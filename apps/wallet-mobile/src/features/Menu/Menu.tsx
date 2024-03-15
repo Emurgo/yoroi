@@ -10,7 +10,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useCanVote} from '../../Catalyst/hooks'
 import {InsufficientFundsModal} from '../../Catalyst/InsufficientFundsModal'
 import {Boundary, Icon, Spacer, Text} from '../../components'
-import {Hr} from '../../components/Hr'
+import {useStatusBar} from '../../components/hooks/useStatusBar'
 import {usePrefetchStakingInfo} from '../../Dashboard/StakePoolInfos'
 import {useMetrics} from '../../metrics/metricsManager'
 import {defaultStackNavigationOptions, useWalletNavigation} from '../../navigation'
@@ -41,6 +41,7 @@ export const MenuNavigator = () => {
 
 export const Menu = () => {
   const strings = useStrings()
+  const styles = useStyles()
   const navigateTo = useNavigateTo()
   const wallet = useSelectedWallet()
   const {track} = useMetrics()
@@ -73,8 +74,6 @@ export const Menu = () => {
           left={<Icon.Gear size={24} color={lightPalette.gray['600']} />}
         />
 
-        <Hr />
-
         <Boundary loading={{size: 'small', style: {padding: 16}}} error={{size: 'inline'}}>
           <Catalyst //
             label={strings.catalystVoting}
@@ -84,26 +83,18 @@ export const Menu = () => {
         </Boundary>
 
         {isGovernanceFeatureEnabled && (
-          <>
-            <Hr />
-
-            <Governance
-              label={strings.governanceCentre}
-              onPress={navigateTo.governanceCentre}
-              left={<Icon.Governance size={24} color={lightPalette.gray['600']} />}
-            />
-          </>
+          <Governance
+            label={strings.governanceCentre}
+            onPress={navigateTo.governanceCentre}
+            left={<Icon.Governance size={24} color={lightPalette.gray['600']} />}
+          />
         )}
-
-        <Hr />
 
         <KnowledgeBase //
           label={strings.knowledgeBase}
           onPress={navigateTo.knowledgeBase}
           left={<Icon.Info size={24} color={lightPalette.gray['600']} />}
         />
-
-        <Hr />
 
         <Spacer fill />
 
@@ -115,6 +106,7 @@ export const Menu = () => {
 
 const SupportLink = () => {
   const strings = useStrings()
+  const styles = useStyles()
   const navigateTo = useNavigateTo()
 
   return (
@@ -151,6 +143,8 @@ const Item = ({
   right?: React.ReactElement | null
   onPress: () => void
 }) => {
+  const styles = useStyles()
+
   return (
     <TouchableOpacity onPress={onPress} style={styles.item} disabled={disabled}>
       {left}
@@ -282,36 +276,46 @@ const messages = defineMessage({
   },
 })
 
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  item: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 16,
-    justifyContent: 'center',
-  },
-  scrollViewContent: {
-    flex: 1,
-    padding: 16,
-  },
-  support: {
-    alignItems: 'center',
-  },
-  supportTitle: {
-    justifyContent: 'center',
-  },
-  supportTitleText: {
-    color: '#6B7384',
-  },
-  supportLink: {
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  supportLinkText: {
-    color: '#4B6DDE',
-  },
-})
+const useStyles = () => {
+  useStatusBar()
+  const {theme} = useTheme()
+  const {color, padding} = theme
+
+  const styles = StyleSheet.create({
+    root: {
+      flex: 1,
+      backgroundColor: color.gray.min,
+    },
+    item: {
+      ...padding['y-l'],
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: color.gray[200],
+    },
+    scrollViewContent: {
+      flex: 1,
+      ...padding['l'],
+    },
+    support: {
+      alignItems: 'center',
+    },
+    supportTitle: {
+      justifyContent: 'center',
+    },
+    supportTitleText: {
+      color: color.gray[600],
+    },
+    supportLink: {
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      flexDirection: 'row',
+    },
+    supportLinkText: {
+      color: color.primary[500],
+    },
+  })
+
+  return styles
+}

@@ -1726,7 +1726,7 @@
   },
   {
     "id": "swap.listOrders.emptyOpenOrdersSub",
-    "defaultMessage": "!!!Start doing the swap operations to your open orders here",
+    "defaultMessage": "!!!Start doing SWAP to see your open orders here",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
       "line": 638,
@@ -1736,7 +1736,7 @@
     "end": {
       "line": 641,
       "column": 3,
-      "index": 25877
+      "index": 25866
     }
   },
   {
@@ -1746,12 +1746,12 @@
     "start": {
       "line": 642,
       "column": 24,
-      "index": 25903
+      "index": 25892
     },
     "end": {
       "line": 645,
       "column": 3,
-      "index": 26006
+      "index": 25995
     }
   },
   {
@@ -1761,12 +1761,12 @@
     "start": {
       "line": 646,
       "column": 15,
-      "index": 26023
+      "index": 26012
     },
     "end": {
       "line": 649,
       "column": 3,
-      "index": 26106
+      "index": 26095
     }
   },
   {
@@ -1776,12 +1776,12 @@
     "start": {
       "line": 650,
       "column": 23,
-      "index": 26131
+      "index": 26120
     },
     "end": {
       "line": 653,
       "column": 3,
-      "index": 26240
+      "index": 26229
     }
   },
   {
@@ -1791,12 +1791,12 @@
     "start": {
       "line": 654,
       "column": 30,
-      "index": 26272
+      "index": 26261
     },
     "end": {
       "line": 658,
       "column": 3,
-      "index": 26462
+      "index": 26451
     }
   },
   {
@@ -1806,12 +1806,12 @@
     "start": {
       "line": 659,
       "column": 34,
-      "index": 26498
+      "index": 26487
     },
     "end": {
       "line": 662,
       "column": 3,
-      "index": 26678
+      "index": 26667
     }
   },
   {
@@ -1821,12 +1821,12 @@
     "start": {
       "line": 663,
       "column": 19,
-      "index": 26699
+      "index": 26688
     },
     "end": {
       "line": 666,
       "column": 3,
-      "index": 26868
+      "index": 26857
     }
   },
   {
@@ -1836,12 +1836,12 @@
     "start": {
       "line": 667,
       "column": 11,
-      "index": 26881
+      "index": 26870
     },
     "end": {
       "line": 670,
       "column": 3,
-      "index": 26975
+      "index": 26964
     }
   },
   {
@@ -1851,12 +1851,12 @@
     "start": {
       "line": 671,
       "column": 20,
-      "index": 26997
+      "index": 26986
     },
     "end": {
       "line": 674,
       "column": 3,
-      "index": 27092
+      "index": 27081
     }
   }
 ]

@@ -4,7 +4,8 @@ import {Image, Platform, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import fingerprintImage from '../../assets/img/fingerprint.png'
-import {Icon, ScreenBackground, StatusBar, Text} from '../../components'
+import {Icon, ScreenBackground, Text} from '../../components'
+import {useStatusBar} from '../../components/hooks/useStatusBar'
 import {COLORS} from '../../theme'
 import {supportsAndroidFingerprintOverlay} from '../biometrics'
 
@@ -41,11 +42,11 @@ export const OsAuthScreen = ({
     setShowImage(showFingerPlaceholder)
   }, [showFingerPlaceholder])
 
+  useStatusBar()
+
   return (
     <ScreenBackground style={styles.container}>
       <SafeAreaView style={{flex: 1}}>
-        <StatusBar type="dark" />
-
         <View style={[styles.main, onGoBack ? null : styles.mainPadded]}>
           {onGoBack && (
             <TouchableOpacity onPress={onGoBack}>

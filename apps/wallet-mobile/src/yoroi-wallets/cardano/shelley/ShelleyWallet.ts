@@ -13,6 +13,7 @@ import DeviceInfo from 'react-native-device-info'
 import {defaultMemoize} from 'reselect'
 
 import LocalizableError from '../../../i18n/LocalizableError'
+import {WalletMeta} from '../../../wallet-manager/types'
 import {HWDeviceInfo} from '../../hw'
 import {Logger} from '../../logging'
 import {makeMemosManager, MemosManager} from '../../memos'
@@ -35,7 +36,6 @@ import type {
 import {NETWORK_REGISTRY, StakingInfo, YoroiSignedTx, YoroiUnsignedTx} from '../../types'
 import {asQuantity, Quantities} from '../../utils'
 import {validatePassword} from '../../utils/validators'
-import {WalletMeta} from '../../walletManager'
 import {Cardano, CardanoMobile} from '../../wallets'
 import * as legacyApi from '../api'
 import {encryptWithPassword} from '../catalyst/catalystCipher'
@@ -633,7 +633,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
               constant: containsDatum ? String(BigInt(constant) * 2n) : constant,
             },
             minimumUtxoVal: MINIMUM_UTXO_VAL,
-            coinsPerUtxoWord: String(Number(coinsPerUtxoByte) * 8),
+            coinsPerUtxoByte,
             poolDeposit,
             networkId: NETWORK_ID,
           },
@@ -670,7 +670,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
             keyDeposit,
             linearFee,
             minimumUtxoVal: MINIMUM_UTXO_VAL,
-            coinsPerUtxoWord: String(Number(coinsPerUtxoByte) * 8),
+            coinsPerUtxoByte,
             poolDeposit,
             networkId: NETWORK_ID,
           },
@@ -777,7 +777,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
           keyDeposit,
           linearFee,
           minimumUtxoVal: MINIMUM_UTXO_VAL,
-          coinsPerUtxoWord: String(Number(coinsPerUtxoByte) * 8),
+          coinsPerUtxoByte,
           poolDeposit,
           networkId: NETWORK_ID,
         },
@@ -823,7 +823,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
           keyDeposit,
           linearFee,
           minimumUtxoVal: MINIMUM_UTXO_VAL,
-          coinsPerUtxoWord: String(Number(coinsPerUtxoByte) * 8),
+          coinsPerUtxoByte,
           poolDeposit,
           networkId: NETWORK_ID,
         }
@@ -920,7 +920,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         {
           linearFee,
           minimumUtxoVal: MINIMUM_UTXO_VAL,
-          coinsPerUtxoWord: String(Number(coinsPerUtxoByte) * 8),
+          coinsPerUtxoByte,
           poolDeposit,
           keyDeposit,
           networkId: NETWORK_ID,

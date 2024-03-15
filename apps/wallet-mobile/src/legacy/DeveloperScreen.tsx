@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {useNavigation} from '@react-navigation/native'
+import {useTheme} from '@yoroi/theme'
 import assert from 'assert'
 import ExtendableError from 'es6-error'
 import _ from 'lodash'
@@ -8,19 +9,21 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 import {Alert, InteractionManager, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity} from 'react-native'
 import config from 'react-native-config'
-import * as Keychain from 'react-native-keychain'
 
 import {useAuth} from '../auth/AuthProvider'
-import {Button, StatusBar, Text, TextInput} from '../components'
+import {Button, Text, TextInput} from '../components'
+import {useStatusBar} from '../components/hooks/useStatusBar'
 import {showErrorDialog} from '../dialogs'
 import {useLegalAgreement, useResetLegalAgreement} from '../features/Initialization/common'
 import {errorMessages} from '../i18n/global-messages'
+import {storageVersionMaker} from '../migrations/storageVersion'
 import {AppRoutes, useWalletNavigation} from '../navigation'
 import {useSelectedWalletContext} from '../SelectedWallet'
 import {isEmptyString} from '../utils/utils'
 import {NetworkError} from '../yoroi-wallets/cardano/errors'
 import {generateAdaMnemonic} from '../yoroi-wallets/cardano/mnemonic'
 import {useCreateWallet} from '../yoroi-wallets/hooks'
+import {rootStorage} from '../yoroi-wallets/storage/rootStorage'
 import {NetworkId} from '../yoroi-wallets/types'
 import {CONFIG} from './config'
 
@@ -29,34 +32,13 @@ const routes: Array<{label: string; path: keyof AppRoutes}> = [
   {label: 'Skip to wallet list', path: 'app-root'},
 ]
 
-const styles = StyleSheet.create({
-  safeAreaView: {
-    flex: 1,
-    paddingTop: 50,
-  },
-  container: {
-    flex: 1,
-    paddingHorizontal: 16,
-  },
-  button: {
-    marginHorizontal: 16,
-    marginVertical: 8,
-  },
-  link: {
-    height: 32,
-    fontSize: 16,
-    textAlign: 'center',
-    alignItems: 'center',
-    marginTop: 8,
-  },
-})
-
 const crash = () => {
   return Promise.reject(new Error('Forced crash'))
 }
 
 export const DeveloperScreen = () => {
   const navigation = useNavigation()
+  const {styles} = useStyles()
   const {logout} = useAuth()
   const {resetToWalletSelection} = useWalletNavigation()
   const intl = useIntl()
@@ -78,8 +60,6 @@ export const DeveloperScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <StatusBar type="dark" />
-
       <ScrollView style={styles.container}>
         {routes.map((route) => (
           <Button
@@ -101,9 +81,9 @@ export const DeveloperScreen = () => {
         </TouchableOpacity>
 
         <Button
-          title="All kc"
+          title="reset storage version"
           style={styles.button}
-          onPress={() => Keychain.getAllGenericPasswordServices().then(console.log)}
+          onPress={() => storageVersionMaker(rootStorage).remove()}
         />
 
         <Button
@@ -135,6 +115,7 @@ export const DeveloperScreen = () => {
               networkId: Number(config['WALLET_1_NETWORK_ID'] ?? 300) as NetworkId,
               password: '1234567890',
               walletImplementationId: 'haskell-shelley',
+              addressMode: 'multiple',
             })
           }
           testID="btnRestoreWallet1"
@@ -151,6 +132,7 @@ export const DeveloperScreen = () => {
               networkId: Number(config['WALLET_2_NETWORK_ID'] ?? 300) as NetworkId,
               password: '1234567890',
               walletImplementationId: 'haskell-shelley',
+              addressMode: 'multiple',
             })
           }
           testID="btnRestoreWallet2"
@@ -167,6 +149,7 @@ export const DeveloperScreen = () => {
               networkId: 1,
               password: '1234567890',
               walletImplementationId: 'haskell-shelley',
+              addressMode: 'single',
             })
           }
           title="RO Mainnet For Forced Addresses"
@@ -231,6 +214,36 @@ export const DeveloperScreen = () => {
       </ScrollView>
     </SafeAreaView>
   )
+}
+
+const useStyles = () => {
+  const {theme} = useTheme()
+  useStatusBar(theme.color.gray.min)
+
+  const styles = StyleSheet.create({
+    safeAreaView: {
+      flex: 1,
+      paddingTop: 50,
+      backgroundColor: theme.color.gray.min,
+    },
+    container: {
+      flex: 1,
+      paddingHorizontal: 16,
+    },
+    button: {
+      marginHorizontal: 16,
+      marginVertical: 8,
+    },
+    link: {
+      height: 32,
+      fontSize: 16,
+      textAlign: 'center',
+      alignItems: 'center',
+      marginTop: 8,
+    },
+  })
+
+  return {styles}
 }
 
 export class StorageError extends ExtendableError {}

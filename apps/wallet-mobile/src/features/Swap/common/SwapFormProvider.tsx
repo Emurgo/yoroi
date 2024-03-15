@@ -461,7 +461,7 @@ function missingInit() {
   console.error('[SwapFormContext] missing initialization')
 }
 
-const initialSwapFormContext: SwapFormContext = {
+const initialExchangeFormContext: SwapFormContext = {
   ...defaultState,
   sellTouched: missingInit,
   buyTouched: missingInit,
@@ -565,4 +565,4 @@ type SwapFormContext = SwapFormState &
     onChangeLimitPrice: (text: string) => void
   }
 
-const SwapFormContext = React.createContext<SwapFormContext>(initialSwapFormContext)
+const SwapFormContext = React.createContext<SwapFormContext>(initialExchangeFormContext)

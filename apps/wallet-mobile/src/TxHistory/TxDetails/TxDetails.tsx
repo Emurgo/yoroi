@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation, useRoute} from '@react-navigation/native'
 import {isNonNullable} from '@yoroi/common'
+import {useTheme} from '@yoroi/theme'
 import {BigNumber} from 'bignumber.js'
 import {fromPairs} from 'lodash'
 import React, {useEffect, useState} from 'react'
@@ -8,13 +9,13 @@ import {defineMessages, IntlShape, useIntl} from 'react-intl'
 import {LayoutAnimation, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {Banner, Boundary, Button, CopyButton, FadeIn, Icon, StatusBar, Text} from '../../components'
+import {Banner, Boundary, Button, CopyButton, FadeIn, Icon, Text} from '../../components'
+import {useStatusBar} from '../../components/hooks/useStatusBar'
 import AddressModal from '../../features/Receive/common/AddressModal/AddressModal'
 import {usePrivacyMode} from '../../features/Settings/PrivacyMode/PrivacyMode'
 import globalMessages from '../../i18n/global-messages'
 import {formatDateAndTime, formatTokenWithSymbol} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {brand, COLORS} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
 import {MultiToken} from '../../yoroi-wallets/cardano/MultiToken'
 import {CardanoTypes, YoroiWallet} from '../../yoroi-wallets/cardano/types'
@@ -22,10 +23,12 @@ import {useTipStatus, useTransactionInfos} from '../../yoroi-wallets/hooks'
 import {TransactionInfo} from '../../yoroi-wallets/types'
 import {asQuantity, openInExplorer} from '../../yoroi-wallets/utils'
 import {AssetList} from './AssetList'
-import assetListStyle from './AssetListTransaction.style'
+import {useAssetListStyles} from './AssetListTransaction.style'
 
 export const TxDetails = () => {
   const strings = useStrings()
+  const {styles, colors} = useStyles()
+  useStatusBar()
   const intl = useIntl()
   const {id} = useRoute().params as Params
   const wallet = useSelectedWallet()
@@ -63,8 +66,6 @@ export const TxDetails = () => {
 
   return (
     <FadeIn style={styles.container}>
-      <StatusBar type="dark" />
-
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <Banner label={strings[transaction.direction]}>
           <Boundary>
@@ -98,7 +99,7 @@ export const TxDetails = () => {
 
                 <Icon.Chevron
                   direction={expandedInItemId === item.id ? 'up' : 'down'}
-                  color={COLORS.ACTION_GRAY}
+                  color={colors.iconColor}
                   size={23}
                 />
               </TouchableOpacity>
@@ -130,7 +131,7 @@ export const TxDetails = () => {
 
                 <Icon.Chevron
                   direction={expandedOutItemId === item.id ? 'up' : 'down'}
-                  color={COLORS.ACTION_GRAY}
+                  color={colors.iconColor}
                   size={23}
                 />
               </TouchableOpacity>
@@ -196,10 +197,15 @@ const Confirmations = ({transaction, wallet}: {transaction: TransactionInfo; wal
   )
 }
 
-const Label = ({children}: {children: string}) => <Text style={styles.label}>{children}</Text>
+const Label = ({children}: {children: string}) => {
+  const {styles} = useStyles()
+
+  return <Text style={styles.label}>{children}</Text>
+}
 
 const AdaAmount = ({amount, isPrivacyOff}: {amount: BigNumber; isPrivacyOff?: boolean}) => {
   const wallet = useSelectedWallet()
+  const {styles} = useStyles()
   const amountStyle = amount.gte(0) ? styles.positiveAmount : styles.negativeAmount
 
   if (isPrivacyOff) {
@@ -221,15 +227,18 @@ const ExpandableAssetList: React.VFC<{
   expanded: boolean
   assets: CardanoTypes.TokenEntry[]
   isPrivacyOff?: boolean
-}> = ({expanded, assets, isPrivacyOff}) => (
-  <View style={{borderWidth: 1, borderColor: 'transparent'}}>
-    {/* ↑↑↑ View wrapper fixes bug ↑↑↑ */}
+}> = ({expanded, assets, isPrivacyOff}) => {
+  const assetListStyle = useAssetListStyles()
+  return (
+    <View style={{borderWidth: 1, borderColor: 'transparent'}}>
+      {/* ↑↑↑ View wrapper fixes bug ↑↑↑ */}
 
-    {expanded && <AssetList isPrivacyOff={isPrivacyOff} styles={assetListStyle} assets={assets} />}
+      {expanded && <AssetList isPrivacyOff={isPrivacyOff} styles={assetListStyle} assets={assets} />}
 
-    {/* ↓↓↓ View wrapper fixes bug ↓↓↓ */}
-  </View>
-)
+      {/* ↓↓↓ View wrapper fixes bug ↓↓↓ */}
+    </View>
+  )
+}
 
 type AddressEntryProps = {
   address: string
@@ -420,47 +429,54 @@ const messages = defineMessages({
   },
 })
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  contentContainer: {
-    paddingHorizontal: 16,
-  },
-  positiveAmount: {
-    color: '#3154CB',
-    fontWeight: '500',
-  },
-  negativeAmount: {
-    color: COLORS.NEGATIVE_AMOUNT,
-    fontWeight: '500',
-  },
-  label: {
-    marginTop: 16,
-    marginBottom: 8,
-  },
-  assetsExpandable: {
-    paddingTop: 12,
-    paddingBottom: 24,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignContent: 'center',
-  },
-  assetsTitle: {
-    fontSize: 14,
-    fontFamily: brand.defaultFont,
-    color: COLORS.TEXT_GRAY,
-  },
-  borderTop: {
-    borderTopWidth: 1,
-    borderColor: 'rgba(173, 174, 182, 0.3)',
-  },
-  dataContainer: {
-    flexDirection: 'row',
-    paddingRight: 70,
-    marginBottom: 20,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, padding, typography} = theme
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+    },
+    contentContainer: {
+      ...padding['x-l'],
+    },
+    positiveAmount: {
+      color: color.primary[600],
+      fontWeight: '500',
+    },
+    negativeAmount: {
+      color: color.magenta[500],
+      fontWeight: '500',
+    },
+    label: {
+      ...padding['t-l'],
+      marginBottom: 8,
+    },
+    assetsExpandable: {
+      ...padding['t-m'],
+      ...padding['b-xl'],
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignContent: 'center',
+    },
+    assetsTitle: {
+      ...typography['body-2-m-regular'],
+      color: color.gray[900],
+    },
+    borderTop: {
+      borderTopWidth: 1,
+      borderColor: 'rgba(173, 174, 182, 0.3)',
+    },
+    dataContainer: {
+      flexDirection: 'row',
+      paddingRight: 70,
+      marginBottom: 20,
+    },
+  })
+  const colors = {
+    iconColor: color.gray[500],
+  }
+  return {styles, colors}
+}
 
 const useTitle = (text: string) => {
   const navigation = useNavigation()

@@ -1,11 +1,13 @@
 import {useIsFocused} from '@react-navigation/native'
+import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import _ from 'lodash'
 import React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
-import {Button, KeyboardAvoidingView, Spacer, StatusBar} from '../../../../components'
-import {ScrollView} from '../../../../components/ScrollView/ScrollView'
+import {Button, KeyboardAvoidingView, Spacer} from '../../../../components'
+import {useStatusBar} from '../../../../components/hooks/useStatusBar'
+import {ScrollView, useScrollView} from '../../../../components/ScrollView/ScrollView'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
@@ -15,7 +17,6 @@ import {memoMaxLenght} from '../../common/constants'
 import {AddressErrorWrongNetwork} from '../../common/errors'
 import {useNavigateTo} from '../../common/navigation'
 import {useStrings} from '../../common/strings'
-import {useFlashAndScroll} from '../../common/useFlashAndScroll'
 import {useSendAddress} from '../../common/useSendAddress'
 import {useSendReceiver} from '../../common/useSendReceiver'
 import {InputMemo} from './InputMemo/InputMemo'
@@ -26,6 +27,7 @@ import {ShowErrors} from './ShowErrors'
 
 export const StartMultiTokenTxScreen = () => {
   const strings = useStrings()
+  const styles = useStyles()
   const navigateTo = useNavigateTo()
   const wallet = useSelectedWallet()
   const {track} = useMetrics()
@@ -35,6 +37,8 @@ export const StartMultiTokenTxScreen = () => {
     track.sendInitiated()
   }, [track])
 
+  useStatusBar()
+
   const hasPendingTx = useHasPendingTx(wallet)
   const isOnline = useIsOnline(wallet)
 
@@ -42,7 +46,7 @@ export const StartMultiTokenTxScreen = () => {
   const {amounts} = targets[selectedTargetIndex].entry
   const receiver = targets[selectedTargetIndex].receiver
   const shouldOpenAddToken = Amounts.toArray(amounts).length === 0
-  const [isScrollBarShown, setIsScrollBarShown] = React.useState(false)
+  const {isScrollBarShown, setIsScrollBarShown, scrollViewRef} = useScrollView()
 
   const {isWrongBlockchainError, isResolvingAddressess, receiverError, isUnsupportedDomain, isNotResolvedDomain} =
     useSendReceiver()
@@ -76,12 +80,8 @@ export const StartMultiTokenTxScreen = () => {
   }
   const handleOnChangeMemo = (text: string) => memoChanged(text)
 
-  const scrollViewRef = useFlashAndScroll()
-
   return (
     <View style={styles.container}>
-      <StatusBar type="dark" />
-
       <KeyboardAvoidingView style={styles.flex}>
         <ScrollView
           ref={scrollViewRef}
@@ -123,7 +123,10 @@ export const StartMultiTokenTxScreen = () => {
   )
 }
 
-const Actions = ({style, ...props}: ViewProps) => <View style={[styles.actions, style]} {...props} />
+const Actions = ({style, ...props}: ViewProps) => {
+  const styles = useStyles()
+  return <View style={[styles.actions, style]} {...props} />
+}
 
 const useReceiverError = ({
   isWrongBlockchainError,
@@ -159,22 +162,26 @@ const useReceiverError = ({
     receiverErrorMessage: '',
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.WHITE,
-    paddingTop: 16,
-  },
-  flex: {
-    flex: 1,
-  },
-  actions: {
-    padding: 16,
-  },
-  scroll: {
-    paddingHorizontal: 16,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, padding} = theme
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: color.gray.min,
+      ...padding['t-l'],
+    },
+    flex: {
+      flex: 1,
+    },
+    actions: {
+      ...padding['l'],
+    },
+    scroll: {
+      ...padding['x-l'],
+    },
+  })
+  return styles
+}
 
 const NextButton = Button

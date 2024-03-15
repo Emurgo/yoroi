@@ -18,7 +18,7 @@ const Playground = () => {
 
   return (
     <View style={{flex: 1}}>
-      <Text style={{lineHeight: 24, fontWeight: '700', alignSelf: 'center'}}>Metrics State</Text>
+      <Text style={{lineHeight: 24, fontWeight: '500', alignSelf: 'center'}}>Metrics State</Text>
 
       <Text onPress={metrics[metrics.isEnabled ? 'disable' : 'enable']}>{JSON.stringify(metrics, null, 2)}</Text>
     </View>

@@ -10,11 +10,11 @@ import {
   Checkmark,
   KeyboardAvoidingView,
   Spacer,
-  StatusBar,
   Text,
   TextInput,
   TextInputProps,
 } from '../../../components'
+import {useStatusBar} from '../../../components/hooks/useStatusBar'
 import {useWalletNavigation} from '../../../navigation'
 import {useSelectedWallet} from '../../../SelectedWallet'
 import {useRemoveWallet, useWalletName} from '../../../yoroi-wallets/hooks'
@@ -24,6 +24,7 @@ export const RemoveWalletScreen = () => {
   const styles = useStyles()
   const wallet = useSelectedWallet()
   const walletName = useWalletName(wallet)
+  useStatusBar()
 
   const {resetToWalletSelection} = useWalletNavigation()
   const {removeWallet, isLoading} = useRemoveWallet(wallet.id, {
@@ -37,8 +38,6 @@ export const RemoveWalletScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
-      <StatusBar type="dark" />
-
       <KeyboardAvoidingView style={{flex: 1}}>
         <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
           <Description>

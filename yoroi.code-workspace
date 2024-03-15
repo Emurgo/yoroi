@@ -21,8 +21,8 @@
       "path": "./packages/theme"
     },
     {
-      "name": "@yoroi/banxa",
-      "path": "./packages/banxa"
+      "name": "@yoroi/exchange",
+      "path": "./packages/exchange"
     },
     {
       "name": "@yoroi/transfer",

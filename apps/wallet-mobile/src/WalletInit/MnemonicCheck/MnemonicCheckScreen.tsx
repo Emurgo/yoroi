@@ -4,21 +4,26 @@ import {defineMessages, useIntl} from 'react-intl'
 import {InteractionManager, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Spacer, StatusBar, Text} from '../../components'
+import {Button, Spacer, Text} from '../../components'
+import {useStatusBar} from '../../components/hooks/useStatusBar'
 import {showErrorDialog} from '../../dialogs'
 import {errorMessages} from '../../i18n/global-messages'
 import {useMetrics} from '../../metrics/metricsManager'
 import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
+import {AddressMode} from '../../wallet-manager/types'
 import {NetworkError} from '../../yoroi-wallets/cardano/errors'
 import {useCreateWallet} from '../../yoroi-wallets/hooks'
 
+// when creating, later will be part of the onboarding
+const addressMode: AddressMode = 'single'
 export const MnemonicCheckScreen = () => {
   const strings = useStrings()
   const {resetToWalletSelection} = useWalletNavigation()
   const route = useRoute<RouteProp<WalletInitRoutes, 'mnemonic-check'>>()
   const {mnemonic, password, name, networkId, walletImplementationId} = route.params
   const {track} = useMetrics()
+  useStatusBar()
 
   const mnemonicEntries: Array<Entry> = mnemonic
     .split(' ')
@@ -33,6 +38,9 @@ export const MnemonicCheckScreen = () => {
   const isPhraseValid = userEntries.map((entry) => entry.word).join(' ') === mnemonic
 
   const intl = useIntl()
+  const handleOnCreateWallet = () => {
+    createWallet({name, mnemonicPhrase: mnemonic, password, networkId, walletImplementationId, addressMode})
+  }
   const {createWallet, isLoading, isSuccess} = useCreateWallet({
     onSuccess: () => {
       track.createWalletDetailsSettled()
@@ -46,11 +54,10 @@ export const MnemonicCheckScreen = () => {
       })
     },
   })
+  const disabled = !isPhraseComplete || !isPhraseValid || isLoading || isSuccess
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-      <StatusBar type="dark" />
-
       <Spacer height={24} />
 
       <Instructions />
@@ -70,8 +77,8 @@ export const MnemonicCheckScreen = () => {
       <View style={styles.buttons}>
         <Button
           block
-          onPress={() => createWallet({name, mnemonicPhrase: mnemonic, password, networkId, walletImplementationId})}
-          disabled={!isPhraseComplete || !isPhraseValid || isLoading || isSuccess}
+          onPress={handleOnCreateWallet}
+          disabled={disabled}
           title={strings.confirmButton}
           style={styles.confirmButton}
           testID="mnemonicCheckScreen::confirm"

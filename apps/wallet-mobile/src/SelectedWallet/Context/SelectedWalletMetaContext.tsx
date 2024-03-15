@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import {WalletMeta} from '../../yoroi-wallets/walletManager'
+import {WalletMeta} from '../../wallet-manager/types'
 
 type SelectedWalletMeta = WalletMeta
 type SetSelectedWalletMeta = (selectedWalletMeta?: SelectedWalletMeta) => void

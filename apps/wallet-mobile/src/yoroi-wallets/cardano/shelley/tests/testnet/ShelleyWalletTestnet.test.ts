@@ -3,11 +3,11 @@ import {Address} from '@emurgo/cross-csl-core'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {Balance} from '@yoroi/types'
 
+import {WalletMeta} from '../../../../../wallet-manager/types'
 import {HWDeviceInfo} from '../../../../hw'
 import {EncryptedStorage, EncryptedStorageKeys} from '../../../../storage'
 import {rootStorage} from '../../../../storage/rootStorage'
 import {DefaultAsset} from '../../../../types'
-import {WalletMeta} from '../../../../walletManager'
 import {ShelleyAddressGeneratorJSON} from '../../../chain'
 import {WalletJSON} from '../../../shelley/ShelleyWallet'
 import {ShelleyWalletTestnet} from '../../../shelley/wallets'
@@ -354,6 +354,7 @@ const walletMeta: WalletMeta = {
     TextPart: 'OSEC-2869',
   },
   isEasyConfirmationEnabled: false,
+  addressMode: 'multiple',
 }
 
 const data: WalletJSON = {

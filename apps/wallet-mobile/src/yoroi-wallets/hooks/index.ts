@@ -19,13 +19,15 @@ import {
 } from 'react-query'
 
 import {CONFIG} from '../../legacy/config'
-import {useWalletManager} from '../../WalletManager'
+import {AddressMode, WalletMeta} from '../../wallet-manager/types'
+import {parseWalletMeta} from '../../wallet-manager/validators'
+import {WalletManager} from '../../wallet-manager/walletManager'
+import {useWalletManager} from '../../wallet-manager/WalletManagerContext'
 import {getSpendingKey, getStakingKey} from '../cardano/addressInfo/addressInfo'
 import {calcLockedDeposit} from '../cardano/assetUtils'
 import {generateShelleyPlateFromKey} from '../cardano/shelley/plate'
 import {WalletEvent, YoroiWallet} from '../cardano/types'
 import {HWDeviceInfo} from '../hw'
-import {parseWalletMeta} from '../migrations/walletMeta'
 import {
   TRANSACTION_DIRECTION,
   TRANSACTION_STATUS,
@@ -36,7 +38,6 @@ import {
 import {CurrencySymbol, NetworkId, TipStatusResponse, TxSubmissionStatus, WalletImplementationId} from '../types/other'
 import {delay} from '../utils/timeUtils'
 import {Amounts, Quantities, Utxos} from '../utils/utils'
-import {WalletManager, WalletMeta} from '../walletManager'
 
 const crashReportsStorageKey = 'sendCrashReports'
 
@@ -164,14 +165,19 @@ export const useAssetIds = (wallet: YoroiWallet): string[] => {
  */
 export const useLockedAmount = (
   {wallet}: {wallet: YoroiWallet},
-  options?: UseQueryOptions<Balance.Quantity, Error, Balance.Quantity, [string, 'lockedAmount']>,
+  options?: UseQueryOptions<Balance.Quantity, Error, Balance.Quantity, [string, string, 'lockedAmount']>,
 ) => {
+  const {protocolParams} = useProtocolParams(wallet, {suspense: true})
+  const coinsPerUtxoByte = protocolParams?.coinsPerUtxoByte ?? ''
+
   const query = useQuery({
     ...options,
     suspense: true,
-    queryKey: [wallet.id, 'lockedAmount'],
+    queryKey: [wallet.id, coinsPerUtxoByte, 'lockedAmount'],
     queryFn: () =>
-      calcLockedDeposit(wallet.utxos, wallet.networkId).then((amount) => amount.toString() as Balance.Quantity),
+      calcLockedDeposit(wallet.utxos, wallet.receiveAddresses[0], coinsPerUtxoByte).then(
+        (amount) => amount.toString() as Balance.Quantity,
+      ),
   })
 
   React.useEffect(() => {
@@ -727,12 +733,13 @@ type CreateBip44WalletInfo = {
   implementationId: WalletImplementationId
   hwDeviceInfo?: null | HWDeviceInfo
   readOnly: boolean
+  addressMode: AddressMode
 }
 
 export const useCreateBip44Wallet = (options?: UseMutationOptions<YoroiWallet, Error, CreateBip44WalletInfo>) => {
   const walletManager = useWalletManager()
   const mutation = useMutationWithInvalidations<YoroiWallet, Error, CreateBip44WalletInfo>({
-    mutationFn: ({name, bip44AccountPublic, networkId, implementationId, hwDeviceInfo, readOnly}) =>
+    mutationFn: ({name, bip44AccountPublic, networkId, implementationId, hwDeviceInfo, readOnly, addressMode}) =>
       walletManager.createWalletWithBip44Account(
         name,
         bip44AccountPublic,
@@ -740,6 +747,7 @@ export const useCreateBip44Wallet = (options?: UseMutationOptions<YoroiWallet, E
         implementationId,
         hwDeviceInfo || null,
         readOnly,
+        addressMode,
       ),
     invalidateQueries: [['walletMetas']],
     ...options,
@@ -757,13 +765,14 @@ export type CreateWalletInfo = {
   password: string
   networkId: NetworkId
   walletImplementationId: WalletImplementationId
+  addressMode: AddressMode
 }
 
 export const useCreateWallet = (options?: UseMutationOptions<YoroiWallet, Error, CreateWalletInfo>) => {
   const walletManager = useWalletManager()
   const mutation = useMutationWithInvalidations({
-    mutationFn: ({name, mnemonicPhrase, password, networkId, walletImplementationId}) =>
-      walletManager.createWallet(name, mnemonicPhrase, password, networkId, walletImplementationId),
+    mutationFn: ({name, mnemonicPhrase, password, networkId, walletImplementationId, addressMode}) =>
+      walletManager.createWallet(name, mnemonicPhrase, password, networkId, walletImplementationId, addressMode),
     invalidateQueries: [['walletMetas']],
     ...options,
   })

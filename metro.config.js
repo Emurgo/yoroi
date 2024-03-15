@@ -7,7 +7,7 @@ module.exports = {
     path.resolve(__dirname, "packages/types"),
     path.resolve(__dirname, "packages/common"),
     path.resolve(__dirname, "packages/api"),
-    path.resolve(__dirname, "packages/banxa"),
+    path.resolve(__dirname, "packages/exchange"),
     path.resolve(__dirname, "packages/links"),
     path.resolve(__dirname, "packages/resolver"),
     path.resolve(__dirname, "packages/swap"),

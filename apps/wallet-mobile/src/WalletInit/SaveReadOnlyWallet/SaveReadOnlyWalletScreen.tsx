@@ -4,13 +4,15 @@ import {defineMessages, useIntl} from 'react-intl'
 import {FlatList, InteractionManager, ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Boundary, Icon, Line, StatusBar, Text} from '../../components'
+import {Boundary, Icon, Line, Text} from '../../components'
+import {useStatusBar} from '../../components/hooks/useStatusBar'
 import {showErrorDialog} from '../../dialogs'
 import {errorMessages} from '../../i18n/global-messages'
 import {useMetrics} from '../../metrics/metricsManager'
 import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
 import {theme} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
+import {AddressMode} from '../../wallet-manager/types'
 import {NetworkError} from '../../yoroi-wallets/cardano/errors'
 import {NUMBERS} from '../../yoroi-wallets/cardano/numbers'
 import {useCreateBip44Wallet, usePlate} from '../../yoroi-wallets/hooks'
@@ -18,9 +20,12 @@ import {NetworkId} from '../../yoroi-wallets/types'
 import {WalletAddress} from '../WalletAddress'
 import {WalletNameForm} from '../WalletNameForm'
 
+// when ro, later will be part of the onboarding
+const addressMode: AddressMode = 'multiple'
 export const SaveReadOnlyWalletScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
+  useStatusBar()
   const {resetToWalletSelection} = useWalletNavigation()
   const {track} = useMetrics()
   const route = useRoute<RouteProp<WalletInitRoutes, 'save-read-only'>>()
@@ -55,13 +60,12 @@ export const SaveReadOnlyWalletScreen = () => {
       implementationId: walletImplementationId,
       bip44AccountPublic: publicKeyHex,
       readOnly: true,
+      addressMode,
     })
   }
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container} testID="saveReadOnlyWalletContainer">
-      <StatusBar type="dark" />
-
       <WalletNameForm
         onSubmit={onSubmit}
         defaultWalletName={strings.defaultWalletName}

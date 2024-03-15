@@ -3,7 +3,7 @@ import {TextStyle} from 'react-native'
 export type Theme = {
   color: Palette
   typography: Typography
-  spacing: Spacing
+  padding: Spacing
 }
 
 export type HexColor = `#${string}`
@@ -68,6 +68,7 @@ export type Palette = {
     'blue-green': Gradient
     'green': Gradient
     'blue': Gradient
+    'light': Gradient
   }
   'bottom-sheet-background': HexColor
   'overlay-extension': {hex: HexColor; opacity: number}
@@ -99,19 +100,11 @@ type TypographyKeys =
   | 'link-2-m-underline'
   | 'navbar'
 
-type SpacingKeys =
-  | 'spacing-2'
-  | 'spacing-4'
-  | 'spacing-6'
-  | 'spacing-8'
-  | 'spacing-10'
-  | 'spacing-12'
-  | 'spacing-16'
-  | 'spacing-24'
-  | 'spacing-32'
-  | 'spacing-40'
-  | 'spacing-48'
-  | 'spacing-80'
-
 export type Typography = Record<TypographyKeys, TextStyle>
-export type Spacing = Record<SpacingKeys, string>
+
+export type Direction = 'x' | 'y' | 't' | 'b' | 'l' | 'r'
+export type SpacingSize = 'none' | 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl'
+type SpacingKeys = `${Direction}-${SpacingSize}` | SpacingSize | 'none'
+export type Spacing = {
+  [key in SpacingKeys]?: Record<string, number>
+}

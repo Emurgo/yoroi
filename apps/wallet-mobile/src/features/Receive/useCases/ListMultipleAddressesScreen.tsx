@@ -1,16 +1,19 @@
+import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {StyleSheet, Text, View, ViewToken} from 'react-native'
 import Animated, {Layout} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer, useModal} from '../../../components'
+import {useStatusBar} from '../../../components/hooks/useStatusBar'
+import {useMetrics} from '../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../SelectedWallet'
+import {useAddressModeManager} from '../../../wallet-manager/useAddressModeManager'
 import {BIP32_HD_GAP_LIMIT} from '../common/contants'
 import {useReceive} from '../common/ReceiveProvider'
 import {ShowAddressLimitInfo} from '../common/ShowAddressLimitInfo/ShowAddressLimitInfo'
 import {SmallAddressCard} from '../common/SmallAddressCard/SmallAddressCard'
-import {useAddressDerivationManager} from '../common/useAddressDerivationManager'
 import {useMultipleAddressesInfo} from '../common/useMultipleAddressesInfo'
 import {useNavigateTo} from '../common/useNavigateTo'
 import {useReceiveAddressesStatus} from '../common/useReceiveAddressesStatus'
@@ -23,26 +26,35 @@ type AddressInfo = {
 }
 
 export const ListMultipleAddressesScreen = () => {
+  const inView = React.useRef(Number.MAX_SAFE_INTEGER)
   const strings = useStrings()
   const {styles} = useStyles()
+  useStatusBar()
   const wallet = useSelectedWallet()
   const navigate = useNavigateTo()
+  const {track} = useMetrics()
 
-  const {addressDerivation} = useAddressDerivationManager()
-  const addresses = useReceiveAddressesStatus(addressDerivation)
+  const {addressMode} = useAddressModeManager()
+  const addresses = useReceiveAddressesStatus(addressMode)
   const {selectedAddressChanged} = useReceive()
+
   React.useEffect(() => {
     wallet.generateNewReceiveAddressIfNeeded()
   }, [wallet])
 
   const {openModal} = useModal()
   const {isShowingMultipleAddressInfo} = useMultipleAddressesInfo()
+
   React.useEffect(() => {
     isShowingMultipleAddressInfo && openModal(strings.multiplePresentation, <Modal />, modalHeight)
   }, [isShowingMultipleAddressInfo, openModal, strings.multiplePresentation])
 
   const addressInfos = toAddressInfos(addresses)
   const hasReachedGapLimit = addresses.unused.length >= BIP32_HD_GAP_LIMIT
+
+  const onViewableItemsChanged = React.useCallback(({viewableItems}: {viewableItems: ViewToken[]}) => {
+    inView.current = viewableItems.length
+  }, [])
 
   const renderAddressInfo = React.useCallback(
     ({item}: {item: AddressInfo}) => (
@@ -59,30 +71,50 @@ export const ListMultipleAddressesScreen = () => {
     [navigate, selectedAddressChanged],
   )
 
+  const handleOnGenerateNewReceiveAddress = () => {
+    track.receiveGenerateNewAddressClicked()
+    wallet.generateNewReceiveAddress()
+  }
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.receivePageListViewed()
+    }, [track]),
+  )
+
   return (
     <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
-      {hasReachedGapLimit && (
-        <>
-          <ShowAddressLimitInfo />
+      <View style={styles.content}>
+        {hasReachedGapLimit && (
+          <>
+            <ShowAddressLimitInfo />
 
-          <Spacer height={16} />
-        </>
-      )}
+            <Spacer height={16} />
+          </>
+        )}
 
-      <Animated.FlatList
-        data={addressInfos}
-        keyExtractor={(addressInfo) => addressInfo.address}
-        renderItem={renderAddressInfo}
+        <Animated.FlatList
+          data={addressInfos}
+          keyExtractor={(addressInfo) => addressInfo.address}
+          renderItem={renderAddressInfo}
+          layout={Layout}
+          showsVerticalScrollIndicator={false}
+          onViewableItemsChanged={onViewableItemsChanged}
+        />
+      </View>
+
+      <Animated.View
+        style={[
+          styles.footer,
+          {display: hasReachedGapLimit ? 'none' : 'flex', borderTopWidth: inView.current < addressInfos.length ? 1 : 0},
+        ]}
         layout={Layout}
-        showsVerticalScrollIndicator={false}
-      />
-
-      <Animated.View style={[styles.footer, {display: hasReachedGapLimit ? 'none' : 'flex'}]} layout={Layout}>
+      >
         <Button
           shelleyTheme
           title={strings.generateButton}
           disabled={hasReachedGapLimit}
-          onPress={() => wallet.generateNewReceiveAddress()}
+          onPress={handleOnGenerateNewReceiveAddress}
           style={styles.button}
         />
       </Animated.View>
@@ -109,7 +141,7 @@ const Modal = () => {
 
       <Text style={[styles.details, {color: colors.details}]}>{strings.multiplePresentationDetails}</Text>
 
-      <Spacer fill />
+      <Spacer fill height={24} />
 
       <View style={styles.buttonContainer}>
         <Button shelleyTheme title={strings.ok} onPress={handleOnCloseModal} style={styles.button} />
@@ -127,7 +159,11 @@ const useStyles = () => {
     root: {
       flex: 1,
       backgroundColor: theme.color.gray.min,
-      padding: 16,
+      ...theme.padding['t-l'],
+    },
+    content: {
+      flex: 1,
+      ...theme.padding['x-l'],
     },
     modal: {
       flex: 1,
@@ -137,7 +173,8 @@ const useStyles = () => {
     },
     footer: {
       backgroundColor: theme.color.gray.min,
-      paddingTop: 16,
+      borderColor: theme.color.gray[200],
+      ...theme.padding['l'],
     },
     details: {
       ...theme.typography['body-1-l-regular'],

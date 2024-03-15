@@ -325,6 +325,21 @@ const getTokens: Balance.TokenInfo[] = [
     ticker: 'ELADR',
     metadatas: {},
   },
+  {
+    id: '2d420236ffaada336c21e3f4520b799f6e246d8618f2fc89a4907da6.FFFFFF',
+    group: '2d420236ffaada336c21e3f4520b799f6e246d8618f2fc89a4907da6',
+    fingerprint: 'asset1ud7y8pzglxmf68jtww3xhpes9j87akx4mtyx28',
+    name: 'FFFFFF',
+    decimals: 6,
+    description: 'Proof Of Contribution.',
+    image:
+      'https://tokens.muesliswap.com/static/img/tokens/2d420236ffaada336c21e3f4520b799f6e246d8618f2fc89a4907da6.4564756c6164646572546f6b656e.png',
+    kind: 'ft',
+    symbol: undefined,
+    icon: undefined,
+    ticker: 'ELADR',
+    metadatas: {},
+  },
 ]
 
 export const apiMocks = {

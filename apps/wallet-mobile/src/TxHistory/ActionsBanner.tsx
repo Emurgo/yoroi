@@ -9,7 +9,7 @@ import Animated, {FadeInDown, FadeOutDown, Layout} from 'react-native-reanimated
 
 import {useCopy} from '../../src/legacy/useCopy'
 import {Icon, Spacer, Text} from '../components'
-import {useAddressDerivationManager} from '../features/Receive/common/useAddressDerivationManager'
+import {useReceive} from '../features/Receive/common/ReceiveProvider'
 import {useReceiveAddressesStatus} from '../features/Receive/common/useReceiveAddressesStatus'
 import {messages as receiveMessages} from '../features/Receive/common/useStrings'
 import {useSwapForm} from '../features/Swap/common/SwapFormProvider'
@@ -17,6 +17,7 @@ import {actionMessages} from '../i18n/global-messages'
 import {useMetrics} from '../metrics/metricsManager'
 import {TxHistoryRouteNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
+import {useAddressModeManager} from '../wallet-manager/useAddressModeManager'
 import {useTokenInfo} from '../yoroi-wallets/hooks'
 
 export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
@@ -24,8 +25,9 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
 
-  const {isSingle, addressDerivation} = useAddressDerivationManager()
-  const {next: nextReceiveAddress} = useReceiveAddressesStatus(addressDerivation)
+  const {isSingle, addressMode} = useAddressModeManager()
+  const {next: nextReceiveAddress} = useReceiveAddressesStatus(addressMode)
+  const {selectedAddressChanged} = useReceive()
   const [isCopying, copy] = useCopy()
 
   const {reset: resetSendState} = useTransfer()
@@ -71,6 +73,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
 
   const handleOnPressReceive = () => {
     if (isSingle) {
+      selectedAddressChanged(nextReceiveAddress)
       navigateTo.receiveSingleAddress()
     } else {
       navigateTo.receiveMultipleAddresses()
@@ -78,6 +81,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   }
 
   const handleOnLongPressReceive = () => {
+    track.receiveCopyAddressClicked({copy_address_location: 'Long Press wallet Address'})
     copy(nextReceiveAddress)
   }
 
@@ -87,7 +91,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   }
 
   return (
-    <View style={styles.banner}>
+    <View>
       <Spacer height={16} />
 
       <View style={styles.centralized}>
@@ -167,9 +171,8 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
 
 const useStyles = () => {
   const {theme} = useTheme()
-  const {color} = theme
+  const {color, padding, typography} = theme
   const styles = StyleSheet.create({
-    banner: {},
     centralized: {
       alignItems: 'center',
       justifyContent: 'center',
@@ -187,12 +190,9 @@ const useStyles = () => {
       backgroundColor: color.primary[500],
     },
     actionLabel: {
-      paddingTop: 8,
-      fontSize: 12,
+      ...padding['t-s'],
       color: color.gray.max,
-      fontFamily: 'Rubik-Regular',
-      fontWeight: '500',
-      lineHeight: 18,
+      ...typography['body-3-s-medium'],
     },
     disabled: {
       opacity: 0.5,
@@ -209,10 +209,8 @@ const useStyles = () => {
     },
     textCopy: {
       textAlign: 'center',
-      padding: 8,
-      fontSize: 14,
-      fontWeight: '500',
-      fontFamily: 'Rubik-Medium',
+      ...padding['s'],
+      ...typography['body-2-m-medium'],
       color: color.gray.min,
     },
   })
@@ -250,6 +248,6 @@ const useNavigateTo = () => {
     receiveSingleAddress: () => navigation.navigate('receive-single'),
     receiveMultipleAddresses: () => navigation.navigate('receive-multiple'),
     swap: () => navigation.navigate('swap-start-swap'),
-    exchange: () => navigation.navigate('rampOnOff-start-rampOnOff'),
+    exchange: () => navigation.navigate('exchange-create-order'),
   }
 }

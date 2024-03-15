@@ -1,11 +1,13 @@
 import {useFocusEffect} from '@react-navigation/native'
+import {useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
 import React, {ReactNode} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {RefreshControl, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Icon, NftImageGallery, SkeletonGallery, Spacer, StatusBar} from '../components'
+import {Icon, NftImageGallery, SkeletonGallery, Spacer} from '../components'
+import {useStatusBar} from '../components/hooks/useStatusBar'
 import {useMetrics} from '../metrics/metricsManager'
 import {useSearch, useSearchOnNavBar} from '../Search/SearchContext'
 import {useSelectedWallet} from '../SelectedWallet'
@@ -17,7 +19,9 @@ import {NoNftsScreen} from './NoNftsScreen'
 export const Nfts = () => {
   const navigateTo = useNavigateTo()
   const strings = useStrings()
+  const styles = useStyles()
   const {track} = useMetrics()
+  useStatusBar()
 
   // use case: search nfts
   useSearchOnNavBar({
@@ -132,10 +136,9 @@ export const Nfts = () => {
 }
 
 const Wrapper = ({children}: {children: ReactNode}) => {
+  const styles = useStyles()
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-      <StatusBar type="dark" />
-
       <View style={styles.container}>
         <Spacer height={16} />
 
@@ -147,6 +150,7 @@ const Wrapper = ({children}: {children: ReactNode}) => {
 
 const ErrorScreen = ({onRefresh, isRefreshing}: {onRefresh: () => void; isRefreshing: boolean}) => {
   const strings = useStrings()
+  const styles = useStyles()
 
   return (
     <ScrollView
@@ -179,6 +183,7 @@ const ErrorScreen = ({onRefresh, isRefreshing}: {onRefresh: () => void; isRefres
 
 const NftCount = ({count}: {count?: number | string}) => {
   const strings = useStrings()
+  const styles = useStyles()
 
   return (
     <View style={styles.countBar} testID="txtNftCount">
@@ -188,6 +193,7 @@ const NftCount = ({count}: {count?: number | string}) => {
 }
 
 const LoadingScreen = ({nftsCount}: {nftsCount: number}) => {
+  const styles = useStyles()
   return (
     <View style={styles.galleryContainer}>
       <NftCount count={nftsCount} />
@@ -201,50 +207,54 @@ const LoadingScreen = ({nftsCount}: {nftsCount: number}) => {
 
 const byName = ({name: A}: Balance.TokenInfo, {name: B}: Balance.TokenInfo) => A.localeCompare(B)
 
-const styles = StyleSheet.create({
-  safeAreaView: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  container: {
-    flexDirection: 'column',
-    flex: 1,
-  },
-  scrollView: {
-    flex: 1,
-    flexGrow: 1,
-  },
-  scrollViewError: {
-    flex: 1,
-  },
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
+  const styles = StyleSheet.create({
+    safeAreaView: {
+      flex: 1,
+      backgroundColor: color.gray.min,
+    },
+    container: {
+      flexDirection: 'column',
+      flex: 1,
+    },
+    scrollView: {
+      flex: 1,
+      flexGrow: 1,
+    },
+    scrollViewError: {
+      flex: 1,
+    },
+    countBar: {
+      height: 22,
+    },
+    count: {
+      flex: 1,
+      textAlign: 'center',
+      color: color.gray[600],
+    },
 
-  countBar: {
-    height: 22,
-  },
-  count: {
-    flex: 1,
-    textAlign: 'center',
-    color: '#6B7384',
-  },
+    titleText: {
+      textAlign: 'center',
+      color: color.gray.max,
+      ...theme.typography['heading-3-medium'],
+    },
 
-  titleText: {
-    textAlign: 'center',
-    fontWeight: '700',
-    fontSize: 20,
-    color: '#000',
-  },
+    errorContainer: {
+      flex: 1,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    galleryContainer: {
+      flex: 1,
+      flexGrow: 1,
+    },
+  })
 
-  errorContainer: {
-    flex: 1,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  galleryContainer: {
-    flex: 1,
-    flexGrow: 1,
-  },
-})
+  return styles
+}
 
 const messages = defineMessages({
   nftCount: {

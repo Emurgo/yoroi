@@ -4,8 +4,10 @@ import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import {CopyButton, Text} from '../../../../components'
+import {useMetrics} from '../../../../metrics/metricsManager'
 import {isEmptyString} from '../../../../utils/utils'
 import {useStrings} from '../useStrings'
+import {useLastDateAddressUsed} from './useLastDateAddressUsed'
 
 type AddressDetailsProps = {
   address: string
@@ -16,9 +18,15 @@ type AddressDetailsProps = {
 export const ShareDetailsCard = ({address, spendingHash, stakingHash}: AddressDetailsProps) => {
   const strings = useStrings()
   const {styles, colors} = useStyles()
+  const {track} = useMetrics()
+  const lastUsed = useLastDateAddressUsed(address)
 
   const hasStakingHash = !isEmptyString(stakingHash)
   const hasSpendingHash = !isEmptyString(spendingHash)
+
+  const handleAddressOnCopy = () => {
+    track.receiveCopyAddressClicked({copy_address_location: 'Tap Address Details'})
+  }
 
   return (
     <View style={styles.addressDetails}>
@@ -37,7 +45,7 @@ export const ShareDetailsCard = ({address, spendingHash, stakingHash}: AddressDe
         <View style={styles.textRow}>
           <Text style={styles.textAddressDetails}>{address}</Text>
 
-          <CopyButton value={address} />
+          <CopyButton value={address} onCopy={handleAddressOnCopy} />
         </View>
       </View>
 
@@ -64,6 +72,16 @@ export const ShareDetailsCard = ({address, spendingHash, stakingHash}: AddressDe
           </View>
         </View>
       )}
+
+      {Boolean(lastUsed) && (
+        <View style={styles.textSection}>
+          <Text style={[styles.textAddress, {color: colors.grayText}]}>{strings.lastUsed}</Text>
+
+          <View style={styles.textRow}>
+            <Text style={styles.textAddressDetails}>{lastUsed}</Text>
+          </View>
+        </View>
+      )}
     </View>
   )
 }
@@ -71,7 +89,7 @@ export const ShareDetailsCard = ({address, spendingHash, stakingHash}: AddressDe
 const useStyles = () => {
   const screenWidth = useWindowDimensions().width
   const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, typography, padding} = theme
 
   const styles = StyleSheet.create({
     title: {
@@ -86,13 +104,13 @@ const useStyles = () => {
       minHeight: 394,
       alignSelf: 'center',
       overflow: 'hidden',
-      paddingHorizontal: 16,
+      ...padding['x-l'],
+      ...padding['y-xxl'],
       gap: 16,
-      paddingTop: 32,
     },
     textAddressDetails: {
-      ...typography['body-2-m-regular'],
-      lineHeight: 18,
+      ...typography['body-1-l-regular'],
+      lineHeight: 24,
       textAlign: 'left',
       flex: 1,
       color: color.gray[900],
@@ -103,7 +121,6 @@ const useStyles = () => {
       textAlign: 'left',
     },
     textSection: {
-      gap: 4,
       alignSelf: 'stretch',
     },
     textRow: {
