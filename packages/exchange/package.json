@@ -128,7 +128,9 @@
   },
   "dependencies": {
     "@yoroi/common": "1.5.1",
-    "zod": "^3.22.2"
+    "axios": "^1.5.0",
+    "react-query": "^3.39.3",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",

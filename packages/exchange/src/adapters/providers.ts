@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 import {Exchange} from '@yoroi/types'
 
-export const Providers = {
+export const Providers: Exchange.Providers = {
   [Exchange.Provider.Banxa]: {
     buy: {
       fee: 2,

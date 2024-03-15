@@ -1,5 +1,4 @@
 import {ExchangeReferralUrlQueryStringParams} from './params'
-import {ExchangeProvider} from './provider'
 
 export type ExchangeManager = {
   /**
@@ -20,7 +19,7 @@ export type ExchangeManager = {
    * @returns {URL} The generated Banxa referral link as URL object.
    */
   readonly createReferralUrl: (
-    provider: ExchangeProvider,
+    baseUrl: string,
     queries: ExchangeReferralUrlQueryStringParams,
   ) => URL
 }

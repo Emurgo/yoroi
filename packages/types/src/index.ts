@@ -120,6 +120,7 @@ import {
   ExchangeProviderFeatures,
   ExchangeProviders,
 } from './exchange/provider'
+import {ExchangeApi} from './exchange/api'
 
 export namespace App {
   export interface Storage<IsAsync extends boolean = true>
@@ -335,6 +336,7 @@ export namespace Exchange {
   export type ProviderFeatures = ExchangeProviderFeatures
   export type ReferralUrlQueryStringParams =
     ExchangeReferralUrlQueryStringParams
+  export interface Api extends ExchangeApi {}
   export namespace Errors {
     export class Validation extends ExchangeValidationError {}
     export class Unknown extends ExchangeUnknownError {}

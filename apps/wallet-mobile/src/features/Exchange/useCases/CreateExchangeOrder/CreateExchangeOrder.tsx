@@ -1,4 +1,4 @@
-import {exchangeManagerMaker, Providers} from '@yoroi/exchange'
+import {exchangeApiMaker, exchangeManagerMaker, Providers, useCreateReferralLink} from '@yoroi/exchange'
 import {useTheme} from '@yoroi/theme'
 import {Exchange} from '@yoroi/types'
 import * as React from 'react'
@@ -46,47 +46,49 @@ export const CreateExchangeOrder = () => {
 
   const {height: deviceHeight} = useWindowDimensions()
 
+  const isMainnet = wallet.networkId === 1
+  const quantity = `${amount.value}` as `${number}`
+  const denomination = amountTokenInfo.decimals ?? 0
+  const orderAmount = +Quantities.denominated(quantity, denomination)
+  const sandboxWallet = env.getString('BANXA_TEST_WALLET')
+  const returnUrl = `${SCHEME_URL}${RAMP_ON_OFF_PATH}`
+  const walletAddress = isMainnet ? wallet.externalAddresses[0] : sandboxWallet
+  const urlOptions: Exchange.ReferralUrlQueryStringParams = {
+    orderType: orderType,
+    fiatType: 'USD',
+    coinType: 'ADA',
+    coinAmount: orderAmount ?? 0,
+    blockchain: 'ADA',
+    walletAddress,
+    returnUrl,
+  }
+  const {getBaseUrl} = React.useMemo(() => exchangeApiMaker({provider: providerSelected}), [providerSelected])
+  const {createReferralUrl} = React.useMemo(() => exchangeManagerMaker(), [])
+
+  const {referralLink, refetch} = useCreateReferralLink(
+    {
+      isProduction: isMainnet,
+      partner: 'yoroi',
+      queries: urlOptions,
+      getBaseUrl,
+      createReferralUrl,
+    },
+    {enabled: false},
+  )
+
+  React.useEffect(() => {
+    refetch()
+  }, [refetch, providerSelected])
+
   React.useEffect(() => {
     track.exchangePageViewed()
   }, [track])
 
   const handleExchange = React.useCallback(() => {
-    // banxa doesn't support testnet for the sandbox it needs a mainnet address
-    const sandboxWallet = env.getString('BANXA_TEST_WALLET')
-    const returnUrl = `${SCHEME_URL}${RAMP_ON_OFF_PATH}`
-    const isMainnet = wallet.networkId === 1
-    const walletAddress = isMainnet ? wallet.externalAddresses[0] : sandboxWallet
-    const moduleOptions = {isProduction: isMainnet, partner: 'yoroi'} as const
-
-    const quantity = `${amount.value}` as `${number}`
-    const denomination = amountTokenInfo.decimals ?? 0
-    const orderAmount = +Quantities.denominated(quantity, denomination)
-
-    const urlOptions: Exchange.ReferralUrlQueryStringParams = {
-      orderType: orderType,
-      fiatType: 'USD',
-      coinType: 'ADA',
-      coinAmount: orderAmount ?? 0,
-      blockchain: 'ADA',
-      walletAddress,
-      returnUrl,
-    }
-
-    const exchange = exchangeManagerMaker(moduleOptions)
-    const url = exchange.createReferralUrl(providerSelected, urlOptions)
-    Linking.openURL(url.toString())
+    Linking.openURL(referralLink.toString())
     track.exchangeSubmitted({ramp_type: orderType === 'sell' ? 'Sell' : 'Buy', ada_amount: orderAmount})
     navigateTo.exchangeOpenOrder()
-  }, [
-    amount.value,
-    amountTokenInfo.decimals,
-    navigateTo,
-    orderType,
-    providerSelected,
-    track,
-    wallet.externalAddresses,
-    wallet.networkId,
-  ])
+  }, [navigateTo, orderAmount, orderType, referralLink, track])
 
   const handleOnPressSelectProvider = () => {
     if (orderType === 'sell') {

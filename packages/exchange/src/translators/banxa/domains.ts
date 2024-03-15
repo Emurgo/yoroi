@@ -1,3 +1,2 @@
-export const banxaDomainProduction = 'banxa.com'
-export const banxaDomainSandbox = 'banxa-sandbox.com'
+/* istanbul ignore file */
 export const banxaSupportUrl = 'https://support.banxa.com/'

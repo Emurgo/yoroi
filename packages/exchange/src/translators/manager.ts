@@ -1,25 +1,15 @@
 import {Exchange} from '@yoroi/types'
 import {handleZodErrors} from '../adapters/zod-errors'
 import {urlReferralQueryStringParamsSchema} from '../adapters/zod-schema'
-import {generateBanxaBaseUrl} from '../adapters/banxa/base-url'
 
-export const exchangeManagerMaker = (
-  {partner, isProduction}: Exchange.ManagerOptions,
-  {zodErrorTranslator = handleZodErrors} = {},
-): Exchange.Manager => {
+export const exchangeManagerMaker = ({
+  zodErrorTranslator = handleZodErrors,
+} = {}): Exchange.Manager => {
   const createReferralUrl = (
-    provider: Exchange.Provider,
+    baseUrl: string,
     queries: Exchange.ReferralUrlQueryStringParams,
   ) => {
-    const baseUrlGenerators = {
-      [Exchange.Provider.Banxa]: generateBanxaBaseUrl,
-      [Exchange.Provider.Encryptus]: generateBanxaBaseUrl,
-    }
-
     try {
-      const generateBaseUrl = baseUrlGenerators[provider]
-      const baseUrl = generateBaseUrl(isProduction, partner)
-
       const validatedQueries = urlReferralQueryStringParamsSchema.parse(queries)
       const url = new URL(baseUrl)
       const params = new URLSearchParams()

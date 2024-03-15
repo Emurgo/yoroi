@@ -191,11 +191,16 @@ export const TxHistoryNavigator = () => {
 
                     <Stack.Screen
                       name="exchange-create-order"
-                      component={CreateExchangeOrder}
                       options={{
                         title: strings.exchangeCreateOrderTitle,
                       }}
-                    />
+                    >
+                      {() => (
+                        <Boundary>
+                          <CreateExchangeOrder />
+                        </Boundary>
+                      )}
+                    </Stack.Screen>
 
                     <Stack.Screen
                       name="exchange-select-buy-provider"
