@@ -6,13 +6,13 @@ export enum ExchangeProvider {
 export type ExchangeProviderFeatures = {
   sell?: {
     fee: number
-    max: number
-    min: number
+    max?: number
+    min?: number
   }
   buy?: {
     fee: number
-    max: number
-    min: number
+    max?: number
+    min?: number
   }
 }
 

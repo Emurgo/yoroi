@@ -5,20 +5,17 @@ export const Providers: Exchange.Providers = {
   [Exchange.Provider.Banxa]: {
     buy: {
       fee: 2,
-      min: 2,
-      max: 2,
+      min: 100000000,
     },
   },
   [Exchange.Provider.Encryptus]: {
     sell: {
       fee: 2.5,
-      min: 2.5,
-      max: 2.5,
+      min: 100000000,
     },
     buy: {
       fee: 2.5,
-      min: 2.5,
-      max: 2.5,
+      min: 100000000,
     },
   },
 }

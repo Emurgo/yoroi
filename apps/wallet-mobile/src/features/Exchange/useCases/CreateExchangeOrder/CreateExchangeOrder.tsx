@@ -158,20 +158,13 @@ const useReferralLink = ({wallet}: {wallet: YoroiWallet}) => {
 
   const {getBaseUrl} = React.useMemo(() => exchangeApiMaker({provider}), [provider])
 
-  const {referralLink, refetch, isLoading} = useCreateReferralLink(
-    {
-      isProduction: isMainnet,
-      partner: 'yoroi',
-      queries: urlOptions,
-      getBaseUrl,
-      createReferralUrl,
-    },
-    {enabled: false},
-  )
-
-  React.useEffect(() => {
-    refetch()
-  }, [refetch, provider])
+  const {referralLink, isLoading} = useCreateReferralLink({
+    isProduction: isMainnet,
+    partner: 'yoroi',
+    queries: urlOptions,
+    getBaseUrl,
+    createReferralUrl,
+  })
 
   return {referralLink, isLoading}
 }
