@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {StatusBar} from '../../components'
+import {useStatusBar} from '../../components/hooks/useStatusBar'
 import {defaultStackNavigationOptions} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {useWalletName} from '../../yoroi-wallets/hooks'
@@ -14,11 +14,10 @@ const Stack = NavigationStack
 export const DappExplorerNavigator = () => {
   const selectedWallet = useSelectedWallet()
   const walletName = useWalletName(selectedWallet)
+  useStatusBar()
 
   return (
     <SafeArea>
-      <StatusBar type="dark" />
-
       <Stack.Navigator screenOptions={screenOptions} initialRouteName="dapp-explorer-home">
         <Stack.Screen name="dapp-explorer-home" component={HomeScreen} options={{title: walletName}} />
 

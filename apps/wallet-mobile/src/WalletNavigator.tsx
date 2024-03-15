@@ -7,11 +7,13 @@ import {Keyboard, Platform} from 'react-native'
 
 import {VotingRegistration} from './Catalyst'
 import {Icon, OfflineBanner} from './components'
+import {DashboardNavigator} from './Dashboard'
 import {DappExplorerNavigator} from './features/DappExplorer'
 import {MenuNavigator} from './features/Menu'
 import {SettingsScreenNavigator} from './features/Settings'
 import {GovernanceNavigator} from './features/Staking/Governance'
 import {ToggleAnalyticsSettingsNavigator} from './features/ToggleAnalyticsSettings'
+import {CONFIG} from './legacy/config'
 import {useMetrics} from './metrics/metricsManager'
 import {hideTabBarForRoutes, WalletStackRoutes, WalletTabRoutes} from './navigation'
 import {NftDetailsNavigator} from './NftDetails/NftDetailsNavigator'
@@ -21,8 +23,6 @@ import {useSelectedWallet, WalletSelectionScreen} from './SelectedWallet'
 import {theme} from './theme'
 import {TxHistoryNavigator} from './TxHistory'
 import {isHaskellShelley} from './yoroi-wallets/cardano/utils'
-import {DashboardNavigator} from './Dashboard'
-import {CONFIG} from './legacy/config'
 
 const Tab = createBottomTabNavigator<WalletTabRoutes>()
 const WalletTabNavigator = () => {

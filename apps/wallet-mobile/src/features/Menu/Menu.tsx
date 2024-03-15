@@ -12,12 +12,12 @@ import {InsufficientFundsModal} from '../../Catalyst/InsufficientFundsModal'
 import {Boundary, Icon, Spacer, Text} from '../../components'
 import {useStatusBar} from '../../components/hooks/useStatusBar'
 import {usePrefetchStakingInfo} from '../../Dashboard/StakePoolInfos'
+import {CONFIG} from '../../legacy/config'
 import {useMetrics} from '../../metrics/metricsManager'
 import {defaultStackNavigationOptions, useWalletNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {lightPalette} from '../../theme'
 import {useIsGovernanceFeatureEnabled} from '../Staking/Governance'
-import {CONFIG} from '../../legacy/config'
 
 const MenuStack = createStackNavigator()
 
@@ -57,15 +57,11 @@ export const Menu = () => {
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
       <ScrollView contentContainerStyle={styles.scrollViewContent} bounces={false}>
         {CONFIG.DAPP_EXPLORER_ENABLED && (
-          <>
-            <StakingCenter
-              label={strings.stakingCenter}
-              onPress={navigateTo.stakingCenter}
-              left={<Icon.Staking size={24} color={lightPalette.gray['600']} />}
-            />
-
-            <Hr />
-          </>
+          <StakingCenter
+            label={strings.stakingCenter}
+            onPress={navigateTo.stakingCenter}
+            left={<Icon.Staking size={24} color={lightPalette.gray['600']} />}
+          />
         )}
 
         <AppSettings //

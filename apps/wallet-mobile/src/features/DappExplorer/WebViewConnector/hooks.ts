@@ -25,11 +25,11 @@ export const useConnectWalletToWebView = (
 ) => {
   const dappConnector = useDappConnector()
 
-  const sendMessageToWebView = (id: string, result: unknown, error?: Error) => {
+  const sendMessageToWebView = (event: string) => (id: string, result: unknown, error?: Error) => {
     if (error) {
-      Logger.info('DappConnector', 'sending error to webview', error)
+      Logger.info('DappConnector', 'sending error to webview', error, 'as a response to', event)
     } else {
-      Logger.info('DappConnector', 'sending result to webview', result)
+      Logger.info('DappConnector', 'sending result to webview', result, 'as a response to', event)
     }
 
     webViewRef.current?.injectJavaScript(getInjectableMessage({id, result, error: error?.message || null}))
@@ -40,7 +40,7 @@ export const useConnectWalletToWebView = (
     const webViewUrl = e.nativeEvent.url
 
     const handlerWallet = {
-      id: wallet.id,
+      id: MOCK_WALLET_ID,
       networkId: wallet.networkId,
       confirmConnection: async (origin: string) => {
         return new Promise<boolean>((resolve) => {
@@ -53,7 +53,7 @@ export const useConnectWalletToWebView = (
     }
 
     try {
-      await dappConnector.handleEvent(data, webViewUrl, handlerWallet, sendMessageToWebView)
+      await dappConnector.handleEvent(data, webViewUrl, handlerWallet, sendMessageToWebView(data))
     } catch (e) {
       Logger.error('DappConnector', 'handleWebViewEvent::error', e)
     }
@@ -83,3 +83,5 @@ const getInitScript = (sessionId: string, dappConnector: DappConnector) => {
     sessionId,
   })
 }
+
+const MOCK_WALLET_ID = 'b5d94758-26c5-48b0-af2b-6e68c3ef2dbf'
