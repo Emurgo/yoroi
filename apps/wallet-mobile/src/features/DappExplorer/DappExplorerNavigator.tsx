@@ -1,11 +1,11 @@
 import React from 'react'
 
 import {useStatusBar} from '../../components/hooks/useStatusBar'
+import {SafeArea} from '../../components/SafeArea'
 import {defaultStackNavigationOptions} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {useWalletName} from '../../yoroi-wallets/hooks'
 import {NavigationStack} from './common/navigation'
-import {SafeArea} from './common/SafeArea'
 import {HomeScreen} from './useCases/HomeScreen'
 import {WebBrowserScreen} from './useCases/WebBrowserScreen'
 

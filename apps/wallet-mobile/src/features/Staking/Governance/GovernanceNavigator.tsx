@@ -3,8 +3,9 @@ import {Theme, useTheme} from '@yoroi/theme'
 import React from 'react'
 
 import {useStatusBar} from '../../../components/hooks/useStatusBar'
+import {SafeArea} from '../../../components/SafeArea'
 import {defaultStackNavigationOptions} from '../../../navigation'
-import {NavigationStack, SafeArea, useGovernanceManagerMaker, useStrings} from './common'
+import {NavigationStack, useGovernanceManagerMaker, useStrings} from './common'
 import {ChangeVoteScreen, ConfirmTxScreen, FailedTxScreen, HomeScreen, SuccessTxScreen} from './useCases'
 
 const Stack = NavigationStack
