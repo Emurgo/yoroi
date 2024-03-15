@@ -22,6 +22,8 @@ const GOVERNANCE_ENABLED_SINCE_BLOCK = {
   PREPROD: Infinity, // TODO: Add block number once known
 }
 
+const DAPP_EXPLORER_ENABLED = !isProduction() && !isNightly()
+
 export const CONFIG = {
   SENTRY_DSN,
   PIN_LENGTH: 6,
@@ -31,6 +33,7 @@ export const CONFIG = {
   AGREEMENT_DATE,
   UNSTOPPABLE_API_KEY,
   GOVERNANCE_ENABLED_SINCE_BLOCK,
+  DAPP_EXPLORER_ENABLED,
 }
 
 export const SCHEME_URL = 'yoroi://'

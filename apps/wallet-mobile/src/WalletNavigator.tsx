@@ -21,6 +21,8 @@ import {useSelectedWallet, WalletSelectionScreen} from './SelectedWallet'
 import {theme} from './theme'
 import {TxHistoryNavigator} from './TxHistory'
 import {isHaskellShelley} from './yoroi-wallets/cardano/utils'
+import {DashboardNavigator} from './Dashboard'
+import {CONFIG} from './legacy/config'
 
 const Tab = createBottomTabNavigator<WalletTabRoutes>()
 const WalletTabNavigator = () => {
@@ -114,7 +116,24 @@ const WalletTabNavigator = () => {
           )}
         </Tab.Screen>
 
-        {isHaskellShelley(wallet.walletImplementationId) && (
+        {isHaskellShelley(wallet.walletImplementationId) && !CONFIG.DAPP_EXPLORER_ENABLED && (
+          <Tab.Screen
+            name="staking-dashboard"
+            component={DashboardNavigator}
+            options={{
+              tabBarIcon: ({focused}) => (
+                <Icon.TabStaking
+                  size={24}
+                  color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
+                />
+              ),
+              tabBarLabel: strings.stakingButton,
+              tabBarTestID: 'stakingTabBarButton',
+            }}
+          />
+        )}
+
+        {isHaskellShelley(wallet.walletImplementationId) && CONFIG.DAPP_EXPLORER_ENABLED && (
           <Tab.Screen
             name="dapp-explorer"
             component={DappExplorerNavigator}

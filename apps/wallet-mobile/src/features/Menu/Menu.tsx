@@ -17,6 +17,7 @@ import {defaultStackNavigationOptions, useWalletNavigation} from '../../navigati
 import {useSelectedWallet} from '../../SelectedWallet'
 import {lightPalette} from '../../theme'
 import {useIsGovernanceFeatureEnabled} from '../Staking/Governance'
+import {CONFIG} from '../../legacy/config'
 
 const MenuStack = createStackNavigator()
 
@@ -54,6 +55,18 @@ export const Menu = () => {
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
       <ScrollView contentContainerStyle={styles.scrollViewContent} bounces={false}>
+        {CONFIG.DAPP_EXPLORER_ENABLED && (
+          <>
+            <StakingCenter
+              label={strings.stakingCenter}
+              onPress={navigateTo.stakingCenter}
+              left={<Icon.Staking size={24} color={lightPalette.gray['600']} />}
+            />
+
+            <Hr />
+          </>
+        )}
+
         <AppSettings //
           label={strings.settings}
           onPress={navigateTo.settings}
@@ -162,6 +175,7 @@ const Item = ({
 const Governance = Item
 const AppSettings = Item
 const KnowledgeBase = Item
+const StakingCenter = Item
 const Catalyst = ({label, left, onPress}: {label: string; left: React.ReactElement; onPress: () => void}) => {
   const wallet = useSelectedWallet()
   const {canVote, sufficientFunds} = useCanVote(wallet)
@@ -189,7 +203,7 @@ const SUPPORT_TICKET_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/request
 const KNOWLEDGE_BASE_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/categories/4412619927695-Yoroi'
 
 const useNavigateTo = () => {
-  const {navigation, navigateToSettings, navigateToGovernanceCentre} = useWalletNavigation()
+  const {navigation, navigateToSettings, navigateToGovernanceCentre, navigateToStakingDashboard} = useWalletNavigation()
   const wallet = useSelectedWallet()
   const prefetchStakingInfo = usePrefetchStakingInfo(wallet)
 
@@ -209,6 +223,7 @@ const useNavigateTo = () => {
     support: () => Linking.openURL(SUPPORT_TICKET_LINK),
     knowledgeBase: () => Linking.openURL(KNOWLEDGE_BASE_LINK),
     governanceCentre: () => navigateToGovernanceCentre(),
+    stakingCenter: () => navigateToStakingDashboard(),
   }
 }
 
@@ -224,6 +239,7 @@ const useStrings = () => {
     menu: intl.formatMessage(messages.menu),
     releases: intl.formatMessage(messages.releases),
     governanceCentre: intl.formatMessage(messages.governanceCentre),
+    stakingCenter: intl.formatMessage(messages.stakingCenter),
   }
 }
 
@@ -259,6 +275,10 @@ const messages = defineMessage({
   governanceCentre: {
     id: 'menu.governanceCentre',
     defaultMessage: '!!!Governance centre',
+  },
+  stakingCenter: {
+    id: 'menu.stakingCenter',
+    defaultMessage: '!!!Staking center',
   },
 })
 
