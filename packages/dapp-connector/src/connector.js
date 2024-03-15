@@ -106,9 +106,7 @@ const initWallet = ({iconUrl, apiVersion, walletName, supportedExtensions, sessi
   const enable = (...args) => {
     enabling = true
     localStorage.setItem('yoroi-session-id', sessionId)
-    return callExternalMethod('cardano_enable', args)
-      .then(createApi)
-      .catch((e) => handleError(e))
+    return callExternalMethod('cardano_enable', args).then(createApi).catch(handleError)
   }
 
   const handleError = (error) => {
