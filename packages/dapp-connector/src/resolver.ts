@@ -27,7 +27,7 @@ type Resolver = {
 export const resolver: Resolver = {
   logMessage: async (params) => {
     if (isRecord(params) && isKeyOf('args', params) && Array.isArray(params.args)) {
-      console.log('Log From WebView:', ...params.args)
+      console.log('Log From Dapp Connector:', ...params.args)
     }
   },
   enable: async (_params: unknown, context: Context) => {
@@ -125,7 +125,6 @@ const handleMethod = async (
     return resolver.api[apiMethod](params, context)
   }
 
-  console.log('unknown method', method, params)
   throw new Error(`Unknown method '${method}' with params ${JSON.stringify(params)}`)
 }
 
