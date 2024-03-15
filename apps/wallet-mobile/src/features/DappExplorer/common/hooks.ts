@@ -68,7 +68,8 @@ export const useConnectWalletToWebView = (
 }
 
 const getInjectableMessage = (message: unknown) => {
-  return `(() => window.dispatchEvent(new MessageEvent('message', {data: ${JSON.stringify(message)}})))()`
+  const event = JSON.stringify({data: message})
+  return `(() => window.dispatchEvent(new MessageEvent('message', ${event})))()`
 }
 
 const getInitScript = (sessionId: string, dappConnector: DappConnector) => {
