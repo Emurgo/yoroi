@@ -11,11 +11,7 @@ export const Providers: Exchange.Providers = {
   [Exchange.Provider.Encryptus]: {
     sell: {
       fee: 2.5,
-      min: 100000000,
-    },
-    buy: {
-      fee: 2.5,
-      min: 100000000,
+      min: 1,
     },
   },
 }

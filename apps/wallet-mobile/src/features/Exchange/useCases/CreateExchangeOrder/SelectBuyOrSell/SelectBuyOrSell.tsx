@@ -1,5 +1,3 @@
-import {Providers} from '@yoroi/exchange'
-import {Exchange} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 
@@ -9,12 +7,10 @@ import {useStrings} from '../../../common/useStrings'
 
 export const SelectBuyOrSell = () => {
   const strings = useStrings()
-  const {provider} = useExchange()
-  const features: Exchange.ProviderFeatures = Providers[provider]
 
-  const orderTypeLabels: ReadonlyArray<{label: string; value: OrderType; enabled: boolean}> = [
-    {label: strings.buyCrypto, value: 'buy', enabled: !!features.buy},
-    {label: strings.sellCrypto, value: 'sell', enabled: !!features.sell},
+  const orderTypeLabels: ReadonlyArray<{label: string; value: OrderType}> = [
+    {label: strings.buyCrypto, value: 'buy'},
+    {label: strings.sellCrypto, value: 'sell'},
   ] as const
 
   const {orderType, orderTypeChanged} = useExchange()
@@ -28,7 +24,7 @@ export const SelectBuyOrSell = () => {
       <ButtonActionGroup
         onSelect={(label) => handleSelectAction(label)}
         selected={orderType}
-        labels={orderTypeLabels.filter((orderTypeLabel) => orderTypeLabel.enabled)}
+        labels={orderTypeLabels}
       />
     </View>
   )

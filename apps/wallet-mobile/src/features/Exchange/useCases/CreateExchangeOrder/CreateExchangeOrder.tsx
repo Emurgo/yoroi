@@ -20,7 +20,6 @@ import {Quantities} from '../../../../yoroi-wallets/utils'
 import {useExchange} from '../../common/ExchangeProvider'
 import {ProviderItem} from '../../common/ProviderItem/ProviderItem'
 import {useNavigateTo} from '../../common/useNavigateTo'
-import {useProviders} from '../../common/useProviders'
 import {useStrings} from '../../common/useStrings'
 import {EditAmount} from './EditAmount/EditAmount'
 import {SelectBuyOrSell} from './SelectBuyOrSell/SelectBuyOrSell'
@@ -34,9 +33,6 @@ export const CreateExchangeOrder = () => {
   const styles = useStyles()
   const {track} = useMetrics()
   const [contentHeight, setContentHeight] = React.useState(0)
-  const providers = useProviders()
-
-  const providerSelectionDisabled = providers.length === 1
 
   const navigateTo = useNavigateTo()
   const {orderType, amount, canExchange, provider: providerSelected} = useExchange()
@@ -96,7 +92,7 @@ export const CreateExchangeOrder = () => {
               fee={orderType === 'buy' ? providerFeatures.buy?.fee ?? 0 : providerFeatures.sell?.fee ?? 0}
               icon={<Icon.Chevron direction="right" />}
               onPress={handleOnPressSelectProvider}
-              disabled={providerSelectionDisabled}
+              disabled={true}
             />
 
             <Space height="xl" />

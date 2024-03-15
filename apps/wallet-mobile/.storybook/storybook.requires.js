@@ -120,7 +120,6 @@ const getStories = () => {
     "./src/features/Exchange/common/ShowBuyBanner/ShowBuyBanner.stories.tsx": require("../src/features/Exchange/common/ShowBuyBanner/ShowBuyBanner.stories.tsx"),
     "./src/features/Exchange/useCases/CreateExchangeOrder/CreateExchangeOrder.stories.tsx": require("../src/features/Exchange/useCases/CreateExchangeOrder/CreateExchangeOrder.stories.tsx"),
     "./src/features/Exchange/useCases/CreateExchangeOrder/EditAmount/EditAmount.stories.tsx": require("../src/features/Exchange/useCases/CreateExchangeOrder/EditAmount/EditAmount.stories.tsx"),
-    "./src/features/Exchange/useCases/CreateExchangeOrder/SelectBuyOrSell/SelectBuyOrSell.stories.tsx": require("../src/features/Exchange/useCases/CreateExchangeOrder/SelectBuyOrSell/SelectBuyOrSell.stories.tsx"),
     "./src/features/Exchange/useCases/CreateExchangeOrder/ShowDisclaimer/ShowDisclaimer.stories.tsx": require("../src/features/Exchange/useCases/CreateExchangeOrder/ShowDisclaimer/ShowDisclaimer.stories.tsx"),
     "./src/features/Exchange/useCases/SelectProvider/SelectProvider.stories.tsx": require("../src/features/Exchange/useCases/SelectProvider/SelectProvider.stories.tsx"),
     "./src/features/Exchange/useCases/ShowExchangeResultOrder/ContentResult/ContentResult.stories.tsx": require("../src/features/Exchange/useCases/ShowExchangeResultOrder/ContentResult/ContentResult.stories.tsx"),

@@ -7,14 +7,14 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Icon} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
 import {useExchange} from '../../common/ExchangeProvider'
+import {getProvidersByOrderType} from '../../common/getProvidersByOrderType'
 import {ProviderItem} from '../../common/ProviderItem/ProviderItem'
-import {useProviders} from '../../common/useProviders'
 
 export const SelectProvider = () => {
   const styles = useStyles()
   const {orderType, provider: selectedProvider, orderTypeChanged, providerChanged} = useExchange()
 
-  const providers = useProviders()
+  const providers = getProvidersByOrderType(orderType)
 
   const onPress = React.useCallback(
     (provider: Exchange.Provider, features: Exchange.ProviderFeatures) => {
@@ -31,7 +31,7 @@ export const SelectProvider = () => {
       <FlatList
         style={styles.list}
         data={providers}
-        renderItem={({item: [provider, features]}) => {
+        renderItem={({item: [provider, features]}: {item: [Exchange.Provider, Exchange.ProviderFeatures]}) => {
           return (
             <ProviderItem
               provider={provider}

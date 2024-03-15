@@ -1,3 +1,4 @@
+import {Providers} from '@yoroi/exchange'
 import {Exchange} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import {produce} from 'immer'
@@ -10,8 +11,6 @@ import {useBalances} from '../../../yoroi-wallets/hooks'
 import {useTokenInfo} from '../../../yoroi-wallets/hooks'
 import {Amounts, Quantities} from '../../../yoroi-wallets/utils'
 import {useStrings} from './useStrings'
-
-const MIN_ADA_LIMIT = 100000000
 
 export const useExchange = () => React.useContext(ExchangeContext)
 
@@ -39,6 +38,9 @@ export const ExchangeProvider = ({
   const amountBalance = Amounts.getAmount(balances, tokenId).quantity
 
   const strings = useStrings()
+
+  const features = Providers[state.provider]
+  const minAda = state.orderType === 'buy' ? features.buy?.min ?? 0 : features.sell?.min ?? 0
 
   const actions = React.useRef<ExchangeActions>({
     orderTypeChanged: (orderType: OrderType) => dispatch({type: ExchangeActionType.OrderTypeChanged, orderType}),
@@ -68,8 +70,8 @@ export const ExchangeProvider = ({
   const isNotEnoughBalance = new BigNumber(state.amount.value).isGreaterThan(new BigNumber(amountBalance))
 
   React.useEffect(() => {
-    actions.canExchangeChanged(state.amount.value >= MIN_ADA_LIMIT && state.amount.error === undefined)
-  }, [actions, state.amount.error, state.amount.value])
+    actions.canExchangeChanged(state.amount.value >= minAda && state.amount.error === undefined)
+  }, [actions, minAda, state.amount.error, state.amount.value])
 
   // amount input errors
   React.useEffect(() => {
@@ -79,7 +81,7 @@ export const ExchangeProvider = ({
       return
     }
 
-    if (state.amount.value > 0 && state.amount.value < MIN_ADA_LIMIT && state.orderType === 'buy') {
+    if (state.amount.value > 0 && state.amount.value < minAda && state.orderType === 'buy') {
       actions.amountErrorChanged(strings.minAdaRequired)
       return
     }
@@ -102,6 +104,7 @@ export const ExchangeProvider = ({
     clearErrors,
     state.amount.value,
     strings.minAdaRequired,
+    minAda,
   ])
 
   const context = React.useMemo(
@@ -122,6 +125,12 @@ const exchangeReducer = (state: ExchangeState, action: ExchangeAction) => {
     switch (action.type) {
       case ExchangeActionType.OrderTypeChanged:
         draft.orderType = action.orderType
+
+        if (action.orderType === 'buy') {
+          draft.provider = Exchange.Provider.Banxa
+        } else {
+          draft.provider = Exchange.Provider.Encryptus
+        }
         break
       case ExchangeActionType.AmountInputDisplayValueChanged:
         if (state.amount.isTouched) draft.amount.displayValue = action.value
