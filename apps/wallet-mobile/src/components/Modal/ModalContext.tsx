@@ -36,8 +36,10 @@ export const ModalProvider = ({
   const navigation = useNavigation()
   const actions = React.useRef<ModalActions>({
     closeModal: () => {
-      dispatch({type: 'close'})
-      navigation.goBack()
+      if (navigation.getState().routes.slice(-1)[0].name === 'modal') {
+        dispatch({type: 'close'})
+        navigation.goBack()
+      }
     },
     openModal: (title: ModalState['title'], content: ModalState['content'], height?: ModalState['height']) => {
       dispatch({type: 'open', title, content, height})
