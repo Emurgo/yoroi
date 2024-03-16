@@ -2,7 +2,6 @@ import {isString, useAsyncStorage} from '@yoroi/common'
 import {App} from '@yoroi/types'
 import React, {useEffect, useRef} from 'react'
 import {Platform, UIManager} from 'react-native'
-import * as Sentry from 'sentry-expo'
 import uuid from 'uuid'
 
 import {AppNavigator} from './AppNavigator'
