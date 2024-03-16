@@ -2846,9 +2846,7 @@
     base-64 "0.1.0"
 
 "@emurgo/react-native-blockies-svg@file:../react-native-blockies-svg":
-  version "0.0.3"
-  dependencies:
-    react-native-svg "14.1.0"
+  version "0.0.4"
 
 "@emurgo/react-native-hid@^5.15.6":
   version "5.15.6"
