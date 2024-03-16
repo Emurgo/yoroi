@@ -122,6 +122,9 @@
       "<rootDir>/example/node_modules",
       "<rootDir>/lib/"
     ],
+    "transformIgnorePatterns": [
+      "<rootDir>/node_modules/(?!react-native-mmkv)/"
+    ],
     "preset": "react-native",
     "setupFiles": [
       "<rootDir>/jest.setup.js"
