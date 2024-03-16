@@ -1,27 +1,20 @@
-import {FetchData, fetchData, handleApiError, isLeft} from '@yoroi/common'
+import {FetchData, fetchData, getApiError, isLeft} from '@yoroi/common'
+import {freeze} from 'immer'
 import {z} from 'zod'
-import {handleZodErrors} from '../zod-errors'
 import {AxiosRequestConfig} from 'axios'
-import {Exchange} from '@yoroi/types'
 
-const initialDeps = {request: fetchData} as const
+import {getValidationError} from '../../helpers/get-validation-error'
 
-export const encryptusApiGetBaseUrl = ({
-  request,
-}: {request: FetchData} = initialDeps) => {
-  return async ({
-    isProduction,
-    fetcherConfig,
-  }: {
-    isProduction: boolean
-    fetcherConfig?: AxiosRequestConfig
-  }): Promise<string> => {
-    const url = isProduction
-      ? encryptusApiConfig.production.getBaseUrl
-      : encryptusApiConfig.sandbox.getBaseUrl
+const initialDeps = freeze({request: fetchData}, true)
 
+export const encryptusApiGetBaseUrl = (
+  {isProduction}: {isProduction: boolean},
+  {request}: {request: FetchData} = initialDeps,
+) => {
+  return async ({fetcherConfig}: {fetcherConfig?: AxiosRequestConfig}) => {
     const config = {
-      url,
+      url: encryptusApiConfig[isProduction ? 'production' : 'sandbox']
+        .getBaseUrl,
     } as const
 
     try {
@@ -30,16 +23,14 @@ export const encryptusApiGetBaseUrl = ({
         fetcherConfig,
       )
 
-      if (isLeft(response)) {
-        handleApiError(response.error)
-      } else {
-        const parsedResponse = EncryptusApiResponseSchema.parse(
-          response.value.data,
-        )
-        return parsedResponse.data.link
-      }
+      if (isLeft(response)) throw getApiError(response.error)
+
+      const parsedResponse = EncryptusApiResponseSchema.parse(
+        response.value.data,
+      )
+      return parsedResponse.data.link
     } catch (error: unknown) {
-      return handleEncryptusApiError(error)
+      throw getValidationError(error)
     }
   }
 }
@@ -57,18 +48,15 @@ const EncryptusApiResponseSchema = z.object({
   }),
 })
 
-export const encryptusApiConfig = {
-  production: {
-    getBaseUrl: 'https://api.yoroiwallet.com/api/v2/encryptus/payoutlink',
+export const encryptusApiConfig = freeze(
+  {
+    production: {
+      getBaseUrl: 'https://api.yoroiwallet.com/api/v2/encryptus/payoutlink',
+    },
+    sandbox: {
+      getBaseUrl:
+        'https://preprod-backend.yoroiwallet.com/api/v2/encryptus/payoutlink',
+    },
   },
-  sandbox: {
-    getBaseUrl:
-      'https://preprod-backend.yoroiwallet.com/api/v2/encryptus/payoutlink',
-  },
-} as const
-
-export const handleEncryptusApiError = (error: unknown): never => {
-  handleZodErrors(error)
-  /* istanbul ignore next */
-  throw new Exchange.Errors.Unknown(JSON.stringify(error)) // TS doesn't know that zodErrorTranslator will throw
-}
+  true,
+)

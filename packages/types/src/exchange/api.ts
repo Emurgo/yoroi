@@ -1,13 +1,11 @@
 import {AxiosRequestConfig} from 'axios'
 
+import {ExchangeProvider} from './provider'
+
 export interface ExchangeApi {
-  getBaseUrl({
-    isProduction,
-    partner,
-    fetcherConfig,
-  }: {
-    isProduction: boolean
-    partner?: string
-    fetcherConfig?: AxiosRequestConfig
-  }): Promise<string>
+  getBaseUrl(
+    providerId: string,
+    fetcherOptions?: AxiosRequestConfig,
+  ): Promise<string>
+  getProviders(): Promise<Record<string, ExchangeProvider>>
 }

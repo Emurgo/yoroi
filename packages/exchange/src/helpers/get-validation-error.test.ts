@@ -1,8 +1,9 @@
 import {Exchange} from '@yoroi/types'
-import {handleZodErrors} from './zod-errors'
 import {z} from 'zod'
 
-describe('handleZodErrors', () => {
+import {getValidationError} from './get-validation-error'
+
+describe('getValidationError', () => {
   const testSchema = z.object({
     name: z.string(),
     age: z.number(),
@@ -22,7 +23,7 @@ describe('handleZodErrors', () => {
       // Handle the error
       let handledError
       try {
-        handleZodErrors(error)
+        throw getValidationError(error)
       } catch (e: any) {
         handledError = e
 
@@ -39,7 +40,7 @@ describe('handleZodErrors', () => {
 
     let handledError
     try {
-      handleZodErrors(someOtherError)
+      throw getValidationError(someOtherError)
     } catch (e) {
       handledError = e
     }

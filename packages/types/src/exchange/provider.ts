@@ -1,22 +1,19 @@
-export enum ExchangeProvider {
-  Banxa = 'banxa',
-  Encryptus = 'encryptus',
-}
-
-export type ExchangeProviderFeatures = {
-  sell?: {
-    fee: number
-    max?: number
-    min?: number
+export type ExchangeProvider = {
+  id: string
+  name: string
+  supportedFeatures: {
+    sell?: {
+      fee: number
+      max?: number
+      min?: number
+    }
+    buy?: {
+      fee: number
+      max?: number
+      min?: number
+    }
   }
-  buy?: {
-    fee: number
-    max?: number
-    min?: number
-  }
+  // TODO: revisit on v4.27
+  logo: string // add later - base64
+  supportUrl?: string // add later
 }
-
-export type ExchangeProviders = Record<
-  ExchangeProvider,
-  ExchangeProviderFeatures
->

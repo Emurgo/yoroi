@@ -1,22 +1,24 @@
 import {Exchange} from '@yoroi/types'
+import {AxiosRequestConfig} from 'axios'
+import {freeze} from 'immer'
+
 import {encryptusApiGetBaseUrl} from './encryptus/api'
 import {banxaApiGetBaseUrl} from './banxa/api'
 
-const initialDeps = {
-  banxaApi: {
-    getBaseUrl: banxaApiGetBaseUrl,
+const initialDeps = freeze(
+  {
+    banxaApi: {
+      getBaseUrl: banxaApiGetBaseUrl,
+    },
+    encryptusApi: {
+      getBaseUrl: encryptusApiGetBaseUrl,
+    },
   },
-  encryptusApi: {
-    getBaseUrl: encryptusApiGetBaseUrl,
-  },
-} as const
+  true,
+)
 
 export const exchangeApiMaker = (
-  {
-    provider,
-  }: {
-    provider: Exchange.Provider
-  },
+  {isProduction, partner}: {isProduction: boolean; partner: string},
   {
     banxaApi,
     encryptusApi,
@@ -25,15 +27,51 @@ export const exchangeApiMaker = (
     encryptusApi: {getBaseUrl: typeof encryptusApiGetBaseUrl}
   } = initialDeps,
 ): Exchange.Api => {
-  const getBanxaBaseUrl = banxaApi.getBaseUrl()
-  const getEncryptusBaseUrl = encryptusApi.getBaseUrl()
+  const getProviders = async () => Promise.resolve(providers)
 
-  const operationsGetBaseUrl = {
-    [Exchange.Provider.Banxa]: getBanxaBaseUrl,
-    [Exchange.Provider.Encryptus]: getEncryptusBaseUrl,
+  const getBaseUrl = (
+    providerId: string,
+    fetcherConfig?: AxiosRequestConfig,
+  ) => {
+    switch (providerId) {
+      case 'banxa':
+        return banxaApi.getBaseUrl({isProduction, partner})()
+      case 'encryptus':
+        return encryptusApi.getBaseUrl({isProduction})({fetcherConfig})
+      default:
+        return Promise.reject(
+          new Exchange.Errors.ProviderNotFound(
+            `Unknown provider: ${providerId}`,
+          ),
+        )
+    }
   }
 
-  const getBaseUrl = operationsGetBaseUrl[provider]
-
-  return {getBaseUrl} as const
+  return freeze({getBaseUrl, getProviders}, true)
 }
+
+export const providers: Readonly<Record<string, Exchange.Provider>> = freeze(
+  {
+    banxa: {
+      id: 'banxa',
+      name: 'Banxa',
+      logo: 'RFU',
+      buy: {
+        fee: 2,
+        min: 100000000,
+      },
+      supportUrl: 'https://support.banxa.com/',
+    },
+    encryptus: {
+      id: 'encryptus',
+      name: 'Encryptus',
+      logo: 'RFU',
+      sell: {
+        fee: 2.5,
+        min: 1,
+      },
+      supportUrl: 'https://support.encryptus.com/',
+    },
+  },
+  true,
+)

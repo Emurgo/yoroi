@@ -112,13 +112,13 @@ import {ExchangeManagerOptions} from './exchange/build'
 import {ExchangeCoin} from './exchange/coin'
 import {ExchangeFiat} from './exchange/fiat'
 import {ExchangeReferralUrlQueryStringParams} from './exchange/params'
-import {ExchangeUnknownError, ExchangeValidationError} from './exchange/errors'
-import {ExchangeOrderType} from './exchange/order'
 import {
-  ExchangeProvider,
-  ExchangeProviderFeatures,
-  ExchangeProviders,
-} from './exchange/provider'
+  ExchangeProviderNotFoundError,
+  ExchangeUnknownError,
+  ExchangeValidationError,
+} from './exchange/errors'
+import {ExchangeOrderType} from './exchange/order'
+import {ExchangeProvider} from './exchange/provider'
 import {ExchangeApi} from './exchange/api'
 
 export namespace App {
@@ -329,15 +329,13 @@ export namespace Exchange {
   export type Fiat = ExchangeFiat
   export type OrderType = ExchangeOrderType
   export type Provider = ExchangeProvider
-  export const Provider = ExchangeProvider
-  export type Providers = ExchangeProviders
-  export type ProviderFeatures = ExchangeProviderFeatures
   export type ReferralUrlQueryStringParams =
     ExchangeReferralUrlQueryStringParams
   export interface Api extends ExchangeApi {}
   export namespace Errors {
     export class Validation extends ExchangeValidationError {}
     export class Unknown extends ExchangeUnknownError {}
+    export class ProviderNotFound extends ExchangeProviderNotFoundError {}
   }
 }
 
