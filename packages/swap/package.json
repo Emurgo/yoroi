@@ -136,12 +136,11 @@
   "dependencies": {
     "@emurgo/cip14-js": "^3.0.1",
     "@yoroi/api": "1.5.1",
-    "@yoroi/common": "1.5.1",
-    "immer": "^10.0.2"
+    "@yoroi/common": "1.5.1"
   },
   "devDependencies": {
-    "@emurgo/yoroi-lib": "0.15.0",
     "@commitlint/config-conventional": "^17.0.2",
+    "@emurgo/yoroi-lib": "0.15.0",
     "@react-native-async-storage/async-storage": "^1.19.3",
     "@react-native-community/eslint-config": "^3.0.2",
     "@release-it/conventional-changelog": "^5.0.0",
@@ -160,6 +159,7 @@
     "eslint-plugin-ft-flow": "^3.0.0",
     "eslint-plugin-prettier": "^4.0.0",
     "flowgen": "^1.21.0",
+    "immer": "^10.0.2",
     "jest": "^29.7.0",
     "pod-install": "^0.1.0",
     "prettier": "^2.0.5",
@@ -174,6 +174,7 @@
   "peerDependencies": {
     "@emurgo/yoroi-lib": "0.15.0",
     "@react-native-async-storage/async-storage": ">= 1.19.3 <= 1.20.0",
+    "immer": "^10.0.2",
     "react": ">= 16.8.0 <= 19.0.0",
     "react-query": "^3.39.3"
   },
