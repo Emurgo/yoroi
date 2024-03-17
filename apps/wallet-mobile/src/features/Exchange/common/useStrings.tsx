@@ -36,6 +36,7 @@ export const useStrings = () => {
     needMoreCrypto: intl.formatMessage(messages.needMoreCrypto),
     fee: intl.formatMessage(messages.fee),
     close: intl.formatMessage(globalMessages.close),
+    error: intl.formatMessage(globalMessages.error),
   }).current
 }
 

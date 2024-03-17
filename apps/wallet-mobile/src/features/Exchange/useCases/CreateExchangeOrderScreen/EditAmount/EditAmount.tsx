@@ -9,7 +9,7 @@ import {Quantities} from '../../../../../yoroi-wallets/utils'
 import {AmountCard} from '../../../common/AmountCard/AmountCard'
 import {useStrings} from '../../../common/useStrings'
 
-export const EditAmount = () => {
+export const EditAmount = ({disabled}: {disabled?: boolean}) => {
   const wallet = useSelectedWallet()
 
   const tokenId = wallet.primaryTokenInfo.id
@@ -75,6 +75,7 @@ export const EditAmount = () => {
       wallet={wallet}
       amount={{tokenId, quantity: balance}}
       error={amount.error ?? ''}
+      inputEditable={!disabled}
     />
   )
 }

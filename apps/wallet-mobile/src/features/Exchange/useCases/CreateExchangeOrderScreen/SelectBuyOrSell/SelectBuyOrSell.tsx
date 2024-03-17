@@ -5,7 +5,7 @@ import {StyleSheet, View} from 'react-native'
 import {ButtonActionGroup} from '../../../common/ButtonActionGroup/ButtonActionGroup'
 import {useStrings} from '../../../common/useStrings'
 
-export const SelectBuyOrSell = () => {
+export const SelectBuyOrSell = ({disabled}: {disabled?: boolean}) => {
   const strings = useStrings()
 
   const orderTypeLabels: ReadonlyArray<{label: string; value: OrderType}> = [
@@ -22,6 +22,7 @@ export const SelectBuyOrSell = () => {
   return (
     <View style={styles.buttonsGroup}>
       <ButtonActionGroup
+        disabled={disabled}
         onSelect={(label) => handleSelectAction(label)}
         selected={orderType}
         labels={orderTypeLabels}

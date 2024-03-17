@@ -2,7 +2,7 @@ import {useCreateReferralLink, useExchange, useExchangeProvidersByOrderType} fro
 import {useTheme} from '@yoroi/theme'
 import {Exchange} from '@yoroi/types'
 import * as React from 'react'
-import {Linking, StyleSheet, useWindowDimensions, View} from 'react-native'
+import {Alert, Linking, StyleSheet, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -11,10 +11,8 @@ import {useStatusBar} from '../../../../components/hooks/useStatusBar'
 import {Space} from '../../../../components/Space/Space'
 import {Warning} from '../../../../components/Warning'
 import {RAMP_ON_OFF_PATH, SCHEME_URL} from '../../../../legacy/config'
-import env from '../../../../legacy/env'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../SelectedWallet'
-import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../yoroi-wallets/utils'
 import {ProviderItem} from '../../common/ProviderItem/ProviderItem'
@@ -36,7 +34,7 @@ export const CreateExchangeOrderScreen = () => {
   const [contentHeight, setContentHeight] = React.useState(0)
 
   const navigateTo = useNavigateTo()
-  const {orderType, amount, canExchange, providerId, provider} = useExchange()
+  const {orderType, canExchange, providerId, provider, amount, referralLink: managerReferralLink} = useExchange()
 
   const providers = useExchangeProvidersByOrderType({orderType, providerListByOrderType: provider.list.byOrderType})
   const providerSelected = Object.fromEntries(providers)[providerId]
@@ -44,26 +42,60 @@ export const CreateExchangeOrderScreen = () => {
   const Logo = providerSelected.id === 'banxa' ? BanxaLogo : EncryptusLogo
 
   const wallet = useSelectedWallet()
-  const amountTokenInfo = useTokenInfo({wallet, tokenId: ''})
 
   const {height: deviceHeight} = useWindowDimensions()
 
-  const {referralLink, isLoading} = useReferralLink({wallet})
+  const amountTokenInfo = useTokenInfo({wallet, tokenId: wallet.primaryTokenInfo.id})
+  const quantity = `${amount.value}` as `${number}`
+  const denomination = amountTokenInfo.decimals ?? 0
+  const orderAmount = +Quantities.denominated(quantity, denomination)
+  const returnUrl = `${SCHEME_URL}${RAMP_ON_OFF_PATH}`
+  const walletAddress = wallet.externalAddresses[0]
+
+  const urlOptions: Exchange.ReferralUrlQueryStringParams = {
+    orderType: orderType,
+    fiatType: 'USD',
+    coinType: 'ADA',
+    coinAmount: orderAmount ?? 0,
+    blockchain: 'ADA',
+    walletAddress,
+    returnUrl,
+  }
+
+  const {isLoading, refetch: createReferralLink} = useCreateReferralLink(
+    {
+      queries: urlOptions,
+      providerId,
+      referralLinkCreate: managerReferralLink.create,
+    },
+    {
+      retryOnMount: false,
+      refetchOnMount: false,
+      enabled: false,
+      suspense: false,
+      useErrorBoundary: false,
+      onError: (error) => {
+        Alert.alert(strings.error, error.message)
+      },
+      onSuccess: (referralLink) => {
+        if (referralLink.toString() !== '') {
+          Linking.openURL(referralLink.toString())
+          track.exchangeSubmitted({ramp_type: orderType === 'sell' ? 'Sell' : 'Buy', ada_amount: orderAmount})
+          navigateTo.exchangeOpenOrder()
+        }
+      },
+    },
+  )
+
   const exchangeDisabled = isLoading || !canExchange
 
   React.useEffect(() => {
     track.exchangePageViewed()
   }, [track])
 
-  const handleOnExchange = React.useCallback(() => {
-    const quantity = `${amount.value}` as `${number}`
-    const denomination = amountTokenInfo.decimals ?? 0
-    const orderAmount = +Quantities.denominated(quantity, denomination)
-
-    Linking.openURL(referralLink.toString())
-    track.exchangeSubmitted({ramp_type: orderType === 'sell' ? 'Sell' : 'Buy', ada_amount: orderAmount})
-    navigateTo.exchangeOpenOrder()
-  }, [amount.value, amountTokenInfo.decimals, navigateTo, orderType, referralLink, track])
+  const handleOnExchange = () => {
+    createReferralLink()
+  }
 
   const handleOnListProvidersByOrderType = () => {
     if (orderType === 'sell') {
@@ -84,11 +116,11 @@ export const CreateExchangeOrderScreen = () => {
               setContentHeight(height + BOTTOM_ACTION_SECTION)
             }}
           >
-            <SelectBuyOrSell />
+            <SelectBuyOrSell disabled={isLoading} />
 
             <Space height="xl" />
 
-            <EditAmount />
+            <EditAmount disabled={isLoading} />
 
             <Space height="xxs" />
 
@@ -134,37 +166,6 @@ export const CreateExchangeOrderScreen = () => {
       </KeyboardAvoidingView>
     </SafeAreaView>
   )
-}
-
-const useReferralLink = ({wallet}: {wallet: YoroiWallet}) => {
-  const amountTokenInfo = useTokenInfo({wallet, tokenId: wallet.primaryTokenInfo.id})
-  const {orderType, amount, providerId, referralLink: managerReferralLink} = useExchange()
-
-  const isMainnet = wallet.networkId === 1
-  const quantity = `${amount.value}` as `${number}`
-  const denomination = amountTokenInfo.decimals ?? 0
-  const orderAmount = +Quantities.denominated(quantity, denomination)
-  const sandboxWallet = env.getString('BANXA_TEST_WALLET')
-  const returnUrl = `${SCHEME_URL}${RAMP_ON_OFF_PATH}`
-  const walletAddress = isMainnet ? wallet.externalAddresses[0] : sandboxWallet
-
-  const urlOptions: Exchange.ReferralUrlQueryStringParams = {
-    orderType: orderType,
-    fiatType: 'USD',
-    coinType: 'ADA',
-    coinAmount: orderAmount ?? 0,
-    blockchain: 'ADA',
-    walletAddress,
-    returnUrl,
-  }
-
-  const {referralLink, isLoading} = useCreateReferralLink({
-    queries: urlOptions,
-    providerId,
-    referralLinkCreate: managerReferralLink.create,
-  })
-
-  return {referralLink, isLoading}
 }
 
 const useStyles = () => {
