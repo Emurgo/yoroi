@@ -122,6 +122,9 @@
       "<rootDir>/example/node_modules",
       "<rootDir>/lib/"
     ],
+    "moduleNameMapper": {
+      "^react-native$": "<rootDir>/node_modules/react-native"
+    },
     "transformIgnorePatterns": [
       "<rootDir>/node_modules/(?!react-native-mmkv)/"
     ],
