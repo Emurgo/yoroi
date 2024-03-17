@@ -45,6 +45,6 @@ describe('getValidationError', () => {
       handledError = e
     }
 
-    expect(handledError).toBeInstanceOf(Exchange.Errors.Unknown)
+    expect(handledError).toBeInstanceOf(Error)
   })
 })

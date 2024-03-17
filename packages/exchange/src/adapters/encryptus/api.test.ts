@@ -115,7 +115,7 @@ describe('getEncryptusBaseUrl', () => {
       {request: mockFetchData},
     )
 
-    await expect(() => getBaseUrl()).rejects.toThrow(Exchange.Errors.Unknown)
+    await expect(() => getBaseUrl()).rejects.toThrow(Api.Errors.NotFound)
 
     expect(mockFetchData).toHaveBeenCalledWith(
       {

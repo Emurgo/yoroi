@@ -69,8 +69,6 @@ export const CreateExchangeOrderScreen = () => {
       referralLinkCreate: managerReferralLink.create,
     },
     {
-      retryOnMount: false,
-      refetchOnMount: false,
       enabled: false,
       suspense: false,
       useErrorBoundary: false,

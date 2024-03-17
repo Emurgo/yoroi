@@ -12,5 +12,6 @@ export function getValidationError(error: unknown) {
       .join(', ')}`
     return new Exchange.Errors.Validation(errorMessage)
   }
-  return new Exchange.Errors.Unknown(JSON.stringify(error))
+
+  return error
 }
