@@ -11,6 +11,7 @@ import {useStatusBar} from '../../../../components/hooks/useStatusBar'
 import {Space} from '../../../../components/Space/Space'
 import {Warning} from '../../../../components/Warning'
 import {RAMP_ON_OFF_PATH, SCHEME_URL} from '../../../../legacy/config'
+import env from '../../../../legacy/env'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
@@ -50,7 +51,10 @@ export const CreateExchangeOrderScreen = () => {
   const denomination = amountTokenInfo.decimals ?? 0
   const orderAmount = +Quantities.denominated(quantity, denomination)
   const returnUrl = `${SCHEME_URL}${RAMP_ON_OFF_PATH}`
-  const walletAddress = wallet.externalAddresses[0]
+
+  const sandboxWallet = env.getString('BANXA_TEST_WALLET')
+  const isMainnet = wallet.networkId === 1
+  const walletAddress = isMainnet ? wallet.externalAddresses[0] : sandboxWallet
 
   const urlOptions: Exchange.ReferralUrlQueryStringParams = {
     orderType: orderType,
