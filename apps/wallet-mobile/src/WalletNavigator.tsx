@@ -8,7 +8,7 @@ import {Keyboard, Platform} from 'react-native'
 import {VotingRegistration} from './Catalyst'
 import {Icon, OfflineBanner} from './components'
 import {DashboardNavigator} from './Dashboard'
-import {ShowExchangeResultOrder} from './features/Exchange/useCases/ShowExchangeResultOrder/ShowExchangeResultOrder'
+import {ShowExchangeResultOrderScreen} from './features/Exchange/useCases/ShowExchangeResultOrderScreen/ShowExchangeResultOrderScreen'
 import {MenuNavigator} from './features/Menu'
 import {SettingsScreenNavigator} from './features/Settings'
 import {GovernanceNavigator} from './features/Staking/Governance'
@@ -156,6 +156,7 @@ const Stack = createStackNavigator<WalletStackRoutes>()
 export const WalletNavigator = () => {
   const {initialUrl} = useInitialLink()
   const {resetToWalletSelection} = useWalletNavigation()
+
   return (
     <Stack.Navigator
       initialRouteName={initialUrl !== null ? 'exchange-result' : 'wallet-selection'}
@@ -165,7 +166,7 @@ export const WalletNavigator = () => {
       }}
     >
       <Stack.Screen name="exchange-result">
-        {() => <ShowExchangeResultOrder onClose={resetToWalletSelection} />}
+        {() => <ShowExchangeResultOrderScreen onClose={resetToWalletSelection} />}
       </Stack.Screen>
 
       <Stack.Screen name="wallet-selection" component={WalletSelectionScreen} />

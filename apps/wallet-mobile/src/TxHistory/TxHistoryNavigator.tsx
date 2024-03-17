@@ -2,6 +2,7 @@ import {init} from '@emurgo/cross-csl-mobile'
 import {useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {useAsyncStorage} from '@yoroi/common'
+import {exchangeApiMaker, exchangeManagerMaker, ExchangeProvider} from '@yoroi/exchange'
 import {resolverApiMaker, resolverManagerMaker, ResolverProvider, resolverStorageMaker} from '@yoroi/resolver'
 import {
   milkTokenId,
@@ -23,11 +24,10 @@ import {Boundary, Icon, Spacer} from '../components'
 import {claimApiMaker} from '../features/Claim/module/api'
 import {ClaimProvider} from '../features/Claim/module/ClaimProvider'
 import {ShowSuccessScreen} from '../features/Claim/useCases/ShowSuccessScreen'
-import {ExchangeProvider} from '../features/Exchange/common/ExchangeProvider'
 import {useNavigateTo} from '../features/Exchange/common/useNavigateTo'
-import {CreateExchangeOrder} from '../features/Exchange/useCases/CreateExchangeOrder/CreateExchangeOrder'
-import {SelectProviderFromList} from '../features/Exchange/useCases/SelectProviderFromList/SelectProviderFromList'
-import {ShowExchangeResultOrder} from '../features/Exchange/useCases/ShowExchangeResultOrder/ShowExchangeResultOrder'
+import {CreateExchangeOrderScreen} from '../features/Exchange/useCases/CreateExchangeOrderScreen/CreateExchangeOrderScreen'
+import {SelectProviderFromListScreen} from '../features/Exchange/useCases/SelectProviderFromListScreen/SelectProviderFromListScreen'
+import {ShowExchangeResultOrderScreen} from '../features/Exchange/useCases/ShowExchangeResultOrderScreen/ShowExchangeResultOrderScreen'
 import {ReceiveProvider} from '../features/Receive/common/ReceiveProvider'
 import {DescribeSelectedAddressScreen} from '../features/Receive/useCases/DescribeSelectedAddressScreen'
 import {ListMultipleAddressesScreen} from '../features/Receive/useCases/ListMultipleAddressesScreen'
@@ -128,6 +128,17 @@ export const TxHistoryNavigator = () => {
 
   const navigateTo = useNavigateTo()
 
+  // exchange
+  const exchangeManager = React.useMemo(() => {
+    const api = exchangeApiMaker({
+      isProduction: wallet.networkId === 1,
+      partner: 'yoroi',
+    })
+
+    const manager = exchangeManagerMaker({api})
+    return manager
+  }, [wallet.networkId])
+
   return (
     <ReceiveProvider key={wallet.id}>
       <TransferProvider key={wallet.id}>
@@ -135,7 +146,14 @@ export const TxHistoryNavigator = () => {
           <SwapFormProvider>
             <ResolverProvider resolverManager={resolverManager}>
               <ClaimProvider key={wallet.id} claimApi={claimApi}>
-                <ExchangeProvider key={wallet.id}>
+                <ExchangeProvider
+                  key={wallet.id}
+                  manager={exchangeManager}
+                  initialState={{
+                    providerId: 'banxa',
+                    providerSuggestedByOrderType: exchangeManager.provider.suggested.byOrderType(),
+                  }}
+                >
                   <Stack.Navigator
                     screenListeners={{}}
                     screenOptions={{
@@ -200,7 +218,7 @@ export const TxHistoryNavigator = () => {
                     >
                       {() => (
                         <Boundary>
-                          <CreateExchangeOrder />
+                          <CreateExchangeOrderScreen />
                         </Boundary>
                       )}
                     </Stack.Screen>
@@ -213,7 +231,7 @@ export const TxHistoryNavigator = () => {
                     >
                       {() => (
                         <Boundary>
-                          <SelectProviderFromList />
+                          <SelectProviderFromListScreen />
                         </Boundary>
                       )}
                     </Stack.Screen>
@@ -226,7 +244,7 @@ export const TxHistoryNavigator = () => {
                     >
                       {() => (
                         <Boundary>
-                          <SelectProviderFromList />
+                          <SelectProviderFromListScreen />
                         </Boundary>
                       )}
                     </Stack.Screen>
@@ -237,7 +255,7 @@ export const TxHistoryNavigator = () => {
                       }}
                       name="exchange-result"
                     >
-                      {() => <ShowExchangeResultOrder onClose={navigateTo.exchangeOpenOrder} />}
+                      {() => <ShowExchangeResultOrderScreen onClose={navigateTo.exchangeOpenOrder} />}
                     </Stack.Screen>
 
                     <Stack.Screen

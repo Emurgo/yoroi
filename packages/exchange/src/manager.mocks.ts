@@ -1,7 +1,7 @@
 import {freeze} from 'immer'
+import {Exchange} from '@yoroi/types'
 
 import {providers} from './adapters/api'
-import {ExchangeManager} from './manager'
 
 const loading = () => new Promise(() => {})
 const unknownError = () => Promise.reject(new Error('Unknown error'))
@@ -28,7 +28,7 @@ const providerListByFeature = {
 }
 
 const referralLinkCreate = {
-  success: () => Promise.resolve(),
+  success: () => Promise.resolve(new URL('https://google.com')),
   delayed: (timeout?: number) => delayedResponse({data: '', timeout}),
   empty: () => Promise.resolve([]),
   loading,
@@ -37,7 +37,7 @@ const referralLinkCreate = {
   },
 }
 
-const success: ExchangeManager = {
+export const successManagerMock: Exchange.Manager = {
   provider: {
     suggested: {
       // TODO: fix add a constant for now
@@ -56,10 +56,16 @@ const success: ExchangeManager = {
   },
 }
 
-const error: ExchangeManager = {
+export const errorManagerMock: Exchange.Manager = {
   provider: {
     list: {
       byOrderType: providerListByFeature.error.unknown,
+    },
+    suggested: {
+      byOrderType: () => ({
+        ['sell']: '',
+        ['buy']: '',
+      }),
     },
   },
   referralLink: {
@@ -67,10 +73,10 @@ const error: ExchangeManager = {
   },
 }
 
-export const managerMocks: Readonly<Record<string, ExchangeManager>> = freeze(
+export const managerMocks: Readonly<Record<string, Exchange.Manager>> = freeze(
   {
-    success,
-    error,
+    success: successManagerMock,
+    error: errorManagerMock,
   },
   true,
 )

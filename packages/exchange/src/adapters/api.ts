@@ -37,7 +37,7 @@ export const exchangeApiMaker = (
       case 'banxa':
         return banxaApi.getBaseUrl({isProduction, partner})()
       case 'encryptus':
-        return encryptusApi.getBaseUrl({isProduction})({fetcherConfig})
+        return encryptusApi.getBaseUrl({isProduction})(fetcherConfig)
       default:
         return Promise.reject(
           new Exchange.Errors.ProviderNotFound(
@@ -55,20 +55,24 @@ export const providers: Readonly<Record<string, Exchange.Provider>> = freeze(
     banxa: {
       id: 'banxa',
       name: 'Banxa',
-      logo: 'RFU',
-      buy: {
-        fee: 2,
-        min: 100000000,
+      logo: 'banxa',
+      supportedOrders: {
+        buy: {
+          fee: 2,
+          min: 100000000,
+        },
       },
       supportUrl: 'https://support.banxa.com/',
     },
     encryptus: {
       id: 'encryptus',
       name: 'Encryptus',
-      logo: 'RFU',
-      sell: {
-        fee: 2.5,
-        min: 1,
+      logo: 'encryptus',
+      supportedOrders: {
+        sell: {
+          fee: 2.5,
+          min: 1000000,
+        },
       },
       supportUrl: 'https://support.encryptus.com/',
     },

@@ -1,11 +1,12 @@
 import * as React from 'react'
 import {Text, View} from 'react-native'
 import {render, waitFor} from '@testing-library/react-native'
-import {useCreateReferralLink} from './useCreateReferralLink'
 import {Exchange} from '@yoroi/types'
-import {wrapperFixture} from '../../../fixtures/wrapper'
 import {QueryClient} from 'react-query'
 import {queryClientFixture} from '@yoroi/common'
+
+import {useCreateReferralLink} from './useCreateReferralLink'
+import {wrapper as wrapperFixture} from '../../../fixtures/wrapper'
 
 describe('useCreateReferralLink', () => {
   let queryClient: QueryClient
@@ -19,14 +20,8 @@ describe('useCreateReferralLink', () => {
   })
 
   it('success', async () => {
-    const TestReferralLing = () => {
-      const provider = Exchange.Provider.Banxa
-      const createReferralUrl = jest.fn(() => 'referral-url') as unknown as (
-        baseUrl: string,
-        queries: Exchange.ReferralUrlQueryStringParams,
-      ) => URL
-      const isProduction = true
-      const partner = 'yoroi'
+    const TestReferralLink = () => {
+      const providerId = 'banxa'
       const queries: Exchange.ReferralUrlQueryStringParams = {
         orderType: 'buy',
         fiatType: 'USD',
@@ -35,11 +30,11 @@ describe('useCreateReferralLink', () => {
       }
 
       const {referralLink} = useCreateReferralLink({
-        provider,
-        createReferralUrl,
-        isProduction,
-        partner,
+        providerId,
         queries,
+        referralLinkCreate: jest
+          .fn()
+          .mockResolvedValue(new URL('referral-url')),
       })
 
       return (
@@ -52,7 +47,7 @@ describe('useCreateReferralLink', () => {
     const wrapper = wrapperFixture({
       queryClient,
     })
-    const {getByTestId} = render(<TestReferralLing />, {wrapper})
+    const {getByTestId} = render(<TestReferralLink />, {wrapper})
 
     await waitFor(() => {
       expect(getByTestId('link')).toBeDefined()

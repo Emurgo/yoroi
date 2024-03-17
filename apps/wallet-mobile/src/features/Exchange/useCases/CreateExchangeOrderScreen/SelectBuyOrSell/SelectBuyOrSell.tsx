@@ -1,8 +1,8 @@
+import {OrderType, useExchange} from '@yoroi/exchange'
 import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {ButtonActionGroup} from '../../../common/ButtonActionGroup/ButtonActionGroup'
-import {OrderType, useExchange} from '../../../common/ExchangeProvider'
 import {useStrings} from '../../../common/useStrings'
 
 export const SelectBuyOrSell = () => {

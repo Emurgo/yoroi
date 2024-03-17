@@ -111,15 +111,16 @@ import {ExchangeBlockchainCode} from './exchange/blockchain'
 import {ExchangeManagerOptions} from './exchange/build'
 import {ExchangeCoin} from './exchange/coin'
 import {ExchangeFiat} from './exchange/fiat'
-import {ExchangeReferralUrlQueryStringParams} from './exchange/params'
+import {ExchangeReferralUrlQueryStringParams} from './exchange/query-string'
 import {
   ExchangeProviderNotFoundError,
   ExchangeUnknownError,
   ExchangeValidationError,
 } from './exchange/errors'
-import {ExchangeOrderType} from './exchange/order'
+import {ExchangeOrderType} from './exchange/order-type'
 import {ExchangeProvider} from './exchange/provider'
 import {ExchangeApi} from './exchange/api'
+import {ExchangeManager} from './exchange/manager'
 
 export namespace App {
   export interface Storage<IsAsync extends boolean = true>
@@ -324,6 +325,7 @@ export namespace Chain {
 
 export namespace Exchange {
   export type BlockchainCode = ExchangeBlockchainCode
+  export type Manager = ExchangeManager
   export type ManagerOptions = ExchangeManagerOptions
   export type Coin = ExchangeCoin
   export type Fiat = ExchangeFiat

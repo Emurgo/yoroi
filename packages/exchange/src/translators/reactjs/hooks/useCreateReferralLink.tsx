@@ -1,23 +1,15 @@
 import {Exchange} from '@yoroi/types'
 import {UseQueryOptions, useQuery} from 'react-query'
-import {exchangeApiMaker} from '../../../adapters/api'
 
 export const useCreateReferralLink = (
   {
-    provider,
-    createReferralUrl,
-    isProduction,
-    partner,
+    providerId,
     queries,
+    referralLinkCreate,
   }: {
-    provider: Exchange.Provider
-    createReferralUrl: (
-      baseUrl: string,
-      queries: Exchange.ReferralUrlQueryStringParams,
-    ) => URL
-    isProduction: boolean
-    partner: string
+    providerId: string
     queries: Exchange.ReferralUrlQueryStringParams
+    referralLinkCreate: Exchange.Manager['referralLink']['create']
   },
   options?: UseQueryOptions<
     URL,
@@ -26,24 +18,17 @@ export const useCreateReferralLink = (
     [
       'useCreateReferralLink',
       Exchange.ReferralUrlQueryStringParams,
-      Exchange.Provider,
+      Exchange.Provider['id'],
     ]
   >,
 ) => {
   const query = useQuery({
-    queryKey: ['useCreateReferralLink', queries, provider],
+    suspense: true,
+    useErrorBoundary: true,
     ...options,
-    queryFn: async ({signal}) => {
-      const {getBaseUrl} = exchangeApiMaker({provider})
-      const baseUrl = await getBaseUrl({
-        isProduction,
-        partner,
-        fetcherConfig: {signal},
-      })
-      const referralUrl = await createReferralUrl(baseUrl, queries)
-
-      return referralUrl
-    },
+    queryKey: ['useCreateReferralLink', queries, providerId],
+    queryFn: async ({signal}) =>
+      referralLinkCreate({providerId, queries}, {signal}),
   })
 
   return {

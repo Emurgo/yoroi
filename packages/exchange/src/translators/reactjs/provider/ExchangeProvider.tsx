@@ -7,14 +7,13 @@ import {
   ExchangeContext,
   ExchangeState,
   OrderType,
-  defaultState,
+  exchangeDefaultState,
   exchangeReducer,
-  initialExchangeContext,
-} from './state'
-import {ExchangeManager} from '../../manager'
+  exchangeInitialExchangeContext,
+} from '../state/state'
 
 export const ExchangeCtx = React.createContext<ExchangeContext>(
-  initialExchangeContext,
+  exchangeInitialExchangeContext,
 )
 
 export const ExchangeProvider = ({
@@ -24,18 +23,25 @@ export const ExchangeProvider = ({
 }: {
   children: React.ReactNode
   initialState?: Partial<ExchangeState>
-  manager: ExchangeManager
+  manager: Exchange.Manager
 }) => {
   const [state, dispatch] = React.useReducer(exchangeReducer, {
-    ...defaultState,
+    ...exchangeDefaultState,
     ...initialState,
   })
 
   const actions = React.useRef<ExchangeActions>({
     orderTypeChanged: (orderType: OrderType) =>
       dispatch({type: ExchangeActionType.OrderTypeChanged, orderType}),
-    amountInputChanged: (input: ExchangeState['amount']) =>
-      dispatch({type: ExchangeActionType.AmountInputChanged, input}),
+    amountInputChanged: (
+      amount: ExchangeState['amount'],
+      canExchange: ExchangeState['canExchange'],
+    ) =>
+      dispatch({
+        type: ExchangeActionType.AmountInputChanged,
+        amount,
+        canExchange,
+      }),
     providerIdChanged: (providerId: Exchange.Provider['id']) =>
       dispatch({type: ExchangeActionType.ProviderIdChanged, providerId}),
   }).current

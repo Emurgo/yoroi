@@ -11,7 +11,7 @@ export const encryptusApiGetBaseUrl = (
   {isProduction}: {isProduction: boolean},
   {request}: {request: FetchData} = initialDeps,
 ) => {
-  return async ({fetcherConfig}: {fetcherConfig?: AxiosRequestConfig}) => {
+  return async (fetcherConfig?: AxiosRequestConfig) => {
     const config = {
       url: encryptusApiConfig[isProduction ? 'production' : 'sandbox']
         .getBaseUrl,

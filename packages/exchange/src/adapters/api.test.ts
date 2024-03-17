@@ -1,5 +1,4 @@
-import {Exchange} from '@yoroi/types'
-import {exchangeApiMaker} from './api'
+import {exchangeApiMaker, providers} from './api'
 
 describe('exchangeApiMaker', () => {
   describe('getBaseUrl', () => {
@@ -9,7 +8,9 @@ describe('exchangeApiMaker', () => {
       })
 
       it('resolves', async () => {
-        const provider = Exchange.Provider.Banxa
+        const isProduction = true
+        const partner = 'yoroi'
+        const providerId = 'banxa'
         const deps = {
           banxaApi: {
             getBaseUrl: jest
@@ -23,8 +24,8 @@ describe('exchangeApiMaker', () => {
           },
         }
 
-        const api = exchangeApiMaker({provider}, deps)
-        const result = await api.getBaseUrl({isProduction: true})
+        const api = exchangeApiMaker({isProduction, partner}, deps)
+        const result = await api.getBaseUrl(providerId)
         expect(result).toBe('banxa-url')
       })
     })
@@ -35,7 +36,9 @@ describe('exchangeApiMaker', () => {
       })
 
       it('resolves', async () => {
-        const provider = Exchange.Provider.Encryptus
+        const isProduction = true
+        const partner = 'yoroi'
+        const providerId = 'encryptus'
         const deps = {
           banxaApi: {
             getBaseUrl: jest
@@ -49,16 +52,64 @@ describe('exchangeApiMaker', () => {
           },
         }
 
-        const api = exchangeApiMaker({provider}, deps)
-        const result = await api.getBaseUrl({isProduction: true})
+        const api = exchangeApiMaker({isProduction, partner}, deps)
+        const result = await api.getBaseUrl(providerId)
         expect(result).toBe('encryptus-url')
       })
     })
+
+    it('does not resolve', async () => {
+      const isProduction = true
+      const partner = 'yoroi'
+      const providerId = 'none'
+      const deps = {
+        banxaApi: {
+          getBaseUrl: jest
+            .fn()
+            .mockReturnValue(jest.fn().mockResolvedValue('banxa-url')),
+        },
+        encryptusApi: {
+          getBaseUrl: jest
+            .fn()
+            .mockReturnValue(jest.fn().mockResolvedValue('encryptus-url')),
+        },
+      }
+
+      const api = exchangeApiMaker({isProduction, partner}, deps)
+
+      try {
+        await api.getBaseUrl(providerId)
+      } catch (e: any) {
+        expect(e.message).toBe('Unknown provider: none')
+      }
+    })
+  })
+
+  it('getProviders', async () => {
+    const isProduction = true
+    const partner = 'yoroi'
+    const deps = {
+      banxaApi: {
+        getBaseUrl: jest
+          .fn()
+          .mockReturnValue(jest.fn().mockResolvedValue('banxa-url')),
+      },
+      encryptusApi: {
+        getBaseUrl: jest
+          .fn()
+          .mockReturnValue(jest.fn().mockResolvedValue('encryptus-url')),
+      },
+    }
+
+    const api = exchangeApiMaker({isProduction, partner}, deps)
+    const result = await api.getProviders()
+    expect(result).toEqual(providers)
   })
 
   it('should build without dependencies (coverage only)', () => {
-    const provider = Exchange.Provider.Encryptus
-    const api = exchangeApiMaker({provider})
+    const isProduction = true
+    const partner = 'yoroi'
+    const api = exchangeApiMaker({isProduction, partner})
     expect(api).toBeDefined()
   })
 })

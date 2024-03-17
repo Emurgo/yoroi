@@ -1,7 +1,6 @@
 import {Exchange} from '@yoroi/types'
 import {freeze, produce} from 'immer'
-import {ExchangeManager} from '../../manager'
-import {managerMocks} from '../../manager.mocks'
+import {errorManagerMock} from '../../../manager.mocks'
 
 export const exchangeReducer = (
   state: ExchangeState,
@@ -11,38 +10,37 @@ export const exchangeReducer = (
     switch (action.type) {
       case ExchangeActionType.OrderTypeChanged:
         draft.orderType = action.orderType
-
-        // TODO: this should come from the state already after the warm up
-        if (action.orderType === 'buy') {
-          draft.providerId = 'banxa'
-        } else {
-          draft.providerId = 'encryptus'
+        // resets
+        draft.amount = {
+          ...exchangeDefaultState.amount,
         }
-        // what else should happen?
-        // on ui maybe it should check for the balance or reset the input
-        // derive the reset of the state from the ui
-        // reset inputs?
-        // reset can exchange?
+        draft.canExchange = exchangeDefaultState.canExchange
+        // when switching orderType it will replace the provider with the suggested one
+        if (action.orderType === 'buy') {
+          draft.providerId = state.providerSuggestedByOrderType.buy
+          break
+        }
+        if (action.orderType === 'sell') {
+          draft.providerId = state.providerSuggestedByOrderType.sell
+          break
+        }
         break
+
       case ExchangeActionType.AmountInputChanged:
-        /// --> errors, displayValue --> --> handler,
-        // entire input as one action InputChanged, all the input is calculated on UI side
-        // if error if not balance
-        // if touched
-        // update can exchange
+        draft.amount = {...action.amount}
+        draft.canExchange = action.canExchange
         break
-      // case ExchangeActionType.CanExchangeChanged:
-      // it should be a derived state - maybe it can be dropped
-      // when changing provider what happens by ProviderChanged
-      // when changing the order type what happens by OrderTypeChanged
-      // when updating the amount what happens by AmountInputValueChanged
+
+      // not in use, but for now changing provider resets amount
       case ExchangeActionType.ProviderIdChanged:
-        // what should happen?
-        // 1. reset input
-        // 2. clearn input error
-        // 3. reset can exchange ?
         draft.providerId = action.providerId
+        //resets
+        draft.canExchange = exchangeDefaultState.canExchange
+        draft.amount = {
+          ...exchangeDefaultState.amount,
+        }
         break
+
       default:
         throw new Error(`ExchangeFormReducer invalid action`)
     }
@@ -51,14 +49,15 @@ export const exchangeReducer = (
 
 export type OrderType = Exchange.ReferralUrlQueryStringParams['orderType']
 
-type ExchangeAction =
+export type ExchangeAction =
   | {
       type: ExchangeActionType.OrderTypeChanged
       orderType: OrderType
     }
   | {
       type: ExchangeActionType.AmountInputChanged
-      input: ExchangeState['amount']
+      amount: ExchangeState['amount']
+      canExchange: ExchangeState['canExchange']
     }
   | {
       type: ExchangeActionType.ProviderIdChanged
@@ -69,7 +68,6 @@ export type ExchangeState = {
   orderType: OrderType
   providerSuggestedByOrderType: {[key in OrderType]: Exchange.Provider['id']}
   amount: {
-    isTouched: boolean
     disabled: boolean
     error: string | undefined | null
     displayValue: string
@@ -79,16 +77,14 @@ export type ExchangeState = {
   providerId: Exchange.Provider['id']
 }
 
-export const defaultState: Readonly<ExchangeState> = freeze(
+export const exchangeDefaultState: Readonly<ExchangeState> = freeze(
   {
     orderType: 'buy',
-    // TODO: first action to dispatch while mounting at first time
     providerSuggestedByOrderType: {
       buy: '',
       sell: '',
     },
     amount: {
-      isTouched: true,
       disabled: false,
       error: undefined,
       displayValue: '',
@@ -107,15 +103,18 @@ export enum ExchangeActionType {
 }
 export type ExchangeActions = {
   orderTypeChanged: (type: OrderType) => void
-  amountInputChanged: (input: ExchangeState['amount']) => void
+  amountInputChanged: (
+    amount: ExchangeState['amount'],
+    canExchange: ExchangeState['canExchange'],
+  ) => void
   providerIdChanged: (providerId: Exchange.Provider['id']) => void
 }
 
-export type ExchangeContext = ExchangeState & ExchangeActions & ExchangeManager
-export const initialExchangeContext: ExchangeContext = freeze(
+export type ExchangeContext = ExchangeState & ExchangeActions & Exchange.Manager
+export const exchangeInitialExchangeContext: ExchangeContext = freeze(
   {
-    ...defaultState,
-    ...managerMocks.error,
+    ...exchangeDefaultState,
+    ...errorManagerMock,
     orderTypeChanged: missingInit,
     amountInputChanged: missingInit,
     providerIdChanged: missingInit,

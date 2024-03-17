@@ -4,24 +4,31 @@ import {freeze} from 'immer'
 import {urlReferralQueryStringParamsSchema} from './adapters/zod-schema'
 import {getValidationError} from './helpers/get-validation-error'
 
-export const exchangeManagerMaker = ({api}: {api: Exchange.Api}) => {
+export const exchangeManagerMaker = ({
+  api,
+}: {
+  api: Exchange.Api
+}): Exchange.Manager => {
   return freeze(
     {
       provider: {
         suggested: {
-          // TODO: don't cast, make it syncronous now
-          byOrderType: () =>
-            ({
-              ['sell']: 'banxa',
-              ['buy']: 'banxa',
-            } as {[key in Exchange.OrderType]: string}),
+          byOrderType: () => {
+            const suggestedProvidersByOrderType: Readonly<
+              Record<Exchange.OrderType, Exchange.Provider['id']>
+            > = freeze({
+              sell: 'encryptus',
+              buy: 'banxa',
+            })
+            return suggestedProvidersByOrderType
+          },
         },
         list: {
           byOrderType: async (orderType: Exchange.OrderType) => {
             return api.getProviders().then((providers) => {
               return freeze(
                 Object.entries(providers).filter(
-                  ([, provider]) => orderType in provider,
+                  ([, provider]) => orderType in provider.supportedOrders,
                 ),
                 true,
               )
@@ -40,7 +47,7 @@ export const exchangeManagerMaker = ({api}: {api: Exchange.Api}) => {
           },
           fetcherOptions?: AxiosRequestConfig,
         ) => {
-          api.getBaseUrl(providerId, fetcherOptions).then((baseUrl) => {
+          return api.getBaseUrl(providerId, fetcherOptions).then((baseUrl) => {
             try {
               const validatedQueries =
                 urlReferralQueryStringParamsSchema.parse(queries)
@@ -52,8 +59,7 @@ export const exchangeManagerMaker = ({api}: {api: Exchange.Api}) => {
               url.search = params.toString()
               return Promise.resolve(url)
             } catch (error) {
-              const validationError = getValidationError(error)
-              return Promise.reject(validationError)
+              return Promise.reject(getValidationError(error))
             }
           })
         },
@@ -62,6 +68,3 @@ export const exchangeManagerMaker = ({api}: {api: Exchange.Api}) => {
     true,
   )
 }
-
-// TODO: placeholder for @yoroi/types
-export type ExchangeManager = ReturnType<typeof exchangeManagerMaker>

@@ -1,34 +1,31 @@
 import {useTheme} from '@yoroi/theme'
-import {Exchange} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Space} from '../../../../components/Space/Space'
-import {ProviderLabel, ProviderLogo} from '../constants'
 import {useStrings} from '../useStrings'
 
 type Props = {
-  provider: Exchange.Provider
   fee: number
+  label: string
   rightAdornment: React.ReactNode
+  leftAdornment: React.ReactNode
   onPress: () => void
   disabled?: boolean
 }
 
-export const ProviderItem = ({provider, onPress, fee, rightAdornment, disabled}: Props) => {
+export const ProviderItem = ({onPress, fee, rightAdornment, leftAdornment, disabled, label}: Props) => {
   const styles = useStyles()
   const strings = useStrings()
-  const Logo = ProviderLogo[provider]
-  const providerSelected = ProviderLabel[provider]
 
   return (
     <TouchableOpacity onPress={onPress} style={styles.item} disabled={disabled}>
-      <Logo size={40} />
+      {leftAdornment}
 
       <Space width="m" />
 
       <View style={styles.labels}>
-        <Text style={styles.provider}>{providerSelected}</Text>
+        <Text style={styles.label}>{label}</Text>
 
         <Text style={styles.fee}>{`${fee}% ${strings.fee}`}</Text>
       </View>
@@ -48,7 +45,7 @@ const useStyles = () => {
     labels: {
       flex: 1,
     },
-    provider: {
+    label: {
       ...theme.typography['body-1-l-medium'],
       color: theme.color.gray[900],
     },

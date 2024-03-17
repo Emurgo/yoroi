@@ -1,4 +1,4 @@
-import {createReferralUrl, Providers, useCreateReferralLink} from '@yoroi/exchange'
+import {useCreateReferralLink, useExchange, useExchangeProvidersByOrderType} from '@yoroi/exchange'
 import {useTheme} from '@yoroi/theme'
 import {Exchange} from '@yoroi/types'
 import * as React from 'react'
@@ -17,17 +17,18 @@ import {useSelectedWallet} from '../../../../SelectedWallet'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../yoroi-wallets/utils'
-import {useExchange} from '../../common/ExchangeProvider'
 import {ProviderItem} from '../../common/ProviderItem/ProviderItem'
 import {useNavigateTo} from '../../common/useNavigateTo'
 import {useStrings} from '../../common/useStrings'
+import {BanxaLogo} from '../../illustrations/BanxaLogo'
+import {EncryptusLogo} from '../../illustrations/EncryptusLogo'
 import {EditAmount} from './EditAmount/EditAmount'
 import {SelectBuyOrSell} from './SelectBuyOrSell/SelectBuyOrSell'
 import {ShowDisclaimer} from './ShowDisclaimer/ShowDisclaimer'
 
 const BOTTOM_ACTION_SECTION = 180
 
-export const CreateExchangeOrder = () => {
+export const CreateExchangeOrderScreen = () => {
   useStatusBar()
   const strings = useStrings()
   const styles = useStyles()
@@ -35,8 +36,12 @@ export const CreateExchangeOrder = () => {
   const [contentHeight, setContentHeight] = React.useState(0)
 
   const navigateTo = useNavigateTo()
-  const {orderType, amount, canExchange, provider: providerSelected} = useExchange()
-  const providerFeatures: Exchange.ProviderFeatures = Providers[providerSelected]
+  const {orderType, amount, canExchange, providerId, provider} = useExchange()
+
+  const providers = useExchangeProvidersByOrderType({orderType, providerListByOrderType: provider.list.byOrderType})
+  const providerSelected = Object.fromEntries(providers)[providerId]
+  const fee = providerSelected.supportedOrders?.[orderType]?.fee ?? 0
+  const Logo = providerSelected.id === 'banxa' ? BanxaLogo : EncryptusLogo
 
   const wallet = useSelectedWallet()
   const amountTokenInfo = useTokenInfo({wallet, tokenId: ''})
@@ -44,12 +49,13 @@ export const CreateExchangeOrder = () => {
   const {height: deviceHeight} = useWindowDimensions()
 
   const {referralLink, isLoading} = useReferralLink({wallet})
+  const exchangeDisabled = isLoading || !canExchange
 
   React.useEffect(() => {
     track.exchangePageViewed()
   }, [track])
 
-  const handleExchange = React.useCallback(() => {
+  const handleOnExchange = React.useCallback(() => {
     const quantity = `${amount.value}` as `${number}`
     const denomination = amountTokenInfo.decimals ?? 0
     const orderAmount = +Quantities.denominated(quantity, denomination)
@@ -59,13 +65,12 @@ export const CreateExchangeOrder = () => {
     navigateTo.exchangeOpenOrder()
   }, [amount.value, amountTokenInfo.decimals, navigateTo, orderType, referralLink, track])
 
-  const handleOnPressSelectProvider = () => {
+  const handleOnListProvidersByOrderType = () => {
     if (orderType === 'sell') {
       navigateTo.exchangeSelectSellProvider()
-      return
+    } else {
+      navigateTo.exchangeSelectBuyProvider()
     }
-
-    navigateTo.exchangeSelectBuyProvider()
   }
 
   return (
@@ -85,19 +90,20 @@ export const CreateExchangeOrder = () => {
 
             <EditAmount />
 
-            <Space height="xl" />
+            <Space height="xxs" />
 
             <ProviderItem
-              provider={providerSelected}
-              fee={orderType === 'buy' ? providerFeatures.buy?.fee ?? 0 : providerFeatures.sell?.fee ?? 0}
+              label={providerSelected.name}
+              fee={fee}
+              leftAdornment={<Logo size={40} />}
               rightAdornment={<Icon.Chevron direction="right" />}
-              onPress={handleOnPressSelectProvider}
-              disabled={true}
+              onPress={handleOnListProvidersByOrderType}
+              disabled
             />
 
             <Space height="xl" />
 
-            {orderType === 'sell' && providerSelected === Exchange.Provider.Banxa && (
+            {orderType === 'sell' && providerId === 'banxa' && (
               <>
                 <Warning content={strings.sellCurrencyWarning} />
 
@@ -121,8 +127,8 @@ export const CreateExchangeOrder = () => {
             testID="rampOnOffButton"
             shelleyTheme
             title={strings.proceed.toLocaleUpperCase()}
-            onPress={handleExchange}
-            disabled={!canExchange || isLoading}
+            onPress={handleOnExchange}
+            disabled={exchangeDisabled}
           />
         </View>
       </KeyboardAvoidingView>
@@ -132,7 +138,7 @@ export const CreateExchangeOrder = () => {
 
 const useReferralLink = ({wallet}: {wallet: YoroiWallet}) => {
   const amountTokenInfo = useTokenInfo({wallet, tokenId: wallet.primaryTokenInfo.id})
-  const {orderType, amount, provider} = useExchange()
+  const {orderType, amount, providerId, referralLink: managerReferralLink} = useExchange()
 
   const isMainnet = wallet.networkId === 1
   const quantity = `${amount.value}` as `${number}`
@@ -153,11 +159,9 @@ const useReferralLink = ({wallet}: {wallet: YoroiWallet}) => {
   }
 
   const {referralLink, isLoading} = useCreateReferralLink({
-    isProduction: isMainnet,
-    partner: 'yoroi',
     queries: urlOptions,
-    provider,
-    createReferralUrl,
+    providerId,
+    referralLinkCreate: managerReferralLink.create,
   })
 
   return {referralLink, isLoading}

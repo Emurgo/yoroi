@@ -1,19 +1,18 @@
 import {storiesOf} from '@storybook/react-native'
+import {exchangeDefaultState, ExchangeProvider, successManagerMock} from '@yoroi/exchange'
 import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {SelectedWalletProvider} from '../../../../SelectedWallet'
 import {mocks} from '../../../../yoroi-wallets/mocks'
-import {ExchangeProvider} from '../../common/ExchangeProvider'
-import {mockExchangeStateDefault} from '../../common/mocks'
-import {SelectProviderFromList} from './SelectProviderFromList'
+import {SelectProviderFromListScreen} from './SelectProviderFromListScreen'
 
-storiesOf('Exchange SelectProvidert', module).add('Default', () => {
+storiesOf('Exchange SelectProviderFromListScreen', module).add('Default', () => {
   return (
     <SelectedWalletProvider wallet={mocks.wallet}>
-      <ExchangeProvider initialState={mockExchangeStateDefault}>
+      <ExchangeProvider manager={successManagerMock} initialState={{...exchangeDefaultState, providerId: 'banxa'}}>
         <View style={styles.container}>
-          <SelectProviderFromList />
+          <SelectProviderFromListScreen />
         </View>
       </ExchangeProvider>
     </SelectedWalletProvider>

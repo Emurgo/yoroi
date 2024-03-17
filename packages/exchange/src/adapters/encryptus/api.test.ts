@@ -20,9 +20,12 @@ describe('getEncryptusBaseUrl', () => {
       },
     }
     const mockFetchData = jest.fn().mockReturnValue(mockFetchDataResponse)
-    const getBaseUrl = encryptusApiGetBaseUrl({request: mockFetchData})
+    const getBaseUrl = encryptusApiGetBaseUrl(
+      {isProduction},
+      {request: mockFetchData},
+    )
 
-    const result = await getBaseUrl({isProduction})
+    const result = await getBaseUrl()
 
     expect(mockFetchData).toHaveBeenCalledWith(
       {
@@ -46,9 +49,12 @@ describe('getEncryptusBaseUrl', () => {
       },
     }
     const mockFetchData = jest.fn().mockReturnValue(mockFetchDataResponse)
-    const getBaseUrl = encryptusApiGetBaseUrl({request: mockFetchData})
+    const getBaseUrl = encryptusApiGetBaseUrl(
+      {isProduction},
+      {request: mockFetchData},
+    )
 
-    const result = await getBaseUrl({isProduction})
+    const result = await getBaseUrl()
 
     expect(mockFetchData).toHaveBeenCalledWith(
       {
@@ -74,11 +80,12 @@ describe('getEncryptusBaseUrl', () => {
       },
     }
     const mockFetchData = jest.fn().mockReturnValue(mockFetchDataResponse)
-    const getBaseUrl = encryptusApiGetBaseUrl({request: mockFetchData})
-
-    await expect(() => getBaseUrl({isProduction})).rejects.toThrow(
-      Exchange.Errors.Validation,
+    const getBaseUrl = encryptusApiGetBaseUrl(
+      {isProduction},
+      {request: mockFetchData},
     )
+
+    await expect(() => getBaseUrl()).rejects.toThrow(Exchange.Errors.Validation)
     expect(mockFetchData).toHaveBeenCalledWith(
       {
         url: expectedUrl,
@@ -103,11 +110,12 @@ describe('getEncryptusBaseUrl', () => {
     }
 
     const mockFetchData = jest.fn().mockReturnValue(mockFetchDataResponse)
-    const getBaseUrl = encryptusApiGetBaseUrl({request: mockFetchData})
-
-    await expect(() => getBaseUrl({isProduction})).rejects.toThrow(
-      Exchange.Errors.Unknown,
+    const getBaseUrl = encryptusApiGetBaseUrl(
+      {isProduction},
+      {request: mockFetchData},
     )
+
+    await expect(() => getBaseUrl()).rejects.toThrow(Exchange.Errors.Unknown)
 
     expect(mockFetchData).toHaveBeenCalledWith(
       {
@@ -118,7 +126,7 @@ describe('getEncryptusBaseUrl', () => {
   })
 
   it('should build without dependencies (coverage only)', () => {
-    const getCryptoAddress = encryptusApiGetBaseUrl()
+    const getCryptoAddress = encryptusApiGetBaseUrl({isProduction: true})
     expect(getCryptoAddress).toBeDefined()
   })
 })

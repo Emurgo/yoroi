@@ -8,12 +8,23 @@ const IntialLinkContext = React.createContext<
 export const InitialLinkProvider: React.FC<React.PropsWithChildren> = ({children}) => {
   const [initialUrl, setInitialUrl] = React.useState<string | null>(null)
 
+  // app is open
   React.useEffect(() => {
     const getUrl = ({url}: {url: string | null}) => {
-      setInitialUrl(url)
+      if (url !== null) setInitialUrl(url)
     }
     Linking.addEventListener('url', getUrl)
     return () => Linking.removeAllListeners('url')
+  }, [])
+
+  // app is closed
+  React.useEffect(() => {
+    const getInitialURL = async () => {
+      const url = await Linking.getInitialURL()
+      if (url !== null) setInitialUrl(url)
+    }
+
+    getInitialURL()
   }, [])
 
   return <IntialLinkContext.Provider value={{initialUrl, setInitialUrl}}>{children}</IntialLinkContext.Provider>

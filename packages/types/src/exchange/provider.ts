@@ -1,7 +1,7 @@
 export type ExchangeProvider = {
   id: string
   name: string
-  supportedFeatures: {
+  supportedOrders: {
     sell?: {
       fee: number
       max?: number

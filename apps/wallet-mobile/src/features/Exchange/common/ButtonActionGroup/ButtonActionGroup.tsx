@@ -1,8 +1,7 @@
+import {OrderType} from '@yoroi/exchange'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
-
-import {OrderType} from '../ExchangeProvider'
 
 type ButtonActionGroupProps = {
   onSelect: (orderType: OrderType) => void
