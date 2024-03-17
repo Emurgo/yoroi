@@ -16,7 +16,7 @@ export const countNftsDisplayedAndroid = async (max = 10) => {
  while (i < max) {
   try {
    await expect(
-    element(by.id(/^card_nft_[a-zA-Z0-9_ ]+$/)).atIndex(i),
+    element(by.id(/^card_nft_[a-zA-Z0-9_$. ]+$/)).atIndex(i),
    ).toExist()
    i++
   } catch (e) {
@@ -33,9 +33,9 @@ export const checkAttributeNftAndroid = async (nftLabel: string, max = 10) => {
  while (i < max) {
   try {
    await expect(
-    element(by.id(/^card_nft_[a-zA-Z0-9_ ]+$/)).atIndex(i),
+    element(by.id(/^card_nft_[a-zA-Z0-9_$. ]+$/)).atIndex(i),
    ).toExist()
-   const nftAttributes = await element(by.id(/^card_nft_[a-zA-Z0-9_ ]+$/))
+   const nftAttributes = await element(by.id(/^card_nft_[a-zA-Z0-9_$. ]+$/))
     .atIndex(i)
     .getAttributes()
    if (
