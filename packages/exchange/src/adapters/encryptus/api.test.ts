@@ -94,6 +94,38 @@ describe('getEncryptusBaseUrl', () => {
     )
   })
 
+  it.only('tetetk', async () => {
+    const isProduction = false
+    const expectedUrl = encryptusApiConfig.sandbox.getBaseUrl
+    const invalidApiResponse = {
+      ...getEncryptusBaseUrlResponse,
+      data: {link: 233},
+    }
+
+    const mockFetchDataResponse: Right<
+      Api.ResponseSuccess<EncryptusApiResponse>
+    > = {
+      tag: 'right',
+      value: {
+        data: invalidApiResponse as any,
+        status: 200,
+      },
+    }
+    const mockFetchData = jest.fn().mockReturnValue(mockFetchDataResponse)
+    const getBaseUrl = encryptusApiGetBaseUrl(
+      {isProduction},
+      {request: mockFetchData},
+    )
+
+    await expect(() => getBaseUrl()).rejects.toThrow(Exchange.Errors.Validation)
+    expect(mockFetchData).toHaveBeenCalledWith(
+      {
+        url: expectedUrl,
+      },
+      undefined,
+    )
+  })
+
   it('should throw unknow error if throws an error', async () => {
     const isProduction = false
     const expectedUrl = encryptusApiConfig.sandbox.getBaseUrl

@@ -25,6 +25,10 @@ export const encryptusApiGetBaseUrl = (
 
       if (isLeft(response)) throw getApiError(response.error)
 
+      const test = EncryptusApiResponseSchema.safeParse(response.value.data)
+
+      console.log('test', test)
+
       const parsedResponse = EncryptusApiResponseSchema.parse(
         response.value.data,
       )
