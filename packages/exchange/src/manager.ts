@@ -47,21 +47,20 @@ export const exchangeManagerMaker = ({
           },
           fetcherOptions?: AxiosRequestConfig,
         ) => {
-          return api.getBaseUrl(providerId, fetcherOptions).then((baseUrl) => {
-            try {
-              const validatedQueries =
-                urlReferralQueryStringParamsSchema.parse(queries)
-              const url = new URL(baseUrl)
-              const params = new URLSearchParams()
-              for (const [key, value] of Object.entries(validatedQueries)) {
-                params.append(key, value.toString())
-              }
-              url.search = params.toString()
-              return Promise.resolve(url)
-            } catch (error) {
-              return Promise.reject(getValidationError(error))
+          try {
+            const baseUrl = await api.getBaseUrl(providerId, fetcherOptions)
+            const validatedQueries =
+              urlReferralQueryStringParamsSchema.parse(queries)
+            const url = new URL(baseUrl)
+            const params = new URLSearchParams()
+            for (const [key, value] of Object.entries(validatedQueries)) {
+              params.append(key, value.toString())
             }
-          })
+            url.search = params.toString()
+            return Promise.resolve(url)
+          } catch (error) {
+            return Promise.reject(getValidationError(error))
+          }
         },
       },
     },
