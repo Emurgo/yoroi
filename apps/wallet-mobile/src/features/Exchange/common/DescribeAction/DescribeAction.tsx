@@ -1,4 +1,4 @@
-import {banxaSupportUrl} from '@yoroi/exchange'
+import {useExchange, useExchangeProvidersByOrderType} from '@yoroi/exchange'
 import React from 'react'
 import {Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 
@@ -9,12 +9,16 @@ const YOROI_SUPPORT_URL = 'https://yoroi-wallet.com/#/support'
 
 export const DescribeAction = () => {
   const strings = useStrings()
+  const {orderType, providerId, provider} = useExchange()
+  const providers = useExchangeProvidersByOrderType({orderType, providerListByOrderType: provider.list.byOrderType})
+  const providerSelected = Object.fromEntries(providers)[providerId]
+  const name = providerSelected?.name ?? ''
 
-  const handleLinkingContactBanxa = () => {
-    Linking.openURL(banxaSupportUrl)
+  const handleOnContactProvider = () => {
+    if (providerSelected?.supportUrl != null) Linking.openURL(providerSelected.supportUrl)
   }
 
-  const handleLinkingContactYoroi = () => {
+  const handleOnContactYoroi = () => {
     Linking.openURL(YOROI_SUPPORT_URL)
   }
 
@@ -27,13 +31,13 @@ export const DescribeAction = () => {
       <View style={[styles.decorationText]}>
         <Text style={[styles.description]}>{strings.contact} </Text>
 
-        <TouchableOpacity onPress={handleLinkingContactBanxa}>
-          <Text style={[styles.description, styles.linkText]}>{strings.banxa} </Text>
+        <TouchableOpacity onPress={handleOnContactProvider}>
+          <Text style={[styles.description, styles.linkText]}>{name} </Text>
         </TouchableOpacity>
 
         <Text style={styles.description}>{strings.and} </Text>
 
-        <TouchableOpacity onPress={handleLinkingContactYoroi}>
+        <TouchableOpacity onPress={handleOnContactYoroi}>
           <Text style={[styles.description, styles.linkText]}>{strings.customerSupport}</Text>
         </TouchableOpacity>
 

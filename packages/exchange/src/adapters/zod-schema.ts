@@ -18,7 +18,6 @@ export const urlReferralQueryStringParamsSchema = z
   })
   .refine((data) => {
     return (
-      (data.coinType === 'ADA' || data.coinType === 'TADA') &&
-      isPossibleCardanoAddress(data.walletAddress)
+      data.coinType === 'ADA' && isPossibleCardanoAddress(data.walletAddress)
     )
   })

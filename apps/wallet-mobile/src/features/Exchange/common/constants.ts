@@ -1,2 +1,2 @@
-export const storageRootExchange = 'ramp-on-off'
+export const storageRootExchange = 'exchange'
 export const storageKeyShowBuyBannerSmall = 'show-buy-banner-small'
