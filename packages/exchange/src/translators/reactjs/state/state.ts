@@ -20,10 +20,8 @@ export const exchangeReducer = (
           draft.providerId = state.providerSuggestedByOrderType.buy
           break
         }
-        if (action.orderType === 'sell') {
-          draft.providerId = state.providerSuggestedByOrderType.sell
-          break
-        }
+
+        draft.providerId = state.providerSuggestedByOrderType.sell
         break
 
       case ExchangeActionType.AmountInputChanged:

@@ -53,4 +53,29 @@ describe('useExchangeProvidersByOrderType', () => {
       JSON.stringify([['banxa', providers.banxa]]),
     )
   })
+
+  it('empty', async () => {
+    const TestProviders = () => {
+      const result = useExchangeProvidersByOrderType({
+        orderType: 'buy',
+        providerListByOrderType: jest.fn().mockResolvedValue(null),
+      })
+
+      return (
+        <View>
+          <Text testID="providers">{JSON.stringify(result)}</Text>
+        </View>
+      )
+    }
+
+    const wrapper = wrapperFixture({
+      queryClient,
+    })
+    const {getByTestId} = render(<TestProviders />, {wrapper})
+
+    await waitFor(() => {
+      expect(getByTestId('providers')).toBeDefined()
+    })
+    expect(getByTestId('providers').props.children).toEqual(JSON.stringify([]))
+  })
 })

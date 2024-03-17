@@ -34,7 +34,7 @@ describe('useCreateReferralLink', () => {
         queries,
         referralLinkCreate: jest
           .fn()
-          .mockResolvedValue(new URL('referral-url')),
+          .mockResolvedValue(new URL('https://example.com')),
       })
 
       return (
@@ -53,7 +53,33 @@ describe('useCreateReferralLink', () => {
       expect(getByTestId('link')).toBeDefined()
     })
     expect(getByTestId('link').props.children).toEqual(
-      JSON.stringify('referral-url'),
+      JSON.stringify('https://example.com/'),
     )
+  })
+
+  it('empty', async () => {
+    const TestReferralLink = () => {
+      const {referralLink} = useCreateReferralLink({
+        providerId: 'banxa',
+        queries: {} as any,
+        referralLinkCreate: jest.fn().mockResolvedValue(null),
+      })
+
+      return (
+        <View>
+          <Text testID="link">{JSON.stringify(referralLink)}</Text>
+        </View>
+      )
+    }
+
+    const wrapper = wrapperFixture({
+      queryClient,
+    })
+    const {getByTestId} = render(<TestReferralLink />, {wrapper})
+
+    await waitFor(() => {
+      expect(getByTestId('link')).toBeDefined()
+    })
+    expect(getByTestId('link').props.children).toEqual(JSON.stringify(''))
   })
 })
