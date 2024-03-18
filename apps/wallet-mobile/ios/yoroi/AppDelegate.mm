@@ -12,7 +12,7 @@
   // You can add your custom initial props in the dictionary below.
   // They will be passed down to the ViewController used by React Native.
   self.initialProps = @{};
-  
+
   // react-native-bootsplash
   UIView *rootView = self.window.rootViewController.view;
   [RNBootSplash initWithStoryboard:@"BootSplash" rootView:rootView];
@@ -28,11 +28,11 @@
 
 - (NSURL *)getBundleURL
 {
-//#if DEBUG
+#if DEBUG
   return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index"];
-//#else
-//  return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
-//#endif
+#else
+  return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+#endif
 }
 
 /// This method controls whether the `concurrentRoot`feature of React18 is turned on or off.
