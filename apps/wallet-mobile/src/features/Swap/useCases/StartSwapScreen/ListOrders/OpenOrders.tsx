@@ -270,7 +270,7 @@ export const OpenOrders = () => {
       tokenPrice,
       tokenAmount,
     } = order
-    const totalReturned = `${fromTokenAmount} ${fromTokenInfo?.ticker}`
+    const totalReturned = `${fromTokenAmount} ${fromTokenInfo?.ticker ?? fromTokenInfo?.name}`
     const collateralUtxo = await getCollateralUtxo()
 
     try {
