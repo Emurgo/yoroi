@@ -51,10 +51,10 @@ export const exchangeManagerMaker = ({
             const baseUrl = await api.getBaseUrl(providerId, fetcherOptions)
 
             const url = new URL(baseUrl)
+            const {origin, pathname} = url
             const baseUrlParams = new URLSearchParams(url.search)
 
             const accessToken = baseUrlParams.get('access_token')
-            const {origin, pathname} = url
             const reconstructedBaseUrl = origin + pathname // to remove any params (access token) from baseUrl
             const recontructedUrl = new URL(reconstructedBaseUrl)
 
