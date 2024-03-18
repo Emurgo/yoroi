@@ -3,7 +3,6 @@ import {AxiosRequestConfig} from 'axios'
 import {freeze} from 'immer'
 import {urlReferralQueryStringParamsSchema} from './adapters/zod-schema'
 import {getValidationError} from './helpers/get-validation-error'
-import {extractAccessTokenFromBaseUrl} from './helpers/extract-access-token'
 
 export const exchangeManagerMaker = ({
   api,
@@ -50,24 +49,31 @@ export const exchangeManagerMaker = ({
         ) => {
           try {
             const baseUrl = await api.getBaseUrl(providerId, fetcherOptions)
-            const {access_token} = extractAccessTokenFromBaseUrl(baseUrl)
-            const {origin, pathname} = new URL(baseUrl)
+
+            const url = new URL(baseUrl)
+            const baseUrlParams = new URLSearchParams(url.search)
+
+            const accessToken = baseUrlParams.get('access_token')
+            const {origin, pathname} = url
             const reconstructedBaseUrl = origin + pathname // to remove any params (access token) from baseUrl
+            const recontructedUrl = new URL(reconstructedBaseUrl)
 
             const allQueries =
-              access_token !== null ? {...queries, access_token} : queries
+              accessToken !== null
+                ? {...queries, access_token: accessToken}
+                : queries
 
             const validatedQueries =
               urlReferralQueryStringParamsSchema.parse(allQueries)
 
-            const url = new URL(reconstructedBaseUrl)
             const params = new URLSearchParams()
             for (const [key, value] of Object.entries(validatedQueries)) {
               params.append(key, value.toString())
             }
 
-            url.search = params.toString()
-            return Promise.resolve(url)
+            recontructedUrl.search = params.toString()
+
+            return Promise.resolve(recontructedUrl)
           } catch (error) {
             return Promise.reject(getValidationError(error))
           }
