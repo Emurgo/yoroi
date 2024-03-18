@@ -26,4 +26,10 @@ export type ExchangeReferralUrlQueryStringParams = {
 
   /** This is the url that users will be redirected to when they have completed or cancel the order process. e.g. https://{returnUrl}.com) */
   returnUrl?: string
+
+  /* platform access token */
+  access_token?: string
+
+  /* wallet ADA balance */
+  balance?: string
 }

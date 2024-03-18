@@ -4,6 +4,7 @@ import {z} from 'zod'
 import {AxiosRequestConfig} from 'axios'
 
 import {getValidationError} from '../../helpers/get-validation-error'
+import {Exchange} from '@yoroi/types'
 
 const initialDeps = freeze({request: fetchData}, true)
 
@@ -35,6 +36,23 @@ export const encryptusApiGetBaseUrl = (
   }
 }
 
+export const encryptusExtractParamsFromBaseUrl = (
+  baseUrl: string,
+): Pick<Exchange.ReferralUrlQueryStringParams, 'access_token'> => {
+  const url = new URL(baseUrl)
+  const params = new URLSearchParams(url.search)
+
+  try {
+    const parsedParams = EncryptusBaseUrlParams.parse({
+      access_token: params.get('access_token'),
+    })
+
+    return {access_token: parsedParams.access_token}
+  } catch (error: unknown) {
+    throw getValidationError(error)
+  }
+}
+
 export type EncryptusApiResponse = {
   status: number
   data: {
@@ -46,6 +64,10 @@ const EncryptusApiResponseSchema = z.object({
   data: z.object({
     link: z.string(),
   }),
+})
+
+const EncryptusBaseUrlParams = z.object({
+  access_token: z.string(),
 })
 
 export const encryptusApiConfig = freeze(

@@ -49,8 +49,13 @@ export const exchangeManagerMaker = ({
         ) => {
           try {
             const baseUrl = await api.getBaseUrl(providerId, fetcherOptions)
-            const validatedQueries =
-              urlReferralQueryStringParamsSchema.parse(queries)
+
+            const baseUrlParams =
+              api.extractParamsFromBaseUrl?.(providerId, baseUrl) ?? {}
+            const validatedQueries = urlReferralQueryStringParamsSchema.parse({
+              ...queries,
+              ...baseUrlParams,
+            })
             const url = new URL(baseUrl)
             const params = new URLSearchParams()
             for (const [key, value] of Object.entries(validatedQueries)) {

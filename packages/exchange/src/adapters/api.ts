@@ -2,7 +2,10 @@ import {Exchange} from '@yoroi/types'
 import {AxiosRequestConfig} from 'axios'
 import {freeze} from 'immer'
 
-import {encryptusApiGetBaseUrl} from './encryptus/api'
+import {
+  encryptusApiGetBaseUrl,
+  encryptusExtractParamsFromBaseUrl,
+} from './encryptus/api'
 import {banxaApiGetBaseUrl} from './banxa/api'
 
 const initialDeps = freeze(
@@ -12,6 +15,7 @@ const initialDeps = freeze(
     },
     encryptusApi: {
       getBaseUrl: encryptusApiGetBaseUrl,
+      extractParamsFromBaseUrl: encryptusExtractParamsFromBaseUrl,
     },
   },
   true,
@@ -24,7 +28,10 @@ export const exchangeApiMaker = (
     encryptusApi,
   }: {
     banxaApi: {getBaseUrl: typeof banxaApiGetBaseUrl}
-    encryptusApi: {getBaseUrl: typeof encryptusApiGetBaseUrl}
+    encryptusApi: {
+      getBaseUrl: typeof encryptusApiGetBaseUrl
+      extractParamsFromBaseUrl: typeof encryptusExtractParamsFromBaseUrl
+    }
   } = initialDeps,
 ): Exchange.Api => {
   const getProviders = async () => Promise.resolve(providers)
@@ -47,7 +54,16 @@ export const exchangeApiMaker = (
     }
   }
 
-  return freeze({getBaseUrl, getProviders}, true)
+  const extractParamsFromBaseUrl = (providerId: string, baseUrl: string) => {
+    switch (providerId) {
+      case 'encryptus':
+        return encryptusApi.extractParamsFromBaseUrl(baseUrl)
+      default:
+        return {}
+    }
+  }
+
+  return freeze({getBaseUrl, getProviders, extractParamsFromBaseUrl}, true)
 }
 
 export const providers: Readonly<Record<string, Exchange.Provider>> = freeze(
