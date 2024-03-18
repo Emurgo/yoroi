@@ -56,32 +56,30 @@ describe('exchangeApiMaker', () => {
         const result = await api.getBaseUrl(providerId)
         expect(result).toBe('encryptus-url')
       })
-    })
 
-    it('does not resolve', async () => {
-      const isProduction = true
-      const partner = 'yoroi'
-      const providerId = 'none'
-      const deps = {
-        banxaApi: {
-          getBaseUrl: jest
-            .fn()
-            .mockReturnValue(jest.fn().mockResolvedValue('banxa-url')),
-        },
-        encryptusApi: {
-          getBaseUrl: jest
-            .fn()
-            .mockReturnValue(jest.fn().mockResolvedValue('encryptus-url')),
-        },
-      }
+      it('does not resolve', async () => {
+        const isProduction = true
+        const partner = 'yoroi'
+        const providerId = 'none'
+        const deps = {
+          banxaApi: {
+            getBaseUrl: jest
+              .fn()
+              .mockReturnValue(jest.fn().mockResolvedValue('banxa-url')),
+          },
+          encryptusApi: {
+            getBaseUrl: jest
+              .fn()
+              .mockReturnValue(jest.fn().mockResolvedValue('encryptus-url')),
+          },
+        }
 
-      const api = exchangeApiMaker({isProduction, partner}, deps)
+        const api = exchangeApiMaker({isProduction, partner}, deps)
 
-      try {
-        await api.getBaseUrl(providerId)
-      } catch (e: any) {
-        expect(e.message).toBe('Unknown provider: none')
-      }
+        await expect(
+          async () => await api.getBaseUrl(providerId),
+        ).rejects.toThrow('Unknown provider: none')
+      })
     })
   })
 
