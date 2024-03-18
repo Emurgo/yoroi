@@ -82,7 +82,8 @@ export const transformersMaker = (
   }
 
   const asYoroiCompletedOrder = (openswapOrder: CompletedOrder) => {
-    const {txHash, fromAmount, fromToken, toAmount, toToken} = openswapOrder
+    const {txHash, fromAmount, fromToken, toAmount, toToken, placedAt, dex} =
+      openswapOrder
     const from = {
       amount: fromAmount,
       token: `${fromToken.address.policyId}.${fromToken.address.name}`,
@@ -93,9 +94,11 @@ export const transformersMaker = (
     }
 
     return {
-      txHash: txHash,
+      txHash,
       from: asYoroiAmount(from),
       to: asYoroiAmount(to),
+      placedAt,
+      provider: dex ?? 'muesliswap',
     } as const
   }
 
