@@ -1,5 +1,8 @@
 require File.join(File.dirname(`node --print "require.resolve('expo/package.json')"`), "scripts/autolinking")
 
+# suggested for glog issues with expo-core
+use_modular_headers!
+
 # new version run node
 # require Pod::Executable.execute_command('node', ['-p',
 #   'require.resolve(
