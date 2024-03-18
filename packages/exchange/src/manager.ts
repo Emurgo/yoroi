@@ -63,11 +63,11 @@ export const exchangeManagerMaker = ({
                 ? {...queries, access_token: accessToken}
                 : queries
 
-            const validatedQueries =
+            const parsedQueries =
               urlReferralQueryStringParamsSchema.parse(allQueries)
 
             const params = new URLSearchParams()
-            for (const [key, value] of Object.entries(validatedQueries)) {
+            for (const [key, value] of Object.entries(parsedQueries)) {
               params.append(key, value.toString())
             }
 
