@@ -81,7 +81,6 @@ export const CreateExchangeOrderScreen = () => {
       },
       onSuccess: (referralLink) => {
         if (referralLink.toString() !== '') {
-          console.log('referralLink', referralLink)
           Linking.openURL(referralLink.toString())
           track.exchangeSubmitted({ramp_type: orderType === 'sell' ? 'Sell' : 'Buy', ada_amount: orderAmount})
           navigateTo.exchangeOpenOrder()
