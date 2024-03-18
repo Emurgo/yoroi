@@ -3,8 +3,8 @@ import {freeze} from 'immer'
 import {exchangeManagerMaker} from './manager'
 
 describe('referralLink', () => {
-  test('should generate a correct referral link with all parameters', async () => {
-    const baseUrl = 'https://checkout.banxa.com/?'
+  test.only('should generate a correct referral link with all parameters', async () => {
+    const baseUrl = 'https://checkout.banxa.com/?&access_token=FAKE_TOKEN'
     const fullUrl =
       baseUrl +
       'orderType=sell' +
@@ -19,7 +19,9 @@ describe('referralLink', () => {
       '&' +
       'blockchain=ADA' +
       '&' +
-      'walletAddress=addr1q9v8dvht2mv847gwarl7r4p49yzys8r7zlep7c8t2hqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqquvupf'
+      'walletAddress=addr1q9v8dvht2mv847gwarl7r4p49yzys8r7zlep7c8t2hqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqquvupf' +
+      '&' +
+      'access_token=FAKE_TOKEN'
 
     const api = {
       getBaseUrl: jest.fn(() => Promise.resolve(baseUrl)),

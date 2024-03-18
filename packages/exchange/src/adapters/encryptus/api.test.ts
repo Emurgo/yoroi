@@ -3,7 +3,6 @@ import {
   EncryptusApiResponse,
   encryptusApiConfig,
   encryptusApiGetBaseUrl,
-  encryptusExtractParamsFromBaseUrl,
 } from './api'
 import {getEncryptusBaseUrlResponse} from './api.mocks'
 
@@ -129,24 +128,5 @@ describe('getEncryptusBaseUrl', () => {
   it('should build without dependencies (coverage only)', () => {
     const getCryptoAddress = encryptusApiGetBaseUrl({isProduction: true})
     expect(getCryptoAddress).toBeDefined()
-  })
-})
-
-describe('encryptusExtractParamsFromBaseUrl', () => {
-  it('extracts the params from the base url', () => {
-    const baseUrl = `https://sandbox.encryptus.co/pw?access_token=FAKE_TOKEN`
-    const params = encryptusExtractParamsFromBaseUrl(baseUrl.toString())
-    expect(params).toEqual({access_token: 'FAKE_TOKEN'})
-  })
-
-  it('throws validation error because the params are missing', () => {
-    const baseUrl = `https://sandbox.encryptus.co/pw`
-    try {
-      encryptusExtractParamsFromBaseUrl(baseUrl.toString())
-
-      fail('should be filed before')
-    } catch (e: any) {
-      expect(e).toBeInstanceOf(Exchange.Errors.Validation)
-    }
   })
 })

@@ -3,6 +3,7 @@ import {AxiosRequestConfig} from 'axios'
 import {freeze} from 'immer'
 import {urlReferralQueryStringParamsSchema} from './adapters/zod-schema'
 import {getValidationError} from './helpers/get-validation-error'
+import {extractAccessTokenFromBaseUrl} from './helpers/extract-access-token'
 
 export const exchangeManagerMaker = ({
   api,
@@ -50,17 +51,20 @@ export const exchangeManagerMaker = ({
           try {
             const baseUrl = await api.getBaseUrl(providerId, fetcherOptions)
 
-            const baseUrlParams =
-              api.extractParamsFromBaseUrl?.(providerId, baseUrl) ?? {}
-            const validatedQueries = urlReferralQueryStringParamsSchema.parse({
-              ...queries,
-              ...baseUrlParams,
-            })
+            const {access_token} = extractAccessTokenFromBaseUrl(baseUrl)
+
+            const allQueries =
+              access_token !== null ? {...queries, access_token} : queries
+
+            const validatedQueries =
+              urlReferralQueryStringParamsSchema.parse(allQueries)
+
             const url = new URL(baseUrl)
             const params = new URLSearchParams()
             for (const [key, value] of Object.entries(validatedQueries)) {
               params.append(key, value.toString())
             }
+
             url.search = params.toString()
             return Promise.resolve(url)
           } catch (error) {
