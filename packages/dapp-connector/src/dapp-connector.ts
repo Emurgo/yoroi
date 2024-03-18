@@ -41,7 +41,7 @@ type SupportedExtension = {
   cip: number
 }
 
-const supportedExtensions: SupportedExtension[] = [{cip: 95}]
+const supportedExtensions: SupportedExtension[] = []
 
 type Wallet = {
   id: string
