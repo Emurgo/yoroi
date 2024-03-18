@@ -38,7 +38,7 @@ export const BASE_CONFIG = {
 } as const
 
 export const IS_MAINNET = true
-export const API_ROOT = 'https://api.yoroiwallet.com/api'
+export const API_ROOT = 'https://mainnet-dev.emurgornd.com/api'
 export const TOKEN_INFO_SERVICE = 'https://cdn.yoroiwallet.com'
 export const BACKEND = {
   API_ROOT,

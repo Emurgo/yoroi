@@ -61,7 +61,7 @@ const HASKELL_SHELLEY = {
   POOL_EXPLORER: 'https://adapools.yoroiwallet.com/?source=mobile',
 
   BACKEND: {
-    API_ROOT: 'https://api.yoroiwallet.com/api',
+    API_ROOT: 'https://mainnet-dev.emurgornd.com/api',
     NFT_STORAGE_URL: 'https://fibo-validated-nft-images.s3.amazonaws.com',
     TOKEN_INFO_SERVICE: 'https://cdn.yoroiwallet.com',
     ..._DEFAULT_BACKEND_RULES,
