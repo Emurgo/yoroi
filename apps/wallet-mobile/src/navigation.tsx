@@ -127,6 +127,7 @@ export type WalletStackRoutes = {
   'voting-registration': NavigatorScreenParams<VotingRegistrationRoutes>
   'toggle-analytics-settings': NavigatorScreenParams<ToggleAnalyticsSettingsRoutes>
   governance: NavigatorScreenParams<StakingGovernanceRoutes>
+  'staking-dashboard': NavigatorScreenParams<DashboardRoutes>
 }
 export type WalletStackRouteNavigation = StackNavigationProp<WalletStackRoutes>
 
@@ -455,12 +456,9 @@ export const useWalletNavigation = () => {
 
     navigateToStakingDashboard: () => {
       navigation.navigate('app-root', {
-        screen: 'main-wallet-routes',
+        screen: 'staking-dashboard',
         params: {
-          screen: 'staking-dashboard',
-          params: {
-            screen: 'staking-dashboard-main',
-          },
+          screen: 'staking-dashboard-main',
         },
       })
     },

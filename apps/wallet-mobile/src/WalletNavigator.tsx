@@ -19,16 +19,16 @@ import {hideTabBarForRoutes, WalletStackRoutes, WalletTabRoutes} from './navigat
 import {NftDetailsNavigator} from './NftDetails/NftDetailsNavigator'
 import {NftsNavigator} from './Nfts/NftsNavigator'
 import {SearchProvider} from './Search/SearchContext'
-import {useSelectedWallet, WalletSelectionScreen} from './SelectedWallet'
+import {WalletSelectionScreen} from './SelectedWallet'
 import {theme} from './theme'
 import {TxHistoryNavigator} from './TxHistory'
-import {isHaskellShelley} from './yoroi-wallets/cardano/utils'
 
 const Tab = createBottomTabNavigator<WalletTabRoutes>()
 const WalletTabNavigator = () => {
   const strings = useStrings()
-  const wallet = useSelectedWallet()
-  const initialRoute = isHaskellShelley(wallet.walletImplementationId) ? 'staking-dashboard' : 'history'
+  // const wallet = useSelectedWallet()
+
+  const initialRoute = /* isHaskellShelley(wallet.walletImplementationId) ? 'staking-dashboard' :*/ 'history'
 
   const [isKeyboardOpen, setIsKeyboardOpen] = React.useState(false)
 

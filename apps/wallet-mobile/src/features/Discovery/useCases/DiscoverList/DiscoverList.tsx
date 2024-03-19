@@ -1,9 +1,9 @@
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {FlatList, ScrollView, StyleSheet, Text, View} from 'react-native'
+import {FlatList, ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Spacer, useModal} from '../../../../components'
+import {Spacer} from '../../../../components'
 import {useSearch, useSearchOnNavBar} from '../../../../Search/SearchContext'
 import {makeList} from '../../../../utils'
 import {useShowWelcomeDApp} from '../../common/useShowWelcomeDApp'
@@ -23,8 +23,6 @@ export const DiscoverList = () => {
   const [categoriesSelected, setCategoriesSelected] = React.useState<Partial<{[key in TDAppCategory]: boolean}>>()
 
   const isSearching = visible
-
-  // const {openModal} = useModal()
 
   useShowWelcomeDApp()
 
@@ -70,12 +68,6 @@ export const DiscoverList = () => {
   React.useEffect(() => {
     setTimeout(() => {
       setIsLoading(false)
-      // openModal(
-      //   'Hehe',
-      //   <View>
-      //     <Text>123123123</Text>
-      //   </View>,
-      // )
     }, 200)
   }, [])
 
