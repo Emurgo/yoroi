@@ -28,7 +28,8 @@
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="https"/>
-        <data android:scheme="yoroi-wallet.com"/>
+        <data android:host="yoroi-wallet.com" android:pathPrefix="/w1" />
+
       </intent-filter>
 
     </activity>
