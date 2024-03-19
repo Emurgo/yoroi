@@ -38,3 +38,5 @@ export const useAllowScreenshots = () => {
   }, [screenShareSettingEnabled])
   useFocusEffect(callback)
 }
+
+export const makeList = (length = 0) => Array.from({ length }).fill(1);

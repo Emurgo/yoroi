@@ -98,6 +98,7 @@
   "components.common.navigation.delegateButton": "Delegate",
   "components.common.navigation.nftGallery": "NFT Gallery",
   "components.common.navigation.transactionsButton": "Transactions",
+  "components.common.navigation.discover": "Discover",
   "components.delegation.delegationnavigationbuttons.stakingCenterButton": "Go to Staking Center",
   "components.delegation.withdrawaldialog.deregisterButton": "Deregister",
   "components.delegation.withdrawaldialog.explanation1": "When **withdrawing rewards**, you also have the option to deregister the staking key.",
@@ -928,5 +929,7 @@
   "rampOnOff.rampOnOffScreen.needMoreCrypto": "Need more ADA for staking or swap?",
   "rampOnOff.rampOnOffScreen.ourTrustedPartners": "Top up your wallet safely using our trusted partners",
   "rampOnOff.rampOnOffScreen.exchangeSelectProvider.buy": "Buy provider",
-  "rampOnOff.rampOnOffScreen.exchangeSelectProvider.sell": "Sell provider"
+  "rampOnOff.rampOnOffScreen.exchangeSelectProvider.sell": "Sell provider",
+  "discover.discoverList.discoverTitle": "Discover Cardano",
+  "discover.discoverList.searchDApps": "Search DApps"
 }

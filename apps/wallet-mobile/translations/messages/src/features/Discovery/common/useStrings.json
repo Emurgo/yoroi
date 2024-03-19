@@ -1,0 +1,32 @@
+[
+  {
+    "id": "discover.discoverList.discoverTitle",
+    "defaultMessage": "!!!Discover Cardano",
+    "file": "src/features/Discovery/common/useStrings.tsx",
+    "start": {
+      "line": 15,
+      "column": 19,
+      "index": 382
+    },
+    "end": {
+      "line": 18,
+      "column": 5,
+      "index": 483
+    }
+  },
+  {
+    "id": "discover.discoverList.searchDApps",
+    "defaultMessage": "!!!Search DApps",
+    "file": "src/features/Discovery/common/useStrings.tsx",
+    "start": {
+      "line": 19,
+      "column": 17,
+      "index": 502
+    },
+    "end": {
+      "line": 22,
+      "column": 5,
+      "index": 597
+    }
+  }
+]

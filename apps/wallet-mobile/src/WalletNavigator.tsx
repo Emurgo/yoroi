@@ -8,7 +8,7 @@ import {Keyboard, Platform} from 'react-native'
 
 import {VotingRegistration} from './Catalyst'
 import {Icon, OfflineBanner} from './components'
-import {DashboardNavigator} from './Dashboard'
+import {DiscoverNavigator} from './features/Discovery'
 import {ShowExchangeResultOrderScreen} from './features/Exchange/useCases/ShowExchangeResultOrderScreen/ShowExchangeResultOrderScreen'
 import {MenuNavigator} from './features/Menu'
 import {SettingsScreenNavigator} from './features/Settings'
@@ -116,7 +116,7 @@ const WalletTabNavigator = () => {
           )}
         </Tab.Screen>
 
-        {isHaskellShelley(wallet.walletImplementationId) && (
+        {/* {isHaskellShelley(wallet.walletImplementationId) && (
           <Tab.Screen
             name="staking-dashboard"
             component={DashboardNavigator}
@@ -131,7 +131,27 @@ const WalletTabNavigator = () => {
               tabBarTestID: 'stakingTabBarButton',
             }}
           />
-        )}
+        )} */}
+
+        <Tab.Screen
+          name="discover"
+          options={{
+            tabBarIcon: ({focused}) => (
+              <Icon.Discover
+                size={28}
+                color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
+              />
+            ),
+            tabBarLabel: strings.discoverTabBarLabel,
+            tabBarTestID: 'discoverTabBarButton',
+          }}
+        >
+          {() => (
+            <SearchProvider>
+              <DiscoverNavigator />
+            </SearchProvider>
+          )}
+        </Tab.Screen>
 
         <Tab.Screen
           name="menu"
@@ -241,6 +261,10 @@ const messages = defineMessages({
     id: 'menu',
     defaultMessage: '!!!Menu',
   },
+  discoverButton: {
+    id: 'components.common.navigation.discover',
+    defaultMessage: '!!!Discover',
+  },
 })
 
 const useStrings = () => {
@@ -255,5 +279,6 @@ const useStrings = () => {
     walletTabBarLabel: intl.formatMessage(messages.walletButton),
     nftsTabBarLabel: intl.formatMessage(messages.nftsButton),
     menuTabBarLabel: intl.formatMessage(messages.menuButton),
+    discoverTabBarLabel: intl.formatMessage(messages.discoverButton),
   }
 }

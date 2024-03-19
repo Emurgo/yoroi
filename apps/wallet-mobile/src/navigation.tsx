@@ -112,8 +112,9 @@ export const defaultMaterialTopTabNavigationOptions = (theme: Theme): MaterialTo
 // ROUTES
 export type WalletTabRoutes = {
   history: NavigatorScreenParams<TxHistoryRoutes>
-  'staking-dashboard': NavigatorScreenParams<DashboardRoutes>
+  // 'staking-dashboard': NavigatorScreenParams<DashboardRoutes>
   nfts: NavigatorScreenParams<NftRoutes>
+  discover: NavigatorScreenParams<DiscoverRoutes>
   menu: NavigatorScreenParams<MenuRoutes>
 }
 
@@ -314,6 +315,10 @@ export type SettingsRouteNavigation = StackNavigationProp<SettingsStackRoutes>
 
 export type SendConfirmParams = {
   yoroiUnsignedTx: YoroiUnsignedTx
+}
+
+export type DiscoverRoutes = {
+  // '': undefined
 }
 
 export type DashboardRoutes = {
