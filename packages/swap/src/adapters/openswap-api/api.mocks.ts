@@ -26,7 +26,7 @@ const getCompletedOrders: Array<Swap.CompletedOrder> = [
         'c04f4200502a998e9eebafac0291a1f38008de3fe146d136946d8f4b.415247454e54',
     },
     provider: 'minswap',
-    placedAt: 1631635254,
+    placedAt: 1631635254000,
   },
 ]
 
