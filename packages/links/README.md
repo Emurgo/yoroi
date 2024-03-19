@@ -98,6 +98,15 @@ console.log(yoroiPaymentRequestWithAdaLink);
 | `yoroi` `https` | `dapp`     | **soon**                                    |
 
 
+## Testing the deep & universal links developing
+```shell
+# iOS
+xcrun simctl openurl booted "https://yoroi-wallet.com/w1/transfer/request/ada?amount=1&address=$stackchain"
+
+# Android
+adb shell am start -W -a android.intent.action.VIEW -d "yoroi://yoroi-wallet.com/w1/transfer/request/ada?amount=1&address=$stackchain"
+```
+
 ## For more
 - [BIP-21](https://github.com/bitcoin/bips/blob/master/bip-0021.mediawiki) 
 - [EIP-681](https://eips.ethereum.org/EIPS/eip-681)
