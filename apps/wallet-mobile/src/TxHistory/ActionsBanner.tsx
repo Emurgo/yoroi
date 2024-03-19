@@ -91,7 +91,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   }
 
   return (
-    <View style={styles.banner}>
+    <View>
       <Spacer height={16} />
 
       <View style={styles.centralized}>
@@ -171,9 +171,8 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
 
 const useStyles = () => {
   const {theme} = useTheme()
-  const {color} = theme
+  const {color, padding, typography} = theme
   const styles = StyleSheet.create({
-    banner: {},
     centralized: {
       alignItems: 'center',
       justifyContent: 'center',
@@ -191,12 +190,9 @@ const useStyles = () => {
       backgroundColor: color.primary[500],
     },
     actionLabel: {
-      paddingTop: 8,
-      fontSize: 12,
+      ...padding['t-s'],
       color: color.gray.max,
-      fontFamily: 'Rubik-Regular',
-      fontWeight: '500',
-      lineHeight: 18,
+      ...typography['body-3-s-medium'],
     },
     disabled: {
       opacity: 0.5,
@@ -213,10 +209,8 @@ const useStyles = () => {
     },
     textCopy: {
       textAlign: 'center',
-      padding: 8,
-      fontSize: 14,
-      fontWeight: '500',
-      fontFamily: 'Rubik-Medium',
+      ...padding['s'],
+      ...typography['body-2-m-medium'],
       color: color.gray.min,
     },
   })

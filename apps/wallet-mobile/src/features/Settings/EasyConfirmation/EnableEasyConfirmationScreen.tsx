@@ -40,7 +40,7 @@ export const EnableEasyConfirmationScreen = () => {
 
   return (
     <SafeAreaView edges={['bottom']} style={styles.container}>
-      <StatusBar type="dark" />
+      <StatusBar />
 
       <KeyboardAvoidingView style={{flex: 1}}>
         <ScrollView keyboardShouldPersistTaps="always" contentContainerStyle={styles.contentContainer}>

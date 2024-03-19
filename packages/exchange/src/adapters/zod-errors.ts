@@ -1,4 +1,4 @@
-import {BanxaUnknownError, BanxaValidationError} from './banxa/errors'
+import {Exchange} from '@yoroi/types'
 import {ZodError} from 'zod'
 
 /**
@@ -15,7 +15,7 @@ export function handleZodErrors(error: ZodError | any) {
     const errorMessage = `Invalid data: ${errorDetails
       .map((e) => `${e.field}: ${e.message}`)
       .join(', ')}`
-    throw new BanxaValidationError(errorMessage)
+    throw new Exchange.Errors.Validation(errorMessage)
   }
-  throw new BanxaUnknownError(JSON.stringify(error))
+  throw new Exchange.Errors.Unknown(JSON.stringify(error))
 }

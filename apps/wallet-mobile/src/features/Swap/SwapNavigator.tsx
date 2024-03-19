@@ -64,7 +64,7 @@ export const SwapTabNavigator = () => {
 
   return (
     <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
-      <StatusBar type="dark" />
+      <StatusBar />
 
       <Tab.Navigator
         screenOptions={({route}) => ({

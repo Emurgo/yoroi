@@ -1,4 +1,5 @@
 import {useIsFocused} from '@react-navigation/native'
+import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import _ from 'lodash'
 import React from 'react'
@@ -26,6 +27,7 @@ import {ShowErrors} from './ShowErrors'
 
 export const StartMultiTokenTxScreen = () => {
   const strings = useStrings()
+  const styles = useStyles()
   const navigateTo = useNavigateTo()
   const wallet = useSelectedWallet()
   const {track} = useMetrics()
@@ -80,7 +82,7 @@ export const StartMultiTokenTxScreen = () => {
 
   return (
     <View style={styles.container}>
-      <StatusBar type="dark" />
+      <StatusBar />
 
       <KeyboardAvoidingView style={styles.flex}>
         <ScrollView
@@ -123,7 +125,10 @@ export const StartMultiTokenTxScreen = () => {
   )
 }
 
-const Actions = ({style, ...props}: ViewProps) => <View style={[styles.actions, style]} {...props} />
+const Actions = ({style, ...props}: ViewProps) => {
+  const styles = useStyles()
+  return <View style={[styles.actions, style]} {...props} />
+}
 
 const useReceiverError = ({
   isWrongBlockchainError,
@@ -159,22 +164,26 @@ const useReceiverError = ({
     receiverErrorMessage: '',
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.WHITE,
-    paddingTop: 16,
-  },
-  flex: {
-    flex: 1,
-  },
-  actions: {
-    padding: 16,
-  },
-  scroll: {
-    paddingHorizontal: 16,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, padding} = theme
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: color.gray.min,
+      ...padding['t-l'],
+    },
+    flex: {
+      flex: 1,
+    },
+    actions: {
+      ...padding['l'],
+    },
+    scroll: {
+      ...padding['x-l'],
+    },
+  })
+  return styles
+}
 
 const NextButton = Button

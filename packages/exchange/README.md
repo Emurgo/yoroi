@@ -1,6 +1,8 @@
 # Yoroi Exchange Module
 
-The Yoroi Exchange package is a utility for interacting with exchanges resources/APIs.
+The Yoroi Exchange package is a utility for interacting with exchanges the folowwing resources/APIs:
+
+-  [Banxa](https://banxa.com/)
 
 ## Installation
 
@@ -8,32 +10,35 @@ Install the package using npm or yarn :
 
 ```bash
 npm install @yoroi/exchange --save
+npm install @yoroi/types --save-dev
 ```
 ```bash
 yarn add @yoroi/exchange --save
+yarn add @yoroi/types --save-dev
 ```
 
 ## Usage
 
 ### Generating a Banxa referral URL to redirect/open
 ```typescript
-import { Banxa, banxaModuleMaker } from '@yoroi/exchange';
+import { exchangeManagerMaker } from '@yoroi/exchange';
+import { Exchange } from '@yoroi/types';
 
-const options: Banxa.ReferralUrlBuilderOptions = {
+const options: Exchange.ManagerOptions = {
     isProduction: true,
     partner: 'emurgo',
 };
 
-const params: Banxa.ReferralUrlQueryStringParams = {
+const params: Exchange.ReferralUrlQueryStringParams = {
     fiatType: 'USD',
     coinType: 'ADA',
     walletAddress:
         'addr1q9v8dvht2mv847gwarl7r4p49yzys8r7zlep7c8t2hqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqquvupf',
 };
 
-const banxa = banxaModuleMaker(options);
+const module = exchangeManagerMaker(Exchange.Provider.Banxa, options);
 
-const url = banxa.createReferralUrl(params);
+const url = module.createReferralUrl(params);
 
 console.log(url.toString())
 ```
@@ -43,9 +48,9 @@ console.log(url.toString())
 try {
     // some Banxa code
 } catch (error) {
-    if (error instanceof Banxa.ValidationError) {
+    if (error instanceof Exchange.Error.Validation) {
         console.error("Validation error:", error.message);
-    } else if (error instanceof Banxa.UnknownError) {
+    } else if (error instanceof Exchange.Error.Unknown) {
         console.error("Unknown error:", error.message);
     }
 }

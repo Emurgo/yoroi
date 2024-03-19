@@ -30,7 +30,7 @@ export const TermsOfServiceChangedScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar type="dark" />
+      <StatusBar />
 
       <ScrollView bounces={false} contentContainerStyle={styles.scrollableContentContainer}>
         <YoroiLogo />

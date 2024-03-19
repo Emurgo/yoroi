@@ -400,24 +400,24 @@ const sortNfts = (nftNameA: string, nftNameB: string): number => nftNameA.locale
 
 const useStyles = () => {
   const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, typography, padding} = theme
   const styles = StyleSheet.create({
     root: {
       flex: 1,
       backgroundColor: color.gray.min,
     },
     subheader: {
-      paddingHorizontal: 16,
+      ...padding['x-l'],
     },
     item: {
-      paddingVertical: 14,
+      ...padding['y-m'],
     },
     borderBottom: {
       borderBottomColor: color.gray[200],
       borderBottomWidth: StyleSheet.hairlineWidth,
     },
     panel: {
-      paddingTop: 16,
+      ...padding['x-l'],
     },
     tabs: {
       flexDirection: 'row',
@@ -431,14 +431,14 @@ const useStyles = () => {
     },
     tab: {
       textAlign: 'center',
-      paddingVertical: 14,
+      ...padding['y-m'],
       ...typography['body-1-l-medium'],
     },
     list: {
       flex: 1,
     },
     assetListContent: {
-      paddingHorizontal: 16,
+      ...padding['x-l'],
     },
     image: {
       flex: 1,
@@ -457,7 +457,7 @@ const useStyles = () => {
       textAlign: 'center',
     },
     counter: {
-      padding: 16,
+      ...padding['l'],
       justifyContent: 'center',
       flexDirection: 'row',
     },

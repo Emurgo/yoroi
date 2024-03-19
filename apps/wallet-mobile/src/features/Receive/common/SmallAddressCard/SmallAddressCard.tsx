@@ -83,7 +83,7 @@ const useStyles = () => {
       width: '100%',
       alignItems: 'center',
       justifyContent: 'space-between',
-      height: 140,
+      minHeight: 140,
       alignSelf: 'center',
       overflow: 'hidden',
       padding: 16,

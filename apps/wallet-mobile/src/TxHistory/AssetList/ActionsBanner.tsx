@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import React, {useState} from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
@@ -18,6 +19,7 @@ type Props = {
 
 export const ActionsBanner = (props: Props) => {
   const [assetSelected, setAssetSelected] = useState<AssetsOptions>('tokens')
+  const {styles, colors} = useStyles()
   const {onPressTokens, onPressNFTs, tokensLabel, nftsLabel} = props
 
   const handleOnSelectTokens = () => {
@@ -44,22 +46,30 @@ export const ActionsBanner = (props: Props) => {
 
       {features.txHistory.search && (
         <TouchableOpacity onPress={props.onSearch}>
-          <Icon.Magnify size={24} color="#6B7384" />
+          <Icon.Magnify size={24} color={colors.iconColor} />
         </TouchableOpacity>
       )}
     </View>
   )
 }
 
-const styles = StyleSheet.create({
-  actionsRoot: {
-    display: 'flex',
-    paddingHorizontal: 20,
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    paddingBottom: 2,
-  },
-  assets: {
-    flexDirection: 'row',
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, padding} = theme
+  const styles = StyleSheet.create({
+    actionsRoot: {
+      display: 'flex',
+      ...padding['x-l'],
+      ...padding['b-xxs'],
+      justifyContent: 'space-between',
+      flexDirection: 'row',
+    },
+    assets: {
+      flexDirection: 'row',
+    },
+  })
+  const colors = {
+    iconColor: color.gray[600],
+  }
+  return {styles, colors}
+}

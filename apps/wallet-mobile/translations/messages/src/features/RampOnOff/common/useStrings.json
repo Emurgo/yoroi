@@ -301,7 +301,7 @@
   },
   {
     "id": "rampOnOff.rampOnOffScreen.rampOnOffTitle",
-    "defaultMessage": "!!!Exchange ADA",
+    "defaultMessage": "!!!Buy ADA",
     "file": "src/features/RampOnOff/common/useStrings.tsx",
     "start": {
       "line": 123,
@@ -311,7 +311,7 @@
     "end": {
       "line": 126,
       "column": 5,
-      "index": 5156
+      "index": 5151
     }
   },
   {
@@ -321,12 +321,12 @@
     "start": {
       "line": 127,
       "column": 13,
-      "index": 5171
+      "index": 5166
     },
     "end": {
       "line": 130,
       "column": 5,
-      "index": 5261
+      "index": 5256
     }
   },
   {
@@ -336,12 +336,12 @@
     "start": {
       "line": 131,
       "column": 9,
-      "index": 5272
+      "index": 5267
     },
     "end": {
       "line": 134,
       "column": 5,
-      "index": 5354
+      "index": 5349
     }
   },
   {
@@ -351,12 +351,12 @@
     "start": {
       "line": 135,
       "column": 21,
-      "index": 5377
+      "index": 5372
     },
     "end": {
       "line": 138,
       "column": 5,
-      "index": 5490
+      "index": 5485
     }
   },
   {
@@ -366,12 +366,12 @@
     "start": {
       "line": 139,
       "column": 17,
-      "index": 5509
+      "index": 5504
     },
     "end": {
       "line": 142,
       "column": 5,
-      "index": 5658
+      "index": 5653
     }
   },
   {
@@ -381,12 +381,12 @@
     "start": {
       "line": 143,
       "column": 20,
-      "index": 5680
+      "index": 5675
     },
     "end": {
       "line": 146,
       "column": 5,
-      "index": 5822
+      "index": 5817
     }
   },
   {
@@ -396,12 +396,12 @@
     "start": {
       "line": 147,
       "column": 24,
-      "index": 5848
+      "index": 5843
     },
     "end": {
       "line": 150,
       "column": 5,
-      "index": 5994
+      "index": 5989
     }
   },
   {
@@ -411,12 +411,12 @@
     "start": {
       "line": 151,
       "column": 20,
-      "index": 6016
+      "index": 6011
     },
     "end": {
       "line": 154,
       "column": 5,
-      "index": 6140
+      "index": 6135
     }
   }
 ]

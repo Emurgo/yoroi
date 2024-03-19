@@ -22,7 +22,7 @@ export const RampOnOffScreen = () => {
 
   return (
     <SafeAreaView edges={['bottom', 'left', 'right']} style={[styles.root]}>
-      <StatusBar type="dark" />
+      <StatusBar />
 
       <RampOnOffProvider>
         <Stack.Navigator
@@ -46,8 +46,9 @@ export const RampOnOffScreen = () => {
               headerShown: false,
             }}
             name="result-ramp-on-off"
-            component={() => <ShowExchangeResult variant="noInfo" />}
-          />
+          >
+            {() => <ShowExchangeResult variant="noInfo" />}
+          </Stack.Screen>
         </Stack.Navigator>
       </RampOnOffProvider>
     </SafeAreaView>

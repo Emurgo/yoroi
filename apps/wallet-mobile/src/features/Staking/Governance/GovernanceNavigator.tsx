@@ -15,7 +15,7 @@ export const GovernanceNavigator = () => {
   const {theme} = useTheme()
   return (
     <GovernanceProvider manager={manager}>
-      <StatusBar type="dark" />
+      <StatusBar />
 
       <SafeArea>
         <Stack.Navigator screenOptions={screenOptions(theme)}>
