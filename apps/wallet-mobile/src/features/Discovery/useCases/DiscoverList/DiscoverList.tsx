@@ -54,21 +54,24 @@ export const DiscoverList = () => {
     if (search?.length > 0) {
       return mockDAppList
         .filter((dApp) => dApp.name.toLowerCase().includes(search.toLowerCase()))
+        .sort((_, __) => _.name.localeCompare(__.name))
         .concat(mockDAppGoogle(search))
     }
 
     if (getCategoriesSelected().length > 0) {
       const selectedCategories = getCategoriesSelected()
-      return mockDAppList.filter((dApp) => selectedCategories.includes(dApp.category))
+      return mockDAppList
+        .filter((dApp) => dApp.category !== undefined && selectedCategories.includes(dApp.category))
+        .sort((_, __) => _.name.localeCompare(__.name))
     }
 
-    return mockDAppList
+    return mockDAppList.sort((_, __) => _.name.localeCompare(__.name))
   }
 
   React.useEffect(() => {
     setTimeout(() => {
       setIsLoading(false)
-    }, 200)
+    }, 500)
   }, [])
 
   return (
@@ -86,24 +89,22 @@ export const DiscoverList = () => {
       ) : (
         <FlatList
           data={getListDApps()}
-          keyExtractor={(item) => item.name.toString()}
+          keyExtractor={(item) => item.id.toString()}
           ListHeaderComponentStyle={styles.boxHeader}
-          ListHeaderComponent={
+          ListHeaderComponent={() =>
             isSearching ? (
               <View></View>
             ) : (
-              () => (
-                <View style={styles.containerHeader}>
-                  <DAppTypes
-                    types={getDAppCategories}
-                    onToggle={handleToggleCategory}
-                    selected={categoriesSelected}
-                    listCategoriesSelected={getCategoriesSelected()}
-                  />
+              <View style={styles.containerHeader}>
+                <DAppTypes
+                  types={getDAppCategories}
+                  onToggle={handleToggleCategory}
+                  selected={categoriesSelected}
+                  listCategoriesSelected={getCategoriesSelected()}
+                />
 
-                  <CountDAppsAvailable total={getListDApps().length} />
-                </View>
-              )
+                <CountDAppsAvailable total={getListDApps().length} />
+              </View>
             )
           }
           renderItem={({item: entry}) => (
@@ -128,9 +129,7 @@ const useStyles = () => {
     boxHeader: {
       marginBottom: 16,
     },
-    containerHeader: {
-      gap: 16,
-    },
+    containerHeader: {},
     dAppsBox: {
       height: 16,
     },

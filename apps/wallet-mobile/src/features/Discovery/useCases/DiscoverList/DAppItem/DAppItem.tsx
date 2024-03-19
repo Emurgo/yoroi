@@ -4,7 +4,7 @@ import {Image, StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-nat
 
 import {Spacer} from '../../../../../components'
 import {LabelCategoryDApp} from '../../../common/LabelCategoryDApp'
-import {LabelConnected} from '../../../common/LabelConnected'
+// import {LabelConnected} from '../../../common/LabelConnected'
 import {IDAppItem} from '../DAppMock'
 
 type Props = {
@@ -42,7 +42,7 @@ export const DAppItem = ({dApp}: Props) => {
           <Spacer height={8} />
 
           <View style={styles.labelBox}>
-            <LabelConnected />
+            {/* <LabelConnected /> */}
 
             {dApp.category !== undefined && <LabelCategoryDApp category={dApp.category} />}
           </View>

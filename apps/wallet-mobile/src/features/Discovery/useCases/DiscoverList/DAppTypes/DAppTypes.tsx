@@ -4,7 +4,7 @@ import * as React from 'react'
 import {ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Icon} from '../../../../../components'
+import {Icon, Spacer} from '../../../../../components'
 import {DAppCategory, TDAppCategory} from '../DAppMock'
 
 type Props = {
@@ -21,11 +21,14 @@ export const DAppTypes = ({types, onToggle, selected, listCategoriesSelected}: P
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.contentContainer}>
       {types
+        .sort((_, __) => _.localeCompare(__))
         .sort((a, b) => listCategoriesSelected.indexOf(b) - listCategoriesSelected.indexOf(a))
         .map((type) => {
           const isSelected = !!(selected ?? {})[type]
           return <TypeItem key={type} isActive={isSelected} name={DAppCategory[type]} onToggle={() => onToggle(type)} />
         })}
+
+      <Spacer width={8} />
     </ScrollView>
   )
 }
@@ -120,6 +123,7 @@ const useStyles = () => {
     },
     contentContainer: {
       ...padding['l-l'],
+      ...padding['y-l'],
     },
   })
 
