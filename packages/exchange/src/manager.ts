@@ -49,15 +49,31 @@ export const exchangeManagerMaker = ({
         ) => {
           try {
             const baseUrl = await api.getBaseUrl(providerId, fetcherOptions)
-            const validatedQueries =
-              urlReferralQueryStringParamsSchema.parse(queries)
+
             const url = new URL(baseUrl)
+            const {origin, pathname} = url
+            const baseUrlParams = new URLSearchParams(url.search)
+            const accessToken = baseUrlParams.get('access_token')
+
+            const reconstructedBaseUrl = origin + pathname // to remove any params (access token) from baseUrl
+            const recontructedUrl = new URL(reconstructedBaseUrl)
+
+            const allQueries =
+              accessToken !== null
+                ? {...queries, access_token: accessToken}
+                : queries
+
+            const parsedQueries =
+              urlReferralQueryStringParamsSchema.parse(allQueries)
+
             const params = new URLSearchParams()
-            for (const [key, value] of Object.entries(validatedQueries)) {
+            for (const [key, value] of Object.entries(parsedQueries)) {
               params.append(key, value.toString())
             }
-            url.search = params.toString()
-            return Promise.resolve(url)
+
+            recontructedUrl.search = params.toString()
+
+            return Promise.resolve(recontructedUrl)
           } catch (error) {
             return Promise.reject(getValidationError(error))
           }

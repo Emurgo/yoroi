@@ -3,7 +3,97 @@ import {freeze} from 'immer'
 import {exchangeManagerMaker} from './manager'
 
 describe('referralLink', () => {
-  test('should generate a correct referral link with all parameters', async () => {
+  test('should generate a correct referral link with all parameters with access token and pathname', async () => {
+    const origin = 'https://checkout.banxa.com'
+    const pathname = '/pw'
+    const baseUrl = `${origin}${pathname}?&access_token=FAKE_TOKEN`
+    const fullUrl =
+      `${origin}` +
+      `${pathname}?` +
+      'orderType=sell' +
+      '&' +
+      'fiatType=USD' +
+      '&' +
+      'fiatAmount=500' +
+      '&' +
+      'coinType=ADA' +
+      '&' +
+      'coinAmount=800' +
+      '&' +
+      'blockchain=ADA' +
+      '&' +
+      'walletAddress=addr1q9v8dvht2mv847gwarl7r4p49yzys8r7zlep7c8t2hqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqquvupf' +
+      '&' +
+      'access_token=FAKE_TOKEN'
+
+    const api = {
+      getBaseUrl: jest.fn(() => Promise.resolve(baseUrl)),
+    } as unknown as Exchange.Api
+
+    const manager = exchangeManagerMaker({api})
+
+    const url = await manager.referralLink.create({
+      providerId: 'banxa',
+      queries: {
+        orderType: 'sell',
+        fiatType: 'USD',
+        fiatAmount: 500,
+        coinType: 'ADA',
+        coinAmount: 800,
+        blockchain: 'ADA',
+        walletAddress:
+          'addr1q9v8dvht2mv847gwarl7r4p49yzys8r7zlep7c8t2hqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqquvupf',
+      },
+    })
+
+    expect(url.toString()).toBe(fullUrl)
+  })
+
+  test('should generate a correct referral link with all parameters with access token without pathname', async () => {
+    const origin = 'https://checkout.banxa.com'
+    const baseUrl = `${origin}/?&access_token=FAKE_TOKEN`
+    const fullUrl =
+      `${origin}/?` +
+      'orderType=sell' +
+      '&' +
+      'fiatType=USD' +
+      '&' +
+      'fiatAmount=500' +
+      '&' +
+      'coinType=ADA' +
+      '&' +
+      'coinAmount=800' +
+      '&' +
+      'blockchain=ADA' +
+      '&' +
+      'walletAddress=addr1q9v8dvht2mv847gwarl7r4p49yzys8r7zlep7c8t2hqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqquvupf' +
+      '&' +
+      'access_token=FAKE_TOKEN'
+
+    const api = {
+      getBaseUrl: jest.fn(() => Promise.resolve(baseUrl)),
+    } as unknown as Exchange.Api
+
+    const manager = exchangeManagerMaker({api})
+
+    const url = await manager.referralLink.create({
+      providerId: 'banxa',
+      queries: {
+        orderType: 'sell',
+        fiatType: 'USD',
+        fiatAmount: 500,
+        coinType: 'ADA',
+        coinAmount: 800,
+        blockchain: 'ADA',
+        walletAddress:
+          'addr1q9v8dvht2mv847gwarl7r4p49yzys8r7zlep7c8t2hqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqquvupf',
+      },
+    })
+
+    expect(url.toString()).toBe(fullUrl)
+  })
+
+  test('should generate a correct referral link with all parameters without access token and without pathname', async () => {
     const baseUrl = 'https://checkout.banxa.com/?'
     const fullUrl =
       baseUrl +

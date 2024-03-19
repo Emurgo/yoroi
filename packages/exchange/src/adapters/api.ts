@@ -24,7 +24,9 @@ export const exchangeApiMaker = (
     encryptusApi,
   }: {
     banxaApi: {getBaseUrl: typeof banxaApiGetBaseUrl}
-    encryptusApi: {getBaseUrl: typeof encryptusApiGetBaseUrl}
+    encryptusApi: {
+      getBaseUrl: typeof encryptusApiGetBaseUrl
+    }
   } = initialDeps,
 ): Exchange.Api => {
   const getProviders = async () => Promise.resolve(providers)
