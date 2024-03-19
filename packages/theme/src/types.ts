@@ -69,6 +69,7 @@ export type Palette = {
     'green': Gradient
     'blue': Gradient
     'light': Gradient
+    'green-blue': [HexColor, HexColor, HexColor, HexColor, HexColor, HexColor]
   }
   'bottom-sheet-background': HexColor
   'overlay-extension': {hex: HexColor; opacity: number}
