@@ -31,7 +31,14 @@ import {
 import {ResolverManager} from './resolver/manager'
 import {ResolverReceiver} from './resolver/receiver'
 import {ResolverStorage} from './resolver/storage'
-import {LinksLink, LinksModule, LinksUriConfig} from './links/link'
+import {
+  LinksLink,
+  LinksModule,
+  LinksUriConfig,
+  LinksUriRules,
+  LinksWebCardanoUriConfig,
+  LinksYoroiUriConfig,
+} from './links/link'
 import {
   LinksErrorExtraParamsDenied,
   LinksErrorForbiddenParamsProvided,
@@ -195,10 +202,9 @@ export namespace Balance {
 
 export namespace Links {
   export interface UriConfig extends LinksUriConfig {}
-  export type Scheme = LinksUriConfig['scheme']
-  export type Authority = LinksUriConfig['authority']
-  export type Version = LinksUriConfig['version']
-  export type Rules = LinksUriConfig['rules']
+  export interface WebCardanoUriConfig extends LinksWebCardanoUriConfig {}
+  export interface YoroiUriConfig extends LinksYoroiUriConfig {}
+  export interface Rules extends LinksUriRules {}
 
   export type Link<T extends LinksUriConfig> = LinksLink<T>
 
