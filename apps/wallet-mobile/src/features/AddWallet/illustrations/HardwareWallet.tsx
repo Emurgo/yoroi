@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Svg, {Defs, LinearGradient, Path, Stop, SvgProps} from 'react-native-svg'
 
-const HardwareWallet = (props: SvgProps) => {
+export const HardwareWallet = (props: SvgProps) => {
   return (
     <Svg width={131} height={120} viewBox="0 0 131 120" fill="none" {...props}>
       <Path
@@ -433,5 +433,3 @@ const HardwareWallet = (props: SvgProps) => {
     </Svg>
   )
 }
-
-export default HardwareWallet

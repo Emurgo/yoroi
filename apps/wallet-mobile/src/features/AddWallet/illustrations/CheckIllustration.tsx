@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Svg, {Path, SvgProps} from 'react-native-svg'
 
-const CheckIcon = (props: SvgProps) => {
+export const CheckIllustration = (props: SvgProps) => {
   return (
     <Svg width={12} height={9} viewBox="0 0 12 9" fill="none" {...props}>
       <Path
@@ -13,5 +13,3 @@ const CheckIcon = (props: SvgProps) => {
     </Svg>
   )
 }
-
-export default CheckIcon

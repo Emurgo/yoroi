@@ -169,8 +169,7 @@ const ShelleyButton = () => {
         // note: assume wallet implementation = yoroi haskell shelley
         // (15 words), but user may choose 24 words in next screen
         navigation.navigate('new-wallet', {
-          screen: 'biometrics-screen',
-          // screen: 'choose-create-restore',
+          screen: 'choose-create-restore',
           params: {
             networkId: HASKELL_SHELLEY.NETWORK_ID,
             walletImplementationId: HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,

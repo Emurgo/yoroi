@@ -1,62 +1,56 @@
 import {useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {StyleSheet} from 'react-native'
 import Animated, {Layout} from 'react-native-reanimated'
 
-import CheckIcon from '../../illustrations/CheckIcon'
+import {CheckIllustration} from '../../illustrations/CheckIllustration'
 
 type StepProps = {
   currentStep: number
-  currentStepTitle?: string
-  todoStep: boolean
-  pastStep: boolean
-  displayStepNumber?: boolean
+  currentStepTitle: string
+  isNext: boolean
+  isPrevious: boolean
 }
-const Step = ({currentStep, currentStepTitle, displayStepNumber, todoStep, pastStep}: StepProps) => {
+const Step = ({currentStep, currentStepTitle, isNext, isPrevious}: StepProps) => {
   const {styles} = useStyles()
+  const shouldDisplayStepTitle = !isNext && !isPrevious && currentStepTitle !== undefined
   return (
-    <>
+    <Animated.View style={styles.root}>
       <Animated.View
         layout={Layout}
-        style={[
-          styles.step,
-          todoStep && styles.todoStep,
-          pastStep && styles.pastStep,
-          displayStepNumber === true && styles.markedStep,
-        ]}
+        style={[styles.step, isNext && styles.isNext, isPrevious && styles.isPrevious, styles.markedStep]}
       >
-        {displayStepNumber === true && !pastStep ? (
-          <Animated.Text style={[styles.stepNumber, todoStep && styles.todoStepNumber]}>{currentStep}</Animated.Text>
+        {!isPrevious ? (
+          <Animated.Text style={[styles.stepNumber, isNext && styles.isNextNumber]}>{currentStep}</Animated.Text>
         ) : (
-          <CheckIcon />
+          <CheckIllustration />
         )}
       </Animated.View>
 
-      {!todoStep && !pastStep && currentStepTitle !== undefined && (
-        <Animated.Text layout={Layout} style={[styles.stepText]}>
+      {shouldDisplayStepTitle && (
+        <Animated.Text layout={Layout} style={[styles.currentStepTitle]}>
           {currentStepTitle}
         </Animated.Text>
       )}
-    </>
+    </Animated.View>
   )
 }
 
-type ProgressStepProps = {
+type StepperProgressProps = {
   currentStep: number
-  currentStepTitle?: string
+  currentStepTitle: string
   totalSteps: number
-  displayStepNumber?: boolean
 }
-export const StepperProgress = ({currentStep, currentStepTitle, totalSteps, displayStepNumber}: ProgressStepProps) => {
-  const steps: Array<React.ReactNode> = []
+export const StepperProgress = ({currentStep, currentStepTitle, totalSteps}: StepperProgressProps) => {
+  const stepIndicator: Array<React.ReactNode> = []
   for (let i = 0; i < totalSteps; i++) {
-    steps.push(
+    const currentIndex = i + 1
+    stepIndicator.push(
       <Step
-        currentStep={i + 1}
+        currentStep={currentIndex}
         currentStepTitle={currentStepTitle}
-        displayStepNumber={displayStepNumber}
-        pastStep={i + 1 < currentStep}
-        todoStep={i + 1 > currentStep}
+        isPrevious={currentIndex < currentStep}
+        isNext={currentIndex > currentStep}
         key={i}
       />,
     )
@@ -64,7 +58,7 @@ export const StepperProgress = ({currentStep, currentStepTitle, totalSteps, disp
   const {styles} = useStyles()
   return (
     <Animated.View layout={Layout} style={[styles.bar]}>
-      {steps}
+      {stepIndicator}
     </Animated.View>
   )
 }
@@ -72,6 +66,10 @@ export const StepperProgress = ({currentStep, currentStepTitle, totalSteps, disp
 const useStyles = () => {
   const {theme} = useTheme()
   const styles = StyleSheet.create({
+    root: {
+      flexDirection: 'row',
+      gap: 8,
+    },
     bar: {
       flexDirection: 'row',
       gap: 16,
@@ -88,30 +86,24 @@ const useStyles = () => {
     markedStep: {
       alignSelf: 'center',
     },
-    todoStep: {
+    isNext: {
       backgroundColor: theme.color['white-static'],
       borderWidth: 2,
       borderColor: theme.color.gray[400],
     },
-    pastStep: {
+    isPrevious: {
       backgroundColor: theme.color.primary[300],
     },
     stepNumber: {
-      fontSize: 14,
-      lineHeight: 22,
-      fontWeight: '500',
+      ...theme.typography['body-2-m-medium'],
       color: theme.color.primary[100],
     },
-    todoStepNumber: {
+    isNextNumber: {
       color: theme.color.gray[400],
     },
-    stepText: {
-      fontFamily: 'Rubik',
-      fontWeight: '500',
-      fontSize: 16,
-      lineHeight: 24,
+    currentStepTitle: {
+      ...theme.typography['body-1-l-medium'],
       color: theme.color.primary[600],
-      marginHorizontal: -8,
     },
   })
   return {styles} as const

@@ -20,17 +20,17 @@ export const useStrings = () => {
     enableButton: intl.formatMessage(messages.enableButton),
     ignoreButton: intl.formatMessage(messages.ignoreButton),
     continueButton: intl.formatMessage(messages.continueButton),
-    nextButton: intl.formatMessage(messages.nextButton),
-    learnMoreButton: intl.formatMessage(messages.learnMoreButton),
+    next: intl.formatMessage(messages.next),
+    learnMore: intl.formatMessage(messages.learnMore),
     aboutRecoveryPhraseTitle: intl.formatMessage(messages.aboutRecoveryPhraseTitle),
-    aboutRecoveryPhraseStepper: intl.formatMessage(messages.aboutRecoveryPhraseStepper),
+    stepAboutRecoveryPhrase: intl.formatMessage(messages.stepAboutRecoveryPhrase),
     aboutRecoveryPhraseCardFirstItem: intl.formatMessage(messages.aboutRecoveryPhraseCardFirstItem),
     aboutRecoveryPhraseCardSecondItem: intl.formatMessage(messages.aboutRecoveryPhraseCardSecondItem),
     aboutRecoveryPhraseCardThirdItem: intl.formatMessage(messages.aboutRecoveryPhraseCardThirdItem),
     aboutRecoveryPhraseCardFourthItem: intl.formatMessage(messages.aboutRecoveryPhraseCardFourthItem),
     aboutRecoveryPhraseCardFifthItem: intl.formatMessage(messages.aboutRecoveryPhraseCardFifthItem),
     recoveryPhraseTitle: intl.formatMessage(messages.recoveryPhraseTitle),
-    recoveryStepper: intl.formatMessage(messages.recoveryStepper),
+    stepRecoveryPhrase: intl.formatMessage(messages.stepRecoveryPhrase),
     recoveryPhraseModalTitle: intl.formatMessage(messages.recoveryPhraseModalTitle),
     hideRecoveryPhraseButton: intl.formatMessage(messages.hideRecoveryPhraseButton),
     showRecoveryPhraseButton: intl.formatMessage(messages.showRecoveryPhraseButton),
@@ -41,9 +41,26 @@ export const useStrings = () => {
     recoveryPhraseCardFourthItem: intl.formatMessage(messages.recoveryPhraseCardFourthItem),
     recoveryPhraseCardFifthItem: intl.formatMessage(messages.recoveryPhraseCardFifthItem),
     verifyRecoveryPhraseTitle: intl.formatMessage(messages.verifyRecoveryPhraseTitle),
-    verifyRecoveryStepper: intl.formatMessage(messages.verifyRecoveryStepper),
+    stepVerifyRecoveryPhrase: intl.formatMessage(messages.stepVerifyRecoveryPhrase),
     verifyRecoveryPhraseErrorMessage: intl.formatMessage(messages.verifyRecoveryPhraseErrorMessage),
     verifyRecoveryPhraseSuccessMessage: intl.formatMessage(messages.verifyRecoveryPhraseSuccessMessage),
+    walletDetailsModalTitle: intl.formatMessage(messages.walletDetailsModalTitle),
+    walletNameModalCardTitle: intl.formatMessage(messages.walletNameModalCardTitle),
+    walletNameModalCardFirstItem: intl.formatMessage(messages.walletNameModalCardFirstItem),
+    walletNameModalCardSecondItem: intl.formatMessage(messages.walletNameModalCardSecondItem),
+    walletPasswordModalCardTitle: intl.formatMessage(messages.walletPasswordModalCardTitle),
+    walletPasswordModalCardFirstItem: intl.formatMessage(messages.walletPasswordModalCardFirstItem),
+    walletPasswordModalCardSecondItem: intl.formatMessage(messages.walletPasswordModalCardSecondItem),
+    walletChecksumModalCardTitle: intl.formatMessage(messages.walletChecksumModalCardTitle),
+    walletChecksumModalCardFirstItem: intl.formatMessage(messages.walletChecksumModalCardFirstItem),
+    walletChecksumModalCardSecondItem: intl.formatMessage(messages.walletChecksumModalCardSecondItem),
+    walletChecksumModalCardThirdItem: intl.formatMessage(messages.walletChecksumModalCardThirdItem),
+    stepWalletDetails: intl.formatMessage(messages.stepWalletDetails),
+    walletDetailsTitle: intl.formatMessage(messages.walletDetailsTitle),
+    walletDetailsPasswordHelper: intl.formatMessage(messages.walletDetailsPasswordHelper),
+    walletDetailsNameInput: intl.formatMessage(messages.walletDetailsNameInput),
+    walletDetailsPasswordInput: intl.formatMessage(messages.walletDetailsPasswordInput),
+    walletDetailsConfirmPasswordInput: intl.formatMessage(messages.walletDetailsConfirmPasswordInput),
   }).current
 }
 
@@ -57,7 +74,7 @@ export const messages = Object.freeze(
       id: 'components.walletinit.walletinitmenu.logo.subtitle',
       defaultMessage: '!!!Light wallet for Cardano assets',
     },
-    learnMoreButton: {
+    learnMore: {
       id: 'components.walletinit.learnMoreInfo.button.title',
       defaultMessage: '!!!Learn more on Yoroi Zendesk',
     },
@@ -65,7 +82,7 @@ export const messages = Object.freeze(
       id: 'components.walletinit.txnavigationbuttons.continueButton',
       defaultMessage: '!!!Continue',
     },
-    nextButton: {
+    next: {
       id: 'components.walletinit.txnavigationbuttons.nextButton',
       defaultMessage: '!!!Next',
     },
@@ -122,7 +139,7 @@ export const messages = Object.freeze(
       id: 'components.walletinit.aboutRecoveryPhrase.aboutRecoveryPhrase.title',
       defaultMessage: '!!!Read this information carefully before saving your recovery phrase:',
     },
-    aboutRecoveryPhraseStepper: {
+    stepAboutRecoveryPhrase: {
       id: 'components.walletinit.aboutRecoveryPhrase.aboutRecoveryStepper.title',
       defaultMessage: '!!!About recovery phrase',
     },
@@ -150,7 +167,7 @@ export const messages = Object.freeze(
       id: 'components.walletinit.recoveryPhrase.title',
       defaultMessage: '!!!Click “Show recovery phrase” below to reveal and save it. ',
     },
-    recoveryStepper: {
+    stepRecoveryPhrase: {
       id: 'components.walletinit.recoveryPhrase.recoveryStepper.title',
       defaultMessage: '!!!Recovery phrase',
     },
@@ -196,7 +213,7 @@ export const messages = Object.freeze(
       id: 'components.walletinit.verifyRecoveryPhrase.title',
       defaultMessage: '!!!Select each word in the correct order to confirm your recovery phrase.',
     },
-    verifyRecoveryStepper: {
+    stepVerifyRecoveryPhrase: {
       id: 'components.walletinit.verifyRecoveryPhrase.verifyRecoveryStepper.title',
       defaultMessage: '!!!Verify recovery phrase',
     },
@@ -207,6 +224,77 @@ export const messages = Object.freeze(
     verifyRecoveryPhraseSuccessMessage: {
       id: 'components.walletinit.verifyRecoveryPhrase.successMessage',
       defaultMessage: '!!!The recovery phrase is verified',
+    },
+    walletDetailsModalTitle: {
+      id: 'components.walletinit.walletDetails.walletDetailsModalTitle.title',
+      defaultMessage: '!!!Tips',
+    },
+    walletNameModalCardTitle: {
+      id: 'components.walletinit.walletDetails.walletNameModalCardTitle.title',
+      defaultMessage: '!!!What is wallet name',
+    },
+    walletNameModalCardFirstItem: {
+      id: 'components.walletinit.walletDetails.walletNameModalCardItem.first',
+      defaultMessage: '!!!It is a wallet identifier that helps you to easier find the exact wallet in your app',
+    },
+    walletNameModalCardSecondItem: {
+      id: 'components.walletinit.walletDetails.walletNameModalCardItem.second',
+      defaultMessage:
+        '!!!You can have different wallet names for the same wallet account connected to different devices',
+    },
+    walletPasswordModalCardTitle: {
+      id: 'components.walletinit.walletDetails.walletPasswordModalCardTitle.title',
+      defaultMessage: '!!!What is password',
+    },
+    walletPasswordModalCardFirstItem: {
+      id: 'components.walletinit.walletDetails.walletPasswordModalCardItem.first',
+      defaultMessage: '!!!Password is an additional security layer used to confirm transactions from this device',
+    },
+    walletPasswordModalCardSecondItem: {
+      id: 'components.walletinit.walletDetails.walletPasswordModalCardItem.second',
+      defaultMessage:
+        '!!!Both wallet name and password are stored locally, so you are only person who can change or restore it.',
+    },
+    walletChecksumModalCardTitle: {
+      id: 'components.walletinit.walletDetails.walletChecksumModalCardTitle.title',
+      defaultMessage: '!!!What is wallet checksum and plate number?',
+    },
+    walletChecksumModalCardFirstItem: {
+      id: 'components.walletinit.walletDetails.walletChecksumModalCardItem.first',
+      defaultMessage:
+        '!!!Wallet checksum is a generic Blockie image that is generated to visually distinguish your wallet from others.',
+    },
+    walletChecksumModalCardSecondItem: {
+      id: 'components.walletinit.walletDetails.walletChecksumModalCardItem.second',
+      defaultMessage: '!!!Plate number BONE-0770 is a auto-generated sign of four letters and four digits.',
+    },
+    walletChecksumModalCardThirdItem: {
+      id: 'components.walletinit.walletDetails.walletChecksumModalCardItem.third',
+      defaultMessage: '!!!Checksum and plate number are unique to your wallet and represent your public key.',
+    },
+    stepWalletDetails: {
+      id: 'components.walletinit.walletDetails.stepWalletDetails',
+      defaultMessage: '!!!Wallet details',
+    },
+    walletDetailsTitle: {
+      id: 'components.walletinit.walletDetails.walletDetailsTitle',
+      defaultMessage: '!!!Add your wallet name and password. ',
+    },
+    walletDetailsPasswordHelper: {
+      id: 'components.walletinit.walletDetails.walletDetailsPasswordHelper',
+      defaultMessage: '!!!Use a combination of letters, numbers and symbols to make your password stronger',
+    },
+    walletDetailsNameInput: {
+      id: 'components.walletinit.walletDetails.walletDetailsNameInput',
+      defaultMessage: '!!!Enter wallet name',
+    },
+    walletDetailsPasswordInput: {
+      id: 'components.walletinit.walletDetails.walletDetailsPasswordInput',
+      defaultMessage: '!!!Enter password',
+    },
+    walletDetailsConfirmPasswordInput: {
+      id: 'components.walletinit.walletDetails.walletDetailsConfirmPasswordInput',
+      defaultMessage: '!!!Confirm password',
     },
   }),
 )

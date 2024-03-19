@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Svg, {Path, SvgProps} from 'react-native-svg'
 
-const EyeOpenIcon = (props: SvgProps) => {
+export const EyeOpen = (props: SvgProps) => {
   return (
     <Svg width={22} height={14} viewBox="0 0 22 14" fill="none" {...props}>
       <Path
@@ -20,5 +20,3 @@ const EyeOpenIcon = (props: SvgProps) => {
     </Svg>
   )
 }
-
-export default EyeOpenIcon

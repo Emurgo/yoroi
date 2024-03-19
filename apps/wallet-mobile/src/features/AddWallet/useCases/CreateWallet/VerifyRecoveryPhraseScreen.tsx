@@ -1,3 +1,4 @@
+import {useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
@@ -8,14 +9,17 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, StatusBar} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
+import {WalletInitRouteNavigation} from '../../../../navigation'
 import {mockAddWallet} from '../../common/mocks'
 import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
 import {useStrings} from '../../common/useStrings'
-import AlertIcon from '../../illustrations/AlertIcon'
-import Check2Icon from '../../illustrations/Check2Icon'
+import {Alert as AlertIllustration} from '../../illustrations/Alert'
+import {Check2 as Check2Illustration} from '../../illustrations/Check2'
 
-export const VerifyRecoveryPhrase = () => {
+export const VerifyRecoveryPhraseScreen = () => {
   const {styles} = useStyles()
+
+  const navigation = useNavigation<WalletInitRouteNavigation>()
 
   const strings = useStrings()
 
@@ -50,12 +54,7 @@ export const VerifyRecoveryPhrase = () => {
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
       <StatusBar type="light" />
 
-      <StepperProgress
-        currentStep={3}
-        currentStepTitle={strings.verifyRecoveryStepper}
-        totalSteps={4}
-        displayStepNumber
-      />
+      <StepperProgress currentStep={3} currentStepTitle={strings.stepVerifyRecoveryPhrase} totalSteps={4} />
 
       <Space height="l" />
 
@@ -100,7 +99,12 @@ export const VerifyRecoveryPhrase = () => {
       <Space height="l" />
 
       <View>
-        <Button title="next" style={styles.button} disabled={disabled} />
+        <Button
+          title="next"
+          style={styles.button}
+          disabled={disabled}
+          onPress={() => navigation.navigate('create-wallet-form')}
+        />
 
         <Space height="s" />
       </View>
@@ -113,7 +117,7 @@ const ErrorMessage = () => {
   const strings = useStrings()
   return (
     <View style={styles.errorMessageContainer}>
-      <AlertIcon />
+      <AlertIllustration />
 
       <Space width="s" />
 
@@ -127,7 +131,7 @@ const SuccessMessage = () => {
   const strings = useStrings()
   return (
     <View style={styles.successMessageContainer}>
-      <Check2Icon />
+      <Check2Illustration />
 
       <Space width="s" />
 
@@ -153,10 +157,10 @@ const MnemonicInput = ({defaultMnemonic, userEntries, onPress}: MnemonicInputPro
   const lastUserEntry = userEntries.findLast((last) => last)
   const isLastWordValid = () => {
     const lastUserEntryId = userEntries.length - 1
-    const isMatch = defaultMnemonic.some(
+    const isWordValid = defaultMnemonic.some(
       (defaultValue) => defaultValue.id === lastUserEntryId && defaultValue.word === lastUserEntry?.word,
     )
-    return isMatch
+    return isWordValid
   }
 
   return (

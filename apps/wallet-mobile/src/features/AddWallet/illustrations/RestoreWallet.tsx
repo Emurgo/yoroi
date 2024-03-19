@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Svg, {Defs, Ellipse, LinearGradient, Path, Stop, SvgProps} from 'react-native-svg'
 
-const RestoreWallet = (props: SvgProps) => {
+export const RestoreWallet = (props: SvgProps) => {
   return (
     <Svg width={131} height={120} viewBox="0 0 131 120" fill="none" {...props}>
       <Path
@@ -655,5 +655,3 @@ const RestoreWallet = (props: SvgProps) => {
     </Svg>
   )
 }
-
-export default RestoreWallet

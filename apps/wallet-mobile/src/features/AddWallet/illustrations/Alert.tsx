@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Svg, {Path, Rect, SvgProps} from 'react-native-svg'
 
-const AlertIcon = (props: SvgProps) => {
+export const Alert = (props: SvgProps) => {
   return (
     <Svg width={17} height={17} viewBox="0 0 17 17" fill="none" {...props}>
       <Rect width={17} height={17} rx={8.5} fill="#FF1351" />
@@ -13,5 +13,3 @@ const AlertIcon = (props: SvgProps) => {
     </Svg>
   )
 }
-
-export default AlertIcon

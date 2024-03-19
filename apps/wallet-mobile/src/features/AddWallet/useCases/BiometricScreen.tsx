@@ -7,7 +7,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button, StatusBar} from '../../../components'
 import {Space} from '../../../components/Space/Space'
 import {useStrings} from '../common/useStrings'
-import Biometric from '../illustrations/Biometric'
+import {Biometric as BiometricIlustration} from '../illustrations/Biometric'
 
 export const BiometricScreen = () => {
   const {styles} = useStyles()
@@ -16,17 +16,17 @@ export const BiometricScreen = () => {
   const navigation = useNavigation()
 
   return (
-    <SafeAreaView edges={['left', 'right', 'top', 'bottom']} style={styles.container}>
+    <SafeAreaView edges={['left', 'right', 'top', 'bottom']} style={styles.root}>
       <StatusBar type="light" />
 
       <View style={styles.content}>
-        <View style={styles.logo}>
-          <Biometric />
+        <View style={styles.illustration}>
+          <BiometricIlustration />
         </View>
 
         <Space height="l" />
 
-        <Text style={styles.title}>{strings.biometricDescription}</Text>
+        <Text style={styles.biometricDescription}>{strings.biometricDescription}</Text>
       </View>
 
       <View>
@@ -41,7 +41,7 @@ export const BiometricScreen = () => {
           }
         />
 
-        <Button title={strings.enableButton} style={styles.button} />
+        <Button title={strings.enableButton} style={styles.enableButton} />
 
         <Space height="s" />
       </View>
@@ -52,7 +52,7 @@ export const BiometricScreen = () => {
 const useStyles = () => {
   const {theme} = useTheme()
   const styles = StyleSheet.create({
-    container: {
+    root: {
       flex: 1,
       backgroundColor: theme.color['white-static'],
       ...theme.padding['x-l'],
@@ -61,22 +61,18 @@ const useStyles = () => {
       flex: 1,
       justifyContent: 'center',
     },
-    logo: {
+    illustration: {
       alignItems: 'center',
     },
-    title: {
+    biometricDescription: {
       ...theme.typography['heading-3-medium'],
       color: theme.color.gray.max,
       textAlign: 'center',
       ...theme.padding['x-l'],
     },
     textOutlineButton: {color: theme.color.gray[900]},
-    button: {backgroundColor: theme.color.primary[500]},
+    enableButton: {backgroundColor: theme.color.primary[500]},
   })
 
-  const colors = {
-    gray900: theme.color.gray[900],
-  }
-
-  return {styles, colors} as const
+  return {styles} as const
 }

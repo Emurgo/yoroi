@@ -2,44 +2,43 @@ import {useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import {BlurView} from 'expo-blur'
 import * as React from 'react'
-import {
-  Keyboard,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  useWindowDimensions,
-  View,
-} from 'react-native'
+import {Keyboard, ScrollView, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, StatusBar, useModal} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
+import {WalletInitRouteNavigation} from '../../../../navigation'
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
 import {LearnMoreButton} from '../../common/LearnMoreButton/LearnMoreButton'
 import {mockAddWallet} from '../../common/mocks'
 import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
 import {useStrings} from '../../common/useStrings'
-import EyeClosedIcon from '../../illustrations/EyeClosed'
-import EyeOpenIcon from '../../illustrations/EyeOpen'
-import InfoIcon from '../../illustrations/InfoIcon'
+import {EyeClosed as EyeClosedIllustration} from '../../illustrations/EyeClosed'
+import {EyeOpen as EyeOpenIllustration} from '../../illustrations/EyeOpen'
+import {Info as InfoIllustration} from '../../illustrations/Info'
 
-export const RecoveryPhrase = () => {
+const useSizeModal = () => {
+  const HEIGHT_SCREEN = useWindowDimensions().height
+  const mediumScreenHeight = 800
+  const largerScreenHeight = 900
+  const PERCENTAGE = HEIGHT_SCREEN >= largerScreenHeight ? 48 : HEIGHT_SCREEN >= mediumScreenHeight ? 55 : 75
+  const HEIGHT_MODAL = (HEIGHT_SCREEN / 100) * PERCENTAGE
+
+  return {HEIGHT_MODAL} as const
+}
+
+export const RecoveryPhraseScreen = () => {
   const {styles, colors} = useStyles()
+  const {HEIGHT_MODAL} = useSizeModal()
   const {openModal, closeModal} = useModal()
   const [isBlur, setIsBlur] = React.useState(true)
 
-  const navigation = useNavigation()
-
-  const HEIGHT_SCREEN = useWindowDimensions().height
-  const PERCENTAGE = HEIGHT_SCREEN >= 900 ? 48 : HEIGHT_SCREEN >= 800 ? 55 : 75
-  const HEIGHT_MODAL = (HEIGHT_SCREEN / 100) * PERCENTAGE
+  const navigation = useNavigation<WalletInitRouteNavigation>()
 
   const strings = useStrings()
 
-  const showModal = () => {
+  const handleOnShowModal = () => {
     Keyboard.dismiss()
     openModal(
       strings.recoveryPhraseModalTitle,
@@ -48,7 +47,7 @@ export const RecoveryPhrase = () => {
           <View style={styles.content}>
             <CardAboutPhrase
               title={strings.recoveryPhraseCardTitle}
-              items={[
+              linesOfText={[
                 strings.recoveryPhraseCardFirstItem,
                 strings.recoveryPhraseCardSecondItem,
                 strings.recoveryPhraseCardThirdItem,
@@ -76,18 +75,18 @@ export const RecoveryPhrase = () => {
   }
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
       <StatusBar type="light" />
 
       <View style={styles.content}>
-        <StepperProgress currentStep={2} currentStepTitle={strings.recoveryStepper} totalSteps={4} displayStepNumber />
+        <StepperProgress currentStep={2} currentStepTitle={strings.stepRecoveryPhrase} totalSteps={4} />
 
         <Text style={styles.title}>
           {strings.recoveryPhraseTitle}
 
-          <Pressable onPress={showModal}>
-            <InfoIcon />
-          </Pressable>
+          <TouchableOpacity onPress={handleOnShowModal}>
+            <InfoIllustration />
+          </TouchableOpacity>
         </Text>
 
         <View style={styles.mnemonicWords}>
@@ -111,10 +110,10 @@ export const RecoveryPhrase = () => {
           ))}
         </View>
 
-        <TouchableOpacity activeOpacity={0.5} style={styles.blurViewButton} onPress={() => setIsBlur(!isBlur)}>
-          {isBlur ? <EyeOpenIcon /> : <EyeClosedIcon />}
+        <TouchableOpacity activeOpacity={0.5} style={styles.blurButton} onPress={() => setIsBlur(!isBlur)}>
+          {isBlur ? <EyeOpenIllustration /> : <EyeClosedIllustration />}
 
-          <Text style={styles.blurViewTextButton}>
+          <Text style={styles.blurTextButton}>
             {!isBlur ? strings.hideRecoveryPhraseButton : strings.showRecoveryPhraseButton}
           </Text>
         </TouchableOpacity>
@@ -122,13 +121,10 @@ export const RecoveryPhrase = () => {
 
       <View>
         <Button
-          title={strings.nextButton}
+          title={strings.next}
           style={styles.button}
-          onPress={() =>
-            navigation.navigate('new-wallet', {
-              screen: 'verify-recovery-phrase',
-            })
-          }
+          disabled={isBlur}
+          onPress={() => navigation.navigate('mnemonic-check')}
         />
 
         <Space height="s" />
@@ -140,7 +136,7 @@ export const RecoveryPhrase = () => {
 const useStyles = () => {
   const {theme} = useTheme()
   const styles = StyleSheet.create({
-    container: {
+    root: {
       flex: 1,
       ...theme.padding['x-l'],
       justifyContent: 'space-between',
@@ -184,19 +180,18 @@ const useStyles = () => {
       top: 0,
       zIndex: 1,
     },
-    blurViewButton: {
+    blurButton: {
       flexDirection: 'row',
       alignItems: 'center',
       gap: 8,
     },
-    blurViewTextButton: {
+    blurTextButton: {
       ...theme.typography['button-2-m'],
       color: theme.color.primary[500],
     },
   })
 
   const colors = {
-    gray900: theme.color.gray[900],
     gradientBlueGreen: theme.color.gradients['blue-green'],
   }
 

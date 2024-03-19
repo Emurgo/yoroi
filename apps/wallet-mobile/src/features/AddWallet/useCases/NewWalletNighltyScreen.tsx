@@ -6,15 +6,16 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {StatusBar} from '../../../components'
 import {Space} from '../../../components/Space/Space'
+import {WalletInitRouteNavigation} from '../../../navigation'
 import {ButtonCard} from '../common/ButtonCard/ButtonCard'
 import {LogoBanner} from '../common/LogoBanner/LogoBanner'
 import {useStrings} from '../common/useStrings'
 
-export const NewWalletScreenNighlty = () => {
+export const NewWalletNighltyScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
 
-  const navigation = useNavigation()
+  const navigation = useNavigation<WalletInitRouteNavigation>()
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
@@ -31,11 +32,7 @@ export const NewWalletScreenNighlty = () => {
           <ButtonCard
             title={strings.cardanoMainnet}
             subTitle={strings.cardanoMainnetDescription}
-            onPress={() =>
-              navigation.navigate('new-wallet', {
-                screen: 'about-recovery-phrase',
-              })
-            }
+            onPress={() => navigation.navigate('mnemonic-description')}
           />
 
           <Space height="l" />
@@ -43,9 +40,7 @@ export const NewWalletScreenNighlty = () => {
           <ButtonCard
             title={strings.cardanoTestnet}
             subTitle={strings.cardanoTestnetDescription}
-            onPress={() => {
-              ;('')
-            }}
+            onPress={() => navigation.navigate('mnemonic-description')}
           />
 
           <Space height="l" />
@@ -53,9 +48,7 @@ export const NewWalletScreenNighlty = () => {
           <ButtonCard
             title={strings.cardanoSanchonet}
             subTitle={strings.cardanoSanchonetDescription}
-            onPress={() => {
-              ;('')
-            }}
+            onPress={() => navigation.navigate('mnemonic-description')}
           />
 
           <Space height="l" />

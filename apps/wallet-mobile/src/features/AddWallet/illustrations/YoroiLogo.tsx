@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Svg, {Path, SvgProps} from 'react-native-svg'
 
-const YoroiLogo = (props: SvgProps) => {
+export const YoroiLogo = (props: SvgProps) => {
   return (
     <Svg width={57} height={48} viewBox="0 0 57 48" fill="none" {...props}>
       <Path
@@ -11,5 +11,3 @@ const YoroiLogo = (props: SvgProps) => {
     </Svg>
   )
 }
-
-export default YoroiLogo

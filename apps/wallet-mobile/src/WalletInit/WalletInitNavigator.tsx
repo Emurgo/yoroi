@@ -2,22 +2,21 @@ import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {VerifyRecoveryPhrase} from '../features/AddWallet/useCases/CreateWallet/VerifyRecoveryPhrase'
-// import {BiometricScreen} from '../features/AddWallet/useCases/BiometricScreen'
+import {AboutRecoveryPhraseScreen} from '../features/AddWallet/useCases/CreateWallet/AboutRecoveryPhraseScreen'
+import {RecoveryPhraseScreen} from '../features/AddWallet/useCases/CreateWallet/RecoveryPhraseScreen'
+import {VerifyRecoveryPhraseScreen} from '../features/AddWallet/useCases/CreateWallet/VerifyRecoveryPhraseScreen'
+import {WalletDetailsScreen} from '../features/AddWallet/useCases/CreateWallet/WalletDetailsScreen'
+import {WalletInitScreen} from '../features/AddWallet/useCases/WalletInitScreen'
 import {defaultStackNavigationOptions, DEPRECATED_defaultStackNavigationOptions, WalletInitRoutes} from '../navigation'
 import {CheckNanoXScreen} from './CheckNanoX'
 import {ConnectNanoXScreen} from './ConnectNanoX/ConnectNanoXScreen'
-import {CreateWalletScreen} from './CreateWallet'
 import {ImportReadOnlyWalletScreen} from './ImportReadOnlyWallet'
-import {MnemonicCheckScreen} from './MnemonicCheck'
-import {MnemonicShowScreen} from './MnemonicShow'
 import {RestoreWalletScreen} from './RestoreWallet'
 import {SaveNanoXScreen} from './SaveNanoX/SaveNanoXScreen'
 import {SaveReadOnlyWalletScreen} from './SaveReadOnlyWallet'
 import {VerifyRestoredWalletScreen} from './VerifyRestoredWallet'
 import {WalletCredentialsScreen} from './WalletCredentials'
 import {WalletFreshInitScreen} from './WalletFreshInit'
-// import {WalletInitScreen} from './WalletInit'
 
 const Stack = createStackNavigator<WalletInitRoutes>()
 export const WalletInitNavigator = () => {
@@ -40,13 +39,13 @@ export const WalletInitNavigator = () => {
 
       <Stack.Screen
         name="choose-create-restore"
-        component={VerifyRecoveryPhrase}
+        component={WalletInitScreen}
         options={{...DEPRECATED_defaultStackNavigationOptions, title: strings.addWalletTitle}}
       />
 
       <Stack.Screen
         name="create-wallet-form"
-        component={CreateWalletScreen}
+        component={WalletDetailsScreen}
         options={{title: strings.createWalletTitle}}
       />
 
@@ -92,14 +91,20 @@ export const WalletInitNavigator = () => {
       />
 
       <Stack.Screen //
+        name="mnemonic-description"
+        component={AboutRecoveryPhraseScreen}
+        options={{title: strings.mnemonicShowTitle}}
+      />
+
+      <Stack.Screen
         name="mnemonic-show"
-        component={MnemonicShowScreen}
+        component={RecoveryPhraseScreen}
         options={{title: strings.mnemonicShowTitle}}
       />
 
       <Stack.Screen
         name="mnemonic-check"
-        component={MnemonicCheckScreen}
+        component={VerifyRecoveryPhraseScreen}
         options={{title: strings.mnemonicCheckTitle}}
       />
 

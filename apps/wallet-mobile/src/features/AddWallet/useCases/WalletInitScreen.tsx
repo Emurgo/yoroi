@@ -6,6 +6,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {StatusBar} from '../../../components'
 import {Space} from '../../../components/Space/Space'
+import {WalletInitRouteNavigation} from '../../../navigation'
 import {ButtonCard} from '../common/ButtonCard/ButtonCard'
 import {LogoBanner} from '../common/LogoBanner/LogoBanner'
 import {useStrings} from '../common/useStrings'
@@ -14,7 +15,7 @@ export const WalletInitScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
 
-  const navigation = useNavigation()
+  const navigation = useNavigation<WalletInitRouteNavigation>()
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
@@ -31,11 +32,7 @@ export const WalletInitScreen = () => {
           <ButtonCard
             title={strings.createWalletButtonCard}
             icon="create"
-            onPress={() =>
-              navigation.navigate('new-wallet', {
-                screen: 'choose-create-restore',
-              })
-            }
+            onPress={() => navigation.navigate('mnemonic-description')}
           />
 
           <Space height="l" />

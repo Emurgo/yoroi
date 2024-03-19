@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Svg, {ClipPath, Defs, G, LinearGradient, Path, Stop, SvgProps} from 'react-native-svg'
 
-const Biometric = (props: SvgProps) => {
+export const Biometric = (props: SvgProps) => {
   return (
     <Svg width={265} height={252} viewBox="0 0 265 252" fill="none" {...props}>
       <G clipPath="url(#clip0_12857_312214)">
@@ -428,5 +428,3 @@ const Biometric = (props: SvgProps) => {
     </Svg>
   )
 }
-
-export default Biometric

@@ -4,39 +4,35 @@ import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Spacer, StatusBar} from '../../../../components'
+import {Button, StatusBar} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
+import {WalletInitRouteNavigation} from '../../../../navigation'
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
 import {LearnMoreButton} from '../../common/LearnMoreButton/LearnMoreButton'
 import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
 import {useStrings} from '../../common/useStrings'
 
-export const AboutRecoveryPhrase = () => {
+export const AboutRecoveryPhraseScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
-  const navigation = useNavigation()
+  const navigation = useNavigation<WalletInitRouteNavigation>()
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
       <StatusBar type="light" />
 
       <View>
-        <StepperProgress
-          currentStep={1}
-          currentStepTitle={strings.aboutRecoveryPhraseStepper}
-          totalSteps={4}
-          displayStepNumber
-        />
+        <StepperProgress currentStep={1} currentStepTitle={strings.stepAboutRecoveryPhrase} totalSteps={4} />
 
         <Space height="l" />
 
-        <Text style={styles.title}>{strings.aboutRecoveryPhraseTitle}</Text>
+        <Text style={styles.aboutRecoveryPhraseTitle}>{strings.aboutRecoveryPhraseTitle}</Text>
 
         <Space height="l" />
 
         <CardAboutPhrase
-          background
-          padding
-          items={[
+          showBackgroundColor
+          includeSpacing
+          linesOfText={[
             strings.aboutRecoveryPhraseCardFirstItem,
             strings.aboutRecoveryPhraseCardSecondItem,
             strings.aboutRecoveryPhraseCardThirdItem,
@@ -54,19 +50,7 @@ export const AboutRecoveryPhrase = () => {
         />
       </View>
 
-      <View>
-        <Button
-          title="next"
-          style={styles.button}
-          onPress={() =>
-            navigation.navigate('new-wallet', {
-              screen: 'save-recovery-phrase',
-            })
-          }
-        />
-
-        <Spacer height={7} />
-      </View>
+      <Button title={strings.next} style={styles.button} onPress={() => navigation.navigate('mnemonic-show')} />
     </SafeAreaView>
   )
 }
@@ -74,13 +58,13 @@ export const AboutRecoveryPhrase = () => {
 const useStyles = () => {
   const {theme} = useTheme()
   const styles = StyleSheet.create({
-    container: {
+    root: {
       flex: 1,
       ...theme.padding['x-l'],
       justifyContent: 'space-between',
       backgroundColor: theme.color['white-static'],
     },
-    title: {
+    aboutRecoveryPhraseTitle: {
       ...theme.typography['body-1-l-regular'],
       color: theme.color.gray[900],
     },

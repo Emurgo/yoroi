@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Svg, {Path, SvgProps} from 'react-native-svg'
 
-const InfoIcon = (props: SvgProps) => {
+export const Info = (props: SvgProps) => {
   return (
     <Svg width={20} height={20} viewBox="0 0 20 20" fill="none" {...props}>
       <Path d="M10 5a1 1 0 100 2h.01a1 1 0 100-2H10zM10 8a1 1 0 00-1 1v5a1 1 0 102 0V9a1 1 0 00-1-1z" fill="#000" />
@@ -15,5 +15,3 @@ const InfoIcon = (props: SvgProps) => {
     </Svg>
   )
 }
-
-export default InfoIcon

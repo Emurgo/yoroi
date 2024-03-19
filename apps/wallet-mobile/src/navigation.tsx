@@ -81,7 +81,6 @@ export const defaultStackNavigationOptions = (theme: Theme): StackNavigationOpti
 
 export const DEPRECATED_defaultStackNavigationOptions: StackNavigationOptions = {
   headerStyle: {
-    // backgroundColor: COLORS.BACKGROUND_BLUE,
     elevation: 0,
     shadowOpacity: 0,
   },
@@ -128,16 +127,12 @@ export type WalletStackRoutes = {
 export type WalletStackRouteNavigation = StackNavigationProp<WalletStackRoutes>
 
 export type WalletInitRoutes = {
-  'biometrics-screen': undefined
-  'choose-create-restore': undefined
-  'about-recovery-phrase': undefined
-  'save-recovery-phrase': undefined
-  'verify-recovery-phrase': undefined
-  'initial-choose-create-restore': undefined
-  'create-wallet-form': {
+  'choose-create-restore': {
     networkId: NetworkId
     walletImplementationId: WalletImplementationId
   }
+  'initial-choose-create-restore': undefined
+  'create-wallet-form': undefined
   'restore-wallet-form': {
     networkId: NetworkId
     walletImplementationId: WalletImplementationId
@@ -167,20 +162,9 @@ export type WalletInitRoutes = {
     walletImplementationId: WalletImplementationId
     hwDeviceInfo: HWDeviceInfo
   }
-  'mnemonic-show': {
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
-    password: string
-    name: string
-    mnemonic: string
-  }
-  'mnemonic-check': {
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
-    password: string
-    name: string
-    mnemonic: string
-  }
+  'mnemonic-description': undefined
+  'mnemonic-show': undefined
+  'mnemonic-check': undefined
   'wallet-account-checksum': {
     networkId: NetworkId
     walletImplementationId: WalletImplementationId
