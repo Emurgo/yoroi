@@ -97,7 +97,7 @@ export const transformersMaker = (
       txHash,
       from: asYoroiAmount(from),
       to: asYoroiAmount(to),
-      placedAt,
+      placedAt: placedAt * 1000,
       provider: dex ?? 'muesliswap',
     } as const
   }
