@@ -111,8 +111,6 @@ describe('referralLink', () => {
       '&' +
       'walletAddress=addr1q9v8dvht2mv847gwarl7r4p49yzys8r7zlep7c8t2hqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqquvupf'
 
-    console.log(fullUrl)
-
     const api = {
       getBaseUrl: jest.fn(() => Promise.resolve(baseUrl)),
     } as unknown as Exchange.Api
