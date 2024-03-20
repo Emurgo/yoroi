@@ -9,7 +9,7 @@ describe('referralLink', () => {
     const baseUrl = `${origin}${pathname}?&access_token=FAKE_TOKEN`
     const fullUrl =
       `${origin}` +
-      `${pathname}?` +
+      `${pathname}/?` +
       'orderType=sell' +
       '&' +
       'fiatType=USD' +
