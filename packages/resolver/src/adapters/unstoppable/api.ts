@@ -1,5 +1,5 @@
 import {Api, Resolver} from '@yoroi/types'
-import {fetchData, FetchData, handleApiError, isLeft} from '@yoroi/common'
+import {fetchData, FetchData, getApiError, isLeft} from '@yoroi/common'
 import {z} from 'zod'
 import {AxiosRequestConfig} from 'axios'
 
@@ -38,7 +38,7 @@ export const unstoppableApiGetCryptoAddress = (
         if (error.responseData?.message?.includes('Unsupported TLD'))
           throw new Resolver.Errors.UnsupportedTld()
 
-        handleApiError(error)
+        throw getApiError(error)
       } else {
         // parsing
         const safeParsedAdaResponse = UnstoppableApiAdaResponseSchema.safeParse(
@@ -60,7 +60,7 @@ export const unstoppableApiGetCryptoAddress = (
         throw new Resolver.Errors.InvalidResponse()
       }
     } catch (error: unknown) {
-      return handleUnstoppableApiError(error)
+      throw getUnstoppableApiError(error)
     }
   }
 }
@@ -138,8 +138,9 @@ export const unstoppableApiConfig = {
   },
 } as const
 
-export const handleUnstoppableApiError = (error: unknown): never => {
-  if (error instanceof Api.Errors.NotFound) throw new Resolver.Errors.NotFound()
+export const getUnstoppableApiError = (error: unknown) => {
+  if (error instanceof Api.Errors.NotFound)
+    return new Resolver.Errors.NotFound()
 
-  throw error
+  return error
 }

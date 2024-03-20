@@ -2,14 +2,17 @@ import * as React from 'react'
 import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Spacer, StatusBar, YoroiLogo} from '../../../components'
+import {Button, Spacer, YoroiLogo} from '../../../components'
 import {BlueCheckbox} from '../../../components/BlueCheckbox'
+import {useStatusBar} from '../../../components/hooks/useStatusBar'
 import {COLORS} from '../../../theme'
 import {useNavigateTo, useStrings} from '../common'
 
 export const TermsOfServiceChangedScreen = () => {
   const [accepted, setAccepted] = React.useState(false)
   const navigateTo = useNavigateTo()
+
+  useStatusBar()
 
   const onPressContinue = () => {
     navigateTo.analyticsChanged()
@@ -30,8 +33,6 @@ export const TermsOfServiceChangedScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar type="dark" />
-
       <ScrollView bounces={false} contentContainerStyle={styles.scrollableContentContainer}>
         <YoroiLogo />
 

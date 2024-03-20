@@ -1,7 +1,7 @@
 {
   "name": "@yoroi/exchange",
-  "version": "1.0.0",
-  "description": "The Banxa integration package of Yoroi SDK",
+  "version": "2.0.0",
+  "description": "The Exchange package of Yoroi SDK",
   "keywords": [
     "yoroi",
     "cardano",
@@ -103,7 +103,8 @@
     "collectCoverage": true,
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}",
-      "!src/**/*.d.ts"
+      "!src/**/*.d.ts",
+      "!src/**/*.mocks.{js,jsx,ts,tsx}"
     ],
     "coverageReporters": [
       "text-summary",
@@ -127,18 +128,20 @@
     ]
   },
   "dependencies": {
-    "zod": "^3.22.2"
+    "@yoroi/common": "1.5.1"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
-    "@react-native-async-storage/async-storage": "^1.18.1",
+    "@react-native-async-storage/async-storage": "^1.19.3",
     "@react-native-community/eslint-config": "^3.0.2",
     "@release-it/conventional-changelog": "^5.0.0",
     "@testing-library/react-hooks": "^8.0.1",
+    "@testing-library/react-native": "^12.3.0",
     "@tsconfig/react-native": "^3.0.3",
     "@types/jest": "^29.5.12",
     "@types/react": "^18.2.55",
     "@types/react-test-renderer": "^18.0.7",
+    "axios": "^1.5.0",
     "commitlint": "^17.0.2",
     "del-cli": "^5.0.0",
     "dependency-cruiser": "^13.1.1",
@@ -147,6 +150,7 @@
     "eslint-plugin-ft-flow": "^3.0.0",
     "eslint-plugin-prettier": "^4.0.0",
     "flowgen": "^1.21.0",
+    "immer": "^10.0.2",
     "jest": "^28.1.1",
     "pod-install": "^0.1.0",
     "prettier": "^2.0.5",
@@ -156,14 +160,19 @@
     "react-query": "^3.39.3",
     "react-test-renderer": "^18.2.0",
     "release-it": "^15.0.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "zod": "^3.22.4"
   },
   "peerDependencies": {
+    "@react-native-async-storage/async-storage": ">= 1.19.3 <= 1.20.0",
+    "axios": "^1.5.0",
+    "immer": "^10.0.2",
     "react": ">= 16.8.0 <= 19.0.0",
-    "react-query": "^3.39.3"
+    "react-query": "^3.39.3",
+    "zod": "^3.22.4"
   },
   "optionalDependencies": {
-    "@react-native-async-storage/async-storage": "^1.18.1"
+    "@react-native-async-storage/async-storage": "^1.19.3"
   },
   "packageManager": "yarn@1.22.21",
   "engines": {

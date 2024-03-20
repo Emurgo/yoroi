@@ -7,7 +7,8 @@ import {InteractionManager, ScrollView, StyleSheet, Switch} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useAuth} from '../../../auth/AuthProvider'
-import {Icon, Spacer, StatusBar} from '../../../components'
+import {Icon, Spacer} from '../../../components'
+import {useStatusBar} from '../../../components/hooks/useStatusBar'
 import {DIALOG_BUTTONS, showConfirmationDialog} from '../../../dialogs'
 import {confirmationMessages} from '../../../i18n/global-messages'
 import {SettingsRouteNavigation, useWalletNavigation} from '../../../navigation'
@@ -41,6 +42,7 @@ export const WalletSettingsScreen = () => {
   const wallet = useSelectedWallet()
   const authSetting = useAuthSetting()
   const addressMode = useAddressModeManager()
+  useStatusBar()
 
   const logout = useLogout()
   const settingsNavigation = useNavigation<SettingsRouteNavigation>()
@@ -62,8 +64,6 @@ export const WalletSettingsScreen = () => {
   return (
     <SafeAreaView edges={['bottom', 'right', 'left']} style={styles.root}>
       <ScrollView bounces={false} style={styles.settings}>
-        <StatusBar type="dark" />
-
         <SettingsSection title={strings.general}>
           <NavigatedSettingsItem
             icon={<Icon.WalletStack {...iconProps} />}
@@ -277,7 +277,7 @@ const messages = defineMessages({
   },
   singleAddress: {
     id: 'global.singleAddress',
-    defaultMessage: '!!!Single addresses',
+    defaultMessage: '!!!Single address',
   },
   multipleAddressesInfo: {
     id: 'global.multipleAddressesInfo',

@@ -4,7 +4,8 @@ import {defineMessages, useIntl} from 'react-intl'
 import {InteractionManager, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Spacer, StatusBar, Text} from '../../components'
+import {Button, Spacer, Text} from '../../components'
+import {useStatusBar} from '../../components/hooks/useStatusBar'
 import {showErrorDialog} from '../../dialogs'
 import {errorMessages} from '../../i18n/global-messages'
 import {useMetrics} from '../../metrics/metricsManager'
@@ -22,6 +23,7 @@ export const MnemonicCheckScreen = () => {
   const route = useRoute<RouteProp<WalletInitRoutes, 'mnemonic-check'>>()
   const {mnemonic, password, name, networkId, walletImplementationId} = route.params
   const {track} = useMetrics()
+  useStatusBar()
 
   const mnemonicEntries: Array<Entry> = mnemonic
     .split(' ')
@@ -56,8 +58,6 @@ export const MnemonicCheckScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-      <StatusBar type="dark" />
-
       <Spacer height={24} />
 
       <Instructions />

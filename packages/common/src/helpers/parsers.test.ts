@@ -18,6 +18,7 @@ import {
   isUrl,
   isKeyOf,
   getKeys,
+  isStringLiteral,
 } from './parsers'
 
 describe('parsers', () => {
@@ -281,6 +282,52 @@ describe('parsers', () => {
 
     it('should return an empty array if the object is empty', () => {
       expect(getKeys({})).toEqual([])
+    })
+  })
+
+  describe('isStringLiteral function', () => {
+    const literalsArray = ['apple', 'banana', 'cherry']
+
+    it('should return true for a value that is part of the literals array', () => {
+      const value = 'banana'
+      const result = isStringLiteral(literalsArray, value)
+      expect(result).toBe(true)
+    })
+
+    it('should return false for a value that is not part of the literals array', () => {
+      const value = 'orange'
+      const result = isStringLiteral(literalsArray, value)
+      expect(result).toBe(false)
+    })
+
+    it('should return false for a number value when literals array contains only strings', () => {
+      const value = 123
+      const result = isStringLiteral(literalsArray, value)
+      expect(result).toBe(false)
+    })
+
+    it('should return false for an object value when literals array contains only strings', () => {
+      const value = {fruit: 'banana'}
+      const result = isStringLiteral(literalsArray, value)
+      expect(result).toBe(false)
+    })
+
+    it('should return false for a boolean value when literals array contains only strings', () => {
+      const value = true
+      const result = isStringLiteral(literalsArray, value)
+      expect(result).toBe(false)
+    })
+
+    it('should return false for null when literals array contains only strings', () => {
+      const value = null
+      const result = isStringLiteral(literalsArray, value)
+      expect(result).toBe(false)
+    })
+
+    it('should return false for undefined when literals array contains only strings', () => {
+      const value = undefined
+      const result = isStringLiteral(literalsArray, value)
+      expect(result).toBe(false)
     })
   })
 })

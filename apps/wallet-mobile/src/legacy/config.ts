@@ -45,12 +45,8 @@ export const LINKING_CONFIG = {
             history: {
               initialRouteName: 'history-list',
               screens: {
-                'rampOnOff-start-rampOnOff': {
-                  screens: {
-                    'result-ramp-on-off': {
-                      path: RAMP_ON_OFF_PATH,
-                    },
-                  },
+                'exchange-result': {
+                  path: RAMP_ON_OFF_PATH,
                 },
               },
             },

@@ -4,7 +4,8 @@ import {defineMessages, useIntl} from 'react-intl'
 import {FlatList, InteractionManager, ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Boundary, Icon, Line, StatusBar, Text} from '../../components'
+import {Boundary, Icon, Line, Text} from '../../components'
+import {useStatusBar} from '../../components/hooks/useStatusBar'
 import {showErrorDialog} from '../../dialogs'
 import {errorMessages} from '../../i18n/global-messages'
 import {useMetrics} from '../../metrics/metricsManager'
@@ -24,6 +25,7 @@ const addressMode: AddressMode = 'multiple'
 export const SaveReadOnlyWalletScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
+  useStatusBar()
   const {resetToWalletSelection} = useWalletNavigation()
   const {track} = useMetrics()
   const route = useRoute<RouteProp<WalletInitRoutes, 'save-read-only'>>()
@@ -64,8 +66,6 @@ export const SaveReadOnlyWalletScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container} testID="saveReadOnlyWalletContainer">
-      <StatusBar type="dark" />
-
       <WalletNameForm
         onSubmit={onSubmit}
         defaultWalletName={strings.defaultWalletName}

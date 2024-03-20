@@ -2673,10 +2673,10 @@
   resolved "https://registry.yarnpkg.com/@emotion/weak-memoize/-/weak-memoize-0.2.5.tgz#8eed982e2ee6f7f4e44c253e12962980791efd46"
   integrity sha512-6U71C2Wp7r5XtFtQzYrW5iKFT67OixrSxjI4MptCHzdSVlgabczzqLe0ZSgnub/5Kp4hSbpDB1tMytZY9pwxxA==
 
-"@emurgo/cardano-serialization-lib-nodejs@12.0.0-alpha.15":
-  version "12.0.0-alpha.15"
-  resolved "https://registry.yarnpkg.com/@emurgo/cardano-serialization-lib-nodejs/-/cardano-serialization-lib-nodejs-12.0.0-alpha.15.tgz#244fb4df7c240def0cf259b915158b2653a4316c"
-  integrity sha512-s75fBN9xAUkZNPaeBoVtXKQJaOjMr1ndmB6i9Ms79J/FN9LUq9XS6p08lVgWyjZPg6BEDU3wdrDJCtKYnMWIPg==
+"@emurgo/cardano-serialization-lib-nodejs@12.0.0-alpha.18":
+  version "12.0.0-alpha.18"
+  resolved "https://registry.yarnpkg.com/@emurgo/cardano-serialization-lib-nodejs/-/cardano-serialization-lib-nodejs-12.0.0-alpha.18.tgz#8696720e2ca839d6b2e64d1add1b35893713cd22"
+  integrity sha512-r2AiqV7Ip8+UlOxiWEM0ANi+aeKx7pimUpTTUDSbl/PGrxPLLB39Gs/d2UzVlfe1+uKQ6PLOBMFS3qf0m8/JJQ==
 
 "@emurgo/cardano-serialization-lib-nodejs@^9.1.4":
   version "9.1.4"
@@ -2700,10 +2700,10 @@
     buffer-crc32 "0.2.13"
     fnv-plus "1.3.1"
 
-"@emurgo/cross-csl-core@4.0.0-alpha.1", "@emurgo/cross-csl-core@^4.0.0-alpha.1":
-  version "4.0.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-core/-/cross-csl-core-4.0.0-alpha.1.tgz#59a4eff71abdcbe394400983ac62c728b30c323c"
-  integrity sha512-kaA2lHOxxxaBTgAtxmqp6DpME5mJ+sW0O6pu5wyCZ8oChUKW9MKWrt9z8RSA3ABs4ZgI6m3uuzFm6HYWaC9sqg==
+"@emurgo/cross-csl-core@4.2.0", "@emurgo/cross-csl-core@^4.2.0":
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-core/-/cross-csl-core-4.2.0.tgz#d6e2c00c0ae867f372d36daf37868b0f9fc39ad2"
+  integrity sha512-cXqGlcLl034dCpfcrzl+BaeTOeNQhSZErDU7rAOAm+yc9Ow+rATF/ApSbdQTq2uEifsC5eRJLhBpdi7PAU0X0w==
   dependencies:
     "@cardano-foundation/ledgerjs-hw-app-cardano" "^5.0.0"
     "@types/mocha" "^9.1.1"
@@ -2714,26 +2714,33 @@
     hash-wasm "^4.9.0"
     mocha "^10.0.0"
 
-"@emurgo/cross-csl-mobile@^4.0.0-alpha.1":
-  version "4.0.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-mobile/-/cross-csl-mobile-4.0.0-alpha.1.tgz#67dcdf5abaebf8c0ebfb482bf3c708d0a2288c31"
-  integrity sha512-mEBU0oUuejgTV9Txp5QDtcAmRdLWVn37tWZDKwD3DS1OJrrSZSM7hvGN3x4l0uiplLDZfilHK07rZs0CEc1T1g==
+"@emurgo/cross-csl-mobile@^4.2.0":
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-mobile/-/cross-csl-mobile-4.2.0.tgz#7f7fe1312c0a65b290e62f761cdc60d7c50aa79e"
+  integrity sha512-2K9M7EJPkv0PKlrQsRb6A/kpUZSIOcur/cBgejEUa0MmMu2kUsSm4HgLutw5PzXkhlVqD6ux2NbfvTr0TLqEOw==
   dependencies:
-    "@emurgo/cross-csl-core" "4.0.0-alpha.1"
-    "@emurgo/csl-mobile-bridge" "6.0.0-alpha.2"
+    "@emurgo/cross-csl-core" "4.2.0"
+    "@emurgo/csl-mobile-bridge" "6.0.0-alpha.3"
 
-"@emurgo/cross-csl-nodejs@^4.0.0-alpha.1":
-  version "4.0.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-nodejs/-/cross-csl-nodejs-4.0.0-alpha.1.tgz#a9dc1a3379d2b282f92eca659f99582b2f015194"
-  integrity sha512-1q0MA7lX5FQ/CvqXWGTB3f5KpFpEdtAnFD8rhzW3dcfdpVmxSji07Mbt8NMnkuTonf62wTRSzWXKTEIjXAqNGw==
+"@emurgo/cross-csl-nodejs@^4.2.0":
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-nodejs/-/cross-csl-nodejs-4.2.0.tgz#6ed4524ca5478d6e60e10469600636803a8115b9"
+  integrity sha512-RqUWCBEospYZVSvYGWb6Hw6zde6ktJckBL88NlwcHedNmOXL2EA16STfHDrnqhOzAOJhxDV4fFrDaBmNGrYVUg==
   dependencies:
-    "@emurgo/cardano-serialization-lib-nodejs" "12.0.0-alpha.15"
-    "@emurgo/cross-csl-core" "4.0.0-alpha.1"
+    "@emurgo/cardano-serialization-lib-nodejs" "12.0.0-alpha.18"
+    "@emurgo/cross-csl-core" "4.2.0"
 
-"@emurgo/csl-mobile-bridge@6.0.0-alpha.2":
-  version "6.0.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@emurgo/csl-mobile-bridge/-/csl-mobile-bridge-6.0.0-alpha.2.tgz#a2180e1af1e1bb700091cd70b44259cf6e3b1447"
-  integrity sha512-gacii8OQsTkflvh9U1+NTBwNageqKzQIhgIXpQXFYxE4IAND09kChG8H4HVVZ2FyiifUCCBV1Jc67wuMgKkszw==
+"@emurgo/csl-mobile-bridge@6.0.0-alpha.3":
+  version "6.0.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@emurgo/csl-mobile-bridge/-/csl-mobile-bridge-6.0.0-alpha.3.tgz#4626eed0209b464e4bdc2d0dd7311151949dd935"
+  integrity sha512-/mX45uyKEx16XEQKCgPjfRRNLD7wcV3zyB5BLdO8LpPg2M43H5SUnN+hvvRXUcJ+7GzfwD/HFXGoj+ItK9qhHQ==
+  dependencies:
+    base-64 "0.1.0"
+
+"@emurgo/csl-mobile-bridge@6.0.0-alpha.4":
+  version "6.0.0-alpha.4"
+  resolved "https://registry.yarnpkg.com/@emurgo/csl-mobile-bridge/-/csl-mobile-bridge-6.0.0-alpha.4.tgz#114b1094892fdfda90441a159f14a4da975e253c"
+  integrity sha512-ffnVpmN6bbMHSX80aqeIYNGXEvkvuTyAsMwX+31pRV6sYC49Q72zWCJWcRT7i1UIi4kfYsN3mACeMLeYL2K+Kw==
   dependencies:
     base-64 "0.1.0"
 
@@ -2755,13 +2762,13 @@
     "@ledgerhq/logs" "^5.15.0"
     rxjs "^6.5.5"
 
-"@emurgo/yoroi-lib@0.14.2":
-  version "0.14.2"
-  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib/-/yoroi-lib-0.14.2.tgz#c7bbee40cd224ad405b5e97d738e8b9704fd8c40"
-  integrity sha512-9zJObcPeiRkylOPe9gcaVmu1PnIY8Zh74HBjGYLTEeyjzwAYByaohJg6iaqsfcCAGyuys9n1njy7gqj7LDeD8w==
+"@emurgo/yoroi-lib@0.15.0":
+  version "0.15.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib/-/yoroi-lib-0.15.0.tgz#d4f00ac95f4083849ae2c51501abdd1f9efeed91"
+  integrity sha512-Zl95cbs0SKcVfUFWtFBRZF7enOvi1wk9oWNkf0Ejf5mJrDUU+TCr8r1hwqQXN6ixkVeOdgUUvzRSkjDTol5jsQ==
   dependencies:
     "@cardano-foundation/ledgerjs-hw-app-cardano" "^6.0.0"
-    "@emurgo/cross-csl-core" "^4.0.0-alpha.1"
+    "@emurgo/cross-csl-core" "^4.2.0"
     "@noble/hashes" "^1.3.2"
     axios "^0.24.0"
     bech32 "^2.0.0"
@@ -4788,13 +4795,6 @@
   version "1.18.2"
   resolved "https://registry.yarnpkg.com/@react-native-async-storage/async-storage/-/async-storage-1.18.2.tgz#ec8fd487a0b6c9500b43ece4b8779d1561f12e91"
   integrity sha512-dM8AfdoeIxlh+zqgr0o5+vCTPQ0Ru1mrPzONZMsr7ufp5h+6WgNxQNza7t0r5qQ6b04AJqTlBNixTWZxqP649Q==
-  dependencies:
-    merge-options "^3.0.4"
-
-"@react-native-async-storage/async-storage@^1.18.1":
-  version "1.19.1"
-  resolved "https://registry.yarnpkg.com/@react-native-async-storage/async-storage/-/async-storage-1.19.1.tgz#09d35caaa31823b40fdfeebf95decf8f992a6274"
-  integrity sha512-5QXuGCtB+HL3VtKL2JN3+6t4qh8VXizK+aGDAv6Dqiq3MLrzgZHb4tjVgtEWMd8CcDtD/JqaAI1b6/EaYGtFIA==
   dependencies:
     merge-options "^3.0.4"
 
@@ -23811,3 +23811,8 @@ zod@^3.22.2:
   version "3.22.2"
   resolved "https://registry.yarnpkg.com/zod/-/zod-3.22.2.tgz#3add8c682b7077c05ac6f979fea6998b573e157b"
   integrity sha512-wvWkphh5WQsJbVk1tbx1l1Ly4yg+XecD+Mq280uBGt9wa5BKSWf4Mhp6GmrkPixhMxmabYY7RbzlwVP32pbGCg==
+
+zod@^3.22.4:
+  version "3.22.4"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-3.22.4.tgz#f31c3a9386f61b1f228af56faa9255e845cf3fff"
+  integrity sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==

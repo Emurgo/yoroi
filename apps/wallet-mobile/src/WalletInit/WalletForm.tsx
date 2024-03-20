@@ -3,6 +3,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, TextInput as RNTextInput, View, ViewProps} from 'react-native'
 
 import {Button, Checkmark, KeyboardAvoidingView, Spacer, TextInput} from '../components'
+import {useStatusBar} from '../components/hooks/useStatusBar'
 import {debugWalletInfo, features} from '../features'
 import globalMessages from '../i18n/global-messages'
 import {COLORS} from '../theme'
@@ -22,6 +23,7 @@ type Props = {
 
 export const WalletForm = ({onSubmit}: Props) => {
   const strings = useStrings()
+  useStatusBar()
   const walletManager = useWalletManager()
   const {walletNames} = useWalletNames(walletManager)
   const [name, setName] = React.useState(features.prefillWalletInfo ? debugWalletInfo.WALLET_NAME : '')

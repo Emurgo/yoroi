@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useFocusEffect} from '@react-navigation/native'
+import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import React, {useEffect} from 'react'
 import {useIntl} from 'react-intl'
@@ -12,7 +13,6 @@ import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../
 import {assetsToSendProperties} from '../../../../metrics/helpers'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../SelectedWallet'
-import {COLORS} from '../../../../theme'
 import {sortTokenInfos} from '../../../../utils'
 import {useSaveMemo, useTokenInfos} from '../../../../yoroi-wallets/hooks'
 import {YoroiSignedTx} from '../../../../yoroi-wallets/types'
@@ -29,6 +29,7 @@ import {SecondaryTotals} from './Summary/SecondaryTotals'
 
 export const ConfirmTxScreen = () => {
   const strings = useStrings()
+  const styles = useStyles()
   const wallet = useSelectedWallet()
   const navigateTo = useNavigateTo()
   const [password, setPassword] = React.useState('')
@@ -132,19 +133,31 @@ export const ConfirmTxScreen = () => {
   )
 }
 
-const Actions = (props: ViewProps) => <View {...props} style={{padding: 16}} />
+const Actions = (props: ViewProps) => {
+  const styles = useStyles()
+  return <View {...props} style={styles.actions} />
+}
 
-const styles = StyleSheet.create({
-  root: {
-    backgroundColor: COLORS.WHITE,
-    flex: 1,
-  },
-  container: {
-    backgroundColor: COLORS.WHITE,
-    flex: 1,
-    paddingHorizontal: 16,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, padding} = theme
+
+  const styles = StyleSheet.create({
+    root: {
+      backgroundColor: color.gray.min,
+      flex: 1,
+    },
+    container: {
+      backgroundColor: color.gray.min,
+      flex: 1,
+      ...padding['x-l'],
+    },
+    actions: {
+      ...padding['l'],
+    },
+  })
+  return styles
+}
 
 const useStrings = () => {
   const intl = useIntl()

@@ -98,9 +98,12 @@ export const ShareQRCodeCard = ({content, title, isCopying, onLongPress}: ShareQ
 }
 
 const useStyles = () => {
-  const screenWidth = useWindowDimensions().width
+  const {width: screenWidth, height: screenHeight} = useWindowDimensions()
   const {theme} = useTheme()
   const {color, typography} = theme
+
+  const heightBreakpointLarge = 800
+  const cardSpacing = screenHeight > heightBreakpointLarge ? 32 : 16
 
   const styles = StyleSheet.create({
     qrCode: {
@@ -120,9 +123,8 @@ const useStyles = () => {
       minHeight: 394,
       alignSelf: 'center',
       overflow: 'hidden',
-      paddingVertical: 16,
-      gap: 32,
-      paddingTop: 32,
+      paddingVertical: cardSpacing,
+      gap: cardSpacing,
     },
     title: {
       ...typography['heading-3-medium'],

@@ -58,6 +58,7 @@ export const darkPalette: Palette = {
     'blue-green': ['#122770', '#026264'],
     'green': ['#93F5E1', '#C6F7F7'],
     'blue': ['#244ABF', '#4B6DDE'],
+    'light': ['#C6F7ED', '#E4E8F7'],
   },
   'bottom-sheet-background': '#15171F',
   'overlay-extension': {hex: '#15171F', opacity: 0.72},

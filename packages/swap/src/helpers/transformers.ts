@@ -1,6 +1,7 @@
 import AssetFingerprint from '@emurgo/cip14-js'
 import {Swap, Balance} from '@yoroi/types'
 import {isString} from '@yoroi/common'
+import {AssetNameUtils} from '@emurgo/yoroi-lib/dist/internals/utils/assets'
 
 import {Quantities} from '../utils/quantities'
 import {supportedProviders} from '../translators/constants'
@@ -123,7 +124,7 @@ export const transformersMaker = (
         policyId: openswapToken.address.policyId,
         assetNameHex: openswapToken.address.name,
       }),
-      name: asUtf8(openswapToken.address.name),
+      name: asTokenName(openswapToken.address.name),
       decimals: openswapToken.decimalPlaces,
       description: openswapToken.description,
       image: openswapToken.image,
@@ -266,7 +267,10 @@ export const asTokenFingerprint = ({
   return assetFingerprint.fingerprint()
 }
 
-export const asUtf8 = (hex: string) => Buffer.from(hex, 'hex').toString('utf-8')
+export const asTokenName = (hex: string) => {
+  const {asciiName, hexName} = AssetNameUtils.resolveProperties(hex)
+  return asciiName ?? hexName
+}
 
 function isSupportedProvider(
   provider: string,

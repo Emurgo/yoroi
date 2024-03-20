@@ -3,10 +3,10 @@ import {useTheme} from '@yoroi/theme'
 import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {LayoutAnimation, StyleSheet, View} from 'react-native'
-import Animated from 'react-native-reanimated'
 
 import infoIcon from '../assets/img/icon/info-light-green.png'
-import {Boundary, ResetErrorRef, Spacer, StatusBar} from '../components'
+import {Boundary, ResetErrorRef, Spacer} from '../components'
+import {useStatusBar} from '../components/hooks/useStatusBar'
 import {Tab, TabPanel, TabPanels, Tabs} from '../components/Tabs'
 import {assetMessages, txLabels} from '../i18n/global-messages'
 import {useSelectedWallet} from '../SelectedWallet'
@@ -18,7 +18,6 @@ import {BalanceBanner} from './BalanceBanner'
 import {CollapsibleHeader} from './CollapsibleHeader'
 import {LockedDeposit} from './LockedDeposit'
 import {TxHistoryList} from './TxHistoryList'
-import {useAnimatedTxHistory} from './useAnimatedTxHistory'
 import {useOnScroll} from './useOnScroll'
 import {WarningBanner} from './WarningBanner'
 
@@ -32,8 +31,6 @@ export const TxHistory = () => {
   const [showWarning, setShowWarning] = useState(isByron(wallet.walletImplementationId))
 
   const [activeTab, setActiveTab] = useState<Tab>('transactions')
-
-  const {translateStyles} = useAnimatedTxHistory()
 
   const onSelectTab = (tab: Tab) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
@@ -56,71 +53,67 @@ export const TxHistory = () => {
 
   return (
     <View style={styles.scrollView}>
-      <StatusBar type="dark" overrideColor="#E1EAF6" />
+      <CollapsibleHeader expanded={expanded}>
+        <BalanceBanner ref={resetErrorRef} />
 
-      <Animated.View style={[styles.container, translateStyles]}>
-        <CollapsibleHeader expanded={expanded}>
-          <BalanceBanner ref={resetErrorRef} />
+        <ActionsBanner disabled={isLoading} />
+      </CollapsibleHeader>
 
-          <ActionsBanner disabled={isLoading} />
-        </CollapsibleHeader>
+      <Tabs style={styles.tabs}>
+        <Tab
+          onPress={() => {
+            setExpanded(true)
+            onSelectTab('transactions')
+          }}
+          label={strings.transactions}
+          active={activeTab === 'transactions'}
+          testID="transactionsTabButton"
+          style={styles.tab}
+        />
 
-        <Tabs style={styles.tabs}>
-          <Tab
-            onPress={() => {
-              setExpanded(true)
-              onSelectTab('transactions')
-            }}
-            label={strings.transactions}
-            active={activeTab === 'transactions'}
-            testID="transactionsTabButton"
-            style={styles.tab}
-          />
+        <Tab //
+          onPress={() => {
+            setExpanded(true)
+            onSelectTab('assets')
+          }}
+          label={strings.assets}
+          active={activeTab === 'assets'}
+          testID="assetsTabButton"
+          style={styles.tab}
+        />
+      </Tabs>
 
-          <Tab //
-            onPress={() => {
-              setExpanded(true)
-              onSelectTab('assets')
-            }}
-            label={strings.assets}
-            active={activeTab === 'assets'}
-            testID="assetsTabButton"
-            style={styles.tab}
-          />
-        </Tabs>
+      <TabPanels>
+        <Spacer height={2} />
 
-        <TabPanels>
-          <Spacer height={2} />
+        <LockedDeposit />
 
-          <LockedDeposit />
+        <Spacer height={8} />
 
-          <Spacer height={8} />
+        <TabPanel active={activeTab === 'transactions'}>
+          {isByron(wallet.walletImplementationId) && showWarning && (
+            <WarningBanner
+              title={strings.warningTitle.toUpperCase()}
+              icon={infoIcon}
+              message={strings.warningMessage}
+              showCloseIcon
+              onRequestClose={() => {
+                LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+                setShowWarning(false)
+              }}
+              style={styles.warningNoteStyles}
+            />
+          )}
 
-          <TabPanel active={activeTab === 'transactions'}>
-            {isByron(wallet.walletImplementationId) && showWarning && (
-              <WarningBanner
-                title={strings.warningTitle.toUpperCase()}
-                icon={infoIcon}
-                message={strings.warningMessage}
-                showCloseIcon
-                onRequestClose={() => {
-                  LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-                  setShowWarning(false)
-                }}
-                style={styles.warningNoteStyles}
-              />
-            )}
+          <TxHistoryList onScroll={onScroll} refreshing={isLoading} onRefresh={onRefresh} />
+        </TabPanel>
 
-            <TxHistoryList onScroll={onScroll} refreshing={isLoading} onRefresh={onRefresh} />
-          </TabPanel>
-
-          <TabPanel active={activeTab === 'assets'}>
-            <Boundary loading={{size: 'full'}}>
-              <AssetList onScroll={onScroll} refreshing={isLoading} onRefresh={onRefresh} />
-            </Boundary>
-          </TabPanel>
-        </TabPanels>
-      </Animated.View>
+        <TabPanel active={activeTab === 'assets'}>
+          <Boundary loading={{size: 'full'}}>
+            <AssetList onScroll={onScroll} refreshing={isLoading} onRefresh={onRefresh} />
+          </Boundary>
+        </TabPanel>
+      </TabPanels>
     </View>
   )
 }
@@ -149,15 +142,13 @@ const warningBannerMessages = defineMessages({
 
 const useStyles = () => {
   const {theme} = useTheme()
-  const {color} = theme
+  const {color, padding} = theme
+  useStatusBar(color.primary[100])
+
   const styles = StyleSheet.create({
     scrollView: {
       flex: 1,
       backgroundColor: color.primary[100],
-    },
-    container: {
-      flexDirection: 'column',
-      flex: 1,
     },
     warningNoteStyles: {
       position: 'absolute',
@@ -173,7 +164,7 @@ const useStyles = () => {
     tab: {
       alignItems: 'center',
       justifyContent: 'center',
-      padding: 16,
+      ...padding['l'],
       flex: 1,
     },
   })

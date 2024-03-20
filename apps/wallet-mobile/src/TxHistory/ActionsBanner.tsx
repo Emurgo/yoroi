@@ -91,7 +91,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   }
 
   return (
-    <View style={styles.banner}>
+    <View>
       <Spacer height={16} />
 
       <View style={styles.centralized}>
@@ -102,31 +102,36 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
             </Animated.View>
           )}
 
+          <View style={styles.centralized}>
+            <TouchableOpacity
+              style={styles.actionIcon}
+              onPress={handleOnPressReceive}
+              testID="receiveButton"
+              disabled={disabled}
+              onLongPress={handleOnLongPressReceive}
+            >
+              <Icon.Received {...iconProps} />
+            </TouchableOpacity>
+
+            <Text style={styles.actionLabel}>{strings.receiveLabel}</Text>
+          </View>
+
+          {!wallet.isReadOnly && <Spacer width={18} />}
+
           {!wallet.isReadOnly && (
             <View style={styles.centralized}>
               <TouchableOpacity
                 style={styles.actionIcon}
-                onPress={handleOnPressReceive}
-                testID="receiveButton"
+                onPress={handleOnSend}
+                testID="sendButton"
                 disabled={disabled}
-                onLongPress={handleOnLongPressReceive}
               >
-                <Icon.Received {...iconProps} />
+                <Icon.Send {...iconProps} />
               </TouchableOpacity>
 
-              <Text style={styles.actionLabel}>{strings.receiveLabel}</Text>
+              <Text style={styles.actionLabel}>{strings.sendLabel}</Text>
             </View>
           )}
-
-          {!wallet.isReadOnly && <Spacer width={18} />}
-
-          <View style={styles.centralized}>
-            <TouchableOpacity style={styles.actionIcon} onPress={handleOnSend} testID="sendButton" disabled={disabled}>
-              <Icon.Send {...iconProps} />
-            </TouchableOpacity>
-
-            <Text style={styles.actionLabel}>{strings.sendLabel}</Text>
-          </View>
 
           {!wallet.isReadOnly && (
             <>
@@ -171,9 +176,8 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
 
 const useStyles = () => {
   const {theme} = useTheme()
-  const {color} = theme
+  const {color, padding, typography} = theme
   const styles = StyleSheet.create({
-    banner: {},
     centralized: {
       alignItems: 'center',
       justifyContent: 'center',
@@ -191,12 +195,9 @@ const useStyles = () => {
       backgroundColor: color.primary[500],
     },
     actionLabel: {
-      paddingTop: 8,
-      fontSize: 12,
+      ...padding['t-s'],
       color: color.gray.max,
-      fontFamily: 'Rubik-Regular',
-      fontWeight: '500',
-      lineHeight: 18,
+      ...typography['body-3-s-medium'],
     },
     disabled: {
       opacity: 0.5,
@@ -213,10 +214,8 @@ const useStyles = () => {
     },
     textCopy: {
       textAlign: 'center',
-      padding: 8,
-      fontSize: 14,
-      fontWeight: '500',
-      fontFamily: 'Rubik-Medium',
+      ...padding['s'],
+      ...typography['body-2-m-medium'],
       color: color.gray.min,
     },
   })
@@ -254,6 +253,6 @@ const useNavigateTo = () => {
     receiveSingleAddress: () => navigation.navigate('receive-single'),
     receiveMultipleAddresses: () => navigation.navigate('receive-multiple'),
     swap: () => navigation.navigate('swap-start-swap'),
-    exchange: () => navigation.navigate('rampOnOff-start-rampOnOff'),
+    exchange: () => navigation.navigate('exchange-create-order'),
   }
 }
