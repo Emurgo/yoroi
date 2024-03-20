@@ -7,7 +7,8 @@ import LinearGradient from 'react-native-linear-gradient'
 import Animated, {FadeIn, FadeOut, Layout} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, StatusBar} from '../../../../components'
+import {Button} from '../../../../components'
+import {useStatusBar} from '../../../../components/hooks/useStatusBar'
 import {Space} from '../../../../components/Space/Space'
 import {WalletInitRouteNavigation} from '../../../../navigation'
 import {mockAddWallet} from '../../common/mocks'
@@ -17,6 +18,7 @@ import {Alert as AlertIllustration} from '../../illustrations/Alert'
 import {Check2 as Check2Illustration} from '../../illustrations/Check2'
 
 export const VerifyRecoveryPhraseScreen = () => {
+  useStatusBar()
   const {styles} = useStyles()
 
   const navigation = useNavigation<WalletInitRouteNavigation>()
@@ -52,8 +54,6 @@ export const VerifyRecoveryPhraseScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
-      <StatusBar />
-
       <StepperProgress currentStep={3} currentStepTitle={strings.stepVerifyRecoveryPhrase} totalSteps={4} />
 
       <Space height="l" />
@@ -103,7 +103,12 @@ export const VerifyRecoveryPhraseScreen = () => {
           title="next"
           style={styles.button}
           disabled={disabled}
-          onPress={() => navigation.navigate('create-wallet-form')}
+          onPress={() =>
+            navigation.navigate('create-wallet-form', {
+              networkId: 1,
+              walletImplementationId: 'haskell-byron',
+            })
+          }
         />
 
         <Space height="s" />

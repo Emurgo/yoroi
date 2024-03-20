@@ -1,20 +1,18 @@
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import assert from 'assert'
 import React from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
+import {WalletInitRouteNavigation} from '../../navigation'
 import {COLORS} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
-import {generateAdaMnemonic} from '../../yoroi-wallets/cardano/mnemonic'
 import {MnemonicExplanationModal} from '../MnemonicExplanationModal'
 import {WalletForm} from '../WalletForm'
 
 type WalletFormData = null | {name: string; password: string}
 export const CreateWalletScreen = () => {
   const navigation = useNavigation<WalletInitRouteNavigation>()
-  const route = useRoute<RouteProp<WalletInitRoutes, 'create-wallet-form'>>()
   const [visibleMnemonicExplanation, setVisibleMnemonicExplanation] = React.useState(false)
   const [formData, _setFormData] = React.useState<WalletFormData>(null)
 
@@ -27,8 +25,6 @@ export const CreateWalletScreen = () => {
 
   const navigateToMnemonicScreen = () => {
     hideMnemonicExplanation()
-    const mnemonic = generateAdaMnemonic()
-    const {networkId, walletImplementationId} = route.params
     const name = formData?.name
     const password = formData?.password
 
@@ -36,11 +32,11 @@ export const CreateWalletScreen = () => {
     assert(!isEmptyString(password), 'Password is required')
 
     navigation.navigate('mnemonic-show', {
-      mnemonic,
-      networkId,
-      walletImplementationId,
-      name,
-      password,
+      mnemonic: '',
+      name: '',
+      networkId: 1,
+      password: '',
+      walletImplementationId: 'haskell-byron',
     })
   }
 

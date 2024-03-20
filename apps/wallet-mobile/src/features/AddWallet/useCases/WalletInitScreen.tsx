@@ -4,7 +4,7 @@ import * as React from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {StatusBar} from '../../../components'
+import {useStatusBar} from '../../../components/hooks/useStatusBar'
 import {Space} from '../../../components/Space/Space'
 import {WalletInitRouteNavigation} from '../../../navigation'
 import {ButtonCard} from '../common/ButtonCard/ButtonCard'
@@ -12,6 +12,7 @@ import {LogoBanner} from '../common/LogoBanner/LogoBanner'
 import {useStrings} from '../common/useStrings'
 
 export const WalletInitScreen = () => {
+  useStatusBar()
   const {styles} = useStyles()
   const strings = useStrings()
 
@@ -19,8 +20,6 @@ export const WalletInitScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
-      <StatusBar  />
-
       <Space height="l" />
 
       <LogoBanner />

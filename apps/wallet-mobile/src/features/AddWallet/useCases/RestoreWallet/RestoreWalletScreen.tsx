@@ -5,7 +5,7 @@ import {StyleSheet, Text, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, StatusBar} from '../../../../components'
+import {Button} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
 import {isEmptyString} from '../../../../utils'
 import {MnemonicInput} from '../../../../WalletInit/MnemonicInput'
@@ -16,6 +16,7 @@ export const RestoreWalletScreen = () => {
   const {styles} = useStyles()
   const [phrase, setPhrase] = React.useState('')
   const navigation = useNavigation()
+  // const mnemonic = generateAdaMnemonic()
 
   const strings = useStrings()
 
@@ -23,8 +24,6 @@ export const RestoreWalletScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
-      <StatusBar />
-
       <View>
         <StepperProgress currentStep={1} currentStepTitle="Enter recovery phrase" totalSteps={2} />
 

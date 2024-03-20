@@ -4,7 +4,8 @@ import * as React from 'react'
 import {Keyboard, ScrollView, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, StatusBar, TextInput, useModal} from '../../../../components'
+import {Button, TextInput, useModal} from '../../../../components'
+import {useStatusBar} from '../../../../components/hooks/useStatusBar'
 import {Space} from '../../../../components/Space/Space'
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
 import {LearnMoreButton} from '../../common/LearnMoreButton/LearnMoreButton'
@@ -28,6 +29,7 @@ const useSizeModal = () => {
 }
 
 export const WalletDetailsScreen = () => {
+  useStatusBar()
   const {styles} = useStyles()
   const {HEIGHT_MODAL_NAME_PASSWORD, HEIGHT_MODAL_CHECKSUM} = useSizeModal()
   const {openModal, closeModal} = useModal()
@@ -111,8 +113,6 @@ export const WalletDetailsScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
-      <StatusBar />
-
       <View>
         <StepperProgress currentStep={4} currentStepTitle={strings.stepWalletDetails} totalSteps={4} />
 

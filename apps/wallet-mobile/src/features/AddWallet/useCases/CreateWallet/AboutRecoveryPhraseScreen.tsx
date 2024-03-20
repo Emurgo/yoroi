@@ -4,7 +4,8 @@ import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, StatusBar} from '../../../../components'
+import {Button} from '../../../../components'
+import {useStatusBar} from '../../../../components/hooks/useStatusBar'
 import {Space} from '../../../../components/Space/Space'
 import {WalletInitRouteNavigation} from '../../../../navigation'
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
@@ -13,13 +14,12 @@ import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
 import {useStrings} from '../../common/useStrings'
 
 export const AboutRecoveryPhraseScreen = () => {
+  useStatusBar()
   const {styles} = useStyles()
   const strings = useStrings()
   const navigation = useNavigation<WalletInitRouteNavigation>()
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
-      <StatusBar />
-
       <View>
         <StepperProgress currentStep={1} currentStepTitle={strings.stepAboutRecoveryPhrase} totalSteps={4} />
 
@@ -50,7 +50,19 @@ export const AboutRecoveryPhraseScreen = () => {
         />
       </View>
 
-      <Button title={strings.next} style={styles.button} onPress={() => navigation.navigate('mnemonic-show')} />
+      <Button
+        title={strings.next}
+        style={styles.button}
+        onPress={() =>
+          navigation.navigate('mnemonic-show', {
+            mnemonic: '',
+            name: '',
+            networkId: 1,
+            password: '',
+            walletImplementationId: 'haskell-byron',
+          })
+        }
+      />
     </SafeAreaView>
   )
 }

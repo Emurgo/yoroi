@@ -4,12 +4,14 @@ import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, StatusBar} from '../../../components'
+import {Button} from '../../../components'
+import {useStatusBar} from '../../../components/hooks/useStatusBar'
 import {Space} from '../../../components/Space/Space'
 import {useStrings} from '../common/useStrings'
 import {Biometric as BiometricIlustration} from '../illustrations/Biometric'
 
 export const BiometricScreen = () => {
+  useStatusBar()
   const {styles} = useStyles()
   const strings = useStrings()
 
@@ -17,8 +19,6 @@ export const BiometricScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'top', 'bottom']} style={styles.root}>
-      <StatusBar />
-
       <View style={styles.content}>
         <View style={styles.illustration}>
           <BiometricIlustration />
