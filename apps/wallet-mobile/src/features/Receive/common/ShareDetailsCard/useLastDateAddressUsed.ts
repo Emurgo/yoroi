@@ -18,8 +18,11 @@ export const useLastDateAddressUsed = (address: string) => {
 
     return lastUsed
       ? intl.formatDate(new Date(lastUsed), {
-          dateStyle: 'short',
-          timeStyle: 'short',
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
           hour12: false,
         })
       : null

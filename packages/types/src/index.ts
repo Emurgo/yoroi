@@ -31,7 +31,14 @@ import {
 import {ResolverManager} from './resolver/manager'
 import {ResolverReceiver} from './resolver/receiver'
 import {ResolverStorage} from './resolver/storage'
-import {LinksLink, LinksModule, LinksUriConfig} from './links/link'
+import {
+  LinksLink,
+  LinksModule,
+  LinksUriConfig,
+  LinksUriRules,
+  LinksWebCardanoUriConfig,
+  LinksYoroiUriConfig,
+} from './links/link'
 import {
   LinksErrorExtraParamsDenied,
   LinksErrorForbiddenParamsProvided,
@@ -107,15 +114,20 @@ import {
   CardanoUnsignedTx,
   CardanoVoting,
 } from './chain/cardano'
-import {ExchangeManager} from './exchange/module'
 import {ExchangeBlockchainCode} from './exchange/blockchain'
 import {ExchangeManagerOptions} from './exchange/build'
 import {ExchangeCoin} from './exchange/coin'
 import {ExchangeFiat} from './exchange/fiat'
-import {ExchangeReferralUrlQueryStringParams} from './exchange/params'
-import {ExchangeUnknownError, ExchangeValidationError} from './exchange/errors'
-import {ExchangeOrderType} from './exchange/order'
+import {ExchangeReferralUrlQueryStringParams} from './exchange/query-string'
+import {
+  ExchangeProviderNotFoundError,
+  ExchangeUnknownError,
+  ExchangeValidationError,
+} from './exchange/errors'
+import {ExchangeOrderType} from './exchange/order-type'
 import {ExchangeProvider} from './exchange/provider'
+import {ExchangeApi} from './exchange/api'
+import {ExchangeManager} from './exchange/manager'
 
 export namespace App {
   export interface Storage<IsAsync extends boolean = true>
@@ -190,10 +202,9 @@ export namespace Balance {
 
 export namespace Links {
   export interface UriConfig extends LinksUriConfig {}
-  export type Scheme = LinksUriConfig['scheme']
-  export type Authority = LinksUriConfig['authority']
-  export type Version = LinksUriConfig['version']
-  export type Rules = LinksUriConfig['rules']
+  export interface WebCardanoUriConfig extends LinksWebCardanoUriConfig {}
+  export interface YoroiUriConfig extends LinksYoroiUriConfig {}
+  export interface Rules extends LinksUriRules {}
 
   export type Link<T extends LinksUriConfig> = LinksLink<T>
 
@@ -319,19 +330,20 @@ export namespace Chain {
 }
 
 export namespace Exchange {
-  export type Manager = ExchangeManager
   export type BlockchainCode = ExchangeBlockchainCode
+  export type Manager = ExchangeManager
   export type ManagerOptions = ExchangeManagerOptions
   export type Coin = ExchangeCoin
   export type Fiat = ExchangeFiat
   export type OrderType = ExchangeOrderType
   export type Provider = ExchangeProvider
-  export const Provider = ExchangeProvider
   export type ReferralUrlQueryStringParams =
     ExchangeReferralUrlQueryStringParams
+  export interface Api extends ExchangeApi {}
   export namespace Errors {
     export class Validation extends ExchangeValidationError {}
     export class Unknown extends ExchangeUnknownError {}
+    export class ProviderNotFound extends ExchangeProviderNotFoundError {}
   }
 }
 

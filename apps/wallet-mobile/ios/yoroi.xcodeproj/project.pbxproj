@@ -102,6 +102,8 @@
 		9A17D1FE4D734EC2A996EA26 /* Rubik-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Medium.ttf"; path = "../src/assets/fonts/Rubik-Medium.ttf"; sourceTree = "<group>"; };
 		A230DBE7EEBA4B38AD9006D2 /* Rubik-Italic-VariableFont_wght.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Italic-VariableFont_wght.ttf"; path = "../src/assets/fonts/Rubik-Italic-VariableFont_wght.ttf"; sourceTree = "<group>"; };
 		B4FF531EA86A409487D4A26C /* Rubik-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-BlackItalic.ttf"; path = "../src/assets/fonts/Rubik-BlackItalic.ttf"; sourceTree = "<group>"; };
+		BD1BE1882BAA0839004E2DD9 /* yoroi.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = yoroi.entitlements; path = yoroi/yoroi.entitlements; sourceTree = "<group>"; };
+		BD1BE1892BAA0888004E2DD9 /* nightly.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = nightly.entitlements; sourceTree = "<group>"; };
 		BD60BE852A34B13000EFF020 /* nightly.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = nightly.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BD825DEA29FB507600E19149 /* BootSplash.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = BootSplash.storyboard; path = yoroi/BootSplash.storyboard; sourceTree = "<group>"; };
 		BDD74A382A34B82A003591A8 /* nightly.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = nightly.plist; sourceTree = "<group>"; };
@@ -161,6 +163,7 @@
 		13B07FAE1A68108700A75B9A /* yoroi */ = {
 			isa = PBXGroup;
 			children = (
+				BD1BE1882BAA0839004E2DD9 /* yoroi.entitlements */,
 				BDD74A382A34B82A003591A8 /* nightly.plist */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
@@ -193,6 +196,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				BD1BE1892BAA0888004E2DD9 /* nightly.entitlements */,
 				13B07FAE1A68108700A75B9A /* yoroi */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* yoroiTests */,
@@ -828,6 +832,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = yoroi/yoroi.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 513;
@@ -872,6 +877,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = yoroi/yoroi.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 513;
@@ -1066,6 +1072,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-nightly";
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = nightly.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 513;
@@ -1110,6 +1117,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-nightly";
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = nightly.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 513;

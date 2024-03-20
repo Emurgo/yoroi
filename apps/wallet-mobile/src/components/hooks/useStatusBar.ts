@@ -18,7 +18,10 @@ export const useStatusBar = (baseColor?: HexColor, legacyModal?: boolean) => {
     if (Platform.OS === 'android') StatusBarRN.setBackgroundColor(bgColor, true)
   }, [baseColor, isDark, isOpen, legacyModal, theme.color])
 
+  // Reflect the status bar color when the screen is focused
   useFocusEffect(reflectStatusBarColor)
+  // Reflect the status bar color when the modal is opened or closed
+  React.useEffect(reflectStatusBarColor, [isOpen, legacyModal, reflectStatusBarColor])
 }
 
 /**

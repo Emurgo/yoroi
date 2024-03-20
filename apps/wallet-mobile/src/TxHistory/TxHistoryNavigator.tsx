@@ -2,6 +2,7 @@ import {init} from '@emurgo/cross-csl-mobile'
 import {useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {useAsyncStorage} from '@yoroi/common'
+import {exchangeApiMaker, exchangeManagerMaker, ExchangeProvider} from '@yoroi/exchange'
 import {resolverApiMaker, resolverManagerMaker, ResolverProvider, resolverStorageMaker} from '@yoroi/resolver'
 import {
   milkTokenId,
@@ -23,9 +24,10 @@ import {Boundary, Icon, Spacer} from '../components'
 import {claimApiMaker} from '../features/Claim/module/api'
 import {ClaimProvider} from '../features/Claim/module/ClaimProvider'
 import {ShowSuccessScreen} from '../features/Claim/useCases/ShowSuccessScreen'
-import {ExchangeProvider} from '../features/Exchange/common/ExchangeProvider'
-import {CreateExchangeOrder} from '../features/Exchange/useCases/CreateExchangeOrder/CreateExchangeOrder'
-import {ShowExchangeResultOrder} from '../features/Exchange/useCases/ShowExchangeResultOrder/ShowExchangeResultOrder'
+import {useNavigateTo} from '../features/Exchange/common/useNavigateTo'
+import {CreateExchangeOrderScreen} from '../features/Exchange/useCases/CreateExchangeOrderScreen/CreateExchangeOrderScreen'
+import {SelectProviderFromListScreen} from '../features/Exchange/useCases/SelectProviderFromListScreen/SelectProviderFromListScreen'
+import {ShowExchangeResultOrderScreen} from '../features/Exchange/useCases/ShowExchangeResultOrderScreen/ShowExchangeResultOrderScreen'
 import {ReceiveProvider} from '../features/Receive/common/ReceiveProvider'
 import {DescribeSelectedAddressScreen} from '../features/Receive/useCases/DescribeSelectedAddressScreen'
 import {ListMultipleAddressesScreen} from '../features/Receive/useCases/ListMultipleAddressesScreen'
@@ -124,6 +126,19 @@ export const TxHistoryNavigator = () => {
   // navigator components
   const headerRightHistory = React.useCallback(() => <HeaderRightHistory />, [])
 
+  const navigateTo = useNavigateTo()
+
+  // exchange
+  const exchangeManager = React.useMemo(() => {
+    const api = exchangeApiMaker({
+      isProduction: wallet.networkId === 1,
+      partner: 'yoroi',
+    })
+
+    const manager = exchangeManagerMaker({api})
+    return manager
+  }, [wallet.networkId])
+
   return (
     <ReceiveProvider key={wallet.id}>
       <TransferProvider key={wallet.id}>
@@ -131,7 +146,14 @@ export const TxHistoryNavigator = () => {
           <SwapFormProvider>
             <ResolverProvider resolverManager={resolverManager}>
               <ClaimProvider key={wallet.id} claimApi={claimApi}>
-                <ExchangeProvider key={wallet.id}>
+                <ExchangeProvider
+                  key={wallet.id}
+                  manager={exchangeManager}
+                  initialState={{
+                    providerId: 'banxa',
+                    providerSuggestedByOrderType: exchangeManager.provider.suggested.byOrderType(),
+                  }}
+                >
                   <Stack.Navigator
                     screenListeners={{}}
                     screenOptions={{
@@ -190,11 +212,42 @@ export const TxHistoryNavigator = () => {
 
                     <Stack.Screen
                       name="exchange-create-order"
-                      component={CreateExchangeOrder}
                       options={{
-                        title: strings.rampOnOffTitle,
+                        title: strings.exchangeCreateOrderTitle,
                       }}
-                    />
+                    >
+                      {() => (
+                        <Boundary>
+                          <CreateExchangeOrderScreen />
+                        </Boundary>
+                      )}
+                    </Stack.Screen>
+
+                    <Stack.Screen
+                      name="exchange-select-buy-provider"
+                      options={{
+                        title: strings.exchangeSelectBuyProvider,
+                      }}
+                    >
+                      {() => (
+                        <Boundary>
+                          <SelectProviderFromListScreen />
+                        </Boundary>
+                      )}
+                    </Stack.Screen>
+
+                    <Stack.Screen
+                      name="exchange-select-sell-provider"
+                      options={{
+                        title: strings.exchangeSelectSellProvider,
+                      }}
+                    >
+                      {() => (
+                        <Boundary>
+                          <SelectProviderFromListScreen />
+                        </Boundary>
+                      )}
+                    </Stack.Screen>
 
                     <Stack.Screen
                       options={{
@@ -202,7 +255,7 @@ export const TxHistoryNavigator = () => {
                       }}
                       name="exchange-result"
                     >
-                      {() => <ShowExchangeResultOrder variant="noInfo" />}
+                      {() => <ShowExchangeResultOrderScreen onClose={navigateTo.exchangeOpenOrder} />}
                     </Stack.Screen>
 
                     <Stack.Screen
@@ -458,9 +511,17 @@ const messages = defineMessages({
     id: 'components.receive.receivescreen.specificAmount',
     defaultMessage: '!!!Request specific amount',
   },
-  rampOnOffTitle: {
+  exchangeCreateOrderTitle: {
     id: 'rampOnOff.rampOnOffScreen.rampOnOffTitle',
-    defaultMessage: '!!!Buy ADA',
+    defaultMessage: '!!!Buy/Sell ADA',
+  },
+  exchangeSelectBuyProvider: {
+    id: 'rampOnOff.rampOnOffScreen.exchangeSelectProvider.buy',
+    defaultMessage: '!!!Buy provider',
+  },
+  exchangeSelectSellProvider: {
+    id: 'rampOnOff.rampOnOffScreen.exchangeSelectProvider.sell',
+    defaultMessage: '!!!Sell provider',
   },
 })
 
@@ -485,7 +546,9 @@ const useStrings = () => {
     scanTitle: intl.formatMessage(messages.scanTitle),
     claimShowSuccess: intl.formatMessage(messages.claimShowSuccessTitle),
     specificAmount: intl.formatMessage(messages.specificAmount),
-    rampOnOffTitle: intl.formatMessage(messages.rampOnOffTitle),
+    exchangeCreateOrderTitle: intl.formatMessage(messages.exchangeCreateOrderTitle),
+    exchangeSelectBuyProvider: intl.formatMessage(messages.exchangeSelectBuyProvider),
+    exchangeSelectSellProvider: intl.formatMessage(messages.exchangeSelectSellProvider),
   }
 }
 

@@ -1,6 +1,8 @@
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
+import globalMessages from '../../../i18n/global-messages'
+
 export const useStrings = () => {
   const intl = useIntl()
 
@@ -25,7 +27,6 @@ export const useStrings = () => {
     proceed: intl.formatMessage(messages.proceed),
     provider: intl.formatMessage(messages.provider),
     providerFee: intl.formatMessage(messages.providerFee),
-    rampOnOffTitle: intl.formatMessage(messages.rampOnOffTitle),
     sellCrypto: intl.formatMessage(messages.sellCrypto),
     significant: intl.formatMessage(messages.significant),
     sellCurrencyWarning: intl.formatMessage(messages.sellCurrencyWarning),
@@ -33,6 +34,9 @@ export const useStrings = () => {
     getFirstCrypto: intl.formatMessage(messages.getFirstCrypto),
     ourTrustedPartners: intl.formatMessage(messages.ourTrustedPartners),
     needMoreCrypto: intl.formatMessage(messages.needMoreCrypto),
+    fee: intl.formatMessage(messages.fee),
+    close: intl.formatMessage(globalMessages.close),
+    error: intl.formatMessage(globalMessages.error),
   }).current
 }
 
@@ -53,7 +57,7 @@ export const messages = Object.freeze(
     contentDisclaimer: {
       id: 'rampOnOff.createRampOnOff.contentDisclaimer',
       defaultMessage:
-        '!!!"Yoroi uses Banxa to provide direct Fiat-ADA exchange. By clicking “Proceed,” you also acknowledge that you will be redirected to our partner’s website, where you may be asked to accept their terms and conditions. Banxa may have buy and sell limitations depending on your location and your financial institution."',
+        '!!!Yoroi uses third party web3 on-and-off ramp solution to provide direct Fiat-ADA exchange. By clicking "Proceed", you also acknowledge that you will be redirected to our partner\'s website, where you may be asked to accept their terms and conditions. The third party web3 on-and-off ramp solution may have a certain limitation that will vary depending on your location and your financial institution.',
     },
     buyCrypto: {
       id: 'rampOnOff.createRampOnOff.buyCrypto',
@@ -120,10 +124,6 @@ export const messages = Object.freeze(
       defaultMessage:
         '!!!Normally the Buy ADA/Sell transaction takes 3-5 of minutes for the order to be fulfilled. However, there are instances where the order cannot be fulfilled instantly because the compliance team can be doing a manual verification of the KYC docs or any other issues.',
     },
-    rampOnOffTitle: {
-      id: 'rampOnOff.rampOnOffScreen.rampOnOffTitle',
-      defaultMessage: '!!!Buy ADA',
-    },
     contact: {
       id: 'rampOnOff.resultRampOnOff.contact',
       defaultMessage: '!!!Contact',
@@ -151,6 +151,10 @@ export const messages = Object.freeze(
     needMoreCrypto: {
       id: 'rampOnOff.rampOnOffScreen.needMoreCrypto',
       defaultMessage: '!!!Need more ADA for staking or swap?',
+    },
+    fee: {
+      id: 'rampOnOff.createRampOnOff.fee',
+      defaultMessage: '!!!fee',
     },
   }),
 )

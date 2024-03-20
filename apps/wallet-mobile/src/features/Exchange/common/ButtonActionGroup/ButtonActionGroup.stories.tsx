@@ -1,9 +1,9 @@
 import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
+import {OrderType} from '@yoroi/exchange'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {OrderType} from '../ExchangeProvider'
 import {ButtonActionGroup} from './ButtonActionGroup'
 
 storiesOf('Exchange ButtonActionGroup', module)

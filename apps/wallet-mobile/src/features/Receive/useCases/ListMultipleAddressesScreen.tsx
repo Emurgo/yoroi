@@ -29,7 +29,6 @@ export const ListMultipleAddressesScreen = () => {
   const inView = React.useRef(Number.MAX_SAFE_INTEGER)
   const strings = useStrings()
   const {styles} = useStyles()
-  useStatusBar()
   const wallet = useSelectedWallet()
   const navigate = useNavigateTo()
   const {track} = useMetrics()
@@ -161,7 +160,7 @@ const Modal = () => {
 
 const useStyles = () => {
   const {theme} = useTheme()
-
+  useStatusBar()
   const styles = StyleSheet.create({
     root: {
       flex: 1,

@@ -138,9 +138,7 @@
   },
   "dependencies": {
     "@yoroi/api": "1.5.1",
-    "@yoroi/common": "1.5.1",
-    "axios": "^1.5.0",
-    "zod": "^3.22.2"
+    "@yoroi/common": "1.5.1"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
@@ -154,6 +152,7 @@
     "@types/react": "^18.2.55",
     "@types/react-test-renderer": "^18.0.7",
     "@yoroi/types": "1.5.2",
+    "axios": "^1.5.0",
     "commitlint": "^17.0.2",
     "del-cli": "^5.0.0",
     "dependency-cruiser": "^13.1.1",
@@ -171,12 +170,15 @@
     "react-query": "^3.39.3",
     "react-test-renderer": "^18.2.0",
     "release-it": "^15.0.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "zod": "^3.22.2"
   },
   "peerDependencies": {
     "@react-native-async-storage/async-storage": ">= 1.19.3 <= 1.20.0",
+    "axios": "^1.5.0",
     "react": ">= 16.8.0 <= 19.0.0",
-    "react-query": "^3.39.3"
+    "react-query": "^3.39.3",
+    "zod": "^3.22.2"
   },
   "packageManager": "yarn@1.22.21",
   "engines": {
