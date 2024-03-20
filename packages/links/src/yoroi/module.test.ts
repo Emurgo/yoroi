@@ -48,17 +48,19 @@ describe('linksYoroiModuleMaker', () => {
         },
       ],
       memo: 'exampleMemo',
+      authorization: 'uuid-v4',
     }
 
     const transferRequestAdaLink = transfer.request.ada(
       transferRequestAdaParams,
     )
     const expectedTransferRequestAdaLink =
-      'yoroi://yoroi-wallet.com/w1/transfer/request/ada?targets=%7B%22receiver%22%3A%22exampleReceiver%22%2C%22datum%22%3A%22DEADDEAD%22%2C%22amounts%22%3A%5B%7B%22tokenId%22%3A%22exampleTokenId%22%2C%22quantity%22%3A%2210%22%7D%5D%7D&memo=exampleMemo'
+      'yoroi://yoroi-wallet.com/w1/transfer/request/ada?targets=%7B%22receiver%22%3A%22exampleReceiver%22%2C%22datum%22%3A%22DEADDEAD%22%2C%22amounts%22%3A%5B%7B%22tokenId%22%3A%22exampleTokenId%22%2C%22quantity%22%3A%2210%22%7D%5D%7D&memo=exampleMemo&authorization=uuid-v4'
     expect(transferRequestAdaLink).toEqual(expectedTransferRequestAdaLink)
 
     const wrongAdaLink: LinksYoroiTransferRequestAdaWithUrlParams = {
       link: 'exampleLink',
+      authorization: 'uuid-v4',
     }
     expect(() => transfer.request.adaWithLink(wrongAdaLink)).toThrow()
 
@@ -74,12 +76,13 @@ describe('linksYoroiModuleMaker', () => {
     const requestAdaWithLinkParams: LinksYoroiTransferRequestAdaWithUrlParams =
       {
         link: correctAdaLink.link,
+        authorization: 'uuid-v4',
       }
     const requestAdaWithLinkLink = transfer.request.adaWithLink(
       requestAdaWithLinkParams,
     )
     const expectedRequestAdaWithLinkLink =
-      'yoroi://yoroi-wallet.com/w1/transfer/request/ada-with-link?link=web%2Bcardano%3Aaddr1qygnpgnmc4twqxe4qnj3pakudc0ysheqwflv8guwwlply7zptg3wjqz84kx3t4re4xpqvs3fu7mvsahwhyxd4q3qq90s7sgxnh%3Famount%3D10'
+      'yoroi://yoroi-wallet.com/w1/transfer/request/ada-with-link?link=web%2Bcardano%3Aaddr1qygnpgnmc4twqxe4qnj3pakudc0ysheqwflv8guwwlply7zptg3wjqz84kx3t4re4xpqvs3fu7mvsahwhyxd4q3qq90s7sgxnh%3Famount%3D10&authorization=uuid-v4'
 
     expect(requestAdaWithLinkLink).toEqual(expectedRequestAdaWithLinkLink)
   })
