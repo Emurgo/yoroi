@@ -52,7 +52,6 @@ export const enterRecoveryPhrase = async (
 export const prepareApp = async (pin: string): Promise<void> => {
  await expect(element(by.text('Select language'))).toBeVisible()
  await expect(initialScreen.dropDownLanguagePicker()).toBeVisible()
-
  await initialScreen.checkboxSelect().tap({x: 5, y: 10})
  await initialScreen.buttonContinue().tap()
 
