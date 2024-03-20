@@ -3,6 +3,7 @@ import {AxiosRequestConfig} from 'axios'
 import {freeze} from 'immer'
 import {urlReferralQueryStringParamsSchema} from './adapters/zod-schema'
 import {getValidationError} from './helpers/get-validation-error'
+import {baseUrlAdapter} from './adapters/base-url-adapter'
 
 export const exchangeManagerMaker = ({
   api,
@@ -55,9 +56,11 @@ export const exchangeManagerMaker = ({
             const baseUrlParams = new URLSearchParams(url.search)
             const accessToken = baseUrlParams.get('access_token')
 
-            const reconstructedBaseUrl =
-              origin + (pathname === '/' ? '' : pathname) // to remove any params (access token) from baseUrl
-            const recontructedUrl = new URL(reconstructedBaseUrl)
+            const reconstructedBaseUrl = origin + pathname // to remove any params (access token) from baseUrl
+
+            const recontructedUrl = new URL(
+              baseUrlAdapter(reconstructedBaseUrl, providerId),
+            )
 
             const allQueries =
               accessToken !== null

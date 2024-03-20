@@ -6,7 +6,7 @@ describe('referralLink', () => {
   test('should generate a correct referral link with all parameters with access token and pathname', async () => {
     const origin = 'https://checkout.banxa.com'
     const pathname = '/pw'
-    const baseUrl = `${origin}${pathname}/?&access_token=FAKE_TOKEN`
+    const baseUrl = `${origin}${pathname}?&access_token=FAKE_TOKEN`
     const fullUrl =
       `${origin}` +
       `${pathname}/?` +
@@ -33,7 +33,7 @@ describe('referralLink', () => {
     const manager = exchangeManagerMaker({api})
 
     const url = await manager.referralLink.create({
-      providerId: 'banxa',
+      providerId: 'encryptus',
       queries: {
         orderType: 'sell',
         fiatType: 'USD',
