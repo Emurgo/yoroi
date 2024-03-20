@@ -113,6 +113,54 @@ xcrun simctl openurl booted "https://yoroi-wallet.com/w1/transfer/request/ada?am
 adb shell am start -W -a android.intent.action.VIEW -d "yoroi://yoroi-wallet.com/w1/transfer/request/ada?amount=1&address=$stackchain"
 ```
 
+## Schemas
+
+Yoroi validates deeplinks and univeral links in a stricted way, missing params is fine, will warn users, adding extra params will make Yoroi to ignore your request completely.
+
+### `PartnerInfoSchema`
+
+This schema is designed for adding information about how Yoroi should behave, even though all are flagged as optional, it will change how Yoroi respondes to it, and for some funnels it might block the user, or trigger some red alerts about dangerous actions. It includes the following fields:
+
+- `business`: Only 'exchange' for now, it is used only to display the right UI, based on partner.
+- `isProduction`: A boolean indicating whether it should be using production (mainnet), or if testnet wallets and actions are ok.
+- `partnerId`: A string with a maximum length of 20 characters. I.e "encryptus".
+- `redirectTo`: Yoroi may present a link button or automatic redirect the user based on funnel.
+- `authorization`: All actions initiated within Yoroi will provide an authorization, that works along with the wallet used. 
+- `message`: Yoroi may present this message for some actions, be descriptive and concise around the action needed from Yoroi, otherwise users might reject your request.
+- `walletName`: As the authorization, when provided, is expected back. Otherwise just set `isProduction` so Yoroi will know how to ask users to open their right wallet.
+
+### `LinksYoroiExchangeShowCreateResulSchema`
+
+This schema validates data for the creation result of a order to exchange coins, the link includes the following fields:
+
+- `coinAmount`: The amount in the coin main denomination ie. Cardano ADA.
+- `coin`: The coin ticker, Cardano ADA.
+- `fiatAmount`: The amount of fiat currency.
+- `fiat`: The fiat ticker, ie. USD.
+- `status`: 'success' | 'error' Indicates to Yoroi the message to display, if you need to include an explanation use the `message` param.
+- It also merges all fields from `PartnerInfoSchema`.
+
+
+### `LinksYoroiTransferRequestAdaSchema`
+
+This schema is for validating transfer requests of ADA and includes the following fields:
+
+- `targets`: An array of objects (with a minimum of 1 and maximum of 5 elements) where each object contains:
+  - `receiver`: A string with a maximum length of 256 characters, it can be a wallet address or any domain name for your wallet address.
+  - `datum` (optional) A CBOR string with a maximum length of 1024 characters.
+  - `amounts`: An array of objects (with a minimum of 1 and maximum of 10 elements) where each object contains:
+    - `tokenId`: A string with a maximum length of 256 characters, represented by `policyId` and `assetName` in hex, separated by a `.`, for ADA pass `.` only.
+    - `quantity`: A string with a maximum length of 80 characters, atomic, Cardano Lovelaces.
+- `memo` (optional): A string with a maximum length of 256 characters, stored in the wallet local storage wallet, it is not included in the transaction.
+- It also merges all fields from `PartnerInfoSchema`.
+
+
+### `LinksYoroiTransferRequestAdaWithUrlSchema`
+
+This schema validates transfer requests that include a URL and has the following fields:
+
+- `link`: A URL string with a maximum length of 2048 characters, it supports the CIP13 for Cardano legacy transfer, that can also be created by this module.
+
 ## For more
 - [BIP-21](https://github.com/bitcoin/bips/blob/master/bip-0021.mediawiki) 
 - [EIP-681](https://eips.ethereum.org/EIPS/eip-681)

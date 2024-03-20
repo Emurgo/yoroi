@@ -43,6 +43,16 @@ export const linksYoroiBuilder = <T extends ZodTypeAny>(
   return {create}
 }
 
+const PartnerInfoSchema = z.object({
+  business: z.literal('exchange').optional(),
+  isProduction: z.boolean().optional(),
+  partnerId: z.string().max(20).optional(),
+  redirectTo: z.string().url().max(2048).optional(),
+  authorization: z.string().max(256).optional(),
+  message: z.string().max(256).optional(),
+  walletName: z.string().max(40).optional(),
+})
+
 export const LinksYoroiExchangeShowCreateResulSchema = z
   .object({
     provider: z.string().max(20),
@@ -51,19 +61,9 @@ export const LinksYoroiExchangeShowCreateResulSchema = z
     fiatAmount: z.number().nonnegative(),
     fiat: z.string().max(20),
     status: z.string().max(20),
-    walletName: z.string().max(40).optional(),
-    isProduction: z.boolean().optional(),
-    link: z.string().url().optional(),
   })
+  .merge(PartnerInfoSchema)
   .strict()
-
-const PartnerInfoSchema = z.object({
-  business: z.literal('exchange').optional(),
-  partnerId: z.string().max(20).optional(),
-  redirectTo: z.string().url().max(2048).optional(),
-  authorization: z.string().max(256),
-  message: z.string().max(256).optional(),
-})
 
 export const LinksYoroiTransferRequestAdaSchema = z
   .object({
