@@ -144,7 +144,13 @@ const Modal = () => {
       <Spacer fill height={24} />
 
       <View style={styles.buttonContainer}>
-        <Button shelleyTheme title={strings.ok} onPress={handleOnCloseModal} style={styles.button} testID='wallet:receive:oneTimeModal-ok-button' />
+        <Button
+          shelleyTheme
+          title={strings.ok}
+          onPress={handleOnCloseModal}
+          style={styles.button}
+          testID="wallet:receive:oneTimeModal-ok-button"
+        />
       </View>
 
       <Spacer height={24} />
