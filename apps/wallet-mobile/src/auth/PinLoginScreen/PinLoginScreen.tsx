@@ -2,7 +2,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {StatusBar} from '../../components'
+import {useStatusBar} from '../../components/hooks/useStatusBar'
 import {showErrorDialog} from '../../dialogs'
 import {errorMessages} from '../../i18n/global-messages'
 import {CONFIG} from '../../legacy/config'
@@ -27,10 +27,10 @@ export const PinLoginScreen = () => {
     },
   })
 
+  useStatusBar()
+
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={{flex: 1}}>
-      <StatusBar />
-
       <PinInput
         ref={pinInputRef}
         enabled={!isLoading}

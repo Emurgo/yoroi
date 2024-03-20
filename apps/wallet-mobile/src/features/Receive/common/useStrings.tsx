@@ -4,6 +4,7 @@ export const useStrings = () => {
   const intl = useIntl()
 
   return {
+    amountToReceive: intl.formatMessage(messages.amountToReceive),
     receiveTitle: intl.formatMessage(messages.receiveTitle),
     addresscardTitle: intl.formatMessage(messages.addresscardTitle),
     shareLabel: intl.formatMessage(messages.shareLabel),
@@ -22,6 +23,7 @@ export const useStrings = () => {
     copyLinkBtn: intl.formatMessage(messages.copyLinkBtn),
     copyLinkMsg: intl.formatMessage(messages.copyLinkMsg),
     addressCopiedMsg: intl.formatMessage(messages.addressCopiedMsg),
+    lastUsed: intl.formatMessage(messages.lastUsed),
     unusedAddress: intl.formatMessage(messages.unusedAddress),
     usedAddress: intl.formatMessage(messages.usedAddress),
     generateButton: intl.formatMessage(messages.generateButton),
@@ -34,6 +36,10 @@ export const useStrings = () => {
 }
 
 export const messages = defineMessages({
+  amountToReceive: {
+    id: 'components.receive.specificamountscreen.title',
+    defaultMessage: '!!!Amount to receive',
+  },
   receiveTitle: {
     id: 'components.receive.receivescreen.title',
     defaultMessage: '!!!Receive',
@@ -105,6 +111,10 @@ export const messages = defineMessages({
   addressCopiedMsg: {
     id: 'components.receive.receivescreen.addressCopiedMsg',
     defaultMessage: '!!!Address copied',
+  },
+  lastUsed: {
+    id: 'components.receive.receivescreen.lastUsed',
+    defaultMessage: '!!!Last used',
   },
   unusedAddress: {
     id: 'components.receive.receivescreen.unusedAddress',

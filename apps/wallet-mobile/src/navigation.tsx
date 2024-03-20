@@ -117,6 +117,7 @@ export type WalletTabRoutes = {
 
 export type WalletStackRoutes = {
   'wallet-selection': undefined
+  'exchange-result': undefined
   'main-wallet-routes': NavigatorScreenParams<WalletTabRoutes>
   'nft-details-routes': NavigatorScreenParams<NftRoutes>
   settings: NavigatorScreenParams<SettingsStackRoutes>
@@ -200,7 +201,7 @@ export type TxHistoryRoutes = {
 } & SwapTokenRoutes &
   ScanRoutes &
   ClaimRoutes &
-  RampOnOffRoutes
+  ExchangeRoutes
 export type TxHistoryRouteNavigation = StackNavigationProp<TxHistoryRoutes>
 
 type ScanStartParams = Readonly<{
@@ -213,10 +214,6 @@ export type ScanRoutes = {
 }
 export type ClaimRoutes = {
   'claim-show-success': undefined
-}
-
-export type RampOnOffRoutes = {
-  'rampOnOff-start-rampOnOff': undefined
 }
 
 export type SwapTokenRoutes = {
@@ -245,13 +242,15 @@ export type SwapTabRoutes = {
   orders: undefined
 }
 
-export type RampOnOffStackRoutes = {
-  'create-ramp-on-off': undefined
-  'result-ramp-on-off': undefined
+export type ExchangeRoutes = {
+  'exchange-create-order': undefined
+  'exchange-result': undefined
+  'exchange-select-buy-provider': undefined
+  'exchange-select-sell-provider': undefined
   'app-root': undefined
 }
 
-export type RampOnOffRoutesNavigation = StackNavigationProp<RampOnOffStackRoutes>
+export type ExchangeRoutesNavigation = StackNavigationProp<ExchangeRoutes>
 
 export type StakingCenterRouteNavigation = StackNavigationProp<StakingCenterRoutes>
 
@@ -355,6 +354,7 @@ export type AppRoutes = {
   'new-wallet': NavigatorScreenParams<WalletInitRoutes>
   'app-root': NavigatorScreenParams<WalletStackRoutes>
   'custom-pin-auth': undefined
+  'exchange-result': undefined
   'bio-auth-initial': undefined
   'enable-login-with-pin': undefined
   'agreement-changed-notice': undefined
@@ -522,6 +522,7 @@ export const useWalletNavigation = () => {
 export const hideTabBarForRoutes = (route: RouteProp<WalletTabRoutes, 'history'>): ViewStyle | undefined =>
   getFocusedRouteNameFromRoute(route)?.startsWith('scan') ||
   getFocusedRouteNameFromRoute(route)?.startsWith('swap') ||
-  getFocusedRouteNameFromRoute(route)?.startsWith('receive')
+  getFocusedRouteNameFromRoute(route)?.startsWith('receive') ||
+  getFocusedRouteNameFromRoute(route)?.startsWith('exchange')
     ? {display: 'none'}
     : undefined

@@ -6,7 +6,8 @@ import {Dimensions, Image, ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import recoveryPhrase from '../../assets/img/recovery_phrase.png'
-import {Button, StatusBar, Text} from '../../components'
+import {Button, Text} from '../../components'
+import {useStatusBar} from '../../components/hooks/useStatusBar'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {isEmptyString} from '../../utils/utils'
 import {MnemonicBackupImportanceModal} from '../MnemonicBackupModal'
@@ -15,6 +16,7 @@ export const MnemonicShowScreen = () => {
   const navigation = useNavigation<WalletInitRouteNavigation>()
   const route = useRoute<RouteProp<WalletInitRoutes, 'mnemonic-show'>>()
   const strings = useStrings()
+  useStatusBar()
   const mnemonic = route.params.mnemonic
   const [modal, setModal] = React.useState(false)
   const showModal = () => setModal(true)
@@ -40,8 +42,6 @@ export const MnemonicShowScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-      <StatusBar />
-
       <View style={styles.content}>
         <ScrollView contentContainerStyle={styles.scrollViewContentContainer} bounces={false}>
           <View style={styles.mnemonicNote}>

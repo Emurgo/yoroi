@@ -5,7 +5,8 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
-import {Banner, Button, StatusBar, useModal} from '../components'
+import {Banner, Button, useModal} from '../components'
+import {useStatusBar} from '../components/hooks/useStatusBar'
 import {
   useGovernanceStrings,
   useIsParticipatingInGovernance,
@@ -55,6 +56,8 @@ export const Dashboard = () => {
   const isParticipatingInGovernance = useIsParticipatingInGovernance(wallet)
   const walletNavigateTo = useWalletNavigation()
 
+  useStatusBar()
+
   const handleOnParticipatePress = () => {
     walletNavigateTo.navigateToGovernanceCentre({navigateToStakingOnSuccess: true})
   }
@@ -72,8 +75,6 @@ export const Dashboard = () => {
 
   return (
     <View style={styles.root}>
-      <StatusBar />
-
       <View style={styles.container}>
         {isOnline && error && <SyncErrorBanner showRefresh={!(isLoading || isSyncing)} />}
 

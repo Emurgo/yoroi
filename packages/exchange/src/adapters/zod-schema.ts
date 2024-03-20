@@ -15,10 +15,11 @@ export const urlReferralQueryStringParamsSchema = z
     blockchain: z.string().refine(isBlockchainCode).optional(),
     walletAddress: z.string(),
     returnUrl: z.string().optional(),
+    access_token: z.string().optional(),
+    balance: z.string().optional(),
   })
   .refine((data) => {
     return (
-      (data.coinType === 'ADA' || data.coinType === 'TADA') &&
-      isPossibleCardanoAddress(data.walletAddress)
+      data.coinType === 'ADA' && isPossibleCardanoAddress(data.walletAddress)
     )
   })

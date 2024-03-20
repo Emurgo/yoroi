@@ -105,7 +105,7 @@ export const useSearchOnNavBar = ({
 }) => {
   const navigation = useNavigation()
   const {theme} = useTheme()
-  const defaultNavigationOptions = React.useCallback(() => defaultStackNavigationOptions(theme), [theme])
+  const defaultNavigationOptions = React.useMemo(() => defaultStackNavigationOptions(theme), [theme])
 
   const {search, visible, showSearch, hideSearch, clearSearch} = useSearch()
 

@@ -14,6 +14,7 @@ import {ErrorBoundary} from './components/ErrorBoundary'
 import {CurrencyProvider} from './features/Settings/Currency/CurrencyContext'
 import {LanguageProvider} from './i18n'
 import {InitApp} from './InitApp'
+import {InitialLinkProvider} from './IntialLinkManagerProvider'
 import {CONFIG} from './legacy/config'
 import {setLogLevel} from './legacy/logging'
 import {makeMetricsManager, MetricsProvider} from './metrics/metricsManager'
@@ -61,7 +62,9 @@ export const YoroiApp = () => {
                           <AuthProvider>
                             <SelectedWalletMetaProvider>
                               <SelectedWalletProvider>
-                                <InitApp />
+                                <InitialLinkProvider>
+                                  <InitApp />
+                                </InitialLinkProvider>
                               </SelectedWalletProvider>
                             </SelectedWalletMetaProvider>
                           </AuthProvider>

@@ -131,10 +131,6 @@
       "<rootDir>/jest.setup.js"
     ]
   },
-  "dependencies": {
-    "axios": "^1.5.0",
-    "zod": "^3.22.1"
-  },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
     "@react-native-async-storage/async-storage": "^1.19.3",
@@ -149,6 +145,7 @@
     "@types/react": "^18.2.55",
     "@types/react-test-renderer": "^18.0.7",
     "@yoroi/types": "1.5.2",
+    "axios": "^1.5.0",
     "axios-mock-adapter": "^1.21.5",
     "commitlint": "^17.0.2",
     "del-cli": "^5.0.0",
@@ -168,13 +165,16 @@
     "react-query": "^3.39.3",
     "react-test-renderer": "^18.2.0",
     "release-it": "^15.0.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "zod": "^3.22.1"
   },
   "peerDependencies": {
     "@react-native-async-storage/async-storage": ">= 1.19.3 <= 1.20.0",
+    "axios": "^1.5.0",
     "react": ">= 16.8.0 <= 19.0.0",
     "react-native-mmkv": "^2.11.0",
-    "react-query": "^3.39.3"
+    "react-query": "^3.39.3",
+    "zod": "^3.22.1"
   },
   "packageManager": "yarn@1.22.21",
   "engines": {
