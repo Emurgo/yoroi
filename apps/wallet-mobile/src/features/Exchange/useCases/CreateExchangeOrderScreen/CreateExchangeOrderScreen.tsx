@@ -71,6 +71,7 @@ export const CreateExchangeOrderScreen = () => {
       queries: urlOptions,
       providerId,
       referralLinkCreate: managerReferralLink.create,
+      // referralLinkCreate: () => new Promise(() => undefined),
     },
     {
       enabled: false,
