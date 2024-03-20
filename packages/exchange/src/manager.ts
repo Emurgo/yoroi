@@ -58,7 +58,7 @@ export const exchangeManagerMaker = ({
 
             const reconstructedBaseUrl = origin + pathname // to remove any params (access token) from baseUrl
 
-            const recontructedUrl = new URL(
+            const reconstructedUrl = new URL(
               baseUrlAdapter(reconstructedBaseUrl, providerId),
             )
 
@@ -75,9 +75,9 @@ export const exchangeManagerMaker = ({
               params.append(key, value.toString())
             }
 
-            recontructedUrl.search = params.toString()
+            reconstructedUrl.search = params.toString()
 
-            return Promise.resolve(recontructedUrl)
+            return Promise.resolve(reconstructedUrl)
           } catch (error) {
             return Promise.reject(getValidationError(error))
           }
