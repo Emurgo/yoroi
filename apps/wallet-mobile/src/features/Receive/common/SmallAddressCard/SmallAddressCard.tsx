@@ -15,9 +15,10 @@ export type SmallAddressCardProps = {
   loading?: boolean
   date?: string
   onPress?: () => void
+  testId?: string
 }
 
-export const SmallAddressCard = ({address, isUsed, date, onPress, loading}: SmallAddressCardProps) => {
+export const SmallAddressCard = ({address, isUsed, date, onPress, loading, testId}: SmallAddressCardProps) => {
   const strings = useStrings()
   const [isCopying, copy] = useCopy()
   const {styles, colors} = useStyles()
@@ -40,6 +41,7 @@ export const SmallAddressCard = ({address, isUsed, date, onPress, loading}: Smal
             activeOpacity={0.6}
             onLongPress={() => copy(address)}
             onPress={onPress}
+            testID={testId}
           >
             <LinearGradient
               style={[StyleSheet.absoluteFill, {opacity: 1}]}

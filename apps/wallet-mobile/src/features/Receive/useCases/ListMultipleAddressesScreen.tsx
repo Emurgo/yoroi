@@ -57,7 +57,7 @@ export const ListMultipleAddressesScreen = () => {
   }, [])
 
   const renderAddressInfo = React.useCallback(
-    ({item}: {item: AddressInfo}) => (
+    ({item, index}: {item: AddressInfo; index: number}) => (
       <SmallAddressCard
         address={item.address}
         isUsed={item.isUsed}
@@ -65,6 +65,7 @@ export const ListMultipleAddressesScreen = () => {
           selectedAddressChanged(item.address)
           navigate.receiveDetails()
         }}
+        testId={`receive:small-address-card-${index + 1}`} // Add index + 1 to include count
         // date={}  // TODO define with project
       />
     ),

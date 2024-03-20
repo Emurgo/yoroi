@@ -53,6 +53,7 @@ export const DescribeSelectedAddressScreen = () => {
         }}
         onPress={navigate.specificAmount}
         disabled={!hasAddress}
+        testID="receive:request-specific-amount-link"
       />
 
       <Spacer height={6} />

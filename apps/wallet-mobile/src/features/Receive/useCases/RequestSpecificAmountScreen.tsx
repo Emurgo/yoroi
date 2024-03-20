@@ -71,6 +71,7 @@ export const RequestSpecificAmountScreen = () => {
                 keyboardType="numeric"
                 onChangeText={handleOnChangeAmount}
                 value={amount}
+                testID="receive:request-specific-amount-ada-input"
               />
 
               <View style={styles.textSection}>
@@ -88,6 +89,7 @@ export const RequestSpecificAmountScreen = () => {
               disabled={!hasAmount}
               title={strings.generateLink}
               style={styles.button}
+              testID="receive:request-specific-amount:generate-link-button"
             />
           </View>
         </KeyboardAvoidingView>
@@ -122,7 +124,7 @@ const Modal = ({amount, address}: {amount: string; address: string}) => {
     <View style={styles.root}>
       <RNScrollView>
         {hasAddress ? (
-          <ShareQRCodeCard title={title} content={content} onLongPress={handOnCopy} />
+          <ShareQRCodeCard title={title} content={content} onLongPress={handOnCopy} testId="receive:specific-amount" />
         ) : (
           <View style={styles.root}>
             <SkeletonAdressDetail />
@@ -141,6 +143,7 @@ const Modal = ({amount, address}: {amount: string; address: string}) => {
         isCopying={isCopying}
         copiedText={strings.copyLinkMsg}
         style={styles.button}
+        testID="receive:request-specific-amount:copy-link-button"
       />
 
       <Spacer height={16} />
