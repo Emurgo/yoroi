@@ -6,7 +6,7 @@ describe('referralLink', () => {
   test('should generate a correct referral link with all parameters with access token and pathname', async () => {
     const origin = 'https://checkout.banxa.com'
     const pathname = '/pw'
-    const baseUrl = `${origin}${pathname}?&access_token=FAKE_TOKEN`
+    const baseUrl = `${origin}${pathname}/?&access_token=FAKE_TOKEN`
     const fullUrl =
       `${origin}` +
       `${pathname}/?` +
@@ -110,6 +110,8 @@ describe('referralLink', () => {
       'blockchain=ADA' +
       '&' +
       'walletAddress=addr1q9v8dvht2mv847gwarl7r4p49yzys8r7zlep7c8t2hqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqquvupf'
+
+    console.log(fullUrl)
 
     const api = {
       getBaseUrl: jest.fn(() => Promise.resolve(baseUrl)),
