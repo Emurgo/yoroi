@@ -9,7 +9,7 @@ describe('referralLink', () => {
     const baseUrl = `${origin}${pathname}?&access_token=FAKE_TOKEN`
     const fullUrl =
       `${origin}` +
-      `${pathname}?` +
+      `${pathname}/?` +
       'orderType=sell' +
       '&' +
       'fiatType=USD' +
@@ -33,7 +33,7 @@ describe('referralLink', () => {
     const manager = exchangeManagerMaker({api})
 
     const url = await manager.referralLink.create({
-      providerId: 'banxa',
+      providerId: 'encryptus',
       queries: {
         orderType: 'sell',
         fiatType: 'USD',
