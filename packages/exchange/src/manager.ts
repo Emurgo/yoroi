@@ -55,7 +55,8 @@ export const exchangeManagerMaker = ({
             const baseUrlParams = new URLSearchParams(url.search)
             const accessToken = baseUrlParams.get('access_token')
 
-            const reconstructedBaseUrl = origin + pathname // to remove any params (access token) from baseUrl
+            const reconstructedBaseUrl =
+              origin + (pathname === '/' ? pathname : `${pathname}/`) // to remove any params (access token) from baseUrl
             const recontructedUrl = new URL(reconstructedBaseUrl)
 
             const allQueries =
