@@ -19,7 +19,7 @@ export const WalletInitScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
-      <StatusBar type="light" />
+      <StatusBar  />
 
       <Space height="l" />
 

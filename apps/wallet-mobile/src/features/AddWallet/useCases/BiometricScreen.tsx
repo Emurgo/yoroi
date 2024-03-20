@@ -17,7 +17,7 @@ export const BiometricScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'top', 'bottom']} style={styles.root}>
-      <StatusBar type="light" />
+      <StatusBar />
 
       <View style={styles.content}>
         <View style={styles.illustration}>

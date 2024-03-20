@@ -76,7 +76,7 @@ export const RecoveryPhraseScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
-      <StatusBar type="light" />
+      <StatusBar />
 
       <View style={styles.content}>
         <StepperProgress currentStep={2} currentStepTitle={strings.stepRecoveryPhrase} totalSteps={4} />

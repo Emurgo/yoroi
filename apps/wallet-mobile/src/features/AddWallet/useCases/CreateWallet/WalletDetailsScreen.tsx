@@ -111,7 +111,7 @@ export const WalletDetailsScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
-      <StatusBar type="light" />
+      <StatusBar />
 
       <View>
         <StepperProgress currentStep={4} currentStepTitle={strings.stepWalletDetails} totalSteps={4} />

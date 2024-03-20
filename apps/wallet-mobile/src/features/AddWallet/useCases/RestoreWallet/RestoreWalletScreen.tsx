@@ -8,7 +8,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button, StatusBar} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
 import {isEmptyString} from '../../../../utils'
-import {MnemonicInput} from '../../common/MnemonicInput'
+import {MnemonicInput} from '../../../../WalletInit/MnemonicInput'
 import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
 import {useStrings} from '../../common/useStrings'
 
@@ -23,7 +23,7 @@ export const RestoreWalletScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
-      <StatusBar type="light" />
+      <StatusBar />
 
       <View>
         <StepperProgress currentStep={1} currentStepTitle="Enter recovery phrase" totalSteps={2} />
@@ -42,11 +42,7 @@ export const RestoreWalletScreen = () => {
           title={strings.next}
           style={styles.button}
           disabled={isEmptyString(phrase)}
-          onPress={() =>
-            navigation.navigate('new-wallet', {
-              screen: 'verify-recovery-phrase',
-            })
-          }
+          onPress={() => navigation.navigate('storybook')}
         />
 
         <Space height="s" />

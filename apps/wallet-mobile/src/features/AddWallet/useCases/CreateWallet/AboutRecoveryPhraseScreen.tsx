@@ -18,7 +18,7 @@ export const AboutRecoveryPhraseScreen = () => {
   const navigation = useNavigation<WalletInitRouteNavigation>()
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
-      <StatusBar type="light" />
+      <StatusBar />
 
       <View>
         <StepperProgress currentStep={1} currentStepTitle={strings.stepAboutRecoveryPhrase} totalSteps={4} />
