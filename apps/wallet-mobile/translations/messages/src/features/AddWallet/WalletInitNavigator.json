@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Add wallet",
     "file": "src/features/AddWallet/WalletInitNavigator.tsx",
     "start": {
-      "line": 67,
+      "line": 81,
       "column": 18,
-      "index": 2221
+      "index": 2761
     },
     "end": {
-      "line": 70,
+      "line": 84,
       "column": 3,
-      "index": 2319
+      "index": 2859
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Create a new wallet",
     "file": "src/features/AddWallet/WalletInitNavigator.tsx",
     "start": {
-      "line": 71,
+      "line": 85,
       "column": 21,
-      "index": 2342
+      "index": 2882
     },
     "end": {
-      "line": 74,
+      "line": 88,
       "column": 3,
-      "index": 2464
+      "index": 3004
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Restore wallet",
     "file": "src/features/AddWallet/WalletInitNavigator.tsx",
     "start": {
-      "line": 75,
+      "line": 89,
       "column": 22,
-      "index": 2488
+      "index": 3028
     },
     "end": {
-      "line": 78,
+      "line": 92,
       "column": 3,
-      "index": 2607
+      "index": 3147
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Read-only Wallet",
     "file": "src/features/AddWallet/WalletInitNavigator.tsx",
     "start": {
-      "line": 79,
+      "line": 93,
       "column": 23,
-      "index": 2632
+      "index": 3172
     },
     "end": {
-      "line": 82,
+      "line": 96,
       "column": 3,
-      "index": 2746
+      "index": 3286
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Verify read-only wallet",
     "file": "src/features/AddWallet/WalletInitNavigator.tsx",
     "start": {
-      "line": 83,
+      "line": 97,
       "column": 27,
-      "index": 2775
+      "index": 3315
     },
     "end": {
-      "line": 86,
+      "line": 100,
       "column": 3,
-      "index": 2894
+      "index": 3434
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!Recovery phrase",
     "file": "src/features/AddWallet/WalletInitNavigator.tsx",
     "start": {
-      "line": 87,
+      "line": 101,
       "column": 21,
-      "index": 2917
+      "index": 3457
     },
     "end": {
-      "line": 90,
+      "line": 104,
       "column": 3,
-      "index": 3035
+      "index": 3575
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!Recovery phrase",
     "file": "src/features/AddWallet/WalletInitNavigator.tsx",
     "start": {
-      "line": 91,
+      "line": 105,
       "column": 22,
-      "index": 3059
+      "index": 3599
     },
     "end": {
-      "line": 94,
+      "line": 108,
       "column": 3,
-      "index": 3178
+      "index": 3718
     }
   },
   {
@@ -109,14 +109,14 @@
     "defaultMessage": "!!!Verify restored wallet",
     "file": "src/features/AddWallet/WalletInitNavigator.tsx",
     "start": {
-      "line": 95,
+      "line": 109,
       "column": 29,
-      "index": 3209
+      "index": 3749
     },
     "end": {
-      "line": 98,
+      "line": 112,
       "column": 3,
-      "index": 3323
+      "index": 3863
     }
   },
   {
@@ -124,14 +124,14 @@
     "defaultMessage": "!!!Wallet credentials",
     "file": "src/features/AddWallet/WalletInitNavigator.tsx",
     "start": {
-      "line": 99,
+      "line": 113,
       "column": 26,
-      "index": 3351
+      "index": 3891
     },
     "end": {
-      "line": 102,
+      "line": 116,
       "column": 3,
-      "index": 3478
+      "index": 4018
     }
   },
   {
@@ -139,14 +139,14 @@
     "defaultMessage": "!!!Connect to Ledger Device",
     "file": "src/features/AddWallet/WalletInitNavigator.tsx",
     "start": {
-      "line": 103,
+      "line": 117,
       "column": 21,
-      "index": 3501
+      "index": 4041
     },
     "end": {
-      "line": 106,
+      "line": 120,
       "column": 3,
-      "index": 3628
+      "index": 4168
     }
   },
   {
@@ -154,14 +154,14 @@
     "defaultMessage": "!!!Connect to Ledger Device",
     "file": "src/features/AddWallet/WalletInitNavigator.tsx",
     "start": {
-      "line": 107,
+      "line": 121,
       "column": 19,
-      "index": 3649
+      "index": 4189
     },
     "end": {
-      "line": 110,
+      "line": 124,
       "column": 3,
-      "index": 3774
+      "index": 4314
     }
   },
   {
@@ -169,14 +169,14 @@
     "defaultMessage": "!!!Save wallet",
     "file": "src/features/AddWallet/WalletInitNavigator.tsx",
     "start": {
-      "line": 111,
+      "line": 125,
       "column": 18,
-      "index": 3794
+      "index": 4334
     },
     "end": {
-      "line": 114,
+      "line": 128,
       "column": 3,
-      "index": 3905
+      "index": 4445
     }
   }
 ]

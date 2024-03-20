@@ -108,6 +108,8 @@ const getStories = () => {
     "./src/Dashboard/WithdrawStakingRewards/ConfirmTx/ConfirmTxWithPassword.stories.tsx": require("../src/Dashboard/WithdrawStakingRewards/ConfirmTx/ConfirmTxWithPassword.stories.tsx"),
     "./src/Dashboard/WithdrawStakingRewards/TransferSummary/TransferSummary.stories.tsx": require("../src/Dashboard/WithdrawStakingRewards/TransferSummary/TransferSummary.stories.tsx"),
     "./src/Dashboard/WithdrawStakingRewards/WithdrawStakingRewards.stories.tsx": require("../src/Dashboard/WithdrawStakingRewards/WithdrawStakingRewards.stories.tsx"),
+    "./src/features/AddWallet/common/MnemonicInput/MnemonicInput.stories.tsx": require("../src/features/AddWallet/common/MnemonicInput/MnemonicInput.stories.tsx"),
+    "./src/features/AddWallet/common/TextInput/TextInput.stories.tsx": require("../src/features/AddWallet/common/TextInput/TextInput.stories.tsx"),
     "./src/features/Claim/illustrations/Ilustrations.stories.tsx": require("../src/features/Claim/illustrations/Ilustrations.stories.tsx"),
     "./src/features/Claim/useCases/AskConfirmation.stories.tsx": require("../src/features/Claim/useCases/AskConfirmation.stories.tsx"),
     "./src/features/Claim/useCases/ShowSuccessScreen.stories.tsx": require("../src/features/Claim/useCases/ShowSuccessScreen.stories.tsx"),
