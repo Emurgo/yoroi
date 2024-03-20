@@ -61,6 +61,7 @@ const PartnerInfoSchema = z.object({
   business: z.literal('exchange').optional(),
   partnerId: z.string().max(20).optional(),
   redirectTo: z.string().url().max(2048).optional(),
+  authorization: z.string().max(256),
   message: z.string().max(256).optional(),
 })
 

@@ -84,7 +84,13 @@ const cardanoLink = create({
   }
 });
 
-const yoroiPaymentRequestWithAdaLink = transfer.request.adaWithLink(cardanoLink.link)
+const yoroiPaymentRequestWithAdaLink = transfer.request.adaWithLink({
+  link: cardanoLink.link,
+  business: 'exchange',
+  partnerId: 'encryptus',
+  authorization: 'uuid-v4',
+  redirectTo: 'https://my.amazing.web/?amountRequested=1&session=03bf4dd213d'
+})
 
 console.log(yoroiPaymentRequestWithAdaLink); 
 ```
