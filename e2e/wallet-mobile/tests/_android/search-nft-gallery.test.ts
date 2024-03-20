@@ -22,9 +22,7 @@ describe('Search for an NFT from gallery and verify', () => {
   await expect(devOptionsScreen.buttonRestoreWallet2()).toBeVisible()
   await devOptionsScreen.buttonRestoreWallet2().tap()
   await waitFor(myWalletsScreen.pageTitle()).toBeVisible().withTimeout(5000)
-  await waitFor(myWalletsScreen.tabWallet('Wallet 2'))
-   .toBeVisible()
-   .withTimeout(10000)
+  await waitFor(myWalletsScreen.tabWallet('Wallet 2')).toBeVisible().withTimeout(10000)
  })
 
  it('should be able to open "Wallet 2"', async () => {
@@ -37,12 +35,7 @@ describe('Search for an NFT from gallery and verify', () => {
   await waitFor(nftGalleryScreen.iconSearch()).toBeVisible().withTimeout(10000)
 
   const nftCount = await nftGalleryScreen.countNftsDisplayedAndroid()
-  jestExpect(
-   await nftGalleryScreen.verifyNftCount(
-    nftGalleryScreen.txtNftCount(),
-    nftCount,
-   ),
-  ).toBe(true)
+  jestExpect(await nftGalleryScreen.verifyNftCount(nftGalleryScreen.txtNftCount(), nftCount)).toBe(true)
  })
 
  it('should be able to search for a keyword that reutrns "one" matching NFT', async () => {
@@ -51,12 +44,8 @@ describe('Search for an NFT from gallery and verify', () => {
   await nftGalleryScreen.iconSearch().tap()
   await nftGalleryScreen.inputSearch().tap()
   await nftGalleryScreen.inputSearch().typeText(nftToSearch)
-  jestExpect(await nftGalleryScreen.countNftsDisplayedAndroid()).toBe(
-   expectedCountMatchingNFT,
-  )
-  jestExpect(await nftGalleryScreen.checkAttributeNftAndroid(nftToSearch)).toBe(
-   true,
-  )
+  jestExpect(await nftGalleryScreen.countNftsDisplayedAndroid()).toBe(expectedCountMatchingNFT)
+  jestExpect(await nftGalleryScreen.checkAttributeNftAndroid(nftToSearch)).toBe(true)
  })
 
  it('should be able to search for a keyword that reutrns "multiple" matching NFTs', async () => {
@@ -66,12 +55,8 @@ describe('Search for an NFT from gallery and verify', () => {
   await nftGalleryScreen.iconSearch().tap()
   await nftGalleryScreen.inputSearch().tap()
   await nftGalleryScreen.inputSearch().typeText(nftToSearch)
-  jestExpect(await nftGalleryScreen.countNftsDisplayedAndroid()).toBe(
-   expectedCountMatchingNFT,
-  )
-  jestExpect(await nftGalleryScreen.checkAttributeNftAndroid(nftToSearch)).toBe(
-   true,
-  )
+  jestExpect(await nftGalleryScreen.countNftsDisplayedAndroid()).toBe(expectedCountMatchingNFT)
+  jestExpect(await nftGalleryScreen.checkAttributeNftAndroid(nftToSearch)).toBe(true)
  })
 
  it('should be able to search for a keyword that reutrns "no" matching NFTs', async () => {

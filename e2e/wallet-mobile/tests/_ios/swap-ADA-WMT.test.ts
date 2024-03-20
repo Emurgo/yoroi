@@ -23,9 +23,7 @@ describe('Swap test', () => {
   await expect(devOptionsScreen.buttonRestoreWallet2()).toBeVisible()
   await devOptionsScreen.buttonRestoreWallet2().tap()
   await waitFor(myWalletsScreen.pageTitle()).toBeVisible().withTimeout(5000)
-  await waitFor(myWalletsScreen.tabWallet('Wallet 2'))
-   .toBeVisible()
-   .withTimeout(10000)
+  await waitFor(myWalletsScreen.tabWallet('Wallet 2')).toBeVisible().withTimeout(10000)
   await utils.takeScreenshot('Wallet 2 is added')
  })
 

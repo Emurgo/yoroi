@@ -22,15 +22,9 @@ describe('Create a wallet', () => {
   await expect(createWalletFlow.credentialsView()).toBeVisible()
   await createWalletFlow.walletNameInput().typeText(constants.wallet_Name)
   await device.disableSynchronization()
-  await createWalletFlow
-   .spendingPasswordInput()
-   .typeText(constants.spending_Password)
-  await waitFor(createWalletFlow.repeatSpendingPasswordInput())
-   .toBeVisible()
-   .withTimeout(10000)
-  await createWalletFlow
-   .repeatSpendingPasswordInput()
-   .typeText(`${constants.spending_Password}\n`)
+  await createWalletFlow.spendingPasswordInput().typeText(constants.spending_Password)
+  await waitFor(createWalletFlow.repeatSpendingPasswordInput()).toBeVisible().withTimeout(10000)
+  await createWalletFlow.repeatSpendingPasswordInput().typeText(`${constants.spending_Password}\n`)
   await device.enableSynchronization()
 
   await createWalletFlow.credentialsFormContinueButton().tap()
@@ -50,8 +44,6 @@ describe('Create a wallet', () => {
  it('should be able to enter and verify the stored mnemonic', async () => {
   await utils.repeatSeedPhrase(seedPhraseText)
   await createWalletFlow.mnemonicCheckScreenConfirmButton().tap()
-  await expect(
-   myWalletsScreen.walletByNameButton(constants.wallet_Name),
-  ).toBeVisible()
+  await expect(myWalletsScreen.walletByNameButton(constants.wallet_Name)).toBeVisible()
  })
 })
