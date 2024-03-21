@@ -102,31 +102,36 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
             </Animated.View>
           )}
 
+          <View style={styles.centralized}>
+            <TouchableOpacity
+              style={styles.actionIcon}
+              onPress={handleOnPressReceive}
+              testID="receiveButton"
+              disabled={disabled}
+              onLongPress={handleOnLongPressReceive}
+            >
+              <Icon.Received {...iconProps} />
+            </TouchableOpacity>
+
+            <Text style={styles.actionLabel}>{strings.receiveLabel}</Text>
+          </View>
+
+          {!wallet.isReadOnly && <Spacer width={18} />}
+
           {!wallet.isReadOnly && (
             <View style={styles.centralized}>
               <TouchableOpacity
                 style={styles.actionIcon}
-                onPress={handleOnPressReceive}
-                testID="receiveButton"
+                onPress={handleOnSend}
+                testID="sendButton"
                 disabled={disabled}
-                onLongPress={handleOnLongPressReceive}
               >
-                <Icon.Received {...iconProps} />
+                <Icon.Send {...iconProps} />
               </TouchableOpacity>
 
-              <Text style={styles.actionLabel}>{strings.receiveLabel}</Text>
+              <Text style={styles.actionLabel}>{strings.sendLabel}</Text>
             </View>
           )}
-
-          {!wallet.isReadOnly && <Spacer width={18} />}
-
-          <View style={styles.centralized}>
-            <TouchableOpacity style={styles.actionIcon} onPress={handleOnSend} testID="sendButton" disabled={disabled}>
-              <Icon.Send {...iconProps} />
-            </TouchableOpacity>
-
-            <Text style={styles.actionLabel}>{strings.sendLabel}</Text>
-          </View>
 
           {!wallet.isReadOnly && (
             <>

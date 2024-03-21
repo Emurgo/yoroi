@@ -104,12 +104,14 @@ export const AmountCard: React.FC<AmountCardProps> = ({
         </View>
       </View>
 
-      {!isEmptyString(error) && (
+      {!isEmptyString(error) ? (
         <View>
           <Spacer height={4} />
 
           <Text style={styles.errorText}>{error}</Text>
         </View>
+      ) : (
+        <Spacer height={22} />
       )}
     </View>
   )
