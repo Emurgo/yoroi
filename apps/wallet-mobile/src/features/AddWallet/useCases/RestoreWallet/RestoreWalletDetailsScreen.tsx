@@ -49,7 +49,7 @@ const useSizeModal = () => {
   return {HEIGHT_MODAL_NAME_PASSWORD, HEIGHT_MODAL_CHECKSUM} as const
 }
 
-export const WalletDetailsScreen = () => {
+export const RestoreWalletDetailsScreen = () => {
   useStatusBar()
   const bold = useBold()
   const {styles} = useStyles()
@@ -161,7 +161,7 @@ export const WalletDetailsScreen = () => {
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
       <View>
-        <StepperProgress currentStep={4} currentStepTitle={strings.stepWalletDetails} totalSteps={4} />
+        <StepperProgress currentStep={2} currentStepTitle={strings.stepWalletDetails} totalSteps={2} />
 
         <Text style={styles.title}>
           {strings.walletDetailsTitle(bold)}
@@ -254,6 +254,7 @@ const useBold = () => {
     b: (text: React.ReactNode) => <Text style={styles.bolder}>{text}</Text>,
   }
 }
+
 const useStyles = () => {
   const {theme} = useTheme()
   const styles = StyleSheet.create({

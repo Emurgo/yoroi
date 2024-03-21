@@ -2,14 +2,25 @@ import {useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import {BlurView} from 'expo-blur'
 import * as React from 'react'
-import {Keyboard, ScrollView, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View} from 'react-native'
+import {
+  Keyboard,
+  Linking,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, StatusBar, useModal} from '../../../../components'
+import {Button, useModal} from '../../../../components'
+import {useStatusBar} from '../../../../components/hooks/useStatusBar'
 import {Space} from '../../../../components/Space/Space'
 import {WalletInitRouteNavigation} from '../../../../navigation'
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
+import {YoroiZendeskLink} from '../../common/contants'
 import {LearnMoreButton} from '../../common/LearnMoreButton/LearnMoreButton'
 import {mockAddWallet} from '../../common/mocks'
 import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
@@ -29,14 +40,14 @@ const useSizeModal = () => {
 }
 
 export const RecoveryPhraseScreen = () => {
+  useStatusBar()
   const {styles, colors} = useStyles()
   const {HEIGHT_MODAL} = useSizeModal()
   const {openModal, closeModal} = useModal()
   const [isBlur, setIsBlur] = React.useState(true)
-
   const navigation = useNavigation<WalletInitRouteNavigation>()
-
   const strings = useStrings()
+  const bold = useBold()
 
   const handleOnShowModal = () => {
     Keyboard.dismiss()
@@ -58,7 +69,7 @@ export const RecoveryPhraseScreen = () => {
 
             <LearnMoreButton
               onPress={() => {
-                ;('')
+                Linking.openURL(YoroiZendeskLink)
               }}
             />
           </View>
@@ -76,13 +87,11 @@ export const RecoveryPhraseScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
-      <StatusBar />
-
       <View style={styles.content}>
         <StepperProgress currentStep={2} currentStepTitle={strings.stepRecoveryPhrase} totalSteps={4} />
 
         <Text style={styles.title}>
-          {strings.recoveryPhraseTitle}
+          {strings.recoveryPhraseTitle(bold)}
 
           <TouchableOpacity onPress={handleOnShowModal}>
             <InfoIllustration />
@@ -124,13 +133,29 @@ export const RecoveryPhraseScreen = () => {
           title={strings.next}
           style={styles.button}
           disabled={isBlur}
-          onPress={() => navigation.navigate('mnemonic-check')}
+          onPress={() =>
+            navigation.navigate('verify-recovery-phrase-mnemonic', {
+              mnemonic: '',
+              name: '',
+              networkId: 1,
+              password: '',
+              walletImplementationId: 'haskell-byron',
+            })
+          }
         />
 
         <Space height="s" />
       </View>
     </SafeAreaView>
   )
+}
+
+const useBold = () => {
+  const {styles} = useStyles()
+
+  return {
+    b: (text: React.ReactNode) => <Text style={styles.bolder}>{text}</Text>,
+  }
 }
 
 const useStyles = () => {
@@ -148,6 +173,9 @@ const useStyles = () => {
     title: {
       ...theme.typography['body-1-l-regular'],
       color: theme.color.gray[900],
+    },
+    bolder: {
+      ...theme.typography['body-1-l-medium'],
     },
     content: {
       gap: 16,

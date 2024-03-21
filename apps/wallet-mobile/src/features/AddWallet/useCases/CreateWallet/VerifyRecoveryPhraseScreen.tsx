@@ -20,11 +20,9 @@ import {Check2 as Check2Illustration} from '../../illustrations/Check2'
 export const VerifyRecoveryPhraseScreen = () => {
   useStatusBar()
   const {styles} = useStyles()
-
+  const bold = useBold()
   const navigation = useNavigation<WalletInitRouteNavigation>()
-
   const strings = useStrings()
-
   const mnemonic = mockAddWallet.mnemonic
 
   const mnemonicEntries: Array<Entry> = mnemonic
@@ -37,6 +35,13 @@ export const VerifyRecoveryPhraseScreen = () => {
   const [userEntries, setUserEntries] = React.useState<Array<Entry>>([])
   const appendEntry = (entry: Entry) => setUserEntries([...userEntries, entry])
   const removeLastEntry = () => setUserEntries((entries) => entries.slice(0, -1))
+  const removeLastEntryAndAddNew = (entry: Entry) => {
+    setUserEntries((entries) => {
+      const updatedEntries = entries.slice(0, -1)
+      updatedEntries.push(entry)
+      return updatedEntries
+    })
+  }
 
   const isPhraseComplete = userEntries.length === mnemonicEntries.length
   const isPhraseValid = userEntries.map((entry) => entry.word).join(' ') === mnemonic
@@ -58,7 +63,7 @@ export const VerifyRecoveryPhraseScreen = () => {
 
       <Space height="l" />
 
-      <Text style={styles.title}>{strings.verifyRecoveryPhraseTitle}</Text>
+      <Text style={styles.title}>{strings.verifyRecoveryPhraseTitle(bold)}</Text>
 
       <Space height="l" />
 
@@ -85,6 +90,7 @@ export const VerifyRecoveryPhraseScreen = () => {
           mnemonicEntries={mnemonicEntries}
           userEntries={userEntries}
           onPress={appendEntry}
+          removeLastEntryAndAddNew={removeLastEntryAndAddNew}
         />
 
         {!isLastWordValid() && userEntries.length > 0 && (
@@ -104,7 +110,7 @@ export const VerifyRecoveryPhraseScreen = () => {
           style={styles.button}
           disabled={disabled}
           onPress={() =>
-            navigation.navigate('create-wallet-form', {
+            navigation.navigate('wallet-details-form', {
               networkId: 1,
               walletImplementationId: 'haskell-byron',
             })
@@ -237,9 +243,16 @@ type WordBadgesProps = {
   mnemonicEntries: Array<Entry>
   userEntries: Array<Entry>
   onPress: (wordEntry: Entry) => void
+  removeLastEntryAndAddNew: (entry: Entry) => void
 }
 
-const WordBadges = ({defaultMnemonic, mnemonicEntries, userEntries, onPress}: WordBadgesProps) => {
+const WordBadges = ({
+  defaultMnemonic,
+  mnemonicEntries,
+  userEntries,
+  onPress,
+  removeLastEntryAndAddNew,
+}: WordBadgesProps) => {
   const isWordUsed = (entryId: number) => userEntries.some((entry) => entry.id === entryId)
 
   const lastUserEntry = userEntries.findLast((last) => last)
@@ -254,6 +267,8 @@ const WordBadges = ({defaultMnemonic, mnemonicEntries, userEntries, onPress}: Wo
   const selectWord = (entry: {id: number; word: string}) => {
     if (isLastWordValid() || userEntries.length === 0) {
       onPress(entry)
+    } else {
+      removeLastEntryAndAddNew(entry)
     }
   }
 
@@ -278,7 +293,7 @@ const WordBadges = ({defaultMnemonic, mnemonicEntries, userEntries, onPress}: Wo
               style={[StyleSheet.absoluteFill, {opacity: 1}]}
               start={{x: 1, y: 0}}
               end={{x: 0, y: 0}}
-              colors={!usedError ? colors.gradientBlueGreen : [colors.error500, colors.error500]}
+              colors={!usedError ? colors.gradientBlueGreen : [colors.error, colors.error]}
             />
 
             {isUsed && <View style={styles.usedWordBackground} />}
@@ -331,6 +346,14 @@ const WordBadge = ({word, onPress, disabled, testID, used, usedError, recoveryWo
       </TouchableOpacity>
     </Animated.View>
   )
+}
+
+const useBold = () => {
+  const {styles} = useStyles()
+
+  return {
+    b: (text: React.ReactNode) => <Text style={styles.bolder}>{text}</Text>,
+  }
 }
 
 const useStyles = () => {
@@ -430,10 +453,13 @@ const useStyles = () => {
       top: 2,
       bottom: 2,
     },
+    bolder: {
+      ...theme.typography['body-1-l-medium'],
+    },
   })
 
   const colors = {
-    error500: theme.color.magenta['500'],
+    error: theme.color.magenta['500'],
     gradientBlueGreen: theme.color.gradients['blue-green'],
     gradientGreen: theme.color.gradients['green'],
   }

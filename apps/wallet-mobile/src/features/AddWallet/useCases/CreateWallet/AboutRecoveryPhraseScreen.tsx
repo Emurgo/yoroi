@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Linking, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../../components'
@@ -9,12 +9,14 @@ import {useStatusBar} from '../../../../components/hooks/useStatusBar'
 import {Space} from '../../../../components/Space/Space'
 import {WalletInitRouteNavigation} from '../../../../navigation'
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
+import {YoroiZendeskLink} from '../../common/contants'
 import {LearnMoreButton} from '../../common/LearnMoreButton/LearnMoreButton'
 import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
 import {useStrings} from '../../common/useStrings'
 
 export const AboutRecoveryPhraseScreen = () => {
   useStatusBar()
+  const bold = useBold()
   const {styles} = useStyles()
   const strings = useStrings()
   const navigation = useNavigation<WalletInitRouteNavigation>()
@@ -25,7 +27,7 @@ export const AboutRecoveryPhraseScreen = () => {
 
         <Space height="l" />
 
-        <Text style={styles.aboutRecoveryPhraseTitle}>{strings.aboutRecoveryPhraseTitle}</Text>
+        <Text style={styles.aboutRecoveryPhraseTitle}>{strings.aboutRecoveryPhraseTitle(bold)}</Text>
 
         <Space height="l" />
 
@@ -33,11 +35,11 @@ export const AboutRecoveryPhraseScreen = () => {
           showBackgroundColor
           includeSpacing
           linesOfText={[
-            strings.aboutRecoveryPhraseCardFirstItem,
-            strings.aboutRecoveryPhraseCardSecondItem,
-            strings.aboutRecoveryPhraseCardThirdItem,
-            strings.aboutRecoveryPhraseCardFourthItem,
-            strings.aboutRecoveryPhraseCardFifthItem,
+            strings.aboutRecoveryPhraseCardFirstItem(bold),
+            strings.aboutRecoveryPhraseCardSecondItem(bold),
+            strings.aboutRecoveryPhraseCardThirdItem(bold),
+            strings.aboutRecoveryPhraseCardFourthItem(bold),
+            strings.aboutRecoveryPhraseCardFifthItem(bold),
           ]}
         />
 
@@ -45,7 +47,7 @@ export const AboutRecoveryPhraseScreen = () => {
 
         <LearnMoreButton
           onPress={() => {
-            ;('')
+            Linking.openURL(YoroiZendeskLink)
           }}
         />
       </View>
@@ -54,7 +56,7 @@ export const AboutRecoveryPhraseScreen = () => {
         title={strings.next}
         style={styles.button}
         onPress={() =>
-          navigation.navigate('mnemonic-show', {
+          navigation.navigate('recovery-phrase-mnemonic', {
             mnemonic: '',
             name: '',
             networkId: 1,
@@ -65,6 +67,14 @@ export const AboutRecoveryPhraseScreen = () => {
       />
     </SafeAreaView>
   )
+}
+
+const useBold = () => {
+  const {styles} = useStyles()
+
+  return {
+    b: (text: React.ReactNode) => <Text style={styles.bolder}>{text}</Text>,
+  }
 }
 
 const useStyles = () => {
@@ -81,6 +91,9 @@ const useStyles = () => {
       color: theme.color.gray[900],
     },
     button: {backgroundColor: theme.color.primary[500]},
+    bolder: {
+      ...theme.typography['body-1-l-medium'],
+    },
   })
 
   return {styles} as const

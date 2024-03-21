@@ -1,10 +1,19 @@
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
+import globalMessages from '../../../i18n/global-messages'
+
 export const useStrings = () => {
   const intl = useIntl()
 
   return React.useRef({
+    passwordStrengthRequirement: (options: {requiredPasswordLength: number}) =>
+      intl.formatMessage(messages.passwordStrengthRequirement, options),
+    repeatPasswordInputLabel: intl.formatMessage(messages.repeatPasswordInputLabel),
+    repeatPasswordInputError: intl.formatMessage(messages.repeatPasswordInputError),
+    tooLong: intl.formatMessage(globalMessages.walletNameErrorTooLong),
+    nameAlreadyTaken: intl.formatMessage(globalMessages.walletNameErrorNameAlreadyTaken),
+    mustBeFilled: intl.formatMessage(globalMessages.walletNameErrorMustBeFilled),
     logoTitle: intl.formatMessage(messages.logoTitle),
     logoSubtitle: intl.formatMessage(messages.logoSubtitle),
     createWalletButtonCard: intl.formatMessage(messages.createWalletButtonCard),
@@ -22,14 +31,21 @@ export const useStrings = () => {
     continueButton: intl.formatMessage(messages.continueButton),
     next: intl.formatMessage(messages.next),
     learnMore: intl.formatMessage(messages.learnMore),
-    aboutRecoveryPhraseTitle: intl.formatMessage(messages.aboutRecoveryPhraseTitle),
+    aboutRecoveryPhraseTitle: (options: {b: (content: React.ReactNode[]) => React.ReactNode}) =>
+      intl.formatMessage(messages.aboutRecoveryPhraseTitle, {...options}),
     stepAboutRecoveryPhrase: intl.formatMessage(messages.stepAboutRecoveryPhrase),
-    aboutRecoveryPhraseCardFirstItem: intl.formatMessage(messages.aboutRecoveryPhraseCardFirstItem),
-    aboutRecoveryPhraseCardSecondItem: intl.formatMessage(messages.aboutRecoveryPhraseCardSecondItem),
-    aboutRecoveryPhraseCardThirdItem: intl.formatMessage(messages.aboutRecoveryPhraseCardThirdItem),
-    aboutRecoveryPhraseCardFourthItem: intl.formatMessage(messages.aboutRecoveryPhraseCardFourthItem),
-    aboutRecoveryPhraseCardFifthItem: intl.formatMessage(messages.aboutRecoveryPhraseCardFifthItem),
-    recoveryPhraseTitle: intl.formatMessage(messages.recoveryPhraseTitle),
+    aboutRecoveryPhraseCardFirstItem: (options: {b: (content: React.ReactNode[]) => React.ReactNode}) =>
+      intl.formatMessage(messages.aboutRecoveryPhraseCardFirstItem, {...options}),
+    aboutRecoveryPhraseCardSecondItem: (options: {b: (content: React.ReactNode[]) => React.ReactNode}) =>
+      intl.formatMessage(messages.aboutRecoveryPhraseCardSecondItem, {...options}),
+    aboutRecoveryPhraseCardThirdItem: (options: {b: (content: React.ReactNode[]) => React.ReactNode}) =>
+      intl.formatMessage(messages.aboutRecoveryPhraseCardThirdItem, {...options}),
+    aboutRecoveryPhraseCardFourthItem: (options: {b: (content: React.ReactNode[]) => React.ReactNode}) =>
+      intl.formatMessage(messages.aboutRecoveryPhraseCardFourthItem, {...options}),
+    aboutRecoveryPhraseCardFifthItem: (options: {b: (content: React.ReactNode[]) => React.ReactNode}) =>
+      intl.formatMessage(messages.aboutRecoveryPhraseCardFifthItem, {...options}),
+    recoveryPhraseTitle: (options: {b: (content: React.ReactNode[]) => React.ReactNode}) =>
+      intl.formatMessage(messages.recoveryPhraseTitle, {...options}),
     stepRecoveryPhrase: intl.formatMessage(messages.stepRecoveryPhrase),
     recoveryPhraseModalTitle: intl.formatMessage(messages.recoveryPhraseModalTitle),
     hideRecoveryPhraseButton: intl.formatMessage(messages.hideRecoveryPhraseButton),
@@ -40,7 +56,8 @@ export const useStrings = () => {
     recoveryPhraseCardThirdItem: intl.formatMessage(messages.recoveryPhraseCardThirdItem),
     recoveryPhraseCardFourthItem: intl.formatMessage(messages.recoveryPhraseCardFourthItem),
     recoveryPhraseCardFifthItem: intl.formatMessage(messages.recoveryPhraseCardFifthItem),
-    verifyRecoveryPhraseTitle: intl.formatMessage(messages.verifyRecoveryPhraseTitle),
+    verifyRecoveryPhraseTitle: (options: {b: (content: React.ReactNode[]) => React.ReactNode}) =>
+      intl.formatMessage(messages.verifyRecoveryPhraseTitle, {...options}),
     stepVerifyRecoveryPhrase: intl.formatMessage(messages.stepVerifyRecoveryPhrase),
     verifyRecoveryPhraseErrorMessage: intl.formatMessage(messages.verifyRecoveryPhraseErrorMessage),
     verifyRecoveryPhraseSuccessMessage: intl.formatMessage(messages.verifyRecoveryPhraseSuccessMessage),
@@ -56,16 +73,41 @@ export const useStrings = () => {
     walletChecksumModalCardSecondItem: intl.formatMessage(messages.walletChecksumModalCardSecondItem),
     walletChecksumModalCardThirdItem: intl.formatMessage(messages.walletChecksumModalCardThirdItem),
     stepWalletDetails: intl.formatMessage(messages.stepWalletDetails),
-    walletDetailsTitle: intl.formatMessage(messages.walletDetailsTitle),
+    walletDetailsTitle: (options: {b: (content: React.ReactNode[]) => React.ReactNode}) =>
+      intl.formatMessage(messages.walletDetailsTitle, {...options}),
     walletDetailsPasswordHelper: intl.formatMessage(messages.walletDetailsPasswordHelper),
     walletDetailsNameInput: intl.formatMessage(messages.walletDetailsNameInput),
     walletDetailsPasswordInput: intl.formatMessage(messages.walletDetailsPasswordInput),
     walletDetailsConfirmPasswordInput: intl.formatMessage(messages.walletDetailsConfirmPasswordInput),
+    header: intl.formatMessage(messages.header),
+    addWalletButton: intl.formatMessage(messages.addWalletButton),
+    addWalletOnShelleyButton: intl.formatMessage(messages.addWalletOnShelleyButton),
+    deprecated: intl.formatMessage(globalMessages.deprecated),
+    pleaseWait: intl.formatMessage(globalMessages.pleaseWait),
+    loadingWallet: intl.formatMessage(messages.loadingWallet),
+    supportTicketLink: intl.formatMessage(messages.supportTicketLink),
+    invalidChecksum: intl.formatMessage(messages.invalidChecksum),
+    validChecksum: intl.formatMessage(messages.validChecksum),
+    stepRestoreWalletScreen: intl.formatMessage(messages.stepRestoreWalletScreen),
+    restoreWalletScreenTitle: (options: {b: (content: React.ReactNode[]) => React.ReactNode}) =>
+      intl.formatMessage(messages.restoreWalletScreenTitle, {...options}),
   }).current
 }
 
 export const messages = Object.freeze(
   defineMessages({
+    passwordStrengthRequirement: {
+      id: 'components.walletinit.createwallet.createwalletscreen.passwordLengthRequirement',
+      defaultMessage: '!!!Minimum characters',
+    },
+    repeatPasswordInputLabel: {
+      id: 'components.walletinit.walletform.repeatPasswordInputLabel',
+      defaultMessage: '!!!Repeat password',
+    },
+    repeatPasswordInputError: {
+      id: 'components.walletinit.walletform.repeatPasswordInputError',
+      defaultMessage: '!!!Passwords do not match',
+    },
     logoTitle: {
       id: 'components.walletinit.walletinitmenu.logo.title',
       defaultMessage: '!!!Yoroi',
@@ -295,6 +337,42 @@ export const messages = Object.freeze(
     walletDetailsConfirmPasswordInput: {
       id: 'components.walletinit.walletDetails.walletDetailsConfirmPasswordInput',
       defaultMessage: '!!!Confirm password',
+    },
+    header: {
+      id: 'components.walletselection.walletselectionscreen.header',
+      defaultMessage: '!!!My wallets',
+    },
+    addWalletButton: {
+      id: 'components.walletselection.walletselectionscreen.addWalletButton',
+      defaultMessage: '!!!Add wallet',
+    },
+    addWalletOnShelleyButton: {
+      id: 'components.walletselection.walletselectionscreen.addWalletOnShelleyButton',
+      defaultMessage: '!!!Add wallet (Jormungandr ITN)',
+    },
+    loadingWallet: {
+      id: 'components.walletselection.walletselectionscreen.loadingWallet',
+      defaultMessage: '!!!Loading wallet',
+    },
+    supportTicketLink: {
+      id: 'components.walletselection.walletselectionscreen.supportTicketLink',
+      defaultMessage: '!!!Ask our support team',
+    },
+    invalidChecksum: {
+      id: 'components.walletinit.restorewallet.restorewalletscreen.invalidchecksum',
+      defaultMessage: '!!!Please enter valid mnemonic.',
+    },
+    validChecksum: {
+      id: 'components.walletinit.restorewallet.restorewalletscreen.validchecksum',
+      defaultMessage: '!!!The recovery phrase is verified',
+    },
+    stepRestoreWalletScreen: {
+      id: 'components.walletinit.restorewallet.restorewalletscreen.stepRestoreWalletScreen',
+      defaultMessage: '!!!Enter recovery phrase',
+    },
+    restoreWalletScreenTitle: {
+      id: 'components.walletinit.restorewallet.restorewalletscreen.restoreWalletScreenTitle',
+      defaultMessage: '!!!Add the recovery phrase you received upon your wallet creation process.',
     },
   }),
 )

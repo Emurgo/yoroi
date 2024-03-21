@@ -12,9 +12,9 @@ import {LogoBanner} from '../common/LogoBanner/LogoBanner'
 import {useStrings} from '../common/useStrings'
 
 export const WalletInitScreen = () => {
-  useStatusBar()
   const {styles} = useStyles()
   const strings = useStrings()
+  useStatusBar()
 
   const navigation = useNavigation<WalletInitRouteNavigation>()
 
@@ -31,7 +31,7 @@ export const WalletInitScreen = () => {
           <ButtonCard
             title={strings.createWalletButtonCard}
             icon="create"
-            onPress={() => navigation.navigate('mnemonic-description')}
+            onPress={() => navigation.navigate('about-recovery-phase')}
           />
 
           <Space height="l" />
@@ -39,9 +39,12 @@ export const WalletInitScreen = () => {
           <ButtonCard
             title={strings.restoreWalletButtonCard}
             icon="restore"
-            onPress={() => {
-              ;('')
-            }}
+            onPress={() =>
+              navigation.navigate('restore-wallet-form', {
+                networkId: 1,
+                walletImplementationId: 'haskell-shelley',
+              })
+            }
           />
 
           <Space height="l" />
@@ -50,7 +53,11 @@ export const WalletInitScreen = () => {
             title={strings.connectWalletButtonCard}
             icon="hardware"
             onPress={() => {
-              ;('')
+              navigation.navigate('check-nano-x', {
+                networkId: 1,
+                walletImplementationId: 'haskell-byron',
+                useUSB: false,
+              })
             }}
           />
 

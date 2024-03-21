@@ -4,15 +4,25 @@ import {StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import {Space} from '../../../../components/Space/Space'
+import {WalletChecksum} from '../../illustrations/WalletChecksum'
 
 type CardAboutPhraseProps = {
-  linesOfText: string[]
+  linesOfText: string[] | React.ReactNode[]
   title?: string
   showBackgroundColor?: boolean
   includeSpacing?: boolean
+  checksumImage?: string
+  checksumLine?: number
 }
 
-export const CardAboutPhrase = ({linesOfText, title, showBackgroundColor, includeSpacing}: CardAboutPhraseProps) => {
+export const CardAboutPhrase = ({
+  linesOfText,
+  title,
+  showBackgroundColor,
+  includeSpacing,
+  checksumImage,
+  checksumLine,
+}: CardAboutPhraseProps) => {
   const {styles, colors} = useStyles(includeSpacing, showBackgroundColor)
 
   return (
@@ -34,15 +44,28 @@ export const CardAboutPhrase = ({linesOfText, title, showBackgroundColor, includ
         </>
       )}
 
-      {linesOfText.map((textLine, index) => (
-        <View key={index + '_ITEM_CARD'} style={styles.itemContainer}>
-          <Text style={styles.bullet}>•</Text>
+      {linesOfText.map((textLine, index) => {
+        const handleShowChecksum = checksumImage !== undefined && checksumLine === index + 1
+        return (
+          <View key={index + '_ITEM_CARD'} style={styles.itemContainer}>
+            <Text style={styles.bullet}>•</Text>
 
-          <Space height="s" />
+            <Space height="s" />
 
-          <Text style={styles.textLine}>{textLine}</Text>
-        </View>
-      ))}
+            <Text style={styles.textLine}>
+              {handleShowChecksum && (
+                <>
+                  <WalletChecksum iconSeed={checksumImage} style={styles.walletChecksum} />
+
+                  <Space height="s" />
+                </>
+              )}
+
+              {textLine}
+            </Text>
+          </View>
+        )
+      })}
     </View>
   )
 }
@@ -73,6 +96,7 @@ const useStyles = (padding?: boolean, background?: boolean) => {
       ...theme.typography['body-1-l-regular'],
       color: background ? theme.color.primary[600] : theme.color.gray[900],
     },
+    walletChecksum: {width: 24, height: 24},
   })
 
   const colors = {

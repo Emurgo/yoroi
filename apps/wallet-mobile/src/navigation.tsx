@@ -82,17 +82,17 @@ export const defaultStackNavigationOptions = (theme: Theme): StackNavigationOpti
 
 export const DEPRECATED_defaultStackNavigationOptions: StackNavigationOptions = {
   headerStyle: {
-    backgroundColor: COLORS.BACKGROUND_BLUE,
+    backgroundColor: COLORS.WHITE,
     elevation: 0,
     shadowOpacity: 0,
   },
-  headerTintColor: '#fff',
+  headerTintColor: '#000',
   headerBackTitleVisible: false,
   headerTitleAlign: 'center',
   headerLeftContainerStyle: {
     paddingLeft: Platform.OS === 'ios' ? 8 : undefined,
   },
-  headerLeft: (props) => <BackButton color="#fff" {...props} />,
+  headerLeft: (props) => <BackButton color="#000" {...props} />,
 }
 
 // NAVIGATOR TOP TABS OPTIONS
@@ -135,11 +135,15 @@ export type WalletInitRoutes = {
     walletImplementationId: WalletImplementationId
   }
   'initial-choose-create-restore': undefined
-  'create-wallet-form': {
+  'wallet-details-form': {
     networkId: NetworkId
     walletImplementationId: WalletImplementationId
   }
   'restore-wallet-form': {
+    networkId: NetworkId
+    walletImplementationId: WalletImplementationId
+  }
+  'restore-wallet-details': {
     networkId: NetworkId
     walletImplementationId: WalletImplementationId
   }
@@ -168,22 +172,22 @@ export type WalletInitRoutes = {
     walletImplementationId: WalletImplementationId
     hwDeviceInfo: HWDeviceInfo
   }
-  'mnemonic-description': undefined
-  'mnemonic-show': {
+  'about-recovery-phase': undefined
+  'recovery-phrase-mnemonic': {
     networkId: NetworkId
     walletImplementationId: WalletImplementationId
     password: string
     name: string
     mnemonic: string
   }
-  'mnemonic-check': {
+  'verify-recovery-phrase-mnemonic': {
     networkId: NetworkId
     walletImplementationId: WalletImplementationId
     password: string
     name: string
     mnemonic: string
   }
-  'wallet-account-checksum': {
+  'wallet-restore-wallet-checksum': {
     networkId: NetworkId
     walletImplementationId: WalletImplementationId
     phrase: string

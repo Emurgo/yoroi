@@ -31,7 +31,7 @@ export const NewWalletNighltyScreen = () => {
           <ButtonCard
             title={strings.cardanoMainnet}
             subTitle={strings.cardanoMainnetDescription}
-            onPress={() => navigation.navigate('mnemonic-description')}
+            onPress={() => navigation.navigate('about-recovery-phase')}
           />
 
           <Space height="l" />
@@ -39,7 +39,7 @@ export const NewWalletNighltyScreen = () => {
           <ButtonCard
             title={strings.cardanoTestnet}
             subTitle={strings.cardanoTestnetDescription}
-            onPress={() => navigation.navigate('mnemonic-description')}
+            onPress={() => navigation.navigate('about-recovery-phase')}
           />
 
           <Space height="l" />
@@ -47,7 +47,7 @@ export const NewWalletNighltyScreen = () => {
           <ButtonCard
             title={strings.cardanoSanchonet}
             subTitle={strings.cardanoSanchonetDescription}
-            onPress={() => navigation.navigate('mnemonic-description')}
+            onPress={() => navigation.navigate('about-recovery-phase')}
           />
 
           <Space height="l" />
