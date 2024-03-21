@@ -99,7 +99,7 @@
     "@emurgo/csl-mobile-bridge": "6.0.0-alpha.4",
     "@emurgo/react-native-blockies-svg": "^0.0.2",
     "@emurgo/react-native-hid": "^5.15.6",
-    "@emurgo/yoroi-lib": "0.15.0",
+    "@emurgo/yoroi-lib": "0.15.1",
     "@formatjs/intl-datetimeformat": "^6.7.0",
     "@formatjs/intl-getcanonicallocales": "^2.1.0",
     "@formatjs/intl-locale": "^3.2.1",
