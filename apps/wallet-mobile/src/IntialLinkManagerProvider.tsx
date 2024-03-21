@@ -11,6 +11,7 @@ export const InitialLinkProvider: React.FC<React.PropsWithChildren> = ({children
   // app is open
   React.useEffect(() => {
     const getUrl = ({url}: {url: string | null}) => {
+      console.warn('url', url)
       if (url !== null) setInitialUrl(url)
     }
     Linking.addEventListener('url', getUrl)
