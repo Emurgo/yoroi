@@ -82,7 +82,7 @@ describe('linksYoroiParser', () => {
 
   it('should parse exchange show create result link', () => {
     const link =
-      'yoroi://yoroi-wallet.com/w1/exchange/order/show-create-result?provider=yoroi&coinAmount=10&coin=ADA&fiatAmount=100&fiat=USD&status=success'
+      'yoroi://yoroi-wallet.com/w1/exchange/order/show-create-result?provider=yoroi&coinAmount=10&coin=ADA&fiatAmount=100&fiat=USD&status=success&orderType=buy'
 
     const result = linksYoroiParser(link)
 
@@ -97,6 +97,7 @@ describe('linksYoroiParser', () => {
         fiatAmount: 100,
         fiat: 'USD',
         status: 'success',
+        orderType: 'buy',
       },
     })
   })

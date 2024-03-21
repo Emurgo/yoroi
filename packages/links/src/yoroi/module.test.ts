@@ -19,6 +19,7 @@ describe('linksYoroiModuleMaker', () => {
         fiatAmount: 100,
         fiat: 'USD',
         status: 'success',
+        orderType: 'buy',
       }
 
     const createOrderShowResultLink = exchange.order.showCreateResult(
@@ -26,7 +27,7 @@ describe('linksYoroiModuleMaker', () => {
     )
 
     const expected =
-      'yoroi://yoroi-wallet.com/w1/exchange/order/show-create-result?provider=yoroi&coinAmount=10&coin=ADA&fiatAmount=100&fiat=USD&status=success'
+      'yoroi://yoroi-wallet.com/w1/exchange/order/show-create-result?provider=yoroi&coinAmount=10&coin=ADA&fiatAmount=100&fiat=USD&status=success&orderType=buy'
 
     expect(createOrderShowResultLink).toEqual(expected)
   })

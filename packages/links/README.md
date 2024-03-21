@@ -141,12 +141,13 @@ Yoroi validates deeplinks and univeral links in a stricted way, missing params i
 
 This schema is designed for adding information about how Yoroi should behave, even though all are flagged as optional, it will change how Yoroi respondes to it, and for some funnels it might block the user, or trigger some red alerts about dangerous actions. It includes the following fields:
 
-- `isProduction`: A boolean indicating whether it should be using production (mainnet), or if testnet wallets and actions are ok.
+- `isSandbox`: A boolean indicating the environment, when `true` deeplinks only work on non-production builds.
+- `isTestnet`: A boolean that restrics whether it should list only `mainnet` wallets or testnets wallets. 
 - `appId`: A string with a maximum length of 40 characters that identifies that app. 
 - `redirectTo`: Yoroi may present a link button or automatic redirect the user based on funnel.
 - `authorization`: All actions initiated within Yoroi will provide an authorization, that works along with the wallet used.
 - `message`: Yoroi may present this message for some actions, be descriptive and concise around the action needed from Yoroi, otherwise users might reject your request.
-- `walletName`: As the authorization, when provided, is expected back. Otherwise just set `isProduction` so Yoroi will know how to ask users to open their right wallet.
+- `walletId`: As the authorization, when provided, is expected back. Otherwise just set `isProduction` so Yoroi will know how to ask users to open their right wallet.
 - `signature`: Partner signature, it changes many behaviours inside Yoroi, specially regarding warning and dangerous messages.
 
 ### `LinksYoroiExchangeShowCreateResultSchema`
@@ -157,8 +158,9 @@ This schema validates data for the creation result of a order to exchange coins,
 - `coin`: The coin ticker, Cardano ADA.
 - `fiatAmount`: The amount of fiat currency.
 - `fiat`: The fiat ticker, ie. USD.
-- `status`: 'success' | 'error' Indicates to Yoroi the message to display, if you need to include an explanation use the `message` param.
+- `status`: 'success' | 'failed' | 'pending' Indicates to Yoroi the message to display, if you need to include an explanation use the `message` param.
 - It also merges all fields from `PartnerInfoSchema`.
+- `orderType`: 'buy' | 'sell' The order type.
 
 ### `LinksYoroiTransferRequestAdaSchema`
 

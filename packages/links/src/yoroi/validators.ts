@@ -3,11 +3,12 @@ import z from 'zod'
 import {linksCardanoModuleMaker} from '../cardano/module'
 
 const PartnerInfoSchema = z.object({
-  isProduction: z.boolean().optional(),
+  isSandbox: z.boolean().optional(),
+  isTestnet: z.boolean().optional(),
   appId: z.string().max(40).optional(),
   redirectTo: z.string().url().max(2048).optional(),
   message: z.string().max(256).optional(),
-  walletName: z.string().max(40).optional(),
+  walletId: z.string().max(40).optional(),
   authorization: z.string().max(256).optional(),
   signature: z.string().max(256).optional(),
 })
@@ -19,7 +20,12 @@ export const LinksYoroiExchangeShowCreateResultSchema = z
     coin: z.string().max(20),
     fiatAmount: z.number().nonnegative(),
     fiat: z.string().max(20),
-    status: z.string().max(20),
+    status: z.union([
+      z.literal('success'),
+      z.literal('pending'),
+      z.literal('failed'),
+    ]),
+    orderType: z.union([z.literal('buy'), z.literal('sell')]),
   })
   .merge(PartnerInfoSchema)
   .strict()
