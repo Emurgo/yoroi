@@ -17,3 +17,28 @@ export type LinksYoroiTransferRequestAdaParams = SchemaInfer<
 export type LinksYoroiTransferRequestAdaWithLinkParams = SchemaInfer<
   typeof LinksYoroiTransferRequestAdaWithLinkSchema
 >
+
+export type LinksYoroiActionInfo =
+  | {
+      version: 1
+      feature: 'transfer'
+      useCase: 'request/ada-with-link'
+      params: LinksYoroiTransferRequestAdaWithLinkParams
+    }
+  | {
+      version: 1
+      feature: 'transfer'
+      useCase: 'request/ada'
+      params: LinksYoroiTransferRequestAdaParams
+    }
+  | {
+      version: 1
+      feature: 'exchange'
+      useCase: 'order/show-create-result'
+      params: LinksYoroiExchangeShowCreateResultParams
+    }
+
+export type LinksYoroiAction = {
+  info: LinksYoroiActionInfo
+  isTrusted: boolean
+}

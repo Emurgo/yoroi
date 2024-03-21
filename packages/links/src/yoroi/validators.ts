@@ -3,9 +3,8 @@ import z from 'zod'
 import {linksCardanoModuleMaker} from '../cardano/module'
 
 const PartnerInfoSchema = z.object({
-  business: z.literal('exchange').optional(),
   isProduction: z.boolean().optional(),
-  partnerId: z.string().max(20).optional(),
+  appId: z.string().max(40).optional(),
   redirectTo: z.string().url().max(2048).optional(),
   message: z.string().max(256).optional(),
   walletName: z.string().max(40).optional(),

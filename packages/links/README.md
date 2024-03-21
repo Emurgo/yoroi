@@ -141,9 +141,8 @@ Yoroi validates deeplinks and univeral links in a stricted way, missing params i
 
 This schema is designed for adding information about how Yoroi should behave, even though all are flagged as optional, it will change how Yoroi respondes to it, and for some funnels it might block the user, or trigger some red alerts about dangerous actions. It includes the following fields:
 
-- `business`: Only 'exchange' for now, it is used only to display the right UI, based on partner.
 - `isProduction`: A boolean indicating whether it should be using production (mainnet), or if testnet wallets and actions are ok.
-- `partnerId`: A string with a maximum length of 20 characters. I.e "encryptus".
+- `appId`: A string with a maximum length of 40 characters that identifies that app. 
 - `redirectTo`: Yoroi may present a link button or automatic redirect the user based on funnel.
 - `authorization`: All actions initiated within Yoroi will provide an authorization, that works along with the wallet used.
 - `message`: Yoroi may present this message for some actions, be descriptive and concise around the action needed from Yoroi, otherwise users might reject your request.

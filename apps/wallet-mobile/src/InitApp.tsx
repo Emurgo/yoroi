@@ -1,5 +1,6 @@
 import {isString, useAsyncStorage} from '@yoroi/common'
 import {App} from '@yoroi/types'
+import {enableMapSet} from 'immer'
 import React, {useEffect, useRef} from 'react'
 import {Platform, UIManager} from 'react-native'
 import * as Sentry from 'sentry-expo'
@@ -11,6 +12,8 @@ import {CONFIG, isProduction} from './legacy/config'
 import {storageVersionMaker} from './migrations/storageVersion'
 import {walletManager} from './wallet-manager/walletManager'
 import {useCrashReportsEnabled} from './yoroi-wallets/hooks'
+
+enableMapSet()
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental != null) {

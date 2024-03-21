@@ -6,8 +6,11 @@ import {
   LinksYoroiTransferRequestAdaWithLinkSchema,
 } from './validators'
 import {convertSearchParamsToObject} from './helpers'
+import {LinksYoroiActionInfo} from './types'
 
-export const linksYoroiParser = (link: string) => {
+export const linksYoroiParser = (
+  link: string,
+): Readonly<LinksYoroiActionInfo> | null => {
   try {
     const url = new URL(link)
 
