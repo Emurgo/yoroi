@@ -15,10 +15,11 @@ const safeAreaEdges = ['bottom', 'left', 'right', 'bottom'] as const
 
 const useStyles = () => {
   const {theme} = useTheme()
-  return StyleSheet.create({
+  const styles = StyleSheet.create({
     root: {
       flex: 1,
       backgroundColor: theme.color['white-static'],
     },
   })
+  return styles
 }
