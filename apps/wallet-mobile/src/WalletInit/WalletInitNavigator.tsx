@@ -1,5 +1,6 @@
 import {createStackNavigator} from '@react-navigation/stack'
-import React from 'react'
+import {useTheme} from '@yoroi/theme'
+import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
 import {AboutRecoveryPhraseScreen} from '../features/AddWallet/useCases/CreateWallet/AboutRecoveryPhraseScreen'
@@ -22,13 +23,14 @@ import {WalletFreshInitScreen} from './WalletFreshInit'
 const Stack = createStackNavigator<WalletInitRoutes>()
 export const WalletInitNavigator = () => {
   const strings = useStrings()
+  const {theme} = useTheme()
 
   return (
     <Stack.Navigator
       initialRouteName="initial-choose-create-restore"
       screenOptions={{
         cardStyle: {backgroundColor: 'transparent'},
-        ...defaultStackNavigationOptions,
+        ...defaultStackNavigationOptions(theme),
         detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
       }}
     >
