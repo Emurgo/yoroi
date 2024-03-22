@@ -72,6 +72,16 @@ describe('asYoroiCompletedOrder', () => {
     )
 
     expect(result).toEqual<Swap.CompletedOrder>(apiMocks.getCompletedOrders[0]!)
+
+    const missingDex = {...openswapMocks.getCompletedOrders[0]!}
+    missingDex.dex = undefined as any
+    const defaultedProviderToMuesliswap = {
+      ...apiMocks.getCompletedOrders[0]!,
+      provider: 'muesliswap' as Swap.PoolProvider,
+    }
+
+    const result2 = transformers.asYoroiCompletedOrder(missingDex)
+    expect(result2).toEqual<Swap.CompletedOrder>(defaultedProviderToMuesliswap)
   })
 })
 

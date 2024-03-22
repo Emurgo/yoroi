@@ -69,7 +69,7 @@ export type CompletedOrder = {
   attachedLvl: string
   scriptVersion: string
   pubKeyHash: string
-  feeField: number
+  dex: Provider
 }
 export type CompletedOrderResponse = CompletedOrder[]
 

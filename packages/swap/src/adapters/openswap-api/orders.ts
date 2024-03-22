@@ -101,10 +101,6 @@ export async function getCompletedOrders(
   const response = await client.get<CompletedOrderResponse>(apiUrl, {
     params: {
       'stake-key-hash': stakeKeyHash,
-      'canceled': 'n',
-      'open': 'n',
-      'matched': 'y',
-      'v2_only': 'y',
     },
   })
 
@@ -114,5 +110,5 @@ export async function getCompletedOrders(
     })
   }
 
-  return response.data.filter((order) => order.status === 'matched')
+  return response.data
 }

@@ -41,4 +41,6 @@ export type SwapCompletedOrder = {
   from: BalanceAmount
   to: BalanceAmount
   txHash: string
+  provider: SwapPoolProvider
+  placedAt: number
 }
