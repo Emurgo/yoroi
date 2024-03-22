@@ -92,8 +92,22 @@ describe('linksYoroiModuleMaker', () => {
       requestAdaWithLinkParams,
     )
     const expectedRequestAdaWithLinkLink =
-      'yoroi://yoroi-wallet.com/w1/transfer/request/ada-with-link?link=web%2Bcardano%3Aaddr1qygnpgnmc4twqxe4qnj3pakudc0ysheqwflv8guwwlply7zptg3wjqz84kx3t4re4xpqvs3fu7mvsahwhyxd4q3qq90s7sgxnh%3Famount%3D10&authorization=uuid-v4'
+      'yoroi://yoroi-wallet.com/w1/transfer/request/ada-with-link?authorization=uuid-v4&link=web%2Bcardano%3Aaddr1qygnpgnmc4twqxe4qnj3pakudc0ysheqwflv8guwwlply7zptg3wjqz84kx3t4re4xpqvs3fu7mvsahwhyxd4q3qq90s7sgxnh%3Famount%3D10'
 
     expect(requestAdaWithLinkLink).toEqual(expectedRequestAdaWithLinkLink)
+
+    const requestAdaWithLinkParamsOnlyLink: LinksYoroiTransferRequestAdaWithLinkParams =
+      {
+        link: correctAdaLink.link,
+      }
+    const requestAdaWithLinkOnlyLink = transfer.request.adaWithLink(
+      requestAdaWithLinkParamsOnlyLink,
+    )
+    const expectedRequestAdaWithLinkOnlyLink =
+      'yoroi://yoroi-wallet.com/w1/transfer/request/ada-with-link?link=web%2Bcardano%3Aaddr1qygnpgnmc4twqxe4qnj3pakudc0ysheqwflv8guwwlply7zptg3wjqz84kx3t4re4xpqvs3fu7mvsahwhyxd4q3qq90s7sgxnh%3Famount%3D10'
+
+    expect(requestAdaWithLinkOnlyLink).toEqual(
+      expectedRequestAdaWithLinkOnlyLink,
+    )
   })
 })

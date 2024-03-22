@@ -1,15 +1,19 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {RouteProp, useFocusEffect} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
-import {useLinks} from '@yoroi/links'
+import {
+  LinksYoroiTransferRequestAdaWithLinkParams,
+  useLinks,
+} from '@yoroi/links'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Keyboard, Platform} from 'react-native'
 
 import {VotingRegistration} from './Catalyst'
-import {Icon, OfflineBanner} from './components'
+import {Icon, OfflineBanner, useModal} from './components'
 import {DashboardNavigator} from './Dashboard'
 import {ShowExchangeResultOrderScreen} from './features/Exchange/useCases/ShowExchangeResultOrderScreen/ShowExchangeResultOrderScreen'
+import {RequestedAdaPaymentWithLink} from './features/Links/useCases/RequestedAdaPaymentWithLink'
 import {MenuNavigator} from './features/Menu'
 import {SettingsScreenNavigator} from './features/Settings'
 import {GovernanceNavigator} from './features/Staking/Governance'
@@ -154,14 +158,13 @@ const WalletTabNavigator = () => {
 
 const Stack = createStackNavigator<WalletStackRoutes>()
 export const WalletNavigator = () => {
-  const initialRouteName = useInitialRouteName()
+  const {initialRoute} = useDeepLinkManager()
 
   // initialRoute doens't update the state of the navigator, only at first render
   // https://reactnavigation.org/docs/auth-flow/
-  if (initialRouteName === 'exchange-result') {
+  if (initialRoute === 'exchange-result') {
     return (
       <Stack.Navigator
-        initialRouteName={initialRouteName}
         screenOptions={{
           headerShown: false /* used only for transition */,
           detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
@@ -174,7 +177,6 @@ export const WalletNavigator = () => {
 
   return (
     <Stack.Navigator
-      initialRouteName={initialRouteName}
       screenOptions={{
         headerShown: false /* used only for transition */,
         detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
@@ -197,11 +199,33 @@ export const WalletNavigator = () => {
   )
 }
 
-const useInitialRouteName = () => {
+const useDeepLinkManager = () => {
   const {action} = useLinks()
-  const routeName: keyof WalletStackRoutes =
-    action?.info.useCase === 'order/show-create-result' ? 'exchange-result' : 'wallet-selection'
-  return routeName
+  const initialRoute = action?.info.useCase === 'order/show-create-result' ? 'exchange-result' : 'wallet-selection'
+
+  const {openModal} = useModal()
+
+  const openRequestedPaymentAdaWithLink = React.useCallback(
+    ({params, isTrusted}: {params: LinksYoroiTransferRequestAdaWithLinkParams; isTrusted?: boolean}) => {
+      Keyboard.dismiss()
+
+      const content = <RequestedAdaPaymentWithLink params={params} isTrusted={isTrusted} />
+
+      // TODO revisit
+      openModal('title', content, 800)
+    },
+    [openModal],
+  )
+
+  React.useEffect(() => {
+    if (action?.info.useCase === 'request/ada-with-link') {
+      openRequestedPaymentAdaWithLink({params: action.info.params, isTrusted: action.isTrusted})
+    }
+  }, [action?.info.params, action?.info.useCase, action?.isTrusted, openRequestedPaymentAdaWithLink])
+
+  return React.useMemo(() => {
+    return {initialRoute}
+  }, [initialRoute])
 }
 
 const messages = defineMessages({

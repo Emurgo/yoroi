@@ -18,10 +18,23 @@ export const linksYoroiBuilder = <T extends ZodTypeAny>(
     }
 
     const queryParams = convertObjectToSearchParams(result.data)
+    const linkValue = queryParams.get('link')
+    let queryString = ''
+
+    // link is added always at the end
+    if (linkValue != null) {
+      queryParams.delete('link')
+      queryString = queryParams.toString()
+      // check if we need to add '&' to separate parameters
+      if (queryString.length > 0) queryString += '&'
+      queryString += `link=${encodeURIComponent(linkValue)}`
+    } else {
+      queryString = queryParams.toString()
+    }
 
     const {scheme, authority, path, version} = config
     const url = new URL(
-      `${scheme}://${authority}/${version}/${path}?${queryParams.toString()}`,
+      `${scheme}://${authority}/${version}/${path}?${queryString}`,
     )
     return url.toString()
   }
