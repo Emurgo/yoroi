@@ -179,6 +179,7 @@ const ShelleyButton = () => {
       }
       title={strings.addWalletButton}
       style={styles.topButton}
+      testID="addWalletMainnetButton"
     />
   )
 }

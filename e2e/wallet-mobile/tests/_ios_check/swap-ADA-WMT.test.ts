@@ -1,11 +1,16 @@
 import {device, expect} from 'detox'
 
 import * as constants from '../../general/constants'
-import * as createWalletFlow from '../../screens/createWalletFlow.screen'
 import * as myWalletsScreen from '../../screens/myWallets.screen'
+import * as swapScreen from '../../screens/swapMain.screen'
+import * as walletHomeScreen from '../../screens/walletHome.screen'
+import * as createWalletFlow from '../../screens/createWalletFlow.screen'
 import * as utils from '../../general/utils'
+import * as walletMenuScreen from '../../screens/walletMenuItems.screen'
 
-describe('Create a wallet', () => {
+describe('Swap test', () => {
+ // const sellToken = 'ADA'
+ const buyToken = 'ADAMOON'
  let seedPhraseText: string[]
 
  beforeAll(async () => {
@@ -14,7 +19,7 @@ describe('Create a wallet', () => {
  })
 
  it('should be able to initiate the "create wallet" process form the home screen', async () => {
-  await myWalletsScreen.addWalletTestnetButton().tap()
+  await myWalletsScreen.addWalletMainnetButton().tap()
   await myWalletsScreen.createWalletButton().tap()
  })
 
@@ -47,5 +52,28 @@ describe('Create a wallet', () => {
   await utils.repeatSeedPhrase(seedPhraseText)
   await createWalletFlow.mnemonicCheckScreenConfirmButton().tap()
   await expect(myWalletsScreen.walletByNameButton(constants.wallet_Name)).toBeVisible()
+ })
+
+ it('should be able to open "New Test Wallet"', async () => {
+  await myWalletsScreen.tabWallet('New Test Wallet').tap()
+  await expect(walletMenuScreen.menuNFTGallery()).toBeVisible()
+  await utils.takeScreenshot('New Test Wallet Home screen')
+ })
+
+ it('should be able to click "Swap" from wallet home and verify swap screen is displayed', async () => {
+  await walletHomeScreen.swapButton().tap()
+  await expect(swapScreen.inputSellQuantity()).toBeVisible()
+ })
+
+ it('should be able to enter quantities and select tokens', async () => {
+  await swapScreen.inputSellQuantity().tap()
+  await swapScreen.inputSellQuantity().clearText()
+  await swapScreen.inputSellQuantity().replaceText('55.34')
+  await swapScreen.selectBuyToken().tap()
+  await swapScreen.swapTokenName(buyToken).tap()
+  await swapScreen.inputSellQuantity().typeText('2')
+  await utils.delay(5000)
+  await expect(swapScreen.buttonSwapAction()).toBeVisible()
+  await swapScreen.buttonSwapAction().tap()
  })
 })
