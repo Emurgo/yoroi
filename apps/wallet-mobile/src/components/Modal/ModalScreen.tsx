@@ -4,7 +4,7 @@ import React from 'react'
 import {Animated, GestureResponderEvent, Pressable, StyleSheet, Text, View} from 'react-native'
 
 import {KeyboardAvoidingView, Spacer} from '..'
-import {LoadingOverlay} from '../LoadingOverlay/LoadingOverlay'
+import {LoadingOverlay} from '../../legacy/LoadingOverlay/LoadingOverlay'
 import {useModal} from './ModalContext'
 
 export const ModalScreen = () => {

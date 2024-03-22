@@ -1,10 +1,12 @@
-import {useCreateReferralLink, useExchange, useExchangeProvidersByOrderType} from '@yoroi/exchange'
+import {useExchange, useExchangeProvidersByOrderType} from '@yoroi/exchange'
 import {useTheme} from '@yoroi/theme'
 import {Exchange} from '@yoroi/types'
+import {AxiosRequestConfig} from 'axios'
 import * as React from 'react'
 import {Alert, Linking, StyleSheet, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
+import {useQuery, UseQueryOptions} from 'react-query'
 
 import {Button, Icon, KeyboardAvoidingView} from '../../../../components'
 import {useStatusBar} from '../../../../components/hooks/useStatusBar'
@@ -15,7 +17,7 @@ import env from '../../../../legacy/env'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
-import {Quantities} from '../../../../yoroi-wallets/utils'
+import {delay, Quantities} from '../../../../yoroi-wallets/utils'
 import {ProviderItem} from '../../common/ProviderItem/ProviderItem'
 import {useNavigateTo} from '../../common/useNavigateTo'
 import {useStrings} from '../../common/useStrings'
@@ -71,19 +73,23 @@ export const CreateExchangeOrderScreen = () => {
       queries: urlOptions,
       providerId,
       referralLinkCreate: managerReferralLink.create,
-      // referralLinkCreate: () => new Promise(() => undefined),
+      /* referralLinkCreate: () =>
+        setTimeout(() => {
+          throw new Error('fake-error')
+        }, 10000) as unknown as Promise<URL>, */
+      fetcherConfig: {timeout: 30000},
     },
     {
       enabled: false,
       suspense: false,
       useErrorBoundary: false,
-      onError: (error) => {
-        Alert.alert(strings.error, error.message)
+      onError: () => {
+        navigateTo.exchangeOpenOrder()
       },
       onSuccess: (referralLink) => {
+        // navigateTo.closeLoading()
         const link = referralLink.toString()
         if (link !== '') {
-          console.log('link', link)
           Linking.openURL(link)
           track.exchangeSubmitted({ramp_type: orderType === 'sell' ? 'Sell' : 'Buy', ada_amount: orderAmount})
           navigateTo.exchangeOpenOrder()
@@ -99,6 +105,7 @@ export const CreateExchangeOrderScreen = () => {
   }, [track])
 
   const handleOnExchange = () => {
+    navigateTo.openLoading()
     createReferralLink()
   }
 
@@ -200,4 +207,43 @@ const useStyles = () => {
     },
   })
   return styles
+}
+
+export const useCreateReferralLink = (
+  {
+    providerId,
+    queries,
+  }: // referralLinkCreate,
+  // fetcherConfig,
+  {
+    providerId: string
+    queries: Exchange.ReferralUrlQueryStringParams
+    referralLinkCreate: Exchange.Manager['referralLink']['create']
+    fetcherConfig?: AxiosRequestConfig
+  },
+  options?: UseQueryOptions<
+    URL,
+    Error,
+    URL,
+    ['useCreateReferralLink', Exchange.ReferralUrlQueryStringParams, Exchange.Provider['id']]
+  >,
+) => {
+  const query = useQuery({
+    suspense: true,
+    useErrorBoundary: true,
+    ...options,
+    queryKey: ['useCreateReferralLink', queries, providerId],
+    queryFn: async (/* {signal} */) => {
+      console.log('aaaaaa')
+      await delay(5000)
+      console.log('bbbbb')
+
+      throw new Error('fake-error')
+    },
+  })
+
+  return {
+    ...query,
+    referralLink: query.data ?? '',
+  }
 }

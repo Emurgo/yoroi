@@ -2,7 +2,7 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 
 import {TwoActionView} from '../../../components'
-import {LoadingOverlay} from '../../../components/LoadingOverlay'
+import {LoadingOverlay} from '../../../legacy/LoadingOverlay'
 import {confirmationMessages, txLabels} from '../../../i18n/global-messages'
 import {useAuthOsWithEasyConfirmation} from '../../../yoroi-wallets/auth/auth'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'

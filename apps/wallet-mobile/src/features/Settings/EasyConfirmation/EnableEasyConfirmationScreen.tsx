@@ -7,7 +7,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, KeyboardAvoidingView, Text, TextInput} from '../../../components'
 import {useStatusBar} from '../../../components/hooks/useStatusBar'
-import {LoadingOverlay} from '../../../components/LoadingOverlay'
+import {LoadingOverlay} from '../../../legacy/LoadingOverlay'
 import {showErrorDialog} from '../../../dialogs'
 import {errorMessages} from '../../../i18n/global-messages'
 import {useSelectedWallet, useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../../SelectedWallet'

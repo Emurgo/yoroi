@@ -11,6 +11,7 @@ import {OsLoginScreen, PinLoginScreen, useBackgroundTimeout} from './auth'
 import {useAuth} from './auth/AuthProvider'
 import {supportsAndroidFingerprintOverlay} from './auth/biometrics'
 import {EnableLoginWithPin} from './auth/EnableLoginWithPin'
+import {LoadingOverlay} from './components/LoadingOverlay/LoadingOverlay'
 import {ModalProvider} from './components/Modal/ModalContext'
 import {ModalScreen} from './components/Modal/ModalScreen'
 import {AgreementChangedNavigator, InitializationNavigator} from './features/Initialization'
@@ -143,6 +144,10 @@ export const AppNavigator = () => {
 
               <Stack.Group screenOptions={{presentation: 'transparentModal'}}>
                 <Stack.Screen name="modal" component={ModalScreen} />
+              </Stack.Group>
+
+              <Stack.Group screenOptions={{presentation: 'transparentModal'}}>
+                <Stack.Screen name="loading">{() => <LoadingOverlay loading />}</Stack.Screen>
               </Stack.Group>
             </>
           )}

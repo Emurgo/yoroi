@@ -375,6 +375,7 @@ export type AppRoutes = {
   'enable-login-with-pin': undefined
   'agreement-changed-notice': undefined
   modal: undefined
+  loading: undefined
 }
 export type AppRouteNavigation = StackNavigationProp<AppRoutes>
 

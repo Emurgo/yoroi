@@ -6,7 +6,7 @@ import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, KeyboardAvoidingView, Spacer} from '../../../../components'
-import {LoadingOverlay} from '../../../../components/LoadingOverlay'
+import {LoadingOverlay} from '../../../../legacy/LoadingOverlay'
 import {useModal} from '../../../../components/Modal/ModalContext'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../SelectedWallet'

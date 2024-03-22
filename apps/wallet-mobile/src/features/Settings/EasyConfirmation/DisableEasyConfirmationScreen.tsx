@@ -7,7 +7,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Text} from '../../../components'
 import {useStatusBar} from '../../../components/hooks/useStatusBar'
-import {LoadingOverlay} from '../../../components/LoadingOverlay'
+import {LoadingOverlay} from '../../../legacy/LoadingOverlay'
 import {useSelectedWallet, useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../../SelectedWallet'
 import {useDisableEasyConfirmation} from '../../../yoroi-wallets/hooks'
 

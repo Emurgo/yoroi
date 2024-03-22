@@ -31,7 +31,7 @@ export const useCreateReferralLink = (
     ...options,
     queryKey: ['useCreateReferralLink', queries, providerId],
     queryFn: async ({signal}) =>
-      referralLinkCreate({providerId, queries}, {...fetcherConfig, signal}),
+      referralLinkCreate({providerId, queries}, {signal, ...fetcherConfig}),
   })
 
   return {
