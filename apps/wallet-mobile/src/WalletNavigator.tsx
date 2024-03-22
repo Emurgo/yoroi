@@ -2,7 +2,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {RouteProp, useFocusEffect} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {
-  LinksYoroiTransferRequestAdaWithLinkParams,
+  LinksTransferRequestAdaWithLinkParams,
   useLinks,
 } from '@yoroi/links'
 import React from 'react'
@@ -206,7 +206,7 @@ const useDeepLinkManager = () => {
   const {openModal} = useModal()
 
   const openRequestedPaymentAdaWithLink = React.useCallback(
-    ({params, isTrusted}: {params: LinksYoroiTransferRequestAdaWithLinkParams; isTrusted?: boolean}) => {
+    ({params, isTrusted}: {params: LinksTransferRequestAdaWithLinkParams; isTrusted?: boolean}) => {
       Keyboard.dismiss()
 
       const content = <RequestedAdaPaymentWithLink params={params} isTrusted={isTrusted} />

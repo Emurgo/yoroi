@@ -1,15 +1,16 @@
-import {LinksYoroiTransferRequestAdaWithLinkParams, useLinks} from '@yoroi/links'
+import {LinksTransferRequestAdaWithLinkParams, useLinks} from '@yoroi/links'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {ScrollView, StyleSheet, Text, View, ViewProps} from 'react-native'
 
 import {Button, Spacer, useModal} from '../../../components'
+import {isEmptyString} from '../../../utils/utils'
 
 export const RequestedAdaPaymentWithLink = ({
   params,
   isTrusted,
 }: {
-  params: LinksYoroiTransferRequestAdaWithLinkParams
+  params: LinksTransferRequestAdaWithLinkParams
   isTrusted?: boolean
 }) => {
   const {styles, colors} = useStyles()
@@ -47,8 +48,8 @@ export const RequestedAdaPaymentWithLink = ({
   )
 }
 
-const Message = ({message, ...props}: {message?: string} & ViewProps) =>
-  message && (
+const Message = ({message}: {message?: string}) =>
+  !isEmptyString(message) && (
     <>
       <Text>{message}</Text>
 

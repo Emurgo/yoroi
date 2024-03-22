@@ -195,7 +195,7 @@
     "util": "0.12.4",
     "uuid": "^3.3.2",
     "vm-browserify": "1.1.2",
-    "zod": "^3.22.1"
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@amplitude/ampli": "^1.34.0",

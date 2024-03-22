@@ -13,6 +13,7 @@ export const useDeepLinkWatcher = () => {
         Logger.debug('useDeepLinksWatcher :: action in progress, ignoring...')
         return
       }
+      console.log(url)
       const action = linksYoroiParser(url)
       if (action == null) {
         Logger.debug('useDeepLinksWatcher :: link is malformated, ignoring...')
@@ -24,7 +25,7 @@ export const useDeepLinkWatcher = () => {
       }
       // TODO: implement isTrusted if signature was provided and doesn't match with authorization ignore it
       Logger.debug('action', JSON.stringify(action, null, 2))
-      links.actionStarted({info: action, isTrusted: false})
+      // links.actionStarted({info: action, isTrusted: false})
     },
     [links],
   )

@@ -1,19 +1,17 @@
 import z from 'zod'
 
-import {linksCardanoModuleMaker} from '../cardano/module'
-
 const PartnerInfoSchema = z.object({
   isSandbox: z.boolean().optional(),
   isTestnet: z.boolean().optional(),
   appId: z.string().max(40).optional(),
-  redirectTo: z.string().url().max(2048).optional(),
+  redirectTo: z.string().max(2048).optional(),
   message: z.string().max(256).optional(),
   walletId: z.string().max(40).optional(),
   authorization: z.string().max(256).optional(),
   signature: z.string().max(256).optional(),
 })
 
-export const LinksYoroiExchangeShowCreateResultSchema = z
+export const ExchangeShowCreateResultSchema = z
   .object({
     provider: z.string().max(20),
     coinAmount: z.number().nonnegative(),
@@ -30,7 +28,7 @@ export const LinksYoroiExchangeShowCreateResultSchema = z
   .merge(PartnerInfoSchema)
   .strict()
 
-export const LinksYoroiTransferRequestAdaSchema = z
+export const TransferRequestAdaSchema = z
   .object({
     targets: z
       .array(
@@ -55,17 +53,11 @@ export const LinksYoroiTransferRequestAdaSchema = z
   .merge(PartnerInfoSchema)
   .strict()
 
-export const LinksYoroiTransferRequestAdaWithLinkSchema = z
+export const TransferRequestAdaWithLinkSchema = z
   .object({
-    link: z.string().url().max(2048),
+    link: z.string().max(2048),
   })
   .merge(PartnerInfoSchema)
   .strict()
-  .refine((check) => {
-    try {
-      linksCardanoModuleMaker().parse(check.link)
-      return true
-    } catch {
-      return false
-    }
-  })
+
+export const isSafeUrl = (url: string) => url.startsWith('https://')
