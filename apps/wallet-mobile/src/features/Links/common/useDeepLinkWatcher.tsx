@@ -10,19 +10,20 @@ export const useDeepLinkWatcher = () => {
   const processLink = React.useCallback(
     (url: string) => {
       if (links.action !== null) {
-        Logger.debug('useDeepLinks :: action in progress, ignoring...')
+        Logger.debug('useDeepLinksWatcher :: action in progress, ignoring...')
         return
       }
       const action = linksYoroiParser(url)
       if (action == null) {
-        Logger.debug('useDeepLinks :: link is malformated, ignoring...')
+        Logger.debug('useDeepLinksWatcher :: link is malformated, ignoring...')
         return
       }
       if (action.params?.isSandbox === true && __DEV__ === false) {
-        Logger.debug('useDeepLinks :: link is sandboxed, ignoring...')
+        Logger.debug('useDeepLinksWatcher :: link is sandboxed, ignoring...')
         return
       }
       // TODO: implement isTrusted if signature was provided and doesn't match with authorization ignore it
+      Logger.debug('action', JSON.stringify(action, null, 2))
       links.actionStarted({info: action, isTrusted: false})
     },
     [links],
@@ -30,10 +31,7 @@ export const useDeepLinkWatcher = () => {
 
   React.useEffect(() => {
     const getUrl = ({url}: {url: string | null}) => {
-      console.warn('url', url)
-      if (url !== null) {
-        processLink(url)
-      }
+      if (url !== null) processLink(url)
     }
     Linking.addEventListener('url', getUrl)
     return () => Linking.removeAllListeners('url')
@@ -43,10 +41,7 @@ export const useDeepLinkWatcher = () => {
   React.useEffect(() => {
     const getInitialURL = async () => {
       const url = await Linking.getInitialURL()
-      console.warn('url', url)
-      if (url !== null) {
-        processLink(url)
-      }
+      if (url !== null) processLink(url)
     }
     getInitialURL()
   }, [processLink])

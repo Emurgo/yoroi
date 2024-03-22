@@ -156,6 +156,22 @@ const Stack = createStackNavigator<WalletStackRoutes>()
 export const WalletNavigator = () => {
   const initialRouteName = useInitialRouteName()
 
+  // initialRoute doens't update the state of the navigator, only at first render
+  // https://reactnavigation.org/docs/auth-flow/
+  if (initialRouteName === 'exchange-result') {
+    return (
+      <Stack.Navigator
+        initialRouteName={initialRouteName}
+        screenOptions={{
+          headerShown: false /* used only for transition */,
+          detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+        }}
+      >
+        <Stack.Screen name="exchange-result" component={ShowExchangeResultOrderScreen} />
+      </Stack.Navigator>
+    )
+  }
+
   return (
     <Stack.Navigator
       initialRouteName={initialRouteName}
@@ -164,8 +180,6 @@ export const WalletNavigator = () => {
         detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
       }}
     >
-      <Stack.Screen name="exchange-result" component={ShowExchangeResultOrderScreen} />
-
       <Stack.Screen name="wallet-selection" component={WalletSelectionScreen} />
 
       <Stack.Screen name="main-wallet-routes" component={WalletTabNavigator} />

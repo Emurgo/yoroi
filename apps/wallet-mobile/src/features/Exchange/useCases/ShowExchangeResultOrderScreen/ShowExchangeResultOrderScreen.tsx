@@ -1,3 +1,4 @@
+import {exchangeApiMaker, exchangeManagerMaker, ExchangeProvider} from '@yoroi/exchange'
 import {LinksYoroiExchangeShowCreateResultParams, useLinks} from '@yoroi/links'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
@@ -21,6 +22,17 @@ export const ShowExchangeResultOrderScreen = () => {
   const {resetToWalletSelection} = useWalletNavigation()
   const {action, actionFinished} = useLinks()
 
+  // exchange
+  const exchangeManager = React.useMemo(() => {
+    const api = exchangeApiMaker({
+      isProduction: action?.info?.params?.isSandbox !== true,
+      partner: 'yoroi',
+    })
+
+    const manager = exchangeManagerMaker({api})
+    return manager
+  }, [action?.info?.params?.isSandbox])
+
   // NOTE: should never happen, caller should handle it
   if (action == null || action.info.useCase !== 'order/show-create-result') return null
   const params: LinksYoroiExchangeShowCreateResultParams = action.info.params
@@ -37,63 +49,65 @@ export const ShowExchangeResultOrderScreen = () => {
   const {showOrderDetails, Logo, name, showProviderDetails} = sanitizeParams(params)
 
   return (
-    <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
-      <View style={styles.flex}>
-        <WalletAssetImage style={styles.image} />
+    <ExchangeProvider manager={exchangeManager}>
+      <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
+        <View style={styles.flex}>
+          <WalletAssetImage style={styles.image} />
 
-        <Spacer height={25} />
+          <Spacer height={25} />
 
-        <Text style={styles.congratsText}>
-          {strings.congrats}
+          <Text style={styles.congratsText}>
+            {strings.congrats}
+
+            {showOrderDetails && (
+              <>
+                <Spacer width={4} />
+
+                <TouchableOpacity style={{transform: [{translateY: 3}]}} onPress={handleOnShowDetails}>
+                  <Icon.Info size={26} />
+                </TouchableOpacity>
+              </>
+            )}
+          </Text>
+
+          <Spacer height={16} />
 
           {showOrderDetails && (
             <>
-              <Spacer width={4} />
+              <ContentResult title={strings.cryptoAmountYouGet}>
+                <Text style={styles.contentValueText}>{`${params?.coinAmount ?? 0} ${params?.coin ?? ''}`}</Text>
+              </ContentResult>
 
-              <TouchableOpacity style={{transform: [{translateY: 3}]}} onPress={handleOnShowDetails}>
-                <Icon.Info size={26} />
-              </TouchableOpacity>
+              <Spacer height={16} />
+
+              <ContentResult title={strings.fiatAmountYouGet}>
+                <Text style={styles.contentValueText}>{`${params?.fiatAmount ?? 0} ${params?.fiat ?? ''}`}</Text>
+              </ContentResult>
             </>
           )}
-        </Text>
 
-        <Spacer height={16} />
+          {showProviderDetails && (
+            <>
+              <Spacer height={16} />
 
-        {showOrderDetails && (
-          <>
-            <ContentResult title={strings.cryptoAmountYouGet}>
-              <Text style={styles.contentValueText}>{`${params?.coinAmount ?? 0} ${params?.coin ?? ''}`}</Text>
-            </ContentResult>
+              <ContentResult title={strings.provider}>
+                <View style={styles.boxProvider}>
+                  <Logo size={24} />
 
-            <Spacer height={16} />
+                  <Spacer width={4} />
 
-            <ContentResult title={strings.fiatAmountYouGet}>
-              <Text style={styles.contentValueText}>{`${params?.fiatAmount ?? 0} ${params?.fiat ?? ''}`}</Text>
-            </ContentResult>
-          </>
-        )}
+                  <Text style={styles.contentValueText}>{name}</Text>
+                </View>
+              </ContentResult>
+            </>
+          )}
+        </View>
 
-        {showProviderDetails && (
-          <>
-            <Spacer height={16} />
-
-            <ContentResult title={strings.provider}>
-              <View style={styles.boxProvider}>
-                <Logo size={24} />
-
-                <Spacer width={4} />
-
-                <Text style={styles.contentValueText}>{name}</Text>
-              </View>
-            </ContentResult>
-          </>
-        )}
-      </View>
-
-      <View style={styles.actions}>
-        <Button shelleyTheme onPress={handleOnClose} title={strings.close} />
-      </View>
-    </SafeAreaView>
+        <View style={styles.actions}>
+          <Button shelleyTheme onPress={handleOnClose} title={strings.close} />
+        </View>
+      </SafeAreaView>
+    </ExchangeProvider>
   )
 }
 
