@@ -16,6 +16,7 @@ import {ModalProvider} from './components/Modal/ModalContext'
 import {ModalScreen} from './components/Modal/ModalScreen'
 import {AgreementChangedNavigator, InitializationNavigator} from './features/Initialization'
 import {LegalAgreement, useLegalAgreement} from './features/Initialization/common'
+import {useDeepLinkWatcher} from './features/Links/common/useDeepLinkWatcher'
 import {CONFIG, LINKING_CONFIG, LINKING_PREFIXES} from './legacy/config'
 import {DeveloperScreen} from './legacy/DeveloperScreen'
 import {AppRoutes} from './navigation'
@@ -28,9 +29,11 @@ const Stack = createStackNavigator<AppRoutes>()
 const navRef = React.createRef<NavigationContainerRef<ReactNavigation.RootParamList>>()
 
 export const AppNavigator = () => {
+  useDeepLinkWatcher()
   const strings = useStrings()
   const [routeName, setRouteName] = React.useState<string>()
 
+  // NOTE: mind some routes are handled by the event listener
   const enableDeepLink = routeName === 'history-list'
 
   const linking = {
