@@ -4,11 +4,12 @@ const PartnerInfoSchema = z.object({
   isSandbox: z.boolean().optional(),
   isTestnet: z.boolean().optional(),
   appId: z.string().max(40).optional(),
-  redirectTo: z.string().max(2048).optional(),
   message: z.string().max(256).optional(),
   walletId: z.string().max(40).optional(),
   authorization: z.string().max(256).optional(),
   signature: z.string().max(256).optional(),
+  redirectTo: z.string().max(2048).optional(),
+  redirectWith: z.array(z.enum(['txHash', 'walletName'])).optional(),
 })
 
 export const ExchangeShowCreateResultSchema = z

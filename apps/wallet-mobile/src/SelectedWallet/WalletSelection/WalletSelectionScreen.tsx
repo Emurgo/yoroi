@@ -9,6 +9,7 @@ import {useStatusBar} from '../../components/hooks/useStatusBar'
 import {Icon} from '../../components/Icon'
 import {PleaseWaitModal} from '../../components/PleaseWaitModal'
 import {showErrorDialog} from '../../dialogs'
+import {useLinksRequestWallet} from '../../features/Links/common/useLinksRequestWallet'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import {isNightly} from '../../legacy/config'
 import {useMetrics} from '../../metrics/metricsManager'
@@ -27,6 +28,7 @@ import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../Context'
 import {WalletListItem} from './WalletListItem'
 
 export const WalletSelectionScreen = () => {
+  useLinksRequestWallet()
   const strings = useStrings()
   const {navigateToTxHistory} = useWalletNavigation()
   const walletManager = useWalletManager()

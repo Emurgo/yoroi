@@ -1,0 +1,92 @@
+[
+  {
+    "id": "links.trusted.paymentRequested.title",
+    "defaultMessage": "!!!Payment requested",
+    "file": "src/features/Links/common/useStrings.ts",
+    "start": {
+      "line": 28,
+      "column": 34,
+      "index": 1155
+    },
+    "end": {
+      "line": 31,
+      "column": 5,
+      "index": 1258
+    }
+  },
+  {
+    "id": "links.trusted.paymentRequested.description",
+    "defaultMessage": "!!!A payment has been requested.",
+    "file": "src/features/Links/common/useStrings.ts",
+    "start": {
+      "line": 32,
+      "column": 40,
+      "index": 1300
+    },
+    "end": {
+      "line": 35,
+      "column": 5,
+      "index": 1421
+    }
+  },
+  {
+    "id": "links.untrusted.paymentRequested.title",
+    "defaultMessage": "!!!Payment requested",
+    "file": "src/features/Links/common/useStrings.ts",
+    "start": {
+      "line": 36,
+      "column": 36,
+      "index": 1459
+    },
+    "end": {
+      "line": 39,
+      "column": 5,
+      "index": 1564
+    }
+  },
+  {
+    "id": "links.untrusted.paymentRequested.description",
+    "defaultMessage": "!!!A payment has been requested.",
+    "file": "src/features/Links/common/useStrings.ts",
+    "start": {
+      "line": 40,
+      "column": 42,
+      "index": 1608
+    },
+    "end": {
+      "line": 43,
+      "column": 5,
+      "index": 1731
+    }
+  },
+  {
+    "id": "links.askToOpenAWallet.title",
+    "defaultMessage": "!!!Open a wallet",
+    "file": "src/features/Links/common/useStrings.ts",
+    "start": {
+      "line": 45,
+      "column": 27,
+      "index": 1761
+    },
+    "end": {
+      "line": 48,
+      "column": 5,
+      "index": 1852
+    }
+  },
+  {
+    "id": "links.askToOpenAWallet.description",
+    "defaultMessage": "!!!To continue, open a wallet.",
+    "file": "src/features/Links/common/useStrings.ts",
+    "start": {
+      "line": 49,
+      "column": 33,
+      "index": 1887
+    },
+    "end": {
+      "line": 52,
+      "column": 5,
+      "index": 1998
+    }
+  }
+]

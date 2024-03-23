@@ -1,19 +1,16 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {RouteProp, useFocusEffect} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
-import {
-  LinksTransferRequestAdaWithLinkParams,
-  useLinks,
-} from '@yoroi/links'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Keyboard, Platform} from 'react-native'
 
 import {VotingRegistration} from './Catalyst'
-import {Icon, OfflineBanner, useModal} from './components'
+import {Icon, OfflineBanner} from './components'
 import {DashboardNavigator} from './Dashboard'
 import {ShowExchangeResultOrderScreen} from './features/Exchange/useCases/ShowExchangeResultOrderScreen/ShowExchangeResultOrderScreen'
-import {RequestedAdaPaymentWithLink} from './features/Links/useCases/RequestedAdaPaymentWithLink'
+import {useLinksRequestWallet} from './features/Links/common/useLinksRequestWallet'
+import {useLinksShowActionResult} from './features/Links/common/useLinksShowActionResult'
 import {MenuNavigator} from './features/Menu'
 import {SettingsScreenNavigator} from './features/Settings'
 import {GovernanceNavigator} from './features/Staking/Governance'
@@ -158,7 +155,7 @@ const WalletTabNavigator = () => {
 
 const Stack = createStackNavigator<WalletStackRoutes>()
 export const WalletNavigator = () => {
-  const {initialRoute} = useDeepLinkManager()
+  const {initialRoute} = useLinksShowActionResult()
 
   // initialRoute doens't update the state of the navigator, only at first render
   // https://reactnavigation.org/docs/auth-flow/
@@ -197,35 +194,6 @@ export const WalletNavigator = () => {
       <Stack.Screen name="governance" component={GovernanceNavigator} />
     </Stack.Navigator>
   )
-}
-
-const useDeepLinkManager = () => {
-  const {action} = useLinks()
-  const initialRoute = action?.info.useCase === 'order/show-create-result' ? 'exchange-result' : 'wallet-selection'
-
-  const {openModal} = useModal()
-
-  const openRequestedPaymentAdaWithLink = React.useCallback(
-    ({params, isTrusted}: {params: LinksTransferRequestAdaWithLinkParams; isTrusted?: boolean}) => {
-      Keyboard.dismiss()
-
-      const content = <RequestedAdaPaymentWithLink params={params} isTrusted={isTrusted} />
-
-      // TODO revisit
-      openModal('title', content, 800)
-    },
-    [openModal],
-  )
-
-  React.useEffect(() => {
-    if (action?.info.useCase === 'request/ada-with-link') {
-      openRequestedPaymentAdaWithLink({params: action.info.params, isTrusted: action.isTrusted})
-    }
-  }, [action?.info.params, action?.info.useCase, action?.isTrusted, openRequestedPaymentAdaWithLink])
-
-  return React.useMemo(() => {
-    return {initialRoute}
-  }, [initialRoute])
 }
 
 const messages = defineMessages({
