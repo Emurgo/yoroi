@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import ExtendableError from 'es6-error'
 
-import {Logger} from '../../logging'
-
 export class IsLockedError extends ExtendableError {}
 export type Mutex = {
   lock: Promise<any> | null | undefined

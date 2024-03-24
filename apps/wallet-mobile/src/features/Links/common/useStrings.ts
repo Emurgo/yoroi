@@ -14,6 +14,8 @@ export const useStrings = () => {
 
     askToOpenAWalletTitle: intl.formatMessage(messages.askToOpenAWalletTitle),
     askToOpenAWalletDescription: intl.formatMessage(messages.askToOpenAWalletDescription),
+    askToRedirectTitle: intl.formatMessage(messages.askToRedirectTitle),
+    askToRedirectDescription: intl.formatMessage(messages.askToRedirectDescription),
 
     unknown: intl.formatMessage(globalMessages.unknown),
     disclaimer: intl.formatMessage(globalMessages.disclaimer),
@@ -50,6 +52,16 @@ export const messages = Object.freeze(
     askToOpenAWalletDescription: {
       id: 'links.askToOpenAWallet.description',
       defaultMessage: '!!!To continue, open a wallet.',
+    },
+
+    askToRedirectTitle: {
+      id: 'links.askToRedirect.title',
+      defaultMessage: '!!!Redirect available',
+    },
+    askToRedirectDescription: {
+      id: 'links.askToRedirect.description',
+      defaultMessage:
+        '!!!The caller that request this action has provided a way for Yoroi to return to their application, would you like to be redirected?',
     },
   }),
 )

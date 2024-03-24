@@ -46,7 +46,6 @@ export const useTriggerScanAction = ({insideFeature}: {insideFeature: ScanFeatur
   const trigger = (scanAction: ScanAction) => {
     switch (scanAction.action) {
       case 'send-single-pt': {
-
         if (insideFeature !== 'send') resetTransferState()
 
         receiverResolveChanged(scanAction.receiver)
@@ -64,18 +63,16 @@ export const useTriggerScanAction = ({insideFeature}: {insideFeature: ScanFeatur
           if ('memo' in scanAction.params) memoChanged(scanAction.params?.memo ?? '')
         }
 
-        navigateTo.back()
-        navigateTo.send()
+        navigateTo.startTransfer()
         break
       }
 
       case 'send-only-receiver': {
         if (insideFeature !== 'send') resetTransferState()
-        
+
         receiverResolveChanged(scanAction.receiver)
 
-        navigateTo.back()
-        navigateTo.send()
+        navigateTo.startTransfer()
         break
       }
 

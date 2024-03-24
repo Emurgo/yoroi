@@ -539,7 +539,6 @@ export class ByronWallet implements YoroiWallet {
       .then((key) => key.derive(NUMBERS.STAKING_KEY_INDEX))
       .then((key) => key.toRawKey())
 
-    Logger.info(`getStakingKey: ${Buffer.from(await stakingKey.asBytes()).toString('hex')}`)
     return stakingKey
   }
 
@@ -1381,7 +1380,6 @@ export class ByronWallet implements YoroiWallet {
     assert(this.isInitialized, 'doFullSync: isInitialized')
 
     if (isJormungandr(this.networkId)) return
-    Logger.info('Discovery done, now syncing transactions')
 
     await this.discoverAddresses()
 

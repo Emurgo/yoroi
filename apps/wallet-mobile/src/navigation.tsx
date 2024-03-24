@@ -444,15 +444,13 @@ export const useWalletNavigation = () => {
               routes: [
                 {name: 'wallet-selection'},
                 {
-                  name: 'main-wallet-routes', 
+                  name: 'main-wallet-routes',
                   state: {
                     routes: [
                       {
                         name: 'history',
                         state: {
-                          routes: [
-                            {name: 'send-start-tx'},
-                          ],
+                          routes: [{name: 'send-start-tx'}],
                         },
                       },
                     ],
