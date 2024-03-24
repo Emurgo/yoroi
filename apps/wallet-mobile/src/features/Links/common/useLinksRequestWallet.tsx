@@ -1,6 +1,6 @@
 import {useLinks} from '@yoroi/links'
 import * as React from 'react'
-import {Keyboard} from 'react-native'
+import {InteractionManager, Keyboard} from 'react-native'
 
 import {useModal} from '../../../components/Modal/ModalContext'
 import {useSelectedWalletContext} from '../../../SelectedWallet'
@@ -21,7 +21,9 @@ export const useLinksRequestWallet = () => {
   }, [openModal, strings.askToOpenAWalletTitle])
 
   React.useEffect(() => {
-    const isWalletRequested = action?.info.useCase === 'request/ada-with-link' && wallet == null
-    if (isWalletRequested) askToOpenAWallet()
+    InteractionManager.runAfterInteractions(() => {
+      const isWalletRequested = action?.info.useCase === 'request/ada-with-link' && wallet == null
+      if (isWalletRequested) askToOpenAWallet()
+    })
   }, [askToOpenAWallet, action?.info.useCase, wallet])
 }

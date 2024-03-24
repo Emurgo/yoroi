@@ -11,11 +11,15 @@ import {mocks} from './transformers.mocks'
 describe('transformers', () => {
   describe('encodeExchangeShowCreateResult', () => {
     it('should encode redirectTo if it is a safe URL', () => {
-      const result = encodeExchangeShowCreateResult.parse(
-        mocks.exchangeShowCreateResult.params,
-      )
+      const result = encodeExchangeShowCreateResult.parse({
+        ...mocks.exchangeShowCreateResult.params,
+        redirectTo: 'https://example.com',
+      })
 
-      expect(result).toEqual(mocks.exchangeShowCreateResult.result)
+      expect(result).toEqual({
+        ...mocks.exchangeShowCreateResult.result,
+        redirectTo: encodeURIComponent('https://example.com'),
+      })
     })
 
     it('should throw if redirectTo is not a safe URL', () => {
@@ -29,42 +33,43 @@ describe('transformers', () => {
     })
 
     it('should not encode redirectTo when not present', () => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const {redirectTo: _, ...params} = mocks.exchangeShowCreateResult.params
+      const result = encodeExchangeShowCreateResult.parse(
+        mocks.exchangeShowCreateResult.params,
+      )
 
-      const result = encodeExchangeShowCreateResult.parse(params)
-
-      expect(result).toEqual(params)
+      expect(result).toEqual(mocks.exchangeShowCreateResult.result)
     })
   })
 
   describe('decodeExchangeShowCreateResult', () => {
     it('should decode redirectTo if it is a safe URL', () => {
-      const result = decodeExchangeShowCreateResult.parse(
-        mocks.exchangeShowCreateResult.result,
-      )
+      const result = decodeExchangeShowCreateResult.parse({
+        ...mocks.exchangeShowCreateResult.result,
+        redirectTo: encodeURIComponent('https://example.com'),
+      })
 
-      expect(result).toEqual(mocks.exchangeShowCreateResult.params)
+      expect(result).toEqual({
+        ...mocks.exchangeShowCreateResult.params,
+        redirectTo: 'https://example.com',
+      })
     })
 
     it('should throw if redirectTo is not a safe URL', () => {
       expect(() =>
         decodeExchangeShowCreateResult.parse({
           ...mocks.exchangeShowCreateResult.result,
-          redirectTo: Buffer.from(
+          redirectTo:
             'http://example.com/welcome?message=<script>alert("Malicious Script Executed")</script>',
-          ).toString('hex'),
         }),
       ).toThrow()
     })
 
     it('should not decode redirectTo when not present', () => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const {redirectTo: _, ...result} = mocks.exchangeShowCreateResult.result
+      const params = decodeExchangeShowCreateResult.parse(
+        mocks.exchangeShowCreateResult.result,
+      )
 
-      const params = decodeExchangeShowCreateResult.parse(result)
-
-      expect(params).toEqual(result)
+      expect(params).toEqual(mocks.exchangeShowCreateResult.params)
     })
   })
 
@@ -85,7 +90,7 @@ describe('transformers', () => {
 
       expect(result).toEqual({
         ...mocks.transferRequestAdaWithLink.result,
-        redirectTo: Buffer.from('https://example.com').toString('hex'),
+        redirectTo: encodeURIComponent('https://example.com'),
       })
     })
 
@@ -121,7 +126,7 @@ describe('transformers', () => {
     it('should decode redirectTo and link', () => {
       const result = decodeTransferRequestAdaWithLink.parse({
         ...mocks.transferRequestAdaWithLink.result,
-        redirectTo: Buffer.from('https://example.com').toString('hex'),
+        redirectTo: encodeURIComponent('https://example.com'),
       })
 
       expect(result).toEqual({
@@ -134,9 +139,9 @@ describe('transformers', () => {
       expect(() =>
         decodeTransferRequestAdaWithLink.parse({
           ...mocks.transferRequestAdaWithLink.result,
-          redirectTo: Buffer.from(
+          redirectTo: encodeURIComponent(
             'http://example.com/welcome?message=<script>alert("Malicious Script Executed")</script>',
-          ).toString('hex'),
+          ),
         }),
       ).toThrow()
     })
@@ -145,7 +150,7 @@ describe('transformers', () => {
       expect(() =>
         decodeTransferRequestAdaWithLink.parse({
           ...mocks.transferRequestAdaWithLink.result,
-          link: Buffer.from('invalid').toString('hex'),
+          link: 'invalid',
         }),
       ).toThrow()
     })
@@ -178,7 +183,7 @@ describe('transformers', () => {
 
       expect(result).toEqual({
         ...mocks.transferRequestAda.result,
-        redirectTo: Buffer.from('https://example.com').toString('hex'),
+        redirectTo: encodeURIComponent('https://example.com'),
       })
     })
   })
@@ -196,9 +201,9 @@ describe('transformers', () => {
       expect(() =>
         decodeTransferRequestAda.parse({
           ...mocks.transferRequestAda.result,
-          redirectTo: Buffer.from(
+          redirectTo: encodeURIComponent(
             'http://example.com/welcome?message=<script>alert("Malicious Script Executed")</script>',
-          ).toString('hex'),
+          ),
         }),
       ).toThrow()
     })
@@ -206,7 +211,7 @@ describe('transformers', () => {
     it('should decode with redirectTo', () => {
       const result = decodeTransferRequestAda.parse({
         ...mocks.transferRequestAda.result,
-        redirectTo: Buffer.from('https://example.com').toString('hex'),
+        redirectTo: encodeURIComponent('https://example.com'),
       })
 
       expect(result).toEqual({

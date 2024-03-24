@@ -26,7 +26,7 @@ export const useLinksRequestAction = () => {
       if (action.info.useCase === 'request/ada-with-link') {
         reset()
         try {
-          const link = Buffer.from(action.info.params.link, 'hex').toString()
+          const link = decodeURIComponent(action.info.params.link)
           const parsedCardanoLink = linksCardanoModuleMaker().parse(link)
           if (parsedCardanoLink) {
             const {address: receiver, amount, memo} = parsedCardanoLink.params

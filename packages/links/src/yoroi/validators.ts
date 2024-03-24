@@ -9,7 +9,6 @@ const PartnerInfoSchema = z.object({
   authorization: z.string().max(256).optional(),
   signature: z.string().max(256).optional(),
   redirectTo: z.string().max(2048).optional(),
-  redirectWith: z.array(z.enum(['txHash', 'walletName'])).optional(),
 })
 
 export const ExchangeShowCreateResultSchema = z
@@ -61,4 +60,4 @@ export const TransferRequestAdaWithLinkSchema = z
   .merge(PartnerInfoSchema)
   .strict()
 
-export const isSafeUrl = (url: string) => url.startsWith('https://')
+export const isUnsafeUrl = (url: string) => url.startsWith('http:')

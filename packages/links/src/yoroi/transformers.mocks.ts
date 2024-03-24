@@ -13,7 +13,6 @@ const exchangeShowCreateResultParams: LinksExchangeShowCreateResultParams = {
   orderType: 'buy',
   provider: 'yoroi',
   status: 'success',
-  redirectTo: 'https://example.com',
 }
 const exchangeShowCreateResultResult: LinksExchangeShowCreateResultParams = {
   coin: 'ADA',
@@ -23,7 +22,6 @@ const exchangeShowCreateResultResult: LinksExchangeShowCreateResultParams = {
   orderType: 'buy',
   provider: 'yoroi',
   status: 'success',
-  redirectTo: Buffer.from('https://example.com').toString('hex'),
 }
 
 const transferRequestAdaParams: LinksTransferRequestAdaParams = {
@@ -79,9 +77,9 @@ const transferRequestAdaWithLinkParams: LinksTransferRequestAdaWithLinkParams =
   }
 const transferRequestAdaWithLinkResult: LinksTransferRequestAdaWithLinkParams =
   {
-    link: Buffer.from(
+    link: encodeURIComponent(
       'web+cardano:addr1qygnpgnmc4twqxe4qnj3pakudc0ysheqwflv8guwwlply7zptg3wjqz84kx3t4re4xpqvs3fu7mvsahwhyxd4q3qq90s7sgxnh?amount=10',
-    ).toString('hex'),
+    ),
   }
 
 export const mocks = freeze(

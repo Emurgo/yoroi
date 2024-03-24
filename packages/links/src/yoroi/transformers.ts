@@ -3,12 +3,12 @@ import {
   ExchangeShowCreateResultSchema,
   TransferRequestAdaSchema,
   TransferRequestAdaWithLinkSchema,
-  isSafeUrl,
+  isUnsafeUrl,
 } from './validators'
 
 export const encodeExchangeShowCreateResult =
   ExchangeShowCreateResultSchema.refine((toCheck) => {
-    if (toCheck.redirectTo != null && !isSafeUrl(toCheck.redirectTo))
+    if (toCheck.redirectTo != null && isUnsafeUrl(toCheck.redirectTo))
       return false
 
     return true
@@ -16,27 +16,25 @@ export const encodeExchangeShowCreateResult =
     if (toTransform.redirectTo != null) {
       return {
         ...toTransform,
-        redirectTo: Buffer.from(toTransform.redirectTo).toString('hex'),
+        redirectTo: encodeURIComponent(toTransform.redirectTo),
       }
     }
     return toTransform
   })
 export const decodeExchangeShowCreateResult =
   ExchangeShowCreateResultSchema.refine((toCheck) => {
-    if (toCheck.redirectTo != null) {
-      const decodedRedirectTo = Buffer.from(
-        toCheck.redirectTo,
-        'hex',
-      ).toString()
+    if (
+      toCheck.redirectTo != null &&
+      isUnsafeUrl(decodeURIComponent(toCheck.redirectTo))
+    )
+      return false
 
-      if (!isSafeUrl(decodedRedirectTo)) return false
-    }
     return true
   }).transform((toTransform) => {
     if (toTransform.redirectTo != null) {
       return {
         ...toTransform,
-        redirectTo: Buffer.from(toTransform.redirectTo, 'hex').toString(),
+        redirectTo: decodeURIComponent(toTransform.redirectTo),
       }
     }
     return toTransform
@@ -44,7 +42,7 @@ export const decodeExchangeShowCreateResult =
 
 export const encodeTransferRequestAdaWithLink =
   TransferRequestAdaWithLinkSchema.refine((toCheck) => {
-    if (toCheck.redirectTo != null && !isSafeUrl(toCheck.redirectTo))
+    if (toCheck.redirectTo != null && isUnsafeUrl(toCheck.redirectTo))
       return false
 
     try {
@@ -57,29 +55,26 @@ export const encodeTransferRequestAdaWithLink =
     if (toTransform.redirectTo != null) {
       return {
         ...toTransform,
-        redirectTo: Buffer.from(toTransform.redirectTo).toString('hex'),
-        link: Buffer.from(toTransform.link).toString('hex'),
+        redirectTo: encodeURIComponent(toTransform.redirectTo),
+        link: encodeURIComponent(toTransform.link),
       }
     }
     return {
       ...toTransform,
-      link: Buffer.from(toTransform.link).toString('hex'),
+      link: encodeURIComponent(toTransform.link),
     }
   })
 
 export const decodeTransferRequestAdaWithLink =
   TransferRequestAdaWithLinkSchema.refine((toCheck) => {
-    if (toCheck.redirectTo != null) {
-      const decodedRedirectTo = Buffer.from(
-        toCheck.redirectTo,
-        'hex',
-      ).toString()
-      if (!isSafeUrl(decodedRedirectTo)) return false
-    }
+    if (
+      toCheck.redirectTo != null &&
+      isUnsafeUrl(decodeURIComponent(toCheck.redirectTo))
+    )
+      return false
+
     try {
-      linksCardanoModuleMaker().parse(
-        Buffer.from(toCheck.link, 'hex').toString(),
-      )
+      linksCardanoModuleMaker().parse(decodeURIComponent(toCheck.link))
       return true
     } catch {
       return false
@@ -88,19 +83,19 @@ export const decodeTransferRequestAdaWithLink =
     if (toTransform.redirectTo != null) {
       return {
         ...toTransform,
-        redirectTo: Buffer.from(toTransform.redirectTo, 'hex').toString(),
-        link: Buffer.from(toTransform.link, 'hex').toString(),
+        redirectTo: decodeURIComponent(toTransform.redirectTo),
+        link: decodeURIComponent(toTransform.link),
       }
     }
     return {
       ...toTransform,
-      link: Buffer.from(toTransform.link, 'hex').toString(),
+      link: decodeURIComponent(toTransform.link),
     }
   })
 
 export const encodeTransferRequestAda = TransferRequestAdaSchema.refine(
   (toCheck) => {
-    if (toCheck.redirectTo != null && !isSafeUrl(toCheck.redirectTo))
+    if (toCheck.redirectTo != null && isUnsafeUrl(toCheck.redirectTo))
       return false
 
     return true
@@ -109,7 +104,7 @@ export const encodeTransferRequestAda = TransferRequestAdaSchema.refine(
   if (toTransform.redirectTo != null) {
     return {
       ...toTransform,
-      redirectTo: Buffer.from(toTransform.redirectTo).toString('hex'),
+      redirectTo: encodeURIComponent(toTransform.redirectTo),
     }
   }
   return toTransform
@@ -117,20 +112,19 @@ export const encodeTransferRequestAda = TransferRequestAdaSchema.refine(
 
 export const decodeTransferRequestAda = TransferRequestAdaSchema.refine(
   (toCheck) => {
-    if (toCheck.redirectTo != null) {
-      const decodedRedirectTo = Buffer.from(
-        toCheck.redirectTo,
-        'hex',
-      ).toString()
-      if (!isSafeUrl(decodedRedirectTo)) return false
-    }
+    if (
+      toCheck.redirectTo != null &&
+      isUnsafeUrl(decodeURIComponent(toCheck.redirectTo))
+    )
+      return false
+
     return true
   },
 ).transform((toTransform) => {
   if (toTransform.redirectTo != null) {
     return {
       ...toTransform,
-      redirectTo: Buffer.from(toTransform.redirectTo, 'hex').toString(),
+      redirectTo: decodeURIComponent(toTransform.redirectTo),
     }
   }
   return toTransform
