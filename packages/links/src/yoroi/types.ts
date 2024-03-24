@@ -1,21 +1,21 @@
 import {ZodSchema} from 'zod'
 
 import {
-  LinksYoroiExchangeShowCreateResultSchema,
-  LinksYoroiTransferRequestAdaSchema,
-  LinksYoroiTransferRequestAdaWithLinkSchema,
+  ExchangeShowCreateResultSchema,
+  TransferRequestAdaSchema,
+  TransferRequestAdaWithLinkSchema,
 } from './validators'
 
 export type SchemaInfer<T> = T extends ZodSchema<infer U> ? U : never
 
-export type LinksYoroiExchangeShowCreateResultParams = SchemaInfer<
-  typeof LinksYoroiExchangeShowCreateResultSchema
+export type LinksExchangeShowCreateResultParams = SchemaInfer<
+  typeof ExchangeShowCreateResultSchema
 >
-export type LinksYoroiTransferRequestAdaParams = SchemaInfer<
-  typeof LinksYoroiTransferRequestAdaSchema
+export type LinksTransferRequestAdaParams = SchemaInfer<
+  typeof TransferRequestAdaSchema
 >
-export type LinksYoroiTransferRequestAdaWithLinkParams = SchemaInfer<
-  typeof LinksYoroiTransferRequestAdaWithLinkSchema
+export type LinksTransferRequestAdaWithLinkParams = SchemaInfer<
+  typeof TransferRequestAdaWithLinkSchema
 >
 
 export type LinksYoroiActionInfo =
@@ -23,19 +23,19 @@ export type LinksYoroiActionInfo =
       version: 1
       feature: 'transfer'
       useCase: 'request/ada-with-link'
-      params: LinksYoroiTransferRequestAdaWithLinkParams
+      params: LinksTransferRequestAdaWithLinkParams
     }
   | {
       version: 1
       feature: 'transfer'
       useCase: 'request/ada'
-      params: LinksYoroiTransferRequestAdaParams
+      params: LinksTransferRequestAdaParams
     }
   | {
       version: 1
       feature: 'exchange'
       useCase: 'order/show-create-result'
-      params: LinksYoroiExchangeShowCreateResultParams
+      params: LinksExchangeShowCreateResultParams
     }
 
 export type LinksYoroiAction = {
