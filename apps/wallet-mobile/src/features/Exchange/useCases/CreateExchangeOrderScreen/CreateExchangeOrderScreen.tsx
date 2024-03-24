@@ -42,7 +42,7 @@ export const CreateExchangeOrderScreen = () => {
     providerId,
     provider,
     amount,
-    // referralLink: managerReferralLink,
+    referralLink: managerReferralLink,
     amountInputChanged,
   } = useExchange()
 
@@ -81,8 +81,7 @@ export const CreateExchangeOrderScreen = () => {
     {
       queries: urlOptions,
       providerId,
-      referralLinkCreate: () => new Promise(() => undefined),
-      // referralLinkCreate: managerReferralLink.create,
+      referralLinkCreate: managerReferralLink.create,
       fetcherConfig: {timeout: 30000},
     },
     {
