@@ -23,6 +23,7 @@ export const RequestedAdaPaymentWithLinkScreen = ({
   const {actionFinished} = useLinks()
   const {closeModal} = useModal()
 
+  // TODO: revisit check with product
   const disclaimerStyle = isTrusted ? styles.text : styles.text
   const description = isTrusted
     ? strings.trustedPaymentRequestedDescription

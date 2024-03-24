@@ -7,7 +7,7 @@ import {useSelectedWalletContext} from '../../../SelectedWallet'
 import {AskToOpenWalletScreen} from '../useCases/AskToOpenAWalletScreen/AskToOpenAWalletScreen'
 import {useStrings} from './useStrings'
 
-const heightBreakpoint = 467
+const heightBreakpoint = 367
 export const useLinksRequestWallet = () => {
   const strings = useStrings()
   const {openModal} = useModal()

@@ -18,6 +18,7 @@ export const AskToOpenWalletScreen = () => {
     closeModal()
   }
 
+  // TODO: revisit check with product size and copy
   return (
     <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
       <ScrollView bounces={false}>
