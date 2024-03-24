@@ -129,6 +129,8 @@ const getStories = () => {
     "./src/features/Initialization/InitialScreen/InitialScreen.stories.tsx": require("../src/features/Initialization/InitialScreen/InitialScreen.stories.tsx"),
     "./src/features/Initialization/LanguagePickerScreen/LanguagePickerScreen.stories.tsx": require("../src/features/Initialization/LanguagePickerScreen/LanguagePickerScreen.stories.tsx"),
     "./src/features/Initialization/TermsOfServiceChangedScreen/TermsOfServiceChangedScreen.stories.tsx": require("../src/features/Initialization/TermsOfServiceChangedScreen/TermsOfServiceChangedScreen.stories.tsx"),
+    "./src/features/Links/useCases/AskToOpenAWalletScreen/AskToOpenAWalletScreen.stories.tsx": require("../src/features/Links/useCases/AskToOpenAWalletScreen/AskToOpenAWalletScreen.stories.tsx"),
+    "./src/features/Links/useCases/AskToRedirect/AskToRedirectScreen.stories.tsx": require("../src/features/Links/useCases/AskToRedirect/AskToRedirectScreen.stories.tsx"),
     "./src/features/Links/useCases/RequestedAdaPaymentWithLinkScreen/RequestedAdaPaymentWithLink.stories.tsx": require("../src/features/Links/useCases/RequestedAdaPaymentWithLinkScreen/RequestedAdaPaymentWithLink.stories.tsx"),
     "./src/features/Links/useCases/RequestedAdaPaymentWithLinkScreen/ShowDisclaimer/ShowDisclaimer.stories.tsx": require("../src/features/Links/useCases/RequestedAdaPaymentWithLinkScreen/ShowDisclaimer/ShowDisclaimer.stories.tsx"),
     "./src/features/Menu/Menu.stories.tsx": require("../src/features/Menu/Menu.stories.tsx"),
