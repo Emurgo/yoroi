@@ -462,7 +462,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         .then((key) => key.derive(STAKING_KEY_INDEX))
         .then((key) => key.toRawKey())
 
-      Logger.info(`getStakingKey: ${Buffer.from(await stakingKey.asBytes()).toString('hex')}`)
       return stakingKey
     }
 
@@ -1274,8 +1273,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
 
     private async _doFullSync() {
       assert(this.isInitialized, 'doFullSync: isInitialized')
-
-      Logger.info('Discovery done, now syncing transactions')
 
       await this.discoverAddresses()
 

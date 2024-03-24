@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Payment requested",
     "file": "src/features/Links/common/useStrings.ts",
     "start": {
-      "line": 28,
+      "line": 29,
       "column": 34,
-      "index": 1155
+      "index": 1202
     },
     "end": {
-      "line": 31,
+      "line": 32,
       "column": 5,
-      "index": 1258
+      "index": 1305
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!A payment has been requested.",
     "file": "src/features/Links/common/useStrings.ts",
     "start": {
-      "line": 32,
+      "line": 33,
       "column": 40,
-      "index": 1300
+      "index": 1347
     },
     "end": {
-      "line": 35,
+      "line": 36,
       "column": 5,
-      "index": 1421
+      "index": 1468
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Payment requested",
     "file": "src/features/Links/common/useStrings.ts",
     "start": {
-      "line": 36,
+      "line": 37,
       "column": 36,
-      "index": 1459
+      "index": 1506
     },
     "end": {
-      "line": 39,
+      "line": 40,
       "column": 5,
-      "index": 1564
+      "index": 1611
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!A payment has been requested.",
     "file": "src/features/Links/common/useStrings.ts",
     "start": {
-      "line": 40,
+      "line": 41,
       "column": 42,
-      "index": 1608
+      "index": 1655
     },
     "end": {
-      "line": 43,
+      "line": 44,
       "column": 5,
-      "index": 1731
+      "index": 1778
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Open a wallet",
     "file": "src/features/Links/common/useStrings.ts",
     "start": {
-      "line": 45,
+      "line": 46,
       "column": 27,
-      "index": 1761
+      "index": 1808
     },
     "end": {
-      "line": 48,
+      "line": 49,
       "column": 5,
-      "index": 1852
+      "index": 1899
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!To continue, open a wallet.",
     "file": "src/features/Links/common/useStrings.ts",
     "start": {
-      "line": 49,
+      "line": 50,
       "column": 33,
-      "index": 1887
+      "index": 1934
     },
     "end": {
-      "line": 52,
+      "line": 53,
       "column": 5,
-      "index": 1998
+      "index": 2045
     }
   }
 ]

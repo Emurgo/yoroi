@@ -18,6 +18,7 @@ export const useStrings = () => {
     unknown: intl.formatMessage(globalMessages.unknown),
     disclaimer: intl.formatMessage(globalMessages.disclaimer),
 
+    ok: intl.formatMessage(globalMessages.ok),
     cancel: intl.formatMessage(globalMessages.cancel),
     continue: intl.formatMessage(globalMessages.continue),
   } as const).current

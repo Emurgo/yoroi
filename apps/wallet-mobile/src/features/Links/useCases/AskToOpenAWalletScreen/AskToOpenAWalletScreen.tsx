@@ -32,7 +32,7 @@ export const AskToOpenWalletScreen = () => {
 
         <Spacer width={16} />
 
-        <Button block shelleyTheme onPress={closeModal} title={strings.continue} />
+        <Button block shelleyTheme onPress={closeModal} title={strings.ok} />
       </Actions>
     </SafeAreaView>
   )
