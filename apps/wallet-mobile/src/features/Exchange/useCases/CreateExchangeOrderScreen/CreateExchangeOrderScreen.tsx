@@ -1,10 +1,12 @@
-import {useCreateReferralLink, useExchange, useExchangeProvidersByOrderType} from '@yoroi/exchange'
+import {/* useCreateReferralLink,  */ useExchange, useExchangeProvidersByOrderType} from '@yoroi/exchange'
 import {useTheme} from '@yoroi/theme'
 import {Exchange} from '@yoroi/types'
+import {AxiosRequestConfig} from 'axios'
 import * as React from 'react'
 import {Linking, StyleSheet, Text, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
+import {useQuery, UseQueryOptions} from 'react-query'
 
 import {Button, Icon, KeyboardAvoidingView} from '../../../../components'
 import {useStatusBar} from '../../../../components/hooks/useStatusBar'
@@ -16,7 +18,7 @@ import env from '../../../../legacy/env'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
-import {Quantities} from '../../../../yoroi-wallets/utils'
+import {delay, Quantities} from '../../../../yoroi-wallets/utils'
 import {ProviderItem} from '../../common/ProviderItem/ProviderItem'
 import {useNavigateTo} from '../../common/useNavigateTo'
 import {useStrings} from '../../common/useStrings'
@@ -90,7 +92,7 @@ export const CreateExchangeOrderScreen = () => {
       useErrorBoundary: false,
       retry: false,
       onError: () => {
-        stopLoading({onStop: navigateTo.exchangeErrorScreen})
+        stopLoading({onStop: () => navigateTo.exchangeErrorScreen()})
 
         amountInputChanged(
           {
@@ -103,7 +105,7 @@ export const CreateExchangeOrderScreen = () => {
         )
       },
       onSuccess: (referralLink) => {
-        stopLoading({onStop: navigateTo.historyList})
+        stopLoading({onStop: () => navigateTo.historyList()})
 
         const link = referralLink.toString()
         if (link !== '') {
@@ -196,9 +198,9 @@ export const CreateExchangeOrderScreen = () => {
   )
 }
 
-const delay = 2000 // 2s
+const delays = 2000 // 2s
 const useLoadingScreen = () => {
-  const {startLoading, stopLoading, isLoading} = useLoadingOverlay()
+  const {startLoading, stopLoading} = useLoadingOverlay()
 
   const timerRef = React.useRef<NodeJS.Timeout | undefined>()
 
@@ -206,16 +208,16 @@ const useLoadingScreen = () => {
     ({onStop}: {onStop?: () => void}) => {
       clearTimeout(timerRef.current)
 
-      if (isLoading) stopLoading()
+      stopLoading()
 
       onStop?.()
     },
-    [isLoading, stopLoading],
+    [stopLoading],
   )
 
   const handleStartLoading = React.useCallback(
     (text: LoadingOverlayState['text']) => {
-      timerRef.current = setTimeout(() => startLoading(text), delay)
+      timerRef.current = setTimeout(() => startLoading(text), delays)
     },
     [startLoading],
   )
@@ -225,6 +227,41 @@ const useLoadingScreen = () => {
   return {
     startLoading: handleStartLoading,
     stopLoading: handleStopLoading,
+  }
+}
+
+export const useCreateReferralLink = (
+  {
+    providerId,
+    queries,
+  }: {
+    providerId: string
+    queries: Exchange.ReferralUrlQueryStringParams
+    referralLinkCreate: Exchange.Manager['referralLink']['create']
+    fetcherConfig?: AxiosRequestConfig
+  },
+  options?: UseQueryOptions<
+    URL,
+    Error,
+    URL,
+    ['useCreateReferralLink', Exchange.ReferralUrlQueryStringParams, Exchange.Provider['id']]
+  >,
+) => {
+  const query = useQuery({
+    suspense: true,
+    useErrorBoundary: true,
+    ...options,
+    queryKey: ['useCreateReferralLink', queries, providerId],
+    queryFn: async () => {
+      await delay(5000)
+
+      throw new Error('fake-error')
+    },
+  })
+
+  return {
+    ...query,
+    referralLink: query.data ?? '',
   }
 }
 
