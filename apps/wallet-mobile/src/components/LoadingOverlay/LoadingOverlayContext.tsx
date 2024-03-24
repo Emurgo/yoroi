@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 
-type LoadingOverlayState = {
+export type LoadingOverlayState = {
   isLoading: boolean
   text: React.ReactNode
 }

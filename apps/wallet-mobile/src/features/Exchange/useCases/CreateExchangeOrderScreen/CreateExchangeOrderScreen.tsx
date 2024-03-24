@@ -8,7 +8,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Icon, KeyboardAvoidingView} from '../../../../components'
 import {useStatusBar} from '../../../../components/hooks/useStatusBar'
-import {useLoadingOverlay} from '../../../../components/LoadingOverlay/LoadingOverlayContext'
+import {LoadingOverlayState, useLoadingOverlay} from '../../../../components/LoadingOverlay/LoadingOverlayContext'
 import {Space} from '../../../../components/Space/Space'
 import {Warning} from '../../../../components/Warning'
 import {RAMP_ON_OFF_PATH, SCHEME_URL} from '../../../../legacy/config'
@@ -42,7 +42,7 @@ export const CreateExchangeOrderScreen = () => {
     providerId,
     provider,
     amount,
-    referralLink: managerReferralLink,
+    // referralLink: managerReferralLink,
     amountInputChanged,
   } = useExchange()
 
@@ -65,7 +65,7 @@ export const CreateExchangeOrderScreen = () => {
   const isMainnet = wallet.networkId === 1
   const walletAddress = isMainnet ? wallet.externalAddresses[0] : sandboxWallet
 
-  const {startLoading, stopLoading} = useLoadingOverlay()
+  const {startLoading, stopLoading} = useLoadingScreen()
 
   const urlOptions: Exchange.ReferralUrlQueryStringParams = {
     orderType: orderType,
@@ -81,7 +81,8 @@ export const CreateExchangeOrderScreen = () => {
     {
       queries: urlOptions,
       providerId,
-      referralLinkCreate: managerReferralLink.create,
+      referralLinkCreate: () => new Promise(() => undefined),
+      // referralLinkCreate: managerReferralLink.create,
       fetcherConfig: {timeout: 30000},
     },
     {
@@ -195,6 +196,32 @@ export const CreateExchangeOrderScreen = () => {
       </KeyboardAvoidingView>
     </SafeAreaView>
   )
+}
+
+const delay = 2000 // 2s
+const useLoadingScreen = () => {
+  const {startLoading, stopLoading, isLoading} = useLoadingOverlay()
+
+  const timerRef = React.useRef<NodeJS.Timeout | undefined>()
+
+  const handleStopLoading = React.useCallback(() => {
+    clearTimeout(timerRef.current)
+    if (isLoading) stopLoading()
+  }, [isLoading, stopLoading])
+
+  const handleStartLoading = React.useCallback(
+    (text: LoadingOverlayState['text']) => {
+      timerRef.current = setTimeout(() => startLoading(text), delay)
+    },
+    [startLoading],
+  )
+
+  React.useEffect(() => () => handleStopLoading(), [handleStopLoading, startLoading])
+
+  return {
+    startLoading: handleStartLoading,
+    stopLoading: handleStopLoading,
+  }
 }
 
 const useStyles = () => {
