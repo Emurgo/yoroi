@@ -257,6 +257,7 @@
     "eslint-config-prettier": "8.3.0",
     "eslint-plugin-formatjs": "^4.10.0",
     "eslint-plugin-import": "^2.24.2",
+    "eslint-plugin-jest": "^27.9.0",
     "eslint-plugin-react": "^7.26.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-native": "3.11.0",

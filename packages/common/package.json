@@ -155,6 +155,7 @@
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-ft-flow": "^3.0.0",
+    "eslint-plugin-jest": "^27.9.0",
     "eslint-plugin-prettier": "^4.0.0",
     "flowgen": "^1.21.0",
     "jest": "^28.1.1",
