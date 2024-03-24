@@ -1,3 +1,4 @@
+import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
@@ -13,6 +14,7 @@ storiesOf('Links ShowDisclaimer', module)
         link: 'web+cardano://$stackchain?amount1',
       }}
       isTrusted
+      onContinue={action('onContinue')}
     />
   ))
   .add('untrusted source', () => (
@@ -21,6 +23,7 @@ storiesOf('Links ShowDisclaimer', module)
         message: 'message',
         link: 'web+cardano://$stackchain?amount1',
       }}
+      onContinue={action('onContinue')}
     />
   ))
 
