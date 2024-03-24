@@ -1,6 +1,7 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {RouteProp, useFocusEffect} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
+import {TransferProvider} from '@yoroi/transfer'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Keyboard, Platform} from 'react-native'
@@ -9,7 +10,7 @@ import {VotingRegistration} from './Catalyst'
 import {Icon, OfflineBanner} from './components'
 import {DashboardNavigator} from './Dashboard'
 import {ShowExchangeResultOrderScreen} from './features/Exchange/useCases/ShowExchangeResultOrderScreen/ShowExchangeResultOrderScreen'
-import {useLinksRequestWallet} from './features/Links/common/useLinksRequestWallet'
+import {useLinksRequestAction} from './features/Links/common/useLinksRequestAction'
 import {useLinksShowActionResult} from './features/Links/common/useLinksShowActionResult'
 import {MenuNavigator} from './features/Menu'
 import {SettingsScreenNavigator} from './features/Settings'
@@ -156,6 +157,7 @@ const WalletTabNavigator = () => {
 const Stack = createStackNavigator<WalletStackRoutes>()
 export const WalletNavigator = () => {
   const {initialRoute} = useLinksShowActionResult()
+  useLinksRequestAction()
 
   // initialRoute doens't update the state of the navigator, only at first render
   // https://reactnavigation.org/docs/auth-flow/

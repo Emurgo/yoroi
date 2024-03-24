@@ -241,8 +241,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     static async restore({walletMeta, storage}: {storage: App.Storage; walletMeta: WalletMeta}) {
       const data = await storage.getItem('data', parseWalletJSON)
       if (!data) throw new Error('Cannot read saved data')
-      Logger.debug('openWallet::data', data)
-      Logger.info('restore wallet', walletMeta.name)
 
       const {internalChain, externalChain} = addressChains.restore({data})
 

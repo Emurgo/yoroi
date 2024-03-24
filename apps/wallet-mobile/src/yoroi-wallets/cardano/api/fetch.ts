@@ -47,7 +47,6 @@ type FetchRequest<T> = {
 export const checkedFetch = (request: FetchRequest<any>) => {
   const {endpoint, payload, method, headers} = request
   const checkResponse = request.checkResponse || _checkResponse
-  Logger.info(`API call: ${endpoint}`)
 
   const args = [
     endpoint,
@@ -72,7 +71,6 @@ export const checkedFetch = (request: FetchRequest<any>) => {
       throw e
     })
     .then(async (r) => {
-      Logger.info(`API call ${endpoint} finished`)
       const response = await checkResponse(r, payload)
       // Logger.debug('Response:', response)
       return response

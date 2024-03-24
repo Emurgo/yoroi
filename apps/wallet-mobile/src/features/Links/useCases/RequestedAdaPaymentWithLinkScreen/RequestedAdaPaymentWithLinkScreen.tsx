@@ -12,9 +12,11 @@ import {ShowDisclaimer} from './ShowDisclaimer/ShowDisclaimer'
 export const RequestedAdaPaymentWithLinkScreen = ({
   params,
   isTrusted,
+  onContinue,
 }: {
   params: LinksTransferRequestAdaWithLinkParams
   isTrusted?: boolean
+  onContinue: () => void
 }) => {
   const strings = useStrings()
   const {styles} = useStyles()
@@ -27,10 +29,6 @@ export const RequestedAdaPaymentWithLinkScreen = ({
     : strings.untrustedPaymentRequestedDescription
 
   const handleOnCancel = () => {
-    actionFinished()
-    closeModal()
-  }
-  const handleOnContinue = () => {
     actionFinished()
     closeModal()
   }
@@ -59,7 +57,7 @@ export const RequestedAdaPaymentWithLinkScreen = ({
 
         <Spacer width={16} />
 
-        <Button block shelleyTheme onPress={handleOnContinue} title={strings.continue} />
+        <Button block shelleyTheme onPress={onContinue} title={strings.continue} />
       </Actions>
     </SafeAreaView>
   )

@@ -13,8 +13,6 @@ export const useLinksRequestWallet = () => {
   const {openModal} = useModal()
   const [wallet] = useSelectedWalletContext()
   const {action} = useLinks()
-  const isWalletRequested = action?.info.useCase === 'request/ada-with-link' && wallet == null
-  console.log('isWalletRequested', isWalletRequested)
 
   const askToOpenAWallet = React.useCallback(() => {
     Keyboard.dismiss()
@@ -23,6 +21,7 @@ export const useLinksRequestWallet = () => {
   }, [openModal, strings.askToOpenAWalletTitle])
 
   React.useEffect(() => {
+    const isWalletRequested = action?.info.useCase === 'request/ada-with-link' && wallet == null
     if (isWalletRequested) askToOpenAWallet()
-  }, [isWalletRequested, askToOpenAWallet])
+  }, [askToOpenAWallet, action?.info.useCase, wallet])
 }

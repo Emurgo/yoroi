@@ -222,8 +222,6 @@ export class ByronWallet implements YoroiWallet {
   static async restore({walletMeta, storage}: {storage: App.Storage; walletMeta: WalletMeta}) {
     const data = await storage.getItem('data', parseWalletJSON)
     if (!data) throw new Error('Cannot read saved data')
-    Logger.debug('openWallet::data', data)
-    Logger.info('restore wallet', walletMeta.name)
 
     const networkId = data.networkId ?? walletMeta.networkId // can be null for versions < 3.0.0
     const {internalChain, externalChain} = addressChains.restore({data, networkId})

@@ -5,28 +5,24 @@ import {Linking} from 'react-native'
 import {Logger} from '../../../yoroi-wallets/logging'
 
 export const useDeepLinkWatcher = () => {
-  const links = useLinks()
+  const {actionStarted} = useLinks()
 
   const processLink = React.useCallback(
     (url: string) => {
-      if (links.action !== null) {
-        Logger.debug('useDeepLinksWatcher :: action in progress, ignoring...')
-        return
-      }
-      const action = linksYoroiParser(url)
-      if (action == null) {
+      const parsedAction = linksYoroiParser(url)
+      if (parsedAction == null) {
         Logger.debug('useDeepLinksWatcher :: link is malformated, ignoring...')
         return
       }
-      if (action.params?.isSandbox === true && __DEV__ === false) {
+      if (parsedAction.params?.isSandbox === true && __DEV__ === false) {
         Logger.debug('useDeepLinksWatcher :: link is sandboxed, ignoring...')
         return
       }
       // TODO: implement isTrusted if signature was provided and doesn't match with authorization ignore it
-      Logger.debug('action', JSON.stringify(action, null, 2))
-      links.actionStarted({info: action, isTrusted: false})
+      Logger.debug('parsedAction', JSON.stringify(parsedAction, null, 2))
+      actionStarted({info: parsedAction, isTrusted: false})
     },
-    [links],
+    [actionStarted],
   )
 
   React.useEffect(() => {
