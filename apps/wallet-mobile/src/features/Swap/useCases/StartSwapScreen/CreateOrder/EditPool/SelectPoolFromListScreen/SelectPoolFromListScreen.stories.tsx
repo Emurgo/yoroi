@@ -2,6 +2,8 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
+import {SelectedWalletProvider} from '../../../../../../../SelectedWallet'
+import {mocks} from '../../../../../../../yoroi-wallets/mocks/wallet'
 import {SelectPoolFromListScreen} from './SelectPoolFromListScreen'
 
 const styles = StyleSheet.create({
@@ -11,5 +13,9 @@ const styles = StyleSheet.create({
   },
 })
 storiesOf('Swap Pool Screen', module)
-  .addDecorator((story) => <View style={styles.container}>{story()}</View>)
+  .addDecorator((story) => (
+    <SelectedWalletProvider wallet={mocks.wallet}>
+      <View style={styles.container}>{story()}</View>
+    </SelectedWalletProvider>
+  ))
   .add('initial', () => <SelectPoolFromListScreen />)

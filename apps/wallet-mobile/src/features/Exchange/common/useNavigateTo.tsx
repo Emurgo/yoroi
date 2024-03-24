@@ -7,11 +7,11 @@ export const useNavigateTo = () => {
   const navigation = useNavigation<ExchangeRoutesNavigation & AppRouteNavigation>()
 
   return useRef({
-    closeLoading: navigation.goBack,
-    openLoading: () => navigation.navigate('loading'),
     exchangeSelectBuyProvider: () => navigation.navigate('exchange-select-buy-provider'),
+    exchangeErrorScreen: () => navigation.navigate('exchange-error-screen'),
     exchangeSelectSellProvider: () => navigation.navigate('exchange-select-sell-provider'),
-    exchangeOpenOrder: () =>
+    exchangeCreateOrder: () => navigation.navigate('exchange-create-order'),
+    historyList: () =>
       navigation.reset({
         index: 0,
         routes: [

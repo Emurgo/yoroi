@@ -25,6 +25,7 @@ import {claimApiMaker} from '../features/Claim/module/api'
 import {ClaimProvider} from '../features/Claim/module/ClaimProvider'
 import {ShowSuccessScreen} from '../features/Claim/useCases/ShowSuccessScreen'
 import {CreateExchangeOrderScreen} from '../features/Exchange/useCases/CreateExchangeOrderScreen/CreateExchangeOrderScreen'
+import {ExchangeErrorScreen} from '../features/Exchange/useCases/CreateExchangeOrderScreen/ExchangeErrorScreen/ExchangeErrorScreen'
 import {SelectProviderFromListScreen} from '../features/Exchange/useCases/SelectProviderFromListScreen/SelectProviderFromListScreen'
 import {ShowExchangeResultOrderScreen} from '../features/Exchange/useCases/ShowExchangeResultOrderScreen/ShowExchangeResultOrderScreen'
 import {ReceiveProvider} from '../features/Receive/common/ReceiveProvider'
@@ -219,6 +220,14 @@ export const TxHistoryNavigator = () => {
                         </Boundary>
                       )}
                     </Stack.Screen>
+
+                    <Stack.Screen
+                      name="exchange-error-screen"
+                      options={{
+                        headerShown: false,
+                      }}
+                      component={ExchangeErrorScreen}
+                    />
 
                     <Stack.Screen
                       name="exchange-select-buy-provider"

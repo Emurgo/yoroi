@@ -23,8 +23,8 @@ import {
   TokenIcon,
   useModal,
 } from '../../../../../components'
-import {LoadingOverlay} from '../../../../../legacy/LoadingOverlay'
 import {useLanguage} from '../../../../../i18n'
+import {LoadingOverlay} from '../../../../../legacy/LoadingOverlay'
 import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useWalletNavigation} from '../../../../../navigation'
 import {useSearch} from '../../../../../Search/SearchContext'

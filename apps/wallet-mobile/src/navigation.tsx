@@ -260,6 +260,7 @@ export type SwapTabRoutes = {
 
 export type ExchangeRoutes = {
   'exchange-create-order': undefined
+  'exchange-error-screen': undefined
   'exchange-result': undefined
   'exchange-select-buy-provider': undefined
   'exchange-select-sell-provider': undefined

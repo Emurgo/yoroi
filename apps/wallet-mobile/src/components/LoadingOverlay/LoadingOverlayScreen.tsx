@@ -3,28 +3,19 @@ import {StyleSheet, View} from 'react-native'
 import Svg, {Defs, LinearGradient, Path, Stop} from 'react-native-svg'
 import {ViewProps} from 'react-native-svg/lib/typescript/fabric/utils'
 
-export const LoadingOverlay = ({
-  loading,
-  onTimeout,
-  timeout,
-}: {
-  loading: boolean
-  onTimeout?: () => void
-  timeout?: number
-}) => {
-  React.useEffect(() => {
-    if (loading && onTimeout !== undefined && timeout !== undefined) {
-      const timeoutRef = setTimeout(onTimeout, timeout)
+import {Space} from '../Space/Space'
+import {useLoadingOverlay} from './LoadingOverlayContext'
 
-      return () => clearTimeout(timeoutRef)
-    }
-  }, [loading, onTimeout, timeout])
-
-  if (!loading) return null
+export const LoadingOverlayScreen = () => {
+  const {text} = useLoadingOverlay()
 
   return (
     <View style={styles.loading}>
       <YoroiLogo />
+
+      <Space height="xl" />
+
+      {text}
     </View>
   )
 }
@@ -60,7 +51,6 @@ const YoroiLogo = (props: ViewProps) => {
 const styles = StyleSheet.create({
   loading: {
     ...StyleSheet.absoluteFillObject,
-    opacity: 0.8,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
