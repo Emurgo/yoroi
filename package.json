@@ -21,7 +21,7 @@
     ]
   },
   "scripts": {
-    "reset": "yarn clean && yarn install --frozen-lockfile && yarn wallet-mobile:reset && yarn build && yarn start",
+    "reset": "yarn cache clean --force && yarn clean && yarn install --frozen-lockfile && yarn wallet-mobile:reset && yarn build && yarn start",
     "build": "yarn workspaces run build",
     "clean": "yarn workspaces run rimraf node_modules && yarn rimraf node_modules",
     "build:start": "yarn build && concurrently \"yarn watch\" \"yarn wallet-mobile:start\"",
