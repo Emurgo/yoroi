@@ -196,7 +196,7 @@ export const CreateExchangeOrderScreen = () => {
   )
 }
 
-const delays = 2000 // 2s
+const delays = 2000 // 2s requeriment
 const useLoadingScreen = () => {
   const {startLoading, stopLoading} = useLoadingOverlay()
 
