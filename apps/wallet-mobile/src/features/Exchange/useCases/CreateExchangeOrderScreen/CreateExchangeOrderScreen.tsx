@@ -216,7 +216,7 @@ const useLoadingScreen = () => {
     [startLoading],
   )
 
-  React.useEffect(() => () => handleStopLoading(), [handleStopLoading, startLoading])
+  React.useEffect(() => () => handleStopLoading(), [handleStopLoading])
 
   return {
     startLoading: handleStartLoading,
