@@ -33,9 +33,9 @@ export const CreateExchangeOrderScreen = () => {
   const strings = useStrings()
   const styles = useStyles()
   const {track} = useMetrics()
+  const navigateTo = useNavigateTo()
   const [contentHeight, setContentHeight] = React.useState(0)
 
-  const navigateTo = useNavigateTo()
   const {
     orderType,
     canExchange,
@@ -88,7 +88,10 @@ export const CreateExchangeOrderScreen = () => {
       enabled: false,
       suspense: false,
       useErrorBoundary: false,
+      retry: false,
       onError: () => {
+        stopLoading({onStop: navigateTo.exchangeErrorScreen})
+
         amountInputChanged(
           {
             disabled: false,
@@ -98,18 +101,14 @@ export const CreateExchangeOrderScreen = () => {
           },
           true,
         )
-
-        stopLoading()
-        navigateTo.exchangeErrorScreen()
       },
       onSuccess: (referralLink) => {
-        stopLoading()
+        stopLoading({onStop: navigateTo.historyList})
 
         const link = referralLink.toString()
         if (link !== '') {
           Linking.openURL(link)
           track.exchangeSubmitted({ramp_type: orderType === 'sell' ? 'Sell' : 'Buy', ada_amount: orderAmount})
-          navigateTo.historyList()
         }
       },
     },
@@ -122,8 +121,8 @@ export const CreateExchangeOrderScreen = () => {
   }, [track])
 
   const handleOnExchange = () => {
-    startLoading(<Text style={styles.loadingLink}>{strings.loadingLink}</Text>)
     createReferralLink()
+    startLoading(<Text style={styles.loadingLink}>{strings.loadingLink}</Text>)
   }
 
   const handleOnListProvidersByOrderType = () => {
@@ -203,10 +202,16 @@ const useLoadingScreen = () => {
 
   const timerRef = React.useRef<NodeJS.Timeout | undefined>()
 
-  const handleStopLoading = React.useCallback(() => {
-    clearTimeout(timerRef.current)
-    if (isLoading) stopLoading()
-  }, [isLoading, stopLoading])
+  const handleStopLoading = React.useCallback(
+    ({onStop}: {onStop?: () => void}) => {
+      clearTimeout(timerRef.current)
+
+      if (isLoading) stopLoading()
+
+      onStop?.()
+    },
+    [isLoading, stopLoading],
+  )
 
   const handleStartLoading = React.useCallback(
     (text: LoadingOverlayState['text']) => {
@@ -215,7 +220,7 @@ const useLoadingScreen = () => {
     [startLoading],
   )
 
-  React.useEffect(() => () => handleStopLoading(), [handleStopLoading])
+  React.useEffect(() => () => handleStopLoading({}), [handleStopLoading])
 
   return {
     startLoading: handleStartLoading,
