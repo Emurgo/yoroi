@@ -2903,7 +2903,7 @@
     structured-headers "^0.4.1"
     tar "^6.0.5"
     tempy "^0.7.1"
-    terminal-link "^2.1.1"
+    terminal-link "2.1.1"
     text-table "^0.2.0"
     url-join "4.0.0"
     wrap-ansi "^7.0.0"
@@ -3733,7 +3733,7 @@
     slash "^3.0.0"
     string-length "^4.0.1"
     strip-ansi "^6.0.0"
-    terminal-link "^2.0.0"
+    terminal-link "2.1.1"
     v8-to-istanbul "^9.0.1"
 
 "@jest/reporters@^29.6.1":
@@ -22194,7 +22194,7 @@ tempy@^0.7.1:
     type-fest "^0.16.0"
     unique-string "^2.0.0"
 
-terminal-link@^2.0.0, terminal-link@^2.1.1:
+terminal-link@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/terminal-link/-/terminal-link-2-m.1.1.tgz#14a64a27ab3c0df933ea546fba55f2d078edc994"
   integrity sha512-un0FmiRUQNr5PJqy9kP7c40F5BOfpGlYTrxonDChEZB7pzZxRNp/bt+ymiy9/npwXya9KH99nJ/GXFIiUkYGFQ==
