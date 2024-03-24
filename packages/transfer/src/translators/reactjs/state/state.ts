@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {isNameServer, isResolvableDomain} from '@yoroi/resolver'
 import {Balance, Chain, Resolver, Transfer} from '@yoroi/types'
 import {castDraft, freeze, produce} from 'immer'
