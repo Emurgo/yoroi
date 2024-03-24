@@ -1,12 +1,10 @@
-import {/* useCreateReferralLink,  */ useExchange, useExchangeProvidersByOrderType} from '@yoroi/exchange'
+import {useCreateReferralLink, useExchange, useExchangeProvidersByOrderType} from '@yoroi/exchange'
 import {useTheme} from '@yoroi/theme'
 import {Exchange} from '@yoroi/types'
-import {AxiosRequestConfig} from 'axios'
 import * as React from 'react'
 import {Linking, StyleSheet, Text, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useQuery, UseQueryOptions} from 'react-query'
 
 import {Button, Icon, KeyboardAvoidingView} from '../../../../components'
 import {useStatusBar} from '../../../../components/hooks/useStatusBar'
@@ -18,7 +16,7 @@ import env from '../../../../legacy/env'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
-import {delay, Quantities} from '../../../../yoroi-wallets/utils'
+import {Quantities} from '../../../../yoroi-wallets/utils'
 import {ProviderItem} from '../../common/ProviderItem/ProviderItem'
 import {useNavigateTo} from '../../common/useNavigateTo'
 import {useStrings} from '../../common/useStrings'
@@ -227,41 +225,6 @@ const useLoadingScreen = () => {
   return {
     startLoading: handleStartLoading,
     stopLoading: handleStopLoading,
-  }
-}
-
-export const useCreateReferralLink = (
-  {
-    providerId,
-    queries,
-  }: {
-    providerId: string
-    queries: Exchange.ReferralUrlQueryStringParams
-    referralLinkCreate: Exchange.Manager['referralLink']['create']
-    fetcherConfig?: AxiosRequestConfig
-  },
-  options?: UseQueryOptions<
-    URL,
-    Error,
-    URL,
-    ['useCreateReferralLink', Exchange.ReferralUrlQueryStringParams, Exchange.Provider['id']]
-  >,
-) => {
-  const query = useQuery({
-    suspense: true,
-    useErrorBoundary: true,
-    ...options,
-    queryKey: ['useCreateReferralLink', queries, providerId],
-    queryFn: async () => {
-      await delay(5000)
-
-      throw new Error('fake-error')
-    },
-  })
-
-  return {
-    ...query,
-    referralLink: query.data ?? '',
   }
 }
 
