@@ -81,7 +81,7 @@ export const mockDAppList: IDAppItem[] = [
   {
     id: 5,
     name: 'GeniusYield',
-    description: 'The all-in-one platform, that combines an order book DEX with an automated yield option',
+    description: 'The all-in-one platform, that combines an order book DEX with an automated yield optimizer.',
     category: 'dex',
     logo: GeniusYield,
   },
