@@ -18,7 +18,7 @@ import {ModalScreen} from './components/Modal/ModalScreen'
 import {AgreementChangedNavigator, InitializationNavigator} from './features/Initialization'
 import {LegalAgreement, useLegalAgreement} from './features/Initialization/common'
 import {useDeepLinkWatcher} from './features/Links/common/useDeepLinkWatcher'
-import {CONFIG, LINKING_CONFIG, LINKING_PREFIXES} from './legacy/config'
+import {CONFIG} from './legacy/config'
 import {DeveloperScreen} from './legacy/DeveloperScreen'
 import {AppRoutes} from './navigation'
 import {SearchProvider} from './Search/SearchContext'
@@ -34,15 +34,6 @@ export const AppNavigator = () => {
   const strings = useStrings()
   const [routeName, setRouteName] = React.useState<string>()
   useStatusBar(routeName)
-
-  // NOTE: mind some routes are handled by the event listener
-  const enableDeepLink = routeName === 'history-list'
-
-  const linking = {
-    enabled: enableDeepLink,
-    prefixes: LINKING_PREFIXES,
-    config: LINKING_CONFIG,
-  }
 
   useHideScreenInAppSwitcher()
   useAutoLogout()
@@ -83,7 +74,7 @@ export const AppNavigator = () => {
   }
 
   return (
-    <NavigationContainer onStateChange={handleStateChange} linking={linking} onReady={onReady} ref={navRef}>
+    <NavigationContainer onStateChange={handleStateChange} onReady={onReady} ref={navRef}>
       <ModalProvider>
         <Stack.Navigator
           screenOptions={{

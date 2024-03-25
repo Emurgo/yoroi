@@ -1,4 +1,5 @@
 import {useCreateReferralLink, useExchange, useExchangeProvidersByOrderType} from '@yoroi/exchange'
+import {linksYoroiModuleMaker} from '@yoroi/links'
 import {useTheme} from '@yoroi/theme'
 import {Exchange} from '@yoroi/types'
 import * as React from 'react'
@@ -9,7 +10,6 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button, Icon, KeyboardAvoidingView} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
 import {Warning} from '../../../../components/Warning'
-import {RAMP_ON_OFF_PATH, SCHEME_URL} from '../../../../legacy/config'
 import env from '../../../../legacy/env'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../SelectedWallet'
@@ -49,7 +49,15 @@ export const CreateExchangeOrderScreen = () => {
   const quantity = `${amount.value}` as `${number}`
   const denomination = amountTokenInfo.decimals ?? 0
   const orderAmount = +Quantities.denominated(quantity, denomination)
-  const returnUrl = `${SCHEME_URL}${RAMP_ON_OFF_PATH}`
+  const returnUrl = encodeURIComponent(
+    linksYoroiModuleMaker('https').exchange.order.showCreateResult({
+      provider: String(providerSelected ?? ''),
+      orderType,
+      walletId: wallet.id,
+      isTestnet: wallet.networkId !== 1,
+      isSandbox: wallet.networkId !== 1,
+    }),
+  )
 
   const sandboxWallet = env.getString('BANXA_TEST_WALLET')
   const isMainnet = wallet.networkId === 1
