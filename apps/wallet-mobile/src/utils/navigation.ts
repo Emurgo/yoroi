@@ -1,5 +1,5 @@
 import {NavigationProp, NavigationState, useNavigation, useNavigationState} from '@react-navigation/native'
-import {useEffect, useMemo, useState} from 'react'
+import {useEffect, useState} from 'react'
 import {InteractionManager} from 'react-native'
 
 import {compareArrays} from '../yoroi-wallets/utils'
@@ -36,7 +36,7 @@ function useKeepRoutesInHistory(routesToKeep: string[]) {
   }, [navigation, initialRouteId, routesToKeep])
 }
 
-export const useIsCurrentScreenActive = () => {
+export const useIsRouteActive = () => {
   const navigation = useNavigation()
   const currentRouteName = useNavigationState((s) => selectRouteName(s))
   const [initialRouteName] = useState(() => selectRouteName(navigation.getState()))

@@ -4,14 +4,14 @@ import * as React from 'react'
 import {Platform, StatusBar as StatusBarRN} from 'react-native'
 
 import {HexColor} from '../../theme/types'
-import {useIsCurrentScreenActive} from '../../utils/navigation'
+import {useIsRouteActive} from '../../utils/navigation'
 import {useModal} from '../Modal/ModalContext'
 
 export const useStatusBar = (baseColor?: HexColor, legacyModal = false) => {
   const {theme, isDark} = useTheme()
   const {isOpen} = useModal()
 
-  const isActive = useIsCurrentScreenActive()
+  const isActive = useIsRouteActive()
 
   const reflectStatusBarColor = React.useCallback(() => {
     if (!isActive) return
