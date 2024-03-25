@@ -6,7 +6,6 @@ import Animated, {Layout} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer, useModal} from '../../../components'
-import {useStatusBar} from '../../../components/hooks/useStatusBar'
 import {useMetrics} from '../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../SelectedWallet'
 import {useAddressModeManager} from '../../../wallet-manager/useAddressModeManager'
@@ -153,7 +152,6 @@ const Modal = () => {
 
 const useStyles = () => {
   const {theme} = useTheme()
-  useStatusBar()
   const styles = StyleSheet.create({
     root: {
       flex: 1,

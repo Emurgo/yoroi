@@ -5,13 +5,11 @@ import {StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, ScreenBackground} from '../../components'
-import {useStatusBar} from '../../components/hooks/useStatusBar'
 import {LedgerTransportSwitchModal} from '../../HW'
 import globalMessages from '../../i18n/global-messages'
 import {Modal} from '../../legacy/Modal'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
-import {HexColor} from '../../theme/types'
 import {WALLET_CONFIG_24} from '../../yoroi-wallets/cardano/constants/mainnet/constants'
 import {isJormungandr} from '../../yoroi-wallets/cardano/networks'
 import {isByron, isHaskellShelley} from '../../yoroi-wallets/cardano/utils'
@@ -24,7 +22,6 @@ export const WalletInitScreen = () => {
   const strings = useStrings()
   const route = useRoute<RouteProp<WalletInitRoutes, 'choose-create-restore'>>()
   const [modalState, setModalState] = React.useState<ModalState>(MODAL_STATES.CLOSED)
-  useStatusBar(COLORS.BACKGROUND_BLUE as HexColor, modalState !== MODAL_STATES.CLOSED)
 
   const {networkId, walletImplementationId: implementationId} = route.params
   const navigateTo = useNavigateTo({networkId})

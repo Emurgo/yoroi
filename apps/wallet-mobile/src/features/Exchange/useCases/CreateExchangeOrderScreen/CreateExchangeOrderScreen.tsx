@@ -7,7 +7,6 @@ import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Icon, KeyboardAvoidingView} from '../../../../components'
-import {useStatusBar} from '../../../../components/hooks/useStatusBar'
 import {Space} from '../../../../components/Space/Space'
 import {Warning} from '../../../../components/Warning'
 import {RAMP_ON_OFF_PATH, SCHEME_URL} from '../../../../legacy/config'
@@ -28,7 +27,6 @@ import {ShowDisclaimer} from './ShowDisclaimer/ShowDisclaimer'
 const BOTTOM_ACTION_SECTION = 180
 
 export const CreateExchangeOrderScreen = () => {
-  useStatusBar()
   const strings = useStrings()
   const styles = useStyles()
   const {track} = useMetrics()

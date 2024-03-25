@@ -12,6 +12,7 @@ import {OsLoginScreen, PinLoginScreen, useBackgroundTimeout} from './auth'
 import {useAuth} from './auth/AuthProvider'
 import {supportsAndroidFingerprintOverlay} from './auth/biometrics'
 import {EnableLoginWithPin} from './auth/EnableLoginWithPin'
+import {useStatusBar} from './components/hooks/useStatusBar'
 import {ModalProvider} from './components/Modal/ModalContext'
 import {ModalScreen} from './components/Modal/ModalScreen'
 import {AgreementChangedNavigator, InitializationNavigator} from './features/Initialization'
@@ -32,6 +33,7 @@ export const AppNavigator = () => {
   useDeepLinkWatcher()
   const strings = useStrings()
   const [routeName, setRouteName] = React.useState<string>()
+  useStatusBar(routeName)
 
   // NOTE: mind some routes are handled by the event listener
   const enableDeepLink = routeName === 'history-list'

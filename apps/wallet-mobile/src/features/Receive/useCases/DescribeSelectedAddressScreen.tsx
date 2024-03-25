@@ -6,7 +6,6 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import Icon from '../../../assets/img/copy.png'
 import {Button, Spacer, useModal} from '../../../components'
-import {useStatusBar} from '../../../components/hooks/useStatusBar'
 import {useCopy} from '../../../legacy/useCopy'
 import {useMetrics} from '../../../metrics/metricsManager'
 import {isEmptyString} from '../../../utils'
@@ -140,7 +139,6 @@ const Modal = () => {
 
 const useStyles = () => {
   const {theme} = useTheme()
-  useStatusBar()
 
   const styles = StyleSheet.create({
     root: {
