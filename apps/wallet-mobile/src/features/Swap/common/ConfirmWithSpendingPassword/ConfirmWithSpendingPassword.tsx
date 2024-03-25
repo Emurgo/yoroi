@@ -32,6 +32,7 @@ export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error, onPassw
   return (
     <>
       <Text style={styles.modalText}>{strings.enterSpendingPassword}</Text>
+
       <TextInput
         secureTextEntry
         ref={spendingPasswordRef}
@@ -56,6 +57,7 @@ export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error, onPassw
         onPress={() => onSubmit?.(spendingPassword)}
         disabled={spendingPassword.length === 0}
       />
+
       {isLoading && (
         <View style={styles.loading}>
           <ActivityIndicator size="large" color="black" />
