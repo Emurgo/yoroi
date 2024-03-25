@@ -26,7 +26,7 @@ export const ReceiverInfo = ({target}: Props) => {
         <>
           <View style={{flexDirection: 'row'}}>
             <Text style={styles.value}>
-              {receiver.selectedNameServer ? nameServerName[receiver.selectedNameServer] : ''}:
+              {receiver.selectedNameServer != null ? nameServerName[receiver.selectedNameServer] : ''}:
             </Text>
 
             <Spacer width={5} />

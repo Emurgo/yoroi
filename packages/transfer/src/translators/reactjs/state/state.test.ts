@@ -50,6 +50,20 @@ describe('State Actions', () => {
       })
     })
 
+    describe('RedirectToChanged', () => {
+      it('set', () => {
+        const action: TransferAction = {
+          type: TransferActionType.RedirectToChanged,
+          redirectTo: 'https://yoroi-wallet.com?walletId={walletId}',
+        }
+        const state = combinedReducers(defaultTransferState, action)
+        expect(state).toEqual({
+          ...defaultTransferState,
+          redirectTo: 'https://yoroi-wallet.com?walletId={walletId}',
+        })
+      })
+    })
+
     describe('TokenSelectedChanged', () => {
       it('set', () => {
         const action: TransferAction = {
@@ -89,6 +103,7 @@ describe('State Actions', () => {
         selectedTokenId: '',
         unsignedTx: undefined,
         memo: '',
+        redirectTo: undefined,
         targets: [
           {
             receiver: {
@@ -129,6 +144,7 @@ describe('State Actions', () => {
           selectedTokenId: '',
           memo: '',
           unsignedTx: undefined,
+          redirectTo: undefined,
           targets: [
             {
               receiver: {
@@ -205,6 +221,7 @@ describe('State Actions', () => {
         selectedTargetIndex: 0,
         selectedTokenId: '',
         unsignedTx: undefined,
+        redirectTo: undefined,
         memo: '',
         targets: [
           {
@@ -250,6 +267,7 @@ describe('State Actions', () => {
           selectedTokenId: '',
           memo: '',
           unsignedTx: undefined,
+          redirectTo: undefined,
           targets: [
             {
               receiver: {
@@ -300,6 +318,7 @@ describe('State Actions', () => {
           selectedTokenId: '',
           memo: '',
           unsignedTx: undefined,
+          redirectTo: undefined,
           targets: [
             {
               receiver: {
@@ -346,6 +365,7 @@ describe('State Actions', () => {
           selectedTokenId: '',
           memo: '',
           unsignedTx: undefined,
+          redirectTo: undefined,
           targets: [
             {
               receiver: {
@@ -390,6 +410,7 @@ describe('State Actions', () => {
           selectedTokenId: '',
           memo: '',
           unsignedTx: undefined,
+          redirectTo: undefined,
           targets: [
             {
               receiver: {
@@ -427,6 +448,7 @@ describe('State Actions', () => {
         selectedTargetIndex: 0,
         selectedTokenId: '',
         unsignedTx: undefined,
+        redirectTo: undefined,
         memo: '',
         targets: [
           {
@@ -546,6 +568,7 @@ describe('State Actions', () => {
           selectedTargetIndex: 0,
           selectedTokenId: '',
           unsignedTx: undefined,
+          redirectTo: undefined,
           memo: '',
           targets: [
             {
@@ -570,6 +593,7 @@ describe('State Actions', () => {
           selectedTokenId: '',
           memo: '',
           unsignedTx: undefined,
+          redirectTo: undefined,
           targets: [
             {
               receiver: {
@@ -599,6 +623,7 @@ describe('State Actions', () => {
           selectedTokenId: 'fake-token-id',
           memo: '',
           unsignedTx: undefined,
+          redirectTo: undefined,
           targets: [
             {
               receiver: {
@@ -675,6 +700,7 @@ describe('State Actions', () => {
           selectedTokenId: 'fake-token-id',
           memo: '',
           unsignedTx: undefined,
+          redirectTo: undefined,
           targets: [
             {
               receiver: {
@@ -710,6 +736,7 @@ describe('State Actions', () => {
           selectedTokenId: 'fake-token-id',
           memo: '',
           unsignedTx: undefined,
+          redirectTo: undefined,
           targets: [
             {
               receiver: {

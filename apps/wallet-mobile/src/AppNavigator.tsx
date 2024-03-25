@@ -1,6 +1,7 @@
 import {NavigationContainer, NavigationContainerRef} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {isString} from '@yoroi/common'
+import {TransferProvider} from '@yoroi/transfer'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Alert, AppState, AppStateStatus, InteractionManager, Platform} from 'react-native'
@@ -136,7 +137,9 @@ export const AppNavigator = () => {
                 <Stack.Screen name="app-root">
                   {() => (
                     <SearchProvider>
-                      <WalletNavigator />
+                      <TransferProvider>
+                        <WalletNavigator />
+                      </TransferProvider>
                     </SearchProvider>
                   )}
                 </Stack.Screen>

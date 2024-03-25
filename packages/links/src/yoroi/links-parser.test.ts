@@ -65,7 +65,7 @@ describe('linksYoroiParser', () => {
 
   it('should parse transfer request ada with link', () => {
     const link =
-      'yoroi://yoroi-wallet.com/w1/transfer/request/ada-with-link?link=web%2Bcardano%3Aaddr1qygnpgnmc4twqxe4qnj3pakudc0ysheqwflv8guwwlply7zptg3wjqz84kx3t4re4xpqvs3fu7mvsahwhyxd4q3qq90s7sgxnh%3Famount%3D10&authorization=uuid-v4'
+      'yoroi://yoroi-wallet.com/w1/transfer/request/ada-with-link?link=web%252Bcardano%253Aaddr1qygnpgnmc4twqxe4qnj3pakudc0ysheqwflv8guwwlply7zptg3wjqz84kx3t4re4xpqvs3fu7mvsahwhyxd4q3qq90s7sgxnh%253Famount%253D10&authorization=uuid-v4'
 
     const result = linksYoroiParser(link)
 

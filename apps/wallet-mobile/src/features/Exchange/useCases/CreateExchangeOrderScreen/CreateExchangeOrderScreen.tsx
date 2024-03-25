@@ -38,9 +38,10 @@ export const CreateExchangeOrderScreen = () => {
   const {orderType, canExchange, providerId, provider, amount, referralLink: managerReferralLink} = useExchange()
 
   const providers = useExchangeProvidersByOrderType({orderType, providerListByOrderType: provider.list.byOrderType})
-  const providerSelected = Object.fromEntries(providers)[providerId]
-  const fee = providerSelected.supportedOrders?.[orderType]?.fee ?? 0
-  const Logo = providerSelected.id === 'banxa' ? BanxaLogo : EncryptusLogo
+  const providerSelected = new Map(providers).get(providerId)
+  const fee = providerSelected?.supportedOrders[orderType]?.fee ?? 0
+
+  const Logo = providerSelected?.id === 'banxa' ? BanxaLogo : EncryptusLogo
 
   const wallet = useSelectedWallet()
 
@@ -127,7 +128,7 @@ export const CreateExchangeOrderScreen = () => {
             <Space height="xxs" />
 
             <ProviderItem
-              label={providerSelected.name}
+              label={providerSelected?.name ?? ''}
               fee={fee}
               leftAdornment={<Logo size={40} />}
               rightAdornment={<Icon.Chevron direction="right" />}
