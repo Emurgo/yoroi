@@ -17,6 +17,7 @@ import {useReceive} from '../common/ReceiveProvider'
 import {SkeletonAdressDetail} from '../common/SkeletonAddressDetail/SkeletonAddressDetail'
 import {useMultipleAddressesInfo} from '../common/useMultipleAddressesInfo'
 import {useNavigateTo} from '../common/useNavigateTo'
+import {useReceiveAddressesStatus} from '../common/useReceiveAddressesStatus'
 import {useStrings} from '../common/useStrings'
 import {QRs} from '../illustrations/QRs'
 
@@ -25,7 +26,9 @@ export const DescribeSelectedAddressScreen = () => {
   const {styles, colors} = useStyles()
   const navigate = useNavigateTo()
   const {selectedAddress} = useReceive()
-  const {isSingle} = useAddressModeManager()
+  const {isSingle, addressMode} = useAddressModeManager()
+  const addresses = useReceiveAddressesStatus(addressMode)
+  const multipleAddressesUsed = addresses.used.length > 1
   const {isShowingMultipleAddressInfo} = useMultipleAddressesInfo()
   const {openModal} = useModal()
 
@@ -40,8 +43,11 @@ export const DescribeSelectedAddressScreen = () => {
   }
 
   React.useEffect(() => {
-    isSingle && isShowingMultipleAddressInfo && openModal(strings.singleOrMultiple, <Modal />, modalHeight)
-  }, [isShowingMultipleAddressInfo, isSingle, openModal, strings.singleOrMultiple])
+    isSingle &&
+      multipleAddressesUsed &&
+      isShowingMultipleAddressInfo &&
+      openModal(strings.singleOrMultiple, <Modal />, modalHeight)
+  }, [isShowingMultipleAddressInfo, isSingle, multipleAddressesUsed, openModal, strings.singleOrMultiple])
 
   useFocusEffect(
     React.useCallback(() => {
