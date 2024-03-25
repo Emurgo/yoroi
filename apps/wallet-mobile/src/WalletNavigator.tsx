@@ -155,7 +155,7 @@ const WalletTabNavigator = () => {
 
 const Stack = createStackNavigator<WalletStackRoutes>()
 export const WalletNavigator = () => {
-  const {initialRoute} = useLinksShowActionResult()
+  const initialRoute = useLinksShowActionResult()
   useLinksRequestAction()
 
   // initialRoute doens't update the state of the navigator, only at first render
