@@ -29,6 +29,8 @@ export const RequestSpecificAmountScreen = () => {
   const strings = useStrings()
   const {colors, styles} = useStyles()
   const [amount, setAmount] = React.useState('')
+  const wallet = useSelectedWallet()
+
   const {track} = useMetrics()
   const hasAmount = !isEmptyString(amount)
   const {isScrollBarShown, setIsScrollBarShown, scrollViewRef} = useScrollView()
@@ -49,7 +51,7 @@ export const RequestSpecificAmountScreen = () => {
   const handleOnChangeAmount = (amount: string) => {
     const edited = editedFormatter(amount)
     const numberOfDecimals = (edited.split('.')[1] ?? []).length
-    if (Number(edited) <= Number.MAX_SAFE_INTEGER && numberOfDecimals <= 6) {
+    if (Number(edited) <= Number.MAX_SAFE_INTEGER && numberOfDecimals <= (wallet.primaryTokenInfo.decimals ?? 0)) {
       setAmount(edited)
     }
   }
