@@ -48,7 +48,8 @@ export const RequestSpecificAmountScreen = () => {
 
   const handleOnChangeAmount = (amount: string) => {
     const edited = editedFormatter(amount)
-    if (Number(edited.replace(',', '.')) <= Number.MAX_SAFE_INTEGER) {
+    const numberOfDecimals = (edited.split('.')[1] ?? []).length
+    if (Number(edited) <= Number.MAX_SAFE_INTEGER && numberOfDecimals <= 6) {
       setAmount(edited)
     }
   }
