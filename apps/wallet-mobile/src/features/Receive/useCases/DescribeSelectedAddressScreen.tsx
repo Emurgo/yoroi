@@ -47,7 +47,7 @@ export const DescribeSelectedAddressScreen = () => {
       multipleAddressesUsed &&
       isShowingMultipleAddressInfo &&
       openModal(strings.singleOrMultiple, <Modal />, modalHeight)
-  }, [isShowingMultipleAddressInfo, isSingle, multipleAddressesUsed, openModal, strings.singleOrMultiple])
+  }, [isShowingMultipleAddressInfo, isSingle, isMultipleAddressesUsed, openModal, strings.singleOrMultiple])
 
   useFocusEffect(
     React.useCallback(() => {
