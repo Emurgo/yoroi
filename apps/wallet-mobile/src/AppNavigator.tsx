@@ -1,6 +1,7 @@
 import {NavigationContainer, NavigationContainerRef} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {isString} from '@yoroi/common'
+import {supportedPrefixes} from '@yoroi/links'
 import {TransferProvider} from '@yoroi/transfer'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -28,6 +29,7 @@ import {AuthSetting, useAuthOsEnabled, useAuthSetting, useAuthWithOs} from './yo
 
 const Stack = createStackNavigator<AppRoutes>()
 const navRef = React.createRef<NavigationContainerRef<ReactNavigation.RootParamList>>()
+const prefixes = [...supportedPrefixes]
 
 export const AppNavigator = () => {
   useDeepLinkWatcher()
@@ -74,7 +76,12 @@ export const AppNavigator = () => {
   }
 
   return (
-    <NavigationContainer onStateChange={handleStateChange} onReady={onReady} ref={navRef}>
+    <NavigationContainer
+      onStateChange={handleStateChange}
+      linking={{enabled: true, prefixes}}
+      onReady={onReady}
+      ref={navRef}
+    >
       <ModalProvider>
         <Stack.Navigator
           screenOptions={{
