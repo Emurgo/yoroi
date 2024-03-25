@@ -278,19 +278,6 @@ export const TxHistoryNavigator = () => {
                   />
 
                   <Stack.Screen
-                    name="exchange-select-buy-provider"
-                    options={{
-                      title: strings.exchangeSelectBuyProvider,
-                    }}
-                  >
-                    {() => (
-                      <Boundary>
-                        <SelectProviderFromListScreen />
-                      </Boundary>
-                    )}
-                  </Stack.Screen>
-
-                  <Stack.Screen
                     name="swap-select-sell-token"
                     component={SelectSellTokenFromListScreen}
                     options={{
