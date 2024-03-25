@@ -72,7 +72,7 @@ export const useLinksRequestAction = () => {
               version: 1,
               feature: 'transfer',
               useCase: 'request/ada-with-link',
-              params: params,
+              params,
             },
             isTrusted,
           },
