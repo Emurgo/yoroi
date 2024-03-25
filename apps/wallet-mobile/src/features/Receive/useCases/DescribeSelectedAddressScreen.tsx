@@ -28,7 +28,7 @@ export const DescribeSelectedAddressScreen = () => {
   const {selectedAddress} = useReceive()
   const {isSingle, addressMode} = useAddressModeManager()
   const addresses = useReceiveAddressesStatus(addressMode)
-  const multipleAddressesUsed = addresses.used.length > 1
+  const isMultipleAddressesUsed = addresses.used.length > 1
   const {isShowingMultipleAddressInfo} = useMultipleAddressesInfo()
   const {openModal} = useModal()
 
