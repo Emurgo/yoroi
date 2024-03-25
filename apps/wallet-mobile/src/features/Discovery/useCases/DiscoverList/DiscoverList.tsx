@@ -76,6 +76,10 @@ export const DiscoverList = () => {
 
   return (
     <SafeAreaView edges={['bottom', 'left', 'right']} style={[styles.root]}>
+      {/* <View style={styles.dAppItemBox}>
+        <Text>12313123</Text>
+      </View> */}
+
       {isLoading ? (
         <ScrollView>
           {makeList(7).map((_, index) => (
@@ -134,7 +138,7 @@ const useStyles = () => {
       height: 16,
     },
     dAppItemBox: {
-      paddingHorizontal: 16,
+      ...theme.padding['x-l'],
     },
   })
 

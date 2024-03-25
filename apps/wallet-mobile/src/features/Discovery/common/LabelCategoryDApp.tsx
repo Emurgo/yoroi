@@ -42,7 +42,6 @@ const useStyles = () => {
     },
     labelText: {
       ...typography['body-3-s-medium'],
-      fontWeight: '500',
       color: color.primary['600'],
     },
   })

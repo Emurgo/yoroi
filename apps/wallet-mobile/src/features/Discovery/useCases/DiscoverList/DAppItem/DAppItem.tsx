@@ -30,13 +30,7 @@ export const DAppItem = ({dApp}: Props) => {
           <Text style={styles.nameText}>{dApp.name}</Text>
 
           {dApp?.description !== undefined && (
-            <>
-              <Spacer height={2} />
-
-              <Text style={[styles.descriptionText, isPressed && styles.descriptionTextActive]}>
-                {dApp.description}
-              </Text>
-            </>
+            <Text style={[styles.descriptionText, isPressed && styles.descriptionTextActive]}>{dApp.description}</Text>
           )}
 
           <Spacer height={8} />
@@ -59,7 +53,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     dAppItemContainer: {
       flexDirection: 'row',
-      gap: 16,
+      gap: 12,
     },
     nameText: {
       color: color.gray[900],
@@ -81,8 +75,8 @@ const useStyles = () => {
       gap: 8,
     },
     dAppLogo: {
-      width: 48,
-      height: 48,
+      width: 40,
+      height: 40,
       resizeMode: 'contain',
     },
   })

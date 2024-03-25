@@ -3,19 +3,22 @@ import {useTheme} from '@yoroi/theme'
 import React, {useCallback} from 'react'
 import {useEffect} from 'react'
 import {Image, StyleSheet, Text, View} from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import IllustrationDAppImage from '../../../assets/img/illustration-dapp.png'
 import {Button, useModal} from '../../../components'
 import {useSelectedWallet} from '../../../SelectedWallet/Context/SelectedWalletContext'
 
-export const storageRootDAppExplorer = 'dapp-explorer'
-export const storageDAppWelcome = 'dapp-explorer-welcome-dialog'
+export const storageRootDAppExplorer = 'dapp-explorer-3'
+export const storageDAppWelcome = 'dapp-explorer-welcome-dialog-3'
 
 export const useShowWelcomeDApp = () => {
   const wallet = useSelectedWallet()
   const storage = useAsyncStorage()
   const {openModal, closeModal} = useModal()
   const {styles} = useStyles()
+  const insets = useSafeAreaInsets()
+  const dialogHeight = 494 + insets.bottom
 
   const dAppExplorerStorage = storage.join(`wallet/${wallet.id}/${storageRootDAppExplorer}/`)
 
@@ -46,13 +49,13 @@ export const useShowWelcomeDApp = () => {
               <Button shelleyTheme onPress={handleClose} title="Next" />
             </View>
           </View>,
-          536,
+          dialogHeight,
         )
 
         dAppExplorerStorage.setItem(storageDAppWelcome, 'true')
       }
     })
-  }, [closeModal, handleClose, openModal, dAppExplorerStorage, styles])
+  }, [closeModal, handleClose, openModal, dAppExplorerStorage, styles, insets.bottom])
 }
 
 const useStyles = () => {

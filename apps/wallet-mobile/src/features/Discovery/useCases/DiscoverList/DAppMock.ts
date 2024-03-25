@@ -27,7 +27,7 @@ import Wingriders from '../../../../assets/img/dApp/wingriders.png';
 
 export const DAppCategory = {
   dex: 'DEX',
-  news: 'News',
+  media: 'Social Media',
   identity: 'Identity',
   entertainment: 'Entertainment',
   trading: 'Trading Tools',
@@ -53,8 +53,8 @@ export const mockDAppList: IDAppItem[] = [
   {
     id: 1,
     name: 'Cardano Spot',
-    description: 'Latest  Cardano updates and news, projects and many more just in one place',
-    category: 'news',
+    description: 'Join a global Cardano Community: a single space to communicate, engage, educate with Cardano',
+    category: 'media',
     logo: CardanoSpot,
   },
   {
@@ -102,14 +102,14 @@ export const mockDAppList: IDAppItem[] = [
   {
     id: 8,
     name: 'ADA Markets',
-    description: 'A one stop platform to give you easy access to trading on Cardano with an algo that works out',
+    description: 'DEX Aggregator getting you the best value swaps / splits across Cardano DEXes',
     category: 'dex',
     logo: ADAMarkets,
   },
   {
     id: 9,
     name: 'ADA Handle',
-    description: 'A one stop platform to give you easy access to trading on Cardano with an algo that works out',
+    description: 'NFT-powered naming solution for your Cardano wallet address',
     category: 'identity',
     logo: ADAHandle,
   },
