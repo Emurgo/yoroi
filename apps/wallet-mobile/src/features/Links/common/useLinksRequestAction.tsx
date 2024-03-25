@@ -74,7 +74,7 @@ export const useLinksRequestAction = () => {
               useCase: 'request/ada-with-link',
               params: params,
             },
-            isTrusted: isTrusted,
+            isTrusted,
           },
           decimals,
         )
