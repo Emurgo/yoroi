@@ -24,7 +24,6 @@ import {Boundary, Icon, Spacer} from '../components'
 import {claimApiMaker} from '../features/Claim/module/api'
 import {ClaimProvider} from '../features/Claim/module/ClaimProvider'
 import {ShowSuccessScreen} from '../features/Claim/useCases/ShowSuccessScreen'
-import {useNavigateTo} from '../features/Exchange/common/useNavigateTo'
 import {CreateExchangeOrderScreen} from '../features/Exchange/useCases/CreateExchangeOrderScreen/CreateExchangeOrderScreen'
 import {SelectProviderFromListScreen} from '../features/Exchange/useCases/SelectProviderFromListScreen/SelectProviderFromListScreen'
 import {ShowExchangeResultOrderScreen} from '../features/Exchange/useCases/ShowExchangeResultOrderScreen/ShowExchangeResultOrderScreen'
@@ -125,8 +124,6 @@ export const TxHistoryNavigator = () => {
 
   // navigator components
   const headerRightHistory = React.useCallback(() => <HeaderRightHistory />, [])
-
-  const navigateTo = useNavigateTo()
 
   // exchange
   const exchangeManager = React.useMemo(() => {
@@ -254,9 +251,8 @@ export const TxHistoryNavigator = () => {
                         headerShown: false,
                       }}
                       name="exchange-result"
-                    >
-                      {() => <ShowExchangeResultOrderScreen onClose={navigateTo.exchangeOpenOrder} />}
-                    </Stack.Screen>
+                      component={ShowExchangeResultOrderScreen}
+                    />
 
                     <Stack.Screen
                       name="swap-start-swap"

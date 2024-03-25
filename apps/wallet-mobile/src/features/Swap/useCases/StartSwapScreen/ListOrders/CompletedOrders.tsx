@@ -1,4 +1,5 @@
 import {useFocusEffect} from '@react-navigation/native'
+import {isString} from '@yoroi/common'
 import {getPoolUrlByProvider} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
 import {Balance, Swap} from '@yoroi/types'
@@ -8,6 +9,7 @@ import {capitalize} from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import Config from 'react-native-config'
 import {FlatList} from 'react-native-gesture-handler'
 
 import {
@@ -58,6 +60,9 @@ const findCompletedOrderTx = (transactions: TransactionInfo[]): MappedRawOrder[]
     .reduce((acc, sentTx) => {
       const result: TxMetadataInfo = {}
       receivedTransactions.forEach((receivedTx) => {
+        if (hasFrontendFeeReturn(receivedTx)) {
+          return
+        }
         receivedTx.inputs.forEach((input) => {
           if (Boolean(input.id) && input?.id?.slice(0, -1) === sentTx?.id && receivedTx.inputs.length > 1) {
             result['id'] = sentTx?.id
@@ -75,6 +80,18 @@ const findCompletedOrderTx = (transactions: TransactionInfo[]): MappedRawOrder[]
     .sort(compareByDate)
 
   return filteredTx.filter((tx) => tx.metadata !== null).sort(compareByDate)
+}
+
+const hasFrontendFeeReturn = (tx: TransactionInfo): boolean => {
+  const addresses = tx.inputs.map((input) => input.address).filter(Boolean)
+
+  const frontendFeeMainnetAddress = Config['FRONTEND_FEE_ADDRESS_MAINNET']
+  const frontendFeePreprodAddress = Config['FRONTEND_FEE_ADDRESS_PREPROD']
+
+  const containsMainnetFeeAddress = isString(frontendFeeMainnetAddress) && addresses.includes(frontendFeeMainnetAddress)
+  const containsPreprodFeeAddress = isString(frontendFeePreprodAddress) && addresses.includes(frontendFeePreprodAddress)
+
+  return containsMainnetFeeAddress || containsPreprodFeeAddress
 }
 
 export const CompletedOrders = () => {

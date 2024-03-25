@@ -1,17 +1,17 @@
 import {Links} from '@yoroi/types'
 import {freeze} from 'immer'
 
+import {linksYoroiBuilder} from './links-builder'
 import {
-  LinksYoroiExchangeShowCreateResulSchema,
-  LinksYoroiTransferRequestAdaSchema,
-  LinksYoroiTransferRequestAdaWithUrlSchema,
-  linksYoroiBuilder,
-} from './links-builder'
-import {
-  configYoroiOrderShowCreateResult,
+  configYoroiExchangeOrderShowCreateResult,
   configYoroiTransferRequestAda,
   configYoroiTransferRequestAdaWithLink,
 } from './constants'
+import {
+  LinksYoroiExchangeShowCreateResultSchema,
+  LinksYoroiTransferRequestAdaSchema,
+  LinksYoroiTransferRequestAdaWithLinkSchema,
+} from './validators'
 
 export const linksYoroiModuleMaker = (
   scheme: Links.YoroiUriConfig['scheme'],
@@ -19,8 +19,8 @@ export const linksYoroiModuleMaker = (
   const exchange = {
     order: {
       showCreateResult: linksYoroiBuilder(
-        LinksYoroiExchangeShowCreateResulSchema,
-        {...configYoroiOrderShowCreateResult, scheme},
+        LinksYoroiExchangeShowCreateResultSchema,
+        {...configYoroiExchangeOrderShowCreateResult, scheme},
       ).create,
     },
   }
@@ -33,7 +33,7 @@ export const linksYoroiModuleMaker = (
       }).create,
 
       adaWithLink: linksYoroiBuilder(
-        LinksYoroiTransferRequestAdaWithUrlSchema,
+        LinksYoroiTransferRequestAdaWithLinkSchema,
         {
           ...configYoroiTransferRequestAdaWithLink,
           scheme,
