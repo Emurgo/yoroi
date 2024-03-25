@@ -4,19 +4,23 @@ import * as React from 'react'
 import {Platform, StatusBar as StatusBarRN} from 'react-native'
 
 import {HexColor} from '../../theme/types'
+import {useIsCurrentScreenActive} from '../../utils/navigation'
 import {useModal} from '../Modal/ModalContext'
 
-export const useStatusBar = (baseColor?: HexColor, legacyModal?: boolean) => {
+export const useStatusBar = (baseColor?: HexColor, legacyModal = false) => {
   const {theme, isDark} = useTheme()
   const {isOpen} = useModal()
 
+  const isActive = useIsCurrentScreenActive()
+
   const reflectStatusBarColor = React.useCallback(() => {
+    if (!isActive) return
     const color = baseColor ?? (isDark ? theme.color['black-static'] : theme.color['white-static'])
     const bgColor = isOpen || legacyModal ? simulateOpacity(color) : color
 
     StatusBarRN.setBarStyle(isDark ? 'light-content' : 'dark-content', true)
     if (Platform.OS === 'android') StatusBarRN.setBackgroundColor(bgColor, true)
-  }, [baseColor, isDark, isOpen, legacyModal, theme.color])
+  }, [baseColor, isDark, isOpen, legacyModal, theme.color, isActive])
 
   // Reflect the status bar color when the screen is focused
   useFocusEffect(reflectStatusBarColor)
