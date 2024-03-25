@@ -76,10 +76,6 @@ const useStyles = () => {
       paddingBottom: 8,
       color: color.gray[900],
     },
-    errorMessage: {
-      color: color.magenta[500],
-      textAlign: 'center',
-    },
     loading: {
       position: 'absolute',
       height: '100%',
