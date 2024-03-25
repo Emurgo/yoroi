@@ -44,7 +44,7 @@ export const DescribeSelectedAddressScreen = () => {
 
   React.useEffect(() => {
     isSingle &&
-      multipleAddressesUsed &&
+      isMultipleAddressesUsed &&
       isShowingMultipleAddressInfo &&
       openModal(strings.singleOrMultiple, <Modal />, modalHeight)
   }, [isShowingMultipleAddressInfo, isSingle, isMultipleAddressesUsed, openModal, strings.singleOrMultiple])
