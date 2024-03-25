@@ -158,7 +158,7 @@ export const WalletNavigator = () => {
   const initialRoute = useLinksShowActionResult()
   useLinksRequestAction()
 
-  // initialRoute doens't update the state of the navigator, only at first render
+  // initialRoute doesn't update the state of the navigator, only at first render
   // https://reactnavigation.org/docs/auth-flow/
   if (initialRoute === 'exchange-result') {
     return (
