@@ -50,6 +50,8 @@ export const SmallAddressCard = ({address, isUsed, date, onPress, loading}: Smal
 
             <Text style={styles.textAddress}>{address}</Text>
 
+            <Spacer height={12} />
+
             <View style={styles.footer}>
               <View style={isUsed ? styles.statusUsed : styles.statusUnused}>
                 <Text style={isUsed ? styles.statusUsedText : styles.statusUnusedText}>
@@ -100,8 +102,8 @@ const useStyles = () => {
     statusUnused: {
       borderRadius: 20,
       backgroundColor: color.secondary[600],
-      paddingVertical: 6,
-      paddingHorizontal: 10,
+      paddingVertical: 4,
+      paddingHorizontal: 8,
       alignItems: 'center',
       justifyContent: 'center',
     },
@@ -113,8 +115,8 @@ const useStyles = () => {
     statusUsed: {
       borderRadius: 20,
       backgroundColor: color.gray.min,
-      paddingVertical: 6,
-      paddingHorizontal: 10,
+      paddingVertical: 4,
+      paddingHorizontal: 8,
       alignItems: 'center',
       justifyContent: 'center',
     },

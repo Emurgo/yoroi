@@ -635,6 +635,18 @@ export const currencyNames = defineMessages({
 })
 
 export default defineMessages({
+  continue: {
+    id: 'global.continue',
+    defaultMessage: '!!!Continue',
+  },
+  disclaimer: {
+    id: 'global.disclaimer',
+    defaultMessage: '!!!Disclaimer',
+  },
+  unknown: {
+    id: 'global.unknown',
+    defaultMessage: '!!!Unknown',
+  },
   apply: {
     id: 'global.apply',
     defaultMessage: '!!!Apply',

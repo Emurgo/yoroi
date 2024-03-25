@@ -30,6 +30,10 @@ export const useStrings = () => {
     infoAddressLimit: intl.formatMessage(messages.infoAddressLimit),
     multiplePresentation: intl.formatMessage(messages.multiplePresentation),
     multiplePresentationDetails: intl.formatMessage(messages.multiplePresentationDetails),
+    singleOrMultiple: intl.formatMessage(messages.singleOrMultiple),
+    singleOrMultipleDetails: intl.formatMessage(messages.singleOrMultipleDetails),
+    selectMultiple: intl.formatMessage(messages.selectMultiple),
+    singleAddressWallet: intl.formatMessage(messages.singleAddressWallet),
     yoroiZendesk: intl.formatMessage(messages.yoroiZendesk),
     ok: intl.formatMessage(messages.ok),
   }
@@ -141,6 +145,23 @@ export const messages = defineMessages({
     id: 'components.receive.receivescreen.multiplePresentationDetails',
     defaultMessage:
       '!!!Enables Yoroi to manage various addresses in one place, enhancing privacy and providing organisational benefits.',
+  },
+  singleOrMultiple: {
+    id: 'components.receive.receivescreen.singleOrMultiple',
+    defaultMessage: '!!!Single or multiple address?',
+  },
+  singleOrMultipleDetails: {
+    id: 'components.receive.receivescreen.singleOrMultipleDetails',
+    defaultMessage:
+      '!!!Single keeps things simple and secure. Multiple may offer some extra privacy. For most users, single address is the way to go! You can always change it in settings.',
+  },
+  selectMultiple: {
+    id: 'components.receive.receivescreen.selectMultiple',
+    defaultMessage: '!!!Select multiple instead',
+  },
+  singleAddressWallet: {
+    id: 'components.receive.receivescreen.singleAddressWallet',
+    defaultMessage: '!!!Single address wallet',
   },
   ok: {
     id: 'global.ok',

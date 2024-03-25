@@ -1,5 +1,5 @@
 import {exchangeApiMaker, exchangeManagerMaker, ExchangeProvider} from '@yoroi/exchange'
-import {LinksYoroiExchangeShowCreateResultParams, useLinks} from '@yoroi/links'
+import {LinksExchangeShowCreateResultParams, useLinks} from '@yoroi/links'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
@@ -35,7 +35,7 @@ export const ShowExchangeResultOrderScreen = () => {
 
   // NOTE: should never happen, caller should handle it
   if (action == null || action.info.useCase !== 'order/show-create-result') return null
-  const params: LinksYoroiExchangeShowCreateResultParams = action.info.params
+  const params: LinksExchangeShowCreateResultParams = action.info.params
 
   const handleOnClose = () => {
     actionFinished()
@@ -121,7 +121,7 @@ const providerName = {
   banxa: 'Banxa',
 } as const
 
-const sanitizeParams = (params: LinksYoroiExchangeShowCreateResultParams) => {
+const sanitizeParams = (params: LinksExchangeShowCreateResultParams) => {
   const showOrderDetails =
     params.coin != null && params.coinAmount != null && params.fiat != null && params.fiatAmount != null
 

@@ -150,7 +150,7 @@ This schema is designed for adding information about how Yoroi should behave, ev
 - `walletId`: As the authorization, when provided, is expected back. Otherwise just set `isProduction` so Yoroi will know how to ask users to open their right wallet.
 - `signature`: Partner signature, it changes many behaviours inside Yoroi, specially regarding warning and dangerous messages.
 
-### `LinksYoroiExchangeShowCreateResultSchema`
+### `ExchangeShowCreateResultSchema`
 
 This schema validates data for the creation result of a order to exchange coins, the link includes the following fields:
 
@@ -162,7 +162,7 @@ This schema validates data for the creation result of a order to exchange coins,
 - It also merges all fields from `PartnerInfoSchema`.
 - `orderType`: 'buy' | 'sell' The order type.
 
-### `LinksYoroiTransferRequestAdaSchema`
+### `TransferRequestAdaSchema`
 
 This schema is for validating transfer requests of ADA and includes the following fields:
 
@@ -175,7 +175,7 @@ This schema is for validating transfer requests of ADA and includes the followin
 - `memo` (optional): A string with a maximum length of 256 characters, stored in the wallet local storage wallet, it is not included in the transaction.
 - It also merges all fields from `PartnerInfoSchema`.
 
-### `LinksYoroiTransferRequestAdaWithLinkSchema`
+### `TransferRequestAdaWithLinkSchema`
 
 This schema validates transfer requests that include a URL and has the following fields:
 
