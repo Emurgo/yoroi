@@ -67,7 +67,7 @@ export const DescribeSelectedAddressScreen = () => {
         outline
         title={strings.requestSpecificAmountButton}
         textStyles={{
-          color: colors.buttonBackgroundBlue,
+          color: colors.requestSpecificAmountButtonText,
         }}
         onPress={navigate.specificAmount}
         disabled={!hasAddress}
@@ -172,7 +172,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    buttonBackgroundBlue: theme.color.primary[600],
+    requestSpecificAmountButtonText: theme.color.primary[500],
     details: theme.color.gray[900],
   }
 
