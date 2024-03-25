@@ -22,8 +22,8 @@ export const ThemeProvider = ({children}: {children: React.ReactNode}) => {
       theme: themes[colorScheme],
       colorScheme,
       selectColorScheme,
-      isLight: colorScheme === 'dark',
-      isDark: colorScheme === 'light',
+      isLight: colorScheme === 'light',
+      isDark: colorScheme === 'dark',
     }),
     [colorScheme, selectColorScheme],
   )
