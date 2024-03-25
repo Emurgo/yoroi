@@ -32,7 +32,6 @@ export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error, onPassw
   return (
     <>
       <Text style={styles.modalText}>{strings.enterSpendingPassword}</Text>
-
       <TextInput
         secureTextEntry
         ref={spendingPasswordRef}
@@ -41,16 +40,12 @@ export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error, onPassw
         value={spendingPassword}
         onChangeText={(text) => {
           setSpendingPassword(text)
-          onPasswordChange && onPasswordChange()
+          onPasswordChange?.()
         }}
+        error={errorMessage != null}
+        errorText={errorMessage ?? undefined}
         autoComplete="off"
       />
-
-      {errorMessage != null && (
-        <Text style={styles.errorMessage} numberOfLines={3}>
-          {errorMessage}
-        </Text>
-      )}
 
       <Spacer fill />
 
@@ -61,7 +56,6 @@ export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error, onPassw
         onPress={() => onSubmit?.(spendingPassword)}
         disabled={spendingPassword.length === 0}
       />
-
       {isLoading && (
         <View style={styles.loading}>
           <ActivityIndicator size="large" color="black" />
