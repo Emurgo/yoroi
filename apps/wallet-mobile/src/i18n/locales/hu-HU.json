@@ -215,6 +215,7 @@
   "components.receive.receivescreen.generateButton": "Új tárca cím generálása",
   "components.receive.receivescreen.infoText": "Oszd meg ezt a tárca címet fizetés fogadásához. Adatvédelmi okok miatt, automatikusan új tárca címek jönnek létre miután azok felhasználásra kerültek.",
   "components.receive.receivescreen.title": "Fogadás",
+  "components.receive.describeselectedaddressscreen.title": "Address details",
   "components.receive.receivescreen.unusedAddresses": "Unused",
   "components.receive.receivescreen.usedAddresses": "Used",
   "components.receive.receivescreen.verifyAddress": "Cím ellenőrzés",
