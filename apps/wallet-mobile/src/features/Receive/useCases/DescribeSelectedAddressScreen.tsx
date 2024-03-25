@@ -90,7 +90,7 @@ export const DescribeSelectedAddressScreen = () => {
   )
 }
 
-const modalHeight = 520
+const modalHeight = 580
 const Modal = () => {
   const {styles, colors} = useStyles()
   const strings = useStrings()
