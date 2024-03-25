@@ -1,32 +1,70 @@
-import {useFocusEffect} from '@react-navigation/native'
-import {useTheme} from '@yoroi/theme'
+import {Palette, useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {Platform, StatusBar as StatusBarRN} from 'react-native'
+import {Platform, StatusBar, StatusBarStyle} from 'react-native'
 
+import {COLORS} from '../../theme/config'
 import {HexColor} from '../../theme/types'
-import {useIsRouteActive} from '../../utils/navigation'
-import {useModal} from '../Modal/ModalContext'
 
-export const useStatusBar = (baseColor?: HexColor, legacyModal = false) => {
-  const {theme, isDark} = useTheme()
-  const {isOpen} = useModal()
-
-  const isActive = useIsRouteActive()
-
-  const reflectStatusBarColor = React.useCallback(() => {
-    if (!isActive) return
-    const color = baseColor ?? (isDark ? theme.color['black-static'] : theme.color['white-static'])
-    const bgColor = isOpen || legacyModal ? simulateOpacity(color) : color
-
-    StatusBarRN.setBarStyle(isDark ? 'light-content' : 'dark-content', true)
-    if (Platform.OS === 'android') StatusBarRN.setBackgroundColor(bgColor, true)
-  }, [baseColor, isDark, isOpen, legacyModal, theme.color, isActive])
-
-  // Reflect the status bar color when the screen is focused
-  useFocusEffect(reflectStatusBarColor)
-  // Reflect the status bar color when the modal is opened or closed
-  React.useEffect(reflectStatusBarColor, [isOpen, legacyModal, reflectStatusBarColor])
+type StatusBarColor = {
+  bgColorAndroid: HexColor
+  statusBarStyle: StatusBarStyle
 }
+export const useStatusBar = (currentRouteName: string | undefined) => {
+  const {
+    theme: {color: palette},
+    isDark,
+  } = useTheme()
+  const statusBarStyleByRoute = React.useRef<StatusBarColor>(
+    getStatusBarStyleByRoute({currentRouteName, isDark, palette}),
+  )
+
+  React.useEffect(() => {
+    if (currentRouteName === 'modal') {
+      if (Platform.OS === 'android')
+        StatusBar.setBackgroundColor(simulateOpacity(statusBarStyleByRoute.current.bgColorAndroid), true)
+    } else {
+      const style = getStatusBarStyleByRoute({currentRouteName, isDark, palette})
+      statusBarStyleByRoute.current = style
+      if (Platform.OS === 'android') StatusBar.setBackgroundColor(style.bgColorAndroid, true)
+      StatusBar.setBarStyle(style.statusBarStyle, true)
+    }
+  }, [currentRouteName, isDark, palette])
+}
+
+const getStatusBarStyleByRoute = ({
+  currentRouteName,
+  isDark,
+  palette,
+}: {
+  currentRouteName: string | undefined
+  isDark?: boolean
+  palette: Palette
+}): StatusBarColor => {
+  if (currentRouteName) {
+    if (currentRouteName === 'history-list') {
+      return {
+        bgColorAndroid: palette.primary[100],
+        statusBarStyle: 'dark-content',
+      }
+    } else if (oldBlueRoutes.includes(currentRouteName)) {
+      return {
+        bgColorAndroid: COLORS.BACKGROUND_BLUE as HexColor,
+        statusBarStyle: 'light-content',
+      }
+    } else if (currentRouteName === 'scan-start') {
+      return {
+        bgColorAndroid: palette['black-static'],
+        statusBarStyle: 'dark-content',
+      }
+    }
+  }
+  return {
+    bgColorAndroid: isDark ? palette['black-static'] : palette['white-static'],
+    statusBarStyle: isDark ? 'light-content' : 'dark-content',
+  }
+}
+
+const oldBlueRoutes = ['wallet-selection', 'choose-create-restore', 'enable-login-with-os', 'auth-with-os']
 
 /**
  *

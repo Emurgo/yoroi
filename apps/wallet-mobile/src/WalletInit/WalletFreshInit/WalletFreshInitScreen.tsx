@@ -5,7 +5,6 @@ import {StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, ButtonProps, Spacer} from '../../components'
-import {useStatusBar} from '../../components/hooks/useStatusBar'
 import {isNightly} from '../../legacy/config'
 import {WalletInitRouteNavigation} from '../../navigation'
 import {COLORS} from '../../theme'
@@ -17,7 +16,6 @@ import {WalletDescription} from '../WalletDescription'
 export const WalletFreshInitScreen = () => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
-  useStatusBar()
 
   return (
     <SafeAreaView edges={['left', 'right', 'top', 'bottom']} style={styles.safeAreaView}>

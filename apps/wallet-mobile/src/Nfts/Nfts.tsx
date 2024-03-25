@@ -7,7 +7,6 @@ import {RefreshControl, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Icon, NftImageGallery, SkeletonGallery, Spacer} from '../components'
-import {useStatusBar} from '../components/hooks/useStatusBar'
 import {useMetrics} from '../metrics/metricsManager'
 import {useSearch, useSearchOnNavBar} from '../Search/SearchContext'
 import {useSelectedWallet} from '../SelectedWallet'
@@ -21,7 +20,6 @@ export const Nfts = () => {
   const strings = useStrings()
   const styles = useStyles()
   const {track} = useMetrics()
-  useStatusBar()
 
   // use case: search nfts
   useSearchOnNavBar({

@@ -6,7 +6,6 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Icon, Spacer, Text, useModal} from '../../../../components'
-import {useStatusBar} from '../../../../components/hooks/useStatusBar'
 import {useWalletNavigation} from '../../../../navigation'
 import {DescribeAction} from '../../common/DescribeAction/DescribeAction'
 import {useStrings} from '../../common/useStrings'
@@ -133,7 +132,6 @@ const sanitizeParams = (params: LinksExchangeShowCreateResultParams) => {
 }
 
 const useStyles = () => {
-  useStatusBar()
   const {theme} = useTheme()
   const styles = StyleSheet.create({
     root: {

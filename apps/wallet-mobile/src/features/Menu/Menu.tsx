@@ -10,7 +10,6 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useCanVote} from '../../Catalyst/hooks'
 import {InsufficientFundsModal} from '../../Catalyst/InsufficientFundsModal'
 import {Boundary, Icon, Spacer, Text} from '../../components'
-import {useStatusBar} from '../../components/hooks/useStatusBar'
 import {usePrefetchStakingInfo} from '../../Dashboard/StakePoolInfos'
 import {useMetrics} from '../../metrics/metricsManager'
 import {defaultStackNavigationOptions, useWalletNavigation} from '../../navigation'
@@ -257,7 +256,6 @@ const messages = defineMessage({
 })
 
 const useStyles = () => {
-  useStatusBar()
   const {theme} = useTheme()
   const {color, padding} = theme
 

@@ -5,7 +5,6 @@ import {ActivityIndicator, ScrollView, StyleSheet, View, ViewProps} from 'react-
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {BulletPointItem, Button, Icon, Spacer, Text} from '../../components'
-import {useStatusBar} from '../../components/hooks/useStatusBar'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
 import {generateByronPlateFromMnemonics} from '../../yoroi-wallets/cardano/byron/plate'
@@ -20,7 +19,6 @@ import {WalletAddress} from '../WalletAddress'
 
 export const VerifyRestoredWalletScreen = () => {
   const strings = useStrings()
-  useStatusBar()
   const navigation = useNavigation<WalletInitRouteNavigation>()
   const route = useRoute<RouteProp<WalletInitRoutes, 'wallet-credentials'>>()
   const {phrase, networkId, walletImplementationId} = route.params

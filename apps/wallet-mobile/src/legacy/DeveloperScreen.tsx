@@ -12,7 +12,6 @@ import config from 'react-native-config'
 
 import {useAuth} from '../auth/AuthProvider'
 import {Button, Text, TextInput} from '../components'
-import {useStatusBar} from '../components/hooks/useStatusBar'
 import {showErrorDialog} from '../dialogs'
 import {useLegalAgreement, useResetLegalAgreement} from '../features/Initialization/common'
 import {errorMessages} from '../i18n/global-messages'
@@ -218,7 +217,6 @@ export const DeveloperScreen = () => {
 
 const useStyles = () => {
   const {theme} = useTheme()
-  useStatusBar(theme.color.gray.min)
 
   const styles = StyleSheet.create({
     safeAreaView: {

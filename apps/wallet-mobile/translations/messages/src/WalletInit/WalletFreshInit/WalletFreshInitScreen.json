@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Add wallet",
     "file": "src/WalletInit/WalletFreshInit/WalletFreshInitScreen.tsx",
     "start": {
-      "line": 56,
+      "line": 54,
       "column": 19,
-      "index": 2310
+      "index": 2228
     },
     "end": {
-      "line": 59,
+      "line": 57,
       "column": 3,
-      "index": 2423
+      "index": 2341
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Add wallet (Shelley Testnet)",
     "file": "src/WalletInit/WalletFreshInit/WalletFreshInitScreen.tsx",
     "start": {
-      "line": 60,
+      "line": 58,
       "column": 28,
-      "index": 2453
+      "index": 2371
     },
     "end": {
-      "line": 63,
+      "line": 61,
       "column": 3,
-      "index": 2593
+      "index": 2511
     }
   }
 ]
