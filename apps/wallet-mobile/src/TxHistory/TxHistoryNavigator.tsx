@@ -183,7 +183,7 @@ export const TxHistoryNavigator = () => {
                     name="receive-single"
                     component={DescribeSelectedAddressScreen}
                     options={{
-                      title: strings.receiveTitle,
+                      title: strings.describeSelectedAddressTitle,
                       gestureEnabled: false,
                     }}
                   />
@@ -436,6 +436,10 @@ const messages = defineMessages({
     id: 'components.receive.receivescreen.title',
     defaultMessage: '!!!Receive',
   },
+  describeSelectedAddressTitle: {
+    id: 'components.receive.describeselectedaddressscreen.title',
+    defaultMessage: '!!!Address details',
+  },
   swapTitle: {
     id: 'swap.swapScreen.swapTitle',
     defaultMessage: '!!!Swap',
@@ -541,6 +545,7 @@ const useStrings = () => {
     exchangeCreateOrderTitle: intl.formatMessage(messages.exchangeCreateOrderTitle),
     exchangeSelectBuyProvider: intl.formatMessage(messages.exchangeSelectBuyProvider),
     exchangeSelectSellProvider: intl.formatMessage(messages.exchangeSelectSellProvider),
+    describeSelectedAddressTitle: intl.formatMessage(messages.describeSelectedAddressTitle),
   }
 }
 

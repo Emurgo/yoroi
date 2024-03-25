@@ -1,6 +1,5 @@
 import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
-import _ from 'lodash'
 import * as React from 'react'
 import {ScrollView, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -67,7 +66,7 @@ export const DescribeSelectedAddressScreen = () => {
         outline
         title={strings.requestSpecificAmountButton}
         textStyles={{
-          color: colors.buttonBackgroundBlue,
+          color: colors.requestSpecificAmountTextColor,
         }}
         onPress={navigate.specificAmount}
         disabled={!hasAddress}
@@ -172,7 +171,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    buttonBackgroundBlue: theme.color.primary[600],
+    requestSpecificAmountTextColor: theme.color.primary[500],
     details: theme.color.gray[900],
   }
 
