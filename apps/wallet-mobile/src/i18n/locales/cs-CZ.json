@@ -215,6 +215,7 @@
   "components.receive.receivescreen.generateButton": "Generovat novou adresu",
   "components.receive.receivescreen.infoText": "Nasdílejte tuto adresu pro přijímání plateb.Kvůli ochraně soukromí, nové adresy jsou generovány automaticky jakmile je začnete používat.",
   "components.receive.receivescreen.title": "Přijmout",
+  "components.receive.describeselectedaddressscreen.title": "Address details",
   "components.receive.receivescreen.unusedAddresses": "Unused",
   "components.receive.receivescreen.usedAddresses": "Used",
   "components.receive.receivescreen.verifyAddress": "Ověřit adresu",

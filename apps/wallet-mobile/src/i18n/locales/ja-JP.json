@@ -215,6 +215,7 @@
   "components.receive.receivescreen.generateButton": "Generate new address",
   "components.receive.receivescreen.infoText": "このアドレスを共有して、支払いを受けることができます。  プライバシー保護のため、 新しいアドレスが毎回自動生成されます",
   "components.receive.receivescreen.title": "受信",
+  "components.receive.describeselectedaddressscreen.title": "Address details",
   "components.receive.receivescreen.unusedAddresses": "Unused",
   "components.receive.receivescreen.usedAddresses": "Used",
   "components.receive.receivescreen.verifyAddress": "Verify address",

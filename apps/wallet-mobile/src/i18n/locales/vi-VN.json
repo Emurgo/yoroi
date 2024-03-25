@@ -215,6 +215,7 @@
   "components.receive.receivescreen.generateButton": "Tạo địa chỉ mới",
   "components.receive.receivescreen.infoText": "Chia sẻ địa chỉ ví này để nhận thanh toán.Để bảo vệ quyền riêng tư của bạn, địa chỉ mới được tạo tự động sau khi bạn sử dụng chúng.",
   "components.receive.receivescreen.title": "Nhận",
+  "components.receive.describeselectedaddressscreen.title": "Address details",
   "components.receive.receivescreen.unusedAddresses": "Unused",
   "components.receive.receivescreen.usedAddresses": "Used",
   "components.receive.receivescreen.verifyAddress": "Xác minh địa chỉ",

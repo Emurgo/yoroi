@@ -215,6 +215,7 @@
   "components.receive.receivescreen.generateButton": "Maak een nieuw adres aan",
   "components.receive.receivescreen.infoText": "Deel dit adres om betalingen te ontvangen. Om uw privacy te beschermen, worden er automatisch nieuwe adressen aangemaakt zodra u ze gebruikt.",
   "components.receive.receivescreen.title": "Ontvangen",
+  "components.receive.describeselectedaddressscreen.title": "Address details",
   "components.receive.receivescreen.unusedAddresses": "Unused",
   "components.receive.receivescreen.usedAddresses": "Used",
   "components.receive.receivescreen.verifyAddress": "Controleer adres",
