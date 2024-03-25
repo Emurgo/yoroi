@@ -23,7 +23,6 @@ import {Cross} from './Cross'
 import {CrossCircle} from './CrossCircle'
 import {Danger} from './Danger'
 import {DappConnector} from './DappConnector'
-import {DAppLogoMock} from './DAppLogoMock'
 import {Delete} from './Delete'
 import {Device} from './Device'
 import {DigitalAsset} from './DigitalAsset'
@@ -225,5 +224,4 @@ export const Icon = {
   Collateral,
   Discover,
   CheckFilled2,
-  DAppLogoMock,
 }

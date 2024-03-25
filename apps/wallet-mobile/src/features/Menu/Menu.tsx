@@ -9,7 +9,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useCanVote} from '../../Catalyst/hooks'
 import {InsufficientFundsModal} from '../../Catalyst/InsufficientFundsModal'
-import {Boundary, Icon, Spacer, Text} from '../../components'
+import {Boundary, Hr, Icon, Spacer, Text} from '../../components'
 import {useStatusBar} from '../../components/hooks/useStatusBar'
 import {usePrefetchStakingInfo} from '../../Dashboard/StakePoolInfos'
 import {useMetrics} from '../../metrics/metricsManager'

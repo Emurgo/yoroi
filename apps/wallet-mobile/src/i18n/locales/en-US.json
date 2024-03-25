@@ -932,5 +932,8 @@
   "rampOnOff.rampOnOffScreen.exchangeSelectProvider.buy": "Buy provider",
   "rampOnOff.rampOnOffScreen.exchangeSelectProvider.sell": "Sell provider",
   "discover.discoverList.discoverTitle": "Discover Cardano",
-  "discover.discoverList.searchDApps": "Search DApps"
+  "discover.discoverList.searchDApps": "Search DApps",
+  "discover.discoverList.welcomeToYoroiDAppExplorer": "Welcome to Yoroi DApp Explorer",
+  "discover.discoverList.welcomeToYoroiDAppExplorerDescription": "Discover, inspect, and connect to Cardano decentralized applications (DApps) with ease. Our solution helps to interact with DApps and their smart contracts, seamlessly enhancing your Cardano experience",
+  "discover.discoverList.dAppAvailable": "DApp(s) available"
 }

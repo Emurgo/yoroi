@@ -8,6 +8,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import IllustrationDAppImage from '../../../assets/img/illustration-dapp.png'
 import {Button, useModal} from '../../../components'
 import {useSelectedWallet} from '../../../SelectedWallet/Context/SelectedWalletContext'
+import {useStrings} from './useStrings'
 
 export const storageRootDAppExplorer = 'dapp-explorer-3'
 export const storageDAppWelcome = 'dapp-explorer-welcome-dialog-3'
@@ -15,6 +16,7 @@ export const storageDAppWelcome = 'dapp-explorer-welcome-dialog-3'
 export const useShowWelcomeDApp = () => {
   const wallet = useSelectedWallet()
   const storage = useAsyncStorage()
+  const strings = useStrings()
   const {openModal, closeModal} = useModal()
   const {styles} = useStyles()
   const insets = useSafeAreaInsets()
@@ -30,7 +32,7 @@ export const useShowWelcomeDApp = () => {
     dAppExplorerStorage.getItem(storageDAppWelcome).then((isShowed) => {
       if (isShowed === null) {
         openModal(
-          'Welcome to Yoroi DApp Explorer',
+          strings.welcomeToYoroiDAppExplorer,
           <View>
             <Image
               source={IllustrationDAppImage}
@@ -40,13 +42,10 @@ export const useShowWelcomeDApp = () => {
               }}
             />
 
-            <Text style={styles.welcomeText}>
-              Discover, inspect, and connect to Cardano decentralized applications (DApps) with ease. Our solution helps
-              to interact with DApps and their smart contracts, seamlessly enhancing your Cardano experience
-            </Text>
+            <Text style={styles.welcomeText}>{strings.welcomeToYoroiDAppExplorerDescription}</Text>
 
             <View style={styles.actions}>
-              <Button shelleyTheme onPress={handleClose} title="Next" />
+              <Button shelleyTheme onPress={handleClose} title={strings.next} />
             </View>
           </View>,
           dialogHeight,
@@ -55,7 +54,18 @@ export const useShowWelcomeDApp = () => {
         dAppExplorerStorage.setItem(storageDAppWelcome, 'true')
       }
     })
-  }, [closeModal, handleClose, openModal, dAppExplorerStorage, styles, insets.bottom])
+  }, [
+    closeModal,
+    handleClose,
+    openModal,
+    dAppExplorerStorage,
+    styles,
+    insets.bottom,
+    strings.welcomeToYoroiDAppExplorer,
+    strings.welcomeToYoroiDAppExplorerDescription,
+    strings.next,
+    dialogHeight,
+  ])
 }
 
 const useStyles = () => {

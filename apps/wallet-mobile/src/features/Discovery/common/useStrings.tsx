@@ -7,6 +7,10 @@ export const useStrings = () => {
   return React.useRef({
     discoverTitle: intl.formatMessage(messages.discoverTitle),
     searchDApps: intl.formatMessage(messages.searchDApps),
+    welcomeToYoroiDAppExplorer: intl.formatMessage(messages.welcomeToYoroiDAppExplorer),
+    welcomeToYoroiDAppExplorerDescription: intl.formatMessage(messages.welcomeToYoroiDAppExplorerDescription),
+    next: intl.formatMessage(messages.next),
+    totalDAppAvailable: intl.formatMessage(messages.totalDAppAvailable),
   }).current
 }
 
@@ -19,6 +23,23 @@ export const messages = Object.freeze(
     searchDApps: {
       id: 'discover.discoverList.searchDApps',
       defaultMessage: '!!!Search DApps',
+    },
+    welcomeToYoroiDAppExplorer: {
+      id: 'discover.discoverList.welcomeToYoroiDAppExplorer',
+      defaultMessage: '!!!Welcome to Yoroi DApp Explorer',
+    },
+    welcomeToYoroiDAppExplorerDescription: {
+      id: 'discover.discoverList.welcomeToYoroiDAppExplorerDescription',
+      defaultMessage:
+        '!!!Discover, inspect, and connect to Cardano decentralized applications (DApps) with ease. Our solution helps to interact with DApps and their smart contracts, seamlessly enhancing your Cardano experience',
+    },
+    next: {
+      id: 'global.next',
+      defaultMessage: '!!!Next',
+    },
+    totalDAppAvailable: {
+      id: 'discover.discoverList.dAppAvailable',
+      defaultMessage: '!!!DApp(s) available',
     },
   }),
 )

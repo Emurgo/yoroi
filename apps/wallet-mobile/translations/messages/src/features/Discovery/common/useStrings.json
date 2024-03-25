@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Discover Cardano",
     "file": "src/features/Discovery/common/useStrings.tsx",
     "start": {
-      "line": 15,
+      "line": 19,
       "column": 19,
-      "index": 382
+      "index": 700
     },
     "end": {
-      "line": 18,
+      "line": 22,
       "column": 5,
-      "index": 483
+      "index": 801
     }
   },
   {
@@ -19,14 +19,74 @@
     "defaultMessage": "!!!Search DApps",
     "file": "src/features/Discovery/common/useStrings.tsx",
     "start": {
-      "line": 19,
+      "line": 23,
       "column": 17,
-      "index": 502
+      "index": 820
     },
     "end": {
-      "line": 22,
+      "line": 26,
       "column": 5,
-      "index": 597
+      "index": 915
+    }
+  },
+  {
+    "id": "discover.discoverList.welcomeToYoroiDAppExplorer",
+    "defaultMessage": "!!!Welcome to Yoroi DApp Explorer",
+    "file": "src/features/Discovery/common/useStrings.tsx",
+    "start": {
+      "line": 27,
+      "column": 32,
+      "index": 949
+    },
+    "end": {
+      "line": 30,
+      "column": 5,
+      "index": 1077
+    }
+  },
+  {
+    "id": "discover.discoverList.welcomeToYoroiDAppExplorerDescription",
+    "defaultMessage": "!!!Discover, inspect, and connect to Cardano decentralized applications (DApps) with ease. Our solution helps to interact with DApps and their smart contracts, seamlessly enhancing your Cardano experience",
+    "file": "src/features/Discovery/common/useStrings.tsx",
+    "start": {
+      "line": 31,
+      "column": 43,
+      "index": 1122
+    },
+    "end": {
+      "line": 35,
+      "column": 5,
+      "index": 1440
+    }
+  },
+  {
+    "id": "global.next",
+    "defaultMessage": "!!!Next",
+    "file": "src/features/Discovery/common/useStrings.tsx",
+    "start": {
+      "line": 36,
+      "column": 10,
+      "index": 1452
+    },
+    "end": {
+      "line": 39,
+      "column": 5,
+      "index": 1517
+    }
+  },
+  {
+    "id": "discover.discoverList.dAppAvailable",
+    "defaultMessage": "!!!DApp(s) available",
+    "file": "src/features/Discovery/common/useStrings.tsx",
+    "start": {
+      "line": 40,
+      "column": 24,
+      "index": 1543
+    },
+    "end": {
+      "line": 43,
+      "column": 5,
+      "index": 1645
     }
   }
 ]
