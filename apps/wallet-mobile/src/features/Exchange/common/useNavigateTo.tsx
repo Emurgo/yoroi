@@ -35,13 +35,3 @@ export const useNavigateTo = () => {
       }),
   }).current
 }
-
-export type ExchangeInitRoutes = {
-  exchange: {
-    coin: string
-    coinAmount: number
-    fiat: number
-    fiatAmount: number
-    status: string
-  }
-}

@@ -4,7 +4,7 @@ import {linksYoroiModuleMaker} from './module'
 import {
   LinksYoroiExchangeShowCreateResultParams,
   LinksYoroiTransferRequestAdaParams,
-  LinksYoroiTransferRequestAdaWithUrlParams,
+  LinksYoroiTransferRequestAdaWithLinkParams,
 } from './types'
 
 describe('linksYoroiModuleMaker', () => {
@@ -19,6 +19,7 @@ describe('linksYoroiModuleMaker', () => {
         fiatAmount: 100,
         fiat: 'USD',
         status: 'success',
+        orderType: 'buy',
       }
 
     const createOrderShowResultLink = exchange.order.showCreateResult(
@@ -26,7 +27,7 @@ describe('linksYoroiModuleMaker', () => {
     )
 
     const expected =
-      'yoroi://yoroi-wallet.com/w1/exchange/order/show-create-result?provider=yoroi&coinAmount=10&coin=ADA&fiatAmount=100&fiat=USD&status=success'
+      'yoroi://yoroi-wallet.com/w1/exchange/order/show-create-result?provider=yoroi&coinAmount=10&coin=ADA&fiatAmount=100&fiat=USD&status=success&orderType=buy'
 
     expect(createOrderShowResultLink).toEqual(expected)
   })
@@ -46,6 +47,15 @@ describe('linksYoroiModuleMaker', () => {
             },
           ],
         },
+        {
+          receiver: 'exampleReceiver2',
+          amounts: [
+            {
+              tokenId: 'exampleTokenId2',
+              quantity: '20',
+            },
+          ],
+        },
       ],
       memo: 'exampleMemo',
       authorization: 'uuid-v4',
@@ -55,10 +65,10 @@ describe('linksYoroiModuleMaker', () => {
       transferRequestAdaParams,
     )
     const expectedTransferRequestAdaLink =
-      'yoroi://yoroi-wallet.com/w1/transfer/request/ada?targets=%7B%22receiver%22%3A%22exampleReceiver%22%2C%22datum%22%3A%22DEADDEAD%22%2C%22amounts%22%3A%5B%7B%22tokenId%22%3A%22exampleTokenId%22%2C%22quantity%22%3A%2210%22%7D%5D%7D&memo=exampleMemo&authorization=uuid-v4'
+      'yoroi://yoroi-wallet.com/w1/transfer/request/ada?targets%5B0%5D=%7B%22receiver%22%3A%22exampleReceiver%22%2C%22datum%22%3A%22DEADDEAD%22%2C%22amounts%22%3A%5B%7B%22tokenId%22%3A%22exampleTokenId%22%2C%22quantity%22%3A%2210%22%7D%5D%7D&targets%5B1%5D=%7B%22receiver%22%3A%22exampleReceiver2%22%2C%22amounts%22%3A%5B%7B%22tokenId%22%3A%22exampleTokenId2%22%2C%22quantity%22%3A%2220%22%7D%5D%7D&memo=exampleMemo&authorization=uuid-v4'
     expect(transferRequestAdaLink).toEqual(expectedTransferRequestAdaLink)
 
-    const wrongAdaLink: LinksYoroiTransferRequestAdaWithUrlParams = {
+    const wrongAdaLink: LinksYoroiTransferRequestAdaWithLinkParams = {
       link: 'exampleLink',
       authorization: 'uuid-v4',
     }
@@ -73,7 +83,7 @@ describe('linksYoroiModuleMaker', () => {
       },
     })
 
-    const requestAdaWithLinkParams: LinksYoroiTransferRequestAdaWithUrlParams =
+    const requestAdaWithLinkParams: LinksYoroiTransferRequestAdaWithLinkParams =
       {
         link: correctAdaLink.link,
         authorization: 'uuid-v4',
