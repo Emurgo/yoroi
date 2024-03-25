@@ -48,6 +48,10 @@ export const messages = defineMessages({
     id: 'components.receive.receivescreen.title',
     defaultMessage: '!!!Receive',
   },
+  describeSelectedAddressTitle: {
+    id: 'components.receive.describeselectedaddressscreen.title',
+    defaultMessage: '!!!Address details',
+  },
   addresscardTitle: {
     id: 'components.receive.addresscard.title',
     defaultMessage: '!!!Wallet address',
