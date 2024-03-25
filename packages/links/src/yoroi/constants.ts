@@ -23,3 +23,8 @@ export const configYoroiExchangeOrderShowCreateResult: Readonly<
   version: 'w1',
   path: 'exchange/order/show-create-result',
 } as const
+
+export const supportedPrefixes = [
+  'yoroi://',
+  'https://yoroi-wallet.com/w1',
+] as const
