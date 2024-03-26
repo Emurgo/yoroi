@@ -39,4 +39,4 @@ export const useAllowScreenshots = () => {
   useFocusEffect(callback)
 }
 
-export const makeList = (length = 0) => Array.from({ length }).fill(1);
+export const makeList = (length = 0) => Array.from({length}).fill(1)

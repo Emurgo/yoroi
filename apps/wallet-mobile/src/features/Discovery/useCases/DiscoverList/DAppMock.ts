@@ -1,29 +1,29 @@
-import { ImageSourcePropType } from 'react-native';
+import {ImageSourcePropType} from 'react-native'
 
-import ADAHandle from '../../../../assets/img/dApp/ada-handle.png';
-import ADAMarkets from '../../../../assets/img/dApp/ada-markets.png';
-import Book from '../../../../assets/img/dApp/book.png';
-import CardanoSpot from '../../../../assets/img/dApp/cardano-spot.png';
-import CNS from '../../../../assets/img/dApp/cns.png';
-import Djed from '../../../../assets/img/dApp/djed.png';
-import FluidTokens from '../../../../assets/img/dApp/fluidtokens.png';
-import GeniusYield from '../../../../assets/img/dApp/genius-yield.png';
-import Google from '../../../../assets/img/dApp/google.png';
-import DEXHunter from '../../../../assets/img/dApp/hunter.png';
-import Iagon from '../../../../assets/img/dApp/iagon.png';
-import JamOnBread from '../../../../assets/img/dApp/jam-on-bread.png';
-import Lenfi from '../../../../assets/img/dApp/lenfi.png';
-import Levvy from '../../../../assets/img/dApp/levvy.png';
-import Liqwid from '../../../../assets/img/dApp/liqwid.png';
-import Minswap from '../../../../assets/img/dApp/minswap.png';
-import MuesliSwap from '../../../../assets/img/dApp/muesliswap.png';
-import Nucast from '../../../../assets/img/dApp/nucast.png';
-import OptionFlow from '../../../../assets/img/dApp/optionflow.png';
-import PXLZ from '../../../../assets/img/dApp/pxlz.png';
-// import Summon from '../../../../assets/img/dApp/summon.png';
-import SundaeSwap from '../../../../assets/img/dApp/sundaeswap.png';
-import Taptools from '../../../../assets/img/dApp/taptools.png';
-import Wingriders from '../../../../assets/img/dApp/wingriders.png';
+import ADAHandle from '../../../../assets/img/dApp/ada-handle.png'
+import ADAMarkets from '../../../../assets/img/dApp/ada-markets.png'
+import Book from '../../../../assets/img/dApp/book.png'
+import CardanoSpot from '../../../../assets/img/dApp/cardano-spot.png'
+import CNS from '../../../../assets/img/dApp/cns.png'
+import Djed from '../../../../assets/img/dApp/djed.png'
+import FluidTokens from '../../../../assets/img/dApp/fluidtokens.png'
+import GeniusYield from '../../../../assets/img/dApp/genius-yield.png'
+import Google from '../../../../assets/img/dApp/google.png'
+import DEXHunter from '../../../../assets/img/dApp/hunter.png'
+import Iagon from '../../../../assets/img/dApp/iagon.png'
+import JamOnBread from '../../../../assets/img/dApp/jam-on-bread.png'
+import Lenfi from '../../../../assets/img/dApp/lenfi.png'
+import Levvy from '../../../../assets/img/dApp/levvy.png'
+import Liqwid from '../../../../assets/img/dApp/liqwid.png'
+import Minswap from '../../../../assets/img/dApp/minswap.png'
+import MuesliSwap from '../../../../assets/img/dApp/muesliswap.png'
+import Nucast from '../../../../assets/img/dApp/nucast.png'
+import OptionFlow from '../../../../assets/img/dApp/optionflow.png'
+import PXLZ from '../../../../assets/img/dApp/pxlz.png'
+// import Summon from '../../../../assets/img/dApp/summon.png'
+import SundaeSwap from '../../../../assets/img/dApp/sundaeswap.png'
+import Taptools from '../../../../assets/img/dApp/taptools.png'
+import Wingriders from '../../../../assets/img/dApp/wingriders.png'
 
 export const DAppCategory = {
   dex: 'DEX',
@@ -34,20 +34,19 @@ export const DAppCategory = {
   nft: 'NFT Marketplace',
   defi: 'DeFi',
   dao: 'DAO',
-  stablecoin: 'Stablecoin', 
-  decentralized_storage: 'Decentralized Storage'
+  stablecoin: 'Stablecoin',
+  decentralized_storage: 'Decentralized Storage',
 } as const
 
 export type TDAppCategory = keyof typeof DAppCategory
 
 export interface IDAppItem {
-  id: string,
-  name: string;
-  description?: string;
-  category?: TDAppCategory;
-  logo: ImageSourcePropType;
+  id: string
+  name: string
+  description?: string
+  category?: TDAppCategory
+  logo: ImageSourcePropType
 }
-
 
 export const mockDAppList: IDAppItem[] = [
   {
@@ -74,7 +73,7 @@ export const mockDAppList: IDAppItem[] = [
   {
     id: 'muesliswap',
     name: 'MuesliSwap',
-    description: 'Swap tokens, earn & invest  on Cardano\'s leading DeFi ecosystem',
+    description: "Swap tokens, earn & invest  on Cardano's leading DeFi ecosystem",
     category: 'dex',
     logo: MuesliSwap,
   },
@@ -144,7 +143,7 @@ export const mockDAppList: IDAppItem[] = [
   {
     id: 'jpg_store',
     name: 'JPG Store',
-    description: 'Buy and sell NFTs on Cardano\'s most popular NFT marketplace',
+    description: "Buy and sell NFTs on Cardano's most popular NFT marketplace",
     category: 'nft',
     logo: Taptools,
   },
@@ -207,7 +206,7 @@ export const mockDAppList: IDAppItem[] = [
   {
     id: 'djed',
     name: 'Djed',
-    description: 'Cardano\'s native overcollateralized stablecoin, developed by IOG and powered by COTI',
+    description: "Cardano's native overcollateralized stablecoin, developed by IOG and powered by COTI",
     category: 'stablecoin',
     logo: Djed,
   },
@@ -218,7 +217,7 @@ export const mockDAppList: IDAppItem[] = [
     category: 'decentralized_storage',
     logo: Iagon,
   },
-];
+]
 
 export const mockDAppGoogle = (searchQuery: string): IDAppItem => ({
   id: 'google_search',
