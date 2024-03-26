@@ -9,12 +9,11 @@ import {
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack'
 import {Theme, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {Dimensions, Platform, TouchableOpacity, TouchableOpacityProps, ViewStyle} from 'react-native'
+import {Dimensions, TouchableOpacity, TouchableOpacityProps, ViewStyle} from 'react-native'
 
 import {Icon} from './components'
 import {ScanFeature} from './features/Scan/common/types'
 import {Routes as StakingGovernanceRoutes} from './features/Staking/Governance/common/navigation'
-import {COLORS} from './theme'
 import {HWDeviceInfo} from './yoroi-wallets/hw'
 import {NetworkId, WalletImplementationId, YoroiUnsignedTx} from './yoroi-wallets/types'
 
@@ -78,21 +77,6 @@ export const defaultStackNavigationOptions = (theme: Theme): StackNavigationOpti
     cardStyle: {backgroundColor: 'white'},
     headerLeft: (props) => <BackButton {...props} />,
   }
-}
-
-export const DEPRECATED_defaultStackNavigationOptions: StackNavigationOptions = {
-  headerStyle: {
-    backgroundColor: COLORS.WHITE,
-    elevation: 0,
-    shadowOpacity: 0,
-  },
-  headerTintColor: '#000',
-  headerBackTitleVisible: false,
-  headerTitleAlign: 'center',
-  headerLeftContainerStyle: {
-    paddingLeft: Platform.OS === 'ios' ? 8 : undefined,
-  },
-  headerLeft: (props) => <BackButton color="#000" {...props} />,
 }
 
 // NAVIGATOR TOP TABS OPTIONS

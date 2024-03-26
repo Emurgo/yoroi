@@ -10,7 +10,7 @@ import {WalletDetailsScreen} from '../features/AddWallet/useCases/CreateWallet/W
 import {RestoreWalletDetailsScreen} from '../features/AddWallet/useCases/RestoreWallet/RestoreWalletDetailsScreen'
 import {RestoreWalletScreen} from '../features/AddWallet/useCases/RestoreWallet/RestoreWalletScreen'
 import {WalletInitScreen} from '../features/AddWallet/useCases/WalletInitScreen'
-import {defaultStackNavigationOptions, DEPRECATED_defaultStackNavigationOptions, WalletInitRoutes} from '../navigation'
+import {defaultStackNavigationOptions, WalletInitRoutes} from '../navigation'
 import {CheckNanoXScreen} from './CheckNanoX'
 import {ConnectNanoXScreen} from './ConnectNanoX/ConnectNanoXScreen'
 import {ImportReadOnlyWalletScreen} from './ImportReadOnlyWallet'
@@ -43,25 +43,25 @@ export const WalletInitNavigator = () => {
       <Stack.Screen
         name="choose-create-restore"
         component={WalletInitScreen}
-        options={{...DEPRECATED_defaultStackNavigationOptions, title: strings.addWalletTitle}}
+        options={{...defaultStackNavigationOptions(theme), title: strings.addWalletTitle}}
       />
 
       <Stack.Screen
         name="wallet-details-form"
         component={WalletDetailsScreen}
-        options={{...DEPRECATED_defaultStackNavigationOptions, title: strings.createWalletTitle}}
+        options={{...defaultStackNavigationOptions(theme), title: strings.createWalletTitle}}
       />
 
       <Stack.Screen
         name="restore-wallet-form"
         component={RestoreWalletScreen}
-        options={{...DEPRECATED_defaultStackNavigationOptions, title: strings.restoreWalletTitle}}
+        options={{...defaultStackNavigationOptions(theme), title: strings.restoreWalletTitle}}
       />
 
       <Stack.Screen
         name="restore-wallet-details"
         component={RestoreWalletDetailsScreen}
-        options={{...DEPRECATED_defaultStackNavigationOptions, title: strings.restoreWalletTitle}}
+        options={{...defaultStackNavigationOptions(theme), title: strings.restoreWalletTitle}}
       />
 
       <Stack.Screen
@@ -102,25 +102,25 @@ export const WalletInitNavigator = () => {
       <Stack.Screen //
         name="about-recovery-phase"
         component={AboutRecoveryPhraseScreen}
-        options={{...DEPRECATED_defaultStackNavigationOptions, title: strings.mnemonicShowTitle}}
+        options={{...defaultStackNavigationOptions(theme), title: strings.mnemonicShowTitle}}
       />
 
       <Stack.Screen
         name="recovery-phrase-mnemonic"
         component={RecoveryPhraseScreen}
-        options={{...DEPRECATED_defaultStackNavigationOptions, title: strings.mnemonicShowTitle}}
+        options={{...defaultStackNavigationOptions(theme), title: strings.mnemonicShowTitle}}
       />
 
       <Stack.Screen
         name="verify-recovery-phrase-mnemonic"
         component={VerifyRecoveryPhraseScreen}
-        options={{...DEPRECATED_defaultStackNavigationOptions, title: strings.mnemonicCheckTitle}}
+        options={{...defaultStackNavigationOptions(theme), title: strings.mnemonicCheckTitle}}
       />
 
       <Stack.Screen
         name="wallet-restore-wallet-checksum"
         component={VerifyRestoredWalletScreen}
-        options={{...DEPRECATED_defaultStackNavigationOptions, title: strings.verifyRestoredWalletTitle}}
+        options={{...defaultStackNavigationOptions(theme), title: strings.verifyRestoredWalletTitle}}
       />
 
       <Stack.Screen
