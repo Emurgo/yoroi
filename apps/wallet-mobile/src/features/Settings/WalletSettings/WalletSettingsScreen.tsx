@@ -8,7 +8,6 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useAuth} from '../../../auth/AuthProvider'
 import {Icon, Spacer} from '../../../components'
-import {useStatusBar} from '../../../components/hooks/useStatusBar'
 import {DIALOG_BUTTONS, showConfirmationDialog} from '../../../dialogs'
 import {confirmationMessages} from '../../../i18n/global-messages'
 import {SettingsRouteNavigation, useWalletNavigation} from '../../../navigation'
@@ -42,7 +41,6 @@ export const WalletSettingsScreen = () => {
   const wallet = useSelectedWallet()
   const authSetting = useAuthSetting()
   const addressMode = useAddressModeManager()
-  useStatusBar()
 
   const logout = useLogout()
   const settingsNavigation = useNavigation<SettingsRouteNavigation>()

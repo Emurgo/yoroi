@@ -6,7 +6,6 @@ import {LayoutAnimation, StyleSheet, View} from 'react-native'
 
 import infoIcon from '../assets/img/icon/info-light-green.png'
 import {Boundary, ResetErrorRef, Spacer} from '../components'
-import {useStatusBar} from '../components/hooks/useStatusBar'
 import {Tab, TabPanel, TabPanels, Tabs} from '../components/Tabs'
 import {assetMessages, txLabels} from '../i18n/global-messages'
 import {useSelectedWallet} from '../SelectedWallet'
@@ -143,7 +142,6 @@ const warningBannerMessages = defineMessages({
 const useStyles = () => {
   const {theme} = useTheme()
   const {color, padding} = theme
-  useStatusBar(color.primary[100])
 
   const styles = StyleSheet.create({
     scrollView: {

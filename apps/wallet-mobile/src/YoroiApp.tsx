@@ -49,12 +49,12 @@ export const YoroiApp = () => {
 
   return (
     <AsyncStorageProvider storage={rootStorage}>
-      <MetricsProvider metricsManager={metricsManager}>
-        <WalletManagerProvider walletManager={walletManager}>
-          <ErrorBoundary>
-            <QueryClientProvider client={queryClient}>
-              <LoadingBoundary style={StyleSheet.absoluteFill}>
-                <ThemeProvider>
+      <ThemeProvider>
+        <MetricsProvider metricsManager={metricsManager}>
+          <WalletManagerProvider walletManager={walletManager}>
+            <ErrorBoundary>
+              <QueryClientProvider client={queryClient}>
+                <LoadingBoundary style={StyleSheet.absoluteFill}>
                   <LanguageProvider>
                     <CurrencyProvider>
                       <SafeAreaProvider>
@@ -72,12 +72,12 @@ export const YoroiApp = () => {
                       </SafeAreaProvider>
                     </CurrencyProvider>
                   </LanguageProvider>
-                </ThemeProvider>
-              </LoadingBoundary>
-            </QueryClientProvider>
-          </ErrorBoundary>
-        </WalletManagerProvider>
-      </MetricsProvider>
+                </LoadingBoundary>
+              </QueryClientProvider>
+            </ErrorBoundary>
+          </WalletManagerProvider>
+        </MetricsProvider>
+      </ThemeProvider>
     </AsyncStorageProvider>
   )
 }

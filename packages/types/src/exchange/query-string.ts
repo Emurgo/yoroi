@@ -32,4 +32,13 @@ export type ExchangeReferralUrlQueryStringParams = {
 
   /* wallet ADA balance */
   balance?: string
+
+  /* device locale, used to send the message back when applied in the right language*/
+  locale?: string
+
+  /* authorization from yoroi side, used to sign to verify trusted partners */
+  authorization?: string
+
+  /* wallet id - when actions should start and end with the same wallet KYC */
+  walletId?: string
 }

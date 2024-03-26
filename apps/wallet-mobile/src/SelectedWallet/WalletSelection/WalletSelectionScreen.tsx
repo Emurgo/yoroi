@@ -5,16 +5,15 @@ import {FlatList, InteractionManager, Linking, RefreshControl, StyleSheet, Text,
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../components/Button'
-import {useStatusBar} from '../../components/hooks/useStatusBar'
 import {Icon} from '../../components/Icon'
 import {PleaseWaitModal} from '../../components/PleaseWaitModal'
 import {showErrorDialog} from '../../dialogs'
+import {useLinksRequestWallet} from '../../features/Links/common/useLinksRequestWallet'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import {isNightly} from '../../legacy/config'
 import {useMetrics} from '../../metrics/metricsManager'
 import {useWalletNavigation} from '../../navigation'
 import {COLORS} from '../../theme'
-import {HexColor} from '../../theme/types'
 import {WalletMeta} from '../../wallet-manager/types'
 import {useWalletManager} from '../../wallet-manager/WalletManagerContext'
 import * as HASKELL_SHELLEY from '../../yoroi-wallets/cardano/constants/mainnet/constants'
@@ -27,6 +26,7 @@ import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../Context'
 import {WalletListItem} from './WalletListItem'
 
 export const WalletSelectionScreen = () => {
+  useLinksRequestWallet()
   const strings = useStrings()
   const {navigateToTxHistory} = useWalletNavigation()
   const walletManager = useWalletManager()
@@ -48,14 +48,7 @@ export const WalletSelectionScreen = () => {
     onSuccess: ([wallet, walletMeta]) => {
       selectWalletMeta(walletMeta)
       selectWallet(wallet)
-
-      // fixes modal issue
-      // https://github.com/facebook/react-native/issues/32329
-      // https://github.com/facebook/react-native/issues/33733
-      // https://github.com/facebook/react-native/issues/29319
-      InteractionManager.runAfterInteractions(() => {
-        navigateToTxHistory()
-      })
+      navigateToTxHistory()
     },
     onError: (error) => {
       InteractionManager.runAfterInteractions(() => {
@@ -67,8 +60,6 @@ export const WalletSelectionScreen = () => {
       })
     },
   })
-
-  useStatusBar(COLORS.BACKGROUND_BLUE as HexColor, isLoading)
 
   const onSelect = async (walletMeta: WalletMeta) => {
     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions

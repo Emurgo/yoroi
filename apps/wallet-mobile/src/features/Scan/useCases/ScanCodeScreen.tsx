@@ -1,12 +1,10 @@
 import {createTypeGuardFromSchema} from '@yoroi/common'
-import {useTheme} from '@yoroi/theme'
 import {BarCodeScannerResult} from 'expo-barcode-scanner'
 import * as React from 'react'
 import {Alert, AlertButton} from 'react-native'
 import {z} from 'zod'
 
 import {CameraCodeScanner, CameraCodeScannerMethods} from '../../../components/CameraCodeScanner/CameraCodeScanner'
-import {useStatusBar} from '../../../components/hooks/useStatusBar'
 import {ScanRoutes, useParams} from '../../../navigation'
 import * as feedback from '../../../utils/feedback'
 import {parseScanAction} from '../common/parsers'
@@ -16,10 +14,6 @@ import {useStrings} from '../common/useStrings'
 import {useTriggerScanAction} from '../common/useTriggerScanAction'
 
 export const ScanCodeScreen = () => {
-  const {
-    theme: {color},
-  } = useTheme()
-  useStatusBar(color['black-static'])
   const navigateTo = useNavigateTo()
   const strings = useStrings()
   const scannerRef = React.useRef<CameraCodeScannerMethods>(null)

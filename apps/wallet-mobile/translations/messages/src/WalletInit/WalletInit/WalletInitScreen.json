@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Create wallet",
     "file": "src/WalletInit/WalletInit/WalletInitScreen.tsx",
     "start": {
-      "line": 131,
+      "line": 128,
       "column": 22,
-      "index": 5220
+      "index": 5025
     },
     "end": {
-      "line": 134,
+      "line": 131,
       "column": 3,
-      "index": 5334
+      "index": 5139
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Restore wallet",
     "file": "src/WalletInit/WalletInit/WalletInitScreen.tsx",
     "start": {
-      "line": 135,
+      "line": 132,
       "column": 23,
-      "index": 5359
+      "index": 5164
     },
     "end": {
-      "line": 138,
+      "line": 135,
       "column": 3,
-      "index": 5475
+      "index": 5280
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!15-word Wallet",
     "file": "src/WalletInit/WalletInit/WalletInitScreen.tsx",
     "start": {
-      "line": 139,
+      "line": 136,
       "column": 28,
-      "index": 5505
+      "index": 5310
     },
     "end": {
-      "line": 142,
+      "line": 139,
       "column": 3,
-      "index": 5626
+      "index": 5431
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!24-word Wallet",
     "file": "src/WalletInit/WalletInit/WalletInitScreen.tsx",
     "start": {
-      "line": 143,
+      "line": 140,
       "column": 28,
-      "index": 5656
+      "index": 5461
     },
     "end": {
-      "line": 146,
+      "line": 143,
       "column": 3,
-      "index": 5777
+      "index": 5582
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!If you have a recovery phrase consisting of {mnemonicLength} words, choose this option to restore your wallet.",
     "file": "src/WalletInit/WalletInit/WalletInitScreen.tsx",
     "start": {
-      "line": 147,
+      "line": 144,
       "column": 33,
-      "index": 5812
+      "index": 5617
     },
     "end": {
-      "line": 152,
+      "line": 149,
       "column": 3,
-      "index": 6051
+      "index": 5856
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!Read-only wallet",
     "file": "src/WalletInit/WalletInit/WalletInitScreen.tsx",
     "start": {
-      "line": 153,
+      "line": 150,
       "column": 29,
-      "index": 6082
+      "index": 5887
     },
     "end": {
-      "line": 156,
+      "line": 153,
       "column": 3,
-      "index": 6206
+      "index": 6011
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!The Yoroi extension allows you to export any of your wallets' public keys in a QR code. Choose this option to import a wallet from  a QR code in read-only mode.",
     "file": "src/WalletInit/WalletInit/WalletInitScreen.tsx",
     "start": {
-      "line": 157,
+      "line": 154,
       "column": 35,
-      "index": 6243
+      "index": 6048
     },
     "end": {
-      "line": 163,
+      "line": 160,
       "column": 3,
-      "index": 6545
+      "index": 6350
     }
   },
   {
@@ -109,14 +109,14 @@
     "defaultMessage": "!!!Connect to Ledger Nano",
     "file": "src/WalletInit/WalletInit/WalletInitScreen.tsx",
     "start": {
-      "line": 164,
+      "line": 161,
       "column": 32,
-      "index": 6579
+      "index": 6384
     },
     "end": {
-      "line": 167,
+      "line": 164,
       "column": 3,
-      "index": 6712
+      "index": 6517
     }
   }
 ]

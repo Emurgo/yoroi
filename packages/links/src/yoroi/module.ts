@@ -8,37 +8,34 @@ import {
   configYoroiTransferRequestAdaWithLink,
 } from './constants'
 import {
-  LinksYoroiExchangeShowCreateResultSchema,
-  LinksYoroiTransferRequestAdaSchema,
-  LinksYoroiTransferRequestAdaWithLinkSchema,
-} from './validators'
+  encodeExchangeShowCreateResult,
+  encodeTransferRequestAda,
+  encodeTransferRequestAdaWithLink,
+} from './transformers'
 
 export const linksYoroiModuleMaker = (
   scheme: Links.YoroiUriConfig['scheme'],
 ) => {
   const exchange = {
     order: {
-      showCreateResult: linksYoroiBuilder(
-        LinksYoroiExchangeShowCreateResultSchema,
-        {...configYoroiExchangeOrderShowCreateResult, scheme},
-      ).create,
+      showCreateResult: linksYoroiBuilder(encodeExchangeShowCreateResult, {
+        ...configYoroiExchangeOrderShowCreateResult,
+        scheme,
+      }).create,
     },
   }
 
   const transfer = {
     request: {
-      ada: linksYoroiBuilder(LinksYoroiTransferRequestAdaSchema, {
+      ada: linksYoroiBuilder(encodeTransferRequestAda, {
         ...configYoroiTransferRequestAda,
         scheme,
       }).create,
 
-      adaWithLink: linksYoroiBuilder(
-        LinksYoroiTransferRequestAdaWithLinkSchema,
-        {
-          ...configYoroiTransferRequestAdaWithLink,
-          scheme,
-        },
-      ).create,
+      adaWithLink: linksYoroiBuilder(encodeTransferRequestAdaWithLink, {
+        ...configYoroiTransferRequestAdaWithLink,
+        scheme,
+      }).create,
     },
   }
 

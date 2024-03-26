@@ -440,6 +440,47 @@ export const useWalletNavigation = () => {
       })
     },
 
+    resetToStartTransfer: () => {
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'app-root',
+            state: {
+              routes: [
+                {name: 'wallet-selection'},
+                {
+                  name: 'main-wallet-routes',
+                  state: {
+                    routes: [
+                      {
+                        name: 'history',
+                        state: {
+                          routes: [{name: 'send-start-tx'}],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      })
+    },
+
+    navigateToStartTransfer: () => {
+      navigation.navigate('app-root', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'send-start-tx',
+          },
+        },
+      })
+    },
+
     resetToWalletSelection: () => {
       navigation.reset({
         index: 0,

@@ -45,6 +45,16 @@ describe('TransferContext :: hooks', () => {
     expect(result.current.memo).toBe('Test memo')
   })
 
+  test('redirectToChanged', () => {
+    const {result} = renderHook(() => useTransfer(), {wrapper})
+
+    act(() => {
+      result.current.redirectToChanged('https://example.com')
+    })
+
+    expect(result.current.redirectTo).toBe('https://example.com')
+  })
+
   test('tokenSelectedChanged', () => {
     const {result} = renderHook(() => useTransfer(), {wrapper})
 
