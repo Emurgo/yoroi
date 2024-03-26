@@ -73,6 +73,7 @@ export const AddressDetailCard = ({title}: AddressDetailCardProps) => {
             content={item.address}
             onLongPress={() => copy(item.address)}
             isCopying={isCopying}
+            testId="receive:address-detail-card"
           />
         )
       case 'Details':
