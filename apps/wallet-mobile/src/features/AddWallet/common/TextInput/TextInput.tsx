@@ -119,8 +119,9 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: React.For
           if (showErrorOnBlur && !errorTextEnabled && !isEmptyString(errorText)) {
             setErrorTextEnabled(true)
             setIsWordValid(false)
+          } else {
+            setIsWordValid(true)
           }
-          setIsWordValid(true)
         }}
         theme={{
           roundness: 8,

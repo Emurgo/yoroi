@@ -9,6 +9,8 @@ export const useStrings = () => {
   return React.useRef({
     passwordStrengthRequirement: (options: {requiredPasswordLength: number}) =>
       intl.formatMessage(messages.passwordStrengthRequirement, options),
+    notFound: intl.formatMessage(messages.notFound),
+    clearAll: intl.formatMessage(messages.clearAll),
     repeatPasswordInputLabel: intl.formatMessage(messages.repeatPasswordInputLabel),
     repeatPasswordInputError: intl.formatMessage(messages.repeatPasswordInputError),
     tooLong: intl.formatMessage(globalMessages.walletNameErrorTooLong),
@@ -96,6 +98,14 @@ export const useStrings = () => {
 
 export const messages = Object.freeze(
   defineMessages({
+    notFound: {
+      id: 'components.walletinit.createwallet.createwalletscreen.notFound',
+      defaultMessage: '!!!Not found',
+    },
+    clearAll: {
+      id: 'components.walletinit.createwallet.createwalletscreen.clearAll',
+      defaultMessage: '!!!Clear all',
+    },
     passwordStrengthRequirement: {
       id: 'components.walletinit.createwallet.createwalletscreen.passwordLengthRequirement',
       defaultMessage: '!!!Minimum characters',
