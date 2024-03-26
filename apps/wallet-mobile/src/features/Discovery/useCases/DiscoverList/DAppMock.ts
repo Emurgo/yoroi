@@ -20,7 +20,7 @@ import MuesliSwap from '../../../../assets/img/dApp/muesliswap.png';
 import Nucast from '../../../../assets/img/dApp/nucast.png';
 import OptionFlow from '../../../../assets/img/dApp/optionflow.png';
 import PXLZ from '../../../../assets/img/dApp/pxlz.png';
-import Summon from '../../../../assets/img/dApp/summon.png';
+// import Summon from '../../../../assets/img/dApp/summon.png';
 import SundaeSwap from '../../../../assets/img/dApp/sundaeswap.png';
 import Taptools from '../../../../assets/img/dApp/taptools.png';
 import Wingriders from '../../../../assets/img/dApp/wingriders.png';
@@ -41,7 +41,7 @@ export const DAppCategory = {
 export type TDAppCategory = keyof typeof DAppCategory
 
 export interface IDAppItem {
-  id: number,
+  id: string,
   name: string;
   description?: string;
   category?: TDAppCategory;
@@ -51,168 +51,168 @@ export interface IDAppItem {
 
 export const mockDAppList: IDAppItem[] = [
   {
-    id: 1,
+    id: 'cardano_spot',
     name: 'Cardano Spot',
     description: 'Join a global Cardano Community: a single space to communicate, engage, educate with Cardano',
     category: 'media',
     logo: CardanoSpot,
   },
   {
-    id: 2,
+    id: 'minswap',
     name: 'Minswap',
     description: 'A decentralized exchange governed by a community that zaps',
     category: 'dex',
     logo: Minswap,
   },
   {
-    id: 3,
+    id: 'sundaeswap',
     name: 'SundaeSwap',
     description: 'Native, scalable decentralized exchange and automated liquidity provision protocol',
     category: 'dex',
     logo: SundaeSwap,
   },
   {
-    id: 4,
+    id: 'muesliswap',
     name: 'MuesliSwap',
     description: 'Swap tokens, earn & invest  on Cardano\'s leading DeFi ecosystem',
     category: 'dex',
     logo: MuesliSwap,
   },
   {
-    id: 5,
+    id: 'geniusyield',
     name: 'GeniusYield',
     description: 'The all-in-one platform, that combines an order book DEX with an automated yield optimizer.',
     category: 'dex',
     logo: GeniusYield,
   },
   {
-    id: 6,
+    id: 'wingriders',
     name: 'Wingriders',
     description: 'Native and fast AMM decentralized exchange platform',
     category: 'dex',
     logo: Wingriders,
   },
   {
-    id: 7,
+    id: 'dex_hunter',
     name: 'DEX Hunter',
     description: 'Biggest Cardano DEX Aggregator with real-time alerts and an easy to use interface',
     category: 'dex',
     logo: DEXHunter,
   },
   {
-    id: 8,
+    id: 'ada_markets',
     name: 'ADA Markets',
     description: 'DEX Aggregator getting you the best value swaps / splits across Cardano DEXes',
     category: 'dex',
     logo: ADAMarkets,
   },
   {
-    id: 9,
+    id: 'ada_handle',
     name: 'ADA Handle',
     description: 'NFT-powered naming solution for your Cardano wallet address',
     category: 'identity',
     logo: ADAHandle,
   },
   {
-    id: 10,
+    id: 'cns',
     name: 'CNS',
     description: 'Decentralized name registry and social graph creation',
     category: 'identity',
     logo: CNS,
   },
   {
-    id: 11,
+    id: 'book_io',
     name: 'Book.io',
     description: 'A Web3 marketplace for buying, reading, and selling eBooks and Audiobooks',
     category: 'entertainment',
     logo: Book,
   },
   {
-    id: 12,
+    id: 'nucast',
     name: 'Nucast',
     description: 'Nest generation video streaming and ownership platform',
     category: 'entertainment',
     logo: Nucast,
   },
   {
-    id: 13,
+    id: 'taptools',
     name: 'Taptools',
     description: 'Chart analysis, wallet profiler, and portfolio tracker on Cardano',
     category: 'trading',
     logo: Taptools,
   },
   {
-    id: 14,
+    id: 'jpg_store',
     name: 'JPG Store',
     description: 'Buy and sell NFTs on Cardano\'s most popular NFT marketplace',
     category: 'nft',
     logo: Taptools,
   },
   {
-    id: 15,
+    id: 'jam_on_bread',
     name: 'JAM ON BREAD',
     description: 'Decentralized NFT marketplace and aggregator',
     category: 'nft',
     logo: JamOnBread,
   },
   {
-    id: 16,
+    id: 'pxlz',
     name: 'PXLZ',
     description: 'The first interactive NFT collectibles on the Cardano blockchain',
     category: 'nft',
     logo: PXLZ,
   },
   {
-    id: 17,
+    id: 'liqwid',
     name: 'Liqwid',
     description: 'Earn interest, borrow assets, and build on the most hydrated liquidity protocol on Cardano',
     category: 'defi',
     logo: Liqwid,
   },
   {
-    id: 18,
+    id: 'lenfi',
     name: 'Lenfi',
     description: 'Permissionless lending, borrowing, liquidity pool creation, and more',
     category: 'defi',
     logo: Lenfi,
   },
   {
-    id: 19,
+    id: 'fluidtokens',
     name: 'FluidTokens',
     description: 'Lend, borrow, rent, and boost',
     category: 'defi',
     logo: FluidTokens,
   },
   {
-    id: 20,
+    id: 'levvy',
     name: 'Levvy',
     description: 'Lend and borrow with NFTs and Tokens',
     category: 'defi',
     logo: Levvy,
   },
   {
-    id: 21,
+    id: 'optionflow',
     name: 'OptionFlow',
     description: 'A Decentralized Option Protocol on the Cardano Blockchain',
     category: 'defi',
     logo: OptionFlow,
   },
+  // {
+  //   id: 'summon',
+  //   name: 'Summon',
+  //   description: 'Cardano DAO tooling platform',
+  //   category: 'dao',
+  //   logo: Summon,
+  // },
   {
-    id: 22,
-    name: 'Summon',
-    description: 'Cardano DAO tooling platform',
-    category: 'dao',
-    logo: Summon,
-  },
-  {
-    id: 23,
+    id: 'djed',
     name: 'Djed',
     description: 'Cardano\'s native overcollateralized stablecoin, developed by IOG and powered by COTI',
     category: 'stablecoin',
     logo: Djed,
   },
   {
-    id: 24,
+    id: 'iagon',
     name: 'Iagon',
     description: 'A cloud computing platform offering access to decentralized storage and compute',
     category: 'decentralized_storage',
@@ -221,7 +221,7 @@ export const mockDAppList: IDAppItem[] = [
 ];
 
 export const mockDAppGoogle = (searchQuery: string): IDAppItem => ({
-  id: -1,
+  id: 'google_search',
   name: searchQuery,
   description: 'Google',
   logo: Google,

@@ -123,7 +123,7 @@ const useStyles = () => {
     },
     contentContainer: {
       ...padding['l-l'],
-      ...padding['y-l'],
+      ...padding['b-l'],
     },
   })
 

@@ -1,25 +1,32 @@
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {FlatList, ScrollView, StyleSheet, View} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Spacer} from '../../../../components'
 import {useSearch, useSearchOnNavBar} from '../../../../Search/SearchContext'
 import {makeList} from '../../../../utils'
+import {useDAppsConnected} from '../../common/useDAppsConnected'
 import {useShowWelcomeDApp} from '../../common/useShowWelcomeDApp'
 import {useStrings} from '../../common/useStrings'
 import {CountDAppsAvailable} from './CountDAppsAvailable/CountDAppsAvailable'
+import {DAppExplorerTabItem} from './DAppExplorerTabItem/DAppExplorerTabItem'
 import {DAppItem} from './DAppItem/DAppItem'
 import {DAppItemSkeleton} from './DAppItem/DAppItemSkeleton'
 import {DAppCategory, mockDAppGoogle, mockDAppList, TDAppCategory} from './DAppMock'
 import {DAppTypes} from './DAppTypes/DAppTypes'
+
+const DAppTabs = {
+  connected: 'connected',
+  recommended: 'recommended',
+} as const
+type TDAppTabs = keyof typeof DAppTabs
 
 export const DiscoverList = () => {
   const styles = useStyles()
   const strings = useStrings()
   const {search, visible} = useSearch()
 
-  const [isLoading, setIsLoading] = React.useState(true)
+  const [currentTab, setCurrentTab] = React.useState<TDAppTabs>('connected')
   const [categoriesSelected, setCategoriesSelected] = React.useState<Partial<{[key in TDAppCategory]: boolean}>>()
 
   const isSearching = visible
@@ -31,15 +38,21 @@ export const DiscoverList = () => {
     placeholder: strings.searchDApps,
     noBack: true,
   })
+  const {data: listDAppConnected, isFetching: fetchingDAppConnected} = useDAppsConnected({refetchOnMount: true})
+  const haveDAppsConnected = (listDAppConnected ?? [])?.length > 0
 
   const getDAppCategories = Object.keys(DAppCategory) as TDAppCategory[]
 
   const handleToggleCategory = React.useCallback(
     (category: TDAppCategory) => {
-      setCategoriesSelected({
-        ...categoriesSelected,
-        [category]: !(categoriesSelected ?? {})[category],
-      })
+      const handleSelected = {...categoriesSelected}
+      if (categoriesSelected?.[category]) {
+        delete handleSelected[category]
+      } else {
+        handleSelected[category] = true
+      }
+
+      setCategoriesSelected(handleSelected)
     },
     [categoriesSelected],
   )
@@ -51,6 +64,12 @@ export const DiscoverList = () => {
   }
 
   const getListDApps = () => {
+    if (haveDAppsConnected && currentTab === DAppTabs.connected) {
+      return mockDAppList
+        .filter((dApp) => listDAppConnected?.includes(dApp.id))
+        .sort((_, __) => _.name.localeCompare(__.name))
+    }
+
     if (search?.length > 0) {
       return mockDAppList
         .filter((dApp) => dApp.name.toLowerCase().includes(search.toLowerCase()))
@@ -68,19 +87,52 @@ export const DiscoverList = () => {
     return mockDAppList.sort((_, __) => _.name.localeCompare(__.name))
   }
 
-  React.useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false)
-    }, 500)
-  }, [])
+  const handleChangeTab = (tab: TDAppTabs) => {
+    setCurrentTab(tab)
+  }
+
+  const headerDAppControl = () => {
+    if (isSearching) return null // <View />
+
+    return (
+      <>
+        {haveDAppsConnected && (
+          <View style={[styles.dAppItemBox, styles.tabsContainer]}>
+            <DAppExplorerTabItem
+              name={strings.connected}
+              isActive={currentTab === DAppTabs.connected}
+              onPress={() => handleChangeTab(DAppTabs.connected)}
+            />
+
+            <DAppExplorerTabItem
+              name={strings.recommended}
+              isActive={currentTab === DAppTabs.recommended}
+              onPress={() => handleChangeTab(DAppTabs.recommended)}
+            />
+          </View>
+        )}
+
+        {(!haveDAppsConnected || currentTab === DAppTabs.recommended) && (
+          <View style={styles.containerHeader}>
+            <DAppTypes
+              types={getDAppCategories}
+              onToggle={handleToggleCategory}
+              selected={categoriesSelected}
+              listCategoriesSelected={getCategoriesSelected()}
+            />
+
+            <CountDAppsAvailable total={getListDApps().length} />
+
+            <Spacer style={styles.dAppsBox} />
+          </View>
+        )}
+      </>
+    )
+  }
 
   return (
-    <SafeAreaView edges={['bottom', 'left', 'right']} style={[styles.root]}>
-      {/* <View style={styles.dAppItemBox}>
-        <Text>12313123</Text>
-      </View> */}
-
-      {isLoading ? (
+    <View style={[styles.root]}>
+      {fetchingDAppConnected ? (
         <ScrollView>
           {makeList(7).map((_, index) => (
             <View style={styles.dAppItemBox} key={index}>
@@ -95,31 +147,16 @@ export const DiscoverList = () => {
           data={getListDApps()}
           keyExtractor={(item) => item.id.toString()}
           ListHeaderComponentStyle={styles.boxHeader}
-          ListHeaderComponent={() =>
-            isSearching ? (
-              <View></View>
-            ) : (
-              <View style={styles.containerHeader}>
-                <DAppTypes
-                  types={getDAppCategories}
-                  onToggle={handleToggleCategory}
-                  selected={categoriesSelected}
-                  listCategoriesSelected={getCategoriesSelected()}
-                />
-
-                <CountDAppsAvailable total={getListDApps().length} />
-              </View>
-            )
-          }
+          ListHeaderComponent={headerDAppControl}
           renderItem={({item: entry}) => (
             <View style={styles.dAppItemBox}>
-              <DAppItem dApp={entry} />
+              <DAppItem dApp={entry} connected={(listDAppConnected ?? [])?.includes(entry.id)} />
             </View>
           )}
           ItemSeparatorComponent={() => <Spacer style={styles.dAppsBox} />}
         />
       )}
-    </SafeAreaView>
+    </View>
   )
 }
 
@@ -130,15 +167,18 @@ const useStyles = () => {
       flex: 1,
       backgroundColor: theme.color.gray.min,
     },
-    boxHeader: {
-      marginBottom: 16,
-    },
+    boxHeader: {},
     containerHeader: {},
     dAppsBox: {
       height: 16,
     },
     dAppItemBox: {
       ...theme.padding['x-l'],
+    },
+    tabsContainer: {
+      flexDirection: 'row',
+      gap: 8,
+      paddingBottom: 16,
     },
   })
 

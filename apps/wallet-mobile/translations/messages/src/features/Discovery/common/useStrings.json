@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Discover Cardano",
     "file": "src/features/Discovery/common/useStrings.tsx",
     "start": {
-      "line": 19,
+      "line": 21,
       "column": 19,
-      "index": 700
+      "index": 814
     },
     "end": {
-      "line": 22,
+      "line": 24,
       "column": 5,
-      "index": 801
+      "index": 915
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Search DApps",
     "file": "src/features/Discovery/common/useStrings.tsx",
     "start": {
-      "line": 23,
+      "line": 25,
       "column": 17,
-      "index": 820
+      "index": 934
     },
     "end": {
-      "line": 26,
+      "line": 28,
       "column": 5,
-      "index": 915
+      "index": 1029
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Welcome to Yoroi DApp Explorer",
     "file": "src/features/Discovery/common/useStrings.tsx",
     "start": {
-      "line": 27,
+      "line": 29,
       "column": 32,
-      "index": 949
+      "index": 1063
     },
     "end": {
-      "line": 30,
+      "line": 32,
       "column": 5,
-      "index": 1077
+      "index": 1191
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Discover, inspect, and connect to Cardano decentralized applications (DApps) with ease. Our solution helps to interact with DApps and their smart contracts, seamlessly enhancing your Cardano experience",
     "file": "src/features/Discovery/common/useStrings.tsx",
     "start": {
-      "line": 31,
+      "line": 33,
       "column": 43,
-      "index": 1122
+      "index": 1236
     },
     "end": {
-      "line": 35,
+      "line": 37,
       "column": 5,
-      "index": 1440
+      "index": 1554
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Next",
     "file": "src/features/Discovery/common/useStrings.tsx",
     "start": {
-      "line": 36,
+      "line": 38,
       "column": 10,
-      "index": 1452
+      "index": 1566
     },
     "end": {
-      "line": 39,
+      "line": 41,
       "column": 5,
-      "index": 1517
+      "index": 1631
     }
   },
   {
@@ -79,14 +79,44 @@
     "defaultMessage": "!!!DApp(s) available",
     "file": "src/features/Discovery/common/useStrings.tsx",
     "start": {
-      "line": 40,
+      "line": 42,
       "column": 24,
-      "index": 1543
+      "index": 1657
     },
     "end": {
-      "line": 43,
+      "line": 45,
       "column": 5,
-      "index": 1645
+      "index": 1759
+    }
+  },
+  {
+    "id": "discover.discoverList.connected",
+    "defaultMessage": "!!!Connected",
+    "file": "src/features/Discovery/common/useStrings.tsx",
+    "start": {
+      "line": 46,
+      "column": 15,
+      "index": 1776
+    },
+    "end": {
+      "line": 49,
+      "column": 5,
+      "index": 1866
+    }
+  },
+  {
+    "id": "discover.discoverList.recommended",
+    "defaultMessage": "!!!Recommended",
+    "file": "src/features/Discovery/common/useStrings.tsx",
+    "start": {
+      "line": 50,
+      "column": 17,
+      "index": 1885
+    },
+    "end": {
+      "line": 53,
+      "column": 5,
+      "index": 1979
     }
   }
 ]

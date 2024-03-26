@@ -11,6 +11,8 @@ export const useStrings = () => {
     welcomeToYoroiDAppExplorerDescription: intl.formatMessage(messages.welcomeToYoroiDAppExplorerDescription),
     next: intl.formatMessage(messages.next),
     totalDAppAvailable: intl.formatMessage(messages.totalDAppAvailable),
+    connected: intl.formatMessage(messages.connected),
+    recommended: intl.formatMessage(messages.recommended),
   }).current
 }
 
@@ -40,6 +42,14 @@ export const messages = Object.freeze(
     totalDAppAvailable: {
       id: 'discover.discoverList.dAppAvailable',
       defaultMessage: '!!!DApp(s) available',
+    },
+    connected: {
+      id: 'discover.discoverList.connected',
+      defaultMessage: '!!!Connected',
+    },
+    recommended: {
+      id: 'discover.discoverList.recommended',
+      defaultMessage: '!!!Recommended',
     },
   }),
 )
