@@ -64,17 +64,19 @@ export const DiscoverList = () => {
   }
 
   const getListDApps = () => {
+    if (isSearching) {
+      if (search?.length > 0)
+        return mockDAppList
+          .filter((dApp) => dApp.name.toLowerCase().includes(search.toLowerCase()))
+          .sort((_, __) => _.name.localeCompare(__.name))
+          .concat(mockDAppGoogle(search))
+      return mockDAppList
+    }
+
     if (haveDAppsConnected && currentTab === DAppTabs.connected) {
       return mockDAppList
         .filter((dApp) => listDAppConnected?.includes(dApp.id))
         .sort((_, __) => _.name.localeCompare(__.name))
-    }
-
-    if (search?.length > 0) {
-      return mockDAppList
-        .filter((dApp) => dApp.name.toLowerCase().includes(search.toLowerCase()))
-        .sort((_, __) => _.name.localeCompare(__.name))
-        .concat(mockDAppGoogle(search))
     }
 
     if (getCategoriesSelected().length > 0) {
@@ -92,7 +94,7 @@ export const DiscoverList = () => {
   }
 
   const headerDAppControl = () => {
-    if (isSearching) return null // <View />
+    if (isSearching) return <Spacer height={16} />
 
     return (
       <>
