@@ -10,21 +10,25 @@ export const ThemeProvider = ({children}: {children: React.ReactNode}) => {
     'light',
   )
 
-  const selectColorScheme = (themeColor: 'light' | 'dark') => {
-    setColorScheme(themeColor)
-  }
-
-  const theme = themes[colorScheme]
-  const isDark = colorScheme === 'dark'
-  const isLight = colorScheme === 'light'
-
-  return (
-    <ThemeContext.Provider
-      value={{theme, colorScheme, selectColorScheme, isLight, isDark}}
-    >
-      {children}
-    </ThemeContext.Provider>
+  const selectColorScheme = React.useCallback(
+    (themeColor: 'light' | 'dark') => {
+      setColorScheme(themeColor)
+    },
+    [],
   )
+
+  const value = React.useMemo(
+    () => ({
+      theme: themes[colorScheme],
+      colorScheme,
+      selectColorScheme,
+      isLight: colorScheme === 'dark',
+      isDark: colorScheme === 'light',
+    }),
+    [colorScheme, selectColorScheme],
+  )
+
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
 }
 
 export const useTheme = () =>
