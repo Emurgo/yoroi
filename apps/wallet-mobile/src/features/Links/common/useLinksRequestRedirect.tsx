@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {InteractionManager, Keyboard} from 'react-native'
+import {InteractionManager} from 'react-native'
 
 import {useModal} from '../../../components/Modal/ModalContext'
 import {isEmptyString} from '../../../utils/utils'
@@ -13,7 +13,6 @@ export const useLinksRequestRedirect = (redirectTo?: string) => {
 
   const askToRedirect = React.useCallback(
     (link: string) => {
-      Keyboard.dismiss()
       const content = <AskToRedirectScreen link={link} />
       openModal(strings.askToRedirectTitle, content, heightBreakpoint)
     },

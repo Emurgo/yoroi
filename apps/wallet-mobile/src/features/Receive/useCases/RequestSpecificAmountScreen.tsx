@@ -42,8 +42,6 @@ export const RequestSpecificAmountScreen = () => {
   const {openModal} = useModal()
 
   const handleOnGenerateLink = React.useCallback(() => {
-    Keyboard.dismiss()
-
     track.receiveAmountGeneratedPageViewed({ada_amount: Number(amount)})
     openModal(strings.amountToReceive, <Modal amount={amount} address={selectedAddress} />, modalHeight)
   }, [track, amount, openModal, strings.amountToReceive, selectedAddress, modalHeight])
