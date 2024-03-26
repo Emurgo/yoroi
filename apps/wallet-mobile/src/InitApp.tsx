@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/react-native'
 import {isString, useAsyncStorage} from '@yoroi/common'
 import {App} from '@yoroi/types'
 import React, {useEffect, useRef} from 'react'
