@@ -6,7 +6,6 @@ import {StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Text} from '../../../components'
-import {useStatusBar} from '../../../components/hooks/useStatusBar'
 import {LoadingOverlay} from '../../../components/LoadingOverlay'
 import {useSelectedWallet, useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../../SelectedWallet'
 import {useDisableEasyConfirmation} from '../../../yoroi-wallets/hooks'
@@ -18,7 +17,6 @@ export const DisableEasyConfirmationScreen = () => {
   const wallet = useSelectedWallet()
   const walletMeta = useSelectedWalletMeta()
   const setSelectedWalletMeta = useSetSelectedWalletMeta()
-  useStatusBar()
   if (!walletMeta) throw new Error('Missing walletMeta')
   const {disableEasyConfirmation, isLoading} = useDisableEasyConfirmation(wallet, {
     onSuccess: () => {

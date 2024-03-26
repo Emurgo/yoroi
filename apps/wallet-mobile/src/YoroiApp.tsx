@@ -1,4 +1,5 @@
 import {AsyncStorageProvider} from '@yoroi/common'
+import {LinksProvider} from '@yoroi/links'
 import {ThemeProvider} from '@yoroi/theme'
 import React from 'react'
 import {LogBox, Platform, StyleSheet, UIManager} from 'react-native'
@@ -14,7 +15,6 @@ import {ErrorBoundary} from './components/ErrorBoundary'
 import {CurrencyProvider} from './features/Settings/Currency/CurrencyContext'
 import {LanguageProvider} from './i18n'
 import {InitApp} from './InitApp'
-import {InitialLinkProvider} from './IntialLinkManagerProvider'
 import {CONFIG} from './legacy/config'
 import {setLogLevel} from './legacy/logging'
 import {makeMetricsManager, MetricsProvider} from './metrics/metricsManager'
@@ -49,12 +49,12 @@ export const YoroiApp = () => {
 
   return (
     <AsyncStorageProvider storage={rootStorage}>
-      <MetricsProvider metricsManager={metricsManager}>
-        <WalletManagerProvider walletManager={walletManager}>
-          <ErrorBoundary>
-            <QueryClientProvider client={queryClient}>
-              <LoadingBoundary style={StyleSheet.absoluteFill}>
-                <ThemeProvider>
+      <ThemeProvider>
+        <MetricsProvider metricsManager={metricsManager}>
+          <WalletManagerProvider walletManager={walletManager}>
+            <ErrorBoundary>
+              <QueryClientProvider client={queryClient}>
+                <LoadingBoundary style={StyleSheet.absoluteFill}>
                   <LanguageProvider>
                     <CurrencyProvider>
                       <SafeAreaProvider>
@@ -62,9 +62,9 @@ export const YoroiApp = () => {
                           <AuthProvider>
                             <SelectedWalletMetaProvider>
                               <SelectedWalletProvider>
-                                <InitialLinkProvider>
+                                <LinksProvider>
                                   <InitApp />
-                                </InitialLinkProvider>
+                                </LinksProvider>
                               </SelectedWalletProvider>
                             </SelectedWalletMetaProvider>
                           </AuthProvider>
@@ -72,12 +72,12 @@ export const YoroiApp = () => {
                       </SafeAreaProvider>
                     </CurrencyProvider>
                   </LanguageProvider>
-                </ThemeProvider>
-              </LoadingBoundary>
-            </QueryClientProvider>
-          </ErrorBoundary>
-        </WalletManagerProvider>
-      </MetricsProvider>
+                </LoadingBoundary>
+              </QueryClientProvider>
+            </ErrorBoundary>
+          </WalletManagerProvider>
+        </MetricsProvider>
+      </ThemeProvider>
     </AsyncStorageProvider>
   )
 }

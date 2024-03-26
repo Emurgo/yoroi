@@ -1,44 +1,41 @@
 import {Links} from '@yoroi/types'
 import {freeze} from 'immer'
 
+import {linksYoroiBuilder} from './links-builder'
 import {
-  LinksYoroiExchangeShowCreateResulSchema,
-  LinksYoroiTransferRequestAdaSchema,
-  LinksYoroiTransferRequestAdaWithUrlSchema,
-  linksYoroiBuilder,
-} from './links-builder'
-import {
-  configYoroiOrderShowCreateResult,
+  configYoroiExchangeOrderShowCreateResult,
   configYoroiTransferRequestAda,
   configYoroiTransferRequestAdaWithLink,
 } from './constants'
+import {
+  encodeExchangeShowCreateResult,
+  encodeTransferRequestAda,
+  encodeTransferRequestAdaWithLink,
+} from './transformers'
 
 export const linksYoroiModuleMaker = (
   scheme: Links.YoroiUriConfig['scheme'],
 ) => {
   const exchange = {
     order: {
-      showCreateResult: linksYoroiBuilder(
-        LinksYoroiExchangeShowCreateResulSchema,
-        {...configYoroiOrderShowCreateResult, scheme},
-      ).create,
+      showCreateResult: linksYoroiBuilder(encodeExchangeShowCreateResult, {
+        ...configYoroiExchangeOrderShowCreateResult,
+        scheme,
+      }).create,
     },
   }
 
   const transfer = {
     request: {
-      ada: linksYoroiBuilder(LinksYoroiTransferRequestAdaSchema, {
+      ada: linksYoroiBuilder(encodeTransferRequestAda, {
         ...configYoroiTransferRequestAda,
         scheme,
       }).create,
 
-      adaWithLink: linksYoroiBuilder(
-        LinksYoroiTransferRequestAdaWithUrlSchema,
-        {
-          ...configYoroiTransferRequestAdaWithLink,
-          scheme,
-        },
-      ).create,
+      adaWithLink: linksYoroiBuilder(encodeTransferRequestAdaWithLink, {
+        ...configYoroiTransferRequestAdaWithLink,
+        scheme,
+      }).create,
     },
   }
 

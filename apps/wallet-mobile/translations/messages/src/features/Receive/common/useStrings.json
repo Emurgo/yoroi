@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Amount to receive",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 39,
+      "line": 43,
       "column": 19,
-      "index": 2014
+      "index": 2306
     },
     "end": {
-      "line": 42,
+      "line": 46,
       "column": 3,
-      "index": 2120
+      "index": 2412
     }
   },
   {
@@ -19,14 +19,29 @@
     "defaultMessage": "!!!Receive",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 43,
+      "line": 47,
       "column": 16,
-      "index": 2138
+      "index": 2430
     },
     "end": {
-      "line": 46,
+      "line": 50,
       "column": 3,
-      "index": 2227
+      "index": 2519
+    }
+  },
+  {
+    "id": "components.receive.describeselectedaddressscreen.title",
+    "defaultMessage": "!!!Address details",
+    "file": "src/features/Receive/common/useStrings.tsx",
+    "start": {
+      "line": 51,
+      "column": 32,
+      "index": 2553
+    },
+    "end": {
+      "line": 54,
+      "column": 3,
+      "index": 2666
     }
   },
   {
@@ -34,14 +49,14 @@
     "defaultMessage": "!!!Wallet address",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 47,
+      "line": 55,
       "column": 20,
-      "index": 2249
+      "index": 2688
     },
     "end": {
-      "line": 50,
+      "line": 58,
       "column": 3,
-      "index": 2343
+      "index": 2782
     }
   },
   {
@@ -49,14 +64,14 @@
     "defaultMessage": "!!!Share address",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 51,
+      "line": 59,
       "column": 14,
-      "index": 2359
+      "index": 2798
     },
     "end": {
-      "line": 54,
+      "line": 62,
       "column": 3,
-      "index": 2457
+      "index": 2896
     }
   },
   {
@@ -64,14 +79,14 @@
     "defaultMessage": "!!!Wallet address details",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 55,
+      "line": 63,
       "column": 17,
-      "index": 2476
+      "index": 2915
     },
     "end": {
-      "line": 58,
+      "line": 66,
       "column": 3,
-      "index": 2586
+      "index": 3025
     }
   },
   {
@@ -79,14 +94,14 @@
     "defaultMessage": "!!!Spending key hash",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 59,
+      "line": 67,
       "column": 19,
-      "index": 2607
+      "index": 3046
     },
     "end": {
-      "line": 62,
+      "line": 70,
       "column": 3,
-      "index": 2714
+      "index": 3153
     }
   },
   {
@@ -94,14 +109,14 @@
     "defaultMessage": "!!!Staking key hash",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 63,
+      "line": 71,
       "column": 18,
-      "index": 2734
+      "index": 3173
     },
     "end": {
-      "line": 66,
+      "line": 74,
       "column": 3,
-      "index": 2839
+      "index": 3278
     }
   },
   {
@@ -109,14 +124,14 @@
     "defaultMessage": "!!!Address",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 67,
+      "line": 75,
       "column": 11,
-      "index": 2852
+      "index": 3291
     },
     "end": {
-      "line": 70,
+      "line": 78,
       "column": 3,
-      "index": 2941
+      "index": 3380
     }
   },
   {
@@ -124,14 +139,14 @@
     "defaultMessage": "!!!Copy address",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 71,
+      "line": 79,
       "column": 21,
-      "index": 2964
+      "index": 3403
     },
     "end": {
-      "line": 74,
+      "line": 82,
       "column": 3,
-      "index": 3063
+      "index": 3502
     }
   },
   {
@@ -139,14 +154,14 @@
     "defaultMessage": "!!!Request specific amount",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 75,
+      "line": 83,
       "column": 31,
-      "index": 3096
+      "index": 3535
     },
     "end": {
-      "line": 78,
+      "line": 86,
       "column": 3,
-      "index": 3223
+      "index": 3662
     }
   },
   {
@@ -154,14 +169,14 @@
     "defaultMessage": "!!!Request specific amount",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 79,
+      "line": 87,
       "column": 18,
-      "index": 3243
+      "index": 3682
     },
     "end": {
-      "line": 82,
+      "line": 90,
       "column": 3,
-      "index": 3357
+      "index": 3796
     }
   },
   {
@@ -169,14 +184,14 @@
     "defaultMessage": "!!!Generate a unique wallet address for requesting a specific amount of ADA from another wallet.",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 83,
+      "line": 91,
       "column": 29,
-      "index": 3388
+      "index": 3827
     },
     "end": {
-      "line": 86,
+      "line": 94,
       "column": 3,
-      "index": 3583
+      "index": 4022
     }
   },
   {
@@ -184,14 +199,14 @@
     "defaultMessage": "!!!ADA Amount",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 87,
+      "line": 95,
       "column": 12,
-      "index": 3597
+      "index": 4036
     },
     "end": {
-      "line": 90,
+      "line": 98,
       "column": 3,
-      "index": 3692
+      "index": 4131
     }
   },
   {
@@ -199,14 +214,14 @@
     "defaultMessage": "!!!Generate link",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 91,
+      "line": 99,
       "column": 16,
-      "index": 3710
+      "index": 4149
     },
     "end": {
-      "line": 94,
+      "line": 102,
       "column": 3,
-      "index": 3812
+      "index": 4251
     }
   },
   {
@@ -214,14 +229,14 @@
     "defaultMessage": "!!!Multiple addresses",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 95,
+      "line": 103,
       "column": 19,
-      "index": 3833
+      "index": 4272
     },
     "end": {
-      "line": 98,
+      "line": 106,
       "column": 3,
-      "index": 3943
+      "index": 4382
     }
   },
   {
@@ -229,14 +244,14 @@
     "defaultMessage": "!!!Single address",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 99,
+      "line": 107,
       "column": 17,
-      "index": 3962
+      "index": 4401
     },
     "end": {
-      "line": 102,
+      "line": 110,
       "column": 3,
-      "index": 4040
+      "index": 4479
     }
   },
   {
@@ -244,14 +259,14 @@
     "defaultMessage": "!!!Copy link",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 103,
+      "line": 111,
       "column": 15,
-      "index": 4057
+      "index": 4496
     },
     "end": {
-      "line": 106,
+      "line": 114,
       "column": 3,
-      "index": 4154
+      "index": 4593
     }
   },
   {
@@ -259,14 +274,14 @@
     "defaultMessage": "!!!Link copied",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 107,
+      "line": 115,
       "column": 15,
-      "index": 4171
+      "index": 4610
     },
     "end": {
-      "line": 110,
+      "line": 118,
       "column": 3,
-      "index": 4270
+      "index": 4709
     }
   },
   {
@@ -274,14 +289,14 @@
     "defaultMessage": "!!!Address copied",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 111,
+      "line": 119,
       "column": 20,
-      "index": 4292
+      "index": 4731
     },
     "end": {
-      "line": 114,
+      "line": 122,
       "column": 3,
-      "index": 4399
+      "index": 4838
     }
   },
   {
@@ -289,14 +304,14 @@
     "defaultMessage": "!!!Last used",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 115,
+      "line": 123,
       "column": 12,
-      "index": 4413
+      "index": 4852
     },
     "end": {
-      "line": 118,
+      "line": 126,
       "column": 3,
-      "index": 4507
+      "index": 4946
     }
   },
   {
@@ -304,14 +319,14 @@
     "defaultMessage": "!!!Unused",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 119,
+      "line": 127,
       "column": 17,
-      "index": 4526
+      "index": 4965
     },
     "end": {
-      "line": 122,
+      "line": 130,
       "column": 3,
-      "index": 4622
+      "index": 5061
     }
   },
   {
@@ -319,14 +334,14 @@
     "defaultMessage": "!!!Used",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 123,
+      "line": 131,
       "column": 15,
-      "index": 4639
+      "index": 5078
     },
     "end": {
-      "line": 126,
+      "line": 134,
       "column": 3,
-      "index": 4731
+      "index": 5170
     }
   },
   {
@@ -334,14 +349,14 @@
     "defaultMessage": "!!!Generate new address",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 127,
+      "line": 135,
       "column": 18,
-      "index": 4751
+      "index": 5190
     },
     "end": {
-      "line": 130,
+      "line": 138,
       "column": 3,
-      "index": 4862
+      "index": 5301
     }
   },
   {
@@ -349,14 +364,14 @@
     "defaultMessage": "!!!You have already reached your 20 addresses limit. If you need to operate with more than 20 addresses, reach out to us via Yoroi Zendesk",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 131,
+      "line": 139,
       "column": 20,
-      "index": 4884
+      "index": 5323
     },
     "end": {
-      "line": 135,
+      "line": 143,
       "column": 3,
-      "index": 5118
+      "index": 5557
     }
   },
   {
@@ -364,14 +379,14 @@
     "defaultMessage": "!!!Meet multiple addresses in Yoroi",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 136,
+      "line": 144,
       "column": 24,
-      "index": 5144
+      "index": 5583
     },
     "end": {
-      "line": 139,
+      "line": 147,
       "column": 3,
-      "index": 5273
+      "index": 5712
     }
   },
   {
@@ -379,14 +394,74 @@
     "defaultMessage": "!!!Enables Yoroi to manage various addresses in one place, enhancing privacy and providing organisational benefits.",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 140,
+      "line": 148,
       "column": 31,
-      "index": 5306
+      "index": 5745
     },
     "end": {
-      "line": 144,
+      "line": 152,
       "column": 3,
-      "index": 5528
+      "index": 5967
+    }
+  },
+  {
+    "id": "components.receive.receivescreen.singleOrMultiple",
+    "defaultMessage": "!!!Single or multiple address?",
+    "file": "src/features/Receive/common/useStrings.tsx",
+    "start": {
+      "line": 153,
+      "column": 20,
+      "index": 5989
+    },
+    "end": {
+      "line": 156,
+      "column": 3,
+      "index": 6109
+    }
+  },
+  {
+    "id": "components.receive.receivescreen.singleOrMultipleDetails",
+    "defaultMessage": "!!!Single keeps things simple and secure. Multiple may offer some extra privacy. For most users, single address is the way to go! You can always change it in settings.",
+    "file": "src/features/Receive/common/useStrings.tsx",
+    "start": {
+      "line": 157,
+      "column": 27,
+      "index": 6138
+    },
+    "end": {
+      "line": 161,
+      "column": 3,
+      "index": 6408
+    }
+  },
+  {
+    "id": "components.receive.receivescreen.selectMultiple",
+    "defaultMessage": "!!!Select multiple instead",
+    "file": "src/features/Receive/common/useStrings.tsx",
+    "start": {
+      "line": 162,
+      "column": 18,
+      "index": 6428
+    },
+    "end": {
+      "line": 165,
+      "column": 3,
+      "index": 6542
+    }
+  },
+  {
+    "id": "components.receive.receivescreen.singleAddressWallet",
+    "defaultMessage": "!!!Single address wallet",
+    "file": "src/features/Receive/common/useStrings.tsx",
+    "start": {
+      "line": 166,
+      "column": 23,
+      "index": 6567
+    },
+    "end": {
+      "line": 169,
+      "column": 3,
+      "index": 6684
     }
   },
   {
@@ -394,14 +469,14 @@
     "defaultMessage": "!!!OK",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 145,
+      "line": 170,
       "column": 6,
-      "index": 5536
+      "index": 6692
     },
     "end": {
-      "line": 148,
+      "line": 173,
       "column": 3,
-      "index": 5591
+      "index": 6747
     }
   },
   {
@@ -409,14 +484,14 @@
     "defaultMessage": "!!!Yoroi Zendesk",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 149,
+      "line": 174,
       "column": 16,
-      "index": 5609
+      "index": 6765
     },
     "end": {
-      "line": 152,
+      "line": 177,
       "column": 3,
-      "index": 5685
+      "index": 6841
     }
   }
 ]

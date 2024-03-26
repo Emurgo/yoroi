@@ -1,4 +1,4 @@
-import {NavigationProp, useNavigation} from '@react-navigation/native'
+import {NavigationProp, NavigationState, useNavigation, useNavigationState} from '@react-navigation/native'
 import {useEffect, useState} from 'react'
 import {InteractionManager} from 'react-native'
 
@@ -36,6 +36,13 @@ function useKeepRoutesInHistory(routesToKeep: string[]) {
   }, [navigation, initialRouteId, routesToKeep])
 }
 
+export const useIsRouteActive = () => {
+  const navigation = useNavigation()
+  const currentRouteName = useNavigationState((s) => selectRouteName(s))
+  const [initialRouteName] = useState(() => selectRouteName(navigation.getState()))
+  return initialRouteName === currentRouteName
+}
+
 export function useOverridePreviousRoute<RouteName extends string>(previousRouteName: RouteName) {
   const navigation = useNavigation()
   const [initialRouteName] = useState(() => getNavigationRouteName(navigation))
@@ -62,6 +69,7 @@ function getNavigationRouteId(navigation: NavigationProp<ReactNavigation.RootPar
 }
 
 function getNavigationRouteName(navigation: NavigationProp<ReactNavigation.RootParamList>) {
-  const state = navigation.getState()
-  return state.routes[state.index].name
+  return selectRouteName(navigation.getState())
 }
+
+const selectRouteName = (state: NavigationState) => state.routes[state.index].name

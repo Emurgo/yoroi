@@ -3,14 +3,11 @@ import {Linking, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Analytics} from '../../../components'
-import {useStatusBar} from '../../../components/hooks/useStatusBar'
 import {useAgreeWithLegal, useNavigateTo} from '../common'
 
 export const AnalyticsNoticeScreen = () => {
   const navigateTo = useNavigateTo()
   const {agree} = useAgreeWithLegal()
-
-  useStatusBar()
 
   const onClose = () => {
     agree()
