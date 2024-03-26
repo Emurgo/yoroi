@@ -18,6 +18,10 @@ import {useNavigateTo} from '../common/useNavigateTo'
 import {useReceiveAddressesStatus} from '../common/useReceiveAddressesStatus'
 import {useStrings} from '../common/useStrings'
 import {QRs} from '../illustrations/QRs'
+import {
+  MeetMultipleAddressesModal,
+  meetMultipleAddressesModalHeight,
+} from '../common/MeetMultipleAddressesModal/MeetMultipleAddressesModal'
 
 type AddressInfo = {
   isUsed?: boolean
@@ -44,7 +48,8 @@ export const ListMultipleAddressesScreen = () => {
   const {isShowingMultipleAddressInfo} = useMultipleAddressesInfo()
 
   React.useEffect(() => {
-    isShowingMultipleAddressInfo && openModal(strings.multiplePresentation, <Modal />, modalHeight)
+    isShowingMultipleAddressInfo &&
+      openModal(strings.multiplePresentation, <MeetMultipleAddressesModal />, meetMultipleAddressesModalHeight)
   }, [isShowingMultipleAddressInfo, openModal, strings.multiplePresentation])
 
   const addressInfos = toAddressInfos(addresses)
@@ -120,36 +125,6 @@ export const ListMultipleAddressesScreen = () => {
   )
 }
 
-const modalHeight = 520
-const Modal = () => {
-  const {styles, colors} = useStyles()
-  const strings = useStrings()
-
-  const {hideMultipleAddressesInfo} = useMultipleAddressesInfo()
-
-  const {closeModal} = useModal()
-  const handleOnCloseModal = () => {
-    hideMultipleAddressesInfo()
-    closeModal()
-  }
-
-  return (
-    <View style={styles.modal}>
-      <QRs />
-
-      <Text style={[styles.details, {color: colors.details}]}>{strings.multiplePresentationDetails}</Text>
-
-      <Spacer fill height={24} />
-
-      <View style={styles.buttonContainer}>
-        <Button shelleyTheme title={strings.ok} onPress={handleOnCloseModal} style={styles.button} />
-      </View>
-
-      <Spacer height={24} />
-    </View>
-  )
-}
-
 const useStyles = () => {
   const {theme} = useTheme()
   const styles = StyleSheet.create({
@@ -161,12 +136,6 @@ const useStyles = () => {
     content: {
       flex: 1,
       ...theme.padding['x-l'],
-    },
-    modal: {
-      flex: 1,
-      backgroundColor: theme.color['bottom-sheet-background'],
-      alignItems: 'center',
-      justifyContent: 'space-between',
     },
     footer: {
       backgroundColor: theme.color.gray.min,
