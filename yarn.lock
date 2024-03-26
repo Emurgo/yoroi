@@ -2879,10 +2879,10 @@
   dependencies:
     base-64 "0.1.0"
 
-"@emurgo/csl-mobile-bridge@6.0.0-alpha.4":
-  version "6.0.0-alpha.4"
-  resolved "https://registry.yarnpkg.com/@emurgo/csl-mobile-bridge/-/csl-mobile-bridge-6.0.0-alpha.4.tgz#114b1094892fdfda90441a159f14a4da975e253c"
-  integrity sha512-ffnVpmN6bbMHSX80aqeIYNGXEvkvuTyAsMwX+31pRV6sYC49Q72zWCJWcRT7i1UIi4kfYsN3mACeMLeYL2K+Kw==
+"@emurgo/csl-mobile-bridge@6.0.0-alpha.5":
+  version "6.0.0-alpha.5"
+  resolved "https://registry.yarnpkg.com/@emurgo/csl-mobile-bridge/-/csl-mobile-bridge-6.0.0-alpha.5.tgz#8edf18e6c21428ecd756068020cdc2539ce2a0e3"
+  integrity sha512-JVbXmqe0xefixlWIErisjaJ8WATUGyOufEVJVMAMrVJ5KnM62tthel6IXDLIPkrHcVRk1aspXrekooJeoreJCg==
   dependencies:
     base-64 "0.1.0"
 
@@ -5516,10 +5516,10 @@
     prompts "^2.4.2"
     semver "^7.5.2"
 
-"@react-native-community/datetimepicker@7.6.1":
-  version "7.6.1"
-  resolved "https://registry.yarnpkg.com/@react-native-community/datetimepicker/-/datetimepicker-7.6.1.tgz#98bdee01e3df490526ee1125e438c2030becac1f"
-  integrity sha512-g66Q2Kd9Uw3eRL7kkrTsGhi+eXxNoPDRFYH6z78sZQuYjPkUQgJDDMUYgBmaBsQx/fKMtemPrCj1ulGmyi0OSw==
+"@react-native-community/datetimepicker@^7.6.3":
+  version "7.6.3"
+  resolved "https://registry.yarnpkg.com/@react-native-community/datetimepicker/-/datetimepicker-7.6.3.tgz#c6b7b84a3d6a824b55d2710658d86fe64ce12a72"
+  integrity sha512-Ceb+zWwX67tJKK8gTk6JRRIlU1DqIuwe2kaFwz28s6SKrU8bn/nSSB8/y9B4vic3hb8Z0WTo22807GA1Kg4W7A==
   dependencies:
     invariant "^2.2.4"
 
