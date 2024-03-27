@@ -1,5 +1,5 @@
 import {useTheme} from '@yoroi/theme'
-import {SwapApi} from '@yoroi/types/lib/swap/api'
+import {Swap} from '@yoroi/types'
 import React, {useState} from 'react'
 import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
 
@@ -19,7 +19,7 @@ type Props = {
   onConfirm?: () => void
   utxo: string
   bech32Address: string
-  cancelOrder: SwapApi['cancelOrder']
+  cancelOrder: Swap.Api['cancelOrder']
 }
 
 export const ConfirmRawTxWithHW = ({onConfirm, utxo, bech32Address, cancelOrder}: Props) => {
