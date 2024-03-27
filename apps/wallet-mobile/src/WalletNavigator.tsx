@@ -1,6 +1,7 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {RouteProp, useFocusEffect} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Keyboard, Platform} from 'react-native'
@@ -8,7 +9,7 @@ import {Keyboard, Platform} from 'react-native'
 import {VotingRegistration} from './Catalyst'
 import {Icon, OfflineBanner} from './components'
 import {DashboardNavigator} from './Dashboard'
-import {WalletSelectionScreen} from './features/AddWallet/useCases/WalletSelection'
+import {SelectWalletFromList} from './features/AddWallet/useCases/SelectWalletFromList'
 import {ShowExchangeResultOrderScreen} from './features/Exchange/useCases/ShowExchangeResultOrderScreen/ShowExchangeResultOrderScreen'
 import {useLinksRequestAction} from './features/Links/common/useLinksRequestAction'
 import {useLinksShowActionResult} from './features/Links/common/useLinksShowActionResult'
@@ -18,6 +19,7 @@ import {GovernanceNavigator} from './features/Staking/Governance'
 import {ToggleAnalyticsSettingsNavigator} from './features/ToggleAnalyticsSettings'
 import {useMetrics} from './metrics/metricsManager'
 import {hideTabBarForRoutes, WalletStackRoutes, WalletTabRoutes} from './navigation'
+import {defaultStackNavigationOptions} from './navigation'
 import {NftDetailsNavigator} from './NftDetails/NftDetailsNavigator'
 import {NftsNavigator} from './Nfts/NftsNavigator'
 import {SearchProvider} from './Search/SearchContext'
@@ -157,6 +159,8 @@ const WalletTabNavigator = () => {
 const Stack = createStackNavigator<WalletStackRoutes>()
 export const WalletNavigator = () => {
   const initialRoute = useLinksShowActionResult()
+  const strings = useStrings()
+  const {theme} = useTheme()
   useLinksRequestAction()
 
   // initialRoute doesn't update the state of the navigator, only at first render
@@ -177,23 +181,32 @@ export const WalletNavigator = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerShown: false /* used only for transition */,
+        ...defaultStackNavigationOptions(theme),
+        headerLeft: undefined,
         detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
       }}
     >
-      <Stack.Screen name="wallet-selection" component={WalletSelectionScreen} />
+      <Stack.Screen
+        name="wallet-selection"
+        options={{title: strings.walletSelectionScreenHeader}}
+        component={SelectWalletFromList}
+      />
 
-      <Stack.Screen name="main-wallet-routes" component={WalletTabNavigator} />
+      <Stack.Screen name="main-wallet-routes" options={{headerShown: false}} component={WalletTabNavigator} />
 
-      <Stack.Screen name="nft-details-routes" component={NftDetailsNavigator} />
+      <Stack.Screen name="nft-details-routes" options={{headerShown: false}} component={NftDetailsNavigator} />
 
-      <Stack.Screen name="settings" component={SettingsScreenNavigator} />
+      <Stack.Screen name="settings" options={{headerShown: false}} component={SettingsScreenNavigator} />
 
-      <Stack.Screen name="voting-registration" component={VotingRegistration} />
+      <Stack.Screen name="voting-registration" options={{headerShown: false}} component={VotingRegistration} />
 
-      <Stack.Screen name="toggle-analytics-settings" component={ToggleAnalyticsSettingsNavigator} />
+      <Stack.Screen
+        name="toggle-analytics-settings"
+        options={{headerShown: false}}
+        component={ToggleAnalyticsSettingsNavigator}
+      />
 
-      <Stack.Screen name="governance" component={GovernanceNavigator} />
+      <Stack.Screen name="governance" options={{headerShown: false}} component={GovernanceNavigator} />
     </Stack.Navigator>
   )
 }
@@ -235,6 +248,10 @@ const messages = defineMessages({
     id: 'menu',
     defaultMessage: '!!!Menu',
   },
+  walletSelectionScreenHeader: {
+    id: 'components.walletselection.walletselectionscreen.header',
+    defaultMessage: '!!!My wallets',
+  },
 })
 
 const useStrings = () => {
@@ -249,5 +266,6 @@ const useStrings = () => {
     walletTabBarLabel: intl.formatMessage(messages.walletButton),
     nftsTabBarLabel: intl.formatMessage(messages.nftsButton),
     menuTabBarLabel: intl.formatMessage(messages.menuButton),
+    walletSelectionScreenHeader: intl.formatMessage(messages.walletSelectionScreenHeader),
   }
 }

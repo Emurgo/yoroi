@@ -7,9 +7,9 @@ import {mockWalletManager, WalletManager} from '../../../../wallet-manager/walle
 import {WalletManagerProvider} from '../../../../wallet-manager/WalletManagerContext'
 import {InvalidState, NetworkError} from '../../../../yoroi-wallets/cardano/errors'
 import {mocks} from '../../../../yoroi-wallets/mocks'
-import {WalletSelectionScreen} from './WalletSelectionScreen'
+import {SelectWalletFromList} from './SelectWalletFromListScreen'
 
-storiesOf('WalletSelectionScreen', module)
+storiesOf('SelectWalletFromList', module)
   .add('no wallets', () => (
     <WalletManagerProvider
       walletManager={
@@ -19,7 +19,7 @@ storiesOf('WalletSelectionScreen', module)
         } as WalletManager
       }
     >
-      <WalletSelectionScreen />
+      <SelectWalletFromList />
     </WalletManagerProvider>
   ))
   .add('loading', () => (
@@ -31,7 +31,7 @@ storiesOf('WalletSelectionScreen', module)
         } as WalletManager
       }
     >
-      <WalletSelectionScreen />
+      <SelectWalletFromList />
     </WalletManagerProvider>
   ))
   .add('loaded', () => (
@@ -47,7 +47,7 @@ storiesOf('WalletSelectionScreen', module)
         } as unknown as WalletManager
       }
     >
-      <WalletSelectionScreen />
+      <SelectWalletFromList />
     </WalletManagerProvider>
   ))
   .add('error, no network connection ', () => (
@@ -64,7 +64,7 @@ storiesOf('WalletSelectionScreen', module)
         } as unknown as WalletManager
       }
     >
-      <WalletSelectionScreen />
+      <SelectWalletFromList />
     </WalletManagerProvider>
   ))
   .add('error, invalid state ', () => (
@@ -81,7 +81,7 @@ storiesOf('WalletSelectionScreen', module)
         } as unknown as WalletManager
       }
     >
-      <WalletSelectionScreen />
+      <SelectWalletFromList />
     </WalletManagerProvider>
   ))
   .add('error, unknown error ', () => (
@@ -98,7 +98,7 @@ storiesOf('WalletSelectionScreen', module)
         } as unknown as WalletManager
       }
     >
-      <WalletSelectionScreen />
+      <SelectWalletFromList />
     </WalletManagerProvider>
   ))
 

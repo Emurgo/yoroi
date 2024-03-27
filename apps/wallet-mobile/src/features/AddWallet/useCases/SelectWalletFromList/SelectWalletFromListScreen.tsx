@@ -3,10 +3,11 @@ import {NetworkError} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
-import {FlatList, InteractionManager, Linking, RefreshControl, StyleSheet, Text, TouchableOpacity} from 'react-native'
+import {InteractionManager, Linking, RefreshControl, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../../components/Button'
+import {ScrollView, useScrollView} from '../../../../components/ScrollView/ScrollView'
 import {Space} from '../../../../components/Space/Space'
 import {showErrorDialog} from '../../../../dialogs'
 import {errorMessages} from '../../../../i18n/global-messages'
@@ -27,10 +28,9 @@ import {useStrings} from '../../common/useStrings'
 import {SupportIllustration} from '../../illustrations/SupportIllustration'
 import {WalletListItem} from './WalletListItem'
 
-export const WalletSelectionScreen = () => {
+export const SelectWalletFromList = () => {
   useLinksRequestWallet()
-  const strings = useStrings()
-  const {styles} = useStyles()
+  const {styles, colors} = useStyles()
   const walletManager = useWalletManager()
   const {navigateToTxHistory} = useWalletNavigation()
   const {walletMetas, isFetching, refetch} = useWalletMetas(walletManager, {
@@ -38,6 +38,8 @@ export const WalletSelectionScreen = () => {
   })
   const intl = useIntl()
   const {track} = useMetrics()
+  const {isScrollBarShown, setIsScrollBarShown, scrollViewRef} = useScrollView()
+  const [showLine, setShowLine] = React.useState(false)
 
   useFocusEffect(
     React.useCallback(() => {
@@ -65,45 +67,69 @@ export const WalletSelectionScreen = () => {
     },
   })
 
-  const onSelect = async (walletMeta: WalletMeta) => {
-    if (walletMeta.isShelley || isJormungandr(walletMeta.networkId)) {
-      await showErrorDialog(errorMessages.itnNotSupported, intl)
-      return
-    }
+  const onSelect = React.useCallback(
+    async (walletMeta: WalletMeta) => {
+      if (walletMeta.isShelley || isJormungandr(walletMeta.networkId)) {
+        await showErrorDialog(errorMessages.itnNotSupported, intl)
+        return
+      }
 
-    return openWallet(walletMeta)
-  }
+      return openWallet(walletMeta)
+    },
+    [intl, openWallet],
+  )
+
+  const data = React.useMemo(
+    () =>
+      walletMetas?.map((walletMeta, index, allData) => (
+        <React.Fragment key={walletMeta.id}>
+          <WalletListItem wallet={walletMeta} onPress={onSelect} />
+
+          {index < allData.length - 1 && <Space height="l" />}
+        </React.Fragment>
+      )),
+    [onSelect, walletMetas],
+  )
 
   return (
-    <SafeAreaView style={styles.safeAreaView}>
-      <Text style={styles.title}>{strings.header}</Text>
-
-      <FlatList
-        contentContainerStyle={styles.walletItemContainer}
-        data={walletMetas}
-        keyExtractor={(item) => item.id}
-        renderItem={({item: walletMeta}) => <WalletListItem wallet={walletMeta} onPress={onSelect} />}
-        ListEmptyComponent={null}
+    <SafeAreaView style={styles.safeAreaView} edges={['left', 'right', 'bottom']}>
+      <ScrollView
+        ref={scrollViewRef}
+        style={styles.list}
         refreshControl={<RefreshControl refreshing={isFetching} onRefresh={refetch} />}
-      />
+        onScrollBarChange={setIsScrollBarShown}
+        onScrollBeginDrag={() => setShowLine(true)}
+        onScrollEndDrag={() => setShowLine(false)}
+      >
+        {data}
+      </ScrollView>
 
-      <SupportTicketLink />
+      <View
+        style={[
+          styles.actions,
+          (showLine || isScrollBarShown) && {borderTopWidth: 1, borderTopColor: colors.lightGray},
+        ]}
+      >
+        <Space height="l" />
 
-      <Space height="l" />
+        <SupportTicketLink />
 
-      <ShelleyButton />
+        <Space height="l" />
 
-      <Space height="m" />
+        <ShelleyButton />
 
-      <OnlyNightlyShelleyTestnetButton />
+        <Space height="m" />
 
-      <Space height="m" />
+        <OnlyNightlyShelleyTestnetButton />
 
-      <OnlyNightlyShelleySanchonetButton />
+        <Space height="m" />
 
-      <Space height="m" />
+        <OnlyNightlyShelleySanchonetButton />
 
-      <OnlyDevButton />
+        <Space height="m" />
+
+        <OnlyDevButton />
+      </View>
     </SafeAreaView>
   )
 }
@@ -116,8 +142,10 @@ const SupportTicketLink = () => {
   const {styles} = useStyles()
 
   return (
-    <TouchableOpacity style={styles.link} onPress={() => onPress()}>
+    <TouchableOpacity style={styles.link} onPress={onPress}>
       <SupportIllustration />
+
+      <Space width="s" />
 
       <Text style={styles.linkText}>{strings.supportTicketLink.toLocaleUpperCase()}</Text>
     </TouchableOpacity>
@@ -212,14 +240,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     safeAreaView: {
       flex: 1,
-      ...theme.padding['x-l'],
       backgroundColor: theme.color['white-static'],
-    },
-    title: {
-      textAlign: 'center',
-      ...theme.typography['body-1-l-medium'],
-      ...theme.padding['l'],
-      color: theme.color.gray.max,
     },
     topButton: {
       backgroundColor: theme.color.primary[500],
@@ -235,14 +256,21 @@ const useStyles = () => {
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
-      gap: 8,
     },
-    walletItemContainer: {
-      ...theme.padding['y-l'],
-      gap: 8,
+    list: {
+      ...theme.padding['l'],
+    },
+    actions: {
+      ...theme.padding['x-l'],
     },
   })
-  return {styles} as const
+
+  const colors = {
+    gray: theme.color.gray[600],
+    lightGray: theme.color.gray[200],
+  }
+
+  return {styles, colors} as const
 }
 
 const byName = (a: {name: string}, b: {name: string}) => {

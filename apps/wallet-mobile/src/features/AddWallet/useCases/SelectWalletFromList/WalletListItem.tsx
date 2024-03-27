@@ -3,6 +3,7 @@ import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Icon} from '../../../../components'
+import {Space} from '../../../../components/Space/Space'
 import {WalletMeta} from '../../../../wallet-manager/types'
 import {isByron, isHaskellShelley, isJormun} from '../../../../yoroi-wallets/cardano/utils'
 import {ChevronRightDarkIllustration, ChevronRightGrayIllustration} from '../../illustrations/ChevronRightIllustration'
@@ -28,6 +29,8 @@ export const WalletListItem = ({wallet, onPress}: Props) => {
         onPressOut={() => setIsButtonPressed(false)}
       >
         <Icon.WalletAccount iconSeed={wallet.checksum.ImagePart} />
+
+        <Space height="m" />
 
         <View style={styles.walletDetails}>
           <Text style={styles.walletName} numberOfLines={1}>
@@ -81,9 +84,7 @@ const useStyles = () => {
       flexWrap: 'wrap',
     },
     leftSide: {
-      flexGrow: 1,
       flexDirection: 'row',
-      gap: 12,
       alignItems: 'center',
     },
     walletDetails: {
