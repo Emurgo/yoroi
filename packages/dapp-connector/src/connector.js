@@ -36,7 +36,7 @@ const initWallet = ({iconUrl, apiVersion, walletName, supportedExtensions, sessi
   }
 
   const logMessage = (...args) => {
-    callExternalMethod('log_message', args, {doNotWaitForResponse: true})
+    callExternalMethod('log_message', ['[yoroi-mobile-connector]:', ...args], {doNotWaitForResponse: true})
   }
 
   window.addEventListener('error', (event) => {

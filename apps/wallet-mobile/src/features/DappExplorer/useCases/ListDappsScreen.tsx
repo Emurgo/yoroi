@@ -1,10 +1,10 @@
-import React from 'react'
+import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {Button} from '../../../components'
 import {useNavigateTo} from '../common/navigation'
 
-export const HomeScreen = () => {
+export const ListDappsScreen = () => {
   const navigateTo = useNavigateTo()
   return (
     <View style={styles.root}>

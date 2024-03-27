@@ -1,13 +1,13 @@
 import {useAsyncStorage} from '@yoroi/common'
 import {connectionStorageMaker, DappConnector, dappConnectorMaker} from '@yoroi/dapp-connector'
 import {App} from '@yoroi/types'
-import {RefObject, useEffect, useMemo} from 'react'
+import * as React from 'react'
 import {Alert} from 'react-native'
 import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {Logger} from '../../../yoroi-wallets/logging'
-import {WALLET_CONFIG} from './wallet-config'
+import {walletConfig} from './wallet-config'
 
 const createDappConnector = (appStorage: App.Storage) => {
   const storage = connectionStorageMaker(appStorage.join('dapp-connections/'))
@@ -16,12 +16,12 @@ const createDappConnector = (appStorage: App.Storage) => {
 
 const useDappConnector = () => {
   const appStorage = useAsyncStorage()
-  return useMemo(() => createDappConnector(appStorage), [appStorage])
+  return React.useMemo(() => createDappConnector(appStorage), [appStorage])
 }
 
 export const useConnectWalletToWebView = (
   wallet: YoroiWallet,
-  webViewRef: RefObject<WebView | null>,
+  webViewRef: React.RefObject<WebView | null>,
   sessionId: string,
 ) => {
   const dappConnector = useDappConnector()
@@ -60,7 +60,7 @@ export const useConnectWalletToWebView = (
     }
   }
 
-  useEffect(() => {
+  React.useEffect(() => {
     webViewRef.current?.injectJavaScript(getInitScript(sessionId, dappConnector))
   }, [wallet, webViewRef, sessionId, dappConnector])
 
@@ -74,9 +74,9 @@ const getInjectableMessage = (message: unknown) => {
 
 const getInitScript = (sessionId: string, dappConnector: DappConnector) => {
   return dappConnector.getWalletConnectorScript({
-    iconUrl: WALLET_CONFIG.iconUrl,
-    apiVersion: WALLET_CONFIG.apiVersion,
-    walletName: WALLET_CONFIG.name,
+    iconUrl: walletConfig.iconUrl,
+    apiVersion: walletConfig.apiVersion,
+    walletName: walletConfig.name,
     sessionId,
   })
 }

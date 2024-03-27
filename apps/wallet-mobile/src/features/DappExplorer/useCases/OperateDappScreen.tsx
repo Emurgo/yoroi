@@ -1,5 +1,5 @@
 import {useFocusEffect} from '@react-navigation/native'
-import React, {useState} from 'react'
+import * as React from 'react'
 import {Platform, Share, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {WebView} from 'react-native-webview'
 
@@ -12,74 +12,59 @@ import {
   NavigationRefreshIcon,
   NavigationShareIcon,
 } from '../common/icons'
+import {useTheme} from '@yoroi/theme'
 
 const DAPP_URL = 'https://app.dexhunter.io/'
 
-const ENABLED_BUTTON_COLOR = '#383E54'
-const DISABLED_BUTTON_COLOR = '#8A92A3'
-
-export const WebBrowserScreen = () => {
-  const [sessionId] = useState(() => Math.random().toString(36).substring(7))
-
+export const OperateDappScreen = () => {
+  const [sessionId] = React.useState(() => Math.random().toString(36).substring(7))
+  const {styles} = useStyles()
   return (
     <View style={styles.root}>
-      <TabScreen sessionId={sessionId} />
+      <BrowserTab sessionId={sessionId} />
     </View>
   )
 }
 
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-  },
-  navigationContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    height: 32,
-    paddingVertical: 16,
-    paddingHorizontal: 7,
-  },
-  navigationButton: {
-    flex: 1,
-    width: 24,
-    height: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-})
-
-function TabScreen({sessionId}: {sessionId: string}) {
+function BrowserTab({sessionId}: {sessionId: string}) {
   const ref = React.useRef<WebView | null>(null)
   const wallet = useSelectedWallet()
   const {handleEvent, initScript} = useConnectWalletToWebView(wallet, ref, sessionId)
-  const [currentUrl, setCurrentUrl] = useState(DAPP_URL)
-  const [inputUrl, setInputUrl] = useState('')
+  const [currentUrl, setCurrentUrl] = React.useState(DAPP_URL)
+  const [inputUrl, setInputUrl] = React.useState('')
 
   const [canGoBack, setCanGoBack] = React.useState(false)
   const [canGoForward, setCanGoForward] = React.useState(false)
 
-  const [isFocused, setIsFocused] = useState(false)
+  const [isFocused, setIsFocused] = React.useState(false)
 
-  useFocusEffect(() => {
-    ref.current?.injectJavaScript(initScript)
+  const {styles, colors} = useStyles()
+
+  const updateFocusedState = React.useCallback(() => {
     setIsFocused(true)
     return () => setIsFocused(false)
-  })
+  }, [setIsFocused])
 
-  const handleReloadPress = () => {
+  const injectInitScript = React.useCallback(() => {
+    ref.current?.injectJavaScript(initScript)
+  }, [initScript])
+
+  useFocusEffect(updateFocusedState)
+  useFocusEffect(injectInitScript)
+
+  const handleOnReload = () => {
     ref.current?.reload()
   }
 
-  const handleBackPress = () => {
+  const handleOnNavigateBack = () => {
     ref.current?.goBack()
   }
 
-  const handleForwardPress = () => {
+  const handleOnNavigateForward = () => {
     ref.current?.goForward()
   }
 
-  const handleSharePress = () => {
+  const handleOnShare = () => {
     if (Platform.OS === 'android') {
       Share.share({message: currentUrl})
     } else {
@@ -87,12 +72,12 @@ function TabScreen({sessionId}: {sessionId: string}) {
     }
   }
 
-  const handleUrlSubmit = (url: string) => {
+  const handleOnSubmitUrl = (url: string) => {
     const normalizedUrl = url.startsWith('http') ? url : `https://${url}`
     setCurrentUrl(normalizedUrl)
   }
 
-  const handleLoadingEnd = (url: string) => {
+  const handleOnLoaded = (url: string) => {
     setInputUrl(url)
     setCurrentUrl(url)
     ref.current?.injectJavaScript(initScript)
@@ -106,7 +91,7 @@ function TabScreen({sessionId}: {sessionId: string}) {
         multiline={false}
         value={inputUrl}
         onChangeText={(text) => setInputUrl(text)}
-        onSubmitEditing={(e) => handleUrlSubmit(e.nativeEvent.text)}
+        onSubmitEditing={(e) => handleOnSubmitUrl(e.nativeEvent.text)}
       />
 
       <View style={{flex: 1}}>
@@ -121,7 +106,7 @@ function TabScreen({sessionId}: {sessionId: string}) {
               setCanGoBack(e.canGoBack)
               setCanGoForward(e.canGoForward)
               if (!e.loading) {
-                handleLoadingEnd(e.url)
+                handleOnLoaded(e.url)
               }
             }}
             nativeID={wallet.id}
@@ -136,22 +121,51 @@ function TabScreen({sessionId}: {sessionId: string}) {
       </View>
 
       <View style={styles.navigationContainer}>
-        <TouchableOpacity onPress={handleBackPress} style={styles.navigationButton} disabled={!canGoBack}>
-          <NavigationArrowLeftIcon color={canGoBack ? ENABLED_BUTTON_COLOR : DISABLED_BUTTON_COLOR} />
+        <TouchableOpacity onPress={handleOnNavigateBack} style={styles.navigationButton} disabled={!canGoBack}>
+          <NavigationArrowLeftIcon color={canGoBack ? colors.enabled : colors.disabled} />
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={handleForwardPress} style={styles.navigationButton} disabled={!canGoForward}>
-          <NavigationArrowRightIcon color={canGoForward ? ENABLED_BUTTON_COLOR : DISABLED_BUTTON_COLOR} />
+        <TouchableOpacity onPress={handleOnNavigateForward} style={styles.navigationButton} disabled={!canGoForward}>
+          <NavigationArrowRightIcon color={canGoForward ? colors.enabled : colors.disabled} />
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={handleSharePress} style={styles.navigationButton}>
-          <NavigationShareIcon color={ENABLED_BUTTON_COLOR} />
+        <TouchableOpacity onPress={handleOnShare} style={styles.navigationButton}>
+          <NavigationShareIcon color={colors.enabled} />
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={handleReloadPress} style={styles.navigationButton}>
-          <NavigationRefreshIcon color={ENABLED_BUTTON_COLOR} />
+        <TouchableOpacity onPress={handleOnReload} style={styles.navigationButton}>
+          <NavigationRefreshIcon color={colors.enabled} />
         </TouchableOpacity>
       </View>
     </View>
   )
+}
+
+const useStyles = () => {
+  const {theme} = useTheme()
+  const styles = StyleSheet.create({
+    root: {
+      flex: 1,
+    },
+    navigationContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      height: 32,
+      paddingVertical: 16,
+      paddingHorizontal: 7,
+    },
+    navigationButton: {
+      flex: 1,
+      width: 24,
+      height: 24,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+  })
+  const colors = {
+    enabled: theme.color.gray['800'],
+    disabled: theme.color.gray['500'],
+  }
+  return {styles, colors}
 }
