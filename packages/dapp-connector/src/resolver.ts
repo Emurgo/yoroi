@@ -1,6 +1,6 @@
 import {isKeyOf, isRecord} from '@yoroi/common'
 import {mockedData} from './mocks'
-import {Storage} from './storage'
+import {Storage} from './adapters/async-storage'
 
 type Context = {
   browserOrigin: string
@@ -35,7 +35,7 @@ export const resolver: Resolver = {
     if (await hasWalletAcceptedConnection(context)) return true
     const manualAccept = await context.wallet.confirmConnection(context.trustedOrigin)
     if (!manualAccept) return false
-    await context.storage.addConnection({walletId: context.wallet.id, dappOrigin: context.trustedOrigin})
+    await context.storage.save({walletId: context.wallet.id, dappOrigin: context.trustedOrigin})
     return true
   },
   isEnabled: async (_params: unknown, context: Context) => {
@@ -84,7 +84,7 @@ const assertWalletAcceptedConnection = async (context: Context) => {
 }
 
 const hasWalletAcceptedConnection = async (context: Context) => {
-  const connections = await context.storage.listAllConnections()
+  const connections = await context.storage.read()
   const requestedConnection = {walletId: context.wallet.id, dappOrigin: context.trustedOrigin}
   return connections.some(
     (c) => c.walletId === requestedConnection.walletId && c.dappOrigin === requestedConnection.dappOrigin,

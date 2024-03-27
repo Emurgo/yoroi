@@ -127,7 +127,7 @@ const initWallet = ({iconUrl, apiVersion, walletName, supportedExtensions, sessi
     supportedExtensions: Object.freeze(supportedExtensions),
   })
 
-  window.cardano = window.cardano || {}
+  window.cardano = window.cardano ?? {}
   window.cardano[walletName] = walletObj
 
   logMessage('Wallet connected')

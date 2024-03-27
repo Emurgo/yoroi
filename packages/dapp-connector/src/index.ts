@@ -1,4 +1,4 @@
-import {connectionStorageMaker, type Storage} from './storage'
+import {connectionStorageMaker, type Storage} from './adapters/async-storage'
 import {DappConnector} from './dapp-connector'
 export {connectionStorageMaker, type Storage, DappConnector}
 

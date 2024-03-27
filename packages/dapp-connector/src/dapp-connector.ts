@@ -1,21 +1,21 @@
-import {DappConnection, Storage} from './storage'
 import {handleEvent} from './resolver'
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {connectWallet} from './connector'
+import {DappConnection, Storage} from './adapters/async-storage'
 
 export class DappConnector {
   constructor(private storage: Storage) {}
 
   public listAllConnections = async () => {
-    return this.storage.listAllConnections()
+    return this.storage.read()
   }
 
   public removeConnection = async (connection: DappConnection) => {
-    return this.storage.removeConnection(connection)
+    return this.storage.remove(connection)
   }
 
   public addConnection = async (connection: DappConnection) => {
-    return this.storage.addConnection(connection)
+    return this.storage.save(connection)
   }
 
   public getWalletConnectorScript = (props: {
