@@ -1,5 +1,6 @@
-import {LinksTransferRequestAdaWithLinkParams, useLinks} from '@yoroi/links'
+import {useLinks} from '@yoroi/links'
 import {useTheme} from '@yoroi/theme'
+import {Links} from '@yoroi/types'
 import * as React from 'react'
 import {ScrollView, StyleSheet, Text, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -14,7 +15,7 @@ export const RequestedAdaPaymentWithLinkScreen = ({
   isTrusted,
   onContinue,
 }: {
-  params: LinksTransferRequestAdaWithLinkParams
+  params: Links.TransferRequestAdaWithLinkParams
   isTrusted?: boolean
   onContinue: () => void
 }) => {

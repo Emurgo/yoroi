@@ -1,5 +1,6 @@
-import {linksCardanoModuleMaker, LinksTransferRequestAdaWithLinkParams, LinksYoroiAction, useLinks} from '@yoroi/links'
+import {linksCardanoModuleMaker, useLinks} from '@yoroi/links'
 import {useTransfer} from '@yoroi/transfer'
+import {Links} from '@yoroi/types'
 import * as React from 'react'
 import {InteractionManager} from 'react-native'
 
@@ -21,7 +22,7 @@ export const useLinksRequestAction = () => {
 
   const {memoChanged, receiverResolveChanged, amountChanged, reset, redirectToChanged} = useTransfer()
   const startTransferWithLink = React.useCallback(
-    (action: LinksYoroiAction, decimals: number) => {
+    (action: Links.YoroiAction, decimals: number) => {
       Logger.debug('startTransferWithLink', action, decimals)
       if (action.info.useCase === 'request/ada-with-link') {
         reset()
@@ -62,7 +63,7 @@ export const useLinksRequestAction = () => {
   )
 
   const openRequestedPaymentAdaWithLink = React.useCallback(
-    ({params, isTrusted}: {params: LinksTransferRequestAdaWithLinkParams; isTrusted: boolean}, decimals: number) => {
+    ({params, isTrusted}: {params: Links.TransferRequestAdaWithLinkParams; isTrusted: boolean}, decimals: number) => {
       const title = isTrusted ? strings.trustedPaymentRequestedTitle : strings.untrustedPaymentRequestedTitle
       const handleOnContinue = () =>
         startTransferWithLink(

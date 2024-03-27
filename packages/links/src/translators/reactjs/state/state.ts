@@ -1,17 +1,15 @@
-import {Nullable} from '@yoroi/types'
-import {freeze, produce} from 'immer'
-
-import {LinksYoroiAction} from '../../../yoroi/types'
+import {Links, Nullable} from '@yoroi/types'
+import {freeze, produce, castDraft} from 'immer'
 
 export type LinksState = Readonly<{
   // walletId -> authorization (handle 1 per wallet at time)
   authorizations: ReadonlyMap<string, string>
 
-  action: Nullable<LinksYoroiAction>
+  action: Nullable<Links.YoroiAction>
 }>
 
 export type LinksActions = Readonly<{
-  actionStarted: (action: LinksYoroiAction) => void
+  actionStarted: (action: Links.YoroiAction) => void
   actionFinished: () => void
   authorizationsChanged: (walletId: string, authorizations: string) => void
 }>
@@ -25,7 +23,7 @@ export enum LinksActionType {
 export type LinksAction =
   | {
       type: LinksActionType.ActionStarted
-      action: LinksYoroiAction
+      action: Links.YoroiAction
     }
   | {
       type: LinksActionType.ActionFinished
@@ -60,7 +58,7 @@ export const linksReducer = (
   return produce(state, (draft) => {
     switch (action.type) {
       case LinksActionType.ActionStarted:
-        draft.action = action.action
+        draft.action = castDraft(action.action)
         break
       case LinksActionType.ActionFinished:
         draft.action = null
