@@ -3,10 +3,7 @@ import fs from 'fs/promises'
 import {addAttach, addMsg} from 'jest-html-reporters/helper'
 import yargs from 'yargs/yargs'
 
-import {
- mnemonicBadgeByWord,
- mnemonicByIndexText,
-} from '../screens/createWalletFlow.screen'
+import {mnemonicBadgeByWord, mnemonicByIndexText} from '../screens/createWalletFlow.screen'
 import * as initialScreen from '../screens/initialScreen.screen'
 import * as myWalletsScreen from '../screens/myWallets.screen'
 import {pinKeyButton} from '../screens/pinCode.screen'
@@ -31,18 +28,13 @@ export const getSeedPhrase = async (): Promise<Array<string>> => {
  return allWords
 }
 
-export const repeatSeedPhrase = async (
- phraseArray: string[],
-): Promise<void> => {
+export const repeatSeedPhrase = async (phraseArray: string[]): Promise<void> => {
  for (const phraseArrayWord of phraseArray) {
   await mnemonicBadgeByWord(phraseArrayWord).tap()
  }
 }
 
-export const enterRecoveryPhrase = async (
- phraseArray: string[],
- platform: string,
-): Promise<void> => {
+export const enterRecoveryPhrase = async (phraseArray: string[], platform: string): Promise<void> => {
  for (let wordIndex = 0; wordIndex < phraseArray.length; wordIndex++) {
   const wordElementInput = mnemonicByIndexInput(wordIndex, platform)
   await wordElementInput.typeText(`${phraseArray[wordIndex]}\n`)
@@ -52,7 +44,6 @@ export const enterRecoveryPhrase = async (
 export const prepareApp = async (pin: string): Promise<void> => {
  await expect(element(by.text('Select language'))).toBeVisible()
  await expect(initialScreen.dropDownLanguagePicker()).toBeVisible()
- await takeScreenshot('Initial screen for first time user')
  await initialScreen.checkboxSelect().tap({x: 5, y: 10})
  await initialScreen.buttonContinue().tap()
 
@@ -65,8 +56,7 @@ export const prepareApp = async (pin: string): Promise<void> => {
  await expect(myWalletsScreen.pageTitle()).toBeVisible()
 }
 
-export const delay = (milliseconds: number) =>
- new Promise((resolve) => setTimeout(resolve, milliseconds))
+export const delay = (milliseconds: number) => new Promise((resolve) => setTimeout(resolve, milliseconds))
 
 // deciding  from the args of the script (example  - e2e:test:android:nightly:release)
 // checking the e2e path (example -  $npm_package_e2ePath_android) and decide if the test platform is android or iOS based on the folder path

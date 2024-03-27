@@ -6,7 +6,6 @@ import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, KeyboardAvoidingView, Text, TextInput} from '../../../components'
-import {useStatusBar} from '../../../components/hooks/useStatusBar'
 import {LoadingOverlay} from '../../../components/LoadingOverlay'
 import {showErrorDialog} from '../../../dialogs'
 import {errorMessages} from '../../../i18n/global-messages'
@@ -19,7 +18,6 @@ export const EnableEasyConfirmationScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
   const styles = useStyles()
-  useStatusBar()
   const navigation = useNavigation()
   const [rootPassword, setRootPassword] = React.useState('')
   const walletMeta = useSelectedWalletMeta()

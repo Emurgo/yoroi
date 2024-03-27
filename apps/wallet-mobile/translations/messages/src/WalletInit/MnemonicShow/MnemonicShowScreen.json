@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Please, make sure you have carefully written down your recovery phrase somewhere safe. You will need this phrase to use and restore your wallet. Phrase is case sensitive.",
     "file": "src/WalletInit/MnemonicShow/MnemonicShowScreen.tsx",
     "start": {
-      "line": 85,
+      "line": 83,
       "column": 16,
-      "index": 3053
+      "index": 2971
     },
     "end": {
-      "line": 92,
+      "line": 90,
       "column": 3,
-      "index": 3372
+      "index": 3290
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Yes, I have written it down",
     "file": "src/WalletInit/MnemonicShow/MnemonicShowScreen.tsx",
     "start": {
-      "line": 93,
+      "line": 91,
       "column": 22,
-      "index": 3396
+      "index": 3314
     },
     "end": {
-      "line": 96,
+      "line": 94,
       "column": 3,
-      "index": 3539
+      "index": 3457
     }
   }
 ]

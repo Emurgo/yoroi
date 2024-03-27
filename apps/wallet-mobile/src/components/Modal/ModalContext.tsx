@@ -1,5 +1,6 @@
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
+import {Keyboard} from 'react-native'
 
 type ModalState = {
   height: number
@@ -43,6 +44,7 @@ export const ModalProvider = ({
       }
     },
     openModal: (title: ModalState['title'], content: ModalState['content'], height?: ModalState['height']) => {
+      Keyboard.dismiss()
       dispatch({type: 'open', title, content, height})
       navigation.navigate('modal')
     },

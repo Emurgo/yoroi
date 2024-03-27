@@ -5,7 +5,7 @@ inputs:
   node-version:
     description: "Node.js version to use"
     required: true
-    default: "16.19.0"
+    default: "18.19.1"
 
 runs:
   using: "composite"
@@ -18,7 +18,7 @@ runs:
       id: yarn-cache-dir-path
       run: echo "::set-output name=dir::$(yarn cache dir)"
       shell: bash
-    - uses: actions/cache@v2
+    - uses: actions/cache@v3
       with:
         path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}

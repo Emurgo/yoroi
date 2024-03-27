@@ -1,4 +1,5 @@
 import {useCreateReferralLink, useExchange, useExchangeProvidersByOrderType} from '@yoroi/exchange'
+import {linksYoroiModuleMaker} from '@yoroi/links'
 import {useTheme} from '@yoroi/theme'
 import {Exchange} from '@yoroi/types'
 import * as React from 'react'
@@ -7,10 +8,8 @@ import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Icon, KeyboardAvoidingView} from '../../../../components'
-import {useStatusBar} from '../../../../components/hooks/useStatusBar'
 import {Space} from '../../../../components/Space/Space'
 import {Warning} from '../../../../components/Warning'
-import {RAMP_ON_OFF_PATH, SCHEME_URL} from '../../../../legacy/config'
 import env from '../../../../legacy/env'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../SelectedWallet'
@@ -28,7 +27,6 @@ import {ShowDisclaimer} from './ShowDisclaimer/ShowDisclaimer'
 const BOTTOM_ACTION_SECTION = 180
 
 export const CreateExchangeOrderScreen = () => {
-  useStatusBar()
   const strings = useStrings()
   const styles = useStyles()
   const {track} = useMetrics()
@@ -38,9 +36,10 @@ export const CreateExchangeOrderScreen = () => {
   const {orderType, canExchange, providerId, provider, amount, referralLink: managerReferralLink} = useExchange()
 
   const providers = useExchangeProvidersByOrderType({orderType, providerListByOrderType: provider.list.byOrderType})
-  const providerSelected = Object.fromEntries(providers)[providerId]
-  const fee = providerSelected.supportedOrders?.[orderType]?.fee ?? 0
-  const Logo = providerSelected.id === 'banxa' ? BanxaLogo : EncryptusLogo
+  const providerSelected = new Map(providers).get(providerId)
+  const fee = providerSelected?.supportedOrders[orderType]?.fee ?? 0
+
+  const Logo = providerSelected?.id === 'banxa' ? BanxaLogo : EncryptusLogo
 
   const wallet = useSelectedWallet()
 
@@ -50,7 +49,15 @@ export const CreateExchangeOrderScreen = () => {
   const quantity = `${amount.value}` as `${number}`
   const denomination = amountTokenInfo.decimals ?? 0
   const orderAmount = +Quantities.denominated(quantity, denomination)
-  const returnUrl = `${SCHEME_URL}${RAMP_ON_OFF_PATH}`
+  const returnUrl = encodeURIComponent(
+    linksYoroiModuleMaker('https').exchange.order.showCreateResult({
+      provider: String(providerSelected ?? ''),
+      orderType,
+      walletId: wallet.id,
+      isTestnet: wallet.networkId !== 1,
+      isSandbox: wallet.networkId !== 1,
+    }),
+  )
 
   const sandboxWallet = env.getString('BANXA_TEST_WALLET')
   const isMainnet = wallet.networkId === 1
@@ -127,7 +134,7 @@ export const CreateExchangeOrderScreen = () => {
             <Space height="xxs" />
 
             <ProviderItem
-              label={providerSelected.name}
+              label={providerSelected?.name ?? ''}
               fee={fee}
               leftAdornment={<Logo size={40} />}
               rightAdornment={<Icon.Chevron direction="right" />}

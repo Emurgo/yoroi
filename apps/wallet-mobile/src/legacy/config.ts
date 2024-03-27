@@ -35,27 +35,3 @@ export const CONFIG = {
   GOVERNANCE_ENABLED_SINCE_BLOCK,
   DAPP_EXPLORER_ENABLED,
 }
-
-export const SCHEME_URL = 'yoroi://'
-export const RAMP_ON_OFF_PATH = 'ramp-on-off/result'
-export const LINKING_PREFIXES = [SCHEME_URL]
-export const LINKING_CONFIG = {
-  screens: {
-    'app-root': {
-      screens: {
-        'main-wallet-routes': {
-          screens: {
-            history: {
-              initialRouteName: 'history-list',
-              screens: {
-                'exchange-result': {
-                  path: RAMP_ON_OFF_PATH,
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-}

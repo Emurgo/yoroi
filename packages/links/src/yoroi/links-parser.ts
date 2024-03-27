@@ -1,9 +1,9 @@
 import {freeze} from 'immer'
 
 import {
-  LinksYoroiExchangeShowCreateResultSchema,
-  LinksYoroiTransferRequestAdaSchema,
-  LinksYoroiTransferRequestAdaWithLinkSchema,
+  ExchangeShowCreateResultSchema,
+  TransferRequestAdaSchema,
+  TransferRequestAdaWithLinkSchema,
 } from './validators'
 import {convertSearchParamsToObject} from './helpers'
 import {LinksYoroiActionInfo} from './types'
@@ -17,8 +17,7 @@ export const linksYoroiParser = (
     switch (url.pathname) {
       case `/w1/transfer/request/ada`: {
         const objectFromParams = convertSearchParamsToObject(url.searchParams)
-        const params =
-          LinksYoroiTransferRequestAdaSchema.parse(objectFromParams)
+        const params = TransferRequestAdaSchema.parse(objectFromParams)
         return freeze(
           {
             version: 1,
@@ -31,8 +30,7 @@ export const linksYoroiParser = (
       }
       case `/w1/transfer/request/ada-with-link`: {
         const objectFromParams = convertSearchParamsToObject(url.searchParams)
-        const params =
-          LinksYoroiTransferRequestAdaWithLinkSchema.parse(objectFromParams)
+        const params = TransferRequestAdaWithLinkSchema.parse(objectFromParams)
         return freeze(
           {
             version: 1,
@@ -45,8 +43,7 @@ export const linksYoroiParser = (
       }
       case `/w1/exchange/order/show-create-result`: {
         const objectFromParams = convertSearchParamsToObject(url.searchParams)
-        const params =
-          LinksYoroiExchangeShowCreateResultSchema.parse(objectFromParams)
+        const params = ExchangeShowCreateResultSchema.parse(objectFromParams)
         return freeze(
           {
             version: 1,

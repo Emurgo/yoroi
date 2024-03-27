@@ -5,7 +5,6 @@ import {View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, KeyboardAvoidingView, KeyboardSpacer, ScrollableView, Spacer, Text} from '../../components'
-import {useStatusBar} from '../../components/hooks/useStatusBar'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {isEmptyString} from '../../utils/utils'
 import {getWalletConfigById} from '../../yoroi-wallets/cardano/utils'
@@ -13,7 +12,6 @@ import {MnemonicInput} from '../MnemonicInput'
 
 export const RestoreWalletScreen = () => {
   const strings = useStrings()
-  useStatusBar()
   const navigation = useNavigation<WalletInitRouteNavigation>()
   const route = useRoute<RouteProp<WalletInitRoutes, 'restore-wallet-form'>>()
   const {networkId, walletImplementationId} = route.params

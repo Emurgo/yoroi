@@ -4,14 +4,14 @@
     "defaultMessage": "!!!General",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 264,
+      "line": 262,
       "column": 11,
-      "index": 9139
+      "index": 9054
     },
     "end": {
-      "line": 267,
+      "line": 265,
       "column": 3,
-      "index": 9249
+      "index": 9164
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Security & Reporting",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 268,
+      "line": 266,
       "column": 21,
-      "index": 9272
+      "index": 9187
     },
     "end": {
-      "line": 271,
+      "line": 269,
       "column": 3,
-      "index": 9405
+      "index": 9320
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Language",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 272,
+      "line": 270,
       "column": 18,
-      "index": 9425
+      "index": 9340
     },
     "end": {
-      "line": 275,
+      "line": 273,
       "column": 3,
-      "index": 9537
+      "index": 9452
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Fiat Currency",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 276,
+      "line": 274,
       "column": 22,
-      "index": 9561
+      "index": 9476
     },
     "end": {
-      "line": 279,
+      "line": 277,
       "column": 3,
-      "index": 9682
+      "index": 9597
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!About",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 280,
+      "line": 278,
       "column": 9,
-      "index": 9693
+      "index": 9608
     },
     "end": {
-      "line": 283,
+      "line": 281,
       "column": 3,
-      "index": 9793
+      "index": 9708
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!Terms of Service Agreement",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 284,
+      "line": 282,
       "column": 18,
-      "index": 9813
+      "index": 9728
     },
     "end": {
-      "line": 287,
+      "line": 285,
       "column": 3,
-      "index": 9940
+      "index": 9855
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!Change PIN",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 288,
+      "line": 286,
       "column": 13,
-      "index": 9955
+      "index": 9870
     },
     "end": {
-      "line": 291,
+      "line": 289,
       "column": 3,
-      "index": 10064
+      "index": 9979
     }
   },
   {
@@ -109,14 +109,14 @@
     "defaultMessage": "!!!Hide balance",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 292,
+      "line": 290,
       "column": 15,
-      "index": 10081
+      "index": 9996
     },
     "end": {
-      "line": 295,
+      "line": 293,
       "column": 3,
-      "index": 10194
+      "index": 10109
     }
   },
   {
@@ -124,14 +124,14 @@
     "defaultMessage": "!!!This function will be applied to all wallets in your app",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 296,
+      "line": 294,
       "column": 19,
-      "index": 10215
+      "index": 10130
     },
     "end": {
-      "line": 299,
+      "line": 297,
       "column": 3,
-      "index": 10376
+      "index": 10291
     }
   },
   {
@@ -139,14 +139,14 @@
     "defaultMessage": "!!!Sign in with your biometrics",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 300,
+      "line": 298,
       "column": 20,
-      "index": 10398
+      "index": 10313
     },
     "end": {
-      "line": 303,
+      "line": 301,
       "column": 3,
-      "index": 10532
+      "index": 10447
     }
   },
   {
@@ -154,14 +154,14 @@
     "defaultMessage": "!!!Changes to this option will be reflected after restarting the application",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 304,
+      "line": 302,
       "column": 24,
-      "index": 10558
+      "index": 10473
     },
     "end": {
-      "line": 307,
+      "line": 305,
       "column": 3,
-      "index": 10741
+      "index": 10656
     }
   },
   {
@@ -169,14 +169,14 @@
     "defaultMessage": "!!!Send crash report to Emurgo",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 308,
+      "line": 306,
       "column": 18,
-      "index": 10761
+      "index": 10676
     },
     "end": {
-      "line": 311,
+      "line": 309,
       "column": 3,
-      "index": 10892
+      "index": 10807
     }
   },
   {
@@ -184,14 +184,14 @@
     "defaultMessage": "!!!Changes to this option will be reflected after restarting the application",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 312,
+      "line": 310,
       "column": 22,
-      "index": 10916
+      "index": 10831
     },
     "end": {
-      "line": 315,
+      "line": 313,
       "column": 3,
-      "index": 11097
+      "index": 11012
     }
   },
   {
@@ -199,14 +199,14 @@
     "defaultMessage": "!!!Analytics",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 316,
+      "line": 314,
       "column": 13,
-      "index": 11112
+      "index": 11027
     },
     "end": {
-      "line": 319,
+      "line": 317,
       "column": 3,
-      "index": 11220
+      "index": 11135
     }
   },
   {
@@ -214,14 +214,14 @@
     "defaultMessage": "!!!Privacy Policy",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 320,
+      "line": 318,
       "column": 17,
-      "index": 11239
+      "index": 11154
     },
     "end": {
-      "line": 323,
+      "line": 321,
       "column": 3,
-      "index": 11356
+      "index": 11271
     }
   },
   {
@@ -229,14 +229,14 @@
     "defaultMessage": "!!!Enable screensharing",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 324,
+      "line": 322,
       "column": 17,
-      "index": 11375
+      "index": 11290
     },
     "end": {
-      "line": 327,
+      "line": 325,
       "column": 3,
-      "index": 11498
+      "index": 11413
     }
   },
   {
@@ -244,14 +244,14 @@
     "defaultMessage": "!!!Changes to this option will enable you to make screenshots as well share your screen via third party apps",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 328,
+      "line": 326,
       "column": 21,
-      "index": 11521
+      "index": 11436
     },
     "end": {
-      "line": 332,
+      "line": 330,
       "column": 3,
-      "index": 11739
+      "index": 11654
     }
   }
 ]

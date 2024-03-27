@@ -1,7 +1,6 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {RouteProp, useFocusEffect} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
-import {useLinks} from '@yoroi/links'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Keyboard, Platform} from 'react-native'
@@ -11,6 +10,8 @@ import {Icon, OfflineBanner} from './components'
 import {DashboardNavigator} from './Dashboard'
 import {DappExplorerNavigator} from './features/DappExplorer'
 import {ShowExchangeResultOrderScreen} from './features/Exchange/useCases/ShowExchangeResultOrderScreen/ShowExchangeResultOrderScreen'
+import {useLinksRequestAction} from './features/Links/common/useLinksRequestAction'
+import {useLinksShowActionResult} from './features/Links/common/useLinksShowActionResult'
 import {MenuNavigator} from './features/Menu'
 import {SettingsScreenNavigator} from './features/Settings'
 import {GovernanceNavigator} from './features/Staking/Governance'
@@ -177,14 +178,14 @@ const WalletTabNavigator = () => {
 
 const Stack = createStackNavigator<WalletStackRoutes>()
 export const WalletNavigator = () => {
-  const initialRouteName = useInitialRouteName()
+  const initialRoute = useLinksShowActionResult()
+  useLinksRequestAction()
 
-  // initialRoute doens't update the state of the navigator, only at first render
+  // initialRoute doesn't update the state of the navigator, only at first render
   // https://reactnavigation.org/docs/auth-flow/
-  if (initialRouteName === 'exchange-result') {
+  if (initialRoute === 'exchange-result') {
     return (
       <Stack.Navigator
-        initialRouteName={initialRouteName}
         screenOptions={{
           headerShown: false /* used only for transition */,
           detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
@@ -197,7 +198,6 @@ export const WalletNavigator = () => {
 
   return (
     <Stack.Navigator
-      initialRouteName={initialRouteName}
       screenOptions={{
         headerShown: false /* used only for transition */,
         detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
@@ -220,13 +220,6 @@ export const WalletNavigator = () => {
       <Stack.Screen name="dapp-explorer" component={DappExplorerNavigator} />
     </Stack.Navigator>
   )
-}
-
-const useInitialRouteName = () => {
-  const {action} = useLinks()
-  const routeName: keyof WalletStackRoutes =
-    action?.info.useCase === 'order/show-create-result' ? 'exchange-result' : 'wallet-selection'
-  return routeName
 }
 
 const messages = defineMessages({
