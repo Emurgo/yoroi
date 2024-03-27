@@ -22,16 +22,10 @@ describe('Create a wallet', () => {
   await expect(createWalletFlow.credentialsView()).toBeVisible()
   await createWalletFlow.walletNameInput().typeText(constants.wallet_Name)
   await createWalletFlow.spendingPasswordInput().tap()
-  await createWalletFlow
-   .spendingPasswordInput()
-   .typeText(`${constants.spending_Password}\n`)
-  await waitFor(createWalletFlow.repeatSpendingPasswordInput())
-   .toBeVisible()
-   .withTimeout(10000)
+  await createWalletFlow.spendingPasswordInput().typeText(`${constants.spending_Password}\n`)
+  await waitFor(createWalletFlow.repeatSpendingPasswordInput()).toBeVisible().withTimeout(10000)
   await createWalletFlow.repeatSpendingPasswordInput().tap()
-  await createWalletFlow
-   .repeatSpendingPasswordInput()
-   .typeText(constants.spending_Password)
+  await createWalletFlow.repeatSpendingPasswordInput().typeText(constants.spending_Password)
   await utils.takeScreenshot('Set the spending password')
 
   await createWalletFlow.credentialsFormContinueButton().tap()
@@ -52,9 +46,7 @@ describe('Create a wallet', () => {
  it('should be able to enter and verify the stored mnemonic', async () => {
   await utils.repeatSeedPhrase(seedPhraseText)
   await createWalletFlow.mnemonicCheckScreenConfirmButton().tap()
-  await expect(
-   myWalletsScreen.walletByNameButton(constants.wallet_Name),
-  ).toBeVisible()
+  await expect(myWalletsScreen.walletByNameButton(constants.wallet_Name)).toBeVisible()
   await utils.takeScreenshot(`Wallet "${constants.wallet_Name} is added.`)
  })
 })

@@ -5,7 +5,6 @@ import uuid from 'uuid'
 import {getCardanoWalletFactory} from '../yoroi-wallets/cardano/getWallet'
 import {isYoroiWallet, YoroiWallet} from '../yoroi-wallets/cardano/types'
 import {HWDeviceInfo} from '../yoroi-wallets/hw'
-import {Logger} from '../yoroi-wallets/logging'
 import {makeWalletEncryptedStorage} from '../yoroi-wallets/storage'
 import {Keychain} from '../yoroi-wallets/storage/Keychain'
 import {rootStorage} from '../yoroi-wallets/storage/rootStorage'
@@ -122,8 +121,6 @@ export class WalletManager {
     }
 
     await this.walletsRootStorage.setItem(id, walletMeta)
-
-    Logger.debug('WalletManager::saveWallet::wallet', wallet)
 
     if (isYoroiWallet(wallet)) {
       return wallet

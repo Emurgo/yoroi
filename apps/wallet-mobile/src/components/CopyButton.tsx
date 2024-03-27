@@ -1,4 +1,4 @@
-import {ThemeProvider, useTheme} from '@yoroi/theme'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleProp, TouchableOpacity, ViewStyle} from 'react-native'
 
@@ -16,18 +16,16 @@ export const CopyButton = ({value, onCopy, children, style}: CopyButtonProps) =>
   const [isCopying, copy] = useCopy()
 
   return (
-    <ThemeProvider>
-      <AnimatedCopyButton
-        style={style}
-        isCopying={isCopying}
-        onCopy={() => {
-          copy(value)
-          onCopy?.()
-        }}
-      >
-        {children}
-      </AnimatedCopyButton>
-    </ThemeProvider>
+    <AnimatedCopyButton
+      style={style}
+      isCopying={isCopying}
+      onCopy={() => {
+        copy(value)
+        onCopy?.()
+      }}
+    >
+      {children}
+    </AnimatedCopyButton>
   )
 }
 

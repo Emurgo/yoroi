@@ -66,6 +66,8 @@ export const TransferProvider = ({
       dispatch({type: TransferActionType.AmountChanged, quantity}),
     amountRemoved: (tokenId: string) =>
       dispatch({type: TransferActionType.AmountRemoved, tokenId}),
+    redirectToChanged: (redirectTo) =>
+      dispatch({type: TransferActionType.RedirectToChanged, redirectTo}),
   }).current
 
   const context = React.useMemo(
