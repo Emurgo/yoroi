@@ -20,7 +20,7 @@ export const useLinksRequestAction = () => {
   const [wallet] = useSelectedWalletContext()
   const navigateTo = useNavigateTo()
 
-  const {memoChanged, receiverResolveChanged, amountChanged, reset, redirectToChanged} = useTransfer()
+  const {memoChanged, receiverResolveChanged, amountChanged, reset, linkActionChanged} = useTransfer()
   const startTransferWithLink = React.useCallback(
     (action: Links.YoroiAction, decimals: number) => {
       Logger.debug('startTransferWithLink', action, decimals)
@@ -31,7 +31,7 @@ export const useLinksRequestAction = () => {
           const parsedCardanoLink = linksCardanoModuleMaker().parse(link)
           if (parsedCardanoLink) {
             const redirectTo = action.info.params.redirectTo
-            if (redirectTo != null) redirectToChanged(decodeURIComponent(redirectTo))
+            if (redirectTo != null) linkActionChanged(action)
 
             const {address: receiver, amount, memo} = parsedCardanoLink.params
             const ptAmount = Quantities.integer(asQuantity(amount ?? 0), decimals)
@@ -54,10 +54,10 @@ export const useLinksRequestAction = () => {
       actionFinished,
       amountChanged,
       closeModal,
+      linkActionChanged,
       memoChanged,
       navigateTo,
       receiverResolveChanged,
-      redirectToChanged,
       reset,
     ],
   )
