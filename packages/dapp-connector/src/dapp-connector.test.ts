@@ -3,7 +3,7 @@ import {storageMock} from './storage.mocks'
 import {mockedData} from './mocks'
 
 const getDappConnector = () => {
-  const storage = connectionStorageMaker(storageMock)
+  const storage = connectionStorageMaker({storage: storageMock})
   return dappConnectorMaker(storage)
 }
 
@@ -27,6 +27,12 @@ describe('DappConnector', () => {
   })
 
   describe('connection management', () => {
+    it('should init with default storage', async () => {
+      const storage = connectionStorageMaker()
+      const connector = dappConnectorMaker(storage)
+      expect(connector).toBeDefined()
+    })
+
     it('should return 0 connections if there are no connections', async () => {
       const dappConnector = getDappConnector()
       expect(await dappConnector.listAllConnections()).toHaveLength(0)
@@ -61,6 +67,14 @@ describe('DappConnector', () => {
         {walletId, dappOrigin: 'fake-url-2'},
         {walletId: 'new-wallet-id', dappOrigin: 'fake-url-1'},
       ])
+    })
+
+    it('should throw an error if connection already exists', async () => {
+      const dappConnector = getDappConnector()
+      await dappConnector.addConnection({walletId, dappOrigin: 'fake-url'})
+      await expect(dappConnector.addConnection({walletId, dappOrigin: 'fake-url'})).rejects.toThrow(
+        `Connection already exists: {"walletId":"${walletId}","dappOrigin":"fake-url"}`,
+      )
     })
   })
 
