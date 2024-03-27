@@ -1,8 +1,8 @@
+import * as Sentry from '@sentry/react-native'
 import {isString, useAsyncStorage} from '@yoroi/common'
 import {App} from '@yoroi/types'
 import React, {useEffect, useRef} from 'react'
 import {Platform, UIManager} from 'react-native'
-import * as Sentry from 'sentry-expo'
 import uuid from 'uuid'
 
 import {AppNavigator} from './AppNavigator'
@@ -71,7 +71,6 @@ const useInitSentry = (options: {enabled: boolean}) => {
     Sentry.init({
       dsn: CONFIG.SENTRY_DSN,
       patchGlobalPromise: true,
-      enableInExpoDevelopment: true,
       tracesSampleRate: isProduction() ? 0.25 : 1,
       beforeSend(event) {
         // https://github.com/getsentry/sentry-javascript/issues/2039
