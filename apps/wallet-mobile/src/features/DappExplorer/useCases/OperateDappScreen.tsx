@@ -1,4 +1,5 @@
 import {useFocusEffect} from '@react-navigation/native'
+import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Platform, Share, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {WebView} from 'react-native-webview'
@@ -12,7 +13,6 @@ import {
   NavigationRefreshIcon,
   NavigationShareIcon,
 } from '../common/icons'
-import {useTheme} from '@yoroi/theme'
 
 const DAPP_URL = 'https://app.dexhunter.io/'
 
