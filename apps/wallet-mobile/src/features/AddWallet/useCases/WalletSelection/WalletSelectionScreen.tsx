@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {NetworkError} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
@@ -7,11 +7,11 @@ import {FlatList, InteractionManager, Linking, RefreshControl, StyleSheet, Text,
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../../components/Button'
-import {useStatusBar} from '../../../../components/hooks/useStatusBar'
 import {Space} from '../../../../components/Space/Space'
 import {showErrorDialog} from '../../../../dialogs'
 import {errorMessages} from '../../../../i18n/global-messages'
 import {isNightly} from '../../../../legacy/config'
+import {useMetrics} from '../../../../metrics/metricsManager'
 import {useWalletNavigation} from '../../../../navigation'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../../../SelectedWallet'
 import {WalletMeta} from '../../../../wallet-manager/types'
@@ -22,11 +22,13 @@ import * as HASKELL_SHELLEY_TESTNET from '../../../../yoroi-wallets/cardano/cons
 import {InvalidState} from '../../../../yoroi-wallets/cardano/errors'
 import {isJormungandr} from '../../../../yoroi-wallets/cardano/networks'
 import {useOpenWallet, useWalletMetas} from '../../../../yoroi-wallets/hooks'
+import {useLinksRequestWallet} from '../../../Links/common/useLinksRequestWallet'
 import {useStrings} from '../../common/useStrings'
 import {SupportIllustration} from '../../illustrations/SupportIllustration'
 import {WalletListItem} from './WalletListItem'
 
 export const WalletSelectionScreen = () => {
+  useLinksRequestWallet()
   const strings = useStrings()
   const {styles} = useStyles()
   const walletManager = useWalletManager()
@@ -35,6 +37,13 @@ export const WalletSelectionScreen = () => {
     select: (walletMetas) => walletMetas.sort(byName),
   })
   const intl = useIntl()
+  const {track} = useMetrics()
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.allWalletsPageViewed()
+    }, [track]),
+  )
 
   const selectWalletMeta = useSetSelectedWalletMeta()
   const selectWallet = useSetSelectedWallet()
@@ -43,14 +52,7 @@ export const WalletSelectionScreen = () => {
     onSuccess: ([wallet, walletMeta]) => {
       selectWalletMeta(walletMeta)
       selectWallet(wallet)
-
-      // fixes modal issue
-      // https://github.com/facebook/react-native/issues/32329
-      // https://github.com/facebook/react-native/issues/33733
-      // https://github.com/facebook/react-native/issues/29319
-      InteractionManager.runAfterInteractions(() => {
-        navigateToTxHistory()
-      })
+      navigateToTxHistory()
     },
     onError: (error) => {
       InteractionManager.runAfterInteractions(() => {
@@ -62,8 +64,6 @@ export const WalletSelectionScreen = () => {
       })
     },
   })
-
-  useStatusBar()
 
   const onSelect = async (walletMeta: WalletMeta) => {
     if (walletMeta.isShelley || isJormungandr(walletMeta.networkId)) {

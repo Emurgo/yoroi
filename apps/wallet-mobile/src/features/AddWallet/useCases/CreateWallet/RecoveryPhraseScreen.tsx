@@ -16,7 +16,6 @@ import LinearGradient from 'react-native-linear-gradient'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, useModal} from '../../../../components'
-import {useStatusBar} from '../../../../components/hooks/useStatusBar'
 import {Space} from '../../../../components/Space/Space'
 import {WalletInitRouteNavigation} from '../../../../navigation'
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
@@ -40,7 +39,6 @@ const useSizeModal = () => {
 }
 
 export const RecoveryPhraseScreen = () => {
-  useStatusBar()
   const {styles, colors} = useStyles()
   const {HEIGHT_MODAL} = useSizeModal()
   const {openModal, closeModal} = useModal()

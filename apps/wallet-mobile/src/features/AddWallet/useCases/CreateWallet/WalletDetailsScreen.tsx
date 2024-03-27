@@ -15,7 +15,6 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Icon, TextInput, useModal} from '../../../../components'
-import {useStatusBar} from '../../../../components/hooks/useStatusBar'
 import {Space} from '../../../../components/Space/Space'
 import {debugWalletInfo, features} from '../../../../features'
 import {isEmptyString} from '../../../../utils'
@@ -50,7 +49,6 @@ const useSizeModal = () => {
 }
 
 export const WalletDetailsScreen = () => {
-  useStatusBar()
   const bold = useBold()
   const {styles} = useStyles()
   const {HEIGHT_MODAL_NAME_PASSWORD, HEIGHT_MODAL_CHECKSUM} = useSizeModal()

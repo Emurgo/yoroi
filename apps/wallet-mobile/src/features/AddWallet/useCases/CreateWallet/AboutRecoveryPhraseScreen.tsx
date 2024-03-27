@@ -5,7 +5,6 @@ import {Linking, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../../components'
-import {useStatusBar} from '../../../../components/hooks/useStatusBar'
 import {Space} from '../../../../components/Space/Space'
 import {WalletInitRouteNavigation} from '../../../../navigation'
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
@@ -15,7 +14,6 @@ import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
 import {useStrings} from '../../common/useStrings'
 
 export const AboutRecoveryPhraseScreen = () => {
-  useStatusBar()
   const bold = useBold()
   const {styles} = useStyles()
   const strings = useStrings()

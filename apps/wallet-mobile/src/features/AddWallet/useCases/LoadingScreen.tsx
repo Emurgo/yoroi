@@ -2,7 +2,6 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {useStatusBar} from '../../../components/hooks/useStatusBar'
 import {Space} from '../../../components/Space/Space'
 import {YoroiLogo} from '../illustrations/YoroiLogo'
 
@@ -11,7 +10,6 @@ type LoadingScreenProps = {
 }
 
 export const LoadingScreen = ({title}: LoadingScreenProps) => {
-  useStatusBar()
   const {styles} = useStyles()
 
   return (

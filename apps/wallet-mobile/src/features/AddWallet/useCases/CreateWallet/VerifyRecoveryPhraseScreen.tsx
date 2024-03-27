@@ -8,7 +8,6 @@ import Animated, {FadeIn, FadeOut, Layout} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../../components'
-import {useStatusBar} from '../../../../components/hooks/useStatusBar'
 import {Space} from '../../../../components/Space/Space'
 import {WalletInitRouteNavigation} from '../../../../navigation'
 import {mockAddWallet} from '../../common/mocks'
@@ -18,7 +17,6 @@ import {Alert as AlertIllustration} from '../../illustrations/Alert'
 import {Check2 as Check2Illustration} from '../../illustrations/Check2'
 
 export const VerifyRecoveryPhraseScreen = () => {
-  useStatusBar()
   const {styles} = useStyles()
   const bold = useBold()
   const navigation = useNavigation<WalletInitRouteNavigation>()

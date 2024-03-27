@@ -5,13 +5,11 @@ import {StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../components'
-import {useStatusBar} from '../../../components/hooks/useStatusBar'
 import {Space} from '../../../components/Space/Space'
 import {useStrings} from '../common/useStrings'
 import {Biometric as BiometricIlustration} from '../illustrations/Biometric'
 
 export const BiometricScreen = () => {
-  useStatusBar()
   const {styles} = useStyles()
   const strings = useStrings()
 

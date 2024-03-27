@@ -4,7 +4,6 @@ import * as React from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useStatusBar} from '../../../components/hooks/useStatusBar'
 import {Space} from '../../../components/Space/Space'
 import {WalletInitRouteNavigation} from '../../../navigation'
 import {ButtonCard} from '../common/ButtonCard/ButtonCard'
@@ -12,7 +11,6 @@ import {LogoBanner} from '../common/LogoBanner/LogoBanner'
 import {useStrings} from '../common/useStrings'
 
 export const NewWalletNighltyScreen = () => {
-  useStatusBar()
   const {styles} = useStyles()
   const strings = useStrings()
 
