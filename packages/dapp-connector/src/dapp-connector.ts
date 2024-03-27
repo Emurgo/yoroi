@@ -1,5 +1,4 @@
 import {handleEvent} from './resolver'
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {connectWallet} from './connector'
 import {DappConnection, Storage} from './adapters/async-storage'
 
