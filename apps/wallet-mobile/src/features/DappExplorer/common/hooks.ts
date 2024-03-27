@@ -10,7 +10,7 @@ import {Logger} from '../../../yoroi-wallets/logging'
 import {walletConfig} from './wallet-config'
 
 const createDappConnector = (appStorage: App.Storage) => {
-  const storage = connectionStorageMaker(appStorage.join('dapp-connections/'))
+  const storage = connectionStorageMaker({storage: appStorage.join('dapp-connections/')})
   return dappConnectorMaker(storage)
 }
 

@@ -1,6 +1,5 @@
 import React from 'react'
 
-import {useStatusBar} from '../../components/hooks/useStatusBar'
 import {SafeArea} from '../../components/SafeArea'
 import {defaultStackNavigationOptions} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
@@ -14,7 +13,6 @@ const Stack = NavigationStack
 export const DappExplorerNavigator = () => {
   const selectedWallet = useSelectedWallet()
   const walletName = useWalletName(selectedWallet)
-  useStatusBar()
 
   return (
     <SafeArea>
