@@ -1,5 +1,5 @@
 import {isNameServer, isResolvableDomain} from '@yoroi/resolver'
-import {Balance, Chain, Resolver, Transfer} from '@yoroi/types'
+import {Balance, Chain, Links, Resolver, Transfer} from '@yoroi/types'
 import {castDraft, freeze, produce} from 'immer'
 
 export const combinedReducers = (
@@ -29,11 +29,15 @@ const transferReducer = (state: TransferState, action: TransferAction) => {
       case TransferActionType.TokenSelectedChanged:
         draft.selectedTokenId = action.tokenId
         break
+      case TransferActionType.LinkActionChanged:
+        draft.linkAction = castDraft(action.linkAction)
+        break
       case TransferActionType.Reset:
         draft.selectedTokenId = defaultTransferState.selectedTokenId
         draft.memo = defaultTransferState.memo
         draft.unsignedTx = castDraft(defaultTransferState.unsignedTx)
         draft.selectedTargetIndex = defaultTransferState.selectedTargetIndex
+        draft.linkAction = castDraft(defaultTransferState.linkAction)
         draft.targets = defaultTransferState.targets
         break
     }
@@ -140,6 +144,7 @@ export const defaultTransferState: TransferState = freeze(
     selectedTokenId: '',
     unsignedTx: undefined,
     memo: '',
+    linkAction: undefined,
     targets: [
       {
         receiver: {
@@ -171,6 +176,7 @@ const defaultStateActions: TransferActions = {
   tokenSelectedChanged: missingInit,
   reset: missingInit,
   memoChanged: missingInit,
+  linkActionChanged: missingInit,
 }
 
 export const defaultTransferActions = {
@@ -184,6 +190,7 @@ export type TransferState = Readonly<{
   unsignedTx: Chain.Cardano.UnsignedTx | undefined
   memo: string
   targets: Transfer.Targets
+  linkAction: Links.YoroiAction | undefined
 }>
 
 export type TargetActions = Readonly<{
@@ -205,6 +212,7 @@ export type TransferActions = Readonly<{
   tokenSelectedChanged: (tokenId: string) => void
   reset: () => void
   memoChanged: (memo: string) => void
+  linkActionChanged: (linkAction: Links.YoroiAction) => void
 }>
 
 export type TargetAction = Readonly<
@@ -254,6 +262,10 @@ export type TransferAction = Readonly<
       type: TransferActionType.UnsignedTxChanged
       unsignedTx: Chain.Cardano.UnsignedTx | undefined
     }
+  | {
+      type: TransferActionType.LinkActionChanged
+      linkAction: Links.YoroiAction
+    }
 >
 
 export enum TransferActionType {
@@ -267,6 +279,7 @@ export enum TransferActionType {
   Reset = 'reset',
   MemoChanged = 'memoChanged',
   UnsignedTxChanged = 'unsignedTxChanged',
+  LinkActionChanged = 'linkActionChanged',
 }
 
 /* istanbul ignore next */

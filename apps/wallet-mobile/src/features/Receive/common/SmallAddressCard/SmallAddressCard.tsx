@@ -15,9 +15,10 @@ export type SmallAddressCardProps = {
   loading?: boolean
   date?: string
   onPress?: () => void
+  testId?: string
 }
 
-export const SmallAddressCard = ({address, isUsed, date, onPress, loading}: SmallAddressCardProps) => {
+export const SmallAddressCard = ({address, isUsed, date, onPress, loading, testId}: SmallAddressCardProps) => {
   const strings = useStrings()
   const [isCopying, copy] = useCopy()
   const {styles, colors} = useStyles()
@@ -40,6 +41,7 @@ export const SmallAddressCard = ({address, isUsed, date, onPress, loading}: Smal
             activeOpacity={0.6}
             onLongPress={() => copy(address)}
             onPress={onPress}
+            testID={testId}
           >
             <LinearGradient
               style={[StyleSheet.absoluteFill, {opacity: 1}]}
@@ -49,6 +51,8 @@ export const SmallAddressCard = ({address, isUsed, date, onPress, loading}: Smal
             />
 
             <Text style={styles.textAddress}>{address}</Text>
+
+            <Spacer height={12} />
 
             <View style={styles.footer}>
               <View style={isUsed ? styles.statusUsed : styles.statusUnused}>
@@ -100,8 +104,8 @@ const useStyles = () => {
     statusUnused: {
       borderRadius: 20,
       backgroundColor: color.secondary[600],
-      paddingVertical: 6,
-      paddingHorizontal: 10,
+      paddingVertical: 4,
+      paddingHorizontal: 8,
       alignItems: 'center',
       justifyContent: 'center',
     },
@@ -113,8 +117,8 @@ const useStyles = () => {
     statusUsed: {
       borderRadius: 20,
       backgroundColor: color.gray.min,
-      paddingVertical: 6,
-      paddingHorizontal: 10,
+      paddingVertical: 4,
+      paddingHorizontal: 8,
       alignItems: 'center',
       justifyContent: 'center',
     },

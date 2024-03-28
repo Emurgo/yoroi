@@ -5,15 +5,12 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer, YoroiLogo} from '../../../components'
 import {BlueCheckbox} from '../../../components/BlueCheckbox'
-import {useStatusBar} from '../../../components/hooks/useStatusBar'
 import {useNavigateTo, useStrings} from '../common'
 
 export const TermsOfServiceChangedScreen = () => {
   const [accepted, setAccepted] = React.useState(false)
   const styles = useStyles()
   const navigateTo = useNavigateTo()
-
-  useStatusBar()
 
   const onPressContinue = () => {
     navigateTo.analyticsChanged()

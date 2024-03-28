@@ -2,6 +2,7 @@ import {init} from '@emurgo/cross-csl-mobile'
 import {useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {useAsyncStorage} from '@yoroi/common'
+import {exchangeApiMaker, exchangeManagerMaker, ExchangeProvider} from '@yoroi/exchange'
 import {resolverApiMaker, resolverManagerMaker, ResolverProvider, resolverStorageMaker} from '@yoroi/resolver'
 import {
   milkTokenId,
@@ -12,7 +13,6 @@ import {
   swapStorageMaker,
 } from '@yoroi/swap'
 import {Theme, useTheme} from '@yoroi/theme'
-import {TransferProvider} from '@yoroi/transfer'
 import {Resolver, Swap} from '@yoroi/types'
 import _ from 'lodash'
 import React from 'react'
@@ -23,9 +23,9 @@ import {Boundary, Icon, Spacer} from '../components'
 import {claimApiMaker} from '../features/Claim/module/api'
 import {ClaimProvider} from '../features/Claim/module/ClaimProvider'
 import {ShowSuccessScreen} from '../features/Claim/useCases/ShowSuccessScreen'
-import {ExchangeProvider} from '../features/Exchange/common/ExchangeProvider'
-import {CreateExchangeOrder} from '../features/Exchange/useCases/CreateExchangeOrder/CreateExchangeOrder'
-import {ShowExchangeResultOrder} from '../features/Exchange/useCases/ShowExchangeResultOrder/ShowExchangeResultOrder'
+import {CreateExchangeOrderScreen} from '../features/Exchange/useCases/CreateExchangeOrderScreen/CreateExchangeOrderScreen'
+import {SelectProviderFromListScreen} from '../features/Exchange/useCases/SelectProviderFromListScreen/SelectProviderFromListScreen'
+import {ShowExchangeResultOrderScreen} from '../features/Exchange/useCases/ShowExchangeResultOrderScreen/ShowExchangeResultOrderScreen'
 import {ReceiveProvider} from '../features/Receive/common/ReceiveProvider'
 import {DescribeSelectedAddressScreen} from '../features/Receive/useCases/DescribeSelectedAddressScreen'
 import {ListMultipleAddressesScreen} from '../features/Receive/useCases/ListMultipleAddressesScreen'
@@ -124,264 +124,309 @@ export const TxHistoryNavigator = () => {
   // navigator components
   const headerRightHistory = React.useCallback(() => <HeaderRightHistory />, [])
 
+  // exchange
+  const exchangeManager = React.useMemo(() => {
+    const api = exchangeApiMaker({
+      isProduction: wallet.networkId === 1,
+      partner: 'yoroi',
+    })
+
+    const manager = exchangeManagerMaker({api})
+    return manager
+  }, [wallet.networkId])
+
   return (
     <ReceiveProvider key={wallet.id}>
-      <TransferProvider key={wallet.id}>
-        <SwapProvider key={wallet.id} swapManager={swapManager}>
-          <SwapFormProvider>
-            <ResolverProvider resolverManager={resolverManager}>
-              <ClaimProvider key={wallet.id} claimApi={claimApi}>
-                <ExchangeProvider key={wallet.id}>
-                  <Stack.Navigator
-                    screenListeners={{}}
-                    screenOptions={{
-                      ...defaultStackNavigationOptions(theme),
-                      detachPreviousScreen:
-                        false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
-                      gestureEnabled: true,
+      <SwapProvider key={wallet.id} swapManager={swapManager}>
+        <SwapFormProvider>
+          <ResolverProvider resolverManager={resolverManager}>
+            <ClaimProvider key={wallet.id} claimApi={claimApi}>
+              <ExchangeProvider
+                key={wallet.id}
+                manager={exchangeManager}
+                initialState={{
+                  providerId: 'banxa',
+                  providerSuggestedByOrderType: exchangeManager.provider.suggested.byOrderType(),
+                }}
+              >
+                <Stack.Navigator
+                  screenListeners={{}}
+                  screenOptions={{
+                    ...defaultStackNavigationOptions(theme),
+                    detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+                    gestureEnabled: true,
+                  }}
+                >
+                  <Stack.Screen
+                    name="history-list"
+                    component={TxHistory}
+                    options={{
+                      title: walletName ?? '',
+                      headerRight: headerRightHistory,
+                      headerStyle: {
+                        elevation: 0,
+                        shadowOpacity: 0,
+                        backgroundColor: theme.color.primary['100'],
+                      },
+                    }}
+                  />
+
+                  <Stack.Screen name="history-details" options={{title: ''}}>
+                    {() => (
+                      <Boundary loading={{size: 'full'}}>
+                        <TxDetails />
+                      </Boundary>
+                    )}
+                  </Stack.Screen>
+
+                  <Stack.Screen
+                    name="receive-single"
+                    component={DescribeSelectedAddressScreen}
+                    options={{
+                      title: strings.describeSelectedAddressTitle,
+                      gestureEnabled: false,
+                    }}
+                  />
+
+                  <Stack.Screen
+                    name="receive-multiple"
+                    component={ListMultipleAddressesScreen}
+                    options={{
+                      title: strings.receiveTitle,
+                    }}
+                  />
+
+                  <Stack.Screen
+                    name="receive-specific-amount"
+                    component={RequestSpecificAmountScreen}
+                    options={{
+                      title: strings.specificAmount,
+                    }}
+                  />
+
+                  <Stack.Screen
+                    name="exchange-create-order"
+                    options={{
+                      title: strings.exchangeCreateOrderTitle,
                     }}
                   >
-                    <Stack.Screen
-                      name="history-list"
-                      component={TxHistory}
-                      options={{
-                        title: walletName ?? '',
-                        headerRight: headerRightHistory,
-                        headerStyle: {
-                          elevation: 0,
-                          shadowOpacity: 0,
-                          backgroundColor: theme.color.primary['100'],
-                        },
-                      }}
-                    />
+                    {() => (
+                      <Boundary>
+                        <CreateExchangeOrderScreen />
+                      </Boundary>
+                    )}
+                  </Stack.Screen>
 
-                    <Stack.Screen name="history-details" options={{title: ''}}>
-                      {() => (
-                        <Boundary loading={{size: 'full'}}>
-                          <TxDetails />
-                        </Boundary>
-                      )}
-                    </Stack.Screen>
+                  <Stack.Screen
+                    name="exchange-select-buy-provider"
+                    options={{
+                      title: strings.exchangeSelectBuyProvider,
+                    }}
+                  >
+                    {() => (
+                      <Boundary>
+                        <SelectProviderFromListScreen />
+                      </Boundary>
+                    )}
+                  </Stack.Screen>
 
-                    <Stack.Screen
-                      name="receive-single"
-                      component={DescribeSelectedAddressScreen}
-                      options={{
-                        title: strings.receiveTitle,
-                        gestureEnabled: false,
-                      }}
-                    />
+                  <Stack.Screen
+                    name="exchange-select-sell-provider"
+                    options={{
+                      title: strings.exchangeSelectSellProvider,
+                    }}
+                  >
+                    {() => (
+                      <Boundary>
+                        <SelectProviderFromListScreen />
+                      </Boundary>
+                    )}
+                  </Stack.Screen>
 
-                    <Stack.Screen
-                      name="receive-multiple"
-                      component={ListMultipleAddressesScreen}
-                      options={{
-                        title: strings.receiveTitle,
-                      }}
-                    />
+                  <Stack.Screen
+                    options={{
+                      headerShown: false,
+                    }}
+                    name="exchange-result"
+                    component={ShowExchangeResultOrderScreen}
+                  />
 
-                    <Stack.Screen
-                      name="receive-specific-amount"
-                      component={RequestSpecificAmountScreen}
-                      options={{
-                        title: strings.specificAmount,
-                      }}
-                    />
+                  <Stack.Screen
+                    name="swap-start-swap"
+                    component={SwapTabNavigator}
+                    options={{
+                      ...sendOptions(theme),
+                      title: strings.swapTitle,
+                    }}
+                  />
 
-                    <Stack.Screen
-                      name="exchange-create-order"
-                      component={CreateExchangeOrder}
-                      options={{
-                        title: strings.rampOnOffTitle,
-                      }}
-                    />
+                  <Stack.Screen
+                    name="swap-confirm-tx"
+                    component={ConfirmTxSwapScreen}
+                    options={{
+                      title: strings.confirmationTransaction,
+                    }}
+                  />
 
-                    <Stack.Screen
-                      options={{
-                        headerShown: false,
-                      }}
-                      name="exchange-result"
-                    >
-                      {() => <ShowExchangeResultOrder variant="noInfo" />}
-                    </Stack.Screen>
+                  <Stack.Screen
+                    name="swap-select-sell-token"
+                    component={SelectSellTokenFromListScreen}
+                    options={{
+                      ...sendOptions(theme),
+                      title: strings.swapFromTitle,
+                    }}
+                  />
 
-                    <Stack.Screen
-                      name="swap-start-swap"
-                      component={SwapTabNavigator}
-                      options={{
-                        ...sendOptions(theme),
-                        title: strings.swapTitle,
-                      }}
-                    />
+                  <Stack.Screen
+                    name="swap-select-buy-token"
+                    component={SelectBuyTokenFromListScreen}
+                    options={{
+                      ...sendOptions(theme),
+                      title: strings.swapToTitle,
+                    }}
+                  />
 
-                    <Stack.Screen
-                      name="swap-confirm-tx"
-                      component={ConfirmTxSwapScreen}
-                      options={{
-                        title: strings.confirmationTransaction,
-                      }}
-                    />
+                  <Stack.Screen
+                    name="swap-edit-slippage"
+                    component={EditSlippageScreen}
+                    options={{
+                      title: strings.slippageTolerance,
+                    }}
+                  />
 
-                    <Stack.Screen
-                      name="swap-select-sell-token"
-                      component={SelectSellTokenFromListScreen}
-                      options={{
-                        ...sendOptions(theme),
-                        title: strings.swapFromTitle,
-                      }}
-                    />
+                  <Stack.Screen
+                    name="swap-select-pool"
+                    component={SelectPoolFromListScreen}
+                    options={{
+                      title: strings.selectPool,
+                    }}
+                  />
 
-                    <Stack.Screen
-                      name="swap-select-buy-token"
-                      component={SelectBuyTokenFromListScreen}
-                      options={{
-                        ...sendOptions(theme),
-                        title: strings.swapToTitle,
-                      }}
-                    />
+                  <Stack.Screen
+                    name="swap-submitted-tx"
+                    component={SubmittedTxSwapScreen}
+                    options={{headerShown: false, gestureEnabled: false}}
+                  />
 
-                    <Stack.Screen
-                      name="swap-edit-slippage"
-                      component={EditSlippageScreen}
-                      options={{
-                        title: strings.slippageTolerance,
-                      }}
-                    />
+                  <Stack.Screen
+                    name="swap-failed-tx"
+                    component={FailedTxSwapScreen}
+                    options={{headerShown: false, gestureEnabled: false}}
+                  />
 
-                    <Stack.Screen
-                      name="swap-select-pool"
-                      component={SelectPoolFromListScreen}
-                      options={{
-                        title: strings.selectPool,
-                      }}
-                    />
+                  <Stack.Screen
+                    name="send-start-tx"
+                    options={{
+                      title: strings.sendTitle,
+                      ...sendOptions(theme),
+                    }}
+                  >
+                    {() => (
+                      <Boundary>
+                        <StartMultiTokenTxScreen />
+                      </Boundary>
+                    )}
+                  </Stack.Screen>
 
-                    <Stack.Screen
-                      name="swap-submitted-tx"
-                      component={SubmittedTxSwapScreen}
-                      options={{headerShown: false, gestureEnabled: false}}
-                    />
+                  <Stack.Screen
+                    name="send-select-token-from-list"
+                    options={{
+                      title: strings.selectAssetTitle,
+                      ...sendOptions(theme),
+                    }}
+                  >
+                    {() => (
+                      <Boundary>
+                        <SelectTokenFromListScreen />
+                      </Boundary>
+                    )}
+                  </Stack.Screen>
 
-                    <Stack.Screen
-                      name="swap-failed-tx"
-                      component={FailedTxSwapScreen}
-                      options={{headerShown: false, gestureEnabled: false}}
-                    />
+                  <Stack.Screen //
+                    name="send-list-amounts-to-send"
+                    options={{
+                      title: strings.listAmountsToSendTitle,
+                      ...sendOptions(theme),
+                    }}
+                  >
+                    {() => (
+                      <Boundary>
+                        <ListAmountsToSendScreen />
+                      </Boundary>
+                    )}
+                  </Stack.Screen>
 
-                    <Stack.Screen
-                      name="send-start-tx"
-                      options={{
-                        title: strings.sendTitle,
-                        ...sendOptions(theme),
-                      }}
-                    >
-                      {() => (
-                        <Boundary>
-                          <StartMultiTokenTxScreen />
-                        </Boundary>
-                      )}
-                    </Stack.Screen>
+                  <Stack.Screen //
+                    name="send-edit-amount"
+                    options={{
+                      title: strings.editAmountTitle,
+                      ...sendOptions(theme),
+                    }}
+                  >
+                    {() => (
+                      <Boundary>
+                        <EditAmountScreen />
+                      </Boundary>
+                    )}
+                  </Stack.Screen>
 
-                    <Stack.Screen
-                      name="send-select-token-from-list"
-                      options={{
-                        title: strings.selectAssetTitle,
-                        ...sendOptions(theme),
-                      }}
-                    >
-                      {() => (
-                        <Boundary>
-                          <SelectTokenFromListScreen />
-                        </Boundary>
-                      )}
-                    </Stack.Screen>
+                  <Stack.Screen //
+                    name="send-confirm-tx"
+                    component={ConfirmTxScreen}
+                    options={{
+                      title: strings.confirmTitle,
+                      ...sendOptions(theme),
+                    }}
+                  />
 
-                    <Stack.Screen //
-                      name="send-list-amounts-to-send"
-                      options={{
-                        title: strings.listAmountsToSendTitle,
-                        ...sendOptions(theme),
-                      }}
-                    >
-                      {() => (
-                        <Boundary>
-                          <ListAmountsToSendScreen />
-                        </Boundary>
-                      )}
-                    </Stack.Screen>
+                  <Stack.Screen
+                    name="send-submitted-tx"
+                    component={SubmittedTxScreen}
+                    options={{headerShown: false, gestureEnabled: false}}
+                  />
 
-                    <Stack.Screen //
-                      name="send-edit-amount"
-                      options={{
-                        title: strings.editAmountTitle,
-                        ...sendOptions(theme),
-                      }}
-                    >
-                      {() => (
-                        <Boundary>
-                          <EditAmountScreen />
-                        </Boundary>
-                      )}
-                    </Stack.Screen>
+                  <Stack.Screen
+                    name="send-failed-tx"
+                    component={FailedTxScreen}
+                    options={{headerShown: false, gestureEnabled: false}}
+                  />
 
-                    <Stack.Screen //
-                      name="send-confirm-tx"
-                      component={ConfirmTxScreen}
-                      options={{
-                        title: strings.confirmTitle,
-                        ...sendOptions(theme),
-                      }}
-                    />
+                  <Stack.Screen //
+                    name="scan-start"
+                    component={ScanCodeScreen}
+                    options={{
+                      ...sendOptions(theme),
+                      headerTransparent: true,
+                      title: strings.scanTitle,
+                      headerTintColor: COLORS.WHITE,
+                      headerLeft: (props) => <BackButton color={COLORS.WHITE} {...props} />,
+                    }}
+                  />
 
-                    <Stack.Screen
-                      name="send-submitted-tx"
-                      component={SubmittedTxScreen}
-                      options={{headerShown: false, gestureEnabled: false}}
-                    />
+                  <Stack.Screen //
+                    name="scan-show-camera-permission-denied"
+                    component={ShowCameraPermissionDeniedScreen}
+                    options={{
+                      headerShown: false,
+                      gestureEnabled: false,
+                    }}
+                  />
 
-                    <Stack.Screen
-                      name="send-failed-tx"
-                      component={FailedTxScreen}
-                      options={{headerShown: false, gestureEnabled: false}}
-                    />
+                  <Stack.Screen
+                    name="claim-show-success"
+                    component={ShowSuccessScreen}
+                    options={{title: strings.claimShowSuccess, headerLeft: () => null}}
+                  />
+                </Stack.Navigator>
 
-                    <Stack.Screen //
-                      name="scan-start"
-                      component={ScanCodeScreen}
-                      options={{
-                        ...sendOptions(theme),
-                        headerTransparent: true,
-                        title: strings.scanTitle,
-                        headerTintColor: COLORS.WHITE,
-                        headerLeft: (props) => <BackButton color={COLORS.WHITE} {...props} />,
-                      }}
-                    />
-
-                    <Stack.Screen //
-                      name="scan-show-camera-permission-denied"
-                      component={ShowCameraPermissionDeniedScreen}
-                      options={{
-                        headerShown: false,
-                        gestureEnabled: false,
-                      }}
-                    />
-
-                    <Stack.Screen
-                      name="claim-show-success"
-                      component={ShowSuccessScreen}
-                      options={{title: strings.claimShowSuccess, headerLeft: () => null}}
-                    />
-                  </Stack.Navigator>
-
-                  <ModalInfo hideModalInfo={hideModalInfo} visible={isModalInfoVisible}>
-                    <Text style={styles.receiveInfoText}>{strings.receiveInfoText}</Text>
-                  </ModalInfo>
-                </ExchangeProvider>
-              </ClaimProvider>
-            </ResolverProvider>
-          </SwapFormProvider>
-        </SwapProvider>
-      </TransferProvider>
+                <ModalInfo hideModalInfo={hideModalInfo} visible={isModalInfoVisible}>
+                  <Text style={styles.receiveInfoText}>{strings.receiveInfoText}</Text>
+                </ModalInfo>
+              </ExchangeProvider>
+            </ClaimProvider>
+          </ResolverProvider>
+        </SwapFormProvider>
+      </SwapProvider>
     </ReceiveProvider>
   )
 }
@@ -390,6 +435,10 @@ const messages = defineMessages({
   receiveTitle: {
     id: 'components.receive.receivescreen.title',
     defaultMessage: '!!!Receive',
+  },
+  describeSelectedAddressTitle: {
+    id: 'components.receive.describeselectedaddressscreen.title',
+    defaultMessage: '!!!Address details',
   },
   swapTitle: {
     id: 'swap.swapScreen.swapTitle',
@@ -458,9 +507,17 @@ const messages = defineMessages({
     id: 'components.receive.receivescreen.specificAmount',
     defaultMessage: '!!!Request specific amount',
   },
-  rampOnOffTitle: {
+  exchangeCreateOrderTitle: {
     id: 'rampOnOff.rampOnOffScreen.rampOnOffTitle',
-    defaultMessage: '!!!Buy ADA',
+    defaultMessage: '!!!Buy/Sell ADA',
+  },
+  exchangeSelectBuyProvider: {
+    id: 'rampOnOff.rampOnOffScreen.exchangeSelectProvider.buy',
+    defaultMessage: '!!!Buy provider',
+  },
+  exchangeSelectSellProvider: {
+    id: 'rampOnOff.rampOnOffScreen.exchangeSelectProvider.sell',
+    defaultMessage: '!!!Sell provider',
   },
 })
 
@@ -485,7 +542,10 @@ const useStrings = () => {
     scanTitle: intl.formatMessage(messages.scanTitle),
     claimShowSuccess: intl.formatMessage(messages.claimShowSuccessTitle),
     specificAmount: intl.formatMessage(messages.specificAmount),
-    rampOnOffTitle: intl.formatMessage(messages.rampOnOffTitle),
+    exchangeCreateOrderTitle: intl.formatMessage(messages.exchangeCreateOrderTitle),
+    exchangeSelectBuyProvider: intl.formatMessage(messages.exchangeSelectBuyProvider),
+    exchangeSelectSellProvider: intl.formatMessage(messages.exchangeSelectSellProvider),
+    describeSelectedAddressTitle: intl.formatMessage(messages.describeSelectedAddressTitle),
   }
 }
 

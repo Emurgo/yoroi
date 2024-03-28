@@ -7,7 +7,6 @@ import {Platform, ScrollView, StyleSheet, Switch} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Icon, Spacer} from '../../../components'
-import {useStatusBar} from '../../../components/hooks/useStatusBar'
 import {useLanguage} from '../../../i18n'
 import {defaultLanguage} from '../../../i18n/languages'
 import {CONFIG, isNightly, isProduction} from '../../../legacy/config'
@@ -29,7 +28,6 @@ export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
   const styles = useStyles()
   const {colorScheme} = useTheme()
-  useStatusBar()
   const {languageCode, supportedLanguages} = useLanguage()
   const language = supportedLanguages.find((lang) => lang.code === languageCode) ?? defaultLanguage
 

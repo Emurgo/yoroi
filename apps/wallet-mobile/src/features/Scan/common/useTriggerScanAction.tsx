@@ -23,7 +23,7 @@ export const useTriggerScanAction = ({insideFeature}: {insideFeature: ScanFeatur
     receiverResolveChanged,
     amountChanged,
     tokenSelectedChanged,
-    reset: resetSendState,
+    reset: resetTransferState,
     memoChanged,
   } = useTransfer()
 
@@ -46,10 +46,7 @@ export const useTriggerScanAction = ({insideFeature}: {insideFeature: ScanFeatur
   const trigger = (scanAction: ScanAction) => {
     switch (scanAction.action) {
       case 'send-single-pt': {
-        navigateTo.back()
-        navigateTo.send()
-
-        if (insideFeature !== 'send') resetSendState()
+        if (insideFeature !== 'send') resetTransferState()
 
         receiverResolveChanged(scanAction.receiver)
 
@@ -65,16 +62,17 @@ export const useTriggerScanAction = ({insideFeature}: {insideFeature: ScanFeatur
           }
           if ('memo' in scanAction.params) memoChanged(scanAction.params?.memo ?? '')
         }
+
+        navigateTo.startTransfer()
         break
       }
 
       case 'send-only-receiver': {
-        navigateTo.back()
-        navigateTo.send()
-
-        if (insideFeature !== 'send') resetSendState()
+        if (insideFeature !== 'send') resetTransferState()
 
         receiverResolveChanged(scanAction.receiver)
+
+        navigateTo.startTransfer()
         break
       }
 
@@ -97,7 +95,6 @@ export const useTriggerScanAction = ({insideFeature}: {insideFeature: ScanFeatur
         )
 
         openModal(stringsClaim.askConfirmationTitle, claimContent, 400)
-
         break
       }
     }

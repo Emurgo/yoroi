@@ -118,6 +118,7 @@ export type WalletTabRoutes = {
 
 export type WalletStackRoutes = {
   'wallet-selection': undefined
+  'exchange-result': undefined
   'main-wallet-routes': NavigatorScreenParams<WalletTabRoutes>
   'nft-details-routes': NavigatorScreenParams<NftRoutes>
   settings: NavigatorScreenParams<SettingsStackRoutes>
@@ -259,6 +260,8 @@ export type SwapTabRoutes = {
 export type ExchangeRoutes = {
   'exchange-create-order': undefined
   'exchange-result': undefined
+  'exchange-select-buy-provider': undefined
+  'exchange-select-sell-provider': undefined
   'app-root': undefined
 }
 
@@ -366,6 +369,7 @@ export type AppRoutes = {
   'new-wallet': NavigatorScreenParams<WalletInitRoutes>
   'app-root': NavigatorScreenParams<WalletStackRoutes>
   'custom-pin-auth': undefined
+  'exchange-result': undefined
   'bio-auth-initial': undefined
   'enable-login-with-pin': undefined
   'agreement-changed-notice': undefined
@@ -426,6 +430,47 @@ export const useWalletNavigation = () => {
             },
           },
         ],
+      })
+    },
+
+    resetToStartTransfer: () => {
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'app-root',
+            state: {
+              routes: [
+                {name: 'wallet-selection'},
+                {
+                  name: 'main-wallet-routes',
+                  state: {
+                    routes: [
+                      {
+                        name: 'history',
+                        state: {
+                          routes: [{name: 'send-start-tx'}],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      })
+    },
+
+    navigateToStartTransfer: () => {
+      navigation.navigate('app-root', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'send-start-tx',
+          },
+        },
       })
     },
 
@@ -533,6 +578,7 @@ export const useWalletNavigation = () => {
 export const hideTabBarForRoutes = (route: RouteProp<WalletTabRoutes, 'history'>): ViewStyle | undefined =>
   getFocusedRouteNameFromRoute(route)?.startsWith('scan') ||
   getFocusedRouteNameFromRoute(route)?.startsWith('swap') ||
-  getFocusedRouteNameFromRoute(route)?.startsWith('receive')
+  getFocusedRouteNameFromRoute(route)?.startsWith('receive') ||
+  getFocusedRouteNameFromRoute(route)?.startsWith('exchange')
     ? {display: 'none'}
     : undefined

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {useNavigation} from '@react-navigation/native'
+import {useTheme} from '@yoroi/theme'
 import assert from 'assert'
 import ExtendableError from 'es6-error'
 import _ from 'lodash'
@@ -11,7 +12,6 @@ import config from 'react-native-config'
 
 import {useAuth} from '../auth/AuthProvider'
 import {Button, Text, TextInput} from '../components'
-import {useStatusBar} from '../components/hooks/useStatusBar'
 import {showErrorDialog} from '../dialogs'
 import {useLegalAgreement, useResetLegalAgreement} from '../features/Initialization/common'
 import {errorMessages} from '../i18n/global-messages'
@@ -31,37 +31,15 @@ const routes: Array<{label: string; path: keyof AppRoutes}> = [
   {label: 'Skip to wallet list', path: 'app-root'},
 ]
 
-const styles = StyleSheet.create({
-  safeAreaView: {
-    flex: 1,
-    paddingTop: 50,
-  },
-  container: {
-    flex: 1,
-    paddingHorizontal: 16,
-  },
-  button: {
-    marginHorizontal: 16,
-    marginVertical: 8,
-  },
-  link: {
-    height: 32,
-    fontSize: 16,
-    textAlign: 'center',
-    alignItems: 'center',
-    marginTop: 8,
-  },
-})
-
 const crash = () => {
   return Promise.reject(new Error('Forced crash'))
 }
 
 export const DeveloperScreen = () => {
   const navigation = useNavigation()
+  const {styles} = useStyles()
   const {logout} = useAuth()
   const {resetToWalletSelection} = useWalletNavigation()
-  useStatusBar()
   const intl = useIntl()
   const {createWallet, isLoading} = useCreateWallet({
     onSuccess: () => resetToWalletSelection(),
@@ -235,6 +213,35 @@ export const DeveloperScreen = () => {
       </ScrollView>
     </SafeAreaView>
   )
+}
+
+const useStyles = () => {
+  const {theme} = useTheme()
+
+  const styles = StyleSheet.create({
+    safeAreaView: {
+      flex: 1,
+      paddingTop: 50,
+      backgroundColor: theme.color.gray.min,
+    },
+    container: {
+      flex: 1,
+      paddingHorizontal: 16,
+    },
+    button: {
+      marginHorizontal: 16,
+      marginVertical: 8,
+    },
+    link: {
+      height: 32,
+      fontSize: 16,
+      textAlign: 'center',
+      alignItems: 'center',
+      marginTop: 8,
+    },
+  })
+
+  return {styles}
 }
 
 export class StorageError extends ExtendableError {}

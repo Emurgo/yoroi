@@ -23,12 +23,17 @@ export const useStrings = () => {
     copyLinkBtn: intl.formatMessage(messages.copyLinkBtn),
     copyLinkMsg: intl.formatMessage(messages.copyLinkMsg),
     addressCopiedMsg: intl.formatMessage(messages.addressCopiedMsg),
+    lastUsed: intl.formatMessage(messages.lastUsed),
     unusedAddress: intl.formatMessage(messages.unusedAddress),
     usedAddress: intl.formatMessage(messages.usedAddress),
     generateButton: intl.formatMessage(messages.generateButton),
     infoAddressLimit: intl.formatMessage(messages.infoAddressLimit),
     multiplePresentation: intl.formatMessage(messages.multiplePresentation),
     multiplePresentationDetails: intl.formatMessage(messages.multiplePresentationDetails),
+    singleOrMultiple: intl.formatMessage(messages.singleOrMultiple),
+    singleOrMultipleDetails: intl.formatMessage(messages.singleOrMultipleDetails),
+    selectMultiple: intl.formatMessage(messages.selectMultiple),
+    singleAddressWallet: intl.formatMessage(messages.singleAddressWallet),
     yoroiZendesk: intl.formatMessage(messages.yoroiZendesk),
     ok: intl.formatMessage(messages.ok),
   }
@@ -42,6 +47,10 @@ export const messages = defineMessages({
   receiveTitle: {
     id: 'components.receive.receivescreen.title',
     defaultMessage: '!!!Receive',
+  },
+  describeSelectedAddressTitle: {
+    id: 'components.receive.describeselectedaddressscreen.title',
+    defaultMessage: '!!!Address details',
   },
   addresscardTitle: {
     id: 'components.receive.addresscard.title',
@@ -111,6 +120,10 @@ export const messages = defineMessages({
     id: 'components.receive.receivescreen.addressCopiedMsg',
     defaultMessage: '!!!Address copied',
   },
+  lastUsed: {
+    id: 'components.receive.receivescreen.lastUsed',
+    defaultMessage: '!!!Last used',
+  },
   unusedAddress: {
     id: 'components.receive.receivescreen.unusedAddress',
     defaultMessage: '!!!Unused',
@@ -136,6 +149,23 @@ export const messages = defineMessages({
     id: 'components.receive.receivescreen.multiplePresentationDetails',
     defaultMessage:
       '!!!Enables Yoroi to manage various addresses in one place, enhancing privacy and providing organisational benefits.',
+  },
+  singleOrMultiple: {
+    id: 'components.receive.receivescreen.singleOrMultiple',
+    defaultMessage: '!!!Single or multiple address?',
+  },
+  singleOrMultipleDetails: {
+    id: 'components.receive.receivescreen.singleOrMultipleDetails',
+    defaultMessage:
+      '!!!Single keeps things simple and secure. Multiple may offer some extra privacy. For most users, single address is the way to go! You can always change it in settings.',
+  },
+  selectMultiple: {
+    id: 'components.receive.receivescreen.selectMultiple',
+    defaultMessage: '!!!Select multiple instead',
+  },
+  singleAddressWallet: {
+    id: 'components.receive.receivescreen.singleAddressWallet',
+    defaultMessage: '!!!Single address wallet',
   },
   ok: {
     id: 'global.ok',

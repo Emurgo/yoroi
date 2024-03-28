@@ -1,7 +1,7 @@
 import {createTypeGuardFromSchema} from '@yoroi/common'
 import {BarCodeScannerResult} from 'expo-barcode-scanner'
 import * as React from 'react'
-import {Alert, AlertButton, StatusBar} from 'react-native'
+import {Alert, AlertButton} from 'react-native'
 import {z} from 'zod'
 
 import {CameraCodeScanner, CameraCodeScannerMethods} from '../../../components/CameraCodeScanner/CameraCodeScanner'
@@ -45,16 +45,12 @@ export const ScanCodeScreen = () => {
   )
 
   return (
-    <>
-      <StatusBar hidden />
-
-      <CameraCodeScanner
-        ref={scannerRef}
-        onRead={handleOnRead}
-        onCameraPermissionDenied={navigateTo.showCameraPermissionDenied}
-        withMask
-      />
-    </>
+    <CameraCodeScanner
+      ref={scannerRef}
+      onRead={handleOnRead}
+      onCameraPermissionDenied={navigateTo.showCameraPermissionDenied}
+      withMask
+    />
   )
 }
 

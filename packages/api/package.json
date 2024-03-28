@@ -133,9 +133,8 @@
   },
   "dependencies": {
     "@emurgo/cip14-js": "^3.0.1",
-    "@yoroi/common": "1.5.1",
-    "axios": "^1.5.0",
-    "zod": "^3.22.1"
+    "@yoroi/common": "1.5.2",
+    "@yoroi/types": "1.5.4"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
@@ -150,7 +149,7 @@
     "@types/jest": "^29.5.12",
     "@types/react": "^18.2.55",
     "@types/react-test-renderer": "^18.0.7",
-    "@yoroi/types": "1.5.2",
+    "axios": "^1.5.0",
     "axios-mock-adapter": "^1.21.5",
     "commitlint": "^17.0.2",
     "del-cli": "^5.0.0",
@@ -165,15 +164,18 @@
     "prettier": "^2.0.5",
     "react": "18.2.0",
     "react-native": "~0.71.0",
-    "react-native-builder-bob": "^0.20.4",
+    "react-native-builder-bob": "^0.23.2",
     "react-query": "^3.39.3",
     "react-test-renderer": "^18.2.0",
     "release-it": "^15.0.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "zod": "^3.22.1"
   },
   "peerDependencies": {
+    "axios": "^1.5.0",
     "react": ">= 16.8.0 <= 19.0.0",
-    "react-query": "^3.39.3"
+    "react-query": "^3.39.3",
+    "zod": "^3.22.1"
   },
   "packageManager": "yarn@1.22.21",
   "engines": {

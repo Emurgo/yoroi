@@ -20,6 +20,7 @@ type AmountCardProps = {
   touched?: boolean
   amount: Balance.Amount
   wallet: YoroiWallet
+  testId?: string
 }
 
 export const AmountCard: React.FC<AmountCardProps> = ({
@@ -32,6 +33,7 @@ export const AmountCard: React.FC<AmountCardProps> = ({
   touched,
   amount,
   wallet,
+  testId,
 }: AmountCardProps) => {
   const [isFocused, setIsFocused] = React.useState(false)
 
@@ -76,6 +78,7 @@ export const AmountCard: React.FC<AmountCardProps> = ({
               selectTextOnFocus
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
+              testID={testId}
             />
           </Pressable>
 
@@ -104,12 +107,14 @@ export const AmountCard: React.FC<AmountCardProps> = ({
         </View>
       </View>
 
-      {!isEmptyString(error) && (
+      {!isEmptyString(error) ? (
         <View>
           <Spacer height={4} />
 
           <Text style={styles.errorText}>{error}</Text>
         </View>
+      ) : (
+        <Spacer height={22} />
       )}
     </View>
   )

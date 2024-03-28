@@ -1,6 +1,6 @@
 import {useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
-import {SwapOrderType} from '@yoroi/types/lib/swap/order'
+import {Swap} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
@@ -22,7 +22,7 @@ export type AmountItemProps = {
   inWallet?: boolean
   variant?: 'swap'
   priceImpactRisk?: SwapPriceImpactRisk
-  orderType?: SwapOrderType
+  orderType?: Swap.OrderType
 }
 
 export const AmountItem = ({

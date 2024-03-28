@@ -1,9 +1,11 @@
 import {useTheme} from '@yoroi/theme'
+import {useTransfer} from '@yoroi/transfer'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {Button, Spacer, Text} from '../../../../../components'
 import {useBlockGoBack, useWalletNavigation} from '../../../../../navigation'
+import {useLinksRequestRedirect} from '../../../../Links/common/useLinksRequestRedirect'
 import {useStrings} from '../../../common/strings'
 import {SubmittedTxImage} from './SubmittedTxImage'
 
@@ -12,6 +14,8 @@ export const SubmittedTxScreen = () => {
   const strings = useStrings()
   const styles = useStyles()
   const {resetToTxHistory} = useWalletNavigation()
+  const {linkAction} = useTransfer()
+  useLinksRequestRedirect(linkAction?.info.params.redirectTo)
 
   return (
     <View style={styles.container}>

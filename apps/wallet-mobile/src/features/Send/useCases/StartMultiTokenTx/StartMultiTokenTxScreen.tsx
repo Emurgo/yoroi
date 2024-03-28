@@ -6,7 +6,6 @@ import React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
 import {Button, KeyboardAvoidingView, Spacer} from '../../../../components'
-import {useStatusBar} from '../../../../components/hooks/useStatusBar'
 import {ScrollView, useScrollView} from '../../../../components/ScrollView/ScrollView'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../SelectedWallet'
@@ -35,8 +34,6 @@ export const StartMultiTokenTxScreen = () => {
   React.useEffect(() => {
     track.sendInitiated()
   }, [track])
-
-  useStatusBar()
 
   const hasPendingTx = useHasPendingTx(wallet)
   const isOnline = useIsOnline(wallet)

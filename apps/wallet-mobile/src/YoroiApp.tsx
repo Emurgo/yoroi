@@ -1,4 +1,5 @@
 import {AsyncStorageProvider} from '@yoroi/common'
+import {LinksProvider} from '@yoroi/links'
 import {ThemeProvider} from '@yoroi/theme'
 import React from 'react'
 import {LogBox, Platform, StyleSheet, UIManager} from 'react-native'
@@ -48,12 +49,12 @@ export const YoroiApp = () => {
 
   return (
     <AsyncStorageProvider storage={rootStorage}>
-      <MetricsProvider metricsManager={metricsManager}>
-        <WalletManagerProvider walletManager={walletManager}>
-          <ErrorBoundary>
-            <QueryClientProvider client={queryClient}>
-              <LoadingBoundary style={StyleSheet.absoluteFill}>
-                <ThemeProvider>
+      <ThemeProvider>
+        <MetricsProvider metricsManager={metricsManager}>
+          <WalletManagerProvider walletManager={walletManager}>
+            <ErrorBoundary>
+              <QueryClientProvider client={queryClient}>
+                <LoadingBoundary style={StyleSheet.absoluteFill}>
                   <LanguageProvider>
                     <CurrencyProvider>
                       <SafeAreaProvider>
@@ -61,7 +62,9 @@ export const YoroiApp = () => {
                           <AuthProvider>
                             <SelectedWalletMetaProvider>
                               <SelectedWalletProvider>
-                                <InitApp />
+                                <LinksProvider>
+                                  <InitApp />
+                                </LinksProvider>
                               </SelectedWalletProvider>
                             </SelectedWalletMetaProvider>
                           </AuthProvider>
@@ -69,12 +72,12 @@ export const YoroiApp = () => {
                       </SafeAreaProvider>
                     </CurrencyProvider>
                   </LanguageProvider>
-                </ThemeProvider>
-              </LoadingBoundary>
-            </QueryClientProvider>
-          </ErrorBoundary>
-        </WalletManagerProvider>
-      </MetricsProvider>
+                </LoadingBoundary>
+              </QueryClientProvider>
+            </ErrorBoundary>
+          </WalletManagerProvider>
+        </MetricsProvider>
+      </ThemeProvider>
     </AsyncStorageProvider>
   )
 }

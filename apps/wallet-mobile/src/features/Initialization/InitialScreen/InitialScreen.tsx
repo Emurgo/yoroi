@@ -5,7 +5,6 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Icon, Spacer, YoroiLogo} from '../../../components'
 import {BlueCheckbox} from '../../../components/BlueCheckbox'
-import {useStatusBar} from '../../../components/hooks/useStatusBar'
 import {useLanguage} from '../../../i18n'
 import {defaultLanguage} from '../../../i18n/languages'
 import {useNavigateTo, useStrings} from '../common'
@@ -15,8 +14,6 @@ export const InitialScreen = () => {
   const styles = useStyles()
   const navigateTo = useNavigateTo()
   const [tosAccepted, setTosAccepted] = React.useState(false)
-
-  useStatusBar()
 
   const onTosLinkPress = () => {
     navigateTo.readTermsOfService()

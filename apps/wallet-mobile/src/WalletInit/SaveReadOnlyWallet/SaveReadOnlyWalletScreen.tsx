@@ -5,7 +5,6 @@ import {FlatList, InteractionManager, ScrollView, StyleSheet, View} from 'react-
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Boundary, Icon, Line, Text} from '../../components'
-import {useStatusBar} from '../../components/hooks/useStatusBar'
 import {showErrorDialog} from '../../dialogs'
 import {errorMessages} from '../../i18n/global-messages'
 import {useMetrics} from '../../metrics/metricsManager'
@@ -25,7 +24,6 @@ const addressMode: AddressMode = 'multiple'
 export const SaveReadOnlyWalletScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
-  useStatusBar()
   const {resetToWalletSelection} = useWalletNavigation()
   const {track} = useMetrics()
   const route = useRoute<RouteProp<WalletInitRoutes, 'save-read-only'>>()

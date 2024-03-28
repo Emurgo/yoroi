@@ -6,7 +6,6 @@ import Animated, {Layout} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer, useModal} from '../../../components'
-import {useStatusBar} from '../../../components/hooks/useStatusBar'
 import {useMetrics} from '../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../SelectedWallet'
 import {useAddressModeManager} from '../../../wallet-manager/useAddressModeManager'
@@ -29,7 +28,6 @@ export const ListMultipleAddressesScreen = () => {
   const inView = React.useRef(Number.MAX_SAFE_INTEGER)
   const strings = useStrings()
   const {styles} = useStyles()
-  useStatusBar()
   const wallet = useSelectedWallet()
   const navigate = useNavigateTo()
   const {track} = useMetrics()
@@ -57,7 +55,7 @@ export const ListMultipleAddressesScreen = () => {
   }, [])
 
   const renderAddressInfo = React.useCallback(
-    ({item}: {item: AddressInfo}) => (
+    ({item, index}: {item: AddressInfo; index: number}) => (
       <SmallAddressCard
         address={item.address}
         isUsed={item.isUsed}
@@ -65,6 +63,7 @@ export const ListMultipleAddressesScreen = () => {
           selectedAddressChanged(item.address)
           navigate.receiveDetails()
         }}
+        testId={`receive:small-address-card-${index + 1}`} // Add index + 1 to include count
         // date={}  // TODO define with project
       />
     ),
@@ -144,7 +143,13 @@ const Modal = () => {
       <Spacer fill height={24} />
 
       <View style={styles.buttonContainer}>
-        <Button shelleyTheme title={strings.ok} onPress={handleOnCloseModal} style={styles.button} />
+        <Button
+          shelleyTheme
+          title={strings.ok}
+          onPress={handleOnCloseModal}
+          style={styles.button}
+          testID="wallet:receive:oneTimeModal-ok-button"
+        />
       </View>
 
       <Spacer height={24} />
@@ -154,7 +159,6 @@ const Modal = () => {
 
 const useStyles = () => {
   const {theme} = useTheme()
-
   const styles = StyleSheet.create({
     root: {
       flex: 1,

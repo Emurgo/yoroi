@@ -1,5 +1,5 @@
 import {act, renderHook} from '@testing-library/react-hooks'
-import {Chain, Resolver} from '@yoroi/types'
+import {Chain, Links, Resolver} from '@yoroi/types'
 import * as React from 'react'
 import {useTransfer} from '../hooks/useTransfer'
 import {defaultTransferState} from '../state/state'
@@ -43,6 +43,28 @@ describe('TransferContext :: hooks', () => {
     })
 
     expect(result.current.memo).toBe('Test memo')
+  })
+
+  test('redirectToChanged', () => {
+    const {result} = renderHook(() => useTransfer(), {wrapper})
+    const linkAction: Links.YoroiAction = {
+      info: {
+        version: 1,
+        feature: 'transfer',
+        useCase: 'request/ada-with-link',
+        params: {
+          link: 'web+cardano:addr1qygnpgnmc4twqxe4qnj3pakudc0ysheqwflv8guwwlply7zptg3wjqz84kx3t4re4xpqvs3fu7mvsahwhyxd4q3qq90s7sgxnh?amount=10',
+          authorization: 'uuid-v4',
+        },
+      },
+      isTrusted: false,
+    }
+
+    act(() => {
+      result.current.linkActionChanged(linkAction)
+    })
+
+    expect(result.current.linkAction).toEqual(linkAction)
   })
 
   test('tokenSelectedChanged', () => {

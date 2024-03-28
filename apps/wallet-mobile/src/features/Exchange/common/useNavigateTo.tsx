@@ -7,7 +7,9 @@ export const useNavigateTo = () => {
   const navigation = useNavigation<ExchangeRoutesNavigation>()
 
   return useRef({
-    rampOnOffOpenOrder: () =>
+    exchangeSelectBuyProvider: () => navigation.navigate('exchange-select-buy-provider'),
+    exchangeSelectSellProvider: () => navigation.navigate('exchange-select-sell-provider'),
+    exchangeOpenOrder: () =>
       navigation.reset({
         index: 0,
         routes: [
@@ -32,13 +34,4 @@ export const useNavigateTo = () => {
         ],
       }),
   }).current
-}
-
-export type ExchangeInitRoutes = {
-  rampOnOff: {
-    coin: string
-    coinAmount: number
-    fiat: number
-    fiatAmount: number
-  }
 }

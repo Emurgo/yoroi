@@ -73,6 +73,7 @@ export const AddressDetailCard = ({title}: AddressDetailCardProps) => {
             content={item.address}
             onLongPress={() => copy(item.address)}
             isCopying={isCopying}
+            testId="receive:address-detail-card"
           />
         )
       case 'Details':
@@ -142,8 +143,8 @@ const useStyles = () => {
   })
 
   const colors = {
-    active: theme.color.primary[600],
-    inactive: theme.color.gray[400],
+    active: theme.color.primary[500],
+    inactive: theme.color.gray[300],
   }
   return {styles, colors}
 }
