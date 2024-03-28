@@ -15,7 +15,7 @@ import {
   SwapOpenOrder,
   SwapOrderType,
 } from './swap/order'
-import {SwapPool, SwapPoolProvider, SwapSupportedProvider} from './swap/pool'
+import {SwapPool, SwapPoolProvider} from './swap/pool'
 import {SwapStorage} from './swap/storage'
 import {SwapManager} from './swap/manager'
 import {AppStorage, AppStorageFolderName} from './app/storage'
@@ -71,7 +71,12 @@ import {
   ResolverErrorNotFound,
   ResolverErrorUnsupportedTld,
 } from './resolver/errors'
-import {AppApi, AppFrontendFeeTier, AppFrontendFeesResponse} from './api/app'
+import {
+  AppApi,
+  AppFrontendFeeTier,
+  AppFrontendFeesResponse,
+  AppSwapConfigResponse,
+} from './api/app'
 import {
   ApiFtMetadata,
   ApiFtMetadataRecord,
@@ -167,6 +172,7 @@ export namespace App {
 
   export type FrontendFeeTier = AppFrontendFeeTier
   export type FrontendFeesResponse = AppFrontendFeesResponse
+  export type SwapConfigResponse = AppSwapConfigResponse
 }
 
 export namespace Swap {
@@ -190,8 +196,6 @@ export namespace Swap {
   export type Pool = SwapPool
   export type PoolResponse = SwapPool[]
   export type PoolProvider = SwapPoolProvider
-  export type SupportedProvider = SwapSupportedProvider
-
   export type Storage = SwapStorage
 }
 

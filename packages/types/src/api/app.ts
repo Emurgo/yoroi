@@ -3,6 +3,7 @@ import {SwapAggregator} from '../swap/aggregator'
 
 export interface AppApi {
   getFrontendFees(): Promise<AppFrontendFeesResponse>
+  getSwapConfig(): Promise<AppSwapConfigResponse>
 }
 
 export type AppFrontendFeesResponse = Readonly<{
@@ -14,4 +15,16 @@ export type AppFrontendFeeTier = Readonly<{
   secondaryTokenBalanceThreshold: BalanceQuantity // secodary token balance (holding)
   variableFeeMultiplier: number
   fixedFee: BalanceQuantity
+}>
+
+export type AppSwapConfigResponse = Readonly<{
+  aggregators: {
+    [aggregator in SwapAggregator]?: {
+      isEnabled: boolean
+      frontendFeeTiers: ReadonlyArray<AppFrontendFeeTier>
+      discountTokenId: string
+    }
+  }
+  liquidityProvidersEnabled: ReadonlyArray<string>
+  isSwapEnabled: boolean
 }>
