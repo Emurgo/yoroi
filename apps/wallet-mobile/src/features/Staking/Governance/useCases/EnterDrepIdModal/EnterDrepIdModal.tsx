@@ -1,10 +1,10 @@
 import {isNonNullable} from '@yoroi/common'
 import {parseDrepId, useIsValidDRepID} from '@yoroi/staking'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Linking, StyleSheet, View} from 'react-native'
 
 import {Button, Spacer, Text, TextInput} from '../../../../../components'
-import {COLORS} from '../../../../../theme'
 import {CardanoMobile} from '../../../../../yoroi-wallets/wallets'
 import {useStrings} from '../../common'
 
@@ -16,6 +16,7 @@ const FIND_DREPS_LINK = ''
 
 export const EnterDrepIdModal = ({onSubmit}: Props) => {
   const strings = useStrings()
+  const styles = useStyles()
   const [drepId, setDrepId] = React.useState('')
 
   const {error, isFetched, isFetching} = useIsValidDRepID(drepId, {retry: false, enabled: drepId.length > 0})
@@ -73,32 +74,34 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
   )
 }
 
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-  },
-  text: {
-    color: '#242838',
-    textAlign: 'center',
-    fontFamily: 'Rubik-Regular',
-    fontSize: 16,
-    lineHeight: 24,
-    fontWeight: '400',
-  },
-  link: {
-    color: COLORS.BLUE_LIGHTER,
-    textDecorationLine: 'underline',
-  },
-  inputWrapperStyle: {
-    minHeight: 80,
-    fontSize: 16,
-  },
-  inputStyle: {
-    minHeight: 70,
-    paddingTop: 16,
-    paddingRight: 16,
-    paddingBottom: 16,
-    paddingLeft: 16,
-    // padding: 16, does not have effect
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, padding, typography} = theme
+  const styles = StyleSheet.create({
+    root: {
+      flex: 1,
+    },
+    text: {
+      color: color.gray[900],
+      textAlign: 'center',
+      ...typography['body-1-l-regular'],
+    },
+    link: {
+      color: color.primary[500],
+      textDecorationLine: 'underline',
+    },
+    inputWrapperStyle: {
+      minHeight: 80,
+      ...typography['body-1-l-regular'],
+    },
+    inputStyle: {
+      minHeight: 70,
+      ...padding['t-l'],
+      ...padding['b-l'],
+      ...padding['l-l'],
+      ...padding['r-l'],
+      // padding: 16, does not have effect
+    },
+  })
+  return styles
+}

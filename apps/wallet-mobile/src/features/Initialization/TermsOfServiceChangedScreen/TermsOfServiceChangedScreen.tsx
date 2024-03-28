@@ -1,14 +1,15 @@
+import {padding, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer, YoroiLogo} from '../../../components'
 import {BlueCheckbox} from '../../../components/BlueCheckbox'
-import {COLORS} from '../../../theme'
 import {useNavigateTo, useStrings} from '../common'
 
 export const TermsOfServiceChangedScreen = () => {
   const [accepted, setAccepted] = React.useState(false)
+  const styles = useStyles()
   const navigateTo = useNavigateTo()
 
   const onPressContinue = () => {
@@ -71,47 +72,45 @@ export const TermsOfServiceChangedScreen = () => {
   )
 }
 
-const styles = StyleSheet.create({
-  scrollableContentContainer: {
-    flexGrow: 1,
-  },
-  checkbox: {
-    alignItems: 'flex-start',
-  },
-  checkboxRow: {
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: '#fff',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: '500',
-    fontFamily: 'Rubik-Bold',
-    lineHeight: 30,
-    textAlign: 'center',
-    color: '#242838',
-  },
-  description: {
-    fontSize: 16,
-    fontWeight: '400',
-    fontFamily: 'Rubik',
-    lineHeight: 24,
-    textAlign: 'center',
-    color: '#383E54',
-  },
-  checkboxText: {
-    fontFamily: 'Rubik',
-    fontSize: 16,
-    lineHeight: 18,
-    color: '#000000',
-  },
-  checkboxLink: {
-    color: COLORS.DARK_BLUE,
-    textDecorationLine: 'underline',
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, typography} = theme
+  const styles = StyleSheet.create({
+    scrollableContentContainer: {
+      flexGrow: 1,
+    },
+    checkbox: {
+      alignItems: 'flex-start',
+    },
+    checkboxRow: {
+      display: 'flex',
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+    },
+    container: {
+      flex: 1,
+      ...padding['l'],
+      backgroundColor: color.gray.min,
+    },
+    title: {
+      ...typography['heading-3-medium'],
+      color: color.gray[900],
+      textAlign: 'center',
+    },
+    description: {
+      ...typography['body-1-l-regular'],
+      color: color.gray[800],
+      textAlign: 'center',
+    },
+    checkboxText: {
+      ...typography['body-1-l-regular'],
+      color: color.gray.max,
+    },
+    checkboxLink: {
+      color: color.gray[800],
+      textDecorationLine: 'underline',
+    },
+  })
+
+  return styles
+}

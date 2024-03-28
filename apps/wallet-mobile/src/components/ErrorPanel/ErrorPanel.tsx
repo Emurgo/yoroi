@@ -1,14 +1,16 @@
+import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
-import {COLORS} from '../../theme'
 import {Icon} from '../Icon'
 import {Spacer} from '../Spacer'
 
 export const ErrorPanel = ({style, children, ...props}: ViewProps) => {
+  const {styles, colors} = useStyles()
+
   return (
     <View {...props} style={[style, styles.container]}>
-      <Icon.Info color={COLORS.ERROR_TEXT_COLOR} />
+      <Icon.Info color={colors.iconColor} />
 
       <Spacer height={10} />
 
@@ -17,16 +19,24 @@ export const ErrorPanel = ({style, children, ...props}: ViewProps) => {
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: COLORS.BACKGROUND_LIGHT_RED,
-    borderRadius: 8,
-    flexDirection: 'column',
-    paddingTop: 12,
-    paddingBottom: 8,
-    paddingHorizontal: 16,
-  },
-  message: {
-    flexDirection: 'row',
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, padding} = theme
+  const styles = StyleSheet.create({
+    container: {
+      backgroundColor: 'rgba(255, 16, 81, 0.06)',
+      borderRadius: 8,
+      flexDirection: 'column',
+      ...padding['t-m'],
+      ...padding['b-s'],
+      ...padding['x-l'],
+    },
+    message: {
+      flexDirection: 'row',
+    },
+  })
+  const colors = {
+    iconColor: color.magenta[500],
+  }
+  return {styles, colors}
+}

@@ -1,8 +1,8 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import Svg, {Path} from 'react-native-svg'
 
-import {COLORS} from '../theme'
 import {Text} from './Text'
 
 type ExternalProps = {
@@ -10,6 +10,7 @@ type ExternalProps = {
 }
 
 export const ProgressCircle = ({percentage}: ExternalProps) => {
+  const styles = useStyles()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const height = undefined as any
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -42,26 +43,31 @@ export const ProgressCircle = ({percentage}: ExternalProps) => {
   )
 }
 
-const styles = StyleSheet.create({
-  wrapper: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 100,
-  },
-  textWrapper: {
-    fontSize: 18,
-    lineHeight: 22,
-    fontWeight: 'bold',
-    color: COLORS.LIGHT_GRAY_TEXT,
-    textAlign: 'center',
-  },
-  chart: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    width: '100%',
-    height: '100%',
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, typography} = theme
+
+  const styles = StyleSheet.create({
+    wrapper: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: 100,
+    },
+    textWrapper: {
+      ...typography['heading-4-medium'],
+      color: color.gray[700],
+      textAlign: 'center',
+    },
+    chart: {
+      position: 'absolute',
+      top: 0,
+      bottom: 0,
+      left: 0,
+      right: 0,
+      width: '100%',
+      height: '100%',
+    },
+  })
+
+  return styles
+}

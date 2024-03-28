@@ -1,14 +1,15 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Linking, StyleSheet, TouchableOpacity} from 'react-native'
 
 import {Text} from '../../../../../components'
-import {COLORS} from '../../../../../theme'
 import {useStrings} from '../strings'
 
 const LEARN_MORE_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/sections/8582793481231-Governance'
 
 export const LearnMoreLink = () => {
   const strings = useStrings()
+  const styles = useStyles()
 
   const handleOnPress = () => {
     Linking.openURL(LEARN_MORE_LINK)
@@ -23,15 +24,21 @@ export const LearnMoreLink = () => {
   )
 }
 
-const styles = StyleSheet.create({
-  root: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  blueText: {
-    color: COLORS.SHELLEY_BLUE,
-    textDecorationLine: 'underline',
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
+  const styles = StyleSheet.create({
+    root: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    blueText: {
+      color: color.primary[600],
+      textDecorationLine: 'underline',
+    },
+  })
+
+  return styles
+}

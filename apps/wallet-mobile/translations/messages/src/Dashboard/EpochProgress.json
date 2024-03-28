@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Epoch progress",
     "file": "src/Dashboard/EpochProgress.tsx",
     "start": {
-      "line": 59,
+      "line": 60,
       "column": 22,
-      "index": 1630
+      "index": 1665
     },
     "end": {
-      "line": 62,
+      "line": 63,
       "column": 3,
-      "index": 1736
+      "index": 1771
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Ends in",
     "file": "src/Dashboard/EpochProgress.tsx",
     "start": {
-      "line": 63,
+      "line": 64,
       "column": 15,
-      "index": 1753
+      "index": 1788
     },
     "end": {
-      "line": 66,
+      "line": 67,
       "column": 3,
-      "index": 1853
+      "index": 1888
     }
   }
 ]

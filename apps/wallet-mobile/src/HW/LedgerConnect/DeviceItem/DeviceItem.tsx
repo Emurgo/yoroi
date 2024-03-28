@@ -1,7 +1,7 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {ActivityIndicator, StyleSheet, Text, TouchableOpacity} from 'react-native'
 
-import {COLORS} from '../../../theme'
 import {Device} from '../../../yoroi-wallets/types'
 
 type Props = {
@@ -12,6 +12,7 @@ type Props = {
 
 export const DeviceItem = ({device, onSelect, disabled}: Props) => {
   const [pending, setPending] = React.useState(false)
+  const styles = useStyles()
   const onPress = async () => {
     setPending(true)
     try {
@@ -36,26 +37,29 @@ export const DeviceItem = ({device, onSelect, disabled}: Props) => {
   )
 }
 
-export const styles = StyleSheet.create({
-  deviceItem: {
-    paddingVertical: 16,
-    paddingHorizontal: 32,
-    marginVertical: 8,
-    marginHorizontal: 16,
-    borderColor: COLORS.LIGHT_POSITIVE_GREEN,
-    borderWidth: 1,
-    borderRadius: 8,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  deviceName: {
-    fontSize: 20,
-    lineHeight: 24,
-    fontWeight: 'bold',
-    color: COLORS.LIGHT_POSITIVE_GREEN,
-  },
-  disabled: {
-    opacity: 0.5,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, padding, typography} = theme
+  const styles = StyleSheet.create({
+    deviceItem: {
+      ...padding['y-l'],
+      ...padding['x-xxl'],
+      marginVertical: 8,
+      marginHorizontal: 16,
+      borderColor: color.secondary[500],
+      borderWidth: 1,
+      borderRadius: 8,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+    deviceName: {
+      ...typography['heading-3-medium'],
+      color: color.secondary[500],
+    },
+    disabled: {
+      opacity: 0.5,
+    },
+  })
+  return styles
+}

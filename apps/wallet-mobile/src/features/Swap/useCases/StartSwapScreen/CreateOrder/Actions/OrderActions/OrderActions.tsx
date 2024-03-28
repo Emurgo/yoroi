@@ -1,16 +1,17 @@
 import {useSwap, useSwapPoolsByPair} from '@yoroi/swap'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Animated, Keyboard, Pressable, StyleSheet, View} from 'react-native'
 
 import {Icon} from '../../../../../../../components'
 import {LoadingOverlay} from '../../../../../../../components/LoadingOverlay'
-import {COLORS} from '../../../../../../../theme'
 import {ButtonGroup} from '../../../../../common/ButtonGroup/ButtonGroup'
 import {useStrings} from '../../../../../common/strings'
 import {useSwapForm} from '../../../../../common/SwapFormProvider'
 
 export const OrderActions = () => {
   const strings = useStrings()
+  const {styles} = useStyles()
   const orderTypeLabels = [strings.marketButton, strings.limitButton]
   const {orderData, orderTypeChanged, poolPairsChanged} = useSwap()
   const {
@@ -64,6 +65,7 @@ export const OrderActions = () => {
 const RefreshIcon = ({onPress, disabled}: {onPress: () => void; disabled: boolean}) => {
   const spin = React.useRef(new Animated.Value(0)).current
   const [isActive, setIsActive] = React.useState(false)
+  const {colors} = useStyles()
 
   const handleOnPress = () => {
     Animated.timing(spin, {
@@ -92,16 +94,26 @@ const RefreshIcon = ({onPress, disabled}: {onPress: () => void; disabled: boolea
       onPressOut={() => setIsActive(false)}
     >
       <Animated.View style={getRotationStyle()}>
-        <Icon.Refresh size={28} color={disabled ? COLORS.DISABLED : ''} active={isActive} />
+        <Icon.Refresh size={28} color={disabled ? colors.disabled : ''} active={isActive} />
       </Animated.View>
     </Pressable>
   )
 }
 
-const styles = StyleSheet.create({
-  buttonsGroup: {
-    paddingBottom: 24,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, padding} = theme
+  const styles = StyleSheet.create({
+    buttonsGroup: {
+      ...padding['b-xl'],
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+  })
+
+  const colors = {
+    disabled: color.gray[500],
+  }
+
+  return {styles, colors}
+}

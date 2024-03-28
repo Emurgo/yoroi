@@ -1,15 +1,13 @@
 import {Platform} from 'react-native'
 
-import {COLORS} from './theme'
-
-export const defaultNavigationOptions = {
-  headerStyle: {
-    backgroundColor: COLORS.BACKGROUND_BLUE,
-    elevation: 0,
-    shadowOpacity: 0,
-  },
-  headerTintColor: '#fff',
-} as const
+// export const defaultNavigationOptions = {
+//   headerStyle: {
+//     backgroundColor: COLORS.BACKGROUND_BLUE,
+//     elevation: 0,
+//     shadowOpacity: 0,
+//   },
+//   headerTintColor: '#fff',
+// } as const
 
 export const defaultStackNavigatorOptions = {
   headerTitleAlign: 'center',

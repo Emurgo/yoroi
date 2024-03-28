@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
@@ -7,7 +8,6 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button, CopyButton, ProgressStep, Spacer, Text} from '../components'
 import {confirmationMessages} from '../i18n/global-messages'
 import {useBlockGoBack} from '../navigation'
-import {COLORS} from '../theme'
 import {useAllowScreenshots} from '../utils'
 import {Actions, Description, Title} from './components'
 import {useCountdown} from './hooks'
@@ -17,6 +17,7 @@ export const QrCode = ({onNext, votingKeyEncrypted}: {onNext: () => void; voting
   useBlockGoBack()
   useAllowScreenshots()
   const strings = useStrings()
+  const styles = useStyles()
 
   const [showBackupWarningModal, setShowBackupWarningModal] = useState(false)
   const countdown = useCountdown()
@@ -80,13 +81,22 @@ export const QrCode = ({onNext, votingKeyEncrypted}: {onNext: () => void; voting
   )
 }
 
-const AlertBox = (props: ViewProps) => <View {...props} style={styles.alertBox} />
-const QRCode = ({text}: {text: string}) => (
-  <View style={styles.qrCodeBackground}>
-    <QRCodeSVG value={text} size={140} backgroundColor="white" color="black" />
-  </View>
-)
-const SecretCodeBox = (props: ViewProps) => <View {...props} style={styles.secretCodeBox} />
+const AlertBox = (props: ViewProps) => {
+  const styles = useStyles()
+  return <View {...props} style={styles.alertBox} />
+}
+const QRCode = ({text}: {text: string}) => {
+  const styles = useStyles()
+  return (
+    <View style={styles.qrCodeBackground}>
+      <QRCodeSVG value={text} size={140} backgroundColor="white" color="black" />
+    </View>
+  )
+}
+const SecretCodeBox = (props: ViewProps) => {
+  const styles = useStyles()
+  return <View {...props} style={styles.secretCodeBox} />
+}
 
 const messages = defineMessages({
   subTitle: {
@@ -119,36 +129,42 @@ const messages = defineMessages({
   },
 })
 
-const styles = StyleSheet.create({
-  safeAreaView: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  alertBox: {
-    padding: 16,
-    backgroundColor: COLORS.BACKGROUND_LIGHT_RED,
-    borderRadius: 8,
-  },
-  contentContainer: {
-    paddingHorizontal: 16,
-  },
-  note: {
-    color: '#242838',
-    fontWeight: 'bold',
-  },
-  qrCodeBackground: {
-    borderRadius: 8,
-    padding: 16,
-    backgroundColor: '#F0F3F5',
-    alignSelf: 'center',
-  },
-  secretCodeBox: {
-    backgroundColor: '#F0F3F5',
-    borderRadius: 8,
-    padding: 16,
-    flexDirection: 'row',
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, padding} = theme
+  const styles = StyleSheet.create({
+    safeAreaView: {
+      flex: 1,
+      backgroundColor: color.gray.min,
+    },
+    alertBox: {
+      ...padding['l'],
+      backgroundColor: 'rgba(255, 16, 81, 0.06)',
+      borderRadius: 8,
+    },
+    contentContainer: {
+      ...padding['x-l'],
+    },
+    note: {
+      color: color.gray[900],
+      fontWeight: 'bold',
+    },
+    qrCodeBackground: {
+      borderRadius: 8,
+      ...padding['l'],
+      backgroundColor: color.gray[50],
+      alignSelf: 'center',
+    },
+    secretCodeBox: {
+      backgroundColor: color.gray[50],
+      borderRadius: 8,
+      ...padding['l'],
+      flexDirection: 'row',
+    },
+  })
+
+  return styles
+}
 
 const useStrings = () => {
   const intl = useIntl()

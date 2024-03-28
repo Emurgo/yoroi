@@ -1,13 +1,14 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image, StyleSheet, View} from 'react-native'
 
 import NotDelegatedImage from '../assets/img/testnet/no-transactions-yet.png'
 import {Line, Text} from '../components'
-import {COLORS} from '../theme'
 
 export const NotDelegatedInfo = () => {
   const strings = useStrings()
+  const styles = useStyles()
 
   return (
     <View style={styles.wrapper}>
@@ -24,29 +25,34 @@ export const NotDelegatedInfo = () => {
   )
 }
 
-const styles = StyleSheet.create({
-  wrapper: {
-    marginTop: 24,
-    marginHorizontal: 16,
-  },
-  imageWrap: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  text: {
-    textAlign: 'center',
-    color: COLORS.DARK_TEXT,
-    lineHeight: 22,
-  },
-  textFirstLine: {
-    fontSize: 16,
-    marginBottom: 12,
-  },
-  textSecondLine: {
-    fontSize: 14,
-    marginBottom: 16,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, typography} = theme
+  const styles = StyleSheet.create({
+    wrapper: {
+      marginTop: 24,
+      marginHorizontal: 16,
+    },
+    imageWrap: {
+      flex: 1,
+      alignItems: 'center',
+    },
+    text: {
+      textAlign: 'center',
+      color: color.gray[900],
+      lineHeight: 22,
+    },
+    textFirstLine: {
+      ...typography['body-1-l-regular'],
+      marginBottom: 12,
+    },
+    textSecondLine: {
+      ...typography['body-2-m-regular'],
+      marginBottom: 16,
+    },
+  })
+  return styles
+}
 
 const useStrings = () => {
   const intl = useIntl()
