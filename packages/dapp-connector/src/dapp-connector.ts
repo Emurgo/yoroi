@@ -2,6 +2,10 @@ import {handleEvent} from './resolver'
 import {connectWallet} from './connector'
 import {DappConnection, Storage} from './adapters/async-storage'
 
+export const dappConnectorMaker = (storage: Storage): DappConnector => {
+  return new DappConnector(storage)
+}
+
 export class DappConnector {
   constructor(private storage: Storage) {}
 

@@ -1,6 +1,7 @@
-import {dappConnectorMaker, connectionStorageMaker} from './index'
 import {storageMock} from './storage.mocks'
 import {mockedData} from './mocks'
+import {connectionStorageMaker} from './adapters/async-storage'
+import {dappConnectorMaker} from './dapp-connector'
 
 const getDappConnector = () => {
   const storage = connectionStorageMaker({storage: storageMock})
