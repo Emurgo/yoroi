@@ -16,6 +16,7 @@ import {Clock} from './Clock'
 import {Close} from './Close'
 import {Coins} from './Coins'
 import {Collateral} from './Collateral'
+import {Compass} from './Compass'
 import {Copy} from './Copy'
 import {CopySuccess} from './CopySuccess'
 import {Cross} from './Cross'
@@ -220,4 +221,5 @@ export const Icon = {
   Close,
   Warning,
   Collateral,
+  Compass,
 }

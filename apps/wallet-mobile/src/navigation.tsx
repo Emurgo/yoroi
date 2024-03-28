@@ -12,6 +12,7 @@ import React from 'react'
 import {Dimensions, Platform, TouchableOpacity, TouchableOpacityProps, ViewStyle} from 'react-native'
 
 import {Icon} from './components'
+import {DappExplorerRoutes} from './features/DappExplorer'
 import {ScanFeature} from './features/Scan/common/types'
 import {Routes as StakingGovernanceRoutes} from './features/Staking/Governance/common/navigation'
 import {COLORS} from './theme'
@@ -115,6 +116,7 @@ export type WalletTabRoutes = {
   'staking-dashboard': NavigatorScreenParams<DashboardRoutes>
   nfts: NavigatorScreenParams<NftRoutes>
   menu: NavigatorScreenParams<MenuRoutes>
+  'dapp-explorer': NavigatorScreenParams<DappExplorerRoutes>
 }
 
 export type WalletStackRoutes = {
@@ -126,6 +128,7 @@ export type WalletStackRoutes = {
   'voting-registration': NavigatorScreenParams<VotingRegistrationRoutes>
   'toggle-analytics-settings': NavigatorScreenParams<ToggleAnalyticsSettingsRoutes>
   governance: NavigatorScreenParams<StakingGovernanceRoutes>
+  'dapp-explorer': NavigatorScreenParams<DappExplorerRoutes>
 }
 export type WalletStackRouteNavigation = StackNavigationProp<WalletStackRoutes>
 

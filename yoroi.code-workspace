@@ -45,6 +45,10 @@
       "path": "./packages/staking"
     },
     {
+      "name": "@yoroi/dapp-connector",
+      "path": "./packages/dapp-connector"
+    },
+    {
       "name": "@yoroi/wallet-mobile",
       "path": "./apps/wallet-mobile"
     },

@@ -8,6 +8,7 @@ import {Keyboard, Platform} from 'react-native'
 import {VotingRegistration} from './Catalyst'
 import {Icon, OfflineBanner} from './components'
 import {DashboardNavigator} from './Dashboard'
+import {DappExplorerNavigator} from './features/DappExplorer'
 import {ShowExchangeResultOrderScreen} from './features/Exchange/useCases/ShowExchangeResultOrderScreen/ShowExchangeResultOrderScreen'
 import {useLinksRequestAction} from './features/Links/common/useLinksRequestAction'
 import {useLinksShowActionResult} from './features/Links/common/useLinksShowActionResult'
@@ -15,6 +16,7 @@ import {MenuNavigator} from './features/Menu'
 import {SettingsScreenNavigator} from './features/Settings'
 import {GovernanceNavigator} from './features/Staking/Governance'
 import {ToggleAnalyticsSettingsNavigator} from './features/ToggleAnalyticsSettings'
+import {CONFIG} from './legacy/config'
 import {useMetrics} from './metrics/metricsManager'
 import {hideTabBarForRoutes, WalletStackRoutes, WalletTabRoutes} from './navigation'
 import {NftDetailsNavigator} from './NftDetails/NftDetailsNavigator'
@@ -29,7 +31,11 @@ const Tab = createBottomTabNavigator<WalletTabRoutes>()
 const WalletTabNavigator = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const initialRoute = isHaskellShelley(wallet.walletImplementationId) ? 'staking-dashboard' : 'history'
+  const initialRoute = CONFIG.DAPP_EXPLORER_ENABLED
+    ? 'history'
+    : isHaskellShelley(wallet.walletImplementationId)
+    ? 'staking-dashboard'
+    : 'history'
 
   const [isKeyboardOpen, setIsKeyboardOpen] = React.useState(false)
 
@@ -117,7 +123,7 @@ const WalletTabNavigator = () => {
           )}
         </Tab.Screen>
 
-        {isHaskellShelley(wallet.walletImplementationId) && (
+        {isHaskellShelley(wallet.walletImplementationId) && !CONFIG.DAPP_EXPLORER_ENABLED && (
           <Tab.Screen
             name="staking-dashboard"
             component={DashboardNavigator}
@@ -130,6 +136,23 @@ const WalletTabNavigator = () => {
               ),
               tabBarLabel: strings.stakingButton,
               tabBarTestID: 'stakingTabBarButton',
+            }}
+          />
+        )}
+
+        {isHaskellShelley(wallet.walletImplementationId) && CONFIG.DAPP_EXPLORER_ENABLED && (
+          <Tab.Screen
+            name="dapp-explorer"
+            component={DappExplorerNavigator}
+            options={{
+              tabBarIcon: ({focused}) => (
+                <Icon.Compass
+                  size={24}
+                  color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
+                />
+              ),
+              tabBarLabel: strings.dappExplorerTabBarLabel,
+              tabBarTestID: 'dappExplorerTabBarButton',
             }}
           />
         )}
@@ -193,6 +216,8 @@ export const WalletNavigator = () => {
       <Stack.Screen name="toggle-analytics-settings" component={ToggleAnalyticsSettingsNavigator} />
 
       <Stack.Screen name="governance" component={GovernanceNavigator} />
+
+      <Stack.Screen name="dapp-explorer" component={DappExplorerNavigator} />
     </Stack.Navigator>
   )
 }
@@ -234,6 +259,10 @@ const messages = defineMessages({
     id: 'menu',
     defaultMessage: '!!!Menu',
   },
+  dappExplorerButton: {
+    id: 'components.common.navigation.dappExplorerButton',
+    defaultMessage: '!!!Discover',
+  },
 })
 
 const useStrings = () => {
@@ -248,5 +277,6 @@ const useStrings = () => {
     walletTabBarLabel: intl.formatMessage(messages.walletButton),
     nftsTabBarLabel: intl.formatMessage(messages.nftsButton),
     menuTabBarLabel: intl.formatMessage(messages.menuButton),
+    dappExplorerTabBarLabel: intl.formatMessage(messages.dappExplorerButton),
   }
 }

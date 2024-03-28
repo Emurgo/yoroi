@@ -1,7 +1,7 @@
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {SafeArea} from '../../common'
+import {SafeArea} from '../../../../../components/SafeArea'
 import {FailedTxScreen} from './FailedTxScreen'
 
 storiesOf('Governance/FailedTxScreen', module)
