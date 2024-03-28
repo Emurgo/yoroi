@@ -8,7 +8,6 @@ import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Icon, KeyboardAvoidingView} from '../../../../components'
-import {useStatusBar} from '../../../../components/hooks/useStatusBar'
 import {LoadingOverlayState, useLoadingOverlay} from '../../../../components/LoadingOverlay/LoadingOverlayContext'
 import {Space} from '../../../../components/Space/Space'
 import {Warning} from '../../../../components/Warning'
@@ -34,7 +33,6 @@ export const CreateExchangeOrderScreen = () => {
   const {track} = useMetrics()
   const wallet = useSelectedWallet()
   const navigateTo = useNavigateTo()
-  const wallet = useSelectedWallet()
 
   const [contentHeight, setContentHeight] = React.useState(0)
 

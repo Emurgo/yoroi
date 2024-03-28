@@ -6,7 +6,6 @@ import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, KeyboardAvoidingView, Text, TextInput} from '../../../components'
-import {useStatusBar} from '../../../components/hooks/useStatusBar'
 import {showErrorDialog} from '../../../dialogs'
 import {errorMessages} from '../../../i18n/global-messages'
 import {LoadingOverlay} from '../../../legacy/LoadingOverlay'
