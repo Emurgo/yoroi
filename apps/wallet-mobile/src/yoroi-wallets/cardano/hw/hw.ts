@@ -94,19 +94,14 @@ const isAdaAppClosedError = (e: Error | unknown): boolean => {
 
 const mapLedgerError = (e: Error | any): Error | LocalizableError => {
   if (isAdaAppClosedError(e)) {
-    Logger.info('ledgerUtils::mapLedgerError: Ada app closed', e)
     return new AdaAppClosedError()
   } else if (isUserError(e)) {
-    Logger.info('ledgerUtils::mapLedgerError: User-side error', e)
     return new LedgerUserError()
   } else if (isRejectedError(e)) {
-    Logger.info('ledgerUtils::mapLedgerError: Rejected by user error', e)
     return new RejectedByUserError()
   } else if (isConnectionError(e)) {
-    Logger.info('ledgerUtils::mapLedgerError: General/BleError', e)
     return new GeneralConnectionError()
   } else if (e instanceof DeprecatedAdaAppError) {
-    Logger.info('ledgerUtils::mapLedgerError: Deprecated Ada app', e)
     return e
   } else {
     Logger.error('ledgerUtils::mapLedgerError: Unexpected error', e)
@@ -216,15 +211,12 @@ export const getHWDeviceInfo = async (
   useUSB = false,
 ): Promise<HWDeviceInfo> => {
   try {
-    Logger.debug('ledgerUtils::getHWDeviceInfo called')
     const appAda = await connectionHandler(deviceId, deviceObj, useUSB)
     // assume single account in Yoroi
     const accountPath = makeCardanoAccountBIP44Path(getWalletType(walletImplementationId), NUMBERS.ACCOUNT_INDEX)
-    Logger.debug('bip44 account path', accountPath)
     // get Cardano's first account
     // i.e hdPath = [2147483692, 2147485463, 2147483648]
     const extendedPublicKeyResp: GetExtendedPublicKeyResponse = await appAda.getExtendedPublicKey(accountPath)
-    Logger.debug('extended public key', extendedPublicKeyResp)
     const serial: GetSerialResponse = await appAda.getSerial()
     const hwDeviceInfo = normalizeHWResponse({
       extendedPublicKeyResp,
@@ -232,8 +224,6 @@ export const getHWDeviceInfo = async (
       deviceObj,
       ...serial,
     })
-    Logger.info('ledgerUtils::getHWDeviceInfo: Ledger device OK')
-    Logger.info('hwDeviceInfo', hwDeviceInfo)
     await appAda.transport.close()
     return hwDeviceInfo
   } catch (e) {
@@ -295,13 +285,9 @@ export const signTxWithLedger = async (
   useUSB: boolean,
 ) => {
   try {
-    Logger.debug('ledgerUtils::signTxWithLedger called')
     const appAda = await connectionHandler(hwDeviceInfo.hwFeatures.deviceId, hwDeviceInfo.hwFeatures.deviceObj, useUSB)
-    Logger.debug('ledgerUtils::signTxWithLedger inputs', signRequest.tx.inputs)
-    Logger.debug('ledgerUtils::signTxWithLedger outputs', signRequest.tx.outputs)
     const ledgerSignature: SignTransactionResponse = await appAda.signTransaction(signRequest)
     await appAda.transport.close()
-    Logger.debug('ledgerUtils::ledgerSignature', JSON.stringify(ledgerSignature))
     return ledgerSignature
   } catch (e) {
     throw mapLedgerError(e)

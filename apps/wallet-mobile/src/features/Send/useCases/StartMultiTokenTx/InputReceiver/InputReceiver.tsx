@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {ActivityIndicator, StyleSheet, Text} from 'react-native'
 
@@ -13,11 +14,12 @@ export const InputReceiver = ({
   ...props
 }: {isLoading?: boolean; isValid?: boolean} & TextInputProps) => {
   const strings = useStrings()
+  const {styles, colors} = useStyles()
   const navigateTo = useNavigateTo()
   const rightAdornment = isLoading ? (
-    <ActivityIndicator size={25} color="#3154CB" />
+    <ActivityIndicator size={25} color={colors.indicatorColor} />
   ) : isValid ? (
-    <Icon.Check size={25} color="#08C29D" />
+    <Icon.Check size={25} color={colors.iconColor} />
   ) : (
     <ScannerButton onPress={navigateTo.reader} />
   )
@@ -43,8 +45,17 @@ export const InputReceiver = ({
   )
 }
 
-const styles = StyleSheet.create({
-  label: {
-    fontSize: 15,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
+  const styles = StyleSheet.create({
+    label: {
+      fontSize: 15,
+    },
+  })
+  const colors = {
+    indicatorColor: color.primary[600],
+    iconColor: color.secondary[500],
+  }
+  return {styles, colors}
+}

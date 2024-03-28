@@ -1,4 +1,4 @@
-import {handleApiError} from '@yoroi/common'
+import {getApiError} from '@yoroi/common'
 import {Api, Balance} from '@yoroi/types'
 
 import {Amounts, asQuantity} from '../../../yoroi-wallets/utils/utils'
@@ -9,7 +9,7 @@ import {ClaimApiClaimTokensResponse, ClaimToken} from './types'
 export const asClaimApiError = (error: Api.ResponseError) => {
   const ClaimApiError = claimApiErrors.find(({statusCode}) => statusCode === error.status)
   if (ClaimApiError) throw new ClaimApiError()
-  handleApiError(error)
+  throw getApiError(error)
 }
 
 export const asClaimToken = (

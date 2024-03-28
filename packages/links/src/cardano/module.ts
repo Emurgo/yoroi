@@ -1,38 +1,15 @@
 import {Links} from '@yoroi/types'
-import {
-  LinksCardanoUriConfig,
-  LinksCardanoClaimV1,
-  LinksCardanoLegacyTransfer,
-} from './types'
-import {preapareParams} from './params'
 import {isArray} from '@yoroi/common'
+import {freeze} from 'immer'
+
+import {preapareParams} from './params'
 import {isCardanoAddress} from './helpers'
-
-export const cardanoScheme: Links.Scheme = 'web+cardano'
-export const configCardanoClaimV1: Readonly<LinksCardanoClaimV1> = {
-  scheme: cardanoScheme,
-  authority: 'claim',
-  version: 'v1',
-  rules: {
-    requiredParams: ['code', 'faucet_url'],
-    optionalParams: [],
-    forbiddenParams: ['address'],
-    extraParams: 'include',
-  },
-} as const
-
-export const configCardanoLegacyTransfer: Readonly<LinksCardanoLegacyTransfer> =
-  {
-    scheme: cardanoScheme,
-    authority: '',
-    version: '',
-    rules: {
-      requiredParams: ['address'],
-      optionalParams: ['amount', 'memo', 'message'],
-      forbiddenParams: [],
-      extraParams: 'drop',
-    },
-  } as const
+import {LinksCardanoUriConfig} from './types'
+import {
+  cardanoScheme,
+  configCardanoClaimV1,
+  configCardanoLegacyTransfer,
+} from './constants'
 
 export const linksCardanoModuleMaker =
   (): Links.Module<LinksCardanoUriConfig> => {
@@ -128,10 +105,13 @@ export const linksCardanoModuleMaker =
       return create({config, params})
     }
 
-    return {
-      create,
-      parse,
-    } as const
+    return freeze(
+      {
+        create,
+        parse,
+      },
+      true,
+    )
   }
 
 const isCardanoClaimV1 = (url: URL) => {

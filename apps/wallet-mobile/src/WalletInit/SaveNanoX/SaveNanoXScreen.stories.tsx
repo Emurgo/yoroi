@@ -4,10 +4,10 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
 import {WalletInitRoutes} from '../../navigation'
-import {WalletManagerProvider} from '../../WalletManager'
+import {WalletManager, walletManager} from '../../wallet-manager/walletManager'
+import {WalletManagerProvider} from '../../wallet-manager/WalletManagerContext'
 import {NETWORK_ID, WALLET_IMPLEMENTATION_ID} from '../../yoroi-wallets/cardano/constants/testnet/constants'
 import {NetworkError} from '../../yoroi-wallets/cardano/errors'
-import {WalletManager, walletManager} from '../../yoroi-wallets/walletManager'
 import {SaveNanoXScreen} from './SaveNanoXScreen'
 
 const params: RouteProp<WalletInitRoutes, 'save-nano-x'>['params'] = {

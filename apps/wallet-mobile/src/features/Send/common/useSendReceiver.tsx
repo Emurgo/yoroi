@@ -1,15 +1,15 @@
 import {isDomain, isNameServer, isResolvableDomain, useResolverCryptoAddresses} from '@yoroi/resolver'
+import {useTransfer} from '@yoroi/transfer'
 import {Resolver} from '@yoroi/types'
 import * as React from 'react'
 import {useQueryClient} from 'react-query'
 
 import {debounceMaker} from '../../../utils/debounceMaker'
-import {useSend} from './SendContext'
 
 export const useSendReceiver = () => {
   const queryClient = useQueryClient()
 
-  const {targets, selectedTargetIndex, receiverResolveChanged, addressRecordsFetched} = useSend()
+  const {targets, selectedTargetIndex, receiverResolveChanged, addressRecordsFetched} = useTransfer()
   const receiver = targets[selectedTargetIndex].receiver
   const isUnsupportedDomain = !isResolvableDomain(receiver.resolve) && isDomain(receiver.resolve)
 

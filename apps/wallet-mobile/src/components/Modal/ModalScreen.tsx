@@ -1,4 +1,5 @@
 import {useCardAnimation} from '@react-navigation/stack'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Animated, GestureResponderEvent, Pressable, StyleSheet, Text, View} from 'react-native'
 
@@ -7,6 +8,7 @@ import {LoadingOverlay} from '../LoadingOverlay/LoadingOverlay'
 import {useModal} from './ModalContext'
 
 export const ModalScreen = () => {
+  const styles = useStyles()
   const {current} = useCardAnimation()
   const {height, closeModal, content, isOpen, isLoading} = useModal()
   const [swipeLocationY, setSwipeLocationY] = React.useState(height)
@@ -60,6 +62,7 @@ const Header = (props: {
   onResponderMove?: (event: GestureResponderEvent) => void
   onStartShouldSetResponder?: () => boolean
 }) => {
+  const styles = useStyles()
   const {title} = useModal()
   return (
     <View style={styles.header} {...props}>
@@ -74,51 +77,57 @@ const Header = (props: {
   )
 }
 
-const SliderIndicator = () => <View style={styles.slider} />
+const SliderIndicator = () => {
+  const styles = useStyles()
+  return <View style={styles.slider} />
+}
 
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    alignSelf: 'stretch',
-  },
-  cancellableArea: {
-    flexGrow: 1,
-  },
-  backdrop: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  animatedView: {
-    alignSelf: 'stretch',
-  },
-  rounded: {
-    borderTopRightRadius: 20,
-    borderTopLeftRadius: 20,
-  },
-  sheet: {
-    flex: 1,
-    backgroundColor: 'white',
-    alignSelf: 'stretch',
-    paddingHorizontal: 16,
-    paddingBottom: 16,
-  },
-  title: {
-    fontWeight: '500',
-    fontFamily: 'Rubik-Medium',
-    fontSize: 20,
-    padding: 16,
-    color: '#000',
-  },
-  header: {
-    alignItems: 'center',
-    alignSelf: 'stretch',
-  },
-  slider: {
-    height: 4,
-    backgroundColor: 'black',
-    width: 32,
-    borderRadius: 10,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, typography} = theme
+  const styles = StyleSheet.create({
+    root: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+      alignSelf: 'stretch',
+    },
+    cancellableArea: {
+      flexGrow: 1,
+    },
+    backdrop: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    animatedView: {
+      alignSelf: 'stretch',
+    },
+    rounded: {
+      borderTopRightRadius: 20,
+      borderTopLeftRadius: 20,
+    },
+    sheet: {
+      flex: 1,
+      backgroundColor: color['bottom-sheet-background'],
+      alignSelf: 'stretch',
+      paddingHorizontal: 16,
+      paddingBottom: 16,
+    },
+    title: {
+      ...typography['heading-3-medium'],
+      padding: 14,
+      color: color.gray.max,
+    },
+    header: {
+      alignItems: 'center',
+      alignSelf: 'stretch',
+    },
+    slider: {
+      height: 4,
+      backgroundColor: color.gray.max,
+      width: 32,
+      borderRadius: 10,
+    },
+  })
+  return styles
+}

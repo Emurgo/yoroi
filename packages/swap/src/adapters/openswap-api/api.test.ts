@@ -1,397 +1,231 @@
-import {OpenSwapApi} from '@yoroi/openswap'
-import {Balance, Swap} from '@yoroi/types'
+import {OpenSwapApi} from './api'
+import {axiosClient} from './config'
+import {
+  CancelOrderRequest,
+  CreateOrderRequest,
+  Network,
+  Provider,
+} from './types'
 
-import {swapApiMaker} from './api'
-import {openswapMocks} from './openswap.mocks'
-import {apiMocks} from './api.mocks'
+jest.mock('./config.ts')
 
-const stakingKey = 'someStakingKey'
-const primaryTokenId = ''
-const supportedProviders: ReadonlyArray<Swap.SupportedProvider> = ['minswap']
-
-describe('swapApiMaker', () => {
-  let mockOpenSwapApi: jest.Mocked<OpenSwapApi>
-
-  beforeEach(() => {
-    jest.clearAllMocks()
-    mockOpenSwapApi = {
-      getPrice: jest.fn(),
-      cancelOrder: jest.fn(),
-      createOrder: jest.fn(),
-      getOrders: jest.fn(),
-      getTokens: jest.fn(),
-      getTokenPairs: jest.fn(),
-      getCompletedOrders: jest.fn(),
-      getLiquidityPools: jest.fn(),
-      getPoolsPair: jest.fn(),
-      network: 'mainnet',
-    } as any
-  })
-
-  it('getOpenOrders', async () => {
-    mockOpenSwapApi.getOrders = jest
-      .fn()
-      .mockResolvedValue(openswapMocks.getOpenOrders)
-
-    const api = swapApiMaker(
-      {
-        isMainnet: true,
-        stakingKey,
-        primaryTokenId,
-        supportedProviders,
-      },
-      {
-        openswap: mockOpenSwapApi,
-      },
-    )
-
-    const result = await api.getOpenOrders()
-
-    expect(mockOpenSwapApi.getOrders).toBeCalledWith(stakingKey)
-    expect(result).toEqual<Swap.OpenOrderResponse>(apiMocks.getOpenOrders)
-  })
-
-  it('getCompletedOrders', async () => {
-    mockOpenSwapApi.getCompletedOrders = jest
-      .fn()
-      .mockResolvedValue(openswapMocks.getCompletedOrders)
-
-    const api = swapApiMaker(
-      {
-        isMainnet: true,
-        stakingKey,
-        primaryTokenId,
-        supportedProviders,
-      },
-      {
-        openswap: mockOpenSwapApi,
-      },
-    )
-
-    const result = await api.getCompletedOrders()
-
-    expect(mockOpenSwapApi.getCompletedOrders).toBeCalledWith(stakingKey)
-    expect(result).toEqual<Swap.CompletedOrderResponse>(
-      apiMocks.getCompletedOrders,
+describe('OpenSwapApi constructor', () => {
+  it('should throw an error for unsupported networks', () => {
+    const unsupportedNetwork = 'testnet' // Assuming 'testnet' is not supported
+    expect(() => new OpenSwapApi(unsupportedNetwork as Network)).toThrow(
+      /Supported networks are/,
     )
   })
 
-  it('cancelOrder', async () => {
-    mockOpenSwapApi = {
-      cancelOrder: jest.fn().mockResolvedValue('data'),
-    } as any
+  it('should create an instance for supported networks', () => {
+    const supportedNetwork = 'mainnet'
+    const api = new OpenSwapApi(supportedNetwork)
+    expect(api).toBeInstanceOf(OpenSwapApi)
+    expect(api.network).toBe(supportedNetwork)
+  })
+})
 
-    const api = swapApiMaker(
-      {
-        isMainnet: true,
-        stakingKey,
-        primaryTokenId,
-        supportedProviders,
-      },
-      {
-        openswap: mockOpenSwapApi,
-      },
+describe('createOrder', () => {
+  it('should call createOrder with correct parameters', async () => {
+    const mockAxios = axiosClient as jest.Mocked<typeof axiosClient>
+    mockAxios.get.mockImplementationOnce(() =>
+      Promise.resolve({
+        status: 200,
+        data: 'test-createOrder',
+      }),
     )
 
-    const result = await api.cancelOrder({
-      address: 'address',
-      utxos: {
-        order: 'order',
-        collateral: 'collateral',
+    const api = new OpenSwapApi('mainnet', axiosClient)
+    const orderData: CreateOrderRequest = {
+      walletAddress: 'walletAddress',
+      protocol: 'sundaeswap',
+      poolId: 'poolId',
+      sell: {
+        policyId: 'sell-policyId',
+        assetName: 'buy-assetName',
+        amount: '123',
       },
-    })
+      buy: {
+        policyId: 'buy-policyId',
+        assetName: 'buy-assetName',
+        amount: '321',
+      },
+    }
 
-    expect(mockOpenSwapApi.cancelOrder).toBeCalledWith({
-      collateralUTxO: 'collateral',
-      orderUTxO: 'order',
-      walletAddress: 'address',
-    })
-    expect(result).toBe('data')
+    const result = await api.createOrder(orderData)
+
+    expect(result).toBe('test-createOrder')
   })
+})
 
-  it('no deps (coverage)', () => {
-    const testnet = swapApiMaker({
-      isMainnet: true,
-      stakingKey,
-      primaryTokenId,
-      supportedProviders,
-    })
-    expect(testnet).toBeDefined()
+describe('cancelOrder', () => {
+  it('should call cancelOrder with correct parameters', async () => {
+    const mockAxios = axiosClient as jest.Mocked<typeof axiosClient>
+    mockAxios.get.mockImplementationOnce(() =>
+      Promise.resolve({
+        status: 200,
+        data: {cbor: 'test-cancelOrder'},
+      }),
+    )
 
-    const mainnet = swapApiMaker({
-      isMainnet: false,
-      stakingKey,
-      primaryTokenId,
-      supportedProviders,
-    })
-    expect(mainnet).toBeDefined()
+    const api = new OpenSwapApi('mainnet', axiosClient)
+    const orderData: CancelOrderRequest = {
+      orderUTxO: 'orderUTxO',
+      collateralUTxO: 'collateralUTxO',
+      walletAddress: 'walletAddress',
+    }
+
+    const result = await api.cancelOrder(orderData)
+
+    expect(result).toBe('test-cancelOrder')
   })
+})
 
-  describe('createOrder', () => {
-    it('success', async () => {
-      const mockApiResponse = {
-        status: 'success',
-        datum: 'someDatum',
-        hash: 'someHash',
-        address: 'someContractAddress',
-      }
+describe('getOrders', () => {
+  it('should call getOrders with correct parameters', async () => {
+    const mockAxios = axiosClient as jest.Mocked<typeof axiosClient>
+    mockAxios.get.mockImplementationOnce(() =>
+      Promise.resolve({
+        status: 200,
+        data: 'test-getOrders',
+      }),
+    )
 
-      mockOpenSwapApi.createOrder = jest.fn().mockResolvedValue(mockApiResponse)
+    const api = new OpenSwapApi('mainnet', axiosClient)
+    const stakeKeyHash = 'stake-key-hash'
 
-      const api = swapApiMaker(
-        {
-          isMainnet: true,
-          stakingKey,
-          primaryTokenId,
-          supportedProviders,
-        },
-        {
-          openswap: mockOpenSwapApi,
-        },
-      )
+    const result = await api.getOrders(stakeKeyHash)
 
-      const result = await api.createOrder(apiMocks.createOrderData)
-
-      expect(mockOpenSwapApi.createOrder).toHaveBeenCalledWith(
-        expect.any(Object),
-      )
-      expect(result).toEqual<Swap.CreateOrderResponse>({
-        datum: mockApiResponse.datum,
-        datumHash: mockApiResponse.hash,
-        contractAddress: mockApiResponse.address,
-      })
-    })
-
-    it('fail with reason', async () => {
-      const mockApiResponse = {
-        status: 'failed',
-        reason: 'Insufficient funds',
-      }
-
-      mockOpenSwapApi.createOrder = jest.fn().mockResolvedValue(mockApiResponse)
-
-      const api = swapApiMaker(
-        {
-          isMainnet: true,
-          stakingKey,
-          primaryTokenId,
-          supportedProviders,
-        },
-        {
-          openswap: mockOpenSwapApi,
-        },
-      )
-
-      await expect(api.createOrder(apiMocks.createOrderData)).rejects.toBe(
-        'Insufficient funds',
-      )
-      expect(mockOpenSwapApi.createOrder).toHaveBeenCalledWith(
-        expect.any(Object),
-      )
-    })
-
-    it('fail with no reason', async () => {
-      const mockApiResponse = {
-        status: 'failed',
-      }
-
-      mockOpenSwapApi.createOrder = jest.fn().mockResolvedValue(mockApiResponse)
-
-      const api = swapApiMaker(
-        {
-          isMainnet: true,
-          stakingKey,
-          primaryTokenId,
-          supportedProviders,
-        },
-        {
-          openswap: mockOpenSwapApi,
-        },
-      )
-
-      await expect(api.createOrder(apiMocks.createOrderData)).rejects.toBe(
-        'Unknown error',
-      )
-      expect(mockOpenSwapApi.createOrder).toHaveBeenCalledWith(
-        expect.any(Object),
-      )
-    })
+    expect(result).toBe('test-getOrders')
   })
+})
 
-  describe('getTokenPairs', () => {
-    it('mainnet', async () => {
-      mockOpenSwapApi.getTokenPairs = jest
-        .fn()
-        .mockResolvedValue(openswapMocks.getTokenPairs)
-      const api = swapApiMaker(
-        {
-          isMainnet: true,
-          stakingKey,
-          primaryTokenId,
-          supportedProviders,
-        },
-        {
-          openswap: mockOpenSwapApi,
-        },
-      )
+describe('getCompletedOrders', () => {
+  it('should call getCompletedOrders with correct parameters', async () => {
+    const mockAxios = axiosClient as jest.Mocked<typeof axiosClient>
+    mockAxios.get.mockImplementationOnce(() =>
+      Promise.resolve({
+        status: 200,
+        data: [{status: 'matched', test: 'test-getCompletedOrders'}],
+      }),
+    )
 
-      const result = await api.getTokenPairs('')
+    const api = new OpenSwapApi('mainnet', axiosClient)
+    const stakeKeyHash = 'stake-key-hash'
 
-      expect(mockOpenSwapApi.getTokenPairs).toHaveBeenCalledTimes(1)
-      expect(result).toEqual<Array<Balance.Token>>(apiMocks.getTokenPairs)
-    })
+    const result = await api.getCompletedOrders(stakeKeyHash)
 
-    it('preprod (mocked)', async () => {
-      mockOpenSwapApi.getTokenPairs = jest
-        .fn()
-        .mockResolvedValue(openswapMocks.getTokenPairs)
-
-      const api = swapApiMaker(
-        {
-          isMainnet: false,
-          stakingKey,
-          primaryTokenId,
-          supportedProviders,
-        },
-        {
-          openswap: mockOpenSwapApi,
-        },
-      )
-
-      const result = await api.getTokenPairs('')
-
-      expect(result).toBeDefined()
-      expect(mockOpenSwapApi.getTokenPairs).not.toHaveBeenCalled()
-    })
+    expect(result).toEqual([
+      {status: 'matched', test: 'test-getCompletedOrders'},
+    ])
   })
+})
 
-  describe('getTokens', () => {
-    it('mainnet', async () => {
-      mockOpenSwapApi.getTokens = jest
-        .fn()
-        .mockResolvedValue(openswapMocks.getTokens)
-      const api = swapApiMaker(
-        {
-          isMainnet: true,
-          stakingKey,
-          primaryTokenId,
-          supportedProviders,
-        },
-        {
-          openswap: mockOpenSwapApi,
-        },
-      )
+describe('getPrice', () => {
+  it('should call getPrice with correct parameters', async () => {
+    const mockAxios = axiosClient as jest.Mocked<typeof axiosClient>
+    mockAxios.get.mockImplementationOnce(() =>
+      Promise.resolve({
+        status: 200,
+        data: 'test-getPrice',
+      }),
+    )
 
-      const result = await api.getTokens()
+    const api = new OpenSwapApi('mainnet', axiosClient)
+    const baseToken = {
+      policyId: 'baseToken-policyId',
+      name: 'baseToken-name',
+    }
+    const quoteToken = {
+      policyId: 'quoteToken-policyId',
+      name: 'quoteToken-name',
+    }
 
-      expect(mockOpenSwapApi.getTokens).toHaveBeenCalledTimes(1)
-      expect(result).toEqual<Array<Balance.TokenInfo>>(apiMocks.getTokens)
-    })
+    const result = await api.getPrice({baseToken, quoteToken})
 
-    it('preprod', async () => {
-      mockOpenSwapApi.getTokens = jest
-        .fn()
-        .mockResolvedValue(openswapMocks.getTokens)
-
-      const api = swapApiMaker(
-        {
-          isMainnet: false,
-          stakingKey,
-          primaryTokenId,
-          supportedProviders,
-        },
-        {
-          openswap: mockOpenSwapApi,
-        },
-      )
-
-      const result = await api.getTokens()
-
-      expect(result).toBeDefined()
-      expect(mockOpenSwapApi.getTokenPairs).not.toHaveBeenCalled()
-    })
+    expect(result).toEqual('test-getPrice')
   })
+})
 
-  describe('getPools', () => {
-    it('mainnet', async () => {
-      mockOpenSwapApi.getLiquidityPools = jest
-        .fn()
-        .mockResolvedValue(openswapMocks.getLiquidityPools)
+describe('getPoolsPair', () => {
+  it('should call getPoolsPair with correct parameters', async () => {
+    const mockAxios = axiosClient as jest.Mocked<typeof axiosClient>
+    mockAxios.get.mockImplementationOnce(() =>
+      Promise.resolve({
+        status: 200,
+        data: 'test-getPoolsPair',
+      }),
+    )
 
-      const api = swapApiMaker(
-        {
-          isMainnet: true,
-          stakingKey,
-          primaryTokenId,
-          supportedProviders,
-        },
-        {
-          openswap: mockOpenSwapApi,
-        },
-      )
+    const api = new OpenSwapApi('mainnet', axiosClient)
+    const tokenA = {
+      policyId: 'tokenA-policyId',
+      assetName: 'tokenA-name',
+    }
+    const tokenB = {
+      policyId: 'tokenB-policyId',
+      assetName: 'tokenB-name',
+    }
 
-      const result = await api.getPools({
-        tokenA: 'token.A',
-        tokenB: 'token.B',
-      })
+    const result = await api.getPoolsPair({tokenA, tokenB})
 
-      expect(result).toEqual<Swap.PoolResponse>(apiMocks.getPools)
-      expect(mockOpenSwapApi.getLiquidityPools).toHaveBeenCalledTimes(1)
-    })
-
-    it('preprod (mocked)', async () => {
-      mockOpenSwapApi.getLiquidityPools = jest
-        .fn()
-        .mockResolvedValue(openswapMocks.getLiquidityPools)
-
-      const api = swapApiMaker(
-        {
-          isMainnet: false,
-          stakingKey,
-          primaryTokenId,
-          supportedProviders,
-        },
-        {
-          openswap: mockOpenSwapApi,
-        },
-      )
-
-      const result = await api.getPools({
-        tokenA: 'token.A',
-        tokenB: 'token.B',
-      })
-
-      expect(result).toBeDefined()
-      expect(mockOpenSwapApi.getLiquidityPools).not.toHaveBeenCalled()
-    })
+    expect(result).toEqual('test-getPoolsPair')
   })
+})
 
-  describe('getPrice', () => {
-    it('mainnet', async () => {
-      mockOpenSwapApi.getPrice = jest
-        .fn()
-        .mockResolvedValue(openswapMocks.getPrice)
+describe('getLiquidityPools', () => {
+  it('should call getLiquidityPools with correct parameters', async () => {
+    const mockAxios = axiosClient as jest.Mocked<typeof axiosClient>
+    mockAxios.get.mockImplementationOnce(() =>
+      Promise.resolve({
+        status: 200,
+        data: 'test-getLiquidityPools',
+      }),
+    )
 
-      const api = swapApiMaker(
-        {
-          isMainnet: true,
-          stakingKey,
-          primaryTokenId,
-          supportedProviders,
-        },
-        {
-          openswap: mockOpenSwapApi,
-        },
-      )
+    const api = new OpenSwapApi('mainnet', axiosClient)
+    const tokenA = 'tokenA'
+    const tokenB = 'tokenB'
+    const providers: ReadonlyArray<Provider> = ['spectrum']
 
-      const result = await api.getPrice({
-        baseToken: '',
-        quoteToken:
-          '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6.4d494e',
-      })
+    const result = await api.getLiquidityPools({tokenA, tokenB, providers})
 
-      expect(result).toBe(0.07080044463)
-      expect(mockOpenSwapApi.getPrice).toHaveBeenCalledTimes(1)
-    })
+    expect(result).toEqual('test-getLiquidityPools')
+  })
+})
+
+describe('getTokenPairs', () => {
+  it('should call getTokenPairs with correct parameters', async () => {
+    const mockAxios = axiosClient as jest.Mocked<typeof axiosClient>
+    mockAxios.get.mockImplementationOnce(() =>
+      Promise.resolve({
+        status: 200,
+        data: 'test-getTokenPairs',
+      }),
+    )
+
+    const api = new OpenSwapApi('mainnet', axiosClient)
+
+    const result = await api.getTokenPairs()
+
+    expect(result).toEqual('test-getTokenPairs')
+  })
+})
+
+describe('getTokens', () => {
+  it('should call getTokens with correct parameters', async () => {
+    const mockAxios = axiosClient as jest.Mocked<typeof axiosClient>
+    mockAxios.get.mockImplementationOnce(() =>
+      Promise.resolve({
+        status: 200,
+        data: 'test-getTokens',
+      }),
+    )
+
+    const api = new OpenSwapApi('mainnet', axiosClient)
+
+    const result = await api.getTokens()
+
+    expect(result).toEqual('test-getTokens')
   })
 })

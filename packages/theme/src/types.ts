@@ -3,7 +3,7 @@ import {TextStyle} from 'react-native'
 export type Theme = {
   color: Palette
   typography: Typography
-  spacing: Spacing
+  padding: Spacing
 }
 
 export type HexColor = `#${string}`
@@ -68,7 +68,9 @@ export type Palette = {
     'blue-green': Gradient
     'green': Gradient
     'blue': Gradient
+    'light': Gradient
   }
+  'bottom-sheet-background': HexColor
   'overlay-extension': {hex: HexColor; opacity: number}
   'overlay-mobile': {hex: HexColor; opacity: number}
   'sidebar-overlay': {hex: HexColor; opacity: number}
@@ -84,38 +86,25 @@ type TypographyKeys =
   | 'heading-3-regular'
   | 'heading-4-medium'
   | 'heading-4-regular'
-  | 'heading-5-medium'
-  | 'heading-5-regular'
-  | 'body-1-medium'
-  | 'body-1-regular'
-  | 'body-2-medium'
-  | 'body-2-regular'
-  | 'body-3-medium'
-  | 'body-3-regular'
-  | 'button-1'
-  | 'button-2'
-  | 'button-3'
-  | 'link-1'
-  | 'link-1-underline'
-  | 'link-2'
-  | 'link-2-underline'
-  | 'overline'
-  | 'caption-medium'
-  | 'caption-regular'
-
-type SpacingKeys =
-  | 'spacing-2'
-  | 'spacing-4'
-  | 'spacing-6'
-  | 'spacing-8'
-  | 'spacing-10'
-  | 'spacing-12'
-  | 'spacing-16'
-  | 'spacing-24'
-  | 'spacing-32'
-  | 'spacing-40'
-  | 'spacing-48'
-  | 'spacing-80'
+  | 'body-1-l-medium'
+  | 'body-1-l-regular'
+  | 'body-2-m-medium'
+  | 'body-2-m-regular'
+  | 'body-3-s-medium'
+  | 'body-3-s-regular'
+  | 'button-1-l'
+  | 'button-2-m'
+  | 'link-1-l'
+  | 'link-1-l-underline'
+  | 'link-2-m'
+  | 'link-2-m-underline'
+  | 'navbar'
 
 export type Typography = Record<TypographyKeys, TextStyle>
-export type Spacing = Record<SpacingKeys, string>
+
+export type Direction = 'x' | 'y' | 't' | 'b' | 'l' | 'r'
+export type SpacingSize = 'none' | 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl'
+type SpacingKeys = `${Direction}-${SpacingSize}` | SpacingSize | 'none'
+export type Spacing = {
+  [key in SpacingKeys]?: Record<string, number>
+}

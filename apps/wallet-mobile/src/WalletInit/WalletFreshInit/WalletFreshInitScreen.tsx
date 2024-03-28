@@ -4,7 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, ButtonProps, Spacer, StatusBar} from '../../components'
+import {Button, ButtonProps, Spacer} from '../../components'
 import {isNightly} from '../../legacy/config'
 import {WalletInitRouteNavigation} from '../../navigation'
 import {COLORS} from '../../theme'
@@ -19,8 +19,6 @@ export const WalletFreshInitScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'top', 'bottom']} style={styles.safeAreaView}>
-      <StatusBar type="dark" />
-
       <View style={styles.banner}>
         <WalletDescription />
       </View>

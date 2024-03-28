@@ -3,9 +3,9 @@
 // @ts-ignore
 import TransportHID from '@emurgo/react-native-hid'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
-import React from 'react'
+import * as React from 'react'
 import type {IntlShape} from 'react-intl'
-import {defineMessages, injectIntl} from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, Alert, FlatList, Image, RefreshControl, ScrollView, StyleSheet, View} from 'react-native'
 
 import bleImage from '../../assets/img/bluetooth.png'
@@ -305,7 +305,11 @@ class _LedgerConnect extends React.Component<Props, State> {
   }
 }
 
-export const LedgerConnect = injectIntl(_LedgerConnect)
+export const LedgerConnect = (props: Omit<Props, 'intl'>) => {
+  const intl = useIntl()
+
+  return <_LedgerConnect {...props} intl={intl} />
+}
 
 const messages = defineMessages({
   caption: {

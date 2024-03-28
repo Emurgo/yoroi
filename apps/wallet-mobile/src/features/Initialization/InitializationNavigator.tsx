@@ -1,4 +1,5 @@
 import {createStackNavigator} from '@react-navigation/stack'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 
 import {useAuth} from '../../auth/AuthProvider'
@@ -14,11 +15,12 @@ import {ReadTermsOfServiceScreen} from './ReadTermsOfServiceScreen'
 const Stack = createStackNavigator<InititalizationRoutes>()
 export const InitializationNavigator = () => {
   const strings = useStrings()
+  const {theme} = useTheme()
 
   return (
     <Stack.Navigator
       screenOptions={{
-        ...defaultStackNavigationOptions,
+        ...defaultStackNavigationOptions(theme),
         detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
       }}
     >

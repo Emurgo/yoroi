@@ -26,7 +26,7 @@ export const ReceiverInfo = ({target}: Props) => {
         <>
           <View style={{flexDirection: 'row'}}>
             <Text style={styles.value}>
-              {receiver.selectedNameServer ? nameServerName[receiver.selectedNameServer] : ''}:
+              {receiver.selectedNameServer != null ? nameServerName[receiver.selectedNameServer] : ''}:
             </Text>
 
             <Spacer width={5} />
@@ -58,11 +58,11 @@ const useStyles = () => {
   const {typography, color} = theme
   const styles = StyleSheet.create({
     label: {
-      ...typography['body-2-regular'],
+      ...typography['body-2-m-regular'],
       color: color.gray[900],
     },
     value: {
-      ...typography['body-1-regular'],
+      ...typography['body-1-l-regular'],
       color: color.gray[900],
     },
   })

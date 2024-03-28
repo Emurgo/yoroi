@@ -1,77 +1,86 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, TouchableOpacity, TouchableOpacityProps, View, ViewProps} from 'react-native'
 
-import {COLORS} from '../../theme'
 import {Text} from '../Text'
 
-export const Tabs = ({children}: {children: React.ReactNode}) => <View style={styles.tabs}>{children}</View>
+export const Tabs = ({children, style}: ViewProps) => {
+  const styles = useStyles()
+  return <View style={[styles.tabs, style]}>{children}</View>
+}
 
 export const Tab = ({
   onPress,
   active,
   label,
   testID,
-}: {
-  onPress: () => void
-  active: boolean
-  label: string
-  testID: string
-}) => (
-  <TouchableOpacity style={styles.tab} onPress={onPress} testID={testID}>
-    <View style={styles.centered}>
-      <Text style={[styles.tabText, active ? styles.tabTextActive : styles.tabTextInactive]}>{label}</Text>
-    </View>
+  style,
+}: TouchableOpacityProps & {active: boolean; label: string}) => {
+  const styles = useStyles()
 
-    {active && <View style={styles.indicator} />}
-  </TouchableOpacity>
-)
+  return (
+    <TouchableOpacity style={[styles.tab, style]} onPress={onPress} testID={testID}>
+      <View style={styles.centered}>
+        <Text style={[styles.tabText, active ? styles.tabTextActive : styles.tabTextInactive]}>{label}</Text>
+      </View>
 
-export const TabPanels = ({children}: {children: React.ReactNode}) => (
-  <View style={styles.tabNavigatorRoot}>{children}</View>
-)
+      {active && <View style={styles.indicator} />}
+    </TouchableOpacity>
+  )
+}
+
+export const TabPanels = ({children}: {children: React.ReactNode}) => {
+  const styles = useStyles()
+  return <View style={styles.tabNavigatorRoot}>{children}</View>
+}
 
 export const TabPanel = ({active, children}: {active: boolean; children: React.ReactNode}) => (
   <>{active ? children : null}</>
 )
 
-const styles = StyleSheet.create({
-  centered: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  tabs: {
-    flexDirection: 'row',
-  },
-  tab: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 16,
-    flex: 1,
-  },
-  tabText: {
-    fontSize: 14,
-    fontFamily: 'Rubik-Medium',
-  },
-  tabTextActive: {
-    color: COLORS.PRIMARY,
-  },
-  tabTextInactive: {
-    color: COLORS.TEXT_INPUT,
-  },
-  indicator: {
-    position: 'absolute',
-    bottom: 0,
-    height: 3,
-    width: '100%',
-    borderTopLeftRadius: 2,
-    borderTopRightRadius: 2,
-    backgroundColor: COLORS.PRIMARY,
-  },
-  tabNavigatorRoot: {
-    flex: 1,
-    paddingTop: 8,
-    backgroundColor: '#fff',
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, typography} = theme
+  const styles = StyleSheet.create({
+    centered: {
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    tabs: {
+      flexDirection: 'row',
+    },
+    tab: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingVertical: 14,
+      flex: 1,
+    },
+    tabText: {
+      ...typography['body-1-l-medium'],
+    },
+    tabTextActive: {
+      color: color.primary[600],
+    },
+    tabTextInactive: {
+      color: color.gray[600],
+    },
+    indicator: {
+      position: 'absolute',
+      bottom: 0,
+      height: 2,
+      width: '100%',
+      borderTopLeftRadius: 2,
+      borderTopRightRadius: 2,
+      backgroundColor: color.primary[600],
+    },
+    tabNavigatorRoot: {
+      flex: 1,
+      paddingTop: 8,
+      backgroundColor: color.gray.min,
+      borderTopLeftRadius: 8,
+      borderTopRightRadius: 8,
+    },
+  })
+
+  return styles
+}

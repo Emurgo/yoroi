@@ -1,4 +1,4 @@
-import {SwapApi} from '@yoroi/types/lib/swap/api'
+import {Swap} from '@yoroi/types'
 import React from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
 
@@ -14,7 +14,7 @@ type Props = {
   onHWConfirm?: () => void
   utxo: string
   bech32Address: string
-  cancelOrder: SwapApi['cancelOrder']
+  cancelOrder: Swap.Api['cancelOrder']
 }
 
 export const ConfirmRawTx = ({onConfirm, onHWConfirm, onCancel, utxo, bech32Address, cancelOrder}: Props) => {

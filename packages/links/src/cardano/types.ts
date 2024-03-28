@@ -1,7 +1,7 @@
 import {Links} from '@yoroi/types'
 
 // CIP99 - v1
-export interface LinksCardanoClaimV1 extends Links.UriConfig {
+export interface LinksCardanoClaimV1 extends Links.WebCardanoUriConfig {
   readonly scheme: 'web+cardano'
   readonly authority: 'claim'
   readonly version: 'v1'
@@ -14,7 +14,7 @@ export interface LinksCardanoClaimV1 extends Links.UriConfig {
 }
 
 // CIP13 - initial version
-export interface LinksCardanoLegacyTransfer extends Links.UriConfig {
+export interface LinksCardanoLegacyTransfer extends Links.WebCardanoUriConfig {
   readonly scheme: 'web+cardano'
   readonly authority: '' // is the wallet address
   readonly version: '' // unsupported

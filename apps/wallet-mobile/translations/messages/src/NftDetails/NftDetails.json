@@ -4,14 +4,14 @@
     "defaultMessage": "!!!NFT Details",
     "file": "src/NftDetails/NftDetails.tsx",
     "start": {
-      "line": 299,
+      "line": 306,
       "column": 9,
-      "index": 8415
+      "index": 8956
     },
     "end": {
-      "line": 302,
+      "line": 309,
       "column": 3,
-      "index": 8486
+      "index": 9027
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Overview",
     "file": "src/NftDetails/NftDetails.tsx",
     "start": {
-      "line": 303,
+      "line": 310,
       "column": 12,
-      "index": 8500
+      "index": 9041
     },
     "end": {
-      "line": 306,
+      "line": 313,
       "column": 3,
-      "index": 8571
+      "index": 9112
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Metadata",
     "file": "src/NftDetails/NftDetails.tsx",
     "start": {
-      "line": 307,
+      "line": 314,
       "column": 12,
-      "index": 8585
+      "index": 9126
     },
     "end": {
-      "line": 310,
+      "line": 317,
       "column": 3,
-      "index": 8656
+      "index": 9197
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!NFT Name",
     "file": "src/NftDetails/NftDetails.tsx",
     "start": {
-      "line": 311,
+      "line": 318,
       "column": 11,
-      "index": 8669
+      "index": 9210
     },
     "end": {
-      "line": 314,
+      "line": 321,
       "column": 3,
-      "index": 8739
+      "index": 9280
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Created",
     "file": "src/NftDetails/NftDetails.tsx",
     "start": {
-      "line": 315,
+      "line": 322,
       "column": 13,
-      "index": 8754
+      "index": 9295
     },
     "end": {
-      "line": 318,
+      "line": 325,
       "column": 3,
-      "index": 8825
+      "index": 9366
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!Description",
     "file": "src/NftDetails/NftDetails.tsx",
     "start": {
-      "line": 319,
+      "line": 326,
       "column": 15,
-      "index": 8842
+      "index": 9383
     },
     "end": {
-      "line": 322,
+      "line": 329,
       "column": 3,
-      "index": 8919
+      "index": 9460
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!Author",
     "file": "src/NftDetails/NftDetails.tsx",
     "start": {
-      "line": 323,
+      "line": 330,
       "column": 10,
-      "index": 8931
+      "index": 9472
     },
     "end": {
-      "line": 326,
+      "line": 333,
       "column": 3,
-      "index": 8998
+      "index": 9539
     }
   },
   {
@@ -109,14 +109,14 @@
     "defaultMessage": "!!!Fingerprint",
     "file": "src/NftDetails/NftDetails.tsx",
     "start": {
-      "line": 327,
+      "line": 334,
       "column": 15,
-      "index": 9015
+      "index": 9556
     },
     "end": {
-      "line": 330,
+      "line": 337,
       "column": 3,
-      "index": 9092
+      "index": 9633
     }
   },
   {
@@ -124,14 +124,14 @@
     "defaultMessage": "!!!Policy id",
     "file": "src/NftDetails/NftDetails.tsx",
     "start": {
-      "line": 331,
+      "line": 338,
       "column": 12,
-      "index": 9106
+      "index": 9647
     },
     "end": {
-      "line": 334,
+      "line": 341,
       "column": 3,
-      "index": 9178
+      "index": 9719
     }
   },
   {
@@ -139,14 +139,14 @@
     "defaultMessage": "!!!Details on",
     "file": "src/NftDetails/NftDetails.tsx",
     "start": {
-      "line": 335,
+      "line": 342,
       "column": 16,
-      "index": 9196
+      "index": 9737
     },
     "end": {
-      "line": 338,
+      "line": 345,
       "column": 3,
-      "index": 9273
+      "index": 9814
     }
   },
   {
@@ -154,14 +154,14 @@
     "defaultMessage": "!!!Copy metadata",
     "file": "src/NftDetails/NftDetails.tsx",
     "start": {
-      "line": 339,
+      "line": 346,
       "column": 16,
-      "index": 9291
+      "index": 9832
     },
     "end": {
-      "line": 342,
+      "line": 349,
       "column": 3,
-      "index": 9371
+      "index": 9912
     }
   }
 ]

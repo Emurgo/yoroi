@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {storiesOf} from '@storybook/react-native'
-import {rootStorage, StorageProvider} from '@yoroi/common'
+import {AsyncStorageProvider} from '@yoroi/common'
 import React from 'react'
 
+import {rootStorage} from '../../yoroi-wallets/storage/rootStorage'
 import {PinLoginScreen} from './PinLoginScreen'
 
 storiesOf('PinLoginScreen', module).add('Default', () => (
-  <StorageProvider
+  <AsyncStorageProvider
     storage={{
       ...rootStorage,
       getItem: async (): Promise<any> => {
@@ -15,7 +16,7 @@ storiesOf('PinLoginScreen', module).add('Default', () => (
     }}
   >
     <PinLoginScreen />
-  </StorageProvider>
+  </AsyncStorageProvider>
 ))
 
 // PIN = 111111

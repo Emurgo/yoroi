@@ -1,13 +1,13 @@
 import {useTheme} from '@yoroi/theme'
-import {SwapApi} from '@yoroi/types/lib/swap/api'
+import {Swap} from '@yoroi/types'
 import React, {useState} from 'react'
 import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
 
 import {Text} from '../../../../components'
 import {LedgerConnect} from '../../../../HW'
 import {useSelectedWallet} from '../../../../SelectedWallet'
+import {walletManager} from '../../../../wallet-manager/walletManager'
 import {DeviceId, DeviceObj, withBLE, withUSB} from '../../../../yoroi-wallets/hw'
-import {walletManager} from '../../../../yoroi-wallets/walletManager'
 import {LedgerTransportSwitch} from '../../useCases/ConfirmTxScreen/LedgerTransportSwitch'
 import {useCancelOrderWithHw} from '../helpers'
 import {useStrings} from '../strings'
@@ -19,7 +19,7 @@ type Props = {
   onConfirm?: () => void
   utxo: string
   bech32Address: string
-  cancelOrder: SwapApi['cancelOrder']
+  cancelOrder: Swap.Api['cancelOrder']
 }
 
 export const ConfirmRawTxWithHW = ({onConfirm, utxo, bech32Address, cancelOrder}: Props) => {

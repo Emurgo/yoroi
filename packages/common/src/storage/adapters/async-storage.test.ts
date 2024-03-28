@@ -3,15 +3,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import {App} from '@yoroi/types'
 
 import {parseSafe} from '../../helpers/parsers'
-import {rootStorage} from './rootStorage'
-import {mountMultiStorage} from './async-storage'
+import {mountAsyncMultiStorage, mountAsyncStorage} from './async-storage'
 
 describe('prefixed storage', () => {
   beforeEach(() => AsyncStorage.clear())
 
   it('getAllKeys, setItem, getItem, removeItem, clear', async () => {
-    const storage = rootStorage
-    await storage.getAllKeys().then((keys) => expect(keys).toEqual([]))
+    const storage = mountAsyncStorage('/')
+    await storage
+      .getAllKeys()
+      .then((keys: ReadonlyArray<string>) => expect(keys).toEqual([]))
 
     await storage.setItem('item1', item1)
     expect(await storage.getItem('item1')).toEqual(item1)
@@ -29,6 +30,7 @@ describe('prefixed storage', () => {
   })
 
   it('getAllKeys, setItem, getItem, removeItem, clear, with prefix', async () => {
+    const rootStorage = mountAsyncStorage('/')
     const storage = rootStorage.join('prefix/')
     expect(await storage.getAllKeys()).toEqual([])
 
@@ -48,6 +50,7 @@ describe('prefixed storage', () => {
   })
 
   it('getAllKeys, multiSet, multiGet, multiRemove', async () => {
+    const rootStorage = mountAsyncStorage('/')
     const storage = rootStorage.join('prefix/')
 
     await storage.multiSet([
@@ -70,10 +73,14 @@ describe('prefixed storage', () => {
       ['item2', null],
     ])
 
-    await storage.getAllKeys().then((keys) => expect(keys).toEqual([]))
+    await storage
+      .getAllKeys()
+      .then((keys: ReadonlyArray<string>) => expect(keys).toEqual([]))
   })
 
   it('getAllKeys', async () => {
+    const rootStorage = mountAsyncStorage('/')
+
     const storage1 = rootStorage.join('prefix/1/')
     expect(await storage1.getAllKeys()).toEqual([])
     await storage1.setItem('key1', item1)
@@ -94,6 +101,8 @@ describe('prefixed storage', () => {
   })
 
   it('join', async () => {
+    const rootStorage = mountAsyncStorage('/')
+
     const root = rootStorage.join('/')
     await root.setItem('key1', item1)
     await root.setItem('key2', item2)
@@ -119,16 +128,16 @@ describe('prefixed storage', () => {
 
   describe('stringify/parse', () => {
     it('getItem, setItem', async () => {
-      const storage = rootStorage
+      const storage = mountAsyncStorage('/')
       const item = 'text'
       const storedItem = 'item123'
 
-      await storage.setItem('item', item, (data) => {
+      await storage.setItem('item', item, (data: unknown) => {
         expect(data).toBe(item)
         return storedItem
       }) // overrides JSON.stringify
 
-      const parsedResult = await storage.getItem('item', (data) => {
+      const parsedResult = await storage.getItem('item', (data: unknown) => {
         expect(data).toBe(storedItem)
         return item
       }) // overrides JSON.parse
@@ -137,7 +146,7 @@ describe('prefixed storage', () => {
     })
 
     it('multiGet, multiSet', async () => {
-      const storage = rootStorage
+      const storage = mountAsyncStorage('/')
       const item1 = 'item1'
       const storedItem1 = `${item1}-modified`
       const item2 = 'item2'
@@ -147,14 +156,14 @@ describe('prefixed storage', () => {
         ['item2', item2],
       ]
 
-      await storage.multiSet(tuples, (data) => {
+      await storage.multiSet(tuples, (data: unknown) => {
         expect([item1, item2]).toContain(data)
         return `${data}-modified`
       }) // overrides JSON.stringify
 
       const parsedResult = await storage.multiGet(
         ['item1', 'item2'],
-        (data) => {
+        (data: string | null) => {
           expect([storedItem1, storedItem2]).toContain(data)
           return data?.slice(0, 5)
         },
@@ -165,6 +174,7 @@ describe('prefixed storage', () => {
   })
 
   it('clears sub-storage', async () => {
+    const rootStorage = mountAsyncStorage('/')
     const storage1 = rootStorage.join('1/')
     const storage2 = storage1.join('2/')
     const storage3 = storage2.join('3/')
@@ -197,6 +207,7 @@ describe('prefixed storage', () => {
   })
 
   it('removeFolder', async () => {
+    const rootStorage = mountAsyncStorage('/')
     const storage1 = rootStorage.join('1/')
     const storage2 = storage1.join('2/')
     const storage3 = storage2.join('3/')
@@ -241,7 +252,7 @@ describe('multi storage', () => {
   beforeEach(() => AsyncStorage.clear())
 
   it('saveMany, readAll, readMany, keys, and clear providing the serializers', async () => {
-    const storage = mountMultiStorage(options)
+    const storage = mountAsyncMultiStorage(options)
     await storage.saveMany([item3, item4])
 
     const readItems = await storage.readAll()
@@ -262,7 +273,8 @@ describe('multi storage', () => {
     expect(emptyKeys).toEqual([])
   })
   it('saveMany, readAll, readMany, keys, and clear default serializers / key as extractor', async () => {
-    const storage = mountMultiStorage({
+    const rootStorage = mountAsyncStorage('/')
+    const storage = mountAsyncMultiStorage({
       storage: rootStorage.join('multiStorage/'),
       dataFolder: 'dataFolder/',
       keyExtractor: 'id',
@@ -275,8 +287,10 @@ describe('multi storage', () => {
       ['2', item4],
     ])
 
+    storage.removeMany(['2'])
+
     const keys = await storage.getAllKeys()
-    expect(keys).toEqual(['1', '2'])
+    expect(keys).toEqual(['1'])
 
     const readItem = await storage.readMany(['1'])
     expect(readItem).toEqual([['1', item3]])
@@ -289,7 +303,7 @@ describe('multi storage', () => {
 })
 
 const options: App.MultiStorageOptions<any> = {
-  storage: rootStorage.join('multiStorage/'),
+  storage: mountAsyncStorage('/').join('multiStorage/'),
   dataFolder: 'dataFolder/',
   keyExtractor: (item: any) => item.id,
   serializer: JSON.stringify,

@@ -1,18 +1,19 @@
 import {AppStorage, AppStorageFolderName} from './storage'
-import {Nullable} from '../helpers/types'
+import {MaybePromise, Nullable} from '../helpers/types'
 
-export interface AppMultiStorage<T> {
-  getAllKeys: () => Promise<ReadonlyArray<string>>
-  clear: () => Promise<void>
-  saveMany: (data: ReadonlyArray<NonNullable<T>>) => Promise<void>
-  readAll: () => Promise<ReadonlyArray<[string, Nullable<T>]>>
+export interface AppMultiStorage<T, IsAsync extends boolean = true> {
+  getAllKeys: () => MaybePromise<ReadonlyArray<string>, IsAsync>
+  clear: () => MaybePromise<void, IsAsync>
+  saveMany: (data: ReadonlyArray<NonNullable<T>>) => MaybePromise<void, IsAsync>
+  readAll: () => MaybePromise<ReadonlyArray<[string, Nullable<T>]>, IsAsync>
   readMany: (
     keys: ReadonlyArray<string>,
-  ) => Promise<ReadonlyArray<[string, Nullable<T>]>>
+  ) => MaybePromise<ReadonlyArray<[string, Nullable<T>]>, IsAsync>
+  removeMany: (keys: ReadonlyArray<string>) => MaybePromise<void, IsAsync>
 }
 
-export type AppMultiStorageOptions<T> = {
-  storage: AppStorage
+export type AppMultiStorageOptions<T, IsAsync extends boolean = true> = {
+  storage: AppStorage<IsAsync>
   dataFolder: AppStorageFolderName
   keyExtractor: keyof T | ((data: NonNullable<T>) => string)
   serializer?: (data: NonNullable<T>) => string

@@ -1,9 +1,9 @@
+import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleProp, StyleSheet, Text, TouchableOpacity, ViewStyle} from 'react-native'
 
 import {Icon, Spacer} from '../../../../../components'
-import {COLORS} from '../../../../../theme'
 
 type AddTokenButtonProps = {
   onPress(): void
@@ -12,10 +12,11 @@ type AddTokenButtonProps = {
 }
 export const AddTokenButton = ({onPress, disabled, style}: AddTokenButtonProps) => {
   const strings = useStrings()
+  const {styles, colors} = useStyles()
 
   return (
     <TouchableOpacity onPress={onPress} disabled={disabled} testID="addTokenButton" style={[style, styles.button]}>
-      <Icon.Plus size={26} color={COLORS.SHELLEY_BLUE} />
+      <Icon.Plus size={26} color={colors.iconColor} />
 
       <Spacer width={4} />
 
@@ -24,23 +25,30 @@ export const AddTokenButton = ({onPress, disabled, style}: AddTokenButtonProps) 
   )
 }
 
-const styles = StyleSheet.create({
-  label: {
-    color: COLORS.SHELLEY_BLUE,
-    fontFamily: 'Rubik-Medium',
-    fontWeight: '500',
-  },
-  button: {
-    borderRadius: 8,
-    flexDirection: 'row',
-    paddingHorizontal: 16,
-    paddingVertical: 4,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderColor: COLORS.SHELLEY_BLUE,
-    borderWidth: 2,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, typography, padding} = theme
+  const styles = StyleSheet.create({
+    label: {
+      color: color.primary[600],
+      ...typography['button-2-m'],
+    },
+    button: {
+      borderColor: color.primary[600],
+      borderRadius: 8,
+      flexDirection: 'row',
+      ...padding['x-l'],
+      ...padding['y-xs'],
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderWidth: 2,
+    },
+  })
+  const colors = {
+    iconColor: color.primary[600],
+  }
+  return {styles, colors}
+}
 
 const messages = defineMessages({
   addToken: {

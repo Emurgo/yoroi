@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {createStackNavigator} from '@react-navigation/stack'
 import {GovernanceProvider} from '@yoroi/staking'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
@@ -18,12 +19,13 @@ export const DashboardNavigator = () => {
   const wallet = useSelectedWallet()
   const walletName = useWalletName(wallet)
   const strings = useStrings()
+  const {theme} = useTheme()
 
   const manager = useGovernanceManagerMaker()
 
   return (
     <GovernanceProvider manager={manager}>
-      <Stack.Navigator screenOptions={defaultStackNavigationOptions}>
+      <Stack.Navigator screenOptions={defaultStackNavigationOptions(theme)}>
         <Stack.Screen
           name="staking-dashboard-main"
           component={Dashboard}

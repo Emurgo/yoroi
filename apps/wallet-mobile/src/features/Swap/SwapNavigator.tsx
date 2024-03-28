@@ -1,14 +1,13 @@
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs'
 import {useSwap, useSwapTokensOnlyVerified} from '@yoroi/swap'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {StatusBar} from '../../components'
 import {defaultMaterialTopTabNavigationOptions, SwapTabRoutes} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {COLORS} from '../../theme'
-import {useBalance, useHideBottomTabBar} from '../../yoroi-wallets/hooks'
+import {useBalance} from '../../yoroi-wallets/hooks'
 import {useStrings} from './common/strings'
 import {CreateOrder} from './useCases/StartSwapScreen/CreateOrder/CreateOrder'
 import {ListOrders} from './useCases/StartSwapScreen/ListOrders/ListOrders'
@@ -16,8 +15,8 @@ import {ListOrders} from './useCases/StartSwapScreen/ListOrders/ListOrders'
 const Tab = createMaterialTopTabNavigator<SwapTabRoutes>()
 export const SwapTabNavigator = () => {
   const strings = useStrings()
-
-  useHideBottomTabBar()
+  const styles = useStyles()
+  const {theme} = useTheme()
 
   // state data
   const wallet = useSelectedWallet()
@@ -64,16 +63,12 @@ export const SwapTabNavigator = () => {
 
   return (
     <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
-      <StatusBar type="dark" />
-
       <Tab.Navigator
         screenOptions={({route}) => ({
-          ...defaultMaterialTopTabNavigationOptions,
+          ...defaultMaterialTopTabNavigationOptions(theme),
           tabBarLabel: route.name === 'token-swap' ? strings.tokenSwap : strings.orderSwap,
         })}
-        style={{
-          backgroundColor: COLORS.WHITE,
-        }}
+        style={styles.tab}
       >
         <Tab.Screen name="token-swap" component={CreateOrder} />
 
@@ -83,9 +78,17 @@ export const SwapTabNavigator = () => {
   )
 }
 
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    backgroundColor: COLORS.WHITE,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
+  const styles = StyleSheet.create({
+    root: {
+      flex: 1,
+      backgroundColor: theme.color.gray.min,
+    },
+    tab: {
+      backgroundColor: color.gray.min,
+    },
+  })
+  return styles
+}

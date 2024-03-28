@@ -1,9 +1,6 @@
 import {Links} from '@yoroi/types'
-import {
-  configCardanoClaimV1,
-  configCardanoLegacyTransfer,
-  linksCardanoModuleMaker,
-} from './module'
+import {linksCardanoModuleMaker} from './module'
+import {configCardanoClaimV1, configCardanoLegacyTransfer} from './constants'
 
 describe('linksCardanoModuleMaker', () => {
   it('should return a Links.Module', () => {

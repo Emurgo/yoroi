@@ -1,16 +1,21 @@
+import {useTheme} from '@yoroi/theme'
+import {useTransfer} from '@yoroi/transfer'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {Button, Spacer, Text} from '../../../../../components'
 import {useBlockGoBack, useWalletNavigation} from '../../../../../navigation'
-import {COLORS} from '../../../../../theme'
+import {useLinksRequestRedirect} from '../../../../Links/common/useLinksRequestRedirect'
 import {useStrings} from '../../../common/strings'
 import {SubmittedTxImage} from './SubmittedTxImage'
 
 export const SubmittedTxScreen = () => {
   useBlockGoBack()
   const strings = useStrings()
+  const styles = useStyles()
   const {resetToTxHistory} = useWalletNavigation()
+  const {linkAction} = useTransfer()
+  useLinksRequestRedirect(linkAction?.info.params.redirectTo)
 
   return (
     <View style={styles.container}>
@@ -27,30 +32,31 @@ export const SubmittedTxScreen = () => {
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 16,
-  },
-  title: {
-    color: COLORS.BLACK,
-    fontWeight: 'bold',
-    fontSize: 20,
-    padding: 4,
-    textAlign: 'center',
-    lineHeight: 30,
-  },
-  text: {
-    color: COLORS.TEXT_INPUT,
-    fontSize: 14,
-    fontWeight: '400',
-    lineHeight: 22,
-    textAlign: 'center',
-    maxWidth: 300,
-  },
-  button: {
-    paddingHorizontal: 20,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, typography, padding} = theme
+  const styles = StyleSheet.create({
+    container: {
+      ...padding['l'],
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    title: {
+      color: color.gray.max,
+      ...typography['heading-3-regular'],
+      ...padding['xs'],
+      textAlign: 'center',
+    },
+    text: {
+      color: color.gray[600],
+      ...typography['body-2-m-regular'],
+      textAlign: 'center',
+      maxWidth: 300,
+    },
+    button: {
+      ...padding['x-l'],
+    },
+  })
+  return styles
+}

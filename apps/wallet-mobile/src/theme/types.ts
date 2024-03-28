@@ -68,7 +68,9 @@ export type Palette = {
     'blue-green': Gradient
     green: Gradient
     blue: Gradient
+    light: Gradient
   }
+  'bottom-sheet-background': HexColor
   'overlay-extension': {hex: HexColor; opacity: number}
   'overlay-mobile': {hex: HexColor; opacity: number}
   'sidebar-overlay': {hex: HexColor; opacity: number}
@@ -84,21 +86,19 @@ type TypographyKeys =
   | 'heading-3-regular'
   | 'heading-4-medium'
   | 'heading-4-regular'
-  | 'heading-5-medium'
-  | 'heading-5-regular'
-  | 'body-1-medium'
-  | 'body-1-regular'
-  | 'body-2-medium'
-  | 'body-2-regular'
-  | 'body-3-medium'
-  | 'body-3-regular'
-  | 'button-1'
-  | 'button-2'
+  | 'body-1-l-medium'
+  | 'body-1-l-regular'
+  | 'body-2-m-medium'
+  | 'body-2-m-regular'
+  | 'body-3-s-medium'
+  | 'body-3-s-regular'
+  | 'button-1-l'
+  | 'button-2-m'
   | 'button-3'
-  | 'link-1'
-  | 'link-1-underline'
-  | 'link-2'
-  | 'link-2-underline'
+  | 'link-1-l'
+  | 'link-1-l-underline'
+  | 'link-2-m'
+  | 'link-2-m-underline'
   | 'overline'
   | 'caption-medium'
   | 'caption-regular'

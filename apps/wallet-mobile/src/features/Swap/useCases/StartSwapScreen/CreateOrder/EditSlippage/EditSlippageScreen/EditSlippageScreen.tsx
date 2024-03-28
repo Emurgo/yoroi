@@ -1,4 +1,5 @@
 import {useSwap} from '@yoroi/swap'
+import {useTheme} from '@yoroi/theme'
 import BigNumber from 'bignumber.js'
 import React, {useEffect, useRef, useState} from 'react'
 import {ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
@@ -41,6 +42,7 @@ const MAX_DECIMALS = 1
 
 export const EditSlippageScreen = () => {
   const {numberLocale} = useLanguage()
+  const styles = useStyles()
 
   const {slippageChanged, orderData} = useSwap()
   const defaultSelectedChoice = getChoiceBySlippage(orderData.slippage, numberLocale)
@@ -154,106 +156,112 @@ export const EditSlippageScreen = () => {
   )
 }
 
-const styles = StyleSheet.create({
-  flex: {
-    flex: 1,
-  },
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.WHITE,
-    paddingHorizontal: 16,
-    paddingBottom: 16,
-  },
-  textInfo: {
-    fontSize: 12,
-    color: COLORS.TEXT_INPUT,
-  },
-  description: {
-    paddingVertical: 16,
-    fontSize: 16,
-    lineHeight: 24,
-    fontFamily: 'Rubik',
-    color: '#242838',
-  },
-  bottomText: {
-    paddingTop: 16,
-    color: '#4A5065',
-    lineHeight: 16,
-    fontSize: 12,
-    fontFamily: 'Rubik-Regular',
-  },
-  choicesContainer: {
-    flexDirection: 'row',
-    paddingBottom: 24,
-    flexWrap: 'wrap',
-  },
-  choiceButton: {
-    padding: 8,
-  },
-  selectedChoiceButton: {
-    backgroundColor: COLORS.BORDER_GRAY,
-    borderRadius: 8,
-  },
-  choiceLabel: {
-    fontSize: 15,
-    fontWeight: '500',
-    color: COLORS.BLACK,
-    fontFamily: 'Rubik-Medium',
-  },
-  selectedChoiceLabel: {
-    color: COLORS.BLACK,
-  },
-  inputContainer: {
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: '#C4CAD7',
-    padding: 16,
-    position: 'relative',
-  },
-  label: {
-    position: 'absolute',
-    top: -7,
-    left: 10,
-    backgroundColor: COLORS.WHITE,
-    paddingHorizontal: 5,
-    fontSize: 12,
-    color: COLORS.ERROR_TEXT_COLOR_DARK,
-    fontFamily: 'Rubik-Regular',
-  },
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
+  const styles = StyleSheet.create({
+    flex: {
+      flex: 1,
+    },
+    container: {
+      flex: 1,
+      backgroundColor: color.gray.min,
+      paddingHorizontal: 16,
+      paddingBottom: 16,
+    },
+    textInfo: {
+      fontSize: 12,
+      color: color.gray[600],
+    },
+    description: {
+      paddingVertical: 16,
+      fontSize: 16,
+      lineHeight: 24,
+      fontFamily: 'Rubik',
+      color: '#242838',
+    },
+    bottomText: {
+      paddingTop: 16,
+      color: '#4A5065',
+      lineHeight: 16,
+      fontSize: 12,
+      fontFamily: 'Rubik-Regular',
+    },
+    choicesContainer: {
+      flexDirection: 'row',
+      paddingBottom: 24,
+      flexWrap: 'wrap',
+    },
+    choiceButton: {
+      padding: 8,
+    },
+    selectedChoiceButton: {
+      backgroundColor: COLORS.BORDER_GRAY,
+      borderRadius: 8,
+    },
+    choiceLabel: {
+      fontSize: 15,
+      fontWeight: '500',
+      color: COLORS.BLACK,
+      fontFamily: 'Rubik-Medium',
+    },
+    selectedChoiceLabel: {
+      color: COLORS.BLACK,
+    },
+    inputContainer: {
+      borderRadius: 6,
+      borderWidth: 1,
+      borderColor: '#C4CAD7',
+      padding: 16,
+      position: 'relative',
+    },
+    label: {
+      position: 'absolute',
+      top: -7,
+      left: 10,
+      backgroundColor: COLORS.WHITE,
+      paddingHorizontal: 5,
+      fontSize: 12,
+      color: COLORS.ERROR_TEXT_COLOR_DARK,
+      fontFamily: 'Rubik-Regular',
+    },
 
-  disabledInputContainer: {
-    backgroundColor: '#F0F3F5',
-  },
-  errorText: {
-    color: COLORS.ALERT_TEXT_COLOR,
-    fontSize: 12,
-  },
-  errorInput: {
-    borderColor: COLORS.ALERT_TEXT_COLOR,
-  },
-  input: {
-    height: 24,
-    padding: 0,
-    fontSize: 16,
-    fontFamily: 'Rubik',
-    color: '#242838',
-  },
-  inputFocused: {
-    borderColor: '#242838',
-    borderWidth: 2,
-  },
-  percentLabel: {
-    lineHeight: 24,
-    fontFamily: 'Rubik',
-    fontWeight: '400',
-    color: '#242838',
-    position: 'absolute',
-    padding: 16,
-    fontSize: 16,
-    right: 0,
-    top: 0,
-  },
-})
+    disabledInputContainer: {
+      backgroundColor: '#F0F3F5',
+    },
+    errorText: {
+      color: COLORS.ALERT_TEXT_COLOR,
+      fontSize: 12,
+    },
+    errorInput: {
+      borderColor: COLORS.ALERT_TEXT_COLOR,
+    },
+    input: {
+      height: 24,
+      padding: 0,
+      fontSize: 16,
+      fontFamily: 'Rubik',
+      color: '#242838',
+    },
+    inputFocused: {
+      borderColor: '#242838',
+      borderWidth: 2,
+    },
+    percentLabel: {
+      lineHeight: 24,
+      fontFamily: 'Rubik',
+      fontWeight: '400',
+      color: '#242838',
+      position: 'absolute',
+      padding: 16,
+      fontSize: 16,
+      right: 0,
+      top: 0,
+    },
+  })
+
+  return styles
+}
 
 const validateSlippage = (text: string, format: NumberLocale) => {
   const slippage = parseNumber(text, format)

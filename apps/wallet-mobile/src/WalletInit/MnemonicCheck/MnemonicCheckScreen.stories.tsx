@@ -4,10 +4,10 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
 import {debugWalletInfo} from '../../features'
-import {WalletManagerProvider} from '../../WalletManager'
+import {WalletManager, walletManager} from '../../wallet-manager/walletManager'
+import {WalletManagerProvider} from '../../wallet-manager/WalletManagerContext'
 import {NETWORK_ID} from '../../yoroi-wallets/cardano/constants/testnet/constants'
 import {NetworkError} from '../../yoroi-wallets/cardano/errors'
-import {WalletManager, walletManager} from '../../yoroi-wallets/walletManager'
 import {MnemonicCheckScreen} from './MnemonicCheckScreen'
 
 storiesOf('MnemonicCheckScreen', module)

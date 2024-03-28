@@ -1,5 +1,5 @@
 import {Api, Resolver} from '@yoroi/types'
-import {fetchData, FetchData, handleApiError, isLeft} from '@yoroi/common'
+import {fetchData, FetchData, getApiError, isLeft} from '@yoroi/common'
 import {z} from 'zod'
 import {AxiosRequestConfig} from 'axios'
 
@@ -27,16 +27,12 @@ export const handleApiGetCryptoAddress = ({
         fetcherConfig,
       )
 
-      if (isLeft(response)) {
-        handleApiError(response.error)
-      } else {
-        const parsedResponse = HandleApiResponseSchema.parse(
-          response.value.data,
-        )
-        return parsedResponse.resolved_addresses.ada
-      }
+      if (isLeft(response)) throw getApiError(response.error)
+
+      const parsedResponse = HandleApiResponseSchema.parse(response.value.data)
+      return parsedResponse.resolved_addresses.ada
     } catch (error: unknown) {
-      return handleHandleApiError(error)
+      throw getHandleApiError(error)
     }
   }
 }
@@ -97,12 +93,13 @@ export const handleApiConfig = {
   },
 } as const
 
-export const handleHandleApiError = (error: unknown): never => {
+export const getHandleApiError = (error: unknown) => {
   const zodErrorMessage = handleZodErrors(error)
   if (zodErrorMessage)
-    throw new Resolver.Errors.InvalidResponse(zodErrorMessage)
+    return new Resolver.Errors.InvalidResponse(zodErrorMessage)
 
-  if (error instanceof Api.Errors.NotFound) throw new Resolver.Errors.NotFound()
+  if (error instanceof Api.Errors.NotFound)
+    return new Resolver.Errors.NotFound()
 
-  throw error
+  return error
 }

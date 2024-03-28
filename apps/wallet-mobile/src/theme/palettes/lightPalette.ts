@@ -56,9 +56,11 @@ export const lightPalette: Palette = {
   },
   gradients: {
     'blue-green': ['#E4E8F7', '#C6F7F7'],
+    light: ['#C6F7ED', '#E4E8F7'],
     green: ['#93F5E1', '#C6F7F7'],
     blue: ['#244ABF', '#4B6DDE'],
   },
+  'bottom-sheet-background': '#FFF',
   'overlay-extension': {hex: '#121f4d', opacity: 0.7},
   'overlay-mobile': {hex: '#000000', opacity: 0.4},
   'sidebar-overlay': {hex: '#000000', opacity: 0.16},

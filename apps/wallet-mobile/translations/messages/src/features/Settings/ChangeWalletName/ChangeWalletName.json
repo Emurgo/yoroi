@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Change name",
     "file": "src/features/Settings/ChangeWalletName/ChangeWalletName.tsx",
     "start": {
-      "line": 94,
+      "line": 100,
       "column": 16,
-      "index": 3180
+      "index": 3352
     },
     "end": {
-      "line": 97,
+      "line": 103,
       "column": 3,
-      "index": 3284
+      "index": 3456
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Wallet name",
     "file": "src/features/Settings/ChangeWalletName/ChangeWalletName.tsx",
     "start": {
-      "line": 98,
+      "line": 104,
       "column": 24,
-      "index": 3310
+      "index": 3482
     },
     "end": {
-      "line": 101,
+      "line": 107,
       "column": 3,
-      "index": 3422
+      "index": 3594
     }
   }
 ]

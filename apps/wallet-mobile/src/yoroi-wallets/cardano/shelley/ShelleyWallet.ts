@@ -13,6 +13,7 @@ import DeviceInfo from 'react-native-device-info'
 import {defaultMemoize} from 'reselect'
 
 import LocalizableError from '../../../i18n/LocalizableError'
+import {WalletMeta} from '../../../wallet-manager/types'
 import {HWDeviceInfo} from '../../hw'
 import {Logger} from '../../logging'
 import {makeMemosManager, MemosManager} from '../../memos'
@@ -35,7 +36,6 @@ import type {
 import {NETWORK_REGISTRY, StakingInfo, YoroiSignedTx, YoroiUnsignedTx} from '../../types'
 import {asQuantity, Quantities} from '../../utils'
 import {validatePassword} from '../../utils/validators'
-import {WalletMeta} from '../../walletManager'
 import {Cardano, CardanoMobile} from '../../wallets'
 import * as legacyApi from '../api'
 import {encryptWithPassword} from '../catalyst/catalystCipher'
@@ -241,8 +241,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     static async restore({walletMeta, storage}: {storage: App.Storage; walletMeta: WalletMeta}) {
       const data = await storage.getItem('data', parseWalletJSON)
       if (!data) throw new Error('Cannot read saved data')
-      Logger.debug('openWallet::data', data)
-      Logger.info('restore wallet', walletMeta.name)
 
       const {internalChain, externalChain} = addressChains.restore({data})
 
@@ -381,8 +379,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     timeout: NodeJS.Timeout | null = null
 
     startSync() {
-      Logger.info(`starting wallet: ${this.id}`)
-
       const backgroundSync = async () => {
         try {
           await this.tryDoFullSync()
@@ -400,7 +396,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
 
     stopSync() {
       if (!this.timeout) return
-      Logger.info(`stopping wallet: ${this.id}`)
       clearTimeout(this.timeout)
     }
 
@@ -464,7 +459,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         .then((key) => key.derive(STAKING_KEY_INDEX))
         .then((key) => key.toRawKey())
 
-      Logger.info(`getStakingKey: ${Buffer.from(await stakingKey.asBytes()).toString('hex')}`)
       return stakingKey
     }
 
@@ -633,7 +627,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
               constant: containsDatum ? String(BigInt(constant) * 2n) : constant,
             },
             minimumUtxoVal: MINIMUM_UTXO_VAL,
-            coinsPerUtxoWord: String(Number(coinsPerUtxoByte) * 8),
+            coinsPerUtxoByte,
             poolDeposit,
             networkId: NETWORK_ID,
           },
@@ -644,7 +638,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         return yoroiUnsignedTx({unsignedTx, networkConfig: NETWORK_CONFIG, addressedUtxos, entries, primaryTokenId})
       } catch (e) {
         if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError) throw e
-        Logger.error(`shelley::createUnsignedTx:: ${(e as Error).message}`, e)
         throw new CardanoError((e as Error).message)
       }
     }
@@ -670,7 +663,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
             keyDeposit,
             linearFee,
             minimumUtxoVal: MINIMUM_UTXO_VAL,
-            coinsPerUtxoWord: String(Number(coinsPerUtxoByte) * 8),
+            coinsPerUtxoByte,
             poolDeposit,
             networkId: NETWORK_ID,
           },
@@ -689,7 +682,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         })
       } catch (e) {
         if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError) throw e
-        Logger.error(`shelley::createUnsignedGovernanceTx:: ${(e as Error).message}`, e)
         throw new CardanoError((e as Error).message)
       }
     }
@@ -777,7 +769,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
           keyDeposit,
           linearFee,
           minimumUtxoVal: MINIMUM_UTXO_VAL,
-          coinsPerUtxoWord: String(Number(coinsPerUtxoByte) * 8),
+          coinsPerUtxoByte,
           poolDeposit,
           networkId: NETWORK_ID,
         },
@@ -795,8 +787,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     }
 
     async createVotingRegTx(pin: string, supportsCIP36: boolean) {
-      Logger.debug('CardanoWallet::createVotingRegTx called')
-
       const bytes = await generatePrivateKeyForCatalyst()
         .then((key) => key.toRawKey())
         .then((key) => key.asBytes())
@@ -823,7 +813,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
           keyDeposit,
           linearFee,
           minimumUtxoVal: MINIMUM_UTXO_VAL,
-          coinsPerUtxoWord: String(Number(coinsPerUtxoByte) * 8),
+          coinsPerUtxoByte,
           poolDeposit,
           networkId: NETWORK_ID,
         }
@@ -886,7 +876,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         }
       } catch (e) {
         if (e instanceof LocalizableError || e instanceof ExtendableError) throw e
-        Logger.error(`shelley::createVotingRegTx:: ${(e as Error).message}`, e)
         throw new CardanoError((e as Error).message)
       }
     }
@@ -920,7 +909,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         {
           linearFee,
           minimumUtxoVal: MINIMUM_UTXO_VAL,
-          coinsPerUtxoWord: String(Number(coinsPerUtxoByte) * 8),
+          coinsPerUtxoByte,
           poolDeposit,
           keyDeposit,
           networkId: NETWORK_ID,
@@ -1030,7 +1019,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
 
     async submitTransaction(signedTx: string) {
       const response: any = await legacyApi.submitTransaction(signedTx, BACKEND)
-      Logger.info(response)
       return response as any
     }
 
@@ -1277,8 +1265,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     private async _doFullSync() {
       assert(this.isInitialized, 'doFullSync: isInitialized')
 
-      Logger.info('Discovery done, now syncing transactions')
-
       await this.discoverAddresses()
 
       await Promise.all([this.syncUtxos(), this.transactionManager.doSync(this.getAddressesInBlocks(), BACKEND)])
@@ -1325,8 +1311,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     // ========== UI state ============= //
 
     private updateState(update: Partial<WalletState>) {
-      Logger.debug('Wallet::updateState', update)
-
       this.state = {
         ...this.state,
         ...update,

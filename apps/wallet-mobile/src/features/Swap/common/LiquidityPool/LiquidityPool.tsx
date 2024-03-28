@@ -30,7 +30,7 @@ export const LiquidityPool = ({
 
 const useStyles = () => {
   const {theme} = useTheme()
-  const {color} = theme
+  const {color, typography} = theme
   const styles = StyleSheet.create({
     liquidityPoolLink: {
       alignItems: 'center',
@@ -38,10 +38,7 @@ const useStyles = () => {
     },
     liquidityPoolText: {
       color: color.primary[500],
-      fontFamily: 'Rubik',
-      fontSize: 16,
-      fontWeight: '500',
-      lineHeight: 22,
+      ...typography['body-1-l-medium'],
     },
     liquidityPool: {
       flexDirection: 'row',

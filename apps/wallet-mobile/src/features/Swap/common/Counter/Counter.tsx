@@ -36,7 +36,7 @@ export const Counter = ({openingText, counter, unitsText, closingText, style}: C
 
 const useStyles = () => {
   const {theme} = useTheme()
-  const {color} = theme
+  const {color, typography} = theme
 
   const styles = StyleSheet.create({
     counter: {
@@ -46,13 +46,12 @@ const useStyles = () => {
       backgroundColor: color.gray.min,
     },
     counterText: {
-      fontWeight: '400',
+      ...typography['body-2-m-medium'],
       color: color.primary[600],
     },
     counterTextBold: {
-      fontWeight: '500',
+      ...typography['body-2-m-regular'],
       color: color.primary[600],
-      fontFamily: 'Rubik-Medium',
     },
   })
 

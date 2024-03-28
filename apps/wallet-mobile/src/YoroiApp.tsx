@@ -1,11 +1,12 @@
-import {rootStorage, StorageProvider} from '@yoroi/common'
+import {AsyncStorageProvider} from '@yoroi/common'
+import {LinksProvider} from '@yoroi/links'
 import {ThemeProvider} from '@yoroi/theme'
 import React from 'react'
 import {LogBox, Platform, StyleSheet, UIManager} from 'react-native'
 import Config from 'react-native-config'
 import * as RNP from 'react-native-paper'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
-import {enableScreens} from 'react-native-screens'
+import {enableFreeze, enableScreens} from 'react-native-screens'
 import {QueryClient, QueryClientProvider} from 'react-query'
 
 import {AuthProvider} from './auth/AuthProvider'
@@ -17,12 +18,14 @@ import {InitApp} from './InitApp'
 import {CONFIG} from './legacy/config'
 import {setLogLevel} from './legacy/logging'
 import {makeMetricsManager, MetricsProvider} from './metrics/metricsManager'
+import {useMigrations} from './migrations/useMigrations'
 import {SelectedWalletMetaProvider, SelectedWalletProvider} from './SelectedWallet/Context'
-import {WalletManagerProvider} from './WalletManager'
-import {useMigrations} from './yoroi-wallets/migrations'
-import {walletManager} from './yoroi-wallets/walletManager'
+import {walletManager} from './wallet-manager/walletManager'
+import {WalletManagerProvider} from './wallet-manager/WalletManagerContext'
+import {rootStorage} from './yoroi-wallets/storage/rootStorage'
 
-enableScreens()
+enableScreens(true)
+enableFreeze(true)
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental != null) {
@@ -41,15 +44,17 @@ const metricsManager = makeMetricsManager()
 
 export const YoroiApp = () => {
   const migrated = useMigrations(rootStorage)
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  return migrated ? (
-    <StorageProvider>
-      <MetricsProvider metricsManager={metricsManager}>
-        <WalletManagerProvider walletManager={walletManager}>
-          <ErrorBoundary>
-            <QueryClientProvider client={queryClient}>
-              <LoadingBoundary style={StyleSheet.absoluteFill}>
-                <ThemeProvider>
+
+  if (!migrated) return null
+
+  return (
+    <AsyncStorageProvider storage={rootStorage}>
+      <ThemeProvider>
+        <MetricsProvider metricsManager={metricsManager}>
+          <WalletManagerProvider walletManager={walletManager}>
+            <ErrorBoundary>
+              <QueryClientProvider client={queryClient}>
+                <LoadingBoundary style={StyleSheet.absoluteFill}>
                   <LanguageProvider>
                     <CurrencyProvider>
                       <SafeAreaProvider>
@@ -57,7 +62,9 @@ export const YoroiApp = () => {
                           <AuthProvider>
                             <SelectedWalletMetaProvider>
                               <SelectedWalletProvider>
-                                <InitApp />
+                                <LinksProvider>
+                                  <InitApp />
+                                </LinksProvider>
                               </SelectedWalletProvider>
                             </SelectedWalletMetaProvider>
                           </AuthProvider>
@@ -65,12 +72,12 @@ export const YoroiApp = () => {
                       </SafeAreaProvider>
                     </CurrencyProvider>
                   </LanguageProvider>
-                </ThemeProvider>
-              </LoadingBoundary>
-            </QueryClientProvider>
-          </ErrorBoundary>
-        </WalletManagerProvider>
-      </MetricsProvider>
-    </StorageProvider>
-  ) : null
+                </LoadingBoundary>
+              </QueryClientProvider>
+            </ErrorBoundary>
+          </WalletManagerProvider>
+        </MetricsProvider>
+      </ThemeProvider>
+    </AsyncStorageProvider>
+  )
 }

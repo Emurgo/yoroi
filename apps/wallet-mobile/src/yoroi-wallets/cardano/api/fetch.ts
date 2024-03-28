@@ -10,7 +10,7 @@ type RequestMethod = 'POST' | 'GET'
 
 type ResponseChecker<T> = (rawResponse: Record<string, any>, requestPayload: Record<string, any>) => Promise<T>
 
-const _checkResponse: ResponseChecker<Record<string, any>> = async (rawResponse, requestPayload) => {
+const _checkResponse: ResponseChecker<Record<string, any>> = async (rawResponse) => {
   let responseBody = {}
 
   try {
@@ -28,9 +28,6 @@ const _checkResponse: ResponseChecker<Record<string, any>> = async (rawResponse,
       throw new ApiHistoryError((responseBody as any).error.response)
     }
 
-    Logger.debug('Bad status code from server', status)
-    Logger.debug('Request payload:', requestPayload)
-    Logger.info('response', responseBody)
     throw new ApiError((responseBody as any).error?.response)
   }
 
@@ -47,8 +44,6 @@ type FetchRequest<T> = {
 export const checkedFetch = (request: FetchRequest<any>) => {
   const {endpoint, payload, method, headers} = request
   const checkResponse = request.checkResponse || _checkResponse
-  Logger.info(`API call: ${endpoint}`)
-
   const args = [
     endpoint,
     {
@@ -60,7 +55,7 @@ export const checkedFetch = (request: FetchRequest<any>) => {
 
   return fetch(...args) // Fetch throws only for network/dns/related errors, not http statuses
     .catch((e) => {
-      Logger.info(`API call ${endpoint} failed`, e)
+      Logger.error(`API call ${endpoint} failed`, e)
 
       /* It really is TypeError according to
     https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
@@ -72,9 +67,7 @@ export const checkedFetch = (request: FetchRequest<any>) => {
       throw e
     })
     .then(async (r) => {
-      Logger.info(`API call ${endpoint} finished`)
       const response = await checkResponse(r, payload)
-      // Logger.debug('Response:', response)
       return response
     })
 }

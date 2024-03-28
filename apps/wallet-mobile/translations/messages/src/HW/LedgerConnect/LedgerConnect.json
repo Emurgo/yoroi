@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Scanning bluetooth devices...",
     "file": "src/HW/LedgerConnect/LedgerConnect.tsx",
     "start": {
-      "line": 311,
+      "line": 315,
       "column": 11,
-      "index": 9810
+      "index": 9898
     },
     "end": {
-      "line": 314,
+      "line": 318,
       "column": 3,
-      "index": 9944
+      "index": 10032
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!You'll need to:",
     "file": "src/HW/LedgerConnect/LedgerConnect.tsx",
     "start": {
-      "line": 315,
+      "line": 319,
       "column": 13,
-      "index": 9959
+      "index": 10047
     },
     "end": {
-      "line": 318,
+      "line": 322,
       "column": 3,
-      "index": 10081
+      "index": 10169
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!USB device is ready, please tap on Confirm to continue.",
     "file": "src/HW/LedgerConnect/LedgerConnect.tsx",
     "start": {
-      "line": 319,
+      "line": 323,
       "column": 18,
-      "index": 10101
+      "index": 10189
     },
     "end": {
-      "line": 322,
+      "line": 326,
       "column": 3,
-      "index": 10246
+      "index": 10334
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!An error occurred while trying to connect with your hardware wallet:",
     "file": "src/HW/LedgerConnect/LedgerConnect.tsx",
     "start": {
-      "line": 323,
+      "line": 327,
       "column": 9,
-      "index": 10257
+      "index": 10345
     },
     "end": {
-      "line": 326,
+      "line": 330,
       "column": 3,
-      "index": 10428
+      "index": 10516
     }
   }
 ]

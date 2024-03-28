@@ -94,6 +94,7 @@ export const DEBUG_BORDERS = {
 export const colors = {
   buttonBackground: '#17d1aa',
   buttonBackgroundBlue: '#3154cb',
+  buttonBackgroundMain: '#4B6DDE',
 }
 
 // TODO: remove, use theme instead.

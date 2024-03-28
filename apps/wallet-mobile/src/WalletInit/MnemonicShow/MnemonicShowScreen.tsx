@@ -6,7 +6,7 @@ import {Dimensions, Image, ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import recoveryPhrase from '../../assets/img/recovery_phrase.png'
-import {Button, StatusBar, Text} from '../../components'
+import {Button, Text} from '../../components'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {isEmptyString} from '../../utils/utils'
 import {MnemonicBackupImportanceModal} from '../MnemonicBackupModal'
@@ -40,8 +40,6 @@ export const MnemonicShowScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-      <StatusBar type="dark" />
-
       <View style={styles.content}>
         <ScrollView contentContainerStyle={styles.scrollViewContentContainer} bounces={false}>
           <View style={styles.mnemonicNote}>

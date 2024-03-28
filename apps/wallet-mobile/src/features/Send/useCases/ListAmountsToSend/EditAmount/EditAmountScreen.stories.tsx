@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable react/jsx-curly-brace-presence */
 import {storiesOf} from '@storybook/react-native'
+import {TransferProvider} from '@yoroi/transfer'
 import React from 'react'
 
 import {SelectedWalletProvider} from '../../../../../SelectedWallet'
 import {mocks as walletMocks} from '../../../../../yoroi-wallets/mocks'
 import {mocks as sendMocks} from '../../../common/mocks'
-import {SendProvider} from '../../../common/SendContext'
 import {EditAmountScreen} from './EditAmountScreen'
 
 storiesOf('Edit Amount', module) //
@@ -29,9 +29,9 @@ storiesOf('Edit Amount', module) //
 const NonPrimary = () => {
   return (
     <SelectedWalletProvider wallet={walletMocks.wallet}>
-      <SendProvider initialState={sendMocks.editingAmount.secondaryToken}>
+      <TransferProvider initialState={sendMocks.editingAmount.secondaryToken}>
         <EditAmountScreen />
-      </SendProvider>
+      </TransferProvider>
     </SelectedWalletProvider>
   )
 }
@@ -39,9 +39,9 @@ const NonPrimary = () => {
 const Editing = () => {
   return (
     <SelectedWalletProvider wallet={walletMocks.wallet}>
-      <SendProvider initialState={sendMocks.editingAmount.initialQuantity}>
+      <TransferProvider initialState={sendMocks.editingAmount.initialQuantity}>
         <EditAmountScreen />
-      </SendProvider>
+      </TransferProvider>
     </SelectedWalletProvider>
   )
 }
@@ -49,9 +49,9 @@ const Editing = () => {
 const Adding = () => {
   return (
     <SelectedWalletProvider wallet={walletMocks.wallet}>
-      <SendProvider initialState={sendMocks.editingAmount.adding}>
+      <TransferProvider initialState={sendMocks.editingAmount.adding}>
         <EditAmountScreen />
-      </SendProvider>
+      </TransferProvider>
     </SelectedWalletProvider>
   )
 }
@@ -59,9 +59,9 @@ const Adding = () => {
 const InsuficientBalance = () => {
   return (
     <SelectedWalletProvider wallet={walletMocks.wallet}>
-      <SendProvider initialState={sendMocks.editingAmount.insuficientBalance}>
+      <TransferProvider initialState={sendMocks.editingAmount.insuficientBalance}>
         <EditAmountScreen />
-      </SendProvider>
+      </TransferProvider>
     </SelectedWalletProvider>
   )
 }
@@ -69,9 +69,9 @@ const InsuficientBalance = () => {
 const OverSpendable = () => {
   return (
     <SelectedWalletProvider wallet={walletMocks.wallet}>
-      <SendProvider initialState={{}}>
+      <TransferProvider initialState={{}}>
         <EditAmountScreen />
-      </SendProvider>
+      </TransferProvider>
     </SelectedWalletProvider>
   )
 }

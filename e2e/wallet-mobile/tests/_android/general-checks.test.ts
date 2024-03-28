@@ -2,7 +2,6 @@ import {device, expect} from 'detox'
 
 import * as initialScreen from '../../screens/initialScreen.screen'
 import * as analyticsScreen from '../../screens/shareUserInsights.screen'
-import * as utils from '../../general/utils'
 
 describe('General checks', () => {
  beforeAll(async () => {
@@ -26,7 +25,6 @@ describe('General checks', () => {
   await expect(initialScreen.linkPrivacyPolicy()).toBeVisible()
   await initialScreen.linkPrivacyPolicy().tap()
   await expect(element(by.text('3. Collection of Personal Data'))).toBeVisible()
-  await utils.takeScreenshot('Privacy Policy is displayed')
   await initialScreen.buttonBack2().tap()
  })
 
@@ -34,20 +32,17 @@ describe('General checks', () => {
   await expect(initialScreen.linkToS()).toBeVisible()
   await initialScreen.linkToS().tap()
   await expect(element(by.text('1. Rights and Obligations'))).toBeVisible()
-  await utils.takeScreenshot('Terms of Service is displayed')
   await initialScreen.buttonBack2().tap()
  })
 
  it('should be able to select checkbox and proceed', async () => {
   await initialScreen.checkboxSelect().tap({x: 5, y: 10})
   await initialScreen.buttonContinue().tap()
-  await utils.takeScreenshot('User consent screen for sharing insights')
  })
 
  it('should be able to skip consent for analytics and proceed', async () => {
   await expect(analyticsScreen.txt_PageTitle()).toBeVisible()
   await analyticsScreen.btn_Skip().tap()
   await expect(element(by.text('Enter PIN'))).toBeVisible()
-  await utils.takeScreenshot('Enter PIN screen')
  })
 })

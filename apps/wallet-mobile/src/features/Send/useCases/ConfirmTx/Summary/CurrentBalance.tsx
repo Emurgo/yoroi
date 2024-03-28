@@ -1,15 +1,16 @@
+import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {Text} from '../../../../../components/Text'
 import {formatTokenWithText} from '../../../../../legacy/format'
 import {useSelectedWallet} from '../../../../../SelectedWallet/Context/SelectedWalletContext'
-import {COLORS} from '../../../../../theme/config'
 import {useBalances} from '../../../../../yoroi-wallets/hooks'
 import {Amounts} from '../../../../../yoroi-wallets/utils/utils'
 import {useStrings} from '../../../common/strings'
 
 export const CurrentBalance = () => {
+  const styles = useStyles()
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const balances = useBalances(wallet)
@@ -30,14 +31,19 @@ export const CurrentBalance = () => {
   )
 }
 
-const styles = StyleSheet.create({
-  banner: {
-    backgroundColor: COLORS.WHITE,
-    paddingVertical: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  label: {
-    paddingBottom: 6,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, padding} = theme
+  const styles = StyleSheet.create({
+    banner: {
+      backgroundColor: color.gray.min,
+      ...padding['y-l'],
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    label: {
+      ...padding['b-xs'],
+    },
+  })
+  return styles
+}

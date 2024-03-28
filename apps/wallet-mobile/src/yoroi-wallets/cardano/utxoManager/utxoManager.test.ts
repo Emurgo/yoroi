@@ -1,5 +1,4 @@
-import {rootStorage} from '@yoroi/common'
-
+import {rootStorage} from '../../storage/rootStorage'
 import {makeUtxoManagerStorage, makeUtxoStorage} from './utxoManager'
 
 describe('utxo manager storage', () => {

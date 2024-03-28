@@ -1,16 +1,18 @@
 import {useNavigation} from '@react-navigation/native'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, StatusBar, Text} from '../../../components'
+import {Button, Text} from '../../../components'
 import {LoadingOverlay} from '../../../components/LoadingOverlay'
 import {useSelectedWallet, useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../../SelectedWallet'
 import {useDisableEasyConfirmation} from '../../../yoroi-wallets/hooks'
 
 export const DisableEasyConfirmationScreen = () => {
   const strings = useStrings()
+  const styles = useStyles()
   const navigation = useNavigation()
   const wallet = useSelectedWallet()
   const walletMeta = useSelectedWalletMeta()
@@ -28,8 +30,6 @@ export const DisableEasyConfirmationScreen = () => {
 
   return (
     <SafeAreaView edges={['bottom']} style={styles.container}>
-      <StatusBar type="dark" />
-
       <View style={[styles.disableSection]}>
         <Text style={styles.heading}>{strings.disableHeading}</Text>
       </View>
@@ -68,22 +68,26 @@ const messages = defineMessages({
   },
 })
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  heading: {
-    fontSize: 16,
-    lineHeight: 24,
-  },
-  disableSection: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 20,
-  },
-  actions: {
-    paddingBottom: 16,
-    paddingHorizontal: 16,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, typography} = theme
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: color.gray.min,
+    },
+    heading: {
+      ...typography['body-1-l-regular'],
+    },
+    disableSection: {
+      flex: 1,
+      justifyContent: 'center',
+      padding: 20,
+    },
+    actions: {
+      paddingBottom: 16,
+      paddingHorizontal: 16,
+    },
+  })
+  return styles
+}

@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
@@ -37,6 +38,7 @@ const LockedAmount = () => {
 }
 
 const FormattedAmount = ({amount}: {amount: string}) => {
+  const styles = useStyles()
   return (
     <Row>
       <Label />
@@ -49,11 +51,13 @@ const FormattedAmount = ({amount}: {amount: string}) => {
 }
 
 const Row = ({children}: {children: React.ReactNode}) => {
+  const styles = useStyles()
   return <View style={styles.root}>{children}</View>
 }
 
 const Label = () => {
   const strings = useStrings()
+  const styles = useStyles()
 
   return <Text style={styles.label}>{strings.lockedDeposit}:</Text>
 }
@@ -66,16 +70,20 @@ const useStrings = () => {
   }
 }
 
-const styles = StyleSheet.create({
-  root: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  label: {
-    color: '#6B7384',
-    fontSize: 14,
-    fontWeight: '400',
-    lineHeight: 22,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, typography} = theme
+  const styles = StyleSheet.create({
+    root: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    label: {
+      color: color.gray[600],
+      ...typography['body-2-m-regular'],
+    },
+  })
+
+  return styles
+}

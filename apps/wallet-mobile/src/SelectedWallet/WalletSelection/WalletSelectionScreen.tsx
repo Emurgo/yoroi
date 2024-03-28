@@ -7,25 +7,26 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button} from '../../components/Button'
 import {Icon} from '../../components/Icon'
 import {PleaseWaitModal} from '../../components/PleaseWaitModal'
-import {StatusBar} from '../../components/StatusBar'
 import {showErrorDialog} from '../../dialogs'
+import {useLinksRequestWallet} from '../../features/Links/common/useLinksRequestWallet'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import {isNightly} from '../../legacy/config'
 import {useMetrics} from '../../metrics/metricsManager'
 import {useWalletNavigation} from '../../navigation'
 import {COLORS} from '../../theme'
-import {useWalletManager} from '../../WalletManager'
+import {WalletMeta} from '../../wallet-manager/types'
+import {useWalletManager} from '../../wallet-manager/WalletManagerContext'
 import * as HASKELL_SHELLEY from '../../yoroi-wallets/cardano/constants/mainnet/constants'
 import * as SANCHONET from '../../yoroi-wallets/cardano/constants/sanchonet/constants'
 import * as HASKELL_SHELLEY_TESTNET from '../../yoroi-wallets/cardano/constants/testnet/constants'
 import {InvalidState, NetworkError} from '../../yoroi-wallets/cardano/errors'
 import {isJormungandr} from '../../yoroi-wallets/cardano/networks'
 import {useOpenWallet, useWalletMetas} from '../../yoroi-wallets/hooks'
-import {WalletMeta} from '../../yoroi-wallets/walletManager'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../Context'
 import {WalletListItem} from './WalletListItem'
 
 export const WalletSelectionScreen = () => {
+  useLinksRequestWallet()
   const strings = useStrings()
   const {navigateToTxHistory} = useWalletNavigation()
   const walletManager = useWalletManager()
@@ -47,14 +48,7 @@ export const WalletSelectionScreen = () => {
     onSuccess: ([wallet, walletMeta]) => {
       selectWalletMeta(walletMeta)
       selectWallet(wallet)
-
-      // fixes modal issue
-      // https://github.com/facebook/react-native/issues/32329
-      // https://github.com/facebook/react-native/issues/33733
-      // https://github.com/facebook/react-native/issues/29319
-      InteractionManager.runAfterInteractions(() => {
-        navigateToTxHistory()
-      })
+      navigateToTxHistory()
     },
     onError: (error) => {
       InteractionManager.runAfterInteractions(() => {
@@ -79,8 +73,6 @@ export const WalletSelectionScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <StatusBar type="light" />
-
       <Text style={styles.title}>{strings.header}</Text>
 
       <FlatList
@@ -178,6 +170,7 @@ const ShelleyButton = () => {
       }
       title={strings.addWalletButton}
       style={styles.topButton}
+      testID="addWalletMainnetButton"
     />
   )
 }

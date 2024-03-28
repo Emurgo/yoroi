@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
@@ -6,7 +7,6 @@ import {Boundary} from '../../../../../components/Boundary/Boundary'
 import {Text} from '../../../../../components/Text'
 import {formatTokenWithText} from '../../../../../legacy/format'
 import {useSelectedWallet} from '../../../../../SelectedWallet/Context/SelectedWalletContext'
-import {COLORS} from '../../../../../theme/config'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {useToken} from '../../../../../yoroi-wallets/hooks'
 import {YoroiUnsignedTx} from '../../../../../yoroi-wallets/types/yoroi'
@@ -33,13 +33,19 @@ export const SecondaryTotals = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsign
 }
 
 const Amount = ({amount, wallet}: {amount: Balance.Amount; wallet: YoroiWallet}) => {
+  const styles = useStyles()
   const token = useToken({wallet, tokenId: amount.tokenId})
 
   return <Text style={styles.amount}>{formatTokenWithText(amount.quantity, token)}</Text>
 }
 
-const styles = StyleSheet.create({
-  amount: {
-    color: COLORS.POSITIVE_AMOUNT,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
+  const styles = StyleSheet.create({
+    amount: {
+      color: color.secondary[600],
+    },
+  })
+  return styles
+}

@@ -1,4 +1,6 @@
-import {parseSafe, useStorage} from '@yoroi/common'
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {parseSafe, useAsyncStorage} from '@yoroi/common'
 import React, {useMemo} from 'react'
 import {IntlProvider} from 'react-intl'
 import {Text} from 'react-native'
@@ -41,11 +43,12 @@ export const LanguageProvider = ({children}: {children: React.ReactNode}) => {
 
   return (
     <LanguageContext.Provider value={initialState}>
+      {/* @ts-ignore types/react mistmatch */}
       <IntlProvider
         timeZone={timeZone}
         locale={languageCode}
         messages={translations[languageCode]}
-        textComponent={Text}
+        textComponent={Text as any}
       >
         {children}
       </IntlProvider>
@@ -88,7 +91,7 @@ const missingProvider = () => {
 }
 
 const useLanguageCode = ({onSuccess, ...options}: UseQueryOptions<LanguageCode> = {}) => {
-  const storage = useStorage()
+  const storage = useAsyncStorage()
   const query = useQuery({
     queryKey: ['languageCode'],
     queryFn: async () => {
@@ -110,7 +113,7 @@ const useLanguageCode = ({onSuccess, ...options}: UseQueryOptions<LanguageCode> 
 }
 
 const useSaveLanguageCode = ({onSuccess, ...options}: UseMutationOptions<void, Error, LanguageCode> = {}) => {
-  const storage = useStorage()
+  const storage = useAsyncStorage()
   const queryClient = useQueryClient()
 
   const mutation = useMutation({

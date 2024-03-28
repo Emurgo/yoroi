@@ -1,8 +1,15 @@
 import {MaterialTopTabNavigationOptions} from '@react-navigation/material-top-tabs'
-import {NavigatorScreenParams, useNavigation, useRoute} from '@react-navigation/native'
+import {
+  getFocusedRouteNameFromRoute,
+  NavigatorScreenParams,
+  RouteProp,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native'
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack'
+import {Theme, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {Dimensions, Platform, TouchableOpacity, TouchableOpacityProps} from 'react-native'
+import {Dimensions, Platform, TouchableOpacity, TouchableOpacityProps, ViewStyle} from 'react-native'
 
 import {Icon} from './components'
 import {ScanFeature} from './features/Scan/common/types'
@@ -31,41 +38,46 @@ export const useParams = <Params, >(guard: Guard<Params>): Params => {
 
 type Guard<Params> = (params: Params | object) => params is Params
 
-export const BackButton = (props: TouchableOpacityProps & {color?: string}) => (
-  <TouchableOpacity {...props} testID="buttonBack2">
-    <Icon.Chevron size={28} direction="left" color={props.color ?? '#000000'} />
-  </TouchableOpacity>
-)
+export const BackButton = (props: TouchableOpacityProps & {color?: string}) => {
+  const {theme} = useTheme()
+
+  return (
+    <TouchableOpacity {...props} testID="buttonBack2">
+      <Icon.Chevron direction="left" color={props.color ?? theme.color.gray.max} />
+    </TouchableOpacity>
+  )
+}
 
 // OPTIONS
 const WIDTH = Dimensions.get('window').width
-export const defaultStackNavigationOptions: StackNavigationOptions = {
-  headerTintColor: COLORS.ERROR_TEXT_COLOR_DARK,
-  headerStyle: {
-    elevation: 0,
-    shadowOpacity: 0,
-    backgroundColor: '#fff',
-  },
-  headerTitleStyle: {
-    fontSize: 16,
-    fontFamily: 'Rubik-Medium',
-    width: WIDTH - 75,
-    textAlign: 'center',
-  },
-  headerTitleAlign: 'center',
-  headerTitleContainerStyle: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerLeftContainerStyle: {
-    paddingLeft: 10,
-  },
-  headerRightContainerStyle: {
-    paddingRight: 10,
-  },
-  cardStyle: {backgroundColor: 'white'},
-  headerLeft: (props) => <BackButton {...props} />,
+export const defaultStackNavigationOptions = (theme: Theme): StackNavigationOptions => {
+  return {
+    headerTintColor: theme.color.gray.max,
+    headerStyle: {
+      elevation: 0,
+      shadowOpacity: 0,
+      backgroundColor: theme.color.gray.min,
+    },
+    headerTitleStyle: {
+      ...theme.typography['body-1-l-medium'],
+      width: WIDTH - 75,
+      textAlign: 'center',
+    },
+    headerTitleAlign: 'center',
+    headerTitleContainerStyle: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    headerLeftContainerStyle: {
+      ...theme.padding['l-s'],
+    },
+    headerRightContainerStyle: {
+      ...theme.padding['r-s'],
+    },
+    cardStyle: {backgroundColor: 'white'},
+    headerLeft: (props) => <BackButton {...props} />,
+  }
 }
 
 export const DEPRECATED_defaultStackNavigationOptions: StackNavigationOptions = {
@@ -84,17 +96,17 @@ export const DEPRECATED_defaultStackNavigationOptions: StackNavigationOptions = 
 }
 
 // NAVIGATOR TOP TABS OPTIONS
-export const defaultMaterialTopTabNavigationOptions: MaterialTopTabNavigationOptions = {
-  tabBarStyle: {backgroundColor: COLORS.WHITE, elevation: 0, shadowOpacity: 0, marginHorizontal: 16},
-  tabBarIndicatorStyle: {backgroundColor: COLORS.SHELLEY_BLUE, height: 2},
-  tabBarLabelStyle: {
-    textTransform: 'none',
-    fontFamily: 'Rubik-Medium',
-    fontSize: 16,
-    fontWeight: '500',
-  },
-  tabBarActiveTintColor: COLORS.SHELLEY_BLUE,
-  tabBarInactiveTintColor: COLORS.NOT_SELECTED_TAB_TEXT,
+export const defaultMaterialTopTabNavigationOptions = (theme: Theme): MaterialTopTabNavigationOptions => {
+  return {
+    tabBarStyle: {backgroundColor: theme.color.gray.min, elevation: 0, shadowOpacity: 0, marginHorizontal: 16},
+    tabBarIndicatorStyle: {backgroundColor: theme.color.primary[600], height: 2},
+    tabBarLabelStyle: {
+      textTransform: 'none',
+      ...theme.typography['body-1-l-medium'],
+    },
+    tabBarActiveTintColor: theme.color.primary[600],
+    tabBarInactiveTintColor: theme.color.gray[600],
+  }
 }
 
 // ROUTES
@@ -107,6 +119,7 @@ export type WalletTabRoutes = {
 
 export type WalletStackRoutes = {
   'wallet-selection': undefined
+  'exchange-result': undefined
   'main-wallet-routes': NavigatorScreenParams<WalletTabRoutes>
   'nft-details-routes': NavigatorScreenParams<NftRoutes>
   settings: NavigatorScreenParams<SettingsStackRoutes>
@@ -191,7 +204,9 @@ export type TxHistoryRoutes = {
   'history-details': {
     id: string
   }
-  receive: undefined
+  'receive-single': undefined
+  'receive-specific-amount': undefined
+  'receive-multiple': undefined
   'send-start-tx': undefined
   'send-confirm-tx': undefined
   'send-submitted-tx': {txId: string}
@@ -202,7 +217,7 @@ export type TxHistoryRoutes = {
 } & SwapTokenRoutes &
   ScanRoutes &
   ClaimRoutes &
-  RampOnOffRoutes
+  ExchangeRoutes
 export type TxHistoryRouteNavigation = StackNavigationProp<TxHistoryRoutes>
 
 type ScanStartParams = Readonly<{
@@ -215,10 +230,6 @@ export type ScanRoutes = {
 }
 export type ClaimRoutes = {
   'claim-show-success': undefined
-}
-
-export type RampOnOffRoutes = {
-  'rampOnOff-start-rampOnOff': undefined
 }
 
 export type SwapTokenRoutes = {
@@ -247,13 +258,15 @@ export type SwapTabRoutes = {
   orders: undefined
 }
 
-export type RampOnOffStackRoutes = {
-  'create-ramp-on-off': undefined
-  'result-ramp-on-off': undefined
+export type ExchangeRoutes = {
+  'exchange-create-order': undefined
+  'exchange-result': undefined
+  'exchange-select-buy-provider': undefined
+  'exchange-select-sell-provider': undefined
   'app-root': undefined
 }
 
-export type RampOnOffRoutesNavigation = StackNavigationProp<RampOnOffStackRoutes>
+export type ExchangeRoutesNavigation = StackNavigationProp<ExchangeRoutes>
 
 export type StakingCenterRouteNavigation = StackNavigationProp<StakingCenterRoutes>
 
@@ -357,6 +370,7 @@ export type AppRoutes = {
   'new-wallet': NavigatorScreenParams<WalletInitRoutes>
   'app-root': NavigatorScreenParams<WalletStackRoutes>
   'custom-pin-auth': undefined
+  'exchange-result': undefined
   'bio-auth-initial': undefined
   'enable-login-with-pin': undefined
   'agreement-changed-notice': undefined
@@ -417,6 +431,47 @@ export const useWalletNavigation = () => {
             },
           },
         ],
+      })
+    },
+
+    resetToStartTransfer: () => {
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'app-root',
+            state: {
+              routes: [
+                {name: 'wallet-selection'},
+                {
+                  name: 'main-wallet-routes',
+                  state: {
+                    routes: [
+                      {
+                        name: 'history',
+                        state: {
+                          routes: [{name: 'send-start-tx'}],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      })
+    },
+
+    navigateToStartTransfer: () => {
+      navigation.navigate('app-root', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'send-start-tx',
+          },
+        },
       })
     },
 
@@ -520,3 +575,11 @@ export const useWalletNavigation = () => {
     },
   } as const).current
 }
+
+export const hideTabBarForRoutes = (route: RouteProp<WalletTabRoutes, 'history'>): ViewStyle | undefined =>
+  getFocusedRouteNameFromRoute(route)?.startsWith('scan') ||
+  getFocusedRouteNameFromRoute(route)?.startsWith('swap') ||
+  getFocusedRouteNameFromRoute(route)?.startsWith('receive') ||
+  getFocusedRouteNameFromRoute(route)?.startsWith('exchange')
+    ? {display: 'none'}
+    : undefined

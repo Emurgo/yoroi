@@ -23,6 +23,7 @@ type Props = {
   inputRef?: React.RefObject<TextInput>
   inputEditable?: boolean
   error?: string
+  testId?: string
 }
 
 export const AmountCard = ({
@@ -36,6 +37,7 @@ export const AmountCard = ({
   inputRef,
   inputEditable = true,
   error,
+  testId,
 }: Props) => {
   const [isFocused, setIsFocused] = React.useState(false)
   const strings = useStrings()
@@ -61,7 +63,11 @@ export const AmountCard = ({
         {label != null && <Text style={[styles.label, !isEmptyString(error) && styles.labelError]}>{label}</Text>}
 
         <View style={styles.content}>
-          <Pressable style={styles.amountWrapper} onPress={() => (noTokenSelected ? navigateTo?.() : focusInput())}>
+          <Pressable
+            style={styles.amountWrapper}
+            onPress={() => (noTokenSelected ? navigateTo?.() : focusInput())}
+            testID={noTokenSelected ? `${testId}-token-input` : ''}
+          >
             <TextInput
               keyboardType="numeric"
               autoComplete="off"
@@ -78,6 +84,7 @@ export const AmountCard = ({
               selectTextOnFocus
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
+              testID={`${testId}-amount-input`}
               {...(noTokenSelected && {onPressIn: navigateTo})}
             />
           </Pressable>
@@ -147,7 +154,7 @@ const useStrings = () => {
 
 const useStyles = () => {
   const {theme} = useTheme()
-  const {color} = theme
+  const {color, typography} = theme
   const styles = StyleSheet.create({
     container: {
       borderRadius: 8,
@@ -208,8 +215,7 @@ const useStyles = () => {
       alignItems: 'center',
     },
     coinName: {
-      fontSize: 16,
-      fontWeight: '400',
+      ...typography['body-1-l-regular'],
       color: color.gray.max,
     },
     balanceText: {

@@ -31,7 +31,7 @@ export const ButtonGroup: React.FC<ButtonGroupProps> = ({labels, onSelect, selec
 
 const useStyles = () => {
   const {theme} = useTheme()
-  const {color} = theme
+  const {color, typography} = theme
   const styles = StyleSheet.create({
     container: {
       flexDirection: 'row',
@@ -49,10 +49,7 @@ const useStyles = () => {
     },
     label: {
       color: color.gray.max,
-      fontFamily: 'Rubik-Medium',
-      fontWeight: '500',
-      lineHeight: 24,
-      fontSize: 16,
+      ...typography['body-1-l-medium'],
     },
   })
 

@@ -7,7 +7,7 @@ import {debugWalletInfo, features} from '../features'
 import globalMessages from '../i18n/global-messages'
 import {COLORS} from '../theme'
 import {isEmptyString} from '../utils/utils'
-import {useWalletManager} from '../WalletManager'
+import {useWalletManager} from '../wallet-manager/WalletManagerContext'
 import {useWalletNames} from '../yoroi-wallets/hooks'
 import {
   getWalletNameError,

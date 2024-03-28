@@ -3,12 +3,12 @@ import Svg, {Path} from 'react-native-svg'
 
 export const Chevron = ({
   direction,
-  color = 'black',
+  color,
   size = 40,
 }: {
   size?: number
-  color?: string
   backgroundColor?: string
+  color?: string
   direction: 'left' | 'right' | 'up' | 'down'
 }) => {
   const rotate = direction === 'down' ? 0 : direction === 'right' ? 270 : direction === 'left' ? 90 : 180

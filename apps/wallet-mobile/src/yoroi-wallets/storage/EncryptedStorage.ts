@@ -1,7 +1,8 @@
-import {parseString, rootStorage} from '@yoroi/common'
+import {parseString} from '@yoroi/common'
 
 import {YoroiWallet} from '../cardano/types'
 import {decryptData, encryptData} from '../encryption'
+import {rootStorage} from './rootStorage'
 
 type StorageKey = `${string}-MASTER_PASSWORD`
 export const EncryptedStorageKeys = {

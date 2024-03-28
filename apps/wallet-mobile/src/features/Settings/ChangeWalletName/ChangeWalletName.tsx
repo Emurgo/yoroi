@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View} from 'react-native'
@@ -7,14 +8,14 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button, KeyboardAvoidingView, TextInput} from '../../../components'
 import globalMessages from '../../../i18n/global-messages'
 import {useSelectedWallet} from '../../../SelectedWallet'
-import {COLORS} from '../../../theme'
 import {isEmptyString} from '../../../utils/utils'
-import {useWalletManager} from '../../../WalletManager'
+import {useWalletManager} from '../../../wallet-manager/WalletManagerContext'
 import {useChangeWalletName, useWalletName, useWalletNames} from '../../../yoroi-wallets/hooks'
 import {getWalletNameError, validateWalletName} from '../../../yoroi-wallets/utils/validators'
 
 export const ChangeWalletName = () => {
   const strings = useStrings()
+  const styles = useStyles()
   const navigation = useNavigation()
 
   const wallet = useSelectedWallet()
@@ -72,21 +73,26 @@ export const ChangeWalletName = () => {
   )
 }
 
-const styles = StyleSheet.create({
-  safeAreaView: {
-    backgroundColor: COLORS.BACKGROUND,
-    flex: 1,
-  },
-  scrollContentContainer: {
-    flex: 1,
-    paddingHorizontal: 16,
-    paddingTop: 40,
-  },
-  action: {
-    paddingHorizontal: 16,
-    backgroundColor: COLORS.BACKGROUND,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
+  const styles = StyleSheet.create({
+    safeAreaView: {
+      backgroundColor: color.gray.min,
+      flex: 1,
+    },
+    scrollContentContainer: {
+      flex: 1,
+      paddingHorizontal: 16,
+      paddingTop: 40,
+    },
+    action: {
+      paddingHorizontal: 16,
+      backgroundColor: color.gray.min,
+    },
+  })
+  return styles
+}
 
 const WalletNameInput = TextInput
 

@@ -1,6 +1,8 @@
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
+import {useTheme} from '@yoroi/theme'
+import {TransferProvider} from '@yoroi/transfer'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
@@ -16,7 +18,6 @@ import {
   SettingsTabRoutes,
 } from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {SendProvider} from '../Send/common/SendContext'
 import {About} from './About'
 import {ApplicationSettingsScreen} from './ApplicationSettings'
 import {ChangeLanguageScreen} from './ChangeLanguage'
@@ -39,6 +40,7 @@ export const SettingsScreenNavigator = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const {track} = useMetrics()
+  const {theme} = useTheme()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -47,10 +49,10 @@ export const SettingsScreenNavigator = () => {
   )
 
   return (
-    <SendProvider key={wallet.id}>
+    <TransferProvider key={wallet.id}>
       <Stack.Navigator
         screenOptions={{
-          ...defaultStackNavigationOptions,
+          ...defaultStackNavigationOptions(theme),
           detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
         }}
       >
@@ -177,18 +179,20 @@ export const SettingsScreenNavigator = () => {
           component={EnableLoginWithPinWrapper}
         />
       </Stack.Navigator>
-    </SendProvider>
+    </TransferProvider>
   )
 }
 
 const Tab = createMaterialTopTabNavigator<SettingsTabRoutes>()
 const SettingsTabNavigator = () => {
   const strings = useStrings()
+  const {theme} = useTheme()
 
   return (
     <Tab.Navigator
+      style={{backgroundColor: theme.color.gray.min}}
       screenOptions={({route}) => ({
-        ...defaultMaterialTopTabNavigationOptions,
+        ...defaultMaterialTopTabNavigationOptions(theme),
         tabBarLabel: route.name === 'wallet-settings' ? strings.walletTabTitle : strings.appTabTitle,
       })}
     >

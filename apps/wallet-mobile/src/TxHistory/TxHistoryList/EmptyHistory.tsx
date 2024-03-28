@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image, StyleSheet, Text, View} from 'react-native'
@@ -7,6 +8,7 @@ import {Spacer} from '../../components/Spacer'
 
 export const EmptyHistory = () => {
   const strings = useStrings()
+  const styles = useStyles()
 
   return (
     <View style={styles.empty} testID="emptyHistoryComponent">
@@ -23,24 +25,27 @@ export const EmptyHistory = () => {
   )
 }
 
-const styles = StyleSheet.create({
-  empty: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  emptyText: {
-    fontSize: 16,
-    lineHeight: 24,
-    fontWeight: 'bold',
-    color: '#242838',
-    width: '55%',
-    textAlign: 'center',
-  },
-  image: {
-    height: 100,
-    width: 131,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, typography} = theme
+  const styles = StyleSheet.create({
+    empty: {
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    emptyText: {
+      ...typography['body-1-l-medium'],
+      color: color.gray[900],
+      width: '55%',
+      textAlign: 'center',
+    },
+    image: {
+      height: 100,
+      width: 131,
+    },
+  })
+  return styles
+}
 
 const messages = defineMessages({
   noTransactions: {

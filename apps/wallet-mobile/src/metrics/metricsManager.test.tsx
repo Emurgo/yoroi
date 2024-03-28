@@ -51,7 +51,6 @@ const mockAmpli = {
   allWalletsPageViewed: jest.fn(),
   assetsPageViewed: jest.fn(),
   menuPageViewed: jest.fn(),
-  receivePageViewed: jest.fn(),
   settingsPageViewed: jest.fn(),
   stakingCenterPageViewed: jest.fn(),
   transactionsPageViewed: jest.fn(),
@@ -91,6 +90,17 @@ const mockAmpli = {
   governanceConfirmTransactionPageViewed: jest.fn(),
   governanceDashboardPageViewed: jest.fn(),
   governanceTransactionSuccessPageViewed: jest.fn(),
+
+  createWalletDetailsSettled: jest.fn(),
+  restoreWalletDetailsSettled: jest.fn(),
+
+  receiveAmountGeneratedPageViewed: jest.fn(),
+  receiveAmountPageViewed: jest.fn(),
+  receiveCopyAddressClicked: jest.fn(),
+  receiveGenerateNewAddressClicked: jest.fn(),
+  receivePageListViewed: jest.fn(),
+  receiveShareAddressClicked: jest.fn(),
+  receivePageViewed: jest.fn(),
 } as unknown as Ampli
 
 const mockMetricsStorage = {
@@ -192,6 +202,19 @@ describe('makeMetricsManager', () => {
     metricsManager.track.governanceTransactionSuccessPageViewed({governance_selection: 'Abstain'})
     metricsManager.track.governanceTransactionSuccessPageViewed({governance_selection: 'No Confidence'})
 
+    metricsManager.track.createWalletDetailsSettled()
+    metricsManager.track.restoreWalletDetailsSettled()
+
+    metricsManager.track.receiveAmountGeneratedPageViewed({ada_amount: 500})
+    metricsManager.track.receiveAmountPageViewed()
+    metricsManager.track.receiveCopyAddressClicked({copy_address_location: 'CTA Copy Address'})
+    metricsManager.track.receiveCopyAddressClicked({copy_address_location: 'Long Press wallet Address'})
+    metricsManager.track.receiveCopyAddressClicked({copy_address_location: 'Tap Address Details'})
+    metricsManager.track.receiveGenerateNewAddressClicked()
+    metricsManager.track.receivePageListViewed()
+    metricsManager.track.receivePageViewed()
+    metricsManager.track.receiveShareAddressClicked()
+
     expect(mockAmpli.nftGalleryDetailsTab).toHaveBeenCalledWith({nft_tab: 'Metadata'})
     expect(mockAmpli.nftGalleryPageViewed).toHaveBeenCalledWith({nft_count: 10})
     expect(mockAmpli.nftGallerySearchActivated).toHaveBeenCalledWith({nft_search_term: 'test', nft_count: 10})
@@ -250,6 +273,21 @@ describe('makeMetricsManager', () => {
     expect(mockAmpli.governanceTransactionSuccessPageViewed).toHaveBeenCalledWith({
       governance_selection: 'No Confidence',
     })
+
+    expect(mockAmpli.createWalletDetailsSettled).toHaveBeenCalled()
+    expect(mockAmpli.restoreWalletDetailsSettled).toHaveBeenCalled()
+
+    expect(mockAmpli.receiveAmountGeneratedPageViewed).toHaveBeenCalledWith({ada_amount: 500})
+    expect(mockAmpli.receiveAmountPageViewed).toHaveBeenCalled()
+    expect(mockAmpli.receiveCopyAddressClicked).toHaveBeenCalledWith({copy_address_location: 'CTA Copy Address'})
+    expect(mockAmpli.receiveCopyAddressClicked).toHaveBeenCalledWith({
+      copy_address_location: 'Long Press wallet Address',
+    })
+    expect(mockAmpli.receiveCopyAddressClicked).toHaveBeenCalledWith({copy_address_location: 'Tap Address Details'})
+    expect(mockAmpli.receiveGenerateNewAddressClicked).toHaveBeenCalled()
+    expect(mockAmpli.receivePageListViewed).toHaveBeenCalled()
+    expect(mockAmpli.receivePageViewed).toHaveBeenCalled()
+    expect(mockAmpli.receiveShareAddressClicked).toHaveBeenCalled()
   })
 
   test('enable should set metrics enabled to true', async () => {

@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {storiesOf} from '@storybook/react-native'
-import {rootStorage, StorageProvider} from '@yoroi/common'
+import {AsyncStorageProvider} from '@yoroi/common'
 import React from 'react'
 
 import {QueryProvider, RouteProvider} from '../../../.storybook/decorators'
 import {SelectedWalletProvider} from '../../SelectedWallet'
 import {mocks} from '../../yoroi-wallets/mocks'
+import {rootStorage} from '../../yoroi-wallets/storage/rootStorage'
 import {TxDetails} from './TxDetails'
 
 storiesOf('TxDetails', module)
@@ -48,7 +49,7 @@ storiesOf('TxDetails', module)
     <QueryProvider>
       <RouteProvider params={{id: mockTransaction.id}}>
         <SelectedWalletProvider wallet={mocks.wallet}>
-          <StorageProvider
+          <AsyncStorageProvider
             storage={{
               ...rootStorage,
               join: (key: string) => {
@@ -64,7 +65,7 @@ storiesOf('TxDetails', module)
             }}
           >
             <TxDetails />
-          </StorageProvider>
+          </AsyncStorageProvider>
         </SelectedWalletProvider>
       </RouteProvider>
     </QueryProvider>

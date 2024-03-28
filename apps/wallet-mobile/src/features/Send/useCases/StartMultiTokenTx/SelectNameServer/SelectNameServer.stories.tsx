@@ -1,6 +1,7 @@
 import {init} from '@emurgo/cross-csl-mobile'
 import {storiesOf} from '@storybook/react-native'
 import {resolverApiMaker, resolverManagerMaker, ResolverProvider, resolverStorageMaker} from '@yoroi/resolver'
+import {defaultTransferState, TransferProvider, TransferState} from '@yoroi/transfer'
 import {Resolver} from '@yoroi/types'
 import * as React from 'react'
 
@@ -9,7 +10,6 @@ import {Boundary} from '../../../../../components'
 import {SelectedWalletProvider} from '../../../../../SelectedWallet'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {mocks as walletMocks} from '../../../../../yoroi-wallets/mocks/wallet'
-import {initialState, SendProvider, SendState} from '../../../common/SendContext'
 import {SelectNameServer} from './SelectNameServer'
 
 storiesOf('Send SelectNameServer', module)
@@ -38,13 +38,13 @@ const UnselectedNS = () => {
   const resolverManager = resolverManagerMaker(resolverStorage, resolverApi)
 
   return (
-    <SendProvider initialState={mockUnselectedNameServer}>
+    <TransferProvider initialState={mockUnselectedNameServer}>
       <ResolverProvider resolverManager={resolverManager}>
         <Boundary>
           <SelectNameServer />
         </Boundary>
       </ResolverProvider>
-    </SendProvider>
+    </TransferProvider>
   )
 }
 
@@ -61,18 +61,18 @@ const SelectedNS = () => {
   const resolverManager = resolverManagerMaker(resolverStorage, resolverApi)
 
   return (
-    <SendProvider initialState={mockSelectedNameServer}>
+    <TransferProvider initialState={mockSelectedNameServer}>
       <ResolverProvider resolverManager={resolverManager}>
         <Boundary>
           <SelectNameServer />
         </Boundary>
       </ResolverProvider>
-    </SendProvider>
+    </TransferProvider>
   )
 }
 
-const mockSelectedNameServer: SendState = {
-  ...initialState,
+const mockSelectedNameServer: TransferState = {
+  ...defaultTransferState,
   targets: [
     {
       entry: {address: 'addr1vxggvx6uq9mtf6e0tyda2mahg84w8azngpvkwr5808ey6qsy2ww7d', amounts: {'': '1000000'}},
@@ -88,8 +88,8 @@ const mockSelectedNameServer: SendState = {
     },
   ],
 }
-const mockUnselectedNameServer: SendState = {
-  ...initialState,
+const mockUnselectedNameServer: TransferState = {
+  ...defaultTransferState,
   targets: [
     {
       entry: {address: '', amounts: {'': '1000000'}},

@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, TextInput as RNTextInput, View, ViewProps} from 'react-native'
@@ -8,12 +9,12 @@ import {MutationOptions, useMutation} from 'react-query'
 import {Button, Checkmark, KeyboardAvoidingView, Spacer, TextInput} from '../../../components'
 import {errorMessages} from '../../../i18n/global-messages'
 import {useSelectedWallet} from '../../../SelectedWallet'
-import {COLORS} from '../../../theme'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {REQUIRED_PASSWORD_LENGTH, validatePassword} from '../../../yoroi-wallets/utils/validators'
 
 export const ChangePasswordScreen = () => {
   const strings = useStrings()
+  const styles = useStyles()
   const navigation = useNavigation()
 
   const currentPasswordRef = React.useRef<RNTextInput>(null)
@@ -107,7 +108,10 @@ export const ChangePasswordScreen = () => {
 const CurrentPasswordInput = TextInput
 const PasswordInput = TextInput
 const PasswordConfirmationInput = TextInput
-const Actions = (props: ViewProps) => <View {...props} style={styles.actions} />
+const Actions = (props: ViewProps) => {
+  const styles = useStyles()
+  return <View {...props} style={styles.actions} />
+}
 
 const messages = defineMessages({
   oldPasswordInputLabel: {
@@ -152,19 +156,24 @@ const useStrings = () => {
   }
 }
 
-const styles = StyleSheet.create({
-  safeAreaView: {
-    backgroundColor: COLORS.BACKGROUND,
-    flex: 1,
-  },
-  contentContainer: {
-    padding: 16,
-  },
-  actions: {
-    padding: 16,
-    backgroundColor: COLORS.BACKGROUND,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
+
+  const styles = StyleSheet.create({
+    safeAreaView: {
+      flex: 1,
+    },
+    contentContainer: {
+      padding: 16,
+    },
+    actions: {
+      padding: 16,
+      backgroundColor: color.gray.min,
+    },
+  })
+  return styles
+}
 
 const useChangePassword = (
   wallet: YoroiWallet,

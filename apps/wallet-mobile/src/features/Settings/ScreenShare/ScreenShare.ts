@@ -1,4 +1,4 @@
-import {isBoolean, useMutationWithInvalidations, useStorage} from '@yoroi/common'
+import {isBoolean, useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
 import {useEffect, useState} from 'react'
 import {NativeModules, Platform} from 'react-native'
 import {useQuery} from 'react-query'
@@ -6,7 +6,7 @@ import {useQuery} from 'react-query'
 const {FlagSecure} = NativeModules
 
 export const useChangeScreenShareSetting = () => {
-  const storage = useStorage()
+  const storage = useAsyncStorage()
 
   const mutation = useMutationWithInvalidations({
     mutationFn: async (screenShareEnabled: boolean) => {
@@ -25,7 +25,7 @@ export const useChangeScreenShareSetting = () => {
 }
 
 export const useScreenShareSettingEnabled = () => {
-  const storage = useStorage()
+  const storage = useAsyncStorage()
 
   return useQuery('screenShareEnabled', async () => {
     if (Platform.OS === 'android') {

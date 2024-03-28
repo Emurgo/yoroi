@@ -81,3 +81,10 @@ export function isArrayOfType<T>(
 ): data is Array<T> {
   return isArray(data) && data.every(predicate)
 }
+
+export const isStringLiteral = <T extends string>(
+  literals: Readonly<T[]>,
+  value: unknown,
+) => {
+  return literals.includes(value as T)
+}

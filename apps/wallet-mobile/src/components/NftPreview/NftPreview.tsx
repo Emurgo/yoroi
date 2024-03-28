@@ -56,7 +56,7 @@ export const NftPreview = ({
       <Image
         source={shouldShowPlaceholder ? placeholder : {uri, headers}}
         onError={onError}
-        onLoadEnd={onLoad}
+        onLoad={onLoad}
         style={[style, {width, height}]}
         resizeMode={contentFit}
         blurRadius={blurRadius}

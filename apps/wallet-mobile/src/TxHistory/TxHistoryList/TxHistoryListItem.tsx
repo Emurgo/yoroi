@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation} from '@react-navigation/native'
 import {isNonNullable} from '@yoroi/common'
+import {padding, useTheme} from '@yoroi/theme'
 import {BigNumber} from 'bignumber.js'
 import _, {fromPairs} from 'lodash'
 import React from 'react'
@@ -14,7 +15,6 @@ import {formatTime, formatTokenFractional, formatTokenInteger} from '../../legac
 import utfSymbols from '../../legacy/utfSymbols'
 import {TxHistoryRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {COLORS} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
 import {MultiToken} from '../../yoroi-wallets/cardano/MultiToken'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
@@ -27,6 +27,7 @@ type Props = {
 
 export const TxHistoryListItem = ({transaction}: Props) => {
   const strings = useStrings()
+  const {styles, colors} = useStyles()
   const navigation = useNavigation<TxHistoryRouteNavigation>()
 
   const wallet = useSelectedWallet()
@@ -38,7 +39,7 @@ export const TxHistoryListItem = ({transaction}: Props) => {
   const isPending = transaction.assurance === 'PENDING'
   const isReceived = transaction.direction === 'RECEIVED'
 
-  const rootBgColor = bgColorByAssurance(transaction.assurance)
+  const rootBgColor = bgColorByAssurance(transaction.assurance, colors)
 
   const internalAddressIndex = fromPairs(wallet.internalAddresses.map((addr, i) => [addr, i]))
   const externalAddressIndex = fromPairs(wallet.externalAddresses.map((addr, i) => [addr, i]))
@@ -107,6 +108,7 @@ const Middle = ({style, ...props}: ViewProps) => (
 )
 const Right = ({style, ...props}: ViewProps) => <View style={[style, {padding: 4}]} {...props} />
 const Amount = ({wallet, transaction}: {wallet: YoroiWallet; transaction: TransactionInfo}) => {
+  const {styles} = useStyles()
   const {isPrivacyOff} = usePrivacyMode()
   const amountAsMT = MultiToken.fromArray(transaction.amount)
   const amount: BigNumber = amountAsMT.getDefault()
@@ -131,34 +133,43 @@ const Amount = ({wallet, transaction}: {wallet: YoroiWallet; transaction: Transa
   )
 }
 
-const styles = StyleSheet.create({
-  item: {
-    flex: 1,
-    flexDirection: 'row',
-    borderRadius: 10,
-    elevation: 2,
-    shadowOffset: {width: 0, height: -2},
-    shadowRadius: 10,
-    shadowOpacity: 0.08,
-    shadowColor: '#181a1e',
-    backgroundColor: '#fff',
-    paddingHorizontal: 12,
-    paddingVertical: 12,
-  },
-  amount: {
-    flex: 1,
-    flexDirection: 'row',
-  },
-  positiveAmount: {
-    color: '#3154CB',
-  },
-  negativeAmount: {
-    color: COLORS.BLACK,
-  },
-  neutralAmount: {
-    color: COLORS.BLACK,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
+  const styles = StyleSheet.create({
+    item: {
+      flex: 1,
+      flexDirection: 'row',
+      borderRadius: 10,
+      elevation: 2,
+      shadowOffset: {width: 0, height: -2},
+      shadowRadius: 10,
+      shadowOpacity: 0.08,
+      shadowColor: color.gray[900],
+      backgroundColor: color.gray.min,
+      ...padding['m'],
+    },
+    amount: {
+      flex: 1,
+      flexDirection: 'row',
+    },
+    positiveAmount: {
+      color: color.primary[600],
+    },
+    negativeAmount: {
+      color: color.gray.max,
+    },
+    neutralAmount: {
+      color: color.gray.max,
+    },
+  })
+
+  const colors = {
+    default: color['white-static'],
+    failed: color.primary[200],
+  }
+  return {styles, colors}
+}
 
 const messages = defineMessages({
   fee: {
@@ -227,13 +238,13 @@ const useStrings = () => {
   }
 }
 
-const bgColorByAssurance = (assurance: TransactionAssurance) => {
+const bgColorByAssurance = (assurance: TransactionAssurance, colors: {failed: string; default: string}) => {
   switch (assurance) {
     case 'PENDING':
       return 'rgba(207, 217, 224, 0.6)'
     case 'FAILED':
-      return '#F8D7DA'
+      return colors.failed
     default:
-      return '#FFF'
+      return colors.default
   }
 }
