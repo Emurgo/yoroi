@@ -1,3 +1,4 @@
+import {Links} from '@yoroi/types'
 import {freeze} from 'immer'
 
 import {
@@ -6,11 +7,10 @@ import {
   TransferRequestAdaWithLinkSchema,
 } from './validators'
 import {convertSearchParamsToObject} from './helpers'
-import {LinksYoroiActionInfo} from './types'
 
 export const linksYoroiParser = (
   link: string,
-): Readonly<LinksYoroiActionInfo> | null => {
+): Readonly<Links.YoroiActionInfo> | null => {
   try {
     const url = new URL(link)
 

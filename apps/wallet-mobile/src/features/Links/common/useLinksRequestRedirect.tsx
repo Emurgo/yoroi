@@ -21,7 +21,7 @@ export const useLinksRequestRedirect = (redirectTo?: string) => {
 
   React.useEffect(() => {
     InteractionManager.runAfterInteractions(() => {
-      if (!isEmptyString(redirectTo)) askToRedirect(redirectTo)
+      if (!isEmptyString(redirectTo)) askToRedirect(decodeURIComponent(redirectTo))
     })
   }, [redirectTo, askToRedirect])
 }

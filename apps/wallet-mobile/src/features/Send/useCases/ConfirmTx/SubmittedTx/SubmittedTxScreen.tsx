@@ -14,8 +14,8 @@ export const SubmittedTxScreen = () => {
   const strings = useStrings()
   const styles = useStyles()
   const {resetToTxHistory} = useWalletNavigation()
-  const {redirectTo} = useTransfer()
-  useLinksRequestRedirect(redirectTo)
+  const {linkAction} = useTransfer()
+  useLinksRequestRedirect(linkAction?.info.params.redirectTo)
 
   return (
     <View style={styles.container}>

@@ -1,17 +1,14 @@
+import {Links} from '@yoroi/types'
+
 import {configCardanoLegacyTransfer} from '../cardano/constants'
 import {linksCardanoModuleMaker} from '../cardano/module'
 import {linksYoroiModuleMaker} from './module'
-import {
-  LinksExchangeShowCreateResultParams,
-  LinksTransferRequestAdaParams,
-  LinksTransferRequestAdaWithLinkParams,
-} from './types'
 
 describe('linksYoroiModuleMaker', () => {
   it('should create exchange links', () => {
     const {exchange} = linksYoroiModuleMaker('yoroi')
 
-    const createOrderShowResultParams: LinksExchangeShowCreateResultParams = {
+    const createOrderShowResultParams: Links.ExchangeShowCreateResultParams = {
       provider: 'yoroi',
       coinAmount: 10,
       coin: 'ADA',
@@ -34,7 +31,7 @@ describe('linksYoroiModuleMaker', () => {
   it('should create transfer with links', () => {
     const {transfer} = linksYoroiModuleMaker('yoroi')
 
-    const transferRequestAdaParams: LinksTransferRequestAdaParams = {
+    const transferRequestAdaParams: Links.TransferRequestAdaParams = {
       targets: [
         {
           receiver: 'exampleReceiver',
@@ -67,7 +64,7 @@ describe('linksYoroiModuleMaker', () => {
       'yoroi://yoroi-wallet.com/w1/transfer/request/ada?targets%5B0%5D=%7B%22receiver%22%3A%22exampleReceiver%22%2C%22datum%22%3A%22DEADDEAD%22%2C%22amounts%22%3A%5B%7B%22tokenId%22%3A%22exampleTokenId%22%2C%22quantity%22%3A%2210%22%7D%5D%7D&targets%5B1%5D=%7B%22receiver%22%3A%22exampleReceiver2%22%2C%22amounts%22%3A%5B%7B%22tokenId%22%3A%22exampleTokenId2%22%2C%22quantity%22%3A%2220%22%7D%5D%7D&memo=exampleMemo&authorization=uuid-v4'
     expect(transferRequestAdaLink).toEqual(expectedTransferRequestAdaLink)
 
-    const wrongAdaLink: LinksTransferRequestAdaWithLinkParams = {
+    const wrongAdaLink: Links.TransferRequestAdaWithLinkParams = {
       link: 'exampleLink',
       authorization: 'uuid-v4',
     }
@@ -82,7 +79,7 @@ describe('linksYoroiModuleMaker', () => {
       },
     })
 
-    const requestAdaWithLinkParams: LinksTransferRequestAdaWithLinkParams = {
+    const requestAdaWithLinkParams: Links.TransferRequestAdaWithLinkParams = {
       link: correctAdaLink.link,
       authorization: 'ac0692d3-bf34-44e2-b57d-53e4ce47666b',
       message: 'hi there',
@@ -102,7 +99,7 @@ describe('linksYoroiModuleMaker', () => {
 
     expect(requestAdaWithLinkLink).toEqual(expectedRequestAdaWithLinkLink)
 
-    const requestAdaWithLinkParamsOnlyLink: LinksTransferRequestAdaWithLinkParams =
+    const requestAdaWithLinkParamsOnlyLink: Links.TransferRequestAdaWithLinkParams =
       {
         link: correctAdaLink.link,
       }
