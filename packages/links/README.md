@@ -133,13 +133,13 @@ xcrun simctl openurl booted "https://yoroi-wallet.com/w1/transfer/request/ada?ta
 adb shell am start -W -a android.intent.action.VIEW -d "yoroi://yoroi-wallet.com/w1/transfer/request/ada?amount=1&address=%24$stackchain"
 ```
 
-## Schemas
+## Types/Schema
 
 Yoroi validates deeplinks and univeral links in a stricted way, missing params is fine, will warn users, adding extra params will make Yoroi to ignore your request completely.
 
-### `PartnerInfoSchema`
+### `PartnerInfoParams`
 
-This schema is designed for adding information about how Yoroi should behave, even though all are flagged as optional, it will change how Yoroi respondes to it, and for some funnels it might block the user, or trigger some red alerts about dangerous actions. It includes the following fields:
+This schema is designed for adding information about how Yoroi should behave, even though all are flagged as optional, it will change how Yoroi reacts to it, and for some funnels it might block the user, or trigger some red alerts about dangerous actions. **`PartnerInfoParams` is part of all links**. It includes the following fields:
 
 - `isSandbox`: A boolean indicating the environment, when `true` deeplinks only work on non-production builds.
 - `isTestnet`: A boolean that restrics whether it should list only `mainnet` wallets or testnets wallets. 
@@ -150,7 +150,7 @@ This schema is designed for adding information about how Yoroi should behave, ev
 - `walletId`: As the authorization, when provided, is expected back. Otherwise just set `isProduction` so Yoroi will know how to ask users to open their right wallet.
 - `signature`: Partner signature, it changes many behaviours inside Yoroi, specially regarding warning and dangerous messages.
 
-### `ExchangeShowCreateResultSchema`
+### `ExchangeShowCreateResultParams`
 
 This schema validates data for the creation result of a order to exchange coins, the link includes the following fields:
 
@@ -159,8 +159,8 @@ This schema validates data for the creation result of a order to exchange coins,
 - `fiatAmount`: The amount of fiat currency.
 - `fiat`: The fiat ticker, ie. USD.
 - `status`: 'success' | 'failed' | 'pending' Indicates to Yoroi the message to display, if you need to include an explanation use the `message` param.
-- It also merges all fields from `PartnerInfoSchema`.
 - `orderType`: 'buy' | 'sell' The order type.
+- `provider`: Legacy, it should be replaced by `PartnerInfoParams.appId`
 
 ### `TransferRequestAdaSchema`
 
@@ -173,9 +173,8 @@ This schema is for validating transfer requests of ADA and includes the followin
     - `tokenId`: A string with a maximum length of 256 characters, represented by `policyId` and `assetName` in hex, separated by a `.`, for ADA both are valid `.` or ` ` empty string.
     - `quantity`: A string with a maximum length of 80 characters, atomic, Cardano Lovelaces.
 - `memo` (optional): A string with a maximum length of 256 characters, stored in the wallet local storage wallet, it is not included in the transaction.
-- It also merges all fields from `PartnerInfoSchema`.
 
-### `TransferRequestAdaWithLinkSchema`
+### `TransferRequestAdaWithLinkParams`
 
 This schema validates transfer requests that include a URL and has the following fields:
 

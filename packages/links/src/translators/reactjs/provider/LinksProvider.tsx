@@ -1,4 +1,6 @@
 import * as React from 'react'
+import {Links} from '@yoroi/types'
+
 import {
   LinksActionType,
   LinksActions,
@@ -7,7 +9,6 @@ import {
   defaultLinksState,
   linksReducer,
 } from '../state/state'
-import {LinksYoroiAction} from '../../../yoroi/types'
 
 type LinksProviderContext = React.PropsWithChildren<LinksState & LinksActions>
 
@@ -41,7 +42,7 @@ export const LinksProvider = ({
     actionFinished: () => {
       dispatch({type: LinksActionType.ActionFinished})
     },
-    actionStarted: (action: LinksYoroiAction) => {
+    actionStarted: (action: Links.YoroiAction) => {
       dispatch({type: LinksActionType.ActionStarted, action})
     },
   }).current

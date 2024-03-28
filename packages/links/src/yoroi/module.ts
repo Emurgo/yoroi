@@ -15,7 +15,7 @@ import {
 
 export const linksYoroiModuleMaker = (
   scheme: Links.YoroiUriConfig['scheme'],
-) => {
+): Links.YoroiModule => {
   const exchange = {
     order: {
       showCreateResult: linksYoroiBuilder(encodeExchangeShowCreateResult, {
