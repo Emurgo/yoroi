@@ -13,6 +13,7 @@ export type ExchangeProvider = {
       min?: number
     }
   }
+  appId: string
   // TODO: revisit on v4.27
   logo: string // add later - base64
   supportUrl?: string // add later

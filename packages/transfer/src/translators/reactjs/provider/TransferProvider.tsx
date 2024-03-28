@@ -1,4 +1,3 @@
-import {Balance, Resolver} from '@yoroi/types'
 import * as React from 'react'
 import {
   combinedReducers,
@@ -38,18 +37,14 @@ export const TransferProvider = ({
   const actions = React.useRef<TransferActions & TargetActions>({
     reset: () => dispatch({type: TransferActionType.Reset}),
 
-    receiverResolveChanged: (resolve: Resolver.Receiver['resolve']) =>
+    receiverResolveChanged: (resolve) =>
       dispatch({type: TransferActionType.ReceiverResolveChanged, resolve}),
-    nameServerSelectedChanged: (
-      nameServer: Resolver.Receiver['selectedNameServer'],
-    ) =>
+    nameServerSelectedChanged: (nameServer) =>
       dispatch({
         type: TransferActionType.NameServerSelectedChanged,
         nameServer,
       }),
-    addressRecordsFetched: (
-      addressRecords: Resolver.Receiver['addressRecords'],
-    ) =>
+    addressRecordsFetched: (addressRecords) =>
       dispatch({
         type: TransferActionType.AddressRecordsFetched,
         addressRecords,
@@ -60,14 +55,14 @@ export const TransferProvider = ({
 
     unsignedTxChanged: (unsignedTx) =>
       dispatch({type: TransferActionType.UnsignedTxChanged, unsignedTx}),
-    tokenSelectedChanged: (tokenId: string) =>
+    tokenSelectedChanged: (tokenId) =>
       dispatch({type: TransferActionType.TokenSelectedChanged, tokenId}),
-    amountChanged: (quantity: Balance.Quantity) =>
+    amountChanged: (quantity) =>
       dispatch({type: TransferActionType.AmountChanged, quantity}),
-    amountRemoved: (tokenId: string) =>
+    amountRemoved: (tokenId) =>
       dispatch({type: TransferActionType.AmountRemoved, tokenId}),
-    redirectToChanged: (redirectTo) =>
-      dispatch({type: TransferActionType.RedirectToChanged, redirectTo}),
+    linkActionChanged: (linkAction) =>
+      dispatch({type: TransferActionType.LinkActionChanged, linkAction}),
   }).current
 
   const context = React.useMemo(

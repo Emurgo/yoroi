@@ -3,14 +3,12 @@ import React from 'react'
 import {ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useStatusBar} from '../../../components/hooks/useStatusBar'
 import {useLanguage} from '../../../i18n'
 import {PrivacyPolicy} from '../../../Legal'
 
 export const PrivacyPolicyScreen = () => {
   const styles = useStyles()
   const {languageCode} = useLanguage()
-  useStatusBar()
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>

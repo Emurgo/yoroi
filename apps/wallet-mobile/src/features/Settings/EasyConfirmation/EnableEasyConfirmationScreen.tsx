@@ -19,7 +19,6 @@ export const EnableEasyConfirmationScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
   const styles = useStyles()
-  useStatusBar()
   const navigation = useNavigation()
   const [rootPassword, setRootPassword] = React.useState('')
   const walletMeta = useSelectedWalletMeta()

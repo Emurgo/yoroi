@@ -215,6 +215,7 @@
   "components.receive.receivescreen.generateButton": "Generate new address",
   "components.receive.receivescreen.infoText": "송금을 받기위해서는 이 주소를 공유해 주십시오. 개인정보를 보호하기 위하여  새로운 주소가 매번 자동생성됩니다.",
   "components.receive.receivescreen.title": "받기",
+  "components.receive.describeselectedaddressscreen.title": "Address details",
   "components.receive.receivescreen.unusedAddresses": "Unused",
   "components.receive.receivescreen.usedAddresses": "Used",
   "components.receive.receivescreen.verifyAddress": "Verify address",

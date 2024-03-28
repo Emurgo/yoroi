@@ -1,4 +1,5 @@
 import {useCreateReferralLink, useExchange, useExchangeProvidersByOrderType} from '@yoroi/exchange'
+import {linksYoroiModuleMaker} from '@yoroi/links'
 import {useTheme} from '@yoroi/theme'
 import {Exchange} from '@yoroi/types'
 import * as React from 'react'
@@ -11,7 +12,6 @@ import {useStatusBar} from '../../../../components/hooks/useStatusBar'
 import {LoadingOverlayState, useLoadingOverlay} from '../../../../components/LoadingOverlay/LoadingOverlayContext'
 import {Space} from '../../../../components/Space/Space'
 import {Warning} from '../../../../components/Warning'
-import {RAMP_ON_OFF_PATH, SCHEME_URL} from '../../../../legacy/config'
 import env from '../../../../legacy/env'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../SelectedWallet'
@@ -29,11 +29,13 @@ import {ShowDisclaimer} from './ShowDisclaimer/ShowDisclaimer'
 const BOTTOM_ACTION_SECTION = 180
 
 export const CreateExchangeOrderScreen = () => {
-  useStatusBar()
   const strings = useStrings()
   const styles = useStyles()
   const {track} = useMetrics()
+  const wallet = useSelectedWallet()
   const navigateTo = useNavigateTo()
+  const wallet = useSelectedWallet()
+
   const [contentHeight, setContentHeight] = React.useState(0)
 
   const {
@@ -52,16 +54,22 @@ export const CreateExchangeOrderScreen = () => {
 
   const Logo = providerSelected?.id === 'banxa' ? BanxaLogo : EncryptusLogo
 
-  const wallet = useSelectedWallet()
-
   const {height: deviceHeight} = useWindowDimensions()
 
   const amountTokenInfo = useTokenInfo({wallet, tokenId: wallet.primaryTokenInfo.id})
   const quantity = `${amount.value}` as `${number}`
   const denomination = amountTokenInfo.decimals ?? 0
   const orderAmount = +Quantities.denominated(quantity, denomination)
-  const returnUrl = `${SCHEME_URL}${RAMP_ON_OFF_PATH}`
-
+  const returnUrl = encodeURIComponent(
+    linksYoroiModuleMaker('yoroi').exchange.order.showCreateResult({
+      provider: providerSelected?.id ?? '',
+      orderType,
+      walletId: wallet.id,
+      isTestnet: wallet.networkId !== 1,
+      isSandbox: wallet.networkId !== 1,
+      appId: providerSelected?.appId,
+    }),
+  )
   const sandboxWallet = env.getString('BANXA_TEST_WALLET')
   const isMainnet = wallet.networkId === 1
   const walletAddress = isMainnet ? wallet.externalAddresses[0] : sandboxWallet
@@ -76,6 +84,7 @@ export const CreateExchangeOrderScreen = () => {
     blockchain: 'ADA',
     walletAddress,
     returnUrl,
+    walletId: wallet.id,
   }
 
   const {isLoading, refetch: createReferralLink} = useCreateReferralLink(

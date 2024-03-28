@@ -18,9 +18,10 @@ type ShareQRCodeCardProps = {
   title: string
   isCopying?: boolean
   onLongPress: () => void
+  testId?: string
 }
 
-export const ShareQRCodeCard = ({content, title, isCopying, onLongPress}: ShareQRCodeCardProps) => {
+export const ShareQRCodeCard = ({content, title, isCopying, onLongPress, testId}: ShareQRCodeCardProps) => {
   const strings = useStrings()
   const {styles, colors, qrSize} = useStyles()
   const {track} = useMetrics()
@@ -70,9 +71,11 @@ export const ShareQRCodeCard = ({content, title, isCopying, onLongPress}: ShareQ
             colors={colors.bgCard}
           />
 
-          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.title} testID={`${testId}-title`}>
+            {title}
+          </Text>
 
-          <View style={styles.qrCode}>
+          <View style={styles.qrCode} testID={`${testId}-qr`}>
             <QRCode value={content} size={qrSize} backgroundColor={colors.white} color={colors.black} />
           </View>
 

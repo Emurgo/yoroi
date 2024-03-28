@@ -1,13 +1,11 @@
 import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
-import _ from 'lodash'
 import * as React from 'react'
 import {ScrollView, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import Icon from '../../../assets/img/copy.png'
 import {Button, Spacer, useModal} from '../../../components'
-import {useStatusBar} from '../../../components/hooks/useStatusBar'
 import {useCopy} from '../../../legacy/useCopy'
 import {useMetrics} from '../../../metrics/metricsManager'
 import {isEmptyString} from '../../../utils'
@@ -67,10 +65,11 @@ export const DescribeSelectedAddressScreen = () => {
         outline
         title={strings.requestSpecificAmountButton}
         textStyles={{
-          color: colors.buttonBackgroundBlue,
+          color: colors.requestSpecificAmountTextColor,
         }}
         onPress={navigate.specificAmount}
         disabled={!hasAddress}
+        testID="receive:request-specific-amount-link"
       />
 
       <Spacer height={6} />
@@ -91,7 +90,7 @@ export const DescribeSelectedAddressScreen = () => {
   )
 }
 
-const modalHeight = 520
+const modalHeight = 580
 const Modal = () => {
   const {styles, colors} = useStyles()
   const strings = useStrings()
@@ -141,7 +140,6 @@ const Modal = () => {
 
 const useStyles = () => {
   const {theme} = useTheme()
-  useStatusBar()
 
   const styles = StyleSheet.create({
     root: {
@@ -172,7 +170,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    buttonBackgroundBlue: theme.color.primary[600],
+    requestSpecificAmountTextColor: theme.color.primary[500],
     details: theme.color.gray[900],
   }
 

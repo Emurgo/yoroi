@@ -18,7 +18,6 @@ export const DisableEasyConfirmationScreen = () => {
   const wallet = useSelectedWallet()
   const walletMeta = useSelectedWalletMeta()
   const setSelectedWalletMeta = useSetSelectedWalletMeta()
-  useStatusBar()
   if (!walletMeta) throw new Error('Missing walletMeta')
   const {disableEasyConfirmation, isLoading} = useDisableEasyConfirmation(wallet, {
     onSuccess: () => {

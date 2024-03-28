@@ -1,6 +1,6 @@
 import z from 'zod'
 
-const PartnerInfoSchema = z.object({
+export const PartnerInfoSchema = z.object({
   isSandbox: z.boolean().optional(),
   isTestnet: z.boolean().optional(),
   appId: z.string().max(40).optional(),
@@ -14,15 +14,13 @@ const PartnerInfoSchema = z.object({
 export const ExchangeShowCreateResultSchema = z
   .object({
     provider: z.string().max(20),
-    coinAmount: z.number().nonnegative(),
-    coin: z.string().max(20),
-    fiatAmount: z.number().nonnegative(),
-    fiat: z.string().max(20),
-    status: z.union([
-      z.literal('success'),
-      z.literal('pending'),
-      z.literal('failed'),
-    ]),
+    coinAmount: z.number().nonnegative().optional(),
+    coin: z.string().max(20).optional(),
+    fiatAmount: z.number().nonnegative().optional(),
+    fiat: z.string().max(20).optional(),
+    status: z
+      .union([z.literal('success'), z.literal('pending'), z.literal('failed')])
+      .optional(),
     orderType: z.union([z.literal('buy'), z.literal('sell')]),
   })
   .merge(PartnerInfoSchema)

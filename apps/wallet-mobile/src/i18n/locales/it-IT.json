@@ -215,6 +215,7 @@
   "components.receive.receivescreen.generateButton": "Genera nuovo indirizzo",
   "components.receive.receivescreen.infoText": "Condividi questo indirizzo per ricevere i pagamenti. Per proteggere la tua privacy, i nuovi indirizzi vengono generati automaticamente una volta che li usi.",
   "components.receive.receivescreen.title": "Ricevere",
+  "components.receive.describeselectedaddressscreen.title": "Address details",
   "components.receive.receivescreen.unusedAddresses": "Unused",
   "components.receive.receivescreen.usedAddresses": "Used",
   "components.receive.receivescreen.verifyAddress": "Verifica indirizzo",

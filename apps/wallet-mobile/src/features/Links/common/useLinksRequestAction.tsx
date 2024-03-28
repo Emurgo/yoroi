@@ -1,7 +1,8 @@
-import {linksCardanoModuleMaker, LinksTransferRequestAdaWithLinkParams, LinksYoroiAction, useLinks} from '@yoroi/links'
+import {linksCardanoModuleMaker, useLinks} from '@yoroi/links'
 import {useTransfer} from '@yoroi/transfer'
+import {Links} from '@yoroi/types'
 import * as React from 'react'
-import {InteractionManager, Keyboard} from 'react-native'
+import {InteractionManager} from 'react-native'
 
 import {useModal} from '../../../components/Modal/ModalContext'
 import {useSelectedWalletContext} from '../../../SelectedWallet'
@@ -19,9 +20,9 @@ export const useLinksRequestAction = () => {
   const [wallet] = useSelectedWalletContext()
   const navigateTo = useNavigateTo()
 
-  const {memoChanged, receiverResolveChanged, amountChanged, reset, redirectToChanged} = useTransfer()
+  const {memoChanged, receiverResolveChanged, amountChanged, reset, linkActionChanged} = useTransfer()
   const startTransferWithLink = React.useCallback(
-    (action: LinksYoroiAction, decimals: number) => {
+    (action: Links.YoroiAction, decimals: number) => {
       Logger.debug('startTransferWithLink', action, decimals)
       if (action.info.useCase === 'request/ada-with-link') {
         reset()
@@ -30,7 +31,7 @@ export const useLinksRequestAction = () => {
           const parsedCardanoLink = linksCardanoModuleMaker().parse(link)
           if (parsedCardanoLink) {
             const redirectTo = action.info.params.redirectTo
-            if (redirectTo != null) redirectToChanged(decodeURIComponent(redirectTo))
+            if (redirectTo != null) linkActionChanged(action)
 
             const {address: receiver, amount, memo} = parsedCardanoLink.params
             const ptAmount = Quantities.integer(asQuantity(amount ?? 0), decimals)
@@ -53,17 +54,16 @@ export const useLinksRequestAction = () => {
       actionFinished,
       amountChanged,
       closeModal,
+      linkActionChanged,
       memoChanged,
       navigateTo,
       receiverResolveChanged,
-      redirectToChanged,
       reset,
     ],
   )
 
   const openRequestedPaymentAdaWithLink = React.useCallback(
-    ({params, isTrusted}: {params: LinksTransferRequestAdaWithLinkParams; isTrusted: boolean}, decimals: number) => {
-      Keyboard.dismiss()
+    ({params, isTrusted}: {params: Links.TransferRequestAdaWithLinkParams; isTrusted: boolean}, decimals: number) => {
       const title = isTrusted ? strings.trustedPaymentRequestedTitle : strings.untrustedPaymentRequestedTitle
       const handleOnContinue = () =>
         startTransferWithLink(

@@ -3,11 +3,8 @@ import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {LanguagePicker} from '../../../components'
-import {useStatusBar} from '../../../components/hooks/useStatusBar'
 
 export const LanguagePickerScreen = () => {
-  useStatusBar()
-
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
       <LanguagePicker />
