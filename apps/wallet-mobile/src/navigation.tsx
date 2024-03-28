@@ -9,12 +9,11 @@ import {
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack'
 import {Theme, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {Dimensions, Platform, TouchableOpacity, TouchableOpacityProps, ViewStyle} from 'react-native'
+import {Dimensions, TouchableOpacity, TouchableOpacityProps, ViewStyle} from 'react-native'
 
 import {Icon} from './components'
 import {ScanFeature} from './features/Scan/common/types'
 import {Routes as StakingGovernanceRoutes} from './features/Staking/Governance/common/navigation'
-import {COLORS} from './theme'
 import {HWDeviceInfo} from './yoroi-wallets/hw'
 import {NetworkId, WalletImplementationId, YoroiUnsignedTx} from './yoroi-wallets/types'
 
@@ -80,21 +79,6 @@ export const defaultStackNavigationOptions = (theme: Theme): StackNavigationOpti
   }
 }
 
-export const DEPRECATED_defaultStackNavigationOptions: StackNavigationOptions = {
-  headerStyle: {
-    backgroundColor: COLORS.BACKGROUND_BLUE,
-    elevation: 0,
-    shadowOpacity: 0,
-  },
-  headerTintColor: '#fff',
-  headerBackTitleVisible: false,
-  headerTitleAlign: 'center',
-  headerLeftContainerStyle: {
-    paddingLeft: Platform.OS === 'ios' ? 8 : undefined,
-  },
-  headerLeft: (props) => <BackButton color="#fff" {...props} />,
-}
-
 // NAVIGATOR TOP TABS OPTIONS
 export const defaultMaterialTopTabNavigationOptions = (theme: Theme): MaterialTopTabNavigationOptions => {
   return {
@@ -135,11 +119,15 @@ export type WalletInitRoutes = {
     walletImplementationId: WalletImplementationId
   }
   'initial-choose-create-restore': undefined
-  'create-wallet-form': {
+  'wallet-details-form': {
     networkId: NetworkId
     walletImplementationId: WalletImplementationId
   }
   'restore-wallet-form': {
+    networkId: NetworkId
+    walletImplementationId: WalletImplementationId
+  }
+  'restore-wallet-details': {
     networkId: NetworkId
     walletImplementationId: WalletImplementationId
   }
@@ -168,21 +156,22 @@ export type WalletInitRoutes = {
     walletImplementationId: WalletImplementationId
     hwDeviceInfo: HWDeviceInfo
   }
-  'mnemonic-show': {
+  'about-recovery-phase': undefined
+  'recovery-phrase-mnemonic': {
     networkId: NetworkId
     walletImplementationId: WalletImplementationId
     password: string
     name: string
     mnemonic: string
   }
-  'mnemonic-check': {
+  'verify-recovery-phrase-mnemonic': {
     networkId: NetworkId
     walletImplementationId: WalletImplementationId
     password: string
     name: string
     mnemonic: string
   }
-  'wallet-account-checksum': {
+  'wallet-restore-wallet-checksum': {
     networkId: NetworkId
     walletImplementationId: WalletImplementationId
     phrase: string
