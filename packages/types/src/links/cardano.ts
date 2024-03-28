@@ -32,13 +32,3 @@ export type LinksModule<T extends LinksUriConfig> = Readonly<{
   create: (args: {config: T; params: LinksParams}) => LinksLink<T>
   parse: (text: string) => LinksLink<T> | undefined
 }>
-
-export interface LinksYoroiUriConfig {
-  readonly scheme: 'yoroi' | 'https'
-  readonly authority: 'yoroi-wallet.com'
-  readonly version: 'w1'
-  readonly path:
-    | 'exchange/order/show-create-result'
-    | 'transfer/request/ada'
-    | 'transfer/request/ada-with-link'
-}

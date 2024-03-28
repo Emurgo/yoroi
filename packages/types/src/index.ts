@@ -37,8 +37,7 @@ import {
   LinksUriConfig,
   LinksUriRules,
   LinksWebCardanoUriConfig,
-  LinksYoroiUriConfig,
-} from './links/link'
+} from './links/cardano'
 import {
   LinksErrorExtraParamsDenied,
   LinksErrorForbiddenParamsProvided,
@@ -128,6 +127,16 @@ import {ExchangeOrderType} from './exchange/order-type'
 import {ExchangeProvider} from './exchange/provider'
 import {ExchangeApi} from './exchange/api'
 import {ExchangeManager} from './exchange/manager'
+import {
+  LinksPartnerInfoParams,
+  LinksExchangeShowCreateResultParams,
+  LinksTransferRequestAdaWithLinkParams,
+  LinksTransferRequestAdaParams,
+  LinksYoroiActionInfo,
+  LinksYoroiAction,
+  LinksYoroiUriConfig,
+  LinksYoroiModule,
+} from './links/yoroi'
 
 export namespace App {
   export interface Storage<IsAsync extends boolean = true>
@@ -201,9 +210,19 @@ export namespace Balance {
 }
 
 export namespace Links {
+  export type YoroiModule = LinksYoroiModule
   export interface UriConfig extends LinksUriConfig {}
   export interface WebCardanoUriConfig extends LinksWebCardanoUriConfig {}
   export interface YoroiUriConfig extends LinksYoroiUriConfig {}
+  export type PartnerInfoSchema = LinksPartnerInfoParams
+  export type ExchangeShowCreateResultParams =
+    LinksExchangeShowCreateResultParams
+  export type TransferRequestAdaWithLinkParams =
+    LinksTransferRequestAdaWithLinkParams
+  export type TransferRequestAdaParams = LinksTransferRequestAdaParams
+  export type YoroiActionInfo = LinksYoroiActionInfo
+  export type YoroiAction = LinksYoroiAction
+
   export interface Rules extends LinksUriRules {}
 
   export type Link<T extends LinksUriConfig> = LinksLink<T>

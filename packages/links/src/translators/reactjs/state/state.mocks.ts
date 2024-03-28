@@ -1,8 +1,7 @@
+import {Links} from '@yoroi/types'
 import {freeze} from 'immer'
 
-import {LinksYoroiActionInfo} from '../../../yoroi/types'
-
-const exchangeActionInfo: LinksYoroiActionInfo = {
+const exchangeActionInfo: Links.YoroiActionInfo = {
   feature: 'exchange',
   version: 1,
   useCase: 'order/show-create-result',

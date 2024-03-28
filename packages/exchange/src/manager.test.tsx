@@ -302,6 +302,7 @@ export const providers: Readonly<Record<string, Exchange.Provider>> = freeze(
         },
       },
       supportUrl: 'https://support.banxa.com/',
+      appId: '',
     },
     encryptus: {
       id: 'encryptus',
@@ -313,6 +314,7 @@ export const providers: Readonly<Record<string, Exchange.Provider>> = freeze(
           min: 1000000,
         },
       },
+      appId: '',
       supportUrl: 'https://support.encryptus.com/',
     },
   },
