@@ -22,11 +22,13 @@ import {CopySuccess} from './CopySuccess'
 import {Cross} from './Cross'
 import {CrossCircle} from './CrossCircle'
 import {Danger} from './Danger'
+import {DApp} from './DApp'
 import {DappConnector} from './DappConnector'
 import {Delete} from './Delete'
 import {Device} from './Device'
 import {DigitalAsset} from './DigitalAsset'
 import {Direction} from './Direction'
+import {Disconnect} from './Disconnect'
 import {Discover} from './Discover'
 import {Document} from './Document'
 import {Drag} from './Drag'
@@ -224,4 +226,6 @@ export const Icon = {
   Collateral,
   Discover,
   CheckFilled2,
+  DApp,
+  Disconnect,
 }

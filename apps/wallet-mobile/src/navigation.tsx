@@ -128,6 +128,7 @@ export type WalletStackRoutes = {
   'toggle-analytics-settings': NavigatorScreenParams<ToggleAnalyticsSettingsRoutes>
   governance: NavigatorScreenParams<StakingGovernanceRoutes>
   'staking-dashboard': NavigatorScreenParams<DashboardRoutes>
+  browser: NavigatorScreenParams<DiscoverRoutes>
 }
 export type WalletStackRouteNavigation = StackNavigationProp<WalletStackRoutes>
 
@@ -272,6 +273,8 @@ export type ExchangeRoutesNavigation = StackNavigationProp<ExchangeRoutes>
 
 export type StakingCenterRouteNavigation = StackNavigationProp<StakingCenterRoutes>
 
+export type DiscoverRoutesNavigation = StackNavigationProp<DiscoverRoutes>
+
 export type SettingsTabRoutes = {
   'wallet-settings': undefined
   'app-settings': undefined
@@ -319,7 +322,8 @@ export type SendConfirmParams = {
 }
 
 export type DiscoverRoutes = {
-  // '': undefined
+  'browser-view': undefined
+  'app-root': undefined
 }
 
 export type DashboardRoutes = {

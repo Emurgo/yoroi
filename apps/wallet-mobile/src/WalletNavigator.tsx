@@ -8,6 +8,7 @@ import {Keyboard, Platform} from 'react-native'
 import {VotingRegistration} from './Catalyst'
 import {Icon, OfflineBanner} from './components'
 import {DiscoverNavigator} from './features/Discovery'
+import {BrowserView} from './features/Discovery/useCases/Browser/BrowserView'
 import {ShowExchangeResultOrderScreen} from './features/Exchange/useCases/ShowExchangeResultOrderScreen/ShowExchangeResultOrderScreen'
 import {useLinksRequestAction} from './features/Links/common/useLinksRequestAction'
 import {useLinksShowActionResult} from './features/Links/common/useLinksShowActionResult'
@@ -213,6 +214,8 @@ export const WalletNavigator = () => {
       <Stack.Screen name="toggle-analytics-settings" component={ToggleAnalyticsSettingsNavigator} />
 
       <Stack.Screen name="governance" component={GovernanceNavigator} />
+
+      <Stack.Screen name="browser" component={BrowserView} />
     </Stack.Navigator>
   )
 }
