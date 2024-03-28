@@ -1,0 +1,122 @@
+[
+  {
+    "id": "discover.discoverList.discoverTitle",
+    "defaultMessage": "!!!Discover Cardano",
+    "file": "src/features/Discovery/common/useStrings.tsx",
+    "start": {
+      "line": 21,
+      "column": 19,
+      "index": 814
+    },
+    "end": {
+      "line": 24,
+      "column": 5,
+      "index": 915
+    }
+  },
+  {
+    "id": "discover.discoverList.searchDApps",
+    "defaultMessage": "!!!Search DApps",
+    "file": "src/features/Discovery/common/useStrings.tsx",
+    "start": {
+      "line": 25,
+      "column": 17,
+      "index": 934
+    },
+    "end": {
+      "line": 28,
+      "column": 5,
+      "index": 1029
+    }
+  },
+  {
+    "id": "discover.discoverList.welcomeToYoroiDAppExplorer",
+    "defaultMessage": "!!!Welcome to Yoroi DApp Explorer",
+    "file": "src/features/Discovery/common/useStrings.tsx",
+    "start": {
+      "line": 29,
+      "column": 32,
+      "index": 1063
+    },
+    "end": {
+      "line": 32,
+      "column": 5,
+      "index": 1191
+    }
+  },
+  {
+    "id": "discover.discoverList.welcomeToYoroiDAppExplorerDescription",
+    "defaultMessage": "!!!Discover, inspect, and connect to Cardano decentralized applications (DApps) with ease. Our solution helps to interact with DApps and their smart contracts, seamlessly enhancing your Cardano experience",
+    "file": "src/features/Discovery/common/useStrings.tsx",
+    "start": {
+      "line": 33,
+      "column": 43,
+      "index": 1236
+    },
+    "end": {
+      "line": 37,
+      "column": 5,
+      "index": 1554
+    }
+  },
+  {
+    "id": "global.next",
+    "defaultMessage": "!!!Next",
+    "file": "src/features/Discovery/common/useStrings.tsx",
+    "start": {
+      "line": 38,
+      "column": 10,
+      "index": 1566
+    },
+    "end": {
+      "line": 41,
+      "column": 5,
+      "index": 1631
+    }
+  },
+  {
+    "id": "discover.discoverList.dAppAvailable",
+    "defaultMessage": "!!!DApp(s) available",
+    "file": "src/features/Discovery/common/useStrings.tsx",
+    "start": {
+      "line": 42,
+      "column": 24,
+      "index": 1657
+    },
+    "end": {
+      "line": 45,
+      "column": 5,
+      "index": 1759
+    }
+  },
+  {
+    "id": "discover.discoverList.connected",
+    "defaultMessage": "!!!Connected",
+    "file": "src/features/Discovery/common/useStrings.tsx",
+    "start": {
+      "line": 46,
+      "column": 15,
+      "index": 1776
+    },
+    "end": {
+      "line": 49,
+      "column": 5,
+      "index": 1866
+    }
+  },
+  {
+    "id": "discover.discoverList.recommended",
+    "defaultMessage": "!!!Recommended",
+    "file": "src/features/Discovery/common/useStrings.tsx",
+    "start": {
+      "line": 50,
+      "column": 17,
+      "index": 1885
+    },
+    "end": {
+      "line": 53,
+      "column": 5,
+      "index": 1979
+    }
+  }
+]

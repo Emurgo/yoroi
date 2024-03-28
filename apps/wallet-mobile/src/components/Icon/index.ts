@@ -10,6 +10,7 @@ import {Catalyst} from './Catalyst'
 import {Categories} from './Categories'
 import {Check} from './Check'
 import {CheckFilled} from './CheckFilled'
+import {CheckFilled2} from './CheckFilled2'
 import {CheckOutlined} from './CheckOutlined'
 import {Chevron} from './Chevron'
 import {Clock} from './Clock'
@@ -21,11 +22,14 @@ import {CopySuccess} from './CopySuccess'
 import {Cross} from './Cross'
 import {CrossCircle} from './CrossCircle'
 import {Danger} from './Danger'
+import {DApp} from './DApp'
 import {DappConnector} from './DappConnector'
 import {Delete} from './Delete'
 import {Device} from './Device'
 import {DigitalAsset} from './DigitalAsset'
 import {Direction} from './Direction'
+import {Disconnect} from './Disconnect'
+import {Discover} from './Discover'
 import {Document} from './Document'
 import {Drag} from './Drag'
 import {Edit} from './Edit'
@@ -220,4 +224,8 @@ export const Icon = {
   Close,
   Warning,
   Collateral,
+  Discover,
+  CheckFilled2,
+  DApp,
+  Disconnect,
 }

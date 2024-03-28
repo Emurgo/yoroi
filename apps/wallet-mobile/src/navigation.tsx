@@ -112,8 +112,9 @@ export const defaultMaterialTopTabNavigationOptions = (theme: Theme): MaterialTo
 // ROUTES
 export type WalletTabRoutes = {
   history: NavigatorScreenParams<TxHistoryRoutes>
-  'staking-dashboard': NavigatorScreenParams<DashboardRoutes>
+  // 'staking-dashboard': NavigatorScreenParams<DashboardRoutes>
   nfts: NavigatorScreenParams<NftRoutes>
+  discover: NavigatorScreenParams<DiscoverRoutes>
   menu: NavigatorScreenParams<MenuRoutes>
 }
 
@@ -126,6 +127,8 @@ export type WalletStackRoutes = {
   'voting-registration': NavigatorScreenParams<VotingRegistrationRoutes>
   'toggle-analytics-settings': NavigatorScreenParams<ToggleAnalyticsSettingsRoutes>
   governance: NavigatorScreenParams<StakingGovernanceRoutes>
+  'staking-dashboard': NavigatorScreenParams<DashboardRoutes>
+  browser: NavigatorScreenParams<DiscoverRoutes>
 }
 export type WalletStackRouteNavigation = StackNavigationProp<WalletStackRoutes>
 
@@ -270,6 +273,8 @@ export type ExchangeRoutesNavigation = StackNavigationProp<ExchangeRoutes>
 
 export type StakingCenterRouteNavigation = StackNavigationProp<StakingCenterRoutes>
 
+export type DiscoverRoutesNavigation = StackNavigationProp<DiscoverRoutes>
+
 export type SettingsTabRoutes = {
   'wallet-settings': undefined
   'app-settings': undefined
@@ -314,6 +319,11 @@ export type SettingsRouteNavigation = StackNavigationProp<SettingsStackRoutes>
 
 export type SendConfirmParams = {
   yoroiUnsignedTx: YoroiUnsignedTx
+}
+
+export type DiscoverRoutes = {
+  'browser-view': undefined
+  'app-root': undefined
 }
 
 export type DashboardRoutes = {
@@ -491,12 +501,9 @@ export const useWalletNavigation = () => {
 
     navigateToStakingDashboard: () => {
       navigation.navigate('app-root', {
-        screen: 'main-wallet-routes',
+        screen: 'staking-dashboard',
         params: {
-          screen: 'staking-dashboard',
-          params: {
-            screen: 'staking-dashboard-main',
-          },
+          screen: 'staking-dashboard-main',
         },
       })
     },

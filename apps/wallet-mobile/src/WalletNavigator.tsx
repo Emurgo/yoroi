@@ -7,7 +7,8 @@ import {Keyboard, Platform} from 'react-native'
 
 import {VotingRegistration} from './Catalyst'
 import {Icon, OfflineBanner} from './components'
-import {DashboardNavigator} from './Dashboard'
+import {DiscoverNavigator} from './features/Discovery'
+import {BrowserView} from './features/Discovery/useCases/Browser/BrowserView'
 import {ShowExchangeResultOrderScreen} from './features/Exchange/useCases/ShowExchangeResultOrderScreen/ShowExchangeResultOrderScreen'
 import {useLinksRequestAction} from './features/Links/common/useLinksRequestAction'
 import {useLinksShowActionResult} from './features/Links/common/useLinksShowActionResult'
@@ -20,16 +21,16 @@ import {hideTabBarForRoutes, WalletStackRoutes, WalletTabRoutes} from './navigat
 import {NftDetailsNavigator} from './NftDetails/NftDetailsNavigator'
 import {NftsNavigator} from './Nfts/NftsNavigator'
 import {SearchProvider} from './Search/SearchContext'
-import {useSelectedWallet, WalletSelectionScreen} from './SelectedWallet'
+import {WalletSelectionScreen} from './SelectedWallet'
 import {theme} from './theme'
 import {TxHistoryNavigator} from './TxHistory'
-import {isHaskellShelley} from './yoroi-wallets/cardano/utils'
 
 const Tab = createBottomTabNavigator<WalletTabRoutes>()
 const WalletTabNavigator = () => {
   const strings = useStrings()
-  const wallet = useSelectedWallet()
-  const initialRoute = isHaskellShelley(wallet.walletImplementationId) ? 'staking-dashboard' : 'history'
+  // const wallet = useSelectedWallet()
+
+  const initialRoute = /* isHaskellShelley(wallet.walletImplementationId) ? 'staking-dashboard' :*/ 'history'
 
   const [isKeyboardOpen, setIsKeyboardOpen] = React.useState(false)
 
@@ -117,7 +118,7 @@ const WalletTabNavigator = () => {
           )}
         </Tab.Screen>
 
-        {isHaskellShelley(wallet.walletImplementationId) && (
+        {/* {isHaskellShelley(wallet.walletImplementationId) && (
           <Tab.Screen
             name="staking-dashboard"
             component={DashboardNavigator}
@@ -132,7 +133,27 @@ const WalletTabNavigator = () => {
               tabBarTestID: 'stakingTabBarButton',
             }}
           />
-        )}
+        )} */}
+
+        <Tab.Screen
+          name="discover"
+          options={{
+            tabBarIcon: ({focused}) => (
+              <Icon.Discover
+                size={28}
+                color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
+              />
+            ),
+            tabBarLabel: strings.discoverTabBarLabel,
+            tabBarTestID: 'discoverTabBarButton',
+          }}
+        >
+          {() => (
+            <SearchProvider>
+              <DiscoverNavigator />
+            </SearchProvider>
+          )}
+        </Tab.Screen>
 
         <Tab.Screen
           name="menu"
@@ -193,6 +214,8 @@ export const WalletNavigator = () => {
       <Stack.Screen name="toggle-analytics-settings" component={ToggleAnalyticsSettingsNavigator} />
 
       <Stack.Screen name="governance" component={GovernanceNavigator} />
+
+      <Stack.Screen name="browser" component={BrowserView} />
     </Stack.Navigator>
   )
 }
@@ -234,6 +257,10 @@ const messages = defineMessages({
     id: 'menu',
     defaultMessage: '!!!Menu',
   },
+  discoverButton: {
+    id: 'components.common.navigation.discover',
+    defaultMessage: '!!!Discover',
+  },
 })
 
 const useStrings = () => {
@@ -248,5 +275,6 @@ const useStrings = () => {
     walletTabBarLabel: intl.formatMessage(messages.walletButton),
     nftsTabBarLabel: intl.formatMessage(messages.nftsButton),
     menuTabBarLabel: intl.formatMessage(messages.menuButton),
+    discoverTabBarLabel: intl.formatMessage(messages.discoverButton),
   }
 }
