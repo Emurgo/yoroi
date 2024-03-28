@@ -3,7 +3,7 @@ import React from 'react'
 import {Animated, Keyboard, Pressable, StyleSheet, View} from 'react-native'
 
 import {Icon} from '../../../../../../../components'
-import {LoadingOverlay} from '../../../../../../../components/LoadingOverlay'
+import {LoadingOverlay} from '../../../../../../../legacy/LoadingOverlay'
 import {COLORS} from '../../../../../../../theme'
 import {ButtonGroup} from '../../../../../common/ButtonGroup/ButtonGroup'
 import {useStrings} from '../../../../../common/strings'

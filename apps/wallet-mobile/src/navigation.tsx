@@ -260,6 +260,7 @@ export type SwapTabRoutes = {
 
 export type ExchangeRoutes = {
   'exchange-create-order': undefined
+  'exchange-error-screen': undefined
   'exchange-result': undefined
   'exchange-select-buy-provider': undefined
   'exchange-select-sell-provider': undefined
@@ -375,6 +376,7 @@ export type AppRoutes = {
   'enable-login-with-pin': undefined
   'agreement-changed-notice': undefined
   modal: undefined
+  loading: undefined
 }
 export type AppRouteNavigation = StackNavigationProp<AppRoutes>
 

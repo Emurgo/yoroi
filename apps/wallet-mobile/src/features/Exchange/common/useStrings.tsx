@@ -35,6 +35,8 @@ export const useStrings = () => {
     ourTrustedPartners: intl.formatMessage(messages.ourTrustedPartners),
     needMoreCrypto: intl.formatMessage(messages.needMoreCrypto),
     fee: intl.formatMessage(messages.fee),
+    loadingLink: intl.formatMessage(messages.loadingLink),
+    linkError: intl.formatMessage(messages.linkError),
     close: intl.formatMessage(globalMessages.close),
     error: intl.formatMessage(globalMessages.error),
   }).current
@@ -155,6 +157,14 @@ export const messages = Object.freeze(
     fee: {
       id: 'rampOnOff.createRampOnOff.fee',
       defaultMessage: '!!!fee',
+    },
+    loadingLink: {
+      id: 'rampOnOff.createRampOnOff.loadingLink',
+      defaultMessage: '!!!We are redirecting you outside Yoroi. Please wait',
+    },
+    linkError: {
+      id: 'rampOnOff.createRampOnOff.linkError',
+      defaultMessage: '!!!This service is currently unavailable. Please try again later',
     },
   }),
 )

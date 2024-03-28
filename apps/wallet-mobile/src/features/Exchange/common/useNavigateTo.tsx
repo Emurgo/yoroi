@@ -1,15 +1,17 @@
 import {useNavigation} from '@react-navigation/native'
 import {useRef} from 'react'
 
-import {ExchangeRoutesNavigation} from '../../../navigation'
+import {AppRouteNavigation, ExchangeRoutesNavigation} from '../../../navigation'
 
 export const useNavigateTo = () => {
-  const navigation = useNavigation<ExchangeRoutesNavigation>()
+  const navigation = useNavigation<ExchangeRoutesNavigation & AppRouteNavigation>()
 
   return useRef({
     exchangeSelectBuyProvider: () => navigation.navigate('exchange-select-buy-provider'),
+    exchangeErrorScreen: () => navigation.navigate('exchange-error-screen'),
     exchangeSelectSellProvider: () => navigation.navigate('exchange-select-sell-provider'),
-    exchangeOpenOrder: () =>
+    exchangeCreateOrder: () => navigation.navigate('exchange-create-order'),
+    historyList: () =>
       navigation.reset({
         index: 0,
         routes: [

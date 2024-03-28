@@ -3,11 +3,12 @@ import {linksYoroiModuleMaker} from '@yoroi/links'
 import {useTheme} from '@yoroi/theme'
 import {Exchange} from '@yoroi/types'
 import * as React from 'react'
-import {Alert, Linking, StyleSheet, useWindowDimensions, View} from 'react-native'
+import {Linking, StyleSheet, Text, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Icon, KeyboardAvoidingView} from '../../../../components'
+import {LoadingOverlayState, useLoadingOverlay} from '../../../../components/LoadingOverlay/LoadingOverlayContext'
 import {Space} from '../../../../components/Space/Space'
 import {Warning} from '../../../../components/Warning'
 import env from '../../../../legacy/env'
@@ -31,10 +32,19 @@ export const CreateExchangeOrderScreen = () => {
   const styles = useStyles()
   const {track} = useMetrics()
   const wallet = useSelectedWallet()
+  const navigateTo = useNavigateTo()
+
   const [contentHeight, setContentHeight] = React.useState(0)
 
-  const navigateTo = useNavigateTo()
-  const {orderType, canExchange, providerId, provider, amount, referralLink: managerReferralLink} = useExchange()
+  const {
+    orderType,
+    canExchange,
+    providerId,
+    provider,
+    amount,
+    referralLink: managerReferralLink,
+    amountInputChanged,
+  } = useExchange()
 
   const providers = useExchangeProvidersByOrderType({orderType, providerListByOrderType: provider.list.byOrderType})
   const providerSelected = new Map(providers).get(providerId)
@@ -62,6 +72,8 @@ export const CreateExchangeOrderScreen = () => {
   const isMainnet = wallet.networkId === 1
   const walletAddress = isMainnet ? wallet.externalAddresses[0] : sandboxWallet
 
+  const {startLoading, stopLoading} = useLoadingScreen()
+
   const urlOptions: Exchange.ReferralUrlQueryStringParams = {
     orderType: orderType,
     fiatType: 'USD',
@@ -78,19 +90,33 @@ export const CreateExchangeOrderScreen = () => {
       queries: urlOptions,
       providerId,
       referralLinkCreate: managerReferralLink.create,
+      fetcherConfig: {timeout: 30000},
     },
     {
       enabled: false,
       suspense: false,
       useErrorBoundary: false,
-      onError: (error) => {
-        Alert.alert(strings.error, error.message)
+      retry: false,
+      onError: () => {
+        stopLoading({onStop: () => navigateTo.exchangeErrorScreen()})
+
+        amountInputChanged(
+          {
+            disabled: false,
+            error: null,
+            displayValue: '',
+            value: 0,
+          },
+          true,
+        )
       },
       onSuccess: (referralLink) => {
-        if (referralLink.toString() !== '') {
-          Linking.openURL(referralLink.toString())
+        stopLoading({onStop: () => navigateTo.historyList()})
+
+        const link = referralLink.toString()
+        if (link !== '') {
+          Linking.openURL(link)
           track.exchangeSubmitted({ramp_type: orderType === 'sell' ? 'Sell' : 'Buy', ada_amount: orderAmount})
-          navigateTo.exchangeOpenOrder()
         }
       },
     },
@@ -104,6 +130,7 @@ export const CreateExchangeOrderScreen = () => {
 
   const handleOnExchange = () => {
     createReferralLink()
+    startLoading(<Text style={styles.loadingLink}>{strings.loadingLink}</Text>)
   }
 
   const handleOnListProvidersByOrderType = () => {
@@ -177,6 +204,38 @@ export const CreateExchangeOrderScreen = () => {
   )
 }
 
+const delays = 2000 // 2s requeriment
+const useLoadingScreen = () => {
+  const {startLoading, stopLoading} = useLoadingOverlay()
+
+  const timerRef = React.useRef<NodeJS.Timeout | undefined>()
+
+  const handleStopLoading = React.useCallback(
+    ({onStop}: {onStop?: () => void}) => {
+      clearTimeout(timerRef.current)
+
+      stopLoading()
+
+      onStop?.()
+    },
+    [stopLoading],
+  )
+
+  const handleStartLoading = React.useCallback(
+    (text: LoadingOverlayState['text']) => {
+      timerRef.current = setTimeout(() => startLoading(text), delays)
+    },
+    [startLoading],
+  )
+
+  React.useEffect(() => () => handleStopLoading({}), [handleStopLoading])
+
+  return {
+    startLoading: handleStartLoading,
+    stopLoading: handleStopLoading,
+  }
+}
+
 const useStyles = () => {
   const {theme} = useTheme()
   const styles = StyleSheet.create({
@@ -201,6 +260,11 @@ const useStyles = () => {
     actionBorder: {
       borderTopWidth: 1,
       borderTopColor: theme.color.gray[200],
+    },
+    loadingLink: {
+      ...theme.typography['heading-3-medium'],
+      maxWidth: 340,
+      textAlign: 'center',
     },
   })
   return styles

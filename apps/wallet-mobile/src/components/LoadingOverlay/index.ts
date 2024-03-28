@@ -1,1 +1,1 @@
-export * from './LoadingOverlay'
+export * from './LoadingOverlayScreen'

@@ -1,4 +1,5 @@
 import {Exchange} from '@yoroi/types'
+import {AxiosRequestConfig} from 'axios'
 import {UseQueryOptions, useQuery} from 'react-query'
 
 export const useCreateReferralLink = (
@@ -6,10 +7,12 @@ export const useCreateReferralLink = (
     providerId,
     queries,
     referralLinkCreate,
+    fetcherConfig,
   }: {
     providerId: string
     queries: Exchange.ReferralUrlQueryStringParams
     referralLinkCreate: Exchange.Manager['referralLink']['create']
+    fetcherConfig?: AxiosRequestConfig
   },
   options?: UseQueryOptions<
     URL,
@@ -28,7 +31,7 @@ export const useCreateReferralLink = (
     ...options,
     queryKey: ['useCreateReferralLink', queries, providerId],
     queryFn: async ({signal}) =>
-      referralLinkCreate({providerId, queries}, {signal}),
+      referralLinkCreate({providerId, queries}, {signal, ...fetcherConfig}),
   })
 
   return {
