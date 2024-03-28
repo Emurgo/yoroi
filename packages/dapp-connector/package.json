@@ -153,7 +153,7 @@
     "@types/jest": "^29.5.12",
     "@types/react": "^18.2.55",
     "@types/react-test-renderer": "^18.0.7",
-    "@yoroi/types": "1.5.2",
+    "@yoroi/types": "1.5.4",
     "axios-mock-adapter": "^1.21.5",
     "commitlint": "^17.0.2",
     "del-cli": "^5.0.0",

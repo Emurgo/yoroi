@@ -7050,9 +7050,6 @@
     js-yaml "^3.10.0"
     tslib "^2.4.0"
 
-"@yoroi/types@1.5.2":
-  version "1.5.4"
-
 "@zkochan/js-yaml@0.0.6":
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/@zkochan/js-yaml/-/js-yaml-0.0.6.tgz#975f0b306e705e28b8068a07737fa46d3fc04826"
