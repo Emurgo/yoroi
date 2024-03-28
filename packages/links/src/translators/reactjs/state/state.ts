@@ -11,7 +11,7 @@ export type LinksState = Readonly<{
 export type LinksActions = Readonly<{
   actionStarted: (action: Links.YoroiAction) => void
   actionFinished: () => void
-  authorizationsChanged: (walletId: string, authorizations: string) => void
+  authorizationsChanged: (walletId: string, authorization: string) => void
 }>
 
 export enum LinksActionType {

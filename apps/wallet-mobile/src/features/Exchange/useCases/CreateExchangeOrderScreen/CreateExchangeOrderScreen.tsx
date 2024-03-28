@@ -30,6 +30,7 @@ export const CreateExchangeOrderScreen = () => {
   const strings = useStrings()
   const styles = useStyles()
   const {track} = useMetrics()
+  const wallet = useSelectedWallet()
   const [contentHeight, setContentHeight] = React.useState(0)
 
   const navigateTo = useNavigateTo()
@@ -41,8 +42,6 @@ export const CreateExchangeOrderScreen = () => {
 
   const Logo = providerSelected?.id === 'banxa' ? BanxaLogo : EncryptusLogo
 
-  const wallet = useSelectedWallet()
-
   const {height: deviceHeight} = useWindowDimensions()
 
   const amountTokenInfo = useTokenInfo({wallet, tokenId: wallet.primaryTokenInfo.id})
@@ -50,15 +49,15 @@ export const CreateExchangeOrderScreen = () => {
   const denomination = amountTokenInfo.decimals ?? 0
   const orderAmount = +Quantities.denominated(quantity, denomination)
   const returnUrl = encodeURIComponent(
-    linksYoroiModuleMaker('https').exchange.order.showCreateResult({
-      provider: String(providerSelected ?? ''),
+    linksYoroiModuleMaker('yoroi').exchange.order.showCreateResult({
+      provider: providerSelected?.id ?? '',
       orderType,
       walletId: wallet.id,
       isTestnet: wallet.networkId !== 1,
       isSandbox: wallet.networkId !== 1,
+      appId: providerSelected?.appId,
     }),
   )
-
   const sandboxWallet = env.getString('BANXA_TEST_WALLET')
   const isMainnet = wallet.networkId === 1
   const walletAddress = isMainnet ? wallet.externalAddresses[0] : sandboxWallet
@@ -71,6 +70,7 @@ export const CreateExchangeOrderScreen = () => {
     blockchain: 'ADA',
     walletAddress,
     returnUrl,
+    walletId: wallet.id,
   }
 
   const {isLoading, refetch: createReferralLink} = useCreateReferralLink(

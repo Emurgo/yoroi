@@ -65,6 +65,7 @@ export const providers: Readonly<Record<string, Exchange.Provider>> = freeze(
         },
       },
       supportUrl: 'https://support.banxa.com/',
+      appId: '160e2963-e5fa-4d20-b406-4c91c13f1d5c',
     },
     encryptus: {
       id: 'encryptus',
@@ -77,6 +78,7 @@ export const providers: Readonly<Record<string, Exchange.Provider>> = freeze(
         },
       },
       supportUrl: 'https://support.encryptus.com/',
+      appId: '18d1545a-a59b-45cb-a180-157b110c77fe',
     },
   },
   true,
