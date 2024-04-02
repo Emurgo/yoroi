@@ -28,6 +28,7 @@ export const BrowserView = () => {
     url: webURL,
     canGoBack: false,
     canGoForward: false,
+    title: '',
   })
 
   const handleNavigationStateChange = (event: WebViewNavigation) => {

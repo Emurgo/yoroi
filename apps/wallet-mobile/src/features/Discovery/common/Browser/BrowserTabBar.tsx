@@ -2,6 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import React, {PropsWithChildren, RefObject} from 'react'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import Share from 'react-native-share'
 import WebView from 'react-native-webview'
 
 import {Icon} from '../../../../components'
@@ -44,6 +45,18 @@ export const BrowserTabBar = ({webViewRef, webViewState}: Props) => {
     navigateTo.browserTabs()
   }
 
+  const handleShare = async () => {
+    const url = webViewState.url
+    const title = webViewState.title
+    const message = webViewState.title
+
+    await Share.open({
+      url,
+      title,
+      message,
+    })
+  }
+
   return (
     <View style={[styles.root, {paddingBottom: insets.bottom}]}>
       <Touch disabled={!webViewState.canGoBack} onPress={handleBackward}>
@@ -54,7 +67,7 @@ export const BrowserTabBar = ({webViewRef, webViewState}: Props) => {
         <Icon.Forward color={colorForward} />
       </Touch>
 
-      <Touch>
+      <Touch onPress={handleShare}>
         <Icon.Share2 />
       </Touch>
 
