@@ -1,7 +1,8 @@
-import {useRoute} from '@react-navigation/native'
+import {useIsFocused, useRoute} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
-import React, {useState} from 'react'
-import {StyleSheet} from 'react-native'
+import React, {useEffect, useState} from 'react'
+import {Dimensions, StyleSheet} from 'react-native'
+import Animated, {useAnimatedStyle, useSharedValue, withTiming} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import ViewShot, {captureRef} from 'react-native-view-shot'
 import WebView, {WebViewNavigation} from 'react-native-webview'
@@ -13,6 +14,9 @@ import {BrowserToolbar} from '../../common/Browser/BrowserToolbar'
 
 export type WebViewState = Partial<WebViewNavigation> & Required<Pick<WebViewNavigation, 'url'>>
 
+const THUMB_WIDTH = Dimensions.get('window').width
+const THUMB_HEIGHT = (THUMB_WIDTH * 339) / 160
+
 export const BrowserView = () => {
   const {styles} = useStyles()
   const route = useRoute()
@@ -23,6 +27,21 @@ export const BrowserView = () => {
   const currentTabIndex = tabs.findIndex((t) => t.id === browserId)
   const webURL = tabs[currentTabIndex]?.url
   const ref: React.RefObject<ViewShot> = React.useRef(null)
+  const isFocused = useIsFocused()
+
+  const opacityValue = useSharedValue(0)
+  const scaleValue = useSharedValue(0)
+  const opacityAnimate = useAnimatedStyle(() => {
+    return {
+      opacity: opacityValue.value,
+    }
+  })
+
+  const scaleAnimate = useAnimatedStyle(() => {
+    return {
+      transform: [{scale: scaleValue.value}],
+    }
+  })
 
   const [webViewStateRest, setWebViewState] = useState<WebViewState>({
     url: webURL,
@@ -37,8 +56,10 @@ export const BrowserView = () => {
 
   const handleShotWebView = async () => {
     const uri = await captureRef(ref, {
-      format: 'png',
-      quality: 0.5,
+      format: 'jpg',
+      quality: 0.2,
+      width: THUMB_WIDTH,
+      height: THUMB_HEIGHT,
     })
     updateTab(+currentTabIndex, {captureImage: uri})
   }
@@ -48,25 +69,38 @@ export const BrowserView = () => {
     updateTab(+currentTabIndex, {url})
   }
 
+  useEffect(() => {
+    if (isFocused) {
+      opacityValue.value = withTiming(1, {duration: 300})
+      scaleValue.value = withTiming(1, {duration: 300})
+    } else {
+      opacityValue.value = withTiming(0, {duration: 300})
+      scaleValue.value = withTiming(0, {duration: 300})
+    }
+  }, [isFocused, opacityValue, scaleValue])
+
   return (
-    <SafeAreaView edges={['left', 'right', 'top']} style={styles.root}>
-      <BrowserToolbar uri={webURL} />
+    <Animated.View style={[opacityAnimate, styles.root]}>
+      <SafeAreaView edges={['left', 'right', 'top']} style={styles.root}>
+        <BrowserToolbar uri={webURL} />
 
-      <ViewShot ref={ref} style={styles.root}>
-        <WebView
-          ref={webViewRef}
-          androidLayerType="software"
-          source={{
-            uri: webURL,
-          }}
-          onNavigationStateChange={handleNavigationStateChange}
-          onLoadEnd={handleShotWebView}
-          onLoad={handleEventLoadWebView}
-        />
-      </ViewShot>
+        <Animated.View style={[scaleAnimate, styles.root]}>
+          <ViewShot ref={ref} style={styles.root}>
+            <WebView
+              ref={webViewRef}
+              androidLayerType="software"
+              source={{
+                uri: webURL,
+              }}
+              onNavigationStateChange={handleNavigationStateChange}
+              onLoad={handleEventLoadWebView}
+            />
+          </ViewShot>
+        </Animated.View>
 
-      <BrowserTabBar webViewRef={webViewRef} webViewState={webViewStateRest} />
-    </SafeAreaView>
+        <BrowserTabBar onShotWebView={handleShotWebView} webViewRef={webViewRef} webViewState={webViewStateRest} />
+      </SafeAreaView>
+    </Animated.View>
   )
 }
 

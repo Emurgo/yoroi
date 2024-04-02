@@ -1,10 +1,10 @@
 import {RouteProp, useIsFocused, useRoute} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
-import lodash from 'lodash'
 import React, {useEffect, useState} from 'react'
-import {StyleSheet, View} from 'react-native'
+import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {WebViewNavigation} from 'react-native-webview'
+import uuid from 'uuid'
 
 import {BrowserRoutes} from '../../../../navigation'
 import {useBrowser} from '../../common/Browser/BrowserProvider'
@@ -68,11 +68,12 @@ export const BrowserSearch = () => {
 
     let tabId = ''
     const url = getUrl()
+
     if (isEdit) {
       updateTab(tabActiveIndex, {url})
       tabId = tabActive.id
     } else {
-      tabId = lodash.uniqueId('browser-tab-id-')
+      tabId = uuid.v4()
       addBrowserTab(url, tabId)
       setTabActive(tabs.length)
     }
@@ -89,12 +90,12 @@ export const BrowserSearch = () => {
         onSearchSubmit={handleSubmit}
       />
 
-      <View style={styles.dAppContainer}>
+      <ScrollView style={styles.dAppContainer}>
         {searchValue !== '' &&
           [mockDAppGoogle(searchValue)].map((dApp) => (
             <DAppItem key={dApp.id} dApp={dApp} connected={false} onPress={handleSubmit} />
           ))}
-      </View>
+      </ScrollView>
     </SafeAreaView>
   )
 }

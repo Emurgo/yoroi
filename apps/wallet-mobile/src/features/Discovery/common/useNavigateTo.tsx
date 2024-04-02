@@ -26,7 +26,7 @@ export const useNavigateTo = () => {
           screen: webViewTab,
         },
       }),
-    browserTabs: () => navigation.navigate('browser-tabs'),
+    browserTabs: () => navigation.jumpTo('browser-tabs'),
     navigation: () => navigation,
   }).current
 }

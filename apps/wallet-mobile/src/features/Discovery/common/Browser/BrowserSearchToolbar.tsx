@@ -1,6 +1,6 @@
-import {useNavigation} from '@react-navigation/native'
+import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
-import React, {useEffect, useRef} from 'react'
+import React, {useCallback, useRef} from 'react'
 import {StyleSheet, TextInput, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
 import {Icon} from '../../../../components'
@@ -14,13 +14,15 @@ type Props = {
 export const BrowserSearchToolbar = ({onBack, onSearchChange, onSearchSubmit, searchValue}: Props) => {
   const {styles} = useStyles()
   const inputRef = useRef<TextInput>(null)
-  const navigation = useNavigation()
 
-  useEffect(() => {
-    navigation.addListener('focus', () => {
-      inputRef.current?.focus()
-    })
-  }, [navigation])
+  const selectionText = useCallback(() => {
+    if (!inputRef.current) return
+    inputRef.current?.focus()
+  }, [])
+
+  useFocusEffect(() => {
+    selectionText()
+  })
 
   return (
     <View style={styles.root}>
@@ -38,6 +40,7 @@ export const BrowserSearchToolbar = ({onBack, onSearchChange, onSearchSubmit, se
           style={{flex: 1, color: '#000000'}}
           testID="inputSearch"
           onSubmitEditing={onSearchSubmit}
+          enablesReturnKeyAutomatically={searchValue.length === 0}
         />
       </View>
     </View>
@@ -60,15 +63,10 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: color['white-static'],
       paddingVertical: 10,
       paddingHorizontal: 16,
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 16,
     },
     boxURI: {
-      flex: 1,
       flexDirection: 'row',
       alignItems: 'center',
       borderRadius: 8,

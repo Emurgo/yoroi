@@ -37,11 +37,11 @@ export const BrowserTabItem = memo(({tab, index}: Props) => {
 
   const onSelectTabActive = () => {
     setTabActive(index)
-    navigationTo.browserView(`browser-view-${tab.id}`, 'navigate')
+    navigationTo.browserView(`browser-view-${tab.id}`)
   }
 
   return (
-    <TouchableOpacity style={styles.tabContainer} onPress={onSelectTabActive}>
+    <TouchableOpacity activeOpacity={1} style={styles.tabContainer} onPress={onSelectTabActive}>
       <View style={[styles.tabContainerPreview, isTabActive && styles.tabActiveContainer]}>
         {captureImage !== undefined ? (
           <Image source={{uri: captureImage}} resizeMode="cover" style={styles.imagePreview} />
@@ -79,8 +79,11 @@ const useStyles = () => {
       color: color['black-static'],
     },
     imagePreview: {
-      width: '100%',
-      height: 160,
+      ...StyleSheet.absoluteFillObject,
+      width: undefined,
+      height: undefined,
+      resizeMode: 'cover',
+      paddingTop: '100%',
     },
     overlay: {
       position: 'absolute',

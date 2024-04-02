@@ -1,5 +1,5 @@
 import {useTheme} from '@yoroi/theme'
-import React from 'react'
+import React, {useRef} from 'react'
 import {FlatList, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {WebViewNavigation} from 'react-native-webview'
@@ -14,13 +14,15 @@ export type WebViewState = Partial<WebViewNavigation> & Required<Pick<WebViewNav
 export const BrowserTabs = () => {
   const {styles} = useStyles()
   const {tabs} = useBrowser()
+  const flatListRef = useRef<FlatList>(null)
 
   return (
     <SafeAreaView edges={['left', 'right', 'top']} style={styles.root}>
       <FlatList
+        ref={flatListRef}
         style={styles.root}
         data={tabs}
-        keyExtractor={(item, index) => item.url + index}
+        keyExtractor={(item) => item.id}
         ItemSeparatorComponent={() => <Spacer height={16} />}
         renderItem={({item: tab, index}) => {
           return <BrowserTabItem tab={tab} index={index} />

@@ -13,8 +13,9 @@ import {useBrowser} from './BrowserProvider'
 type Props = {
   webViewRef: RefObject<WebView>
   webViewState: WebViewState
+  onShotWebView: () => Promise<void>
 }
-export const BrowserTabBar = ({webViewRef, webViewState}: Props) => {
+export const BrowserTabBar = ({webViewRef, webViewState, onShotWebView}: Props) => {
   const {styles, color} = useStyles()
   const {tabs} = useBrowser()
   const navigateTo = useNavigateTo()
@@ -41,7 +42,8 @@ export const BrowserTabBar = ({webViewRef, webViewState}: Props) => {
     webViewRef.current.goForward()
   }
 
-  const handleChoseTabs = () => {
+  const handleChoseTabs = async () => {
+    await onShotWebView()
     navigateTo.browserTabs()
   }
 
@@ -58,7 +60,7 @@ export const BrowserTabBar = ({webViewRef, webViewState}: Props) => {
   }
 
   return (
-    <View style={[styles.root, {paddingBottom: insets.bottom}]}>
+    <View style={[styles.root, {paddingBottom: insets.bottom + 12}]}>
       <Touch disabled={!webViewState.canGoBack} onPress={handleBackward}>
         <Icon.Backward color={colorBackward} />
       </Touch>
@@ -119,8 +121,8 @@ const useStyles = () => {
       alignItems: 'center',
       justifyContent: 'space-between',
       gap: 16,
-      paddingVertical: 7,
       ...padding['x-l'],
+      paddingVertical: 12,
     },
     touchBox: {
       ...padding['y-xxs'],

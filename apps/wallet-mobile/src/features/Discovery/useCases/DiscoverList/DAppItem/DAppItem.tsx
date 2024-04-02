@@ -49,33 +49,38 @@ export const DAppItem = ({dApp, connected, onPress}: Props) => {
   const handlePress = () => {
     if (onPress) {
       onPress()
-    } else {
-      openModal(
-        strings.dAppActions,
-        <View>
-          <View style={styles.dAppInfo}>
-            <Image
-              source={dApp.logo}
-              style={{
-                width: 48,
-                height: 48,
-              }}
-            />
-
-            <Text style={styles.dAppName}>{dApp.name}</Text>
-          </View>
-
-          <Spacer height={16} />
-
-          <View>
-            <DAppAction onPress={handleOpenDApp} icon={<Icon.DApp />} title={strings.openDApp} />
-
-            <DAppAction onPress={handleDisconnectDApp} icon={<Icon.DApp />} title={strings.disconnectWalletFromDApp} />
-          </View>
-        </View>,
-        dialogHeight,
-      )
+      return
     }
+
+    if (dApp.id === 'google_search') {
+      return handleOpenDApp()
+    }
+
+    openModal(
+      strings.dAppActions,
+      <View>
+        <View style={styles.dAppInfo}>
+          <Image
+            source={dApp.logo}
+            style={{
+              width: 48,
+              height: 48,
+            }}
+          />
+
+          <Text style={styles.dAppName}>{dApp.name}</Text>
+        </View>
+
+        <Spacer height={16} />
+
+        <View>
+          <DAppAction onPress={handleOpenDApp} icon={<Icon.DApp />} title={strings.openDApp} />
+
+          <DAppAction onPress={handleDisconnectDApp} icon={<Icon.DApp />} title={strings.disconnectWalletFromDApp} />
+        </View>
+      </View>,
+      dialogHeight,
+    )
   }
 
   return (

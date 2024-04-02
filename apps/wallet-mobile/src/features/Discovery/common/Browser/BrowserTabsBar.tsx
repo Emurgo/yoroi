@@ -26,7 +26,7 @@ export const BrowserTabsBar = () => {
   }
 
   return (
-    <View style={[styles.root, {paddingBottom: insets.bottom}]}>
+    <View style={[styles.root, {paddingBottom: insets.bottom + 12}]}>
       <View style={styles.fullFlex}>
         <TouchableOpacity onPress={handleCreateTab}>
           <Icon.Plus size={24} />
@@ -58,7 +58,7 @@ const useStyles = () => {
     },
     root: {
       backgroundColor: color['white-static'],
-      paddingVertical: 10,
+      paddingVertical: 12,
       paddingHorizontal: 16,
       flexDirection: 'row',
       alignItems: 'center',
