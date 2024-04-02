@@ -120,10 +120,8 @@ const MnemonicWordsInput = ({onSelect, words, isPhraseValid = false}: MnemonicWo
             }}
             isPhraseValid={isPhraseValid}
             onKeyPress={(currentWord: string) => {
-              if (refs[index].current && isEmptyString(currentWord)) {
-                if (index > 0) {
-                  refs[index - 1]?.current?.focus()
-                }
+              if (refs[index].current && isEmptyString(currentWord) && index > 0) {
+                refs[index - 1]?.current?.focus()
               }
             }}
           />
@@ -149,26 +147,51 @@ const MnemonicWordInput = React.forwardRef<RNTextInput, MnemonicWordInputProps>(
     const {styles} = useStyles()
     const strings = useStrings()
     const [word, setWord] = React.useState(words[index])
-    const matchingWords = React.useMemo(() => (!isEmptyString(word) ? getMatchingWords(word) : []), [word])
     const [menuEnabled, setMenuEnabled] = React.useState(false)
     const dateTime = React.useRef<number>()
+    const [error, setError] = React.useState('')
+    const [matchingWords, setMatchingWords] = React.useState<Array<string>>([])
 
-    const selectWord = (word: string) => {
-      setWord(normalizeText(word))
-      onSelect(normalizeText(word))
+    const selectWord = React.useCallback(
+      (word: string) => {
+        setWord(normalizeText(word))
+        onSelect(normalizeText(word))
 
-      if (dateTime.current == null) throw new Error()
-      setTimeout(() => {
-        setMenuEnabled(false)
-      }, 1000 - (Date.now() - dateTime.current)) // RNP.Menu has a buggy show/hide
-    }
+        if (dateTime.current == null) throw new Error()
+        setTimeout(() => {
+          setMenuEnabled(false)
+        }, 1000 - (Date.now() - dateTime.current)) // RNP.Menu has a buggy show/hide
+      },
+      [onSelect],
+    )
 
-    const onSubmitEditing = () => {
+    const onSubmitEditing = React.useCallback(() => {
       if (!isEmptyString(matchingWords[0])) {
-        setWord(matchingWords[0])
         selectWord(matchingWords[0])
       }
-    }
+    }, [matchingWords, selectWord])
+
+    const onChangeText = React.useCallback(
+      (word: string) => {
+        if (word.endsWith(' ')) {
+          word = word.trimEnd()
+          setWord(normalizeText(word))
+          onSubmitEditing()
+        } else {
+          setWord(normalizeText(word))
+        }
+
+        if (!isEmptyString(word)) {
+          const matchingWords = getMatchingWords(word)
+          setMatchingWords(matchingWords)
+
+          if (matchingWords.length <= 0) {
+            setError('error')
+          } else if (error !== '') setError('')
+        } else setMatchingWords([])
+      },
+      [error, onSubmitEditing],
+    )
 
     React.useEffect(() => {
       if (isEmptyString(words[index])) {
@@ -184,34 +207,37 @@ const MnemonicWordInput = React.forwardRef<RNTextInput, MnemonicWordInputProps>(
           <TextInput
             ref={ref}
             value={word}
-            onFocus={onFocus}
+            onFocus={(e) => {
+              // selectTextOnFocus buggy on ios
+              e.currentTarget.setNativeProps({
+                selection: {start: 0, end: word?.length},
+              })
+
+              onFocus()
+            }}
             onChange={() => {
               setMenuEnabled(true)
               dateTime.current = Date.now()
             }}
-            onChangeText={(word) => {
-              if (word.endsWith(' ')) {
-                word = word.trimEnd()
-                setWord(normalizeText(word))
-                onSubmitEditing()
-              } else {
-                setWord(normalizeText(word))
-              }
-            }}
+            onChangeText={onChangeText}
             enablesReturnKeyAutomatically
             blurOnSubmit={false}
             onSubmitEditing={onSubmitEditing}
             dense
             noHelper
             errorDelay={0}
-            errorText={matchingWords.length <= 0 ? 'No matching words' : ''}
+            errorText={error}
             autoComplete="off"
             style={styles.textInput}
             isPhraseValid={isPhraseValid}
+            showErrorOnBlur={false}
             onKeyPress={({nativeEvent}) => {
               if (nativeEvent.key === 'Backspace') {
                 onKeyPress(word)
               }
+            }}
+            onBlur={() => {
+              setError('')
             }}
           />
         }
@@ -318,9 +344,9 @@ const useStyles = () => {
     },
     clearAll: {
       ...theme.typography['button-2-m'],
-      color: theme.color.primary[500],
-      transform: 'uppercase',
       ...theme.padding['l-s'],
+      color: theme.color.primary[500],
+      textTransform: 'uppercase',
     },
   })
   return {styles} as const

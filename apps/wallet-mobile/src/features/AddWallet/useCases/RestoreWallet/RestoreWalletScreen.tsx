@@ -25,9 +25,11 @@ export const RestoreWalletScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
-      <StepperProgress currentStep={1} currentStepTitle={strings.stepRestoreWalletScreen} totalSteps={2} />
+      <View style={styles.padding}>
+        <StepperProgress currentStep={1} currentStepTitle={strings.stepRestoreWalletScreen} totalSteps={2} />
+      </View>
 
-      <ScrollView bounces={false} automaticallyAdjustKeyboardInsets>
+      <ScrollView style={styles.padding} bounces={false} automaticallyAdjustKeyboardInsets>
         <View>
           <Text style={styles.title}>{strings.restoreWalletScreenTitle(bold)}</Text>
 
@@ -37,7 +39,7 @@ export const RestoreWalletScreen = () => {
         <MnemonicInput length={mnemonicLength} onDone={setPhrase} />
       </ScrollView>
 
-      <View>
+      <View style={styles.padding}>
         <Button
           title={strings.next}
           style={styles.button}
@@ -69,7 +71,6 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      ...theme.padding['x-l'],
       justifyContent: 'space-between',
       backgroundColor: theme.color['white-static'],
     },
@@ -80,6 +81,9 @@ const useStyles = () => {
     button: {backgroundColor: theme.color.primary[500]},
     bolder: {
       ...theme.typography['body-1-l-medium'],
+    },
+    padding: {
+      ...theme.padding['x-l'],
     },
   })
 

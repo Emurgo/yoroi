@@ -47,6 +47,7 @@ export const VerifyRecoveryPhraseScreen = () => {
   const disabled = !isPhraseComplete || !isPhraseValid
 
   const lastUserEntry = userEntries.findLast((last) => last)
+
   const isLastWordValid = () => {
     const lastUserEntryId = userEntries.length - 1
     const isMatch = mnemonicDefault.some(
@@ -164,6 +165,7 @@ const MnemonicInput = ({defaultMnemonic, userEntries, onPress}: MnemonicInputPro
   const isPhraseValid = userEntries.map((entry) => entry.word).join(' ') === mnemonic
 
   const lastUserEntry = userEntries.findLast((last) => last)
+
   const isLastWordValid = () => {
     const lastUserEntryId = userEntries.length - 1
     const isWordValid = defaultMnemonic.some(

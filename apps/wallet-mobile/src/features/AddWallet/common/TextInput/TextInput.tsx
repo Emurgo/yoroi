@@ -55,6 +55,7 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: React.For
     showErrorOnBlur,
     autoComplete = 'off',
     onFocus,
+    onBlur,
     autoFocus,
     selectTextOnAutoFocus,
     isPhraseValid = false,
@@ -64,6 +65,7 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: React.For
   const [errorTextEnabled, setErrorTextEnabled] = React.useState(errorOnMount)
   const [isWordValid, setIsWordValid] = React.useState(false)
   const {colors} = useStyles()
+
   useDebounced(
     React.useCallback(() => setErrorTextEnabled(true), []),
     value,
@@ -115,14 +117,6 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: React.For
 
           if (onFocus) onFocus(event)
         }}
-        onBlur={() => {
-          if (showErrorOnBlur && !errorTextEnabled && !isEmptyString(errorText)) {
-            setErrorTextEnabled(true)
-            setIsWordValid(false)
-          } else {
-            setIsWordValid(true)
-          }
-        }}
         theme={{
           roundness: 8,
           colors: {
@@ -143,6 +137,19 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: React.For
             <RNTextInput {...inputProps} style={[style, renderComponentStyle, {color: colors.text, flex: 1}]} />
           </InputContainer>
         )}
+        onBlur={(e) => {
+          if (!isEmptyString(errorText)) {
+            if (showErrorOnBlur && !errorTextEnabled) setErrorTextEnabled(true)
+            setIsWordValid(false)
+          } else if (value === '') {
+            setIsWordValid(false)
+            setErrorTextEnabled(false)
+          } else {
+            setIsWordValid(true)
+          }
+
+          onBlur?.(e)
+        }}
         {...restProps}
       />
 
