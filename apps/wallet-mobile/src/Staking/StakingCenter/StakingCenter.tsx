@@ -84,6 +84,7 @@ export const StakingCenter = () => {
           <Spacer height={8} />
 
           <WebView
+            originWhitelist={['*']}
             androidLayerType="software"
             source={{uri: prepareStakingURL(languageCode)}}
             onMessage={(event) => handleOnMessage(event)}
