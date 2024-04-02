@@ -2,11 +2,11 @@ import {createStackNavigator} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 
-import {defaultStackNavigationOptions} from '../../navigation'
+import {defaultStackNavigationOptions, DiscoverRoutes} from '../../navigation'
 import {useStrings} from './common/useStrings'
 import {DiscoverList} from './useCases/DiscoverList/DiscoverList'
 
-const Stack = createStackNavigator()
+const Stack = createStackNavigator<DiscoverRoutes>()
 
 export const DiscoverNavigator = () => {
   const {theme} = useTheme()
@@ -21,14 +21,13 @@ export const DiscoverNavigator = () => {
         detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
         gestureEnabled: true,
       }}
-      initialRouteName="discover"
+      initialRouteName="discover-list"
     >
       <Stack.Screen
-        name="discover"
+        name="discover-list"
         component={DiscoverList}
         options={{
           title: strings.discoverTitle,
-          // headerRight: () => <Icon
         }}
       />
     </Stack.Navigator>

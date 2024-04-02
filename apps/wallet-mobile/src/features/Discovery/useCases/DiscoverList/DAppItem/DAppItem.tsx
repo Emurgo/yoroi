@@ -2,22 +2,29 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Image, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import uuid from 'uuid'
 
 import {Icon, Spacer, useModal} from '../../../../../components'
+import {useBrowser} from '../../../common/Browser/BrowserProvider'
 import {LabelCategoryDApp} from '../../../common/LabelCategoryDApp'
 import {LabelConnected} from '../../../common/LabelConnected'
 import {useNavigateTo} from '../../../common/useNavigateTo'
+import {useStrings} from '../../../common/useStrings'
 import {IDAppItem} from '../DAppMock'
 
 type Props = {
   dApp: IDAppItem
   connected: boolean
+  onPress?: () => void
 }
-export const DAppItem = ({dApp, connected}: Props) => {
+export const DAppItem = ({dApp, connected, onPress}: Props) => {
   const {styles} = useStyles()
+  const {addBrowserTab, setTabActive, tabs} = useBrowser()
   const navigateTo = useNavigateTo()
   const {openModal, closeModal} = useModal()
   const insets = useSafeAreaInsets()
+  const strings = useStrings()
+
   const dialogHeight = 294 + insets.bottom
 
   const [isPressed, setIsPressed] = React.useState(false)
@@ -27,39 +34,48 @@ export const DAppItem = ({dApp, connected}: Props) => {
   }
 
   const handleOpenDApp = () => {
+    const id = uuid.v4()
     closeModal()
-    navigateTo.browserView()
+    addBrowserTab(dApp.uri, id)
+    setTabActive(tabs.length)
+    const screenName = `browser-view-${id}`
+
+    navigateTo.browserView(screenName)
   }
   const handleDisconnectDApp = () => {
     closeModal()
   }
 
   const handlePress = () => {
-    openModal(
-      'DApp actions',
-      <View>
-        <View style={styles.dAppInfo}>
-          <Image
-            source={dApp.logo}
-            style={{
-              width: 48,
-              height: 48,
-            }}
-          />
-
-          <Text style={styles.dAppName}>{dApp.name}</Text>
-        </View>
-
-        <Spacer height={16} />
-
+    if (onPress) {
+      onPress()
+    } else {
+      openModal(
+        strings.dAppActions,
         <View>
-          <DAppAction onPress={handleOpenDApp} icon={<Icon.DApp />} title="Open DApp" />
+          <View style={styles.dAppInfo}>
+            <Image
+              source={dApp.logo}
+              style={{
+                width: 48,
+                height: 48,
+              }}
+            />
 
-          <DAppAction onPress={handleDisconnectDApp} icon={<Icon.DApp />} title="Disconnect wallet from DApp" />
-        </View>
-      </View>,
-      dialogHeight,
-    )
+            <Text style={styles.dAppName}>{dApp.name}</Text>
+          </View>
+
+          <Spacer height={16} />
+
+          <View>
+            <DAppAction onPress={handleOpenDApp} icon={<Icon.DApp />} title={strings.openDApp} />
+
+            <DAppAction onPress={handleDisconnectDApp} icon={<Icon.DApp />} title={strings.disconnectWalletFromDApp} />
+          </View>
+        </View>,
+        dialogHeight,
+      )
+    }
   }
 
   return (
@@ -74,7 +90,9 @@ export const DAppItem = ({dApp, connected}: Props) => {
         </View>
 
         <View style={styles.flexFull}>
-          <Text style={styles.nameText}>{dApp.name}</Text>
+          <Text numberOfLines={1} style={styles.nameText}>
+            {dApp.name}
+          </Text>
 
           {dApp?.description !== undefined && (
             <Text style={[styles.descriptionText, isPressed && styles.descriptionTextActive]}>{dApp.description}</Text>

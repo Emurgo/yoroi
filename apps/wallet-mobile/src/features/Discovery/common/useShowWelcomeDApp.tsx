@@ -10,8 +10,8 @@ import {Button, useModal} from '../../../components'
 import {useSelectedWallet} from '../../../SelectedWallet/Context/SelectedWalletContext'
 import {useStrings} from './useStrings'
 
-export const storageRootDAppExplorer = 'dapp-explorer-3'
-export const storageDAppWelcome = 'dapp-explorer-welcome-dialog-3'
+export const storageRootDAppExplorer = 'dapp-explorer'
+export const storageDAppWelcome = 'dapp-explorer-welcome-dialog'
 
 export const useShowWelcomeDApp = () => {
   const wallet = useSelectedWallet()

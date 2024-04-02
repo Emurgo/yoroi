@@ -952,5 +952,9 @@
   "discover.discoverList.welcomeToYoroiDAppExplorerDescription": "Discover, inspect, and connect to Cardano decentralized applications (DApps) with ease. Our solution helps to interact with DApps and their smart contracts, seamlessly enhancing your Cardano experience",
   "discover.discoverList.dAppAvailable": "DApp(s) available",
   "discover.discoverList.connected": "Connected",
-  "discover.discoverList.recommended": "Recommended"
+  "discover.discoverList.recommended": "Recommended",
+  "discover.discoverList.done": "DONE",
+  "discover.discoverList.openDApp": "Open DApp",
+  "discover.discoverList.disconnectWalletFromDApp": "Disconnect wallet from DApp",
+  "discover.discoverList.dAppActions": "DApp actions"
 }

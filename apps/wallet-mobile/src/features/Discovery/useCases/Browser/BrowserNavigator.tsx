@@ -1,24 +1,34 @@
-import {createStackNavigator} from '@react-navigation/stack'
-import {Theme, useTheme} from '@yoroi/theme'
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs'
 import React from 'react'
+import {BrowserRoutes} from 'src/navigation'
 
-import {defaultStackNavigationOptions, DiscoverRoutes} from '../../../../navigation'
+import {useBrowser} from '../../common/Browser/BrowserProvider'
+import {BrowserSearch} from './BrowserSearch'
+import {BrowserTabs} from './BrowserTabs'
 import {BrowserView} from './BrowserView'
 
-const Stack = createStackNavigator<DiscoverRoutes>()
+const Tab = createMaterialTopTabNavigator<BrowserRoutes>()
 
 export const BrowserNavigator = () => {
-  const {theme} = useTheme()
+  const {tabs} = useBrowser()
 
   return (
-    <Stack.Navigator screenOptions={screenOptions(theme)}>
-      <Stack.Screen name="browser-view" component={BrowserView} />
-    </Stack.Navigator>
+    <Tab.Navigator
+      screenOptions={{
+        tabBarStyle: {
+          height: 0,
+        },
+        swipeEnabled: false,
+        animationEnabled: false,
+      }}
+    >
+      {tabs.map((tab) => (
+        <Tab.Screen name={`browser-view-${tab.id}`} component={BrowserView} key={tab.id} />
+      ))}
+
+      <Tab.Screen name="browser-tabs" component={BrowserTabs} />
+
+      <Tab.Screen name="browser-search" component={BrowserSearch} />
+    </Tab.Navigator>
   )
 }
-
-const screenOptions = (theme: Theme) => ({
-  ...defaultStackNavigationOptions(theme),
-  detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
-  gestureEnabled: true,
-})

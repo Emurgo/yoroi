@@ -8,7 +8,8 @@ import {Keyboard, Platform} from 'react-native'
 import {VotingRegistration} from './Catalyst'
 import {Icon, OfflineBanner} from './components'
 import {DiscoverNavigator} from './features/Discovery'
-import {BrowserView} from './features/Discovery/useCases/Browser/BrowserView'
+import {BrowserProvider} from './features/Discovery/common/Browser/BrowserProvider'
+import {BrowserNavigator} from './features/Discovery/useCases/Browser/BrowserNavigator'
 import {ShowExchangeResultOrderScreen} from './features/Exchange/useCases/ShowExchangeResultOrderScreen/ShowExchangeResultOrderScreen'
 import {useLinksRequestAction} from './features/Links/common/useLinksRequestAction'
 import {useLinksShowActionResult} from './features/Links/common/useLinksShowActionResult'
@@ -195,28 +196,30 @@ export const WalletNavigator = () => {
   }
 
   return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: false /* used only for transition */,
-        detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
-      }}
-    >
-      <Stack.Screen name="wallet-selection" component={WalletSelectionScreen} />
+    <BrowserProvider>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false /* used only for transition */,
+          detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+        }}
+      >
+        <Stack.Screen name="wallet-selection" component={WalletSelectionScreen} />
 
-      <Stack.Screen name="main-wallet-routes" component={WalletTabNavigator} />
+        <Stack.Screen name="main-wallet-routes" component={WalletTabNavigator} />
 
-      <Stack.Screen name="nft-details-routes" component={NftDetailsNavigator} />
+        <Stack.Screen name="nft-details-routes" component={NftDetailsNavigator} />
 
-      <Stack.Screen name="settings" component={SettingsScreenNavigator} />
+        <Stack.Screen name="settings" component={SettingsScreenNavigator} />
 
-      <Stack.Screen name="voting-registration" component={VotingRegistration} />
+        <Stack.Screen name="voting-registration" component={VotingRegistration} />
 
-      <Stack.Screen name="toggle-analytics-settings" component={ToggleAnalyticsSettingsNavigator} />
+        <Stack.Screen name="toggle-analytics-settings" component={ToggleAnalyticsSettingsNavigator} />
 
-      <Stack.Screen name="governance" component={GovernanceNavigator} />
+        <Stack.Screen name="governance" component={GovernanceNavigator} />
 
-      <Stack.Screen name="browser" component={BrowserView} />
-    </Stack.Navigator>
+        <Stack.Screen name="browser" component={BrowserNavigator} />
+      </Stack.Navigator>
+    </BrowserProvider>
   )
 }
 

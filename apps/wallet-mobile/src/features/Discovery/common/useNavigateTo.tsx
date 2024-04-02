@@ -1,32 +1,32 @@
-import {useNavigation} from '@react-navigation/native'
+import {NavigationProp, useNavigation} from '@react-navigation/native'
 import {useRef} from 'react'
 
-import {DiscoverRoutesNavigation} from '../../../navigation'
+import {BrowserRoutes} from '../../../navigation'
 
 export const useNavigateTo = () => {
-  const navigation = useNavigation<DiscoverRoutesNavigation>()
+  const navigation = useNavigation<NavigationProp<BrowserRoutes>>()
 
   return useRef({
-    browserView: () =>
-      navigation.reset({
-        index: 0,
-        routes: [
-          {
-            name: 'app-root',
-            state: {
-              routes: [
-                {name: 'wallet-selection'},
-                {
-                  name: 'main-wallet-routes',
-                  state: {
-                    routes: [{name: 'discover'}],
-                  },
-                },
-                {name: 'browser'},
-              ],
-            },
-          },
-        ],
+    goBack: () => navigation.goBack(),
+    browserSearch: (isEdit = false) => {
+      return navigation.navigate('app-root', {
+        screen: 'browser',
+        params: {
+          screen: 'browser-search',
+          params: {isEdit},
+        },
+      })
+      // return navigation.navigate('browser-search', {isEdit})
+    },
+    discover: () => navigation.navigate('discover', {screen: 'discover-list'}),
+    browserView: (webViewTab: keyof BrowserRoutes) =>
+      navigation.navigate('app-root', {
+        screen: 'browser',
+        params: {
+          screen: webViewTab,
+        },
       }),
+    browserTabs: () => navigation.navigate('browser-tabs'),
+    navigation: () => navigation,
   }).current
 }

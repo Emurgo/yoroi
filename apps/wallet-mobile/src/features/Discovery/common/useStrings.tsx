@@ -13,6 +13,10 @@ export const useStrings = () => {
     totalDAppAvailable: intl.formatMessage(messages.totalDAppAvailable),
     connected: intl.formatMessage(messages.connected),
     recommended: intl.formatMessage(messages.recommended),
+    done: intl.formatMessage(messages.done),
+    openDApp: intl.formatMessage(messages.openDApp),
+    disconnectWalletFromDApp: intl.formatMessage(messages.disconnectWalletFromDApp),
+    dAppActions: intl.formatMessage(messages.dAppActions),
   }).current
 }
 
@@ -50,6 +54,22 @@ export const messages = Object.freeze(
     recommended: {
       id: 'discover.discoverList.recommended',
       defaultMessage: '!!!Recommended',
+    },
+    done: {
+      id: 'discover.discoverList.done',
+      defaultMessage: '!!!DONE',
+    },
+    openDApp: {
+      id: 'discover.discoverList.openDApp',
+      defaultMessage: '!!!Open DApp',
+    },
+    disconnectWalletFromDApp: {
+      id: 'discover.discoverList.disconnectWalletFromDApp',
+      defaultMessage: '!!!Disconnect wallet from DApp',
+    },
+    dAppActions: {
+      id: 'discover.discoverList.dAppActions',
+      defaultMessage: '!!!DApp actions',
     },
   }),
 )

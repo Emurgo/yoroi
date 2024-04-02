@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Discover Cardano",
     "file": "src/features/Discovery/common/useStrings.tsx",
     "start": {
-      "line": 21,
+      "line": 25,
       "column": 19,
-      "index": 814
+      "index": 1056
     },
     "end": {
-      "line": 24,
+      "line": 28,
       "column": 5,
-      "index": 915
+      "index": 1157
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Search DApps",
     "file": "src/features/Discovery/common/useStrings.tsx",
     "start": {
-      "line": 25,
+      "line": 29,
       "column": 17,
-      "index": 934
+      "index": 1176
     },
     "end": {
-      "line": 28,
+      "line": 32,
       "column": 5,
-      "index": 1029
+      "index": 1271
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Welcome to Yoroi DApp Explorer",
     "file": "src/features/Discovery/common/useStrings.tsx",
     "start": {
-      "line": 29,
+      "line": 33,
       "column": 32,
-      "index": 1063
+      "index": 1305
     },
     "end": {
-      "line": 32,
+      "line": 36,
       "column": 5,
-      "index": 1191
+      "index": 1433
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Discover, inspect, and connect to Cardano decentralized applications (DApps) with ease. Our solution helps to interact with DApps and their smart contracts, seamlessly enhancing your Cardano experience",
     "file": "src/features/Discovery/common/useStrings.tsx",
     "start": {
-      "line": 33,
+      "line": 37,
       "column": 43,
-      "index": 1236
+      "index": 1478
     },
     "end": {
-      "line": 37,
+      "line": 41,
       "column": 5,
-      "index": 1554
+      "index": 1796
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Next",
     "file": "src/features/Discovery/common/useStrings.tsx",
     "start": {
-      "line": 38,
+      "line": 42,
       "column": 10,
-      "index": 1566
+      "index": 1808
     },
     "end": {
-      "line": 41,
+      "line": 45,
       "column": 5,
-      "index": 1631
+      "index": 1873
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!DApp(s) available",
     "file": "src/features/Discovery/common/useStrings.tsx",
     "start": {
-      "line": 42,
+      "line": 46,
       "column": 24,
-      "index": 1657
+      "index": 1899
     },
     "end": {
-      "line": 45,
+      "line": 49,
       "column": 5,
-      "index": 1759
+      "index": 2001
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!Connected",
     "file": "src/features/Discovery/common/useStrings.tsx",
     "start": {
-      "line": 46,
+      "line": 50,
       "column": 15,
-      "index": 1776
+      "index": 2018
     },
     "end": {
-      "line": 49,
+      "line": 53,
       "column": 5,
-      "index": 1866
+      "index": 2108
     }
   },
   {
@@ -109,14 +109,74 @@
     "defaultMessage": "!!!Recommended",
     "file": "src/features/Discovery/common/useStrings.tsx",
     "start": {
-      "line": 50,
+      "line": 54,
       "column": 17,
-      "index": 1885
+      "index": 2127
     },
     "end": {
-      "line": 53,
+      "line": 57,
       "column": 5,
-      "index": 1979
+      "index": 2221
+    }
+  },
+  {
+    "id": "discover.discoverList.done",
+    "defaultMessage": "!!!DONE",
+    "file": "src/features/Discovery/common/useStrings.tsx",
+    "start": {
+      "line": 58,
+      "column": 10,
+      "index": 2233
+    },
+    "end": {
+      "line": 61,
+      "column": 5,
+      "index": 2313
+    }
+  },
+  {
+    "id": "discover.discoverList.openDApp",
+    "defaultMessage": "!!!Open DApp",
+    "file": "src/features/Discovery/common/useStrings.tsx",
+    "start": {
+      "line": 62,
+      "column": 14,
+      "index": 2329
+    },
+    "end": {
+      "line": 65,
+      "column": 5,
+      "index": 2418
+    }
+  },
+  {
+    "id": "discover.discoverList.disconnectWalletFromDApp",
+    "defaultMessage": "!!!Disconnect wallet from DApp",
+    "file": "src/features/Discovery/common/useStrings.tsx",
+    "start": {
+      "line": 66,
+      "column": 30,
+      "index": 2450
+    },
+    "end": {
+      "line": 69,
+      "column": 5,
+      "index": 2573
+    }
+  },
+  {
+    "id": "discover.discoverList.dAppActions",
+    "defaultMessage": "!!!DApp actions",
+    "file": "src/features/Discovery/common/useStrings.tsx",
+    "start": {
+      "line": 70,
+      "column": 17,
+      "index": 2592
+    },
+    "end": {
+      "line": 73,
+      "column": 5,
+      "index": 2687
     }
   }
 ]

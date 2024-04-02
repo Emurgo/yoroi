@@ -2,6 +2,7 @@ import {Ada} from './Ada'
 import {Analytics} from './Analytics'
 import {ArrowRight} from './ArrowRight'
 import {Assets} from './Assets'
+import {Backward} from './Backward'
 import {Bio} from './Bio'
 import {Bug} from './Bug'
 import {Burger} from './Burger'
@@ -40,6 +41,7 @@ import {ExternalLink} from './ExternalLink'
 import {EyeOff} from './EyeOff'
 import {EyeOn} from './EyeOn'
 import {Facebook} from './Facebook'
+import {Forward} from './Forward'
 import {Gear} from './Gear'
 import {Github} from './Github'
 import {Globe} from './Globe'
@@ -51,6 +53,7 @@ import {Launchpad} from './Launchpad'
 import {Lightning} from './Lightning'
 import {Link} from './Link'
 import {Lock} from './Lock'
+import {LockFilled} from './LockFilled'
 import {Logout} from './Logout'
 import {Magnify} from './Magnify'
 import {Megaphone} from './Megaphone'
@@ -71,6 +74,7 @@ import {Qr} from './Qr'
 import {QuestionMark} from './QuestionMark'
 import {Received} from './Received'
 import {Refresh} from './Refresh'
+import {Reload} from './Reload'
 import {Resync} from './Resync'
 import {RewardManuallyPayout} from './RewardManuallyPayout'
 import {RewardWithdrawn} from './RewardWithdrawn'
@@ -78,9 +82,11 @@ import {Sandbox} from './Sandbox'
 import {Send} from './Send'
 import {Settings} from './Settings'
 import {Share} from './Share'
+import {Share2} from './Share2'
 import {SliderSettings} from './SliderSettings'
 import {SortTable} from './SortTable'
 import {SpectrumSwap} from './SpectrumSwap'
+import {Square} from './Square'
 import {Staking} from './Staking'
 import {StakingKeyDeregistered} from './StakingKeyDeregistered'
 import {StakingKeyRegistered} from './StakingKeyRegistered'
@@ -228,4 +234,10 @@ export const Icon = {
   CheckFilled2,
   DApp,
   Disconnect,
+  LockFilled,
+  Backward,
+  Forward,
+  Share2,
+  Reload,
+  Square,
 }
