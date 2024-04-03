@@ -12,15 +12,15 @@ import {useAddressModeManager} from '../../../wallet-manager/useAddressModeManag
 import {BIP32_HD_GAP_LIMIT} from '../common/contants'
 import {useReceive} from '../common/ReceiveProvider'
 import {ShowAddressLimitInfo} from '../common/ShowAddressLimitInfo/ShowAddressLimitInfo'
+import {
+  SingleOrMultipleAddressesModal,
+  singleOrMultipleAddressesModalHeight,
+} from '../common/SingleOrMultipleAddressesModal/SingleOrMultipleAddressesModal'
 import {SmallAddressCard} from '../common/SmallAddressCard/SmallAddressCard'
 import {useMultipleAddressesInfo} from '../common/useMultipleAddressesInfo'
 import {useNavigateTo} from '../common/useNavigateTo'
 import {useReceiveAddressesStatus} from '../common/useReceiveAddressesStatus'
 import {useStrings} from '../common/useStrings'
-import {
-  SingleOrMultipleAddressesModal,
-  singleOrMultipleAddressesModalHeight,
-} from '../common/SingleOrMultipleAddressesModal/SingleOrMultipleAddressesModal'
 
 type AddressInfo = {
   isUsed?: boolean
