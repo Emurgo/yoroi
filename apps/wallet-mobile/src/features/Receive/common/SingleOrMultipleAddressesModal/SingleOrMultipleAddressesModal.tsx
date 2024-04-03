@@ -21,7 +21,8 @@ export const SingleOrMultipleAddressesModal = () => {
 
   const handleOnMultiple = () => {
     enableMultipleMode()
-    handleOnSingle()
+    hideMultipleAddressesInfo()
+    closeModal()
   }
 
   const handleOnSingle = () => {
