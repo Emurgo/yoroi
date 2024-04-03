@@ -44,11 +44,14 @@ export const DescribeSelectedAddressScreen = () => {
     copy(selectedAddress)
   }
 
-  const handleOnModalConfirm = (method: AddressMode) => {
-    if (method === 'multiple') {
-      navigate.replaceReceiveMultiple()
-    }
-  }
+  const handleOnModalConfirm = React.useCallback(
+    (method: AddressMode) => {
+      if (method === 'multiple') {
+        navigate.replaceReceiveMultiple()
+      }
+    },
+    [navigate],
+  )
 
   React.useEffect(() => {
     isShowingMultipleAddressInfo &&
@@ -57,7 +60,14 @@ export const DescribeSelectedAddressScreen = () => {
         <SingleOrMultipleAddressesModal onConfirm={handleOnModalConfirm} />,
         singleOrMultipleAddressesModalHeight,
       )
-  }, [isShowingMultipleAddressInfo, isSingle, isMultipleAddressesUsed, openModal, strings.singleOrMultiple])
+  }, [
+    isShowingMultipleAddressInfo,
+    isSingle,
+    isMultipleAddressesUsed,
+    openModal,
+    strings.singleOrMultiple,
+    handleOnModalConfirm,
+  ])
 
   useFocusEffect(
     React.useCallback(() => {

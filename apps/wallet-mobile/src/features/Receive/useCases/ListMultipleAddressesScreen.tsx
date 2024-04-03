@@ -49,12 +49,15 @@ export const ListMultipleAddressesScreen = () => {
 
   const {next: nextReceiveSingleAddress} = useReceiveAddressesStatus('single')
 
-  const handleOnModalConfirm = (method: AddressMode) => {
-    if (method === 'single') {
-      selectedAddressChanged(nextReceiveSingleAddress)
-      navigate.replaceReceiveSingle()
-    }
-  }
+  const handleOnModalConfirm = React.useCallback(
+    (method: AddressMode) => {
+      if (method === 'single') {
+        selectedAddressChanged(nextReceiveSingleAddress)
+        navigate.replaceReceiveSingle()
+      }
+    },
+    [navigate, nextReceiveSingleAddress, selectedAddressChanged],
+  )
 
   React.useEffect(() => {
     isShowingMultipleAddressInfo &&
@@ -63,7 +66,7 @@ export const ListMultipleAddressesScreen = () => {
         <SingleOrMultipleAddressesModal onConfirm={handleOnModalConfirm} />,
         singleOrMultipleAddressesModalHeight,
       )
-  }, [isShowingMultipleAddressInfo, openModal, strings.singleOrMultiple])
+  }, [isShowingMultipleAddressInfo, openModal, strings.singleOrMultiple, handleOnModalConfirm])
 
   const addressInfos = toAddressInfos(addresses)
   const hasReachedGapLimit = addresses.unused.length >= BIP32_HD_GAP_LIMIT
