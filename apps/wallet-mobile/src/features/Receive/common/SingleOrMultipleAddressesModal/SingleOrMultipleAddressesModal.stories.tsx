@@ -1,3 +1,4 @@
+import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import {AsyncStorageProvider} from '@yoroi/common'
 import * as React from 'react'
@@ -27,7 +28,7 @@ storiesOf('Receive SingleOrMultipleAddressesModal', module).add('default', () =>
         },
       }}
     >
-      <SingleOrMultipleAddressesModal />
+      <SingleOrMultipleAddressesModal onConfirm={action('onConfirm')} />
     </AsyncStorageProvider>
   </SelectedWalletProvider>
 ))

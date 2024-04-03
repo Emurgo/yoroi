@@ -12,7 +12,7 @@ import {useStrings} from '../useStrings'
 export const singleOrMultipleAddressesModalHeight = 580
 
 type Props = {
-  onConfirm?: (method: AddressMode) => void
+  onConfirm: (method: AddressMode) => void
 }
 
 export const SingleOrMultipleAddressesModal = ({onConfirm}: Props) => {
@@ -28,14 +28,14 @@ export const SingleOrMultipleAddressesModal = ({onConfirm}: Props) => {
     enableMultipleMode()
     hideMultipleAddressesInfo()
     closeModal()
-    onConfirm?.('multiple')
+    onConfirm('multiple')
   }
 
   const handleOnSingle = () => {
     enableSingleMode()
     hideMultipleAddressesInfo()
     closeModal()
-    onConfirm?.('single')
+    onConfirm('single')
   }
 
   return (
