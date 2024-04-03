@@ -5,7 +5,7 @@ import {StyleSheet, Text, View} from 'react-native'
 import {Button, Spacer, useModal} from '../../../../components'
 import {AddressMode} from '../../../../wallet-manager/types'
 import {useAddressModeManager} from '../../../../wallet-manager/useAddressModeManager'
-import {QRs} from '../../illustrations/QRs'
+import {QRs as QRsIllustration} from '../../illustrations/QRs'
 import {useMultipleAddressesInfo} from '../useMultipleAddressesInfo'
 import {useStrings} from '../useStrings'
 
@@ -18,9 +18,7 @@ type Props = {
 export const SingleOrMultipleAddressesModal = ({onConfirm}: Props) => {
   const {styles, colors} = useStyles()
   const strings = useStrings()
-  const {enableMultipleMode, enableSingleMode} = useAddressModeManager({
-    onSuccess: (_data, mode) => onConfirm?.(mode),
-  })
+  const {enableMultipleMode, enableSingleMode} = useAddressModeManager()
 
   const {hideMultipleAddressesInfo} = useMultipleAddressesInfo()
 
@@ -30,17 +28,19 @@ export const SingleOrMultipleAddressesModal = ({onConfirm}: Props) => {
     enableMultipleMode()
     hideMultipleAddressesInfo()
     closeModal()
+    onConfirm?.('multiple')
   }
 
   const handleOnSingle = () => {
     enableSingleMode()
     hideMultipleAddressesInfo()
     closeModal()
+    onConfirm?.('single')
   }
 
   return (
     <View style={styles.modal}>
-      <QRs />
+      <QRsIllustration />
 
       <Text style={[styles.details, {color: colors.details}]}>{strings.singleOrMultipleDetails}</Text>
 

@@ -5,20 +5,14 @@ import {StyleSheet, View, ViewToken} from 'react-native'
 import Animated, {Layout} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Spacer, useModal} from '../../../components'
+import {Button, Spacer} from '../../../components'
 import {useMetrics} from '../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../SelectedWallet'
-import {AddressMode} from '../../../wallet-manager/types'
 import {useAddressModeManager} from '../../../wallet-manager/useAddressModeManager'
 import {BIP32_HD_GAP_LIMIT} from '../common/contants'
 import {useReceive} from '../common/ReceiveProvider'
 import {ShowAddressLimitInfo} from '../common/ShowAddressLimitInfo/ShowAddressLimitInfo'
-import {
-  SingleOrMultipleAddressesModal,
-  singleOrMultipleAddressesModalHeight,
-} from '../common/SingleOrMultipleAddressesModal/SingleOrMultipleAddressesModal'
 import {SmallAddressCard} from '../common/SmallAddressCard/SmallAddressCard'
-import {useMultipleAddressesInfo} from '../common/useMultipleAddressesInfo'
 import {useNavigateTo} from '../common/useNavigateTo'
 import {useReceiveAddressesStatus} from '../common/useReceiveAddressesStatus'
 import {useStrings} from '../common/useStrings'
@@ -43,30 +37,6 @@ export const ListMultipleAddressesScreen = () => {
   React.useEffect(() => {
     wallet.generateNewReceiveAddressIfNeeded()
   }, [wallet])
-
-  const {openModal} = useModal()
-  const {isShowingMultipleAddressInfo} = useMultipleAddressesInfo()
-
-  const {next: nextReceiveSingleAddress} = useReceiveAddressesStatus('single')
-
-  const handleOnModalConfirm = React.useCallback(
-    (method: AddressMode) => {
-      if (method === 'single') {
-        selectedAddressChanged(nextReceiveSingleAddress)
-        navigate.replaceReceiveSingle()
-      }
-    },
-    [navigate, nextReceiveSingleAddress, selectedAddressChanged],
-  )
-
-  React.useEffect(() => {
-    isShowingMultipleAddressInfo &&
-      openModal(
-        strings.singleOrMultiple,
-        <SingleOrMultipleAddressesModal onConfirm={handleOnModalConfirm} />,
-        singleOrMultipleAddressesModalHeight,
-      )
-  }, [isShowingMultipleAddressInfo, openModal, strings.singleOrMultiple, handleOnModalConfirm])
 
   const addressInfos = toAddressInfos(addresses)
   const hasReachedGapLimit = addresses.unused.length >= BIP32_HD_GAP_LIMIT

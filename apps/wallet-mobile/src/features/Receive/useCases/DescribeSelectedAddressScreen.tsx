@@ -26,7 +26,7 @@ import {useStrings} from '../common/useStrings'
 export const DescribeSelectedAddressScreen = () => {
   const strings = useStrings()
   const {styles, colors} = useStyles()
-  const navigate = useNavigateTo()
+  const navigateTo = useNavigateTo()
   const {selectedAddress} = useReceive()
   const {isSingle, addressMode} = useAddressModeManager()
   const addresses = useReceiveAddressesStatus(addressMode)
@@ -47,10 +47,10 @@ export const DescribeSelectedAddressScreen = () => {
   const handleOnModalConfirm = React.useCallback(
     (method: AddressMode) => {
       if (method === 'multiple') {
-        navigate.replaceReceiveMultiple()
+        navigateTo.replaceReceiveMultiple()
       }
     },
-    [navigate],
+    [navigateTo],
   )
 
   React.useEffect(() => {
@@ -89,7 +89,7 @@ export const DescribeSelectedAddressScreen = () => {
         textStyles={{
           color: colors.requestSpecificAmountTextColor,
         }}
-        onPress={navigate.specificAmount}
+        onPress={navigateTo.specificAmount}
         disabled={!hasAddress}
         testID="receive:request-specific-amount-link"
       />

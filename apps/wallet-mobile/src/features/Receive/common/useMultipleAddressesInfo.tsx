@@ -37,7 +37,7 @@ const useIsShowingMultipleAddressesInfo = (options?: UseQueryOptions<boolean, Er
     },
   })
 
-  return query.isFetching ? false : query.data
+  return query.data
 }
 
 export const useMultipleAddressesInfo = () => {
