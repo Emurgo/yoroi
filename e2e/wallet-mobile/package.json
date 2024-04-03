@@ -25,11 +25,12 @@
     "build": "yarn lint && yarn tsc"
   },
   "prettier": {
+    "printWidth": 120,
     "bracketSpacing": false,
     "quoteProps": "consistent",
     "semi": false,
     "singleQuote": true,
-    "tabWidth": 1,
+    "tabWidth": 2,
     "trailingComma": "all",
     "useTabs": false
   },

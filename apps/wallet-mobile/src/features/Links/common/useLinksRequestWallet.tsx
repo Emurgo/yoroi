@@ -1,6 +1,6 @@
 import {useLinks} from '@yoroi/links'
 import * as React from 'react'
-import {InteractionManager, Keyboard} from 'react-native'
+import {InteractionManager} from 'react-native'
 
 import {useModal} from '../../../components/Modal/ModalContext'
 import {useSelectedWalletContext} from '../../../SelectedWallet'
@@ -15,7 +15,6 @@ export const useLinksRequestWallet = () => {
   const {action} = useLinks()
 
   const askToOpenAWallet = React.useCallback(() => {
-    Keyboard.dismiss()
     const content = <AskToOpenWalletScreen />
     openModal(strings.askToOpenAWalletTitle, content, heightBreakpoint)
   }, [openModal, strings.askToOpenAWalletTitle])

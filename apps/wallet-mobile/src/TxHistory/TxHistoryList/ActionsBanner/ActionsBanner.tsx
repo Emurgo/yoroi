@@ -45,7 +45,6 @@ const useStyles = () => {
       justifyContent: 'space-between',
       flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor: 'red',
     },
   })
   const colors = {
