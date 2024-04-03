@@ -3,6 +3,7 @@ import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Button, Spacer, useModal} from '../../../../components'
+import {AddressMode} from '../../../../wallet-manager/types'
 import {useAddressModeManager} from '../../../../wallet-manager/useAddressModeManager'
 import {QRs} from '../../illustrations/QRs'
 import {useMultipleAddressesInfo} from '../useMultipleAddressesInfo'
@@ -10,10 +11,16 @@ import {useStrings} from '../useStrings'
 
 export const singleOrMultipleAddressesModalHeight = 580
 
-export const SingleOrMultipleAddressesModal = () => {
+type Props = {
+  onConfirm?: (method: AddressMode) => void
+}
+
+export const SingleOrMultipleAddressesModal = ({onConfirm}: Props) => {
   const {styles, colors} = useStyles()
   const strings = useStrings()
-  const {enableMultipleMode, enableSingleMode} = useAddressModeManager()
+  const {enableMultipleMode, enableSingleMode} = useAddressModeManager({
+    onSuccess: (_data, mode) => onConfirm?.(mode),
+  })
 
   const {hideMultipleAddressesInfo} = useMultipleAddressesInfo()
 

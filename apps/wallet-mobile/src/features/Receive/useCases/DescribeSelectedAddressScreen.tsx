@@ -9,6 +9,7 @@ import {Button, Spacer, useModal} from '../../../components'
 import {useCopy} from '../../../legacy/useCopy'
 import {useMetrics} from '../../../metrics/metricsManager'
 import {isEmptyString} from '../../../utils'
+import {AddressMode} from '../../../wallet-manager/types'
 import {useAddressModeManager} from '../../../wallet-manager/useAddressModeManager'
 import {AddressDetailCard} from '../common/AddressDetailCard/AddressDetailCard'
 import {useReceive} from '../common/ReceiveProvider'
@@ -43,9 +44,19 @@ export const DescribeSelectedAddressScreen = () => {
     copy(selectedAddress)
   }
 
+  const handleOnModalConfirm = (method: AddressMode) => {
+    if (method === 'multiple') {
+      navigate.replaceReceiveMultiple()
+    }
+  }
+
   React.useEffect(() => {
     isShowingMultipleAddressInfo &&
-      openModal(strings.singleOrMultiple, <SingleOrMultipleAddressesModal />, singleOrMultipleAddressesModalHeight)
+      openModal(
+        strings.singleOrMultiple,
+        <SingleOrMultipleAddressesModal onConfirm={handleOnModalConfirm} />,
+        singleOrMultipleAddressesModalHeight,
+      )
   }, [isShowingMultipleAddressInfo, isSingle, isMultipleAddressesUsed, openModal, strings.singleOrMultiple])
 
   useFocusEffect(

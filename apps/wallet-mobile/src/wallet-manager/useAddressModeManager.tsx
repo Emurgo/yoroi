@@ -74,11 +74,11 @@ const useToogleAddressMode = (options?: UseMutationOptions<void, Error, void>) =
 
 const initialAddressMode: AddressMode = 'multiple'
 
-export const useAddressModeManager = () => {
+export const useAddressModeManager = (options?: UseMutationOptions<void, Error, AddressMode>) => {
   const addressMode = useAddressMode()
   const {toggle, isToggleLoading} = useToogleAddressMode()
 
-  const saveAddressMode = useSaveAddressMode()
+  const saveAddressMode = useSaveAddressMode(options)
   const enableMultipleMode = () => saveAddressMode('multiple')
   const enableSingleMode = () => saveAddressMode('single')
 

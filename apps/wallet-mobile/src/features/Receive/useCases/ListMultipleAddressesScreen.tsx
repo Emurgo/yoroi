@@ -8,6 +8,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button, Spacer, useModal} from '../../../components'
 import {useMetrics} from '../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../SelectedWallet'
+import {AddressMode} from '../../../wallet-manager/types'
 import {useAddressModeManager} from '../../../wallet-manager/useAddressModeManager'
 import {BIP32_HD_GAP_LIMIT} from '../common/contants'
 import {useReceive} from '../common/ReceiveProvider'
@@ -46,9 +47,22 @@ export const ListMultipleAddressesScreen = () => {
   const {openModal} = useModal()
   const {isShowingMultipleAddressInfo} = useMultipleAddressesInfo()
 
+  const {next: nextReceiveSingleAddress} = useReceiveAddressesStatus('single')
+
+  const handleOnModalConfirm = (method: AddressMode) => {
+    if (method === 'single') {
+      selectedAddressChanged(nextReceiveSingleAddress)
+      navigate.replaceReceiveSingle()
+    }
+  }
+
   React.useEffect(() => {
     isShowingMultipleAddressInfo &&
-      openModal(strings.singleOrMultiple, <SingleOrMultipleAddressesModal />, singleOrMultipleAddressesModalHeight)
+      openModal(
+        strings.singleOrMultiple,
+        <SingleOrMultipleAddressesModal onConfirm={handleOnModalConfirm} />,
+        singleOrMultipleAddressesModalHeight,
+      )
   }, [isShowingMultipleAddressInfo, openModal, strings.singleOrMultiple])
 
   const addressInfos = toAddressInfos(addresses)

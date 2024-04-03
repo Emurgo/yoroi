@@ -9,5 +9,7 @@ export const useNavigateTo = () => {
   return useRef({
     receiveDetails: () => navigation.navigate('receive-single'),
     specificAmount: () => navigation.navigate('receive-specific-amount'),
+    replaceReceiveSingle: () => navigation.replace('receive-single'),
+    replaceReceiveMultiple: () => navigation.replace('receive-multiple'),
   }).current
 }
