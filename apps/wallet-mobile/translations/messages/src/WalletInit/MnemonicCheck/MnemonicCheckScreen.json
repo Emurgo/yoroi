@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Tap each word in the correct order to verify your recovery phrase",
     "file": "src/WalletInit/MnemonicCheck/MnemonicCheckScreen.tsx",
     "start": {
-      "line": 174,
+      "line": 171,
       "column": 16,
-      "index": 5990
+      "index": 5766
     },
     "end": {
-      "line": 177,
+      "line": 174,
       "column": 3,
-      "index": 6166
+      "index": 5942
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Confirm",
     "file": "src/WalletInit/MnemonicCheck/MnemonicCheckScreen.tsx",
     "start": {
-      "line": 178,
+      "line": 175,
       "column": 17,
-      "index": 6185
+      "index": 5961
     },
     "end": {
-      "line": 181,
+      "line": 178,
       "column": 3,
-      "index": 6304
+      "index": 6080
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Recovery phrase does not match",
     "file": "src/WalletInit/MnemonicCheck/MnemonicCheckScreen.tsx",
     "start": {
-      "line": 182,
+      "line": 179,
       "column": 35,
-      "index": 6341
+      "index": 6117
     },
     "end": {
-      "line": 185,
+      "line": 182,
       "column": 3,
-      "index": 6501
+      "index": 6277
     }
   }
 ]
