@@ -1,7 +1,7 @@
 import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {ScrollView, StyleSheet, Text, View} from 'react-native'
+import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import Icon from '../../../assets/img/copy.png'
@@ -12,15 +12,15 @@ import {isEmptyString} from '../../../utils'
 import {useAddressModeManager} from '../../../wallet-manager/useAddressModeManager'
 import {AddressDetailCard} from '../common/AddressDetailCard/AddressDetailCard'
 import {useReceive} from '../common/ReceiveProvider'
+import {
+  SingleOrMultipleAddressesModal,
+  singleOrMultipleAddressesModalHeight,
+} from '../common/SingleOrMultipleAddressesModal/SingleOrMultipleAddressesModal'
 import {SkeletonAdressDetail} from '../common/SkeletonAddressDetail/SkeletonAddressDetail'
 import {useMultipleAddressesInfo} from '../common/useMultipleAddressesInfo'
 import {useNavigateTo} from '../common/useNavigateTo'
 import {useReceiveAddressesStatus} from '../common/useReceiveAddressesStatus'
 import {useStrings} from '../common/useStrings'
-import {
-  SingleOrMultipleAddressesModal,
-  singleOrMultipleAddressesModalHeight,
-} from '../common/SingleOrMultipleAddressesModal/SingleOrMultipleAddressesModal'
 
 export const DescribeSelectedAddressScreen = () => {
   const strings = useStrings()

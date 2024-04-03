@@ -1,11 +1,12 @@
-import {useStrings} from '../useStrings'
-import {useAddressModeManager} from '../../../../wallet-manager/useAddressModeManager'
-import {useMultipleAddressesInfo} from '../useMultipleAddressesInfo'
-import {Button, Spacer, useModal} from '../../../../components'
-import {StyleSheet, Text, View} from 'react-native'
-import {QRs} from '../../illustrations/QRs'
-import * as React from 'react'
 import {useTheme} from '@yoroi/theme'
+import * as React from 'react'
+import {StyleSheet, Text, View} from 'react-native'
+
+import {Button, Spacer, useModal} from '../../../../components'
+import {useAddressModeManager} from '../../../../wallet-manager/useAddressModeManager'
+import {QRs} from '../../illustrations/QRs'
+import {useMultipleAddressesInfo} from '../useMultipleAddressesInfo'
+import {useStrings} from '../useStrings'
 
 export const singleOrMultipleAddressesModalHeight = 580
 

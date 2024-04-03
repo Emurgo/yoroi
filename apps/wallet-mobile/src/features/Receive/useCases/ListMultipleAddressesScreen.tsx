@@ -1,7 +1,7 @@
 import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, View, ViewToken} from 'react-native'
+import {StyleSheet, View, ViewToken} from 'react-native'
 import Animated, {Layout} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -10,6 +10,10 @@ import {useMetrics} from '../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../SelectedWallet'
 import {useAddressModeManager} from '../../../wallet-manager/useAddressModeManager'
 import {BIP32_HD_GAP_LIMIT} from '../common/contants'
+import {
+  MeetMultipleAddressesModal,
+  meetMultipleAddressesModalHeight,
+} from '../common/MeetMultipleAddressesModal/MeetMultipleAddressesModal'
 import {useReceive} from '../common/ReceiveProvider'
 import {ShowAddressLimitInfo} from '../common/ShowAddressLimitInfo/ShowAddressLimitInfo'
 import {SmallAddressCard} from '../common/SmallAddressCard/SmallAddressCard'
@@ -17,11 +21,6 @@ import {useMultipleAddressesInfo} from '../common/useMultipleAddressesInfo'
 import {useNavigateTo} from '../common/useNavigateTo'
 import {useReceiveAddressesStatus} from '../common/useReceiveAddressesStatus'
 import {useStrings} from '../common/useStrings'
-import {QRs} from '../illustrations/QRs'
-import {
-  MeetMultipleAddressesModal,
-  meetMultipleAddressesModalHeight,
-} from '../common/MeetMultipleAddressesModal/MeetMultipleAddressesModal'
 
 type AddressInfo = {
   isUsed?: boolean
@@ -142,13 +141,6 @@ const useStyles = () => {
       backgroundColor: theme.color.gray.min,
       borderColor: theme.color.gray[200],
       ...theme.padding['l'],
-    },
-    details: {
-      ...theme.typography['body-1-l-regular'],
-    },
-    buttonContainer: {
-      alignSelf: 'stretch',
-      backgroundColor: theme.color.gray.min,
     },
     button: {
       backgroundColor: theme.color.primary[500],
