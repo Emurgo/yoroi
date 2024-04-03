@@ -10,10 +10,6 @@ import {useMetrics} from '../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../SelectedWallet'
 import {useAddressModeManager} from '../../../wallet-manager/useAddressModeManager'
 import {BIP32_HD_GAP_LIMIT} from '../common/contants'
-import {
-  MeetMultipleAddressesModal,
-  meetMultipleAddressesModalHeight,
-} from '../common/MeetMultipleAddressesModal/MeetMultipleAddressesModal'
 import {useReceive} from '../common/ReceiveProvider'
 import {ShowAddressLimitInfo} from '../common/ShowAddressLimitInfo/ShowAddressLimitInfo'
 import {SmallAddressCard} from '../common/SmallAddressCard/SmallAddressCard'
@@ -21,6 +17,10 @@ import {useMultipleAddressesInfo} from '../common/useMultipleAddressesInfo'
 import {useNavigateTo} from '../common/useNavigateTo'
 import {useReceiveAddressesStatus} from '../common/useReceiveAddressesStatus'
 import {useStrings} from '../common/useStrings'
+import {
+  SingleOrMultipleAddressesModal,
+  singleOrMultipleAddressesModalHeight,
+} from '../common/SingleOrMultipleAddressesModal/SingleOrMultipleAddressesModal'
 
 type AddressInfo = {
   isUsed?: boolean
@@ -48,8 +48,8 @@ export const ListMultipleAddressesScreen = () => {
 
   React.useEffect(() => {
     isShowingMultipleAddressInfo &&
-      openModal(strings.multiplePresentation, <MeetMultipleAddressesModal />, meetMultipleAddressesModalHeight)
-  }, [isShowingMultipleAddressInfo, openModal, strings.multiplePresentation])
+      openModal(strings.singleOrMultiple, <SingleOrMultipleAddressesModal />, singleOrMultipleAddressesModalHeight)
+  }, [isShowingMultipleAddressInfo, openModal, strings.singleOrMultiple])
 
   const addressInfos = toAddressInfos(addresses)
   const hasReachedGapLimit = addresses.unused.length >= BIP32_HD_GAP_LIMIT

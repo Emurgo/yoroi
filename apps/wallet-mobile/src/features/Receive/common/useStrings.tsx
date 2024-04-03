@@ -28,8 +28,6 @@ export const useStrings = () => {
     usedAddress: intl.formatMessage(messages.usedAddress),
     generateButton: intl.formatMessage(messages.generateButton),
     infoAddressLimit: intl.formatMessage(messages.infoAddressLimit),
-    multiplePresentation: intl.formatMessage(messages.multiplePresentation),
-    multiplePresentationDetails: intl.formatMessage(messages.multiplePresentationDetails),
     singleOrMultiple: intl.formatMessage(messages.singleOrMultiple),
     singleOrMultipleDetails: intl.formatMessage(messages.singleOrMultipleDetails),
     selectMultiple: intl.formatMessage(messages.selectMultiple),
@@ -140,15 +138,6 @@ export const messages = defineMessages({
     id: 'components.receive.receivescreen.infoAddressLimit',
     defaultMessage:
       '!!!You have already reached your 20 addresses limit. If you need to operate with more than 20 addresses, reach out to us via Yoroi Zendesk',
-  },
-  multiplePresentation: {
-    id: 'components.receive.receivescreen.multiplePresentation',
-    defaultMessage: '!!!Meet multiple addresses in Yoroi',
-  },
-  multiplePresentationDetails: {
-    id: 'components.receive.receivescreen.multiplePresentationDetails',
-    defaultMessage:
-      '!!!Enables Yoroi to manage various addresses in one place, enhancing privacy and providing organisational benefits.',
   },
   singleOrMultiple: {
     id: 'components.receive.receivescreen.singleOrMultiple',
