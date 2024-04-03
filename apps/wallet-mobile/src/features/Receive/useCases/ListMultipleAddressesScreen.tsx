@@ -52,7 +52,7 @@ export const ListMultipleAddressesScreen = () => {
         isUsed={item.isUsed}
         onPress={() => {
           selectedAddressChanged(item.address)
-          navigate.receiveDetails()
+          navigate.showAddressDetails()
         }}
         testId={`receive:small-address-card-${index + 1}`} // Add index + 1 to include count
         // date={}  // TODO define with project
