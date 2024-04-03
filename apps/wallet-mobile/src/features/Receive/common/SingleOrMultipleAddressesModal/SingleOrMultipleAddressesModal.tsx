@@ -13,7 +13,7 @@ export const singleOrMultipleAddressesModalHeight = 580
 export const SingleOrMultipleAddressesModal = () => {
   const {styles, colors} = useStyles()
   const strings = useStrings()
-  const {enableMultipleMode} = useAddressModeManager()
+  const {enableMultipleMode, enableSingleMode} = useAddressModeManager()
 
   const {hideMultipleAddressesInfo} = useMultipleAddressesInfo()
 
@@ -25,6 +25,7 @@ export const SingleOrMultipleAddressesModal = () => {
   }
 
   const handleOnSingle = () => {
+    enableSingleMode()
     hideMultipleAddressesInfo()
     closeModal()
   }
