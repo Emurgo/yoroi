@@ -47,7 +47,7 @@ export const DescribeSelectedAddressScreen = () => {
   const handleOnModalConfirm = React.useCallback(
     (method: AddressMode) => {
       if (method === 'multiple') {
-        navigateTo.replaceReceiveMultiple()
+        navigateTo.multipleAddress()
       }
     },
     [navigateTo],
@@ -89,7 +89,7 @@ export const DescribeSelectedAddressScreen = () => {
         textStyles={{
           color: colors.requestSpecificAmountTextColor,
         }}
-        onPress={navigateTo.specificAmount}
+        onPress={navigateTo.requestSpecificAmount}
         disabled={!hasAddress}
         testID="receive:request-specific-amount-link"
       />

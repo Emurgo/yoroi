@@ -8,8 +8,8 @@ export const useNavigateTo = () => {
 
   return useRef({
     showAddressDetails: () => navigation.navigate('receive-single'),
-    specificAmount: () => navigation.navigate('receive-specific-amount'),
-    replaceReceiveSingle: () => navigation.replace('receive-single'),
-    replaceReceiveMultiple: () => navigation.replace('receive-multiple'),
+    requestSpecificAmount: () => navigation.navigate('receive-specific-amount'),
+    singleAddress: () => navigation.replace('receive-single'),
+    multipleAddress: () => navigation.replace('receive-multiple'),
   }).current
 }
