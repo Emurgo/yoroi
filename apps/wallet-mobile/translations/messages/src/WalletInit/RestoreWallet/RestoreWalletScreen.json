@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Restore wallet",
     "file": "src/WalletInit/RestoreWallet/RestoreWalletScreen.tsx",
     "start": {
-      "line": 62,
+      "line": 60,
       "column": 17,
-      "index": 2376
+      "index": 2274
     },
     "end": {
-      "line": 65,
+      "line": 63,
       "column": 3,
-      "index": 2503
+      "index": 2401
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!To restore your wallet please provide the {mnemonicLength}-word recovery phrase you received when you created your wallet for the first time.",
     "file": "src/WalletInit/RestoreWallet/RestoreWalletScreen.tsx",
     "start": {
-      "line": 66,
+      "line": 64,
       "column": 16,
-      "index": 2521
+      "index": 2419
     },
     "end": {
-      "line": 72,
+      "line": 70,
       "column": 3,
-      "index": 2802
+      "index": 2700
     }
   }
 ]
