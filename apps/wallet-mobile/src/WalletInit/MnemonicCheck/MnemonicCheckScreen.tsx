@@ -1,4 +1,5 @@
 import {RouteProp, useRoute} from '@react-navigation/native'
+import {useAsyncStorage} from '@yoroi/common'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {InteractionManager, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
@@ -6,6 +7,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer, Text} from '../../components'
 import {showErrorDialog} from '../../dialogs'
+import {setShowingMultipleAddressInfo} from '../../features/Receive/common/useMultipleAddressesInfo'
 import {errorMessages} from '../../i18n/global-messages'
 import {useMetrics} from '../../metrics/metricsManager'
 import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
@@ -22,6 +24,7 @@ export const MnemonicCheckScreen = () => {
   const route = useRoute<RouteProp<WalletInitRoutes, 'mnemonic-check'>>()
   const {mnemonic, password, name, networkId, walletImplementationId} = route.params
   const {track} = useMetrics()
+  const storage = useAsyncStorage()
 
   const mnemonicEntries: Array<Entry> = mnemonic
     .split(' ')
@@ -40,9 +43,10 @@ export const MnemonicCheckScreen = () => {
     createWallet({name, mnemonicPhrase: mnemonic, password, networkId, walletImplementationId, addressMode})
   }
   const {createWallet, isLoading, isSuccess} = useCreateWallet({
-    onSuccess: () => {
+    onSuccess: (wallet) => {
       track.createWalletDetailsSettled()
       resetToWalletSelection()
+      setShowingMultipleAddressInfo(storage.join(`wallet/${wallet.id}/`), false)
     },
     onError: (error) => {
       InteractionManager.runAfterInteractions(() => {
