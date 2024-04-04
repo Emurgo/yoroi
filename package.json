@@ -9,6 +9,7 @@
       "packages/types",
       "packages/common",
       "packages/api",
+      "packages/links",
       "packages/*",
       "apps/*",
       "e2e/*"

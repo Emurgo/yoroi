@@ -31,7 +31,6 @@ const infoPlugin: EnrichmentPlugin = {
   type: PluginType.ENRICHMENT,
   setup: async () => Promise.resolve(),
   execute: async (event: Event) => {
-    Logger.info('[metrics-react-native]', event.event_type, event.event_properties ?? '- No properties')
     return Promise.resolve(event)
   },
 }

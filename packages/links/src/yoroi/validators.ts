@@ -1,6 +1,6 @@
 import z from 'zod'
 
-const PartnerInfoSchema = z.object({
+export const PartnerInfoSchema = z.object({
   isSandbox: z.boolean().optional(),
   isTestnet: z.boolean().optional(),
   appId: z.string().max(40).optional(),

@@ -1,11 +1,7 @@
+import {Links} from '@yoroi/types'
 import {freeze} from 'immer'
-import {
-  LinksExchangeShowCreateResultParams,
-  LinksTransferRequestAdaParams,
-  LinksTransferRequestAdaWithLinkParams,
-} from './types'
 
-const exchangeShowCreateResultParams: LinksExchangeShowCreateResultParams = {
+const exchangeShowCreateResultParams: Links.ExchangeShowCreateResultParams = {
   coin: 'ADA',
   coinAmount: 10,
   fiat: 'USD',
@@ -14,7 +10,7 @@ const exchangeShowCreateResultParams: LinksExchangeShowCreateResultParams = {
   provider: 'yoroi',
   status: 'success',
 }
-const exchangeShowCreateResultResult: LinksExchangeShowCreateResultParams = {
+const exchangeShowCreateResultResult: Links.ExchangeShowCreateResultParams = {
   coin: 'ADA',
   coinAmount: 10,
   fiat: 'USD',
@@ -24,7 +20,7 @@ const exchangeShowCreateResultResult: LinksExchangeShowCreateResultParams = {
   status: 'success',
 }
 
-const transferRequestAdaParams: LinksTransferRequestAdaParams = {
+const transferRequestAdaParams: Links.TransferRequestAdaParams = {
   targets: [
     {
       amounts: [
@@ -47,7 +43,7 @@ const transferRequestAdaParams: LinksTransferRequestAdaParams = {
     },
   ],
 }
-const transferRequestAdaResult: LinksTransferRequestAdaParams = {
+const transferRequestAdaResult: Links.TransferRequestAdaParams = {
   targets: [
     {
       amounts: [
@@ -71,11 +67,11 @@ const transferRequestAdaResult: LinksTransferRequestAdaParams = {
   ],
 }
 
-const transferRequestAdaWithLinkParams: LinksTransferRequestAdaWithLinkParams =
+const transferRequestAdaWithLinkParams: Links.TransferRequestAdaWithLinkParams =
   {
     link: 'web+cardano:addr1qygnpgnmc4twqxe4qnj3pakudc0ysheqwflv8guwwlply7zptg3wjqz84kx3t4re4xpqvs3fu7mvsahwhyxd4q3qq90s7sgxnh?amount=10',
   }
-const transferRequestAdaWithLinkResult: LinksTransferRequestAdaWithLinkParams =
+const transferRequestAdaWithLinkResult: Links.TransferRequestAdaWithLinkParams =
   {
     link: encodeURIComponent(
       'web+cardano:addr1qygnpgnmc4twqxe4qnj3pakudc0ysheqwflv8guwwlply7zptg3wjqz84kx3t4re4xpqvs3fu7mvsahwhyxd4q3qq90s7sgxnh?amount=10',
