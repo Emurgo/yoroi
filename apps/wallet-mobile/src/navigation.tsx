@@ -329,7 +329,7 @@ export type DiscoverRoutes = {
 export type BrowserRoutes = {
   discover?: NavigatorScreenParams<DiscoverRoutes>
   browser?: BrowserRoutes
-  'browser-tabs': undefined
+  'browser-view': undefined
   'browser-search': {
     isEdit: boolean
   }

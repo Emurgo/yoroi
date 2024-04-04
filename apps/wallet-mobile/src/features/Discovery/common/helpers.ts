@@ -3,13 +3,10 @@ export const validUrl = (url: string) => {
 }
 
 export function hasProtocol(url: string) {
-  return /^[a-z]*:\/\//i.test(url);
+  return /^[a-z]*:\/\//i.test(url)
 }
 
-export const urlWithProtocol = (
-  url: string,
-  defaultProtocol = 'https://',
-) => {
-  const sanitizedURL = hasProtocol(url) ? url : `${defaultProtocol}${url}`;
-  return sanitizedURL;
-};
+export const urlWithProtocol = (url: string, defaultProtocol = 'https://') => {
+  const sanitizedURL = hasProtocol(url) ? url : `${defaultProtocol}${url}`
+  return sanitizedURL
+}

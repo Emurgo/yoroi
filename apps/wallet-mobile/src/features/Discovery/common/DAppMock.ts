@@ -1,29 +1,29 @@
 import {ImageSourcePropType} from 'react-native'
 
-import ADAHandle from '../../../../assets/img/dApp/ada-handle.png'
-import ADAMarkets from '../../../../assets/img/dApp/ada-markets.png'
-import Book from '../../../../assets/img/dApp/book.png'
-import CardanoSpot from '../../../../assets/img/dApp/cardano-spot.png'
-import CNS from '../../../../assets/img/dApp/cns.png'
-import Djed from '../../../../assets/img/dApp/djed.png'
-import FluidTokens from '../../../../assets/img/dApp/fluidtokens.png'
-import GeniusYield from '../../../../assets/img/dApp/genius-yield.png'
-import Google from '../../../../assets/img/dApp/google.png'
-import DEXHunter from '../../../../assets/img/dApp/hunter.png'
-import Iagon from '../../../../assets/img/dApp/iagon.png'
-import JamOnBread from '../../../../assets/img/dApp/jam-on-bread.png'
-import Lenfi from '../../../../assets/img/dApp/lenfi.png'
-import Levvy from '../../../../assets/img/dApp/levvy.png'
-import Liqwid from '../../../../assets/img/dApp/liqwid.png'
-import Minswap from '../../../../assets/img/dApp/minswap.png'
-import MuesliSwap from '../../../../assets/img/dApp/muesliswap.png'
-import Nucast from '../../../../assets/img/dApp/nucast.png'
-import OptionFlow from '../../../../assets/img/dApp/optionflow.png'
-import PXLZ from '../../../../assets/img/dApp/pxlz.png'
-// import Summon from '../../../../assets/img/dApp/summon.png'
-import SundaeSwap from '../../../../assets/img/dApp/sundaeswap.png'
-import Taptools from '../../../../assets/img/dApp/taptools.png'
-import Wingriders from '../../../../assets/img/dApp/wingriders.png'
+import ADAHandle from '../../../assets/img/dApp/ada-handle.png'
+import ADAMarkets from '../../../assets/img/dApp/ada-markets.png'
+import Book from '../../../assets/img/dApp/book.png'
+import CardanoSpot from '../../../assets/img/dApp/cardano-spot.png'
+import CNS from '../../../assets/img/dApp/cns.png'
+import Djed from '../../../assets/img/dApp/djed.png'
+import FluidTokens from '../../../assets/img/dApp/fluidtokens.png'
+import GeniusYield from '../../../assets/img/dApp/genius-yield.png'
+import Google from '../../../assets/img/dApp/google.png'
+import DEXHunter from '../../../assets/img/dApp/hunter.png'
+import Iagon from '../../../assets/img/dApp/iagon.png'
+import JamOnBread from '../../../assets/img/dApp/jam-on-bread.png'
+import Lenfi from '../../../assets/img/dApp/lenfi.png'
+import Levvy from '../../../assets/img/dApp/levvy.png'
+import Liqwid from '../../../assets/img/dApp/liqwid.png'
+import Minswap from '../../../assets/img/dApp/minswap.png'
+import MuesliSwap from '../../../assets/img/dApp/muesliswap.png'
+import Nucast from '../../../assets/img/dApp/nucast.png'
+import OptionFlow from '../../../assets/img/dApp/optionflow.png'
+import PXLZ from '../../../assets/img/dApp/pxlz.png'
+// import Summon from '../../../assets/img/dApp/summon.png'
+import SundaeSwap from '../../../assets/img/dApp/sundaeswap.png'
+import Taptools from '../../../assets/img/dApp/taptools.png'
+import Wingriders from '../../../assets/img/dApp/wingriders.png'
 
 export const DAppCategory = {
   dex: 'DEX',
@@ -33,7 +33,7 @@ export const DAppCategory = {
   trading: 'Trading Tools',
   nft: 'NFT Marketplace',
   defi: 'DeFi',
-  dao: 'DAO',
+  // dao: 'DAO',
   stablecoin: 'Stablecoin',
   decentralized_storage: 'Decentralized Storage',
 } as const
@@ -56,7 +56,7 @@ export const mockDAppList: IDAppItem[] = [
     description: 'Join a global Cardano Community: a single space to communicate, engage, educate with Cardano',
     category: 'media',
     logo: CardanoSpot,
-    uri: 'https://cardanospot.io/landing'
+    uri: 'https://cardanospot.io/landing',
   },
   {
     id: 'minswap',
@@ -64,7 +64,7 @@ export const mockDAppList: IDAppItem[] = [
     description: 'A decentralized exchange governed by a community that zaps',
     category: 'dex',
     logo: Minswap,
-    uri: 'https://minswap.org/'
+    uri: 'https://minswap.org/',
   },
   {
     id: 'sundaeswap',
@@ -72,7 +72,7 @@ export const mockDAppList: IDAppItem[] = [
     description: 'Native, scalable decentralized exchange and automated liquidity provision protocol',
     category: 'dex',
     logo: SundaeSwap,
-    uri: 'https://sundae.fi/'
+    uri: 'https://sundae.fi/',
   },
   {
     id: 'muesliswap',
@@ -80,7 +80,7 @@ export const mockDAppList: IDAppItem[] = [
     description: "Swap tokens, earn & invest  on Cardano's leading DeFi ecosystem",
     category: 'dex',
     logo: MuesliSwap,
-    uri: 'https://muesliswap.com/'
+    uri: 'https://muesliswap.com/',
   },
   {
     id: 'geniusyield',
@@ -88,7 +88,7 @@ export const mockDAppList: IDAppItem[] = [
     description: 'The all-in-one platform, that combines an order book DEX with an automated yield optimizer.',
     category: 'dex',
     logo: GeniusYield,
-    uri: 'https://www.geniusyield.co/'
+    uri: 'https://www.geniusyield.co/',
   },
   {
     id: 'wingriders',
@@ -96,7 +96,7 @@ export const mockDAppList: IDAppItem[] = [
     description: 'Native and fast AMM decentralized exchange platform',
     category: 'dex',
     logo: Wingriders,
-    uri: 'https://www.wingriders.com/'
+    uri: 'https://www.wingriders.com/',
   },
   {
     id: 'dex_hunter',
@@ -104,7 +104,7 @@ export const mockDAppList: IDAppItem[] = [
     description: 'Biggest Cardano DEX Aggregator with real-time alerts and an easy to use interface',
     category: 'dex',
     logo: DEXHunter,
-    uri: 'https://www.dexhunter.io/'
+    uri: 'https://www.dexhunter.io/',
   },
   {
     id: 'ada_markets',
@@ -112,7 +112,7 @@ export const mockDAppList: IDAppItem[] = [
     description: 'DEX Aggregator getting you the best value swaps / splits across Cardano DEXes',
     category: 'dex',
     logo: ADAMarkets,
-    uri: 'https://ada.markets/'
+    uri: 'https://ada.markets/',
   },
   {
     id: 'ada_handle',
@@ -120,7 +120,7 @@ export const mockDAppList: IDAppItem[] = [
     description: 'NFT-powered naming solution for your Cardano wallet address',
     category: 'identity',
     logo: ADAHandle,
-    uri: 'https://adahandle.com/'
+    uri: 'https://adahandle.com/',
   },
   {
     id: 'cns',
@@ -128,7 +128,7 @@ export const mockDAppList: IDAppItem[] = [
     description: 'Decentralized name registry and social graph creation',
     category: 'identity',
     logo: CNS,
-    uri: 'https://cns.space/'
+    uri: 'https://cns.space/',
   },
   {
     id: 'book_io',
@@ -136,7 +136,7 @@ export const mockDAppList: IDAppItem[] = [
     description: 'A Web3 marketplace for buying, reading, and selling eBooks and Audiobooks',
     category: 'entertainment',
     logo: Book,
-    uri: 'https://book.io/'
+    uri: 'https://book.io/',
   },
   {
     id: 'nucast',
@@ -144,7 +144,7 @@ export const mockDAppList: IDAppItem[] = [
     description: 'Nest generation video streaming and ownership platform',
     category: 'entertainment',
     logo: Nucast,
-    uri: 'https://www.nucast.io/'
+    uri: 'https://www.nucast.io/',
   },
   {
     id: 'taptools',
@@ -152,7 +152,7 @@ export const mockDAppList: IDAppItem[] = [
     description: 'Chart analysis, wallet profiler, and portfolio tracker on Cardano',
     category: 'trading',
     logo: Taptools,
-    uri: 'https://www.taptools.io/'
+    uri: 'https://www.taptools.io/',
   },
   {
     id: 'jpg_store',
@@ -160,7 +160,7 @@ export const mockDAppList: IDAppItem[] = [
     description: "Buy and sell NFTs on Cardano's most popular NFT marketplace",
     category: 'nft',
     logo: Taptools,
-    uri: 'https://www.jpg.store/'
+    uri: 'https://www.jpg.store/',
   },
   {
     id: 'jam_on_bread',
@@ -168,7 +168,7 @@ export const mockDAppList: IDAppItem[] = [
     description: 'Decentralized NFT marketplace and aggregator',
     category: 'nft',
     logo: JamOnBread,
-    uri: 'https://jamonbread.io/'
+    uri: 'https://jamonbread.io/',
   },
   {
     id: 'pxlz',
@@ -176,7 +176,7 @@ export const mockDAppList: IDAppItem[] = [
     description: 'The first interactive NFT collectibles on the Cardano blockchain',
     category: 'nft',
     logo: PXLZ,
-    uri: 'https://pxlz.org/'
+    uri: 'https://pxlz.org/',
   },
   {
     id: 'liqwid',
@@ -184,7 +184,7 @@ export const mockDAppList: IDAppItem[] = [
     description: 'Earn interest, borrow assets, and build on the most hydrated liquidity protocol on Cardano',
     category: 'defi',
     logo: Liqwid,
-    uri: 'https://liqwid.finance/'
+    uri: 'https://liqwid.finance/',
   },
   {
     id: 'lenfi',
@@ -192,7 +192,7 @@ export const mockDAppList: IDAppItem[] = [
     description: 'Permissionless lending, borrowing, liquidity pool creation, and more',
     category: 'defi',
     logo: Lenfi,
-    uri: 'https://lenfi.io/'
+    uri: 'https://lenfi.io/',
   },
   {
     id: 'fluidtokens',
@@ -200,7 +200,7 @@ export const mockDAppList: IDAppItem[] = [
     description: 'Lend, borrow, rent, and boost',
     category: 'defi',
     logo: FluidTokens,
-    uri: 'https://fluidtokens.com/'
+    uri: 'https://fluidtokens.com/',
   },
   {
     id: 'levvy',
@@ -208,7 +208,7 @@ export const mockDAppList: IDAppItem[] = [
     description: 'Lend and borrow with NFTs and Tokens',
     category: 'defi',
     logo: Levvy,
-    uri: 'https://levvy.fi/'
+    uri: 'https://levvy.fi/',
   },
   {
     id: 'optionflow',
@@ -216,7 +216,7 @@ export const mockDAppList: IDAppItem[] = [
     description: 'A Decentralized Option Protocol on the Cardano Blockchain',
     category: 'defi',
     logo: OptionFlow,
-    uri: 'https://app.optionflow.finance/'
+    uri: 'https://app.optionflow.finance/',
   },
   // {
   //   id: 'summon',
@@ -231,7 +231,7 @@ export const mockDAppList: IDAppItem[] = [
     description: "Cardano's native overcollateralized stablecoin, developed by IOG and powered by COTI",
     category: 'stablecoin',
     logo: Djed,
-    uri: 'https://djed.xyz/'
+    uri: 'https://djed.xyz/',
   },
   {
     id: 'iagon',
@@ -239,7 +239,7 @@ export const mockDAppList: IDAppItem[] = [
     description: 'A cloud computing platform offering access to decentralized storage and compute',
     category: 'decentralized_storage',
     logo: Iagon,
-    uri: 'https://iagon.com/'
+    uri: 'https://iagon.com/',
   },
 ]
 
@@ -248,5 +248,5 @@ export const mockDAppGoogle = (searchQuery: string): IDAppItem => ({
   name: searchQuery,
   description: 'Google',
   logo: Google,
-  uri: `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`
+  uri: `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`,
 })

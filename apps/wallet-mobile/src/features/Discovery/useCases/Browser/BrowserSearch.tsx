@@ -2,17 +2,16 @@ import {RouteProp, useIsFocused, useRoute} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import React, {useEffect, useState} from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
 import {WebViewNavigation} from 'react-native-webview'
 import uuid from 'uuid'
 
 import {BrowserRoutes} from '../../../../navigation'
 import {useBrowser} from '../../common/Browser/BrowserProvider'
 import {BrowserSearchToolbar} from '../../common/Browser/BrowserSearchToolbar'
+import {mockDAppGoogle} from '../../common/DAppMock'
 import {urlWithProtocol, validUrl} from '../../common/helpers'
 import {useNavigateTo} from '../../common/useNavigateTo'
 import {DAppItem} from '../DiscoverList/DAppItem/DAppItem'
-import {mockDAppGoogle} from '../DiscoverList/DAppMock'
 
 export type WebViewState = Partial<WebViewNavigation> & Required<Pick<WebViewNavigation, 'url'>>
 
@@ -29,15 +28,14 @@ export const BrowserSearch = () => {
 
   const handleGoBack = () => {
     if (tabActiveIndex >= 0) {
-      const tabId = tabs[tabActiveIndex].id
-      navigateTo.browserView(`browser-view-${tabId}`)
+      navigateTo.browserView()
     } else {
-      navigateTo.browserTabs()
+      navigateTo.discover()
     }
   }
 
-  const getUrl = () => {
-    if (!validUrl(searchValue)) {
+  const getUrl = (isEngineSearch: boolean) => {
+    if (isEngineSearch || !validUrl(searchValue)) {
       const searchUrl = 'https://www.google.com/search?q=' + encodeURIComponent(searchValue)
       return searchUrl
     }
@@ -63,11 +61,11 @@ export const BrowserSearch = () => {
     }
   }, [isEdit, isFocused, tabActive?.url])
 
-  const handleSubmit = () => {
+  const handleSubmit = (isEngineSearch: boolean) => {
     if (searchValue === '') return
 
     let tabId = ''
-    const url = getUrl()
+    const url = getUrl(isEngineSearch)
 
     if (isEdit) {
       updateTab(tabActiveIndex, {url})
@@ -77,26 +75,25 @@ export const BrowserSearch = () => {
       addBrowserTab(url, tabId)
       setTabActive(tabs.length)
     }
-    const screenName = `browser-view-${tabId}`
-    navigateTo.browserView(screenName)
+    navigateTo.browserView()
   }
 
   return (
-    <SafeAreaView edges={['left', 'right', 'top']} style={styles.root}>
+    <View style={styles.root}>
       <BrowserSearchToolbar
         onBack={handleGoBack}
         searchValue={searchValue}
         onSearchChange={(value) => setSearchValue(value)}
-        onSearchSubmit={handleSubmit}
+        onSearchSubmit={() => handleSubmit(false)}
       />
 
       <ScrollView style={styles.dAppContainer}>
         {searchValue !== '' &&
           [mockDAppGoogle(searchValue)].map((dApp) => (
-            <DAppItem key={dApp.id} dApp={dApp} connected={false} onPress={handleSubmit} />
+            <DAppItem key={dApp.id} dApp={dApp} connected={false} onPress={() => handleSubmit(true)} />
           ))}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   )
 }
 

@@ -6,19 +6,16 @@ import Share from 'react-native-share'
 import WebView from 'react-native-webview'
 
 import {Icon} from '../../../../components'
-import {WebViewState} from '../../useCases/Browser/BrowserView'
-import {useNavigateTo} from '../useNavigateTo'
+import {WebViewState} from '../../useCases/Browser/WebViewItem'
 import {useBrowser} from './BrowserProvider'
 
 type Props = {
   webViewRef: RefObject<WebView>
   webViewState: WebViewState
-  onShotWebView: () => Promise<void>
 }
-export const BrowserTabBar = ({webViewRef, webViewState, onShotWebView}: Props) => {
+export const BrowserTabBar = ({webViewRef, webViewState}: Props) => {
   const {styles, color} = useStyles()
-  const {tabs} = useBrowser()
-  const navigateTo = useNavigateTo()
+  const {tabs, switchTab} = useBrowser()
   const insets = useSafeAreaInsets()
 
   const totalTabs = Math.min(tabs.length ?? 0, 99)
@@ -42,9 +39,8 @@ export const BrowserTabBar = ({webViewRef, webViewState, onShotWebView}: Props) 
     webViewRef.current.goForward()
   }
 
-  const handleChoseTabs = async () => {
-    await onShotWebView()
-    navigateTo.browserTabs()
+  const handleChoseTabs = () => {
+    switchTab(true)
   }
 
   const handleShare = async () => {
@@ -60,7 +56,7 @@ export const BrowserTabBar = ({webViewRef, webViewState, onShotWebView}: Props) 
   }
 
   return (
-    <View style={[styles.root, {paddingBottom: insets.bottom + 12}]}>
+    <View style={[styles.root, styles.shadow, {paddingBottom: insets.bottom + 12}]}>
       <Touch disabled={!webViewState.canGoBack} onPress={handleBackward}>
         <Icon.Backward color={colorBackward} />
       </Touch>
@@ -123,6 +119,20 @@ const useStyles = () => {
       gap: 16,
       ...padding['x-l'],
       paddingVertical: 12,
+      backgroundColor: color['white-static'],
+    },
+    shadow: {
+      shadowColor: '#054037',
+      shadowOffset: {
+        width: 0,
+        height: 8,
+      },
+      shadowOpacity: 0.3,
+      shadowRadius: 8,
+
+      elevation: 14,
+
+      zIndex: 1,
     },
     touchBox: {
       ...padding['y-xxs'],

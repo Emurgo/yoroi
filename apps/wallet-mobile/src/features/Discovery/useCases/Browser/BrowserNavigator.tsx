@@ -1,41 +1,31 @@
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
-import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs'
+import {createStackNavigator} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {BrowserRoutes} from 'src/navigation'
 
-import {useBrowser} from '../../common/Browser/BrowserProvider'
 import {BrowserSearch} from './BrowserSearch'
-import {BrowserTabs} from './BrowserTabs'
 import {BrowserView} from './BrowserView'
 
-const Tab = createMaterialTopTabNavigator<BrowserRoutes>()
+const Tab = createStackNavigator<BrowserRoutes>()
 
 export const BrowserNavigator = () => {
-  const {tabs} = useBrowser()
   const {styles} = useStyles()
 
   return (
-    <View style={styles.root}>
+    <SafeAreaView edges={['left', 'right', 'top']} style={styles.root}>
       <Tab.Navigator
         screenOptions={{
-          tabBarStyle: {
-            height: 0,
-          },
-          swipeEnabled: false,
           animationEnabled: false,
+          headerShown: false,
         }}
       >
-        {tabs.map((tab) => (
-          <Tab.Screen name={`browser-view-${tab.id}`} component={BrowserView} key={tab.id} />
-        ))}
-
-        <Tab.Screen name="browser-tabs" component={BrowserTabs} />
+        <Tab.Screen name="browser-view" component={BrowserView} />
 
         <Tab.Screen name="browser-search" component={BrowserSearch} />
       </Tab.Navigator>
-    </View>
+    </SafeAreaView>
   )
 }
 

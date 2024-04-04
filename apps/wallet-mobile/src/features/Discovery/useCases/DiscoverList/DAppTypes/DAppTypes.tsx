@@ -5,7 +5,7 @@ import {ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View} from 'reac
 import LinearGradient from 'react-native-linear-gradient'
 
 import {Icon, Spacer} from '../../../../../components'
-import {DAppCategory, TDAppCategory} from '../DAppMock'
+import {DAppCategory, TDAppCategory} from '../../../common/DAppMock'
 
 type Props = {
   types: TDAppCategory[]
@@ -107,12 +107,12 @@ const useStyles = () => {
     },
     chipContentBox: {
       paddingHorizontal: 14,
-      paddingVertical: 6,
       backgroundColor: color['white-static'],
       flexDirection: 'row',
       alignItems: 'center',
       gap: 8,
       borderRadius: 6,
+      height: '100%',
     },
     chipBgWhite: {
       backgroundColor: color['white-static'],

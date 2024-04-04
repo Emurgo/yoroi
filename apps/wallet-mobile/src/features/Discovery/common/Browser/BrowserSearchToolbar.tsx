@@ -1,6 +1,5 @@
-import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
-import React, {useCallback, useRef} from 'react'
+import React from 'react'
 import {StyleSheet, TextInput, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
 import {Icon} from '../../../../components'
@@ -13,16 +12,6 @@ type Props = {
 }
 export const BrowserSearchToolbar = ({onBack, onSearchChange, onSearchSubmit, searchValue}: Props) => {
   const {styles} = useStyles()
-  const inputRef = useRef<TextInput>(null)
-
-  const selectionText = useCallback(() => {
-    if (!inputRef.current) return
-    inputRef.current?.focus()
-  }, [])
-
-  useFocusEffect(() => {
-    selectionText()
-  })
 
   return (
     <View style={styles.root}>
@@ -30,7 +19,6 @@ export const BrowserSearchToolbar = ({onBack, onSearchChange, onSearchSubmit, se
         <BackButton onPress={onBack} />
 
         <TextInput
-          ref={inputRef}
           autoFocus
           selectTextOnFocus
           value={searchValue}
@@ -38,7 +26,6 @@ export const BrowserSearchToolbar = ({onBack, onSearchChange, onSearchSubmit, se
           onChangeText={(search) => onSearchChange(search)}
           autoCapitalize="none"
           style={{flex: 1, color: '#000000'}}
-          testID="inputSearch"
           onSubmitEditing={onSearchSubmit}
           enablesReturnKeyAutomatically={searchValue.length === 0}
         />

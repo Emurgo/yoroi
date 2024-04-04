@@ -16,17 +16,15 @@ export const useNavigateTo = () => {
           params: {isEdit},
         },
       })
-      // return navigation.navigate('browser-search', {isEdit})
     },
     discover: () => navigation.navigate('discover', {screen: 'discover-list'}),
-    browserView: (webViewTab: keyof BrowserRoutes) =>
+    browserView: () =>
       navigation.navigate('app-root', {
         screen: 'browser',
         params: {
-          screen: webViewTab,
+          screen: 'browser-view',
         },
       }),
-    browserTabs: () => navigation.jumpTo('browser-tabs'),
     navigation: () => navigation,
   }).current
 }

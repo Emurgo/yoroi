@@ -7,6 +7,7 @@ export const defaultBrowserActions: BrowserContextActions = {
   setTabActive: () => invalid('missing init'),
   updateTab: () => invalid('missing init'),
   removeTab: () => invalid('missing init'),
+  switchTab: () => invalid('missing init'),
 } as const
 
 const initialBrowserState: BrowserContextState = {
@@ -14,6 +15,7 @@ const initialBrowserState: BrowserContextState = {
   tabActiveIndex: -1,
   status: 'waiting',
   searchEngine: 'Google',
+  switchTabOpen: false,
 }
 
 export type TabItem = {
@@ -29,6 +31,7 @@ type BrowserContextState = Readonly<{
   tabActiveIndex: number
   status: StatusBrowser
   searchEngine: 'Google'
+  switchTabOpen: boolean
 }>
 
 export type BrowserProviderContext = BrowserContextState & BrowserContextActions
@@ -77,6 +80,9 @@ export const BrowserProvider = ({children}: {children: ReactNode}) => {
     removeTab: (index) => {
       dispatch({type: BrowserAction.RemoveTab, index})
     },
+    switchTab: (isOpen) => {
+      dispatch({type: BrowserAction.SwitchTab, isOpen})
+    },
   }).current
 
   const context = React.useMemo<BrowserProviderContext>(
@@ -100,6 +106,7 @@ enum BrowserAction {
   UpdateTab = 'updateTab',
   RemoveTab = 'removeTab',
   SetStatusStorage = 'setStatusStorage',
+  SwitchTab = 'SwitchTab',
 }
 
 type BrowserContextAction =
@@ -130,11 +137,16 @@ type BrowserContextAction =
       type: BrowserAction.SetStatusStorage
       status: StatusBrowser
     }
+  | {
+      type: BrowserAction.SwitchTab
+      isOpen: boolean
+    }
 type BrowserContextActions = Readonly<{
   addBrowserTab: (url: string, id: string) => void
   setTabActive: (index: number) => void
   updateTab: (tabIndex: number, tabInfo: Partial<Omit<TabItem, 'id'>>) => void
   removeTab: (index: number) => void
+  switchTab: (isOpen: boolean) => void
 }>
 
 export const browserReducer = (state: BrowserContextState, action: BrowserContextAction): BrowserContextState => {
@@ -168,6 +180,10 @@ export const browserReducer = (state: BrowserContextState, action: BrowserContex
 
       case BrowserAction.SetStatusStorage:
         draft.status = action.status
+        break
+
+      case BrowserAction.SwitchTab:
+        draft.switchTabOpen = action.isOpen
         break
     }
   })

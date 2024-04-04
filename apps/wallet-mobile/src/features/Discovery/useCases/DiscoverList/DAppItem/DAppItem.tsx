@@ -6,11 +6,11 @@ import uuid from 'uuid'
 
 import {Icon, Spacer, useModal} from '../../../../../components'
 import {useBrowser} from '../../../common/Browser/BrowserProvider'
+import {IDAppItem} from '../../../common/DAppMock'
 import {LabelCategoryDApp} from '../../../common/LabelCategoryDApp'
 import {LabelConnected} from '../../../common/LabelConnected'
 import {useNavigateTo} from '../../../common/useNavigateTo'
 import {useStrings} from '../../../common/useStrings'
-import {IDAppItem} from '../DAppMock'
 
 type Props = {
   dApp: IDAppItem
@@ -38,9 +38,8 @@ export const DAppItem = ({dApp, connected, onPress}: Props) => {
     closeModal()
     addBrowserTab(dApp.uri, id)
     setTabActive(tabs.length)
-    const screenName = `browser-view-${id}`
 
-    navigateTo.browserView(screenName)
+    navigateTo.browserView()
   }
   const handleDisconnectDApp = () => {
     closeModal()
