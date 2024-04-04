@@ -1,4 +1,5 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
+import {useWalletSetup} from '@yoroi/wallet-setup'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
@@ -13,7 +14,6 @@ import {WalletInitRouteNavigation, WalletInitRoutes} from '../../../../navigatio
 import {getHWDeviceInfo} from '../../../../yoroi-wallets/cardano/hw'
 import {DeviceId, DeviceObj, HWDeviceInfo} from '../../../../yoroi-wallets/hw'
 import {Device, NetworkId, WalletImplementationId} from '../../../../yoroi-wallets/types'
-import {useWalletSetup} from '../../common/translators/reactjs/hooks/useWalletSetup'
 
 export type Params = {
   useUSB?: boolean

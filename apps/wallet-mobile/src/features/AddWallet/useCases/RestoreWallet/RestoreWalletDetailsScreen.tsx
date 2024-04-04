@@ -1,5 +1,6 @@
 import {NetworkError} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
+import {useWalletSetup} from '@yoroi/wallet-setup'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {
@@ -37,7 +38,6 @@ import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
 import {YoroiZendeskLink} from '../../common/contants'
 import {LearnMoreButton} from '../../common/LearnMoreButton/LearnMoreButton'
 import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
-import {useWalletSetup} from '../../common/translators/reactjs/hooks/useWalletSetup'
 import {useStrings} from '../../common/useStrings'
 import {Info as InfoIllustration} from '../../illustrations/Info'
 

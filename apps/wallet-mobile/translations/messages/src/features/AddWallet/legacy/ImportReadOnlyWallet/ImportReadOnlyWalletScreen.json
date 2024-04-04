@@ -6,12 +6,12 @@
     "start": {
       "line": 64,
       "column": 13,
-      "index": 2227
+      "index": 2193
     },
     "end": {
       "line": 67,
       "column": 3,
-      "index": 2401
+      "index": 2367
     }
   },
   {
@@ -21,12 +21,12 @@
     "start": {
       "line": 68,
       "column": 9,
-      "index": 2412
+      "index": 2378
     },
     "end": {
       "line": 71,
       "column": 3,
-      "index": 2556
+      "index": 2522
     }
   },
   {
@@ -36,12 +36,12 @@
     "start": {
       "line": 72,
       "column": 9,
-      "index": 2567
+      "index": 2533
     },
     "end": {
       "line": 75,
       "column": 3,
-      "index": 2743
+      "index": 2709
     }
   },
   {
@@ -51,12 +51,12 @@
     "start": {
       "line": 76,
       "column": 14,
-      "index": 2759
+      "index": 2725
     },
     "end": {
       "line": 79,
       "column": 3,
-      "index": 2892
+      "index": 2858
     }
   }
 ]

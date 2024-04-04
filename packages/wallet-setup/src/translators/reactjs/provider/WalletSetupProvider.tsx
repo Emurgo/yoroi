@@ -10,7 +10,9 @@ import {
   WalletSetupState,
 } from '../state/state'
 
-export const WalletSetupCtx = React.createContext<WalletSetupContext>(walletSetupInitialContext)
+export const WalletSetupCtx = React.createContext<WalletSetupContext>(
+  walletSetupInitialContext,
+)
 
 export const WalletSetupProvider = ({
   children,
@@ -29,15 +31,26 @@ export const WalletSetupProvider = ({
       dispatch({type: WalletSetupActionType.MnemonicChanged, mnemonic}),
     walletNameChanged: (walletName: WalletSetupState['walletName']) =>
       dispatch({type: WalletSetupActionType.WalletNameChanged, walletName}),
-    walletPasswordChanged: (walletPassword: WalletSetupState['walletPassword']) =>
-      dispatch({type: WalletSetupActionType.WalletPasswordChanged, walletPassword}),
+    walletPasswordChanged: (
+      walletPassword: WalletSetupState['walletPassword'],
+    ) =>
+      dispatch({
+        type: WalletSetupActionType.WalletPasswordChanged,
+        walletPassword,
+      }),
     networkIdChanged: (networkId: WalletSetupState['networkId']) =>
       dispatch({type: WalletSetupActionType.NetworkIdChanged, networkId}),
-    walletImplementationIdChanged: (walletImplementationId: WalletSetupState['walletImplementationId']) =>
-      dispatch({type: WalletSetupActionType.WalletImplementationIdChanged, walletImplementationId}),
+    walletImplementationIdChanged: (
+      walletImplementationId: WalletSetupState['walletImplementationId'],
+    ) =>
+      dispatch({
+        type: WalletSetupActionType.WalletImplementationIdChanged,
+        walletImplementationId,
+      }),
     publicKeyHexChanged: (publicKeyHex: WalletSetupState['publicKeyHex']) =>
       dispatch({type: WalletSetupActionType.PublicKeyHexChanged, publicKeyHex}),
-    pathChanged: (path: WalletSetupState['path']) => dispatch({type: WalletSetupActionType.PathChanged, path}),
+    pathChanged: (path: WalletSetupState['path']) =>
+      dispatch({type: WalletSetupActionType.PathChanged, path}),
     hwDeviceInfoChanged: (hwDeviceInfo: WalletSetupState['hwDeviceInfo']) =>
       dispatch({type: WalletSetupActionType.HwDeviceInfoChanged, hwDeviceInfo}),
     reset: () => dispatch({type: WalletSetupActionType.Reset}),
@@ -51,5 +64,9 @@ export const WalletSetupProvider = ({
     [state, actions],
   )
 
-  return <WalletSetupCtx.Provider value={context}>{children}</WalletSetupCtx.Provider>
+  return (
+    <WalletSetupCtx.Provider value={context}>
+      {children}
+    </WalletSetupCtx.Provider>
+  )
 }

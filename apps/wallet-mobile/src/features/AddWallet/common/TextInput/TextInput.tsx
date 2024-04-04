@@ -56,6 +56,8 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: React.For
     autoComplete = 'off',
     onFocus,
     onBlur,
+    onChangeText,
+    onChange,
     autoFocus,
     selectTextOnAutoFocus,
     isPhraseValid = false,
@@ -101,9 +103,17 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: React.For
         ref={ref}
         style={{textAlign}}
         value={value}
-        onChange={() => {
+        onChange={(e) => {
           setErrorTextEnabled(false)
           setIsWordValid(false)
+
+          onChange?.(e)
+        }}
+        onChangeText={(e) => {
+          setErrorTextEnabled(false)
+          setIsWordValid(false)
+
+          onChangeText?.(e)
         }}
         autoCorrect={false}
         autoComplete={autoComplete}

@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native'
+import {useWalletSetup} from '@yoroi/wallet-setup'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StatusBar, StyleSheet, View} from 'react-native'
@@ -10,7 +11,6 @@ import {Logger} from '../../../../legacy/logging'
 import {WalletInitRouteNavigation} from '../../../../navigation'
 import {theme} from '../../../../theme'
 import {isCIP1852AccountPath, isValidPublicKey} from '../../../../yoroi-wallets/cardano/bip44Validators'
-import {useWalletSetup} from '../../common/translators/reactjs/hooks/useWalletSetup'
 
 export const ImportReadOnlyWalletScreen = () => {
   const intl = useIntl()

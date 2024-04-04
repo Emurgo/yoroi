@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native'
+import {useWalletSetup} from '@yoroi/wallet-setup'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View, ViewProps} from 'react-native'
@@ -11,7 +12,6 @@ import {COLORS} from '../../../../theme'
 import * as HASKELL_SHELLEY from '../../../../yoroi-wallets/cardano/constants/mainnet/constants'
 import * as HASKELL_SHELLEY_TESTNET from '../../../../yoroi-wallets/cardano/constants/testnet/constants'
 import {NetworkId, WALLET_IMPLEMENTATION_REGISTRY, WalletImplementationId} from '../../../../yoroi-wallets/types'
-import {useWalletSetup} from '../../common/translators/reactjs/hooks/useWalletSetup'
 import {WalletDescription} from '../WalletDescription'
 
 export const WalletFreshInitScreen = () => {

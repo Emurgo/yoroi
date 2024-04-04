@@ -1,3 +1,4 @@
+import {useWalletSetup} from '@yoroi/wallet-setup'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {FlatList, InteractionManager, ScrollView, StyleSheet, View} from 'react-native'
@@ -15,7 +16,6 @@ import {NetworkError} from '../../../../yoroi-wallets/cardano/errors'
 import {NUMBERS} from '../../../../yoroi-wallets/cardano/numbers'
 import {useCreateBip44Wallet, usePlate} from '../../../../yoroi-wallets/hooks'
 import {NetworkId, WalletImplementationId} from '../../../../yoroi-wallets/types'
-import {useWalletSetup} from '../../common/translators/reactjs/hooks/useWalletSetup'
 import {WalletAddress} from '../WalletAddress'
 import {WalletNameForm} from '../WalletNameForm'
 

@@ -1,3 +1,4 @@
+import {useWalletSetup} from '@yoroi/wallet-setup'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {InteractionManager} from 'react-native'
@@ -11,7 +12,6 @@ import {AddressMode} from '../../../../wallet-manager/types'
 import {NetworkError} from '../../../../yoroi-wallets/cardano/errors'
 import {useCreateBip44Wallet} from '../../../../yoroi-wallets/hooks'
 import {WalletImplementationId} from '../../../../yoroi-wallets/types'
-import {useWalletSetup} from '../../common/translators/reactjs/hooks/useWalletSetup'
 import {WalletNameForm} from '../WalletNameForm'
 
 // when hw, later will be part of the onboarding

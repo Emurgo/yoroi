@@ -21,6 +21,7 @@ yarn workspace @yoroi/staking add -D "$1"
 yarn workspace @yoroi/swap add -D "$1"
 yarn workspace @yoroi/theme add -D "$1"
 yarn workspace @yoroi/transfer add -D "$1"
+yarn workspace @yoroi/wallet-setup add -D "$1"
 yarn workspace @yoroi/types add -D "$1"
 yarn workspace @yoroi/wallet-mobile add -D "$1"
 

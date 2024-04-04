@@ -1,39 +1,42 @@
 import {freeze, produce} from 'immer'
 
-export const walletSetupReducer = (state: WalletSetupState, action: WalletSetupAction) => {
+export const walletSetupReducer = (
+  state: WalletSetupState,
+  action: WalletSetupAction,
+) => {
   return produce(state, (draft) => {
     switch (action.type) {
       case WalletSetupActionType.MnemonicChanged:
         draft.mnemonic = action.mnemonic
-        break
+        return
 
       case WalletSetupActionType.WalletNameChanged:
         draft.walletName = action.walletName
-        break
+        return
 
       case WalletSetupActionType.WalletPasswordChanged:
         draft.walletPassword = action.walletPassword
-        break
+        return
 
       case WalletSetupActionType.NetworkIdChanged:
         draft.networkId = action.networkId
-        break
+        return
 
       case WalletSetupActionType.WalletImplementationIdChanged:
         draft.walletImplementationId = action.walletImplementationId
-        break
+        return
 
       case WalletSetupActionType.PublicKeyHexChanged:
         draft.publicKeyHex = action.publicKeyHex
-        break
+        return
 
       case WalletSetupActionType.PathChanged:
         draft.path = action.path
-        break
+        return
 
       case WalletSetupActionType.HwDeviceInfoChanged:
         draft.hwDeviceInfo = action.hwDeviceInfo
-        break
+        return
 
       case WalletSetupActionType.Reset:
         return walletSetupDefaultState
@@ -121,9 +124,13 @@ export type WalletSetupAction =
 export type WalletSetupActions = {
   mnemonicChanged: (mnemonic: WalletSetupState['mnemonic']) => void
   walletNameChanged: (walletName: WalletSetupState['walletName']) => void
-  walletPasswordChanged: (walletPassword: WalletSetupState['walletPassword']) => void
+  walletPasswordChanged: (
+    walletPassword: WalletSetupState['walletPassword'],
+  ) => void
   networkIdChanged: (networkId: WalletSetupState['networkId']) => void
-  walletImplementationIdChanged: (walletImplementationId: WalletSetupState['walletImplementationId']) => void
+  walletImplementationIdChanged: (
+    walletImplementationId: WalletSetupState['walletImplementationId'],
+  ) => void
   publicKeyHexChanged: (publicKeyHex: WalletSetupState['publicKeyHex']) => void
   pathChanged: (path: WalletSetupState['path']) => void
   hwDeviceInfoChanged: (path: WalletSetupState['hwDeviceInfo']) => void

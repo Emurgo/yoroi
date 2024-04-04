@@ -10,7 +10,9 @@ describe('State Actions', () => {
   it('unknown', () => {
     const action = {type: 'UNKNOWN'} as unknown as WalletSetupAction
 
-    expect(() => walletSetupReducer(walletSetupDefaultState, action)).toThrow('walletSetupReducer invalid action')
+    expect(() => walletSetupReducer(walletSetupDefaultState, action)).toThrow(
+      'walletSetupReducer invalid action',
+    )
   })
 
   it('MnemonicChanged', () => {
@@ -66,6 +68,26 @@ describe('State Actions', () => {
     const state = walletSetupReducer(walletSetupDefaultState, action)
 
     expect(state.walletImplementationId).toBe(action.walletImplementationId)
+  })
+
+  it('HwDeviceInfoChanged', () => {
+    const action: WalletSetupAction = {
+      type: WalletSetupActionType.HwDeviceInfoChanged,
+      hwDeviceInfo: {
+        bip44AccountPublic: 'fake-key',
+        hwFeatures: {
+          deviceId: 'fake-sevice-id',
+          deviceObj: null,
+          model: 'Nano',
+          serialHex: 'aqerkfofk',
+          vendor: 'ledger.com',
+        },
+      },
+    }
+
+    const state = walletSetupReducer(walletSetupDefaultState, action)
+
+    expect(state.hwDeviceInfo).toBe(action.hwDeviceInfo)
   })
 
   it('Reset', () => {

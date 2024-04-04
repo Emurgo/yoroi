@@ -1,5 +1,6 @@
 import {useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
+import {useWalletSetup} from '@yoroi/wallet-setup'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
@@ -12,7 +13,6 @@ import {isEmptyString} from '../../../../utils'
 import {makeKeys} from '../../../../yoroi-wallets/cardano/shelley/makeKeys'
 import {MnemonicInput} from '../../common/MnemonicInput'
 import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
-import {useWalletSetup} from '../../common/translators/reactjs/hooks/useWalletSetup'
 import {useStrings} from '../../common/useStrings'
 
 export const RestoreWalletScreen = () => {
