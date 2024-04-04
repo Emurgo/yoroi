@@ -1,8 +1,8 @@
 import * as React from 'react'
 
-import {useSelectedWallet} from '../../../SelectedWallet'
 import {AddressMode} from '../../../wallet-manager/types'
 import {useReceiveAddresses} from '../../../yoroi-wallets/hooks'
+import {useSelectedWallet} from '../../AddWallet/common/Context'
 
 type ReceiveAddressesStatus = {
   used: string[]

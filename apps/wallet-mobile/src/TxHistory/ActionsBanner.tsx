@@ -9,6 +9,7 @@ import Animated, {FadeInDown, FadeOutDown, Layout} from 'react-native-reanimated
 
 import {useCopy} from '../../src/legacy/useCopy'
 import {Icon, Spacer, Text} from '../components'
+import {useSelectedWallet} from '../features/AddWallet/common/Context'
 import {useReceive} from '../features/Receive/common/ReceiveProvider'
 import {useReceiveAddressesStatus} from '../features/Receive/common/useReceiveAddressesStatus'
 import {messages as receiveMessages} from '../features/Receive/common/useStrings'
@@ -16,7 +17,6 @@ import {useSwapForm} from '../features/Swap/common/SwapFormProvider'
 import {actionMessages} from '../i18n/global-messages'
 import {useMetrics} from '../metrics/metricsManager'
 import {TxHistoryRouteNavigation} from '../navigation'
-import {useSelectedWallet} from '../SelectedWallet'
 import {useAddressModeManager} from '../wallet-manager/useAddressModeManager'
 import {useTokenInfo} from '../yoroi-wallets/hooks'
 

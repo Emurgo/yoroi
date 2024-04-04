@@ -3,8 +3,8 @@ import React from 'react'
 import {Text} from 'react-native'
 
 import {QueryProvider} from '../../.storybook/decorators'
+import {SelectedWalletProvider} from '../features/AddWallet/common/Context'
 import {SearchProvider} from '../Search/SearchContext'
-import {SelectedWalletProvider} from '../SelectedWallet'
 import {mocks} from '../yoroi-wallets/mocks'
 import {NoNftsScreen} from './NoNftsScreen'
 

@@ -3,8 +3,8 @@ import {exchangeDefaultState, ExchangeProvider, successManagerMock} from '@yoroi
 import {produce} from 'immer'
 import React from 'react'
 
-import {SelectedWalletProvider} from '../../../../SelectedWallet'
 import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks'
+import {SelectedWalletProvider} from '../../../AddWallet/common/Context'
 import {CreateExchangeOrderScreen} from './CreateExchangeOrderScreen'
 
 storiesOf('Exchange CreateExchangeOrderScreen', module) //

@@ -14,7 +14,6 @@ import {errorMessages} from '../../../../i18n/global-messages'
 import {isNightly} from '../../../../legacy/config'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useWalletNavigation} from '../../../../navigation'
-import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../../../SelectedWallet'
 import {WalletMeta} from '../../../../wallet-manager/types'
 import {useWalletManager} from '../../../../wallet-manager/WalletManagerContext'
 import * as HASKELL_SHELLEY from '../../../../yoroi-wallets/cardano/constants/mainnet/constants'
@@ -24,6 +23,8 @@ import {InvalidState} from '../../../../yoroi-wallets/cardano/errors'
 import {isJormungandr} from '../../../../yoroi-wallets/cardano/networks'
 import {useOpenWallet, useWalletMetas} from '../../../../yoroi-wallets/hooks'
 import {useLinksRequestWallet} from '../../../Links/common/useLinksRequestWallet'
+import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../common/Context'
+import {useWalletSetup} from '../../common/translators/reactjs/hooks/useWalletSetup'
 import {useStrings} from '../../common/useStrings'
 import {SupportIllustration} from '../../illustrations/SupportIllustration'
 import {WalletListItem} from './WalletListItem'
@@ -156,18 +157,20 @@ const ShelleyButton = () => {
   const navigation = useNavigation()
   const strings = useStrings()
   const {styles} = useStyles()
+  const {networkIdChanged, walletImplementationIdChanged, reset: resetWalletSetup} = useWalletSetup()
 
   return (
     <Button
-      onPress={() =>
+      onPress={() => {
+        resetWalletSetup()
+
+        networkIdChanged(HASKELL_SHELLEY.NETWORK_ID)
+        walletImplementationIdChanged(HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID)
+
         navigation.navigate('new-wallet', {
           screen: 'choose-create-restore',
-          params: {
-            networkId: HASKELL_SHELLEY.NETWORK_ID,
-            walletImplementationId: HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID,
-          },
         })
-      }
+      }}
       title={strings.addWalletButton}
       style={styles.topButton}
     />
@@ -178,20 +181,22 @@ const OnlyNightlyShelleyTestnetButton = () => {
   const navigation = useNavigation()
   const strings = useStrings()
   const {styles} = useStyles()
+  const {networkIdChanged, walletImplementationIdChanged, reset: resetWalletSetup} = useWalletSetup()
 
   if (!isNightly() && !__DEV__) return null
 
   return (
     <Button
-      onPress={() =>
+      onPress={() => {
+        resetWalletSetup()
+
+        networkIdChanged(HASKELL_SHELLEY_TESTNET.NETWORK_ID)
+        walletImplementationIdChanged(HASKELL_SHELLEY_TESTNET.WALLET_IMPLEMENTATION_ID)
+
         navigation.navigate('new-wallet', {
           screen: 'choose-create-restore',
-          params: {
-            networkId: HASKELL_SHELLEY_TESTNET.NETWORK_ID,
-            walletImplementationId: HASKELL_SHELLEY_TESTNET.WALLET_IMPLEMENTATION_ID,
-          },
         })
-      }
+      }}
       title={`${strings.addWalletButton} (preprod)`}
       style={styles.button}
       testID="addWalletPreprodShelleyButton"
@@ -203,16 +208,18 @@ const OnlyNightlyShelleySanchonetButton = () => {
   const navigation = useNavigation()
   const strings = useStrings()
   const {styles} = useStyles()
+  const {networkIdChanged, walletImplementationIdChanged, reset: resetWalletSetup} = useWalletSetup()
 
   if (!isNightly() && !__DEV__) return null
 
   const handleOnPress = () => {
+    resetWalletSetup()
+
+    networkIdChanged(SANCHONET.NETWORK_ID)
+    walletImplementationIdChanged(SANCHONET.WALLET_IMPLEMENTATION_ID)
+
     navigation.navigate('new-wallet', {
       screen: 'choose-create-restore',
-      params: {
-        networkId: SANCHONET.NETWORK_ID,
-        walletImplementationId: SANCHONET.WALLET_IMPLEMENTATION_ID,
-      },
     })
   }
 

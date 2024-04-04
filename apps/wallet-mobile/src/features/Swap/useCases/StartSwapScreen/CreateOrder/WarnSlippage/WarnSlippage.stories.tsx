@@ -4,8 +4,8 @@ import React from 'react'
 import {Button, StyleSheet, View} from 'react-native'
 
 import {useModal} from '../../../../../../components'
-import {SelectedWalletProvider} from '../../../../../../SelectedWallet'
 import {mocks as walletMocks} from '../../../../../../yoroi-wallets/mocks'
+import {SelectedWalletProvider} from '../../../../../AddWallet/common/Context'
 import {useStrings} from '../../../../common/strings'
 import {WarnSlippage} from './WarnSlippage'
 

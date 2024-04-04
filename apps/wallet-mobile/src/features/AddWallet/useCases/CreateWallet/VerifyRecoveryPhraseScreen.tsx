@@ -10,8 +10,9 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
 import {WalletInitRouteNavigation} from '../../../../navigation'
-import {mockAddWallet} from '../../common/mocks'
+import {makeKeys} from '../../../../yoroi-wallets/cardano/shelley/makeKeys'
 import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
+import {useWalletSetup} from '../../common/translators/reactjs/hooks/useWalletSetup'
 import {useStrings} from '../../common/useStrings'
 import {Alert as AlertIllustration} from '../../illustrations/Alert'
 import {Check2 as Check2Illustration} from '../../illustrations/Check2'
@@ -21,7 +22,7 @@ export const VerifyRecoveryPhraseScreen = () => {
   const bold = useBold()
   const navigation = useNavigation<WalletInitRouteNavigation>()
   const strings = useStrings()
-  const mnemonic = mockAddWallet.mnemonic
+  const {mnemonic, publicKeyHexChanged} = useWalletSetup()
 
   const mnemonicEntries: Array<Entry> = mnemonic
     .split(' ')
@@ -108,12 +109,11 @@ export const VerifyRecoveryPhraseScreen = () => {
           title="next"
           style={styles.button}
           disabled={disabled}
-          onPress={() =>
-            navigation.navigate('wallet-details-form', {
-              networkId: 1,
-              walletImplementationId: 'haskell-byron',
-            })
-          }
+          onPress={async () => {
+            const {accountPubKeyHex} = await makeKeys({mnemonic})
+            publicKeyHexChanged(accountPubKeyHex)
+            navigation.navigate('wallet-details-form')
+          }}
         />
 
         <Space height="s" />
@@ -159,7 +159,7 @@ type MnemonicInputProps = {
 const MnemonicInput = ({defaultMnemonic, userEntries, onPress}: MnemonicInputProps) => {
   const {styles, colors} = useStyles()
 
-  const mnemonic = mockAddWallet.mnemonic // mocked value
+  const {mnemonic} = useWalletSetup()
 
   const isPhraseComplete = userEntries.length === defaultMnemonic.length
   const isPhraseValid = userEntries.map((entry) => entry.word).join(' ') === mnemonic

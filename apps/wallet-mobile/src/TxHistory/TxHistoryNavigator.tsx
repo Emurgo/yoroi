@@ -20,6 +20,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View, ViewProps} from 'react-native'
 
 import {Boundary, Icon, Spacer} from '../components'
+import {useSelectedWallet} from '../features/AddWallet/common/Context'
 import {claimApiMaker} from '../features/Claim/module/api'
 import {ClaimProvider} from '../features/Claim/module/ClaimProvider'
 import {ShowSuccessScreen} from '../features/Claim/useCases/ShowSuccessScreen'
@@ -59,7 +60,6 @@ import {
   TxHistoryRoutes,
   useWalletNavigation,
 } from '../navigation'
-import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {useFrontendFees, useStakingKey, useWalletName} from '../yoroi-wallets/hooks'
 import {isMainnetNetworkId} from '../yoroi-wallets/utils'

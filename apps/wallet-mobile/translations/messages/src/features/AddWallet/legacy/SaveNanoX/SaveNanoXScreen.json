@@ -1,0 +1,17 @@
+[
+  {
+    "id": "components.walletinit.connectnanox.savenanoxscreen.ledgerWalletNameSuggestion",
+    "defaultMessage": "!!!My Ledger Wallet",
+    "file": "src/features/AddWallet/legacy/SaveNanoX/SaveNanoXScreen.tsx",
+    "start": {
+      "line": 75,
+      "column": 30,
+      "index": 2468
+    },
+    "end": {
+      "line": 78,
+      "column": 3,
+      "index": 2605
+    }
+  }
+]

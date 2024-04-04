@@ -4,9 +4,9 @@ import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Button, Spacer, useModal} from '../../../../../../components'
-import {useSelectedWallet} from '../../../../../../SelectedWallet'
 import {useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../../yoroi-wallets/utils'
+import {useSelectedWallet} from '../../../../../AddWallet/common/Context'
 import {PRICE_PRECISION} from '../../../../common/constants'
 import {useStrings} from '../../../../common/strings'
 

@@ -7,8 +7,8 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Text} from '../../../components'
 import {LoadingOverlay} from '../../../components/LoadingOverlay'
-import {useSelectedWallet, useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../../SelectedWallet'
 import {useDisableEasyConfirmation} from '../../../yoroi-wallets/hooks'
+import {useSelectedWallet, useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../AddWallet/common/Context'
 
 export const DisableEasyConfirmationScreen = () => {
   const strings = useStrings()

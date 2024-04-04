@@ -3,11 +3,11 @@ import {type StakingKeyState, governanceApiMaker, governanceManagerMaker, useSta
 import * as React from 'react'
 
 import {CONFIG} from '../../../../legacy/config'
-import {useSelectedWallet} from '../../../../SelectedWallet'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useStakingKey, useTipStatus} from '../../../../yoroi-wallets/hooks'
 import {isMainnetNetworkId, isSanchoNetworkId} from '../../../../yoroi-wallets/utils'
 import {CardanoMobile} from '../../../../yoroi-wallets/wallets'
+import {useSelectedWallet} from '../../../AddWallet/common/Context'
 import {GovernanceVote} from '../types'
 
 export const useIsParticipatingInGovernance = (wallet: YoroiWallet) => {

@@ -2,9 +2,9 @@ import {storiesOf} from '@storybook/react-native'
 import {GovernanceManager, GovernanceProvider} from '@yoroi/staking'
 import React from 'react'
 
-import {SelectedWalletProvider} from '../../../../../SelectedWallet'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {mocks} from '../../../../../yoroi-wallets/mocks'
+import {SelectedWalletProvider} from '../../../../AddWallet/common/Context'
 import {mocks as governanceMocks, SafeArea} from '../../common'
 import {ChangeVoteScreen} from './ChangeVoteScreen'
 

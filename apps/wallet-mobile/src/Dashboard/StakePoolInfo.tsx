@@ -4,7 +4,7 @@ import {ActivityIndicator, Linking, StyleSheet, View} from 'react-native'
 import {useQuery, UseQueryOptions} from 'react-query'
 
 import {Button, CopyButton, Text, TitledCard} from '../components'
-import {useSelectedWallet} from '../SelectedWallet'
+import {useSelectedWallet} from '../features/AddWallet/common/Context'
 import {COLORS} from '../theme'
 import {isEmptyString} from '../utils/utils'
 import {YoroiWallet} from '../yoroi-wallets/cardano/types'

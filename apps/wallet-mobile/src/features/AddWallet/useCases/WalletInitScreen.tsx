@@ -37,12 +37,9 @@ export const WalletInitScreen = () => {
           <ButtonCard
             title={strings.restoreWalletButtonCard}
             icon="restore"
-            onPress={() =>
-              navigation.navigate('restore-wallet-form', {
-                networkId: 1,
-                walletImplementationId: 'haskell-shelley',
-              })
-            }
+            onPress={() => {
+              navigation.navigate('restore-wallet-form')
+            }}
           />
 
           <Space height="l" />
@@ -52,8 +49,6 @@ export const WalletInitScreen = () => {
             icon="hardware"
             onPress={() => {
               navigation.navigate('check-nano-x', {
-                networkId: 1,
-                walletImplementationId: 'haskell-byron',
                 useUSB: false,
               })
             }}

@@ -4,9 +4,9 @@ import React from 'react'
 import {Keyboard, TextInput} from 'react-native'
 
 import {useLanguage} from '../../../i18n'
-import {useSelectedWallet} from '../../../SelectedWallet'
 import {useBalances, useTokenInfo} from '../../../yoroi-wallets/hooks'
 import {Amounts, Quantities} from '../../../yoroi-wallets/utils'
+import {useSelectedWallet} from '../../AddWallet/common/Context'
 import {PRICE_PRECISION} from './constants'
 import {useStrings} from './strings'
 

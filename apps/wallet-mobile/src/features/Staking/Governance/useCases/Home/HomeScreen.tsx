@@ -16,7 +16,6 @@ import {Button, Spacer, useModal} from '../../../../../components'
 import {useStakingInfo} from '../../../../../Dashboard/StakePoolInfos'
 import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useUnsafeParams, useWalletNavigation} from '../../../../../navigation'
-import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {
   useCreateGovernanceTx,
   useStakingKey,
@@ -24,6 +23,7 @@ import {
   useWalletEvent,
 } from '../../../../../yoroi-wallets/hooks'
 import {TransactionInfo} from '../../../../../yoroi-wallets/types'
+import {useSelectedWallet} from '../../../../AddWallet/common/Context'
 import {Action, LearnMoreLink, useNavigateTo, useStrings} from '../../common'
 import {mapStakingKeyStateToGovernanceAction} from '../../common/helpers'
 import {Routes} from '../../common/navigation'

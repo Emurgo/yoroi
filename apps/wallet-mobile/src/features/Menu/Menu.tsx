@@ -13,8 +13,8 @@ import {Boundary, Icon, Spacer, Text} from '../../components'
 import {usePrefetchStakingInfo} from '../../Dashboard/StakePoolInfos'
 import {useMetrics} from '../../metrics/metricsManager'
 import {defaultStackNavigationOptions, useWalletNavigation} from '../../navigation'
-import {useSelectedWallet} from '../../SelectedWallet'
 import {lightPalette} from '../../theme'
+import {useSelectedWallet} from '../AddWallet/common/Context'
 import {useIsGovernanceFeatureEnabled} from '../Staking/Governance'
 
 const MenuStack = createStackNavigator()

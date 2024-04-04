@@ -4,10 +4,10 @@ import {useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 
 import {Boundary, Spacer, Text} from '../components'
+import {useSelectedWallet} from '../features/AddWallet/common/Context'
 import {usePrivacyMode} from '../features/Settings/PrivacyMode/PrivacyMode'
 import globalMessages from '../i18n/global-messages'
 import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../legacy/format'
-import {useSelectedWallet} from '../SelectedWallet'
 import {useLockedAmount} from '../yoroi-wallets/hooks'
 
 export const LockedDeposit = () => {

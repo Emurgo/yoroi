@@ -1,7 +1,9 @@
-import {useNavigation} from '@react-navigation/native'
+import {NetworkError} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
+import {useIntl} from 'react-intl'
 import {
+  InteractionManager,
   Keyboard,
   Linking,
   ScrollView,
@@ -16,10 +18,15 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Icon, TextInput, useModal} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
+import {showErrorDialog} from '../../../../dialogs'
 import {debugWalletInfo, features} from '../../../../features'
+import {errorMessages} from '../../../../i18n/global-messages'
+import {useWalletNavigation} from '../../../../navigation'
 import {isEmptyString} from '../../../../utils'
+import {AddressMode} from '../../../../wallet-manager/types'
 import {useWalletManager} from '../../../../wallet-manager/WalletManagerContext'
-import {useWalletNames} from '../../../../yoroi-wallets/hooks'
+import {useCreateWallet, usePlate, useWalletNames} from '../../../../yoroi-wallets/hooks'
+import {WalletImplementationId} from '../../../../yoroi-wallets/types'
 import {
   getWalletNameError,
   REQUIRED_PASSWORD_LENGTH,
@@ -29,8 +36,8 @@ import {
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
 import {YoroiZendeskLink} from '../../common/contants'
 import {LearnMoreButton} from '../../common/LearnMoreButton/LearnMoreButton'
-import {mockAddWallet} from '../../common/mocks'
 import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
+import {useWalletSetup} from '../../common/translators/reactjs/hooks/useWalletSetup'
 import {useStrings} from '../../common/useStrings'
 import {Info as InfoIllustration} from '../../illustrations/Info'
 
@@ -48,13 +55,15 @@ const useSizeModal = () => {
   return {HEIGHT_MODAL_NAME_PASSWORD, HEIGHT_MODAL_CHECKSUM} as const
 }
 
+// when restoring, later will be part of the onboarding
+const addressMode: AddressMode = 'multiple'
 export const RestoreWalletDetailsScreen = () => {
   const bold = useBold()
   const {styles} = useStyles()
   const {HEIGHT_MODAL_NAME_PASSWORD, HEIGHT_MODAL_CHECKSUM} = useSizeModal()
   const {openModal, closeModal} = useModal()
-  const navigation = useNavigation()
   const strings = useStrings()
+  const {resetToWalletSelection} = useWalletNavigation()
   const walletManager = useWalletManager()
   const {walletNames} = useWalletNames(walletManager)
   const [name, setName] = React.useState(features.prefillWalletInfo ? debugWalletInfo.WALLET_NAME : '')
@@ -72,12 +81,30 @@ export const RestoreWalletDetailsScreen = () => {
     features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '',
   )
   const passwordErrors = validatePassword(password, passwordConfirmation)
+
+  const {mnemonic, networkId, publicKeyHex, walletImplementationId} = useWalletSetup()
+  const plate = usePlate({networkId, publicKeyHex})
+
   const passwordErrorText = passwordErrors.passwordIsWeak
     ? strings.passwordStrengthRequirement({requiredPasswordLength: REQUIRED_PASSWORD_LENGTH})
     : undefined
   const passwordConfirmationErrorText = passwordErrors.matchesConfirmation
     ? strings.repeatPasswordInputError
     : undefined
+
+  const intl = useIntl()
+  const {createWallet, isLoading, isSuccess} = useCreateWallet({
+    onSuccess: () => {
+      resetToWalletSelection()
+    },
+    onError: (error) => {
+      InteractionManager.runAfterInteractions(() => {
+        return error instanceof NetworkError
+          ? showErrorDialog(errorMessages.networkError, intl)
+          : showErrorDialog(errorMessages.generalError, intl, {message: error.message})
+      })
+    },
+  })
 
   const showModalTipsPassword = () => {
     Keyboard.dismiss()
@@ -127,7 +154,7 @@ export const RestoreWalletDetailsScreen = () => {
           <View>
             <CardAboutPhrase
               title={strings.walletChecksumModalCardTitle}
-              checksumImage={mockAddWallet.imageChecksum}
+              checksumImage={plate.accountPlate.ImagePart}
               checksumLine={1}
               linesOfText={[
                 strings.walletChecksumModalCardFirstItem,
@@ -219,10 +246,14 @@ export const RestoreWalletDetailsScreen = () => {
         />
 
         <View style={styles.checksum}>
-          <Icon.WalletAccount iconSeed={mockAddWallet.imageChecksum} style={styles.walletChecksum} />
+          <Icon.WalletAccount iconSeed={plate.accountPlate.ImagePart} style={styles.walletChecksum} />
+
+          <Space width="s" />
 
           <Text style={styles.plateNumber}>
-            {mockAddWallet.checksum}
+            {plate.accountPlate.TextPart}
+
+            <Space width="s" />
 
             <TouchableOpacity onPress={showModalTipsPlateNumber}>
               <InfoIllustration />
@@ -235,7 +266,19 @@ export const RestoreWalletDetailsScreen = () => {
         <Button
           title={strings.next}
           style={styles.button}
-          onPress={() => navigation.navigate('app-root', {screen: 'wallet-selection'})}
+          onPress={
+            isLoading || isSuccess
+              ? NOOP
+              : () =>
+                  createWallet({
+                    name,
+                    password,
+                    mnemonicPhrase: mnemonic,
+                    networkId,
+                    walletImplementationId: walletImplementationId as WalletImplementationId,
+                    addressMode,
+                  })
+          }
           disabled={Object.keys(passwordErrors).length > 0 || Object.keys(nameErrors).length > 0}
         />
 
@@ -290,3 +333,5 @@ const useStyles = () => {
 
   return {styles} as const
 }
+
+const NOOP = () => undefined

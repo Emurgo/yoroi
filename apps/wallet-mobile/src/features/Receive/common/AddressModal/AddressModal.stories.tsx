@@ -2,8 +2,8 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
 import {WithModalProps} from '../../../../../.storybook/decorators'
-import {SelectedWalletProvider} from '../../../../SelectedWallet'
 import {mocks} from '../../../../yoroi-wallets/mocks'
+import {SelectedWalletProvider} from '../../../AddWallet/common/Context'
 import {AddressModal} from './AddressModal'
 
 const address =

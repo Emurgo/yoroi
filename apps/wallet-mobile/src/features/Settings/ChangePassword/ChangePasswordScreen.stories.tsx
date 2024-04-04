@@ -2,9 +2,9 @@ import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {SelectedWalletProvider} from '../../../SelectedWallet'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {mocks} from '../../../yoroi-wallets/mocks'
+import {SelectedWalletProvider} from '../../AddWallet/common/Context'
 import {ChangePasswordScreen} from './ChangePasswordScreen'
 
 const wallet: YoroiWallet = {

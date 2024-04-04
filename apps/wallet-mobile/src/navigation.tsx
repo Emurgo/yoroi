@@ -14,8 +14,7 @@ import {Dimensions, TouchableOpacity, TouchableOpacityProps, ViewStyle} from 're
 import {Icon} from './components'
 import {ScanFeature} from './features/Scan/common/types'
 import {Routes as StakingGovernanceRoutes} from './features/Staking/Governance/common/navigation'
-import {HWDeviceInfo} from './yoroi-wallets/hw'
-import {NetworkId, WalletImplementationId, YoroiUnsignedTx} from './yoroi-wallets/types'
+import {YoroiUnsignedTx} from './yoroi-wallets/types'
 
 // prettier-ignore
 export const useUnsafeParams = <Params, >() => {
@@ -114,73 +113,23 @@ export type WalletStackRoutes = {
 export type WalletStackRouteNavigation = StackNavigationProp<WalletStackRoutes>
 
 export type WalletInitRoutes = {
-  'choose-create-restore': {
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
-  }
+  'choose-create-restore': undefined
   'initial-choose-create-restore': undefined
-  'wallet-details-form': {
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
-  }
-  'restore-wallet-form': {
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
-  }
-  'restore-wallet-details': {
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
-  }
-  'import-read-only': {
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
-  }
-  'save-read-only': {
-    publicKeyHex: string
-    path: number[]
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
-  }
+  'wallet-details-form': undefined
+  'restore-wallet-form': undefined
+  'restore-wallet-details': undefined
+  'import-read-only': undefined
+  'save-read-only': undefined
   'check-nano-x': {
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
     useUSB: boolean
   }
   'connect-nano-x': {
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
     useUSB: boolean
   }
-  'save-nano-x': {
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
-    hwDeviceInfo: HWDeviceInfo
-  }
+  'save-nano-x': undefined
   'about-recovery-phase': undefined
-  'recovery-phrase-mnemonic': {
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
-    password: string
-    name: string
-    mnemonic: string
-  }
-  'verify-recovery-phrase-mnemonic': {
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
-    password: string
-    name: string
-    mnemonic: string
-  }
-  'wallet-restore-wallet-checksum': {
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
-    phrase: string
-  }
-  'wallet-credentials': {
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
-    phrase: string
-  }
+  'recovery-phrase-mnemonic': undefined
+  'verify-recovery-phrase-mnemonic': undefined
 }
 export type WalletInitRouteNavigation = StackNavigationProp<WalletInitRoutes>
 

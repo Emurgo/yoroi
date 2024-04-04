@@ -53,15 +53,7 @@ export const AboutRecoveryPhraseScreen = () => {
       <Button
         title={strings.next}
         style={styles.button}
-        onPress={() =>
-          navigation.navigate('recovery-phrase-mnemonic', {
-            mnemonic: '',
-            name: '',
-            networkId: 1,
-            password: '',
-            walletImplementationId: 'haskell-byron',
-          })
-        }
+        onPress={() => navigation.navigate('recovery-phrase-mnemonic')}
       />
     </SafeAreaView>
   )

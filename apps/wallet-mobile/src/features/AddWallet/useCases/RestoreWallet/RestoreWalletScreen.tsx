@@ -9,15 +9,18 @@ import {Button} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
 import {WalletInitRouteNavigation} from '../../../../navigation'
 import {isEmptyString} from '../../../../utils'
+import {makeKeys} from '../../../../yoroi-wallets/cardano/shelley/makeKeys'
 import {MnemonicInput} from '../../common/MnemonicInput'
 import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
+import {useWalletSetup} from '../../common/translators/reactjs/hooks/useWalletSetup'
 import {useStrings} from '../../common/useStrings'
 
 export const RestoreWalletScreen = () => {
   const {styles} = useStyles()
   const bold = useBold()
-  const [phrase, setPhrase] = React.useState('')
+  const [mnemonic, setMnemonic] = React.useState('')
   const navigation = useNavigation<WalletInitRouteNavigation>()
+  const {publicKeyHexChanged, mnemonicChanged} = useWalletSetup()
 
   const strings = useStrings()
 
@@ -36,20 +39,20 @@ export const RestoreWalletScreen = () => {
           <Space height="xl" />
         </View>
 
-        <MnemonicInput length={mnemonicLength} onDone={setPhrase} />
+        <MnemonicInput length={mnemonicLength} onDone={setMnemonic} />
       </ScrollView>
 
       <View style={styles.padding}>
         <Button
           title={strings.next}
           style={styles.button}
-          disabled={isEmptyString(phrase)}
-          onPress={() =>
-            navigation.navigate('restore-wallet-details', {
-              networkId: 1,
-              walletImplementationId: 'haskell-shelley',
-            })
-          }
+          disabled={isEmptyString(mnemonic)}
+          onPress={async () => {
+            const {accountPubKeyHex} = await makeKeys({mnemonic})
+            mnemonicChanged(mnemonic)
+            publicKeyHexChanged(accountPubKeyHex)
+            navigation.navigate('restore-wallet-details')
+          }}
         />
 
         <Space height="s" />

@@ -1,5 +1,6 @@
 import {useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
+import {generateMnemonic} from 'bip39'
 import {BlurView} from 'expo-blur'
 import * as React from 'react'
 import {
@@ -21,8 +22,8 @@ import {WalletInitRouteNavigation} from '../../../../navigation'
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
 import {YoroiZendeskLink} from '../../common/contants'
 import {LearnMoreButton} from '../../common/LearnMoreButton/LearnMoreButton'
-import {mockAddWallet} from '../../common/mocks'
 import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
+import {useWalletSetup} from '../../common/translators/reactjs/hooks/useWalletSetup'
 import {useStrings} from '../../common/useStrings'
 import {EyeClosed as EyeClosedIllustration} from '../../illustrations/EyeClosed'
 import {EyeOpen as EyeOpenIllustration} from '../../illustrations/EyeOpen'
@@ -45,7 +46,10 @@ export const RecoveryPhraseScreen = () => {
   const [isBlur, setIsBlur] = React.useState(true)
   const navigation = useNavigation<WalletInitRouteNavigation>()
   const strings = useStrings()
+  const {mnemonicChanged} = useWalletSetup()
   const bold = useBold()
+
+  const mnemonic = React.useMemo(() => generateMnemonic(), [])
 
   const handleOnShowModal = () => {
     Keyboard.dismiss()
@@ -99,7 +103,7 @@ export const RecoveryPhraseScreen = () => {
         <View style={styles.mnemonicWords}>
           <BlurView intensity={isBlur ? 14 : 0} style={styles.blurView} />
 
-          {mockAddWallet.mnemonic.split(' ').map((word, index) => (
+          {mnemonic.split(' ').map((word, index) => (
             <View key={`mnemonic-${index}`} testID={`mnemonic-${index}`} style={styles.mnemonicTextContainer}>
               <LinearGradient
                 style={[StyleSheet.absoluteFill, {opacity: 1}]}
@@ -131,15 +135,10 @@ export const RecoveryPhraseScreen = () => {
           title={strings.next}
           style={styles.button}
           disabled={isBlur}
-          onPress={() =>
-            navigation.navigate('verify-recovery-phrase-mnemonic', {
-              mnemonic: '',
-              name: '',
-              networkId: 1,
-              password: '',
-              walletImplementationId: 'haskell-byron',
-            })
-          }
+          onPress={() => {
+            mnemonicChanged(mnemonic)
+            navigation.navigate('verify-recovery-phrase-mnemonic')
+          }}
         />
 
         <Space height="s" />

@@ -3,8 +3,8 @@ import {mockSwapManager, SwapProvider} from '@yoroi/swap'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {SelectedWalletProvider} from '../../../../../SelectedWallet'
 import {mocks as walletMocks} from '../../../../../yoroi-wallets/mocks'
+import {SelectedWalletProvider} from '../../../../AddWallet/common/Context'
 import {ShowSubmittedTxScreen} from './ShowSubmittedTxScreen'
 
 storiesOf('Submitted Tx Screen', module)

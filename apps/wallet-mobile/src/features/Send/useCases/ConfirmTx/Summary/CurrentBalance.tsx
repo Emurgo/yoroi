@@ -4,9 +4,9 @@ import {StyleSheet, View} from 'react-native'
 
 import {Text} from '../../../../../components/Text'
 import {formatTokenWithText} from '../../../../../legacy/format'
-import {useSelectedWallet} from '../../../../../SelectedWallet/Context/SelectedWalletContext'
 import {useBalances} from '../../../../../yoroi-wallets/hooks'
 import {Amounts} from '../../../../../yoroi-wallets/utils/utils'
+import {useSelectedWallet} from '../../../../AddWallet/common/Context'
 import {useStrings} from '../../../common/strings'
 
 export const CurrentBalance = () => {

@@ -1,8 +1,8 @@
 import * as React from 'react'
 
-import {useSelectedWallet} from '../../../../SelectedWallet/Context/SelectedWalletContext'
 import {useBalances} from '../../../../yoroi-wallets/hooks'
 import {Amounts, Quantities} from '../../../../yoroi-wallets/utils/utils'
+import {useSelectedWallet} from '../../../AddWallet/common/Context'
 import {useResetShowBuyBannerSmall} from '../useResetShowBuyBannerSmall'
 import {useShowBuyBannerSmall} from '../useShowBuyBannerSmall'
 import {BuyBannerBig} from './BuyBannerBig'

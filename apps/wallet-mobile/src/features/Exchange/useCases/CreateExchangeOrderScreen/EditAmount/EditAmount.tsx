@@ -3,9 +3,9 @@ import BigNumber from 'bignumber.js'
 import * as React from 'react'
 
 import {useLanguage} from '../../../../../i18n'
-import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {useBalance, useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
+import {useSelectedWallet} from '../../../../AddWallet/common/Context'
 import {AmountCard} from '../../../common/AmountCard/AmountCard'
 import {useStrings} from '../../../common/useStrings'
 

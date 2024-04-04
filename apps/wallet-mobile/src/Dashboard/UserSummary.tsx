@@ -4,10 +4,10 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 
 import {Button, Icon, Text, TitledCard} from '../components'
+import {useSelectedWallet} from '../features/AddWallet/common/Context'
 import {usePrivacyMode} from '../features/Settings/PrivacyMode/PrivacyMode'
 import globalMessages from '../i18n/global-messages'
 import {formatAdaWithText} from '../legacy/format'
-import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {asQuantity} from '../yoroi-wallets/utils'
 
