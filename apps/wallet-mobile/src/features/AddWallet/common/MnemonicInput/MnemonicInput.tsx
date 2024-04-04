@@ -1,7 +1,16 @@
 import {useTheme} from '@yoroi/theme'
 import {validateMnemonic, wordlists} from 'bip39'
 import * as React from 'react'
-import {Keyboard, ScrollView, StyleSheet, Text, TextInput as RNTextInput, TouchableOpacity, View} from 'react-native'
+import {
+  Keyboard,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput as RNTextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 
 import {Menu, useScrollView} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
@@ -209,9 +218,12 @@ const MnemonicWordInput = React.forwardRef<RNTextInput, MnemonicWordInputProps>(
             value={word}
             onFocus={(e) => {
               // selectTextOnFocus buggy on ios
-              e.currentTarget.setNativeProps({
-                selection: {start: 0, end: word?.length},
-              })
+
+              if (Platform.OS === 'ios') {
+                e.currentTarget.setNativeProps({
+                  selection: {start: 0, end: word?.length},
+                })
+              }
 
               onFocus()
             }}
@@ -224,6 +236,7 @@ const MnemonicWordInput = React.forwardRef<RNTextInput, MnemonicWordInputProps>(
             blurOnSubmit={false}
             onSubmitEditing={onSubmitEditing}
             dense
+            selectTextOnFocus
             noHelper
             errorDelay={0}
             errorText={error}
@@ -291,7 +304,7 @@ const useStyles = () => {
   const ROW_HEIGHT = 50
   const styles = StyleSheet.create({
     menu: {
-      marginTop: ROW_HEIGHT,
+      paddingTop: Platform.OS === 'ios' ? ROW_HEIGHT : ROW_HEIGHT / 2,
       minWidth: 143,
     },
     menuContent: {

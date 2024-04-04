@@ -84,6 +84,26 @@ describe('WalletSetupContext :: hooks', () => {
     expect(result.current.path).toEqual([3838388338])
   })
 
+  test('setUpTypeChanged', () => {
+    const {result} = renderHook(() => useWalletSetup(), {wrapper})
+
+    act(() => {
+      result.current.setUpTypeChanged('create')
+    })
+
+    expect(result.current.setUpType).toBe('create')
+  })
+
+  test('mnemonicTypeChanged', () => {
+    const {result} = renderHook(() => useWalletSetup(), {wrapper})
+
+    act(() => {
+      result.current.mnemonicTypeChanged(15)
+    })
+
+    expect(result.current.mnemonicType).toBe(15)
+  })
+
   test('reset', () => {
     const {result} = renderHook(() => useWalletSetup(), {wrapper})
 

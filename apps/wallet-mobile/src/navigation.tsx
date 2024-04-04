@@ -114,9 +114,7 @@ export type WalletStackRouteNavigation = StackNavigationProp<WalletStackRoutes>
 
 export type WalletInitRoutes = {
   'choose-create-restore': undefined
-  'choose-network': {
-    flow: 'restore' | 'create' | 'hw'
-  }
+  'choose-network': undefined
   'initial-choose-create-restore': undefined
   'wallet-details-form': undefined
   'restore-wallet-form': undefined

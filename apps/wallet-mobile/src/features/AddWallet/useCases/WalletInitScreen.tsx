@@ -16,7 +16,7 @@ import {useStrings} from '../common/useStrings'
 export const WalletInitScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
-  const {networkIdChanged} = useWalletSetup()
+  const {networkIdChanged, setUpTypeChanged} = useWalletSetup()
 
   const navigation = useNavigation<WalletInitRouteNavigation>()
 
@@ -27,7 +27,8 @@ export const WalletInitScreen = () => {
       return
     }
 
-    navigation.navigate('choose-network', {flow: 'create'})
+    setUpTypeChanged('create')
+    navigation.navigate('choose-network')
   }
 
   const handleRestore = () => {
@@ -37,7 +38,8 @@ export const WalletInitScreen = () => {
       return
     }
 
-    navigation.navigate('choose-network', {flow: 'restore'})
+    setUpTypeChanged('restore')
+    navigation.navigate('choose-network')
   }
 
   const handleHw = () => {
@@ -47,7 +49,8 @@ export const WalletInitScreen = () => {
       return
     }
 
-    navigation.navigate('choose-network', {flow: 'hw'})
+    setUpTypeChanged('hw')
+    navigation.navigate('choose-network')
   }
 
   return (

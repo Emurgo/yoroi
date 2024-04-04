@@ -90,6 +90,28 @@ describe('State Actions', () => {
     expect(state.hwDeviceInfo).toBe(action.hwDeviceInfo)
   })
 
+  it('SetUpTypeChanged', () => {
+    const action: WalletSetupAction = {
+      type: WalletSetupActionType.SetUpTypeChanged,
+      setUpType: 'restore',
+    }
+
+    const state = walletSetupReducer(walletSetupDefaultState, action)
+
+    expect(state.setUpType).toBe(action.setUpType)
+  })
+
+  it('MnemonicTypeChanged', () => {
+    const action: WalletSetupAction = {
+      type: WalletSetupActionType.MnemonicTypeChanged,
+      mnemonicType: 15,
+    }
+
+    const state = walletSetupReducer(walletSetupDefaultState, action)
+
+    expect(state.mnemonicType).toBe(action.mnemonicType)
+  })
+
   it('Reset', () => {
     const action: WalletSetupAction = {
       type: WalletSetupActionType.Reset,
@@ -105,6 +127,8 @@ describe('State Actions', () => {
         publicKeyHex: 'asdd',
         path: [11344, 1325, 6],
         hwDeviceInfo: {foo: 'bar'} as unknown as HWDeviceInfo,
+        setUpType: 'restore',
+        mnemonicType: 15,
       },
       action,
     )

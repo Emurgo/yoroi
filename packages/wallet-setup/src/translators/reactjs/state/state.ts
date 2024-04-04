@@ -38,6 +38,14 @@ export const walletSetupReducer = (
         draft.hwDeviceInfo = action.hwDeviceInfo
         return
 
+      case WalletSetupActionType.SetUpTypeChanged:
+        draft.setUpType = action.setUpType
+        return
+
+      case WalletSetupActionType.MnemonicTypeChanged:
+        draft.mnemonicType = action.mnemonicType
+        return
+
       case WalletSetupActionType.Reset:
         return walletSetupDefaultState
 
@@ -57,6 +65,8 @@ export const walletSetupDefaultState: Readonly<WalletSetupState> = freeze(
     publicKeyHex: '',
     path: [],
     hwDeviceInfo: null,
+    setUpType: null,
+    mnemonicType: null,
   },
   true,
 )
@@ -70,6 +80,8 @@ export type WalletSetupState = {
   publicKeyHex: string
   path: Array<number>
   hwDeviceInfo: HWDeviceInfo | null
+  setUpType: 'restore' | 'create' | 'hw' | null
+  mnemonicType: 15 | 24 | null
 }
 
 export enum WalletSetupActionType {
@@ -81,6 +93,8 @@ export enum WalletSetupActionType {
   PublicKeyHexChanged = 'publicKeyHexChanged',
   PathChanged = 'pathChanged',
   HwDeviceInfoChanged = 'hwDeviceInfoChanged',
+  SetUpTypeChanged = 'setUpTypeChanged',
+  MnemonicTypeChanged = 'mnemonicTypeChanged',
   Reset = 'reset',
 }
 
@@ -118,6 +132,14 @@ export type WalletSetupAction =
       hwDeviceInfo: WalletSetupState['hwDeviceInfo']
     }
   | {
+      type: WalletSetupActionType.SetUpTypeChanged
+      setUpType: WalletSetupState['setUpType']
+    }
+  | {
+      type: WalletSetupActionType.MnemonicTypeChanged
+      mnemonicType: WalletSetupState['mnemonicType']
+    }
+  | {
       type: WalletSetupActionType.Reset
     }
 
@@ -133,7 +155,9 @@ export type WalletSetupActions = {
   ) => void
   publicKeyHexChanged: (publicKeyHex: WalletSetupState['publicKeyHex']) => void
   pathChanged: (path: WalletSetupState['path']) => void
-  hwDeviceInfoChanged: (path: WalletSetupState['hwDeviceInfo']) => void
+  hwDeviceInfoChanged: (hwDeviceInfo: WalletSetupState['hwDeviceInfo']) => void
+  setUpTypeChanged: (setUpType: WalletSetupState['setUpType']) => void
+  mnemonicTypeChanged: (mnemonicType: WalletSetupState['mnemonicType']) => void
   reset: () => void
 }
 
@@ -149,6 +173,8 @@ export const walletSetupInitialContext: WalletSetupContext = freeze(
     publicKeyHexChanged: missingInit,
     pathChanged: missingInit,
     hwDeviceInfoChanged: missingInit,
+    setUpTypeChanged: missingInit,
+    mnemonicTypeChanged: missingInit,
     reset: missingInit,
   },
   true,

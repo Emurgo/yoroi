@@ -53,6 +53,10 @@ export const WalletSetupProvider = ({
       dispatch({type: WalletSetupActionType.PathChanged, path}),
     hwDeviceInfoChanged: (hwDeviceInfo: WalletSetupState['hwDeviceInfo']) =>
       dispatch({type: WalletSetupActionType.HwDeviceInfoChanged, hwDeviceInfo}),
+    setUpTypeChanged: (setUpType: WalletSetupState['setUpType']) =>
+      dispatch({type: WalletSetupActionType.SetUpTypeChanged, setUpType}),
+    mnemonicTypeChanged: (mnemonicType: WalletSetupState['mnemonicType']) =>
+      dispatch({type: WalletSetupActionType.MnemonicTypeChanged, mnemonicType}),
     reset: () => dispatch({type: WalletSetupActionType.Reset}),
   }).current
 

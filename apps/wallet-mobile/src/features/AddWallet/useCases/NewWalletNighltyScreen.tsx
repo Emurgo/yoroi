@@ -1,12 +1,12 @@
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
-import {useWalletSetup} from '@yoroi/wallet-setup'
+import {useWalletSetup, WalletSetupState} from '@yoroi/wallet-setup'
 import * as React from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Space} from '../../../components/Space/Space'
-import {WalletInitRouteNavigation, WalletInitRoutes} from '../../../navigation'
+import {WalletInitRouteNavigation} from '../../../navigation'
 import * as HASKELL_SHELLEY from '../../../yoroi-wallets/cardano/constants/mainnet/constants'
 import * as SANCHONET from '../../../yoroi-wallets/cardano/constants/sanchonet/constants'
 import * as HASKELL_SHELLEY_TESTNET from '../../../yoroi-wallets/cardano/constants/testnet/constants'
@@ -17,25 +17,23 @@ import {useStrings} from '../common/useStrings'
 export const NewWalletNighltyScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
-  const route = useRoute<RouteProp<WalletInitRoutes, 'choose-network'>>()
-  const {networkIdChanged} = useWalletSetup()
-  const {flow} = route.params
+  const {networkIdChanged, setUpType} = useWalletSetup()
 
   const navigateTo = useNavigateTo()
 
   const handleMainnet = () => {
     networkIdChanged(HASKELL_SHELLEY.NETWORK_ID)
-    navigateToFlow(flow, navigateTo)
+    navigateToFlow(setUpType, navigateTo)
   }
 
   const handleRestore = () => {
     networkIdChanged(HASKELL_SHELLEY_TESTNET.NETWORK_ID)
-    navigateToFlow(flow, navigateTo)
+    navigateToFlow(setUpType, navigateTo)
   }
 
   const handleHw = () => {
     networkIdChanged(SANCHONET.NETWORK_ID)
-    navigateToFlow(flow, navigateTo)
+    navigateToFlow(setUpType, navigateTo)
   }
 
   return (
@@ -90,11 +88,8 @@ const useStyles = () => {
   return {styles} as const
 }
 
-const navigateToFlow = (
-  flow: WalletInitRoutes['choose-network']['flow'],
-  navigateTo: ReturnType<typeof useNavigateTo>,
-) => {
-  switch (flow) {
+const navigateToFlow = (setUpType: WalletSetupState['setUpType'], navigateTo: ReturnType<typeof useNavigateTo>) => {
+  switch (setUpType) {
     case 'create':
       navigateTo.create()
       return
