@@ -14,7 +14,7 @@ import {useCreateBip44Wallet} from '../../yoroi-wallets/hooks'
 import {WalletNameForm} from '../WalletNameForm'
 
 // when hw, later will be part of the onboarding
-const addressMode: AddressMode = 'multiple'
+const addressMode: AddressMode = 'single'
 export const SaveNanoXScreen = () => {
   const strings = useStrings()
   const {resetToWalletSelection} = useWalletNavigation()
