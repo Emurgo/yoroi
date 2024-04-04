@@ -80,8 +80,6 @@ export const DiscoverList = () => {
     }
 
     if (haveDAppsConnected && currentTab === DAppTabs.connected) {
-      console.log(1, listDApp.length, listDAppConnected?.length)
-
       return listDApp
         .filter((dApp) => listDAppConnected?.includes(dApp.id))
         .sort((_, __) => _.name.localeCompare(__.name))
@@ -141,8 +139,6 @@ export const DiscoverList = () => {
   }
 
   const loadingDAppsList = fetchingDAppConnected || fetchingDApp
-
-  console.log(getListDApps())
 
   return (
     <View style={[styles.root]}>
