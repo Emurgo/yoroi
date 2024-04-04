@@ -1,11 +1,15 @@
-import {useNavigation} from '@react-navigation/native'
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
+import {useWalletSetup} from '@yoroi/wallet-setup'
 import * as React from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Space} from '../../../components/Space/Space'
-import {WalletInitRouteNavigation} from '../../../navigation'
+import {WalletInitRouteNavigation, WalletInitRoutes} from '../../../navigation'
+import * as HASKELL_SHELLEY from '../../../yoroi-wallets/cardano/constants/mainnet/constants'
+import * as SANCHONET from '../../../yoroi-wallets/cardano/constants/sanchonet/constants'
+import * as HASKELL_SHELLEY_TESTNET from '../../../yoroi-wallets/cardano/constants/testnet/constants'
 import {ButtonCard} from '../common/ButtonCard/ButtonCard'
 import {LogoBanner} from '../common/LogoBanner/LogoBanner'
 import {useStrings} from '../common/useStrings'
@@ -13,8 +17,26 @@ import {useStrings} from '../common/useStrings'
 export const NewWalletNighltyScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
+  const route = useRoute<RouteProp<WalletInitRoutes, 'choose-network'>>()
+  const {networkIdChanged} = useWalletSetup()
+  const {flow} = route.params
 
-  const navigation = useNavigation<WalletInitRouteNavigation>()
+  const navigateTo = useNavigateTo()
+
+  const handleMainnet = () => {
+    networkIdChanged(HASKELL_SHELLEY.NETWORK_ID)
+    navigateToFlow(flow, navigateTo)
+  }
+
+  const handleRestore = () => {
+    networkIdChanged(HASKELL_SHELLEY_TESTNET.NETWORK_ID)
+    navigateToFlow(flow, navigateTo)
+  }
+
+  const handleHw = () => {
+    networkIdChanged(SANCHONET.NETWORK_ID)
+    navigateToFlow(flow, navigateTo)
+  }
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
@@ -29,7 +51,7 @@ export const NewWalletNighltyScreen = () => {
           <ButtonCard
             title={strings.cardanoMainnet}
             subTitle={strings.cardanoMainnetDescription}
-            onPress={() => navigation.navigate('about-recovery-phase')}
+            onPress={handleMainnet}
           />
 
           <Space height="l" />
@@ -37,7 +59,7 @@ export const NewWalletNighltyScreen = () => {
           <ButtonCard
             title={strings.cardanoTestnet}
             subTitle={strings.cardanoTestnetDescription}
-            onPress={() => navigation.navigate('about-recovery-phase')}
+            onPress={handleRestore}
           />
 
           <Space height="l" />
@@ -45,7 +67,7 @@ export const NewWalletNighltyScreen = () => {
           <ButtonCard
             title={strings.cardanoSanchonet}
             subTitle={strings.cardanoSanchonetDescription}
-            onPress={() => navigation.navigate('about-recovery-phase')}
+            onPress={handleHw}
           />
 
           <Space height="l" />
@@ -66,4 +88,33 @@ const useStyles = () => {
   })
 
   return {styles} as const
+}
+
+const navigateToFlow = (
+  flow: WalletInitRoutes['choose-network']['flow'],
+  navigateTo: ReturnType<typeof useNavigateTo>,
+) => {
+  switch (flow) {
+    case 'create':
+      navigateTo.create()
+      return
+
+    case 'restore':
+      navigateTo.restore()
+      return
+
+    case 'hw':
+      navigateTo.hw()
+      return
+  }
+}
+
+export const useNavigateTo = () => {
+  const navigation = useNavigation<WalletInitRouteNavigation>()
+
+  return React.useRef({
+    create: () => navigation.navigate('about-recovery-phase'),
+    restore: () => navigation.navigate('restore-wallet-form'),
+    hw: () => navigation.navigate('check-nano-x'),
+  }).current
 }

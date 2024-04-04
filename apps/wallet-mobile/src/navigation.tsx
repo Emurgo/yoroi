@@ -114,15 +114,16 @@ export type WalletStackRouteNavigation = StackNavigationProp<WalletStackRoutes>
 
 export type WalletInitRoutes = {
   'choose-create-restore': undefined
+  'choose-network': {
+    flow: 'restore' | 'create' | 'hw'
+  }
   'initial-choose-create-restore': undefined
   'wallet-details-form': undefined
   'restore-wallet-form': undefined
   'restore-wallet-details': undefined
   'import-read-only': undefined
   'save-read-only': undefined
-  'check-nano-x': {
-    useUSB: boolean
-  }
+  'check-nano-x': undefined
   'connect-nano-x': {
     useUSB: boolean
   }

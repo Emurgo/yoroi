@@ -1,11 +1,14 @@
 import {useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
+import {useWalletSetup} from '@yoroi/wallet-setup'
 import * as React from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Space} from '../../../components/Space/Space'
+import {isProduction} from '../../../legacy/config'
 import {WalletInitRouteNavigation} from '../../../navigation'
+import * as HASKELL_SHELLEY from '../../../yoroi-wallets/cardano/constants/mainnet/constants'
 import {ButtonCard} from '../common/ButtonCard/ButtonCard'
 import {LogoBanner} from '../common/LogoBanner/LogoBanner'
 import {useStrings} from '../common/useStrings'
@@ -13,8 +16,39 @@ import {useStrings} from '../common/useStrings'
 export const WalletInitScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
+  const {networkIdChanged} = useWalletSetup()
 
   const navigation = useNavigation<WalletInitRouteNavigation>()
+
+  const handleCreate = () => {
+    if (isProduction()) {
+      networkIdChanged(HASKELL_SHELLEY.NETWORK_ID)
+      navigation.navigate('about-recovery-phase')
+      return
+    }
+
+    navigation.navigate('choose-network', {flow: 'create'})
+  }
+
+  const handleRestore = () => {
+    if (isProduction()) {
+      networkIdChanged(HASKELL_SHELLEY.NETWORK_ID)
+      navigation.navigate('restore-wallet-form')
+      return
+    }
+
+    navigation.navigate('choose-network', {flow: 'restore'})
+  }
+
+  const handleHw = () => {
+    if (isProduction()) {
+      networkIdChanged(HASKELL_SHELLEY.NETWORK_ID)
+      navigation.navigate('check-nano-x')
+      return
+    }
+
+    navigation.navigate('choose-network', {flow: 'hw'})
+  }
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
@@ -26,33 +60,15 @@ export const WalletInitScreen = () => {
 
       <ScrollView showsVerticalScrollIndicator={false}>
         <View>
-          <ButtonCard
-            title={strings.createWalletButtonCard}
-            icon="create"
-            onPress={() => navigation.navigate('about-recovery-phase')}
-          />
+          <ButtonCard title={strings.createWalletButtonCard} icon="create" onPress={handleCreate} />
 
           <Space height="l" />
 
-          <ButtonCard
-            title={strings.restoreWalletButtonCard}
-            icon="restore"
-            onPress={() => {
-              navigation.navigate('restore-wallet-form')
-            }}
-          />
+          <ButtonCard title={strings.restoreWalletButtonCard} icon="restore" onPress={handleRestore} />
 
           <Space height="l" />
 
-          <ButtonCard
-            title={strings.connectWalletButtonCard}
-            icon="hardware"
-            onPress={() => {
-              navigation.navigate('check-nano-x', {
-                useUSB: false,
-              })
-            }}
-          />
+          <ButtonCard title={strings.connectWalletButtonCard} icon="hardware" onPress={handleHw} />
 
           <Space height="l" />
         </View>

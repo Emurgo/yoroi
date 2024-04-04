@@ -14,6 +14,7 @@ import {AboutRecoveryPhraseScreen} from './useCases/CreateWallet/AboutRecoveryPh
 import {RecoveryPhraseScreen} from './useCases/CreateWallet/RecoveryPhraseScreen'
 import {VerifyRecoveryPhraseScreen} from './useCases/CreateWallet/VerifyRecoveryPhraseScreen'
 import {WalletDetailsScreen} from './useCases/CreateWallet/WalletDetailsScreen'
+import {NewWalletNighltyScreen} from './useCases/NewWalletNighltyScreen'
 import {RestoreWalletDetailsScreen} from './useCases/RestoreWallet/RestoreWalletDetailsScreen'
 import {RestoreWalletScreen} from './useCases/RestoreWallet/RestoreWalletScreen'
 import {WalletInitScreen} from './useCases/WalletInitScreen'
@@ -43,6 +44,12 @@ export const WalletInitNavigator = () => {
       <Stack.Screen
         name="choose-create-restore"
         component={WalletInitScreen}
+        options={{title: strings.addWalletTitle}}
+      />
+
+      <Stack.Screen
+        name="choose-network"
+        component={NewWalletNighltyScreen}
         options={{title: strings.addWalletTitle}}
       />
 

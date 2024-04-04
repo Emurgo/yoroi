@@ -325,7 +325,6 @@ const useStyles = () => {
     },
     checksum: {
       flexDirection: 'row',
-      gap: 8,
       justifyContent: 'center',
     },
     walletChecksum: {width: 24, height: 24},
