@@ -26,12 +26,12 @@ export const Text = (props: Props) => {
 
   const textStyle: Array<StyleProp<TextStyle>> = [
     styles.text,
-    small === true && styles.small,
-    secondary === true && styles.secondary,
-    light === true && styles.light,
-    bold === true && styles.bold,
-    monospace === true && styles.monospace,
-    error === true && styles.error,
+    Boolean(small) && styles.small,
+    Boolean(secondary) && styles.secondary,
+    Boolean(light) && styles.light,
+    Boolean(bold) && styles.bold,
+    Boolean(monospace) && styles.monospace,
+    Boolean(error) && styles.error,
     style,
   ]
   if (fontSize > 0) {
