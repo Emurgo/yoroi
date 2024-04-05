@@ -10,7 +10,7 @@ export const ErrorPanel = ({style, children, ...props}: ViewProps) => {
 
   return (
     <View {...props} style={[style, styles.container]}>
-      <Icon.Info color={colors.iconColor} />
+      <Icon.Info color={colors.icon} />
 
       <Spacer height={10} />
 
@@ -36,7 +36,7 @@ const useStyles = () => {
     },
   })
   const colors = {
-    iconColor: color.magenta[500],
+    icon: color.magenta[500],
   }
   return {styles, colors}
 }

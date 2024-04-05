@@ -40,7 +40,7 @@ export const LanguagePicker = () => {
           >
             <Text style={styles.itemText}>{label}</Text>
 
-            {languageCode === code && <Icon.Check size={24} color={colors.iconColor} />}
+            {languageCode === code && <Icon.Check size={24} color={colors.icon} />}
           </TouchableOpacity>
         )}
         ItemSeparatorComponent={() => <HR />}
@@ -86,7 +86,7 @@ const useStyles = () => {
     },
   })
   const colors = {
-    iconColor: color.primary[600],
+    icon: color.primary[600],
   }
   return {styles, colors}
 }

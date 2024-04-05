@@ -49,7 +49,7 @@ export const ErrorView = ({title, errorMessage, errorLogs, onDismiss}: ErrorView
                 {showErrorLogs ? intl.formatMessage(messages.hideError) : intl.formatMessage(messages.showError)}
               </Text>
 
-              <Icon.Chevron size={28} color={colors.iconColor} direction={showErrorLogs ? 'left' : 'right'} />
+              <Icon.Chevron size={28} color={colors.icon} direction={showErrorLogs ? 'left' : 'right'} />
             </View>
           </TouchableOpacity>
 
@@ -143,7 +143,7 @@ const useStyles = () => {
     },
   })
   const colors = {
-    iconColor: color.gray[400],
+    icon: color.gray[400],
   }
   return {styles, colors}
 }
