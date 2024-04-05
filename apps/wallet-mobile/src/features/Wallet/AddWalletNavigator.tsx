@@ -9,7 +9,6 @@ import {ConnectNanoXScreen} from './legacy/ConnectNanoX/ConnectNanoXScreen'
 import {ImportReadOnlyWalletScreen} from './legacy/ImportReadOnlyWallet'
 import {SaveNanoXScreen} from './legacy/SaveNanoX/SaveNanoXScreen'
 import {SaveReadOnlyWalletScreen} from './legacy/SaveReadOnlyWallet'
-import {WalletFreshInitScreen} from './legacy/WalletFreshInit'
 import {ChooseMnemonicTypeScreen} from './useCases/ChooseMnemonicType/ChooseMnemonicTypeScren'
 import {ChooseNetworkScreen} from './useCases/ChooseNetwork/ChooseNetworkScreen'
 import {ChooseSetupTypeScreen} from './useCases/ChooseSetupType/ChooseSetupTypeScreen'
@@ -29,19 +28,12 @@ export const AddWalletNavigator = () => {
 
   return (
     <Stack.Navigator
-      initialRouteName="initial-add-wallet-choose-setup-type"
       screenOptions={{
         cardStyle: {backgroundColor: 'transparent'},
         ...navigationOptions,
         detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
       }}
     >
-      <Stack.Screen
-        name="initial-add-wallet-choose-setup-type"
-        component={WalletFreshInitScreen}
-        options={{headerShown: false}}
-      />
-
       <Stack.Screen
         name="add-wallet-choose-setup-type"
         component={ChooseSetupTypeScreen}

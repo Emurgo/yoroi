@@ -2,11 +2,11 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {BiometricScreen} from './BiometricScreen'
+import {ChooseBiometricLoginScreen} from './ChooseBiometricLoginScreen'
 
-storiesOf('AddWallet BiometricScreen', module)
+storiesOf('AddWallet ChooseBiometricLoginScreen', module)
   .addDecorator((story) => <View style={styles.container}>{story()}</View>)
-  .add('initial', () => <BiometricScreen />)
+  .add('initial', () => <ChooseBiometricLoginScreen />)
 
 const styles = StyleSheet.create({
   container: {

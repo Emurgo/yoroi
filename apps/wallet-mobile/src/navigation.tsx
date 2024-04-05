@@ -101,6 +101,7 @@ export type WalletTabRoutes = {
 }
 
 export type WalletStackRoutes = {
+  'choose-biometric-login': undefined
   'wallet-selection': undefined
   'exchange-result': undefined
   'main-wallet-routes': NavigatorScreenParams<WalletTabRoutes>

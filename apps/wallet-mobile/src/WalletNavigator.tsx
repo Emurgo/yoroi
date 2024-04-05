@@ -9,8 +9,6 @@ import {Keyboard, Platform} from 'react-native'
 import {VotingRegistration} from './Catalyst'
 import {Icon, OfflineBanner} from './components'
 import {DashboardNavigator} from './Dashboard'
-import {useSelectedWallet} from './features/Wallet/common/Context'
-import {SelectWalletFromList} from './features/Wallet/useCases/SelectWalletFromList'
 import {ShowExchangeResultOrderScreen} from './features/Exchange/useCases/ShowExchangeResultOrderScreen/ShowExchangeResultOrderScreen'
 import {useLinksRequestAction} from './features/Links/common/useLinksRequestAction'
 import {useLinksShowActionResult} from './features/Links/common/useLinksShowActionResult'
@@ -18,6 +16,12 @@ import {MenuNavigator} from './features/Menu'
 import {SettingsScreenNavigator} from './features/Settings'
 import {GovernanceNavigator} from './features/Staking/Governance'
 import {ToggleAnalyticsSettingsNavigator} from './features/ToggleAnalyticsSettings'
+import {useSelectedWallet} from './features/Wallet/common/Context'
+import {
+  ChooseBiometricLoginScreen,
+  useShowBiometricsScreen,
+} from './features/Wallet/useCases/ChooseBiometricLogin/ChooseBiometricLoginScreen'
+import {SelectWalletFromList} from './features/Wallet/useCases/SelectWalletFromList'
 import {useMetrics} from './metrics/metricsManager'
 import {hideTabBarForRoutes, WalletStackRoutes, WalletTabRoutes} from './navigation'
 import {defaultStackNavigationOptions} from './navigation'
@@ -163,6 +167,8 @@ export const WalletNavigator = () => {
   const {theme} = useTheme()
   useLinksRequestAction()
 
+  const {showBiometricsScreen} = useShowBiometricsScreen()
+
   // initialRoute doesn't update the state of the navigator, only at first render
   // https://reactnavigation.org/docs/auth-flow/
   if (initialRoute === 'exchange-result') {
@@ -186,6 +192,14 @@ export const WalletNavigator = () => {
         detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
       }}
     >
+      {showBiometricsScreen && (
+        <Stack.Screen //
+          name="choose-biometric-login"
+          options={{headerShown: false}}
+          component={ChooseBiometricLoginScreen}
+        />
+      )}
+
       <Stack.Screen
         name="wallet-selection"
         options={{title: strings.walletSelectionScreenHeader}}
