@@ -13,6 +13,9 @@ import * as HASKELL_SHELLEY from '../../../../yoroi-wallets/cardano/constants/ma
 import {ButtonCard} from '../../common/ButtonCard/ButtonCard'
 import {LogoBanner} from '../../common/LogoBanner/LogoBanner'
 import {useStrings} from '../../common/useStrings'
+import {CreateWallet} from '../../illustrations/CreateWallet'
+import {HardwareWallet} from '../../illustrations/HardwareWallet'
+import {RestoreWallet} from '../../illustrations/RestoreWallet'
 
 export const ChooseSetupTypeScreen = () => {
   const {styles} = useStyles()
@@ -73,15 +76,27 @@ export const ChooseSetupTypeScreen = () => {
 
       <ScrollView showsVerticalScrollIndicator={false}>
         <View>
-          <ButtonCard title={strings.createWalletButtonCard} icon="create" onPress={handleCreate} />
+          <ButtonCard
+            title={strings.createWalletButtonCard}
+            icon={<CreateWallet style={styles.icon} />}
+            onPress={handleCreate}
+          />
 
           <Space height="l" />
 
-          <ButtonCard title={strings.restoreWalletButtonCard} icon="restore" onPress={handleRestore} />
+          <ButtonCard
+            title={strings.restoreWalletButtonCard}
+            icon={<RestoreWallet style={styles.icon} />}
+            onPress={handleRestore}
+          />
 
           <Space height="l" />
 
-          <ButtonCard title={strings.connectWalletButtonCard} icon="hardware" onPress={handleHw} />
+          <ButtonCard
+            title={strings.connectWalletButtonCard}
+            icon={<HardwareWallet style={styles.icon} />}
+            onPress={handleHw}
+          />
 
           <Space height="l" />
         </View>
@@ -111,6 +126,10 @@ const useStyles = () => {
       flex: 1,
       ...theme.padding['x-l'],
       backgroundColor: theme.color['white-static'],
+    },
+    icon: {
+      position: 'absolute',
+      right: 0,
     },
   })
 

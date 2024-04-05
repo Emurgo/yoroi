@@ -603,6 +603,8 @@
   "components.walletinit.restorewallet.upgradeconfirmmodal.toLabel": "To",
   "components.walletinit.restorewallet.upgradeconfirmmodal.txIdLabel": "Transaction ID",
   "components.walletinit.restorewallet.walletcredentialsscreen.title": "Wallet credentials",
+  "components.walletinit.restorewallet.choose15WordsMnemonicTitle": "15 word recovery phrase",
+  "components.walletinit.restorewallet.choose24WordsMnemonicTitle": "24 word recovery phrase",
   "components.walletinit.restorewallet.walletcredentialsscreen.walletCheckError": "Could not verify wallet funds",
   "components.walletinit.savereadonlywalletscreen.defaultWalletName": "My read-only wallet",
   "components.walletinit.savereadonlywalletscreen.derivationPath": "Derivation path:",

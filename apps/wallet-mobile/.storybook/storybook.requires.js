@@ -238,7 +238,6 @@ const getStories = () => {
     "./src/features/Wallet/useCases/CreateWallet/RecoveryPhraseScreen.stories.tsx": require("../src/features/Wallet/useCases/CreateWallet/RecoveryPhraseScreen.stories.tsx"),
     "./src/features/Wallet/useCases/CreateWallet/VerifyRecoveryPhraseScreen.stories.tsx": require("../src/features/Wallet/useCases/CreateWallet/VerifyRecoveryPhraseScreen.stories.tsx"),
     "./src/features/Wallet/useCases/CreateWallet/WalletDetailsScreen.stories.tsx": require("../src/features/Wallet/useCases/CreateWallet/WalletDetailsScreen.stories.tsx"),
-    "./src/features/Wallet/useCases/LoadingScreen.stories.tsx": require("../src/features/Wallet/useCases/LoadingScreen.stories.tsx"),
     "./src/features/Wallet/useCases/RestoreWallet/RestoreWalletDetailsScreen.stories.tsx": require("../src/features/Wallet/useCases/RestoreWallet/RestoreWalletDetailsScreen.stories.tsx"),
     "./src/features/Wallet/useCases/SelectWalletFromList/SelectWalletFromListScreen.stories.tsx": require("../src/features/Wallet/useCases/SelectWalletFromList/SelectWalletFromListScreen.stories.tsx"),
     "./src/HW/Instructions/Instructions.stories.tsx": require("../src/HW/Instructions/Instructions.stories.tsx"),

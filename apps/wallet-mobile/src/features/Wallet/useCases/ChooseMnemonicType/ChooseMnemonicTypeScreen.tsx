@@ -9,11 +9,13 @@ import {Space} from '../../../../components/Space/Space'
 import {WalletInitRouteNavigation} from '../../../../navigation'
 import {ButtonCard} from '../../common/ButtonCard/ButtonCard'
 import {LogoBanner} from '../../common/LogoBanner/LogoBanner'
-// import {useStrings} from '../common/useStrings'
+import {useStrings} from '../../common/useStrings'
+import {Mnemonic15Words} from '../../illustrations/Mnemonic15Words'
+import {Mnemonic24Words} from '../../illustrations/Mnemonic24Words'
 
 export const ChooseMnemonicTypeScreen = () => {
   const {styles} = useStyles()
-  // const strings = useStrings()
+  const strings = useStrings()
   const {mnemonicTypeChanged} = useWalletSetup()
 
   const navigation = useNavigation<WalletInitRouteNavigation>()
@@ -37,11 +39,19 @@ export const ChooseMnemonicTypeScreen = () => {
       <Space height="xl" />
 
       <View>
-        <ButtonCard title="15 word recovery phrase" icon="create" onPress={handle15Words} />
+        <ButtonCard
+          title={strings.choose15WordsMnemonicTitle}
+          icon={<Mnemonic15Words style={styles.icon} />}
+          onPress={handle15Words}
+        />
 
         <Space height="l" />
 
-        <ButtonCard title="24 word recovery phrase" icon="restore" onPress={handle24Words} />
+        <ButtonCard
+          title={strings.choose24WordsMnemonicTitle}
+          icon={<Mnemonic24Words style={styles.icon} />}
+          onPress={handle24Words}
+        />
 
         <Space height="l" />
       </View>
@@ -56,6 +66,10 @@ const useStyles = () => {
       flex: 1,
       ...theme.padding['x-l'],
       backgroundColor: theme.color['white-static'],
+    },
+    icon: {
+      position: 'absolute',
+      right: 0,
     },
   })
 

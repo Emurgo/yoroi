@@ -3,33 +3,17 @@ import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {CreateWallet} from '../../illustrations/CreateWallet'
-import {HardwareWallet} from '../../illustrations/HardwareWallet'
-import {RestoreWallet} from '../../illustrations/RestoreWallet'
 import {splitInLines} from '../splitInLines'
 
 type ButtonCardProps = {
   title: string
   subTitle?: string
-  icon?: 'create' | 'restore' | 'hardware' | null
+  icon?: React.ReactNode
   onPress: () => void
 }
 
 export const ButtonCard = ({title, subTitle, icon = null, onPress}: ButtonCardProps) => {
   const {styles, colors} = useStyles()
-
-  const IconComponent = (component?: 'create' | 'restore' | 'hardware') => {
-    switch (component) {
-      case 'create':
-        return <CreateWallet style={styles.icon} />
-      case 'restore':
-        return <RestoreWallet style={styles.icon} />
-      case 'hardware':
-        return <HardwareWallet style={styles.icon} />
-      default:
-        return null
-    }
-  }
 
   return (
     <TouchableOpacity
@@ -54,7 +38,7 @@ export const ButtonCard = ({title, subTitle, icon = null, onPress}: ButtonCardPr
         </View>
       )}
 
-      {icon !== null && IconComponent(icon)}
+      {icon !== null && icon}
     </TouchableOpacity>
   )
 }
@@ -73,10 +57,6 @@ const useStyles = () => {
     },
     justifySpaceBetween: {
       justifyContent: 'space-between',
-    },
-    icon: {
-      position: 'absolute',
-      right: 0,
     },
     title: {
       ...theme.typography['heading-4-medium'],

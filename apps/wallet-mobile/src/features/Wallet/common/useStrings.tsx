@@ -91,6 +91,8 @@ export const useStrings = () => {
     invalidChecksum: intl.formatMessage(messages.invalidChecksum),
     validChecksum: intl.formatMessage(messages.validChecksum),
     stepRestoreWalletScreen: intl.formatMessage(messages.stepRestoreWalletScreen),
+    choose15WordsMnemonicTitle: intl.formatMessage(messages.choose15WordsMnemonicTitle),
+    choose24WordsMnemonicTitle: intl.formatMessage(messages.choose24WordsMnemonicTitle),
     restoreWalletScreenTitle: (options: {b: (content: React.ReactNode[]) => React.ReactNode}) =>
       intl.formatMessage(messages.restoreWalletScreenTitle, {...options}),
   }).current
@@ -379,6 +381,14 @@ export const messages = Object.freeze(
     stepRestoreWalletScreen: {
       id: 'components.walletinit.restorewallet.restorewalletscreen.stepRestoreWalletScreen',
       defaultMessage: '!!!Enter recovery phrase',
+    },
+    choose15WordsMnemonicTitle: {
+      id: 'components.walletinit.restorewallet.choose15WordsMnemonicTitle',
+      defaultMessage: '!!!15 word recovery phrase',
+    },
+    choose24WordsMnemonicTitle: {
+      id: 'components.walletinit.restorewallet.choose24WordsMnemonicTitle',
+      defaultMessage: '!!!24 word recovery phrase',
     },
     restoreWalletScreenTitle: {
       id: 'components.walletinit.restorewallet.restorewalletscreen.restoreWalletScreenTitle',

@@ -39,7 +39,6 @@ import {YoroiZendeskLink} from '../../common/contants'
 import {LearnMoreButton} from '../../common/LearnMoreButton/LearnMoreButton'
 import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
 import {useStrings} from '../../common/useStrings'
-import {Info as InfoIllustration} from '../../illustrations/Info'
 
 const useSizeModal = () => {
   const HEIGHT_SCREEN = useWindowDimensions().height
@@ -193,7 +192,7 @@ export const WalletDetailsScreen = () => {
           {strings.walletDetailsTitle(bold)}
 
           <TouchableOpacity onPress={showModalTipsPassword}>
-            <InfoIllustration />
+            <Icon.Info size={28} />
           </TouchableOpacity>
         </Text>
 
@@ -257,7 +256,7 @@ export const WalletDetailsScreen = () => {
             <Space width="s" />
 
             <TouchableOpacity onPress={showModalTipsPlateNumber}>
-              <InfoIllustration />
+              <Icon.Info size={28} />
             </TouchableOpacity>
           </Text>
         </View>
@@ -309,6 +308,7 @@ const useStyles = () => {
       flex: 1,
     },
     title: {
+      alignSelf: 'center',
       ...theme.typography['body-1-l-regular'],
       color: theme.color.gray[900],
     },

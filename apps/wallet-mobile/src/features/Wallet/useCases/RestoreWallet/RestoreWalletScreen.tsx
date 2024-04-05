@@ -6,7 +6,7 @@ import {StyleSheet, Text, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../components'
+import {Button, KeyboardAvoidingView} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
 import {WalletInitRouteNavigation} from '../../../../navigation'
 import {isEmptyString} from '../../../../utils'
@@ -28,35 +28,37 @@ export const RestoreWalletScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
-      <View style={styles.padding}>
-        <StepperProgress currentStep={1} currentStepTitle={strings.stepRestoreWalletScreen} totalSteps={2} />
-      </View>
-
-      <ScrollView style={styles.padding} bounces={false} automaticallyAdjustKeyboardInsets>
-        <View>
-          <Text style={styles.title}>{strings.restoreWalletScreenTitle(bold)}</Text>
-
-          <Space height="xl" />
+      <KeyboardAvoidingView style={{flex: 1}}>
+        <View style={styles.padding}>
+          <StepperProgress currentStep={1} currentStepTitle={strings.stepRestoreWalletScreen} totalSteps={2} />
         </View>
 
-        <MnemonicInput length={mnemonicType} onDone={setMnemonic} />
-      </ScrollView>
+        <ScrollView style={styles.padding} bounces={false}>
+          <View>
+            <Text style={styles.title}>{strings.restoreWalletScreenTitle(bold)}</Text>
 
-      <View style={styles.padding}>
-        <Button
-          title={strings.next}
-          style={styles.button}
-          disabled={isEmptyString(mnemonic)}
-          onPress={async () => {
-            const {accountPubKeyHex} = await makeKeys({mnemonic})
-            mnemonicChanged(mnemonic)
-            publicKeyHexChanged(accountPubKeyHex)
-            navigation.navigate('add-wallet-restore-details')
-          }}
-        />
+            <Space height="xl" />
+          </View>
 
-        <Space height="s" />
-      </View>
+          <MnemonicInput length={mnemonicType} onDone={setMnemonic} />
+        </ScrollView>
+
+        <View style={styles.padding}>
+          <Button
+            title={strings.next}
+            style={styles.button}
+            disabled={isEmptyString(mnemonic)}
+            onPress={async () => {
+              const {accountPubKeyHex} = await makeKeys({mnemonic})
+              mnemonicChanged(mnemonic)
+              publicKeyHexChanged(accountPubKeyHex)
+              navigation.navigate('add-wallet-restore-details')
+            }}
+          />
+
+          <Space height="s" />
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   )
 }
@@ -86,7 +88,7 @@ const useStyles = () => {
       ...theme.typography['body-1-l-medium'],
     },
     padding: {
-      ...theme.padding['x-l'],
+      ...theme.padding['l'],
     },
   })
 
