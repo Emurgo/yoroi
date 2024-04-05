@@ -14,13 +14,13 @@ type CodeScannerButtonProps = {
 export const CodeScannerButton = ({size = fallbackSize, color, ...props}: CodeScannerButtonProps) => {
   const {colors} = useStyles()
 
-  return <PressableIcon icon={Icon.Qr} size={size} color={color ?? colors.fallbackColor} {...props} />
+  return <PressableIcon icon={Icon.Qr} size={size} color={color ?? colors.iconFallback} {...props} />
 }
 const useStyles = () => {
   const {theme} = useTheme()
   const {color} = theme
   const colors = {
-    fallbackColor: color.gray.max,
+    iconFallback: color.gray.max,
   }
   return {colors}
 }
