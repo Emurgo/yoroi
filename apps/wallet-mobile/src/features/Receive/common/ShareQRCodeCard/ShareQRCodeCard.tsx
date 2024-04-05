@@ -1,5 +1,4 @@
 import {useTheme} from '@yoroi/theme'
-import _ from 'lodash'
 import * as React from 'react'
 import {StyleSheet, TouchableOpacity, TouchableWithoutFeedback, useWindowDimensions, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
@@ -10,7 +9,6 @@ import ViewShot, {captureRef} from 'react-native-view-shot'
 
 import {Spacer, Text} from '../../../../components'
 import {useMetrics} from '../../../../metrics/metricsManager'
-import {CaptureShareQRCodeCard} from '../CaptureShareQRCodeCard/CaptureShareQRCodeCard'
 import {useStrings} from '../useStrings'
 
 type ShareQRCodeCardProps = {
@@ -53,17 +51,10 @@ export const ShareQRCodeCard = ({content, title, isCopying, onLongPress, testId}
     }
   }, [isSharing, strings.address, strings.shareLabel, content, message])
 
-  if (isSharing)
-    return (
-      <ViewShot ref={ref}>
-        <CaptureShareQRCodeCard content={content} />
-      </ViewShot>
-    )
-
   return (
     <TouchableWithoutFeedback onLongPress={onLongPress}>
       <View>
-        <View style={styles.card}>
+        <ViewShot style={styles.card} ref={ref}>
           <LinearGradient
             style={[StyleSheet.absoluteFill, {opacity: 1}]}
             start={{x: 0, y: 0}}
@@ -71,7 +62,7 @@ export const ShareQRCodeCard = ({content, title, isCopying, onLongPress, testId}
             colors={colors.bgCard}
           />
 
-          <Text style={styles.title} testID={`${testId}-title`}>
+          <Text style={[styles.title, isSharing && styles.hidden]} testID={`${testId}-title`}>
             {title}
           </Text>
 
@@ -82,13 +73,13 @@ export const ShareQRCodeCard = ({content, title, isCopying, onLongPress, testId}
 
             <Spacer height={16} />
 
-            <Text style={styles.textAddress}>{content}</Text>
+            <Text style={[styles.textAddress, isSharing && styles.hidden]}>{content}</Text>
           </View>
 
           <TouchableOpacity activeOpacity={0.5} onPress={handleOnPressShare} onLongPress={onLongPress}>
-            <Text style={styles.textShareAddress}>{strings.shareLabel}</Text>
+            <Text style={[styles.textShareAddress, isSharing && styles.hidden]}>{strings.shareLabel}</Text>
           </TouchableOpacity>
-        </View>
+        </ViewShot>
 
         {isCopying && (
           <Animated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
@@ -111,6 +102,9 @@ const useStyles = () => {
   const qrSize = 170
 
   const styles = StyleSheet.create({
+    hidden: {
+      opacity: 0,
+    },
     qrCode: {
       backgroundColor: theme.color.gray.min,
       padding: 10,
