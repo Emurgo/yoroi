@@ -3,9 +3,9 @@ import {storiesOf} from '@storybook/react-native'
 import {AsyncStorageProvider} from '@yoroi/common'
 import * as React from 'react'
 
-import {SelectedWalletProvider} from '../../../../SelectedWallet'
 import {mocks} from '../../../../yoroi-wallets/mocks'
 import {rootStorage} from '../../../../yoroi-wallets/storage/rootStorage'
+import {SelectedWalletProvider} from '../../../Wallet/common/Context'
 import {SingleOrMultipleAddressesModal} from './SingleOrMultipleAddressesModal'
 
 storiesOf('Receive SingleOrMultipleAddressesModal', module).add('default', () => (
