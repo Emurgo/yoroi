@@ -48,7 +48,7 @@ export const OsAuthScreen = ({
         <View style={[styles.main, onGoBack ? null : styles.mainPadded]}>
           {onGoBack && (
             <TouchableOpacity onPress={onGoBack}>
-              <Icon.Chevron direction="left" size={28} color={colors.iconColor} />
+              <Icon.Chevron direction="left" size={28} color={colors.icon} />
             </TouchableOpacity>
           )}
 
@@ -164,7 +164,7 @@ const useStyles = () => {
     },
   })
   const colors = {
-    iconColor: color['white-static'],
+    icon: color['white-static'],
   }
   return {colors, styles}
 }
