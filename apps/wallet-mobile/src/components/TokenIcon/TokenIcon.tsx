@@ -80,7 +80,7 @@ export const TokenIconPlaceholder = ({variant}: PlaceholderProps) => {
   const {styles, colors} = useStyles()
   return (
     <View style={[styles.icon, styles.placeholder, variant === 'swap' && styles.placeholderSmall]}>
-      <Icon.Tokens color={colors.iconColor} size={35} />
+      <Icon.Tokens color={colors.icon} size={35} />
     </View>
   )
 }
@@ -133,7 +133,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    iconColor: color.gray[600],
+    icon: color.gray[600],
   }
 
   return {styles, colors}
