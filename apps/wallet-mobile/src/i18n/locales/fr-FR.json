@@ -238,8 +238,6 @@
   "components.receive.receivescreen.lastUsed": "Last used",
   "components.receive.receivescreen.unusedAddress": "Unused",
   "components.receive.receivescreen.usedAddress": "Used",
-  "components.receive.receivescreen.multiplePresentation": "Meet multiple addresses in Yoroi",
-  "components.receive.receivescreen.multiplePresentationDetails": "Enables Yoroi to manage various addresses in one place, enhancing privacy and providing organisational benefits.",
   "components.receive.receivescreen.singleOrMultiple": "Single or multiple address?",
   "components.receive.receivescreen.singleOrMultipleDetails": "Single keeps things simple and secure. Multiple may offer some extra privacy. For most users, single address is the way to go! You can always change it in settings.",
   "components.receive.receivescreen.selectMultiple": "Select multiple instead",

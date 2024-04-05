@@ -20,7 +20,6 @@ export const useSendStyles = () => {
       justifyContent: 'space-between',
       borderBottomWidth: 1,
       borderColor: 'rgba(173, 174, 182, 0.3)',
-      backgroundColor: 'red',
     },
     assetTitle: {
       flexDirection: 'row',

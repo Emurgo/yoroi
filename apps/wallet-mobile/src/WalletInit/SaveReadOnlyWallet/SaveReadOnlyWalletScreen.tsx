@@ -20,7 +20,7 @@ import {WalletAddress} from '../WalletAddress'
 import {WalletNameForm} from '../WalletNameForm'
 
 // when ro, later will be part of the onboarding
-const addressMode: AddressMode = 'multiple'
+const addressMode: AddressMode = 'single'
 export const SaveReadOnlyWalletScreen = () => {
   const intl = useIntl()
   const strings = useStrings()

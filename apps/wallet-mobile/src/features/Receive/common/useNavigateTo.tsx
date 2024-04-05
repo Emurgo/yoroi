@@ -7,7 +7,9 @@ export const useNavigateTo = () => {
   const navigation = useNavigation<TxHistoryRouteNavigation>()
 
   return useRef({
-    receiveDetails: () => navigation.navigate('receive-single'),
-    specificAmount: () => navigation.navigate('receive-specific-amount'),
+    showAddressDetails: () => navigation.navigate('receive-single'),
+    requestSpecificAmount: () => navigation.navigate('receive-specific-amount'),
+    singleAddress: () => navigation.replace('receive-single'),
+    multipleAddress: () => navigation.replace('receive-multiple'),
   }).current
 }

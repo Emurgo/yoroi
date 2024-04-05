@@ -18,13 +18,11 @@ export const useAssetListStyles = () => {
     assetRow: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      backgroundColor: 'red',
     },
     assetTitle: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       marginBottom: 10,
-      backgroundColor: 'red',
     },
     assetName: {
       ...typography['body-2-m-regular'],

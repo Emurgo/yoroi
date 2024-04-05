@@ -15,7 +15,7 @@ import {useCreateWallet} from '../../yoroi-wallets/hooks'
 import {WalletForm} from '../WalletForm'
 
 // when restoring, later will be part of the onboarding
-const addressMode: AddressMode = 'multiple'
+const addressMode: AddressMode = 'single'
 export const WalletCredentialsScreen = () => {
   const {resetToWalletSelection} = useWalletNavigation()
   const {track} = useMetrics()
