@@ -49,9 +49,9 @@ export const ValidatedTextInput = ({label, error, style, secureTextEntry, keyboa
       {secureTextEntry === true && (
         <TouchableOpacity style={styles.showPasswordContainer} onPress={toggleShowPassword}>
           {showPassword ? (
-            <Icon.EyeOn size={40} color={colors.iconColor} />
+            <Icon.EyeOn size={40} color={colors.icon} />
           ) : (
-            <Icon.EyeOff size={40} color={colors.iconColor} />
+            <Icon.EyeOff size={40} color={colors.icon} />
           )}
         </TouchableOpacity>
       )}
@@ -110,7 +110,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    iconColor: color.gray[800],
+    icon: color.gray[800],
   }
 
   return {styles, colors}
