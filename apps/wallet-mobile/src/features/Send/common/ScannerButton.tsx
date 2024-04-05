@@ -11,7 +11,7 @@ type Props = {
 export const ScannerButton = ({disabled, onPress}: Props) => {
   const {colors} = useStyles()
 
-  const color = disabled ? colors.disabled : colors.active
+  const color = disabled ? colors.disabled : colors.enabled
 
   return (
     <TouchableOpacity onPress={onPress} disabled={disabled}>
@@ -25,7 +25,7 @@ const useStyles = () => {
   const {color} = theme
   const colors = {
     disabled: color.gray[600],
-    active: color.gray.max,
+    enabled: color.gray.max,
   }
   return {colors}
 }
