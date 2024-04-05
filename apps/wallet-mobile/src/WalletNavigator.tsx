@@ -66,8 +66,8 @@ const WalletTabNavigator = () => {
         screenOptions={{
           headerShown: false,
           tabBarLabelStyle: {fontSize: 11},
-          tabBarActiveTintColor: colors.navigationActive,
-          tabBarInactiveTintColor: colors.navigationInactive,
+          tabBarActiveTintColor: colors.active,
+          tabBarInactiveTintColor: colors.inactive,
           tabBarStyle: {
             // keyboardWillShow keyboardWillHiden dont work on android
             display: isKeyboardOpen ? 'none' : undefined,
@@ -81,7 +81,7 @@ const WalletTabNavigator = () => {
           name="history"
           options={({route}: {route: RouteProp<WalletTabRoutes, 'history'>}) => ({
             tabBarIcon: ({focused}) => (
-              <Icon.TabWallet size={24} color={focused ? colors.navigationActive : colors.navigationInactive} />
+              <Icon.TabWallet size={24} color={focused ? colors.active : colors.inactive} />
             ),
             tabBarLabel: strings.walletTabBarLabel,
             tabBarTestID: 'walletTabBarButton',
@@ -99,7 +99,7 @@ const WalletTabNavigator = () => {
           name="nfts"
           options={{
             tabBarIcon: ({focused}) => (
-              <Icon.Image size={28} color={focused ? colors.navigationActive : colors.navigationInactive} />
+              <Icon.Image size={28} color={focused ? colors.active : colors.inactive} />
             ),
             tabBarLabel: strings.nftsTabBarLabel,
             tabBarTestID: 'nftsTabBarButton',
@@ -118,7 +118,7 @@ const WalletTabNavigator = () => {
             component={DashboardNavigator}
             options={{
               tabBarIcon: ({focused}) => (
-                <Icon.TabStaking size={24} color={focused ? colors.navigationActive : colors.navigationInactive} />
+                <Icon.TabStaking size={24} color={focused ? colors.active : colors.inactive} />
               ),
               tabBarLabel: strings.stakingButton,
               tabBarTestID: 'stakingTabBarButton',
@@ -131,7 +131,7 @@ const WalletTabNavigator = () => {
           component={MenuNavigator}
           options={{
             tabBarIcon: ({focused}) => (
-              <Icon.Menu size={28} color={focused ? colors.navigationActive : colors.navigationInactive} />
+              <Icon.Menu size={28} color={focused ? colors.active : colors.inactive} />
             ),
             tabBarLabel: strings.menuTabBarLabel,
             tabBarTestID: 'menuTabBarButton',
@@ -191,8 +191,8 @@ const useStyles = () => {
   const {color} = theme
 
   const colors = {
-    navigationActive: color.primary[600],
-    navigationInactive: color.gray[600],
+    active: color.primary[600],
+    inactive: color.gray[600],
   }
   return {colors}
 }
