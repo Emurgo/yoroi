@@ -21,8 +21,7 @@ export const ScannerButton = ({disabled, onPress}: Props) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {theme: {color}} = useTheme()
   const colors = {
     disabled: color.gray[600],
     enabled: color.gray.max,
