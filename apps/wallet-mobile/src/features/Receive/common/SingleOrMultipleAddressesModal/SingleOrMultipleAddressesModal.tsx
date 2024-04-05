@@ -51,7 +51,7 @@ export const SingleOrMultipleAddressesModal = ({onConfirm}: Props) => {
           outline
           title={strings.selectMultiple}
           textStyles={{
-            color: colors.details,
+            color: colors.selectMultipleInsteadTextColor,
           }}
           onPress={handleOnMultiple}
         />
@@ -82,6 +82,8 @@ const useStyles = () => {
     },
     details: {
       ...theme.typography['body-1-l-regular'],
+      justifyContent: 'center',
+      textAlign: 'center',
     },
 
     button: {
@@ -91,6 +93,7 @@ const useStyles = () => {
 
   const colors = {
     details: theme.color.gray[900],
+    selectMultipleInsteadTextColor: theme.color.primary[500],
   }
 
   return {styles, colors} as const
