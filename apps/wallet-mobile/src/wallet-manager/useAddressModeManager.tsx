@@ -72,7 +72,7 @@ const useToogleAddressMode = (options?: UseMutationOptions<void, Error, void>) =
   }
 }
 
-const initialAddressMode: AddressMode = 'multiple'
+const initialAddressMode: AddressMode = 'single'
 
 export const useAddressModeManager = () => {
   const addressMode = useAddressMode()

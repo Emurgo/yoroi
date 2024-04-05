@@ -111,7 +111,7 @@ const useStyles = () => {
     },
     statusUnusedText: {
       color: color.gray.min,
-      ...typography['body-3-s-regular'],
+      ...typography['body-3-s-medium'],
       letterSpacing: 0.2,
     },
     statusUsed: {
@@ -123,7 +123,7 @@ const useStyles = () => {
       justifyContent: 'center',
     },
     statusUsedText: {
-      ...typography['body-3-s-regular'],
+      ...typography['body-3-s-medium'],
       lineHeight: 16,
       letterSpacing: 0.2,
       color: color.gray.max,

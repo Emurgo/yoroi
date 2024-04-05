@@ -138,6 +138,7 @@ const getStories = () => {
     "./src/features/Receive/common/AddressModal/AddressModal.stories.tsx": require("../src/features/Receive/common/AddressModal/AddressModal.stories.tsx"),
     "./src/features/Receive/common/ShareDetailsCard/ShareDetailsCard.stories.tsx": require("../src/features/Receive/common/ShareDetailsCard/ShareDetailsCard.stories.tsx"),
     "./src/features/Receive/common/ShareQRCodeCard/ShareQRCodeCard.stories.tsx": require("../src/features/Receive/common/ShareQRCodeCard/ShareQRCodeCard.stories.tsx"),
+    "./src/features/Receive/common/SingleOrMultipleAddressesModal/SingleOrMultipleAddressesModal.stories.tsx": require("../src/features/Receive/common/SingleOrMultipleAddressesModal/SingleOrMultipleAddressesModal.stories.tsx"),
     "./src/features/Receive/common/SmallAddressCard/SmallAddressCard.stories.tsx": require("../src/features/Receive/common/SmallAddressCard/SmallAddressCard.stories.tsx"),
     "./src/features/Scan/common/CodeScannerButton.stories.tsx": require("../src/features/Scan/common/CodeScannerButton.stories.tsx"),
     "./src/features/Scan/illustrations/Ilustrations.stories.tsx": require("../src/features/Scan/illustrations/Ilustrations.stories.tsx"),
