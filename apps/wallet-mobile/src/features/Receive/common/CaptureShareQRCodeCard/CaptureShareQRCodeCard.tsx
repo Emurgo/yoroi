@@ -25,8 +25,6 @@ export const CaptureShareQRCodeCard = ({content}: ShareProps) => {
 
       <Spacer height={16} />
 
-      <YoroiLogoIllustration height={37} width={35} />
-
       <View style={styles.addressContainer}>
         <View style={styles.qrCode}>
           <QRCode value={content} size={158} color={colors.black} />
