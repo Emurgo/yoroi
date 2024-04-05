@@ -7,7 +7,7 @@ import {Hr, Icon, Spacer, Text} from '../../components'
 import {formatTokenWithSymbol} from '../../legacy/format'
 import {lightPalette} from '../../theme'
 import {useCollateralInfo} from '../../yoroi-wallets/cardano/utxoManager/useCollateralInfo'
-import {useSelectedWallet} from '../AddWallet/common/Context'
+import {useSelectedWallet} from '../Wallet/common/Context'
 
 const Touchable = (props: TouchableOpacityProps) => <TouchableOpacity {...props} activeOpacity={0.5} />
 

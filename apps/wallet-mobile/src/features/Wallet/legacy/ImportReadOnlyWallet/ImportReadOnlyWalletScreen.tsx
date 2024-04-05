@@ -25,7 +25,7 @@ export const ImportReadOnlyWalletScreen = () => {
       publicKeyHexChanged(publicKeyHex)
       pathChanged(path)
 
-      navigation.navigate('save-read-only')
+      navigation.navigate('add-wallet-save-read-only')
     } catch (error) {
       Logger.debug('ImportReadOnlyWalletScreen::onRead::error', error)
       await showErrorDialog(errorMessages.invalidQRCode, intl)

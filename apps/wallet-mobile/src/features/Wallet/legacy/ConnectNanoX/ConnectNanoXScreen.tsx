@@ -1,4 +1,4 @@
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import {useWalletSetup} from '@yoroi/wallet-setup'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -10,7 +10,7 @@ import {showErrorDialog} from '../../../../dialogs'
 import {LedgerConnect} from '../../../../HW'
 import {errorMessages} from '../../../../i18n/global-messages'
 import LocalizableError from '../../../../i18n/LocalizableError'
-import {WalletInitRouteNavigation, WalletInitRoutes} from '../../../../navigation'
+import {WalletInitRouteNavigation} from '../../../../navigation'
 import {getHWDeviceInfo} from '../../../../yoroi-wallets/cardano/hw'
 import {DeviceId, DeviceObj, HWDeviceInfo} from '../../../../yoroi-wallets/hw'
 import {Device, NetworkId, WalletImplementationId} from '../../../../yoroi-wallets/types'
@@ -29,13 +29,12 @@ export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
   const intl = useIntl()
   const strings = useStrings()
   const navigation = useNavigation<WalletInitRouteNavigation>()
-  const route = useRoute<RouteProp<WalletInitRoutes, 'connect-nano-x'>>()
-  const {useUSB} = route.params
-  const {hwDeviceInfoChanged, walletImplementationId} = useWalletSetup()
+
+  const {hwDeviceInfoChanged, walletImplementationId, useUSB} = useWalletSetup()
 
   const onSuccess = (hwDeviceInfo: HWDeviceInfo) => {
     hwDeviceInfoChanged(hwDeviceInfo)
-    navigation.navigate('save-nano-x')
+    navigation.navigate('add-wallet-save-nano-x')
   }
 
   const onError = (error: Error) => {

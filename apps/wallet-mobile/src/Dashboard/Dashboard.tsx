@@ -6,13 +6,13 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
 import {Banner, Button, useModal} from '../components'
-import {useSelectedWallet} from '../features/AddWallet/common/Context'
 import {
   useGovernanceStrings,
   useIsParticipatingInGovernance,
   WithdrawWarningModal,
 } from '../features/Staking/Governance'
 import {useIsGovernanceFeatureEnabled} from '../features/Staking/Governance'
+import {useSelectedWallet} from '../features/Wallet/common/Context'
 import globalMessages from '../i18n/global-messages'
 import {Modal} from '../legacy/Modal'
 import {useWalletNavigation} from '../navigation'

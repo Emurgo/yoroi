@@ -20,7 +20,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View, ViewProps} from 'react-native'
 
 import {Boundary, Icon, Spacer} from '../components'
-import {useSelectedWallet} from '../features/AddWallet/common/Context'
+import {useSelectedWallet} from '../features/Wallet/common/Context'
 import {claimApiMaker} from '../features/Claim/module/api'
 import {ClaimProvider} from '../features/Claim/module/ClaimProvider'
 import {ShowSuccessScreen} from '../features/Claim/useCases/ShowSuccessScreen'

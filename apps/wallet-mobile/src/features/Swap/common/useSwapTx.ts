@@ -4,7 +4,7 @@ import {UseMutationOptions} from 'react-query'
 
 import {YoroiEntry, YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {splitStringInto64CharArray} from '../../../yoroi-wallets/utils'
-import {useSelectedWallet} from '../../AddWallet/common/Context'
+import {useSelectedWallet} from '../../Wallet/common/Context'
 
 export const useSwapTx = (options?: UseMutationOptions<YoroiUnsignedTx, Error, {entries: YoroiEntry[]}>) => {
   const {orderData} = useSwap()

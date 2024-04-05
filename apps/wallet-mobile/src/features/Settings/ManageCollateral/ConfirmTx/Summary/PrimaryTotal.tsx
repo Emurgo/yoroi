@@ -8,7 +8,7 @@ import globalMessages from '../../../../../i18n/global-messages'
 import {formatTokenWithSymbol} from '../../../../../legacy/format'
 import {YoroiUnsignedTx} from '../../../../../yoroi-wallets/types/yoroi'
 import {Amounts} from '../../../../../yoroi-wallets/utils/utils'
-import {useSelectedWallet} from '../../../../AddWallet/common/Context'
+import {useSelectedWallet} from '../../../../Wallet/common/Context'
 
 export const PrimaryTotal = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => {
   const strings = useStrings()

@@ -8,7 +8,7 @@ import {CopyButton, Spacer, Text} from '../../../../components'
 import {Modal} from '../../../../legacy/Modal'
 import {AddressType, formatPath} from '../../../../yoroi-wallets/cardano/formatPath/formatPath'
 import {useKeyHashes} from '../../../../yoroi-wallets/hooks'
-import {useSelectedWallet} from '../../../AddWallet/common/Context'
+import {useSelectedWallet} from '../../../Wallet/common/Context'
 
 type Path = {
   account: number

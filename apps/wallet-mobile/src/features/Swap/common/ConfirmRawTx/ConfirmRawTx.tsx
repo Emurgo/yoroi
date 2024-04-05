@@ -3,7 +3,7 @@ import React from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
 
 import {ModalError} from '../../../../components/ModalError/ModalError'
-import {useSelectedWallet} from '../../../AddWallet/common/Context'
+import {useSelectedWallet} from '../../../Wallet/common/Context'
 import {ConfirmRawTxWithHW} from './ConfirmRawTxWithHW'
 import {ConfirmRawTxWithOs} from './ConfirmRawTxWithOs'
 import {ConfirmRawTxWithPassword} from './ConfirmRawTxWithPassword'

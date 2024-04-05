@@ -7,6 +7,7 @@ import * as React from 'react'
 import {
   Keyboard,
   Linking,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -101,7 +102,11 @@ export const RecoveryPhraseScreen = () => {
         </Text>
 
         <View style={styles.mnemonicWords}>
-          <BlurView intensity={isBlur ? 14 : 0} style={styles.blurView} />
+          <BlurView
+            experimentalBlurMethod={Platform.OS === 'android' ? 'dimezisBlurView' : 'none'}
+            intensity={isBlur ? 14 : 0}
+            style={styles.blurView}
+          />
 
           {mnemonic.split(' ').map((word, index) => (
             <View key={`mnemonic-${index}`} testID={`mnemonic-${index}`} style={styles.mnemonicTextContainer}>
@@ -137,7 +142,7 @@ export const RecoveryPhraseScreen = () => {
           disabled={isBlur}
           onPress={() => {
             mnemonicChanged(mnemonic)
-            navigation.navigate('verify-recovery-phrase-mnemonic')
+            navigation.navigate('add-wallet-verify-recovery-phrase-mnemonic')
           }}
         />
 

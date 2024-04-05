@@ -2,11 +2,11 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {WalletInitScreen} from './WalletInitScreen'
+import {ChooseSetupTypeScreen} from './ChooseSetupTypeScreen'
 
-storiesOf('AddWallet WalletInitScreen', module)
+storiesOf('AddWallet ChooseSetupTypeScreen', module)
   .addDecorator((story) => <View style={styles.container}>{story()}</View>)
-  .add('initial', () => <WalletInitScreen />)
+  .add('initial', () => <ChooseSetupTypeScreen />)
 
 const styles = StyleSheet.create({
   container: {

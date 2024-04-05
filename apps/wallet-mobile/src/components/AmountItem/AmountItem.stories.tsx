@@ -3,7 +3,7 @@ import React from 'react'
 import {Text, View} from 'react-native'
 
 import {QueryProvider} from '../../../.storybook/decorators'
-import {SelectedWalletProvider} from '../../features/AddWallet/common/Context'
+import {SelectedWalletProvider} from '../../features/Wallet/common/Context'
 import {mocks} from '../../yoroi-wallets/mocks'
 import {Amounts} from '../../yoroi-wallets/utils'
 import {Spacer} from '..'

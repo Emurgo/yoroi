@@ -9,7 +9,7 @@ import Animated, {FadeInDown, FadeOutDown, Layout} from 'react-native-reanimated
 
 import {useCopy} from '../../src/legacy/useCopy'
 import {Icon, Spacer, Text} from '../components'
-import {useSelectedWallet} from '../features/AddWallet/common/Context'
+import {useSelectedWallet} from '../features/Wallet/common/Context'
 import {useReceive} from '../features/Receive/common/ReceiveProvider'
 import {useReceiveAddressesStatus} from '../features/Receive/common/useReceiveAddressesStatus'
 import {messages as receiveMessages} from '../features/Receive/common/useStrings'

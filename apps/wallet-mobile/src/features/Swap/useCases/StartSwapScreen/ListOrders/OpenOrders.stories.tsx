@@ -6,7 +6,7 @@ import {QueryProvider} from '../../../../../../.storybook/decorators'
 import {Boundary} from '../../../../../components'
 import {SearchProvider} from '../../../../../Search/SearchContext'
 import {mocks} from '../../../../../yoroi-wallets/mocks/wallet'
-import {SelectedWalletProvider} from '../../../../AddWallet/common/Context'
+import {SelectedWalletProvider} from '../../../../Wallet/common/Context'
 import {SwapFormProvider} from '../../../common/SwapFormProvider'
 import {OpenOrders, OpenOrdersSkeleton} from './OpenOrders'
 

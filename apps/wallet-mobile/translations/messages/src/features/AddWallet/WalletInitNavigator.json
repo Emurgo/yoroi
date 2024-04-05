@@ -2,181 +2,181 @@
   {
     "id": "components.walletinit.walletinitscreen.title",
     "defaultMessage": "!!!Add wallet",
-    "file": "src/features/AddWallet/WalletInitNavigator.tsx",
+    "file": "src/features/AddWallet/AddWalletNavigator.tsx",
     "start": {
-      "line": 133,
+      "line": 140,
       "column": 18,
-      "index": 4379
+      "index": 4635
     },
     "end": {
-      "line": 136,
+      "line": 143,
       "column": 3,
-      "index": 4477
+      "index": 4733
     }
   },
   {
     "id": "components.walletinit.createwallet.createwalletscreen.title",
     "defaultMessage": "!!!Create a new wallet",
-    "file": "src/features/AddWallet/WalletInitNavigator.tsx",
+    "file": "src/features/AddWallet/AddWalletNavigator.tsx",
     "start": {
-      "line": 137,
+      "line": 144,
       "column": 21,
-      "index": 4500
+      "index": 4756
     },
     "end": {
-      "line": 140,
+      "line": 147,
       "column": 3,
-      "index": 4622
+      "index": 4878
     }
   },
   {
     "id": "components.walletinit.restorewallet.restorewalletscreen.title",
     "defaultMessage": "!!!Restore wallet",
-    "file": "src/features/AddWallet/WalletInitNavigator.tsx",
+    "file": "src/features/AddWallet/AddWalletNavigator.tsx",
     "start": {
-      "line": 141,
+      "line": 148,
       "column": 22,
-      "index": 4646
+      "index": 4902
     },
     "end": {
-      "line": 144,
+      "line": 151,
       "column": 3,
-      "index": 4765
+      "index": 5021
     }
   },
   {
     "id": "components.walletinit.importreadonlywalletscreen.title",
     "defaultMessage": "!!!Read-only Wallet",
-    "file": "src/features/AddWallet/WalletInitNavigator.tsx",
+    "file": "src/features/AddWallet/AddWalletNavigator.tsx",
     "start": {
-      "line": 145,
+      "line": 152,
       "column": 23,
-      "index": 4790
+      "index": 5046
     },
     "end": {
-      "line": 148,
+      "line": 155,
       "column": 3,
-      "index": 4904
+      "index": 5160
     }
   },
   {
     "id": "components.walletinit.savereadonlywalletscreen.title",
     "defaultMessage": "!!!Verify read-only wallet",
-    "file": "src/features/AddWallet/WalletInitNavigator.tsx",
+    "file": "src/features/AddWallet/AddWalletNavigator.tsx",
     "start": {
-      "line": 149,
+      "line": 156,
       "column": 27,
-      "index": 4933
+      "index": 5189
     },
     "end": {
-      "line": 152,
+      "line": 159,
       "column": 3,
-      "index": 5052
+      "index": 5308
     }
   },
   {
     "id": "components.walletinit.createwallet.mnemonicshowscreen.title",
     "defaultMessage": "!!!Recovery phrase",
-    "file": "src/features/AddWallet/WalletInitNavigator.tsx",
+    "file": "src/features/AddWallet/AddWalletNavigator.tsx",
     "start": {
-      "line": 153,
+      "line": 160,
       "column": 21,
-      "index": 5075
+      "index": 5331
     },
     "end": {
-      "line": 156,
+      "line": 163,
       "column": 3,
-      "index": 5193
+      "index": 5449
     }
   },
   {
     "id": "components.walletinit.createwallet.mnemoniccheckscreen.title",
     "defaultMessage": "!!!Recovery phrase",
-    "file": "src/features/AddWallet/WalletInitNavigator.tsx",
+    "file": "src/features/AddWallet/AddWalletNavigator.tsx",
     "start": {
-      "line": 157,
+      "line": 164,
       "column": 22,
-      "index": 5217
+      "index": 5473
     },
     "end": {
-      "line": 160,
+      "line": 167,
       "column": 3,
-      "index": 5336
+      "index": 5592
     }
   },
   {
     "id": "components.walletinit.verifyrestoredwallet.title",
     "defaultMessage": "!!!Verify restored wallet",
-    "file": "src/features/AddWallet/WalletInitNavigator.tsx",
+    "file": "src/features/AddWallet/AddWalletNavigator.tsx",
     "start": {
-      "line": 161,
+      "line": 168,
       "column": 29,
-      "index": 5367
+      "index": 5623
     },
     "end": {
-      "line": 164,
+      "line": 171,
       "column": 3,
-      "index": 5481
+      "index": 5737
     }
   },
   {
     "id": "components.walletinit.restorewallet.walletcredentialsscreen.title",
     "defaultMessage": "!!!Wallet credentials",
-    "file": "src/features/AddWallet/WalletInitNavigator.tsx",
+    "file": "src/features/AddWallet/AddWalletNavigator.tsx",
     "start": {
-      "line": 165,
+      "line": 172,
       "column": 26,
-      "index": 5509
+      "index": 5765
     },
     "end": {
-      "line": 168,
+      "line": 175,
       "column": 3,
-      "index": 5636
+      "index": 5892
     }
   },
   {
     "id": "components.walletinit.connectnanox.connectnanoxscreen.title",
     "defaultMessage": "!!!Connect to Ledger Device",
-    "file": "src/features/AddWallet/WalletInitNavigator.tsx",
+    "file": "src/features/AddWallet/AddWalletNavigator.tsx",
     "start": {
-      "line": 169,
+      "line": 176,
       "column": 21,
-      "index": 5659
+      "index": 5915
     },
     "end": {
-      "line": 172,
+      "line": 179,
       "column": 3,
-      "index": 5786
+      "index": 6042
     }
   },
   {
     "id": "components.walletinit.connectnanox.checknanoxscreen.title",
     "defaultMessage": "!!!Connect to Ledger Device",
-    "file": "src/features/AddWallet/WalletInitNavigator.tsx",
+    "file": "src/features/AddWallet/AddWalletNavigator.tsx",
     "start": {
-      "line": 173,
+      "line": 180,
       "column": 19,
-      "index": 5807
+      "index": 6063
     },
     "end": {
-      "line": 176,
+      "line": 183,
       "column": 3,
-      "index": 5932
+      "index": 6188
     }
   },
   {
     "id": "components.walletinit.connectnanox.savenanoxscreen.title",
     "defaultMessage": "!!!Save wallet",
-    "file": "src/features/AddWallet/WalletInitNavigator.tsx",
+    "file": "src/features/AddWallet/AddWalletNavigator.tsx",
     "start": {
-      "line": 177,
+      "line": 184,
       "column": 18,
-      "index": 5952
+      "index": 6208
     },
     "end": {
-      "line": 180,
+      "line": 187,
       "column": 3,
-      "index": 6063
+      "index": 6319
     }
   }
 ]

@@ -1,4 +1,5 @@
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
+import {useWalletSetup} from '@yoroi/wallet-setup'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image, Platform, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
@@ -7,15 +8,14 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import image from '../../../../assets/img/ledger_1.png'
 import {BulletPointItem, Button, ProgressStep, Spacer, Text} from '../../../../components'
 import {confirmationMessages, ledgerMessages} from '../../../../i18n/global-messages'
-import {WalletInitRouteNavigation, WalletInitRoutes} from '../../../../navigation'
+import {WalletInitRouteNavigation} from '../../../../navigation'
 
 export const CheckNanoXScreen = () => {
   const strings = useStrings()
-  const route = useRoute<RouteProp<WalletInitRoutes, 'connect-nano-x'>>()
-  const {useUSB} = route.params
 
   const navigation = useNavigation<WalletInitRouteNavigation>()
-  const onContinue = () => navigation.navigate('connect-nano-x', {useUSB})
+  const onContinue = () => navigation.navigate('add-wallet-connect-nano-x')
+  const {useUSB} = useWalletSetup()
 
   const commonRequirements = [strings.appInstalled, strings.appOpened]
   const usbRequirements = [strings.haveOTGAdapter, strings.usbAlwaysConnected, ...commonRequirements]

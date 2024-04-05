@@ -17,7 +17,7 @@ import {EnableLoginWithPin} from './auth/EnableLoginWithPin'
 import {useStatusBar} from './components/hooks/useStatusBar'
 import {ModalProvider} from './components/Modal/ModalContext'
 import {ModalScreen} from './components/Modal/ModalScreen'
-import {WalletInitNavigator} from './features/AddWallet/WalletInitNavigator'
+import {AddWalletNavigator} from './features/Wallet/AddWalletNavigator'
 import {AgreementChangedNavigator, InitializationNavigator} from './features/Initialization'
 import {LegalAgreement, useLegalAgreement} from './features/Initialization/common'
 import {useDeepLinkWatcher} from './features/Links/common/useDeepLinkWatcher'
@@ -146,7 +146,7 @@ export const AppNavigator = () => {
                     )}
                   </Stack.Screen>
 
-                  <Stack.Screen name="new-wallet" component={WalletInitNavigator} />
+                  <Stack.Screen name="new-wallet" component={AddWalletNavigator} />
                 </Stack.Group>
 
                 <Stack.Group screenOptions={{presentation: 'transparentModal'}}>

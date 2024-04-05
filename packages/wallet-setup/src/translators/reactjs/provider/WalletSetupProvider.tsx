@@ -57,6 +57,8 @@ export const WalletSetupProvider = ({
       dispatch({type: WalletSetupActionType.SetUpTypeChanged, setUpType}),
     mnemonicTypeChanged: (mnemonicType: WalletSetupState['mnemonicType']) =>
       dispatch({type: WalletSetupActionType.MnemonicTypeChanged, mnemonicType}),
+    useUSBChanged: (useUSB: WalletSetupState['useUSB']) =>
+      dispatch({type: WalletSetupActionType.UseUSBChanged, useUSB}),
     reset: () => dispatch({type: WalletSetupActionType.Reset}),
   }).current
 

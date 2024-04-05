@@ -46,6 +46,10 @@ export const walletSetupReducer = (
         draft.mnemonicType = action.mnemonicType
         return
 
+      case WalletSetupActionType.UseUSBChanged:
+        draft.useUSB = action.useUSB
+        return
+
       case WalletSetupActionType.Reset:
         return walletSetupDefaultState
 
@@ -67,6 +71,7 @@ export const walletSetupDefaultState: Readonly<WalletSetupState> = freeze(
     hwDeviceInfo: null,
     setUpType: null,
     mnemonicType: null,
+    useUSB: false,
   },
   true,
 )
@@ -82,6 +87,7 @@ export type WalletSetupState = {
   hwDeviceInfo: HWDeviceInfo | null
   setUpType: 'restore' | 'create' | 'hw' | null
   mnemonicType: 15 | 24 | null
+  useUSB: boolean
 }
 
 export enum WalletSetupActionType {
@@ -95,6 +101,7 @@ export enum WalletSetupActionType {
   HwDeviceInfoChanged = 'hwDeviceInfoChanged',
   SetUpTypeChanged = 'setUpTypeChanged',
   MnemonicTypeChanged = 'mnemonicTypeChanged',
+  UseUSBChanged = 'useUSBChanged',
   Reset = 'reset',
 }
 
@@ -140,6 +147,10 @@ export type WalletSetupAction =
       mnemonicType: WalletSetupState['mnemonicType']
     }
   | {
+      type: WalletSetupActionType.UseUSBChanged
+      useUSB: WalletSetupState['useUSB']
+    }
+  | {
       type: WalletSetupActionType.Reset
     }
 
@@ -158,6 +169,7 @@ export type WalletSetupActions = {
   hwDeviceInfoChanged: (hwDeviceInfo: WalletSetupState['hwDeviceInfo']) => void
   setUpTypeChanged: (setUpType: WalletSetupState['setUpType']) => void
   mnemonicTypeChanged: (mnemonicType: WalletSetupState['mnemonicType']) => void
+  useUSBChanged: (useUSB: WalletSetupState['useUSB']) => void
   reset: () => void
 }
 
@@ -175,6 +187,7 @@ export const walletSetupInitialContext: WalletSetupContext = freeze(
     hwDeviceInfoChanged: missingInit,
     setUpTypeChanged: missingInit,
     mnemonicTypeChanged: missingInit,
+    useUSBChanged: missingInit,
     reset: missingInit,
   },
   true,

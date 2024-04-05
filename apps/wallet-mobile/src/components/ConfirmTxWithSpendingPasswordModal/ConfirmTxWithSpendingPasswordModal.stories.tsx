@@ -2,7 +2,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {SelectedWalletProvider} from '../../features/AddWallet/common/Context'
+import {SelectedWalletProvider} from '../../features/Wallet/common/Context'
 import {mocks} from '../../yoroi-wallets/mocks'
 import {ConfirmTxWithSpendingPasswordModal} from './ConfirmTxWithSpendingPasswordModal'
 

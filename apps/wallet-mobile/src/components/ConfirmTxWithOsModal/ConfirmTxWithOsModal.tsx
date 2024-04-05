@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react'
 import {ActivityIndicator, StyleSheet, Text, View} from 'react-native'
 
-import {useSelectedWallet} from '../../features/AddWallet/common/Context'
+import {useSelectedWallet} from '../../features/Wallet/common/Context'
 import {COLORS} from '../../theme'
 import {useAuthOsWithEasyConfirmation} from '../../yoroi-wallets/auth'
 import {useSignTx, useSubmitTx} from '../../yoroi-wallets/hooks'

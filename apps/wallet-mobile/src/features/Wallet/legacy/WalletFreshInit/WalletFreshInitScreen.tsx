@@ -93,7 +93,7 @@ const useNavigateTo = () => {
   const navigateInitWallet = (networkId: NetworkId, walletImplementationId: WalletImplementationId) => {
     networkIdChanged(networkId)
     walletImplementationIdChanged(walletImplementationId)
-    navigation.navigate('choose-create-restore')
+    navigation.navigate('add-wallet-choose-setup-type')
   }
 
   return {

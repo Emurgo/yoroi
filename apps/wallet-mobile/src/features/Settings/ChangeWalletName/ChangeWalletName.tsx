@@ -11,7 +11,7 @@ import {isEmptyString} from '../../../utils/utils'
 import {useWalletManager} from '../../../wallet-manager/WalletManagerContext'
 import {useChangeWalletName, useWalletName, useWalletNames} from '../../../yoroi-wallets/hooks'
 import {getWalletNameError, validateWalletName} from '../../../yoroi-wallets/utils/validators'
-import {useSelectedWallet} from '../../AddWallet/common/Context'
+import {useSelectedWallet} from '../../Wallet/common/Context'
 
 export const ChangeWalletName = () => {
   const strings = useStrings()

@@ -3,7 +3,7 @@ import React, {useEffect} from 'react'
 import {ActivityIndicator, StyleSheet, Text, View} from 'react-native'
 
 import {useAuthOsWithEasyConfirmation} from '../../../../yoroi-wallets/auth'
-import {useSelectedWallet} from '../../../AddWallet/common/Context'
+import {useSelectedWallet} from '../../../Wallet/common/Context'
 import {getErrorMessage} from '../errors'
 import {useStrings} from '../strings'
 

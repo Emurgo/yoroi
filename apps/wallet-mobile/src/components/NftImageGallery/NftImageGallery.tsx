@@ -5,7 +5,7 @@ import {Dimensions, StyleSheet, TouchableOpacity, TouchableOpacityProps, View} f
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 import {features} from '../../features'
-import {useSelectedWallet} from '../../features/AddWallet/common/Context'
+import {useSelectedWallet} from '../../features/Wallet/common/Context'
 import {useModeratedNftImage} from '../../Nfts/hooks'
 import {Icon} from '../Icon'
 import {NftPreview} from '../NftPreview'

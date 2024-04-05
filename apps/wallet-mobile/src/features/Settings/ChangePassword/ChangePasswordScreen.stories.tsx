@@ -4,7 +4,7 @@ import React from 'react'
 
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {mocks} from '../../../yoroi-wallets/mocks'
-import {SelectedWalletProvider} from '../../AddWallet/common/Context'
+import {SelectedWalletProvider} from '../../Wallet/common/Context'
 import {ChangePasswordScreen} from './ChangePasswordScreen'
 
 const wallet: YoroiWallet = {

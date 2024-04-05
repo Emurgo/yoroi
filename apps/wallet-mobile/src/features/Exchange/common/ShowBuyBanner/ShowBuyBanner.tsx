@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import {useBalances} from '../../../../yoroi-wallets/hooks'
 import {Amounts, Quantities} from '../../../../yoroi-wallets/utils/utils'
-import {useSelectedWallet} from '../../../AddWallet/common/Context'
+import {useSelectedWallet} from '../../../Wallet/common/Context'
 import {useResetShowBuyBannerSmall} from '../useResetShowBuyBannerSmall'
 import {useShowBuyBannerSmall} from '../useShowBuyBannerSmall'
 import {BuyBannerBig} from './BuyBannerBig'

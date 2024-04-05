@@ -20,11 +20,11 @@ export const RestoreWalletScreen = () => {
   const bold = useBold()
   const [mnemonic, setMnemonic] = React.useState('')
   const navigation = useNavigation<WalletInitRouteNavigation>()
-  const {publicKeyHexChanged, mnemonicChanged} = useWalletSetup()
+  const {publicKeyHexChanged, mnemonicChanged, mnemonicType} = useWalletSetup()
 
   const strings = useStrings()
 
-  const mnemonicLength = 15
+  if (mnemonicType === null) throw new Error('mnemonicType missing')
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
@@ -39,7 +39,7 @@ export const RestoreWalletScreen = () => {
           <Space height="xl" />
         </View>
 
-        <MnemonicInput length={mnemonicLength} onDone={setMnemonic} />
+        <MnemonicInput length={mnemonicType} onDone={setMnemonic} />
       </ScrollView>
 
       <View style={styles.padding}>
@@ -51,7 +51,7 @@ export const RestoreWalletScreen = () => {
             const {accountPubKeyHex} = await makeKeys({mnemonic})
             mnemonicChanged(mnemonic)
             publicKeyHexChanged(accountPubKeyHex)
-            navigation.navigate('restore-wallet-details')
+            navigation.navigate('add-wallet-restore-details')
           }}
         />
 

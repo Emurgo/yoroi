@@ -5,52 +5,62 @@ import * as React from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Space} from '../../../components/Space/Space'
-import {isProduction} from '../../../legacy/config'
-import {WalletInitRouteNavigation} from '../../../navigation'
-import * as HASKELL_SHELLEY from '../../../yoroi-wallets/cardano/constants/mainnet/constants'
-import {ButtonCard} from '../common/ButtonCard/ButtonCard'
-import {LogoBanner} from '../common/LogoBanner/LogoBanner'
-import {useStrings} from '../common/useStrings'
+import {Space} from '../../../../components/Space/Space'
+import {LedgerTransportSwitchModal} from '../../../../HW'
+import {isProduction} from '../../../../legacy/config'
+import {WalletInitRouteNavigation} from '../../../../navigation'
+import * as HASKELL_SHELLEY from '../../../../yoroi-wallets/cardano/constants/mainnet/constants'
+import {ButtonCard} from '../../common/ButtonCard/ButtonCard'
+import {LogoBanner} from '../../common/LogoBanner/LogoBanner'
+import {useStrings} from '../../common/useStrings'
 
-export const WalletInitScreen = () => {
+export const ChooseSetupTypeScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
-  const {networkIdChanged, setUpTypeChanged} = useWalletSetup()
+  const {networkIdChanged, setUpTypeChanged, useUSBChanged: USBChanged} = useWalletSetup()
+  const [isModalOpen, setIsModalOpen] = React.useState(false)
 
   const navigation = useNavigation<WalletInitRouteNavigation>()
 
   const handleCreate = () => {
+    setUpTypeChanged('create')
+
     if (isProduction()) {
       networkIdChanged(HASKELL_SHELLEY.NETWORK_ID)
-      navigation.navigate('about-recovery-phase')
+      navigation.navigate('add-wallet-about-recovery-phase')
       return
     }
 
-    setUpTypeChanged('create')
-    navigation.navigate('choose-network')
+    navigation.navigate('add-wallet-choose-network')
   }
 
   const handleRestore = () => {
+    setUpTypeChanged('restore')
+
     if (isProduction()) {
       networkIdChanged(HASKELL_SHELLEY.NETWORK_ID)
-      navigation.navigate('restore-wallet-form')
+      navigation.navigate('add-wallet-choose-mnemonic-type')
       return
     }
 
-    setUpTypeChanged('restore')
-    navigation.navigate('choose-network')
+    navigation.navigate('add-wallet-choose-network')
   }
 
   const handleHw = () => {
+    setIsModalOpen(true)
+  }
+
+  const navigateHw = () => {
+    setIsModalOpen(false)
+    setUpTypeChanged('hw')
+
     if (isProduction()) {
       networkIdChanged(HASKELL_SHELLEY.NETWORK_ID)
-      navigation.navigate('check-nano-x')
+      navigation.navigate('add-wallet-check-nano-x')
       return
     }
 
-    setUpTypeChanged('hw')
-    navigation.navigate('choose-network')
+    navigation.navigate('add-wallet-choose-network')
   }
 
   return (
@@ -76,6 +86,20 @@ export const WalletInitScreen = () => {
           <Space height="l" />
         </View>
       </ScrollView>
+
+      <LedgerTransportSwitchModal
+        visible={isModalOpen}
+        onRequestClose={() => setIsModalOpen(false)}
+        onSelectUSB={() => {
+          USBChanged(true)
+          navigateHw()
+        }}
+        onSelectBLE={() => {
+          USBChanged(false)
+          navigateHw()
+        }}
+        showCloseIcon
+      />
     </SafeAreaView>
   )
 }

@@ -6,7 +6,7 @@ import {StyleSheet, Text, View} from 'react-native'
 import {Button, Spacer, useModal} from '../../../../../../components'
 import {useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../../yoroi-wallets/utils'
-import {useSelectedWallet} from '../../../../../AddWallet/common/Context'
+import {useSelectedWallet} from '../../../../../Wallet/common/Context'
 import {PRICE_PRECISION} from '../../../../common/constants'
 import {useStrings} from '../../../../common/strings'
 

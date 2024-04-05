@@ -5,7 +5,7 @@ import * as React from 'react'
 import {useLanguage} from '../../../../../i18n'
 import {useBalance, useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
-import {useSelectedWallet} from '../../../../AddWallet/common/Context'
+import {useSelectedWallet} from '../../../../Wallet/common/Context'
 import {AmountCard} from '../../../common/AmountCard/AmountCard'
 import {useStrings} from '../../../common/useStrings'
 

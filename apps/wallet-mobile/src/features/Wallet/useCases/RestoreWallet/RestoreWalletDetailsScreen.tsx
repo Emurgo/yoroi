@@ -20,7 +20,6 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button, Icon, TextInput, useModal} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
 import {showErrorDialog} from '../../../../dialogs'
-import {debugWalletInfo, features} from '../../../../features'
 import {errorMessages} from '../../../../i18n/global-messages'
 import {useWalletNavigation} from '../../../../navigation'
 import {isEmptyString} from '../../../../utils'
@@ -34,6 +33,7 @@ import {
   validatePassword,
   validateWalletName,
 } from '../../../../yoroi-wallets/utils'
+import {debugWalletInfo, features} from '../../..'
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
 import {YoroiZendeskLink} from '../../common/contants'
 import {LearnMoreButton} from '../../common/LearnMoreButton/LearnMoreButton'

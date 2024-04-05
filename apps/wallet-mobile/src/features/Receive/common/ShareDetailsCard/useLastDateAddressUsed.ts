@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {useIntl} from 'react-intl'
 
-import {useSelectedWallet} from '../../../AddWallet/common/Context'
+import {useSelectedWallet} from '../../../Wallet/common/Context'
 
 export const useLastDateAddressUsed = (address: string) => {
   const wallet = useSelectedWallet()

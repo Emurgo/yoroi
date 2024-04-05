@@ -53,7 +53,7 @@ export const AboutRecoveryPhraseScreen = () => {
       <Button
         title={strings.next}
         style={styles.button}
-        onPress={() => navigation.navigate('recovery-phrase-mnemonic')}
+        onPress={() => navigation.navigate('add-wallet-recovery-phrase-mnemonic')}
       />
     </SafeAreaView>
   )

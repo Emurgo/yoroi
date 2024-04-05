@@ -104,6 +104,16 @@ describe('WalletSetupContext :: hooks', () => {
     expect(result.current.mnemonicType).toBe(15)
   })
 
+  test('useUSBChanged', () => {
+    const {result} = renderHook(() => useWalletSetup(), {wrapper})
+
+    act(() => {
+      result.current.useUSBChanged(true)
+    })
+
+    expect(result.current.useUSB).toBe(true)
+  })
+
   test('reset', () => {
     const {result} = renderHook(() => useWalletSetup(), {wrapper})
 

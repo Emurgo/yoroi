@@ -13,7 +13,7 @@ import {useSearch, useSearchOnNavBar} from '../../../../../../../Search/SearchCo
 import {sortTokenInfos} from '../../../../../../../utils'
 import {YoroiWallet} from '../../../../../../../yoroi-wallets/cardano/types'
 import {useAllTokenInfos, useBalance, useIsWalletEmpty} from '../../../../../../../yoroi-wallets/hooks'
-import {useSelectedWallet} from '../../../../../../AddWallet/common/Context'
+import {useSelectedWallet} from '../../../../../../Wallet/common/Context'
 import {filterByFungibility} from '../../../../../../Send/common/filterByFungibility'
 import {NoAssetFoundImage} from '../../../../../../Send/common/NoAssetFoundImage'
 import {Counter} from '../../../../../common/Counter/Counter'

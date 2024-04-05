@@ -5,7 +5,7 @@ import {StyleSheet, View} from 'react-native'
 
 import {SearchProvider} from '../../../../../Search/SearchContext'
 import {mocks} from '../../../../../yoroi-wallets/mocks'
-import {SelectedWalletProvider} from '../../../../AddWallet/common/Context'
+import {SelectedWalletProvider} from '../../../../Wallet/common/Context'
 import {EditAmount} from './EditAmount'
 
 storiesOf('Exchange Edit Amount', module).add('initial - message', () => {

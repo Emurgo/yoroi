@@ -3,7 +3,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {FlatList, Text, TouchableOpacity, View} from 'react-native'
 
 import {Boundary} from '../../components'
-import {useSelectedWallet} from '../../features/AddWallet/common/Context'
+import {useSelectedWallet} from '../../features/Wallet/common/Context'
 import globalMessages, {txLabels} from '../../i18n/global-messages'
 import {formatTokenAmount} from '../../legacy/format'
 import {isEmptyString} from '../../utils'

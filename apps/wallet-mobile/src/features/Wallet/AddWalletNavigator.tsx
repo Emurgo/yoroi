@@ -10,17 +10,18 @@ import {ImportReadOnlyWalletScreen} from './legacy/ImportReadOnlyWallet'
 import {SaveNanoXScreen} from './legacy/SaveNanoX/SaveNanoXScreen'
 import {SaveReadOnlyWalletScreen} from './legacy/SaveReadOnlyWallet'
 import {WalletFreshInitScreen} from './legacy/WalletFreshInit'
+import {ChooseMnemonicTypeScreen} from './useCases/ChooseMnemonicType/ChooseMnemonicTypeScren'
+import {ChooseNetworkScreen} from './useCases/ChooseNetwork/ChooseNetworkScreen'
+import {ChooseSetupTypeScreen} from './useCases/ChooseSetupType/ChooseSetupTypeScreen'
 import {AboutRecoveryPhraseScreen} from './useCases/CreateWallet/AboutRecoveryPhraseScreen'
 import {RecoveryPhraseScreen} from './useCases/CreateWallet/RecoveryPhraseScreen'
 import {VerifyRecoveryPhraseScreen} from './useCases/CreateWallet/VerifyRecoveryPhraseScreen'
 import {WalletDetailsScreen} from './useCases/CreateWallet/WalletDetailsScreen'
-import {NewWalletNighltyScreen} from './useCases/NewWalletNighltyScreen'
 import {RestoreWalletDetailsScreen} from './useCases/RestoreWallet/RestoreWalletDetailsScreen'
 import {RestoreWalletScreen} from './useCases/RestoreWallet/RestoreWalletScreen'
-import {WalletInitScreen} from './useCases/WalletInitScreen'
 
 const Stack = createStackNavigator<WalletInitRoutes>()
-export const WalletInitNavigator = () => {
+export const AddWalletNavigator = () => {
   const strings = useStrings()
   const {theme} = useTheme()
 
@@ -28,7 +29,7 @@ export const WalletInitNavigator = () => {
 
   return (
     <Stack.Navigator
-      initialRouteName="initial-choose-create-restore"
+      initialRouteName="initial-add-wallet-choose-setup-type"
       screenOptions={{
         cardStyle: {backgroundColor: 'transparent'},
         ...navigationOptions,
@@ -36,43 +37,49 @@ export const WalletInitNavigator = () => {
       }}
     >
       <Stack.Screen
-        name="initial-choose-create-restore"
+        name="initial-add-wallet-choose-setup-type"
         component={WalletFreshInitScreen}
         options={{headerShown: false}}
       />
 
       <Stack.Screen
-        name="choose-create-restore"
-        component={WalletInitScreen}
+        name="add-wallet-choose-setup-type"
+        component={ChooseSetupTypeScreen}
         options={{title: strings.addWalletTitle}}
       />
 
       <Stack.Screen
-        name="choose-network"
-        component={NewWalletNighltyScreen}
+        name="add-wallet-choose-network"
+        component={ChooseNetworkScreen}
         options={{title: strings.addWalletTitle}}
       />
 
       <Stack.Screen
-        name="wallet-details-form"
+        name="add-wallet-choose-mnemonic-type"
+        component={ChooseMnemonicTypeScreen}
+        options={{title: strings.addWalletTitle}}
+      />
+
+      <Stack.Screen
+        name="add-wallet-details-form"
         component={WalletDetailsScreen}
         options={{...navigationOptions, title: strings.createWalletTitle}}
       />
 
       <Stack.Screen
-        name="restore-wallet-form"
+        name="add-wallet-restore-form"
         component={RestoreWalletScreen}
         options={{title: strings.restoreWalletTitle}}
       />
 
       <Stack.Screen
-        name="restore-wallet-details"
+        name="add-wallet-restore-details"
         component={RestoreWalletDetailsScreen}
         options={{title: strings.restoreWalletTitle}}
       />
 
       <Stack.Screen
-        name="import-read-only"
+        name="add-wallet-import-read-only"
         component={ImportReadOnlyWalletScreen}
         options={{
           title: strings.importReadOnlyTitle,
@@ -81,25 +88,25 @@ export const WalletInitNavigator = () => {
       />
 
       <Stack.Screen
-        name="save-read-only"
+        name="add-wallet-save-read-only"
         component={SaveReadOnlyWalletScreen}
         options={{title: strings.saveReadOnlyWalletTitle}}
       />
 
       <Stack.Screen //
-        name="check-nano-x"
+        name="add-wallet-check-nano-x"
         component={CheckNanoXScreen}
         options={{title: strings.checkNanoXTitle}}
       />
 
       <Stack.Screen //
-        name="connect-nano-x"
+        name="add-wallet-connect-nano-x"
         options={{title: strings.connectNanoXTitle}}
         component={ConnectNanoXScreenWrapper}
       />
 
       <Stack.Screen
-        name="save-nano-x"
+        name="add-wallet-save-nano-x"
         component={SaveNanoXScreen}
         options={{
           title: strings.saveNanoXTitle,
@@ -107,19 +114,19 @@ export const WalletInitNavigator = () => {
       />
 
       <Stack.Screen //
-        name="about-recovery-phase"
+        name="add-wallet-about-recovery-phase"
         component={AboutRecoveryPhraseScreen}
         options={{title: strings.mnemonicShowTitle}}
       />
 
       <Stack.Screen
-        name="recovery-phrase-mnemonic"
+        name="add-wallet-recovery-phrase-mnemonic"
         component={RecoveryPhraseScreen}
         options={{title: strings.mnemonicShowTitle}}
       />
 
       <Stack.Screen
-        name="verify-recovery-phrase-mnemonic"
+        name="add-wallet-verify-recovery-phrase-mnemonic"
         component={VerifyRecoveryPhraseScreen}
         options={{title: strings.mnemonicCheckTitle}}
       />

@@ -155,7 +155,7 @@ const AddWalletButton = () => {
         walletImplementationIdChanged(HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID)
 
         navigation.navigate('new-wallet', {
-          screen: 'choose-create-restore',
+          screen: 'add-wallet-choose-setup-type',
         })
       }}
       title={strings.addWalletButton}

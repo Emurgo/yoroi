@@ -4,7 +4,7 @@ import * as React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
 import {mocks} from '../../../../../yoroi-wallets/mocks'
-import {SelectedWalletProvider} from '../../../../AddWallet/common/Context'
+import {SelectedWalletProvider} from '../../../../Wallet/common/Context'
 import {SelectBuyOrSell} from './SelectBuyOrSell'
 
 const Wrapper = ({children}: ViewProps) => (

@@ -10,7 +10,7 @@ import {StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 
 import {Spacer, Text} from '../../components'
 import {Icon} from '../../components/Icon'
-import {useSelectedWallet} from '../../features/AddWallet/common/Context'
+import {useSelectedWallet} from '../../features/Wallet/common/Context'
 import {usePrivacyMode} from '../../features/Settings/PrivacyMode/PrivacyMode'
 import {formatTime, formatTokenFractional, formatTokenInteger} from '../../legacy/format'
 import utfSymbols from '../../legacy/utfSymbols'

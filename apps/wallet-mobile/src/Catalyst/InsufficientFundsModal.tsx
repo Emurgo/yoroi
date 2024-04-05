@@ -3,7 +3,7 @@ import {useIntl} from 'react-intl'
 import {Text, View} from 'react-native'
 
 import {StandardModal} from '../components'
-import {useSelectedWallet} from '../features/AddWallet/common/Context'
+import {useSelectedWallet} from '../features/Wallet/common/Context'
 import globalMessages, {confirmationMessages} from '../i18n/global-messages'
 import {formatTokenWithText} from '../legacy/format'
 import {CATALYST} from '../yoroi-wallets/cardano/utils'

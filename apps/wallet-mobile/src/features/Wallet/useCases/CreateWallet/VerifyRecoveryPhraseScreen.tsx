@@ -112,7 +112,7 @@ export const VerifyRecoveryPhraseScreen = () => {
           onPress={async () => {
             const {accountPubKeyHex} = await makeKeys({mnemonic})
             publicKeyHexChanged(accountPubKeyHex)
-            navigation.navigate('wallet-details-form')
+            navigation.navigate('add-wallet-details-form')
           }}
         />
 

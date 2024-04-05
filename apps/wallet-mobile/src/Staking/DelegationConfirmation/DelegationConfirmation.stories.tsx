@@ -3,7 +3,7 @@ import React from 'react'
 import {QueryClient, QueryClientProvider} from 'react-query'
 
 import {RouteProvider} from '../../../.storybook/decorators'
-import {SelectedWalletProvider} from '../../features/AddWallet/common/Context'
+import {SelectedWalletProvider} from '../../features/Wallet/common/Context'
 import {StakingCenterRoutes} from '../../navigation'
 import {mocks} from '../../yoroi-wallets/mocks'
 import {DelegationConfirmation} from './DelegationConfirmation'

@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Action needed: Please, export public key from your Ledger device.",
     "file": "src/features/AddWallet/legacy/ConnectNanoX/ConnectNanoXScreen.tsx",
     "start": {
-      "line": 81,
+      "line": 80,
       "column": 13,
-      "index": 2926
+      "index": 2801
     },
     "end": {
-      "line": 84,
+      "line": 83,
       "column": 3,
-      "index": 3098
+      "index": 2973
     }
   }
 ]

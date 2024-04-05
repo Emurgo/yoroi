@@ -112,6 +112,20 @@ describe('State Actions', () => {
     expect(state.mnemonicType).toBe(action.mnemonicType)
   })
 
+  it('UseUSBChanged', () => {
+    const action: WalletSetupAction = {
+      type: WalletSetupActionType.UseUSBChanged,
+      useUSB: true,
+    }
+
+    const state = walletSetupReducer(
+      {...walletSetupDefaultState, useUSB: false},
+      action,
+    )
+
+    expect(state.useUSB).toBe(action.useUSB)
+  })
+
   it('Reset', () => {
     const action: WalletSetupAction = {
       type: WalletSetupActionType.Reset,
@@ -129,6 +143,7 @@ describe('State Actions', () => {
         hwDeviceInfo: {foo: 'bar'} as unknown as HWDeviceInfo,
         setUpType: 'restore',
         mnemonicType: 15,
+        useUSB: true,
       },
       action,
     )

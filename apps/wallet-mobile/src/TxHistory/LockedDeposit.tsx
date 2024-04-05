@@ -4,7 +4,7 @@ import {useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 
 import {Boundary, Spacer, Text} from '../components'
-import {useSelectedWallet} from '../features/AddWallet/common/Context'
+import {useSelectedWallet} from '../features/Wallet/common/Context'
 import {usePrivacyMode} from '../features/Settings/PrivacyMode/PrivacyMode'
 import globalMessages from '../i18n/global-messages'
 import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../legacy/format'

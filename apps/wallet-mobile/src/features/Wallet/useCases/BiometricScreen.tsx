@@ -34,7 +34,7 @@ export const BiometricScreen = () => {
           textStyles={styles.textOutlineButton}
           onPress={() =>
             navigation.navigate('new-wallet', {
-              screen: 'initial-choose-create-restore',
+              screen: 'initial-add-wallet-choose-setup-type',
             })
           }
         />

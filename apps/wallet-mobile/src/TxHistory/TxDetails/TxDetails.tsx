@@ -10,9 +10,9 @@ import {LayoutAnimation, StyleSheet, TouchableOpacity, View, ViewProps} from 're
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {Banner, Boundary, Button, CopyButton, FadeIn, Icon, Text} from '../../components'
-import {useSelectedWallet} from '../../features/AddWallet/common/Context'
 import AddressModal from '../../features/Receive/common/AddressModal/AddressModal'
 import {usePrivacyMode} from '../../features/Settings/PrivacyMode/PrivacyMode'
+import {useSelectedWallet} from '../../features/Wallet/common/Context'
 import globalMessages from '../../i18n/global-messages'
 import {formatDateAndTime, formatTokenWithSymbol} from '../../legacy/format'
 import {isEmptyString} from '../../utils/utils'
