@@ -70,7 +70,7 @@ function ModalClassComponent({
 
           {showCloseIcon && (
             <TouchableOpacity style={styles.close} onPress={onRequestClose}>
-              <Icon.Cross size={26} color={colors.iconColor} />
+              <Icon.Cross size={26} color={colors.icon} />
             </TouchableOpacity>
           )}
 
@@ -128,7 +128,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    iconColor: color.gray[400],
+    icon: color.gray[400],
   }
   return {styles, colors}
 }
