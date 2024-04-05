@@ -67,7 +67,7 @@ export const AmountItem = ({
             <>
               <Spacer width={4} />
 
-              {inWallet && <Icon.Portfolio size={22} color={colors.iconColor} />}
+              {inWallet && <Icon.Portfolio size={22} color={colors.icon} />}
             </>
           )}
         </View>
@@ -175,7 +175,7 @@ const useStyles = () => {
   const colors = {
     text: color.gray[900],
     background: color.gray[200],
-    iconColor: color.secondary[600],
+    icon: color.secondary[600],
   }
 
   return {styles, colors}
