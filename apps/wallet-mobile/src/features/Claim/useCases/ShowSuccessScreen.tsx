@@ -117,7 +117,7 @@ const TxHash = ({txHash}: {txHash: string}) => {
         <PressableIcon
           icon={Icon.ExternalLink}
           onPress={() => Linking.openURL(config.EXPLORER_URL_FOR_TX(txHash))}
-          color={colors.iconColor}
+          color={colors.icon}
           size={16}
         />
       </View>
@@ -187,7 +187,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    iconColor: color.gray[500],
+    icon: color.gray[500],
   }
 
   return {styles, colors}
