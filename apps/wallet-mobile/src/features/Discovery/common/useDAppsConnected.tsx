@@ -14,7 +14,6 @@ export const useDAppsConnected = (options?: UseQueryOptions<DAppId[], Error, DAp
     queryKey: [wallet.id, 'dappsConnected'],
     queryFn: async () => {
       const data = await new Promise<DAppId[]>((resolve) => {
-        // return setTimeout(() => resolve([]), 1000)
         return setTimeout(() => resolve(mockDAppList.slice(0, 3).map((_) => _.id)), 1000)
       })
 

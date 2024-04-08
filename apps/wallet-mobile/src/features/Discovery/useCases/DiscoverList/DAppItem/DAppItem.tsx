@@ -12,6 +12,8 @@ import {LabelConnected} from '../../../common/LabelConnected'
 import {useNavigateTo} from '../../../common/useNavigateTo'
 import {useStrings} from '../../../common/useStrings'
 
+const DIALOG_DAPP_ACTIONS_HEIGHT = 248
+
 type Props = {
   dApp: IDAppItem
   connected: boolean
@@ -25,7 +27,7 @@ export const DAppItem = ({dApp, connected, onPress}: Props) => {
   const insets = useSafeAreaInsets()
   const strings = useStrings()
 
-  const dialogHeight = 294 + insets.bottom
+  const dialogHeight = DIALOG_DAPP_ACTIONS_HEIGHT + insets.bottom
 
   const [isPressed, setIsPressed] = React.useState(false)
 

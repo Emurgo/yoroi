@@ -21,7 +21,6 @@ const initialBrowserState: BrowserContextState = {
 export type TabItem = {
   id: string
   url: string
-  captureImage?: string
 }
 
 type StatusBrowser = 'waiting' | 'active'

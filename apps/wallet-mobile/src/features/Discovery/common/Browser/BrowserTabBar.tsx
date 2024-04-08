@@ -18,7 +18,7 @@ export const BrowserTabBar = ({webViewRef, webViewState}: Props) => {
   const {tabs, switchTab} = useBrowser()
   const insets = useSafeAreaInsets()
 
-  const totalTabs = Math.min(tabs.length ?? 0, 99)
+  const totalTabs = Math.min(tabs.length, 99)
 
   const colorBackward = webViewState.canGoBack ? color.gray['800'] : color.gray['500']
   const colorForward = webViewState.canGoForward ? color.gray['800'] : color.gray['500']

@@ -20,7 +20,6 @@ import MuesliSwap from '../../../assets/img/dApp/muesliswap.png'
 import Nucast from '../../../assets/img/dApp/nucast.png'
 import OptionFlow from '../../../assets/img/dApp/optionflow.png'
 import PXLZ from '../../../assets/img/dApp/pxlz.png'
-// import Summon from '../../../assets/img/dApp/summon.png'
 import SundaeSwap from '../../../assets/img/dApp/sundaeswap.png'
 import Taptools from '../../../assets/img/dApp/taptools.png'
 import Wingriders from '../../../assets/img/dApp/wingriders.png'
@@ -218,13 +217,6 @@ export const mockDAppList: IDAppItem[] = [
     logo: OptionFlow,
     uri: 'https://app.optionflow.finance/',
   },
-  // {
-  //   id: 'summon',
-  //   name: 'Summon',
-  //   description: 'Cardano DAO tooling platform',
-  //   category: 'dao',
-  //   logo: Summon,
-  // },
   {
     id: 'djed',
     name: 'Djed',

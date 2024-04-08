@@ -1,4 +1,3 @@
-// @flow
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Dimensions, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback} from 'react-native'

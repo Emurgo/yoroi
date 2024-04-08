@@ -1,4 +1,3 @@
-// @flow
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native'
@@ -77,7 +76,7 @@ const TypeItem = ({name, isActive = false, onToggle, disabled = false, isLimited
       >
         <LinearGradient style={styles.gradient} start={{x: 0, y: 0}} end={{x: 1, y: 1}} colors={getBoxGradientBg()}>
           <View style={[styles.chipContentBox, getBoxContentBg()]}>
-            {isActive && <Icon.CheckFilled2 fill={colors.iconCheckFilledColor} color="#fff" />}
+            {isActive && <Icon.CheckFilled2 fill={colors.iconCheckFilledColor} color={colors.whiteStatic} />}
 
             <Text style={styles.chipText}>{name}</Text>
           </View>
@@ -135,6 +134,7 @@ const useStyles = () => {
     gradientGreenBlue: color.gradients['green-blue'],
     gradientLimited: ['#93F5E1', '#C6F7ED'],
     gradientIdle: ['#E4E8F7', '#C6F7ED'],
+    whiteStatic: color['white-static'],
   }
   return {styles, colors} as const
 }

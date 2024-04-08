@@ -25,7 +25,7 @@ export const BrowserSearchToolbar = ({onBack, onSearchChange, onSearchSubmit, se
           placeholder=""
           onChangeText={(search) => onSearchChange(search)}
           autoCapitalize="none"
-          style={{flex: 1, color: '#000000'}}
+          style={styles.searchInputStyle}
           onSubmitEditing={onSearchSubmit}
           enablesReturnKeyAutomatically={searchValue.length === 0}
         />
@@ -61,6 +61,7 @@ const useStyles = () => {
       backgroundColor: color.gray['50'],
       height: 50,
     },
+    searchInputStyle: {flex: 1, color: '#000000'},
   })
 
   return {styles} as const
