@@ -33,7 +33,6 @@ import {RequestSpecificAmountScreen} from '../features/Receive/useCases/RequestS
 import {CodeScannerButton} from '../features/Scan/common/CodeScannerButton'
 import {ScanCodeScreen} from '../features/Scan/useCases/ScanCodeScreen'
 import {ShowCameraPermissionDeniedScreen} from '../features/Scan/useCases/ShowCameraPermissionDeniedScreen/ShowCameraPermissionDeniedScreen'
-import {useSelectedWallet} from '../features/WalletManager/Context'
 import {ConfirmTxScreen} from '../features/Send/useCases/ConfirmTx/ConfirmTxScreen'
 import {FailedTxScreen} from '../features/Send/useCases/ConfirmTx/FailedTx/FailedTxScreen'
 import {SubmittedTxScreen} from '../features/Send/useCases/ConfirmTx/SubmittedTx/SubmittedTxScreen'
@@ -52,6 +51,7 @@ import {
 } from '../features/Swap/useCases'
 import {SelectBuyTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
 import {SelectSellTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/EditSellAmount/SelectSellTokenFromListScreen/SelectSellTokenFromListScreen'
+import {useSelectedWallet} from '../features/WalletManager/Context'
 import {CONFIG} from '../legacy/config'
 import {
   BackButton,

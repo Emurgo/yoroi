@@ -13,7 +13,6 @@ import {ShowExchangeResultOrderScreen} from './features/Exchange/useCases/ShowEx
 import {useLinksRequestAction} from './features/Links/common/useLinksRequestAction'
 import {useLinksShowActionResult} from './features/Links/common/useLinksShowActionResult'
 import {MenuNavigator} from './features/Menu'
-import {useSelectedWallet} from './features/WalletManager/Context'
 import {SettingsScreenNavigator} from './features/Settings'
 import {
   ChooseBiometricLoginScreen,
@@ -22,6 +21,7 @@ import {
 import {SelectWalletFromList} from './features/SetupWallet/useCases/SelectWalletFromList'
 import {GovernanceNavigator} from './features/Staking/Governance'
 import {ToggleAnalyticsSettingsNavigator} from './features/ToggleAnalyticsSettings'
+import {useSelectedWallet} from './features/WalletManager/Context'
 import {useMetrics} from './metrics/metricsManager'
 import {hideTabBarForRoutes, WalletStackRoutes, WalletTabRoutes} from './navigation'
 import {defaultStackNavigationOptions} from './navigation'
