@@ -75,19 +75,19 @@ export const ShareQRCodeCard = ({content, title, isCopying, onLongPress, testId}
             {title}
           </Text>
 
-          <View style={styles.qrCode} testID={`${testId}-qr`}>
-            <QRCode value={content} size={qrSize} backgroundColor={colors.white} color={colors.black} />
-          </View>
-
           <View style={styles.addressContainer}>
-            <Text style={styles.textAddress}>{content}</Text>
+            <View style={styles.qrCode} testID={`${testId}-qr`}>
+              <QRCode value={content} size={qrSize} backgroundColor={colors.white} color={colors.black} />
+            </View>
 
             <Spacer height={16} />
 
-            <TouchableOpacity activeOpacity={0.5} onPress={handleOnPressShare} onLongPress={onLongPress}>
-              <Text style={styles.textShareAddress}>{strings.shareLabel}</Text>
-            </TouchableOpacity>
+            <Text style={styles.textAddress}>{content}</Text>
           </View>
+
+          <TouchableOpacity activeOpacity={0.5} onPress={handleOnPressShare} onLongPress={onLongPress}>
+            <Text style={styles.textShareAddress}>{strings.shareLabel}</Text>
+          </TouchableOpacity>
         </View>
 
         {isCopying && (
@@ -128,6 +128,7 @@ const useStyles = () => {
       minHeight: 394,
       alignSelf: 'center',
       overflow: 'hidden',
+      paddingHorizontal: 16,
       paddingVertical: cardSpacing,
       gap: cardSpacing,
     },
@@ -137,15 +138,14 @@ const useStyles = () => {
     },
     textAddress: {
       textAlign: 'center',
-      paddingHorizontal: 16,
       ...typography['body-2-m-medium'],
       color: color.gray.max,
     },
     textShareAddress: {
       height: 32,
-      textAlignVertical: 'bottom',
+      textAlignVertical: 'center',
       color: color.gray[900],
-      ...typography['body-2-m-medium'],
+      ...typography['button-2-m'],
       textTransform: 'uppercase',
       letterSpacing: 0.5,
     },
