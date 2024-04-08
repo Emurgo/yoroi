@@ -13,7 +13,7 @@ import {ShowExchangeResultOrderScreen} from './features/Exchange/useCases/ShowEx
 import {useLinksRequestAction} from './features/Links/common/useLinksRequestAction'
 import {useLinksShowActionResult} from './features/Links/common/useLinksShowActionResult'
 import {MenuNavigator} from './features/Menu'
-import {useSelectedWallet} from './features/SelectedWallet/Context'
+import {useSelectedWallet} from './features/WalletManager/Context'
 import {SettingsScreenNavigator} from './features/Settings'
 import {
   ChooseBiometricLoginScreen,

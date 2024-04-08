@@ -23,7 +23,7 @@ import {
   useWalletEvent,
 } from '../../../../../yoroi-wallets/hooks'
 import {TransactionInfo} from '../../../../../yoroi-wallets/types'
-import {useSelectedWallet} from '../../../../SelectedWallet/Context'
+import {useSelectedWallet} from '../../../../WalletManager/Context'
 import {Action, LearnMoreLink, useNavigateTo, useStrings} from '../../common'
 import {mapStakingKeyStateToGovernanceAction} from '../../common/helpers'
 import {Routes} from '../../common/navigation'

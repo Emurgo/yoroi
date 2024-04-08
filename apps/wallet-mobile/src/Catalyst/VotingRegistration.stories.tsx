@@ -5,7 +5,7 @@ import React from 'react'
 
 import {QueryProvider, WithModalProps} from '../../.storybook/decorators'
 import {Boundary} from '../components'
-import {SelectedWalletProvider} from '../features/SelectedWallet/Context'
+import {SelectedWalletProvider} from '../features/WalletManager/Context'
 import {YoroiWallet} from '../yoroi-wallets/cardano/types'
 import {mocks} from '../yoroi-wallets/mocks'
 import {ConfirmPin} from './ConfirmPin'

@@ -13,7 +13,7 @@ import {useSetCollateralId} from '../../../../yoroi-wallets/cardano/utxoManager/
 import {useSaveMemo} from '../../../../yoroi-wallets/hooks'
 import {YoroiSignedTx} from '../../../../yoroi-wallets/types'
 import {debugWalletInfo, features} from '../../..'
-import {useSelectedWallet} from '../../../SelectedWallet/Context'
+import {useSelectedWallet} from '../../../WalletManager/Context'
 import {useNavigateTo} from '../navigation'
 import {BalanceAfter} from './Summary/BalanceAfter'
 import {CurrentBalance} from './Summary/CurrentBalance'

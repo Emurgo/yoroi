@@ -5,7 +5,7 @@ import {QueryClientProvider} from 'react-query'
 
 import {queryClientFixture} from '../../../utils/fixtures'
 import {mocks as walletMocks} from '../../../yoroi-wallets/mocks/wallet'
-import {SelectedWalletProvider} from '../../SelectedWallet/Context'
+import {SelectedWalletProvider} from '../../WalletManager/Context'
 import {claimApiMockInstances} from '../module/api.mocks'
 import {ClaimProvider} from '../module/ClaimProvider'
 import {mocks as claimMocks} from '../module/state.mocks'

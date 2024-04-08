@@ -4,7 +4,7 @@ import {AsyncStorageProvider} from '@yoroi/common'
 import React from 'react'
 
 import {QueryProvider, RouteProvider} from '../../../.storybook/decorators'
-import {SelectedWalletProvider} from '../../features/SelectedWallet/Context'
+import {SelectedWalletProvider} from '../../features/WalletManager/Context'
 import {mocks} from '../../yoroi-wallets/mocks'
 import {rootStorage} from '../../yoroi-wallets/storage/rootStorage'
 import {TxDetails} from './TxDetails'

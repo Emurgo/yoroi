@@ -3,7 +3,7 @@ import {useQuery, UseQueryOptions} from 'react-query'
 
 import {useBalances} from '../../../yoroi-wallets/hooks'
 import {Amounts, asQuantity, Quantities} from '../../../yoroi-wallets/utils/utils'
-import {useSelectedWallet} from '../../SelectedWallet/Context'
+import {useSelectedWallet} from '../../WalletManager/Context'
 import {storageKeyShowBuyBannerSmall, storageRootExchange} from './constants'
 
 export const useShowBuyBannerSmall = (options?: UseQueryOptions<boolean, Error, boolean, [string, string]>) => {

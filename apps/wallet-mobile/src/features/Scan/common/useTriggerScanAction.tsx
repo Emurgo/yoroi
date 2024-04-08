@@ -10,7 +10,7 @@ import {useClaimTokens} from '../../../features/Claim/module/useClaimTokens'
 import {AskConfirmation} from '../../../features/Claim/useCases/AskConfirmation'
 import {pastedFormatter} from '../../../yoroi-wallets/utils/amountUtils'
 import {asQuantity, Quantities} from '../../../yoroi-wallets/utils/utils'
-import {useSelectedWallet} from '../../SelectedWallet/Context'
+import {useSelectedWallet} from '../../WalletManager/Context'
 import {ScanAction, ScanFeature} from './types'
 import {useNavigateTo} from './useNavigateTo'
 

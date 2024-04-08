@@ -14,8 +14,8 @@ import {usePrefetchStakingInfo} from '../../Dashboard/StakePoolInfos'
 import {useMetrics} from '../../metrics/metricsManager'
 import {defaultStackNavigationOptions, useWalletNavigation} from '../../navigation'
 import {lightPalette} from '../../theme'
-import {useSelectedWallet} from '../SelectedWallet/Context'
 import {useIsGovernanceFeatureEnabled} from '../Staking/Governance'
+import {useSelectedWallet} from '../WalletManager/Context'
 
 const MenuStack = createStackNavigator()
 

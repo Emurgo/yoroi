@@ -3,7 +3,7 @@ import * as React from 'react'
 import {InteractionManager} from 'react-native'
 
 import {useModal} from '../../../components/Modal/ModalContext'
-import {useSelectedWalletContext} from '../../SelectedWallet/Context'
+import {useSelectedWalletContext} from '../../WalletManager/Context'
 import {AskToOpenWalletScreen} from '../useCases/AskToOpenAWalletScreen/AskToOpenAWalletScreen'
 import {useStrings} from './useStrings'
 

@@ -4,7 +4,7 @@ import {produce} from 'immer'
 import React from 'react'
 
 import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks'
-import {SelectedWalletProvider} from '../../../SelectedWallet/Context'
+import {SelectedWalletProvider} from '../../../WalletManager/Context'
 import {CreateExchangeOrderScreen} from './CreateExchangeOrderScreen'
 
 storiesOf('Exchange CreateExchangeOrderScreen', module) //

@@ -6,7 +6,7 @@ import * as React from 'react'
 import {Text} from 'react-native'
 
 import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks'
-import {SelectedWalletProvider} from '../../../SelectedWallet/Context'
+import {SelectedWalletProvider} from '../../../WalletManager/Context'
 import {ShowBuyBanner} from './ShowBuyBanner'
 
 const thirtyOneDaysInMs = 31 * 24 * 60 * 60 * 1000
