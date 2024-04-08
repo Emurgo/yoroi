@@ -12,7 +12,7 @@ import {LabelConnected} from '../../../common/LabelConnected'
 import {useNavigateTo} from '../../../common/useNavigateTo'
 import {useStrings} from '../../../common/useStrings'
 
-const DIALOG_DAPP_ACTIONS_HEIGHT = 248
+const DIALOG_DAPP_ACTIONS_HEIGHT = 294
 
 type Props = {
   dApp: IDAppItem
