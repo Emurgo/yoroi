@@ -3,7 +3,7 @@ import {TransferProvider} from '@yoroi/transfer'
 import React from 'react'
 
 import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks'
-import {SelectedWalletProvider} from '../../../Wallet/common/Context'
+import {SelectedWalletProvider} from '../../../SelectedWallet/Context'
 import {mocks as sendMocks} from '../../common/mocks'
 import {ConfirmTxScreen} from './ConfirmTxScreen'
 

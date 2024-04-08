@@ -6,7 +6,7 @@ import {Button, StyleSheet, View} from 'react-native'
 
 import {useModal} from '../../../../../../components'
 import {mocks as walletMocks} from '../../../../../../yoroi-wallets/mocks'
-import {SelectedWalletProvider} from '../../../../../Wallet/common/Context'
+import {SelectedWalletProvider} from '../../../../../SelectedWallet/Context'
 import {useStrings} from '../../../../common/strings'
 import {WarnPriceImpact} from './WarnPriceImpact'
 

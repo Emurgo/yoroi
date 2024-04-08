@@ -6,8 +6,8 @@ import {Text} from '../../../../../components/Text'
 import {formatTokenWithText} from '../../../../../legacy/format'
 import {useBalances} from '../../../../../yoroi-wallets/hooks'
 import {Amounts} from '../../../../../yoroi-wallets/utils/utils'
+import {useSelectedWallet} from '../../../../SelectedWallet/Context'
 import {useStrings} from '../../../../Send/common/strings'
-import {useSelectedWallet} from '../../../../Wallet/common/Context'
 
 export const CurrentBalance = () => {
   const strings = useStrings()

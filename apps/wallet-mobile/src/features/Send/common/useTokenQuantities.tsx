@@ -3,7 +3,7 @@ import {Transfer} from '@yoroi/types'
 
 import {useBalance, useLockedAmount} from '../../../yoroi-wallets/hooks'
 import {Amounts, Quantities} from '../../../yoroi-wallets/utils'
-import {useSelectedWallet} from '../../Wallet/common/Context'
+import {useSelectedWallet} from '../../SelectedWallet/Context'
 
 export const useTokenQuantities = (tokenId: string) => {
   const wallet = useSelectedWallet()

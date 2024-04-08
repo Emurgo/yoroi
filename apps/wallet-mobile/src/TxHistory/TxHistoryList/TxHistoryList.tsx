@@ -8,7 +8,7 @@ import {Platform, SectionList, SectionListProps, StyleSheet, View} from 'react-n
 
 import {Spacer, Text} from '../../components'
 import {ShowBuyBanner} from '../../features/Exchange/common/ShowBuyBanner/ShowBuyBanner'
-import {useSelectedWallet} from '../../features/Wallet/common/Context'
+import {useSelectedWallet} from '../../features/SelectedWallet/Context'
 import {formatDateRelative} from '../../legacy/format'
 import {useMetrics} from '../../metrics/metricsManager'
 import {useTransactionInfos} from '../../yoroi-wallets/hooks'

@@ -13,15 +13,15 @@ import {ShowExchangeResultOrderScreen} from './features/Exchange/useCases/ShowEx
 import {useLinksRequestAction} from './features/Links/common/useLinksRequestAction'
 import {useLinksShowActionResult} from './features/Links/common/useLinksShowActionResult'
 import {MenuNavigator} from './features/Menu'
+import {useSelectedWallet} from './features/SelectedWallet/Context'
 import {SettingsScreenNavigator} from './features/Settings'
-import {GovernanceNavigator} from './features/Staking/Governance'
-import {ToggleAnalyticsSettingsNavigator} from './features/ToggleAnalyticsSettings'
-import {useSelectedWallet} from './features/Wallet/common/Context'
 import {
   ChooseBiometricLoginScreen,
   useShowBiometricsScreen,
-} from './features/Wallet/useCases/ChooseBiometricLogin/ChooseBiometricLoginScreen'
-import {SelectWalletFromList} from './features/Wallet/useCases/SelectWalletFromList'
+} from './features/SetupWallet/useCases/ChooseBiometricLogin/ChooseBiometricLoginScreen'
+import {SelectWalletFromList} from './features/SetupWallet/useCases/SelectWalletFromList'
+import {GovernanceNavigator} from './features/Staking/Governance'
+import {ToggleAnalyticsSettingsNavigator} from './features/ToggleAnalyticsSettings'
 import {useMetrics} from './metrics/metricsManager'
 import {hideTabBarForRoutes, WalletStackRoutes, WalletTabRoutes} from './navigation'
 import {defaultStackNavigationOptions} from './navigation'

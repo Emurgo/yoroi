@@ -12,7 +12,7 @@ import {errorMessages} from '../../../i18n/global-messages'
 import {isEmptyString} from '../../../utils/utils'
 import {WrongPassword} from '../../../yoroi-wallets/cardano/errors'
 import {useEnableEasyConfirmation} from '../../../yoroi-wallets/hooks'
-import {useSelectedWallet, useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../Wallet/common/Context'
+import {useSelectedWallet, useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../SelectedWallet/Context'
 
 export const EnableEasyConfirmationScreen = () => {
   const intl = useIntl()

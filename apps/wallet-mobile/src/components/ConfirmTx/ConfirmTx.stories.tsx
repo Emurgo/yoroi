@@ -2,7 +2,7 @@ import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {SelectedWalletProvider} from '../../features/Wallet/common/Context'
+import {SelectedWalletProvider} from '../../features/SelectedWallet/Context'
 import {mocks} from '../../yoroi-wallets/mocks'
 import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {ConfirmTx} from './ConfirmTx'

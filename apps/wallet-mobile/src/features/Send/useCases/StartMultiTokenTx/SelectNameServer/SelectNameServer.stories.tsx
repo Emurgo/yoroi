@@ -9,7 +9,7 @@ import {QueryProvider} from '../../../../../../.storybook/decorators'
 import {Boundary} from '../../../../../components'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {mocks as walletMocks} from '../../../../../yoroi-wallets/mocks/wallet'
-import {SelectedWalletProvider} from '../../../../Wallet/common/Context'
+import {SelectedWalletProvider} from '../../../../SelectedWallet/Context'
 import {SelectNameServer} from './SelectNameServer'
 
 storiesOf('Send SelectNameServer', module)

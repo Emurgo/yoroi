@@ -2,7 +2,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
 import {QueryProvider} from '../../.storybook/decorators'
-import {SelectedWalletProvider} from '../features/Wallet/common/Context'
+import {SelectedWalletProvider} from '../features/SelectedWallet/Context'
 import {YoroiWallet} from '../yoroi-wallets/cardano/types'
 import {mocks} from '../yoroi-wallets/mocks'
 import {Dashboard} from './Dashboard'

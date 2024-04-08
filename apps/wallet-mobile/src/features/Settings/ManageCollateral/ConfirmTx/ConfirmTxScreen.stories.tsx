@@ -3,8 +3,8 @@ import {TransferProvider} from '@yoroi/transfer'
 import React from 'react'
 
 import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks'
+import {SelectedWalletProvider} from '../../../SelectedWallet/Context'
 import {mocks as sendMocks} from '../../../Send/common/mocks'
-import {SelectedWalletProvider} from '../../../Wallet/common/Context'
 import {ConfirmTxScreen} from './ConfirmTxScreen'
 
 storiesOf('Confirm Tx', module).add('initial', () => {

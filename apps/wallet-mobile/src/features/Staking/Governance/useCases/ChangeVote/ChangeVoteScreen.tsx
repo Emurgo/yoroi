@@ -11,7 +11,7 @@ import {StyleSheet, Text, View} from 'react-native'
 
 import {Spacer, useModal} from '../../../../../components'
 import {useCreateGovernanceTx, useStakingKey} from '../../../../../yoroi-wallets/hooks'
-import {useSelectedWallet} from '../../../../Wallet/common/Context'
+import {useSelectedWallet} from '../../../../SelectedWallet/Context'
 import {Action, LearnMoreLink, useNavigateTo, useStrings} from '../../common'
 import {mapStakingKeyStateToGovernanceAction} from '../../common/helpers'
 import {GovernanceVote} from '../../types'

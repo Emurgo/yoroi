@@ -16,7 +16,7 @@ import {NotEnoughMoneyToSendError} from '../../../../../yoroi-wallets/cardano/ty
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {YoroiEntry} from '../../../../../yoroi-wallets/types'
 import {isMainnetNetworkId, Quantities} from '../../../../../yoroi-wallets/utils'
-import {useSelectedWallet} from '../../../../Wallet/common/Context'
+import {useSelectedWallet} from '../../../../SelectedWallet/Context'
 import {createOrderEntry, makePossibleFrontendFeeEntry} from '../../../common/entries'
 import {getPriceImpactRisk} from '../../../common/helpers'
 import {useNavigateTo} from '../../../common/navigation'

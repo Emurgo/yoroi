@@ -1,0 +1,92 @@
+[
+  {
+    "id": "components.walletinit.walletform.walletNameInputLabel",
+    "defaultMessage": "!!!Wallet name",
+    "file": "src/features/SetupWallet/legacy/WalletForm.tsx",
+    "start": {
+      "line": 133,
+      "column": 24,
+      "index": 5050
+    },
+    "end": {
+      "line": 136,
+      "column": 3,
+      "index": 5158
+    }
+  },
+  {
+    "id": "components.walletinit.walletform.newPasswordInput",
+    "defaultMessage": "!!!Spending password",
+    "file": "src/features/SetupWallet/legacy/WalletForm.tsx",
+    "start": {
+      "line": 137,
+      "column": 20,
+      "index": 5180
+    },
+    "end": {
+      "line": 140,
+      "column": 3,
+      "index": 5290
+    }
+  },
+  {
+    "id": "components.walletinit.walletform.continueButton",
+    "defaultMessage": "!!!Continue",
+    "file": "src/features/SetupWallet/legacy/WalletForm.tsx",
+    "start": {
+      "line": 141,
+      "column": 18,
+      "index": 5310
+    },
+    "end": {
+      "line": 144,
+      "column": 3,
+      "index": 5409
+    }
+  },
+  {
+    "id": "components.walletinit.createwallet.createwalletscreen.passwordLengthRequirement",
+    "defaultMessage": "!!!Minimum characters",
+    "file": "src/features/SetupWallet/legacy/WalletForm.tsx",
+    "start": {
+      "line": 145,
+      "column": 31,
+      "index": 5442
+    },
+    "end": {
+      "line": 148,
+      "column": 3,
+      "index": 5583
+    }
+  },
+  {
+    "id": "components.walletinit.walletform.repeatPasswordInputLabel",
+    "defaultMessage": "!!!Repeat password",
+    "file": "src/features/SetupWallet/legacy/WalletForm.tsx",
+    "start": {
+      "line": 149,
+      "column": 28,
+      "index": 5613
+    },
+    "end": {
+      "line": 152,
+      "column": 3,
+      "index": 5729
+    }
+  },
+  {
+    "id": "components.walletinit.walletform.repeatPasswordInputError",
+    "defaultMessage": "!!!Passwords do not match",
+    "file": "src/features/SetupWallet/legacy/WalletForm.tsx",
+    "start": {
+      "line": 153,
+      "column": 28,
+      "index": 5759
+    },
+    "end": {
+      "line": 156,
+      "column": 3,
+      "index": 5882
+    }
+  }
+]

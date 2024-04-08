@@ -5,7 +5,7 @@ import * as React from 'react'
 
 import {mocks} from '../../../../yoroi-wallets/mocks'
 import {rootStorage} from '../../../../yoroi-wallets/storage/rootStorage'
-import {SelectedWalletProvider} from '../../../Wallet/common/Context'
+import {SelectedWalletProvider} from '../../../SelectedWallet/Context'
 import {SingleOrMultipleAddressesModal} from './SingleOrMultipleAddressesModal'
 
 storiesOf('Receive SingleOrMultipleAddressesModal', module).add('default', () => (

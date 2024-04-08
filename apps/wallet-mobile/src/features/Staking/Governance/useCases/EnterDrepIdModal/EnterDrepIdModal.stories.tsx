@@ -3,7 +3,7 @@ import {GovernanceProvider} from '@yoroi/staking'
 import React from 'react'
 
 import {mocks} from '../../../../../yoroi-wallets/mocks'
-import {SelectedWalletProvider} from '../../../../Wallet/common/Context'
+import {SelectedWalletProvider} from '../../../../SelectedWallet/Context'
 import {mocks as governanceMocks} from '../../common'
 import {EnterDrepIdModal} from './EnterDrepIdModal'
 

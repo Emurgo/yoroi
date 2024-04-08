@@ -3,7 +3,7 @@ import React from 'react'
 import {View} from 'react-native'
 
 import {QueryProvider} from '../../../.storybook/decorators'
-import {SelectedWalletProvider} from '../../features/Wallet/common/Context'
+import {SelectedWalletProvider} from '../../features/SelectedWallet/Context'
 import {mocks} from '../../yoroi-wallets/mocks'
 import {PairedBalance} from './PairedBalance'
 

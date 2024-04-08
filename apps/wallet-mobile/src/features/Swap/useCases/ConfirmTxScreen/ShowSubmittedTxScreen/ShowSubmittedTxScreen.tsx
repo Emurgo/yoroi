@@ -8,7 +8,7 @@ import {z} from 'zod'
 import {Button, Spacer, Text} from '../../../../../components'
 import {useBlockGoBack, useUnsafeParams, useWalletNavigation} from '../../../../../navigation'
 import {getNetworkConfigById} from '../../../../../yoroi-wallets/cardano/networks'
-import {useSelectedWallet} from '../../../../Wallet/common/Context'
+import {useSelectedWallet} from '../../../../SelectedWallet/Context'
 import {useStrings} from '../../../common/strings'
 import {SubmittedTxImage} from './SubmittedTxImage'
 

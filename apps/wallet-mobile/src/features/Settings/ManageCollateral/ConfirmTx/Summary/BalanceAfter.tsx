@@ -7,7 +7,7 @@ import {formatTokenWithSymbol} from '../../../../../legacy/format'
 import {useBalances} from '../../../../../yoroi-wallets/hooks'
 import {YoroiUnsignedTx} from '../../../../../yoroi-wallets/types/yoroi'
 import {Amounts} from '../../../../../yoroi-wallets/utils/utils'
-import {useSelectedWallet} from '../../../../Wallet/common/Context'
+import {useSelectedWallet} from '../../../../SelectedWallet/Context'
 
 export const BalanceAfter = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => {
   const strings = useStrings()

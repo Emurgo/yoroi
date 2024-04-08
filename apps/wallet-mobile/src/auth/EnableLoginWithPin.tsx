@@ -1,7 +1,7 @@
 import React from 'react'
 
 import {LoadingOverlay} from '../components/LoadingOverlay'
-import {useSelectedWalletContext} from '../features/Wallet/common/Context'
+import {useSelectedWalletContext} from '../features/SelectedWallet/Context'
 import {useDisableAllEasyConfirmation} from '../yoroi-wallets/auth'
 import {CreatePinScreen} from './CreatePinScreen'
 

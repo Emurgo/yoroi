@@ -1,7 +1,7 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {useSelectedWallet} from '../../features/Wallet/common/Context'
+import {useSelectedWallet} from '../../features/SelectedWallet/Context'
 import {useIsOnline} from '../../yoroi-wallets/hooks'
 import {Banner} from '../Banner'
 import {LoadingBoundary} from '../Boundary'

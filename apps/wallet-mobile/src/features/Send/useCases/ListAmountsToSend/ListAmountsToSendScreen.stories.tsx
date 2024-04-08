@@ -4,7 +4,7 @@ import React from 'react'
 
 import {SearchProvider} from '../../../../Search/SearchContext'
 import {mocks} from '../../../../yoroi-wallets/mocks/wallet'
-import {SelectedWalletProvider} from '../../../Wallet/common/Context'
+import {SelectedWalletProvider} from '../../../SelectedWallet/Context'
 import {ListAmountsToSendScreen} from './ListAmountsToSendScreen'
 
 storiesOf('List Amounts To Send', module).add('initial', () => {

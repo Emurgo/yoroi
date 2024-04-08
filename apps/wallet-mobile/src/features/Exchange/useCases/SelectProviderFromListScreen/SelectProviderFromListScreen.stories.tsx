@@ -4,7 +4,7 @@ import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {mocks} from '../../../../yoroi-wallets/mocks'
-import {SelectedWalletProvider} from '../../../Wallet/common/Context'
+import {SelectedWalletProvider} from '../../../SelectedWallet/Context'
 import {SelectProviderFromListScreen} from './SelectProviderFromListScreen'
 
 storiesOf('Exchange SelectProviderFromListScreen', module).add('Default', () => {

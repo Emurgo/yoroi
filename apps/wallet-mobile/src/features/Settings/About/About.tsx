@@ -9,7 +9,7 @@ import {CONFIG} from '../../../legacy/config'
 import {lightPalette} from '../../../theme'
 import {getNetworkConfigById} from '../../../yoroi-wallets/cardano/networks'
 import {isHaskellShelley} from '../../../yoroi-wallets/cardano/utils'
-import {useSelectedWallet} from '../../Wallet/common/Context'
+import {useSelectedWallet} from '../../SelectedWallet/Context'
 
 const version = DeviceInfo.getVersion()
 

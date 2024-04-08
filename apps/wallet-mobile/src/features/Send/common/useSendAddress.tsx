@@ -3,7 +3,7 @@ import * as React from 'react'
 import {useQuery, UseQueryOptions} from 'react-query'
 
 import {normalizeToAddress, toCardanoNetworkId} from '../../../yoroi-wallets/cardano/utils'
-import {useSelectedWallet} from '../../Wallet/common/Context'
+import {useSelectedWallet} from '../../SelectedWallet/Context'
 import {AddressErrorInvalid, AddressErrorWrongNetwork} from './errors'
 
 export const useSendAddress = () => {

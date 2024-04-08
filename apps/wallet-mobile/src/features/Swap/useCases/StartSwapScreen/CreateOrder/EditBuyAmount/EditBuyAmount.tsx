@@ -2,7 +2,7 @@ import {useSwap} from '@yoroi/swap'
 import * as React from 'react'
 
 import {useBalance} from '../../../../../../yoroi-wallets/hooks'
-import {useSelectedWallet} from '../../../../../Wallet/common/Context'
+import {useSelectedWallet} from '../../../../../SelectedWallet/Context'
 import {AmountCard} from '../../../../common/AmountCard/AmountCard'
 import {useNavigateTo} from '../../../../common/navigation'
 import {useStrings} from '../../../../common/strings'

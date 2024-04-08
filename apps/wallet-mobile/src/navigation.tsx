@@ -114,21 +114,21 @@ export type WalletStackRoutes = {
 export type WalletStackRouteNavigation = StackNavigationProp<WalletStackRoutes>
 
 export type WalletInitRoutes = {
-  'add-wallet-choose-setup-type': undefined
-  'add-wallet-choose-network': undefined
-  'add-wallet-choose-mnemonic-type': undefined
-  'initial-add-wallet-choose-setup-type': undefined
-  'add-wallet-details-form': undefined
-  'add-wallet-restore-form': undefined
-  'add-wallet-restore-details': undefined
-  'add-wallet-import-read-only': undefined
-  'add-wallet-save-read-only': undefined
-  'add-wallet-check-nano-x': undefined
-  'add-wallet-connect-nano-x': undefined
-  'add-wallet-save-nano-x': undefined
-  'add-wallet-about-recovery-phase': undefined
-  'add-wallet-recovery-phrase-mnemonic': undefined
-  'add-wallet-verify-recovery-phrase-mnemonic': undefined
+  'setup-wallet-choose-setup-type': undefined
+  'setup-wallet-choose-network': undefined
+  'setup-wallet-choose-mnemonic-type': undefined
+  'initial-setup-wallet-choose-setup-type': undefined
+  'setup-wallet-details-form': undefined
+  'setup-wallet-restore-form': undefined
+  'setup-wallet-restore-details': undefined
+  'setup-wallet-import-read-only': undefined
+  'setup-wallet-save-read-only': undefined
+  'setup-wallet-check-nano-x': undefined
+  'setup-wallet-connect-nano-x': undefined
+  'setup-wallet-save-nano-x': undefined
+  'setup-wallet-about-recovery-phase': undefined
+  'setup-wallet-recovery-phrase-mnemonic': undefined
+  'setup-wallet-verify-recovery-phrase-mnemonic': undefined
 }
 export type WalletInitRouteNavigation = StackNavigationProp<WalletInitRoutes>
 

@@ -3,7 +3,7 @@ import React from 'react'
 
 import {WithModalProps} from '../../../../../.storybook/decorators'
 import {mocks} from '../../../../yoroi-wallets/mocks'
-import {SelectedWalletProvider} from '../../../Wallet/common/Context'
+import {SelectedWalletProvider} from '../../../SelectedWallet/Context'
 import {AddressModal} from './AddressModal'
 
 const address =

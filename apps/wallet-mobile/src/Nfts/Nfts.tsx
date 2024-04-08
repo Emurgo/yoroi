@@ -7,7 +7,7 @@ import {RefreshControl, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Icon, NftImageGallery, SkeletonGallery, Spacer} from '../components'
-import {useSelectedWallet} from '../features/Wallet/common/Context'
+import {useSelectedWallet} from '../features/SelectedWallet/Context'
 import {useMetrics} from '../metrics/metricsManager'
 import {useSearch, useSearchOnNavBar} from '../Search/SearchContext'
 import {useNfts} from '../yoroi-wallets/hooks'
