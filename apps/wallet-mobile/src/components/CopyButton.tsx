@@ -5,7 +5,6 @@ import Animated, {FadeInDown, FadeOutDown, Layout} from 'react-native-reanimated
 
 import {Text} from '../../../wallet-mobile/src/components'
 import {Icon} from '../components/Icon'
-import {useStrings} from '../features/Receive/common/useStrings'
 import {useCopy} from '../legacy/useCopy'
 
 export type CopyButtonProps = {
@@ -13,15 +12,17 @@ export type CopyButtonProps = {
   onCopy?: () => void
   children?: React.ReactNode
   style?: StyleProp<ViewStyle>
+  message?: string
 }
 
-export const CopyButton = ({value, onCopy, children, style}: CopyButtonProps) => {
+export const CopyButton = ({value, onCopy, children, style, message}: CopyButtonProps) => {
   const [isCopying, copy] = useCopy()
 
   return (
     <AnimatedCopyButton
       style={style}
       isCopying={isCopying}
+      message={message}
       onCopy={() => {
         copy(value)
         onCopy?.()
@@ -32,51 +33,26 @@ export const CopyButton = ({value, onCopy, children, style}: CopyButtonProps) =>
   )
 }
 
-const AnimatedCopyButton = ({
+export const AnimatedCopyButton = ({
   onCopy,
   children,
   style,
   isCopying,
-}: Omit<CopyButtonProps, 'value'> & {isCopying: boolean}) => {
-  const strings = useStrings()
+  message,
+}: Omit<CopyButtonProps, 'value'> & {isCopying: boolean; message?: string | null | undefined}) => {
   const {styles, colors} = useStyles()
 
   return (
     <TouchableOpacity onPress={onCopy} disabled={isCopying} testID="copyButton" style={style}>
       {isCopying ? (
         <View style={styles.rowContainer}>
-          <Animated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
-            <Text style={styles.copiedText}>{strings.addressCopiedMsg}</Text>
-          </Animated.View>
-
-          <Icon.CopySuccess size={26} color={colors.gray} />
-        </View>
-      ) : (
-        <Icon.Copy size={26} color={colors.gray} />
-      )}
-
-      {children}
-    </TouchableOpacity>
-  )
-}
-
-
-export const AnimatedCopyButtonWithMessage = ({
-  onCopy,
-  children,
-  style,
-  isCopying,
-}: Omit<CopyButtonProps, 'value'> & {isCopying: boolean}) => {
-  const strings = useStrings()
-  const {styles, colors} = useStyles()
-
-  return (
-    <TouchableOpacity onPress={onCopy} disabled={isCopying} testID="copyButton" style={style}>
-      {isCopying ? (
-        <View style={styles.rowContainer}>
-          <Animated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
-            <Text style={styles.copiedText}>{strings.addressCopiedMsg}</Text>
-          </Animated.View>
+          {message != null ? (
+            <Animated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
+              <Text style={styles.copiedText}>{message}</Text>
+            </Animated.View>
+          ) : (
+            <View />
+          )}
 
           <Icon.CopySuccess size={26} color={colors.gray} />
         </View>
