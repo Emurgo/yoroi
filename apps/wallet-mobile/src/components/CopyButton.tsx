@@ -33,13 +33,13 @@ export const CopyButton = ({value, onCopy, children, style, message}: CopyButton
   )
 }
 
-export const AnimatedCopyButton = ({
+const AnimatedCopyButton = ({
   onCopy,
   children,
   style,
   isCopying,
   message,
-}: Omit<CopyButtonProps, 'value'> & {isCopying: boolean; message?: string | null | undefined}) => {
+}: Omit<CopyButtonProps, 'value'> & {isCopying: boolean; message?: string}) => {
   const {styles, colors} = useStyles()
 
   return (
