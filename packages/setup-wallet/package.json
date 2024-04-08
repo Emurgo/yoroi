@@ -1,22 +1,22 @@
 {
-  "name": "@yoroi/wallet-setup",
+  "name": "@yoroi/setup-wallet",
   "version": "1.0.0",
-  "description": "The Transfer package of Yoroi SDK",
+  "description": "The Wallet Setup package of Yoroi SDK",
   "keywords": [
     "yoroi",
     "cardano",
-    "wallet-setup",
+    "setup-wallet",
     "browser",
     "react"
   ],
-  "homepage": "https://github.com/Emurgo/yoroi/packages/wallet-setup#readme",
+  "homepage": "https://github.com/Emurgo/yoroi/packages/setup-wallet#readme",
   "bugs": {
     "url": "https://github.com/Emurgo/yoroi/issues"
   },
   "repository": {
     "type": "github",
     "url": "https://github.com/Emurgo/yoroi.git",
-    "directory": "packages/wallet-setup"
+    "directory": "packages/setup-wallet"
   },
   "license": "Apache-2.0",
   "author": "EMURGO Fintech <support@emurgo.com> (https://github.com/Emurgo/yoroi)",

@@ -27,8 +27,8 @@ yarn workspace @yoroi/swap add @yoroi/common@"$1"
 # transfer
 yarn workspace @yoroi/transfer add -D @yoroi/types@"$1"
 
-# wallet-setup
-yarn workspace @yoroi/wallet-setup add -D @yoroi/types@"$1"
+# setup-wallet
+yarn workspace @yoroi/setup-wallet add -D @yoroi/types@"$1"
 
 # resolver
 yarn workspace @yoroi/resolver add -D @yoroi/types@"$1"
@@ -49,7 +49,7 @@ yarn workspace @yoroi/wallet-mobile add @yoroi/api@"$1"
 yarn workspace @yoroi/wallet-mobile add @yoroi/common@"$1"
 yarn workspace @yoroi/wallet-mobile add @yoroi/swap@"$1"
 yarn workspace @yoroi/wallet-mobile add @yoroi/transfer@"$1"
-yarn workspace @yoroi/wallet-mobile add @yoroi/wallet-setup@"$1"
+yarn workspace @yoroi/wallet-mobile add @yoroi/setup-wallet@"$1"
 yarn workspace @yoroi/wallet-mobile add @yoroi/links@"$1"
 yarn workspace @yoroi/wallet-mobile add @yoroi/staking@"$1"
 yarn workspace @yoroi/wallet-mobile add @yoroi/resolver@"$1"
