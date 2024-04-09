@@ -5,9 +5,9 @@ import {TouchableOpacity} from 'react-native-gesture-handler'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {Icon} from '../../../../components'
+import {useBrowser} from '../../common/BrowserProvider'
 import {useNavigateTo} from '../../common/useNavigateTo'
 import {useStrings} from '../../common/useStrings'
-import {useBrowser} from '../../common/BrowserProvider'
 
 export const BrowserTabsBar = () => {
   const strings = useStrings()

@@ -5,12 +5,12 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import uuid from 'uuid'
 
 import {Icon, Spacer, useModal} from '../../../../../components'
+import {useBrowser} from '../../../common/BrowserProvider'
 import {GOOGLE_DAPP_ID, IDAppItem} from '../../../common/DAppMock'
 import {LabelCategoryDApp} from '../../../common/LabelCategoryDApp'
 import {LabelConnected} from '../../../common/LabelConnected'
 import {useNavigateTo} from '../../../common/useNavigateTo'
 import {useStrings} from '../../../common/useStrings'
-import {useBrowser} from '../../../common/BrowserProvider'
 
 const DIALOG_DAPP_ACTIONS_HEIGHT = 294
 
