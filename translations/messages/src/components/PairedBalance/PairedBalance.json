@@ -1,0 +1,17 @@
+[
+  {
+    "id": "components.txhistory.balancebanner.pairedbalance.error",
+    "defaultMessage": "!!!Error obtaining {currency} pairing",
+    "file": "src/components/PairedBalance/PairedBalance.tsx",
+    "start": {
+      "line": 88,
+      "column": 22,
+      "index": 2781
+    },
+    "end": {
+      "line": 91,
+      "column": 3,
+      "index": 2913
+    }
+  }
+]

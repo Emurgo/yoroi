@@ -1,0 +1,467 @@
+[
+  {
+    "id": "components.receive.specificamountscreen.title",
+    "defaultMessage": "!!!Amount to receive",
+    "file": "src/features/Receive/common/useStrings.tsx",
+    "start": {
+      "line": 41,
+      "column": 19,
+      "index": 2138
+    },
+    "end": {
+      "line": 44,
+      "column": 3,
+      "index": 2244
+    }
+  },
+  {
+    "id": "components.receive.receivescreen.title",
+    "defaultMessage": "!!!Receive",
+    "file": "src/features/Receive/common/useStrings.tsx",
+    "start": {
+      "line": 45,
+      "column": 16,
+      "index": 2262
+    },
+    "end": {
+      "line": 48,
+      "column": 3,
+      "index": 2351
+    }
+  },
+  {
+    "id": "components.receive.describeselectedaddressscreen.title",
+    "defaultMessage": "!!!Address details",
+    "file": "src/features/Receive/common/useStrings.tsx",
+    "start": {
+      "line": 49,
+      "column": 32,
+      "index": 2385
+    },
+    "end": {
+      "line": 52,
+      "column": 3,
+      "index": 2498
+    }
+  },
+  {
+    "id": "components.receive.addresscard.title",
+    "defaultMessage": "!!!Wallet address",
+    "file": "src/features/Receive/common/useStrings.tsx",
+    "start": {
+      "line": 53,
+      "column": 20,
+      "index": 2520
+    },
+    "end": {
+      "line": 56,
+      "column": 3,
+      "index": 2614
+    }
+  },
+  {
+    "id": "components.receive.addresscard.shareLabel",
+    "defaultMessage": "!!!Share address",
+    "file": "src/features/Receive/common/useStrings.tsx",
+    "start": {
+      "line": 57,
+      "column": 14,
+      "index": 2630
+    },
+    "end": {
+      "line": 60,
+      "column": 3,
+      "index": 2728
+    }
+  },
+  {
+    "id": "components.receive.addresscard.walletAddress",
+    "defaultMessage": "!!!Wallet address details",
+    "file": "src/features/Receive/common/useStrings.tsx",
+    "start": {
+      "line": 61,
+      "column": 17,
+      "index": 2747
+    },
+    "end": {
+      "line": 64,
+      "column": 3,
+      "index": 2857
+    }
+  },
+  {
+    "id": "components.receive.addresscard.spendingKeyHash",
+    "defaultMessage": "!!!Spending key hash",
+    "file": "src/features/Receive/common/useStrings.tsx",
+    "start": {
+      "line": 65,
+      "column": 19,
+      "index": 2878
+    },
+    "end": {
+      "line": 68,
+      "column": 3,
+      "index": 2985
+    }
+  },
+  {
+    "id": "components.receive.addresscard.stakingKeyHash",
+    "defaultMessage": "!!!Staking key hash",
+    "file": "src/features/Receive/common/useStrings.tsx",
+    "start": {
+      "line": 69,
+      "column": 18,
+      "index": 3005
+    },
+    "end": {
+      "line": 72,
+      "column": 3,
+      "index": 3110
+    }
+  },
+  {
+    "id": "components.receive.addresscard.address",
+    "defaultMessage": "!!!Address",
+    "file": "src/features/Receive/common/useStrings.tsx",
+    "start": {
+      "line": 73,
+      "column": 11,
+      "index": 3123
+    },
+    "end": {
+      "line": 76,
+      "column": 3,
+      "index": 3212
+    }
+  },
+  {
+    "id": "components.receive.receivescreen.copyButton",
+    "defaultMessage": "!!!Copy address",
+    "file": "src/features/Receive/common/useStrings.tsx",
+    "start": {
+      "line": 77,
+      "column": 21,
+      "index": 3235
+    },
+    "end": {
+      "line": 80,
+      "column": 3,
+      "index": 3334
+    }
+  },
+  {
+    "id": "components.receive.receivescreen.requestSpecificAmountButton",
+    "defaultMessage": "!!!Request specific amount",
+    "file": "src/features/Receive/common/useStrings.tsx",
+    "start": {
+      "line": 81,
+      "column": 31,
+      "index": 3367
+    },
+    "end": {
+      "line": 84,
+      "column": 3,
+      "index": 3494
+    }
+  },
+  {
+    "id": "components.receive.receivescreen.specificAmount",
+    "defaultMessage": "!!!Request specific amount",
+    "file": "src/features/Receive/common/useStrings.tsx",
+    "start": {
+      "line": 85,
+      "column": 18,
+      "index": 3514
+    },
+    "end": {
+      "line": 88,
+      "column": 3,
+      "index": 3628
+    }
+  },
+  {
+    "id": "components.receive.receivescreen.specificAmountDescription",
+    "defaultMessage": "!!!Generate a unique wallet address for requesting a specific amount of ADA from another wallet.",
+    "file": "src/features/Receive/common/useStrings.tsx",
+    "start": {
+      "line": 89,
+      "column": 29,
+      "index": 3659
+    },
+    "end": {
+      "line": 92,
+      "column": 3,
+      "index": 3854
+    }
+  },
+  {
+    "id": "components.receive.receivescreen.ADALabel",
+    "defaultMessage": "!!!ADA Amount",
+    "file": "src/features/Receive/common/useStrings.tsx",
+    "start": {
+      "line": 93,
+      "column": 12,
+      "index": 3868
+    },
+    "end": {
+      "line": 96,
+      "column": 3,
+      "index": 3963
+    }
+  },
+  {
+    "id": "components.receive.receivescreen.generateLink",
+    "defaultMessage": "!!!Generate link",
+    "file": "src/features/Receive/common/useStrings.tsx",
+    "start": {
+      "line": 97,
+      "column": 16,
+      "index": 3981
+    },
+    "end": {
+      "line": 100,
+      "column": 3,
+      "index": 4083
+    }
+  },
+  {
+    "id": "components.receive.receivescreen.multipleAddress",
+    "defaultMessage": "!!!Multiple addresses",
+    "file": "src/features/Receive/common/useStrings.tsx",
+    "start": {
+      "line": 101,
+      "column": 19,
+      "index": 4104
+    },
+    "end": {
+      "line": 104,
+      "column": 3,
+      "index": 4214
+    }
+  },
+  {
+    "id": "global.singleAddress",
+    "defaultMessage": "!!!Single address",
+    "file": "src/features/Receive/common/useStrings.tsx",
+    "start": {
+      "line": 105,
+      "column": 17,
+      "index": 4233
+    },
+    "end": {
+      "line": 108,
+      "column": 3,
+      "index": 4311
+    }
+  },
+  {
+    "id": "components.receive.receivescreen.copyLinkBtn",
+    "defaultMessage": "!!!Copy link",
+    "file": "src/features/Receive/common/useStrings.tsx",
+    "start": {
+      "line": 109,
+      "column": 15,
+      "index": 4328
+    },
+    "end": {
+      "line": 112,
+      "column": 3,
+      "index": 4425
+    }
+  },
+  {
+    "id": "components.receive.receivescreen.copyLinkMsg",
+    "defaultMessage": "!!!Link copied",
+    "file": "src/features/Receive/common/useStrings.tsx",
+    "start": {
+      "line": 113,
+      "column": 15,
+      "index": 4442
+    },
+    "end": {
+      "line": 116,
+      "column": 3,
+      "index": 4541
+    }
+  },
+  {
+    "id": "components.receive.receivescreen.addressCopiedMsg",
+    "defaultMessage": "!!!Address copied",
+    "file": "src/features/Receive/common/useStrings.tsx",
+    "start": {
+      "line": 117,
+      "column": 20,
+      "index": 4563
+    },
+    "end": {
+      "line": 120,
+      "column": 3,
+      "index": 4670
+    }
+  },
+  {
+    "id": "components.receive.receivescreen.lastUsed",
+    "defaultMessage": "!!!Last used",
+    "file": "src/features/Receive/common/useStrings.tsx",
+    "start": {
+      "line": 121,
+      "column": 12,
+      "index": 4684
+    },
+    "end": {
+      "line": 124,
+      "column": 3,
+      "index": 4778
+    }
+  },
+  {
+    "id": "components.receive.receivescreen.unusedAddress",
+    "defaultMessage": "!!!Unused",
+    "file": "src/features/Receive/common/useStrings.tsx",
+    "start": {
+      "line": 125,
+      "column": 17,
+      "index": 4797
+    },
+    "end": {
+      "line": 128,
+      "column": 3,
+      "index": 4893
+    }
+  },
+  {
+    "id": "components.receive.receivescreen.usedAddress",
+    "defaultMessage": "!!!Used",
+    "file": "src/features/Receive/common/useStrings.tsx",
+    "start": {
+      "line": 129,
+      "column": 15,
+      "index": 4910
+    },
+    "end": {
+      "line": 132,
+      "column": 3,
+      "index": 5002
+    }
+  },
+  {
+    "id": "components.receive.receivescreen.generateButton",
+    "defaultMessage": "!!!Generate new address",
+    "file": "src/features/Receive/common/useStrings.tsx",
+    "start": {
+      "line": 133,
+      "column": 18,
+      "index": 5022
+    },
+    "end": {
+      "line": 136,
+      "column": 3,
+      "index": 5133
+    }
+  },
+  {
+    "id": "components.receive.receivescreen.infoAddressLimit",
+    "defaultMessage": "!!!You have already reached your 20 addresses limit. If you need to operate with more than 20 addresses, reach out to us via Yoroi Zendesk",
+    "file": "src/features/Receive/common/useStrings.tsx",
+    "start": {
+      "line": 137,
+      "column": 20,
+      "index": 5155
+    },
+    "end": {
+      "line": 141,
+      "column": 3,
+      "index": 5389
+    }
+  },
+  {
+    "id": "components.receive.receivescreen.singleOrMultiple",
+    "defaultMessage": "!!!Single or multiple address?",
+    "file": "src/features/Receive/common/useStrings.tsx",
+    "start": {
+      "line": 142,
+      "column": 20,
+      "index": 5411
+    },
+    "end": {
+      "line": 145,
+      "column": 3,
+      "index": 5531
+    }
+  },
+  {
+    "id": "components.receive.receivescreen.singleOrMultipleDetails",
+    "defaultMessage": "!!!Single keeps things simple and secure. Multiple may offer some extra privacy. For most users, single address is the way to go! You can always change it in settings.",
+    "file": "src/features/Receive/common/useStrings.tsx",
+    "start": {
+      "line": 146,
+      "column": 27,
+      "index": 5560
+    },
+    "end": {
+      "line": 150,
+      "column": 3,
+      "index": 5830
+    }
+  },
+  {
+    "id": "components.receive.receivescreen.selectMultiple",
+    "defaultMessage": "!!!Select multiple instead",
+    "file": "src/features/Receive/common/useStrings.tsx",
+    "start": {
+      "line": 151,
+      "column": 18,
+      "index": 5850
+    },
+    "end": {
+      "line": 154,
+      "column": 3,
+      "index": 5964
+    }
+  },
+  {
+    "id": "components.receive.receivescreen.singleAddressWallet",
+    "defaultMessage": "!!!Single address wallet",
+    "file": "src/features/Receive/common/useStrings.tsx",
+    "start": {
+      "line": 155,
+      "column": 23,
+      "index": 5989
+    },
+    "end": {
+      "line": 158,
+      "column": 3,
+      "index": 6106
+    }
+  },
+  {
+    "id": "global.ok",
+    "defaultMessage": "!!!OK",
+    "file": "src/features/Receive/common/useStrings.tsx",
+    "start": {
+      "line": 159,
+      "column": 6,
+      "index": 6114
+    },
+    "end": {
+      "line": 162,
+      "column": 3,
+      "index": 6169
+    }
+  },
+  {
+    "id": "global.yoroiZendesk",
+    "defaultMessage": "!!!Yoroi Zendesk",
+    "file": "src/features/Receive/common/useStrings.tsx",
+    "start": {
+      "line": 163,
+      "column": 16,
+      "index": 6187
+    },
+    "end": {
+      "line": 166,
+      "column": 3,
+      "index": 6263
+    }
+  }
+]

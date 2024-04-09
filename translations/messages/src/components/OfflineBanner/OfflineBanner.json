@@ -1,0 +1,17 @@
+[
+  {
+    "id": "components.uikit.offlinebanner.offline",
+    "defaultMessage": "!!!You are offline. Please check settings on your device.",
+    "file": "src/components/OfflineBanner/OfflineBanner.tsx",
+    "start": {
+      "line": 24,
+      "column": 11,
+      "index": 685
+    },
+    "end": {
+      "line": 27,
+      "column": 3,
+      "index": 821
+    }
+  }
+]

@@ -1,0 +1,17 @@
+[
+  {
+    "id": "components.common.fingerprintscreenbase.welcomeMessage",
+    "defaultMessage": "!!!Welcome Back",
+    "file": "src/auth/OsAuthScreen/OsAuthScreen.tsx",
+    "start": {
+      "line": 98,
+      "column": 18,
+      "index": 2981
+    },
+    "end": {
+      "line": 101,
+      "column": 3,
+      "index": 3091
+    }
+  }
+]
