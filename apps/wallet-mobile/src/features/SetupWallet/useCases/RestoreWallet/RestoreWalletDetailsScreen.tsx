@@ -1,5 +1,6 @@
+import {useFocusEffect} from '@react-navigation/native'
 import {NetworkError} from '@yoroi/common'
-import {useWalletSetup} from '@yoroi/setup-wallet'
+import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
@@ -17,10 +18,11 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Icon, TextInput, useModal} from '../../../../components'
+import {Button, Icon, KeyboardAvoidingView, TextInput, useModal} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
 import {showErrorDialog} from '../../../../dialogs'
 import {errorMessages} from '../../../../i18n/global-messages'
+import {useMetrics} from '../../../../metrics/metricsManager'
 import {useWalletNavigation} from '../../../../navigation'
 import {isEmptyString} from '../../../../utils'
 import {AddressMode} from '../../../../wallet-manager/types'
@@ -65,6 +67,7 @@ export const RestoreWalletDetailsScreen = () => {
   const strings = useStrings()
   const {resetToWalletSelection} = useWalletNavigation()
   const walletManager = useWalletManager()
+  const {track} = useMetrics()
   const {walletNames} = useWalletNames(walletManager)
   const [name, setName] = React.useState(features.prefillWalletInfo ? debugWalletInfo.WALLET_NAME : '')
   const nameErrors = validateWalletName(name, null, walletNames ?? [])
@@ -82,7 +85,7 @@ export const RestoreWalletDetailsScreen = () => {
   )
   const passwordErrors = validatePassword(password, passwordConfirmation)
 
-  const {mnemonic, networkId, publicKeyHex, walletImplementationId} = useWalletSetup()
+  const {mnemonic, networkId, publicKeyHex, walletImplementationId} = useSetupWallet()
   const plate = usePlate({networkId, publicKeyHex})
 
   const passwordErrorText = passwordErrors.passwordIsWeak
@@ -95,6 +98,7 @@ export const RestoreWalletDetailsScreen = () => {
   const intl = useIntl()
   const {createWallet, isLoading, isSuccess} = useCreateWallet({
     onSuccess: () => {
+      track.restoreWalletDetailsSettled()
       resetToWalletSelection()
     },
     onError: (error) => {
@@ -105,6 +109,12 @@ export const RestoreWalletDetailsScreen = () => {
       })
     },
   })
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.restoreWalletDetailsStepViewed()
+    }, [track]),
+  )
 
   const showModalTipsPassword = () => {
     Keyboard.dismiss()
@@ -185,105 +195,108 @@ export const RestoreWalletDetailsScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
-      <View>
-        <StepperProgress currentStep={2} currentStepTitle={strings.stepWalletDetails} totalSteps={2} />
+      <KeyboardAvoidingView style={{flex: 1}}>
+        <StepperProgress
+          style={styles.steps}
+          currentStep={2}
+          currentStepTitle={strings.stepWalletDetails}
+          totalSteps={2}
+        />
 
-        <Text style={styles.title}>
-          {strings.walletDetailsTitle(bold)}
+        <View style={styles.info}>
+          <Text style={styles.title}>{strings.walletDetailsTitle(bold)}</Text>
 
-          <TouchableOpacity onPress={showModalTipsPassword}>
+          <TouchableOpacity style={{flex: 1, alignSelf: 'center'}} onPress={showModalTipsPassword}>
             <InfoIllustration />
           </TouchableOpacity>
-        </Text>
+        </View>
 
         <Space height="xl" />
 
-        <TextInput
-          enablesReturnKeyAutomatically
-          autoFocus
-          label={strings.walletDetailsNameInput}
-          value={name}
-          onChangeText={(walletName: string) => setName(walletName)}
-          errorText={!isEmptyString(walletNameErrorText) ? walletNameErrorText : undefined}
-          errorDelay={0}
-          returnKeyType="next"
-          onSubmitEditing={() => passwordRef.current?.focus()}
-          testID="walletNameInput"
-          autoComplete="off"
-          showErrorOnBlur
-        />
+        <ScrollView style={styles.form}>
+          <TextInput
+            enablesReturnKeyAutomatically
+            autoFocus
+            label={strings.walletDetailsNameInput}
+            value={name}
+            onChangeText={(walletName: string) => setName(walletName)}
+            errorText={!isEmptyString(walletNameErrorText) ? walletNameErrorText : undefined}
+            errorDelay={0}
+            returnKeyType="next"
+            onSubmitEditing={() => passwordRef.current?.focus()}
+            testID="walletNameInput"
+            autoComplete="off"
+            showErrorOnBlur
+          />
 
-        <TextInput
-          enablesReturnKeyAutomatically
-          ref={passwordRef}
-          secureTextEntry
-          label={strings.walletDetailsPasswordInput}
-          value={password}
-          onChangeText={setPassword}
-          errorText={passwordErrorText}
-          returnKeyType="next"
-          helper={strings.walletDetailsPasswordHelper}
-          onSubmitEditing={() => passwordConfirmationRef.current?.focus()}
-          testID="walletPasswordInput"
-          autoComplete="off"
-          showErrorOnBlur
-        />
+          <TextInput
+            enablesReturnKeyAutomatically
+            ref={passwordRef}
+            secureTextEntry
+            label={strings.walletDetailsPasswordInput}
+            value={password}
+            onChangeText={setPassword}
+            errorText={passwordErrorText}
+            returnKeyType="next"
+            helper={strings.walletDetailsPasswordHelper}
+            onSubmitEditing={() => passwordConfirmationRef.current?.focus()}
+            testID="walletPasswordInput"
+            autoComplete="off"
+            showErrorOnBlur
+          />
 
-        <Space height="xl" />
+          <Space height="xl" />
 
-        <TextInput
-          enablesReturnKeyAutomatically
-          ref={passwordConfirmationRef}
-          secureTextEntry
-          returnKeyType="done"
-          label={strings.walletDetailsConfirmPasswordInput}
-          value={passwordConfirmation}
-          onChangeText={setPasswordConfirmation}
-          errorText={passwordConfirmationErrorText}
-          testID="walletRepeatPasswordInput"
-          autoComplete="off"
-          showErrorOnBlur
-        />
+          <TextInput
+            enablesReturnKeyAutomatically
+            ref={passwordConfirmationRef}
+            secureTextEntry
+            returnKeyType="done"
+            label={strings.walletDetailsConfirmPasswordInput}
+            value={passwordConfirmation}
+            onChangeText={setPasswordConfirmation}
+            errorText={passwordConfirmationErrorText}
+            testID="walletRepeatPasswordInput"
+            autoComplete="off"
+            showErrorOnBlur
+          />
 
-        <View style={styles.checksum}>
-          <Icon.WalletAccount iconSeed={plate.accountPlate.ImagePart} style={styles.walletChecksum} />
+          <View style={styles.checksum}>
+            <Icon.WalletAccount iconSeed={plate.accountPlate.ImagePart} style={styles.walletChecksum} />
 
-          <Space width="s" />
+            <Space width="s" />
 
-          <Text style={styles.plateNumber}>
-            {plate.accountPlate.TextPart}
+            <Text style={styles.plateNumber}>{plate.accountPlate.TextPart}</Text>
 
             <Space width="s" />
 
             <TouchableOpacity onPress={showModalTipsPlateNumber}>
               <InfoIllustration />
             </TouchableOpacity>
-          </Text>
+          </View>
+        </ScrollView>
+
+        <View style={styles.actions}>
+          <Button
+            title={strings.next}
+            style={styles.button}
+            onPress={
+              isLoading || isSuccess
+                ? NOOP
+                : () =>
+                    createWallet({
+                      name,
+                      password,
+                      mnemonicPhrase: mnemonic,
+                      networkId,
+                      walletImplementationId: walletImplementationId as WalletImplementationId,
+                      addressMode,
+                    })
+            }
+            disabled={Object.keys(passwordErrors).length > 0 || Object.keys(nameErrors).length > 0}
+          />
         </View>
-      </View>
-
-      <View>
-        <Button
-          title={strings.next}
-          style={styles.button}
-          onPress={
-            isLoading || isSuccess
-              ? NOOP
-              : () =>
-                  createWallet({
-                    name,
-                    password,
-                    mnemonicPhrase: mnemonic,
-                    networkId,
-                    walletImplementationId: walletImplementationId as WalletImplementationId,
-                    addressMode,
-                  })
-          }
-          disabled={Object.keys(passwordErrors).length > 0 || Object.keys(nameErrors).length > 0}
-        />
-
-        <Space height="s" />
-      </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   )
 }
@@ -299,14 +312,24 @@ const useBold = () => {
 const useStyles = () => {
   const {theme} = useTheme()
   const styles = StyleSheet.create({
+    form: {
+      ...theme.padding['x-l'],
+      flex: 1,
+    },
+    steps: {
+      ...theme.padding['x-l'],
+    },
     root: {
       flex: 1,
-      ...theme.padding['x-l'],
       justifyContent: 'space-between',
       backgroundColor: theme.color['white-static'],
     },
     modal: {
       flex: 1,
+    },
+    info: {
+      ...theme.padding['x-l'],
+      flexDirection: 'row',
     },
     title: {
       ...theme.typography['body-1-l-regular'],
@@ -319,16 +342,25 @@ const useStyles = () => {
       justifyContent: 'center',
       alignItems: 'center',
     },
-    button: {backgroundColor: theme.color.primary[500]},
+    button: {
+      backgroundColor: theme.color.primary[500],
+    },
     bolder: {
       ...theme.typography['body-1-l-medium'],
     },
     checksum: {
       flexDirection: 'row',
-
+      alignItems: 'center',
       justifyContent: 'center',
+      textAlignVertical: 'center',
     },
-    walletChecksum: {width: 24, height: 24},
+    walletChecksum: {
+      width: 24,
+      height: 24,
+    },
+    actions: {
+      ...theme.padding['l'],
+    },
   })
 
   return {styles} as const

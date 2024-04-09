@@ -1,5 +1,5 @@
-import {useNavigation} from '@react-navigation/native'
-import {useWalletSetup} from '@yoroi/setup-wallet'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
@@ -8,6 +8,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, KeyboardAvoidingView} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
+import {useMetrics} from '../../../../metrics/metricsManager'
 import {WalletInitRouteNavigation} from '../../../../navigation'
 import {isEmptyString} from '../../../../utils'
 import {makeKeys} from '../../../../yoroi-wallets/cardano/shelley/makeKeys'
@@ -20,11 +21,19 @@ export const RestoreWalletScreen = () => {
   const bold = useBold()
   const [mnemonic, setMnemonic] = React.useState('')
   const navigation = useNavigation<WalletInitRouteNavigation>()
-  const {publicKeyHexChanged, mnemonicChanged, mnemonicType} = useWalletSetup()
+  const {publicKeyHexChanged, mnemonicChanged, mnemonicType} = useSetupWallet()
+  const {track} = useMetrics()
 
   const strings = useStrings()
 
   if (mnemonicType === null) throw new Error('mnemonicType missing')
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const recoveryPhraseLenght = String(mnemonicType) as '15' | '24'
+      track.restoreWalletEnterPhraseStepViewed({recovery_phrase_lenght: recoveryPhraseLenght})
+    }, [mnemonicType, track]),
+  )
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>

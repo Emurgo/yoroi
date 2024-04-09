@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {useFocusEffect} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, Image, ImageSourcePropType, ScrollView, StyleSheet, View, ViewStyle} from 'react-native'
 
 import {Button, KeyboardAvoidingView, ProgressStep, TextInput} from '../../../../components'
 import globalMessages from '../../../../i18n/global-messages'
+import {useMetrics} from '../../../../metrics/metricsManager'
 import {spacing} from '../../../../theme'
 import {useWalletManager} from '../../../../wallet-manager/WalletManagerContext'
 import {useWalletNames} from '../../../../yoroi-wallets/hooks'
@@ -39,6 +41,7 @@ export const WalletNameForm = ({
   const strings = useStrings()
   const [name, setName] = React.useState(defaultWalletName ?? '')
   const walletManager = useWalletManager()
+  const {track} = useMetrics()
   const {walletNames} = useWalletNames(walletManager)
   const validationErrors = validateWalletName(name, null, walletNames || [])
   const hasErrors = Object.keys(validationErrors).length > 0
@@ -48,6 +51,12 @@ export const WalletNameForm = ({
     mustBeFilled: strings.walletNameErrorMustBeFilled,
   }
   const walletNameErrorText = getWalletNameError(errorMessages, validationErrors) ?? undefined
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.restoreWalletDetailsStepViewed()
+    }, [track]),
+  )
 
   return (
     <View style={styles.root}>

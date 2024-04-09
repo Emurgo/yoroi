@@ -1,4 +1,5 @@
 /* tslint:disable */
+/* eslint-disable eslint-comments/no-unlimited-disable */
 /* eslint-disable */
 // @ts-nocheck
 /**
@@ -17,21 +18,21 @@
  * [Full Setup Instructions](https://data.amplitude.com/emurgo/Yoroi/implementation/mobile)
  */
 
-import * as amplitude from '@amplitude/analytics-react-native'
+import * as amplitude from '@amplitude/analytics-react-native';
 
-export type ReactNativeClient = amplitude.Types.ReactNativeClient
-export type BaseEvent = amplitude.Types.BaseEvent
-export type Event = amplitude.Types.Event
-export type EventOptions = amplitude.Types.EventOptions
-export type Result = amplitude.Types.Result
-export type ReactNativeOptions = amplitude.Types.ReactNativeOptions
+export type ReactNativeClient = amplitude.Types.ReactNativeClient;
+export type BaseEvent = amplitude.Types.BaseEvent;
+export type Event = amplitude.Types.Event;
+export type EventOptions = amplitude.Types.EventOptions;
+export type Result = amplitude.Types.Result;
+export type ReactNativeOptions = amplitude.Types.ReactNativeOptions;
 
-export type Environment = 'production' | 'development'
+export type Environment = 'production' | 'development';
 
 export const ApiKey: Record<Environment, string> = {
   production: 'd44950b777177c2ebee5f21f194c1231',
-  development: '52a980fd5fb8da5fc680687d7e991e18',
-}
+  development: '52a980fd5fb8da5fc680687d7e991e18'
+};
 
 /**
  * Default Amplitude configuration options. Contains tracking plan information.
@@ -41,28 +42,52 @@ export const DefaultConfiguration: ReactNativeOptions = {
     version: '7',
     branch: 'main',
     source: 'mobile',
-    versionId: 'a0985241-d0c0-4bda-bc6d-271830af0067',
+    versionId: 'a0985241-d0c0-4bda-bc6d-271830af0067'
   },
   ...{
     ingestionMetadata: {
       sourceName: 'react-native-typescript-ampli',
-      sourceVersion: '2.0.0',
-    },
-  },
+      sourceVersion: '2.0.0'
+    }
+  }
+};
+
+export interface LoadOptionsBase { disabled?: boolean }
+
+export type LoadOptionsWithEnvironment = LoadOptionsBase & { environment: Environment; client?: { configuration?: ReactNativeOptions; }; };
+export type LoadOptionsWithApiKey = LoadOptionsBase & { client: { apiKey: string; configuration?: ReactNativeOptions; } };
+export type LoadOptionsWithClientInstance = LoadOptionsBase & { client: { instance: ReactNativeClient; } };
+
+export type LoadOptions = LoadOptionsWithEnvironment | LoadOptionsWithApiKey | LoadOptionsWithClientInstance;
+
+export interface CreateWalletVerifyPhraseWordSelectedProperties {
+  recovery_word_order?: any;
 }
 
-export interface LoadOptionsBase {
-  disabled?: boolean
+export interface DiscoverFilterSelectedProperties {
+  /**
+   * Describe the dApp filters on the discover page.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Enum Values | Investment, Media, Trading, NFT, Community |
+   */
+  dapp_filter: "Investment" | "Media" | "Trading" | "NFT" | "Community";
 }
 
-export type LoadOptionsWithEnvironment = LoadOptionsBase & {
-  environment: Environment
-  client?: {configuration?: ReactNativeOptions}
+export interface DiscoverSearchActivatedProperties {
+  /**
+   * What a user is looking to search.
+   */
+  search_term: string;
 }
-export type LoadOptionsWithApiKey = LoadOptionsBase & {client: {apiKey: string; configuration?: ReactNativeOptions}}
-export type LoadOptionsWithClientInstance = LoadOptionsBase & {client: {instance: ReactNativeClient}}
 
-export type LoadOptions = LoadOptionsWithEnvironment | LoadOptionsWithApiKey | LoadOptionsWithClientInstance
+export interface DiscoverWebViewToolbarSearchActivatedProperties {
+  /**
+   * What a user is looking to search.
+   */
+  search_term: string;
+}
 
 export interface ExchangeSubmittedProperties {
   /**
@@ -72,7 +97,7 @@ export interface ExchangeSubmittedProperties {
    * |---|---|
    * | Type | number |
    */
-  ada_amount: number
+  ada_amount: number;
   /**
    * The type of ramp selected on a given transaction.
    *
@@ -80,7 +105,7 @@ export interface ExchangeSubmittedProperties {
    * |---|---|
    * | Enum Values | Buy, Sell |
    */
-  ramp_type: 'Buy' | 'Sell'
+  ramp_type: "Buy" | "Sell";
 }
 
 export interface GovernanceConfirmTransactionPageViewedProperties {
@@ -89,7 +114,7 @@ export interface GovernanceConfirmTransactionPageViewedProperties {
    * |---|---|
    * | Enum Values | Delegate, Abstain, No Confidence |
    */
-  governance_selection: 'Delegate' | 'Abstain' | 'No Confidence'
+  governance_selection: "Delegate" | "Abstain" | "No Confidence";
 }
 
 export interface GovernanceTransactionSuccessPageViewedProperties {
@@ -98,7 +123,7 @@ export interface GovernanceTransactionSuccessPageViewedProperties {
    * |---|---|
    * | Enum Values | Delegate, Abstain, No Confidence |
    */
-  governance_selection: 'Delegate' | 'Abstain' | 'No Confidence'
+  governance_selection: "Delegate" | "Abstain" | "No Confidence";
 }
 
 export interface NftGalleryDetailsTabProperties {
@@ -107,7 +132,7 @@ export interface NftGalleryDetailsTabProperties {
    * |---|---|
    * | Enum Values | Overview, Metadata |
    */
-  nft_tab: 'Overview' | 'Metadata'
+  nft_tab: "Overview" | "Metadata";
 }
 
 export interface NftGalleryPageViewedProperties {
@@ -118,7 +143,7 @@ export interface NftGalleryPageViewedProperties {
    * |---|---|
    * | Type | integer |
    */
-  nft_count: number
+  nft_count: number;
 }
 
 export interface NftGallerySearchActivatedProperties {
@@ -129,11 +154,11 @@ export interface NftGallerySearchActivatedProperties {
    * |---|---|
    * | Type | integer |
    */
-  nft_count: number
+  nft_count: number;
   /**
    * What user is looking to search on NFT gallery page
    */
-  nft_search_term: string
+  nft_search_term: string;
 }
 
 export interface ReceiveAmountGeneratedPageViewedProperties {
@@ -144,7 +169,7 @@ export interface ReceiveAmountGeneratedPageViewedProperties {
    * |---|---|
    * | Type | number |
    */
-  ada_amount: number
+  ada_amount: number;
 }
 
 export interface ReceiveCopyAddressClickedProperties {
@@ -155,7 +180,20 @@ export interface ReceiveCopyAddressClickedProperties {
    * |---|---|
    * | Enum Values | CTA Copy Address, Tap Address Details, Long Press wallet Address |
    */
-  copy_address_location: 'CTA Copy Address' | 'Tap Address Details' | 'Long Press wallet Address'
+  copy_address_location: "CTA Copy Address" | "Tap Address Details" | "Long Press wallet Address";
+}
+
+export interface RestoreWalletEnterPhraseStepStatusProperties {
+  recovery_prhase_status: boolean;
+}
+
+export interface RestoreWalletEnterPhraseStepViewedProperties {
+  /**
+   * | Rule | Value |
+   * |---|---|
+   * | Enum Values | 15, 24 |
+   */
+  recovery_phrase_lenght: "15" | "24";
 }
 
 export interface SendSelectAssetSelectedProperties {
@@ -166,7 +204,7 @@ export interface SendSelectAssetSelectedProperties {
    * |---|---|
    * | Type | number |
    */
-  asset_count: number
+  asset_count: number;
   /**
    * ```
    * nfts: [
@@ -180,7 +218,7 @@ export interface SendSelectAssetSelectedProperties {
    * ]
    * ```
    */
-  nfts?: any[]
+  nfts?: any[];
   /**
    * ```
    * Tokens: [
@@ -195,7 +233,7 @@ export interface SendSelectAssetSelectedProperties {
    * ]
    * ```
    */
-  tokens?: any[]
+  tokens?: any[];
 }
 
 export interface SendSelectAssetUpdatedProperties {
@@ -204,7 +242,7 @@ export interface SendSelectAssetUpdatedProperties {
    * |---|---|
    * | Type | number |
    */
-  asset_count: number
+  asset_count: number;
   /**
    * ```
    * nfts: [
@@ -218,7 +256,7 @@ export interface SendSelectAssetUpdatedProperties {
    * ]
    * ```
    */
-  nfts?: any[]
+  nfts?: any[];
   /**
    * ```
    * Tokens: [
@@ -233,7 +271,7 @@ export interface SendSelectAssetUpdatedProperties {
    * ]
    * ```
    */
-  tokens?: any[]
+  tokens?: any[];
 }
 
 export interface SendSummaryPageViewedProperties {
@@ -242,7 +280,7 @@ export interface SendSummaryPageViewedProperties {
    * |---|---|
    * | Type | number |
    */
-  asset_count: number
+  asset_count: number;
   /**
    * ```
    * nfts: [
@@ -256,7 +294,7 @@ export interface SendSummaryPageViewedProperties {
    * ]
    * ```
    */
-  nfts?: any[]
+  nfts?: any[];
   /**
    * ```
    * Tokens: [
@@ -271,7 +309,7 @@ export interface SendSummaryPageViewedProperties {
    * ]
    * ```
    */
-  tokens?: any[]
+  tokens?: any[];
 }
 
 export interface SendSummarySubmittedProperties {
@@ -280,7 +318,7 @@ export interface SendSummarySubmittedProperties {
    * |---|---|
    * | Type | number |
    */
-  asset_count: number
+  asset_count: number;
   /**
    * ```
    * nfts: [
@@ -294,7 +332,7 @@ export interface SendSummarySubmittedProperties {
    * ]
    * ```
    */
-  nfts?: any[]
+  nfts?: any[];
   /**
    * ```
    * Tokens: [
@@ -309,7 +347,7 @@ export interface SendSummarySubmittedProperties {
    * ]
    * ```
    */
-  tokens?: any[]
+  tokens?: any[];
 }
 
 export interface SwapAssetFromChangedProperties {
@@ -325,7 +363,7 @@ export interface SwapAssetFromChangedProperties {
    *   },
    * \]
    */
-  from_asset: any[]
+  from_asset: any[];
 }
 
 export interface SwapAssetToChangedProperties {
@@ -336,7 +374,7 @@ export interface SwapAssetToChangedProperties {
    * Asset Ticker
    * Policy ID
    */
-  to_asset: any[]
+  to_asset: any[];
 }
 
 export interface SwapCancelationSubmittedProperties {
@@ -347,7 +385,7 @@ export interface SwapCancelationSubmittedProperties {
    * |---|---|
    * | Type | number |
    */
-  from_amount: number
+  from_amount: number;
   /**
    * Displaying the asset that the user chose to trade with.
    *
@@ -364,11 +402,11 @@ export interface SwapCancelationSubmittedProperties {
    * |---|---|
    * | Unique Items | null |
    */
-  from_asset: any[]
+  from_asset: any[];
   /**
    * The name of liquidity pool used for this swap transaction
    */
-  pool_source: string
+  pool_source: string;
   /**
    * The amount of asset that the user is swapping to
    *
@@ -376,7 +414,7 @@ export interface SwapCancelationSubmittedProperties {
    * |---|---|
    * | Type | number |
    */
-  to_amount: number
+  to_amount: number;
   /**
    * Displaying the asset that the user chose to trade to
    *
@@ -388,7 +426,7 @@ export interface SwapCancelationSubmittedProperties {
    * |---|---|
    * | Unique Items | null |
    */
-  to_asset: any[]
+  to_asset: any[];
 }
 
 export interface SwapConfirmedPageViewedProperties {
@@ -399,7 +437,7 @@ export interface SwapConfirmedPageViewedProperties {
    * |---|---|
    * | Enum Values | Open Orders, Completed Orders |
    */
-  swap_tab: 'Open Orders' | 'Completed Orders'
+  swap_tab: "Open Orders" | "Completed Orders";
 }
 
 export interface SwapInitiatedProperties {
@@ -419,7 +457,7 @@ export interface SwapInitiatedProperties {
    * |---|---|
    * | Unique Items | null |
    */
-  from_asset: any[]
+  from_asset: any[];
   /**
    * The type of order selected on a given transaction
    *
@@ -427,7 +465,7 @@ export interface SwapInitiatedProperties {
    * |---|---|
    * | Enum Values | limit, market |
    */
-  order_type: 'limit' | 'market'
+  order_type: "limit" | "market";
   /**
    * The default slippage tolerance is 1%, but users are free to change the slippage.
    *
@@ -435,7 +473,7 @@ export interface SwapInitiatedProperties {
    * |---|---|
    * | Type | number |
    */
-  slippage_tolerance: number
+  slippage_tolerance: number;
   /**
    * Displaying the asset that the user chose to trade to
    *
@@ -447,14 +485,14 @@ export interface SwapInitiatedProperties {
    * |---|---|
    * | Unique Items | null |
    */
-  to_asset: any[]
+  to_asset: any[];
 }
 
 export interface SwapOrderSelectedProperties {
   /**
    * The amount of asset that the user is swapping from
    */
-  from_amount: string
+  from_amount: string;
   /**
    * Displaying the asset that the user chose to trade with.
    *
@@ -467,7 +505,7 @@ export interface SwapOrderSelectedProperties {
    *   },
    * \]
    */
-  from_asset: any[]
+  from_asset: any[];
   /**
    * The type of order selected on a given transaction
    *
@@ -475,11 +513,11 @@ export interface SwapOrderSelectedProperties {
    * |---|---|
    * | Enum Values | limit, market |
    */
-  order_type: 'limit' | 'market'
+  order_type?: "limit" | "market";
   /**
    * The name of liquidity pool used for this swap transaction
    */
-  pool_source: string
+  pool_source: string;
   /**
    * The default slippage tolerance is 1%, but users are free to change the slippage.
    *
@@ -487,7 +525,7 @@ export interface SwapOrderSelectedProperties {
    * |---|---|
    * | Type | number |
    */
-  slippage_tolerance: number
+  slippage_tolerance?: number;
   /**
    * The amount of fees charged on the transaction. The value is in ADA.
    *
@@ -495,11 +533,11 @@ export interface SwapOrderSelectedProperties {
    * |---|---|
    * | Type | number |
    */
-  swap_fees: number
+  swap_fees?: number;
   /**
    * The amount of asset that the user is swapping to
    */
-  to_amount: string
+  to_amount: string;
   /**
    * Displaying the asset that the user chose to trade to
    *
@@ -507,14 +545,14 @@ export interface SwapOrderSelectedProperties {
    * Asset Ticker
    * Policy ID
    */
-  to_asset: any[]
+  to_asset: any[];
 }
 
 export interface SwapOrderSubmittedProperties {
   /**
    * The amount of asset that the user is swapping from
    */
-  from_amount: string
+  from_amount: string;
   /**
    * Displaying the asset that the user chose to trade with.
    *
@@ -527,7 +565,7 @@ export interface SwapOrderSubmittedProperties {
    *   },
    * \]
    */
-  from_asset: any[]
+  from_asset: any[];
   /**
    * The type of order selected on a given transaction
    *
@@ -535,11 +573,11 @@ export interface SwapOrderSubmittedProperties {
    * |---|---|
    * | Enum Values | limit, market |
    */
-  order_type: 'limit' | 'market'
+  order_type?: "limit" | "market";
   /**
    * The name of liquidity pool used for this swap transaction
    */
-  pool_source: string
+  pool_source: string;
   /**
    * The default slippage tolerance is 1%, but users are free to change the slippage.
    *
@@ -547,7 +585,7 @@ export interface SwapOrderSubmittedProperties {
    * |---|---|
    * | Type | number |
    */
-  slippage_tolerance: number
+  slippage_tolerance?: number;
   /**
    * The amount of fees charged on the transaction. The value is in ADA.
    *
@@ -555,11 +593,11 @@ export interface SwapOrderSubmittedProperties {
    * |---|---|
    * | Type | number |
    */
-  swap_fees: number
+  swap_fees?: number;
   /**
    * The amount of asset that the user is swapping to
    */
-  to_amount: string
+  to_amount: string;
   /**
    * Displaying the asset that the user chose to trade to
    *
@@ -567,7 +605,7 @@ export interface SwapOrderSubmittedProperties {
    * Asset Ticker
    * Policy ID
    */
-  to_asset: any[]
+  to_asset: any[];
 }
 
 export interface SwapSlippageChangedProperties {
@@ -578,7 +616,7 @@ export interface SwapSlippageChangedProperties {
    * |---|---|
    * | Type | number |
    */
-  slippage_tolerance: number
+  slippage_tolerance: number;
 }
 
 export interface SendProperties {
@@ -589,7 +627,7 @@ export interface SendProperties {
    * |---|---|
    * | Type | number |
    */
-  asset_count: number
+  asset_count: number;
   /**
    * ```
    * nfts: [
@@ -603,7 +641,7 @@ export interface SendProperties {
    * ]
    * ```
    */
-  nfts?: any[]
+  nfts?: any[];
   /**
    * ```
    * Tokens: [
@@ -618,14 +656,14 @@ export interface SendProperties {
    * ]
    * ```
    */
-  tokens?: any[]
+  tokens?: any[];
 }
 
 export interface SwapProperties {
   /**
    * The amount of asset that the user is swapping from
    */
-  from_amount: string
+  from_amount: string;
   /**
    * Displaying the asset that the user chose to trade with.
    *
@@ -638,7 +676,7 @@ export interface SwapProperties {
    *   },
    * \]
    */
-  from_asset: any[]
+  from_asset: any[];
   /**
    * The type of order selected on a given transaction
    *
@@ -646,11 +684,11 @@ export interface SwapProperties {
    * |---|---|
    * | Enum Values | limit, market |
    */
-  order_type: 'limit' | 'market'
+  order_type?: "limit" | "market";
   /**
    * The name of liquidity pool used for this swap transaction
    */
-  pool_source: string
+  pool_source: string;
   /**
    * The default slippage tolerance is 1%, but users are free to change the slippage.
    *
@@ -658,7 +696,7 @@ export interface SwapProperties {
    * |---|---|
    * | Type | number |
    */
-  slippage_tolerance: number
+  slippage_tolerance?: number;
   /**
    * The amount of fees charged on the transaction. The value is in ADA.
    *
@@ -666,11 +704,11 @@ export interface SwapProperties {
    * |---|---|
    * | Type | number |
    */
-  swap_fees: number
+  swap_fees?: number;
   /**
    * The amount of asset that the user is swapping to
    */
-  to_amount: string
+  to_amount: string;
   /**
    * Displaying the asset that the user chose to trade to
    *
@@ -678,276 +716,468 @@ export interface SwapProperties {
    * Asset Ticker
    * Policy ID
    */
-  to_asset: any[]
+  to_asset: any[];
 }
 
 export class AllWalletsPageViewed implements BaseEvent {
-  event_type = 'All Wallets Page Viewed'
+  event_type = 'All Wallets Page Viewed';
 }
 
 export class AssetsPageViewed implements BaseEvent {
-  event_type = 'Assets Page Viewed'
+  event_type = 'Assets Page Viewed';
 }
 
 export class CreateWalletDetailsSettled implements BaseEvent {
-  event_type = 'Create Wallet Details Settled'
+  event_type = 'Create Wallet Details Settled';
+}
+
+export class CreateWalletDetailsStepViewed implements BaseEvent {
+  event_type = 'Create Wallet Details Step Viewed';
+}
+
+export class CreateWalletDetailsSubmitted implements BaseEvent {
+  event_type = 'Create Wallet Details Submitted';
+}
+
+export class CreateWalletLanguagePageViewed implements BaseEvent {
+  event_type = 'Create Wallet Language Page Viewed';
+}
+
+export class CreateWalletLearnPhraseStepViewed implements BaseEvent {
+  event_type = 'Create Wallet Learn Phrase Step Viewed';
+}
+
+export class CreateWalletSavePhraseStepViewed implements BaseEvent {
+  event_type = 'Create Wallet Save Phrase Step Viewed';
+}
+
+export class CreateWalletSelectMethodPageViewed implements BaseEvent {
+  event_type = 'Create Wallet Select Method Page Viewed';
+}
+
+export class CreateWalletTermsPageViewed implements BaseEvent {
+  event_type = 'Create Wallet Terms Page Viewed';
+}
+
+export class CreateWalletVerifyPhraseStepViewed implements BaseEvent {
+  event_type = 'Create Wallet Verify Phrase Step Viewed';
+}
+
+export class CreateWalletVerifyPhraseWordSelected implements BaseEvent {
+  event_type = 'Create Wallet Verify Phrase Word Selected';
+
+  constructor(
+    public event_properties?: CreateWalletVerifyPhraseWordSelectedProperties,
+  ) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class DiscoverConnectedBottomSheetDisconnectClicked implements BaseEvent {
+  event_type = 'Discover Connected Bottom Sheet Disconnect Clicked';
+}
+
+export class DiscoverConnectedBottomSheetOpenDAppClicked implements BaseEvent {
+  event_type = 'Discover Connected Bottom Sheet Open DApp Clicked';
+}
+
+export class DiscoverConnectedDAppItemClicked implements BaseEvent {
+  event_type = 'Discover Connected DApp Item Clicked';
+}
+
+export class DiscoverDAppItemClicked implements BaseEvent {
+  event_type = 'Discover DApp Item Clicked';
+}
+
+export class DiscoverFilterSelected implements BaseEvent {
+  event_type = 'Discover Filter Selected';
+
+  constructor(
+    public event_properties: DiscoverFilterSelectedProperties,
+  ) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class DiscoverPageViewed implements BaseEvent {
+  event_type = 'Discover Page Viewed';
+}
+
+export class DiscoverSearchActivated implements BaseEvent {
+  event_type = 'Discover Search Activated';
+
+  constructor(
+    public event_properties: DiscoverSearchActivatedProperties,
+  ) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class DiscoverWebViewBottomSheetConnectClicked implements BaseEvent {
+  event_type = 'Discover Web View Bottom Sheet Connect Clicked';
+}
+
+export class DiscoverWebViewCloseClicked implements BaseEvent {
+  event_type = 'Discover Web View Close Clicked';
+}
+
+export class DiscoverWebViewTabBarBackwardClicked implements BaseEvent {
+  event_type = 'Discover Web View Tab Bar Backward Clicked';
+}
+
+export class DiscoverWebViewTabBarForwardClicked implements BaseEvent {
+  event_type = 'Discover Web View Tab Bar Forward Clicked';
+}
+
+export class DiscoverWebViewTabBarRefreshClicked implements BaseEvent {
+  event_type = 'Discover Web View Tab Bar Refresh Clicked';
+}
+
+export class DiscoverWebViewTabBarShareClicked implements BaseEvent {
+  event_type = 'Discover Web View Tab Bar Share Clicked';
+}
+
+export class DiscoverWebViewTabClicked implements BaseEvent {
+  event_type = 'Discover Web View Tab Clicked';
+}
+
+export class DiscoverWebViewToolbarSearchActivated implements BaseEvent {
+  event_type = 'Discover Web View Toolbar Search Activated';
+
+  constructor(
+    public event_properties: DiscoverWebViewToolbarSearchActivatedProperties,
+  ) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class DiscoverWebViewViewed implements BaseEvent {
+  event_type = 'Discover Web View Viewed';
 }
 
 export class ExchangePageViewed implements BaseEvent {
-  event_type = 'Exchange Page Viewed'
+  event_type = 'Exchange Page Viewed';
 }
 
 export class ExchangeSubmitted implements BaseEvent {
-  event_type = 'Exchange Submitted'
+  event_type = 'Exchange Submitted';
 
-  constructor(public event_properties: ExchangeSubmittedProperties) {
-    this.event_properties = event_properties
+  constructor(
+    public event_properties: ExchangeSubmittedProperties,
+  ) {
+    this.event_properties = event_properties;
   }
 }
 
 export class GovernanceChooseDrepPageViewed implements BaseEvent {
-  event_type = 'Governance Choose Drep Page Viewed'
+  event_type = 'Governance Choose Drep Page Viewed';
 }
 
 export class GovernanceConfirmTransactionPageViewed implements BaseEvent {
-  event_type = 'Governance Confirm Transaction Page Viewed'
+  event_type = 'Governance Confirm Transaction Page Viewed';
 
-  constructor(public event_properties: GovernanceConfirmTransactionPageViewedProperties) {
-    this.event_properties = event_properties
+  constructor(
+    public event_properties: GovernanceConfirmTransactionPageViewedProperties,
+  ) {
+    this.event_properties = event_properties;
   }
 }
 
 export class GovernanceDashboardPageViewed implements BaseEvent {
-  event_type = 'Governance Dashboard Page Viewed'
+  event_type = 'Governance Dashboard Page Viewed';
 }
 
 export class GovernanceTransactionSuccessPageViewed implements BaseEvent {
-  event_type = 'Governance Transaction Success Page Viewed'
+  event_type = 'Governance Transaction Success Page Viewed';
 
-  constructor(public event_properties: GovernanceTransactionSuccessPageViewedProperties) {
-    this.event_properties = event_properties
+  constructor(
+    public event_properties: GovernanceTransactionSuccessPageViewedProperties,
+  ) {
+    this.event_properties = event_properties;
   }
 }
 
 export class MenuPageViewed implements BaseEvent {
-  event_type = 'Menu Page Viewed'
+  event_type = 'Menu Page Viewed';
 }
 
 export class NftGalleryDetailsImageViewed implements BaseEvent {
-  event_type = 'NFT Gallery Details Image Viewed'
+  event_type = 'NFT Gallery Details Image Viewed';
 }
 
 export class NftGalleryDetailsPageViewed implements BaseEvent {
-  event_type = 'NFT Gallery Details Page Viewed'
+  event_type = 'NFT Gallery Details Page Viewed';
 }
 
 export class NftGalleryDetailsTab implements BaseEvent {
-  event_type = 'NFT Gallery Details Tab'
+  event_type = 'NFT Gallery Details Tab';
 
-  constructor(public event_properties: NftGalleryDetailsTabProperties) {
-    this.event_properties = event_properties
+  constructor(
+    public event_properties: NftGalleryDetailsTabProperties,
+  ) {
+    this.event_properties = event_properties;
   }
 }
 
 export class NftGalleryPageViewed implements BaseEvent {
-  event_type = 'NFT Gallery Page Viewed'
+  event_type = 'NFT Gallery Page Viewed';
 
-  constructor(public event_properties: NftGalleryPageViewedProperties) {
-    this.event_properties = event_properties
+  constructor(
+    public event_properties: NftGalleryPageViewedProperties,
+  ) {
+    this.event_properties = event_properties;
   }
 }
 
 export class NftGallerySearchActivated implements BaseEvent {
-  event_type = 'NFT Gallery Search Activated'
+  event_type = 'NFT Gallery Search Activated';
 
-  constructor(public event_properties: NftGallerySearchActivatedProperties) {
-    this.event_properties = event_properties
+  constructor(
+    public event_properties: NftGallerySearchActivatedProperties,
+  ) {
+    this.event_properties = event_properties;
   }
 }
 
 export class ReceiveAmountGeneratedPageViewed implements BaseEvent {
-  event_type = 'Receive Amount Generated Page Viewed'
+  event_type = 'Receive Amount Generated Page Viewed';
 
-  constructor(public event_properties: ReceiveAmountGeneratedPageViewedProperties) {
-    this.event_properties = event_properties
+  constructor(
+    public event_properties: ReceiveAmountGeneratedPageViewedProperties,
+  ) {
+    this.event_properties = event_properties;
   }
 }
 
 export class ReceiveAmountPageViewed implements BaseEvent {
-  event_type = 'Receive Amount Page Viewed'
+  event_type = 'Receive Amount Page Viewed';
 }
 
 export class ReceiveCopyAddressClicked implements BaseEvent {
-  event_type = 'Receive Copy Address Clicked'
+  event_type = 'Receive Copy Address Clicked';
 
-  constructor(public event_properties: ReceiveCopyAddressClickedProperties) {
-    this.event_properties = event_properties
+  constructor(
+    public event_properties: ReceiveCopyAddressClickedProperties,
+  ) {
+    this.event_properties = event_properties;
   }
 }
 
 export class ReceiveGenerateNewAddressClicked implements BaseEvent {
-  event_type = 'Receive Generate New Address Clicked'
+  event_type = 'Receive Generate New Address Clicked';
 }
 
 export class ReceivePageListViewed implements BaseEvent {
-  event_type = 'Receive Page List Viewed'
+  event_type = 'Receive Page List Viewed';
 }
 
 export class ReceivePageViewed implements BaseEvent {
-  event_type = 'Receive Page Viewed'
+  event_type = 'Receive Page Viewed';
 }
 
 export class ReceiveShareAddressClicked implements BaseEvent {
-  event_type = 'Receive Share Address Clicked'
+  event_type = 'Receive Share Address Clicked';
 }
 
 export class RestoreWalletDetailsSettled implements BaseEvent {
-  event_type = 'Restore Wallet Details Settled'
+  event_type = 'Restore Wallet Details Settled';
+}
+
+export class RestoreWalletDetailsStepViewed implements BaseEvent {
+  event_type = 'Restore Wallet Details Step Viewed';
+}
+
+export class RestoreWalletEnterPhraseStepStatus implements BaseEvent {
+  event_type = 'Restore Wallet Enter Phrase Step Status';
+
+  constructor(
+    public event_properties: RestoreWalletEnterPhraseStepStatusProperties,
+  ) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class RestoreWalletEnterPhraseStepViewed implements BaseEvent {
+  event_type = 'Restore Wallet Enter Phrase Step Viewed';
+
+  constructor(
+    public event_properties: RestoreWalletEnterPhraseStepViewedProperties,
+  ) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class RestoreWalletTypeStepViewed implements BaseEvent {
+  event_type = 'Restore Wallet Type Step Viewed';
 }
 
 export class SendInitiated implements BaseEvent {
-  event_type = 'Send Initiated'
+  event_type = 'Send Initiated';
 }
 
 export class SendSelectAssetPageViewed implements BaseEvent {
-  event_type = 'Send Select Asset Page Viewed'
+  event_type = 'Send Select Asset Page Viewed';
 }
 
 export class SendSelectAssetSelected implements BaseEvent {
-  event_type = 'Send Select Asset Selected'
+  event_type = 'Send Select Asset Selected';
 
-  constructor(public event_properties: SendSelectAssetSelectedProperties) {
-    this.event_properties = event_properties
+  constructor(
+    public event_properties: SendSelectAssetSelectedProperties,
+  ) {
+    this.event_properties = event_properties;
   }
 }
 
 export class SendSelectAssetUpdated implements BaseEvent {
-  event_type = 'Send Select Asset Updated'
+  event_type = 'Send Select Asset Updated';
 
-  constructor(public event_properties: SendSelectAssetUpdatedProperties) {
-    this.event_properties = event_properties
+  constructor(
+    public event_properties: SendSelectAssetUpdatedProperties,
+  ) {
+    this.event_properties = event_properties;
   }
 }
 
 export class SendSummaryPageViewed implements BaseEvent {
-  event_type = 'Send Summary Page Viewed'
+  event_type = 'Send Summary Page Viewed';
 
-  constructor(public event_properties: SendSummaryPageViewedProperties) {
-    this.event_properties = event_properties
+  constructor(
+    public event_properties: SendSummaryPageViewedProperties,
+  ) {
+    this.event_properties = event_properties;
   }
 }
 
 export class SendSummarySubmitted implements BaseEvent {
-  event_type = 'Send Summary Submitted'
+  event_type = 'Send Summary Submitted';
 
-  constructor(public event_properties: SendSummarySubmittedProperties) {
-    this.event_properties = event_properties
+  constructor(
+    public event_properties: SendSummarySubmittedProperties,
+  ) {
+    this.event_properties = event_properties;
   }
 }
 
 export class SettingsPageViewed implements BaseEvent {
-  event_type = 'Settings Page Viewed'
+  event_type = 'Settings Page Viewed';
 }
 
 export class StakingCenterPageViewed implements BaseEvent {
-  event_type = 'Staking Center Page Viewed'
+  event_type = 'Staking Center Page Viewed';
 }
 
 export class SwapAssetFromChanged implements BaseEvent {
-  event_type = 'Swap Asset From Changed'
+  event_type = 'Swap Asset From Changed';
 
-  constructor(public event_properties: SwapAssetFromChangedProperties) {
-    this.event_properties = event_properties
+  constructor(
+    public event_properties: SwapAssetFromChangedProperties,
+  ) {
+    this.event_properties = event_properties;
   }
 }
 
 export class SwapAssetToChanged implements BaseEvent {
-  event_type = 'Swap Asset To Changed'
+  event_type = 'Swap Asset To Changed';
 
-  constructor(public event_properties: SwapAssetToChangedProperties) {
-    this.event_properties = event_properties
+  constructor(
+    public event_properties: SwapAssetToChangedProperties,
+  ) {
+    this.event_properties = event_properties;
   }
 }
 
 export class SwapCancelationSubmitted implements BaseEvent {
-  event_type = 'Swap Cancelation Submitted'
+  event_type = 'Swap Cancelation Submitted';
 
-  constructor(public event_properties: SwapCancelationSubmittedProperties) {
-    this.event_properties = event_properties
+  constructor(
+    public event_properties: SwapCancelationSubmittedProperties,
+  ) {
+    this.event_properties = event_properties;
   }
 }
 
 export class SwapConfirmedPageViewed implements BaseEvent {
-  event_type = 'Swap Confirmed  Page Viewed'
+  event_type = 'Swap Confirmed  Page Viewed';
 
-  constructor(public event_properties: SwapConfirmedPageViewedProperties) {
-    this.event_properties = event_properties
+  constructor(
+    public event_properties: SwapConfirmedPageViewedProperties,
+  ) {
+    this.event_properties = event_properties;
   }
 }
 
 export class SwapInitiated implements BaseEvent {
-  event_type = 'Swap Initiated'
+  event_type = 'Swap Initiated';
 
-  constructor(public event_properties: SwapInitiatedProperties) {
-    this.event_properties = event_properties
+  constructor(
+    public event_properties: SwapInitiatedProperties,
+  ) {
+    this.event_properties = event_properties;
   }
 }
 
 export class SwapOrderSelected implements BaseEvent {
-  event_type = 'Swap Order Selected'
+  event_type = 'Swap Order Selected';
 
-  constructor(public event_properties: SwapOrderSelectedProperties) {
-    this.event_properties = event_properties
+  constructor(
+    public event_properties: SwapOrderSelectedProperties,
+  ) {
+    this.event_properties = event_properties;
   }
 }
 
 export class SwapOrderSubmitted implements BaseEvent {
-  event_type = 'Swap Order Submitted'
+  event_type = 'Swap Order Submitted';
 
-  constructor(public event_properties: SwapOrderSubmittedProperties) {
-    this.event_properties = event_properties
+  constructor(
+    public event_properties: SwapOrderSubmittedProperties,
+  ) {
+    this.event_properties = event_properties;
   }
 }
 
 export class SwapPoolChanged implements BaseEvent {
-  event_type = 'Swap Pool Changed'
+  event_type = 'Swap Pool Changed';
 }
 
 export class SwapSlippageChanged implements BaseEvent {
-  event_type = 'Swap Slippage Changed'
+  event_type = 'Swap Slippage Changed';
 
-  constructor(public event_properties: SwapSlippageChangedProperties) {
-    this.event_properties = event_properties
+  constructor(
+    public event_properties: SwapSlippageChangedProperties,
+  ) {
+    this.event_properties = event_properties;
   }
 }
 
 export class TransactionsPageViewed implements BaseEvent {
-  event_type = 'Transactions Page Viewed'
+  event_type = 'Transactions Page Viewed';
 }
 
 export class VotingPageViewed implements BaseEvent {
-  event_type = 'Voting Page Viewed'
+  event_type = 'Voting Page Viewed';
 }
 
 export class WalletPageBuyBannerClicked implements BaseEvent {
-  event_type = 'Wallet Page Buy Banner Clicked'
+  event_type = 'Wallet Page Buy Banner Clicked';
 }
 
 export class WalletPageExchangeBottomSheetClicked implements BaseEvent {
-  event_type = 'Wallet Page Exchange Bottom Sheet Clicked'
+  event_type = 'Wallet Page Exchange Bottom Sheet Clicked';
 }
 
 export class WalletPageExchangeClicked implements BaseEvent {
-  event_type = 'Wallet Page Exchange Clicked'
+  event_type = 'Wallet Page Exchange Clicked';
 }
 
 export class WalletPageViewed implements BaseEvent {
-  event_type = 'Wallet Page Viewed'
+  event_type = 'Wallet Page Viewed';
 }
 
-export type PromiseResult<T> = {promise: Promise<T | void>}
+export type PromiseResult<T> = { promise: Promise<T | void> };
 
-const getVoidPromiseResult = () => ({promise: Promise.resolve()})
+const getVoidPromiseResult = () => ({ promise: Promise.resolve() });
 
 // prettier-ignore
 export class Ampli {
@@ -1096,6 +1326,395 @@ export class Ampli {
     options?: EventOptions,
   ) {
     return this.track(new CreateWalletDetailsSettled(), options);
+  }
+
+  /**
+   * Create Wallet Details Step Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Create%20Wallet%20Details%20Step%20Viewed)
+   *
+   * This event tracks when a user views the details \*\*step 4\*\* while creating a wallet. User will introduce: \* Wallet Name \* Password \* Repeat Password
+   *
+   * @param options Amplitude event options.
+   */
+  createWalletDetailsStepViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new CreateWalletDetailsStepViewed(), options);
+  }
+
+  /**
+   * Create Wallet Details Submitted
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Create%20Wallet%20Details%20Submitted)
+   *
+   * This event captures the submission of the wallet creation on the last step of the flow (\*\*step 4\*\*).
+   *
+   * @param options Amplitude event options.
+   */
+  createWalletDetailsSubmitted(
+    options?: EventOptions,
+  ) {
+    return this.track(new CreateWalletDetailsSubmitted(), options);
+  }
+
+  /**
+   * Create Wallet Language Page Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Create%20Wallet%20Language%20Page%20Viewed)
+   *
+   * This event tracks when a user views the page for selecting the language during the wallet creation process on the first time he launch Yoroi.
+   *
+   * @param options Amplitude event options.
+   */
+  createWalletLanguagePageViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new CreateWalletLanguagePageViewed(), options);
+  }
+
+  /**
+   * Create Wallet Learn Phrase Step Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Create%20Wallet%20Learn%20Phrase%20Step%20Viewed)
+   *
+   * This event tracks when a user view the \*\*first step\*\* of learn about recovery prhase
+   *
+   * @param options Amplitude event options.
+   */
+  createWalletLearnPhraseStepViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new CreateWalletLearnPhraseStepViewed(), options);
+  }
+
+  /**
+   * Create Wallet Save Phrase Step Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Create%20Wallet%20Save%20Phrase%20Step%20Viewed)
+   *
+   * This event tracks when a user views the \*\*second step\*\* to save their wallet recovery phrase during the wallet creation process
+   *
+   * @param options Amplitude event options.
+   */
+  createWalletSavePhraseStepViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new CreateWalletSavePhraseStepViewed(), options);
+  }
+
+  /**
+   * Create Wallet Select Method Page Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Create%20Wallet%20Select%20Method%20Page%20Viewed)
+   *
+   * This event tracks when a user views the page where they can select the method to create a wallet: 
+   *
+   * \* Create new wallet 
+   *
+   * \* Restore existing wallet 
+   *
+   * This event tracks when a user views the page where they can select the method to create a wallet\* Connect hardware wallet
+   *
+   * @param options Amplitude event options.
+   */
+  createWalletSelectMethodPageViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new CreateWalletSelectMethodPageViewed(), options);
+  }
+
+  /**
+   * Create Wallet Terms Page Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Create%20Wallet%20Terms%20Page%20Viewed)
+   *
+   * This event tracks when a user views the terms of service agreement page on the creation wallet flow
+   *
+   * @param options Amplitude event options.
+   */
+  createWalletTermsPageViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new CreateWalletTermsPageViewed(), options);
+  }
+
+  /**
+   * Create Wallet Verify Phrase Step Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Create%20Wallet%20Verify%20Phrase%20Step%20Viewed)
+   *
+   * This event tracks when a user views the verification phrase step while creating a wallet
+   *
+   * @param options Amplitude event options.
+   */
+  createWalletVerifyPhraseStepViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new CreateWalletVerifyPhraseStepViewed(), options);
+  }
+
+  /**
+   * Create Wallet Verify Phrase Word Selected
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Create%20Wallet%20Verify%20Phrase%20Word%20Selected)
+   *
+   * This event tracks the selection of a specific word during the process of verifying the recovery phrase when creating a wallet
+   *
+   * @param properties The event's properties (e.g. recovery_word_order)
+   * @param options Amplitude event options.
+   */
+  createWalletVerifyPhraseWordSelected(
+    properties?: CreateWalletVerifyPhraseWordSelectedProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new CreateWalletVerifyPhraseWordSelected(properties), options);
+  }
+
+  /**
+   * Discover Connected Bottom Sheet Disconnect Clicked
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Discover%20Connected%20Bottom%20Sheet%20Disconnect%20Clicked)
+   *
+   * This event tracks when a user clicks on the disconnect DApp button on the bottom sheet implementation of a DApp that is already connected.
+   *
+   * @param options Amplitude event options.
+   */
+  discoverConnectedBottomSheetDisconnectClicked(
+    options?: EventOptions,
+  ) {
+    return this.track(new DiscoverConnectedBottomSheetDisconnectClicked(), options);
+  }
+
+  /**
+   * Discover Connected Bottom Sheet Open DApp Clicked
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Discover%20Connected%20Bottom%20Sheet%20Open%20DApp%20Clicked)
+   *
+   * This event tracks when a user clicks on the open DApp button on the bottom sheet implementation of a DApp that is already connected.
+   *
+   * @param options Amplitude event options.
+   */
+  discoverConnectedBottomSheetOpenDAppClicked(
+    options?: EventOptions,
+  ) {
+    return this.track(new DiscoverConnectedBottomSheetOpenDAppClicked(), options);
+  }
+
+  /**
+   * Discover Connected DApp Item Clicked
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Discover%20Connected%20DApp%20Item%20Clicked)
+   *
+   * This event tracks when a user clicks on a DApp list item that is already connected to the wallet.
+   *
+   * @param options Amplitude event options.
+   */
+  discoverConnectedDAppItemClicked(
+    options?: EventOptions,
+  ) {
+    return this.track(new DiscoverConnectedDAppItemClicked(), options);
+  }
+
+  /**
+   * Discover DApp Item Clicked
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Discover%20DApp%20Item%20Clicked)
+   *
+   * This event tracks when a user clicks on a DApp list item.
+   *
+   * @param options Amplitude event options.
+   */
+  discoverDAppItemClicked(
+    options?: EventOptions,
+  ) {
+    return this.track(new DiscoverDAppItemClicked(), options);
+  }
+
+  /**
+   * Discover Filter Selected
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Discover%20Filter%20Selected)
+   *
+   * This event tracks when a user applies filter on the dApp Explorer page.
+   *
+   * @param properties The event's properties (e.g. dapp_filter)
+   * @param options Amplitude event options.
+   */
+  discoverFilterSelected(
+    properties: DiscoverFilterSelectedProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new DiscoverFilterSelected(properties), options);
+  }
+
+  /**
+   * Discover Page Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Discover%20Page%20Viewed)
+   *
+   * This event tracks when the dApp Explorer page has loaded all of the recommended dApps.
+   *
+   * @param options Amplitude event options.
+   */
+  discoverPageViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new DiscoverPageViewed(), options);
+  }
+
+  /**
+   * Discover Search Activated
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Discover%20Search%20Activated)
+   *
+   * This event tracks when a user activates and starts a search in the discover page. Delay of 0.5 seconds.
+   *
+   * @param properties The event's properties (e.g. search_term)
+   * @param options Amplitude event options.
+   */
+  discoverSearchActivated(
+    properties: DiscoverSearchActivatedProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new DiscoverSearchActivated(properties), options);
+  }
+
+  /**
+   * Discover Web View Bottom Sheet Connect Clicked
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Discover%20Web%20View%20Bottom%20Sheet%20Connect%20Clicked)
+   *
+   * This event tracks when a user attempts to connect their wallet by clicking on "Connect" in the bottom sheet that appears on the integrated web view after the user clicks on “Connect Wallet” on a DApp page.
+   *
+   * @param options Amplitude event options.
+   */
+  discoverWebViewBottomSheetConnectClicked(
+    options?: EventOptions,
+  ) {
+    return this.track(new DiscoverWebViewBottomSheetConnectClicked(), options);
+  }
+
+  /**
+   * Discover Web View Close Clicked
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Discover%20Web%20View%20Close%20Clicked)
+   *
+   * This event tracks when a user clicks the close icon on the integrated web view to close the webview.
+   *
+   * @param options Amplitude event options.
+   */
+  discoverWebViewCloseClicked(
+    options?: EventOptions,
+  ) {
+    return this.track(new DiscoverWebViewCloseClicked(), options);
+  }
+
+  /**
+   * Discover Web View Tab Bar Backward Clicked
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Discover%20Web%20View%20Tab%20Bar%20Backward%20Clicked)
+   *
+   * This event tracks when a user clicks the backward button on the integrated web view.
+   *
+   * @param options Amplitude event options.
+   */
+  discoverWebViewTabBarBackwardClicked(
+    options?: EventOptions,
+  ) {
+    return this.track(new DiscoverWebViewTabBarBackwardClicked(), options);
+  }
+
+  /**
+   * Discover Web View Tab Bar Forward Clicked
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Discover%20Web%20View%20Tab%20Bar%20Forward%20Clicked)
+   *
+   * This event tracks when a user clicks the forward button on the integrated web view.
+   *
+   * @param options Amplitude event options.
+   */
+  discoverWebViewTabBarForwardClicked(
+    options?: EventOptions,
+  ) {
+    return this.track(new DiscoverWebViewTabBarForwardClicked(), options);
+  }
+
+  /**
+   * Discover Web View Tab Bar Refresh Clicked
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Discover%20Web%20View%20Tab%20Bar%20Refresh%20Clicked)
+   *
+   * This event tracks when a user clicks the refresh button on the integrated web view.
+   *
+   * @param options Amplitude event options.
+   */
+  discoverWebViewTabBarRefreshClicked(
+    options?: EventOptions,
+  ) {
+    return this.track(new DiscoverWebViewTabBarRefreshClicked(), options);
+  }
+
+  /**
+   * Discover Web View Tab Bar Share Clicked
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Discover%20Web%20View%20Tab%20Bar%20Share%20Clicked)
+   *
+   * This event tracks when a user clicks the share button on the integrated web view.
+   *
+   * @param options Amplitude event options.
+   */
+  discoverWebViewTabBarShareClicked(
+    options?: EventOptions,
+  ) {
+    return this.track(new DiscoverWebViewTabBarShareClicked(), options);
+  }
+
+  /**
+   * Discover Web View Tab Clicked
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Discover%20Web%20View%20Tab%20Clicked)
+   *
+   * This event tracks when a user clicks the tab button on the integrated web view to open the tab manager.
+   *
+   * @param options Amplitude event options.
+   */
+  discoverWebViewTabClicked(
+    options?: EventOptions,
+  ) {
+    return this.track(new DiscoverWebViewTabClicked(), options);
+  }
+
+  /**
+   * Discover Web View Toolbar Search Activated
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Discover%20Web%20View%20Toolbar%20Search%20Activated)
+   *
+   * This event tracks when a user activates and starts a search in the webview’s tool bar.
+   *
+   * @param properties The event's properties (e.g. search_term)
+   * @param options Amplitude event options.
+   */
+  discoverWebViewToolbarSearchActivated(
+    properties: DiscoverWebViewToolbarSearchActivatedProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new DiscoverWebViewToolbarSearchActivated(properties), options);
+  }
+
+  /**
+   * Discover Web View Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Discover%20Web%20View%20Viewed)
+   *
+   * This event tracks when a user loads the integrated web view containing a DApp website.
+   *
+   * @param options Amplitude event options.
+   */
+  discoverWebViewViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new DiscoverWebViewViewed(), options);
   }
 
   /**
@@ -1413,6 +2032,74 @@ export class Ampli {
     options?: EventOptions,
   ) {
     return this.track(new RestoreWalletDetailsSettled(), options);
+  }
+
+  /**
+   * Restore Wallet Details Step Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Restore%20Wallet%20Details%20Step%20Viewed)
+   *
+   * Track when user loads the page where user inserts wallet name and password
+   *
+   * @param options Amplitude event options.
+   */
+  restoreWalletDetailsStepViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new RestoreWalletDetailsStepViewed(), options);
+  }
+
+  /**
+   * Restore Wallet Enter Phrase Step Status
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Restore%20Wallet%20Enter%20Phrase%20Step%20Status)
+   *
+   * This events tracks the validation of the recovery phrase is verified, once the user insert the latest word. The output can be positive or negative and we do save that in he property: recovery*prhase*status
+   *
+   * @param properties The event's properties (e.g. recovery_prhase_status)
+   * @param options Amplitude event options.
+   */
+  restoreWalletEnterPhraseStepStatus(
+    properties: RestoreWalletEnterPhraseStepStatusProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new RestoreWalletEnterPhraseStepStatus(properties), options);
+  }
+
+  /**
+   * Restore Wallet Enter Phrase Step Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Restore%20Wallet%20Enter%20Phrase%20Step%20Viewed)
+   *
+   * This event tracks when a user views the step to enter the recovery phrase while restoring a wallet (**Step 2**).
+   *
+   * @param properties The event's properties (e.g. recovery_phrase_lenght)
+   * @param options Amplitude event options.
+   */
+  restoreWalletEnterPhraseStepViewed(
+    properties: RestoreWalletEnterPhraseStepViewedProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new RestoreWalletEnterPhraseStepViewed(properties), options);
+  }
+
+  /**
+   * Restore Wallet Type Step Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Restore%20Wallet%20Type%20Step%20Viewed)
+   *
+   * This event tracks when a user views the **first step after** selecting restore wallet, were they have to choose between:
+   *
+   * * 15-word recovery phrase
+   *
+   * * 24-word recovery phrase
+   *
+   * @param options Amplitude event options.
+   */
+  restoreWalletTypeStepViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new RestoreWalletTypeStepViewed(), options);
   }
 
   /**
@@ -1808,4 +2495,4 @@ export class Ampli {
   }
 }
 
-export const ampli = new Ampli()
+export const ampli = new Ampli();

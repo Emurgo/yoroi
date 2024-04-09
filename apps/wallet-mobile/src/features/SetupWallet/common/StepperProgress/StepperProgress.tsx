@@ -1,6 +1,6 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet} from 'react-native'
+import {StyleSheet, ViewStyle} from 'react-native'
 import Animated, {Layout} from 'react-native-reanimated'
 
 import {CheckIllustration} from '../../illustrations/CheckIllustration'
@@ -40,8 +40,9 @@ type StepperProgressProps = {
   currentStep: number
   currentStepTitle: string
   totalSteps: number
+  style?: ViewStyle
 }
-export const StepperProgress = ({currentStep, currentStepTitle, totalSteps}: StepperProgressProps) => {
+export const StepperProgress = ({currentStep, currentStepTitle, totalSteps, style}: StepperProgressProps) => {
   const stepIndicator: Array<React.ReactNode> = []
   for (let i = 0; i < totalSteps; i++) {
     const currentIndex = i + 1
@@ -57,7 +58,7 @@ export const StepperProgress = ({currentStep, currentStepTitle, totalSteps}: Ste
   }
   const {styles} = useStyles()
   return (
-    <Animated.View layout={Layout} style={[styles.bar]}>
+    <Animated.View layout={Layout} style={[styles.bar, style]}>
       {stepIndicator}
     </Animated.View>
   )

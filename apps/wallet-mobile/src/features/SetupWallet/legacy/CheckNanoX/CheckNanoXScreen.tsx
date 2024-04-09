@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native'
-import {useWalletSetup} from '@yoroi/setup-wallet'
+import {useSetupWallet} from '@yoroi/setup-wallet'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image, Platform, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
@@ -15,7 +15,7 @@ export const CheckNanoXScreen = () => {
 
   const navigation = useNavigation<WalletInitRouteNavigation>()
   const onContinue = () => navigation.navigate('setup-wallet-connect-nano-x')
-  const {useUSB} = useWalletSetup()
+  const {useUSB} = useSetupWallet()
 
   const commonRequirements = [strings.appInstalled, strings.appOpened]
   const usbRequirements = [strings.haveOTGAdapter, strings.usbAlwaysConnected, ...commonRequirements]

@@ -1,5 +1,5 @@
-import {useNavigation} from '@react-navigation/native'
-import {useWalletSetup} from '@yoroi/setup-wallet'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
@@ -10,6 +10,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
+import {useMetrics} from '../../../../metrics/metricsManager'
 import {WalletInitRouteNavigation} from '../../../../navigation'
 import {makeKeys} from '../../../../yoroi-wallets/cardano/shelley/makeKeys'
 import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
@@ -22,7 +23,14 @@ export const VerifyRecoveryPhraseScreen = () => {
   const bold = useBold()
   const navigation = useNavigation<WalletInitRouteNavigation>()
   const strings = useStrings()
-  const {mnemonic, publicKeyHexChanged} = useWalletSetup()
+  const {mnemonic, publicKeyHexChanged} = useSetupWallet()
+  const {track} = useMetrics()
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.createWalletSavePhraseStepViewed()
+    }, [track]),
+  )
 
   const mnemonicEntries: Array<Entry> = mnemonic
     .split(' ')
@@ -159,7 +167,7 @@ type MnemonicInputProps = {
 const MnemonicInput = ({defaultMnemonic, userEntries, onPress}: MnemonicInputProps) => {
   const {styles, colors} = useStyles()
 
-  const {mnemonic} = useWalletSetup()
+  const {mnemonic} = useSetupWallet()
 
   const isPhraseComplete = userEntries.length === defaultMnemonic.length
   const isPhraseValid = userEntries.map((entry) => entry.word).join(' ') === mnemonic
@@ -253,6 +261,7 @@ const WordBadges = ({
   onPress,
   removeLastEntryAndAddNew,
 }: WordBadgesProps) => {
+  const {track} = useMetrics()
   const isWordUsed = (entryId: number) => userEntries.some((entry) => entry.id === entryId)
 
   const lastUserEntry = userEntries.findLast((last) => last)
@@ -265,6 +274,8 @@ const WordBadges = ({
   }
 
   const selectWord = (entry: {id: number; word: string}) => {
+    track.createWalletVerifyPhraseWordSelected()
+
     if (isLastWordValid() || userEntries.length === 0) {
       onPress(entry)
     } else {

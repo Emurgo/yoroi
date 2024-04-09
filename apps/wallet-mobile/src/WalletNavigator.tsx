@@ -30,6 +30,7 @@ import {NftsNavigator} from './Nfts/NftsNavigator'
 import {SearchProvider} from './Search/SearchContext'
 import {theme} from './theme'
 import {TxHistoryNavigator} from './TxHistory'
+import {useAuthOsEnabled} from './yoroi-wallets/auth'
 import {isHaskellShelley} from './yoroi-wallets/cardano/utils'
 
 const Tab = createBottomTabNavigator<WalletTabRoutes>()
@@ -166,7 +167,7 @@ export const WalletNavigator = () => {
   const strings = useStrings()
   const {theme} = useTheme()
   useLinksRequestAction()
-
+  const authOsEnabled = useAuthOsEnabled()
   const {showBiometricsScreen} = useShowBiometricsScreen()
 
   // initialRoute doesn't update the state of the navigator, only at first render
@@ -192,7 +193,7 @@ export const WalletNavigator = () => {
         detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
       }}
     >
-      {showBiometricsScreen && (
+      {showBiometricsScreen && authOsEnabled && (
         <Stack.Screen //
           name="choose-biometric-login"
           options={{headerShown: false}}

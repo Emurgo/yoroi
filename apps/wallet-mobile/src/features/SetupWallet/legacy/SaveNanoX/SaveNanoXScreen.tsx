@@ -1,4 +1,4 @@
-import {useWalletSetup} from '@yoroi/setup-wallet'
+import {useSetupWallet} from '@yoroi/setup-wallet'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {InteractionManager} from 'react-native'
@@ -12,14 +12,14 @@ import {AddressMode} from '../../../../wallet-manager/types'
 import {NetworkError} from '../../../../yoroi-wallets/cardano/errors'
 import {useCreateBip44Wallet} from '../../../../yoroi-wallets/hooks'
 import {WalletImplementationId} from '../../../../yoroi-wallets/types'
-import {WalletNameForm} from '../WalletNameForm'
+import {WalletNameForm} from '../WalletNameForm/WalletNameForm'
 
 // when hw, later will be part of the onboarding
 const addressMode: AddressMode = 'single'
 export const SaveNanoXScreen = () => {
   const strings = useStrings()
   const {resetToWalletSelection} = useWalletNavigation()
-  const {networkId, walletImplementationId, hwDeviceInfo} = useWalletSetup()
+  const {networkId, walletImplementationId, hwDeviceInfo} = useSetupWallet()
   const intl = useIntl()
   const {track} = useMetrics()
 
@@ -39,19 +39,24 @@ export const SaveNanoXScreen = () => {
 
   if (!hwDeviceInfo) throw new Error('no hwDeviceInfo')
 
+  const handleOnSubmit = React.useCallback(
+    ({name}: {name: string}) => {
+      createWallet({
+        name,
+        networkId,
+        bip44AccountPublic: hwDeviceInfo.bip44AccountPublic,
+        implementationId: walletImplementationId as WalletImplementationId,
+        hwDeviceInfo,
+        readOnly: false,
+        addressMode,
+      })
+    },
+    [createWallet, hwDeviceInfo, networkId, walletImplementationId],
+  )
+
   return (
     <WalletNameForm
-      onSubmit={({name}) =>
-        createWallet({
-          name,
-          networkId,
-          bip44AccountPublic: hwDeviceInfo.bip44AccountPublic,
-          implementationId: walletImplementationId as WalletImplementationId,
-          hwDeviceInfo,
-          readOnly: false,
-          addressMode,
-        })
-      }
+      onSubmit={({name}) => handleOnSubmit({name})}
       defaultWalletName={strings.ledgerWalletNameSuggestion}
       image={image}
       progress={{

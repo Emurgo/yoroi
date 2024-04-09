@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native'
 import {parseBoolean, useAsyncStorage} from '@yoroi/common'
-import {useWalletSetup} from '@yoroi/setup-wallet'
+import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Alert, StyleSheet, Text, View} from 'react-native'
@@ -19,7 +19,7 @@ export const ChooseBiometricLoginScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
   const storage = useAsyncStorage()
-  const {walletImplementationIdChanged} = useWalletSetup()
+  const {walletImplementationIdChanged} = useSetupWallet()
 
   const navigate = () => {
     walletImplementationIdChanged(HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID)

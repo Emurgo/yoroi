@@ -1,9 +1,11 @@
+import {useFocusEffect} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, TextInput as RNTextInput, View, ViewProps} from 'react-native'
 
 import {Button, Checkmark, KeyboardAvoidingView, Spacer, TextInput} from '../../../components'
 import globalMessages from '../../../i18n/global-messages'
+import {useMetrics} from '../../../metrics/metricsManager'
 import {COLORS} from '../../../theme'
 import {isEmptyString} from '../../../utils/utils'
 import {useWalletManager} from '../../../wallet-manager/WalletManagerContext'
@@ -23,6 +25,7 @@ type Props = {
 export const WalletForm = ({onSubmit}: Props) => {
   const strings = useStrings()
   const walletManager = useWalletManager()
+  const {track} = useMetrics()
   const {walletNames} = useWalletNames(walletManager)
   const [name, setName] = React.useState(features.prefillWalletInfo ? debugWalletInfo.WALLET_NAME : '')
   const nameErrors = validateWalletName(name, null, walletNames ?? [])
@@ -45,6 +48,12 @@ export const WalletForm = ({onSubmit}: Props) => {
   const passwordConfirmationErrorText = passwordErrors.matchesConfirmation
     ? strings.repeatPasswordInputError
     : undefined
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.restoreWalletDetailsStepViewed()
+    }, [track]),
+  )
 
   return (
     <View style={styles.safeAreaView}>

@@ -1,6 +1,6 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {NetworkError} from '@yoroi/common'
-import {useWalletSetup} from '@yoroi/setup-wallet'
+import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
@@ -146,12 +146,12 @@ const AddWalletButton = () => {
   const navigation = useNavigation()
   const strings = useStrings()
   const {styles} = useStyles()
-  const {walletImplementationIdChanged, reset: resetWalletSetup} = useWalletSetup()
+  const {walletImplementationIdChanged, reset: resetSetupWallet} = useSetupWallet()
 
   return (
     <Button
       onPress={() => {
-        resetWalletSetup()
+        resetSetupWallet()
         walletImplementationIdChanged(HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID)
 
         navigation.navigate('new-wallet', {

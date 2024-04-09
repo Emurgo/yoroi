@@ -1,5 +1,5 @@
-import {useNavigation} from '@react-navigation/native'
-import {useWalletSetup} from '@yoroi/setup-wallet'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
@@ -8,6 +8,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Space} from '../../../../components/Space/Space'
 import {LedgerTransportSwitchModal} from '../../../../HW'
 import {isProduction} from '../../../../legacy/config'
+import {useMetrics} from '../../../../metrics/metricsManager'
 import {WalletInitRouteNavigation} from '../../../../navigation'
 import * as HASKELL_SHELLEY from '../../../../yoroi-wallets/cardano/constants/mainnet/constants'
 import {ButtonCard} from '../../common/ButtonCard/ButtonCard'
@@ -20,8 +21,15 @@ import {RestoreWallet} from '../../illustrations/RestoreWallet'
 export const ChooseSetupTypeScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
-  const {networkIdChanged, setUpTypeChanged, useUSBChanged: USBChanged} = useWalletSetup()
+  const {networkIdChanged, setUpTypeChanged, useUSBChanged: USBChanged} = useSetupWallet()
   const [isModalOpen, setIsModalOpen] = React.useState(false)
+  const {track} = useMetrics()
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.createWalletSelectMethodPageViewed()
+    }, [track]),
+  )
 
   const navigation = useNavigation<WalletInitRouteNavigation>()
 

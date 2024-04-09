@@ -1,4 +1,4 @@
-import {useWalletSetup} from '@yoroi/setup-wallet'
+import {useSetupWallet} from '@yoroi/setup-wallet'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {FlatList, InteractionManager, ScrollView, StyleSheet, View} from 'react-native'
@@ -16,8 +16,8 @@ import {NetworkError} from '../../../../yoroi-wallets/cardano/errors'
 import {NUMBERS} from '../../../../yoroi-wallets/cardano/numbers'
 import {useCreateBip44Wallet, usePlate} from '../../../../yoroi-wallets/hooks'
 import {NetworkId, WalletImplementationId} from '../../../../yoroi-wallets/types'
-import {WalletAddress} from '../WalletAddress'
-import {WalletNameForm} from '../WalletNameForm'
+import {WalletAddress} from '../WalletAddress/WalletAddress'
+import {WalletNameForm} from '../WalletNameForm/WalletNameForm'
 
 // when ro, later will be part of the onboarding
 const addressMode: AddressMode = 'single'
@@ -27,7 +27,7 @@ export const SaveReadOnlyWalletScreen = () => {
   const {resetToWalletSelection} = useWalletNavigation()
   const {track} = useMetrics()
 
-  const {publicKeyHex, path, networkId, walletImplementationId} = useWalletSetup()
+  const {publicKeyHex, path, networkId, walletImplementationId} = useSetupWallet()
 
   const normalizedPath = path.map((i) => {
     if (i >= NUMBERS.HARD_DERIVATION_START) {
@@ -50,16 +50,19 @@ export const SaveReadOnlyWalletScreen = () => {
     },
   })
 
-  const onSubmit = ({name}: {name: string}) => {
-    createWallet({
-      name,
-      networkId: networkId as NetworkId,
-      implementationId: walletImplementationId as WalletImplementationId,
-      bip44AccountPublic: publicKeyHex,
-      readOnly: true,
-      addressMode,
-    })
-  }
+  const onSubmit = React.useCallback(
+    ({name}: {name: string}) => {
+      createWallet({
+        name,
+        networkId: networkId as NetworkId,
+        implementationId: walletImplementationId as WalletImplementationId,
+        bip44AccountPublic: publicKeyHex,
+        readOnly: true,
+        addressMode,
+      })
+    },
+    [createWallet, networkId, publicKeyHex, walletImplementationId],
+  )
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container} testID="saveReadOnlyWalletContainer">

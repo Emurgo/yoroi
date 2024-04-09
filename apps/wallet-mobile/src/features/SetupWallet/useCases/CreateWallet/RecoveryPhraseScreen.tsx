@@ -1,11 +1,9 @@
-import {useNavigation} from '@react-navigation/native'
-import {useWalletSetup} from '@yoroi/setup-wallet'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
-import {generateMnemonic} from 'bip39'
 import {BlurView} from 'expo-blur'
 import * as React from 'react'
 import {
-  Keyboard,
   Linking,
   Platform,
   ScrollView,
@@ -20,7 +18,9 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, useModal} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
+import {useMetrics} from '../../../../metrics/metricsManager'
 import {WalletInitRouteNavigation} from '../../../../navigation'
+import {generateAdaMnemonic} from '../../../../yoroi-wallets/cardano/mnemonic'
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
 import {YoroiZendeskLink} from '../../common/contants'
 import {LearnMoreButton} from '../../common/LearnMoreButton/LearnMoreButton'
@@ -47,13 +47,19 @@ export const RecoveryPhraseScreen = () => {
   const [isBlur, setIsBlur] = React.useState(true)
   const navigation = useNavigation<WalletInitRouteNavigation>()
   const strings = useStrings()
-  const {mnemonicChanged} = useWalletSetup()
+  const {mnemonicChanged} = useSetupWallet()
+  const {track} = useMetrics()
   const bold = useBold()
 
-  const mnemonic = React.useMemo(() => generateMnemonic(), [])
+  const mnemonic = React.useMemo(() => generateAdaMnemonic(), [])
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.createWalletLearnPhraseStepViewed()
+    }, [track]),
+  )
 
   const handleOnShowModal = () => {
-    Keyboard.dismiss()
     openModal(
       strings.recoveryPhraseModalTitle,
       <View style={styles.modal}>

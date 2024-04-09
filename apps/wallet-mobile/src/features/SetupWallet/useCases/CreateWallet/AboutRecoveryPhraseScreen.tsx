@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Linking, StyleSheet, Text, View} from 'react-native'
@@ -6,6 +6,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
+import {useMetrics} from '../../../../metrics/metricsManager'
 import {WalletInitRouteNavigation} from '../../../../navigation'
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
 import {YoroiZendeskLink} from '../../common/contants'
@@ -18,6 +19,19 @@ export const AboutRecoveryPhraseScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
   const navigation = useNavigation<WalletInitRouteNavigation>()
+  const {track} = useMetrics()
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.createWalletLearnPhraseStepViewed()
+    }, [track]),
+  )
+
+  const handleOnLearMoreButtonPress = () => {
+    track.createWalletTermsPageViewed()
+    Linking.openURL(YoroiZendeskLink)
+  }
+
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
       <View>
@@ -43,11 +57,7 @@ export const AboutRecoveryPhraseScreen = () => {
 
         <Space height="l" />
 
-        <LearnMoreButton
-          onPress={() => {
-            Linking.openURL(YoroiZendeskLink)
-          }}
-        />
+        <LearnMoreButton onPress={handleOnLearMoreButtonPress} />
       </View>
 
       <Button

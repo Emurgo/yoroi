@@ -1,5 +1,6 @@
+import {useFocusEffect} from '@react-navigation/native'
 import {NetworkError} from '@yoroi/common'
-import {useWalletSetup} from '@yoroi/setup-wallet'
+import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
@@ -21,6 +22,7 @@ import {Button, Icon, TextInput, useModal} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
 import {showErrorDialog} from '../../../../dialogs'
 import {errorMessages} from '../../../../i18n/global-messages'
+import {useMetrics} from '../../../../metrics/metricsManager'
 import {useWalletNavigation} from '../../../../navigation'
 import {isEmptyString} from '../../../../utils'
 import {AddressMode} from '../../../../wallet-manager/types'
@@ -65,8 +67,15 @@ export const WalletDetailsScreen = () => {
   const strings = useStrings()
   const walletManager = useWalletManager()
   const {walletNames} = useWalletNames(walletManager)
+  const {track} = useMetrics()
 
-  const {mnemonic, networkId, publicKeyHex, walletImplementationId} = useWalletSetup()
+  useFocusEffect(
+    React.useCallback(() => {
+      track.createWalletDetailsStepViewed()
+    }, [track]),
+  )
+
+  const {mnemonic, networkId, publicKeyHex, walletImplementationId} = useSetupWallet()
   const plate = usePlate({networkId, publicKeyHex})
 
   const [name, setName] = React.useState(features.prefillWalletInfo ? debugWalletInfo.WALLET_NAME : '')
@@ -95,6 +104,7 @@ export const WalletDetailsScreen = () => {
   const intl = useIntl()
   const {createWallet, isLoading, isSuccess} = useCreateWallet({
     onSuccess: () => {
+      track.createWalletDetailsSettled()
       resetToWalletSelection()
     },
     onError: (error) => {
@@ -105,6 +115,19 @@ export const WalletDetailsScreen = () => {
       })
     },
   })
+
+  const handleCreateWallet = React.useCallback(() => {
+    track.createWalletDetailsSubmitted()
+
+    createWallet({
+      name,
+      password,
+      mnemonicPhrase: mnemonic,
+      networkId,
+      walletImplementationId: walletImplementationId as WalletImplementationId,
+      addressMode,
+    })
+  }, [createWallet, mnemonic, name, networkId, password, track, walletImplementationId])
 
   const showModalTipsPassword = () => {
     Keyboard.dismiss()
@@ -266,19 +289,7 @@ export const WalletDetailsScreen = () => {
         <Button
           title={strings.next}
           style={styles.button}
-          onPress={
-            isLoading || isSuccess
-              ? NOOP
-              : () =>
-                  createWallet({
-                    name,
-                    password,
-                    mnemonicPhrase: mnemonic,
-                    networkId,
-                    walletImplementationId: walletImplementationId as WalletImplementationId,
-                    addressMode,
-                  })
-          }
+          onPress={isLoading || isSuccess ? NOOP : () => handleCreateWallet()}
           disabled={Object.keys(passwordErrors).length > 0 || Object.keys(nameErrors).length > 0}
         />
 

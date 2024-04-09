@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native'
-import {useWalletSetup} from '@yoroi/setup-wallet'
+import {useSetupWallet} from '@yoroi/setup-wallet'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StatusBar, StyleSheet, View} from 'react-native'
@@ -16,7 +16,7 @@ export const ImportReadOnlyWalletScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
   const navigation = useNavigation<WalletInitRouteNavigation>()
-  const {publicKeyHexChanged, pathChanged} = useWalletSetup()
+  const {publicKeyHexChanged, pathChanged} = useSetupWallet()
 
   const onRead = async (event: {data: string}): Promise<boolean> => {
     try {

@@ -1,6 +1,6 @@
 import {AsyncStorageProvider} from '@yoroi/common'
 import {LinksProvider} from '@yoroi/links'
-import {WalletSetupProvider} from '@yoroi/setup-wallet'
+import {SetupWalletProvider} from '@yoroi/setup-wallet'
 import {ThemeProvider} from '@yoroi/theme'
 import React from 'react'
 import {LogBox, Platform, StyleSheet, UIManager} from 'react-native'
@@ -64,9 +64,9 @@ export const YoroiApp = () => {
                             <SelectedWalletMetaProvider>
                               <SelectedWalletProvider>
                                 <LinksProvider>
-                                  <WalletSetupProvider>
+                                  <SetupWalletProvider>
                                     <InitApp />
-                                  </WalletSetupProvider>
+                                  </SetupWalletProvider>
                                 </LinksProvider>
                               </SelectedWalletProvider>
                             </SelectedWalletMetaProvider>

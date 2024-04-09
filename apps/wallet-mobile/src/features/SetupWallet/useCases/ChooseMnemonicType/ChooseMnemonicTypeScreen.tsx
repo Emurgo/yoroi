@@ -1,11 +1,12 @@
-import {useNavigation} from '@react-navigation/native'
-import {useWalletSetup} from '@yoroi/setup-wallet'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Space} from '../../../../components/Space/Space'
+import {useMetrics} from '../../../../metrics/metricsManager'
 import {WalletInitRouteNavigation} from '../../../../navigation'
 import {ButtonCard} from '../../common/ButtonCard/ButtonCard'
 import {LogoBanner} from '../../common/LogoBanner/LogoBanner'
@@ -16,7 +17,8 @@ import {Mnemonic24Words} from '../../illustrations/Mnemonic24Words'
 export const ChooseMnemonicTypeScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
-  const {mnemonicTypeChanged} = useWalletSetup()
+  const {mnemonicTypeChanged} = useSetupWallet()
+  const {track} = useMetrics()
 
   const navigation = useNavigation<WalletInitRouteNavigation>()
 
@@ -29,6 +31,12 @@ export const ChooseMnemonicTypeScreen = () => {
     mnemonicTypeChanged(24)
     navigation.navigate('setup-wallet-restore-form')
   }
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.restoreWalletTypeStepViewed()
+    }, [track]),
+  )
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>

@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native'
-import {useWalletSetup} from '@yoroi/setup-wallet'
+import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
@@ -17,7 +17,7 @@ import {useStrings} from '../../common/useStrings'
 export const ChooseNetworkScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
-  const {networkIdChanged} = useWalletSetup()
+  const {networkIdChanged} = useSetupWallet()
   const navigate = useNavigate()
 
   const handleMainnet = () => {
@@ -75,7 +75,7 @@ export const ChooseNetworkScreen = () => {
 }
 
 const useNavigate = () => {
-  const {setUpType} = useWalletSetup()
+  const {setUpType} = useSetupWallet()
   const navigateTo = useNavigateTo()
 
   switch (setUpType) {

@@ -14,6 +14,7 @@ import {
 
 import {Menu, useScrollView} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
+import {useMetrics} from '../../../../metrics/metricsManager'
 import {isEmptyString} from '../../../../utils/utils'
 import {Alert as AlertIllustration} from '../../illustrations/Alert'
 import {Check2} from '../../illustrations/Check2'
@@ -32,6 +33,7 @@ export const MnemonicInput = ({
   const strings = useStrings()
   const {styles} = useStyles()
   const [mnemonicWords, setMnemonicWords] = React.useState<Array<string>>(Array.from({length}).map(() => ''))
+  const {track} = useMetrics()
 
   const mnemonicWordsComplete = mnemonicWords.every(Boolean)
   const isValid: boolean = mnemonicWordsComplete ? validate(mnemonicWords.join(' ')) : false
@@ -46,11 +48,16 @@ export const MnemonicInput = ({
     })
 
   React.useEffect(() => {
-    if (mnemonicWordsComplete && isValid) {
-      Keyboard.dismiss()
-      onDone(mnemonicWords.join(' '))
+    if (mnemonicWordsComplete) {
+      if (isValid) {
+        track.restoreWalletEnterPhraseStepStatus({recovery_prhase_status: true})
+        Keyboard.dismiss()
+        onDone(mnemonicWords.join(' '))
+      } else {
+        track.restoreWalletEnterPhraseStepStatus({recovery_prhase_status: false})
+      }
     }
-  }, [mnemonicWordsComplete, isValid, mnemonicWords, onDone])
+  }, [mnemonicWordsComplete, isValid, mnemonicWords, onDone, track])
 
   return (
     <View>
@@ -160,11 +167,12 @@ const MnemonicWordInput = React.forwardRef<RNTextInput, MnemonicWordInputProps>(
     const dateTime = React.useRef<number>()
     const [error, setError] = React.useState('')
     const [matchingWords, setMatchingWords] = React.useState<Array<string>>([])
+    const [wordSubmitted, setWordSubmitted] = React.useState(false)
 
     const selectWord = React.useCallback(
-      (word: string) => {
-        setWord(normalizeText(word))
-        onSelect(normalizeText(word))
+      (matchingWord: string) => {
+        setWord(normalizeText(matchingWord))
+        onSelect(normalizeText(matchingWord))
 
         if (dateTime.current == null) throw new Error()
         setTimeout(() => {
@@ -175,23 +183,26 @@ const MnemonicWordInput = React.forwardRef<RNTextInput, MnemonicWordInputProps>(
     )
 
     const onSubmitEditing = React.useCallback(() => {
+      setWordSubmitted(true)
       if (!isEmptyString(matchingWords[0])) {
         selectWord(matchingWords[0])
       }
     }, [matchingWords, selectWord])
 
     const onChangeText = React.useCallback(
-      (word: string) => {
-        if (word.endsWith(' ')) {
-          word = word.trimEnd()
-          setWord(normalizeText(word))
+      (text: string) => {
+        if (wordSubmitted) return // to fix ios simulator issue
+
+        if (text.endsWith(' ')) {
+          text = text.trimEnd()
+          setWord(normalizeText(text))
           onSubmitEditing()
         } else {
-          setWord(normalizeText(word))
+          setWord(normalizeText(text))
         }
 
-        if (!isEmptyString(word)) {
-          const matchingWords = getMatchingWords(word)
+        if (!isEmptyString(text)) {
+          const matchingWords = getMatchingWords(text)
           setMatchingWords(matchingWords)
 
           if (matchingWords.length <= 0) {
@@ -199,7 +210,7 @@ const MnemonicWordInput = React.forwardRef<RNTextInput, MnemonicWordInputProps>(
           } else if (error !== '') setError('')
         } else setMatchingWords([])
       },
-      [error, onSubmitEditing],
+      [error, onSubmitEditing, wordSubmitted],
     )
 
     React.useEffect(() => {
@@ -225,6 +236,7 @@ const MnemonicWordInput = React.forwardRef<RNTextInput, MnemonicWordInputProps>(
                 })
               }
 
+              setWordSubmitted(false)
               onFocus()
             }}
             onChange={() => {

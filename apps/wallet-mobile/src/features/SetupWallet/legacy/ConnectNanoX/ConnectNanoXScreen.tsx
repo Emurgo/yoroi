@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native'
-import {useWalletSetup} from '@yoroi/setup-wallet'
+import {useSetupWallet} from '@yoroi/setup-wallet'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
@@ -30,7 +30,7 @@ export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
   const strings = useStrings()
   const navigation = useNavigation<WalletInitRouteNavigation>()
 
-  const {hwDeviceInfoChanged, walletImplementationId, useUSB} = useWalletSetup()
+  const {hwDeviceInfoChanged, walletImplementationId, useUSB} = useSetupWallet()
 
   const onSuccess = (hwDeviceInfo: HWDeviceInfo) => {
     hwDeviceInfoChanged(hwDeviceInfo)
