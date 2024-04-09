@@ -1,8 +1,8 @@
 import React from 'react'
 import {LayoutAnimation, StyleSheet, TouchableOpacity, View} from 'react-native'
 
-import {Icon, Text} from '../..'
 import {COLORS} from '../../../theme'
+import {Icon, Text} from '../..'
 
 type Props = {
   label: string
