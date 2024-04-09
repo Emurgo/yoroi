@@ -72,6 +72,7 @@ export type Palette = {
     'green-blue': [HexColor, HexColor, HexColor, HexColor, HexColor, HexColor]
   }
   'bottom-sheet-background': HexColor
+  'bottom-sheet-opacity': string
   'overlay-extension': {hex: HexColor; opacity: number}
   'overlay-mobile': {hex: HexColor; opacity: number}
   'sidebar-overlay': {hex: HexColor; opacity: number}

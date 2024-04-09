@@ -8,7 +8,6 @@ import {Icon, Spacer, Text, useModal} from '../../../../components'
 import {AmountItem} from '../../../../components/AmountItem/AmountItem'
 import {PairedBalance} from '../../../../components/PairedBalance/PairedBalance'
 import {useSelectedWallet} from '../../../../SelectedWallet'
-import {COLORS} from '../../../../theme'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../yoroi-wallets/utils'
 import {PRICE_IMPACT_HIGH_RISK, PRICE_IMPACT_MODERATE_RISK, PRICE_PRECISION} from '../../common/constants'
@@ -301,7 +300,7 @@ const useStyles = () => {
       color: color.gray[900],
     },
     gray: {
-      color: COLORS.GRAY,
+      color: color.gray[700],
     },
     amountItemLabel: {
       fontSize: 12,

@@ -1,9 +1,9 @@
+import {useTheme} from '@yoroi/theme'
 import React, {useEffect, useRef, useState} from 'react'
 import {ActivityIndicator, StyleSheet, TextInput as RNTextInput, View} from 'react-native'
 
 import {debugWalletInfo, features} from '../../features'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {COLORS} from '../../theme'
 import {WrongPassword} from '../../yoroi-wallets/cardano/errors'
 import {useSignTxWithPassword, useSubmitTx} from '../../yoroi-wallets/hooks'
 import {YoroiSignedTx, YoroiUnsignedTx} from '../../yoroi-wallets/types'
@@ -22,6 +22,7 @@ type Props = {
 export const ConfirmTxWithSpendingPasswordModal = ({onSuccess, unsignedTx, onError}: Props) => {
   const spendingPasswordRef = useRef<RNTextInput>(null)
   const wallet = useSelectedWallet()
+  const styles = useStyles()
   const {signTx, error: signError, isLoading: signIsLoading} = useSignTxWithPassword({wallet})
   const {submitTx, error: submitError, isLoading: submitIsLoading} = useSubmitTx({wallet}, {onError})
   const strings = useStrings()
@@ -113,22 +114,28 @@ const getErrorMessage = (error: unknown, strings: Record<'wrongPasswordMessage' 
   return strings.error
 }
 
-const styles = StyleSheet.create({
-  modalText: {
-    paddingHorizontal: 70,
-    textAlign: 'center',
-    paddingBottom: 8,
-  },
-  errorMessage: {
-    color: COLORS.ERROR_TEXT_COLOR,
-    textAlign: 'center',
-  },
-  loading: {
-    position: 'absolute',
-    height: '100%',
-    left: 0,
-    right: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
+  const styles = StyleSheet.create({
+    modalText: {
+      paddingHorizontal: 70,
+      textAlign: 'center',
+      paddingBottom: 8,
+    },
+    errorMessage: {
+      color: color.magenta[500],
+      textAlign: 'center',
+    },
+    loading: {
+      position: 'absolute',
+      height: '100%',
+      left: 0,
+      right: 0,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+  })
+
+  return styles
+}

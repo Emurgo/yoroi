@@ -69,6 +69,7 @@ export const lightPalette: Palette = {
     ],
   },
   'bottom-sheet-background': '#ffffff',
+  'bottom-sheet-opacity': 'rgba(0, 0, 0, .5)',
   'overlay-extension': {hex: '#121f4d', opacity: 0.7},
   'overlay-mobile': {hex: '#000000', opacity: 0.4},
   'sidebar-overlay': {hex: '#000000', opacity: 0.16},
