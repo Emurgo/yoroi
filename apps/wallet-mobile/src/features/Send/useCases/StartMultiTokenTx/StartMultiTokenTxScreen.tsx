@@ -9,7 +9,6 @@ import {Button, KeyboardAvoidingView, Spacer} from '../../../../components'
 import {ScrollView, useScrollView} from '../../../../components/ScrollView/ScrollView'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../SelectedWallet'
-import {COLORS} from '../../../../theme'
 import {useHasPendingTx, useIsOnline} from '../../../../yoroi-wallets/hooks'
 import {Amounts} from '../../../../yoroi-wallets/utils'
 import {memoMaxLenght} from '../../common/constants'
@@ -106,7 +105,7 @@ export const StartMultiTokenTxScreen = () => {
           <InputMemo value={memo} onChangeText={handleOnChangeMemo} isValid={!hasMemoError} />
         </ScrollView>
 
-        <Actions style={isScrollBarShown && {borderTopWidth: 1, borderTopColor: COLORS.BORDER_GRAY}}>
+        <Actions style={Boolean(isScrollBarShown) && styles.actionsScroll}>
           <NextButton
             onPress={handleOnNext}
             title={strings.next}
@@ -176,6 +175,10 @@ const useStyles = () => {
     },
     scroll: {
       ...padding['x-l'],
+    },
+    actionsScroll: {
+      borderTopWidth: 1,
+      borderTopColor: color.gray[200],
     },
   })
   return styles

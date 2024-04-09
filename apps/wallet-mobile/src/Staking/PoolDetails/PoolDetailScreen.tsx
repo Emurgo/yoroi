@@ -1,9 +1,9 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 
 import {Button, Text, TextInput} from '../../components'
-import {COLORS, spacing} from '../../theme'
 
 type Props = {
   onPressDelegate: (poolHash: string) => void
@@ -12,6 +12,7 @@ type Props = {
 
 export const PoolDetailScreen = ({onPressDelegate, disabled = false}: Props) => {
   const strings = useStrings()
+  const styles = useStyles()
   const [poolHash, setPoolHash] = React.useState('')
 
   return (
@@ -41,26 +42,31 @@ export const PoolDetailScreen = ({onPressDelegate, disabled = false}: Props) => 
   )
 }
 
-const styles = StyleSheet.create({
-  content: {
-    flex: 1,
-    padding: 24,
-    backgroundColor: COLORS.LIGHT_GRAY,
-  },
-  heading: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingBottom: spacing.paragraphBottomMargin,
-  },
-  title: {
-    fontSize: 16,
-    color: COLORS.SHELLEY_BLUE,
-    paddingBottom: spacing.paragraphBottomMargin,
-  },
-  button: {
-    padding: 8,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, padding, typography} = theme
+  const styles = StyleSheet.create({
+    content: {
+      flex: 1,
+      padding: 24,
+      backgroundColor: color.gray[100],
+    },
+    heading: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      ...padding['b-l'],
+    },
+    title: {
+      color: color.primary[600],
+      ...padding['b-l'],
+      ...typography['body-1-l-regular'],
+    },
+    button: {
+      ...padding['s'],
+    },
+  })
+  return styles
+}
 
 const useStrings = () => {
   const intl = useIntl()
