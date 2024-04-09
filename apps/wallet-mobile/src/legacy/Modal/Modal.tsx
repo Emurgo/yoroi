@@ -95,7 +95,7 @@ const useStyles = () => {
       alignItems: 'stretch',
       justifyContent: 'center',
       ...padding['xl'],
-      backgroundColor: 'rgba(0, 0, 0, .5)',
+      backgroundColor: color['bottom-sheet-opacity'],
     },
     noPadding: {
       padding: 0,
