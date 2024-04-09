@@ -5,12 +5,12 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import uuid from 'uuid'
 
 import {Icon, Spacer, useModal} from '../../../../../components'
-import {useBrowser} from '../../../common/Browser/BrowserProvider'
-import {IDAppItem} from '../../../common/DAppMock'
+import {GOOGLE_DAPP_ID, IDAppItem} from '../../../common/DAppMock'
 import {LabelCategoryDApp} from '../../../common/LabelCategoryDApp'
 import {LabelConnected} from '../../../common/LabelConnected'
 import {useNavigateTo} from '../../../common/useNavigateTo'
 import {useStrings} from '../../../common/useStrings'
+import {useBrowser} from '../../../common/BrowserProvider'
 
 const DIALOG_DAPP_ACTIONS_HEIGHT = 294
 
@@ -20,7 +20,7 @@ type Props = {
   onPress?: () => void
 }
 export const DAppItem = ({dApp, connected, onPress}: Props) => {
-  const {styles} = useStyles()
+  const {styles, colors} = useStyles()
   const {addBrowserTab, setTabActive, tabs} = useBrowser()
   const navigateTo = useNavigateTo()
   const {openModal, closeModal} = useModal()
@@ -53,7 +53,7 @@ export const DAppItem = ({dApp, connected, onPress}: Props) => {
       return
     }
 
-    if (dApp.id === 'google_search') {
+    if (!connected || dApp.id === GOOGLE_DAPP_ID) {
       return handleOpenDApp()
     }
 
@@ -75,9 +75,13 @@ export const DAppItem = ({dApp, connected, onPress}: Props) => {
         <Spacer height={16} />
 
         <View>
-          <DAppAction onPress={handleOpenDApp} icon={<Icon.DApp />} title={strings.openDApp} />
+          <DAppAction onPress={handleOpenDApp} icon={<Icon.DApp color={colors.icon} />} title={strings.openDApp} />
 
-          <DAppAction onPress={handleDisconnectDApp} icon={<Icon.DApp />} title={strings.disconnectWalletFromDApp} />
+          <DAppAction
+            onPress={handleDisconnectDApp}
+            icon={<Icon.Disconnect color={colors.icon} />}
+            title={strings.disconnectWalletFromDApp}
+          />
         </View>
       </View>,
       dialogHeight,
@@ -187,5 +191,9 @@ const useStyles = () => {
     },
   })
 
-  return {styles} as const
+  const colors = {
+    icon: color.primary['900'],
+  }
+
+  return {styles, colors} as const
 }

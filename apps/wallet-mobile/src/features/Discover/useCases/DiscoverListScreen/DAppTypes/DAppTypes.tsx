@@ -20,8 +20,11 @@ export const DAppTypes = ({types, onToggle, selected, listCategoriesSelected}: P
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.contentContainer}>
       {types
-        .sort((_, __) => _.localeCompare(__))
-        .sort((a, b) => listCategoriesSelected.indexOf(b) - listCategoriesSelected.indexOf(a))
+        .sort((firstType, secondType) => firstType.localeCompare(secondType))
+        .sort(
+          (firstType, secondType) =>
+            listCategoriesSelected.indexOf(secondType) - listCategoriesSelected.indexOf(firstType),
+        )
         .map((type) => {
           const isSelected = !!(selected ?? {})[type]
           return <TypeItem key={type} isActive={isSelected} name={DAppCategory[type]} onToggle={() => onToggle(type)} />

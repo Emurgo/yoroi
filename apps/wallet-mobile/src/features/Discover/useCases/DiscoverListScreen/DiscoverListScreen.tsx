@@ -5,16 +5,16 @@ import {FlatList, ScrollView, StyleSheet, View} from 'react-native'
 import {Spacer} from '../../../../components'
 import {useSearch, useSearchOnNavBar} from '../../../../Search/SearchContext'
 import {makeList} from '../../../../utils'
-import {DAppCategory, mockDAppGoogle, TDAppCategory} from '../../common/DAppMock'
+import {DAppCategory, getGoogleSearchItem, TDAppCategory} from '../../common/DAppMock'
 import {useDAppsConnected} from '../../common/useDAppsConnected'
 import {useDAppsList} from '../../common/useDAppsList'
-import {useShowWelcomeDApp} from '../../common/useShowWelcomeDApp'
 import {useStrings} from '../../common/useStrings'
 import {CountDAppsAvailable} from './CountDAppsAvailable/CountDAppsAvailable'
 import {DAppExplorerTabItem} from './DAppExplorerTabItem/DAppExplorerTabItem'
 import {DAppItem} from './DAppItem/DAppItem'
 import {DAppItemSkeleton} from './DAppItem/DAppItemSkeleton'
 import {DAppTypes} from './DAppTypes/DAppTypes'
+import {WelcomeDApp} from './WelcomeDApp'
 
 const DAppTabs = {
   connected: 'connected',
@@ -22,7 +22,7 @@ const DAppTabs = {
 } as const
 type TDAppTabs = keyof typeof DAppTabs
 
-export const DiscoverList = () => {
+export const DiscoverListScreen = () => {
   const styles = useStyles()
   const strings = useStrings()
   const {search, visible} = useSearch()
@@ -31,8 +31,6 @@ export const DiscoverList = () => {
   const [categoriesSelected, setCategoriesSelected] = React.useState<Partial<{[key in TDAppCategory]: boolean}>>()
 
   const isSearching = visible
-
-  useShowWelcomeDApp()
 
   useSearchOnNavBar({
     title: strings.discoverTitle,
@@ -72,8 +70,8 @@ export const DiscoverList = () => {
       if (search?.length > 0) {
         return listDApp
           .filter((dApp) => dApp.name.toLowerCase().includes(search.toLowerCase()))
-          .sort((_, __) => _.name.localeCompare(__.name))
-          .concat(mockDAppGoogle(search))
+          .sort((dAppFirst, dAppSecond) => dAppFirst.name.localeCompare(dAppSecond.name))
+          .concat(getGoogleSearchItem(search))
       }
 
       return listDApp
@@ -82,17 +80,17 @@ export const DiscoverList = () => {
     if (haveDAppsConnected && currentTab === DAppTabs.connected) {
       return listDApp
         .filter((dApp) => listDAppConnected?.includes(dApp.id))
-        .sort((_, __) => _.name.localeCompare(__.name))
+        .sort((dAppFirst, dAppSecond) => dAppFirst.name.localeCompare(dAppSecond.name))
     }
 
     if (getCategoriesSelected().length > 0) {
       const selectedCategories = getCategoriesSelected()
       return listDApp
         .filter((dApp) => dApp.category !== undefined && selectedCategories.includes(dApp.category))
-        .sort((_, __) => _.name.localeCompare(__.name))
+        .sort((dAppFirst, dAppSecond) => dAppFirst.name.localeCompare(dAppSecond.name))
     }
 
-    return listDApp.sort((_, __) => _.name.localeCompare(__.name))
+    return listDApp.sort((dAppFirst, dAppSecond) => dAppFirst.name.localeCompare(dAppSecond.name))
   }
 
   const handleChangeTab = (tab: TDAppTabs) => {
@@ -141,34 +139,38 @@ export const DiscoverList = () => {
   const loadingDAppsList = fetchingDAppConnected || fetchingDApp
 
   return (
-    <View style={[styles.root]}>
-      {loadingDAppsList ? (
-        <ScrollView>
-          {makeList(7).map((_, index) => (
-            <View style={styles.dAppItemBox} key={index}>
-              <DAppItemSkeleton />
+    <>
+      <WelcomeDApp />
 
-              <Spacer style={styles.dAppsBox} />
-            </View>
-          ))}
-        </ScrollView>
-      ) : (
-        <FlatList
-          data={getListDApps()}
-          extraData={listDAppConnected}
-          keyExtractor={(item) => item.id.toString()}
-          ListHeaderComponentStyle={styles.boxHeader}
-          ListHeaderComponent={headerDAppControl}
-          renderItem={({item: entry}) => (
-            <View style={styles.dAppItemBox}>
-              <DAppItem dApp={entry} connected={(listDAppConnected ?? [])?.includes(entry.id)} />
-            </View>
-          )}
-          ItemSeparatorComponent={() => <Spacer style={styles.dAppsBox} />}
-          ListFooterComponent={() => <Spacer style={styles.dAppsBox} />}
-        />
-      )}
-    </View>
+      <View style={[styles.root]}>
+        {loadingDAppsList ? (
+          <ScrollView>
+            {makeList(7).map((_, index) => (
+              <View style={styles.dAppItemBox} key={index}>
+                <DAppItemSkeleton />
+
+                <Spacer style={styles.dAppsBox} />
+              </View>
+            ))}
+          </ScrollView>
+        ) : (
+          <FlatList
+            data={getListDApps()}
+            extraData={listDAppConnected}
+            keyExtractor={(item) => item.id.toString()}
+            ListHeaderComponentStyle={styles.boxHeader}
+            ListHeaderComponent={headerDAppControl}
+            renderItem={({item: entry}) => (
+              <View style={styles.dAppItemBox}>
+                <DAppItem dApp={entry} connected={(listDAppConnected ?? [])?.includes(entry.id)} />
+              </View>
+            )}
+            ItemSeparatorComponent={() => <Spacer style={styles.dAppsBox} />}
+            ListFooterComponent={() => <Spacer style={styles.dAppsBox} />}
+          />
+        )}
+      </View>
+    </>
   )
 }
 

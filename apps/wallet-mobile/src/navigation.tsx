@@ -128,7 +128,6 @@ export type WalletStackRoutes = {
   'toggle-analytics-settings': NavigatorScreenParams<ToggleAnalyticsSettingsRoutes>
   governance: NavigatorScreenParams<StakingGovernanceRoutes>
   'staking-dashboard': NavigatorScreenParams<DashboardRoutes>
-  browser: BrowserRoutes
 }
 export type WalletStackRouteNavigation = StackNavigationProp<WalletStackRoutes>
 
@@ -322,20 +321,15 @@ export type SendConfirmParams = {
 }
 
 export type DiscoverRoutes = {
-  'app-root': undefined
   'discover-list': undefined
+  browser: NavigatorScreenParams<BrowserRoutes>
 }
 
 export type BrowserRoutes = {
-  discover?: NavigatorScreenParams<DiscoverRoutes>
-  browser?: BrowserRoutes
   'browser-view': undefined
   'browser-search': {
     isEdit: boolean
   }
-  'app-root': NavigatorScreenParams<{
-    browser: NavigatorScreenParams<Omit<BrowserRoutes, 'app-root'>>
-  }>
 }
 
 export type DashboardRoutes = {
@@ -595,10 +589,11 @@ export const useWalletNavigation = () => {
   } as const).current
 }
 
-export const hideTabBarForRoutes = (route: RouteProp<WalletTabRoutes, 'history'>): ViewStyle | undefined =>
+export const hideTabBarForRoutes = (route: RouteProp<WalletTabRoutes, 'history' | 'discover'>): ViewStyle | undefined =>
   getFocusedRouteNameFromRoute(route)?.startsWith('scan') ||
   getFocusedRouteNameFromRoute(route)?.startsWith('swap') ||
   getFocusedRouteNameFromRoute(route)?.startsWith('receive') ||
-  getFocusedRouteNameFromRoute(route)?.startsWith('exchange')
+  getFocusedRouteNameFromRoute(route)?.startsWith('exchange') ||
+  getFocusedRouteNameFromRoute(route)?.startsWith('browser')
     ? {display: 'none'}
     : undefined

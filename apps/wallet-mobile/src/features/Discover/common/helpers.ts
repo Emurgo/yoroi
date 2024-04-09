@@ -10,3 +10,19 @@ export const urlWithProtocol = (url: string, defaultProtocol = 'https://') => {
   const sanitizedURL = hasProtocol(url) ? url : `${defaultProtocol}${url}`
   return sanitizedURL
 }
+
+export const getDomainFromUrl = (url: string) => {
+  try {
+    const parsedUrl = new URL(url)
+
+    return {
+      isSecure: parsedUrl.protocol === 'https:',
+      domainName: parsedUrl.hostname.replace(/www./g, ''),
+    }
+  } catch (error) {
+    return {
+      isSecure: false,
+      domainName: '',
+    }
+  }
+}

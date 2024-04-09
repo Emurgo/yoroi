@@ -2,6 +2,8 @@ import {invalid, useAsyncStorage} from '@yoroi/common'
 import {produce} from 'immer'
 import React, {createContext, ReactNode, useContext, useEffect} from 'react'
 
+import {useSelectedWallet} from '../../../SelectedWallet'
+
 export const defaultBrowserActions: BrowserContextActions = {
   addBrowserTab: () => invalid('missing init'),
   setTabActive: () => invalid('missing init'),
@@ -43,12 +45,20 @@ const BrowserContext = createContext<BrowserProviderContext>({
 const storageRootBrowser = 'browser'
 const storageBrowserState = 'browser-state'
 
-export const BrowserProvider = ({children}: {children: ReactNode}) => {
+export const BrowserProvider = ({
+  children,
+  initialState,
+}: {
+  children: ReactNode
+  initialState?: Partial<BrowserContextState>
+}) => {
   const storage = useAsyncStorage()
-  const browserStorage = storage.join(`${storageRootBrowser}/`)
+  const wallet = useSelectedWallet()
+  const browserStorage = storage.join(`wallet/${wallet.id}/${storageRootBrowser}/`)
 
   const [browserState, dispatch] = React.useReducer(browserReducer, {
     ...initialBrowserState,
+    ...initialState,
   })
 
   useEffect(() => {
@@ -61,7 +71,7 @@ export const BrowserProvider = ({children}: {children: ReactNode}) => {
     browserStorage.getItem(storageBrowserState).then((browserStorage) => {
       if (Boolean(browserStorage) && typeof browserStorage === 'string') {
         dispatch({type: BrowserAction.SetState, state: JSON.parse(browserStorage)})
-        dispatch({type: BrowserAction.SetStatusStorage, status: 'active'})
+        dispatch({type: BrowserAction.SetStatus, status: 'active'})
       }
     })
   }, [browserState.status, browserStorage])
@@ -104,7 +114,7 @@ enum BrowserAction {
   SetTabActive = 'setTabActive',
   UpdateTab = 'updateTab',
   RemoveTab = 'removeTab',
-  SetStatusStorage = 'setStatusStorage',
+  SetStatus = 'setStatus',
   SwitchTab = 'SwitchTab',
 }
 
@@ -133,7 +143,7 @@ type BrowserContextAction =
       index: number
     }
   | {
-      type: BrowserAction.SetStatusStorage
+      type: BrowserAction.SetStatus
       status: StatusBrowser
     }
   | {
@@ -177,7 +187,7 @@ export const browserReducer = (state: BrowserContextState, action: BrowserContex
         draft.tabs.splice(action.index, 1)
         break
 
-      case BrowserAction.SetStatusStorage:
+      case BrowserAction.SetStatus:
         draft.status = action.status
         break
 

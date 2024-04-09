@@ -5,8 +5,8 @@ import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {BrowserRoutes} from 'src/navigation'
 
-import {BrowserSearch} from './BrowserSearch'
-import {BrowserView} from './BrowserView'
+import {BrowseDappScreen} from './useCases/BrowseDappScreen/BrowseDappScreen'
+import {BrowseSearchDappScreen} from './useCases/BrowseSearchDappScreen/BrowseSearchDappScreen'
 
 const Tab = createStackNavigator<BrowserRoutes>()
 
@@ -21,9 +21,9 @@ export const BrowserNavigator = () => {
           headerShown: false,
         }}
       >
-        <Tab.Screen name="browser-view" component={BrowserView} />
+        <Tab.Screen name="browser-view" component={BrowseDappScreen} />
 
-        <Tab.Screen name="browser-search" component={BrowserSearch} />
+        <Tab.Screen name="browser-search" component={BrowseSearchDappScreen} />
       </Tab.Navigator>
     </SafeAreaView>
   )

@@ -6,7 +6,7 @@ type Props = {
   color?: string
 }
 
-export const Square = ({size = 24, color = '#383E54'}: Props) => (
+export const Square = ({size = 24, color = 'black'}: Props) => (
   <Svg width={size} height={size} viewBox="0 0 24 24">
     <Path
       fillRule="evenodd"

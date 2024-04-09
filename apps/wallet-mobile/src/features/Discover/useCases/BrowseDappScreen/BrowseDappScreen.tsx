@@ -3,11 +3,11 @@ import React, {useRef} from 'react'
 import {FlatList, StyleSheet, View} from 'react-native'
 
 import {Spacer} from '../../../../components'
-import {useBrowser} from '../../common/Browser/BrowserProvider'
-import {BrowserTabsBar} from '../../common/Browser/BrowserTabsBar'
+import {useBrowser} from '../../common/BrowserProvider'
+import {BrowserTabsBar} from './BrowserTabsBar'
 import {WebViewItem} from './WebViewItem'
 
-export const BrowserView = () => {
+export const BrowseDappScreen = () => {
   const {styles} = useStyles()
   const flatListRef = useRef<FlatList>(null)
   const {tabs, switchTabOpen} = useBrowser()

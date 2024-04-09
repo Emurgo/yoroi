@@ -235,8 +235,10 @@ export const mockDAppList: IDAppItem[] = [
   },
 ]
 
-export const mockDAppGoogle = (searchQuery: string): IDAppItem => ({
-  id: 'google_search',
+export const GOOGLE_DAPP_ID = 'google_search'
+
+export const getGoogleSearchItem = (searchQuery: string): IDAppItem => ({
+  id: GOOGLE_DAPP_ID,
   name: searchQuery,
   description: 'Google',
   logo: Google,

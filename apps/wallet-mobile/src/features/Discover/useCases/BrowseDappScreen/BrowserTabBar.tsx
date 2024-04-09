@@ -6,15 +6,15 @@ import Share from 'react-native-share'
 import WebView from 'react-native-webview'
 
 import {Icon} from '../../../../components'
-import {WebViewState} from '../../useCases/Browser/WebViewItem'
-import {useBrowser} from './BrowserProvider'
+import {useBrowser} from '../../common/BrowserProvider'
+import {WebViewState} from './WebViewItem'
 
 type Props = {
   webViewRef: RefObject<WebView>
   webViewState: WebViewState
 }
 export const BrowserTabBar = ({webViewRef, webViewState}: Props) => {
-  const {styles, color} = useStyles()
+  const {styles, color, colors} = useStyles()
   const {tabs, switchTab} = useBrowser()
   const insets = useSafeAreaInsets()
 
@@ -66,7 +66,7 @@ export const BrowserTabBar = ({webViewRef, webViewState}: Props) => {
       </Touch>
 
       <Touch onPress={handleShare}>
-        <Icon.Share2 />
+        <Icon.Share2 color={colors.iconNormal} />
       </Touch>
 
       <Touch onPress={handleRefresh} disabled={webViewState.loading}>
@@ -94,11 +94,11 @@ type TabItemProps = {
   total: number
 }
 const TabItem = ({total = 1}: TabItemProps) => {
-  const {styles} = useStyles()
+  const {styles, colors} = useStyles()
 
   return (
     <View style={styles.tabViewContainer}>
-      <Icon.Square />
+      <Icon.Square color={colors.iconNormal} />
 
       <View style={styles.tabBox}>
         <Text style={styles.tabNumber}>{total}</Text>
@@ -157,5 +157,9 @@ const useStyles = () => {
     },
   })
 
-  return {styles, color} as const
+  const colors = {
+    iconNormal: color.gray['800'],
+  }
+
+  return {styles, color, colors} as const
 }

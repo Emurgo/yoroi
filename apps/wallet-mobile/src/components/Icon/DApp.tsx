@@ -6,7 +6,7 @@ type Props = {
   color?: string
 }
 
-export const DApp = ({size = 24, color = '#242838'}: Props) => {
+export const DApp = ({size = 24, color = 'black'}: Props) => {
   return (
     <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <Path

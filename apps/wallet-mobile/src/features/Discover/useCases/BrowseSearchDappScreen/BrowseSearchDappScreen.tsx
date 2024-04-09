@@ -2,20 +2,26 @@ import {RouteProp, useIsFocused, useRoute} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import React, {useEffect, useState} from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
-import {WebViewNavigation} from 'react-native-webview'
 import uuid from 'uuid'
 
 import {BrowserRoutes} from '../../../../navigation'
-import {useBrowser} from '../../common/Browser/BrowserProvider'
-import {BrowserSearchToolbar} from '../../common/Browser/BrowserSearchToolbar'
-import {mockDAppGoogle} from '../../common/DAppMock'
+import {useBrowser} from '../../common/BrowserProvider'
+import {getGoogleSearchItem} from '../../common/DAppMock'
 import {urlWithProtocol, validUrl} from '../../common/helpers'
 import {useNavigateTo} from '../../common/useNavigateTo'
-import {DAppItem} from '../DiscoverList/DAppItem/DAppItem'
+import {BrowserSearchToolbar} from '../BrowseDappScreen/BrowserSearchToolbar'
+import {DAppItem} from '../DiscoverListScreen/DAppItem/DAppItem'
 
-export type WebViewState = Partial<WebViewNavigation> & Required<Pick<WebViewNavigation, 'url'>>
+const getUrl = (searchValue: string, isEngineSearch: boolean) => {
+  if (isEngineSearch || !validUrl(searchValue)) {
+    const searchUrl = 'https://www.google.com/search?q=' + encodeURIComponent(searchValue)
+    return searchUrl
+  }
 
-export const BrowserSearch = () => {
+  return urlWithProtocol(searchValue)
+}
+
+export const BrowseSearchDappScreen = () => {
   const {styles} = useStyles()
   const router = useRoute<RouteProp<BrowserRoutes, 'browser-search'>>()
   const {isEdit} = router.params ?? {isEdit: false}
@@ -25,6 +31,7 @@ export const BrowserSearch = () => {
   const [searchValue, setSearchValue] = useState('')
 
   const isFocused = useIsFocused()
+  const googleItem = getGoogleSearchItem(searchValue)
 
   const handleGoBack = () => {
     if (tabActiveIndex >= 0) {
@@ -32,15 +39,6 @@ export const BrowserSearch = () => {
     } else {
       navigateTo.discover()
     }
-  }
-
-  const getUrl = (isEngineSearch: boolean) => {
-    if (isEngineSearch || !validUrl(searchValue)) {
-      const searchUrl = 'https://www.google.com/search?q=' + encodeURIComponent(searchValue)
-      return searchUrl
-    }
-
-    return urlWithProtocol(searchValue)
   }
 
   useEffect(() => {
@@ -65,7 +63,7 @@ export const BrowserSearch = () => {
     if (searchValue === '') return
 
     let tabId = ''
-    const url = getUrl(isEngineSearch)
+    const url = getUrl(searchValue, isEngineSearch)
 
     if (isEdit) {
       updateTab(tabActiveIndex, {url})
@@ -88,10 +86,9 @@ export const BrowserSearch = () => {
       />
 
       <ScrollView style={styles.dAppContainer}>
-        {searchValue !== '' &&
-          [mockDAppGoogle(searchValue)].map((dApp) => (
-            <DAppItem key={dApp.id} dApp={dApp} connected={false} onPress={() => handleSubmit(true)} />
-          ))}
+        {searchValue !== '' && (
+          <DAppItem key={googleItem.id} dApp={googleItem} connected={false} onPress={() => handleSubmit(true)} />
+        )}
       </ScrollView>
     </View>
   )

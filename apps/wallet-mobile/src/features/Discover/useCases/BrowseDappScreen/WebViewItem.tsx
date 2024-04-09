@@ -8,11 +8,11 @@ import WebView from 'react-native-webview'
 import {WebViewNavigation, WebViewNavigationEvent} from 'react-native-webview/lib/WebViewTypes'
 
 import {Icon, Spacer} from '../../../../components'
-import {TabItem, useBrowser} from '../../common/Browser/BrowserProvider'
-import {BrowserTabBar} from '../../common/Browser/BrowserTabBar'
-import {BrowserToolbar} from '../../common/Browser/BrowserToolbar'
+import {TabItem, useBrowser} from '../../common/BrowserProvider'
+import {getDomainFromUrl} from '../../common/helpers'
 import {useNavigateTo} from '../../common/useNavigateTo'
-import {useSplitUrl} from '../../common/useSplitUrl'
+import {BrowserTabBar} from './BrowserTabBar'
+import {BrowserToolbar} from './BrowserToolbar'
 
 const SCREEN_WIDTH = Dimensions.get('window').width
 const SCREEN_HEIGHT = Dimensions.get('window').height
@@ -28,7 +28,7 @@ export const WebViewItem = ({tab, index}: Props) => {
   const webViewRef = React.useRef<WebView>(null)
   const {tabs, updateTab, switchTabOpen, switchTab, setTabActive, removeTab, tabActiveIndex} = useBrowser()
   const webURL = tab?.url
-  const {domainName} = useSplitUrl(webURL)
+  const {domainName} = getDomainFromUrl(webURL)
   const isTabActive = index === tabActiveIndex
   const navigationTo = useNavigateTo()
   const insets = useSafeAreaInsets()

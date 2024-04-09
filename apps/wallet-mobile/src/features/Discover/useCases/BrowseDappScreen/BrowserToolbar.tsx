@@ -4,8 +4,8 @@ import {StyleSheet, Text, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
 import {Icon} from '../../../../components'
-import {useNavigateTo} from '../useNavigateTo'
-import {useSplitUrl} from '../useSplitUrl'
+import {getDomainFromUrl} from '../../common/helpers'
+import {useNavigateTo} from '../../common/useNavigateTo'
 type Props = {
   uri: string
 }
@@ -13,7 +13,7 @@ export const BrowserToolbar = ({uri}: Props) => {
   const {styles} = useStyles()
   const navigateTo = useNavigateTo()
 
-  const {isSecure, domainName} = useSplitUrl(uri)
+  const {isSecure, domainName} = getDomainFromUrl(uri)
 
   const handleCloseBrowser = () => {
     navigateTo.discover()
