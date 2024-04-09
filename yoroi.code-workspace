@@ -29,6 +29,10 @@
       "path": "./packages/transfer"
     },
     {
+      "name": "@yoroi/setup-wallet",
+      "path": "./packages/setup-wallet"
+    },
+    {
       "name": "@yoroi/api",
       "path": "./packages/api"
     },

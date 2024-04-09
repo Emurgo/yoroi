@@ -6,9 +6,9 @@ import {StyleSheet, View} from 'react-native'
 
 import {Button, Icon, Text, TitledCard} from '../components'
 import {usePrivacyMode} from '../features/Settings/PrivacyMode/PrivacyMode'
+import {useSelectedWallet} from '../features/WalletManager/Context'
 import globalMessages from '../i18n/global-messages'
 import {formatAdaWithText} from '../legacy/format'
-import {useSelectedWallet} from '../SelectedWallet'
 import {asQuantity} from '../yoroi-wallets/utils'
 
 const ICON_DIM = 44

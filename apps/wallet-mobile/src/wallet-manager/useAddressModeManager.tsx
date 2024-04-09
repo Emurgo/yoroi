@@ -1,7 +1,7 @@
 import {useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
 import {UseMutationOptions, useQuery} from 'react-query'
 
-import {useSelectedWallet} from '../SelectedWallet'
+import {useSelectedWallet} from '../features/WalletManager/Context'
 import {AddressMode} from './types'
 import {parseWalletMeta} from './validators'
 

@@ -10,7 +10,7 @@ type Props = {
 
 export const Info = ({size = 40, color = 'black', style = {}}: Props) => {
   return (
-    <Svg width={size} height={size} {...style} viewBox="-2 -2 28 28">
+    <Svg width={size} height={size} {...style} viewBox="-2 -2 25 25">
       <Path
         d="M12 7C11.4477 7 11 7.44771 11 8C11 8.55229 11.4477 9 12 9H12.01C12.5623 9 13.01 8.55229 13.01 8C13.01 7.44771 12.5623 7 12.01 7H12Z"
         fill={color}

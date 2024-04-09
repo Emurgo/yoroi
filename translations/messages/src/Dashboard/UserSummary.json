@@ -1,0 +1,62 @@
+[
+  {
+    "id": "components.delegationsummary.userSummary.title",
+    "defaultMessage": "!!!Your Summary",
+    "file": "src/Dashboard/UserSummary.tsx",
+    "start": {
+      "line": 159,
+      "column": 9,
+      "index": 4614
+    },
+    "end": {
+      "line": 162,
+      "column": 3,
+      "index": 4716
+    }
+  },
+  {
+    "id": "components.delegationsummary.userSummary.totalRewards",
+    "defaultMessage": "!!!Total Rewards",
+    "file": "src/Dashboard/UserSummary.tsx",
+    "start": {
+      "line": 163,
+      "column": 16,
+      "index": 4734
+    },
+    "end": {
+      "line": 166,
+      "column": 3,
+      "index": 4844
+    }
+  },
+  {
+    "id": "components.delegationsummary.userSummary.totalDelegated",
+    "defaultMessage": "!!!Total Delegated",
+    "file": "src/Dashboard/UserSummary.tsx",
+    "start": {
+      "line": 167,
+      "column": 18,
+      "index": 4864
+    },
+    "end": {
+      "line": 170,
+      "column": 3,
+      "index": 4978
+    }
+  },
+  {
+    "id": "components.delegationsummary.userSummary.withdrawButtonTitle",
+    "defaultMessage": "!!!Withdraw",
+    "file": "src/Dashboard/UserSummary.tsx",
+    "start": {
+      "line": 171,
+      "column": 23,
+      "index": 5003
+    },
+    "end": {
+      "line": 174,
+      "column": 3,
+      "index": 5115
+    }
+  }
+]

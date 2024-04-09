@@ -14,15 +14,22 @@ import {useLinksRequestAction} from './features/Links/common/useLinksRequestActi
 import {useLinksShowActionResult} from './features/Links/common/useLinksShowActionResult'
 import {MenuNavigator} from './features/Menu'
 import {SettingsScreenNavigator} from './features/Settings'
+import {
+  ChooseBiometricLoginScreen,
+  useShowBiometricsScreen,
+} from './features/SetupWallet/useCases/ChooseBiometricLogin/ChooseBiometricLoginScreen'
+import {SelectWalletFromList} from './features/SetupWallet/useCases/SelectWalletFromList'
 import {GovernanceNavigator} from './features/Staking/Governance'
 import {ToggleAnalyticsSettingsNavigator} from './features/ToggleAnalyticsSettings'
+import {useSelectedWallet} from './features/WalletManager/Context'
 import {useMetrics} from './metrics/metricsManager'
 import {hideTabBarForRoutes, WalletStackRoutes, WalletTabRoutes} from './navigation'
+import {defaultStackNavigationOptions} from './navigation'
 import {NftDetailsNavigator} from './NftDetails/NftDetailsNavigator'
 import {NftsNavigator} from './Nfts/NftsNavigator'
 import {SearchProvider} from './Search/SearchContext'
-import {useSelectedWallet, WalletSelectionScreen} from './SelectedWallet'
 import {TxHistoryNavigator} from './TxHistory'
+import {useAuthOsEnabled} from './yoroi-wallets/auth'
 import {isHaskellShelley} from './yoroi-wallets/cardano/utils'
 
 const Tab = createBottomTabNavigator<WalletTabRoutes>()
@@ -139,7 +146,11 @@ const WalletTabNavigator = () => {
 const Stack = createStackNavigator<WalletStackRoutes>()
 export const WalletNavigator = () => {
   const initialRoute = useLinksShowActionResult()
+  const strings = useStrings()
+  const {theme} = useTheme()
   useLinksRequestAction()
+  const authOsEnabled = useAuthOsEnabled()
+  const {showBiometricsScreen} = useShowBiometricsScreen()
 
   // initialRoute doesn't update the state of the navigator, only at first render
   // https://reactnavigation.org/docs/auth-flow/
@@ -159,23 +170,40 @@ export const WalletNavigator = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerShown: false /* used only for transition */,
+        ...defaultStackNavigationOptions(theme),
+        headerLeft: undefined,
         detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
       }}
     >
-      <Stack.Screen name="wallet-selection" component={WalletSelectionScreen} />
+      {showBiometricsScreen && authOsEnabled && (
+        <Stack.Screen //
+          name="choose-biometric-login"
+          options={{headerShown: false}}
+          component={ChooseBiometricLoginScreen}
+        />
+      )}
 
-      <Stack.Screen name="main-wallet-routes" component={WalletTabNavigator} />
+      <Stack.Screen
+        name="wallet-selection"
+        options={{title: strings.walletSelectionScreenHeader}}
+        component={SelectWalletFromList}
+      />
 
-      <Stack.Screen name="nft-details-routes" component={NftDetailsNavigator} />
+      <Stack.Screen name="main-wallet-routes" options={{headerShown: false}} component={WalletTabNavigator} />
 
-      <Stack.Screen name="settings" component={SettingsScreenNavigator} />
+      <Stack.Screen name="nft-details-routes" options={{headerShown: false}} component={NftDetailsNavigator} />
 
-      <Stack.Screen name="voting-registration" component={VotingRegistration} />
+      <Stack.Screen name="settings" options={{headerShown: false}} component={SettingsScreenNavigator} />
 
-      <Stack.Screen name="toggle-analytics-settings" component={ToggleAnalyticsSettingsNavigator} />
+      <Stack.Screen name="voting-registration" options={{headerShown: false}} component={VotingRegistration} />
 
-      <Stack.Screen name="governance" component={GovernanceNavigator} />
+      <Stack.Screen
+        name="toggle-analytics-settings"
+        options={{headerShown: false}}
+        component={ToggleAnalyticsSettingsNavigator}
+      />
+
+      <Stack.Screen name="governance" options={{headerShown: false}} component={GovernanceNavigator} />
     </Stack.Navigator>
   )
 }
@@ -228,6 +256,10 @@ const messages = defineMessages({
     id: 'menu',
     defaultMessage: '!!!Menu',
   },
+  walletSelectionScreenHeader: {
+    id: 'components.walletselection.walletselectionscreen.header',
+    defaultMessage: '!!!My wallets',
+  },
 })
 
 const useStrings = () => {
@@ -242,5 +274,6 @@ const useStrings = () => {
     walletTabBarLabel: intl.formatMessage(messages.walletButton),
     nftsTabBarLabel: intl.formatMessage(messages.nftsButton),
     menuTabBarLabel: intl.formatMessage(messages.menuButton),
+    walletSelectionScreenHeader: intl.formatMessage(messages.walletSelectionScreenHeader),
   }
 }

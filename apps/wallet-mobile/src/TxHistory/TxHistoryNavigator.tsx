@@ -51,6 +51,7 @@ import {
 } from '../features/Swap/useCases'
 import {SelectBuyTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
 import {SelectSellTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/EditSellAmount/SelectSellTokenFromListScreen/SelectSellTokenFromListScreen'
+import {useSelectedWallet} from '../features/WalletManager/Context'
 import {CONFIG} from '../legacy/config'
 import {
   BackButton,
@@ -59,7 +60,6 @@ import {
   TxHistoryRoutes,
   useWalletNavigation,
 } from '../navigation'
-import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {useFrontendFees, useStakingKey, useWalletName} from '../yoroi-wallets/hooks'
 import {isMainnetNetworkId} from '../yoroi-wallets/utils'

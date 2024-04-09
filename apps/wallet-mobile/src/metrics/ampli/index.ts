@@ -64,6 +64,35 @@ export type LoadOptionsWithClientInstance = LoadOptionsBase & {client: {instance
 
 export type LoadOptions = LoadOptionsWithEnvironment | LoadOptionsWithApiKey | LoadOptionsWithClientInstance
 
+export interface CreateWalletVerifyPhraseWordSelectedProperties {
+  recovery_word_order?: any
+}
+
+export interface DiscoverFilterSelectedProperties {
+  /**
+   * Describe the dApp filters on the discover page.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Enum Values | Investment, Media, Trading, NFT, Community |
+   */
+  dapp_filter: 'Investment' | 'Media' | 'Trading' | 'NFT' | 'Community'
+}
+
+export interface DiscoverSearchActivatedProperties {
+  /**
+   * What a user is looking to search.
+   */
+  search_term: string
+}
+
+export interface DiscoverWebViewToolbarSearchActivatedProperties {
+  /**
+   * What a user is looking to search.
+   */
+  search_term: string
+}
+
 export interface ExchangeSubmittedProperties {
   /**
    * The amount of ADA that the user will be exchanging.
@@ -156,6 +185,19 @@ export interface ReceiveCopyAddressClickedProperties {
    * | Enum Values | CTA Copy Address, Tap Address Details, Long Press wallet Address |
    */
   copy_address_location: 'CTA Copy Address' | 'Tap Address Details' | 'Long Press wallet Address'
+}
+
+export interface RestoreWalletEnterPhraseStepStatusProperties {
+  recovery_prhase_status: boolean
+}
+
+export interface RestoreWalletEnterPhraseStepViewedProperties {
+  /**
+   * | Rule | Value |
+   * |---|---|
+   * | Enum Values | 15, 24 |
+   */
+  recovery_phrase_lenght: '15' | '24'
 }
 
 export interface SendSelectAssetSelectedProperties {
@@ -475,7 +517,7 @@ export interface SwapOrderSelectedProperties {
    * |---|---|
    * | Enum Values | limit, market |
    */
-  order_type: 'limit' | 'market'
+  order_type?: 'limit' | 'market'
   /**
    * The name of liquidity pool used for this swap transaction
    */
@@ -487,7 +529,7 @@ export interface SwapOrderSelectedProperties {
    * |---|---|
    * | Type | number |
    */
-  slippage_tolerance: number
+  slippage_tolerance?: number
   /**
    * The amount of fees charged on the transaction. The value is in ADA.
    *
@@ -495,7 +537,7 @@ export interface SwapOrderSelectedProperties {
    * |---|---|
    * | Type | number |
    */
-  swap_fees: number
+  swap_fees?: number
   /**
    * The amount of asset that the user is swapping to
    */
@@ -535,7 +577,7 @@ export interface SwapOrderSubmittedProperties {
    * |---|---|
    * | Enum Values | limit, market |
    */
-  order_type: 'limit' | 'market'
+  order_type?: 'limit' | 'market'
   /**
    * The name of liquidity pool used for this swap transaction
    */
@@ -547,7 +589,7 @@ export interface SwapOrderSubmittedProperties {
    * |---|---|
    * | Type | number |
    */
-  slippage_tolerance: number
+  slippage_tolerance?: number
   /**
    * The amount of fees charged on the transaction. The value is in ADA.
    *
@@ -555,7 +597,7 @@ export interface SwapOrderSubmittedProperties {
    * |---|---|
    * | Type | number |
    */
-  swap_fees: number
+  swap_fees?: number
   /**
    * The amount of asset that the user is swapping to
    */
@@ -646,7 +688,7 @@ export interface SwapProperties {
    * |---|---|
    * | Enum Values | limit, market |
    */
-  order_type: 'limit' | 'market'
+  order_type?: 'limit' | 'market'
   /**
    * The name of liquidity pool used for this swap transaction
    */
@@ -658,7 +700,7 @@ export interface SwapProperties {
    * |---|---|
    * | Type | number |
    */
-  slippage_tolerance: number
+  slippage_tolerance?: number
   /**
    * The amount of fees charged on the transaction. The value is in ADA.
    *
@@ -666,7 +708,7 @@ export interface SwapProperties {
    * |---|---|
    * | Type | number |
    */
-  swap_fees: number
+  swap_fees?: number
   /**
    * The amount of asset that the user is swapping to
    */
@@ -691,6 +733,122 @@ export class AssetsPageViewed implements BaseEvent {
 
 export class CreateWalletDetailsSettled implements BaseEvent {
   event_type = 'Create Wallet Details Settled'
+}
+
+export class CreateWalletDetailsStepViewed implements BaseEvent {
+  event_type = 'Create Wallet Details Step Viewed'
+}
+
+export class CreateWalletDetailsSubmitted implements BaseEvent {
+  event_type = 'Create Wallet Details Submitted'
+}
+
+export class CreateWalletLanguagePageViewed implements BaseEvent {
+  event_type = 'Create Wallet Language Page Viewed'
+}
+
+export class CreateWalletLearnPhraseStepViewed implements BaseEvent {
+  event_type = 'Create Wallet Learn Phrase Step Viewed'
+}
+
+export class CreateWalletSavePhraseStepViewed implements BaseEvent {
+  event_type = 'Create Wallet Save Phrase Step Viewed'
+}
+
+export class CreateWalletSelectMethodPageViewed implements BaseEvent {
+  event_type = 'Create Wallet Select Method Page Viewed'
+}
+
+export class CreateWalletTermsPageViewed implements BaseEvent {
+  event_type = 'Create Wallet Terms Page Viewed'
+}
+
+export class CreateWalletVerifyPhraseStepViewed implements BaseEvent {
+  event_type = 'Create Wallet Verify Phrase Step Viewed'
+}
+
+export class CreateWalletVerifyPhraseWordSelected implements BaseEvent {
+  event_type = 'Create Wallet Verify Phrase Word Selected'
+
+  constructor(public event_properties?: CreateWalletVerifyPhraseWordSelectedProperties) {
+    this.event_properties = event_properties
+  }
+}
+
+export class DiscoverConnectedBottomSheetDisconnectClicked implements BaseEvent {
+  event_type = 'Discover Connected Bottom Sheet Disconnect Clicked'
+}
+
+export class DiscoverConnectedBottomSheetOpenDAppClicked implements BaseEvent {
+  event_type = 'Discover Connected Bottom Sheet Open DApp Clicked'
+}
+
+export class DiscoverConnectedDAppItemClicked implements BaseEvent {
+  event_type = 'Discover Connected DApp Item Clicked'
+}
+
+export class DiscoverDAppItemClicked implements BaseEvent {
+  event_type = 'Discover DApp Item Clicked'
+}
+
+export class DiscoverFilterSelected implements BaseEvent {
+  event_type = 'Discover Filter Selected'
+
+  constructor(public event_properties: DiscoverFilterSelectedProperties) {
+    this.event_properties = event_properties
+  }
+}
+
+export class DiscoverPageViewed implements BaseEvent {
+  event_type = 'Discover Page Viewed'
+}
+
+export class DiscoverSearchActivated implements BaseEvent {
+  event_type = 'Discover Search Activated'
+
+  constructor(public event_properties: DiscoverSearchActivatedProperties) {
+    this.event_properties = event_properties
+  }
+}
+
+export class DiscoverWebViewBottomSheetConnectClicked implements BaseEvent {
+  event_type = 'Discover Web View Bottom Sheet Connect Clicked'
+}
+
+export class DiscoverWebViewCloseClicked implements BaseEvent {
+  event_type = 'Discover Web View Close Clicked'
+}
+
+export class DiscoverWebViewTabBarBackwardClicked implements BaseEvent {
+  event_type = 'Discover Web View Tab Bar Backward Clicked'
+}
+
+export class DiscoverWebViewTabBarForwardClicked implements BaseEvent {
+  event_type = 'Discover Web View Tab Bar Forward Clicked'
+}
+
+export class DiscoverWebViewTabBarRefreshClicked implements BaseEvent {
+  event_type = 'Discover Web View Tab Bar Refresh Clicked'
+}
+
+export class DiscoverWebViewTabBarShareClicked implements BaseEvent {
+  event_type = 'Discover Web View Tab Bar Share Clicked'
+}
+
+export class DiscoverWebViewTabClicked implements BaseEvent {
+  event_type = 'Discover Web View Tab Clicked'
+}
+
+export class DiscoverWebViewToolbarSearchActivated implements BaseEvent {
+  event_type = 'Discover Web View Toolbar Search Activated'
+
+  constructor(public event_properties: DiscoverWebViewToolbarSearchActivatedProperties) {
+    this.event_properties = event_properties
+  }
+}
+
+export class DiscoverWebViewViewed implements BaseEvent {
+  event_type = 'Discover Web View Viewed'
 }
 
 export class ExchangePageViewed implements BaseEvent {
@@ -803,6 +961,30 @@ export class ReceiveShareAddressClicked implements BaseEvent {
 
 export class RestoreWalletDetailsSettled implements BaseEvent {
   event_type = 'Restore Wallet Details Settled'
+}
+
+export class RestoreWalletDetailsStepViewed implements BaseEvent {
+  event_type = 'Restore Wallet Details Step Viewed'
+}
+
+export class RestoreWalletEnterPhraseStepStatus implements BaseEvent {
+  event_type = 'Restore Wallet Enter Phrase Step Status'
+
+  constructor(public event_properties: RestoreWalletEnterPhraseStepStatusProperties) {
+    this.event_properties = event_properties
+  }
+}
+
+export class RestoreWalletEnterPhraseStepViewed implements BaseEvent {
+  event_type = 'Restore Wallet Enter Phrase Step Viewed'
+
+  constructor(public event_properties: RestoreWalletEnterPhraseStepViewedProperties) {
+    this.event_properties = event_properties
+  }
+}
+
+export class RestoreWalletTypeStepViewed implements BaseEvent {
+  event_type = 'Restore Wallet Type Step Viewed'
 }
 
 export class SendInitiated implements BaseEvent {
@@ -1072,7 +1254,7 @@ export class Ampli {
    *
    * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Assets%20Page%20Viewed)
    *
-   * This event tracks when a user views the Assets page. 
+   * This event tracks when a user views the Assets page.
    *  On mobile  is available on the wallet page (First item from main menu) in the assets tab.
    *
    * @param options Amplitude event options.
@@ -1096,6 +1278,395 @@ export class Ampli {
     options?: EventOptions,
   ) {
     return this.track(new CreateWalletDetailsSettled(), options);
+  }
+
+  /**
+   * Create Wallet Details Step Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Create%20Wallet%20Details%20Step%20Viewed)
+   *
+   * This event tracks when a user views the details \*\*step 4\*\* while creating a wallet. User will introduce: \* Wallet Name \* Password \* Repeat Password
+   *
+   * @param options Amplitude event options.
+   */
+  createWalletDetailsStepViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new CreateWalletDetailsStepViewed(), options);
+  }
+
+  /**
+   * Create Wallet Details Submitted
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Create%20Wallet%20Details%20Submitted)
+   *
+   * This event captures the submission of the wallet creation on the last step of the flow (\*\*step 4\*\*).
+   *
+   * @param options Amplitude event options.
+   */
+  createWalletDetailsSubmitted(
+    options?: EventOptions,
+  ) {
+    return this.track(new CreateWalletDetailsSubmitted(), options);
+  }
+
+  /**
+   * Create Wallet Language Page Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Create%20Wallet%20Language%20Page%20Viewed)
+   *
+   * This event tracks when a user views the page for selecting the language during the wallet creation process on the first time he launch Yoroi.
+   *
+   * @param options Amplitude event options.
+   */
+  createWalletLanguagePageViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new CreateWalletLanguagePageViewed(), options);
+  }
+
+  /**
+   * Create Wallet Learn Phrase Step Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Create%20Wallet%20Learn%20Phrase%20Step%20Viewed)
+   *
+   * This event tracks when a user view the \*\*first step\*\* of learn about recovery prhase
+   *
+   * @param options Amplitude event options.
+   */
+  createWalletLearnPhraseStepViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new CreateWalletLearnPhraseStepViewed(), options);
+  }
+
+  /**
+   * Create Wallet Save Phrase Step Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Create%20Wallet%20Save%20Phrase%20Step%20Viewed)
+   *
+   * This event tracks when a user views the \*\*second step\*\* to save their wallet recovery phrase during the wallet creation process
+   *
+   * @param options Amplitude event options.
+   */
+  createWalletSavePhraseStepViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new CreateWalletSavePhraseStepViewed(), options);
+  }
+
+  /**
+   * Create Wallet Select Method Page Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Create%20Wallet%20Select%20Method%20Page%20Viewed)
+   *
+   * This event tracks when a user views the page where they can select the method to create a wallet:
+   *
+   * \* Create new wallet
+   *
+   * \* Restore existing wallet
+   *
+   * This event tracks when a user views the page where they can select the method to create a wallet\* Connect hardware wallet
+   *
+   * @param options Amplitude event options.
+   */
+  createWalletSelectMethodPageViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new CreateWalletSelectMethodPageViewed(), options);
+  }
+
+  /**
+   * Create Wallet Terms Page Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Create%20Wallet%20Terms%20Page%20Viewed)
+   *
+   * This event tracks when a user views the terms of service agreement page on the creation wallet flow
+   *
+   * @param options Amplitude event options.
+   */
+  createWalletTermsPageViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new CreateWalletTermsPageViewed(), options);
+  }
+
+  /**
+   * Create Wallet Verify Phrase Step Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Create%20Wallet%20Verify%20Phrase%20Step%20Viewed)
+   *
+   * This event tracks when a user views the verification phrase step while creating a wallet
+   *
+   * @param options Amplitude event options.
+   */
+  createWalletVerifyPhraseStepViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new CreateWalletVerifyPhraseStepViewed(), options);
+  }
+
+  /**
+   * Create Wallet Verify Phrase Word Selected
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Create%20Wallet%20Verify%20Phrase%20Word%20Selected)
+   *
+   * This event tracks the selection of a specific word during the process of verifying the recovery phrase when creating a wallet
+   *
+   * @param properties The event's properties (e.g. recovery_word_order)
+   * @param options Amplitude event options.
+   */
+  createWalletVerifyPhraseWordSelected(
+    properties?: CreateWalletVerifyPhraseWordSelectedProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new CreateWalletVerifyPhraseWordSelected(properties), options);
+  }
+
+  /**
+   * Discover Connected Bottom Sheet Disconnect Clicked
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Discover%20Connected%20Bottom%20Sheet%20Disconnect%20Clicked)
+   *
+   * This event tracks when a user clicks on the disconnect DApp button on the bottom sheet implementation of a DApp that is already connected.
+   *
+   * @param options Amplitude event options.
+   */
+  discoverConnectedBottomSheetDisconnectClicked(
+    options?: EventOptions,
+  ) {
+    return this.track(new DiscoverConnectedBottomSheetDisconnectClicked(), options);
+  }
+
+  /**
+   * Discover Connected Bottom Sheet Open DApp Clicked
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Discover%20Connected%20Bottom%20Sheet%20Open%20DApp%20Clicked)
+   *
+   * This event tracks when a user clicks on the open DApp button on the bottom sheet implementation of a DApp that is already connected.
+   *
+   * @param options Amplitude event options.
+   */
+  discoverConnectedBottomSheetOpenDAppClicked(
+    options?: EventOptions,
+  ) {
+    return this.track(new DiscoverConnectedBottomSheetOpenDAppClicked(), options);
+  }
+
+  /**
+   * Discover Connected DApp Item Clicked
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Discover%20Connected%20DApp%20Item%20Clicked)
+   *
+   * This event tracks when a user clicks on a DApp list item that is already connected to the wallet.
+   *
+   * @param options Amplitude event options.
+   */
+  discoverConnectedDAppItemClicked(
+    options?: EventOptions,
+  ) {
+    return this.track(new DiscoverConnectedDAppItemClicked(), options);
+  }
+
+  /**
+   * Discover DApp Item Clicked
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Discover%20DApp%20Item%20Clicked)
+   *
+   * This event tracks when a user clicks on a DApp list item.
+   *
+   * @param options Amplitude event options.
+   */
+  discoverDAppItemClicked(
+    options?: EventOptions,
+  ) {
+    return this.track(new DiscoverDAppItemClicked(), options);
+  }
+
+  /**
+   * Discover Filter Selected
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Discover%20Filter%20Selected)
+   *
+   * This event tracks when a user applies filter on the dApp Explorer page.
+   *
+   * @param properties The event's properties (e.g. dapp_filter)
+   * @param options Amplitude event options.
+   */
+  discoverFilterSelected(
+    properties: DiscoverFilterSelectedProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new DiscoverFilterSelected(properties), options);
+  }
+
+  /**
+   * Discover Page Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Discover%20Page%20Viewed)
+   *
+   * This event tracks when the dApp Explorer page has loaded all of the recommended dApps.
+   *
+   * @param options Amplitude event options.
+   */
+  discoverPageViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new DiscoverPageViewed(), options);
+  }
+
+  /**
+   * Discover Search Activated
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Discover%20Search%20Activated)
+   *
+   * This event tracks when a user activates and starts a search in the discover page. Delay of 0.5 seconds.
+   *
+   * @param properties The event's properties (e.g. search_term)
+   * @param options Amplitude event options.
+   */
+  discoverSearchActivated(
+    properties: DiscoverSearchActivatedProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new DiscoverSearchActivated(properties), options);
+  }
+
+  /**
+   * Discover Web View Bottom Sheet Connect Clicked
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Discover%20Web%20View%20Bottom%20Sheet%20Connect%20Clicked)
+   *
+   * This event tracks when a user attempts to connect their wallet by clicking on "Connect" in the bottom sheet that appears on the integrated web view after the user clicks on “Connect Wallet” on a DApp page.
+   *
+   * @param options Amplitude event options.
+   */
+  discoverWebViewBottomSheetConnectClicked(
+    options?: EventOptions,
+  ) {
+    return this.track(new DiscoverWebViewBottomSheetConnectClicked(), options);
+  }
+
+  /**
+   * Discover Web View Close Clicked
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Discover%20Web%20View%20Close%20Clicked)
+   *
+   * This event tracks when a user clicks the close icon on the integrated web view to close the webview.
+   *
+   * @param options Amplitude event options.
+   */
+  discoverWebViewCloseClicked(
+    options?: EventOptions,
+  ) {
+    return this.track(new DiscoverWebViewCloseClicked(), options);
+  }
+
+  /**
+   * Discover Web View Tab Bar Backward Clicked
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Discover%20Web%20View%20Tab%20Bar%20Backward%20Clicked)
+   *
+   * This event tracks when a user clicks the backward button on the integrated web view.
+   *
+   * @param options Amplitude event options.
+   */
+  discoverWebViewTabBarBackwardClicked(
+    options?: EventOptions,
+  ) {
+    return this.track(new DiscoverWebViewTabBarBackwardClicked(), options);
+  }
+
+  /**
+   * Discover Web View Tab Bar Forward Clicked
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Discover%20Web%20View%20Tab%20Bar%20Forward%20Clicked)
+   *
+   * This event tracks when a user clicks the forward button on the integrated web view.
+   *
+   * @param options Amplitude event options.
+   */
+  discoverWebViewTabBarForwardClicked(
+    options?: EventOptions,
+  ) {
+    return this.track(new DiscoverWebViewTabBarForwardClicked(), options);
+  }
+
+  /**
+   * Discover Web View Tab Bar Refresh Clicked
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Discover%20Web%20View%20Tab%20Bar%20Refresh%20Clicked)
+   *
+   * This event tracks when a user clicks the refresh button on the integrated web view.
+   *
+   * @param options Amplitude event options.
+   */
+  discoverWebViewTabBarRefreshClicked(
+    options?: EventOptions,
+  ) {
+    return this.track(new DiscoverWebViewTabBarRefreshClicked(), options);
+  }
+
+  /**
+   * Discover Web View Tab Bar Share Clicked
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Discover%20Web%20View%20Tab%20Bar%20Share%20Clicked)
+   *
+   * This event tracks when a user clicks the share button on the integrated web view.
+   *
+   * @param options Amplitude event options.
+   */
+  discoverWebViewTabBarShareClicked(
+    options?: EventOptions,
+  ) {
+    return this.track(new DiscoverWebViewTabBarShareClicked(), options);
+  }
+
+  /**
+   * Discover Web View Tab Clicked
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Discover%20Web%20View%20Tab%20Clicked)
+   *
+   * This event tracks when a user clicks the tab button on the integrated web view to open the tab manager.
+   *
+   * @param options Amplitude event options.
+   */
+  discoverWebViewTabClicked(
+    options?: EventOptions,
+  ) {
+    return this.track(new DiscoverWebViewTabClicked(), options);
+  }
+
+  /**
+   * Discover Web View Toolbar Search Activated
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Discover%20Web%20View%20Toolbar%20Search%20Activated)
+   *
+   * This event tracks when a user activates and starts a search in the webview’s tool bar.
+   *
+   * @param properties The event's properties (e.g. search_term)
+   * @param options Amplitude event options.
+   */
+  discoverWebViewToolbarSearchActivated(
+    properties: DiscoverWebViewToolbarSearchActivatedProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new DiscoverWebViewToolbarSearchActivated(properties), options);
+  }
+
+  /**
+   * Discover Web View Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Discover%20Web%20View%20Viewed)
+   *
+   * This event tracks when a user loads the integrated web view containing a DApp website.
+   *
+   * @param options Amplitude event options.
+   */
+  discoverWebViewViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new DiscoverWebViewViewed(), options);
   }
 
   /**
@@ -1199,7 +1770,7 @@ export class Ampli {
    *
    * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Menu%20Page%20Viewed)
    *
-   * This event is triggered when a user views the menu page within the application. Only available on Mobile. 
+   * This event is triggered when a user views the menu page within the application. Only available on Mobile.
    *  The menu page is accesible via the bottom navigation page (last item on the right)
    *
    * @param options Amplitude event options.
@@ -1416,6 +1987,74 @@ export class Ampli {
   }
 
   /**
+   * Restore Wallet Details Step Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Restore%20Wallet%20Details%20Step%20Viewed)
+   *
+   * Track when user loads the page where user inserts wallet name and password
+   *
+   * @param options Amplitude event options.
+   */
+  restoreWalletDetailsStepViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new RestoreWalletDetailsStepViewed(), options);
+  }
+
+  /**
+   * Restore Wallet Enter Phrase Step Status
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Restore%20Wallet%20Enter%20Phrase%20Step%20Status)
+   *
+   * This events tracks the validation of the recovery phrase is verified, once the user insert the latest word. The output can be positive or negative and we do save that in he property: recovery*prhase*status
+   *
+   * @param properties The event's properties (e.g. recovery_prhase_status)
+   * @param options Amplitude event options.
+   */
+  restoreWalletEnterPhraseStepStatus(
+    properties: RestoreWalletEnterPhraseStepStatusProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new RestoreWalletEnterPhraseStepStatus(properties), options);
+  }
+
+  /**
+   * Restore Wallet Enter Phrase Step Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Restore%20Wallet%20Enter%20Phrase%20Step%20Viewed)
+   *
+   * This event tracks when a user views the step to enter the recovery phrase while restoring a wallet (**Step 2**).
+   *
+   * @param properties The event's properties (e.g. recovery_phrase_lenght)
+   * @param options Amplitude event options.
+   */
+  restoreWalletEnterPhraseStepViewed(
+    properties: RestoreWalletEnterPhraseStepViewedProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new RestoreWalletEnterPhraseStepViewed(properties), options);
+  }
+
+  /**
+   * Restore Wallet Type Step Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Restore%20Wallet%20Type%20Step%20Viewed)
+   *
+   * This event tracks when a user views the **first step after** selecting restore wallet, were they have to choose between:
+   *
+   * * 15-word recovery phrase
+   *
+   * * 24-word recovery phrase
+   *
+   * @param options Amplitude event options.
+   */
+  restoreWalletTypeStepViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new RestoreWalletTypeStepViewed(), options);
+  }
+
+  /**
    * Send Initiated
    *
    * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Send%20Initiated)
@@ -1467,9 +2106,9 @@ export class Ampli {
    *
    * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Send%20Select%20Asset%20Updated)
    *
-   * When an user update the tokens selection on "amount" step: 
-   *  \- Add 
-   *  \- Remove 
+   * When an user update the tokens selection on "amount" step:
+   *  \- Add
+   *  \- Remove
    *  \- Updated
    *
    * @param properties The event's properties (e.g. asset_count)
