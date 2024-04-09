@@ -80,6 +80,7 @@ const getStories = () => {
     "./src/components/ConfirmTxWithSpendingPasswordModal/ConfirmTxWithSpendingPasswordModal.stories.tsx": require("../src/components/ConfirmTxWithSpendingPasswordModal/ConfirmTxWithSpendingPasswordModal.stories.tsx"),
     "./src/components/DangerousActionModal/DangerousActionModal.stories.tsx": require("../src/components/DangerousActionModal/DangerousActionModal.stories.tsx"),
     "./src/components/ErrorBoundary/ErrorBoundary.stories.tsx": require("../src/components/ErrorBoundary/ErrorBoundary.stories.tsx"),
+    "./src/components/ErrorBoundary/ExpandableItem/ExpandableItem.stories.tsx": require("../src/components/ErrorBoundary/ExpandableItem/ExpandableItem.stories.tsx"),
     "./src/components/ErrorModal/ErrorModal.stories.tsx": require("../src/components/ErrorModal/ErrorModal.stories.tsx"),
     "./src/components/ErrorPanel/ErrorPanel.stories.tsx": require("../src/components/ErrorPanel/ErrorPanel.stories.tsx"),
     "./src/components/ExpandableInfoCard/ExpandableInfoCard.stories.tsx": require("../src/components/ExpandableInfoCard/ExpandableInfoCard.stories.tsx"),
