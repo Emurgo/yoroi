@@ -19,7 +19,7 @@ export const LearnMoreLink = () => {
 
   return (
     <TouchableOpacity style={styles.root} onPress={handleOnPress}>
-      <Text style={styles.blueText}>{strings.learnMoreAboutGovernance}</Text>
+      <Text style={styles.link}>{strings.learnMoreAboutGovernance}</Text>
     </TouchableOpacity>
   )
 }
@@ -34,7 +34,7 @@ const useStyles = () => {
       alignItems: 'center',
       justifyContent: 'center',
     },
-    blueText: {
+    link: {
       color: color.primary[600],
       textDecorationLine: 'underline',
     },

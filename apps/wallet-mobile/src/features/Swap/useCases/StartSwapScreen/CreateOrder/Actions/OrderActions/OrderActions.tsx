@@ -94,7 +94,7 @@ const RefreshIcon = ({onPress, disabled}: {onPress: () => void; disabled: boolea
       onPressOut={() => setIsActive(false)}
     >
       <Animated.View style={getRotationStyle()}>
-        <Icon.Refresh size={28} color={disabled ? colors.disabled : ''} active={isActive} />
+        <Icon.Refresh size={28} color={disabled ? colors.disabled : colors.enabled} active={isActive} />
       </Animated.View>
     </Pressable>
   )
@@ -113,6 +113,7 @@ const useStyles = () => {
 
   const colors = {
     disabled: color.gray[500],
+    enabled: color['black-static'],
   }
 
   return {styles, colors}
