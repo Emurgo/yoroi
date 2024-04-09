@@ -80,9 +80,7 @@ const WalletTabNavigator = () => {
         <Tab.Screen
           name="history"
           options={({route}: {route: RouteProp<WalletTabRoutes, 'history'>}) => ({
-            tabBarIcon: ({focused}) => (
-              <Icon.TabWallet size={24} color={focused ? colors.active : colors.inactive} />
-            ),
+            tabBarIcon: ({focused}) => <Icon.TabWallet size={24} color={focused ? colors.active : colors.inactive} />,
             tabBarLabel: strings.walletTabBarLabel,
             tabBarTestID: 'walletTabBarButton',
             tabBarStyle: hideTabBarForRoutes(route),
@@ -98,9 +96,7 @@ const WalletTabNavigator = () => {
         <Tab.Screen
           name="nfts"
           options={{
-            tabBarIcon: ({focused}) => (
-              <Icon.Image size={28} color={focused ? colors.active : colors.inactive} />
-            ),
+            tabBarIcon: ({focused}) => <Icon.Image size={28} color={focused ? colors.active : colors.inactive} />,
             tabBarLabel: strings.nftsTabBarLabel,
             tabBarTestID: 'nftsTabBarButton',
           }}
@@ -130,9 +126,7 @@ const WalletTabNavigator = () => {
           name="menu"
           component={MenuNavigator}
           options={{
-            tabBarIcon: ({focused}) => (
-              <Icon.Menu size={28} color={focused ? colors.active : colors.inactive} />
-            ),
+            tabBarIcon: ({focused}) => <Icon.Menu size={28} color={focused ? colors.active : colors.inactive} />,
             tabBarLabel: strings.menuTabBarLabel,
             tabBarTestID: 'menuTabBarButton',
           }}
