@@ -61,6 +61,7 @@ export const darkPalette: Palette = {
     'light': ['#C6F7ED', '#E4E8F7'],
   },
   'bottom-sheet-background': '#15171F',
+  'bottom-sheet-opacity': 'rgba(0, 0, 0, .5)',
   'overlay-extension': {hex: '#15171F', opacity: 0.72},
   'overlay-mobile': {hex: '#15171F', opacity: 0.64},
   'sidebar-overlay': {hex: '#ffffff', opacity: 0.24},

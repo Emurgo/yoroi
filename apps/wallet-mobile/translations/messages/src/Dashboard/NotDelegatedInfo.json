@@ -4,14 +4,14 @@
     "defaultMessage": "!!!You have not delegated your ADA yet.",
     "file": "src/Dashboard/NotDelegatedInfo.tsx",
     "start": {
-      "line": 61,
+      "line": 67,
       "column": 13,
-      "index": 1337
+      "index": 1568
     },
     "end": {
-      "line": 64,
+      "line": 70,
       "column": 3,
-      "index": 1472
+      "index": 1703
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Go to Staking center to choose which stake pool you want to delegate in. Note, you may delegate only to one stake pool in this Tesnnet.",
     "file": "src/Dashboard/NotDelegatedInfo.tsx",
     "start": {
-      "line": 65,
+      "line": 71,
       "column": 14,
-      "index": 1488
+      "index": 1719
     },
     "end": {
-      "line": 69,
+      "line": 75,
       "column": 3,
-      "index": 1729
+      "index": 1960
     }
   }
 ]

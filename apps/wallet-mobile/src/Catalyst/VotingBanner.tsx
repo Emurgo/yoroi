@@ -1,4 +1,5 @@
 import {catalystManagerMaker} from '@yoroi/staking'
+import {useTheme} from '@yoroi/theme'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
@@ -8,7 +9,6 @@ import {useSelectedWallet} from '../features/WalletManager/Context'
 import globalMessages, {confirmationMessages} from '../i18n/global-messages'
 import {isNightly} from '../legacy/config'
 import {Logger} from '../legacy/logging'
-import {COLORS} from '../theme'
 import {useCanVote} from './hooks'
 import {InsufficientFundsModal} from './InsufficientFundsModal'
 
@@ -16,6 +16,7 @@ type Props = {onPress: () => void; disabled?: boolean}
 
 export const VotingBanner = ({onPress, disabled}: Props) => {
   const strings = useStrings()
+  const {styles, colors} = useStyles()
   const wallet = useSelectedWallet()
   const {canVote, sufficientFunds} = useCanVote(wallet)
   const [showInsufficientFundsModal, setShowInsufficientFundsModal] = useState(false)
@@ -58,7 +59,7 @@ export const VotingBanner = ({onPress, disabled}: Props) => {
     <View style={styles.container}>
       <TouchableOpacity onPress={handleOnPress} disabled={disabled}>
         <View style={styles.button}>
-          <Icon.Catalyst size={26} color={COLORS.LIGHT_POSITIVE_GREEN} />
+          <Icon.Catalyst size={26} color={colors.iconColor} />
 
           <Text style={styles.text}>{strings.name.toLocaleUpperCase()}</Text>
         </View>
@@ -79,24 +80,32 @@ const messages = defineMessages({
   },
 })
 
-const styles = StyleSheet.create({
-  container: {
-    paddingVertical: 16,
-    alignItems: 'center',
-  },
-  button: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: COLORS.LIGHT_POSITIVE_GREEN,
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-  },
-  text: {
-    color: COLORS.LIGHT_POSITIVE_GREEN,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, padding} = theme
+  const styles = StyleSheet.create({
+    container: {
+      ...padding['y-l'],
+      alignItems: 'center',
+    },
+    button: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      borderRadius: 8,
+      borderWidth: 1,
+      borderColor: color.secondary[500],
+      ...padding['y-m'],
+      ...padding['x-xl'],
+    },
+    text: {
+      color: color.secondary[500],
+    },
+  })
+  const colors = {
+    iconColor: color.secondary[500],
+  }
+  return {styles, colors}
+}
 
 const useStrings = () => {
   const intl = useIntl()

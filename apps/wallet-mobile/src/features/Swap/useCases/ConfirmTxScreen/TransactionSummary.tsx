@@ -7,7 +7,6 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {Icon, Spacer, Text, useModal} from '../../../../components'
 import {AmountItem} from '../../../../components/AmountItem/AmountItem'
 import {PairedBalance} from '../../../../components/PairedBalance/PairedBalance'
-import {COLORS} from '../../../../theme'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../yoroi-wallets/utils'
 import {useSelectedWallet} from '../../../WalletManager/Context'
@@ -301,7 +300,7 @@ const useStyles = () => {
       color: color.gray[900],
     },
     gray: {
-      color: COLORS.GRAY,
+      color: color.gray[700],
     },
     amountItemLabel: {
       fontSize: 12,

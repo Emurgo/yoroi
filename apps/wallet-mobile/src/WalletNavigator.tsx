@@ -28,7 +28,6 @@ import {defaultStackNavigationOptions} from './navigation'
 import {NftDetailsNavigator} from './NftDetails/NftDetailsNavigator'
 import {NftsNavigator} from './Nfts/NftsNavigator'
 import {SearchProvider} from './Search/SearchContext'
-import {theme} from './theme'
 import {TxHistoryNavigator} from './TxHistory'
 import {useAuthOsEnabled} from './yoroi-wallets/auth'
 import {isHaskellShelley} from './yoroi-wallets/cardano/utils'
@@ -36,6 +35,7 @@ import {isHaskellShelley} from './yoroi-wallets/cardano/utils'
 const Tab = createBottomTabNavigator<WalletTabRoutes>()
 const WalletTabNavigator = () => {
   const strings = useStrings()
+  const {colors} = useStyles()
   const wallet = useSelectedWallet()
   const initialRoute = isHaskellShelley(wallet.walletImplementationId) ? 'staking-dashboard' : 'history'
 
@@ -73,8 +73,8 @@ const WalletTabNavigator = () => {
         screenOptions={{
           headerShown: false,
           tabBarLabelStyle: {fontSize: 11},
-          tabBarActiveTintColor: theme.COLORS.NAVIGATION_ACTIVE,
-          tabBarInactiveTintColor: theme.COLORS.NAVIGATION_INACTIVE,
+          tabBarActiveTintColor: colors.active,
+          tabBarInactiveTintColor: colors.inactive,
           tabBarStyle: {
             // keyboardWillShow keyboardWillHiden dont work on android
             display: isKeyboardOpen ? 'none' : undefined,
@@ -87,12 +87,7 @@ const WalletTabNavigator = () => {
         <Tab.Screen
           name="history"
           options={({route}: {route: RouteProp<WalletTabRoutes, 'history'>}) => ({
-            tabBarIcon: ({focused}) => (
-              <Icon.TabWallet
-                size={24}
-                color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
-              />
-            ),
+            tabBarIcon: ({focused}) => <Icon.TabWallet size={24} color={focused ? colors.active : colors.inactive} />,
             tabBarLabel: strings.walletTabBarLabel,
             tabBarTestID: 'walletTabBarButton',
             tabBarStyle: hideTabBarForRoutes(route),
@@ -108,12 +103,7 @@ const WalletTabNavigator = () => {
         <Tab.Screen
           name="nfts"
           options={{
-            tabBarIcon: ({focused}) => (
-              <Icon.Image
-                size={28}
-                color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
-              />
-            ),
+            tabBarIcon: ({focused}) => <Icon.Image size={28} color={focused ? colors.active : colors.inactive} />,
             tabBarLabel: strings.nftsTabBarLabel,
             tabBarTestID: 'nftsTabBarButton',
           }}
@@ -131,10 +121,7 @@ const WalletTabNavigator = () => {
             component={DashboardNavigator}
             options={{
               tabBarIcon: ({focused}) => (
-                <Icon.TabStaking
-                  size={24}
-                  color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
-                />
+                <Icon.TabStaking size={24} color={focused ? colors.active : colors.inactive} />
               ),
               tabBarLabel: strings.stakingButton,
               tabBarTestID: 'stakingTabBarButton',
@@ -146,12 +133,7 @@ const WalletTabNavigator = () => {
           name="menu"
           component={MenuNavigator}
           options={{
-            tabBarIcon: ({focused}) => (
-              <Icon.Menu
-                size={28}
-                color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
-              />
-            ),
+            tabBarIcon: ({focused}) => <Icon.Menu size={28} color={focused ? colors.active : colors.inactive} />,
             tabBarLabel: strings.menuTabBarLabel,
             tabBarTestID: 'menuTabBarButton',
           }}
@@ -224,6 +206,17 @@ export const WalletNavigator = () => {
       <Stack.Screen name="governance" options={{headerShown: false}} component={GovernanceNavigator} />
     </Stack.Navigator>
   )
+}
+
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
+
+  const colors = {
+    active: color.primary[600],
+    inactive: color.gray[600],
+  }
+  return {colors}
 }
 
 const messages = defineMessages({

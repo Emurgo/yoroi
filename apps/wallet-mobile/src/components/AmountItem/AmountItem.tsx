@@ -6,7 +6,6 @@ import {StyleSheet, View, ViewProps} from 'react-native'
 
 import {usePriceImpactRiskTheme} from '../../features/Swap/common/helpers'
 import {SwapPriceImpactRisk} from '../../features/Swap/common/types'
-import {COLORS} from '../../theme'
 import {isEmptyString} from '../../utils'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../yoroi-wallets/hooks'
@@ -68,7 +67,7 @@ export const AmountItem = ({
             <>
               <Spacer width={4} />
 
-              {inWallet && <Icon.Portfolio size={22} color={COLORS.LIGHT_GREEN} />}
+              {inWallet && <Icon.Portfolio size={22} color={colors.icon} />}
             </>
           )}
         </View>
@@ -176,6 +175,7 @@ const useStyles = () => {
   const colors = {
     text: color.gray[900],
     background: color.gray[200],
+    icon: color.secondary[600],
   }
 
   return {styles, colors}

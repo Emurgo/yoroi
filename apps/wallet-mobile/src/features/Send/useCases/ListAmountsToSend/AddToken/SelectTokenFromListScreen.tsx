@@ -12,7 +12,6 @@ import {NftImageGallery} from '../../../../../components/NftImageGallery'
 import {useMetrics} from '../../../../../metrics/metricsManager'
 import {TxHistoryRouteNavigation} from '../../../../../navigation'
 import {useSearch, useSearchOnNavBar} from '../../../../../Search/SearchContext'
-import {COLORS} from '../../../../../theme'
 import {sortTokenInfos} from '../../../../../utils'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {limitOfSecondaryAmountsPerTx} from '../../../../../yoroi-wallets/contants'
@@ -32,7 +31,7 @@ export type FungibilityFilter = 'all' | 'ft' | 'nft'
 
 export const SelectTokenFromListScreen = () => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {styles} = useStyles()
   const [fungibilityFilter, setFungibilityFilter] = React.useState<FungibilityFilter>('all')
   const {targets, selectedTargetIndex} = useTransfer()
   const {track} = useMetrics()
@@ -103,7 +102,7 @@ const List = ({fungibilityFilter, isSearching, canAddAmount}: ListProps) => {
 }
 
 const NftList = ({canAddAmount}: {canAddAmount: boolean}) => {
-  const styles = useStyles()
+  const {styles} = useStyles()
   const wallet = useSelectedWallet()
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const {tokenSelectedChanged, amountChanged, targets, selectedTargetIndex} = useTransfer()
@@ -148,7 +147,7 @@ type AssetListProps = {
   fungibilityFilter: FungibilityFilter
 }
 const AssetList = ({canAddAmount, fungibilityFilter}: AssetListProps) => {
-  const styles = useStyles()
+  const {styles} = useStyles()
   const wallet = useSelectedWallet()
   const tokenInfos = useAllTokenInfos({wallet})
   const filteredTokenInfos = useFilteredTokenInfos({fungibilityFilter, tokenInfos})
@@ -180,7 +179,7 @@ const AssetList = ({canAddAmount, fungibilityFilter}: AssetListProps) => {
 }
 
 const Tabs = ({children}: {children: React.ReactNode}) => {
-  const styles = useStyles()
+  const {styles} = useStyles()
   return <View style={styles.tabs}>{children}</View>
 }
 
@@ -191,7 +190,7 @@ type TabProps = {
   label: string
 }
 const Tab = ({onPress, active, tab, label}: TabProps) => {
-  const styles = useStyles()
+  const {styles, colors} = useStyles()
   return (
     <TouchableOpacity
       onPress={() => onPress(tab)}
@@ -201,7 +200,7 @@ const Tab = ({onPress, active, tab, label}: TabProps) => {
         style={[
           styles.tab,
           {
-            color: active === tab ? COLORS.SHELLEY_BLUE : COLORS.TEXT_INPUT,
+            color: active === tab ? colors.activeTab : colors.inactiveTab,
           },
         ]}
       >
@@ -213,7 +212,7 @@ const Tab = ({onPress, active, tab, label}: TabProps) => {
 
 type SelectableAssetItemProps = {disabled?: boolean; tokenInfo: Balance.TokenInfo; wallet: YoroiWallet}
 const SelectableAssetItem = ({tokenInfo, disabled, wallet}: SelectableAssetItemProps) => {
-  const styles = useStyles()
+  const {styles} = useStyles()
   const {closeSearch} = useSearch()
   const {tokenSelectedChanged, amountChanged} = useTransfer()
   const {spendable} = useTokenQuantities(tokenInfo.id)
@@ -275,7 +274,7 @@ const ListEmptyComponent = ({
 }
 
 const NoAssetsYet = ({text}: {text: string}) => {
-  const styles = useStyles()
+  const {styles} = useStyles()
   return (
     <View style={styles.imageContainer}>
       <Spacer height={160} />
@@ -290,7 +289,7 @@ const NoAssetsYet = ({text}: {text: string}) => {
 }
 
 const EmptySearchResult = () => {
-  const styles = useStyles()
+  const {styles} = useStyles()
   const strings = useStrings()
   return (
     <View style={styles.imageContainer}>
@@ -308,7 +307,7 @@ const EmptySearchResult = () => {
 const Counter = ({fungibilityFilter, counter}: {fungibilityFilter: FungibilityFilter; counter: number}) => {
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
   const strings = useStrings()
-  const styles = useStyles()
+  const {styles} = useStyles()
 
   if (!isSearching && fungibilityFilter === 'all') {
     return (
@@ -471,5 +470,10 @@ const useStyles = () => {
     },
   })
 
-  return styles
+  const colors = {
+    activeTab: color.primary[600],
+    inactiveTab: color.gray[600],
+  }
+
+  return {styles, colors}
 }
