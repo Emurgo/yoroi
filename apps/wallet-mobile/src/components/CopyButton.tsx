@@ -4,6 +4,7 @@ import {StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-na
 import Animated, {FadeInDown, FadeOutDown, Layout} from 'react-native-reanimated'
 
 import {Text} from '../../../wallet-mobile/src/components'
+import {isEmptyString} from '../../../wallet-mobile/src/utils/utils'
 import {Icon} from '../components/Icon'
 import {useCopy} from '../legacy/useCopy'
 
@@ -46,7 +47,7 @@ const AnimatedCopyButton = ({
     <TouchableOpacity onPress={onCopy} disabled={isCopying} testID="copyButton" style={style}>
       {isCopying ? (
         <View style={styles.rowContainer}>
-          {message != null ? (
+          {!isEmptyString(message) ? (
             <Animated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
               <Text style={styles.copiedText}>{message}</Text>
             </Animated.View>
