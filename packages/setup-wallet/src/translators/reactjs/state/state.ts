@@ -1,65 +1,65 @@
 import {freeze, produce} from 'immer'
 
-export const walletSetupReducer = (
-  state: WalletSetupState,
-  action: WalletSetupAction,
+export const setupWalletReducer = (
+  state: SetupWalletState,
+  action: SetupWalletAction,
 ) => {
   return produce(state, (draft) => {
     switch (action.type) {
-      case WalletSetupActionType.MnemonicChanged:
+      case SetupWalletActionType.MnemonicChanged:
         draft.mnemonic = action.mnemonic
         return
 
-      case WalletSetupActionType.WalletNameChanged:
+      case SetupWalletActionType.WalletNameChanged:
         draft.walletName = action.walletName
         return
 
-      case WalletSetupActionType.WalletPasswordChanged:
+      case SetupWalletActionType.WalletPasswordChanged:
         draft.walletPassword = action.walletPassword
         return
 
-      case WalletSetupActionType.NetworkIdChanged:
+      case SetupWalletActionType.NetworkIdChanged:
         draft.networkId = action.networkId
         return
 
-      case WalletSetupActionType.WalletImplementationIdChanged:
+      case SetupWalletActionType.WalletImplementationIdChanged:
         draft.walletImplementationId = action.walletImplementationId
         return
 
-      case WalletSetupActionType.PublicKeyHexChanged:
+      case SetupWalletActionType.PublicKeyHexChanged:
         draft.publicKeyHex = action.publicKeyHex
         return
 
-      case WalletSetupActionType.PathChanged:
+      case SetupWalletActionType.PathChanged:
         draft.path = action.path
         return
 
-      case WalletSetupActionType.HwDeviceInfoChanged:
+      case SetupWalletActionType.HwDeviceInfoChanged:
         draft.hwDeviceInfo = action.hwDeviceInfo
         return
 
-      case WalletSetupActionType.SetUpTypeChanged:
+      case SetupWalletActionType.SetUpTypeChanged:
         draft.setUpType = action.setUpType
         return
 
-      case WalletSetupActionType.MnemonicTypeChanged:
+      case SetupWalletActionType.MnemonicTypeChanged:
         draft.mnemonicType = action.mnemonicType
         return
 
-      case WalletSetupActionType.UseUSBChanged:
+      case SetupWalletActionType.UseUSBChanged:
         draft.useUSB = action.useUSB
         return
 
-      case WalletSetupActionType.Reset:
-        return walletSetupDefaultState
+      case SetupWalletActionType.Reset:
+        return setupWalletDefaultState
 
       default:
-        throw new Error(`walletSetupReducer invalid action`)
+        throw new Error(`setupWalletReducer invalid action`)
     }
   })
 }
 
-export const walletSetupDefaultState: Readonly<WalletSetupState> = freeze(
+export const setupWalletDefaultState: Readonly<SetupWalletState> = freeze(
   {
     mnemonic: '',
     walletName: '',
@@ -76,7 +76,7 @@ export const walletSetupDefaultState: Readonly<WalletSetupState> = freeze(
   true,
 )
 
-export type WalletSetupState = {
+export type SetupWalletState = {
   mnemonic: string
   walletName: string
   walletPassword: string
@@ -90,7 +90,7 @@ export type WalletSetupState = {
   useUSB: boolean
 }
 
-export enum WalletSetupActionType {
+export enum SetupWalletActionType {
   MnemonicChanged = 'mnemonicChanged',
   WalletNameChanged = 'walletNameChanged',
   WalletPasswordChanged = 'walletPasswordChanged',
@@ -105,78 +105,78 @@ export enum WalletSetupActionType {
   Reset = 'reset',
 }
 
-export type WalletSetupAction =
+export type SetupWalletAction =
   | {
-      type: WalletSetupActionType.MnemonicChanged
-      mnemonic: WalletSetupState['mnemonic']
+      type: SetupWalletActionType.MnemonicChanged
+      mnemonic: SetupWalletState['mnemonic']
     }
   | {
-      type: WalletSetupActionType.WalletNameChanged
-      walletName: WalletSetupState['walletName']
+      type: SetupWalletActionType.WalletNameChanged
+      walletName: SetupWalletState['walletName']
     }
   | {
-      type: WalletSetupActionType.WalletPasswordChanged
-      walletPassword: WalletSetupState['walletPassword']
+      type: SetupWalletActionType.WalletPasswordChanged
+      walletPassword: SetupWalletState['walletPassword']
     }
   | {
-      type: WalletSetupActionType.NetworkIdChanged
-      networkId: WalletSetupState['networkId']
+      type: SetupWalletActionType.NetworkIdChanged
+      networkId: SetupWalletState['networkId']
     }
   | {
-      type: WalletSetupActionType.WalletImplementationIdChanged
-      walletImplementationId: WalletSetupState['walletImplementationId']
+      type: SetupWalletActionType.WalletImplementationIdChanged
+      walletImplementationId: SetupWalletState['walletImplementationId']
     }
   | {
-      type: WalletSetupActionType.PublicKeyHexChanged
-      publicKeyHex: WalletSetupState['publicKeyHex']
+      type: SetupWalletActionType.PublicKeyHexChanged
+      publicKeyHex: SetupWalletState['publicKeyHex']
     }
   | {
-      type: WalletSetupActionType.PathChanged
-      path: WalletSetupState['path']
+      type: SetupWalletActionType.PathChanged
+      path: SetupWalletState['path']
     }
   | {
-      type: WalletSetupActionType.HwDeviceInfoChanged
-      hwDeviceInfo: WalletSetupState['hwDeviceInfo']
+      type: SetupWalletActionType.HwDeviceInfoChanged
+      hwDeviceInfo: SetupWalletState['hwDeviceInfo']
     }
   | {
-      type: WalletSetupActionType.SetUpTypeChanged
-      setUpType: WalletSetupState['setUpType']
+      type: SetupWalletActionType.SetUpTypeChanged
+      setUpType: SetupWalletState['setUpType']
     }
   | {
-      type: WalletSetupActionType.MnemonicTypeChanged
-      mnemonicType: WalletSetupState['mnemonicType']
+      type: SetupWalletActionType.MnemonicTypeChanged
+      mnemonicType: SetupWalletState['mnemonicType']
     }
   | {
-      type: WalletSetupActionType.UseUSBChanged
-      useUSB: WalletSetupState['useUSB']
+      type: SetupWalletActionType.UseUSBChanged
+      useUSB: SetupWalletState['useUSB']
     }
   | {
-      type: WalletSetupActionType.Reset
+      type: SetupWalletActionType.Reset
     }
 
-export type WalletSetupActions = {
-  mnemonicChanged: (mnemonic: WalletSetupState['mnemonic']) => void
-  walletNameChanged: (walletName: WalletSetupState['walletName']) => void
+export type SetupWalletActions = {
+  mnemonicChanged: (mnemonic: SetupWalletState['mnemonic']) => void
+  walletNameChanged: (walletName: SetupWalletState['walletName']) => void
   walletPasswordChanged: (
-    walletPassword: WalletSetupState['walletPassword'],
+    walletPassword: SetupWalletState['walletPassword'],
   ) => void
-  networkIdChanged: (networkId: WalletSetupState['networkId']) => void
+  networkIdChanged: (networkId: SetupWalletState['networkId']) => void
   walletImplementationIdChanged: (
-    walletImplementationId: WalletSetupState['walletImplementationId'],
+    walletImplementationId: SetupWalletState['walletImplementationId'],
   ) => void
-  publicKeyHexChanged: (publicKeyHex: WalletSetupState['publicKeyHex']) => void
-  pathChanged: (path: WalletSetupState['path']) => void
-  hwDeviceInfoChanged: (hwDeviceInfo: WalletSetupState['hwDeviceInfo']) => void
-  setUpTypeChanged: (setUpType: WalletSetupState['setUpType']) => void
-  mnemonicTypeChanged: (mnemonicType: WalletSetupState['mnemonicType']) => void
-  useUSBChanged: (useUSB: WalletSetupState['useUSB']) => void
+  publicKeyHexChanged: (publicKeyHex: SetupWalletState['publicKeyHex']) => void
+  pathChanged: (path: SetupWalletState['path']) => void
+  hwDeviceInfoChanged: (hwDeviceInfo: SetupWalletState['hwDeviceInfo']) => void
+  setUpTypeChanged: (setUpType: SetupWalletState['setUpType']) => void
+  mnemonicTypeChanged: (mnemonicType: SetupWalletState['mnemonicType']) => void
+  useUSBChanged: (useUSB: SetupWalletState['useUSB']) => void
   reset: () => void
 }
 
-export type WalletSetupContext = WalletSetupState & WalletSetupActions
-export const walletSetupInitialContext: WalletSetupContext = freeze(
+export type SetupWalletContext = SetupWalletState & SetupWalletActions
+export const setupWalletInitialContext: SetupWalletContext = freeze(
   {
-    ...walletSetupDefaultState,
+    ...setupWalletDefaultState,
     mnemonicChanged: missingInit,
     walletNameChanged: missingInit,
     walletPasswordChanged: missingInit,

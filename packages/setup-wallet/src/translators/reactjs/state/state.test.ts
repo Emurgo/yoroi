@@ -1,78 +1,78 @@
 import {
   HWDeviceInfo,
-  WalletSetupAction,
-  WalletSetupActionType,
-  walletSetupDefaultState,
-  walletSetupReducer,
+  SetupWalletAction,
+  SetupWalletActionType,
+  setupWalletDefaultState,
+  setupWalletReducer,
 } from './state'
 
 describe('State Actions', () => {
   it('unknown', () => {
-    const action = {type: 'UNKNOWN'} as unknown as WalletSetupAction
+    const action = {type: 'UNKNOWN'} as unknown as SetupWalletAction
 
-    expect(() => walletSetupReducer(walletSetupDefaultState, action)).toThrow(
-      'walletSetupReducer invalid action',
+    expect(() => setupWalletReducer(setupWalletDefaultState, action)).toThrow(
+      'setupWalletReducer invalid action',
     )
   })
 
   it('MnemonicChanged', () => {
-    const action: WalletSetupAction = {
-      type: WalletSetupActionType.MnemonicChanged,
+    const action: SetupWalletAction = {
+      type: SetupWalletActionType.MnemonicChanged,
       mnemonic: 'fake-mnemonic',
     }
 
-    const state = walletSetupReducer(walletSetupDefaultState, action)
+    const state = setupWalletReducer(setupWalletDefaultState, action)
 
     expect(state.mnemonic).toBe(action.mnemonic)
   })
 
   it('WalletNameChanged', () => {
-    const action: WalletSetupAction = {
-      type: WalletSetupActionType.WalletNameChanged,
+    const action: SetupWalletAction = {
+      type: SetupWalletActionType.WalletNameChanged,
       walletName: 'fancy-name',
     }
 
-    const state = walletSetupReducer(walletSetupDefaultState, action)
+    const state = setupWalletReducer(setupWalletDefaultState, action)
 
     expect(state.walletName).toBe(action.walletName)
   })
 
   it('WalletPasswordChanged', () => {
-    const action: WalletSetupAction = {
-      type: WalletSetupActionType.WalletPasswordChanged,
+    const action: SetupWalletAction = {
+      type: SetupWalletActionType.WalletPasswordChanged,
       walletPassword: 'fake-password',
     }
 
-    const state = walletSetupReducer(walletSetupDefaultState, action)
+    const state = setupWalletReducer(setupWalletDefaultState, action)
 
     expect(state.walletPassword).toBe(action.walletPassword)
   })
 
   it('NetworkIdChanged', () => {
-    const action: WalletSetupAction = {
-      type: WalletSetupActionType.NetworkIdChanged,
+    const action: SetupWalletAction = {
+      type: SetupWalletActionType.NetworkIdChanged,
       networkId: 0,
     }
 
-    const state = walletSetupReducer(walletSetupDefaultState, action)
+    const state = setupWalletReducer(setupWalletDefaultState, action)
 
     expect(state.networkId).toBe(action.networkId)
   })
 
   it('WalletImplementationIdChanged', () => {
-    const action: WalletSetupAction = {
-      type: WalletSetupActionType.WalletImplementationIdChanged,
+    const action: SetupWalletAction = {
+      type: SetupWalletActionType.WalletImplementationIdChanged,
       walletImplementationId: 'wallet-implementation-id',
     }
 
-    const state = walletSetupReducer(walletSetupDefaultState, action)
+    const state = setupWalletReducer(setupWalletDefaultState, action)
 
     expect(state.walletImplementationId).toBe(action.walletImplementationId)
   })
 
   it('HwDeviceInfoChanged', () => {
-    const action: WalletSetupAction = {
-      type: WalletSetupActionType.HwDeviceInfoChanged,
+    const action: SetupWalletAction = {
+      type: SetupWalletActionType.HwDeviceInfoChanged,
       hwDeviceInfo: {
         bip44AccountPublic: 'fake-key',
         hwFeatures: {
@@ -85,41 +85,41 @@ describe('State Actions', () => {
       },
     }
 
-    const state = walletSetupReducer(walletSetupDefaultState, action)
+    const state = setupWalletReducer(setupWalletDefaultState, action)
 
     expect(state.hwDeviceInfo).toBe(action.hwDeviceInfo)
   })
 
   it('SetUpTypeChanged', () => {
-    const action: WalletSetupAction = {
-      type: WalletSetupActionType.SetUpTypeChanged,
+    const action: SetupWalletAction = {
+      type: SetupWalletActionType.SetUpTypeChanged,
       setUpType: 'restore',
     }
 
-    const state = walletSetupReducer(walletSetupDefaultState, action)
+    const state = setupWalletReducer(setupWalletDefaultState, action)
 
     expect(state.setUpType).toBe(action.setUpType)
   })
 
   it('MnemonicTypeChanged', () => {
-    const action: WalletSetupAction = {
-      type: WalletSetupActionType.MnemonicTypeChanged,
+    const action: SetupWalletAction = {
+      type: SetupWalletActionType.MnemonicTypeChanged,
       mnemonicType: 15,
     }
 
-    const state = walletSetupReducer(walletSetupDefaultState, action)
+    const state = setupWalletReducer(setupWalletDefaultState, action)
 
     expect(state.mnemonicType).toBe(action.mnemonicType)
   })
 
   it('UseUSBChanged', () => {
-    const action: WalletSetupAction = {
-      type: WalletSetupActionType.UseUSBChanged,
+    const action: SetupWalletAction = {
+      type: SetupWalletActionType.UseUSBChanged,
       useUSB: true,
     }
 
-    const state = walletSetupReducer(
-      {...walletSetupDefaultState, useUSB: false},
+    const state = setupWalletReducer(
+      {...setupWalletDefaultState, useUSB: false},
       action,
     )
 
@@ -127,11 +127,11 @@ describe('State Actions', () => {
   })
 
   it('Reset', () => {
-    const action: WalletSetupAction = {
-      type: WalletSetupActionType.Reset,
+    const action: SetupWalletAction = {
+      type: SetupWalletActionType.Reset,
     }
 
-    const state = walletSetupReducer(
+    const state = setupWalletReducer(
       {
         mnemonic: 'fake-mnemonic',
         walletName: 'fake-wallet-name',
@@ -148,6 +148,6 @@ describe('State Actions', () => {
       action,
     )
 
-    expect(state).toEqual(walletSetupDefaultState)
+    expect(state).toEqual(setupWalletDefaultState)
   })
 })
