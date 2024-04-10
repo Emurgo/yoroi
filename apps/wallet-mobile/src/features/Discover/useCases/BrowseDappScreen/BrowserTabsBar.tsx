@@ -11,7 +11,7 @@ import {useStrings} from '../../common/useStrings'
 
 export const BrowserTabsBar = () => {
   const strings = useStrings()
-  const {styles} = useStyles()
+  const {styles, colors} = useStyles()
   const navigateTo = useNavigateTo()
   const {tabs, switchTab} = useBrowser()
   const totalTabs = tabs.length
@@ -30,7 +30,7 @@ export const BrowserTabsBar = () => {
     <View style={[styles.root, styles.shadow, {paddingBottom: insets.bottom + 12}]}>
       <View style={styles.fullFlex}>
         <TouchableOpacity onPress={handleCreateTab}>
-          <Icon.Plus size={24} />
+          <Icon.Plus size={24} color={colors.iconColor} />
         </TouchableOpacity>
       </View>
 
@@ -87,5 +87,9 @@ const useStyles = () => {
     },
   })
 
-  return {styles} as const
+  const colors = {
+    iconColor: color.gray['800'],
+  }
+
+  return {styles, colors} as const
 }

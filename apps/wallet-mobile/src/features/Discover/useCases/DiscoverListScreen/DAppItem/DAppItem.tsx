@@ -61,13 +61,7 @@ export const DAppItem = ({dApp, connected, onPress}: Props) => {
       strings.dAppActions,
       <View>
         <View style={styles.dAppInfo}>
-          <Image
-            source={dApp.logo}
-            style={{
-              width: 48,
-              height: 48,
-            }}
-          />
+          <Image source={dApp.logo} style={styles.dAppLogoDialog} />
 
           <Text style={styles.dAppName}>{dApp.name}</Text>
         </View>
@@ -170,6 +164,10 @@ const useStyles = () => {
       width: 40,
       height: 40,
       resizeMode: 'contain',
+    },
+    dAppLogoDialog: {
+      width: 48,
+      height: 48,
     },
     dAppName: {
       ...typography['body-1-l-medium'],

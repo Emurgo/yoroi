@@ -10,7 +10,7 @@ type Props = {
   uri: string
 }
 export const BrowserToolbar = ({uri}: Props) => {
-  const {styles} = useStyles()
+  const {styles, colors} = useStyles()
   const navigateTo = useNavigateTo()
 
   const {isSecure, domainName} = getDomainFromUrl(uri)
@@ -34,7 +34,7 @@ export const BrowserToolbar = ({uri}: Props) => {
       </View>
 
       <TouchableOpacity onPress={handleCloseBrowser}>
-        <Icon.Close size={24} />
+        <Icon.Close size={24} color={colors.iconColor} />
       </TouchableOpacity>
     </View>
   )
@@ -71,5 +71,9 @@ const useStyles = () => {
     },
   })
 
-  return {styles} as const
+  const colors = {
+    iconColor: color.gray['800'],
+  }
+
+  return {styles, colors} as const
 }
