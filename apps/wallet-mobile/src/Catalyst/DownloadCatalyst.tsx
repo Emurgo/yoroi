@@ -9,9 +9,9 @@ import playstoreBadge from '../assets/img/google-play-badge.png'
 import AppDownload from '../assets/img/pic-catalyst-step1.png'
 import {Button, ProgressStep, Spacer, StandardModal, Text} from '../components'
 import {useStakingInfo} from '../Dashboard/StakePoolInfos'
+import {useSelectedWallet} from '../features/WalletManager/Context'
 import globalMessages, {confirmationMessages} from '../i18n/global-messages'
 import {Logger} from '../legacy/logging'
-import {useSelectedWallet} from '../SelectedWallet'
 import {Actions, Row} from './components'
 
 type Props = {

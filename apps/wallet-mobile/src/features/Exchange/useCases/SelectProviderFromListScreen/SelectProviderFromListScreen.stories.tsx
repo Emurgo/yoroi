@@ -3,8 +3,8 @@ import {exchangeDefaultState, ExchangeProvider, successManagerMock} from '@yoroi
 import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {SelectedWalletProvider} from '../../../../SelectedWallet'
 import {mocks} from '../../../../yoroi-wallets/mocks'
+import {SelectedWalletProvider} from '../../../WalletManager/Context'
 import {SelectProviderFromListScreen} from './SelectProviderFromListScreen'
 
 storiesOf('Exchange SelectProviderFromListScreen', module).add('Default', () => {

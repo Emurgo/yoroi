@@ -12,10 +12,10 @@ import {
   WithdrawWarningModal,
 } from '../features/Staking/Governance'
 import {useIsGovernanceFeatureEnabled} from '../features/Staking/Governance'
+import {useSelectedWallet} from '../features/WalletManager/Context'
 import globalMessages from '../i18n/global-messages'
 import {Modal} from '../legacy/Modal'
 import {useWalletNavigation} from '../navigation'
-import {useSelectedWallet} from '../SelectedWallet'
 import {isEmptyString} from '../utils/utils'
 import {getCardanoNetworkConfigById} from '../yoroi-wallets/cardano/networks'
 import {getCardanoBaseConfig} from '../yoroi-wallets/cardano/utils'
