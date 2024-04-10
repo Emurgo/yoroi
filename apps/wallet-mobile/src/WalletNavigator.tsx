@@ -29,8 +29,10 @@ import {NftDetailsNavigator} from './NftDetails/NftDetailsNavigator'
 import {NftsNavigator} from './Nfts/NftsNavigator'
 import {SearchProvider} from './Search/SearchContext'
 import {TxHistoryNavigator} from './TxHistory'
-import {useAuthOsEnabled} from './yoroi-wallets/auth'
+import {useWalletManager} from './wallet-manager/WalletManagerContext'
+import {useAuthSetting, useIsAuthOsSupported} from './yoroi-wallets/auth'
 import {isHaskellShelley} from './yoroi-wallets/cardano/utils'
+import {useHasWallets} from './yoroi-wallets/hooks'
 
 const Tab = createBottomTabNavigator<WalletTabRoutes>()
 const WalletTabNavigator = () => {
@@ -149,8 +151,13 @@ export const WalletNavigator = () => {
   const strings = useStrings()
   const {theme} = useTheme()
   useLinksRequestAction()
-  const authOsEnabled = useAuthOsEnabled()
+  const isAuthOsSupported = useIsAuthOsSupported()
   const {showBiometricsScreen} = useShowBiometricsScreen()
+  const walletManager = useWalletManager()
+  const hasWallets = useHasWallets(walletManager)
+  const authSetting = useAuthSetting()
+
+  const shouldAskToUseAuthWithOs = !hasWallets && showBiometricsScreen && isAuthOsSupported && authSetting !== 'os'
 
   // initialRoute doesn't update the state of the navigator, only at first render
   // https://reactnavigation.org/docs/auth-flow/
@@ -175,7 +182,7 @@ export const WalletNavigator = () => {
         detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
       }}
     >
-      {showBiometricsScreen && authOsEnabled && (
+      {shouldAskToUseAuthWithOs && (
         <Stack.Screen //
           name="choose-biometric-login"
           options={{headerShown: false}}
