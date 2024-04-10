@@ -11,7 +11,7 @@ import {useLanguage} from '../../../i18n'
 import {defaultLanguage} from '../../../i18n/languages'
 import {CONFIG, isNightly, isProduction} from '../../../legacy/config'
 import {lightPalette} from '../../../theme'
-import {useAuthSetting, useAuthWithOs, useIsAuthWithOsSupported} from '../../../yoroi-wallets/auth'
+import {useAuthSetting, useAuthWithOs, useIsAuthOsSupported} from '../../../yoroi-wallets/auth'
 import {useCrashReports} from '../../../yoroi-wallets/hooks'
 import {usePrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
 import {useNavigateTo} from '../common/navigation'
@@ -36,7 +36,7 @@ export const ApplicationSettingsScreen = () => {
   const {enabled: crashReportEnabled} = useCrashReports()
 
   const authSetting = useAuthSetting()
-  const isAuthOsSupported = useIsAuthWithOsSupported()
+  const isAuthOsSupported = useIsAuthOsSupported()
   const navigateTo = useNavigateTo()
   const {authWithOs} = useAuthWithOs({onSuccess: navigateTo.enableLoginWithPin})
 

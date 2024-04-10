@@ -25,7 +25,7 @@ import {DeveloperScreen} from './legacy/DeveloperScreen'
 import {AppRoutes} from './navigation'
 import {SearchProvider} from './Search/SearchContext'
 import {WalletNavigator} from './WalletNavigator'
-import {AuthSetting, useAuthSetting, useAuthWithOs, useIsAuthWithOsSupported} from './yoroi-wallets/auth'
+import {AuthSetting, useAuthSetting, useAuthWithOs, useIsAuthOsSupported} from './yoroi-wallets/auth'
 
 const Stack = createStackNavigator<AppRoutes>()
 const navRef = React.createRef<NavigationContainerRef<ReactNavigation.RootParamList>>()
@@ -208,7 +208,7 @@ const useAutoLogout = () => {
   const authSetting = useAuthSetting()
   const strings = useStrings()
   const {logout} = useAuth()
-  const isAuthOsSupported = useIsAuthWithOsSupported()
+  const isAuthOsSupported = useIsAuthOsSupported()
   const osAuthDisabled = !isAuthOsSupported && authSetting === 'os'
 
   useBackgroundTimeout({
@@ -263,7 +263,7 @@ const getFirstAction = (
 
 const useFirstAction = () => {
   const authSetting = useAuthSetting()
-  const isAuthOsSupported = useIsAuthWithOsSupported()
+  const isAuthOsSupported = useIsAuthOsSupported()
   const terms = useLegalAgreement()
 
   return getFirstAction(isAuthOsSupported, authSetting, terms)

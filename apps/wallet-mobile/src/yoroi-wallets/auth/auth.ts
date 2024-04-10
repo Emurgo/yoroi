@@ -14,7 +14,7 @@ import {YoroiWallet} from '../cardano/types'
 import {decryptData, encryptData} from '../encryption'
 import {AuthenticationPrompt, Keychain} from '../storage'
 
-export const useIsAuthWithOsSupported = (options?: UseQueryOptions<boolean, Error>) => {
+export const useIsAuthOsSupported = (options?: UseQueryOptions<boolean, Error>) => {
   const queryClient = useQueryClient()
   const query = useQuery({
     queryKey: ['isAuthOsSupported'],

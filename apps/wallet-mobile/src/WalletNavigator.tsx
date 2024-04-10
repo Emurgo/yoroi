@@ -30,7 +30,7 @@ import {NftsNavigator} from './Nfts/NftsNavigator'
 import {SearchProvider} from './Search/SearchContext'
 import {TxHistoryNavigator} from './TxHistory'
 import {useWalletManager} from './wallet-manager/WalletManagerContext'
-import {useAuthSetting, useIsAuthWithOsSupported} from './yoroi-wallets/auth'
+import {useAuthSetting, useIsAuthOsSupported} from './yoroi-wallets/auth'
 import {isHaskellShelley} from './yoroi-wallets/cardano/utils'
 import {useHasWallets} from './yoroi-wallets/hooks'
 
@@ -151,7 +151,7 @@ export const WalletNavigator = () => {
   const strings = useStrings()
   const {theme} = useTheme()
   useLinksRequestAction()
-  const isAuthOsSupported = useIsAuthWithOsSupported()
+  const isAuthOsSupported = useIsAuthOsSupported()
   const {showBiometricsScreen} = useShowBiometricsScreen()
   const walletManager = useWalletManager()
   const hasWallets = useHasWallets(walletManager)
