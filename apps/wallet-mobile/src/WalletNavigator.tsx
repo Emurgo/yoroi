@@ -180,7 +180,9 @@ export const WalletNavigator = () => {
         detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
       }}
     >
-      {!hasWallets && showBiometricsScreen && isAuthOsSupported && authSetting !== 'os' && (
+const shouldAskToUseAuthWithOs = !hasWallets && showBiometricsScreen && isAuthOsSupported && authSetting !== 'os'
+
+      {shouldAskToUseAuthWithOs && (
         <Stack.Screen //
           name="choose-biometric-login"
           options={{headerShown: false}}
