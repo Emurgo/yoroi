@@ -42,6 +42,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="BootSplashLogo" width="500" height="500"/>
+        <image name="BootSplashLogoNightly" width="500" height="500"/>
     </resources>
 </document>
