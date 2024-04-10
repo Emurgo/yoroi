@@ -1077,10 +1077,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-nightly";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = nightly.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 513;
-				DEVELOPMENT_TEAM = F8NVT2G2L4;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
 				ENVFILE = "$(PODS_ROOT)/../../.env.nightly";
 				INFOPLIST_FILE = nightly.plist;
@@ -1103,6 +1104,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.emurgo.yoroi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore com.emurgo.yoroi";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -1120,10 +1122,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-nightly";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = nightly.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 513;
-				DEVELOPMENT_TEAM = F8NVT2G2L4;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = F8NVT2G2L4;
 				ENVFILE = "$(PODS_ROOT)/../../.env.nightly";
 				INFOPLIST_FILE = nightly.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Yoroi Nightly";
@@ -1145,6 +1148,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.emurgo.yoroi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore com.emurgo.yoroi";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
