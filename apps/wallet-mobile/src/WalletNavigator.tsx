@@ -157,6 +157,8 @@ export const WalletNavigator = () => {
   const hasWallets = useHasWallets(walletManager)
   const authSetting = useAuthSetting()
 
+  const shouldAskToUseAuthWithOs = !hasWallets && showBiometricsScreen && isAuthOsSupported && authSetting !== 'os'
+
   // initialRoute doesn't update the state of the navigator, only at first render
   // https://reactnavigation.org/docs/auth-flow/
   if (initialRoute === 'exchange-result') {
@@ -180,8 +182,6 @@ export const WalletNavigator = () => {
         detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
       }}
     >
-const shouldAskToUseAuthWithOs = !hasWallets && showBiometricsScreen && isAuthOsSupported && authSetting !== 'os'
-
       {shouldAskToUseAuthWithOs && (
         <Stack.Screen //
           name="choose-biometric-login"
