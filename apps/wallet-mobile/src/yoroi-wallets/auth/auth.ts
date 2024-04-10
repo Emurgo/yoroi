@@ -14,11 +14,11 @@ import {YoroiWallet} from '../cardano/types'
 import {decryptData, encryptData} from '../encryption'
 import {AuthenticationPrompt, Keychain} from '../storage'
 
-export const useAuthOsEnabled = (options?: UseQueryOptions<boolean, Error>) => {
+export const useIsAuthWithOsSupported = (options?: UseQueryOptions<boolean, Error>) => {
   const queryClient = useQueryClient()
   const query = useQuery({
-    queryKey: ['authOsEnabled'],
-    queryFn: authOsEnabled,
+    queryKey: ['isAuthOsSupported'],
+    queryFn: isAuthOsSupported,
     suspense: true,
     ...options,
   })
@@ -269,7 +269,7 @@ export type AuthSetting = 'pin' | 'os' | undefined
 export const AUTH_WITH_OS: AuthSetting = 'os'
 export const AUTH_WITH_PIN: AuthSetting = 'pin'
 
-export const authOsEnabled = () => {
+export const isAuthOsSupported = () => {
   return Platform.select({
     android: async () =>
       canAuthWithOS({

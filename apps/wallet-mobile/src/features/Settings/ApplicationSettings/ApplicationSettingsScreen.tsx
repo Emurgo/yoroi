@@ -11,7 +11,7 @@ import {useLanguage} from '../../../i18n'
 import {defaultLanguage} from '../../../i18n/languages'
 import {CONFIG, isNightly, isProduction} from '../../../legacy/config'
 import {lightPalette} from '../../../theme'
-import {useAuthOsEnabled, useAuthSetting, useAuthWithOs} from '../../../yoroi-wallets/auth'
+import {useAuthSetting, useAuthWithOs, useIsAuthWithOsSupported} from '../../../yoroi-wallets/auth'
 import {useCrashReports} from '../../../yoroi-wallets/hooks'
 import {usePrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
 import {useNavigateTo} from '../common/navigation'
@@ -36,7 +36,7 @@ export const ApplicationSettingsScreen = () => {
   const {enabled: crashReportEnabled} = useCrashReports()
 
   const authSetting = useAuthSetting()
-  const authOsEnabled = useAuthOsEnabled()
+  const isAuthOsSupported = useIsAuthWithOsSupported()
   const navigateTo = useNavigateTo()
   const {authWithOs} = useAuthWithOs({onSuccess: navigateTo.enableLoginWithPin})
 
@@ -126,12 +126,12 @@ export const ApplicationSettingsScreen = () => {
             icon={<Icon.Bio {...iconProps} />}
             label={strings.biometricsSignIn}
             info={strings.biometricsSignInInfo}
-            disabled={!authOsEnabled}
+            disabled={!isAuthOsSupported}
           >
             <Switch
               value={authSetting === 'os'}
               onValueChange={onToggleAuthWithOs}
-              disabled={!authOsEnabled || isTogglePrivacyModeLoading}
+              disabled={!isAuthOsSupported || isTogglePrivacyModeLoading}
             />
           </SettingsItem>
 
