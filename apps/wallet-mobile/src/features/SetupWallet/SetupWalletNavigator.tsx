@@ -37,19 +37,25 @@ export const AddWalletNavigator = () => {
       <Stack.Screen
         name="setup-wallet-choose-setup-type"
         component={ChooseSetupTypeScreen}
-        options={{title: strings.addWalletTitle}}
+        options={{title: strings.addNewWalletTitle}}
       />
 
       <Stack.Screen
-        name="setup-wallet-choose-network"
+        name="setup-wallet-create-choose-network"
         component={ChooseNetworkScreen}
-        options={{title: strings.addWalletTitle}}
+        options={{title: strings.createWalletTitle}}
       />
 
       <Stack.Screen
-        name="setup-wallet-choose-mnemonic-type"
+        name="setup-wallet-restore-choose-network"
+        component={ChooseNetworkScreen}
+        options={{title: strings.restoreWalletTitle}}
+      />
+
+      <Stack.Screen
+        name="setup-wallet-restore-choose-mnemonic-type"
         component={ChooseMnemonicTypeScreen}
-        options={{title: strings.addWalletTitle}}
+        options={{title: strings.restoreWalletTitle}}
       />
 
       <Stack.Screen
@@ -108,19 +114,19 @@ export const AddWalletNavigator = () => {
       <Stack.Screen //
         name="setup-wallet-about-recovery-phase"
         component={AboutRecoveryPhraseScreen}
-        options={{title: strings.mnemonicShowTitle}}
+        options={{title: strings.createWalletTitle}}
       />
 
       <Stack.Screen
         name="setup-wallet-recovery-phrase-mnemonic"
         component={RecoveryPhraseScreen}
-        options={{title: strings.mnemonicShowTitle}}
+        options={{title: strings.createWalletTitle}}
       />
 
       <Stack.Screen
         name="setup-wallet-verify-recovery-phrase-mnemonic"
         component={VerifyRecoveryPhraseScreen}
-        options={{title: strings.mnemonicCheckTitle}}
+        options={{title: strings.createWalletTitle}}
       />
     </Stack.Navigator>
   )
@@ -129,13 +135,13 @@ export const AddWalletNavigator = () => {
 const ConnectNanoXScreenWrapper = () => <ConnectNanoXScreen />
 
 const messages = defineMessages({
-  addWalletTitle: {
+  addNewWalletTitle: {
     id: 'components.walletinit.walletinitscreen.title',
-    defaultMessage: '!!!Add wallet',
+    defaultMessage: '!!!Add new wallet',
   },
   createWalletTitle: {
     id: 'components.walletinit.createwallet.createwalletscreen.title',
-    defaultMessage: '!!!Create a new wallet',
+    defaultMessage: '!!!Create wallet',
   },
   restoreWalletTitle: {
     id: 'components.walletinit.restorewallet.restorewalletscreen.title',
@@ -183,7 +189,7 @@ const useStrings = () => {
   const intl = useIntl()
 
   return {
-    addWalletTitle: intl.formatMessage(messages.addWalletTitle),
+    addNewWalletTitle: intl.formatMessage(messages.addNewWalletTitle),
     createWalletTitle: intl.formatMessage(messages.createWalletTitle),
     restoreWalletTitle: intl.formatMessage(messages.restoreWalletTitle),
     importReadOnlyTitle: intl.formatMessage(messages.importReadOnlyTitle),

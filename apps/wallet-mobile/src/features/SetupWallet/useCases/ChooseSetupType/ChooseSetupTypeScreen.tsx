@@ -42,7 +42,7 @@ export const ChooseSetupTypeScreen = () => {
       return
     }
 
-    navigation.navigate('setup-wallet-choose-network')
+    navigation.navigate('setup-wallet-create-choose-network')
   }
 
   const handleRestore = () => {
@@ -50,11 +50,11 @@ export const ChooseSetupTypeScreen = () => {
 
     if (isProduction()) {
       networkIdChanged(HASKELL_SHELLEY.NETWORK_ID)
-      navigation.navigate('setup-wallet-choose-mnemonic-type')
+      navigation.navigate('setup-wallet-restore-choose-mnemonic-type')
       return
     }
 
-    navigation.navigate('setup-wallet-choose-network')
+    navigation.navigate('setup-wallet-restore-choose-network')
   }
 
   const handleHw = () => {
@@ -64,14 +64,8 @@ export const ChooseSetupTypeScreen = () => {
   const navigateHw = () => {
     setIsModalOpen(false)
     setUpTypeChanged('hw')
-
-    if (isProduction()) {
-      networkIdChanged(HASKELL_SHELLEY.NETWORK_ID)
-      navigation.navigate('setup-wallet-check-nano-x')
-      return
-    }
-
-    navigation.navigate('setup-wallet-choose-network')
+    networkIdChanged(HASKELL_SHELLEY.NETWORK_ID)
+    navigation.navigate('setup-wallet-check-nano-x')
   }
 
   return (
