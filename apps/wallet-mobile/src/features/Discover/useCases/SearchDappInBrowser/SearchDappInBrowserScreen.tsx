@@ -22,7 +22,7 @@ const getUrl = (searchValue: string, isEngineSearch: boolean) => {
 
 export const SearchDappInBrowserScreen = () => {
   const {styles} = useStyles()
-  const router = useRoute<RouteProp<BrowserRoutes, 'browser-search'>>()
+  const router = useRoute<RouteProp<BrowserRoutes, 'discover-search-dapp-in-browser'>>()
   const {isEdit} = router.params ?? {isEdit: false}
   const navigateTo = useNavigateTo()
   const {addBrowserTab, setTabActive, updateTab, tabs, tabActiveIndex} = useBrowser()
@@ -34,7 +34,7 @@ export const SearchDappInBrowserScreen = () => {
 
   const handleGoBack = () => {
     if (tabActiveIndex >= 0) {
-      navigateTo.browserView()
+      navigateTo.browseDapp()
     } else {
       navigateTo.selectDappFromList()
     }
@@ -65,14 +65,14 @@ export const SearchDappInBrowserScreen = () => {
 
     if (isEdit) {
       updateTab(tabActiveIndex, {url})
-      navigateTo.browserView()
+      navigateTo.browseDapp()
       return
     }
 
     const tabId = uuid.v4()
     addBrowserTab(url, tabId)
     setTabActive(tabs.length)
-    navigateTo.browserView()
+    navigateTo.browseDapp()
   }
 
   return (

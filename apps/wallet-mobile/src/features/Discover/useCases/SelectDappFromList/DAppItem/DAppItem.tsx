@@ -41,7 +41,7 @@ export const DAppItem = ({dApp, connected, onPress}: Props) => {
     addBrowserTab(dApp.uri, id)
     setTabActive(tabs.length)
 
-    navigateTo.browserView()
+    navigateTo.browseDapp()
   }
   const handleDisconnectDApp = () => {
     closeModal()

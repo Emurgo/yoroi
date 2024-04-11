@@ -23,23 +23,15 @@ export const DiscoverNavigator = () => {
           detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
           gestureEnabled: true,
         }}
-        initialRouteName="select-dapp-from-list"
+        initialRouteName="discover-select-dapp-from-list"
       >
         <Stack.Screen
-          name="select-dapp-from-list"
+          name="discover-select-dapp-from-list"
           component={SelectDappFromListScreen}
-          options={{
-            title: strings.discoverTitle,
-          }}
+          options={{title: strings.discoverTitle}}
         />
 
-        <Stack.Screen
-          name="browser"
-          component={BrowserNavigator}
-          options={{
-            headerShown: false,
-          }}
-        />
+        <Stack.Screen name="discover-browser" component={BrowserNavigator} options={{headerShown: false}} />
       </Stack.Navigator>
     </BrowserProvider>
   )

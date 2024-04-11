@@ -258,13 +258,13 @@ export type SendConfirmParams = {
 }
 
 export type DiscoverRoutes = {
-  'select-dapp-from-list': undefined
-  browser: NavigatorScreenParams<BrowserRoutes>
+  'discover-select-dapp-from-list': undefined
+  'discover-browser': NavigatorScreenParams<BrowserRoutes>
 }
 
 export type BrowserRoutes = {
-  'browser-view': undefined
-  'browser-search': {
+  'discover-browse-dapp': undefined
+  'discover-search-dapp-in-browser': {
     isEdit: boolean
   }
 }

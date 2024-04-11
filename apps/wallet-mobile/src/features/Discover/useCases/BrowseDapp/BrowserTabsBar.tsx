@@ -23,7 +23,7 @@ export const BrowserTabsBar = () => {
 
   const handleCreateTab = () => {
     switchTab(false)
-    navigateTo.browserSearch({isEdit: false})
+    navigateTo.searchDappInBrowser({isEdit: false})
   }
 
   return (
