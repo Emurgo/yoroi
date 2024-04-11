@@ -97,6 +97,7 @@ export type WalletTabRoutes = {
   history: NavigatorScreenParams<TxHistoryRoutes>
   'staking-dashboard': NavigatorScreenParams<DashboardRoutes>
   nfts: NavigatorScreenParams<NftRoutes>
+  discover: NavigatorScreenParams<DiscoverRoutes>
   menu: NavigatorScreenParams<MenuRoutes>
 }
 
@@ -110,6 +111,7 @@ export type WalletStackRoutes = {
   'voting-registration': NavigatorScreenParams<VotingRegistrationRoutes>
   'toggle-analytics-settings': NavigatorScreenParams<ToggleAnalyticsSettingsRoutes>
   governance: NavigatorScreenParams<StakingGovernanceRoutes>
+  'staking-dashboard': NavigatorScreenParams<DashboardRoutes>
 }
 export type WalletStackRouteNavigation = StackNavigationProp<WalletStackRoutes>
 
@@ -207,6 +209,8 @@ export type ExchangeRoutesNavigation = StackNavigationProp<ExchangeRoutes>
 
 export type StakingCenterRouteNavigation = StackNavigationProp<StakingCenterRoutes>
 
+export type DiscoverRoutesNavigation = StackNavigationProp<DiscoverRoutes>
+
 export type SettingsTabRoutes = {
   'wallet-settings': undefined
   'app-settings': undefined
@@ -251,6 +255,18 @@ export type SettingsRouteNavigation = StackNavigationProp<SettingsStackRoutes>
 
 export type SendConfirmParams = {
   yoroiUnsignedTx: YoroiUnsignedTx
+}
+
+export type DiscoverRoutes = {
+  'discover-list': undefined
+  browser: NavigatorScreenParams<BrowserRoutes>
+}
+
+export type BrowserRoutes = {
+  'browser-view': undefined
+  'browser-search': {
+    isEdit: boolean
+  }
 }
 
 export type DashboardRoutes = {
@@ -428,12 +444,9 @@ export const useWalletNavigation = () => {
 
     navigateToStakingDashboard: () => {
       navigation.navigate('app-root', {
-        screen: 'main-wallet-routes',
+        screen: 'staking-dashboard',
         params: {
-          screen: 'staking-dashboard',
-          params: {
-            screen: 'staking-dashboard-main',
-          },
+          screen: 'staking-dashboard-main',
         },
       })
     },
@@ -513,10 +526,11 @@ export const useWalletNavigation = () => {
   } as const).current
 }
 
-export const hideTabBarForRoutes = (route: RouteProp<WalletTabRoutes, 'history'>): ViewStyle | undefined =>
+export const hideTabBarForRoutes = (route: RouteProp<WalletTabRoutes, 'history' | 'discover'>): ViewStyle | undefined =>
   getFocusedRouteNameFromRoute(route)?.startsWith('scan') ||
   getFocusedRouteNameFromRoute(route)?.startsWith('swap') ||
   getFocusedRouteNameFromRoute(route)?.startsWith('receive') ||
-  getFocusedRouteNameFromRoute(route)?.startsWith('exchange')
+  getFocusedRouteNameFromRoute(route)?.startsWith('exchange') ||
+  getFocusedRouteNameFromRoute(route)?.startsWith('browser')
     ? {display: 'none'}
     : undefined

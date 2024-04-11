@@ -98,6 +98,7 @@
   "components.common.navigation.delegateButton": "Delegate",
   "components.common.navigation.nftGallery": "NFT Gallery",
   "components.common.navigation.transactionsButton": "Transactions",
+  "components.common.navigation.discover": "Discover",
   "components.delegation.delegationnavigationbuttons.stakingCenterButton": "Go to Staking Center",
   "components.delegation.withdrawaldialog.deregisterButton": "Deregister",
   "components.delegation.withdrawaldialog.explanation1": "When **withdrawing rewards**, you also have the option to deregister the staking key.",
@@ -832,6 +833,7 @@
   "menu.knowledgeBase": "Knowledge base",
   "menu.releases": "Releases",
   "menu.settings": "Settings",
+  "menu.stakingCenter": "Staking center",
   "menu.supportLink": "Ask our support team",
   "menu.supportTitle": "Any questions?",
   "menu": "Menu",
@@ -1006,5 +1008,16 @@
   "rampOnOff.rampOnOffScreen.needMoreCrypto": "Need more ADA for staking or swap?",
   "rampOnOff.rampOnOffScreen.ourTrustedPartners": "Top up your wallet safely using our trusted partners",
   "rampOnOff.rampOnOffScreen.exchangeSelectProvider.buy": "Buy provider",
-  "rampOnOff.rampOnOffScreen.exchangeSelectProvider.sell": "Sell provider"
+  "rampOnOff.rampOnOffScreen.exchangeSelectProvider.sell": "Sell provider",
+  "discover.discoverList.discoverTitle": "Discover Cardano",
+  "discover.discoverList.searchDApps": "Search DApps",
+  "discover.discoverList.welcomeToYoroiDAppExplorer": "Welcome to Yoroi DApp Explorer",
+  "discover.discoverList.welcomeToYoroiDAppExplorerDescription": "Discover, inspect, and connect to Cardano decentralized applications (DApps) with ease. Our solution helps to interact with DApps and their smart contracts, seamlessly enhancing your Cardano experience",
+  "discover.discoverList.dAppAvailable": "DApp(s) available",
+  "discover.discoverList.connected": "Connected",
+  "discover.discoverList.recommended": "Recommended",
+  "discover.discoverList.done": "DONE",
+  "discover.discoverList.openDApp": "Open DApp",
+  "discover.discoverList.disconnectWalletFromDApp": "Disconnect wallet from DApp",
+  "discover.discoverList.dAppActions": "DApp actions"
 }
