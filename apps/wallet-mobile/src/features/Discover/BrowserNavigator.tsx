@@ -14,7 +14,7 @@ export const BrowserNavigator = () => {
   const {styles} = useStyles()
 
   return (
-    <SafeAreaView edges={['left', 'right', 'top', 'bottom']} style={styles.root}>
+    <SafeAreaView edges={['left', 'right', 'top']} style={styles.root}>
       <Tab.Navigator
         screenOptions={{
           animationEnabled: false,

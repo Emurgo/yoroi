@@ -3,7 +3,7 @@ import * as React from 'react'
 import {Dimensions, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import Animated, {Easing, useAnimatedStyle, useSharedValue, withTiming} from 'react-native-reanimated'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {initialWindowMetrics, useSafeAreaInsets} from 'react-native-safe-area-context'
 import WebView from 'react-native-webview'
 import {WebViewNavigation, WebViewNavigationEvent} from 'react-native-webview/lib/WebViewTypes'
 
@@ -35,6 +35,9 @@ export const WebViewItem = ({tab, index}: Props) => {
 
   const scaleXWebview = useSharedValue(1)
   const opacityValue = useSharedValue(0)
+
+  const topInset = Math.max(insets.top, initialWindowMetrics?.insets.top ?? 0)
+  const visibleAreaHeight = SCREEN_HEIGHT - topInset
 
   const containerStyleAnimated = useAnimatedStyle(() => {
     return {
@@ -100,7 +103,7 @@ export const WebViewItem = ({tab, index}: Props) => {
         style={[
           containerStyleAnimated,
           {width: SCREEN_WIDTH},
-          switchTabOpen ? {height: 'auto'} : {height: isTabActive ? SCREEN_HEIGHT - insets.top : 0},
+          switchTabOpen ? {height: 'auto'} : {height: isTabActive ? visibleAreaHeight : 0},
         ]}
       >
         <Animated.View
