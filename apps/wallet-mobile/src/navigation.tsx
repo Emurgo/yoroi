@@ -531,6 +531,6 @@ export const hideTabBarForRoutes = (route: RouteProp<WalletTabRoutes, 'history' 
   getFocusedRouteNameFromRoute(route)?.startsWith('swap') ||
   getFocusedRouteNameFromRoute(route)?.startsWith('receive') ||
   getFocusedRouteNameFromRoute(route)?.startsWith('exchange') ||
-  getFocusedRouteNameFromRoute(route)?.startsWith('browser')
+  getFocusedRouteNameFromRoute(route)?.startsWith('discover-browser')
     ? {display: 'none'}
     : undefined
