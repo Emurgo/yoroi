@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import {BigNumber} from 'bignumber.js'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -5,10 +6,9 @@ import {StyleSheet, View} from 'react-native'
 
 import {Button, Icon, Text, TitledCard} from '../components'
 import {usePrivacyMode} from '../features/Settings/PrivacyMode/PrivacyMode'
+import {useSelectedWallet} from '../features/WalletManager/Context'
 import globalMessages from '../i18n/global-messages'
 import {formatAdaWithText} from '../legacy/format'
-import {useSelectedWallet} from '../SelectedWallet'
-import {COLORS} from '../theme'
 import {asQuantity} from '../yoroi-wallets/utils'
 
 const ICON_DIM = 44
@@ -22,6 +22,7 @@ type Props = {
 }
 
 export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdraw, disableWithdraw}: Props) => {
+  const styles = useStyles()
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const {isPrivacyOn} = usePrivacyMode()
@@ -101,47 +102,52 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
   )
 }
 
-const styles = StyleSheet.create({
-  wrapper: {
-    flex: 1,
-  },
-  stats: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'space-around',
-  },
-  row: {
-    flex: 1,
-    paddingVertical: 8,
-    flexDirection: 'row',
-  },
-  icon: {
-    paddingLeft: 8,
-    paddingRight: 18,
-  },
-  amountBlock: {
-    flexDirection: 'column',
-  },
-  label: {
-    color: COLORS.DARK_TEXT,
-    lineHeight: 24,
-    fontSize: 14,
-  },
-  value: {
-    color: COLORS.DARK_GRAY,
-    lineHeight: 24,
-    fontSize: 16,
-  },
-  withdrawBlock: {
-    flex: 1,
-    padding: 5,
-    justifyContent: 'flex-end',
-    flexDirection: 'row',
-  },
-  withdrawButton: {
-    minHeight: 18,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, padding, typography} = theme
+  const styles = StyleSheet.create({
+    wrapper: {
+      flex: 1,
+    },
+    stats: {
+      flex: 1,
+      flexDirection: 'column',
+      justifyContent: 'space-around',
+    },
+    row: {
+      flex: 1,
+      ...padding['y-s'],
+      flexDirection: 'row',
+    },
+    icon: {
+      paddingLeft: 8,
+      ...padding['s'],
+      ...padding['r-l'],
+    },
+    amountBlock: {
+      flexDirection: 'column',
+    },
+    label: {
+      color: color.gray[900],
+      ...typography['body-2-m-regular'],
+    },
+    value: {
+      color: color.gray[800],
+      ...typography['body-1-l-regular'],
+    },
+    withdrawBlock: {
+      flex: 1,
+      ...padding['xs'],
+      justifyContent: 'flex-end',
+      flexDirection: 'row',
+    },
+    withdrawButton: {
+      minHeight: 18,
+    },
+  })
+
+  return styles
+}
 
 const useStrings = () => {
   const intl = useIntl()

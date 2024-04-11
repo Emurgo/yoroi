@@ -8,9 +8,9 @@ import {MutationOptions, useMutation} from 'react-query'
 
 import {Button, Checkmark, KeyboardAvoidingView, Spacer, TextInput} from '../../../components'
 import {errorMessages} from '../../../i18n/global-messages'
-import {useSelectedWallet} from '../../../SelectedWallet'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {REQUIRED_PASSWORD_LENGTH, validatePassword} from '../../../yoroi-wallets/utils/validators'
+import {useSelectedWallet} from '../../WalletManager/Context'
 
 export const ChangePasswordScreen = () => {
   const strings = useStrings()

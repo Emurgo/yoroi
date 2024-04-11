@@ -64,15 +64,15 @@ describe('4_26_0 migrations', () => {
     expect(storage.setItem).toHaveBeenCalledTimes(3)
     expect(storage.setItem).toHaveBeenCalledWith('1', {
       ...pwdWalletMeta,
-      addressMode: 'multiple',
+      addressMode: 'single',
     })
     expect(storage.setItem).toHaveBeenCalledWith('2', {
       ...hwWalletMeta,
-      addressMode: 'multiple',
+      addressMode: 'single',
     })
     expect(storage.setItem).toHaveBeenCalledWith('3', {
       ...bioAuthWalletMeta,
-      addressMode: 'multiple',
+      addressMode: 'single',
     })
   })
 

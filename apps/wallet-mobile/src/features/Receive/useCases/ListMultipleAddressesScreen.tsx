@@ -1,23 +1,21 @@
 import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, View, ViewToken} from 'react-native'
+import {StyleSheet, View, ViewToken} from 'react-native'
 import Animated, {Layout} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Spacer, useModal} from '../../../components'
+import {Button, Spacer} from '../../../components'
 import {useMetrics} from '../../../metrics/metricsManager'
-import {useSelectedWallet} from '../../../SelectedWallet'
 import {useAddressModeManager} from '../../../wallet-manager/useAddressModeManager'
+import {useSelectedWallet} from '../../WalletManager/Context'
 import {BIP32_HD_GAP_LIMIT} from '../common/contants'
 import {useReceive} from '../common/ReceiveProvider'
 import {ShowAddressLimitInfo} from '../common/ShowAddressLimitInfo/ShowAddressLimitInfo'
 import {SmallAddressCard} from '../common/SmallAddressCard/SmallAddressCard'
-import {useMultipleAddressesInfo} from '../common/useMultipleAddressesInfo'
 import {useNavigateTo} from '../common/useNavigateTo'
 import {useReceiveAddressesStatus} from '../common/useReceiveAddressesStatus'
 import {useStrings} from '../common/useStrings'
-import {QRs} from '../illustrations/QRs'
 
 type AddressInfo = {
   isUsed?: boolean
@@ -40,13 +38,6 @@ export const ListMultipleAddressesScreen = () => {
     wallet.generateNewReceiveAddressIfNeeded()
   }, [wallet])
 
-  const {openModal} = useModal()
-  const {isShowingMultipleAddressInfo} = useMultipleAddressesInfo()
-
-  React.useEffect(() => {
-    isShowingMultipleAddressInfo && openModal(strings.multiplePresentation, <Modal />, modalHeight)
-  }, [isShowingMultipleAddressInfo, openModal, strings.multiplePresentation])
-
   const addressInfos = toAddressInfos(addresses)
   const hasReachedGapLimit = addresses.unused.length >= BIP32_HD_GAP_LIMIT
 
@@ -61,7 +52,7 @@ export const ListMultipleAddressesScreen = () => {
         isUsed={item.isUsed}
         onPress={() => {
           selectedAddressChanged(item.address)
-          navigate.receiveDetails()
+          navigate.showAddressDetails()
         }}
         testId={`receive:small-address-card-${index + 1}`} // Add index + 1 to include count
         // date={}  // TODO define with project
@@ -121,42 +112,6 @@ export const ListMultipleAddressesScreen = () => {
   )
 }
 
-const modalHeight = 520
-const Modal = () => {
-  const {styles, colors} = useStyles()
-  const strings = useStrings()
-
-  const {hideMultipleAddressesInfo} = useMultipleAddressesInfo()
-
-  const {closeModal} = useModal()
-  const handleOnCloseModal = () => {
-    hideMultipleAddressesInfo()
-    closeModal()
-  }
-
-  return (
-    <View style={styles.modal}>
-      <QRs />
-
-      <Text style={[styles.details, {color: colors.details}]}>{strings.multiplePresentationDetails}</Text>
-
-      <Spacer fill height={24} />
-
-      <View style={styles.buttonContainer}>
-        <Button
-          shelleyTheme
-          title={strings.ok}
-          onPress={handleOnCloseModal}
-          style={styles.button}
-          testID="wallet:receive:oneTimeModal-ok-button"
-        />
-      </View>
-
-      <Spacer height={24} />
-    </View>
-  )
-}
-
 const useStyles = () => {
   const {theme} = useTheme()
   const styles = StyleSheet.create({
@@ -169,23 +124,10 @@ const useStyles = () => {
       flex: 1,
       ...theme.padding['x-l'],
     },
-    modal: {
-      flex: 1,
-      backgroundColor: theme.color['bottom-sheet-background'],
-      alignItems: 'center',
-      justifyContent: 'space-between',
-    },
     footer: {
       backgroundColor: theme.color.gray.min,
       borderColor: theme.color.gray[200],
       ...theme.padding['l'],
-    },
-    details: {
-      ...theme.typography['body-1-l-regular'],
-    },
-    buttonContainer: {
-      alignSelf: 'stretch',
-      backgroundColor: theme.color.gray.min,
     },
     button: {
       backgroundColor: theme.color.primary[500],

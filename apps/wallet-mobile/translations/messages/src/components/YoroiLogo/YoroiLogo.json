@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Light wallet for Cardano assets",
     "file": "src/components/YoroiLogo/YoroiLogo.tsx",
     "start": {
-      "line": 84,
+      "line": 85,
       "column": 8,
-      "index": 2128
+      "index": 2221
     },
     "end": {
-      "line": 87,
+      "line": 88,
       "column": 3,
-      "index": 2223
+      "index": 2316
     }
   }
 ]

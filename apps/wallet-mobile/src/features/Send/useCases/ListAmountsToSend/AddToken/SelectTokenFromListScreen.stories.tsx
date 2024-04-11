@@ -3,8 +3,8 @@ import {TransferProvider} from '@yoroi/transfer'
 import React from 'react'
 
 import {SearchProvider} from '../../../../../Search/SearchContext'
-import {SelectedWalletProvider} from '../../../../../SelectedWallet'
 import {mocks} from '../../../../../yoroi-wallets/mocks/wallet'
+import {SelectedWalletProvider} from '../../../../WalletManager/Context'
 import {SelectTokenFromListScreen} from './SelectTokenFromListScreen'
 
 storiesOf('Select Token From List', module).add('initial', () => {

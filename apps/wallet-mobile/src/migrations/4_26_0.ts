@@ -10,7 +10,7 @@ export const migrateAddressMode = async (rootStorage: App.Storage) => {
   // moved from /wallet/ -> /
   await walletsRootStorage.removeItem('deletedWalletIds')
 
-  // add the addressMode defaulted to 'multiple' to all wallet metas
+  // add the addressMode defaulted to 'single' to all wallet metas
   const walletIds = await walletsRootStorage.getAllKeys()
   const walletMetas = await walletsRootStorage
     .multiGet(walletIds)
@@ -22,7 +22,7 @@ export const migrateAddressMode = async (rootStorage: App.Storage) => {
 }
 
 const addAddressModeWrapper = (walletsRootStorage: App.Storage) => async (walletMetaToMigrate: WalletMeta) => {
-  return walletsRootStorage.setItem(walletMetaToMigrate.id, {...walletMetaToMigrate, addressMode: 'multiple'})
+  return walletsRootStorage.setItem(walletMetaToMigrate.id, {...walletMetaToMigrate, addressMode: 'single'})
 }
 
 export const to4_26_0 = migrateAddressMode

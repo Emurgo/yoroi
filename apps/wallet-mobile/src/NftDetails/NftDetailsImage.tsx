@@ -6,9 +6,9 @@ import ViewTransformer from 'react-native-easy-view-transformer'
 
 import {FadeIn} from '../components'
 import {NftPreview} from '../components/NftPreview'
+import {useSelectedWallet} from '../features/WalletManager/Context'
 import {useMetrics} from '../metrics/metricsManager'
 import {NftRoutes, useParams} from '../navigation'
-import {useSelectedWallet} from '../SelectedWallet'
 import {isEmptyString} from '../utils/utils'
 import {useNft} from '../yoroi-wallets/hooks'
 

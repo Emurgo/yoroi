@@ -4,10 +4,10 @@ import {Divider} from 'react-native-paper'
 
 import errorImage from '../../assets/img/error.png'
 import {Logger} from '../../legacy/logging'
-import {ExpandableItem} from '../../WalletInit/WalletInit/ExpandableItem'
 import {Button} from '../Button/Button'
 import {CopyButton} from '../CopyButton'
 import {Spacer} from '../Spacer'
+import {ExpandableItem} from './ExpandableItem'
 
 interface Props {
   children: ReactNode

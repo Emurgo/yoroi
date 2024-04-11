@@ -1,7 +1,7 @@
 import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {ScrollView, StyleSheet, Text, View} from 'react-native'
+import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import Icon from '../../../assets/img/copy.png'
@@ -9,20 +9,24 @@ import {Button, Spacer, useModal} from '../../../components'
 import {useCopy} from '../../../legacy/useCopy'
 import {useMetrics} from '../../../metrics/metricsManager'
 import {isEmptyString} from '../../../utils'
+import {AddressMode} from '../../../wallet-manager/types'
 import {useAddressModeManager} from '../../../wallet-manager/useAddressModeManager'
 import {AddressDetailCard} from '../common/AddressDetailCard/AddressDetailCard'
 import {useReceive} from '../common/ReceiveProvider'
+import {
+  SingleOrMultipleAddressesModal,
+  singleOrMultipleAddressesModalHeight,
+} from '../common/SingleOrMultipleAddressesModal/SingleOrMultipleAddressesModal'
 import {SkeletonAdressDetail} from '../common/SkeletonAddressDetail/SkeletonAddressDetail'
 import {useMultipleAddressesInfo} from '../common/useMultipleAddressesInfo'
 import {useNavigateTo} from '../common/useNavigateTo'
 import {useReceiveAddressesStatus} from '../common/useReceiveAddressesStatus'
 import {useStrings} from '../common/useStrings'
-import {QRs} from '../illustrations/QRs'
 
 export const DescribeSelectedAddressScreen = () => {
   const strings = useStrings()
   const {styles, colors} = useStyles()
-  const navigate = useNavigateTo()
+  const navigateTo = useNavigateTo()
   const {selectedAddress} = useReceive()
   const {isSingle, addressMode} = useAddressModeManager()
   const addresses = useReceiveAddressesStatus(addressMode)
@@ -40,12 +44,30 @@ export const DescribeSelectedAddressScreen = () => {
     copy(selectedAddress)
   }
 
+  const handleOnModalConfirm = React.useCallback(
+    (method: AddressMode) => {
+      if (method === 'multiple') {
+        navigateTo.multipleAddress()
+      }
+    },
+    [navigateTo],
+  )
+
   React.useEffect(() => {
-    isSingle &&
-      isMultipleAddressesUsed &&
-      isShowingMultipleAddressInfo &&
-      openModal(strings.singleOrMultiple, <Modal />, modalHeight)
-  }, [isShowingMultipleAddressInfo, isSingle, isMultipleAddressesUsed, openModal, strings.singleOrMultiple])
+    isShowingMultipleAddressInfo &&
+      openModal(
+        strings.singleOrMultiple,
+        <SingleOrMultipleAddressesModal onConfirm={handleOnModalConfirm} />,
+        singleOrMultipleAddressesModalHeight,
+      )
+  }, [
+    isShowingMultipleAddressInfo,
+    isSingle,
+    isMultipleAddressesUsed,
+    openModal,
+    strings.singleOrMultiple,
+    handleOnModalConfirm,
+  ])
 
   useFocusEffect(
     React.useCallback(() => {
@@ -67,7 +89,7 @@ export const DescribeSelectedAddressScreen = () => {
         textStyles={{
           color: colors.requestSpecificAmountTextColor,
         }}
-        onPress={navigate.specificAmount}
+        onPress={navigateTo.requestSpecificAmount}
         disabled={!hasAddress}
         testID="receive:request-specific-amount-link"
       />
@@ -90,54 +112,6 @@ export const DescribeSelectedAddressScreen = () => {
   )
 }
 
-const modalHeight = 580
-const Modal = () => {
-  const {styles, colors} = useStyles()
-  const strings = useStrings()
-  const {enableMultipleMode} = useAddressModeManager()
-
-  const {hideMultipleAddressesInfo} = useMultipleAddressesInfo()
-
-  const {closeModal} = useModal()
-
-  const handleOnMultiple = () => {
-    enableMultipleMode()
-    handleOnSingle()
-  }
-
-  const handleOnSingle = () => {
-    hideMultipleAddressesInfo()
-    closeModal()
-  }
-
-  return (
-    <View style={styles.modal}>
-      <QRs />
-
-      <Text style={[styles.details, {color: colors.details}]}>{strings.singleOrMultipleDetails}</Text>
-
-      <Spacer fill height={24} />
-
-      <View style={styles.buttonContainer}>
-        <Button
-          outline
-          title={strings.selectMultiple}
-          textStyles={{
-            color: colors.details,
-          }}
-          onPress={handleOnMultiple}
-        />
-
-        <Spacer height={6} />
-
-        <Button shelleyTheme title={strings.singleAddressWallet} onPress={handleOnSingle} style={styles.button} />
-      </View>
-
-      <Spacer height={24} />
-    </View>
-  )
-}
-
 const useStyles = () => {
   const {theme} = useTheme()
 
@@ -146,19 +120,6 @@ const useStyles = () => {
       flex: 1,
       backgroundColor: theme.color.gray.min,
       padding: 16,
-    },
-    modal: {
-      flex: 1,
-      backgroundColor: theme.color['bottom-sheet-background'],
-      alignItems: 'center',
-      justifyContent: 'space-between',
-    },
-    buttonContainer: {
-      alignSelf: 'stretch',
-      backgroundColor: theme.color.gray.min,
-    },
-    details: {
-      ...theme.typography['body-1-l-regular'],
     },
     address: {
       flex: 1,
@@ -171,7 +132,6 @@ const useStyles = () => {
 
   const colors = {
     requestSpecificAmountTextColor: theme.color.primary[500],
-    details: theme.color.gray[900],
   }
 
   return {styles, colors} as const

@@ -1,7 +1,6 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Linking, StyleSheet, Text, TextStyle, TouchableOpacity} from 'react-native'
-
-import {COLORS} from '../../theme'
 
 type Props = {
   url: string
@@ -10,15 +9,24 @@ type Props = {
   children?: React.ReactNode
 }
 
-export const Link = ({url, text, style, children}: Props) => (
-  <TouchableOpacity onPress={() => Linking.openURL(url)}>
-    {children === undefined ? <Text style={[styles.text, style]}>{text}</Text> : children}
-  </TouchableOpacity>
-)
+export const Link = ({url, text, style, children}: Props) => {
+  const styles = useStyles()
 
-const styles = StyleSheet.create({
-  text: {
-    color: COLORS.DARK_BLUE,
-    textDecorationLine: 'underline',
-  },
-})
+  return (
+    <TouchableOpacity onPress={() => Linking.openURL(url)}>
+      {children === undefined ? <Text style={[styles.text, style]}>{text}</Text> : children}
+    </TouchableOpacity>
+  )
+}
+
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
+  const styles = StyleSheet.create({
+    text: {
+      color: color.primary[600],
+      textDecorationLine: 'underline',
+    },
+  })
+  return styles
+}

@@ -3,7 +3,6 @@ import React from 'react'
 import {Image, StyleSheet, TextStyle, TouchableOpacity, TouchableOpacityProps, View, ViewStyle} from 'react-native'
 import Animated, {FadeInDown, FadeOutDown, Layout} from 'react-native-reanimated'
 
-import {colors} from '../../theme'
 import {Text} from '../Text'
 
 export type ButtonProps = TouchableOpacityProps & {
@@ -84,21 +83,21 @@ export const Button = (props: ButtonProps) => {
   )
 }
 
-const buttonOutline = {
-  borderWidth: 2,
-  borderColor: '#fff',
-  backgroundColor: 'transparent',
-}
-
 const useStyles = () => {
   const {theme} = useTheme()
+  const {color, typography, padding} = theme
 
+  const buttonOutline = {
+    borderWidth: 2,
+    borderColor: color.gray.min,
+    backgroundColor: 'transparent',
+  }
   const styles = StyleSheet.create({
     block: {
       flex: 1,
     },
     button: {
-      backgroundColor: colors.buttonBackground,
+      backgroundColor: color.secondary[500],
       minHeight: 48,
       maxHeight: 54,
       borderRadius: 8,
@@ -113,49 +112,47 @@ const useStyles = () => {
       ...buttonOutline,
     },
     mainTheme: {
-      backgroundColor: colors.buttonBackgroundMain,
+      backgroundColor: color.primary[500],
     },
     buttonOutlineOnLight: {
       ...buttonOutline,
-      borderColor: colors.buttonBackground,
+      borderColor: color.secondary[500],
     },
     buttonOutlineShelley: {
       ...buttonOutline,
-      borderColor: colors.buttonBackgroundBlue,
+      borderColor: color.primary[600],
     },
     text: {
-      color: 'white',
+      color: color.gray.min,
+      ...typography['body-2-m-medium'],
+      ...padding['s'],
       textAlign: 'center',
-      padding: 8,
-      fontSize: 14,
-      fontWeight: '500',
-      fontFamily: 'Rubik-Medium',
       textTransform: 'uppercase',
     },
     textOutlineOnLight: {
-      color: colors.buttonBackground,
+      color: color.secondary[500],
     },
     textOutlineShelley: {
-      color: colors.buttonBackgroundBlue,
+      color: color.primary[600],
     },
     buttonDisabled: {
       opacity: 0.5,
     },
     shelleyTheme: {
-      backgroundColor: colors.buttonBackgroundBlue,
+      backgroundColor: color.primary[600],
     },
     shelleyOutlineOnLight: {
       backgroundColor: 'transparent',
-      borderColor: colors.buttonBackgroundBlue,
+      borderColor: color.primary[600],
       borderWidth: 2,
     },
     textShelleyOutlineOnLight: {
-      color: colors.buttonBackgroundBlue,
+      color: color.primary[600],
       fontWeight: '600',
     },
     isCopying: {
       position: 'absolute',
-      backgroundColor: '#000',
+      backgroundColor: color.gray.max,
       alignItems: 'center',
       justifyContent: 'center',
       top: -20,
@@ -166,10 +163,8 @@ const useStyles = () => {
     copiedText: {
       color: theme.color['white-static'],
       textAlign: 'center',
-      padding: 8,
-      fontSize: 14,
-      fontWeight: '500',
-      fontFamily: 'Rubik-Medium',
+      ...padding['s'],
+      ...typography['body-2-m-medium'],
     },
   })
 

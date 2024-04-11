@@ -7,6 +7,7 @@ import {SelectedWalletProvider} from '../../../../../SelectedWallet'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {mocks} from '../../../../../yoroi-wallets/mocks'
 import {mocks as governanceMocks} from '../../common'
+import {SelectedWalletProvider} from '../../../../WalletManager/Context'
 import {ChangeVoteScreen} from './ChangeVoteScreen'
 
 storiesOf('Governance/ChangeVoteScreen', module)

@@ -9,10 +9,10 @@ import {Button, KeyboardAvoidingView, Text, TextInput} from '../../../components
 import {LoadingOverlay} from '../../../components/LoadingOverlay'
 import {showErrorDialog} from '../../../dialogs'
 import {errorMessages} from '../../../i18n/global-messages'
-import {useSelectedWallet, useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../../SelectedWallet'
 import {isEmptyString} from '../../../utils/utils'
 import {WrongPassword} from '../../../yoroi-wallets/cardano/errors'
 import {useEnableEasyConfirmation} from '../../../yoroi-wallets/hooks'
+import {useSelectedWallet, useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../WalletManager/Context'
 
 export const EnableEasyConfirmationScreen = () => {
   const intl = useIntl()

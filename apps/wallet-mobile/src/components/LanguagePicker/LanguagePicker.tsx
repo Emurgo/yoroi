@@ -1,10 +1,10 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {FlatList, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 
 import {useLanguage} from '../../i18n'
 import {useSearch, useSearchOnNavBar} from '../../Search/SearchContext'
-import {COLORS} from '../../theme'
 import {Icon} from '../Icon'
 import {Text} from '../Text'
 import {LanguagePickerWarning} from './LanguagePickerWarning'
@@ -12,6 +12,7 @@ import {LanguagePickerWarning} from './LanguagePickerWarning'
 const INCLUDED_LANGUAGE_CODES = ['en-US', 'ja-JP']
 
 export const LanguagePicker = () => {
+  const {styles, colors} = useStyles()
   const language = useLanguage()
   const {languageCode, selectLanguageCode, supportedLanguages} = language
   const strings = useStrings()
@@ -39,7 +40,7 @@ export const LanguagePicker = () => {
           >
             <Text style={styles.itemText}>{label}</Text>
 
-            {languageCode === code && <Icon.Check size={24} color={COLORS.SHELLEY_BLUE} />}
+            {languageCode === code && <Icon.Check size={24} color={colors.icon} />}
           </TouchableOpacity>
         )}
         ItemSeparatorComponent={() => <HR />}
@@ -51,35 +52,44 @@ export const LanguagePicker = () => {
   )
 }
 
-const HR = (props: ViewProps) => <View {...props} style={styles.hr} />
+const HR = (props: ViewProps) => {
+  const {styles} = useStyles()
+  return <View {...props} style={styles.hr} />
+}
 
-const styles = StyleSheet.create({
-  languagePicker: {
-    flex: 1,
-    alignItems: 'stretch',
-  },
-  languageList: {
-    alignItems: 'stretch',
-    padding: 16,
-  },
-  hr: {
-    height: 1,
-    backgroundColor: '#DCE0E9',
-  },
-  item: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 16,
-  },
-  itemText: {
-    fontSize: 16,
-    lineHeight: 24,
-    color: '#242838',
-    fontWeight: '500',
-    fontFamily: 'Rubik-SemiBold',
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, padding, typography} = theme
+
+  const styles = StyleSheet.create({
+    languagePicker: {
+      flex: 1,
+      alignItems: 'stretch',
+    },
+    languageList: {
+      alignItems: 'stretch',
+      ...padding['l'],
+    },
+    hr: {
+      height: 1,
+      backgroundColor: color.gray[200],
+    },
+    item: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      ...padding['y-l'],
+    },
+    itemText: {
+      ...typography['body-1-l-medium'],
+      color: color.gray[900],
+    },
+  })
+  const colors = {
+    icon: color.primary[600],
+  }
+  return {styles, colors}
+}
 
 const useStrings = () => {
   const intl = useIntl()

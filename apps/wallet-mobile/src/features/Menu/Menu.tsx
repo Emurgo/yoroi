@@ -9,14 +9,14 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useCanVote} from '../../Catalyst/hooks'
 import {InsufficientFundsModal} from '../../Catalyst/InsufficientFundsModal'
-import {Boundary, Icon, Spacer, Text} from '../../components'
+import {Boundary, Hr, Icon, Spacer, Text} from '../../components'
 import {usePrefetchStakingInfo} from '../../Dashboard/StakePoolInfos'
 import {CONFIG} from '../../legacy/config'
 import {useMetrics} from '../../metrics/metricsManager'
 import {defaultStackNavigationOptions, useWalletNavigation} from '../../navigation'
-import {useSelectedWallet} from '../../SelectedWallet'
 import {lightPalette} from '../../theme'
 import {useIsGovernanceFeatureEnabled} from '../Staking/Governance'
+import {useSelectedWallet} from '../WalletManager/Context'
 
 const MenuStack = createStackNavigator()
 
@@ -55,13 +55,13 @@ export const Menu = () => {
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
       <ScrollView contentContainerStyle={styles.scrollViewContent} bounces={false}>
-        {CONFIG.DAPP_EXPLORER_ENABLED && (
-          <StakingCenter
-            label={strings.stakingCenter}
-            onPress={navigateTo.stakingCenter}
-            left={<Icon.Staking size={24} color={lightPalette.gray['600']} />}
-          />
-        )}
+        <AppSettings
+          label={strings.stakingCenter}
+          onPress={navigateTo.stakingCenter}
+          left={<Icon.TabStaking size={24} color={lightPalette.gray['600']} />}
+        />
+
+        <Hr />
 
         <AppSettings //
           label={strings.settings}
@@ -164,7 +164,6 @@ const Item = ({
 const Governance = Item
 const AppSettings = Item
 const KnowledgeBase = Item
-const StakingCenter = Item
 const Catalyst = ({label, left, onPress}: {label: string; left: React.ReactElement; onPress: () => void}) => {
   const wallet = useSelectedWallet()
   const {canVote, sufficientFunds} = useCanVote(wallet)
@@ -208,11 +207,11 @@ const useNavigateTo = () => {
         },
       })
     },
+    stakingCenter: () => navigateToStakingDashboard(),
     settings: () => navigateToSettings(),
     support: () => Linking.openURL(SUPPORT_TICKET_LINK),
     knowledgeBase: () => Linking.openURL(KNOWLEDGE_BASE_LINK),
     governanceCentre: () => navigateToGovernanceCentre(),
-    stakingCenter: () => navigateToStakingDashboard(),
   }
 }
 
@@ -222,13 +221,13 @@ const useStrings = () => {
   return {
     catalystVoting: intl.formatMessage(messages.catalystVoting),
     settings: intl.formatMessage(messages.settings),
+    stakingCenter: intl.formatMessage(messages.stakingCenter),
     supportTitle: intl.formatMessage(messages.supportTitle),
     supportLink: intl.formatMessage(messages.supportLink),
     knowledgeBase: intl.formatMessage(messages.knowledgeBase),
     menu: intl.formatMessage(messages.menu),
     releases: intl.formatMessage(messages.releases),
     governanceCentre: intl.formatMessage(messages.governanceCentre),
-    stakingCenter: intl.formatMessage(messages.stakingCenter),
   }
 }
 
@@ -236,6 +235,10 @@ const messages = defineMessage({
   catalystVoting: {
     id: 'menu.catalystVoting',
     defaultMessage: '!!!Catalyst voting',
+  },
+  stakingCenter: {
+    id: 'menu.stakingCenter',
+    defaultMessage: '!!!Staking',
   },
   settings: {
     id: 'menu.settings',
@@ -264,10 +267,6 @@ const messages = defineMessage({
   governanceCentre: {
     id: 'menu.governanceCentre',
     defaultMessage: '!!!Governance centre',
-  },
-  stakingCenter: {
-    id: 'menu.stakingCenter',
-    defaultMessage: '!!!Staking center',
   },
 })
 
