@@ -59,7 +59,7 @@ export const RecoveryPhraseScreen = () => {
     }, [track]),
   )
 
-  const handleOnShowModal = () => {
+  const handleOnShowModal = React.useCallback(() => {
     openModal(
       strings.recoveryPhraseModalTitle,
       <View style={styles.modal}>
@@ -92,7 +92,27 @@ export const RecoveryPhraseScreen = () => {
       </View>,
       HEIGHT_MODAL,
     )
-  }
+  }, [
+    HEIGHT_MODAL,
+    closeModal,
+    openModal,
+    strings.continueButton,
+    strings.recoveryPhraseCardFifthItem,
+    strings.recoveryPhraseCardFirstItem,
+    strings.recoveryPhraseCardFourthItem,
+    strings.recoveryPhraseCardSecondItem,
+    strings.recoveryPhraseCardThirdItem,
+    strings.recoveryPhraseCardTitle,
+    strings.recoveryPhraseModalTitle,
+    styles.button,
+    styles.content,
+    styles.modal,
+  ])
+
+  React.useEffect(() => {
+    handleOnShowModal()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>

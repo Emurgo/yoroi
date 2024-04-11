@@ -194,10 +194,10 @@ const useStyles = () => {
       backgroundColor: theme.color.primary[500],
     },
     linkText: {
+      ...theme.typography['button-2-m'],
       color: theme.color.primary[500],
     },
     link: {
-      ...theme.typography['button-2-m'],
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',

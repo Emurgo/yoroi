@@ -130,7 +130,6 @@ export const WalletDetailsScreen = () => {
   }, [createWallet, mnemonic, name, networkId, password, track, walletImplementationId])
 
   const showModalTipsPassword = () => {
-    Keyboard.dismiss()
     openModal(
       strings.walletDetailsModalTitle,
       <View style={styles.modal}>
@@ -167,6 +166,11 @@ export const WalletDetailsScreen = () => {
       HEIGHT_MODAL_NAME_PASSWORD,
     )
   }
+
+  React.useEffect(() => {
+    showModalTipsPassword()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const showModalTipsPlateNumber = () => {
     Keyboard.dismiss()
