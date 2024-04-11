@@ -1,12 +1,12 @@
 import {NavigationProp, useNavigation} from '@react-navigation/native'
-import {useRef} from 'react'
+import * as React from 'react'
 
 import {DiscoverRoutes} from '../../../navigation'
 
 export const useNavigateTo = () => {
   const navigation = useNavigation<NavigationProp<DiscoverRoutes>>()
 
-  return useRef({
+  return React.useRef({
     goBack: () => navigation.goBack(),
     browserSearch: (isEdit = false) => {
       return navigation.navigate('browser', {

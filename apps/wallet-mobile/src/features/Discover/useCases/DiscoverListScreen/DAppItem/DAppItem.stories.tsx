@@ -1,5 +1,5 @@
 import {storiesOf} from '@storybook/react-native'
-import React from 'react'
+import * as React from 'react'
 
 import CardanoSpot from '../../../../../assets/img/dApp/cardano-spot.png'
 import {DAppItem} from './DAppItem'

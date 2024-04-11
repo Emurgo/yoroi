@@ -22,6 +22,7 @@ import {
 import {SelectWalletFromList} from './features/SetupWallet/useCases/SelectWalletFromList'
 import {GovernanceNavigator} from './features/Staking/Governance'
 import {ToggleAnalyticsSettingsNavigator} from './features/ToggleAnalyticsSettings'
+import {CONFIG} from './legacy/config'
 import {useMetrics} from './metrics/metricsManager'
 import {defaultStackNavigationOptions, hideTabBarForRoutes, WalletStackRoutes, WalletTabRoutes} from './navigation'
 import {NftDetailsNavigator} from './NftDetails/NftDetailsNavigator'
@@ -37,7 +38,7 @@ const Tab = createBottomTabNavigator<WalletTabRoutes>()
 const WalletTabNavigator = () => {
   const strings = useStrings()
   const {colors} = useStyles()
-  const initialRoute = /* isHaskellShelley(wallet.walletImplementationId) ? 'staking-dashboard' :*/ 'history'
+  const initialRoute = 'history'
 
   const [isKeyboardOpen, setIsKeyboardOpen] = React.useState(false)
 
@@ -115,7 +116,28 @@ const WalletTabNavigator = () => {
           )}
         </Tab.Screen>
 
-        {/* {isHaskellShelley(wallet.walletImplementationId) && (
+        {CONFIG.DAPP_EXPLORER_ENABLED ? (
+          <Tab.Screen
+            name="discover"
+            options={({route}: {route: RouteProp<WalletTabRoutes, 'discover'>}) => ({
+              tabBarIcon: ({focused}) => (
+                <Icon.Discover
+                  size={28}
+                  color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
+                />
+              ),
+              tabBarLabel: strings.discoverTabBarLabel,
+              tabBarTestID: 'discoverTabBarButton',
+              tabBarStyle: hideTabBarForRoutes(route),
+            })}
+          >
+            {() => (
+              <SearchProvider>
+                <DiscoverNavigator />
+              </SearchProvider>
+            )}
+          </Tab.Screen>
+        ) : (
           <Tab.Screen
             name="staking-dashboard"
             component={DashboardNavigator}
@@ -127,28 +149,7 @@ const WalletTabNavigator = () => {
               tabBarTestID: 'stakingTabBarButton',
             }}
           />
-        )} */}
-
-        <Tab.Screen
-          name="discover"
-          options={({route}: {route: RouteProp<WalletTabRoutes, 'discover'>}) => ({
-            tabBarIcon: ({focused}) => (
-              <Icon.Discover
-                size={28}
-                color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
-              />
-            ),
-            tabBarLabel: strings.discoverTabBarLabel,
-            tabBarTestID: 'discoverTabBarButton',
-            tabBarStyle: hideTabBarForRoutes(route),
-          })}
-        >
-          {() => (
-            <SearchProvider>
-              <DiscoverNavigator />
-            </SearchProvider>
-          )}
-        </Tab.Screen>
+        )}
 
         <Tab.Screen
           name="menu"

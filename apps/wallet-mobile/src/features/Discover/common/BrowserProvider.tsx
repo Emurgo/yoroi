@@ -1,6 +1,6 @@
 import {invalid, useAsyncStorage} from '@yoroi/common'
 import {produce} from 'immer'
-import React, {createContext, ReactNode, useContext, useEffect} from 'react'
+import * as React from 'react'
 
 import {useSelectedWallet} from '../../../features/WalletManager/Context'
 
@@ -37,7 +37,7 @@ type BrowserContextState = Readonly<{
 
 export type BrowserProviderContext = BrowserContextState & BrowserContextActions
 
-const BrowserContext = createContext<BrowserProviderContext>({
+const BrowserContext = React.createContext<BrowserProviderContext>({
   ...initialBrowserState,
   ...defaultBrowserActions,
 })
@@ -49,7 +49,7 @@ export const BrowserProvider = ({
   children,
   initialState,
 }: {
-  children: ReactNode
+  children: React.ReactNode
   initialState?: Partial<BrowserContextState>
 }) => {
   const storage = useAsyncStorage()
@@ -61,12 +61,12 @@ export const BrowserProvider = ({
     ...initialState,
   })
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (browserState.status === 'waiting') return
     browserStorage.setItem(storageBrowserState, JSON.stringify(browserState))
   }, [browserState, browserStorage])
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (browserState.status === 'active') return
     browserStorage.getItem(storageBrowserState).then((browserStorage) => {
       if (Boolean(browserStorage) && typeof browserStorage === 'string') {
@@ -106,7 +106,7 @@ export const BrowserProvider = ({
 }
 
 export const useBrowser = () =>
-  useContext(BrowserContext) ?? invalid('useBrowser: needs to be wrapped in a BrowserProvider')
+  React.useContext(BrowserContext) ?? invalid('useBrowser: needs to be wrapped in a BrowserProvider')
 
 enum BrowserAction {
   AddBrowserTab = 'addBrowserTab',

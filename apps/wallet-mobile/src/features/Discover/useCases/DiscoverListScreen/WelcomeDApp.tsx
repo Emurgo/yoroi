@@ -1,5 +1,5 @@
 import {useTheme} from '@yoroi/theme'
-import React, {useEffect} from 'react'
+import * as React from 'react'
 import {Image, StyleSheet, Text, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
@@ -18,7 +18,7 @@ export const WelcomeDApp = () => {
 
   const dialogHeight = DIALOG_WELCOME_DAPP_HEIGHT + insets.bottom
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (loadingGetShowedWelcomeDApp || isShowedWelcomeDApp) return
 
     openModal(strings.welcomeToYoroiDAppExplorer, <WelcomeDAppModal />, dialogHeight)

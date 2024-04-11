@@ -1,5 +1,5 @@
 import {useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 export const DAppItemSkeleton = () => {

@@ -1,6 +1,6 @@
 import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
-import React, {useState} from 'react'
+import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {LayoutAnimation, StyleSheet, View} from 'react-native'
 
@@ -27,9 +27,9 @@ export const TxHistory = () => {
   const strings = useStrings()
   const styles = useStyles()
   const wallet = useSelectedWallet()
-  const [showWarning, setShowWarning] = useState(isByron(wallet.walletImplementationId))
+  const [showWarning, setShowWarning] = React.useState(isByron(wallet.walletImplementationId))
 
-  const [activeTab, setActiveTab] = useState<Tab>('transactions')
+  const [activeTab, setActiveTab] = React.useState<Tab>('transactions')
 
   const onSelectTab = (tab: Tab) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
@@ -39,7 +39,7 @@ export const TxHistory = () => {
   const {sync, isLoading} = useSync(wallet)
   useFocusEffect(React.useCallback(() => sync(), [sync]))
 
-  const [expanded, setExpanded] = useState(true)
+  const [expanded, setExpanded] = React.useState(true)
   const onScroll = useOnScroll({
     onScrollUp: () => setExpanded(true),
     onScrollDown: () => setExpanded(false),

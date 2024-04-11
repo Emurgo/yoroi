@@ -1,5 +1,5 @@
 import {useTheme} from '@yoroi/theme'
-import React, {useRef} from 'react'
+import * as React from 'react'
 import {FlatList, StyleSheet, View} from 'react-native'
 
 import {Spacer} from '../../../../components'
@@ -9,7 +9,7 @@ import {WebViewItem} from './WebViewItem'
 
 export const BrowseDappScreen = () => {
   const {styles} = useStyles()
-  const flatListRef = useRef<FlatList>(null)
+  const flatListRef = React.useRef<FlatList>(null)
   const {tabs, switchTabOpen} = useBrowser()
 
   return (

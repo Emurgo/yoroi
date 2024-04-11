@@ -1,6 +1,6 @@
 import {RouteProp, useIsFocused, useRoute} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
-import React, {useEffect, useState} from 'react'
+import * as React from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import uuid from 'uuid'
 
@@ -28,7 +28,7 @@ export const BrowseSearchDappScreen = () => {
   const navigateTo = useNavigateTo()
   const {addBrowserTab, setTabActive, updateTab, tabs, tabActiveIndex} = useBrowser()
   const tabActive = tabs[tabActiveIndex]
-  const [searchValue, setSearchValue] = useState('')
+  const [searchValue, setSearchValue] = React.useState('')
 
   const isFocused = useIsFocused()
   const googleItem = getGoogleSearchItem(searchValue)
@@ -41,7 +41,7 @@ export const BrowseSearchDappScreen = () => {
     }
   }
 
-  useEffect(() => {
+  React.useEffect(() => {
     const handleSetUrl = () => {
       if (isEdit) {
         setSearchValue(tabActive?.url)

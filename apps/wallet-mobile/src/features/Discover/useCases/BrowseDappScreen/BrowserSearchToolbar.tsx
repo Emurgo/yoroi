@@ -1,5 +1,5 @@
 import {useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {StyleSheet, TextInput, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
 import {Icon} from '../../../../components'

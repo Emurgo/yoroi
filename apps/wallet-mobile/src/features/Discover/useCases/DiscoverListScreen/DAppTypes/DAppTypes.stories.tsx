@@ -1,5 +1,5 @@
 import {storiesOf} from '@storybook/react-native'
-import React from 'react'
+import * as React from 'react'
 
 import {DAppCategory, TDAppCategory} from '../../../../../features/Discover/common/DAppMock'
 import {DAppTypes} from './DAppTypes'

@@ -1,5 +1,5 @@
 import {useTheme} from '@yoroi/theme'
-import React, {PropsWithChildren, RefObject} from 'react'
+import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import Share from 'react-native-share'
@@ -10,7 +10,7 @@ import {useBrowser} from '../../common/BrowserProvider'
 import {WebViewState} from './WebViewItem'
 
 type Props = {
-  webViewRef: RefObject<WebView>
+  webViewRef: React.RefObject<WebView>
   webViewState: WebViewState
 }
 export const BrowserTabBar = ({webViewRef, webViewState}: Props) => {
@@ -80,7 +80,7 @@ export const BrowserTabBar = ({webViewRef, webViewState}: Props) => {
   )
 }
 
-const Touch = ({children, ...props}: PropsWithChildren<TouchableOpacityProps>) => {
+const Touch = ({children, ...props}: React.PropsWithChildren<TouchableOpacityProps>) => {
   const {styles} = useStyles()
 
   return (

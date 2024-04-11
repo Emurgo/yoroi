@@ -14,6 +14,7 @@ import {
 import {useIsGovernanceFeatureEnabled} from '../features/Staking/Governance'
 import {useSelectedWallet} from '../features/WalletManager/Context'
 import globalMessages from '../i18n/global-messages'
+import {CONFIG} from '../legacy/config'
 import {Modal} from '../legacy/Modal'
 import {useWalletNavigation} from '../navigation'
 import {isEmptyString} from '../utils/utils'
@@ -151,14 +152,32 @@ export const Dashboard = () => {
 const useNavigateTo = () => {
   const navigation = useNavigation()
 
+  if (CONFIG.DAPP_EXPLORER_ENABLED)
+    return {
+      stakingCenter: () => {
+        navigation.navigate('app-root', {
+          screen: 'staking-dashboard',
+          params: {
+            screen: 'staking-center',
+            params: {
+              screen: 'staking-center-main',
+            },
+          },
+        })
+      },
+    }
+
   return {
     stakingCenter: () => {
       navigation.navigate('app-root', {
-        screen: 'staking-dashboard',
+        screen: 'main-wallet-routes',
         params: {
-          screen: 'staking-center',
+          screen: 'staking-dashboard',
           params: {
-            screen: 'staking-center-main',
+            screen: 'staking-center',
+            params: {
+              screen: 'staking-center-main',
+            },
           },
         },
       })
