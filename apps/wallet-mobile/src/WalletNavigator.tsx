@@ -28,7 +28,6 @@ import {defaultStackNavigationOptions, hideTabBarForRoutes, WalletStackRoutes, W
 import {NftDetailsNavigator} from './NftDetails/NftDetailsNavigator'
 import {NftsNavigator} from './Nfts/NftsNavigator'
 import {SearchProvider} from './Search/SearchContext'
-import {theme} from './theme'
 import {TxHistoryNavigator} from './TxHistory'
 import {useWalletManager} from './wallet-manager/WalletManagerContext'
 import {useAuthSetting, useIsAuthOsSupported} from './yoroi-wallets/auth'
@@ -120,12 +119,7 @@ const WalletTabNavigator = () => {
           <Tab.Screen
             name="discover"
             options={({route}: {route: RouteProp<WalletTabRoutes, 'discover'>}) => ({
-              tabBarIcon: ({focused}) => (
-                <Icon.Discover
-                  size={28}
-                  color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
-                />
-              ),
+              tabBarIcon: ({focused}) => <Icon.Discover size={28} color={focused ? colors.active : colors.inactive} />,
               tabBarLabel: strings.discoverTabBarLabel,
               tabBarTestID: 'discoverTabBarButton',
               tabBarStyle: hideTabBarForRoutes(route),
