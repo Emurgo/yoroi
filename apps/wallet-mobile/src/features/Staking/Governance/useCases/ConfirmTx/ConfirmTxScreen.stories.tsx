@@ -4,10 +4,9 @@ import {GovernanceProvider} from '@yoroi/staking'
 import React from 'react'
 
 import {SafeArea} from '../../../../../components/SafeArea'
-import {SelectedWalletProvider} from '../../../../../SelectedWallet'
 import {mocks} from '../../../../../yoroi-wallets/mocks'
-import {mocks as governanceMocks} from '../../common'
 import {SelectedWalletProvider} from '../../../../WalletManager/Context'
+import {mocks as governanceMocks} from '../../common'
 import {Routes} from '../../common/navigation'
 import {ConfirmTxScreen} from './ConfirmTxScreen'
 

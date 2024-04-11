@@ -19,11 +19,8 @@ const useDappConnector = () => {
   return React.useMemo(() => createDappConnector(appStorage), [appStorage])
 }
 
-export const useConnectWalletToWebView = (
-  wallet: YoroiWallet,
-  webViewRef: React.RefObject<WebView | null>,
-  sessionId: string,
-) => {
+export const useConnectWalletToWebView = (wallet: YoroiWallet, webViewRef: React.RefObject<WebView | null>) => {
+  const [sessionId] = React.useState(() => Math.random().toString(36).substring(7))
   const dappConnector = useDappConnector()
 
   const sendMessageToWebView = (event: string) => (id: string, result: unknown, error?: Error) => {
@@ -64,7 +61,7 @@ export const useConnectWalletToWebView = (
     webViewRef.current?.injectJavaScript(getInitScript(sessionId, dappConnector))
   }, [wallet, webViewRef, sessionId, dappConnector])
 
-  return {handleEvent: handleWebViewEvent, initScript: getInitScript(sessionId, dappConnector)}
+  return {handleEvent: handleWebViewEvent, initScript: getInitScript(sessionId, dappConnector), sessionId}
 }
 
 const getInjectableMessage = (message: unknown) => {

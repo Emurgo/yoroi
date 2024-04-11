@@ -8,6 +8,8 @@ import WebView from 'react-native-webview'
 import {WebViewNavigation, WebViewNavigationEvent} from 'react-native-webview/lib/WebViewTypes'
 
 import {Icon, Spacer} from '../../../../components'
+import {useConnectWalletToWebView} from '../../../DappExplorer/common/hooks'
+import {useSelectedWallet} from '../../../WalletManager/Context'
 import {TabItem, useBrowser} from '../../common/BrowserProvider'
 import {getDomainFromUrl} from '../../common/helpers'
 import {useNavigateTo} from '../../common/useNavigateTo'
@@ -32,9 +34,12 @@ export const WebViewItem = ({tab, index}: Props) => {
   const isTabActive = index === tabActiveIndex
   const navigationTo = useNavigateTo()
   const insets = useSafeAreaInsets()
+  const wallet = useSelectedWallet()
 
   const scaleXWebview = useSharedValue(1)
   const opacityValue = useSharedValue(0)
+
+  useConnectWalletToWebView(wallet, webViewRef)
 
   const containerStyleAnimated = useAnimatedStyle(() => {
     return {
