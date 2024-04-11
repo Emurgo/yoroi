@@ -129,7 +129,7 @@ export const WalletDetailsScreen = () => {
     })
   }, [createWallet, mnemonic, name, networkId, password, track, walletImplementationId])
 
-  const showModalTipsPassword = () => {
+  const showModalTipsPassword = React.useCallback(() => {
     openModal(
       strings.walletDetailsModalTitle,
       <View style={styles.modal}>
@@ -165,7 +165,21 @@ export const WalletDetailsScreen = () => {
       </View>,
       HEIGHT_MODAL_NAME_PASSWORD,
     )
-  }
+  }, [
+    HEIGHT_MODAL_NAME_PASSWORD,
+    closeModal,
+    openModal,
+    strings.continueButton,
+    strings.walletDetailsModalTitle,
+    strings.walletNameModalCardFirstItem,
+    strings.walletNameModalCardSecondItem,
+    strings.walletNameModalCardTitle,
+    strings.walletPasswordModalCardFirstItem,
+    strings.walletPasswordModalCardSecondItem,
+    strings.walletPasswordModalCardTitle,
+    styles.button,
+    styles.modal,
+  ])
 
   React.useEffect(() => {
     showModalTipsPassword()
