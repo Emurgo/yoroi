@@ -14,8 +14,7 @@ import {DAppItem} from '../SelectDappFromList/DAppItem/DAppItem'
 
 const getUrl = (searchValue: string, isEngineSearch: boolean) => {
   if (isEngineSearch || !validUrl(searchValue)) {
-    const searchUrl = 'https://www.google.com/search?q=' + encodeURIComponent(searchValue)
-    return searchUrl
+    return 'https://www.google.com/search?q=' + encodeURIComponent(searchValue)
   }
 
   return urlWithProtocol(searchValue)
@@ -37,7 +36,7 @@ export const SearchDappInBrowserScreen = () => {
     if (tabActiveIndex >= 0) {
       navigateTo.browserView()
     } else {
-      navigateTo.discover()
+      navigateTo.selectDappFromList()
     }
   }
 
@@ -62,17 +61,17 @@ export const SearchDappInBrowserScreen = () => {
   const handleSubmit = (isEngineSearch: boolean) => {
     if (searchValue === '') return
 
-    let tabId = ''
     const url = getUrl(searchValue, isEngineSearch)
 
     if (isEdit) {
       updateTab(tabActiveIndex, {url})
-      tabId = tabActive.id
-    } else {
-      tabId = uuid.v4()
-      addBrowserTab(url, tabId)
-      setTabActive(tabs.length)
+      navigateTo.browserView()
+      return
     }
+
+    const tabId = uuid.v4()
+    addBrowserTab(url, tabId)
+    setTabActive(tabs.length)
     navigateTo.browserView()
   }
 

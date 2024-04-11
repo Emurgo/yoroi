@@ -72,7 +72,7 @@ export const WebViewItem = ({tab, index}: Props) => {
       switchTab(false)
       removeTab(index)
       setTabActive(-1)
-      navigationTo.discover()
+      navigationTo.selectDappFromList()
       return
     }
 

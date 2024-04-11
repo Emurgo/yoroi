@@ -258,7 +258,7 @@ export type SendConfirmParams = {
 }
 
 export type DiscoverRoutes = {
-  'discover-list': undefined
+  'select-dapp-from-list': undefined
   browser: NavigatorScreenParams<BrowserRoutes>
 }
 

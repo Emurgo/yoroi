@@ -6,7 +6,7 @@ import {defaultStackNavigationOptions, DiscoverRoutes} from '../../navigation'
 import {BrowserNavigator} from './BrowserNavigator'
 import {BrowserProvider} from './common/BrowserProvider'
 import {useStrings} from './common/useStrings'
-import {DiscoverListScreen} from './useCases/DiscoverListScreen/DiscoverListScreen'
+import {SelectDappFromListScreen} from './useCases/SelectDappFromList/SelectDappFromListScreen'
 
 const Stack = createStackNavigator<DiscoverRoutes>()
 
@@ -23,11 +23,11 @@ export const DiscoverNavigator = () => {
           detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
           gestureEnabled: true,
         }}
-        initialRouteName="discover-list"
+        initialRouteName="select-dapp-from-list"
       >
         <Stack.Screen
-          name="discover-list"
-          component={DiscoverListScreen}
+          name="select-dapp-from-list"
+          component={SelectDappFromListScreen}
           options={{
             title: strings.discoverTitle,
           }}

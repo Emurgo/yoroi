@@ -16,11 +16,11 @@ export const BrowserToolbar = ({uri}: Props) => {
   const {isSecure, domainName} = getDomainFromUrl(uri)
 
   const handleCloseBrowser = () => {
-    navigateTo.discover()
+    navigateTo.selectDappFromList()
   }
 
   const handleEditUrl = () => {
-    navigateTo.browserSearch(true)
+    navigateTo.browserSearch({isEdit: true})
   }
 
   return (
