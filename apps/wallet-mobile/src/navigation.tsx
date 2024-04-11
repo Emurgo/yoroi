@@ -272,7 +272,10 @@ export type BrowserRoutes = {
 export type DashboardRoutes = {
   'staking-dashboard-main': undefined
   'staking-center': NavigatorScreenParams<StakingCenterRoutes>
-  'delegation-confirmation': undefined
+  'delegation-confirmation': {
+    poolId: string
+    yoroiUnsignedTx: YoroiUnsignedTx
+  }
 }
 
 export type VotingRegistrationRoutes = {

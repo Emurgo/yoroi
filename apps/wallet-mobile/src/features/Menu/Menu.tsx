@@ -13,7 +13,7 @@ import {Boundary, Hr, Icon, Spacer, Text} from '../../components'
 import {usePrefetchStakingInfo} from '../../Dashboard/StakePoolInfos'
 import {useMetrics} from '../../metrics/metricsManager'
 import {defaultStackNavigationOptions, useWalletNavigation} from '../../navigation'
-import {lightPalette} from '../../theme'
+import {usePoolTransition} from '../../Staking/PoolTransition/usePoolTransition'
 import {useIsGovernanceFeatureEnabled} from '../Staking/Governance'
 import {useSelectedWallet} from '../WalletManager/Context'
 
@@ -39,9 +39,10 @@ export const MenuNavigator = () => {
 
 export const Menu = () => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {styles, color} = useStyles()
   const navigateTo = useNavigateTo()
   const wallet = useSelectedWallet()
+  const {isPoolRetiring} = usePoolTransition()
   const {track} = useMetrics()
 
   useFocusEffect(
@@ -54,10 +55,11 @@ export const Menu = () => {
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
       <ScrollView contentContainerStyle={styles.scrollViewContent} bounces={false}>
-        <AppSettings
+        <Staking
           label={strings.stakingCenter}
           onPress={navigateTo.stakingCenter}
-          left={<Icon.TabStaking size={24} color={lightPalette.gray['600']} />}
+          left={<Icon.TabStaking size={24} color={color.gray['600']} />}
+          right={isPoolRetiring ? <Icon.Warning size={24} color={color.magenta[500]} /> : null}
         />
 
         <Hr />
@@ -65,29 +67,29 @@ export const Menu = () => {
         <AppSettings //
           label={strings.settings}
           onPress={navigateTo.settings}
-          left={<Icon.Gear size={24} color={lightPalette.gray['600']} />}
+          left={<Icon.Gear size={24} color={color.gray['600']} />}
         />
-
-        <Boundary loading={{size: 'small', style: {padding: 16}}} error={{size: 'inline'}}>
-          <Catalyst //
-            label={strings.catalystVoting}
-            onPress={navigateTo.catalystVoting}
-            left={<Icon.Catalyst size={24} color={lightPalette.gray['600']} />}
-          />
-        </Boundary>
 
         {isGovernanceFeatureEnabled && (
           <Governance
             label={strings.governanceCentre}
             onPress={navigateTo.governanceCentre}
-            left={<Icon.Governance size={24} color={lightPalette.gray['600']} />}
+            left={<Icon.Governance size={24} color={color.gray['600']} />}
           />
         )}
+
+        <Boundary loading={{size: 'small', style: {padding: 16}}} error={{size: 'inline'}}>
+          <Catalyst //
+            label={strings.catalystVoting}
+            onPress={navigateTo.catalystVoting}
+            left={<Icon.Catalyst size={24} color={color.gray['600']} />}
+          />
+        </Boundary>
 
         <KnowledgeBase //
           label={strings.knowledgeBase}
           onPress={navigateTo.knowledgeBase}
-          left={<Icon.Info size={24} color={lightPalette.gray['600']} />}
+          left={<Icon.Info size={24} color={color.gray['600']} />}
         />
 
         <Spacer fill />
@@ -100,7 +102,7 @@ export const Menu = () => {
 
 const SupportLink = () => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {styles} = useStyles()
   const navigateTo = useNavigateTo()
 
   return (
@@ -137,7 +139,7 @@ const Item = ({
   right?: React.ReactElement | null
   onPress: () => void
 }) => {
-  const styles = useStyles()
+  const {styles, color} = useStyles()
 
   return (
     <TouchableOpacity onPress={onPress} style={styles.item} disabled={disabled}>
@@ -145,9 +147,7 @@ const Item = ({
 
       <Spacer width={12} />
 
-      <Text style={{fontFamily: 'Rubik-Medium', fontSize: 16, lineHeight: 24, color: lightPalette.gray['900']}}>
-        {label}
-      </Text>
+      <Text style={{fontFamily: 'Rubik-Medium', fontSize: 16, lineHeight: 24, color: color.gray['900']}}>{label}</Text>
 
       <Spacer fill />
 
@@ -155,11 +155,12 @@ const Item = ({
 
       <Spacer width={8} />
 
-      <Icon.Chevron direction="right" size={28} color={lightPalette.gray['600']} />
+      <Icon.Chevron direction="right" size={28} color={color.gray['600']} />
     </TouchableOpacity>
   )
 }
 
+const Staking = Item
 const Governance = Item
 const AppSettings = Item
 const KnowledgeBase = Item
@@ -231,6 +232,10 @@ const useStrings = () => {
 }
 
 const messages = defineMessage({
+  staking: {
+    id: 'menu.staking',
+    defaultMessage: '!!!Staking center',
+  },
   catalystVoting: {
     id: 'menu.catalystVoting',
     defaultMessage: '!!!Catalyst voting',
@@ -309,5 +314,5 @@ const useStyles = () => {
     },
   })
 
-  return styles
+  return {styles, color}
 }
