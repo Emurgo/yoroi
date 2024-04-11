@@ -8,20 +8,20 @@ import {Button, useModal} from '../../../../components'
 import {useShowWelcomeDApp} from '../../common/useShowWelcomeDApp'
 import {useStrings} from '../../common/useStrings'
 
-const DIALOG_WELCOME_DAPP_HEIGHT = 494
+const WELCOME_DAPP_MODAL_HEIGHT = 494
 
-export const WelcomeDApp = () => {
+export const WelcomeDAppModal = () => {
   const strings = useStrings()
   const insets = useSafeAreaInsets()
   const {openModal} = useModal()
   const {isShowedWelcomeDApp, setShowedWelcomeDApp, loadingGetShowedWelcomeDApp} = useShowWelcomeDApp()
 
-  const dialogHeight = DIALOG_WELCOME_DAPP_HEIGHT + insets.bottom
+  const dialogHeight = WELCOME_DAPP_MODAL_HEIGHT + insets.bottom
 
   React.useEffect(() => {
     if (loadingGetShowedWelcomeDApp || isShowedWelcomeDApp) return
 
-    openModal(strings.welcomeToYoroiDAppExplorer, <WelcomeDAppModal />, dialogHeight)
+    openModal(strings.welcomeToYoroiDAppExplorer, <Modal />, dialogHeight)
     setShowedWelcomeDApp()
   }, [
     dialogHeight,
@@ -57,7 +57,7 @@ const useStyles = () => {
   return {styles} as const
 }
 
-const WelcomeDAppModal = () => {
+const Modal = () => {
   const {styles} = useStyles()
   const strings = useStrings()
   const {closeModal} = useModal()

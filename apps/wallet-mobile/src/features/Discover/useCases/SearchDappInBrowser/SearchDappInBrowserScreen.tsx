@@ -9,8 +9,8 @@ import {useBrowser} from '../../common/BrowserProvider'
 import {getGoogleSearchItem} from '../../common/DAppMock'
 import {urlWithProtocol, validUrl} from '../../common/helpers'
 import {useNavigateTo} from '../../common/useNavigateTo'
-import {BrowserSearchToolbar} from '../BrowseDappScreen/BrowserSearchToolbar'
-import {DAppItem} from '../DiscoverListScreen/DAppItem/DAppItem'
+import {BrowserSearchToolbar} from '../BrowseDapp/BrowserSearchToolbar'
+import {DAppItem} from '../SelectDappFromList/DAppItem/DAppItem'
 
 const getUrl = (searchValue: string, isEngineSearch: boolean) => {
   if (isEngineSearch || !validUrl(searchValue)) {
@@ -21,7 +21,7 @@ const getUrl = (searchValue: string, isEngineSearch: boolean) => {
   return urlWithProtocol(searchValue)
 }
 
-export const BrowseSearchDappScreen = () => {
+export const SearchDappInBrowserScreen = () => {
   const {styles} = useStyles()
   const router = useRoute<RouteProp<BrowserRoutes, 'browser-search'>>()
   const {isEdit} = router.params ?? {isEdit: false}

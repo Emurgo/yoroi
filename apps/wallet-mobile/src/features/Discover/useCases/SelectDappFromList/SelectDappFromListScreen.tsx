@@ -14,7 +14,7 @@ import {DAppExplorerTabItem} from './DAppExplorerTabItem/DAppExplorerTabItem'
 import {DAppItem} from './DAppItem/DAppItem'
 import {DAppItemSkeleton} from './DAppItem/DAppItemSkeleton'
 import {DAppTypes} from './DAppTypes/DAppTypes'
-import {WelcomeDApp} from './WelcomeDApp'
+import {WelcomeDAppModal} from './WelcomeDAppModal'
 
 const DAppTabs = {
   connected: 'connected',
@@ -22,7 +22,7 @@ const DAppTabs = {
 } as const
 type TDAppTabs = keyof typeof DAppTabs
 
-export const DiscoverListScreen = () => {
+export const SelectDappFromListScreen = () => {
   const styles = useStyles()
   const strings = useStrings()
   const {search, visible} = useSearch()
@@ -140,7 +140,7 @@ export const DiscoverListScreen = () => {
 
   return (
     <>
-      <WelcomeDApp />
+      <WelcomeDAppModal />
 
       <View style={[styles.root]}>
         {loadingDAppsList ? (

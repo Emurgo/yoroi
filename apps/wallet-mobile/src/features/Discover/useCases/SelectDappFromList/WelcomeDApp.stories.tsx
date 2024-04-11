@@ -1,19 +1,19 @@
 import {storiesOf} from '@storybook/react-native'
 import * as React from 'react'
 
-import {SelectedWalletProvider} from '../../../../features/WalletManager/Context'
 import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks'
+import {SelectedWalletProvider} from '../../../WalletManager/Context'
 import {BrowserProvider} from '../../common/BrowserProvider'
-import {WelcomeDApp} from './WelcomeDApp'
+import {WelcomeDAppModal} from './WelcomeDAppModal'
 
-storiesOf('Discover WelcomeDApp', module)
+storiesOf('Discover WelcomeDAppModal', module)
   .addDecorator((story) => <SelectedWalletProvider wallet={walletMocks.wallet}>{story()}</SelectedWalletProvider>)
   .add('initial', () => <Initial />)
 
 const Initial = () => {
   return (
     <BrowserProvider>
-      <WelcomeDApp />
+      <WelcomeDAppModal />
     </BrowserProvider>
   )
 }
