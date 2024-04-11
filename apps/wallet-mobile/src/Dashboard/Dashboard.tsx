@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation} from '@react-navigation/native'
+import {StackNavigationProp} from '@react-navigation/stack'
 import BigNumber from 'bignumber.js'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -14,9 +15,8 @@ import {
 import {useIsGovernanceFeatureEnabled} from '../features/Staking/Governance'
 import {useSelectedWallet} from '../features/WalletManager/Context'
 import globalMessages from '../i18n/global-messages'
-import {CONFIG} from '../legacy/config'
 import {Modal} from '../legacy/Modal'
-import {useWalletNavigation} from '../navigation'
+import {DashboardRoutes, useWalletNavigation} from '../navigation'
 import {isEmptyString} from '../utils/utils'
 import {getCardanoNetworkConfigById} from '../yoroi-wallets/cardano/networks'
 import {getCardanoBaseConfig} from '../yoroi-wallets/cardano/utils'
@@ -150,38 +150,10 @@ export const Dashboard = () => {
 }
 
 const useNavigateTo = () => {
-  const navigation = useNavigation()
-
-  if (CONFIG.DAPP_EXPLORER_ENABLED)
-    return {
-      stakingCenter: () => {
-        navigation.navigate('app-root', {
-          screen: 'staking-dashboard',
-          params: {
-            screen: 'staking-center',
-            params: {
-              screen: 'staking-center-main',
-            },
-          },
-        })
-      },
-    }
+  const navigation = useNavigation<StackNavigationProp<DashboardRoutes>>()
 
   return {
-    stakingCenter: () => {
-      navigation.navigate('app-root', {
-        screen: 'main-wallet-routes',
-        params: {
-          screen: 'staking-dashboard',
-          params: {
-            screen: 'staking-center',
-            params: {
-              screen: 'staking-center-main',
-            },
-          },
-        },
-      })
-    },
+    stakingCenter: () => navigation.navigate('staking-center', {screen: 'staking-center-main'}),
   }
 }
 
