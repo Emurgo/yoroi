@@ -57,7 +57,7 @@ const useSizeModal = () => {
 }
 
 // when restoring, later will be part of the onboarding
-const addressMode: AddressMode = 'multiple'
+const addressMode: AddressMode = 'single'
 export const WalletDetailsScreen = () => {
   const bold = useBold()
   const {styles} = useStyles()
