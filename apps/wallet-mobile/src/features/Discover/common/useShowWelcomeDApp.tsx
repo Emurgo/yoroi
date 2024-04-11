@@ -2,7 +2,7 @@ import {isBoolean, useAsyncStorage} from '@yoroi/common'
 import {useCallback} from 'react'
 import {useMutation, UseMutationOptions, useQuery, UseQueryOptions} from 'react-query'
 
-import {useSelectedWallet} from '../../../SelectedWallet/Context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../features/WalletManager/Context'
 
 const storageRootDAppExplorer = 'dapp-explorer'
 const storageDAppWelcome = 'dapp-explorer-welcome-dialog'

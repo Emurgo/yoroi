@@ -1,6 +1,6 @@
 import {useQuery, UseQueryOptions} from 'react-query'
 
-import {useSelectedWallet} from '../../../SelectedWallet/Context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../features/WalletManager/Context'
 import {IDAppItem, mockDAppList} from './DAppMock'
 
 export const useDAppsList = (options?: UseQueryOptions<IDAppItem[], Error, IDAppItem[], [string, string]>) => {

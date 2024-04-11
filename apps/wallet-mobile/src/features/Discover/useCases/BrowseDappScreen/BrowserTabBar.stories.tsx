@@ -2,7 +2,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import WebView from 'react-native-webview'
 
-import {SelectedWalletProvider} from '../../../../SelectedWallet'
+import {SelectedWalletProvider} from '../../../../features/WalletManager/Context'
 import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks'
 import {BrowserProvider} from '../../common/BrowserProvider'
 import {BrowserTabBar} from './BrowserTabBar'

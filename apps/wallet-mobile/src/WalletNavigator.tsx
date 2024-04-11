@@ -216,8 +216,6 @@ export const WalletNavigator = () => {
 
       <Stack.Screen name="voting-registration" options={{headerShown: false}} component={VotingRegistration} />
 
-      <Stack.Screen name="governance" component={GovernanceNavigator} />
-
       <Stack.Screen
         name="toggle-analytics-settings"
         options={{headerShown: false}}
@@ -226,7 +224,7 @@ export const WalletNavigator = () => {
 
       <Stack.Screen name="governance" options={{headerShown: false}} component={GovernanceNavigator} />
 
-      <Stack.Screen name="staking-dashboard" component={DashboardNavigator} />
+      <Stack.Screen name="staking-dashboard" options={{headerShown: false}} component={DashboardNavigator} />
     </Stack.Navigator>
   )
 }

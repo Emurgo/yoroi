@@ -2,7 +2,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {ScrollView} from 'react-native'
 
-import {SelectedWalletProvider} from '../../../../SelectedWallet'
+import {SelectedWalletProvider} from '../../../../features/WalletManager/Context'
 import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks'
 import {BrowserProvider} from '../../common/BrowserProvider'
 import {BrowseDappScreen} from './BrowseDappScreen'

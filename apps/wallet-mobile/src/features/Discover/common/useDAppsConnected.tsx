@@ -1,6 +1,6 @@
 import {useQuery, UseQueryOptions} from 'react-query'
 
-import {useSelectedWallet} from '../../../SelectedWallet/Context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../features/WalletManager/Context'
 import {IDAppItem, mockDAppList} from './DAppMock'
 
 type DAppId = IDAppItem['id']
