@@ -22,7 +22,7 @@ const GOVERNANCE_ENABLED_SINCE_BLOCK = {
   PREPROD: Infinity, // TODO: Add block number once known
 }
 
-const DAPP_EXPLORER_ENABLED = !isProduction()
+const DAPP_EXPLORER_ENABLED = !isProduction() && !isNightly()
 
 export const CONFIG = {
   SENTRY_DSN,
