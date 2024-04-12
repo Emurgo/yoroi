@@ -6,7 +6,6 @@ import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {
   InteractionManager,
-  Keyboard,
   Linking,
   ScrollView,
   StyleSheet,
@@ -41,6 +40,7 @@ import {YoroiZendeskLink} from '../../common/contants'
 import {LearnMoreButton} from '../../common/LearnMoreButton/LearnMoreButton'
 import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
 import {useStrings} from '../../common/useStrings'
+import {Info as InfoIllustration} from '../../illustrations/Info'
 
 const useSizeModal = () => {
   const HEIGHT_SCREEN = useWindowDimensions().height
@@ -169,7 +169,6 @@ export const WalletDetailsScreen = () => {
   }
 
   const showModalTipsPlateNumber = () => {
-    Keyboard.dismiss()
     openModal(
       strings.walletDetailsModalTitle,
       <View style={styles.modal}>
@@ -211,13 +210,13 @@ export const WalletDetailsScreen = () => {
       <View>
         <StepperProgress currentStep={4} currentStepTitle={strings.stepWalletDetails} totalSteps={4} />
 
-        <Text style={styles.title}>
-          {strings.walletDetailsTitle(bold)}
+        <View style={styles.info}>
+          <Text style={styles.title}>{strings.walletDetailsTitle(bold)}</Text>
 
-          <TouchableOpacity onPress={showModalTipsPassword}>
-            <Icon.Info size={28} />
+          <TouchableOpacity style={{flex: 1, alignSelf: 'center'}} onPress={showModalTipsPassword}>
+            <InfoIllustration />
           </TouchableOpacity>
-        </Text>
+        </View>
 
         <Space height="xl" />
 
@@ -273,15 +272,13 @@ export const WalletDetailsScreen = () => {
 
           <Space width="s" />
 
-          <Text style={styles.plateNumber}>
-            {plate.accountPlate.TextPart}
+          <Text style={styles.plateNumber}>{plate.accountPlate.TextPart}</Text>
 
-            <Space width="s" />
+          <Space width="s" />
 
-            <TouchableOpacity onPress={showModalTipsPlateNumber}>
-              <Icon.Info size={28} />
-            </TouchableOpacity>
-          </Text>
+          <TouchableOpacity onPress={showModalTipsPlateNumber}>
+            <InfoIllustration />
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -315,6 +312,9 @@ const useStyles = () => {
       justifyContent: 'space-between',
       backgroundColor: theme.color['white-static'],
     },
+    info: {
+      flexDirection: 'row',
+    },
     modal: {
       flex: 1,
     },
@@ -336,9 +336,14 @@ const useStyles = () => {
     },
     checksum: {
       flexDirection: 'row',
+      alignItems: 'center',
       justifyContent: 'center',
+      textAlignVertical: 'center',
     },
-    walletChecksum: {width: 24, height: 24},
+    walletChecksum: {
+      width: 24,
+      height: 24,
+    },
   })
 
   return {styles} as const

@@ -95,6 +95,9 @@ export const useStrings = () => {
     choose24WordsMnemonicTitle: intl.formatMessage(messages.choose24WordsMnemonicTitle),
     restoreWalletScreenTitle: (options: {b: (content: React.ReactNode[]) => React.ReactNode}) =>
       intl.formatMessage(messages.restoreWalletScreenTitle, {...options}),
+    restoreDuplicatedWalletModalTitle: intl.formatMessage(messages.restoreDuplicatedWalletModalTitle),
+    restoreDuplicatedWalletModalText: intl.formatMessage(messages.restoreDuplicatedWalletModalText),
+    restoreDuplicatedWalletModalButton: intl.formatMessage(messages.restoreDuplicatedWalletModalButton),
   }).current
 }
 
@@ -393,6 +396,19 @@ export const messages = Object.freeze(
     restoreWalletScreenTitle: {
       id: 'components.walletinit.restorewallet.restorewalletscreen.restoreWalletScreenTitle',
       defaultMessage: '!!!Add the recovery phrase you received upon your wallet creation process.',
+    },
+    restoreDuplicatedWalletModalTitle: {
+      id: 'components.walletinit.restorewallet.restorewalletscreen.restoreDuplicatedWalletModalTitle',
+      defaultMessage: '!!!This wallet is already added',
+    },
+    restoreDuplicatedWalletModalText: {
+      id: 'components.walletinit.restorewallet.restorewalletscreen.restoreDuplicatedWalletModalText',
+      defaultMessage:
+        '!!!This wallet already exist on your device, You can open it or go back and restore another wallet.',
+    },
+    restoreDuplicatedWalletModalButton: {
+      id: 'components.walletinit.restorewallet.restorewalletscreen.restoreDuplicatedWalletModalButton',
+      defaultMessage: '!!!Open wallet',
     },
   }),
 )
