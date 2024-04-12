@@ -8,11 +8,8 @@ export const useNavigateTo = () => {
 
   return React.useRef({
     goBack: () => navigation.goBack(),
-    searchDappInBrowser: ({isEdit = false} = {}) => {
-      return navigation.navigate('discover-browser', {screen: 'discover-search-dapp-in-browser', params: {isEdit}})
-    },
+    searchDappInBrowser: () => navigation.navigate('discover-browser', {screen: 'discover-search-dapp-in-browser'}),
     selectDappFromList: () => navigation.navigate('discover-select-dapp-from-list'),
     browseDapp: () => navigation.navigate('discover-browser', {screen: 'discover-browse-dapp'}),
-    navigation: () => navigation,
   }).current
 }

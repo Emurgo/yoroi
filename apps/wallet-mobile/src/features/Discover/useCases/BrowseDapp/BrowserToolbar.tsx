@@ -20,7 +20,7 @@ export const BrowserToolbar = ({uri}: Props) => {
   }
 
   const handleEditUrl = () => {
-    navigateTo.searchDappInBrowser({isEdit: true})
+    navigateTo.searchDappInBrowser()
   }
 
   return (

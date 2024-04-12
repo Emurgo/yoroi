@@ -3,6 +3,7 @@ import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import uuid from 'uuid'
 
 import {Icon} from '../../../../components'
 import {useBrowser} from '../../common/BrowserProvider'
@@ -13,7 +14,7 @@ export const BrowserTabsBar = () => {
   const strings = useStrings()
   const {styles, colors} = useStyles()
   const navigateTo = useNavigateTo()
-  const {tabs, switchTab} = useBrowser()
+  const {tabs, switchTab, addBrowserTab, setTabActive} = useBrowser()
   const totalTabs = tabs.length
   const insets = useSafeAreaInsets()
 
@@ -23,7 +24,10 @@ export const BrowserTabsBar = () => {
 
   const handleCreateTab = () => {
     switchTab(false)
-    navigateTo.searchDappInBrowser({isEdit: false})
+    const tabId = uuid.v4()
+    addBrowserTab('', tabId)
+    setTabActive(tabs.length)
+    navigateTo.searchDappInBrowser()
   }
 
   return (

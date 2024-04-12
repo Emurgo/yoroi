@@ -264,9 +264,7 @@ export type DiscoverRoutes = {
 
 export type BrowserRoutes = {
   'discover-browse-dapp': undefined
-  'discover-search-dapp-in-browser': {
-    isEdit: boolean
-  }
+  'discover-search-dapp-in-browser': undefined
 }
 
 export type DashboardRoutes = {

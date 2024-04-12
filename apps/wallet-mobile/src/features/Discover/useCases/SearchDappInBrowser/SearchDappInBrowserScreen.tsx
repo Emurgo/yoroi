@@ -1,10 +1,8 @@
-import {RouteProp, useIsFocused, useRoute} from '@react-navigation/native'
+import {useIsFocused} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
-import uuid from 'uuid'
 
-import {BrowserRoutes} from '../../../../navigation'
 import {useBrowser} from '../../common/BrowserProvider'
 import {getGoogleSearchItem} from '../../common/DAppMock'
 import {urlWithProtocol, validUrl} from '../../common/helpers'
@@ -22,10 +20,8 @@ const getUrl = (searchValue: string, isEngineSearch: boolean) => {
 
 export const SearchDappInBrowserScreen = () => {
   const {styles} = useStyles()
-  const router = useRoute<RouteProp<BrowserRoutes, 'discover-search-dapp-in-browser'>>()
-  const {isEdit} = router.params ?? {isEdit: false}
   const navigateTo = useNavigateTo()
-  const {addBrowserTab, setTabActive, updateTab, tabs, tabActiveIndex} = useBrowser()
+  const {updateTab, tabs, tabActiveIndex} = useBrowser()
   const tabActive = tabs[tabActiveIndex]
   const [searchValue, setSearchValue] = React.useState('')
 
@@ -42,9 +38,7 @@ export const SearchDappInBrowserScreen = () => {
 
   React.useEffect(() => {
     const handleSetUrl = () => {
-      if (isEdit) {
-        setSearchValue(tabActive?.url)
-      }
+      setSearchValue(tabActive?.url)
     }
 
     const handleClearSearchValue = () => {
@@ -56,22 +50,12 @@ export const SearchDappInBrowserScreen = () => {
     } else {
       handleClearSearchValue()
     }
-  }, [isEdit, isFocused, tabActive?.url])
+  }, [isFocused, tabActive?.url])
 
   const handleSubmit = (isEngineSearch: boolean) => {
     if (searchValue === '') return
-
     const url = getUrl(searchValue, isEngineSearch)
-
-    if (isEdit) {
-      updateTab(tabActiveIndex, {url})
-      navigateTo.browseDapp()
-      return
-    }
-
-    const tabId = uuid.v4()
-    addBrowserTab(url, tabId)
-    setTabActive(tabs.length)
+    updateTab(tabActiveIndex, {url})
     navigateTo.browseDapp()
   }
 
