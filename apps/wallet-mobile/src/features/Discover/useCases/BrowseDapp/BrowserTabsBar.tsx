@@ -14,16 +14,16 @@ export const BrowserTabsBar = () => {
   const strings = useStrings()
   const {styles, colors} = useStyles()
   const navigateTo = useNavigateTo()
-  const {tabs, switchTab, addTab, setTabActive} = useBrowser()
+  const {tabs, openTabs, addTab, setTabActive} = useBrowser()
   const totalTabs = tabs.length
   const insets = useSafeAreaInsets()
 
   const handleCancelChangeTab = () => {
-    switchTab(false)
+    openTabs(false)
   }
 
   const handleCreateTab = () => {
-    switchTab(false)
+    openTabs(false)
     const tabId = uuid.v4()
     addTab('', tabId)
     setTabActive(tabs.length)

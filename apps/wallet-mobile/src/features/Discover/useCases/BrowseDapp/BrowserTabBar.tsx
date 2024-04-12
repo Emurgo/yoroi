@@ -15,7 +15,7 @@ type Props = {
 }
 export const BrowserTabBar = ({webViewRef, webViewState}: Props) => {
   const {styles, color, colors} = useStyles()
-  const {tabs, switchTab} = useBrowser()
+  const {tabs, openTabs} = useBrowser()
   const insets = useSafeAreaInsets()
 
   const totalTabs = Math.min(tabs.length, 99)
@@ -40,7 +40,7 @@ export const BrowserTabBar = ({webViewRef, webViewState}: Props) => {
   }
 
   const handleChoseTabs = () => {
-    switchTab(true)
+    openTabs(true)
   }
 
   const handleShare = async () => {

@@ -9,7 +9,7 @@ export const defaultActions: BrowserActions = {
   setTabActive: () => invalid('missing init'),
   updateTab: () => invalid('missing init'),
   removeTab: () => invalid('missing init'),
-  switchTab: () => invalid('missing init'),
+  openTabs: () => invalid('missing init'),
 } as const
 
 const defaultState: BrowserState = {
@@ -146,7 +146,7 @@ type BrowserActions = Readonly<{
   setTabActive: (index: number) => void
   updateTab: (tabIndex: number, tabInfo: Partial<Omit<TabItem, 'id'>>) => void
   removeTab: (index: number) => void
-  switchTab: (isOpen: boolean) => void
+  openTabs: (isOpen: boolean) => void
 }>
 
 export const browserReducer = (state: BrowserState, action: BrowserContextAction): BrowserState => {

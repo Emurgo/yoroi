@@ -26,7 +26,7 @@ type Props = {
 export const WebViewItem = ({tab, index}: Props) => {
   const {styles, colors} = useStyles()
   const webViewRef = React.useRef<WebView>(null)
-  const {tabs, updateTab, tabsOpen, switchTab, setTabActive, removeTab, tabActiveIndex} = useBrowser()
+  const {tabs, updateTab, tabsOpen, openTabs, setTabActive, removeTab, tabActiveIndex} = useBrowser()
   const webURL = tab?.url
   const {domainName} = getDomainFromUrl(webURL)
   const isTabActive = index === tabActiveIndex
@@ -67,12 +67,12 @@ export const WebViewItem = ({tab, index}: Props) => {
 
   const onSelectTabActive = () => {
     setTabActive(index)
-    switchTab(false)
+    openTabs(false)
   }
 
   const handleCloseTab = () => {
     if (tabs.length === 1) {
-      switchTab(false)
+      openTabs(false)
       removeTab(index)
       setTabActive(-1)
       navigationTo.selectDappFromList()
