@@ -130,7 +130,6 @@ export const WalletDetailsScreen = () => {
   }, [createWallet, mnemonic, name, networkId, password, track, walletImplementationId])
 
   const showModalTipsPassword = () => {
-    Keyboard.dismiss()
     openModal(
       strings.walletDetailsModalTitle,
       <View style={styles.modal}>
@@ -213,7 +212,7 @@ export const WalletDetailsScreen = () => {
         <View style={styles.info}>
           <Text style={styles.title}>{strings.walletDetailsTitle(bold)}</Text>
 
-          <TouchableOpacity style={{flex: 1, alignSelf: 'center'}} onPress={showModalTipsPassword}>
+          <TouchableOpacity onPress={showModalTipsPassword}>
             <InfoIllustration />
           </TouchableOpacity>
         </View>
