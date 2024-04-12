@@ -82,7 +82,7 @@ export const BrowserProvider = ({
     removeTab: (index) => {
       dispatch({type: BrowserActionType.RemoveTab, index})
     },
-    switchTab: (isOpen) => {
+    openTabs: (isOpen) => {
       dispatch({type: BrowserActionType.OpenTabs, isOpen})
     },
   }).current
