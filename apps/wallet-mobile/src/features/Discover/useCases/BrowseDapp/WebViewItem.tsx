@@ -26,7 +26,7 @@ type Props = {
 export const WebViewItem = ({tab, index}: Props) => {
   const {styles, colors} = useStyles()
   const webViewRef = React.useRef<WebView>(null)
-  const {tabs, updateTab, switchTabOpen, switchTab, setTabActive, removeTab, tabActiveIndex} = useBrowser()
+  const {tabs, updateTab, tabsOpen, switchTab, setTabActive, removeTab, tabActiveIndex} = useBrowser()
   const webURL = tab?.url
   const {domainName} = getDomainFromUrl(webURL)
   const isTabActive = index === tabActiveIndex
@@ -90,30 +90,30 @@ export const WebViewItem = ({tab, index}: Props) => {
     const scaleXRatio = 1 - 16 / SCREEN_WIDTH
     const timingConfig = {duration: 100, easing: Easing.linear}
 
-    if (switchTabOpen) {
+    if (tabsOpen) {
       scaleXWebview.value = withTiming(scaleXRatio, timingConfig)
     } else {
       scaleXWebview.value = withTiming(isTabActive ? 1 : scaleXRatio, timingConfig)
     }
-  }, [isTabActive, opacityValue, scaleXWebview, switchTabOpen])
+  }, [isTabActive, opacityValue, scaleXWebview, tabsOpen])
 
   return (
-    <TouchableWithoutFeedback onPress={onSelectTabActive} disabled={!switchTabOpen}>
+    <TouchableWithoutFeedback onPress={onSelectTabActive} disabled={!tabsOpen}>
       <Animated.View
         style={[
           containerStyleAnimated,
           {width: SCREEN_WIDTH},
-          switchTabOpen ? {height: 'auto'} : {height: isTabActive ? visibleAreaHeight : 0},
+          tabsOpen ? {height: 'auto'} : {height: isTabActive ? visibleAreaHeight : 0},
         ]}
       >
         <Animated.View
           style={
-            switchTabOpen
+            tabsOpen
               ? [styles.switchTabRoot, styles.roundedContainer, isTabActive && styles.switchTabRootActive]
               : styles.webViewContainer
           }
         >
-          {!switchTabOpen && isTabActive && <BrowserToolbar uri={tab.url} />}
+          {!tabsOpen && isTabActive && <BrowserToolbar uri={tab.url} />}
 
           <WebView
             ref={webViewRef}
@@ -129,23 +129,23 @@ export const WebViewItem = ({tab, index}: Props) => {
             style={[styles.roundedInsideContainer]}
           />
 
-          {switchTabOpen && (
+          {tabsOpen && (
             <LinearGradient
               style={[StyleSheet.absoluteFillObject, styles.roundedInsideContainer]}
               colors={['#000000A1', '#00000000']}
             />
           )}
 
-          {switchTabOpen && (
+          {tabsOpen && (
             <TouchableOpacity style={styles.closeTabPosition} onPress={handleCloseTab}>
               <Icon.Close size={20} color={colors.whiteStatic} />
             </TouchableOpacity>
           )}
 
-          {!switchTabOpen && isTabActive && <BrowserTabBar webViewRef={webViewRef} webViewState={webViewStateRest} />}
+          {!tabsOpen && isTabActive && <BrowserTabBar webViewRef={webViewRef} webViewState={webViewStateRest} />}
         </Animated.View>
 
-        {switchTabOpen && (
+        {tabsOpen && (
           <>
             <Spacer height={4} />
 

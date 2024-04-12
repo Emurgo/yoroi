@@ -10,7 +10,7 @@ import {WebViewItem} from './WebViewItem'
 export const BrowseDappScreen = () => {
   const {styles} = useStyles()
   const flatListRef = React.useRef<FlatList>(null)
-  const {tabs, switchTabOpen} = useBrowser()
+  const {tabs, tabsOpen} = useBrowser()
 
   return (
     <View style={styles.root}>
@@ -19,19 +19,19 @@ export const BrowseDappScreen = () => {
         style={styles.root}
         data={tabs}
         pagingEnabled={false}
-        ListHeaderComponent={() => switchTabOpen && <Spacer height={16} />}
-        ListFooterComponent={() => switchTabOpen && <Spacer height={16} />}
-        ItemSeparatorComponent={() => switchTabOpen && <Spacer height={16} />}
+        ListHeaderComponent={() => tabsOpen && <Spacer height={16} />}
+        ListFooterComponent={() => tabsOpen && <Spacer height={16} />}
+        ItemSeparatorComponent={() => tabsOpen && <Spacer height={16} />}
         keyExtractor={(item) => item.id}
         renderItem={function ({item: tab, index}) {
           return <WebViewItem tab={tab} index={index} />
         }}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
-        scrollEnabled={switchTabOpen ?? false}
+        scrollEnabled={tabsOpen ?? false}
       />
 
-      {switchTabOpen && <BrowserTabsBar />}
+      {tabsOpen && <BrowserTabsBar />}
     </View>
   )
 }

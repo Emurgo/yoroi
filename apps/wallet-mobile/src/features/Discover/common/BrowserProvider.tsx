@@ -4,42 +4,38 @@ import * as React from 'react'
 
 import {useSelectedWallet} from '../../../features/WalletManager/Context'
 
-export const defaultBrowserActions: BrowserContextActions = {
-  addBrowserTab: () => invalid('missing init'),
+export const defaultActions: BrowserActions = {
+  addTab: () => invalid('missing init'),
   setTabActive: () => invalid('missing init'),
   updateTab: () => invalid('missing init'),
   removeTab: () => invalid('missing init'),
   switchTab: () => invalid('missing init'),
 } as const
 
-const initialBrowserState: BrowserContextState = {
+const defaultState: BrowserState = {
   tabs: [],
   tabActiveIndex: -1,
   status: 'waiting',
-  searchEngine: 'Google',
-  switchTabOpen: false,
-}
+  tabsOpen: false,
+} as const
 
 export type TabItem = {
   id: string
   url: string
 }
 
-type StatusBrowser = 'waiting' | 'active'
+type BrowserStatus = 'waiting' | 'active'
 
-type BrowserContextState = Readonly<{
+type BrowserState = {
   tabs: TabItem[]
   tabActiveIndex: number
-  status: StatusBrowser
-  searchEngine: 'Google'
-  switchTabOpen: boolean
-}>
+  status: BrowserStatus
+  tabsOpen: boolean
+}
 
-export type BrowserProviderContext = BrowserContextState & BrowserContextActions
-
-const BrowserContext = React.createContext<BrowserProviderContext>({
-  ...initialBrowserState,
-  ...defaultBrowserActions,
+const BrowserContext = React.createContext<BrowserState & BrowserActions>({
+  ...defaultState,
+  ...defaultActions,
 })
 
 const storageRootBrowser = 'browser'
@@ -50,16 +46,13 @@ export const BrowserProvider = ({
   initialState,
 }: {
   children: React.ReactNode
-  initialState?: Partial<BrowserContextState>
+  initialState?: Partial<BrowserState>
 }) => {
   const storage = useAsyncStorage()
   const wallet = useSelectedWallet()
   const browserStorage = storage.join(`wallet/${wallet.id}/${storageRootBrowser}/`)
 
-  const [browserState, dispatch] = React.useReducer(browserReducer, {
-    ...initialBrowserState,
-    ...initialState,
-  })
+  const [browserState, dispatch] = React.useReducer(browserReducer, {...defaultState, ...initialState})
 
   React.useEffect(() => {
     if (browserState.status === 'waiting') return
@@ -70,35 +63,32 @@ export const BrowserProvider = ({
     if (browserState.status === 'active') return
     browserStorage.getItem(storageBrowserState).then((browserStorage) => {
       if (Boolean(browserStorage) && typeof browserStorage === 'string') {
-        dispatch({type: BrowserAction.SetState, state: JSON.parse(browserStorage)})
-        dispatch({type: BrowserAction.SetStatus, status: 'active'})
+        dispatch({type: BrowserActionType.SetState, state: JSON.parse(browserStorage)})
+        dispatch({type: BrowserActionType.SetStatus, status: 'active'})
       }
     })
   }, [browserState.status, browserStorage])
 
-  const actions = React.useRef<BrowserContextActions>({
-    addBrowserTab: (url, id) => {
-      dispatch({type: BrowserAction.AddBrowserTab, payload: {url, id}})
+  const actions = React.useRef<BrowserActions>({
+    addTab: (url, id) => {
+      dispatch({type: BrowserActionType.AddTab, payload: {url, id}})
     },
     setTabActive: (index) => {
-      dispatch({type: BrowserAction.SetTabActive, index})
+      dispatch({type: BrowserActionType.SetTabActive, index})
     },
     updateTab: (tabIndex, tabInfo) => {
-      dispatch({type: BrowserAction.UpdateTab, payload: {tabInfo, tabIndex}})
+      dispatch({type: BrowserActionType.UpdateTab, payload: {tabInfo, tabIndex}})
     },
     removeTab: (index) => {
-      dispatch({type: BrowserAction.RemoveTab, index})
+      dispatch({type: BrowserActionType.RemoveTab, index})
     },
     switchTab: (isOpen) => {
-      dispatch({type: BrowserAction.SwitchTab, isOpen})
+      dispatch({type: BrowserActionType.OpenTabs, isOpen})
     },
   }).current
 
-  const context = React.useMemo<BrowserProviderContext>(
-    () => ({
-      ...browserState,
-      ...actions,
-    }),
+  const context = React.useMemo<BrowserState & BrowserActions>(
+    () => ({...browserState, ...actions}),
     [actions, browserState],
   )
 
@@ -108,91 +98,89 @@ export const BrowserProvider = ({
 export const useBrowser = () =>
   React.useContext(BrowserContext) ?? invalid('useBrowser: needs to be wrapped in a BrowserProvider')
 
-enum BrowserAction {
-  AddBrowserTab = 'addBrowserTab',
+enum BrowserActionType {
+  AddTab = 'addTab',
   SetState = 'setState',
   SetTabActive = 'setTabActive',
   UpdateTab = 'updateTab',
   RemoveTab = 'removeTab',
   SetStatus = 'setStatus',
-  SwitchTab = 'SwitchTab',
+  OpenTabs = 'openTabs',
 }
 
 type BrowserContextAction =
   | {
-      type: BrowserAction.AddBrowserTab
+      type: BrowserActionType.AddTab
       payload: {url: string; id: string}
     }
   | {
-      type: BrowserAction.SetState
-      state: BrowserContextState
+      type: BrowserActionType.SetState
+      state: BrowserState
     }
   | {
-      type: BrowserAction.SetTabActive
+      type: BrowserActionType.SetTabActive
       index: number
     }
   | {
-      type: BrowserAction.UpdateTab
+      type: BrowserActionType.UpdateTab
       payload: {
         tabInfo: Partial<Omit<TabItem, 'id'>>
         tabIndex: number
       }
     }
   | {
-      type: BrowserAction.RemoveTab
+      type: BrowserActionType.RemoveTab
       index: number
     }
   | {
-      type: BrowserAction.SetStatus
-      status: StatusBrowser
+      type: BrowserActionType.SetStatus
+      status: BrowserStatus
     }
   | {
-      type: BrowserAction.SwitchTab
+      type: BrowserActionType.OpenTabs
       isOpen: boolean
     }
-type BrowserContextActions = Readonly<{
-  addBrowserTab: (url: string, id: string) => void
+
+type BrowserActions = Readonly<{
+  addTab: (url: string, id: string) => void
   setTabActive: (index: number) => void
   updateTab: (tabIndex: number, tabInfo: Partial<Omit<TabItem, 'id'>>) => void
   removeTab: (index: number) => void
   switchTab: (isOpen: boolean) => void
 }>
 
-export const browserReducer = (state: BrowserContextState, action: BrowserContextAction): BrowserContextState => {
+export const browserReducer = (state: BrowserState, action: BrowserContextAction): BrowserState => {
   return produce(state, (draft) => {
     switch (action.type) {
-      case BrowserAction.AddBrowserTab:
-        draft.tabs.push({
-          url: action.payload.url,
-          id: action.payload.id,
-        })
+      case BrowserActionType.AddTab:
+        draft.tabs.push({url: action.payload.url, id: action.payload.id})
         break
 
-      case BrowserAction.SetState:
+      case BrowserActionType.SetState:
         draft.tabs = action.state.tabs
         break
 
-      case BrowserAction.SetTabActive:
+      case BrowserActionType.SetTabActive:
         draft.tabActiveIndex = action.index
         break
 
-      case BrowserAction.UpdateTab:
+      case BrowserActionType.UpdateTab:
         draft.tabs[action.payload.tabIndex] = {
           ...draft.tabs[action.payload.tabIndex],
           ...action.payload.tabInfo,
         }
         break
 
-      case BrowserAction.RemoveTab:
+      case BrowserActionType.RemoveTab:
         draft.tabs.splice(action.index, 1)
         break
 
-      case BrowserAction.SetStatus:
+      case BrowserActionType.SetStatus:
         draft.status = action.status
         break
 
-      case BrowserAction.SwitchTab:
-        draft.switchTabOpen = action.isOpen
+      case BrowserActionType.OpenTabs:
+        draft.tabsOpen = action.isOpen
         break
     }
   })

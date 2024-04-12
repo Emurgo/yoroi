@@ -14,7 +14,7 @@ export const BrowserTabsBar = () => {
   const strings = useStrings()
   const {styles, colors} = useStyles()
   const navigateTo = useNavigateTo()
-  const {tabs, switchTab, addBrowserTab, setTabActive} = useBrowser()
+  const {tabs, switchTab, addTab, setTabActive} = useBrowser()
   const totalTabs = tabs.length
   const insets = useSafeAreaInsets()
 
@@ -25,7 +25,7 @@ export const BrowserTabsBar = () => {
   const handleCreateTab = () => {
     switchTab(false)
     const tabId = uuid.v4()
-    addBrowserTab('', tabId)
+    addTab('', tabId)
     setTabActive(tabs.length)
     navigateTo.searchDappInBrowser()
   }
