@@ -1,12 +1,12 @@
 import {createStackNavigator} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {BrowserRoutes} from 'src/navigation'
 
-import {BrowseDappScreen} from './useCases/BrowseDappScreen/BrowseDappScreen'
-import {BrowseSearchDappScreen} from './useCases/BrowseSearchDappScreen/BrowseSearchDappScreen'
+import {BrowseDappScreen} from './useCases/BrowseDapp/BrowseDappScreen'
+import {SearchDappInBrowserScreen} from './useCases/SearchDappInBrowser/SearchDappInBrowserScreen'
 
 const Tab = createStackNavigator<BrowserRoutes>()
 
@@ -21,9 +21,9 @@ export const BrowserNavigator = () => {
           headerShown: false,
         }}
       >
-        <Tab.Screen name="browser-view" component={BrowseDappScreen} />
+        <Tab.Screen name="discover-browse-dapp" component={BrowseDappScreen} />
 
-        <Tab.Screen name="browser-search" component={BrowseSearchDappScreen} />
+        <Tab.Screen name="discover-search-dapp-in-browser" component={SearchDappInBrowserScreen} />
       </Tab.Navigator>
     </SafeAreaView>
   )
