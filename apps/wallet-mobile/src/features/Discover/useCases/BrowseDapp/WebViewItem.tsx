@@ -39,7 +39,7 @@ export const WebViewItem = ({tab, index}: Props) => {
   const scaleXWebview = useSharedValue(1)
   const opacityValue = useSharedValue(0)
 
-  useConnectWalletToWebView(wallet, webViewRef)
+  const {initScript, handleEvent} = useConnectWalletToWebView(wallet, webViewRef)
 
   const topInset = Math.max(insets.top, initialWindowMetrics?.insets.top ?? 0)
   const visibleAreaHeight = SCREEN_HEIGHT - topInset
@@ -131,6 +131,8 @@ export const WebViewItem = ({tab, index}: Props) => {
             javaScriptEnabled
             scalesPageToFit
             cacheEnabled
+            injectedJavaScript={initScript}
+            onMessage={handleEvent}
             style={[styles.roundedInsideContainer]}
           />
 

@@ -58,7 +58,8 @@ export const useConnectWalletToWebView = (wallet: YoroiWallet, webViewRef: React
   }
 
   React.useEffect(() => {
-    webViewRef.current?.injectJavaScript(getInitScript(sessionId, dappConnector))
+    const initScript = getInitScript(sessionId, dappConnector)
+    webViewRef.current?.injectJavaScript(initScript)
   }, [wallet, webViewRef, sessionId, dappConnector])
 
   return {handleEvent: handleWebViewEvent, initScript: getInitScript(sessionId, dappConnector), sessionId}
