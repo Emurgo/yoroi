@@ -19,8 +19,10 @@ const useDappConnector = () => {
   return React.useMemo(() => createDappConnector(appStorage), [appStorage])
 }
 
+const generateSessionId = () => Math.random().toString(36).substring(7)
+
 export const useConnectWalletToWebView = (wallet: YoroiWallet, webViewRef: React.RefObject<WebView | null>) => {
-  const [sessionId] = React.useState(() => Math.random().toString(36).substring(7))
+  const [sessionId] = React.useState(() => generateSessionId())
   const dappConnector = useDappConnector()
 
   const sendMessageToWebView = (event: string) => (id: string, result: unknown, error?: Error) => {
