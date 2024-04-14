@@ -22,7 +22,7 @@ describe('createGovernanceManager', () => {
     walletId: 'walletId',
     networkId,
     cardano,
-    storage: mountAsyncStorage('wallet/'),
+    storage: mountAsyncStorage({path: 'wallet/'}),
     api: governanceApiMaker({networkId, client: fetcher}),
   }
 

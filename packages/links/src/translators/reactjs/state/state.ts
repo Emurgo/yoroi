@@ -1,11 +1,11 @@
-import {Links, Nullable} from '@yoroi/types'
+import {Links} from '@yoroi/types'
 import {freeze, produce, castDraft} from 'immer'
 
 export type LinksState = Readonly<{
   // walletId -> authorization (handle 1 per wallet at time)
   authorizations: ReadonlyMap<string, string>
 
-  action: Nullable<Links.YoroiAction>
+  action: Links.YoroiAction | null
 }>
 
 export type LinksActions = Readonly<{

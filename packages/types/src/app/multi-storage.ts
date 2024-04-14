@@ -1,21 +1,29 @@
 import {AppStorage, AppStorageFolderName} from './storage'
-import {MaybePromise, Nullable} from '../helpers/types'
+import {MaybePromise} from '../helpers/types'
 
-export interface AppMultiStorage<T, IsAsync extends boolean = true> {
-  getAllKeys: () => MaybePromise<ReadonlyArray<string>, IsAsync>
+export interface AppMultiStorage<
+  T,
+  IsAsync extends boolean = true,
+  K extends string = string,
+> {
+  getAllKeys: () => MaybePromise<ReadonlyArray<K>, IsAsync>
   clear: () => MaybePromise<void, IsAsync>
   saveMany: (data: ReadonlyArray<NonNullable<T>>) => MaybePromise<void, IsAsync>
-  readAll: () => MaybePromise<ReadonlyArray<[string, Nullable<T>]>, IsAsync>
+  readAll: () => MaybePromise<ReadonlyArray<[K, T | null]>, IsAsync>
   readMany: (
-    keys: ReadonlyArray<string>,
-  ) => MaybePromise<ReadonlyArray<[string, Nullable<T>]>, IsAsync>
-  removeMany: (keys: ReadonlyArray<string>) => MaybePromise<void, IsAsync>
+    keys: ReadonlyArray<K>,
+  ) => MaybePromise<ReadonlyArray<[K, T | null]>, IsAsync>
+  removeMany: (keys: ReadonlyArray<K>) => MaybePromise<void, IsAsync>
 }
 
-export type AppMultiStorageOptions<T, IsAsync extends boolean = true> = {
-  storage: AppStorage<IsAsync>
+export type AppMultiStorageOptions<
+  T,
+  IsAsync extends boolean = true,
+  K extends string = string,
+> = {
+  storage: AppStorage<IsAsync, K>
   dataFolder: AppStorageFolderName
-  keyExtractor: keyof T | ((data: NonNullable<T>) => string)
+  keyExtractor: keyof T | ((data: NonNullable<T>) => K)
   serializer?: (data: NonNullable<T>) => string
-  deserializer?: (data: string | null) => Nullable<T>
+  deserializer?: (data: unknown) => T | null
 }

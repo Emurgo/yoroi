@@ -4,7 +4,7 @@ import renderer from 'react-test-renderer'
 import {AsyncStorageProvider, useAsyncStorage} from './async-storage-reactjs' // Update with the actual module path
 import {mountAsyncStorage} from '../adapters/async-storage'
 
-const rootStorage = mountAsyncStorage('/')
+const rootStorage = mountAsyncStorage({path: '/'})
 
 describe('AsyncStorageProvider and useAsyncStorage Tests', () => {
   test('AsyncStorageProvider provides storage context', () => {

@@ -4,7 +4,7 @@ import renderer from 'react-test-renderer'
 import {SyncStorageProvider, useSyncStorage} from './sync-storage-reactjs' // Update with the actual module path
 import {mountMMKVStorage} from '../adapters/mmkv-storage'
 
-const rootStorage = mountMMKVStorage('/')
+const rootStorage = mountMMKVStorage({path: '/'})
 
 describe('SyncStorageProvider and useSyncStorage Tests', () => {
   test('SyncStorageProvider provides storage context', () => {

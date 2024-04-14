@@ -3,6 +3,7 @@ import {fromPairs} from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 
 import {rootStorage} from '../../storage/rootStorage'
+import {Transaction} from '../../types/other'
 import {ApiHistoryError} from '../errors'
 import {
   mockedAddressesByChunks,
@@ -32,7 +33,7 @@ describe('transactionManager', () => {
     DeviceInfo.getVersion = () => '9.9.9'
 
     const mockStorage = rootStorage.join('txs/')
-    mockStorage.multiSet([
+    mockStorage.multiSet<Transaction | [string]>([
       [mockTx.id, mockTx],
       ['txids', [mockTx.id]],
     ])

@@ -159,9 +159,10 @@ export const disableAllEasyConfirmation = async (storage: App.Storage) => {
   })
 
   const updateWalletJSONs = walletIds.map(async (walletId) => {
-    const walletJSON: Record<string, unknown> & {isEasyConfirmationEnabled: boolean} = await walletStorage
+    const walletJSON: null | (Record<string, unknown> & {isEasyConfirmationEnabled: boolean}) = await walletStorage
       .join(`${walletId}/`)
       .getItem('data')
+    if (walletJSON == null) return
     await walletStorage.join(`${walletId}/`).setItem('data', {...walletJSON, isEasyConfirmationEnabled: false})
   })
 
@@ -264,7 +265,7 @@ const messages = defineMessages({
   },
 })
 
-export type AuthSetting = 'pin' | 'os' | undefined
+export type AuthSetting = 'pin' | 'os' | undefined | null
 
 export const AUTH_WITH_OS: AuthSetting = 'os'
 export const AUTH_WITH_PIN: AuthSetting = 'pin'

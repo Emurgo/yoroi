@@ -19,6 +19,7 @@ import {ModalScreen} from './components/Modal/ModalScreen'
 import {AgreementChangedNavigator, InitializationNavigator} from './features/Initialization'
 import {LegalAgreement, useLegalAgreement} from './features/Initialization/common'
 import {useDeepLinkWatcher} from './features/Links/common/useDeepLinkWatcher'
+import {PortfolioScreen} from './features/Portfolio/useCases/PortfolioScreen'
 import {AddWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
 import {CONFIG} from './legacy/config'
 import {DeveloperScreen} from './legacy/DeveloperScreen'
@@ -160,6 +161,8 @@ export const AppNavigator = () => {
               <Stack.Screen name="developer" component={DeveloperScreen} options={{headerShown: false}} />
 
               <Stack.Screen name="storybook" component={StorybookScreen} />
+
+              <Stack.Screen name="portfolio-dashboard" component={PortfolioScreen} />
             </Stack.Group>
           )}
         </Stack.Navigator>
@@ -248,9 +251,9 @@ type FirstAction = 'auth-with-pin' | 'auth-with-os' | 'request-new-pin' | 'first
 const getFirstAction = (
   isAuthOsSupported: boolean,
   authSetting: AuthSetting,
-  agreement: LegalAgreement | undefined,
+  legalAgreement: LegalAgreement | undefined | null,
 ): FirstAction => {
-  const hasAccepted = agreement?.latestAcceptedAgreementsDate === CONFIG.AGREEMENT_DATE
+  const hasAccepted = legalAgreement?.latestAcceptedAgreementsDate === CONFIG.AGREEMENT_DATE
 
   if (isString(authSetting) && !hasAccepted) return 'show-agreement-changed-notice'
 
@@ -264,7 +267,7 @@ const getFirstAction = (
 const useFirstAction = () => {
   const authSetting = useAuthSetting()
   const isAuthOsSupported = useIsAuthOsSupported()
-  const terms = useLegalAgreement()
+  const legalAgreement = useLegalAgreement()
 
-  return getFirstAction(isAuthOsSupported, authSetting, terms)
+  return getFirstAction(isAuthOsSupported, authSetting, legalAgreement)
 }
