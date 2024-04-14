@@ -1,7 +1,7 @@
 import {storageSerializer} from '@yoroi/common'
 import {App, Portfolio} from '@yoroi/types'
 
-import {portfolioBalanceStorageMaker} from './balance-storage-maker' // Adjust the path accordingly
+import {portfolioBalanceStorageMaker} from './balance-storage-maker'
 import {tokenMocks} from '../token.mocks'
 import {deserializers} from '../../transformers/deserializers'
 import {tokenBalanceMocks} from '../token-balance.mocks'

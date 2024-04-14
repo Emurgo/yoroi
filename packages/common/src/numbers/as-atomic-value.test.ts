@@ -2,7 +2,7 @@ import {Numbers} from '@yoroi/types'
 
 import {asAtomicValue} from './as-atomic-value'
 
-describe('asQuantity', () => {
+describe('asAtomicValue', () => {
   it.each`
     input             | expected
     ${BigInt('1000')} | ${'1000'}

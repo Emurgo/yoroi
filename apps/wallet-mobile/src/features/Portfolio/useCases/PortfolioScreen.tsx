@@ -8,7 +8,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer} from '../../../components'
 import {useSelectedWallet} from '../../WalletManager/Context'
-import {usePortfolioBalanceManager} from '../common/usePortfoiloBalanceManager'
+import {usePortfolioBalanceManager} from '../common/usePortfolioBalanceManager'
 import {usePortfolioTokenManager} from '../common/usePortfolioTokenManager'
 
 export const PortfolioScreen = () => {
