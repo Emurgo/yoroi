@@ -11,6 +11,7 @@ import {useCanVote} from '../../Catalyst/hooks'
 import {InsufficientFundsModal} from '../../Catalyst/InsufficientFundsModal'
 import {Boundary, Hr, Icon, Spacer, Text} from '../../components'
 import {usePrefetchStakingInfo} from '../../Dashboard/StakePoolInfos'
+import {CONFIG} from '../../legacy/config'
 import {useMetrics} from '../../metrics/metricsManager'
 import {defaultStackNavigationOptions, useWalletNavigation} from '../../navigation'
 import {lightPalette} from '../../theme'
@@ -54,13 +55,17 @@ export const Menu = () => {
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
       <ScrollView contentContainerStyle={styles.scrollViewContent} bounces={false}>
-        <AppSettings
-          label={strings.stakingCenter}
-          onPress={navigateTo.stakingCenter}
-          left={<Icon.TabStaking size={24} color={lightPalette.gray['600']} />}
-        />
+        {CONFIG.DAPP_EXPLORER_ENABLED && (
+          <>
+            <AppSettings
+              label={strings.stakingCenter}
+              onPress={navigateTo.stakingCenter}
+              left={<Icon.TabStaking size={24} color={lightPalette.gray['600']} />}
+            />
 
-        <Hr />
+            <Hr />
+          </>
+        )}
 
         <AppSettings //
           label={strings.settings}

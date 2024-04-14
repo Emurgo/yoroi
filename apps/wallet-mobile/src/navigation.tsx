@@ -258,15 +258,13 @@ export type SendConfirmParams = {
 }
 
 export type DiscoverRoutes = {
-  'discover-list': undefined
-  browser: NavigatorScreenParams<BrowserRoutes>
+  'discover-select-dapp-from-list': undefined
+  'discover-browser': NavigatorScreenParams<BrowserRoutes>
 }
 
 export type BrowserRoutes = {
-  'browser-view': undefined
-  'browser-search': {
-    isEdit: boolean
-  }
+  'discover-browse-dapp': undefined
+  'discover-search-dapp-in-browser': undefined
 }
 
 export type DashboardRoutes = {
@@ -531,6 +529,6 @@ export const hideTabBarForRoutes = (route: RouteProp<WalletTabRoutes, 'history' 
   getFocusedRouteNameFromRoute(route)?.startsWith('swap') ||
   getFocusedRouteNameFromRoute(route)?.startsWith('receive') ||
   getFocusedRouteNameFromRoute(route)?.startsWith('exchange') ||
-  getFocusedRouteNameFromRoute(route)?.startsWith('browser')
+  getFocusedRouteNameFromRoute(route)?.startsWith('discover-browser')
     ? {display: 'none'}
     : undefined
