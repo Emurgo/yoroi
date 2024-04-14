@@ -33,7 +33,7 @@ describe('transactionManager', () => {
     DeviceInfo.getVersion = () => '9.9.9'
 
     const mockStorage = rootStorage.join('txs/')
-    mockStorage.multiSet<Transaction | [string]>([
+    await mockStorage.multiSet<Transaction | [string]>([
       [mockTx.id, mockTx],
       ['txids', [mockTx.id]],
     ])
@@ -83,7 +83,7 @@ describe('transaction storage', () => {
 
   it('drops transaction if invalid format', async () => {
     const storage = rootStorage.join('txs/')
-    storage.multiSet([
+    await storage.multiSet([
       [mockTx.id, undefined],
       ['txids', [mockTx.id]],
     ])
@@ -97,7 +97,7 @@ describe('transaction storage', () => {
 
   it('starts fresh if txids is invalid format', async () => {
     const storage = rootStorage.join('txs/')
-    storage.multiSet([
+    await storage.multiSet([
       [mockTx.id, mockTx],
       ['txids', undefined],
     ])
