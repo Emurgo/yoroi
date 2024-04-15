@@ -9,7 +9,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useCanVote} from '../../Catalyst/hooks'
 import {InsufficientFundsModal} from '../../Catalyst/InsufficientFundsModal'
-import {Boundary, Hr, Icon, Spacer, Text} from '../../components'
+import {Boundary, Icon, Spacer, Text} from '../../components'
 import {usePrefetchStakingInfo} from '../../Dashboard/StakePoolInfos'
 import {useMetrics} from '../../metrics/metricsManager'
 import {defaultStackNavigationOptions, useWalletNavigation} from '../../navigation'
@@ -55,19 +55,17 @@ export const Menu = () => {
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
       <ScrollView contentContainerStyle={styles.scrollViewContent} bounces={false}>
+        <AppSettings //
+          label={strings.settings}
+          onPress={navigateTo.settings}
+          left={<Icon.Gear size={24} color={color.gray['600']} />}
+        />
+
         <Staking
           label={strings.stakingCenter}
           onPress={navigateTo.stakingCenter}
           left={<Icon.TabStaking size={24} color={color.gray['600']} />}
           right={isPoolRetiring ? <Icon.Warning size={24} color={color.magenta[500]} /> : null}
-        />
-
-        <Hr />
-
-        <AppSettings //
-          label={strings.settings}
-          onPress={navigateTo.settings}
-          left={<Icon.Gear size={24} color={color.gray['600']} />}
         />
 
         {isGovernanceFeatureEnabled && (

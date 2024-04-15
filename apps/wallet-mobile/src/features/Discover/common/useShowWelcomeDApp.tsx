@@ -1,5 +1,5 @@
 import {isBoolean, useAsyncStorage} from '@yoroi/common'
-import {useCallback} from 'react'
+import * as React from 'react'
 import {useMutation, UseMutationOptions, useQuery, UseQueryOptions} from 'react-query'
 
 import {useSelectedWallet} from '../../../features/WalletManager/Context'
@@ -46,7 +46,7 @@ export const useShowWelcomeDApp = () => {
   return {
     loadingGetShowedWelcomeDApp,
     isShowedWelcomeDApp,
-    setShowedWelcomeDApp: useCallback(
+    setShowedWelcomeDApp: React.useCallback(
       (options?: UseMutationOptions<void, Error, boolean>) => setShowingWelcomeDApp(true, options),
       [setShowingWelcomeDApp],
     ),

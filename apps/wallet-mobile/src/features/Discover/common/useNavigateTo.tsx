@@ -1,24 +1,15 @@
 import {NavigationProp, useNavigation} from '@react-navigation/native'
-import {useRef} from 'react'
+import * as React from 'react'
 
 import {DiscoverRoutes} from '../../../navigation'
 
 export const useNavigateTo = () => {
   const navigation = useNavigation<NavigationProp<DiscoverRoutes>>()
 
-  return useRef({
+  return React.useRef({
     goBack: () => navigation.goBack(),
-    browserSearch: (isEdit = false) => {
-      return navigation.navigate('browser', {
-        screen: 'browser-search',
-        params: {isEdit},
-      })
-    },
-    discover: () => navigation.navigate('discover-list'),
-    browserView: () =>
-      navigation.navigate('browser', {
-        screen: 'browser-view',
-      }),
-    navigation: () => navigation,
+    searchDappInBrowser: () => navigation.navigate('discover-browser', {screen: 'discover-search-dapp-in-browser'}),
+    selectDappFromList: () => navigation.navigate('discover-select-dapp-from-list'),
+    browseDapp: () => navigation.navigate('discover-browser', {screen: 'discover-browse-dapp'}),
   }).current
 }

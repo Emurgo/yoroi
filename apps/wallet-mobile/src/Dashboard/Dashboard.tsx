@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation} from '@react-navigation/native'
+import {StackNavigationProp} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
 import BigNumber from 'bignumber.js'
 import React from 'react'
@@ -16,7 +17,7 @@ import {useIsGovernanceFeatureEnabled} from '../features/Staking/Governance'
 import {useSelectedWallet} from '../features/WalletManager/Context'
 import globalMessages from '../i18n/global-messages'
 import {Modal} from '../legacy/Modal'
-import {useWalletNavigation} from '../navigation'
+import {DashboardRoutes, useWalletNavigation} from '../navigation'
 import {PoolTransitionNotice} from '../Staking/PoolTransition/PoolTransitionNotice'
 import {usePoolTransition} from '../Staking/PoolTransition/usePoolTransition'
 import {isEmptyString} from '../utils/utils'
@@ -160,20 +161,10 @@ export const Dashboard = () => {
 }
 
 const useNavigateTo = () => {
-  const navigation = useNavigation()
+  const navigation = useNavigation<StackNavigationProp<DashboardRoutes>>()
 
   return {
-    stakingCenter: () => {
-      navigation.navigate('app-root', {
-        screen: 'staking-dashboard',
-        params: {
-          screen: 'staking-center',
-          params: {
-            screen: 'staking-center-main',
-          },
-        },
-      })
-    },
+    stakingCenter: () => navigation.navigate('staking-center', {screen: 'staking-center-main'}),
   }
 }
 
