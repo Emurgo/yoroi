@@ -247,8 +247,6 @@ storiesOf('Icon', module).add('Gallery', () => {
 
         <Item icon={<Icon.Collateral />} title="Collateral" />
 
-        <Item icon={<Icon.Compass />} title="Compass" />
-
         <Item icon={<Icon.Discover />} title="Discover" />
 
         <Item icon={<Icon.CheckFilled2 />} title="CheckFilled2" />
