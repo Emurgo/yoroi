@@ -12,7 +12,7 @@ import {walletConfig} from './wallet-config'
 
 const createDappConnector = (appStorage: App.Storage, wallet: YoroiWallet) => {
   const handlerWallet = {
-    id: MOCK_WALLET_ID,
+    id: wallet.id,
     networkId: wallet.networkId,
     confirmConnection: async (origin: string) => {
       return new Promise<boolean>((resolve) => {
@@ -81,5 +81,3 @@ const getInitScript = (sessionId: string, dappConnector: DappConnector) => {
     sessionId,
   })
 }
-
-const MOCK_WALLET_ID = 'b5d94758-26c5-48b0-af2b-6e68c3ef2dbf'

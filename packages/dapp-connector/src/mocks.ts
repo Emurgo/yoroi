@@ -168,3 +168,6 @@ export const mockedData = {
     ],
   },
 }
+
+export const mockWalletId1 = 'b5d94758-26c5-48b0-af2b-6e68c3ef2dbf'
+export const mockWalletId2 = '7d43e99b-a4a3-4662-b94d-c3213fd9bba1'

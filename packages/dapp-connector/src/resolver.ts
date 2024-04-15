@@ -1,5 +1,5 @@
 import {isKeyOf, isRecord} from '@yoroi/common'
-import {mockedData} from './mocks'
+import {mockedData, mockWalletId1} from './mocks'
 import {Storage} from './adapters/async-storage'
 
 type Context = {
@@ -16,7 +16,7 @@ type Resolver = {
   enable: ResolvableMethod<boolean>
   isEnabled: ResolvableMethod<boolean>
   api: {
-    getBalance: ResolvableMethod<number>
+    getBalance: ResolvableMethod<string>
     getChangeAddresses: ResolvableMethod<string[]>
     getNetworkId: ResolvableMethod<number>
     getRewardAddresses: ResolvableMethod<string[]>
@@ -46,12 +46,12 @@ export const resolver: Resolver = {
     getBalance: async (_params: unknown, context: Context) => {
       assertOriginsMatch(context)
       await assertWalletAcceptedConnection(context)
-      return (mockedData as any)[context.wallet.id]?.balance
+      return mockedData[mockWalletId1].balance
     },
     getChangeAddresses: async (_params: unknown, context: Context) => {
       assertOriginsMatch(context)
       await assertWalletAcceptedConnection(context)
-      return (mockedData as any)[context.wallet.id]?.changeAddresses
+      return mockedData[mockWalletId1].changeAddresses
     },
     getNetworkId: async (_params: unknown, context: Context) => {
       assertOriginsMatch(context)
@@ -61,12 +61,12 @@ export const resolver: Resolver = {
     getRewardAddresses: async (_params: unknown, context: Context) => {
       assertOriginsMatch(context)
       await assertWalletAcceptedConnection(context)
-      return (mockedData as any)[context.wallet.id]?.rewardAddresses
+      return mockedData[mockWalletId1].rewardAddresses
     },
     getUsedAddresses: async (_params: unknown, context: Context) => {
       assertOriginsMatch(context)
       await assertWalletAcceptedConnection(context)
-      return (mockedData as any)[context.wallet.id]?.usedAddresses
+      return mockedData[mockWalletId1].usedAddresses
     },
   },
 } as const
