@@ -159,9 +159,10 @@ export const disableAllEasyConfirmation = async (storage: App.Storage) => {
   })
 
   const updateWalletJSONs = walletIds.map(async (walletId) => {
-    const walletJSON: Record<string, unknown> & {isEasyConfirmationEnabled: boolean} = await walletStorage
+    const walletJSON: null | (Record<string, unknown> & {isEasyConfirmationEnabled: boolean}) = await walletStorage
       .join(`${walletId}/`)
       .getItem('data')
+    if (walletJSON == null) return
     await walletStorage.join(`${walletId}/`).setItem('data', {...walletJSON, isEasyConfirmationEnabled: false})
   })
 
@@ -227,12 +228,14 @@ export const useAuthSetting = (options?: UseQueryOptions<AuthSetting, Error>) =>
   return query.data
 }
 
-export const getAuthSetting = async (storage: App.Storage) =>
-  storage.join('appSettings/').getItem('auth', parseAuthSetting)
+export const getAuthSetting = async (storage: App.Storage) => {
+  const authSetting = await storage.join('appSettings/').getItem('auth', parseAuthSetting)
+  return authSetting ?? undefined
+}
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const isAuthSetting = (data: any): data is 'os' | 'pin' | undefined => ['os', 'pin', undefined].includes(data)
 const parseAuthSetting = (data: unknown) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const isAuthSetting = (data: any): data is 'os' | 'pin' | undefined => ['os', 'pin', undefined].includes(data)
   const parsed = parseSafe(data)
   return isAuthSetting(parsed) ? parsed : undefined
 }

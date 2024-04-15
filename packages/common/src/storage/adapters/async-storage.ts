@@ -1,13 +1,15 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {App, Nullable} from '@yoroi/types'
+import {App} from '@yoroi/types'
 
-import {parseSafe} from '../../helpers/parsers'
+import {parseSafe} from '../../utils/parsers'
 import {isFolderKey} from '../helpers/is-folder-key'
 import {isFileKey} from '../helpers/is-file-key'
 
-// -------
-// FACTORY
-export const mountAsyncStorage = (path: App.StorageFolderName): App.Storage => {
+export const mountAsyncStorage = ({
+  path,
+}: {
+  path: App.StorageFolderName
+}): App.Storage => {
   const withPath = (key: string) =>
     `${path}${key}` as `${App.StorageFolderName}${string}`
   const withoutPath = (value: string) => value.slice(path.length)
@@ -39,7 +41,7 @@ export const mountAsyncStorage = (path: App.StorageFolderName): App.Storage => {
 
   return {
     join: (folderName: App.StorageFolderName) =>
-      mountAsyncStorage(`${path}${folderName}`),
+      mountAsyncStorage({path: `${path}${folderName}`}),
 
     getItem,
     multiGet,
@@ -51,9 +53,9 @@ export const mountAsyncStorage = (path: App.StorageFolderName): App.Storage => {
       const item = stringify(value)
       await AsyncStorage.setItem(withPath(key), item)
     },
-    multiSet: async (
-      tuples: ReadonlyArray<[key: string, value: unknown]>,
-      stringify: (data: unknown) => string = JSON.stringify,
+    multiSet: async <T = unknown>(
+      tuples: ReadonlyArray<[key: string, value: T]>,
+      stringify: (data: T) => string = JSON.stringify,
     ) => {
       const items: Array<[string, string]> = tuples.map(([key, value]) => [
         withPath(key),
@@ -83,7 +85,10 @@ export const mountAsyncStorage = (path: App.StorageFolderName): App.Storage => {
         .then((keys) =>
           keys.filter((key) => key.startsWith(path) && isFileKey({key, path})),
         )
-        .then((filteredKeys) => filteredKeys.map(withoutPath))
+        .then(
+          // temporary any until async interface is migrated to receive keys for multi storage
+          (filteredKeys) => filteredKeys.map(withoutPath) as ReadonlyArray<any>,
+        )
     },
     clear: async () => {
       const keys = await AsyncStorage.getAllKeys()
@@ -102,7 +107,7 @@ export const mountAsyncMultiStorage = <T = unknown>(
     dataFolder,
     keyExtractor,
     serializer = JSON.stringify,
-    deserializer = parseSafe as (item: string | null) => Nullable<T>,
+    deserializer = parseSafe as (item: string | null) => T | null,
   } = options
   const dataStorage = storage.join(dataFolder)
   const {getAllKeys: getAllKeysStorage, multiSet, multiGet} = dataStorage
@@ -120,10 +125,10 @@ export const mountAsyncMultiStorage = <T = unknown>(
   }
   const readAll = () =>
     getAllKeys().then((keysToRead) =>
-      multiGet<Nullable<T>>(keysToRead, deserializer),
+      multiGet<T | null>(keysToRead, deserializer),
     )
   const readMany = (keysToRead: ReadonlyArray<string>) =>
-    dataStorage.multiGet<Nullable<T>>(keysToRead, deserializer)
+    dataStorage.multiGet<T | null>(keysToRead, deserializer)
   const removeMany = (keysToRead: ReadonlyArray<string>) =>
     dataStorage.multiRemove(keysToRead)
   const getAllKeys = () => getAllKeysStorage().then((keys) => keys)
