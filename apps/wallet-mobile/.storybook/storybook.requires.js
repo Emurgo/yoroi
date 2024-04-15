@@ -269,6 +269,7 @@ const getStories = () => {
     "./src/Nfts/Nfts.stories.tsx": require("../src/Nfts/Nfts.stories.tsx"),
     "./src/Nfts/NoNftsScreen.stories.tsx": require("../src/Nfts/NoNftsScreen.stories.tsx"),
     "./src/Staking/DelegationConfirmation/DelegationConfirmation.stories.tsx": require("../src/Staking/DelegationConfirmation/DelegationConfirmation.stories.tsx"),
+    "./src/Staking/FailedTx/FailedTxScreen.stories.tsx": require("../src/Staking/FailedTx/FailedTxScreen.stories.tsx"),
     "./src/Staking/PoolDetails/PoolDetailScreen.stories.tsx": require("../src/Staking/PoolDetails/PoolDetailScreen.stories.tsx"),
     "./src/Staking/PoolWarningModal/PoolWarningModal.stories.tsx": require("../src/Staking/PoolWarningModal/PoolWarningModal.stories.tsx"),
     "./src/Staking/StakingCenter/StakingCenter.stories.tsx": require("../src/Staking/StakingCenter/StakingCenter.stories.tsx"),

@@ -190,6 +190,7 @@ export type StakingCenterRoutes = {
     poolId: string
     yoroiUnsignedTx: YoroiUnsignedTx
   }
+  'delegation-failed-tx': undefined
 }
 
 export type SwapTabRoutes = {
@@ -276,6 +277,7 @@ export type DashboardRoutes = {
     poolId: string
     yoroiUnsignedTx: YoroiUnsignedTx
   }
+  'delegation-failed-tx': undefined
 }
 
 export type VotingRegistrationRoutes = {

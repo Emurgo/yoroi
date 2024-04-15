@@ -86,22 +86,23 @@ export const usePoolTransition = () => {
     try {
       const yoroiUnsignedTx = await createDelegationTx(wallet, poolId)
       navigation.navigate('app-root', {
-        screen: 'main-wallet-routes',
+        screen: 'staking-dashboard',
         params: {
-          screen: 'staking-dashboard',
+          screen: 'delegation-confirmation',
+          initial: false,
           params: {
-            screen: 'delegation-confirmation',
-            initial: false,
-            params: {
-              poolId,
-              yoroiUnsignedTx,
-            },
+            poolId,
+            yoroiUnsignedTx,
           },
         },
       })
     } catch (err) {
       navigation.navigate('app-root', {
-        screen: 'wallet-selection',
+        screen: 'staking-dashboard',
+        params: {
+          screen: 'delegation-failed-tx',
+          initial: false,
+        },
       })
     }
   }, [navigation, poolId, wallet])
