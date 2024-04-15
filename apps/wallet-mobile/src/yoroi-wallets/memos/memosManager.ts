@@ -33,7 +33,7 @@ export const makeMemosManager = async (storage: App.Storage) => {
   } as const
 }
 
-const filterCorruptEntries = (tuples: ReadonlyArray<[string, string | undefined | null]>) => {
+const filterCorruptEntries = (tuples: ReadonlyArray<[string, unknown]>) => {
   return tuples.filter((tuple): tuple is [string, string] => isString(tuple[1]))
 }
 
