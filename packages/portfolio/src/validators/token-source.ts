@@ -1,13 +1,10 @@
+import {createTypeGuardFromSchema} from '@yoroi/common'
 import {Portfolio} from '@yoroi/types'
 import {z} from 'zod'
 
 export const TokenSourceSchema = z.nativeEnum(Portfolio.Token.Source)
 
-export const isTokenSource = (
-  data: unknown,
-): data is Portfolio.Token.Source => {
-  return TokenSourceSchema.safeParse(data).success
-}
+export const isTokenSource = createTypeGuardFromSchema(TokenSourceSchema)
 
 export const parseTokenSource = (
   data: unknown,

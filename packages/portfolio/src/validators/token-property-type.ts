@@ -1,3 +1,4 @@
+import {createTypeGuardFromSchema} from '@yoroi/common'
 import {Portfolio} from '@yoroi/types'
 import {z} from 'zod'
 
@@ -5,11 +6,9 @@ export const TokenPropertyTypeSchema = z.nativeEnum(
   Portfolio.Token.PropertyType,
 )
 
-export const isTokenPropertyType = (
-  data: unknown,
-): data is Portfolio.Token.PropertyType => {
-  return TokenPropertyTypeSchema.safeParse(data).success
-}
+export const isTokenPropertyType = createTypeGuardFromSchema(
+  TokenPropertyTypeSchema,
+)
 
 export const parseTokenPropertyType = (
   data: unknown,

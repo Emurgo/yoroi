@@ -1,13 +1,10 @@
+import {createTypeGuardFromSchema} from '@yoroi/common'
 import {Portfolio} from '@yoroi/types'
 import {z} from 'zod'
 
 export const TokenNatureSchema = z.nativeEnum(Portfolio.Token.Nature)
 
-export const isTokenNature = (
-  data: unknown,
-): data is Portfolio.Token.Nature => {
-  return TokenNatureSchema.safeParse(data).success
-}
+export const isTokenNature = createTypeGuardFromSchema(TokenNatureSchema)
 
 export const parseTokenNature = (
   data: unknown,
