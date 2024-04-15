@@ -16,7 +16,7 @@ export const portfolioApiMaker = ({
   const config = apiConfig[network]
   return freeze(
     {
-      tokenDiscoveries(idsWithCache) {
+      async tokenDiscoveries(idsWithCache) {
         return request<
           Portfolio.Api.TokenDiscoveriesResponse,
           ReadonlyArray<Api.RequestWithCache<Portfolio.Token.Id>>
@@ -30,8 +30,8 @@ export const portfolioApiMaker = ({
           },
         })
       },
-      tokenInfos(idsWithCache) {
-        return request<
+      async tokenInfos(idsWithCache) {
+        const response = await request<
           DullahanApiTokenInfosResponse,
           ReadonlyArray<Api.RequestWithCache<Portfolio.Token.Id>>
         >({
@@ -42,27 +42,26 @@ export const portfolioApiMaker = ({
             'Content-Type': 'application/json',
             'Accept': 'application/json',
           },
-        }).then((response) => {
-          if (isLeft(response)) return response
+        })
+        if (isLeft(response)) return response
 
-          const transformedResponseData = toSecondaryTokenInfos(
-            response.value.data,
+        const transformedResponseData = toSecondaryTokenInfos(
+          response.value.data,
+        )
+
+        const transformedResponse: Api.Response<Portfolio.Api.TokenInfosResponse> =
+          freeze(
+            {
+              tag: 'right',
+              value: {
+                status: response.value.status,
+                data: transformedResponseData,
+              },
+            },
+            true,
           )
 
-          const transformedResponse: Api.Response<Portfolio.Api.TokenInfosResponse> =
-            freeze(
-              {
-                tag: 'right',
-                value: {
-                  status: response.value.status,
-                  data: transformedResponseData,
-                },
-              },
-              true,
-            )
-
-          return transformedResponse
-        })
+        return transformedResponse
       },
     },
     true,
