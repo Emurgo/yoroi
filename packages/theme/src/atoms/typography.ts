@@ -1,6 +1,6 @@
 import {TextStyle} from 'react-native'
 
-import {Typography} from './types'
+import {Typography} from '../types'
 
 const fontFamily: Record<string, TextStyle> = {
   regular: {
@@ -10,21 +10,6 @@ const fontFamily: Record<string, TextStyle> = {
     fontFamily: 'Rubik-Medium',
   },
 }
-
-// const fontScale: Record<string, TextStyle> = {
-//   small: {
-//     fontWeight: '300',
-//   },
-//   normall: {
-//     fontWeight: '400',
-//   },
-//   big: {
-//     fontWeight: '500',
-//   },
-//   large: {
-//     fontWeight: '600',
-//   },
-// }
 
 const size: Record<string, TextStyle> = {
   h1: {
@@ -64,7 +49,7 @@ const size: Record<string, TextStyle> = {
     fontSize: 10,
     lineHeight: 18,
   },
-}
+} as const
 
 export const typography: Typography = {
   'heading-1-medium': {
@@ -165,4 +150,4 @@ export const typography: Typography = {
     lineHeight: 18,
     textTransform: 'uppercase',
   },
-}
+} as const

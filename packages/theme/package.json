@@ -87,7 +87,8 @@
           "useTabs": false,
           "semi": false
         }
-      ]
+      ],
+      "react-native/no-inline-styles": "off"
     },
     "root": true
   },
@@ -125,10 +126,6 @@
       "<rootDir>/jest.setup.ts"
     ]
   },
-  "dependencies": {
-    "@yoroi/common": "^1.5.2",
-    "@yoroi/types": "^1.5.3"
-  },
   "devDependencies": {
     "@babel/preset-env": "^7.23.3",
     "@babel/preset-typescript": "^7.23.2",
@@ -145,6 +142,8 @@
     "@types/jest": "^29.5.12",
     "@types/react": "^18.2.55",
     "@types/react-test-renderer": "^18.0.7",
+    "@yoroi/common": "^1.5.2",
+    "@yoroi/types": "^1.5.3",
     "axios-mock-adapter": "^1.21.5",
     "commitlint": "^17.0.2",
     "del-cli": "^5.0.0",
@@ -166,6 +165,7 @@
     "typescript": "^5.3.3"
   },
   "peerDependencies": {
+    "@yoroi/common": "^1.5.2",
     "react": ">= 16.8.0 <= 19.0.0"
   },
   "packageManager": "yarn@1.22.21",

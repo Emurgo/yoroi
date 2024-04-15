@@ -1,13 +1,9 @@
-/* eslint-disable react-native/no-inline-styles */
-import {storiesOf} from '@storybook/react-native'
 import * as React from 'react'
 import {ScrollView, Switch, Text, View} from 'react-native'
 
-import {useTheme} from './ThemeProvider'
+import {useTheme} from '../ThemeProvider'
 
-storiesOf('ThemeProvider', module).add('ThemeProvider', () => <ThemeGallery />)
-
-const ThemeGallery = () => {
+export const StorybookTheme = () => {
   const {theme, colorScheme, selectColorScheme} = useTheme()
 
   return (

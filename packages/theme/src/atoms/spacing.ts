@@ -1,4 +1,4 @@
-import {Direction, SpacingSize} from './types'
+import {Direction, SpacingSize} from '../types'
 
 export const baseSpace: Record<SpacingSize, number> = {
   none: 0,

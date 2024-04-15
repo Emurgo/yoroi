@@ -1,12 +1,9 @@
-/* eslint-disable react-native/no-inline-styles */
-import {storiesOf} from '@storybook/react-native'
 import * as React from 'react'
 import {ScrollView, Switch, Text as RNText, TextProps, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {darkPalette, lightPalette} from './palettes'
-
-storiesOf('Palette', module).add('Palette', () => <WithColorScheme />)
+import {darkPalette} from '../base-palettes/dark-palette'
+import {lightPalette} from '../base-palettes/light-palette'
 
 const Palette = () => {
   const [colorScheme, setColorScheme] = useColorScheme()
@@ -221,7 +218,7 @@ const Text = (props: TextProps) => {
 const ColorSchemeContext = React.createContext<
   undefined | ['light' | 'dark', (colorScheme: 'light' | 'dark') => void]
 >(undefined)
-const WithColorScheme = () => {
+export const StorybookPalette = () => {
   return (
     <ColorSchemeContext.Provider
       value={React.useState<'light' | 'dark'>('light')}

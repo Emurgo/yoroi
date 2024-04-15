@@ -1,6 +1,7 @@
 import {TextStyle} from 'react-native'
 
 export type Theme = {
+  name: 'default-light' | 'default-dark'
   color: Palette
   typography: Typography
   padding: Spacing

@@ -1,7 +1,7 @@
 import React from 'react'
 
-import {darkTheme} from './darkTheme'
-import {lightTheme} from './lightTheme'
+import {darkTheme} from './themes/darkTheme'
+import {lightTheme} from './themes/lightTheme'
 import {Theme} from './types'
 
 const ThemeContext = React.createContext<undefined | ThemeContext>(undefined)

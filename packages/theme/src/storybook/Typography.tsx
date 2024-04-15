@@ -1,13 +1,9 @@
-/* eslint-disable react-native/no-inline-styles */
-import {storiesOf} from '@storybook/react-native'
 import * as React from 'react'
 import {ScrollView, Text, View} from 'react-native'
 
-import {typography} from './typography'
+import {typography} from '../atoms/typography'
 
-storiesOf('Typography', module).add('default', () => <Typography />)
-
-const Typography = () => {
+export const StorybookTypography = () => {
   return (
     <ScrollView
       style={{backgroundColor: 'white'}}
