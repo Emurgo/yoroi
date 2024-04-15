@@ -2,12 +2,12 @@ import {handleEvent} from './resolver'
 import {connectWallet} from './connector'
 import {DappConnection, Storage} from './adapters/async-storage'
 
-export const dappConnectorMaker = (storage: Storage): DappConnector => {
-  return new DappConnector(storage)
+export const dappConnectorMaker = (storage: Storage, wallet: Wallet): DappConnector => {
+  return new DappConnector(storage, wallet)
 }
 
 export class DappConnector {
-  constructor(private storage: Storage) {}
+  constructor(private storage: Storage, private wallet: Wallet) {}
 
   public listAllConnections = async () => {
     return this.storage.read()
@@ -17,8 +17,8 @@ export class DappConnector {
     return this.storage.remove(connection)
   }
 
-  public addConnection = async (connection: DappConnection) => {
-    return this.storage.save(connection)
+  public addConnection = async (options: {dappOrigin: string; walletId?: string}) => {
+    return this.storage.save({walletId: options.walletId ?? this.wallet.id, dappOrigin: options.dappOrigin})
   }
 
   public getWalletConnectorScript = (props: {
@@ -33,10 +33,9 @@ export class DappConnector {
   public handleEvent = async (
     eventData: string,
     trustedUrl: string,
-    wallet: Wallet,
     sendMessage: (id: string, result: unknown, error?: Error) => void,
   ) => {
-    return await handleEvent(eventData, trustedUrl, wallet, sendMessage, this.storage)
+    return await handleEvent(eventData, trustedUrl, this.wallet, sendMessage, this.storage)
   }
 }
 
