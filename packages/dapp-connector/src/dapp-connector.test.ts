@@ -41,7 +41,7 @@ describe('DappConnector', () => {
 
     it('should not crash when trying to remove a connection that does not exist', async () => {
       const dappConnector = getDappConnector()
-      await dappConnector.removeConnection({walletId, dappOrigin: 'fake-url'})
+      await dappConnector.removeConnection({dappOrigin: 'fake-url'})
     })
 
     it('should add a connection', async () => {
@@ -63,7 +63,7 @@ describe('DappConnector', () => {
       await dappConnector.addConnection({dappOrigin: 'fake-url-2'})
       await dappConnector.addConnection({walletId: 'new-wallet-id', dappOrigin: 'fake-url-1'})
 
-      await dappConnector.removeConnection({walletId, dappOrigin: 'fake-url-1'})
+      await dappConnector.removeConnection({dappOrigin: 'fake-url-1'})
       expect(await dappConnector.listAllConnections()).toEqual([
         {walletId, dappOrigin: 'fake-url-2'},
         {walletId: 'new-wallet-id', dappOrigin: 'fake-url-1'},

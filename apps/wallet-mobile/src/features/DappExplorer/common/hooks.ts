@@ -7,16 +7,30 @@ import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {Logger} from '../../../yoroi-wallets/logging'
+import {useSelectedWallet} from '../../WalletManager/Context'
 import {walletConfig} from './wallet-config'
 
-const createDappConnector = (appStorage: App.Storage) => {
+const createDappConnector = (appStorage: App.Storage, wallet: YoroiWallet) => {
+  const handlerWallet = {
+    id: MOCK_WALLET_ID,
+    networkId: wallet.networkId,
+    confirmConnection: async (origin: string) => {
+      return new Promise<boolean>((resolve) => {
+        Alert.alert('Confirm connection', `Do you want to connect to ${origin}?`, [
+          {text: 'Cancel', style: 'cancel', onPress: () => resolve(false)},
+          {text: 'OK', onPress: () => resolve(true)},
+        ])
+      })
+    },
+  }
   const storage = connectionStorageMaker({storage: appStorage.join('dapp-connections/')})
-  return dappConnectorMaker(storage)
+  return dappConnectorMaker(storage, handlerWallet)
 }
 
 const useDappConnector = () => {
   const appStorage = useAsyncStorage()
-  return React.useMemo(() => createDappConnector(appStorage), [appStorage])
+  const wallet = useSelectedWallet()
+  return React.useMemo(() => createDappConnector(appStorage, wallet), [appStorage, wallet])
 }
 
 const generateSessionId = () => Math.random().toString(36).substring(7)
@@ -39,21 +53,8 @@ export const useConnectWalletToWebView = (wallet: YoroiWallet, webViewRef: React
     const {data} = e.nativeEvent
     const webViewUrl = e.nativeEvent.url
 
-    const handlerWallet = {
-      id: MOCK_WALLET_ID,
-      networkId: wallet.networkId,
-      confirmConnection: async (origin: string) => {
-        return new Promise<boolean>((resolve) => {
-          Alert.alert('Confirm connection', `Do you want to connect to ${origin}?`, [
-            {text: 'Cancel', style: 'cancel', onPress: () => resolve(false)},
-            {text: 'OK', onPress: () => resolve(true)},
-          ])
-        })
-      },
-    }
-
     try {
-      await dappConnector.handleEvent(data, webViewUrl, handlerWallet, sendMessageToWebView(data))
+      await dappConnector.handleEvent(data, webViewUrl, sendMessageToWebView(data))
     } catch (e) {
       Logger.error('DappConnector', 'handleWebViewEvent::error', e)
     }
