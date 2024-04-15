@@ -33,10 +33,10 @@ const Palette = () => {
 
         <Switch
           trackColor={{
-            false: palette.primary[500],
-            true: palette.secondary[500],
+            false: palette.primary_500,
+            true: palette.secondary_500,
           }}
-          ios_backgroundColor={palette.primary[500]}
+          ios_backgroundColor={palette.primary_500}
           value={colorScheme === 'light'}
           onChange={() =>
             setColorScheme(colorScheme === 'light' ? 'dark' : 'light')
@@ -45,91 +45,91 @@ const Palette = () => {
       </View>
 
       <Section title="Grayscale">
-        <Item title="max" color={palette.gray.max} />
+        <Item title="max" color={palette.gray_max} />
 
-        <Item title="900" color={palette.gray['900']} />
+        <Item title="900" color={palette.gray_900} />
 
-        <Item title="800" color={palette.gray['800']} />
+        <Item title="800" color={palette.gray_800} />
 
-        <Item title="700" color={palette.gray['700']} />
+        <Item title="700" color={palette.gray_700} />
 
-        <Item title="600" color={palette.gray['600']} />
+        <Item title="600" color={palette.gray_600} />
 
-        <Item title="500" color={palette.gray['500']} />
+        <Item title="500" color={palette.gray_500} />
 
-        <Item title="400" color={palette.gray['400']} />
+        <Item title="400" color={palette.gray_400} />
 
-        <Item title="300" color={palette.gray['300']} />
+        <Item title="300" color={palette.gray_300} />
 
-        <Item title="200" color={palette.gray['200']} />
+        <Item title="200" color={palette.gray_200} />
 
-        <Item title="100" color={palette.gray['100']} />
+        <Item title="100" color={palette.gray_100} />
 
-        <Item title="50" color={palette.gray['50']} />
+        <Item title="50" color={palette.gray_50} />
 
-        <Item title="min" color={palette.gray.min} />
+        <Item title="min" color={palette.gray_min} />
       </Section>
 
       <Section title="Primary">
-        <Item title="900" color={palette.primary['900']} />
+        <Item title="900" color={palette.primary_900} />
 
-        <Item title="800" color={palette.primary['800']} />
+        <Item title="800" color={palette.primary_800} />
 
-        <Item title="700" color={palette.primary['700']} />
+        <Item title="700" color={palette.primary_700} />
 
-        <Item title="600" color={palette.primary['600']} />
+        <Item title="600" color={palette.primary_600} />
 
-        <Item title="500" color={palette.primary['500']} />
+        <Item title="500" color={palette.primary_500} />
 
-        <Item title="400" color={palette.primary['400']} />
+        <Item title="400" color={palette.primary_400} />
 
-        <Item title="300" color={palette.primary['300']} />
+        <Item title="300" color={palette.primary_300} />
 
-        <Item title="200" color={palette.primary['200']} />
+        <Item title="200" color={palette.primary_200} />
 
-        <Item title="100" color={palette.primary['100']} />
+        <Item title="100" color={palette.primary_100} />
       </Section>
 
       <Section title="Secondary">
-        <Item title="900" color={palette.secondary['900']} />
+        <Item title="900" color={palette.secondary_900} />
 
-        <Item title="800" color={palette.secondary['800']} />
+        <Item title="800" color={palette.secondary_800} />
 
-        <Item title="700" color={palette.secondary['700']} />
+        <Item title="700" color={palette.secondary_700} />
 
-        <Item title="600" color={palette.secondary['600']} />
+        <Item title="600" color={palette.secondary_600} />
 
-        <Item title="500" color={palette.secondary['500']} />
+        <Item title="500" color={palette.secondary_500} />
 
-        <Item title="400" color={palette.secondary['400']} />
+        <Item title="400" color={palette.secondary_400} />
 
-        <Item title="300" color={palette.secondary['300']} />
+        <Item title="300" color={palette.secondary_300} />
 
-        <Item title="200" color={palette.secondary['200']} />
+        <Item title="200" color={palette.secondary_200} />
 
-        <Item title="100" color={palette.secondary['100']} />
+        <Item title="100" color={palette.secondary_100} />
       </Section>
 
       <Section title="Magenta">
-        <Item title="500" color={palette.magenta['500']} />
+        <Item title="500" color={palette.magenta_500} />
 
-        <Item title="300" color={palette.magenta['300']} />
+        <Item title="300" color={palette.magenta_300} />
 
-        <Item title="100" color={palette.magenta['100']} />
+        <Item title="100" color={palette.magenta_100} />
       </Section>
 
       <Section title="Cyan">
-        <Item title="400" color={palette.cyan['500']} />
+        <Item title="400" color={palette.cyan_500} />
 
-        <Item title="100" color={palette.cyan['100']} />
+        <Item title="100" color={palette.cyan_100} />
       </Section>
 
       <Section title="Gradients">
-        <Gradient title="blue-green" colors={palette.gradients['blue-green']} />
+        <Gradient title="blue-green" colors={palette.gradients_blue_green} />
 
-        <Gradient title="blue" colors={palette.gradients.blue} />
+        <Gradient title="blue" colors={palette.gradients_blue} />
 
-        <Gradient title="green" colors={palette.gradients.green} />
+        <Gradient title="green" colors={palette.gradients_green} />
       </Section>
     </ScrollView>
   )
@@ -181,13 +181,7 @@ const Item = ({title, color}: {title: string; color: string}) => {
   )
 }
 
-const Gradient = ({
-  title,
-  colors,
-}: {
-  title: string
-  colors: [string, string]
-}) => {
+const Gradient = ({title, colors}: {title: string; colors: string[]}) => {
   return (
     <View style={{alignItems: 'center'}}>
       <Text>{title}</Text>
@@ -218,7 +212,7 @@ const Text = (props: TextProps) => {
 const ColorSchemeContext = React.createContext<
   undefined | ['light' | 'dark', (colorScheme: 'light' | 'dark') => void]
 >(undefined)
-export const StorybookPalette = () => {
+export const BasePalette = () => {
   return (
     <ColorSchemeContext.Provider
       value={React.useState<'light' | 'dark'>('light')}

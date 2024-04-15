@@ -1,11 +1,8 @@
-import {padding} from '../atoms/spacing'
 import {Theme} from '../types'
-import {typography} from '../atoms/typography'
-import {light} from '../theme-palettes/light'
+import {light} from '../themed-palettes/light'
 
-export const lightTheme: Theme = {
+export const defaultLightTheme: Theme = {
+  base: 'light',
   name: 'default-light',
   color: light,
-  typography: typography,
-  padding: padding,
 }

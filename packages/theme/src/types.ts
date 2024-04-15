@@ -1,113 +1,74 @@
-import {TextStyle} from 'react-native'
-
 export type Theme = {
-  name: 'default-light' | 'default-dark'
+  base: BaseThemePalette
+  name: SupportedThemes
   color: Palette
-  typography: Typography
-  padding: Spacing
 }
+
+export type BaseThemePalette = 'light' | 'dark'
+
+export type SupportedThemes = 'default-light' | 'default-dark' | 'system'
+
+export type ThemeStorage = Readonly<{
+  save: (name: SupportedThemes) => void
+  read: () => SupportedThemes | null
+  key: string
+}>
 
 export type HexColor = `#${string}`
 
-export type Gradient = [HexColor, HexColor]
+export type Gradient = HexColor[]
 
 export type Palette = {
-  'black-static': HexColor
-  'white-static': HexColor
-  'gray': {
-    max: HexColor
-    900: HexColor
-    800: HexColor
-    700: HexColor
-    600: HexColor
-    500: HexColor
-    400: HexColor
-    300: HexColor
-    200: HexColor
-    100: HexColor
-    50: HexColor
-    min: HexColor
-  }
-  'primary': {
-    900: HexColor
-    800: HexColor
-    700: HexColor
-    600: HexColor
-    500: HexColor
-    400: HexColor
-    300: HexColor
-    200: HexColor
-    100: HexColor
-  }
-  'secondary': {
-    900: HexColor
-    800: HexColor
-    700: HexColor
-    600: HexColor
-    500: HexColor
-    400: HexColor
-    300: HexColor
-    200: HexColor
-    100: HexColor
-  }
-  'magenta': {
-    700: HexColor
-    600: HexColor
-    500: HexColor
-    300: HexColor
-    100: HexColor
-  }
-  'cyan': {
-    500: HexColor
-    100: HexColor
-  }
-  'yellow': {
-    500: HexColor
-    100: HexColor
-  }
-  'gradients': {
-    'blue-green': Gradient
-    'green': Gradient
-    'blue': Gradient
-    'light': Gradient
-    'green-blue': [HexColor, HexColor, HexColor, HexColor, HexColor, HexColor]
-  }
-  'bottom-sheet-background': HexColor
-  'bottom-sheet-opacity': string
-  'overlay-extension': {hex: HexColor; opacity: number}
-  'overlay-mobile': {hex: HexColor; opacity: number}
-  'sidebar-overlay': {hex: HexColor; opacity: number}
-  'sidebar-item': {hex: HexColor; opacity: number}
-}
-
-type TypographyKeys =
-  | 'heading-1-medium'
-  | 'heading-1-regular'
-  | 'heading-2-medium'
-  | 'heading-2-regular'
-  | 'heading-3-medium'
-  | 'heading-3-regular'
-  | 'heading-4-medium'
-  | 'heading-4-regular'
-  | 'body-1-l-medium'
-  | 'body-1-l-regular'
-  | 'body-2-m-medium'
-  | 'body-2-m-regular'
-  | 'body-3-s-medium'
-  | 'body-3-s-regular'
-  | 'button-1-l'
-  | 'button-2-m'
-  | 'link-1-l'
-  | 'link-1-l-underline'
-  | 'link-2-m'
-  | 'link-2-m-underline'
-  | 'navbar'
-
-export type Typography = Record<TypographyKeys, TextStyle>
-
-export type Direction = 'x' | 'y' | 't' | 'b' | 'l' | 'r'
-export type SpacingSize = 'none' | 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl'
-type SpacingKeys = `${Direction}-${SpacingSize}` | SpacingSize | 'none'
-export type Spacing = {
-  [key in SpacingKeys]?: Record<string, number>
+  black_static: HexColor
+  white_static: HexColor
+  gray_max: HexColor
+  gray_900: HexColor
+  gray_800: HexColor
+  gray_700: HexColor
+  gray_600: HexColor
+  gray_500: HexColor
+  gray_400: HexColor
+  gray_300: HexColor
+  gray_200: HexColor
+  gray_100: HexColor
+  gray_50: HexColor
+  gray_min: HexColor
+  primary_900: HexColor
+  primary_800: HexColor
+  primary_700: HexColor
+  primary_600: HexColor
+  primary_500: HexColor
+  primary_400: HexColor
+  primary_300: HexColor
+  primary_200: HexColor
+  primary_100: HexColor
+  secondary_900: HexColor
+  secondary_800: HexColor
+  secondary_700: HexColor
+  secondary_600: HexColor
+  secondary_500: HexColor
+  secondary_400: HexColor
+  secondary_300: HexColor
+  secondary_200: HexColor
+  secondary_100: HexColor
+  magenta_700: HexColor
+  magenta_600: HexColor
+  magenta_500: HexColor
+  magenta_300: HexColor
+  magenta_100: HexColor
+  cyan_500: HexColor
+  cyan_100: HexColor
+  yellow_500: HexColor
+  yellow_100: HexColor
+  gradients_blue_green: Gradient
+  gradients_green: Gradient
+  gradients_blue: Gradient
+  gradients_light: Gradient
+  gradients_green_blue: Gradient
+  bottom_sheet_background: HexColor
+  bottom_sheet_opacity: string
+  overlay_extension: {hex: HexColor; opacity: number}
+  overlay_mobile: {hex: HexColor; opacity: number}
+  sidebar_overlay: {hex: HexColor; opacity: number}
+  sidebar_item: {hex: HexColor; opacity: number}
 }

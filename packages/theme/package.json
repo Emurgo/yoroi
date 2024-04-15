@@ -24,7 +24,7 @@
   "module": "lib/module/index",
   "source": "src/index",
   "browser": "lib/module/index",
-  "types": "lib/typescript/src/index.d.ts",
+  "types": "lib/typescript/index.d.ts",
   "files": [
     "src",
     "lib",
@@ -40,7 +40,7 @@
     "!**/.*"
   ],
   "scripts": {
-    "build": "yarn tsc && yarn lint && yarn clean && bob build",
+    "build": "yarn tsc && yarn lint && yarn test --ci --silent && yarn clean && bob build",
     "build:release": "yarn build && yarn flow",
     "clean": "del-cli lib",
     "dgraph": "depcruise src --include-only \"^src\" --output-type dot | dot -T svg > dependency-graph.svg",
@@ -96,14 +96,15 @@
     "node_modules/",
     "lib/",
     "babel.config.js",
-    "jest.setup.ts",
+    "jest.setup.js",
     "coverage/"
   ],
   "jest": {
     "collectCoverage": true,
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}",
-      "!src/**/*.d.ts"
+      "!src/**/*.d.ts",
+      "!src/storybook/**"
     ],
     "coverageReporters": [
       "text-summary",
@@ -123,18 +124,14 @@
     ],
     "preset": "react-native",
     "setupFiles": [
-      "<rootDir>/jest.setup.ts"
+      "<rootDir>/jest.setup.js"
     ]
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.23.3",
-    "@babel/preset-typescript": "^7.23.2",
     "@commitlint/config-conventional": "^17.0.2",
     "@react-native-async-storage/async-storage": "^1.19.3",
     "@react-native-community/eslint-config": "^3.0.2",
     "@release-it/conventional-changelog": "^5.0.0",
-    "@testing-library/jest-dom": "^6.0.0",
-    "@testing-library/react": "^14.0.0",
     "@testing-library/react-hooks": "^8.0.1",
     "@testing-library/react-native": "^12.3.0",
     "@tsconfig/react-native": "^3.0.3",

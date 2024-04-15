@@ -1,11 +1,8 @@
-import {padding} from '../atoms/spacing'
 import {Theme} from '../types'
-import {typography} from '../atoms/typography'
-import {black} from '../theme-palettes/black'
+import {black} from '../themed-palettes/black'
 
-export const darkTheme: Theme = {
+export const defaultDarkTheme: Theme = {
+  base: 'dark',
   name: 'default-dark',
   color: black,
-  typography: typography,
-  padding: padding,
 }

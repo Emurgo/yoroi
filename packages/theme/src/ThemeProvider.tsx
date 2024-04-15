@@ -1,53 +1,62 @@
 import React from 'react'
+import {useColorScheme} from 'react-native'
 
-import {darkTheme} from './themes/darkTheme'
-import {lightTheme} from './themes/lightTheme'
-import {Theme} from './types'
+import {Palette, SupportedThemes, Theme, ThemeStorage} from './types'
+import {defaultLightTheme} from './themes/default-light'
+import {defaultDarkTheme} from './themes/default-dark'
+import {detectTheme} from './helpers/detect-theme'
 
 const ThemeContext = React.createContext<undefined | ThemeContext>(undefined)
-export const ThemeProvider = ({children}: {children: React.ReactNode}) => {
-  const [colorScheme, setColorScheme] = React.useState<'light' | 'dark'>(
-    'light',
-  )
-
-  const selectColorScheme = React.useCallback(
-    (themeColor: 'light' | 'dark') => {
-      setColorScheme(themeColor)
-    },
-    [],
-  )
+export const ThemeProvider = ({
+  children,
+  storage,
+}: {
+  children: React.ReactNode
+  storage: ThemeStorage
+}) => {
+  const colorScheme = useColorScheme()
+  const [themeName, setThemeName] = React.useState<
+    Exclude<SupportedThemes, 'system'>
+  >(detectTheme(colorScheme, storage.read() ?? 'system'))
 
   const value = React.useMemo(
     () => ({
-      theme: themes[colorScheme],
-      colorScheme,
-      selectColorScheme,
-      isLight: colorScheme === 'light',
-      isDark: colorScheme === 'dark',
+      name: themes[themeName].name,
+      color: themes[themeName].color,
+
+      selectThemeName: (newTheme: SupportedThemes) => {
+        const detectedTheme = detectTheme(colorScheme, newTheme)
+        setThemeName(detectedTheme)
+        storage.save(newTheme)
+      },
+
+      isLight: themes[themeName].base === 'light',
+      isDark: themes[themeName].base === 'dark',
     }),
-    [colorScheme, selectColorScheme],
+    [colorScheme, storage, themeName],
   )
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
 }
 
 export const useTheme = () =>
-  React.useContext(ThemeContext) || missingProvider()
+  React.useContext(ThemeContext) ?? missingProvider()
 
-const missingProvider = () => {
-  throw new Error('ThemeProvider is missing')
-}
+export const useThemeColor = () => useTheme().color
 
-type ColorSchemeOption = 'light' | 'dark'
 type ThemeContext = {
-  theme: Theme
-  colorScheme: ColorSchemeOption
-  selectColorScheme: (colorTheme: ColorSchemeOption) => void
+  name: SupportedThemes
+  color: Palette
+  selectThemeName: (name: SupportedThemes) => void
   isLight: boolean
   isDark: boolean
 }
 
-const themes: Record<'light' | 'dark', Theme> = {
-  light: lightTheme,
-  dark: darkTheme,
+const themes: Record<Exclude<SupportedThemes, 'system'>, Theme> = {
+  ['default-light']: defaultLightTheme,
+  ['default-dark']: defaultDarkTheme,
+}
+
+const missingProvider = () => {
+  throw new Error('ThemeProvider is missing')
 }

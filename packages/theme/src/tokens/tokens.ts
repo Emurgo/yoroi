@@ -2,9 +2,9 @@ export const space = {
   none: 0,
   _2xs: 2,
   xs: 4,
-  s: 8,
-  m: 12,
-  l: 16,
+  sm: 8,
+  md: 12,
+  lg: 16,
   xl: 24,
   _2xl: 32,
 } as const
@@ -16,7 +16,7 @@ export const borderRadius = {
   full: 999,
 } as const
 
-export const fontSizes = {
+export const fontSize = {
   _2xs: 10,
   xs: 12,
   sm: 14,
@@ -28,14 +28,27 @@ export const fontSizes = {
 } as const
 
 export const lineHeight = {
-  none: 1,
-  normal: 1.5,
-  relaxed: 1.625,
+  _2xs: 18,
+  xs: 18,
+  sm: 22,
+  md: 24,
+  lg: 26,
+  xl: 30,
+  _2xl: 32,
+  _3xl: 36,
 } as const
 
 export const fontWeight = {
-  light: '300',
+  thin: '300',
   normal: '400',
   semibold: '500',
   bold: '600',
+} as const
+
+export const tokens = {
+  space,
+  borderRadius,
+  fontSize,
+  lineHeight,
+  fontWeight,
 } as const
