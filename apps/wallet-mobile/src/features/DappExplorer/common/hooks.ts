@@ -1,37 +1,10 @@
-import {useAsyncStorage} from '@yoroi/common'
-import {connectionStorageMaker, DappConnector, dappConnectorMaker} from '@yoroi/dapp-connector'
-import {App} from '@yoroi/types'
+import {DappConnector, useDappConnector} from '@yoroi/dapp-connector'
 import * as React from 'react'
-import {Alert} from 'react-native'
 import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {Logger} from '../../../yoroi-wallets/logging'
-import {useSelectedWallet} from '../../WalletManager/Context'
 import {walletConfig} from './wallet-config'
-
-const createDappConnector = (appStorage: App.Storage, wallet: YoroiWallet) => {
-  const handlerWallet = {
-    id: wallet.id,
-    networkId: wallet.networkId,
-    confirmConnection: async (origin: string) => {
-      return new Promise<boolean>((resolve) => {
-        Alert.alert('Confirm connection', `Do you want to connect to ${origin}?`, [
-          {text: 'Cancel', style: 'cancel', onPress: () => resolve(false)},
-          {text: 'OK', onPress: () => resolve(true)},
-        ])
-      })
-    },
-  }
-  const storage = connectionStorageMaker({storage: appStorage.join('dapp-connections/')})
-  return dappConnectorMaker(storage, handlerWallet)
-}
-
-const useDappConnector = () => {
-  const appStorage = useAsyncStorage()
-  const wallet = useSelectedWallet()
-  return React.useMemo(() => createDappConnector(appStorage, wallet), [appStorage, wallet])
-}
 
 const generateSessionId = () => Math.random().toString(36).substring(7)
 
@@ -54,18 +27,18 @@ export const useConnectWalletToWebView = (wallet: YoroiWallet, webViewRef: React
     const webViewUrl = e.nativeEvent.url
 
     try {
-      await dappConnector.handleEvent(data, webViewUrl, sendMessageToWebView(data))
+      await dappConnector.manager.handleEvent(data, webViewUrl, sendMessageToWebView(data))
     } catch (e) {
       Logger.error('DappConnector', 'handleWebViewEvent::error', e)
     }
   }
 
   React.useEffect(() => {
-    const initScript = getInitScript(sessionId, dappConnector)
+    const initScript = getInitScript(sessionId, dappConnector.manager)
     webViewRef.current?.injectJavaScript(initScript)
   }, [wallet, webViewRef, sessionId, dappConnector])
 
-  return {handleEvent: handleWebViewEvent, initScript: getInitScript(sessionId, dappConnector), sessionId}
+  return {handleEvent: handleWebViewEvent, initScript: getInitScript(sessionId, dappConnector.manager), sessionId}
 }
 
 const getInjectableMessage = (message: unknown) => {
