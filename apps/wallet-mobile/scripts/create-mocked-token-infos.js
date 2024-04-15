@@ -38,4 +38,3 @@ const apiResponseTokenInfos = generatedTokens.reduce((acc, token, index) => {
   return acc
 }, {})
 
-console.log(JSON.stringify(apiResponseTokenInfos, null, 2))
