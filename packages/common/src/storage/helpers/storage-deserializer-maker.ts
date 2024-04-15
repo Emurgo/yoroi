@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js'
+import {isRecord} from '../../utils/parsers'
 
 export enum StorageReviverType {
   AsBigInt = 'AsBigInt',
@@ -27,17 +28,17 @@ export const storageDeserializerMaker = (mapping: StorageReviverMapping) => {
     }
   }
 
-  const convertProperties = (obj: any): unknown => {
-    if (Array.isArray(obj)) {
-      return obj.map((item) => convertProperties(item))
-    } else if (obj !== null && typeof obj === 'object') {
+  const convertProperties = (obj: unknown): unknown => {
+    if (Array.isArray(obj)) return obj.map((item) => convertProperties(item))
+
+    if (isRecord(obj)) {
       Object.keys(obj).forEach((key) => {
         obj[key] = convertProperties(obj[key])
       })
       return obj
-    } else {
-      return obj
     }
+
+    return obj
   }
 
   return (jsonString: string | null) => {
