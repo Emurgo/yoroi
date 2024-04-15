@@ -19,13 +19,12 @@ function generateTokenInfos(baseToken, count) {
   const tokens = []
   for (let i = 0; i < count; i++) {
     // Clone the base token object to create a new token
-    const newToken = {...baseToken}
-
-    // Modify properties to make the token unique
-    newToken.id = `${baseToken.id.split('.')[0]}.${Buffer.from(String(i)).toString('hex')}`
-    newToken.name = `${baseToken.name.split(' ')[0]} #${i}`
-    newToken.reference = `${baseToken.reference.split('.')[0]}.${Buffer.from(String(i)).toString('hex')}`
-    newToken.fingerprint = `asset${i}s7nlt45cc82upqewvjtgu7g97l7eg483c6wu${i}`
+    const id = `${baseToken.id.split('.')[0]}.${Buffer.from(String(i)).toString('hex')}`
+    const name = `${baseToken.name.split(' ')[0]} #${i}`
+    const reference = `${baseToken.reference.split('.')[0]}.${Buffer.from(String(i)).toString('hex')}`
+    const fingerprint = `asset${i}s7nlt45cc82upqewvjtgu7g97l7eg483c6wu${i}`
+    
+    const newToken = {...baseToken, id, name, reference, fingerprint}
 
     tokens.push(newToken)
   }
