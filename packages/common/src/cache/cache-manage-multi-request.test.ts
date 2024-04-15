@@ -3,10 +3,7 @@ import {Api, App} from '@yoroi/types'
 import {cacheManageMultiRequest} from './cache-manage-multi-request'
 
 describe('cacheManageMultiRequest', () => {
-  let cachedInfosWithoutRecord = new Map<
-    string,
-    App.CacheInfo | null | undefined
-  >()
+  let cachedInfosWithoutRecord = new Map<string, App.CacheInfo>()
   let ids = ['id1', 'id2', 'id3']
   const request = jest.fn()
   const persistance = {
@@ -21,10 +18,7 @@ describe('cacheManageMultiRequest', () => {
     ids = ['id1', 'id2', 'id3']
     persistance.read.mockReturnValue([])
     request.mockResolvedValue([])
-    cachedInfosWithoutRecord = new Map<
-      string,
-      App.CacheInfo | null | undefined
-    >()
+    cachedInfosWithoutRecord = new Map<string, App.CacheInfo>()
   })
 
   it('should fetch records from API and update cache with unknowns', async () => {

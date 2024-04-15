@@ -5,26 +5,33 @@ import {cacheResolveRecordsSource} from './cache-resolve-records-source'
 import {isRight} from '../utils/monads'
 import {hasEntryValue} from '../utils/predicates'
 
-export const cacheManageMultiRequest = async <K extends string, V>({
-  cachedInfosWithoutRecord,
-  ids,
-  request,
-  persistance,
-  unknownRecordFactory,
-}: {
-  cachedInfosWithoutRecord: Readonly<Map<K, App.CacheInfo | null | undefined>>
+type CacheMultiRequestParams<K extends string, V> = {
+  // current cache info
+  cachedInfosWithoutRecord: Readonly<Map<K, App.CacheInfo>>
+  // new ids to be resolved -> api or persistance
   ids: ReadonlyArray<K>
+  // api request to fetch the records
   request: (
     ids: ReadonlyArray<Api.RequestWithCache<K>>,
   ) => Promise<Readonly<Api.Response<{[key in K]: Api.ResponseWithCache<V>}>>>
+  // cache persistance
   persistance: {
     read: (
       ids: ReadonlyArray<K>,
     ) => ReadonlyArray<[K, App.CacheRecord<V> | null]>
     save: (records: ReadonlyArray<[K, App.CacheRecord<V>]>) => void
   }
+  // factory to create unknown records when not provided return null for records not found
   unknownRecordFactory?: (id: K) => Readonly<App.CacheRecord<V>>
-}) => {
+}
+
+export const cacheManageMultiRequest = async <K extends string, V>({
+  cachedInfosWithoutRecord,
+  ids,
+  request,
+  persistance,
+  unknownRecordFactory,
+}: CacheMultiRequestParams<K, V>) => {
   // resolve the ids to be fetched and the ones that should be read from cache
   const {toFetch, fromCache} = cacheResolveRecordsSource({
     ids,
