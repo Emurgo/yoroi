@@ -47,27 +47,27 @@ export type FetchData = <T, D = any>(
  *
  * @example
  * ```typescript
- * //// Example of a GET request
+ * // Example of a GET request
  * fetchData<{ someDataType }>({
  *   url: 'https://example.com/data',
  * }).then(response => {
- *   //// Handle response
+ *   // Handle response
  * }).catch(error => {
- *   //// Handle error
+ *   // Handle error
  * })
  * ```
  *
  * @example
  * ```typescript
- * //// Example of a POST request with data
+ * // Example of a POST request with data
  * fetchData<{ someDataType }, { somePayloadType }>({
  *   url: 'https://example.com/data',
  *   method: 'post',
- *   data: { /* some data *\/ }
+ *   data: {...somePayload}
  * }).then(response => {
- *   //// Handle response
+ *   // Handle response
  * }).catch(error => {
- *   //// Handle error
+ *   // Handle error
  * })
  * ```
  */
