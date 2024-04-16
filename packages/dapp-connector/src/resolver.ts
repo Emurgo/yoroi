@@ -128,7 +128,7 @@ const handleMethod = async (
   throw new Error(`Unknown method '${method}' with params ${JSON.stringify(params)}`)
 }
 
-export const handleEvent = async (
+export const resolverHandleEvent = async (
   eventData: string,
   trustedUrl: string,
   wallet: Wallet,

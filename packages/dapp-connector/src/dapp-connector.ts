@@ -1,4 +1,4 @@
-import {handleEvent} from './resolver'
+import {resolverHandleEvent} from './resolver'
 import {connectWallet} from './connector'
 import {Storage} from './adapters/async-storage'
 
@@ -37,7 +37,7 @@ export class DappConnector {
     trustedUrl: string,
     sendMessage: (id: string, result: unknown, error?: Error) => void,
   ) => {
-    return await handleEvent(eventData, trustedUrl, this.wallet, sendMessage, this.storage)
+    return await resolverHandleEvent(eventData, trustedUrl, this.wallet, sendMessage, this.storage)
   }
 }
 
