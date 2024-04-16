@@ -167,7 +167,6 @@ const MnemonicWordInput = React.forwardRef<RNTextInput, MnemonicWordInputProps>(
     const dateTime = React.useRef<number>()
     const [error, setError] = React.useState('')
     const [matchingWords, setMatchingWords] = React.useState<Array<string>>([])
-    const [wordSubmitted, setWordSubmitted] = React.useState(false)
 
     const selectWord = React.useCallback(
       (matchingWord: string) => {
@@ -183,7 +182,6 @@ const MnemonicWordInput = React.forwardRef<RNTextInput, MnemonicWordInputProps>(
     )
 
     const onSubmitEditing = React.useCallback(() => {
-      setWordSubmitted(true)
       if (!isEmptyString(matchingWords[0])) {
         selectWord(matchingWords[0])
       }
@@ -191,8 +189,6 @@ const MnemonicWordInput = React.forwardRef<RNTextInput, MnemonicWordInputProps>(
 
     const onChangeText = React.useCallback(
       (text: string) => {
-        if (wordSubmitted) return // to fix ios simulator issue
-
         if (text.endsWith(' ')) {
           text = text.trimEnd()
           setWord(normalizeText(text))
@@ -210,7 +206,7 @@ const MnemonicWordInput = React.forwardRef<RNTextInput, MnemonicWordInputProps>(
           } else if (error !== '') setError('')
         } else setMatchingWords([])
       },
-      [error, onSubmitEditing, wordSubmitted],
+      [error, onSubmitEditing],
     )
 
     React.useEffect(() => {
@@ -236,7 +232,6 @@ const MnemonicWordInput = React.forwardRef<RNTextInput, MnemonicWordInputProps>(
                 })
               }
 
-              setWordSubmitted(false)
               onFocus()
             }}
             onChange={() => {
