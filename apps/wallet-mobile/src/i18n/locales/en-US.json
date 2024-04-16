@@ -240,7 +240,7 @@
   "components.receive.receivescreen.unusedAddress": "Unused",
   "components.receive.receivescreen.usedAddress": "Used",
   "components.receive.receivescreen.singleOrMultiple": "Single or multiple address?",
-  "components.receive.receivescreen.singleOrMultipleDetails": "Single keeps things simple and secure. Multiple may offer some extra privacy. For most users, single address is the way to go! You can always change it in settings.",
+  "components.receive.receivescreen.singleOrMultipleDetails": "Single keeps things simple and secure. For most users, single address is the way to go! You can always change it in settings.",
   "components.receive.receivescreen.selectMultiple": "Select multiple instead",
   "components.receive.receivescreen.singleAddressWallet": "Single address wallet",
   "components.receive.receivescreen.learnAboutYoroi": "Learn more about this in Yoroi Zendesk",
