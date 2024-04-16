@@ -319,7 +319,12 @@ export type MenuRoutes = {
   'voting-registration': undefined
 }
 
-export type AppRoutes = {
+export type PortfolioRoutes = {
+  'portfolio-dashboard': undefined
+}
+
+// TODO revisit portfolio
+export type AppRoutes = PortfolioRoutes & {
   'first-run': NavigatorScreenParams<FirstRunRoutes>
   developer: undefined
   storybook: undefined

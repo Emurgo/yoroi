@@ -85,6 +85,8 @@ export const DeveloperScreen = () => {
           onPress={() => storageVersionMaker(rootStorage).remove()}
         />
 
+        <Button title="Portfolio" style={styles.button} onPress={() => navigation.navigate('portfolio-dashboard')} />
+
         <Button
           title="Logout"
           style={styles.button}

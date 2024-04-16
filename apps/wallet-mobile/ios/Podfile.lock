@@ -495,10 +495,10 @@ PODS:
     - SentryPrivate (= 8.9.3)
   - SentryPrivate (8.9.3)
   - Yoga (1.14.0)
-  - ZXingObjC/Core (3.6.5)
-  - ZXingObjC/OneD (3.6.5):
+  - ZXingObjC/Core (3.6.9)
+  - ZXingObjC/OneD (3.6.9):
     - ZXingObjC/Core
-  - ZXingObjC/PDF417 (3.6.5):
+  - ZXingObjC/PDF417 (3.6.9):
     - ZXingObjC/Core
 
 DEPENDENCIES:
@@ -858,7 +858,7 @@ SPEC CHECKSUMS:
   Sentry: 97161cac725da1ecbe77d1445bf8a61c1e5667f1
   SentryPrivate: 9a76def09fb08f9501997b8df946e8097947b94f
   Yoga: e71803b4c1fff832ccf9b92541e00f9b873119b9
-  ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
+  ZXingObjC: 8898711ab495761b2dbbdec76d90164a6d7e14c5
 
 PODFILE CHECKSUM: 31f344d67f1a9c35e34eb202e3cdfeb4907367e8
 

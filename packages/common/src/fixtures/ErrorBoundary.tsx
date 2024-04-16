@@ -1,8 +1,8 @@
-import React, {Component, ReactNode} from 'react'
+import * as React from 'react'
 import {View, Text} from 'react-native'
 
 interface Props {
-  children: ReactNode
+  children: React.ReactNode
 }
 
 interface State {
@@ -10,7 +10,7 @@ interface State {
   error?: Error
 }
 
-export class ErrorBoundary extends Component<Props, State> {
+export class ErrorBoundary extends React.Component<Props, State> {
   state: State = {
     hasError: false,
   }
