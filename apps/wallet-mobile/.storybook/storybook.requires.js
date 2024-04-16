@@ -272,6 +272,7 @@ const getStories = () => {
     "./src/Staking/PoolDetails/PoolDetailScreen.stories.tsx": require("../src/Staking/PoolDetails/PoolDetailScreen.stories.tsx"),
     "./src/Staking/PoolWarningModal/PoolWarningModal.stories.tsx": require("../src/Staking/PoolWarningModal/PoolWarningModal.stories.tsx"),
     "./src/Staking/StakingCenter/StakingCenter.stories.tsx": require("../src/Staking/StakingCenter/StakingCenter.stories.tsx"),
+    "./src/theme/BasePallete.stories.tsx": require("../src/theme/BasePallete.stories.tsx"),
     "./src/TxHistory/AssetList/ActionsBanner.stories.tsx": require("../src/TxHistory/AssetList/ActionsBanner.stories.tsx"),
     "./src/TxHistory/AssetList/ChipButton/ChipButton.stories.tsx": require("../src/TxHistory/AssetList/ChipButton/ChipButton.stories.tsx"),
     "./src/TxHistory/BalanceBanner.stories.tsx": require("../src/TxHistory/BalanceBanner.stories.tsx"),
