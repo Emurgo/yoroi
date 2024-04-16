@@ -1,7 +1,15 @@
 import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {NativeScrollEvent, NativeSyntheticEvent, ScrollView, StyleSheet, View, ViewToken} from 'react-native'
+import {
+  LayoutAnimation,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  ScrollView,
+  StyleSheet,
+  View,
+  ViewToken,
+} from 'react-native'
 import Animated, {Layout} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -77,6 +85,7 @@ export const ListMultipleAddressesScreen = () => {
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     if (event.nativeEvent.contentOffset.y <= 0) {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
       setShowAddressLimitInfo(true)
     } else if (showAddressLimitInfo && event.nativeEvent.contentOffset.y > 0) {
       setShowAddressLimitInfo(false)
@@ -84,6 +93,7 @@ export const ListMultipleAddressesScreen = () => {
   }
   React.useEffect(() => {
     if (hasReachedGapLimit) {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
       setShowAddressLimitInfo(true)
     }
   }, [hasReachedGapLimit])
