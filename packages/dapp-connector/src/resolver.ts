@@ -137,9 +137,12 @@ export const handleEvent = async (
 ) => {
   const trustedOrigin = new URL(trustedUrl).origin
   const {id, method, params} = JSON.parse(eventData)
-  await handleMethod(method, params, {origin: trustedOrigin, wallet, storage})
-    .then((result) => method !== LOG_MESSAGE_EVENT && sendMessage(id, result))
-    .catch((error) => method !== LOG_MESSAGE_EVENT && sendMessage(id, null, error))
+  try {
+    const result = await handleMethod(method, params, {origin: trustedOrigin, wallet, storage})
+    if (method !== LOG_MESSAGE_EVENT) sendMessage(id, result)
+  } catch (error) {
+    if (method !== LOG_MESSAGE_EVENT && error instanceof Error) sendMessage(id, null, error)
+  }
 }
 
 type Wallet = {
