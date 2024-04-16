@@ -4,7 +4,7 @@ import React from 'react'
 
 import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks'
 import {mocks as sendMocks} from '../../../Send/common/mocks'
-import {SelectedWalletProvider} from '../../../WalletManager/Context'
+import {SelectedWalletProvider} from '../../../WalletManager/Context/SelectedWalletContext'
 import {ConfirmTxScreen} from './ConfirmTxScreen'
 
 storiesOf('Confirm Tx', module).add('initial', () => {

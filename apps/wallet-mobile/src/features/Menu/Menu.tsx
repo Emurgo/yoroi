@@ -15,7 +15,7 @@ import {useMetrics} from '../../metrics/metricsManager'
 import {defaultStackNavigationOptions, useWalletNavigation} from '../../navigation'
 import {lightPalette} from '../../theme'
 import {useIsGovernanceFeatureEnabled} from '../Staking/Governance'
-import {useSelectedWallet} from '../WalletManager/Context'
+import {useSelectedWallet} from '../WalletManager/Context/SelectedWalletContext'
 
 const MenuStack = createStackNavigator()
 

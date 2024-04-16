@@ -3,7 +3,7 @@ import {TransferProvider} from '@yoroi/transfer'
 import React from 'react'
 
 import {QueryProvider} from '../../.storybook/decorators'
-import {SelectedWalletProvider} from '../features/WalletManager/Context'
+import {SelectedWalletProvider} from '../features/WalletManager/Context/SelectedWalletContext'
 import {mocks} from '../yoroi-wallets/mocks'
 import {TxHistory} from './TxHistory'
 
