@@ -72,7 +72,8 @@ export const useStrings = () => {
     walletPasswordModalCardSecondItem: intl.formatMessage(messages.walletPasswordModalCardSecondItem),
     walletChecksumModalCardTitle: intl.formatMessage(messages.walletChecksumModalCardTitle),
     walletChecksumModalCardFirstItem: intl.formatMessage(messages.walletChecksumModalCardFirstItem),
-    walletChecksumModalCardSecondItem: intl.formatMessage(messages.walletChecksumModalCardSecondItem),
+    walletChecksumModalCardSecondItem: (checksum: string) =>
+      intl.formatMessage(messages.walletChecksumModalCardSecondItem, {checksum}),
     walletChecksumModalCardThirdItem: intl.formatMessage(messages.walletChecksumModalCardThirdItem),
     stepWalletDetails: intl.formatMessage(messages.stepWalletDetails),
     walletDetailsTitle: (options: {b: (content: React.ReactNode[]) => React.ReactNode}) =>
@@ -320,7 +321,7 @@ export const messages = Object.freeze(
     },
     walletChecksumModalCardSecondItem: {
       id: 'components.walletinit.walletDetails.walletChecksumModalCardItem.second',
-      defaultMessage: '!!!Plate number BONE-0770 is a auto-generated sign of four letters and four digits.',
+      defaultMessage: '!!!Plate number {checksum} is a auto-generated sign of four letters and four digits.',
     },
     walletChecksumModalCardThirdItem: {
       id: 'components.walletinit.walletDetails.walletChecksumModalCardItem.third',
