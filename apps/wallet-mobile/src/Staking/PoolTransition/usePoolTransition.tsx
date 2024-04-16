@@ -116,35 +116,35 @@ export const usePoolTransition = () => {
 }
 
 export const usePoolTransitionModal = () => {
-  const {poolTransition, isPoolRetiring, isLoading} = usePoolTransition()
+  const {poolTransition, isPoolRetiring, isLoading, navigateToUpdate} = usePoolTransition()
   const {openModal} = useModal()
   const strings = useStrings()
   const {modalHeight} = useStyles()
 
   React.useEffect(() => {
-    if (isPoolRetiring) {
-      openModal(strings.title, <Modal />, modalHeight)
+    if (isPoolRetiring && poolTransition) {
+      openModal(
+        strings.title,
+        <PoolTransitionModal poolTransition={poolTransition} onContinue={navigateToUpdate} />,
+        modalHeight,
+      )
     }
-  }, [isPoolRetiring, modalHeight, openModal, poolTransition, strings.title])
+  }, [isPoolRetiring, modalHeight, navigateToUpdate, openModal, poolTransition, strings.title])
 
   return {isLoading}
 }
 
-const Modal = () => {
-  const {poolTransition, navigateToUpdate} = usePoolTransition()
-
+export const PoolTransitionModal = ({
+  poolTransition,
+  onContinue,
+}: {
+  poolTransition: PoolTransition
+  onContinue: () => void
+}) => {
   const {styles, colors} = useStyles()
   const strings = useStrings()
 
   const {closeModal} = useModal()
-
-  React.useEffect(() => {
-    if (!poolTransition) {
-      closeModal()
-    }
-  }, [closeModal, poolTransition, strings.title])
-
-  if (!poolTransition) return null
 
   const handleOnSkip = () => {
     closeModal()
@@ -152,7 +152,7 @@ const Modal = () => {
 
   const handleOnUpdate = () => {
     closeModal()
-    navigateToUpdate()
+    onContinue()
   }
 
   const isActive = poolTransition.deadlineMilliseconds > 0
