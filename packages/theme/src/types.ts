@@ -19,7 +19,7 @@ export type HexColor = `#${string}`
 export type Gradient = HexColor[]
 
 // master palette
-export type MasterPalette = {
+export type BasePalette = {
   primary_c900: HexColor
   primary_c800: HexColor
   primary_c700: HexColor
@@ -76,7 +76,7 @@ export type MasterPalette = {
   bg_gradient_3: Gradient
 }
 
-export type ThemedPalette = MasterPalette & {
+export type ThemedPalette = BasePalette & {
   text_primary_high: HexColor
   text_primary_medium: HexColor
   text_primary_low: HexColor

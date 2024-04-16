@@ -1,6 +1,6 @@
-import {MasterPalette} from '../types'
+import {BasePalette} from '../types'
 
-export const lightPalette: MasterPalette = {
+export const lightPalette: BasePalette = {
   primary_c900: '#121F4D',
   primary_c800: '#122770',
   primary_c700: '#1737A3',

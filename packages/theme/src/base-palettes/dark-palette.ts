@@ -1,9 +1,9 @@
 import {tokens} from '../tokens/tokens'
-import {MasterPalette} from '../types'
+import {BasePalette} from '../types'
 
 const {opacity} = tokens
 
-export const darkPalette: MasterPalette = {
+export const darkPalette: BasePalette = {
   primary_c900: '#E4E8F7',
   primary_c800: '#C4CFF5',
   primary_c700: '#A0B3F2',

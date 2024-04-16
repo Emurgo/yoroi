@@ -212,7 +212,7 @@ const Text = (props: TextProps) => {
 const ColorSchemeContext = React.createContext<
   undefined | ['light' | 'dark', (colorScheme: 'light' | 'dark') => void]
 >(undefined)
-export const BasePalette = () => {
+export const StorybookBasePalette = () => {
   return (
     <ColorSchemeContext.Provider
       value={React.useState<'light' | 'dark'>('light')}
