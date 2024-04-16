@@ -46,6 +46,7 @@ const createDappConnector = (appStorage: App.Storage, wallet: YoroiWallet) => {
     networkId: wallet.networkId,
     confirmConnection: async (origin: string) => {
       return new Promise<boolean>((resolve) => {
+        // TODO: Use modal with translations here instead of alert
         Alert.alert('Confirm connection', `Do you want to connect to ${origin}?`, [
           {text: 'Cancel', style: 'cancel', onPress: () => resolve(false)},
           {text: 'OK', onPress: () => resolve(true)},
