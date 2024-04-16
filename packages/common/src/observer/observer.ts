@@ -1,23 +1,23 @@
 import {App} from '@yoroi/types'
+import {freeze} from 'immer'
+import {Subject, Subscription} from 'rxjs'
 
-export const observerMaker = <T>(): App.Observer<T> => {
-  const subscribers: Set<App.Subscriber<T>> = new Set()
+export const observerMaker = <T>(): App.ObserverManager<T> => {
+  const eventSubject = new Subject<T>()
 
-  return {
-    subscribe: (callback: App.Subscriber<T>) => {
-      subscribers.add(callback)
-      return () => {
-        subscribers.delete(callback)
-      }
+  return freeze({
+    subscribe: (observer: App.Subscriber<T>): Subscription => {
+      return eventSubject.subscribe(observer)
     },
-    unsubscribe(subscriber: App.Subscriber<T>) {
-      subscribers.delete(subscriber)
+    unsubscribe: (subscription: Subscription) => {
+      subscription.unsubscribe()
     },
-    notify: (data: T) => {
-      subscribers.forEach((callback) => callback(data))
+    notify: (value: T) => {
+      eventSubject.next(value)
     },
     destroy: () => {
-      subscribers.clear()
+      eventSubject.complete()
     },
-  } as const
+    observable: eventSubject.asObservable(),
+  })
 }
