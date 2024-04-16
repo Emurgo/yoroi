@@ -141,7 +141,7 @@ export const resolverHandleEvent = async (
     const result = await handleMethod(method, params, {origin: trustedOrigin, wallet, storage})
     if (method !== LOG_MESSAGE_EVENT) sendMessage(id, result)
   } catch (error) {
-    if (method !== LOG_MESSAGE_EVENT) sendMessage(id, null, error as Error)
+    sendMessage(id, null, error as Error)
   }
 }
 
