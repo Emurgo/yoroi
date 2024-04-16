@@ -150,7 +150,7 @@ const Modal = ({
   const strings = useStrings()
 
   return (
-    <View style={{flex: 1}}>
+    <View style={styles.modal}>
       <Text style={styles.modalText}>{strings.restoreDuplicatedWalletModalText}</Text>
 
       <Space height="l" />
@@ -227,6 +227,9 @@ const useStyles = () => {
     plateName: {
       ...theme.typography['body-2-m-medium'],
       color: theme.color.gray[900],
+    },
+    modal: {
+      flex: 1,
     },
   })
 
