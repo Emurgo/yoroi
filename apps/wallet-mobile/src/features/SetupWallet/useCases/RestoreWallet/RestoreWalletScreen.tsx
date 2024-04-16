@@ -72,7 +72,8 @@ export const RestoreWalletScreen = () => {
 
   const saveMnemonic = React.useCallback(async () => {
     const {accountPubKeyHex} = await makeKeys({mnemonic})
-    const {accountPlate} = await generateShelleyPlateFromKey(accountPubKeyHex, 1, networkId)
+    const addressCount = 1
+    const {accountPlate} = await generateShelleyPlateFromKey(accountPubKeyHex, addressCount, networkId)
 
     const duplicatedWalletMeta = walletMetas?.find(
       (walletMeta) => walletMeta.checksum.TextPart === accountPlate.TextPart,
