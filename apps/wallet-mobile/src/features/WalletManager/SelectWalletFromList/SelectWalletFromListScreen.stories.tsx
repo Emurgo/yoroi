@@ -2,11 +2,11 @@ import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {WalletMeta} from '../../../../wallet-manager/types'
-import {mockWalletManager, WalletManager} from '../../../../wallet-manager/walletManager'
-import {WalletManagerProvider} from '../../../../wallet-manager/WalletManagerContext'
-import {InvalidState, NetworkError} from '../../../../yoroi-wallets/cardano/errors'
-import {mocks} from '../../../../yoroi-wallets/mocks'
+import {WalletMeta} from '../../../wallet-manager/types'
+import {mockWalletManager, WalletManager} from '../../../wallet-manager/walletManager'
+import {WalletManagerProvider} from '../../../wallet-manager/WalletManagerContext'
+import {InvalidState, NetworkError} from '../../../yoroi-wallets/cardano/errors'
+import {mocks} from '../../../yoroi-wallets/mocks'
 import {SelectWalletFromList} from './SelectWalletFromListScreen'
 
 storiesOf('SelectWalletFromList', module)

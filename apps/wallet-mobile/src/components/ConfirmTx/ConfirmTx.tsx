@@ -6,7 +6,7 @@ import {useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 
 import {debugWalletInfo, features} from '../../features'
-import {useSelectedWallet} from '../../features/WalletManager/Context'
+import {useSelectedWallet} from '../../features/WalletManager/Context/SelectedWalletContext'
 import {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
 import {isEmptyString} from '../../utils/utils'

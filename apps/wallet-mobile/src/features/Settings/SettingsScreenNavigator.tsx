@@ -17,7 +17,7 @@ import {
   SettingsStackRoutes,
   SettingsTabRoutes,
 } from '../../navigation'
-import {useSelectedWallet} from '../WalletManager/Context'
+import {useSelectedWallet} from '../WalletManager/Context/SelectedWalletContext'
 import {About} from './About'
 import {ApplicationSettingsScreen} from './ApplicationSettings'
 import {ChangeLanguageScreen} from './ChangeLanguage'

@@ -18,7 +18,8 @@ import {getNetworkConfigById} from '../../../yoroi-wallets/cardano/networks'
 import {isByron, isHaskellShelley} from '../../../yoroi-wallets/cardano/utils'
 import {useEasyConfirmationEnabled, useResync} from '../../../yoroi-wallets/hooks'
 import {NetworkId, WalletImplementationId} from '../../../yoroi-wallets/types'
-import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../WalletManager/Context'
+import {useSelectedWallet, useSetSelectedWallet} from '../../WalletManager/Context/SelectedWalletContext'
+import {useSetSelectedWalletMeta} from '../../WalletManager/Context/SelectedWalletMetaContext'
 import {useNavigateTo} from '../common/navigation'
 import {
   NavigatedSettingsItem,

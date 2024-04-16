@@ -2,11 +2,14 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
-import {Icon} from '../../../../components'
-import {Space} from '../../../../components/Space/Space'
-import {WalletMeta} from '../../../../wallet-manager/types'
-import {isByron, isHaskellShelley, isJormun} from '../../../../yoroi-wallets/cardano/utils'
-import {ChevronRightDarkIllustration, ChevronRightGrayIllustration} from '../../illustrations/ChevronRightIllustration'
+import {Icon} from '../../../components'
+import {Space} from '../../../components/Space/Space'
+import {WalletMeta} from '../../../wallet-manager/types'
+import {isByron, isHaskellShelley, isJormun} from '../../../yoroi-wallets/cardano/utils'
+import {
+  ChevronRightDarkIllustration,
+  ChevronRightGrayIllustration,
+} from '../../SetupWallet/illustrations/ChevronRightIllustration'
 
 type Props = {
   wallet: WalletMeta

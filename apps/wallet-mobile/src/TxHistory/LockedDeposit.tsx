@@ -5,7 +5,7 @@ import {StyleSheet, View} from 'react-native'
 
 import {Boundary, Spacer, Text} from '../components'
 import {usePrivacyMode} from '../features/Settings/PrivacyMode/PrivacyMode'
-import {useSelectedWallet} from '../features/WalletManager/Context'
+import {useSelectedWallet} from '../features/WalletManager/Context/SelectedWalletContext'
 import globalMessages from '../i18n/global-messages'
 import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../legacy/format'
 import {useLockedAmount} from '../yoroi-wallets/hooks'

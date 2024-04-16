@@ -10,7 +10,7 @@ import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {useToken} from '../../../../../yoroi-wallets/hooks'
 import {YoroiUnsignedTx} from '../../../../../yoroi-wallets/types/yoroi'
 import {Amounts, Quantities} from '../../../../../yoroi-wallets/utils/utils'
-import {useSelectedWallet} from '../../../../WalletManager/Context'
+import {useSelectedWallet} from '../../../../WalletManager/Context/SelectedWalletContext'
 
 export const SecondaryTotals = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => {
   const wallet = useSelectedWallet()
