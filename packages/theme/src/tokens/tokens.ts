@@ -45,10 +45,22 @@ export const fontWeight = {
   bold: '600',
 } as const
 
+export const opacity = {
+  _8: '14',
+  _10: '1A',
+  _16: '29',
+  _26: '42',
+  _40: '66',
+  _48: '7A',
+  _70: 'B3',
+  _80: 'CC',
+} as const
+
 export const tokens = {
   space,
   borderRadius,
   fontSize,
   lineHeight,
   fontWeight,
+  opacity,
 } as const

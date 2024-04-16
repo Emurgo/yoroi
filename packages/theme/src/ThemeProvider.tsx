@@ -1,7 +1,7 @@
 import React from 'react'
 import {useColorScheme} from 'react-native'
 
-import {Palette, SupportedThemes, Theme, ThemeStorage} from './types'
+import {ThemedPalette, SupportedThemes, Theme, ThemeStorage} from './types'
 import {defaultLightTheme} from './themes/default-light'
 import {defaultDarkTheme} from './themes/default-dark'
 import {detectTheme} from './helpers/detect-theme'
@@ -46,7 +46,7 @@ export const useThemeColor = () => useTheme().color
 
 type ThemeContext = {
   name: SupportedThemes
-  color: Palette
+  color: ThemedPalette
   selectThemeName: (name: SupportedThemes) => void
   isLight: boolean
   isDark: boolean
