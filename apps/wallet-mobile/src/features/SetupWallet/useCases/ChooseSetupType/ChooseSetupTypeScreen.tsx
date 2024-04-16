@@ -42,6 +42,7 @@ export const ChooseSetupTypeScreen = () => {
       return
     }
 
+    // On production the step of network is skipped
     navigation.navigate('setup-wallet-create-choose-network')
   }
 
@@ -54,6 +55,7 @@ export const ChooseSetupTypeScreen = () => {
       return
     }
 
+    // On production the step of network is skipped
     navigation.navigate('setup-wallet-restore-choose-network')
   }
 
@@ -64,8 +66,15 @@ export const ChooseSetupTypeScreen = () => {
   const navigateHw = () => {
     setIsModalOpen(false)
     setUpTypeChanged('hw')
-    networkIdChanged(HASKELL_SHELLEY.NETWORK_ID)
-    navigation.navigate('setup-wallet-check-nano-x')
+
+    if (isProduction()) {
+      networkIdChanged(HASKELL_SHELLEY.NETWORK_ID)
+      navigation.navigate('setup-wallet-check-nano-x')
+      return
+    }
+
+    // On production the step of network is skipped
+    navigation.navigate('setup-wallet-restore-choose-network')
   }
 
   return (
