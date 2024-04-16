@@ -1,4 +1,4 @@
-import {WalletChecksum} from '@emurgo/cip4-js'
+import {walletChecksum} from '@emurgo/cip4-js'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {NetworkError} from '@yoroi/common'
 import {useSetupWallet} from '@yoroi/setup-wallet'
@@ -18,9 +18,8 @@ import {useWalletNavigation, WalletInitRouteNavigation} from '../../../../naviga
 import {isEmptyString} from '../../../../utils'
 import {useWalletManager} from '../../../../wallet-manager/WalletManagerContext'
 import {InvalidState} from '../../../../yoroi-wallets/cardano/errors'
-import {generateShelleyPlateFromKey} from '../../../../yoroi-wallets/cardano/shelley'
 import {makeKeys} from '../../../../yoroi-wallets/cardano/shelley/makeKeys'
-import {useOpenWallet, useWalletMetas} from '../../../../yoroi-wallets/hooks'
+import {useOpenWallet, usePlate, useWalletMetas} from '../../../../yoroi-wallets/hooks'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../../WalletManager/Context'
 import {MnemonicInput} from '../../common/MnemonicInput'
 import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
@@ -31,7 +30,7 @@ export const RestoreWalletScreen = () => {
   const bold = useBold()
   const [mnemonic, setMnemonic] = React.useState('')
   const navigation = useNavigation<WalletInitRouteNavigation>()
-  const {publicKeyHexChanged, mnemonicChanged, mnemonicType, networkId} = useSetupWallet()
+  const {publicKeyHexChanged, mnemonicChanged, mnemonicType} = useSetupWallet()
   const {track} = useMetrics()
   const walletManager = useWalletManager()
   const {walletMetas} = useWalletMetas(walletManager)
@@ -72,19 +71,16 @@ export const RestoreWalletScreen = () => {
 
   const handleOnNext = React.useCallback(async () => {
     const {accountPubKeyHex} = await makeKeys({mnemonic})
-    const addressCount = 1
-    const {accountPlate} = await generateShelleyPlateFromKey(accountPubKeyHex, addressCount, networkId)
+    const checksum = walletChecksum(accountPubKeyHex)
 
-    const duplicatedWalletMeta = walletMetas?.find(
-      (walletMeta) => walletMeta.checksum.TextPart === accountPlate.TextPart,
-    )
+    const duplicatedWalletMeta = walletMetas?.find((walletMeta) => walletMeta.checksum.TextPart === checksum.TextPart)
 
     if (duplicatedWalletMeta) {
       openModal(
         strings.restoreDuplicatedWalletModalTitle,
         <Modal
           walletName={duplicatedWalletMeta.name}
-          accountPlate={accountPlate}
+          publicKeyHex={accountPubKeyHex}
           onPress={() => openWallet(duplicatedWalletMeta)}
         />,
       )
@@ -99,7 +95,6 @@ export const RestoreWalletScreen = () => {
     mnemonic,
     mnemonicChanged,
     navigation,
-    networkId,
     openModal,
     openWallet,
     publicKeyHexChanged,
@@ -139,15 +134,17 @@ export const RestoreWalletScreen = () => {
 
 const Modal = ({
   onPress,
-  accountPlate,
+  publicKeyHex,
   walletName,
 }: {
   onPress: () => void
-  accountPlate: WalletChecksum
+  publicKeyHex: string
   walletName: string
 }) => {
   const {styles} = useStyles()
   const strings = useStrings()
+  const {networkId} = useSetupWallet()
+  const plate = usePlate({networkId, publicKeyHex})
 
   return (
     <View style={styles.modal}>
@@ -156,14 +153,14 @@ const Modal = ({
       <Space height="l" />
 
       <View style={styles.checksum}>
-        <Icon.WalletAccount iconSeed={accountPlate.ImagePart} style={styles.walletChecksum} />
+        <Icon.WalletAccount iconSeed={plate.accountPlate.ImagePart} style={styles.walletChecksum} />
 
         <Space width="s" />
 
         <View>
           <Text style={styles.plateName}>{walletName}</Text>
 
-          <Text style={styles.plateText}>{accountPlate.TextPart}</Text>
+          <Text style={styles.plateText}>{plate.accountPlate.TextPart}</Text>
         </View>
       </View>
 
