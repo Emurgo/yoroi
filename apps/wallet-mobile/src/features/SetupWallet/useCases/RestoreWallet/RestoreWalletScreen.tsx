@@ -70,7 +70,7 @@ export const RestoreWalletScreen = () => {
     },
   })
 
-  const saveMnemonic = React.useCallback(async () => {
+  const handleOnNext = React.useCallback(async () => {
     const {accountPubKeyHex} = await makeKeys({mnemonic})
     const addressCount = 1
     const {accountPlate} = await generateShelleyPlateFromKey(accountPubKeyHex, addressCount, networkId)
@@ -129,7 +129,7 @@ export const RestoreWalletScreen = () => {
             title={strings.next}
             style={styles.button}
             disabled={isEmptyString(mnemonic)}
-            onPress={saveMnemonic}
+            onPress={handleOnNext}
           />
         </View>
       </KeyboardAvoidingView>
