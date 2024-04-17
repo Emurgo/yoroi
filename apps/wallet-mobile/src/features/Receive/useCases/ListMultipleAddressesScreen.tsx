@@ -6,10 +6,8 @@ import {
   LayoutAnimation,
   NativeScrollEvent,
   NativeSyntheticEvent,
-  Platform,
   ScrollView,
   StyleSheet,
-  UIManager,
   View,
   ViewToken,
 } from 'react-native'
@@ -44,10 +42,6 @@ export const ListMultipleAddressesScreen = () => {
   const {addressMode} = useAddressModeManager()
   const addresses = useReceiveAddressesStatus(addressMode)
   const {selectedAddressChanged} = useReceive()
-
-  if (Platform.OS === 'android') {
-    UIManager.setLayoutAnimationEnabledExperimental(true)
-  }
 
   React.useEffect(() => {
     wallet.generateNewReceiveAddressIfNeeded()
