@@ -4,33 +4,33 @@ import {ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View} from 'reac
 import LinearGradient from 'react-native-linear-gradient'
 
 import {Icon, Spacer} from '../../../../../components'
+import {useMemo} from 'react'
 
 type Props = {
   types: string[]
   onToggle: (category: string) => void
-  listCategoriesSelected: string[]
-  disabled?: boolean
-  isLimited?: boolean
+  selectedTypes: string[]
 }
-export const DAppTypes = ({types, onToggle, listCategoriesSelected}: Props) => {
+export const DAppTypes = ({types, onToggle, selectedTypes}: Props) => {
   const {styles} = useStyles()
+  const sorted = useMemo(() => sortTypes(types, selectedTypes), [types, selectedTypes])
 
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.contentContainer}>
-      {types
-        .sort((firstType, secondType) => firstType.localeCompare(secondType))
-        .sort(
-          (firstType, secondType) =>
-            listCategoriesSelected.indexOf(secondType) - listCategoriesSelected.indexOf(firstType),
-        )
-        .map((type) => {
-          const isSelected = listCategoriesSelected.includes(type)
-          return <TypeItem key={type} isActive={isSelected} name={type} onToggle={() => onToggle(type)} />
-        })}
+      {sorted.map((type) => {
+        const isSelected = selectedTypes.includes(type)
+        return <TypeItem key={type} isActive={isSelected} name={type} onToggle={() => onToggle(type)} />
+      })}
 
       <Spacer width={8} />
     </ScrollView>
   )
+}
+
+const sortTypes = (types: string[], selectedTypes: string[]) => {
+  return types
+    .sort((firstType, secondType) => firstType.localeCompare(secondType))
+    .sort((firstType, secondType) => selectedTypes.indexOf(secondType) - selectedTypes.indexOf(firstType))
 }
 
 type TypeItemProps = {

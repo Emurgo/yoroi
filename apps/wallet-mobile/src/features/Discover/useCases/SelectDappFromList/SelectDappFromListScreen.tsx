@@ -114,7 +114,7 @@ export const SelectDappFromListScreen = () => {
 
         {(!haveDAppsConnected || currentTab === DAppTabs.recommended) && (
           <View style={styles.containerHeader}>
-            <DAppTypes types={filters} onToggle={handleToggleCategory} listCategoriesSelected={categoriesSelected} />
+            <DAppTypes types={filters} onToggle={handleToggleCategory} selectedTypes={categoriesSelected} />
 
             <CountDAppsAvailable total={getListDApps().length} />
 
