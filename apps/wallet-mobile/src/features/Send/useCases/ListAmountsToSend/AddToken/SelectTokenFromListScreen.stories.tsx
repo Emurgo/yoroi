@@ -4,7 +4,7 @@ import React from 'react'
 
 import {SearchProvider} from '../../../../../Search/SearchContext'
 import {mocks} from '../../../../../yoroi-wallets/mocks/wallet'
-import {SelectedWalletProvider} from '../../../../WalletManager/Context'
+import {SelectedWalletProvider} from '../../../../WalletManager/Context/SelectedWalletContext'
 import {SelectTokenFromListScreen} from './SelectTokenFromListScreen'
 
 storiesOf('Select Token From List', module).add('initial', () => {

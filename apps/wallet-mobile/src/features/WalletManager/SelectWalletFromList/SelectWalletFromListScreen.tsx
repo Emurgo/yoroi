@@ -7,23 +7,24 @@ import {useIntl} from 'react-intl'
 import {InteractionManager, Linking, RefreshControl, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../components/Button'
-import {ScrollView, useScrollView} from '../../../../components/ScrollView/ScrollView'
-import {Space} from '../../../../components/Space/Space'
-import {showErrorDialog} from '../../../../dialogs'
-import {errorMessages} from '../../../../i18n/global-messages'
-import {useMetrics} from '../../../../metrics/metricsManager'
-import {useWalletNavigation} from '../../../../navigation'
-import {WalletMeta} from '../../../../wallet-manager/types'
-import {useWalletManager} from '../../../../wallet-manager/WalletManagerContext'
-import * as HASKELL_SHELLEY from '../../../../yoroi-wallets/cardano/constants/mainnet/constants'
-import {InvalidState} from '../../../../yoroi-wallets/cardano/errors'
-import {isJormungandr} from '../../../../yoroi-wallets/cardano/networks'
-import {useOpenWallet, useWalletMetas} from '../../../../yoroi-wallets/hooks'
-import {useLinksRequestWallet} from '../../../Links/common/useLinksRequestWallet'
-import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../../WalletManager/Context'
-import {useStrings} from '../../common/useStrings'
-import {SupportIllustration} from '../../illustrations/SupportIllustration'
+import {Button} from '../../../components/Button'
+import {ScrollView, useScrollView} from '../../../components/ScrollView/ScrollView'
+import {Space} from '../../../components/Space/Space'
+import {showErrorDialog} from '../../../dialogs'
+import {errorMessages} from '../../../i18n/global-messages'
+import {useMetrics} from '../../../metrics/metricsManager'
+import {useWalletNavigation} from '../../../navigation'
+import {WalletMeta} from '../../../wallet-manager/types'
+import {useWalletManager} from '../../../wallet-manager/WalletManagerContext'
+import * as HASKELL_SHELLEY from '../../../yoroi-wallets/cardano/constants/mainnet/constants'
+import {InvalidState} from '../../../yoroi-wallets/cardano/errors'
+import {isJormungandr} from '../../../yoroi-wallets/cardano/networks'
+import {useOpenWallet, useWalletMetas} from '../../../yoroi-wallets/hooks'
+import {useLinksRequestWallet} from '../../Links/common/useLinksRequestWallet'
+import {useStrings} from '../../SetupWallet/common/useStrings'
+import {SupportIllustration} from '../../SetupWallet/illustrations/SupportIllustration'
+import {useSetSelectedWallet} from '../Context/SelectedWalletContext'
+import {useSetSelectedWalletMeta} from '../Context/SelectedWalletMetaContext'
 import {WalletListItem} from './WalletListItem'
 
 export const SelectWalletFromList = () => {
@@ -119,6 +120,8 @@ export const SelectWalletFromList = () => {
         <Space height="m" />
 
         <OnlyDevButton />
+
+        <Space height="l" />
       </View>
     </SafeAreaView>
   )
