@@ -74,13 +74,13 @@ export const apiConfig: ApiConfig = freeze(
       tokenDiscoveries:
         'https://add50d9d-76d7-47b7-b17f-e34021f63a02.mock.pstmn.io/v1/token-discoveries',
       tokenInfos:
-        'https://national-brightly-iguana.ngrok-free.app/v1/token-infos',
+        'https://dev-yoroi-backend-zero-mainnet.emurgornd.com/tokens/info/multi',
     },
     preprod: {
       tokenDiscoveries:
         'https://add50d9d-76d7-47b7-b17f-e34021f63a02.mock.pstmn.io/v1/token-discoveries',
       tokenInfos:
-        'https://national-brightly-iguana.ngrok-free.app/v1/token-infos',
+        'https://dev-yoroi-backend-zero-preprod.emurgornd.com/tokens/info/multi',
     },
     preview: {
       tokenDiscoveries:

@@ -7,13 +7,51 @@ import {FlatList} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer} from '../../../components'
+import {WalletMeta} from '../../../wallet-manager/types'
+import {useWalletManager} from '../../../wallet-manager/WalletManagerContext'
+import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {useSelectedWallet} from '../../WalletManager/Context'
 import {usePortfolioBalanceManager} from '../common/usePortfolioBalanceManager'
 import {usePortfolioTokenManager} from '../common/usePortfolioTokenManager'
 
+type OpenWallets = Record<number, Array<Partial<YoroiWallet & WalletMeta>>>
 export const PortfolioScreen = () => {
   const navigation = useNavigation()
+  const manager = useWalletManager()
   const wallet = useSelectedWallet()
+  const [openedWalletsByNetwork, setOpenedWalletsByNetwork] = React.useState<OpenWallets>({})
+
+  React.useEffect(() => {
+    manager.listWallets().then(async (walletMetas) => {
+      const walletsPerNetwork: OpenWallets = {}
+
+      for (const meta of walletMetas) {
+        const wallet = await manager.openWallet(meta)
+        if (walletsPerNetwork[wallet.networkId] == null) walletsPerNetwork[wallet.networkId] = []
+        walletsPerNetwork[wallet.networkId].push({
+          id: wallet.id,
+          name: meta.name,
+          utxos: wallet.utxos,
+        })
+      }
+
+      setOpenedWalletsByNetwork(walletsPerNetwork)
+
+      for (const networkId in walletsPerNetwork) {
+        const wallets = walletsPerNetwork[networkId]
+        for (const wallet of wallets) {
+          console.log(wallet.name)
+          if (wallet.utxos == null) continue
+          for (const utxo of wallet.utxos) {
+            for (const record of utxo.assets) {
+              console.log(record.assetId)
+            }
+          }
+        }
+      }
+    })
+  }, [manager, openedWalletsByNetwork])
+
   const {tokenManager, tokenStorage} = usePortfolioTokenManager({network: Chain.Network.Main})
   const {balanceManager: bmW1, balanceStorage: bs1} = usePortfolioBalanceManager({
     tokenManager,
@@ -45,11 +83,7 @@ export const PortfolioScreen = () => {
         minRequiredByTokens: 0n,
         records: [],
       },
-      secondaryBalances: new Map([
-        ['14696a4676909f4e3cb1f2e60e2e08e5abed70caf5c02699be971139.34', {balance: 2n, lockedInBuiltTxs: 0n}],
-        ['14696a4676909f4e3cb1f2e60e2e08e5abed70caf5c02699be971139.35', {balance: 3n, lockedInBuiltTxs: 0n}],
-        ['14696a4676909f4e3cb1f2e60e2e08e5abed70caf5c02699be971139.36', {balance: 4n, lockedInBuiltTxs: 0n}],
-      ]),
+      secondaryBalances: new Map([]),
     })
 
     bmW2.sync({
@@ -59,12 +93,7 @@ export const PortfolioScreen = () => {
         minRequiredByTokens: 0n,
         records: [],
       },
-      secondaryBalances: new Map([
-        ['14696a4676909f4e3cb1f2e60e2e08e5abed70caf5c02699be971139.3130', {balance: 222n, lockedInBuiltTxs: 0n}],
-        ['14696a4676909f4e3cb1f2e60e2e08e5abed70caf5c02699be971139.35', {balance: 223n, lockedInBuiltTxs: 0n}],
-        ['14696a4676909f4e3cb1f2e60e2e08e5abed70caf5c02699be971139.3131', {balance: 224n, lockedInBuiltTxs: 0n}],
-        ['14696a4676909f4e3cb1f2e60e2e08e5abed70caf5c02699be971139.3132', {balance: 224n, lockedInBuiltTxs: 0n}],
-      ]),
+      secondaryBalances: new Map([]),
     })
   }
 
