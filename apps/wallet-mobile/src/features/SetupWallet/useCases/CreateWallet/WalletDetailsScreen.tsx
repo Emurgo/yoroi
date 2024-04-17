@@ -38,7 +38,8 @@ import {
   validateWalletName,
 } from '../../../../yoroi-wallets/utils'
 import {debugWalletInfo, features} from '../../..'
-import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../../WalletManager/Context'
+import {useSetSelectedWallet} from '../../../WalletManager/Context/SelectedWalletContext'
+import {useSetSelectedWalletMeta} from '../../../WalletManager/Context/SelectedWalletMetaContext'
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
 import {YoroiZendeskLink} from '../../common/contants'
 import {LearnMoreButton} from '../../common/LearnMoreButton/LearnMoreButton'
@@ -75,7 +76,14 @@ export const WalletDetailsScreen = () => {
   const selectWalletMeta = useSetSelectedWalletMeta()
   const selectWallet = useSetSelectedWallet()
   const storage = useAsyncStorage()
-  const {mnemonic, networkId, publicKeyHex, walletImplementationId} = useSetupWallet()
+  const {
+    mnemonic,
+    networkId,
+    publicKeyHex,
+    walletImplementationId,
+    showRestoreWalletInfoModal,
+    showRestoreWalletInfoModalChanged,
+  } = useSetupWallet()
   const plate = usePlate({networkId, publicKeyHex})
   const [name, setName] = React.useState(features.prefillWalletInfo ? debugWalletInfo.WALLET_NAME : '')
   const passwordRef = React.useRef<RNTextInput>(null)
@@ -194,7 +202,14 @@ export const WalletDetailsScreen = () => {
 
         <Space height="s" />
 
-        <Button title={strings.continueButton} style={styles.button} onPress={closeModal} />
+        <Button
+          title={strings.continueButton}
+          style={styles.button}
+          onPress={() => {
+            closeModal()
+            showRestoreWalletInfoModalChanged(false)
+          }}
+        />
 
         <Space height="l" />
       </View>,
@@ -204,6 +219,7 @@ export const WalletDetailsScreen = () => {
     HEIGHT_MODAL_NAME_PASSWORD,
     closeModal,
     openModal,
+    showRestoreWalletInfoModalChanged,
     strings.continueButton,
     strings.walletDetailsModalTitle,
     strings.walletNameModalCardFirstItem,
@@ -217,9 +233,9 @@ export const WalletDetailsScreen = () => {
   ])
 
   React.useEffect(() => {
-    showModalTipsPassword()
+    if (showRestoreWalletInfoModal) showModalTipsPassword()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [showRestoreWalletInfoModal])
 
   const showModalTipsPlateNumber = () => {
     Keyboard.dismiss()

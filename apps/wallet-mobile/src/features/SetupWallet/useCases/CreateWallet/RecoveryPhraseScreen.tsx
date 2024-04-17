@@ -47,7 +47,7 @@ export const RecoveryPhraseScreen = () => {
   const [isBlur, setIsBlur] = React.useState(true)
   const navigation = useNavigation<WalletInitRouteNavigation>()
   const strings = useStrings()
-  const {mnemonicChanged} = useSetupWallet()
+  const {mnemonicChanged, showCreateWalletInfoModal, showCreateWalletInfoModalChanged} = useSetupWallet()
   const {track} = useMetrics()
   const bold = useBold()
 
@@ -86,7 +86,14 @@ export const RecoveryPhraseScreen = () => {
 
         <Space height="s" />
 
-        <Button title={strings.continueButton} style={styles.button} onPress={closeModal} />
+        <Button
+          title={strings.continueButton}
+          style={styles.button}
+          onPress={() => {
+            closeModal()
+            showCreateWalletInfoModalChanged(false)
+          }}
+        />
 
         <Space height="l" />
       </View>,
@@ -96,6 +103,7 @@ export const RecoveryPhraseScreen = () => {
     HEIGHT_MODAL,
     closeModal,
     openModal,
+    showCreateWalletInfoModalChanged,
     strings.continueButton,
     strings.recoveryPhraseCardFifthItem,
     strings.recoveryPhraseCardFirstItem,
@@ -110,9 +118,9 @@ export const RecoveryPhraseScreen = () => {
   ])
 
   React.useEffect(() => {
-    handleOnShowModal()
+    if (showCreateWalletInfoModal) handleOnShowModal()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [showCreateWalletInfoModal])
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
