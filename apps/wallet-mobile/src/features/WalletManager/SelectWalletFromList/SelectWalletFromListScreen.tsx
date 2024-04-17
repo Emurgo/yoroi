@@ -146,10 +146,10 @@ const SupportTicketLink = () => {
 }
 
 const AddWalletButton = () => {
-  const navigation = useNavigation()
   const strings = useStrings()
   const {styles} = useStyles()
   const {walletImplementationIdChanged, reset: resetSetupWallet} = useSetupWallet()
+  const {navigateToWalletSetup} = useWalletNavigation()
 
   return (
     <Button
@@ -157,9 +157,7 @@ const AddWalletButton = () => {
         resetSetupWallet()
         walletImplementationIdChanged(HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID)
 
-        navigation.navigate('new-wallet', {
-          screen: 'setup-wallet-choose-setup-type',
-        })
+        navigateToWalletSetup()
       }}
       title={strings.addWalletButton}
       style={styles.topButton}

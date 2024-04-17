@@ -19,7 +19,7 @@ import {ModalScreen} from './components/Modal/ModalScreen'
 import {AgreementChangedNavigator, InitializationNavigator} from './features/Initialization'
 import {LegalAgreement, useLegalAgreement} from './features/Initialization/common'
 import {useDeepLinkWatcher} from './features/Links/common/useDeepLinkWatcher'
-import {AddWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
+import {SetupWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
 import {CONFIG} from './legacy/config'
 import {DeveloperScreen} from './legacy/DeveloperScreen'
 import {AppRoutes} from './navigation'
@@ -144,7 +144,7 @@ export const AppNavigator = () => {
                   )}
                 </Stack.Screen>
 
-                <Stack.Screen name="new-wallet" component={AddWalletNavigator} />
+                <Stack.Screen name="setup-wallet" component={SetupWalletNavigator} />
               </Stack.Group>
 
               <Stack.Group screenOptions={{presentation: 'transparentModal'}}>

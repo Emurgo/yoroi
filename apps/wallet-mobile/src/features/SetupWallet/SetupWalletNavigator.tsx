@@ -20,7 +20,7 @@ import {RestoreWalletDetailsScreen} from './useCases/RestoreWallet/RestoreWallet
 import {RestoreWalletScreen} from './useCases/RestoreWallet/RestoreWalletScreen'
 
 const Stack = createStackNavigator<WalletInitRoutes>()
-export const AddWalletNavigator = () => {
+export const SetupWalletNavigator = () => {
   const strings = useStrings()
   const {theme} = useTheme()
 

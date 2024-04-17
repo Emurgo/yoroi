@@ -14,6 +14,8 @@ import {Dimensions, TouchableOpacity, TouchableOpacityProps, ViewStyle} from 're
 import {Icon} from './components'
 import {ScanFeature} from './features/Scan/common/types'
 import {Routes as StakingGovernanceRoutes} from './features/Staking/Governance/common/navigation'
+import {useWalletManager} from './wallet-manager/WalletManagerContext'
+import {useHasWallets} from './yoroi-wallets/hooks'
 import {YoroiUnsignedTx} from './yoroi-wallets/types'
 
 // prettier-ignore
@@ -305,7 +307,7 @@ export type AppRoutes = {
   'first-run': NavigatorScreenParams<FirstRunRoutes>
   developer: undefined
   storybook: undefined
-  'new-wallet': NavigatorScreenParams<WalletInitRoutes>
+  'setup-wallet': NavigatorScreenParams<WalletInitRoutes>
   'app-root': NavigatorScreenParams<WalletStackRoutes>
   'custom-pin-auth': undefined
   'exchange-result': undefined
@@ -339,81 +341,102 @@ export const useBlockGoBack = () => {
 
 export const useWalletNavigation = () => {
   const navigation = useNavigation()
+  const walletManager = useWalletManager()
+  const hasWallets = useHasWallets(walletManager)
 
-  return React.useRef({
-    navigation,
-
-    resetToTxHistory: () => {
-      navigation.reset({
-        index: 0,
-        routes: [
-          {
-            name: 'app-root',
-            state: {
-              routes: [
-                {name: 'wallet-selection'},
-                {
-                  name: 'main-wallet-routes',
-                  state: {
-                    routes: [
-                      {
-                        name: 'history',
-                        state: {
-                          routes: [{name: 'history-list'}],
-                        },
+  const resetToTxHistory = () => {
+    navigation.reset({
+      index: 0,
+      routes: [
+        {
+          name: 'app-root',
+          state: {
+            routes: [
+              {name: 'wallet-selection'},
+              {
+                name: 'main-wallet-routes',
+                state: {
+                  routes: [
+                    {
+                      name: 'history',
+                      state: {
+                        routes: [{name: 'history-list'}],
                       },
-                    ],
-                  },
+                    },
+                  ],
                 },
-              ],
-            },
-          },
-        ],
-      })
-    },
-
-    resetToStartTransfer: () => {
-      navigation.reset({
-        index: 0,
-        routes: [
-          {
-            name: 'app-root',
-            state: {
-              routes: [
-                {name: 'wallet-selection'},
-                {
-                  name: 'main-wallet-routes',
-                  state: {
-                    routes: [
-                      {
-                        name: 'history',
-                        state: {
-                          routes: [{name: 'send-start-tx'}],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      })
-    },
-
-    navigateToStartTransfer: () => {
-      navigation.navigate('app-root', {
-        screen: 'main-wallet-routes',
-        params: {
-          screen: 'history',
-          params: {
-            screen: 'send-start-tx',
+              },
+            ],
           },
         },
-      })
-    },
+      ],
+    })
+  }
 
-    resetToWalletSelection: () => {
+  const resetToStartTransfer = () => {
+    navigation.reset({
+      index: 0,
+      routes: [
+        {
+          name: 'app-root',
+          state: {
+            routes: [
+              {name: 'wallet-selection'},
+              {
+                name: 'main-wallet-routes',
+                state: {
+                  routes: [
+                    {
+                      name: 'history',
+                      state: {
+                        routes: [{name: 'send-start-tx'}],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      ],
+    })
+  }
+
+  const navigateToStartTransfer = () => {
+    navigation.navigate('app-root', {
+      screen: 'main-wallet-routes',
+      params: {
+        screen: 'history',
+        params: {
+          screen: 'send-start-tx',
+        },
+      },
+    })
+  }
+
+  const resetToWalletSetup = () => {
+    navigation.reset({
+      index: 0,
+      routes: [
+        {
+          name: 'app-root',
+          state: {
+            routes: [
+              {
+                name: 'setup-wallet',
+                state: {
+                  routes: [{name: 'setup-wallet-choose-setup-type'}],
+                },
+              },
+            ],
+          },
+        },
+      ],
+    })
+  }
+
+  const resetToWalletSelection = () => {
+    if (hasWallets) {
       navigation.reset({
         index: 0,
         routes: [
@@ -425,92 +448,120 @@ export const useWalletNavigation = () => {
           },
         ],
       })
-    },
 
-    navigateToStakingDashboard: () => {
-      navigation.navigate('app-root', {
-        screen: 'main-wallet-routes',
+      return
+    }
+
+    resetToWalletSetup()
+  }
+
+  const navigateToWalletSetup = () => {
+    navigation.navigate('setup-wallet', {
+      screen: 'setup-wallet-choose-setup-type',
+    })
+  }
+
+  const navigateToStakingDashboard = () => {
+    navigation.navigate('app-root', {
+      screen: 'main-wallet-routes',
+      params: {
+        screen: 'staking-dashboard',
         params: {
-          screen: 'staking-dashboard',
-          params: {
-            screen: 'staking-dashboard-main',
-          },
+          screen: 'staking-dashboard-main',
         },
-      })
-    },
+      },
+    })
+  }
 
-    navigateToSettings: () => {
-      navigation.navigate('app-root', {
+  const navigateToSettings = () => {
+    navigation.navigate('app-root', {
+      screen: 'settings',
+      params: {
+        screen: 'main-settings',
+      },
+    })
+  }
+
+  const navigateToTxHistory = () => {
+    navigation.navigate('app-root', {
+      screen: 'main-wallet-routes',
+      params: {
+        screen: 'history',
+        params: {
+          screen: 'history-list',
+        },
+      },
+    })
+  }
+
+  const navigateToNftGallery = () => {
+    navigation.navigate('app-root', {
+      screen: 'main-wallet-routes',
+      params: {
+        screen: 'nfts',
+        params: {
+          screen: 'nft-gallery',
+        },
+      },
+    })
+  }
+
+  const navigateToAppSettings = () => {
+    navigation.navigate('app-root', {
+      screen: 'settings',
+      params: {
+        screen: 'app-settings',
+      },
+    })
+  }
+
+  const navigateToCollateralSettings = (params?: SettingsStackRoutes['manage-collateral']) => {
+    navigation.navigate('app-root', {
+      screen: 'settings',
+      params: {
+        screen: 'manage-collateral',
+        params,
+      },
+    })
+  }
+
+  const navigateToAnalyticsSettings = () => {
+    navigation.navigate('app-root', {
+      screen: 'toggle-analytics-settings',
+      params: {
         screen: 'settings',
-        params: {
-          screen: 'main-settings',
-        },
-      })
-    },
+      },
+    })
+  }
 
-    navigateToTxHistory: () => {
-      navigation.navigate('app-root', {
-        screen: 'main-wallet-routes',
+  const navigateToGovernanceCentre = ({navigateToStakingOnSuccess = false} = {}) => {
+    navigation.navigate('app-root', {
+      screen: 'governance',
+      params: {
+        screen: 'staking-gov-home',
         params: {
-          screen: 'history',
-          params: {
-            screen: 'history-list',
-          },
+          navigateToStakingOnSuccess,
         },
-      })
-    },
+      },
+    })
+  }
 
-    navigateToNftGallery: () => {
-      navigation.navigate('app-root', {
-        screen: 'main-wallet-routes',
-        params: {
-          screen: 'nfts',
-          params: {
-            screen: 'nft-gallery',
-          },
-        },
-      })
-    },
-
-    navigateToAppSettings: () => {
-      navigation.navigate('app-root', {
-        screen: 'settings',
-        params: {
-          screen: 'app-settings',
-        },
-      })
-    },
-
-    navigateToCollateralSettings: (params?: SettingsStackRoutes['manage-collateral']) => {
-      navigation.navigate('app-root', {
-        screen: 'settings',
-        params: {
-          screen: 'manage-collateral',
-          params,
-        },
-      })
-    },
-
-    navigateToAnalyticsSettings: () => {
-      navigation.navigate('app-root', {
-        screen: 'toggle-analytics-settings',
-        params: {
-          screen: 'settings',
-        },
-      })
-    },
-
-    navigateToGovernanceCentre: ({navigateToStakingOnSuccess = false} = {}) => {
-      navigation.navigate('app-root', {
-        screen: 'governance',
-        params: {
-          screen: 'staking-gov-home',
-          params: {
-            navigateToStakingOnSuccess,
-          },
-        },
-      })
-    },
+  return React.useRef({
+    navigation,
+    resetToTxHistory,
+    resetToStartTransfer,
+    navigateToStartTransfer,
+    resetToWalletSelection,
+    resetToWalletSetup,
+    navigateToWalletSetup,
+    navigateToStakingDashboard,
+    navigateToSettings,
+    navigateToTxHistory,
+    navigateToNftGallery,
+    navigateToAppSettings,
+    navigateToCollateralSettings,
+    navigateToAnalyticsSettings,
+    navigateToGovernanceCentre,
   } as const).current
 }
 
