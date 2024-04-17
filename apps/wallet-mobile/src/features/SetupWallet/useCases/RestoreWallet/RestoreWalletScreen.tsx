@@ -15,7 +15,6 @@ import {showErrorDialog} from '../../../../dialogs'
 import {errorMessages} from '../../../../i18n/global-messages'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useWalletNavigation, WalletInitRouteNavigation} from '../../../../navigation'
-import {isEmptyString} from '../../../../utils'
 import {useWalletManager} from '../../../../wallet-manager/WalletManagerContext'
 import {InvalidState} from '../../../../yoroi-wallets/cardano/errors'
 import {makeKeys} from '../../../../yoroi-wallets/cardano/shelley/makeKeys'
@@ -120,14 +119,11 @@ export const RestoreWalletScreen = () => {
           <MnemonicInput length={mnemonicType} onDone={setMnemonic} />
         </ScrollView>
 
-        <View style={styles.padding}>
-          <Button
-            title={strings.next}
-            style={styles.button}
-            disabled={isEmptyString(mnemonic)}
-            onPress={handleOnNext}
-          />
-        </View>
+        {mnemonic !== '' && (
+          <View style={styles.padding}>
+            <Button title={strings.next} style={styles.button} onPress={handleOnNext} />
+          </View>
+        )}
       </KeyboardAvoidingView>
     </SafeAreaView>
   )

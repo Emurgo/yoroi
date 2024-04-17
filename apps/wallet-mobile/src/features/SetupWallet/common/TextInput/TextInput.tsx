@@ -88,6 +88,10 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: React.For
     </HelperText>
   )
 
+  React.useEffect(() => {
+    if (value === '') setIsWordValid(false)
+  }, [value])
+
   return (
     <View style={containerStyle}>
       {isWordValid && isEmptyString(errorText) && (
