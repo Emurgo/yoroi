@@ -1,25 +1,19 @@
 import {useQuery, UseQueryOptions} from 'react-query'
 
 import {useSelectedWallet} from '../../../features/WalletManager/Context'
-import {IDAppItem, mockDAppList} from './DAppMock'
+import {mockDAppList} from './DAppMock'
 
-type DAppId = IDAppItem['id']
-
-export const useDAppsConnected = (options?: UseQueryOptions<DAppId[], Error, DAppId[], [string, string]>) => {
+export const useDAppsConnected = (options?: UseQueryOptions<string[], Error, string[], [string, string]>) => {
   const wallet = useSelectedWallet()
 
-  const query = useQuery({
+  return useQuery({
     suspense: true,
     ...options,
     queryKey: [wallet.id, 'dappsConnected'],
     queryFn: async () => {
-      const data = await new Promise<DAppId[]>((resolve) => {
-        return setTimeout(() => resolve(mockDAppList.slice(0, 3).map((_) => _.id)), 1000)
+      return await new Promise<string[]>((resolve) => {
+        return setTimeout(() => resolve(mockDAppList.slice(0, 3).map((_) => _.origins[0])), 1000)
       })
-
-      return data
     },
   })
-
-  return query
 }

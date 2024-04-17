@@ -4,7 +4,6 @@ import {FlatList, ScrollView, StyleSheet, View} from 'react-native'
 
 import {Spacer} from '../../../../components'
 import {useSearch, useSearchOnNavBar} from '../../../../Search/SearchContext'
-import {makeList} from '../../../../utils'
 import {getGoogleSearchItem} from '../../common/DAppMock'
 import {useDAppsConnected} from '../../common/useDAppsConnected'
 import {useDAppsList} from '../../common/useDAppsList'
@@ -12,7 +11,6 @@ import {useStrings} from '../../common/useStrings'
 import {CountDAppsAvailable} from './CountDAppsAvailable/CountDAppsAvailable'
 import {DAppExplorerTabItem} from './DAppExplorerTabItem/DAppExplorerTabItem'
 import {DAppItem} from './DAppItem/DAppItem'
-import {DAppItemSkeleton} from './DAppItem/DAppItemSkeleton'
 import {DAppTypes} from './DAppTypes/DAppTypes'
 import {WelcomeDAppModal} from './WelcomeDAppModal'
 
@@ -39,9 +37,14 @@ export const SelectDappFromListScreen = () => {
   })
   const {data: list} = useDAppsList()
   const {data: listDAppConnected} = useDAppsConnected({refetchOnMount: true})
-  const haveDAppsConnected = (listDAppConnected ?? [])?.length > 0
+  const hasConnectedDapps = (listDAppConnected ?? [])?.length > 0
 
   const filters = Object.keys(list?.filters ?? {})
+
+  const isDappConnected = (dappOrigins: string[]) => {
+    const connectedOrigins = listDAppConnected ?? []
+    return dappOrigins.some((dappOrigin) => connectedOrigins.includes(dappOrigin))
+  }
 
   console.log('list')
   console.log(JSON.stringify(list, null, 2))
@@ -72,9 +75,9 @@ export const SelectDappFromListScreen = () => {
       return list.dapps
     }
 
-    if (haveDAppsConnected && currentTab === DAppTabs.connected) {
+    if (hasConnectedDapps && currentTab === DAppTabs.connected) {
       return list.dapps
-        .filter((dApp) => listDAppConnected?.includes(dApp.id))
+        .filter((dApp) => isDappConnected(dApp.origins))
         .sort((dAppFirst, dAppSecond) => dAppFirst.name.localeCompare(dAppSecond.name))
     }
 
@@ -96,7 +99,7 @@ export const SelectDappFromListScreen = () => {
 
     return (
       <>
-        {haveDAppsConnected && (
+        {hasConnectedDapps && (
           <View style={[styles.dAppItemBox, styles.tabsContainer]}>
             <DAppExplorerTabItem
               name={strings.connected}
@@ -112,7 +115,7 @@ export const SelectDappFromListScreen = () => {
           </View>
         )}
 
-        {(!haveDAppsConnected || currentTab === DAppTabs.recommended) && (
+        {(!hasConnectedDapps || currentTab === DAppTabs.recommended) && (
           <View style={styles.containerHeader}>
             <DAppTypes types={filters} onToggle={handleToggleCategory} selectedTypes={categoriesSelected} />
 
@@ -138,7 +141,7 @@ export const SelectDappFromListScreen = () => {
           ListHeaderComponent={headerDAppControl}
           renderItem={({item: entry}) => (
             <View style={styles.dAppItemBox}>
-              <DAppItem dApp={entry} connected={(listDAppConnected ?? [])?.includes(entry.id)} />
+              <DAppItem dApp={entry} connected={isDappConnected(entry.origins)} />
             </View>
           )}
           ItemSeparatorComponent={() => <Spacer style={styles.dAppsBox} />}
