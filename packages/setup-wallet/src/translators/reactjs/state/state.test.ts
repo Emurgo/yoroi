@@ -126,6 +126,38 @@ describe('State Actions', () => {
     expect(state.useUSB).toBe(action.useUSB)
   })
 
+  it('ShowCreateWalletInfoModalChanged', () => {
+    const action: SetupWalletAction = {
+      type: SetupWalletActionType.ShowCreateWalletInfoModalChanged,
+      showCreateWalletInfoModal: true,
+    }
+
+    const state = setupWalletReducer(
+      {...setupWalletDefaultState, showCreateWalletInfoModal: false},
+      action,
+    )
+
+    expect(state.showCreateWalletInfoModal).toBe(
+      action.showCreateWalletInfoModal,
+    )
+  })
+
+  it('ShowRestoreWalletInfoModalChanged', () => {
+    const action: SetupWalletAction = {
+      type: SetupWalletActionType.ShowRestoreWalletInfoModalChanged,
+      showRestoreWalletInfoModal: true,
+    }
+
+    const state = setupWalletReducer(
+      {...setupWalletDefaultState, showRestoreWalletInfoModal: false},
+      action,
+    )
+
+    expect(state.showRestoreWalletInfoModal).toBe(
+      action.showRestoreWalletInfoModal,
+    )
+  })
+
   it('Reset', () => {
     const action: SetupWalletAction = {
       type: SetupWalletActionType.Reset,
@@ -144,6 +176,8 @@ describe('State Actions', () => {
         setUpType: 'restore',
         mnemonicType: 15,
         useUSB: true,
+        showCreateWalletInfoModal: true,
+        showRestoreWalletInfoModal: true,
       },
       action,
     )
