@@ -120,14 +120,16 @@ export const RestoreWalletScreen = () => {
           <MnemonicInput length={mnemonicType} onDone={setMnemonic} />
         </ScrollView>
 
-        <View style={styles.padding}>
-          <Button
-            title={strings.next}
-            style={styles.button}
-            disabled={isEmptyString(mnemonic)}
-            onPress={handleOnNext}
-          />
-        </View>
+        {mnemonic !== '' && (
+          <View style={styles.padding}>
+            <Button
+              title={strings.next}
+              style={styles.button}
+              disabled={isEmptyString(mnemonic)}
+              onPress={handleOnNext}
+            />
+          </View>
+        )}
       </KeyboardAvoidingView>
     </SafeAreaView>
   )
