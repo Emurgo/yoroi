@@ -21,7 +21,7 @@ import {
 import {GovernanceNavigator} from './features/Staking/Governance'
 import {ToggleAnalyticsSettingsNavigator} from './features/ToggleAnalyticsSettings'
 import {useSelectedWallet} from './features/WalletManager/Context/SelectedWalletContext'
-import {SelectWalletFromList} from './features/WalletManager/SelectWalletFromList'
+import {SelectWalletFromList} from './features/WalletManager/SelectWalletFromList/SelectWalletFromListScreen'
 import {useMetrics} from './metrics/metricsManager'
 import {hideTabBarForRoutes, WalletStackRoutes, WalletTabRoutes} from './navigation'
 import {defaultStackNavigationOptions} from './navigation'
