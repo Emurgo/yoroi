@@ -38,7 +38,8 @@ import {
   validateWalletName,
 } from '../../../../yoroi-wallets/utils'
 import {debugWalletInfo, features} from '../../..'
-import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../../WalletManager/Context'
+import {useSetSelectedWallet} from '../../../WalletManager/Context/SelectedWalletContext'
+import {useSetSelectedWalletMeta} from '../../../WalletManager/Context/SelectedWalletMetaContext'
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
 import {YoroiZendeskLink} from '../../common/contants'
 import {LearnMoreButton} from '../../common/LearnMoreButton/LearnMoreButton'
