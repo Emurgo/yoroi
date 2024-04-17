@@ -76,7 +76,14 @@ export const WalletDetailsScreen = () => {
   const selectWalletMeta = useSetSelectedWalletMeta()
   const selectWallet = useSetSelectedWallet()
   const storage = useAsyncStorage()
-  const {mnemonic, networkId, publicKeyHex, walletImplementationId} = useSetupWallet()
+  const {
+    mnemonic,
+    networkId,
+    publicKeyHex,
+    walletImplementationId,
+    showRestoreWalletInfoModal,
+    showRestoreWalletInfoModalChanged,
+  } = useSetupWallet()
   const plate = usePlate({networkId, publicKeyHex})
   const [name, setName] = React.useState(features.prefillWalletInfo ? debugWalletInfo.WALLET_NAME : '')
   const passwordRef = React.useRef<RNTextInput>(null)
@@ -165,7 +172,7 @@ export const WalletDetailsScreen = () => {
     })
   }, [createWallet, mnemonic, name, networkId, password, track, walletImplementationId])
 
-  const showModalTipsPassword = () => {
+  const showModalTipsPassword = React.useCallback(() => {
     openModal(
       strings.walletDetailsModalTitle,
       <View style={styles.modal}>
@@ -195,13 +202,40 @@ export const WalletDetailsScreen = () => {
 
         <Space height="s" />
 
-        <Button title={strings.continueButton} style={styles.button} onPress={closeModal} />
+        <Button
+          title={strings.continueButton}
+          style={styles.button}
+          onPress={() => {
+            closeModal()
+            showRestoreWalletInfoModalChanged(false)
+          }}
+        />
 
         <Space height="l" />
       </View>,
       HEIGHT_MODAL_NAME_PASSWORD,
     )
-  }
+  }, [
+    HEIGHT_MODAL_NAME_PASSWORD,
+    closeModal,
+    openModal,
+    showRestoreWalletInfoModalChanged,
+    strings.continueButton,
+    strings.walletDetailsModalTitle,
+    strings.walletNameModalCardFirstItem,
+    strings.walletNameModalCardSecondItem,
+    strings.walletNameModalCardTitle,
+    strings.walletPasswordModalCardFirstItem,
+    strings.walletPasswordModalCardSecondItem,
+    strings.walletPasswordModalCardTitle,
+    styles.button,
+    styles.modal,
+  ])
+
+  React.useEffect(() => {
+    if (showRestoreWalletInfoModal) showModalTipsPassword()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showRestoreWalletInfoModal])
 
   const showModalTipsPlateNumber = () => {
     openModal(
