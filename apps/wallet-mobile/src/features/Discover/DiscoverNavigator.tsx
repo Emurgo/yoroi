@@ -7,6 +7,8 @@ import {BrowserNavigator} from './BrowserNavigator'
 import {BrowserProvider} from './common/BrowserProvider'
 import {useStrings} from './common/useStrings'
 import {SelectDappFromListScreen} from './useCases/SelectDappFromList/SelectDappFromListScreen'
+import {LoadingBoundary} from '../../components'
+import {ListSkeleton} from './useCases/SelectDappFromList/ListSkeleton'
 
 const Stack = createStackNavigator<DiscoverRoutes>()
 
@@ -25,11 +27,13 @@ export const DiscoverNavigator = () => {
         }}
         initialRouteName="discover-select-dapp-from-list"
       >
-        <Stack.Screen
-          name="discover-select-dapp-from-list"
-          component={SelectDappFromListScreen}
-          options={{title: strings.discoverTitle}}
-        />
+        <Stack.Screen name="discover-select-dapp-from-list" options={{title: strings.discoverTitle}}>
+          {() => (
+            <LoadingBoundary fallback={<ListSkeleton />}>
+              <SelectDappFromListScreen />
+            </LoadingBoundary>
+          )}
+        </Stack.Screen>
 
         <Stack.Screen name="discover-browser" component={BrowserNavigator} options={{headerShown: false}} />
       </Stack.Navigator>

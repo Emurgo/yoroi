@@ -37,8 +37,8 @@ export const SelectDappFromListScreen = () => {
     placeholder: strings.searchDApps,
     noBack: true,
   })
-  const {data: list, isFetching: fetchingDApp} = useDAppsList()
-  const {data: listDAppConnected, isFetching: fetchingDAppConnected} = useDAppsConnected({refetchOnMount: true})
+  const {data: list} = useDAppsList()
+  const {data: listDAppConnected} = useDAppsConnected({refetchOnMount: true})
   const haveDAppsConnected = (listDAppConnected ?? [])?.length > 0
 
   const filters = Object.keys(list?.filters ?? {})
@@ -125,39 +125,25 @@ export const SelectDappFromListScreen = () => {
     )
   }
 
-  const loadingDAppsList = fetchingDAppConnected || fetchingDApp
-
   return (
     <>
       <WelcomeDAppModal />
 
       <View style={[styles.root]}>
-        {loadingDAppsList ? (
-          <ScrollView>
-            {makeList(7).map((_, index) => (
-              <View style={styles.dAppItemBox} key={index}>
-                <DAppItemSkeleton />
-
-                <Spacer style={styles.dAppsBox} />
-              </View>
-            ))}
-          </ScrollView>
-        ) : (
-          <FlatList
-            data={getListDApps()}
-            extraData={listDAppConnected}
-            keyExtractor={(item) => item.id.toString()}
-            ListHeaderComponentStyle={styles.boxHeader}
-            ListHeaderComponent={headerDAppControl}
-            renderItem={({item: entry}) => (
-              <View style={styles.dAppItemBox}>
-                <DAppItem dApp={entry} connected={(listDAppConnected ?? [])?.includes(entry.id)} />
-              </View>
-            )}
-            ItemSeparatorComponent={() => <Spacer style={styles.dAppsBox} />}
-            ListFooterComponent={() => <Spacer style={styles.dAppsBox} />}
-          />
-        )}
+        <FlatList
+          data={getListDApps()}
+          extraData={listDAppConnected}
+          keyExtractor={(item) => item.id.toString()}
+          ListHeaderComponentStyle={styles.boxHeader}
+          ListHeaderComponent={headerDAppControl}
+          renderItem={({item: entry}) => (
+            <View style={styles.dAppItemBox}>
+              <DAppItem dApp={entry} connected={(listDAppConnected ?? [])?.includes(entry.id)} />
+            </View>
+          )}
+          ItemSeparatorComponent={() => <Spacer style={styles.dAppsBox} />}
+          ListFooterComponent={() => <Spacer style={styles.dAppsBox} />}
+        />
       </View>
     </>
   )
