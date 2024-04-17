@@ -1,23 +1,35 @@
 import {useQuery, UseQueryOptions} from 'react-query'
 
 import {useSelectedWallet} from '../../../features/WalletManager/Context'
-import {IDAppItem, mockDAppList} from './DAppMock'
+import {DAppItem, mockDAppList} from './DAppMock'
 
-export const useDAppsList = (options?: UseQueryOptions<IDAppItem[], Error, IDAppItem[], [string, string]>) => {
+type Result = {
+  dapps: DAppItem[]
+  filters: Record<string, string[]>
+}
+
+export const useDAppsList = (options?: UseQueryOptions<Result, Error, Result, [string, string]>) => {
   const wallet = useSelectedWallet()
 
-  const query = useQuery({
+  return useQuery({
     suspense: true,
     ...options,
     queryKey: [wallet.id, 'dappsList'],
     queryFn: async () => {
-      const data = await new Promise<IDAppItem[]>((resolve) => {
-        return setTimeout(() => resolve(mockDAppList), 1000)
+      return await new Promise<Result>((resolve) => {
+        return setTimeout(() => resolve(result), 1000)
       })
-
-      return data
     },
   })
+}
 
-  return query
+const result = {
+  dapps: mockDAppList,
+  filters: {
+    Media: ['News', 'Entertainment'],
+    Investment: ['DeFi', 'DEX', 'NFT Marketplace', 'Stablecoin'],
+    NFT: ['NFT Marketplace'],
+    Trading: ['DEX', 'Trading Tools', 'Stablecoin'],
+    Community: ['DAO', 'Decentralised Storage'],
+  },
 }

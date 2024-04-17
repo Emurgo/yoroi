@@ -5,7 +5,7 @@ import {FlatList, ScrollView, StyleSheet, View} from 'react-native'
 import {Spacer} from '../../../../components'
 import {useSearch, useSearchOnNavBar} from '../../../../Search/SearchContext'
 import {makeList} from '../../../../utils'
-import {DAppCategory, getGoogleSearchItem, TDAppCategory} from '../../common/DAppMock'
+import {getGoogleSearchItem} from '../../common/DAppMock'
 import {useDAppsConnected} from '../../common/useDAppsConnected'
 import {useDAppsList} from '../../common/useDAppsList'
 import {useStrings} from '../../common/useStrings'
@@ -28,7 +28,7 @@ export const SelectDappFromListScreen = () => {
   const {search, visible} = useSearch()
 
   const [currentTab, setCurrentTab] = React.useState<TDAppTabs>('connected')
-  const [categoriesSelected, setCategoriesSelected] = React.useState<Partial<{[key in TDAppCategory]: boolean}>>()
+  const [categoriesSelected, setCategoriesSelected] = React.useState<string[]>([])
 
   const isSearching = visible
 
@@ -37,60 +37,54 @@ export const SelectDappFromListScreen = () => {
     placeholder: strings.searchDApps,
     noBack: true,
   })
-  const {data: listDApp, isFetching: fetchingDApp} = useDAppsList()
+  const {data: list, isFetching: fetchingDApp} = useDAppsList()
   const {data: listDAppConnected, isFetching: fetchingDAppConnected} = useDAppsConnected({refetchOnMount: true})
   const haveDAppsConnected = (listDAppConnected ?? [])?.length > 0
 
-  const getDAppCategories = Object.keys(DAppCategory) as TDAppCategory[]
+  const filters = Object.keys(list?.filters ?? {})
+
+  console.log('list')
+  console.log(JSON.stringify(list, null, 2))
 
   const handleToggleCategory = React.useCallback(
-    (category: TDAppCategory) => {
-      const handleSelected = {...categoriesSelected}
-      if (categoriesSelected?.[category]) {
-        delete handleSelected[category]
-      } else {
-        handleSelected[category] = true
+    (category: string) => {
+      if (categoriesSelected.includes(category)) {
+        setCategoriesSelected(categoriesSelected.filter((c) => c !== category))
+        return
       }
 
-      setCategoriesSelected(handleSelected)
+      setCategoriesSelected([...categoriesSelected, category])
     },
     [categoriesSelected],
   )
 
-  const getCategoriesSelected = () => {
-    return Object.keys(categoriesSelected ?? {}).filter(
-      (key) => (categoriesSelected ?? {})[key as TDAppCategory],
-    ) as TDAppCategory[]
-  }
-
   const getListDApps = () => {
-    if (!listDApp) return []
+    if (!list?.dapps) return []
 
     if (isSearching) {
       if (search?.length > 0) {
-        return listDApp
+        return list.dapps
           .filter((dApp) => dApp.name.toLowerCase().includes(search.toLowerCase()))
           .sort((dAppFirst, dAppSecond) => dAppFirst.name.localeCompare(dAppSecond.name))
           .concat(getGoogleSearchItem(search))
       }
 
-      return listDApp
+      return list.dapps
     }
 
     if (haveDAppsConnected && currentTab === DAppTabs.connected) {
-      return listDApp
+      return list.dapps
         .filter((dApp) => listDAppConnected?.includes(dApp.id))
         .sort((dAppFirst, dAppSecond) => dAppFirst.name.localeCompare(dAppSecond.name))
     }
 
-    if (getCategoriesSelected().length > 0) {
-      const selectedCategories = getCategoriesSelected()
-      return listDApp
-        .filter((dApp) => dApp.category !== undefined && selectedCategories.includes(dApp.category))
+    if (categoriesSelected.length > 0) {
+      return list.dapps
+        .filter((dApp) => categoriesSelected.some((filter) => list.filters[filter].includes(dApp.category)))
         .sort((dAppFirst, dAppSecond) => dAppFirst.name.localeCompare(dAppSecond.name))
     }
 
-    return listDApp.sort((dAppFirst, dAppSecond) => dAppFirst.name.localeCompare(dAppSecond.name))
+    return list.dapps.sort((dAppFirst, dAppSecond) => dAppFirst.name.localeCompare(dAppSecond.name))
   }
 
   const handleChangeTab = (tab: TDAppTabs) => {
@@ -120,12 +114,7 @@ export const SelectDappFromListScreen = () => {
 
         {(!haveDAppsConnected || currentTab === DAppTabs.recommended) && (
           <View style={styles.containerHeader}>
-            <DAppTypes
-              types={getDAppCategories}
-              onToggle={handleToggleCategory}
-              selected={categoriesSelected}
-              listCategoriesSelected={getCategoriesSelected()}
-            />
+            <DAppTypes types={filters} onToggle={handleToggleCategory} listCategoriesSelected={categoriesSelected} />
 
             <CountDAppsAvailable total={getListDApps().length} />
 

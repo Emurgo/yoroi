@@ -6,7 +6,7 @@ import uuid from 'uuid'
 
 import {Icon, Spacer, useModal} from '../../../../../components'
 import {useBrowser} from '../../../common/BrowserProvider'
-import {GOOGLE_DAPP_ID, IDAppItem} from '../../../common/DAppMock'
+import {DAppItem as IDAppItem, GOOGLE_DAPP_ID} from '../../../common/DAppMock'
 import {LabelCategoryDApp} from '../../../common/LabelCategoryDApp'
 import {LabelConnected} from '../../../common/LabelConnected'
 import {useNavigateTo} from '../../../common/useNavigateTo'

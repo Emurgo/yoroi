@@ -4,17 +4,15 @@ import {ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View} from 'reac
 import LinearGradient from 'react-native-linear-gradient'
 
 import {Icon, Spacer} from '../../../../../components'
-import {DAppCategory, TDAppCategory} from '../../../common/DAppMock'
 
 type Props = {
-  types: TDAppCategory[]
-  onToggle: (category: TDAppCategory) => void
-  selected?: Partial<{[key in TDAppCategory]: boolean}>
-  listCategoriesSelected: TDAppCategory[]
+  types: string[]
+  onToggle: (category: string) => void
+  listCategoriesSelected: string[]
   disabled?: boolean
   isLimited?: boolean
 }
-export const DAppTypes = ({types, onToggle, selected, listCategoriesSelected}: Props) => {
+export const DAppTypes = ({types, onToggle, listCategoriesSelected}: Props) => {
   const {styles} = useStyles()
 
   return (
@@ -26,8 +24,8 @@ export const DAppTypes = ({types, onToggle, selected, listCategoriesSelected}: P
             listCategoriesSelected.indexOf(secondType) - listCategoriesSelected.indexOf(firstType),
         )
         .map((type) => {
-          const isSelected = !!(selected ?? {})[type]
-          return <TypeItem key={type} isActive={isSelected} name={DAppCategory[type]} onToggle={() => onToggle(type)} />
+          const isSelected = listCategoriesSelected.includes(type)
+          return <TypeItem key={type} isActive={isSelected} name={type} onToggle={() => onToggle(type)} />
         })}
 
       <Spacer width={8} />
