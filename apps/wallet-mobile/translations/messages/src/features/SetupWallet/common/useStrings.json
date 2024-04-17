@@ -796,7 +796,7 @@
   },
   {
     "id": "components.walletinit.walletDetails.walletChecksumModalCardItem.second",
-    "defaultMessage": "!!!Plate number BONE-0770 is a auto-generated sign of four letters and four digits.",
+    "defaultMessage": "!!!Plate number {checksum} is a auto-generated sign of four letters and four digits.",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
       "line": 324,

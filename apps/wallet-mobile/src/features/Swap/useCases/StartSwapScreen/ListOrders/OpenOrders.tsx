@@ -35,7 +35,7 @@ import {createRawTxSigningKey, generateCIP30UtxoCbor} from '../../../../../yoroi
 import {useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
 import {getCollateralAmountInLovelace} from '../../../../Settings/ManageCollateral/helpers'
-import {useSelectedWallet} from '../../../../WalletManager/Context'
+import {useSelectedWallet} from '../../../../WalletManager/Context/SelectedWalletContext'
 import {ConfirmRawTx} from '../../../common/ConfirmRawTx/ConfirmRawTx'
 import {Counter} from '../../../common/Counter/Counter'
 import {EmptyOpenOrdersIllustration} from '../../../common/Illustrations/EmptyOpenOrdersIllustration'

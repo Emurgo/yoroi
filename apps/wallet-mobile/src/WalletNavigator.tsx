@@ -18,10 +18,10 @@ import {
   ChooseBiometricLoginScreen,
   useShowBiometricsScreen,
 } from './features/SetupWallet/useCases/ChooseBiometricLogin/ChooseBiometricLoginScreen'
-import {SelectWalletFromList} from './features/SetupWallet/useCases/SelectWalletFromList'
 import {GovernanceNavigator} from './features/Staking/Governance'
 import {ToggleAnalyticsSettingsNavigator} from './features/ToggleAnalyticsSettings'
-import {useSelectedWallet} from './features/WalletManager/Context'
+import {useSelectedWallet} from './features/WalletManager/Context/SelectedWalletContext'
+import {SelectWalletFromList} from './features/WalletManager/SelectWalletFromList'
 import {useMetrics} from './metrics/metricsManager'
 import {hideTabBarForRoutes, WalletStackRoutes, WalletTabRoutes} from './navigation'
 import {defaultStackNavigationOptions} from './navigation'

@@ -2,7 +2,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
 import {QueryProvider} from '../../.storybook/decorators'
-import {SelectedWalletProvider} from '../features/WalletManager/Context'
+import {SelectedWalletProvider} from '../features/WalletManager/Context/SelectedWalletContext'
 import {SearchProvider} from '../Search/SearchContext'
 import {mocks} from '../yoroi-wallets/mocks'
 import {Nfts} from './Nfts'

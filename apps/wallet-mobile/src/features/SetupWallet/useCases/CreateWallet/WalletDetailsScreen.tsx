@@ -1,5 +1,5 @@
 import {useFocusEffect} from '@react-navigation/native'
-import {NetworkError} from '@yoroi/common'
+import {NetworkError, useAsyncStorage} from '@yoroi/common'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
@@ -25,8 +25,10 @@ import {useMetrics} from '../../../../metrics/metricsManager'
 import {useWalletNavigation} from '../../../../navigation'
 import {isEmptyString} from '../../../../utils'
 import {AddressMode} from '../../../../wallet-manager/types'
+import {parseWalletMeta} from '../../../../wallet-manager/validators'
 import {useWalletManager} from '../../../../wallet-manager/WalletManagerContext'
-import {useCreateWallet, usePlate, useWalletNames} from '../../../../yoroi-wallets/hooks'
+import {InvalidState} from '../../../../yoroi-wallets/cardano/errors'
+import {useCreateWallet, useOpenWallet, usePlate, useWalletNames} from '../../../../yoroi-wallets/hooks'
 import {WalletImplementationId} from '../../../../yoroi-wallets/types'
 import {
   getWalletNameError,
@@ -35,6 +37,7 @@ import {
   validateWalletName,
 } from '../../../../yoroi-wallets/utils'
 import {debugWalletInfo, features} from '../../..'
+import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../../WalletManager/Context'
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
 import {YoroiZendeskLink} from '../../common/contants'
 import {LearnMoreButton} from '../../common/LearnMoreButton/LearnMoreButton'
@@ -63,31 +66,26 @@ export const WalletDetailsScreen = () => {
   const {styles} = useStyles()
   const {HEIGHT_MODAL_NAME_PASSWORD, HEIGHT_MODAL_CHECKSUM} = useSizeModal()
   const {openModal, closeModal} = useModal()
-  const {resetToWalletSelection} = useWalletNavigation()
+  const {navigateToTxHistory} = useWalletNavigation()
   const strings = useStrings()
   const walletManager = useWalletManager()
   const {walletNames} = useWalletNames(walletManager)
   const {track} = useMetrics()
+  const intl = useIntl()
+  const selectWalletMeta = useSetSelectedWalletMeta()
+  const selectWallet = useSetSelectedWallet()
+  const storage = useAsyncStorage()
+  const {mnemonic, networkId, publicKeyHex, walletImplementationId} = useSetupWallet()
+  const plate = usePlate({networkId, publicKeyHex})
+  const [name, setName] = React.useState(features.prefillWalletInfo ? debugWalletInfo.WALLET_NAME : '')
+  const passwordRef = React.useRef<RNTextInput>(null)
+  const [password, setPassword] = React.useState(features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '')
 
   useFocusEffect(
     React.useCallback(() => {
       track.createWalletDetailsStepViewed()
     }, [track]),
   )
-
-  const {mnemonic, networkId, publicKeyHex, walletImplementationId} = useSetupWallet()
-  const plate = usePlate({networkId, publicKeyHex})
-
-  const [name, setName] = React.useState(features.prefillWalletInfo ? debugWalletInfo.WALLET_NAME : '')
-
-  const nameErrors = validateWalletName(name, null, walletNames ?? [])
-  const walletNameErrorText = getWalletNameError(
-    {tooLong: strings.tooLong, nameAlreadyTaken: strings.nameAlreadyTaken, mustBeFilled: strings.mustBeFilled},
-    nameErrors,
-  )
-
-  const passwordRef = React.useRef<RNTextInput>(null)
-  const [password, setPassword] = React.useState(features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '')
 
   const passwordConfirmationRef = React.useRef<RNTextInput>(null)
   const [passwordConfirmation, setPasswordConfirmation] = React.useState(
@@ -101,11 +99,40 @@ export const WalletDetailsScreen = () => {
     ? strings.repeatPasswordInputError
     : undefined
 
-  const intl = useIntl()
-  const {createWallet, isLoading, isSuccess} = useCreateWallet({
-    onSuccess: () => {
+  const {
+    openWallet,
+    isLoading: isOpenWalletLoading,
+    isSuccess: isOpenWalletSuccess,
+  } = useOpenWallet({
+    onSuccess: ([wallet, walletMeta]) => {
+      selectWalletMeta(walletMeta)
+      selectWallet(wallet)
+      navigateToTxHistory()
+    },
+    onError: (error) => {
+      InteractionManager.runAfterInteractions(() => {
+        return error instanceof InvalidState
+          ? showErrorDialog(errorMessages.walletStateInvalid, intl)
+          : error instanceof NetworkError
+          ? showErrorDialog(errorMessages.networkError, intl)
+          : showErrorDialog(errorMessages.generalError, intl, {message: error.message})
+      })
+    },
+  })
+
+  const {
+    createWallet,
+    isLoading: isCreateWalletLoading,
+    isSuccess: isCreateWalletSuccess,
+  } = useCreateWallet({
+    onSuccess: async (wallet) => {
+      const walletStorage = storage.join('wallet/')
+      const walletMeta = await walletStorage.getItem(wallet.id, parseWalletMeta)
+
+      if (!walletMeta) throw new Error('invalid wallet meta')
+
+      openWallet(walletMeta)
       track.createWalletDetailsSettled()
-      resetToWalletSelection()
     },
     onError: (error) => {
       InteractionManager.runAfterInteractions(() => {
@@ -115,6 +142,14 @@ export const WalletDetailsScreen = () => {
       })
     },
   })
+
+  const nameErrors = validateWalletName(name, null, walletNames && !isCreateWalletSuccess ? walletNames : [])
+  const walletNameErrorText = getWalletNameError(
+    {tooLong: strings.tooLong, nameAlreadyTaken: strings.nameAlreadyTaken, mustBeFilled: strings.mustBeFilled},
+    nameErrors,
+  )
+
+  const isLoading = isCreateWalletLoading || isOpenWalletLoading
 
   const handleCreateWallet = React.useCallback(() => {
     track.createWalletDetailsSubmitted()
@@ -179,7 +214,7 @@ export const WalletDetailsScreen = () => {
               checksumLine={1}
               linesOfText={[
                 strings.walletChecksumModalCardFirstItem,
-                strings.walletChecksumModalCardSecondItem,
+                strings.walletChecksumModalCardSecondItem(plate.accountPlate.TextPart),
                 strings.walletChecksumModalCardThirdItem,
               ]}
             />
@@ -231,6 +266,7 @@ export const WalletDetailsScreen = () => {
           onSubmitEditing={() => passwordRef.current?.focus()}
           testID="walletNameInput"
           autoComplete="off"
+          disabled={isLoading}
           showErrorOnBlur
         />
 
@@ -247,6 +283,7 @@ export const WalletDetailsScreen = () => {
           onSubmitEditing={() => passwordConfirmationRef.current?.focus()}
           testID="walletPasswordInput"
           autoComplete="off"
+          disabled={isLoading}
           showErrorOnBlur
         />
 
@@ -263,6 +300,7 @@ export const WalletDetailsScreen = () => {
           errorText={passwordConfirmationErrorText}
           testID="walletRepeatPasswordInput"
           autoComplete="off"
+          disabled={isLoading}
           showErrorOnBlur
         />
 
@@ -285,8 +323,8 @@ export const WalletDetailsScreen = () => {
         <Button
           title={strings.next}
           style={styles.button}
-          onPress={isLoading || isSuccess ? NOOP : () => handleCreateWallet()}
-          disabled={Object.keys(passwordErrors).length > 0 || Object.keys(nameErrors).length > 0}
+          onPress={isLoading || isOpenWalletSuccess ? NOOP : () => handleCreateWallet()}
+          disabled={isLoading || Object.keys(passwordErrors).length > 0 || Object.keys(nameErrors).length > 0}
         />
 
         <Space height="s" />

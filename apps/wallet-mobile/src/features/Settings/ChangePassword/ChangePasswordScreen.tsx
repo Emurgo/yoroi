@@ -10,7 +10,7 @@ import {Button, Checkmark, KeyboardAvoidingView, Spacer, TextInput} from '../../
 import {errorMessages} from '../../../i18n/global-messages'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {REQUIRED_PASSWORD_LENGTH, validatePassword} from '../../../yoroi-wallets/utils/validators'
-import {useSelectedWallet} from '../../WalletManager/Context'
+import {useSelectedWallet} from '../../WalletManager/Context/SelectedWalletContext'
 
 export const ChangePasswordScreen = () => {
   const strings = useStrings()

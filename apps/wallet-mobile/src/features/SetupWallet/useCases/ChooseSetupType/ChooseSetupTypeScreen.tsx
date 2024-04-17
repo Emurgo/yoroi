@@ -42,7 +42,8 @@ export const ChooseSetupTypeScreen = () => {
       return
     }
 
-    navigation.navigate('setup-wallet-choose-network')
+    // On production the step of network is skipped
+    navigation.navigate('setup-wallet-create-choose-network')
   }
 
   const handleRestore = () => {
@@ -50,11 +51,12 @@ export const ChooseSetupTypeScreen = () => {
 
     if (isProduction()) {
       networkIdChanged(HASKELL_SHELLEY.NETWORK_ID)
-      navigation.navigate('setup-wallet-choose-mnemonic-type')
+      navigation.navigate('setup-wallet-restore-choose-mnemonic-type')
       return
     }
 
-    navigation.navigate('setup-wallet-choose-network')
+    // On production the step of network is skipped
+    navigation.navigate('setup-wallet-restore-choose-network')
   }
 
   const handleHw = () => {
@@ -71,7 +73,8 @@ export const ChooseSetupTypeScreen = () => {
       return
     }
 
-    navigation.navigate('setup-wallet-choose-network')
+    // On production the step of network is skipped
+    navigation.navigate('setup-wallet-restore-choose-network')
   }
 
   return (
