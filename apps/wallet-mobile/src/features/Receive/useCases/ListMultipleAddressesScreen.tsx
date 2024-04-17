@@ -2,11 +2,14 @@ import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {
+  InteractionManager,
   LayoutAnimation,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  Platform,
   ScrollView,
   StyleSheet,
+  UIManager,
   View,
   ViewToken,
 } from 'react-native'
@@ -41,6 +44,10 @@ export const ListMultipleAddressesScreen = () => {
   const {addressMode} = useAddressModeManager()
   const addresses = useReceiveAddressesStatus(addressMode)
   const {selectedAddressChanged} = useReceive()
+
+  if (Platform.OS === 'android') {
+    UIManager.setLayoutAnimationEnabledExperimental(true)
+  }
 
   React.useEffect(() => {
     wallet.generateNewReceiveAddressIfNeeded()
@@ -85,16 +92,20 @@ export const ListMultipleAddressesScreen = () => {
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     if (event.nativeEvent.contentOffset.y <= 0) {
-      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-      setShowAddressLimitInfo(true)
+      InteractionManager.runAfterInteractions(() => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+        setShowAddressLimitInfo(true)
+      })
     } else if (showAddressLimitInfo && event.nativeEvent.contentOffset.y > 0) {
       setShowAddressLimitInfo(false)
     }
   }
   React.useEffect(() => {
     if (hasReachedGapLimit) {
-      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-      setShowAddressLimitInfo(true)
+      InteractionManager.runAfterInteractions(() => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+        setShowAddressLimitInfo(true)
+      })
     }
   }, [hasReachedGapLimit])
 
