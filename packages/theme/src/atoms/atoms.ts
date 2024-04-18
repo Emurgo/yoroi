@@ -58,8 +58,7 @@ const size = {
   },
 } as const
 
-export const atoms = {
-  // typography
+const typograpghy = {
   heading_1_medium: {
     ...fontFamily.medium,
     ...size.h1,
@@ -184,6 +183,76 @@ export const atoms = {
   text_right: {
     textAlign: 'right',
   },
+}
+
+const padding = {
+  p_0: {padding: tokens.space.none},
+  p_2xs: {padding: tokens.space._2xs},
+  p_xs: {padding: tokens.space.xs},
+  p_sm: {padding: tokens.space.sm},
+  p_md: {padding: tokens.space.md},
+  p_lg: {padding: tokens.space.lg},
+  p_xl: {padding: tokens.space.xl},
+  p_2xl: {padding: tokens.space._2xl},
+
+  px_0: {paddingLeft: tokens.space.none, paddingRight: tokens.space.none},
+  px_2xs: {paddingLeft: tokens.space._2xs, paddingRight: tokens.space._2xs},
+  px_xs: {paddingLeft: tokens.space.xs, paddingRight: tokens.space.xs},
+  px_sm: {paddingLeft: tokens.space.sm, paddingRight: tokens.space.sm},
+  px_md: {paddingLeft: tokens.space.md, paddingRight: tokens.space.md},
+  px_lg: {paddingLeft: tokens.space.lg, paddingRight: tokens.space.lg},
+  px_xl: {paddingLeft: tokens.space.xl, paddingRight: tokens.space.xl},
+  px_2xl: {paddingLeft: tokens.space._2xl, paddingRight: tokens.space._2xl},
+
+  py_0: {paddingTop: tokens.space.none, paddingBottom: tokens.space.none},
+  py_2xs: {paddingTop: tokens.space._2xs, paddingBottom: tokens.space._2xs},
+  py_xs: {paddingTop: tokens.space.xs, paddingBottom: tokens.space.xs},
+  py_sm: {paddingTop: tokens.space.sm, paddingBottom: tokens.space.sm},
+  py_md: {paddingTop: tokens.space.md, paddingBottom: tokens.space.md},
+  py_lg: {paddingTop: tokens.space.lg, paddingBottom: tokens.space.lg},
+  py_xl: {paddingTop: tokens.space.xl, paddingBottom: tokens.space.xl},
+  py_2xl: {paddingTop: tokens.space._2xl, paddingBottom: tokens.space._2xl},
+
+  pt_0: {paddingTop: tokens.space.none},
+  pt_2xs: {paddingTop: tokens.space._2xs},
+  pt_xs: {paddingTop: tokens.space.xs},
+  pt_sm: {paddingTop: tokens.space.sm},
+  pt_md: {paddingTop: tokens.space.md},
+  pt_lg: {paddingTop: tokens.space.lg},
+  pt_xl: {paddingTop: tokens.space.xl},
+  pt_2xl: {paddingTop: tokens.space._2xl},
+
+  pb_0: {paddingBottom: tokens.space.none},
+  pb_2xs: {paddingBottom: tokens.space._2xs},
+  pb_xs: {paddingBottom: tokens.space.xs},
+  pb_sm: {paddingBottom: tokens.space.sm},
+  pb_md: {paddingBottom: tokens.space.md},
+  pb_lg: {paddingBottom: tokens.space.lg},
+  pb_xl: {paddingBottom: tokens.space.xl},
+  pb_2xl: {paddingBottom: tokens.space._2xl},
+
+  pl_0: {paddingLeft: tokens.space.none},
+  pl_2xs: {paddingLeft: tokens.space._2xs},
+  pl_xs: {paddingLeft: tokens.space.xs},
+  pl_sm: {paddingLeft: tokens.space.sm},
+  pl_md: {paddingLeft: tokens.space.md},
+  pl_lg: {paddingLeft: tokens.space.lg},
+  pl_xl: {paddingLeft: tokens.space.xl},
+  pl_2xl: {paddingLeft: tokens.space._2xl},
+
+  pr_0: {paddingRight: tokens.space.none},
+  pr_2xs: {paddingRight: tokens.space._2xs},
+  pr_xs: {paddingRight: tokens.space.xs},
+  pr_sm: {paddingRight: tokens.space.sm},
+  pr_md: {paddingRight: tokens.space.md},
+  pr_lg: {paddingRight: tokens.space.lg},
+  pr_xl: {paddingRight: tokens.space.xl},
+  pr_2xl: {paddingRight: tokens.space._2xl},
+}
+
+export const atoms = {
+  typograpghy: typograpghy,
+  padding: padding,
 
   // positioning
   absolute: {
@@ -374,70 +443,6 @@ export const atoms = {
   self_baseline: {
     alignSelf: 'baseline',
   },
-
-  // padding
-  p_0: {padding: tokens.space.none},
-  p_2xs: {padding: tokens.space._2xs},
-  p_xs: {padding: tokens.space.xs},
-  p_sm: {padding: tokens.space.sm},
-  p_md: {padding: tokens.space.md},
-  p_lg: {padding: tokens.space.lg},
-  p_xl: {padding: tokens.space.xl},
-  p_2xl: {padding: tokens.space._2xl},
-
-  px_0: {paddingLeft: tokens.space.none, paddingRight: tokens.space.none},
-  px_2xs: {paddingLeft: tokens.space._2xs, paddingRight: tokens.space._2xs},
-  px_xs: {paddingLeft: tokens.space.xs, paddingRight: tokens.space.xs},
-  px_sm: {paddingLeft: tokens.space.sm, paddingRight: tokens.space.sm},
-  px_md: {paddingLeft: tokens.space.md, paddingRight: tokens.space.md},
-  px_lg: {paddingLeft: tokens.space.lg, paddingRight: tokens.space.lg},
-  px_xl: {paddingLeft: tokens.space.xl, paddingRight: tokens.space.xl},
-  px_2xl: {paddingLeft: tokens.space._2xl, paddingRight: tokens.space._2xl},
-
-  py_0: {paddingTop: tokens.space.none, paddingBottom: tokens.space.none},
-  py_2xs: {paddingTop: tokens.space._2xs, paddingBottom: tokens.space._2xs},
-  py_xs: {paddingTop: tokens.space.xs, paddingBottom: tokens.space.xs},
-  py_sm: {paddingTop: tokens.space.sm, paddingBottom: tokens.space.sm},
-  py_md: {paddingTop: tokens.space.md, paddingBottom: tokens.space.md},
-  py_lg: {paddingTop: tokens.space.lg, paddingBottom: tokens.space.lg},
-  py_xl: {paddingTop: tokens.space.xl, paddingBottom: tokens.space.xl},
-  py_2xl: {paddingTop: tokens.space._2xl, paddingBottom: tokens.space._2xl},
-
-  pt_0: {paddingTop: tokens.space.none},
-  pt_2xs: {paddingTop: tokens.space._2xs},
-  pt_xs: {paddingTop: tokens.space.xs},
-  pt_sm: {paddingTop: tokens.space.sm},
-  pt_md: {paddingTop: tokens.space.md},
-  pt_lg: {paddingTop: tokens.space.lg},
-  pt_xl: {paddingTop: tokens.space.xl},
-  pt_2xl: {paddingTop: tokens.space._2xl},
-
-  pb_0: {paddingBottom: tokens.space.none},
-  pb_2xs: {paddingBottom: tokens.space._2xs},
-  pb_xs: {paddingBottom: tokens.space.xs},
-  pb_sm: {paddingBottom: tokens.space.sm},
-  pb_md: {paddingBottom: tokens.space.md},
-  pb_lg: {paddingBottom: tokens.space.lg},
-  pb_xl: {paddingBottom: tokens.space.xl},
-  pb_2xl: {paddingBottom: tokens.space._2xl},
-
-  pl_0: {paddingLeft: tokens.space.none},
-  pl_2xs: {paddingLeft: tokens.space._2xs},
-  pl_xs: {paddingLeft: tokens.space.xs},
-  pl_sm: {paddingLeft: tokens.space.sm},
-  pl_md: {paddingLeft: tokens.space.md},
-  pl_lg: {paddingLeft: tokens.space.lg},
-  pl_xl: {paddingLeft: tokens.space.xl},
-  pl_2xl: {paddingLeft: tokens.space._2xl},
-
-  pr_0: {paddingRight: tokens.space.none},
-  pr_2xs: {paddingRight: tokens.space._2xs},
-  pr_xs: {paddingRight: tokens.space.xs},
-  pr_sm: {paddingRight: tokens.space.sm},
-  pr_md: {paddingRight: tokens.space.md},
-  pr_lg: {paddingRight: tokens.space.lg},
-  pr_xl: {paddingRight: tokens.space.xl},
-  pr_2xl: {paddingRight: tokens.space._2xl},
 } as const
 
 export type Atoms = typeof atoms

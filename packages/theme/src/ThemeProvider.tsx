@@ -5,6 +5,7 @@ import {ThemedPalette, SupportedThemes, Theme, ThemeStorage} from './types'
 import {defaultLightTheme} from './themes/default-light'
 import {defaultDarkTheme} from './themes/default-dark'
 import {detectTheme} from './helpers/detect-theme'
+import {Atoms} from './atoms/atoms'
 
 const ThemeContext = React.createContext<undefined | ThemeContext>(undefined)
 export const ThemeProvider = ({
@@ -32,6 +33,7 @@ export const ThemeProvider = ({
 
       isLight: themes[themeName].base === 'light',
       isDark: themes[themeName].base === 'dark',
+      atoms: themes[themeName].atoms,
     }),
     [colorScheme, storage, themeName],
   )
@@ -50,6 +52,7 @@ type ThemeContext = {
   selectThemeName: (name: SupportedThemes) => void
   isLight: boolean
   isDark: boolean
+  atoms: Atoms
 }
 
 const themes: Record<Exclude<SupportedThemes, 'system'>, Theme> = {
