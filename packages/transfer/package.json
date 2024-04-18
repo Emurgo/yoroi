@@ -128,7 +128,7 @@
     ]
   },
   "dependencies": {
-    "@yoroi/resolver": "2.0.4",
+    "@yoroi/resolver": "2.0.5",
     "@yoroi/types": "1.5.4"
   },
   "devDependencies": {
