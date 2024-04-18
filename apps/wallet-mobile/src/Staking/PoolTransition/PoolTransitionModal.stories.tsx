@@ -4,7 +4,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {View} from 'react-native'
 
-import {PoolTransitionModal} from './usePoolTransition'
+import {PoolTransitionModal} from './PoolTransitionModal'
 
 const mock = {
   currentPool: {
@@ -12,17 +12,17 @@ const mock = {
     ticker: 'EMRG',
     name: 'emurgo old',
     roa: '0',
-    tax: '3.5',
-  } as unknown as PoolInfo & {tax: number},
+    taxRate: '0.05',
+  } as PoolInfo,
   suggestedPool: {
     pic: 'https://img.cexplorer.io/e/c/2/3/1/pool1dkww2vlysa8lsnuf5rca979zdsyr3zvt59hu7e420yxfunkka2z.png',
     id: 'df1750df9b2df285fcfb50f4740657a18ee3af42727d410c37b86207',
     name: 'emurgo new',
     roa: '5.1',
     ticker: 'EMRG',
-    tax: '3.2',
-  } as unknown as PoolInfo & {tax: number},
-  deadlineMilliseconds: 2999777000,
+    taxRate: '0.02',
+  } as PoolInfo,
+  deadlineMilliseconds: Date.now() + 2999777000,
 }
 
 storiesOf('PoolTransitionModal', module)

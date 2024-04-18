@@ -13,7 +13,8 @@ export const PoolTransitionNotice = () => {
   const {poolTransition, navigateToUpdate} = usePoolTransition()
   if (!poolTransition) return null
 
-  const isActive = poolTransition.deadlineMilliseconds > 0
+  const timeSpan = poolTransition.deadlineMilliseconds - Date.now()
+  const isActive = timeSpan > 0
 
   return (
     <View style={styles.notice}>
@@ -30,7 +31,7 @@ export const PoolTransitionNotice = () => {
           <Text style={styles.bold}>
             {'\n'}
 
-            {formatTimeSpan(poolTransition.deadlineMilliseconds)}
+            {formatTimeSpan(timeSpan)}
           </Text>
         )}
       </Text>

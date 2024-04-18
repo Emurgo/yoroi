@@ -304,6 +304,8 @@ const ms_in_sec = 1000,
   sec_in_hour = 3600,
   sec_in_min = 60
 export const formatTimeSpan = (ms: number) => {
+  if (ms < 0) return ''
+
   let seconds = Math.round(Math.abs(ms) / ms_in_sec)
   const days = Math.floor(seconds / sec_in_day)
   seconds = Math.floor(seconds % sec_in_day)
