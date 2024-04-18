@@ -1,6 +1,6 @@
 import {PoolTransition} from '@emurgo/yoroi-lib'
 import {useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {Image, StyleSheet, Text, View, ViewProps} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
@@ -44,26 +44,26 @@ export const PoolTransitionModal = ({
           <Text style={styles.label}>{strings.currentPool}</Text>
 
           <View style={styles.poolTicker}>
-            {poolTransition.currentPool.pic != null && (
-              <Image source={{uri: poolTransition.currentPool.pic}} style={styles.pic} />
+            {poolTransition.current.pic != null && (
+              <Image source={{uri: poolTransition.current.pic}} style={styles.pic} />
             )}
 
             <Text
               style={styles.poolTickerText}
-            >{`[${poolTransition.currentPool.ticker}] ${poolTransition.currentPool.name}`}</Text>
+            >{`[${poolTransition.current.ticker}] ${poolTransition.current.name}`}</Text>
           </View>
         </Row>
 
         <Row>
           <Text style={styles.label}>{strings.estimatedRoa}</Text>
 
-          <Text style={styles.currentValue}>{poolTransition.currentPool.roa} %</Text>
+          <Text style={styles.currentValue}>{poolTransition.current.roa} %</Text>
         </Row>
 
         <Row>
           <Text style={styles.label}>{strings.fee}</Text>
 
-          <Text style={styles.currentValue}>{Number(poolTransition.currentPool.taxRato) * 100} %</Text>
+          <Text style={styles.currentValue}>{Number(poolTransition.current.taxRatio) * 100} %</Text>
         </Row>
 
         <Text style={styles.warning}>
@@ -97,26 +97,26 @@ export const PoolTransitionModal = ({
           <Text style={styles.label}>{strings.newPool}</Text>
 
           <View style={styles.poolTicker}>
-            {poolTransition.suggestedPool.pic != null && (
-              <Image source={{uri: poolTransition.suggestedPool.pic}} style={styles.pic} />
+            {poolTransition.suggested.pic != null && (
+              <Image source={{uri: poolTransition.suggested.pic}} style={styles.pic} />
             )}
 
             <Text
               style={styles.poolTickerText}
-            >{`[${poolTransition.suggestedPool.ticker}] ${poolTransition.suggestedPool.name}`}</Text>
+            >{`[${poolTransition.suggested.ticker}] ${poolTransition.suggested.name}`}</Text>
           </View>
         </Row>
 
         <Row>
           <Text style={styles.label}>{strings.estimatedRoa}</Text>
 
-          <Text style={styles.suggestedValue}>{poolTransition.suggestedPool.roa} %</Text>
+          <Text style={styles.suggestedValue}>{poolTransition.suggested.roa} %</Text>
         </Row>
 
         <Row>
           <Text style={styles.label}>{strings.fee}</Text>
 
-          <Text style={styles.suggestedValue}>{poolTransition.suggestedPool.tax} %</Text>
+          <Text style={styles.suggestedValue}>{Number(poolTransition.suggested.taxRatio) * 100} %</Text>
         </Row>
 
         <Text style={styles.currentValue}>{strings.poolGeneratesRewards}</Text>

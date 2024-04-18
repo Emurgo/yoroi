@@ -1,5 +1,5 @@
 import {useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {StyleSheet, Text, View, ViewProps} from 'react-native'
 
 import {Button, Icon} from '../../components'
@@ -11,7 +11,7 @@ export const PoolTransitionNotice = () => {
   const {styles, color} = useStyles()
   const strings = useStrings()
   const {poolTransition, navigateToUpdate} = usePoolTransition()
-  if (!poolTransition) return null
+  if (poolTransition === null) return null
 
   const timeSpan = poolTransition.deadlineMilliseconds - Date.now()
   const isActive = timeSpan > 0

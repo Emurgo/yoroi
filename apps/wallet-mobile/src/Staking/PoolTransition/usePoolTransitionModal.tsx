@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 
 import {useModal} from '../../components'
 import {PoolTransitionModal} from './PoolTransitionModal'
@@ -11,7 +11,7 @@ export const usePoolTransitionModal = () => {
   const modalHeight = 700
 
   React.useEffect(() => {
-    if (isPoolRetiring && poolTransition) {
+    if (isPoolRetiring && poolTransition !== null) {
       openModal(
         strings.title,
         <PoolTransitionModal poolTransition={poolTransition} onContinue={navigateToUpdate} />,

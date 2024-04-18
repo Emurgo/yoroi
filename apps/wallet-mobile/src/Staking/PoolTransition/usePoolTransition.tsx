@@ -1,7 +1,7 @@
-import {getPoolTransition} from '@emurgo/yoroi-lib'
+import {PoolInfoApi} from '@emurgo/yoroi-lib'
 import {useNavigation} from '@react-navigation/native'
 import BigNumber from 'bignumber.js'
-import React from 'react'
+import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {useQuery} from 'react-query'
 
@@ -24,6 +24,8 @@ const createDelegationTx = async (wallet: YoroiWallet, poolId: string) => {
   return wallet.createDelegationTx(poolId, new BigNumber(amountToDelegate))
 }
 
+const poolInfoApi = new PoolInfoApi()
+
 export const usePoolTransition = () => {
   const navigation = useNavigation()
   const wallet = useSelectedWallet()
@@ -37,11 +39,11 @@ export const usePoolTransition = () => {
     retry: false,
     staleTime: 20 * 1000,
     queryKey: [wallet.id, 'poolTransition', currentPoolId],
-    queryFn: () => getPoolTransition(currentPoolId),
+    queryFn: () => poolInfoApi.getTransition(currentPoolId),
   })
 
   const poolTransition = poolTransitionQuery.data ?? null
-  const poolId = poolTransition?.suggestedPool.id ?? ''
+  const poolId = poolTransition?.suggested.id ?? ''
 
   const navigateToUpdate = React.useCallback(async () => {
     try {
@@ -71,7 +73,7 @@ export const usePoolTransition = () => {
   return {
     ...poolTransitionQuery,
     poolTransition,
-    isPoolRetiring: !!poolTransition,
+    isPoolRetiring: poolTransition !== null,
     navigateToUpdate,
   }
 }
