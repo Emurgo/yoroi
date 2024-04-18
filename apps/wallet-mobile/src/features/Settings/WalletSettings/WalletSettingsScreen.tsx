@@ -10,7 +10,7 @@ import {useAuth} from '../../../auth/AuthProvider'
 import {Icon, Spacer} from '../../../components'
 import {DIALOG_BUTTONS, showConfirmationDialog} from '../../../dialogs'
 import {confirmationMessages} from '../../../i18n/global-messages'
-import {SettingsRouteNavigation, useWalletNavigation} from '../../../navigation'
+import {SettingsRouteNavigation, useResetToWalletSelection, useWalletNavigation} from '../../../navigation'
 import {lightPalette} from '../../../theme'
 import {useAddressModeManager} from '../../../wallet-manager/useAddressModeManager'
 import {useAuthSetting} from '../../../yoroi-wallets/auth'
@@ -38,7 +38,7 @@ export const WalletSettingsScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
   const styles = useStyles()
-  const {resetToWalletSelection} = useWalletNavigation()
+  const resetToWalletSelection = useResetToWalletSelection()
   const wallet = useSelectedWallet()
   const authSetting = useAuthSetting()
   const addressMode = useAddressModeManager()

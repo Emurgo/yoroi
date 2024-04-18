@@ -14,7 +14,7 @@ import {
   TextInput,
   TextInputProps,
 } from '../../../components'
-import {useWalletNavigation} from '../../../navigation'
+import {useResetToWalletSelection} from '../../../navigation'
 import {useRemoveWallet, useWalletName} from '../../../yoroi-wallets/hooks'
 import {useSelectedWallet} from '../../WalletManager/Context/SelectedWalletContext'
 
@@ -24,7 +24,7 @@ export const RemoveWalletScreen = () => {
   const wallet = useSelectedWallet()
   const walletName = useWalletName(wallet)
 
-  const {resetToWalletSelection} = useWalletNavigation()
+  const resetToWalletSelection = useResetToWalletSelection()
   const {removeWallet, isLoading} = useRemoveWallet(wallet.id, {
     onSuccess: () => resetToWalletSelection(),
   })

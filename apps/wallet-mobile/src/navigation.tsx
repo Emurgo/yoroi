@@ -120,7 +120,6 @@ export type WalletInitRoutes = {
   'setup-wallet-create-choose-network': undefined
   'setup-wallet-restore-choose-network': undefined
   'setup-wallet-restore-choose-mnemonic-type': undefined
-  'initial-setup-wallet-choose-setup-type': undefined
   'setup-wallet-details-form': undefined
   'setup-wallet-restore-form': undefined
   'setup-wallet-restore-details': undefined
@@ -341,228 +340,217 @@ export const useBlockGoBack = () => {
 
 export const useWalletNavigation = () => {
   const navigation = useNavigation()
-  const walletManager = useWalletManager()
-  const hasWallets = useHasWallets(walletManager)
 
-  const resetToTxHistory = () => {
-    navigation.reset({
-      index: 0,
-      routes: [
-        {
-          name: 'app-root',
-          state: {
-            routes: [
-              {name: 'wallet-selection'},
-              {
-                name: 'main-wallet-routes',
-                state: {
-                  routes: [
-                    {
-                      name: 'history',
-                      state: {
-                        routes: [{name: 'history-list'}],
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-        },
-      ],
-    })
-  }
+  return React.useRef({
+    navigation,
 
-  const resetToStartTransfer = () => {
-    navigation.reset({
-      index: 0,
-      routes: [
-        {
-          name: 'app-root',
-          state: {
-            routes: [
-              {name: 'wallet-selection'},
-              {
-                name: 'main-wallet-routes',
-                state: {
-                  routes: [
-                    {
-                      name: 'history',
-                      state: {
-                        routes: [{name: 'send-start-tx'}],
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-        },
-      ],
-    })
-  }
-
-  const navigateToStartTransfer = () => {
-    navigation.navigate('app-root', {
-      screen: 'main-wallet-routes',
-      params: {
-        screen: 'history',
-        params: {
-          screen: 'send-start-tx',
-        },
-      },
-    })
-  }
-
-  const resetToWalletSetup = () => {
-    navigation.reset({
-      index: 0,
-      routes: [
-        {
-          name: 'app-root',
-          state: {
-            routes: [
-              {
-                name: 'setup-wallet',
-                state: {
-                  routes: [{name: 'setup-wallet-choose-setup-type'}],
-                },
-              },
-            ],
-          },
-        },
-      ],
-    })
-  }
-
-  const resetToWalletSelection = () => {
-    if (hasWallets) {
+    resetToTxHistory: () => {
       navigation.reset({
         index: 0,
         routes: [
           {
             name: 'app-root',
             state: {
-              routes: [{name: 'wallet-selection'}],
+              routes: [
+                {name: 'wallet-selection'},
+                {
+                  name: 'main-wallet-routes',
+                  state: {
+                    routes: [
+                      {
+                        name: 'history',
+                        state: {
+                          routes: [{name: 'history-list'}],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
             },
           },
         ],
       })
+    },
 
-      return
-    }
+    resetToStartTransfer: () => {
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'app-root',
+            state: {
+              routes: [
+                {name: 'wallet-selection'},
+                {
+                  name: 'main-wallet-routes',
+                  state: {
+                    routes: [
+                      {
+                        name: 'history',
+                        state: {
+                          routes: [{name: 'send-start-tx'}],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      })
+    },
 
-    resetToWalletSetup()
-  }
-
-  const navigateToWalletSetup = () => {
-    navigation.navigate('setup-wallet', {
-      screen: 'setup-wallet-choose-setup-type',
-    })
-  }
-
-  const navigateToStakingDashboard = () => {
-    navigation.navigate('app-root', {
-      screen: 'main-wallet-routes',
-      params: {
-        screen: 'staking-dashboard',
+    navigateToStartTransfer: () => {
+      navigation.navigate('app-root', {
+        screen: 'main-wallet-routes',
         params: {
-          screen: 'staking-dashboard-main',
+          screen: 'history',
+          params: {
+            screen: 'send-start-tx',
+          },
         },
-      },
-    })
-  }
+      })
+    },
 
-  const navigateToSettings = () => {
-    navigation.navigate('app-root', {
-      screen: 'settings',
-      params: {
-        screen: 'main-settings',
-      },
-    })
-  }
+    resetToWalletSetup: () => {
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'app-root',
+            state: {
+              routes: [
+                {
+                  name: 'wallet-setup',
+                  state: {
+                    routes: [{name: 'setup-wallet-choose-setup-type'}],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      })
+    },
 
-  const navigateToTxHistory = () => {
-    navigation.navigate('app-root', {
-      screen: 'main-wallet-routes',
-      params: {
-        screen: 'history',
+    navigateToWalletSetup: () => {
+      navigation.navigate('setup-wallet', {
+        screen: 'setup-wallet-choose-setup-type',
+      })
+    },
+
+    navigateToStakingDashboard: () => {
+      navigation.navigate('app-root', {
+        screen: 'main-wallet-routes',
         params: {
-          screen: 'history-list',
+          screen: 'staking-dashboard',
+          params: {
+            screen: 'staking-dashboard-main',
+          },
         },
-      },
-    })
-  }
+      })
+    },
 
-  const navigateToNftGallery = () => {
-    navigation.navigate('app-root', {
-      screen: 'main-wallet-routes',
-      params: {
-        screen: 'nfts',
-        params: {
-          screen: 'nft-gallery',
-        },
-      },
-    })
-  }
-
-  const navigateToAppSettings = () => {
-    navigation.navigate('app-root', {
-      screen: 'settings',
-      params: {
-        screen: 'app-settings',
-      },
-    })
-  }
-
-  const navigateToCollateralSettings = (params?: SettingsStackRoutes['manage-collateral']) => {
-    navigation.navigate('app-root', {
-      screen: 'settings',
-      params: {
-        screen: 'manage-collateral',
-        params,
-      },
-    })
-  }
-
-  const navigateToAnalyticsSettings = () => {
-    navigation.navigate('app-root', {
-      screen: 'toggle-analytics-settings',
-      params: {
+    navigateToSettings: () => {
+      navigation.navigate('app-root', {
         screen: 'settings',
-      },
-    })
-  }
-
-  const navigateToGovernanceCentre = ({navigateToStakingOnSuccess = false} = {}) => {
-    navigation.navigate('app-root', {
-      screen: 'governance',
-      params: {
-        screen: 'staking-gov-home',
         params: {
-          navigateToStakingOnSuccess,
+          screen: 'main-settings',
         },
-      },
-    })
-  }
+      })
+    },
 
-  return React.useRef({
-    navigation,
-    resetToTxHistory,
-    resetToStartTransfer,
-    navigateToStartTransfer,
-    resetToWalletSelection,
-    resetToWalletSetup,
-    navigateToWalletSetup,
-    navigateToStakingDashboard,
-    navigateToSettings,
-    navigateToTxHistory,
-    navigateToNftGallery,
-    navigateToAppSettings,
-    navigateToCollateralSettings,
-    navigateToAnalyticsSettings,
-    navigateToGovernanceCentre,
+    navigateToTxHistory: () => {
+      navigation.navigate('app-root', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'history-list',
+          },
+        },
+      })
+    },
+
+    navigateToNftGallery: () => {
+      navigation.navigate('app-root', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'nfts',
+          params: {
+            screen: 'nft-gallery',
+          },
+        },
+      })
+    },
+
+    navigateToAppSettings: () => {
+      navigation.navigate('app-root', {
+        screen: 'settings',
+        params: {
+          screen: 'app-settings',
+        },
+      })
+    },
+
+    navigateToCollateralSettings: (params?: SettingsStackRoutes['manage-collateral']) => {
+      navigation.navigate('app-root', {
+        screen: 'settings',
+        params: {
+          screen: 'manage-collateral',
+          params,
+        },
+      })
+    },
+
+    navigateToAnalyticsSettings: () => {
+      navigation.navigate('app-root', {
+        screen: 'toggle-analytics-settings',
+        params: {
+          screen: 'settings',
+        },
+      })
+    },
+
+    navigateToGovernanceCentre: ({navigateToStakingOnSuccess = false} = {}) => {
+      navigation.navigate('app-root', {
+        screen: 'governance',
+        params: {
+          screen: 'staking-gov-home',
+          params: {
+            navigateToStakingOnSuccess,
+          },
+        },
+      })
+    },
   } as const).current
+}
+
+export const useResetToWalletSelection = () => {
+  const {resetToWalletSetup} = useWalletNavigation()
+  const walletManager = useWalletManager()
+  const hasWallets = useHasWallets(walletManager)
+  const navigation = useNavigation()
+
+  console.log('hasWallets', hasWallets)
+
+  const resetToWalletSelection = React.useRef(() => {
+    navigation.reset({
+      index: 0,
+      routes: [
+        {
+          name: 'app-root',
+          state: {
+            routes: [{name: 'wallet-selection'}],
+          },
+        },
+      ],
+    })
+  }).current
+
+  return hasWallets ? resetToWalletSelection : resetToWalletSetup
 }
 
 export const hideTabBarForRoutes = (route: RouteProp<WalletTabRoutes, 'history'>): ViewStyle | undefined =>
