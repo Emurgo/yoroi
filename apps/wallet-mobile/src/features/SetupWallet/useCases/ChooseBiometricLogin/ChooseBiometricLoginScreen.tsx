@@ -101,8 +101,8 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: theme.color['white-static'],
-      ...theme.padding['x-l'],
+      backgroundColor: theme.color.white_static,
+      ...theme.atoms.px_lg,
     },
     content: {
       flex: 1,
@@ -112,13 +112,13 @@ const useStyles = () => {
       alignItems: 'center',
     },
     biometricDescription: {
-      ...theme.typography['heading-3-medium'],
-      color: theme.color.gray.max,
+      ...theme.atoms.heading_3_medium,
+      color: theme.color.gray_cmax,
       textAlign: 'center',
-      ...theme.padding['x-l'],
+      ...theme.atoms.px_lg,
     },
-    textOutlineButton: {color: theme.color.gray[900]},
-    enableButton: {backgroundColor: theme.color.primary[500]},
+    textOutlineButton: {color: theme.color.gray_c900},
+    enableButton: {backgroundColor: theme.color.primary_c500},
   })
 
   return {styles} as const

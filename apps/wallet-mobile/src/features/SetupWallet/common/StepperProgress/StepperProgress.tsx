@@ -74,10 +74,10 @@ const useStyles = () => {
     bar: {
       flexDirection: 'row',
       gap: 16,
-      ...theme.padding['y-l'],
+      ...theme.atoms.py_lg,
     },
     step: {
-      backgroundColor: theme.color.primary[600],
+      backgroundColor: theme.color.primary_c600,
       alignItems: 'center',
       justifyContent: 'center',
       height: 24,
@@ -88,23 +88,23 @@ const useStyles = () => {
       alignSelf: 'center',
     },
     isNext: {
-      backgroundColor: theme.color['white-static'],
+      backgroundColor: theme.color.white_static,
       borderWidth: 2,
-      borderColor: theme.color.gray[400],
+      borderColor: theme.color.gray_c400,
     },
     isPrevious: {
-      backgroundColor: theme.color.primary[300],
+      backgroundColor: theme.color.primary_c300,
     },
     stepNumber: {
-      ...theme.typography['body-2-m-medium'],
-      color: theme.color.primary[100],
+      ...theme.atoms.body_2_md_medium,
+      color: theme.color.primary_c100,
     },
     isNextNumber: {
-      color: theme.color.gray[400],
+      color: theme.color.gray_c400,
     },
     currentStepTitle: {
-      ...theme.typography['body-1-l-medium'],
-      color: theme.color.primary[600],
+      ...(theme.atoms.body - 1 - lg - medium),
+      color: theme.color.primary_c600,
     },
   })
   return {styles} as const

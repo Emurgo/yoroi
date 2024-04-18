@@ -89,13 +89,13 @@ const useStyles = () => {
     },
     label: {
       fontSize: 16,
-      color: color.gray[600],
+      color: color.gray_c600,
       lineHeight: 24,
       fontFamily: 'Rubik-Regular',
     },
     value: {
       fontSize: 16,
-      color: color.gray.max,
+      color: color.gray_cmax,
       lineHeight: 24,
       fontFamily: 'Rubik-Regular',
       textAlign: 'right',
@@ -118,8 +118,8 @@ const useStyles = () => {
       gap: 10,
     },
     description: {
-      ...typography['body-1-l-regular'],
-      color: color.gray[900],
+      ...atoms.body_1_lg_regular,
+      color: color.gray_c900,
     },
   })
 

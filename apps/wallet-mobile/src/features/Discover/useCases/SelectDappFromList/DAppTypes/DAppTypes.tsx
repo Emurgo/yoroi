@@ -109,7 +109,7 @@ const useStyles = () => {
     },
     chipContentBox: {
       paddingHorizontal: 14,
-      backgroundColor: color['white-static'],
+      backgroundColor: color.white_static,
       flexDirection: 'row',
       alignItems: 'center',
       gap: 8,
@@ -117,27 +117,27 @@ const useStyles = () => {
       height: '100%',
     },
     chipBgWhite: {
-      backgroundColor: color['white-static'],
+      backgroundColor: color.white_static,
     },
     chipText: {
-      color: color.primary[600],
-      ...typography['body-1-l-regular'],
+      color: color.primary_c600,
+      ...atoms.body_1_lg_regular,
     },
     contentContainer: {
-      ...padding['l-l'],
-      ...padding['b-l'],
+      ...atoms.pl_lg,
+      ...atoms.pb_lg,
     },
   })
 
   const colors = {
     gradientColorSelected: color.gradients['blue-green'],
     gradientColorPressed: ['#C4CFF5', '#93F5E1'],
-    iconCheckFilledColor: color.primary[600],
-    gradientDisabledColor: [color.primary[200], '#C4CFF5'],
-    gradientGreenBlue: color.gradients['green-blue'],
+    iconCheckFilledColor: color.primary_c600,
+    gradientDisabledColor: [color.primary_c200, '#C4CFF5'],
+    gradientGreenBlue: color.bg_gradient_1,
     gradientLimited: ['#93F5E1', '#C6F7ED'],
     gradientIdle: ['#E4E8F7', '#C6F7ED'],
-    whiteStatic: color['white-static'],
+    whiteStatic: color.white_static,
   }
   return {styles, colors} as const
 }

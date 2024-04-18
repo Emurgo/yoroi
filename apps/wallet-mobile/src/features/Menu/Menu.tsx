@@ -275,25 +275,24 @@ const messages = defineMessage({
 })
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding} = theme
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
     item: {
-      ...padding['y-l'],
+      ...atoms.py_lg,
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
       borderBottomWidth: StyleSheet.hairlineWidth,
-      borderBottomColor: color.gray[200],
+      borderBottomColor: color.gray_c200,
     },
     scrollViewContent: {
       flex: 1,
-      ...padding['l'],
+      ...atoms.p_lg,
     },
     support: {
       alignItems: 'center',
@@ -302,7 +301,7 @@ const useStyles = () => {
       justifyContent: 'center',
     },
     supportTitleText: {
-      color: color.gray[600],
+      color: color.gray_c600,
     },
     supportLink: {
       justifyContent: 'space-between',
@@ -310,7 +309,7 @@ const useStyles = () => {
       flexDirection: 'row',
     },
     supportLinkText: {
-      color: color.primary[500],
+      color: color.primary_c500,
     },
   })
 

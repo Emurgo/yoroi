@@ -152,32 +152,32 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     header: {
       alignItems: 'center',
-      ...padding['x-l'],
+      ...atoms.px_lg,
     },
     title: {
-      color: color.gray.max,
-      ...typography['heading-3-medium'],
+      color: color.gray_cmax,
+      ...atoms.heading_3_medium,
       ...padding['xs'],
       textAlign: 'center',
     },
     message: {
-      color: color.gray[600],
-      ...typography['body-3-s-regular'],
+      color: color.gray_c600,
+      ...atoms.body_3_sm_regular,
       textAlign: 'center',
       maxWidth: 300,
     },
     txLabel: {
-      ...typography['body-1-l-regular'],
-      ...padding['r-s'],
+      ...atoms.body_1_lg_regular,
+      ...atoms.pr_sm,
     },
     monospace: {
-      ...typography['body-1-l-regular'],
-      color: color.gray[600],
+      ...atoms.body_1_lg_regular,
+      color: color.gray_c600,
       ...Platform.select({
         ios: {fontFamily: 'Menlo'},
         android: {fontFamily: 'monospace'},
       }),
-      ...padding['r-s'],
+      ...atoms.pr_sm,
       flex: 1,
     },
     txRow: {
@@ -187,7 +187,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    icon: color.gray[500],
+    icon: color.gray_c500,
   }
 
   return {styles, colors}

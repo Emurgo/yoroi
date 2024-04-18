@@ -34,8 +34,8 @@ const useStyles = () => {
       alignItems: 'center',
     },
     emptyText: {
-      ...typography['body-1-l-medium'],
-      color: color.gray[900],
+      ...(atoms.body - 1 - lg - medium),
+      color: color.gray_c900,
       width: '55%',
       textAlign: 'center',
     },

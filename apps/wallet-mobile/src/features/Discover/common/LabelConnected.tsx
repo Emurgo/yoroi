@@ -17,15 +17,15 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     labelContainer: {
-      backgroundColor: color.secondary[600],
+      backgroundColor: color.secondary_c600,
       ...padding['x-s'],
       paddingVertical: 3,
       borderRadius: 999,
     },
     labelText: {
-      ...typography['body-3-s-medium'],
+      ...atoms.body_3_sm_medium,
       fontWeight: '500',
-      color: color['white-static'],
+      color: color.white_static,
     },
   })
 

@@ -311,28 +311,28 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      ...theme.padding['x-l'],
+      ...theme.atoms.px_lg,
       justifyContent: 'space-between',
-      backgroundColor: theme.color['white-static'],
+      backgroundColor: theme.color.white_static,
     },
     modal: {
       flex: 1,
     },
     title: {
       alignSelf: 'center',
-      ...theme.typography['body-1-l-regular'],
-      color: theme.color.gray[900],
+      ...theme.atoms.body_1_lg_regular,
+      color: theme.color.gray_c900,
     },
     plateNumber: {
-      ...theme.typography['body-1-l-regular'],
-      color: theme.color.gray[900],
+      ...theme.atoms.body_1_lg_regular,
+      color: theme.color.gray_c900,
       textAlign: 'center',
       justifyContent: 'center',
       alignItems: 'center',
     },
-    button: {backgroundColor: theme.color.primary[500]},
+    button: {backgroundColor: theme.color.primary_c500},
     bolder: {
-      ...theme.typography['body-1-l-medium'],
+      ...(theme.atoms.body - 1 - lg - medium),
     },
     checksum: {
       flexDirection: 'row',

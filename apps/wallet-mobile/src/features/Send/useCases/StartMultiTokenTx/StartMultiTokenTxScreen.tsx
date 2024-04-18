@@ -159,26 +159,25 @@ const useReceiverError = ({
   }
 }
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: color.gray.min,
-      ...padding['t-l'],
+      backgroundColor: color.gray_cmin,
+      ...atoms.pt_lg,
     },
     flex: {
       flex: 1,
     },
     actions: {
-      ...padding['l'],
+      ...atoms.p_lg,
     },
     scroll: {
-      ...padding['x-l'],
+      ...atoms.px_lg,
     },
     actionsScroll: {
       borderTopWidth: 1,
-      borderTopColor: color.gray[200],
+      borderTopColor: color.gray_c200,
     },
   })
   return styles

@@ -23,11 +23,11 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     container: {
-      ...padding['s'],
+      ...atoms.p_sm,
       borderRadius: 8,
     },
     text: {
-      ...typography['body-1-l-medium'],
+      ...(atoms.body - 1 - lg - medium),
     },
     containerActive: {
       backgroundColor: color.gray['200'],

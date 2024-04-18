@@ -7,13 +7,13 @@ export const useBaseStyles = () => {
 
   const styles = StyleSheet.create({
     assetHeading: {
-      color: color.gray.min,
-      ...typography['body-3-s-regular'],
+      color: color.gray_cmin,
+      ...atoms.body_3_sm_regular,
       opacity: 0.5,
     },
     assetMeta: {
-      color: color.gray.min,
-      ...typography['body-2-m-regular'],
+      color: color.gray_cmin,
+      ...atoms.body_2_md_regular,
       opacity: 0.5,
     },
     assetRow: {
@@ -31,13 +31,13 @@ export const useBaseStyles = () => {
       justifyContent: 'flex-start',
     },
     assetName: {
-      ...typography['body-2-m-regular'],
-      color: color.gray.min,
+      ...atoms.body_2_md_regular,
+      color: color.gray_cmin,
       marginBottom: 2,
     },
     assetBalance: {
-      ...typography['body-2-m-regular'],
-      color: color.gray.min,
+      ...atoms.body_2_md_regular,
+      color: color.gray_cmin,
     },
     py5: {
       paddingVertical: 10,

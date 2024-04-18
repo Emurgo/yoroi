@@ -60,7 +60,7 @@ const useStyles = () => {
     },
     buttonContinue: {
       flex: 1,
-      backgroundColor: color.magenta[500],
+      backgroundColor: color.sys_magenta_c500,
     },
     buttonsWrapper: {
       alignItems: 'center',
@@ -73,12 +73,12 @@ const useStyles = () => {
       justifyContent: 'space-between',
     },
     description: {
-      color: color.gray[900],
-      ...typography['body-1-l-regular'],
+      color: color.gray_c900,
+      ...atoms.body_1_lg_regular,
       lineHeight: 21,
     },
     bold: {
-      ...typography['body-1-l-medium'],
+      ...(atoms.body - 1 - lg - medium),
     },
   })
   return styles

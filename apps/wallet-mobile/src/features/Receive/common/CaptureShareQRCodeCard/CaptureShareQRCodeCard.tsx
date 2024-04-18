@@ -46,7 +46,7 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     qrCode: {
-      backgroundColor: theme.color.gray.min,
+      backgroundColor: theme.color.gray_cmin,
       padding: 10,
       borderRadius: 8,
     },
@@ -69,12 +69,12 @@ const useStyles = () => {
     content: {
       textAlign: 'center',
       maxWidth: 300,
-      ...theme.typography['body-1-l-regular'],
+      ...theme.atoms.body_1_lg_regular,
     },
   })
 
   const colors = {
-    black: theme.color.gray.max,
+    black: theme.color.gray_cmax,
     transparent: 'transparent',
     backgroundGradientCard: theme.color.gradients['blue-green'],
   }

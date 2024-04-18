@@ -132,8 +132,8 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      ...theme.padding['x-l'],
-      backgroundColor: theme.color['white-static'],
+      ...theme.atoms.px_lg,
+      backgroundColor: theme.color.white_static,
     },
     icon: {
       position: 'absolute',

@@ -145,7 +145,7 @@ const useStyles = () => {
     container: {
       paddingHorizontal: 16,
       flexDirection: 'column',
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
       flex: 1,
       paddingBottom: 30,
     },
@@ -158,7 +158,7 @@ const useStyles = () => {
       borderRadius: 20,
     },
     shadowProp: {
-      shadowColor: color.gray.max,
+      shadowColor: color.gray_cmax,
       shadowOpacity: 0.2,
       shadowOffset: {
         width: 0,
@@ -180,7 +180,7 @@ const useStyles = () => {
     },
     label: {
       fontSize: 16,
-      ...typography['body-1-l-medium'],
+      ...(atoms.body - 1 - lg - medium),
     },
     infoContainer: {
       flexDirection: 'column',
@@ -191,13 +191,13 @@ const useStyles = () => {
       paddingBottom: 4,
     },
     infoLabel: {
-      color: color.gray[600],
+      color: color.gray_c600,
       fontSize: 16,
       fontFamily: 'Rubik-Regular',
     },
     infoValue: {
       fontSize: 16,
-      color: color.gray.max,
+      color: color.gray_cmax,
       fontFamily: 'Rubik-Regular',
       display: 'flex',
       flexShrink: 1,
@@ -206,7 +206,7 @@ const useStyles = () => {
   })
   const colors = {
     gradientColor: color.gradients['blue-green'],
-    white: color['white-static'],
+    white: color.white_static,
   }
 
   return {styles, colors} as const

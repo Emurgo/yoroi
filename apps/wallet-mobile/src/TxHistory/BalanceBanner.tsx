@@ -82,8 +82,8 @@ const useStyles = () => {
       alignItems: 'center',
     },
     balanceText: {
-      ...typography['body-1-l-medium'],
-      color: color.gray[900],
+      ...(atoms.body - 1 - lg - medium),
+      color: color.gray_c900,
     },
     centered: {
       justifyContent: 'center',

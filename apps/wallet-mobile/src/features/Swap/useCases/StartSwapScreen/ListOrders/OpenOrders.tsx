@@ -736,7 +736,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
       paddingTop: 10,
     },
     content: {
@@ -752,25 +752,25 @@ const useStyles = () => {
     },
     contentTitle: {
       color: 'red',
-      ...typography['body-1-l-regular'],
+      ...atoms.body_1_lg_regular,
       textAlign: 'center',
     },
     modalContentTitleText: {
-      color: color.gray[900],
-      ...typography['body-1-l-medium'],
+      color: color.gray_c900,
+      ...(atoms.body - 1 - lg - medium),
       textAlign: 'center',
     },
     contentLabel: {
-      color: color.gray[600],
-      ...typography['body-1-l-regular'],
+      color: color.gray_c600,
+      ...atoms.body_1_lg_regular,
     },
     headerLabel: {
-      color: color.gray.max,
-      ...typography['body-2-m-medium'],
+      color: color.gray_cmax,
+      ...atoms.body_2_md_medium,
     },
     contentValue: {
-      color: color.gray.max,
-      ...typography['body-1-l-regular'],
+      color: color.gray_cmax,
+      ...atoms.body_1_lg_regular,
     },
     modalContentTitle: {
       flexDirection: 'row',
@@ -785,8 +785,8 @@ const useStyles = () => {
       justifyContent: 'center',
     },
     txLinkText: {
-      color: color.primary[500],
-      ...typography['body-1-l-regular'],
+      color: color.primary_c500,
+      ...atoms.body_1_lg_regular,
       textDecorationLine: 'underline',
     },
 
@@ -810,16 +810,16 @@ const useStyles = () => {
     contentText: {
       flex: 1,
       textAlign: 'center',
-      color: color.gray.max,
-      ...typography['heading-3-medium'],
+      color: color.gray_cmax,
+      ...atoms.heading_3_medium,
     },
     contentSubText: {
       flex: 1,
       textAlign: 'center',
-      color: color.gray[600],
-      ...typography['body-1-l-medium'],
+      color: color.gray_c600,
+      ...(atoms.body - 1 - lg - medium),
     },
-    modalButton: {backgroundColor: color.magenta[500]},
+    modalButton: {backgroundColor: color.sys_magenta_c500},
   })
 
   return styles

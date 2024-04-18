@@ -185,16 +185,16 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     safeAreaView: {
       flex: 1,
-      backgroundColor: theme.color['white-static'],
+      backgroundColor: theme.color.white_static,
     },
     topButton: {
-      backgroundColor: theme.color.primary[500],
+      backgroundColor: theme.color.primary_c500,
     },
     button: {
-      backgroundColor: theme.color.primary[500],
+      backgroundColor: theme.color.primary_c500,
     },
     linkText: {
-      color: theme.color.primary[500],
+      color: theme.color.primary_c500,
     },
     link: {
       ...theme.typography['button-2-m'],
@@ -203,16 +203,16 @@ const useStyles = () => {
       alignItems: 'center',
     },
     list: {
-      ...theme.padding['l'],
+      ...theme.atoms.p_lg,
     },
     actions: {
-      ...theme.padding['x-l'],
+      ...theme.atoms.px_lg,
     },
   })
 
   const colors = {
-    gray: theme.color.gray[600],
-    lightGray: theme.color.gray[200],
+    gray: theme.color.gray_c600,
+    lightGray: theme.color.gray_c200,
   }
 
   return {styles, colors} as const

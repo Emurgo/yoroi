@@ -6,14 +6,14 @@ export const useSendStyles = () => {
   const {color, typography, padding} = theme
   const styles = StyleSheet.create({
     assetHeading: {
-      color: color.gray.max,
+      color: color.gray_cmax,
       opacity: 0.5,
-      ...typography['body-3-s-regular'],
+      ...atoms.body_3_sm_regular,
     },
     assetMeta: {
-      color: color.gray[500],
+      color: color.gray_c500,
       opacity: 1,
-      ...typography['body-2-m-regular'],
+      ...atoms.body_2_md_regular,
     },
     assetRow: {
       flexDirection: 'row',
@@ -25,16 +25,16 @@ export const useSendStyles = () => {
       flexDirection: 'row',
       justifyContent: 'space-between',
       marginBottom: 10,
-      ...padding['x-l'],
-      ...padding['y-m'],
-      backgroundColor: color.gray.min,
+      ...atoms.px_lg,
+      ...atoms.py_md,
+      backgroundColor: color.gray_cmin,
       borderTopWidth: 1,
       borderBottomWidth: 2,
       borderColor: 'rgba(173, 174, 182, 0.3)',
     },
     assetName: {
-      ...typography['body-2-m-regular'],
-      color: color.gray[900],
+      ...atoms.body_2_md_regular,
+      color: color.gray_c900,
       marginBottom: 2,
     },
     assetBalanceView: {
@@ -43,20 +43,20 @@ export const useSendStyles = () => {
       justifyContent: 'flex-start',
     },
     assetBalance: {
-      ...typography['body-2-m-regular'],
-      color: color.gray.max,
+      ...atoms.body_2_md_regular,
+      color: color.gray_cmax,
     },
     py5: {
-      ...padding['y-s'],
+      ...atoms.py_sm,
     },
     px5: {
-      ...padding['x-l'],
+      ...atoms.px_lg,
     },
     rowColor1: {
       backgroundColor: 'transparent',
     },
     rowColor2: {
-      backgroundColor: color.primary[100],
+      backgroundColor: color.primary_c100,
     },
     tokenMetaView: {
       flex: 2,

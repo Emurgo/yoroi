@@ -6,7 +6,7 @@ export const DAppItemSkeleton = () => {
   const {theme} = useTheme()
 
   return (
-    <SkeletonPlaceholder backgroundColor={theme.color.gray[100]}>
+    <SkeletonPlaceholder backgroundColor={theme.color.gray_c100}>
       <SkeletonPlaceholder.Item flexDirection="row" width="100%" gap={12}>
         <SkeletonPlaceholder.Item width={40} height={40} borderRadius={8} />
 

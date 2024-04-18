@@ -137,7 +137,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: theme.color.gray.min,
+      backgroundColor: theme.color.gray_cmin,
     },
     flex: {
       flex: 1,
@@ -152,15 +152,15 @@ const useStyles = () => {
       height: 228,
     },
     congratsText: {
-      ...theme.typography['heading-3-regular'],
-      color: theme.color.gray[900],
+      ...theme.atoms.heading_3_medium,
+      color: theme.color.gray_c900,
       fontWeight: '500',
       textAlign: 'center',
       textAlignVertical: 'center',
     },
     contentValueText: {
-      ...theme.typography['body-1-l-regular'],
-      color: theme.color.gray.max,
+      ...theme.atoms.body_1_lg_regular,
+      color: theme.color.gray_cmax,
     },
     boxProvider: {
       flexDirection: 'row',

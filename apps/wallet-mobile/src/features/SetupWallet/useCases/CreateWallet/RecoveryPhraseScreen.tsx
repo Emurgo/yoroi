@@ -171,40 +171,40 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      ...theme.padding['x-l'],
+      ...theme.atoms.px_lg,
       justifyContent: 'space-between',
-      backgroundColor: theme.color['white-static'],
+      backgroundColor: theme.color.white_static,
     },
     modal: {
       flex: 1,
     },
     title: {
-      ...theme.typography['body-1-l-regular'],
-      color: theme.color.gray[900],
+      ...theme.atoms.body_1_lg_regular,
+      color: theme.color.gray_c900,
     },
     bolder: {
-      ...theme.typography['body-1-l-medium'],
+      ...(theme.atoms.body - 1 - lg - medium),
     },
     content: {
       gap: 16,
     },
-    button: {backgroundColor: theme.color.primary[500]},
+    button: {backgroundColor: theme.color.primary_c500},
     mnemonicWords: {
       flexDirection: 'row',
       flexWrap: 'wrap',
       gap: 8,
-      ...theme.padding['y-s'],
+      ...theme.atoms.py_sm,
     },
     mnemonicTextContainer: {
       flexDirection: 'row',
       flexWrap: 'wrap',
       borderRadius: 8,
       overflow: 'hidden',
-      ...theme.padding['x-l'],
-      ...theme.padding['y-s'],
+      ...theme.atoms.px_lg,
+      ...theme.atoms.py_sm,
     },
     mnemonicText: {
-      ...theme.typography['body-1-l-regular'],
+      ...theme.atoms.body_1_lg_regular,
       color: theme.color.primary['600'],
     },
     blurView: {
@@ -223,7 +223,7 @@ const useStyles = () => {
     },
     blurTextButton: {
       ...theme.typography['button-2-m'],
-      color: theme.color.primary[500],
+      color: theme.color.primary_c500,
     },
   })
 

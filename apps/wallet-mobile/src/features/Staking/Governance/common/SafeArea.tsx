@@ -18,12 +18,11 @@ export const SafeArea = ({children}: Props) => {
 const safeAreaEdges = ['bottom', 'left', 'right', 'bottom'] as const
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
   })
   return styles

@@ -222,11 +222,10 @@ export const RemoveAmountButton = ({disabled, ...props}: TouchableOpacityProps) 
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     safeAreaView: {
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
       flex: 1,
       paddingHorizontal: 16,
       paddingBottom: 16,
@@ -242,7 +241,7 @@ const useStyles = () => {
     },
   })
   const colors = {
-    iconColor: color.gray.max,
+    iconColor: color.gray_cmax,
   }
 
   return {styles, colors}

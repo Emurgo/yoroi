@@ -46,12 +46,12 @@ const useStyles = () => {
       flex: 1,
     },
     label: {
-      ...theme.typography['body-1-l-medium'],
-      color: theme.color.gray[900],
+      ...(theme.atoms.body - 1 - lg - medium),
+      color: theme.color.gray_c900,
     },
     fee: {
-      ...theme.typography['body-3-s-regular'],
-      color: theme.color.gray[600],
+      ...theme.atoms.body_3_sm_regular,
+      color: theme.color.gray_c600,
     },
   })
 

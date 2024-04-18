@@ -37,25 +37,25 @@ const useStyles = () => {
   const {color, typography, padding} = theme
   const styles = StyleSheet.create({
     container: {
-      ...padding['l'],
+      ...atoms.p_lg,
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
     },
     title: {
-      color: color.gray.max,
-      ...typography['heading-3-regular'],
+      color: color.gray_cmax,
+      ...atoms.heading_3_medium,
       ...padding['xs'],
       textAlign: 'center',
     },
     text: {
-      color: color.gray[600],
-      ...typography['body-2-m-regular'],
+      color: color.gray_c600,
+      ...atoms.body_2_md_regular,
       textAlign: 'center',
       maxWidth: 300,
     },
     button: {
-      ...padding['x-l'],
+      ...atoms.px_lg,
     },
   })
   return styles

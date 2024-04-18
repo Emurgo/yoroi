@@ -238,7 +238,7 @@ const BackButton = (props: TouchableOpacityProps) => {
 
   return (
     <TouchableOpacity testID="buttonBack" {...props}>
-      <Icon.Chevron direction="left" color={theme.color.gray.max} />
+      <Icon.Chevron direction="left" color={theme.color.gray_cmax} />
     </TouchableOpacity>
   )
 }

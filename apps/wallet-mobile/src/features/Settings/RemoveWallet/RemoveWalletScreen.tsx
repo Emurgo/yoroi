@@ -159,21 +159,21 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
 
     descriptionContainer: {
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
     description: {
-      ...typography['body-1-l-regular'],
+      ...atoms.body_1_lg_regular,
     },
 
     walletNameLabel: {
-      ...typography['body-1-l-medium'],
+      ...(atoms.body - 1 - lg - medium),
     },
     walletName: {
-      ...typography['body-1-l-regular'],
+      ...atoms.body_1_lg_regular,
     },
 
     contentContainer: {
@@ -184,7 +184,7 @@ const useStyles = () => {
       padding: 16,
     },
     removeButton: {
-      backgroundColor: color.magenta[500],
+      backgroundColor: color.sys_magenta_c500,
     },
     buttonContainer: {
       paddingHorizontal: 16,

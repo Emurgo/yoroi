@@ -80,21 +80,21 @@ const useStyles = (padding?: boolean, background?: boolean) => {
       overflow: 'hidden',
     },
     title: {
-      ...theme.typography['body-1-l-medium'],
-      color: background ? theme.color.primary[600] : theme.color.gray[900],
+      ...(theme.atoms.body - 1 - lg - medium),
+      color: background ? theme.color.primary_c600 : theme.color.gray_c900,
       textAlign: 'center',
     },
     itemContainer: {
       flexDirection: 'row',
     },
     bullet: {
-      ...theme.typography['body-1-l-regular'],
-      color: background ? theme.color.primary[600] : theme.color.gray[900],
+      ...theme.atoms.body_1_lg_regular,
+      color: background ? theme.color.primary_c600 : theme.color.gray_c900,
     },
     textLine: {
       flex: 1,
-      ...theme.typography['body-1-l-regular'],
-      color: background ? theme.color.primary[600] : theme.color.gray[900],
+      ...theme.atoms.body_1_lg_regular,
+      color: background ? theme.color.primary_c600 : theme.color.gray_c900,
     },
     walletChecksum: {width: 24, height: 24},
   })

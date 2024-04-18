@@ -258,7 +258,7 @@ const useStyles = () => {
       alignItems: 'flex-end',
     },
     priceImpactRiskText: {
-      ...typography['body-2-m-regular'],
+      ...atoms.body_2_md_regular,
     },
     alignRight: {
       textAlign: 'right',
@@ -267,13 +267,13 @@ const useStyles = () => {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'flex-start',
-      backgroundColor: color.primary[600],
+      backgroundColor: color.primary_c600,
       padding: 16,
       borderRadius: 8,
     },
     cardText: {
       fontSize: 18,
-      color: color.gray.min,
+      color: color.gray_cmin,
     },
     cardTextValue: {
       ...typography['heading-4-medium'],
@@ -282,7 +282,7 @@ const useStyles = () => {
     },
     cardTextUSD: {
       fontSize: 14,
-      color: color.gray.min,
+      color: color.gray_cmin,
       opacity: 0.75,
     },
     flexBetween: {
@@ -296,15 +296,15 @@ const useStyles = () => {
     },
     text: {
       textAlign: 'left',
-      ...typography['body-1-l-regular'],
-      color: color.gray[900],
+      ...atoms.body_1_lg_regular,
+      color: color.gray_c900,
     },
     gray: {
-      color: color.gray[700],
+      color: color.gray_c700,
     },
     amountItemLabel: {
       fontSize: 12,
-      color: color.gray[900],
+      color: color.gray_c900,
       paddingBottom: 8,
     },
     modalContent: {
@@ -312,8 +312,8 @@ const useStyles = () => {
       flex: 1,
     },
     modalText: {
-      ...typography['body-1-l-regular'],
-      color: color.gray[900],
+      ...atoms.body_1_lg_regular,
+      color: color.gray_c900,
     },
     orderValueContainer: {
       flexDirection: 'row',
@@ -331,10 +331,10 @@ const useStyles = () => {
     bannerText: {
       fontSize: 14,
       lineHeight: 22,
-      color: color.gray[900],
+      color: color.gray_c900,
     },
     bold: {
-      ...typography['body-2-m-medium'],
+      ...atoms.body_2_md_medium,
     },
   })
 

@@ -39,8 +39,7 @@ export const TabPanel = ({active, children}: {active: boolean; children: React.R
 )
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     centered: {
       alignItems: 'center',
@@ -56,13 +55,13 @@ const useStyles = () => {
       flex: 1,
     },
     tabText: {
-      ...typography['body-1-l-medium'],
+      ...atoms.body_1_lg_medium,
     },
     tabTextActive: {
-      color: color.primary[600],
+      color: color.primary_c600,
     },
     tabTextInactive: {
-      color: color.gray[600],
+      color: color.gray_c600,
     },
     indicator: {
       position: 'absolute',
@@ -71,12 +70,12 @@ const useStyles = () => {
       width: '100%',
       borderTopLeftRadius: 2,
       borderTopRightRadius: 2,
-      backgroundColor: color.primary[600],
+      backgroundColor: color.primary_c600,
     },
     tabNavigatorRoot: {
       flex: 1,
       paddingTop: 8,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
       borderTopLeftRadius: 8,
       borderTopRightRadius: 8,
     },

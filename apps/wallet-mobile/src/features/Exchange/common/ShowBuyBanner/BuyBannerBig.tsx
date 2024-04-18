@@ -61,7 +61,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       ...padding['b-m'],
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
       flex: 1,
     },
     gradient: {
@@ -72,25 +72,25 @@ const useStyles = () => {
       alignItems: 'center',
     },
     spaceButtonText: {
-      ...padding['none'],
+      ...atoms.p_0,
     },
     label: {
-      ...typography['heading-3-medium'],
-      color: color.gray.max,
+      ...atoms.heading_3_medium,
+      color: color.gray_cmax,
       textAlign: 'center',
     },
     text: {
-      ...typography['body-1-l-regular'],
+      ...atoms.body_1_lg_regular,
       ...padding['x-xxl'],
-      color: color.gray.max,
+      color: color.gray_cmax,
       textAlign: 'center',
     },
     spaceButton: {
-      ...padding['x-l'],
+      ...atoms.px_lg,
     },
   })
   const colors = {
-    gradientColor: color.gradients['green'],
+    gradientColor: color.bg_gradient_2,
   }
   return {styles, colors} as const
 }

@@ -184,26 +184,26 @@ const useStyles = () => {
     },
     container: {
       flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
     scrollView: {
       flex: 1,
-      ...padding['x-l'],
+      ...atoms.px_lg,
     },
     hr: {
       height: StyleSheet.hairlineWidth,
-      backgroundColor: color.gray[200],
+      backgroundColor: color.gray_c200,
     },
     actions: {
-      ...padding['l'],
+      ...atoms.p_lg,
     },
     maxBalance: {
-      color: color.primary[600],
-      ...typography['body-1-l-medium'],
+      color: color.primary_c600,
+      ...(atoms.body - 1 - lg - medium),
     },
     amount: {
       ...typography['heading-2-regular'],
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
       borderWidth: 0,
       textAlign: 'right',
     },
@@ -213,7 +213,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    black: color.gray.max,
+    black: color.gray_cmax,
   }
   return {styles, colors}
 }

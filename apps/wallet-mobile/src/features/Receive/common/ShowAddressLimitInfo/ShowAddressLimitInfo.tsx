@@ -45,14 +45,14 @@ const useStyles = () => {
       backgroundColor: theme.color.cyan[100],
     },
     text: {
-      ...theme.typography['body-2-m-regular'],
-      color: theme.color.gray.max,
+      ...theme.atoms.body_2_md_regular,
+      color: theme.color.gray_cmax,
     },
   })
 
   const colors = {
-    icon: theme.color.primary[500],
-    zendeskLink: theme.color.primary[500],
+    icon: theme.color.primary_c500,
+    zendeskLink: theme.color.primary_c500,
   }
 
   return {styles, colors} as const

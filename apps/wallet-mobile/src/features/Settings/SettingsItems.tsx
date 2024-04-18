@@ -149,19 +149,19 @@ const useStyles = () => {
     },
     sectionText: {
       color: color.gray['900'],
-      ...typography['body-2-m-regular'],
+      ...atoms.body_2_md_regular,
     },
     itemText: {
       color: color.gray['900'],
-      ...typography['body-1-l-medium'],
+      ...(atoms.body - 1 - lg - medium),
     },
     itemTextIsNil: {
       color: color.gray['600'],
-      ...typography['body-3-s-regular'],
+      ...atoms.body_3_sm_regular,
     },
     navigationItem: {
       color: color.gray['500'],
-      ...typography['body-1-l-regular'],
+      ...atoms.body_1_lg_regular,
     },
     row: {flexDirection: 'row', alignItems: 'center'},
   })

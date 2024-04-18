@@ -131,34 +131,34 @@ const messages = defineMessages({
 
 const useStyles = () => {
   const {theme} = useTheme()
-  const {color, padding} = theme
+  const {color, atoms} = theme
   const styles = StyleSheet.create({
     safeAreaView: {
       flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
     alertBox: {
-      ...padding['l'],
+      ...atoms.p_lg,
       backgroundColor: 'rgba(255, 16, 81, 0.06)',
       borderRadius: 8,
     },
     contentContainer: {
-      ...padding['x-l'],
+      ...atoms.px_lg,
     },
     note: {
-      color: color.gray[900],
+      color: color.gray_c900,
       fontWeight: 'bold',
     },
     qrCodeBackground: {
       borderRadius: 8,
-      ...padding['l'],
-      backgroundColor: color.gray[50],
+      ...atoms.p_lg,
+      backgroundColor: color.gray_c50,
       alignSelf: 'center',
     },
     secretCodeBox: {
-      backgroundColor: color.gray[50],
+      backgroundColor: color.gray_c50,
       borderRadius: 8,
-      ...padding['l'],
+      ...atoms.p_lg,
       flexDirection: 'row',
     },
   })

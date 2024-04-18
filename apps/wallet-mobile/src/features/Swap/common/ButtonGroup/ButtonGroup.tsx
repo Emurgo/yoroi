@@ -45,11 +45,11 @@ const useStyles = () => {
       borderRadius: 8,
     },
     selected: {
-      backgroundColor: color.gray[200],
+      backgroundColor: color.gray_c200,
     },
     label: {
-      color: color.gray.max,
-      ...typography['body-1-l-medium'],
+      color: color.gray_cmax,
+      ...(atoms.body - 1 - lg - medium),
     },
   })
 

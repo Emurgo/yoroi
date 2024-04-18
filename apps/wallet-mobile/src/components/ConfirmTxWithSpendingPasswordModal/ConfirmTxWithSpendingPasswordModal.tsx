@@ -115,8 +115,7 @@ const getErrorMessage = (error: unknown, strings: Record<'wrongPasswordMessage' 
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     modalText: {
       paddingHorizontal: 70,
@@ -124,7 +123,7 @@ const useStyles = () => {
       paddingBottom: 8,
     },
     errorMessage: {
-      color: color.magenta[500],
+      color: color.sys_magenta_c500,
       textAlign: 'center',
     },
     loading: {

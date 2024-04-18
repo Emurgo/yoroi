@@ -6,14 +6,14 @@ export const useAssetListStyles = () => {
   const {color, typography} = theme
   const styles = StyleSheet.create({
     assetHeading: {
-      color: color.gray.max,
+      color: color.gray_cmax,
       opacity: 0.5,
-      ...typography['body-3-s-regular'],
+      ...atoms.body_3_sm_regular,
     },
     assetMeta: {
-      color: color.gray[500],
+      color: color.gray_c500,
       opacity: 0.5,
-      ...typography['body-2-m-regular'],
+      ...atoms.body_2_md_regular,
     },
     assetRow: {
       flexDirection: 'row',
@@ -25,8 +25,8 @@ export const useAssetListStyles = () => {
       marginBottom: 10,
     },
     assetName: {
-      ...typography['body-2-m-regular'],
-      color: color.gray[900],
+      ...atoms.body_2_md_regular,
+      color: color.gray_c900,
       marginBottom: 2,
     },
     assetBalanceView: {
@@ -35,8 +35,8 @@ export const useAssetListStyles = () => {
       justifyContent: 'flex-start',
     },
     assetBalance: {
-      ...typography['body-2-m-regular'],
-      color: color.gray.max,
+      ...atoms.body_2_md_regular,
+      color: color.gray_cmax,
     },
     py5: {
       paddingVertical: 10,

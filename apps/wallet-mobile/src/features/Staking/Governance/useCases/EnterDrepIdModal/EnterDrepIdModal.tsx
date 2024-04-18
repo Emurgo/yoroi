@@ -82,23 +82,23 @@ const useStyles = () => {
       flex: 1,
     },
     text: {
-      color: color.gray[900],
+      color: color.gray_c900,
       textAlign: 'center',
-      ...typography['body-1-l-regular'],
+      ...atoms.body_1_lg_regular,
     },
     link: {
-      color: color.primary[500],
+      color: color.primary_c500,
       textDecorationLine: 'underline',
     },
     inputWrapperStyle: {
       minHeight: 80,
-      ...typography['body-1-l-regular'],
+      ...atoms.body_1_lg_regular,
     },
     inputStyle: {
       minHeight: 70,
       ...padding['t-l'],
-      ...padding['b-l'],
-      ...padding['l-l'],
+      ...atoms.pb_lg,
+      ...atoms.pl_lg,
       ...padding['r-l'],
       // padding: 16, does not have effect
     },

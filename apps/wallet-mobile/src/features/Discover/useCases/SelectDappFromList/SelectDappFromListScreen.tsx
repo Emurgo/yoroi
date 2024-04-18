@@ -179,7 +179,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: theme.color.gray.min,
+      backgroundColor: theme.color.gray_cmin,
     },
     boxHeader: {},
     containerHeader: {},
@@ -187,7 +187,7 @@ const useStyles = () => {
       height: 16,
     },
     dAppItemBox: {
-      ...theme.padding['x-l'],
+      ...theme.atoms.px_lg,
     },
     tabsContainer: {
       flexDirection: 'row',

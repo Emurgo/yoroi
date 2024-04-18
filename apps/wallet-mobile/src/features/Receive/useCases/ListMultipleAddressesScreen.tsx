@@ -117,27 +117,27 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: theme.color.gray.min,
+      backgroundColor: theme.color.gray_cmin,
       ...theme.padding['t-l'],
     },
     content: {
       flex: 1,
-      ...theme.padding['x-l'],
+      ...theme.atoms.px_lg,
     },
     footer: {
-      backgroundColor: theme.color.gray.min,
-      borderColor: theme.color.gray[200],
-      ...theme.padding['l'],
+      backgroundColor: theme.color.gray_cmin,
+      borderColor: theme.color.gray_c200,
+      ...theme.atoms.p_lg,
     },
     button: {
-      backgroundColor: theme.color.primary[500],
+      backgroundColor: theme.color.primary_c500,
     },
   })
 
   const colors = {
-    buttonBackgroundBlue: theme.color.primary[600],
-    learnMore: theme.color.primary[500],
-    details: theme.color.gray[900],
+    buttonBackgroundBlue: theme.color.primary_c600,
+    learnMore: theme.color.primary_c500,
+    details: theme.color.gray_c900,
   }
 
   return {styles, colors} as const

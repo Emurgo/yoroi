@@ -35,19 +35,19 @@ const useStyles = () => {
       ...padding['xxs'],
     },
     labelContainer: {
-      backgroundColor: color['white-static'],
+      backgroundColor: color.white_static,
       ...padding['x-s'],
       paddingVertical: 3,
       borderRadius: 999,
     },
     labelText: {
-      ...typography['body-3-s-medium'],
+      ...atoms.body_3_sm_medium,
       color: color.primary['600'],
     },
   })
 
   const colors = {
-    gradientColor: color.gradients['green-blue'],
+    gradientColor: color.bg_gradient_1,
   }
   return {styles, colors} as const
 }

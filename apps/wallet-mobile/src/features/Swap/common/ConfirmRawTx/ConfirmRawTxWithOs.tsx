@@ -42,8 +42,7 @@ export const ConfirmRawTxWithOs = ({onConfirm}: {onConfirm?: (rootKey: string) =
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
 
   const styles = StyleSheet.create({
     center: {
@@ -51,7 +50,7 @@ const useStyles = () => {
       justifyContent: 'center',
     },
     errorMessage: {
-      color: color.magenta[500],
+      color: color.sys_magenta_c500,
       textAlign: 'center',
     },
   })

@@ -182,7 +182,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: theme.color.gray.min,
+      backgroundColor: theme.color.gray_cmin,
     },
     flex: {
       flex: 1,
@@ -200,7 +200,7 @@ const useStyles = () => {
     },
     actionBorder: {
       borderTopWidth: 1,
-      borderTopColor: theme.color.gray[200],
+      borderTopColor: theme.color.gray_c200,
     },
   })
   return styles

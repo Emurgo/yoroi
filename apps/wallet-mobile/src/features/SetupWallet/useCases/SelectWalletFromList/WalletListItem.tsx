@@ -92,24 +92,24 @@ const useStyles = () => {
       flex: 1,
     },
     walletName: {
-      ...theme.typography['body-1-l-medium'],
-      color: theme.color.gray.max,
+      ...(theme.atoms.body - 1 - lg - medium),
+      color: theme.color.gray_cmax,
       flex: 1,
     },
     walletMeta: {
-      color: theme.color.gray[600],
-      ...theme.typography['body-3-s-regular'],
+      color: theme.color.gray_c600,
+      ...theme.atoms.body_3_sm_regular,
       opacity: 0.5,
     },
     walletMetaPressed: {
-      color: theme.color.gray.max,
-      ...theme.typography['body-3-s-regular'],
+      color: theme.color.gray_cmax,
+      ...theme.atoms.body_3_sm_regular,
       opacity: 1,
     },
   })
 
   const colors = {
-    white: theme.color['white-static'],
+    white: theme.color.white_static,
   }
 
   return {styles, colors} as const

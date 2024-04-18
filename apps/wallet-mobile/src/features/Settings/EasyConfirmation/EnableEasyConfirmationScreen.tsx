@@ -123,18 +123,18 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
     contentContainer: {
       padding: 16,
     },
     heading: {
-      ...typography['body-1-l-regular'],
+      ...atoms.body_1_lg_regular,
       paddingBottom: 20,
     },
     warning: {
-      color: color.magenta[500],
-      ...typography['body-2-m-regular'],
+      color: color.sys_magenta_c500,
+      ...atoms.body_2_md_regular,
       paddingBottom: 20,
     },
     actions: {

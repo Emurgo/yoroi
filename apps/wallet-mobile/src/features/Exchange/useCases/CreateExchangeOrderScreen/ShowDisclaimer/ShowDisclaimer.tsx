@@ -38,14 +38,14 @@ const useStyles = () => {
       borderRadius: 8,
     },
     title: {
-      ...theme.typography['body-1-l-regular'],
-      color: theme.color.gray.max,
+      ...theme.atoms.body_1_lg_regular,
+      color: theme.color.gray_cmax,
       fontWeight: '500',
     },
     text: {
-      ...theme.typography['body-2-m-regular'],
+      ...theme.atoms.body_2_md_regular,
       marginTop: 8,
-      color: theme.color.gray.max,
+      color: theme.color.gray_cmax,
     },
   })
 

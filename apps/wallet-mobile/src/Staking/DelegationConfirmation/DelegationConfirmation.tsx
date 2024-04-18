@@ -184,10 +184,10 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
     scrollView: {
-      ...padding['x-l'],
+      ...atoms.px_lg,
       ...padding['b-xl'],
       flex: 1,
     },
@@ -195,20 +195,20 @@ const useStyles = () => {
       marginTop: 24,
     },
     itemTitle: {
-      color: color.gray[900],
-      ...typography['body-2-m-regular'],
+      color: color.gray_c900,
+      ...atoms.body_2_md_regular,
     },
     input: {
       marginTop: 16,
     },
     rewards: {
       marginTop: 5,
-      ...typography['body-1-l-medium'],
-      color: color.primary[600],
+      ...(atoms.body - 1 - lg - medium),
+      color: color.primary_c600,
     },
     fees: {
       textAlign: 'right',
-      color: color.gray[900],
+      color: color.gray_c900,
     },
   })
   return styles

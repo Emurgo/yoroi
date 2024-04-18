@@ -51,7 +51,7 @@ const useStyles = () => {
       height: 120,
       flexDirection: 'row',
       alignItems: 'center',
-      ...theme.padding['x-l'],
+      ...theme.atoms.px_lg,
       overflow: 'hidden',
       justifyContent: 'center',
     },
@@ -60,16 +60,16 @@ const useStyles = () => {
     },
     title: {
       ...theme.typography['heading-4-medium'],
-      color: theme.color.gray.max,
+      color: theme.color.gray_cmax,
     },
     titleCentre: {
       ...theme.typography['heading-4-medium'],
-      color: theme.color['black-static'],
+      color: theme.color.black_static,
       textAlign: 'center',
     },
     subTitle: {
-      ...theme.typography['body-1-l-regular'],
-      color: theme.color.gray[900],
+      ...theme.atoms.body_1_lg_regular,
+      color: theme.color.gray_c900,
     },
     textContainer: {
       alignItems: 'center',

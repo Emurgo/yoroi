@@ -52,15 +52,15 @@ const useStyles = () => {
       flexDirection: 'row',
     },
     button: {
-      ...padding['s'],
+      ...atoms.p_sm,
       borderRadius: 6,
     },
     selected: {
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
     label: {
-      color: color.primary[600],
-      ...typography['body-1-l-medium'],
+      color: color.primary_c600,
+      ...(atoms.body - 1 - lg - medium),
     },
     gradient: {borderRadius: 8, padding: 3},
   })

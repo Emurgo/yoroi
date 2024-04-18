@@ -14,15 +14,15 @@ export const ExampleButton = ({onPress, disabled, text}) => {
 
 const useStyles = () => {
   const {theme} = useTheme()
-  const {color, padding} = theme
+  const {color, atoms} = theme
   const styles = StyleSheet.create({
     container: {
-      ...padding['x-l'],
-      ...padding['y-s'],
-      backgroundColor: color.primary[500],
+      ...atoms.px_lg,
+      ...atoms.py_sm,
+      backgroundColor: color.primary_c500,
       borderRadius: 8,
     },
-    text: {color: color.gray.min},
+    text: {color: color.gray_cmin},
   })
 
   return styles

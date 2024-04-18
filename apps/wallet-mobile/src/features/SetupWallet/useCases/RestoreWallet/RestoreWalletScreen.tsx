@@ -86,23 +86,23 @@ const useStyles = () => {
     root: {
       flex: 1,
       justifyContent: 'space-between',
-      backgroundColor: theme.color['white-static'],
+      backgroundColor: theme.color.white_static,
     },
     title: {
-      ...theme.typography['body-1-l-regular'],
-      color: theme.color.gray[900],
+      ...theme.atoms.body_1_lg_regular,
+      color: theme.color.gray_c900,
     },
-    button: {backgroundColor: theme.color.primary[500]},
+    button: {backgroundColor: theme.color.primary_c500},
     bolder: {
-      ...theme.typography['body-1-l-medium'],
+      ...(theme.atoms.body - 1 - lg - medium),
     },
     padding: {
-      ...theme.padding['l'],
+      ...theme.atoms.p_lg,
     },
   })
 
   const colors = {
-    gray900: theme.color.gray[900],
+    gray900: theme.color.gray_c900,
     gradientBlueGreen: theme.color.gradients['blue-green'],
   }
 

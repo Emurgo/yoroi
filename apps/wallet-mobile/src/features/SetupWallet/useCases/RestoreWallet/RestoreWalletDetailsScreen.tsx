@@ -313,40 +313,40 @@ const useStyles = () => {
   const {theme} = useTheme()
   const styles = StyleSheet.create({
     form: {
-      ...theme.padding['x-l'],
+      ...theme.atoms.px_lg,
       flex: 1,
     },
     steps: {
-      ...theme.padding['x-l'],
+      ...theme.atoms.px_lg,
     },
     root: {
       flex: 1,
       justifyContent: 'space-between',
-      backgroundColor: theme.color['white-static'],
+      backgroundColor: theme.color.white_static,
     },
     modal: {
       flex: 1,
     },
     info: {
-      ...theme.padding['x-l'],
+      ...theme.atoms.px_lg,
       flexDirection: 'row',
     },
     title: {
-      ...theme.typography['body-1-l-regular'],
-      color: theme.color.gray[900],
+      ...theme.atoms.body_1_lg_regular,
+      color: theme.color.gray_c900,
     },
     plateNumber: {
-      ...theme.typography['body-1-l-regular'],
-      color: theme.color.gray[900],
+      ...theme.atoms.body_1_lg_regular,
+      color: theme.color.gray_c900,
       textAlign: 'center',
       justifyContent: 'center',
       alignItems: 'center',
     },
     button: {
-      backgroundColor: theme.color.primary[500],
+      backgroundColor: theme.color.primary_c500,
     },
     bolder: {
-      ...theme.typography['body-1-l-medium'],
+      ...(theme.atoms.body - 1 - lg - medium),
     },
     checksum: {
       flexDirection: 'row',
@@ -359,7 +359,7 @@ const useStyles = () => {
       height: 24,
     },
     actions: {
-      ...theme.padding['l'],
+      ...theme.atoms.p_lg,
     },
   })
 

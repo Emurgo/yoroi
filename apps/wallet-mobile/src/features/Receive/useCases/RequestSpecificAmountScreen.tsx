@@ -162,15 +162,15 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
     content: {
       flex: 1,
       paddingHorizontal: 16,
     },
     textAddressDetails: {
-      ...typography['body-1-l-regular'],
-      color: color.gray[900],
+      ...atoms.body_1_lg_regular,
+      color: color.gray_c900,
     },
     textSection: {
       gap: 4,
@@ -181,7 +181,7 @@ const useStyles = () => {
       flex: 2,
     },
     button: {
-      backgroundColor: color.primary[500],
+      backgroundColor: color.primary_c500,
     },
     actions: {
       padding: 16,
@@ -189,8 +189,8 @@ const useStyles = () => {
   })
 
   const colors = {
-    gray: color.gray[600],
-    lightGray: color.gray[200],
+    gray: color.gray_c600,
+    lightGray: color.gray_c200,
   }
 
   return {styles, colors} as const

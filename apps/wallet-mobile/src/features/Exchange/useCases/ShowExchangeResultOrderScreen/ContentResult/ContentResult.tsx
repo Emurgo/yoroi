@@ -30,7 +30,7 @@ const useStyles = () => {
     },
     contentLabel: {
       fontSize: 16,
-      color: theme.color.gray[600],
+      color: theme.color.gray_c600,
     },
   })
   return styles

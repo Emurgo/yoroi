@@ -599,7 +599,7 @@ const useStyles = () => {
       paddingStart: 8,
     },
   })
-  return {styles, backgroundColor: theme.color.primary['100'], color: theme.color.gray.max}
+  return {styles, backgroundColor: theme.color.primary['100'], color: theme.color.gray_cmax}
 }
 
 const sendOptions = (theme: Theme) => ({
@@ -607,6 +607,6 @@ const sendOptions = (theme: Theme) => ({
   headerStyle: {
     elevation: 0,
     shadowOpacity: 0,
-    backgroundColor: theme.color.gray.min,
+    backgroundColor: theme.color.gray_cmin,
   },
 })

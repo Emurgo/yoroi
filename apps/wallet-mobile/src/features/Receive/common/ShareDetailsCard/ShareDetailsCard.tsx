@@ -93,8 +93,8 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     title: {
-      ...typography['heading-3-medium'],
-      color: color.gray.max,
+      ...atoms.heading_3_medium,
+      color: color.gray_cmax,
     },
     addressDetails: {
       borderRadius: 16,
@@ -104,20 +104,20 @@ const useStyles = () => {
       minHeight: 394,
       alignSelf: 'center',
       overflow: 'hidden',
-      ...padding['x-l'],
+      ...atoms.px_lg,
       ...padding['y-xxl'],
       gap: 16,
     },
     textAddressDetails: {
-      ...typography['body-1-l-regular'],
+      ...atoms.body_1_lg_regular,
       lineHeight: 24,
       textAlign: 'left',
       flex: 1,
-      color: color.gray[900],
+      color: color.gray_c900,
     },
     textAddress: {
-      ...typography['body-2-m-regular'],
-      color: color.gray[600],
+      ...atoms.body_2_md_regular,
+      color: color.gray_c600,
       textAlign: 'left',
     },
     textSection: {
@@ -130,7 +130,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    grayText: color.gray[600],
+    grayText: color.gray_c600,
     backgroundGradientCard: color.gradients['blue-green'],
   }
 

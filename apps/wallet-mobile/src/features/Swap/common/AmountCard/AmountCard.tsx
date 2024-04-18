@@ -159,7 +159,7 @@ const useStyles = () => {
     container: {
       borderRadius: 8,
       borderWidth: 1,
-      borderColor: color.gray[400],
+      borderColor: color.gray_c400,
       paddingTop: 16,
       paddingBottom: 16,
       paddingLeft: 16,
@@ -168,25 +168,25 @@ const useStyles = () => {
       height: 86,
     },
     borderError: {
-      borderColor: color.magenta[500],
+      borderColor: color.sys_magenta_c500,
       borderWidth: 2,
     },
     active: {
       borderWidth: 2,
-      borderColor: color.gray[900],
+      borderColor: color.gray_c900,
     },
 
     label: {
       position: 'absolute',
       top: -7,
       left: 10,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
       paddingHorizontal: 5,
       fontSize: 12,
-      color: color.gray[900],
+      color: color.gray_c900,
     },
     labelError: {
-      color: color.magenta[500],
+      color: color.sys_magenta_c500,
     },
     content: {
       display: 'flex',
@@ -200,7 +200,7 @@ const useStyles = () => {
       maxWidth: 200,
       height: 34,
       fontSize: 16,
-      color: color.gray.max,
+      color: color.gray_cmax,
     },
     amountWrapper: {
       flex: 1,
@@ -215,26 +215,26 @@ const useStyles = () => {
       alignItems: 'center',
     },
     coinName: {
-      ...typography['body-1-l-regular'],
-      color: color.gray.max,
+      ...atoms.body_1_lg_regular,
+      color: color.gray_cmax,
     },
     balanceText: {
       fontSize: 12,
-      color: color.gray[600],
+      color: color.gray_c600,
     },
     errorText: {
-      color: color.magenta[500],
+      color: color.sys_magenta_c500,
       fontSize: 12,
     },
     grayText: {
-      color: color.gray[600],
+      color: color.gray_c600,
     },
   })
   const colors = {
-    placeholder: theme.color.gray[600],
-    focused: theme.color.gray[900],
-    blur: theme.color['black-static'],
-    noSelected: theme.color.gray[400],
+    placeholder: theme.color.gray_c600,
+    focused: theme.color.gray_c900,
+    blur: theme.color.black_static,
+    noSelected: theme.color.gray_c400,
   }
   return {styles, colors} as const
 }

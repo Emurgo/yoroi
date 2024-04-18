@@ -102,7 +102,7 @@ const useStyles = () => {
       marginTop: 0,
     },
     container: {
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
       borderRadius: 4,
       ...padding['xl'],
     },
@@ -110,7 +110,7 @@ const useStyles = () => {
       position: 'absolute',
       top: 0,
       right: 0,
-      ...padding['l'],
+      ...atoms.p_lg,
     },
     content: {
       marginTop: 15,
@@ -120,15 +120,15 @@ const useStyles = () => {
       marginTop: 0,
     },
     title: {
-      ...typography['heading-3-medium'],
-      color: color.gray[600],
+      ...atoms.heading_3_medium,
+      color: color.gray_c600,
       alignSelf: 'center',
       ...padding['t-s'],
     },
   })
 
   const colors = {
-    icon: color.gray[400],
+    icon: color.gray_c400,
   }
   return {styles, colors}
 }

@@ -22,16 +22,15 @@ export const Screen = ({children, scroll, bgColor, style = {}, ...restProps}: Pr
 export default Screen
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
   })
   const colors = {
-    white: color.gray.min,
+    white: color.gray_cmin,
   }
   return {styles, colors}
 }

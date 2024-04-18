@@ -41,12 +41,12 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     welcomeText: {
-      ...typography['body-1-l-regular'],
+      ...atoms.body_1_lg_regular,
       color: color.gray['900'],
       marginTop: 16,
     },
     actions: {
-      ...padding['y-l'],
+      ...atoms.py_lg,
     },
     welcomeImage: {
       width: 343,

@@ -37,12 +37,12 @@ const useStyles = () => {
       alignItems: 'center',
     },
     label: {
-      ...typography['body-1-l-regular'],
-      color: color.gray[600],
+      ...atoms.body_1_lg_regular,
+      color: color.gray_c600,
     },
     sheetContent: {
-      ...typography['body-1-l-regular'],
-      color: color.gray[900],
+      ...atoms.body_1_lg_regular,
+      color: color.gray_c900,
     },
   })
 

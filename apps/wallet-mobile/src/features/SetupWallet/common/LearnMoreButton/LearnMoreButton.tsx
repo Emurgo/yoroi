@@ -20,7 +20,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     text: {
       ...theme.typography['link-1-l-underline'],
-      color: theme.color.primary[500],
+      color: theme.color.primary_c500,
       alignSelf: 'center',
     },
   })

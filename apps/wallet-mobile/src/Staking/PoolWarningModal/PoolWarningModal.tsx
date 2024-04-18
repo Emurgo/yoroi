@@ -86,17 +86,17 @@ const useStyles = () => {
   const {padding, typography} = theme
   const styles = StyleSheet.create({
     scrollView: {
-      ...padding['r-s'],
+      ...atoms.pr_sm,
     },
     text: {
-      ...typography['body-2-m-regular'],
+      ...atoms.body_2_md_regular,
     },
     reputationInfoView: {
       marginBottom: 15,
     },
     paragraph: {
       marginBottom: 15,
-      ...typography['body-2-m-regular'],
+      ...atoms.body_2_md_regular,
     },
     content: {
       flex: 1,
@@ -108,7 +108,7 @@ const useStyles = () => {
       marginBottom: 15,
     },
     title: {
-      ...typography['heading-3-medium'],
+      ...atoms.heading_3_medium,
       marginBottom: 15,
     },
     buttons: {

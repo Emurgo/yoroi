@@ -181,8 +181,8 @@ const useStyles = () => {
       height: '100%',
     },
     domainText: {
-      ...typography['body-2-m-regular'],
-      color: color['black-static'],
+      ...atoms.body_2_md_regular,
+      color: color.black_static,
     },
     closeTabPosition: {
       position: 'absolute',
@@ -192,7 +192,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    whiteStatic: color['white-static'],
+    whiteStatic: color.white_static,
   }
 
   return {styles, colors} as const

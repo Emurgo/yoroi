@@ -435,14 +435,14 @@ const useStyles = () => {
       flex: 1,
     },
     contentContainer: {
-      ...padding['x-l'],
+      ...atoms.px_lg,
     },
     positiveAmount: {
-      color: color.primary[600],
+      color: color.primary_c600,
       fontWeight: '500',
     },
     negativeAmount: {
-      color: color.magenta[500],
+      color: color.sys_magenta_c500,
       fontWeight: '500',
     },
     label: {
@@ -450,15 +450,15 @@ const useStyles = () => {
       marginBottom: 8,
     },
     assetsExpandable: {
-      ...padding['t-m'],
+      ...atoms.pt_md,
       ...padding['b-xl'],
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignContent: 'center',
     },
     assetsTitle: {
-      ...typography['body-2-m-regular'],
-      color: color.gray[900],
+      ...atoms.body_2_md_regular,
+      color: color.gray_c900,
     },
     borderTop: {
       borderTopWidth: 1,
@@ -471,7 +471,7 @@ const useStyles = () => {
     },
   })
   const colors = {
-    iconColor: color.gray[500],
+    iconColor: color.gray_c500,
   }
   return {styles, colors}
 }

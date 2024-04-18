@@ -21,7 +21,7 @@ const useStyles = () => {
     theme: {color},
   } = useTheme()
   const colors = {
-    iconFallback: color.gray.max,
+    iconFallback: color.gray_cmax,
   }
   return {colors}
 }

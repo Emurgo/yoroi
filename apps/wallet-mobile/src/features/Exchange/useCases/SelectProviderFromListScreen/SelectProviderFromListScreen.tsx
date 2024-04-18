@@ -58,7 +58,7 @@ const CheckIcon = () => {
   const {theme} = useTheme()
   return (
     <View>
-      <Icon.Check size={24} color={theme.color.primary[600]} />
+      <Icon.Check size={24} color={theme.color.primary_c600} />
 
       <Space fill />
     </View>
@@ -72,7 +72,7 @@ const useStyles = () => {
       flex: 1,
     },
     list: {
-      ...theme.padding['x-l'],
+      ...theme.atoms.px_lg,
     },
   })
 

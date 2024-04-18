@@ -84,12 +84,11 @@ export const Button = (props: ButtonProps) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography, padding} = theme
+  const {color, atoms} = useTheme()
 
   const buttonOutline = {
     borderWidth: 2,
-    borderColor: color.gray.min,
+    borderColor: color.gray_cmin,
     backgroundColor: 'transparent',
   }
   const styles = StyleSheet.create({
@@ -97,7 +96,7 @@ const useStyles = () => {
       flex: 1,
     },
     button: {
-      backgroundColor: color.secondary[500],
+      backgroundColor: color.secondary_c500,
       minHeight: 48,
       maxHeight: 54,
       borderRadius: 8,
@@ -112,47 +111,47 @@ const useStyles = () => {
       ...buttonOutline,
     },
     mainTheme: {
-      backgroundColor: color.primary[500],
+      backgroundColor: color.primary_c500,
     },
     buttonOutlineOnLight: {
       ...buttonOutline,
-      borderColor: color.secondary[500],
+      borderColor: color.secondary_c500,
     },
     buttonOutlineShelley: {
       ...buttonOutline,
-      borderColor: color.primary[600],
+      borderColor: color.primary_c600,
     },
     text: {
-      color: color.gray.min,
-      ...typography['body-2-m-medium'],
-      ...padding['s'],
+      color: color.gray_cmin,
+      ...atoms.body_2_md_medium,
+      ...atoms.p_sm,
       textAlign: 'center',
       textTransform: 'uppercase',
     },
     textOutlineOnLight: {
-      color: color.secondary[500],
+      color: color.secondary_c500,
     },
     textOutlineShelley: {
-      color: color.primary[600],
+      color: color.primary_c600,
     },
     buttonDisabled: {
       opacity: 0.5,
     },
     shelleyTheme: {
-      backgroundColor: color.primary[600],
+      backgroundColor: color.primary_c600,
     },
     shelleyOutlineOnLight: {
       backgroundColor: 'transparent',
-      borderColor: color.primary[600],
+      borderColor: color.primary_c600,
       borderWidth: 2,
     },
     textShelleyOutlineOnLight: {
-      color: color.primary[600],
+      color: color.primary_c600,
       fontWeight: '600',
     },
     isCopying: {
       position: 'absolute',
-      backgroundColor: color.gray.max,
+      backgroundColor: color.gray_cmax,
       alignItems: 'center',
       justifyContent: 'center',
       top: -20,
@@ -161,10 +160,10 @@ const useStyles = () => {
       zIndex: 10,
     },
     copiedText: {
-      color: theme.color['white-static'],
+      color: color.white_static,
       textAlign: 'center',
-      ...padding['s'],
-      ...typography['body-2-m-medium'],
+      ...atoms.p_sm,
+      ...atoms.body_2_md_medium,
     },
   })
 

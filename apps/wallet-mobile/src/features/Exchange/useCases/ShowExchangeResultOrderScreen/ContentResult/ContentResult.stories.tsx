@@ -36,7 +36,7 @@ const useStyles = () => {
       alignItems: 'center',
     },
     contentValueText: {
-      ...theme.typography['body-1-l-regular'],
+      ...theme.atoms.body_1_lg_regular,
       color: '#000000',
     },
     banxaLogo: {

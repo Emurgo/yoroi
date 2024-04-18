@@ -73,7 +73,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     gradient: {
       borderRadius: 8,
-      ...padding['m'],
+      ...atoms.p_md,
     },
     header: {
       flexDirection: 'row',
@@ -84,25 +84,25 @@ const useStyles = () => {
       flexDirection: 'row',
       alignItems: 'center',
       lineHeight: 22,
-      color: color.gray.max,
+      color: color.gray_cmax,
     },
     nameServerText: {
-      ...typography['body-2-m-medium'],
-      color: color.gray.max,
+      ...atoms.body_2_md_medium,
+      color: color.gray_cmax,
     },
     title: {
-      ...typography['body-1-l-medium'],
-      color: color.gray.max,
+      ...(atoms.body - 1 - lg - medium),
+      color: color.gray_cmax,
     },
     text: {
-      ...typography['body-2-m-regular'],
-      color: color.gray.max,
+      ...atoms.body_2_md_regular,
+      color: color.gray_cmax,
     },
   })
 
   const colors = {
-    lightGreen: color.secondary[200],
-    lightBlue: color.primary[100],
+    lightGreen: color.secondary_c200,
+    lightBlue: color.primary_c100,
   }
 
   return {styles, colors}

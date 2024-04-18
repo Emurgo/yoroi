@@ -51,7 +51,7 @@ const useStyles = () => {
   const {theme} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: theme.color['white-static'],
+      backgroundColor: theme.color.white_static,
       paddingBottom: 18,
     },
     gradient: {
@@ -69,7 +69,7 @@ const useStyles = () => {
     },
     title: {
       fontSize: 16,
-      color: theme.color['black-static'],
+      color: theme.color.black_static,
       fontWeight: '500',
       fontFamily: 'Rubik-Medium',
       lineHeight: 24,
@@ -78,7 +78,7 @@ const useStyles = () => {
     },
     text: {
       fontSize: 16,
-      color: theme.color['black-static'],
+      color: theme.color.black_static,
       fontWeight: '400',
       fontFamily: 'Rubik-Regular',
       lineHeight: 24,
@@ -87,7 +87,7 @@ const useStyles = () => {
       fontSize: 14,
       fontWeight: '500',
       fontFamily: 'Rubik-Medium',
-      color: theme.color.primary[500],
+      color: theme.color.primary_c500,
       lineHeight: 22,
       flex: 1,
       borderRadius: 8,

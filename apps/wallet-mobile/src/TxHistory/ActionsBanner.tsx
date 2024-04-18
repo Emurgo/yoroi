@@ -204,19 +204,19 @@ const useStyles = () => {
       height: 56,
       width: 56,
       borderRadius: 28,
-      backgroundColor: color.primary[500],
+      backgroundColor: color.primary_c500,
     },
     actionLabel: {
       ...padding['t-s'],
-      color: color.gray.max,
-      ...typography['body-3-s-medium'],
+      color: color.gray_cmax,
+      ...atoms.body_3_sm_medium,
     },
     disabled: {
       opacity: 0.5,
     },
     isCopying: {
       position: 'absolute',
-      backgroundColor: color.gray.max,
+      backgroundColor: color.gray_cmax,
       alignItems: 'center',
       justifyContent: 'center',
       top: -40,
@@ -226,14 +226,14 @@ const useStyles = () => {
     },
     textCopy: {
       textAlign: 'center',
-      ...padding['s'],
-      ...typography['body-2-m-medium'],
-      color: color.gray.min,
+      ...atoms.p_sm,
+      ...atoms.body_2_md_medium,
+      color: color.gray_cmin,
     },
   })
 
   const colors = {
-    actionColor: theme.color.gray.min,
+    actionColor: theme.color.gray_cmin,
   }
   return {styles, colors}
 }

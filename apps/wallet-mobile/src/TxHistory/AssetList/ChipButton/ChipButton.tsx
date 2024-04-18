@@ -29,14 +29,14 @@ const useStyles = () => {
       borderRadius: 8,
     },
     label: {
-      color: color.gray[600],
+      color: color.gray_c600,
       ...padding['x-m'],
       ...padding['y-xs'],
-      ...typography['body-2-m-regular'],
+      ...atoms.body_2_md_regular,
     },
     selected: {
-      backgroundColor: color.gray[50],
-      color: color.gray[900],
+      backgroundColor: color.gray_c50,
+      color: color.gray_c900,
     },
   })
 

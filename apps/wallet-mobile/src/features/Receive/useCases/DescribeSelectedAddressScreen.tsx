@@ -118,7 +118,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: theme.color.gray.min,
+      backgroundColor: theme.color.gray_cmin,
       padding: 16,
     },
     address: {
@@ -126,12 +126,12 @@ const useStyles = () => {
       alignItems: 'center',
     },
     button: {
-      backgroundColor: theme.color.primary[500],
+      backgroundColor: theme.color.primary_c500,
     },
   })
 
   const colors = {
-    requestSpecificAmountTextColor: theme.color.primary[500],
+    requestSpecificAmountTextColor: theme.color.primary_c500,
   }
 
   return {styles, colors} as const

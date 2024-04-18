@@ -251,8 +251,8 @@ const padding = {
 }
 
 export const atoms = {
-  typograpghy: typograpghy,
-  padding: padding,
+  ...typograpghy,
+  ...padding,
 
   // positioning
   absolute: {

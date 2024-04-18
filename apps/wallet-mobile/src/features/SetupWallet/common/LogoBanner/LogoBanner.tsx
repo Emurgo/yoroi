@@ -30,14 +30,14 @@ const useStyles = () => {
       alignItems: 'center',
     },
     title: {
-      color: theme.color.primary[500],
+      color: theme.color.primary_c500,
       textAlign: 'center',
-      ...theme.typography['heading-1-medium'],
+      ...theme.atoms.heading_1_medium,
     },
     subtitle: {
-      color: theme.color.gray[900],
+      color: theme.color.gray_c900,
       textAlign: 'center',
-      ...theme.typography['body-2-m-regular'],
+      ...theme.atoms.body_2_md_regular,
     },
   })
 

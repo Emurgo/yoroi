@@ -115,20 +115,20 @@ const useStyles = () => {
     },
     container: {
       flex: 1,
-      ...padding['l'],
-      backgroundColor: color.gray.min,
+      ...atoms.p_lg,
+      backgroundColor: color.gray_cmin,
     },
     title: {
-      ...typography['heading-3-medium'],
+      ...atoms.heading_3_medium,
       textAlign: 'center',
-      color: color.gray[900],
+      color: color.gray_c900,
     },
     input: {
-      color: color.gray[600],
-      ...padding['l-l'],
-      ...typography['body-1-l-regular'],
+      color: color.gray_c600,
+      ...atoms.pl_lg,
+      ...atoms.body_1_lg_regular,
       justifyContent: 'center',
-      borderColor: color.gray[400],
+      borderColor: color.gray_c400,
       borderWidth: 1,
       borderRadius: 8,
       height: 56,
@@ -140,11 +140,11 @@ const useStyles = () => {
       ...padding['t-s'],
     },
     checkboxText: {
-      ...typography['body-1-l-regular'],
-      color: color.gray.max,
+      ...atoms.body_1_lg_regular,
+      color: color.gray_cmax,
     },
     checkboxLink: {
-      color: color.primary[800],
+      color: color.primary_c800,
       textDecorationLine: 'underline',
     },
     checkbox: {

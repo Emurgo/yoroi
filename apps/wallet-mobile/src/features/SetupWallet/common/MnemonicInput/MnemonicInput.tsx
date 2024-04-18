@@ -320,17 +320,17 @@ const useStyles = () => {
       minWidth: 143,
     },
     menuContent: {
-      backgroundColor: theme.color['white-static'],
+      backgroundColor: theme.color.white_static,
       borderRadius: 8,
     },
     menuScrollView: {
       maxHeight: ROW_HEIGHT * 3.5,
     },
     menuItemText: {
-      color: theme.color.gray[600],
+      color: theme.color.gray_c600,
     },
     menuItem: {
-      backgroundColor: theme.color.gray[50],
+      backgroundColor: theme.color.gray_c50,
     },
     mnemonicInputView: {
       flexDirection: 'row',
@@ -342,7 +342,7 @@ const useStyles = () => {
       alignItems: 'center',
       justifyContent: 'space-evenly',
       width: '50%',
-      ...theme.padding['x-xs'],
+      ...theme.atoms.py_xs,
       ...theme.padding['y-xxs'],
     },
     textInput: {
@@ -351,8 +351,8 @@ const useStyles = () => {
       textAlign: 'center',
     },
     mnemonicIndex: {
-      color: theme.color.primary[400],
-      ...theme.typography['body-1-l-regular'],
+      color: theme.color.primary_c400,
+      ...theme.atoms.body_1_lg_regular,
     },
     textView: {
       flexDirection: 'row',
@@ -360,17 +360,17 @@ const useStyles = () => {
       alignItems: 'center',
     },
     errorText: {
-      ...theme.typography['body-1-l-regular'],
-      color: theme.color.magenta[500],
+      ...theme.atoms.body_1_lg_regular,
+      color: theme.color.sys_magenta_c500,
     },
     successText: {
-      ...theme.typography['body-1-l-medium'],
-      color: theme.color.gray.max,
+      ...(theme.atoms.body - 1 - lg - medium),
+      color: theme.color.gray_cmax,
     },
     clearAll: {
       ...theme.typography['button-2-m'],
       ...theme.padding['l-s'],
-      color: theme.color.primary[500],
+      color: theme.color.primary_c500,
       textTransform: 'uppercase',
     },
   })

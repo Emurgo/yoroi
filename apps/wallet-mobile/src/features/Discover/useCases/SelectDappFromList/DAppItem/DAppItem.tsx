@@ -142,13 +142,13 @@ const useStyles = () => {
       gap: 12,
     },
     nameText: {
-      color: color.gray[900],
+      color: color.gray_c900,
       fontWeight: '500',
-      ...typography['body-1-l-medium'],
+      ...(atoms.body - 1 - lg - medium),
     },
     descriptionText: {
-      color: color.gray[600],
-      ...typography['body-3-s-regular'],
+      color: color.gray_c600,
+      ...atoms.body_3_sm_regular,
     },
     descriptionTextActive: {
       color: color.gray['max'],
@@ -170,7 +170,7 @@ const useStyles = () => {
       height: 48,
     },
     dAppName: {
-      ...typography['body-1-l-medium'],
+      ...(atoms.body - 1 - lg - medium),
       color: color.gray['900'],
     },
     dAppInfo: {
@@ -181,10 +181,10 @@ const useStyles = () => {
       flexDirection: 'row',
       alignItems: 'center',
       gap: 12,
-      ...padding['y-m'],
+      ...atoms.py_md,
     },
     actionTitle: {
-      ...typography['body-1-l-medium'],
+      ...(atoms.body - 1 - lg - medium),
       color: color.gray['900'],
     },
   })

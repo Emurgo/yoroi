@@ -140,13 +140,12 @@ const warningBannerMessages = defineMessages({
 })
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding} = theme
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
     scrollView: {
       flex: 1,
-      backgroundColor: color.primary[100],
+      backgroundColor: color.primary_c100,
     },
     warningNoteStyles: {
       position: 'absolute',
@@ -155,14 +154,14 @@ const useStyles = () => {
     },
     tabs: {
       flexDirection: 'row',
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
       borderTopLeftRadius: 24,
       borderTopRightRadius: 24,
     },
     tab: {
       alignItems: 'center',
       justifyContent: 'center',
-      ...padding['l'],
+      ...atoms.p_lg,
       flex: 1,
     },
   })

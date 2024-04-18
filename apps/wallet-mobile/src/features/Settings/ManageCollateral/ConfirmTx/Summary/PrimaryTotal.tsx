@@ -38,11 +38,10 @@ const useStrings = () => {
   }
 }
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     amount: {
-      color: color.secondary[600],
+      color: color.secondary_c600,
     },
   })
   return styles

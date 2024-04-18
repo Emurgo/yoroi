@@ -20,9 +20,9 @@ export const BrowserTabBar = ({webViewRef, webViewState}: Props) => {
 
   const totalTabs = Math.min(tabs.length, 99)
 
-  const colorBackward = webViewState.canGoBack ? color.gray['800'] : color.gray['500']
-  const colorForward = webViewState.canGoForward ? color.gray['800'] : color.gray['500']
-  const colorRefresh = !webViewState.loading ? color.gray['800'] : color.gray['500']
+  const colorBackward = webViewState.canGoBack ? color.gray_c800 : color.gray['500']
+  const colorForward = webViewState.canGoForward ? color.gray_c800 : color.gray['500']
+  const colorRefresh = !webViewState.loading ? color.gray_c800 : color.gray['500']
 
   const handleRefresh = () => {
     if (!webViewRef.current) return
@@ -108,8 +108,7 @@ const TabItem = ({total = 1}: TabItemProps) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding} = theme
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
     root: {
@@ -117,9 +116,9 @@ const useStyles = () => {
       alignItems: 'center',
       justifyContent: 'space-between',
       gap: 16,
-      ...padding['x-l'],
+      ...atoms.px_lg,
       paddingVertical: 12,
-      backgroundColor: color['white-static'],
+      backgroundColor: color.white_static,
     },
     shadow: {
       shadowColor: '#054037',
@@ -135,7 +134,7 @@ const useStyles = () => {
       zIndex: 1,
     },
     touchBox: {
-      ...padding['y-xxs'],
+      ...atoms.py__2xl,
     },
     tabViewContainer: {
       position: 'relative',
@@ -150,7 +149,7 @@ const useStyles = () => {
       alignItems: 'center',
     },
     tabNumber: {
-      color: color.gray[800],
+      color: color.gray_c800,
       fontWeight: '500',
       fontSize: 10,
       lineHeight: 18,
@@ -158,7 +157,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    iconNormal: color.gray['800'],
+    iconNormal: color.gray_c800,
   }
 
   return {styles, color, colors} as const

@@ -197,8 +197,8 @@ const useStyles = () => {
       ...padding['b-xs'],
     },
     balanceAmount: {
-      color: color.secondary[500],
-      ...typography['body-1-l-regular'],
+      color: color.secondary_c500,
+      ...atoms.body_1_lg_regular,
     },
   })
   return styles

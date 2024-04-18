@@ -75,8 +75,8 @@ const useStyles = () => {
     stats: {
       flex: 1,
       flexDirection: 'column',
-      ...padding['l-l'],
-      ...padding['b-s'],
+      ...atoms.pl_lg,
+      ...atoms.pb_sm,
       flexWrap: 'wrap',
     },
     row: {
@@ -86,23 +86,23 @@ const useStyles = () => {
       alignItems: 'flex-start',
     },
     label: {
-      color: color.gray[900],
+      color: color.gray_c900,
       ...padding['r-m'],
-      ...typography['body-2-m-regular'],
+      ...atoms.body_2_md_regular,
     },
     value: {
-      ...typography['body-1-l-regular'],
-      color: color.gray[700],
+      ...atoms.body_1_lg_regular,
+      color: color.gray_c700,
     },
     timeWrapper: {
       flexDirection: 'row',
       flexWrap: 'nowrap',
     },
     timeBlock: {
-      ...typography['body-1-l-regular'],
-      ...padding['x-xs'],
-      backgroundColor: color.gray[900],
-      color: color.gray[900],
+      ...atoms.body_1_lg_regular,
+      ...atoms.py_xs,
+      backgroundColor: color.gray_c900,
+      color: color.gray_c900,
       marginHorizontal: 4,
       borderRadius: 2,
       textAlign: 'center',

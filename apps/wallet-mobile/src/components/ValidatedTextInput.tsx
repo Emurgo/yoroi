@@ -58,42 +58,41 @@ export const ValidatedTextInput = ({label, error, style, secureTextEntry, keyboa
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography, padding} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
       paddingTop: 16,
       marginBottom: 8,
     },
     input: {
-      borderColor: color.gray[500],
-      backgroundColor: color.gray.min,
+      borderColor: color.gray_c500,
+      backgroundColor: color.gray_cmin,
       borderRadius: 8,
       borderWidth: 1,
-      ...typography['body-1-l-regular'],
-      ...padding['l-l'],
-      ...padding['y-m'],
+      ...atoms.body_1_lg_regular,
+      ...atoms.pl_lg,
+      ...atoms.py_md,
       paddingRight: 50,
     },
     inputError: {
-      borderColor: color.magenta[500],
+      borderColor: color.sys_magenta_c500,
     },
     labelWrap: {
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
       marginLeft: 12,
       top: 8,
-      ...padding['x-xs'],
+      ...atoms.py_xs,
       position: 'absolute',
     },
     label: {
-      color: color.gray[900],
+      color: color.gray_c900,
     },
     labelError: {
-      color: color.magenta[500],
+      color: color.sys_magenta_c500,
     },
     error: {
-      color: color.magenta[500],
-      ...padding['x-l'],
+      color: color.sys_magenta_c500,
+      ...atoms.px_lg,
       lineHeight: 24,
     },
     showPasswordContainer: {
@@ -106,7 +105,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    icon: color.gray[800],
+    icon: color.gray_c800,
   }
 
   return {styles, colors}

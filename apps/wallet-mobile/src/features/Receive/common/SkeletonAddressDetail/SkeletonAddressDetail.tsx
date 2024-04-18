@@ -9,7 +9,7 @@ export const SkeletonAdressDetail = () => {
   const WIDTH = width - 32
 
   return (
-    <SkeletonPlaceholder borderRadius={10} backgroundColor={theme.color.gray[200]}>
+    <SkeletonPlaceholder borderRadius={10} backgroundColor={theme.color.gray_c200}>
       <SkeletonPlaceholder.Item alignItems="center" justifyContent="center">
         <SkeletonPlaceholder.Item width={WIDTH} height="100%" maxHeight={458} />
       </SkeletonPlaceholder.Item>
@@ -23,7 +23,7 @@ export const SkeletonSmallCardAddress = () => {
   const WIDTH = width - 32
 
   return (
-    <SkeletonPlaceholder borderRadius={10} backgroundColor={theme.color.gray[200]}>
+    <SkeletonPlaceholder borderRadius={10} backgroundColor={theme.color.gray_c200}>
       <SkeletonPlaceholder.Item alignItems="center" justifyContent="center">
         <SkeletonPlaceholder.Item width={WIDTH} height={140} />
       </SkeletonPlaceholder.Item>

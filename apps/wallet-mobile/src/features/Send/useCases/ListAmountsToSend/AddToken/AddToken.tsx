@@ -30,14 +30,14 @@ const useStyles = () => {
   const {color, typography, padding} = theme
   const styles = StyleSheet.create({
     label: {
-      color: color.primary[600],
+      color: color.primary_c600,
       ...typography['button-2-m'],
     },
     button: {
-      borderColor: color.primary[600],
+      borderColor: color.primary_c600,
       borderRadius: 8,
       flexDirection: 'row',
-      ...padding['x-l'],
+      ...atoms.px_lg,
       ...padding['y-xs'],
       justifyContent: 'center',
       alignItems: 'center',
@@ -45,7 +45,7 @@ const useStyles = () => {
     },
   })
   const colors = {
-    iconColor: color.primary[600],
+    iconColor: color.primary_c600,
   }
   return {styles, colors}
 }

@@ -112,13 +112,13 @@ const useStyles = () => {
       flex: 1,
     },
     content: {
-      ...padding['x-l'],
+      ...atoms.px_lg,
       flexGrow: 1,
       height: 'auto',
     },
     dayHeaderRoot: {
       ...padding['b-xs'],
-      ...padding['x-l'],
+      ...atoms.px_lg,
     },
   })
 
