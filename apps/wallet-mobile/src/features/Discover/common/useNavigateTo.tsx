@@ -11,5 +11,5 @@ export const useNavigateTo = () => {
     searchDappInBrowser: () => navigation.navigate('discover-browser', {screen: 'discover-search-dapp-in-browser'}),
     selectDappFromList: () => navigation.navigate('discover-select-dapp-from-list'),
     browseDapp: () => navigation.navigate('discover-browser', {screen: 'discover-browse-dapp'}),
-  }).current
+  } as const).current
 }

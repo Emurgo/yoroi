@@ -3,9 +3,10 @@ import {storiesOf} from '@storybook/react-native'
 import {GovernanceProvider} from '@yoroi/staking'
 import React from 'react'
 
+import {SafeArea} from '../../../../../components/SafeArea'
 import {mocks} from '../../../../../yoroi-wallets/mocks'
 import {SelectedWalletProvider} from '../../../../WalletManager/Context'
-import {mocks as governanceMocks, SafeArea} from '../../common'
+import {mocks as governanceMocks} from '../../common'
 import {Routes} from '../../common/navigation'
 import {ConfirmTxScreen} from './ConfirmTxScreen'
 

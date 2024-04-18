@@ -4,6 +4,15 @@ module.exports = (api) => {
   const presets = ['module:metro-react-native-babel-preset']
   const plugins = [
     [
+      // Used by @yoroi/dapp-connector to create injectable JS code
+      'babel-plugin-show-source',
+      {
+        // directive needs to be changed from 'show source' when in use with hermes
+        directive: 'babel plugin show source',
+        removeFunction: true,
+      },
+    ],
+    [
       'react-intl',
       {
         messagesDir: './translations/messages/',

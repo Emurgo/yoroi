@@ -344,7 +344,8 @@ PODS:
     - React-Core
   - react-native-view-shot (3.8.0):
     - React-Core
-  - react-native-webview (11.26.1):
+  - react-native-webview (13.8.1):
+    - RCT-Folly (= 2021.07.22.00)
     - React-Core
   - React-perflogger (0.71.14)
   - React-RCTActionSheet (0.71.14):
@@ -825,7 +826,7 @@ SPEC CHECKSUMS:
   react-native-slider: 33b8d190b59d4f67a541061bb91775d53d617d9d
   react-native-timezone: 92fa6c0a7c041efd632a372a515c957cd8ee9e72
   react-native-view-shot: 6b7ed61d77d88580fed10954d45fad0eb2d47688
-  react-native-webview: 9f111dfbcfc826084d6c507f569e5e03342ee1c1
+  react-native-webview: bdc091de8cf7f8397653e30182efcd9f772e03b3
   React-perflogger: 4987ad83731c23d11813c84263963b0d3028c966
   React-RCTActionSheet: 5ad952b2a9740d87a5bd77280c4bc23f6f89ea0c
   React-RCTAnimation: d2de22af3f536cc80bb5b3918e1a455114d1b985
