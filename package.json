@@ -8,7 +8,10 @@
     "packages": [
       "packages/types",
       "packages/common",
+      "packages/theme",
       "packages/api",
+      "packages/links",
+      "packages/portfolio",
       "packages/*",
       "apps/*",
       "e2e/*"

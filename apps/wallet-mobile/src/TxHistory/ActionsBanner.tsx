@@ -10,13 +10,14 @@ import Animated, {FadeInDown, FadeOutDown, Layout} from 'react-native-reanimated
 import {useCopy} from '../../src/legacy/useCopy'
 import {Icon, Spacer, Text} from '../components'
 import {useReceive} from '../features/Receive/common/ReceiveProvider'
+import {useMultipleAddressesInfo} from '../features/Receive/common/useMultipleAddressesInfo'
 import {useReceiveAddressesStatus} from '../features/Receive/common/useReceiveAddressesStatus'
 import {messages as receiveMessages} from '../features/Receive/common/useStrings'
 import {useSwapForm} from '../features/Swap/common/SwapFormProvider'
+import {useSelectedWallet} from '../features/WalletManager/Context'
 import {actionMessages} from '../i18n/global-messages'
 import {useMetrics} from '../metrics/metricsManager'
 import {TxHistoryRouteNavigation} from '../navigation'
-import {useSelectedWallet} from '../SelectedWallet'
 import {useAddressModeManager} from '../wallet-manager/useAddressModeManager'
 import {useTokenInfo} from '../yoroi-wallets/hooks'
 
@@ -26,9 +27,10 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   const navigateTo = useNavigateTo()
 
   const {isSingle, addressMode} = useAddressModeManager()
-  const {next: nextReceiveAddress} = useReceiveAddressesStatus(addressMode)
+  const {next: nextReceiveAddress, used: usedAddresses} = useReceiveAddressesStatus(addressMode)
   const {selectedAddressChanged} = useReceive()
   const [isCopying, copy] = useCopy()
+  const {hideMultipleAddressesInfo, isShowingMultipleAddressInfo} = useMultipleAddressesInfo()
 
   const {reset: resetSendState} = useTransfer()
   const {orderData} = useSwap()
@@ -72,12 +74,22 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   }
 
   const handleOnPressReceive = () => {
-    if (isSingle) {
-      selectedAddressChanged(nextReceiveAddress)
-      navigateTo.receiveSingleAddress()
-    } else {
+    if (!isSingle) {
       navigateTo.receiveMultipleAddresses()
+      return
     }
+
+    if (usedAddresses.length <= 1 && isShowingMultipleAddressInfo) {
+      hideMultipleAddressesInfo({
+        onSuccess: () => {
+          selectedAddressChanged(nextReceiveAddress)
+          navigateTo.receiveSingleAddress()
+        },
+      })
+      return
+    }
+    selectedAddressChanged(nextReceiveAddress)
+    navigateTo.receiveSingleAddress()
   }
 
   const handleOnLongPressReceive = () => {
@@ -102,31 +114,36 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
             </Animated.View>
           )}
 
+          <View style={styles.centralized}>
+            <TouchableOpacity
+              style={styles.actionIcon}
+              onPress={handleOnPressReceive}
+              testID="receiveButton"
+              disabled={disabled}
+              onLongPress={handleOnLongPressReceive}
+            >
+              <Icon.Received {...iconProps} />
+            </TouchableOpacity>
+
+            <Text style={styles.actionLabel}>{strings.receiveLabel}</Text>
+          </View>
+
+          {!wallet.isReadOnly && <Spacer width={18} />}
+
           {!wallet.isReadOnly && (
             <View style={styles.centralized}>
               <TouchableOpacity
                 style={styles.actionIcon}
-                onPress={handleOnPressReceive}
-                testID="receiveButton"
+                onPress={handleOnSend}
+                testID="sendButton"
                 disabled={disabled}
-                onLongPress={handleOnLongPressReceive}
               >
-                <Icon.Received {...iconProps} />
+                <Icon.Send {...iconProps} />
               </TouchableOpacity>
 
-              <Text style={styles.actionLabel}>{strings.receiveLabel}</Text>
+              <Text style={styles.actionLabel}>{strings.sendLabel}</Text>
             </View>
           )}
-
-          {!wallet.isReadOnly && <Spacer width={18} />}
-
-          <View style={styles.centralized}>
-            <TouchableOpacity style={styles.actionIcon} onPress={handleOnSend} testID="sendButton" disabled={disabled}>
-              <Icon.Send {...iconProps} />
-            </TouchableOpacity>
-
-            <Text style={styles.actionLabel}>{strings.sendLabel}</Text>
-          </View>
 
           {!wallet.isReadOnly && (
             <>

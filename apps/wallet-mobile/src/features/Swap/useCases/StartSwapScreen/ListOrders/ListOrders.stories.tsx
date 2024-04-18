@@ -4,8 +4,8 @@ import React from 'react'
 
 import {QueryProvider} from '../../../../../../.storybook/decorators'
 import {SearchProvider} from '../../../../../Search/SearchContext'
-import {SelectedWalletProvider} from '../../../../../SelectedWallet'
 import {mocks} from '../../../../../yoroi-wallets/mocks/wallet'
+import {SelectedWalletProvider} from '../../../../WalletManager/Context'
 import {SwapFormProvider} from '../../../common/SwapFormProvider'
 import {ListOrders} from './ListOrders'
 

@@ -56,7 +56,21 @@ export const mockMetricsManager = (): MetricsManager => {
     governanceTransactionSuccessPageViewed: e,
 
     createWalletDetailsSettled: e,
+    createWalletDetailsStepViewed: e,
+    createWalletDetailsSubmitted: e,
+    createWalletLanguagePageViewed: e,
+    createWalletLearnPhraseStepViewed: e,
+    createWalletSavePhraseStepViewed: e,
+    createWalletSelectMethodPageViewed: e,
+    createWalletTermsPageViewed: e,
+    createWalletVerifyPhraseStepViewed: e,
+    createWalletVerifyPhraseWordSelected: e,
+
     restoreWalletDetailsSettled: e,
+    restoreWalletDetailsStepViewed: e,
+    restoreWalletEnterPhraseStepStatus: e,
+    restoreWalletEnterPhraseStepViewed: e,
+    restoreWalletTypeStepViewed: e,
 
     receiveAmountGeneratedPageViewed: e,
     receiveAmountPageViewed: e,

@@ -12,7 +12,7 @@
   // You can add your custom initial props in the dictionary below.
   // They will be passed down to the ViewController used by React Native.
   self.initialProps = @{};
-  
+
   // react-native-bootsplash
   UIView *rootView = self.window.rootViewController.view;
   [RNBootSplash initWithStoryboard:@"BootSplash" rootView:rootView];
@@ -46,4 +46,11 @@
   return [RCTLinkingManager application:application openURL:url options:options];
 }
 
+- (BOOL)application:(UIApplication *)application continueUserActivity:(nonnull NSUserActivity *)userActivity
+ restorationHandler:(nonnull void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler
+{
+ return [RCTLinkingManager application:application
+                  continueUserActivity:userActivity
+                    restorationHandler:restorationHandler];
+}
 @end

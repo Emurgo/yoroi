@@ -1,11 +1,11 @@
 import {isBoolean, parseSafe, useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
 import {UseMutationOptions, useQuery, UseQueryOptions} from 'react-query'
 
-import {useSelectedWallet} from '../../../SelectedWallet'
+import {useSelectedWallet} from '../../WalletManager/Context'
 
 const isShowingMultipleAddressInfoKey = 'isShowingMultipleAddressesModal'
 
-const useSetShowMultipleAddressessInfo = (options?: UseMutationOptions<void, Error, boolean>) => {
+const useSetShowMultipleAddressesInfo = (options?: UseMutationOptions<void, Error, boolean>) => {
   const storage = useAsyncStorage()
   const wallet = useSelectedWallet()
   const walletStorage = storage.join(`wallet/${wallet.id}/`)
@@ -42,11 +42,13 @@ const useIsShowingMultipleAddressesInfo = (options?: UseQueryOptions<boolean, Er
 
 export const useMultipleAddressesInfo = () => {
   const isShowingMultipleAddressInfo = useIsShowingMultipleAddressesInfo()
-  const setShowMultipleAddressInfo = useSetShowMultipleAddressessInfo()
+  const setShowMultipleAddressInfo = useSetShowMultipleAddressesInfo()
 
   return {
-    hideMultipleAddressesInfo: () => setShowMultipleAddressInfo(false),
-    showMultipleAddressesInfo: () => setShowMultipleAddressInfo(true),
+    hideMultipleAddressesInfo: (options?: UseMutationOptions<void, Error, boolean>) =>
+      setShowMultipleAddressInfo(false, options),
+    showMultipleAddressesInfo: (options?: UseMutationOptions<void, Error, boolean>) =>
+      setShowMultipleAddressInfo(true, options),
     isShowingMultipleAddressInfo,
   }
 }

@@ -1,4 +1,4 @@
-import {Chain, Resolver} from '@yoroi/types'
+import {Chain, Links, Resolver} from '@yoroi/types'
 import {
   TargetAction,
   TransferAction,
@@ -50,6 +50,32 @@ describe('State Actions', () => {
       })
     })
 
+    describe('LinkActionChanged', () => {
+      it('set', () => {
+        const linkAction: Links.YoroiAction = {
+          info: {
+            version: 1,
+            feature: 'transfer',
+            useCase: 'request/ada-with-link',
+            params: {
+              link: 'web+cardano:addr1qygnpgnmc4twqxe4qnj3pakudc0ysheqwflv8guwwlply7zptg3wjqz84kx3t4re4xpqvs3fu7mvsahwhyxd4q3qq90s7sgxnh?amount=10',
+              authorization: 'uuid-v4',
+            },
+          },
+          isTrusted: false,
+        }
+        const action: TransferAction = {
+          type: TransferActionType.LinkActionChanged,
+          linkAction,
+        }
+        const state = combinedReducers(defaultTransferState, action)
+        expect(state).toEqual({
+          ...defaultTransferState,
+          linkAction,
+        })
+      })
+    })
+
     describe('TokenSelectedChanged', () => {
       it('set', () => {
         const action: TransferAction = {
@@ -89,6 +115,7 @@ describe('State Actions', () => {
         selectedTokenId: '',
         unsignedTx: undefined,
         memo: '',
+        linkAction: undefined,
         targets: [
           {
             receiver: {
@@ -129,6 +156,7 @@ describe('State Actions', () => {
           selectedTokenId: '',
           memo: '',
           unsignedTx: undefined,
+          linkAction: undefined,
           targets: [
             {
               receiver: {
@@ -205,6 +233,7 @@ describe('State Actions', () => {
         selectedTargetIndex: 0,
         selectedTokenId: '',
         unsignedTx: undefined,
+        linkAction: undefined,
         memo: '',
         targets: [
           {
@@ -250,6 +279,7 @@ describe('State Actions', () => {
           selectedTokenId: '',
           memo: '',
           unsignedTx: undefined,
+          linkAction: undefined,
           targets: [
             {
               receiver: {
@@ -300,6 +330,7 @@ describe('State Actions', () => {
           selectedTokenId: '',
           memo: '',
           unsignedTx: undefined,
+          linkAction: undefined,
           targets: [
             {
               receiver: {
@@ -346,6 +377,7 @@ describe('State Actions', () => {
           selectedTokenId: '',
           memo: '',
           unsignedTx: undefined,
+          linkAction: undefined,
           targets: [
             {
               receiver: {
@@ -390,6 +422,7 @@ describe('State Actions', () => {
           selectedTokenId: '',
           memo: '',
           unsignedTx: undefined,
+          linkAction: undefined,
           targets: [
             {
               receiver: {
@@ -427,6 +460,7 @@ describe('State Actions', () => {
         selectedTargetIndex: 0,
         selectedTokenId: '',
         unsignedTx: undefined,
+        linkAction: undefined,
         memo: '',
         targets: [
           {
@@ -546,6 +580,7 @@ describe('State Actions', () => {
           selectedTargetIndex: 0,
           selectedTokenId: '',
           unsignedTx: undefined,
+          linkAction: undefined,
           memo: '',
           targets: [
             {
@@ -570,6 +605,7 @@ describe('State Actions', () => {
           selectedTokenId: '',
           memo: '',
           unsignedTx: undefined,
+          linkAction: undefined,
           targets: [
             {
               receiver: {
@@ -599,6 +635,7 @@ describe('State Actions', () => {
           selectedTokenId: 'fake-token-id',
           memo: '',
           unsignedTx: undefined,
+          linkAction: undefined,
           targets: [
             {
               receiver: {
@@ -675,6 +712,7 @@ describe('State Actions', () => {
           selectedTokenId: 'fake-token-id',
           memo: '',
           unsignedTx: undefined,
+          linkAction: undefined,
           targets: [
             {
               receiver: {
@@ -710,6 +748,7 @@ describe('State Actions', () => {
           selectedTokenId: 'fake-token-id',
           memo: '',
           unsignedTx: undefined,
+          redirectTo: undefined,
           targets: [
             {
               receiver: {

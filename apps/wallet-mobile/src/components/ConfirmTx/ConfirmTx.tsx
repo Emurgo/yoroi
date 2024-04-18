@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation} from '@react-navigation/native'
+import {useTheme} from '@yoroi/theme'
 import React, {useEffect, useState} from 'react'
 import {useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 
 import {debugWalletInfo, features} from '../../features'
+import {useSelectedWallet} from '../../features/WalletManager/Context'
 import {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
-import {useSelectedWallet} from '../../SelectedWallet'
-import {COLORS} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
 import {walletManager} from '../../wallet-manager/walletManager'
 import {useAuthOsWithEasyConfirmation} from '../../yoroi-wallets/auth'
@@ -60,6 +60,7 @@ export const ConfirmTx = ({
   autoConfirm,
 }: Props) => {
   const strings = useStrings()
+  const styles = useStyles()
   const navigation = useNavigation()
 
   const wallet = useSelectedWallet()
@@ -269,6 +270,7 @@ export const ConfirmTx = ({
           {...buttonProps}
           disabled={isConfirmationDisabled || isProcessing || disabled}
           testID="confirmTxButton"
+          shelleyTheme
         />
       </View>
 
@@ -292,14 +294,19 @@ export const ConfirmTx = ({
   )
 }
 
-const styles = StyleSheet.create({
-  root: {
-    backgroundColor: COLORS.WHITE,
-  },
-  actionContainer: {
-    justifyContent: 'space-between',
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
+  const styles = StyleSheet.create({
+    root: {
+      backgroundColor: color.gray.min,
+    },
+    actionContainer: {
+      justifyContent: 'space-between',
+    },
+  })
+  return styles
+}
 
 const useStrings = () => {
   const intl = useIntl()

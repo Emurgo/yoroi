@@ -1,3 +1,3 @@
 import {mountAsyncStorage} from '@yoroi/common'
 
-export const rootStorage = mountAsyncStorage('/')
+export const rootStorage = mountAsyncStorage({path: '/'})

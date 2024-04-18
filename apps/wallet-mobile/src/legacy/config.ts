@@ -22,6 +22,8 @@ const GOVERNANCE_ENABLED_SINCE_BLOCK = {
   PREPROD: Infinity, // TODO: Add block number once known
 }
 
+const DAPP_EXPLORER_ENABLED = !isProduction() && !isNightly()
+
 export const CONFIG = {
   SENTRY_DSN,
   PIN_LENGTH: 6,
@@ -31,28 +33,5 @@ export const CONFIG = {
   AGREEMENT_DATE,
   UNSTOPPABLE_API_KEY,
   GOVERNANCE_ENABLED_SINCE_BLOCK,
-}
-
-export const SCHEME_URL = 'yoroi://'
-export const RAMP_ON_OFF_PATH = 'ramp-on-off/result'
-export const LINKING_PREFIXES = [SCHEME_URL]
-export const LINKING_CONFIG = {
-  screens: {
-    'app-root': {
-      screens: {
-        'main-wallet-routes': {
-          screens: {
-            history: {
-              initialRouteName: 'history-list',
-              screens: {
-                'exchange-result': {
-                  path: RAMP_ON_OFF_PATH,
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  },
+  DAPP_EXPLORER_ENABLED,
 }

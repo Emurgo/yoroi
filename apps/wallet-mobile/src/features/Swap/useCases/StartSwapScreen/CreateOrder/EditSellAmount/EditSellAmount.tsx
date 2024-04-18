@@ -1,8 +1,8 @@
 import {useSwap} from '@yoroi/swap'
 import * as React from 'react'
 
-import {useSelectedWallet} from '../../../../../../SelectedWallet'
 import {useBalance} from '../../../../../../yoroi-wallets/hooks'
+import {useSelectedWallet} from '../../../../../WalletManager/Context'
 import {AmountCard} from '../../../../common/AmountCard/AmountCard'
 import {useNavigateTo} from '../../../../common/navigation'
 import {useStrings} from '../../../../common/strings'
@@ -32,6 +32,7 @@ export const EditSellAmount = () => {
       touched={isSellTouched}
       inputRef={sellInputRef}
       error={error}
+      testId="swap:sell-edit"
     />
   )
 }

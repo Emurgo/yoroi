@@ -1,9 +1,9 @@
-import {SwapApi} from '@yoroi/types/lib/swap/api'
+import {Swap} from '@yoroi/types'
 import React from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
 
 import {ModalError} from '../../../../components/ModalError/ModalError'
-import {useSelectedWallet} from '../../../../SelectedWallet'
+import {useSelectedWallet} from '../../../WalletManager/Context'
 import {ConfirmRawTxWithHW} from './ConfirmRawTxWithHW'
 import {ConfirmRawTxWithOs} from './ConfirmRawTxWithOs'
 import {ConfirmRawTxWithPassword} from './ConfirmRawTxWithPassword'
@@ -14,7 +14,7 @@ type Props = {
   onHWConfirm?: () => void
   utxo: string
   bech32Address: string
-  cancelOrder: SwapApi['cancelOrder']
+  cancelOrder: Swap.Api['cancelOrder']
 }
 
 export const ConfirmRawTx = ({onConfirm, onHWConfirm, onCancel, utxo, bech32Address, cancelOrder}: Props) => {

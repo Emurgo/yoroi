@@ -1,11 +1,13 @@
+import {exchangeApiMaker, exchangeManagerMaker, ExchangeProvider} from '@yoroi/exchange'
+import {useLinks} from '@yoroi/links'
 import {useTheme} from '@yoroi/theme'
+import {Links} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Icon, Spacer, Text, useModal} from '../../../../components'
-import {useStatusBar} from '../../../../components/hooks/useStatusBar'
-import {useInitialLink} from '../../../../IntialLinkManagerProvider'
+import {useWalletNavigation} from '../../../../navigation'
 import {DescribeAction} from '../../common/DescribeAction/DescribeAction'
 import {useStrings} from '../../common/useStrings'
 import {BanxaLogo} from '../../illustrations/BanxaLogo'
@@ -13,82 +15,99 @@ import {EncryptusLogo} from '../../illustrations/EncryptusLogo'
 import {WalletAssetImage} from '../../illustrations/WalletAssetImage'
 import {ContentResult} from './ContentResult/ContentResult'
 
-export const ShowExchangeResultOrderScreen = ({onClose}: {onClose: () => void}) => {
+export const ShowExchangeResultOrderScreen = () => {
   const strings = useStrings()
   const styles = useStyles()
   const {openModal} = useModal()
+  const {resetToWalletSelection} = useWalletNavigation()
+  const {action, actionFinished} = useLinks()
 
-  const {setInitialUrl, initialUrl} = useInitialLink()
+  // exchange
+  const exchangeManager = React.useMemo(() => {
+    const api = exchangeApiMaker({
+      isProduction: action?.info?.params?.isSandbox !== true,
+      partner: 'yoroi',
+    })
+
+    const manager = exchangeManagerMaker({api})
+    return manager
+  }, [action?.info?.params?.isSandbox])
+
+  // NOTE: should never happen, caller should handle it
+  if (action == null || action.info.useCase !== 'order/show-create-result') return null
+  const params: Links.ExchangeShowCreateResultParams = action.info.params
 
   const handleOnClose = () => {
-    setInitialUrl(null)
-    onClose()
+    actionFinished()
+    resetToWalletSelection()
   }
 
   const handleOnShowDetails = () => {
     openModal(strings.buySellCrypto, <DescribeAction />)
   }
 
-  const {showOrderDetails, params, Logo, name, showProviderDetails} = sanitizeParams(initialUrl)
+  const {showOrderDetails, Logo, name, showProviderDetails} = sanitizeParams(params)
 
   return (
-    <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
-      <View style={styles.flex}>
-        <WalletAssetImage style={styles.image} />
+    <ExchangeProvider manager={exchangeManager}>
+      <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
+        <View style={styles.flex}>
+          <WalletAssetImage style={styles.image} />
 
-        <Spacer height={25} />
+          <Spacer height={25} />
 
-        <Text style={styles.congratsText}>
-          {strings.congrats}
+          <Text style={styles.congratsText}>
+            {strings.congrats}
+
+            {showOrderDetails && (
+              <>
+                <Spacer width={4} />
+
+                <TouchableOpacity style={{transform: [{translateY: 3}]}} onPress={handleOnShowDetails}>
+                  <Icon.Info size={26} />
+                </TouchableOpacity>
+              </>
+            )}
+          </Text>
+
+          <Spacer height={16} />
 
           {showOrderDetails && (
             <>
-              <Spacer width={4} />
+              <ContentResult title={strings.cryptoAmountYouGet}>
+                <Text style={styles.contentValueText}>{`${params?.coinAmount ?? 0} ${params?.coin ?? ''}`}</Text>
+              </ContentResult>
 
-              <TouchableOpacity style={{transform: [{translateY: 3}]}} onPress={handleOnShowDetails}>
-                <Icon.Info size={26} />
-              </TouchableOpacity>
+              <Spacer height={16} />
+
+              <ContentResult title={strings.fiatAmountYouGet}>
+                <Text style={styles.contentValueText}>{`${params?.fiatAmount ?? 0} ${params?.fiat ?? ''}`}</Text>
+              </ContentResult>
             </>
           )}
-        </Text>
 
-        <Spacer height={16} />
+          {showProviderDetails && (
+            <>
+              <Spacer height={16} />
 
-        {showOrderDetails && (
-          <>
-            <ContentResult title={strings.cryptoAmountYouGet}>
-              <Text style={styles.contentValueText}>{`${params?.coinAmount ?? 0} ${params?.coin ?? ''}`}</Text>
-            </ContentResult>
+              <ContentResult title={strings.provider}>
+                <View style={styles.boxProvider}>
+                  <Logo size={24} />
 
-            <Spacer height={16} />
+                  <Spacer width={4} />
 
-            <ContentResult title={strings.fiatAmountYouGet}>
-              <Text style={styles.contentValueText}>{`${params?.fiatAmount ?? 0} ${params?.fiat ?? ''}`}</Text>
-            </ContentResult>
-          </>
-        )}
+                  <Text style={styles.contentValueText}>{name}</Text>
+                </View>
+              </ContentResult>
+            </>
+          )}
+        </View>
 
-        {showProviderDetails && (
-          <>
-            <Spacer height={16} />
-
-            <ContentResult title={strings.provider}>
-              <View style={styles.boxProvider}>
-                <Logo size={24} />
-
-                <Spacer width={4} />
-
-                <Text style={styles.contentValueText}>{name}</Text>
-              </View>
-            </ContentResult>
-          </>
-        )}
-      </View>
-
-      <View style={styles.actions}>
-        <Button shelleyTheme onPress={handleOnClose} title={strings.close} />
-      </View>
-    </SafeAreaView>
+        <View style={styles.actions}>
+          <Button shelleyTheme onPress={handleOnClose} title={strings.close} />
+        </View>
+      </SafeAreaView>
+    </ExchangeProvider>
   )
 }
 
@@ -102,41 +121,18 @@ const providerName = {
   banxa: 'Banxa',
 } as const
 
-const sanitizeParams = (url: string | null) => {
-  const urlSearchParams = url !== null ? new URLSearchParams(url) : null
-  const params =
-    urlSearchParams !== null
-      ? {
-          coin: urlSearchParams.get('coin'),
-          coinAmount: urlSearchParams.get('coinAmount'),
-          fiat: urlSearchParams.get('fiat'),
-          fiatAmount: urlSearchParams.get('fiatAmount'),
-          provider: urlSearchParams.get('provider'),
-          status: urlSearchParams.get('status'),
-          orderType: urlSearchParams.get('orderType'),
-          // NOTE: it passes the params below to get it back
-          isProduction: urlSearchParams.get('isProduction'),
-          // NOTE: later it should open the used wallet and then display
-          walletName: urlSearchParams.get('walletName'), // we avoid id - security reasons
-        }
-      : null
-
+const sanitizeParams = (params: Links.ExchangeShowCreateResultParams) => {
   const showOrderDetails =
-    params != null &&
-    params.coin != null &&
-    params.coinAmount != null &&
-    params.fiat != null &&
-    params.fiatAmount != null
+    params.coin != null && params.coinAmount != null && params.fiat != null && params.fiatAmount != null
 
   const Logo = providerLogo[params?.provider as keyof typeof providerLogo]
   const name = providerName[params?.provider as keyof typeof providerName]
   const showProviderDetails = Logo != null && name != null
 
-  return {params, showOrderDetails, Logo, name, showProviderDetails}
+  return {showOrderDetails, Logo, name, showProviderDetails}
 }
 
 const useStyles = () => {
-  useStatusBar()
   const {theme} = useTheme()
   const styles = StyleSheet.create({
     root: {

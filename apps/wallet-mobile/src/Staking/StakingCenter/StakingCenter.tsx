@@ -6,17 +6,16 @@ import {View} from 'react-native'
 import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
 import {PleaseWaitModal, Spacer} from '../../components'
-import {useStatusBar} from '../../components/hooks/useStatusBar'
 import {useStakingTx} from '../../Dashboard/StakePoolInfos'
 import {showErrorDialog} from '../../dialogs'
 import {features} from '../../features'
+import {useSelectedWallet} from '../../features/WalletManager/Context'
 import {useLanguage} from '../../i18n'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import {isNightly} from '../../legacy/config'
 import {Logger} from '../../legacy/logging'
 import {useMetrics} from '../../metrics/metricsManager'
 import {StakingCenterRouteNavigation} from '../../navigation'
-import {useSelectedWallet} from '../../SelectedWallet'
 import {getNetworkConfigById, NETWORKS} from '../../yoroi-wallets/cardano/networks'
 import {NotEnoughMoneyToSendError} from '../../yoroi-wallets/cardano/types'
 import {PoolDetailScreen} from '../PoolDetails'
@@ -61,8 +60,6 @@ export const StakingCenter = () => {
     },
   )
 
-  useStatusBar(undefined, isLoading)
-
   const handleOnMessage = async (event: WebViewMessageEvent) => {
     const selectedPoolHashes = JSON.parse(decodeURI(event.nativeEvent.data))
     if (!Array.isArray(selectedPoolHashes) || selectedPoolHashes.length < 1) {
@@ -87,6 +84,7 @@ export const StakingCenter = () => {
           <Spacer height={8} />
 
           <WebView
+            originWhitelist={['*']}
             androidLayerType="software"
             source={{uri: prepareStakingURL(languageCode)}}
             onMessage={(event) => handleOnMessage(event)}

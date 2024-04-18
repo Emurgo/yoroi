@@ -3,8 +3,8 @@ import {mockSwapManager, mockSwapStateDefault, orderMocks, SwapOrderCalculation,
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {SelectedWalletProvider} from '../../../../SelectedWallet'
 import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks'
+import {SelectedWalletProvider} from '../../../WalletManager/Context'
 import {mocks} from '../../common/mocks'
 import {SwapFormProvider} from '../../common/SwapFormProvider'
 import {TransactionSummary} from './TransactionSummary'

@@ -30,7 +30,7 @@ describe('migrateAuthSetting', () => {
 
   // if the store is inconsistent we favor OS, so the user can disable on device and it will ask for a new pin
   it('old store is pin + os (inconsistent), method = "os"', async () => {
-    await rootStorage.join('appSettings/').multiSet([
+    await rootStorage.join('appSettings/').multiSet<string | boolean>([
       ['customPinHash', 'encrypted-hash'],
       [OLD_OS_AUTH_KEY, true],
     ])
@@ -41,7 +41,7 @@ describe('migrateAuthSetting', () => {
   })
 
   it('old store is pin, method = "pin"', async () => {
-    await rootStorage.join('appSettings/').multiSet([
+    await rootStorage.join('appSettings/').multiSet<string | boolean>([
       ['customPinHash', 'encrypted-hash'],
       [OLD_OS_AUTH_KEY, false],
     ])

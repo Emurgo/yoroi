@@ -12,13 +12,12 @@ import config from 'react-native-config'
 
 import {useAuth} from '../auth/AuthProvider'
 import {Button, Text, TextInput} from '../components'
-import {useStatusBar} from '../components/hooks/useStatusBar'
 import {showErrorDialog} from '../dialogs'
 import {useLegalAgreement, useResetLegalAgreement} from '../features/Initialization/common'
+import {useSelectedWalletContext} from '../features/WalletManager/Context'
 import {errorMessages} from '../i18n/global-messages'
 import {storageVersionMaker} from '../migrations/storageVersion'
 import {AppRoutes, useWalletNavigation} from '../navigation'
-import {useSelectedWalletContext} from '../SelectedWallet'
 import {isEmptyString} from '../utils/utils'
 import {NetworkError} from '../yoroi-wallets/cardano/errors'
 import {generateAdaMnemonic} from '../yoroi-wallets/cardano/mnemonic'
@@ -85,6 +84,8 @@ export const DeveloperScreen = () => {
           style={styles.button}
           onPress={() => storageVersionMaker(rootStorage).remove()}
         />
+
+        <Button title="Portfolio" style={styles.button} onPress={() => navigation.navigate('portfolio-dashboard')} />
 
         <Button
           title="Logout"
@@ -218,7 +219,6 @@ export const DeveloperScreen = () => {
 
 const useStyles = () => {
   const {theme} = useTheme()
-  useStatusBar(theme.color.gray.min)
 
   const styles = StyleSheet.create({
     safeAreaView: {

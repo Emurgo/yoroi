@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image, LayoutAnimation, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
@@ -5,7 +6,6 @@ import {Image, LayoutAnimation, ScrollView, StyleSheet, Text, TouchableOpacity, 
 import image from '../../assets/img/error.png'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import {Modal} from '../../legacy/Modal'
-import {brand, COLORS, spacing} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
 import {Button} from '../Button'
 import {Icon} from '../Icon'
@@ -19,6 +19,7 @@ type ErrorViewProps = {
 
 export const ErrorView = ({title, errorMessage, errorLogs, onDismiss}: ErrorViewProps) => {
   const intl = useIntl()
+  const {styles, colors} = useStyles()
   const [showErrorLogs, setShowErrorLogs] = React.useState(false)
   const toggleShowErrorlogs = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
@@ -48,7 +49,7 @@ export const ErrorView = ({title, errorMessage, errorLogs, onDismiss}: ErrorView
                 {showErrorLogs ? intl.formatMessage(messages.hideError) : intl.formatMessage(messages.showError)}
               </Text>
 
-              <Icon.Chevron size={28} color={COLORS.GREY_6} direction={showErrorLogs ? 'left' : 'right'} />
+              <Icon.Chevron size={28} color={colors.icon} direction={showErrorLogs ? 'left' : 'right'} />
             </View>
           </TouchableOpacity>
 
@@ -86,62 +87,66 @@ export const ErrorModal = ({visible, title, errorMessage, errorLogs, onRequestCl
   </Modal>
 )
 
-const text = {
-  fontFamily: brand.defaultFont,
-  color: COLORS.BLACK,
-  lineHeight: 18,
-  fontSize: 14,
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, typography, padding} = theme
+  const text = {
+    color: color.gray.max,
+    ...typography['body-2-m-regular'],
+  }
+  const styles = StyleSheet.create({
+    scrollView: {
+      ...padding['r-s'],
+    },
+    headerView: {
+      alignItems: 'center',
+    },
+    title: {
+      ...text,
+      ...padding['b-l'],
+    },
+    image: {
+      ...padding['b-l'],
+    },
+    paragraph: {
+      ...text,
+      ...padding['b-l'],
+      ...typography['body-2-m-regular'],
+    },
+    errorSection: {
+      marginVertical: 16,
+    },
+    errorSectionHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginBottom: 5,
+    },
+    showErrorTrigger: {
+      flex: 1,
+      ...text,
+      color: color.gray[700],
+    },
+    errorSectionView: {
+      elevation: 1,
+      shadowOffset: {width: 0, height: 2},
+      shadowRadius: 12,
+      shadowOpacity: 0.06,
+      shadowColor: color['black-static'],
+      backgroundColor: color.gray.min,
+      borderRadius: 8,
+    },
+    errorSectionContent: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      ...padding['m'],
+    },
+  })
+  const colors = {
+    icon: color.gray[400],
+  }
+  return {styles, colors}
 }
-
-const styles = StyleSheet.create({
-  scrollView: {
-    paddingRight: 10,
-  },
-  headerView: {
-    alignItems: 'center',
-  },
-  title: {
-    ...text,
-    marginBottom: spacing.paragraphBottomMargin,
-  },
-  image: {
-    marginBottom: spacing.paragraphBottomMargin,
-  },
-  paragraph: {
-    ...text,
-    marginBottom: spacing.paragraphBottomMargin,
-    fontSize: 14,
-    lineHeight: 22,
-  },
-  errorSection: {
-    marginVertical: 16,
-  },
-  errorSectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 5,
-  },
-  showErrorTrigger: {
-    flex: 1,
-    ...text,
-    color: COLORS.SECONDARY_TEXT,
-  },
-  errorSectionView: {
-    elevation: 1,
-    shadowOffset: {width: 0, height: 2},
-    shadowRadius: 12,
-    shadowOpacity: 0.06,
-    shadowColor: 'black',
-    backgroundColor: '#fff',
-    borderRadius: 8,
-  },
-  errorSectionContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 12,
-  },
-})
 
 const messages = defineMessages({
   showError: {

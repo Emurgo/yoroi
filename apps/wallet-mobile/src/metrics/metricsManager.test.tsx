@@ -92,7 +92,21 @@ const mockAmpli = {
   governanceTransactionSuccessPageViewed: jest.fn(),
 
   createWalletDetailsSettled: jest.fn(),
+  createWalletDetailsStepViewed: jest.fn(),
+  createWalletDetailsSubmitted: jest.fn(),
+  createWalletLanguagePageViewed: jest.fn(),
+  createWalletLearnPhraseStepViewed: jest.fn(),
+  createWalletSavePhraseStepViewed: jest.fn(),
+  createWalletSelectMethodPageViewed: jest.fn(),
+  createWalletTermsPageViewed: jest.fn(),
+  createWalletVerifyPhraseStepViewed: jest.fn(),
+  createWalletVerifyPhraseWordSelected: jest.fn(),
+
   restoreWalletDetailsSettled: jest.fn(),
+  restoreWalletDetailsStepViewed: jest.fn(),
+  restoreWalletEnterPhraseStepStatus: jest.fn(),
+  restoreWalletEnterPhraseStepViewed: jest.fn(),
+  restoreWalletTypeStepViewed: jest.fn(),
 
   receiveAmountGeneratedPageViewed: jest.fn(),
   receiveAmountPageViewed: jest.fn(),
@@ -203,7 +217,23 @@ describe('makeMetricsManager', () => {
     metricsManager.track.governanceTransactionSuccessPageViewed({governance_selection: 'No Confidence'})
 
     metricsManager.track.createWalletDetailsSettled()
+    metricsManager.track.createWalletDetailsStepViewed()
+    metricsManager.track.createWalletDetailsSubmitted()
+    metricsManager.track.createWalletLanguagePageViewed()
+    metricsManager.track.createWalletLearnPhraseStepViewed()
+    metricsManager.track.createWalletSavePhraseStepViewed()
+    metricsManager.track.createWalletTermsPageViewed()
+    metricsManager.track.createWalletSelectMethodPageViewed()
+    metricsManager.track.createWalletVerifyPhraseStepViewed()
+    metricsManager.track.createWalletVerifyPhraseWordSelected()
+
     metricsManager.track.restoreWalletDetailsSettled()
+    metricsManager.track.restoreWalletDetailsStepViewed()
+    metricsManager.track.restoreWalletEnterPhraseStepStatus({recovery_prhase_status: true})
+    metricsManager.track.restoreWalletEnterPhraseStepStatus({recovery_prhase_status: false})
+    metricsManager.track.restoreWalletEnterPhraseStepViewed({recovery_phrase_lenght: '15'})
+    metricsManager.track.restoreWalletEnterPhraseStepViewed({recovery_phrase_lenght: '24'})
+    metricsManager.track.restoreWalletTypeStepViewed()
 
     metricsManager.track.receiveAmountGeneratedPageViewed({ada_amount: 500})
     metricsManager.track.receiveAmountPageViewed()
@@ -275,7 +305,23 @@ describe('makeMetricsManager', () => {
     })
 
     expect(mockAmpli.createWalletDetailsSettled).toHaveBeenCalled()
+    expect(mockAmpli.createWalletDetailsStepViewed).toHaveBeenCalled()
+    expect(mockAmpli.createWalletDetailsSubmitted).toHaveBeenCalled()
+    expect(mockAmpli.createWalletLanguagePageViewed).toHaveBeenCalled()
+    expect(mockAmpli.createWalletLearnPhraseStepViewed).toHaveBeenCalled()
+    expect(mockAmpli.createWalletSavePhraseStepViewed).toHaveBeenCalled()
+    expect(mockAmpli.createWalletSelectMethodPageViewed).toHaveBeenCalled()
+    expect(mockAmpli.createWalletTermsPageViewed).toHaveBeenCalled()
+    expect(mockAmpli.createWalletVerifyPhraseStepViewed).toHaveBeenCalled()
+    expect(mockAmpli.createWalletVerifyPhraseWordSelected).toHaveBeenCalled()
+
     expect(mockAmpli.restoreWalletDetailsSettled).toHaveBeenCalled()
+    expect(mockAmpli.restoreWalletDetailsStepViewed).toHaveBeenCalled()
+    expect(mockAmpli.restoreWalletEnterPhraseStepStatus).toHaveBeenCalledWith({recovery_prhase_status: true})
+    expect(mockAmpli.restoreWalletEnterPhraseStepStatus).toHaveBeenCalledWith({recovery_prhase_status: false})
+    expect(mockAmpli.restoreWalletEnterPhraseStepViewed).toHaveBeenCalledWith({recovery_phrase_lenght: '15'})
+    expect(mockAmpli.restoreWalletEnterPhraseStepViewed).toHaveBeenCalledWith({recovery_phrase_lenght: '24'})
+    expect(mockAmpli.restoreWalletTypeStepViewed).toHaveBeenCalled()
 
     expect(mockAmpli.receiveAmountGeneratedPageViewed).toHaveBeenCalledWith({ada_amount: 500})
     expect(mockAmpli.receiveAmountPageViewed).toHaveBeenCalled()

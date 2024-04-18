@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image, ScrollView, StyleSheet, TextStyle, View} from 'react-native'
@@ -6,7 +7,6 @@ import image from '../../assets/img/mnemonic_explanation.png'
 import {Button, Text} from '../../components'
 import {confirmationMessages} from '../../i18n/global-messages'
 import {Modal} from '../../legacy/Modal'
-import {spacing} from '../../theme'
 
 type Props = {
   visible: boolean
@@ -16,6 +16,7 @@ type Props = {
 }
 
 export const PoolWarningModal = ({visible, onPress, onRequestClose, reputationInfo}: Props) => {
+  const styles = useStyles()
   const intl = useIntl()
 
   const issues = (() => {
@@ -80,45 +81,47 @@ const BulletPointItem = ({textRow, style}: BulletPointProps) => {
   return <Text style={style}>{text}</Text>
 }
 
-const styles = StyleSheet.create({
-  scrollView: {
-    paddingRight: 10,
-  },
-  text: {
-    fontSize: 14,
-    lineHeight: 22,
-  },
-  reputationInfoView: {
-    marginBottom: spacing.paragraphBottomMargin,
-  },
-  paragraph: {
-    marginBottom: spacing.paragraphBottomMargin,
-    fontSize: 14,
-    lineHeight: 22,
-  },
-  content: {
-    flex: 1,
-    marginBottom: 24,
-  },
-  heading: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: spacing.paragraphBottomMargin,
-  },
-  title: {
-    fontSize: 20,
-    lineHeight: 22,
-    fontWeight: 'bold',
-    marginBottom: spacing.paragraphBottomMargin,
-  },
-  buttons: {
-    flexDirection: 'row',
-    marginTop: 12,
-  },
-  button: {
-    marginHorizontal: 10,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {padding, typography} = theme
+  const styles = StyleSheet.create({
+    scrollView: {
+      ...padding['r-s'],
+    },
+    text: {
+      ...typography['body-2-m-regular'],
+    },
+    reputationInfoView: {
+      marginBottom: 15,
+    },
+    paragraph: {
+      marginBottom: 15,
+      ...typography['body-2-m-regular'],
+    },
+    content: {
+      flex: 1,
+      marginBottom: 24,
+    },
+    heading: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: 15,
+    },
+    title: {
+      ...typography['heading-3-medium'],
+      marginBottom: 15,
+    },
+    buttons: {
+      flexDirection: 'row',
+      marginTop: 12,
+    },
+    button: {
+      marginHorizontal: 10,
+    },
+  })
+
+  return styles
+}
 
 const messages = defineMessages({
   title: {

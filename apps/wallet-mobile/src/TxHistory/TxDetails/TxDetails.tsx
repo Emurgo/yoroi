@@ -10,12 +10,11 @@ import {LayoutAnimation, StyleSheet, TouchableOpacity, View, ViewProps} from 're
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {Banner, Boundary, Button, CopyButton, FadeIn, Icon, Text} from '../../components'
-import {useStatusBar} from '../../components/hooks/useStatusBar'
 import AddressModal from '../../features/Receive/common/AddressModal/AddressModal'
 import {usePrivacyMode} from '../../features/Settings/PrivacyMode/PrivacyMode'
+import {useSelectedWallet} from '../../features/WalletManager/Context'
 import globalMessages from '../../i18n/global-messages'
 import {formatDateAndTime, formatTokenWithSymbol} from '../../legacy/format'
-import {useSelectedWallet} from '../../SelectedWallet'
 import {isEmptyString} from '../../utils/utils'
 import {MultiToken} from '../../yoroi-wallets/cardano/MultiToken'
 import {CardanoTypes, YoroiWallet} from '../../yoroi-wallets/cardano/types'
@@ -28,7 +27,6 @@ import {useAssetListStyles} from './AssetListTransaction.style'
 export const TxDetails = () => {
   const strings = useStrings()
   const {styles, colors} = useStyles()
-  useStatusBar()
   const intl = useIntl()
   const {id} = useRoute().params as Params
   const wallet = useSelectedWallet()

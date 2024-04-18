@@ -9,7 +9,7 @@ const AsyncStorageContext = React.createContext<undefined | App.Storage>(
 )
 export const AsyncStorageProvider = ({
   children,
-  storage = mountAsyncStorage('/'),
+  storage = mountAsyncStorage({path: '/'}),
 }: {
   storage?: App.Storage
   children: React.ReactNode

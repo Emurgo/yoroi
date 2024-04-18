@@ -1,7 +1,10 @@
-import {ThemeProvider, useTheme} from '@yoroi/theme'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {StyleProp, TouchableOpacity, ViewStyle} from 'react-native'
+import {StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native'
+import Animated, {FadeInDown, FadeOutDown, Layout} from 'react-native-reanimated'
 
+import {Text} from '../../../wallet-mobile/src/components'
+import {isEmptyString} from '../../../wallet-mobile/src/utils/utils'
 import {Icon} from '../components/Icon'
 import {useCopy} from '../legacy/useCopy'
 
@@ -10,24 +13,24 @@ export type CopyButtonProps = {
   onCopy?: () => void
   children?: React.ReactNode
   style?: StyleProp<ViewStyle>
+  message?: string
 }
 
-export const CopyButton = ({value, onCopy, children, style}: CopyButtonProps) => {
+export const CopyButton = ({value, onCopy, children, style, message}: CopyButtonProps) => {
   const [isCopying, copy] = useCopy()
 
   return (
-    <ThemeProvider>
-      <AnimatedCopyButton
-        style={style}
-        isCopying={isCopying}
-        onCopy={() => {
-          copy(value)
-          onCopy?.()
-        }}
-      >
-        {children}
-      </AnimatedCopyButton>
-    </ThemeProvider>
+    <AnimatedCopyButton
+      style={style}
+      isCopying={isCopying}
+      message={message}
+      onCopy={() => {
+        copy(value)
+        onCopy?.()
+      }}
+    >
+      {children}
+    </AnimatedCopyButton>
   )
 }
 
@@ -36,12 +39,27 @@ const AnimatedCopyButton = ({
   children,
   style,
   isCopying,
-}: Omit<CopyButtonProps, 'value'> & {isCopying: boolean}) => {
-  const {colors} = useStyles()
+  message,
+}: Omit<CopyButtonProps, 'value'> & {isCopying: boolean; message?: string}) => {
+  const {styles, colors} = useStyles()
 
   return (
     <TouchableOpacity onPress={onCopy} disabled={isCopying} testID="copyButton" style={style}>
-      {isCopying ? <Icon.CopySuccess size={26} color={colors.gray} /> : <Icon.Copy size={26} color={colors.gray} />}
+      {isCopying ? (
+        <View style={styles.rowContainer}>
+          {!isEmptyString(message) ? (
+            <Animated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
+              <Text style={styles.copiedText}>{message}</Text>
+            </Animated.View>
+          ) : (
+            <View />
+          )}
+
+          <Icon.CopySuccess size={26} color={colors.gray} />
+        </View>
+      ) : (
+        <Icon.Copy size={26} color={colors.gray} />
+      )}
 
       {children}
     </TouchableOpacity>
@@ -50,11 +68,36 @@ const AnimatedCopyButton = ({
 
 const useStyles = () => {
   const {theme} = useTheme()
-  const {color} = theme
+  const {color, typography} = theme
 
   const colors = {
     gray: color.gray[900],
   }
 
-  return {colors} as const
+  const styles = StyleSheet.create({
+    isCopying: {
+      position: 'absolute',
+      backgroundColor: color.gray.max,
+      alignItems: 'center',
+      justifyContent: 'center',
+      bottom: 20,
+      right: 10,
+      alignSelf: 'center',
+      borderRadius: 4,
+      zIndex: 10,
+    },
+    copiedText: {
+      color: color.gray.min,
+      textAlign: 'center',
+      padding: 8,
+      flex: 1,
+      ...typography['body-2-m-medium'],
+    },
+    rowContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+  })
+
+  return {styles, colors} as const
 }

@@ -17,9 +17,9 @@ import {Button, KeyboardAvoidingView, Spacer, TextInput, useModal} from '../../.
 import {ScrollView, useScrollView} from '../../../components/ScrollView/ScrollView'
 import {useCopy} from '../../../legacy/useCopy'
 import {useMetrics} from '../../../metrics/metricsManager'
-import {useSelectedWallet} from '../../../SelectedWallet'
 import {isEmptyString} from '../../../utils'
 import {editedFormatter} from '../../../yoroi-wallets/utils'
+import {useSelectedWallet} from '../../WalletManager/Context'
 import {useReceive} from '../common/ReceiveProvider'
 import {ShareQRCodeCard} from '../common/ShareQRCodeCard/ShareQRCodeCard'
 import {SkeletonAdressDetail} from '../common/SkeletonAddressDetail/SkeletonAddressDetail'
@@ -29,6 +29,8 @@ export const RequestSpecificAmountScreen = () => {
   const strings = useStrings()
   const {colors, styles} = useStyles()
   const [amount, setAmount] = React.useState('')
+  const wallet = useSelectedWallet()
+
   const {track} = useMetrics()
   const hasAmount = !isEmptyString(amount)
   const {isScrollBarShown, setIsScrollBarShown, scrollViewRef} = useScrollView()
@@ -40,15 +42,14 @@ export const RequestSpecificAmountScreen = () => {
   const {openModal} = useModal()
 
   const handleOnGenerateLink = React.useCallback(() => {
-    Keyboard.dismiss()
-
     track.receiveAmountGeneratedPageViewed({ada_amount: Number(amount)})
     openModal(strings.amountToReceive, <Modal amount={amount} address={selectedAddress} />, modalHeight)
   }, [track, amount, openModal, strings.amountToReceive, selectedAddress, modalHeight])
 
   const handleOnChangeAmount = (amount: string) => {
     const edited = editedFormatter(amount)
-    if (Number(edited.replace(',', '.')) <= Number.MAX_SAFE_INTEGER) {
+    const numberOfDecimals = (edited.split('.')[1] ?? []).length
+    if (Number(edited) <= Number.MAX_SAFE_INTEGER && numberOfDecimals <= (wallet.primaryTokenInfo.decimals ?? 0)) {
       setAmount(edited)
     }
   }
@@ -74,6 +75,7 @@ export const RequestSpecificAmountScreen = () => {
                 keyboardType="numeric"
                 onChangeText={handleOnChangeAmount}
                 value={amount}
+                testID="receive:request-specific-amount-ada-input"
               />
 
               <View style={styles.textSection}>
@@ -91,6 +93,7 @@ export const RequestSpecificAmountScreen = () => {
               disabled={!hasAmount}
               title={strings.generateLink}
               style={styles.button}
+              testID="receive:request-specific-amount:generate-link-button"
             />
           </View>
         </KeyboardAvoidingView>
@@ -125,7 +128,7 @@ const Modal = ({amount, address}: {amount: string; address: string}) => {
     <View style={styles.root}>
       <RNScrollView>
         {hasAddress ? (
-          <ShareQRCodeCard title={title} content={content} onLongPress={handOnCopy} />
+          <ShareQRCodeCard title={title} content={content} onLongPress={handOnCopy} testId="receive:specific-amount" />
         ) : (
           <View style={styles.root}>
             <SkeletonAdressDetail />
@@ -144,6 +147,7 @@ const Modal = ({amount, address}: {amount: string; address: string}) => {
         isCopying={isCopying}
         copiedText={strings.copyLinkMsg}
         style={styles.button}
+        testID="receive:request-specific-amount:copy-link-button"
       />
 
       <Spacer height={16} />

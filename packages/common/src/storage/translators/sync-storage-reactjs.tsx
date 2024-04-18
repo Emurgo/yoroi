@@ -9,7 +9,7 @@ const SyncStorageContext = React.createContext<undefined | App.Storage<false>>(
 )
 export const SyncStorageProvider = ({
   children,
-  storage = mountMMKVStorage('/'),
+  storage = mountMMKVStorage({path: '/'}),
 }: {
   storage?: App.Storage<false>
   children: React.ReactNode

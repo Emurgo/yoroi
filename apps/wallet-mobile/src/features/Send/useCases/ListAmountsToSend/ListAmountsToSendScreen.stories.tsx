@@ -3,8 +3,8 @@ import {TransferProvider} from '@yoroi/transfer'
 import React from 'react'
 
 import {SearchProvider} from '../../../../Search/SearchContext'
-import {SelectedWalletProvider} from '../../../../SelectedWallet'
 import {mocks} from '../../../../yoroi-wallets/mocks/wallet'
+import {SelectedWalletProvider} from '../../../WalletManager/Context'
 import {ListAmountsToSendScreen} from './ListAmountsToSendScreen'
 
 storiesOf('List Amounts To Send', module).add('initial', () => {

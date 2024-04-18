@@ -6,20 +6,18 @@ import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, KeyboardAvoidingView, Text, TextInput} from '../../../components'
-import {useStatusBar} from '../../../components/hooks/useStatusBar'
 import {LoadingOverlay} from '../../../components/LoadingOverlay'
 import {showErrorDialog} from '../../../dialogs'
 import {errorMessages} from '../../../i18n/global-messages'
-import {useSelectedWallet, useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../../SelectedWallet'
 import {isEmptyString} from '../../../utils/utils'
 import {WrongPassword} from '../../../yoroi-wallets/cardano/errors'
 import {useEnableEasyConfirmation} from '../../../yoroi-wallets/hooks'
+import {useSelectedWallet, useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../WalletManager/Context'
 
 export const EnableEasyConfirmationScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
   const styles = useStyles()
-  useStatusBar()
   const navigation = useNavigation()
   const [rootPassword, setRootPassword] = React.useState('')
   const walletMeta = useSelectedWalletMeta()

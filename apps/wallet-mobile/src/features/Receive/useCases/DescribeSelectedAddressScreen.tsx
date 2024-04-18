@@ -1,26 +1,39 @@
 import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
-import _ from 'lodash'
 import * as React from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import Icon from '../../../assets/img/copy.png'
-import {Button, Spacer} from '../../../components'
+import {Button, Spacer, useModal} from '../../../components'
 import {useCopy} from '../../../legacy/useCopy'
 import {useMetrics} from '../../../metrics/metricsManager'
 import {isEmptyString} from '../../../utils'
+import {AddressMode} from '../../../wallet-manager/types'
+import {useAddressModeManager} from '../../../wallet-manager/useAddressModeManager'
 import {AddressDetailCard} from '../common/AddressDetailCard/AddressDetailCard'
 import {useReceive} from '../common/ReceiveProvider'
+import {
+  SingleOrMultipleAddressesModal,
+  singleOrMultipleAddressesModalHeight,
+} from '../common/SingleOrMultipleAddressesModal/SingleOrMultipleAddressesModal'
 import {SkeletonAdressDetail} from '../common/SkeletonAddressDetail/SkeletonAddressDetail'
+import {useMultipleAddressesInfo} from '../common/useMultipleAddressesInfo'
 import {useNavigateTo} from '../common/useNavigateTo'
+import {useReceiveAddressesStatus} from '../common/useReceiveAddressesStatus'
 import {useStrings} from '../common/useStrings'
 
 export const DescribeSelectedAddressScreen = () => {
   const strings = useStrings()
   const {styles, colors} = useStyles()
-  const navigate = useNavigateTo()
+  const navigateTo = useNavigateTo()
   const {selectedAddress} = useReceive()
+  const {isSingle, addressMode} = useAddressModeManager()
+  const addresses = useReceiveAddressesStatus(addressMode)
+  const isMultipleAddressesUsed = addresses.used.length > 1
+  const {isShowingMultipleAddressInfo} = useMultipleAddressesInfo()
+  const {openModal} = useModal()
+
   const {track} = useMetrics()
 
   const [isCopying, copy] = useCopy()
@@ -30,6 +43,31 @@ export const DescribeSelectedAddressScreen = () => {
     track.receiveCopyAddressClicked({copy_address_location: 'CTA Copy Address'})
     copy(selectedAddress)
   }
+
+  const handleOnModalConfirm = React.useCallback(
+    (method: AddressMode) => {
+      if (method === 'multiple') {
+        navigateTo.multipleAddress()
+      }
+    },
+    [navigateTo],
+  )
+
+  React.useEffect(() => {
+    isShowingMultipleAddressInfo &&
+      openModal(
+        strings.singleOrMultiple,
+        <SingleOrMultipleAddressesModal onConfirm={handleOnModalConfirm} />,
+        singleOrMultipleAddressesModalHeight,
+      )
+  }, [
+    isShowingMultipleAddressInfo,
+    isSingle,
+    isMultipleAddressesUsed,
+    openModal,
+    strings.singleOrMultiple,
+    handleOnModalConfirm,
+  ])
 
   useFocusEffect(
     React.useCallback(() => {
@@ -49,10 +87,11 @@ export const DescribeSelectedAddressScreen = () => {
         outline
         title={strings.requestSpecificAmountButton}
         textStyles={{
-          color: colors.buttonBackgroundBlue,
+          color: colors.requestSpecificAmountTextColor,
         }}
-        onPress={navigate.specificAmount}
+        onPress={navigateTo.requestSpecificAmount}
         disabled={!hasAddress}
+        testID="receive:request-specific-amount-link"
       />
 
       <Spacer height={6} />
@@ -92,7 +131,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    buttonBackgroundBlue: theme.color.primary[600],
+    requestSpecificAmountTextColor: theme.color.primary[500],
   }
 
   return {styles, colors} as const

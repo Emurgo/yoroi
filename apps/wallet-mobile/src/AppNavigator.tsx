@@ -1,6 +1,8 @@
 import {NavigationContainer, NavigationContainerRef} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {isString} from '@yoroi/common'
+import {supportedPrefixes} from '@yoroi/links'
+import {TransferProvider} from '@yoroi/transfer'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Alert, AppState, AppStateStatus, InteractionManager, Platform} from 'react-native'
@@ -11,32 +13,30 @@ import {OsLoginScreen, PinLoginScreen, useBackgroundTimeout} from './auth'
 import {useAuth} from './auth/AuthProvider'
 import {supportsAndroidFingerprintOverlay} from './auth/biometrics'
 import {EnableLoginWithPin} from './auth/EnableLoginWithPin'
+import {useStatusBar} from './components/hooks/useStatusBar'
 import {ModalProvider} from './components/Modal/ModalContext'
 import {ModalScreen} from './components/Modal/ModalScreen'
 import {AgreementChangedNavigator, InitializationNavigator} from './features/Initialization'
 import {LegalAgreement, useLegalAgreement} from './features/Initialization/common'
-import {CONFIG, LINKING_CONFIG, LINKING_PREFIXES} from './legacy/config'
+import {useDeepLinkWatcher} from './features/Links/common/useDeepLinkWatcher'
+import {PortfolioScreen} from './features/Portfolio/useCases/PortfolioScreen'
+import {AddWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
+import {CONFIG} from './legacy/config'
 import {DeveloperScreen} from './legacy/DeveloperScreen'
 import {AppRoutes} from './navigation'
 import {SearchProvider} from './Search/SearchContext'
-import {WalletInitNavigator} from './WalletInit/WalletInitNavigator'
 import {WalletNavigator} from './WalletNavigator'
-import {AuthSetting, useAuthOsEnabled, useAuthSetting, useAuthWithOs} from './yoroi-wallets/auth'
+import {AuthSetting, useAuthSetting, useAuthWithOs, useIsAuthOsSupported} from './yoroi-wallets/auth'
 
 const Stack = createStackNavigator<AppRoutes>()
 const navRef = React.createRef<NavigationContainerRef<ReactNavigation.RootParamList>>()
+const prefixes = [...supportedPrefixes]
 
 export const AppNavigator = () => {
+  useDeepLinkWatcher()
   const strings = useStrings()
   const [routeName, setRouteName] = React.useState<string>()
-
-  const enableDeepLink = routeName === 'history-list'
-
-  const linking = {
-    enabled: enableDeepLink,
-    prefixes: LINKING_PREFIXES,
-    config: LINKING_CONFIG,
-  }
+  useStatusBar(routeName)
 
   useHideScreenInAppSwitcher()
   useAutoLogout()
@@ -77,7 +77,12 @@ export const AppNavigator = () => {
   }
 
   return (
-    <NavigationContainer onStateChange={handleStateChange} linking={linking} onReady={onReady} ref={navRef}>
+    <NavigationContainer
+      onStateChange={handleStateChange}
+      linking={{enabled: true, prefixes}}
+      onReady={onReady}
+      ref={navRef}
+    >
       <ModalProvider>
         <Stack.Navigator
           screenOptions={{
@@ -133,12 +138,14 @@ export const AppNavigator = () => {
                 <Stack.Screen name="app-root">
                   {() => (
                     <SearchProvider>
-                      <WalletNavigator />
+                      <TransferProvider>
+                        <WalletNavigator />
+                      </TransferProvider>
                     </SearchProvider>
                   )}
                 </Stack.Screen>
 
-                <Stack.Screen name="new-wallet" component={WalletInitNavigator} />
+                <Stack.Screen name="new-wallet" component={AddWalletNavigator} />
               </Stack.Group>
 
               <Stack.Group screenOptions={{presentation: 'transparentModal'}}>
@@ -154,6 +161,8 @@ export const AppNavigator = () => {
               <Stack.Screen name="developer" component={DeveloperScreen} options={{headerShown: false}} />
 
               <Stack.Screen name="storybook" component={StorybookScreen} />
+
+              <Stack.Screen name="portfolio-dashboard" component={PortfolioScreen} />
             </Stack.Group>
           )}
         </Stack.Navigator>
@@ -202,8 +211,8 @@ const useAutoLogout = () => {
   const authSetting = useAuthSetting()
   const strings = useStrings()
   const {logout} = useAuth()
-  const authOsEnabled = useAuthOsEnabled()
-  const osAuthDisabled = !authOsEnabled && authSetting === 'os'
+  const isAuthOsSupported = useIsAuthOsSupported()
+  const osAuthDisabled = !isAuthOsSupported && authSetting === 'os'
 
   useBackgroundTimeout({
     onTimeout: logout,
@@ -240,25 +249,25 @@ const useHideScreenInAppSwitcher = () => {
 
 type FirstAction = 'auth-with-pin' | 'auth-with-os' | 'request-new-pin' | 'first-run' | 'show-agreement-changed-notice'
 const getFirstAction = (
-  authOsEnabled: boolean,
+  isAuthOsSupported: boolean,
   authSetting: AuthSetting,
-  agreement: LegalAgreement | undefined,
+  legalAgreement: LegalAgreement | undefined | null,
 ): FirstAction => {
-  const hasAccepted = agreement?.latestAcceptedAgreementsDate === CONFIG.AGREEMENT_DATE
+  const hasAccepted = legalAgreement?.latestAcceptedAgreementsDate === CONFIG.AGREEMENT_DATE
 
   if (isString(authSetting) && !hasAccepted) return 'show-agreement-changed-notice'
 
   if (authSetting === 'pin') return 'auth-with-pin'
-  if (authSetting === 'os' && authOsEnabled) return 'auth-with-os'
-  if (authSetting === 'os' && !authOsEnabled) return 'request-new-pin'
+  if (authSetting === 'os' && isAuthOsSupported) return 'auth-with-os'
+  if (authSetting === 'os' && !isAuthOsSupported) return 'request-new-pin'
 
   return 'first-run' // setup not completed
 }
 
 const useFirstAction = () => {
   const authSetting = useAuthSetting()
-  const authOsEnabled = useAuthOsEnabled()
-  const terms = useLegalAgreement()
+  const isAuthOsSupported = useIsAuthOsSupported()
+  const legalAgreement = useLegalAgreement()
 
-  return getFirstAction(authOsEnabled, authSetting, terms)
+  return getFirstAction(isAuthOsSupported, authSetting, legalAgreement)
 }

@@ -1,8 +1,8 @@
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {SelectedWalletProvider} from '../../../SelectedWallet'
 import {mocks} from '../../../yoroi-wallets/mocks'
+import {SelectedWalletProvider} from '../../WalletManager/Context'
 import {DisableEasyConfirmationScreen} from './DisableEasyConfirmationScreen'
 import {EnableEasyConfirmationScreen} from './EnableEasyConfirmationScreen'
 

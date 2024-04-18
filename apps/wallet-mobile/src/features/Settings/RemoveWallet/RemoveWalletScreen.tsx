@@ -14,17 +14,15 @@ import {
   TextInput,
   TextInputProps,
 } from '../../../components'
-import {useStatusBar} from '../../../components/hooks/useStatusBar'
 import {useWalletNavigation} from '../../../navigation'
-import {useSelectedWallet} from '../../../SelectedWallet'
 import {useRemoveWallet, useWalletName} from '../../../yoroi-wallets/hooks'
+import {useSelectedWallet} from '../../WalletManager/Context'
 
 export const RemoveWalletScreen = () => {
   const strings = useStrings()
   const styles = useStyles()
   const wallet = useSelectedWallet()
   const walletName = useWalletName(wallet)
-  useStatusBar()
 
   const {resetToWalletSelection} = useWalletNavigation()
   const {removeWallet, isLoading} = useRemoveWallet(wallet.id, {

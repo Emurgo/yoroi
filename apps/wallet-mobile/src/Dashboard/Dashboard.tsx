@@ -1,22 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation} from '@react-navigation/native'
+import {StackNavigationProp} from '@react-navigation/stack'
 import BigNumber from 'bignumber.js'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
 import {Banner, Button, useModal} from '../components'
-import {useStatusBar} from '../components/hooks/useStatusBar'
 import {
   useGovernanceStrings,
   useIsParticipatingInGovernance,
   WithdrawWarningModal,
 } from '../features/Staking/Governance'
 import {useIsGovernanceFeatureEnabled} from '../features/Staking/Governance'
+import {useSelectedWallet} from '../features/WalletManager/Context'
 import globalMessages from '../i18n/global-messages'
 import {Modal} from '../legacy/Modal'
-import {useWalletNavigation} from '../navigation'
-import {useSelectedWallet} from '../SelectedWallet'
+import {DashboardRoutes, useWalletNavigation} from '../navigation'
 import {isEmptyString} from '../utils/utils'
 import {getCardanoNetworkConfigById} from '../yoroi-wallets/cardano/networks'
 import {getCardanoBaseConfig} from '../yoroi-wallets/cardano/utils'
@@ -55,8 +55,6 @@ export const Dashboard = () => {
 
   const isParticipatingInGovernance = useIsParticipatingInGovernance(wallet)
   const walletNavigateTo = useWalletNavigation()
-
-  useStatusBar()
 
   const handleOnParticipatePress = () => {
     walletNavigateTo.navigateToGovernanceCentre({navigateToStakingOnSuccess: true})
@@ -152,23 +150,10 @@ export const Dashboard = () => {
 }
 
 const useNavigateTo = () => {
-  const navigation = useNavigation()
+  const navigation = useNavigation<StackNavigationProp<DashboardRoutes>>()
 
   return {
-    stakingCenter: () => {
-      navigation.navigate('app-root', {
-        screen: 'main-wallet-routes',
-        params: {
-          screen: 'staking-dashboard',
-          params: {
-            screen: 'staking-center',
-            params: {
-              screen: 'staking-center-main',
-            },
-          },
-        },
-      })
-    },
+    stakingCenter: () => navigation.navigate('staking-center', {screen: 'staking-center-main'}),
   }
 }
 

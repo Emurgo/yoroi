@@ -18,11 +18,12 @@ type ShareQRCodeCardProps = {
   title: string
   isCopying?: boolean
   onLongPress: () => void
+  testId?: string
 }
 
-export const ShareQRCodeCard = ({content, title, isCopying, onLongPress}: ShareQRCodeCardProps) => {
+export const ShareQRCodeCard = ({content, title, isCopying, onLongPress, testId}: ShareQRCodeCardProps) => {
   const strings = useStrings()
-  const {styles, colors} = useStyles()
+  const {styles, colors, qrSize} = useStyles()
   const {track} = useMetrics()
 
   const [isSharing, setIsSharing] = React.useState(false)
@@ -70,11 +71,13 @@ export const ShareQRCodeCard = ({content, title, isCopying, onLongPress}: ShareQ
             colors={colors.bgCard}
           />
 
-          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.title} testID={`${testId}-title`}>
+            {title}
+          </Text>
 
           <View style={styles.addressContainer}>
-            <View style={styles.qrCode}>
-              <QRCode value={content} size={158} backgroundColor={colors.white} color={colors.black} />
+            <View style={styles.qrCode} testID={`${testId}-qr`}>
+              <QRCode value={content} size={qrSize} backgroundColor={colors.white} color={colors.black} />
             </View>
 
             <Spacer height={16} />
@@ -105,6 +108,8 @@ const useStyles = () => {
   const heightBreakpointLarge = 800
   const cardSpacing = screenHeight > heightBreakpointLarge ? 32 : 16
 
+  const qrSize = 170
+
   const styles = StyleSheet.create({
     qrCode: {
       backgroundColor: theme.color.gray.min,
@@ -123,6 +128,7 @@ const useStyles = () => {
       minHeight: 394,
       alignSelf: 'center',
       overflow: 'hidden',
+      paddingHorizontal: 16,
       paddingVertical: cardSpacing,
       gap: cardSpacing,
     },
@@ -132,13 +138,14 @@ const useStyles = () => {
     },
     textAddress: {
       textAlign: 'center',
-      paddingHorizontal: 16,
       ...typography['body-2-m-medium'],
       color: color.gray.max,
     },
     textShareAddress: {
-      color: color.gray.max,
-      ...typography['body-2-m-medium'],
+      height: 32,
+      textAlignVertical: 'center',
+      color: color.gray[900],
+      ...typography['button-2-m'],
       textTransform: 'uppercase',
       letterSpacing: 0.5,
     },
@@ -166,5 +173,5 @@ const useStyles = () => {
     black: color.gray.max,
   }
 
-  return {styles, colors} as const
+  return {styles, colors, qrSize} as const
 }

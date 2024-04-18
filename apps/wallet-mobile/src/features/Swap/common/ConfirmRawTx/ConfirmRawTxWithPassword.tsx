@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 
 import {Spacer} from '../../../../components'
-import {useSelectedWallet} from '../../../../SelectedWallet'
+import {useSelectedWallet} from '../../../WalletManager/Context'
 import {ConfirmWithSpendingPassword} from '../ConfirmWithSpendingPassword'
 
 export const ConfirmRawTxWithPassword = ({onConfirm}: {onConfirm?: (rootKey: string) => Promise<void>}) => {
@@ -32,9 +32,18 @@ const PasswordInput = ({onConfirm}: {onConfirm: (password: string) => Promise<vo
     setLoading(false)
   }
 
+  const handlePasswordChange = () => {
+    setError(null)
+  }
+
   return (
     <>
-      <ConfirmWithSpendingPassword onSubmit={onConfirmPress} isLoading={loading} error={error ?? undefined} />
+      <ConfirmWithSpendingPassword
+        onSubmit={onConfirmPress}
+        onPasswordChange={handlePasswordChange}
+        isLoading={loading}
+        error={error ?? undefined}
+      />
 
       <Spacer height={10} />
     </>

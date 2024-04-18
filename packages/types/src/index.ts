@@ -31,7 +31,13 @@ import {
 import {ResolverManager} from './resolver/manager'
 import {ResolverReceiver} from './resolver/receiver'
 import {ResolverStorage} from './resolver/storage'
-import {LinksLink, LinksModule, LinksUriConfig} from './links/link'
+import {
+  LinksLink,
+  LinksModule,
+  LinksUriConfig,
+  LinksUriRules,
+  LinksWebCardanoUriConfig,
+} from './links/cardano'
 import {
   LinksErrorExtraParamsDenied,
   LinksErrorForbiddenParamsProvided,
@@ -41,6 +47,11 @@ import {
   LinksErrorUnsupportedAuthority,
   LinksErrorUnsupportedVersion,
 } from './links/errors'
+import {
+  ApiRequestRecordWithCache,
+  ApiResponseRecordWithCache,
+} from './api/cache'
+import {ApiHttpStatusCode} from './api/status-code'
 import {ApiResponse, ApiResponseError, ApiResponseSuccess} from './api/response'
 import {
   ApiErrorBadRequest,
@@ -96,7 +107,11 @@ import {
   AppObservableStorage,
 } from './app/observable-storage'
 import {AppCacheInfo, AppCacheRecord, AppCacheRow} from './app/cache'
-import {AppObserver, AppSubscriber} from './app/simple-observer'
+import {
+  AppObserverManager,
+  AppObserverSubscribe,
+  AppSubscriber,
+} from './app/observer-manager'
 import {
   CardanoAddress,
   CardanoMetadata,
@@ -121,26 +136,103 @@ import {ExchangeOrderType} from './exchange/order-type'
 import {ExchangeProvider} from './exchange/provider'
 import {ExchangeApi} from './exchange/api'
 import {ExchangeManager} from './exchange/manager'
+import {
+  LinksPartnerInfoParams,
+  LinksExchangeShowCreateResultParams,
+  LinksTransferRequestAdaWithLinkParams,
+  LinksTransferRequestAdaParams,
+  LinksYoroiActionInfo,
+  LinksYoroiAction,
+  LinksYoroiUriConfig,
+  LinksYoroiModule,
+} from './links/yoroi'
+import {
+  PortfolioTokenId,
+  PortfolioTokenType,
+  PortfolioTokenPropertyType,
+  PortfolioTokenApplication,
+  PortfolioTokenSource,
+  PortfolioTokenNature,
+  PortfolioTokenStatus,
+} from './portfolio/token'
+import {PortfolioTokenDiscovery} from './portfolio/discovery'
+import {PortfolioTokenInfo} from './portfolio/info'
+import {
+  PortfolioAmount,
+  PortfolioAmounts,
+  PortfolioBalancePrimaryBreakdown,
+  PortfolioBalancePrimaryRecord,
+  PortfolioTokenBalance,
+} from './portfolio/balance'
+import {PortfolioTokenPrice} from './portfolio/price'
+import {ChainNetwork} from './chain/network'
+import {NumbersErrorInvalidAtomicValue} from './numbers/errors'
+import {NumbersAtomicValue} from './numbers/atomic-value'
+import {AppErrorInvalidState} from './app/errors'
+import {
+  PortfolioApi,
+  PortfolioApiTokenDiscoveriesResponse,
+  PortfolioApiTokenInfosResponse,
+} from './portfolio/api'
+import {
+  PortfolioEventBalanceManager,
+  PortfolioEventSourceId,
+  PortfolioEventManagerOn,
+  PortfolioEventTokenManager,
+  PortfolioEventTokenManagerSync,
+  PortfolioEventTokenManagerHydrate,
+  PortfolioEventBalanceManagerHydrate,
+  PortfolioEventBalanceManagerRefresh,
+  PortfolioEventBalanceManagerSync,
+} from './portfolio/event'
+import {
+  PortfolioStorageBalance,
+  PortfolioStorageToken,
+} from './portfolio/storage'
+import {
+  PortfolioManagerBalance,
+  PortfolioManagerToken,
+} from './portfolio/manager'
+import {AppQueueTask, AppQueueTaskManager} from './app/queue-task-manager'
 
 export namespace App {
-  export interface Storage<IsAsync extends boolean = true>
-    extends AppStorage<IsAsync> {}
-  export type StorageFolderName = AppStorageFolderName
-  export interface MultiStorage<T, IsAsync extends boolean = true>
-    extends AppMultiStorage<T, IsAsync> {}
+  export namespace Errors {
+    export class InvalidState extends AppErrorInvalidState {}
+  }
 
-  export interface ObservableStorage<IsAsync extends boolean = true>
-    extends AppObservableStorage<IsAsync> {}
-  export interface ObservableMultiStorage<T, IsAsync extends boolean = true>
-    extends AppObservableMultiStorage<T, IsAsync> {}
+  export interface Storage<
+    IsAsync extends boolean = true,
+    K extends string = string,
+  > extends AppStorage<IsAsync, K> {}
+  export type StorageFolderName = AppStorageFolderName
+  export interface MultiStorage<
+    T,
+    IsAsync extends boolean = true,
+    K extends string = string,
+  > extends AppMultiStorage<T, IsAsync, K> {}
+
+  export interface ObservableStorage<
+    IsAsync extends boolean = true,
+    K extends string = string,
+  > extends AppObservableStorage<IsAsync, K> {}
+  export interface ObservableMultiStorage<
+    T,
+    IsAsync extends boolean = true,
+    K extends string = string,
+  > extends AppObservableMultiStorage<T, IsAsync, K> {}
 
   export type MultiStorageOptions<
     T,
     IsAsync extends boolean = true,
-  > = AppMultiStorageOptions<T, IsAsync>
+    K extends string = string,
+  > = AppMultiStorageOptions<T, IsAsync, K>
 
-  export type Observer<T> = AppObserver<T>
+  export type ObserverManager<T> = AppObserverManager<T>
   export type Subscriber<T> = AppSubscriber<T>
+  export type ObserverSubscribe<T> = AppObserverSubscribe<T>
+
+  export type QueueTask = AppQueueTask
+  export type QueueTaskManager = AppQueueTaskManager
 
   export type CacheInfo = AppCacheInfo
   export interface CacheRecord<T> extends AppCacheRecord<T> {}
@@ -194,11 +286,20 @@ export namespace Balance {
 }
 
 export namespace Links {
+  export type YoroiModule = LinksYoroiModule
   export interface UriConfig extends LinksUriConfig {}
-  export type Scheme = LinksUriConfig['scheme']
-  export type Authority = LinksUriConfig['authority']
-  export type Version = LinksUriConfig['version']
-  export type Rules = LinksUriConfig['rules']
+  export interface WebCardanoUriConfig extends LinksWebCardanoUriConfig {}
+  export interface YoroiUriConfig extends LinksYoroiUriConfig {}
+  export type PartnerInfoSchema = LinksPartnerInfoParams
+  export type ExchangeShowCreateResultParams =
+    LinksExchangeShowCreateResultParams
+  export type TransferRequestAdaWithLinkParams =
+    LinksTransferRequestAdaWithLinkParams
+  export type TransferRequestAdaParams = LinksTransferRequestAdaParams
+  export type YoroiActionInfo = LinksYoroiActionInfo
+  export type YoroiAction = LinksYoroiAction
+
+  export interface Rules extends LinksUriRules {}
 
   export type Link<T extends LinksUriConfig> = LinksLink<T>
 
@@ -219,6 +320,11 @@ export namespace Api {
   export type ResponseError = ApiResponseError
   export type ResponseSuccess<T> = ApiResponseSuccess<T>
   export type Response<T> = ApiResponse<T>
+
+  export type ResponseWithCache<T> = ApiResponseRecordWithCache<T>
+  export type RequestWithCache<T> = ApiRequestRecordWithCache<T>
+  export type HttpStatusCode = ApiHttpStatusCode
+  export const HttpStatusCode = ApiHttpStatusCode
 
   export namespace Errors {
     export class BadRequest extends ApiErrorBadRequest {}
@@ -277,6 +383,11 @@ export namespace Api {
 
 export namespace Numbers {
   export type Locale = NumberLocale
+  export type AtomicValue = NumbersAtomicValue
+
+  export namespace Errors {
+    export class InvalidAtomicValue extends NumbersErrorInvalidAtomicValue {}
+  }
 }
 
 export namespace Resolver {
@@ -310,7 +421,76 @@ export namespace Transfer {
   export type Targets = TransferTargets
 }
 
+export namespace Portfolio {
+  export type Amount = PortfolioAmount
+  export type Amounts = PortfolioAmounts
+  export type BalancePrimaryRecord = PortfolioBalancePrimaryRecord
+  export type BalancePrimaryBreakdown = PortfolioBalancePrimaryBreakdown
+
+  export namespace Event {
+    export type SourceId = PortfolioEventSourceId
+    export type TokenManager = PortfolioEventTokenManager
+    export type BalanceManager = PortfolioEventBalanceManager
+    export type ManagerOn = PortfolioEventManagerOn
+    export const ManagerOn = PortfolioEventManagerOn
+
+    export type TokenManagerSync = PortfolioEventTokenManagerSync
+    export type TokenManagerHydrate = PortfolioEventTokenManagerHydrate
+
+    export type BalanceManagerSync = PortfolioEventBalanceManagerSync
+    export type BalanceManagerHydrate = PortfolioEventBalanceManagerHydrate
+    export type BalanceManagerRefresh = PortfolioEventBalanceManagerRefresh
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-shadow
+  export namespace Api {
+    export type TokenInfosResponse = PortfolioApiTokenInfosResponse
+    export type TokenDiscoveriesResponse = PortfolioApiTokenDiscoveriesResponse
+    export type Api = PortfolioApi
+  }
+
+  export namespace Storage {
+    export type Token = PortfolioStorageToken
+    export type Balance = PortfolioStorageBalance
+  }
+
+  export namespace Manager {
+    export type Token = PortfolioManagerToken
+    export type Balance = PortfolioManagerBalance
+  }
+
+  export namespace Token {
+    export type Id = PortfolioTokenId
+
+    export type Type = PortfolioTokenType
+    export const Type = PortfolioTokenType
+
+    export type PropertyType = PortfolioTokenPropertyType
+    export const PropertyType = PortfolioTokenPropertyType
+
+    export type Application = PortfolioTokenApplication
+    export const Application = PortfolioTokenApplication
+
+    export type Source = PortfolioTokenSource
+    export const Source = PortfolioTokenSource
+
+    export type Nature = PortfolioTokenNature
+    export const Nature = PortfolioTokenNature
+
+    export type Status = PortfolioTokenStatus
+    export const Status = PortfolioTokenStatus
+
+    export type Info = PortfolioTokenInfo
+    export type Discovery = PortfolioTokenDiscovery
+    export type Balance = PortfolioTokenBalance
+    export type Price = PortfolioTokenPrice
+  }
+}
+
 export namespace Chain {
+  export type Network = ChainNetwork
+  export const Network = ChainNetwork
+
   export namespace Cardano {
     export type UnsignedTx = CardanoUnsignedTx
     export type SignedTx = CardanoSignedTx

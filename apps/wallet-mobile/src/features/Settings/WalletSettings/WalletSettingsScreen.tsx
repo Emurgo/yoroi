@@ -8,11 +8,9 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useAuth} from '../../../auth/AuthProvider'
 import {Icon, Spacer} from '../../../components'
-import {useStatusBar} from '../../../components/hooks/useStatusBar'
 import {DIALOG_BUTTONS, showConfirmationDialog} from '../../../dialogs'
 import {confirmationMessages} from '../../../i18n/global-messages'
 import {SettingsRouteNavigation, useWalletNavigation} from '../../../navigation'
-import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../../SelectedWallet'
 import {lightPalette} from '../../../theme'
 import {useAddressModeManager} from '../../../wallet-manager/useAddressModeManager'
 import {useAuthSetting} from '../../../yoroi-wallets/auth'
@@ -20,6 +18,7 @@ import {getNetworkConfigById} from '../../../yoroi-wallets/cardano/networks'
 import {isByron, isHaskellShelley} from '../../../yoroi-wallets/cardano/utils'
 import {useEasyConfirmationEnabled, useResync} from '../../../yoroi-wallets/hooks'
 import {NetworkId, WalletImplementationId} from '../../../yoroi-wallets/types'
+import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../WalletManager/Context'
 import {useNavigateTo} from '../common/navigation'
 import {
   NavigatedSettingsItem,
@@ -42,7 +41,6 @@ export const WalletSettingsScreen = () => {
   const wallet = useSelectedWallet()
   const authSetting = useAuthSetting()
   const addressMode = useAddressModeManager()
-  useStatusBar()
 
   const logout = useLogout()
   const settingsNavigation = useNavigation<SettingsRouteNavigation>()

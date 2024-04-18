@@ -25,6 +25,8 @@ PODS:
     - React-Core
   - Expo (48.0.20):
     - ExpoModulesCore
+  - ExpoBlur (12.9.2):
+    - ExpoModulesCore
   - ExpoDevice (5.4.0):
     - ExpoModulesCore
   - ExpoKeepAwake (12.0.1):
@@ -342,7 +344,8 @@ PODS:
     - React-Core
   - react-native-view-shot (3.8.0):
     - React-Core
-  - react-native-webview (11.26.1):
+  - react-native-webview (13.8.1):
+    - RCT-Folly (= 2021.07.22.00)
     - React-Core
   - React-perflogger (0.71.14)
   - React-RCTActionSheet (0.71.14):
@@ -493,10 +496,10 @@ PODS:
     - SentryPrivate (= 8.9.3)
   - SentryPrivate (8.9.3)
   - Yoga (1.14.0)
-  - ZXingObjC/Core (3.6.5)
-  - ZXingObjC/OneD (3.6.5):
+  - ZXingObjC/Core (3.6.9)
+  - ZXingObjC/OneD (3.6.9):
     - ZXingObjC/Core
-  - ZXingObjC/PDF417 (3.6.5):
+  - ZXingObjC/PDF417 (3.6.9):
     - ZXingObjC/Core
 
 DEPENDENCIES:
@@ -512,6 +515,7 @@ DEPENDENCIES:
   - EXFont (from `../../../node_modules/expo-font/ios`)
   - EXImageLoader (from `../../../node_modules/expo-image-loader/ios`)
   - Expo (from `../../../node_modules/expo`)
+  - ExpoBlur (from `../../../node_modules/expo-blur/ios`)
   - ExpoDevice (from `../../../node_modules/expo-device/ios`)
   - ExpoKeepAwake (from `../../../node_modules/expo-keep-awake/ios`)
   - ExpoModulesCore (from `../../../node_modules/expo-modules-core`)
@@ -621,6 +625,8 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/expo-image-loader/ios"
   Expo:
     :path: "../../../node_modules/expo"
+  ExpoBlur:
+    :path: "../../../node_modules/expo-blur/ios"
   ExpoDevice:
     :path: "../../../node_modules/expo-device/ios"
   ExpoKeepAwake:
@@ -775,6 +781,7 @@ SPEC CHECKSUMS:
   EXFont: 6ea3800df746be7233208d80fe379b8ed74f4272
   EXImageLoader: fd053169a8ee932dd83bf1fe5487a50c26d27c2b
   Expo: b7d2843b0a0027d0ce76121a63085764355a16ed
+  ExpoBlur: e832d874bd94afc0645daddbd3162ec1ce172080
   ExpoDevice: 1c1b0c9cad96c292c1de73948649cfd654b2b3c0
   ExpoKeepAwake: 69f5f627670d62318410392d03e0b5db0f85759a
   ExpoModulesCore: 653958063a301098b541ae4dfed1ac0b98db607b
@@ -819,7 +826,7 @@ SPEC CHECKSUMS:
   react-native-slider: 33b8d190b59d4f67a541061bb91775d53d617d9d
   react-native-timezone: 92fa6c0a7c041efd632a372a515c957cd8ee9e72
   react-native-view-shot: 6b7ed61d77d88580fed10954d45fad0eb2d47688
-  react-native-webview: 9f111dfbcfc826084d6c507f569e5e03342ee1c1
+  react-native-webview: bdc091de8cf7f8397653e30182efcd9f772e03b3
   React-perflogger: 4987ad83731c23d11813c84263963b0d3028c966
   React-RCTActionSheet: 5ad952b2a9740d87a5bd77280c4bc23f6f89ea0c
   React-RCTAnimation: d2de22af3f536cc80bb5b3918e1a455114d1b985
@@ -852,7 +859,7 @@ SPEC CHECKSUMS:
   Sentry: 97161cac725da1ecbe77d1445bf8a61c1e5667f1
   SentryPrivate: 9a76def09fb08f9501997b8df946e8097947b94f
   Yoga: e71803b4c1fff832ccf9b92541e00f9b873119b9
-  ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
+  ZXingObjC: 8898711ab495761b2dbbdec76d90164a6d7e14c5
 
 PODFILE CHECKSUM: 31f344d67f1a9c35e34eb202e3cdfeb4907367e8
 

@@ -1,8 +1,8 @@
+import {useTheme} from '@yoroi/theme'
 import React, {useEffect} from 'react'
 import {ActivityIndicator, StyleSheet, Text, View} from 'react-native'
 
-import {useSelectedWallet} from '../../SelectedWallet'
-import {COLORS} from '../../theme'
+import {useSelectedWallet} from '../../features/WalletManager/Context'
 import {useAuthOsWithEasyConfirmation} from '../../yoroi-wallets/auth'
 import {useSignTx, useSubmitTx} from '../../yoroi-wallets/hooks'
 import {YoroiSignedTx, YoroiUnsignedTx} from '../../yoroi-wallets/types'
@@ -15,6 +15,7 @@ type Props = {
 
 export const ConfirmTxWithOsModal = ({onSuccess, unsignedTx, onError}: Props) => {
   const wallet = useSelectedWallet()
+  const styles = useStyles()
 
   const {signTx, error: signError} = useSignTx({wallet})
   const {submitTx} = useSubmitTx({wallet}, {onError})
@@ -58,13 +59,19 @@ export const ConfirmTxWithOsModal = ({onSuccess, unsignedTx, onError}: Props) =>
     </View>
   )
 }
-const styles = StyleSheet.create({
-  center: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  errorMessage: {
-    color: COLORS.ERROR_TEXT_COLOR,
-    textAlign: 'center',
-  },
-})
+
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
+  const styles = StyleSheet.create({
+    center: {
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    errorMessage: {
+      color: color.magenta[500],
+      textAlign: 'center',
+    },
+  })
+  return styles
+}

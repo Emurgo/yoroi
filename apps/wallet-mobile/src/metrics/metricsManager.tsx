@@ -31,7 +31,6 @@ const infoPlugin: EnrichmentPlugin = {
   type: PluginType.ENRICHMENT,
   setup: async () => Promise.resolve(),
   execute: async (event: Event) => {
-    Logger.info('[metrics-react-native]', event.event_type, event.event_properties ?? '- No properties')
     return Promise.resolve(event)
   },
 }
@@ -146,7 +145,21 @@ export const makeMetricsManager = (
     governanceTransactionSuccessPageViewed: metricsModule.governanceTransactionSuccessPageViewed.bind(metricsModule),
 
     createWalletDetailsSettled: metricsModule.createWalletDetailsSettled.bind(metricsModule),
+    createWalletDetailsStepViewed: metricsModule.createWalletDetailsStepViewed.bind(metricsModule),
+    createWalletDetailsSubmitted: metricsModule.createWalletDetailsSubmitted.bind(metricsModule),
+    createWalletLanguagePageViewed: metricsModule.createWalletLanguagePageViewed.bind(metricsModule),
+    createWalletLearnPhraseStepViewed: metricsModule.createWalletLearnPhraseStepViewed.bind(metricsModule),
+    createWalletSavePhraseStepViewed: metricsModule.createWalletSavePhraseStepViewed.bind(metricsModule),
+    createWalletSelectMethodPageViewed: metricsModule.createWalletSelectMethodPageViewed.bind(metricsModule),
+    createWalletTermsPageViewed: metricsModule.createWalletTermsPageViewed.bind(metricsModule),
+    createWalletVerifyPhraseStepViewed: metricsModule.createWalletVerifyPhraseStepViewed.bind(metricsModule),
+    createWalletVerifyPhraseWordSelected: metricsModule.createWalletVerifyPhraseWordSelected.bind(metricsModule),
+
     restoreWalletDetailsSettled: metricsModule.restoreWalletDetailsSettled.bind(metricsModule),
+    restoreWalletDetailsStepViewed: metricsModule.restoreWalletDetailsStepViewed.bind(metricsModule),
+    restoreWalletEnterPhraseStepStatus: metricsModule.restoreWalletEnterPhraseStepStatus.bind(metricsModule),
+    restoreWalletEnterPhraseStepViewed: metricsModule.restoreWalletEnterPhraseStepViewed.bind(metricsModule),
+    restoreWalletTypeStepViewed: metricsModule.restoreWalletTypeStepViewed.bind(metricsModule),
 
     receiveAmountGeneratedPageViewed: metricsModule.receiveAmountGeneratedPageViewed.bind(metricsModule),
     receiveAmountPageViewed: metricsModule.receiveAmountPageViewed.bind(metricsModule),

@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image, Platform, StyleSheet, TouchableOpacity, View} from 'react-native'
@@ -5,8 +6,6 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import fingerprintImage from '../../assets/img/fingerprint.png'
 import {Icon, ScreenBackground, Text} from '../../components'
-import {useStatusBar} from '../../components/hooks/useStatusBar'
-import {COLORS} from '../../theme'
 import {supportsAndroidFingerprintOverlay} from '../biometrics'
 
 type Props = {
@@ -29,6 +28,7 @@ export const OsAuthScreen = ({
   showFingerPlaceholder = false,
 }: Props) => {
   const intl = useIntl()
+  const {styles, colors} = useStyles()
   const [showImage, setShowImage] = React.useState(showFingerPlaceholder)
 
   React.useEffect(() => {
@@ -42,15 +42,13 @@ export const OsAuthScreen = ({
     setShowImage(showFingerPlaceholder)
   }, [showFingerPlaceholder])
 
-  useStatusBar()
-
   return (
     <ScreenBackground style={styles.container}>
       <SafeAreaView style={{flex: 1}}>
         <View style={[styles.main, onGoBack ? null : styles.mainPadded]}>
           {onGoBack && (
             <TouchableOpacity onPress={onGoBack}>
-              <Icon.Chevron direction="left" size={28} color={COLORS.WHITE} />
+              <Icon.Chevron direction="left" size={28} color={colors.icon} />
             </TouchableOpacity>
           )}
 
@@ -90,10 +88,12 @@ export const OsAuthScreen = ({
 }
 
 const Actions = ({children}: {children: React.ReactNode}) => {
+  const {styles} = useStyles()
   return <View style={styles.actions}>{children}</View>
 }
 
 const Action = ({children}: {children: React.ReactNode}) => {
+  const {styles} = useStyles()
   return <View style={styles.action}>{children}</View>
 }
 
@@ -104,62 +104,67 @@ const messages = defineMessages({
   },
 })
 
-const headingTextStyle = {
-  color: COLORS.WHITE,
-  textAlign: 'center',
-} as const
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  main: {
-    flex: 1,
-  },
-  mainPadded: {
-    paddingTop: 25,
-  },
-  heading: {
-    ...headingTextStyle,
-    fontSize: 22,
-    lineHeight: 28,
-  },
-  subHeadingContainer: {
-    marginVertical: 10,
-  },
-  subHeading: {
-    ...headingTextStyle,
-  },
-  imageContainer: {
-    marginVertical: 20,
-    width: '100%',
-    height: 200,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(110, 110, 255, 0.4)',
-    borderRadius: 8,
-  },
-  image: {
-    height: 120,
-    width: 120,
-  },
-  welcomeMessageContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  welcomeMessageText: {
-    ...headingTextStyle,
-    fontSize: 50,
-    lineHeight: 60,
-  },
-  actions: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  action: {
-    flexDirection: 'column',
-    alignItems: 'stretch',
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, padding, typography} = theme
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      ...padding['l'],
+    },
+    main: {
+      flex: 1,
+    },
+    mainPadded: {
+      paddingTop: 25,
+    },
+    heading: {
+      color: color.gray.min,
+      textAlign: 'center',
+      ...typography['heading-3-regular'],
+    },
+    subHeadingContainer: {
+      marginVertical: 10,
+    },
+    subHeading: {
+      color: color.gray.min,
+      textAlign: 'center',
+    },
+    imageContainer: {
+      marginVertical: 20,
+      width: '100%',
+      height: 200,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(110, 110, 255, 0.4)',
+      borderRadius: 8,
+    },
+    image: {
+      height: 120,
+      width: 120,
+    },
+    welcomeMessageContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    welcomeMessageText: {
+      color: color.gray.min,
+      textAlign: 'center',
+      fontSize: 50,
+      lineHeight: 60,
+    },
+    actions: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    action: {
+      flexDirection: 'column',
+      alignItems: 'stretch',
+    },
+  })
+  const colors = {
+    icon: color['white-static'],
+  }
+  return {colors, styles}
+}

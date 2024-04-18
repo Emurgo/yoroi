@@ -1,0 +1,1082 @@
+[
+  {
+    "id": "components.walletinit.createwallet.createwalletscreen.notFound",
+    "defaultMessage": "!!!Not found",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 103,
+      "column": 14,
+      "index": 7545
+    },
+    "end": {
+      "line": 106,
+      "column": 5,
+      "index": 7666
+    }
+  },
+  {
+    "id": "components.walletinit.createwallet.createwalletscreen.clearAll",
+    "defaultMessage": "!!!Clear all",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 107,
+      "column": 14,
+      "index": 7682
+    },
+    "end": {
+      "line": 110,
+      "column": 5,
+      "index": 7803
+    }
+  },
+  {
+    "id": "components.walletinit.createwallet.createwalletscreen.passwordLengthRequirement",
+    "defaultMessage": "!!!Minimum characters",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 111,
+      "column": 33,
+      "index": 7838
+    },
+    "end": {
+      "line": 114,
+      "column": 5,
+      "index": 7985
+    }
+  },
+  {
+    "id": "components.walletinit.walletform.repeatPasswordInputLabel",
+    "defaultMessage": "!!!Repeat password",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 115,
+      "column": 30,
+      "index": 8017
+    },
+    "end": {
+      "line": 118,
+      "column": 5,
+      "index": 8139
+    }
+  },
+  {
+    "id": "components.walletinit.walletform.repeatPasswordInputError",
+    "defaultMessage": "!!!Passwords do not match",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 119,
+      "column": 30,
+      "index": 8171
+    },
+    "end": {
+      "line": 122,
+      "column": 5,
+      "index": 8300
+    }
+  },
+  {
+    "id": "components.walletinit.walletinitmenu.logo.title",
+    "defaultMessage": "!!!Yoroi",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 123,
+      "column": 15,
+      "index": 8317
+    },
+    "end": {
+      "line": 126,
+      "column": 5,
+      "index": 8419
+    }
+  },
+  {
+    "id": "components.walletinit.walletinitmenu.logo.subtitle",
+    "defaultMessage": "!!!Light wallet for Cardano assets",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 127,
+      "column": 18,
+      "index": 8439
+    },
+    "end": {
+      "line": 130,
+      "column": 5,
+      "index": 8570
+    }
+  },
+  {
+    "id": "components.walletinit.learnMoreInfo.button.title",
+    "defaultMessage": "!!!Learn more on Yoroi Zendesk",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 131,
+      "column": 15,
+      "index": 8587
+    },
+    "end": {
+      "line": 134,
+      "column": 5,
+      "index": 8712
+    }
+  },
+  {
+    "id": "components.walletinit.txnavigationbuttons.continueButton",
+    "defaultMessage": "!!!Continue",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 135,
+      "column": 20,
+      "index": 8734
+    },
+    "end": {
+      "line": 138,
+      "column": 5,
+      "index": 8848
+    }
+  },
+  {
+    "id": "components.walletinit.txnavigationbuttons.nextButton",
+    "defaultMessage": "!!!Next",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 139,
+      "column": 10,
+      "index": 8860
+    },
+    "end": {
+      "line": 142,
+      "column": 5,
+      "index": 8966
+    }
+  },
+  {
+    "id": "components.walletinit.walletinitmenu.createwalletbutton.title",
+    "defaultMessage": "!!!Create new wallet",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 143,
+      "column": 28,
+      "index": 8996
+    },
+    "end": {
+      "line": 146,
+      "column": 5,
+      "index": 9124
+    }
+  },
+  {
+    "id": "components.walletinit.walletinitmenu.restorewalletbutton.title",
+    "defaultMessage": "!!!Restore Yoroi existing wallet",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 147,
+      "column": 29,
+      "index": 9155
+    },
+    "end": {
+      "line": 150,
+      "column": 5,
+      "index": 9296
+    }
+  },
+  {
+    "id": "components.walletinit.walletinitmenu.connectwalletbutton.title",
+    "defaultMessage": "!!!Connect hardware wallet device",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 151,
+      "column": 29,
+      "index": 9327
+    },
+    "end": {
+      "line": 154,
+      "column": 5,
+      "index": 9469
+    }
+  },
+  {
+    "id": "components.walletinit.walletinitmenu.cardanoMainnetbutton.title",
+    "defaultMessage": "!!!Cardano Mainnet",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 155,
+      "column": 20,
+      "index": 9491
+    },
+    "end": {
+      "line": 158,
+      "column": 5,
+      "index": 9619
+    }
+  },
+  {
+    "id": "components.walletinit.walletinitmenu.cardanoTestnetbutton.title",
+    "defaultMessage": "!!!Cardano Preprod Testnet",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 159,
+      "column": 20,
+      "index": 9641
+    },
+    "end": {
+      "line": 162,
+      "column": 5,
+      "index": 9777
+    }
+  },
+  {
+    "id": "components.walletinit.walletinitmenu.cardanoSanchonetbutton.title",
+    "defaultMessage": "!!!Cardano SanchoNet",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 163,
+      "column": 22,
+      "index": 9801
+    },
+    "end": {
+      "line": 166,
+      "column": 5,
+      "index": 9933
+    }
+  },
+  {
+    "id": "components.walletinit.walletinitmenu.cardanoMainnetbutton.description",
+    "defaultMessage": "!!!Works with real ADA",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 167,
+      "column": 31,
+      "index": 9966
+    },
+    "end": {
+      "line": 170,
+      "column": 5,
+      "index": 10104
+    }
+  },
+  {
+    "id": "components.walletinit.walletinitmenu.cardanoTestnetbutton.description",
+    "defaultMessage": "!!!Works with test ADA (tADA)",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 171,
+      "column": 31,
+      "index": 10137
+    },
+    "end": {
+      "line": 174,
+      "column": 5,
+      "index": 10282
+    }
+  },
+  {
+    "id": "components.walletinit.walletinitmenu.cardanoSanchonetbutton.description",
+    "defaultMessage": "!!!Testnet for rolling out governance",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 175,
+      "column": 33,
+      "index": 10317
+    },
+    "end": {
+      "line": 178,
+      "column": 5,
+      "index": 10472
+    }
+  },
+  {
+    "id": "components.walletinit.biometricScreen.biometricDescription.description",
+    "defaultMessage": "!!!Use your device biometrics for a more convenient access to your Yoroi wallet and transaction confirmation",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 179,
+      "column": 26,
+      "index": 10500
+    },
+    "end": {
+      "line": 183,
+      "column": 5,
+      "index": 10733
+    }
+  },
+  {
+    "id": "components.walletinit.biometricScreen.enableButton.title",
+    "defaultMessage": "!!!Enable biometrics",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 184,
+      "column": 18,
+      "index": 10753
+    },
+    "end": {
+      "line": 187,
+      "column": 5,
+      "index": 10876
+    }
+  },
+  {
+    "id": "components.walletinit.biometricScreen.ignoreButton.title",
+    "defaultMessage": "!!!Recovery phrase is a unique combination of words",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 188,
+      "column": 18,
+      "index": 10896
+    },
+    "end": {
+      "line": 191,
+      "column": 5,
+      "index": 11050
+    }
+  },
+  {
+    "id": "components.walletinit.aboutRecoveryPhrase.aboutRecoveryPhrase.title",
+    "defaultMessage": "!!!Read this information carefully before saving your recovery phrase:",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 192,
+      "column": 30,
+      "index": 11082
+    },
+    "end": {
+      "line": 195,
+      "column": 5,
+      "index": 11266
+    }
+  },
+  {
+    "id": "components.walletinit.aboutRecoveryPhrase.aboutRecoveryStepper.title",
+    "defaultMessage": "!!!About recovery phrase",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 196,
+      "column": 29,
+      "index": 11297
+    },
+    "end": {
+      "line": 199,
+      "column": 5,
+      "index": 11436
+    }
+  },
+  {
+    "id": "components.walletinit.aboutRecoveryPhrase.aboutRecoveryPhraseCard.firstItem",
+    "defaultMessage": "!!!Recovery phrase is the only way to access your wallet",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 200,
+      "column": 38,
+      "index": 11476
+    },
+    "end": {
+      "line": 203,
+      "column": 5,
+      "index": 11654
+    }
+  },
+  {
+    "id": "components.walletinit.aboutRecoveryPhrase.aboutRecoveryPhraseCard.secondItem",
+    "defaultMessage": "!!!If you lose your Recovery phrase, it will not be possible to recover your wallet",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 204,
+      "column": 39,
+      "index": 11695
+    },
+    "end": {
+      "line": 207,
+      "column": 5,
+      "index": 11901
+    }
+  },
+  {
+    "id": "components.walletinit.aboutRecoveryPhrase.aboutRecoveryPhraseCard.thirdItem",
+    "defaultMessage": "!!!You are the only person who knows and stores your Recovery phrase",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 208,
+      "column": 38,
+      "index": 11941
+    },
+    "end": {
+      "line": 211,
+      "column": 5,
+      "index": 12131
+    }
+  },
+  {
+    "id": "components.walletinit.aboutRecoveryPhrase.aboutRecoveryPhraseCard.fourthItem",
+    "defaultMessage": "!!!You are the only person who knows and stores your Recovery phrase",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 212,
+      "column": 39,
+      "index": 12172
+    },
+    "end": {
+      "line": 215,
+      "column": 5,
+      "index": 12363
+    }
+  },
+  {
+    "id": "components.walletinit.aboutRecoveryPhrase.aboutRecoveryPhraseCard.fifthItem",
+    "defaultMessage": "!!!Yoroi NEVER asks for your Recovery phrase. Watch out for scammers and impersonators",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 216,
+      "column": 38,
+      "index": 12403
+    },
+    "end": {
+      "line": 219,
+      "column": 5,
+      "index": 12611
+    }
+  },
+  {
+    "id": "components.walletinit.recoveryPhrase.title",
+    "defaultMessage": "!!!Click “Show recovery phrase” below to reveal and save it.",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 220,
+      "column": 25,
+      "index": 12638
+    },
+    "end": {
+      "line": 223,
+      "column": 5,
+      "index": 12788
+    }
+  },
+  {
+    "id": "components.walletinit.recoveryPhrase.recoveryStepper.title",
+    "defaultMessage": "!!!Recovery phrase",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 224,
+      "column": 24,
+      "index": 12814
+    },
+    "end": {
+      "line": 227,
+      "column": 5,
+      "index": 12937
+    }
+  },
+  {
+    "id": "components.walletinit.recoveryPhrase.hideRecoveryPhraseButton",
+    "defaultMessage": "!!!Hide recovery phrase",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 228,
+      "column": 30,
+      "index": 12969
+    },
+    "end": {
+      "line": 231,
+      "column": 5,
+      "index": 13100
+    }
+  },
+  {
+    "id": "components.walletinit.recoveryPhrase.showRecoveryPhraseButton",
+    "defaultMessage": "!!!Show recovery phrase",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 232,
+      "column": 30,
+      "index": 13132
+    },
+    "end": {
+      "line": 235,
+      "column": 5,
+      "index": 13263
+    }
+  },
+  {
+    "id": "components.walletinit.recoveryPhrase.recoveryPhraseModal.title",
+    "defaultMessage": "!!!Tips",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 236,
+      "column": 30,
+      "index": 13295
+    },
+    "end": {
+      "line": 239,
+      "column": 5,
+      "index": 13411
+    }
+  },
+  {
+    "id": "components.walletinit.recoveryPhrase.recoveryPhraseCard.title",
+    "defaultMessage": "!!!How to save your recovery phrase?",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 240,
+      "column": 29,
+      "index": 13442
+    },
+    "end": {
+      "line": 243,
+      "column": 5,
+      "index": 13586
+    }
+  },
+  {
+    "id": "components.walletinit.recoveryPhrase.recoveryPhraseCard.firstItem",
+    "defaultMessage": "!!!Make sure no one is looking at your screen.",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 244,
+      "column": 33,
+      "index": 13621
+    },
+    "end": {
+      "line": 247,
+      "column": 5,
+      "index": 13779
+    }
+  },
+  {
+    "id": "components.walletinit.recoveryPhrase.recoveryPhraseCard.secondItem",
+    "defaultMessage": "!!!DO NOT take a screenshot.",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 248,
+      "column": 34,
+      "index": 13815
+    },
+    "end": {
+      "line": 251,
+      "column": 5,
+      "index": 13956
+    }
+  },
+  {
+    "id": "components.walletinit.recoveryPhrase.recoveryPhraseCard.thirdItem",
+    "defaultMessage": "!!!Write the recovery phrase on a piece of paper and store in a secure location like a safety deposit box.",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 252,
+      "column": 33,
+      "index": 13991
+    },
+    "end": {
+      "line": 256,
+      "column": 5,
+      "index": 14217
+    }
+  },
+  {
+    "id": "components.walletinit.recoveryPhrase.recoveryPhraseCard.fourthItem",
+    "defaultMessage": "!!!It is recommended to have 2 or 3 copies of the recovery phrase in different secure locations.",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 257,
+      "column": 34,
+      "index": 14253
+    },
+    "end": {
+      "line": 261,
+      "column": 5,
+      "index": 14470
+    }
+  },
+  {
+    "id": "components.walletinit.recoveryPhrase.recoveryPhraseCard.fifthItem",
+    "defaultMessage": "!!!DO NOT share the recovery phrase as this will allow anyone to access your assets and wallet.",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 262,
+      "column": 33,
+      "index": 14505
+    },
+    "end": {
+      "line": 265,
+      "column": 5,
+      "index": 14712
+    }
+  },
+  {
+    "id": "components.walletinit.verifyRecoveryPhrase.title",
+    "defaultMessage": "!!!Select each word in the correct order to confirm your recovery phrase.",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 266,
+      "column": 31,
+      "index": 14745
+    },
+    "end": {
+      "line": 269,
+      "column": 5,
+      "index": 14913
+    }
+  },
+  {
+    "id": "components.walletinit.verifyRecoveryPhrase.verifyRecoveryStepper.title",
+    "defaultMessage": "!!!Verify recovery phrase",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 270,
+      "column": 30,
+      "index": 14945
+    },
+    "end": {
+      "line": 273,
+      "column": 5,
+      "index": 15087
+    }
+  },
+  {
+    "id": "components.walletinit.verifyRecoveryPhrase.errorMessage",
+    "defaultMessage": "!!!Incorrect order. Try again",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 274,
+      "column": 38,
+      "index": 15127
+    },
+    "end": {
+      "line": 277,
+      "column": 5,
+      "index": 15258
+    }
+  },
+  {
+    "id": "components.walletinit.verifyRecoveryPhrase.successMessage",
+    "defaultMessage": "!!!The recovery phrase is verified",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 278,
+      "column": 40,
+      "index": 15300
+    },
+    "end": {
+      "line": 281,
+      "column": 5,
+      "index": 15438
+    }
+  },
+  {
+    "id": "components.walletinit.walletDetails.walletDetailsModalTitle.title",
+    "defaultMessage": "!!!Tips",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 282,
+      "column": 29,
+      "index": 15469
+    },
+    "end": {
+      "line": 285,
+      "column": 5,
+      "index": 15588
+    }
+  },
+  {
+    "id": "components.walletinit.walletDetails.walletNameModalCardTitle.title",
+    "defaultMessage": "!!!What is wallet name",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 286,
+      "column": 30,
+      "index": 15620
+    },
+    "end": {
+      "line": 289,
+      "column": 5,
+      "index": 15755
+    }
+  },
+  {
+    "id": "components.walletinit.walletDetails.walletNameModalCardItem.first",
+    "defaultMessage": "!!!It is a wallet identifier that helps you to easier find the exact wallet in your app",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 290,
+      "column": 34,
+      "index": 15791
+    },
+    "end": {
+      "line": 293,
+      "column": 5,
+      "index": 15990
+    }
+  },
+  {
+    "id": "components.walletinit.walletDetails.walletNameModalCardItem.second",
+    "defaultMessage": "!!!You can have different wallet names for the same wallet account connected to different devices",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 294,
+      "column": 35,
+      "index": 16027
+    },
+    "end": {
+      "line": 298,
+      "column": 5,
+      "index": 16245
+    }
+  },
+  {
+    "id": "components.walletinit.walletDetails.walletPasswordModalCardTitle.title",
+    "defaultMessage": "!!!What is password",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 299,
+      "column": 34,
+      "index": 16281
+    },
+    "end": {
+      "line": 302,
+      "column": 5,
+      "index": 16417
+    }
+  },
+  {
+    "id": "components.walletinit.walletDetails.walletPasswordModalCardItem.first",
+    "defaultMessage": "!!!Password is an additional security layer used to confirm transactions from this device",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 303,
+      "column": 38,
+      "index": 16457
+    },
+    "end": {
+      "line": 306,
+      "column": 5,
+      "index": 16662
+    }
+  },
+  {
+    "id": "components.walletinit.walletDetails.walletPasswordModalCardItem.second",
+    "defaultMessage": "!!!Both wallet name and password are stored locally, so you are only person who can change or restore it.",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 307,
+      "column": 39,
+      "index": 16703
+    },
+    "end": {
+      "line": 311,
+      "column": 5,
+      "index": 16933
+    }
+  },
+  {
+    "id": "components.walletinit.walletDetails.walletChecksumModalCardTitle.title",
+    "defaultMessage": "!!!What is wallet checksum and plate number?",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 312,
+      "column": 34,
+      "index": 16969
+    },
+    "end": {
+      "line": 315,
+      "column": 5,
+      "index": 17130
+    }
+  },
+  {
+    "id": "components.walletinit.walletDetails.walletChecksumModalCardItem.first",
+    "defaultMessage": "!!!Wallet checksum is a generic Blockie image that is generated to visually distinguish your wallet from others.",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 316,
+      "column": 38,
+      "index": 17170
+    },
+    "end": {
+      "line": 320,
+      "column": 5,
+      "index": 17406
+    }
+  },
+  {
+    "id": "components.walletinit.walletDetails.walletChecksumModalCardItem.second",
+    "defaultMessage": "!!!Plate number BONE-0770 is a auto-generated sign of four letters and four digits.",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 321,
+      "column": 39,
+      "index": 17447
+    },
+    "end": {
+      "line": 324,
+      "column": 5,
+      "index": 17647
+    }
+  },
+  {
+    "id": "components.walletinit.walletDetails.walletChecksumModalCardItem.third",
+    "defaultMessage": "!!!Checksum and plate number are unique to your wallet and represent your public key.",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 325,
+      "column": 38,
+      "index": 17687
+    },
+    "end": {
+      "line": 328,
+      "column": 5,
+      "index": 17888
+    }
+  },
+  {
+    "id": "components.walletinit.walletDetails.stepWalletDetails",
+    "defaultMessage": "!!!Wallet details",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 329,
+      "column": 23,
+      "index": 17913
+    },
+    "end": {
+      "line": 332,
+      "column": 5,
+      "index": 18030
+    }
+  },
+  {
+    "id": "components.walletinit.walletDetails.walletDetailsTitle",
+    "defaultMessage": "!!!Add your wallet name and password.",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 333,
+      "column": 24,
+      "index": 18056
+    },
+    "end": {
+      "line": 336,
+      "column": 5,
+      "index": 18195
+    }
+  },
+  {
+    "id": "components.walletinit.walletDetails.walletDetailsPasswordHelper",
+    "defaultMessage": "!!!Use a combination of letters, numbers and symbols to make your password stronger",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 337,
+      "column": 33,
+      "index": 18230
+    },
+    "end": {
+      "line": 340,
+      "column": 5,
+      "index": 18423
+    }
+  },
+  {
+    "id": "components.walletinit.walletDetails.walletDetailsNameInput",
+    "defaultMessage": "!!!Enter wallet name",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 341,
+      "column": 28,
+      "index": 18453
+    },
+    "end": {
+      "line": 344,
+      "column": 5,
+      "index": 18578
+    }
+  },
+  {
+    "id": "components.walletinit.walletDetails.walletDetailsPasswordInput",
+    "defaultMessage": "!!!Enter password",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 345,
+      "column": 32,
+      "index": 18612
+    },
+    "end": {
+      "line": 348,
+      "column": 5,
+      "index": 18738
+    }
+  },
+  {
+    "id": "components.walletinit.walletDetails.walletDetailsConfirmPasswordInput",
+    "defaultMessage": "!!!Confirm password",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 349,
+      "column": 39,
+      "index": 18779
+    },
+    "end": {
+      "line": 352,
+      "column": 5,
+      "index": 18914
+    }
+  },
+  {
+    "id": "components.walletselection.walletselectionscreen.header",
+    "defaultMessage": "!!!My wallets",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 353,
+      "column": 12,
+      "index": 18928
+    },
+    "end": {
+      "line": 356,
+      "column": 5,
+      "index": 19043
+    }
+  },
+  {
+    "id": "components.walletselection.walletselectionscreen.addWalletButton",
+    "defaultMessage": "!!!Add wallet",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 357,
+      "column": 21,
+      "index": 19066
+    },
+    "end": {
+      "line": 360,
+      "column": 5,
+      "index": 19190
+    }
+  },
+  {
+    "id": "components.walletselection.walletselectionscreen.addWalletOnShelleyButton",
+    "defaultMessage": "!!!Add wallet (Jormungandr ITN)",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 361,
+      "column": 30,
+      "index": 19222
+    },
+    "end": {
+      "line": 364,
+      "column": 5,
+      "index": 19373
+    }
+  },
+  {
+    "id": "components.walletselection.walletselectionscreen.loadingWallet",
+    "defaultMessage": "!!!Loading wallet",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 365,
+      "column": 19,
+      "index": 19394
+    },
+    "end": {
+      "line": 368,
+      "column": 5,
+      "index": 19520
+    }
+  },
+  {
+    "id": "components.walletselection.walletselectionscreen.supportTicketLink",
+    "defaultMessage": "!!!Ask our support team",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 369,
+      "column": 23,
+      "index": 19545
+    },
+    "end": {
+      "line": 372,
+      "column": 5,
+      "index": 19681
+    }
+  },
+  {
+    "id": "components.walletinit.restorewallet.restorewalletscreen.invalidchecksum",
+    "defaultMessage": "!!!Please enter valid mnemonic.",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 373,
+      "column": 21,
+      "index": 19704
+    },
+    "end": {
+      "line": 376,
+      "column": 5,
+      "index": 19853
+    }
+  },
+  {
+    "id": "components.walletinit.restorewallet.restorewalletscreen.validchecksum",
+    "defaultMessage": "!!!The recovery phrase is verified",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 377,
+      "column": 19,
+      "index": 19874
+    },
+    "end": {
+      "line": 380,
+      "column": 5,
+      "index": 20024
+    }
+  },
+  {
+    "id": "components.walletinit.restorewallet.restorewalletscreen.stepRestoreWalletScreen",
+    "defaultMessage": "!!!Enter recovery phrase",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 381,
+      "column": 29,
+      "index": 20055
+    },
+    "end": {
+      "line": 384,
+      "column": 5,
+      "index": 20205
+    }
+  },
+  {
+    "id": "components.walletinit.restorewallet.choose15WordsMnemonicTitle",
+    "defaultMessage": "!!!15 word recovery phrase",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 385,
+      "column": 32,
+      "index": 20239
+    },
+    "end": {
+      "line": 388,
+      "column": 5,
+      "index": 20374
+    }
+  },
+  {
+    "id": "components.walletinit.restorewallet.choose24WordsMnemonicTitle",
+    "defaultMessage": "!!!24 word recovery phrase",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 389,
+      "column": 32,
+      "index": 20408
+    },
+    "end": {
+      "line": 392,
+      "column": 5,
+      "index": 20543
+    }
+  },
+  {
+    "id": "components.walletinit.restorewallet.restorewalletscreen.restoreWalletScreenTitle",
+    "defaultMessage": "!!!Add the recovery phrase you received upon your wallet creation process.",
+    "file": "src/features/Wallet/common/useStrings.tsx",
+    "start": {
+      "line": 393,
+      "column": 30,
+      "index": 20575
+    },
+    "end": {
+      "line": 396,
+      "column": 5,
+      "index": 20776
+    }
+  }
+]
