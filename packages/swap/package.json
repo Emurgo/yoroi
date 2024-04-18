@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/swap",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "The Swap package of Yoroi SDK",
   "keywords": [
     "yoroi",
@@ -138,7 +138,6 @@
     "@yoroi/api": "1.5.1",
     "@yoroi/common": "1.5.2",
     "@yoroi/types": "1.5.4"
-
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
