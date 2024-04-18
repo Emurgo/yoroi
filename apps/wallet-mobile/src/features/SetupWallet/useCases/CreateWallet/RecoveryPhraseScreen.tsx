@@ -127,11 +127,13 @@ export const RecoveryPhraseScreen = () => {
       <View style={styles.content}>
         <StepperProgress currentStep={2} currentStepTitle={strings.stepRecoveryPhrase} totalSteps={4} />
 
-        <Text style={styles.title}>
+        <Text style={[styles.title, {lineHeight: 24}]}>
           {strings.recoveryPhraseTitle(bold)}
 
-          <TouchableOpacity onPress={handleOnShowModal}>
-            <InfoIllustration />
+          <TouchableOpacity style={{height: 24}} onPress={handleOnShowModal}>
+            <View style={{height: 2}} />
+
+            <InfoIllustration size={24} />
           </TouchableOpacity>
         </Text>
 
