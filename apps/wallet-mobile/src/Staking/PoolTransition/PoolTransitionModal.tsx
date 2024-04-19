@@ -63,7 +63,7 @@ export const PoolTransitionModal = ({
         <Row>
           <Text style={styles.label}>{strings.fee}</Text>
 
-          <Text style={styles.currentValue}>{Number(poolTransition.current.taxRatio) * 100} %</Text>
+          <Text style={styles.currentValue}>{formatFee(poolTransition.current.taxRatio)} %</Text>
         </Row>
 
         <Text style={styles.warning}>
@@ -116,7 +116,7 @@ export const PoolTransitionModal = ({
         <Row>
           <Text style={styles.label}>{strings.fee}</Text>
 
-          <Text style={styles.suggestedValue}>{Number(poolTransition.suggested.taxRatio) * 100} %</Text>
+          <Text style={styles.suggestedValue}>{formatFee(poolTransition.suggested.taxRatio)} %</Text>
         </Row>
 
         <Text style={styles.currentValue}>{strings.poolGeneratesRewards}</Text>
@@ -237,3 +237,5 @@ const Row = (props: ViewProps) => {
   const {styles} = useStyles()
   return <View {...props} style={styles.row} />
 }
+
+const formatFee = (fee: string) => Number((Number(fee) * 100).toFixed(2))

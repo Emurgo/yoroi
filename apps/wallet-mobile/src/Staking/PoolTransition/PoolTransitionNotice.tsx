@@ -20,8 +20,6 @@ export const PoolTransitionNotice = () => {
     <View style={styles.notice}>
       <Row>
         <Icon.Warning size={20} color={color.magenta[500]} />
-
-        <Text style={[styles.text, styles.bold]}>{strings.title}</Text>
       </Row>
 
       <Text style={styles.text}>
