@@ -839,7 +839,7 @@
 				CODE_SIGN_ENTITLEMENTS = yoroi/yoroi.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 535;
+				CURRENT_PROJECT_VERSION = 513;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
@@ -864,6 +864,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.emurgo.yoroi;
 				PRODUCT_NAME = yoroi;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore com.emurgo.yoroi";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -883,7 +884,7 @@
 				CODE_SIGN_ENTITLEMENTS = yoroi/yoroi.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 535;
+				CURRENT_PROJECT_VERSION = 513;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = F8NVT2G2L4;
 				ENVFILE = "$(PODS_ROOT)/../../.env.production";
@@ -907,6 +908,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.emurgo.yoroi;
 				PRODUCT_NAME = yoroi;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore com.emurgo.yoroi";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -1077,7 +1079,7 @@
 				CODE_SIGN_ENTITLEMENTS = nightly.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 535;
+				CURRENT_PROJECT_VERSION = 513;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
@@ -1122,7 +1124,7 @@
 				CODE_SIGN_ENTITLEMENTS = nightly.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 535;
+				CURRENT_PROJECT_VERSION = 513;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = F8NVT2G2L4;
 				ENVFILE = "$(PODS_ROOT)/../../.env.nightly";
