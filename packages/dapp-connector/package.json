@@ -107,7 +107,7 @@
     "src/connector.js"
   ],
   "jest": {
-    "collectCoverage": true,
+    "collectCoverage": false,
     "coveragePathIgnorePatterns": [
       "connector.js"
     ],

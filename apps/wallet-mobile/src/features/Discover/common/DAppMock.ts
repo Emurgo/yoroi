@@ -50,6 +50,14 @@ export interface IDAppItem {
 
 export const mockDAppList: IDAppItem[] = [
   {
+    id: 'example-dapp',
+    name: 'Example Dapp',
+    description: 'Example',
+    category: 'media',
+    logo: CardanoSpot,
+    uri: 'https://dapp-example.yoroiwallet.com/',
+  },
+  {
     id: 'cardano_spot',
     name: 'Cardano Spot',
     description: 'Join a global Cardano Community: a single space to communicate, engage, educate with Cardano',

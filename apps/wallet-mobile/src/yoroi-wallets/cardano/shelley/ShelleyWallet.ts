@@ -34,7 +34,7 @@ import type {
   YoroiNftModerationStatus,
 } from '../../types'
 import {NETWORK_REGISTRY, StakingInfo, YoroiSignedTx, YoroiUnsignedTx} from '../../types'
-import {asQuantity, Quantities} from '../../utils'
+import {asQuantity, Quantities, Utxos} from '../../utils'
 import {validatePassword} from '../../utils/validators'
 import {Cardano, CardanoMobile} from '../../wallets'
 import * as legacyApi from '../api'
@@ -66,10 +66,12 @@ import {
   YoroiWallet,
 } from '../types'
 import {yoroiUnsignedTx} from '../unsignedTx'
-import {deriveRewardAddressHex, toRecipients} from '../utils'
+import {deriveRewardAddressHex, identifierToCardanoAsset, toRecipients} from '../utils'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
 import {utxosMaker} from '../utxoManager/utxos'
 import {makeKeys} from './makeKeys'
+import {toAssetNameHex, toTokenSubject} from '../api'
+import {Buffer} from 'buffer'
 type WalletState = {
   lastGeneratedAddressIndex: number
 }
@@ -923,6 +925,40 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     async ledgerSupportsCIP36(useUSB: boolean): Promise<boolean> {
       if (!this.hwDeviceInfo) throw new Error('Invalid wallet state')
       return doesCardanoAppVersionSupportCIP36(await getCardanoAppMajorVersion(this.hwDeviceInfo, useUSB))
+    }
+
+    async getBalance(tokenId = '*') {
+      if (tokenId === '*') tokenId = '.'
+      const amounts = Utxos.toAmounts(this.utxos, this.primaryTokenInfo.id)
+      const value = await CardanoMobile.Value.new(await CardanoMobile.BigNum.fromStr(amounts[this.primaryTokenInfo.id]))
+      const normalizedInHex = await Promise.all(
+        Object.keys(amounts).map(async (tokenId) => {
+          if (tokenId === '.' || tokenId === '' || tokenId === this.primaryTokenInfo.id) return null
+          const {policyId, name} = await identifierToCardanoAsset(tokenId)
+          const amount = amounts[tokenId]
+          return {policyIdHex: await policyId.toHex(), nameHex: await name.toHex(), amount}
+        }),
+      )
+
+      const groupedByPolicyId = _.groupBy(normalizedInHex.filter(Boolean), 'policyIdHex')
+
+      const multiAsset = await CardanoMobile.MultiAsset.new()
+      for (const policyIdHex of Object.keys(groupedByPolicyId)) {
+        const assetValue = groupedByPolicyId[policyIdHex]
+        if (!assetValue) continue
+        const policyId = await CardanoMobile.ScriptHash.fromHex(policyIdHex)
+        const assets = await CardanoMobile.Assets.new()
+        for (const asset of assetValue) {
+          if (!asset) continue
+          const assetName = await CardanoMobile.AssetName.fromHex(asset.nameHex)
+          const assetValue = await CardanoMobile.BigNum.fromStr(asset.amount)
+          await assets.insert(assetName, assetValue)
+        }
+        await multiAsset.insert(policyId, assets)
+      }
+      await value.setMultiasset(multiAsset)
+
+      return Buffer.from(await value.toBytes()).toString('hex')
     }
 
     async signSwapCancellationWithLedger(cbor: string, useUSB: boolean): Promise<void> {

@@ -1,10 +1,12 @@
 import {isKeyOf, isRecord} from '@yoroi/common'
 import {mockedData, mockWalletId1} from './mocks'
 import {Storage} from './adapters/async-storage'
+import {z} from 'zod'
+import {createTypeGuardFromSchema} from '@yoroi/common/src'
 
 type Context = {
   browserOrigin: string
-  wallet: Wallet
+  wallet: ResolverWallet
   trustedOrigin: string
   storage: Storage
 }
@@ -43,10 +45,12 @@ export const resolver: Resolver = {
     return hasWalletAcceptedConnection(context)
   },
   api: {
-    getBalance: async (_params: unknown, context: Context) => {
+    getBalance: async (params: unknown, context: Context) => {
       assertOriginsMatch(context)
       await assertWalletAcceptedConnection(context)
-      return mockedData[mockWalletId1].balance
+      if (!isGetBalanceParams(params)) throw new Error('Invalid params')
+      const [tokenId = '*'] = params.args || []
+      return context.wallet.getBalance(tokenId)
     },
     getChangeAddresses: async (_params: unknown, context: Context) => {
       assertOriginsMatch(context)
@@ -71,6 +75,9 @@ export const resolver: Resolver = {
   },
 } as const
 
+const getBalanceSchema = z.object({args: z.array(z.string().optional())})
+const isGetBalanceParams = createTypeGuardFromSchema(getBalanceSchema)
+
 const assertOriginsMatch = (context: Context) => {
   if (context.browserOrigin !== context.trustedOrigin) {
     throw new Error(`Origins do not match: ${context.browserOrigin} !== ${context.trustedOrigin}`)
@@ -94,7 +101,7 @@ const hasWalletAcceptedConnection = async (context: Context) => {
 const handleMethod = async (
   method: string,
   params: {browserContext?: {origin?: unknown}},
-  trustedContext: {wallet: Wallet; origin: string; storage: Storage},
+  trustedContext: {wallet: ResolverWallet; origin: string; storage: Storage},
 ) => {
   const browserOrigin = String(params?.browserContext?.origin || '')
 
@@ -131,7 +138,7 @@ const handleMethod = async (
 export const resolverHandleEvent = async (
   eventData: string,
   trustedUrl: string,
-  wallet: Wallet,
+  wallet: ResolverWallet,
   sendMessage: (id: string, result: unknown, error?: Error) => void,
   storage: Storage,
 ) => {
@@ -145,10 +152,11 @@ export const resolverHandleEvent = async (
   }
 }
 
-type Wallet = {
+export type ResolverWallet = {
   id: string
   networkId: number
   confirmConnection: (dappOrigin: string) => Promise<boolean>
+  getBalance: (tokenId?: string) => Promise<string>
 }
 
 const LOG_MESSAGE_EVENT = 'log_message'

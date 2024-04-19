@@ -2,6 +2,7 @@ import {storageMock} from './storage.mocks'
 import {mockedData} from './mocks'
 import {connectionStorageMaker} from './adapters/async-storage'
 import {dappConnectorMaker} from './dapp-connector'
+import {ResolverWallet} from './resolver'
 
 const getDappConnector = (wallet = mockWallet) => {
   const storage = connectionStorageMaker({storage: storageMock})
@@ -88,7 +89,9 @@ describe('DappConnector', () => {
       expect(sendMessage).toHaveBeenCalledWith(
         '1',
         null,
-        new Error(`Unknown method 'unknown' with params {"browserContext":{"origin":"https://yoroi-wallet.com"}}`),
+        new Error(
+          `Unknown method 'unknown' with params {"args":[],"browserContext":{"origin":"https://yoroi-wallet.com"}}`,
+        ),
       )
     })
 
@@ -251,9 +254,18 @@ describe('DappConnector', () => {
 })
 
 const createEvent = (method: string, params?: object) => {
-  return JSON.stringify({id: '1', method, params: {...params, browserContext: {origin: 'https://yoroi-wallet.com'}}})
+  return JSON.stringify({
+    id: '1',
+    method,
+    params: {args: [], ...params, browserContext: {origin: 'https://yoroi-wallet.com'}},
+  })
 }
 
 const walletId = 'b5d94758-26c5-48b0-af2b-6e68c3ef2dbf'
-const mockWallet = {id: walletId, networkId: 1, confirmConnection: async () => true}
+const mockWallet: ResolverWallet = {
+  id: walletId,
+  networkId: 1,
+  confirmConnection: async () => true,
+  getBalance: () => Promise.resolve('1a062ea8a0'),
+}
 const trustedUrl = 'https://yoroi-wallet.com/'

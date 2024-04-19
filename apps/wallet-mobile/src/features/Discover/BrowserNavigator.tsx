@@ -1,6 +1,6 @@
 import {createStackNavigator} from '@react-navigation/stack'
 import {useAsyncStorage} from '@yoroi/common'
-import {connectionStorageMaker, dappConnectorMaker, DappConnectorProvider} from '@yoroi/dapp-connector'
+import {connectionStorageMaker, dappConnectorMaker, DappConnectorProvider, ResolverWallet} from '@yoroi/dapp-connector'
 import {useTheme} from '@yoroi/theme'
 import {App} from '@yoroi/types'
 import * as React from 'react'
@@ -41,9 +41,10 @@ export const BrowserNavigator = () => {
 }
 
 const createDappConnector = (appStorage: App.Storage, wallet: YoroiWallet) => {
-  const handlerWallet = {
+  const handlerWallet: ResolverWallet = {
     id: wallet.id,
     networkId: wallet.networkId,
+    getBalance: (tokenId) => wallet.getBalance(tokenId),
     confirmConnection: async (origin: string) => {
       return new Promise<boolean>((resolve) => {
         // TODO: Use modal with translations here instead of alert

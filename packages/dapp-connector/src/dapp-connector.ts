@@ -1,13 +1,13 @@
-import {resolverHandleEvent} from './resolver'
+import {resolverHandleEvent, ResolverWallet} from './resolver'
 import {connectWallet} from './connector'
 import {Storage} from './adapters/async-storage'
 
-export const dappConnectorMaker = (storage: Storage, wallet: Wallet): DappConnector => {
+export const dappConnectorMaker = (storage: Storage, wallet: ResolverWallet): DappConnector => {
   return new DappConnector(storage, wallet)
 }
 
 export class DappConnector {
-  constructor(private storage: Storage, private wallet: Wallet) {}
+  constructor(private storage: Storage, private wallet: ResolverWallet) {}
 
   public listAllConnections = async () => {
     return this.storage.read()
@@ -46,9 +46,3 @@ type SupportedExtension = {
 }
 
 const supportedExtensions: SupportedExtension[] = []
-
-type Wallet = {
-  id: string
-  networkId: number
-  confirmConnection: (dappOrigin: string) => Promise<boolean>
-}

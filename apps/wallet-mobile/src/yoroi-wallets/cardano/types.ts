@@ -193,6 +193,9 @@ export type YoroiWallet = {
   getFirstPaymentAddress(): Promise<BaseAddress>
 
   getProtocolParams(): Promise<Api.Cardano.ProtocolParamsResult>
+
+  // CIP-30
+  getBalance(tokenId?: string): Promise<string>
 }
 
 export const isYoroiWallet = (wallet: unknown): wallet is YoroiWallet => {
