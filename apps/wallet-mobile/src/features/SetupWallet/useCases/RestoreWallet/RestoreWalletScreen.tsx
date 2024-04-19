@@ -109,7 +109,7 @@ export const RestoreWalletScreen = () => {
           <StepperProgress currentStep={1} currentStepTitle={strings.stepRestoreWalletScreen} totalSteps={2} />
         </View>
 
-        <ScrollView style={styles.scroll} bounces={false}>
+        <ScrollView style={styles.scroll} bounces={false} keyboardShouldPersistTaps="handled">
           <View>
             <Text style={styles.title}>{strings.restoreWalletScreenTitle(bold)}</Text>
 
