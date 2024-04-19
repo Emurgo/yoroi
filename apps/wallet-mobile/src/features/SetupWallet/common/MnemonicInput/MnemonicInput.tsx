@@ -257,6 +257,7 @@ const MnemonicWordInput = React.forwardRef<RNTextInput, MnemonicWordInputProps>(
             errorDelay={0}
             errorText={error}
             autoComplete="off"
+            selectionColor="#D4D8E3"
             style={styles.textInput}
             isPhraseValid={isPhraseValid}
             showErrorOnBlur={false}
