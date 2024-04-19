@@ -305,6 +305,9 @@ export const WalletDetailsScreen = () => {
           showErrorOnBlur
         />
 
+        {/* requeriment */}
+        {!isEmptyString(walletNameErrorText) && <Space height="l" />}
+
         <TextInput
           enablesReturnKeyAutomatically
           ref={passwordRef}
@@ -322,6 +325,9 @@ export const WalletDetailsScreen = () => {
           showErrorOnBlur
         />
 
+        {/* requeriment */}
+        {passwordErrorText !== undefined && <Space height="l" />}
+
         <Space height="xl" />
 
         <TextInput
@@ -338,6 +344,9 @@ export const WalletDetailsScreen = () => {
           disabled={isLoading}
           showErrorOnBlur
         />
+
+        {/* requeriment */}
+        {passwordConfirmation !== undefined && <Space height="l" />}
 
         <View style={styles.checksum}>
           <Icon.WalletAccount iconSeed={plate.accountPlate.ImagePart} style={styles.walletChecksum} />
