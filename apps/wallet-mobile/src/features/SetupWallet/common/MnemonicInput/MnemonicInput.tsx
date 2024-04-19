@@ -100,7 +100,7 @@ export const MnemonicInput = ({
         </TouchableOpacity>
       )}
 
-      <Space height="l" />
+      <Space height="xxl" />
     </View>
   )
 }
