@@ -100,7 +100,7 @@ const initWallet = ({iconUrl, apiVersion, walletName, supportedExtensions, sessi
   }
 
   window.addEventListener('message', (event) => {
-    logMessage('Received message' + JSON.stringify(event.data))
+    logMessage('Received message ' + JSON.stringify(event.data))
     const {id, result, error} = event.data
     const promise = promisesMap.get(id)
     if (!promise) return
