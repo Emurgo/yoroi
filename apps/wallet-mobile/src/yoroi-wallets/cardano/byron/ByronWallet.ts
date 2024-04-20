@@ -1327,32 +1327,6 @@ export class ByronWallet implements YoroiWallet {
   }
 
   // =================== sync =================== //
-
-  async tryDoFullSync() {
-    // try {
-    //   return await nonblockingSynchronize(this._doFullSyncMutex, () => this._doFullSync())
-    // } catch (error) {
-    //   if (!(error instanceof IsLockedError)) {
-    //     throw error
-    //   }
-    // }
-  }
-
-  private async doFullSync() {
-    // return synchronize(this._doFullSyncMutex, () => this._doFullSync())
-  }
-
-  private async _doFullSync() {
-    // assert(this.isInitialized, 'doFullSync: isInitialized')
-    // if (isJormungandr(this.networkId)) return
-    // await this.discoverAddresses()
-    // await Promise.all([
-    //   this.syncUtxos(),
-    //   this.transactionManager.doSync(this.getAddressesInBlocks(), this.getBackendConfig()),
-    // ])
-    // this.updateLastGeneratedAddressIndex()
-  }
-
   private getAddressesInBlocks() {
     const internalAddresses = this.internalChain.getBlocks()
     const externalAddresses = this.externalChain.getBlocks()
