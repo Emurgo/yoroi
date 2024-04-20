@@ -1,6 +1,6 @@
 import {parseSafe} from '@yoroi/common'
 import {App} from '@yoroi/types'
-import {catchError, concatMap, finalize, from, interval, of} from 'rxjs'
+import {catchError, concatMap, finalize, from, interval, of, Subject} from 'rxjs'
 import uuid from 'uuid'
 
 import {getCardanoWalletFactory} from '../yoroi-wallets/cardano/getWallet'
@@ -10,42 +10,68 @@ import {makeWalletEncryptedStorage} from '../yoroi-wallets/storage'
 import {Keychain} from '../yoroi-wallets/storage/Keychain'
 import {rootStorage} from '../yoroi-wallets/storage/rootStorage'
 import {NetworkId, WalletImplementationId} from '../yoroi-wallets/types'
-import {AddressMode, WalletManagerEvent, WalletManagerSubscription, WalletMeta} from './types'
+import {AddressMode, WalletInfos, WalletManagerEvent, WalletManagerSubscription, WalletMeta} from './types'
 import {isWalletMeta, parseWalletMeta} from './validators'
 
 const thirtyFiveSeconds = 35 * 1e3
 
 export class WalletManager {
-  private readonly walletsRootStorage: App.Storage
-  private readonly rootStorage: App.Storage
-  private readonly openedWallets: Map<string, YoroiWallet> = new Map()
+  readonly #walletsRootStorage: App.Storage
+  readonly #rootStorage: App.Storage
+  readonly #openedWallets: Map<string, YoroiWallet> = new Map()
+  public readonly walletInfos$ = new Subject<WalletInfos>()
+  readonly #walletInfos: WalletInfos = new Map()
+  #selectedWalletId: YoroiWallet['id'] | null = null
 
   private subscriptions: Array<WalletManagerSubscription> = []
   private isSyncing = false
 
   constructor() {
-    this.walletsRootStorage = rootStorage.join('wallet/')
-    this.rootStorage = rootStorage
+    this.#walletsRootStorage = rootStorage.join('wallet/')
+    this.#rootStorage = rootStorage
+  }
+
+  set selectedWalletId(id: YoroiWallet['id']) {
+    this.#selectedWalletId = id
+    this._notify({type: 'selected-wallet-id', id})
+  }
+
+  get selectedWalledId() {
+    return this.#selectedWalletId
   }
 
   startSyncingAllWallets() {
     const syncWallets = () => {
-      if (this.isSyncing) {
-        return
-      }
+      if (this.isSyncing) return
+
       this.isSyncing = true
 
       from(this.openWallets())
         .pipe(
           concatMap((wallets) => {
+            this.#walletInfos.clear()
+            wallets.forEach((wallet) => {
+              this.#walletInfos.set(wallet.id, {sync: {status: 'waiting', updatedAt: Date.now()}})
+              this.walletInfos$.next(new Map(this.#walletInfos))
+            })
             return from(wallets)
           }),
           concatMap((wallet) => {
-            return from(wallet.sync())
-          }),
-          catchError((error) => {
-            console.error('WalletManager::startSyncingAllWallets: error syncing wallet', error)
-            return of()
+            this.#walletInfos.set(wallet.id, {sync: {status: 'syncing', updatedAt: Date.now()}})
+            this.walletInfos$.next(new Map(this.#walletInfos))
+            return from(wallet.sync()).pipe(
+              finalize(() => {
+                if (this.#walletInfos.get(wallet.id)?.sync.status !== 'error') {
+                  this.#walletInfos.set(wallet.id, {sync: {status: 'done', updatedAt: Date.now()}})
+                  this.walletInfos$.next(new Map(this.#walletInfos))
+                }
+              }),
+              catchError((error) => {
+                this.#walletInfos.set(wallet.id, {sync: {status: 'error', error, updatedAt: Date.now()}})
+                this.walletInfos$.next(new Map(this.#walletInfos))
+                return of()
+              }),
+            )
           }),
           finalize(() => {
             this.isSyncing = false
@@ -65,24 +91,24 @@ export class WalletManager {
 
   getOpenedWalletsByNetwork = () => {
     const openedWalletsByNetwork: Map<NetworkId, YoroiWallet['id']> = new Map()
-    this.openedWallets.forEach(({id, networkId}) => openedWalletsByNetwork.set(networkId, id))
+    this.#openedWallets.forEach(({id, networkId}) => openedWalletsByNetwork.set(networkId, id))
     return openedWalletsByNetwork
   }
 
   async openWallets() {
     const walletMetas = await this.listWallets()
-    const closedWallets = walletMetas.filter((meta) => !this.openedWallets.has(meta.id))
+    const closedWallets = walletMetas.filter((meta) => !this.#openedWallets.has(meta.id))
     const wallets = await Promise.all(closedWallets.map((meta) => this.openWallet(meta)))
-    wallets.forEach((wallet) => this.openedWallets.set(wallet.id, wallet))
-    return [...this.openedWallets.values()]
+    wallets.forEach((wallet) => this.#openedWallets.set(wallet.id, wallet))
+    return [...this.#openedWallets.values()]
   }
 
   async listWallets() {
     const deletedWalletIds = await this.deletedWalletIds()
-    const walletIds = await this.walletsRootStorage
+    const walletIds = await this.#walletsRootStorage
       .getAllKeys()
       .then((ids) => ids.filter((id) => !deletedWalletIds.includes(id)))
-    const walletMetas = await this.walletsRootStorage
+    const walletMetas = await this.#walletsRootStorage
       .multiGet(walletIds, parseWalletMeta)
       .then((tuples) => tuples.map(([_, walletMeta]) => walletMeta))
       .then((walletMetas) => walletMetas.filter(isWalletMeta)) // filter corrupted wallet metas)
@@ -91,7 +117,7 @@ export class WalletManager {
   }
 
   async deletedWalletIds() {
-    const ids = await this.rootStorage.getItem('deletedWalletIds', parseDeletedWalletIds)
+    const ids = await this.#rootStorage.getItem('deletedWalletIds', parseDeletedWalletIds)
 
     return ids ?? []
   }
@@ -104,14 +130,14 @@ export class WalletManager {
       deletedWalletsIds.map(async (id) => {
         const encryptedStorage = makeWalletEncryptedStorage(id)
 
-        await this.walletsRootStorage.removeItem(id) // remove wallet meta
-        await this.walletsRootStorage.removeFolder(`${id}/`) // remove wallet folder
+        await this.#walletsRootStorage.removeItem(id) // remove wallet meta
+        await this.#walletsRootStorage.removeFolder(`${id}/`) // remove wallet folder
         await encryptedStorage.rootKey.remove() // remove auth with password
         await Keychain.removeWalletKey(id) // remove auth with os
       }),
     )
 
-    await this.rootStorage.setItem('deletedWalletIds', [])
+    await this.#rootStorage.setItem('deletedWalletIds', [])
   }
 
   // Note(ppershing): needs 'this' to be bound
@@ -175,10 +201,10 @@ export class WalletManager {
       isEasyConfirmationEnabled: false,
     }
 
-    await this.walletsRootStorage.setItem(id, walletMeta)
+    await this.#walletsRootStorage.setItem(id, walletMeta)
 
     if (isYoroiWallet(wallet)) {
-      this.openedWallets.set(id, wallet)
+      this.#openedWallets.set(id, wallet)
       return wallet
     }
 
@@ -187,13 +213,13 @@ export class WalletManager {
 
   async openWallet(walletMeta: WalletMeta): Promise<YoroiWallet> {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    if (this.openedWallets.has(walletMeta.id)) return this.openedWallets.get(walletMeta.id)!
+    if (this.#openedWallets.has(walletMeta.id)) return this.#openedWallets.get(walletMeta.id)!
 
     const {id, walletImplementationId, networkId} = walletMeta
     const walletFactory = getWalletFactory({networkId, implementationId: walletImplementationId})
 
     const wallet = await walletFactory.restore({
-      storage: this.walletsRootStorage.join(`${id}/`),
+      storage: this.#walletsRootStorage.join(`${id}/`),
       walletMeta,
     })
 
@@ -205,15 +231,15 @@ export class WalletManager {
 
   async removeWallet(id: string) {
     const deletedWalletIds = await this.deletedWalletIds()
-    this.openedWallets.delete(id)
-    await this.rootStorage.setItem('deletedWalletIds', [...deletedWalletIds, id])
+    this.#openedWallets.delete(id)
+    await this.#rootStorage.setItem('deletedWalletIds', [...deletedWalletIds, id])
   }
 
   // TODO(ppershing): how should we deal with race conditions?
   async _updateMetadata(id: string, newMeta: {isEasyConfirmationEnabled: boolean}) {
-    const walletMeta = await this.walletsRootStorage.getItem(id, parseWalletMeta)
+    const walletMeta = await this.#walletsRootStorage.getItem(id, parseWalletMeta)
     const merged = {...walletMeta, ...newMeta}
-    return this.walletsRootStorage.setItem(id, merged)
+    return this.#walletsRootStorage.setItem(id, merged)
   }
 
   async updateHWDeviceInfo(wallet: YoroiWallet, hwDeviceInfo: HWDeviceInfo) {
@@ -232,7 +258,7 @@ export class WalletManager {
   ) {
     const walletFactory = getWalletFactory({networkId, implementationId})
     const id = uuid.v4()
-    const storage = this.walletsRootStorage.join(`${id}/`)
+    const storage = this.#walletsRootStorage.join(`${id}/`)
 
     const wallet = await walletFactory.create({
       storage,
@@ -255,7 +281,7 @@ export class WalletManager {
   ) {
     const walletFactory = getWalletFactory({networkId, implementationId})
     const id = uuid.v4()
-    const storage = this.walletsRootStorage.join(`${id}/`)
+    const storage = this.#walletsRootStorage.join(`${id}/`)
 
     const wallet = await walletFactory.createBip44({
       storage,

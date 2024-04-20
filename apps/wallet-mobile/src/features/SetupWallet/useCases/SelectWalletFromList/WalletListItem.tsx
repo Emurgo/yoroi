@@ -3,9 +3,13 @@ import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Icon} from '../../../../components'
+import {Loading} from '../../../../components/Loading/Loading'
 import {Space} from '../../../../components/Space/Space'
-import {WalletMeta} from '../../../../wallet-manager/types'
+import {WalletInfo, WalletMeta} from '../../../../wallet-manager/types'
+import {useWalletManager} from '../../../../wallet-manager/WalletManagerContext'
+import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {isByron, isHaskellShelley, isJormun} from '../../../../yoroi-wallets/cardano/utils'
+import {features} from '../../..'
 import {ChevronRightDarkIllustration, ChevronRightGrayIllustration} from '../../illustrations/ChevronRightIllustration'
 
 type Props = {
@@ -16,6 +20,28 @@ type Props = {
 export const WalletListItem = ({wallet, onPress}: Props) => {
   const {styles, colors} = useStyles()
   const {type} = getWalletItemMeta(wallet, colors)
+  const walletManager = useWalletManager()
+
+  const [selectedWalledId, setSelectedWalletId] = React.useState<YoroiWallet['id'] | null>(
+    walletManager.selectedWalledId,
+  )
+  React.useEffect(() => {
+    return walletManager.subscribe((event) => {
+      if (event.type === 'selected-wallet-id') {
+        setSelectedWalletId(event.id)
+      }
+    })
+  }, [walletManager])
+  const isSelected = selectedWalledId === wallet.id
+
+  const [walletInfo, setWalletInfo] = React.useState<WalletInfo>()
+  React.useEffect(() => {
+    const subscription = walletManager.walletInfos$.subscribe((walletInfos) => {
+      const newWalletInfo = walletInfos.get(wallet.id)
+      if (newWalletInfo) setWalletInfo(newWalletInfo)
+    })
+    return () => subscription.unsubscribe()
+  })
 
   const [isButtonPressed, setIsButtonPressed] = React.useState(false)
 
@@ -41,6 +67,18 @@ export const WalletListItem = ({wallet, onPress}: Props) => {
             {wallet.checksum != null ? `${wallet.checksum.TextPart} | ${type}` : type}
           </Text>
         </View>
+
+        {features.walletListFeedback && (
+          <>
+            {walletInfo?.sync.status === 'syncing' && <Loading />}
+
+            <Space width="m" />
+
+            {isSelected && <Icon.Check size={20} />}
+
+            <Space width="m" />
+          </>
+        )}
 
         {isButtonPressed ? <ChevronRightDarkIllustration /> : <ChevronRightGrayIllustration />}
       </TouchableOpacity>

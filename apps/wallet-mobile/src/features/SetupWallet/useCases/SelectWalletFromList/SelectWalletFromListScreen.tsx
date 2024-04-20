@@ -52,6 +52,7 @@ export const SelectWalletFromList = () => {
     onSuccess: ([wallet, walletMeta]) => {
       selectWalletMeta(walletMeta)
       selectWallet(wallet)
+      walletManager.selectedWalletId = walletMeta.id
       navigateToTxHistory()
     },
     onError: (error) => {
