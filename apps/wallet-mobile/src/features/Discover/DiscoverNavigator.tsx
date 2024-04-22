@@ -2,13 +2,13 @@ import {createStackNavigator} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 
+import {LoadingBoundary} from '../../components'
 import {defaultStackNavigationOptions, DiscoverRoutes} from '../../navigation'
 import {BrowserNavigator} from './BrowserNavigator'
 import {BrowserProvider} from './common/BrowserProvider'
 import {useStrings} from './common/useStrings'
-import {SelectDappFromListScreen} from './useCases/SelectDappFromList/SelectDappFromListScreen'
-import {LoadingBoundary} from '../../components'
 import {ListSkeleton} from './useCases/SelectDappFromList/ListSkeleton'
+import {SelectDappFromListScreen} from './useCases/SelectDappFromList/SelectDappFromListScreen'
 
 const Stack = createStackNavigator<DiscoverRoutes>()
 

@@ -1,9 +1,10 @@
+import {useTheme} from '@yoroi/theme'
+import * as React from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
+
+import {Spacer} from '../../../../components'
 import {makeList} from '../../../../utils'
 import {DAppItemSkeleton} from './DAppItem/DAppItemSkeleton'
-import {Spacer} from '../../../../components'
-import * as React from 'react'
-import {useTheme} from '@yoroi/theme'
 
 export const ListSkeleton = () => {
   const styles = useStyles()

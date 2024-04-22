@@ -1,8 +1,8 @@
+import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import * as React from 'react'
 
 import {DAppTypes} from './DAppTypes'
-import {action} from '@storybook/addon-actions'
 
 storiesOf('Discover DAppTypes', module).add('initial', () => <Initial />)
 

@@ -1,10 +1,10 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
+import {useMemo} from 'react'
 import {ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import {Icon, Spacer} from '../../../../../components'
-import {useMemo} from 'react'
 
 type Props = {
   types: string[]
