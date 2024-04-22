@@ -36,7 +36,7 @@ export const RemoveWalletScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
-      <KeyboardAvoidingView style={{flex: 1}}>
+      <KeyboardAvoidingView style={styles.keyboardAvoider}>
         <ScrollView contentContainerStyle={styles.contentContainer} bounces={false}>
           <Description>
             {!wallet.isHW && <Text style={styles.description}>{strings.descriptionParagraph1}</Text>}
@@ -68,7 +68,7 @@ export const RemoveWalletScreen = () => {
 
         <Spacer fill />
 
-        <View style={{padding: 16}}>
+        <View style={styles.actions}>
           {!wallet.isHW && (
             <Checkbox
               checked={hasMnemonicWrittenDown}
@@ -150,14 +150,14 @@ const useStrings = () => {
 
 const useStyles = () => {
   const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, typography, padding} = theme
   const styles = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: color.gray.min,
     },
     contentContainer: {
-      paddingHorizontal: 16,
+      ...padding['x-l'],
     },
     descriptionContainer: {
       backgroundColor: color.gray.min,
@@ -172,7 +172,12 @@ const useStyles = () => {
     walletName: {
       ...typography['body-1-l-regular'],
     },
-
+    actions: {
+      ...padding['l'],
+    },
+    keyboardAvoider: {
+      flex: 1,
+    },
     removeButton: {
       backgroundColor: color.magenta[500],
     },
