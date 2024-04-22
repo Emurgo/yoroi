@@ -1,4 +1,4 @@
-import {FetchData, fetchData, getApiError, isLeft} from '@yoroi/common'
+import {FetchData, fetchData, getApiError, isLeft, createTypeGuardFromSchema} from '@yoroi/common'
 import {freeze} from 'immer'
 import {AxiosRequestConfig} from 'axios'
 import {z} from 'zod'
@@ -17,11 +17,11 @@ export const dappConnectorApiGetDappList = ({request}: {request: FetchData} = in
 
       if (isLeft(response)) throw getApiError(response.error)
 
-      if (!DappListResponseSchema.safeParse(response.value)) {
+      if (!isDappListResponse(response.value)) {
         throw new Error('Invalid dapp list response')
       }
 
-      return response
+      return response.value.data
     } catch (error: unknown) {
       throw error
     }
@@ -42,6 +42,8 @@ const DappListResponseSchema = z.object({
   dapps: z.array(DappResponseSchema),
   filters: z.record(z.array(z.string())),
 })
+
+const isDappListResponse = createTypeGuardFromSchema(DappListResponseSchema)
 
 export interface DappListResponse {
   dapps: DappResponse[]
