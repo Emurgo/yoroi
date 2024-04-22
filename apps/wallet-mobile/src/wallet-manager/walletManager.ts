@@ -139,9 +139,7 @@ export class WalletManager {
     await this.#rootStorage.setItem('deletedWalletIds', [])
   }
 
-  // Note(ppershing): needs 'this' to be bound
   _notify = (event: WalletManagerEvent) => {
-    // TODO(ppershing): do this in next tick?
     this.#subscriptions.forEach((handler) => handler(event))
   }
 
@@ -223,7 +221,6 @@ export class WalletManager {
     })
 
     wallet.subscribe((event) => this._notify(event as never))
-    // wallet.startSync()
 
     return wallet
   }
