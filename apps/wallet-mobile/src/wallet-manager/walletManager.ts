@@ -22,16 +22,15 @@ export class WalletManager {
   public readonly walletInfos$ = new Subject<WalletInfos>()
   readonly #walletInfos: WalletInfos = new Map()
   #selectedWalletId: YoroiWallet['id'] | null = null
-
-  private subscriptions: Array<WalletManagerSubscription> = []
-  private isSyncing = false
+  #subscriptions: Array<WalletManagerSubscription> = []
+  #isSyncing = false
 
   constructor() {
     this.#walletsRootStorage = rootStorage.join('wallet/')
     this.#rootStorage = rootStorage
   }
 
-  set selectedWalletId(id: YoroiWallet['id']) {
+  setSelectedWalletId(id: YoroiWallet['id']) {
     this.#selectedWalletId = id
     this._notify({type: 'selected-wallet-id', id})
   }
@@ -42,9 +41,9 @@ export class WalletManager {
 
   startSyncingAllWallets() {
     const syncWallets = () => {
-      if (this.isSyncing) return
+      if (this.#isSyncing) return
 
-      this.isSyncing = true
+      this.#isSyncing = true
 
       from(this.openWallets())
         .pipe(
@@ -74,7 +73,7 @@ export class WalletManager {
             )
           }),
           finalize(() => {
-            this.isSyncing = false
+            this.#isSyncing = false
           }),
         )
         .subscribe()
@@ -143,14 +142,14 @@ export class WalletManager {
   // Note(ppershing): needs 'this' to be bound
   _notify = (event: WalletManagerEvent) => {
     // TODO(ppershing): do this in next tick?
-    this.subscriptions.forEach((handler) => handler(event))
+    this.#subscriptions.forEach((handler) => handler(event))
   }
 
   subscribe(subscription: (event: WalletManagerEvent) => void) {
-    this.subscriptions.push(subscription)
+    this.#subscriptions.push(subscription)
 
     return () => {
-      this.subscriptions = this.subscriptions.filter((sub) => sub !== subscription)
+      this.#subscriptions = this.#subscriptions.filter((sub) => sub !== subscription)
     }
   }
 
