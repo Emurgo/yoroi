@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation} from '@react-navigation/native'
 import {StackNavigationProp} from '@react-navigation/stack'
+import {useTheme} from '@yoroi/theme'
 import BigNumber from 'bignumber.js'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -17,6 +18,8 @@ import {useSelectedWallet} from '../features/WalletManager/Context'
 import globalMessages from '../i18n/global-messages'
 import {Modal} from '../legacy/Modal'
 import {DashboardRoutes, useWalletNavigation} from '../navigation'
+import {PoolTransitionNotice} from '../Staking/PoolTransition/PoolTransitionNotice'
+import {usePoolTransition} from '../Staking/PoolTransition/usePoolTransition'
 import {isEmptyString} from '../utils/utils'
 import {getCardanoNetworkConfigById} from '../yoroi-wallets/cardano/networks'
 import {getCardanoBaseConfig} from '../yoroi-wallets/cardano/utils'
@@ -35,9 +38,11 @@ import {UserSummary} from './UserSummary'
 import {WithdrawStakingRewards} from './WithdrawStakingRewards'
 
 export const Dashboard = () => {
+  const {styles} = useStyles()
   const intl = useIntl()
   const navigateTo = useNavigateTo()
   const governanceStrings = useGovernanceStrings()
+  const {isPoolRetiring} = usePoolTransition()
 
   const wallet = useSelectedWallet()
   const {isLoading: isSyncing, sync} = useSync(wallet)
@@ -90,6 +95,12 @@ export const Dashboard = () => {
           }
         >
           {stakingInfo?.status !== 'staked' && <NotDelegatedInfo />}
+
+          {isPoolRetiring && (
+            <Row>
+              <PoolTransitionNotice />
+            </Row>
+          )}
 
           <Row>
             <EpochInfo />
@@ -156,8 +167,6 @@ const useNavigateTo = () => {
     stakingCenter: () => navigation.navigate('staking-center', {screen: 'staking-center-main'}),
   }
 }
-
-const Row = ({style, ...props}: ViewProps) => <View {...props} style={[style, styles.row]} />
 
 const SyncErrorBanner = ({showRefresh}: {showRefresh: boolean}) => {
   const intl = useIntl()
@@ -227,8 +236,6 @@ const EpochInfo = () => {
   )
 }
 
-const Actions = (props: ViewProps) => <View {...props} style={styles.actions} />
-
 const messages = defineMessages({
   stakingCenterButton: {
     id: 'components.delegation.delegationnavigationbuttons.stakingCenterButton',
@@ -236,36 +243,53 @@ const messages = defineMessages({
   },
 })
 
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-  },
-  container: {
-    flexDirection: 'column',
-    flex: 1,
-  },
-  scrollView: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  contentContainer: {
-    paddingTop: 16,
-    paddingHorizontal: 16,
-  },
-  row: {
-    flex: 1,
-    paddingVertical: 12,
-  },
-  actions: {
-    flexDirection: 'row',
-    backgroundColor: '#fff',
-    padding: 16,
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
-    elevation: 1,
-    shadowOpacity: 0.06,
-    shadowColor: 'black',
-    shadowRadius: 6,
-    shadowOffset: {width: 0, height: -8},
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
+
+  const styles = StyleSheet.create({
+    root: {
+      flex: 1,
+    },
+    container: {
+      flexDirection: 'column',
+      flex: 1,
+    },
+    scrollView: {
+      flex: 1,
+      backgroundColor: color.gray.min,
+    },
+    contentContainer: {
+      paddingTop: 16,
+      paddingHorizontal: 16,
+    },
+    row: {
+      flex: 1,
+      paddingVertical: 12,
+    },
+    actions: {
+      flexDirection: 'row',
+      backgroundColor: color.gray.min,
+      padding: 16,
+      borderTopLeftRadius: 8,
+      borderTopRightRadius: 8,
+      elevation: 1,
+      shadowOpacity: 0.06,
+      shadowColor: color['black-static'],
+      shadowRadius: 6,
+      shadowOffset: {width: 0, height: -8},
+    },
+  })
+
+  return {styles}
+}
+
+const Actions = (props: ViewProps) => {
+  const {styles} = useStyles()
+  return <View {...props} style={styles.actions} />
+}
+
+const Row = (props: ViewProps) => {
+  const {styles} = useStyles()
+  return <View {...props} style={styles.row} />
+}
