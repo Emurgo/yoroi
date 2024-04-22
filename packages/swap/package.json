@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/swap",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "The Swap package of Yoroi SDK",
   "keywords": [
     "yoroi",
@@ -138,11 +138,10 @@
     "@yoroi/api": "1.5.1",
     "@yoroi/common": "1.5.2",
     "@yoroi/types": "1.5.4"
-
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
-    "@emurgo/yoroi-lib": "0.15.1",
+    "@emurgo/yoroi-lib": "0.15.3",
     "@react-native-async-storage/async-storage": "^1.19.3",
     "@react-native-community/eslint-config": "^3.0.2",
     "@release-it/conventional-changelog": "^5.0.0",
@@ -173,7 +172,7 @@
     "typescript": "^5.3.3"
   },
   "peerDependencies": {
-    "@emurgo/yoroi-lib": "0.15.1",
+    "@emurgo/yoroi-lib": "0.15.3",
     "@react-native-async-storage/async-storage": ">= 1.19.3 <= 1.20.0",
     "immer": "^10.0.2",
     "react": ">= 16.8.0 <= 19.0.0",

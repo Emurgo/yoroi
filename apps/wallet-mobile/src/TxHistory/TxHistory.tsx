@@ -1,4 +1,3 @@
-import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -9,6 +8,7 @@ import {Boundary, ResetErrorRef, Spacer} from '../components'
 import {Tab, TabPanel, TabPanels, Tabs} from '../components/Tabs'
 import {useSelectedWallet} from '../features/WalletManager/Context'
 import {assetMessages, txLabels} from '../i18n/global-messages'
+import {usePoolTransitionModal} from '../Staking/PoolTransition/usePoolTransitionModal'
 import {isByron} from '../yoroi-wallets/cardano/utils'
 import {useSync} from '../yoroi-wallets/hooks'
 import {ActionsBanner} from './ActionsBanner'
@@ -36,8 +36,9 @@ export const TxHistory = () => {
     setActiveTab(tab)
   }
 
-  const {sync, isLoading} = useSync(wallet)
-  useFocusEffect(React.useCallback(() => sync(), [sync]))
+  const {sync, isLoading: isLoadingWallet} = useSync(wallet)
+  const {isLoading: isLoadingPoolTransition} = usePoolTransitionModal()
+  const isLoading = isLoadingWallet || isLoadingPoolTransition
 
   const [expanded, setExpanded] = React.useState(true)
   const onScroll = useOnScroll({
