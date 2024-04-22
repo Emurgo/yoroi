@@ -6,6 +6,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {useQuery} from 'react-query'
 
 import {useStakingInfo} from '../../Dashboard/StakePoolInfos'
+import {features} from '../../features'
 import {useSelectedWallet} from '../../features/WalletManager/Context'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {asQuantity, Quantities} from '../../yoroi-wallets/utils'
@@ -39,7 +40,7 @@ export const usePoolTransition = () => {
     retry: false,
     staleTime: 20 * 1000,
     queryKey: [wallet.id, 'poolTransition', currentPoolId],
-    queryFn: () => poolInfoApi.getTransition(currentPoolId),
+    queryFn: () => (features.poolTransition ? poolInfoApi.getTransition(currentPoolId) : null),
   })
 
   const poolTransition = poolTransitionQuery.data ?? null
