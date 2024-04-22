@@ -37,7 +37,7 @@ export const RemoveWalletScreen = () => {
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
       <KeyboardAvoidingView style={{flex: 1}}>
-        <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
+        <ScrollView contentContainerStyle={styles.contentContainer} bounces={false}>
           <Description>
             {!wallet.isHW && <Text style={styles.description}>{strings.descriptionParagraph1}</Text>}
 
@@ -66,7 +66,9 @@ export const RemoveWalletScreen = () => {
           </WalletInfo>
         </ScrollView>
 
-        <Actions>
+        <Spacer fill />
+
+        <View style={{padding: 16}}>
           {!wallet.isHW && (
             <Checkbox
               checked={hasMnemonicWrittenDown}
@@ -77,16 +79,13 @@ export const RemoveWalletScreen = () => {
 
           <Spacer height={30} />
 
-          <View style={styles.buttonContainer}>
-            <Button
-              onPress={() => removeWallet()}
-              title={strings.remove}
-              style={styles.removeButton}
-              disabled={disabled}
-              block
-            />
-          </View>
-        </Actions>
+          <Button
+            onPress={() => removeWallet()}
+            title={strings.remove}
+            style={styles.removeButton}
+            disabled={disabled}
+          />
+        </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   )
@@ -101,10 +100,6 @@ const WalletInfo = (props: ViewProps) => {
 }
 const WalletNameInput = (props: TextInputProps) => {
   return <TextInput {...props} autoFocus enablesReturnKeyAutomatically returnKeyType="done" />
-}
-const Actions = (props: ViewProps) => {
-  const styles = useStyles()
-  return <View {...props} style={styles.actions} />
 }
 
 const messages = defineMessages({
@@ -161,7 +156,9 @@ const useStyles = () => {
       flex: 1,
       backgroundColor: color.gray.min,
     },
-
+    contentContainer: {
+      paddingHorizontal: 16,
+    },
     descriptionContainer: {
       backgroundColor: color.gray.min,
     },
@@ -176,19 +173,8 @@ const useStyles = () => {
       ...typography['body-1-l-regular'],
     },
 
-    contentContainer: {
-      padding: 16,
-    },
-
-    actions: {
-      padding: 16,
-    },
     removeButton: {
       backgroundColor: color.magenta[500],
-    },
-    buttonContainer: {
-      paddingHorizontal: 16,
-      paddingBottom: 36,
     },
   })
   return styles
