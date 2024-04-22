@@ -12,7 +12,7 @@ import {
   View,
 } from 'react-native'
 
-import {Menu, useScrollView} from '../../../../components'
+import {Menu, Spacer, useScrollView} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {isEmptyString} from '../../../../utils/utils'
@@ -100,7 +100,7 @@ export const MnemonicInput = ({
         </TouchableOpacity>
       )}
 
-      <View style={{height: 50}} />
+      <Spacer height={50} />
     </View>
   )
 }
@@ -257,7 +257,6 @@ const MnemonicWordInput = React.forwardRef<RNTextInput, MnemonicWordInputProps>(
             errorDelay={0}
             errorText={error}
             autoComplete="off"
-            selectionColor="#D4D8E3"
             style={styles.textInput}
             isPhraseValid={isPhraseValid}
             showErrorOnBlur={false}

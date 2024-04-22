@@ -26,12 +26,7 @@ const Step = ({currentStep, currentStepTitle, isNext, isPrevious}: StepProps) =>
 
   return (
     <Animated.View style={styles.root}>
-      <Animated.View
-        layout={Layout}
-        style={[styles.step, isNext && styles.isNext, isPrevious && styles.isPrevious, styles.markedStep]}
-      >
-        {StepLogo && <StepLogo />}
-      </Animated.View>
+      {StepLogo && <StepLogo />}
 
       {shouldDisplayStepTitle && (
         <Animated.Text layout={Layout} style={[styles.currentStepTitle]}>
@@ -70,36 +65,10 @@ export const StepperProgress = ({currentStep, currentStepTitle, totalSteps, styl
   )
 }
 
+const nonEmptyIcons = [Number1, Number2, Number3, Number4]
+const emptyIcons = [null, Number2Empty, Number3Empty, Number4Empty]
 const getStepperLogo = (step: number, empty: boolean) => {
-  if (step === 1) {
-    return Number1
-  }
-
-  if (step === 2 && empty) {
-    return Number2Empty
-  }
-
-  if (step === 2) {
-    return Number2
-  }
-
-  if (step === 3 && empty) {
-    return Number3Empty
-  }
-
-  if (step === 3) {
-    return Number3
-  }
-
-  if (step === 4 && empty) {
-    return Number4Empty
-  }
-
-  if (step === 4) {
-    return Number4
-  }
-
-  return null
+  return empty ? emptyIcons[step - 1] : nonEmptyIcons[step - 1]
 }
 
 const useStyles = () => {
@@ -113,25 +82,6 @@ const useStyles = () => {
       flexDirection: 'row',
       gap: 16,
       ...theme.padding['y-l'],
-    },
-    step: {
-      backgroundColor: theme.color.primary[600],
-      alignItems: 'center',
-      justifyContent: 'center',
-      height: 24,
-      width: 24,
-      borderRadius: 24,
-    },
-    markedStep: {
-      alignSelf: 'center',
-    },
-    isNext: {
-      backgroundColor: theme.color['white-static'],
-      borderWidth: 2,
-      borderColor: theme.color.gray[400],
-    },
-    isPrevious: {
-      backgroundColor: theme.color.primary[300],
     },
     currentStepTitle: {
       ...theme.typography['body-1-l-medium'],
