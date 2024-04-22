@@ -227,9 +227,6 @@ const wallet: YoroiWallet = {
   saveMemo: async (...args: unknown[]) => {
     action('saveMemo')(...args)
   },
-  tryDoFullSync: async (...args: unknown[]) => {
-    action('tryDoFullSync')(...args)
-  },
   clear: async (...args: unknown[]) => {
     action('clear')(...args)
   },
@@ -247,30 +244,8 @@ const wallet: YoroiWallet = {
   },
   getProtocolParams: CardanoApi.mockCardanoApi.getProtocolParams,
 
-  // canGenerateNewReceiveAddress: () => {
-  //   throw new Error('not implemented: canGenerateNewReceiveAddress')
-  // },
-
-  // generateNewUiReceiveAddress: () => {
-  //   throw new Error('not implemented: generateNewUiReceiveAddress')
-  // },
-
-  // generateNewUiReceiveAddressIfNeeded: () => {
-  //   throw new Error('not implemented: generateNewUiReceiveAddressIfNeeded')
-  // },
-
-  // getAddressingInfo: () => {
-  //   throw new Error('not implemented: getAddressingInfo')
-  // },
-
   fetchFundInfo: () => {
     throw new Error('not implemented: fetchFundInfo')
-  },
-  startSync: () => {
-    throw new Error('not implemented: start')
-  },
-  stopSync: () => {
-    throw new Error('not implemented: stop')
   },
 
   createUnsignedGovernanceTx: () => {

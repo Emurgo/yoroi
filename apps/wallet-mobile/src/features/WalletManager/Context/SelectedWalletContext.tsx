@@ -32,8 +32,7 @@ export const useSetSelectedWallet = () => {
   const [currentWallet, setSelectedWallet] = useSelectedWalletContext()
   const selectWallet = React.useCallback(
     (nextWallet?: YoroiWallet) => {
-      if (currentWallet?.id !== nextWallet?.id) currentWallet?.stopSync() // only 1 active wallet at a time
-      setSelectedWallet(nextWallet)
+      if (currentWallet?.id !== nextWallet?.id) setSelectedWallet(nextWallet)
     },
     [currentWallet, setSelectedWallet],
   )

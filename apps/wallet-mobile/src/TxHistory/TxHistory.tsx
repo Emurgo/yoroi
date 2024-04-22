@@ -1,4 +1,3 @@
-import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -40,8 +39,6 @@ export const TxHistory = () => {
   const {sync, isLoading: isLoadingWallet} = useSync(wallet)
   const {isLoading: isLoadingPoolTransition} = usePoolTransitionModal()
   const isLoading = isLoadingWallet || isLoadingPoolTransition
-
-  useFocusEffect(React.useCallback(() => sync(), [sync]))
 
   const [expanded, setExpanded] = React.useState(true)
   const onScroll = useOnScroll({
