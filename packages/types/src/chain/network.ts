@@ -5,3 +5,8 @@ export enum ChainNetwork {
   Preprod = 'preprod',
   Sancho = 'sancho',
 }
+
+export type ChainSupportedNetworks =
+  | ChainNetwork.Main
+  | ChainNetwork.Preprod
+  | ChainNetwork.Sancho

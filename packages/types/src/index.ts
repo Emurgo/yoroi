@@ -165,7 +165,7 @@ import {
   PortfolioTokenBalance,
 } from './portfolio/balance'
 import {PortfolioTokenPrice} from './portfolio/price'
-import {ChainNetwork} from './chain/network'
+import {ChainNetwork, ChainSupportedNetworks} from './chain/network'
 import {NumbersErrorInvalidAtomicValue} from './numbers/errors'
 import {NumbersAtomicValue} from './numbers/atomic-value'
 import {AppErrorInvalidState} from './app/errors'
@@ -490,6 +490,7 @@ export namespace Portfolio {
 export namespace Chain {
   export type Network = ChainNetwork
   export const Network = ChainNetwork
+  export type SupportedNetworks = ChainSupportedNetworks
 
   export namespace Cardano {
     export type UnsignedTx = CardanoUnsignedTx
