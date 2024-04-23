@@ -8,7 +8,7 @@ import {Boundary, Icon, Line, Text} from '../../../../components'
 import {showErrorDialog} from '../../../../dialogs'
 import {errorMessages} from '../../../../i18n/global-messages'
 import {useMetrics} from '../../../../metrics/metricsManager'
-import {useResetToWalletSelection} from '../../../../navigation'
+import {useWalletNavigation} from '../../../../navigation'
 import {theme} from '../../../../theme'
 import {isEmptyString} from '../../../../utils/utils'
 import {AddressMode} from '../../../../wallet-manager/types'
@@ -24,7 +24,7 @@ const addressMode: AddressMode = 'single'
 export const SaveReadOnlyWalletScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
-  const resetToWalletSelection = useResetToWalletSelection()
+  const {resetToWalletSelection} = useWalletNavigation()
   const {track} = useMetrics()
 
   const {publicKeyHex, path, networkId, walletImplementationId} = useSetupWallet()

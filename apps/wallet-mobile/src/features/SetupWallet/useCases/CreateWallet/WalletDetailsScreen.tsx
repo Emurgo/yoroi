@@ -67,7 +67,7 @@ export const WalletDetailsScreen = () => {
   const {styles} = useStyles()
   const {HEIGHT_MODAL_NAME_PASSWORD, HEIGHT_MODAL_CHECKSUM} = useSizeModal()
   const {openModal, closeModal} = useModal()
-  const {navigateToTxHistory} = useWalletNavigation()
+  const {resetToTxHistory} = useWalletNavigation()
   const strings = useStrings()
   const walletManager = useWalletManager()
   const {walletNames} = useWalletNames(walletManager)
@@ -115,7 +115,7 @@ export const WalletDetailsScreen = () => {
     onSuccess: ([wallet, walletMeta]) => {
       selectWalletMeta(walletMeta)
       selectWallet(wallet)
-      navigateToTxHistory()
+      resetToTxHistory()
     },
     onError: (error) => {
       InteractionManager.runAfterInteractions(() => {

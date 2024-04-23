@@ -7,7 +7,7 @@ import image from '../../../../assets/img/ledger_2.png'
 import {showErrorDialog} from '../../../../dialogs'
 import {errorMessages} from '../../../../i18n/global-messages'
 import {useMetrics} from '../../../../metrics/metricsManager'
-import {useResetToWalletSelection} from '../../../../navigation'
+import {useWalletNavigation} from '../../../../navigation'
 import {AddressMode} from '../../../../wallet-manager/types'
 import {NetworkError} from '../../../../yoroi-wallets/cardano/errors'
 import {useCreateBip44Wallet} from '../../../../yoroi-wallets/hooks'
@@ -18,7 +18,7 @@ import {WalletNameForm} from '../WalletNameForm/WalletNameForm'
 const addressMode: AddressMode = 'single'
 export const SaveNanoXScreen = () => {
   const strings = useStrings()
-  const resetToWalletSelection = useResetToWalletSelection()
+  const {resetToWalletSelection} = useWalletNavigation()
   const {networkId, walletImplementationId, hwDeviceInfo} = useSetupWallet()
   const intl = useIntl()
   const {track} = useMetrics()

@@ -17,7 +17,7 @@ import {useLegalAgreement, useResetLegalAgreement} from '../features/Initializat
 import {useSelectedWalletContext} from '../features/WalletManager/Context/SelectedWalletContext'
 import {errorMessages} from '../i18n/global-messages'
 import {storageVersionMaker} from '../migrations/storageVersion'
-import {AppRoutes, useResetToWalletSelection} from '../navigation'
+import {AppRoutes, useWalletNavigation} from '../navigation'
 import {isEmptyString} from '../utils/utils'
 import {NetworkError} from '../yoroi-wallets/cardano/errors'
 import {generateAdaMnemonic} from '../yoroi-wallets/cardano/mnemonic'
@@ -39,7 +39,7 @@ export const DeveloperScreen = () => {
   const navigation = useNavigation()
   const {styles} = useStyles()
   const {logout} = useAuth()
-  const resetToWalletSelection = useResetToWalletSelection()
+  const {resetToWalletSelection} = useWalletNavigation()
   const intl = useIntl()
   const {createWallet, isLoading} = useCreateWallet({
     onSuccess: () => resetToWalletSelection(),

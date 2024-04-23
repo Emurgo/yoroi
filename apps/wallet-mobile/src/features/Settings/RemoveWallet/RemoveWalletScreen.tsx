@@ -14,7 +14,7 @@ import {
   TextInput,
   TextInputProps,
 } from '../../../components'
-import {useResetToWalletSelection} from '../../../navigation'
+import {useNavigateToWalletSelectionSync} from '../../../navigation'
 import {useRemoveWallet, useWalletName} from '../../../yoroi-wallets/hooks'
 import {useSelectedWallet} from '../../WalletManager/Context/SelectedWalletContext'
 
@@ -24,15 +24,17 @@ export const RemoveWalletScreen = () => {
   const wallet = useSelectedWallet()
   const walletName = useWalletName(wallet)
 
-  const resetToWalletSelection = useResetToWalletSelection()
-  const {removeWallet, isLoading} = useRemoveWallet(wallet.id, {
-    onSuccess: () => resetToWalletSelection(),
+  const resetToWalletSelectionSync = useNavigateToWalletSelectionSync()
+  const {removeWallet, isLoading: isRemoveWalletLoading} = useRemoveWallet(wallet.id, {
+    onSuccess: () => {
+      resetToWalletSelectionSync()
+    },
   })
 
   const [hasMnemonicWrittenDown, setHasMnemonicWrittenDown] = React.useState(false)
   const [typedWalletName, setTypedWalletName] = React.useState('')
 
-  const disabled = isLoading || (!wallet.isHW && !hasMnemonicWrittenDown) || walletName !== typedWalletName
+  const disabled = isRemoveWalletLoading || (!wallet.isHW && !hasMnemonicWrittenDown) || walletName !== typedWalletName
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>

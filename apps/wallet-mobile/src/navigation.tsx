@@ -104,6 +104,7 @@ export type WalletTabRoutes = {
 
 export type WalletStackRoutes = {
   'choose-biometric-login': undefined
+  'setup-wallet': undefined
   'wallet-selection': undefined
   'exchange-result': undefined
   'main-wallet-routes': NavigatorScreenParams<WalletTabRoutes>
@@ -423,12 +424,26 @@ export const useWalletNavigation = () => {
             state: {
               routes: [
                 {
-                  name: 'wallet-setup',
+                  name: 'setup-wallet',
                   state: {
                     routes: [{name: 'setup-wallet-choose-setup-type'}],
                   },
                 },
               ],
+            },
+          },
+        ],
+      })
+    },
+
+    resetToWalletSelection: () => {
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'app-root',
+            state: {
+              routes: [{name: 'wallet-selection'}],
             },
           },
         ],
@@ -528,29 +543,26 @@ export const useWalletNavigation = () => {
   } as const).current
 }
 
-export const useResetToWalletSelection = () => {
-  const {resetToWalletSetup} = useWalletNavigation()
+export const useNavigateToWalletSelectionSync = () => {
+  const {resetToWalletSetup, resetToWalletSelection} = useWalletNavigation()
   const walletManager = useWalletManager()
-  const hasWallets = useHasWallets(walletManager)
-  const navigation = useNavigation()
+  const {refetch} = useHasWallets(walletManager, {
+    enabled: false,
+    onSuccess: (hasWallets) => {
+      if (hasWallets) {
+        resetToWalletSelection()
+        return
+      }
 
-  console.log('hasWallets', hasWallets)
+      resetToWalletSetup()
+    },
+  })
 
-  const resetToWalletSelection = React.useRef(() => {
-    navigation.reset({
-      index: 0,
-      routes: [
-        {
-          name: 'app-root',
-          state: {
-            routes: [{name: 'wallet-selection'}],
-          },
-        },
-      ],
-    })
-  }).current
+  const navigateToWalletSelectionSync = React.useCallback(() => {
+    refetch()
+  }, [refetch])
 
-  return hasWallets ? resetToWalletSelection : resetToWalletSetup
+  return navigateToWalletSelectionSync
 }
 
 export const hideTabBarForRoutes = (route: RouteProp<WalletTabRoutes, 'history'>): ViewStyle | undefined =>

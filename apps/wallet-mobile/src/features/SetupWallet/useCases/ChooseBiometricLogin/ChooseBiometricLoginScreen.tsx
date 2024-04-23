@@ -20,11 +20,11 @@ export const ChooseBiometricLoginScreen = () => {
   const strings = useStrings()
   const storage = useAsyncStorage()
   const {walletImplementationIdChanged} = useSetupWallet()
-  const {navigateToWalletSetup} = useWalletNavigation()
+  const {resetToWalletSetup} = useWalletNavigation()
 
   const navigate = () => {
     walletImplementationIdChanged(HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID)
-    navigateToWalletSetup()
+    resetToWalletSetup()
   }
 
   const {enableAuthWithOs, isLoading} = useEnableAuthWithOs({

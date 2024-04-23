@@ -709,7 +709,10 @@ export const useHasWallets = (
 
   if (query.data == null) throw new Error('invalid state')
 
-  return query.data
+  return {
+    ...query,
+    hasWallets: query.data,
+  }
 }
 
 export const useRemoveWallet = (id: YoroiWallet['id'], options: UseMutationOptions<void, Error, void> = {}) => {

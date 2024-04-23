@@ -12,7 +12,7 @@ import {InsufficientFundsModal} from '../../Catalyst/InsufficientFundsModal'
 import {Boundary, Icon, Spacer, Text} from '../../components'
 import {usePrefetchStakingInfo} from '../../Dashboard/StakePoolInfos'
 import {useMetrics} from '../../metrics/metricsManager'
-import {defaultStackNavigationOptions, useResetToWalletSelection, useWalletNavigation} from '../../navigation'
+import {defaultStackNavigationOptions, useWalletNavigation} from '../../navigation'
 import {lightPalette} from '../../theme'
 import {useIsGovernanceFeatureEnabled} from '../Staking/Governance'
 import {useSelectedWallet} from '../WalletManager/Context/SelectedWalletContext'
@@ -185,10 +185,8 @@ const useNavigateTo = () => {
   const {navigation, navigateToSettings, navigateToGovernanceCentre} = useWalletNavigation()
   const wallet = useSelectedWallet()
   const prefetchStakingInfo = usePrefetchStakingInfo(wallet)
-  const resetToWalletSelection = useResetToWalletSelection()
 
   return {
-    allWallets: () => resetToWalletSelection(),
     catalystVoting: () => {
       prefetchStakingInfo()
 

@@ -6,7 +6,6 @@ import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {
   InteractionManager,
-  Keyboard,
   Linking,
   ScrollView,
   StyleSheet,
@@ -69,7 +68,7 @@ export const RestoreWalletDetailsScreen = () => {
   const {HEIGHT_MODAL_NAME_PASSWORD, HEIGHT_MODAL_CHECKSUM} = useSizeModal()
   const {openModal, closeModal} = useModal()
   const strings = useStrings()
-  const {navigateToTxHistory} = useWalletNavigation()
+  const {resetToTxHistory} = useWalletNavigation()
   const walletManager = useWalletManager()
   const {track} = useMetrics()
   const {walletNames} = useWalletNames(walletManager)
@@ -104,7 +103,7 @@ export const RestoreWalletDetailsScreen = () => {
     onSuccess: ([wallet, walletMeta]) => {
       selectWalletMeta(walletMeta)
       selectWallet(wallet)
-      navigateToTxHistory()
+      resetToTxHistory()
     },
     onError: (error) => {
       InteractionManager.runAfterInteractions(() => {
@@ -156,7 +155,6 @@ export const RestoreWalletDetailsScreen = () => {
   )
 
   const showModalTipsPassword = () => {
-    Keyboard.dismiss()
     openModal(
       strings.walletDetailsModalTitle,
       <View style={styles.modal}>
@@ -195,7 +193,6 @@ export const RestoreWalletDetailsScreen = () => {
   }
 
   const showModalTipsPlateNumber = () => {
-    Keyboard.dismiss()
     openModal(
       strings.walletDetailsModalTitle,
       <View style={styles.modal}>
