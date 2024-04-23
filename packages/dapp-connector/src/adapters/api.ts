@@ -17,8 +17,8 @@ export const dappConnectorApiGetDappList = ({request}: {request: FetchData} = in
 
       if (isLeft(response)) throw getApiError(response.error)
 
-      if (!isDappListResponse(response.value)) {
-        throw new Error('Invalid dapp list response')
+      if (!isDappListResponse(response.value.data)) {
+        throw new Error('Invalid dapp list response: ' + JSON.stringify(response.value.data))
       }
 
       return response.value.data
@@ -40,7 +40,7 @@ const DappResponseSchema = z.object({
 
 const DappListResponseSchema = z.object({
   dapps: z.array(DappResponseSchema),
-  filters: z.record(z.array(z.string())),
+  filters: z.record(z.array(z.string()).optional()),
 })
 
 const isDappListResponse = createTypeGuardFromSchema(DappListResponseSchema)

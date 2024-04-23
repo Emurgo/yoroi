@@ -1,6 +1,9 @@
-import {useQuery} from 'react-query'
-import {dappConnectorApiGetDappList} from '../../adapters/api'
+import {useQuery, UseQueryOptions} from 'react-query'
+import {dappConnectorApiGetDappList, DappListResponse} from '../../adapters/api'
 
-export const useDappList = () => {
-  return useQuery('dappList', dappConnectorApiGetDappList())
+export const useDappList = (options?: UseQueryOptions<DappListResponse, Error, DappListResponse, 'dappList'>) => {
+  return useQuery('dappList', {
+    ...options,
+    queryFn: dappConnectorApiGetDappList(),
+  })
 }

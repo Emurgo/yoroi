@@ -1,18 +1,18 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {FlatList, ScrollView, StyleSheet, View} from 'react-native'
+import {FlatList, StyleSheet, View} from 'react-native'
 
 import {Spacer} from '../../../../components'
 import {useSearch, useSearchOnNavBar} from '../../../../Search/SearchContext'
 import {getGoogleSearchItem} from '../../common/DAppMock'
 import {useDAppsConnected} from '../../common/useDAppsConnected'
-import {useDAppsList} from '../../common/useDAppsList'
 import {useStrings} from '../../common/useStrings'
 import {CountDAppsAvailable} from './CountDAppsAvailable/CountDAppsAvailable'
 import {DAppExplorerTabItem} from './DAppExplorerTabItem/DAppExplorerTabItem'
 import {DAppItem} from './DAppItem/DAppItem'
 import {DAppTypes} from './DAppTypes/DAppTypes'
 import {WelcomeDAppModal} from './WelcomeDAppModal'
+import {useDappList} from '@yoroi/dapp-connector/src'
 
 const DAppTabs = {
   connected: 'connected',
@@ -35,7 +35,7 @@ export const SelectDappFromListScreen = () => {
     placeholder: strings.searchDApps,
     noBack: true,
   })
-  const {data: list} = useDAppsList()
+  const {data: list} = useDappList({suspense: true})
   const {data: listDAppConnected} = useDAppsConnected({refetchOnMount: true})
   const hasConnectedDapps = (listDAppConnected ?? [])?.length > 0
 
