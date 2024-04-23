@@ -45,6 +45,8 @@ export const WalletListItem = ({wallet, onPress}: Props) => {
           </Text>
         </View>
 
+        <Space width="m" />
+
         {isButtonPressed ? <ChevronRightDarkIllustration /> : <ChevronRightGrayIllustration />}
       </TouchableOpacity>
     </View>

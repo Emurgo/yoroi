@@ -105,15 +105,15 @@ export const RestoreWalletScreen = () => {
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
       <KeyboardAvoidingView style={{flex: 1}}>
-        <View style={styles.padding}>
+        <View style={styles.stepper}>
           <StepperProgress currentStep={1} currentStepTitle={strings.stepRestoreWalletScreen} totalSteps={2} />
         </View>
 
-        <ScrollView style={styles.padding} bounces={false}>
+        <ScrollView style={styles.scroll} bounces={false} keyboardShouldPersistTaps="handled">
           <View>
             <Text style={styles.title}>{strings.restoreWalletScreenTitle(bold)}</Text>
 
-            <Space height="xl" />
+            <Space height="l" />
           </View>
 
           <MnemonicInput length={mnemonicType} onDone={setMnemonic} />
@@ -193,6 +193,12 @@ const useStyles = () => {
     button: {backgroundColor: theme.color.primary[500]},
     bolder: {
       ...theme.typography['body-1-l-medium'],
+    },
+    stepper: {
+      ...theme.padding['x-l'],
+    },
+    scroll: {
+      ...theme.padding['l'],
     },
     padding: {
       ...theme.padding['l'],

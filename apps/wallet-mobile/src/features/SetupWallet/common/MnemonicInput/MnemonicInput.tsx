@@ -12,7 +12,7 @@ import {
   View,
 } from 'react-native'
 
-import {Menu, useScrollView} from '../../../../components'
+import {Menu, Spacer, useScrollView} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {isEmptyString} from '../../../../utils/utils'
@@ -100,7 +100,7 @@ export const MnemonicInput = ({
         </TouchableOpacity>
       )}
 
-      <Space height="l" />
+      <Spacer height={50} />
     </View>
   )
 }
