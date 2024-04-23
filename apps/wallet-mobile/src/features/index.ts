@@ -9,6 +9,7 @@ export const features = {
   showProdPoolsInDev: __DEV__,
   moderatingNftsEnabled: false,
   walletListFeedback: __DEV__,
+  poolTransition: __DEV__,
 }
 
 export const debugWalletInfo = {
