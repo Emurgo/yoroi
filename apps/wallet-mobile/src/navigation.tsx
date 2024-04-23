@@ -449,12 +449,6 @@ export const useWalletNavigation = () => {
       })
     },
 
-    navigateToWalletSetup: () => {
-      navigation.navigate('setup-wallet', {
-        screen: 'setup-wallet-choose-setup-type',
-      })
-    },
-
     navigateToStakingDashboard: () => {
       navigation.navigate('app-root', {
         screen: 'main-wallet-routes',
