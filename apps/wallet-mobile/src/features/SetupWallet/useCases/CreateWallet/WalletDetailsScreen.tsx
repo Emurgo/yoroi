@@ -1,5 +1,5 @@
 import {useFocusEffect} from '@react-navigation/native'
-import {useAsyncStorage} from '@yoroi/common'
+import {NetworkError, useAsyncStorage} from '@yoroi/common'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
@@ -27,7 +27,7 @@ import {isEmptyString} from '../../../../utils'
 import {AddressMode} from '../../../../wallet-manager/types'
 import {parseWalletMeta} from '../../../../wallet-manager/validators'
 import {useWalletManager} from '../../../../wallet-manager/WalletManagerContext'
-import {InvalidState, NetworkError} from '../../../../yoroi-wallets/cardano/errors'
+import {InvalidState} from '../../../../yoroi-wallets/cardano/errors'
 import {useCreateWallet, useOpenWallet, usePlate, useWalletNames} from '../../../../yoroi-wallets/hooks'
 import {WalletImplementationId} from '../../../../yoroi-wallets/types'
 import {
@@ -233,7 +233,7 @@ export const WalletDetailsScreen = () => {
   ])
 
   React.useEffect(() => {
-    if (showRestoreWalletInfoModal) showModalTipsPassword()
+    if (showRestoreWalletInfoModal === true) showModalTipsPassword()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showRestoreWalletInfoModal])
 

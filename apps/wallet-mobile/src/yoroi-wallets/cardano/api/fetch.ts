@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {NetworkError} from '@yoroi/common'
 import {Platform} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
 import {Logger} from '../../logging'
 import type {BackendConfig} from '../../types/other'
-import {ApiError, ApiHistoryError, NetworkError} from '../errors'
+import {ApiError, ApiHistoryError} from '../errors'
 
 type RequestMethod = 'POST' | 'GET'
 

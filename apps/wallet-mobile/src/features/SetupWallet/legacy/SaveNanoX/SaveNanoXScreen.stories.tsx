@@ -1,11 +1,11 @@
 import {NavigationRouteContext} from '@react-navigation/native'
 import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
+import {NetworkError} from '@yoroi/common'
 import React from 'react'
 
 import {WalletManager, walletManager} from '../../../../wallet-manager/walletManager'
 import {WalletManagerProvider} from '../../../../wallet-manager/WalletManagerContext'
-import {NetworkError} from '../../../../yoroi-wallets/cardano/errors'
 import {SaveNanoXScreen} from './SaveNanoXScreen'
 
 storiesOf('SaveNanoXScreen', module)
