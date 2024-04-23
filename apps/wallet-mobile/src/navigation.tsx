@@ -551,11 +551,7 @@ export const useNavigateToWalletSelectionSync = () => {
     },
   })
 
-  const navigateToWalletSelectionSync = React.useCallback(() => {
-    refetch()
-  }, [refetch])
-
-  return navigateToWalletSelectionSync
+  return refetch
 }
 
 export const hideTabBarForRoutes = (route: RouteProp<WalletTabRoutes, 'history'>): ViewStyle | undefined =>
