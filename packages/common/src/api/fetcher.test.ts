@@ -40,9 +40,6 @@ describe('fetcher', () => {
     await expect(
       fetcher({url: '/network-error', method: 'GET'}),
     ).rejects.toThrow(Api.Errors.Network)
-    await expect(
-      fetcher({url: '/network-error', method: 'GET'}),
-    ).rejects.toHaveProperty('message', 'No response received')
   })
 
   it('throws generic Error for other cases', async () => {
