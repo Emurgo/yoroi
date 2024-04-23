@@ -1,3 +1,4 @@
+import {useDappList} from '@yoroi/dapp-connector/src'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {FlatList, StyleSheet, View} from 'react-native'
@@ -12,7 +13,6 @@ import {DAppExplorerTabItem} from './DAppExplorerTabItem/DAppExplorerTabItem'
 import {DAppItem} from './DAppItem/DAppItem'
 import {DAppTypes} from './DAppTypes/DAppTypes'
 import {WelcomeDAppModal} from './WelcomeDAppModal'
-import {useDappList} from '@yoroi/dapp-connector/src'
 
 const DAppTabs = {
   connected: 'connected',
