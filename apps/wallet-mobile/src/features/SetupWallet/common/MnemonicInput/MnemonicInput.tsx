@@ -12,7 +12,7 @@ import {
   View,
 } from 'react-native'
 
-import {Menu, useScrollView} from '../../../../components'
+import {Menu, Spacer, useScrollView} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {isEmptyString} from '../../../../utils/utils'
@@ -34,6 +34,7 @@ export const MnemonicInput = ({
   const {styles} = useStyles()
   const [mnemonicWords, setMnemonicWords] = React.useState<Array<string>>(Array.from({length}).map(() => ''))
   const {track} = useMetrics()
+  const refs = React.useRef(mnemonicWords.map(() => React.createRef<RNTextInput>())).current
 
   const mnemonicWordsComplete = mnemonicWords.every(Boolean)
   const isValid: boolean = mnemonicWordsComplete ? validate(mnemonicWords.join(' ')) : false
@@ -55,13 +56,19 @@ export const MnemonicInput = ({
         onDone(mnemonicWords.join(' '))
       } else {
         track.restoreWalletEnterPhraseStepStatus({recovery_prhase_status: false})
+        onDone('')
       }
     }
   }, [mnemonicWordsComplete, isValid, mnemonicWords, onDone, track])
 
   return (
     <View>
-      <MnemonicWordsInput onSelect={onSelect} words={mnemonicWords} isPhraseValid={isValid && mnemonicWordsComplete} />
+      <MnemonicWordsInput
+        refs={refs}
+        onSelect={onSelect}
+        words={mnemonicWords}
+        isPhraseValid={isValid && mnemonicWordsComplete}
+      />
 
       <Space height="l" />
 
@@ -85,25 +92,28 @@ export const MnemonicInput = ({
         <TouchableOpacity
           activeOpacity={0.5}
           style={[styles.textView]}
-          onPress={() => setMnemonicWords(Array.from({length}).map(() => ''))}
+          onPress={() => {
+            setMnemonicWords(Array.from({length}).map(() => ''))
+            refs[0].current?.focus()
+          }}
         >
           <Text style={styles.clearAll}>{strings.clearAll}</Text>
         </TouchableOpacity>
       )}
 
-      <Space height="l" />
+      <Spacer height={50} />
     </View>
   )
 }
 
 type MnemonicWordsInputProps = {
+  refs: React.RefObject<RNTextInput>[]
   words: Array<string>
   onSelect: (index: number, word: string) => void
   isPhraseValid: boolean
 }
-const MnemonicWordsInput = ({onSelect, words, isPhraseValid = false}: MnemonicWordsInputProps) => {
+const MnemonicWordsInput = ({onSelect, words, refs, isPhraseValid = false}: MnemonicWordsInputProps) => {
   const {styles} = useStyles()
-  const refs = React.useRef(words.map(() => React.createRef<RNTextInput>())).current
   const scrollView = useScrollView()
   const rowHeightRef = React.useRef<number | void>()
 

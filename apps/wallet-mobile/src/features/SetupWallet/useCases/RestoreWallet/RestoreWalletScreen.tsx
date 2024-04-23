@@ -15,7 +15,6 @@ import {showErrorDialog} from '../../../../dialogs'
 import {errorMessages} from '../../../../i18n/global-messages'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useWalletNavigation, WalletInitRouteNavigation} from '../../../../navigation'
-import {isEmptyString} from '../../../../utils'
 import {useWalletManager} from '../../../../wallet-manager/WalletManagerContext'
 import {InvalidState} from '../../../../yoroi-wallets/cardano/errors'
 import {makeKeys} from '../../../../yoroi-wallets/cardano/shelley/makeKeys'
@@ -106,28 +105,25 @@ export const RestoreWalletScreen = () => {
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
       <KeyboardAvoidingView style={{flex: 1}}>
-        <View style={styles.padding}>
+        <View style={styles.stepper}>
           <StepperProgress currentStep={1} currentStepTitle={strings.stepRestoreWalletScreen} totalSteps={2} />
         </View>
 
-        <ScrollView style={styles.padding} bounces={false}>
+        <ScrollView style={styles.scroll} bounces={false} keyboardShouldPersistTaps="handled">
           <View>
             <Text style={styles.title}>{strings.restoreWalletScreenTitle(bold)}</Text>
 
-            <Space height="xl" />
+            <Space height="l" />
           </View>
 
           <MnemonicInput length={mnemonicType} onDone={setMnemonic} />
         </ScrollView>
 
-        <View style={styles.padding}>
-          <Button
-            title={strings.next}
-            style={styles.button}
-            disabled={isEmptyString(mnemonic)}
-            onPress={handleOnNext}
-          />
-        </View>
+        {mnemonic !== '' && (
+          <View style={styles.padding}>
+            <Button title={strings.next} style={styles.button} onPress={handleOnNext} />
+          </View>
+        )}
       </KeyboardAvoidingView>
     </SafeAreaView>
   )
@@ -197,6 +193,12 @@ const useStyles = () => {
     button: {backgroundColor: theme.color.primary[500]},
     bolder: {
       ...theme.typography['body-1-l-medium'],
+    },
+    stepper: {
+      ...theme.padding['x-l'],
+    },
+    scroll: {
+      ...theme.padding['l'],
     },
     padding: {
       ...theme.padding['l'],

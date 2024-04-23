@@ -16,7 +16,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, useModal} from '../../../../components'
+import {Button, Spacer, useModal} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {WalletInitRouteNavigation} from '../../../../navigation'
@@ -130,9 +130,7 @@ export const RecoveryPhraseScreen = () => {
         <Text style={styles.title}>
           {strings.recoveryPhraseTitle(bold)}
 
-          <TouchableOpacity onPress={handleOnShowModal}>
-            <InfoIllustration />
-          </TouchableOpacity>
+          <Info onPress={handleOnShowModal} />
         </Text>
 
         <View style={styles.mnemonicWords}>
@@ -186,6 +184,18 @@ export const RecoveryPhraseScreen = () => {
   )
 }
 
+const Info = ({onPress}: {onPress: () => void}) => {
+  const {styles} = useStyles()
+
+  return (
+    <TouchableOpacity style={styles.info} onPress={onPress}>
+      <Spacer height={2} />
+
+      <InfoIllustration size={24} />
+    </TouchableOpacity>
+  )
+}
+
 const useBold = () => {
   const {styles} = useStyles()
 
@@ -209,6 +219,7 @@ const useStyles = () => {
     title: {
       ...theme.typography['body-1-l-regular'],
       color: theme.color.gray[900],
+      lineHeight: 24,
     },
     bolder: {
       ...theme.typography['body-1-l-medium'],
@@ -252,6 +263,9 @@ const useStyles = () => {
     blurTextButton: {
       ...theme.typography['button-2-m'],
       color: theme.color.primary[500],
+    },
+    info: {
+      height: 24,
     },
   })
 

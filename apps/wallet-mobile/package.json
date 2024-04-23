@@ -126,7 +126,7 @@
     "@yoroi/common": "1.5.2",
     "@yoroi/exchange": "2.0.1",
     "@yoroi/links": "1.5.4",
-    "@yoroi/resolver": "2.0.4",
+    "@yoroi/resolver": "2.0.5",
     "@yoroi/staking": "1.5.1",
     "@yoroi/swap": "1.5.2",
     "@yoroi/theme": "^1.0.0",

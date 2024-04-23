@@ -124,10 +124,16 @@ export const unstoppableSupportedTlds = [
   '.manga',
   '.go',
   '.altimist',
+  '.pudgy',
   '.unstoppable',
+  '.austin',
+  '.bitget',
+  '.pog',
+  '.clay',
   '.zil',
   '.eth',
 ] as const
+
 export const isUnstoppableDomain = (value: string) => {
   return unstoppableSupportedTlds.some((tld) => value.endsWith(tld))
 }
