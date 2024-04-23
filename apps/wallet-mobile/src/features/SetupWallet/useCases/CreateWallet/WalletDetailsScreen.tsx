@@ -291,7 +291,7 @@ export const WalletDetailsScreen = () => {
 
         <TextInput
           enablesReturnKeyAutomatically
-          autoFocus
+          autoFocus={!showRestoreWalletInfoModal}
           label={strings.walletDetailsNameInput}
           value={name}
           onChangeText={(walletName: string) => setName(walletName)}

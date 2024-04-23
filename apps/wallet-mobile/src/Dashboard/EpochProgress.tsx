@@ -101,7 +101,6 @@ const useStyles = () => {
     timeBlock: {
       ...typography['body-1-l-regular'],
       ...padding['x-xs'],
-      backgroundColor: color.gray[900],
       color: color.gray[900],
       marginHorizontal: 4,
       borderRadius: 2,

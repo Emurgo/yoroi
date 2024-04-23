@@ -5,7 +5,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, KeyboardAvoidingView, TextInput} from '../../../components'
+import {Button, KeyboardAvoidingView, Spacer, TextInput} from '../../../components'
 import globalMessages from '../../../i18n/global-messages'
 import {isEmptyString} from '../../../utils/utils'
 import {useWalletManager} from '../../../wallet-manager/WalletManagerContext'
@@ -39,6 +39,8 @@ export const ChangeWalletName = () => {
   return (
     <SafeAreaView style={styles.safeAreaView} edges={['left', 'right', 'bottom']}>
       <KeyboardAvoidingView style={{flex: 1}}>
+        <Spacer height={40} />
+
         <ScrollView
           keyboardDismissMode="on-drag"
           keyboardShouldPersistTaps="always"
@@ -56,6 +58,8 @@ export const ChangeWalletName = () => {
             autoComplete="off"
           />
         </ScrollView>
+
+        <Spacer fill />
 
         <View style={styles.action}>
           <Button
@@ -75,20 +79,16 @@ export const ChangeWalletName = () => {
 
 const useStyles = () => {
   const {theme} = useTheme()
-  const {color} = theme
+  const {padding} = theme
   const styles = StyleSheet.create({
     safeAreaView: {
-      backgroundColor: color.gray.min,
       flex: 1,
     },
     scrollContentContainer: {
-      flex: 1,
-      paddingHorizontal: 16,
-      paddingTop: 40,
+      ...padding['x-l'],
     },
     action: {
-      paddingHorizontal: 16,
-      backgroundColor: color.gray.min,
+      ...padding['l'],
     },
   })
   return styles
