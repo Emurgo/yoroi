@@ -15,7 +15,8 @@ const mockDApp = {
   category: 'media',
   logo: CardanoSpot,
   uri: 'https://cardanospot.io/landing',
-} as const
+  origins: [],
+}
 
 const Initial = () => {
   return <DAppItem dApp={mockDApp} connected={false} />

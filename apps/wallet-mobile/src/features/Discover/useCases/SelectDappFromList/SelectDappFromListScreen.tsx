@@ -1,4 +1,4 @@
-import {useDappList} from '@yoroi/dapp-connector/src'
+import {useDappList} from '@yoroi/dapp-connector'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {FlatList, StyleSheet, View} from 'react-native'

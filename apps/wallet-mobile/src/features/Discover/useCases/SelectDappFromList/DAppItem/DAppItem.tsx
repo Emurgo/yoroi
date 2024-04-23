@@ -61,7 +61,7 @@ export const DAppItem = ({dApp, connected, onPress}: Props) => {
       strings.dAppActions,
       <View>
         <View style={styles.dAppInfo}>
-          <Image source={dApp.logo} style={styles.dAppLogoDialog} />
+          <Image source={{uri: dApp.logo}} style={styles.dAppLogoDialog} />
 
           <Text style={styles.dAppName}>{dApp.name}</Text>
         </View>
@@ -90,7 +90,7 @@ export const DAppItem = ({dApp, connected, onPress}: Props) => {
     >
       <View style={styles.dAppItemContainer}>
         <View>
-          <Image source={{uri: Image.resolveAssetSource(dApp.logo).uri}} style={styles.dAppLogo} />
+          <Image source={{uri: dApp.logo}} style={styles.dAppLogo} />
         </View>
 
         <View style={styles.flexFull}>
