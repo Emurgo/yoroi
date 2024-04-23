@@ -68,7 +68,7 @@ export const RemoveWalletScreen = () => {
 
         <Spacer fill />
 
-        <View style={styles.actions}>
+        <Actions>
           {!wallet.isHW && (
             <Checkbox
               checked={hasMnemonicWrittenDown}
@@ -85,7 +85,7 @@ export const RemoveWalletScreen = () => {
             style={styles.removeButton}
             disabled={disabled}
           />
-        </View>
+        </Actions>
       </KeyboardAvoidingView>
     </SafeAreaView>
   )
@@ -100,6 +100,10 @@ const WalletInfo = (props: ViewProps) => {
 }
 const WalletNameInput = (props: TextInputProps) => {
   return <TextInput {...props} autoFocus enablesReturnKeyAutomatically returnKeyType="done" />
+}
+const Actions = (props: ViewProps) => {
+  const styles = useStyles()
+  return <View {...props} style={styles.actions} />
 }
 
 const messages = defineMessages({
