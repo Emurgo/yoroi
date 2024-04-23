@@ -56,6 +56,7 @@ export const MnemonicInput = ({
         onDone(mnemonicWords.join(' '))
       } else {
         track.restoreWalletEnterPhraseStepStatus({recovery_prhase_status: false})
+        onDone('')
       }
     }
   }, [mnemonicWordsComplete, isValid, mnemonicWords, onDone, track])
