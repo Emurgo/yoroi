@@ -1,5 +1,5 @@
-import {NetworkError} from '@yoroi/common'
 import {useSetupWallet} from '@yoroi/setup-wallet'
+import {Api} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {InteractionManager} from 'react-native'
@@ -30,7 +30,7 @@ export const SaveNanoXScreen = () => {
     },
     onError: (error) => {
       InteractionManager.runAfterInteractions(() => {
-        return error instanceof NetworkError
+        return error instanceof Api.Errors.Network
           ? showErrorDialog(errorMessages.networkError, intl)
           : showErrorDialog(errorMessages.generalError, intl, {message: error.message})
       })

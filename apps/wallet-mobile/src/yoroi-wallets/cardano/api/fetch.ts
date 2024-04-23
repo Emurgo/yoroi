@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {NetworkError} from '@yoroi/common'
+import {Api} from '@yoroi/types'
 import {Platform} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
@@ -62,7 +62,7 @@ export const checkedFetch = (request: FetchRequest<any>) => {
     https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
     */
       if (e instanceof TypeError) {
-        throw new NetworkError()
+        throw new Api.Errors.Network()
       }
 
       throw e

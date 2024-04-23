@@ -3,4 +3,3 @@ export const invalid = (message: string) => {
 }
 
 export class ApiError extends Error {}
-export class NetworkError extends Error {}

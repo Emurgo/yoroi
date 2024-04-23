@@ -2,6 +2,7 @@ import {walletChecksum} from '@emurgo/cip4-js'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
+import {Api} from '@yoroi/types'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {InteractionManager, StyleSheet, Text, View} from 'react-native'
@@ -15,7 +16,7 @@ import {errorMessages} from '../../../../i18n/global-messages'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useWalletNavigation, WalletInitRouteNavigation} from '../../../../navigation'
 import {useWalletManager} from '../../../../wallet-manager/WalletManagerContext'
-import {InvalidState, NetworkError} from '../../../../yoroi-wallets/cardano/errors'
+import {InvalidState} from '../../../../yoroi-wallets/cardano/errors'
 import {makeKeys} from '../../../../yoroi-wallets/cardano/shelley/makeKeys'
 import {useOpenWallet, usePlate, useWalletMetas} from '../../../../yoroi-wallets/hooks'
 import {useSetSelectedWallet} from '../../../WalletManager/Context/SelectedWalletContext'
@@ -61,7 +62,7 @@ export const RestoreWalletScreen = () => {
       InteractionManager.runAfterInteractions(() => {
         return error instanceof InvalidState
           ? showErrorDialog(errorMessages.walletStateInvalid, intl)
-          : error instanceof NetworkError
+          : error instanceof Api.Errors.Network
           ? showErrorDialog(errorMessages.networkError, intl)
           : showErrorDialog(errorMessages.generalError, intl, {message: error.message})
       })

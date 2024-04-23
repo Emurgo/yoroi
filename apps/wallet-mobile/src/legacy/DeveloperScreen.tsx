@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {useNavigation} from '@react-navigation/native'
-import {NetworkError} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
+import {Api} from '@yoroi/types'
 import assert from 'assert'
 import ExtendableError from 'es6-error'
 import _ from 'lodash'
@@ -45,7 +45,7 @@ export const DeveloperScreen = () => {
     onSuccess: () => resetToWalletSelection(),
     onError: (error) => {
       InteractionManager.runAfterInteractions(() => {
-        return error instanceof NetworkError
+        return error instanceof Api.Errors.Network
           ? showErrorDialog(errorMessages.networkError, intl)
           : showErrorDialog(errorMessages.generalError, intl, {message: error.message})
       })
