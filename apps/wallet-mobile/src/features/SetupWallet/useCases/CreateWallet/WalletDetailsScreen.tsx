@@ -233,7 +233,7 @@ export const WalletDetailsScreen = () => {
   ])
 
   React.useEffect(() => {
-    if (showRestoreWalletInfoModal === true) showModalTipsPassword()
+    if (showRestoreWalletInfoModal) showModalTipsPassword()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showRestoreWalletInfoModal])
 
