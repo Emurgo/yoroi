@@ -5,7 +5,6 @@ import {portfolioBalanceStorageMaker} from './balance-storage-maker'
 import {tokenMocks} from '../token.mocks'
 import {deserializers} from '../../transformers/deserializers'
 import {tokenBalanceMocks} from '../token-balance.mocks'
-import {tokenInfoMocks} from '../token-info.mocks'
 
 describe('portfolioBalanceStorageMaker', () => {
   let balanceStorage: App.ObservableStorage<false, Portfolio.Token.Id>
@@ -31,6 +30,7 @@ describe('portfolioBalanceStorageMaker', () => {
     const storage = portfolioBalanceStorageMaker({
       balanceStorage,
       primaryBreakdownStorage,
+      primaryTokenId: tokenMocks.primaryETH.info.id,
     })
 
     expect(storage).toBeDefined()
@@ -41,6 +41,7 @@ describe('portfolioBalanceStorageMaker', () => {
     const {balances} = portfolioBalanceStorageMaker({
       balanceStorage,
       primaryBreakdownStorage,
+      primaryTokenId: tokenMocks.primaryETH.info.id,
     })
 
     balances.save(tokenBalanceMocks.storage.entries1)
@@ -58,6 +59,7 @@ describe('portfolioBalanceStorageMaker', () => {
     const {balances} = portfolioBalanceStorageMaker({
       balanceStorage,
       primaryBreakdownStorage,
+      primaryTokenId: tokenMocks.primaryETH.info.id,
     })
 
     balances.save(tokenBalanceMocks.storage.entries1)
@@ -76,19 +78,17 @@ describe('portfolioBalanceStorageMaker', () => {
   })
 
   it('should clear all portfolio records', () => {
-    const {clear, balances, primaryBalanceBreakdown} =
-      portfolioBalanceStorageMaker({
-        balanceStorage,
-        primaryBreakdownStorage,
-      })
+    const {clear, balances, primaryBreakdown} = portfolioBalanceStorageMaker({
+      balanceStorage,
+      primaryBreakdownStorage,
+      primaryTokenId: tokenMocks.primaryETH.info.id,
+    })
 
     balances.save(tokenBalanceMocks.storage.entries1)
-    primaryBalanceBreakdown.save(tokenBalanceMocks.primaryETHBreakdown)
+    primaryBreakdown.save(tokenBalanceMocks.primaryETHBreakdown)
 
     let balanceResult = balances.all()
-    let primaryBreakdownResult = primaryBalanceBreakdown.read(
-      tokenInfoMocks.primaryETH.id,
-    )
+    let primaryBreakdownResult = primaryBreakdown.read()
 
     expect(balanceResult).toEqual(tokenBalanceMocks.storage.entries1)
     expect(primaryBreakdownResult).toEqual(
@@ -98,9 +98,7 @@ describe('portfolioBalanceStorageMaker', () => {
     clear()
 
     balanceResult = balances.all()
-    primaryBreakdownResult = primaryBalanceBreakdown.read(
-      tokenInfoMocks.primaryETH.id,
-    )
+    primaryBreakdownResult = primaryBreakdown.read()
 
     // keys are gone
     expect(balanceResult).toEqual([])
@@ -111,13 +109,14 @@ describe('portfolioBalanceStorageMaker', () => {
   })
 
   it('should return all keys', () => {
-    const {balances, primaryBalanceBreakdown} = portfolioBalanceStorageMaker({
+    const {balances, primaryBreakdown} = portfolioBalanceStorageMaker({
       balanceStorage,
       primaryBreakdownStorage,
+      primaryTokenId: tokenMocks.primaryETH.info.id,
     })
 
     balances.save(tokenBalanceMocks.storage.entries1)
-    primaryBalanceBreakdown.save(tokenBalanceMocks.primaryETHBreakdown)
+    primaryBreakdown.save(tokenBalanceMocks.primaryETHBreakdown)
 
     let balanceResult = balances.keys()
 
@@ -127,13 +126,14 @@ describe('portfolioBalanceStorageMaker', () => {
   })
 
   it('should call clear', () => {
-    const {balances, primaryBalanceBreakdown} = portfolioBalanceStorageMaker({
+    const {balances, primaryBreakdown} = portfolioBalanceStorageMaker({
       balanceStorage,
       primaryBreakdownStorage,
+      primaryTokenId: tokenMocks.primaryETH.info.id,
     })
 
     balances.clear()
-    primaryBalanceBreakdown.clear()
+    primaryBreakdown.clear()
 
     expect(balanceStorage.clear).toHaveBeenCalled()
     expect(primaryBreakdownStorage.clear).toHaveBeenCalled()

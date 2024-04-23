@@ -11,7 +11,7 @@ import {
   TxMetadata as TxMetadataType,
   UnsignedTx as UnsignedTxType,
 } from '@emurgo/yoroi-lib'
-import {Api, App, Balance} from '@yoroi/types'
+import {Api, App, Balance, Portfolio} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 
 import {HWDeviceInfo} from '../hw'

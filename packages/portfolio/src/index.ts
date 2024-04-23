@@ -14,7 +14,7 @@ export * from './adapters/token.mocks'
 export * from './transformers/deserializers'
 
 export * from './validators/amount'
-export * from './validators/primary-balance-breakdown'
+export * from './validators/primary-breakdown'
 export * from './validators/response-record-with-cache-schema-maker'
 export * from './validators/token-application'
 export * from './validators/token-balance'

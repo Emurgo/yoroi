@@ -89,7 +89,7 @@ export const portfolioTokenManagerMaker = (
 
       subscribe: observer.subscribe,
       unsubscribe: observer.unsubscribe,
-      observable: observer.observable,
+      observable$: observer.observable,
 
       destroy,
     },

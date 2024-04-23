@@ -6,10 +6,12 @@ import {deserializers} from '../../transformers/deserializers'
 export const portfolioBalanceStorageMaker = ({
   balanceStorage,
   primaryBreakdownStorage,
+  primaryTokenId,
 }: {
   balanceStorage: App.ObservableStorage<false, Portfolio.Token.Id>
   primaryBreakdownStorage: App.ObservableStorage<false, Portfolio.Token.Id>
-}) => {
+  primaryTokenId: Portfolio.Token.Id
+}): Portfolio.Storage.Balance => {
   const balances = {
     save: (
       entries: ReadonlyArray<[Portfolio.Token.Id, Portfolio.Token.Balance]>,
@@ -32,16 +34,16 @@ export const portfolioBalanceStorageMaker = ({
     clear: () => balanceStorage.clear(),
   }
 
-  const primaryBalanceBreakdown = {
-    save: (breakdown: Readonly<Portfolio.BalancePrimaryBreakdown>) =>
+  const primaryBreakdown = {
+    save: (breakdown: Readonly<Portfolio.PrimaryBreakdown>) =>
       primaryBreakdownStorage.setItem(
-        breakdown.info.id,
+        primaryTokenId,
         breakdown,
         storageSerializer,
       ),
-    read: (key: Portfolio.Token.Id) =>
-      primaryBreakdownStorage.getItem<Portfolio.BalancePrimaryBreakdown>(
-        key,
+    read: () =>
+      primaryBreakdownStorage.getItem<Portfolio.PrimaryBreakdown>(
+        primaryTokenId,
         deserializers.primaryBreakdown,
       ),
     clear: () => primaryBreakdownStorage.clear(),
@@ -55,7 +57,7 @@ export const portfolioBalanceStorageMaker = ({
   return freeze(
     {
       balances,
-      primaryBalanceBreakdown,
+      primaryBreakdown,
       clear,
     },
     true,

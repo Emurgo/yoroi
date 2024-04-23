@@ -6,7 +6,6 @@ import {TokenInfoSchema} from './token-info'
 export const TokenBalanceSchema = z.object({
   info: TokenInfoSchema,
   balance: z.bigint(),
-  lockedInBuiltTxs: z.bigint(),
 })
 
 export const isTokenBalance = (

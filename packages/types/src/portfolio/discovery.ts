@@ -22,7 +22,7 @@ export type PortfolioTokenDiscovery = {
   }
 
   counters: {
-    supply: BigInt
+    supply: bigint
     items: number
     totalItems: number
   }

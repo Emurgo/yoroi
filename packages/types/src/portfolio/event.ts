@@ -33,6 +33,7 @@ export type PortfolioEventBalanceManager =
 export type PortfolioEventBalanceManagerSync = PortfolioEventSourceId &
   Readonly<{
     on: PortfolioEventManagerOn.Sync
+    mode: 'all' | 'primary-derived' | 'primary-stated'
   }>
 
 export type PortfolioEventBalanceManagerHydrate = PortfolioEventSourceId &

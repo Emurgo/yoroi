@@ -56,12 +56,14 @@ export const PortfolioScreen = () => {
   const {balanceManager: bmW1, balanceStorage: bs1} = usePortfolioBalanceManager({
     tokenManager,
     walletId: wallet.id,
+    network: Chain.Network.Main,
   })
 
   // wallet 2 for testing
   const {balanceManager: bmW2, balanceStorage: bs2} = usePortfolioBalanceManager({
     tokenManager,
     walletId: 'wallet-2',
+    network: Chain.Network.Main,
   })
   const {data: balancesW2, isPending: isPendingW2} = useObserver({
     observable: bmW2.observable,

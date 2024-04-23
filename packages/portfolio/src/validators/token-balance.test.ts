@@ -9,10 +9,9 @@ import {tokenInfoMocks} from '../adapters/token-info.mocks'
 
 describe('TokenBalanceSchema', () => {
   it('should validate a valid token balance', () => {
-    const validTokenBalance = {
+    const validTokenBalance: Portfolio.Token.Balance = {
       info: tokenInfoMocks.ftNoTicker,
       balance: BigInt(10000000000),
-      lockedInBuiltTxs: BigInt(0),
     }
 
     const result = TokenBalanceSchema.safeParse(validTokenBalance)
@@ -24,7 +23,6 @@ describe('TokenBalanceSchema', () => {
     const invalidTokenBalance = {
       info: tokenInfoMocks.ftNoTicker,
       balance: '10000000000',
-      lockedInBuiltTxs: BigInt(0),
     }
 
     const result = TokenBalanceSchema.safeParse(invalidTokenBalance)
@@ -38,7 +36,6 @@ describe('isTokenBalance', () => {
     const validTokenBalance: Portfolio.Token.Balance = {
       info: tokenInfoMocks.ftNoTicker,
       balance: BigInt(10000000000),
-      lockedInBuiltTxs: BigInt(0),
     }
 
     const result = isTokenBalance(validTokenBalance)
@@ -50,7 +47,6 @@ describe('isTokenBalance', () => {
     const invalidTokenBalance = {
       info: tokenInfoMocks.ftNoTicker,
       balance: '10000000000',
-      lockedInBuiltTxs: BigInt(0),
     }
 
     const result = isTokenBalance(invalidTokenBalance)
@@ -64,7 +60,6 @@ describe('parseTokenBalance', () => {
     const validTokenBalance: Portfolio.Token.Balance = {
       info: tokenInfoMocks.ftNoTicker,
       balance: BigInt(10000000000),
-      lockedInBuiltTxs: BigInt(0),
     }
 
     const result = parseTokenBalance(validTokenBalance)
@@ -76,7 +71,6 @@ describe('parseTokenBalance', () => {
     const invalidTokenBalance = {
       info: tokenInfoMocks.ftNoTicker,
       balance: '10000000000',
-      lockedInBuiltTxs: BigInt(0),
     }
 
     const result = parseTokenBalance(invalidTokenBalance)

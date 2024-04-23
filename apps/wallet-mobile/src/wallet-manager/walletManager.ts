@@ -1,8 +1,9 @@
 import {parseSafe} from '@yoroi/common'
-import {App} from '@yoroi/types'
-import {catchError, concatMap, finalize, from, interval, of, Subject} from 'rxjs'
+import {App, Chain} from '@yoroi/types'
+import {catchError, concatMap, finalize, from, interval, of, startWith, Subject} from 'rxjs'
 import uuid from 'uuid'
 
+import {buildPortfolioTokenManagers} from '../features/Portfolio/common/usePortfolioTokenManager'
 import {getCardanoWalletFactory} from '../yoroi-wallets/cardano/getWallet'
 import {isYoroiWallet, YoroiWallet} from '../yoroi-wallets/cardano/types'
 import {HWDeviceInfo} from '../yoroi-wallets/hw'
@@ -16,23 +17,34 @@ import {isWalletMeta, parseWalletMeta} from './validators'
 const thirtyFiveSeconds = 35 * 1e3
 
 export class WalletManager {
-  readonly #walletsRootStorage: App.Storage
-  readonly #rootStorage: App.Storage
+  static #instance: WalletManager
+  readonly #walletsRootStorage: App.Storage = rootStorage.join('wallet/')
+  readonly #rootStorage: App.Storage = rootStorage
   readonly #openedWallets: Map<string, YoroiWallet> = new Map()
   public readonly walletInfos$ = new Subject<WalletInfos>()
   readonly #walletInfos: WalletInfos = new Map()
+  readonly #tokenManagersByNetwork = buildPortfolioTokenManagers()
   #selectedWalletId: YoroiWallet['id'] | null = null
   #subscriptions: Array<WalletManagerSubscription> = []
   #isSyncing = false
 
   constructor() {
-    this.#walletsRootStorage = rootStorage.join('wallet/')
-    this.#rootStorage = rootStorage
+    if (WalletManager.#instance) return WalletManager.#instance
+    WalletManager.#instance = this
+  }
+
+  static instance() {
+    if (!WalletManager.#instance) return new WalletManager()
+    return WalletManager.#instance
   }
 
   setSelectedWalletId(id: YoroiWallet['id']) {
     this.#selectedWalletId = id
     this._notify({type: 'selected-wallet-id', id})
+  }
+
+  getTokenManager(network: Chain.SupportedNetworks) {
+    return this.#tokenManagersByNetwork[network]
   }
 
   get selectedWalledId() {
@@ -79,7 +91,7 @@ export class WalletManager {
         .subscribe()
     }
 
-    const subscription = interval(thirtyFiveSeconds).subscribe(syncWallets)
+    const subscription = interval(thirtyFiveSeconds).pipe(startWith(0)).subscribe(syncWallets)
 
     return {
       destroy: () => {
@@ -185,8 +197,8 @@ export class WalletManager {
     walletImplementationId: WalletImplementationId,
     addressMode: AddressMode,
   ) {
-    await wallet.save()
-    if (!wallet.checksum) throw new Error('invalid wallet')
+    if (!isYoroiWallet(wallet)) throw new Error('invalid wallet')
+
     const walletMeta: WalletMeta = {
       id,
       name,
@@ -198,14 +210,10 @@ export class WalletManager {
       isEasyConfirmationEnabled: false,
     }
 
+    await wallet.save()
     await this.#walletsRootStorage.setItem(id, walletMeta)
 
-    if (isYoroiWallet(wallet)) {
-      this.#openedWallets.set(id, wallet)
-      return wallet
-    }
-
-    throw new Error('invalid wallet')
+    return wallet
   }
 
   async openWallet(walletMeta: WalletMeta): Promise<YoroiWallet> {
@@ -291,7 +299,7 @@ export class WalletManager {
   }
 }
 
-export const walletManager = new WalletManager()
+export const walletManager = WalletManager.instance()
 walletManager.startSyncingAllWallets()
 
 export default walletManager

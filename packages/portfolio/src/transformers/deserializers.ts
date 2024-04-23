@@ -7,7 +7,7 @@ import {freeze} from 'immer'
 
 import {parseTokenBalance} from '../validators/token-balance'
 import {parseTokenDiscoveryWithCacheRecord} from '../validators/token-discovery'
-import {parsePrimaryBalanceBreakdown} from '../validators/primary-balance-breakdown'
+import {parsePrimaryBreakdown} from '../validators/primary-breakdown'
 
 export const tokenDiscoveryReviverMapping: StorageReviverMapping = {
   supply: StorageReviverType.AsBigInt,
@@ -15,14 +15,12 @@ export const tokenDiscoveryReviverMapping: StorageReviverMapping = {
 
 export const tokenBalanceReviverMapping: StorageReviverMapping = {
   balance: StorageReviverType.AsBigInt,
-  lockedInBuiltTxs: StorageReviverType.AsBigInt,
 }
 
 export const primaryBalanceBreakdownReviverMapping: StorageReviverMapping = {
-  balance: StorageReviverType.AsBigInt,
-  lockedInBuiltTxs: StorageReviverType.AsBigInt,
-  minRequiredByTokens: StorageReviverType.AsBigInt,
-  quantity: StorageReviverType.AsBigInt,
+  availableRewards: StorageReviverType.AsBigInt,
+  totalFromTxs: StorageReviverType.AsBigInt,
+  lockedAsStorageCost: StorageReviverType.AsBigInt,
 }
 
 const tokenBalanceDeserializer = (jsonString: string | null) => {
@@ -48,7 +46,7 @@ const primaryBalanceBreakdownDeserializer = (jsonString: string | null) => {
   const record = storageDeserializerMaker(
     primaryBalanceBreakdownReviverMapping,
   )(jsonString)
-  const parsed = parsePrimaryBalanceBreakdown(record)
+  const parsed = parsePrimaryBreakdown(record)
   return parsed ?? null
 }
 

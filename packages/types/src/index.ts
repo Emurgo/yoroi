@@ -160,8 +160,7 @@ import {PortfolioTokenInfo} from './portfolio/info'
 import {
   PortfolioAmount,
   PortfolioAmounts,
-  PortfolioBalancePrimaryBreakdown,
-  PortfolioBalancePrimaryRecord,
+  PortfolioPrimaryBreakdown,
   PortfolioTokenBalance,
 } from './portfolio/balance'
 import {PortfolioTokenPrice} from './portfolio/price'
@@ -424,8 +423,7 @@ export namespace Transfer {
 export namespace Portfolio {
   export type Amount = PortfolioAmount
   export type Amounts = PortfolioAmounts
-  export type BalancePrimaryRecord = PortfolioBalancePrimaryRecord
-  export type BalancePrimaryBreakdown = PortfolioBalancePrimaryBreakdown
+  export type PrimaryBreakdown = PortfolioPrimaryBreakdown
 
   export namespace Event {
     export type SourceId = PortfolioEventSourceId

@@ -122,7 +122,9 @@ export class TransactionManager {
         // @deprecated
         perAddressSyncMetadata: this.#state.perAddressSyncMetadata,
       })
+      return true
     }
+    return false
   }
 }
 

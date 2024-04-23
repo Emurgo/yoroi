@@ -1,27 +1,55 @@
 import {mountMMKVStorage, observableStorageMaker} from '@yoroi/common'
 import {portfolioApiMaker, portfolioTokenManagerMaker, portfolioTokenStorageMaker} from '@yoroi/portfolio'
 import {Chain, Portfolio} from '@yoroi/types'
+import {freeze} from 'immer'
 import * as React from 'react'
 
 export const usePortfolioTokenManager = ({network}: {network: Chain.Network}) => {
-  return React.useMemo(() => {
-    const tokenDiscoveryStorageMounted = mountMMKVStorage<Portfolio.Token.Id>({path: `${network}/token-discovery/`})
-    const tokenInfoStorageMounted = mountMMKVStorage<Portfolio.Token.Id>({path: `${network}/token-info/`})
+  return React.useMemo(() => buildPortfolioTokenManager({network}), [network])
+}
 
-    const tokenStorage = portfolioTokenStorageMaker({
-      tokenDiscoveryStorage: observableStorageMaker(tokenDiscoveryStorageMounted),
-      tokenInfoStorage: observableStorageMaker(tokenInfoStorageMounted),
-    })
-    const api = portfolioApiMaker({
-      network,
-    })
+export const buildPortfolioTokenManager = ({network}: {network: Chain.Network}) => {
+  const tokenDiscoveryStorageMounted = mountMMKVStorage<Portfolio.Token.Id>({path: `${network}/token-discovery/`})
+  const tokenInfoStorageMounted = mountMMKVStorage<Portfolio.Token.Id>({path: `${network}/token-info/`})
 
-    const tokenManager = portfolioTokenManagerMaker({
-      api,
-      storage: tokenStorage,
-    })
+  const tokenStorage = portfolioTokenStorageMaker({
+    tokenDiscoveryStorage: observableStorageMaker(tokenDiscoveryStorageMounted),
+    tokenInfoStorage: observableStorageMaker(tokenInfoStorageMounted),
+  })
+  const api = portfolioApiMaker({
+    network,
+  })
 
-    tokenManager.hydrate({sourceId: 'initial'})
-    return {tokenManager, tokenStorage}
-  }, [network])
+  const tokenManager = portfolioTokenManagerMaker({
+    api,
+    storage: tokenStorage,
+  })
+
+  tokenManager.hydrate({sourceId: 'initial'})
+  return {tokenManager, tokenStorage}
+}
+
+export const buildPortfolioTokenManagers = () => {
+  const mainnetPortfolioTokenManager = buildPortfolioTokenManager({network: Chain.Network.Main})
+  const preprodPortfolioTokenManager = buildPortfolioTokenManager({network: Chain.Network.Preprod})
+  const sanchoPortfolioTokenManager = buildPortfolioTokenManager({network: Chain.Network.Sancho})
+
+  mainnetPortfolioTokenManager.tokenManager.hydrate({sourceId: 'initial'})
+  preprodPortfolioTokenManager.tokenManager.hydrate({sourceId: 'initial'})
+  sanchoPortfolioTokenManager.tokenManager.hydrate({sourceId: 'initial'})
+
+  const tokenManagers: Readonly<{
+    [Chain.Network.Main]: Portfolio.Manager.Token
+    [Chain.Network.Preprod]: Portfolio.Manager.Token
+    [Chain.Network.Sancho]: Portfolio.Manager.Token
+  }> = freeze(
+    {
+      [Chain.Network.Main]: mainnetPortfolioTokenManager.tokenManager,
+      [Chain.Network.Preprod]: preprodPortfolioTokenManager.tokenManager,
+      [Chain.Network.Sancho]: sanchoPortfolioTokenManager.tokenManager,
+    },
+    true,
+  )
+
+  return tokenManagers
 }

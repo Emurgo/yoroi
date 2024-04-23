@@ -10,7 +10,7 @@ export const portfolioTokenStorageMaker = ({
 }: {
   tokenInfoStorage: App.ObservableStorage<false, Portfolio.Token.Id>
   tokenDiscoveryStorage: App.ObservableStorage<false, Portfolio.Token.Id>
-}) => {
+}): Portfolio.Storage.Token => {
   const infos = {
     save: (
       entries: ReadonlyArray<
