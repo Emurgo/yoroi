@@ -4,11 +4,12 @@ export const features = {
     search: __DEV__ || false,
     nfts: __DEV__ || false,
   },
-  useTestnet: __DEV__ ? false : false,
-  startWithIndexScreen: __DEV__ ? false : false,
-  prefillWalletInfo: __DEV__ ? false : false,
-  showProdPoolsInDev: __DEV__ ? false : false,
-  moderatingNftsEnabled: __DEV__ ? false : false,
+  useTestnet: false,
+  prefillWalletInfo: false,
+  showProdPoolsInDev: __DEV__,
+  moderatingNftsEnabled: false,
+  walletListFeedback: __DEV__,
+  poolTransition: __DEV__,
 }
 
 export const debugWalletInfo = {
