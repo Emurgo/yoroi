@@ -41,8 +41,9 @@ import {debugWalletInfo, features} from '../../..'
 import {useSetSelectedWallet} from '../../../WalletManager/Context/SelectedWalletContext'
 import {useSetSelectedWalletMeta} from '../../../WalletManager/Context/SelectedWalletMetaContext'
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
-import {YoroiZendeskLink} from '../../common/contants'
+import {YoroiZendeskLink} from '../../common/constants'
 import {LearnMoreButton} from '../../common/LearnMoreButton/LearnMoreButton'
+import {PreparingWallet} from '../../common/PreparingWallet/PreparingWallet'
 import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
 import {useStrings} from '../../common/useStrings'
 import {Info as InfoIllustration} from '../../illustrations/Info'
@@ -110,6 +111,7 @@ export const WalletDetailsScreen = () => {
 
   const {
     openWallet,
+    data: openWalletData,
     isLoading: isOpenWalletLoading,
     isSuccess: isOpenWalletSuccess,
   } = useOpenWallet({
@@ -157,8 +159,6 @@ export const WalletDetailsScreen = () => {
     {tooLong: strings.tooLong, nameAlreadyTaken: strings.nameAlreadyTaken, mustBeFilled: strings.mustBeFilled},
     nameErrors,
   )
-
-  const isLoading = isCreateWalletLoading || isOpenWalletLoading
 
   const handleCreateWallet = React.useCallback(() => {
     track.createWalletDetailsSubmitted()
@@ -273,6 +273,12 @@ export const WalletDetailsScreen = () => {
       </View>,
       HEIGHT_MODAL_CHECKSUM,
     )
+  }
+
+  const isLoading = isCreateWalletLoading || isOpenWalletLoading || !!openWalletData
+
+  if (isLoading) {
+    return <PreparingWallet />
   }
 
   return (
