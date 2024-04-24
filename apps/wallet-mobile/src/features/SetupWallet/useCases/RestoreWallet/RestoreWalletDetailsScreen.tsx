@@ -6,6 +6,7 @@ import {Api} from '@yoroi/types'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {
+  ActivityIndicator,
   InteractionManager,
   Keyboard,
   Linking,
@@ -66,7 +67,7 @@ const useSizeModal = () => {
 const addressMode: AddressMode = 'single'
 export const RestoreWalletDetailsScreen = () => {
   const bold = useBold()
-  const {styles} = useStyles()
+  const {styles, colors} = useStyles()
   const {HEIGHT_MODAL_NAME_PASSWORD, HEIGHT_MODAL_CHECKSUM} = useSizeModal()
   const {openModal, closeModal} = useModal()
   const strings = useStrings()
@@ -254,69 +255,75 @@ export const RestoreWalletDetailsScreen = () => {
         <Space height="xl" />
 
         <ScrollView style={styles.form}>
-          <TextInput
-            enablesReturnKeyAutomatically
-            autoFocus
-            label={strings.walletDetailsNameInput}
-            value={name}
-            onChangeText={(walletName: string) => setName(walletName)}
-            errorText={!isEmptyString(walletNameErrorText) ? walletNameErrorText : undefined}
-            errorDelay={0}
-            returnKeyType="next"
-            onSubmitEditing={() => passwordRef.current?.focus()}
-            testID="walletNameInput"
-            autoComplete="off"
-            disabled={isLoading}
-            showErrorOnBlur
-          />
+          {isLoading ? (
+            <ActivityIndicator animating size="large" color={colors.loading} style={styles.loading} />
+          ) : (
+            <>
+              <TextInput
+                enablesReturnKeyAutomatically
+                autoFocus
+                label={strings.walletDetailsNameInput}
+                value={name}
+                onChangeText={(walletName: string) => setName(walletName)}
+                errorText={!isEmptyString(walletNameErrorText) ? walletNameErrorText : undefined}
+                errorDelay={0}
+                returnKeyType="next"
+                onSubmitEditing={() => passwordRef.current?.focus()}
+                testID="walletNameInput"
+                autoComplete="off"
+                disabled={isLoading}
+                showErrorOnBlur
+              />
 
-          <TextInput
-            enablesReturnKeyAutomatically
-            ref={passwordRef}
-            secureTextEntry
-            label={strings.walletDetailsPasswordInput}
-            value={password}
-            onChangeText={setPassword}
-            errorText={passwordErrorText}
-            returnKeyType="next"
-            helper={strings.walletDetailsPasswordHelper}
-            onSubmitEditing={() => passwordConfirmationRef.current?.focus()}
-            testID="walletPasswordInput"
-            autoComplete="off"
-            disabled={isLoading}
-            showErrorOnBlur
-          />
+              <TextInput
+                enablesReturnKeyAutomatically
+                ref={passwordRef}
+                secureTextEntry
+                label={strings.walletDetailsPasswordInput}
+                value={password}
+                onChangeText={setPassword}
+                errorText={passwordErrorText}
+                returnKeyType="next"
+                helper={strings.walletDetailsPasswordHelper}
+                onSubmitEditing={() => passwordConfirmationRef.current?.focus()}
+                testID="walletPasswordInput"
+                autoComplete="off"
+                disabled={isLoading}
+                showErrorOnBlur
+              />
 
-          <Space height="xl" />
+              <Space height="xl" />
 
-          <TextInput
-            enablesReturnKeyAutomatically
-            ref={passwordConfirmationRef}
-            secureTextEntry
-            returnKeyType="done"
-            label={strings.walletDetailsConfirmPasswordInput}
-            value={passwordConfirmation}
-            onChangeText={setPasswordConfirmation}
-            errorText={passwordConfirmationErrorText}
-            testID="walletRepeatPasswordInput"
-            autoComplete="off"
-            disabled={isLoading}
-            showErrorOnBlur={!isOpenWalletSuccess}
-          />
+              <TextInput
+                enablesReturnKeyAutomatically
+                ref={passwordConfirmationRef}
+                secureTextEntry
+                returnKeyType="done"
+                label={strings.walletDetailsConfirmPasswordInput}
+                value={passwordConfirmation}
+                onChangeText={setPasswordConfirmation}
+                errorText={passwordConfirmationErrorText}
+                testID="walletRepeatPasswordInput"
+                autoComplete="off"
+                disabled={isLoading}
+                showErrorOnBlur={!isOpenWalletSuccess}
+              />
 
-          <View style={styles.checksum}>
-            <Icon.WalletAccount iconSeed={plate.accountPlate.ImagePart} style={styles.walletChecksum} />
+              <View style={styles.checksum}>
+                <Icon.WalletAccount iconSeed={plate.accountPlate.ImagePart} style={styles.walletChecksum} />
 
-            <Space width="s" />
+                <Space width="s" />
 
-            <Text style={styles.plateNumber}>{plate.accountPlate.TextPart}</Text>
+                <Text style={styles.plateNumber}>{plate.accountPlate.TextPart}</Text>
 
-            <Space width="s" />
+                <Space width="s" />
 
-            <TouchableOpacity onPress={showModalTipsPlateNumber}>
-              <InfoIllustration />
-            </TouchableOpacity>
-          </View>
+                <TouchableOpacity onPress={showModalTipsPlateNumber}>
+                  <InfoIllustration />
+                </TouchableOpacity>
+              </View>
+            </>
+          )}
         </ScrollView>
 
         <View style={styles.actions}>
@@ -385,6 +392,9 @@ const useStyles = () => {
       justifyContent: 'center',
       alignItems: 'center',
     },
+    loading: {
+      ...theme.padding['y-xxl'],
+    },
     button: {
       backgroundColor: theme.color.primary[500],
     },
@@ -406,7 +416,9 @@ const useStyles = () => {
     },
   })
 
-  return {styles} as const
+  const colors = {loading: theme.color.gray.max}
+
+  return {styles, colors} as const
 }
 
 const NOOP = () => undefined
