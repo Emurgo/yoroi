@@ -4,7 +4,7 @@ import {ScrollView, StyleSheet, View} from 'react-native'
 
 import {Spacer} from '../../../../components'
 import {makeList} from '../../../../utils'
-import {DAppItemSkeleton} from './DAppItem/DAppItemSkeleton'
+import {DAppItemSkeleton} from './DAppListItem/DAppItemSkeleton'
 
 export const ListSkeleton = () => {
   const styles = useStyles()

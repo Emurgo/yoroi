@@ -6,7 +6,7 @@ import uuid from 'uuid'
 
 import {Icon, Spacer, useModal} from '../../../../../components'
 import {useBrowser} from '../../../common/BrowserProvider'
-import {DAppItem as IDAppItem, GOOGLE_DAPP_ID} from '../../../common/DAppMock'
+import {type DAppItem, isGoogleSearchItem} from '../../../common/helpers'
 import {LabelCategoryDApp} from '../../../common/LabelCategoryDApp'
 import {LabelConnected} from '../../../common/LabelConnected'
 import {useNavigateTo} from '../../../common/useNavigateTo'
@@ -15,11 +15,11 @@ import {useStrings} from '../../../common/useStrings'
 const DIALOG_DAPP_ACTIONS_HEIGHT = 294
 
 type Props = {
-  dApp: IDAppItem
+  dApp: DAppItem
   connected: boolean
   onPress?: () => void
 }
-export const DAppItem = ({dApp, connected, onPress}: Props) => {
+export const DAppListItem = ({dApp, connected, onPress}: Props) => {
   const {styles, colors} = useStyles()
   const {addTab, setTabActive, tabs} = useBrowser()
   const navigateTo = useNavigateTo()
@@ -53,7 +53,7 @@ export const DAppItem = ({dApp, connected, onPress}: Props) => {
       return
     }
 
-    if (!connected || dApp.id === GOOGLE_DAPP_ID) {
+    if (!connected || isGoogleSearchItem(dApp)) {
       return handleOpenDApp()
     }
 

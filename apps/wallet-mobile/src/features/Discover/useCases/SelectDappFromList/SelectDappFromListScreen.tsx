@@ -5,12 +5,12 @@ import {FlatList, StyleSheet, View} from 'react-native'
 
 import {Spacer} from '../../../../components'
 import {useSearch, useSearchOnNavBar} from '../../../../Search/SearchContext'
-import {getGoogleSearchItem} from '../../common/DAppMock'
+import {getGoogleSearchItem} from '../../common/helpers'
 import {useDAppsConnected} from '../../common/useDAppsConnected'
 import {useStrings} from '../../common/useStrings'
 import {CountDAppsAvailable} from './CountDAppsAvailable/CountDAppsAvailable'
 import {DAppExplorerTabItem} from './DAppExplorerTabItem/DAppExplorerTabItem'
-import {DAppItem} from './DAppItem/DAppItem'
+import {DAppListItem} from './DAppListItem/DAppListItem'
 import {DAppTypes} from './DAppTypes/DAppTypes'
 import {WelcomeDAppModal} from './WelcomeDAppModal'
 
@@ -45,9 +45,6 @@ export const SelectDappFromListScreen = () => {
     const connectedOrigins = listDAppConnected ?? []
     return dappOrigins.some((dappOrigin) => connectedOrigins.includes(dappOrigin))
   }
-
-  console.log('list')
-  console.log(JSON.stringify(list, null, 2))
 
   const handleToggleCategory = React.useCallback(
     (category: string) => {
@@ -141,7 +138,7 @@ export const SelectDappFromListScreen = () => {
           ListHeaderComponent={headerDAppControl}
           renderItem={({item: entry}) => (
             <View style={styles.dAppItemBox}>
-              <DAppItem dApp={entry} connected={isDappConnected(entry.origins)} />
+              <DAppListItem dApp={entry} connected={isDappConnected(entry.origins)} />
             </View>
           )}
           ItemSeparatorComponent={() => <Spacer style={styles.dAppsBox} />}
