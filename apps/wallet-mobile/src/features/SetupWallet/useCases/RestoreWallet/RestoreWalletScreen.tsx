@@ -35,6 +35,7 @@ export const RestoreWalletScreen = () => {
   const walletManager = useWalletManager()
   const {walletMetas} = useWalletMetas(walletManager)
   const {openModal} = useModal()
+  const [suggestedWords, setSuggestedWords] = React.useState<Array<string>>([])
 
   const strings = useStrings()
 
@@ -116,13 +117,38 @@ export const RestoreWalletScreen = () => {
             <Space height="l" />
           </View>
 
-          <MnemonicInput length={mnemonicType} onDone={setMnemonic} />
+          <MnemonicInput
+            suggestedWords={suggestedWords}
+            setSuggestedWords={setSuggestedWords}
+            length={mnemonicType}
+            onDone={setMnemonic}
+          />
         </ScrollView>
 
         {mnemonic !== '' && (
           <View style={styles.padding}>
             <Button title={strings.next} style={styles.button} onPress={handleOnNext} />
           </View>
+        )}
+
+        {suggestedWords.length > 0 && (
+          <ScrollView
+            contentContainerStyle={{flexDirection: 'row', alignItems: 'center'}}
+            style={{
+              height: 100,
+              width: '100%',
+              backgroundColor: 'red' /* flexDirection: 'row', alignItems: 'center' */,
+            }}
+            horizontal
+          >
+            {suggestedWords.map((word) => (
+              <View key={word} style={{padding: 5}}>
+                <View style={{height: 50, width: 50, backgroundColor: 'blue'}}>
+                  <Text>{word}</Text>
+                </View>
+              </View>
+            ))}
+          </ScrollView>
         )}
       </KeyboardAvoidingView>
     </SafeAreaView>
