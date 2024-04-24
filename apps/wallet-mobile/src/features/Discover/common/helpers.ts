@@ -1,8 +1,9 @@
-import Google from '../../../assets/img/dApp/google.png'
-import {App} from '@yoroi/types'
-import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
-import {Alert} from 'react-native'
 import {connectionStorageMaker, dappConnectorMaker} from '@yoroi/dapp-connector'
+import {App} from '@yoroi/types'
+import {Alert} from 'react-native'
+
+import Google from '../../../assets/img/dApp/google.png'
+import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 
 export const validUrl = (url: string) => {
   return /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!&',,=.+]+$/g.test(url)

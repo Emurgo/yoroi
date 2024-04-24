@@ -9,10 +9,10 @@ import {defaultStackNavigationOptions, DiscoverRoutes} from '../../navigation'
 import {useSelectedWallet} from '../WalletManager/Context'
 import {BrowserNavigator} from './BrowserNavigator'
 import {BrowserProvider} from './common/BrowserProvider'
+import {createDappConnector} from './common/helpers'
 import {useStrings} from './common/useStrings'
 import {ListSkeleton} from './useCases/SelectDappFromList/ListSkeleton'
 import {SelectDappFromListScreen} from './useCases/SelectDappFromList/SelectDappFromListScreen'
-import {createDappConnector} from './common/helpers'
 
 const Stack = createStackNavigator<DiscoverRoutes>()
 

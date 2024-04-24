@@ -1,3 +1,4 @@
+import {useDappConnector} from '@yoroi/dapp-connector'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Image, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native'
@@ -11,7 +12,6 @@ import {LabelCategoryDApp} from '../../../common/LabelCategoryDApp'
 import {LabelConnected} from '../../../common/LabelConnected'
 import {useNavigateTo} from '../../../common/useNavigateTo'
 import {useStrings} from '../../../common/useStrings'
-import {useDappConnector} from '@yoroi/dapp-connector'
 
 const DIALOG_DAPP_ACTIONS_HEIGHT = 294
 
