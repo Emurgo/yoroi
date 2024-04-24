@@ -99,6 +99,7 @@ export const useStrings = () => {
     restoreDuplicatedWalletModalTitle: intl.formatMessage(messages.restoreDuplicatedWalletModalTitle),
     restoreDuplicatedWalletModalText: intl.formatMessage(messages.restoreDuplicatedWalletModalText),
     restoreDuplicatedWalletModalButton: intl.formatMessage(messages.restoreDuplicatedWalletModalButton),
+    preparingWallet: intl.formatMessage(messages.preparingWallet),
   }).current
 }
 
@@ -410,6 +411,10 @@ export const messages = Object.freeze(
     restoreDuplicatedWalletModalButton: {
       id: 'components.walletinit.restorewallet.restorewalletscreen.restoreDuplicatedWalletModalButton',
       defaultMessage: '!!!Open wallet',
+    },
+    preparingWallet: {
+      id: 'components.walletinit.restorewallet.restorewalletscreen.preparingWallet',
+      defaultMessage: '!!!Preparing your wallet...',
     },
   }),
 )
