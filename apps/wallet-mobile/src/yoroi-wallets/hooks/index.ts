@@ -175,16 +175,18 @@ export const useLockedAmount = (
   options?: UseQueryOptions<Balance.Quantity, Error, Balance.Quantity, [string, string, 'lockedAmount']>,
 ) => {
   const {protocolParams} = useProtocolParams(wallet, {suspense: true})
-  const coinsPerUtxoByte = protocolParams?.coinsPerUtxoByte ?? ''
+  const coinsPerUtxoByte = protocolParams?.coinsPerUtxoByte
 
   const query = useQuery({
     ...options,
     suspense: true,
-    queryKey: [wallet.id, coinsPerUtxoByte, 'lockedAmount'],
+    queryKey: [wallet.id, coinsPerUtxoByte ?? '', 'lockedAmount'],
     queryFn: () =>
-      calcLockedDeposit(wallet.utxos, wallet.receiveAddresses[0], coinsPerUtxoByte).then(
-        (amount) => amount.toString() as Balance.Quantity,
-      ),
+      calcLockedDeposit({
+        rawUtxos: wallet.utxos,
+        address: wallet.receiveAddresses[0],
+        coinsPerUtxoByteStr: coinsPerUtxoByte,
+      }).then((amount) => amount.toString() as Balance.Quantity),
   })
 
   React.useEffect(() => {
