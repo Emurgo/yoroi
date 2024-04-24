@@ -153,8 +153,8 @@ const AddWalletButton = () => {
   return (
     <Button
       onPress={() => {
-        resetSetupWallet()
-        resetToWalletSetup()
+        resetSetupWallet() // reset state
+        resetToWalletSetup() // navigates to screen
       }}
       title={strings.addWalletButton}
       style={styles.topButton}
