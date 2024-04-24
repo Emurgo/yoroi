@@ -44,10 +44,10 @@ export interface DAppItem {
   origins: string[]
 }
 
-export const GOOGLE_DAPP_ID = 'google_search'
+const googleDappId = 'google_search'
 
 export const getGoogleSearchItem = (searchQuery: string): DAppItem => ({
-  id: GOOGLE_DAPP_ID,
+  id: googleDappId,
   name: searchQuery,
   description: 'Google',
   category: 'search',
@@ -56,7 +56,7 @@ export const getGoogleSearchItem = (searchQuery: string): DAppItem => ({
   origins: ['https://www.google.com'],
 })
 
-export const isGoogleSearchItem = (dApp: DAppItem) => dApp.id === GOOGLE_DAPP_ID
+export const isGoogleSearchItem = (dApp: DAppItem) => dApp.id === googleDappId
 
 export const createDappConnector = (appStorage: App.Storage, wallet: YoroiWallet) => {
   const handlerWallet = {
