@@ -87,6 +87,8 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
     )
   }
 
+  const showIconPlaceholder = dApp.logo.length === 0
+
   return (
     <TouchableWithoutFeedback
       onPressIn={() => handlePressing(true)}
@@ -94,9 +96,13 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
       onPress={handlePress}
     >
       <View style={styles.dAppItemContainer}>
-        <View>
-          <Image source={{uri: dApp.logo}} style={styles.dAppLogo} />
-        </View>
+        {showIconPlaceholder ? (
+          <EmptyIcon />
+        ) : (
+          <View>
+            <Image source={{uri: dApp.logo}} style={styles.dAppLogo} />
+          </View>
+        )}
 
         <View style={styles.flexFull}>
           <Text numberOfLines={1} style={styles.nameText}>
@@ -117,6 +123,16 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
         </View>
       </View>
     </TouchableWithoutFeedback>
+  )
+}
+
+const EmptyIcon = () => {
+  const {colors, styles} = useStyles()
+
+  return (
+    <View style={styles.emptyIcon}>
+      <Icon.DApp color={colors.dappIcon} />
+    </View>
   )
 }
 
@@ -142,6 +158,13 @@ const useStyles = () => {
   const {color, typography, padding} = theme
 
   const styles = StyleSheet.create({
+    emptyIcon: {
+      borderRadius: 8,
+      backgroundColor: color.gray[50],
+      padding: 8,
+      width: 40,
+      height: 40,
+    },
     dAppItemContainer: {
       flexDirection: 'row',
       gap: 12,
@@ -196,6 +219,7 @@ const useStyles = () => {
 
   const colors = {
     icon: color.primary['900'],
+    dappIcon: color.gray[600],
   }
 
   return {styles, colors} as const
