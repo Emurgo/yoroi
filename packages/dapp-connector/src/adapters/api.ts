@@ -3,37 +3,33 @@ import {freeze} from 'immer'
 import {AxiosRequestConfig} from 'axios'
 import {z} from 'zod'
 
-const DAPP_LIST_HOST = 'https://daehx1qv45z7c.cloudfront.net'
+const dappListHost = 'https://daehx1qv45z7c.cloudfront.net'
 const initialDeps = freeze({request: fetchData}, true)
 
 export const dappConnectorApiGetDappList = ({request}: {request: FetchData} = initialDeps) => {
   return async (fetcherConfig?: AxiosRequestConfig): Promise<DappListResponse> => {
-    const config = {url: `${DAPP_LIST_HOST}/data.json`} as const
+    const config = {url: `${dappListHost}/data.json`} as const
 
-    try {
-      const response = await request<unknown>(config, fetcherConfig)
+    const response = await request<unknown>(config, fetcherConfig)
 
-      if (isLeft(response)) throw getApiError(response.error)
+    if (isLeft(response)) throw getApiError(response.error)
 
-      if (!isDappListResponse(response.value.data)) {
-        throw new Error('Invalid dapp list response: ' + JSON.stringify(response.value.data))
-      }
+    if (!isDappListResponse(response.value.data)) {
+      throw new Error('Invalid dapp list response: ' + JSON.stringify(response.value.data))
+    }
 
-      const value = response.value.data
-      return {
-        dapps: value.dapps.map((dapp) => ({
-          id: dapp.id,
-          name: dapp.name,
-          description: dapp.description,
-          category: dapp.category,
-          logo: `${DAPP_LIST_HOST}/${dapp.logo}`,
-          uri: dapp.uri,
-          origins: dapp.origins,
-        })),
-        filters: value.filters,
-      }
-    } catch (error: unknown) {
-      throw error
+    const value = response.value.data
+    return {
+      dapps: value.dapps.map((dapp) => ({
+        id: dapp.id,
+        name: dapp.name,
+        description: dapp.description,
+        category: dapp.category,
+        logo: `${dappListHost}/${dapp.logo}`,
+        uri: dapp.uri,
+        origins: dapp.origins,
+      })),
+      filters: value.filters,
     }
   }
 }

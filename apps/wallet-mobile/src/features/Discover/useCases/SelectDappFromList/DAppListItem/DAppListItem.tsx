@@ -45,11 +45,12 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
 
     navigateTo.browseDapp()
   }
-  const handleDisconnectDApp = (dApp: DAppItem) => {
+  const handleDisconnectDApp = async (dApp: DAppItem) => {
     const promises = dApp.origins.map(async (o) => {
       await manager.removeConnection({dappOrigin: o})
     })
-    Promise.all(promises).then(closeModal)
+    await Promise.all(promises)
+    closeModal()
   }
 
   const handlePress = () => {
@@ -118,7 +119,7 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
           <View style={styles.labelBox}>
             {connected && <LabelConnected />}
 
-            {dApp.category !== undefined && <LabelCategoryDApp category={dApp.category} />}
+            {!isGoogleSearchItem(dApp) && <LabelCategoryDApp category={dApp.category} />}
           </View>
         </View>
       </View>

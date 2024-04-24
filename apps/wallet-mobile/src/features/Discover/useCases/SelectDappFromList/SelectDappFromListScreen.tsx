@@ -77,31 +77,32 @@ export const SelectDappFromListScreen = () => {
 
   const getListDApps = (): DAppItem[] => {
     if (!list?.dapps) return []
+    const allDapps = currentTab === 'connected' ? [...list.dapps, ...getDAppsConnectedButNotInList()] : list.dapps
 
     if (isSearching) {
       if (search?.length > 0) {
-        return list.dapps
+        return allDapps
           .filter((dApp) => dApp.name.toLowerCase().includes(search.toLowerCase()))
           .sort((dAppFirst, dAppSecond) => dAppFirst.name.localeCompare(dAppSecond.name))
           .concat(getGoogleSearchItem(search))
       }
 
-      return list.dapps
+      return allDapps
     }
 
     if (hasConnectedDapps && currentTab === DAppTabs.connected) {
-      return list.dapps
+      return allDapps
         .filter((dApp) => isDappConnected(dApp.origins))
         .sort((dAppFirst, dAppSecond) => dAppFirst.name.localeCompare(dAppSecond.name))
     }
 
     if (categoriesSelected.length > 0) {
-      return list.dapps
+      return allDapps
         .filter((dApp) => categoriesSelected.some((filter) => list.filters[filter].includes(dApp.category)))
         .sort((dAppFirst, dAppSecond) => dAppFirst.name.localeCompare(dAppSecond.name))
     }
 
-    return list.dapps.sort((dAppFirst, dAppSecond) => dAppFirst.name.localeCompare(dAppSecond.name))
+    return allDapps.sort((dAppFirst, dAppSecond) => dAppFirst.name.localeCompare(dAppSecond.name))
   }
 
   const handleChangeTab = (tab: TDAppTabs) => {
@@ -148,7 +149,7 @@ export const SelectDappFromListScreen = () => {
 
       <View style={[styles.root]}>
         <FlatList
-          data={currentTab === 'connected' ? [...getListDApps(), ...getDAppsConnectedButNotInList()] : getListDApps()}
+          data={getListDApps()}
           extraData={connectedOrigins}
           keyExtractor={(item) => item.id.toString()}
           ListHeaderComponentStyle={styles.boxHeader}

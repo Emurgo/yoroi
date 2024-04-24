@@ -1,6 +1,6 @@
 import {connectionStorageMaker, dappConnectorMaker} from '@yoroi/dapp-connector'
 import {App} from '@yoroi/types'
-import {Alert} from 'react-native'
+import {Alert, Image} from 'react-native'
 
 import Google from '../../../assets/img/dApp/google.png'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
@@ -51,7 +51,7 @@ export const getGoogleSearchItem = (searchQuery: string): DAppItem => ({
   name: searchQuery,
   description: 'Google',
   category: 'search',
-  logo: Google,
+  logo: Image.resolveAssetSource(Google).uri,
   uri: `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`,
   origins: ['https://www.google.com'],
 })
