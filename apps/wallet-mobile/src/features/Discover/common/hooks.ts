@@ -5,11 +5,10 @@ import {WebView, WebViewMessageEvent} from 'react-native-webview'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {Logger} from '../../../yoroi-wallets/logging'
 import {walletConfig} from './wallet-config'
-
-const generateSessionId = () => Math.random().toString(36).substring(7)
+import {useStakingKey} from '../../../yoroi-wallets/hooks'
 
 export const useConnectWalletToWebView = (wallet: YoroiWallet, webViewRef: React.RefObject<WebView | null>) => {
-  const [sessionId] = React.useState(() => generateSessionId())
+  const sessionId = useStakingKey(wallet)
   const dappConnector = useDappConnector()
 
   const sendMessageToWebView = (event: string) => (id: string, result: unknown, error?: Error) => {
