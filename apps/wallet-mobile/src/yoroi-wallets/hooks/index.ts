@@ -700,7 +700,7 @@ export const useHasWallets = (
   options?: UseQueryOptions<Array<WalletMeta>, Error, boolean>,
 ) => {
   const query = useQuery({
-    queryKey: ['walletMetas'],
+    queryKey: ['hasWallets'],
     queryFn: async () => walletManager.listWallets(),
     select: (walletMetas) => walletMetas.length > 0,
     suspense: true,

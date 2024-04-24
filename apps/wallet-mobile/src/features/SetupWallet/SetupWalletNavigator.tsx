@@ -37,7 +37,7 @@ export const SetupWalletNavigator = () => {
       <Stack.Screen
         name="setup-wallet-choose-setup-type"
         component={ChooseSetupTypeScreen}
-        options={{title: strings.addNewWalletTitle}}
+        options={{title: strings.addNewWalletTitle, headerLeft: () => null}}
       />
 
       <Stack.Screen
