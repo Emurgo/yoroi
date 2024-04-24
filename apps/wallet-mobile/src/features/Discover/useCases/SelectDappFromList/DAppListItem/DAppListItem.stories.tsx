@@ -1,7 +1,6 @@
 import {storiesOf} from '@storybook/react-native'
 import * as React from 'react'
 
-import CardanoSpot from '../../../../../assets/img/dApp/cardano-spot.png'
 import {DAppListItem} from './DAppListItem'
 
 storiesOf('Discover DAppListItem', module)
@@ -13,7 +12,7 @@ const mockDApp = {
   name: 'Cardano Spot',
   description: 'Join a global Cardano Community: a single space to communicate, engage, educate with Cardano',
   category: 'media',
-  logo: CardanoSpot,
+  logo: 'https://daehx1qv45z7c.cloudfront.net/cardano-spot.png',
   uri: 'https://cardanospot.io/landing',
   origins: [],
 }
