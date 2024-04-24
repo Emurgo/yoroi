@@ -1,8 +1,8 @@
 import {useTransfer} from '@yoroi/transfer'
 import {Transfer} from '@yoroi/types'
 
-import {useBalance, useLockedAmount} from '../../../yoroi-wallets/hooks'
-import {Amounts, Quantities} from '../../../yoroi-wallets/utils'
+import {useBalance} from '../../../yoroi-wallets/hooks'
+import {Amounts, asQuantity, Quantities} from '../../../yoroi-wallets/utils'
 import {useSelectedWallet} from '../../WalletManager/Context'
 
 export const useTokenQuantities = (tokenId: string) => {
@@ -15,7 +15,7 @@ export const useTokenQuantities = (tokenId: string) => {
   const available = Quantities.diff(balance, used)
 
   const isPrimary = tokenId === wallet.primaryTokenInfo.id
-  const primaryLocked = useLockedAmount({wallet})
+  const primaryLocked = asQuantity(wallet.primaryBreakdown.lockedAsStorageCost.toString())
   const locked = isPrimary ? primaryLocked : Quantities.zero
 
   const spendable = Quantities.diff(available, locked)

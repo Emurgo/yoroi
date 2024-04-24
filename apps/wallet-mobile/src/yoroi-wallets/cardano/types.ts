@@ -158,7 +158,7 @@ export type YoroiWallet = {
   resync(): Promise<void>
   clear(): Promise<void>
   save(): Promise<void>
-  sync(): Promise<void>
+  sync(params: {isForced?: boolean}): Promise<void>
   saveMemo(txId: string, memo: string): Promise<void>
 
   // Balances, TxDetails
@@ -177,6 +177,12 @@ export type YoroiWallet = {
     isConfirmed: boolean
   }
   setCollateralId(collateralId: RawUtxo['utxo_id']): Promise<void>
+
+  // Portfolio
+  balance$: Portfolio.Manager.Balance['observable$']
+  get balances(): ReturnType<Portfolio.Manager.Balance['getBalances']>
+  get primaryBalance(): ReturnType<Portfolio.Manager.Balance['getPrimaryBalance']>
+  get primaryBreakdown(): ReturnType<Portfolio.Manager.Balance['getPrimaryBreakdown']>
 
   // Fiat
   fetchCurrentPrice(symbol: CurrencySymbol): Promise<number>
@@ -207,6 +213,12 @@ const yoroiWalletKeys: Array<keyof YoroiWallet> = [
   'isReadOnly',
   'primaryToken',
   'primaryTokenInfo',
+
+  // Portfolio
+  'balance$',
+  'balances',
+  'primaryBalance',
+  'primaryBreakdown',
 
   // Sending
   'createUnsignedTx',

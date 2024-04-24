@@ -11,8 +11,11 @@ import ExtendableError from 'es6-error'
 import _ from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 import {defaultMemoize} from 'reselect'
+import {Observable} from 'rxjs'
 
-import {buildPortfolioBalanceManager} from '../../../features/Portfolio/common/usePortfolioBalanceManager'
+import {buildPortfolioBalanceManager} from '../../../features/Portfolio/common/hooks/usePortfolioBalanceManager'
+import {toBalanceManagerSyncArgs} from '../../../features/Portfolio/common/transformers/toBalanceManagerSyncArgs'
+import {toChainSupportedNetwork} from '../../../features/Portfolio/common/transformers/toChainSupportedNetwork'
 import LocalizableError from '../../../i18n/LocalizableError'
 import {WalletMeta} from '../../../wallet-manager/types'
 import walletManager from '../../../wallet-manager/walletManager'
@@ -40,6 +43,7 @@ import {asQuantity, Quantities} from '../../utils'
 import {validatePassword} from '../../utils/validators'
 import {Cardano, CardanoMobile} from '../../wallets'
 import * as legacyApi from '../api'
+import {calcLockedDeposit} from '../assetUtils'
 import {encryptWithPassword} from '../catalyst/catalystCipher'
 import {generatePrivateKeyForCatalyst} from '../catalyst/catalystUtils'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
@@ -55,7 +59,6 @@ import {processTxHistoryData} from '../processTransactions'
 import {filterAddressesByStakingKey, getDelegationStatus} from '../shelley/delegationUtils'
 import {yoroiSignedTx} from '../signedTx'
 import {TransactionManager} from '../transactionManager'
-import {toChainSupportedNetwork} from '../../../features/Portfolio/common/transformers'
 import {
   CardanoTypes,
   isYoroiWallet,
@@ -171,6 +174,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     readonly checksum: CardanoTypes.WalletChecksum
     readonly encryptedStorage: WalletEncryptedStorage
     isEasyConfirmationEnabled = false
+    readonly balance$: Observable<Portfolio.Event.BalanceManager>
 
     private _utxos: RawUtxo[]
     private readonly storage: App.Storage
@@ -388,6 +392,20 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       this.state = {lastGeneratedAddressIndex}
       this.cardanoApi = cardanoApi
       this.balanceManager = balanceManager
+      this.balance$ = balanceManager.observable$
+    }
+
+    // portfoliio
+    get balances() {
+      return this.balanceManager.getBalances()
+    }
+
+    get primaryBalance() {
+      return this.balanceManager.getPrimaryBalance()
+    }
+
+    get primaryBreakdown() {
+      return this.balanceManager.getPrimaryBreakdown()
     }
 
     get receiveAddresses(): Addresses {
@@ -409,7 +427,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     }
 
     // =================== persistence =================== //
-    async sync() {
+    async sync({isForced = false}: {isForced?: boolean} = {}) {
       if (!this.isInitialized) {
         console.error('ShelleyWallet::sync: wallet not initialized')
         return Promise.resolve()
@@ -421,12 +439,14 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       const hasAddedNewAddress = addressesAfterRequest !== addressesBeforeRequest
 
       const [hasUpdatedUtxos, hasUpdateTxs] = await Promise.all([
-        this.syncUtxos(),
+        this.syncUtxos({isForced}),
         this.transactionManager.doSync(this.getAddressesInBlocks(), BACKEND),
       ])
 
+      const hasNewLastGeneratedAddress = this.generateNewReceiveAddressIfNeeded()
+
       const shouldPersist =
-        this.updateLastGeneratedAddressIndex() || hasAddedNewAddress || hasUpdateTxs || hasUpdatedUtxos
+        hasNewLastGeneratedAddress || hasAddedNewAddress || hasUpdateTxs || hasUpdatedUtxos || isForced
 
       if (shouldPersist) await this.save()
     }
@@ -1030,18 +1050,26 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       return response as any
     }
 
-    private async syncUtxos() {
+    private async syncUtxos({isForced = false}: {isForced?: boolean} = {}) {
       const addresses = [...this.internalAddresses, ...this.externalAddresses]
 
       await this.utxoManager.sync(addresses)
       const newUtxos = await this.utxoManager.getCachedUtxos()
 
-      if (this.didUtxosUpdate(this._utxos, newUtxos)) {
+      // NOTE: wallet is not aware of utxos state
+      // if it crashes, the utxo manager will be out of sync with wallet
+      if (this.didUtxosUpdate(this._utxos, newUtxos) || isForced) {
+        // NOTE: recalc locked deposit should happen also when epoch changes after conway
+        const {coinsPerUtxoByte} = await this.getProtocolParams()
+        const lockedAsStorageCost = await calcLockedDeposit({
+          rawUtxos: newUtxos,
+          coinsPerUtxoByteStr: coinsPerUtxoByte,
+        })
+
+        const balancesToSync = toBalanceManagerSyncArgs(newUtxos, BigInt(lockedAsStorageCost.toString()))
+        this.balanceManager.syncBalances(balancesToSync)
+
         this._utxos = newUtxos
-        // this.balanceManager.sync({
-        //   primaryBalance: {},
-        //   secondaryBalances: {},
-        // })
         this.notify({type: 'utxos', utxos: this.utxos})
         return true
       }

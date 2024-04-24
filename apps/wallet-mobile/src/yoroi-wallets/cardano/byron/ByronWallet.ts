@@ -4,16 +4,21 @@ import {signRawTransaction} from '@emurgo/yoroi-lib'
 import {Datum} from '@emurgo/yoroi-lib/dist/internals/models'
 import {AppApi, CardanoApi} from '@yoroi/api'
 import {isNonNullable, parseSafe} from '@yoroi/common'
-import {Api, App, Balance} from '@yoroi/types'
+import {Api, App, Balance, Portfolio} from '@yoroi/types'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
 import _ from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 import {defaultMemoize} from 'reselect'
+import {Observable} from 'rxjs'
 
+import {buildPortfolioBalanceManager} from '../../../features/Portfolio/common/hooks/usePortfolioBalanceManager'
+import {toBalanceManagerSyncArgs} from '../../../features/Portfolio/common/transformers/toBalanceManagerSyncArgs'
+import {toChainSupportedNetwork} from '../../../features/Portfolio/common/transformers/toChainSupportedNetwork'
 import LocalizableError from '../../../i18n/LocalizableError'
 import {WalletMeta} from '../../../wallet-manager/types'
+import walletManager from '../../../wallet-manager/walletManager'
 import {HWDeviceInfo} from '../../hw'
 import {Logger} from '../../logging'
 import {makeMemosManager, MemosManager} from '../../memos'
@@ -46,6 +51,7 @@ import {genTimeToSlot} from '../../utils/timeUtils'
 import {validatePassword} from '../../utils/validators'
 import {Cardano, CardanoMobile} from '../../wallets'
 import * as legacyApi from '../api'
+import {calcLockedDeposit} from '../assetUtils'
 import {encryptWithPassword} from '../catalyst/catalystCipher'
 import {generatePrivateKeyForCatalyst} from '../catalyst/catalystUtils'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
@@ -134,6 +140,7 @@ export class ByronWallet implements YoroiWallet {
   readonly checksum: CardanoTypes.WalletChecksum
   readonly encryptedStorage: WalletEncryptedStorage
   isEasyConfirmationEnabled = false
+  readonly balance$: Observable<Portfolio.Event.BalanceManager>
 
   private _utxos: RawUtxo[]
   private readonly storage: App.Storage
@@ -143,6 +150,7 @@ export class ByronWallet implements YoroiWallet {
   private readonly memosManager: MemosManager
   private _collateralId = ''
   private readonly cardanoApi: Api.Cardano.Actions
+  private readonly balanceManager: Portfolio.Manager.Balance
 
   // =================== create =================== //
 
@@ -273,6 +281,13 @@ export class ByronWallet implements YoroiWallet {
           ? 'sanchonet'
           : 'preprod',
     })
+    const chainNetwork = toChainSupportedNetwork(networkId)
+    const {balanceManager} = buildPortfolioBalanceManager({
+      tokenManager: walletManager.getTokenManager(chainNetwork),
+      walletId: id,
+      network: chainNetwork,
+    })
+    balanceManager.refresh()
 
     const wallet = new ByronWallet({
       storage,
@@ -291,6 +306,7 @@ export class ByronWallet implements YoroiWallet {
       transactionManager,
       memosManager,
       cardanoApi,
+      balanceManager,
     })
 
     await wallet.discoverAddresses()
@@ -320,6 +336,7 @@ export class ByronWallet implements YoroiWallet {
     transactionManager,
     memosManager,
     cardanoApi,
+    balanceManager,
   }: {
     storage: App.Storage
     networkId: NetworkId
@@ -337,6 +354,7 @@ export class ByronWallet implements YoroiWallet {
     transactionManager: TransactionManager
     memosManager: MemosManager
     cardanoApi: Api.Cardano.Actions
+    balanceManager: Portfolio.Manager.Balance
   }) {
     this.id = id
     this.storage = storage
@@ -376,6 +394,21 @@ export class ByronWallet implements YoroiWallet {
           NUMBERS.STAKING_KEY_INDEX,
         ]
     this.cardanoApi = cardanoApi
+    this.balanceManager = balanceManager
+    this.balance$ = balanceManager.observable$
+  }
+
+  // portfoliio
+  get balances() {
+    return this.balanceManager.getBalances()
+  }
+
+  get primaryBalance() {
+    return this.balanceManager.getPrimaryBalance()
+  }
+
+  get primaryBreakdown() {
+    return this.balanceManager.getPrimaryBreakdown()
   }
 
   get receiveAddresses(): Addresses {
@@ -417,21 +450,28 @@ export class ByronWallet implements YoroiWallet {
     }
   }
 
-  async sync() {
+  async sync({isForced = false}: {isForced?: boolean} = {}) {
     if (!this.isInitialized) {
-      console.error('ByronWallet::sync: wallet not initialized')
+      console.error('ShelleyWallet::sync: wallet not initialized')
       return Promise.resolve()
     }
 
+    const addressesBeforeRequest = this.internalChain.addresses.length + this.externalChain.addresses.length
     await this.discoverAddresses()
+    const addressesAfterRequest = this.internalChain.addresses.length + this.externalChain.addresses.length
+    const hasAddedNewAddress = addressesAfterRequest !== addressesBeforeRequest
 
-    await Promise.all([
-      this.syncUtxos(),
+    const [hasUpdatedUtxos, hasUpdateTxs] = await Promise.all([
+      this.syncUtxos({isForced}),
       this.transactionManager.doSync(this.getAddressesInBlocks(), this.getBackendConfig()),
     ])
 
-    this.updateLastGeneratedAddressIndex()
-    await this.save()
+    const hasNewLastGeneratedAddress = this.generateNewReceiveAddressIfNeeded()
+
+    const shouldPersist =
+      hasNewLastGeneratedAddress || hasAddedNewAddress || hasUpdateTxs || hasUpdatedUtxos || isForced
+
+    if (shouldPersist) await this.save()
   }
 
   async resync() {
@@ -1085,18 +1125,30 @@ export class ByronWallet implements YoroiWallet {
     return response as any
   }
 
-  private async syncUtxos() {
+  private async syncUtxos({isForced = false}: {isForced?: boolean} = {}) {
     const addresses = [...this.internalAddresses, ...this.externalAddresses]
 
     await this.utxoManager.sync(addresses)
-
     const newUtxos = await this.utxoManager.getCachedUtxos()
 
-    if (this.didUtxosUpdate(this._utxos, newUtxos)) {
-      this._utxos = newUtxos
+    // NOTE: wallet is not aware of utxos state
+    // if it crashes, the utxo manager will be out of sync with wallet
+    if (this.didUtxosUpdate(this._utxos, newUtxos) || isForced) {
+      // NOTE: recalc locked deposit should happen also when epoch changes after conway
+      const {coinsPerUtxoByte} = await this.getProtocolParams()
+      const lockedAsStorageCost = await calcLockedDeposit({
+        rawUtxos: newUtxos,
+        coinsPerUtxoByteStr: coinsPerUtxoByte,
+      })
 
+      const balancesToSync = toBalanceManagerSyncArgs(newUtxos, BigInt(lockedAsStorageCost.toString()))
+      this.balanceManager.syncBalances(balancesToSync)
+
+      this._utxos = newUtxos
       this.notify({type: 'utxos', utxos: this.utxos})
+      return true
     }
+    return false
   }
 
   get utxos() {

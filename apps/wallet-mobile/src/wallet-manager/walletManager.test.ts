@@ -8,6 +8,9 @@ import {WalletManager} from './walletManager'
 // ! Actually hitting the API
 describe('walletMananger', () => {
   beforeEach(() => AsyncStorage.clear())
+  afterAll(() => {
+    jest.useRealTimers()
+  })
 
   it('creates a wallet', async () => {
     const walletManager = new WalletManager()

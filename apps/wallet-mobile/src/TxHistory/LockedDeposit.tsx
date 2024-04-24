@@ -3,37 +3,23 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 
-import {Boundary, Spacer, Text} from '../components'
+import {Spacer, Text} from '../components'
+import {usePrimaryBreakdown} from '../features/Portfolio/common/hooks/usePrimaryBreakdown'
 import {usePrivacyMode} from '../features/Settings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../features/WalletManager/Context'
 import globalMessages from '../i18n/global-messages'
 import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../legacy/format'
-import {useLockedAmount} from '../yoroi-wallets/hooks'
+import {asQuantity} from '../yoroi-wallets/utils'
 
 export const LockedDeposit = () => {
   const {isPrivacyOff} = usePrivacyMode()
   const wallet = useSelectedWallet()
-  const loadingAmount = formatTokenWithTextWhenHidden('...', wallet.primaryToken)
   const hiddenAmount = formatTokenWithTextWhenHidden('*.******', wallet.primaryToken)
+  const {lockedAsStorageCost} = usePrimaryBreakdown({wallet})
+  const amount = formatTokenWithText(asQuantity(lockedAsStorageCost.toString()), wallet.primaryToken)
 
   if (isPrivacyOff) return <FormattedAmount amount={hiddenAmount} />
 
-  return (
-    <Boundary
-      loading={{
-        fallback: <FormattedAmount amount={loadingAmount} />,
-      }}
-      error={{size: 'inline'}}
-    >
-      <LockedAmount />
-    </Boundary>
-  )
-}
-
-const LockedAmount = () => {
-  const wallet = useSelectedWallet()
-  const lockedAmount = useLockedAmount({wallet})
-  const amount = formatTokenWithText(lockedAmount, wallet.primaryToken)
   return <FormattedAmount amount={amount} />
 }
 

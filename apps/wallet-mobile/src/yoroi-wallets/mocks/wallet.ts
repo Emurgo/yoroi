@@ -2,8 +2,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {action} from '@storybook/addon-actions'
 import {AppApi, CardanoApi} from '@yoroi/api'
-import {Balance} from '@yoroi/types'
+import {createPrimaryTokenInfo} from '@yoroi/portfolio'
+import {Balance, Portfolio} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
+import {Observable} from 'rxjs'
 
 import {getTokenFingerprint} from '../../legacy/format'
 import {WalletMeta} from '../../wallet-manager/types'
@@ -31,6 +33,17 @@ import {CardanoMobile} from '../wallets'
 import {mockEncryptedStorage} from './storage'
 import {mockTransactionInfo, mockTransactionInfos} from './transaction'
 import {utxos} from './utxos'
+
+const primaryTokenInfoMainnet = createPrimaryTokenInfo({
+  decimals: 6,
+  name: 'ADA',
+  ticker: 'ADA',
+  symbol: '₳',
+  reference: '',
+  tag: '',
+  website: 'https://www.cardano.org/',
+  originalImage: '',
+})
 
 const walletMeta: WalletMeta = {
   id: 'wallet-id',
@@ -68,6 +81,23 @@ const wallet: YoroiWallet = {
   utxos,
   allUtxos: utxos,
   collateralId: '22d391c7a97559cb4784bd975214919618acce75cde573a7150a176700e76181:2',
+
+  balance$: new Observable<Portfolio.Event.BalanceManager>(),
+  balances: {
+    all: [],
+    fts: [],
+    nfts: [],
+  },
+  primaryBalance: {
+    balance: 0n,
+    info: primaryTokenInfoMainnet,
+  },
+  primaryBreakdown: {
+    availableRewards: 0n,
+    lockedAsStorageCost: 0n,
+    totalFromTxs: 0n,
+  },
+
   getStakingInfo: async () => {
     throw new Error('not implemented: getStakingInfo')
   },

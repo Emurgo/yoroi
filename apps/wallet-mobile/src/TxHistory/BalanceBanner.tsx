@@ -5,17 +5,16 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {Boundary, ResetErrorRef, Spacer} from '../components'
 import {Icon} from '../components/Icon'
 import {PairedBalance} from '../components/PairedBalance/PairedBalance'
+import { usePrimaryBalance } from '../features/Portfolio/common/hooks/usePrimaryBalance'
 import {usePrivacyMode} from '../features/Settings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../features/WalletManager/Context'
 import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../legacy/format'
-import {useBalances} from '../yoroi-wallets/hooks'
 import {Amounts} from '../yoroi-wallets/utils'
 
 export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
   const wallet = useSelectedWallet()
   const styles = useStyles()
-  const balances = useBalances(wallet)
-  const primaryAmount = Amounts.getAmount(balances, wallet.primaryTokenInfo.id)
+  const primary = usePrimaryBalance({wallet})
   const {isPrivacyOff, togglePrivacyMode} = usePrivacyMode()
 
   return (
@@ -47,7 +46,6 @@ const hiddenBalance = '*.******'
 const Balance = ({isPrivacyOff}: {isPrivacyOff: boolean}) => {
   const styles = useStyles()
   const wallet = useSelectedWallet()
-  const balances = useBalances(wallet)
 
   const balance = isPrivacyOff
     ? formatTokenWithTextWhenHidden(hiddenBalance, wallet.primaryToken)

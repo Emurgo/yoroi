@@ -3,7 +3,7 @@ import {App, Chain} from '@yoroi/types'
 import {catchError, concatMap, finalize, from, interval, of, startWith, Subject} from 'rxjs'
 import uuid from 'uuid'
 
-import {buildPortfolioTokenManagers} from '../features/Portfolio/common/usePortfolioTokenManager'
+import {buildPortfolioTokenManagers} from '../features/Portfolio/common/hooks/usePortfolioTokenManager'
 import {getCardanoWalletFactory} from '../yoroi-wallets/cardano/getWallet'
 import {isYoroiWallet, YoroiWallet} from '../yoroi-wallets/cardano/types'
 import {HWDeviceInfo} from '../yoroi-wallets/hw'
@@ -20,7 +20,7 @@ export class WalletManager {
   static #instance: WalletManager
   readonly #walletsRootStorage: App.Storage = rootStorage.join('wallet/')
   readonly #rootStorage: App.Storage = rootStorage
-  readonly #openedWallets: Map<string, YoroiWallet> = new Map()
+  readonly #openedWallets: Map<YoroiWallet['id'], YoroiWallet> = new Map()
   public readonly walletInfos$ = new Subject<WalletInfos>()
   readonly #walletInfos: WalletInfos = new Map()
   readonly #tokenManagersByNetwork = buildPortfolioTokenManagers()
@@ -70,17 +70,17 @@ export class WalletManager {
           concatMap((wallet) => {
             this.#walletInfos.set(wallet.id, {sync: {status: 'syncing', updatedAt: Date.now()}})
             this.walletInfos$.next(new Map(this.#walletInfos))
-            return from(wallet.sync()).pipe(
+            return from(wallet.sync({isForced: false})).pipe(
+              catchError((error) => {
+                this.#walletInfos.set(wallet.id, {sync: {status: 'error', error, updatedAt: Date.now()}})
+                this.walletInfos$.next(new Map(this.#walletInfos))
+                return of()
+              }),
               finalize(() => {
                 if (this.#walletInfos.get(wallet.id)?.sync.status !== 'error') {
                   this.#walletInfos.set(wallet.id, {sync: {status: 'done', updatedAt: Date.now()}})
                   this.walletInfos$.next(new Map(this.#walletInfos))
                 }
-              }),
-              catchError((error) => {
-                this.#walletInfos.set(wallet.id, {sync: {status: 'error', error, updatedAt: Date.now()}})
-                this.walletInfos$.next(new Map(this.#walletInfos))
-                return of()
               }),
             )
           }),
@@ -101,9 +101,19 @@ export class WalletManager {
   }
 
   getOpenedWalletsByNetwork = () => {
-    const openedWalletsByNetwork: Map<NetworkId, YoroiWallet['id']> = new Map()
-    this.#openedWallets.forEach(({id, networkId}) => openedWalletsByNetwork.set(networkId, id))
+    const openedWalletsByNetwork = new Map<NetworkId, Set<YoroiWallet['id']>>()
+
+    this.#openedWallets.forEach(({id, networkId}) => {
+      if (!openedWalletsByNetwork.has(networkId)) openedWalletsByNetwork.set(networkId, new Set())
+
+      openedWalletsByNetwork.get(networkId)?.add(id)
+    })
+
     return openedWalletsByNetwork
+  }
+
+  getOpenedWalletById = (id: YoroiWallet['id']) => {
+    return this.#openedWallets.get(id)
   }
 
   async openWallets() {
@@ -300,7 +310,6 @@ export class WalletManager {
 }
 
 export const walletManager = WalletManager.instance()
-walletManager.startSyncingAllWallets()
 
 export default walletManager
 

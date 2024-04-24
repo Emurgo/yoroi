@@ -39,7 +39,7 @@
     "prestart": "sb-rn-get-stories",
     "start": "yarn react-native start --reset-cache --verbose",
     "storybook:watch": "sb-rn-watcher",
-    "test": "jest src --ci --bail --silent",
+    "test": "jest src --ci --bail --silent --maxWorkers=1",
     "tsc": "tsc --noEmit -p tsconfig.json",
     "tsc:cover": "yarn typescript-coverage-report -i '**/*.test.*' -i '**/*.stories*' -t html --threshold=100"
   },

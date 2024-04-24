@@ -24,9 +24,9 @@ import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {useCollateralInfo} from '../../../yoroi-wallets/cardano/utxoManager/useCollateralInfo'
 import {useSetCollateralId} from '../../../yoroi-wallets/cardano/utxoManager/useSetCollateralId'
 import {collateralConfig, utxosMaker} from '../../../yoroi-wallets/cardano/utxoManager/utxos'
-import {useBalances, useLockedAmount} from '../../../yoroi-wallets/hooks'
+import {useBalances} from '../../../yoroi-wallets/hooks'
 import {RawUtxo, YoroiEntry} from '../../../yoroi-wallets/types'
-import {Amounts, Quantities} from '../../../yoroi-wallets/utils'
+import {Amounts, asQuantity, Quantities} from '../../../yoroi-wallets/utils'
 import {useSelectedWallet} from '../../WalletManager/Context'
 import {usePrivacyMode} from '../PrivacyMode/PrivacyMode'
 import {createCollateralEntry} from './helpers'
@@ -42,7 +42,7 @@ export const ManageCollateralScreen = () => {
   const navigateTo = useNavigateTo()
   const strings = useStrings()
   const balances = useBalances(wallet)
-  const lockedAmount = useLockedAmount({wallet})
+  const lockedAmount = asQuantity(wallet.primaryBreakdown.lockedAsStorageCost.toString())
 
   const params = useUnsafeParams<SettingsStackRoutes['manage-collateral']>()
 

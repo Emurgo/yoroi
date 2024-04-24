@@ -3,7 +3,7 @@ import {createPrimaryTokenInfo, portfolioBalanceManagerMaker, portfolioBalanceSt
 import {Chain, Portfolio} from '@yoroi/types'
 import * as React from 'react'
 
-import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
+import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 
 export const usePortfolioBalanceManager = ({
   tokenManager,
@@ -38,6 +38,7 @@ export const buildPortfolioBalanceManager = ({
   const balanceStorage = portfolioBalanceStorageMaker({
     balanceStorage: observableStorageMaker(balanceStorageMounted),
     primaryBreakdownStorage: observableStorageMaker(primaryBreakdownStorageMounted),
+    primaryTokenId: primaryTokenInfo.id,
   })
 
   const balanceManager = portfolioBalanceManagerMaker({

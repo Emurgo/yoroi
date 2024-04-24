@@ -33,7 +33,7 @@ export const TxHistoryList = (props: Props) => {
   )
 
   const transactionsInfo = useTransactionInfos(wallet)
-  const groupedTransactions = getTransactionsByDate(transactionsInfo)
+  const groupedTransactions = React.useMemo(() => getTransactionsByDate(transactionsInfo), [transactionsInfo])
 
   return (
     <View style={styles.container}>
