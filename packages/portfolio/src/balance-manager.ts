@@ -197,8 +197,6 @@ export const portfolioBalanceManagerMaker = (
       Map<Portfolio.Token.Id, Pick<Portfolio.Token.Balance, 'balance'>>
     >
   }) => {
-    if (!isHydrated) hydrate()
-
     queue.enqueue(
       () =>
         new Promise<void>((resolve, reject) => {

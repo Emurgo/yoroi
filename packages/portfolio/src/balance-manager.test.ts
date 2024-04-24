@@ -399,7 +399,7 @@ describe('sync & refresh', () => {
     lockedAsStorageCost: BigInt(0),
   }
 
-  it('should sync (+hydrate)', async () => {
+  it('should sync and respond to token event', async () => {
     tokenManager.sync.mockResolvedValue(
       new Map(tokenInfoMocks.storage.entries1),
     )
@@ -433,6 +433,7 @@ describe('sync & refresh', () => {
 
     const subscriber = jest.fn()
     manager.subscribe(subscriber)
+    manager.hydrate()
 
     const secondaryBalances = new Map(
       tokenBalanceMocks.storage.entries1.slice(0, -1),
@@ -455,7 +456,7 @@ describe('sync & refresh', () => {
     expect(manager.getPrimaryBreakdown()).toEqual(expect.anything())
     expect(manager.getBalances()).toEqual(expect.anything())
 
-    expect(mockedNotify).toHaveBeenCalledTimes(2) // Hydrate + Sync
+    expect(mockedNotify).toHaveBeenCalledTimes(2)
 
     tokenManager.sync.mockResolvedValue(
       new Map(tokenInfoMocks.storage.entries1.slice(0, 1)),
@@ -533,7 +534,7 @@ describe('sync & refresh', () => {
     expect(manager.getPrimaryBreakdown()).toEqual(expect.anything())
     expect(manager.getBalances()).toEqual(expect.anything())
 
-    expect(mockedNotify).toHaveBeenCalledTimes(3) // Hydrate + Sync
+    expect(mockedNotify).toHaveBeenCalledTimes(2)
   })
 
   it('should sync', async () => {
