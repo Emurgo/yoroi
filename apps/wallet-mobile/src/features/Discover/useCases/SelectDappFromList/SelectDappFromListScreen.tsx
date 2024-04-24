@@ -5,7 +5,7 @@ import {FlatList, StyleSheet, View} from 'react-native'
 
 import {Spacer} from '../../../../components'
 import {useSearch, useSearchOnNavBar} from '../../../../Search/SearchContext'
-import {getGoogleSearchItem} from '../../common/helpers'
+import {DAppItem, getGoogleSearchItem} from '../../common/helpers'
 import {useDAppsConnected} from '../../common/useDAppsConnected'
 import {useStrings} from '../../common/useStrings'
 import {CountDAppsAvailable} from './CountDAppsAvailable/CountDAppsAvailable'
@@ -36,15 +36,18 @@ export const SelectDappFromListScreen = () => {
     noBack: true,
   })
   const {data: list} = useDappList({suspense: true})
-  const {data: listDAppConnected} = useDAppsConnected({refetchOnMount: true})
-  const hasConnectedDapps = (listDAppConnected ?? [])?.length > 0
+  const {data: connectedOrigins = []} = useDAppsConnected({refetchOnMount: true, refetchInterval: 500})
+  const hasConnectedDapps = connectedOrigins.length > 0
 
   const filters = Object.keys(list?.filters ?? {})
 
   const isDappConnected = (dappOrigins: string[]) => {
-    const connectedOrigins = listDAppConnected ?? []
     return dappOrigins.some((dappOrigin) => connectedOrigins.includes(dappOrigin))
   }
+
+  const dAppOriginsThatAreConnectedButNotInList = connectedOrigins.filter((connectedOrigin) => {
+    return !list?.dapps.some((dapp) => dapp.origins.includes(connectedOrigin))
+  })
 
   const handleToggleCategory = React.useCallback(
     (category: string) => {
@@ -58,7 +61,21 @@ export const SelectDappFromListScreen = () => {
     [categoriesSelected],
   )
 
-  const getListDApps = () => {
+  const getDAppsConnectedButNotInList = () => {
+    return dAppOriginsThatAreConnectedButNotInList.map((origin) => {
+      return {
+        id: origin,
+        name: origin.replace(/^https?:\/\//, ''),
+        description: origin,
+        category: 'Other',
+        logo: '',
+        uri: origin,
+        origins: [origin],
+      }
+    })
+  }
+
+  const getListDApps = (): DAppItem[] => {
     if (!list?.dapps) return []
 
     if (isSearching) {
@@ -131,8 +148,8 @@ export const SelectDappFromListScreen = () => {
 
       <View style={[styles.root]}>
         <FlatList
-          data={getListDApps()}
-          extraData={listDAppConnected}
+          data={currentTab === 'connected' ? [...getListDApps(), ...getDAppsConnectedButNotInList()] : getListDApps()}
+          extraData={connectedOrigins}
           keyExtractor={(item) => item.id.toString()}
           ListHeaderComponentStyle={styles.boxHeader}
           ListHeaderComponent={headerDAppControl}

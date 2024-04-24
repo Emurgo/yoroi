@@ -11,6 +11,7 @@ import {LabelCategoryDApp} from '../../../common/LabelCategoryDApp'
 import {LabelConnected} from '../../../common/LabelConnected'
 import {useNavigateTo} from '../../../common/useNavigateTo'
 import {useStrings} from '../../../common/useStrings'
+import {useDappConnector} from '@yoroi/dapp-connector'
 
 const DIALOG_DAPP_ACTIONS_HEIGHT = 294
 
@@ -26,6 +27,7 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
   const {openModal, closeModal} = useModal()
   const insets = useSafeAreaInsets()
   const strings = useStrings()
+  const {manager} = useDappConnector()
 
   const dialogHeight = DIALOG_DAPP_ACTIONS_HEIGHT + insets.bottom
 
@@ -43,8 +45,11 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
 
     navigateTo.browseDapp()
   }
-  const handleDisconnectDApp = () => {
-    closeModal()
+  const handleDisconnectDApp = (dApp: DAppItem) => {
+    const promises = dApp.origins.map(async (o) => {
+      await manager.removeConnection({dappOrigin: o})
+    })
+    Promise.all(promises).then(closeModal)
   }
 
   const handlePress = () => {
@@ -72,7 +77,7 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
           <DAppAction onPress={handleOpenDApp} icon={<Icon.DApp color={colors.icon} />} title={strings.openDApp} />
 
           <DAppAction
-            onPress={handleDisconnectDApp}
+            onPress={() => handleDisconnectDApp(dApp)}
             icon={<Icon.Disconnect color={colors.icon} />}
             title={strings.disconnectWalletFromDApp}
           />

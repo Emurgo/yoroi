@@ -1,20 +1,18 @@
 import {createStackNavigator} from '@react-navigation/stack'
 import {useAsyncStorage} from '@yoroi/common'
-import {connectionStorageMaker, dappConnectorMaker, DappConnectorProvider} from '@yoroi/dapp-connector'
+import {DappConnectorProvider} from '@yoroi/dapp-connector'
 import {useTheme} from '@yoroi/theme'
-import {App} from '@yoroi/types'
 import * as React from 'react'
-import {Alert} from 'react-native'
 
 import {LoadingBoundary} from '../../components'
 import {defaultStackNavigationOptions, DiscoverRoutes} from '../../navigation'
-import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {useSelectedWallet} from '../WalletManager/Context'
 import {BrowserNavigator} from './BrowserNavigator'
 import {BrowserProvider} from './common/BrowserProvider'
 import {useStrings} from './common/useStrings'
 import {ListSkeleton} from './useCases/SelectDappFromList/ListSkeleton'
 import {SelectDappFromListScreen} from './useCases/SelectDappFromList/SelectDappFromListScreen'
+import {createDappConnector} from './common/helpers'
 
 const Stack = createStackNavigator<DiscoverRoutes>()
 
@@ -51,22 +49,4 @@ export const DiscoverNavigator = () => {
       </BrowserProvider>
     </DappConnectorProvider>
   )
-}
-
-const createDappConnector = (appStorage: App.Storage, wallet: YoroiWallet) => {
-  const handlerWallet = {
-    id: wallet.id,
-    networkId: wallet.networkId,
-    confirmConnection: async (origin: string) => {
-      return new Promise<boolean>((resolve) => {
-        // TODO: Use modal with translations here instead of alert
-        Alert.alert('Confirm connection', `Do you want to connect to ${origin}?`, [
-          {text: 'Cancel', style: 'cancel', onPress: () => resolve(false)},
-          {text: 'OK', onPress: () => resolve(true)},
-        ])
-      })
-    },
-  }
-  const storage = connectionStorageMaker({storage: appStorage.join('dapp-connections/')})
-  return dappConnectorMaker(storage, handlerWallet)
 }

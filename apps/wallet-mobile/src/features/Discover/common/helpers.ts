@@ -1,4 +1,8 @@
 import Google from '../../../assets/img/dApp/google.png'
+import {App} from '@yoroi/types'
+import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
+import {Alert} from 'react-native'
+import {connectionStorageMaker, dappConnectorMaker} from '@yoroi/dapp-connector'
 
 export const validUrl = (url: string) => {
   return /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!&',,=.+]+$/g.test(url)
@@ -52,3 +56,21 @@ export const getGoogleSearchItem = (searchQuery: string): DAppItem => ({
 })
 
 export const isGoogleSearchItem = (dApp: DAppItem) => dApp.id === GOOGLE_DAPP_ID
+
+export const createDappConnector = (appStorage: App.Storage, wallet: YoroiWallet) => {
+  const handlerWallet = {
+    id: wallet.id,
+    networkId: wallet.networkId,
+    confirmConnection: async (origin: string) => {
+      return new Promise<boolean>((resolve) => {
+        // TODO: Use modal with translations here instead of alert
+        Alert.alert('Confirm connection', `Do you want to connect to ${origin}?`, [
+          {text: 'Cancel', style: 'cancel', onPress: () => resolve(false)},
+          {text: 'OK', onPress: () => resolve(true)},
+        ])
+      })
+    },
+  }
+  const storage = connectionStorageMaker({storage: appStorage.join('dapp-connections/')})
+  return dappConnectorMaker(storage, handlerWallet)
+}
