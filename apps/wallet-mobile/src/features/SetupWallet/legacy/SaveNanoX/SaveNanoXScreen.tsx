@@ -1,4 +1,5 @@
 import {useSetupWallet} from '@yoroi/setup-wallet'
+import {Api} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {InteractionManager} from 'react-native'
@@ -9,7 +10,6 @@ import {errorMessages} from '../../../../i18n/global-messages'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useWalletNavigation} from '../../../../navigation'
 import {AddressMode} from '../../../../wallet-manager/types'
-import {NetworkError} from '../../../../yoroi-wallets/cardano/errors'
 import {useCreateBip44Wallet} from '../../../../yoroi-wallets/hooks'
 import {WalletImplementationId} from '../../../../yoroi-wallets/types'
 import {WalletNameForm} from '../WalletNameForm/WalletNameForm'
@@ -30,7 +30,7 @@ export const SaveNanoXScreen = () => {
     },
     onError: (error) => {
       InteractionManager.runAfterInteractions(() => {
-        return error instanceof NetworkError
+        return error instanceof Api.Errors.Network
           ? showErrorDialog(errorMessages.networkError, intl)
           : showErrorDialog(errorMessages.generalError, intl, {message: error.message})
       })

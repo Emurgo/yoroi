@@ -1,7 +1,8 @@
 import {useFocusEffect} from '@react-navigation/native'
-import {NetworkError, useAsyncStorage} from '@yoroi/common'
+import {useAsyncStorage} from '@yoroi/common'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
+import {Api} from '@yoroi/types'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {
@@ -40,8 +41,9 @@ import {debugWalletInfo, features} from '../../..'
 import {useSetSelectedWallet} from '../../../WalletManager/Context/SelectedWalletContext'
 import {useSetSelectedWalletMeta} from '../../../WalletManager/Context/SelectedWalletMetaContext'
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
-import {YoroiZendeskLink} from '../../common/contants'
+import {YoroiZendeskLink} from '../../common/constants'
 import {LearnMoreButton} from '../../common/LearnMoreButton/LearnMoreButton'
+import {PreparingWallet} from '../../common/PreparingWallet/PreparingWallet'
 import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
 import {useStrings} from '../../common/useStrings'
 import {Info as InfoIllustration} from '../../illustrations/Info'
@@ -109,6 +111,7 @@ export const WalletDetailsScreen = () => {
 
   const {
     openWallet,
+    data: openWalletData,
     isLoading: isOpenWalletLoading,
     isSuccess: isOpenWalletSuccess,
   } = useOpenWallet({
@@ -121,7 +124,7 @@ export const WalletDetailsScreen = () => {
       InteractionManager.runAfterInteractions(() => {
         return error instanceof InvalidState
           ? showErrorDialog(errorMessages.walletStateInvalid, intl)
-          : error instanceof NetworkError
+          : error instanceof Api.Errors.Network
           ? showErrorDialog(errorMessages.networkError, intl)
           : showErrorDialog(errorMessages.generalError, intl, {message: error.message})
       })
@@ -144,7 +147,7 @@ export const WalletDetailsScreen = () => {
     },
     onError: (error) => {
       InteractionManager.runAfterInteractions(() => {
-        return error instanceof NetworkError
+        return error instanceof Api.Errors.Network
           ? showErrorDialog(errorMessages.networkError, intl)
           : showErrorDialog(errorMessages.generalError, intl, {message: error.message})
       })
@@ -156,8 +159,6 @@ export const WalletDetailsScreen = () => {
     {tooLong: strings.tooLong, nameAlreadyTaken: strings.nameAlreadyTaken, mustBeFilled: strings.mustBeFilled},
     nameErrors,
   )
-
-  const isLoading = isCreateWalletLoading || isOpenWalletLoading
 
   const handleCreateWallet = React.useCallback(() => {
     track.createWalletDetailsSubmitted()
@@ -272,6 +273,12 @@ export const WalletDetailsScreen = () => {
       </View>,
       HEIGHT_MODAL_CHECKSUM,
     )
+  }
+
+  const isLoading = isCreateWalletLoading || isOpenWalletLoading || !!openWalletData
+
+  if (isLoading) {
+    return <PreparingWallet />
   }
 
   return (

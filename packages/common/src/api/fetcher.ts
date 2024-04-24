@@ -1,6 +1,7 @@
 import axios, {AxiosRequestConfig, AxiosResponse} from 'axios'
 
-import {ApiError, NetworkError} from '../errors/errors'
+import {ApiError} from '../errors/errors'
+import {Api} from '@yoroi/types'
 
 /**
  * @deprecated This function is deprecated and will be removed in a future release. Use `fetchData` instead.
@@ -20,7 +21,7 @@ export const fetcher: Fetcher = async <T = any>(
       )
     } else if (error.request) {
       // The request was made but no response was received
-      throw new NetworkError('No response received')
+      throw new Api.Errors.Network()
     } else {
       // Something happened in setting up the request that triggered an Error
       throw new Error('An unknown error occurred')

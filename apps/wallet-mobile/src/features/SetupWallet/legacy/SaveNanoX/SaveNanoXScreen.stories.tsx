@@ -1,11 +1,11 @@
 import {NavigationRouteContext} from '@react-navigation/native'
 import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
+import {Api} from '@yoroi/types'
 import React from 'react'
 
 import {WalletManager, walletManager} from '../../../../wallet-manager/walletManager'
 import {WalletManagerProvider} from '../../../../wallet-manager/WalletManagerContext'
-import {NetworkError} from '../../../../yoroi-wallets/cardano/errors'
 import {SaveNanoXScreen} from './SaveNanoXScreen'
 
 storiesOf('SaveNanoXScreen', module)
@@ -33,7 +33,7 @@ storiesOf('SaveNanoXScreen', module)
             createWalletWithBip44Account: async (...args: unknown[]) => {
               action('createWalletWithBip44Account')(...args)
               await new Promise((resolve) => setTimeout(resolve, 1000))
-              throw new NetworkError()
+              throw new Api.Errors.Network()
             },
           } as unknown as WalletManager
         }

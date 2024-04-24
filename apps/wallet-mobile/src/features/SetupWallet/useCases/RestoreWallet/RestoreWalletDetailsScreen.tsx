@@ -1,7 +1,8 @@
 import {useFocusEffect} from '@react-navigation/native'
-import {NetworkError, useAsyncStorage} from '@yoroi/common'
+import {useAsyncStorage} from '@yoroi/common'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
+import {Api} from '@yoroi/types'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {
@@ -40,8 +41,9 @@ import {debugWalletInfo, features} from '../../..'
 import {useSetSelectedWallet} from '../../../WalletManager/Context/SelectedWalletContext'
 import {useSetSelectedWalletMeta} from '../../../WalletManager/Context/SelectedWalletMetaContext'
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
-import {YoroiZendeskLink} from '../../common/contants'
+import {YoroiZendeskLink} from '../../common/constants'
 import {LearnMoreButton} from '../../common/LearnMoreButton/LearnMoreButton'
+import {PreparingWallet} from '../../common/PreparingWallet/PreparingWallet'
 import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
 import {useStrings} from '../../common/useStrings'
 import {Info as InfoIllustration} from '../../illustrations/Info'
@@ -97,6 +99,7 @@ export const RestoreWalletDetailsScreen = () => {
 
   const {
     openWallet,
+    data: openWalletData,
     isLoading: isOpenWalletLoading,
     isSuccess: isOpenWalletSuccess,
   } = useOpenWallet({
@@ -109,7 +112,7 @@ export const RestoreWalletDetailsScreen = () => {
       InteractionManager.runAfterInteractions(() => {
         return error instanceof InvalidState
           ? showErrorDialog(errorMessages.walletStateInvalid, intl)
-          : error instanceof NetworkError
+          : error instanceof Api.Errors.Network
           ? showErrorDialog(errorMessages.networkError, intl)
           : showErrorDialog(errorMessages.generalError, intl, {message: error.message})
       })
@@ -133,25 +136,29 @@ export const RestoreWalletDetailsScreen = () => {
     },
     onError: (error) => {
       InteractionManager.runAfterInteractions(() => {
-        return error instanceof NetworkError
+        return error instanceof Api.Errors.Network
           ? showErrorDialog(errorMessages.networkError, intl)
           : showErrorDialog(errorMessages.generalError, intl, {message: error.message})
       })
     },
   })
 
-  const nameErrors = validateWalletName(name, null, walletNames && !isCreateWalletSuccess ? walletNames : [])
-  const walletNameErrorText = getWalletNameError(
-    {tooLong: strings.tooLong, nameAlreadyTaken: strings.nameAlreadyTaken, mustBeFilled: strings.mustBeFilled},
-    nameErrors,
-  )
-
-  const isLoading = isCreateWalletLoading || isOpenWalletLoading
-
   useFocusEffect(
     React.useCallback(() => {
       track.restoreWalletDetailsStepViewed()
     }, [track]),
+  )
+
+  const isLoading = isCreateWalletLoading || isOpenWalletLoading || !!openWalletData
+
+  if (isLoading) {
+    return <PreparingWallet />
+  }
+
+  const nameErrors = validateWalletName(name, null, walletNames && !isCreateWalletSuccess ? walletNames : [])
+  const walletNameErrorText = getWalletNameError(
+    {tooLong: strings.tooLong, nameAlreadyTaken: strings.nameAlreadyTaken, mustBeFilled: strings.mustBeFilled},
+    nameErrors,
   )
 
   const showModalTipsPassword = () => {

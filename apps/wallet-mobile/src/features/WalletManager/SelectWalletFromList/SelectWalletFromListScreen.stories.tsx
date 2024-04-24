@@ -1,11 +1,12 @@
 import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
+import {Api} from '@yoroi/types'
 import React from 'react'
 
 import {WalletMeta} from '../../../wallet-manager/types'
 import {mockWalletManager, WalletManager} from '../../../wallet-manager/walletManager'
 import {WalletManagerProvider} from '../../../wallet-manager/WalletManagerContext'
-import {InvalidState, NetworkError} from '../../../yoroi-wallets/cardano/errors'
+import {InvalidState} from '../../../yoroi-wallets/cardano/errors'
 import {mocks} from '../../../yoroi-wallets/mocks'
 import {SelectWalletFromList} from './SelectWalletFromListScreen'
 
@@ -59,7 +60,7 @@ storiesOf('SelectWalletFromList', module)
           openWallet: async (walletMeta: WalletMeta) => {
             action('openWallet')(walletMeta)
             await delay(1000)
-            throw new NetworkError()
+            throw new Api.Errors.Network()
           },
         } as unknown as WalletManager
       }

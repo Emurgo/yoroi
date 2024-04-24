@@ -1,4 +1,5 @@
 import {useSetupWallet} from '@yoroi/setup-wallet'
+import {Api} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {FlatList, InteractionManager, ScrollView, StyleSheet, View} from 'react-native'
@@ -12,7 +13,6 @@ import {useWalletNavigation} from '../../../../navigation'
 import {theme} from '../../../../theme'
 import {isEmptyString} from '../../../../utils/utils'
 import {AddressMode} from '../../../../wallet-manager/types'
-import {NetworkError} from '../../../../yoroi-wallets/cardano/errors'
 import {NUMBERS} from '../../../../yoroi-wallets/cardano/numbers'
 import {useCreateBip44Wallet, usePlate} from '../../../../yoroi-wallets/hooks'
 import {NetworkId, WalletImplementationId} from '../../../../yoroi-wallets/types'
@@ -43,7 +43,7 @@ export const SaveReadOnlyWalletScreen = () => {
     },
     onError: (error) => {
       InteractionManager.runAfterInteractions(() => {
-        return error instanceof NetworkError
+        return error instanceof Api.Errors.Network
           ? showErrorDialog(errorMessages.networkError, intl)
           : showErrorDialog(errorMessages.generalError, intl, {message: error.message})
       })

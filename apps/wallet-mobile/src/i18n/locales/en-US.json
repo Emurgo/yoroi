@@ -599,6 +599,7 @@
   "components.walletinit.restorewallet.restorewalletscreen.restoreDuplicatedWalletModalTitle": "This wallet is already added",
   "components.walletinit.restorewallet.restorewalletscreen.restoreDuplicatedWalletModalButton": "Open wallet",
   "components.walletinit.restorewallet.restorewalletscreen.restoreWalletScreenTitle": "Add the <b>recovery phrase</b> you received upon your wallet creation process.",
+  "components.walletinit.restorewallet.restorewalletscreen.preparingWallet": "Preparing your wallet...",
   "components.walletinit.restorewallet.upgradeconfirmmodal.balanceLabel": "Recovered balance",
   "components.walletinit.restorewallet.upgradeconfirmmodal.finalBalanceLabel": "Final balance",
   "components.walletinit.restorewallet.upgradeconfirmmodal.fromLabel": "From",

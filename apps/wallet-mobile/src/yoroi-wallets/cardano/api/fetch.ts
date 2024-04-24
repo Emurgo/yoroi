@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {Api} from '@yoroi/types'
 import {Platform} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
 import {Logger} from '../../logging'
 import type {BackendConfig} from '../../types/other'
-import {ApiError, ApiHistoryError, NetworkError} from '../errors'
+import {ApiError, ApiHistoryError} from '../errors'
 
 type RequestMethod = 'POST' | 'GET'
 
@@ -61,7 +62,7 @@ export const checkedFetch = (request: FetchRequest<any>) => {
     https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
     */
       if (e instanceof TypeError) {
-        throw new NetworkError()
+        throw new Api.Errors.Network()
       }
 
       throw e
