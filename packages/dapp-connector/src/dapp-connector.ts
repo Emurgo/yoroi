@@ -1,5 +1,4 @@
 import {resolverHandleEvent} from './resolver'
-// @ts-ignore-next-line
 import {connectWallet} from './connector'
 import {Storage} from './adapters/async-storage'
 
