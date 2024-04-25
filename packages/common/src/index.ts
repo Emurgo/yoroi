@@ -25,6 +25,7 @@ export * from './utils/strings'
 
 export * from './numbers/as-atomic-value'
 export * from './numbers/split-bigint'
+export * from './numbers/bigint-formatter'
 
 export * from './observer/observer'
 
