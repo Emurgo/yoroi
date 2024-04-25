@@ -20,7 +20,7 @@ import {RestoreWalletDetailsScreen} from './useCases/RestoreWallet/RestoreWallet
 import {RestoreWalletScreen} from './useCases/RestoreWallet/RestoreWalletScreen'
 
 const Stack = createStackNavigator<WalletInitRoutes>()
-export const AddWalletNavigator = () => {
+export const SetupWalletNavigator = () => {
   const strings = useStrings()
   const {theme} = useTheme()
 
@@ -37,7 +37,7 @@ export const AddWalletNavigator = () => {
       <Stack.Screen
         name="setup-wallet-choose-setup-type"
         component={ChooseSetupTypeScreen}
-        options={{title: strings.addNewWalletTitle}}
+        options={{title: strings.addNewWalletTitle, headerLeft: () => null}}
       />
 
       <Stack.Screen

@@ -16,7 +16,6 @@ import {useMetrics} from '../../../metrics/metricsManager'
 import {useWalletNavigation} from '../../../navigation'
 import {WalletMeta} from '../../../wallet-manager/types'
 import {useWalletManager} from '../../../wallet-manager/WalletManagerContext'
-import * as HASKELL_SHELLEY from '../../../yoroi-wallets/cardano/constants/mainnet/constants'
 import {InvalidState} from '../../../yoroi-wallets/cardano/errors'
 import {isJormungandr} from '../../../yoroi-wallets/cardano/networks'
 import {useOpenWallet, useWalletMetas} from '../../../yoroi-wallets/hooks'
@@ -146,20 +145,16 @@ const SupportTicketLink = () => {
 }
 
 const AddWalletButton = () => {
-  const navigation = useNavigation()
   const strings = useStrings()
   const {styles} = useStyles()
-  const {walletImplementationIdChanged, reset: resetSetupWallet} = useSetupWallet()
+  const {reset: resetSetupWallet} = useSetupWallet()
+  const {resetToWalletSetup} = useWalletNavigation()
 
   return (
     <Button
       onPress={() => {
-        resetSetupWallet()
-        walletImplementationIdChanged(HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID)
-
-        navigation.navigate('new-wallet', {
-          screen: 'setup-wallet-choose-setup-type',
-        })
+        resetSetupWallet() // reset state
+        resetToWalletSetup() // navigates to screen
       }}
       title={strings.addWalletButton}
       style={styles.topButton}

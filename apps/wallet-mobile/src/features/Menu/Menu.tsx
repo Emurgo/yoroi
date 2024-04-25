@@ -187,7 +187,6 @@ const useNavigateTo = () => {
   const prefetchStakingInfo = usePrefetchStakingInfo(wallet)
 
   return {
-    allWallets: () => navigation.navigate('app-root', {screen: 'wallet-selection'}),
     catalystVoting: () => {
       prefetchStakingInfo()
 

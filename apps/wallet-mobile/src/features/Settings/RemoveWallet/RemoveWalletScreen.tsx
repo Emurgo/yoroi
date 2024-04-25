@@ -3,6 +3,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
+import {useQueryClient} from 'react-query'
 
 import {
   Button,
@@ -15,7 +16,8 @@ import {
   TextInputProps,
 } from '../../../components'
 import {useWalletNavigation} from '../../../navigation'
-import {useRemoveWallet, useWalletName} from '../../../yoroi-wallets/hooks'
+import {useWalletManager} from '../../../wallet-manager/WalletManagerContext'
+import {hasWalletsKey, useRemoveWallet, useWalletName} from '../../../yoroi-wallets/hooks'
 import {useSelectedWallet} from '../../WalletManager/Context/SelectedWalletContext'
 
 export const RemoveWalletScreen = () => {
@@ -23,16 +25,30 @@ export const RemoveWalletScreen = () => {
   const styles = useStyles()
   const wallet = useSelectedWallet()
   const walletName = useWalletName(wallet)
+  const {resetToWalletSetup, resetToWalletSelection} = useWalletNavigation()
+  const walletManager = useWalletManager()
+  const queryClient = useQueryClient()
 
-  const {resetToWalletSelection} = useWalletNavigation()
-  const {removeWallet, isLoading} = useRemoveWallet(wallet.id, {
-    onSuccess: () => resetToWalletSelection(),
+  const {removeWallet, isLoading: isRemoveWalletLoading} = useRemoveWallet(wallet.id, {
+    onSuccess: async () => {
+      queryClient.invalidateQueries({queryKey: [hasWalletsKey]})
+
+      const walletMetas = await walletManager.listWallets()
+      const hasWallets = walletMetas.length > 0
+
+      if (hasWallets) {
+        resetToWalletSelection()
+        return
+      }
+
+      resetToWalletSetup()
+    },
   })
 
   const [hasMnemonicWrittenDown, setHasMnemonicWrittenDown] = React.useState(false)
   const [typedWalletName, setTypedWalletName] = React.useState('')
 
-  const disabled = isLoading || (!wallet.isHW && !hasMnemonicWrittenDown) || walletName !== typedWalletName
+  const disabled = isRemoveWalletLoading || (!wallet.isHW && !hasMnemonicWrittenDown) || walletName !== typedWalletName
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
