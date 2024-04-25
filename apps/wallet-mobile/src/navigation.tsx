@@ -14,8 +14,6 @@ import {Dimensions, TouchableOpacity, TouchableOpacityProps, ViewStyle} from 're
 import {Icon} from './components'
 import {ScanFeature} from './features/Scan/common/types'
 import {Routes as StakingGovernanceRoutes} from './features/Staking/Governance/common/navigation'
-import {useWalletManager} from './wallet-manager/WalletManagerContext'
-import {useHasWallets} from './yoroi-wallets/hooks'
 import {YoroiUnsignedTx} from './yoroi-wallets/types'
 
 // prettier-ignore
@@ -534,24 +532,6 @@ export const useWalletNavigation = () => {
       })
     },
   } as const).current
-}
-
-export const useNavigateToWalletSelectionSync = () => {
-  const {resetToWalletSetup, resetToWalletSelection} = useWalletNavigation()
-  const walletManager = useWalletManager()
-  const {refetch} = useHasWallets(walletManager, {
-    enabled: false,
-    onSuccess: (hasWallets) => {
-      if (hasWallets) {
-        resetToWalletSelection()
-        return
-      }
-
-      resetToWalletSetup()
-    },
-  })
-
-  return refetch
 }
 
 export const hideTabBarForRoutes = (route: RouteProp<WalletTabRoutes, 'history'>): ViewStyle | undefined =>

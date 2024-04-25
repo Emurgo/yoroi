@@ -3,6 +3,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
+import {useQueryClient} from 'react-query'
 
 import {
   Button,
@@ -14,7 +15,9 @@ import {
   TextInput,
   TextInputProps,
 } from '../../../components'
-import {useNavigateToWalletSelectionSync} from '../../../navigation'
+import {useWalletNavigation} from '../../../navigation'
+import {WalletManager} from '../../../wallet-manager/walletManager'
+import {useWalletManager} from '../../../wallet-manager/WalletManagerContext'
 import {useRemoveWallet, useWalletName} from '../../../yoroi-wallets/hooks'
 import {useSelectedWallet} from '../../WalletManager/Context/SelectedWalletContext'
 
@@ -23,11 +26,23 @@ export const RemoveWalletScreen = () => {
   const styles = useStyles()
   const wallet = useSelectedWallet()
   const walletName = useWalletName(wallet)
+  const {resetToWalletSetup, resetToWalletSelection} = useWalletNavigation()
+  const walletManager = useWalletManager()
+  const queryClient = useQueryClient()
 
-  const resetToWalletSelectionSync = useNavigateToWalletSelectionSync()
   const {removeWallet, isLoading: isRemoveWalletLoading} = useRemoveWallet(wallet.id, {
-    onSuccess: () => {
-      resetToWalletSelectionSync()
+    onSuccess: async () => {
+      queryClient.invalidateQueries({queryKey: ['hasWallets']})
+
+      const walletMetas = await walletManager.listWallets()
+      const hasWallets = walletMetas.length > 0
+
+      if (hasWallets) {
+        resetToWalletSelection()
+        return
+      }
+
+      resetToWalletSetup()
     },
   })
 
@@ -139,6 +154,19 @@ const messages = defineMessages({
       '!!!I have written down mnemonic of this wallet and understand that I cannot recover the wallet without it.',
   },
 })
+
+export const whetherHasWallets = async (
+  walletManager: WalletManager,
+  withWallets: () => void,
+  withoutWallets: () => void,
+) => {
+  const walletMetas = await walletManager.listWallets()
+  const hasWallets = walletMetas.length > 0
+
+  if (hasWallets) return withWallets()
+
+  return withoutWallets()
+}
 
 const useStrings = () => {
   const intl = useIntl()
