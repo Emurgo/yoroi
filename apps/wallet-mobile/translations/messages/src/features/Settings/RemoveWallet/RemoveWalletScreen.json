@@ -4,14 +4,14 @@
     "defaultMessage": "!!!If you wish to permanently delete the wallet make sure you have written down the mnemonic.",
     "file": "src/features/Settings/RemoveWallet/RemoveWalletScreen.tsx",
     "start": {
-      "line": 127,
+      "line": 126,
       "column": 25,
-      "index": 4077
+      "index": 4034
     },
     "end": {
-      "line": 130,
+      "line": 129,
       "column": 3,
-      "index": 4271
+      "index": 4228
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!To confirm this operation type the wallet name below.",
     "file": "src/features/Settings/RemoveWallet/RemoveWalletScreen.tsx",
     "start": {
-      "line": 131,
+      "line": 130,
       "column": 25,
-      "index": 4298
+      "index": 4255
     },
     "end": {
-      "line": 134,
+      "line": 133,
       "column": 3,
-      "index": 4455
+      "index": 4412
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Wallet name",
     "file": "src/features/Settings/RemoveWallet/RemoveWalletScreen.tsx",
     "start": {
-      "line": 135,
+      "line": 134,
       "column": 14,
-      "index": 4471
+      "index": 4428
     },
     "end": {
-      "line": 138,
+      "line": 137,
       "column": 3,
-      "index": 4575
+      "index": 4532
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Wallet name",
     "file": "src/features/Settings/RemoveWallet/RemoveWalletScreen.tsx",
     "start": {
-      "line": 139,
+      "line": 138,
       "column": 19,
-      "index": 4596
+      "index": 4553
     },
     "end": {
-      "line": 142,
+      "line": 141,
       "column": 3,
-      "index": 4705
+      "index": 4662
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Wallet name does not match",
     "file": "src/features/Settings/RemoveWallet/RemoveWalletScreen.tsx",
     "start": {
-      "line": 143,
+      "line": 142,
       "column": 27,
-      "index": 4734
+      "index": 4691
     },
     "end": {
-      "line": 146,
+      "line": 145,
       "column": 3,
-      "index": 4866
+      "index": 4823
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!Remove wallet",
     "file": "src/features/Settings/RemoveWallet/RemoveWalletScreen.tsx",
     "start": {
-      "line": 147,
+      "line": 146,
       "column": 10,
-      "index": 4878
+      "index": 4835
     },
     "end": {
-      "line": 150,
+      "line": 149,
       "column": 3,
-      "index": 4980
+      "index": 4937
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!I have written down mnemonic of this wallet and understand that I cannot recover the wallet without it.",
     "file": "src/features/Settings/RemoveWallet/RemoveWalletScreen.tsx",
     "start": {
-      "line": 151,
+      "line": 150,
       "column": 26,
-      "index": 5008
+      "index": 4965
     },
     "end": {
-      "line": 155,
+      "line": 154,
       "column": 3,
-      "index": 5222
+      "index": 5179
     }
   }
 ]

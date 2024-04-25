@@ -16,9 +16,8 @@ import {
   TextInputProps,
 } from '../../../components'
 import {useWalletNavigation} from '../../../navigation'
-import {WalletManager} from '../../../wallet-manager/walletManager'
 import {useWalletManager} from '../../../wallet-manager/WalletManagerContext'
-import {useRemoveWallet, useWalletName} from '../../../yoroi-wallets/hooks'
+import {hasWalletsKey, useRemoveWallet, useWalletName} from '../../../yoroi-wallets/hooks'
 import {useSelectedWallet} from '../../WalletManager/Context/SelectedWalletContext'
 
 export const RemoveWalletScreen = () => {
@@ -27,11 +26,12 @@ export const RemoveWalletScreen = () => {
   const wallet = useSelectedWallet()
   const walletName = useWalletName(wallet)
   const {resetToWalletSetup, resetToWalletSelection} = useWalletNavigation()
+  const walletManager = useWalletManager()
   const queryClient = useQueryClient()
 
   const {removeWallet, isLoading: isRemoveWalletLoading} = useRemoveWallet(wallet.id, {
     onSuccess: async () => {
-      queryClient.invalidateQueries({queryKey: ['hasWallets']})
+      queryClient.invalidateQueries({queryKey: [hasWalletsKey]})
 
       const walletMetas = await walletManager.listWallets()
       const hasWallets = walletMetas.length > 0
