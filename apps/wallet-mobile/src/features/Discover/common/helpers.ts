@@ -3,7 +3,6 @@ import {dappConnectorApiMaker} from '@yoroi/dapp-connector'
 import {App} from '@yoroi/types'
 import {Alert, Image} from 'react-native'
 
-import Google from '../../../assets/img/dApp/google.png'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 
 export const validUrl = (url: string) => {
@@ -51,7 +50,7 @@ export const getGoogleSearchItem = (searchQuery: string): DAppItem => ({
   name: searchQuery,
   description: 'Google',
   category: 'search',
-  logo: Image.resolveAssetSource(Google).uri,
+  logo: '',
   uri: `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`,
   origins: ['https://www.google.com'],
 })

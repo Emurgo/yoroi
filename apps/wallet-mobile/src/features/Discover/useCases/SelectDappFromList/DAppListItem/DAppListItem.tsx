@@ -97,7 +97,9 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
       onPress={handlePress}
     >
       <View style={styles.dAppItemContainer}>
-        {showIconPlaceholder ? (
+        {isGoogleSearchItem(dApp) ? (
+          <Icon.Google />
+        ) : showIconPlaceholder ? (
           <EmptyIcon />
         ) : (
           <View>
