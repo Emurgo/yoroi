@@ -155,19 +155,6 @@ const messages = defineMessages({
   },
 })
 
-export const whetherHasWallets = async (
-  walletManager: WalletManager,
-  withWallets: () => void,
-  withoutWallets: () => void,
-) => {
-  const walletMetas = await walletManager.listWallets()
-  const hasWallets = walletMetas.length > 0
-
-  if (hasWallets) return withWallets()
-
-  return withoutWallets()
-}
-
 const useStrings = () => {
   const intl = useIntl()
 
