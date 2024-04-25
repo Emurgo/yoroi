@@ -1,25 +1,21 @@
+import {useDappConnector} from '@yoroi/dapp-connector'
+import {DappConnection} from '@yoroi/dapp-connector/src/adapters/async-storage'
 import {useQuery, UseQueryOptions} from 'react-query'
 
 import {useSelectedWallet} from '../../../features/WalletManager/Context'
-import {IDAppItem, mockDAppList} from './DAppMock'
 
-type DAppId = IDAppItem['id']
-
-export const useDAppsConnected = (options?: UseQueryOptions<DAppId[], Error, DAppId[], [string, string]>) => {
+export const useDAppsConnected = (options?: UseQueryOptions<DappConnection[], Error, string[], [string, string]>) => {
   const wallet = useSelectedWallet()
+  const {manager} = useDappConnector()
 
-  const query = useQuery({
+  return useQuery({
     suspense: true,
     ...options,
     queryKey: [wallet.id, 'dappsConnected'],
-    queryFn: async () => {
-      const data = await new Promise<DAppId[]>((resolve) => {
-        return setTimeout(() => resolve(mockDAppList.slice(0, 3).map((_) => _.id)), 1000)
-      })
-
-      return data
+    queryFn: () => manager.listAllConnections(),
+    select: (connections) => {
+      const currentWalletConnections = connections.filter((c) => c.walletId === wallet.id)
+      return currentWalletConnections.map((c) => c.dappOrigin)
     },
   })
-
-  return query
 }

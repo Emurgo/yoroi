@@ -46,6 +46,7 @@ import {Forward} from './Forward'
 import {Gear} from './Gear'
 import {Github} from './Github'
 import {Globe} from './Globe'
+import {Google} from './Google'
 import {Governance} from './Governance'
 import {HardwareWallet} from './HardwareWallet'
 import {Image} from './Image'
@@ -242,4 +243,5 @@ export const Icon = {
   Share2,
   Reload,
   Square,
+  Google,
 }

@@ -1,10 +1,9 @@
 import {storiesOf} from '@storybook/react-native'
 import * as React from 'react'
 
-import CardanoSpot from '../../../../../assets/img/dApp/cardano-spot.png'
-import {DAppItem} from './DAppItem'
+import {DAppListItem} from './DAppListItem'
 
-storiesOf('Discover DAppItem', module)
+storiesOf('Discover DAppListItem', module)
   .add('initial', () => <Initial />)
   .add('connected', () => <Connected />)
 
@@ -13,14 +12,15 @@ const mockDApp = {
   name: 'Cardano Spot',
   description: 'Join a global Cardano Community: a single space to communicate, engage, educate with Cardano',
   category: 'media',
-  logo: CardanoSpot,
+  logo: 'https://daehx1qv45z7c.cloudfront.net/cardano-spot.png',
   uri: 'https://cardanospot.io/landing',
-} as const
+  origins: [],
+}
 
 const Initial = () => {
-  return <DAppItem dApp={mockDApp} connected={false} />
+  return <DAppListItem dApp={mockDApp} connected={false} />
 }
 
 const Connected = () => {
-  return <DAppItem dApp={mockDApp} connected={true} />
+  return <DAppListItem dApp={mockDApp} connected={true} />
 }
