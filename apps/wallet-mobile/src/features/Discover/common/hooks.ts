@@ -4,13 +4,11 @@ import * as React from 'react'
 import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
-import {useStakingKey} from '../../../yoroi-wallets/hooks'
 import {Logger} from '../../../yoroi-wallets/logging'
 import {walletConfig} from './wallet-config'
 
 export const useConnectWalletToWebView = (wallet: YoroiWallet, webViewRef: React.RefObject<WebView | null>) => {
-  const sessionId = useStakingKey(wallet)
-  const dappConnector = useDappConnector()
+  const {manager, sessionId} = useDappConnector()
 
   const sendMessageToWebView = (event: string) => (id: string, result: unknown, error?: Error) => {
     if (error) {
@@ -27,18 +25,18 @@ export const useConnectWalletToWebView = (wallet: YoroiWallet, webViewRef: React
     const webViewUrl = e.nativeEvent.url
 
     try {
-      await dappConnector.manager.handleEvent(data, webViewUrl, sendMessageToWebView(data))
+      await manager.handleEvent(data, webViewUrl, sendMessageToWebView(data))
     } catch (e) {
       Logger.error('DappConnector', 'handleWebViewEvent::error', e)
     }
   }
 
   React.useEffect(() => {
-    const initScript = getInitScript(sessionId, dappConnector.manager)
+    const initScript = getInitScript(sessionId, manager)
     webViewRef.current?.injectJavaScript(initScript)
-  }, [wallet, webViewRef, sessionId, dappConnector])
+  }, [wallet, webViewRef, sessionId, manager])
 
-  return {handleEvent: handleWebViewEvent, initScript: getInitScript(sessionId, dappConnector.manager), sessionId}
+  return {handleEvent: handleWebViewEvent, initScript: getInitScript(sessionId, manager), sessionId}
 }
 
 const getInjectableMessage = (message: unknown) => {
