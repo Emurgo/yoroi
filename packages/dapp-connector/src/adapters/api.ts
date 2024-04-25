@@ -6,8 +6,12 @@ import {z} from 'zod'
 const dappListHost = 'https://daehx1qv45z7c.cloudfront.net'
 const initialDeps = freeze({request: fetchData}, true)
 
-export const dappConnectorApiGetDappList = ({request}: {request: FetchData} = initialDeps) => {
-  return async (fetcherConfig?: AxiosRequestConfig): Promise<DappListResponse> => {
+export type Api = {
+  getDApps: (fetcherConfig?: AxiosRequestConfig) => Promise<DappListResponse>
+}
+
+export const dappConnectorApiMaker = ({request}: {request: FetchData} = initialDeps): Api => {
+  const getDApps = async (fetcherConfig?: AxiosRequestConfig): Promise<DappListResponse> => {
     const config = {url: `${dappListHost}/data.json`} as const
 
     const response = await request<unknown>(config, fetcherConfig)
@@ -32,6 +36,7 @@ export const dappConnectorApiGetDappList = ({request}: {request: FetchData} = in
       filters: value.filters,
     }
   }
+  return {getDApps}
 }
 
 const DappResponseSchema = z.object({

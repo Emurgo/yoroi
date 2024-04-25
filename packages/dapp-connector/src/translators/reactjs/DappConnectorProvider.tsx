@@ -1,11 +1,11 @@
 import * as React from 'react'
-import {DappConnector} from '../../dapp-connector'
+import {DappConnectorManager} from '../../dapp-connector'
 
-const Context = React.createContext<{manager: DappConnector} | null>(null)
+const Context = React.createContext<{manager: DappConnectorManager} | null>(null)
 
 type Props = {
   children: React.ReactNode
-  manager: DappConnector
+  manager: DappConnectorManager
 }
 
 export const DappConnectorProvider = ({children, manager}: Props) => {

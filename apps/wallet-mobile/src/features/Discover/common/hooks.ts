@@ -1,4 +1,5 @@
-import {DappConnector, useDappConnector} from '@yoroi/dapp-connector'
+import {useDappConnector} from '@yoroi/dapp-connector'
+import {DappConnectorManager} from '@yoroi/dapp-connector/src/dapp-connector'
 import * as React from 'react'
 import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
@@ -45,7 +46,7 @@ const getInjectableMessage = (message: unknown) => {
   return `(() => window.dispatchEvent(new MessageEvent('message', ${event})))()`
 }
 
-const getInitScript = (sessionId: string, dappConnector: DappConnector) => {
+const getInitScript = (sessionId: string, dappConnector: DappConnectorManager) => {
   return dappConnector.getWalletConnectorScript({
     iconUrl: walletConfig.iconUrl,
     apiVersion: walletConfig.apiVersion,

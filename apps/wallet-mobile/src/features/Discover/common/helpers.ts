@@ -1,4 +1,5 @@
 import {connectionStorageMaker, dappConnectorMaker} from '@yoroi/dapp-connector'
+import {dappConnectorApiMaker} from '@yoroi/dapp-connector'
 import {App} from '@yoroi/types'
 import {Alert, Image} from 'react-native'
 
@@ -14,8 +15,7 @@ export function hasProtocol(url: string) {
 }
 
 export const urlWithProtocol = (url: string, defaultProtocol = 'https://') => {
-  const sanitizedURL = hasProtocol(url) ? url : `${defaultProtocol}${url}`
-  return sanitizedURL
+  return hasProtocol(url) ? url : `${defaultProtocol}${url}`
 }
 
 export const getDomainFromUrl = (url: string) => {
@@ -59,6 +59,7 @@ export const getGoogleSearchItem = (searchQuery: string): DAppItem => ({
 export const isGoogleSearchItem = (dApp: DAppItem) => dApp.id === googleDappId
 
 export const createDappConnector = (appStorage: App.Storage, wallet: YoroiWallet) => {
+  const api = dappConnectorApiMaker()
   const handlerWallet = {
     id: wallet.id,
     networkId: wallet.networkId,
@@ -73,5 +74,5 @@ export const createDappConnector = (appStorage: App.Storage, wallet: YoroiWallet
     },
   }
   const storage = connectionStorageMaker({storage: appStorage.join('dapp-connections/')})
-  return dappConnectorMaker(storage, handlerWallet)
+  return dappConnectorMaker(storage, handlerWallet, api)
 }
