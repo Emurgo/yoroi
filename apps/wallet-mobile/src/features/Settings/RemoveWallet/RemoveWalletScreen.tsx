@@ -27,7 +27,6 @@ export const RemoveWalletScreen = () => {
   const wallet = useSelectedWallet()
   const walletName = useWalletName(wallet)
   const {resetToWalletSetup, resetToWalletSelection} = useWalletNavigation()
-  const walletManager = useWalletManager()
   const queryClient = useQueryClient()
 
   const {removeWallet, isLoading: isRemoveWalletLoading} = useRemoveWallet(wallet.id, {
