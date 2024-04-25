@@ -1,7 +1,7 @@
 import {connectionStorageMaker, dappConnectorMaker} from '@yoroi/dapp-connector'
 import {dappConnectorApiMaker} from '@yoroi/dapp-connector'
 import {App} from '@yoroi/types'
-import {Alert, Image} from 'react-native'
+import {Alert} from 'react-native'
 
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 

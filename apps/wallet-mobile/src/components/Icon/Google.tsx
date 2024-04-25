@@ -1,5 +1,5 @@
 import * as React from 'react'
-import Svg, {Defs, Image,Pattern, Rect, Use} from 'react-native-svg'
+import Svg, {Defs, Image, Pattern, Rect, Use} from 'react-native-svg'
 
 type Props = {
   size?: number
