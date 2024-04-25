@@ -6,6 +6,6 @@ export const useDappList = (options?: UseQueryOptions<DappListResponse, Error, D
   const {manager} = useDappConnector()
   return useQuery('dappList', {
     ...options,
-    queryFn: manager.getDAppList,
+    queryFn: () => manager.getDAppList(),
   })
 }
