@@ -22,6 +22,7 @@ describe('createPrimaryTokenInfo', () => {
       ticker: '',
       website: '',
       originalImage: '',
+      description: '',
       ...cardanoUnknownToken,
     }
 

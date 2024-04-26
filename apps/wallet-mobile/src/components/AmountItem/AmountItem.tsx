@@ -11,6 +11,7 @@ import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {Quantities} from '../../yoroi-wallets/utils'
 import {Boundary, Icon, Spacer, Text, TokenIcon, TokenIconPlaceholder} from '..'
 import {PairedBalance} from '../PairedBalance/PairedBalance'
+import { infoExtractName } from '@yoroi/portfolio'
 
 export type AmountItemProps = {
   wallet: YoroiWallet
@@ -35,10 +36,11 @@ export const AmountItem = ({
 }: AmountItemProps) => {
   const {styles, colors} = useStyles()
 
-  const isPrimary = amount.info.nature === 'primary'
-  const name = tokenInfo.ticker ?? tokenInfo.name
+  const {info, quantity} = amount
+  const isPrimary = info.nature === 'primary'
+  const name = infoExtractName(info)
   const nameLabel = isEmptyString(name) ? '-' : name
-  const detail = isPrimary ? tokenInfo.description : tokenInfo.fingerprint
+  const detail = isPrimary ? info.: tokenInfo.fingerprint
 
   const formattedQuantity = Quantities.format(quantity, tokenInfo.decimals ?? 0)
   const showSwapDetails = !isPrimary && variant === 'swap'

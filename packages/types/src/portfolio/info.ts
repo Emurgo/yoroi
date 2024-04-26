@@ -19,6 +19,7 @@ type CommonTokenInfo = {
   tag: string
   reference: string // output
   fingerprint: string
+  description: string
 
   website: string // Full link with protocol URI
 

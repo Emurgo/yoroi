@@ -15,6 +15,7 @@ describe('createPrimaryTokenInfo', () => {
       tag: '',
       ticker: 'ADA',
       website: 'https://cardano.org/',
+      description: '',
     }
 
     const expectedTokenInfo: Readonly<Portfolio.Token.Info> = {
