@@ -34,8 +34,8 @@ describe('toBalanceManagerSyncArgs', () => {
 
     expect(result.primaryStated.totalFromTxs).toBe(300n)
     expect(result.primaryStated.lockedAsStorageCost).toBe(10n)
-    expect(result.secondaryBalances.get(`${policyId}.DEAD`)?.balance).toBe(120n)
-    expect(result.secondaryBalances.get(`${policyId}.DEADFEED`)?.balance).toBe(30n)
-    expect(result.secondaryBalances.get(`${policyId}.3031`)?.balance).toBe(80n)
+    expect(result.secondaryBalances.get(`${policyId}.DEAD`)?.quantity).toBe(120n)
+    expect(result.secondaryBalances.get(`${policyId}.DEADFEED`)?.quantity).toBe(30n)
+    expect(result.secondaryBalances.get(`${policyId}.3031`)?.quantity).toBe(80n)
   })
 })

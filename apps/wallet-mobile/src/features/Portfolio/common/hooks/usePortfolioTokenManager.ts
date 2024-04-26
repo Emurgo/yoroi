@@ -9,8 +9,9 @@ export const usePortfolioTokenManager = ({network}: {network: Chain.Network}) =>
 }
 
 export const buildPortfolioTokenManager = ({network}: {network: Chain.Network}) => {
-  const tokenDiscoveryStorageMounted = mountMMKVStorage<Portfolio.Token.Id>({path: `${network}/token-discovery/`})
-  const tokenInfoStorageMounted = mountMMKVStorage<Portfolio.Token.Id>({path: `${network}/token-info/`})
+  const networkStorageMounted = mountMMKVStorage<Portfolio.Token.Id>({path: '/', id: `${network}.token-manager`})
+  const tokenDiscoveryStorageMounted = networkStorageMounted.join('token-discovery/')
+  const tokenInfoStorageMounted = networkStorageMounted.join('token-info/')
 
   const tokenStorage = portfolioTokenStorageMaker({
     tokenDiscoveryStorage: observableStorageMaker(tokenDiscoveryStorageMounted),

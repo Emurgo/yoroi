@@ -50,7 +50,7 @@ export const PortfolioScreen = () => {
                         <View>
                           <Text>walelt: {walletId}</Text>
 
-                          <Text>balance: {wallet.primaryBalance.balance.toString()}</Text>
+                          <Text>balance: {wallet.primaryBalance.quantity.toString()}</Text>
 
                           <Text>locked: {wallet.primaryBreakdown.lockedAsStorageCost.toString()}</Text>
                         </View>
@@ -62,7 +62,7 @@ export const PortfolioScreen = () => {
                       <View style={{padding: 8, backgroundColor: 'lightgray', marginVertical: 4}}>
                         <Text>{item.info.name}</Text>
 
-                        <Text>{item.balance.toString()}</Text>
+                        <Text>{item.quantity.toString()}</Text>
                       </View>
                     )}
                   />

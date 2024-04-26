@@ -79,7 +79,7 @@ const WalletTabNavigator = () => {
             // keyboardWillShow keyboardWillHiden dont work on android
             display: isKeyboardOpen ? 'none' : undefined,
           },
-          tabBarHideOnKeyboard: Platform.OS === 'android',
+          tabBarHideOnKeyboard: true,
         }}
         initialRouteName={initialRoute}
         backBehavior="initialRoute"

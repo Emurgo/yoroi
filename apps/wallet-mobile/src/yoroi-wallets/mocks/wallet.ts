@@ -89,7 +89,7 @@ const wallet: YoroiWallet = {
     nfts: [],
   },
   primaryBalance: {
-    balance: 0n,
+    quantity: 0n,
     info: primaryTokenInfoMainnet,
   },
   primaryBreakdown: {
