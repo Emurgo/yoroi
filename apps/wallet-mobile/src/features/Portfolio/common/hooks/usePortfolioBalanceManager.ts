@@ -30,14 +30,14 @@ export const buildPortfolioBalanceManager = ({
   network: Chain.Network
 }) => {
   const primaryTokenInfo = network === Chain.Network.Main ? primaryTokenInfoMainnet : primaryTokenInfoAnyTestnet
-  const storage = mountMMKVStorage<Portfolio.Token.Id>({path: `/`, id: `${network}.balance-manager`})
-  const walletStorage = storage.join(`${walletId}/`)
-  const balanceStorageMounted = walletStorage.join('secondaries/')
-  const primaryBreakdownStorageMounted = walletStorage.join('primary/')
+  const rootStorage = mountMMKVStorage<Portfolio.Token.Id>({path: `/`, id: `${network}.balance-manager`})
+  const walletStorage = rootStorage.join(`${walletId}/`)
+  const walletBalanceStorage = walletStorage.join('secondaries/')
+  const walletPrimaryBreakdownStorage = walletStorage.join('primary/')
 
   const balanceStorage = portfolioBalanceStorageMaker({
-    balanceStorage: observableStorageMaker(balanceStorageMounted),
-    primaryBreakdownStorage: observableStorageMaker(primaryBreakdownStorageMounted),
+    balanceStorage: observableStorageMaker(walletBalanceStorage),
+    primaryBreakdownStorage: observableStorageMaker(walletPrimaryBreakdownStorage),
     primaryTokenId: primaryTokenInfo.id,
   })
 

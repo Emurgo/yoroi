@@ -9,13 +9,13 @@ export const usePortfolioTokenManager = ({network}: {network: Chain.Network}) =>
 }
 
 export const buildPortfolioTokenManager = ({network}: {network: Chain.Network}) => {
-  const storage = mountMMKVStorage<Portfolio.Token.Id>({path: '/', id: `${network}.token-manager`})
-  const tokenDiscoveryStorageMounted = storage.join('token-discovery/')
-  const tokenInfoStorageMounted = storage.join('token-info/')
+  const rootStorage = mountMMKVStorage<Portfolio.Token.Id>({path: '/', id: `${network}.token-manager`})
+  const appTokenDiscoveryStorage = rootStorage.join('token-discovery/')
+  const appTokenInfoStorage = rootStorage.join('token-info/')
 
   const tokenStorage = portfolioTokenStorageMaker({
-    tokenDiscoveryStorage: observableStorageMaker(tokenDiscoveryStorageMounted),
-    tokenInfoStorage: observableStorageMaker(tokenInfoStorageMounted),
+    tokenDiscoveryStorage: observableStorageMaker(appTokenDiscoveryStorage),
+    tokenInfoStorage: observableStorageMaker(appTokenInfoStorage),
   })
   const api = portfolioApiMaker({
     network,

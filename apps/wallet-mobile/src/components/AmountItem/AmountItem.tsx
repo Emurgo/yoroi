@@ -1,5 +1,5 @@
 import {useTheme} from '@yoroi/theme'
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import {Swap} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
@@ -8,17 +8,15 @@ import {usePriceImpactRiskTheme} from '../../features/Swap/common/helpers'
 import {SwapPriceImpactRisk} from '../../features/Swap/common/types'
 import {isEmptyString} from '../../utils'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
-import {useTokenInfo} from '../../yoroi-wallets/hooks'
 import {Quantities} from '../../yoroi-wallets/utils'
 import {Boundary, Icon, Spacer, Text, TokenIcon, TokenIconPlaceholder} from '..'
 import {PairedBalance} from '../PairedBalance/PairedBalance'
 
 export type AmountItemProps = {
   wallet: YoroiWallet
-  amount: Balance.Amount
+  amount: Portfolio.Token.Amount
   style?: ViewProps['style']
   isPrivacyOff?: boolean
-  status?: string
   inWallet?: boolean
   variant?: 'swap'
   priceImpactRisk?: SwapPriceImpactRisk
@@ -36,10 +34,8 @@ export const AmountItem = ({
   orderType,
 }: AmountItemProps) => {
   const {styles, colors} = useStyles()
-  const {quantity, tokenId} = amount
-  const tokenInfo = useTokenInfo({wallet, tokenId})
 
-  const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
+  const isPrimary = amount.info.nature === 'primary'
   const name = tokenInfo.ticker ?? tokenInfo.name
   const nameLabel = isEmptyString(name) ? '-' : name
   const detail = isPrimary ? tokenInfo.description : tokenInfo.fingerprint
