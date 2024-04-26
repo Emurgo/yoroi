@@ -1,4 +1,5 @@
 export * from './helpers/amount-formatter'
+export * from './helpers/amount-breakdown'
 export * from './helpers/create-primary-token-info'
 export * from './helpers/sorting'
 

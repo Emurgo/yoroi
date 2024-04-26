@@ -1,5 +1,5 @@
 import {useTheme} from '@yoroi/theme'
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TextStyle} from 'react-native'
@@ -10,13 +10,15 @@ import {useExchangeRate} from '../../yoroi-wallets/hooks'
 import {CurrencySymbol} from '../../yoroi-wallets/types'
 import {Quantities} from '../../yoroi-wallets/utils'
 import {Boundary, ResetError, ResetErrorRef} from '..'
+import { splitBigInt } from '@yoroi/common'
 
 type Props = {
-  amount: Balance.Amount
+  amount: Portfolio.Token.Amount
+  privacyPlaceholder: string
   isPrivacyOff?: boolean
   textStyle?: TextStyle
 }
-export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(({isPrivacyOff, amount, textStyle}, ref) => {
+export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(({isPrivacyOff, amount, textStyle, privacyPlaceholder}, ref) => {
   const {currency} = useCurrencyContext()
 
   return (
@@ -31,13 +33,12 @@ export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(({isPrivacyO
         ),
       }}
     >
-      <Amount isPrivacyOff={isPrivacyOff} amount={amount} textStyle={textStyle} />
+      <Price isPrivacyOff={isPrivacyOff} amount={amount} privacyPlaceholder={privacyPlaceholder} textStyle={textStyle} />
     </Boundary>
   )
 })
 
-const hiddenPairedTotal = '*.**'
-const Amount = ({isPrivacyOff, amount, textStyle}: Props) => {
+const Price = ({isPrivacyOff, amount, textStyle, privacyPlaceholder}: Props) => {
   const wallet = useSelectedWallet()
   const styles = useStyles()
   const {currency, config} = useCurrencyContext()
@@ -46,20 +47,15 @@ const Amount = ({isPrivacyOff, amount, textStyle}: Props) => {
   // hide pairing when set to the primary token
   if (currency === 'ADA') return null
 
-  // hide pairing when the amount is not primary
-  if (wallet.primaryTokenInfo.id !== amount.tokenId) return null
-
   if (rate == null)
     return (
-      <Text style={[styles.pairedBalanceText, textStyle]} testID="pairedTotalText">
+      <Text style={[styles.pairedBalanceText, textStyle]}>
         ... {currency}
       </Text>
     )
 
-  const primaryExchangeQuantity = Quantities.quotient(
-    amount.quantity,
-    `${10 ** wallet.primaryToken.metadata.numberOfDecimals}`,
-  )
+  const price = splitBigInt()
+
   const secondaryExchangeQuantity = Quantities.decimalPlaces(
     Quantities.product([primaryExchangeQuantity, `${rate}`]),
     config.decimals,
@@ -78,7 +74,7 @@ const BalanceError = ({textStyle}: {textStyle?: TextStyle}) => {
   const {currency} = useCurrencyContext()
 
   return (
-    <Text style={[styles.pairedBalanceText, textStyle]} testID="pairedTotalText">
+    <Text style={[styles.pairedBalanceText, textStyle]}>
       {strings.pairedBalanceError(currency)}
     </Text>
   )
