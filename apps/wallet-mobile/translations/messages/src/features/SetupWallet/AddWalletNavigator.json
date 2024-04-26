@@ -2,7 +2,7 @@
   {
     "id": "components.walletinit.walletinitscreen.title",
     "defaultMessage": "!!!Add wallet",
-    "file": "src/features/SetupWallet/AddWalletNavigator.tsx",
+    "file": "src/features/SetupWallet/SetupWalletNavigator.tsx",
     "start": {
       "line": 132,
       "column": 18,
@@ -17,7 +17,7 @@
   {
     "id": "components.walletinit.createwallet.createwalletscreen.title",
     "defaultMessage": "!!!Create a new wallet",
-    "file": "src/features/SetupWallet/AddWalletNavigator.tsx",
+    "file": "src/features/SetupWallet/SetupWalletNavigator.tsx",
     "start": {
       "line": 136,
       "column": 21,
@@ -32,7 +32,7 @@
   {
     "id": "components.walletinit.restorewallet.restorewalletscreen.title",
     "defaultMessage": "!!!Restore wallet",
-    "file": "src/features/SetupWallet/AddWalletNavigator.tsx",
+    "file": "src/features/SetupWallet/SetupWalletNavigator.tsx",
     "start": {
       "line": 140,
       "column": 22,
@@ -47,7 +47,7 @@
   {
     "id": "components.walletinit.importreadonlywalletscreen.title",
     "defaultMessage": "!!!Read-only Wallet",
-    "file": "src/features/SetupWallet/AddWalletNavigator.tsx",
+    "file": "src/features/SetupWallet/SetupWalletNavigator.tsx",
     "start": {
       "line": 144,
       "column": 23,
@@ -62,7 +62,7 @@
   {
     "id": "components.walletinit.savereadonlywalletscreen.title",
     "defaultMessage": "!!!Verify read-only wallet",
-    "file": "src/features/SetupWallet/AddWalletNavigator.tsx",
+    "file": "src/features/SetupWallet/SetupWalletNavigator.tsx",
     "start": {
       "line": 148,
       "column": 27,
@@ -77,7 +77,7 @@
   {
     "id": "components.walletinit.createwallet.mnemonicshowscreen.title",
     "defaultMessage": "!!!Recovery phrase",
-    "file": "src/features/SetupWallet/AddWalletNavigator.tsx",
+    "file": "src/features/SetupWallet/SetupWalletNavigator.tsx",
     "start": {
       "line": 152,
       "column": 21,
@@ -92,7 +92,7 @@
   {
     "id": "components.walletinit.createwallet.mnemoniccheckscreen.title",
     "defaultMessage": "!!!Recovery phrase",
-    "file": "src/features/SetupWallet/AddWalletNavigator.tsx",
+    "file": "src/features/SetupWallet/SetupWalletNavigator.tsx",
     "start": {
       "line": 156,
       "column": 22,
@@ -107,7 +107,7 @@
   {
     "id": "components.walletinit.verifyrestoredwallet.title",
     "defaultMessage": "!!!Verify restored wallet",
-    "file": "src/features/SetupWallet/AddWalletNavigator.tsx",
+    "file": "src/features/SetupWallet/SetupWalletNavigator.tsx",
     "start": {
       "line": 160,
       "column": 29,
@@ -122,7 +122,7 @@
   {
     "id": "components.walletinit.restorewallet.walletcredentialsscreen.title",
     "defaultMessage": "!!!Wallet credentials",
-    "file": "src/features/SetupWallet/AddWalletNavigator.tsx",
+    "file": "src/features/SetupWallet/SetupWalletNavigator.tsx",
     "start": {
       "line": 164,
       "column": 26,
@@ -137,7 +137,7 @@
   {
     "id": "components.walletinit.connectnanox.connectnanoxscreen.title",
     "defaultMessage": "!!!Connect to Ledger Device",
-    "file": "src/features/SetupWallet/AddWalletNavigator.tsx",
+    "file": "src/features/SetupWallet/SetupWalletNavigator.tsx",
     "start": {
       "line": 168,
       "column": 21,
@@ -152,7 +152,7 @@
   {
     "id": "components.walletinit.connectnanox.checknanoxscreen.title",
     "defaultMessage": "!!!Connect to Ledger Device",
-    "file": "src/features/SetupWallet/AddWalletNavigator.tsx",
+    "file": "src/features/SetupWallet/SetupWalletNavigator.tsx",
     "start": {
       "line": 172,
       "column": 19,
@@ -167,7 +167,7 @@
   {
     "id": "components.walletinit.connectnanox.savenanoxscreen.title",
     "defaultMessage": "!!!Save wallet",
-    "file": "src/features/SetupWallet/AddWalletNavigator.tsx",
+    "file": "src/features/SetupWallet/SetupWalletNavigator.tsx",
     "start": {
       "line": 176,
       "column": 18,

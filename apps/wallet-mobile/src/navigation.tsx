@@ -102,6 +102,7 @@ export type WalletTabRoutes = {
 
 export type WalletStackRoutes = {
   'choose-biometric-login': undefined
+  'setup-wallet': undefined
   'wallet-selection': undefined
   'exchange-result': undefined
   'main-wallet-routes': NavigatorScreenParams<WalletTabRoutes>
@@ -118,7 +119,6 @@ export type WalletInitRoutes = {
   'setup-wallet-create-choose-network': undefined
   'setup-wallet-restore-choose-network': undefined
   'setup-wallet-restore-choose-mnemonic-type': undefined
-  'initial-setup-wallet-choose-setup-type': undefined
   'setup-wallet-details-form': undefined
   'setup-wallet-restore-form': undefined
   'setup-wallet-restore-details': undefined
@@ -305,7 +305,6 @@ export type AppRoutes = {
   'first-run': NavigatorScreenParams<FirstRunRoutes>
   developer: undefined
   storybook: undefined
-  'new-wallet': NavigatorScreenParams<WalletInitRoutes>
   'app-root': NavigatorScreenParams<WalletStackRoutes>
   'custom-pin-auth': undefined
   'exchange-result': undefined
@@ -410,6 +409,27 @@ export const useWalletNavigation = () => {
             screen: 'send-start-tx',
           },
         },
+      })
+    },
+
+    resetToWalletSetup: () => {
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'app-root',
+            state: {
+              routes: [
+                {
+                  name: 'setup-wallet',
+                  state: {
+                    routes: [{name: 'setup-wallet-choose-setup-type'}],
+                  },
+                },
+              ],
+            },
+          },
+        ],
       })
     },
 
