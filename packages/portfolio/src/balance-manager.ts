@@ -244,6 +244,8 @@ export const portfolioBalanceManagerMaker = (
               balances: [...secondaries.values(), newPrimaryBalance],
             })
             sortedBalances = splitByType(sorted)
+            primaryBreakdown = newPrimaryBreakdown
+            primaryBalance = newPrimaryBalance
 
             observer.notify({
               on: Portfolio.Event.ManagerOn.Sync,

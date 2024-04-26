@@ -1,3 +1,4 @@
+import {amountBreakdown} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
@@ -8,9 +9,7 @@ import {useCurrencyContext} from '../../features/Settings/Currency'
 import {useSelectedWallet} from '../../features/WalletManager/Context'
 import {useExchangeRate} from '../../yoroi-wallets/hooks'
 import {CurrencySymbol} from '../../yoroi-wallets/types'
-import {Quantities} from '../../yoroi-wallets/utils'
 import {Boundary, ResetError, ResetErrorRef} from '..'
-import { splitBigInt } from '@yoroi/common'
 
 type Props = {
   amount: Portfolio.Token.Amount
@@ -18,25 +17,35 @@ type Props = {
   isPrivacyOff?: boolean
   textStyle?: TextStyle
 }
-export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(({isPrivacyOff, amount, textStyle, privacyPlaceholder}, ref) => {
-  const {currency} = useCurrencyContext()
+export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(
+  ({isPrivacyOff, amount, textStyle, privacyPlaceholder}, ref) => {
+    const {currency} = useCurrencyContext()
 
-  return (
-    <Boundary
-      key={currency}
-      loading={{size: 'small'}}
-      error={{
-        fallback: ({resetErrorBoundary}) => (
-          <ResetError resetErrorBoundary={resetErrorBoundary} ref={ref}>
-            <BalanceError textStyle={textStyle} />
-          </ResetError>
-        ),
-      }}
-    >
-      <Price isPrivacyOff={isPrivacyOff} amount={amount} privacyPlaceholder={privacyPlaceholder} textStyle={textStyle} />
-    </Boundary>
-  )
-})
+    // hide pairing when set to the primary token
+    if (currency === 'ADA') return null
+
+    return (
+      <Boundary
+        key={currency}
+        loading={{size: 'small'}}
+        error={{
+          fallback: ({resetErrorBoundary}) => (
+            <ResetError resetErrorBoundary={resetErrorBoundary} ref={ref}>
+              <BalanceError textStyle={textStyle} />
+            </ResetError>
+          ),
+        }}
+      >
+        <Price
+          isPrivacyOff={isPrivacyOff}
+          amount={amount}
+          privacyPlaceholder={privacyPlaceholder}
+          textStyle={textStyle}
+        />
+      </Boundary>
+    )
+  },
+)
 
 const Price = ({isPrivacyOff, amount, textStyle, privacyPlaceholder}: Props) => {
   const wallet = useSelectedWallet()
@@ -44,26 +53,17 @@ const Price = ({isPrivacyOff, amount, textStyle, privacyPlaceholder}: Props) => 
   const {currency, config} = useCurrencyContext()
   const rate = useExchangeRate({wallet, to: currency})
 
-  // hide pairing when set to the primary token
-  if (currency === 'ADA') return null
+  const price = React.useMemo(() => {
+    if (rate == null) return `... ${currency}`
 
-  if (rate == null)
-    return (
-      <Text style={[styles.pairedBalanceText, textStyle]}>
-        ... {currency}
-      </Text>
-    )
+    return !isPrivacyOff
+      ? `${amountBreakdown(amount).bn.times(rate).toFormat(config.decimals)} ${currency}`
+      : `${privacyPlaceholder} ${currency}`
+  }, [amount, config.decimals, currency, isPrivacyOff, privacyPlaceholder, rate])
 
-  const price = splitBigInt()
-
-  const secondaryExchangeQuantity = Quantities.decimalPlaces(
-    Quantities.product([primaryExchangeQuantity, `${rate}`]),
-    config.decimals,
-  )
-  const pairedTotal = isPrivacyOff ? hiddenPairedTotal : secondaryExchangeQuantity
   return (
     <Text style={[styles.pairedBalanceText, textStyle]} testID="pairedTotalText">
-      {`${pairedTotal} ${currency}`}
+      {price}
     </Text>
   )
 }
@@ -73,11 +73,7 @@ const BalanceError = ({textStyle}: {textStyle?: TextStyle}) => {
   const styles = useStyles()
   const {currency} = useCurrencyContext()
 
-  return (
-    <Text style={[styles.pairedBalanceText, textStyle]}>
-      {strings.pairedBalanceError(currency)}
-    </Text>
-  )
+  return <Text style={[styles.pairedBalanceText, textStyle]}>{strings.pairedBalanceError(currency)}</Text>
 }
 
 const messages = defineMessages({
