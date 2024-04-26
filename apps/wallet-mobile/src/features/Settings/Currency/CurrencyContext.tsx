@@ -9,21 +9,13 @@ const CurrencyContext = React.createContext<undefined | CurrencyContext>(undefin
 export const CurrencyProvider = ({children}: {children: React.ReactNode}) => {
   const currency = useCurrency()
   const selectCurrency = useSaveCurrency()
-  const config = configCurrencies[currency]
 
-  return (
-    <CurrencyContext.Provider
-      value={{
-        currency,
-        selectCurrency,
-        supportedCurrencies,
-        configCurrencies,
-        config,
-      }}
-    >
-      {children}
-    </CurrencyContext.Provider>
+  const value = React.useMemo(
+    () => ({currency, selectCurrency, supportedCurrencies, configCurrencies, config: configCurrencies[currency]}),
+    [currency, selectCurrency],
   )
+
+  return <CurrencyContext.Provider value={value}>{children}</CurrencyContext.Provider>
 }
 
 export const useCurrencyContext = () => React.useContext(CurrencyContext) || missingProvider()

@@ -1,4 +1,4 @@
-import {balanceFormatter} from '@yoroi/portfolio'
+import {amountFormatter} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import React from 'react'
@@ -10,6 +10,7 @@ import {PairedBalance} from '../components/PairedBalance/PairedBalance'
 import {usePrimaryBalance} from '../features/Portfolio/common/hooks/usePrimaryBalance'
 import {usePrivacyMode} from '../features/Settings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../features/WalletManager/Context'
+import {asQuantity} from '../yoroi-wallets/utils'
 
 export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
   const wallet = useSelectedWallet()
@@ -29,7 +30,7 @@ export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
 
       <TouchableOpacity onPress={() => togglePrivacyMode()} style={styles.button}>
         <CenteredRow>
-          <Balance
+          <PrimaryBalance
             isPrivacyOff={isPrivacyOff}
             primaryBalance={primaryBalance}
             privacyPlaceholder={privacyPlaceholder}
@@ -37,20 +38,27 @@ export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
         </CenteredRow>
 
         <CenteredRow>
-          <PairedBalance isPrivacyOff={isPrivacyOff} amount={primaryAmount} ref={ref} />
+          <PairedBalance
+            isPrivacyOff={isPrivacyOff}
+            amount={{
+              quantity: asQuantity(primaryBalance.quantity.toString()),
+              tokenId: primaryBalance.info.id,
+            }}
+            ref={ref}
+          />
         </CenteredRow>
       </TouchableOpacity>
     </View>
   )
 })
 
-type BalanceProps = {isPrivacyOff: boolean; primaryBalance: Portfolio.Token.Balance; privacyPlaceholder: string}
-const Balance = ({isPrivacyOff, primaryBalance, privacyPlaceholder}: BalanceProps) => {
+type PrimaryBalanceProps = {isPrivacyOff: boolean; primaryBalance: Portfolio.Token.Amount; privacyPlaceholder: string}
+const PrimaryBalance = ({isPrivacyOff, primaryBalance, privacyPlaceholder}: PrimaryBalanceProps) => {
   const styles = useStyles()
 
   const balance = isPrivacyOff
-    ? balanceFormatter({template: '{{value}} {{symbol}}'})(primaryBalance)
-    : balanceFormatter({template: `${privacyPlaceholder} {{symbol}}`})(primaryBalance)
+    ? amountFormatter({template: '{{value}} {{symbol}}'})(primaryBalance)
+    : amountFormatter({template: `${privacyPlaceholder} {{symbol}}`})(primaryBalance)
 
   return (
     <CenteredRow>
