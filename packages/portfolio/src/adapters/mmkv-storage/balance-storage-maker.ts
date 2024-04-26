@@ -14,21 +14,21 @@ export const portfolioBalanceStorageMaker = ({
 }): Portfolio.Storage.Balance => {
   const balances = {
     save: (
-      entries: ReadonlyArray<[Portfolio.Token.Id, Portfolio.Token.Balance]>,
+      entries: ReadonlyArray<[Portfolio.Token.Id, Portfolio.Token.Amount]>,
     ) =>
-      balanceStorage.multiSet<Portfolio.Token.Balance>(
+      balanceStorage.multiSet<Portfolio.Token.Amount>(
         entries,
         storageSerializer,
       ),
     read: (keys: ReadonlyArray<Portfolio.Token.Id>) =>
-      balanceStorage.multiGet<Portfolio.Token.Balance>(
+      balanceStorage.multiGet<Portfolio.Token.Amount>(
         keys,
-        deserializers.tokenBalance,
+        deserializers.tokenAmount,
       ),
     all: () =>
-      balanceStorage.multiGet<Portfolio.Token.Balance>(
+      balanceStorage.multiGet<Portfolio.Token.Amount>(
         balanceStorage.getAllKeys(),
-        deserializers.tokenBalance,
+        deserializers.tokenAmount,
       ),
     keys: () => balanceStorage.getAllKeys(),
     clear: () => balanceStorage.clear(),

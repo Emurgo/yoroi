@@ -3,9 +3,9 @@ import {freeze} from 'immer'
 
 import {tokenInfoMocks} from './token-info.mocks'
 
-const primaryETH: Portfolio.Token.Balance = {
+const primaryETH: Portfolio.Token.Amount = {
   info: tokenInfoMocks.primaryETH,
-  balance: BigInt(1_000_000),
+  quantity: BigInt(1_000_000),
 }
 
 const primaryETHBreakdown: Portfolio.PrimaryBreakdown = {
@@ -14,38 +14,38 @@ const primaryETHBreakdown: Portfolio.PrimaryBreakdown = {
   lockedAsStorageCost: BigInt(1_000_003),
 }
 
-const missingToken: Portfolio.Token.Balance = {
+const missingToken: Portfolio.Token.Amount = {
   info: {...tokenInfoMocks.ftNameless, id: 'dead.fee'},
-  balance: BigInt(1),
+  quantity: BigInt(1),
 }
 
-const nftCryptoKitty: Portfolio.Token.Balance = {
+const nftCryptoKitty: Portfolio.Token.Amount = {
   info: tokenInfoMocks.nftCryptoKitty,
-  balance: BigInt(1_000_001),
+  quantity: BigInt(1_000_001),
 }
 
-const rnftWhatever: Portfolio.Token.Balance = {
+const rnftWhatever: Portfolio.Token.Amount = {
   info: tokenInfoMocks.rnftWhatever,
-  balance: BigInt(2_000_002),
+  quantity: BigInt(2_000_002),
 }
 
-const ftNoTicker: Portfolio.Token.Balance = {
+const ftNoTicker: Portfolio.Token.Amount = {
   info: tokenInfoMocks.ftNoTicker,
-  balance: BigInt(3_000_003),
+  quantity: BigInt(3_000_003),
 }
 
-const ftNameless: Portfolio.Token.Balance = {
+const ftNameless: Portfolio.Token.Amount = {
   info: tokenInfoMocks.ftNameless,
-  balance: BigInt(4_000_004),
+  quantity: BigInt(4_000_004),
 }
 
 const storage: {
-  entries1: ReadonlyArray<[Portfolio.Token.Id, Portfolio.Token.Balance]>
+  entries1: ReadonlyArray<[Portfolio.Token.Id, Portfolio.Token.Amount]>
   entries1WithPrimary: ReadonlyArray<
-    [Portfolio.Token.Id, Portfolio.Token.Balance]
+    [Portfolio.Token.Id, Portfolio.Token.Amount]
   >
   missingInApiResponse: ReadonlyArray<
-    [Portfolio.Token.Id, Portfolio.Token.Balance]
+    [Portfolio.Token.Id, Portfolio.Token.Amount]
   >
 } = {
   entries1: [

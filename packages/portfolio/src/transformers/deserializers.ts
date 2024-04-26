@@ -5,16 +5,16 @@ import {
 } from '@yoroi/common'
 import {freeze} from 'immer'
 
-import {parseTokenBalance} from '../validators/token-balance'
 import {parseTokenDiscoveryWithCacheRecord} from '../validators/token-discovery'
 import {parsePrimaryBreakdown} from '../validators/primary-breakdown'
+import {parseTokenAmount} from '../validators/token-amount'
 
 export const tokenDiscoveryReviverMapping: StorageReviverMapping = {
   supply: StorageReviverType.AsBigInt,
 }
 
-export const tokenBalanceReviverMapping: StorageReviverMapping = {
-  balance: StorageReviverType.AsBigInt,
+export const tokenAmountReviverMapping: StorageReviverMapping = {
+  quantity: StorageReviverType.AsBigInt,
 }
 
 export const primaryBalanceBreakdownReviverMapping: StorageReviverMapping = {
@@ -23,12 +23,10 @@ export const primaryBalanceBreakdownReviverMapping: StorageReviverMapping = {
   lockedAsStorageCost: StorageReviverType.AsBigInt,
 }
 
-const tokenBalanceDeserializer = (jsonString: string | null) => {
+const tokenAmountDeserializer = (jsonString: string | null) => {
   if (jsonString == null) return null
-  const record = storageDeserializerMaker(tokenBalanceReviverMapping)(
-    jsonString,
-  )
-  const parsed = parseTokenBalance(record)
+  const record = storageDeserializerMaker(tokenAmountReviverMapping)(jsonString)
+  const parsed = parseTokenAmount(record)
   return parsed ?? null
 }
 
@@ -53,7 +51,7 @@ const primaryBalanceBreakdownDeserializer = (jsonString: string | null) => {
 export const deserializers = freeze(
   {
     tokenDiscoveryWithCache: tokenDiscoveryWithCacheDeserializer,
-    tokenBalance: tokenBalanceDeserializer,
+    tokenAmount: tokenAmountDeserializer,
     primaryBreakdown: primaryBalanceBreakdownDeserializer,
   },
   true,

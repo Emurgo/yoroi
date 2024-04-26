@@ -1,80 +1,80 @@
-import {balanceFormatter} from './balance-formatter'
+import {amountFormatter} from './amount-formatter'
 import {tokenBalanceMocks} from '../adapters/token-balance.mocks'
 
-describe('balanceFormatter', () => {
+describe('amountFormatter', () => {
   it('it works', () => {
-    let formattedBalance = balanceFormatter({
+    let formattedBalance = amountFormatter({
       template: '{{symbol}} {{value}} {{ticker}}',
     })(tokenBalanceMocks.primaryETH)
 
     expect(formattedBalance).toBe('Ξ 0.000000000001000000 ETH')
 
-    formattedBalance = balanceFormatter({
+    formattedBalance = amountFormatter({
       template: '{{ticker}} {{value}} {{symbol}}',
     })(tokenBalanceMocks.primaryETH)
 
     expect(formattedBalance).toBe('ETH 0.000000000001000000 Ξ')
 
-    formattedBalance = balanceFormatter()(tokenBalanceMocks.primaryETH)
+    formattedBalance = amountFormatter()(tokenBalanceMocks.primaryETH)
 
     expect(formattedBalance).toBe('0.000000000001000000')
 
-    formattedBalance = balanceFormatter({dropTraillingZeros: true})({
+    formattedBalance = amountFormatter({dropTraillingZeros: true})({
       info: {
         ...tokenBalanceMocks.primaryETH.info,
         decimals: 10,
       },
-      balance: 123_456_000_000n,
+      quantity: 123_456_000_000n,
     })
 
     expect(formattedBalance).toBe('12.3456')
 
-    formattedBalance = balanceFormatter({dropTraillingZeros: true})({
+    formattedBalance = amountFormatter({dropTraillingZeros: true})({
       info: {
         ...tokenBalanceMocks.primaryETH.info,
         decimals: 10,
       },
-      balance: 123_456_000_100n,
+      quantity: 123_456_000_100n,
     })
 
     expect(formattedBalance).toBe('12.34560001')
 
-    formattedBalance = balanceFormatter()({
+    formattedBalance = amountFormatter()({
       info: {
         ...tokenBalanceMocks.primaryETH.info,
         decimals: 10,
       },
-      balance: 123_456_000_000n,
+      quantity: 123_456_000_000n,
     })
 
     expect(formattedBalance).toBe('12.3456000000')
 
-    formattedBalance = balanceFormatter()({
+    formattedBalance = amountFormatter()({
       info: {
         ...tokenBalanceMocks.primaryETH.info,
         decimals: 10,
       },
-      balance: 123_456_789_123_456n,
+      quantity: 123_456_789_123_456n,
     })
 
     expect(formattedBalance).toBe('12,345.6789123456')
 
-    formattedBalance = balanceFormatter({dropTraillingZeros: true})({
+    formattedBalance = amountFormatter({dropTraillingZeros: true})({
       info: {
         ...tokenBalanceMocks.primaryETH.info,
         decimals: 0,
       },
-      balance: 10n,
+      quantity: 10n,
     })
 
     expect(formattedBalance).toBe('10')
 
-    formattedBalance = balanceFormatter({dropTraillingZeros: true})({
+    formattedBalance = amountFormatter({dropTraillingZeros: true})({
       info: {
         ...tokenBalanceMocks.primaryETH.info,
         decimals: 1,
       },
-      balance: 0n,
+      quantity: 0n,
     })
 
     expect(formattedBalance).toBe('0.0')

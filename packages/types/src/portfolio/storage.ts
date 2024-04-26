@@ -1,5 +1,5 @@
 import {AppCacheRecord} from '../app/cache'
-import {PortfolioPrimaryBreakdown, PortfolioTokenBalance} from './balance'
+import {PortfolioPrimaryBreakdown, PortfolioTokenAmount} from './amount'
 import {PortfolioTokenDiscovery} from './discovery'
 import {PortfolioTokenInfo} from './info'
 import {PortfolioTokenId} from './token'
@@ -12,12 +12,12 @@ export type PortfolioStorageBalance = Readonly<{
   }
   balances: {
     save: (
-      entries: ReadonlyArray<[PortfolioTokenId, PortfolioTokenBalance]>,
+      entries: ReadonlyArray<[PortfolioTokenId, PortfolioTokenAmount]>,
     ) => void
     read: (
       keys: ReadonlyArray<PortfolioTokenId>,
-    ) => ReadonlyArray<[PortfolioTokenId, PortfolioTokenBalance | null]>
-    all: () => ReadonlyArray<[PortfolioTokenId, PortfolioTokenBalance | null]>
+    ) => ReadonlyArray<[PortfolioTokenId, PortfolioTokenAmount | null]>
+    all: () => ReadonlyArray<[PortfolioTokenId, PortfolioTokenAmount | null]>
     keys: () => ReadonlyArray<PortfolioTokenId>
     clear: () => void
   }

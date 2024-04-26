@@ -13,7 +13,7 @@ describe('portfolioBalanceStorageMaker', () => {
   beforeEach(() => {
     balanceStorage = createMockStorage(
       'v2/wallets/id/balance/',
-      deserializers.tokenBalance,
+      deserializers.tokenAmount,
     )
     primaryBreakdownStorage = createMockStorage(
       'v2/wallets/id/primary-breakdown/',
@@ -73,7 +73,7 @@ describe('portfolioBalanceStorageMaker', () => {
     ])
     expect(balanceStorage.multiGet).toHaveBeenCalledWith(
       keys,
-      deserializers.tokenBalance,
+      deserializers.tokenAmount,
     )
   })
 

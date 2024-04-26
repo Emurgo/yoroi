@@ -1,3 +1,4 @@
+export * from './helpers/amount-formatter'
 export * from './helpers/create-primary-token-info'
 export * from './helpers/sorting'
 
@@ -13,11 +14,10 @@ export * from './adapters/token.mocks'
 
 export * from './transformers/deserializers'
 
-export * from './validators/amount'
 export * from './validators/primary-breakdown'
 export * from './validators/response-record-with-cache-schema-maker'
 export * from './validators/token-application'
-export * from './validators/token-balance'
+export * from './validators/token-amount'
 export * from './validators/token-discovery'
 export * from './validators/token-id'
 export * from './validators/token-info'

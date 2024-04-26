@@ -29,22 +29,22 @@ describe('deserializers', () => {
     })
   })
 
-  describe('tokenBalance', () => {
+  describe('tokenAmount', () => {
     it('should deserialize valid JSON string', () => {
       const jsonString = storageSerializer(tokenBalanceMocks.primaryETH)
-      const result = deserializers.tokenBalance(jsonString)
+      const result = deserializers.tokenAmount(jsonString)
       expect(result).toEqual(tokenBalanceMocks.primaryETH)
     })
 
     it('should return null for null input', () => {
       const jsonString = null
-      const result = deserializers.tokenBalance(jsonString)
+      const result = deserializers.tokenAmount(jsonString)
       expect(result).toBeNull()
     })
 
     it('should return null for invalid JSON string', () => {
       const jsonString = 'invalid-json'
-      const result = deserializers.tokenBalance(jsonString)
+      const result = deserializers.tokenAmount(jsonString)
       expect(result).toBeNull()
     })
   })

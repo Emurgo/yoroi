@@ -1,18 +1,13 @@
 import {PortfolioTokenInfo} from './info'
 import {PortfolioTokenId} from './token'
 
-export type PortfolioAmounts = {
-  [key: PortfolioTokenId]: bigint
+export type PortfolioTokenAmountRecords = {
+  [key: PortfolioTokenId]: PortfolioTokenAmount
 }
 
-export type PortfolioAmount = {
-  id: PortfolioTokenId
-  quantity: bigint
-}
-
-export type PortfolioTokenBalance = {
+export type PortfolioTokenAmount = {
   info: PortfolioTokenInfo
-  balance: bigint
+  quantity: bigint
 }
 
 export type PortfolioPrimaryBreakdown = {

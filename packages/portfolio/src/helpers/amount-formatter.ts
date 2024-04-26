@@ -1,7 +1,7 @@
 import {bigintFormatter} from '@yoroi/common'
 import {Portfolio} from '@yoroi/types'
 
-type BalanceFormatterConfig = Readonly<{
+type AmountFormatterConfig = Readonly<{
   template?: string
   dropTraillingZeros?: boolean
 }>
@@ -15,16 +15,16 @@ type BalanceFormatterConfig = Readonly<{
  *
  * @returns A function that takes a token balance and returns the formatted balance string.
  */
-export function balanceFormatter({
+export function amountFormatter({
   dropTraillingZeros = false,
   template = '{{value}}',
-}: BalanceFormatterConfig = {}) {
+}: AmountFormatterConfig = {}) {
   return ({
-    balance,
+    quantity,
     info: {decimals, ticker, symbol},
-  }: Portfolio.Token.Balance) => {
+  }: Portfolio.Token.Amount) => {
     const fmtBalance = bigintFormatter({
-      value: balance,
+      value: quantity,
       decimalPlaces: decimals,
     })
 

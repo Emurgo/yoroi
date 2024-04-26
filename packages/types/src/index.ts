@@ -158,11 +158,10 @@ import {
 import {PortfolioTokenDiscovery} from './portfolio/discovery'
 import {PortfolioTokenInfo} from './portfolio/info'
 import {
-  PortfolioAmount,
-  PortfolioAmounts,
+  PortfolioTokenAmount,
+  PortfolioTokenAmountRecords,
   PortfolioPrimaryBreakdown,
-  PortfolioTokenBalance,
-} from './portfolio/balance'
+} from './portfolio/amount'
 import {PortfolioTokenPrice} from './portfolio/price'
 import {ChainNetwork, ChainSupportedNetworks} from './chain/network'
 import {NumbersErrorInvalidAtomicValue} from './numbers/errors'
@@ -421,8 +420,6 @@ export namespace Transfer {
 }
 
 export namespace Portfolio {
-  export type Amount = PortfolioAmount
-  export type Amounts = PortfolioAmounts
   export type PrimaryBreakdown = PortfolioPrimaryBreakdown
 
   export namespace Event {
@@ -458,6 +455,9 @@ export namespace Portfolio {
   }
 
   export namespace Token {
+    export type Amount = PortfolioTokenAmount
+    export type AmountRecords = PortfolioTokenAmountRecords
+
     export type Id = PortfolioTokenId
 
     export type Type = PortfolioTokenType
@@ -480,7 +480,6 @@ export namespace Portfolio {
 
     export type Info = PortfolioTokenInfo
     export type Discovery = PortfolioTokenDiscovery
-    export type Balance = PortfolioTokenBalance
     export type Price = PortfolioTokenPrice
   }
 }

@@ -1,44 +1,44 @@
 import {Portfolio} from '@yoroi/types'
 
 import {
-  TokenBalanceSchema,
-  isTokenBalance,
-  parseTokenBalance,
-} from './token-balance'
+  TokenAmountSchema,
+  isTokenAmount,
+  parseTokenAmount,
+} from './token-amount'
 import {tokenInfoMocks} from '../adapters/token-info.mocks'
 
-describe('TokenBalanceSchema', () => {
+describe('TokenAmountSchema', () => {
   it('should validate a valid token balance', () => {
-    const validTokenBalance: Portfolio.Token.Balance = {
+    const validTokenBalance: Portfolio.Token.Amount = {
       info: tokenInfoMocks.ftNoTicker,
-      balance: BigInt(10000000000),
+      quantity: BigInt(10000000000),
     }
 
-    const result = TokenBalanceSchema.safeParse(validTokenBalance)
+    const result = TokenAmountSchema.safeParse(validTokenBalance)
 
     expect(result.success).toBe(true)
   })
 
   it('should not validate an invalid token balance', () => {
-    const invalidTokenBalance = {
+    const invalidTokenBalance: Portfolio.Token.Amount = {
       info: tokenInfoMocks.ftNoTicker,
-      balance: '10000000000',
-    }
+      quantity: '10000000000',
+    } as any
 
-    const result = TokenBalanceSchema.safeParse(invalidTokenBalance)
+    const result = TokenAmountSchema.safeParse(invalidTokenBalance)
 
     expect(result.success).toBe(false)
   })
 })
 
-describe('isTokenBalance', () => {
+describe('isTokenAmount', () => {
   it('should return true for a valid token balance', () => {
-    const validTokenBalance: Portfolio.Token.Balance = {
+    const validTokenBalance: Portfolio.Token.Amount = {
       info: tokenInfoMocks.ftNoTicker,
-      balance: BigInt(10000000000),
+      quantity: BigInt(10000000000),
     }
 
-    const result = isTokenBalance(validTokenBalance)
+    const result = isTokenAmount(validTokenBalance)
 
     expect(result).toBe(true)
   })
@@ -46,23 +46,23 @@ describe('isTokenBalance', () => {
   it('should return false for an invalid token balance', () => {
     const invalidTokenBalance = {
       info: tokenInfoMocks.ftNoTicker,
-      balance: '10000000000',
+      quantity: '10000000000',
     }
 
-    const result = isTokenBalance(invalidTokenBalance)
+    const result = isTokenAmount(invalidTokenBalance)
 
     expect(result).toBe(false)
   })
 })
 
-describe('parseTokenBalance', () => {
+describe('parseTokenAmount', () => {
   it('should return a valid token balance', () => {
-    const validTokenBalance: Portfolio.Token.Balance = {
+    const validTokenBalance: Portfolio.Token.Amount = {
       info: tokenInfoMocks.ftNoTicker,
-      balance: BigInt(10000000000),
+      quantity: BigInt(10000000000),
     }
 
-    const result = parseTokenBalance(validTokenBalance)
+    const result = parseTokenAmount(validTokenBalance)
 
     expect(result).toEqual(validTokenBalance)
   })
@@ -70,10 +70,10 @@ describe('parseTokenBalance', () => {
   it('should return undefined for an invalid token balance', () => {
     const invalidTokenBalance = {
       info: tokenInfoMocks.ftNoTicker,
-      balance: '10000000000',
+      quantity: '10000000000',
     }
 
-    const result = parseTokenBalance(invalidTokenBalance)
+    const result = parseTokenAmount(invalidTokenBalance)
 
     expect(result).toBeUndefined()
   })
@@ -81,7 +81,7 @@ describe('parseTokenBalance', () => {
   it('should return undefined for an unknown data type', () => {
     const unknownData = 'unknown'
 
-    const result = parseTokenBalance(unknownData)
+    const result = parseTokenAmount(unknownData)
 
     expect(result).toBeUndefined()
   })

@@ -2,7 +2,6 @@ import {Observable, Subscription} from 'rxjs'
 
 import {AppCacheRecord} from '../app/cache'
 import {AppObserverSubscribe} from '../app/observer-manager'
-import {PortfolioPrimaryBreakdown, PortfolioTokenBalance} from './balance'
 import {
   PortfolioEventBalanceManager,
   PortfolioEventSourceId,
@@ -10,6 +9,7 @@ import {
 } from './event'
 import {PortfolioTokenInfo} from './info'
 import {PortfolioTokenId} from './token'
+import {PortfolioPrimaryBreakdown, PortfolioTokenAmount} from './amount'
 
 export type PortfolioManagerToken = Readonly<{
   hydrate(params: PortfolioEventSourceId): void
@@ -45,7 +45,7 @@ export type PortfolioManagerBalance = Readonly<{
         Pick<PortfolioPrimaryBreakdown, 'totalFromTxs' | 'lockedAsStorageCost'>
       >
       secondaryBalances: Readonly<
-        Map<PortfolioTokenId, Pick<PortfolioTokenBalance, 'balance'>>
+        Map<PortfolioTokenId, Pick<PortfolioTokenAmount, 'quantity'>>
       >
     }>,
   ): void
@@ -55,11 +55,11 @@ export type PortfolioManagerBalance = Readonly<{
   observable$: Observable<PortfolioEventBalanceManager>
 
   getPrimaryBreakdown(): Readonly<PortfolioPrimaryBreakdown>
-  getPrimaryBalance(): Readonly<PortfolioTokenBalance>
+  getPrimaryBalance(): Readonly<PortfolioTokenAmount>
   getBalances(): Readonly<{
-    all: ReadonlyArray<PortfolioTokenBalance>
-    fts: ReadonlyArray<PortfolioTokenBalance>
-    nfts: ReadonlyArray<PortfolioTokenBalance>
+    all: ReadonlyArray<PortfolioTokenAmount>
+    fts: ReadonlyArray<PortfolioTokenAmount>
+    nfts: ReadonlyArray<PortfolioTokenAmount>
   }>
   destroy(): void
 }>

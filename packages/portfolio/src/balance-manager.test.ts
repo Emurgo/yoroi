@@ -4,7 +4,7 @@ import {mountMMKVStorage, observableStorageMaker} from '@yoroi/common'
 
 import {portfolioBalanceManagerMaker} from './balance-manager'
 import {tokenBalanceMocks} from './adapters/token-balance.mocks'
-import {sortTokenBalances} from './helpers/sorting'
+import {sortTokenAmountsByInfo} from './helpers/sorting'
 import {tokenMocks} from './adapters/token.mocks'
 import {portfolioBalanceStorageMaker} from './adapters/mmkv-storage/balance-storage-maker'
 import {tokenInfoMocks} from './adapters/token-info.mocks'
@@ -109,9 +109,9 @@ describe('hydrate', () => {
     })
     const subscriber = jest.fn()
     manager.subscribe(subscriber)
-    const sorted = sortTokenBalances({
+    const sorted = sortTokenAmountsByInfo({
       primaryTokenInfo: tokenMocks.managerMaker.primaryToken.info,
-      tokenBalances: [
+      amounts: [
         ...new Map(tokenBalanceMocks.storage.entries1WithPrimary).values(),
       ],
     })
@@ -128,7 +128,7 @@ describe('hydrate', () => {
 
     expect(manager.getPrimaryBalance()).toEqual({
       info: tokenMocks.managerMaker.primaryToken.info,
-      balance: primaryStated.totalFromTxs + primaryStated.availableRewards,
+      quantity: primaryStated.totalFromTxs + primaryStated.availableRewards,
     })
 
     expect(subscriber).toHaveBeenCalledTimes(1)
@@ -287,7 +287,7 @@ describe('primary updates', () => {
     })
     expect(manager.getPrimaryBalance()).toEqual({
       info: tokenMocks.managerMaker.primaryToken.info,
-      balance: 1000001n,
+      quantity: 1000001n,
     })
 
     expect(mockedNotify).toHaveBeenCalledTimes(2)
@@ -348,7 +348,7 @@ describe('primary updates', () => {
     })
     expect(manager.getPrimaryBalance()).toEqual({
       info: tokenMocks.managerMaker.primaryToken.info,
-      balance: 2000002n,
+      quantity: 2000002n,
     })
 
     expect(mockedNotify).toHaveBeenCalledTimes(2)
@@ -627,7 +627,7 @@ describe('sync & refresh', () => {
     )
 
     const secondaryBalances: Readonly<
-      Map<Portfolio.Token.Id, Portfolio.Token.Balance>
+      Map<Portfolio.Token.Id, Portfolio.Token.Amount>
     > = new Map(tokenBalanceMocks.storage.entries1)
 
     manager.syncBalances({
