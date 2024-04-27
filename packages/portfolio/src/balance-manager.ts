@@ -258,22 +258,67 @@ export const portfolioBalanceManagerMaker = (
     )
   }
 
-  function getPrimaryBreakdown() {
+  const getPrimaryBreakdown = () => {
     return primaryBreakdown
   }
 
-  function getPrimaryBalance() {
+  const getPrimaryBalance = () => {
     return primaryBalance
   }
 
-  function getBalances() {
+  const getBalances = () => {
     return sortedBalances
   }
 
-  function destroy() {
+  const destroy = () => {
     observer.destroy()
     queue.destroy()
     tokenManager.unsubscribe(subscription)
+  }
+
+  const clear = () => {
+    queue.enqueue(
+      () =>
+        new Promise<void>((resolve) => {
+          const asyncExecutor = async () => {
+            storage.balances.clear()
+            storage.primaryBreakdown.clear()
+
+            secondaries = freeze(new Map(), true)
+            primaryBreakdown = freeze(
+              {
+                lockedAsStorageCost: 0n,
+                availableRewards: 0n,
+                totalFromTxs: 0n,
+              },
+              true,
+            )
+            primaryBalance = freeze(
+              {
+                quantity: 0n,
+                info: primaryTokenInfo,
+              },
+              true,
+            )
+            sortedBalances = freeze(
+              {
+                all: [],
+                nfts: [],
+                fts: [],
+              },
+              true,
+            )
+
+            observer.notify({
+              on: Portfolio.Event.ManagerOn.Clear,
+              sourceId,
+            })
+
+            resolve()
+          }
+          asyncExecutor()
+        }),
+    )
   }
 
   return freeze(
@@ -292,7 +337,9 @@ export const portfolioBalanceManagerMaker = (
       getPrimaryBreakdown,
       getPrimaryBalance,
       getBalances,
+
       destroy,
+      clear,
     },
     true,
   )

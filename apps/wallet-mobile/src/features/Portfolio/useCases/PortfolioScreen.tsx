@@ -6,18 +6,23 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button, Spacer} from '../../../components'
 import {useWalletManager} from '../../../wallet-manager/WalletManagerContext'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
-import {NetworkId} from '../../../yoroi-wallets/types'
 import {toChainSupportedNetwork} from '../common/transformers/toChainSupportedNetwork'
+import { Chain } from '@yoroi/types'
 
 export const PortfolioScreen = () => {
   const navigation = useNavigation()
   const manager = useWalletManager()
-  const [openedWalletsByNetwork] = React.useState<Map<NetworkId, Set<YoroiWallet['id']>>>(
+  const [openedWalletsByNetwork] = React.useState<Map<Chain.SupportedNetworks, Set<YoroiWallet['id']>>>(
     manager.getOpenedWalletsByNetwork(),
   )
 
   const handleOnReset = () => {
-    navigation.goBack()
+    openedWalletsByNetwork.forEach((walletIds, network) => {
+      const tm = manager.getTokenManager(network)
+      walletIds.forEach((walletId) => {
+        const wallet = manager.getOpenedWalletById(walletId)
+      }
+    }
   }
 
   return (
@@ -35,12 +40,12 @@ export const PortfolioScreen = () => {
 
         <Spacer height={16} />
 
-        {Array.from(openedWalletsByNetwork).map(([networkId, walletIds]) => {
+        {Array.from(openedWalletsByNetwork).map(([network, walletIds]) => {
           return Array.from(walletIds).map((walletId, index) => {
             const wallet = manager.getOpenedWalletById(walletId)
             return (
               <View key={walletId}>
-                {index === 0 && <Text>{toChainSupportedNetwork(networkId)}</Text>}
+                {index === 0 && <Text>{network}</Text>}
 
                 {wallet && (
                   <FlatList

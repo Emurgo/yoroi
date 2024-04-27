@@ -44,9 +44,19 @@ export const ListBalances = (props: Props) => {
   const handleOnPressFTs = React.useCallback(() => startTransition(() => setFilteringBy('fts')), [])
   const handleOnPressAll = React.useCallback(() => startTransition(() => setFilteringBy('all')), [])
   const chips = [
-    {label: strings.tokens(balances.fts.length), onPress: handleOnPressFTs, value: 'fts', disabled: isPending},
-    {label: strings.nfts(balances.nfts.length), onPress: handleOnPressNFTs, value: 'nfts', disabled: isPending},
     {label: strings.all, onPress: handleOnPressAll, value: 'all', disabled: isPending},
+    {
+      label: strings.nfts(balances.nfts.length),
+      onPress: handleOnPressNFTs,
+      value: 'nfts',
+      disabled: isPending || balances.nfts.length === 0,
+    },
+    {
+      label: strings.tokens(balances.fts.length),
+      onPress: handleOnPressFTs,
+      value: 'fts',
+      disabled: isPending || balances.fts.length === 0,
+    },
   ]
 
   return (
@@ -55,6 +65,7 @@ export const ListBalances = (props: Props) => {
 
       <FlashList
         {...props}
+        bounces={false}
         data={balances[filteringBy]}
         renderItem={({item: amount}) => (
           <ExplorableAssetItem

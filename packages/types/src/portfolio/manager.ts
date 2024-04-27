@@ -25,6 +25,7 @@ export type PortfolioManagerToken = Readonly<{
   observable$: Observable<PortfolioEventTokenManager>
 
   destroy(): void
+  clear(): void
 }>
 
 export type PortfolioManagerBalance = Readonly<{
@@ -61,5 +62,7 @@ export type PortfolioManagerBalance = Readonly<{
     fts: ReadonlyArray<PortfolioTokenAmount>
     nfts: ReadonlyArray<PortfolioTokenAmount>
   }>
+
   destroy(): void
+  clear(): void
 }>

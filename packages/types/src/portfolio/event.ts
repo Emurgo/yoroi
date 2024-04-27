@@ -8,11 +8,8 @@ export enum PortfolioEventManagerOn {
   Sync = 'sync',
   Hydrate = 'hydrate',
   Refresh = 'refresh',
+  Clear = 'clear',
 }
-
-export type PortfolioEventTokenManager =
-  | PortfolioEventTokenManagerSync
-  | PortfolioEventTokenManagerHydrate
 
 export type PortfolioEventTokenManagerSync = PortfolioEventSourceId &
   Readonly<{
@@ -25,10 +22,15 @@ export type PortfolioEventTokenManagerHydrate = PortfolioEventSourceId &
     on: PortfolioEventManagerOn.Hydrate
   }>
 
-export type PortfolioEventBalanceManager =
-  | PortfolioEventBalanceManagerSync
-  | PortfolioEventBalanceManagerHydrate
-  | PortfolioEventBalanceManagerRefresh
+export type PortfolioEventTokenManagerClear = PortfolioEventSourceId &
+  Readonly<{
+    on: PortfolioEventManagerOn.Clear
+  }>
+
+export type PortfolioEventTokenManager =
+  | PortfolioEventTokenManagerSync
+  | PortfolioEventTokenManagerHydrate
+  | PortfolioEventTokenManagerClear
 
 export type PortfolioEventBalanceManagerSync = PortfolioEventSourceId &
   Readonly<{
@@ -45,3 +47,14 @@ export type PortfolioEventBalanceManagerRefresh = PortfolioEventSourceId &
   Readonly<{
     on: PortfolioEventManagerOn.Refresh
   }>
+
+export type PortfolioEventBalanceManagerClear = PortfolioEventSourceId &
+  Readonly<{
+    on: PortfolioEventManagerOn.Clear
+  }>
+
+export type PortfolioEventBalanceManager =
+  | PortfolioEventBalanceManagerSync
+  | PortfolioEventBalanceManagerHydrate
+  | PortfolioEventBalanceManagerRefresh
+  | PortfolioEventBalanceManagerClear

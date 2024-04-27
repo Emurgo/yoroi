@@ -101,12 +101,12 @@ export class WalletManager {
   }
 
   getOpenedWalletsByNetwork = () => {
-    const openedWalletsByNetwork = new Map<NetworkId, Set<YoroiWallet['id']>>()
+    const openedWalletsByNetwork = new Map<Chain.SupportedNetworks, Set<YoroiWallet['id']>>()
 
-    this.#openedWallets.forEach(({id, networkId}) => {
-      if (!openedWalletsByNetwork.has(networkId)) openedWalletsByNetwork.set(networkId, new Set())
+    this.#openedWallets.forEach(({id, network}) => {
+      if (!openedWalletsByNetwork.has(network)) openedWalletsByNetwork.set(network, new Set())
 
-      openedWalletsByNetwork.get(networkId)?.add(id)
+      openedWalletsByNetwork.get(network)?.add(id)
     })
 
     return openedWalletsByNetwork

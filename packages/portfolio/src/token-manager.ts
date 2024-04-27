@@ -20,8 +20,7 @@ export const portfolioTokenManagerMaker = (
   {
     observer = observerMaker<Portfolio.Event.TokenManager>(),
   }: {observer?: App.ObserverManager<Portfolio.Event.TokenManager>} = {},
-) => {
-  let isHydrated = false
+): Portfolio.Manager.Token => {
   const cachedInfosWithoutRecord: Readonly<
     Map<Portfolio.Token.Id, App.CacheInfo>
   > = new Map()
@@ -34,7 +33,6 @@ export const portfolioTokenManagerMaker = (
       .filter(hasEntryValue)
       .forEach(([id, value]) => cachedInfosWithoutRecord.set(id, freeze(value)))
 
-    isHydrated = true
     observer.notify({on: Portfolio.Event.ManagerOn.Hydrate, sourceId})
   }
 
@@ -44,8 +42,6 @@ export const portfolioTokenManagerMaker = (
   }: {
     secondaryTokenIds: ReadonlyArray<Portfolio.Token.Id>
   } & Portfolio.Event.SourceId) => {
-    if (!isHydrated) hydrate({sourceId})
-
     const {records, unknownIds, updatedIds, isInvalidated} =
       await cacheManageMultiRequest<Portfolio.Token.Id, Portfolio.Token.Info>({
         request: async (ids) => api.tokenInfos(ids),
@@ -78,7 +74,9 @@ export const portfolioTokenManagerMaker = (
     return records
   }
 
-  function destroy() {
+  const clear = () => {}
+
+  const destroy = () => {
     observer.destroy()
   }
 
@@ -92,6 +90,7 @@ export const portfolioTokenManagerMaker = (
       observable$: observer.observable,
 
       destroy,
+      clear,
     },
     true,
   )

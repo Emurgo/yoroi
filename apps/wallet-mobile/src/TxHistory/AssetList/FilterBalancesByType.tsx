@@ -21,7 +21,7 @@ export const FilterBalancesByType = <T,>({chips, selectedValue}: Props<T>) => {
   return (
     <View style={styles.root}>
       {chips.map(({label, disabled, onPress, value}, index) => (
-        <>
+        <View key={label}>
           <ChipButton
             key={index}
             label={label}
@@ -31,7 +31,7 @@ export const FilterBalancesByType = <T,>({chips, selectedValue}: Props<T>) => {
           />
 
           {index != chips.length - 1 && <Spacer width={12} />}
-        </>
+        </View>
       ))}
     </View>
   )

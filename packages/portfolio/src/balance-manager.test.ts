@@ -44,6 +44,7 @@ describe('portfolioBalanceManagerMaker', () => {
     unsubscribe: jest.fn(),
     observable$: new BehaviorSubject({} as any).asObservable(),
     sync: jest.fn().mockResolvedValue(new Map()),
+    clear: jest.fn(),
   }
 
   it('should be instantiated', () => {
@@ -83,6 +84,7 @@ describe('hydrate', () => {
     unsubscribe: jest.fn(),
     observable$: new BehaviorSubject({} as any).asObservable(),
     sync: jest.fn().mockResolvedValue(new Map()),
+    clear: jest.fn(),
   }
 
   afterEach(() => {
@@ -161,6 +163,7 @@ describe('destroy', () => {
     unsubscribe: jest.fn(),
     observable$: tokenManagerObservable,
     sync: jest.fn().mockResolvedValue(new Map()),
+    clear: jest.fn(),
   }
   const queueDestroy = jest.fn()
   const observerDestroy = jest.fn()
@@ -236,6 +239,7 @@ describe('primary updates', () => {
     unsubscribe: jest.fn(),
     observable$: tokenManagerObservable.asObservable(),
     sync: jest.fn().mockResolvedValue(new Map()),
+    clear: jest.fn(),
   }
 
   afterEach(() => {
@@ -386,6 +390,7 @@ describe('sync & refresh', () => {
     unsubscribe: jest.fn(),
     observable$: tokenManagerObservable.asObservable(),
     sync: jest.fn().mockResolvedValue(new Map()),
+    clear: jest.fn(),
   }
 
   afterEach(() => {
@@ -641,5 +646,92 @@ describe('sync & refresh', () => {
     for (const task of tasks) {
       await expect(() => task()).rejects.toThrow()
     }
+  })
+})
+
+describe('clear', () => {
+  const balanceStorage = observableStorageMaker(
+    mountMMKVStorage<Portfolio.Token.Id>({
+      path: '/tmp/balance/',
+      id: 'balance',
+    }),
+  )
+  const primaryBreakdownStorage = observableStorageMaker(
+    mountMMKVStorage<Portfolio.Token.Id>({
+      path: '/tmp/primary-balance-breakdown/',
+      id: 'primary-breakdown',
+    }),
+  )
+  const storage: Portfolio.Storage.Balance = portfolioBalanceStorageMaker({
+    balanceStorage,
+    primaryBreakdownStorage,
+    primaryTokenId,
+  })
+  const tokenManager: Portfolio.Manager.Token = {
+    destroy: jest.fn(),
+    hydrate: jest.fn(),
+    subscribe: jest.fn(),
+    unsubscribe: jest.fn(),
+    observable$: new BehaviorSubject({} as any).asObservable(),
+    sync: jest.fn().mockResolvedValue(new Map()),
+    clear: jest.fn(),
+  }
+
+  afterEach(() => {
+    storage.clear()
+    tokenInfoStorage.clear()
+  })
+
+  it('should clear all data after syncing operations are complete', async () => {
+    const tasks: any = []
+    const enqueueMock = jest.fn((task) => tasks.push(task))
+    const mockedNotify = jest.fn()
+
+    const manager = portfolioBalanceManagerMaker(
+      {
+        tokenManager,
+        storage,
+        primaryTokenInfo: tokenMocks.primaryETH.info,
+        sourceId,
+      },
+      {
+        queue: {
+          enqueue: enqueueMock,
+          destroy: jest.fn(),
+          observable: new BehaviorSubject({} as any).asObservable(),
+        } as any,
+        observer: {
+          notify: mockedNotify,
+          subscribe: jest.fn(),
+          unsubscribe: jest.fn(),
+          destroy: jest.fn(),
+          observable: new BehaviorSubject({} as any).asObservable(),
+        },
+      },
+    )
+
+    manager.syncBalances({
+      primaryStated: {
+        totalFromTxs: 500n,
+        lockedAsStorageCost: 100n,
+      },
+      secondaryBalances: new Map(),
+    })
+
+    manager.clear()
+
+    expect(enqueueMock).toHaveBeenCalledTimes(2)
+
+    for (const task of tasks) {
+      await task()
+    }
+
+    expect(storage.balances.all()).toEqual([])
+    expect(storage.primaryBreakdown.read()).toBeNull()
+
+    expect(mockedNotify).toHaveBeenCalledWith({
+      on: Portfolio.Event.ManagerOn.Clear,
+      sourceId,
+    })
   })
 })

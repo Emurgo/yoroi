@@ -434,6 +434,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     }
 
     async clear() {
+      this.balanceManager.
       await this.transactionManager.clear()
       this.transactionManager.resetState()
       await this.utxoManager.clear()
