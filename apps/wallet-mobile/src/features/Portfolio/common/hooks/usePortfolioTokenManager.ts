@@ -4,11 +4,11 @@ import {Chain, Portfolio} from '@yoroi/types'
 import {freeze} from 'immer'
 import * as React from 'react'
 
-export const usePortfolioTokenManager = ({network}: {network: Chain.Network}) => {
+export const usePortfolioTokenManager = ({network}: {network: Chain.SupportedNetworks}) => {
   return React.useMemo(() => buildPortfolioTokenManager({network}), [network])
 }
 
-export const buildPortfolioTokenManager = ({network}: {network: Chain.Network}) => {
+export const buildPortfolioTokenManager = ({network}: {network: Chain.SupportedNetworks}) => {
   const rootStorage = mountMMKVStorage<Portfolio.Token.Id>({path: '/', id: `${network}.token-manager`})
   const appTokenDiscoveryStorage = rootStorage.join('token-discovery/')
   const appTokenInfoStorage = rootStorage.join('token-info/')
@@ -31,7 +31,7 @@ export const buildPortfolioTokenManager = ({network}: {network: Chain.Network}) 
 }
 
 export const buildPortfolioTokenManagers = () => {
-  const mainnetPortfolioTokenManager = buildPortfolioTokenManager({network: Chain.Network.Main})
+  const mainnetPortfolioTokenManager = buildPortfolioTokenManager({network: Chain.Network.Mainnet})
   const preprodPortfolioTokenManager = buildPortfolioTokenManager({network: Chain.Network.Preprod})
   const sanchoPortfolioTokenManager = buildPortfolioTokenManager({network: Chain.Network.Sancho})
 
@@ -40,12 +40,12 @@ export const buildPortfolioTokenManagers = () => {
   sanchoPortfolioTokenManager.tokenManager.hydrate({sourceId: 'initial'})
 
   const tokenManagers: Readonly<{
-    [Chain.Network.Main]: Portfolio.Manager.Token
+    [Chain.Network.Mainnet]: Portfolio.Manager.Token
     [Chain.Network.Preprod]: Portfolio.Manager.Token
     [Chain.Network.Sancho]: Portfolio.Manager.Token
   }> = freeze(
     {
-      [Chain.Network.Main]: mainnetPortfolioTokenManager.tokenManager,
+      [Chain.Network.Mainnet]: mainnetPortfolioTokenManager.tokenManager,
       [Chain.Network.Preprod]: preprodPortfolioTokenManager.tokenManager,
       [Chain.Network.Sancho]: sanchoPortfolioTokenManager.tokenManager,
     },

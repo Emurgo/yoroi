@@ -3,7 +3,7 @@ import {Api, Chain, Portfolio} from '@yoroi/types'
 import {apiConfig, portfolioApiMaker} from './api-maker'
 
 describe('portfolioApiMaker', () => {
-  const mockNetwork: Chain.Network = Chain.Network.Main
+  const mockNetwork: Chain.Network = Chain.Network.Mainnet
   const mockRequest = jest.fn()
 
   beforeEach(() => {
@@ -54,7 +54,7 @@ describe('portfolioApiMaker', () => {
     expect(mockRequest).toHaveBeenCalledTimes(2)
     expect(mockRequest).toHaveBeenCalledWith({
       method: 'post',
-      url: apiConfig[Chain.Network.Main].tokenDiscoveries,
+      url: apiConfig[Chain.Network.Mainnet].tokenDiscoveries,
       data: mockTokenIdsWithCache,
       headers: {
         'Accept': 'application/json',
@@ -63,7 +63,7 @@ describe('portfolioApiMaker', () => {
     })
     expect(mockRequest).toHaveBeenCalledWith({
       method: 'post',
-      url: apiConfig[Chain.Network.Main].tokenInfos,
+      url: apiConfig[Chain.Network.Mainnet].tokenInfos,
       data: mockTokenIdsWithCache,
       headers: {
         'Accept': 'application/json',
@@ -95,7 +95,7 @@ describe('portfolioApiMaker', () => {
     expect(mockRequest).toHaveBeenCalledTimes(2)
     expect(mockRequest).toHaveBeenCalledWith({
       method: 'post',
-      url: apiConfig[Chain.Network.Main].tokenDiscoveries,
+      url: apiConfig[Chain.Network.Mainnet].tokenDiscoveries,
       data: mockTokenIdsWithCache,
       headers: {
         'Accept': 'application/json',
@@ -104,7 +104,7 @@ describe('portfolioApiMaker', () => {
     })
     expect(mockRequest).toHaveBeenCalledWith({
       method: 'post',
-      url: apiConfig[Chain.Network.Main].tokenInfos,
+      url: apiConfig[Chain.Network.Mainnet].tokenInfos,
       data: mockTokenIdsWithCache,
       headers: {
         'Accept': 'application/json',

@@ -12,7 +12,7 @@ export const usePortfolioBalanceManager = ({
 }: {
   tokenManager: Portfolio.Manager.Token
   walletId: YoroiWallet['id']
-  network: Chain.Network
+  network: Chain.SupportedNetworks
 }) => {
   return React.useMemo(
     () => buildPortfolioBalanceManager({tokenManager, walletId, network}),
@@ -27,9 +27,9 @@ export const buildPortfolioBalanceManager = ({
 }: {
   tokenManager: Portfolio.Manager.Token
   walletId: YoroiWallet['id']
-  network: Chain.Network
+  network: Chain.SupportedNetworks
 }) => {
-  const primaryTokenInfo = network === Chain.Network.Main ? primaryTokenInfoMainnet : primaryTokenInfoAnyTestnet
+  const primaryTokenInfo = network === Chain.Network.Mainnet ? primaryTokenInfoMainnet : primaryTokenInfoAnyTestnet
   const rootStorage = mountMMKVStorage<Portfolio.Token.Id>({path: `/`, id: `${network}.balance-manager`})
   const walletStorage = rootStorage.join(`${walletId}/`)
   const walletBalanceStorage = walletStorage.join('secondaries/')
@@ -87,6 +87,9 @@ const primaryTokenInfoMainnet = createPrimaryTokenInfo({
   tag: '',
   website: 'https://www.cardano.org/',
   originalImage: '',
+  description: 'Cardano',
+  icon: '',
+  mediaType: '',
 })
 
 const primaryTokenInfoAnyTestnet = createPrimaryTokenInfo({
@@ -98,4 +101,7 @@ const primaryTokenInfoAnyTestnet = createPrimaryTokenInfo({
   tag: '',
   website: 'https://www.cardano.org/',
   originalImage: '',
+  description: 'Cardano',
+  icon: '',
+  mediaType: '',
 })

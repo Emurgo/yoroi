@@ -1,32 +1,34 @@
+import {amountFormatter, infoExtractName} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import {Swap} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
 import {usePriceImpactRiskTheme} from '../../features/Swap/common/helpers'
 import {SwapPriceImpactRisk} from '../../features/Swap/common/types'
-import {isEmptyString} from '../../utils'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
-import {useTokenInfo} from '../../yoroi-wallets/hooks'
-import {Quantities} from '../../yoroi-wallets/utils'
-import {Boundary, Icon, Spacer, Text, TokenIcon, TokenIconPlaceholder} from '..'
+import {Icon, Spacer, Text} from '..'
+import {PairedBalance} from '../PairedBalance/PairedBalance'
+import {AmountIcon} from './AmountIcon'
 
 export type AmountItemProps = {
   wallet: YoroiWallet
-  amount: Balance.Amount
+  amount: Portfolio.Token.Amount
+  privacyPlaceholder: string
   style?: ViewProps['style']
   isPrivacyOff?: boolean
-  status?: string
   inWallet?: boolean
   variant?: 'swap'
   priceImpactRisk?: SwapPriceImpactRisk
   orderType?: Swap.OrderType
+  isMainnet?: boolean
 }
 
 export const AmountItem = ({
+  isMainnet,
   isPrivacyOff,
-  wallet,
+  privacyPlaceholder,
   style,
   amount,
   inWallet,
@@ -35,31 +37,28 @@ export const AmountItem = ({
   orderType,
 }: AmountItemProps) => {
   const {styles, colors} = useStyles()
-  const {quantity, tokenId} = amount
-  const tokenInfo = useTokenInfo({wallet, tokenId})
-
-  const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
-  const name = tokenInfo.ticker ?? tokenInfo.name
-  const nameLabel = isEmptyString(name) ? '-' : name
-  const detail = isPrimary ? tokenInfo.description : tokenInfo.fingerprint
-
-  const formattedQuantity = Quantities.format(quantity, tokenInfo.decimals ?? 0)
-  const showSwapDetails = !isPrimary && variant === 'swap'
   const priceImpactRiskTheme = usePriceImpactRiskTheme(priceImpactRisk ?? 'none')
+
+  const {info} = amount
+  const isPrimary = info.nature === 'primary'
+  const name = infoExtractName(info)
+  const detail = isPrimary ? info.description : info.fingerprint
+
+  const formattedQuantity = !isPrivacyOff ? amountFormatter()(amount) : privacyPlaceholder
+
+  const showSwapDetails = !isPrimary && variant === 'swap'
   const priceImpactRiskTextColor = orderType === 'market' ? priceImpactRiskTheme.text : colors.text
 
   return (
     <View style={[style, styles.container]} testID="assetItem">
       <Left>
-        <Boundary loading={{fallback: <TokenIconPlaceholder />}} error={{fallback: () => <TokenIconPlaceholder />}}>
-          <TokenIcon wallet={wallet} tokenId={tokenInfo.id} variant={variant} />
-        </Boundary>
+        <AmountIcon info={amount.info} size={variant === 'swap' ? 'sm' : 'md'} isMainnet={isMainnet} />
       </Left>
 
       <Middle>
         <View style={styles.row}>
           <Text numberOfLines={1} ellipsizeMode="middle" style={styles.name} testID="tokenInfoText">
-            {nameLabel}
+            {name}
           </Text>
 
           {showSwapDetails && (
@@ -77,16 +76,18 @@ export const AmountItem = ({
       </Middle>
 
       <Right>
-        {tokenInfo.kind !== 'nft' && variant !== 'swap' && (
+        {info.type !== Portfolio.Token.Type.NFT && variant !== 'swap' && (
           <View style={styles.row} testID="tokenAmountText">
             {priceImpactRisk === 'moderate' && <Icon.Info size={24} color={priceImpactRiskTextColor} />}
 
             {priceImpactRisk === 'high' && <Icon.Warning size={24} color={priceImpactRiskTextColor} />}
 
-            <Text style={[styles.quantity, {color: priceImpactRiskTextColor}]}>
-              {isPrivacyOff ? '**.*******' : formattedQuantity}
-            </Text>
+            <Text style={[styles.quantity, {color: priceImpactRiskTextColor}]}>{formattedQuantity}</Text>
           </View>
+        )}
+
+        {isPrimary && variant !== 'swap' && (
+          <PairedBalance isPrivacyOff={isPrivacyOff} amount={amount} privacyPlaceholder={privacyPlaceholder} />
         )}
       </Right>
     </View>
@@ -133,7 +134,8 @@ export const AmountItemPlaceholder = ({style}: ViewProps) => {
 }
 
 const useStyles = () => {
-  const {color, atoms} = useTheme()
+  const {theme} = useTheme()
+  const {color, typography} = theme
   const styles = StyleSheet.create({
     container: {
       flexDirection: 'row',
@@ -141,21 +143,21 @@ const useStyles = () => {
       alignItems: 'center',
     },
     name: {
-      color: color.gray_c900,
+      color: color.gray[900],
       fontSize: 16,
       lineHeight: 22,
       fontWeight: '500',
       fontFamily: 'Rubik-Medium',
     },
     detail: {
-      color: color.gray_c600,
+      color: color.gray[600],
       fontSize: 12,
       lineHeight: 18,
       maxWidth: 140,
     },
     quantity: {
-      color: color.gray_c900,
-      ...atoms.body_1_lg_regular,
+      color: color.gray[900],
+      ...typography['body-1-l-regular'],
       textAlign: 'right',
       flexGrow: 1,
     },
@@ -167,9 +169,9 @@ const useStyles = () => {
   })
 
   const colors = {
-    text: color.gray_c900,
-    background: color.gray_c200,
-    icon: color.secondary_c600,
+    text: color.gray[900],
+    background: color.gray[200],
+    icon: color.secondary[600],
   }
 
   return {styles, colors}

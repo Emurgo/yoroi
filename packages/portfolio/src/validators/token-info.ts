@@ -21,6 +21,8 @@ export const CommonTokenInfoSchema = z.object({
   website: z.string(),
   originalImage: z.string(),
   description: z.string(),
+  icon: z.string(),
+  mediaType: z.string(),
 })
 
 export const PrimaryTokenInfoSchema = CommonTokenInfoSchema.merge(

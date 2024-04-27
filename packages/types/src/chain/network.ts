@@ -1,12 +1,12 @@
 export enum ChainNetwork {
-  Main = 'main',
-  Test = 'test',
+  Mainnet = 'mainnet',
+  Testnet = 'testnet',
   Preview = 'preview',
   Preprod = 'preprod',
   Sancho = 'sancho',
 }
 
 export type ChainSupportedNetworks =
-  | ChainNetwork.Main
+  | ChainNetwork.Mainnet
   | ChainNetwork.Preprod
   | ChainNetwork.Sancho

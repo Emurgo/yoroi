@@ -10,7 +10,7 @@ export const portfolioApiMaker = ({
   network,
   request = fetchData,
 }: {
-  network: Chain.Network
+  network: Chain.SupportedNetworks
   request?: FetchData
 }): Portfolio.Api.Api => {
   const config = apiConfig[network]
@@ -70,7 +70,7 @@ export const portfolioApiMaker = ({
 
 export const apiConfig: ApiConfig = freeze(
   {
-    main: {
+    mainnet: {
       tokenDiscoveries:
         'https://add50d9d-76d7-47b7-b17f-e34021f63a02.mock.pstmn.io/v1/token-discoveries',
       tokenInfos:
@@ -82,19 +82,7 @@ export const apiConfig: ApiConfig = freeze(
       tokenInfos:
         'https://dev-yoroi-backend-zero-preprod.emurgornd.com/tokens/info/multi',
     },
-    preview: {
-      tokenDiscoveries:
-        'https://yoroi-backend-zero-mainnet.emurgornd.com/stakekeys/{{STAKE_KEY_HASH}}/state',
-      tokenInfos:
-        'https://yoroi-backend-zero-mainnet.emurgornd.com/dreps/{{DREP_ID}}/state',
-    },
     sancho: {
-      tokenDiscoveries:
-        'https://yoroi-backend-zero-mainnet.emurgornd.com/stakekeys/{{STAKE_KEY_HASH}}/state',
-      tokenInfos:
-        'https://yoroi-backend-zero-mainnet.emurgornd.com/dreps/{{DREP_ID}}/state',
-    },
-    test: {
       tokenDiscoveries:
         'https://yoroi-backend-zero-mainnet.emurgornd.com/stakekeys/{{STAKE_KEY_HASH}}/state',
       tokenInfos:

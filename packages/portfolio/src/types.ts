@@ -5,7 +5,7 @@ type ApiEndpoints = Readonly<{
 }>
 
 export type ApiConfig = Readonly<{
-  [K in Chain.Network]: ApiEndpoints
+  [K in Chain.SupportedNetworks]: ApiEndpoints
 }>
 
 export type TokenInfoAndDiscovery = Readonly<{
