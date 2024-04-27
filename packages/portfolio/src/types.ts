@@ -7,8 +7,3 @@ type ApiEndpoints = Readonly<{
 export type ApiConfig = Readonly<{
   [K in Chain.SupportedNetworks]: ApiEndpoints
 }>
-
-export type TokenInfoAndDiscovery = Readonly<{
-  info: Portfolio.Token.Info
-  discovery: Portfolio.Token.Discovery
-}>

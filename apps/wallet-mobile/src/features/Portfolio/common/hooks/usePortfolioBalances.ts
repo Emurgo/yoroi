@@ -5,9 +5,9 @@ import {filter} from 'rxjs'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {filterBySyncEvent as isSyncEvent} from '../helpers/filterBySyncEvent'
 
-export const usePrimaryBalance = ({wallet}: {wallet: YoroiWallet}) => {
+export const usePortfolioBalances = ({wallet}: {wallet: YoroiWallet}) => {
   const observable$ = React.useMemo(() => wallet.balance$.pipe(filter(isSyncEvent)), [wallet])
-  const executor = React.useCallback(() => wallet.primaryBalance, [wallet])
+  const executor = React.useCallback(() => wallet.balances, [wallet])
 
   return useObservableValue({
     observable$,

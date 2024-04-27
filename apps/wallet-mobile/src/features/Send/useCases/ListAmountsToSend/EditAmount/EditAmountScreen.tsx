@@ -6,7 +6,6 @@ import {ScrollView, StyleSheet, Text, TouchableOpacity, View, ViewProps} from 'r
 
 import {Button, KeyboardAvoidingView, Spacer, TextInput} from '../../../../../components'
 import {AmountItem} from '../../../../../components/AmountItem/AmountItem'
-import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
 import {selectFtOrThrow} from '../../../../../yoroi-wallets/cardano/utils'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {Logger} from '../../../../../yoroi-wallets/logging'
@@ -78,7 +77,7 @@ export const EditAmountScreen = () => {
           <AmountInput onChange={onChangeQuantity} value={inputValue} ticker={tokenInfo.ticker} />
 
           <Center>
-            {isPrimary && <PairedBalance amount={{tokenId: tokenInfo.id, quantity}} />}
+            {/* {isPrimary && <PairedBalance amount={{tokenId: tokenInfo.id, quantity}} />} */}
 
             <Spacer height={22} />
 

@@ -7,14 +7,14 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {ResetErrorRef, Spacer} from '../components'
 import {Icon} from '../components/Icon'
 import {PairedBalance} from '../components/PairedBalance/PairedBalance'
-import {usePrimaryBalance} from '../features/Portfolio/common/hooks/usePrimaryBalance'
+import {usePortfolioPrimaryBalance} from '../features/Portfolio/common/hooks/usePortfolioPrimaryBalance'
 import {usePrivacyMode} from '../features/Settings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../features/WalletManager/Context'
 
 export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
   const wallet = useSelectedWallet()
   const styles = useStyles()
-  const primaryBalance = usePrimaryBalance({wallet})
+  const primaryBalance = usePortfolioPrimaryBalance({wallet})
   const {isPrivacyOff, togglePrivacyMode, privacyPlaceholder} = usePrivacyMode()
 
   return (

@@ -1,24 +1,33 @@
+import {amountFormatter} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 
 import {Spacer, Text} from '../components'
-import {usePrimaryBreakdown} from '../features/Portfolio/common/hooks/usePrimaryBreakdown'
+import {usePortfolioPrimaryBreakdown} from '../features/Portfolio/common/hooks/usePortfolioPrimaryBreakdown'
 import {usePrivacyMode} from '../features/Settings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../features/WalletManager/Context'
 import globalMessages from '../i18n/global-messages'
-import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../legacy/format'
-import {asQuantity} from '../yoroi-wallets/utils'
 
 export const LockedDeposit = () => {
-  const {isPrivacyOff} = usePrivacyMode()
   const wallet = useSelectedWallet()
-  const hiddenAmount = formatTokenWithTextWhenHidden('*.******', wallet.primaryToken)
-  const {lockedAsStorageCost} = usePrimaryBreakdown({wallet})
-  const amount = formatTokenWithText(asQuantity(lockedAsStorageCost.toString()), wallet.primaryToken)
+  const {isPrivacyOff, privacyPlaceholder} = usePrivacyMode()
+  const {lockedAsStorageCost} = usePortfolioPrimaryBreakdown({wallet})
 
-  if (isPrivacyOff) return <FormattedAmount amount={hiddenAmount} />
+  const amount = React.useMemo(
+    () =>
+      !isPrivacyOff
+        ? amountFormatter({template: '{{value}} {{ticker}}'})({
+            quantity: lockedAsStorageCost,
+            info: wallet.portfolioPrimaryTokenInfo,
+          })
+        : amountFormatter({template: `${privacyPlaceholder} {{ticker}}`})({
+            quantity: 0n,
+            info: wallet.portfolioPrimaryTokenInfo,
+          }),
+    [isPrivacyOff, lockedAsStorageCost, privacyPlaceholder, wallet],
+  )
 
   return <FormattedAmount amount={amount} />
 }

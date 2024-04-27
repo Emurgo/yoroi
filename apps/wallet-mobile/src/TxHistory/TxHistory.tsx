@@ -12,7 +12,7 @@ import {usePoolTransitionModal} from '../Staking/PoolTransition/usePoolTransitio
 import {isByron} from '../yoroi-wallets/cardano/utils'
 import {useSync} from '../yoroi-wallets/hooks'
 import {ActionsBanner} from './ActionsBanner'
-import {AssetList} from './AssetList'
+import {ListBalances} from './AssetList/ListBalances'
 import {BalanceBanner} from './BalanceBanner'
 import {CollapsibleHeader} from './CollapsibleHeader'
 import {LockedDeposit} from './LockedDeposit'
@@ -106,7 +106,7 @@ export const TxHistory = () => {
 
         <TabPanel active={activeTab === 'assets'}>
           <Boundary loading={{size: 'full'}}>
-            <AssetList onScroll={onScroll} refreshing={isLoading} onRefresh={handleOnRefresh} />
+            <ListBalances onScroll={onScroll} refreshing={isLoading} onRefresh={handleOnRefresh} />
           </Boundary>
         </TabPanel>
       </TabPanels>

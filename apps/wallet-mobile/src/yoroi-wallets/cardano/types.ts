@@ -11,7 +11,7 @@ import {
   TxMetadata as TxMetadataType,
   UnsignedTx as UnsignedTxType,
 } from '@emurgo/yoroi-lib'
-import {Api, App, Balance, Portfolio} from '@yoroi/types'
+import {Api, App, Balance, Chain, Portfolio} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 
 import {HWDeviceInfo} from '../hw'
@@ -95,6 +95,11 @@ export type YoroiWallet = {
   isReadOnly: boolean
   primaryToken: Readonly<DefaultAsset>
   primaryTokenInfo: Readonly<Balance.TokenInfo>
+
+  readonly network: Chain.SupportedNetworks
+  readonly portfolioPrimaryTokenInfo: Portfolio.Token.Info
+
+  get isMainnet(): boolean
 
   // API
   api: App.Api

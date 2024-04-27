@@ -7,20 +7,21 @@ import {QueryProvider} from '../../../.storybook/decorators'
 import {SelectedWalletProvider} from '../../features/WalletManager/Context'
 import {mocks} from '../../yoroi-wallets/mocks'
 import {Spacer} from '..'
-import {AmountItem} from './AmountItem'
+import {TokenAmountItem} from './TokenAmountItem'
 
 const primaryAmount = tokenMocks.primaryETH.balance
 const secondaryAmount = tokenMocks.nftCryptoKitty.balance
 
-storiesOf('AmountItem', module).add('Gallery', () => (
+storiesOf('TokenAmountItem', module).add('Gallery', () => (
   <QueryProvider>
     <SelectedWalletProvider wallet={mocks.wallet}>
       <View style={{flex: 1, justifyContent: 'center', padding: 16}}>
         <Text>Fungible primary token</Text>
 
-        <AmountItem
+        <TokenAmountItem
           privacyPlaceholder="-"
-          wallet={mocks.wallet}
+          isMainnet={true}
+          isPrivacyOff={false}
           amount={primaryAmount}
           style={{backgroundColor: 'white', padding: 16, borderRadius: 8}}
         />
@@ -29,9 +30,10 @@ storiesOf('AmountItem', module).add('Gallery', () => (
 
         <Text>Fungible non-primary token</Text>
 
-        <AmountItem
+        <TokenAmountItem
           privacyPlaceholder="-"
-          wallet={mocks.wallet}
+          isMainnet={true}
+          isPrivacyOff={false}
           amount={secondaryAmount}
           style={{backgroundColor: 'white', padding: 16, borderRadius: 8}}
         />

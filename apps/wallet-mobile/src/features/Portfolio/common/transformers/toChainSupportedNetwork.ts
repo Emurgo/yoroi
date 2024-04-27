@@ -6,7 +6,7 @@ export function toChainSupportedNetwork(networkId: NetworkId): Chain.SupportedNe
   switch (networkId) {
     case 0:
     case 1:
-      return Chain.Network.Main
+      return Chain.Network.Mainnet
     case 450:
       return Chain.Network.Sancho
     default:

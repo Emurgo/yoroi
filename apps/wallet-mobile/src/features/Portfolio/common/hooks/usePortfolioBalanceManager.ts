@@ -1,5 +1,5 @@
 import {mountMMKVStorage, observableStorageMaker} from '@yoroi/common'
-import {createPrimaryTokenInfo, portfolioBalanceManagerMaker, portfolioBalanceStorageMaker} from '@yoroi/portfolio'
+import {portfolioBalanceManagerMaker, portfolioBalanceStorageMaker} from '@yoroi/portfolio'
 import {Chain, Portfolio} from '@yoroi/types'
 import * as React from 'react'
 
@@ -9,14 +9,16 @@ export const usePortfolioBalanceManager = ({
   tokenManager,
   walletId,
   network,
+  primaryTokenInfo,
 }: {
   tokenManager: Portfolio.Manager.Token
   walletId: YoroiWallet['id']
   network: Chain.SupportedNetworks
+  primaryTokenInfo: Portfolio.Token.Info
 }) => {
   return React.useMemo(
-    () => buildPortfolioBalanceManager({tokenManager, walletId, network}),
-    [network, tokenManager, walletId],
+    () => buildPortfolioBalanceManager({tokenManager, walletId, network, primaryTokenInfo}),
+    [network, primaryTokenInfo, tokenManager, walletId],
   )
 }
 
@@ -24,12 +26,13 @@ export const buildPortfolioBalanceManager = ({
   tokenManager,
   walletId,
   network,
+  primaryTokenInfo,
 }: {
   tokenManager: Portfolio.Manager.Token
   walletId: YoroiWallet['id']
   network: Chain.SupportedNetworks
+  primaryTokenInfo: Portfolio.Token.Info
 }) => {
-  const primaryTokenInfo = network === Chain.Network.Mainnet ? primaryTokenInfoMainnet : primaryTokenInfoAnyTestnet
   const rootStorage = mountMMKVStorage<Portfolio.Token.Id>({path: `/`, id: `${network}.balance-manager`})
   const walletStorage = rootStorage.join(`${walletId}/`)
   const walletBalanceStorage = walletStorage.join('secondaries/')
@@ -44,64 +47,14 @@ export const buildPortfolioBalanceManager = ({
   const balanceManager = portfolioBalanceManagerMaker({
     tokenManager,
     storage: balanceStorage,
-    primaryToken: {
-      info: primaryTokenInfo,
-      discovery: {
-        counters: {
-          items: 0,
-          supply: 45n * BigInt(1e9),
-          totalItems: 0,
-        },
-        id: primaryTokenInfo.id,
-        originalMetadata: {
-          filteredMintMetadatum: null,
-          referenceDatum: null,
-          tokenRegistry: null,
-        },
-        properties: {},
-        source: {
-          decimals: Portfolio.Token.Source.Metadata,
-          name: Portfolio.Token.Source.Metadata,
-          ticker: Portfolio.Token.Source.Metadata,
-          symbol: Portfolio.Token.Source.Metadata,
-          image: Portfolio.Token.Source.Metadata,
-        },
-      },
-    },
+    primaryTokenInfo,
     sourceId: walletId,
   })
 
   balanceManager.hydrate()
+  balanceManager.refresh()
   return {
     balanceManager,
     balanceStorage,
   }
 }
-
-const primaryTokenInfoMainnet = createPrimaryTokenInfo({
-  decimals: 6,
-  name: 'ADA',
-  ticker: 'ADA',
-  symbol: '₳',
-  reference: '',
-  tag: '',
-  website: 'https://www.cardano.org/',
-  originalImage: '',
-  description: 'Cardano',
-  icon: '',
-  mediaType: '',
-})
-
-const primaryTokenInfoAnyTestnet = createPrimaryTokenInfo({
-  decimals: 6,
-  name: 'TADA',
-  ticker: 'TADA',
-  symbol: '₳',
-  reference: '',
-  tag: '',
-  website: 'https://www.cardano.org/',
-  originalImage: '',
-  description: 'Cardano',
-  icon: '',
-  mediaType: '',
-})

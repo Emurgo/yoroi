@@ -9,7 +9,6 @@ import {freeze} from 'immer'
 import {filter} from 'rxjs'
 
 import {sortTokenAmountsByInfo} from './helpers/sorting'
-import {TokenInfoAndDiscovery} from './types'
 import {isEventTokenManagerSync} from './validators/token-manager-event-sync'
 import {isFt} from './helpers/is-ft'
 import {isNft} from './helpers/is-nft'
@@ -17,13 +16,13 @@ import {isNft} from './helpers/is-nft'
 export const portfolioBalanceManagerMaker = (
   {
     tokenManager,
-    primaryToken,
+    primaryTokenInfo,
     storage,
     sourceId,
   }: {
     tokenManager: Portfolio.Manager.Token
     storage: Portfolio.Storage.Balance
-    primaryToken: TokenInfoAndDiscovery
+    primaryTokenInfo: Portfolio.Token.Info
   } & Portfolio.Event.SourceId,
   {
     observer = observerMaker<Portfolio.Event.BalanceManager>(),
@@ -56,16 +55,16 @@ export const portfolioBalanceManagerMaker = (
   let primaryBalance: Readonly<Portfolio.Token.Amount> = freeze(
     {
       quantity: 0n,
-      info: primaryToken.info,
+      info: primaryTokenInfo,
     },
     true,
   )
 
   const sortBalances = balancesSorter({
-    primaryTokenInfo: primaryToken.info,
+    primaryTokenInfo,
   })
   const updatePrimary = primaryUpdater({
-    primaryTokenInfo: primaryToken.info,
+    primaryTokenInfo,
     storagePrimaryBreakdown: storage.primaryBreakdown,
   })
 
@@ -115,7 +114,7 @@ export const portfolioBalanceManagerMaker = (
     const newPrimaryBalance: Readonly<Portfolio.Token.Amount> = freeze(
       {
         quantity: balance,
-        info: primaryToken.info,
+        info: primaryTokenInfo,
       },
       true,
     )

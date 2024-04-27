@@ -50,7 +50,7 @@ describe('portfolioBalanceManagerMaker', () => {
     const manager = portfolioBalanceManagerMaker({
       tokenManager,
       storage,
-      primaryToken: tokenMocks.managerMaker.primaryToken,
+      primaryTokenInfo: tokenMocks.primaryETH.info,
       sourceId,
     })
 
@@ -104,13 +104,13 @@ describe('hydrate', () => {
     const manager = portfolioBalanceManagerMaker({
       tokenManager,
       storage,
-      primaryToken: tokenMocks.managerMaker.primaryToken,
+      primaryTokenInfo: tokenMocks.primaryETH.info,
       sourceId,
     })
     const subscriber = jest.fn()
     manager.subscribe(subscriber)
     const sorted = sortTokenAmountsByInfo({
-      primaryTokenInfo: tokenMocks.managerMaker.primaryToken.info,
+      primaryTokenInfo: tokenMocks.primaryETH.info,
       amounts: [
         ...new Map(tokenBalanceMocks.storage.entries1WithPrimary).values(),
       ],
@@ -127,7 +127,7 @@ describe('hydrate', () => {
     expect(manager.getBalances()).toEqual(sortedBalances)
 
     expect(manager.getPrimaryBalance()).toEqual({
-      info: tokenMocks.managerMaker.primaryToken.info,
+      info: tokenMocks.primaryETH.info,
       quantity: primaryStated.totalFromTxs + primaryStated.availableRewards,
     })
 
@@ -183,7 +183,7 @@ describe('destroy', () => {
       {
         tokenManager,
         storage,
-        primaryToken: tokenMocks.managerMaker.primaryToken,
+        primaryTokenInfo: tokenMocks.primaryETH.info,
         sourceId,
       },
       {
@@ -252,7 +252,7 @@ describe('primary updates', () => {
       {
         tokenManager,
         storage,
-        primaryToken: tokenMocks.managerMaker.primaryToken,
+        primaryTokenInfo: tokenMocks.primaryETH.info,
         sourceId,
       },
       {
@@ -286,7 +286,7 @@ describe('primary updates', () => {
       lockedAsStorageCost: 10n,
     })
     expect(manager.getPrimaryBalance()).toEqual({
-      info: tokenMocks.managerMaker.primaryToken.info,
+      info: tokenMocks.primaryETH.info,
       quantity: 1000001n,
     })
 
@@ -307,7 +307,7 @@ describe('primary updates', () => {
       {
         tokenManager,
         storage,
-        primaryToken: tokenMocks.managerMaker.primaryToken,
+        primaryTokenInfo: tokenMocks.primaryETH.info,
         sourceId,
       },
       {
@@ -347,7 +347,7 @@ describe('primary updates', () => {
       lockedAsStorageCost: 0n,
     })
     expect(manager.getPrimaryBalance()).toEqual({
-      info: tokenMocks.managerMaker.primaryToken.info,
+      info: tokenMocks.primaryETH.info,
       quantity: 2000002n,
     })
 
@@ -412,7 +412,7 @@ describe('sync & refresh', () => {
       {
         tokenManager,
         storage,
-        primaryToken: tokenMocks.managerMaker.primaryToken,
+        primaryTokenInfo: tokenMocks.primaryETH.info,
         sourceId,
       },
       {
@@ -489,7 +489,7 @@ describe('sync & refresh', () => {
       {
         tokenManager,
         storage,
-        primaryToken: tokenMocks.managerMaker.primaryToken,
+        primaryTokenInfo: tokenMocks.primaryETH.info,
         sourceId,
       },
       {
@@ -550,7 +550,7 @@ describe('sync & refresh', () => {
       {
         tokenManager,
         storage,
-        primaryToken: tokenMocks.managerMaker.primaryToken,
+        primaryTokenInfo: tokenMocks.primaryETH.info,
         sourceId,
       },
       {
@@ -607,7 +607,7 @@ describe('sync & refresh', () => {
       {
         tokenManager,
         storage,
-        primaryToken: tokenMocks.managerMaker.primaryToken,
+        primaryTokenInfo: tokenMocks.primaryETH.info,
         sourceId,
       },
       {

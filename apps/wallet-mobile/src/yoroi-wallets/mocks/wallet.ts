@@ -3,7 +3,7 @@
 import {action} from '@storybook/addon-actions'
 import {AppApi, CardanoApi} from '@yoroi/api'
 import {createPrimaryTokenInfo} from '@yoroi/portfolio'
-import {Balance, Portfolio} from '@yoroi/types'
+import {Balance, Chain, Portfolio} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import {Observable} from 'rxjs'
 
@@ -43,6 +43,9 @@ const primaryTokenInfoMainnet = createPrimaryTokenInfo({
   tag: '',
   website: 'https://www.cardano.org/',
   originalImage: '',
+  description: 'Cardano',
+  icon: '',
+  mediaType: '',
 })
 
 const walletMeta: WalletMeta = {
@@ -97,6 +100,10 @@ const wallet: YoroiWallet = {
     lockedAsStorageCost: 0n,
     totalFromTxs: 0n,
   },
+
+  isMainnet: true,
+  portfolioPrimaryTokenInfo: primaryTokenInfoMainnet,
+  network: Chain.Network.Mainnet,
 
   getStakingInfo: async () => {
     throw new Error('not implemented: getStakingInfo')

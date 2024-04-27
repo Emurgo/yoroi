@@ -3,20 +3,17 @@ import {FlashList, FlashListProps} from '@shopify/flash-list'
 import {useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
 import React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
-import {Alert, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {AmountItem, AmountItemProps} from '../../components/AmountItem/AmountItem'
 import {Spacer} from '../../components/Spacer'
 import {usePrivacyMode} from '../../features/Settings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../../features/WalletManager/Context'
-import globalMessages, {actionMessages} from '../../i18n/global-messages'
 import {useMetrics} from '../../metrics/metricsManager'
 import {sortTokenInfos} from '../../utils'
 import {getNetworkConfigById} from '../../yoroi-wallets/cardano/networks'
 import {useBalances, useTokenInfos} from '../../yoroi-wallets/hooks'
 import {Amounts} from '../../yoroi-wallets/utils'
-import {ActionsBanner} from './ActionsBanner'
 
 type ListProps = FlashListProps<Balance.TokenInfo>
 type Props = Partial<ListProps> & {
@@ -25,7 +22,6 @@ type Props = Partial<ListProps> & {
   onRefresh: () => void
 }
 export const AssetList = (props: Props) => {
-  const strings = useStrings()
   const styles = useStyles()
   const wallet = useSelectedWallet()
   const balances = useBalances(wallet)
@@ -37,10 +33,6 @@ export const AssetList = (props: Props) => {
     }, [track]),
   )
 
-  const handleOnPressNFTs = () => Alert.alert(strings.soon, strings.soon)
-  const handleOnPressTokens = () => Alert.alert(strings.soon, strings.soon)
-  const handleSearch = () => Alert.alert(strings.soon, strings.soon)
-
   const config = getNetworkConfigById(wallet.networkId)
 
   const tokenInfos = useTokenInfos({
@@ -50,14 +42,6 @@ export const AssetList = (props: Props) => {
 
   return (
     <View style={styles.assetList} testID="assetList">
-      <ActionsBanner
-        tokensLabel={strings.tokens(tokenInfos.length)}
-        nftsLabel={strings.nfts(0)}
-        onPressNFTs={handleOnPressNFTs}
-        onPressTokens={handleOnPressTokens}
-        onSearch={handleSearch}
-      />
-
       <FlashList
         {...props}
         data={sortTokenInfos({wallet, tokenInfos})}
@@ -112,22 +96,4 @@ const useStyles = () => {
   })
 
   return styles
-}
-
-const messages = defineMessages({
-  unknownAsset: {
-    id: 'components.send.assetselectorscreen.unknownAsset',
-    defaultMessage: '!!!Unknown asset',
-  },
-})
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    unknown: intl.formatMessage(messages.unknownAsset),
-    tokens: (qty: number) => `${intl.formatMessage(globalMessages.tokens, {qty})} (${qty})`,
-    nfts: (qty: number) => `${intl.formatMessage(globalMessages.nfts, {qty})} (${qty})`,
-    soon: intl.formatMessage(actionMessages.soon),
-  }
 }

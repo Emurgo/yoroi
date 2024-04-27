@@ -14,12 +14,12 @@ const headers = {
 const blurhash =
   '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj['
 
-type AmountIconProps = {
+type TokenInfoIconProps = {
   info: Portfolio.Token.Info
   isMainnet?: boolean
   size: 'sm' | 'md'
 }
-export const AmountIcon = React.memo(({info, isMainnet, size = 'md'}: AmountIconProps) => {
+export const TokenInfoIcon = React.memo(({info, isMainnet, size = 'md'}: TokenInfoIconProps) => {
   const {styles} = useStyles()
 
   if (info.nature === Portfolio.Token.Nature.Primary) return <PrimaryIcon size={size} />

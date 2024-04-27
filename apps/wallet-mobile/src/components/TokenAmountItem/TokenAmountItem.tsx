@@ -7,25 +7,24 @@ import {StyleSheet, View, ViewProps} from 'react-native'
 
 import {usePriceImpactRiskTheme} from '../../features/Swap/common/helpers'
 import {SwapPriceImpactRisk} from '../../features/Swap/common/types'
-import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {Icon, Spacer, Text} from '..'
 import {PairedBalance} from '../PairedBalance/PairedBalance'
-import {AmountIcon} from './AmountIcon'
+import {TokenInfoIcon} from './TokenInfoIcon'
 
-export type AmountItemProps = {
-  wallet: YoroiWallet
+export type TokenAmountItemProps = {
   amount: Portfolio.Token.Amount
   privacyPlaceholder: string
+  isMainnet: boolean
+  isPrivacyOff: boolean
+
   style?: ViewProps['style']
-  isPrivacyOff?: boolean
   inWallet?: boolean
   variant?: 'swap'
   priceImpactRisk?: SwapPriceImpactRisk
   orderType?: Swap.OrderType
-  isMainnet?: boolean
 }
 
-export const AmountItem = ({
+export const TokenAmountItem = ({
   isMainnet,
   isPrivacyOff,
   privacyPlaceholder,
@@ -35,7 +34,7 @@ export const AmountItem = ({
   variant,
   priceImpactRisk,
   orderType,
-}: AmountItemProps) => {
+}: TokenAmountItemProps) => {
   const {styles, colors} = useStyles()
   const priceImpactRiskTheme = usePriceImpactRiskTheme(priceImpactRisk ?? 'none')
 
@@ -52,7 +51,7 @@ export const AmountItem = ({
   return (
     <View style={[style, styles.container]} testID="assetItem">
       <Left>
-        <AmountIcon info={amount.info} size={variant === 'swap' ? 'sm' : 'md'} isMainnet={isMainnet} />
+        <TokenInfoIcon info={amount.info} size={variant === 'swap' ? 'sm' : 'md'} isMainnet={isMainnet} />
       </Left>
 
       <Middle>

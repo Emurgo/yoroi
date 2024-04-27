@@ -4,7 +4,7 @@ import {createSignedLedgerTxFromCbor, signRawTransaction} from '@emurgo/yoroi-li
 import {Datum} from '@emurgo/yoroi-lib/dist/internals/models'
 import {AppApi, CardanoApi} from '@yoroi/api'
 import {isNonNullable, parseSafe} from '@yoroi/common'
-import {Api, App, Balance, Portfolio} from '@yoroi/types'
+import {Api, App, Balance, Chain, Portfolio} from '@yoroi/types'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
@@ -16,6 +16,7 @@ import {Observable} from 'rxjs'
 import {buildPortfolioBalanceManager} from '../../../features/Portfolio/common/hooks/usePortfolioBalanceManager'
 import {toBalanceManagerSyncArgs} from '../../../features/Portfolio/common/transformers/toBalanceManagerSyncArgs'
 import {toChainSupportedNetwork} from '../../../features/Portfolio/common/transformers/toChainSupportedNetwork'
+import {networksConfig} from '../../../features/WalletManager/common/constants'
 import LocalizableError from '../../../i18n/LocalizableError'
 import {WalletMeta} from '../../../wallet-manager/types'
 import walletManager from '../../../wallet-manager/walletManager'
@@ -175,6 +176,8 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     readonly encryptedStorage: WalletEncryptedStorage
     isEasyConfirmationEnabled = false
     readonly balance$: Observable<Portfolio.Event.BalanceManager>
+    readonly network: Chain.SupportedNetworks
+    readonly portfolioPrimaryTokenInfo: Readonly<Portfolio.Token.Info>
 
     private _utxos: RawUtxo[]
     private readonly storage: App.Storage
@@ -183,7 +186,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     private readonly memosManager: MemosManager
     private _collateralId = ''
     private readonly cardanoApi: Api.Cardano.Actions
-    private readonly balanceManager: Portfolio.Manager.Balance
+    private readonly balanceManager: Readonly<Portfolio.Manager.Balance>
 
     // =================== create =================== //
 
@@ -299,13 +302,15 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
             : 'preprod',
       })
 
-      const chainNetwork = toChainSupportedNetwork(NETWORK_ID)
+      const network = toChainSupportedNetwork(NETWORK_ID)
+      const portfolioPrimaryTokenInfo = networksConfig[network].primaryTokenInfo
+      const tokenManager = walletManager.getTokenManager(network)
       const {balanceManager} = buildPortfolioBalanceManager({
-        tokenManager: walletManager.getTokenManager(chainNetwork),
         walletId: id,
-        network: chainNetwork,
+        primaryTokenInfo: portfolioPrimaryTokenInfo,
+        tokenManager,
+        network,
       })
-      balanceManager.refresh()
 
       const wallet = new ShelleyWallet({
         storage,
@@ -323,6 +328,8 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         memosManager,
         cardanoApi,
         balanceManager,
+        network,
+        portfolioPrimaryTokenInfo,
       })
 
       await wallet.discoverAddresses()
@@ -351,6 +358,8 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       memosManager,
       cardanoApi,
       balanceManager,
+      network,
+      portfolioPrimaryTokenInfo,
     }: {
       storage: App.Storage
       id: string
@@ -366,7 +375,9 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       transactionManager: TransactionManager
       memosManager: MemosManager
       cardanoApi: Api.Cardano.Actions
-      balanceManager: Portfolio.Manager.Balance
+      balanceManager: Readonly<Portfolio.Manager.Balance>
+      network: Chain.SupportedNetworks
+      portfolioPrimaryTokenInfo: Readonly<Portfolio.Token.Info>
     }) {
       this.id = id
       this.storage = storage
@@ -393,6 +404,8 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       this.cardanoApi = cardanoApi
       this.balanceManager = balanceManager
       this.balance$ = balanceManager.observable$
+      this.network = network
+      this.portfolioPrimaryTokenInfo = portfolioPrimaryTokenInfo
     }
 
     // portfoliio
@@ -410,6 +423,10 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
 
     get receiveAddresses(): Addresses {
       return this.externalAddresses.slice(0, this.numReceiveAddresses)
+    }
+
+    get isMainnet() {
+      return this.network === Chain.Network.Mainnet
     }
 
     save() {
