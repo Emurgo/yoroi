@@ -74,7 +74,13 @@ export const portfolioTokenManagerMaker = (
     return records
   }
 
-  const clear = () => {}
+  const clear = ({sourceId}: Portfolio.Event.SourceId) => {
+    storage.token.infos.clear()
+    storage.token.discoveries.clear()
+    cachedInfosWithoutRecord.clear()
+
+    observer.notify({on: Portfolio.Event.ManagerOn.Clear, sourceId})
+  }
 
   const destroy = () => {
     observer.destroy()

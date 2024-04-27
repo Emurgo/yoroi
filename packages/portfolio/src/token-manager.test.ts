@@ -91,6 +91,8 @@ describe('portfolioTokenManagerMaker', () => {
     expect(resultRnftWhatever.expires).toBeGreaterThan(Date.now())
     expect(resultRnftWhatever.hash).toBe('hash3')
     expect(resultRnftWhatever.record).toEqual(tokenInfoMocks.rnftWhatever)
+
+    manager.destroy()
   })
 
   it('should read all from cache', async () => {
@@ -181,5 +183,33 @@ describe('portfolioTokenManagerMaker', () => {
     const resultRnftWhatever = result.get(tokenInfoMocks.rnftWhatever.id)
     if (!resultRnftWhatever) fail()
     expect(resultRnftWhatever).toEqual(unknownCachedTokenInfo)
+  })
+
+  it('should clear all data in the storage', async () => {
+    const api = portfolioApiMock.success
+    const manager = portfolioTokenManagerMaker({api, storage})
+    const secondaryTokenIds: Portfolio.Token.Id[] = [
+      tokenInfoMocks.rnftWhatever.id,
+    ]
+
+    await manager.sync({secondaryTokenIds, sourceId: 'sourceId'})
+
+    expect(
+      storage.token.infos.read([tokenInfoMocks.rnftWhatever.id]).length,
+    ).toBe(1)
+
+    const subscriber = jest.fn()
+    manager.subscribe(subscriber)
+
+    manager.clear({sourceId: 'sourceId'})
+
+    expect(storage.token.infos.all().length).toBe(0)
+
+    expect(subscriber).toHaveBeenCalledWith({
+      on: Portfolio.Event.ManagerOn.Clear,
+      sourceId: 'sourceId',
+    })
+
+    manager.destroy()
   })
 })
