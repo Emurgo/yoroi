@@ -105,6 +105,14 @@ const wallet: YoroiWallet = {
   portfolioPrimaryTokenInfo: primaryTokenInfoMainnet,
   network: Chain.Network.Mainnet,
 
+  balanceManager: {
+    clear: jest.fn(),
+    sync: jest.fn(),
+    resync: jest.fn(),
+    startSync: jest.fn(),
+    stopSync: jest.fn(),
+  } as any,
+
   getStakingInfo: async () => {
     throw new Error('not implemented: getStakingInfo')
   },

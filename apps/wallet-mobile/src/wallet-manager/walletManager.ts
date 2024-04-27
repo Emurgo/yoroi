@@ -1,6 +1,18 @@
 import {parseSafe} from '@yoroi/common'
 import {App, Chain} from '@yoroi/types'
-import {catchError, concatMap, finalize, from, interval, of, startWith, Subject} from 'rxjs'
+import {
+  BehaviorSubject,
+  catchError,
+  concatMap,
+  finalize,
+  from,
+  interval,
+  of,
+  startWith,
+  Subject,
+  Subscription,
+  switchMap,
+} from 'rxjs'
 import uuid from 'uuid'
 
 import {buildPortfolioTokenManagers} from '../features/Portfolio/common/hooks/usePortfolioTokenManager'
@@ -24,9 +36,11 @@ export class WalletManager {
   public readonly walletInfos$ = new Subject<WalletInfos>()
   readonly #walletInfos: WalletInfos = new Map()
   readonly #tokenManagersByNetwork = buildPortfolioTokenManagers()
+  readonly #isSyncing$ = new BehaviorSubject<boolean>(false)
   #selectedWalletId: YoroiWallet['id'] | null = null
   #subscriptions: Array<WalletManagerSubscription> = []
-  #isSyncing = false
+  #syncControl$ = new BehaviorSubject<boolean>(true)
+  #syncSubscription: Subscription | null = null
 
   constructor() {
     if (WalletManager.#instance) return WalletManager.#instance
@@ -53,9 +67,9 @@ export class WalletManager {
 
   startSyncingAllWallets() {
     const syncWallets = () => {
-      if (this.#isSyncing) return
+      if (this.#isSyncing$.value) return
 
-      this.#isSyncing = true
+      this.#isSyncing$.next(true)
 
       from(this.openWallets())
         .pipe(
@@ -85,19 +99,51 @@ export class WalletManager {
             )
           }),
           finalize(() => {
-            this.#isSyncing = false
+            this.#isSyncing$.next(false)
           }),
         )
         .subscribe()
     }
 
-    const subscription = interval(thirtyFiveSeconds).pipe(startWith(0)).subscribe(syncWallets)
+    if (!this.#syncSubscription) {
+      this.#syncSubscription = this.#syncControl$
+        .pipe(
+          switchMap((isActive) => (isActive ? interval(thirtyFiveSeconds).pipe(startWith(0)) : of())),
+          concatMap(() => of(syncWallets())),
+        )
+        .subscribe()
+    }
 
     return {
       destroy: () => {
-        subscription.unsubscribe()
+        this.#syncSubscription?.unsubscribe()
+        this.#syncSubscription = null
       },
     }
+  }
+
+  get syncing$() {
+    return this.#isSyncing$.asObservable()
+  }
+
+  get isSyncing() {
+    return this.#isSyncing$.value
+  }
+
+  get syncActive$() {
+    return this.#syncControl$.asObservable()
+  }
+
+  get isSyncActive() {
+    return this.#syncControl$.value
+  }
+
+  pauseSyncing() {
+    this.#syncControl$.next(false)
+  }
+
+  resumeSyncing() {
+    this.#syncControl$.next(true)
   }
 
   getOpenedWalletsByNetwork = () => {

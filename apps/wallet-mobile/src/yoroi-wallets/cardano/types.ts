@@ -98,6 +98,7 @@ export type YoroiWallet = {
 
   readonly network: Chain.SupportedNetworks
   readonly portfolioPrimaryTokenInfo: Portfolio.Token.Info
+  readonly balanceManager: Readonly<Portfolio.Manager.Balance>
 
   get isMainnet(): boolean
 

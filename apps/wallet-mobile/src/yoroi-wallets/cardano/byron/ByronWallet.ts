@@ -144,6 +144,7 @@ export class ByronWallet implements YoroiWallet {
   readonly balance$: Observable<Portfolio.Event.BalanceManager>
   readonly network: Chain.SupportedNetworks
   readonly portfolioPrimaryTokenInfo: Readonly<Portfolio.Token.Info>
+  readonly balanceManager: Readonly<Portfolio.Manager.Balance>
 
   private _utxos: RawUtxo[]
   private readonly storage: App.Storage
@@ -153,7 +154,6 @@ export class ByronWallet implements YoroiWallet {
   private readonly memosManager: MemosManager
   private _collateralId = ''
   private readonly cardanoApi: Api.Cardano.Actions
-  private readonly balanceManager: Readonly<Portfolio.Manager.Balance>
 
   // =================== create =================== //
 
@@ -438,6 +438,7 @@ export class ByronWallet implements YoroiWallet {
   }
 
   async clear() {
+    this.balanceManager.clear()
     await this.transactionManager.clear()
     this.transactionManager.resetState()
     await this.utxoManager.clear()

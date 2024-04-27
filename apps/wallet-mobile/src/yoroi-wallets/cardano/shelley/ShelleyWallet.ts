@@ -178,6 +178,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     readonly balance$: Observable<Portfolio.Event.BalanceManager>
     readonly network: Chain.SupportedNetworks
     readonly portfolioPrimaryTokenInfo: Readonly<Portfolio.Token.Info>
+    readonly balanceManager: Readonly<Portfolio.Manager.Balance>
 
     private _utxos: RawUtxo[]
     private readonly storage: App.Storage
@@ -186,7 +187,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     private readonly memosManager: MemosManager
     private _collateralId = ''
     private readonly cardanoApi: Api.Cardano.Actions
-    private readonly balanceManager: Readonly<Portfolio.Manager.Balance>
 
     // =================== create =================== //
 
@@ -434,7 +434,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     }
 
     async clear() {
-      this.balanceManager.
+      this.balanceManager.clear()
       await this.transactionManager.clear()
       this.transactionManager.resetState()
       await this.utxoManager.clear()
