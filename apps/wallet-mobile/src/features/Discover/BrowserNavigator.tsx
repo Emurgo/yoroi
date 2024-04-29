@@ -14,18 +14,18 @@ export const BrowserNavigator = () => {
   const {styles} = useStyles()
 
   return (
-      <SafeAreaView edges={['left', 'right', 'top']} style={styles.root}>
-        <Tab.Navigator
-          screenOptions={{
-            animationEnabled: false,
-            headerShown: false,
-          }}
-        >
-          <Tab.Screen name="discover-browse-dapp" component={BrowseDappScreen} />
+    <SafeAreaView edges={['left', 'right', 'top']} style={styles.root}>
+      <Tab.Navigator
+        screenOptions={{
+          animationEnabled: false,
+          headerShown: false,
+        }}
+      >
+        <Tab.Screen name="discover-browse-dapp" component={BrowseDappScreen} />
 
-          <Tab.Screen name="discover-search-dapp-in-browser" component={SearchDappInBrowserScreen} />
-        </Tab.Navigator>
-      </SafeAreaView>
+        <Tab.Screen name="discover-search-dapp-in-browser" component={SearchDappInBrowserScreen} />
+      </Tab.Navigator>
+    </SafeAreaView>
   )
 }
 
