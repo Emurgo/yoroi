@@ -37,12 +37,14 @@ export const SelectTokenFromListScreen = () => {
   const balances = usePortfolioBalances({wallet})
   const [fungibilityFilter, setFungibilityFilter] = React.useState<keyof typeof balances>('all')
   const [isPending, startTransition] = React.useTransition()
-  const filteredBalancesByFungibility = balances[fungibilityFilter]
   const showOnlyNfts = fungibilityFilter === 'nfts'
-  const amountsSelected = Object.keys(targets[selectedTargetIndex].entry.amounts)
-  const filteredAndSorted = balances.nfts.filter(filterOutSelected(amountsSelected)).sort((a, b) => sortNfts(a.name, b.name))
-  const counter = filteredAndSorted.length
+  const filteredBalancesByFungibility = balances[fungibilityFilter]
+  const withoutSelected = React.useMemo(
+    () => filteredBalancesByFungibility.filter(filterOutSelected(targets[selectedTargetIndex].entry.amounts)),
+    [filteredBalancesByFungibility, selectedTargetIndex, targets],
+  )
 
+  const counter = withoutSelected.length
 
   const {track} = useMetrics()
   useFocusEffect(
@@ -96,7 +98,7 @@ export const SelectTokenFromListScreen = () => {
 
       <List isSearching={isSearching} canAddAmount={canAddAmount} showOnlyNfts={showOnlyNfts} />
 
-      <Counter fungibilityFilter={fungibilityFilter} counter={0} />
+      <Counter fungibilityFilter={fungibilityFilter} counter={counter} />
     </View>
   )
 }
@@ -393,8 +395,9 @@ const useFilteredTokenInfos = ({
 
 const areAllTokensSelected = (selectedTokenIds: Array<string>, tokenInfos: Balance.TokenInfo[]): boolean =>
   tokenInfos.every((tokenInfo) => selectedTokenIds.includes(tokenInfo.id))
-const filterOutSelected = (selectedTokenIds: Array<Portfolio.Token.Id>) => (amount: Portfolio.Token.Amount) =>
-  !selectedTokenIds.includes(amount.info.id)
+const filterOutSelected =
+  (amounts: Record<Portfolio.Token.Id, Portfolio.Token.Amount>) => (amount: Portfolio.Token.Amount) =>
+    !Object.keys(amounts).includes(amount.info.id)
 const sortNfts = (nftNameA: string, nftNameB: string): number => nftNameA.localeCompare(nftNameB)
 
 const useStyles = () => {
