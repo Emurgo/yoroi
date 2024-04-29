@@ -374,7 +374,7 @@ const useStyles = () => {
       flex: 1,
       ...theme.atoms.px_lg,
       justifyContent: 'space-between',
-      backgroundColor: theme.color.white_static,
+      backgroundColor: color.white_static,
     },
     title: {
       ...theme.atoms.body_1_lg_regular,
@@ -382,7 +382,7 @@ const useStyles = () => {
     },
     button: {backgroundColor: theme.color.primary_c500},
     recoveryPhrase: {
-      ...theme.padding['xxs'],
+      ...theme.atoms.p__2xs,
       minHeight: 182,
       borderRadius: 8,
       overflow: 'hidden',
@@ -390,7 +390,7 @@ const useStyles = () => {
     recoveryPhraseBackground: {
       borderRadius: 6,
       overflow: 'hidden',
-      backgroundColor: theme.color.white_static,
+      backgroundColor: color.white_static,
       minHeight: 182,
     },
     recoveryPhraseOutline: {
@@ -414,7 +414,7 @@ const useStyles = () => {
     },
     successMessage: {
       color: theme.color.gray_cmax,
-      ...(theme.atoms.body - 1 - lg - medium),
+      ...atoms.body_1_lg_medium,
     },
     errorBadge: {
       color: theme.color.magenta['500'],
@@ -433,8 +433,8 @@ const useStyles = () => {
       gap: 2,
     },
     wordBadgeContainerOutline: {
-      ...theme.padding['x-s'],
-      ...theme.padding['y-xs'],
+      ...theme.atoms.px_xs,
+      ...theme.atoms.py_xs,
       borderRadius: 8,
       overflow: 'hidden',
     },
@@ -450,14 +450,14 @@ const useStyles = () => {
     },
     wordBadgeText: {
       ...theme.atoms.body_1_lg_regular,
-      color: theme.color.primary['600'],
+      color: theme.color.primary_c600,
     },
     usedWord: {
       color: theme.color.primary['400'],
     },
     usedWordBackground: {
       position: 'absolute',
-      backgroundColor: theme.color.white_static,
+      backgroundColor: color.white_static,
       borderRadius: 6,
       left: 2,
       right: 2,
@@ -465,7 +465,7 @@ const useStyles = () => {
       bottom: 2,
     },
     bolder: {
-      ...(theme.atoms.body - 1 - lg - medium),
+      ...atoms.body_1_lg_medium,
     },
   })
 

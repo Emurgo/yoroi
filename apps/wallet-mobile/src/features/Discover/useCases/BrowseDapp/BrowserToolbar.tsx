@@ -41,8 +41,7 @@ export const BrowserToolbar = ({uri}: Props) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {typography, color} = theme
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
     root: {

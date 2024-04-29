@@ -130,8 +130,7 @@ const messages = defineMessages({
 })
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, atoms} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     safeAreaView: {
       flex: 1,

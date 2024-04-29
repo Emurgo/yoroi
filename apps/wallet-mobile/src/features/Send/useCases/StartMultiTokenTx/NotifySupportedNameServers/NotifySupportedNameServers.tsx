@@ -68,8 +68,7 @@ const NameServer = ({text}: {text: string}) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding, typography} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     gradient: {
       borderRadius: 8,
@@ -91,7 +90,7 @@ const useStyles = () => {
       color: color.gray_cmax,
     },
     title: {
-      ...(atoms.body - 1 - lg - medium),
+      ...atoms.body_1_lg_medium,
       color: color.gray_cmax,
     },
     text: {

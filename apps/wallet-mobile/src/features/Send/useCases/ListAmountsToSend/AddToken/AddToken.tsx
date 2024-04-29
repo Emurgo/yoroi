@@ -38,7 +38,7 @@ const useStyles = () => {
       borderRadius: 8,
       flexDirection: 'row',
       ...atoms.px_lg,
-      ...padding['y-xs'],
+      ...atoms.py_xs,
       justifyContent: 'center',
       alignItems: 'center',
       borderWidth: 2,

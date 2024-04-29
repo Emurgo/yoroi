@@ -170,7 +170,7 @@ const useStyles = () => {
     },
 
     walletNameLabel: {
-      ...(atoms.body - 1 - lg - medium),
+      ...atoms.body_1_lg_medium,
     },
     walletName: {
       ...atoms.body_1_lg_regular,

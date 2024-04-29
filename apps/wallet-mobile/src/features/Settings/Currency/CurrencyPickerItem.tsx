@@ -83,7 +83,7 @@ const useStyles = () => {
     },
     bodyMedium: {
       color: color.gray_c900,
-      ...(atoms.body - 1 - lg - medium),
+      ...atoms.body_1_lg_medium,
     },
     bodyRegular: {
       color: color.gray_c900,

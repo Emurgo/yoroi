@@ -117,7 +117,7 @@ const useStyles = () => {
       height: 'auto',
     },
     dayHeaderRoot: {
-      ...padding['b-xs'],
+      ...atoms.pb_xs,
       ...atoms.px_lg,
     },
   })

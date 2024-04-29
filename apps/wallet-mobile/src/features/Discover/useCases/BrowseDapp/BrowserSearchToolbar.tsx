@@ -35,11 +35,11 @@ export const BrowserSearchToolbar = ({onBack, onSearchChange, onSearchSubmit, se
 }
 
 const BackButton = (props: TouchableOpacityProps) => {
-  const {theme} = useTheme()
+  const {color} = useTheme()
 
   return (
     <TouchableOpacity testID="buttonBack" {...props}>
-      <Icon.Chevron direction="left" size={24} color={theme.color.gray_cmax} />
+      <Icon.Chevron direction="left" size={24} color={color.gray_cmax} />
     </TouchableOpacity>
   )
 }

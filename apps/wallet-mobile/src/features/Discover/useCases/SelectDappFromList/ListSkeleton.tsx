@@ -23,17 +23,17 @@ export const ListSkeleton = () => {
   )
 }
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: theme.color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
     dAppsBox: {
       height: 16,
     },
     dAppItemBox: {
-      ...theme.padding['x-l'],
+      ...atoms.p_lg,
     },
   })
 

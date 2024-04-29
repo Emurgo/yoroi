@@ -179,8 +179,7 @@ const approximateReward = (stakedQuantity: Balance.Quantity): Balance.Quantity =
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding, typography} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -188,7 +187,7 @@ const useStyles = () => {
     },
     scrollView: {
       ...atoms.px_lg,
-      ...padding['b-xl'],
+      ...atoms.pb_xl,
       flex: 1,
     },
     itemBlock: {
@@ -203,7 +202,7 @@ const useStyles = () => {
     },
     rewards: {
       marginTop: 5,
-      ...(atoms.body - 1 - lg - medium),
+      ...atoms.body_1_lg_medium,
       color: color.primary_c600,
     },
     fees: {

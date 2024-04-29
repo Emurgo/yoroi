@@ -87,14 +87,13 @@ export const Modal = (props: Props) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding, typography} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     backdrop: {
       flex: 1,
       alignItems: 'stretch',
       justifyContent: 'center',
-      ...padding['xl'],
+      ...atoms.px_xl,
       backgroundColor: color['bottom-sheet-opacity'],
     },
     noPadding: {
@@ -104,7 +103,7 @@ const useStyles = () => {
     container: {
       backgroundColor: color.gray_cmin,
       borderRadius: 4,
-      ...padding['xl'],
+      ...atoms.px_xl,
     },
     close: {
       position: 'absolute',
@@ -123,7 +122,7 @@ const useStyles = () => {
       ...atoms.heading_3_medium,
       color: color.gray_c600,
       alignSelf: 'center',
-      ...padding['t-s'],
+      ...atoms.pt_sm,
     },
   })
 

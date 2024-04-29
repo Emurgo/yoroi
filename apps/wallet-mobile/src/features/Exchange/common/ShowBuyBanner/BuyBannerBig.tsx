@@ -56,16 +56,15 @@ export const BuyBannerBig = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography, padding} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      ...padding['b-m'],
+      ...atoms.pb_md,
       backgroundColor: color.gray_cmin,
       flex: 1,
     },
     gradient: {
-      ...padding['b-xl'],
+      ...atoms.pb_xl,
       opacity: 1,
       borderRadius: 8,
       flexDirection: 'column',
@@ -81,7 +80,7 @@ const useStyles = () => {
     },
     text: {
       ...atoms.body_1_lg_regular,
-      ...padding['x-xxl'],
+      ...atoms.px_2xl,
       color: color.gray_cmax,
       textAlign: 'center',
     },

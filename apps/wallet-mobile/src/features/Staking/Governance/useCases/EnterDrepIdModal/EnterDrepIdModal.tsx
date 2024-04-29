@@ -75,8 +75,7 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding, typography} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,
@@ -96,10 +95,10 @@ const useStyles = () => {
     },
     inputStyle: {
       minHeight: 70,
-      ...padding['t-l'],
+      ...atoms.pt_lg,
       ...atoms.pb_lg,
       ...atoms.pl_lg,
-      ...padding['r-l'],
+      ...atoms.pr_lg,
       // padding: 16, does not have effect
     },
   })

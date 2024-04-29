@@ -42,11 +42,11 @@ export const CaptureShareQRCodeCard = ({content}: ShareProps) => {
 
 const useStyles = () => {
   const screenWidth = useWindowDimensions().width
-  const {theme} = useTheme()
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
     qrCode: {
-      backgroundColor: theme.color.gray_cmin,
+      backgroundColor: color.gray_cmin,
       padding: 10,
       borderRadius: 8,
     },
@@ -69,14 +69,14 @@ const useStyles = () => {
     content: {
       textAlign: 'center',
       maxWidth: 300,
-      ...theme.atoms.body_1_lg_regular,
+      ...atoms.body_1_lg_regular,
     },
   })
 
   const colors = {
-    black: theme.color.gray_cmax,
+    black: color.gray_cmax,
     transparent: 'transparent',
-    backgroundGradientCard: theme.color.gradients['blue-green'],
+    backgroundGradientCard: color.bg_gradient_1,
   }
 
   return {styles, colors} as const

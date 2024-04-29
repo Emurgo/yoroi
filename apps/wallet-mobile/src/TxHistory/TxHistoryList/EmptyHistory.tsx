@@ -34,7 +34,7 @@ const useStyles = () => {
       alignItems: 'center',
     },
     emptyText: {
-      ...(atoms.body - 1 - lg - medium),
+      ...atoms.body_1_lg_medium,
       color: color.gray_c900,
       width: '55%',
       textAlign: 'center',

@@ -147,8 +147,7 @@ export const AmountList = ({amounts}: {amounts: Balance.Amounts}) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding, typography} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     header: {
       alignItems: 'center',
@@ -157,7 +156,7 @@ const useStyles = () => {
     title: {
       color: color.gray_cmax,
       ...atoms.heading_3_medium,
-      ...padding['xs'],
+      ...atoms.px_sm,
       textAlign: 'center',
     },
     message: {

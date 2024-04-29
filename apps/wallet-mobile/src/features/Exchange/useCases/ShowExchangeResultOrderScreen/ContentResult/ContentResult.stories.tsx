@@ -25,7 +25,7 @@ storiesOf('Exchange ShowContentResult', module)
   })
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -36,7 +36,7 @@ const useStyles = () => {
       alignItems: 'center',
     },
     contentValueText: {
-      ...theme.atoms.body_1_lg_regular,
+      ...atoms.body_1_lg_regular,
       color: '#000000',
     },
     banxaLogo: {

@@ -165,18 +165,17 @@ export const WebViewItem = ({tab, index}: Props) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {atoms, color} = useTheme()
 
   const styles = StyleSheet.create({
     switchTabRoot: {
       borderWidth: 2,
-      borderColor: color.gray['200'],
+      borderColor: color.gray_c200,
       height: 160,
       overflow: 'hidden',
     },
     switchTabRootActive: {
-      borderColor: color.primary['500'],
+      borderColor: color.primary_c500,
     },
     roundedContainer: {
       borderRadius: 8,

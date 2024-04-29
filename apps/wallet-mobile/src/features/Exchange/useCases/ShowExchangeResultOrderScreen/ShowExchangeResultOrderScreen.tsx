@@ -133,11 +133,11 @@ const sanitizeParams = (params: Links.ExchangeShowCreateResultParams) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: theme.color.gray_cmin,
+      backgroundColor: color.gray_cmin,
     },
     flex: {
       flex: 1,
@@ -152,15 +152,15 @@ const useStyles = () => {
       height: 228,
     },
     congratsText: {
-      ...theme.atoms.heading_3_medium,
-      color: theme.color.gray_c900,
+      ...atoms.heading_3_medium,
+      color: color.gray_c900,
       fontWeight: '500',
       textAlign: 'center',
       textAlignVertical: 'center',
     },
     contentValueText: {
-      ...theme.atoms.body_1_lg_regular,
-      color: theme.color.gray_cmax,
+      ...atoms.body_1_lg_regular,
+      color: color.gray_cmax,
     },
     boxProvider: {
       flexDirection: 'row',

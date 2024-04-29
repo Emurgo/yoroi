@@ -88,7 +88,7 @@ const useStyles = () => {
       alignSelf: 'center',
     },
     isNext: {
-      backgroundColor: theme.color.white_static,
+      backgroundColor: color.white_static,
       borderWidth: 2,
       borderColor: theme.color.gray_c400,
     },
@@ -103,7 +103,7 @@ const useStyles = () => {
       color: theme.color.gray_c400,
     },
     currentStepTitle: {
-      ...(theme.atoms.body - 1 - lg - medium),
+      ...atoms.body_1_lg_medium,
       color: theme.color.primary_c600,
     },
   })

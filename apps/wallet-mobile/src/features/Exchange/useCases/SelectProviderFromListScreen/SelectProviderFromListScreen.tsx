@@ -55,10 +55,10 @@ export const SelectProviderFromListScreen = () => {
 }
 
 const CheckIcon = () => {
-  const {theme} = useTheme()
+  const {color} = useTheme()
   return (
     <View>
-      <Icon.Check size={24} color={theme.color.primary_c600} />
+      <Icon.Check size={24} color={color.primary_c600} />
 
       <Space fill />
     </View>
@@ -66,13 +66,13 @@ const CheckIcon = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,
     },
     list: {
-      ...theme.atoms.px_lg,
+      ...atoms.px_lg,
     },
   })
 

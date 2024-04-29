@@ -107,8 +107,7 @@ const LanguagePickRow = ({onPress}: {onPress: () => void}) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     scrollableContentContainer: {
       flexGrow: 1,
@@ -137,7 +136,7 @@ const useStyles = () => {
       position: 'absolute',
       right: 0,
       ...padding['r-l'],
-      ...padding['t-s'],
+      ...atoms.pt_sm,
     },
     checkboxText: {
       ...atoms.body_1_lg_regular,

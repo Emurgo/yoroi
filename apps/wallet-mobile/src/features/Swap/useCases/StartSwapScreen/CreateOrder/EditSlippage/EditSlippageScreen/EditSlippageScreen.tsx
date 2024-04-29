@@ -156,8 +156,7 @@ export const EditSlippageScreen = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding, typography} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     flex: {
       flex: 1,
@@ -179,11 +178,11 @@ const useStyles = () => {
     bottomText: {
       color: color.gray_c700,
       ...atoms.body_3_sm_regular,
-      ...padding['t-l'],
+      ...atoms.pt_lg,
     },
     choicesContainer: {
       flexDirection: 'row',
-      ...padding['b-xl'],
+      ...atoms.pb_xl,
       flexWrap: 'wrap',
     },
     choiceButton: {
@@ -195,7 +194,7 @@ const useStyles = () => {
       borderRadius: 8,
     },
     choiceLabel: {
-      ...(atoms.body - 1 - lg - medium),
+      ...atoms.body_1_lg_medium,
       color: color.gray_cmax,
     },
     selectedChoiceLabel: {

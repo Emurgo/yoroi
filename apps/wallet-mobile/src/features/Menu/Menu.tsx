@@ -21,13 +21,13 @@ const MenuStack = createStackNavigator()
 
 export const MenuNavigator = () => {
   const strings = useStrings()
-  const {theme} = useTheme()
+  const {atoms, color} = useTheme()
 
   return (
     <MenuStack.Navigator
       initialRouteName="_menu"
       screenOptions={{
-        ...defaultStackNavigationOptions(theme),
+        ...defaultStackNavigationOptions(atoms, color),
         headerLeft: () => null,
         detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
       }}
@@ -145,7 +145,7 @@ const Item = ({
 
       <Spacer width={12} />
 
-      <Text style={{fontFamily: 'Rubik-Medium', fontSize: 16, lineHeight: 24, color: color.gray['900']}}>{label}</Text>
+      <Text style={{fontFamily: 'Rubik-Medium', fontSize: 16, lineHeight: 24, color: color.gray_c900}}>{label}</Text>
 
       <Spacer fill />
 

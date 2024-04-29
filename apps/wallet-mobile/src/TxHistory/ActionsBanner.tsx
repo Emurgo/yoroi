@@ -187,8 +187,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding, typography} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     centralized: {
       alignItems: 'center',
@@ -207,9 +206,9 @@ const useStyles = () => {
       backgroundColor: color.primary_c500,
     },
     actionLabel: {
-      ...padding['t-s'],
-      color: color.gray_cmax,
+      ...atoms.pt_sm,
       ...atoms.body_3_sm_medium,
+      color: color.gray_cmax,
     },
     disabled: {
       opacity: 0.5,

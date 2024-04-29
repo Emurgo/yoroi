@@ -12,13 +12,12 @@ export const LabelConnected = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding, typography} = theme
+  const {atoms, color} = useTheme()
 
   const styles = StyleSheet.create({
     labelContainer: {
       backgroundColor: color.secondary_c600,
-      ...padding['x-s'],
+      ...atoms.px_sm,
       paddingVertical: 3,
       borderRadius: 999,
     },

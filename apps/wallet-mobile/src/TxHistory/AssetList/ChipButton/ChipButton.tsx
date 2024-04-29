@@ -20,8 +20,7 @@ export const ChipButton = ({label, onPress, disabled, selected}: Props) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding, typography} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     button: {
       justifyContent: 'center',
@@ -30,8 +29,8 @@ const useStyles = () => {
     },
     label: {
       color: color.gray_c600,
-      ...padding['x-m'],
-      ...padding['y-xs'],
+      ...atoms.px_md,
+      ...atoms.py_xs,
       ...atoms.body_2_md_regular,
     },
     selected: {

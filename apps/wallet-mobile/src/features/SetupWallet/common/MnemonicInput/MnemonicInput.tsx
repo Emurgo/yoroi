@@ -312,7 +312,7 @@ const useAutoFocus = (ref: React.RefObject<RNTextInput>) =>
   }, [ref])
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {color, atoms} = useTheme()
   const ROW_HEIGHT = 50
   const styles = StyleSheet.create({
     menu: {
@@ -320,17 +320,17 @@ const useStyles = () => {
       minWidth: 143,
     },
     menuContent: {
-      backgroundColor: theme.color.white_static,
+      backgroundColor: color.white_static,
       borderRadius: 8,
     },
     menuScrollView: {
       maxHeight: ROW_HEIGHT * 3.5,
     },
     menuItemText: {
-      color: theme.color.gray_c600,
+      color: color.gray_c600,
     },
     menuItem: {
-      backgroundColor: theme.color.gray_c50,
+      backgroundColor: color.gray_c50,
     },
     mnemonicInputView: {
       flexDirection: 'row',
@@ -342,8 +342,7 @@ const useStyles = () => {
       alignItems: 'center',
       justifyContent: 'space-evenly',
       width: '50%',
-      ...theme.atoms.py_xs,
-      ...theme.padding['y-xxs'],
+      ...atoms.py_xs,
     },
     textInput: {
       minWidth: 143,
@@ -351,8 +350,8 @@ const useStyles = () => {
       textAlign: 'center',
     },
     mnemonicIndex: {
-      color: theme.color.primary_c400,
-      ...theme.atoms.body_1_lg_regular,
+      color: color.primary_c400,
+      ...atoms.body_1_lg_regular,
     },
     textView: {
       flexDirection: 'row',
@@ -360,17 +359,17 @@ const useStyles = () => {
       alignItems: 'center',
     },
     errorText: {
-      ...theme.atoms.body_1_lg_regular,
-      color: theme.color.sys_magenta_c500,
+      ...atoms.body_1_lg_regular,
+      color: color.sys_magenta_c500,
     },
     successText: {
-      ...(theme.atoms.body - 1 - lg - medium),
-      color: theme.color.gray_cmax,
+      ...atoms.body_1_lg_medium,
+      color: color.gray_cmax,
     },
     clearAll: {
-      ...theme.typography['button-2-m'],
-      ...theme.padding['l-s'],
-      color: theme.color.primary_c500,
+      ...atoms.button_2_md,
+      ...atoms.pl_sm,
+      color: color.primary_c500,
       textTransform: 'uppercase',
     },
   })

@@ -47,7 +47,7 @@ const useStyles = () => {
     title: {
       color: color.gray_cmax,
       ...atoms.heading_3_medium,
-      ...padding['x-s'],
+      ...atoms.px_xs,
       textAlign: 'center',
     },
     text: {

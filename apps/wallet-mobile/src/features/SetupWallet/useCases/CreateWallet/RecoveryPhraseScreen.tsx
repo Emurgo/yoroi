@@ -173,7 +173,7 @@ const useStyles = () => {
       flex: 1,
       ...theme.atoms.px_lg,
       justifyContent: 'space-between',
-      backgroundColor: theme.color.white_static,
+      backgroundColor: color.white_static,
     },
     modal: {
       flex: 1,
@@ -183,7 +183,7 @@ const useStyles = () => {
       color: theme.color.gray_c900,
     },
     bolder: {
-      ...(theme.atoms.body - 1 - lg - medium),
+      ...atoms.body_1_lg_medium,
     },
     content: {
       gap: 16,
@@ -205,7 +205,7 @@ const useStyles = () => {
     },
     mnemonicText: {
       ...theme.atoms.body_1_lg_regular,
-      color: theme.color.primary['600'],
+      color: theme.color.primary_c600,
     },
     blurView: {
       position: 'absolute',

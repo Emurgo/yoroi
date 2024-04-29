@@ -60,7 +60,7 @@ const useStyles = () => {
     },
     label: {
       color: color.primary_c600,
-      ...(atoms.body - 1 - lg - medium),
+      ...atoms.body_1_lg_medium,
     },
     gradient: {borderRadius: 8, padding: 3},
   })

@@ -292,7 +292,7 @@ const useStyles = () => {
       flexDirection: 'row',
     },
     title: {
-      ...(atoms.body - 1 - lg - medium),
+      ...atoms.body_1_lg_medium,
     },
     name: {
       color: color.gray_c600,

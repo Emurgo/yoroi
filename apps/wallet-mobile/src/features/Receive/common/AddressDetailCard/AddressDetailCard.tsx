@@ -123,7 +123,7 @@ export const AddressDetailCard = ({title}: AddressDetailCardProps) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     container: {
       borderRadius: 10,
@@ -143,8 +143,8 @@ const useStyles = () => {
   })
 
   const colors = {
-    active: theme.color.primary_c500,
-    inactive: theme.color.gray_c300,
+    active: color.primary_c500,
+    inactive: color.gray_c300,
   }
   return {styles, colors}
 }

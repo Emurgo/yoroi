@@ -24,23 +24,22 @@ export const LabelCategoryDApp = ({category}: Props) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography, padding} = theme
+  const {atoms, color} = useTheme()
 
   const styles = StyleSheet.create({
     labelGradientBox: {
       borderRadius: 999,
-      ...padding['xxs'],
+      ...atoms.p_2xs,
     },
     labelContainer: {
       backgroundColor: color.white_static,
-      ...padding['x-s'],
+      ...atoms.px_xs,
       paddingVertical: 3,
       borderRadius: 999,
     },
     labelText: {
       ...atoms.body_3_sm_medium,
-      color: color.primary['600'],
+      color: color.primary_c600,
     },
   })
 

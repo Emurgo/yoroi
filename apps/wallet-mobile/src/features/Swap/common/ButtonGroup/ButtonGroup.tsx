@@ -49,7 +49,7 @@ const useStyles = () => {
     },
     label: {
       color: color.gray_cmax,
-      ...(atoms.body - 1 - lg - medium),
+      ...atoms.body_1_lg_medium,
     },
   })
 

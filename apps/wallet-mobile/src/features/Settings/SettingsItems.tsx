@@ -148,12 +148,12 @@ const useStyles = () => {
       color: color.gray['500'],
     },
     sectionText: {
-      color: color.gray['900'],
+      color: color.gray_c900,
       ...atoms.body_2_md_regular,
     },
     itemText: {
-      color: color.gray['900'],
-      ...(atoms.body - 1 - lg - medium),
+      color: color.gray_c900,
+      ...atoms.body_1_lg_medium,
     },
     itemTextIsNil: {
       color: color.gray['600'],

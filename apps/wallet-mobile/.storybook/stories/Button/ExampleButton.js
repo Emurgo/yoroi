@@ -13,8 +13,7 @@ export const ExampleButton = ({onPress, disabled, text}) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, atoms} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
       ...atoms.px_lg,

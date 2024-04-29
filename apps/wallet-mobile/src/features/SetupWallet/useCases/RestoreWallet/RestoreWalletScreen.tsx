@@ -86,7 +86,7 @@ const useStyles = () => {
     root: {
       flex: 1,
       justifyContent: 'space-between',
-      backgroundColor: theme.color.white_static,
+      backgroundColor: color.white_static,
     },
     title: {
       ...theme.atoms.body_1_lg_regular,
@@ -94,7 +94,7 @@ const useStyles = () => {
     },
     button: {backgroundColor: theme.color.primary_c500},
     bolder: {
-      ...(theme.atoms.body - 1 - lg - medium),
+      ...atoms.body_1_lg_medium,
     },
     padding: {
       ...theme.atoms.p_lg,

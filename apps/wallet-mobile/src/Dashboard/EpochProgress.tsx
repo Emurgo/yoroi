@@ -68,8 +68,7 @@ const messages = defineMessages({
 })
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography, padding} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     wrapper: {},
     stats: {
@@ -87,7 +86,7 @@ const useStyles = () => {
     },
     label: {
       color: color.gray_c900,
-      ...padding['r-m'],
+      ...atoms.pr_md,
       ...atoms.body_2_md_regular,
     },
     value: {

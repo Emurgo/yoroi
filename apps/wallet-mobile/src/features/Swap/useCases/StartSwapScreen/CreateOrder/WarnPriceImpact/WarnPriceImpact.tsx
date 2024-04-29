@@ -78,7 +78,7 @@ const useStyles = () => {
       lineHeight: 21,
     },
     bold: {
-      ...(atoms.body - 1 - lg - medium),
+      ...atoms.body_1_lg_medium,
     },
   })
   return styles

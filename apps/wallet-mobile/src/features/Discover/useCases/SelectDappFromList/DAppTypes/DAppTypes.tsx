@@ -88,14 +88,13 @@ const TypeItem = ({name, isActive = false, onToggle, disabled = false, isLimited
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding, typography} = theme
+  const {atoms, color} = useTheme()
 
   const styles = StyleSheet.create({
     gradient: {
       opacity: 1,
       borderRadius: 8,
-      ...padding['xxs'],
+      ...atoms.p__2xs,
       overflow: 'hidden',
       height: 40,
     },

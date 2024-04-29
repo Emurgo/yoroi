@@ -118,7 +118,7 @@ const useStyles = () => {
     root: {
       flex: 1,
       backgroundColor: theme.color.gray_cmin,
-      ...theme.padding['t-l'],
+      ...theme.atoms.pt_lg,
     },
     content: {
       flex: 1,

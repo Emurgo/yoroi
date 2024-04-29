@@ -190,11 +190,10 @@ const messages = defineMessages({
 })
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography, padding} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     item: {
-      ...padding['b-xs'],
+      ...atoms.pb_xs,
     },
     balanceAmount: {
       color: color.secondary_c500,

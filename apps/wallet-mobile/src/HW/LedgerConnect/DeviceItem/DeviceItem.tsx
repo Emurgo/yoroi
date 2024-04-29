@@ -38,12 +38,11 @@ export const DeviceItem = ({device, onSelect, disabled}: Props) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding, typography} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     deviceItem: {
       ...atoms.py_lg,
-      ...padding['x-xxl'],
+      ...atoms.px__2xl,
       marginVertical: 8,
       marginHorizontal: 16,
       borderColor: color.secondary_c500,

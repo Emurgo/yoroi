@@ -176,8 +176,7 @@ const HR = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding, typography} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     center: {
       alignItems: 'center',
@@ -199,16 +198,16 @@ const useStyles = () => {
     },
     maxBalance: {
       color: color.primary_c600,
-      ...(atoms.body - 1 - lg - medium),
+      ...atoms.body1_lg_medium,
     },
     amount: {
-      ...typography['heading-2-regular'],
+      ...atoms.heading_2_regular,
       backgroundColor: color.gray_cmin,
       borderWidth: 0,
       textAlign: 'right',
     },
     ticker: {
-      ...typography['heading-2-regular'],
+      ...atoms.heading_2_regular,
     },
   })
 

@@ -757,7 +757,7 @@ const useStyles = () => {
     },
     modalContentTitleText: {
       color: color.gray_c900,
-      ...(atoms.body - 1 - lg - medium),
+      ...atoms.body_1_lg_medium,
       textAlign: 'center',
     },
     contentLabel: {
@@ -817,7 +817,7 @@ const useStyles = () => {
       flex: 1,
       textAlign: 'center',
       color: color.gray_c600,
-      ...(atoms.body - 1 - lg - medium),
+      ...atoms.body_1_lg_medium,
     },
     modalButton: {backgroundColor: color.sys_magenta_c500},
   })

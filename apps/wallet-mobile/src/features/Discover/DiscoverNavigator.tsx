@@ -17,7 +17,7 @@ import {SelectDappFromListScreen} from './useCases/SelectDappFromList/SelectDapp
 const Stack = createStackNavigator<DiscoverRoutes>()
 
 export const DiscoverNavigator = () => {
-  const {theme} = useTheme()
+  const {atoms, color} = useTheme()
   const strings = useStrings()
 
   const appStorage = useAsyncStorage()
@@ -29,7 +29,7 @@ export const DiscoverNavigator = () => {
       <BrowserProvider>
         <Stack.Navigator
           screenOptions={{
-            ...defaultStackNavigationOptions(theme),
+            ...defaultStackNavigationOptions(atoms, color),
             headerLeft: () => null,
             detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
             gestureEnabled: true,

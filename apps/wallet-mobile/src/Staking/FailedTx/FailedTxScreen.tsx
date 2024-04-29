@@ -80,7 +80,7 @@ const useStyles = () => {
     title: {
       color: color.gray.max,
       ...typography['heading-3-medium'],
-      ...padding['x-s'],
+      ...atoms.px_xs,
       textAlign: 'center',
     },
     text: {
@@ -90,7 +90,7 @@ const useStyles = () => {
       maxWidth: 330,
     },
     button: {
-      ...padding['x-l'],
+      ...atoms.p_lg,
       ...typography['button-2-m'],
     },
     outlineText: {

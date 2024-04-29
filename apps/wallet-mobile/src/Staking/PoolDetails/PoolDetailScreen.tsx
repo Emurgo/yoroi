@@ -43,8 +43,7 @@ export const PoolDetailScreen = ({onPressDelegate, disabled = false}: Props) => 
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding, typography} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     content: {
       flex: 1,

@@ -130,7 +130,7 @@ const useStyles = () => {
       flex: 1,
     },
     walletName: {
-      ...(theme.atoms.body - 1 - lg - medium),
+      ...atoms.body_1_lg_medium,
       color: theme.color.gray_cmax,
       flex: 1,
     },
@@ -147,7 +147,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    white: theme.color.white_static,
+    white: color.white_static,
   }
 
   return {styles, colors} as const

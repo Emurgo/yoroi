@@ -186,7 +186,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     safeAreaView: {
       flex: 1,
-      backgroundColor: theme.color.white_static,
+      backgroundColor: color.white_static,
     },
     topButton: {
       backgroundColor: theme.color.primary_c500,

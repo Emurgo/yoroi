@@ -50,8 +50,7 @@ export const BrowserTabsBar = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {typography, color} = theme
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
     flexEnd: {
@@ -86,7 +85,7 @@ const useStyles = () => {
       color: color.black_static,
     },
     doneText: {
-      color: color.gray['900'],
+      color: color.gray_c900,
       ...atoms.body_2_md_medium,
     },
   })

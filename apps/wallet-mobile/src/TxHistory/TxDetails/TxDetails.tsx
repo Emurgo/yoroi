@@ -428,8 +428,7 @@ const messages = defineMessages({
 })
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding, typography} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -446,12 +445,12 @@ const useStyles = () => {
       fontWeight: '500',
     },
     label: {
-      ...padding['t-l'],
+      ...atoms.pt_lg,
       marginBottom: 8,
     },
     assetsExpandable: {
       ...atoms.pt_md,
-      ...padding['b-xl'],
+      ...atoms.pb_xl,
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignContent: 'center',

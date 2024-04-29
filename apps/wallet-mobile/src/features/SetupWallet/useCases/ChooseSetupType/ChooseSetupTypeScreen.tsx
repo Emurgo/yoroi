@@ -133,7 +133,7 @@ const useStyles = () => {
     container: {
       flex: 1,
       ...theme.atoms.px_lg,
-      backgroundColor: theme.color.white_static,
+      backgroundColor: color.white_static,
     },
     icon: {
       position: 'absolute',

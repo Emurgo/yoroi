@@ -19,8 +19,7 @@ export const CountDAppsAvailable = ({total}: Props) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography, padding} = theme
+  const {atoms, color} = useTheme()
 
   const styles = StyleSheet.create({
     availableText: {

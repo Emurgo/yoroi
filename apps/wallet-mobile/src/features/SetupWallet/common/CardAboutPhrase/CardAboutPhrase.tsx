@@ -80,7 +80,7 @@ const useStyles = (padding?: boolean, background?: boolean) => {
       overflow: 'hidden',
     },
     title: {
-      ...(theme.atoms.body - 1 - lg - medium),
+      ...atoms.body_1_lg_medium,
       color: background ? theme.color.primary_c600 : theme.color.gray_c900,
       textAlign: 'center',
     },

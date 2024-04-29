@@ -33,8 +33,7 @@ export const SubmittedTxScreen = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography, padding} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     container: {
       ...atoms.p_lg,
@@ -45,7 +44,7 @@ const useStyles = () => {
     title: {
       color: color.gray_cmax,
       ...atoms.heading_3_medium,
-      ...padding['xs'],
+      ...atoms.px_sm,
       textAlign: 'center',
     },
     text: {

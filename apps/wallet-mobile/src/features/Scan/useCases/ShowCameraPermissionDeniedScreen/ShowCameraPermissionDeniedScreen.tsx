@@ -43,8 +43,7 @@ const Actions = ({style, ...props}: ViewProps) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding, typography} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -59,7 +58,7 @@ const useStyles = () => {
     title: {
       color: color.gray_cmax,
       ...atoms.heading_3_medium,
-      ...padding['xs'],
+      ...atoms.px_sm,
       textAlign: 'center',
     },
     help: {

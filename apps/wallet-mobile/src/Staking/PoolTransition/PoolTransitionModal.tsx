@@ -209,7 +209,7 @@ const useStyles = () => {
     },
     details: {
       ...theme.typography['body-1-l-regular'],
-      color: theme.color.gray['900'],
+      color: theme.color.gray_c900,
       width: '100%',
     },
     outlineButton: {

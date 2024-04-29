@@ -157,13 +157,12 @@ const DAppAction = ({icon: IconAction, title, onPress}: DAppActionProps) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography, padding} = theme
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
     emptyIcon: {
       borderRadius: 8,
-      backgroundColor: color.gray[50],
+      backgroundColor: color.gray_c50,
       padding: 8,
       width: 40,
       height: 40,
@@ -175,14 +174,14 @@ const useStyles = () => {
     nameText: {
       color: color.gray_c900,
       fontWeight: '500',
-      ...(atoms.body - 1 - lg - medium),
+      ...atoms.body_1_lg_medium,
     },
     descriptionText: {
       color: color.gray_c600,
       ...atoms.body_3_sm_regular,
     },
     descriptionTextActive: {
-      color: color.gray['max'],
+      color: color.gray_cmax,
     },
     flexFull: {
       flex: 1,
@@ -201,8 +200,8 @@ const useStyles = () => {
       height: 48,
     },
     dAppName: {
-      ...(atoms.body - 1 - lg - medium),
-      color: color.gray['900'],
+      ...atoms.body_1_lg_medium,
+      color: color.gray_c900,
     },
     dAppInfo: {
       alignItems: 'center',
@@ -215,14 +214,14 @@ const useStyles = () => {
       ...atoms.py_md,
     },
     actionTitle: {
-      ...(atoms.body - 1 - lg - medium),
-      color: color.gray['900'],
+      ...atoms.body_1_lg_medium,
+      color: color.gray_c900,
     },
   })
 
   const colors = {
-    icon: color.primary['900'],
-    dappIcon: color.gray[600],
+    icon: color.primary_c900,
+    dappIcon: color.gray_c600,
   }
 
   return {styles, colors} as const
