@@ -10,6 +10,7 @@ import {
 import {PortfolioTokenInfo} from './info'
 import {PortfolioTokenId} from './token'
 import {PortfolioPrimaryBreakdown, PortfolioTokenAmount} from './amount'
+import {PortfolioTokenBalances} from './balances'
 
 export type PortfolioManagerToken = Readonly<{
   hydrate(params: PortfolioEventSourceId): void
@@ -57,11 +58,7 @@ export type PortfolioManagerBalance = Readonly<{
 
   getPrimaryBreakdown(): Readonly<PortfolioPrimaryBreakdown>
   getPrimaryBalance(): Readonly<PortfolioTokenAmount>
-  getBalances(): Readonly<{
-    all: ReadonlyArray<PortfolioTokenAmount>
-    fts: ReadonlyArray<PortfolioTokenAmount>
-    nfts: ReadonlyArray<PortfolioTokenAmount>
-  }>
+  getBalances(): Readonly<PortfolioTokenBalances>
 
   destroy(): void
   clear(): void

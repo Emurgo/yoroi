@@ -36,10 +36,12 @@ export const portfolioBalanceManagerMaker = (
   let secondaries: Readonly<Map<Portfolio.Token.Id, Portfolio.Token.Amount>> =
     freeze(new Map())
   let sortedBalances: Readonly<{
+    records: Readonly<Map<Portfolio.Token.Id, Portfolio.Token.Amount>>
     all: ReadonlyArray<Portfolio.Token.Amount>
     nfts: ReadonlyArray<Portfolio.Token.Amount>
     fts: ReadonlyArray<Portfolio.Token.Amount>
   }> = freeze({
+    records: new Map(),
     all: [],
     nfts: [],
     fts: [],
@@ -302,6 +304,7 @@ export const portfolioBalanceManagerMaker = (
             )
             sortedBalances = freeze(
               {
+                records: new Map(),
                 all: [],
                 nfts: [],
                 fts: [],
@@ -401,6 +404,9 @@ const refreshTokenInfos = async ({
 const splitByType = (sortedBalances: ReadonlyArray<Portfolio.Token.Amount>) => {
   return freeze(
     {
+      records: new Map(
+        sortedBalances.map(({info, quantity}) => [info.id, {info, quantity}]),
+      ),
       all: sortedBalances,
       fts: sortedBalances.filter(({info}) => isFt(info)),
       nfts: sortedBalances.filter(({info}) => isNft(info)),

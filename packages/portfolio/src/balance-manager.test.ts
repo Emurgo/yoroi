@@ -118,6 +118,7 @@ describe('hydrate', () => {
       ],
     })
     const sortedBalances = {
+      records: new Map(sorted.map((amount) => [amount.info.id, amount])),
       all: sorted,
       fts: sorted.filter(({info}) => isFt(info)),
       nfts: sorted.filter(({info}) => isNft(info)),

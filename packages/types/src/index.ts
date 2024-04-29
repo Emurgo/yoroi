@@ -191,6 +191,7 @@ import {
   PortfolioManagerBalance,
   PortfolioManagerToken,
 } from './portfolio/manager'
+import {PortfolioTokenBalances} from './portfolio/balances'
 import {AppQueueTask, AppQueueTaskManager} from './app/queue-task-manager'
 
 export namespace App {
@@ -455,6 +456,7 @@ export namespace Portfolio {
   }
 
   export namespace Token {
+    export type Balances = PortfolioTokenBalances
     export type Amount = PortfolioTokenAmount
     export type AmountRecords = PortfolioTokenAmountRecords
 
