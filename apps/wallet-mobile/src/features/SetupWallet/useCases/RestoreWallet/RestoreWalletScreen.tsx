@@ -61,9 +61,9 @@ export const RestoreWalletScreen = () => {
 
   const onSelect = (index: number, word: string) => {
     const newWords = [...mnemonicSelectedWords]
-    setMnemonicSelectedWords(newWords)
-    setSuggestedWords([])
     newWords[index] = word
+    setSuggestedWords([])
+    setMnemonicSelectedWords(newWords)
     mnenonicRefs[index].current?.selectWord(isEmptyString(word) ? '' : word)
 
     const mnemonicWordsComplete = newWords.every(Boolean)
@@ -72,7 +72,7 @@ export const RestoreWalletScreen = () => {
     if (mnemonicWordsComplete && isValid) {
       Keyboard.dismiss()
       setIsValidPhrase(true)
-      setMnemonic(mnemonicSelectedWords.join(' '))
+      setMnemonic(newWords.join(' '))
       track.restoreWalletEnterPhraseStepStatus({recovery_prhase_status: true})
 
       return
@@ -80,7 +80,6 @@ export const RestoreWalletScreen = () => {
 
     if (mnemonicWordsComplete && !isValid) {
       setIsValidPhrase(false)
-      setMnemonic(mnemonicSelectedWords.join(' '))
       track.restoreWalletEnterPhraseStepStatus({recovery_prhase_status: false})
 
       return
