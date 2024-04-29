@@ -1,5 +1,6 @@
 import {Ada} from './Ada'
 import {Analytics} from './Analytics'
+import {ArrowDown} from './ArrowDown'
 import {ArrowRight} from './ArrowRight'
 import {Assets} from './Assets'
 import {Backward} from './Backward'
@@ -45,6 +46,7 @@ import {Forward} from './Forward'
 import {Gear} from './Gear'
 import {Github} from './Github'
 import {Globe} from './Globe'
+import {Google} from './Google'
 import {Governance} from './Governance'
 import {HardwareWallet} from './HardwareWallet'
 import {Image} from './Image'
@@ -227,6 +229,7 @@ export const Icon = {
   Share,
   Governance,
   ArrowRight,
+  ArrowDown,
   Close,
   Warning,
   Collateral,
@@ -240,4 +243,5 @@ export const Icon = {
   Share2,
   Reload,
   Square,
+  Google,
 }

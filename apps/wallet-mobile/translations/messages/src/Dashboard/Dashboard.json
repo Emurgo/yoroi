@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Go to Staking Center",
     "file": "src/Dashboard/Dashboard.tsx",
     "start": {
-      "line": 233,
+      "line": 240,
       "column": 23,
-      "index": 7684
+      "index": 7906
     },
     "end": {
-      "line": 236,
+      "line": 243,
       "column": 3,
-      "index": 7817
+      "index": 8039
     }
   }
 ]

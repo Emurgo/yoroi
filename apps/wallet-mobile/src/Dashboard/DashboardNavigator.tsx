@@ -9,7 +9,7 @@ import {SettingsButton} from '../components/Button'
 import {useGovernanceManagerMaker} from '../features/Staking/Governance'
 import {useSelectedWallet} from '../features/WalletManager/Context'
 import {DashboardRoutes, defaultStackNavigationOptions, useWalletNavigation} from '../navigation'
-import {DelegationConfirmation} from '../Staking'
+import {DelegationConfirmation, FailedTxScreen} from '../Staking'
 import {StakingCenter} from '../Staking/StakingCenter'
 import {useWalletName} from '../yoroi-wallets/hooks'
 import {Dashboard} from './Dashboard'
@@ -46,6 +46,8 @@ export const DashboardNavigator = () => {
           component={DelegationConfirmation}
           options={{title: strings.title}}
         />
+
+        <Stack.Screen name="delegation-failed-tx" component={FailedTxScreen} options={{title: strings.title}} />
       </Stack.Navigator>
     </GovernanceProvider>
   )

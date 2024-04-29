@@ -16,6 +16,7 @@ module.exports = {
     path.resolve(__dirname, "packages/staking"),
     path.resolve(__dirname, "packages/transfer"),
     path.resolve(__dirname, "packages/setup-wallet"),
+    path.resolve(__dirname, "packages/dapp-connector"),
     path.resolve(__dirname, "apps/wallet-mobile"),
   ],
   resolver: {

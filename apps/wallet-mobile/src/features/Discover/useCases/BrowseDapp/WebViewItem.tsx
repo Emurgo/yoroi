@@ -8,8 +8,10 @@ import WebView from 'react-native-webview'
 import {WebViewNavigation, WebViewNavigationEvent} from 'react-native-webview/lib/WebViewTypes'
 
 import {Icon, Spacer} from '../../../../components'
+import {useSelectedWallet} from '../../../WalletManager/Context'
 import {TabItem, useBrowser} from '../../common/BrowserProvider'
 import {getDomainFromUrl} from '../../common/helpers'
+import {useConnectWalletToWebView} from '../../common/hooks'
 import {useNavigateTo} from '../../common/useNavigateTo'
 import {BrowserTabBar} from './BrowserTabBar'
 import {BrowserToolbar} from './BrowserToolbar'
@@ -32,9 +34,12 @@ export const WebViewItem = ({tab, index}: Props) => {
   const isTabActive = index === tabActiveIndex
   const navigationTo = useNavigateTo()
   const insets = useSafeAreaInsets()
+  const wallet = useSelectedWallet()
 
   const scaleXWebview = useSharedValue(1)
   const opacityValue = useSharedValue(0)
+
+  const {initScript, handleEvent} = useConnectWalletToWebView(wallet, webViewRef)
 
   const topInset = Math.max(insets.top, initialWindowMetrics?.insets.top ?? 0)
   const visibleAreaHeight = SCREEN_HEIGHT - topInset
@@ -126,6 +131,8 @@ export const WebViewItem = ({tab, index}: Props) => {
             javaScriptEnabled
             scalesPageToFit
             cacheEnabled
+            injectedJavaScript={initScript}
+            onMessage={handleEvent}
             style={[styles.roundedInsideContainer]}
           />
 

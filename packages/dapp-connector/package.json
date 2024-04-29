@@ -1,0 +1,224 @@
+{
+  "name": "@yoroi/dapp-connector",
+  "version": "1.0.0",
+  "description": "The Dapp Connector package of Yoroi SDK",
+  "keywords": [
+    "yoroi",
+    "cardano",
+    "swap",
+    "browser",
+    "react"
+  ],
+  "homepage": "https://github.com/Emurgo/yoroi/packages/dapp-connector#readme",
+  "bugs": {
+    "url": "https://github.com/Emurgo/yoroi/issues"
+  },
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/Emurgo/yoroi.git",
+    "directory": "packages/dapp-connector"
+  },
+  "license": "Apache-2.0",
+  "author": "EMURGO Fintech <support@emurgo.com> (https://github.com/Emurgo/yoroi)",
+  "contributors": [
+    {
+      "name": "Juliano Lazzarotto",
+      "email": "30806844+stackchain@users.noreply.github.com"
+    }
+  ],
+  "main": "lib/commonjs/index",
+  "module": "lib/module/index",
+  "source": "src/index",
+  "browser": "lib/module/index",
+  "types": "lib/typescript/src/index.d.ts",
+  "files": [
+    "src",
+    "lib",
+    "!ios/build",
+    "!android/build",
+    "!android/gradle",
+    "!android/gradlew",
+    "!android/gradlew.bat",
+    "!android/local.properties",
+    "!**/__tests__",
+    "!**/__fixtures__",
+    "!**/__mocks__",
+    "!**/.*"
+  ],
+  "scripts": {
+    "build": "yarn tsc && yarn lint && yarn test --ci --silent && yarn clean && bob build",
+    "build:release": "yarn build && yarn flow",
+    "clean": "del-cli lib",
+    "dgraph": "depcruise src --include-only \"^src\" --output-type dot | dot -T svg > dependency-graph.svg",
+    "flow": ". ./scripts/flowgen.sh",
+    "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "prepack": "yarn build:release",
+    "prepublish:beta": "yarn build:release",
+    "publish:beta": "npm publish --scope yoroi --tag beta --access beta",
+    "prepublish:prod": "yarn build:release",
+    "publish:prod": "npm publish --scope yoroi --access public",
+    "release": "release-it",
+    "test": "jest",
+    "test:watch": "jest --watch --debug",
+    "tsc": "tsc --noEmit -p tsconfig.json"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "prettier": {
+    "bracketSpacing": false,
+    "quoteProps": "consistent",
+    "semi": false,
+    "singleQuote": true,
+    "tabWidth": 2,
+    "trailingComma": "all",
+    "useTabs": false,
+    "printWidth": 120
+  },
+  "eslintConfig": {
+    "extends": [
+      "@react-native-community",
+      "prettier"
+    ],
+    "rules": {
+      "prettier/prettier": [
+        "error",
+        {
+          "quoteProps": "consistent",
+          "bracketSpacing": false,
+          "singleQuote": true,
+          "tabWidth": 2,
+          "trailingComma": "all",
+          "useTabs": false,
+          "semi": false
+        }
+      ]
+    },
+    "root": true
+  },
+  "eslintIgnore": [
+    "node_modules/",
+    "lib/",
+    "babel.config.js",
+    "jest.setup.js",
+    "coverage/",
+    "src/connector.js"
+  ],
+  "jest": {
+    "collectCoverage": true,
+    "coveragePathIgnorePatterns": [
+      "connector.js",
+      "manager.mocks.ts"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}",
+      "!src/**/*.d.ts"
+    ],
+    "coverageReporters": [
+      "text-summary",
+      "html"
+    ],
+    "modulePathIgnorePatterns": [
+      "<rootDir>/example/node_modules",
+      "<rootDir>/lib/"
+    ],
+    "preset": "react-native",
+    "setupFiles": [
+      "<rootDir>/jest.setup.js"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 100,
+        "functions": 100,
+        "lines": 100,
+        "statements": 100
+      }
+    }
+  },
+  "dependencies": {
+    "axios": "^1.5.0",
+    "zod": "^3.22.1"
+  },
+  "devDependencies": {
+    "@commitlint/config-conventional": "^17.0.2",
+    "@react-native-async-storage/async-storage": "^1.19.3",
+    "@react-native-community/eslint-config": "^3.0.2",
+    "@release-it/conventional-changelog": "^5.0.0",
+    "@testing-library/jest-dom": "^6.0.0",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/react-hooks": "^8.0.1",
+    "@testing-library/react-native": "^12.3.0",
+    "@tsconfig/react-native": "^3.0.3",
+    "@types/jest": "^29.5.12",
+    "@types/react": "^18.2.55",
+    "@types/react-test-renderer": "^18.0.7",
+    "@yoroi/types": "1.5.4",
+    "axios-mock-adapter": "^1.21.5",
+    "commitlint": "^17.0.2",
+    "del-cli": "^5.0.0",
+    "dependency-cruiser": "^13.1.1",
+    "eslint": "^8.4.1",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-ft-flow": "^3.0.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "flowgen": "^1.21.0",
+    "jest": "^28.1.1",
+    "pod-install": "^0.1.0",
+    "prettier": "^2.0.5",
+    "react": "18.2.0",
+    "react-native": "~0.71.0",
+    "react-native-builder-bob": "^0.20.4",
+    "react-native-mmkv": "^2.11.0",
+    "react-query": "^3.39.3",
+    "react-test-renderer": "^18.2.0",
+    "release-it": "^15.0.0",
+    "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "@react-native-async-storage/async-storage": ">= 1.19.3 <= 1.20.0",
+    "react": ">= 16.8.0 <= 19.0.0",
+    "react-native-mmkv": "^2.11.0",
+    "react-query": "^3.39.3"
+  },
+  "packageManager": "yarn@1.22.21",
+  "engines": {
+    "node": ">= 16.19.0"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "commonjs",
+      "module",
+      [
+        "typescript",
+        {
+          "project": "tsconfig.build.json",
+          "tsc": "./node_modules/.bin/tsc"
+        }
+      ]
+    ]
+  },
+  "release-it": {
+    "git": {
+      "commitMessage": "chore: release ${version}",
+      "tagName": "v${version}"
+    },
+    "npm": {
+      "publish": true
+    },
+    "github": {
+      "release": false
+    },
+    "plugins": {
+      "@release-it/conventional-changelog": {
+        "preset": "angular"
+      }
+    }
+  }
+}

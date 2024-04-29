@@ -190,6 +190,7 @@ export type StakingCenterRoutes = {
     poolId: string
     yoroiUnsignedTx: YoroiUnsignedTx
   }
+  'delegation-failed-tx': undefined
 }
 
 export type SwapTabRoutes = {
@@ -270,7 +271,11 @@ export type BrowserRoutes = {
 export type DashboardRoutes = {
   'staking-dashboard-main': undefined
   'staking-center': NavigatorScreenParams<StakingCenterRoutes>
-  'delegation-confirmation': undefined
+  'delegation-confirmation': {
+    poolId: string
+    yoroiUnsignedTx: YoroiUnsignedTx
+  }
+  'delegation-failed-tx': undefined
 }
 
 export type VotingRegistrationRoutes = {

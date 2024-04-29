@@ -3,10 +3,8 @@ import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {DAppCategory, TDAppCategory} from './DAppMock'
-
 type Props = {
-  category: TDAppCategory
+  category: string
 }
 export const LabelCategoryDApp = ({category}: Props) => {
   const {styles, colors} = useStyles()
@@ -19,7 +17,7 @@ export const LabelCategoryDApp = ({category}: Props) => {
       colors={colors.gradientColor}
     >
       <View style={styles.labelContainer}>
-        <Text style={styles.labelText}>{DAppCategory[category] ?? ''}</Text>
+        <Text style={styles.labelText}>{category}</Text>
       </View>
     </LinearGradient>
   )

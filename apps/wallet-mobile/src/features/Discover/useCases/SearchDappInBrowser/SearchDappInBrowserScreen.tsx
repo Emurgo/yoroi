@@ -4,11 +4,10 @@ import * as React from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 
 import {useBrowser} from '../../common/BrowserProvider'
-import {getGoogleSearchItem} from '../../common/DAppMock'
-import {urlWithProtocol, validUrl} from '../../common/helpers'
+import {getGoogleSearchItem, urlWithProtocol, validUrl} from '../../common/helpers'
 import {useNavigateTo} from '../../common/useNavigateTo'
 import {BrowserSearchToolbar} from '../BrowseDapp/BrowserSearchToolbar'
-import {DAppItem} from '../SelectDappFromList/DAppItem/DAppItem'
+import {DAppListItem} from '../SelectDappFromList/DAppListItem/DAppListItem'
 
 const getUrl = (searchValue: string, isEngineSearch: boolean) => {
   if (isEngineSearch || !validUrl(searchValue)) {
@@ -70,7 +69,7 @@ export const SearchDappInBrowserScreen = () => {
 
       <ScrollView style={styles.dAppContainer}>
         {searchValue !== '' && (
-          <DAppItem key={googleItem.id} dApp={googleItem} connected={false} onPress={() => handleSubmit(true)} />
+          <DAppListItem key={googleItem.id} dApp={googleItem} connected={false} onPress={() => handleSubmit(true)} />
         )}
       </ScrollView>
     </View>
