@@ -49,6 +49,7 @@ import * as legacyApi from '../api'
 import {encryptWithPassword} from '../catalyst/catalystCipher'
 import {generatePrivateKeyForCatalyst} from '../catalyst/catalystUtils'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
+import * as cip30 from '../cip30'
 import {API_ROOT, MAX_GENERATED_UNUSED, PRIMARY_TOKEN, PRIMARY_TOKEN_INFO} from '../constants/mainnet/constants'
 import {CardanoError, InvalidState} from '../errors'
 import {ADDRESS_TYPE_TO_CHANGE} from '../formatPath'
@@ -415,6 +416,10 @@ export class ByronWallet implements YoroiWallet {
     } catch (e) {
       throw new InvalidState((e as Error).message)
     }
+  }
+
+  getBalance(tokenId = '*') {
+    return cip30.getBalance(tokenId, this.utxos, this.primaryTokenInfo.id)
   }
 
   async sync() {

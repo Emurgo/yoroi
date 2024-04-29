@@ -35,13 +35,14 @@ import type {
   YoroiNftModerationStatus,
 } from '../../types'
 import {NETWORK_REGISTRY, StakingInfo, YoroiSignedTx, YoroiUnsignedTx} from '../../types'
-import {asQuantity, Quantities, Utxos} from '../../utils'
+import {asQuantity, Quantities} from '../../utils'
 import {validatePassword} from '../../utils/validators'
 import {Cardano, CardanoMobile} from '../../wallets'
 import * as legacyApi from '../api'
 import {encryptWithPassword} from '../catalyst/catalystCipher'
 import {generatePrivateKeyForCatalyst} from '../catalyst/catalystUtils'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
+import * as cip30 from '../cip30'
 import {createSwapCancellationLedgerPayload} from '../common/signatureUtils'
 import * as MAINNET from '../constants/mainnet/constants'
 import * as SANCHONET from '../constants/sanchonet/constants'
@@ -66,10 +67,11 @@ import {
   YoroiWallet,
 } from '../types'
 import {yoroiUnsignedTx} from '../unsignedTx'
-import {deriveRewardAddressHex, identifierToCardanoAsset, toRecipients} from '../utils'
+import {deriveRewardAddressHex, toRecipients} from '../utils'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
 import {utxosMaker} from '../utxoManager/utxos'
 import {makeKeys} from './makeKeys'
+
 type WalletState = {
   lastGeneratedAddressIndex: number
 }
@@ -911,38 +913,8 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       return doesCardanoAppVersionSupportCIP36(await getCardanoAppMajorVersion(this.hwDeviceInfo, useUSB))
     }
 
-    async getBalance(tokenId = '*') {
-      if (tokenId === '*') tokenId = '.'
-      const amounts = Utxos.toAmounts(this.utxos, this.primaryTokenInfo.id)
-      const value = await CardanoMobile.Value.new(await CardanoMobile.BigNum.fromStr(amounts[this.primaryTokenInfo.id]))
-      const normalizedInHex = await Promise.all(
-        Object.keys(amounts).map(async (tokenId) => {
-          if (tokenId === '.' || tokenId === '' || tokenId === this.primaryTokenInfo.id) return null
-          const {policyId, name} = await identifierToCardanoAsset(tokenId)
-          const amount = amounts[tokenId]
-          return {policyIdHex: await policyId.toHex(), nameHex: await name.toHex(), amount}
-        }),
-      )
-
-      const groupedByPolicyId = _.groupBy(normalizedInHex.filter(Boolean), 'policyIdHex')
-
-      const multiAsset = await CardanoMobile.MultiAsset.new()
-      for (const policyIdHex of Object.keys(groupedByPolicyId)) {
-        const assetValue = groupedByPolicyId[policyIdHex]
-        if (!assetValue) continue
-        const policyId = await CardanoMobile.ScriptHash.fromHex(policyIdHex)
-        const assets = await CardanoMobile.Assets.new()
-        for (const asset of assetValue) {
-          if (!asset) continue
-          const assetName = await CardanoMobile.AssetName.fromHex(asset.nameHex)
-          const assetValue = await CardanoMobile.BigNum.fromStr(asset.amount)
-          await assets.insert(assetName, assetValue)
-        }
-        await multiAsset.insert(policyId, assets)
-      }
-      await value.setMultiasset(multiAsset)
-
-      return Buffer.from(await value.toBytes()).toString('hex')
+    getBalance(tokenId = '*') {
+      return cip30.getBalance(tokenId, this.utxos, this.primaryTokenInfo.id)
     }
 
     async signSwapCancellationWithLedger(cbor: string, useUSB: boolean): Promise<void> {

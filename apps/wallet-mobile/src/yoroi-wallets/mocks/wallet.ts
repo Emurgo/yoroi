@@ -75,6 +75,9 @@ const wallet: YoroiWallet = {
   ledgerSupportsCIP36: async () => {
     return true
   },
+  getBalance: (): Promise<string> => {
+    return Promise.resolve('1a062ea8a0')
+  },
   getCollateralInfo: () => {
     return {
       utxo: {

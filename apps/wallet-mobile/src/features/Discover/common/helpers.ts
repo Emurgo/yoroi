@@ -1,5 +1,4 @@
-import {connectionStorageMaker, dappConnectorMaker} from '@yoroi/dapp-connector'
-import {dappConnectorApiMaker} from '@yoroi/dapp-connector'
+import {connectionStorageMaker, dappConnectorApiMaker, dappConnectorMaker, ResolverWallet} from '@yoroi/dapp-connector'
 import {App} from '@yoroi/types'
 import {Alert} from 'react-native'
 
@@ -59,9 +58,10 @@ export const isGoogleSearchItem = (dApp: DAppItem) => dApp.id === googleDappId
 
 export const createDappConnector = (appStorage: App.Storage, wallet: YoroiWallet) => {
   const api = dappConnectorApiMaker()
-  const handlerWallet = {
+  const handlerWallet: ResolverWallet = {
     id: wallet.id,
     networkId: wallet.networkId,
+    getBalance: (tokenId) => wallet.getBalance(tokenId),
     confirmConnection: async (origin: string) => {
       return new Promise<boolean>((resolve) => {
         // TODO: Use modal with translations here instead of alert
