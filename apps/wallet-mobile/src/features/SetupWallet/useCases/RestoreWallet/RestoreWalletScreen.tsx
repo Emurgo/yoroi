@@ -3,10 +3,11 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
 import {Api} from '@yoroi/types'
+import {validateMnemonic} from 'bip39'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
-import {InteractionManager, StyleSheet, Text, View} from 'react-native'
-import {ScrollView} from 'react-native-gesture-handler'
+import {InteractionManager, Keyboard, StyleSheet, Text, View} from 'react-native'
+import {FlatList, ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Icon, KeyboardAvoidingView, useModal} from '../../../../components'
@@ -15,6 +16,7 @@ import {showErrorDialog} from '../../../../dialogs'
 import {errorMessages} from '../../../../i18n/global-messages'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useWalletNavigation, WalletInitRouteNavigation} from '../../../../navigation'
+import {isEmptyString} from '../../../../utils'
 import {useWalletManager} from '../../../../wallet-manager/WalletManagerContext'
 import {InvalidState} from '../../../../yoroi-wallets/cardano/errors'
 import {makeKeys} from '../../../../yoroi-wallets/cardano/shelley/makeKeys'
@@ -25,9 +27,17 @@ import {MnemonicInput} from '../../common/MnemonicInput'
 import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
 import {useStrings} from '../../common/useStrings'
 
+export type MnemonicWordInputRef = {
+  focus: () => void
+  word: string
+  selectWord: (matchingWord: string) => void
+}
+
 export const RestoreWalletScreen = () => {
   const {styles} = useStyles()
+  const strings = useStrings()
   const bold = useBold()
+  const intl = useIntl()
   const [mnemonic, setMnemonic] = React.useState('')
   const navigation = useNavigation<WalletInitRouteNavigation>()
   const {publicKeyHexChanged, mnemonicChanged, mnemonicType} = useSetupWallet()
@@ -35,11 +45,60 @@ export const RestoreWalletScreen = () => {
   const walletManager = useWalletManager()
   const {walletMetas} = useWalletMetas(walletManager)
   const {openModal} = useModal()
-  const [suggestedWords, setSuggestedWords] = React.useState<Array<string>>([])
-
-  const strings = useStrings()
+  const {navigateToTxHistory} = useWalletNavigation()
+  const selectWalletMeta = useSetSelectedWalletMeta()
+  const selectWallet = useSetSelectedWallet()
+  const [focusedIndex, setFocusedIndex] = React.useState<number>(0)
+  const [isValidPhrase, setIsValidPhrase] = React.useState(false)
 
   if (mnemonicType === null) throw new Error('mnemonicType missing')
+
+  const [suggestedWords, setSuggestedWords] = React.useState<Array<string>>([])
+  const [mnemonicSelectedWords, setMnemonicSelectedWords] = React.useState<Array<string>>(
+    Array.from({length: mnemonicType}).map(() => ''),
+  )
+  const mnenonicRefs = React.useRef(mnemonicSelectedWords.map(() => React.createRef<MnemonicWordInputRef>())).current
+
+  const onSelect = (index: number, word: string) => {
+    const newWords = [...mnemonicSelectedWords]
+    setMnemonicSelectedWords(newWords)
+    setSuggestedWords([])
+    newWords[index] = word
+    mnenonicRefs[index].current?.selectWord(isEmptyString(word) ? '' : word)
+
+    const mnemonicWordsComplete = newWords.every(Boolean)
+    const isValid: boolean = mnemonicWordsComplete ? validateMnemonic(newWords.join(' ')) : false
+
+    if (mnemonicWordsComplete && isValid) {
+      Keyboard.dismiss()
+      setIsValidPhrase(true)
+      setMnemonic(mnemonicSelectedWords.join(' '))
+      track.restoreWalletEnterPhraseStepStatus({recovery_prhase_status: true})
+
+      return
+    }
+
+    if (mnemonicWordsComplete && !isValid) {
+      setIsValidPhrase(false)
+      setMnemonic(mnemonicSelectedWords.join(' '))
+      track.restoreWalletEnterPhraseStepStatus({recovery_prhase_status: false})
+
+      return
+    }
+
+    if (!mnemonicWordsComplete) {
+      if (isValid) setIsValidPhrase(false)
+
+      const newIndex = index + 1
+      mnenonicRefs[newIndex]?.current?.focus()
+
+      return
+    }
+  }
+
+  const onFocus = (index: number) => {
+    setFocusedIndex(index)
+  }
 
   useFocusEffect(
     React.useCallback(() => {
@@ -47,11 +106,6 @@ export const RestoreWalletScreen = () => {
       track.restoreWalletEnterPhraseStepViewed({recovery_phrase_lenght: recoveryPhraseLenght})
     }, [mnemonicType, track]),
   )
-
-  const intl = useIntl()
-  const {navigateToTxHistory} = useWalletNavigation()
-  const selectWalletMeta = useSetSelectedWalletMeta()
-  const selectWallet = useSetSelectedWallet()
 
   const {openWallet} = useOpenWallet({
     onSuccess: ([wallet, walletMeta]) => {
@@ -110,7 +164,7 @@ export const RestoreWalletScreen = () => {
           <StepperProgress currentStep={1} currentStepTitle={strings.stepRestoreWalletScreen} totalSteps={2} />
         </View>
 
-        <ScrollView style={styles.scroll} bounces={false} keyboardShouldPersistTaps="handled">
+        <ScrollView style={styles.scroll} bounces={false}>
           <View>
             <Text style={styles.title}>{strings.restoreWalletScreenTitle(bold)}</Text>
 
@@ -118,40 +172,38 @@ export const RestoreWalletScreen = () => {
           </View>
 
           <MnemonicInput
+            isValidPhrase={isValidPhrase}
             suggestedWords={suggestedWords}
             setSuggestedWords={setSuggestedWords}
             length={mnemonicType}
             onDone={setMnemonic}
+            mnemonicSelectedWords={mnemonicSelectedWords}
+            setMnemonicSelectedWords={setMnemonicSelectedWords}
+            onSelect={onSelect}
+            onFocus={onFocus}
+            mnemonic={mnemonic}
+            mnenonicRefs={mnenonicRefs}
           />
         </ScrollView>
 
-        {mnemonic !== '' && (
-          <View style={styles.padding}>
-            <Button title={strings.next} style={styles.button} onPress={handleOnNext} />
-          </View>
-        )}
+        {mnemonic !== '' && isValidPhrase && <NextButton onPress={handleOnNext} />}
 
         {suggestedWords.length > 0 && (
-          <ScrollView
-            contentContainerStyle={{flexDirection: 'row', alignItems: 'center'}}
-            style={{
-              height: 100,
-              width: '100%',
-              backgroundColor: 'red' /* flexDirection: 'row', alignItems: 'center' */,
-            }}
-            horizontal
-          >
-            {suggestedWords.map((word) => (
-              <View key={word} style={{padding: 5}}>
-                <View style={{height: 50, width: 50, backgroundColor: 'blue'}}>
-                  <Text>{word}</Text>
-                </View>
-              </View>
-            ))}
-          </ScrollView>
+          <WordSuggestionList data={suggestedWords} index={focusedIndex} onSelect={onSelect} />
         )}
       </KeyboardAvoidingView>
     </SafeAreaView>
+  )
+}
+
+const NextButton = ({onPress}: {onPress: () => void}) => {
+  const {styles} = useStyles()
+  const strings = useStrings()
+
+  return (
+    <View style={styles.padding}>
+      <Button title={strings.next} style={styles.button} onPress={onPress} />
+    </View>
   )
 }
 
@@ -194,6 +246,48 @@ const Modal = ({
       <Space height="xl" />
     </View>
   )
+}
+
+const WordSuggestionList = ({
+  data,
+  index,
+  onSelect,
+}: {
+  data: Array<string>
+  index: number
+  onSelect: (index: number, word: string) => void
+}) => {
+  const {styles} = useStyles()
+  return (
+    <View style={styles.suggestions}>
+      <FlatList
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        data={data}
+        keyboardShouldPersistTaps="handled"
+        renderItem={({item: word, index: wordIndex}) => (
+          <>
+            {wordIndex === 0 && <Space width="l" />}
+
+            <WordSuggestionButton
+              onPress={() => {
+                onSelect(index, word)
+              }}
+              title={word}
+            />
+
+            {wordIndex === data.length - 1 && <Space width="l" />}
+          </>
+        )}
+        ItemSeparatorComponent={() => <Space width="s" />}
+      />
+    </View>
+  )
+}
+
+const WordSuggestionButton = ({title, onPress}: {title: string; onPress: () => void}) => {
+  const {styles} = useStyles()
+  return <Button onPress={onPress} style={styles.suggestion} textStyles={styles.suggestionText} title={title} />
 }
 
 const useBold = () => {
@@ -256,6 +350,25 @@ const useStyles = () => {
     },
     modal: {
       flex: 1,
+    },
+    suggestions: {
+      borderColor: theme.color.gray[200],
+      borderTopWidth: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingTop: 16,
+      paddingBottom: 19,
+    },
+    suggestion: {
+      borderColor: theme.color.primary[500],
+      borderWidth: 2,
+      borderRadius: 8,
+      backgroundColor: 'transparent',
+    },
+    suggestionText: {
+      ...theme.typography['body-1-l-regular'],
+      textTransform: 'none',
+      color: theme.color.primary[500],
     },
   })
 

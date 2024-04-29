@@ -21,7 +21,7 @@ export type TextInputProps = RNTextInputProps &
     faded?: boolean
     showErrorOnBlur?: boolean
     selectTextOnAutoFocus?: boolean
-    isPhraseValid: boolean
+    isValidPhrase: boolean
   }
 
 const useDebounced = (callback: VoidFunction, value: unknown, delay = 1000) => {
@@ -60,7 +60,7 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: React.For
     onChange,
     autoFocus,
     selectTextOnAutoFocus,
-    isPhraseValid = false,
+    isValidPhrase = false,
     ...restProps
   } = props
 
@@ -97,9 +97,9 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: React.For
       {isWordValid && isEmptyString(errorText) && (
         <LinearGradient
           style={[StyleSheet.absoluteFill, {opacity: 1, borderRadius: 8, top: 6}]}
-          start={{x: isPhraseValid ? 0 : 1, y: 0}}
-          end={{x: 0, y: isPhraseValid ? 1 : 0}}
-          colors={isPhraseValid ? colors.gradientGreen : colors.gradientBlueGreen}
+          start={{x: isValidPhrase ? 0 : 1, y: 0}}
+          end={{x: 0, y: isValidPhrase ? 1 : 0}}
+          colors={isValidPhrase ? colors.gradientGreen : colors.gradientBlueGreen}
         />
       )}
 

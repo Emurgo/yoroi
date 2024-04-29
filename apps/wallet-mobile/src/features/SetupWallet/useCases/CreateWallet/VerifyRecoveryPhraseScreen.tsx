@@ -51,9 +51,9 @@ export const VerifyRecoveryPhraseScreen = () => {
   }
 
   const isPhraseComplete = userEntries.length === mnemonicEntries.length
-  const isPhraseValid = userEntries.map((entry) => entry.word).join(' ') === mnemonic
+  const isValidPhrase = userEntries.map((entry) => entry.word).join(' ') === mnemonic
 
-  const disabled = !isPhraseComplete || !isPhraseValid
+  const disabled = !isPhraseComplete || !isValidPhrase
 
   const lastUserEntry = userEntries.findLast((last) => last)
 
@@ -79,7 +79,7 @@ export const VerifyRecoveryPhraseScreen = () => {
         onPress={removeLastEntry}
         defaultMnemonic={mnemonicDefault}
         userEntries={userEntries}
-        error={isPhraseComplete && !isPhraseValid}
+        error={isPhraseComplete && !isValidPhrase}
       />
 
       {isPhraseComplete && isLastWordValid() && (
@@ -170,7 +170,7 @@ const MnemonicInput = ({defaultMnemonic, userEntries, onPress}: MnemonicInputPro
   const {mnemonic} = useSetupWallet()
 
   const isPhraseComplete = userEntries.length === defaultMnemonic.length
-  const isPhraseValid = userEntries.map((entry) => entry.word).join(' ') === mnemonic
+  const isValidPhrase = userEntries.map((entry) => entry.word).join(' ') === mnemonic
 
   const lastUserEntry = userEntries.findLast((last) => last)
 
@@ -222,9 +222,9 @@ const MnemonicInput = ({defaultMnemonic, userEntries, onPress}: MnemonicInputPro
                     {!recoveryWordError && (
                       <LinearGradient
                         style={[StyleSheet.absoluteFill, {opacity: 1}]}
-                        start={isPhraseComplete && isPhraseValid ? {x: 0, y: 0} : {x: 1, y: 0}}
-                        end={isPhraseComplete && isPhraseValid ? {x: 0, y: 1} : {x: 0, y: 0}}
-                        colors={isPhraseComplete && isPhraseValid ? colors.gradientGreen : colors.gradientBlueGreen}
+                        start={isPhraseComplete && isValidPhrase ? {x: 0, y: 0} : {x: 1, y: 0}}
+                        end={isPhraseComplete && isValidPhrase ? {x: 0, y: 1} : {x: 0, y: 0}}
+                        colors={isPhraseComplete && isValidPhrase ? colors.gradientGreen : colors.gradientBlueGreen}
                       />
                     )}
 
