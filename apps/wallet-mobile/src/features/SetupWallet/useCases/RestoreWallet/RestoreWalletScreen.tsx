@@ -69,9 +69,6 @@ export const RestoreWalletScreen = () => {
     const mnemonicWordsComplete = newWords.every(Boolean)
     const isValid: boolean = mnemonicWordsComplete ? validateMnemonic(newWords.join(' ')) : false
 
-    console.log('isValid', isValid)
-    console.log('mnemonicWordsComplete', mnemonicWordsComplete)
-
     if (mnemonicWordsComplete && isValid) {
       Keyboard.dismiss()
       setIsValidPhrase(true)
