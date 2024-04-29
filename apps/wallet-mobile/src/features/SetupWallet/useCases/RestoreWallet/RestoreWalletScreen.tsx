@@ -80,7 +80,6 @@ export const RestoreWalletScreen = () => {
 
     if (mnemonicWordsComplete && !isValid) {
       setIsValidPhrase(false)
-      setMnemonic(newWords.join(' '))
       track.restoreWalletEnterPhraseStepStatus({recovery_prhase_status: false})
 
       return
