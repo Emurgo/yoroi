@@ -41,7 +41,7 @@ export const MnemonicInput = ({
   const {styles} = useStyles()
 
   const isMnemonicCompleted = !isEmptyString(mnemonic)
-  const error = isMnemonicCompleted && !isValidPhrase ? strings.invalidChecksum : ''
+  const error = !isValidPhrase && isMnemonicCompleted ? strings.invalidChecksum : ''
 
   return (
     <View>
@@ -57,7 +57,7 @@ export const MnemonicInput = ({
 
       <Space height="l" />
 
-      {!isEmptyString(error) && isMnemonicCompleted && (
+      {!isEmptyString(error) && (
         <View style={styles.textView}>
           <AlertIllustration />
 
