@@ -1,6 +1,6 @@
 import {Portfolio, Transfer} from '@yoroi/types'
 import {targetGetTokenTotalUsedByOthers} from './target-get-token-total-used-by-others'
-import {isPrimary} from '@yoroi/portfolio'
+import {isPrimaryToken} from '@yoroi/portfolio'
 
 export function targetGetTokenBalanceBreakdown({
   balances,
@@ -38,7 +38,7 @@ export function targetGetTokenBalanceBreakdown({
     if (amount) {
       balance = amount.quantity
       available = balance - used
-      locked = isPrimary(amount.info)
+      locked = isPrimaryToken(amount.info)
         ? primaryBreakdown.lockedAsStorageCost
         : 0n
       spendable = available - locked

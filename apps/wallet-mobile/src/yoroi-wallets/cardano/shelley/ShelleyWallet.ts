@@ -408,7 +408,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       this.portfolioPrimaryTokenInfo = portfolioPrimaryTokenInfo
     }
 
-    // portfoliio
+    // portfolio - here to get snapshots only, avoid using it directly
     get balances() {
       return this.balanceManager.getBalances()
     }
@@ -420,6 +420,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     get primaryBreakdown() {
       return this.balanceManager.getPrimaryBreakdown()
     }
+    // end of portfolio
 
     get receiveAddresses(): Addresses {
       return this.externalAddresses.slice(0, this.numReceiveAddresses)

@@ -27,6 +27,8 @@ import {useStrings} from '../../../common/strings'
 import {useSelectedSecondaryAmountsCounter} from '../../../common/useSelectedSecondaryAmountsCounter'
 import {useTokenQuantities} from '../../../common/useTokenQuantities'
 import {MaxAmountsPerTx} from './Show/MaxAmountsPerTx'
+import {usePortfolioPrimaryBreakdown} from '../../../../Portfolio/common/hooks/usePortfolioPrimaryBreakdown'
+import {isPrimary, isPrimaryToken} from '@yoroi/portfolio'
 
 export const SelectTokenFromListScreen = () => {
   const strings = useStrings()
@@ -212,11 +214,14 @@ const Tab = <T,>({onPress, active, tab, label}: TabProps<T>) => {
   )
 }
 
-type SelectableAssetItemProps = {disabled?: boolean; tokenInfo: Balance.TokenInfo; wallet: YoroiWallet}
-const SelectableAssetItem = ({tokenInfo, disabled, wallet}: SelectableAssetItemProps) => {
+type SelectableAssetItemProps = {disabled?: boolean; amount: Portfolio.Token.Amount; wallet: YoroiWallet}
+const SelectableAssetItem = ({amount, disabled, wallet}: SelectableAssetItemProps) => {
   const {styles} = useStyles()
+  const navigation = useNavigation<TxHistoryRouteNavigation>()
   const {closeSearch} = useSearch()
   const {targets, tokenSelectedChanged, amountChanged, selectedTargetIndex, selectedTokenId} = useTransfer()
+  const {records: balances} = usePortfolioBalances({wallet})
+  const primaryBreakdown = usePortfolioPrimaryBreakdown({wallet})
   const {spendable} = targetGetTokenBalanceBreakdown({
     balances,
     primaryBreakdown,
@@ -224,13 +229,11 @@ const SelectableAssetItem = ({tokenInfo, disabled, wallet}: SelectableAssetItemP
     selectedTokenId,
     targets,
   })
-  const navigation = useNavigation<TxHistoryRouteNavigation>()
-  const balances = useBalances(wallet)
 
-  const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
+  const isPrimary = isPrimaryToken(amount.info)
 
   const onSelect = () => {
-    tokenSelectedChanged(tokenInfo.id)
+    tokenSelectedChanged(amount.info.id)
     closeSearch()
 
     // if the balance is atomic there is no need to edit the amount
