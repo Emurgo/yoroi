@@ -419,6 +419,7 @@
   "components.settings.walletsettingscreen.byronWallet": "Byron-era wallet",
   "components.settings.walletsettingscreen.changePassword": "Change spending password",
   "components.settings.walletsettingscreen.easyConfirmation": "Easy transaction confirmation",
+  "components.settings.walletsettingscreen.easyConfirmationInfo":"Skip the password and approve transactions with biometrics",
   "components.settings.walletsettingscreen.general": "General",
   "components.settings.walletsettingscreen.logout": "Logout",
   "components.settings.walletsettingscreen.removeWallet": "Remove wallet",
