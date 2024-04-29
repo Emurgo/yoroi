@@ -156,8 +156,7 @@ const Modal = ({amount, address}: {amount: string; address: string}) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
     root: {

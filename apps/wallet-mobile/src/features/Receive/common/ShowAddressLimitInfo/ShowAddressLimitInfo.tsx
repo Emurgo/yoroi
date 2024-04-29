@@ -32,7 +32,7 @@ export const ShowAddressLimitInfo = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
     smallAddressCard: {
@@ -42,17 +42,17 @@ const useStyles = () => {
       justifyContent: 'space-between',
       gap: 12,
       padding: 16,
-      backgroundColor: theme.color.cyan[100],
+      backgroundColor: color.sys_cyan_c100,
     },
     text: {
-      ...theme.atoms.body_2_md_regular,
-      color: theme.color.gray_cmax,
+      ...atoms.body_2_md_regular,
+      color: color.gray_cmax,
     },
   })
 
   const colors = {
-    icon: theme.color.primary_c500,
-    zendeskLink: theme.color.primary_c500,
+    icon: color.primary_c500,
+    zendeskLink: color.primary_c500,
   }
 
   return {styles, colors} as const

@@ -138,8 +138,7 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {atoms, color} = useTheme()
 
   const styles = StyleSheet.create({
     container: {
@@ -179,7 +178,6 @@ const useStyles = () => {
       fontSize: 24,
     },
     label: {
-      fontSize: 16,
       ...atoms.body_1_lg_medium,
     },
     infoContainer: {
@@ -205,7 +203,7 @@ const useStyles = () => {
     },
   })
   const colors = {
-    gradientColor: color.gradients['blue-green'],
+    gradientColor: color.bg_gradient_1,
     white: color.white_static,
   }
 

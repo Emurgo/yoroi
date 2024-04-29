@@ -182,38 +182,38 @@ const OnlyDevButton = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     safeAreaView: {
       flex: 1,
       backgroundColor: color.white_static,
     },
     topButton: {
-      backgroundColor: theme.color.primary_c500,
+      backgroundColor: color.primary_c500,
     },
     button: {
-      backgroundColor: theme.color.primary_c500,
+      backgroundColor: color.primary_c500,
     },
     linkText: {
-      color: theme.color.primary_c500,
+      color: color.primary_c500,
     },
     link: {
-      ...theme.typography['button-2-m'],
+      ...atoms.button_2_md,
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
     },
     list: {
-      ...theme.atoms.p_lg,
+      ...atoms.p_lg,
     },
     actions: {
-      ...theme.atoms.px_lg,
+      ...atoms.px_lg,
     },
   })
 
   const colors = {
-    gray: theme.color.gray_c600,
-    lightGray: theme.color.gray_c200,
+    gray: color.gray_c600,
+    lightGray: color.gray_c200,
   }
 
   return {styles, colors} as const

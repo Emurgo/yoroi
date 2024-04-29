@@ -54,8 +54,7 @@ export const WarningBanner = ({
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography, padding} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     title: {
       marginVertical: 10,

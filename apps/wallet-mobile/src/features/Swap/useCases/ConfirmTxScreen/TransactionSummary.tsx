@@ -248,8 +248,7 @@ export const TransactionSummary = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     priceImpactRiskContainer: {
       flex: 1,
@@ -276,7 +275,7 @@ const useStyles = () => {
       color: color.gray_cmin,
     },
     cardTextValue: {
-      ...typography['heading-4-medium'],
+      ...atoms.heading_4_medium,
       lineHeight: 22,
       textAlign: 'right',
     },

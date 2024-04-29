@@ -35,8 +35,7 @@ export const Counter = ({openingText, counter, unitsText, closingText, style}: C
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {atoms, color} = useTheme()
 
   const styles = StyleSheet.create({
     counter: {

@@ -368,21 +368,21 @@ const useBold = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      ...theme.atoms.px_lg,
+      ...atoms.px_lg,
       justifyContent: 'space-between',
       backgroundColor: color.white_static,
     },
     title: {
-      ...theme.atoms.body_1_lg_regular,
-      color: theme.color.gray_c900,
+      ...atoms.body_1_lg_regular,
+      color: color.gray_c900,
     },
-    button: {backgroundColor: theme.color.primary_c500},
+    button: {backgroundColor: color.primary_c500},
     recoveryPhrase: {
-      ...theme.atoms.p__2xs,
+      ...atoms.p_2xs,
       minHeight: 182,
       borderRadius: 8,
       overflow: 'hidden',
@@ -404,8 +404,8 @@ const useStyles = () => {
       alignItems: 'center',
     },
     errorMessage: {
-      color: theme.color.magenta['500'],
-      ...theme.atoms.body_2_md_regular,
+      color: color.sys_magenta_c500,
+      ...atoms.body_2_md_regular,
     },
     successMessageContainer: {
       flexDirection: 'row',
@@ -413,14 +413,14 @@ const useStyles = () => {
       justifyContent: 'center',
     },
     successMessage: {
-      color: theme.color.gray_cmax,
+      color: color.gray_cmax,
       ...atoms.body_1_lg_medium,
     },
     errorBadge: {
-      color: theme.color.magenta['500'],
+      color: color.sys_magenta_c500,
     },
     errorBadgeBackground: {
-      backgroundColor: theme.color.magenta['100'],
+      backgroundColor: color.sys_magenta_c100,
     },
     words: {
       flexDirection: 'row',
@@ -433,14 +433,14 @@ const useStyles = () => {
       gap: 2,
     },
     wordBadgeContainerOutline: {
-      ...theme.atoms.px_xs,
-      ...theme.atoms.py_xs,
+      ...atoms.px_xs,
+      ...atoms.py_xs,
       borderRadius: 8,
       overflow: 'hidden',
     },
     wordBadgeContainer: {
-      ...theme.atoms.px_lg,
-      ...theme.atoms.py_sm,
+      ...atoms.px_lg,
+      ...atoms.py_sm,
       borderRadius: 8,
       overflow: 'hidden',
     },
@@ -449,11 +449,11 @@ const useStyles = () => {
       flexWrap: 'wrap',
     },
     wordBadgeText: {
-      ...theme.atoms.body_1_lg_regular,
-      color: theme.color.primary_c600,
+      ...atoms.body_1_lg_regular,
+      color: color.primary_c600,
     },
     usedWord: {
-      color: theme.color.primary['400'],
+      color: color.primary_c400,
     },
     usedWordBackground: {
       position: 'absolute',
@@ -470,9 +470,9 @@ const useStyles = () => {
   })
 
   const colors = {
-    error: theme.color.magenta['500'],
-    gradientBlueGreen: theme.color.gradients['blue-green'],
-    gradientGreen: theme.color.bg_gradient_2,
+    error: color.sys_magenta_c500,
+    gradientBlueGreen: color.bg_gradient_1,
+    gradientGreen: color.bg_gradient_2,
   }
 
   return {styles, colors} as const

@@ -68,11 +68,11 @@ export const ChooseMnemonicTypeScreen = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      ...theme.atoms.px_lg,
+      ...atoms.px_lg,
       backgroundColor: color.white_static,
     },
     icon: {

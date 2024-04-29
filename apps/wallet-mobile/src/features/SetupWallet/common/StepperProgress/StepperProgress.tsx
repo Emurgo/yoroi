@@ -65,7 +65,7 @@ export const StepperProgress = ({currentStep, currentStepTitle, totalSteps, styl
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flexDirection: 'row',
@@ -74,10 +74,10 @@ const useStyles = () => {
     bar: {
       flexDirection: 'row',
       gap: 16,
-      ...theme.atoms.py_lg,
+      ...atoms.py_lg,
     },
     step: {
-      backgroundColor: theme.color.primary_c600,
+      backgroundColor: color.primary_c600,
       alignItems: 'center',
       justifyContent: 'center',
       height: 24,
@@ -90,21 +90,21 @@ const useStyles = () => {
     isNext: {
       backgroundColor: color.white_static,
       borderWidth: 2,
-      borderColor: theme.color.gray_c400,
+      borderColor: color.gray_c400,
     },
     isPrevious: {
-      backgroundColor: theme.color.primary_c300,
+      backgroundColor: color.primary_c300,
     },
     stepNumber: {
-      ...theme.atoms.body_2_md_medium,
-      color: theme.color.primary_c100,
+      ...atoms.body_2_md_medium,
+      color: color.primary_c100,
     },
     isNextNumber: {
-      color: theme.color.gray_c400,
+      color: color.gray_c400,
     },
     currentStepTitle: {
       ...atoms.body_1_lg_medium,
-      color: theme.color.primary_c600,
+      color: color.primary_c600,
     },
   })
   return {styles} as const

@@ -45,8 +45,7 @@ export const ButtonGroup = <T extends string>({
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography, padding} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flexDirection: 'row',
@@ -66,7 +65,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    gradientColor: color.gradients.light,
+    gradientColor: color.bg_gradient_1,
   }
 
   return {colors, styles}

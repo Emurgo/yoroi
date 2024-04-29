@@ -262,8 +262,7 @@ const useBold = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     flex: {flexDirection: 'row', alignItems: 'center'},
     between: {justifyContent: 'space-between'},

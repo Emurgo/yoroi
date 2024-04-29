@@ -44,14 +44,14 @@ export const ButtonCard = ({title, subTitle, icon = null, onPress}: ButtonCardPr
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     container: {
       borderRadius: 8,
       height: 120,
       flexDirection: 'row',
       alignItems: 'center',
-      ...theme.atoms.px_lg,
+      ...atoms.px_lg,
       overflow: 'hidden',
       justifyContent: 'center',
     },
@@ -59,17 +59,17 @@ const useStyles = () => {
       justifyContent: 'space-between',
     },
     title: {
-      ...theme.typography['heading-4-medium'],
-      color: theme.color.gray_cmax,
+      ...atoms.heading_4_medium,
+      color: color.gray_cmax,
     },
     titleCentre: {
-      ...theme.typography['heading-4-medium'],
-      color: theme.color.black_static,
+      ...atoms.heading_4_medium,
+      color: color.black_static,
       textAlign: 'center',
     },
     subTitle: {
-      ...theme.atoms.body_1_lg_regular,
-      color: theme.color.gray_c900,
+      ...atoms.body_1_lg_regular,
+      color: color.gray_c900,
     },
     textContainer: {
       alignItems: 'center',
@@ -78,7 +78,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    gradientBlueGreen: theme.color.gradients['blue-green'],
+    gradientBlueGreen: color.bg_gradient_1,
   }
   return {styles, colors} as const
 }

@@ -82,8 +82,7 @@ const BulletPointItem = ({textRow, style}: BulletPointProps) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {padding, typography} = theme
+  const {atoms} = useTheme()
   const styles = StyleSheet.create({
     scrollView: {
       ...atoms.pr_sm,

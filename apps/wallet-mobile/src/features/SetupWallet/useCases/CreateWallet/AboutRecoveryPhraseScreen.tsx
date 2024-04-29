@@ -78,19 +78,19 @@ const useBold = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      ...theme.atoms.px_lg,
+      ...atoms.px_lg,
       justifyContent: 'space-between',
       backgroundColor: color.white_static,
     },
     aboutRecoveryPhraseTitle: {
-      ...theme.atoms.body_1_lg_regular,
-      color: theme.color.gray_c900,
+      ...atoms.body_1_lg_regular,
+      color: color.gray_c900,
     },
-    button: {backgroundColor: theme.color.primary_c500},
+    button: {backgroundColor: color.primary_c500},
     bolder: {
       ...atoms.body_1_lg_medium,
     },

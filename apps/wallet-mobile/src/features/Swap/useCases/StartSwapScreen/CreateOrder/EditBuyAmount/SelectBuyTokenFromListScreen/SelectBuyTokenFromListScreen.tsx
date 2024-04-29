@@ -225,8 +225,7 @@ const EmptySearchResult = ({assetSearchTerm}: {assetSearchTerm: string}) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -240,7 +239,6 @@ const useStyles = () => {
       paddingHorizontal: 16,
     },
     label: {
-      fontFamily: 'Rubik',
       ...atoms.body_3_sm_regular,
     },
     labels: {
@@ -286,7 +284,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    lightGreen: theme.color.secondary_c600,
+    lightGreen: color.secondary_c600,
   }
 
   return {styles, colors}

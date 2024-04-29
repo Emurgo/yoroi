@@ -188,11 +188,9 @@ const EmptySearchResult = ({assetSearchTerm}: {assetSearchTerm: string}) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     label: {
-      fontFamily: 'Rubik',
       ...atoms.body_3_sm_regular,
     },
     labels: {
@@ -232,7 +230,7 @@ const useStyles = () => {
     },
     contentText: {
       flex: 1,
-      ...typography['heading-4-medium'],
+      ...atoms.heading_4_medium,
       color: color.gray_cmax,
       paddingTop: 4,
       textAlign: 'center',

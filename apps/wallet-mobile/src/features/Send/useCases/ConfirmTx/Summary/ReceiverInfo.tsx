@@ -54,8 +54,7 @@ export const ReceiverInfo = ({target}: Props) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {typography, color} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     label: {
       ...atoms.body_2_md_regular,

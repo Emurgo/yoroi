@@ -90,8 +90,7 @@ export const WarnLimitPrice = ({onConfirm, orderData}: LimitPriceWarningProps) =
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     buttonContainer: {
       flex: 1,

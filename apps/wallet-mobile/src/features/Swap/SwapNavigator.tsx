@@ -16,7 +16,7 @@ const Tab = createMaterialTopTabNavigator<SwapTabRoutes>()
 export const SwapTabNavigator = () => {
   const strings = useStrings()
   const styles = useStyles()
-  const {theme} = useTheme()
+  const {atoms, color} = useTheme()
 
   // state data
   const wallet = useSelectedWallet()
@@ -65,7 +65,7 @@ export const SwapTabNavigator = () => {
     <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
       <Tab.Navigator
         screenOptions={({route}) => ({
-          ...defaultMaterialTopTabNavigationOptions(theme),
+          ...defaultMaterialTopTabNavigationOptions(atoms, color),
           tabBarLabel: route.name === 'token-swap' ? strings.tokenSwap : strings.orderSwap,
         })}
         style={styles.tab}

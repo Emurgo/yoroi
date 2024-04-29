@@ -58,21 +58,21 @@ export const Menu = () => {
         <AppSettings //
           label={strings.settings}
           onPress={navigateTo.settings}
-          left={<Icon.Gear size={24} color={color.gray['600']} />}
+          left={<Icon.Gear size={24} color={color.gray_c600} />}
         />
 
         <Staking
           label={strings.stakingCenter}
           onPress={navigateTo.stakingCenter}
-          left={<Icon.TabStaking size={24} color={color.gray['600']} />}
-          right={isPoolRetiring ? <Icon.Warning size={24} color={color.magenta[500]} /> : null}
+          left={<Icon.TabStaking size={24} color={color.gray_c600} />}
+          right={isPoolRetiring ? <Icon.Warning size={24} color={color.sys_magenta_c500} /> : null}
         />
 
         {isGovernanceFeatureEnabled && (
           <Governance
             label={strings.governanceCentre}
             onPress={navigateTo.governanceCentre}
-            left={<Icon.Governance size={24} color={color.gray['600']} />}
+            left={<Icon.Governance size={24} color={color.gray_c600} />}
           />
         )}
 
@@ -80,14 +80,14 @@ export const Menu = () => {
           <Catalyst //
             label={strings.catalystVoting}
             onPress={navigateTo.catalystVoting}
-            left={<Icon.Catalyst size={24} color={color.gray['600']} />}
+            left={<Icon.Catalyst size={24} color={color.gray_c600} />}
           />
         </Boundary>
 
         <KnowledgeBase //
           label={strings.knowledgeBase}
           onPress={navigateTo.knowledgeBase}
-          left={<Icon.Info size={24} color={color.gray['600']} />}
+          left={<Icon.Info size={24} color={color.gray_c600} />}
         />
 
         <Spacer fill />
@@ -153,7 +153,7 @@ const Item = ({
 
       <Spacer width={8} />
 
-      <Icon.Chevron direction="right" size={28} color={color.gray['600']} />
+      <Icon.Chevron direction="right" size={28} color={color.gray_c600} />
     </TouchableOpacity>
   )
 }

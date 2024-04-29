@@ -113,7 +113,7 @@ const getWalletItemMeta = (walletMeta: WalletMeta, colors: {white: string}): Wal
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     item: {
       flexDirection: 'row',
@@ -131,17 +131,17 @@ const useStyles = () => {
     },
     walletName: {
       ...atoms.body_1_lg_medium,
-      color: theme.color.gray_cmax,
+      color: color.gray_cmax,
       flex: 1,
     },
     walletMeta: {
-      color: theme.color.gray_c600,
-      ...theme.atoms.body_3_sm_regular,
+      color: color.gray_c600,
+      ...atoms.body_3_sm_regular,
       opacity: 0.5,
     },
     walletMetaPressed: {
-      color: theme.color.gray_cmax,
-      ...theme.atoms.body_3_sm_regular,
+      color: color.gray_cmax,
+      ...atoms.body_3_sm_regular,
       opacity: 1,
     },
   })

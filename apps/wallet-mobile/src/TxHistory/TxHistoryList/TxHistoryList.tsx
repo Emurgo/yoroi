@@ -105,8 +105,7 @@ const getTransactionsByDate = (transactions: Record<string, TransactionInfo>) =>
     .value()
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {padding} = theme
+  const {atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
       flex: 1,

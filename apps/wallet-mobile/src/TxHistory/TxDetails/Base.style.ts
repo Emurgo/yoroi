@@ -2,8 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import {StyleSheet} from 'react-native'
 
 export const useBaseStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {atoms, color} = useTheme()
 
   const styles = StyleSheet.create({
     assetHeading: {

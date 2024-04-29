@@ -19,7 +19,7 @@ export const PoolTransitionNotice = () => {
   return (
     <View style={styles.notice}>
       <Row>
-        <Icon.Warning size={20} color={color.magenta[500]} />
+        <Icon.Warning size={20} color={color.sys_magenta_c500} />
       </Row>
 
       <Text style={styles.text}>
@@ -44,28 +44,27 @@ export const PoolTransitionNotice = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
     notice: {
       flex: 1,
       padding: 16,
       gap: 12,
-      backgroundColor: color.magenta[100],
+      backgroundColor: color.sys_magenta_c100,
       borderRadius: 8,
     },
     text: {
-      color: color.gray.max,
-      ...typography['body-2-m-regular'],
+      color: color.gray_cmax,
+      ...atoms.body_2_md_regular,
     },
     bold: {
-      ...typography['body-2-m-medium'],
+      ...atoms.body_2_md_medium,
     },
     noticeButton: {
       flexGrow: 0,
-      backgroundColor: color.magenta[500],
-      ...typography['button-2-m'],
+      backgroundColor: color.sys_magenta_c500,
+      ...atoms.button_2_md,
     },
     actions: {
       flexDirection: 'row',

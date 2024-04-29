@@ -1,4 +1,4 @@
-import {padding, useTheme} from '@yoroi/theme'
+import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -135,7 +135,7 @@ const useStyles = () => {
     inputIcon: {
       position: 'absolute',
       right: 0,
-      ...padding['r-l'],
+      ...atoms.pr_lg,
       ...atoms.pt_sm,
     },
     checkboxText: {

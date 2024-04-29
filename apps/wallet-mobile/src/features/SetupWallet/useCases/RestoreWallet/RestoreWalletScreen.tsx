@@ -81,7 +81,7 @@ const useBold = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,
@@ -89,21 +89,21 @@ const useStyles = () => {
       backgroundColor: color.white_static,
     },
     title: {
-      ...theme.atoms.body_1_lg_regular,
-      color: theme.color.gray_c900,
+      ...atoms.body_1_lg_regular,
+      color: color.gray_c900,
     },
-    button: {backgroundColor: theme.color.primary_c500},
+    button: {backgroundColor: color.primary_c500},
     bolder: {
       ...atoms.body_1_lg_medium,
     },
     padding: {
-      ...theme.atoms.p_lg,
+      ...atoms.p_lg,
     },
   })
 
   const colors = {
-    gray900: theme.color.gray_c900,
-    gradientBlueGreen: theme.color.gradients['blue-green'],
+    gray900: color.gray_c900,
+    gradientBlueGreen: color.bg_gradient_1,
   }
 
   return {styles, colors} as const

@@ -102,8 +102,7 @@ export const ShareQRCodeCard = ({content, title, isCopying, onLongPress, testId}
 
 const useStyles = () => {
   const {width: screenWidth, height: screenHeight} = useWindowDimensions()
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
 
   const heightBreakpointLarge = 800
   const cardSpacing = screenHeight > heightBreakpointLarge ? 32 : 16
@@ -112,7 +111,7 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     qrCode: {
-      backgroundColor: theme.color.gray_cmin,
+      backgroundColor: color.gray_cmin,
       padding: 10,
       borderRadius: 8,
     },
@@ -145,7 +144,7 @@ const useStyles = () => {
       height: 32,
       textAlignVertical: 'center',
       color: color.gray_c900,
-      ...typography['button-2-m'],
+      ...atoms.button_2_md,
       textTransform: 'uppercase',
       letterSpacing: 0.5,
     },
@@ -168,7 +167,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    bgCard: color.gradients['blue-green'],
+    bgCard: color.bg_gradient_1,
     white: color.gray_cmin,
     black: color.gray_cmax,
   }

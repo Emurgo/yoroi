@@ -310,14 +310,14 @@ const useBold = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     form: {
-      ...theme.atoms.px_lg,
+      ...atoms.px_lg,
       flex: 1,
     },
     steps: {
-      ...theme.atoms.px_lg,
+      ...atoms.px_lg,
     },
     root: {
       flex: 1,
@@ -328,22 +328,22 @@ const useStyles = () => {
       flex: 1,
     },
     info: {
-      ...theme.atoms.px_lg,
+      ...atoms.px_lg,
       flexDirection: 'row',
     },
     title: {
-      ...theme.atoms.body_1_lg_regular,
-      color: theme.color.gray_c900,
+      ...atoms.body_1_lg_regular,
+      color: color.gray_c900,
     },
     plateNumber: {
-      ...theme.atoms.body_1_lg_regular,
-      color: theme.color.gray_c900,
+      ...atoms.body_1_lg_regular,
+      color: color.gray_c900,
       textAlign: 'center',
       justifyContent: 'center',
       alignItems: 'center',
     },
     button: {
-      backgroundColor: theme.color.primary_c500,
+      backgroundColor: color.primary_c500,
     },
     bolder: {
       ...atoms.body_1_lg_medium,
@@ -359,7 +359,7 @@ const useStyles = () => {
       height: 24,
     },
     actions: {
-      ...theme.atoms.p_lg,
+      ...atoms.p_lg,
     },
   })
 

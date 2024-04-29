@@ -20,9 +20,9 @@ export const BrowserTabBar = ({webViewRef, webViewState}: Props) => {
 
   const totalTabs = Math.min(tabs.length, 99)
 
-  const colorBackward = webViewState.canGoBack ? color.gray_c800 : color.gray['500']
-  const colorForward = webViewState.canGoForward ? color.gray_c800 : color.gray['500']
-  const colorRefresh = !webViewState.loading ? color.gray_c800 : color.gray['500']
+  const colorBackward = webViewState.canGoBack ? color.gray_c800 : color.gray_c500
+  const colorForward = webViewState.canGoForward ? color.gray_c800 : color.gray_c500
+  const colorRefresh = !webViewState.loading ? color.gray_c800 : color.gray_c500
 
   const handleRefresh = () => {
     if (!webViewRef.current) return

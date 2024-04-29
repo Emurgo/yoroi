@@ -10,19 +10,19 @@ export const LearnMoreButton = ({activeOpacity = 0.5, ...props}: TouchableOpacit
 
   return (
     <TouchableOpacity activeOpacity={activeOpacity} {...props}>
-      <Text style={styles.text}>{strings.learnMore}</Text>
+      <Text style={{...styles.text, textDecorationLine: 'none'}}>{strings.learnMore}</Text>
     </TouchableOpacity>
   )
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     text: {
-      ...theme.typography['link-1-l-underline'],
-      color: theme.color.primary_c500,
+      ...atoms.link_1_lg_underline,
+      color: color.primary_c500,
       alignSelf: 'center',
     },
   })
-  return {styles} as const
+  return {styles}
 }

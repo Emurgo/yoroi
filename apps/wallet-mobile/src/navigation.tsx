@@ -7,7 +7,7 @@ import {
   useRoute,
 } from '@react-navigation/native'
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack'
-import {Atoms, Theme, ThemedPalette, useTheme} from '@yoroi/theme'
+import {Atoms, ThemedPalette, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Dimensions, TouchableOpacity, TouchableOpacityProps, ViewStyle} from 'react-native'
 
@@ -79,16 +79,19 @@ export const defaultStackNavigationOptions = (atoms: Atoms, color: ThemedPalette
 }
 
 // NAVIGATOR TOP TABS OPTIONS
-export const defaultMaterialTopTabNavigationOptions = (theme: Theme): MaterialTopTabNavigationOptions => {
+export const defaultMaterialTopTabNavigationOptions = (
+  atoms: Atoms,
+  color: ThemedPalette,
+): MaterialTopTabNavigationOptions => {
   return {
-    tabBarStyle: {backgroundColor: theme.color.gray_cmin, elevation: 0, shadowOpacity: 0, marginHorizontal: 16},
-    tabBarIndicatorStyle: {backgroundColor: theme.color.primary_c600, height: 2},
+    tabBarStyle: {backgroundColor: color.gray_cmin, elevation: 0, shadowOpacity: 0, marginHorizontal: 16},
+    tabBarIndicatorStyle: {backgroundColor: color.primary_c600, height: 2},
     tabBarLabelStyle: {
       textTransform: 'none',
-      ...theme.atoms.body_1_lg_medium,
+      ...atoms.body_1_lg_medium,
     },
-    tabBarActiveTintColor: theme.color.primary_c600,
-    tabBarInactiveTintColor: theme.color.gray_c600,
+    tabBarActiveTintColor: color.primary_c600,
+    tabBarInactiveTintColor: color.gray_c600,
   }
 }
 

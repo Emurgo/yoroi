@@ -12,7 +12,7 @@ import {
   SwapProvider,
   swapStorageMaker,
 } from '@yoroi/swap'
-import {Theme, useTheme} from '@yoroi/theme'
+import {Atoms, ThemedPalette, useTheme} from '@yoroi/theme'
 import {Resolver, Swap} from '@yoroi/types'
 import _ from 'lodash'
 import React from 'react'
@@ -75,7 +75,7 @@ export const TxHistoryNavigator = () => {
   const wallet = useSelectedWallet()
   const walletName = useWalletName(wallet)
   const storage = useAsyncStorage()
-  const {theme} = useTheme()
+  const {atoms, color} = useTheme()
   const {styles} = useStyles()
 
   // modal
@@ -152,7 +152,7 @@ export const TxHistoryNavigator = () => {
                 <Stack.Navigator
                   screenListeners={{}}
                   screenOptions={{
-                    ...defaultStackNavigationOptions(theme),
+                    ...defaultStackNavigationOptions(atoms, color),
                     detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
                     gestureEnabled: true,
                   }}
@@ -166,7 +166,7 @@ export const TxHistoryNavigator = () => {
                       headerStyle: {
                         elevation: 0,
                         shadowOpacity: 0,
-                        backgroundColor: theme.color.primary['100'],
+                        backgroundColor: color.primary_c100,
                       },
                     }}
                   />
@@ -255,7 +255,7 @@ export const TxHistoryNavigator = () => {
                     name="swap-start-swap"
                     component={SwapTabNavigator}
                     options={{
-                      ...sendOptions(theme),
+                      ...sendOptions(atoms, color),
                       title: strings.swapTitle,
                     }}
                   />
@@ -272,7 +272,7 @@ export const TxHistoryNavigator = () => {
                     name="swap-select-sell-token"
                     component={SelectSellTokenFromListScreen}
                     options={{
-                      ...sendOptions(theme),
+                      ...sendOptions(atoms, color),
                       title: strings.swapFromTitle,
                     }}
                   />
@@ -281,7 +281,7 @@ export const TxHistoryNavigator = () => {
                     name="swap-select-buy-token"
                     component={SelectBuyTokenFromListScreen}
                     options={{
-                      ...sendOptions(theme),
+                      ...sendOptions(atoms, color),
                       title: strings.swapToTitle,
                     }}
                   />
@@ -318,7 +318,7 @@ export const TxHistoryNavigator = () => {
                     name="send-start-tx"
                     options={{
                       title: strings.sendTitle,
-                      ...sendOptions(theme),
+                      ...sendOptions(atoms, color),
                     }}
                   >
                     {() => (
@@ -332,7 +332,7 @@ export const TxHistoryNavigator = () => {
                     name="send-select-token-from-list"
                     options={{
                       title: strings.selectAssetTitle,
-                      ...sendOptions(theme),
+                      ...sendOptions(atoms, color),
                     }}
                   >
                     {() => (
@@ -346,7 +346,7 @@ export const TxHistoryNavigator = () => {
                     name="send-list-amounts-to-send"
                     options={{
                       title: strings.listAmountsToSendTitle,
-                      ...sendOptions(theme),
+                      ...sendOptions(atoms, color),
                     }}
                   >
                     {() => (
@@ -360,7 +360,7 @@ export const TxHistoryNavigator = () => {
                     name="send-edit-amount"
                     options={{
                       title: strings.editAmountTitle,
-                      ...sendOptions(theme),
+                      ...sendOptions(atoms, color),
                     }}
                   >
                     {() => (
@@ -375,7 +375,7 @@ export const TxHistoryNavigator = () => {
                     component={ConfirmTxScreen}
                     options={{
                       title: strings.confirmTitle,
-                      ...sendOptions(theme),
+                      ...sendOptions(atoms, color),
                     }}
                   />
 
@@ -395,7 +395,7 @@ export const TxHistoryNavigator = () => {
                     name="scan-start"
                     component={ScanCodeScreen}
                     options={{
-                      ...sendOptions(theme),
+                      ...sendOptions(atoms, color),
                       headerTransparent: true,
                       title: strings.scanTitle,
                       headerTintColor: COLORS.WHITE,
@@ -584,7 +584,7 @@ const Row = ({children, style, ...rest}: ViewProps) => (
 )
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {color} = useTheme()
 
   const styles = StyleSheet.create({
     receiveInfoText: {
@@ -595,18 +595,18 @@ const useStyles = () => {
       width: 40,
     },
     row: {
-      backgroundColor: theme.color.primary['100'],
+      backgroundColor: color.primary_c100,
       paddingStart: 8,
     },
   })
-  return {styles, backgroundColor: theme.color.primary['100'], color: theme.color.gray_cmax}
+  return {styles, backgroundColor: color.primary_c100, color: color.gray_cmax}
 }
 
-const sendOptions = (theme: Theme) => ({
-  ...defaultStackNavigationOptions(theme),
+const sendOptions = (atoms: Atoms, color: ThemedPalette) => ({
+  ...defaultStackNavigationOptions(atoms, color),
   headerStyle: {
     elevation: 0,
     shadowOpacity: 0,
-    backgroundColor: theme.color.gray_cmin,
+    backgroundColor: color.gray_cmin,
   },
 })

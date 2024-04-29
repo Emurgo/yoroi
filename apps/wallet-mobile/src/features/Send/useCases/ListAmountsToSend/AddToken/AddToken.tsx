@@ -26,12 +26,12 @@ export const AddTokenButton = ({onPress, disabled, style}: AddTokenButtonProps) 
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography, padding} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     label: {
       color: color.primary_c600,
-      ...typography['button-2-m'],
+      ...atoms.button_2_md,
+      textTransform: 'none',
     },
     button: {
       borderColor: color.primary_c600,

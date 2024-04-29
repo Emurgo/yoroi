@@ -78,8 +78,7 @@ export const SmallAddressCard = ({address, isUsed, date, onPress, loading, testI
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
     smallAddressCard: {
@@ -151,7 +150,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    bgCard: color.gradients['blue-green'],
+    bgCard: color.bg_gradient_1,
   }
 
   return {styles, colors} as const

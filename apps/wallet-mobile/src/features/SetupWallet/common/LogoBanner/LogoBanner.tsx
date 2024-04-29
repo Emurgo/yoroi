@@ -24,20 +24,20 @@ export const LogoBanner = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
       alignItems: 'center',
     },
     title: {
-      color: theme.color.primary_c500,
+      color: color.primary_c500,
       textAlign: 'center',
-      ...theme.atoms.heading_1_medium,
+      ...atoms.heading_1_medium,
     },
     subtitle: {
-      color: theme.color.gray_c900,
+      color: color.gray_c900,
       textAlign: 'center',
-      ...theme.atoms.body_2_md_regular,
+      ...atoms.body_2_md_regular,
     },
   })
 

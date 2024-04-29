@@ -88,8 +88,7 @@ export const ShareDetailsCard = ({address, spendingHash, stakingHash}: AddressDe
 
 const useStyles = () => {
   const screenWidth = useWindowDimensions().width
-  const {theme} = useTheme()
-  const {color, typography, padding} = theme
+  const {atoms, color} = useTheme()
 
   const styles = StyleSheet.create({
     title: {
@@ -105,7 +104,7 @@ const useStyles = () => {
       alignSelf: 'center',
       overflow: 'hidden',
       ...atoms.px_lg,
-      ...padding['y-xxl'],
+      ...atoms.py_2xl,
       gap: 16,
     },
     textAddressDetails: {
@@ -131,7 +130,7 @@ const useStyles = () => {
 
   const colors = {
     grayText: color.gray_c600,
-    backgroundGradientCard: color.gradients['blue-green'],
+    backgroundGradientCard: color.bg_gradient_1,
   }
 
   return {styles, colors} as const

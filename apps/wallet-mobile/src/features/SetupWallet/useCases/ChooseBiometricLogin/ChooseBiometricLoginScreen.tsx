@@ -97,12 +97,12 @@ export const ChooseBiometricLoginScreen = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,
       backgroundColor: color.white_static,
-      ...theme.atoms.px_lg,
+      ...atoms.px_lg,
     },
     content: {
       flex: 1,
@@ -112,13 +112,13 @@ const useStyles = () => {
       alignItems: 'center',
     },
     biometricDescription: {
-      ...theme.atoms.heading_3_medium,
-      color: theme.color.gray_cmax,
+      ...atoms.heading_3_medium,
+      color: color.gray_cmax,
       textAlign: 'center',
-      ...theme.atoms.px_lg,
+      ...atoms.px_lg,
     },
-    textOutlineButton: {color: theme.color.gray_c900},
-    enableButton: {backgroundColor: theme.color.primary_c500},
+    textOutlineButton: {color: color.gray_c900},
+    enableButton: {backgroundColor: color.primary_c500},
   })
 
   return {styles} as const

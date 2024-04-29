@@ -129,8 +129,7 @@ export const SettingsCollateralItem = ({label, onNavigate, icon, disabled}: Navi
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {atoms, color} = useTheme()
 
   const styles = StyleSheet.create({
     itemInner: {
@@ -145,7 +144,7 @@ const useStyles = () => {
       flex: 1,
     },
     disabled: {
-      color: color.gray['500'],
+      color: color.gray_c500,
     },
     sectionText: {
       color: color.gray_c900,
@@ -160,7 +159,7 @@ const useStyles = () => {
       ...atoms.body_3_sm_regular,
     },
     navigationItem: {
-      color: color.gray['500'],
+      color: color.gray_c500,
       ...atoms.body_1_lg_regular,
     },
     row: {flexDirection: 'row', alignItems: 'center'},

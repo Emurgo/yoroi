@@ -1,4 +1,4 @@
-import {padding, useTheme} from '@yoroi/theme'
+import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'

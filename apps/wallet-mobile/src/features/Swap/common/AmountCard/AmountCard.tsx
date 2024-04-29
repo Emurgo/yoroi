@@ -153,8 +153,7 @@ const useStrings = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     container: {
       borderRadius: 8,
@@ -231,10 +230,10 @@ const useStyles = () => {
     },
   })
   const colors = {
-    placeholder: theme.color.gray_c600,
-    focused: theme.color.gray_c900,
-    blur: theme.color.black_static,
-    noSelected: theme.color.gray_c400,
+    placeholder: color.gray_c600,
+    focused: color.gray_c900,
+    blur: color.black_static,
+    noSelected: color.gray_c400,
   }
   return {styles, colors} as const
 }

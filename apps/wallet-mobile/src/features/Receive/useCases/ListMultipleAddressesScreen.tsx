@@ -113,31 +113,31 @@ export const ListMultipleAddressesScreen = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: theme.color.gray_cmin,
-      ...theme.atoms.pt_lg,
+      backgroundColor: color.gray_cmin,
+      ...atoms.pt_lg,
     },
     content: {
       flex: 1,
-      ...theme.atoms.px_lg,
+      ...atoms.px_lg,
     },
     footer: {
-      backgroundColor: theme.color.gray_cmin,
-      borderColor: theme.color.gray_c200,
-      ...theme.atoms.p_lg,
+      backgroundColor: color.gray_cmin,
+      borderColor: color.gray_c200,
+      ...atoms.p_lg,
     },
     button: {
-      backgroundColor: theme.color.primary_c500,
+      backgroundColor: color.primary_c500,
     },
   })
 
   const colors = {
-    buttonBackgroundBlue: theme.color.primary_c600,
-    learnMore: theme.color.primary_c500,
-    details: theme.color.gray_c900,
+    buttonBackgroundBlue: color.primary_c600,
+    learnMore: color.primary_c500,
+    details: color.gray_c900,
   }
 
   return {styles, colors} as const

@@ -127,7 +127,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    gradientColorSelected: color.gradients['blue-green'],
+    gradientColorSelected: color.bg_gradient_1,
     gradientColorPressed: ['#C4CFF5', '#93F5E1'],
     iconCheckFilledColor: color.primary_c600,
     gradientDisabledColor: [color.primary_c200, '#C4CFF5'],
