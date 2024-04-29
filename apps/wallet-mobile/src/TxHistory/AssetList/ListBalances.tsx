@@ -7,9 +7,9 @@ import {useIntl} from 'react-intl'
 import {Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Spacer} from '../../components/Spacer'
-import {TokenAmountItem, TokenAmountItemProps} from '../../components/TokenAmountItem/TokenAmountItem'
 import {useExplorers} from '../../features/Explorer/common/useExplorers'
 import {usePortfolioBalances} from '../../features/Portfolio/common/hooks/usePortfolioBalances'
+import {TokenAmountItem, TokenAmountItemProps} from '../../features/Portfolio/common/TokenAmountItem/TokenAmountItem'
 import {usePrivacyMode} from '../../features/Settings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../../features/WalletManager/Context'
 import globalMessages from '../../i18n/global-messages'
@@ -25,48 +25,51 @@ type Props = Partial<ListProps> & {
 export const ListBalances = (props: Props) => {
   const strings = useStrings()
   const styles = useStyles()
-  const {track} = useMetrics()
   const wallet = useSelectedWallet()
   const balances = usePortfolioBalances({wallet})
-  const explorers = useExplorers(wallet.network)
   const {isPrivacyOff, privacyPlaceholder} = usePrivacyMode()
 
-  const [filteringBy, setFilteringBy] = React.useState<keyof typeof balances>('all')
+  const [fungibilityFilter, setFungibilityFilter] = React.useState<keyof typeof balances>('all')
   const [isPending, startTransition] = React.useTransition()
 
+  const explorers = useExplorers(wallet.network)
+
+  const {track} = useMetrics()
   useFocusEffect(
     React.useCallback(() => {
       track.assetsPageViewed()
     }, [track]),
   )
 
-  const handleOnPressNFTs = React.useCallback(() => startTransition(() => setFilteringBy('nfts')), [])
-  const handleOnPressFTs = React.useCallback(() => startTransition(() => setFilteringBy('fts')), [])
-  const handleOnPressAll = React.useCallback(() => startTransition(() => setFilteringBy('all')), [])
+  const handleOnPressNFTs = React.useCallback(() => startTransition(() => setFungibilityFilter('nfts')), [])
+  const handleOnPressFTs = React.useCallback(() => startTransition(() => setFungibilityFilter('fts')), [])
+  const handleOnPressAll = React.useCallback(() => startTransition(() => setFungibilityFilter('all')), [])
   const chips = [
     {label: strings.all, onPress: handleOnPressAll, value: 'all', disabled: isPending},
-    {
-      label: strings.nfts(balances.nfts.length),
-      onPress: handleOnPressNFTs,
-      value: 'nfts',
-      disabled: isPending || balances.nfts.length === 0,
-    },
     {
       label: strings.tokens(balances.fts.length),
       onPress: handleOnPressFTs,
       value: 'fts',
-      disabled: isPending || balances.fts.length === 0,
+      disabled: isPending,
     },
   ]
+  if (balances.nfts.length > 0) {
+    chips.push({
+      label: strings.nfts(balances.nfts.length),
+      onPress: handleOnPressNFTs,
+      value: 'nfts',
+      disabled: isPending,
+    })
+  }
 
   return (
     <View style={styles.assetList} testID="assetList">
-      <FilterBalancesByType selectedValue={filteringBy} chips={chips} />
+      <FilterBalancesByType selectedValue={fungibilityFilter} chips={chips} />
 
       <FlashList
         {...props}
         bounces={false}
-        data={balances[filteringBy]}
+        data={balances[fungibilityFilter]}
         renderItem={({item: amount}) => (
           <ExplorableAssetItem
             isMainnet={wallet.isMainnet}

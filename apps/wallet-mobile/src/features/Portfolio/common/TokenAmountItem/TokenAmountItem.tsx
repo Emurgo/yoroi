@@ -5,10 +5,10 @@ import {Swap} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
-import {usePriceImpactRiskTheme} from '../../features/Swap/common/helpers'
-import {SwapPriceImpactRisk} from '../../features/Swap/common/types'
-import {Icon, Spacer, Text} from '..'
-import {PairedBalance} from '../PairedBalance/PairedBalance'
+import {Icon, Spacer, Text} from '../../../../components'
+import {PairedBalance} from '../../../../components/PairedBalance/PairedBalance'
+import {usePriceImpactRiskTheme} from '../../../Swap/common/helpers'
+import {SwapPriceImpactRisk} from '../../../Swap/common/types'
 import {TokenInfoIcon} from './TokenInfoIcon'
 
 export type TokenAmountItemProps = {
@@ -55,19 +55,17 @@ export const TokenAmountItem = ({
       </Left>
 
       <Middle>
-        <View style={styles.row}>
-          <Text numberOfLines={1} ellipsizeMode="middle" style={styles.name} testID="tokenInfoText">
-            {name}
-          </Text>
+        <Text numberOfLines={1} ellipsizeMode="middle" style={styles.name} testID="tokenInfoText">
+          {name}
+        </Text>
 
-          {showSwapDetails && (
-            <>
-              <Spacer width={4} />
+        {showSwapDetails && (
+          <>
+            <Spacer width={4} />
 
-              {inWallet && <Icon.Portfolio size={22} color={colors.icon} />}
-            </>
-          )}
-        </View>
+            {inWallet && <Icon.Portfolio size={22} color={colors.icon} />}
+          </>
+        )}
 
         <Text numberOfLines={1} ellipsizeMode="middle" style={styles.detail} testID="tokenFingerprintText">
           {detail}
@@ -76,7 +74,7 @@ export const TokenAmountItem = ({
 
       <Right>
         {info.type !== Portfolio.Token.Type.NFT && variant !== 'swap' && (
-          <View style={styles.row} testID="tokenAmountText">
+          <View testID="tokenAmountText">
             {priceImpactRisk === 'moderate' && <Icon.Info size={24} color={priceImpactRiskTextColor} />}
 
             {priceImpactRisk === 'high' && <Icon.Warning size={24} color={priceImpactRiskTextColor} />}
@@ -138,32 +136,20 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     container: {
       flexDirection: 'row',
-      justifyContent: 'space-between',
       alignItems: 'center',
     },
     name: {
       color: color.gray[900],
-      fontSize: 16,
-      lineHeight: 22,
-      fontWeight: '500',
-      fontFamily: 'Rubik-Medium',
+      ...typography['body-1-l-medium'],
     },
     detail: {
       color: color.gray[600],
-      fontSize: 12,
-      lineHeight: 18,
+      ...typography['body-3-s-regular'],
       maxWidth: 140,
     },
     quantity: {
       color: color.gray[900],
       ...typography['body-1-l-regular'],
-      textAlign: 'right',
-      flexGrow: 1,
-    },
-    row: {
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
     },
   })
 

@@ -3,10 +3,10 @@ import {tokenMocks} from '@yoroi/portfolio'
 import React from 'react'
 import {Text, View} from 'react-native'
 
-import {QueryProvider} from '../../../.storybook/decorators'
-import {SelectedWalletProvider} from '../../features/WalletManager/Context'
-import {mocks} from '../../yoroi-wallets/mocks'
-import {Spacer} from '..'
+import {QueryProvider} from '../../../../../.storybook/decorators'
+import {Spacer} from '../../../../components'
+import {mocks} from '../../../../yoroi-wallets/mocks'
+import {SelectedWalletProvider} from '../../../WalletManager/Context'
 import {TokenAmountItem} from './TokenAmountItem'
 
 const primaryAmount = tokenMocks.primaryETH.balance

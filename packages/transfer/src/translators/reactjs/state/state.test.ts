@@ -7,6 +7,7 @@ import {
   combinedReducers,
   defaultTransferState,
 } from './state'
+import {tokenBalanceMocks} from '@yoroi/portfolio'
 
 describe('State Actions', () => {
   it('unknown', () => {
@@ -80,12 +81,12 @@ describe('State Actions', () => {
       it('set', () => {
         const action: TransferAction = {
           type: TransferActionType.TokenSelectedChanged,
-          tokenId: 'akakakak',
+          tokenId: 'policyId.tokenName',
         }
         const state = combinedReducers(defaultTransferState, action)
         expect(state).toEqual({
           ...defaultTransferState,
-          selectedTokenId: 'akakakak',
+          selectedTokenId: 'policyId.tokenName',
         })
       })
     })
@@ -93,7 +94,7 @@ describe('State Actions', () => {
     describe('Reset', () => {
       const mockedState: TransferState = {
         ...defaultTransferState,
-        selectedTokenId: 'token-id',
+        selectedTokenId: 'policyId.tokenName',
         unsignedTx,
         memo: 'asdfgh',
       }
@@ -112,7 +113,7 @@ describe('State Actions', () => {
     describe('ReceiverResolveChanged', () => {
       const prevState: TransferState = {
         selectedTargetIndex: 0,
-        selectedTokenId: '',
+        selectedTokenId: '.',
         unsignedTx: undefined,
         memo: '',
         linkAction: undefined,
@@ -153,7 +154,7 @@ describe('State Actions', () => {
         const state = combinedReducers(prevState, action)
         expect(state).toEqual({
           selectedTargetIndex: 0,
-          selectedTokenId: '',
+          selectedTokenId: '.',
           memo: '',
           unsignedTx: undefined,
           linkAction: undefined,
@@ -195,7 +196,7 @@ describe('State Actions', () => {
         const state = combinedReducers(prevState, action)
         expect(state).toEqual({
           selectedTargetIndex: 0,
-          selectedTokenId: '',
+          selectedTokenId: '.',
           memo: '',
           unsignedTx: undefined,
           targets: [
@@ -231,7 +232,7 @@ describe('State Actions', () => {
     describe('AddressRecordsFetched', () => {
       const prevState: TransferState = {
         selectedTargetIndex: 0,
-        selectedTokenId: '',
+        selectedTokenId: '.',
         unsignedTx: undefined,
         linkAction: undefined,
         memo: '',
@@ -276,7 +277,7 @@ describe('State Actions', () => {
 
         expect(state).toEqual({
           selectedTargetIndex: 0,
-          selectedTokenId: '',
+          selectedTokenId: '.',
           memo: '',
           unsignedTx: undefined,
           linkAction: undefined,
@@ -327,7 +328,7 @@ describe('State Actions', () => {
 
         expect(state).toEqual({
           selectedTargetIndex: 0,
-          selectedTokenId: '',
+          selectedTokenId: '.',
           memo: '',
           unsignedTx: undefined,
           linkAction: undefined,
@@ -374,7 +375,7 @@ describe('State Actions', () => {
 
         expect(state).toEqual({
           selectedTargetIndex: 0,
-          selectedTokenId: '',
+          selectedTokenId: '.',
           memo: '',
           unsignedTx: undefined,
           linkAction: undefined,
@@ -419,7 +420,7 @@ describe('State Actions', () => {
 
         expect(state).toEqual({
           selectedTargetIndex: 0,
-          selectedTokenId: '',
+          selectedTokenId: '.',
           memo: '',
           unsignedTx: undefined,
           linkAction: undefined,
@@ -458,7 +459,7 @@ describe('State Actions', () => {
     describe('NameServerSelectedChanged', () => {
       const prevState: TransferState = {
         selectedTargetIndex: 0,
-        selectedTokenId: '',
+        selectedTokenId: '.',
         unsignedTx: undefined,
         linkAction: undefined,
         memo: '',
@@ -499,7 +500,7 @@ describe('State Actions', () => {
 
         expect(state).toEqual({
           selectedTargetIndex: 0,
-          selectedTokenId: '',
+          selectedTokenId: '.',
           memo: '',
           targets: [
             {
@@ -539,7 +540,7 @@ describe('State Actions', () => {
 
         expect(state).toEqual({
           selectedTargetIndex: 0,
-          selectedTokenId: '',
+          selectedTokenId: '.',
           memo: '',
           unsignedTx: undefined,
           targets: [
@@ -578,7 +579,7 @@ describe('State Actions', () => {
 
         const prevState_: TransferState = {
           selectedTargetIndex: 0,
-          selectedTokenId: '',
+          selectedTokenId: '.',
           unsignedTx: undefined,
           linkAction: undefined,
           memo: '',
@@ -602,7 +603,7 @@ describe('State Actions', () => {
 
         expect(state).toEqual({
           selectedTargetIndex: 0,
-          selectedTokenId: '',
+          selectedTokenId: '.',
           memo: '',
           unsignedTx: undefined,
           linkAction: undefined,
@@ -627,12 +628,15 @@ describe('State Actions', () => {
       it('set', () => {
         const action: TargetAction = {
           type: TransferActionType.AmountChanged,
-          quantity: '12344',
+          amount: {
+            info: tokenBalanceMocks.primaryETH.info,
+            quantity: 12344n,
+          },
         }
 
         const prevState: TransferState = {
           selectedTargetIndex: 0,
-          selectedTokenId: 'fake-token-id',
+          selectedTokenId: tokenBalanceMocks.primaryETH.info.id,
           memo: '',
           unsignedTx: undefined,
           linkAction: undefined,
@@ -646,7 +650,10 @@ describe('State Actions', () => {
               },
               entry: {
                 address: '',
-                amounts: {['fake-token-id']: '1'},
+                amounts: {
+                  [tokenBalanceMocks.primaryETH.info.id]:
+                    tokenBalanceMocks.primaryETH,
+                },
               },
             },
             {
@@ -666,20 +673,27 @@ describe('State Actions', () => {
 
         const state = combinedReducers(prevState, action)
 
-        expect(state).toEqual({
+        expect(state).toEqual<TransferState>({
           selectedTargetIndex: 0,
-          selectedTokenId: 'fake-token-id',
+          selectedTokenId: tokenBalanceMocks.primaryETH.info.id,
+          unsignedTx: undefined,
+          linkAction: undefined,
           memo: '',
           targets: [
             {
               receiver: {
                 resolve: '',
                 as: 'address',
+                addressRecords: undefined,
+                selectedNameServer: undefined,
               },
               entry: {
                 address: '',
                 amounts: {
-                  'fake-token-id': '12344',
+                  [tokenBalanceMocks.primaryETH.info.id]: {
+                    info: tokenBalanceMocks.primaryETH.info,
+                    quantity: 12344n,
+                  },
                 },
               },
             },
@@ -704,12 +718,12 @@ describe('State Actions', () => {
       it('set', () => {
         const action: TargetAction = {
           type: TransferActionType.AmountRemoved,
-          tokenId: 'fake-token-id',
+          tokenId: tokenBalanceMocks.primaryETH.info.id,
         }
 
         const prevState: TransferState = {
           selectedTargetIndex: 0,
-          selectedTokenId: 'fake-token-id',
+          selectedTokenId: tokenBalanceMocks.primaryETH.info.id,
           memo: '',
           unsignedTx: undefined,
           linkAction: undefined,
@@ -723,7 +737,10 @@ describe('State Actions', () => {
               },
               entry: {
                 address: '',
-                amounts: {['fake-token-id']: '1'},
+                amounts: {
+                  [tokenBalanceMocks.primaryETH.info.id]:
+                    tokenBalanceMocks.primaryETH,
+                },
               },
             },
             {
@@ -745,7 +762,7 @@ describe('State Actions', () => {
 
         expect(state).toEqual({
           selectedTargetIndex: 0,
-          selectedTokenId: 'fake-token-id',
+          selectedTokenId: tokenBalanceMocks.primaryETH.info.id,
           memo: '',
           unsignedTx: undefined,
           redirectTo: undefined,
@@ -785,12 +802,21 @@ const unsignedTx: Chain.Cardano.UnsignedTx & {mock: true} = {
   entries: [
     {
       address: 'address1',
-      amounts: {'': '99999'},
+      amounts: {
+        [tokenBalanceMocks.primaryETH.info.id]: tokenBalanceMocks.primaryETH,
+      },
     },
   ],
-  fee: {'': '12345'},
+  fee: {'.': '12345'},
   metadata: {},
-  change: [{address: 'change_address', amounts: {'': '1'}}],
+  change: [
+    {
+      address: 'change_address',
+      amounts: {
+        [tokenBalanceMocks.primaryETH.info.id]: tokenBalanceMocks.primaryETH,
+      },
+    },
+  ],
   staking: {
     registrations: [],
     deregistrations: [],

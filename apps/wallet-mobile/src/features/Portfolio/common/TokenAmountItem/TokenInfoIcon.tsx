@@ -5,7 +5,7 @@ import {Image} from 'expo-image'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {Icon} from '../Icon'
+import {Icon} from '../../../../components/Icon'
 
 const headers = {
   Accept: 'image/webp',

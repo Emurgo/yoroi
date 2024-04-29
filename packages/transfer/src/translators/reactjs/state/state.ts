@@ -1,5 +1,5 @@
 import {isNameServer, isResolvableDomain} from '@yoroi/resolver'
-import {Balance, Chain, Links, Resolver, Transfer} from '@yoroi/types'
+import {Chain, Links, Portfolio, Resolver, Transfer} from '@yoroi/types'
 import {castDraft, freeze, produce} from 'immer'
 
 export const combinedReducers = (
@@ -111,13 +111,13 @@ const targetsReducer = (state: TransferState, action: TargetAction) => {
       }
 
       case TransferActionType.AmountChanged: {
-        const {quantity} = action
+        const {amount} = action
         const selectedTargetIndex = state.selectedTargetIndex
         const selectedTokenId = state.selectedTokenId
 
         draft.forEach((target, index) => {
           if (index === selectedTargetIndex) {
-            target.entry.amounts[selectedTokenId] = quantity
+            target.entry.amounts[selectedTokenId] = amount
           }
         })
         break
@@ -141,7 +141,7 @@ const targetsReducer = (state: TransferState, action: TargetAction) => {
 export const defaultTransferState: TransferState = freeze(
   {
     selectedTargetIndex: 0,
-    selectedTokenId: '',
+    selectedTokenId: '.', // no problem satisfying the type here, if ptId is dif it needs init by the client
     unsignedTx: undefined,
     memo: '',
     linkAction: undefined,
@@ -186,7 +186,7 @@ export const defaultTransferActions = {
 
 export type TransferState = Readonly<{
   selectedTargetIndex: number
-  selectedTokenId: string
+  selectedTokenId: Portfolio.Token.Id
   unsignedTx: Chain.Cardano.UnsignedTx | undefined
   memo: string
   targets: Transfer.Targets
@@ -195,8 +195,8 @@ export type TransferState = Readonly<{
 
 export type TargetActions = Readonly<{
   // Amount
-  amountChanged: (quantity: Balance.Quantity) => void
-  amountRemoved: (tokenId: string) => void
+  amountChanged: (amount: Portfolio.Token.Amount) => void
+  amountRemoved: (tokenId: Portfolio.Token.Id) => void
   // Receiver
   receiverResolveChanged: (resolve: Resolver.Receiver['resolve']) => void
   nameServerSelectedChanged: (
@@ -209,7 +209,7 @@ export type TargetActions = Readonly<{
 
 export type TransferActions = Readonly<{
   unsignedTxChanged: (UnsignedTx: Chain.Cardano.UnsignedTx | undefined) => void
-  tokenSelectedChanged: (tokenId: string) => void
+  tokenSelectedChanged: (tokenId: Portfolio.Token.Id) => void
   reset: () => void
   memoChanged: (memo: string) => void
   linkActionChanged: (linkAction: Links.YoroiAction) => void
@@ -234,15 +234,15 @@ export type TargetAction = Readonly<
     }
   | {
       type: TransferActionType.TokenSelectedChanged
-      tokenId: string
+      tokenId: Portfolio.Token.Id
     }
   | {
       type: TransferActionType.AmountChanged
-      quantity: Balance.Quantity
+      amount: Portfolio.Token.Amount
     }
   | {
       type: TransferActionType.AmountRemoved
-      tokenId: string
+      tokenId: Portfolio.Token.Id
     }
 >
 
@@ -256,7 +256,7 @@ export type TransferAction = Readonly<
     }
   | {
       type: TransferActionType.TokenSelectedChanged
-      tokenId: string
+      tokenId: Portfolio.Token.Id
     }
   | {
       type: TransferActionType.UnsignedTxChanged
