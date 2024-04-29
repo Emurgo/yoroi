@@ -3,7 +3,7 @@ export * from './helpers/amount-breakdown'
 export * from './helpers/create-primary-token-info'
 export * from './helpers/sorting'
 export * from './helpers/info-extract-name'
-export * from './helpers/is-primary'
+export * from './helpers/is-primary-token'
 
 export * from './adapters/amount.mocks'
 export * from './adapters/dullahan-api/api-maker.mocks'

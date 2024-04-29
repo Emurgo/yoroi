@@ -140,8 +140,23 @@ const targetsReducer = (state: TransferState, action: TargetAction) => {
 
 export const defaultTransferState: TransferState = freeze(
   {
+    balances: new Map(),
+    primaryBalanceBreakdown: {
+      availableRewards: 0n,
+      lockedAsStorageCost: 0n,
+      totalFromTxs: 0n,
+    },
+
+    selectedTokenBalanceBreakdown: {
+      balance: 0n,
+      used: 0n,
+      available: 0n,
+      initialQuantity: 0n,
+      locked: 0n,
+      spendable: 0n,
+    },
     selectedTargetIndex: 0,
-    selectedTokenId: '.', // no problem satisfying the type here, if ptId is dif it needs init by the client
+    selectedTokenId: '.', // it's ok satisfying the type here, if ptId is dif it needs init by the client
     unsignedTx: undefined,
     memo: '',
     linkAction: undefined,

@@ -1,7 +1,7 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {FlashList} from '@shopify/flash-list'
 import {useTheme} from '@yoroi/theme'
-import {useTransfer} from '@yoroi/transfer'
+import {targetGetTokenBalanceBreakdown, useTransfer} from '@yoroi/transfer'
 import {Balance, Portfolio} from '@yoroi/types'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
@@ -216,8 +216,14 @@ type SelectableAssetItemProps = {disabled?: boolean; tokenInfo: Balance.TokenInf
 const SelectableAssetItem = ({tokenInfo, disabled, wallet}: SelectableAssetItemProps) => {
   const {styles} = useStyles()
   const {closeSearch} = useSearch()
-  const {tokenSelectedChanged, amountChanged} = useTransfer()
-  const {spendable} = useTokenQuantities(tokenInfo.id)
+  const {targets, tokenSelectedChanged, amountChanged, selectedTargetIndex, selectedTokenId} = useTransfer()
+  const {spendable} = targetGetTokenBalanceBreakdown({
+    balances,
+    primaryBreakdown,
+    selectedTargetIndex,
+    selectedTokenId,
+    targets,
+  })
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const balances = useBalances(wallet)
 
@@ -228,7 +234,7 @@ const SelectableAssetItem = ({tokenInfo, disabled, wallet}: SelectableAssetItemP
     closeSearch()
 
     // if the balance is atomic there is no need to edit the amount
-    if (tokenInfo.kind === 'ft' && Quantities.isAtomic(spendable, tokenInfo.decimals ?? 0)) {
+    if (tokenInfo.kind === 'ft' && spendable === 1n) {
       amountChanged(spendable)
       navigation.navigate('send-list-amounts-to-send')
     } else if (tokenInfo.kind === 'nft') {
