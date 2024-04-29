@@ -1,86 +1,71 @@
 import {useTheme} from '@yoroi/theme'
-import {validateMnemonic, wordlists} from 'bip39'
+import {wordlists} from 'bip39'
 import * as React from 'react'
-import {
-  Keyboard,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput as RNTextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import {Platform, StyleSheet, Text, TextInput as RNTextInput, TouchableOpacity, View} from 'react-native'
 
-import {Menu, Spacer, useScrollView} from '../../../../components'
+import {Spacer, useScrollView} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
-import {useMetrics} from '../../../../metrics/metricsManager'
 import {isEmptyString} from '../../../../utils/utils'
 import {Alert as AlertIllustration} from '../../illustrations/Alert'
 import {Check2} from '../../illustrations/Check2'
+import {MnemonicWordInputRef} from '../../useCases/RestoreWallet/RestoreWalletScreen'
 import {TextInput} from '../TextInput'
 import {useStrings} from '../useStrings'
 
 export const MnemonicInput = ({
   length,
-  onDone,
-  validate = validateMnemonic,
+  isValidPhrase,
+  suggestedWords,
+  setSuggestedWords,
+  mnemonicSelectedWords,
+  setMnemonicSelectedWords,
+  onSelect,
+  onFocus,
+  mnenonicRefs,
+  mnemonic,
 }: {
   length: number
+  isValidPhrase: boolean
   onDone: (phrase: string) => void
   validate?: (text: string) => boolean
+  suggestedWords: Array<string>
+  setSuggestedWords: React.Dispatch<React.SetStateAction<Array<string>>>
+  mnemonicSelectedWords: Array<string>
+  setMnemonicSelectedWords: React.Dispatch<React.SetStateAction<Array<string>>>
+  onSelect: (index: number, word: string) => void
+  onFocus: (index: number) => void
+  mnenonicRefs: React.RefObject<MnemonicWordInputRef>[]
+  mnemonic: string
 }) => {
   const strings = useStrings()
   const {styles} = useStyles()
-  const [mnemonicWords, setMnemonicWords] = React.useState<Array<string>>(Array.from({length}).map(() => ''))
-  const {track} = useMetrics()
-  const refs = React.useRef(mnemonicWords.map(() => React.createRef<RNTextInput>())).current
 
-  const mnemonicWordsComplete = mnemonicWords.every(Boolean)
-  const isValid: boolean = mnemonicWordsComplete ? validate(mnemonicWords.join(' ')) : false
-  const errorText = !isValid && mnemonicWordsComplete ? strings.invalidChecksum : ''
-
-  const onSelect = (index: number, word: string) =>
-    setMnemonicWords((words) => {
-      const newWords = [...words]
-      newWords[index] = word
-
-      return newWords
-    })
-
-  React.useEffect(() => {
-    if (mnemonicWordsComplete) {
-      if (isValid) {
-        track.restoreWalletEnterPhraseStepStatus({recovery_prhase_status: true})
-        Keyboard.dismiss()
-        onDone(mnemonicWords.join(' '))
-      } else {
-        track.restoreWalletEnterPhraseStepStatus({recovery_prhase_status: false})
-        onDone('')
-      }
-    }
-  }, [mnemonicWordsComplete, isValid, mnemonicWords, onDone, track])
+  const isMnemonicCompleted = !isEmptyString(mnemonic)
+  const error = isMnemonicCompleted && !isValidPhrase ? strings.invalidChecksum : ''
 
   return (
     <View>
       <MnemonicWordsInput
-        refs={refs}
+        mnenonicRefs={mnenonicRefs}
         onSelect={onSelect}
-        words={mnemonicWords}
-        isPhraseValid={isValid && mnemonicWordsComplete}
+        mnemonicSelectedWords={mnemonicSelectedWords}
+        isValidPhrase={isValidPhrase}
+        suggestedWords={suggestedWords}
+        setSuggestedWords={setSuggestedWords}
+        onFocus={onFocus}
       />
 
       <Space height="l" />
 
-      {!isValid && mnemonicWordsComplete && (
+      {!isEmptyString(error) && isMnemonicCompleted && (
         <View style={styles.textView}>
           <AlertIllustration />
 
-          <Text style={styles.errorText}>{errorText}</Text>
+          <Text style={styles.errorText}>{error}</Text>
         </View>
       )}
 
-      {isValid && mnemonicWordsComplete && (
+      {isValidPhrase && (
         <View style={[styles.textView]}>
           <Check2 />
 
@@ -88,17 +73,14 @@ export const MnemonicInput = ({
         </View>
       )}
 
-      {!mnemonicWordsComplete && (
-        <TouchableOpacity
-          activeOpacity={0.5}
-          style={[styles.textView]}
+      {!isMnemonicCompleted && (
+        <ClearAllButton
           onPress={() => {
-            setMnemonicWords(Array.from({length}).map(() => ''))
-            refs[0].current?.focus()
+            setMnemonicSelectedWords(Array.from({length}).map(() => ''))
+            mnenonicRefs.forEach((ref) => ref.current?.selectWord(''))
+            mnenonicRefs[0].current?.focus()
           }}
-        >
-          <Text style={styles.clearAll}>{strings.clearAll}</Text>
-        </TouchableOpacity>
+        />
       )}
 
       <Spacer height={50} />
@@ -106,22 +88,43 @@ export const MnemonicInput = ({
   )
 }
 
-type MnemonicWordsInputProps = {
-  refs: React.RefObject<RNTextInput>[]
-  words: Array<string>
-  onSelect: (index: number, word: string) => void
-  isPhraseValid: boolean
+const ClearAllButton = ({onPress}: {onPress: () => void}) => {
+  const {styles} = useStyles()
+  const strings = useStrings()
+  return (
+    <TouchableOpacity activeOpacity={0.5} style={styles.textView} onPress={onPress}>
+      <Text style={styles.clearAll}>{strings.clearAll}</Text>
+    </TouchableOpacity>
+  )
 }
-const MnemonicWordsInput = ({onSelect, words, refs, isPhraseValid = false}: MnemonicWordsInputProps) => {
+
+type MnemonicWordsInputProps = {
+  mnenonicRefs: React.RefObject<MnemonicWordInputRef>[]
+  mnemonicSelectedWords: Array<string>
+  onSelect: (index: number, word: string) => void
+  isValidPhrase: boolean
+  suggestedWords: Array<string>
+  setSuggestedWords: (suggestedWord: Array<string>) => void
+  onFocus: (index: number) => void
+}
+const MnemonicWordsInput = ({
+  onSelect,
+  mnemonicSelectedWords,
+  mnenonicRefs,
+  isValidPhrase = false,
+  suggestedWords,
+  setSuggestedWords,
+  onFocus,
+}: MnemonicWordsInputProps) => {
   const {styles} = useStyles()
   const scrollView = useScrollView()
   const rowHeightRef = React.useRef<number | void>()
 
-  useAutoFocus(refs[0])
+  useAutoFocus(mnenonicRefs[0])
 
   return (
     <View style={styles.mnemonicInputView} testID="mnemonicInputsView">
-      {words.map((word, index) => (
+      {mnemonicSelectedWords.map((_, index) => (
         <View
           key={index}
           style={styles.mnemonicInput}
@@ -131,30 +134,33 @@ const MnemonicWordsInput = ({onSelect, words, refs, isPhraseValid = false}: Mnem
           <Text style={styles.mnemonicIndex}>{index + 1}.</Text>
 
           <MnemonicWordInput
-            words={words}
+            mnemonicSelectedWords={mnemonicSelectedWords}
             index={index}
-            ref={refs[index]}
+            suggestedWords={suggestedWords}
+            setSuggestedWords={setSuggestedWords}
+            ref={mnenonicRefs[index]}
             onSelect={(word: string) => {
               onSelect(index, word)
-              refs[index + 1]?.current?.focus()
             }}
             onFocus={() => {
               if (rowHeightRef.current == null) return
               const columnNumber = index % 3
               const rowNumber = (index - columnNumber) / 3
               scrollView?.scrollTo({y: rowNumber * rowHeightRef.current})
+
+              onFocus(index)
             }}
-            isPhraseValid={isPhraseValid}
+            isValidPhrase={isValidPhrase}
             onKeyPress={(currentWord: string) => {
-              if (refs[index].current && isEmptyString(currentWord) && index > 0) {
-                refs[index - 1]?.current?.focus()
+              if (mnenonicRefs[index].current && isEmptyString(currentWord) && index > 0) {
+                mnenonicRefs[index - 1]?.current?.focus()
               }
             }}
           />
         </View>
       ))}
 
-      {words.length === 15 && <View style={styles.mnemonicInput} />}
+      {mnemonicSelectedWords.length === 15 && <View style={styles.mnemonicInput} />}
     </View>
   )
 }
@@ -163,39 +169,49 @@ type MnemonicWordInputProps = {
   onSelect: (word: string) => void
   onFocus: () => void
   onKeyPress: (word: string) => void
-  isPhraseValid: boolean
-  words: string[]
+  isValidPhrase: boolean
+  mnemonicSelectedWords: Array<string>
   index: number
+  suggestedWords: Array<string>
+  setSuggestedWords: (suggestedWord: Array<string>) => void
 }
 
-const MnemonicWordInput = React.forwardRef<RNTextInput, MnemonicWordInputProps>(
-  ({onSelect, onFocus, isPhraseValid = false, onKeyPress, words, index}, ref) => {
+const MnemonicWordInput = React.forwardRef<MnemonicWordInputRef, MnemonicWordInputProps>(
+  (
+    {
+      onSelect,
+      onFocus,
+      isValidPhrase = false,
+      onKeyPress,
+      mnemonicSelectedWords,
+      index,
+      suggestedWords,
+      setSuggestedWords,
+    },
+    ref,
+  ) => {
+    const inputRef = React.useRef<RNTextInput>(null)
     const {styles} = useStyles()
-    const strings = useStrings()
-    const [word, setWord] = React.useState(words[index])
-    const [menuEnabled, setMenuEnabled] = React.useState(false)
-    const dateTime = React.useRef<number>()
+    const [word, setWord] = React.useState(mnemonicSelectedWords[index])
     const [error, setError] = React.useState('')
-    const [matchingWords, setMatchingWords] = React.useState<Array<string>>([])
 
-    const selectWord = React.useCallback(
-      (matchingWord: string) => {
-        setWord(normalizeText(matchingWord))
-        onSelect(normalizeText(matchingWord))
-
-        if (dateTime.current == null) throw new Error()
-        setTimeout(() => {
-          setMenuEnabled(false)
-        }, 1000 - (Date.now() - dateTime.current)) // RNP.Menu has a buggy show/hide
+    React.useImperativeHandle(
+      ref,
+      () => {
+        return {
+          selectWord: setWord,
+          word: word,
+          focus: () => inputRef.current?.focus(),
+        }
       },
-      [onSelect],
+      [word],
     )
 
     const onSubmitEditing = React.useCallback(() => {
-      if (!isEmptyString(matchingWords[0])) {
-        selectWord(matchingWords[0])
+      if (!isEmptyString(suggestedWords[0])) {
+        onSelect(normalizeText(suggestedWords[0]))
       }
-    }, [matchingWords, selectWord])
+    }, [suggestedWords, onSelect])
 
     const onChangeText = React.useCallback(
       (text: string) => {
@@ -208,95 +224,56 @@ const MnemonicWordInput = React.forwardRef<RNTextInput, MnemonicWordInputProps>(
         }
 
         if (!isEmptyString(text)) {
-          const matchingWords = getMatchingWords(text)
-          setMatchingWords(matchingWords)
+          const suggestedWords = getMatchingWords(text)
+          setSuggestedWords(suggestedWords)
 
-          if (matchingWords.length <= 0) {
+          if (suggestedWords.length <= 0) {
             setError('error')
           } else if (error !== '') setError('')
-        } else setMatchingWords([])
+        } else setSuggestedWords([])
       },
-      [error, onSubmitEditing],
+      [error, onSubmitEditing, setSuggestedWords],
     )
 
-    React.useEffect(() => {
-      if (isEmptyString(words[index])) {
-        setWord('')
-      }
-    }, [index, words])
-
     return (
-      <Menu
-        style={styles.menu}
-        contentStyle={styles.menuContent}
-        anchor={
-          <TextInput
-            ref={ref}
-            value={word}
-            onFocus={(e) => {
-              // selectTextOnFocus buggy on ios
+      <TextInput
+        ref={inputRef}
+        value={word}
+        onFocus={(e) => {
+          // selectTextOnFocus is buggy on ios
+          if (Platform.OS === 'ios') {
+            e.currentTarget.setNativeProps({
+              selection: {start: 0, end: word?.length},
+            })
+          }
 
-              if (Platform.OS === 'ios') {
-                e.currentTarget.setNativeProps({
-                  selection: {start: 0, end: word?.length},
-                })
-              }
-
-              onFocus()
-            }}
-            onChange={() => {
-              setMenuEnabled(true)
-              dateTime.current = Date.now()
-            }}
-            onChangeText={onChangeText}
-            enablesReturnKeyAutomatically
-            blurOnSubmit={false}
-            onSubmitEditing={onSubmitEditing}
-            dense
-            selectTextOnFocus
-            noHelper
-            errorDelay={0}
-            errorText={error}
-            autoComplete="off"
-            style={styles.textInput}
-            isPhraseValid={isPhraseValid}
-            showErrorOnBlur={false}
-            onKeyPress={({nativeEvent}) => {
-              if (nativeEvent.key === 'Backspace') {
-                onKeyPress(word)
-              }
-            }}
-            onBlur={() => {
-              setError('')
-            }}
-          />
-        }
-        visible={menuEnabled && word.length > 0 && !isEmptyString(word)}
-        onDismiss={() => {
-          setMenuEnabled(false)
-          setWord('')
+          onFocus()
         }}
-      >
-        <ScrollView style={styles.menuScrollView} keyboardShouldPersistTaps="always">
-          {matchingWords.length !== 0 ? (
-            matchingWords.map((word) => (
-              <Menu.Item
-                titleStyle={styles.menuItemText}
-                style={matchingWords[0] === word && styles.menuItem}
-                key={word}
-                title={word}
-                onPress={() => selectWord(word)}
-              />
-            ))
-          ) : (
-            <Menu.Item
-              titleStyle={styles.menuItemText}
-              style={matchingWords[0] === word && styles.menuItem}
-              title={strings.notFound}
-            />
-          )}
-        </ScrollView>
-      </Menu>
+        onChangeText={onChangeText}
+        enablesReturnKeyAutomatically
+        blurOnSubmit={false}
+        onSubmitEditing={onSubmitEditing}
+        dense
+        selectTextOnFocus
+        noHelper
+        errorDelay={0}
+        errorText={error}
+        autoCorrect={false}
+        spellCheck={false}
+        autoComplete="off"
+        style={styles.textInput}
+        isValidPhrase={isValidPhrase}
+        showErrorOnBlur={false}
+        onKeyPress={({nativeEvent}) => {
+          if (nativeEvent.key === 'Backspace') {
+            onKeyPress(word)
+          }
+        }}
+        onBlur={() => {
+          setError('')
+        }}
+        keyboardType={Platform.OS === 'android' ? 'visible-password' : undefined} // to hide keyboard suggestions on android
+      />
     )
   },
 )
@@ -309,7 +286,7 @@ const normalizeText = (text: string) => {
 const getMatchingWords = (targetWord: string) =>
   (wordlists.EN as Array<string>).filter((word) => word.startsWith(normalizeText(targetWord)))
 
-const useAutoFocus = (ref: React.RefObject<RNTextInput>) =>
+const useAutoFocus = (ref: React.RefObject<MnemonicWordInputRef>) =>
   React.useEffect(() => {
     const timeout = setTimeout(() => ref.current?.focus(), 100)
 
@@ -318,25 +295,7 @@ const useAutoFocus = (ref: React.RefObject<RNTextInput>) =>
 
 const useStyles = () => {
   const {theme} = useTheme()
-  const ROW_HEIGHT = 50
   const styles = StyleSheet.create({
-    menu: {
-      paddingTop: Platform.OS === 'ios' ? ROW_HEIGHT : ROW_HEIGHT / 2,
-      minWidth: 143,
-    },
-    menuContent: {
-      backgroundColor: theme.color['white-static'],
-      borderRadius: 8,
-    },
-    menuScrollView: {
-      maxHeight: ROW_HEIGHT * 3.5,
-    },
-    menuItemText: {
-      color: theme.color.gray[600],
-    },
-    menuItem: {
-      backgroundColor: theme.color.gray[50],
-    },
     mnemonicInputView: {
       flexDirection: 'row',
       flexWrap: 'wrap',
