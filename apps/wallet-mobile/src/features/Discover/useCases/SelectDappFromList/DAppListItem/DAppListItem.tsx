@@ -1,3 +1,4 @@
+import {useDappConnector} from '@yoroi/dapp-connector'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Image, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native'
@@ -6,7 +7,7 @@ import uuid from 'uuid'
 
 import {Icon, Spacer, useModal} from '../../../../../components'
 import {useBrowser} from '../../../common/BrowserProvider'
-import {GOOGLE_DAPP_ID, IDAppItem} from '../../../common/DAppMock'
+import {type DAppItem, isGoogleSearchItem} from '../../../common/helpers'
 import {LabelCategoryDApp} from '../../../common/LabelCategoryDApp'
 import {LabelConnected} from '../../../common/LabelConnected'
 import {useNavigateTo} from '../../../common/useNavigateTo'
@@ -15,17 +16,18 @@ import {useStrings} from '../../../common/useStrings'
 const DIALOG_DAPP_ACTIONS_HEIGHT = 294
 
 type Props = {
-  dApp: IDAppItem
+  dApp: DAppItem
   connected: boolean
   onPress?: () => void
 }
-export const DAppItem = ({dApp, connected, onPress}: Props) => {
+export const DAppListItem = ({dApp, connected, onPress}: Props) => {
   const {styles, colors} = useStyles()
   const {addTab, setTabActive, tabs} = useBrowser()
   const navigateTo = useNavigateTo()
   const {openModal, closeModal} = useModal()
   const insets = useSafeAreaInsets()
   const strings = useStrings()
+  const {manager} = useDappConnector()
 
   const dialogHeight = DIALOG_DAPP_ACTIONS_HEIGHT + insets.bottom
 
@@ -43,7 +45,11 @@ export const DAppItem = ({dApp, connected, onPress}: Props) => {
 
     navigateTo.browseDapp()
   }
-  const handleDisconnectDApp = () => {
+  const handleDisconnectDApp = async (dApp: DAppItem) => {
+    const promises = dApp.origins.map(async (o) => {
+      await manager.removeConnection({dappOrigin: o})
+    })
+    await Promise.all(promises)
     closeModal()
   }
 
@@ -53,7 +59,7 @@ export const DAppItem = ({dApp, connected, onPress}: Props) => {
       return
     }
 
-    if (!connected || dApp.id === GOOGLE_DAPP_ID) {
+    if (!connected || isGoogleSearchItem(dApp)) {
       return handleOpenDApp()
     }
 
@@ -61,7 +67,7 @@ export const DAppItem = ({dApp, connected, onPress}: Props) => {
       strings.dAppActions,
       <View>
         <View style={styles.dAppInfo}>
-          <Image source={dApp.logo} style={styles.dAppLogoDialog} />
+          <Image source={{uri: dApp.logo}} style={styles.dAppLogoDialog} />
 
           <Text style={styles.dAppName}>{dApp.name}</Text>
         </View>
@@ -72,7 +78,7 @@ export const DAppItem = ({dApp, connected, onPress}: Props) => {
           <DAppAction onPress={handleOpenDApp} icon={<Icon.DApp color={colors.icon} />} title={strings.openDApp} />
 
           <DAppAction
-            onPress={handleDisconnectDApp}
+            onPress={() => handleDisconnectDApp(dApp)}
             icon={<Icon.Disconnect color={colors.icon} />}
             title={strings.disconnectWalletFromDApp}
           />
@@ -82,6 +88,8 @@ export const DAppItem = ({dApp, connected, onPress}: Props) => {
     )
   }
 
+  const showIconPlaceholder = dApp.logo.length === 0
+
   return (
     <TouchableWithoutFeedback
       onPressIn={() => handlePressing(true)}
@@ -89,9 +97,15 @@ export const DAppItem = ({dApp, connected, onPress}: Props) => {
       onPress={handlePress}
     >
       <View style={styles.dAppItemContainer}>
-        <View>
-          <Image source={{uri: Image.resolveAssetSource(dApp.logo).uri}} style={styles.dAppLogo} />
-        </View>
+        {isGoogleSearchItem(dApp) ? (
+          <Icon.Google />
+        ) : showIconPlaceholder ? (
+          <EmptyIcon />
+        ) : (
+          <View>
+            <Image source={{uri: dApp.logo}} style={styles.dAppLogo} />
+          </View>
+        )}
 
         <View style={styles.flexFull}>
           <Text numberOfLines={1} style={styles.nameText}>
@@ -107,11 +121,21 @@ export const DAppItem = ({dApp, connected, onPress}: Props) => {
           <View style={styles.labelBox}>
             {connected && <LabelConnected />}
 
-            {dApp.category !== undefined && <LabelCategoryDApp category={dApp.category} />}
+            {!isGoogleSearchItem(dApp) && <LabelCategoryDApp category={dApp.category} />}
           </View>
         </View>
       </View>
     </TouchableWithoutFeedback>
+  )
+}
+
+const EmptyIcon = () => {
+  const {colors, styles} = useStyles()
+
+  return (
+    <View style={styles.emptyIcon}>
+      <Icon.DApp color={colors.dappIcon} />
+    </View>
   )
 }
 
@@ -137,6 +161,13 @@ const useStyles = () => {
   const {color, typography, padding} = theme
 
   const styles = StyleSheet.create({
+    emptyIcon: {
+      borderRadius: 8,
+      backgroundColor: color.gray[50],
+      padding: 8,
+      width: 40,
+      height: 40,
+    },
     dAppItemContainer: {
       flexDirection: 'row',
       gap: 12,
@@ -191,6 +222,7 @@ const useStyles = () => {
 
   const colors = {
     icon: color.primary['900'],
+    dappIcon: color.gray[600],
   }
 
   return {styles, colors} as const

@@ -109,7 +109,8 @@
   "jest": {
     "collectCoverage": false,
     "coveragePathIgnorePatterns": [
-      "connector.js"
+      "connector.js",
+      "manager.mocks.ts"
     ],
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}",

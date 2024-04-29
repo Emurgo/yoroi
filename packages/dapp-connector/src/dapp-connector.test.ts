@@ -2,11 +2,16 @@ import {storageMock} from './storage.mocks'
 import {mockedData} from './mocks'
 import {connectionStorageMaker} from './adapters/async-storage'
 import {dappConnectorMaker} from './dapp-connector'
+import {Api, dappConnectorApiMaker} from './adapters/api'
+import {mockedDAppList} from './manager.mocks'
 import {ResolverWallet} from './resolver'
 
 const getDappConnector = (wallet = mockWallet) => {
   const storage = connectionStorageMaker({storage: storageMock})
-  return dappConnectorMaker(storage, wallet)
+  const api: Api = {
+    getDApps: async () => mockedDAppList,
+  }
+  return dappConnectorMaker(storage, wallet, api)
 }
 
 describe('DappConnector', () => {
@@ -31,7 +36,8 @@ describe('DappConnector', () => {
   describe('connection management', () => {
     it('should init with default storage', async () => {
       const storage = connectionStorageMaker()
-      const connector = dappConnectorMaker(storage, mockWallet)
+      const api = dappConnectorApiMaker()
+      const connector = dappConnectorMaker(storage, mockWallet, api)
       expect(connector).toBeDefined()
     })
 
@@ -249,6 +255,13 @@ describe('DappConnector', () => {
       await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
       await dappConnector.handleEvent(createEvent('api.getUsedAddresses'), trustedUrl, sendMessage)
       expect(sendMessage).toHaveBeenCalledWith('1', mockedData[walletId].usedAddresses)
+    })
+  })
+
+  describe('getDAppList', () => {
+    it('should return list of dapps and filters', async () => {
+      const dappConnector = getDappConnector()
+      expect(await dappConnector.getDAppList()).toEqual(mockedDAppList)
     })
   })
 })

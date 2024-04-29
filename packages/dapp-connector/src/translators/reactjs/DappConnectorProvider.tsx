@@ -1,15 +1,16 @@
 import * as React from 'react'
-import {DappConnector} from '../../dapp-connector'
+import {DappConnectorManager} from '../../dapp-connector'
 
-const Context = React.createContext<{manager: DappConnector} | null>(null)
+const Context = React.createContext<{manager: DappConnectorManager; sessionId: string} | null>(null)
 
 type Props = {
   children: React.ReactNode
-  manager: DappConnector
+  manager: DappConnectorManager
 }
 
 export const DappConnectorProvider = ({children, manager}: Props) => {
-  const value = React.useMemo(() => ({manager}), [manager])
+  const [sessionId] = React.useState(() => generateSessionId())
+  const value = React.useMemo(() => ({manager, sessionId}), [manager, sessionId])
   return <Context.Provider value={value}>{children}</Context.Provider>
 }
 
@@ -20,3 +21,5 @@ export const useDappConnector = () => {
   }
   return context
 }
+
+const generateSessionId = () => Math.random().toString(36).substring(7)
