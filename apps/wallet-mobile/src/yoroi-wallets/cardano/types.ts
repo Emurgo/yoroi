@@ -194,6 +194,7 @@ export type YoroiWallet = {
   // CIP-30
   getBalance(tokenId?: string): Promise<string>
   getUnusedAddresses(): Promise<string[]>
+  getUsedAddresses(params?: {page: number; limit: number}): Promise<string[]>
 }
 
 export const isYoroiWallet = (wallet: unknown): wallet is YoroiWallet => {

@@ -918,9 +918,20 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     }
 
     async getUnusedAddresses() {
-      const bech32Addresses = this.receiveAddresses.filter((address) => this.isUsedAddressIndex[address])
+      const bech32Addresses = this.receiveAddresses.filter((address) => !this.isUsedAddressIndex[address])
       const result = await Promise.all(
         bech32Addresses.map((addr) => Cardano.Wasm.Address.fromBech32(addr).then((a) => a.toHex())),
+      )
+      return result
+    }
+
+    async getUsedAddresses(pagination?: {page: number; limit: number}) {
+      const allAddresses = this.receiveAddresses.filter((address) => this.isUsedAddressIndex[address])
+      const selectedAddresses = pagination
+        ? allAddresses.slice(pagination.page * pagination.limit, (pagination.page + 1) * pagination.limit)
+        : allAddresses
+      const result = await Promise.all(
+        selectedAddresses.map((addr) => Cardano.Wasm.Address.fromBech32(addr).then((a) => a.toHex())),
       )
       return result
     }

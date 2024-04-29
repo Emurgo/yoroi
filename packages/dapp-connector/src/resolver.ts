@@ -80,16 +80,19 @@ export const resolver: Resolver = {
       await assertWalletAcceptedConnection(context)
       return mockedData[mockWalletId1].rewardAddresses
     },
-    getUsedAddresses: async (_params: unknown, context: Context) => {
+    getUsedAddresses: async (params: unknown, context: Context) => {
       assertOriginsMatch(context)
       await assertWalletAcceptedConnection(context)
-      return mockedData[mockWalletId1].usedAddresses
+      const pagination = isRecord(params) && isPaginationParams(params.args) ? params.args : undefined
+      return context.wallet.getUsedAddresses(pagination)
     },
   },
 } as const
 
+const paginationSchema = z.object({page: z.number(), limit: z.number()})
 const getBalanceSchema = z.object({args: z.array(z.string().optional())})
 const isGetBalanceParams = createTypeGuardFromSchema(getBalanceSchema)
+const isPaginationParams = createTypeGuardFromSchema(paginationSchema)
 
 const assertOriginsMatch = (context: Context) => {
   if (context.browserOrigin !== context.trustedOrigin) {
@@ -173,6 +176,7 @@ export type ResolverWallet = {
   confirmConnection: (dappOrigin: string) => Promise<boolean>
   getBalance: (tokenId?: string) => Promise<string>
   getUnusedAddresses: () => Promise<string[]>
+  getUsedAddresses: (pagination?: {page: number; limit: number}) => Promise<string[]>
 }
 
 const LOG_MESSAGE_EVENT = 'log_message'

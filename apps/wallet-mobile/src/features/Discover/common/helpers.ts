@@ -61,6 +61,7 @@ export const createDappConnector = (appStorage: App.Storage, wallet: YoroiWallet
   const handlerWallet: ResolverWallet = {
     id: wallet.id,
     networkId: wallet.networkId,
+    getUsedAddresses: (params) => wallet.getUsedAddresses(params),
     getUnusedAddresses: () => wallet.getUnusedAddresses(),
     getBalance: (tokenId) => wallet.getBalance(tokenId),
     confirmConnection: async (origin: string) => {

@@ -254,7 +254,7 @@ describe('DappConnector', () => {
       const sendMessage = jest.fn()
       await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
       await dappConnector.handleEvent(createEvent('api.getUsedAddresses'), trustedUrl, sendMessage)
-      expect(sendMessage).toHaveBeenCalledWith('1', mockedData[walletId].usedAddresses)
+      expect(sendMessage).toHaveBeenCalledWith('1', [])
     })
   })
 
@@ -281,5 +281,6 @@ const mockWallet: ResolverWallet = {
   confirmConnection: async () => true,
   getBalance: () => Promise.resolve('1a062ea8a0'),
   getUnusedAddresses: () => Promise.resolve([]),
+  getUsedAddresses: () => Promise.resolve([]),
 }
 const trustedUrl = 'https://yoroi-wallet.com/'
