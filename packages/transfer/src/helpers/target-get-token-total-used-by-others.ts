@@ -4,7 +4,7 @@ import {Portfolio, Transfer} from '@yoroi/types'
  * @summary Returns the total amount of tokens used by other targets
  * @returns BigInt
  */
-export function getTotalUsedByOtherTargets({
+export function targetGetTokenTotalUsedByOthers({
   targets,
   selectedTargetIndex,
   selectedTokenId,
