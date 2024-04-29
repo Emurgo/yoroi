@@ -6,10 +6,7 @@ import {Icon} from '../../../components'
 import {Space} from '../../../components/Space/Space'
 import {WalletMeta} from '../../../wallet-manager/types'
 import {isByron, isHaskellShelley, isJormun} from '../../../yoroi-wallets/cardano/utils'
-import {
-  ChevronRightDarkIllustration,
-  ChevronRightGrayIllustration,
-} from '../../SetupWallet/illustrations/ChevronRightIllustration'
+import {ChevronRightDarkIllustration, ChevronRightGrayIllustration} from '../../SetupWallet/illustrations/ChevronRight'
 
 type Props = {
   wallet: WalletMeta
