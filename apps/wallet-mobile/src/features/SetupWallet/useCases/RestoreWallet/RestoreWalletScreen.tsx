@@ -352,6 +352,7 @@ const useStyles = () => {
       flex: 1,
     },
     suggestions: {
+      backgroundColor: 'rgba(255, 255, 255, 0.80)',
       borderColor: theme.color.gray[200],
       borderTopWidth: 1,
       flexDirection: 'row',
