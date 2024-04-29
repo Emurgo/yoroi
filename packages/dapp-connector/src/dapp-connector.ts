@@ -51,7 +51,7 @@ export class DappConnector implements DappConnectorManager {
     trustedUrl: string,
     sendMessage: (id: string, result: unknown, error?: Error) => void,
   ) {
-    return await resolverHandleEvent(eventData, trustedUrl, this.wallet, sendMessage, this.storage)
+    return await resolverHandleEvent(eventData, trustedUrl, this.wallet, sendMessage, this.storage, supportedExtensions)
   }
 }
 

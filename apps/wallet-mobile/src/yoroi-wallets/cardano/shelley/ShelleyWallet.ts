@@ -917,6 +917,14 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       return cip30.getBalance(tokenId, this.utxos, this.primaryTokenInfo.id)
     }
 
+    async getUnusedAddresses() {
+      const bech32Addresses = this.receiveAddresses.filter((address) => this.isUsedAddressIndex[address])
+      const result = await Promise.all(
+        bech32Addresses.map((addr) => Cardano.Wasm.Address.fromBech32(addr).then((a) => a.toHex())),
+      )
+      return result
+    }
+
     async signSwapCancellationWithLedger(cbor: string, useUSB: boolean): Promise<void> {
       if (!this.hwDeviceInfo) throw new Error('Invalid wallet state')
 

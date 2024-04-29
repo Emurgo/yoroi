@@ -9,6 +9,7 @@ type Context = {
   wallet: ResolverWallet
   trustedOrigin: string
   storage: Storage
+  supportedExtensions: Array<{cip: number}>
 }
 
 type ResolvableMethod<T> = (params: unknown, context: Context) => Promise<T>
@@ -23,6 +24,8 @@ type Resolver = {
     getNetworkId: ResolvableMethod<number>
     getRewardAddresses: ResolvableMethod<string[]>
     getUsedAddresses: ResolvableMethod<string[]>
+    getExtensions: ResolvableMethod<Array<{cip: number}>>
+    getUnusedAddresses: ResolvableMethod<string[]>
   }
 }
 
@@ -45,6 +48,16 @@ export const resolver: Resolver = {
     return hasWalletAcceptedConnection(context)
   },
   api: {
+    getUnusedAddresses: async (_params: unknown, context: Context) => {
+      assertOriginsMatch(context)
+      await assertWalletAcceptedConnection(context)
+      return context.wallet.getUnusedAddresses()
+    },
+    getExtensions: async (_params: unknown, context: Context) => {
+      assertOriginsMatch(context)
+      await assertWalletAcceptedConnection(context)
+      return context.supportedExtensions
+    },
     getBalance: async (params: unknown, context: Context) => {
       assertOriginsMatch(context)
       await assertWalletAcceptedConnection(context)
@@ -101,7 +114,7 @@ const hasWalletAcceptedConnection = async (context: Context) => {
 const handleMethod = async (
   method: string,
   params: {browserContext?: {origin?: unknown}},
-  trustedContext: {wallet: ResolverWallet; origin: string; storage: Storage},
+  trustedContext: {wallet: ResolverWallet; origin: string; storage: Storage; supportedExtensions: Array<{cip: number}>},
 ) => {
   const browserOrigin = String(params?.browserContext?.origin || '')
 
@@ -110,6 +123,7 @@ const handleMethod = async (
     wallet: trustedContext.wallet,
     trustedOrigin: trustedContext.origin,
     storage: trustedContext.storage,
+    supportedExtensions: trustedContext.supportedExtensions,
   }
 
   if (method === 'cardano_enable') {
@@ -141,11 +155,12 @@ export const resolverHandleEvent = async (
   wallet: ResolverWallet,
   sendMessage: (id: string, result: unknown, error?: Error) => void,
   storage: Storage,
+  supportedExtensions: Array<{cip: number}>,
 ) => {
   const trustedOrigin = new URL(trustedUrl).origin
   const {id, method, params} = JSON.parse(eventData)
   try {
-    const result = await handleMethod(method, params, {origin: trustedOrigin, wallet, storage})
+    const result = await handleMethod(method, params, {origin: trustedOrigin, wallet, storage, supportedExtensions})
     if (method !== LOG_MESSAGE_EVENT) sendMessage(id, result)
   } catch (error) {
     sendMessage(id, null, error as Error)
@@ -157,6 +172,7 @@ export type ResolverWallet = {
   networkId: number
   confirmConnection: (dappOrigin: string) => Promise<boolean>
   getBalance: (tokenId?: string) => Promise<string>
+  getUnusedAddresses: () => Promise<string[]>
 }
 
 const LOG_MESSAGE_EVENT = 'log_message'

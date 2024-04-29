@@ -280,5 +280,6 @@ const mockWallet: ResolverWallet = {
   networkId: 1,
   confirmConnection: async () => true,
   getBalance: () => Promise.resolve('1a062ea8a0'),
+  getUnusedAddresses: () => Promise.resolve([]),
 }
 const trustedUrl = 'https://yoroi-wallet.com/'

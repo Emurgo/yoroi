@@ -6,6 +6,13 @@
  * @Property {(...args: any[]) => Promise} getNetworkId Function to get network ID.
  * @Property {(...args: any[]) => Promise} getRewardAddresses Function to get reward addresses.
  * @Property {(...args: any[]) => Promise} getUsedAddresses Function to get used addresses.
+ * @Property {(...args: any[]) => Promise} getUnusedAddresses Function to get unused addresses.
+ * @Property {(...args: any[]) => Promise} getUtxos Function to get UTXOs.
+ * @Property {(...args: any[]) => Promise} signData Function to sign data.
+ * @Property {(...args: any[]) => Promise} signTx Function to sign transaction.
+ * @Property {(...args: any[]) => Promise} submitTx Function to submit transaction.
+ * @Property {(...args: any[]) => Promise} getCollateral Function to get collateral.
+ * @Property {(...args: any[]) => Promise} getExtensions Function to get extensions.
  */
 
 /**
@@ -125,11 +132,18 @@ const initWallet = ({iconUrl, apiVersion, walletName, supportedExtensions, sessi
     enabling = false
 
     return {
-      getBalance: (...args) => callExternalMethod('api.getBalance', args),
-      getChangeAddress: (...args) => callExternalMethod('api.getChangeAddress', args),
+      getExtensions: (...args) => callExternalMethod('api.getExtensions', args),
       getNetworkId: (...args) => callExternalMethod('api.getNetworkId', args),
-      getRewardAddresses: (...args) => callExternalMethod('api.getRewardAddresses', args),
+      getUtxos: (...args) => callExternalMethod('api.getUtxos', args),
+      getCollateral: (...args) => callExternalMethod('api.getCollateral', args),
+      getBalance: (...args) => callExternalMethod('api.getBalance', args),
       getUsedAddresses: (...args) => callExternalMethod('api.getUsedAddresses', args),
+      getUnusedAddresses: (...args) => callExternalMethod('api.getUnusedAddresses', args),
+      getChangeAddress: (...args) => callExternalMethod('api.getChangeAddress', args),
+      getRewardAddresses: (...args) => callExternalMethod('api.getRewardAddresses', args),
+      signTx: (...args) => callExternalMethod('api.signTx', args),
+      signData: (...args) => callExternalMethod('api.signData', args),
+      submitTx: (...args) => callExternalMethod('api.submitTx', args),
     }
   }
 
