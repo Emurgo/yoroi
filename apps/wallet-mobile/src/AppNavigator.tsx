@@ -88,9 +88,6 @@ export const AppNavigator = () => {
     setRouteName(currentRouteName)
   }
 
-  console.log('HAS WALLETS', hasWallets)
-  console.log('shouldAskToUseAuthWithOs', shouldAskToUseAuthWithOs)
-
   return (
     <NavigationContainer
       onStateChange={handleStateChange}
