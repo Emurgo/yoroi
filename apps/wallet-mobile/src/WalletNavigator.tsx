@@ -15,10 +15,6 @@ import {useLinksShowActionResult} from './features/Links/common/useLinksShowActi
 import {MenuNavigator} from './features/Menu'
 import {SettingsScreenNavigator} from './features/Settings'
 import {SetupWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
-import {
-  ChooseBiometricLoginScreen,
-  useShowBiometricsScreen,
-} from './features/SetupWallet/useCases/ChooseBiometricLogin/ChooseBiometricLoginScreen'
 import {GovernanceNavigator} from './features/Staking/Governance'
 import {ToggleAnalyticsSettingsNavigator} from './features/ToggleAnalyticsSettings'
 import {useSelectedWallet} from './features/WalletManager/Context/SelectedWalletContext'
@@ -30,10 +26,7 @@ import {NftDetailsNavigator} from './NftDetails/NftDetailsNavigator'
 import {NftsNavigator} from './Nfts/NftsNavigator'
 import {SearchProvider} from './Search/SearchContext'
 import {TxHistoryNavigator} from './TxHistory'
-import {useWalletManager} from './wallet-manager/WalletManagerContext'
-import {useAuthSetting, useIsAuthOsSupported} from './yoroi-wallets/auth'
 import {isHaskellShelley} from './yoroi-wallets/cardano/utils'
-import {useHasWallets} from './yoroi-wallets/hooks'
 
 const Tab = createBottomTabNavigator<WalletTabRoutes>()
 const WalletTabNavigator = () => {
@@ -152,13 +145,6 @@ export const WalletNavigator = () => {
   const strings = useStrings()
   const {theme} = useTheme()
   useLinksRequestAction()
-  const isAuthOsSupported = useIsAuthOsSupported()
-  const {showBiometricsScreen} = useShowBiometricsScreen()
-  const walletManager = useWalletManager()
-  const {hasWallets} = useHasWallets(walletManager)
-  const authSetting = useAuthSetting()
-
-  const shouldAskToUseAuthWithOs = showBiometricsScreen && isAuthOsSupported && authSetting !== 'os'
 
   // initialRoute doesn't update the state of the navigator, only at first render
   // https://reactnavigation.org/docs/auth-flow/
@@ -183,26 +169,16 @@ export const WalletNavigator = () => {
         detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
       }}
     >
-      {!hasWallets && shouldAskToUseAuthWithOs && (
-        <Stack.Screen //
-          name="choose-biometric-login"
-          options={{headerShown: false}}
-          component={ChooseBiometricLoginScreen}
-        />
-      )}
-
-      {!hasWallets && !shouldAskToUseAuthWithOs && (
-        <Stack.Screen //
-          name="setup-wallet"
-          options={{headerShown: false}}
-          component={SetupWalletNavigator}
-        />
-      )}
-
       <Stack.Screen
         name="wallet-selection"
         options={{title: strings.walletSelectionScreenHeader}}
         component={SelectWalletFromList}
+      />
+
+      <Stack.Screen //
+        name="setup-wallet"
+        options={{headerShown: false}}
+        component={SetupWalletNavigator}
       />
 
       <Stack.Screen name="main-wallet-routes" options={{headerShown: false}} component={WalletTabNavigator} />

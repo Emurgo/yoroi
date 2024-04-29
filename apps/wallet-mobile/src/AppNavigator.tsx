@@ -19,12 +19,19 @@ import {ModalScreen} from './components/Modal/ModalScreen'
 import {AgreementChangedNavigator, InitializationNavigator} from './features/Initialization'
 import {LegalAgreement, useLegalAgreement} from './features/Initialization/common'
 import {useDeepLinkWatcher} from './features/Links/common/useDeepLinkWatcher'
+import {SetupWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
+import {
+  ChooseBiometricLoginScreen,
+  useShowBiometricsScreen,
+} from './features/SetupWallet/useCases/ChooseBiometricLogin/ChooseBiometricLoginScreen'
 import {CONFIG} from './legacy/config'
 import {DeveloperScreen} from './legacy/DeveloperScreen'
 import {AppRoutes} from './navigation'
 import {SearchProvider} from './Search/SearchContext'
+import {useWalletManager} from './wallet-manager/WalletManagerContext'
 import {WalletNavigator} from './WalletNavigator'
 import {AuthSetting, useAuthSetting, useAuthWithOs, useIsAuthOsSupported} from './yoroi-wallets/auth'
+import {useHasWallets} from './yoroi-wallets/hooks'
 
 const Stack = createStackNavigator<AppRoutes>()
 const navRef = React.createRef<NavigationContainerRef<ReactNavigation.RootParamList>>()
@@ -35,9 +42,16 @@ export const AppNavigator = () => {
   const strings = useStrings()
   const [routeName, setRouteName] = React.useState<string>()
   useStatusBar(routeName)
-
+  const {showBiometricsScreen} = useShowBiometricsScreen()
+  const isAuthOsSupported = useIsAuthOsSupported()
+  const authSetting = useAuthSetting()
+  const walletManager = useWalletManager()
+  const {hasWallets} = useHasWallets(walletManager)
   useHideScreenInAppSwitcher()
+
   useAutoLogout()
+
+  const shouldAskToUseAuthWithOs = showBiometricsScreen && isAuthOsSupported && authSetting !== 'os'
 
   const {isLoggedIn, isLoggedOut, login} = useAuth()
   const {authWithOs} = useAuthWithOs({
@@ -73,6 +87,9 @@ export const AppNavigator = () => {
     const currentRouteName = navRef.current?.getCurrentRoute()?.name
     setRouteName(currentRouteName)
   }
+
+  console.log('HAS WALLETS', hasWallets)
+  console.log('shouldAskToUseAuthWithOs', shouldAskToUseAuthWithOs)
 
   return (
     <NavigationContainer
@@ -133,7 +150,23 @@ export const AppNavigator = () => {
           {isLoggedIn && (
             <>
               <Stack.Group>
-                <Stack.Screen name="app-root">
+                {!hasWallets && shouldAskToUseAuthWithOs && (
+                  <Stack.Screen //
+                    name="choose-biometric-login"
+                    options={{headerShown: false}}
+                    component={ChooseBiometricLoginScreen}
+                  />
+                )}
+
+                {!hasWallets && !shouldAskToUseAuthWithOs && (
+                  <Stack.Screen //
+                    name="setup-wallet"
+                    options={{headerShown: false}}
+                    component={SetupWalletNavigator}
+                  />
+                )}
+
+                <Stack.Screen name="manage-wallets">
                   {() => (
                     <SearchProvider>
                       <TransferProvider>
