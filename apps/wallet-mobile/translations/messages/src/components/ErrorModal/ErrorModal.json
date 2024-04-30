@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Show error message",
     "file": "src/components/ErrorModal/ErrorModal.tsx",
     "start": {
-      "line": 152,
+      "line": 151,
       "column": 13,
-      "index": 4253
+      "index": 4186
     },
     "end": {
-      "line": 155,
+      "line": 154,
       "column": 3,
-      "index": 4353
+      "index": 4286
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Hide error message",
     "file": "src/components/ErrorModal/ErrorModal.tsx",
     "start": {
-      "line": 156,
+      "line": 155,
       "column": 13,
-      "index": 4368
+      "index": 4301
     },
     "end": {
-      "line": 159,
+      "line": 158,
       "column": 3,
-      "index": 4468
+      "index": 4401
     }
   }
 ]

@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Attention",
     "file": "src/Staking/PoolWarningModal/PoolWarningModal.tsx",
     "start": {
-      "line": 127,
+      "line": 126,
       "column": 9,
-      "index": 3351
+      "index": 3288
     },
     "end": {
-      "line": 130,
+      "line": 129,
       "column": 3,
-      "index": 3451
+      "index": 3388
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Based on network activity, it seems this pool:",
     "file": "src/Staking/PoolWarningModal/PoolWarningModal.tsx",
     "start": {
-      "line": 131,
+      "line": 130,
       "column": 10,
-      "index": 3463
+      "index": 3400
     },
     "end": {
-      "line": 134,
+      "line": 133,
       "column": 3,
-      "index": 3601
+      "index": 3538
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Creates multiple blocks in the same slot (purposely causing forks)",
     "file": "src/Staking/PoolWarningModal/PoolWarningModal.tsx",
     "start": {
-      "line": 135,
+      "line": 134,
       "column": 14,
-      "index": 3617
+      "index": 3554
     },
     "end": {
-      "line": 138,
+      "line": 137,
       "column": 3,
-      "index": 3779
+      "index": 3716
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Purposely excludes transactions from blocks (censoring the network)",
     "file": "src/Staking/PoolWarningModal/PoolWarningModal.tsx",
     "start": {
-      "line": 139,
+      "line": 138,
       "column": 16,
-      "index": 3797
+      "index": 3734
     },
     "end": {
-      "line": 142,
+      "line": 141,
       "column": 3,
-      "index": 3962
+      "index": 3899
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!We suggest contacting the pool owner through the stake pool's webpage to ask about their behavior. Remember, you can change your delegation at any time without any interruptions in rewards.",
     "file": "src/Staking/PoolWarningModal/PoolWarningModal.tsx",
     "start": {
-      "line": 143,
+      "line": 142,
       "column": 13,
-      "index": 3977
+      "index": 3914
     },
     "end": {
-      "line": 149,
+      "line": 148,
       "column": 3,
-      "index": 4289
+      "index": 4226
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!Causes some unknown issue (look online for more info)",
     "file": "src/Staking/PoolWarningModal/PoolWarningModal.tsx",
     "start": {
-      "line": 150,
+      "line": 149,
       "column": 11,
-      "index": 4302
+      "index": 4239
     },
     "end": {
-      "line": 153,
+      "line": 152,
       "column": 3,
-      "index": 4448
+      "index": 4385
     }
   }
 ]

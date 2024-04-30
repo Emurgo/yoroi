@@ -2,7 +2,14 @@
 import {Certificate} from '@emurgo/cross-csl-core'
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
 import {useNavigation} from '@react-navigation/native'
-import {parseBoolean, useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
+import {
+  mountMMKVStorage,
+  observableStorageMaker,
+  parseBoolean,
+  useAsyncStorage,
+  useMutationWithInvalidations,
+} from '@yoroi/common'
+import {themeStorageMaker} from '@yoroi/theme'
 import {Api, App, Balance} from '@yoroi/types'
 import {Buffer} from 'buffer'
 import * as React from 'react'
@@ -1134,4 +1141,13 @@ export const useCreateGovernanceTx = (
 
   const mutation = useMutation({mutationFn, retry: false, ...options})
   return {...mutation, createUnsignedGovernanceTx: mutation.mutate}
+}
+
+export const useThemeStorageMaker = () => {
+  const themeDiscovery = mountMMKVStorage<string>({path: `theme/`})
+  const themeDiscoveryStorage = observableStorageMaker(themeDiscovery)
+
+  const themeStorage = themeStorageMaker({storage: themeDiscoveryStorage})
+
+  return themeStorage
 }
