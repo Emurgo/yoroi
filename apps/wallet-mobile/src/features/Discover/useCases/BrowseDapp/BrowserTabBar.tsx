@@ -134,7 +134,7 @@ const useStyles = () => {
       zIndex: 1,
     },
     touchBox: {
-      ...atoms.py__2xl,
+      ...atoms.py_2xl,
     },
     tabViewContainer: {
       position: 'relative',

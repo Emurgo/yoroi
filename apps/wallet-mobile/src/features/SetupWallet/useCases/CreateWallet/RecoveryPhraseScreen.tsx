@@ -84,11 +84,11 @@ export const RecoveryPhraseScreen = () => {
           </View>
         </ScrollView>
 
-        <Space height="s" />
+        <Space height="sm" />
 
         <Button title={strings.continueButton} style={styles.button} onPress={closeModal} />
 
-        <Space height="l" />
+        <Space height="lg" />
       </View>,
       HEIGHT_MODAL,
     )
@@ -152,7 +152,7 @@ export const RecoveryPhraseScreen = () => {
           }}
         />
 
-        <Space height="s" />
+        <Space height="sm" />
       </View>
     </SafeAreaView>
   )

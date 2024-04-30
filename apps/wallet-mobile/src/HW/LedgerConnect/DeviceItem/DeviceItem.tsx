@@ -42,7 +42,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     deviceItem: {
       ...atoms.py_lg,
-      ...atoms.px__2xl,
+      ...atoms.px_2xl,
       marginVertical: 8,
       marginHorizontal: 16,
       borderColor: color.secondary_c500,

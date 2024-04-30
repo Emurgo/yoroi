@@ -22,7 +22,7 @@ export const ProviderItem = ({onPress, fee, rightAdornment, leftAdornment, disab
     <TouchableOpacity onPress={onPress} style={styles.item} disabled={disabled}>
       {leftAdornment}
 
-      <Space width="m" />
+      <Space width="md" />
 
       <View style={styles.labels}>
         <Text style={styles.label}>{label}</Text>

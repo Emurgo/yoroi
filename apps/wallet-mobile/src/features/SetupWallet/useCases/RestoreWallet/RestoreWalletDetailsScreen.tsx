@@ -128,14 +128,14 @@ export const RestoreWalletDetailsScreen = () => {
               linesOfText={[strings.walletNameModalCardFirstItem, strings.walletNameModalCardSecondItem]}
             />
 
-            <Space height="l" />
+            <Space height="lg" />
 
             <CardAboutPhrase
               title={strings.walletPasswordModalCardTitle}
               linesOfText={[strings.walletPasswordModalCardFirstItem, strings.walletPasswordModalCardSecondItem]}
             />
 
-            <Space height="l" />
+            <Space height="lg" />
 
             <LearnMoreButton
               onPress={() => {
@@ -145,11 +145,11 @@ export const RestoreWalletDetailsScreen = () => {
           </View>
         </ScrollView>
 
-        <Space height="s" />
+        <Space height="sm" />
 
         <Button title={strings.continueButton} style={styles.button} onPress={closeModal} />
 
-        <Space height="l" />
+        <Space height="lg" />
       </View>,
       HEIGHT_MODAL_NAME_PASSWORD,
     )
@@ -173,7 +173,7 @@ export const RestoreWalletDetailsScreen = () => {
               ]}
             />
 
-            <Space height="l" />
+            <Space height="lg" />
 
             <LearnMoreButton
               onPress={() => {
@@ -183,11 +183,11 @@ export const RestoreWalletDetailsScreen = () => {
           </View>
         </ScrollView>
 
-        <Space height="s" />
+        <Space height="sm" />
 
         <Button title={strings.continueButton} style={styles.button} onPress={closeModal} />
 
-        <Space height="l" />
+        <Space height="lg" />
       </View>,
       HEIGHT_MODAL_CHECKSUM,
     )
@@ -264,11 +264,11 @@ export const RestoreWalletDetailsScreen = () => {
           <View style={styles.checksum}>
             <Icon.WalletAccount iconSeed={plate.accountPlate.ImagePart} style={styles.walletChecksum} />
 
-            <Space width="s" />
+            <Space width="sm" />
 
             <Text style={styles.plateNumber}>{plate.accountPlate.TextPart}</Text>
 
-            <Space width="s" />
+            <Space width="sm" />
 
             <TouchableOpacity onPress={showModalTipsPlateNumber}>
               <InfoIllustration />

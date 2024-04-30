@@ -37,11 +37,11 @@ export const AboutRecoveryPhraseScreen = () => {
       <View>
         <StepperProgress currentStep={1} currentStepTitle={strings.stepAboutRecoveryPhrase} totalSteps={4} />
 
-        <Space height="l" />
+        <Space height="lg" />
 
         <Text style={styles.aboutRecoveryPhraseTitle}>{strings.aboutRecoveryPhraseTitle(bold)}</Text>
 
-        <Space height="l" />
+        <Space height="lg" />
 
         <CardAboutPhrase
           showBackgroundColor
@@ -55,7 +55,7 @@ export const AboutRecoveryPhraseScreen = () => {
           ]}
         />
 
-        <Space height="l" />
+        <Space height="lg" />
 
         <LearnMoreButton onPress={handleOnLearMoreButtonPress} />
       </View>

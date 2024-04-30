@@ -17,7 +17,7 @@ export const FailedTxScreen = () => {
     <View style={styles.container}>
       <FailedTxImage />
 
-      <Space height="l" />
+      <Space height="lg" />
 
       <Text style={styles.title}>{strings.notEnoughFunds}</Text>
 
@@ -27,7 +27,7 @@ export const FailedTxScreen = () => {
 
       <Button onPress={navigateTo.buyAda} title={strings.buyAda} style={styles.button} shelleyTheme />
 
-      <Space height="l" />
+      <Space height="lg" />
 
       <Button
         onPress={navigateTo.main}

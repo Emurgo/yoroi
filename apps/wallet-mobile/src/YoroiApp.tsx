@@ -1,7 +1,7 @@
 import {AsyncStorageProvider} from '@yoroi/common'
 import {LinksProvider} from '@yoroi/links'
 import {SetupWalletProvider} from '@yoroi/setup-wallet'
-import {ThemeProvider} from '@yoroi/theme'
+import {ThemeProvider, themeStorageMaker} from '@yoroi/theme'
 import React from 'react'
 import {LogBox, Platform, StyleSheet, UIManager} from 'react-native'
 import Config from 'react-native-config'
@@ -41,6 +41,8 @@ if (Boolean(Config.DISABLE_LOGBOX)) LogBox.ignoreAllLogs()
 
 const queryClient = new QueryClient()
 
+const themeStorage = themeStorageMaker({storage: rootStorage})
+
 const metricsManager = makeMetricsManager()
 
 export const YoroiApp = () => {
@@ -50,7 +52,7 @@ export const YoroiApp = () => {
 
   return (
     <AsyncStorageProvider storage={rootStorage}>
-      <ThemeProvider>
+      <ThemeProvider storage={themeStorage}>
         <MetricsProvider metricsManager={metricsManager}>
           <WalletManagerProvider walletManager={walletManager}>
             <ErrorBoundary>

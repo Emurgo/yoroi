@@ -60,7 +60,7 @@ const useStyles = () => {
     actionsRoot: {
       display: 'flex',
       ...atoms.px_lg,
-      ...atoms.pb__xxs,
+      ...atoms.pb_2xs,
       justifyContent: 'space-between',
       flexDirection: 'row',
     },

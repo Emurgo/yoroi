@@ -229,8 +229,8 @@ const useStyles = () => {
     textError: color.sys_magenta_c500,
     infoGray: color.gray_c700,
     positiveGreen: color.secondary_c500,
-    gradientBlueGreen: theme.color.bg_gradient_1,
-    gradientGreen: theme.color.bg_gradient_2,
+    gradientBlueGreen: color.bg_gradient_1,
+    gradientGreen: color.bg_gradient_2,
     none: 'transparent',
   }
 

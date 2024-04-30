@@ -48,7 +48,7 @@ export const ChooseBiometricLoginScreen = () => {
           <BiometricIlustration />
         </View>
 
-        <Space height="l" />
+        <Space height="lg" />
 
         <Text style={styles.biometricDescription}>{strings.biometricDescription}</Text>
       </View>
@@ -90,7 +90,7 @@ export const ChooseBiometricLoginScreen = () => {
           disabled={isLoading}
         />
 
-        <Space height="s" />
+        <Space height="sm" />
       </View>
     </SafeAreaView>
   )

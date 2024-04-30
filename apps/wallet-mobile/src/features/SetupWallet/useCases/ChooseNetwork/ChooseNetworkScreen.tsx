@@ -37,7 +37,7 @@ export const ChooseNetworkScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
-      <Space height="l" />
+      <Space height="lg" />
 
       <LogoBanner />
 
@@ -51,7 +51,7 @@ export const ChooseNetworkScreen = () => {
             onPress={handleMainnet}
           />
 
-          <Space height="l" />
+          <Space height="lg" />
 
           <ButtonCard
             title={strings.cardanoTestnet}
@@ -59,7 +59,7 @@ export const ChooseNetworkScreen = () => {
             onPress={handleTestnet}
           />
 
-          <Space height="l" />
+          <Space height="lg" />
 
           <ButtonCard
             title={strings.cardanoSanchonet}
@@ -67,7 +67,7 @@ export const ChooseNetworkScreen = () => {
             onPress={handleSanchonet}
           />
 
-          <Space height="l" />
+          <Space height="lg" />
         </View>
       </ScrollView>
     </SafeAreaView>

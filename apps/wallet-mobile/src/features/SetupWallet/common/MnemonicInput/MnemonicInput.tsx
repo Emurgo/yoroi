@@ -63,7 +63,7 @@ export const MnemonicInput = ({
     <View>
       <MnemonicWordsInput onSelect={onSelect} words={mnemonicWords} isPhraseValid={isValid && mnemonicWordsComplete} />
 
-      <Space height="l" />
+      <Space height="lg" />
 
       {!isValid && mnemonicWordsComplete && (
         <View style={styles.textView}>
@@ -91,7 +91,7 @@ export const MnemonicInput = ({
         </TouchableOpacity>
       )}
 
-      <Space height="l" />
+      <Space height="lg" />
     </View>
   )
 }

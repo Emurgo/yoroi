@@ -56,7 +56,7 @@ export const WalletListItem = ({wallet, onPress}: Props) => {
       >
         <Icon.WalletAccount iconSeed={wallet.checksum.ImagePart} />
 
-        <Space height="m" />
+        <Space height="md" />
 
         <View style={styles.walletDetails}>
           <Text style={styles.walletName} numberOfLines={1}>
@@ -72,11 +72,11 @@ export const WalletListItem = ({wallet, onPress}: Props) => {
           <>
             {walletInfo?.sync.status === 'syncing' && <Loading />}
 
-            <Space width="m" />
+            <Space width="md" />
 
             {isSelected && <Icon.Check size={20} />}
 
-            <Space width="m" />
+            <Space width="md" />
           </>
         )}
 

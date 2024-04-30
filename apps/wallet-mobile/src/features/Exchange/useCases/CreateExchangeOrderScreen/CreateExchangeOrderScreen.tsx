@@ -131,7 +131,7 @@ export const CreateExchangeOrderScreen = () => {
 
             <EditAmount disabled={isLoading} />
 
-            <Space height="xxs" />
+            <Space height="_2xs" />
 
             <ProviderItem
               label={providerSelected?.name ?? ''}

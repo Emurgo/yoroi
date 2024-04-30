@@ -94,7 +94,7 @@ const useStyles = () => {
     gradient: {
       opacity: 1,
       borderRadius: 8,
-      ...atoms.p__2xs,
+      ...atoms.p_2xs,
       overflow: 'hidden',
       height: 40,
     },

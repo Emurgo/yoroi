@@ -155,7 +155,7 @@ const useStyles = () => {
       ...atoms.body_1_lg_medium,
     },
     itemTextIsNil: {
-      color: color.gray['600'],
+      color: color.gray_c600,
       ...atoms.body_3_sm_regular,
     },
     navigationItem: {
@@ -166,7 +166,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    iconColor: color.gray['600'],
+    iconColor: color.gray_c600,
   }
   return {styles, colors}
 }

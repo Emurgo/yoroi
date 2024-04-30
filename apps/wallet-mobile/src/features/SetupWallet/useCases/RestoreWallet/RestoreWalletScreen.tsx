@@ -65,7 +65,7 @@ export const RestoreWalletScreen = () => {
             }}
           />
 
-          <Space height="s" />
+          <Space height="sm" />
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>

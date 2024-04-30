@@ -240,3 +240,13 @@ type BaseTextStyle = {
 export type TypographyTheme = {
   [K in TypographyKey]: BaseTextStyle
 }
+
+export type SpacingSize =
+  | 'none'
+  | '_2xs'
+  | 'xs'
+  | 'sm'
+  | 'md'
+  | 'lg'
+  | 'xl'
+  | '_2xl'

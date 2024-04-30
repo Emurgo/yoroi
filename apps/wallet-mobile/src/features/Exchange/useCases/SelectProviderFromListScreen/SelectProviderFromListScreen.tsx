@@ -47,7 +47,7 @@ export const SelectProviderFromListScreen = () => {
             />
           )
         }}
-        ItemSeparatorComponent={() => <Space height="l" />}
+        ItemSeparatorComponent={() => <Space height="lg" />}
         keyExtractor={([providerId]) => providerId}
       ></FlatList>
     </SafeAreaView>

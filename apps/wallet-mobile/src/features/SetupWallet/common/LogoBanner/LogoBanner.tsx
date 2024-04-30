@@ -16,7 +16,7 @@ export const LogoBanner = () => {
 
       <Text style={styles.title}>{strings.logoTitle}</Text>
 
-      <Space height="s" />
+      <Space height="sm" />
 
       <Text style={styles.subtitle}>{strings.logoSubtitle}</Text>
     </View>

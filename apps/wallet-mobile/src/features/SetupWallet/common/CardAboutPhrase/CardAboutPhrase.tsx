@@ -40,7 +40,7 @@ export const CardAboutPhrase = ({
         <>
           <Text style={styles.title}>{title}</Text>
 
-          <Space height="s" />
+          <Space height="sm" />
         </>
       )}
 
@@ -50,14 +50,14 @@ export const CardAboutPhrase = ({
           <View key={index + '_ITEM_CARD'} style={styles.itemContainer}>
             <Text style={styles.bullet}>•</Text>
 
-            <Space height="s" />
+            <Space height="sm" />
 
             <Text style={styles.textLine}>
               {handleShowChecksum && (
                 <>
                   <WalletChecksum iconSeed={checksumImage} style={styles.walletChecksum} />
 
-                  <Space height="s" />
+                  <Space height="sm" />
                 </>
               )}
 

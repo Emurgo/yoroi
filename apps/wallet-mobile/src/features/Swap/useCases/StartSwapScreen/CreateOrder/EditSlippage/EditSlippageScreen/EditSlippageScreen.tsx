@@ -186,7 +186,6 @@ const useStyles = () => {
       flexWrap: 'wrap',
     },
     choiceButton: {
-      padding: 8,
       ...atoms.p_sm,
     },
     selectedChoiceButton: {

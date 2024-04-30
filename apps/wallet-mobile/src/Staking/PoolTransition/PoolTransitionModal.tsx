@@ -37,7 +37,7 @@ export const PoolTransitionModal = ({
     <View style={styles.modal}>
       <Text style={styles.details}>{isActive ? strings.warning : strings.finalWarning}</Text>
 
-      <Space fill height="l" />
+      <Space fill height="lg" />
 
       <View style={[styles.card, isActive ? styles.border : styles.warningBorder]}>
         <Row>
@@ -79,11 +79,11 @@ export const PoolTransitionModal = ({
         </Text>
       </View>
 
-      <Space height="s" />
+      <Space height="sm" />
 
       <Icon.ArrowDown size={17} />
 
-      <Space height="s" />
+      <Space height="sm" />
 
       <View style={styles.card}>
         <LinearGradient

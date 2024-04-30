@@ -40,7 +40,7 @@ export const ChooseMnemonicTypeScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
-      <Space height="l" />
+      <Space height="lg" />
 
       <LogoBanner />
 
@@ -53,7 +53,7 @@ export const ChooseMnemonicTypeScreen = () => {
           onPress={handle15Words}
         />
 
-        <Space height="l" />
+        <Space height="lg" />
 
         <ButtonCard
           title={strings.choose24WordsMnemonicTitle}
@@ -61,7 +61,7 @@ export const ChooseMnemonicTypeScreen = () => {
           onPress={handle24Words}
         />
 
-        <Space height="l" />
+        <Space height="lg" />
       </View>
     </SafeAreaView>
   )

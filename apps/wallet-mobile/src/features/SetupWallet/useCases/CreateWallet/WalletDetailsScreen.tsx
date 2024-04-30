@@ -141,14 +141,14 @@ export const WalletDetailsScreen = () => {
               linesOfText={[strings.walletNameModalCardFirstItem, strings.walletNameModalCardSecondItem]}
             />
 
-            <Space height="l" />
+            <Space height="lg" />
 
             <CardAboutPhrase
               title={strings.walletPasswordModalCardTitle}
               linesOfText={[strings.walletPasswordModalCardFirstItem, strings.walletPasswordModalCardSecondItem]}
             />
 
-            <Space height="l" />
+            <Space height="lg" />
 
             <LearnMoreButton
               onPress={() => {
@@ -158,11 +158,11 @@ export const WalletDetailsScreen = () => {
           </View>
         </ScrollView>
 
-        <Space height="s" />
+        <Space height="sm" />
 
         <Button title={strings.continueButton} style={styles.button} onPress={closeModal} />
 
-        <Space height="l" />
+        <Space height="lg" />
       </View>,
       HEIGHT_MODAL_NAME_PASSWORD,
     )
@@ -186,7 +186,7 @@ export const WalletDetailsScreen = () => {
               ]}
             />
 
-            <Space height="l" />
+            <Space height="lg" />
 
             <LearnMoreButton
               onPress={() => {
@@ -196,11 +196,11 @@ export const WalletDetailsScreen = () => {
           </View>
         </ScrollView>
 
-        <Space height="s" />
+        <Space height="sm" />
 
         <Button title={strings.continueButton} style={styles.button} onPress={closeModal} />
 
-        <Space height="l" />
+        <Space height="lg" />
       </View>,
       HEIGHT_MODAL_CHECKSUM,
     )
@@ -271,12 +271,12 @@ export const WalletDetailsScreen = () => {
         <View style={styles.checksum}>
           <Icon.WalletAccount iconSeed={plate.accountPlate.ImagePart} style={styles.walletChecksum} />
 
-          <Space width="s" />
+          <Space width="sm" />
 
           <Text style={styles.plateNumber}>
             {plate.accountPlate.TextPart}
 
-            <Space width="s" />
+            <Space width="sm" />
 
             <TouchableOpacity onPress={showModalTipsPlateNumber}>
               <Icon.Info size={28} />
@@ -293,7 +293,7 @@ export const WalletDetailsScreen = () => {
           disabled={Object.keys(passwordErrors).length > 0 || Object.keys(nameErrors).length > 0}
         />
 
-        <Space height="s" />
+        <Space height="sm" />
       </View>
     </SafeAreaView>
   )

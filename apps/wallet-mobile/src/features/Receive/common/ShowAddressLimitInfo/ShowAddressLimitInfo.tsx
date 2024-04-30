@@ -9,7 +9,7 @@ import {useStrings} from '../useStrings'
 
 export const ShowAddressLimitInfo = () => {
   const strings = useStrings()
-  const {styles, colors} = useStyles()
+  const {styles, colors, color} = useStyles()
 
   return (
     <Animated.View layout={Layout} entering={FadeInUp} exiting={FadeOut} style={styles.smallAddressCard}>
@@ -19,12 +19,11 @@ export const ShowAddressLimitInfo = () => {
         {strings.infoAddressLimit}
 
         <TouchableWithoutFeedback
-          style={[styles.text, {color: colors.zendeskLink}]}
           onPress={() => {
             Linking.openURL(YoroiZendeskLink)
           }}
         >
-          <Text style={{color: colors.zendeskLink, borderWidth: 1}}>{strings.yoroiZendesk}</Text>
+          <Text style={{color: color.primary_c500, borderWidth: 1}}>{strings.yoroiZendesk}</Text>
         </TouchableWithoutFeedback>
       </Text>
     </Animated.View>
@@ -52,8 +51,7 @@ const useStyles = () => {
 
   const colors = {
     icon: color.primary_c500,
-    zendeskLink: color.primary_c500,
   }
 
-  return {styles, colors} as const
+  return {styles, colors, color}
 }

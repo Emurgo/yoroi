@@ -49,13 +49,13 @@ const getStatusBarStyleByRoute = ({
       }
     } else if (currentRouteName === 'scan-start') {
       return {
-        bgColorAndroid: palette['black-static'],
+        bgColorAndroid: color.white_static,
         statusBarStyle: 'dark-content',
       }
     }
   }
   return {
-    bgColorAndroid: isDark ? palette['black-static'] : palette['white-static'],
+    bgColorAndroid: isDark ? color.black_static : color.white_static,
     statusBarStyle: isDark ? 'light-content' : 'dark-content',
   }
 }

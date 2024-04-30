@@ -232,7 +232,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    actionColor: theme.color.gray_cmin,
+    actionColor: color.gray_cmin,
   }
   return {styles, colors}
 }

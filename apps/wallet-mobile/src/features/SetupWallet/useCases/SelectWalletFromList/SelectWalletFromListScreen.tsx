@@ -84,7 +84,7 @@ export const SelectWalletFromList = () => {
         <React.Fragment key={walletMeta.id}>
           <WalletListItem wallet={walletMeta} onPress={onSelect} />
 
-          {index < allData.length - 1 && <Space height="l" />}
+          {index < allData.length - 1 && <Space height="lg" />}
         </React.Fragment>
       )),
     [onSelect, walletMetas],
@@ -109,15 +109,15 @@ export const SelectWalletFromList = () => {
           (showLine || isScrollBarShown) && {borderTopWidth: 1, borderTopColor: colors.lightGray},
         ]}
       >
-        <Space height="l" />
+        <Space height="lg" />
 
         <SupportTicketLink />
 
-        <Space height="l" />
+        <Space height="lg" />
 
         <AddWalletButton />
 
-        <Space height="m" />
+        <Space height="md" />
 
         <OnlyDevButton />
       </View>
@@ -136,7 +136,7 @@ const SupportTicketLink = () => {
     <TouchableOpacity style={styles.link} onPress={onPress}>
       <SupportIllustration />
 
-      <Space width="s" />
+      <Space width="sm" />
 
       <Text style={styles.linkText}>{strings.supportTicketLink.toLocaleUpperCase()}</Text>
     </TouchableOpacity>

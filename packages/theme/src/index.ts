@@ -10,3 +10,5 @@ export * from './atoms/atoms'
 export * from './storybook/BasePalette'
 
 export * from './adapters/mmkv-storage/theme-storage-maker'
+
+export * from './helpers/detect-theme'

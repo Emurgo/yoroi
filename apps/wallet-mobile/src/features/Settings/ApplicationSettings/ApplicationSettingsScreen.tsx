@@ -27,7 +27,7 @@ const iconProps = {
 export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
   const styles = useStyles()
-  const {colorScheme} = useTheme()
+  const {name} = useTheme()
   const {languageCode, supportedLanguages} = useLanguage()
   const language = supportedLanguages.find((lang) => lang.code === languageCode) ?? defaultLanguage
 
@@ -97,7 +97,7 @@ export const ApplicationSettingsScreen = () => {
           {displayToggleThemeSetting && (
             <SettingsItem
               icon={<Icon.EyeOff {...iconProps} />} // TODO
-              label={`${capitalize(colorScheme)} Theme`} // TODO
+              label={`${capitalize(name)} Theme`} // TODO
             >
               <ToggleThemeSwitch />
             </SettingsItem>
@@ -184,16 +184,16 @@ const PrivacyModeSwitch = ({isPrivacyOff}: {isPrivacyOff: boolean}) => {
 }
 
 const ToggleThemeSwitch = () => {
-  const {selectColorScheme, colorScheme} = useTheme()
+  const {selectThemeName, name} = useTheme()
   const [theme, setTheme] = React.useState(true)
 
   const onToggleThemeMode = () => {
-    if (colorScheme === 'light') {
-      selectColorScheme('dark')
+    if (name === 'default-light') {
+      selectThemeName('default-dark')
       setTheme(true)
     }
-    if (colorScheme === 'dark') {
-      selectColorScheme('light')
+    if (name === 'default-dark') {
+      selectThemeName('default-light')
       setTheme(false)
     }
   }

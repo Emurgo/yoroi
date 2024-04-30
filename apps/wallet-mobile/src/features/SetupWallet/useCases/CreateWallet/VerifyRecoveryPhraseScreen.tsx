@@ -69,11 +69,11 @@ export const VerifyRecoveryPhraseScreen = () => {
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
       <StepperProgress currentStep={3} currentStepTitle={strings.stepVerifyRecoveryPhrase} totalSteps={4} />
 
-      <Space height="l" />
+      <Space height="lg" />
 
       <Text style={styles.title}>{strings.verifyRecoveryPhraseTitle(bold)}</Text>
 
-      <Space height="l" />
+      <Space height="lg" />
 
       <MnemonicInput
         onPress={removeLastEntry}
@@ -84,13 +84,13 @@ export const VerifyRecoveryPhraseScreen = () => {
 
       {isPhraseComplete && isLastWordValid() && (
         <>
-          <Space height="l" />
+          <Space height="lg" />
 
           <SuccessMessage />
         </>
       )}
 
-      <Space height="l" />
+      <Space height="lg" />
 
       <ScrollView bounces={false}>
         <WordBadges
@@ -103,14 +103,14 @@ export const VerifyRecoveryPhraseScreen = () => {
 
         {!isLastWordValid() && userEntries.length > 0 && (
           <>
-            <Space height="l" />
+            <Space height="lg" />
 
             <ErrorMessage />
           </>
         )}
       </ScrollView>
 
-      <Space height="l" />
+      <Space height="lg" />
 
       <View>
         <Button
@@ -124,7 +124,7 @@ export const VerifyRecoveryPhraseScreen = () => {
           }}
         />
 
-        <Space height="s" />
+        <Space height="sm" />
       </View>
     </SafeAreaView>
   )
@@ -137,7 +137,7 @@ const ErrorMessage = () => {
     <View style={styles.errorMessageContainer}>
       <AlertIllustration />
 
-      <Space width="s" />
+      <Space width="sm" />
 
       <Text style={styles.errorMessage}>{strings.verifyRecoveryPhraseErrorMessage}</Text>
     </View>
@@ -151,7 +151,7 @@ const SuccessMessage = () => {
     <View style={styles.successMessageContainer}>
       <Check2Illustration />
 
-      <Space width="s" />
+      <Space width="sm" />
 
       <Text style={styles.successMessage}>{strings.verifyRecoveryPhraseSuccessMessage}</Text>
     </View>

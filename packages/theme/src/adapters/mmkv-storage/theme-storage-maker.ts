@@ -8,7 +8,7 @@ const themeNameKey = 'theme-name'
 export const themeStorageMaker = ({
   storage,
 }: {
-  storage: App.ObservableStorage<false>
+  storage: App.ObservableStorage<false, string>
 }): ThemeStorage => {
   const save = (name: SupportedThemes) =>
     storage.setItem<SupportedThemes>(themeNameKey, name)

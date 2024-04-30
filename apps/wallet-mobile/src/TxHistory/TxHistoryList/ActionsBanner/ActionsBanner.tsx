@@ -40,7 +40,7 @@ const useStyles = () => {
     actionsRoot: {
       display: 'flex',
       ...atoms.px_lg,
-      ...atoms.pb__2xs,
+      ...atoms.pb_2xs,
       justifyContent: 'space-between',
       flexDirection: 'row',
       alignItems: 'center',

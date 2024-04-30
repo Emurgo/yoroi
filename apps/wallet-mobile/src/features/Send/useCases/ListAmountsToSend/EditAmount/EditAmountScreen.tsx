@@ -198,7 +198,7 @@ const useStyles = () => {
     },
     maxBalance: {
       color: color.primary_c600,
-      ...atoms.body1_lg_medium,
+      ...atoms.body_1_lg_medium,
     },
     amount: {
       ...atoms.heading_2_regular,

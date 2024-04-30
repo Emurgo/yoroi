@@ -41,7 +41,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     infoIcon: {
       alignSelf: 'center',
-      ...atoms._2xs,
+      ...atoms.p_2xs,
     },
   })
   const colors = {

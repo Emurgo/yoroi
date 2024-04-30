@@ -17,9 +17,7 @@ export const CodeScannerButton = ({size = fallbackSize, color, ...props}: CodeSc
   return <PressableIcon icon={Icon.Qr} size={size} color={color ?? colors.iconFallback} {...props} />
 }
 const useStyles = () => {
-  const {
-    theme: {color},
-  } = useTheme()
+  const {color} = useTheme()
   const colors = {
     iconFallback: color.gray_cmax,
   }
