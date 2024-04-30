@@ -2,6 +2,8 @@ import {isNameServer, isResolvableDomain} from '@yoroi/resolver'
 import {Chain, Links, Portfolio, Resolver, Transfer} from '@yoroi/types'
 import {castDraft, freeze, produce} from 'immer'
 
+import {TransferAllocatedByOtherTargets} from '../../../types'
+
 export const combinedReducers = (
   state: TransferState,
   action: TransferAction | TargetAction,
@@ -39,6 +41,10 @@ const transferReducer = (state: TransferState, action: TransferAction) => {
         draft.selectedTargetIndex = defaultTransferState.selectedTargetIndex
         draft.linkAction = castDraft(defaultTransferState.linkAction)
         draft.targets = defaultTransferState.targets
+        break
+      case TransferActionType.BalancesUpdated:
+        draft.balances = action.balances
+        draft.primaryBreakdown = action.primaryBreakdown
         break
     }
   })
@@ -140,26 +146,15 @@ const targetsReducer = (state: TransferState, action: TargetAction) => {
 
 export const defaultTransferState: TransferState = freeze(
   {
-    balances: new Map(),
-    primaryBalanceBreakdown: {
-      availableRewards: 0n,
-      lockedAsStorageCost: 0n,
-      totalFromTxs: 0n,
-    },
+    allocated: new Map(),
 
-    selectedTokenBalanceBreakdown: {
-      balance: 0n,
-      used: 0n,
-      available: 0n,
-      initialQuantity: 0n,
-      locked: 0n,
-      spendable: 0n,
-    },
     selectedTargetIndex: 0,
     selectedTokenId: '.', // it's ok satisfying the type here, if ptId is dif it needs init by the client
     unsignedTx: undefined,
     memo: '',
+
     linkAction: undefined,
+
     targets: [
       {
         receiver: {
@@ -192,6 +187,7 @@ const defaultStateActions: TransferActions = {
   reset: missingInit,
   memoChanged: missingInit,
   linkActionChanged: missingInit,
+  balancesUpdated: missingInit,
 }
 
 export const defaultTransferActions = {
@@ -200,11 +196,20 @@ export const defaultTransferActions = {
 } as const
 
 export type TransferState = Readonly<{
+  balances: Map<Portfolio.Token.Id, Portfolio.Token.Amount>
+  primaryBreakdown: Portfolio.PrimaryBreakdown
+
+  // inputs
   selectedTargetIndex: number
   selectedTokenId: Portfolio.Token.Id
   unsignedTx: Chain.Cardano.UnsignedTx | undefined
   memo: string
+
+  // derived state
   targets: Transfer.Targets
+  allocated: TransferAllocatedByOtherTargets
+
+  // injected when deeplink request transfer
   linkAction: Links.YoroiAction | undefined
 }>
 
@@ -223,11 +228,15 @@ export type TargetActions = Readonly<{
 }>
 
 export type TransferActions = Readonly<{
-  unsignedTxChanged: (UnsignedTx: Chain.Cardano.UnsignedTx | undefined) => void
+  unsignedTxChanged: (UnsignedTx: Chain.Cardano.UnsignedTx) => void
   tokenSelectedChanged: (tokenId: Portfolio.Token.Id) => void
   reset: () => void
   memoChanged: (memo: string) => void
   linkActionChanged: (linkAction: Links.YoroiAction) => void
+  balancesUpdated: (
+    balances: TransferState['balances'],
+    primaryBreakdown: TransferState['primaryBreakdown'],
+  ) => void
 }>
 
 export type TargetAction = Readonly<
@@ -275,11 +284,16 @@ export type TransferAction = Readonly<
     }
   | {
       type: TransferActionType.UnsignedTxChanged
-      unsignedTx: Chain.Cardano.UnsignedTx | undefined
+      unsignedTx: Chain.Cardano.UnsignedTx
     }
   | {
       type: TransferActionType.LinkActionChanged
       linkAction: Links.YoroiAction
+    }
+  | {
+      type: TransferActionType.BalancesUpdated
+      balances: TransferState['balances']
+      primaryBreakdown: TransferState['primaryBreakdown']
     }
 >
 
@@ -295,9 +309,10 @@ export enum TransferActionType {
   MemoChanged = 'memoChanged',
   UnsignedTxChanged = 'unsignedTxChanged',
   LinkActionChanged = 'linkActionChanged',
+  BalancesUpdated = 'balancesUpdated',
 }
 
 /* istanbul ignore next */
 function missingInit() {
-  console.error('[@yoroi/swap] missing initialization')
+  console.error('[@yoroi/transfer] missing initialization')
 }

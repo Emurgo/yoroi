@@ -1,8 +1,8 @@
 import {tokenBalanceMocks} from '@yoroi/portfolio'
-import {targetGetTokenTotalUsedByOthers} from './target-get-token-total-used-by-others'
+import {targetGetTokenAllocatedToOthers} from './target-get-token-allocated-to-others'
 import {Transfer} from '@yoroi/types'
 
-describe('targetGetTokenTotalUsedByOthers', () => {
+describe('targetGetTokenAllocatedToOthers', () => {
   it('should return the total amount of tokens used by other targets', () => {
     const targets: Transfer.Target[] = [
       {
@@ -40,13 +40,13 @@ describe('targetGetTokenTotalUsedByOthers', () => {
         },
       },
     ]
-    const selectedTargetIndex = 0
-    const selectedTokenId = tokenBalanceMocks.ftNoTicker.info.id
+    const targetIndex = 0
+    const tokenId = tokenBalanceMocks.ftNoTicker.info.id
 
-    const totalUsed = targetGetTokenTotalUsedByOthers({
+    const totalUsed = targetGetTokenAllocatedToOthers({
       targets,
-      selectedTargetIndex,
-      selectedTokenId,
+      targetIndex,
+      tokenId,
     })
 
     expect(totalUsed).toBe(200n)
@@ -72,13 +72,13 @@ describe('targetGetTokenTotalUsedByOthers', () => {
         },
       },
     ]
-    const selectedTargetIndex = 0
-    const selectedTokenId = tokenBalanceMocks.ftNoTicker.info.id
+    const targetIndex = 0
+    const tokenId = tokenBalanceMocks.ftNoTicker.info.id
 
-    const totalUsed = targetGetTokenTotalUsedByOthers({
+    const totalUsed = targetGetTokenAllocatedToOthers({
       targets,
-      selectedTargetIndex,
-      selectedTokenId,
+      targetIndex,
+      tokenId,
     })
 
     expect(totalUsed).toBe(0n)
@@ -121,13 +121,13 @@ describe('targetGetTokenTotalUsedByOthers', () => {
         },
       },
     ]
-    const selectedTargetIndex = 0
-    const selectedTokenId = 'anyOther.token'
+    const targetIndex = 0
+    const tokenId = 'anyOther.token'
 
-    const totalUsed = targetGetTokenTotalUsedByOthers({
+    const totalUsed = targetGetTokenAllocatedToOthers({
       targets,
-      selectedTargetIndex,
-      selectedTokenId,
+      targetIndex,
+      tokenId,
     })
 
     expect(totalUsed).toBe(0n)

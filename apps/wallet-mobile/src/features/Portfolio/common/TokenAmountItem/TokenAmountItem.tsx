@@ -1,4 +1,4 @@
-import {amountFormatter, infoExtractName} from '@yoroi/portfolio'
+import {amountFormatter, infoExtractName, isNft} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import {Swap} from '@yoroi/types'
@@ -73,7 +73,7 @@ export const TokenAmountItem = ({
       </Middle>
 
       <Right>
-        {info.type !== Portfolio.Token.Type.NFT && variant !== 'swap' && (
+        {!isNft(info) && variant !== 'swap' && (
           <View testID="tokenAmountText">
             {priceImpactRisk === 'moderate' && <Icon.Info size={24} color={priceImpactRiskTextColor} />}
 

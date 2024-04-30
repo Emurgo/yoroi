@@ -1,13 +1,13 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {FlashList} from '@shopify/flash-list'
+import {isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {targetGetTokenBalanceBreakdown, useTransfer} from '@yoroi/transfer'
 import {Balance, Portfolio} from '@yoroi/types'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
-import {Boundary, Spacer, Text} from '../../../../../components'
-import {AmountItem} from '../../../../../components/AmountItem/AmountItem'
+import {Spacer, Text} from '../../../../../components'
 import {NftImageGallery} from '../../../../../components/NftImageGallery'
 import {useMetrics} from '../../../../../metrics/metricsManager'
 import {TxHistoryRouteNavigation} from '../../../../../navigation'
@@ -15,9 +15,10 @@ import {useSearch, useSearchOnNavBar} from '../../../../../Search/SearchContext'
 import {sortTokenInfos} from '../../../../../utils'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {limitOfSecondaryAmountsPerTx} from '../../../../../yoroi-wallets/contants'
-import {useAllTokenInfos, useBalances, useIsWalletEmpty, useNfts} from '../../../../../yoroi-wallets/hooks'
-import {Amounts, Quantities} from '../../../../../yoroi-wallets/utils'
+import {useBalances, useIsWalletEmpty, useNfts} from '../../../../../yoroi-wallets/hooks'
+import {Amounts} from '../../../../../yoroi-wallets/utils'
 import {usePortfolioBalances} from '../../../../Portfolio/common/hooks/usePortfolioBalances'
+import {usePortfolioPrimaryBreakdown} from '../../../../Portfolio/common/hooks/usePortfolioPrimaryBreakdown'
 import {useSelectedWallet} from '../../../../WalletManager/Context'
 import {filterByFungibility} from '../../../common/filterByFungibility'
 import {filterBySearch} from '../../../common/filterBySearch'
@@ -25,10 +26,7 @@ import {useOverridePreviousSendTxRoute} from '../../../common/navigation'
 import {NoAssetFoundImage} from '../../../common/NoAssetFoundImage'
 import {useStrings} from '../../../common/strings'
 import {useSelectedSecondaryAmountsCounter} from '../../../common/useSelectedSecondaryAmountsCounter'
-import {useTokenQuantities} from '../../../common/useTokenQuantities'
 import {MaxAmountsPerTx} from './Show/MaxAmountsPerTx'
-import {usePortfolioPrimaryBreakdown} from '../../../../Portfolio/common/hooks/usePortfolioPrimaryBreakdown'
-import {isPrimary, isPrimaryToken} from '@yoroi/portfolio'
 
 export const SelectTokenFromListScreen = () => {
   const strings = useStrings()
@@ -37,7 +35,7 @@ export const SelectTokenFromListScreen = () => {
 
   const wallet = useSelectedWallet()
   const balances = usePortfolioBalances({wallet})
-  const [fungibilityFilter, setFungibilityFilter] = React.useState<keyof typeof balances>('all')
+  const [fungibilityFilter, setFungibilityFilter] = React.useState<Exclude<keyof typeof balances, 'records'>>('all')
   const [isPending, startTransition] = React.useTransition()
   const showOnlyNfts = fungibilityFilter === 'nfts'
   const filteredBalancesByFungibility = balances[fungibilityFilter]
@@ -45,6 +43,7 @@ export const SelectTokenFromListScreen = () => {
     () => filteredBalancesByFungibility.filter(filterOutSelected(targets[selectedTargetIndex].entry.amounts)),
     [filteredBalancesByFungibility, selectedTargetIndex, targets],
   )
+  const balancesBreakdown = 
 
   const counter = withoutSelected.length
 
@@ -113,12 +112,12 @@ type ListProps<T> = {
 const List = <T,>({showOnlyNfts, isSearching, canAddAmount}: ListProps<T>) => {
   const showNftList = showOnlyNfts && !isSearching
 
-  if (showNftList) return <NftList canAddAmount={canAddAmount} />
+  if (showNftList) return <ListSpendableNfts canAddAmount={canAddAmount} />
 
-  return <ListAvailableBalances fungibilityFilter={fungibilityFilter} canAddAmount={canAddAmount} />
+  return <ListSpendableBalances fungibilityFilter={fungibilityFilter} canAddAmount={canAddAmount} />
 }
 
-const NftList = ({canAddAmount}: {canAddAmount: boolean}) => {
+const ListSpendableNfts = ({canAddAmount}: {canAddAmount: boolean}) => {
   const {styles} = useStyles()
   const wallet = useSelectedWallet()
   const navigation = useNavigation<TxHistoryRouteNavigation>()
@@ -159,11 +158,11 @@ const NftList = ({canAddAmount}: {canAddAmount: boolean}) => {
   )
 }
 
-type ListAvailableBalancesProps = {
+type ListSpendableBalancesProps = {
   canAddAmount: boolean
   availableBalances: ReadonlyArray<Portfolio.Token.Amount>
 }
-const ListAvailableBalances = ({canAddAmount, availableBalances}: ListAvailableBalancesProps) => {
+const ListSpendableBalances = ({canAddAmount, availableBalances}: ListSpendableBalancesProps) => {
   const {styles} = useStyles()
 
   return (
@@ -232,31 +231,30 @@ const SelectableAssetItem = ({amount, disabled, wallet}: SelectableAssetItemProp
 
   const isPrimary = isPrimaryToken(amount.info)
 
-  const onSelect = () => {
+  const handleOnSelect = React.useCallback(() => {
     tokenSelectedChanged(amount.info.id)
     closeSearch()
 
     // if the balance is atomic there is no need to edit the amount
-    if (tokenInfo.kind === 'ft' && spendable === 1n) {
-      amountChanged(spendable)
-      navigation.navigate('send-list-amounts-to-send')
-    } else if (tokenInfo.kind === 'nft') {
-      const quantity = Amounts.getAmount(balances, tokenInfo.id).quantity
-      amountChanged(quantity)
+    if (spendable === 1n && amount.info.decimals === 0) {
+      amountChanged({
+        info: amount.info,
+        quantity: spendable,
+      })
       navigation.navigate('send-list-amounts-to-send')
     } else {
       navigation.navigate('send-edit-amount')
     }
-  }
+  }, [amount.info, amountChanged, closeSearch, navigation, spendable, tokenSelectedChanged])
 
   return (
     <TouchableOpacity
       style={[styles.item, isPrimary && styles.borderBottom]}
-      onPress={onSelect}
+      onPress={handleOnSelect}
       testID="selectTokenButton"
       disabled={disabled}
     >
-      <AmountItem amount={{tokenId: tokenInfo.id, quantity: spendable}} wallet={wallet} />
+      <PortfolioAmountItem amount={{info: amount.info, quantity: spendable}} wallet={wallet} />
     </TouchableOpacity>
   )
 }
