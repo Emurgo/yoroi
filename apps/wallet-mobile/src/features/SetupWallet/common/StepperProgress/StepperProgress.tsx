@@ -3,24 +3,25 @@ import * as React from 'react'
 import {StyleSheet, ViewStyle} from 'react-native'
 import Animated, {Layout} from 'react-native-reanimated'
 
-import {CheckIllustration} from '../../illustrations/CheckIllustration'
-import {Number1} from './Number1'
-import {Number2} from './Number2'
-import {Number2Empty} from './Number2Empty'
-import {Number3} from './Number3'
-import {Number3Empty} from './Number3Empty'
-import {Number4} from './Number4'
-import {Number4Empty} from './Number4Empty'
+import {CheckIllustration} from '../../illustrations/Check'
+import {Number1} from '../../illustrations/Number1'
+import {Number2} from '../../illustrations/Number2'
+import {Number2Empty} from '../../illustrations/Number2Empty'
+import {Number3} from '../../illustrations/Number3'
+import {Number3Empty} from '../../illustrations/Number3Empty'
+import {Number4} from '../../illustrations/Number4'
+import {Number4Empty} from '../../illustrations/Number4Empty'
 
 type StepProps = {
   currentStep: number
   currentStepTitle: string
   isNext: boolean
   isPrevious: boolean
+  isLast: boolean
 }
-const Step = ({currentStep, currentStepTitle, isNext, isPrevious}: StepProps) => {
+const Step = ({currentStep, currentStepTitle, isNext, isPrevious, isLast}: StepProps) => {
   const {styles} = useStyles()
-  const shouldDisplayStepTitle = !isNext && !isPrevious && currentStepTitle !== undefined
+  const shouldDisplayStepTitle = !isNext && !isPrevious && currentStepTitle !== undefined && !isLast
 
   const StepLogo = !isPrevious ? getStepperLogo(currentStep, isNext) : CheckIllustration
 
@@ -53,6 +54,7 @@ export const StepperProgress = ({currentStep, currentStepTitle, totalSteps, styl
         currentStepTitle={currentStepTitle}
         isPrevious={currentIndex < currentStep}
         isNext={currentIndex > currentStep}
+        isLast={currentIndex === totalSteps}
         key={i}
       />,
     )
