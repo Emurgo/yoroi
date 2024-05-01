@@ -1,20 +1,20 @@
 import {Portfolio, Transfer} from '@yoroi/types'
 import {freeze} from 'immer'
 
-import {TransferUsedByOtherTargets} from '../types'
-import {targetGetTokenTotalUsedByOthers} from './target-get-token-allocated-to-others'
+import {TransferAllocatedToOtherTargets} from '../types'
+import {targetGetAllocatedToOthersByToken} from './target-get-allocated-to-others-by-token'
 
-export function targetGetUsedByOtherTargets({
+export function targetGetAllocatedToOthers({
   targets,
 }: {
   targets: Readonly<Transfer.Targets>
 }) {
-  const usedByOtherTargets: TransferUsedByOtherTargets = new Map()
+  const usedByOtherTargets: TransferAllocatedToOtherTargets = new Map()
 
   targets.forEach((target, targetIndex) => {
     Object.keys(target.entry.amounts).forEach((untypedTokenId) => {
       const tokenId = untypedTokenId as Portfolio.Token.Id
-      const allocated = targetGetTokenTotalUsedByOthers({
+      const allocated = targetGetAllocatedToOthersByToken({
         targets,
         targetIndex,
         tokenId,
@@ -24,6 +24,8 @@ export function targetGetUsedByOtherTargets({
       currentTarget.set(tokenId, {
         allocated,
       })
+
+      usedByOtherTargets.set(targetIndex, currentTarget)
     })
   })
 

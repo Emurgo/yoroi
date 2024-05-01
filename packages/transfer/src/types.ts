@@ -1,6 +1,6 @@
 import {Portfolio} from '@yoroi/types'
 
-export type TransferAllocatedByOtherTargets = Map<
+export type TransferAllocatedToOtherTargets = Map<
   number,
   Map<
     Portfolio.Token.Id,

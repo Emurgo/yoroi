@@ -1,8 +1,8 @@
 import {tokenBalanceMocks} from '@yoroi/portfolio'
-import {targetGetTokenAllocatedToOthers} from './target-get-token-allocated-to-others'
+import {targetGetAllocatedToOthersByToken} from './target-get-allocated-to-others-by-token'
 import {Transfer} from '@yoroi/types'
 
-describe('targetGetTokenAllocatedToOthers', () => {
+describe('targetGetAllocatedToOthersByToken', () => {
   it('should return the total amount of tokens used by other targets', () => {
     const targets: Transfer.Target[] = [
       {
@@ -43,7 +43,7 @@ describe('targetGetTokenAllocatedToOthers', () => {
     const targetIndex = 0
     const tokenId = tokenBalanceMocks.ftNoTicker.info.id
 
-    const totalUsed = targetGetTokenAllocatedToOthers({
+    const totalUsed = targetGetAllocatedToOthersByToken({
       targets,
       targetIndex,
       tokenId,
@@ -75,7 +75,7 @@ describe('targetGetTokenAllocatedToOthers', () => {
     const targetIndex = 0
     const tokenId = tokenBalanceMocks.ftNoTicker.info.id
 
-    const totalUsed = targetGetTokenAllocatedToOthers({
+    const totalUsed = targetGetAllocatedToOthersByToken({
       targets,
       targetIndex,
       tokenId,
@@ -124,7 +124,7 @@ describe('targetGetTokenAllocatedToOthers', () => {
     const targetIndex = 0
     const tokenId = 'anyOther.token'
 
-    const totalUsed = targetGetTokenAllocatedToOthers({
+    const totalUsed = targetGetAllocatedToOthersByToken({
       targets,
       targetIndex,
       tokenId,

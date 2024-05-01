@@ -1,9 +1,9 @@
 import {Transfer} from '@yoroi/types'
 import {tokenBalanceMocks} from '@yoroi/portfolio'
 
-import {targetGetUsedByOtherTargets} from './target-get-allocated-in-others'
+import {targetGetAllocatedToOthers} from './target-get-allocated-to-others'
 
-describe('targetGetUsedByOtherTargets()', () => {
+describe('TransferAllocatedToOtherTargets', () => {
   it('should calculate balances breakdown correctly', () => {
     const targets: Transfer.Target[] = [
       {
@@ -42,14 +42,14 @@ describe('targetGetUsedByOtherTargets()', () => {
       },
     ]
 
-    const result = targetGetUsedByOtherTargets({targets})
+    const result = targetGetAllocatedToOthers({targets})
 
-    expect(result.size).toEqual(1)
+    expect(result.size).toEqual(2)
     expect(result.get(0)?.get(tokenBalanceMocks.ftNoTicker.info.id)).toEqual({
-      used: 200n,
+      allocated: 200n,
     })
-    expect(result.get(0)?.get(tokenBalanceMocks.ftNoTicker.info.id)).toEqual({
-      used: 100n,
+    expect(result.get(1)?.get(tokenBalanceMocks.ftNoTicker.info.id)).toEqual({
+      allocated: 100n,
     })
   })
 })

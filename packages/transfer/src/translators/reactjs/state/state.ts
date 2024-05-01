@@ -3,20 +3,15 @@ import {Chain, Links, Portfolio, Resolver, Transfer} from '@yoroi/types'
 import {castDraft, freeze, produce} from 'immer'
 
 import {TransferAllocatedByOtherTargets} from '../../../types'
+import { targetGetTokenAllocatedToOthers } from '../../../helpers/target-get-allocated-to-others-by-token'
 
 export const combinedReducers = (
   state: TransferState,
   action: TransferAction | TargetAction,
 ) => {
-  return {
-    ...transferReducer(
-      {
-        ...state,
-        targets: targetsReducer(state, action as TargetAction),
-      },
-      action as TransferAction,
-    ),
-  }
+  let newState = transferReducer(state, action as TransferAction)
+  newState = targetsReducer(newState, action as TargetAction)
+  return newState
 }
 
 const transferReducer = (state: TransferState, action: TransferAction) => {
@@ -35,29 +30,25 @@ const transferReducer = (state: TransferState, action: TransferAction) => {
         draft.linkAction = castDraft(action.linkAction)
         break
       case TransferActionType.Reset:
-        draft.selectedTokenId = defaultTransferState.selectedTokenId
-        draft.memo = defaultTransferState.memo
-        draft.unsignedTx = castDraft(defaultTransferState.unsignedTx)
-        draft.selectedTargetIndex = defaultTransferState.selectedTargetIndex
-        draft.linkAction = castDraft(defaultTransferState.linkAction)
-        draft.targets = defaultTransferState.targets
+        draft = castDraft(defaultTransferState)
         break
       case TransferActionType.BalancesUpdated:
         draft.balances = action.balances
         draft.primaryBreakdown = action.primaryBreakdown
+        draft.allocated = targetGetTokenAllocatedToOthers()
         break
     }
   })
 }
 
 const targetsReducer = (state: TransferState, action: TargetAction) => {
-  return produce(state.targets, (draft) => {
+  return produce(state, (draft) => {
     switch (action.type) {
       case TransferActionType.ReceiverResolveChanged: {
         const {resolve} = action
         const selectedTargetIndex = state.selectedTargetIndex
 
-        draft.forEach((target, index) => {
+        draft.targets.forEach((target, index) => {
           if (index === selectedTargetIndex) {
             const isDomain: boolean = isResolvableDomain(resolve)
             const as: Resolver.Receiver['as'] = isDomain ? 'domain' : 'address'
@@ -78,7 +69,7 @@ const targetsReducer = (state: TransferState, action: TargetAction) => {
         const {addressRecords} = action
         const selectedTargetIndex = state.selectedTargetIndex
 
-        draft.forEach((target, index) => {
+        draft.targets.forEach((target, index) => {
           if (index === selectedTargetIndex) {
             if (addressRecords !== undefined) {
               const keys = Object.keys(addressRecords).filter(isNameServer)
@@ -100,7 +91,7 @@ const targetsReducer = (state: TransferState, action: TargetAction) => {
         const {nameServer} = action
         const selectedTargetIndex = state.selectedTargetIndex
 
-        draft.forEach((target, index) => {
+        draft.targets.forEach((target, index) => {
           if (index === selectedTargetIndex) {
             target.receiver.selectedNameServer = nameServer
 
@@ -121,7 +112,7 @@ const targetsReducer = (state: TransferState, action: TargetAction) => {
         const selectedTargetIndex = state.selectedTargetIndex
         const selectedTokenId = state.selectedTokenId
 
-        draft.forEach((target, index) => {
+        draft.targets.forEach((target, index) => {
           if (index === selectedTargetIndex) {
             target.entry.amounts[selectedTokenId] = amount
           }
@@ -133,7 +124,7 @@ const targetsReducer = (state: TransferState, action: TargetAction) => {
         const {tokenId} = action
         const selectedTargetIndex = state.selectedTargetIndex
 
-        draft.forEach((target, index) => {
+        draft.targets.forEach((target, index) => {
           if (index === selectedTargetIndex) {
             delete target.entry.amounts[tokenId]
           }
@@ -146,6 +137,13 @@ const targetsReducer = (state: TransferState, action: TargetAction) => {
 
 export const defaultTransferState: TransferState = freeze(
   {
+    balances: new Map(),
+    primaryBreakdown: {
+      availableRewards: 0n,
+      lockedAsStorageCost: 0n,
+      totalFromTxs: 0n,
+    },
+
     allocated: new Map(),
 
     selectedTargetIndex: 0,
