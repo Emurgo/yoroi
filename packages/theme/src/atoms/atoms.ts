@@ -8,7 +8,7 @@ const fontFamily = {
     fontFamily: 'Rubik',
   },
   medium: {
-    fontFamily: 'Rubik_Medium',
+    fontFamily: 'Rubik-Medium',
   },
   monospace: {
     fontFamily: Platform.select({
