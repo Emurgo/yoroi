@@ -100,7 +100,23 @@ export type YoroiWallet = {
   readonly portfolioPrimaryTokenInfo: Portfolio.Token.Info
   readonly balanceManager: Readonly<Portfolio.Manager.Balance>
 
+  // ---------------------------------------------------------------------------------------
+  //                     ########## Interface  -  V2 ##########
   get isMainnet(): boolean
+
+  // Portfolio
+  balance$: Portfolio.Manager.Balance['observable$']
+  get balances(): ReturnType<Portfolio.Manager.Balance['getBalances']>
+  get primaryBalance(): ReturnType<Portfolio.Manager.Balance['getPrimaryBalance']>
+  get primaryBreakdown(): ReturnType<Portfolio.Manager.Balance['getPrimaryBreakdown']>
+  get isEmpty(): boolean
+  get hasOnlyPrimary(): boolean
+
+  // sync
+  resync(): Promise<void>
+  clear(): Promise<void>
+  sync(params: {isForced?: boolean}): Promise<void>
+  // ---------------------------------------------------------------------------------------
 
   // API
   api: App.Api
@@ -161,10 +177,7 @@ export type YoroiWallet = {
   fetchNftModerationStatus(fingerprint: string): Promise<YoroiNftModerationStatus>
 
   // Sync, Save
-  resync(): Promise<void>
-  clear(): Promise<void>
   save(): Promise<void>
-  sync(params: {isForced?: boolean}): Promise<void>
   saveMemo(txId: string, memo: string): Promise<void>
 
   // Balances, TxDetails
@@ -183,12 +196,6 @@ export type YoroiWallet = {
     isConfirmed: boolean
   }
   setCollateralId(collateralId: RawUtxo['utxo_id']): Promise<void>
-
-  // Portfolio
-  balance$: Portfolio.Manager.Balance['observable$']
-  get balances(): ReturnType<Portfolio.Manager.Balance['getBalances']>
-  get primaryBalance(): ReturnType<Portfolio.Manager.Balance['getPrimaryBalance']>
-  get primaryBreakdown(): ReturnType<Portfolio.Manager.Balance['getPrimaryBreakdown']>
 
   // Fiat
   fetchCurrentPrice(symbol: CurrencySymbol): Promise<number>

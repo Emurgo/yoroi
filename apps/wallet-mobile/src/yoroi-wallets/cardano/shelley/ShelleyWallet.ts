@@ -420,6 +420,14 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     get primaryBreakdown() {
       return this.balanceManager.getPrimaryBreakdown()
     }
+
+    get hasOnlyPrimary() {
+      return this.balanceManager.getHasOnlyPrimary()
+    }
+
+    get isEmpty() {
+      return this.balanceManager.getIsEmpty()
+    }
     // end of portfolio
 
     get receiveAddresses(): Addresses {

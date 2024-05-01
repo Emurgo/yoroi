@@ -425,6 +425,14 @@ export class ByronWallet implements YoroiWallet {
     return this.balanceManager.getPrimaryBreakdown()
   }
 
+  get hasOnlyPrimary() {
+    return this.balanceManager.getHasOnlyPrimary()
+  }
+
+  get isEmpty() {
+    return this.balanceManager.getIsEmpty()
+  }
+
   get receiveAddresses(): Addresses {
     return this.externalAddresses.slice(0, this.numReceiveAddresses)
   }
