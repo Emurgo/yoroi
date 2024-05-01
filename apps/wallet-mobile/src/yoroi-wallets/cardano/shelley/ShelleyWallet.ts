@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {PrivateKey} from '@emurgo/cross-csl-core'
-import {createSignedLedgerTxFromCbor, signRawTransaction} from '@emurgo/yoroi-lib'
+import {PrivateKey, TransactionUnspentOutput} from '@emurgo/cross-csl-core'
+import {createSignedLedgerTxFromCbor, RemoteUnspentOutput, signRawTransaction} from '@emurgo/yoroi-lib'
 import {Datum} from '@emurgo/yoroi-lib/dist/internals/models'
 import {AppApi, CardanoApi} from '@yoroi/api'
 import {isNonNullable, parseSafe} from '@yoroi/common'
@@ -71,6 +71,7 @@ import {deriveRewardAddressHex, toRecipients} from '../utils'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
 import {utxosMaker} from '../utxoManager/utxos'
 import {makeKeys} from './makeKeys'
+import {cardanoUtxoFromRemoteFormat} from '../cip30'
 
 type WalletState = {
   lastGeneratedAddressIndex: number
@@ -926,9 +927,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
 
     async getUsedAddresses(pagination?: {page: number; limit: number}) {
       const allAddresses = this.receiveAddresses.filter((address) => this.isUsedAddressIndex[address])
-      const selectedAddresses = pagination
-        ? allAddresses.slice(pagination.page * pagination.limit, (pagination.page + 1) * pagination.limit)
-        : allAddresses
+      const selectedAddresses = paginate(allAddresses, pagination)
       const result = await Promise.all(
         selectedAddresses.map((addr) => Cardano.Wasm.Address.fromBech32(addr).then((a) => a.toHex())),
       )
@@ -947,8 +946,22 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       return [hex]
     }
 
-    async CIP30getUtxos() {
-      return []
+    async CIP30getUtxos(value?: string, pagination?: {page: number; limit: number}) {
+      const allUtxos = this.utxos
+      const remoteUnspentOutputs: RemoteUnspentOutput[] = allUtxos.map((utxo) => ({
+        txHash: utxo.tx_hash,
+        txIndex: utxo.tx_index,
+        receiver: utxo.receiver,
+        amount: utxo.amount,
+        assets: utxo.assets,
+        utxoId: utxo.utxo_id,
+      }))
+
+      const valueStr = value?.trim() ?? ''
+      if (valueStr.length === 0) {
+        const selectedUtxos = paginate(remoteUnspentOutputs, pagination)
+        return await Promise.all(selectedUtxos.map((o) => cardanoUtxoFromRemoteFormat(o)))
+      }
     }
 
     async signSwapCancellationWithLedger(cbor: string, useUSB: boolean): Promise<void> {
@@ -1360,3 +1373,7 @@ const keys: Array<keyof WalletJSON> = [
 
 const encryptAndSaveRootKey = (wallet: YoroiWallet, rootKey: string, password: string) =>
   wallet.encryptedStorage.rootKey.write(rootKey, password)
+
+const paginate = <T>(items: T[], pagination?: {page: number; limit: number}) => {
+  return pagination ? items.slice(pagination.page * pagination.limit, (pagination.page + 1) * pagination.limit) : items
+}

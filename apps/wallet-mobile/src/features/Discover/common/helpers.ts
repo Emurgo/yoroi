@@ -66,6 +66,7 @@ export const createDappConnector = (appStorage: App.Storage, wallet: YoroiWallet
     getBalance: (tokenId) => wallet.getBalance(tokenId),
     getChangeAddress: () => wallet.CIP30getChangeAddress(),
     getRewardAddresses: () => wallet.CIP30getRewardAddresses(),
+    getUtxos: (value, pagination) => wallet.CIP30getUtxos(value, pagination),
     confirmConnection: async (origin: string) => {
       return new Promise<boolean>((resolve) => {
         // TODO: Use modal with translations here instead of alert

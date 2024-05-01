@@ -1,13 +1,49 @@
 import {Buffer} from 'buffer'
 import _ from 'lodash'
 
-import {RawUtxo} from '../types'
+import {RawUtxo, RemoteAsset} from '../types'
 import {Utxos} from '../utils'
 import {CardanoMobile} from '../wallets'
 import {identifierToCardanoAsset} from './utils'
+import {RemoteUnspentOutput, UtxoAsset} from '@emurgo/yoroi-lib'
+import * as CSL from '@emurgo/cross-csl-core'
+import {toAssetNameHex, toPolicyId} from './api'
+
+export async function assetToRustMultiasset(remoteAssets: UtxoAsset[]): Promise<CSL.MultiAsset> {
+  const groupedAssets = remoteAssets.reduce((res, a) => {
+    ;(res[toPolicyId(a.assetId)] = res[toPolicyId(a.assetId)] || []).push(a)
+    return res
+  }, {} as Record<string, UtxoAsset[]>)
+  const multiasset = await CardanoMobile.MultiAsset.new()
+  for (const policyHex of Object.keys(groupedAssets)) {
+    const assetGroup = groupedAssets[policyHex]
+    const policyId = await CardanoMobile.ScriptHash.fromBytes(Buffer.from(policyHex, 'hex'))
+    const assets = await CardanoMobile.Assets.new()
+    for (const asset of assetGroup) {
+      await assets.insert(
+        await CardanoMobile.AssetName.new(Buffer.from(toAssetNameHex(asset.assetId), 'hex')),
+        await CardanoMobile.BigNum.fromStr(asset.amount),
+      )
+    }
+    await multiasset.insert(policyId, assets)
+  }
+  return multiasset
+}
+export async function cardanoUtxoFromRemoteFormat(u: RemoteUnspentOutput): Promise<CSL.TransactionUnspentOutput> {
+  const input = await CardanoMobile.TransactionInput.new(
+    await CardanoMobile.TransactionHash.fromHex(u.txHash),
+    u.txIndex,
+  )
+  const value = await CardanoMobile.Value.new(await CardanoMobile.BigNum.fromStr(u.amount))
+  if ((u.assets || []).length > 0) {
+    await value.setMultiasset(await assetToRustMultiasset([...u.assets]))
+  }
+  const output = await CardanoMobile.TransactionOutput.new(await CardanoMobile.Address.fromHex(u.receiver), value)
+  return CardanoMobile.TransactionUnspentOutput.new(input, output)
+}
 
 export const getBalance = async (tokenId = '*', utxos: RawUtxo[], primaryTokenId: string) => {
-  if (tokenId === '*') tokenId = '.'
+  // todo: filter by token id
   const amounts = Utxos.toAmounts(utxos, primaryTokenId)
   const value = await CardanoMobile.Value.new(await CardanoMobile.BigNum.fromStr(amounts[primaryTokenId]))
   const normalizedInHex = await Promise.all(
