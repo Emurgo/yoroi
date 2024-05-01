@@ -28,7 +28,7 @@ import {CONFIG} from './config'
 
 const routes: Array<{label: string; path: keyof AppRoutes}> = [
   {label: 'Storybook', path: 'storybook'},
-  {label: 'Skip to wallet list', path: 'app-root'},
+  {label: 'Skip to wallet list', path: 'manage-wallets'},
 ]
 
 const crash = () => {

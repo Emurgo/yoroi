@@ -190,7 +190,7 @@ const useNavigateTo = () => {
     catalystVoting: () => {
       prefetchStakingInfo()
 
-      navigation.navigate('app-root', {
+      navigation.navigate('manage-wallets', {
         screen: 'voting-registration',
         params: {
           screen: 'download-catalyst',

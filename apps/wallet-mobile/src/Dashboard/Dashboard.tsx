@@ -153,7 +153,7 @@ const useNavigateTo = () => {
 
   return {
     stakingCenter: () => {
-      navigation.navigate('app-root', {
+      navigation.navigate('manage-wallets', {
         screen: 'main-wallet-routes',
         params: {
           screen: 'staking-dashboard',
