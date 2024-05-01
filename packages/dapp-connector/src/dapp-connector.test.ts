@@ -233,12 +233,12 @@ describe('DappConnector', () => {
       expect(sendMessage).toHaveBeenCalledWith('1', mockedData[walletId].balance)
     })
 
-    it('should resolve getChangeAddresses with mocked data', async () => {
+    it('should resolve getChangeAddress with mocked data', async () => {
       const dappConnector = getDappConnector()
       const sendMessage = jest.fn()
       await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
-      await dappConnector.handleEvent(createEvent('api.getChangeAddresses'), trustedUrl, sendMessage)
-      expect(sendMessage).toHaveBeenCalledWith('1', mockedData[walletId].changeAddresses)
+      await dappConnector.handleEvent(createEvent('api.getChangeAddress'), trustedUrl, sendMessage)
+      expect(sendMessage).toHaveBeenCalledWith('1', mockedData[walletId].changeAddresses[0])
     })
 
     it('should resolve getRewardAddresses with mocked data', async () => {
@@ -282,5 +282,10 @@ const mockWallet: ResolverWallet = {
   getBalance: () => Promise.resolve('1a062ea8a0'),
   getUnusedAddresses: () => Promise.resolve([]),
   getUsedAddresses: () => Promise.resolve([]),
+  getChangeAddress: () =>
+    Promise.resolve(
+      '017ef00ee3672330155382a2857573868af466b88aa8c4081f45583e1784d958399bcce03402fd853d43a4e7366f2018932e5aff4eea904693',
+    ),
+  getRewardAddresses: () => Promise.resolve(['e184d958399bcce03402fd853d43a4e7366f2018932e5aff4eea904693']),
 }
 const trustedUrl = 'https://yoroi-wallet.com/'

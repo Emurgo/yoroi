@@ -1,5 +1,4 @@
 import {isKeyOf, isRecord} from '@yoroi/common'
-import {mockedData, mockWalletId1} from './mocks'
 import {Storage} from './adapters/async-storage'
 import {z} from 'zod'
 import {createTypeGuardFromSchema} from '@yoroi/common/src'
@@ -20,7 +19,7 @@ type Resolver = {
   isEnabled: ResolvableMethod<boolean>
   api: {
     getBalance: ResolvableMethod<string>
-    getChangeAddresses: ResolvableMethod<string[]>
+    getChangeAddress: ResolvableMethod<string>
     getNetworkId: ResolvableMethod<number>
     getRewardAddresses: ResolvableMethod<string[]>
     getUsedAddresses: ResolvableMethod<string[]>
@@ -65,10 +64,10 @@ export const resolver: Resolver = {
       const [tokenId = '*'] = params.args || []
       return context.wallet.getBalance(tokenId)
     },
-    getChangeAddresses: async (_params: unknown, context: Context) => {
+    getChangeAddress: async (_params: unknown, context: Context) => {
       assertOriginsMatch(context)
       await assertWalletAcceptedConnection(context)
-      return mockedData[mockWalletId1].changeAddresses
+      return context.wallet.getChangeAddress()
     },
     getNetworkId: async (_params: unknown, context: Context) => {
       assertOriginsMatch(context)
@@ -78,7 +77,7 @@ export const resolver: Resolver = {
     getRewardAddresses: async (_params: unknown, context: Context) => {
       assertOriginsMatch(context)
       await assertWalletAcceptedConnection(context)
-      return mockedData[mockWalletId1].rewardAddresses
+      return context.wallet.getRewardAddresses()
     },
     getUsedAddresses: async (params: unknown, context: Context) => {
       assertOriginsMatch(context)
@@ -177,6 +176,8 @@ export type ResolverWallet = {
   getBalance: (tokenId?: string) => Promise<string>
   getUnusedAddresses: () => Promise<string[]>
   getUsedAddresses: (pagination?: {page: number; limit: number}) => Promise<string[]>
+  getChangeAddress: () => Promise<string>
+  getRewardAddresses: () => Promise<string[]>
 }
 
 const LOG_MESSAGE_EVENT = 'log_message'

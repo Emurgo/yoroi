@@ -919,10 +919,9 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
 
     async getUnusedAddresses() {
       const bech32Addresses = this.receiveAddresses.filter((address) => !this.isUsedAddressIndex[address])
-      const result = await Promise.all(
+      return await Promise.all(
         bech32Addresses.map((addr) => Cardano.Wasm.Address.fromBech32(addr).then((a) => a.toHex())),
       )
-      return result
     }
 
     async getUsedAddresses(pagination?: {page: number; limit: number}) {
@@ -934,6 +933,18 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         selectedAddresses.map((addr) => Cardano.Wasm.Address.fromBech32(addr).then((a) => a.toHex())),
       )
       return result
+    }
+
+    async CIP30getChangeAddress() {
+      const changeAddr = this.getChangeAddress()
+      const addr = await Cardano.Wasm.Address.fromBech32(changeAddr)
+      return addr.toHex()
+    }
+
+    async CIP30getRewardAddresses() {
+      const addr = await CardanoMobile.Address.fromHex(this.rewardAddressHex)
+      const hex = await addr.toHex()
+      return [hex]
     }
 
     async signSwapCancellationWithLedger(cbor: string, useUSB: boolean): Promise<void> {
