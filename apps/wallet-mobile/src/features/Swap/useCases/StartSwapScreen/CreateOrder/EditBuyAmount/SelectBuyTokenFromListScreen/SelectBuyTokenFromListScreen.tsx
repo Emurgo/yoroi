@@ -225,12 +225,11 @@ const EmptySearchResult = ({assetSearchTerm}: {assetSearchTerm: string}) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
     ph: {
       paddingHorizontal: 16,
@@ -240,8 +239,7 @@ const useStyles = () => {
       paddingHorizontal: 16,
     },
     label: {
-      fontFamily: 'Rubik',
-      ...typography['body-3-s-regular'],
+      ...atoms.body_3_sm_regular,
     },
     labels: {
       flexDirection: 'row',
@@ -252,15 +250,15 @@ const useStyles = () => {
     },
     line: {
       height: 1,
-      backgroundColor: color.gray[200],
+      backgroundColor: color.gray_c200,
     },
     row: {
       flexDirection: 'row',
       alignSelf: 'center',
     },
     legend: {
-      color: color.gray[900],
-      ...typography['body-2-m-regular'],
+      color: color.gray_c900,
+      ...atoms.body_2_md_regular,
     },
     image: {
       flex: 1,
@@ -274,9 +272,9 @@ const useStyles = () => {
     },
     contentText: {
       flex: 1,
-      ...typography['heading-3-regular'],
+      ...atoms.heading_3_medium,
       fontSize: 20,
-      color: color.gray.max,
+      color: color.gray_cmax,
       paddingTop: 4,
       textAlign: 'center',
     },
@@ -286,7 +284,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    lightGreen: theme.color.secondary[600],
+    lightGreen: color.secondary_c600,
   }
 
   return {styles, colors}

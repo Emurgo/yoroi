@@ -210,8 +210,7 @@ const InputContainer = ({children}: {children: React.ReactNode}) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     inputContainer: {
       flexDirection: 'row',
@@ -221,17 +220,17 @@ const useStyles = () => {
   })
 
   const colors = {
-    background: color.gray.min,
-    focusInput: color.primary[500],
-    input: color.primary[300],
-    actionGray: color.gray[500],
-    black: color.gray.max,
-    text: color.primary[600],
-    textError: color.magenta[500],
-    infoGray: color.gray[700],
-    positiveGreen: color.secondary[500],
-    gradientBlueGreen: theme.color.gradients['blue-green'],
-    gradientGreen: theme.color.gradients['green'],
+    background: color.gray_cmin,
+    focusInput: color.primary_c500,
+    input: color.primary_c300,
+    actionGray: color.gray_c500,
+    black: color.gray_cmax,
+    text: color.primary_c600,
+    textError: color.sys_magenta_c500,
+    infoGray: color.gray_c700,
+    positiveGreen: color.secondary_c500,
+    gradientBlueGreen: color.bg_gradient_1,
+    gradientGreen: color.bg_gradient_2,
     none: 'transparent',
   }
 

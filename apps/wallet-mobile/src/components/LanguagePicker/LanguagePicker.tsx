@@ -58,8 +58,7 @@ const HR = (props: ViewProps) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding, typography} = theme
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
     languagePicker: {
@@ -68,25 +67,25 @@ const useStyles = () => {
     },
     languageList: {
       alignItems: 'stretch',
-      ...padding['l'],
+      ...atoms.p_lg,
     },
     hr: {
       height: 1,
-      backgroundColor: color.gray[200],
+      backgroundColor: color.gray_c200,
     },
     item: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      ...padding['y-l'],
+      ...atoms.py_lg,
     },
     itemText: {
-      ...typography['body-1-l-medium'],
-      color: color.gray[900],
+      ...atoms.body_1_lg_medium,
+      color: color.gray_c900,
     },
   })
   const colors = {
-    icon: color.primary[600],
+    icon: color.primary_c600,
   }
   return {styles, colors}
 }

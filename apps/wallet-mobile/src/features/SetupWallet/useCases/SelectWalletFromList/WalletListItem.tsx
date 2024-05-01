@@ -56,7 +56,7 @@ export const WalletListItem = ({wallet, onPress}: Props) => {
       >
         <Icon.WalletAccount iconSeed={wallet.checksum.ImagePart} />
 
-        <Space height="m" />
+        <Space height="md" />
 
         <View style={styles.walletDetails}>
           <Text style={styles.walletName} numberOfLines={1}>
@@ -72,11 +72,11 @@ export const WalletListItem = ({wallet, onPress}: Props) => {
           <>
             {walletInfo?.sync.status === 'syncing' && <Loading />}
 
-            <Space width="m" />
+            <Space width="md" />
 
             {isSelected && <Icon.Check size={20} />}
 
-            <Space width="m" />
+            <Space width="md" />
           </>
         )}
 
@@ -113,7 +113,7 @@ const getWalletItemMeta = (walletMeta: WalletMeta, colors: {white: string}): Wal
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     item: {
       flexDirection: 'row',
@@ -130,24 +130,24 @@ const useStyles = () => {
       flex: 1,
     },
     walletName: {
-      ...theme.typography['body-1-l-medium'],
-      color: theme.color.gray.max,
+      ...atoms.body_1_lg_medium,
+      color: color.gray_cmax,
       flex: 1,
     },
     walletMeta: {
-      color: theme.color.gray[600],
-      ...theme.typography['body-3-s-regular'],
+      color: color.gray_c600,
+      ...atoms.body_3_sm_regular,
       opacity: 0.5,
     },
     walletMetaPressed: {
-      color: theme.color.gray.max,
-      ...theme.typography['body-3-s-regular'],
+      color: color.gray_cmax,
+      ...atoms.body_3_sm_regular,
       opacity: 1,
     },
   })
 
   const colors = {
-    white: theme.color['white-static'],
+    white: color.white_static,
   }
 
   return {styles, colors} as const

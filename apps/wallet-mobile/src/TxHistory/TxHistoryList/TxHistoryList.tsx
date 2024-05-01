@@ -105,20 +105,19 @@ const getTransactionsByDate = (transactions: Record<string, TransactionInfo>) =>
     .value()
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {padding} = theme
+  const {atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
       flex: 1,
     },
     content: {
-      ...padding['x-l'],
+      ...atoms.px_lg,
       flexGrow: 1,
       height: 'auto',
     },
     dayHeaderRoot: {
-      ...padding['b-xs'],
-      ...padding['x-l'],
+      ...atoms.pb_xs,
+      ...atoms.px_lg,
     },
   })
 

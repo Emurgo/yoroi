@@ -22,21 +22,20 @@ export const Warning = ({content}: Props) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     notice: {
-      backgroundColor: color.yellow[100],
+      backgroundColor: color.sys_orange_c100,
       padding: 12,
     },
     text: {
-      ...typography['body-2-m-regular'],
-      color: theme.color.gray.max,
+      ...atoms.body_2_md_regular,
+      color: color.gray_cmax,
     },
   })
 
   const colors = {
-    yellow: color.yellow[500],
+    yellow: color.sys_orange_c500,
   }
 
   return {colors, styles}

@@ -138,14 +138,13 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {atoms, color} = useTheme()
 
   const styles = StyleSheet.create({
     container: {
       paddingHorizontal: 16,
       flexDirection: 'column',
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
       flex: 1,
       paddingBottom: 30,
     },
@@ -158,7 +157,7 @@ const useStyles = () => {
       borderRadius: 20,
     },
     shadowProp: {
-      shadowColor: color.gray.max,
+      shadowColor: color.gray_cmax,
       shadowOpacity: 0.2,
       shadowOffset: {
         width: 0,
@@ -179,8 +178,7 @@ const useStyles = () => {
       fontSize: 24,
     },
     label: {
-      fontSize: 16,
-      ...typography['body-1-l-medium'],
+      ...atoms.body_1_lg_medium,
     },
     infoContainer: {
       flexDirection: 'column',
@@ -191,13 +189,13 @@ const useStyles = () => {
       paddingBottom: 4,
     },
     infoLabel: {
-      color: color.gray[600],
+      color: color.gray_c600,
       fontSize: 16,
       fontFamily: 'Rubik-Regular',
     },
     infoValue: {
       fontSize: 16,
-      color: color.gray.max,
+      color: color.gray_cmax,
       fontFamily: 'Rubik-Regular',
       display: 'flex',
       flexShrink: 1,
@@ -205,8 +203,8 @@ const useStyles = () => {
     },
   })
   const colors = {
-    gradientColor: color.gradients['blue-green'],
-    white: color['white-static'],
+    gradientColor: color.bg_gradient_1,
+    white: color.white_static,
   }
 
   return {styles, colors} as const

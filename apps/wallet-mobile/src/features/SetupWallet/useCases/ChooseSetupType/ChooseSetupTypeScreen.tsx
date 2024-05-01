@@ -76,7 +76,7 @@ export const ChooseSetupTypeScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
-      <Space height="l" />
+      <Space height="lg" />
 
       <LogoBanner />
 
@@ -90,7 +90,7 @@ export const ChooseSetupTypeScreen = () => {
             onPress={handleCreate}
           />
 
-          <Space height="l" />
+          <Space height="lg" />
 
           <ButtonCard
             title={strings.restoreWalletButtonCard}
@@ -98,7 +98,7 @@ export const ChooseSetupTypeScreen = () => {
             onPress={handleRestore}
           />
 
-          <Space height="l" />
+          <Space height="lg" />
 
           <ButtonCard
             title={strings.connectWalletButtonCard}
@@ -106,7 +106,7 @@ export const ChooseSetupTypeScreen = () => {
             onPress={handleHw}
           />
 
-          <Space height="l" />
+          <Space height="lg" />
         </View>
       </ScrollView>
 
@@ -128,12 +128,12 @@ export const ChooseSetupTypeScreen = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      ...theme.padding['x-l'],
-      backgroundColor: theme.color['white-static'],
+      ...atoms.px_lg,
+      backgroundColor: color.white_static,
     },
     icon: {
       position: 'absolute',

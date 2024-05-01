@@ -46,16 +46,15 @@ export const InputReceiver = ({
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     label: {
       fontSize: 15,
     },
   })
   const colors = {
-    indicatorColor: color.primary[600],
-    iconColor: color.secondary[500],
+    indicatorColor: color.primary_c600,
+    iconColor: color.secondary_c500,
   }
   return {styles, colors}
 }

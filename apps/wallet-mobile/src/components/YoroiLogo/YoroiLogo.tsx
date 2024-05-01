@@ -55,19 +55,18 @@ const YoroiLogoSvg = (props: SvgProps) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     yoroiLogo: {
       alignItems: 'center',
     },
     yoroiLogoTitle: {
-      color: color.primary[600],
-      ...typography['heading-1-medium'],
+      color: color.primary_c600,
+      ...atoms.heading_1_medium,
     },
     yoroiLogoText: {
-      ...typography['body-2-m-regular'],
-      color: color.gray[900],
+      ...atoms.body_2_md_regular,
+      color: color.gray_c900,
     },
   })
   return styles

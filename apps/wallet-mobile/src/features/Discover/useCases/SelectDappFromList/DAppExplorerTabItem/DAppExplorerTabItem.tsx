@@ -18,19 +18,18 @@ export const DAppExplorerTabItem = ({name, onPress, isActive}: Props) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {padding, typography, color} = theme
+  const {atoms, color} = useTheme()
 
   const styles = StyleSheet.create({
     container: {
-      ...padding['s'],
+      ...atoms.p_sm,
       borderRadius: 8,
     },
     text: {
-      ...typography['body-1-l-medium'],
+      ...atoms.body_1_lg_medium,
     },
     containerActive: {
-      backgroundColor: color.gray['200'],
+      backgroundColor: color.gray_c200,
     },
   })
 

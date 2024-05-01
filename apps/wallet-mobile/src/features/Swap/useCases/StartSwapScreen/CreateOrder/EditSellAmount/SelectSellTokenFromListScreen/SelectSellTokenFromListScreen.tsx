@@ -188,12 +188,10 @@ const EmptySearchResult = ({assetSearchTerm}: {assetSearchTerm: string}) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     label: {
-      fontFamily: 'Rubik',
-      ...typography['body-3-s-regular'],
+      ...atoms.body_3_sm_regular,
     },
     labels: {
       flexDirection: 'row',
@@ -201,7 +199,7 @@ const useStyles = () => {
     },
     container: {
       flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
       display: 'flex',
       justifyContent: 'flex-start',
     },
@@ -214,7 +212,7 @@ const useStyles = () => {
     },
     line: {
       height: 1,
-      backgroundColor: color.gray[200],
+      backgroundColor: color.gray_c200,
     },
     list: {
       paddingTop: 16,
@@ -232,8 +230,8 @@ const useStyles = () => {
     },
     contentText: {
       flex: 1,
-      ...typography['heading-4-medium'],
-      color: color.gray.max,
+      ...atoms.heading_4_medium,
+      color: color.gray_cmax,
       paddingTop: 4,
       textAlign: 'center',
     },

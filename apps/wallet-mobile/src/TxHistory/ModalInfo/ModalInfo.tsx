@@ -37,16 +37,15 @@ const messages = defineMessages({
 })
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     infoIcon: {
       alignSelf: 'center',
-      ...padding['xxs'],
+      ...atoms.p_2xs,
     },
   })
   const colors = {
-    iconColor: color.gray[500],
+    iconColor: color.gray_c500,
   }
   return {styles, colors}
 }

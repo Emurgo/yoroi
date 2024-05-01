@@ -8,16 +8,11 @@ type ShowDisclaimerProps = {
   children: React.ReactNode
 }
 export const ShowDisclaimer = ({title, children}: ShowDisclaimerProps) => {
-  const {theme} = useTheme()
+  const {color} = useTheme()
   const styles = useStyles()
 
   return (
-    <LinearGradient
-      style={styles.gradient}
-      start={{x: 1, y: 1}}
-      end={{x: 0, y: 0}}
-      colors={theme.color.gradients['blue-green']}
-    >
+    <LinearGradient style={styles.gradient} start={{x: 1, y: 1}} end={{x: 0, y: 0}} colors={color.bg_gradient_1}>
       <View style={styles.container}>
         <Text style={styles.title}>{title}</Text>
 
@@ -28,7 +23,7 @@ export const ShowDisclaimer = ({title, children}: ShowDisclaimerProps) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     container: {
       paddingHorizontal: 16,
@@ -39,8 +34,8 @@ const useStyles = () => {
       borderRadius: 8,
     },
     title: {
-      ...theme.typography['body-1-l-regular'],
-      color: theme.color.gray.max,
+      ...atoms.body_1_lg_regular,
+      color: color.gray_cmax,
       fontWeight: '500',
     },
   })

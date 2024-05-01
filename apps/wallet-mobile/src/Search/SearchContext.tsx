@@ -104,8 +104,8 @@ export const useSearchOnNavBar = ({
   isChild?: boolean
 }) => {
   const navigation = useNavigation()
-  const {theme} = useTheme()
-  const defaultNavigationOptions = React.useMemo(() => defaultStackNavigationOptions(theme), [theme])
+  const {atoms, color} = useTheme()
+  const defaultNavigationOptions = React.useMemo(() => defaultStackNavigationOptions(atoms, color), [atoms, color])
 
   const {search, visible, showSearch, hideSearch, clearSearch} = useSearch()
 
@@ -177,24 +177,24 @@ export const useDisableSearchOnBar = ({
   onBack?: () => void
 }) => {
   const navigation = useNavigation()
-  const {theme} = useTheme()
+  const {atoms, color} = useTheme()
 
   useFocusEffect(
     React.useCallback(() => {
       if (isChild)
         navigation.getParent()?.setOptions({
-          ...defaultStackNavigationOptions(theme),
+          ...defaultStackNavigationOptions(atoms, color),
           headerLeft: onBack ? () => <BackButton onPress={onBack} /> : undefined,
           headerRight: undefined,
           title,
         })
-    }, [isChild, navigation, onBack, theme, title]),
+    }, [isChild, navigation, onBack, atoms, color, title]),
   )
 
   React.useLayoutEffect(() => {
     if (!isChild)
       navigation.setOptions({
-        ...defaultStackNavigationOptions(theme),
+        ...defaultStackNavigationOptions(atoms, color),
         headerLeft: onBack ? () => <BackButton onPress={onBack} /> : undefined,
         headerRight: undefined,
         title,
@@ -234,11 +234,11 @@ const EraseButton = (props: TouchableOpacityProps) => (
 )
 
 const BackButton = (props: TouchableOpacityProps) => {
-  const {theme} = useTheme()
+  const {color} = useTheme()
 
   return (
     <TouchableOpacity testID="buttonBack" {...props}>
-      <Icon.Chevron direction="left" color={theme.color.gray.max} />
+      <Icon.Chevron direction="left" color={color.gray_cmax} />
     </TouchableOpacity>
   )
 }

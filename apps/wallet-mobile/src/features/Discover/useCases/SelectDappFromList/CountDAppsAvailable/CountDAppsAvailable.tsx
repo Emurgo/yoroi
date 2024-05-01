@@ -19,16 +19,15 @@ export const CountDAppsAvailable = ({total}: Props) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography, padding} = theme
+  const {atoms, color} = useTheme()
 
   const styles = StyleSheet.create({
     availableText: {
-      ...typography['body-2-m-regular'],
-      color: color.gray[700],
+      ...atoms.body_2_md_regular,
+      color: color.gray_c700,
     },
     countAvailableBox: {
-      ...padding['x-l'],
+      ...atoms.px_lg,
     },
   })
   return {styles} as const

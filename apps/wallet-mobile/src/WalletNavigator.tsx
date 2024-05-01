@@ -163,7 +163,7 @@ const Stack = createStackNavigator<WalletStackRoutes>()
 export const WalletNavigator = () => {
   const initialRoute = useLinksShowActionResult()
   const strings = useStrings()
-  const {theme} = useTheme()
+  const {atoms, color} = useTheme()
   useLinksRequestAction()
   const isAuthOsSupported = useIsAuthOsSupported()
   const {showBiometricsScreen} = useShowBiometricsScreen()
@@ -192,7 +192,7 @@ export const WalletNavigator = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        ...defaultStackNavigationOptions(theme),
+        ...defaultStackNavigationOptions(atoms, color),
         headerLeft: undefined,
         detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
       }}
@@ -233,12 +233,11 @@ export const WalletNavigator = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
 
   const colors = {
-    active: color.primary[600],
-    inactive: color.gray[600],
+    active: color.primary_c600,
+    inactive: color.gray_c600,
   }
   return {colors}
 }

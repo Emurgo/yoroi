@@ -128,14 +128,14 @@ export const RestoreWalletDetailsScreen = () => {
               linesOfText={[strings.walletNameModalCardFirstItem, strings.walletNameModalCardSecondItem]}
             />
 
-            <Space height="l" />
+            <Space height="lg" />
 
             <CardAboutPhrase
               title={strings.walletPasswordModalCardTitle}
               linesOfText={[strings.walletPasswordModalCardFirstItem, strings.walletPasswordModalCardSecondItem]}
             />
 
-            <Space height="l" />
+            <Space height="lg" />
 
             <LearnMoreButton
               onPress={() => {
@@ -145,11 +145,11 @@ export const RestoreWalletDetailsScreen = () => {
           </View>
         </ScrollView>
 
-        <Space height="s" />
+        <Space height="sm" />
 
         <Button title={strings.continueButton} style={styles.button} onPress={closeModal} />
 
-        <Space height="l" />
+        <Space height="lg" />
       </View>,
       HEIGHT_MODAL_NAME_PASSWORD,
     )
@@ -173,7 +173,7 @@ export const RestoreWalletDetailsScreen = () => {
               ]}
             />
 
-            <Space height="l" />
+            <Space height="lg" />
 
             <LearnMoreButton
               onPress={() => {
@@ -183,11 +183,11 @@ export const RestoreWalletDetailsScreen = () => {
           </View>
         </ScrollView>
 
-        <Space height="s" />
+        <Space height="sm" />
 
         <Button title={strings.continueButton} style={styles.button} onPress={closeModal} />
 
-        <Space height="l" />
+        <Space height="lg" />
       </View>,
       HEIGHT_MODAL_CHECKSUM,
     )
@@ -264,11 +264,11 @@ export const RestoreWalletDetailsScreen = () => {
           <View style={styles.checksum}>
             <Icon.WalletAccount iconSeed={plate.accountPlate.ImagePart} style={styles.walletChecksum} />
 
-            <Space width="s" />
+            <Space width="sm" />
 
             <Text style={styles.plateNumber}>{plate.accountPlate.TextPart}</Text>
 
-            <Space width="s" />
+            <Space width="sm" />
 
             <TouchableOpacity onPress={showModalTipsPlateNumber}>
               <InfoIllustration />
@@ -310,43 +310,43 @@ const useBold = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     form: {
-      ...theme.padding['x-l'],
+      ...atoms.px_lg,
       flex: 1,
     },
     steps: {
-      ...theme.padding['x-l'],
+      ...atoms.px_lg,
     },
     root: {
       flex: 1,
       justifyContent: 'space-between',
-      backgroundColor: theme.color['white-static'],
+      backgroundColor: color.white_static,
     },
     modal: {
       flex: 1,
     },
     info: {
-      ...theme.padding['x-l'],
+      ...atoms.px_lg,
       flexDirection: 'row',
     },
     title: {
-      ...theme.typography['body-1-l-regular'],
-      color: theme.color.gray[900],
+      ...atoms.body_1_lg_regular,
+      color: color.gray_c900,
     },
     plateNumber: {
-      ...theme.typography['body-1-l-regular'],
-      color: theme.color.gray[900],
+      ...atoms.body_1_lg_regular,
+      color: color.gray_c900,
       textAlign: 'center',
       justifyContent: 'center',
       alignItems: 'center',
     },
     button: {
-      backgroundColor: theme.color.primary[500],
+      backgroundColor: color.primary_c500,
     },
     bolder: {
-      ...theme.typography['body-1-l-medium'],
+      ...atoms.body_1_lg_medium,
     },
     checksum: {
       flexDirection: 'row',
@@ -359,7 +359,7 @@ const useStyles = () => {
       height: 24,
     },
     actions: {
-      ...theme.padding['l'],
+      ...atoms.p_lg,
     },
   })
 

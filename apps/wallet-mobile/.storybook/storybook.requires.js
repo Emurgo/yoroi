@@ -274,6 +274,7 @@ const getStories = () => {
     "./src/Staking/PoolTransition/PoolTransitionModal.stories.tsx": require("../src/Staking/PoolTransition/PoolTransitionModal.stories.tsx"),
     "./src/Staking/PoolWarningModal/PoolWarningModal.stories.tsx": require("../src/Staking/PoolWarningModal/PoolWarningModal.stories.tsx"),
     "./src/Staking/StakingCenter/StakingCenter.stories.tsx": require("../src/Staking/StakingCenter/StakingCenter.stories.tsx"),
+    "./src/theme/Palettes.stories.tsx": require("../src/theme/Palettes.stories.tsx"),
     "./src/TxHistory/AssetList/ActionsBanner.stories.tsx": require("../src/TxHistory/AssetList/ActionsBanner.stories.tsx"),
     "./src/TxHistory/AssetList/ChipButton/ChipButton.stories.tsx": require("../src/TxHistory/AssetList/ChipButton/ChipButton.stories.tsx"),
     "./src/TxHistory/BalanceBanner.stories.tsx": require("../src/TxHistory/BalanceBanner.stories.tsx"),

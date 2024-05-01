@@ -78,8 +78,7 @@ export const SmallAddressCard = ({address, isUsed, date, onPress, loading, testI
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
     smallAddressCard: {
@@ -93,8 +92,8 @@ const useStyles = () => {
       padding: 16,
     },
     textAddress: {
-      ...typography['body-1-l-regular'],
-      color: color.gray.max,
+      ...atoms.body_1_lg_regular,
+      color: color.gray_cmax,
     },
     footer: {
       width: '100%',
@@ -103,44 +102,44 @@ const useStyles = () => {
     },
     statusUnused: {
       borderRadius: 20,
-      backgroundColor: color.secondary[600],
+      backgroundColor: color.secondary_c600,
       paddingVertical: 4,
       paddingHorizontal: 8,
       alignItems: 'center',
       justifyContent: 'center',
     },
     statusUnusedText: {
-      color: color.gray.min,
-      ...typography['body-3-s-medium'],
+      color: color.gray_cmin,
+      ...atoms.body_3_sm_medium,
       letterSpacing: 0.2,
     },
     statusUsed: {
       borderRadius: 20,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
       paddingVertical: 4,
       paddingHorizontal: 8,
       alignItems: 'center',
       justifyContent: 'center',
     },
     statusUsedText: {
-      ...typography['body-3-s-medium'],
+      ...atoms.body_3_sm_medium,
       lineHeight: 16,
       letterSpacing: 0.2,
-      color: color.gray.max,
+      color: color.gray_cmax,
     },
     date: {
-      ...typography['body-2-m-regular'],
-      color: color.gray[700],
+      ...atoms.body_2_md_regular,
+      color: color.gray_c700,
     },
     copiedText: {
-      color: color.gray.min,
+      color: color.gray_cmin,
       textAlign: 'center',
       padding: 8,
-      ...typography['body-2-m-medium'],
+      ...atoms.body_2_md_medium,
     },
     isCopying: {
       position: 'absolute',
-      backgroundColor: color.gray.max,
+      backgroundColor: color.gray_cmax,
       alignItems: 'center',
       justifyContent: 'center',
       top: 0,
@@ -151,7 +150,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    bgCard: color.gradients['blue-green'],
+    bgCard: color.bg_gradient_1,
   }
 
   return {styles, colors} as const

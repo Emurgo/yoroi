@@ -13,12 +13,12 @@ const Stack = createStackNavigator<NftRoutes>()
 export const NftDetailsNavigator = () => {
   const strings = useStrings()
   const {track} = useMetrics()
-  const {theme} = useTheme()
+  const {atoms, color} = useTheme()
 
   return (
     <Stack.Navigator
       screenOptions={{
-        ...defaultStackNavigationOptions(theme),
+        ...defaultStackNavigationOptions(atoms, color),
         headerTitleContainerStyle: {alignItems: 'center'},
       }}
       initialRouteName="nft-details"

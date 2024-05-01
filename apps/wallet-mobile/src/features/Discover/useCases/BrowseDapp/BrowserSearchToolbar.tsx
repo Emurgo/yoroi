@@ -35,19 +35,17 @@ export const BrowserSearchToolbar = ({onBack, onSearchChange, onSearchSubmit, se
 }
 
 const BackButton = (props: TouchableOpacityProps) => {
-  const {theme} = useTheme()
+  const {color} = useTheme()
 
   return (
     <TouchableOpacity testID="buttonBack" {...props}>
-      <Icon.Chevron direction="left" size={24} color={theme.color.gray.max} />
+      <Icon.Chevron direction="left" size={24} color={color.gray_cmax} />
     </TouchableOpacity>
   )
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
-
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     root: {
       paddingVertical: 10,
@@ -58,10 +56,10 @@ const useStyles = () => {
       alignItems: 'center',
       borderRadius: 8,
       paddingHorizontal: 12,
-      backgroundColor: color.gray['50'],
+      backgroundColor: color.gray_c50,
       height: 50,
     },
-    searchInputStyle: {flex: 1, color: color['black-static']},
+    searchInputStyle: {flex: 1, color: color.black_static},
   })
 
   return {styles} as const

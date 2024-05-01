@@ -139,21 +139,20 @@ const Actions = (props: ViewProps) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding} = theme
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
       flex: 1,
     },
     container: {
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
       flex: 1,
-      ...padding['x-l'],
+      ...atoms.px_lg,
     },
     actions: {
-      ...padding['l'],
+      ...atoms.p_lg,
     },
   })
   return styles

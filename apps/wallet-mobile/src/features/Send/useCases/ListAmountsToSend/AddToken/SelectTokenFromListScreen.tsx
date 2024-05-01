@@ -398,25 +398,24 @@ const filterOutSelected = (selectedTokenIds: Array<string>) => (token: Balance.T
 const sortNfts = (nftNameA: string, nftNameB: string): number => nftNameA.localeCompare(nftNameB)
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography, padding} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
     subheader: {
-      ...padding['x-l'],
+      ...atoms.px_lg,
     },
     item: {
-      ...padding['y-m'],
+      ...atoms.py_md,
     },
     borderBottom: {
-      borderBottomColor: color.gray[200],
+      borderBottomColor: color.gray_c200,
       borderBottomWidth: StyleSheet.hairlineWidth,
     },
     panel: {
-      ...padding['x-l'],
+      ...atoms.px_lg,
     },
     tabs: {
       flexDirection: 'row',
@@ -425,19 +424,19 @@ const useStyles = () => {
       flex: 1,
     },
     tabContainerActive: {
-      borderBottomColor: color.primary[600],
+      borderBottomColor: color.primary_c600,
       borderBottomWidth: 2,
     },
     tab: {
       textAlign: 'center',
-      ...padding['y-m'],
-      ...typography['body-1-l-medium'],
+      ...atoms.py_md,
+      ...atoms.body_1_lg_medium,
     },
     list: {
       flex: 1,
     },
     assetListContent: {
-      ...padding['x-l'],
+      ...atoms.px_lg,
     },
     image: {
       flex: 1,
@@ -450,29 +449,29 @@ const useStyles = () => {
       textAlign: 'center',
     },
     contentText: {
-      ...typography['heading-3-medium'],
-      color: color.gray.max,
+      ...atoms.heading_3_medium,
+      color: color.gray_cmax,
       flex: 1,
       textAlign: 'center',
     },
     counter: {
-      ...padding['l'],
+      ...atoms.p_lg,
       justifyContent: 'center',
       flexDirection: 'row',
     },
     counterText: {
-      color: color.primary[600],
-      ...typography['body-2-m-regular'],
+      color: color.primary_c600,
+      ...atoms.body_2_md_regular,
     },
     counterTextBold: {
-      color: color.primary[600],
-      ...typography['body-2-m-medium'],
+      color: color.primary_c600,
+      ...atoms.body_2_md_medium,
     },
   })
 
   const colors = {
-    activeTab: color.primary[600],
-    inactiveTab: color.gray[600],
+    activeTab: color.primary_c600,
+    inactiveTab: color.gray_c600,
   }
 
   return {styles, colors}

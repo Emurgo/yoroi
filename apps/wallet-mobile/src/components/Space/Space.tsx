@@ -12,7 +12,7 @@ type Props = {
   debug?: boolean
 }
 
-export const Space = ({height = 's', width = 's', fill, style, debug}: Props) => {
+export const Space = ({height = 'sm', width = 'sm', fill, style, debug}: Props) => {
   const heightValue = baseSpace[height]
   const widthValue = baseSpace[width]
 

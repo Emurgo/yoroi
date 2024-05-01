@@ -71,8 +71,7 @@ const useStrings = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flexDirection: 'row',
@@ -80,8 +79,8 @@ const useStyles = () => {
       alignItems: 'center',
     },
     label: {
-      color: color.gray[600],
-      ...typography['body-2-m-regular'],
+      color: color.gray_c600,
+      ...atoms.body_2_md_regular,
     },
   })
 
