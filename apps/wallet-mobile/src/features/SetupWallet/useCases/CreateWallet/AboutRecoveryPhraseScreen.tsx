@@ -1,10 +1,11 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {Linking, StyleSheet, Text, View} from 'react-native'
+import {Linking, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
+import {ViewProps} from 'react-native-svg/lib/typescript/fabric/utils'
 
-import {Button} from '../../../../components'
+import {Button, Spacer} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {WalletInitRouteNavigation} from '../../../../navigation'
@@ -34,7 +35,7 @@ export const AboutRecoveryPhraseScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
-      <View>
+      <ScrollView bounces={false} contentContainerStyle={styles.scroll}>
         <StepperProgress currentStep={1} currentStepTitle={strings.stepAboutRecoveryPhrase} totalSteps={4} />
 
         <Space height="l" />
@@ -54,20 +55,26 @@ export const AboutRecoveryPhraseScreen = () => {
             strings.aboutRecoveryPhraseCardFifthItem(bold),
           ]}
         />
+      </ScrollView>
 
-        <Space height="l" />
+      <Spacer fill />
 
-        <LearnMoreButton onPress={handleOnLearMoreButtonPress} />
-      </View>
+      <LearnMoreButton onPress={handleOnLearMoreButtonPress} />
 
-      <Button
-        title={strings.next}
-        style={styles.button}
-        onPress={() => navigation.navigate('setup-wallet-recovery-phrase-mnemonic')}
-      />
+      <Space height="l" />
+
+      <Actions style={styles.actions}>
+        <Button
+          title={strings.next}
+          style={styles.button}
+          onPress={() => navigation.navigate('setup-wallet-recovery-phrase-mnemonic')}
+        />
+      </Actions>
     </SafeAreaView>
   )
 }
+
+const Actions = ({style, ...props}: ViewProps) => <View style={style} {...props} />
 
 const useBold = () => {
   const {styles} = useStyles()
@@ -82,8 +89,6 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      ...theme.padding['x-l'],
-      justifyContent: 'space-between',
       backgroundColor: theme.color['white-static'],
     },
     aboutRecoveryPhraseTitle: {
@@ -93,6 +98,12 @@ const useStyles = () => {
     button: {backgroundColor: theme.color.primary[500]},
     bolder: {
       ...theme.typography['body-1-l-medium'],
+    },
+    actions: {
+      ...theme.padding['l'],
+    },
+    scroll: {
+      ...theme.padding['x-l'],
     },
   })
 
