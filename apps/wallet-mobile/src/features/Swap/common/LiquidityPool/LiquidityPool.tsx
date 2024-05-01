@@ -29,16 +29,15 @@ export const LiquidityPool = ({
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     liquidityPoolLink: {
       alignItems: 'center',
       justifyContent: 'center',
     },
     liquidityPoolText: {
-      color: color.primary[500],
-      ...typography['body-1-l-medium'],
+      color: color.primary_c500,
+      ...atoms.body_1_lg_medium,
     },
     liquidityPool: {
       flexDirection: 'row',

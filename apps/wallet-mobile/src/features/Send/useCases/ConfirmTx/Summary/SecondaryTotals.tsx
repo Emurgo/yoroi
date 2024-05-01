@@ -40,11 +40,10 @@ const Amount = ({amount, wallet}: {amount: Balance.Amount; wallet: YoroiWallet})
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     amount: {
-      color: color.secondary[500],
+      color: color.secondary_c500,
     },
   })
   return styles

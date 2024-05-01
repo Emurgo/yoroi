@@ -206,12 +206,11 @@ const LoadingScreen = ({nftsCount}: {nftsCount: number}) => {
 const byName = ({name: A}: Balance.TokenInfo, {name: B}: Balance.TokenInfo) => A.localeCompare(B)
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     safeAreaView: {
       flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
     container: {
       flexDirection: 'column',
@@ -230,13 +229,13 @@ const useStyles = () => {
     count: {
       flex: 1,
       textAlign: 'center',
-      color: color.gray[600],
+      color: color.gray_c600,
     },
 
     titleText: {
       textAlign: 'center',
-      color: color.gray.max,
-      ...theme.typography['heading-3-medium'],
+      color: color.gray_cmax,
+      ...atoms.heading_3_medium,
     },
 
     errorContainer: {

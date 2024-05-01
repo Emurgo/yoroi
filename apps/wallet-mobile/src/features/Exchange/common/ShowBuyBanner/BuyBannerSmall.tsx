@@ -48,10 +48,10 @@ export const BuyBannerSmall = ({onClose}: SmallBannerProps) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: theme.color['white-static'],
+      backgroundColor: color.white_static,
       paddingBottom: 18,
     },
     gradient: {
@@ -69,7 +69,7 @@ const useStyles = () => {
     },
     title: {
       fontSize: 16,
-      color: theme.color['black-static'],
+      color: color.black_static,
       fontWeight: '500',
       fontFamily: 'Rubik-Medium',
       lineHeight: 24,
@@ -78,7 +78,7 @@ const useStyles = () => {
     },
     text: {
       fontSize: 16,
-      color: theme.color['black-static'],
+      color: color.black_static,
       fontWeight: '400',
       fontFamily: 'Rubik-Regular',
       lineHeight: 24,
@@ -87,14 +87,14 @@ const useStyles = () => {
       fontSize: 14,
       fontWeight: '500',
       fontFamily: 'Rubik-Medium',
-      color: theme.color.primary[500],
+      color: color.primary_c500,
       lineHeight: 22,
       flex: 1,
       borderRadius: 8,
     },
   })
   const colors = {
-    gradientColor: theme.color.gradients['blue-green'],
+    gradientColor: color.bg_gradient_1,
   }
   return {styles, colors} as const
 }

@@ -25,8 +25,7 @@ export const LearnMoreLink = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     root: {
       display: 'flex',
@@ -35,7 +34,7 @@ const useStyles = () => {
       justifyContent: 'center',
     },
     link: {
-      color: color.primary[600],
+      color: color.primary_c600,
       textDecorationLine: 'underline',
     },
   })

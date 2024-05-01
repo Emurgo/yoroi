@@ -237,8 +237,7 @@ const IMAGE_PADDING = 16
 const IMAGE_WIDTH = Dimensions.get('window').width - IMAGE_PADDING * 2
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     copyButton: {
       flex: 1,
@@ -253,14 +252,14 @@ const useStyles = () => {
       flexDirection: 'row',
     },
     linkText: {
-      color: color.primary[500],
-      ...typography['body-1-l-regular'],
+      color: color.primary_c500,
+      ...atoms.body_1_lg_regular,
       flex: 1,
       textDecorationLine: 'underline',
     },
     copyText: {
-      color: color.gray[900],
-      ...typography['body-2-m-medium'],
+      color: color.gray_c900,
+      ...atoms.body_2_md_medium,
       textTransform: 'uppercase',
     },
     container: {
@@ -292,11 +291,11 @@ const useStyles = () => {
       flexDirection: 'row',
     },
     title: {
-      ...typography['body-1-l-medium'],
+      ...atoms.body_1_lg_medium,
     },
     name: {
-      color: color.gray[600],
-      ...typography['body-2-m-regular'],
+      color: color.gray_c600,
+      ...atoms.body_2_md_regular,
     },
   })
   return styles

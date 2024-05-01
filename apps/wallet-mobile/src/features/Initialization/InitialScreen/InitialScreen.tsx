@@ -1,4 +1,4 @@
-import {padding, useTheme} from '@yoroi/theme'
+import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -107,28 +107,27 @@ const LanguagePickRow = ({onPress}: {onPress: () => void}) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     scrollableContentContainer: {
       flexGrow: 1,
     },
     container: {
       flex: 1,
-      ...padding['l'],
-      backgroundColor: color.gray.min,
+      ...atoms.p_lg,
+      backgroundColor: color.gray_cmin,
     },
     title: {
-      ...typography['heading-3-medium'],
+      ...atoms.heading_3_medium,
       textAlign: 'center',
-      color: color.gray[900],
+      color: color.gray_c900,
     },
     input: {
-      color: color.gray[600],
-      ...padding['l-l'],
-      ...typography['body-1-l-regular'],
+      color: color.gray_c600,
+      ...atoms.pl_lg,
+      ...atoms.body_1_lg_regular,
       justifyContent: 'center',
-      borderColor: color.gray[400],
+      borderColor: color.gray_c400,
       borderWidth: 1,
       borderRadius: 8,
       height: 56,
@@ -136,15 +135,15 @@ const useStyles = () => {
     inputIcon: {
       position: 'absolute',
       right: 0,
-      ...padding['r-l'],
-      ...padding['t-s'],
+      ...atoms.pr_lg,
+      ...atoms.pt_sm,
     },
     checkboxText: {
-      ...typography['body-1-l-regular'],
-      color: color.gray.max,
+      ...atoms.body_1_lg_regular,
+      color: color.gray_cmax,
     },
     checkboxLink: {
-      color: color.primary[800],
+      color: color.primary_c800,
       textDecorationLine: 'underline',
     },
     checkbox: {

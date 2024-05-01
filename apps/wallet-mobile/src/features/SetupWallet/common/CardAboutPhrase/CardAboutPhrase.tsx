@@ -40,7 +40,7 @@ export const CardAboutPhrase = ({
         <>
           <Text style={styles.title}>{title}</Text>
 
-          <Space height="s" />
+          <Space height="sm" />
         </>
       )}
 
@@ -50,14 +50,14 @@ export const CardAboutPhrase = ({
           <View key={index + '_ITEM_CARD'} style={styles.itemContainer}>
             <Text style={styles.bullet}>•</Text>
 
-            <Space height="s" />
+            <Space height="sm" />
 
             <Text style={styles.textLine}>
               {handleShowChecksum && (
                 <>
                   <WalletChecksum iconSeed={checksumImage} style={styles.walletChecksum} />
 
-                  <Space height="s" />
+                  <Space height="sm" />
                 </>
               )}
 
@@ -71,36 +71,36 @@ export const CardAboutPhrase = ({
 }
 
 const useStyles = (padding?: boolean, background?: boolean) => {
-  const {theme} = useTheme()
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
     container: {
       borderRadius: 8,
-      ...theme.padding[padding ? 'l' : 'none'],
+      ...(padding ? atoms.p_lg : atoms.p_0),
       overflow: 'hidden',
     },
     title: {
-      ...theme.typography['body-1-l-medium'],
-      color: background ? theme.color.primary[600] : theme.color.gray[900],
+      ...atoms.body_1_lg_medium,
+      color: background ? color.primary_c600 : color.gray_c900,
       textAlign: 'center',
     },
     itemContainer: {
       flexDirection: 'row',
     },
     bullet: {
-      ...theme.typography['body-1-l-regular'],
-      color: background ? theme.color.primary[600] : theme.color.gray[900],
+      ...atoms.body_1_lg_regular,
+      color: background ? color.primary_c600 : color.gray_c900,
     },
     textLine: {
       flex: 1,
-      ...theme.typography['body-1-l-regular'],
-      color: background ? theme.color.primary[600] : theme.color.gray[900],
+      ...atoms.body_1_lg_regular,
+      color: background ? color.primary_c600 : color.gray_c900,
     },
     walletChecksum: {width: 24, height: 24},
   })
 
   const colors = {
-    gradientBlueGreen: theme.color.gradients['blue-green'],
+    gradientBlueGreen: color.bg_gradient_1,
   }
   return {styles, colors} as const
 }

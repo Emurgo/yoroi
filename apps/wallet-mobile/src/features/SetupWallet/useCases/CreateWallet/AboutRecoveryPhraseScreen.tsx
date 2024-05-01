@@ -37,11 +37,11 @@ export const AboutRecoveryPhraseScreen = () => {
       <View>
         <StepperProgress currentStep={1} currentStepTitle={strings.stepAboutRecoveryPhrase} totalSteps={4} />
 
-        <Space height="l" />
+        <Space height="lg" />
 
         <Text style={styles.aboutRecoveryPhraseTitle}>{strings.aboutRecoveryPhraseTitle(bold)}</Text>
 
-        <Space height="l" />
+        <Space height="lg" />
 
         <CardAboutPhrase
           showBackgroundColor
@@ -55,7 +55,7 @@ export const AboutRecoveryPhraseScreen = () => {
           ]}
         />
 
-        <Space height="l" />
+        <Space height="lg" />
 
         <LearnMoreButton onPress={handleOnLearMoreButtonPress} />
       </View>
@@ -78,21 +78,21 @@ const useBold = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      ...theme.padding['x-l'],
+      ...atoms.px_lg,
       justifyContent: 'space-between',
-      backgroundColor: theme.color['white-static'],
+      backgroundColor: color.white_static,
     },
     aboutRecoveryPhraseTitle: {
-      ...theme.typography['body-1-l-regular'],
-      color: theme.color.gray[900],
+      ...atoms.body_1_lg_regular,
+      color: color.gray_c900,
     },
-    button: {backgroundColor: theme.color.primary[500]},
+    button: {backgroundColor: color.primary_c500},
     bolder: {
-      ...theme.typography['body-1-l-medium'],
+      ...atoms.body_1_lg_medium,
     },
   })
 

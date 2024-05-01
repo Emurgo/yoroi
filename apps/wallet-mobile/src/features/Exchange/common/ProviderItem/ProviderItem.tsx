@@ -22,7 +22,7 @@ export const ProviderItem = ({onPress, fee, rightAdornment, leftAdornment, disab
     <TouchableOpacity onPress={onPress} style={styles.item} disabled={disabled}>
       {leftAdornment}
 
-      <Space width="m" />
+      <Space width="md" />
 
       <View style={styles.labels}>
         <Text style={styles.label}>{label}</Text>
@@ -36,7 +36,7 @@ export const ProviderItem = ({onPress, fee, rightAdornment, leftAdornment, disab
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     item: {
       flexDirection: 'row',
@@ -46,12 +46,12 @@ const useStyles = () => {
       flex: 1,
     },
     label: {
-      ...theme.typography['body-1-l-medium'],
-      color: theme.color.gray[900],
+      ...atoms.body_1_lg_medium,
+      color: color.gray_c900,
     },
     fee: {
-      ...theme.typography['body-3-s-regular'],
-      color: theme.color.gray[600],
+      ...atoms.body_3_sm_regular,
+      color: color.gray_c600,
     },
   })
 

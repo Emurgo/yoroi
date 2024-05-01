@@ -63,12 +63,11 @@ const Subtitle = ({children}: {children: React.ReactNode}) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     row: {
       flexDirection: 'row',
-      borderBottomColor: color.gray[200],
+      borderBottomColor: color.gray_c200,
       borderBottomWidth: 1,
       paddingVertical: 8,
     },
@@ -82,16 +81,16 @@ const useStyles = () => {
       flexDirection: 'column',
     },
     bodyMedium: {
-      color: color.gray[900],
-      ...typography['body-1-l-medium'],
+      color: color.gray_c900,
+      ...atoms.body_1_lg_medium,
     },
     bodyRegular: {
-      color: color.gray[900],
-      ...typography['body-3-s-regular'],
+      color: color.gray_c900,
+      ...atoms.body_3_sm_regular,
     },
   })
   const colors = {
-    checkIcon: color.primary[600],
+    checkIcon: color.primary_c600,
   }
   return {styles, colors}
 }

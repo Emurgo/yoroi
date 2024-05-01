@@ -7,7 +7,7 @@ import {
   useRoute,
 } from '@react-navigation/native'
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack'
-import {Theme, useTheme} from '@yoroi/theme'
+import {Atoms, ThemedPalette, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Dimensions, TouchableOpacity, TouchableOpacityProps, ViewStyle} from 'react-native'
 
@@ -37,27 +37,27 @@ export const useParams = <Params, >(guard: Guard<Params>): Params => {
 type Guard<Params> = (params: Params | object) => params is Params
 
 export const BackButton = (props: TouchableOpacityProps & {color?: string}) => {
-  const {theme} = useTheme()
+  const {color} = useTheme()
 
   return (
     <TouchableOpacity {...props} testID="buttonBack2">
-      <Icon.Chevron direction="left" color={props.color ?? theme.color.gray.max} />
+      <Icon.Chevron direction="left" color={props.color ?? color.gray_cmax} />
     </TouchableOpacity>
   )
 }
 
 // OPTIONS
 const WIDTH = Dimensions.get('window').width
-export const defaultStackNavigationOptions = (theme: Theme): StackNavigationOptions => {
+export const defaultStackNavigationOptions = (atoms: Atoms, color: ThemedPalette): StackNavigationOptions => {
   return {
-    headerTintColor: theme.color.gray.max,
+    headerTintColor: color.gray_cmax,
     headerStyle: {
       elevation: 0,
       shadowOpacity: 0,
-      backgroundColor: theme.color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
     headerTitleStyle: {
-      ...theme.typography['body-1-l-medium'],
+      ...atoms.body_1_lg_medium,
       width: WIDTH - 75,
       textAlign: 'center',
     },
@@ -68,10 +68,10 @@ export const defaultStackNavigationOptions = (theme: Theme): StackNavigationOpti
       justifyContent: 'center',
     },
     headerLeftContainerStyle: {
-      ...theme.padding['l-s'],
+      ...atoms.pl_sm,
     },
     headerRightContainerStyle: {
-      ...theme.padding['r-s'],
+      ...atoms.pr_sm,
     },
     cardStyle: {backgroundColor: 'white'},
     headerLeft: (props) => <BackButton {...props} />,
@@ -79,16 +79,19 @@ export const defaultStackNavigationOptions = (theme: Theme): StackNavigationOpti
 }
 
 // NAVIGATOR TOP TABS OPTIONS
-export const defaultMaterialTopTabNavigationOptions = (theme: Theme): MaterialTopTabNavigationOptions => {
+export const defaultMaterialTopTabNavigationOptions = (
+  atoms: Atoms,
+  color: ThemedPalette,
+): MaterialTopTabNavigationOptions => {
   return {
-    tabBarStyle: {backgroundColor: theme.color.gray.min, elevation: 0, shadowOpacity: 0, marginHorizontal: 16},
-    tabBarIndicatorStyle: {backgroundColor: theme.color.primary[600], height: 2},
+    tabBarStyle: {backgroundColor: color.gray_cmin, elevation: 0, shadowOpacity: 0, marginHorizontal: 16},
+    tabBarIndicatorStyle: {backgroundColor: color.primary_c600, height: 2},
     tabBarLabelStyle: {
       textTransform: 'none',
-      ...theme.typography['body-1-l-medium'],
+      ...atoms.body_1_lg_medium,
     },
-    tabBarActiveTintColor: theme.color.primary[600],
-    tabBarInactiveTintColor: theme.color.gray[600],
+    tabBarActiveTintColor: color.primary_c600,
+    tabBarInactiveTintColor: color.gray_c600,
   }
 }
 

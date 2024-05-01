@@ -17,7 +17,7 @@ export const FailedTxScreen = () => {
     <View style={styles.container}>
       <FailedTxImage />
 
-      <Space height="l" />
+      <Space height="lg" />
 
       <Text style={styles.title}>{strings.notEnoughFunds}</Text>
 
@@ -27,7 +27,7 @@ export const FailedTxScreen = () => {
 
       <Button onPress={navigateTo.buyAda} title={strings.buyAda} style={styles.button} shelleyTheme />
 
-      <Space height="l" />
+      <Space height="lg" />
 
       <Button
         onPress={navigateTo.main}
@@ -68,33 +68,32 @@ const useNavigateTo = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography, padding} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     container: {
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
-      ...padding['l'],
+      ...atoms.p_lg,
     },
     title: {
-      color: color.gray.max,
-      ...typography['heading-3-medium'],
-      ...padding['x-s'],
+      color: color.gray_cmax,
+      ...atoms.heading_3_medium,
+      ...atoms.px_xs,
       textAlign: 'center',
     },
     text: {
-      color: color.gray[600],
-      ...typography['body-2-m-regular'],
+      color: color.gray_c600,
+      ...atoms.body_2_md_regular,
       textAlign: 'center',
       maxWidth: 330,
     },
     button: {
-      ...padding['x-l'],
-      ...typography['button-2-m'],
+      ...atoms.p_lg,
+      ...atoms.button_2_md,
     },
     outlineText: {
-      color: theme.color.primary[500],
+      color: color.primary_c500,
     },
   })
   return styles

@@ -41,12 +41,11 @@ export const BrowserToolbar = ({uri}: Props) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {typography, color} = theme
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: color['white-static'],
+      backgroundColor: color.white_static,
       paddingVertical: 10,
       paddingHorizontal: 16,
       flexDirection: 'row',
@@ -55,14 +54,14 @@ const useStyles = () => {
     },
     boxURI: {
       borderRadius: 8,
-      backgroundColor: color.gray['50'],
+      backgroundColor: color.gray_c50,
       paddingVertical: 13,
       paddingHorizontal: 12,
       flex: 1,
     },
     uriText: {
-      ...typography['body-2-m-regular'],
-      color: color['black-static'],
+      ...atoms.body_2_md_regular,
+      color: color.black_static,
     },
     urlContainer: {
       flexDirection: 'row',
@@ -72,7 +71,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    iconColor: color.gray['800'],
+    iconColor: color.gray_c800,
   }
 
   return {styles, colors} as const

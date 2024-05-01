@@ -106,22 +106,22 @@ export const getPriceImpactRisk = (priceImpact: number) => {
 }
 
 export const usePriceImpactRiskTheme = (risk: SwapPriceImpactRisk) => {
-  const {theme} = useTheme()
+  const {color} = useTheme()
 
   if (risk === 'high') {
     return {
-      text: theme.color.magenta[500],
-      background: theme.color.magenta[100],
+      text: color.sys_magenta_c500,
+      background: color.sys_magenta_c100,
     }
   } else if (risk === 'moderate') {
     return {
-      text: theme.color.yellow[500],
-      background: theme.color.yellow[100],
+      text: color.sys_orange_c500,
+      background: color.sys_orange_c100,
     }
   }
 
   return {
-    text: theme.color.gray.max,
-    background: theme.color.gray.min,
+    text: color.gray_cmax,
+    background: color.gray_cmin,
   }
 }

@@ -48,21 +48,20 @@ export const ClickableBanner = ({onPress, ...rest}: ClickableProps) =>
   )
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     banner: {
-      backgroundColor: color.gray[100],
-      ...padding['l'],
+      backgroundColor: color.gray_c100,
+      ...atoms.p_lg,
       alignItems: 'center',
       justifyContent: 'center',
     },
     textError: {
-      color: color.magenta[500],
+      color: color.sys_magenta_c500,
     },
     bannerError: {
-      backgroundColor: color.gray.min,
-      ...padding['y-s'],
+      backgroundColor: color.gray_cmin,
+      ...atoms.py_sm,
     },
     label: {
       marginBottom: 6,

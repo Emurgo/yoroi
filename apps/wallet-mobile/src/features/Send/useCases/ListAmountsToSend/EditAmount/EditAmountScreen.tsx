@@ -176,44 +176,43 @@ const HR = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding, typography} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     center: {
       alignItems: 'center',
     },
     container: {
       flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
     scrollView: {
       flex: 1,
-      ...padding['x-l'],
+      ...atoms.px_lg,
     },
     hr: {
       height: StyleSheet.hairlineWidth,
-      backgroundColor: color.gray[200],
+      backgroundColor: color.gray_c200,
     },
     actions: {
-      ...padding['l'],
+      ...atoms.p_lg,
     },
     maxBalance: {
-      color: color.primary[600],
-      ...typography['body-1-l-medium'],
+      color: color.primary_c600,
+      ...atoms.body_1_lg_medium,
     },
     amount: {
-      ...typography['heading-2-regular'],
-      backgroundColor: color.gray.min,
+      ...atoms.heading_2_regular,
+      backgroundColor: color.gray_cmin,
       borderWidth: 0,
       textAlign: 'right',
     },
     ticker: {
-      ...typography['heading-2-regular'],
+      ...atoms.heading_2_regular,
     },
   })
 
   const colors = {
-    black: color.gray.max,
+    black: color.gray_cmax,
   }
   return {styles, colors}
 }

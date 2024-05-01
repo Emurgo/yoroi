@@ -32,11 +32,10 @@ export const CurrentBalance = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     banner: {
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
       paddingVertical: 16,
       alignItems: 'center',
       justifyContent: 'center',

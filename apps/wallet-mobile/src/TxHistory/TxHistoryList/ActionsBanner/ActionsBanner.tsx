@@ -35,20 +35,19 @@ export const ActionsBanner = (props: Props) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     actionsRoot: {
       display: 'flex',
-      ...padding['x-l'],
-      ...padding['b-xxs'],
+      ...atoms.px_lg,
+      ...atoms.pb_2xs,
       justifyContent: 'space-between',
       flexDirection: 'row',
       alignItems: 'center',
     },
   })
   const colors = {
-    iconColor: color.primary[500],
+    iconColor: color.primary_c500,
   }
   return {styles, colors}
 }

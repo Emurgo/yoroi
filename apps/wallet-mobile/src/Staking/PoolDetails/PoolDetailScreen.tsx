@@ -43,26 +43,25 @@ export const PoolDetailScreen = ({onPressDelegate, disabled = false}: Props) => 
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding, typography} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     content: {
       flex: 1,
       padding: 24,
-      backgroundColor: color.gray[100],
+      backgroundColor: color.gray_c100,
     },
     heading: {
       alignItems: 'center',
       justifyContent: 'center',
-      ...padding['b-l'],
+      ...atoms.pb_lg,
     },
     title: {
-      color: color.primary[600],
-      ...padding['b-l'],
-      ...typography['body-1-l-regular'],
+      color: color.primary_c600,
+      ...atoms.pb_lg,
+      ...atoms.body_1_lg_regular,
     },
     button: {
-      ...padding['s'],
+      ...atoms.p_sm,
     },
   })
   return styles

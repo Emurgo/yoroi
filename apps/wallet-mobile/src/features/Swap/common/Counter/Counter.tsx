@@ -35,23 +35,22 @@ export const Counter = ({openingText, counter, unitsText, closingText, style}: C
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {atoms, color} = useTheme()
 
   const styles = StyleSheet.create({
     counter: {
       paddingTop: 16,
       justifyContent: 'center',
       flexDirection: 'row',
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
     counterText: {
-      ...typography['body-2-m-medium'],
-      color: color.primary[600],
+      ...atoms.body_2_md_medium,
+      color: color.primary_c600,
     },
     counterTextBold: {
-      ...typography['body-2-m-regular'],
-      color: color.primary[600],
+      ...atoms.body_2_md_regular,
+      color: color.primary_c600,
     },
   })
 

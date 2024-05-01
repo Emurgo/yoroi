@@ -19,13 +19,13 @@ export const DashboardNavigator = () => {
   const wallet = useSelectedWallet()
   const walletName = useWalletName(wallet)
   const strings = useStrings()
-  const {theme} = useTheme()
+  const {color, atoms} = useTheme()
 
   const manager = useGovernanceManagerMaker()
 
   return (
     <GovernanceProvider manager={manager}>
-      <Stack.Navigator screenOptions={defaultStackNavigationOptions(theme)}>
+      <Stack.Navigator screenOptions={defaultStackNavigationOptions(atoms, color)}>
         <Stack.Screen
           name="staking-dashboard-main"
           component={Dashboard}

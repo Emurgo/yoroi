@@ -168,11 +168,11 @@ export const SelectDappFromListScreen = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: theme.color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
     boxHeader: {},
     containerHeader: {},
@@ -180,7 +180,7 @@ const useStyles = () => {
       height: 16,
     },
     dAppItemBox: {
-      ...theme.padding['x-l'],
+      ...atoms.px_lg,
     },
     tabsContainer: {
       flexDirection: 'row',

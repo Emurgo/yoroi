@@ -36,17 +36,16 @@ export const WelcomeDAppModal = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {typography, color, padding} = theme
+  const {atoms, color} = useTheme()
 
   const styles = StyleSheet.create({
     welcomeText: {
-      ...typography['body-1-l-regular'],
-      color: color.gray['900'],
+      ...atoms.body_1_lg_regular,
+      color: color.gray_c900,
       marginTop: 16,
     },
     actions: {
-      ...padding['y-l'],
+      ...atoms.py_lg,
     },
     welcomeImage: {
       width: 343,

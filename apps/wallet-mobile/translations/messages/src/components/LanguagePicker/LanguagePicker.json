@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Language",
     "file": "src/components/LanguagePicker/LanguagePicker.tsx",
     "start": {
-      "line": 104,
+      "line": 103,
       "column": 23,
-      "index": 2842
+      "index": 2792
     },
     "end": {
-      "line": 107,
+      "line": 106,
       "column": 3,
-      "index": 2906
+      "index": 2856
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Search",
     "file": "src/components/LanguagePicker/LanguagePicker.tsx",
     "start": {
-      "line": 108,
+      "line": 107,
       "column": 24,
-      "index": 2932
+      "index": 2882
     },
     "end": {
-      "line": 111,
+      "line": 110,
       "column": 3,
-      "index": 2995
+      "index": 2945
     }
   }
 ]

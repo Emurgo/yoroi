@@ -199,20 +199,19 @@ const messages = defineMessages({
 })
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     row: {
       flexDirection: 'row',
     },
     transparent: {
       backgroundColor: 'transparent',
-      ...padding['y-l'],
+      ...atoms.py_lg,
     },
     container: {
       flex: 1,
-      backgroundColor: color.gray.min,
-      ...padding['x-l'],
+      backgroundColor: color.gray_cmin,
+      ...atoms.px_lg,
     },
     amountItem: {
       flexDirection: 'row',
@@ -221,7 +220,7 @@ const useStyles = () => {
     },
   })
   const colors = {
-    black: color['black-static'],
+    black: color.black_static,
   }
   return {styles, colors}
 }

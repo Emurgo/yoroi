@@ -45,28 +45,27 @@ export const ButtonGroup = <T extends string>({
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography, padding} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flexDirection: 'row',
     },
     button: {
-      ...padding['s'],
+      ...atoms.p_sm,
       borderRadius: 6,
     },
     selected: {
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
     label: {
-      color: color.primary[600],
-      ...typography['body-1-l-medium'],
+      color: color.primary_c600,
+      ...atoms.body_1_lg_medium,
     },
     gradient: {borderRadius: 8, padding: 3},
   })
 
   const colors = {
-    gradientColor: color.gradients.light,
+    gradientColor: color.bg_gradient_1,
   }
 
   return {colors, styles}

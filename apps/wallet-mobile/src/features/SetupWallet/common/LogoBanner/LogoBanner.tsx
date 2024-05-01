@@ -16,7 +16,7 @@ export const LogoBanner = () => {
 
       <Text style={styles.title}>{strings.logoTitle}</Text>
 
-      <Space height="s" />
+      <Space height="sm" />
 
       <Text style={styles.subtitle}>{strings.logoSubtitle}</Text>
     </View>
@@ -24,20 +24,20 @@ export const LogoBanner = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
       alignItems: 'center',
     },
     title: {
-      color: theme.color.primary[500],
+      color: color.primary_c500,
       textAlign: 'center',
-      ...theme.typography['heading-1-medium'],
+      ...atoms.heading_1_medium,
     },
     subtitle: {
-      color: theme.color.gray[900],
+      color: color.gray_c900,
       textAlign: 'center',
-      ...theme.typography['body-2-m-regular'],
+      ...atoms.body_2_md_regular,
     },
   })
 

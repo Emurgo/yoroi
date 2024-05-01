@@ -157,8 +157,7 @@ const useStrings = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
 
   const styles = StyleSheet.create({
     safeAreaView: {
@@ -169,7 +168,7 @@ const useStyles = () => {
     },
     actions: {
       padding: 16,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
   })
   return styles

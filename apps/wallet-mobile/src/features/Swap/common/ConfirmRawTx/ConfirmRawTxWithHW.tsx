@@ -74,9 +74,7 @@ export const ConfirmRawTxWithHW = ({onConfirm, utxo, bech32Address, cancelOrder}
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
-
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -86,7 +84,7 @@ const useStyles = () => {
     },
     text: {
       fontSize: 18,
-      color: color['black-static'],
+      color: color.black_static,
       textAlign: 'center',
     },
   })

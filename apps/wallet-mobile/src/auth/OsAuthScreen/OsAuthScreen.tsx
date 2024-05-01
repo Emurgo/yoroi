@@ -105,12 +105,11 @@ const messages = defineMessages({
 })
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding, typography} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      ...padding['l'],
+      ...atoms.p_lg,
     },
     main: {
       flex: 1,
@@ -119,15 +118,15 @@ const useStyles = () => {
       paddingTop: 25,
     },
     heading: {
-      color: color.gray.min,
+      color: color.gray_cmin,
       textAlign: 'center',
-      ...typography['heading-3-regular'],
+      ...atoms.heading_3_medium,
     },
     subHeadingContainer: {
       marginVertical: 10,
     },
     subHeading: {
-      color: color.gray.min,
+      color: color.gray_cmin,
       textAlign: 'center',
     },
     imageContainer: {
@@ -149,7 +148,7 @@ const useStyles = () => {
       alignItems: 'center',
     },
     welcomeMessageText: {
-      color: color.gray.min,
+      color: color.gray_cmin,
       textAlign: 'center',
       fontSize: 50,
       lineHeight: 60,
@@ -164,7 +163,7 @@ const useStyles = () => {
     },
   })
   const colors = {
-    icon: color['white-static'],
+    icon: color.white_static,
   }
   return {colors, styles}
 }

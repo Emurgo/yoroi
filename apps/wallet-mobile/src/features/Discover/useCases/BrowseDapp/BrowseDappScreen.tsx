@@ -37,12 +37,12 @@ export const BrowseDappScreen = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {color} = useTheme()
 
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: theme.color['white-static'],
+      backgroundColor: color.white_static,
     },
   })
 

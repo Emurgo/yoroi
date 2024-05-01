@@ -77,16 +77,15 @@ export const SearchDappInBrowserScreen = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {padding} = theme
+  const {atoms, color} = useTheme()
 
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: theme.color['white-static'],
+      backgroundColor: color.white_static,
     },
     dAppContainer: {
-      ...padding['l'],
+      ...atoms.p_lg,
     },
   })
 

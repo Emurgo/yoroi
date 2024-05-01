@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation} from '@react-navigation/native'
 import {isNonNullable} from '@yoroi/common'
-import {padding, useTheme} from '@yoroi/theme'
+import {useTheme} from '@yoroi/theme'
 import {BigNumber} from 'bignumber.js'
 import _, {fromPairs} from 'lodash'
 import React from 'react'
@@ -134,8 +134,7 @@ const Amount = ({wallet, transaction}: {wallet: YoroiWallet; transaction: Transa
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     item: {
       flex: 1,
@@ -145,28 +144,28 @@ const useStyles = () => {
       shadowOffset: {width: 0, height: -2},
       shadowRadius: 10,
       shadowOpacity: 0.08,
-      shadowColor: color.gray[900],
-      backgroundColor: color.gray.min,
-      ...padding['m'],
+      shadowColor: color.gray_c900,
+      backgroundColor: color.gray_cmin,
+      ...atoms.p_md,
     },
     amount: {
       flex: 1,
       flexDirection: 'row',
     },
     positiveAmount: {
-      color: color.primary[600],
+      color: color.primary_c600,
     },
     negativeAmount: {
-      color: color.gray.max,
+      color: color.gray_cmax,
     },
     neutralAmount: {
-      color: color.gray.max,
+      color: color.gray_cmax,
     },
   })
 
   const colors = {
-    default: color['white-static'],
-    failed: color.primary[200],
+    default: color.white_static,
+    failed: color.primary_c200,
   }
   return {styles, colors}
 }
