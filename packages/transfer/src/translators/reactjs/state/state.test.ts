@@ -93,10 +93,59 @@ describe('State Actions', () => {
 
     describe('Reset', () => {
       const mockedState: TransferState = {
-        ...defaultTransferState,
-        selectedTokenId: 'policyId.tokenName',
+        allocated: new Map([[0, new Map()]]),
+        linkAction: {
+          info: {
+            version: 1,
+            feature: 'transfer',
+            useCase: 'request/ada-with-link',
+            params: {
+              link: 'web+cardano:addr1qygnpgnmc4twqxe4qnj3pakudc0ysheqwflv8guwwlply7zptg3wjqz84kx3t4re4xpqvs3fu7mvsahwhyxd4q3qq90s7sgxnh?amount=10',
+              authorization: 'uuid-v4',
+            },
+          },
+          isTrusted: false,
+        },
+        memo: 'memo',
+        selectedTargetIndex: 1,
+        selectedTokenId: '.',
         unsignedTx,
-        memo: 'asdfgh',
+        targets: [
+          {
+            receiver: {
+              resolve: '',
+              as: 'address',
+              selectedNameServer: undefined,
+              addressRecords: undefined,
+            },
+            entry: {
+              address: '',
+              amounts: {
+                [tokenBalanceMocks.ftNoTicker.info.id]: {
+                  ...tokenBalanceMocks.ftNoTicker,
+                  quantity: 100n,
+                },
+              },
+            },
+          },
+          {
+            receiver: {
+              resolve: 'address2',
+              as: 'address',
+              addressRecords: undefined,
+              selectedNameServer: undefined,
+            },
+            entry: {
+              address: 'address2',
+              amounts: {
+                [tokenBalanceMocks.ftNoTicker.info.id]: {
+                  ...tokenBalanceMocks.ftNoTicker,
+                  quantity: 200n,
+                },
+              },
+            },
+          },
+        ],
       }
 
       it('set', () => {
@@ -114,6 +163,7 @@ describe('State Actions', () => {
       const prevState: TransferState = {
         selectedTargetIndex: 0,
         selectedTokenId: '.',
+        allocated: new Map(),
         unsignedTx: undefined,
         memo: '',
         linkAction: undefined,
@@ -155,6 +205,7 @@ describe('State Actions', () => {
         expect(state).toEqual({
           selectedTargetIndex: 0,
           selectedTokenId: '.',
+          allocated: new Map(),
           memo: '',
           unsignedTx: undefined,
           linkAction: undefined,
@@ -197,6 +248,7 @@ describe('State Actions', () => {
         expect(state).toEqual({
           selectedTargetIndex: 0,
           selectedTokenId: '.',
+          allocated: new Map(),
           memo: '',
           unsignedTx: undefined,
           targets: [
@@ -233,6 +285,7 @@ describe('State Actions', () => {
       const prevState: TransferState = {
         selectedTargetIndex: 0,
         selectedTokenId: '.',
+        allocated: new Map(),
         unsignedTx: undefined,
         linkAction: undefined,
         memo: '',
@@ -278,6 +331,7 @@ describe('State Actions', () => {
         expect(state).toEqual({
           selectedTargetIndex: 0,
           selectedTokenId: '.',
+          allocated: new Map(),
           memo: '',
           unsignedTx: undefined,
           linkAction: undefined,
@@ -329,6 +383,7 @@ describe('State Actions', () => {
         expect(state).toEqual({
           selectedTargetIndex: 0,
           selectedTokenId: '.',
+          allocated: new Map(),
           memo: '',
           unsignedTx: undefined,
           linkAction: undefined,
@@ -376,6 +431,7 @@ describe('State Actions', () => {
         expect(state).toEqual({
           selectedTargetIndex: 0,
           selectedTokenId: '.',
+          allocated: new Map(),
           memo: '',
           unsignedTx: undefined,
           linkAction: undefined,
@@ -421,6 +477,7 @@ describe('State Actions', () => {
         expect(state).toEqual({
           selectedTargetIndex: 0,
           selectedTokenId: '.',
+          allocated: new Map(),
           memo: '',
           unsignedTx: undefined,
           linkAction: undefined,
@@ -460,6 +517,7 @@ describe('State Actions', () => {
       const prevState: TransferState = {
         selectedTargetIndex: 0,
         selectedTokenId: '.',
+        allocated: new Map(),
         unsignedTx: undefined,
         linkAction: undefined,
         memo: '',
@@ -501,12 +559,14 @@ describe('State Actions', () => {
         expect(state).toEqual({
           selectedTargetIndex: 0,
           selectedTokenId: '.',
+          allocated: new Map(),
           memo: '',
           targets: [
             {
               receiver: {
                 resolve: '',
                 as: 'address',
+                addressRecords: undefined,
                 selectedNameServer: 'cns',
               },
               entry: {
@@ -541,6 +601,7 @@ describe('State Actions', () => {
         expect(state).toEqual({
           selectedTargetIndex: 0,
           selectedTokenId: '.',
+          allocated: new Map(),
           memo: '',
           unsignedTx: undefined,
           targets: [
@@ -580,6 +641,7 @@ describe('State Actions', () => {
         const prevState_: TransferState = {
           selectedTargetIndex: 0,
           selectedTokenId: '.',
+          allocated: new Map(),
           unsignedTx: undefined,
           linkAction: undefined,
           memo: '',
@@ -604,6 +666,7 @@ describe('State Actions', () => {
         expect(state).toEqual({
           selectedTargetIndex: 0,
           selectedTokenId: '.',
+          allocated: new Map(),
           memo: '',
           unsignedTx: undefined,
           linkAction: undefined,
@@ -612,6 +675,7 @@ describe('State Actions', () => {
               receiver: {
                 resolve: '',
                 as: 'domain',
+                addressRecords: undefined,
                 selectedNameServer: undefined,
               },
               entry: {
@@ -637,6 +701,7 @@ describe('State Actions', () => {
         const prevState: TransferState = {
           selectedTargetIndex: 0,
           selectedTokenId: tokenBalanceMocks.primaryETH.info.id,
+          allocated: new Map(),
           memo: '',
           unsignedTx: undefined,
           linkAction: undefined,
@@ -676,6 +741,10 @@ describe('State Actions', () => {
         expect(state).toEqual<TransferState>({
           selectedTargetIndex: 0,
           selectedTokenId: tokenBalanceMocks.primaryETH.info.id,
+          allocated: new Map([
+            [0, new Map()],
+            [1, new Map([[tokenBalanceMocks.primaryETH.info.id, 12344n]])],
+          ]),
           unsignedTx: undefined,
           linkAction: undefined,
           memo: '',
@@ -724,6 +793,7 @@ describe('State Actions', () => {
         const prevState: TransferState = {
           selectedTargetIndex: 0,
           selectedTokenId: tokenBalanceMocks.primaryETH.info.id,
+          allocated: new Map(),
           memo: '',
           unsignedTx: undefined,
           linkAction: undefined,
@@ -763,9 +833,13 @@ describe('State Actions', () => {
         expect(state).toEqual({
           selectedTargetIndex: 0,
           selectedTokenId: tokenBalanceMocks.primaryETH.info.id,
+          allocated: new Map([
+            [0, new Map()],
+            [1, new Map()],
+          ]),
           memo: '',
           unsignedTx: undefined,
-          redirectTo: undefined,
+          linkAction: undefined,
           targets: [
             {
               receiver: {

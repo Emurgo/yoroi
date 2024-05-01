@@ -40,16 +40,50 @@ describe('TransferAllocatedToOtherTargets', () => {
           },
         },
       },
+      {
+        receiver: {
+          resolve: 'address2',
+          as: 'address',
+          addressRecords: undefined,
+          selectedNameServer: undefined,
+        },
+        entry: {
+          address: 'address2',
+          amounts: {
+            [tokenBalanceMocks.ftNoTicker.info.id]: {
+              ...tokenBalanceMocks.ftNoTicker,
+              quantity: 50n,
+            },
+            [tokenBalanceMocks.primaryETH.info.id]: {
+              ...tokenBalanceMocks.primaryETH,
+              quantity: 50n,
+            },
+          },
+        },
+      },
     ]
 
     const result = targetGetAllocatedToOthers({targets})
 
-    expect(result.size).toEqual(2)
-    expect(result.get(0)?.get(tokenBalanceMocks.ftNoTicker.info.id)).toEqual({
-      allocated: 200n,
-    })
-    expect(result.get(1)?.get(tokenBalanceMocks.ftNoTicker.info.id)).toEqual({
-      allocated: 100n,
-    })
+    expect(result.size).toEqual(3)
+    expect(result).toEqual(
+      new Map([
+        [
+          0,
+          new Map([
+            [tokenBalanceMocks.ftNoTicker.info.id, 250n],
+            [tokenBalanceMocks.primaryETH.info.id, 50n],
+          ]),
+        ],
+        [
+          1,
+          new Map([
+            [tokenBalanceMocks.ftNoTicker.info.id, 150n],
+            [tokenBalanceMocks.primaryETH.info.id, 50n],
+          ]),
+        ],
+        [2, new Map([[tokenBalanceMocks.ftNoTicker.info.id, 300n]])],
+      ]),
+    )
   })
 })

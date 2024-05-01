@@ -2,8 +2,8 @@ import {isNameServer, isResolvableDomain} from '@yoroi/resolver'
 import {Chain, Links, Portfolio, Resolver, Transfer} from '@yoroi/types'
 import {castDraft, freeze, produce} from 'immer'
 
-import {TransferAllocatedByOtherTargets} from '../../../types'
-import { targetGetTokenAllocatedToOthers } from '../../../helpers/target-get-allocated-to-others-by-token'
+import {targetGetAllocatedToOthers} from '../../../helpers/target-get-allocated-to-others'
+import {TransferAllocatedToOtherTargets} from '../../../types'
 
 export const combinedReducers = (
   state: TransferState,
@@ -30,12 +30,13 @@ const transferReducer = (state: TransferState, action: TransferAction) => {
         draft.linkAction = castDraft(action.linkAction)
         break
       case TransferActionType.Reset:
-        draft = castDraft(defaultTransferState)
-        break
-      case TransferActionType.BalancesUpdated:
-        draft.balances = action.balances
-        draft.primaryBreakdown = action.primaryBreakdown
-        draft.allocated = targetGetTokenAllocatedToOthers()
+        draft.allocated = defaultTransferState.allocated
+        draft.selectedTargetIndex = defaultTransferState.selectedTargetIndex
+        draft.selectedTokenId = defaultTransferState.selectedTokenId
+        draft.unsignedTx = castDraft(defaultTransferState.unsignedTx)
+        draft.memo = defaultTransferState.memo
+        draft.linkAction = castDraft(defaultTransferState.linkAction)
+        draft.targets = defaultTransferState.targets
         break
     }
   })
@@ -117,6 +118,7 @@ const targetsReducer = (state: TransferState, action: TargetAction) => {
             target.entry.amounts[selectedTokenId] = amount
           }
         })
+        draft.allocated = targetGetAllocatedToOthers({targets: draft.targets})
         break
       }
 
@@ -129,6 +131,7 @@ const targetsReducer = (state: TransferState, action: TargetAction) => {
             delete target.entry.amounts[tokenId]
           }
         })
+        draft.allocated = targetGetAllocatedToOthers({targets: draft.targets})
         break
       }
     }
@@ -137,13 +140,6 @@ const targetsReducer = (state: TransferState, action: TargetAction) => {
 
 export const defaultTransferState: TransferState = freeze(
   {
-    balances: new Map(),
-    primaryBreakdown: {
-      availableRewards: 0n,
-      lockedAsStorageCost: 0n,
-      totalFromTxs: 0n,
-    },
-
     allocated: new Map(),
 
     selectedTargetIndex: 0,
@@ -185,7 +181,6 @@ const defaultStateActions: TransferActions = {
   reset: missingInit,
   memoChanged: missingInit,
   linkActionChanged: missingInit,
-  balancesUpdated: missingInit,
 }
 
 export const defaultTransferActions = {
@@ -194,9 +189,6 @@ export const defaultTransferActions = {
 } as const
 
 export type TransferState = Readonly<{
-  balances: Map<Portfolio.Token.Id, Portfolio.Token.Amount>
-  primaryBreakdown: Portfolio.PrimaryBreakdown
-
   // inputs
   selectedTargetIndex: number
   selectedTokenId: Portfolio.Token.Id
@@ -205,7 +197,7 @@ export type TransferState = Readonly<{
 
   // derived state
   targets: Transfer.Targets
-  allocated: TransferAllocatedByOtherTargets
+  allocated: TransferAllocatedToOtherTargets
 
   // injected when deeplink request transfer
   linkAction: Links.YoroiAction | undefined
@@ -226,15 +218,11 @@ export type TargetActions = Readonly<{
 }>
 
 export type TransferActions = Readonly<{
-  unsignedTxChanged: (UnsignedTx: Chain.Cardano.UnsignedTx) => void
+  unsignedTxChanged: (UnsignedTx: Chain.Cardano.UnsignedTx | undefined) => void
   tokenSelectedChanged: (tokenId: Portfolio.Token.Id) => void
   reset: () => void
   memoChanged: (memo: string) => void
   linkActionChanged: (linkAction: Links.YoroiAction) => void
-  balancesUpdated: (
-    balances: TransferState['balances'],
-    primaryBreakdown: TransferState['primaryBreakdown'],
-  ) => void
 }>
 
 export type TargetAction = Readonly<
@@ -282,16 +270,11 @@ export type TransferAction = Readonly<
     }
   | {
       type: TransferActionType.UnsignedTxChanged
-      unsignedTx: Chain.Cardano.UnsignedTx
+      unsignedTx: Chain.Cardano.UnsignedTx | undefined
     }
   | {
       type: TransferActionType.LinkActionChanged
       linkAction: Links.YoroiAction
-    }
-  | {
-      type: TransferActionType.BalancesUpdated
-      balances: TransferState['balances']
-      primaryBreakdown: TransferState['primaryBreakdown']
     }
 >
 
@@ -307,7 +290,6 @@ export enum TransferActionType {
   MemoChanged = 'memoChanged',
   UnsignedTxChanged = 'unsignedTxChanged',
   LinkActionChanged = 'linkActionChanged',
-  BalancesUpdated = 'balancesUpdated',
 }
 
 /* istanbul ignore next */

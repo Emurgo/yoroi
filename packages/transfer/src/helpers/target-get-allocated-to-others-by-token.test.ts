@@ -41,15 +41,17 @@ describe('targetGetAllocatedToOthersByToken', () => {
       },
     ]
     const targetIndex = 0
-    const tokenId = tokenBalanceMocks.ftNoTicker.info.id
 
     const totalUsed = targetGetAllocatedToOthersByToken({
       targets,
       targetIndex,
-      tokenId,
     })
 
-    expect(totalUsed).toBe(200n)
+    expect(totalUsed).toEqual(
+      new Map([
+        ['14696a4676909f4e3cb1f2e60e2e08e5abed70caf5c02699be971139.3032', 200n],
+      ]),
+    )
   })
 
   it('should return 0 if there are no other targets', () => {
@@ -73,18 +75,16 @@ describe('targetGetAllocatedToOthersByToken', () => {
       },
     ]
     const targetIndex = 0
-    const tokenId = tokenBalanceMocks.ftNoTicker.info.id
 
     const totalUsed = targetGetAllocatedToOthersByToken({
       targets,
       targetIndex,
-      tokenId,
     })
 
-    expect(totalUsed).toBe(0n)
+    expect(totalUsed).toEqual(new Map())
   })
 
-  it('should return 0 if the selected token is not used by other targets', () => {
+  it('should return 0 if empty on other targets', () => {
     const targets: Transfer.Target[] = [
       {
         receiver: {
@@ -97,6 +97,55 @@ describe('targetGetAllocatedToOthersByToken', () => {
           address: '',
           amounts: {
             [tokenBalanceMocks.ftNoTicker.info.id]: {
+              ...tokenBalanceMocks.ftNoTicker,
+              quantity: 100n,
+            },
+          },
+        },
+      },
+      {
+        receiver: {
+          resolve: '',
+          as: 'address',
+          selectedNameServer: undefined,
+          addressRecords: undefined,
+        },
+        entry: {
+          address: '',
+          amounts: {
+            [tokenBalanceMocks.ftNoTicker.info.id]: {
+              ...tokenBalanceMocks.ftNoTicker,
+              quantity: 0n,
+            },
+          },
+        },
+      },
+    ]
+    const targetIndex = 0
+
+    const totalUsed = targetGetAllocatedToOthersByToken({
+      targets,
+      targetIndex,
+    })
+
+    expect(totalUsed).toEqual(
+      new Map([[tokenBalanceMocks.ftNoTicker.info.id, 0n]]),
+    )
+  })
+
+  it('should return the other tokens by other targets', () => {
+    const targets: Transfer.Target[] = [
+      {
+        receiver: {
+          resolve: '',
+          as: 'address',
+          selectedNameServer: undefined,
+          addressRecords: undefined,
+        },
+        entry: {
+          address: '',
+          amounts: {
+            [tokenBalanceMocks.primaryETH.info.id]: {
               ...tokenBalanceMocks.ftNoTicker,
               quantity: 100n,
             },
@@ -122,14 +171,16 @@ describe('targetGetAllocatedToOthersByToken', () => {
       },
     ]
     const targetIndex = 0
-    const tokenId = 'anyOther.token'
 
     const totalUsed = targetGetAllocatedToOthersByToken({
       targets,
       targetIndex,
-      tokenId,
     })
 
-    expect(totalUsed).toBe(0n)
+    expect(totalUsed).toEqual(
+      new Map([
+        ['14696a4676909f4e3cb1f2e60e2e08e5abed70caf5c02699be971139.3032', 200n],
+      ]),
+    )
   })
 })
