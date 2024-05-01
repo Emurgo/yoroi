@@ -61,6 +61,8 @@ export const portfolioBalanceManagerMaker = (
     },
     true,
   )
+  let hasOnlyPrimary = true
+  let isEmpty = true
 
   const sortBalances = balancesSorter({
     primaryTokenInfo,
@@ -130,6 +132,8 @@ export const portfolioBalanceManagerMaker = (
     sortedBalances = splitByType(sorted)
     primaryBreakdown = newPrimaryBreakdown
     primaryBalance = newPrimaryBalance
+    hasOnlyPrimary = sortedBalances.all.length === 1
+    isEmpty = hasOnlyPrimary && primaryBalance.quantity === 0n
     isHydrated = true
 
     observer.notify({on: Portfolio.Event.ManagerOn.Hydrate, sourceId})
@@ -247,6 +251,8 @@ export const portfolioBalanceManagerMaker = (
             sortedBalances = splitByType(sorted)
             primaryBreakdown = newPrimaryBreakdown
             primaryBalance = newPrimaryBalance
+            hasOnlyPrimary = sortedBalances.all.length === 1
+            isEmpty = hasOnlyPrimary && primaryBalance.quantity === 0n
 
             observer.notify({
               on: Portfolio.Event.ManagerOn.Sync,
@@ -260,17 +266,11 @@ export const portfolioBalanceManagerMaker = (
     )
   }
 
-  const getPrimaryBreakdown = () => {
-    return primaryBreakdown
-  }
-
-  const getPrimaryBalance = () => {
-    return primaryBalance
-  }
-
-  const getBalances = () => {
-    return sortedBalances
-  }
+  const getPrimaryBreakdown = () => primaryBreakdown
+  const getPrimaryBalance = () => primaryBalance
+  const getHasOnlyPrimary = () => hasOnlyPrimary
+  const getBalances = () => sortedBalances
+  const getIsEmpty = () => isEmpty
 
   const destroy = () => {
     observer.destroy()
@@ -339,7 +339,9 @@ export const portfolioBalanceManagerMaker = (
 
       getPrimaryBreakdown,
       getPrimaryBalance,
+      getHasOnlyPrimary,
       getBalances,
+      getIsEmpty,
 
       destroy,
       clear,

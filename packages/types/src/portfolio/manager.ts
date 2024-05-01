@@ -58,7 +58,9 @@ export type PortfolioManagerBalance = Readonly<{
 
   getPrimaryBreakdown(): Readonly<PortfolioPrimaryBreakdown>
   getPrimaryBalance(): Readonly<PortfolioTokenAmount>
+  getHasOnlyPrimary(): boolean
   getBalances(): Readonly<PortfolioTokenBalances>
+  getIsEmpty(): boolean
 
   destroy(): void
   clear(): void

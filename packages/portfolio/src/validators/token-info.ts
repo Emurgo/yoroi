@@ -20,9 +20,9 @@ export const CommonTokenInfoSchema = z.object({
   fingerprint: z.string(),
   website: z.string(),
   originalImage: z.string(),
-  description: z.string(),
-  icon: z.string(),
-  mediaType: z.string(),
+  description: z.string().optional(),
+  icon: z.string().optional(),
+  mediaType: z.string().optional(),
 })
 
 export const PrimaryTokenInfoSchema = CommonTokenInfoSchema.merge(

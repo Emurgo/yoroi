@@ -2,7 +2,7 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {FlashList} from '@shopify/flash-list'
 import {isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
-import {targetGetTokenBalanceBreakdown, useTransfer} from '@yoroi/transfer'
+import {useTransfer} from '@yoroi/transfer'
 import {Balance, Portfolio} from '@yoroi/types'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
@@ -15,8 +15,7 @@ import {useSearch, useSearchOnNavBar} from '../../../../../Search/SearchContext'
 import {sortTokenInfos} from '../../../../../utils'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {limitOfSecondaryAmountsPerTx} from '../../../../../yoroi-wallets/contants'
-import {useBalances, useIsWalletEmpty, useNfts} from '../../../../../yoroi-wallets/hooks'
-import {Amounts} from '../../../../../yoroi-wallets/utils'
+import {useIsWalletEmpty} from '../../../../../yoroi-wallets/hooks'
 import {usePortfolioBalances} from '../../../../Portfolio/common/hooks/usePortfolioBalances'
 import {usePortfolioPrimaryBreakdown} from '../../../../Portfolio/common/hooks/usePortfolioPrimaryBreakdown'
 import {useSelectedWallet} from '../../../../WalletManager/Context'
@@ -31,20 +30,17 @@ import {MaxAmountsPerTx} from './Show/MaxAmountsPerTx'
 export const SelectTokenFromListScreen = () => {
   const strings = useStrings()
   const {styles} = useStyles()
-  const {targets, selectedTargetIndex} = useTransfer()
+  const {targets, selectedTargetIndex, allocated} = useTransfer()
 
   const wallet = useSelectedWallet()
   const balances = usePortfolioBalances({wallet})
   const [fungibilityFilter, setFungibilityFilter] = React.useState<Exclude<keyof typeof balances, 'records'>>('all')
   const [isPending, startTransition] = React.useTransition()
-  const showOnlyNfts = fungibilityFilter === 'nfts'
   const filteredBalancesByFungibility = balances[fungibilityFilter]
   const withoutSelected = React.useMemo(
     () => filteredBalancesByFungibility.filter(filterOutSelected(targets[selectedTargetIndex].entry.amounts)),
     [filteredBalancesByFungibility, selectedTargetIndex, targets],
   )
-  const balancesBreakdown = 
-
   const counter = withoutSelected.length
 
   const {track} = useMetrics()
@@ -73,6 +69,8 @@ export const SelectTokenFromListScreen = () => {
   const handleOnPressFTs = React.useCallback(() => startTransition(() => setFungibilityFilter('fts')), [])
   const handleOnPressAll = React.useCallback(() => startTransition(() => setFungibilityFilter('all')), [])
 
+  const showOnlyNfts = fungibilityFilter === 'nfts' && !isSearching
+
   return (
     <View style={styles.root}>
       <View style={styles.subheader}>
@@ -97,96 +95,80 @@ export const SelectTokenFromListScreen = () => {
         )}
       </View>
 
-      <List isSearching={isSearching} canAddAmount={canAddAmount} showOnlyNfts={showOnlyNfts} />
+      <View style={styles.list}>
+        {showOnlyNfts ? (
+          <ListSpendableNfts canAddAmount={canAddAmount} spendableAmounts={spendableAmounts} />
+        ) : (
+          <ListSpendableBalances canAddAmount={canAddAmount} spendableAmounts={spendableAmounts} />
+        )}
+      </View>
 
       <Counter fungibilityFilter={fungibilityFilter} counter={counter} />
     </View>
   )
 }
 
-type ListProps<T> = {
-  showOnlyNfts: boolean
-  isSearching: boolean
+const ListSpendableNfts = ({
+  canAddAmount,
+  spendableAmounts,
+}: {
   canAddAmount: boolean
-}
-const List = <T,>({showOnlyNfts, isSearching, canAddAmount}: ListProps<T>) => {
-  const showNftList = showOnlyNfts && !isSearching
-
-  if (showNftList) return <ListSpendableNfts canAddAmount={canAddAmount} />
-
-  return <ListSpendableBalances fungibilityFilter={fungibilityFilter} canAddAmount={canAddAmount} />
-}
-
-const ListSpendableNfts = ({canAddAmount}: {canAddAmount: boolean}) => {
-  const {styles} = useStyles()
-  const wallet = useSelectedWallet()
-  const navigation = useNavigation<TxHistoryRouteNavigation>()
-  const {tokenSelectedChanged, amountChanged, targets, selectedTargetIndex} = useTransfer()
-  const {closeSearch} = useSearch()
-  const balances = useBalances(wallet)
+  spendableAmounts: ReadonlyArray<Portfolio.Token.Amount>
+}) => {
   const strings = useStrings()
-  const {nfts} = useNfts(wallet)
-  const amountsSelected = Object.keys(targets[selectedTargetIndex].entry.amounts)
-  const filteredAndSorted = nfts.filter(filterOutSelected(amountsSelected)).sort((a, b) => sortNfts(a.name, b.name))
-  const counter = filteredAndSorted.length
+  const navigation = useNavigation<TxHistoryRouteNavigation>()
+  const {closeSearch} = useSearch()
+  const {tokenSelectedChanged, amountChanged} = useTransfer()
+  const isEmpty = spendableAmounts.length > 0
 
-  const onSelect = (nftId: string) => {
-    tokenSelectedChanged(nftId)
+  const handleOnSelect = (amount: Portfolio.Token.Amount) => {
+    tokenSelectedChanged(amount.info.id)
     closeSearch()
 
-    const quantity = Amounts.getAmount(balances, nftId).quantity
-    amountChanged(quantity)
+    amountChanged(amount)
     navigation.navigate('send-list-amounts-to-send')
   }
 
   return (
-    <View style={styles.list}>
-      <NftImageGallery
-        nfts={filteredAndSorted}
-        onRefresh={() => undefined}
-        onSelect={onSelect}
-        readOnly={!canAddAmount}
-        isRefreshing={false}
-        withVerticalPadding={filteredAndSorted.length > 0} // to keep consistency between tabs when the list is not empty
-        ListEmptyComponent={
-          filteredAndSorted.length === 0 ? <NoAssetsYet text={strings.noAssetsAddedYet(strings.nfts(2))} /> : null
-        }
-      />
-
-      <Counter fungibilityFilter="nft" counter={counter} />
-    </View>
+    <NftImageGallery
+      nfts={spendableAmounts}
+      onRefresh={() => undefined}
+      onSelect={handleOnSelect}
+      readOnly={!canAddAmount}
+      isRefreshing={false}
+      withVerticalPadding={!isEmpty} // to keep consistency between tabs when the list is not empty
+      ListEmptyComponent={isEmpty ? <NoAssetsYet text={strings.noAssetsAddedYet(strings.nfts(2))} /> : null}
+    />
   )
 }
 
 type ListSpendableBalancesProps = {
   canAddAmount: boolean
-  availableBalances: ReadonlyArray<Portfolio.Token.Amount>
+  spendableAmounts: ReadonlyArray<Portfolio.Token.Amount>
 }
-const ListSpendableBalances = ({canAddAmount, availableBalances}: ListSpendableBalancesProps) => {
+const ListSpendableBalances = ({canAddAmount, spendableAmounts}: ListSpendableBalancesProps) => {
   const {styles} = useStyles()
 
   return (
-    <View style={styles.list}>
-      <FlashList
-        data={availableBalances}
-        renderItem={({item: amount}) => (
-          <SelectableAssetItem
-            isMainnet={wallet.isMainnet}
-            privacyPlaceholder=""
-            isPrivacyOff={true}
-            amount={amount}
-            disabled={!canAddAmount && amount.info.id !== wallet.primaryTokenInfo.id}
-          />
-        )}
-        bounces={false}
-        contentContainerStyle={styles.content}
-        keyExtractor={(_, index) => index.toString()}
-        testID="assetList"
-        ItemSeparatorComponent={() => <Spacer height={16} />}
-        estimatedItemSize={78}
-        ListEmptyComponent={<ListEmptyComponent filteredTokenInfos={filteredTokenInfos} allTokenInfos={tokenInfos} />}
-      />
-    </View>
+    <FlashList
+      data={spendableAmounts}
+      renderItem={({item: amount}) => (
+        <SelectableAssetItem
+          isMainnet={wallet.isMainnet}
+          privacyPlaceholder=""
+          isPrivacyOff={true}
+          amount={amount}
+          disabled={!canAddAmount && amount.info.id !== wallet.primaryTokenInfo.id}
+        />
+      )}
+      bounces={false}
+      contentContainerStyle={styles.content}
+      keyExtractor={(_, index) => index.toString()}
+      testID="assetList"
+      ItemSeparatorComponent={() => <Spacer height={16} />}
+      estimatedItemSize={78}
+      ListEmptyComponent={<ListEmptyComponent filteredTokenInfos={filteredTokenInfos} allTokenInfos={tokenInfos} />}
+    />
   )
 }
 
@@ -405,28 +387,26 @@ const areAllTokensSelected = (selectedTokenIds: Array<string>, tokenInfos: Balan
 const filterOutSelected =
   (amounts: Record<Portfolio.Token.Id, Portfolio.Token.Amount>) => (amount: Portfolio.Token.Amount) =>
     !Object.keys(amounts).includes(amount.info.id)
-const sortNfts = (nftNameA: string, nftNameB: string): number => nftNameA.localeCompare(nftNameB)
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography, padding} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
     subheader: {
-      ...padding['x-l'],
+      ...atoms.px_lg,
     },
     item: {
-      ...padding['y-m'],
+      ...atoms.py_md,
     },
     borderBottom: {
-      borderBottomColor: color.gray[200],
+      borderBottomColor: color.gray_c200,
       borderBottomWidth: StyleSheet.hairlineWidth,
     },
     panel: {
-      ...padding['x-l'],
+      ...atoms.px_lg,
     },
     tabs: {
       flexDirection: 'row',
@@ -435,19 +415,19 @@ const useStyles = () => {
       flex: 1,
     },
     tabContainerActive: {
-      borderBottomColor: color.primary[600],
+      borderBottomColor: color.primary_c600,
       borderBottomWidth: 2,
     },
     tab: {
       textAlign: 'center',
-      ...padding['y-m'],
-      ...typography['body-1-l-medium'],
+      ...atoms.py_md,
+      ...atoms.body_1_lg_medium,
     },
     list: {
       flex: 1,
     },
     assetListContent: {
-      ...padding['x-l'],
+      ...atoms.px_lg,
     },
     image: {
       flex: 1,
@@ -460,29 +440,29 @@ const useStyles = () => {
       textAlign: 'center',
     },
     contentText: {
-      ...typography['heading-3-medium'],
-      color: color.gray.max,
+      ...atoms.heading_3_medium,
+      color: color.gray_cmax,
       flex: 1,
       textAlign: 'center',
     },
     counter: {
-      ...padding['l'],
+      ...atoms.p_lg,
       justifyContent: 'center',
       flexDirection: 'row',
     },
     counterText: {
-      color: color.primary[600],
-      ...typography['body-2-m-regular'],
+      color: color.primary_c600,
+      ...atoms.body_2_md_regular,
     },
     counterTextBold: {
-      color: color.primary[600],
-      ...typography['body-2-m-medium'],
+      color: color.primary_c600,
+      ...atoms.body_2_md_medium,
     },
   })
 
   const colors = {
-    active: color.primary[600],
-    inactive: color.gray[600],
+    active: color.primary_c600,
+    inactive: color.gray_c600,
   }
 
   return {styles, colors}

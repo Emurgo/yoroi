@@ -135,6 +135,8 @@ describe('hydrate', () => {
     })
 
     expect(subscriber).toHaveBeenCalledTimes(1)
+    expect(manager.getHasOnlyPrimary()).toBe(false)
+    expect(manager.getIsEmpty()).toBe(false)
   })
 })
 

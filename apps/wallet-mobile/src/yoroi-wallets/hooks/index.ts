@@ -969,7 +969,7 @@ const supportedTypes = [
   'image/tiff',
 ]
 
-const supportedSizes = [64, 72, 128, 256, 480, 512, 640, 720, 1080, 1280, 1440] as const
+const supportedSizes = [64, 128, 256, 512, 720] as const
 
 const getClosestSize = (size: string | number) => {
   const pixels = PixelRatio.getPixelSizeForLayoutSize(Number(size))
