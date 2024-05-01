@@ -131,32 +131,31 @@ export const AmountItemPlaceholder = ({style}: ViewProps) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     container: {
       flexDirection: 'row',
       alignItems: 'center',
     },
     name: {
-      color: color.gray[900],
-      ...typography['body-1-l-medium'],
+      color: color.gray_c900,
+      ...atoms.body_1_lg_medium,
     },
     detail: {
-      color: color.gray[600],
-      ...typography['body-3-s-regular'],
+      color: color.gray_c600,
       maxWidth: 140,
+      ...atoms.body_3_sm_regular,
     },
     quantity: {
-      color: color.gray[900],
-      ...typography['body-1-l-regular'],
+      color: color.gray_c900,
+      ...atoms.body_1_lg_regular,
     },
   })
 
   const colors = {
-    text: color.gray[900],
-    background: color.gray[200],
-    icon: color.secondary[600],
+    text: color.gray_c900,
+    background: color.gray_c200,
+    icon: color.secondary_c600,
   }
 
   return {styles, colors}
