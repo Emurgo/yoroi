@@ -2,6 +2,7 @@ import {isKeyOf, isRecord} from '@yoroi/common'
 import {Storage} from './adapters/async-storage'
 import {z} from 'zod'
 import {createTypeGuardFromSchema} from '@yoroi/common/src'
+import {Animated} from 'react-native'
 
 type Context = {
   browserOrigin: string
@@ -25,6 +26,7 @@ type Resolver = {
     getUsedAddresses: ResolvableMethod<string[]>
     getExtensions: ResolvableMethod<Array<{cip: number}>>
     getUnusedAddresses: ResolvableMethod<string[]>
+    getUtxos: ResolvableMethod<string>
   }
 }
 
@@ -79,10 +81,26 @@ export const resolver: Resolver = {
       await assertWalletAcceptedConnection(context)
       return context.wallet.getRewardAddresses()
     },
+    getUtxos: async (params: unknown, context: Context) => {
+      assertOriginsMatch(context)
+      await assertWalletAcceptedConnection(context)
+      const value =
+        isRecord(params) && Array.isArray(params.args) && typeof params.args[0] === 'string'
+          ? params.args[0]
+          : undefined
+      const pagination =
+        isRecord(params) && Array.isArray(params.args) && isPaginationParams(params.args[1])
+          ? params.args[1]
+          : undefined
+      return context.wallet.getUtxos(value, pagination)
+    },
     getUsedAddresses: async (params: unknown, context: Context) => {
       assertOriginsMatch(context)
       await assertWalletAcceptedConnection(context)
-      const pagination = isRecord(params) && isPaginationParams(params.args) ? params.args : undefined
+      const pagination =
+        isRecord(params) && Array.isArray(params.args) && isPaginationParams(params.args[0])
+          ? params.args[0]
+          : undefined
       return context.wallet.getUsedAddresses(pagination)
     },
   },
@@ -175,9 +193,15 @@ export type ResolverWallet = {
   confirmConnection: (dappOrigin: string) => Promise<boolean>
   getBalance: (tokenId?: string) => Promise<string>
   getUnusedAddresses: () => Promise<string[]>
-  getUsedAddresses: (pagination?: {page: number; limit: number}) => Promise<string[]>
+  getUsedAddresses: (pagination?: Pagination) => Promise<string[]>
   getChangeAddress: () => Promise<string>
   getRewardAddresses: () => Promise<string[]>
+  getUtxos: (value?: string, pagination?: Pagination) => Promise<string>
+}
+
+type Pagination = {
+  page: number
+  limit: number
 }
 
 const LOG_MESSAGE_EVENT = 'log_message'

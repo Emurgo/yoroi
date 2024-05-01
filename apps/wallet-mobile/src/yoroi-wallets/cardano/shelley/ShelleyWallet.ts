@@ -947,6 +947,10 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       return [hex]
     }
 
+    async CIP30getUtxos() {
+      return []
+    }
+
     async signSwapCancellationWithLedger(cbor: string, useUSB: boolean): Promise<void> {
       if (!this.hwDeviceInfo) throw new Error('Invalid wallet state')
 
