@@ -12,7 +12,6 @@ import {
   StyleSheet,
   Text,
   TextInput as RNTextInput,
-  TouchableOpacity,
   useWindowDimensions,
   View,
 } from 'react-native'
@@ -42,11 +41,11 @@ import {useSetSelectedWallet} from '../../../WalletManager/Context/SelectedWalle
 import {useSetSelectedWalletMeta} from '../../../WalletManager/Context/SelectedWalletMetaContext'
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
 import {YoroiZendeskLink} from '../../common/constants'
+import {Info} from '../../common/Info/Info'
 import {LearnMoreButton} from '../../common/LearnMoreButton/LearnMoreButton'
 import {PreparingWallet} from '../../common/PreparingWallet/PreparingWallet'
 import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
 import {useStrings} from '../../common/useStrings'
-import {Info as InfoIllustration} from '../../illustrations/Info'
 
 const useSizeModal = () => {
   const HEIGHT_SCREEN = useWindowDimensions().height
@@ -289,9 +288,7 @@ export const WalletDetailsScreen = () => {
         <View style={styles.info}>
           <Text style={styles.title}>{strings.walletDetailsTitle(bold)}</Text>
 
-          <TouchableOpacity onPress={showModalTipsPassword}>
-            <InfoIllustration />
-          </TouchableOpacity>
+          <Info onPress={showModalTipsPassword} />
         </View>
 
         <Space height="xl" />
@@ -355,9 +352,7 @@ export const WalletDetailsScreen = () => {
 
           <Space width="s" />
 
-          <TouchableOpacity onPress={showModalTipsPlateNumber}>
-            <InfoIllustration />
-          </TouchableOpacity>
+          <Info onPress={showModalTipsPlateNumber} />
         </View>
       </View>
 
@@ -393,6 +388,7 @@ const useStyles = () => {
     },
     info: {
       flexDirection: 'row',
+      lineHeight: 24,
     },
     modal: {
       flex: 1,

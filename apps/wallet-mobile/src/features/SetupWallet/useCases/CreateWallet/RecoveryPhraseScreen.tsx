@@ -16,19 +16,19 @@ import {
 import LinearGradient from 'react-native-linear-gradient'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Spacer, useModal} from '../../../../components'
+import {Button, useModal} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {WalletInitRouteNavigation} from '../../../../navigation'
 import {generateAdaMnemonic} from '../../../../yoroi-wallets/cardano/mnemonic'
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
 import {YoroiZendeskLink} from '../../common/constants'
+import {Info} from '../../common/Info/Info'
 import {LearnMoreButton} from '../../common/LearnMoreButton/LearnMoreButton'
 import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
 import {useStrings} from '../../common/useStrings'
 import {EyeClosed as EyeClosedIllustration} from '../../illustrations/EyeClosed'
 import {EyeOpen as EyeOpenIllustration} from '../../illustrations/EyeOpen'
-import {Info as InfoIllustration} from '../../illustrations/Info'
 
 const useSizeModal = () => {
   const HEIGHT_SCREEN = useWindowDimensions().height
@@ -130,7 +130,7 @@ export const RecoveryPhraseScreen = () => {
         <Text style={styles.title}>
           {strings.recoveryPhraseTitle(bold)}
 
-          <Info onPress={handleOnShowModal} />
+          <Info paddingTop={3} onPress={handleOnShowModal} />
         </Text>
 
         <View style={styles.mnemonicWords}>
@@ -184,18 +184,6 @@ export const RecoveryPhraseScreen = () => {
   )
 }
 
-const Info = ({onPress}: {onPress: () => void}) => {
-  const {styles} = useStyles()
-
-  return (
-    <TouchableOpacity style={styles.info} onPress={onPress}>
-      <Spacer height={2} />
-
-      <InfoIllustration size={24} />
-    </TouchableOpacity>
-  )
-}
-
 const useBold = () => {
   const {styles} = useStyles()
 
@@ -220,6 +208,7 @@ const useStyles = () => {
       ...theme.typography['body-1-l-regular'],
       color: theme.color.gray[900],
       lineHeight: 24,
+      flexDirection: 'row',
     },
     bolder: {
       ...theme.typography['body-1-l-medium'],
@@ -263,9 +252,6 @@ const useStyles = () => {
     blurTextButton: {
       ...theme.typography['button-2-m'],
       color: theme.color.primary[500],
-    },
-    info: {
-      height: 24,
     },
   })
 
