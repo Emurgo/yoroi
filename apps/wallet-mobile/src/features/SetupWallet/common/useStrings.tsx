@@ -92,6 +92,7 @@ export const useStrings = () => {
     invalidChecksum: intl.formatMessage(messages.invalidChecksum),
     validChecksum: intl.formatMessage(messages.validChecksum),
     stepRestoreWalletScreen: intl.formatMessage(messages.stepRestoreWalletScreen),
+    wordNotFound: intl.formatMessage(messages.wordNotFound),
     choose15WordsMnemonicTitle: intl.formatMessage(messages.choose15WordsMnemonicTitle),
     choose24WordsMnemonicTitle: intl.formatMessage(messages.choose24WordsMnemonicTitle),
     restoreWalletScreenTitle: (options: {b: (content: React.ReactNode[]) => React.ReactNode}) =>
@@ -415,6 +416,10 @@ export const messages = Object.freeze(
     preparingWallet: {
       id: 'components.walletinit.restorewallet.restorewalletscreen.preparingWallet',
       defaultMessage: '!!!Preparing your wallet...',
+    },
+    wordNotFound: {
+      id: 'components.walletinit.restorewallet.restorewalletscreen.wordNotFound',
+      defaultMessage: '!!!Word not found',
     },
   }),
 )
