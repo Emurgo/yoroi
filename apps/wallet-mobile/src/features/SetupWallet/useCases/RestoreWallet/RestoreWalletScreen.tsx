@@ -191,9 +191,11 @@ export const RestoreWalletScreen = () => {
         {suggestedWords.length > 0 ? (
           <WordSuggestionList data={suggestedWords} index={focusedIndex} onSelect={onSelect} />
         ) : (
-          <View style={styles.suggestionArea}>
-            <Text style={styles.suggestionMessage}>{strings.wordNotFound}</Text>
-          </View>
+          !isEmptyString(mnenonicRefs[focusedIndex].current?.word) && (
+            <View style={styles.suggestionArea}>
+              <Text style={styles.suggestionMessage}>{strings.wordNotFound}</Text>
+            </View>
+          )
         )}
       </KeyboardAvoidingView>
     </SafeAreaView>
