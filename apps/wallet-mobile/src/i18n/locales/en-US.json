@@ -590,6 +590,7 @@
   "components.walletinit.restorewallet.restorewalletscreen.invalidchecksum": "Incorrect recovery phrase. Try again",
   "components.walletinit.restorewallet.restorewalletscreen.validchecksum": "The recovery phrase is verified",
   "components.walletinit.restorewallet.restorewalletscreen.stepRestoreWalletScreen": "Enter recovery phrase",
+  "components.walletinit.restorewallet.restorewalletscreen.wordNotFound": "Word not found",
   "components.walletinit.restorewallet.restorewalletscreen.mnemonicInputLabel": "Recovery phrase",
   "components.walletinit.restorewallet.restorewalletscreen.restoreButton": "Restore wallet",
   "components.walletinit.restorewallet.restorewalletscreen.title": "Restore wallet",

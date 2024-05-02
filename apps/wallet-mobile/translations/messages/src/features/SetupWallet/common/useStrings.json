@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Not found",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 108,
+      "line": 109,
       "column": 14,
-      "index": 7961
+      "index": 8022
     },
     "end": {
-      "line": 111,
+      "line": 112,
       "column": 5,
-      "index": 8082
+      "index": 8143
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Clear all",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 112,
+      "line": 113,
       "column": 14,
-      "index": 8098
+      "index": 8159
     },
     "end": {
-      "line": 115,
+      "line": 116,
       "column": 5,
-      "index": 8219
+      "index": 8280
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Minimum characters",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 116,
+      "line": 117,
       "column": 33,
-      "index": 8254
+      "index": 8315
     },
     "end": {
-      "line": 119,
+      "line": 120,
       "column": 5,
-      "index": 8401
+      "index": 8462
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Repeat password",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 120,
+      "line": 121,
       "column": 30,
-      "index": 8433
+      "index": 8494
     },
     "end": {
-      "line": 123,
+      "line": 124,
       "column": 5,
-      "index": 8555
+      "index": 8616
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Passwords do not match",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 124,
+      "line": 125,
       "column": 30,
-      "index": 8587
+      "index": 8648
     },
     "end": {
-      "line": 127,
+      "line": 128,
       "column": 5,
-      "index": 8716
+      "index": 8777
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!Yoroi",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 128,
+      "line": 129,
       "column": 15,
-      "index": 8733
+      "index": 8794
     },
     "end": {
-      "line": 131,
+      "line": 132,
       "column": 5,
-      "index": 8835
+      "index": 8896
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!Light wallet for Cardano assets",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 132,
+      "line": 133,
       "column": 18,
-      "index": 8855
+      "index": 8916
     },
     "end": {
-      "line": 135,
+      "line": 136,
       "column": 5,
-      "index": 8986
+      "index": 9047
     }
   },
   {
@@ -109,14 +109,14 @@
     "defaultMessage": "!!!Learn more on Yoroi Zendesk",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 136,
+      "line": 137,
       "column": 15,
-      "index": 9003
+      "index": 9064
     },
     "end": {
-      "line": 139,
+      "line": 140,
       "column": 5,
-      "index": 9128
+      "index": 9189
     }
   },
   {
@@ -124,14 +124,14 @@
     "defaultMessage": "!!!Continue",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 140,
+      "line": 141,
       "column": 20,
-      "index": 9150
+      "index": 9211
     },
     "end": {
-      "line": 143,
+      "line": 144,
       "column": 5,
-      "index": 9264
+      "index": 9325
     }
   },
   {
@@ -139,14 +139,14 @@
     "defaultMessage": "!!!Next",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 144,
+      "line": 145,
       "column": 10,
-      "index": 9276
+      "index": 9337
     },
     "end": {
-      "line": 147,
+      "line": 148,
       "column": 5,
-      "index": 9382
+      "index": 9443
     }
   },
   {
@@ -154,14 +154,14 @@
     "defaultMessage": "!!!Create new wallet",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 148,
+      "line": 149,
       "column": 28,
-      "index": 9412
+      "index": 9473
     },
     "end": {
-      "line": 151,
+      "line": 152,
       "column": 5,
-      "index": 9540
+      "index": 9601
     }
   },
   {
@@ -169,14 +169,14 @@
     "defaultMessage": "!!!Restore Yoroi existing wallet",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 152,
+      "line": 153,
       "column": 29,
-      "index": 9571
+      "index": 9632
     },
     "end": {
-      "line": 155,
+      "line": 156,
       "column": 5,
-      "index": 9712
+      "index": 9773
     }
   },
   {
@@ -184,14 +184,14 @@
     "defaultMessage": "!!!Connect hardware wallet device",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 156,
+      "line": 157,
       "column": 29,
-      "index": 9743
+      "index": 9804
     },
     "end": {
-      "line": 159,
+      "line": 160,
       "column": 5,
-      "index": 9885
+      "index": 9946
     }
   },
   {
@@ -199,14 +199,14 @@
     "defaultMessage": "!!!Cardano Mainnet",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 160,
+      "line": 161,
       "column": 20,
-      "index": 9907
+      "index": 9968
     },
     "end": {
-      "line": 163,
+      "line": 164,
       "column": 5,
-      "index": 10035
+      "index": 10096
     }
   },
   {
@@ -214,14 +214,14 @@
     "defaultMessage": "!!!Cardano Preprod Testnet",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 164,
+      "line": 165,
       "column": 20,
-      "index": 10057
+      "index": 10118
     },
     "end": {
-      "line": 167,
+      "line": 168,
       "column": 5,
-      "index": 10193
+      "index": 10254
     }
   },
   {
@@ -229,14 +229,14 @@
     "defaultMessage": "!!!Cardano SanchoNet",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 168,
+      "line": 169,
       "column": 22,
-      "index": 10217
+      "index": 10278
     },
     "end": {
-      "line": 171,
+      "line": 172,
       "column": 5,
-      "index": 10349
+      "index": 10410
     }
   },
   {
@@ -244,14 +244,14 @@
     "defaultMessage": "!!!Works with real ADA",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 172,
+      "line": 173,
       "column": 31,
-      "index": 10382
+      "index": 10443
     },
     "end": {
-      "line": 175,
+      "line": 176,
       "column": 5,
-      "index": 10520
+      "index": 10581
     }
   },
   {
@@ -259,14 +259,14 @@
     "defaultMessage": "!!!Works with test ADA (tADA)",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 176,
+      "line": 177,
       "column": 31,
-      "index": 10553
+      "index": 10614
     },
     "end": {
-      "line": 179,
+      "line": 180,
       "column": 5,
-      "index": 10698
+      "index": 10759
     }
   },
   {
@@ -274,14 +274,14 @@
     "defaultMessage": "!!!Testnet for rolling out governance",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 180,
+      "line": 181,
       "column": 33,
-      "index": 10733
+      "index": 10794
     },
     "end": {
-      "line": 183,
+      "line": 184,
       "column": 5,
-      "index": 10888
+      "index": 10949
     }
   },
   {
@@ -289,14 +289,14 @@
     "defaultMessage": "!!!Use your device biometrics for a more convenient access to your Yoroi wallet and transaction confirmation",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 184,
+      "line": 185,
       "column": 26,
-      "index": 10916
+      "index": 10977
     },
     "end": {
-      "line": 188,
+      "line": 189,
       "column": 5,
-      "index": 11149
+      "index": 11210
     }
   },
   {
@@ -304,14 +304,14 @@
     "defaultMessage": "!!!Enable biometrics",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 189,
+      "line": 190,
       "column": 18,
-      "index": 11169
+      "index": 11230
     },
     "end": {
-      "line": 192,
+      "line": 193,
       "column": 5,
-      "index": 11292
+      "index": 11353
     }
   },
   {
@@ -319,14 +319,14 @@
     "defaultMessage": "!!!Recovery phrase is a unique combination of words",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 193,
+      "line": 194,
       "column": 18,
-      "index": 11312
+      "index": 11373
     },
     "end": {
-      "line": 196,
+      "line": 197,
       "column": 5,
-      "index": 11466
+      "index": 11527
     }
   },
   {
@@ -334,14 +334,14 @@
     "defaultMessage": "!!!Read this information carefully before saving your recovery phrase:",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 197,
+      "line": 198,
       "column": 30,
-      "index": 11498
+      "index": 11559
     },
     "end": {
-      "line": 200,
+      "line": 201,
       "column": 5,
-      "index": 11682
+      "index": 11743
     }
   },
   {
@@ -349,14 +349,14 @@
     "defaultMessage": "!!!About recovery phrase",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 201,
+      "line": 202,
       "column": 29,
-      "index": 11713
+      "index": 11774
     },
     "end": {
-      "line": 204,
+      "line": 205,
       "column": 5,
-      "index": 11852
+      "index": 11913
     }
   },
   {
@@ -364,14 +364,14 @@
     "defaultMessage": "!!!Recovery phrase is the only way to access your wallet",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 205,
+      "line": 206,
       "column": 38,
-      "index": 11892
+      "index": 11953
     },
     "end": {
-      "line": 208,
+      "line": 209,
       "column": 5,
-      "index": 12070
+      "index": 12131
     }
   },
   {
@@ -379,14 +379,14 @@
     "defaultMessage": "!!!If you lose your Recovery phrase, it will not be possible to recover your wallet",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 209,
+      "line": 210,
       "column": 39,
-      "index": 12111
+      "index": 12172
     },
     "end": {
-      "line": 212,
+      "line": 213,
       "column": 5,
-      "index": 12317
+      "index": 12378
     }
   },
   {
@@ -394,14 +394,14 @@
     "defaultMessage": "!!!You are the only person who knows and stores your Recovery phrase",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 213,
+      "line": 214,
       "column": 38,
-      "index": 12357
+      "index": 12418
     },
     "end": {
-      "line": 216,
+      "line": 217,
       "column": 5,
-      "index": 12547
+      "index": 12608
     }
   },
   {
@@ -409,14 +409,14 @@
     "defaultMessage": "!!!You are the only person who knows and stores your Recovery phrase",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 217,
+      "line": 218,
       "column": 39,
-      "index": 12588
+      "index": 12649
     },
     "end": {
-      "line": 220,
+      "line": 221,
       "column": 5,
-      "index": 12779
+      "index": 12840
     }
   },
   {
@@ -424,14 +424,14 @@
     "defaultMessage": "!!!Yoroi NEVER asks for your Recovery phrase. Watch out for scammers and impersonators",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 221,
+      "line": 222,
       "column": 38,
-      "index": 12819
+      "index": 12880
     },
     "end": {
-      "line": 224,
+      "line": 225,
       "column": 5,
-      "index": 13027
+      "index": 13088
     }
   },
   {
@@ -439,14 +439,14 @@
     "defaultMessage": "!!!Click “Show recovery phrase” below to reveal and save it.",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 225,
+      "line": 226,
       "column": 25,
-      "index": 13054
+      "index": 13115
     },
     "end": {
-      "line": 228,
+      "line": 229,
       "column": 5,
-      "index": 13204
+      "index": 13265
     }
   },
   {
@@ -454,14 +454,14 @@
     "defaultMessage": "!!!Recovery phrase",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 229,
+      "line": 230,
       "column": 24,
-      "index": 13230
+      "index": 13291
     },
     "end": {
-      "line": 232,
+      "line": 233,
       "column": 5,
-      "index": 13353
+      "index": 13414
     }
   },
   {
@@ -469,14 +469,14 @@
     "defaultMessage": "!!!Hide recovery phrase",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 233,
+      "line": 234,
       "column": 30,
-      "index": 13385
+      "index": 13446
     },
     "end": {
-      "line": 236,
+      "line": 237,
       "column": 5,
-      "index": 13516
+      "index": 13577
     }
   },
   {
@@ -484,14 +484,14 @@
     "defaultMessage": "!!!Show recovery phrase",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 237,
+      "line": 238,
       "column": 30,
-      "index": 13548
+      "index": 13609
     },
     "end": {
-      "line": 240,
+      "line": 241,
       "column": 5,
-      "index": 13679
+      "index": 13740
     }
   },
   {
@@ -499,14 +499,14 @@
     "defaultMessage": "!!!Tips",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 241,
+      "line": 242,
       "column": 30,
-      "index": 13711
+      "index": 13772
     },
     "end": {
-      "line": 244,
+      "line": 245,
       "column": 5,
-      "index": 13827
+      "index": 13888
     }
   },
   {
@@ -514,14 +514,14 @@
     "defaultMessage": "!!!How to save your recovery phrase?",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 245,
+      "line": 246,
       "column": 29,
-      "index": 13858
+      "index": 13919
     },
     "end": {
-      "line": 248,
+      "line": 249,
       "column": 5,
-      "index": 14002
+      "index": 14063
     }
   },
   {
@@ -529,14 +529,14 @@
     "defaultMessage": "!!!Make sure no one is looking at your screen.",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 249,
+      "line": 250,
       "column": 33,
-      "index": 14037
+      "index": 14098
     },
     "end": {
-      "line": 252,
+      "line": 253,
       "column": 5,
-      "index": 14195
+      "index": 14256
     }
   },
   {
@@ -544,14 +544,14 @@
     "defaultMessage": "!!!DO NOT take a screenshot.",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 253,
+      "line": 254,
       "column": 34,
-      "index": 14231
+      "index": 14292
     },
     "end": {
-      "line": 256,
+      "line": 257,
       "column": 5,
-      "index": 14372
+      "index": 14433
     }
   },
   {
@@ -559,14 +559,14 @@
     "defaultMessage": "!!!Write the recovery phrase on a piece of paper and store in a secure location like a safety deposit box.",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 257,
+      "line": 258,
       "column": 33,
-      "index": 14407
+      "index": 14468
     },
     "end": {
-      "line": 261,
+      "line": 262,
       "column": 5,
-      "index": 14633
+      "index": 14694
     }
   },
   {
@@ -574,14 +574,14 @@
     "defaultMessage": "!!!It is recommended to have 2 or 3 copies of the recovery phrase in different secure locations.",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 262,
+      "line": 263,
       "column": 34,
-      "index": 14669
+      "index": 14730
     },
     "end": {
-      "line": 266,
+      "line": 267,
       "column": 5,
-      "index": 14886
+      "index": 14947
     }
   },
   {
@@ -589,14 +589,14 @@
     "defaultMessage": "!!!DO NOT share the recovery phrase as this will allow anyone to access your assets and wallet.",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 267,
+      "line": 268,
       "column": 33,
-      "index": 14921
+      "index": 14982
     },
     "end": {
-      "line": 270,
+      "line": 271,
       "column": 5,
-      "index": 15128
+      "index": 15189
     }
   },
   {
@@ -604,14 +604,14 @@
     "defaultMessage": "!!!Select each word in the correct order to confirm your recovery phrase.",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 271,
+      "line": 272,
       "column": 31,
-      "index": 15161
+      "index": 15222
     },
     "end": {
-      "line": 274,
+      "line": 275,
       "column": 5,
-      "index": 15329
+      "index": 15390
     }
   },
   {
@@ -619,14 +619,14 @@
     "defaultMessage": "!!!Verify recovery phrase",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 275,
+      "line": 276,
       "column": 30,
-      "index": 15361
+      "index": 15422
     },
     "end": {
-      "line": 278,
+      "line": 279,
       "column": 5,
-      "index": 15503
+      "index": 15564
     }
   },
   {
@@ -634,14 +634,14 @@
     "defaultMessage": "!!!Incorrect order. Try again",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 279,
+      "line": 280,
       "column": 38,
-      "index": 15543
+      "index": 15604
     },
     "end": {
-      "line": 282,
+      "line": 283,
       "column": 5,
-      "index": 15674
+      "index": 15735
     }
   },
   {
@@ -649,14 +649,14 @@
     "defaultMessage": "!!!The recovery phrase is verified",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 283,
+      "line": 284,
       "column": 40,
-      "index": 15716
+      "index": 15777
     },
     "end": {
-      "line": 286,
+      "line": 287,
       "column": 5,
-      "index": 15854
+      "index": 15915
     }
   },
   {
@@ -664,14 +664,14 @@
     "defaultMessage": "!!!Tips",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 287,
+      "line": 288,
       "column": 29,
-      "index": 15885
+      "index": 15946
     },
     "end": {
-      "line": 290,
+      "line": 291,
       "column": 5,
-      "index": 16004
+      "index": 16065
     }
   },
   {
@@ -679,14 +679,14 @@
     "defaultMessage": "!!!What is wallet name",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 291,
+      "line": 292,
       "column": 30,
-      "index": 16036
+      "index": 16097
     },
     "end": {
-      "line": 294,
+      "line": 295,
       "column": 5,
-      "index": 16171
+      "index": 16232
     }
   },
   {
@@ -694,14 +694,14 @@
     "defaultMessage": "!!!It is a wallet identifier that helps you to easier find the exact wallet in your app",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 295,
+      "line": 296,
       "column": 34,
-      "index": 16207
+      "index": 16268
     },
     "end": {
-      "line": 298,
+      "line": 299,
       "column": 5,
-      "index": 16406
+      "index": 16467
     }
   },
   {
@@ -709,14 +709,14 @@
     "defaultMessage": "!!!You can have different wallet names for the same wallet account connected to different devices",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 299,
+      "line": 300,
       "column": 35,
-      "index": 16443
+      "index": 16504
     },
     "end": {
-      "line": 303,
+      "line": 304,
       "column": 5,
-      "index": 16661
+      "index": 16722
     }
   },
   {
@@ -724,14 +724,14 @@
     "defaultMessage": "!!!What is password",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 304,
+      "line": 305,
       "column": 34,
-      "index": 16697
+      "index": 16758
     },
     "end": {
-      "line": 307,
+      "line": 308,
       "column": 5,
-      "index": 16833
+      "index": 16894
     }
   },
   {
@@ -739,14 +739,14 @@
     "defaultMessage": "!!!Password is an additional security layer used to confirm transactions from this device",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 308,
+      "line": 309,
       "column": 38,
-      "index": 16873
+      "index": 16934
     },
     "end": {
-      "line": 311,
+      "line": 312,
       "column": 5,
-      "index": 17078
+      "index": 17139
     }
   },
   {
@@ -754,14 +754,14 @@
     "defaultMessage": "!!!Both wallet name and password are stored locally, so you are only person who can change or restore it.",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 312,
+      "line": 313,
       "column": 39,
-      "index": 17119
+      "index": 17180
     },
     "end": {
-      "line": 316,
+      "line": 317,
       "column": 5,
-      "index": 17349
+      "index": 17410
     }
   },
   {
@@ -769,14 +769,14 @@
     "defaultMessage": "!!!What is wallet checksum and plate number?",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 317,
+      "line": 318,
       "column": 34,
-      "index": 17385
+      "index": 17446
     },
     "end": {
-      "line": 320,
+      "line": 321,
       "column": 5,
-      "index": 17546
+      "index": 17607
     }
   },
   {
@@ -784,14 +784,14 @@
     "defaultMessage": "!!!Wallet checksum is a generic Blockie image that is generated to visually distinguish your wallet from others.",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 321,
+      "line": 322,
       "column": 38,
-      "index": 17586
+      "index": 17647
     },
     "end": {
-      "line": 325,
+      "line": 326,
       "column": 5,
-      "index": 17822
+      "index": 17883
     }
   },
   {
@@ -799,14 +799,14 @@
     "defaultMessage": "!!!Plate number {checksum} is a auto-generated sign of four letters and four digits.",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 326,
+      "line": 327,
       "column": 39,
-      "index": 17863
+      "index": 17924
     },
     "end": {
-      "line": 329,
+      "line": 330,
       "column": 5,
-      "index": 18064
+      "index": 18125
     }
   },
   {
@@ -814,14 +814,14 @@
     "defaultMessage": "!!!Checksum and plate number are unique to your wallet and represent your public key.",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 330,
+      "line": 331,
       "column": 38,
-      "index": 18104
+      "index": 18165
     },
     "end": {
-      "line": 333,
+      "line": 334,
       "column": 5,
-      "index": 18305
+      "index": 18366
     }
   },
   {
@@ -829,14 +829,14 @@
     "defaultMessage": "!!!Wallet details",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 334,
+      "line": 335,
       "column": 23,
-      "index": 18330
+      "index": 18391
     },
     "end": {
-      "line": 337,
+      "line": 338,
       "column": 5,
-      "index": 18447
+      "index": 18508
     }
   },
   {
@@ -844,14 +844,14 @@
     "defaultMessage": "!!!Add your wallet name and password.",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 338,
+      "line": 339,
       "column": 24,
-      "index": 18473
+      "index": 18534
     },
     "end": {
-      "line": 341,
+      "line": 342,
       "column": 5,
-      "index": 18612
+      "index": 18673
     }
   },
   {
@@ -859,14 +859,14 @@
     "defaultMessage": "!!!Use a combination of letters, numbers and symbols to make your password stronger",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 342,
+      "line": 343,
       "column": 33,
-      "index": 18647
+      "index": 18708
     },
     "end": {
-      "line": 345,
+      "line": 346,
       "column": 5,
-      "index": 18840
+      "index": 18901
     }
   },
   {
@@ -874,14 +874,14 @@
     "defaultMessage": "!!!Enter wallet name",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 346,
+      "line": 347,
       "column": 28,
-      "index": 18870
+      "index": 18931
     },
     "end": {
-      "line": 349,
+      "line": 350,
       "column": 5,
-      "index": 18995
+      "index": 19056
     }
   },
   {
@@ -889,14 +889,14 @@
     "defaultMessage": "!!!Enter password",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 350,
+      "line": 351,
       "column": 32,
-      "index": 19029
+      "index": 19090
     },
     "end": {
-      "line": 353,
+      "line": 354,
       "column": 5,
-      "index": 19155
+      "index": 19216
     }
   },
   {
@@ -904,14 +904,14 @@
     "defaultMessage": "!!!Confirm password",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 354,
+      "line": 355,
       "column": 39,
-      "index": 19196
+      "index": 19257
     },
     "end": {
-      "line": 357,
+      "line": 358,
       "column": 5,
-      "index": 19331
+      "index": 19392
     }
   },
   {
@@ -919,14 +919,14 @@
     "defaultMessage": "!!!My wallets",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 358,
+      "line": 359,
       "column": 12,
-      "index": 19345
+      "index": 19406
     },
     "end": {
-      "line": 361,
+      "line": 362,
       "column": 5,
-      "index": 19460
+      "index": 19521
     }
   },
   {
@@ -934,14 +934,14 @@
     "defaultMessage": "!!!Add wallet",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 362,
+      "line": 363,
       "column": 21,
-      "index": 19483
+      "index": 19544
     },
     "end": {
-      "line": 365,
+      "line": 366,
       "column": 5,
-      "index": 19607
+      "index": 19668
     }
   },
   {
@@ -949,14 +949,14 @@
     "defaultMessage": "!!!Add wallet (Jormungandr ITN)",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 366,
+      "line": 367,
       "column": 30,
-      "index": 19639
+      "index": 19700
     },
     "end": {
-      "line": 369,
+      "line": 370,
       "column": 5,
-      "index": 19790
+      "index": 19851
     }
   },
   {
@@ -964,14 +964,14 @@
     "defaultMessage": "!!!Loading wallet",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 370,
+      "line": 371,
       "column": 19,
-      "index": 19811
+      "index": 19872
     },
     "end": {
-      "line": 373,
+      "line": 374,
       "column": 5,
-      "index": 19937
+      "index": 19998
     }
   },
   {
@@ -979,14 +979,14 @@
     "defaultMessage": "!!!Ask our support team",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 374,
+      "line": 375,
       "column": 23,
-      "index": 19962
+      "index": 20023
     },
     "end": {
-      "line": 377,
+      "line": 378,
       "column": 5,
-      "index": 20098
+      "index": 20159
     }
   },
   {
@@ -994,14 +994,14 @@
     "defaultMessage": "!!!Please enter valid mnemonic.",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 378,
+      "line": 379,
       "column": 21,
-      "index": 20121
+      "index": 20182
     },
     "end": {
-      "line": 381,
+      "line": 382,
       "column": 5,
-      "index": 20270
+      "index": 20331
     }
   },
   {
@@ -1009,14 +1009,14 @@
     "defaultMessage": "!!!The recovery phrase is verified",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 382,
+      "line": 383,
       "column": 19,
-      "index": 20291
+      "index": 20352
     },
     "end": {
-      "line": 385,
+      "line": 386,
       "column": 5,
-      "index": 20441
+      "index": 20502
     }
   },
   {
@@ -1024,14 +1024,14 @@
     "defaultMessage": "!!!Enter recovery phrase",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 386,
+      "line": 387,
       "column": 29,
-      "index": 20472
+      "index": 20533
     },
     "end": {
-      "line": 389,
+      "line": 390,
       "column": 5,
-      "index": 20622
+      "index": 20683
     }
   },
   {
@@ -1039,14 +1039,14 @@
     "defaultMessage": "!!!15 word recovery phrase",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 390,
+      "line": 391,
       "column": 32,
-      "index": 20656
+      "index": 20717
     },
     "end": {
-      "line": 393,
+      "line": 394,
       "column": 5,
-      "index": 20791
+      "index": 20852
     }
   },
   {
@@ -1054,14 +1054,14 @@
     "defaultMessage": "!!!24 word recovery phrase",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 394,
+      "line": 395,
       "column": 32,
-      "index": 20825
+      "index": 20886
     },
     "end": {
-      "line": 397,
+      "line": 398,
       "column": 5,
-      "index": 20960
+      "index": 21021
     }
   },
   {
@@ -1069,14 +1069,14 @@
     "defaultMessage": "!!!Add the recovery phrase you received upon your wallet creation process.",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 398,
+      "line": 399,
       "column": 30,
-      "index": 20992
+      "index": 21053
     },
     "end": {
-      "line": 401,
+      "line": 402,
       "column": 5,
-      "index": 21193
+      "index": 21254
     }
   },
   {
@@ -1084,14 +1084,14 @@
     "defaultMessage": "!!!This wallet is already added",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 402,
+      "line": 403,
       "column": 39,
-      "index": 21234
+      "index": 21295
     },
     "end": {
-      "line": 405,
+      "line": 406,
       "column": 5,
-      "index": 21401
+      "index": 21462
     }
   },
   {
@@ -1099,14 +1099,14 @@
     "defaultMessage": "!!!This wallet already exist on your device, You can open it or go back and restore another wallet.",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 406,
+      "line": 407,
       "column": 38,
-      "index": 21441
+      "index": 21502
     },
     "end": {
-      "line": 410,
+      "line": 411,
       "column": 5,
-      "index": 21683
+      "index": 21744
     }
   },
   {
@@ -1114,14 +1114,14 @@
     "defaultMessage": "!!!Open wallet",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 411,
+      "line": 412,
       "column": 40,
-      "index": 21725
+      "index": 21786
     },
     "end": {
-      "line": 414,
+      "line": 415,
       "column": 5,
-      "index": 21876
+      "index": 21937
     }
   },
   {
@@ -1129,14 +1129,29 @@
     "defaultMessage": "!!!Preparing your wallet...",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
-      "line": 415,
+      "line": 416,
       "column": 21,
-      "index": 21899
+      "index": 21960
     },
     "end": {
-      "line": 418,
+      "line": 419,
       "column": 5,
-      "index": 22044
+      "index": 22105
+    }
+  },
+  {
+    "id": "components.walletinit.restorewallet.restorewalletscreen.wordNotFound",
+    "defaultMessage": "!!!Word not found",
+    "file": "src/features/SetupWallet/common/useStrings.tsx",
+    "start": {
+      "line": 420,
+      "column": 18,
+      "index": 22125
+    },
+    "end": {
+      "line": 423,
+      "column": 5,
+      "index": 22257
     }
   }
 ]

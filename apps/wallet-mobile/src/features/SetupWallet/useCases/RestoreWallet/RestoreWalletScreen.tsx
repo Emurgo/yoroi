@@ -188,8 +188,12 @@ export const RestoreWalletScreen = () => {
 
         {mnemonic !== '' && isValidPhrase && <NextButton onPress={handleOnNext} />}
 
-        {suggestedWords.length > 0 && (
+        {suggestedWords.length > 0 ? (
           <WordSuggestionList data={suggestedWords} index={focusedIndex} onSelect={onSelect} />
+        ) : (
+          <View style={styles.suggestionArea}>
+            <Text style={styles.suggestionMessage}>{strings.wordNotFound}</Text>
+          </View>
         )}
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -370,6 +374,18 @@ const useStyles = () => {
       ...theme.typography['body-1-l-regular'],
       textTransform: 'none',
       color: theme.color.primary[500],
+    },
+    suggestionArea: {
+      backgroundColor: 'rgba(255, 255, 255, 0.80)',
+      borderColor: theme.color.gray[200],
+      borderTopWidth: 1,
+      alignItems: 'center',
+    },
+    suggestionMessage: {
+      ...theme.typography['body-1-l-regular'],
+      textAlign: 'center',
+      paddingTop: 24,
+      paddingBottom: 24,
     },
   })
 
