@@ -76,6 +76,7 @@
   "components.common.errormodal.hideError": "Hide error message",
   "components.common.errormodal.showError": "Show error message",
   "components.common.fingerprintscreenbase.welcomeMessage": "Welcome Back",
+  "components.common.osloginscreen.button.title": "Login",
   "components.common.languagepicker.acknowledgement": "**The selected language translation is fully provided by the community**. EMURGO is grateful to all those who have contributed",
   "components.common.languagepicker.brazilian": "Português brasileiro",
   "components.common.languagepicker.chinese": "简体中文",

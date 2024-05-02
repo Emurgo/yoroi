@@ -1,47 +1,17 @@
 [
   {
-    "id": "components.send.biometricauthscreen.headings1",
-    "defaultMessage": "!!!Authorize with your",
-    "file": "src/auth/OsLoginScreen/OsLoginScreen.tsx",
-    "start": {
-      "line": 35,
-      "column": 13,
-      "index": 944
-    },
-    "end": {
-      "line": 38,
-      "column": 3,
-      "index": 1052
-    }
-  },
-  {
-    "id": "components.send.biometricauthscreen.headings2",
-    "defaultMessage": "!!!biometrics",
-    "file": "src/auth/OsLoginScreen/OsLoginScreen.tsx",
-    "start": {
-      "line": 39,
-      "column": 13,
-      "index": 1067
-    },
-    "end": {
-      "line": 42,
-      "column": 3,
-      "index": 1166
-    }
-  },
-  {
-    "id": "components.login.appstartscreen.loginButton",
+    "id": "components.common.osloginscreen.button.title",
     "defaultMessage": "!!!Login",
     "file": "src/auth/OsLoginScreen/OsLoginScreen.tsx",
     "start": {
-      "line": 43,
+      "line": 58,
       "column": 9,
-      "index": 1177
+      "index": 1515
     },
     "end": {
-      "line": 46,
+      "line": 61,
       "column": 3,
-      "index": 1269
+      "index": 1608
     }
   }
 ]
