@@ -1,47 +1,122 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
+import {View} from 'react-native'
+import {StyleSheet} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useAuth} from '../../auth/AuthProvider'
 import {Button} from '../../components'
 import {useAuthWithOs} from '../../yoroi-wallets/auth'
-import {OsAuthScreen} from '../OsAuthScreen'
+import {useAuth} from '../AuthProvider'
+import {Logo} from './Logo'
 
 export const OsLoginScreen = () => {
+  const {styles} = useStyles()
   const strings = useStrings()
-
   const {login} = useAuth()
   const {authWithOs, isLoading} = useAuthWithOs({onSuccess: login})
 
   return (
-    <OsAuthScreen
-      headings={[strings.headings1, strings.headings2]}
-      buttons={[<Button disabled={isLoading} key="login" title={strings.login} onPress={() => authWithOs()} />]}
-      addWelcomeMessage
-    />
+    <SafeAreaView edges={['bottom']} style={styles.root}>
+      <TopSection />
+
+      <MiddleSection>
+        <Logo />
+      </MiddleSection>
+
+      <BottomSection>
+        <Button title={strings.title} disabled={isLoading} shelleyTheme onPress={() => authWithOs()} />
+      </BottomSection>
+    </SafeAreaView>
   )
+}
+
+const TopSection = () => {
+  const {styles} = useStyles()
+  return <View style={styles.top} />
+}
+
+const MiddleSection = ({children}: {children: React.ReactNode}) => {
+  const {styles} = useStyles()
+  return <View style={styles.middle}>{children}</View>
+}
+
+const BottomSection = ({children}: {children: React.ReactNode}) => {
+  const {styles} = useStyles()
+  return <View style={styles.bottom}>{children}</View>
 }
 
 const useStrings = () => {
   const intl = useIntl()
 
   return {
-    headings1: intl.formatMessage(messages.headings1),
-    headings2: intl.formatMessage(messages.headings2),
-    login: intl.formatMessage(messages.login),
+    title: intl.formatMessage(messages.title),
   }
 }
 
 const messages = defineMessages({
-  headings1: {
-    id: 'components.send.biometricauthscreen.headings1',
-    defaultMessage: '!!!Authorize with your',
-  },
-  headings2: {
-    id: 'components.send.biometricauthscreen.headings2',
-    defaultMessage: '!!!biometrics',
-  },
-  login: {
-    id: 'components.login.appstartscreen.loginButton',
+  title: {
+    id: 'components.common.osloginscreen.button.title',
     defaultMessage: '!!!Login',
   },
 })
+
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {padding} = theme
+  const styles = StyleSheet.create({
+    root: {
+      flex: 1,
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      alignItems: 'stretch',
+      ...padding['l'],
+    },
+    top: {
+      flex: 1,
+    },
+    middle: {
+      flex: 1,
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    bottom: {
+      flex: 1,
+      flexDirection: 'column',
+      justifyContent: 'flex-end',
+    },
+  })
+
+  return {styles}
+}
+
+/* const Actions = ({children}: {children: React.ReactNode}) => {
+  const {styles} = useStyles()
+  return <View style={styles.actions}>{children}</View>
+}
+
+const Action = ({children}: {children: React.ReactNode}) => {
+  const {styles} = useStyles()
+  return <View style={styles.action}>{children}</View>
+} */
+/*
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
+  const styles = StyleSheet.create({
+    actions: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    action: {
+      flexDirection: 'column',
+      alignItems: 'stretch',
+    },
+  })
+  const colors = {
+    icon: color['white-static'],
+  }
+  return {colors, styles}
+}
+ */
