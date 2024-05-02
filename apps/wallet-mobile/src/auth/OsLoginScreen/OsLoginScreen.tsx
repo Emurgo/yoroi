@@ -90,33 +90,3 @@ const useStyles = () => {
 
   return {styles}
 }
-
-/* const Actions = ({children}: {children: React.ReactNode}) => {
-  const {styles} = useStyles()
-  return <View style={styles.actions}>{children}</View>
-}
-
-const Action = ({children}: {children: React.ReactNode}) => {
-  const {styles} = useStyles()
-  return <View style={styles.action}>{children}</View>
-} */
-/*
-const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
-  const styles = StyleSheet.create({
-    actions: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-    },
-    action: {
-      flexDirection: 'column',
-      alignItems: 'stretch',
-    },
-  })
-  const colors = {
-    icon: color['white-static'],
-  }
-  return {colors, styles}
-}
- */
