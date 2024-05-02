@@ -162,6 +162,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     safeAreaView: {
       flex: 1,
+      backgroundColor: color.gray_cmin,
     },
     contentContainer: {
       padding: 16,
