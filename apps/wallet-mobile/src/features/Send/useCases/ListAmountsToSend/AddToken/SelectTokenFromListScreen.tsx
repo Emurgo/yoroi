@@ -1,180 +1,227 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {FlashList} from '@shopify/flash-list'
+import {infoFilterByName, isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import React from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native'
 
-import {Boundary, Spacer, Text} from '../../../../../components'
-import {AmountItem} from '../../../../../components/AmountItem/AmountItem'
+import {Spacer, Text} from '../../../../../components'
 import {NftImageGallery} from '../../../../../components/NftImageGallery'
 import {useMetrics} from '../../../../../metrics/metricsManager'
 import {TxHistoryRouteNavigation} from '../../../../../navigation'
 import {useSearch, useSearchOnNavBar} from '../../../../../Search/SearchContext'
-import {sortTokenInfos} from '../../../../../utils'
-import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {limitOfSecondaryAmountsPerTx} from '../../../../../yoroi-wallets/contants'
-import {useAllTokenInfos, useBalances, useIsWalletEmpty, useNfts} from '../../../../../yoroi-wallets/hooks'
-import {Amounts, Quantities} from '../../../../../yoroi-wallets/utils'
+import {usePortfolioBalances} from '../../../../Portfolio/common/hooks/usePortfolioBalances'
+import {TokenAmountItem} from '../../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
 import {useSelectedWallet} from '../../../../WalletManager/Context'
-import {filterByFungibility} from '../../../common/filterByFungibility'
-import {filterBySearch} from '../../../common/filterBySearch'
 import {useOverridePreviousSendTxRoute} from '../../../common/navigation'
 import {NoAssetFoundImage} from '../../../common/NoAssetFoundImage'
 import {useStrings} from '../../../common/strings'
-import {useSelectedSecondaryAmountsCounter} from '../../../common/useSelectedSecondaryAmountsCounter'
-import {useTokenQuantities} from '../../../common/useTokenQuantities'
 import {MaxAmountsPerTx} from './Show/MaxAmountsPerTx'
-
-export type FungibilityFilter = 'all' | 'ft' | 'nft'
 
 export const SelectTokenFromListScreen = () => {
   const strings = useStrings()
   const {styles} = useStyles()
-  const [fungibilityFilter, setFungibilityFilter] = React.useState<FungibilityFilter>('all')
-  const {targets, selectedTargetIndex} = useTransfer()
-  const {track} = useMetrics()
+  const {targets, selectedTargetIndex, allocated} = useTransfer()
 
+  const wallet = useSelectedWallet()
+  const balances = usePortfolioBalances({wallet})
+  const [fungibilityFilter, setFungibilityFilter] = React.useState<Exclude<keyof typeof balances, 'records'>>('all')
+  const [isPending, startTransition] = React.useTransition()
+
+  useSearchOnNavBar({
+    placeholder: strings.searchTokens,
+    title: strings.selecteAssetTitle,
+  })
+  const {visible: isSearchOpened, isSearching, search} = useSearch()
+  const shouldShowNfts = fungibilityFilter === 'nfts' && !isSearchOpened
+
+  const spendableAmounts = React.useMemo(() => {
+    const allocatedToOtherTargets = allocated.get(selectedTargetIndex) ?? new Map()
+    const toSpendableAmount = toSpendableAmountMapper(allocatedToOtherTargets)
+
+    return balances.all
+      .map(toSpendableAmount)
+      .filter(hasSpendableAmount)
+      .filter(filterOutSelected(targets[selectedTargetIndex].entry.amounts))
+  }, [allocated, balances, selectedTargetIndex, targets])
+
+  const filteredAmounts = React.useMemo(() => {
+    if (isSearchOpened === false) {
+      if (fungibilityFilter === 'all') return spendableAmounts
+
+      return spendableAmounts.filter(
+        amountFilterByType(fungibilityFilter === 'fts' ? Portfolio.Token.Type.FT : Portfolio.Token.Type.NFT),
+      )
+    }
+
+    return spendableAmounts.filter(({info}) => infoFilterByName(search)(info))
+  }, [fungibilityFilter, isSearchOpened, search, spendableAmounts])
+
+  const {track} = useMetrics()
   useFocusEffect(
     React.useCallback(() => {
       track.sendSelectAssetPageViewed()
     }, [track]),
   )
 
-  const {amounts} = targets[selectedTargetIndex].entry
-  const hasTokensSelected = Object.keys(amounts).length > 0
+  const currentAmounts = targets[selectedTargetIndex].entry.amounts
+  const hasPrimary = currentAmounts[wallet.portfolioPrimaryTokenInfo.id] != null
+  const currentAmountsSize = Object.keys(currentAmounts).length
+  const secondaryAmountsCounter = currentAmountsSize - (hasPrimary ? 1 : 0)
+  const canAddAmount = secondaryAmountsCounter < limitOfSecondaryAmountsPerTx
 
+  // to redirect the user automatically there is no amount added
+  const hasTokensSelected = currentAmountsSize > 0
   useOverridePreviousSendTxRoute(hasTokensSelected ? 'send-list-amounts-to-send' : 'send-start-tx')
 
-  // use case: search listed tokens
-  useSearchOnNavBar({
-    placeholder: strings.searchTokens,
-    title: strings.selecteAssetTitle,
-  })
-
-  const wallet = useSelectedWallet()
-
-  const secondaryAmountsCounter = useSelectedSecondaryAmountsCounter(wallet)
-
-  const {visible: isSearching} = useSearch()
-
-  const canAddAmount = secondaryAmountsCounter < limitOfSecondaryAmountsPerTx
+  const handleOnPressNFTs = React.useCallback(() => startTransition(() => setFungibilityFilter('nfts')), [])
+  const handleOnPressFTs = React.useCallback(() => startTransition(() => setFungibilityFilter('fts')), [])
+  const handleOnPressAll = React.useCallback(() => startTransition(() => setFungibilityFilter('all')), [])
 
   return (
     <View style={styles.root}>
       <View style={styles.subheader}>
-        {!isSearching && (
+        {isSearchOpened === false && (
           <Tabs>
-            <Tab active={fungibilityFilter} onPress={setFungibilityFilter} label={strings.all} tab="all" />
+            <Tab active={fungibilityFilter} onPress={handleOnPressAll} label={strings.all} tab="all" />
 
-            <Tab active={fungibilityFilter} onPress={setFungibilityFilter} label={strings.tokens(2)} tab="ft" />
+            <Tab active={fungibilityFilter} onPress={handleOnPressFTs} label={strings.tokens(2)} tab="fts" />
 
-            <Tab active={fungibilityFilter} onPress={setFungibilityFilter} label={strings.nfts(2)} tab="nft" />
+            {balances.nfts.length > 0 && (
+              <Tab active={fungibilityFilter} onPress={handleOnPressNFTs} label={strings.nfts(2)} tab="nfts" />
+            )}
           </Tabs>
         )}
 
-        {!canAddAmount && (
-          <View style={styles.panel}>
-            <MaxAmountsPerTx />
+        {canAddAmount === false && <WarningPanelMaxAmountsReached />}
+      </View>
 
-            <Spacer height={16} />
-          </View>
+      <View style={[styles.list, isPending && styles.inTransition]}>
+        {shouldShowNfts ? (
+          <ListSpendableNfts canAddAmount={canAddAmount} spendableAmounts={filteredAmounts} />
+        ) : (
+          <ListSpendables
+            canAddAmount={canAddAmount}
+            spendableAmounts={filteredAmounts}
+            isMainnet={wallet.isMainnet}
+            isSearching={isSearching}
+            isSearchOpened={isSearchOpened}
+          />
         )}
       </View>
 
-      <List fungibilityFilter={fungibilityFilter} isSearching={isSearching} canAddAmount={canAddAmount} />
+      <Counter
+        fungibilityFilter={fungibilityFilter}
+        counter={spendableAmounts.length}
+        isSearchOpened={isSearchOpened}
+        isSearching={isSearching}
+      />
     </View>
   )
 }
 
-type ListProps = {
-  fungibilityFilter: FungibilityFilter
-  isSearching: boolean
+const ListSpendableNfts = ({
+  canAddAmount,
+  spendableAmounts,
+}: {
   canAddAmount: boolean
-}
-const List = ({fungibilityFilter, isSearching, canAddAmount}: ListProps) => {
-  const showNftList = fungibilityFilter === 'nft' && !isSearching
-
-  if (showNftList) return <NftList canAddAmount={canAddAmount} />
-
-  return <AssetList fungibilityFilter={fungibilityFilter} canAddAmount={canAddAmount} />
-}
-
-const NftList = ({canAddAmount}: {canAddAmount: boolean}) => {
-  const {styles} = useStyles()
-  const wallet = useSelectedWallet()
-  const navigation = useNavigation<TxHistoryRouteNavigation>()
-  const {tokenSelectedChanged, amountChanged, targets, selectedTargetIndex} = useTransfer()
-  const {closeSearch} = useSearch()
-  const balances = useBalances(wallet)
+  spendableAmounts: ReadonlyArray<Portfolio.Token.Amount>
+}) => {
   const strings = useStrings()
-  const {nfts} = useNfts(wallet)
-  const amountsSelected = Object.keys(targets[selectedTargetIndex].entry.amounts)
-  const filteredAndSorted = nfts.filter(filterOutSelected(amountsSelected)).sort((a, b) => sortNfts(a.name, b.name))
-  const counter = filteredAndSorted.length
+  const navigation = useNavigation<TxHistoryRouteNavigation>()
+  const {closeSearch} = useSearch()
+  const {tokenSelectedChanged, amountChanged} = useTransfer()
+  const isEmpty = spendableAmounts.length === 0
 
-  const onSelect = (nftId: string) => {
-    tokenSelectedChanged(nftId)
+  const handleOnSelect = (amount: Portfolio.Token.Amount) => {
+    tokenSelectedChanged(amount.info.id)
     closeSearch()
 
-    const quantity = Amounts.getAmount(balances, nftId).quantity
-    amountChanged(quantity)
-    navigation.navigate('send-list-amounts-to-send')
+    // avoid token detected as nft to send all
+    if (amount.quantity === 1n && amount.info.decimals === 0) {
+      amountChanged(amount)
+      navigation.navigate('send-list-amounts-to-send')
+    } else {
+      // should not happen
+      Alert.alert(strings.unknownAsset, strings.unknownAsset)
+    }
   }
 
   return (
-    <View style={styles.list}>
-      <NftImageGallery
-        nfts={filteredAndSorted}
-        onRefresh={() => undefined}
-        onSelect={onSelect}
-        readOnly={!canAddAmount}
-        isRefreshing={false}
-        withVerticalPadding={filteredAndSorted.length > 0} // to keep consistency between tabs when the list is not empty
-        ListEmptyComponent={
-          filteredAndSorted.length === 0 ? <NoAssetsYet text={strings.noAssetsAddedYet(strings.nfts(2))} /> : null
-        }
-      />
+    <NftImageGallery
+      nfts={spendableAmounts}
+      onRefresh={() => undefined}
+      onSelect={handleOnSelect}
+      readOnly={!canAddAmount}
+      isRefreshing={false}
+      withVerticalPadding={!isEmpty} // to keep consistency between tabs when the list is not empty
+      ListEmptyComponent={<NoSpendableAmount text={strings.noAssetsAddedYet(strings.nfts(2))} />}
+    />
+  )
+}
 
-      <Counter fungibilityFilter="nft" counter={counter} />
+type ListSpendableBalancesProps = {
+  canAddAmount: boolean
+  spendableAmounts: ReadonlyArray<Portfolio.Token.Amount>
+  isMainnet: boolean
+  isSearching: boolean
+  isSearchOpened: boolean
+}
+const ListSpendables = ({
+  canAddAmount,
+  spendableAmounts,
+  isMainnet,
+  isSearching,
+  isSearchOpened,
+}: ListSpendableBalancesProps) => {
+  const {styles} = useStyles()
+
+  return (
+    <FlashList
+      data={spendableAmounts}
+      renderItem={({item: amount}) => (
+        <SelectAmount amount={amount} disabled={!canAddAmount && !isPrimaryToken(amount.info)} isMainnet={isMainnet} />
+      )}
+      bounces={false}
+      contentContainerStyle={styles.spendableAmountsContent}
+      keyExtractor={(_, index) => index.toString()}
+      testID="assetList"
+      ItemSeparatorComponent={() => <Spacer height={16} />}
+      estimatedItemSize={78}
+      ListEmptyComponent={<EmptyStatuses isSearchOpened={isSearchOpened} isSearching={isSearching} />}
+    />
+  )
+}
+
+const WarningPanelMaxAmountsReached = () => {
+  const {styles} = useStyles()
+  return (
+    <View style={styles.panel}>
+      <MaxAmountsPerTx />
+
+      <Spacer height={16} />
     </View>
   )
 }
 
-type AssetListProps = {
-  canAddAmount: boolean
-  fungibilityFilter: FungibilityFilter
+type TabProps<T> = {
+  onPress: () => void
+  active: T
+  tab: T
+  label: string
 }
-const AssetList = ({canAddAmount, fungibilityFilter}: AssetListProps) => {
-  const {styles} = useStyles()
-  const wallet = useSelectedWallet()
-  const tokenInfos = useAllTokenInfos({wallet})
-  const filteredTokenInfos = useFilteredTokenInfos({fungibilityFilter, tokenInfos})
+const Tab = <T,>({onPress, active, tab, label}: TabProps<T>) => {
+  const {styles, colors} = useStyles()
+  const isActive = active === tab
+  const color = isActive ? colors.active : colors.inactive
 
   return (
-    <View style={styles.list}>
-      <FlashList
-        data={filteredTokenInfos}
-        renderItem={({item: tokenInfo}: {item: Balance.TokenInfo}) => (
-          <Boundary>
-            <SelectableAssetItem
-              tokenInfo={tokenInfo}
-              disabled={!canAddAmount && tokenInfo.id !== wallet.primaryTokenInfo.id}
-              wallet={wallet}
-            />
-          </Boundary>
-        )}
-        bounces={false}
-        contentContainerStyle={styles.assetListContent}
-        keyExtractor={(_, index) => index.toString()}
-        testID="assetsList"
-        estimatedItemSize={78}
-        ListEmptyComponent={<ListEmptyComponent filteredTokenInfos={filteredTokenInfos} allTokenInfos={tokenInfos} />}
-      />
-
-      <Counter fungibilityFilter={fungibilityFilter} counter={filteredTokenInfos.length} />
-    </View>
+    <TouchableOpacity onPress={onPress} style={[styles.tabContainer, isActive && styles.tabContainerActive]}>
+      <Text style={[styles.tab, {color}]}>{label}</Text>
+    </TouchableOpacity>
   )
 }
 
@@ -183,97 +230,55 @@ const Tabs = ({children}: {children: React.ReactNode}) => {
   return <View style={styles.tabs}>{children}</View>
 }
 
-type TabProps = {
-  onPress: (active: FungibilityFilter) => void
-  active: FungibilityFilter
-  tab: FungibilityFilter
-  label: string
+type SelectAmountProps = {
+  disabled?: boolean
+  amount: Portfolio.Token.Amount
+  isMainnet: boolean
 }
-const Tab = ({onPress, active, tab, label}: TabProps) => {
-  const {styles, colors} = useStyles()
-  return (
-    <TouchableOpacity
-      onPress={() => onPress(tab)}
-      style={[styles.tabContainer, active === tab && styles.tabContainerActive]}
-    >
-      <Text
-        style={[
-          styles.tab,
-          {
-            color: active === tab ? colors.activeTab : colors.inactiveTab,
-          },
-        ]}
-      >
-        {label}
-      </Text>
-    </TouchableOpacity>
-  )
-}
-
-type SelectableAssetItemProps = {disabled?: boolean; tokenInfo: Balance.TokenInfo; wallet: YoroiWallet}
-const SelectableAssetItem = ({tokenInfo, disabled, wallet}: SelectableAssetItemProps) => {
+const SelectAmount = ({amount, disabled, isMainnet = true}: SelectAmountProps) => {
   const {styles} = useStyles()
+  const navigation = useNavigation<TxHistoryRouteNavigation>()
   const {closeSearch} = useSearch()
   const {tokenSelectedChanged, amountChanged} = useTransfer()
-  const {spendable} = useTokenQuantities(tokenInfo.id)
-  const navigation = useNavigation<TxHistoryRouteNavigation>()
-  const balances = useBalances(wallet)
 
-  const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
+  const isPrimary = isPrimaryToken(amount.info)
 
-  const onSelect = () => {
-    tokenSelectedChanged(tokenInfo.id)
+  const handleOnSelect = React.useCallback(() => {
+    tokenSelectedChanged(amount.info.id)
     closeSearch()
 
     // if the balance is atomic there is no need to edit the amount
-    if (tokenInfo.kind === 'ft' && Quantities.isAtomic(spendable, tokenInfo.decimals ?? 0)) {
-      amountChanged(spendable)
-      navigation.navigate('send-list-amounts-to-send')
-    } else if (tokenInfo.kind === 'nft') {
-      const quantity = Amounts.getAmount(balances, tokenInfo.id).quantity
-      amountChanged(quantity)
+    if (amount.quantity === 1n && amount.info.decimals === 0) {
+      amountChanged(amount)
       navigation.navigate('send-list-amounts-to-send')
     } else {
       navigation.navigate('send-edit-amount')
     }
-  }
+  }, [amount, amountChanged, closeSearch, navigation, tokenSelectedChanged])
 
   return (
     <TouchableOpacity
       style={[styles.item, isPrimary && styles.borderBottom]}
-      onPress={onSelect}
+      onPress={handleOnSelect}
       testID="selectTokenButton"
       disabled={disabled}
     >
-      <AmountItem amount={{tokenId: tokenInfo.id, quantity: spendable}} wallet={wallet} />
+      <TokenAmountItem amount={amount} isMainnet={isMainnet} isPrivacyOff={true} privacyPlaceholder="" />
     </TouchableOpacity>
   )
 }
 
-const ListEmptyComponent = ({
-  filteredTokenInfos,
-  allTokenInfos,
-}: {
-  filteredTokenInfos: Array<Balance.TokenInfo>
-  allTokenInfos: Array<Balance.TokenInfo>
-}) => {
-  const {search: assetSearchTerm, visible: isSearching} = useSearch()
-  const wallet = useSelectedWallet()
-  const {targets, selectedTargetIndex} = useTransfer()
-  const selectedTokenIds = Object.keys(targets[selectedTargetIndex].entry.amounts)
-  const isSelectTokenFromListEmpty = areAllTokensSelected(selectedTokenIds, allTokenInfos)
+const EmptyStatuses = ({isSearching, isSearchOpened}: {isSearching: boolean; isSearchOpened: boolean}) => {
   const strings = useStrings()
-  const isWalletEmpty = useIsWalletEmpty(wallet)
 
-  if (isSearching && assetSearchTerm.length > 0 && filteredTokenInfos.length === 0) return <EmptySearchResult />
+  if (isSearching) return <EmptySearchResult />
 
-  if ((isWalletEmpty || isSelectTokenFromListEmpty) && !isSearching)
-    return <NoAssetsYet text={strings.noAssetsAddedYet(strings.tokens(2))} />
+  if (isSearchOpened === false) return <NoSpendableAmount text={strings.noAssetsAddedYet(strings.tokens(2))} />
 
   return null
 }
 
-const NoAssetsYet = ({text}: {text: string}) => {
+const NoSpendableAmount = ({text}: {text: string}) => {
   const {styles} = useStyles()
   return (
     <View style={styles.imageContainer}>
@@ -304,12 +309,21 @@ const EmptySearchResult = () => {
   )
 }
 
-const Counter = ({fungibilityFilter, counter}: {fungibilityFilter: FungibilityFilter; counter: number}) => {
-  const {search: assetSearchTerm, visible: isSearching} = useSearch()
+const Counter = <T,>({
+  fungibilityFilter,
+  counter,
+  isSearchOpened,
+  isSearching,
+}: {
+  fungibilityFilter: T
+  counter: number
+  isSearching: boolean
+  isSearchOpened: boolean
+}) => {
   const strings = useStrings()
   const {styles} = useStyles()
 
-  if (!isSearching && fungibilityFilter === 'all') {
+  if (!isSearchOpened && fungibilityFilter === 'all') {
     return (
       <View style={styles.counter}>
         <Text style={styles.counterText}>{strings.youHave}</Text>
@@ -319,7 +333,7 @@ const Counter = ({fungibilityFilter, counter}: {fungibilityFilter: FungibilityFi
     )
   }
 
-  if (!isSearching && fungibilityFilter === 'ft') {
+  if (!isSearchOpened && fungibilityFilter === 'fts') {
     return (
       <View style={styles.counter}>
         <Text style={styles.counterText}>{strings.youHave}</Text>
@@ -329,7 +343,7 @@ const Counter = ({fungibilityFilter, counter}: {fungibilityFilter: FungibilityFi
     )
   }
 
-  if (!isSearching && fungibilityFilter === 'nft') {
+  if (!isSearchOpened && fungibilityFilter === 'nfts') {
     return (
       <View style={styles.counter}>
         <Text style={styles.counterText}>{strings.youHave}</Text>
@@ -339,8 +353,7 @@ const Counter = ({fungibilityFilter, counter}: {fungibilityFilter: FungibilityFi
     )
   }
 
-  // if it is searching and typing the counter is shown
-  if (isSearching && assetSearchTerm.length > 0) {
+  if (isSearching) {
     return (
       <View style={styles.counter}>
         <Text style={styles.counterTextBold}>{`${counter} ${strings.assets(counter)} `}</Text>
@@ -353,49 +366,20 @@ const Counter = ({fungibilityFilter, counter}: {fungibilityFilter: FungibilityFi
   return null
 }
 
-// filteredTokenInfos has primary token when the search term and the wallet are empty and the ft/all tab is selected
-const useFilteredTokenInfos = ({
-  fungibilityFilter,
-  tokenInfos,
-}: {
-  fungibilityFilter: FungibilityFilter
-  tokenInfos: Array<Balance.TokenInfo>
-}) => {
-  const wallet = useSelectedWallet()
-  const {search: assetSearchTerm, visible: isSearching} = useSearch()
-  const {targets, selectedTargetIndex} = useTransfer()
-  const isWalletEmpty = useIsWalletEmpty(wallet)
-
-  /*
-   * to show the empty list component:
-   *    - filteredTokenInfos has primary token when the search term and the wallet are empty and the ft or all tab are selected
-   *    - "ft" tab has to have primary token hidden when wallet is empty and to show the empty list component
-   *    - "all" tab has to display the primary token and not to show the empty list component
-   */
-  if (fungibilityFilter === 'ft' && isWalletEmpty && !isSearching) return []
-
-  const selectedTokenIds = Object.keys(targets[selectedTargetIndex].entry.amounts)
-
-  const filteredTokenInfos = tokenInfos
-    .filter(filterOutSelected(selectedTokenIds))
-    .filter(filterBySearch(assetSearchTerm))
-    .filter(
-      filterByFungibility({
-        fungibilityFilter: isSearching ? 'all' : fungibilityFilter, // all assets must be available when searching
-      }),
-    )
-
-  return sortTokenInfos({
-    wallet,
-    tokenInfos: filteredTokenInfos,
+const hasSpendableAmount = (amount: Portfolio.Token.Amount) => amount.quantity > 0n
+const filterOutSelected =
+  (amounts: Record<Portfolio.Token.Id, Portfolio.Token.Amount>) => (amount: Portfolio.Token.Amount) =>
+    !Object.keys(amounts).includes(amount.info.id)
+const toSpendableAmountMapper =
+  (allocated: Map<Portfolio.Token.Id, bigint>) =>
+  (amount: Portfolio.Token.Amount): Portfolio.Token.Amount => ({
+    info: amount.info,
+    quantity: amount.quantity - (allocated.get(amount.info.id) ?? 0n),
   })
-}
-
-const areAllTokensSelected = (selectedTokenIds: Array<string>, tokenInfos: Balance.TokenInfo[]): boolean =>
-  tokenInfos.every((tokenInfo) => selectedTokenIds.includes(tokenInfo.id))
-const filterOutSelected = (selectedTokenIds: Array<string>) => (token: Balance.TokenInfo) =>
-  !selectedTokenIds.includes(token.id)
-const sortNfts = (nftNameA: string, nftNameB: string): number => nftNameA.localeCompare(nftNameB)
+const amountFilterByType =
+  (type: Portfolio.Token.Type) =>
+  (amount: Portfolio.Token.Amount): boolean =>
+    amount.info.type === type
 
 const useStyles = () => {
   const {atoms, color} = useTheme()
@@ -435,8 +419,11 @@ const useStyles = () => {
     list: {
       flex: 1,
     },
-    assetListContent: {
+    spendableAmountsContent: {
       ...atoms.px_lg,
+    },
+    inTransition: {
+      opacity: 0.5,
     },
     image: {
       flex: 1,
@@ -470,8 +457,8 @@ const useStyles = () => {
   })
 
   const colors = {
-    activeTab: color.primary_c600,
-    inactiveTab: color.gray_c600,
+    active: color.primary_c600,
+    inactive: color.gray_c600,
   }
 
   return {styles, colors}

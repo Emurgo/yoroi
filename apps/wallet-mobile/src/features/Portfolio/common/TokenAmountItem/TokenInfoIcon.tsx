@@ -1,4 +1,3 @@
-import {isString} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
 import {Chain, Portfolio} from '@yoroi/types'
 import {Image} from 'expo-image'
@@ -6,6 +5,7 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {Icon} from '../../../../components/Icon'
+import {isEmptyString} from '../../../../utils'
 
 const headers = {
   Accept: 'image/webp',
@@ -16,15 +16,15 @@ const blurhash =
 
 type TokenInfoIconProps = {
   info: Portfolio.Token.Info
-  isMainnet?: boolean
+  network: Chain.Network
   size: 'sm' | 'md'
 }
-export const TokenInfoIcon = React.memo(({info, isMainnet, size = 'md'}: TokenInfoIconProps) => {
+export const TokenInfoIcon = React.memo(({info, network, size = 'md'}: TokenInfoIconProps) => {
   const {styles} = useStyles()
 
   if (info.nature === Portfolio.Token.Nature.Primary) return <PrimaryIcon size={size} />
 
-  if (isString(info.icon) && info.icon.length > 0) {
+  if (!isEmptyString(info.icon)) {
     return (
       <Image
         source={{uri: `data:image/png;base64,${info.icon}`}}
@@ -35,7 +35,6 @@ export const TokenInfoIcon = React.memo(({info, isMainnet, size = 'md'}: TokenIn
   }
 
   const [policy, name] = info.id.split('.')
-  const network = isMainnet ? Chain.Network.Mainnet : Chain.Network.Preprod
   const uri = `https://${network}.processed-media.yoroiwallet.com/${policy}/${name}?width=64&height=64&kind=metadata&fit=cover`
 
   return (
@@ -62,11 +61,10 @@ export const TokenIconPlaceholder = ({size = 'md'}: {size?: 'sm' | 'md'}) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     primary: {
-      backgroundColor: color.primary[600],
+      backgroundColor: color.primary_c600,
     },
     iconMedium: {
       backgroundColor: 'transparent',
@@ -87,7 +85,7 @@ const useStyles = () => {
       overflow: 'hidden',
     },
     placeholder: {
-      backgroundColor: color.gray[100],
+      backgroundColor: color.gray_c100,
     },
     placeholderSmall: {
       width: 24,
@@ -96,7 +94,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    icon: color.gray[600],
+    icon: color.gray_c600,
   }
 
   return {styles, colors}

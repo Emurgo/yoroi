@@ -1,6 +1,7 @@
+import {toBigInt} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
-import {Balance} from '@yoroi/types'
+import {Balance, Portfolio} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {
@@ -70,16 +71,16 @@ export const ManageCollateralScreen = () => {
   }
   const createCollateralTransaction = () => {
     const address = wallet.externalAddresses[0]
-    const amount: Balance.Amount = {
-      quantity: collateralConfig.minLovelace,
-      tokenId: wallet.primaryTokenInfo.id,
+    const amount: Portfolio.Token.Amount = {
+      quantity: toBigInt(collateralConfig.minLovelace, wallet.portfolioPrimaryTokenInfo.decimals),
+      info: wallet.portfolioPrimaryTokenInfo,
     }
 
     // populate for confirmation screen
     resetSendState()
     receiverResolveChanged(address)
-    tokenSelectedChanged(amount.tokenId)
-    amountChanged(amount.quantity)
+    tokenSelectedChanged(amount.info.id)
+    amountChanged(amount)
 
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
 

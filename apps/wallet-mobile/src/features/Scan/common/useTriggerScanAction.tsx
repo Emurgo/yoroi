@@ -1,3 +1,4 @@
+import {toBigInt} from '@yoroi/common'
 import {useTransfer} from '@yoroi/transfer'
 import * as React from 'react'
 import {Alert} from 'react-native'
@@ -9,13 +10,12 @@ import {useClaim} from '../../../features/Claim/module/ClaimProvider'
 import {useClaimTokens} from '../../../features/Claim/module/useClaimTokens'
 import {AskConfirmation} from '../../../features/Claim/useCases/AskConfirmation'
 import {pastedFormatter} from '../../../yoroi-wallets/utils/amountUtils'
-import {asQuantity, Quantities} from '../../../yoroi-wallets/utils/utils'
 import {useSelectedWallet} from '../../WalletManager/Context'
 import {ScanAction, ScanFeature} from './types'
 import {useNavigateTo} from './useNavigateTo'
 
 export const useTriggerScanAction = ({insideFeature}: {insideFeature: ScanFeature}) => {
-  const {primaryTokenInfo} = useSelectedWallet()
+  const {portfolioPrimaryTokenInfo} = useSelectedWallet()
   const {openModal, closeModal, startLoading, stopLoading} = useModal()
   const navigateTo = useNavigateTo()
 
@@ -52,13 +52,14 @@ export const useTriggerScanAction = ({insideFeature}: {insideFeature: ScanFeatur
 
         if (scanAction.params) {
           if ('amount' in scanAction.params) {
-            tokenSelectedChanged(primaryTokenInfo.id)
-            amountChanged(
-              Quantities.integer(
-                asQuantity(pastedFormatter(scanAction.params?.amount?.toString() ?? '')),
-                primaryTokenInfo.decimals ?? 0,
+            tokenSelectedChanged(portfolioPrimaryTokenInfo.id)
+            amountChanged({
+              info: portfolioPrimaryTokenInfo,
+              quantity: toBigInt(
+                pastedFormatter(scanAction.params?.amount?.toString() ?? ''),
+                portfolioPrimaryTokenInfo.decimals,
               ),
-            )
+            })
           }
           if ('memo' in scanAction.params) memoChanged(scanAction.params?.memo ?? '')
         }

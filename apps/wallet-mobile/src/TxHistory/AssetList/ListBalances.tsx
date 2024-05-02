@@ -44,23 +44,27 @@ export const ListBalances = (props: Props) => {
   const handleOnPressNFTs = React.useCallback(() => startTransition(() => setFungibilityFilter('nfts')), [])
   const handleOnPressFTs = React.useCallback(() => startTransition(() => setFungibilityFilter('fts')), [])
   const handleOnPressAll = React.useCallback(() => startTransition(() => setFungibilityFilter('all')), [])
-  const chips = [
-    {label: strings.all, onPress: handleOnPressAll, value: 'all', disabled: isPending},
-    {
-      label: strings.tokens(balances.fts.length),
-      onPress: handleOnPressFTs,
-      value: 'fts',
-      disabled: isPending,
-    },
-  ]
-  if (balances.nfts.length > 0) {
-    chips.push({
-      label: strings.nfts(balances.nfts.length),
-      onPress: handleOnPressNFTs,
-      value: 'nfts',
-      disabled: isPending,
-    })
-  }
+
+  const chips = React.useMemo(() => {
+    const chiplist = [
+      {label: strings.all, onPress: handleOnPressAll, value: 'all', disabled: isPending},
+      {
+        label: strings.tokens(balances.fts.length),
+        onPress: handleOnPressFTs,
+        value: 'fts',
+        disabled: isPending,
+      },
+    ]
+    if (balances.nfts.length > 0) {
+      chiplist.push({
+        label: strings.nfts(balances.nfts.length),
+        onPress: handleOnPressNFTs,
+        value: 'nfts',
+        disabled: isPending,
+      })
+    }
+    return chiplist
+  }, [balances, handleOnPressAll, handleOnPressFTs, handleOnPressNFTs, isPending, strings])
 
   return (
     <View style={styles.assetList} testID="assetList">
@@ -71,8 +75,8 @@ export const ListBalances = (props: Props) => {
         bounces={false}
         data={balances[fungibilityFilter]}
         renderItem={({item: amount}) => (
-          <ExplorableAssetItem
-            isMainnet={wallet.isMainnet}
+          <ExplorableAmount
+            network={wallet.network}
             privacyPlaceholder={privacyPlaceholder}
             isPrivacyOff={isPrivacyOff}
             amount={amount}
@@ -91,7 +95,7 @@ export const ListBalances = (props: Props) => {
 type ExplorableAssetItemProps = TokenAmountItemProps & {
   onPress(): void
 }
-const ExplorableAssetItem = ({onPress, ...tokenAmountProps}: ExplorableAssetItemProps) => {
+const ExplorableAmount = ({onPress, ...tokenAmountProps}: ExplorableAssetItemProps) => {
   const styles = useStyles()
   return (
     <TouchableOpacity style={styles.button} onPress={onPress} testID="assetSelectorItem">

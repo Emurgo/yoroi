@@ -1,5 +1,5 @@
 import {FlashList, FlashListProps} from '@shopify/flash-list'
-import {Balance} from '@yoroi/types'
+import {Balance, Portfolio} from '@yoroi/types'
 import React from 'react'
 import {Dimensions, StyleSheet, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
@@ -21,7 +21,7 @@ export const SkeletonGallery = ({amount}: {amount: number}) => {
 }
 
 type Props = {
-  nfts: Balance.TokenInfo[]
+  amounts: Portfolio.Token.Amount[]
   onSelect: (id: string) => void
   onRefresh: () => void
   isRefreshing: boolean
@@ -31,7 +31,7 @@ type Props = {
   readOnly?: boolean
 }
 export const NftImageGallery = ({
-  nfts = [],
+  amounts = [],
   onSelect,
   onRefresh,
   isRefreshing,
@@ -42,19 +42,24 @@ export const NftImageGallery = ({
 }: Props) => {
   return (
     <GalleryList
-      data={nfts}
+      data={amounts}
       onRefresh={onRefresh}
       refreshing={isRefreshing}
       bounces={bounces}
       ListEmptyComponent={ListEmptyComponent}
       withVerticalPadding={withVerticalPadding}
-      renderItem={(nft) =>
-        !('id' in nft) ? (
+      renderItem={(amount) =>
+        !('id' in amount.info) ? (
           <EmptyImage />
         ) : features.moderatingNftsEnabled ? (
-          <ModeratedImage onPress={() => onSelect(nft.id)} nft={nft} key={nft.id} disabled={readOnly} />
+          <ModeratedImage onPress={() => onSelect(amount.info.id)} nft={nft} key={amount.info.id} disabled={readOnly} />
         ) : (
-          <UnModeratedImage onPress={() => onSelect(nft.id)} nft={nft} key={nft.id} disabled={readOnly} />
+          <UnModeratedImage
+            onPress={() => onSelect(amount.info.id)}
+            nft={nft}
+            key={amount.info.id}
+            disabled={readOnly}
+          />
         )
       }
     />

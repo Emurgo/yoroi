@@ -1,8 +1,9 @@
 import {
   UnsignedTx as UnsignedTxType,
   SignedTx as SignedTxType,
+  Datum,
 } from '@emurgo/yoroi-lib'
-import {TransferEntry} from '../transfer/state'
+
 import {BalanceAmounts} from '../balance/token'
 
 export type CardanoUnsignedTx = CardanoTxInfo & {
@@ -13,10 +14,16 @@ export type CardanoSignedTx = CardanoTxInfo & {
   signedTx: SignedTxType
 }
 
+export type CardanoEntry = {
+  address: string
+  amounts: BalanceAmounts
+  datum?: Datum
+}
+
 export type CardanoTxInfo = {
-  entries: TransferEntry[]
+  entries: CardanoEntry[]
   fee: BalanceAmounts
-  change: TransferEntry[]
+  change: CardanoEntry[]
   metadata: CardanoMetadata
   staking: CardanoStaking
   voting: CardanoVoting
@@ -28,10 +35,10 @@ export type CardanoMetadata = {
 }
 
 export type CardanoStaking = {
-  registrations?: TransferEntry[]
-  deregistrations?: TransferEntry[]
-  delegations?: TransferEntry[]
-  withdrawals?: TransferEntry[]
+  registrations?: CardanoEntry[]
+  deregistrations?: CardanoEntry[]
+  delegations?: CardanoEntry[]
+  withdrawals?: CardanoEntry[]
 }
 
 export type CardanoVoting = {

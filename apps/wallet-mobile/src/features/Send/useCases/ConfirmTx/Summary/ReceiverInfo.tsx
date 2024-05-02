@@ -1,17 +1,14 @@
 import {nameServerName} from '@yoroi/resolver'
 import {useTheme} from '@yoroi/theme'
+import {Transfer} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {Spacer} from '../../../../../components/Spacer'
 import {Text} from '../../../../../components/Text'
-import {YoroiTarget} from '../../../../../yoroi-wallets/types'
 import {useStrings} from '../../../common/strings'
 
-type Props = {
-  target: YoroiTarget
-}
-export const ReceiverInfo = ({target}: Props) => {
+export const ReceiverInfo = ({target}: {target: Transfer.Target}) => {
   const strings = useStrings()
   const {receiver, entry} = target
   const styles = useStyles()

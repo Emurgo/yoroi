@@ -1,7 +1,8 @@
 import {splitBigInt} from './split-bigint'
 
 /**
- * @description Use it only to display, internally use bigint, otherwise it will need to localize converters
+ * @description Keep the result to display only, internally use bigint,
+ * otherwise it will need to localize converters
  * Formats a bigint to a string with the given number of decimal places.
  * @param value The bigint to format.
  * @param decimalPlaces The number of decimal places to include.

@@ -1,6 +1,6 @@
 import {amountFormatter, infoExtractName, isNft} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
-import {Portfolio} from '@yoroi/types'
+import {Chain, Portfolio} from '@yoroi/types'
 import {Swap} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
@@ -14,7 +14,7 @@ import {TokenInfoIcon} from './TokenInfoIcon'
 export type TokenAmountItemProps = {
   amount: Portfolio.Token.Amount
   privacyPlaceholder: string
-  isMainnet: boolean
+  network: Chain.Network
   isPrivacyOff: boolean
 
   style?: ViewProps['style']
@@ -25,7 +25,7 @@ export type TokenAmountItemProps = {
 }
 
 export const TokenAmountItem = ({
-  isMainnet,
+  network,
   isPrivacyOff,
   privacyPlaceholder,
   style,
@@ -51,7 +51,7 @@ export const TokenAmountItem = ({
   return (
     <View style={[style, styles.container]} testID="assetItem">
       <Left>
-        <TokenInfoIcon info={amount.info} size={variant === 'swap' ? 'sm' : 'md'} isMainnet={isMainnet} />
+        <TokenInfoIcon info={amount.info} size={variant === 'swap' ? 'sm' : 'md'} network={network} />
       </Left>
 
       <Middle>

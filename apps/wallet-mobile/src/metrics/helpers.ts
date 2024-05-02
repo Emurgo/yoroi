@@ -1,18 +1,22 @@
-import {Balance} from '@yoroi/types'
+import {isFt, isNft} from '@yoroi/portfolio'
+import {Portfolio} from '@yoroi/types'
 
-type AssetList = {
-  tokens: Balance.TokenInfo[]
-  amounts: Balance.Amounts
-}
-
-export const assetsToSendProperties = ({tokens, amounts}: AssetList) => {
-  const limitedAssets = tokens.length < 30 ? tokens : tokens.slice(0, 30)
-  const isNft = ({kind}: {kind: 'nft' | 'ft'}) => kind === 'nft'
-  const isFT = ({kind}: {kind: 'nft' | 'ft'}) => kind === 'ft'
-  const summary = ({name, id}: {id: string; name: string}) => ({name, amount: amounts[id]})
+const maxAmountsPerTrack = 30
+export const assetsToSendProperties = ({amounts}: {amounts: Portfolio.Token.AmountRecords}) => {
+  const limitedAssets = Object.entries(amounts).slice(0, maxAmountsPerTrack) as [
+    Portfolio.Token.Id,
+    Portfolio.Token.Amount,
+  ][]
   return {
-    asset_count: tokens.length,
-    nfts: limitedAssets.filter(isNft).map(summary),
-    tokens: limitedAssets.filter(isFT).map(summary),
+    asset_count: limitedAssets.length,
+    nfts: limitedAssets
+      .filter(([_, amount]) => isNft(amount.info))
+      .map(([_, amount]) => ({name: amount.info.name, amount: amount.quantity.toString()})),
+    tokens: limitedAssets
+      .filter(([_, amount]) => isFt(amount.info))
+      .map(([_, amount]) => ({
+        name: amount.info.name,
+        amount: amount.quantity.toString(),
+      })),
   }
 }

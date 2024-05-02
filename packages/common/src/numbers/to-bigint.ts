@@ -15,7 +15,7 @@ export function toBigInt(
   input: string | number | BigNumber,
   decimalPlaces: number,
 ): bigint {
-  const bigNumber = BigNumber(input)
+  const bigNumber = BigNumber(input || 0)
 
   const scaledNumber = bigNumber.shiftedBy(decimalPlaces)
 
