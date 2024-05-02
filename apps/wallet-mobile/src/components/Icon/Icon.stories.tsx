@@ -11,6 +11,8 @@ storiesOf('Icon', module).add('Gallery', () => {
       <ScrollView contentContainerStyle={{flexDirection: 'row', flexWrap: 'wrap', padding: 16}}>
         <Item icon={<Icon.Bug size={40} />} title="Bug" />
 
+        <Item icon={<Icon.Backspace size={40} />} title="Backspace" />
+
         <Item icon={<Icon.Export size={40} />} title="Export" />
 
         <Item icon={<Icon.Magnify size={40} />} title="Magnify" />

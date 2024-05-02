@@ -3,6 +3,7 @@ import {Analytics} from './Analytics'
 import {ArrowDown} from './ArrowDown'
 import {ArrowRight} from './ArrowRight'
 import {Assets} from './Assets'
+import {Backspace} from './Backspace'
 import {Backward} from './Backward'
 import {Bio} from './Bio'
 import {Bug} from './Bug'
@@ -128,6 +129,7 @@ export const Icon = {
   Assets,
   Bio,
   Bug,
+  Backspace,
   Burger,
   Cardano,
   Catalyst,

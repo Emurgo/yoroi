@@ -59,7 +59,6 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     yoroiLogo: {
       alignItems: 'center',
-      backgroundColor: color.gray_cmin,
     },
     yoroiLogoTitle: {
       color: color.primary_c600,
