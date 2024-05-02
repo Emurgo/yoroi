@@ -197,13 +197,11 @@ const MnemonicWordInput = React.forwardRef<MnemonicWordInputRef, MnemonicWordInp
 
     React.useImperativeHandle(
       ref,
-      () => {
-        return {
-          selectWord: setWord,
-          word: word,
-          focus: () => inputRef.current?.focus(),
-        }
-      },
+      () => ({
+        selectWord: setWord,
+        word: word,
+        focus: () => inputRef.current?.focus(),
+      }),
       [word],
     )
 
@@ -268,9 +266,6 @@ const MnemonicWordInput = React.forwardRef<MnemonicWordInputRef, MnemonicWordInp
           if (nativeEvent.key === 'Backspace') {
             onKeyPress(word)
           }
-        }}
-        onBlur={() => {
-          setError('')
         }}
         keyboardType={Platform.OS === 'android' ? 'visible-password' : undefined} // to hide keyboard suggestions on android
       />
