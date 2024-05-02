@@ -3,7 +3,7 @@ import {FlashList} from '@shopify/flash-list'
 import {infoFilterByName, isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
-import {Balance, Portfolio} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
@@ -12,14 +12,10 @@ import {NftImageGallery} from '../../../../../components/NftImageGallery'
 import {useMetrics} from '../../../../../metrics/metricsManager'
 import {TxHistoryRouteNavigation} from '../../../../../navigation'
 import {useSearch, useSearchOnNavBar} from '../../../../../Search/SearchContext'
-import {sortTokenInfos} from '../../../../../utils'
 import {limitOfSecondaryAmountsPerTx} from '../../../../../yoroi-wallets/contants'
-import {useIsWalletEmpty} from '../../../../../yoroi-wallets/hooks'
 import {usePortfolioBalances} from '../../../../Portfolio/common/hooks/usePortfolioBalances'
 import {TokenAmountItem} from '../../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
 import {useSelectedWallet} from '../../../../WalletManager/Context'
-import {filterByFungibility} from '../../../common/filterByFungibility'
-import {filterBySearch} from '../../../common/filterBySearch'
 import {useOverridePreviousSendTxRoute} from '../../../common/navigation'
 import {NoAssetFoundImage} from '../../../common/NoAssetFoundImage'
 import {useStrings} from '../../../common/strings'
@@ -41,13 +37,16 @@ export const SelectTokenFromListScreen = () => {
     title: strings.selecteAssetTitle,
   })
   const {visible: isSearchOpened, isSearching, search} = useSearch()
-  const showNfts_ShouldntBeSearching = fungibilityFilter === 'nfts' && !isSearchOpened
+  const shouldShowNfts = fungibilityFilter === 'nfts' && !isSearchOpened
 
   const spendableAmounts = React.useMemo(() => {
     const allocatedToOtherTargets = allocated.get(selectedTargetIndex) ?? new Map()
     const toSpendableAmount = toSpendableAmountMapper(allocatedToOtherTargets)
 
-    return balances.all.map(toSpendableAmount).filter(filterOutSelected(targets[selectedTargetIndex].entry.amounts))
+    return balances.all
+      .map(toSpendableAmount)
+      .filter(hasSpendableAmount)
+      .filter(filterOutSelected(targets[selectedTargetIndex].entry.amounts))
   }, [allocated, balances, selectedTargetIndex, targets])
 
   const filteredAmounts = React.useMemo(() => {
@@ -98,8 +97,8 @@ export const SelectTokenFromListScreen = () => {
         {canAddAmount === false && <WarningPanelMaxAmountsReached />}
       </View>
 
-      <View style={styles.list}>
-        {showNfts_ShouldntBeSearching ? (
+      <View style={[styles.list, isPending && styles.inTransition]}>
+        {shouldShowNfts ? (
           <ListSpendableNfts canAddAmount={canAddAmount} spendableAmounts={filteredAmounts} />
         ) : (
           <ListSpendables
@@ -112,7 +111,12 @@ export const SelectTokenFromListScreen = () => {
         )}
       </View>
 
-      <Counter fungibilityFilter={fungibilityFilter} counter={spendableAmounts.length} />
+      <Counter
+        fungibilityFilter={fungibilityFilter}
+        counter={spendableAmounts.length}
+        isSearchOpened={isSearchOpened}
+        isSearching={isSearching}
+      />
     </View>
   )
 }
@@ -146,7 +150,7 @@ const ListSpendableNfts = ({
       readOnly={!canAddAmount}
       isRefreshing={false}
       withVerticalPadding={!isEmpty} // to keep consistency between tabs when the list is not empty
-      ListEmptyComponent={isEmpty ? <NoAssetsYet text={strings.noAssetsAddedYet(strings.nfts(2))} /> : null}
+      ListEmptyComponent={isEmpty ? <NoSpendableAmount text={strings.noAssetsAddedYet(strings.nfts(2))} /> : null}
     />
   )
 }
@@ -179,7 +183,7 @@ const ListSpendables = ({
       testID="assetList"
       ItemSeparatorComponent={() => <Spacer height={16} />}
       estimatedItemSize={78}
-      ListEmptyComponent={<EmptySearchResult_Or_NoAmounts isSearchOpened={isSearchOpened} isSearching={isSearching} />}
+      ListEmptyComponent={<EmptyStatuses isSearchOpened={isSearchOpened} isSearching={isSearching} />}
     />
   )
 }
@@ -256,23 +260,17 @@ const SelectAmount = ({amount, disabled, isMainnet = true}: SelectAmountProps) =
   )
 }
 
-const EmptySearchResult_Or_NoAmounts = ({
-  isSearching,
-  isSearchOpened,
-}: {
-  isSearching: boolean
-  isSearchOpened: boolean
-}) => {
+const EmptyStatuses = ({isSearching, isSearchOpened}: {isSearching: boolean; isSearchOpened: boolean}) => {
   const strings = useStrings()
 
   if (isSearching) return <EmptySearchResult />
 
-  if (isSearchOpened === false) return <NoAssetsYet text={strings.noAssetsAddedYet(strings.tokens(2))} />
+  if (isSearchOpened === false) return <NoSpendableAmount text={strings.noAssetsAddedYet(strings.tokens(2))} />
 
   return null
 }
 
-const NoAssetsYet = ({text}: {text: string}) => {
+const NoSpendableAmount = ({text}: {text: string}) => {
   const {styles} = useStyles()
   return (
     <View style={styles.imageContainer}>
@@ -303,12 +301,21 @@ const EmptySearchResult = () => {
   )
 }
 
-const Counter = <T,>({fungibilityFilter, counter}: {fungibilityFilter: T; counter: number}) => {
-  const {search: assetSearchTerm, visible: isSearching} = useSearch()
+const Counter = <T,>({
+  fungibilityFilter,
+  counter,
+  isSearchOpened,
+  isSearching,
+}: {
+  fungibilityFilter: T
+  counter: number
+  isSearching: boolean
+  isSearchOpened: boolean
+}) => {
   const strings = useStrings()
   const {styles} = useStyles()
 
-  if (!isSearching && fungibilityFilter === 'all') {
+  if (!isSearchOpened && fungibilityFilter === 'all') {
     return (
       <View style={styles.counter}>
         <Text style={styles.counterText}>{strings.youHave}</Text>
@@ -318,7 +325,7 @@ const Counter = <T,>({fungibilityFilter, counter}: {fungibilityFilter: T; counte
     )
   }
 
-  if (!isSearching && fungibilityFilter === 'fts') {
+  if (!isSearchOpened && fungibilityFilter === 'fts') {
     return (
       <View style={styles.counter}>
         <Text style={styles.counterText}>{strings.youHave}</Text>
@@ -328,7 +335,7 @@ const Counter = <T,>({fungibilityFilter, counter}: {fungibilityFilter: T; counte
     )
   }
 
-  if (!isSearching && fungibilityFilter === 'nfts') {
+  if (!isSearchOpened && fungibilityFilter === 'nfts') {
     return (
       <View style={styles.counter}>
         <Text style={styles.counterText}>{strings.youHave}</Text>
@@ -339,7 +346,7 @@ const Counter = <T,>({fungibilityFilter, counter}: {fungibilityFilter: T; counte
   }
 
   // if it is searching and typing the counter is shown
-  if (isSearching && assetSearchTerm.length > 0) {
+  if (isSearching) {
     return (
       <View style={styles.counter}>
         <Text style={styles.counterTextBold}>{`${counter} ${strings.assets(counter)} `}</Text>
@@ -352,46 +359,7 @@ const Counter = <T,>({fungibilityFilter, counter}: {fungibilityFilter: T; counte
   return null
 }
 
-// filteredTokenInfos has primary token when the search term and the wallet are empty and the ft/all tab is selected
-const useFilteredTokenInfos = ({
-  fungibilityFilter,
-  tokenInfos,
-}: {
-  fungibilityFilter: FungibilityFilter
-  tokenInfos: Array<Balance.TokenInfo>
-}) => {
-  const wallet = useSelectedWallet()
-  const {search: assetSearchTerm, visible: isSearching} = useSearch()
-  const {targets, selectedTargetIndex} = useTransfer()
-  const isWalletEmpty = useIsWalletEmpty(wallet)
-
-  /*
-   * to show the empty list component:
-   *    - filteredTokenInfos has primary token when the search term and the wallet are empty and the ft or all tab are selected
-   *    - "ft" tab has to have primary token hidden when wallet is empty and to show the empty list component
-   *    - "all" tab has to display the primary token and not to show the empty list component
-   */
-  if (fungibilityFilter === 'ft' && isWalletEmpty && !isSearching) return []
-
-  const selectedTokenIds = Object.keys(targets[selectedTargetIndex].entry.amounts)
-
-  const filteredTokenInfos = tokenInfos
-    .filter(filterOutSelected(selectedTokenIds))
-    .filter(filterBySearch(assetSearchTerm))
-    .filter(
-      filterByFungibility({
-        fungibilityFilter: isSearching ? 'all' : fungibilityFilter, // all assets must be available when searching
-      }),
-    )
-
-  return sortTokenInfos({
-    wallet,
-    tokenInfos: filteredTokenInfos,
-  })
-}
-
-const areAllTokensSelected = (selectedTokenIds: Array<string>, tokenInfos: Balance.TokenInfo[]): boolean =>
-  tokenInfos.every((tokenInfo) => selectedTokenIds.includes(tokenInfo.id))
+const hasSpendableAmount = (amount: Portfolio.Token.Amount) => amount.quantity > 0n
 const filterOutSelected =
   (amounts: Record<Portfolio.Token.Id, Portfolio.Token.Amount>) => (amount: Portfolio.Token.Amount) =>
     !Object.keys(amounts).includes(amount.info.id)
@@ -446,6 +414,9 @@ const useStyles = () => {
     },
     spendableAmountsContent: {
       ...atoms.px_lg,
+    },
+    inTransition: {
+      opacity: 0.5,
     },
     image: {
       flex: 1,

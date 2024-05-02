@@ -44,7 +44,7 @@ const useStyles = () => {
       display: 'flex',
       ...atoms.px_lg,
       ...atoms.pb_2xs,
-        justifyContent: 'flex-start',
+      justifyContent: 'flex-start',
       flexDirection: 'row',
     },
   })

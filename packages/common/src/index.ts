@@ -23,7 +23,7 @@ export * from './utils/parsers'
 export * from './utils/predicates'
 export * from './utils/strings'
 
-export * from './numbers/as-atomic-value'
+export * from './numbers/to-bigint'
 export * from './numbers/split-bigint'
 export * from './numbers/bigint-formatter'
 

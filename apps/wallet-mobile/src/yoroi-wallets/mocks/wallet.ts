@@ -64,6 +64,8 @@ const walletMeta: WalletMeta = {
 }
 
 const wallet: YoroiWallet = {
+  isEmpty: false,
+  hasOnlyPrimary: false,
   id: 'wallet-id',
   api: AppApi.mockAppApi,
   primaryToken: PRIMARY_TOKEN,
@@ -87,6 +89,7 @@ const wallet: YoroiWallet = {
 
   balance$: new Observable<Portfolio.Event.BalanceManager>(),
   balances: {
+    records: new Map(),
     all: [],
     fts: [],
     nfts: [],

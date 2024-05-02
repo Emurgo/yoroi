@@ -29,7 +29,7 @@ export const ListBalances = (props: Props) => {
   const balances = usePortfolioBalances({wallet})
   const {isPrivacyOff, privacyPlaceholder} = usePrivacyMode()
 
-  const [fungibilityFilter, setFungibilityFilter] = React.useState<keyof typeof balances>('all')
+  const [fungibilityFilter, setFungibilityFilter] = React.useState<Exclude<keyof typeof balances, 'records'>>('all')
   const [isPending, startTransition] = React.useTransition()
 
   const explorers = useExplorers(wallet.network)
@@ -101,19 +101,18 @@ const ExplorableAssetItem = ({onPress, ...tokenAmountProps}: ExplorableAssetItem
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     content: {
-      ...padding['t-l'],
-      ...padding['x-l'],
-      ...padding['b-s'],
+      ...atoms.px_lg,
+      ...atoms.pt_lg,
+      ...atoms.pb_sm,
     },
     assetList: {flex: 1},
     button: {
-      ...padding['m'],
-      backgroundColor: color.gray.min,
-      shadowColor: color.gray[100],
+      ...atoms.p_md,
+      backgroundColor: color.gray_cmin,
+      shadowColor: color.gray_c100,
       borderRadius: 8,
       elevation: 2,
       shadowOffset: {width: 0, height: -2},
