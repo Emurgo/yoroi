@@ -320,7 +320,7 @@ const useStyles = () => {
       minWidth: 143,
     },
     menuContent: {
-      backgroundColor: color.white_static,
+      backgroundColor: color.gray_cmin,
       borderRadius: 8,
     },
     menuScrollView: {

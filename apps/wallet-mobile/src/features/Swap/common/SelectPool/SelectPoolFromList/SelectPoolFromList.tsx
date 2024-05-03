@@ -204,7 +204,7 @@ const useStyles = () => {
   })
   const colors = {
     gradientColor: color.bg_gradient_1,
-    white: color.white_static,
+    white: color.gray_cmin,
   }
 
   return {styles, colors} as const
