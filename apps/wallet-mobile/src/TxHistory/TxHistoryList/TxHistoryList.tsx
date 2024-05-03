@@ -1,10 +1,10 @@
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useFocusEffect} from '@react-navigation/native'
 import {isString} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
 import _ from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {Platform, SectionList, SectionListProps, StyleSheet, View} from 'react-native'
+import {SectionList, SectionListProps, StyleSheet, View} from 'react-native'
 
 import {Spacer, Text} from '../../components'
 import {ShowBuyBanner} from '../../features/Exchange/common/ShowBuyBanner/ShowBuyBanner'
@@ -20,9 +20,8 @@ type ListProps = SectionListProps<TransactionInfo>
 type Props = Partial<ListProps> & {
   onScroll: ListProps['onScroll']
 }
-export const TxHistoryList = (props: Props) => {
+export const TxHistoryList = React.memo((props: Props) => {
   const styles = useStyles()
-  const key = useRemountOnFocusHack()
   const wallet = useSelectedWallet()
   const {track} = useMetrics()
 
@@ -39,7 +38,6 @@ export const TxHistoryList = (props: Props) => {
     <View style={styles.container}>
       <SectionList
         {...props}
-        key={key}
         ListHeaderComponent={<ShowBuyBanner />}
         contentContainerStyle={styles.content}
         renderItem={({item}) => <TxHistoryListItem transaction={item} />}
@@ -56,28 +54,7 @@ export const TxHistoryList = (props: Props) => {
       />
     </View>
   )
-}
-
-// workaround for https://emurgo.atlassian.net/browse/YOMO-199
-// related to https://github.com/facebook/react-native/issues/15694
-export const useRemountOnFocusHack = () => {
-  const [key, setKey] = React.useState(0)
-  const navigation = useNavigation()
-
-  React.useEffect(() => {
-    if (Platform.OS !== 'ios') {
-      return
-    }
-
-    const unsubscribe = navigation.addListener('focus', () => {
-      setKey((key) => key + 1)
-    })
-
-    return unsubscribe
-  }, [key, navigation])
-
-  return key
-}
+})
 
 type DayHeaderProps = {
   ts: unknown
