@@ -44,8 +44,7 @@ export const ProgressCircle = ({percentage}: ExternalProps) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
     wrapper: {
@@ -54,8 +53,8 @@ const useStyles = () => {
       width: 100,
     },
     textWrapper: {
-      ...typography['heading-4-medium'],
-      color: color.gray[700],
+      ...atoms.heading_4_medium,
+      color: color.gray_c700,
       textAlign: 'center',
     },
     chart: {

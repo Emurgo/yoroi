@@ -16,11 +16,10 @@ export const NoBalance = ({style, ...props}: TextProps) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     noBalance: {
-      color: color.magenta[500],
+      color: color.sys_magenta_c500,
       textAlign: 'center',
     },
   })

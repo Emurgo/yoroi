@@ -35,29 +35,28 @@ export const FailedTxScreen = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography, padding} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
-      ...padding['l'],
+      ...atoms.p_lg,
     },
     title: {
-      color: color.gray.max,
-      ...typography['heading-3-medium'],
-      ...padding['x-s'],
+      color: color.gray_cmax,
+      ...atoms.heading_3_medium,
+      ...atoms.px_xs,
       textAlign: 'center',
     },
     text: {
-      color: color.gray[600],
-      ...typography['body-2-m-regular'],
+      color: color.gray_c600,
+      ...atoms.body_2_md_regular,
       textAlign: 'center',
       maxWidth: 330,
     },
     button: {
-      ...padding['x-l'],
+      ...atoms.px_lg,
     },
   })
   return styles

@@ -84,7 +84,7 @@ export const SelectWalletFromList = () => {
         <React.Fragment key={walletMeta.id}>
           <WalletListItem wallet={walletMeta} onPress={onSelect} />
 
-          {index < allData.length - 1 && <Space height="l" />}
+          {index < allData.length - 1 && <Space height="lg" />}
         </React.Fragment>
       )),
     [onSelect, walletMetas],
@@ -109,15 +109,15 @@ export const SelectWalletFromList = () => {
           (showLine || isScrollBarShown) && {borderTopWidth: 1, borderTopColor: colors.lightGray},
         ]}
       >
-        <Space height="l" />
+        <Space height="lg" />
 
         <SupportTicketLink />
 
-        <Space height="l" />
+        <Space height="lg" />
 
         <AddWalletButton />
 
-        <Space height="m" />
+        <Space height="md" />
 
         <OnlyDevButton />
       </View>
@@ -136,7 +136,7 @@ const SupportTicketLink = () => {
     <TouchableOpacity style={styles.link} onPress={onPress}>
       <SupportIllustration />
 
-      <Space width="s" />
+      <Space width="sm" />
 
       <Text style={styles.linkText}>{strings.supportTicketLink.toLocaleUpperCase()}</Text>
     </TouchableOpacity>
@@ -182,38 +182,38 @@ const OnlyDevButton = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     safeAreaView: {
       flex: 1,
-      backgroundColor: theme.color['white-static'],
+      backgroundColor: color.white_static,
     },
     topButton: {
-      backgroundColor: theme.color.primary[500],
+      backgroundColor: color.primary_c500,
     },
     button: {
-      backgroundColor: theme.color.primary[500],
+      backgroundColor: color.primary_c500,
     },
     linkText: {
-      color: theme.color.primary[500],
+      color: color.primary_c500,
     },
     link: {
-      ...theme.typography['button-2-m'],
+      ...atoms.button_2_md,
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
     },
     list: {
-      ...theme.padding['l'],
+      ...atoms.p_lg,
     },
     actions: {
-      ...theme.padding['x-l'],
+      ...atoms.px_lg,
     },
   })
 
   const colors = {
-    gray: theme.color.gray[600],
-    lightGray: theme.color.gray[200],
+    gray: color.gray_c600,
+    lightGray: color.gray_c200,
   }
 
   return {styles, colors} as const

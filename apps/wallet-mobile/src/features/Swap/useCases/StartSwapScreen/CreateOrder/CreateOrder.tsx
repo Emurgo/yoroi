@@ -322,12 +322,11 @@ const Actions = ({style, ...props}: ViewProps) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
     scroll: {
       paddingHorizontal: 16,
@@ -345,7 +344,7 @@ const useStyles = () => {
     },
     actionBorder: {
       borderTopWidth: 1,
-      borderTopColor: color.gray[200],
+      borderTopColor: color.gray_c200,
     },
   })
   return styles

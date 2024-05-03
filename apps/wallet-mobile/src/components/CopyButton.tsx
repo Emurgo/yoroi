@@ -67,17 +67,16 @@ const AnimatedCopyButton = ({
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
 
   const colors = {
-    gray: color.gray[900],
+    gray: color.gray_c900,
   }
 
   const styles = StyleSheet.create({
     isCopying: {
       position: 'absolute',
-      backgroundColor: color.gray.max,
+      backgroundColor: color.gray_cmax,
       alignItems: 'center',
       justifyContent: 'center',
       bottom: 20,
@@ -87,11 +86,11 @@ const useStyles = () => {
       zIndex: 10,
     },
     copiedText: {
-      color: color.gray.min,
+      color: color.gray_cmin,
       textAlign: 'center',
       padding: 8,
       flex: 1,
-      ...typography['body-2-m-medium'],
+      ...atoms.body_2_md_medium,
     },
     rowContainer: {
       flexDirection: 'row',

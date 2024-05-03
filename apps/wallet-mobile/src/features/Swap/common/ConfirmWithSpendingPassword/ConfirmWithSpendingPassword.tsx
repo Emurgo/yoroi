@@ -68,15 +68,14 @@ export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error, onPassw
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
 
   const styles = StyleSheet.create({
     modalText: {
       paddingHorizontal: 70,
       textAlign: 'center',
       paddingBottom: 8,
-      color: color.gray[900],
+      color: color.gray_c900,
     },
     loading: {
       position: 'absolute',

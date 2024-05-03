@@ -218,13 +218,13 @@ export const DeveloperScreen = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {color} = useTheme()
 
   const styles = StyleSheet.create({
     safeAreaView: {
       flex: 1,
       paddingTop: 50,
-      backgroundColor: theme.color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
     container: {
       flex: 1,

@@ -23,6 +23,7 @@ import {makeMetricsManager, MetricsProvider} from './metrics/metricsManager'
 import {useMigrations} from './migrations/useMigrations'
 import {walletManager} from './wallet-manager/walletManager'
 import {WalletManagerProvider} from './wallet-manager/WalletManagerContext'
+import {useThemeStorageMaker} from './yoroi-wallets/hooks'
 import {rootStorage} from './yoroi-wallets/storage/rootStorage'
 
 enableScreens(true)
@@ -46,11 +47,13 @@ const metricsManager = makeMetricsManager()
 export const YoroiApp = () => {
   const migrated = useMigrations(rootStorage)
 
+  const themeStorage = useThemeStorageMaker()
+
   if (!migrated) return null
 
   return (
     <AsyncStorageProvider storage={rootStorage}>
-      <ThemeProvider>
+      <ThemeProvider storage={themeStorage}>
         <MetricsProvider metricsManager={metricsManager}>
           <WalletManagerProvider walletManager={walletManager}>
             <ErrorBoundary>

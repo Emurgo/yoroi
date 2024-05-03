@@ -63,7 +63,7 @@ export const MnemonicInput = ({
     <View>
       <MnemonicWordsInput onSelect={onSelect} words={mnemonicWords} isPhraseValid={isValid && mnemonicWordsComplete} />
 
-      <Space height="l" />
+      <Space height="lg" />
 
       {!isValid && mnemonicWordsComplete && (
         <View style={styles.textView}>
@@ -91,7 +91,7 @@ export const MnemonicInput = ({
         </TouchableOpacity>
       )}
 
-      <Space height="l" />
+      <Space height="lg" />
     </View>
   )
 }
@@ -312,7 +312,7 @@ const useAutoFocus = (ref: React.RefObject<RNTextInput>) =>
   }, [ref])
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {color, atoms} = useTheme()
   const ROW_HEIGHT = 50
   const styles = StyleSheet.create({
     menu: {
@@ -320,17 +320,17 @@ const useStyles = () => {
       minWidth: 143,
     },
     menuContent: {
-      backgroundColor: theme.color['white-static'],
+      backgroundColor: color.white_static,
       borderRadius: 8,
     },
     menuScrollView: {
       maxHeight: ROW_HEIGHT * 3.5,
     },
     menuItemText: {
-      color: theme.color.gray[600],
+      color: color.gray_c600,
     },
     menuItem: {
-      backgroundColor: theme.color.gray[50],
+      backgroundColor: color.gray_c50,
     },
     mnemonicInputView: {
       flexDirection: 'row',
@@ -342,8 +342,7 @@ const useStyles = () => {
       alignItems: 'center',
       justifyContent: 'space-evenly',
       width: '50%',
-      ...theme.padding['x-xs'],
-      ...theme.padding['y-xxs'],
+      ...atoms.py_xs,
     },
     textInput: {
       minWidth: 143,
@@ -351,8 +350,8 @@ const useStyles = () => {
       textAlign: 'center',
     },
     mnemonicIndex: {
-      color: theme.color.primary[400],
-      ...theme.typography['body-1-l-regular'],
+      color: color.primary_c400,
+      ...atoms.body_1_lg_regular,
     },
     textView: {
       flexDirection: 'row',
@@ -360,17 +359,17 @@ const useStyles = () => {
       alignItems: 'center',
     },
     errorText: {
-      ...theme.typography['body-1-l-regular'],
-      color: theme.color.magenta[500],
+      ...atoms.body_1_lg_regular,
+      color: color.sys_magenta_c500,
     },
     successText: {
-      ...theme.typography['body-1-l-medium'],
-      color: theme.color.gray.max,
+      ...atoms.body_1_lg_medium,
+      color: color.gray_cmax,
     },
     clearAll: {
-      ...theme.typography['button-2-m'],
-      ...theme.padding['l-s'],
-      color: theme.color.primary[500],
+      ...atoms.button_2_md,
+      ...atoms.pl_sm,
+      color: color.primary_c500,
       textTransform: 'uppercase',
     },
   })

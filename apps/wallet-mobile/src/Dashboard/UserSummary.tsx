@@ -103,8 +103,7 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding, typography} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     wrapper: {
       flex: 1,
@@ -116,28 +115,28 @@ const useStyles = () => {
     },
     row: {
       flex: 1,
-      ...padding['y-s'],
+      ...atoms.py_sm,
       flexDirection: 'row',
     },
     icon: {
       paddingLeft: 8,
-      ...padding['s'],
-      ...padding['r-l'],
+      ...atoms.p_sm,
+      ...atoms.pr_lg,
     },
     amountBlock: {
       flexDirection: 'column',
     },
     label: {
-      color: color.gray[900],
-      ...typography['body-2-m-regular'],
+      color: color.gray_c900,
+      ...atoms.body_2_md_regular,
     },
     value: {
-      color: color.gray[800],
-      ...typography['body-1-l-regular'],
+      color: color.gray_c800,
+      ...atoms.body_1_lg_regular,
     },
     withdrawBlock: {
       flex: 1,
-      ...padding['xs'],
+      ...atoms.p_xs,
       justifyContent: 'flex-end',
       flexDirection: 'row',
     },

@@ -138,8 +138,7 @@ export const AmountItemPlaceholder = ({style}: ViewProps) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
       flexDirection: 'row',
@@ -147,21 +146,21 @@ const useStyles = () => {
       alignItems: 'center',
     },
     name: {
-      color: color.gray[900],
+      color: color.gray_c900,
       fontSize: 16,
       lineHeight: 22,
       fontWeight: '500',
       fontFamily: 'Rubik-Medium',
     },
     detail: {
-      color: color.gray[600],
+      color: color.gray_c600,
       fontSize: 12,
       lineHeight: 18,
       maxWidth: 140,
     },
     quantity: {
-      color: color.gray[900],
-      ...typography['body-1-l-regular'],
+      color: color.gray_c900,
+      ...atoms.body_1_lg_regular,
       textAlign: 'right',
       flexGrow: 1,
     },
@@ -173,9 +172,9 @@ const useStyles = () => {
   })
 
   const colors = {
-    text: color.gray[900],
-    background: color.gray[200],
-    icon: color.secondary[600],
+    text: color.gray_c900,
+    background: color.gray_c200,
+    icon: color.secondary_c600,
   }
 
   return {styles, colors}

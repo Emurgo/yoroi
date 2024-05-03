@@ -74,11 +74,10 @@ export const ChangeWalletName = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     safeAreaView: {
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
       flex: 1,
     },
     scrollContentContainer: {
@@ -88,7 +87,7 @@ const useStyles = () => {
     },
     action: {
       paddingHorizontal: 16,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
   })
   return styles

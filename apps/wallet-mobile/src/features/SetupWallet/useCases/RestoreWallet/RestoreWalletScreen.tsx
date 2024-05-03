@@ -65,7 +65,7 @@ export const RestoreWalletScreen = () => {
             }}
           />
 
-          <Space height="s" />
+          <Space height="sm" />
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -81,29 +81,29 @@ const useBold = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,
       justifyContent: 'space-between',
-      backgroundColor: theme.color['white-static'],
+      backgroundColor: color.white_static,
     },
     title: {
-      ...theme.typography['body-1-l-regular'],
-      color: theme.color.gray[900],
+      ...atoms.body_1_lg_regular,
+      color: color.gray_c900,
     },
-    button: {backgroundColor: theme.color.primary[500]},
+    button: {backgroundColor: color.primary_c500},
     bolder: {
-      ...theme.typography['body-1-l-medium'],
+      ...atoms.body_1_lg_medium,
     },
     padding: {
-      ...theme.padding['l'],
+      ...atoms.p_lg,
     },
   })
 
   const colors = {
-    gray900: theme.color.gray[900],
-    gradientBlueGreen: theme.color.gradients['blue-green'],
+    gray900: color.gray_c900,
+    gradientBlueGreen: color.bg_gradient_1,
   }
 
   return {styles, colors} as const

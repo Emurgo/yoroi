@@ -32,17 +32,16 @@ export const CurrentBalance = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     banner: {
-      backgroundColor: color.gray.min,
-      ...padding['y-l'],
+      backgroundColor: color.gray_cmin,
+      ...atoms.py_lg,
       alignItems: 'center',
       justifyContent: 'center',
     },
     label: {
-      ...padding['b-xs'],
+      ...atoms.pb_xs,
     },
   })
   return styles

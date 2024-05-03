@@ -48,7 +48,7 @@ export const ChooseBiometricLoginScreen = () => {
           <BiometricIlustration />
         </View>
 
-        <Space height="l" />
+        <Space height="lg" />
 
         <Text style={styles.biometricDescription}>{strings.biometricDescription}</Text>
       </View>
@@ -90,19 +90,19 @@ export const ChooseBiometricLoginScreen = () => {
           disabled={isLoading}
         />
 
-        <Space height="s" />
+        <Space height="sm" />
       </View>
     </SafeAreaView>
   )
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: theme.color['white-static'],
-      ...theme.padding['x-l'],
+      backgroundColor: color.white_static,
+      ...atoms.px_lg,
     },
     content: {
       flex: 1,
@@ -112,13 +112,13 @@ const useStyles = () => {
       alignItems: 'center',
     },
     biometricDescription: {
-      ...theme.typography['heading-3-medium'],
-      color: theme.color.gray.max,
+      ...atoms.heading_3_medium,
+      color: color.gray_cmax,
       textAlign: 'center',
-      ...theme.padding['x-l'],
+      ...atoms.px_lg,
     },
-    textOutlineButton: {color: theme.color.gray[900]},
-    enableButton: {backgroundColor: theme.color.primary[500]},
+    textOutlineButton: {color: color.gray_c900},
+    enableButton: {backgroundColor: color.primary_c500},
   })
 
   return {styles} as const

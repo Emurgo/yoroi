@@ -102,8 +102,7 @@ export const ShareQRCodeCard = ({content, title, isCopying, onLongPress, testId}
 
 const useStyles = () => {
   const {width: screenWidth, height: screenHeight} = useWindowDimensions()
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
 
   const heightBreakpointLarge = 800
   const cardSpacing = screenHeight > heightBreakpointLarge ? 32 : 16
@@ -112,7 +111,7 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     qrCode: {
-      backgroundColor: theme.color.gray.min,
+      backgroundColor: color.gray_cmin,
       padding: 10,
       borderRadius: 8,
     },
@@ -133,31 +132,31 @@ const useStyles = () => {
       gap: cardSpacing,
     },
     title: {
-      ...typography['heading-3-medium'],
-      color: color.gray.max,
+      ...atoms.heading_3_medium,
+      color: color.gray_cmax,
     },
     textAddress: {
       textAlign: 'center',
-      ...typography['body-2-m-medium'],
-      color: color.gray.max,
+      ...atoms.body_2_md_medium,
+      color: color.gray_cmax,
     },
     textShareAddress: {
       height: 32,
       textAlignVertical: 'center',
-      color: color.gray[900],
-      ...typography['button-2-m'],
+      color: color.gray_c900,
+      ...atoms.button_2_md,
       textTransform: 'uppercase',
       letterSpacing: 0.5,
     },
     copiedText: {
-      color: color.gray.min,
+      color: color.gray_cmin,
       textAlign: 'center',
       padding: 8,
-      ...typography['body-2-m-medium'],
+      ...atoms.body_2_md_medium,
     },
     isCopying: {
       position: 'absolute',
-      backgroundColor: color.gray.max,
+      backgroundColor: color.gray_cmax,
       alignItems: 'center',
       justifyContent: 'center',
       bottom: 60,
@@ -168,9 +167,9 @@ const useStyles = () => {
   })
 
   const colors = {
-    bgCard: color.gradients['blue-green'],
-    white: color.gray.min,
-    black: color.gray.max,
+    bgCard: color.bg_gradient_1,
+    white: color.gray_cmin,
+    black: color.gray_cmax,
   }
 
   return {styles, colors, qrSize} as const

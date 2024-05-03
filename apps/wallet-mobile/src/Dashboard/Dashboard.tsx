@@ -244,8 +244,7 @@ const messages = defineMessages({
 })
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
 
   const styles = StyleSheet.create({
     root: {
@@ -257,7 +256,7 @@ const useStyles = () => {
     },
     scrollView: {
       flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
     contentContainer: {
       paddingTop: 16,
@@ -269,13 +268,13 @@ const useStyles = () => {
     },
     actions: {
       flexDirection: 'row',
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
       padding: 16,
       borderTopLeftRadius: 8,
       borderTopRightRadius: 8,
       elevation: 1,
       shadowOpacity: 0.06,
-      shadowColor: color['black-static'],
+      shadowColor: color.black_static,
       shadowRadius: 6,
       shadowOffset: {width: 0, height: -8},
     },

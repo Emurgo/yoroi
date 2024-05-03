@@ -14,11 +14,11 @@ export const SafeArea = ({children, ...rest}: SafeAreaViewProps) => {
 const safeAreaEdges = ['bottom', 'left', 'right', 'bottom'] as const
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: theme.color['white-static'],
+      backgroundColor: color.white_static,
     },
   })
   return styles

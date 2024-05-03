@@ -25,8 +25,7 @@ export function NoNftsScreen({heading, message}: {heading?: ReactNode; message: 
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,
@@ -35,8 +34,8 @@ const useStyles = () => {
       flex: 1,
       textAlign: 'center',
 
-      ...theme.typography['heading-3-medium'],
-      color: color.gray.max,
+      ...atoms.heading_3_medium,
+      color: color.gray_cmax,
     },
 
     image: {

@@ -67,33 +67,33 @@ export const SingleOrMultipleAddressesModal = ({onConfirm}: Props) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
     modal: {
       flex: 1,
-      backgroundColor: theme.color['bottom-sheet-background'],
+      backgroundColor: color.gray_c200,
       alignItems: 'center',
       justifyContent: 'space-between',
     },
     buttonContainer: {
       alignSelf: 'stretch',
-      backgroundColor: theme.color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
     details: {
-      ...theme.typography['body-1-l-regular'],
+      ...atoms.body_1_lg_regular,
       justifyContent: 'center',
       textAlign: 'center',
     },
 
     button: {
-      backgroundColor: theme.color.primary[500],
+      backgroundColor: color.primary_c500,
     },
   })
 
   const colors = {
-    details: theme.color.gray[900],
-    selectMultipleInsteadTextColor: theme.color.primary[500],
+    details: color.gray_c900,
+    selectMultipleInsteadTextColor: color.primary_c500,
   }
 
   return {styles, colors} as const

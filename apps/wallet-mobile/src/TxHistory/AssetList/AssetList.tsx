@@ -91,19 +91,18 @@ const ExplorableAssetItem = ({wallet, amount, onPress}: ExplorableAssetItemProps
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     content: {
-      ...padding['t-l'],
-      ...padding['x-l'],
-      ...padding['b-s'],
+      ...atoms.pt_lg,
+      ...atoms.px_lg,
+      ...atoms.pb_sm,
     },
     assetList: {flex: 1},
     button: {
-      ...padding['m'],
-      backgroundColor: color.gray.min,
-      shadowColor: color.gray[100],
+      ...atoms.p_md,
+      backgroundColor: color.gray_cmin,
+      shadowColor: color.gray_c100,
       borderRadius: 8,
       elevation: 2,
       shadowOffset: {width: 0, height: -2},

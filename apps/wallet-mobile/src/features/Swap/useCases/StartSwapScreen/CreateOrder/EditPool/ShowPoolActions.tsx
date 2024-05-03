@@ -262,20 +262,19 @@ const useBold = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     flex: {flexDirection: 'row', alignItems: 'center'},
     between: {justifyContent: 'space-between'},
     modalText: {
       textAlign: 'left',
-      ...typography['body-1-l-regular'],
-      color: color.gray[900],
+      ...atoms.body_1_lg_regular,
+      color: color.gray_c900,
     },
     text: {
       textAlign: 'right',
-      ...typography['body-1-l-regular'],
-      color: color.gray[900],
+      ...atoms.body_1_lg_regular,
+      color: color.gray_c900,
       flexWrap: 'wrap',
       flex: 1,
     },
@@ -284,14 +283,14 @@ const useStyles = () => {
       flex: 1,
       justifyContent: 'space-between',
     },
-    change: {color: color.primary[500], ...typography['body-2-m-medium'], textTransform: 'uppercase'},
+    change: {color: color.primary_c500, ...atoms.body_2_md_medium, textTransform: 'uppercase'},
     bold: {
-      color: color.gray.max,
-      ...typography['body-1-l-regular'],
+      color: color.gray_cmax,
+      ...atoms.body_1_lg_regular,
     },
     bolder: {
-      color: color.gray.max,
-      ...typography['body-1-l-medium'],
+      color: color.gray_cmax,
+      ...atoms.body_1_lg_medium,
     },
   })
 

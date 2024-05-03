@@ -69,11 +69,11 @@ export const VerifyRecoveryPhraseScreen = () => {
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
       <StepperProgress currentStep={3} currentStepTitle={strings.stepVerifyRecoveryPhrase} totalSteps={4} />
 
-      <Space height="l" />
+      <Space height="lg" />
 
       <Text style={styles.title}>{strings.verifyRecoveryPhraseTitle(bold)}</Text>
 
-      <Space height="l" />
+      <Space height="lg" />
 
       <MnemonicInput
         onPress={removeLastEntry}
@@ -84,13 +84,13 @@ export const VerifyRecoveryPhraseScreen = () => {
 
       {isPhraseComplete && isLastWordValid() && (
         <>
-          <Space height="l" />
+          <Space height="lg" />
 
           <SuccessMessage />
         </>
       )}
 
-      <Space height="l" />
+      <Space height="lg" />
 
       <ScrollView bounces={false}>
         <WordBadges
@@ -103,14 +103,14 @@ export const VerifyRecoveryPhraseScreen = () => {
 
         {!isLastWordValid() && userEntries.length > 0 && (
           <>
-            <Space height="l" />
+            <Space height="lg" />
 
             <ErrorMessage />
           </>
         )}
       </ScrollView>
 
-      <Space height="l" />
+      <Space height="lg" />
 
       <View>
         <Button
@@ -124,7 +124,7 @@ export const VerifyRecoveryPhraseScreen = () => {
           }}
         />
 
-        <Space height="s" />
+        <Space height="sm" />
       </View>
     </SafeAreaView>
   )
@@ -137,7 +137,7 @@ const ErrorMessage = () => {
     <View style={styles.errorMessageContainer}>
       <AlertIllustration />
 
-      <Space width="s" />
+      <Space width="sm" />
 
       <Text style={styles.errorMessage}>{strings.verifyRecoveryPhraseErrorMessage}</Text>
     </View>
@@ -151,7 +151,7 @@ const SuccessMessage = () => {
     <View style={styles.successMessageContainer}>
       <Check2Illustration />
 
-      <Space width="s" />
+      <Space width="sm" />
 
       <Text style={styles.successMessage}>{strings.verifyRecoveryPhraseSuccessMessage}</Text>
     </View>
@@ -368,21 +368,21 @@ const useBold = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      ...theme.padding['x-l'],
+      ...atoms.px_lg,
       justifyContent: 'space-between',
-      backgroundColor: theme.color['white-static'],
+      backgroundColor: color.white_static,
     },
     title: {
-      ...theme.typography['body-1-l-regular'],
-      color: theme.color.gray[900],
+      ...atoms.body_1_lg_regular,
+      color: color.gray_c900,
     },
-    button: {backgroundColor: theme.color.primary[500]},
+    button: {backgroundColor: color.primary_c500},
     recoveryPhrase: {
-      ...theme.padding['xxs'],
+      ...atoms.p_2xs,
       minHeight: 182,
       borderRadius: 8,
       overflow: 'hidden',
@@ -390,7 +390,7 @@ const useStyles = () => {
     recoveryPhraseBackground: {
       borderRadius: 6,
       overflow: 'hidden',
-      backgroundColor: theme.color['white-static'],
+      backgroundColor: color.white_static,
       minHeight: 182,
     },
     recoveryPhraseOutline: {
@@ -404,8 +404,8 @@ const useStyles = () => {
       alignItems: 'center',
     },
     errorMessage: {
-      color: theme.color.magenta['500'],
-      ...theme.typography['body-2-m-regular'],
+      color: color.sys_magenta_c500,
+      ...atoms.body_2_md_regular,
     },
     successMessageContainer: {
       flexDirection: 'row',
@@ -413,14 +413,14 @@ const useStyles = () => {
       justifyContent: 'center',
     },
     successMessage: {
-      color: theme.color.gray.max,
-      ...theme.typography['body-1-l-medium'],
+      color: color.gray_cmax,
+      ...atoms.body_1_lg_medium,
     },
     errorBadge: {
-      color: theme.color.magenta['500'],
+      color: color.sys_magenta_c500,
     },
     errorBadgeBackground: {
-      backgroundColor: theme.color.magenta['100'],
+      backgroundColor: color.sys_magenta_c100,
     },
     words: {
       flexDirection: 'row',
@@ -433,14 +433,14 @@ const useStyles = () => {
       gap: 2,
     },
     wordBadgeContainerOutline: {
-      ...theme.padding['x-s'],
-      ...theme.padding['y-xs'],
+      ...atoms.px_xs,
+      ...atoms.py_xs,
       borderRadius: 8,
       overflow: 'hidden',
     },
     wordBadgeContainer: {
-      ...theme.padding['x-l'],
-      ...theme.padding['y-s'],
+      ...atoms.px_lg,
+      ...atoms.py_sm,
       borderRadius: 8,
       overflow: 'hidden',
     },
@@ -449,15 +449,15 @@ const useStyles = () => {
       flexWrap: 'wrap',
     },
     wordBadgeText: {
-      ...theme.typography['body-1-l-regular'],
-      color: theme.color.primary['600'],
+      ...atoms.body_1_lg_regular,
+      color: color.primary_c600,
     },
     usedWord: {
-      color: theme.color.primary['400'],
+      color: color.primary_c400,
     },
     usedWordBackground: {
       position: 'absolute',
-      backgroundColor: theme.color['white-static'],
+      backgroundColor: color.white_static,
       borderRadius: 6,
       left: 2,
       right: 2,
@@ -465,14 +465,14 @@ const useStyles = () => {
       bottom: 2,
     },
     bolder: {
-      ...theme.typography['body-1-l-medium'],
+      ...atoms.body_1_lg_medium,
     },
   })
 
   const colors = {
-    error: theme.color.magenta['500'],
-    gradientBlueGreen: theme.color.gradients['blue-green'],
-    gradientGreen: theme.color.gradients['green'],
+    error: color.sys_magenta_c500,
+    gradientBlueGreen: color.bg_gradient_1,
+    gradientGreen: color.bg_gradient_2,
   }
 
   return {styles, colors} as const

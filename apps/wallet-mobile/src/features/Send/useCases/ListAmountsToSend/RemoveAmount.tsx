@@ -18,10 +18,9 @@ export const RemoveAmountButton = ({onPress}: RemoveAmountButtonProps) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const colors = {
-    black: color['black-static'],
+    black: color.black_static,
   }
   return {colors}
 }

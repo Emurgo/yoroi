@@ -183,19 +183,18 @@ const CommonContent = ({onReadMore, showLogo}: {onReadMore?: () => void; showLog
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
     content: {
       alignItems: 'center',
       paddingHorizontal: 16,
     },
     text: {
-      ...typography['body-1-l-regular'],
+      ...atoms.body_1_lg_regular,
     },
     list: {
       flex: 1,
@@ -208,26 +207,26 @@ const useStyles = () => {
       alignItems: 'baseline',
     },
     link: {
-      color: color.primary[600],
+      color: color.primary_c600,
       textAlign: 'center',
     },
     title: {
-      ...typography['heading-3-medium'],
+      ...atoms.heading_3_medium,
       textAlign: 'center',
     },
     skip: {
       borderWidth: 0,
     },
     skipText: {
-      color: color.primary[900],
+      color: color.primary_c900,
     },
     tick: {
-      color: color.primary[700],
+      color: color.primary_c700,
       paddingRight: 8,
       fontSize: 16,
     },
     cross: {
-      color: color.magenta[500],
+      color: color.sys_magenta_c500,
       paddingRight: 8,
       fontSize: 16,
     },
@@ -240,13 +239,13 @@ const useStyles = () => {
       width: '100%',
       position: 'absolute',
       bottom: 0,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
       height: BOTTOM_BUTTON_ROW_HEIGHT,
       padding: 16,
     },
     borderTop: {
       borderTopWidth: 1,
-      borderTopColor: color.gray[500],
+      borderTopColor: color.gray_c500,
     },
   })
 

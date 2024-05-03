@@ -47,20 +47,19 @@ const shortenString = (text: string) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     row: {
       flexDirection: 'row',
       justifyContent: 'space-between',
     },
     serverName: {
-      ...typography['body-3-s-regular'],
-      color: color.gray[700],
+      ...atoms.body_3_sm_regular,
+      color: color.gray_c700,
     },
     address: {
-      ...typography['body-3-s-regular'],
-      color: color.gray[500],
+      ...atoms.body_3_sm_regular,
+      color: color.gray_c500,
     },
   })
 

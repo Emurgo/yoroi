@@ -37,7 +37,7 @@ export const PoolTransitionModal = ({
     <View style={styles.modal}>
       <Text style={styles.details}>{isActive ? strings.warning : strings.finalWarning}</Text>
 
-      <Space fill height="l" />
+      <Space fill height="lg" />
 
       <View style={[styles.card, isActive ? styles.border : styles.warningBorder]}>
         <Row>
@@ -79,11 +79,11 @@ export const PoolTransitionModal = ({
         </Text>
       </View>
 
-      <Space height="s" />
+      <Space height="sm" />
 
       <Icon.ArrowDown size={17} />
 
-      <Space height="s" />
+      <Space height="sm" />
 
       <View style={styles.card}>
         <LinearGradient
@@ -136,11 +136,11 @@ export const PoolTransitionModal = ({
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {atoms, color} = useTheme()
 
   const styles = StyleSheet.create({
     modal: {
-      backgroundColor: theme.color['bottom-sheet-background'],
+      backgroundColor: color.web_overlay,
       alignItems: 'center',
       flex: 1,
       justifyContent: 'flex-end',
@@ -148,17 +148,17 @@ const useStyles = () => {
     card: {
       borderRadius: 8,
       gap: 8,
-      ...theme.padding.l,
+      ...atoms.p_lg,
       width: '100%',
       overflow: 'hidden',
     },
     border: {
       borderWidth: 1,
-      borderColor: theme.color.gray['300'],
+      borderColor: color.gray_c300,
     },
     warningBorder: {
       borderWidth: 1,
-      borderColor: theme.color.magenta['500'],
+      borderColor: color.sys_magenta_c500,
     },
     poolTicker: {
       alignItems: 'center',
@@ -166,8 +166,8 @@ const useStyles = () => {
       gap: 8,
     },
     poolTickerText: {
-      ...theme.typography['body-1-l-regular'],
-      color: theme.color.primary[600],
+      ...atoms.body_1_lg_regular,
+      color: color.primary_c600,
     },
     pic: {
       width: 24,
@@ -175,25 +175,25 @@ const useStyles = () => {
       borderRadius: 100,
     },
     label: {
-      ...theme.typography['body-1-l-regular'],
-      color: theme.color.gray['600'],
+      ...atoms.body_1_lg_regular,
+      color: color.gray_c600,
     },
     currentValue: {
-      ...theme.typography['body-1-l-regular'],
-      color: theme.color.gray['max'],
+      ...atoms.body_1_lg_regular,
+      color: color.gray_cmax,
     },
     suggestedValue: {
-      ...theme.typography['body-1-l-medium'],
-      color: theme.color.gray['max'],
+      ...atoms.body_1_lg_medium,
+      color: color.gray_cmax,
     },
     warning: {
-      color: theme.color.magenta['500'],
+      color: color.sys_magenta_c500,
     },
     warningText: {
-      ...theme.typography['body-1-l-regular'],
+      ...atoms.body_1_lg_regular,
     },
     warningTimer: {
-      ...theme.typography['body-1-l-medium'],
+      ...atoms.body_1_lg_medium,
     },
     row: {
       width: '100%',
@@ -204,25 +204,27 @@ const useStyles = () => {
     },
     actions: {
       alignSelf: 'stretch',
-      backgroundColor: theme.color.gray.min,
+      backgroundColor: color.gray_cmin,
       gap: 4,
     },
     details: {
-      ...theme.typography['body-1-l-regular'],
-      color: theme.color.gray['900'],
+      ...atoms.body_1_lg_regular,
+      color: color.gray_c900,
       width: '100%',
     },
     outlineButton: {
-      color: theme.color.gray[900],
-      ...theme.typography['button-2-m'],
+      color: color.gray_c900,
+      ...atoms.button_2_md,
+      textTransform: 'none',
     },
     button: {
-      ...theme.typography['button-1-l'],
+      ...atoms.button_1_lg,
+      textTransform: 'none',
     },
   })
 
   const colors = {
-    backgroundGradientCard: theme.color.gradients['blue-green'],
+    backgroundGradientCard: color.bg_gradient_1,
   }
 
   return {styles, colors} as const

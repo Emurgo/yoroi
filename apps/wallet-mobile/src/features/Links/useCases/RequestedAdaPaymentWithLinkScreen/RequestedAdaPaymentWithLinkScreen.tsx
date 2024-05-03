@@ -76,25 +76,24 @@ const Message = ({message}: {message?: string}) =>
 const Actions = (props: ViewProps) => <View {...props} />
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
     actions: {
       flexDirection: 'row',
       justifyContent: 'space-between',
     },
     text: {
-      ...theme.typography['body-2-m-regular'],
-      color: theme.color.gray.max,
+      ...atoms.body_2_md_regular,
+      color: color.gray_cmax,
     },
   })
   const colors = {
-    danger: color.magenta[500],
-    warning: color.yellow[500],
+    danger: color.sys_magenta_c500,
+    warning: color.sys_orange_c500,
   }
   return {styles, colors}
 }

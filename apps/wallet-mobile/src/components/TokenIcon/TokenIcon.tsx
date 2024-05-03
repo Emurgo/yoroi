@@ -101,11 +101,10 @@ const isBase64 = (text: string) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     primary: {
-      backgroundColor: color.primary[600],
+      backgroundColor: color.primary_c600,
     },
     icon: {
       backgroundColor: 'transparent',
@@ -124,7 +123,7 @@ const useStyles = () => {
       justifyContent: 'center',
     },
     placeholder: {
-      backgroundColor: color.gray[100],
+      backgroundColor: color.gray_c100,
     },
     placeholderSmall: {
       width: 24,
@@ -133,7 +132,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    icon: color.gray[600],
+    icon: color.gray_c600,
   }
 
   return {styles, colors}

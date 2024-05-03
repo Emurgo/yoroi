@@ -23,16 +23,15 @@ export const TitledCard = ({title, children, variant, testID}: ExternalProps) =>
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography, padding} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     title: {
-      ...typography['body-1-l-regular'],
-      color: color.gray[900],
+      ...atoms.body_1_lg_regular,
+      color: color.gray_c900,
       justifyContent: 'center',
     },
     content: {
-      ...padding['m'],
+      ...atoms.p_md,
       flexDirection: 'row',
       borderRadius: 8,
       elevation: 2,
@@ -40,10 +39,10 @@ const useStyles = () => {
       shadowRadius: 12,
       shadowOffset: {width: 0, height: 2},
       shadowColor: 'rgba(0, 0, 0, 0.06)',
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
     poolInfoContent: {
-      ...padding['none'],
+      ...atoms.p_0,
       flexDirection: 'column',
     },
   })
