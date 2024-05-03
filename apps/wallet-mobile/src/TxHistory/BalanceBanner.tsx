@@ -15,7 +15,7 @@ export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
   const wallet = useSelectedWallet()
   const styles = useStyles()
   const primaryBalance = usePortfolioPrimaryBalance({wallet})
-  const {isPrivacyOff, togglePrivacyMode, privacyPlaceholder} = usePrivacyMode()
+  const {togglePrivacyMode} = usePrivacyMode()
 
   return (
     <View>
@@ -29,7 +29,7 @@ export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
 
       <TouchableOpacity onPress={() => togglePrivacyMode()} style={styles.button}>
         <CenteredRow>
-          <Balance isPrivacyOff={isPrivacyOff} amount={primaryBalance} privacyPlaceholder={privacyPlaceholder} />
+          <Balance amount={primaryBalance} />
         </CenteredRow>
 
         <CenteredRow>
@@ -40,16 +40,17 @@ export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
   )
 })
 
-type BalanceProps = {isPrivacyOff: boolean; amount: Portfolio.Token.Amount; privacyPlaceholder: string}
-const Balance = ({isPrivacyOff, amount, privacyPlaceholder}: BalanceProps) => {
+type BalanceProps = {amount: Portfolio.Token.Amount; ignorePrivacy?: boolean}
+const Balance = ({amount, ignorePrivacy}: BalanceProps) => {
+  const {isPrivacyOff, privacyPlaceholder} = usePrivacyMode()
   const styles = useStyles()
 
   const balance = React.useMemo(
     () =>
-      !isPrivacyOff
+      isPrivacyOff || ignorePrivacy
         ? amountFormatter({template: '{{value}} {{ticker}}'})(amount)
         : amountFormatter({template: `${privacyPlaceholder} {{ticker}}`})(amount),
-    [amount, isPrivacyOff, privacyPlaceholder],
+    [amount, ignorePrivacy, isPrivacyOff, privacyPlaceholder],
   )
 
   return (

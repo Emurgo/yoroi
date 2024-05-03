@@ -10,14 +10,14 @@ import {usePrivacyMode} from '../features/Settings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../features/WalletManager/Context'
 import globalMessages from '../i18n/global-messages'
 
-export const LockedDeposit = () => {
+export const LockedDeposit = ({ignorePrivacy = false}: {ignorePrivacy?: boolean}) => {
   const wallet = useSelectedWallet()
   const {isPrivacyOff, privacyPlaceholder} = usePrivacyMode()
   const {lockedAsStorageCost} = usePortfolioPrimaryBreakdown({wallet})
 
   const amount = React.useMemo(
     () =>
-      !isPrivacyOff
+      isPrivacyOff || ignorePrivacy
         ? amountFormatter({template: '{{value}} {{ticker}}'})({
             quantity: lockedAsStorageCost,
             info: wallet.portfolioPrimaryTokenInfo,
@@ -26,7 +26,7 @@ export const LockedDeposit = () => {
             quantity: 0n,
             info: wallet.portfolioPrimaryTokenInfo,
           }),
-    [isPrivacyOff, lockedAsStorageCost, privacyPlaceholder, wallet],
+    [ignorePrivacy, isPrivacyOff, lockedAsStorageCost, privacyPlaceholder, wallet.portfolioPrimaryTokenInfo],
   )
 
   return <FormattedAmount amount={amount} />
