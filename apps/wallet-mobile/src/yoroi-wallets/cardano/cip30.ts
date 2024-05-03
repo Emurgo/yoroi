@@ -7,7 +7,7 @@ import {RawUtxo} from '../types'
 import {Utxos} from '../utils'
 import {CardanoMobile} from '../wallets'
 import {toAssetNameHex, toPolicyId} from './api'
-import {identifierToCardanoAsset} from './utils'
+import {identifierToCardanoAsset, normalizeToAddress} from './utils'
 
 export async function assetToRustMultiasset(remoteAssets: UtxoAsset[]): Promise<CSL.MultiAsset> {
   const groupedAssets = remoteAssets.reduce((res, a) => {
@@ -38,7 +38,9 @@ export async function cardanoUtxoFromRemoteFormat(u: RemoteUnspentOutput): Promi
   if ((u.assets || []).length > 0) {
     await value.setMultiasset(await assetToRustMultiasset([...u.assets]))
   }
-  const output = await CardanoMobile.TransactionOutput.new(await CardanoMobile.Address.fromHex(u.receiver), value)
+  const receiver = await normalizeToAddress(u.receiver)
+  if (!receiver) throw new Error('Invalid receiver')
+  const output = await CardanoMobile.TransactionOutput.new(receiver, value)
   return CardanoMobile.TransactionUnspentOutput.new(input, output)
 }
 

@@ -70,7 +70,7 @@ import {
   YoroiWallet,
 } from '../types'
 import {yoroiUnsignedTx} from '../unsignedTx'
-import {deriveRewardAddressHex, toRecipients} from '../utils'
+import {deriveRewardAddressHex, normalizeToAddress, toRecipients} from '../utils'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
 import {utxosMaker} from '../utxoManager/utxos'
 import {makeKeys} from './makeKeys'
@@ -944,6 +944,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     }
 
     async CIP30getUtxos(value?: string, pagination?: {page: number; limit: number}) {
+      // TODO: 1) Add try-catch. 2) If amount can't be reached, return null
       const allUtxos = this.utxos
       const remoteUnspentOutputs: RemoteUnspentOutput[] = allUtxos.map((utxo) => ({
         txHash: utxo.tx_hash,
@@ -955,6 +956,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       }))
 
       const valueStr = value?.trim() ?? ''
+
       if (valueStr.length === 0) {
         const selectedUtxos = paginate(remoteUnspentOutputs, pagination)
         return Promise.all(selectedUtxos.map((o) => cardanoUtxoFromRemoteFormat(o)))
@@ -974,7 +976,9 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         }
       }
 
-      const unsignedTx = await this.createUnsignedTx([{address: this.rewardAddressHex, amounts}])
+      const unsignedTx = await this.createUnsignedTx([
+        {address: await (await normalizeToAddress(this.rewardAddressHex))?.toBech32(undefined)!, amounts},
+      ])
       const requiredUtxos = await findUtxosInUnsignedTx(unsignedTx, remoteUnspentOutputs)
       const selectedUtxos = paginate(requiredUtxos, pagination)
       return Promise.all(selectedUtxos.map((o) => cardanoUtxoFromRemoteFormat(o)))
