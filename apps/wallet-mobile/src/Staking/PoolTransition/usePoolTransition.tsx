@@ -1,3 +1,4 @@
+import {init} from '@emurgo/cross-csl-mobile'
 import {PoolInfoApi} from '@emurgo/yoroi-lib'
 import {useNavigation} from '@react-navigation/native'
 import BigNumber from 'bignumber.js'
@@ -38,13 +39,13 @@ export const usePoolTransition = () => {
   const poolTransitionQuery = useQuery({
     enabled: isStaked,
     retry: false,
-    staleTime: 20 * 1000,
+    staleTime: Infinity,
     queryKey: [wallet.id, 'poolTransition', currentPoolId],
-    queryFn: () => (features.poolTransition ? poolInfoApi.getTransition(currentPoolId) : null),
+    queryFn: () => (features.poolTransition ? poolInfoApi.getTransition(currentPoolId, init) : null),
   })
 
   const poolTransition = poolTransitionQuery.data ?? null
-  const poolId = poolTransition?.suggested.id ?? ''
+  const poolId = poolTransition?.suggested.hash ?? ''
 
   const navigateToUpdate = React.useCallback(async () => {
     try {
