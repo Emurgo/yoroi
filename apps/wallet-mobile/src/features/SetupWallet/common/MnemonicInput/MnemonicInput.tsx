@@ -23,6 +23,7 @@ export const MnemonicInput = ({
   onFocus,
   mnenonicRefs,
   mnemonic,
+  onError,
 }: {
   length: number
   isValidPhrase: boolean
@@ -36,6 +37,7 @@ export const MnemonicInput = ({
   onFocus: (index: number) => void
   mnenonicRefs: React.RefObject<MnemonicWordInputRef>[]
   mnemonic: string
+  onError: (error: string, index: number) => void
 }) => {
   const strings = useStrings()
   const {styles} = useStyles()
@@ -53,6 +55,7 @@ export const MnemonicInput = ({
         suggestedWords={suggestedWords}
         setSuggestedWords={setSuggestedWords}
         onFocus={onFocus}
+        onError={onError}
       />
 
       <Space height="l" />
@@ -106,6 +109,7 @@ type MnemonicWordsInputProps = {
   suggestedWords: Array<string>
   setSuggestedWords: (suggestedWord: Array<string>) => void
   onFocus: (index: number) => void
+  onError: (error: string, index: number) => void
 }
 const MnemonicWordsInput = ({
   onSelect,
@@ -115,6 +119,7 @@ const MnemonicWordsInput = ({
   suggestedWords,
   setSuggestedWords,
   onFocus,
+  onError,
 }: MnemonicWordsInputProps) => {
   const {styles} = useStyles()
   const scrollView = useScrollView()
@@ -156,6 +161,9 @@ const MnemonicWordsInput = ({
                 mnenonicRefs[index - 1]?.current?.focus()
               }
             }}
+            onError={(error: string) => {
+              onError(error, index)
+            }}
           />
         </View>
       ))}
@@ -174,6 +182,7 @@ type MnemonicWordInputProps = {
   index: number
   suggestedWords: Array<string>
   setSuggestedWords: (suggestedWord: Array<string>) => void
+  onError: (error: string) => void
 }
 
 const MnemonicWordInput = React.forwardRef<MnemonicWordInputRef, MnemonicWordInputProps>(
@@ -187,22 +196,22 @@ const MnemonicWordInput = React.forwardRef<MnemonicWordInputRef, MnemonicWordInp
       index,
       suggestedWords,
       setSuggestedWords,
+      onError,
     },
     ref,
   ) => {
     const inputRef = React.useRef<RNTextInput>(null)
     const {styles} = useStyles()
     const [word, setWord] = React.useState(mnemonicSelectedWords[index])
-    const [error, setError] = React.useState('')
+    const [error, setError] = React.useState(false)
 
     React.useImperativeHandle(
       ref,
       () => ({
         selectWord: setWord,
-        word: word,
         focus: () => inputRef.current?.focus(),
       }),
-      [word],
+      [],
     )
 
     const onSubmitEditing = React.useCallback(() => {
@@ -226,11 +235,19 @@ const MnemonicWordInput = React.forwardRef<MnemonicWordInputRef, MnemonicWordInp
           setSuggestedWords(suggestedWords)
 
           if (suggestedWords.length <= 0) {
-            setError('error')
-          } else if (error !== '') setError('')
-        } else setSuggestedWords([])
+            setError(true)
+            onError('error')
+          } else {
+            setError(false)
+            onError('')
+          }
+        } else {
+          setSuggestedWords([])
+          setError(false)
+          onError('')
+        }
       },
-      [error, onSubmitEditing, setSuggestedWords],
+      [onError, onSubmitEditing, setSuggestedWords],
     )
 
     return (
@@ -255,7 +272,7 @@ const MnemonicWordInput = React.forwardRef<MnemonicWordInputRef, MnemonicWordInp
         selectTextOnFocus
         noHelper
         errorDelay={0}
-        errorText={error}
+        errorText={error ? 'error' : ''}
         autoCorrect={false}
         spellCheck={false}
         autoComplete="off"

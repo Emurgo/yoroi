@@ -29,7 +29,6 @@ import {useStrings} from '../../common/useStrings'
 
 export type MnemonicWordInputRef = {
   focus: () => void
-  word: string
   selectWord: (matchingWord: string) => void
 }
 
@@ -57,6 +56,24 @@ export const RestoreWalletScreen = () => {
   const [mnemonicSelectedWords, setMnemonicSelectedWords] = React.useState<Array<string>>(
     Array.from({length: mnemonicType}).map(() => ''),
   )
+  const [inputErrorsIndexes, setInputErrorsIndexes] = React.useState<Array<number>>([])
+  const hasFocusedInputError = inputErrorsIndexes.find((index) => index === focusedIndex) !== undefined
+
+  const addInputErrorIndex = (indexToAdd: number) => {
+    const newInputErrors = [...inputErrorsIndexes, indexToAdd]
+    setInputErrorsIndexes(newInputErrors)
+  }
+
+  const removeInputErrorIndex = (indexToRemove: number) => {
+    const newInputErrors = inputErrorsIndexes.filter((index) => index !== indexToRemove)
+    setInputErrorsIndexes(newInputErrors)
+  }
+
+  const onError = (error: string, index: number) => {
+    if (!isEmptyString(error)) addInputErrorIndex(index)
+    else removeInputErrorIndex(index)
+  }
+
   const mnenonicRefs = React.useRef(mnemonicSelectedWords.map(() => React.createRef<MnemonicWordInputRef>())).current
 
   const onSelect = (index: number, word: string) => {
@@ -183,14 +200,17 @@ export const RestoreWalletScreen = () => {
             onFocus={onFocus}
             mnemonic={mnemonic}
             mnenonicRefs={mnenonicRefs}
+            onError={onError}
           />
         </ScrollView>
 
         {mnemonic !== '' && isValidPhrase && <NextButton onPress={handleOnNext} />}
 
-        {suggestedWords.length > 0 ? (
+        {suggestedWords.length > 0 && !hasFocusedInputError && (
           <WordSuggestionList data={suggestedWords} index={focusedIndex} onSelect={onSelect} />
-        ) : (
+        )}
+
+        {suggestedWords.length === 0 && hasFocusedInputError && (
           <View style={styles.suggestionArea}>
             <Text style={styles.suggestionMessage}>{strings.wordNotFound}</Text>
           </View>
@@ -380,12 +400,12 @@ const useStyles = () => {
       borderColor: theme.color.gray[200],
       borderTopWidth: 1,
       alignItems: 'center',
+      paddingTop: 30,
+      paddingBottom: 30,
     },
     suggestionMessage: {
       ...theme.typography['body-1-l-regular'],
       textAlign: 'center',
-      paddingTop: 24,
-      paddingBottom: 24,
     },
   })
 
