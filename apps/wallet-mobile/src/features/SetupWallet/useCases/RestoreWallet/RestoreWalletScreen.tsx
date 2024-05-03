@@ -57,7 +57,22 @@ export const RestoreWalletScreen = () => {
     Array.from({length: mnemonicType}).map(() => ''),
   )
   const [inputErrorsIndexes, setInputErrorsIndexes] = React.useState<Array<number>>([])
-  const hasFocusedInputError = inputErrorsIndexes[focusedIndex] !== undefined
+  const hasFocusedInputError = inputErrorsIndexes.find((index) => index === focusedIndex) !== undefined
+
+  const addInputErrorIndex = (indexToAdd: number) => {
+    const newInputErrors = [...inputErrorsIndexes, indexToAdd]
+    setInputErrorsIndexes(newInputErrors)
+  }
+
+  const removeInputErrorIndex = (indexToRemove: number) => {
+    const newInputErrors = inputErrorsIndexes.filter((index) => index !== indexToRemove)
+    setInputErrorsIndexes(newInputErrors)
+  }
+
+  const onError = (error: string, index: number) => {
+    if (!isEmptyString(error)) addInputErrorIndex(index)
+    else removeInputErrorIndex(index)
+  }
 
   const mnenonicRefs = React.useRef(mnemonicSelectedWords.map(() => React.createRef<MnemonicWordInputRef>())).current
 
@@ -159,16 +174,6 @@ export const RestoreWalletScreen = () => {
     walletMetas,
   ])
 
-  const addInputErrorIndex = (indexToAdd: number) => {
-    const newInputErrors = [...inputErrorsIndexes, indexToAdd]
-    setInputErrorsIndexes(newInputErrors)
-  }
-
-  const removeInputErrorIndex = (indexToRemove: number) => {
-    const newInputErrors = inputErrorsIndexes.filter((index) => index !== indexToRemove)
-    setInputErrorsIndexes(newInputErrors)
-  }
-
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
       <KeyboardAvoidingView style={{flex: 1}}>
@@ -195,8 +200,7 @@ export const RestoreWalletScreen = () => {
             onFocus={onFocus}
             mnemonic={mnemonic}
             mnenonicRefs={mnenonicRefs}
-            addInputErrorIndex={addInputErrorIndex}
-            removeInputErrorIndex={removeInputErrorIndex}
+            onError={onError}
           />
         </ScrollView>
 

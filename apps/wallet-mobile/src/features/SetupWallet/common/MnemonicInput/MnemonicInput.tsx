@@ -23,8 +23,7 @@ export const MnemonicInput = ({
   onFocus,
   mnenonicRefs,
   mnemonic,
-  addInputErrorIndex,
-  removeInputErrorIndex,
+  onError,
 }: {
   length: number
   isValidPhrase: boolean
@@ -38,8 +37,7 @@ export const MnemonicInput = ({
   onFocus: (index: number) => void
   mnenonicRefs: React.RefObject<MnemonicWordInputRef>[]
   mnemonic: string
-  addInputErrorIndex: (index: number) => void
-  removeInputErrorIndex: (index: number) => void
+  onError: (error: string, index: number) => void
 }) => {
   const strings = useStrings()
   const {styles} = useStyles()
@@ -57,8 +55,7 @@ export const MnemonicInput = ({
         suggestedWords={suggestedWords}
         setSuggestedWords={setSuggestedWords}
         onFocus={onFocus}
-        addInputErrorIndex={addInputErrorIndex}
-        removeInputErrorIndex={removeInputErrorIndex}
+        onError={onError}
       />
 
       <Space height="l" />
@@ -112,8 +109,7 @@ type MnemonicWordsInputProps = {
   suggestedWords: Array<string>
   setSuggestedWords: (suggestedWord: Array<string>) => void
   onFocus: (index: number) => void
-  addInputErrorIndex: (index: number) => void
-  removeInputErrorIndex: (index: number) => void
+  onError: (error: string, index: number) => void
 }
 const MnemonicWordsInput = ({
   onSelect,
@@ -123,8 +119,7 @@ const MnemonicWordsInput = ({
   suggestedWords,
   setSuggestedWords,
   onFocus,
-  addInputErrorIndex,
-  removeInputErrorIndex,
+  onError,
 }: MnemonicWordsInputProps) => {
   const {styles} = useStyles()
   const scrollView = useScrollView()
@@ -167,8 +162,7 @@ const MnemonicWordsInput = ({
               }
             }}
             onError={(error: string) => {
-              if (!isEmptyString(error)) addInputErrorIndex(index)
-              else removeInputErrorIndex(index)
+              onError(error, index)
             }}
           />
         </View>
@@ -243,6 +237,9 @@ const MnemonicWordInput = React.forwardRef<MnemonicWordInputRef, MnemonicWordInp
           if (suggestedWords.length <= 0) {
             setError('error')
             onError('error')
+          } else {
+            setError('')
+            onError('')
           }
         } else {
           setSuggestedWords([])
