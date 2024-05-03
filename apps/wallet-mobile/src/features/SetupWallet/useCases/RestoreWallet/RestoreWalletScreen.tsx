@@ -69,9 +69,12 @@ export const RestoreWalletScreen = () => {
     setInputErrorsIndexes(newInputErrors)
   }
 
-  const onError = (error: string, index: number) => {
-    if (!isEmptyString(error)) addInputErrorIndex(index)
-    else removeInputErrorIndex(index)
+  const onError = (index: number) => {
+    addInputErrorIndex(index)
+  }
+
+  const onClearError = (index: number) => {
+    removeInputErrorIndex(index)
   }
 
   const mnenonicRefs = React.useRef(mnemonicSelectedWords.map(() => React.createRef<MnemonicWordInputRef>())).current
@@ -79,7 +82,6 @@ export const RestoreWalletScreen = () => {
   const onSelect = (index: number, word: string) => {
     const newWords = [...mnemonicSelectedWords]
     newWords[index] = word
-    setSuggestedWords([])
     setMnemonicSelectedWords(newWords)
     mnenonicRefs[index].current?.selectWord(isEmptyString(word) ? '' : word)
 
@@ -114,6 +116,7 @@ export const RestoreWalletScreen = () => {
   }
 
   const onFocus = (index: number) => {
+    setSuggestedWords([])
     setFocusedIndex(index)
   }
 
@@ -201,6 +204,7 @@ export const RestoreWalletScreen = () => {
             mnemonic={mnemonic}
             mnenonicRefs={mnenonicRefs}
             onError={onError}
+            onClearError={onClearError}
           />
         </ScrollView>
 
