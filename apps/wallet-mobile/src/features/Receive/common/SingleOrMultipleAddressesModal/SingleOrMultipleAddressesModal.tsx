@@ -72,7 +72,6 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     modal: {
       flex: 1,
-      backgroundColor: color.gray_c200,
       alignItems: 'center',
       justifyContent: 'space-between',
     },
