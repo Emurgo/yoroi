@@ -27,6 +27,7 @@ type Resolver = {
     getUnusedAddresses: ResolvableMethod<string[]>
     getUtxos: ResolvableMethod<string[]>
     getCollateral: ResolvableMethod<string[] | null>
+    submitTx: ResolvableMethod<string>
   }
 }
 
@@ -49,6 +50,19 @@ export const resolver: Resolver = {
     return hasWalletAcceptedConnection(context)
   },
   api: {
+    submitTx: async (params: unknown, context: Context) => {
+      assertOriginsMatch(context)
+      await assertWalletAcceptedConnection(context)
+      if (
+        !isRecord(params) ||
+        !isKeyOf('args', params) ||
+        !Array.isArray(params.args) ||
+        typeof params.args[0] !== 'string'
+      ) {
+        throw new Error('Invalid params')
+      }
+      return context.wallet.submitTx(params.args[0])
+    },
     getCollateral: async (params: unknown, context: Context) => {
       // offer to reorganise transactions if possible
       // check if collateral is less than or equal to 5 ADA
@@ -217,6 +231,7 @@ export type ResolverWallet = {
   getRewardAddresses: () => Promise<string[]>
   getUtxos: (value?: string, pagination?: Pagination) => Promise<string[]>
   getCollateral: (value?: string) => Promise<string[] | null>
+  submitTx: (cbor: string) => Promise<string>
 }
 
 type Pagination = {

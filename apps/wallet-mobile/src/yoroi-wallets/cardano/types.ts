@@ -105,7 +105,7 @@ export type YoroiWallet = {
   createUnsignedTx(entries: YoroiEntry[], metadata?: Array<CardanoTypes.TxMetadata>): Promise<YoroiUnsignedTx>
   signTxWithLedger(request: YoroiUnsignedTx, useUSB: boolean): Promise<YoroiSignedTx>
   signTx(signRequest: YoroiUnsignedTx, rootKey: string): Promise<YoroiSignedTx>
-  submitTransaction(signedTx: string): Promise<[]>
+  submitTransaction(signedTx: string): Promise<void>
 
   // Voting
   createVotingRegTx(
@@ -199,6 +199,7 @@ export type YoroiWallet = {
   CIP30getRewardAddresses(): Promise<string[]>
   CIP30getUtxos(value?: string, paginate?: {page: number; limit: number}): Promise<TransactionUnspentOutput[] | null>
   CIP30getCollateral(value?: string): Promise<TransactionUnspentOutput[] | null>
+  CIP30submitTx(cbor: string): Promise<string>
 }
 
 export const isYoroiWallet = (wallet: unknown): wallet is YoroiWallet => {

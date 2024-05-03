@@ -1007,7 +1007,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     }
 
     async CIP30getCollateral(value?: string) {
-      console.log('CIP30getCollateral', value)
       const valueStr = value?.trim() ?? collateralConfig.minLovelace.toString()
       const valueNum = new BigNumber(valueStr)
 
@@ -1020,7 +1019,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       // if has collateral and requested collateral is lower or equal to current collateral
       // return current collateral
       if (currentCollateral.utxo && valueNum.lte(currentCollateral.utxo.amount)) {
-        console.log('CIP30getCollateral: return current collateral')
         const utxo = await cardanoUtxoFromRemoteFormat(rawUtxoToRemoteUnspentOutput(currentCollateral.utxo))
         return [utxo]
       }
@@ -1028,18 +1026,23 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       // if can draw collateral in one utxo, use the utxo as a collateral
       const oneUtxoCollateral = await this._drawCollateralInOneUtxo(asQuantity(valueNum))
       if (oneUtxoCollateral) {
-        console.log('CIP30getCollateral: draw collateral in one utxo')
         return [oneUtxoCollateral]
       }
 
       // if can draw collateral in multiple utxos, use all required utxos
       const multipleUtxosCollateral = await this._drawCollateralInMultipleUtxos(asQuantity(valueNum))
       if (multipleUtxosCollateral && multipleUtxosCollateral.length > 0) {
-        console.log('CIP30getCollateral: draw collateral in multiple utxos')
         return multipleUtxosCollateral
       }
 
       return null
+    }
+
+    async CIP30submitTx(cbor: string) {
+      const base64 = Buffer.from(cbor, 'hex').toString('base64')
+      const txId = await Cardano.calculateTxId(base64, 'base64')
+      await this.submitTransaction(base64)
+      return txId
     }
 
     async signSwapCancellationWithLedger(cbor: string, useUSB: boolean): Promise<void> {
@@ -1134,9 +1137,8 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       return this.cardanoApi.getProtocolParams()
     }
 
-    async submitTransaction(signedTx: string) {
-      const response: any = await legacyApi.submitTransaction(signedTx, BACKEND)
-      return response as any
+    async submitTransaction(base64SignedTx: string) {
+      await legacyApi.submitTransaction(base64SignedTx, BACKEND)
     }
 
     private async syncUtxos() {

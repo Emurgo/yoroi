@@ -66,6 +66,7 @@ export const createDappConnector = (appStorage: App.Storage, wallet: YoroiWallet
     getBalance: (tokenId) => wallet.getBalance(tokenId),
     getChangeAddress: () => wallet.CIP30getChangeAddress(),
     getRewardAddresses: () => wallet.CIP30getRewardAddresses(),
+    submitTx: async (cbor) => wallet.CIP30submitTx(cbor),
     getCollateral: async (value) => {
       // TODO: Move serialisation out of here
       const result = await wallet.CIP30getCollateral(value)
