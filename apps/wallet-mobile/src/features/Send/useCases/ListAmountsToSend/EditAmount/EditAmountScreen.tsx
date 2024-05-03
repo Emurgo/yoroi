@@ -6,6 +6,7 @@ import * as React from 'react'
 import {ScrollView, StyleSheet, Text, TouchableOpacity, View, ViewProps} from 'react-native'
 
 import {Button, KeyboardAvoidingView, Spacer, TextInput} from '../../../../../components'
+import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
 import {useLanguage} from '../../../../../i18n'
 import {Logger} from '../../../../../yoroi-wallets/logging'
 import {editedFormatter, pastedFormatter} from '../../../../../yoroi-wallets/utils'
@@ -96,7 +97,7 @@ export const EditAmountScreen = () => {
           <AmountInput onChange={onChangeQuantity} value={inputValue} ticker={amount.info.ticker} />
 
           <Center>
-            {/* {isPrimary && <PairedBalance amount={{tokenId: tokenInfo.id, quantity}} />} */}
+            {isPrimary && <PairedBalance amount={amount} privacyPlaceholder="" isPrivacyOff />}
 
             <Spacer height={22} />
 

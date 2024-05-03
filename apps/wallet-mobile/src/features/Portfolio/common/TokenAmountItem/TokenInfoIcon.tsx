@@ -1,3 +1,4 @@
+import {isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Chain, Portfolio} from '@yoroi/types'
 import {Image} from 'expo-image'
@@ -7,13 +8,6 @@ import {StyleSheet, View} from 'react-native'
 import {Icon} from '../../../../components/Icon'
 import {isEmptyString} from '../../../../utils'
 
-const headers = {
-  Accept: 'image/webp',
-} as const
-
-const blurhash =
-  '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj['
-
 type TokenInfoIconProps = {
   info: Portfolio.Token.Info
   network: Chain.Network
@@ -21,8 +15,9 @@ type TokenInfoIconProps = {
 }
 export const TokenInfoIcon = React.memo(({info, network, size = 'md'}: TokenInfoIconProps) => {
   const {styles} = useStyles()
+  const [isLoading, setIsLoading] = React.useState(false)
 
-  if (info.nature === Portfolio.Token.Nature.Primary) return <PrimaryIcon size={size} />
+  if (isPrimaryToken(info)) return <PrimaryIcon size={size} />
 
   if (!isEmptyString(info.icon)) {
     return (
@@ -30,6 +25,7 @@ export const TokenInfoIcon = React.memo(({info, network, size = 'md'}: TokenInfo
         source={{uri: `data:image/png;base64,${info.icon}`}}
         style={[size === 'sm' ? styles.iconSmall : styles.iconMedium]}
         placeholder={blurhash}
+        onLoad={() => setIsLoading(false)}
       />
     )
   }
@@ -37,8 +33,16 @@ export const TokenInfoIcon = React.memo(({info, network, size = 'md'}: TokenInfo
   const [policy, name] = info.id.split('.')
   const uri = `https://${network}.processed-media.yoroiwallet.com/${policy}/${name}?width=64&height=64&kind=metadata&fit=cover`
 
+  if (isLoading) return <TokenIconPlaceholder size={size} />
+
   return (
-    <Image source={{uri, headers}} contentFit="cover" style={[size === 'sm' ? styles.iconSmall : styles.iconMedium]} />
+    <Image
+      source={{uri, headers}}
+      contentFit="cover"
+      style={[size === 'sm' ? styles.iconSmall : styles.iconMedium]}
+      onLoadStart={() => setIsLoading(true)}
+      onLoadEnd={() => setIsLoading(false)}
+    />
   )
 })
 
@@ -59,6 +63,13 @@ export const TokenIconPlaceholder = ({size = 'md'}: {size?: 'sm' | 'md'}) => {
     </View>
   )
 }
+
+const headers = {
+  Accept: 'image/webp',
+} as const
+
+const blurhash =
+  '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj['
 
 const useStyles = () => {
   const {color} = useTheme()

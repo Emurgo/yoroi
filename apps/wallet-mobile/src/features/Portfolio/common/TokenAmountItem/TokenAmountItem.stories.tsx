@@ -1,5 +1,6 @@
 import {storiesOf} from '@storybook/react-native'
 import {tokenMocks} from '@yoroi/portfolio'
+import {Chain} from '@yoroi/types'
 import React from 'react'
 import {Text, View} from 'react-native'
 
@@ -20,7 +21,7 @@ storiesOf('TokenAmountItem', module).add('Gallery', () => (
 
         <TokenAmountItem
           privacyPlaceholder="-"
-          isMainnet={true}
+          network={Chain.Network.Mainnet}
           isPrivacyOff={false}
           amount={primaryAmount}
           style={{backgroundColor: 'white', padding: 16, borderRadius: 8}}
@@ -32,7 +33,7 @@ storiesOf('TokenAmountItem', module).add('Gallery', () => (
 
         <TokenAmountItem
           privacyPlaceholder="-"
-          isMainnet={true}
+          network={Chain.Network.Mainnet}
           isPrivacyOff={false}
           amount={secondaryAmount}
           style={{backgroundColor: 'white', padding: 16, borderRadius: 8}}

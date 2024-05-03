@@ -8,12 +8,12 @@ import React from 'react'
 import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Spacer, Text} from '../../../../../components'
-import {NftImageGallery} from '../../../../../components/NftImageGallery'
 import {useMetrics} from '../../../../../metrics/metricsManager'
 import {TxHistoryRouteNavigation} from '../../../../../navigation'
 import {useSearch, useSearchOnNavBar} from '../../../../../Search/SearchContext'
 import {limitOfSecondaryAmountsPerTx} from '../../../../../yoroi-wallets/contants'
 import {usePortfolioBalances} from '../../../../Portfolio/common/hooks/usePortfolioBalances'
+import {MediaGallery} from '../../../../Portfolio/common/MediaGallery/MediaGallery'
 import {TokenAmountItem} from '../../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
 import {useSelectedWallet} from '../../../../WalletManager/Context'
 import {useOverridePreviousSendTxRoute} from '../../../common/navigation'
@@ -151,8 +151,8 @@ const ListSpendableNfts = ({
   }
 
   return (
-    <NftImageGallery
-      nfts={spendableAmounts}
+    <MediaGallery
+      amounts={spendableAmounts}
       onRefresh={() => undefined}
       onSelect={handleOnSelect}
       readOnly={!canAddAmount}
