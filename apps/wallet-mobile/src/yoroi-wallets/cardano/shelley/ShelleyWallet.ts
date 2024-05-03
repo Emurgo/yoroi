@@ -994,6 +994,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     }
 
     private async _drawCollateralInMultipleUtxos(quantity: Balance.Quantity) {
+      // TODO: use only minimum required utxos
       const possibleUtxos = findCollateralCandidates(this.utxos, {
         maxLovelace: collateralConfig.maxLovelace,
         minLovelace: asQuantity('0'),
