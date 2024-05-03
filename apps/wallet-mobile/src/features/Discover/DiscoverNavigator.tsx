@@ -1,6 +1,6 @@
 import {createStackNavigator} from '@react-navigation/stack'
 import {useAsyncStorage} from '@yoroi/common'
-import {DappConnectorProvider} from '@yoroi/dapp-connector'
+import {DappConnectorProvider, DappConnector} from '@yoroi/dapp-connector'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 
@@ -13,6 +13,7 @@ import {createDappConnector} from './common/helpers'
 import {useStrings} from './common/useStrings'
 import {ListSkeleton} from './useCases/SelectDappFromList/ListSkeleton'
 import {SelectDappFromListScreen} from './useCases/SelectDappFromList/SelectDappFromListScreen'
+import {useOpenConfirmConnectionModal} from './common/ConfirmConnectionModal'
 
 const Stack = createStackNavigator<DiscoverRoutes>()
 
@@ -20,9 +21,7 @@ export const DiscoverNavigator = () => {
   const {atoms, color} = useTheme()
   const strings = useStrings()
 
-  const appStorage = useAsyncStorage()
-  const wallet = useSelectedWallet()
-  const manager = React.useMemo(() => createDappConnector(appStorage, wallet), [appStorage, wallet])
+  const manager = useDappConnectorManager()
 
   return (
     <DappConnectorProvider manager={manager}>
@@ -49,4 +48,30 @@ export const DiscoverNavigator = () => {
       </BrowserProvider>
     </DappConnectorProvider>
   )
+}
+
+const useDappConnectorManager = () => {
+  const appStorage = useAsyncStorage()
+  const wallet = useSelectedWallet()
+  const {openConfirmConnectionModal} = useOpenConfirmConnectionModal()
+  const confirmConnection = React.useCallback(
+    async (origin: string, manager: DappConnector) => {
+      const recommendedDApps = await manager.getDAppList()
+      const selectedDapp = recommendedDApps.dapps.find((dapp) => dapp.origins.includes(origin))
+      return new Promise<boolean>((resolve) => {
+        openConfirmConnectionModal({
+          name: selectedDapp?.name ?? origin,
+          website: origin,
+          logo: selectedDapp?.logo ?? '', // TODO: Add placeholder
+          onConfirm: () => resolve(true),
+          onClose: () => {
+            console.log('confirmConnection onClose') // TODO: Fix close
+            resolve(false)
+          },
+        })
+      })
+    },
+    [openConfirmConnectionModal],
+  )
+  return createDappConnector({appStorage, wallet, confirmConnection})
 }

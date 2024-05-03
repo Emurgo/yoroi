@@ -17,6 +17,12 @@ export const useStrings = () => {
     openDApp: intl.formatMessage(messages.openDApp),
     disconnectWalletFromDApp: intl.formatMessage(messages.disconnectWalletFromDApp),
     dAppActions: intl.formatMessage(messages.dAppActions),
+    confirmConnectionModalTitle: intl.formatMessage(messages.confirmConnectionModalTitle),
+    confirmConnectionModalConnectTo: intl.formatMessage(messages.confirmConnectionModalConnectTo),
+    confirmConnectionModalConnect: intl.formatMessage(messages.confirmConnectionModalConnect),
+    confirmConnectionModalAllowThisDAppTo: intl.formatMessage(messages.confirmConnectionModalAllowThisDAppTo),
+    confirmConnectionModalPermission1: intl.formatMessage(messages.confirmConnectionModalPermission1),
+    confirmConnectionModalPermission2: intl.formatMessage(messages.confirmConnectionModalPermission2),
   }).current
 }
 
@@ -70,6 +76,30 @@ export const messages = Object.freeze(
     dAppActions: {
       id: 'discover.discoverList.dAppActions',
       defaultMessage: '!!!DApp actions',
+    },
+    confirmConnectionModalTitle: {
+      id: 'discover.confirmConnectionModal.title',
+      defaultMessage: '!!!Confirm connection',
+    },
+    confirmConnectionModalConnectTo: {
+      id: 'discover.confirmConnectionModal.connectTo',
+      defaultMessage: '!!!Connect to',
+    },
+    confirmConnectionModalConnect: {
+      id: 'discover.confirmConnectionModal.connect',
+      defaultMessage: '!!!Connect',
+    },
+    confirmConnectionModalAllowThisDAppTo: {
+      id: 'discover.confirmConnectionModal.allowThisDAppTo',
+      defaultMessage: '!!!Allow this DApp to:',
+    },
+    confirmConnectionModalPermission1: {
+      id: 'discover.confirmConnectionModal.permission1',
+      defaultMessage: '!!!View addresses, account balance, activity',
+    },
+    confirmConnectionModalPermission2: {
+      id: 'discover.confirmConnectionModal.permission2',
+      defaultMessage: '!!!Request approval for transactions',
     },
   }),
 )

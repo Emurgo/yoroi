@@ -1,8 +1,8 @@
 import {connectionStorageMaker, dappConnectorApiMaker, dappConnectorMaker, ResolverWallet} from '@yoroi/dapp-connector'
 import {App} from '@yoroi/types'
-import {Alert} from 'react-native'
 
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
+import {DappConnector} from '@yoroi/dapp-connector'
 
 export const validUrl = (url: string) => {
   return /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!&',,=.+]+$/g.test(url)
@@ -56,7 +56,14 @@ export const getGoogleSearchItem = (searchQuery: string): DAppItem => ({
 
 export const isGoogleSearchItem = (dApp: DAppItem) => dApp.id === googleDappId
 
-export const createDappConnector = (appStorage: App.Storage, wallet: YoroiWallet) => {
+type CreateDappConnectorOptions = {
+  appStorage: App.Storage
+  wallet: YoroiWallet
+  confirmConnection: (origin: string, manager: DappConnector) => Promise<boolean>
+}
+
+export const createDappConnector = (options: CreateDappConnectorOptions) => {
+  const {wallet, appStorage, confirmConnection} = options
   const api = dappConnectorApiMaker()
   const handlerWallet: ResolverWallet = {
     id: wallet.id,
@@ -79,16 +86,9 @@ export const createDappConnector = (appStorage: App.Storage, wallet: YoroiWallet
       if (!result) return [] // TODO: return null if value was given
       return Promise.all(result.map((v) => v.toHex()))
     },
-    confirmConnection: async (origin: string) => {
-      return new Promise<boolean>((resolve) => {
-        // TODO: Use modal with translations here instead of alert
-        Alert.alert('Confirm connection', `Do you want to connect to ${origin}?`, [
-          {text: 'Cancel', style: 'cancel', onPress: () => resolve(false)},
-          {text: 'OK', onPress: () => resolve(true)},
-        ])
-      })
-    },
+    confirmConnection: (origin: string) => confirmConnection(origin, manager),
   }
   const storage = connectionStorageMaker({storage: appStorage.join('dapp-connections/')})
-  return dappConnectorMaker(storage, handlerWallet, api)
+  const manager = dappConnectorMaker(storage, handlerWallet, api)
+  return manager
 }

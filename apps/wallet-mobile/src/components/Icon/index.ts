@@ -120,6 +120,8 @@ import {Warning} from './Warning'
 import {WingRiders} from './WingRiders'
 import {YoroiNightly} from './YoroiNightly'
 import {YoroiWallet} from './YoroiWallet'
+import {Connection} from './Connection'
+import {YoroiApp} from './YoroiApp'
 
 export const Icon = {
   Ada,
@@ -244,4 +246,6 @@ export const Icon = {
   Reload,
   Square,
   Google,
+  Connection,
+  YoroiApp,
 }

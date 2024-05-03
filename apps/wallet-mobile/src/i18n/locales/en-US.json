@@ -1039,5 +1039,11 @@
   "discover.discoverList.done": "DONE",
   "discover.discoverList.openDApp": "Open DApp",
   "discover.discoverList.disconnectWalletFromDApp": "Disconnect wallet from DApp",
-  "discover.discoverList.dAppActions": "DApp actions"
+  "discover.discoverList.dAppActions": "DApp actions",
+  "discover.confirmConnectionModal.title": "Confirm connection",
+  "discover.confirmConnectionModal.connectTo": "Connect to",
+  "discover.confirmConnectionModal.connect": "Connect",
+  "discover.confirmConnectionModal.allowThisDAppTo": "Allow this DApp to:",
+  "discover.confirmConnectionModal.permission1": "View addresses, account balance, activity",
+  "discover.confirmConnectionModal.permission2": "Request approval for transactions"
 }
