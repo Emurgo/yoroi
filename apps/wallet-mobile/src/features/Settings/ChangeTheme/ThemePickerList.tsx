@@ -2,10 +2,13 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {FlatList, StyleSheet} from 'react-native'
 
+import {useThemeStorageMaker} from '../../../yoroi-wallets/hooks'
 import {ThemePickerItem} from './ThemePickerItem'
 
 export const ThemePickerList = () => {
-  const {name, selectThemeName, data} = useTheme()
+  const themeStorage = useThemeStorageMaker()
+  const [_, setLocalTheme] = React.useState(themeStorage.read())
+  const {selectThemeName, data} = useTheme()
 
   return (
     <FlatList
@@ -13,8 +16,7 @@ export const ThemePickerList = () => {
       data={data}
       keyExtractor={({themeName}) => themeName}
       renderItem={({item: {themeName}}) => {
-        console.log('ThemePickerList themeName', themeName)
-        return <ThemePickerItem isSelected={themeName === name} title={themeName} selectTheme={selectThemeName} />
+        return <ThemePickerItem title={themeName} selectTheme={selectThemeName} setLocalTheme={setLocalTheme} />
       }}
     />
   )

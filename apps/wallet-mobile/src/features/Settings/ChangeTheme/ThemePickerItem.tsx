@@ -6,18 +6,21 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {Icon} from '../../../components/Icon'
 import {Text} from '../../../components/Text'
 import {themeNames} from '../../../i18n/global-messages'
+import {useThemeStorageMaker} from '../../../yoroi-wallets/hooks'
 
 type Props = {
   title: SupportedThemes
   selectTheme: (name: SupportedThemes) => void
-  isSelected: boolean
+  setLocalTheme: (name: SupportedThemes) => void
 }
 
-export const ThemePickerItem = ({title, selectTheme, isSelected}: Props) => {
+export const ThemePickerItem = ({title, selectTheme, setLocalTheme}: Props) => {
   const {colors} = useStyles()
   const strings = useStrings()
+  const themeStorage = useThemeStorageMaker()
 
   const handleSelectTheme = (theme: SupportedThemes) => {
+    setLocalTheme(theme)
     selectTheme(theme)
   }
   return (
@@ -27,7 +30,7 @@ export const ThemePickerItem = ({title, selectTheme, isSelected}: Props) => {
           <Title>{strings.translateThemeName(title)}</Title>
         </Description>
 
-        <Selected>{isSelected && <Icon.Check size={24} color={colors.checkIcon} />}</Selected>
+        <Selected>{themeStorage.read() === title && <Icon.Check size={24} color={colors.checkIcon} />}</Selected>
       </Row>
     </TouchableOpacity>
   )
