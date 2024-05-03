@@ -1,4 +1,4 @@
-import {amountFormatter, infoExtractName, isNft} from '@yoroi/portfolio'
+import {amountFormatter, infoExtractName, isNft, isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Chain, Portfolio} from '@yoroi/types'
 import {Swap} from '@yoroi/types'
@@ -39,9 +39,9 @@ export const TokenAmountItem = ({
   const priceImpactRiskTheme = usePriceImpactRiskTheme(priceImpactRisk ?? 'none')
 
   const {info} = amount
-  const isPrimary = info.nature === 'primary'
-  const name = infoExtractName(info)
+  const isPrimary = isPrimaryToken(info)
   const detail = isPrimary ? info.description : info.fingerprint
+  const name = infoExtractName(info)
 
   const formattedQuantity = !isPrivacyOff ? amountFormatter()(amount) : privacyPlaceholder
 

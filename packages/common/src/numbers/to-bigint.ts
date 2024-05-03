@@ -1,8 +1,10 @@
-import BigNumber from 'bignumber.js' // Make sure to install this package
+import BigNumber from 'bignumber.js'
 
 /**
  * @description Converts a number to a bigint in atomic units
- * @param input string | number | BigNumber
+ * don't use this to format inputs use parseInputToBigInt instead
+ *
+ * @param quantity string | number | BigNumber
  * @param decimalPlaces
  * @returns bigint with atomic units
  *
@@ -12,10 +14,10 @@ import BigNumber from 'bignumber.js' // Make sure to install this package
  * toBigInt('1', 18) // => 1000000000000000000n
  */
 export function toBigInt(
-  input: string | number | BigNumber,
+  quantity: string | number | BigNumber,
   decimalPlaces: number,
 ): bigint {
-  const bigNumber = BigNumber(input || 0)
+  const bigNumber = BigNumber(quantity || 0)
 
   const scaledNumber = bigNumber.shiftedBy(decimalPlaces)
 

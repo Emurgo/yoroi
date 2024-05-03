@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/native'
 import {isNft} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
-import type {Balance, Portfolio} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {useLayoutEffect} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -11,14 +11,12 @@ import {FlatList} from 'react-native-gesture-handler'
 import {useMutation} from 'react-query'
 
 import {Boundary, Button, Icon, Spacer} from '../../../../components'
-import {AmountItem} from '../../../../components/AmountItem/AmountItem'
 import globalMessages from '../../../../i18n/global-messages'
 import {assetsToSendProperties} from '../../../../metrics/helpers'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useSearch} from '../../../../Search/SearchContext'
-import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {YoroiEntry} from '../../../../yoroi-wallets/types'
-import {Amounts} from '../../../../yoroi-wallets/utils'
+import {TokenAmountItem} from '../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
 import {useSelectedWallet} from '../../../WalletManager/Context'
 import {useNavigateTo, useOverridePreviousSendTxRoute} from '../../common/navigation'
 import {toYoroiEntry} from '../../common/toYoroiEntry'
@@ -94,14 +92,14 @@ export const ListAmountsToSendScreen = () => {
   return (
     <View style={styles.container}>
       <AmountsList
-        data={tokens}
-        renderItem={({item: {id}}: {item: Balance.TokenInfo}) => (
+        data={Object.values(amounts)}
+        renderItem={({item: amount}) => (
           <Boundary>
-            <ActionableAmount amount={Amounts.getAmount(amounts, id)} onRemove={onRemove} onEdit={onEdit} />
+            <ActionableAmount amount={amount} onRemove={onRemove} onEdit={onEdit} />
           </Boundary>
         )}
         bounces={false}
-        keyExtractor={({id}) => id}
+        keyExtractor={({info}) => info.id}
         testID="selectedTokens"
       />
 
@@ -126,24 +124,22 @@ export const ListAmountsToSendScreen = () => {
 }
 
 type ActionableAmountProps = {
-  amount: Balance.Amount
-  onEdit(tokenId: string): void
-  onRemove(tokenId: string): void
+  amount: Portfolio.Token.Amount
+  onEdit(tokenId: Portfolio.Token.Id): void
+  onRemove(tokenId: Portfolio.Token.Id): void
 }
 const ActionableAmount = ({amount, onRemove, onEdit}: ActionableAmountProps) => {
   const wallet = useSelectedWallet()
   const {styles} = useStyles()
-  const {tokenId} = amount
-  const tokenInfo = useTokenInfo({wallet, tokenId})
 
-  const handleRemove = () => onRemove(tokenId)
-  const handleEdit = () => (tokenInfo.kind === 'nft' ? null : onEdit(tokenId))
+  const handleRemove = () => onRemove(amount.info.id)
+  const handleEdit = () => (isNft(amount.info) ? null : onEdit(amount.info.id))
 
   return (
     <View style={styles.amountItem} testID="amountItem">
       <Left>
         <EditAmountButton onPress={handleEdit}>
-          <AmountItem amount={amount} wallet={wallet} />
+          <TokenAmountItem amount={amount} privacyPlaceholder="" network={wallet.network} isPrivacyOff />
         </EditAmountButton>
       </Left>
 

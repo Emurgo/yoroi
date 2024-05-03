@@ -26,6 +26,7 @@ export * from './utils/strings'
 export * from './numbers/to-bigint'
 export * from './numbers/split-bigint'
 export * from './numbers/bigint-formatter'
+export * from './numbers/parse-input-to-bigint'
 
 export * from './observer/observer'
 
