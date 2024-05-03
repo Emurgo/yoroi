@@ -61,7 +61,6 @@ export const getDelegationStatus = (
 ): StakingStatus => {
   // start with older certificate
   const sortedCerts: any = sortBy(txCertificatesForKey, (txCerts) => txCerts.submittedAt)
-  Logger.debug('txCertificatesForKey', sortedCerts)
   let status: StakingStatus = {isRegistered: false}
 
   for (const certData of Object.values(sortedCerts)) {

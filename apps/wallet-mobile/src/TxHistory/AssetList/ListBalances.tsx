@@ -104,14 +104,12 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     content: {
       ...atoms.px_lg,
-      ...atoms.pt_lg,
-      ...atoms.pb_sm,
     },
     assetList: {flex: 1},
     button: {
       ...atoms.p_md,
       backgroundColor: color.gray_cmin,
-      shadowColor: color.gray_c100,
+      shadowColor: color.gray_c200,
       borderRadius: 8,
       elevation: 2,
       shadowOffset: {width: 0, height: -2},
