@@ -2,7 +2,6 @@ import {isKeyOf, isRecord} from '@yoroi/common'
 import {Storage} from './adapters/async-storage'
 import {z} from 'zod'
 import {createTypeGuardFromSchema} from '@yoroi/common/src'
-import {Animated} from 'react-native'
 
 type Context = {
   browserOrigin: string
@@ -26,7 +25,7 @@ type Resolver = {
     getUsedAddresses: ResolvableMethod<string[]>
     getExtensions: ResolvableMethod<Array<{cip: number}>>
     getUnusedAddresses: ResolvableMethod<string[]>
-    getUtxos: ResolvableMethod<string>
+    getUtxos: ResolvableMethod<string[]>
   }
 }
 
@@ -196,7 +195,7 @@ export type ResolverWallet = {
   getUsedAddresses: (pagination?: Pagination) => Promise<string[]>
   getChangeAddress: () => Promise<string>
   getRewardAddresses: () => Promise<string[]>
-  getUtxos: (value?: string, pagination?: Pagination) => Promise<string>
+  getUtxos: (value?: string, pagination?: Pagination) => Promise<string[]>
 }
 
 type Pagination = {

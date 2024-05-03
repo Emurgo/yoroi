@@ -1,13 +1,13 @@
+import * as CSL from '@emurgo/cross-csl-core'
+import {RemoteUnspentOutput, UtxoAsset} from '@emurgo/yoroi-lib'
 import {Buffer} from 'buffer'
 import _ from 'lodash'
 
-import {RawUtxo, RemoteAsset} from '../types'
+import {RawUtxo} from '../types'
 import {Utxos} from '../utils'
 import {CardanoMobile} from '../wallets'
-import {identifierToCardanoAsset} from './utils'
-import {RemoteUnspentOutput, UtxoAsset} from '@emurgo/yoroi-lib'
-import * as CSL from '@emurgo/cross-csl-core'
 import {toAssetNameHex, toPolicyId} from './api'
+import {identifierToCardanoAsset} from './utils'
 
 export async function assetToRustMultiasset(remoteAssets: UtxoAsset[]): Promise<CSL.MultiAsset> {
   const groupedAssets = remoteAssets.reduce((res, a) => {
@@ -43,16 +43,21 @@ export async function cardanoUtxoFromRemoteFormat(u: RemoteUnspentOutput): Promi
 }
 
 export const getBalance = async (tokenId = '*', utxos: RawUtxo[], primaryTokenId: string) => {
-  // todo: filter by token id
+  if (tokenId === 'TADA' || tokenId === 'ADA') tokenId = '.'
   const amounts = Utxos.toAmounts(utxos, primaryTokenId)
   const value = await CardanoMobile.Value.new(await CardanoMobile.BigNum.fromStr(amounts[primaryTokenId]))
   const normalizedInHex = await Promise.all(
-    Object.keys(amounts).map(async (tokenId) => {
-      if (tokenId === '.' || tokenId === '' || tokenId === primaryTokenId) return null
-      const {policyId, name} = await identifierToCardanoAsset(tokenId)
-      const amount = amounts[tokenId]
-      return {policyIdHex: await policyId.toHex(), nameHex: await name.toHex(), amount}
-    }),
+    Object.keys(amounts)
+      .filter((t) => {
+        if (tokenId === '*') return true
+        return t === tokenId
+      })
+      .map(async (tokenId) => {
+        if (tokenId === '.' || tokenId === '' || tokenId === primaryTokenId) return null
+        const {policyId, name} = await identifierToCardanoAsset(tokenId)
+        const amount = amounts[tokenId]
+        return {policyIdHex: await policyId.toHex(), nameHex: await name.toHex(), amount}
+      }),
   )
 
   const groupedByPolicyId = _.groupBy(normalizedInHex.filter(Boolean), 'policyIdHex')

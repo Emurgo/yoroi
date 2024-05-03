@@ -1,6 +1,6 @@
 import {WalletChecksum as WalletChecksumType} from '@emurgo/cip4-js'
 import * as CoreTypes from '@emurgo/cross-csl-core'
-import {BaseAddress, PrivateKey, TransactionUnspentOutput, Value} from '@emurgo/cross-csl-core'
+import {BaseAddress, PrivateKey, TransactionUnspentOutput} from '@emurgo/cross-csl-core'
 import {
   Addressing as AddressingType,
   CardanoAddressedUtxo as CardanoAddressedUtxoType,

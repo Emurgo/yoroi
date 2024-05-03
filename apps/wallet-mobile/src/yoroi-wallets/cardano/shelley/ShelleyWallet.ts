@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {PrivateKey, TransactionUnspentOutput} from '@emurgo/cross-csl-core'
+import {PrivateKey} from '@emurgo/cross-csl-core'
 import {createSignedLedgerTxFromCbor, RemoteUnspentOutput, signRawTransaction} from '@emurgo/yoroi-lib'
 import {Datum} from '@emurgo/yoroi-lib/dist/internals/models'
+import {parseTokenList} from '@emurgo/yoroi-lib/dist/internals/utils/assets'
 import {AppApi, CardanoApi} from '@yoroi/api'
 import {isNonNullable, parseSafe} from '@yoroi/common'
 import {Api, App, Balance} from '@yoroi/types'
+import {BalanceAmounts} from '@yoroi/types/src/balance/token'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
@@ -43,6 +45,7 @@ import {encryptWithPassword} from '../catalyst/catalystCipher'
 import {generatePrivateKeyForCatalyst} from '../catalyst/catalystUtils'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
 import * as cip30 from '../cip30'
+import {cardanoUtxoFromRemoteFormat} from '../cip30'
 import {createSwapCancellationLedgerPayload} from '../common/signatureUtils'
 import * as MAINNET from '../constants/mainnet/constants'
 import * as SANCHONET from '../constants/sanchonet/constants'
@@ -71,7 +74,6 @@ import {deriveRewardAddressHex, toRecipients} from '../utils'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
 import {utxosMaker} from '../utxoManager/utxos'
 import {makeKeys} from './makeKeys'
-import {cardanoUtxoFromRemoteFormat} from '../cip30'
 
 type WalletState = {
   lastGeneratedAddressIndex: number
@@ -918,20 +920,15 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       return cip30.getBalance(tokenId, this.utxos, this.primaryTokenInfo.id)
     }
 
-    async getUnusedAddresses() {
+    getUnusedAddresses() {
       const bech32Addresses = this.receiveAddresses.filter((address) => !this.isUsedAddressIndex[address])
-      return await Promise.all(
-        bech32Addresses.map((addr) => Cardano.Wasm.Address.fromBech32(addr).then((a) => a.toHex())),
-      )
+      return Promise.all(bech32Addresses.map((addr) => Cardano.Wasm.Address.fromBech32(addr).then((a) => a.toHex())))
     }
 
-    async getUsedAddresses(pagination?: {page: number; limit: number}) {
+    getUsedAddresses(pagination?: {page: number; limit: number}) {
       const allAddresses = this.receiveAddresses.filter((address) => this.isUsedAddressIndex[address])
       const selectedAddresses = paginate(allAddresses, pagination)
-      const result = await Promise.all(
-        selectedAddresses.map((addr) => Cardano.Wasm.Address.fromBech32(addr).then((a) => a.toHex())),
-      )
-      return result
+      return Promise.all(selectedAddresses.map((addr) => Cardano.Wasm.Address.fromBech32(addr).then((a) => a.toHex())))
     }
 
     async CIP30getChangeAddress() {
@@ -960,8 +957,27 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       const valueStr = value?.trim() ?? ''
       if (valueStr.length === 0) {
         const selectedUtxos = paginate(remoteUnspentOutputs, pagination)
-        return await Promise.all(selectedUtxos.map((o) => cardanoUtxoFromRemoteFormat(o)))
+        return Promise.all(selectedUtxos.map((o) => cardanoUtxoFromRemoteFormat(o)))
       }
+
+      const amounts: BalanceAmounts = {}
+
+      const isValueNumber = !isNaN(Number(valueStr))
+
+      if (isValueNumber) {
+        amounts[this.primaryTokenInfo.id] = asQuantity(valueStr)
+      } else {
+        try {
+          Object.assign(amounts, getAmountsFromValue(valueStr, this.primaryTokenInfo.id))
+        } catch (e) {
+          //
+        }
+      }
+
+      const unsignedTx = await this.createUnsignedTx([{address: this.rewardAddressHex, amounts}])
+      const requiredUtxos = await findUtxosInUnsignedTx(unsignedTx, remoteUnspentOutputs)
+      const selectedUtxos = paginate(requiredUtxos, pagination)
+      return Promise.all(selectedUtxos.map((o) => cardanoUtxoFromRemoteFormat(o)))
     }
 
     async signSwapCancellationWithLedger(cbor: string, useUSB: boolean): Promise<void> {
@@ -1376,4 +1392,34 @@ const encryptAndSaveRootKey = (wallet: YoroiWallet, rootKey: string, password: s
 
 const paginate = <T>(items: T[], pagination?: {page: number; limit: number}) => {
   return pagination ? items.slice(pagination.page * pagination.limit, (pagination.page + 1) * pagination.limit) : items
+}
+
+const findUtxosInUnsignedTx = async (unsignedTx: YoroiUnsignedTx, utxos: RemoteUnspentOutput[]) => {
+  const inputs = await unsignedTx.unsignedTx.txBody.inputs()
+  const filteredUtxos: RemoteUnspentOutput[] = []
+  for (let i = 0; i < (await inputs.len()); i++) {
+    const input = await inputs.get(i)
+    const inputTxHash = await (await input.transactionId()).toHex()
+    const inputIndex = await input.index()
+    const utxo = utxos.find((utxo) => utxo.txHash === inputTxHash && utxo.txIndex === inputIndex)
+    if (utxo) filteredUtxos.push(utxo)
+  }
+  return filteredUtxos
+}
+
+const getAmountsFromValue = async (value: string, primaryTokenId: string) => {
+  const valueFromHex = await CardanoMobile.Value.fromHex(value)
+  const amounts: BalanceAmounts = {}
+
+  if (valueFromHex.hasValue()) {
+    amounts[primaryTokenId] = asQuantity(await (await valueFromHex.coin()).toStr())
+  }
+  const ma = await valueFromHex.multiasset()
+  if (ma) {
+    for (const token of await parseTokenList(ma)) {
+      const {assetId, amount} = token
+      amounts[assetId] = asQuantity(amount)
+    }
+  }
+  return amounts
 }
