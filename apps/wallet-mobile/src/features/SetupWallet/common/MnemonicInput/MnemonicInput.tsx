@@ -217,7 +217,7 @@ const MnemonicWordInput = React.forwardRef<MnemonicWordInputRef, MnemonicWordInp
         selectWord: setWord,
         focus: () => inputRef.current?.focus(),
       }),
-      [setWord],
+      [],
     )
 
     const onSubmitEditing = React.useCallback(() => {
