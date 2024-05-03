@@ -116,6 +116,7 @@ export type WalletStackRouteNavigation = StackNavigationProp<WalletStackRoutes>
 
 export type WalletInitRoutes = {
   'setup-wallet-choose-setup-type': undefined
+  'setup-wallet-choose-setup-type-init': undefined
   'setup-wallet-create-choose-network': undefined
   'setup-wallet-restore-choose-network': undefined
   'setup-wallet-restore-choose-mnemonic-type': undefined
@@ -414,6 +415,27 @@ export const useWalletNavigation = () => {
       })
     },
 
+    resetToWalletSetupInit: () => {
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'manage-wallets',
+            state: {
+              routes: [
+                {
+                  name: 'setup-wallet',
+                  state: {
+                    routes: [{name: 'setup-wallet-choose-setup-type-init'}],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      })
+    },
+
     resetToWalletSetup: () => {
       navigation.reset({
         index: 0,
@@ -422,6 +444,7 @@ export const useWalletNavigation = () => {
             name: 'manage-wallets',
             state: {
               routes: [
+                {name: 'wallet-selection'},
                 {
                   name: 'setup-wallet',
                   state: {
