@@ -25,17 +25,11 @@ export const FailedTxScreen = () => {
 
       <Spacer height={22} />
 
-      <Button onPress={navigateTo.buyAda} title={strings.buyAda} style={styles.button} shelleyTheme />
+      <Button onPress={navigateTo.buyAda} title={strings.buyAda} shelleyTheme />
 
       <Space height="l" />
 
-      <Button
-        onPress={navigateTo.main}
-        title={strings.goToMain}
-        style={styles.button}
-        textStyles={styles.outlineText}
-        outline
-      />
+      <Button onPress={navigateTo.main} title={strings.goToMain} textStyles={styles.outlineText} outline />
     </View>
   )
 }
@@ -88,10 +82,6 @@ const useStyles = () => {
       ...typography['body-2-m-regular'],
       textAlign: 'center',
       maxWidth: 330,
-    },
-    button: {
-      ...padding['x-l'],
-      ...typography['button-2-m'],
     },
     outlineText: {
       color: theme.color.primary[500],
