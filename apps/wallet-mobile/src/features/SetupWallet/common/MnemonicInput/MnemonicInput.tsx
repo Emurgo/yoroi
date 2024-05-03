@@ -203,7 +203,7 @@ const MnemonicWordInput = React.forwardRef<MnemonicWordInputRef, MnemonicWordInp
     const inputRef = React.useRef<RNTextInput>(null)
     const {styles} = useStyles()
     const [word, setWord] = React.useState(mnemonicSelectedWords[index])
-    const [error, setError] = React.useState('')
+    const [error, setError] = React.useState(false)
 
     React.useImperativeHandle(
       ref,
@@ -235,15 +235,15 @@ const MnemonicWordInput = React.forwardRef<MnemonicWordInputRef, MnemonicWordInp
           setSuggestedWords(suggestedWords)
 
           if (suggestedWords.length <= 0) {
-            setError('error')
+            setError(true)
             onError('error')
           } else {
-            setError('')
+            setError(false)
             onError('')
           }
         } else {
           setSuggestedWords([])
-          setError('')
+          setError(false)
           onError('')
         }
       },
@@ -272,7 +272,7 @@ const MnemonicWordInput = React.forwardRef<MnemonicWordInputRef, MnemonicWordInp
         selectTextOnFocus
         noHelper
         errorDelay={0}
-        errorText={error}
+        errorText={error ? 'error' : ''}
         autoCorrect={false}
         spellCheck={false}
         autoComplete="off"
