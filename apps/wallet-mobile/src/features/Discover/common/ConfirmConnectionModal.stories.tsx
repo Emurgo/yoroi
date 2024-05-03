@@ -1,9 +1,10 @@
+import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import * as React from 'react'
-import {ConfirmConnectionModal, useOpenConfirmConnectionModal} from './ConfirmConnectionModal'
-import {action} from '@storybook/addon-actions'
-import {Button, ModalProvider, Spacer} from '../../../components'
 import {View} from 'react-native'
+
+import {Button} from '../../../components'
+import {ConfirmConnectionModal, useOpenConfirmConnectionModal} from './ConfirmConnectionModal'
 
 storiesOf('Discover ConfirmConnectionModal', module)
   .addDecorator((story) => <View style={{padding: 20}}>{story()}</View>)
@@ -13,10 +14,10 @@ storiesOf('Discover ConfirmConnectionModal', module)
 const Initial = () => {
   return (
     <ConfirmConnectionModal
-      logo={'https://daehx1qv45z7c.cloudfront.net/cardano-spot.png'}
+      logo="https://daehx1qv45z7c.cloudfront.net/cardano-spot.png"
       onConfirm={action('onConfirm')}
       name="Example DApp"
-      website={'example.com'}
+      website="example.com"
     />
   )
 }
@@ -34,5 +35,5 @@ const WithButton = () => {
     })
   }
 
-  return <Button title={'Open Modal'} shelleyTheme onPress={handleOnPress} />
+  return <Button title="Open Modal" shelleyTheme onPress={handleOnPress} />
 }

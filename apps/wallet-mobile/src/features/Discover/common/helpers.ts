@@ -1,8 +1,8 @@
 import {connectionStorageMaker, dappConnectorApiMaker, dappConnectorMaker, ResolverWallet} from '@yoroi/dapp-connector'
+import {DappConnector} from '@yoroi/dapp-connector'
 import {App} from '@yoroi/types'
 
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
-import {DappConnector} from '@yoroi/dapp-connector'
 
 export const validUrl = (url: string) => {
   return /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!&',,=.+]+$/g.test(url)

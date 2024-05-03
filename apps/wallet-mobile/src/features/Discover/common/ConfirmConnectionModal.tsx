@@ -1,7 +1,8 @@
-import * as React from 'react'
-import {View, Text, Image, StyleSheet} from 'react-native'
-import {Button, Icon, Spacer, useModal} from '../../../components'
 import {useTheme} from '@yoroi/theme'
+import * as React from 'react'
+import {Image, StyleSheet, Text, View} from 'react-native'
+
+import {Button, Icon, Spacer, useModal} from '../../../components'
 import {useStrings} from './useStrings'
 
 type Props = {
@@ -16,22 +17,25 @@ export const confirmConnectionModalHeight = 400
 export const useOpenConfirmConnectionModal = () => {
   const {openModal, closeModal} = useModal()
   const strings = useStrings()
-  const open = React.useCallback((props: Props & {onClose: () => void}) => {
-    openModal(
-      strings.confirmConnectionModalTitle,
-      <ConfirmConnectionModal
-        name={props.name}
-        website={props.website}
-        logo={props.logo}
-        onConfirm={() => {
-          props.onConfirm()
-          closeModal()
-        }}
-      />,
-      confirmConnectionModalHeight,
-      props.onClose,
-    )
-  }, [])
+  const open = React.useCallback(
+    (props: Props & {onClose: () => void}) => {
+      openModal(
+        strings.confirmConnectionModalTitle,
+        <ConfirmConnectionModal
+          name={props.name}
+          website={props.website}
+          logo={props.logo}
+          onConfirm={() => {
+            props.onConfirm()
+            closeModal()
+          }}
+        />,
+        confirmConnectionModalHeight,
+        props.onClose,
+      )
+    },
+    [openModal, closeModal, strings.confirmConnectionModalTitle],
+  )
   return {openConfirmConnectionModal: open, closeModal}
 }
 
@@ -43,27 +47,38 @@ export const ConfirmConnectionModal = ({name, website, onConfirm, logo}: Props) 
     <View>
       <View style={styles.imagesLine}>
         <Icon.YoroiApp size={48} />
+
         <Icon.Connection size={20} color={colors.connection} />
+
         <Image source={{uri: logo}} style={styles.image} />
       </View>
+
       <Spacer height={8} />
 
       <View style={styles.line}>
         <Text style={styles.text}>{strings.confirmConnectionModalConnectTo}</Text>
+
         <Text style={styles.bold}>{name}</Text>
       </View>
+
       <Spacer height={8} />
+
       <View style={styles.line}>
         <Text style={styles.text}>{website}</Text>
       </View>
+
       <Spacer height={16} />
 
       <View>
         <Text style={styles.text}>{strings.confirmConnectionModalAllowThisDAppTo}</Text>
+
         <Text style={styles.text}>{`\u2022 ${strings.confirmConnectionModalPermission1}`}</Text>
+
         <Text style={styles.text}>{`\u2022 ${strings.confirmConnectionModalPermission2}`}</Text>
       </View>
+
       <Spacer height={46} />
+
       <Button title={strings.confirmConnectionModalConnect} shelleyTheme onPress={onConfirm} />
     </View>
   )

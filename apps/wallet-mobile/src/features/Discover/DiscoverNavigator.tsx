@@ -1,6 +1,6 @@
 import {createStackNavigator} from '@react-navigation/stack'
 import {useAsyncStorage} from '@yoroi/common'
-import {DappConnectorProvider, DappConnector} from '@yoroi/dapp-connector'
+import {DappConnector, DappConnectorProvider} from '@yoroi/dapp-connector'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 
@@ -9,11 +9,11 @@ import {defaultStackNavigationOptions, DiscoverRoutes} from '../../navigation'
 import {useSelectedWallet} from '../WalletManager/Context'
 import {BrowserNavigator} from './BrowserNavigator'
 import {BrowserProvider} from './common/BrowserProvider'
+import {useOpenConfirmConnectionModal} from './common/ConfirmConnectionModal'
 import {createDappConnector} from './common/helpers'
 import {useStrings} from './common/useStrings'
 import {ListSkeleton} from './useCases/SelectDappFromList/ListSkeleton'
 import {SelectDappFromListScreen} from './useCases/SelectDappFromList/SelectDappFromListScreen'
-import {useOpenConfirmConnectionModal} from './common/ConfirmConnectionModal'
 
 const Stack = createStackNavigator<DiscoverRoutes>()
 
