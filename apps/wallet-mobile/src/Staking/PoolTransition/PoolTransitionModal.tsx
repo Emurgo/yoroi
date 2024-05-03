@@ -140,7 +140,6 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     modal: {
-      backgroundColor: color.web_overlay,
       alignItems: 'center',
       flex: 1,
       justifyContent: 'flex-end',
