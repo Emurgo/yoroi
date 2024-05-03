@@ -199,6 +199,8 @@ storiesOf('Icon', module).add('Gallery', () => {
 
         <Item icon={<Icon.Table size={40} />} title="Table" />
 
+        <Item icon={<Icon.Theme size={40} />} title="Theme" />
+
         <Item icon={<Icon.TermsOfUse size={40} />} title="Terms Of Use" />
 
         <Item icon={<Icon.Tokens size={40} />} title="Tokens" />

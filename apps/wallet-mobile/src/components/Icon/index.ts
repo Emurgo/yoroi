@@ -104,6 +104,7 @@ import {TabStaking} from './TabStaking'
 import {TabWallet} from './TabWallet'
 import {Telegram} from './Telegram'
 import {TermsOfUse} from './TermsOfUse'
+import {Theme} from './Theme'
 import {ThumbsUp} from './ThumbsUp'
 import {Tokens} from './Tokens'
 import {TotalAda} from './TotalAda'
@@ -200,6 +201,7 @@ export const Icon = {
   TabStaking,
   TabWallet,
   Table,
+  Theme,
   Telegram,
   TermsOfUse,
   ThumbsUp,

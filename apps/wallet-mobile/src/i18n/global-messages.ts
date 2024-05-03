@@ -1,6 +1,6 @@
 import {defineMessages} from 'react-intl'
 
-import {supportedCurrencies} from '../yoroi-wallets/types/other'
+import {supportedCurrencies, supportedThemes} from '../yoroi-wallets/types/other'
 
 /*
  * Some messages need to be used in multiple components
@@ -631,6 +631,22 @@ export const currencyNames = defineMessages({
   [supportedCurrencies.USD]: {
     id: 'global.currency.USD',
     defaultMessage: `!!!USD`,
+  },
+})
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const themeNames: any = defineMessages({
+  [supportedThemes.system]: {
+    id: 'global.auto',
+    defaultMessage: `!!! System`,
+  },
+  [supportedThemes['default-dark']]: {
+    id: 'global.dark',
+    defaultMessage: `!!! Dark`,
+  },
+  [supportedThemes['default-light']]: {
+    id: 'global.light',
+    defaultMessage: `!!! Light`,
   },
 })
 
