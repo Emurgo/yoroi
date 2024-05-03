@@ -129,7 +129,6 @@ type ActionableAmountProps = {
   onRemove(tokenId: Portfolio.Token.Id): void
 }
 const ActionableAmount = ({amount, onRemove, onEdit}: ActionableAmountProps) => {
-  const wallet = useSelectedWallet()
   const {styles} = useStyles()
 
   const handleRemove = () => onRemove(amount.info.id)
@@ -139,7 +138,7 @@ const ActionableAmount = ({amount, onRemove, onEdit}: ActionableAmountProps) => 
     <View style={styles.amountItem} testID="amountItem">
       <Left>
         <EditAmountButton onPress={handleEdit}>
-          <TokenAmountItem amount={amount} privacyPlaceholder="" network={wallet.network} isPrivacyOff />
+          <TokenAmountItem amount={amount} ignorePrivacy />
         </EditAmountButton>
       </Left>
 

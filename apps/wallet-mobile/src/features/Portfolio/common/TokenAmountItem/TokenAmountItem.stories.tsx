@@ -1,6 +1,5 @@
 import {storiesOf} from '@storybook/react-native'
 import {tokenMocks} from '@yoroi/portfolio'
-import {Chain} from '@yoroi/types'
 import React from 'react'
 import {Text, View} from 'react-native'
 
@@ -19,25 +18,13 @@ storiesOf('TokenAmountItem', module).add('Gallery', () => (
       <View style={{flex: 1, justifyContent: 'center', padding: 16}}>
         <Text>Fungible primary token</Text>
 
-        <TokenAmountItem
-          privacyPlaceholder="-"
-          network={Chain.Network.Mainnet}
-          isPrivacyOff={false}
-          amount={primaryAmount}
-          style={{backgroundColor: 'white', padding: 16, borderRadius: 8}}
-        />
+        <TokenAmountItem amount={primaryAmount} style={{backgroundColor: 'white', padding: 16, borderRadius: 8}} />
 
         <Spacer height={40} />
 
         <Text>Fungible non-primary token</Text>
 
-        <TokenAmountItem
-          privacyPlaceholder="-"
-          network={Chain.Network.Mainnet}
-          isPrivacyOff={false}
-          amount={secondaryAmount}
-          style={{backgroundColor: 'white', padding: 16, borderRadius: 8}}
-        />
+        <TokenAmountItem amount={secondaryAmount} style={{backgroundColor: 'white', padding: 16, borderRadius: 8}} />
       </View>
     </SelectedWalletProvider>
   </QueryProvider>

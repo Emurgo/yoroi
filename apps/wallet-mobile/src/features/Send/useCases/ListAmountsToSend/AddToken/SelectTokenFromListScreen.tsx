@@ -3,7 +3,7 @@ import {FlashList} from '@shopify/flash-list'
 import {infoFilterByName, isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
-import {Chain, Portfolio} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import React from 'react'
 import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native'
 
@@ -106,7 +106,6 @@ export const SelectTokenFromListScreen = () => {
           <ListSpendables
             canAddAmount={canAddAmount}
             spendableAmounts={filteredAmounts}
-            network={wallet.network}
             isSearching={isSearching}
             isSearchOpened={isSearchOpened}
           />
@@ -166,24 +165,17 @@ const ListSpendableNfts = ({
 type ListSpendableBalancesProps = {
   canAddAmount: boolean
   spendableAmounts: ReadonlyArray<Portfolio.Token.Amount>
-  network: Chain.Network
   isSearching: boolean
   isSearchOpened: boolean
 }
-const ListSpendables = ({
-  canAddAmount,
-  spendableAmounts,
-  network,
-  isSearching,
-  isSearchOpened,
-}: ListSpendableBalancesProps) => {
+const ListSpendables = ({canAddAmount, spendableAmounts, isSearching, isSearchOpened}: ListSpendableBalancesProps) => {
   const {styles} = useStyles()
 
   return (
     <FlashList
       data={spendableAmounts}
       renderItem={({item: amount}) => (
-        <SelectAmount amount={amount} disabled={!canAddAmount && !isPrimaryToken(amount.info)} network={network} />
+        <SelectAmount amount={amount} disabled={!canAddAmount && !isPrimaryToken(amount.info)} />
       )}
       bounces={false}
       contentContainerStyle={styles.spendableAmountsContent}
@@ -233,9 +225,8 @@ const Tabs = ({children}: {children: React.ReactNode}) => {
 type SelectAmountProps = {
   disabled?: boolean
   amount: Portfolio.Token.Amount
-  network: Chain.Network
 }
-const SelectAmount = ({amount, disabled, network}: SelectAmountProps) => {
+const SelectAmount = ({amount, disabled}: SelectAmountProps) => {
   const {styles} = useStyles()
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const {closeSearch} = useSearch()
@@ -263,7 +254,7 @@ const SelectAmount = ({amount, disabled, network}: SelectAmountProps) => {
       testID="selectTokenButton"
       disabled={disabled}
     >
-      <TokenAmountItem amount={amount} network={network} isPrivacyOff privacyPlaceholder="" />
+      <TokenAmountItem amount={amount} ignorePrivacy />
     </TouchableOpacity>
   )
 }

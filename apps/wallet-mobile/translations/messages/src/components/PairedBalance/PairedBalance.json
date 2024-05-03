@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Error obtaining {currency} pairing",
     "file": "src/components/PairedBalance/PairedBalance.tsx",
     "start": {
-      "line": 80,
+      "line": 74,
       "column": 22,
-      "index": 2560
+      "index": 2537
     },
     "end": {
-      "line": 83,
+      "line": 77,
       "column": 3,
-      "index": 2692
+      "index": 2669
     }
   }
 ]

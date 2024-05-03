@@ -1,20 +1,21 @@
 import {isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
-import {Chain, Portfolio} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import {Image} from 'expo-image'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {Icon} from '../../../../components/Icon'
 import {isEmptyString} from '../../../../utils'
+import {useSelectedWallet} from '../../../WalletManager/Context'
 
 type TokenInfoIconProps = {
   info: Portfolio.Token.Info
-  network: Chain.Network
   size: 'sm' | 'md'
 }
-export const TokenInfoIcon = React.memo(({info, network, size = 'md'}: TokenInfoIconProps) => {
+export const TokenInfoIcon = React.memo(({info, size = 'md'}: TokenInfoIconProps) => {
   const {styles} = useStyles()
+  const {network} = useSelectedWallet()
   const [isLoading, setIsLoading] = React.useState(false)
 
   if (isPrimaryToken(info)) return <PrimaryIcon size={size} />

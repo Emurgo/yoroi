@@ -20,7 +20,7 @@ storiesOf('PairedBalance', module)
         >
           <View style={{flex: 1, justifyContent: 'center'}}>
             <View style={{borderWidth: 1}}>
-              <PairedBalance amount={tokenBalanceMocks.primaryETH} privacyPlaceholder="*.****" />
+              <PairedBalance amount={tokenBalanceMocks.primaryETH} />
             </View>
           </View>
         </SelectedWalletProvider>
@@ -38,7 +38,7 @@ storiesOf('PairedBalance', module)
         >
           <View style={{flex: 1, justifyContent: 'center'}}>
             <View style={{borderWidth: 1}}>
-              <PairedBalance amount={tokenBalanceMocks.primaryETH} privacyPlaceholder="-.--" />
+              <PairedBalance amount={tokenBalanceMocks.primaryETH} />
             </View>
           </View>
         </SelectedWalletProvider>
@@ -56,11 +56,7 @@ storiesOf('PairedBalance', module)
         >
           <View style={{flex: 1, justifyContent: 'center'}}>
             <View style={{borderWidth: 1}}>
-              <PairedBalance
-                amount={tokenBalanceMocks.primaryETH}
-                privacyPlaceholder="you should see this"
-                isPrivacyOff
-              />
+              <PairedBalance amount={tokenBalanceMocks.primaryETH} ignorePrivacy />
             </View>
           </View>
         </SelectedWalletProvider>
@@ -78,7 +74,7 @@ storiesOf('PairedBalance', module)
         >
           <View style={{flex: 1, justifyContent: 'center'}}>
             <View style={{borderWidth: 1}}>
-              <PairedBalance amount={tokenBalanceMocks.primaryETH} privacyPlaceholder="hide it" />
+              <PairedBalance amount={tokenBalanceMocks.primaryETH} />
             </View>
           </View>
         </SelectedWalletProvider>

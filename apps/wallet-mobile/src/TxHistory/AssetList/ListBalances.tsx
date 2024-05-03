@@ -10,7 +10,6 @@ import {Spacer} from '../../components/Spacer'
 import {useExplorers} from '../../features/Explorer/common/useExplorers'
 import {usePortfolioBalances} from '../../features/Portfolio/common/hooks/usePortfolioBalances'
 import {TokenAmountItem, TokenAmountItemProps} from '../../features/Portfolio/common/TokenAmountItem/TokenAmountItem'
-import {usePrivacyMode} from '../../features/Settings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../../features/WalletManager/Context'
 import globalMessages from '../../i18n/global-messages'
 import {useMetrics} from '../../metrics/metricsManager'
@@ -27,7 +26,6 @@ export const ListBalances = (props: Props) => {
   const styles = useStyles()
   const wallet = useSelectedWallet()
   const balances = usePortfolioBalances({wallet})
-  const {isPrivacyOff, privacyPlaceholder} = usePrivacyMode()
 
   const [fungibilityFilter, setFungibilityFilter] = React.useState<Exclude<keyof typeof balances, 'records'>>('all')
   const [isPending, startTransition] = React.useTransition()
@@ -76,9 +74,6 @@ export const ListBalances = (props: Props) => {
         data={balances[fungibilityFilter]}
         renderItem={({item: amount}) => (
           <ExplorableAmount
-            network={wallet.network}
-            privacyPlaceholder={privacyPlaceholder}
-            isPrivacyOff={isPrivacyOff}
             amount={amount}
             onPress={() => Linking.openURL(explorers.cardanoscan.token(amount.info.id))}
           />

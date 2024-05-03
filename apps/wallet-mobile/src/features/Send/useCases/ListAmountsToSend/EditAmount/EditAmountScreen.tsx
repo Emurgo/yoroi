@@ -90,14 +90,14 @@ export const EditAmountScreen = () => {
         <ScrollView style={styles.scrollView} bounces={false}>
           <Spacer height={16} />
 
-          <TokenAmountItem amount={amount} isPrivacyOff network={wallet.network} privacyPlaceholder="" />
+          <TokenAmountItem amount={amount} ignorePrivacy />
 
           <Spacer height={40} />
 
           <AmountInput onChange={onChangeQuantity} value={inputValue} ticker={amount.info.ticker} />
 
           <Center>
-            {isPrimary && <PairedBalance amount={amount} privacyPlaceholder="" isPrivacyOff />}
+            {isPrimary && <PairedBalance amount={amount} ignorePrivacy />}
 
             <Spacer height={22} />
 

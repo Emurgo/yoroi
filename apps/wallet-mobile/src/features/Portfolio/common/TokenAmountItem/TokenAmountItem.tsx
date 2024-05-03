@@ -1,21 +1,20 @@
 import {amountFormatter, infoExtractName, isNft, isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
-import {Chain, Portfolio} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import {Swap} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
 import {Icon, Spacer, Text} from '../../../../components'
 import {PairedBalance} from '../../../../components/PairedBalance/PairedBalance'
+import {usePrivacyMode} from '../../../Settings/PrivacyMode/PrivacyMode'
 import {usePriceImpactRiskTheme} from '../../../Swap/common/helpers'
 import {SwapPriceImpactRisk} from '../../../Swap/common/types'
 import {TokenInfoIcon} from './TokenInfoIcon'
 
 export type TokenAmountItemProps = {
   amount: Portfolio.Token.Amount
-  privacyPlaceholder: string
-  network: Chain.Network
-  isPrivacyOff: boolean
+  ignorePrivacy?: boolean
 
   style?: ViewProps['style']
   inWallet?: boolean
@@ -25,9 +24,7 @@ export type TokenAmountItemProps = {
 }
 
 export const TokenAmountItem = ({
-  network,
-  isPrivacyOff,
-  privacyPlaceholder,
+  ignorePrivacy = false,
   style,
   amount,
   inWallet,
@@ -36,6 +33,7 @@ export const TokenAmountItem = ({
   orderType,
 }: TokenAmountItemProps) => {
   const {styles, colors} = useStyles()
+  const {privacyPlaceholder, isPrivacyOff} = usePrivacyMode()
   const priceImpactRiskTheme = usePriceImpactRiskTheme(priceImpactRisk ?? 'none')
 
   const {info} = amount
@@ -43,7 +41,7 @@ export const TokenAmountItem = ({
   const detail = isPrimary ? info.description : info.fingerprint
   const name = infoExtractName(info)
 
-  const formattedQuantity = !isPrivacyOff ? amountFormatter()(amount) : privacyPlaceholder
+  const formattedQuantity = isPrivacyOff || ignorePrivacy ? amountFormatter()(amount) : privacyPlaceholder
 
   const showSwapDetails = !isPrimary && variant === 'swap'
   const priceImpactRiskTextColor = orderType === 'market' ? priceImpactRiskTheme.text : colors.text
@@ -51,7 +49,7 @@ export const TokenAmountItem = ({
   return (
     <View style={[style, styles.container]} testID="assetItem">
       <Left>
-        <TokenInfoIcon info={amount.info} size={variant === 'swap' ? 'sm' : 'md'} network={network} />
+        <TokenInfoIcon info={amount.info} size={variant === 'swap' ? 'sm' : 'md'} />
       </Left>
 
       <Middle>
@@ -83,9 +81,7 @@ export const TokenAmountItem = ({
           </View>
         )}
 
-        {isPrimary && variant !== 'swap' && (
-          <PairedBalance isPrivacyOff={isPrivacyOff} amount={amount} privacyPlaceholder={privacyPlaceholder} />
-        )}
+        {isPrimary && variant !== 'swap' && <PairedBalance amount={amount} ignorePrivacy={ignorePrivacy} />}
       </Right>
     </View>
   )
