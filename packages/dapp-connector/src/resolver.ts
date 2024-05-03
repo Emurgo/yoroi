@@ -26,6 +26,7 @@ type Resolver = {
     getExtensions: ResolvableMethod<Array<{cip: number}>>
     getUnusedAddresses: ResolvableMethod<string[]>
     getUtxos: ResolvableMethod<string[]>
+    getCollateral: ResolvableMethod<string[] | null>
   }
 }
 
@@ -48,6 +49,25 @@ export const resolver: Resolver = {
     return hasWalletAcceptedConnection(context)
   },
   api: {
+    getCollateral: async (params: unknown, context: Context) => {
+      // offer to reorganise transactions if possible
+      // check if collateral is less than or equal to 5 ADA
+      assertOriginsMatch(context)
+      await assertWalletAcceptedConnection(context)
+      const value =
+        isRecord(params) && Array.isArray(params.args) && typeof params.args[0] === 'string'
+          ? params.args[0]
+          : undefined
+      const result = await context.wallet.getCollateral(value)
+
+      if (value !== undefined && (result === null || result.length === 0)) {
+        // TODO: Offer to reorganise transactions if possible
+        return null
+      }
+
+      return result
+    },
+
     getUnusedAddresses: async (_params: unknown, context: Context) => {
       assertOriginsMatch(context)
       await assertWalletAcceptedConnection(context)
@@ -196,6 +216,7 @@ export type ResolverWallet = {
   getChangeAddress: () => Promise<string>
   getRewardAddresses: () => Promise<string[]>
   getUtxos: (value?: string, pagination?: Pagination) => Promise<string[]>
+  getCollateral: (value?: string) => Promise<string[] | null>
 }
 
 type Pagination = {

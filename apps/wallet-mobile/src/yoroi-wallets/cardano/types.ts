@@ -198,6 +198,7 @@ export type YoroiWallet = {
   CIP30getChangeAddress(): Promise<string>
   CIP30getRewardAddresses(): Promise<string[]>
   CIP30getUtxos(value?: string, paginate?: {page: number; limit: number}): Promise<TransactionUnspentOutput[] | null>
+  CIP30getCollateral(value?: string): Promise<TransactionUnspentOutput[] | null>
 }
 
 export const isYoroiWallet = (wallet: unknown): wallet is YoroiWallet => {

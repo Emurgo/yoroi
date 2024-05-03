@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {PrivateKey} from '@emurgo/cross-csl-core'
+import {PrivateKey, TransactionUnspentOutput} from '@emurgo/cross-csl-core'
 import {createSignedLedgerTxFromCbor, RemoteUnspentOutput, signRawTransaction} from '@emurgo/yoroi-lib'
 import {Datum} from '@emurgo/yoroi-lib/dist/internals/models'
 import {parseTokenList} from '@emurgo/yoroi-lib/dist/internals/utils/assets'
@@ -72,7 +72,7 @@ import {
 import {yoroiUnsignedTx} from '../unsignedTx'
 import {deriveRewardAddressHex, normalizeToAddress, toRecipients} from '../utils'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
-import {utxosMaker} from '../utxoManager/utxos'
+import {collateralConfig, findCollateralCandidates, utxosMaker} from '../utxoManager/utxos'
 import {makeKeys} from './makeKeys'
 
 type WalletState = {
@@ -943,23 +943,23 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       return [hex]
     }
 
-    async CIP30getUtxos(value?: string, pagination?: {page: number; limit: number}) {
+    private async getUtxos(amounts: Balance.Amounts, allUtxos = this.utxos): Promise<TransactionUnspentOutput[]> {
       // TODO: 1) Add try-catch. 2) If amount can't be reached, return null
-      const allUtxos = this.utxos
-      const remoteUnspentOutputs: RemoteUnspentOutput[] = allUtxos.map((utxo) => ({
-        txHash: utxo.tx_hash,
-        txIndex: utxo.tx_index,
-        receiver: utxo.receiver,
-        amount: utxo.amount,
-        assets: utxo.assets,
-        utxoId: utxo.utxo_id,
-      }))
+      const remoteUnspentOutputs: RemoteUnspentOutput[] = allUtxos.map((utxo) => rawUtxoToRemoteUnspentOutput(utxo))
+      const rewardAddress = await (await normalizeToAddress(this.rewardAddressHex))?.toBech32(undefined)
+      if (!rewardAddress) throw new Error('Invalid wallet state')
 
+      const unsignedTx = await this.createUnsignedTx([{address: rewardAddress, amounts}])
+      const requiredUtxos = await findUtxosInUnsignedTx(unsignedTx, remoteUnspentOutputs)
+      return Promise.all(requiredUtxos.map((o) => cardanoUtxoFromRemoteFormat(o)))
+    }
+
+    async CIP30getUtxos(value?: string, pagination?: {page: number; limit: number}) {
       const valueStr = value?.trim() ?? ''
 
       if (valueStr.length === 0) {
-        const selectedUtxos = paginate(remoteUnspentOutputs, pagination)
-        return Promise.all(selectedUtxos.map((o) => cardanoUtxoFromRemoteFormat(o)))
+        const validUtxos = await this.getUtxos({[this.primaryTokenInfo.id]: asQuantity(valueStr)})
+        return paginate(validUtxos, pagination)
       }
 
       const amounts: BalanceAmounts = {}
@@ -976,12 +976,70 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         }
       }
 
-      const unsignedTx = await this.createUnsignedTx([
-        {address: await (await normalizeToAddress(this.rewardAddressHex))?.toBech32(undefined)!, amounts},
-      ])
-      const requiredUtxos = await findUtxosInUnsignedTx(unsignedTx, remoteUnspentOutputs)
-      const selectedUtxos = paginate(requiredUtxos, pagination)
-      return Promise.all(selectedUtxos.map((o) => cardanoUtxoFromRemoteFormat(o)))
+      const validUtxos = await this.getUtxos(amounts)
+      return paginate(validUtxos, pagination)
+    }
+
+    private async _drawCollateralInOneUtxo(quantity: Balance.Quantity) {
+      const utxos = utxosMaker(this.utxos, {
+        maxLovelace: collateralConfig.maxLovelace,
+        minLovelace: quantity,
+      })
+
+      const possibleCollateralId = utxos.drawnCollateral()
+      if (!possibleCollateralId) return null
+      const collateralUtxo = utxos.findById(possibleCollateralId)
+      if (!collateralUtxo) return null
+      return cardanoUtxoFromRemoteFormat(rawUtxoToRemoteUnspentOutput(collateralUtxo))
+    }
+
+    private async _drawCollateralInMultipleUtxos(quantity: Balance.Quantity) {
+      const possibleUtxos = findCollateralCandidates(this.utxos, {
+        maxLovelace: collateralConfig.maxLovelace,
+        minLovelace: asQuantity('0'),
+      })
+      const utxos = await this.getUtxos({[this.primaryTokenInfo.id]: quantity}, possibleUtxos)
+      if (utxos.length > 0) {
+        console.log('CIP30getCollateral: draw collateral in multiple utxos')
+        return utxos
+      }
+      return null
+    }
+
+    async CIP30getCollateral(value?: string) {
+      console.log('CIP30getCollateral', value)
+      const valueStr = value?.trim() ?? collateralConfig.minLovelace.toString()
+      const valueNum = new BigNumber(valueStr)
+
+      if (valueNum.gte(collateralConfig.maxLovelace)) {
+        throw new Error('Collateral value is too high')
+      }
+
+      const currentCollateral = this.getCollateralInfo()
+
+      // if has collateral and requested collateral is lower or equal to current collateral
+      // return current collateral
+      if (currentCollateral.utxo && valueNum.lte(currentCollateral.utxo.amount)) {
+        console.log('CIP30getCollateral: return current collateral')
+        const utxo = await cardanoUtxoFromRemoteFormat(rawUtxoToRemoteUnspentOutput(currentCollateral.utxo))
+        return [utxo]
+      }
+
+      // if can draw collateral in one utxo, use the utxo as a collateral
+      const oneUtxoCollateral = await this._drawCollateralInOneUtxo(asQuantity(valueNum))
+      if (oneUtxoCollateral) {
+        console.log('CIP30getCollateral: draw collateral in one utxo')
+        return [oneUtxoCollateral]
+      }
+
+      // if can draw collateral in multiple utxos, use all required utxos
+      const multipleUtxosCollateral = await this._drawCollateralInMultipleUtxos(asQuantity(valueNum))
+      if (multipleUtxosCollateral && multipleUtxosCollateral.length > 0) {
+        console.log('CIP30getCollateral: draw collateral in multiple utxos')
+        return multipleUtxosCollateral
+      }
+
+      return null
     }
 
     async signSwapCancellationWithLedger(cbor: string, useUSB: boolean): Promise<void> {
@@ -1426,4 +1484,15 @@ const getAmountsFromValue = async (value: string, primaryTokenId: string) => {
     }
   }
   return amounts
+}
+
+const rawUtxoToRemoteUnspentOutput = (utxo: RawUtxo): RemoteUnspentOutput => {
+  return {
+    txHash: utxo.tx_hash,
+    txIndex: utxo.tx_index,
+    receiver: utxo.receiver,
+    amount: utxo.amount,
+    assets: utxo.assets,
+    utxoId: utxo.utxo_id,
+  }
 }

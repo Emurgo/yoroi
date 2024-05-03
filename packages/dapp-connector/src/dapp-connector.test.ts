@@ -288,5 +288,6 @@ const mockWallet: ResolverWallet = {
     ),
   getRewardAddresses: () => Promise.resolve(['e184d958399bcce03402fd853d43a4e7366f2018932e5aff4eea904693']),
   getUtxos: () => Promise.resolve([]),
+  getCollateral: () => Promise.resolve([]),
 }
 const trustedUrl = 'https://yoroi-wallet.com/'
