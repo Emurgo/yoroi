@@ -2,7 +2,6 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {View} from 'react-native'
 
-import {isEmptyString} from '../../../../utils'
 import {MnemonicWordInputRef} from '../../useCases/RestoreWallet/RestoreWalletScreen'
 import {MnemonicInput} from './MnemonicInput'
 
@@ -43,9 +42,12 @@ storiesOf('MnemonicInput', module)
       setInputErrorsIndexes(newInputErrors)
     }
 
-    const onError = (error: string, index: number) => {
-      if (!isEmptyString(error)) addInputErrorIndex(index)
-      else removeInputErrorIndex(index)
+    const onError = (index: number) => {
+      addInputErrorIndex(index)
+    }
+
+    const onClearError = (index: number) => {
+      removeInputErrorIndex(index)
     }
 
     return (
@@ -63,6 +65,7 @@ storiesOf('MnemonicInput', module)
           setMnemonicSelectedWords={setMnemonicSelectedWords}
           mnemonic={mnemonic}
           onError={onError}
+          onClearError={onClearError}
         />
       </View>
     )
@@ -103,9 +106,12 @@ storiesOf('MnemonicInput', module)
       setInputErrorsIndexes(newInputErrors)
     }
 
-    const onError = (error: string, index: number) => {
-      if (!isEmptyString(error)) addInputErrorIndex(index)
-      else removeInputErrorIndex(index)
+    const onError = (index: number) => {
+      addInputErrorIndex(index)
+    }
+
+    const onClearError = (index: number) => {
+      removeInputErrorIndex(index)
     }
 
     return (
@@ -123,6 +129,7 @@ storiesOf('MnemonicInput', module)
           setMnemonicSelectedWords={setMnemonicSelectedWords}
           mnemonic={mnemonic}
           onError={onError}
+          onClearError={onClearError}
         />
       </View>
     )
