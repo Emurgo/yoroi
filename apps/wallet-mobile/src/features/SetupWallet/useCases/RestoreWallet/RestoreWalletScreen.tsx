@@ -82,7 +82,6 @@ export const RestoreWalletScreen = () => {
   const onSelect = (index: number, word: string) => {
     const newWords = [...mnemonicSelectedWords]
     newWords[index] = word
-    setSuggestedWords([])
     setMnemonicSelectedWords(newWords)
     mnenonicRefs[index].current?.selectWord(isEmptyString(word) ? '' : word)
 
@@ -117,6 +116,7 @@ export const RestoreWalletScreen = () => {
   }
 
   const onFocus = (index: number) => {
+    setSuggestedWords([])
     setFocusedIndex(index)
   }
 
