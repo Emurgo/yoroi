@@ -1,23 +1,20 @@
 import {FlashList} from '@shopify/flash-list'
+import {infoFilterByName} from '@yoroi/portfolio'
 import {useSwap} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
-import {Balance} from '@yoroi/types'
-import React from 'react'
+import {Portfolio} from '@yoroi/types'
+import * as React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Boundary, Spacer, Text} from '../../../../../../../components'
-import {AmountItem, AmountItemPlaceholder} from '../../../../../../../components/AmountItem/AmountItem'
+import {Spacer, Text} from '../../../../../../../components'
 import {useMetrics} from '../../../../../../../metrics/metricsManager'
 import {useSearch, useSearchOnNavBar} from '../../../../../../../Search/SearchContext'
-import {sortTokenInfos} from '../../../../../../../utils'
-import {YoroiWallet} from '../../../../../../../yoroi-wallets/cardano/types'
-import {useAllTokenInfos, useBalance, useIsWalletEmpty} from '../../../../../../../yoroi-wallets/hooks'
-import {filterByFungibility} from '../../../../../../Send/common/filterByFungibility'
+import {usePortfolioBalances} from '../../../../../../Portfolio/common/hooks/usePortfolioBalances'
+import {TokenAmountItem} from '../../../../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
 import {NoAssetFoundImage} from '../../../../../../Send/common/NoAssetFoundImage'
 import {useSelectedWallet} from '../../../../../../WalletManager/Context'
 import {Counter} from '../../../../../common/Counter/Counter'
-import {filterBySearch} from '../../../../../common/filterBySearch'
 import {useNavigateTo} from '../../../../../common/navigation'
 import {useStrings} from '../../../../../common/strings'
 import {useSwapForm} from '../../../../../common/SwapFormProvider'
@@ -33,23 +30,25 @@ export const SelectSellTokenFromListScreen = () => {
 
   return (
     <SafeAreaView style={styles.container} edges={['left', 'right']}>
-      <Boundary>
-        <TokenList />
-      </Boundary>
+      <TokenList />
     </SafeAreaView>
   )
 }
 
 const TokenList = () => {
-  const wallet = useSelectedWallet()
-  const tokenInfos = useAllTokenInfos({wallet})
-  const filteredTokenInfos = useFilteredTokenInfos({tokenInfos})
   const strings = useStrings()
   const styles = useStyles()
+  const wallet = useSelectedWallet()
+  const balances = usePortfolioBalances({wallet})
+  const {search, isSearching} = useSearch()
+
+  const filteredAmounts = React.useMemo(() => {
+    return isSearching ? balances.fts.filter(({info}) => infoFilterByName(search)(info)) : balances.fts
+  }, [balances.fts, isSearching, search])
 
   return (
     <View style={styles.list}>
-      {filteredTokenInfos?.length > 0 && (
+      {filteredAmounts?.length > 0 && (
         <View style={styles.ph}>
           <View style={styles.labels}>
             <Text style={styles.label}>{strings.asset}</Text>
@@ -64,31 +63,26 @@ const TokenList = () => {
       )}
 
       <FlashList
-        data={filteredTokenInfos}
-        renderItem={({item: tokenInfo}: {item: Balance.TokenInfo}) => (
-          <Boundary loading={{fallback: <AmountItemPlaceholder style={styles.item} />}}>
-            <SelectableToken tokenInfo={tokenInfo} wallet={wallet} />
-          </Boundary>
-        )}
+        data={filteredAmounts}
+        renderItem={({item: amount}) => <SelectableToken amount={amount} />}
         bounces={false}
-        keyExtractor={({id, name}) => `${name}-${id}`}
+        keyExtractor={(_, index) => index.toString()}
         testID="assetsList"
         estimatedItemSize={72}
-        ListEmptyComponent={<EmptyList filteredTokenInfos={filteredTokenInfos} allTokenInfos={tokenInfos} />}
+        ListEmptyComponent={<Empty />}
       />
 
       <Counter
-        counter={filteredTokenInfos.length}
+        counter={filteredAmounts.length}
         style={styles.counter}
-        unitsText={strings.assets(filteredTokenInfos.length)}
+        unitsText={strings.assets(filteredAmounts.length)}
         closingText={strings.available}
       />
     </View>
   )
 }
 
-type SelectableTokenProps = {disabled?: boolean; tokenInfo: Balance.TokenInfo; wallet: YoroiWallet}
-const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
+const SelectableToken = ({amount}: {amount: Portfolio.Token.Amount}) => {
   const styles = useStyles()
   const {closeSearch} = useSearch()
   const {sellTokenInfoChanged, orderData, resetQuantities} = useSwap()
@@ -100,14 +94,14 @@ const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
   } = useSwapForm()
   const navigateTo = useNavigateTo()
   const {track} = useMetrics()
+  const [policyId] = amount.info.id.split('.')
 
-  const balanceAvailable = useBalance({wallet, tokenId: tokenInfo.id})
-  const shouldUpdateToken = tokenInfo.id !== orderData.amounts.sell.tokenId || !isSellTouched
-  const shouldSwitchTokens = tokenInfo.id === orderData.amounts.buy.tokenId && isBuyTouched
+  const shouldUpdateToken = amount.info.id !== orderData.amounts.sell.tokenId || !isSellTouched
+  const shouldSwitchTokens = amount.info.id === orderData.amounts.buy.tokenId && isBuyTouched
 
   const handleOnTokenSelection = () => {
     track.swapAssetFromChanged({
-      from_asset: [{asset_name: tokenInfo.name, asset_ticker: tokenInfo.ticker, policy_id: tokenInfo.group}],
+      from_asset: [{asset_name: amount.info.name, asset_ticker: amount.info.ticker, policy_id: policyId}],
     })
 
     // useCase - switch tokens when selecting the same already selected token on the other side
@@ -119,8 +113,8 @@ const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
     if (shouldUpdateToken) {
       sellTouched()
       sellTokenInfoChanged({
-        id: tokenInfo.id,
-        decimals: tokenInfo.decimals ?? 0,
+        id: amount.info.id,
+        decimals: amount.info.decimals,
       })
     }
 
@@ -130,48 +124,16 @@ const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
 
   return (
     <TouchableOpacity style={styles.item} onPress={handleOnTokenSelection} testID="selectTokenButton">
-      <AmountItem amount={{tokenId: tokenInfo.id, quantity: balanceAvailable}} wallet={wallet} />
+      <TokenAmountItem amount={amount} ignorePrivacy />
     </TouchableOpacity>
   )
 }
 
-const useFilteredTokenInfos = ({tokenInfos}: {tokenInfos: Array<Balance.TokenInfo>}) => {
-  const wallet = useSelectedWallet()
-
-  const {search: assetSearchTerm, visible: isSearching} = useSearch()
-  const isWalletEmpty = useIsWalletEmpty(wallet)
-  if (isWalletEmpty && !isSearching && tokenInfos?.length === 0) return []
-
-  const filteredTokenInfos = tokenInfos.filter(filterBySearch(assetSearchTerm)).filter(
-    filterByFungibility({
-      fungibilityFilter: 'ft',
-    }),
-  )
-
-  return sortTokenInfos({
-    wallet,
-    tokenInfos: filteredTokenInfos,
-  })
-}
-
-const EmptyList = ({
-  filteredTokenInfos,
-  allTokenInfos,
-}: {
-  filteredTokenInfos: Array<Balance.TokenInfo>
-  allTokenInfos: Array<Balance.TokenInfo>
-}) => {
-  const {search: assetSearchTerm, visible: isSearching} = useSearch()
-
-  if ((isSearching && assetSearchTerm.length > 0 && filteredTokenInfos.length === 0) || allTokenInfos.length === 0)
-    return <EmptySearchResult assetSearchTerm={assetSearchTerm} />
-
-  return null
-}
-
-const EmptySearchResult = ({assetSearchTerm}: {assetSearchTerm: string}) => {
+const Empty = () => {
   const strings = useStrings()
   const styles = useStyles()
+  const {search} = useSearch()
+
   return (
     <View style={styles.imageContainer}>
       <Spacer height={50} />
@@ -180,9 +142,7 @@ const EmptySearchResult = ({assetSearchTerm}: {assetSearchTerm: string}) => {
 
       <Spacer height={25} />
 
-      <Text style={styles.contentText}>
-        {assetSearchTerm === '' ? strings.noAssetsFound : strings.noAssetsFoundFor(assetSearchTerm)}
-      </Text>
+      <Text style={styles.contentText}>{search === '' ? strings.noAssetsFound : strings.noAssetsFoundFor(search)}</Text>
     </View>
   )
 }
