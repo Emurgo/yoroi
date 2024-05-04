@@ -877,7 +877,7 @@ const unsignedTx: Chain.Cardano.UnsignedTx & {mock: true} = {
     {
       address: 'address1',
       amounts: {
-        [tokenBalanceMocks.primaryETH.info.id]: tokenBalanceMocks.primaryETH,
+        [tokenBalanceMocks.primaryETH.info.id]: '1',
       },
     },
   ],
@@ -887,7 +887,7 @@ const unsignedTx: Chain.Cardano.UnsignedTx & {mock: true} = {
     {
       address: 'change_address',
       amounts: {
-        [tokenBalanceMocks.primaryETH.info.id]: tokenBalanceMocks.primaryETH,
+        [tokenBalanceMocks.primaryETH.info.id]: '1',
       },
     },
   ],

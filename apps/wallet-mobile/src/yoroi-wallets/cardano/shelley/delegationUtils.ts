@@ -4,7 +4,6 @@ import {CardanoAddressedUtxo} from '@emurgo/yoroi-lib'
 import assert from 'assert'
 import {sortBy} from 'lodash'
 
-import {Logger} from '../../logging'
 import {StakingStatus} from '../../types'
 import {CardanoMobile} from '../../wallets'
 import type {TimestampedCertMeta} from '../transactionManager'
