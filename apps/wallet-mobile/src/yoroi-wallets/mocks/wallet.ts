@@ -5,6 +5,7 @@ import {AppApi, CardanoApi} from '@yoroi/api'
 import {createPrimaryTokenInfo} from '@yoroi/portfolio'
 import {Balance, Chain, Portfolio} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
+import {noop} from 'lodash'
 import {Observable} from 'rxjs'
 
 import {getTokenFingerprint} from '../../legacy/format'
@@ -109,11 +110,11 @@ const wallet: YoroiWallet = {
   network: Chain.Network.Mainnet,
 
   balanceManager: {
-    clear: jest.fn(),
-    sync: jest.fn(),
-    resync: jest.fn(),
-    startSync: jest.fn(),
-    stopSync: jest.fn(),
+    clear: noop,
+    sync: noop,
+    resync: noop,
+    startSync: noop,
+    stopSync: noop,
   } as any,
 
   getStakingInfo: async () => {

@@ -8,6 +8,7 @@ import {
 } from '@react-navigation/native'
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack'
 import {Atoms, ThemedPalette, useTheme} from '@yoroi/theme'
+import {Portfolio} from '@yoroi/types'
 import React from 'react'
 import {Dimensions, TouchableOpacity, TouchableOpacityProps, ViewStyle} from 'react-native'
 
@@ -313,8 +314,8 @@ export type FirstRunRouteNavigation = StackNavigationProp<FirstRunRoutes>
 
 export type NftRoutes = {
   'nft-gallery': undefined
-  'nft-details': {id: string}
-  'image-zoom': {id: string}
+  'nft-details': {id: Portfolio.Token.Id}
+  'image-zoom': {id: Portfolio.Token.Id}
 }
 
 export type MenuRoutes = {

@@ -1,51 +1,44 @@
 import {RouteProp, useRoute} from '@react-navigation/native'
-import {isRecord, isString} from '@yoroi/common'
+import {isString} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import React, {ReactNode, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {
-  Dimensions,
-  Linking,
-  RefreshControl,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import {Dimensions, Linking, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {CopyButton, FadeIn, Spacer, Text} from '../components'
-import {NftPreview} from '../components/NftPreview'
 import {Tab, TabPanel, TabPanels, Tabs} from '../components/Tabs'
-import {features} from '../features'
+import {MediaPreview} from '../features/Portfolio/common/MediaGallery/MediaPreview'
 import {useSelectedWallet} from '../features/WalletManager/Context'
 import {useMetrics} from '../metrics/metricsManager'
 import {NftRoutes} from '../navigation'
-import {useModeratedNftImage} from '../Nfts/hooks'
 import {useNavigateTo} from '../Nfts/navigation'
 import {getNetworkConfigById} from '../yoroi-wallets/cardano/networks'
-import {useNativeAssetInvalidation, useNft} from '../yoroi-wallets/hooks'
 
 export const NftDetails = () => {
-  const {id} = useRoute<RouteProp<NftRoutes, 'nft-details'>>().params
-  const strings = useStrings()
   const styles = useStyles()
-  const wallet = useSelectedWallet()
-  const nft = useNft(wallet, {id})
-  const [policy, name] = nft.id.split('.')
-  const [activeTab, setActiveTab] = useState<'overview' | 'metadata'>('overview')
+  const strings = useStrings()
   const {track} = useMetrics()
-  const {invalidate, isLoading} = useNativeAssetInvalidation({networkId: wallet.networkId, policy, name})
+
+  const [activeTab, setActiveTab] = useState<'overview' | 'metadata'>('overview')
+
+  const {id} = useRoute<RouteProp<NftRoutes, 'nft-details'>>().params
+  const wallet = useSelectedWallet()
+
+  // TODO: revisit (missing refresh mechanism)
+  // reading from the getter, there is no need to subscribe to changes
+  // until implementation of the new refresh mechanism in here
+  const amount = wallet.balances.records.get(id)
+
+  // record can be gone when arriving here, need a state
+  // TODO: revisit + product definition (missing is gone state)
+  if (!amount) return null
 
   return (
     <FadeIn style={styles.container}>
       <SafeAreaView>
-        <ScrollView
-          contentContainerStyle={styles.contentContainer}
-          refreshControl={<RefreshControl onRefresh={invalidate} refreshing={isLoading} />}
-        >
-          {features.moderatingNftsEnabled ? <ModeratedNftImage nft={nft} /> : <UnModeratedNftImage nft={nft} />}
+        <ScrollView contentContainerStyle={styles.contentContainer}>
+          <SelectableMedia info={amount.info} />
 
           <Tabs>
             <Tab
@@ -75,11 +68,11 @@ export const NftDetails = () => {
 
           <TabPanels>
             <TabPanel active={activeTab === 'overview'}>
-              <NftOverview nft={nft} />
+              <NftOverview info={amount.info} />
             </TabPanel>
 
             <TabPanel active={activeTab === 'metadata'}>
-              <NftMetadata nft={nft} />
+              <NftMetadata info={amount.info} />
             </TabPanel>
           </TabPanels>
         </ScrollView>
@@ -88,34 +81,12 @@ export const NftDetails = () => {
   )
 }
 
-const UnModeratedNftImage = ({nft}: {nft: Balance.TokenInfo}) => {
+const SelectableMedia = ({info}: {info: Portfolio.Token.Info}) => {
   const styles = useStyles()
   const navigateTo = useNavigateTo()
   return (
-    <TouchableOpacity onPress={() => navigateTo.nftZoom(nft.id)} style={styles.imageWrapper}>
-      <NftPreview nft={nft} style={styles.image} height={IMAGE_HEIGHT} width={IMAGE_WIDTH} contentFit="contain" />
-    </TouchableOpacity>
-  )
-}
-
-const ModeratedNftImage = ({nft}: {nft: Balance.TokenInfo}) => {
-  const styles = useStyles()
-  const wallet = useSelectedWallet()
-  const navigateTo = useNavigateTo()
-  const {status} = useModeratedNftImage({wallet, fingerprint: nft.fingerprint})
-  const canShowNft = status === 'approved' || status === 'consent'
-
-  if (!canShowNft) {
-    return (
-      <View style={styles.imageWrapper}>
-        <NftPreview nft={nft} style={styles.image} height={IMAGE_HEIGHT} width={IMAGE_WIDTH} showPlaceholder />
-      </View>
-    )
-  }
-
-  return (
-    <TouchableOpacity onPress={() => navigateTo.nftZoom(nft.id)} style={styles.imageWrapper}>
-      <NftPreview nft={nft} style={styles.image} height={IMAGE_HEIGHT} width={IMAGE_WIDTH} contentFit="contain" />
+    <TouchableOpacity onPress={() => navigateTo.nftZoom(info.id)} style={styles.imageWrapper}>
+      <MediaPreview info={info} style={styles.image} height={imageHeight} width={imageWidth} contentFit="contain" />
     </TouchableOpacity>
   )
 }
@@ -137,34 +108,37 @@ const MetadataRow = ({title, copyText, children}: {title: string; children: Reac
   )
 }
 
-const NftOverview = ({nft}: {nft: Balance.TokenInfo}) => {
+// TODO: revisit (missing hit the discovery and product screen)
+const NftOverview = ({info}: {info: Portfolio.Token.Info}) => {
   const styles = useStyles()
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const config = getNetworkConfigById(wallet.networkId)
 
+  const [policyId] = info.id.split('.')
+
   return (
     <View>
       <MetadataRow title={strings.nftName}>
-        <Text style={styles.name}>{nft.name}</Text>
+        <Text style={styles.name}>{info.name}</Text>
       </MetadataRow>
 
       <MetadataRow title={strings.description}>
-        <Text style={styles.name}>{normalizeMetadataString(nft.description)}</Text>
+        <Text style={styles.name}>{normalizeMetadataString(info.description)}</Text>
       </MetadataRow>
 
-      {isRecord(nft.metadatas.mintNft) && (
+      {/* {isRecord(info.metadatas.mintNft) && (
         <MetadataRow title={strings.author}>
-          <Text style={styles.name}>{normalizeMetadataString(nft.metadatas.mintNft.author)}</Text>
+          <Text style={styles.name}>{normalizeMetadataString(info.metadatas.mintNft.author)}</Text>
         </MetadataRow>
-      )}
+      )} */}
 
-      <MetadataRow title={strings.fingerprint} copyText={nft.fingerprint}>
-        <Text style={styles.name}>{nft.fingerprint}</Text>
+      <MetadataRow title={strings.fingerprint} copyText={info.fingerprint}>
+        <Text style={styles.name}>{info.fingerprint}</Text>
       </MetadataRow>
 
-      <MetadataRow title={strings.policyId} copyText={nft.group}>
-        <Text style={styles.name}>{nft.group}</Text>
+      <MetadataRow title={strings.policyId} copyText={policyId}>
+        <Text style={styles.name}>{policyId}</Text>
       </MetadataRow>
 
       <MetadataRow title={strings.detailsLinks}>
@@ -174,7 +148,7 @@ const NftOverview = ({nft}: {nft: Balance.TokenInfo}) => {
             flexDirection: 'row',
           }}
         >
-          <TouchableOpacity onPress={() => Linking.openURL(config.EXPLORER_URL_FOR_TOKEN(nft.id))} style={{flex: 2}}>
+          <TouchableOpacity onPress={() => Linking.openURL(config.EXPLORER_URL_FOR_TOKEN(info.id))} style={{flex: 2}}>
             <View style={styles.linkContent}>
               <Spacer width={2} />
 
@@ -182,7 +156,7 @@ const NftOverview = ({nft}: {nft: Balance.TokenInfo}) => {
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => Linking.openURL(config.CEXPLORER_URL_FOR_TOKEN(nft.id))} style={{flex: 4}}>
+          <TouchableOpacity onPress={() => Linking.openURL(config.CEXPLORER_URL_FOR_TOKEN(info.id))} style={{flex: 4}}>
             <View style={styles.linkContent}>
               <Spacer width={2} />
 
@@ -212,10 +186,12 @@ const HR = () => (
   />
 )
 
-const NftMetadata = ({nft}: {nft: Balance.TokenInfo}) => {
+// TODO: revisit (missing hit the discovery and product screen)
+const NftMetadata = ({info}: {info: Portfolio.Token.Info}) => {
   const styles = useStyles()
   const strings = useStrings()
-  const stringifiedMetadata = JSON.stringify(nft.metadatas.mintNft, undefined, 2)
+  // const stringifiedMetadata = JSON.stringify(info.metadatas.mintNft, undefined, 2)
+  const stringifiedMetadata = info.name
 
   return (
     <View>
@@ -232,9 +208,9 @@ const NftMetadata = ({nft}: {nft: Balance.TokenInfo}) => {
   )
 }
 
-const IMAGE_HEIGHT = 380
-const IMAGE_PADDING = 16
-const IMAGE_WIDTH = Dimensions.get('window').width - IMAGE_PADDING * 2
+const imageHeight = 380
+const imagePadding = 16
+const imageWidth = Dimensions.get('window').width - imagePadding * 2
 
 const useStyles = () => {
   const {atoms, color} = useTheme()
@@ -269,10 +245,10 @@ const useStyles = () => {
       flexGrow: 1,
     },
     contentContainer: {
-      paddingHorizontal: IMAGE_PADDING,
+      paddingHorizontal: imagePadding,
     },
     rowContainer: {
-      paddingVertical: IMAGE_PADDING,
+      paddingVertical: imagePadding,
     },
     rowTitleContainer: {
       display: 'flex',

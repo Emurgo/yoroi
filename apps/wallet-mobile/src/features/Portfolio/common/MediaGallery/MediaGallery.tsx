@@ -9,8 +9,8 @@ import {MediaPreview} from './MediaPreview'
 type Props = {
   amounts: ReadonlyArray<Portfolio.Token.Amount>
   onSelect: (amount: Portfolio.Token.Amount) => void
-  onRefresh: () => void
-  isRefreshing: boolean
+  onRefresh?: () => void
+  isRefreshing?: boolean
   bounces?: FlashListProps<Balance.TokenInfo>['bounces']
   ListEmptyComponent?: FlashListProps<Balance.TokenInfo>['ListEmptyComponent']
   withVerticalPadding?: boolean

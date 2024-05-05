@@ -2,121 +2,121 @@
   {
     "id": "nft.gallery.nftCount",
     "defaultMessage": "!!!NFT count",
-    "file": "src/Nfts/Nfts.tsx",
+    "file": "src/features/Portfolio/common/MediaGallery/Nfts.tsx",
     "start": {
       "line": 162,
       "column": 12,
-      "index": 4260
+      "index": 4263
     },
     "end": {
       "line": 165,
       "column": 3,
-      "index": 4333
+      "index": 4336
     }
   },
   {
     "id": "nft.gallery.errorTitle",
     "defaultMessage": "!!!Oops!",
-    "file": "src/Nfts/Nfts.tsx",
+    "file": "src/features/Portfolio/common/MediaGallery/Nfts.tsx",
     "start": {
       "line": 166,
       "column": 14,
-      "index": 4349
+      "index": 4352
     },
     "end": {
       "line": 169,
       "column": 3,
-      "index": 4420
+      "index": 4423
     }
   },
   {
     "id": "nft.gallery.errorDescription",
     "defaultMessage": "!!!Something went wrong.",
-    "file": "src/Nfts/Nfts.tsx",
+    "file": "src/features/Portfolio/common/MediaGallery/Nfts.tsx",
     "start": {
       "line": 170,
       "column": 20,
-      "index": 4442
+      "index": 4445
     },
     "end": {
       "line": 173,
       "column": 3,
-      "index": 4535
+      "index": 4538
     }
   },
   {
     "id": "nft.gallery.reloadApp",
     "defaultMessage": "!!!Try to restart the app.",
-    "file": "src/Nfts/Nfts.tsx",
+    "file": "src/features/Portfolio/common/MediaGallery/Nfts.tsx",
     "start": {
       "line": 174,
       "column": 13,
-      "index": 4550
+      "index": 4553
     },
     "end": {
       "line": 177,
       "column": 3,
-      "index": 4638
+      "index": 4641
     }
   },
   {
     "id": "nft.gallery.noNftsFound",
     "defaultMessage": "!!!No NFTs found",
-    "file": "src/Nfts/Nfts.tsx",
+    "file": "src/features/Portfolio/common/MediaGallery/Nfts.tsx",
     "start": {
       "line": 178,
       "column": 15,
-      "index": 4655
+      "index": 4658
     },
     "end": {
       "line": 181,
       "column": 3,
-      "index": 4735
+      "index": 4738
     }
   },
   {
     "id": "nft.gallery.noNftsInWallet",
     "defaultMessage": "!!!No NFTs added to your wallet yet",
-    "file": "src/Nfts/Nfts.tsx",
+    "file": "src/features/Portfolio/common/MediaGallery/Nfts.tsx",
     "start": {
       "line": 182,
       "column": 18,
-      "index": 4755
+      "index": 4758
     },
     "end": {
       "line": 185,
       "column": 3,
-      "index": 4857
+      "index": 4860
     }
   },
   {
     "id": "nft.navigation.title",
     "defaultMessage": "!!!NFT Gallery",
-    "file": "src/Nfts/Nfts.tsx",
+    "file": "src/features/Portfolio/common/MediaGallery/Nfts.tsx",
     "start": {
       "line": 186,
       "column": 9,
-      "index": 4868
+      "index": 4871
     },
     "end": {
       "line": 189,
       "column": 3,
-      "index": 4943
+      "index": 4946
     }
   },
   {
     "id": "nft.navigation.search",
     "defaultMessage": "!!!Search NFT",
-    "file": "src/Nfts/Nfts.tsx",
+    "file": "src/features/Portfolio/common/MediaGallery/Nfts.tsx",
     "start": {
       "line": 190,
       "column": 10,
-      "index": 4955
+      "index": 4958
     },
     "end": {
       "line": 193,
       "column": 3,
-      "index": 5030
+      "index": 5033
     }
   }
 ]
