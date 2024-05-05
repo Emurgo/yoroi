@@ -1,6 +1,7 @@
 import {Api, Chain, Portfolio} from '@yoroi/types'
 
 import {apiConfig, portfolioApiMaker} from './api-maker'
+import {DullahanApiCachedIdsRequest} from './types'
 
 describe('portfolioApiMaker', () => {
   const mockNetwork: Chain.Network = Chain.Network.Mainnet
@@ -47,6 +48,9 @@ describe('portfolioApiMaker', () => {
     const mockTokenIdsWithCache: ReadonlyArray<
       Api.RequestWithCache<Portfolio.Token.Id>
     > = [['token.id', 'etag-hash']]
+    const mockTokenIdsWithCacheRequest: DullahanApiCachedIdsRequest = [
+      'token.id:etag-hash',
+    ]
 
     await api.tokenDiscoveries(mockTokenIdsWithCache)
     await api.tokenInfos(mockTokenIdsWithCache)
@@ -55,7 +59,7 @@ describe('portfolioApiMaker', () => {
     expect(mockRequest).toHaveBeenCalledWith({
       method: 'post',
       url: apiConfig[Chain.Network.Mainnet].tokenDiscoveries,
-      data: mockTokenIdsWithCache,
+      data: mockTokenIdsWithCacheRequest,
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -64,7 +68,7 @@ describe('portfolioApiMaker', () => {
     expect(mockRequest).toHaveBeenCalledWith({
       method: 'post',
       url: apiConfig[Chain.Network.Mainnet].tokenInfos,
-      data: mockTokenIdsWithCache,
+      data: mockTokenIdsWithCacheRequest,
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -88,6 +92,9 @@ describe('portfolioApiMaker', () => {
     const mockTokenIdsWithCache: ReadonlyArray<
       Api.RequestWithCache<Portfolio.Token.Id>
     > = [['token.id', 'etag-hash']]
+    const mockTokenIdsWithCacheRequest: DullahanApiCachedIdsRequest = [
+      'token.id:etag-hash',
+    ]
 
     await api.tokenDiscoveries(mockTokenIdsWithCache)
     await api.tokenInfos(mockTokenIdsWithCache)
@@ -96,7 +103,7 @@ describe('portfolioApiMaker', () => {
     expect(mockRequest).toHaveBeenCalledWith({
       method: 'post',
       url: apiConfig[Chain.Network.Mainnet].tokenDiscoveries,
-      data: mockTokenIdsWithCache,
+      data: mockTokenIdsWithCacheRequest,
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -105,7 +112,7 @@ describe('portfolioApiMaker', () => {
     expect(mockRequest).toHaveBeenCalledWith({
       method: 'post',
       url: apiConfig[Chain.Network.Mainnet].tokenInfos,
-      data: mockTokenIdsWithCache,
+      data: mockTokenIdsWithCacheRequest,
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',

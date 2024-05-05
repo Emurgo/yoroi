@@ -3,8 +3,11 @@ import {Api, Chain, Portfolio} from '@yoroi/types'
 import {freeze} from 'immer'
 
 import {ApiConfig} from '../../types'
-import {toSecondaryTokenInfos} from './transformers'
-import {DullahanApiTokenInfosResponse} from './types'
+import {toDullahanRequest, toSecondaryTokenInfos} from './transformers'
+import {
+  DullahanApiCachedIdsRequest,
+  DullahanApiTokenInfosResponse,
+} from './types'
 
 export const portfolioApiMaker = ({
   network,
@@ -19,11 +22,11 @@ export const portfolioApiMaker = ({
       async tokenDiscoveries(idsWithCache) {
         return request<
           Portfolio.Api.TokenDiscoveriesResponse,
-          ReadonlyArray<Api.RequestWithCache<Portfolio.Token.Id>>
+          DullahanApiCachedIdsRequest
         >({
           method: 'post',
           url: config.tokenDiscoveries,
-          data: idsWithCache,
+          data: toDullahanRequest(idsWithCache),
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -33,11 +36,11 @@ export const portfolioApiMaker = ({
       async tokenInfos(idsWithCache) {
         const response = await request<
           DullahanApiTokenInfosResponse,
-          ReadonlyArray<Api.RequestWithCache<Portfolio.Token.Id>>
+          DullahanApiCachedIdsRequest
         >({
           method: 'post',
           url: config.tokenInfos,
-          data: idsWithCache,
+          data: toDullahanRequest(idsWithCache),
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',

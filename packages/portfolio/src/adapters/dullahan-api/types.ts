@@ -5,3 +5,7 @@ export type DullahanApiTokenInfosResponse = Readonly<{
     Omit<Portfolio.Token.Info, 'nature'>
   >
 }>
+
+export type DullahanIdWithCache = `${string}.${string}:${string}`
+
+export type DullahanApiCachedIdsRequest = ReadonlyArray<DullahanIdWithCache>
