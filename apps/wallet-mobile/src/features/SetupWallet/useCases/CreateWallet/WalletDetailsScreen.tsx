@@ -316,6 +316,8 @@ export const WalletDetailsScreen = () => {
             showErrorOnBlur
           />
 
+          <Space height="xl" />
+
           <TextInput
             enablesReturnKeyAutomatically
             ref={passwordRef}
@@ -349,6 +351,8 @@ export const WalletDetailsScreen = () => {
             disabled={isLoading}
             showErrorOnBlur
           />
+
+          <Space height="xl" />
 
           <View style={styles.checksum}>
             <Icon.WalletAccount iconSeed={plate.accountPlate.ImagePart} style={styles.walletChecksum} />
