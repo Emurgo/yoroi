@@ -8,7 +8,7 @@ export type PortfolioTokenDiscovery = {
     decimals: PortfolioTokenSource
     ticker: PortfolioTokenSource
     symbol: PortfolioTokenSource
-    image: PortfolioTokenSource
+    originalImage: PortfolioTokenSource
     description: PortfolioTokenSource
   }
 
