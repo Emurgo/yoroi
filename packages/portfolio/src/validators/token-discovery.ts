@@ -11,7 +11,7 @@ const DiscoverySourceSchema = z.object({
   decimals: TokenSourceSchema,
   ticker: TokenSourceSchema,
   symbol: TokenSourceSchema,
-  image: TokenSourceSchema,
+  originalImage: TokenSourceSchema,
   description: TokenSourceSchema,
 })
 
