@@ -1,8 +1,4 @@
-import {
-  PortfolioTokenId,
-  PortfolioTokenPropertyType,
-  PortfolioTokenSource,
-} from './token'
+import {PortfolioTokenId, PortfolioTokenSource} from './token'
 
 export type PortfolioTokenDiscovery = {
   id: PortfolioTokenId
@@ -13,6 +9,7 @@ export type PortfolioTokenDiscovery = {
     ticker: PortfolioTokenSource
     symbol: PortfolioTokenSource
     image: PortfolioTokenSource
+    description: PortfolioTokenSource
   }
 
   originalMetadata: {
@@ -21,19 +18,5 @@ export type PortfolioTokenDiscovery = {
     tokenRegistry: null | Record<string, unknown>
   }
 
-  counters: {
-    supply: bigint
-    items: number
-    totalItems: number
-  }
-
-  properties:
-    | {
-        [property: string]: {
-          rarity: number
-          detectedType: PortfolioTokenPropertyType
-          value: any
-        }
-      }
-    | {}
+  supply: bigint
 }
