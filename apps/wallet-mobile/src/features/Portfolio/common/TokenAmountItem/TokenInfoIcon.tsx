@@ -16,10 +16,6 @@ type TokenInfoIconProps = {
 export const TokenInfoIcon = ({info, size = 'md'}: TokenInfoIconProps) => {
   const {styles} = useStyles()
   const {network} = useSelectedWallet()
-  const [status, setStatus] = React.useState<'loading' | 'error' | 'ok'>('loading')
-
-  const handleOnError = React.useCallback(() => setStatus('error'), [])
-  const handleOnOk = React.useCallback(() => setStatus('ok'), [])
 
   if (isPrimaryToken(info)) return <PrimaryIcon size={size} />
 
@@ -52,11 +48,7 @@ export const TokenInfoIcon = ({info, size = 'md'}: TokenInfoIconProps) => {
       style={[size === 'sm' ? styles.iconSmall : styles.iconMedium]}
       placeholder={blurhash}
       cachePolicy="memory-disk"
-      onError={handleOnError}
-      onLoad={handleOnOk}
-    >
-      {status !== 'ok' && <TokenIconPlaceholder size={size} />}
-    </Image>
+    />
   )
 }
 

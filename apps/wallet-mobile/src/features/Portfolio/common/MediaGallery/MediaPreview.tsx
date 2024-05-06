@@ -2,7 +2,6 @@ import {Portfolio} from '@yoroi/types'
 import {Image} from 'expo-image'
 import React from 'react'
 import {ImageStyle, View} from 'react-native'
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 import placeholder from '../../../../assets/img/nft-placeholder.png'
 import {useSelectedWallet} from '../../../WalletManager/Context'
@@ -27,10 +26,6 @@ export const MediaPreview = ({
   blurRadius,
 }: MediaPreviewProps) => {
   const {network} = useSelectedWallet()
-  const [status, setStatus] = React.useState<'loading' | 'error' | 'ok'>('loading')
-
-  const handleOnError = React.useCallback(() => setStatus('error'), [])
-  const handleOnOk = React.useCallback(() => setStatus('ok'), [])
 
   const [policy, name] = info.id.split('.')
   const uri = showPlaceholder
@@ -46,25 +41,8 @@ export const MediaPreview = ({
         blurRadius={blurRadius}
         placeholder={blurhash}
         cachePolicy="memory-disk"
-        onError={handleOnError}
-        onLoad={handleOnOk}
-      >
-        {status !== 'ok' && <SkeletonImagePlaceholder width={width} height={height} />}
-      </Image>
-    </View>
-  )
-}
-
-function SkeletonImagePlaceholder({width, height}: {width: number; height: number}) {
-  return (
-    <SkeletonPlaceholder>
-      <View
-        style={{
-          width,
-          height,
-        }}
       />
-    </SkeletonPlaceholder>
+    </View>
   )
 }
 
