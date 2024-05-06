@@ -2,7 +2,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {View} from 'react-native'
 
-import {MnemonicWordInputRef} from '../../useCases/RestoreWallet/RestoreWalletScreen'
+import {MnemonicWordInputRef} from '../RestoreWalletScreen'
 import {MnemonicInput} from './MnemonicInput'
 
 storiesOf('MnemonicInput', module)

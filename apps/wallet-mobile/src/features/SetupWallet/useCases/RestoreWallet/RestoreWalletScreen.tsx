@@ -23,9 +23,9 @@ import {makeKeys} from '../../../../yoroi-wallets/cardano/shelley/makeKeys'
 import {useOpenWallet, usePlate, useWalletMetas} from '../../../../yoroi-wallets/hooks'
 import {useSetSelectedWallet} from '../../../WalletManager/Context/SelectedWalletContext'
 import {useSetSelectedWalletMeta} from '../../../WalletManager/Context/SelectedWalletMetaContext'
-import {MnemonicInput} from '../../common/MnemonicInput'
 import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
 import {useStrings} from '../../common/useStrings'
+import {MnemonicInput} from './MnemonicInput'
 
 export type MnemonicWordInputRef = {
   focus: () => void
@@ -59,22 +59,14 @@ export const RestoreWalletScreen = () => {
   const [inputErrorsIndexes, setInputErrorsIndexes] = React.useState<Array<number>>([])
   const hasFocusedInputError = inputErrorsIndexes.find((index) => index === focusedIndex) !== undefined
 
-  const addInputErrorIndex = (indexToAdd: number) => {
+  const onError = (indexToAdd: number) => {
     const newInputErrors = [...inputErrorsIndexes, indexToAdd]
     setInputErrorsIndexes(newInputErrors)
   }
 
-  const removeInputErrorIndex = (indexToRemove: number) => {
+  const onClearError = (indexToRemove: number) => {
     const newInputErrors = inputErrorsIndexes.filter((index) => index !== indexToRemove)
     setInputErrorsIndexes(newInputErrors)
-  }
-
-  const onError = (index: number) => {
-    addInputErrorIndex(index)
-  }
-
-  const onClearError = (index: number) => {
-    removeInputErrorIndex(index)
   }
 
   const mnenonicRefs = React.useRef(mnemonicSelectedWords.map(() => React.createRef<MnemonicWordInputRef>())).current
@@ -183,7 +175,7 @@ export const RestoreWalletScreen = () => {
           <StepperProgress currentStep={1} currentStepTitle={strings.stepRestoreWalletScreen} totalSteps={2} />
         </View>
 
-        <ScrollView style={styles.scroll} bounces={false}>
+        <ScrollView style={styles.scroll} bounces={false} keyboardShouldPersistTaps="always">
           <View>
             <Text style={styles.title}>{strings.restoreWalletScreenTitle(bold)}</Text>
 
@@ -202,12 +194,13 @@ export const RestoreWalletScreen = () => {
             onFocus={onFocus}
             mnemonic={mnemonic}
             mnenonicRefs={mnenonicRefs}
+            inputErrorsIndexes={inputErrorsIndexes}
             onError={onError}
             onClearError={onClearError}
           />
         </ScrollView>
 
-        {mnemonic !== '' && isValidPhrase && <NextButton onPress={handleOnNext} />}
+        {!isEmptyString(mnemonic) && isValidPhrase && <NextButton onPress={handleOnNext} />}
 
         {suggestedWords.length > 0 && !hasFocusedInputError && (
           <WordSuggestionList data={suggestedWords} index={focusedIndex} onSelect={onSelect} />
@@ -291,7 +284,7 @@ const WordSuggestionList = ({
         horizontal
         showsHorizontalScrollIndicator={false}
         data={data}
-        keyboardShouldPersistTaps="handled"
+        keyboardShouldPersistTaps="always"
         renderItem={({item: word, index: wordIndex}) => (
           <>
             {wordIndex === 0 && <Space width="l" />}
