@@ -19,6 +19,7 @@ const primaryETH: Portfolio.Token.Discovery = {
     symbol: Portfolio.Token.Source.Metadata,
     ticker: Portfolio.Token.Source.Metadata,
     description: Portfolio.Token.Source.Metadata,
+    website: Portfolio.Token.Source.Metadata,
   },
 }
 
@@ -37,6 +38,7 @@ const nftCryptoKitty: Portfolio.Token.Discovery = {
     symbol: Portfolio.Token.Source.Metadata,
     ticker: Portfolio.Token.Source.Metadata,
     description: Portfolio.Token.Source.Metadata,
+    website: Portfolio.Token.Source.Metadata,
   },
 }
 
@@ -55,6 +57,7 @@ const rnftWhatever: Portfolio.Token.Discovery = {
     symbol: Portfolio.Token.Source.Metadata,
     ticker: Portfolio.Token.Source.Metadata,
     description: Portfolio.Token.Source.Metadata,
+    website: Portfolio.Token.Source.Metadata,
   },
 }
 

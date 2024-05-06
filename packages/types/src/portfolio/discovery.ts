@@ -10,6 +10,7 @@ export type PortfolioTokenDiscovery = {
     symbol: PortfolioTokenSource
     originalImage: PortfolioTokenSource
     description: PortfolioTokenSource
+    website: PortfolioTokenSource
   }
 
   originalMetadata: {

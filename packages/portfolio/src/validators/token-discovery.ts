@@ -13,6 +13,7 @@ const DiscoverySourceSchema = z.object({
   symbol: TokenSourceSchema,
   originalImage: TokenSourceSchema,
   description: TokenSourceSchema,
+  website: TokenSourceSchema,
 })
 
 const DiscoveryOriginalMetadataSchema = z.object({
