@@ -101,9 +101,11 @@ const ClearAllButton = ({onPress}: {onPress: () => void}) => {
   const {styles} = useStyles()
   const strings = useStrings()
   return (
-    <TouchableOpacity activeOpacity={0.5} style={styles.textView} onPress={onPress}>
-      <Text style={styles.clearAll}>{strings.clearAll}</Text>
-    </TouchableOpacity>
+    <View style={styles.textView}>
+      <TouchableOpacity activeOpacity={0.5} onPress={onPress}>
+        <Text style={styles.clearAll}>{strings.clearAll}</Text>
+      </TouchableOpacity>
+    </View>
   )
 }
 
