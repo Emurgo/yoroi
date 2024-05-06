@@ -83,8 +83,7 @@ const SliderIndicator = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,
@@ -108,15 +107,15 @@ const useStyles = () => {
     },
     sheet: {
       flex: 1,
-      backgroundColor: color['bottom-sheet-background'],
+      backgroundColor: color.gray_cmin,
       alignSelf: 'stretch',
       paddingHorizontal: 16,
       paddingBottom: 16,
     },
     title: {
-      ...typography['heading-3-medium'],
+      ...atoms.heading_3_medium,
       padding: 14,
-      color: color.gray.max,
+      color: color.gray_cmax,
     },
     header: {
       alignItems: 'center',
@@ -124,7 +123,7 @@ const useStyles = () => {
     },
     slider: {
       height: 4,
-      backgroundColor: color.gray.max,
+      backgroundColor: color.gray_cmax,
       width: 32,
       borderRadius: 10,
     },

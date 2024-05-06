@@ -5,10 +5,10 @@ import {SwapApi} from '@yoroi/types/src/swap/api'
 import {useMutation, UseMutationOptions} from 'react-query'
 import {z} from 'zod'
 
-import {useSelectedWallet} from '../../../SelectedWallet'
 import {convertBech32ToHex} from '../../../yoroi-wallets/cardano/common/signatureUtils'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {generateCIP30UtxoCbor} from '../../../yoroi-wallets/cardano/utils'
+import {useSelectedWallet} from '../../WalletManager/Context'
 import {PRICE_IMPACT_HIGH_RISK, PRICE_IMPACT_MODERATE_RISK} from './constants'
 import {SwapPriceImpactRisk} from './types'
 
@@ -106,22 +106,22 @@ export const getPriceImpactRisk = (priceImpact: number) => {
 }
 
 export const usePriceImpactRiskTheme = (risk: SwapPriceImpactRisk) => {
-  const {theme} = useTheme()
+  const {color} = useTheme()
 
   if (risk === 'high') {
     return {
-      text: theme.color.magenta[500],
-      background: theme.color.magenta[100],
+      text: color.sys_magenta_c500,
+      background: color.sys_magenta_c100,
     }
   } else if (risk === 'moderate') {
     return {
-      text: theme.color.yellow[500],
-      background: theme.color.yellow[100],
+      text: color.sys_orange_c500,
+      background: color.sys_orange_c100,
     }
   }
 
   return {
-    text: theme.color.gray.max,
-    background: theme.color.gray.min,
+    text: color.gray_cmax,
+    background: color.gray_cmin,
   }
 }

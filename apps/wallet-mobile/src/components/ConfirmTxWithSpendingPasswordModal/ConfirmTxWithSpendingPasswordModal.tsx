@@ -3,7 +3,7 @@ import React, {useEffect, useRef, useState} from 'react'
 import {ActivityIndicator, StyleSheet, TextInput as RNTextInput, View} from 'react-native'
 
 import {debugWalletInfo, features} from '../../features'
-import {useSelectedWallet} from '../../SelectedWallet'
+import {useSelectedWallet} from '../../features/WalletManager/Context'
 import {WrongPassword} from '../../yoroi-wallets/cardano/errors'
 import {useSignTxWithPassword, useSubmitTx} from '../../yoroi-wallets/hooks'
 import {YoroiSignedTx, YoroiUnsignedTx} from '../../yoroi-wallets/types'
@@ -115,8 +115,7 @@ const getErrorMessage = (error: unknown, strings: Record<'wrongPasswordMessage' 
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     modalText: {
       paddingHorizontal: 70,
@@ -124,7 +123,7 @@ const useStyles = () => {
       paddingBottom: 8,
     },
     errorMessage: {
-      color: color.magenta[500],
+      color: color.sys_magenta_c500,
       textAlign: 'center',
     },
     loading: {

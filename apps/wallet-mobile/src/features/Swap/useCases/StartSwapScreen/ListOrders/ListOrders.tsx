@@ -59,8 +59,7 @@ export const ListOrders = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     buttonsGroup: {
       paddingVertical: 24,
@@ -70,7 +69,7 @@ const useStyles = () => {
     root: {
       flex: 1,
       justifyContent: 'space-between',
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
   })
   return styles

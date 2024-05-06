@@ -50,7 +50,6 @@ import {ADDRESS_TYPE_TO_CHANGE} from '../formatPath'
 import {getTime} from '../getTime'
 import {doesCardanoAppVersionSupportCIP36, getCardanoAppMajorVersion, signTxWithLedger} from '../hw'
 import {processTxHistoryData} from '../processTransactions'
-import {IsLockedError, nonblockingSynchronize, synchronize} from '../promise'
 import {filterAddressesByStakingKey, getDelegationStatus} from '../shelley/delegationUtils'
 import {yoroiSignedTx} from '../signedTx'
 import {TransactionManager} from '../transactionManager'
@@ -106,7 +105,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     DISCOVERY_BLOCK_SIZE,
     DISCOVERY_GAP_SIZE,
     HARD_DERIVATION_START,
-    HISTORY_REFRESH_TIME,
     IS_MAINNET,
     MAX_GENERATED_UNUSED,
     NETWORK_CONFIG,
@@ -376,29 +374,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       this.cardanoApi = cardanoApi
     }
 
-    timeout: NodeJS.Timeout | null = null
-
-    startSync() {
-      const backgroundSync = async () => {
-        try {
-          await this.tryDoFullSync()
-          await this.save()
-        } catch (error) {
-          Logger.error((error as Error)?.message)
-        }
-        if (process.env.NODE_ENV !== 'test') {
-          this.timeout = setTimeout(() => backgroundSync(), HISTORY_REFRESH_TIME)
-        }
-      }
-
-      backgroundSync()
-    }
-
-    stopSync() {
-      if (!this.timeout) return
-      clearTimeout(this.timeout)
-    }
-
     get receiveAddresses(): Addresses {
       return this.externalAddresses.slice(0, this.numReceiveAddresses)
     }
@@ -409,6 +384,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
 
     async clear() {
       await this.transactionManager.clear()
+      this.transactionManager.resetState()
       await this.utxoManager.clear()
     }
 
@@ -418,13 +394,22 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
 
     // =================== persistence =================== //
     async sync() {
-      await this.doFullSync()
+      if (!this.isInitialized) {
+        console.error('ShelleyWallet::sync: wallet not initialized')
+        return Promise.resolve()
+      }
+
+      await this.discoverAddresses()
+
+      await Promise.all([this.syncUtxos(), this.transactionManager.doSync(this.getAddressesInBlocks(), BACKEND)])
+
+      this.updateLastGeneratedAddressIndex()
+
       await this.save()
     }
 
     async resync() {
       await this.clear()
-      this.transactionManager.resetState()
       await this.save()
       this.sync()
     }
@@ -1246,31 +1231,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     }
 
     // =================== sync =================== //
-
-    async tryDoFullSync() {
-      try {
-        return await nonblockingSynchronize(this._doFullSyncMutex, () => this._doFullSync())
-      } catch (error) {
-        if (!(error instanceof IsLockedError)) {
-          throw error
-        }
-      }
-    }
-
-    private async doFullSync() {
-      return synchronize(this._doFullSyncMutex, () => this._doFullSync())
-    }
-
-    private async _doFullSync() {
-      assert(this.isInitialized, 'doFullSync: isInitialized')
-
-      await this.discoverAddresses()
-
-      await Promise.all([this.syncUtxos(), this.transactionManager.doSync(this.getAddressesInBlocks(), BACKEND)])
-
-      this.updateLastGeneratedAddressIndex()
-    }
-
     private getAddressesInBlocks() {
       const internalAddresses = this.internalChain.getBlocks()
       const externalAddresses = this.externalChain.getBlocks()

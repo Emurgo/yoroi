@@ -113,12 +113,12 @@ export const DescribeSelectedAddressScreen = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {color} = useTheme()
 
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: theme.color.gray.min,
+      backgroundColor: color.gray_cmin,
       padding: 16,
     },
     address: {
@@ -126,12 +126,12 @@ const useStyles = () => {
       alignItems: 'center',
     },
     button: {
-      backgroundColor: theme.color.primary[500],
+      backgroundColor: color.primary_c500,
     },
   })
 
   const colors = {
-    requestSpecificAmountTextColor: theme.color.primary[500],
+    requestSpecificAmountTextColor: color.primary_c500,
   }
 
   return {styles, colors} as const

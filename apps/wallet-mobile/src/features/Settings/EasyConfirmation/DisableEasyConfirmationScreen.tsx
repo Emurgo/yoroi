@@ -7,8 +7,8 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Text} from '../../../components'
 import {LoadingOverlay} from '../../../components/LoadingOverlay'
-import {useSelectedWallet, useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../../SelectedWallet'
 import {useDisableEasyConfirmation} from '../../../yoroi-wallets/hooks'
+import {useSelectedWallet, useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../WalletManager/Context'
 
 export const DisableEasyConfirmationScreen = () => {
   const strings = useStrings()
@@ -69,15 +69,14 @@ const messages = defineMessages({
 })
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
     heading: {
-      ...typography['body-1-l-regular'],
+      ...atoms.body_1_lg_regular,
     },
     disableSection: {
       flex: 1,

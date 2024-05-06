@@ -29,20 +29,19 @@ export const ShowSlippageInfo = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     row: {
       flexDirection: 'row',
       alignItems: 'center',
     },
     label: {
-      ...typography['body-1-l-regular'],
-      color: color.gray[600],
+      ...atoms.body_1_lg_regular,
+      color: color.gray_c600,
     },
     sheetContent: {
-      ...typography['body-1-l-regular'],
-      color: color.gray[900],
+      ...atoms.body_1_lg_regular,
+      color: color.gray_c900,
     },
   })
 

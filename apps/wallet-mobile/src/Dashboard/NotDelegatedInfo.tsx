@@ -26,8 +26,7 @@ export const NotDelegatedInfo = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     wrapper: {
       marginTop: 24,
@@ -39,15 +38,15 @@ const useStyles = () => {
     },
     text: {
       textAlign: 'center',
-      color: color.gray[900],
+      color: color.gray_c900,
       lineHeight: 22,
     },
     textFirstLine: {
-      ...typography['body-1-l-regular'],
+      ...atoms.body_1_lg_regular,
       marginBottom: 12,
     },
     textSecondLine: {
-      ...typography['body-2-m-regular'],
+      ...atoms.body_2_md_regular,
       marginBottom: 16,
     },
   })

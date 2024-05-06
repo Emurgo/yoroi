@@ -121,12 +121,12 @@ export const AmountCard: React.FC<AmountCardProps> = ({
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
       borderRadius: 8,
       borderWidth: 1,
-      borderColor: theme.color.gray[400],
+      borderColor: color.gray_c400,
       paddingTop: 16,
       paddingBottom: 16,
       paddingLeft: 16,
@@ -136,23 +136,23 @@ const useStyles = () => {
     },
     active: {
       borderWidth: 2,
-      borderColor: theme.color.gray[900],
+      borderColor: color.gray_c900,
     },
     borderError: {
-      borderColor: theme.color.magenta[500],
+      borderColor: color.sys_magenta_c500,
       borderWidth: 2,
     },
     label: {
       position: 'absolute',
       top: -7,
       left: 10,
-      backgroundColor: theme.color.gray.min,
+      backgroundColor: color.gray_cmin,
       paddingHorizontal: 5,
       fontSize: 12,
-      color: theme.color.gray[900],
+      color: color.gray_c900,
     },
     labelError: {
-      color: theme.color.magenta[500],
+      color: color.sys_magenta_c500,
     },
     content: {
       display: 'flex',
@@ -169,10 +169,10 @@ const useStyles = () => {
       maxWidth: 200,
       height: 34,
       fontSize: 16,
-      color: theme.color.gray.max,
+      color: color.gray_cmax,
     },
     grayText: {
-      color: theme.color.gray[600],
+      color: color.gray_c600,
     },
     rightSection: {
       flexDirection: 'column',
@@ -184,23 +184,23 @@ const useStyles = () => {
       alignItems: 'center',
     },
     coinName: {
-      ...theme.typography['body-1-l-regular'],
+      ...atoms.body_1_lg_regular,
       fontWeight: '400',
-      color: theme.color.gray.max,
+      color: color.gray_cmax,
     },
     balanceText: {
-      ...theme.typography['body-3-s-regular'],
-      color: theme.color.gray[600],
+      ...atoms.body_3_sm_regular,
+      color: color.gray_c600,
     },
     errorText: {
-      color: theme.color.magenta[500],
-      ...theme.typography['body-3-s-regular'],
+      color: color.sys_magenta_c500,
+      ...atoms.body_3_sm_regular,
     },
   })
   const colors = {
-    placeholder: theme.color.gray[600],
-    focused: theme.color.gray[900],
-    blur: theme.color['black-static'],
+    placeholder: color.gray_c600,
+    focused: color.gray_c900,
+    blur: color.black_static,
   }
   return {styles, colors} as const
 }

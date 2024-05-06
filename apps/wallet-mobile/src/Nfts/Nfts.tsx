@@ -7,9 +7,9 @@ import {RefreshControl, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Icon, NftImageGallery, SkeletonGallery, Spacer} from '../components'
+import {useSelectedWallet} from '../features/WalletManager/Context'
 import {useMetrics} from '../metrics/metricsManager'
 import {useSearch, useSearchOnNavBar} from '../Search/SearchContext'
-import {useSelectedWallet} from '../SelectedWallet'
 import {useNfts} from '../yoroi-wallets/hooks'
 import {filterNfts, useTrackNftGallerySearchActivated} from './filterNfts'
 import {useNavigateTo} from './navigation'
@@ -206,12 +206,11 @@ const LoadingScreen = ({nftsCount}: {nftsCount: number}) => {
 const byName = ({name: A}: Balance.TokenInfo, {name: B}: Balance.TokenInfo) => A.localeCompare(B)
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     safeAreaView: {
       flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
     container: {
       flexDirection: 'column',
@@ -230,13 +229,13 @@ const useStyles = () => {
     count: {
       flex: 1,
       textAlign: 'center',
-      color: color.gray[600],
+      color: color.gray_c600,
     },
 
     titleText: {
       textAlign: 'center',
-      color: color.gray.max,
-      ...theme.typography['heading-3-medium'],
+      color: color.gray_cmax,
+      ...atoms.heading_3_medium,
     },
 
     errorContainer: {

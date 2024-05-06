@@ -1,14 +1,14 @@
-import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
-import React, {useState} from 'react'
+import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {LayoutAnimation, StyleSheet, View} from 'react-native'
 
 import infoIcon from '../assets/img/icon/info-light-green.png'
 import {Boundary, ResetErrorRef, Spacer} from '../components'
 import {Tab, TabPanel, TabPanels, Tabs} from '../components/Tabs'
+import {useSelectedWallet} from '../features/WalletManager/Context'
 import {assetMessages, txLabels} from '../i18n/global-messages'
-import {useSelectedWallet} from '../SelectedWallet'
+import {usePoolTransitionModal} from '../Staking/PoolTransition/usePoolTransitionModal'
 import {isByron} from '../yoroi-wallets/cardano/utils'
 import {useSync} from '../yoroi-wallets/hooks'
 import {ActionsBanner} from './ActionsBanner'
@@ -27,19 +27,20 @@ export const TxHistory = () => {
   const strings = useStrings()
   const styles = useStyles()
   const wallet = useSelectedWallet()
-  const [showWarning, setShowWarning] = useState(isByron(wallet.walletImplementationId))
+  const [showWarning, setShowWarning] = React.useState(isByron(wallet.walletImplementationId))
 
-  const [activeTab, setActiveTab] = useState<Tab>('transactions')
+  const [activeTab, setActiveTab] = React.useState<Tab>('transactions')
 
   const onSelectTab = (tab: Tab) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setActiveTab(tab)
   }
 
-  const {sync, isLoading} = useSync(wallet)
-  useFocusEffect(React.useCallback(() => sync(), [sync]))
+  const {sync, isLoading: isLoadingWallet} = useSync(wallet)
+  const {isLoading: isLoadingPoolTransition} = usePoolTransitionModal()
+  const isLoading = isLoadingWallet || isLoadingPoolTransition
 
-  const [expanded, setExpanded] = useState(true)
+  const [expanded, setExpanded] = React.useState(true)
   const onScroll = useOnScroll({
     onScrollUp: () => setExpanded(true),
     onScrollDown: () => setExpanded(false),
@@ -140,13 +141,12 @@ const warningBannerMessages = defineMessages({
 })
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding} = theme
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
     scrollView: {
       flex: 1,
-      backgroundColor: color.primary[100],
+      backgroundColor: color.primary_c100,
     },
     warningNoteStyles: {
       position: 'absolute',
@@ -155,14 +155,14 @@ const useStyles = () => {
     },
     tabs: {
       flexDirection: 'row',
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
       borderTopLeftRadius: 24,
       borderTopRightRadius: 24,
     },
     tab: {
       alignItems: 'center',
       justifyContent: 'center',
-      ...padding['l'],
+      ...atoms.p_lg,
       flex: 1,
     },
   })

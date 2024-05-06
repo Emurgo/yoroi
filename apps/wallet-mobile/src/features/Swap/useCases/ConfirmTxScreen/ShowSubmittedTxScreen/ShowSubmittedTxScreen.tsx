@@ -7,8 +7,8 @@ import {z} from 'zod'
 
 import {Button, Spacer, Text} from '../../../../../components'
 import {useBlockGoBack, useUnsafeParams, useWalletNavigation} from '../../../../../navigation'
-import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {getNetworkConfigById} from '../../../../../yoroi-wallets/cardano/networks'
+import {useSelectedWallet} from '../../../../WalletManager/Context'
 import {useStrings} from '../../../common/strings'
 import {SubmittedTxImage} from './SubmittedTxImage'
 
@@ -64,8 +64,7 @@ export const ShowSubmittedTxScreen = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     bottomFixed: {
       position: 'absolute',
@@ -82,14 +81,14 @@ const useStyles = () => {
       padding: 16,
     },
     title: {
-      color: color.gray.max,
-      ...typography['heading-3-medium'],
+      color: color.gray_cmax,
+      ...atoms.heading_3_medium,
       padding: 4,
       textAlign: 'center',
     },
     text: {
-      color: color.gray[600],
-      ...typography['body-2-m-regular'],
+      color: color.gray_c600,
+      ...atoms.body_2_md_regular,
       textAlign: 'center',
       maxWidth: 300,
     },

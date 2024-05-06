@@ -17,7 +17,7 @@ import {
   SettingsStackRoutes,
   SettingsTabRoutes,
 } from '../../navigation'
-import {useSelectedWallet} from '../../SelectedWallet'
+import {useSelectedWallet} from '../WalletManager/Context'
 import {About} from './About'
 import {ApplicationSettingsScreen} from './ApplicationSettings'
 import {ChangeLanguageScreen} from './ChangeLanguage'
@@ -40,7 +40,7 @@ export const SettingsScreenNavigator = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const {track} = useMetrics()
-  const {theme} = useTheme()
+  const {atoms, color} = useTheme()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -52,7 +52,7 @@ export const SettingsScreenNavigator = () => {
     <TransferProvider key={wallet.id}>
       <Stack.Navigator
         screenOptions={{
-          ...defaultStackNavigationOptions(theme),
+          ...defaultStackNavigationOptions(atoms, color),
           detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
         }}
       >
@@ -186,13 +186,13 @@ export const SettingsScreenNavigator = () => {
 const Tab = createMaterialTopTabNavigator<SettingsTabRoutes>()
 const SettingsTabNavigator = () => {
   const strings = useStrings()
-  const {theme} = useTheme()
+  const {color, atoms} = useTheme()
 
   return (
     <Tab.Navigator
-      style={{backgroundColor: theme.color.gray.min}}
+      style={{backgroundColor: color.gray_cmin}}
       screenOptions={({route}) => ({
-        ...defaultMaterialTopTabNavigationOptions(theme),
+        ...defaultMaterialTopTabNavigationOptions(atoms, color),
         tabBarLabel: route.name === 'wallet-settings' ? strings.walletTabTitle : strings.appTabTitle,
       })}
     >

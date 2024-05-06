@@ -31,8 +31,7 @@ export const EditSlippage = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     container: {
       flexDirection: 'row',
@@ -47,7 +46,7 @@ const useStyles = () => {
     text: {
       fontSize: 16,
       fontFamily: 'Rubik',
-      color: color.gray.max,
+      color: color.gray_cmax,
     },
   })
   return styles

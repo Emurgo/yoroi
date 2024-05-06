@@ -1,8 +1,7 @@
-import {Palette, useTheme} from '@yoroi/theme'
+import {ThemedPalette, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Platform, StatusBar, StatusBarStyle} from 'react-native'
 
-import {COLORS} from '../../theme/config'
 import {HexColor} from '../../theme/types'
 
 type StatusBarColor = {
@@ -10,12 +9,9 @@ type StatusBarColor = {
   statusBarStyle: StatusBarStyle
 }
 export const useStatusBar = (currentRouteName: string | undefined) => {
-  const {
-    theme: {color: palette},
-    isDark,
-  } = useTheme()
+  const {color, isDark} = useTheme()
   const statusBarStyleByRoute = React.useRef<StatusBarColor>(
-    getStatusBarStyleByRoute({currentRouteName, isDark, palette}),
+    getStatusBarStyleByRoute({currentRouteName, isDark, color}),
   )
 
   React.useEffect(() => {
@@ -23,48 +19,48 @@ export const useStatusBar = (currentRouteName: string | undefined) => {
       if (Platform.OS === 'android')
         StatusBar.setBackgroundColor(simulateOpacity(statusBarStyleByRoute.current.bgColorAndroid), true)
     } else {
-      const style = getStatusBarStyleByRoute({currentRouteName, isDark, palette})
+      const style = getStatusBarStyleByRoute({currentRouteName, isDark, color})
       statusBarStyleByRoute.current = style
       if (Platform.OS === 'android') StatusBar.setBackgroundColor(style.bgColorAndroid, true)
       StatusBar.setBarStyle(style.statusBarStyle, true)
     }
-  }, [currentRouteName, isDark, palette])
+  }, [currentRouteName, isDark, color])
 }
 
 const getStatusBarStyleByRoute = ({
   currentRouteName,
   isDark,
-  palette,
+  color,
 }: {
   currentRouteName: string | undefined
   isDark?: boolean
-  palette: Palette
+  color: ThemedPalette
 }): StatusBarColor => {
   if (currentRouteName) {
     if (currentRouteName === 'history-list') {
       return {
-        bgColorAndroid: palette.primary[100],
+        bgColorAndroid: color.primary_c100,
         statusBarStyle: 'dark-content',
       }
     } else if (oldBlueRoutes.includes(currentRouteName)) {
       return {
-        bgColorAndroid: COLORS.BACKGROUND_BLUE as HexColor,
+        bgColorAndroid: '#254BC9',
         statusBarStyle: 'light-content',
       }
     } else if (currentRouteName === 'scan-start') {
       return {
-        bgColorAndroid: palette['black-static'],
+        bgColorAndroid: color.white_static,
         statusBarStyle: 'dark-content',
       }
     }
   }
   return {
-    bgColorAndroid: isDark ? palette['black-static'] : palette['white-static'],
+    bgColorAndroid: isDark ? color.black_static : color.white_static,
     statusBarStyle: isDark ? 'light-content' : 'dark-content',
   }
 }
 
-const oldBlueRoutes = ['wallet-selection', 'choose-create-restore', 'enable-login-with-os', 'auth-with-os']
+const oldBlueRoutes = ['enable-login-with-os', 'auth-with-os']
 
 /**
  *

@@ -5,9 +5,9 @@ import {StyleSheet, View} from 'react-native'
 
 import {Boundary, Spacer, Text} from '../components'
 import {usePrivacyMode} from '../features/Settings/PrivacyMode/PrivacyMode'
+import {useSelectedWallet} from '../features/WalletManager/Context'
 import globalMessages from '../i18n/global-messages'
 import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../legacy/format'
-import {useSelectedWallet} from '../SelectedWallet'
 import {useLockedAmount} from '../yoroi-wallets/hooks'
 
 export const LockedDeposit = () => {
@@ -71,8 +71,7 @@ const useStrings = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flexDirection: 'row',
@@ -80,8 +79,8 @@ const useStyles = () => {
       alignItems: 'center',
     },
     label: {
-      color: color.gray[600],
-      ...typography['body-2-m-regular'],
+      color: color.gray_c600,
+      ...atoms.body_2_md_regular,
     },
   })
 

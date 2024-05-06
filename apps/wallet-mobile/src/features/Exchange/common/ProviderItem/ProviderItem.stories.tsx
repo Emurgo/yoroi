@@ -1,6 +1,5 @@
 import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
-import {lightPalette} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
@@ -15,7 +14,7 @@ storiesOf('Exchange ProviderItem', module)
       label="Banxa"
       fee={5}
       leftAdornment={<BanxaLogo size={40} />}
-      rightAdornment={<Icon.Check color={lightPalette.primary[600]} />}
+      rightAdornment={<Icon.Check color="#7892E8" />}
       onPress={action('Provider Item Pressed')}
     />
   ))

@@ -6,10 +6,10 @@ import DeviceInfo from 'react-native-device-info'
 
 import {Text} from '../../../components'
 import {CONFIG} from '../../../legacy/config'
-import {useSelectedWallet} from '../../../SelectedWallet'
 import {lightPalette} from '../../../theme'
 import {getNetworkConfigById} from '../../../yoroi-wallets/cardano/networks'
 import {isHaskellShelley} from '../../../yoroi-wallets/cardano/utils'
+import {useSelectedWallet} from '../../WalletManager/Context'
 
 const version = DeviceInfo.getVersion()
 
@@ -75,12 +75,11 @@ const ValueText = ({style, children, ...props}: TextProps) => {
   )
 }
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     about: {
       flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
       padding: 16,
     },
     row: {
@@ -89,12 +88,12 @@ const useStyles = () => {
       paddingVertical: 16,
     },
     labelText: {
-      color: lightPalette.gray['900'],
-      ...typography['body-1-l-medium'],
+      color: color.gray_c900,
+      ...atoms.body_1_lg_medium,
     },
     valueText: {
       color: lightPalette.gray['500'],
-      ...typography['body-1-l-regular'],
+      ...atoms.body_1_lg_regular,
     },
   })
 

@@ -12,11 +12,11 @@ import {Button, KeyboardAvoidingView, Spacer, useModal} from '../../../../../com
 import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useWalletNavigation} from '../../../../../navigation'
 import {useDisableSearchOnBar} from '../../../../../Search/SearchContext'
-import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {NotEnoughMoneyToSendError} from '../../../../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {YoroiEntry} from '../../../../../yoroi-wallets/types'
 import {isMainnetNetworkId, Quantities} from '../../../../../yoroi-wallets/utils'
+import {useSelectedWallet} from '../../../../WalletManager/Context'
 import {createOrderEntry, makePossibleFrontendFeeEntry} from '../../../common/entries'
 import {getPriceImpactRisk} from '../../../common/helpers'
 import {useNavigateTo} from '../../../common/navigation'
@@ -322,12 +322,11 @@ const Actions = ({style, ...props}: ViewProps) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
     scroll: {
       paddingHorizontal: 16,
@@ -345,7 +344,7 @@ const useStyles = () => {
     },
     actionBorder: {
       borderTopWidth: 1,
-      borderTopColor: color.gray[200],
+      borderTopColor: color.gray_c200,
     },
   })
   return styles

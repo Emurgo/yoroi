@@ -11,7 +11,6 @@ import {Icon, Spacer} from '../../../components'
 import {DIALOG_BUTTONS, showConfirmationDialog} from '../../../dialogs'
 import {confirmationMessages} from '../../../i18n/global-messages'
 import {SettingsRouteNavigation, useWalletNavigation} from '../../../navigation'
-import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../../SelectedWallet'
 import {lightPalette} from '../../../theme'
 import {useAddressModeManager} from '../../../wallet-manager/useAddressModeManager'
 import {useAuthSetting} from '../../../yoroi-wallets/auth'
@@ -19,6 +18,7 @@ import {getNetworkConfigById} from '../../../yoroi-wallets/cardano/networks'
 import {isByron, isHaskellShelley} from '../../../yoroi-wallets/cardano/utils'
 import {useEasyConfirmationEnabled, useResync} from '../../../yoroi-wallets/hooks'
 import {NetworkId, WalletImplementationId} from '../../../yoroi-wallets/types'
+import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../WalletManager/Context'
 import {useNavigateTo} from '../common/navigation'
 import {
   NavigatedSettingsItem,
@@ -340,12 +340,11 @@ const useStrings = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
     settings: {
       flex: 1,

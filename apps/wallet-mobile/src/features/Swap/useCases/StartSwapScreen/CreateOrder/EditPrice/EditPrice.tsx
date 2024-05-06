@@ -4,9 +4,9 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, TextInput, View} from 'react-native'
 
-import {useSelectedWallet} from '../../../../../../SelectedWallet'
 import {useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../../yoroi-wallets/utils/utils'
+import {useSelectedWallet} from '../../../../../WalletManager/Context'
 import {PRICE_PRECISION} from '../../../../common/constants'
 import {useStrings} from '../../../../common/strings'
 import {useSwapForm} from '../../../../common/SwapFormProvider'
@@ -85,34 +85,33 @@ export const EditPrice = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     container: {
       borderRadius: 8,
       borderWidth: BORDER_SIZE,
-      borderColor: color.gray[400],
+      borderColor: color.gray_c400,
       width: '100%',
       height: 56,
       paddingLeft: 16,
       paddingRight: 8,
     },
     disabled: {
-      backgroundColor: color.gray[50],
+      backgroundColor: color.gray_c50,
     },
     active: {
       borderWidth: 2,
-      borderColor: color.gray[900],
+      borderColor: color.gray_c900,
       zIndex: 2222,
     },
     label: {
       position: 'absolute',
       top: -7,
       left: 10,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
       paddingHorizontal: 5,
       fontSize: 12,
-      color: color.gray[900],
+      color: color.gray_c900,
     },
     content: {
       display: 'flex',
@@ -124,11 +123,11 @@ const useStyles = () => {
       fontSize: 16,
       height: 56,
       paddingRight: 16,
-      color: color.gray.max,
+      color: color.gray_cmax,
     },
     text: {
       fontSize: 16,
-      color: color.gray.max,
+      color: color.gray_cmax,
       fontFamily: 'Rubik-Regular',
     },
     textWrapper: {

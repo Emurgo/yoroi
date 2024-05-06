@@ -21,12 +21,10 @@ export const ScannerButton = ({disabled, onPress}: Props) => {
 }
 
 const useStyles = () => {
-  const {
-    theme: {color},
-  } = useTheme()
+  const {color} = useTheme()
   const colors = {
-    disabled: color.gray[600],
-    enabled: color.gray.max,
+    disabled: color.gray_c600,
+    enabled: color.gray_cmax,
   }
   return {colors}
 }

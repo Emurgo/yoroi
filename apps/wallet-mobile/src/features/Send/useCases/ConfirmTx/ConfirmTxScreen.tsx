@@ -12,12 +12,12 @@ import {ConfirmTx} from '../../../../components/ConfirmTx'
 import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../../../i18n/global-messages'
 import {assetsToSendProperties} from '../../../../metrics/helpers'
 import {useMetrics} from '../../../../metrics/metricsManager'
-import {useSelectedWallet} from '../../../../SelectedWallet'
 import {sortTokenInfos} from '../../../../utils'
 import {useSaveMemo, useTokenInfos} from '../../../../yoroi-wallets/hooks'
 import {YoroiSignedTx} from '../../../../yoroi-wallets/types'
 import {Amounts} from '../../../../yoroi-wallets/utils'
 import {debugWalletInfo, features} from '../../..'
+import {useSelectedWallet} from '../../../WalletManager/Context'
 import {useNavigateTo} from '../../common/navigation'
 import {useFlashAndScroll} from '../../common/useFlashAndScroll'
 import {BalanceAfter} from './Summary/BalanceAfter'
@@ -139,21 +139,20 @@ const Actions = (props: ViewProps) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding} = theme
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
       flex: 1,
     },
     container: {
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
       flex: 1,
-      ...padding['x-l'],
+      ...atoms.px_lg,
     },
     actions: {
-      ...padding['l'],
+      ...atoms.p_lg,
     },
   })
   return styles

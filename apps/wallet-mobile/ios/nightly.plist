@@ -79,7 +79,7 @@
 		<string>Rubik-VariableFont_wght.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
-	<string>BootSplash.storyboard</string>
+	<string>NightlySpashScreen.storyboard</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>

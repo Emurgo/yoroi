@@ -24,7 +24,7 @@ describe('observableStorageMaker', () => {
 
     const observableStorage = observableStorageMaker(storage)
 
-    const unsubscribe = observableStorage.onUpdate(
+    const client1 = observableStorage.onChange(
       ['key1', 'key2'],
       observerCallback,
     )
@@ -44,7 +44,7 @@ describe('observableStorageMaker', () => {
       ['key4', 'value4'],
     ])
 
-    unsubscribe()
+    client1.unsubscribe()
     expect(storage.clear).toHaveBeenCalled()
     expect(storage.setItem).toHaveBeenCalledWith('key1', 'value1')
     expect(storage.multiRemove).toHaveBeenCalledWith(['key1', 'key2'])
@@ -67,7 +67,7 @@ describe('observableStorageMaker', () => {
 
     const observableStorage = observableStorageMaker(storage)
 
-    const unsubscribe = observableStorage.onUpdate(
+    const client1 = observableStorage.onChange(
       ['key1', 'key2'],
       observerCallback,
     )
@@ -87,7 +87,7 @@ describe('observableStorageMaker', () => {
       ['key4', 'value4'],
     ])
 
-    unsubscribe()
+    client1.unsubscribe()
     expect(storage.clear).toHaveBeenCalled()
     expect(storage.setItem).toHaveBeenCalledWith('key1', 'value1')
     expect(storage.multiRemove).toHaveBeenCalledWith(['key1', 'key2'])
@@ -114,7 +114,7 @@ describe('observableMultiStorageMaker', () => {
 
     const observableStorage = observableMultiStorageMaker(storage)
 
-    const unsubscribe = observableStorage.onUpdate(observerCallback)
+    const client1 = observableStorage.onChange(observerCallback)
 
     observableStorage.clear()
     expect(observerCallback).toHaveBeenCalledWith(null)
@@ -122,7 +122,7 @@ describe('observableMultiStorageMaker', () => {
     observableStorage.saveMany([{id: 'key1', value: 'value1'}])
     expect(observerCallback).toHaveBeenCalledWith(null)
 
-    unsubscribe()
+    client1.unsubscribe()
     expect(storage.clear).toHaveBeenCalled()
     expect(storage.saveMany).toHaveBeenCalledWith([
       {id: 'key1', value: 'value1'},
@@ -142,7 +142,7 @@ describe('observableMultiStorageMaker', () => {
 
     const observableStorage = observableMultiStorageMaker(storage)
 
-    const unsubscribe = observableStorage.onUpdate(observerCallback)
+    const client1 = observableStorage.onChange(observerCallback)
 
     await observableStorage.clear()
     expect(observerCallback).toHaveBeenCalledWith(null)
@@ -150,7 +150,7 @@ describe('observableMultiStorageMaker', () => {
     await observableStorage.saveMany([{id: 'key1', value: 'value1'}])
     expect(observerCallback).toHaveBeenCalledWith(null)
 
-    unsubscribe()
+    client1.unsubscribe()
     expect(storage.clear).toHaveBeenCalled()
     expect(storage.saveMany).toHaveBeenCalledWith([
       {id: 'key1', value: 'value1'},

@@ -12,9 +12,9 @@ import {Space} from '../../../../components/Space/Space'
 import {Warning} from '../../../../components/Warning'
 import env from '../../../../legacy/env'
 import {useMetrics} from '../../../../metrics/metricsManager'
-import {useSelectedWallet} from '../../../../SelectedWallet'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../yoroi-wallets/utils'
+import {useSelectedWallet} from '../../../WalletManager/Context'
 import {ProviderItem} from '../../common/ProviderItem/ProviderItem'
 import {useNavigateTo} from '../../common/useNavigateTo'
 import {useStrings} from '../../common/useStrings'
@@ -131,7 +131,7 @@ export const CreateExchangeOrderScreen = () => {
 
             <EditAmount disabled={isLoading} />
 
-            <Space height="xxs" />
+            <Space height="_2xs" />
 
             <ProviderItem
               label={providerSelected?.name ?? ''}
@@ -178,11 +178,11 @@ export const CreateExchangeOrderScreen = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: theme.color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
     flex: {
       flex: 1,
@@ -200,7 +200,7 @@ const useStyles = () => {
     },
     actionBorder: {
       borderTopWidth: 1,
-      borderTopColor: theme.color.gray[200],
+      borderTopColor: color.gray_c200,
     },
   })
   return styles

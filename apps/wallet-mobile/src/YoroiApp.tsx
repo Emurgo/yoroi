@@ -1,5 +1,6 @@
 import {AsyncStorageProvider} from '@yoroi/common'
 import {LinksProvider} from '@yoroi/links'
+import {SetupWalletProvider} from '@yoroi/setup-wallet'
 import {ThemeProvider} from '@yoroi/theme'
 import React from 'react'
 import {LogBox, Platform, StyleSheet, UIManager} from 'react-native'
@@ -13,15 +14,16 @@ import {AuthProvider} from './auth/AuthProvider'
 import {LoadingBoundary} from './components'
 import {ErrorBoundary} from './components/ErrorBoundary'
 import {CurrencyProvider} from './features/Settings/Currency/CurrencyContext'
+import {SelectedWalletMetaProvider, SelectedWalletProvider} from './features/WalletManager/Context'
 import {LanguageProvider} from './i18n'
 import {InitApp} from './InitApp'
 import {CONFIG} from './legacy/config'
 import {setLogLevel} from './legacy/logging'
 import {makeMetricsManager, MetricsProvider} from './metrics/metricsManager'
 import {useMigrations} from './migrations/useMigrations'
-import {SelectedWalletMetaProvider, SelectedWalletProvider} from './SelectedWallet/Context'
 import {walletManager} from './wallet-manager/walletManager'
 import {WalletManagerProvider} from './wallet-manager/WalletManagerContext'
+import {useThemeStorageMaker} from './yoroi-wallets/hooks'
 import {rootStorage} from './yoroi-wallets/storage/rootStorage'
 
 enableScreens(true)
@@ -45,11 +47,13 @@ const metricsManager = makeMetricsManager()
 export const YoroiApp = () => {
   const migrated = useMigrations(rootStorage)
 
+  const themeStorage = useThemeStorageMaker()
+
   if (!migrated) return null
 
   return (
     <AsyncStorageProvider storage={rootStorage}>
-      <ThemeProvider>
+      <ThemeProvider storage={themeStorage}>
         <MetricsProvider metricsManager={metricsManager}>
           <WalletManagerProvider walletManager={walletManager}>
             <ErrorBoundary>
@@ -63,7 +67,9 @@ export const YoroiApp = () => {
                             <SelectedWalletMetaProvider>
                               <SelectedWalletProvider>
                                 <LinksProvider>
-                                  <InitApp />
+                                  <SetupWalletProvider>
+                                    <InitApp />
+                                  </SetupWalletProvider>
                                 </LinksProvider>
                               </SelectedWalletProvider>
                             </SelectedWalletMetaProvider>

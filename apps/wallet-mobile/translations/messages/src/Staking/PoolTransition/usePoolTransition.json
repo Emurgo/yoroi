@@ -1,0 +1,197 @@
+[
+  {
+    "id": "components.pooltransition.title",
+    "defaultMessage": "!!!Upgrade your stake pool",
+    "file": "src/Staking/PoolTransition/usePoolTransition.tsx",
+    "start": {
+      "line": 104,
+      "column": 9,
+      "index": 3537
+    },
+    "end": {
+      "line": 107,
+      "column": 3,
+      "index": 3635
+    }
+  },
+  {
+    "id": "components.pooltransition.warning",
+    "defaultMessage": "!!!The current stake pool you're using will soon close. Migrate to the new EMURGO pool to sustain reward generation.",
+    "file": "src/Staking/PoolTransition/usePoolTransition.tsx",
+    "start": {
+      "line": 108,
+      "column": 11,
+      "index": 3648
+    },
+    "end": {
+      "line": 112,
+      "column": 3,
+      "index": 3844
+    }
+  },
+  {
+    "id": "components.pooltransition.finalWarning",
+    "defaultMessage": "!!!The current stake pool you're using is decommissioned and NOT generating reward anymore. Update it to continue earning",
+    "file": "src/Staking/PoolTransition/usePoolTransition.tsx",
+    "start": {
+      "line": 113,
+      "column": 16,
+      "index": 3862
+    },
+    "end": {
+      "line": 117,
+      "column": 3,
+      "index": 4068
+    }
+  },
+  {
+    "id": "components.pooltransition.currentPool",
+    "defaultMessage": "!!!Current pool",
+    "file": "src/Staking/PoolTransition/usePoolTransition.tsx",
+    "start": {
+      "line": 118,
+      "column": 15,
+      "index": 4085
+    },
+    "end": {
+      "line": 121,
+      "column": 3,
+      "index": 4178
+    }
+  },
+  {
+    "id": "components.pooltransition.newPool",
+    "defaultMessage": "!!!New pool",
+    "file": "src/Staking/PoolTransition/usePoolTransition.tsx",
+    "start": {
+      "line": 122,
+      "column": 11,
+      "index": 4191
+    },
+    "end": {
+      "line": 125,
+      "column": 3,
+      "index": 4276
+    }
+  },
+  {
+    "id": "components.pooltransition.estimatedRoa",
+    "defaultMessage": "!!!Estimated ROA",
+    "file": "src/Staking/PoolTransition/usePoolTransition.tsx",
+    "start": {
+      "line": 126,
+      "column": 16,
+      "index": 4294
+    },
+    "end": {
+      "line": 129,
+      "column": 3,
+      "index": 4389
+    }
+  },
+  {
+    "id": "components.pooltransition.fee",
+    "defaultMessage": "!!!Fee",
+    "file": "src/Staking/PoolTransition/usePoolTransition.tsx",
+    "start": {
+      "line": 130,
+      "column": 7,
+      "index": 4398
+    },
+    "end": {
+      "line": 133,
+      "column": 3,
+      "index": 4474
+    }
+  },
+  {
+    "id": "components.pooltransition.poolGeneratesRewards",
+    "defaultMessage": "!!!This pool continues to generate staking rewards",
+    "file": "src/Staking/PoolTransition/usePoolTransition.tsx",
+    "start": {
+      "line": 134,
+      "column": 24,
+      "index": 4500
+    },
+    "end": {
+      "line": 137,
+      "column": 3,
+      "index": 4637
+    }
+  },
+  {
+    "id": "components.pooltransition.poolNoRewards",
+    "defaultMessage": "!!!This pool is NOT generating staking rewards anymore",
+    "file": "src/Staking/PoolTransition/usePoolTransition.tsx",
+    "start": {
+      "line": 138,
+      "column": 17,
+      "index": 4656
+    },
+    "end": {
+      "line": 141,
+      "column": 3,
+      "index": 4790
+    }
+  },
+  {
+    "id": "components.pooltransition.poolWillStopRewards",
+    "defaultMessage": "!!!This pool will stop generating rewards in",
+    "file": "src/Staking/PoolTransition/usePoolTransition.tsx",
+    "start": {
+      "line": 142,
+      "column": 23,
+      "index": 4815
+    },
+    "end": {
+      "line": 145,
+      "column": 3,
+      "index": 4945
+    }
+  },
+  {
+    "id": "components.pooltransition.skipNoRewards",
+    "defaultMessage": "!!!Skip and stop receiving rewards",
+    "file": "src/Staking/PoolTransition/usePoolTransition.tsx",
+    "start": {
+      "line": 146,
+      "column": 17,
+      "index": 4964
+    },
+    "end": {
+      "line": 149,
+      "column": 3,
+      "index": 5078
+    }
+  },
+  {
+    "id": "components.pooltransition.updateKeepEarning",
+    "defaultMessage": "!!!Update now and keep earning",
+    "file": "src/Staking/PoolTransition/usePoolTransition.tsx",
+    "start": {
+      "line": 150,
+      "column": 21,
+      "index": 5101
+    },
+    "end": {
+      "line": 153,
+      "column": 3,
+      "index": 5215
+    }
+  },
+  {
+    "id": "components.pooltransition.update",
+    "defaultMessage": "!!!Update pool",
+    "file": "src/Staking/PoolTransition/usePoolTransition.tsx",
+    "start": {
+      "line": 154,
+      "column": 10,
+      "index": 5227
+    },
+    "end": {
+      "line": 157,
+      "column": 3,
+      "index": 5314
+    }
+  }
+]

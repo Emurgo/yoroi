@@ -4,9 +4,9 @@ import {StyleSheet, View} from 'react-native'
 
 import {Text} from '../../../../../components/Text'
 import {formatTokenWithText} from '../../../../../legacy/format'
-import {useSelectedWallet} from '../../../../../SelectedWallet/Context/SelectedWalletContext'
 import {useBalances} from '../../../../../yoroi-wallets/hooks'
 import {Amounts} from '../../../../../yoroi-wallets/utils/utils'
+import {useSelectedWallet} from '../../../../WalletManager/Context'
 import {useStrings} from '../../../common/strings'
 
 export const CurrentBalance = () => {
@@ -32,17 +32,16 @@ export const CurrentBalance = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     banner: {
-      backgroundColor: color.gray.min,
-      ...padding['y-l'],
+      backgroundColor: color.gray_cmin,
+      ...atoms.py_lg,
       alignItems: 'center',
       justifyContent: 'center',
     },
     label: {
-      ...padding['b-xs'],
+      ...atoms.pb_xs,
     },
   })
   return styles

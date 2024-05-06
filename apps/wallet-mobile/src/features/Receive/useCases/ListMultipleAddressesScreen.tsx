@@ -7,8 +7,8 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer} from '../../../components'
 import {useMetrics} from '../../../metrics/metricsManager'
-import {useSelectedWallet} from '../../../SelectedWallet'
 import {useAddressModeManager} from '../../../wallet-manager/useAddressModeManager'
+import {useSelectedWallet} from '../../WalletManager/Context'
 import {BIP32_HD_GAP_LIMIT} from '../common/contants'
 import {useReceive} from '../common/ReceiveProvider'
 import {ShowAddressLimitInfo} from '../common/ShowAddressLimitInfo/ShowAddressLimitInfo'
@@ -113,31 +113,31 @@ export const ListMultipleAddressesScreen = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: theme.color.gray.min,
-      ...theme.padding['t-l'],
+      backgroundColor: color.gray_cmin,
+      ...atoms.pt_lg,
     },
     content: {
       flex: 1,
-      ...theme.padding['x-l'],
+      ...atoms.px_lg,
     },
     footer: {
-      backgroundColor: theme.color.gray.min,
-      borderColor: theme.color.gray[200],
-      ...theme.padding['l'],
+      backgroundColor: color.gray_cmin,
+      borderColor: color.gray_c200,
+      ...atoms.p_lg,
     },
     button: {
-      backgroundColor: theme.color.primary[500],
+      backgroundColor: color.primary_c500,
     },
   })
 
   const colors = {
-    buttonBackgroundBlue: theme.color.primary[600],
-    learnMore: theme.color.primary[500],
-    details: theme.color.gray[900],
+    buttonBackgroundBlue: color.primary_c600,
+    learnMore: color.primary_c500,
+    details: color.gray_c900,
   }
 
   return {styles, colors} as const

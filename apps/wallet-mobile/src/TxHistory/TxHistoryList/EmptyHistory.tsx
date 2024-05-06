@@ -26,16 +26,15 @@ export const EmptyHistory = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     empty: {
       justifyContent: 'center',
       alignItems: 'center',
     },
     emptyText: {
-      ...typography['body-1-l-medium'],
-      color: color.gray[900],
+      ...atoms.body_1_lg_medium,
+      color: color.gray_c900,
       width: '55%',
       textAlign: 'center',
     },

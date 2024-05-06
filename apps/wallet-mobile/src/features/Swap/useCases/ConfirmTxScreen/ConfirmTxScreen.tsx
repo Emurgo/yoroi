@@ -9,11 +9,11 @@ import {Button, KeyboardAvoidingView, Spacer} from '../../../../components'
 import {LoadingOverlay} from '../../../../components/LoadingOverlay'
 import {useModal} from '../../../../components/Modal/ModalContext'
 import {useMetrics} from '../../../../metrics/metricsManager'
-import {useSelectedWallet} from '../../../../SelectedWallet'
 import {useAuthOsWithEasyConfirmation} from '../../../../yoroi-wallets/auth'
 import {useSignAndSubmitTx, useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {YoroiSignedTx} from '../../../../yoroi-wallets/types'
 import {Quantities} from '../../../../yoroi-wallets/utils'
+import {useSelectedWallet} from '../../../WalletManager/Context'
 import {useNavigateTo} from '../../common/navigation'
 import {useStrings} from '../../common/strings'
 import {ConfirmTx} from './ConfirmTx'
@@ -164,24 +164,23 @@ const Actions = ({style, ...props}: ViewProps) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
       paddingTop: 16,
     },
     container: {
       flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'space-between',
     },
     actions: {
       padding: 16,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
     modalContent: {
       flex: 1,
@@ -192,7 +191,7 @@ const useStyles = () => {
     },
     actionBorder: {
       borderTopWidth: 1,
-      borderTopColor: color.gray[200],
+      borderTopColor: color.gray_c200,
     },
   })
   return styles

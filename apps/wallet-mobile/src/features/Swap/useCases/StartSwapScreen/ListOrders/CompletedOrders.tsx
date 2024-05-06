@@ -24,10 +24,10 @@ import {
 } from '../../../../../components'
 import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useSearch} from '../../../../../Search/SearchContext'
-import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {useSync, useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
 import {TransactionInfo, TxMetadataInfo} from '../../../../../yoroi-wallets/types'
 import {asQuantity, openInExplorer, Quantities} from '../../../../../yoroi-wallets/utils'
+import {useSelectedWallet} from '../../../../WalletManager/Context'
 import {PRICE_PRECISION} from '../../../common/constants'
 import {Counter} from '../../../common/Counter/Counter'
 import {parseOrderTxMetadata} from '../../../common/helpers'
@@ -382,12 +382,11 @@ const EmptySearchResult = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
     flex: {
       flex: 1,
@@ -397,8 +396,8 @@ const useStyles = () => {
       justifyContent: 'center',
     },
     txLinkText: {
-      color: color.primary[400],
-      ...typography['body-1-l-regular'],
+      color: color.primary_c400,
+      ...atoms.body_1_lg_regular,
       textDecorationLine: 'underline',
     },
     label: {
@@ -406,8 +405,8 @@ const useStyles = () => {
       alignItems: 'center',
     },
     headerLabel: {
-      color: color.gray.max,
-      ...typography['body-2-m-medium'],
+      color: color.gray_cmax,
+      ...atoms.body_2_md_medium,
     },
     counter: {
       paddingVertical: 16,
@@ -425,8 +424,8 @@ const useStyles = () => {
     contentText: {
       flex: 1,
       textAlign: 'center',
-      ...typography['body-2-m-medium'],
-      color: color.gray.max,
+      ...atoms.body_2_md_medium,
+      color: color.gray_cmax,
       fontSize: 20,
     },
   })

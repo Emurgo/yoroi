@@ -181,21 +181,20 @@ export const ExpandableInfoCardSkeleton = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
       borderRadius: 8,
       borderWidth: 1,
-      borderColor: color.gray[400],
+      borderColor: color.gray_c400,
       padding: 16,
       width: '100%',
       height: 'auto',
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
     shadowProp: {
-      backgroundColor: color.gray.min,
-      shadowColor: color.gray.max,
+      backgroundColor: color.gray_cmin,
+      shadowColor: color.gray_cmax,
       shadowOffset: {
         width: 0,
         height: 1,
@@ -217,17 +216,17 @@ const useStyles = () => {
     },
     text: {
       textAlign: 'left',
-      ...typography['body-1-l-regular'],
-      color: color.gray.max,
+      ...atoms.body_1_lg_regular,
+      color: color.gray_cmax,
     },
     gray: {
-      color: color.gray[600],
-      ...typography['body-1-l-regular'],
+      color: color.gray_c600,
+      ...atoms.body_1_lg_regular,
     },
     buttonLabel: {
       paddingTop: 13,
-      color: color.gray.max,
-      ...typography['body-2-m-medium'],
+      color: color.gray_cmax,
+      ...atoms.body_2_md_medium,
     },
     info: {
       flexDirection: 'row',
@@ -236,13 +235,13 @@ const useStyles = () => {
     value: {
       textAlign: 'right',
       flexShrink: 1,
-      ...typography['body-1-l-regular'],
-      color: color.gray[900],
+      ...atoms.body_1_lg_regular,
+      color: color.gray_c900,
     },
     label: {
-      color: color.gray[600],
+      color: color.gray_c600,
       paddingRight: 8,
-      ...typography['body-1-l-regular'],
+      ...atoms.body_1_lg_regular,
     },
     footerDisabled: {
       opacity: 0.5,
@@ -250,7 +249,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    skeletonBackground: theme.color.gray[200],
+    skeletonBackground: color.gray_c200,
   }
 
   return {styles, colors}

@@ -2,8 +2,8 @@ import {useTheme} from '@yoroi/theme'
 import React, {useEffect} from 'react'
 import {ActivityIndicator, StyleSheet, Text, View} from 'react-native'
 
-import {useSelectedWallet} from '../../../../SelectedWallet'
 import {useAuthOsWithEasyConfirmation} from '../../../../yoroi-wallets/auth'
+import {useSelectedWallet} from '../../../WalletManager/Context'
 import {getErrorMessage} from '../errors'
 import {useStrings} from '../strings'
 
@@ -42,8 +42,7 @@ export const ConfirmRawTxWithOs = ({onConfirm}: {onConfirm?: (rootKey: string) =
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
 
   const styles = StyleSheet.create({
     center: {
@@ -51,7 +50,7 @@ const useStyles = () => {
       justifyContent: 'center',
     },
     errorMessage: {
-      color: color.magenta[500],
+      color: color.sys_magenta_c500,
       textAlign: 'center',
     },
   })

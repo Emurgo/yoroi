@@ -6,11 +6,11 @@ import {StyleSheet, View} from 'react-native'
 import {Boundary} from '../../../../../components/Boundary/Boundary'
 import {Text} from '../../../../../components/Text'
 import {formatTokenWithText} from '../../../../../legacy/format'
-import {useSelectedWallet} from '../../../../../SelectedWallet/Context/SelectedWalletContext'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {useToken} from '../../../../../yoroi-wallets/hooks'
 import {YoroiUnsignedTx} from '../../../../../yoroi-wallets/types/yoroi'
 import {Amounts, Quantities} from '../../../../../yoroi-wallets/utils/utils'
+import {useSelectedWallet} from '../../../../WalletManager/Context'
 
 export const SecondaryTotals = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => {
   const wallet = useSelectedWallet()
@@ -40,11 +40,10 @@ const Amount = ({amount, wallet}: {amount: Balance.Amount; wallet: YoroiWallet})
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     amount: {
-      color: color.secondary[500],
+      color: color.secondary_c500,
     },
   })
   return styles

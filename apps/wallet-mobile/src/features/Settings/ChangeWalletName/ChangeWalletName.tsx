@@ -7,11 +7,11 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, KeyboardAvoidingView, TextInput} from '../../../components'
 import globalMessages from '../../../i18n/global-messages'
-import {useSelectedWallet} from '../../../SelectedWallet'
 import {isEmptyString} from '../../../utils/utils'
 import {useWalletManager} from '../../../wallet-manager/WalletManagerContext'
 import {useChangeWalletName, useWalletName, useWalletNames} from '../../../yoroi-wallets/hooks'
 import {getWalletNameError, validateWalletName} from '../../../yoroi-wallets/utils/validators'
+import {useSelectedWallet} from '../../WalletManager/Context'
 
 export const ChangeWalletName = () => {
   const strings = useStrings()
@@ -74,11 +74,10 @@ export const ChangeWalletName = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     safeAreaView: {
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
       flex: 1,
     },
     scrollContentContainer: {
@@ -88,7 +87,7 @@ const useStyles = () => {
     },
     action: {
       paddingHorizontal: 16,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
   })
   return styles

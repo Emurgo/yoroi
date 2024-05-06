@@ -20,7 +20,6 @@ import {Button, CopyButton, Icon, Spacer, Text} from '../../../components'
 import {AmountItem} from '../../../components/AmountItem/AmountItem'
 import {ErrorPanel} from '../../../components/ErrorPanel/ErrorPanel'
 import {SettingsStackRoutes, useUnsafeParams} from '../../../navigation'
-import {useSelectedWallet} from '../../../SelectedWallet'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {useCollateralInfo} from '../../../yoroi-wallets/cardano/utxoManager/useCollateralInfo'
 import {useSetCollateralId} from '../../../yoroi-wallets/cardano/utxoManager/useSetCollateralId'
@@ -28,6 +27,7 @@ import {collateralConfig, utxosMaker} from '../../../yoroi-wallets/cardano/utxoM
 import {useBalances, useLockedAmount} from '../../../yoroi-wallets/hooks'
 import {RawUtxo, YoroiEntry} from '../../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../../yoroi-wallets/utils'
+import {useSelectedWallet} from '../../WalletManager/Context'
 import {usePrivacyMode} from '../PrivacyMode/PrivacyMode'
 import {createCollateralEntry} from './helpers'
 import {useNavigateTo} from './navigation'
@@ -222,11 +222,10 @@ export const RemoveAmountButton = ({disabled, ...props}: TouchableOpacityProps) 
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     safeAreaView: {
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
       flex: 1,
       paddingHorizontal: 16,
       paddingBottom: 16,
@@ -242,7 +241,7 @@ const useStyles = () => {
     },
   })
   const colors = {
-    iconColor: color.gray.max,
+    iconColor: color.gray_cmax,
   }
 
   return {styles, colors}

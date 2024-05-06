@@ -219,8 +219,7 @@ const AdornmentContainer = ({style, children}: ViewProps) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     inputContainer: {
       flexDirection: 'row',
@@ -242,15 +241,15 @@ const useStyles = () => {
   })
 
   const colors = {
-    background: color.gray.min,
-    gray: color.gray[400],
-    textInput: color.gray[600],
-    actionGray: color.gray[500],
-    black: color.gray.max,
-    text: color.gray[900],
-    textError: color.magenta[500],
-    infoGray: color.gray[700],
-    positiveGreen: color.secondary[500],
+    background: color.gray_cmin,
+    gray: color.gray_c400,
+    textInput: color.gray_c600,
+    actionGray: color.gray_c500,
+    black: color.gray_cmax,
+    text: color.gray_c900,
+    textError: color.sys_magenta_c500,
+    infoGray: color.gray_c700,
+    positiveGreen: color.secondary_c500,
   }
 
   return {styles, colors}

@@ -4,10 +4,10 @@ import {StyleSheet, View} from 'react-native'
 
 import {Text} from '../../../../../components/Text'
 import {formatTokenWithText} from '../../../../../legacy/format'
-import {useSelectedWallet} from '../../../../../SelectedWallet/Context/SelectedWalletContext'
 import {useBalances} from '../../../../../yoroi-wallets/hooks'
 import {Amounts} from '../../../../../yoroi-wallets/utils/utils'
 import {useStrings} from '../../../../Send/common/strings'
+import {useSelectedWallet} from '../../../../WalletManager/Context'
 
 export const CurrentBalance = () => {
   const strings = useStrings()
@@ -32,11 +32,10 @@ export const CurrentBalance = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     banner: {
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
       paddingVertical: 16,
       alignItems: 'center',
       justifyContent: 'center',

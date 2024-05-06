@@ -9,11 +9,11 @@ import {KeyboardSpacer, Text, ValidatedTextInput} from '../../components'
 import {ConfirmTx} from '../../components/ConfirmTx'
 import {useStakePoolInfoAndHistory} from '../../Dashboard/StakePoolInfo'
 import {debugWalletInfo, features} from '../../features'
+import {useSelectedWallet} from '../../features/WalletManager/Context'
 import {Instructions as HWInstructions} from '../../HW'
 import globalMessages, {txLabels} from '../../i18n/global-messages'
 import {formatTokenAmount, formatTokenWithText} from '../../legacy/format'
 import {StakingCenterRoutes, useParams, useWalletNavigation} from '../../navigation'
-import {useSelectedWallet} from '../../SelectedWallet'
 import {NETWORKS} from '../../yoroi-wallets/cardano/networks'
 import {NUMBERS} from '../../yoroi-wallets/cardano/numbers'
 import {Amounts, Entries, Quantities} from '../../yoroi-wallets/utils'
@@ -179,36 +179,35 @@ const approximateReward = (stakedQuantity: Balance.Quantity): Balance.Quantity =
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding, typography} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
     scrollView: {
-      ...padding['x-l'],
-      ...padding['b-xl'],
+      ...atoms.px_lg,
+      ...atoms.pb_xl,
       flex: 1,
     },
     itemBlock: {
       marginTop: 24,
     },
     itemTitle: {
-      color: color.gray[900],
-      ...typography['body-2-m-regular'],
+      color: color.gray_c900,
+      ...atoms.body_2_md_regular,
     },
     input: {
       marginTop: 16,
     },
     rewards: {
       marginTop: 5,
-      ...typography['body-1-l-medium'],
-      color: color.primary[600],
+      ...atoms.body_1_lg_medium,
+      color: color.primary_c600,
     },
     fees: {
       textAlign: 'right',
-      color: color.gray[900],
+      color: color.gray_c900,
     },
   })
   return styles

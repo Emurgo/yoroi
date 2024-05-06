@@ -9,13 +9,13 @@ import {PleaseWaitModal, Spacer} from '../../components'
 import {useStakingTx} from '../../Dashboard/StakePoolInfos'
 import {showErrorDialog} from '../../dialogs'
 import {features} from '../../features'
+import {useSelectedWallet} from '../../features/WalletManager/Context'
 import {useLanguage} from '../../i18n'
-import globalMessages, {errorMessages} from '../../i18n/global-messages'
+import globalMessages from '../../i18n/global-messages'
 import {isNightly} from '../../legacy/config'
 import {Logger} from '../../legacy/logging'
 import {useMetrics} from '../../metrics/metricsManager'
 import {StakingCenterRouteNavigation} from '../../navigation'
-import {useSelectedWallet} from '../../SelectedWallet'
 import {getNetworkConfigById, NETWORKS} from '../../yoroi-wallets/cardano/networks'
 import {NotEnoughMoneyToSendError} from '../../yoroi-wallets/cardano/types'
 import {PoolDetailScreen} from '../PoolDetails'
@@ -49,12 +49,10 @@ export const StakingCenter = () => {
       },
       onError: (error) => {
         if (error instanceof NotEnoughMoneyToSendError) {
-          showErrorDialog(errorMessages.insufficientBalance, intl)
+          navigation.navigate('delegation-failed-tx')
         } else {
           Logger.error(error as any)
-          showErrorDialog(errorMessages.generalError, intl, {
-            message: error.message,
-          })
+          navigation.navigate('delegation-failed-tx')
         }
       },
     },

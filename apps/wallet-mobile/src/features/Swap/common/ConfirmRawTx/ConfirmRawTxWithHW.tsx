@@ -5,9 +5,9 @@ import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
 
 import {Text} from '../../../../components'
 import {LedgerConnect} from '../../../../HW'
-import {useSelectedWallet} from '../../../../SelectedWallet'
 import {walletManager} from '../../../../wallet-manager/walletManager'
 import {DeviceId, DeviceObj, withBLE, withUSB} from '../../../../yoroi-wallets/hw'
+import {useSelectedWallet} from '../../../WalletManager/Context'
 import {LedgerTransportSwitch} from '../../useCases/ConfirmTxScreen/LedgerTransportSwitch'
 import {useCancelOrderWithHw} from '../helpers'
 import {useStrings} from '../strings'
@@ -74,9 +74,7 @@ export const ConfirmRawTxWithHW = ({onConfirm, utxo, bech32Address, cancelOrder}
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
-
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -86,7 +84,7 @@ const useStyles = () => {
     },
     text: {
       fontSize: 18,
-      color: color['black-static'],
+      color: color.black_static,
       textAlign: 'center',
     },
   })

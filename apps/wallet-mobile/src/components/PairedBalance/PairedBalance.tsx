@@ -5,7 +5,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TextStyle} from 'react-native'
 
 import {useCurrencyContext} from '../../features/Settings/Currency'
-import {useSelectedWallet} from '../../SelectedWallet'
+import {useSelectedWallet} from '../../features/WalletManager/Context'
 import {useExchangeRate} from '../../yoroi-wallets/hooks'
 import {CurrencySymbol} from '../../yoroi-wallets/types'
 import {Quantities} from '../../yoroi-wallets/utils'
@@ -100,12 +100,11 @@ const useStrings = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     pairedBalanceText: {
-      color: color.gray[600],
-      ...typography['body-3-s-regular'],
+      color: color.gray_c600,
+      ...atoms.body_3_sm_regular,
     },
   })
 

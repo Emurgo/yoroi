@@ -9,28 +9,35 @@ import {Keyboard, Platform} from 'react-native'
 import {VotingRegistration} from './Catalyst'
 import {Icon, OfflineBanner} from './components'
 import {DashboardNavigator} from './Dashboard'
+import {DiscoverNavigator} from './features/Discover'
 import {ShowExchangeResultOrderScreen} from './features/Exchange/useCases/ShowExchangeResultOrderScreen/ShowExchangeResultOrderScreen'
 import {useLinksRequestAction} from './features/Links/common/useLinksRequestAction'
 import {useLinksShowActionResult} from './features/Links/common/useLinksShowActionResult'
 import {MenuNavigator} from './features/Menu'
 import {SettingsScreenNavigator} from './features/Settings'
+import {
+  ChooseBiometricLoginScreen,
+  useShowBiometricsScreen,
+} from './features/SetupWallet/useCases/ChooseBiometricLogin/ChooseBiometricLoginScreen'
+import {SelectWalletFromList} from './features/SetupWallet/useCases/SelectWalletFromList'
 import {GovernanceNavigator} from './features/Staking/Governance'
 import {ToggleAnalyticsSettingsNavigator} from './features/ToggleAnalyticsSettings'
+import {CONFIG} from './legacy/config'
 import {useMetrics} from './metrics/metricsManager'
-import {hideTabBarForRoutes, WalletStackRoutes, WalletTabRoutes} from './navigation'
+import {defaultStackNavigationOptions, hideTabBarForRoutes, WalletStackRoutes, WalletTabRoutes} from './navigation'
 import {NftDetailsNavigator} from './NftDetails/NftDetailsNavigator'
 import {NftsNavigator} from './Nfts/NftsNavigator'
 import {SearchProvider} from './Search/SearchContext'
-import {useSelectedWallet, WalletSelectionScreen} from './SelectedWallet'
 import {TxHistoryNavigator} from './TxHistory'
-import {isHaskellShelley} from './yoroi-wallets/cardano/utils'
+import {useWalletManager} from './wallet-manager/WalletManagerContext'
+import {useAuthSetting, useIsAuthOsSupported} from './yoroi-wallets/auth'
+import {useHasWallets} from './yoroi-wallets/hooks'
 
 const Tab = createBottomTabNavigator<WalletTabRoutes>()
 const WalletTabNavigator = () => {
   const strings = useStrings()
   const {colors} = useStyles()
-  const wallet = useSelectedWallet()
-  const initialRoute = isHaskellShelley(wallet.walletImplementationId) ? 'staking-dashboard' : 'history'
+  const initialRoute = 'history'
 
   const [isKeyboardOpen, setIsKeyboardOpen] = React.useState(false)
 
@@ -108,7 +115,23 @@ const WalletTabNavigator = () => {
           )}
         </Tab.Screen>
 
-        {isHaskellShelley(wallet.walletImplementationId) && (
+        {CONFIG.DAPP_EXPLORER_ENABLED ? (
+          <Tab.Screen
+            name="discover"
+            options={({route}: {route: RouteProp<WalletTabRoutes, 'discover'>}) => ({
+              tabBarIcon: ({focused}) => <Icon.Discover size={28} color={focused ? colors.active : colors.inactive} />,
+              tabBarLabel: strings.discoverTabBarLabel,
+              tabBarTestID: 'discoverTabBarButton',
+              tabBarStyle: hideTabBarForRoutes(route),
+            })}
+          >
+            {() => (
+              <SearchProvider>
+                <DiscoverNavigator />
+              </SearchProvider>
+            )}
+          </Tab.Screen>
+        ) : (
           <Tab.Screen
             name="staking-dashboard"
             component={DashboardNavigator}
@@ -139,7 +162,17 @@ const WalletTabNavigator = () => {
 const Stack = createStackNavigator<WalletStackRoutes>()
 export const WalletNavigator = () => {
   const initialRoute = useLinksShowActionResult()
+  const strings = useStrings()
+  const {atoms, color} = useTheme()
   useLinksRequestAction()
+  const isAuthOsSupported = useIsAuthOsSupported()
+  const {showBiometricsScreen} = useShowBiometricsScreen()
+  const walletManager = useWalletManager()
+  const hasWallets = useHasWallets(walletManager)
+  const authSetting = useAuthSetting()
+
+  const shouldAskToUseAuthWithOs =
+    !hasWallets && showBiometricsScreen && isAuthOsSupported === true && authSetting !== 'os'
 
   // initialRoute doesn't update the state of the navigator, only at first render
   // https://reactnavigation.org/docs/auth-flow/
@@ -159,34 +192,52 @@ export const WalletNavigator = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerShown: false /* used only for transition */,
+        ...defaultStackNavigationOptions(atoms, color),
+        headerLeft: undefined,
         detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
       }}
     >
-      <Stack.Screen name="wallet-selection" component={WalletSelectionScreen} />
+      {shouldAskToUseAuthWithOs && (
+        <Stack.Screen //
+          name="choose-biometric-login"
+          options={{headerShown: false}}
+          component={ChooseBiometricLoginScreen}
+        />
+      )}
 
-      <Stack.Screen name="main-wallet-routes" component={WalletTabNavigator} />
+      <Stack.Screen
+        name="wallet-selection"
+        options={{title: strings.walletSelectionScreenHeader}}
+        component={SelectWalletFromList}
+      />
 
-      <Stack.Screen name="nft-details-routes" component={NftDetailsNavigator} />
+      <Stack.Screen name="main-wallet-routes" options={{headerShown: false}} component={WalletTabNavigator} />
 
-      <Stack.Screen name="settings" component={SettingsScreenNavigator} />
+      <Stack.Screen name="nft-details-routes" options={{headerShown: false}} component={NftDetailsNavigator} />
 
-      <Stack.Screen name="voting-registration" component={VotingRegistration} />
+      <Stack.Screen name="settings" options={{headerShown: false}} component={SettingsScreenNavigator} />
 
-      <Stack.Screen name="toggle-analytics-settings" component={ToggleAnalyticsSettingsNavigator} />
+      <Stack.Screen name="voting-registration" options={{headerShown: false}} component={VotingRegistration} />
 
-      <Stack.Screen name="governance" component={GovernanceNavigator} />
+      <Stack.Screen
+        name="toggle-analytics-settings"
+        options={{headerShown: false}}
+        component={ToggleAnalyticsSettingsNavigator}
+      />
+
+      <Stack.Screen name="governance" options={{headerShown: false}} component={GovernanceNavigator} />
+
+      <Stack.Screen name="staking-dashboard" options={{headerShown: false}} component={DashboardNavigator} />
     </Stack.Navigator>
   )
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
 
   const colors = {
-    active: color.primary[600],
-    inactive: color.gray[600],
+    active: color.primary_c600,
+    inactive: color.gray_c600,
   }
   return {colors}
 }
@@ -228,6 +279,14 @@ const messages = defineMessages({
     id: 'menu',
     defaultMessage: '!!!Menu',
   },
+  discoverButton: {
+    id: 'components.common.navigation.discover',
+    defaultMessage: '!!!Discover',
+  },
+  walletSelectionScreenHeader: {
+    id: 'components.walletselection.walletselectionscreen.header',
+    defaultMessage: '!!!My wallets',
+  },
 })
 
 const useStrings = () => {
@@ -242,5 +301,7 @@ const useStrings = () => {
     walletTabBarLabel: intl.formatMessage(messages.walletButton),
     nftsTabBarLabel: intl.formatMessage(messages.nftsButton),
     menuTabBarLabel: intl.formatMessage(messages.menuButton),
+    discoverTabBarLabel: intl.formatMessage(messages.discoverButton),
+    walletSelectionScreenHeader: intl.formatMessage(messages.walletSelectionScreenHeader),
   }
 }

@@ -12,9 +12,9 @@ import {ScrollView} from 'react-native-gesture-handler'
 import {Banner, Boundary, Button, CopyButton, FadeIn, Icon, Text} from '../../components'
 import AddressModal from '../../features/Receive/common/AddressModal/AddressModal'
 import {usePrivacyMode} from '../../features/Settings/PrivacyMode/PrivacyMode'
+import {useSelectedWallet} from '../../features/WalletManager/Context'
 import globalMessages from '../../i18n/global-messages'
 import {formatDateAndTime, formatTokenWithSymbol} from '../../legacy/format'
-import {useSelectedWallet} from '../../SelectedWallet'
 import {isEmptyString} from '../../utils/utils'
 import {MultiToken} from '../../yoroi-wallets/cardano/MultiToken'
 import {CardanoTypes, YoroiWallet} from '../../yoroi-wallets/cardano/types'
@@ -428,37 +428,36 @@ const messages = defineMessages({
 })
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding, typography} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     container: {
       flex: 1,
     },
     contentContainer: {
-      ...padding['x-l'],
+      ...atoms.px_lg,
     },
     positiveAmount: {
-      color: color.primary[600],
+      color: color.primary_c600,
       fontWeight: '500',
     },
     negativeAmount: {
-      color: color.magenta[500],
+      color: color.sys_magenta_c500,
       fontWeight: '500',
     },
     label: {
-      ...padding['t-l'],
+      ...atoms.pt_lg,
       marginBottom: 8,
     },
     assetsExpandable: {
-      ...padding['t-m'],
-      ...padding['b-xl'],
+      ...atoms.pt_md,
+      ...atoms.pb_xl,
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignContent: 'center',
     },
     assetsTitle: {
-      ...typography['body-2-m-regular'],
-      color: color.gray[900],
+      ...atoms.body_2_md_regular,
+      color: color.gray_c900,
     },
     borderTop: {
       borderTopWidth: 1,
@@ -471,7 +470,7 @@ const useStyles = () => {
     },
   })
   const colors = {
-    iconColor: color.gray[500],
+    iconColor: color.gray_c500,
   }
   return {styles, colors}
 }

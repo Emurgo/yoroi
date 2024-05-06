@@ -4,9 +4,9 @@ import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Button, Spacer, useModal} from '../../../../../../components'
-import {useSelectedWallet} from '../../../../../../SelectedWallet'
 import {useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../../yoroi-wallets/utils'
+import {useSelectedWallet} from '../../../../../WalletManager/Context'
 import {PRICE_PRECISION} from '../../../../common/constants'
 import {useStrings} from '../../../../common/strings'
 
@@ -90,8 +90,7 @@ export const WarnLimitPrice = ({onConfirm, orderData}: LimitPriceWarningProps) =
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     buttonContainer: {
       flex: 1,
@@ -107,12 +106,12 @@ const useStyles = () => {
       justifyContent: 'space-between',
     },
     label: {
-      color: color.gray[600],
-      ...typography['body-1-l-regular'],
+      color: color.gray_c600,
+      ...atoms.body_1_lg_regular,
     },
     value: {
-      color: color.gray.max,
-      ...typography['body-1-l-regular'],
+      color: color.gray_cmax,
+      ...atoms.body_1_lg_regular,
       textAlign: 'right',
     },
     textWrapper: {
@@ -133,8 +132,8 @@ const useStyles = () => {
       gap: 10,
     },
     description: {
-      ...typography['body-1-l-regular'],
-      color: color.gray[900],
+      ...atoms.body_1_lg_regular,
+      color: color.gray_c900,
     },
   })
 

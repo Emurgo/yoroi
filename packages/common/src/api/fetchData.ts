@@ -1,6 +1,13 @@
 import axios, {AxiosError, AxiosRequestConfig, AxiosResponse} from 'axios'
 import {Api} from '@yoroi/types'
 
+// Module augmentation to extend AxiosRequestConfig
+declare module 'axios' {
+  export interface AxiosRequestConfig {
+    metadata?: {startTime: number; duration: number}
+  }
+}
+
 type GetRequestConfig = {
   url: string
   method?: 'get'
@@ -56,7 +63,7 @@ export type FetchData = <T, D = any>(
  * fetchData<{ someDataType }, { somePayloadType }>({
  *   url: 'https://example.com/data',
  *   method: 'post',
- *   data: { /* some data *\/ }
+ *   data: {...somePayload}
  * }).then(response => {
  *   // Handle response
  * }).catch(error => {
@@ -77,13 +84,16 @@ export const fetchData: FetchData = <T, D = any>(
     method: method,
     headers: config.headers ?? {'Content-Type': 'application/json'},
     ...(isNotGet && 'data' in config && {data: config.data}),
+
+    // updated by the interceptors
+    metadata: {startTime: new Date().getTime(), duration: 0},
   }
 
   return axios(axiosConfig)
-    .then((response: AxiosResponse<T>) => {
+    .then(({status, data}: AxiosResponse<T>) => {
       return {
         tag: 'right',
-        value: {status: response.status, data: response.data},
+        value: {status, data},
       } as const
     })
     .catch((error: AxiosError) => {
@@ -117,3 +127,31 @@ export const fetchData: FetchData = <T, D = any>(
       }
     })
 }
+
+/* istanbul ignore next */
+axios.interceptors.request.use(
+  (config) => {
+    config.metadata = {startTime: new Date().getTime(), duration: 0}
+    return config
+  },
+  (error) => {
+    return Promise.reject(error)
+  },
+)
+
+/* istanbul ignore next */
+axios.interceptors.response.use(
+  (response) => {
+    if (response.config.metadata) {
+      const endTime = new Date().getTime()
+      const startTime = response.config.metadata.startTime
+      const duration = endTime - startTime
+      response.config.metadata.duration = duration
+    }
+
+    return response
+  },
+  (error) => {
+    return Promise.reject(error)
+  },
+)

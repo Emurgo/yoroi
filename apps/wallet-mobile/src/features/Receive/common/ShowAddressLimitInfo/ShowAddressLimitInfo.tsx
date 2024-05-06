@@ -9,7 +9,7 @@ import {useStrings} from '../useStrings'
 
 export const ShowAddressLimitInfo = () => {
   const strings = useStrings()
-  const {styles, colors} = useStyles()
+  const {styles, colors, color} = useStyles()
 
   return (
     <Animated.View layout={Layout} entering={FadeInUp} exiting={FadeOut} style={styles.smallAddressCard}>
@@ -19,12 +19,11 @@ export const ShowAddressLimitInfo = () => {
         {strings.infoAddressLimit}
 
         <TouchableWithoutFeedback
-          style={[styles.text, {color: colors.zendeskLink}]}
           onPress={() => {
             Linking.openURL(YoroiZendeskLink)
           }}
         >
-          <Text style={{color: colors.zendeskLink, borderWidth: 1}}>{strings.yoroiZendesk}</Text>
+          <Text style={{color: color.primary_c500, borderWidth: 1}}>{strings.yoroiZendesk}</Text>
         </TouchableWithoutFeedback>
       </Text>
     </Animated.View>
@@ -32,7 +31,7 @@ export const ShowAddressLimitInfo = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
     smallAddressCard: {
@@ -42,18 +41,17 @@ const useStyles = () => {
       justifyContent: 'space-between',
       gap: 12,
       padding: 16,
-      backgroundColor: theme.color.cyan[100],
+      backgroundColor: color.sys_cyan_c100,
     },
     text: {
-      ...theme.typography['body-2-m-regular'],
-      color: theme.color.gray.max,
+      ...atoms.body_2_md_regular,
+      color: color.gray_cmax,
     },
   })
 
   const colors = {
-    icon: theme.color.primary[500],
-    zendeskLink: theme.color.primary[500],
+    icon: color.primary_c500,
   }
 
-  return {styles, colors} as const
+  return {styles, colors, color}
 }

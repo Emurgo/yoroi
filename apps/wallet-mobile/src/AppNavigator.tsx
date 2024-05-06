@@ -19,13 +19,14 @@ import {ModalScreen} from './components/Modal/ModalScreen'
 import {AgreementChangedNavigator, InitializationNavigator} from './features/Initialization'
 import {LegalAgreement, useLegalAgreement} from './features/Initialization/common'
 import {useDeepLinkWatcher} from './features/Links/common/useDeepLinkWatcher'
+import {PortfolioScreen} from './features/Portfolio/useCases/PortfolioScreen'
+import {AddWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
 import {CONFIG} from './legacy/config'
 import {DeveloperScreen} from './legacy/DeveloperScreen'
 import {AppRoutes} from './navigation'
 import {SearchProvider} from './Search/SearchContext'
-import {WalletInitNavigator} from './WalletInit/WalletInitNavigator'
 import {WalletNavigator} from './WalletNavigator'
-import {AuthSetting, useAuthOsEnabled, useAuthSetting, useAuthWithOs} from './yoroi-wallets/auth'
+import {AuthSetting, useAuthSetting, useAuthWithOs, useIsAuthOsSupported} from './yoroi-wallets/auth'
 
 const Stack = createStackNavigator<AppRoutes>()
 const navRef = React.createRef<NavigationContainerRef<ReactNavigation.RootParamList>>()
@@ -144,7 +145,7 @@ export const AppNavigator = () => {
                   )}
                 </Stack.Screen>
 
-                <Stack.Screen name="new-wallet" component={WalletInitNavigator} />
+                <Stack.Screen name="new-wallet" component={AddWalletNavigator} />
               </Stack.Group>
 
               <Stack.Group screenOptions={{presentation: 'transparentModal'}}>
@@ -160,6 +161,8 @@ export const AppNavigator = () => {
               <Stack.Screen name="developer" component={DeveloperScreen} options={{headerShown: false}} />
 
               <Stack.Screen name="storybook" component={StorybookScreen} />
+
+              <Stack.Screen name="portfolio-dashboard" component={PortfolioScreen} />
             </Stack.Group>
           )}
         </Stack.Navigator>
@@ -208,8 +211,8 @@ const useAutoLogout = () => {
   const authSetting = useAuthSetting()
   const strings = useStrings()
   const {logout} = useAuth()
-  const authOsEnabled = useAuthOsEnabled()
-  const osAuthDisabled = !authOsEnabled && authSetting === 'os'
+  const isAuthOsSupported = useIsAuthOsSupported()
+  const osAuthDisabled = !isAuthOsSupported && authSetting === 'os'
 
   useBackgroundTimeout({
     onTimeout: logout,
@@ -246,25 +249,25 @@ const useHideScreenInAppSwitcher = () => {
 
 type FirstAction = 'auth-with-pin' | 'auth-with-os' | 'request-new-pin' | 'first-run' | 'show-agreement-changed-notice'
 const getFirstAction = (
-  authOsEnabled: boolean,
+  isAuthOsSupported: boolean,
   authSetting: AuthSetting,
-  agreement: LegalAgreement | undefined,
+  legalAgreement: LegalAgreement | undefined | null,
 ): FirstAction => {
-  const hasAccepted = agreement?.latestAcceptedAgreementsDate === CONFIG.AGREEMENT_DATE
+  const hasAccepted = legalAgreement?.latestAcceptedAgreementsDate === CONFIG.AGREEMENT_DATE
 
   if (isString(authSetting) && !hasAccepted) return 'show-agreement-changed-notice'
 
   if (authSetting === 'pin') return 'auth-with-pin'
-  if (authSetting === 'os' && authOsEnabled) return 'auth-with-os'
-  if (authSetting === 'os' && !authOsEnabled) return 'request-new-pin'
+  if (authSetting === 'os' && isAuthOsSupported) return 'auth-with-os'
+  if (authSetting === 'os' && !isAuthOsSupported) return 'request-new-pin'
 
   return 'first-run' // setup not completed
 }
 
 const useFirstAction = () => {
   const authSetting = useAuthSetting()
-  const authOsEnabled = useAuthOsEnabled()
-  const terms = useLegalAgreement()
+  const isAuthOsSupported = useIsAuthOsSupported()
+  const legalAgreement = useLegalAgreement()
 
-  return getFirstAction(authOsEnabled, authSetting, terms)
+  return getFirstAction(isAuthOsSupported, authSetting, legalAgreement)
 }

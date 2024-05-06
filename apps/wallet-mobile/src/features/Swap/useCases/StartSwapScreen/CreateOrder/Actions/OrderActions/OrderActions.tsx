@@ -101,19 +101,18 @@ const RefreshIcon = ({onPress, disabled}: {onPress: () => void; disabled: boolea
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     buttonsGroup: {
-      ...padding['b-xl'],
+      ...atoms.pb_xl,
       flexDirection: 'row',
       justifyContent: 'space-between',
     },
   })
 
   const colors = {
-    disabled: color.gray[500],
-    enabled: color['black-static'],
+    disabled: color.gray_c500,
+    enabled: color.black_static,
   }
 
   return {styles, colors}

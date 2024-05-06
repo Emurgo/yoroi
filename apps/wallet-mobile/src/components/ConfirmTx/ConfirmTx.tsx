@@ -6,9 +6,9 @@ import {useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 
 import {debugWalletInfo, features} from '../../features'
+import {useSelectedWallet} from '../../features/WalletManager/Context'
 import {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
-import {useSelectedWallet} from '../../SelectedWallet'
 import {isEmptyString} from '../../utils/utils'
 import {walletManager} from '../../wallet-manager/walletManager'
 import {useAuthOsWithEasyConfirmation} from '../../yoroi-wallets/auth'
@@ -295,11 +295,10 @@ export const ConfirmTx = ({
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
     actionContainer: {
       justifyContent: 'space-between',

@@ -7,15 +7,14 @@ import {
   useRoute,
 } from '@react-navigation/native'
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack'
-import {Theme, useTheme} from '@yoroi/theme'
+import {Atoms, ThemedPalette, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {Dimensions, Platform, TouchableOpacity, TouchableOpacityProps, ViewStyle} from 'react-native'
+import {Dimensions, TouchableOpacity, TouchableOpacityProps, ViewStyle} from 'react-native'
 
 import {Icon} from './components'
 import {ScanFeature} from './features/Scan/common/types'
 import {Routes as StakingGovernanceRoutes} from './features/Staking/Governance/common/navigation'
-import {HWDeviceInfo} from './yoroi-wallets/hw'
-import {NetworkId, WalletImplementationId, YoroiUnsignedTx} from './yoroi-wallets/types'
+import {YoroiUnsignedTx} from './yoroi-wallets/types'
 
 // prettier-ignore
 export const useUnsafeParams = <Params, >() => {
@@ -38,27 +37,27 @@ export const useParams = <Params, >(guard: Guard<Params>): Params => {
 type Guard<Params> = (params: Params | object) => params is Params
 
 export const BackButton = (props: TouchableOpacityProps & {color?: string}) => {
-  const {theme} = useTheme()
+  const {color} = useTheme()
 
   return (
     <TouchableOpacity {...props} testID="buttonBack2">
-      <Icon.Chevron direction="left" color={props.color ?? theme.color.gray.max} />
+      <Icon.Chevron direction="left" color={props.color ?? color.gray_cmax} />
     </TouchableOpacity>
   )
 }
 
 // OPTIONS
 const WIDTH = Dimensions.get('window').width
-export const defaultStackNavigationOptions = (theme: Theme): StackNavigationOptions => {
+export const defaultStackNavigationOptions = (atoms: Atoms, color: ThemedPalette): StackNavigationOptions => {
   return {
-    headerTintColor: theme.color.gray.max,
+    headerTintColor: color.gray_cmax,
     headerStyle: {
       elevation: 0,
       shadowOpacity: 0,
-      backgroundColor: theme.color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
     headerTitleStyle: {
-      ...theme.typography['body-1-l-medium'],
+      ...atoms.body_1_lg_medium,
       width: WIDTH - 75,
       textAlign: 'center',
     },
@@ -69,42 +68,30 @@ export const defaultStackNavigationOptions = (theme: Theme): StackNavigationOpti
       justifyContent: 'center',
     },
     headerLeftContainerStyle: {
-      ...theme.padding['l-s'],
+      ...atoms.pl_sm,
     },
     headerRightContainerStyle: {
-      ...theme.padding['r-s'],
+      ...atoms.pr_sm,
     },
     cardStyle: {backgroundColor: 'white'},
     headerLeft: (props) => <BackButton {...props} />,
   }
 }
 
-export const DEPRECATED_defaultStackNavigationOptions: StackNavigationOptions = {
-  headerStyle: {
-    backgroundColor: '#254BC9',
-    elevation: 0,
-    shadowOpacity: 0,
-  },
-  headerTintColor: '#fff',
-  headerBackTitleVisible: false,
-  headerTitleAlign: 'center',
-  headerLeftContainerStyle: {
-    paddingLeft: Platform.OS === 'ios' ? 8 : undefined,
-  },
-  headerLeft: (props) => <BackButton color="#fff" {...props} />,
-}
-
 // NAVIGATOR TOP TABS OPTIONS
-export const defaultMaterialTopTabNavigationOptions = (theme: Theme): MaterialTopTabNavigationOptions => {
+export const defaultMaterialTopTabNavigationOptions = (
+  atoms: Atoms,
+  color: ThemedPalette,
+): MaterialTopTabNavigationOptions => {
   return {
-    tabBarStyle: {backgroundColor: theme.color.gray.min, elevation: 0, shadowOpacity: 0, marginHorizontal: 16},
-    tabBarIndicatorStyle: {backgroundColor: theme.color.primary[600], height: 2},
+    tabBarStyle: {backgroundColor: color.gray_cmin, elevation: 0, shadowOpacity: 0, marginHorizontal: 16},
+    tabBarIndicatorStyle: {backgroundColor: color.primary_c600, height: 2},
     tabBarLabelStyle: {
       textTransform: 'none',
-      ...theme.typography['body-1-l-medium'],
+      ...atoms.body_1_lg_medium,
     },
-    tabBarActiveTintColor: theme.color.primary[600],
-    tabBarInactiveTintColor: theme.color.gray[600],
+    tabBarActiveTintColor: color.primary_c600,
+    tabBarInactiveTintColor: color.gray_c600,
   }
 }
 
@@ -113,10 +100,12 @@ export type WalletTabRoutes = {
   history: NavigatorScreenParams<TxHistoryRoutes>
   'staking-dashboard': NavigatorScreenParams<DashboardRoutes>
   nfts: NavigatorScreenParams<NftRoutes>
+  discover: NavigatorScreenParams<DiscoverRoutes>
   menu: NavigatorScreenParams<MenuRoutes>
 }
 
 export type WalletStackRoutes = {
+  'choose-biometric-login': undefined
   'wallet-selection': undefined
   'exchange-result': undefined
   'main-wallet-routes': NavigatorScreenParams<WalletTabRoutes>
@@ -125,72 +114,26 @@ export type WalletStackRoutes = {
   'voting-registration': NavigatorScreenParams<VotingRegistrationRoutes>
   'toggle-analytics-settings': NavigatorScreenParams<ToggleAnalyticsSettingsRoutes>
   governance: NavigatorScreenParams<StakingGovernanceRoutes>
+  'staking-dashboard': NavigatorScreenParams<DashboardRoutes>
 }
 export type WalletStackRouteNavigation = StackNavigationProp<WalletStackRoutes>
 
 export type WalletInitRoutes = {
-  'choose-create-restore': {
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
-  }
-  'initial-choose-create-restore': undefined
-  'create-wallet-form': {
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
-  }
-  'restore-wallet-form': {
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
-  }
-  'import-read-only': {
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
-  }
-  'save-read-only': {
-    publicKeyHex: string
-    path: number[]
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
-  }
-  'check-nano-x': {
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
-    useUSB: boolean
-  }
-  'connect-nano-x': {
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
-    useUSB: boolean
-  }
-  'save-nano-x': {
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
-    hwDeviceInfo: HWDeviceInfo
-  }
-  'mnemonic-show': {
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
-    password: string
-    name: string
-    mnemonic: string
-  }
-  'mnemonic-check': {
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
-    password: string
-    name: string
-    mnemonic: string
-  }
-  'wallet-account-checksum': {
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
-    phrase: string
-  }
-  'wallet-credentials': {
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
-    phrase: string
-  }
+  'setup-wallet-choose-setup-type': undefined
+  'setup-wallet-choose-network': undefined
+  'setup-wallet-choose-mnemonic-type': undefined
+  'initial-setup-wallet-choose-setup-type': undefined
+  'setup-wallet-details-form': undefined
+  'setup-wallet-restore-form': undefined
+  'setup-wallet-restore-details': undefined
+  'setup-wallet-import-read-only': undefined
+  'setup-wallet-save-read-only': undefined
+  'setup-wallet-check-nano-x': undefined
+  'setup-wallet-connect-nano-x': undefined
+  'setup-wallet-save-nano-x': undefined
+  'setup-wallet-about-recovery-phase': undefined
+  'setup-wallet-recovery-phrase-mnemonic': undefined
+  'setup-wallet-verify-recovery-phrase-mnemonic': undefined
 }
 export type WalletInitRouteNavigation = StackNavigationProp<WalletInitRoutes>
 
@@ -250,6 +193,7 @@ export type StakingCenterRoutes = {
     poolId: string
     yoroiUnsignedTx: YoroiUnsignedTx
   }
+  'delegation-failed-tx': undefined
 }
 
 export type SwapTabRoutes = {
@@ -268,6 +212,8 @@ export type ExchangeRoutes = {
 export type ExchangeRoutesNavigation = StackNavigationProp<ExchangeRoutes>
 
 export type StakingCenterRouteNavigation = StackNavigationProp<StakingCenterRoutes>
+
+export type DiscoverRoutesNavigation = StackNavigationProp<DiscoverRoutes>
 
 export type SettingsTabRoutes = {
   'wallet-settings': undefined
@@ -315,10 +261,24 @@ export type SendConfirmParams = {
   yoroiUnsignedTx: YoroiUnsignedTx
 }
 
+export type DiscoverRoutes = {
+  'discover-select-dapp-from-list': undefined
+  'discover-browser': NavigatorScreenParams<BrowserRoutes>
+}
+
+export type BrowserRoutes = {
+  'discover-browse-dapp': undefined
+  'discover-search-dapp-in-browser': undefined
+}
+
 export type DashboardRoutes = {
   'staking-dashboard-main': undefined
   'staking-center': NavigatorScreenParams<StakingCenterRoutes>
-  'delegation-confirmation': undefined
+  'delegation-confirmation': {
+    poolId: string
+    yoroiUnsignedTx: YoroiUnsignedTx
+  }
+  'delegation-failed-tx': undefined
 }
 
 export type VotingRegistrationRoutes = {
@@ -362,7 +322,12 @@ export type MenuRoutes = {
   'voting-registration': undefined
 }
 
-export type AppRoutes = {
+export type PortfolioRoutes = {
+  'portfolio-dashboard': undefined
+}
+
+// TODO revisit portfolio
+export type AppRoutes = PortfolioRoutes & {
   'first-run': NavigatorScreenParams<FirstRunRoutes>
   developer: undefined
   storybook: undefined
@@ -490,12 +455,9 @@ export const useWalletNavigation = () => {
 
     navigateToStakingDashboard: () => {
       navigation.navigate('app-root', {
-        screen: 'main-wallet-routes',
+        screen: 'staking-dashboard',
         params: {
-          screen: 'staking-dashboard',
-          params: {
-            screen: 'staking-dashboard-main',
-          },
+          screen: 'staking-dashboard-main',
         },
       })
     },
@@ -575,10 +537,11 @@ export const useWalletNavigation = () => {
   } as const).current
 }
 
-export const hideTabBarForRoutes = (route: RouteProp<WalletTabRoutes, 'history'>): ViewStyle | undefined =>
+export const hideTabBarForRoutes = (route: RouteProp<WalletTabRoutes, 'history' | 'discover'>): ViewStyle | undefined =>
   getFocusedRouteNameFromRoute(route)?.startsWith('scan') ||
   getFocusedRouteNameFromRoute(route)?.startsWith('swap') ||
   getFocusedRouteNameFromRoute(route)?.startsWith('receive') ||
-  getFocusedRouteNameFromRoute(route)?.startsWith('exchange')
+  getFocusedRouteNameFromRoute(route)?.startsWith('exchange') ||
+  getFocusedRouteNameFromRoute(route)?.startsWith('discover-browser')
     ? {display: 'none'}
     : undefined

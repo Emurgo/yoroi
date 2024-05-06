@@ -39,16 +39,15 @@ export const ProgressStep = ({currentStep, totalSteps, displayStepNumber}: Progr
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     bar: {
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
       height: 10,
       flexDirection: 'row',
     },
     step: {
-      backgroundColor: color.secondary[400],
+      backgroundColor: color.secondary_c400,
       alignItems: 'center',
       justifyContent: 'center',
       flexGrow: 1,
@@ -57,12 +56,12 @@ const useStyles = () => {
       marginHorizontal: 0.5,
     },
     todoStep: {
-      backgroundColor: color.secondary[200],
+      backgroundColor: color.secondary_c200,
     },
     stepNumber: {
       fontSize: 7,
       lineHeight: 10,
-      color: color.gray.min,
+      color: color.gray_cmin,
     },
   })
   return styles

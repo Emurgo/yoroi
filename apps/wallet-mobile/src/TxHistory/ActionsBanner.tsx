@@ -14,10 +14,10 @@ import {useMultipleAddressesInfo} from '../features/Receive/common/useMultipleAd
 import {useReceiveAddressesStatus} from '../features/Receive/common/useReceiveAddressesStatus'
 import {messages as receiveMessages} from '../features/Receive/common/useStrings'
 import {useSwapForm} from '../features/Swap/common/SwapFormProvider'
+import {useSelectedWallet} from '../features/WalletManager/Context'
 import {actionMessages} from '../i18n/global-messages'
 import {useMetrics} from '../metrics/metricsManager'
 import {TxHistoryRouteNavigation} from '../navigation'
-import {useSelectedWallet} from '../SelectedWallet'
 import {useAddressModeManager} from '../wallet-manager/useAddressModeManager'
 import {useTokenInfo} from '../yoroi-wallets/hooks'
 
@@ -187,8 +187,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding, typography} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     centralized: {
       alignItems: 'center',
@@ -204,19 +203,19 @@ const useStyles = () => {
       height: 56,
       width: 56,
       borderRadius: 28,
-      backgroundColor: color.primary[500],
+      backgroundColor: color.primary_c500,
     },
     actionLabel: {
-      ...padding['t-s'],
-      color: color.gray.max,
-      ...typography['body-3-s-medium'],
+      ...atoms.pt_sm,
+      ...atoms.body_3_sm_medium,
+      color: color.gray_cmax,
     },
     disabled: {
       opacity: 0.5,
     },
     isCopying: {
       position: 'absolute',
-      backgroundColor: color.gray.max,
+      backgroundColor: color.gray_cmax,
       alignItems: 'center',
       justifyContent: 'center',
       top: -40,
@@ -226,14 +225,14 @@ const useStyles = () => {
     },
     textCopy: {
       textAlign: 'center',
-      ...padding['s'],
-      ...typography['body-2-m-medium'],
-      color: color.gray.min,
+      ...atoms.p_sm,
+      ...atoms.body_2_md_medium,
+      color: color.gray_cmin,
     },
   })
 
   const colors = {
-    actionColor: theme.color.gray.min,
+    actionColor: color.gray_cmin,
   }
   return {styles, colors}
 }

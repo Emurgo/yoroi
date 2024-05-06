@@ -6,8 +6,8 @@ import {Boundary, ResetErrorRef, Spacer} from '../components'
 import {Icon} from '../components/Icon'
 import {PairedBalance} from '../components/PairedBalance/PairedBalance'
 import {usePrivacyMode} from '../features/Settings/PrivacyMode/PrivacyMode'
+import {useSelectedWallet} from '../features/WalletManager/Context'
 import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../legacy/format'
-import {useSelectedWallet} from '../SelectedWallet'
 import {useBalances} from '../yoroi-wallets/hooks'
 import {Amounts} from '../yoroi-wallets/utils'
 
@@ -68,8 +68,7 @@ const Row = ({children}: {children: React.ReactNode}) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     walletIcon: {
       height: 40,
@@ -82,8 +81,8 @@ const useStyles = () => {
       alignItems: 'center',
     },
     balanceText: {
-      ...typography['body-1-l-medium'],
-      color: color.gray[900],
+      ...atoms.body_1_lg_medium,
+      color: color.gray_c900,
     },
     centered: {
       justifyContent: 'center',

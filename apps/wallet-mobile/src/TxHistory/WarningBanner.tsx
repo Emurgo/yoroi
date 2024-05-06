@@ -54,8 +54,7 @@ export const WarningBanner = ({
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography, padding} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     title: {
       marginVertical: 10,
@@ -63,16 +62,16 @@ const useStyles = () => {
       flexDirection: 'row',
     },
     titleText: {
-      color: color.gray[500],
-      ...typography['body-1-l-regular'],
+      color: color.gray_c500,
+      ...atoms.body_1_lg_regular,
     },
     icon: {
       marginRight: 10,
       width: 18,
     },
     messageText: {
-      color: color.gray[900],
-      ...typography['body-2-m-regular'],
+      color: color.gray_c900,
+      ...atoms.body_2_md_regular,
     },
     wrapper: {
       marginTop: 24,
@@ -81,15 +80,15 @@ const useStyles = () => {
       shadowOffset: {width: 0, height: 2},
       shadowRadius: 12,
       shadowOpacity: 0.06,
-      shadowColor: color['black-static'],
-      backgroundColor: color.primary[100],
+      shadowColor: color.black_static,
+      backgroundColor: color.primary_c100,
       borderRadius: 8,
     },
     close: {
       position: 'absolute',
       top: 0,
       right: 0,
-      ...padding['s'],
+      ...atoms.p_sm,
     },
     body: {
       marginVertical: 10,

@@ -7,9 +7,9 @@ import {defineMessages, useIntl} from 'react-intl'
 
 import {SettingsButton} from '../components/Button'
 import {useGovernanceManagerMaker} from '../features/Staking/Governance'
+import {useSelectedWallet} from '../features/WalletManager/Context'
 import {DashboardRoutes, defaultStackNavigationOptions, useWalletNavigation} from '../navigation'
-import {useSelectedWallet} from '../SelectedWallet'
-import {DelegationConfirmation} from '../Staking'
+import {DelegationConfirmation, FailedTxScreen} from '../Staking'
 import {StakingCenter} from '../Staking/StakingCenter'
 import {useWalletName} from '../yoroi-wallets/hooks'
 import {Dashboard} from './Dashboard'
@@ -19,13 +19,13 @@ export const DashboardNavigator = () => {
   const wallet = useSelectedWallet()
   const walletName = useWalletName(wallet)
   const strings = useStrings()
-  const {theme} = useTheme()
+  const {color, atoms} = useTheme()
 
   const manager = useGovernanceManagerMaker()
 
   return (
     <GovernanceProvider manager={manager}>
-      <Stack.Navigator screenOptions={defaultStackNavigationOptions(theme)}>
+      <Stack.Navigator screenOptions={defaultStackNavigationOptions(atoms, color)}>
         <Stack.Screen
           name="staking-dashboard-main"
           component={Dashboard}
@@ -46,6 +46,8 @@ export const DashboardNavigator = () => {
           component={DelegationConfirmation}
           options={{title: strings.title}}
         />
+
+        <Stack.Screen name="delegation-failed-tx" component={FailedTxScreen} options={{title: strings.title}} />
       </Stack.Navigator>
     </GovernanceProvider>
   )

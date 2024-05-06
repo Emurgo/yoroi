@@ -89,8 +89,7 @@ const SliderIndicator = () => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color} = theme
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,
@@ -110,7 +109,7 @@ const useStyles = () => {
     },
     sheet: {
       flex: 1,
-      backgroundColor: color['bottom-sheet-background'],
+      backgroundColor: color.gray_c200,
       borderTopRightRadius: 20,
       borderTopLeftRadius: 20,
       alignSelf: 'stretch',
@@ -122,7 +121,7 @@ const useStyles = () => {
       fontFamily: 'Rubik-Medium',
       fontSize: 20,
       padding: 16,
-      color: color.gray.max,
+      color: color.gray_cmax,
     },
     header: {
       alignItems: 'center',
@@ -130,7 +129,7 @@ const useStyles = () => {
     },
     slider: {
       height: 4,
-      backgroundColor: color.gray.max,
+      backgroundColor: color.gray_cmax,
       width: 32,
       borderRadius: 10,
     },

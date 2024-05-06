@@ -4,9 +4,9 @@ import * as React from 'react'
 
 import {QueryProvider} from '../../../../../.storybook/decorators'
 import {Boundary} from '../../../../components'
-import {SelectedWalletProvider} from '../../../../SelectedWallet'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks/wallet'
+import {SelectedWalletProvider} from '../../../WalletManager/Context'
 import {mocks as sendMocks} from '../../common/mocks'
 import {StartMultiTokenTxScreen} from './StartMultiTokenTxScreen'
 

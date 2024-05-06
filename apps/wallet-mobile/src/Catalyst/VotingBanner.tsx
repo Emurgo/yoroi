@@ -4,8 +4,8 @@ import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
-import {useSelectedWallet} from '../../src/SelectedWallet'
 import {Icon, Text} from '../components'
+import {useSelectedWallet} from '../features/WalletManager/Context'
 import globalMessages, {confirmationMessages} from '../i18n/global-messages'
 import {isNightly} from '../legacy/config'
 import {Logger} from '../legacy/logging'
@@ -81,11 +81,10 @@ const messages = defineMessages({
 })
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
-      ...padding['y-l'],
+      ...atoms.py_lg,
       alignItems: 'center',
     },
     button: {
@@ -93,16 +92,16 @@ const useStyles = () => {
       alignItems: 'center',
       borderRadius: 8,
       borderWidth: 1,
-      borderColor: color.secondary[500],
-      ...padding['y-m'],
-      ...padding['x-xl'],
+      borderColor: color.secondary_c500,
+      ...atoms.py_md,
+      ...atoms.px_xl,
     },
     text: {
-      color: color.secondary[500],
+      color: color.secondary_c500,
     },
   })
   const colors = {
-    iconColor: color.secondary[500],
+    iconColor: color.secondary_c500,
   }
   return {styles, colors}
 }

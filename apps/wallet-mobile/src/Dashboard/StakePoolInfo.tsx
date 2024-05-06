@@ -5,7 +5,7 @@ import {ActivityIndicator, Linking, StyleSheet, View} from 'react-native'
 import {useQuery, UseQueryOptions} from 'react-query'
 
 import {Button, CopyButton, Text, TitledCard} from '../components'
-import {useSelectedWallet} from '../SelectedWallet'
+import {useSelectedWallet} from '../features/WalletManager/Context'
 import {isEmptyString} from '../utils/utils'
 import {YoroiWallet} from '../yoroi-wallets/cardano/types'
 import {StakePoolInfoAndHistory} from '../yoroi-wallets/types'
@@ -92,34 +92,33 @@ export const useStakePoolInfoAndHistory = (
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding, typography} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     topBlock: {
-      ...padding['y-s'],
-      ...padding['y-l'],
+      ...atoms.py_sm,
+      ...atoms.py_lg,
     },
     poolName: {
-      ...typography['body-1-l-regular'],
+      ...atoms.body_1_lg_regular,
     },
     poolIdBlock: {
       flexDirection: 'row',
     },
     poolId: {
-      color: color.gray[700],
-      ...typography['body-2-m-regular'],
+      color: color.gray_c700,
+      ...atoms.body_2_md_regular,
       flex: 1,
     },
     bottomBlock: {
-      ...padding['x-l'],
-      ...padding['y-xl'],
+      ...atoms.px_lg,
+      ...atoms.py_xl,
     },
     warning: {
-      ...padding['s'],
+      ...atoms.p_sm,
     },
     warningText: {
       fontStyle: 'italic',
-      ...typography['body-3-s-regular'],
+      ...atoms.body_3_sm_regular,
     },
   })
   return styles

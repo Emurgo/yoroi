@@ -20,7 +20,7 @@ export const ContentResult = ({title, children}: ContentResultProps) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {color} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flexDirection: 'row',
@@ -30,7 +30,7 @@ const useStyles = () => {
     },
     contentLabel: {
       fontSize: 16,
-      color: theme.color.gray[600],
+      color: color.gray_c600,
     },
   })
   return styles

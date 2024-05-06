@@ -10,12 +10,12 @@ import {AmountItem} from '../../../components/AmountItem/AmountItem'
 import {Button} from '../../../components/Button/Button'
 import {PressableIcon} from '../../../components/PressableIcon/PressableIcon'
 import {Spacer} from '../../../components/Spacer/Spacer'
-import {useSelectedWallet} from '../../../SelectedWallet/Context/SelectedWalletContext'
 import {sortTokenInfos} from '../../../utils/sorting'
 import {isEmptyString} from '../../../utils/utils'
 import {getNetworkConfigById} from '../../../yoroi-wallets/cardano/networks'
 import {useTokenInfos} from '../../../yoroi-wallets/hooks'
 import {Amounts} from '../../../yoroi-wallets/utils/utils'
+import {useSelectedWallet} from '../../WalletManager/Context'
 import {useDialogs} from '../common/useDialogs'
 import {useNavigateTo} from '../common/useNavigateTo'
 import {useStrings} from '../common/useStrings'
@@ -147,37 +147,36 @@ export const AmountList = ({amounts}: {amounts: Balance.Amounts}) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, padding, typography} = theme
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     header: {
       alignItems: 'center',
-      ...padding['x-l'],
+      ...atoms.px_lg,
     },
     title: {
-      color: color.gray.max,
-      ...typography['heading-3-medium'],
-      ...padding['xs'],
+      color: color.gray_cmax,
+      ...atoms.heading_3_medium,
+      ...atoms.px_sm,
       textAlign: 'center',
     },
     message: {
-      color: color.gray[600],
-      ...typography['body-3-s-regular'],
+      color: color.gray_c600,
+      ...atoms.body_3_sm_regular,
       textAlign: 'center',
       maxWidth: 300,
     },
     txLabel: {
-      ...typography['body-1-l-regular'],
-      ...padding['r-s'],
+      ...atoms.body_1_lg_regular,
+      ...atoms.pr_sm,
     },
     monospace: {
-      ...typography['body-1-l-regular'],
-      color: color.gray[600],
+      ...atoms.body_1_lg_regular,
+      color: color.gray_c600,
       ...Platform.select({
         ios: {fontFamily: 'Menlo'},
         android: {fontFamily: 'monospace'},
       }),
-      ...padding['r-s'],
+      ...atoms.pr_sm,
       flex: 1,
     },
     txRow: {
@@ -187,7 +186,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    icon: color.gray[500],
+    icon: color.gray_c500,
   }
 
   return {styles, colors}

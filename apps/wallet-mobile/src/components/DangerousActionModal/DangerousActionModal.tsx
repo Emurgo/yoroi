@@ -175,14 +175,13 @@ const AlertBox = ({title, content}: {title?: string; content: string[]}) => {
 }
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     header: {
       alignItems: 'center',
     },
     heading: {
-      ...typography['body-3-s-medium'],
+      ...atoms.body_3_sm_medium,
     },
     checkbox: {
       paddingLeft: 4,
@@ -190,18 +189,17 @@ const useStyles = () => {
     actions: {},
     primaryButton: {},
     secondaryButton: {
-      backgroundColor: color.magenta[500],
+      backgroundColor: color.sys_magenta_c500,
     },
   })
   return styles
 }
 
 const useAlertStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
   const alertStyles = StyleSheet.create({
     container: {
-      backgroundColor: color.magenta[500],
+      backgroundColor: color.sys_magenta_c500,
       borderRadius: 8,
       padding: 16,
     },
@@ -212,18 +210,18 @@ const useAlertStyles = () => {
       paddingRight: 16,
     },
     title: {
-      color: color.magenta[500],
-      ...typography['body-3-s-medium'],
+      color: color.sys_magenta_c500,
+      ...atoms.body_3_sm_medium,
     },
     paragraph: {
-      ...typography['body-2-m-regular'],
+      ...atoms.body_2_md_regular,
     },
     text: {
-      color: color.gray[900],
+      color: color.gray_c900,
     },
   })
   const colors = {
-    iconColor: color.magenta[500],
+    iconColor: color.sys_magenta_c500,
   }
   return {alertStyles, colors}
 }

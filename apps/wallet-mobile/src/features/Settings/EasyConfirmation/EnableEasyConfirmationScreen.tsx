@@ -9,10 +9,10 @@ import {Button, KeyboardAvoidingView, Text, TextInput} from '../../../components
 import {LoadingOverlay} from '../../../components/LoadingOverlay'
 import {showErrorDialog} from '../../../dialogs'
 import {errorMessages} from '../../../i18n/global-messages'
-import {useSelectedWallet, useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../../SelectedWallet'
 import {isEmptyString} from '../../../utils/utils'
 import {WrongPassword} from '../../../yoroi-wallets/cardano/errors'
 import {useEnableEasyConfirmation} from '../../../yoroi-wallets/hooks'
+import {useSelectedWallet, useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../WalletManager/Context'
 
 export const EnableEasyConfirmationScreen = () => {
   const intl = useIntl()
@@ -118,23 +118,22 @@ const messages = defineMessages({
 })
 
 const useStyles = () => {
-  const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: color.gray.min,
+      backgroundColor: color.gray_cmin,
     },
     contentContainer: {
       padding: 16,
     },
     heading: {
-      ...typography['body-1-l-regular'],
+      ...atoms.body_1_lg_regular,
       paddingBottom: 20,
     },
     warning: {
-      color: color.magenta[500],
-      ...typography['body-2-m-regular'],
+      color: color.sys_magenta_c500,
+      ...atoms.body_2_md_regular,
       paddingBottom: 20,
     },
     actions: {

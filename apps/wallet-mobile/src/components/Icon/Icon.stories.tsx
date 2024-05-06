@@ -246,6 +246,28 @@ storiesOf('Icon', module).add('Gallery', () => {
         <Item icon={<Icon.Warning />} title="Warning" />
 
         <Item icon={<Icon.Collateral />} title="Collateral" />
+
+        <Item icon={<Icon.Discover />} title="Discover" />
+
+        <Item icon={<Icon.CheckFilled2 />} title="CheckFilled2" />
+
+        <Item icon={<Icon.DApp />} title="DApp Icon" />
+
+        <Item icon={<Icon.Disconnect />} title="Disconnect" />
+
+        <Item icon={<Icon.LockFilled />} title="LockFilled" />
+
+        <Item icon={<Icon.Backward />} title="Backward" />
+
+        <Item icon={<Icon.Forward />} title="Forward" />
+
+        <Item icon={<Icon.Share2 />} title="Share2" />
+
+        <Item icon={<Icon.Reload />} title="Reload" />
+
+        <Item icon={<Icon.Square />} title="Square" />
+
+        <Item icon={<Icon.Google />} title="Google" />
       </ScrollView>
     </FilterProvider>
   )
