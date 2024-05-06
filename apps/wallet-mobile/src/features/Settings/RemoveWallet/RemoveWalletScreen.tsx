@@ -25,7 +25,7 @@ export const RemoveWalletScreen = () => {
   const styles = useStyles()
   const wallet = useSelectedWallet()
   const walletName = useWalletName(wallet)
-  const {resetToWalletSetup, resetToWalletSelection} = useWalletNavigation()
+  const {resetToWalletSetupInit, resetToWalletSelection} = useWalletNavigation()
   const walletManager = useWalletManager()
   const queryClient = useQueryClient()
 
@@ -41,7 +41,7 @@ export const RemoveWalletScreen = () => {
         return
       }
 
-      resetToWalletSetup()
+      resetToWalletSetupInit()
     },
   })
 

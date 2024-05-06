@@ -290,6 +290,7 @@ const MnemonicWordInput = React.forwardRef<MnemonicWordInputRef, MnemonicWordInp
             onKeyPress(word)
           }
         }}
+        onBlur={() => setSuggestedWords([])}
         keyboardType={Platform.OS === 'android' ? 'visible-password' : undefined} // to hide keyboard suggestions on android
       />
     )
