@@ -32,27 +32,20 @@ storiesOf('MnemonicInput', module)
       setFocusedIndex(index)
     }
 
-    const addInputErrorIndex = (indexToAdd: number) => {
+    const onError = (indexToAdd: number) => {
       const newInputErrors = [...inputErrorsIndexes, indexToAdd]
       setInputErrorsIndexes(newInputErrors)
     }
 
-    const removeInputErrorIndex = (indexToRemove: number) => {
+    const onClearError = (indexToRemove: number) => {
       const newInputErrors = inputErrorsIndexes.filter((index) => index !== indexToRemove)
       setInputErrorsIndexes(newInputErrors)
-    }
-
-    const onError = (index: number) => {
-      addInputErrorIndex(index)
-    }
-
-    const onClearError = (index: number) => {
-      removeInputErrorIndex(index)
     }
 
     return (
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
         <MnemonicInput
+          inputErrorsIndexes={inputErrorsIndexes}
           mnenonicRefs={mnenonicRefs}
           suggestedWords={suggestedWords}
           setSuggestedWords={setSuggestedWords}
@@ -96,27 +89,20 @@ storiesOf('MnemonicInput', module)
       setFocusedIndex(index)
     }
 
-    const addInputErrorIndex = (indexToAdd: number) => {
+    const onError = (indexToAdd: number) => {
       const newInputErrors = [...inputErrorsIndexes, indexToAdd]
       setInputErrorsIndexes(newInputErrors)
     }
 
-    const removeInputErrorIndex = (indexToRemove: number) => {
+    const onClearError = (indexToRemove: number) => {
       const newInputErrors = inputErrorsIndexes.filter((index) => index !== indexToRemove)
       setInputErrorsIndexes(newInputErrors)
-    }
-
-    const onError = (index: number) => {
-      addInputErrorIndex(index)
-    }
-
-    const onClearError = (index: number) => {
-      removeInputErrorIndex(index)
     }
 
     return (
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
         <MnemonicInput
+          inputErrorsIndexes={inputErrorsIndexes}
           mnenonicRefs={mnenonicRefs}
           suggestedWords={suggestedWords}
           setSuggestedWords={setSuggestedWords}

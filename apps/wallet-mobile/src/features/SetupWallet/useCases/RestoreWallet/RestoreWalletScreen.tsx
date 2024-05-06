@@ -99,6 +99,7 @@ export const RestoreWalletScreen = () => {
 
     if (!mnemonicWordsComplete) {
       if (isValid) setIsValidPhrase(false)
+      if (!isEmptyString(mnemonic)) setMnemonic('')
 
       const newIndex = index + 1
       mnenonicRefs[newIndex]?.current?.focus()
@@ -108,6 +109,8 @@ export const RestoreWalletScreen = () => {
   }
 
   const onFocus = (index: number) => {
+    if (!isEmptyString(mnemonic)) setMnemonic('')
+    if (isValidPhrase) setIsValidPhrase(false)
     setFocusedIndex(index)
   }
 
