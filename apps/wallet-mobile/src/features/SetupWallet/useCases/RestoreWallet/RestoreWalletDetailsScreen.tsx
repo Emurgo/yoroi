@@ -270,6 +270,8 @@ export const RestoreWalletDetailsScreen = () => {
             showErrorOnBlur
           />
 
+          <Space height="xl" />
+
           <TextInput
             enablesReturnKeyAutomatically
             ref={passwordRef}
@@ -303,6 +305,8 @@ export const RestoreWalletDetailsScreen = () => {
             disabled={isLoading}
             showErrorOnBlur={!isOpenWalletSuccess}
           />
+
+          <Space height="xl" />
 
           <View style={styles.checksum}>
             <Icon.WalletAccount iconSeed={plate.accountPlate.ImagePart} style={styles.walletChecksum} />

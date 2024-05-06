@@ -856,7 +856,7 @@
   },
   {
     "id": "components.walletinit.walletDetails.walletDetailsPasswordHelper",
-    "defaultMessage": "!!!Use a combination of letters, numbers and symbols to make your password stronger",
+    "defaultMessage": "!!!Combine of letters, numbers and symbols to make it stronger",
     "file": "src/features/SetupWallet/common/useStrings.tsx",
     "start": {
       "line": 343,
@@ -866,7 +866,7 @@
     "end": {
       "line": 346,
       "column": 5,
-      "index": 18901
+      "index": 18880
     }
   },
   {
@@ -876,12 +876,12 @@
     "start": {
       "line": 347,
       "column": 28,
-      "index": 18931
+      "index": 18910
     },
     "end": {
       "line": 350,
       "column": 5,
-      "index": 19056
+      "index": 19035
     }
   },
   {
@@ -891,12 +891,12 @@
     "start": {
       "line": 351,
       "column": 32,
-      "index": 19090
+      "index": 19069
     },
     "end": {
       "line": 354,
       "column": 5,
-      "index": 19216
+      "index": 19195
     }
   },
   {
@@ -906,12 +906,12 @@
     "start": {
       "line": 355,
       "column": 39,
-      "index": 19257
+      "index": 19236
     },
     "end": {
       "line": 358,
       "column": 5,
-      "index": 19392
+      "index": 19371
     }
   },
   {
@@ -921,12 +921,12 @@
     "start": {
       "line": 359,
       "column": 12,
-      "index": 19406
+      "index": 19385
     },
     "end": {
       "line": 362,
       "column": 5,
-      "index": 19521
+      "index": 19500
     }
   },
   {
@@ -936,12 +936,12 @@
     "start": {
       "line": 363,
       "column": 21,
-      "index": 19544
+      "index": 19523
     },
     "end": {
       "line": 366,
       "column": 5,
-      "index": 19668
+      "index": 19647
     }
   },
   {
@@ -951,12 +951,12 @@
     "start": {
       "line": 367,
       "column": 30,
-      "index": 19700
+      "index": 19679
     },
     "end": {
       "line": 370,
       "column": 5,
-      "index": 19851
+      "index": 19830
     }
   },
   {
@@ -966,12 +966,12 @@
     "start": {
       "line": 371,
       "column": 19,
-      "index": 19872
+      "index": 19851
     },
     "end": {
       "line": 374,
       "column": 5,
-      "index": 19998
+      "index": 19977
     }
   },
   {
@@ -981,12 +981,12 @@
     "start": {
       "line": 375,
       "column": 23,
-      "index": 20023
+      "index": 20002
     },
     "end": {
       "line": 378,
       "column": 5,
-      "index": 20159
+      "index": 20138
     }
   },
   {
@@ -996,12 +996,12 @@
     "start": {
       "line": 379,
       "column": 21,
-      "index": 20182
+      "index": 20161
     },
     "end": {
       "line": 382,
       "column": 5,
-      "index": 20331
+      "index": 20310
     }
   },
   {
@@ -1011,12 +1011,12 @@
     "start": {
       "line": 383,
       "column": 19,
-      "index": 20352
+      "index": 20331
     },
     "end": {
       "line": 386,
       "column": 5,
-      "index": 20502
+      "index": 20481
     }
   },
   {
@@ -1026,12 +1026,12 @@
     "start": {
       "line": 387,
       "column": 29,
-      "index": 20533
+      "index": 20512
     },
     "end": {
       "line": 390,
       "column": 5,
-      "index": 20683
+      "index": 20662
     }
   },
   {
@@ -1041,12 +1041,12 @@
     "start": {
       "line": 391,
       "column": 32,
-      "index": 20717
+      "index": 20696
     },
     "end": {
       "line": 394,
       "column": 5,
-      "index": 20852
+      "index": 20831
     }
   },
   {
@@ -1056,12 +1056,12 @@
     "start": {
       "line": 395,
       "column": 32,
-      "index": 20886
+      "index": 20865
     },
     "end": {
       "line": 398,
       "column": 5,
-      "index": 21021
+      "index": 21000
     }
   },
   {
@@ -1071,12 +1071,12 @@
     "start": {
       "line": 399,
       "column": 30,
-      "index": 21053
+      "index": 21032
     },
     "end": {
       "line": 402,
       "column": 5,
-      "index": 21254
+      "index": 21233
     }
   },
   {
@@ -1086,12 +1086,12 @@
     "start": {
       "line": 403,
       "column": 39,
-      "index": 21295
+      "index": 21274
     },
     "end": {
       "line": 406,
       "column": 5,
-      "index": 21462
+      "index": 21441
     }
   },
   {
@@ -1101,12 +1101,12 @@
     "start": {
       "line": 407,
       "column": 38,
-      "index": 21502
+      "index": 21481
     },
     "end": {
       "line": 411,
       "column": 5,
-      "index": 21744
+      "index": 21723
     }
   },
   {
@@ -1116,12 +1116,12 @@
     "start": {
       "line": 412,
       "column": 40,
-      "index": 21786
+      "index": 21765
     },
     "end": {
       "line": 415,
       "column": 5,
-      "index": 21937
+      "index": 21916
     }
   },
   {
@@ -1131,12 +1131,12 @@
     "start": {
       "line": 416,
       "column": 21,
-      "index": 21960
+      "index": 21939
     },
     "end": {
       "line": 419,
       "column": 5,
-      "index": 22105
+      "index": 22084
     }
   },
   {
@@ -1146,12 +1146,12 @@
     "start": {
       "line": 420,
       "column": 18,
-      "index": 22125
+      "index": 22104
     },
     "end": {
       "line": 423,
       "column": 5,
-      "index": 22257
+      "index": 22236
     }
   }
 ]
