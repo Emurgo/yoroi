@@ -52,13 +52,13 @@ export const TxHistoryList = (props: Props) => {
         testID="txHistoryList"
         onEndReached={handleOnEndReached}
         onEndReachedThreshold={0.5}
-        estimatedItemSize={88}
+        estimatedItemSize={72}
       />
     </View>
   )
 }
 
-const batchSize = 20
+const batchSize = 20 
 
 const getTransactionsByDate = (transactions: Record<string, TransactionInfo>) =>
   _(transactions)
