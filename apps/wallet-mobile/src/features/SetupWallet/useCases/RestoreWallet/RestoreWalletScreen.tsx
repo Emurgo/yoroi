@@ -116,7 +116,6 @@ export const RestoreWalletScreen = () => {
   }
 
   const onFocus = (index: number) => {
-    setSuggestedWords([])
     setFocusedIndex(index)
   }
 
