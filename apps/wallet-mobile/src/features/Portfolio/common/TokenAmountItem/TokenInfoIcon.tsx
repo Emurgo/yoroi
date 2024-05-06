@@ -13,10 +13,10 @@ type TokenInfoIconProps = {
   info: Portfolio.Token.Info
   size: 'sm' | 'md'
 }
-export const TokenInfoIcon = React.memo(({info, size = 'md'}: TokenInfoIconProps) => {
+export const TokenInfoIcon = ({info, size = 'md'}: TokenInfoIconProps) => {
   const {styles} = useStyles()
   const {network} = useSelectedWallet()
-  const [isLoading, setIsLoading] = React.useState(false)
+  const [status, setStatus] = React.useState<'loading' | 'error' | 'ok'>('loading')
 
   if (isPrimaryToken(info)) return <PrimaryIcon size={size} />
 
@@ -26,7 +26,6 @@ export const TokenInfoIcon = React.memo(({info, size = 'md'}: TokenInfoIconProps
         source={{uri: `data:image/png;base64,${info.icon}`}}
         style={[size === 'sm' ? styles.iconSmall : styles.iconMedium]}
         placeholder={blurhash}
-        onLoad={() => setIsLoading(false)}
       />
     )
   }
@@ -34,18 +33,20 @@ export const TokenInfoIcon = React.memo(({info, size = 'md'}: TokenInfoIconProps
   const [policy, name] = info.id.split('.')
   const uri = `https://${network}.processed-media.yoroiwallet.com/${policy}/${name}?width=64&height=64&kind=metadata&fit=cover`
 
-  if (isLoading) return <TokenIconPlaceholder size={size} />
-
   return (
     <Image
       source={{uri, headers}}
       contentFit="cover"
       style={[size === 'sm' ? styles.iconSmall : styles.iconMedium]}
-      onLoadStart={() => setIsLoading(true)}
-      onLoadEnd={() => setIsLoading(false)}
-    />
+      placeholder={blurhash}
+      cachePolicy="memory-disk"
+      onError={() => setStatus('error')}
+      onLoad={() => setStatus('ok')}
+    >
+      {status !== 'ok' && <TokenIconPlaceholder size={size} />}
+    </Image>
   )
-})
+}
 
 const PrimaryIcon = ({size = 'md'}: {size?: 'sm' | 'md'}) => {
   const {styles} = useStyles()
