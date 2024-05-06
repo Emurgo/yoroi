@@ -114,7 +114,7 @@ export const SelectTokenFromListScreen = () => {
 
       <Counter
         fungibilityFilter={fungibilityFilter}
-        counter={spendableAmounts.length}
+        counter={filteredAmounts.length}
         isSearchOpened={isSearchOpened}
         isSearching={isSearching}
       />
@@ -230,7 +230,8 @@ const SelectAmount = ({amount, disabled}: SelectAmountProps) => {
   const {styles} = useStyles()
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const {closeSearch} = useSearch()
-  const {tokenSelectedChanged, amountChanged} = useTransfer()
+  const {tokenSelectedChanged, amountChanged, targets, selectedTargetIndex} = useTransfer()
+  const currentAmount = targets[selectedTargetIndex].entry.amounts[amount.info.id]
 
   const isPrimary = isPrimaryToken(amount.info)
 
@@ -243,9 +244,15 @@ const SelectAmount = ({amount, disabled}: SelectAmountProps) => {
       amountChanged(amount)
       navigation.navigate('send-list-amounts-to-send')
     } else {
+      if (currentAmount == null) {
+        amountChanged({
+          info: amount.info,
+          quantity: 0n,
+        })
+      }
       navigation.navigate('send-edit-amount')
     }
-  }, [amount, amountChanged, closeSearch, navigation, tokenSelectedChanged])
+  }, [amount, amountChanged, closeSearch, currentAmount, navigation, tokenSelectedChanged])
 
   return (
     <TouchableOpacity

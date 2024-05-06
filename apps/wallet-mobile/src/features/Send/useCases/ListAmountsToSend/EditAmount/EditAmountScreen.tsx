@@ -40,7 +40,7 @@ export const EditAmountScreen = () => {
 
   const [quantity, setQuantity] = React.useState(initialQuantity)
   const [inputValue, setInputValue] = React.useState(splitBigInt(initialQuantity, amount.info.decimals).bn.toFormat())
-  const spendable = available - primaryBreakdown.lockedAsStorageCost
+  const spendable = isPrimary ? available - primaryBreakdown.lockedAsStorageCost : available
 
   useOverridePreviousSendTxRoute(initialQuantity === 0n ? 'send-select-token-from-list' : 'send-list-amounts-to-send')
 
@@ -54,20 +54,24 @@ export const EditAmountScreen = () => {
   const isUnableToSpend = isPrimary && quantity > spendable
   const isZero = quantity === 0n
 
-  const onChangeQuantity = (text: string) => {
-    try {
-      const [newInputValue, newQuantity] = parseInputToBigInt({
-        input: text,
-        decimalPlaces: amount.info.decimals,
-        format: numberLocale,
-      })
-      setInputValue(newInputValue)
-      setQuantity(newQuantity)
-    } catch (error) {
-      Logger.error('EditAmountScreen::onChangeQuantity', error)
-    }
-  }
-  const onMaxBalance = () => {
+  const handleOnChangeQuantity = React.useCallback(
+    (text: string) => {
+      try {
+        const [newInputValue, newQuantity] = parseInputToBigInt({
+          input: text,
+          decimalPlaces: amount.info.decimals,
+          format: numberLocale,
+        })
+        setInputValue(newInputValue)
+        setQuantity(newQuantity)
+      } catch (error) {
+        Logger.error('EditAmountScreen::onChangeQuantity', error)
+      }
+    },
+    [amount.info.decimals, numberLocale],
+  )
+
+  const handleOnMaxBalance = React.useCallback(() => {
     const [newInputValue, newQuantity] = parseInputToBigInt({
       input: spendable.toString(),
       decimalPlaces: amount.info.decimals,
@@ -75,14 +79,15 @@ export const EditAmountScreen = () => {
     })
     setInputValue(newInputValue)
     setQuantity(newQuantity)
-  }
-  const onApply = () => {
+  }, [amount.info.decimals, numberLocale, spendable])
+
+  const handleOnApply = React.useCallback(() => {
     amountChanged({
       info: amount.info,
       quantity,
     })
     navigateTo.selectedTokens()
-  }
+  }, [amount.info, amountChanged, navigateTo, quantity])
 
   return (
     <View style={styles.container}>
@@ -90,18 +95,24 @@ export const EditAmountScreen = () => {
         <ScrollView style={styles.scrollView} bounces={false}>
           <Spacer height={16} />
 
-          <TokenAmountItem amount={amount} ignorePrivacy />
+          <TokenAmountItem
+            amount={{
+              info: amount.info,
+              quantity: spendable,
+            }}
+            ignorePrivacy
+          />
 
           <Spacer height={40} />
 
-          <AmountInput onChange={onChangeQuantity} value={inputValue} ticker={amount.info.ticker} />
+          <AmountInput onChange={handleOnChangeQuantity} value={inputValue} ticker={amount.info.ticker} />
 
           <Center>
             {isPrimary && <PairedBalance amount={amount} ignorePrivacy />}
 
             <Spacer height={22} />
 
-            {!isPrimary && <MaxBalanceButton onPress={onMaxBalance} />}
+            {!isPrimary && <MaxBalanceButton onPress={handleOnMaxBalance} />}
 
             <Spacer height={22} />
 
@@ -115,7 +126,7 @@ export const EditAmountScreen = () => {
 
         <Actions>
           <ApplyButton
-            onPress={onApply}
+            onPress={handleOnApply}
             title={strings.apply.toLocaleUpperCase()}
             shelleyTheme
             disabled={isUnableToSpend || !hasBalance || isZero}

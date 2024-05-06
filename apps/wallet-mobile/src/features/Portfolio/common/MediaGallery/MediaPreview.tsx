@@ -37,7 +37,6 @@ export const MediaPreview = ({
     ? placeholder
     : `https://${network}.processed-media.yoroiwallet.com/${policy}/${name}?width=512&height=512&kind=metadata&fit=${contentFit}`
 
-    console.log(status, 'status', uri, 'uri')
   return (
     <View style={{width, height, overflow: 'hidden'}}>
       <Image
