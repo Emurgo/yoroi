@@ -25,10 +25,11 @@ export const ListBalances = (props: Props) => {
   const strings = useStrings()
   const styles = useStyles()
   const wallet = useSelectedWallet()
+  const explorers = useExplorers(wallet.network)
   const balances = usePortfolioBalances({wallet})
 
   const [fungibilityFilter, setFungibilityFilter] = React.useState<Exclude<keyof typeof balances, 'records'>>('all')
-  const amounts = balances[fungibilityFilter]
+  const [amounts, setAmounts] = React.useState(balances[fungibilityFilter])
 
   const [loadedAmounts, setLoadedAmounts] = React.useState(amounts.slice(0, batchSize))
   const [currentIndex, setCurrentIndex] = React.useState(batchSize)
@@ -42,8 +43,6 @@ export const ListBalances = (props: Props) => {
 
   const [isPending, startTransition] = React.useTransition()
 
-  const explorers = useExplorers(wallet.network)
-
   const {track} = useMetrics()
   useFocusEffect(
     React.useCallback(() => {
@@ -51,16 +50,23 @@ export const ListBalances = (props: Props) => {
     }, [track]),
   )
 
-  const handleOnPressNFTs = React.useCallback(() => startTransition(() => setFungibilityFilter('nfts')), [])
-  const handleOnPressFTs = React.useCallback(() => startTransition(() => setFungibilityFilter('fts')), [])
-  const handleOnPressAll = React.useCallback(() => startTransition(() => setFungibilityFilter('all')), [])
+  const handleOnChangeFilter = React.useCallback(
+    (filter: Exclude<keyof typeof balances, 'records'>) =>
+      startTransition(() => {
+        setFungibilityFilter(filter)
+        setCurrentIndex(batchSize)
+        setAmounts(balances[filter])
+        setLoadedAmounts(balances[filter].slice(0, batchSize))
+      }),
+    [balances],
+  )
 
   const chips = React.useMemo(() => {
     const chiplist = [
-      {label: strings.all, onPress: handleOnPressAll, value: 'all', disabled: isPending},
+      {label: strings.all, onPress: () => handleOnChangeFilter('all'), value: 'all', disabled: isPending},
       {
         label: strings.tokens(balances.fts.length),
-        onPress: handleOnPressFTs,
+        onPress: () => handleOnChangeFilter('fts'),
         value: 'fts',
         disabled: isPending,
       },
@@ -68,13 +74,13 @@ export const ListBalances = (props: Props) => {
     if (balances.nfts.length > 0) {
       chiplist.push({
         label: strings.nfts(balances.nfts.length),
-        onPress: handleOnPressNFTs,
+        onPress: () => handleOnChangeFilter('nfts'),
         value: 'nfts',
         disabled: isPending,
       })
     }
     return chiplist
-  }, [balances, handleOnPressAll, handleOnPressFTs, handleOnPressNFTs, isPending, strings])
+  }, [balances.fts.length, balances.nfts.length, handleOnChangeFilter, isPending, strings])
 
   return (
     <View style={styles.assetList} testID="assetList">

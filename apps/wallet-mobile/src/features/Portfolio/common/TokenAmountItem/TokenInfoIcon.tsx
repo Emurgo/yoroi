@@ -18,7 +18,19 @@ export const TokenInfoIcon = ({info, size = 'md'}: TokenInfoIconProps) => {
   const {network} = useSelectedWallet()
   const [status, setStatus] = React.useState<'loading' | 'error' | 'ok'>('loading')
 
+  const handleOnError = React.useCallback(() => setStatus('error'), [])
+  const handleOnOk = React.useCallback(() => setStatus('ok'), [])
+
   if (isPrimaryToken(info)) return <PrimaryIcon size={size} />
+
+  if (info.originalImage.startsWith('data:image/png;base64'))
+    return (
+      <Image
+        source={{uri: info.originalImage}}
+        style={[size === 'sm' ? styles.iconSmall : styles.iconMedium]}
+        placeholder={blurhash}
+      />
+    )
 
   if (!isEmptyString(info.icon)) {
     return (
@@ -40,8 +52,8 @@ export const TokenInfoIcon = ({info, size = 'md'}: TokenInfoIconProps) => {
       style={[size === 'sm' ? styles.iconSmall : styles.iconMedium]}
       placeholder={blurhash}
       cachePolicy="memory-disk"
-      onError={() => setStatus('error')}
-      onLoad={() => setStatus('ok')}
+      onError={handleOnError}
+      onLoad={handleOnOk}
     >
       {status !== 'ok' && <TokenIconPlaceholder size={size} />}
     </Image>

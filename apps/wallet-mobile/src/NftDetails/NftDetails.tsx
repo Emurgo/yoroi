@@ -4,7 +4,7 @@ import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import React, {ReactNode, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Dimensions, Linking, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Dimensions, Linking, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 
 import {CopyButton, FadeIn, Spacer, Text} from '../components'
 import {Tab, TabPanel, TabPanels, Tabs} from '../components/Tabs'
@@ -81,9 +81,15 @@ export const NftDetails = () => {
   )
 }
 
+const imageHeight = 380
+const imagePadding = 16
+
 const SelectableMedia = ({info}: {info: Portfolio.Token.Info}) => {
   const styles = useStyles()
   const navigateTo = useNavigateTo()
+  const dimensions = useWindowDimensions()
+  const imageWidth = dimensions.width - imagePadding * 2
+
   return (
     <TouchableOpacity onPress={() => navigateTo.nftZoom(info.id)} style={styles.imageWrapper}>
       <MediaPreview info={info} style={styles.image} height={imageHeight} width={imageWidth} contentFit="contain" />
@@ -208,9 +214,6 @@ const NftMetadata = ({info}: {info: Portfolio.Token.Info}) => {
   )
 }
 
-const imageHeight = 380
-const imagePadding = 16
-const imageWidth = Dimensions.get('window').width - imagePadding * 2
 
 const useStyles = () => {
   const {atoms, color} = useTheme()

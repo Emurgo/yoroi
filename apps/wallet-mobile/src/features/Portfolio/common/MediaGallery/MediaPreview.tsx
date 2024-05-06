@@ -29,11 +29,15 @@ export const MediaPreview = ({
   const {network} = useSelectedWallet()
   const [status, setStatus] = React.useState<'loading' | 'error' | 'ok'>('loading')
 
+  const handleOnError = React.useCallback(() => setStatus('error'), [])
+  const handleOnOk = React.useCallback(() => setStatus('ok'), [])
+
   const [policy, name] = info.id.split('.')
   const uri = showPlaceholder
     ? placeholder
-    : `https://${network}.processed-media.yoroiwallet.com/${policy}/${name}?width=256&height=256&kind=metadata&fit=${contentFit}`
+    : `https://${network}.processed-media.yoroiwallet.com/${policy}/${name}?width=512&height=512&kind=metadata&fit=${contentFit}`
 
+    console.log(status, 'status', uri, 'uri')
   return (
     <View style={{width, height, overflow: 'hidden'}}>
       <Image
@@ -43,8 +47,8 @@ export const MediaPreview = ({
         blurRadius={blurRadius}
         placeholder={blurhash}
         cachePolicy="memory-disk"
-        onError={() => setStatus('error')}
-        onLoad={() => setStatus('ok')}
+        onError={handleOnError}
+        onLoad={handleOnOk}
       >
         {status !== 'ok' && <SkeletonImagePlaceholder width={width} height={height} />}
       </Image>
