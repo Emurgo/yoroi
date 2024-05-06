@@ -4,7 +4,7 @@ import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import React, {ReactNode, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Dimensions, Linking, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, useWindowDimensions, View} from 'react-native'
+import {Linking, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 
 import {CopyButton, FadeIn, Spacer, Text} from '../components'
 import {Tab, TabPanel, TabPanels, Tabs} from '../components/Tabs'
@@ -213,7 +213,6 @@ const NftMetadata = ({info}: {info: Portfolio.Token.Info}) => {
     </View>
   )
 }
-
 
 const useStyles = () => {
   const {atoms, color} = useTheme()
