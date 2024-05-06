@@ -43,8 +43,19 @@ const TokenList = () => {
   const {search, isSearching} = useSearch()
 
   const filteredAmounts = React.useMemo(() => {
-    return isSearching ? balances.fts.filter(({info}) => infoFilterByName(search)(info)) : balances.fts
+    const byName = infoFilterByName(search)
+    return isSearching ? balances.fts.filter(({info}) => byName(info)) : balances.fts
   }, [balances.fts, isSearching, search])
+
+  const [loadedAmounts, setLoadedAmounts] = React.useState(filteredAmounts.slice(0, batchSize))
+  const [currentIndex, setCurrentIndex] = React.useState(batchSize)
+
+  const handleOnEndReached = React.useCallback(() => {
+    if (currentIndex >= filteredAmounts.length) return
+    const nextBatch = filteredAmounts.slice(currentIndex, currentIndex + batchSize)
+    setLoadedAmounts([...loadedAmounts, ...nextBatch])
+    setCurrentIndex(currentIndex + batchSize)
+  }, [currentIndex, filteredAmounts, loadedAmounts])
 
   return (
     <View style={styles.list}>
@@ -63,13 +74,15 @@ const TokenList = () => {
       )}
 
       <FlashList
-        data={filteredAmounts}
+        data={isSearching ? filteredAmounts : loadedAmounts}
         renderItem={({item: amount}) => <SelectableToken amount={amount} />}
         bounces={false}
         keyExtractor={(_, index) => index.toString()}
         testID="assetsList"
         estimatedItemSize={72}
         ListEmptyComponent={<Empty />}
+        onEndReached={handleOnEndReached}
+        onEndReachedThreshold={0.5}
       />
 
       <Counter
@@ -146,6 +159,8 @@ const Empty = () => {
     </View>
   )
 }
+
+const batchSize = 20
 
 const useStyles = () => {
   const {color, atoms} = useTheme()

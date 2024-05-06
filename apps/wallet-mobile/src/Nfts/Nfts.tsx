@@ -35,7 +35,8 @@ export const Nfts = () => {
   const {search, isSearching} = useSearch()
 
   const filteredAmounts = React.useMemo(() => {
-    return isSearching ? balances.nfts.filter(({info}) => infoFilterByName(search)(info)) : balances.nfts
+    const byName = infoFilterByName(search)
+    return isSearching ? balances.nfts.filter(({info}) => byName(info)) : balances.nfts
   }, [balances.nfts, isSearching, search])
 
   useFocusEffect(
