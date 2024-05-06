@@ -3,14 +3,14 @@ import {wordlists} from 'bip39'
 import * as React from 'react'
 import {Platform, StyleSheet, Text, TextInput as RNTextInput, TouchableOpacity, View} from 'react-native'
 
-import {Spacer, useScrollView} from '../../../../components'
-import {Space} from '../../../../components/Space/Space'
-import {isEmptyString} from '../../../../utils/utils'
-import {Alert as AlertIllustration} from '../../illustrations/Alert'
-import {Check2} from '../../illustrations/Check2'
-import {MnemonicWordInputRef} from '../../useCases/RestoreWallet/RestoreWalletScreen'
-import {TextInput} from '../TextInput'
-import {useStrings} from '../useStrings'
+import {Spacer, useScrollView} from '../../../../../components'
+import {Space} from '../../../../../components/Space/Space'
+import {isEmptyString} from '../../../../../utils/utils'
+import {TextInput} from '../../../common/TextInput'
+import {useStrings} from '../../../common/useStrings'
+import {Alert as AlertIllustration} from '../../../illustrations/Alert'
+import {Check2} from '../../../illustrations/Check2'
+import {MnemonicWordInputRef} from '../RestoreWalletScreen'
 
 export const MnemonicInput = ({
   length,
@@ -23,6 +23,7 @@ export const MnemonicInput = ({
   onFocus,
   mnenonicRefs,
   mnemonic,
+  inputErrorsIndexes,
   onError,
   onClearError,
 }: {
@@ -37,6 +38,7 @@ export const MnemonicInput = ({
   onSelect: (index: number, word: string) => void
   onFocus: (index: number) => void
   mnenonicRefs: React.RefObject<MnemonicWordInputRef>[]
+  inputErrorsIndexes: Array<number>
   mnemonic: string
   onError: (index: number) => void
   onClearError: (index: number) => void
@@ -55,6 +57,7 @@ export const MnemonicInput = ({
         mnemonicSelectedWords={mnemonicSelectedWords}
         isValidPhrase={isValidPhrase}
         suggestedWords={suggestedWords}
+        inputErrorsIndexes={inputErrorsIndexes}
         setSuggestedWords={setSuggestedWords}
         onFocus={onFocus}
         onError={onError}
@@ -98,9 +101,11 @@ const ClearAllButton = ({onPress}: {onPress: () => void}) => {
   const {styles} = useStyles()
   const strings = useStrings()
   return (
-    <TouchableOpacity activeOpacity={0.5} style={styles.textView} onPress={onPress}>
-      <Text style={styles.clearAll}>{strings.clearAll}</Text>
-    </TouchableOpacity>
+    <View style={styles.textView}>
+      <TouchableOpacity activeOpacity={0.5} onPress={onPress}>
+        <Text style={styles.clearAll}>{strings.clearAll}</Text>
+      </TouchableOpacity>
+    </View>
   )
 }
 
@@ -110,6 +115,7 @@ type MnemonicWordsInputProps = {
   onSelect: (index: number, word: string) => void
   isValidPhrase: boolean
   suggestedWords: Array<string>
+  inputErrorsIndexes: Array<number>
   setSuggestedWords: (suggestedWord: Array<string>) => void
   onFocus: (index: number) => void
   onError: (index: number) => void
@@ -121,6 +127,7 @@ const MnemonicWordsInput = ({
   mnenonicRefs,
   isValidPhrase = false,
   suggestedWords,
+  inputErrorsIndexes,
   setSuggestedWords,
   onFocus,
   onError,
@@ -134,43 +141,48 @@ const MnemonicWordsInput = ({
 
   return (
     <View style={styles.mnemonicInputView} testID="mnemonicInputsView">
-      {mnemonicSelectedWords.map((_, index) => (
-        <View
-          key={index}
-          style={styles.mnemonicInput}
-          onLayout={({nativeEvent}) => (rowHeightRef.current = nativeEvent.layout.height)}
-          testID={`mnemonicInput${index}`}
-        >
-          <Text style={styles.mnemonicIndex}>{index + 1}.</Text>
+      {mnemonicSelectedWords.map((word, index) => {
+        const error = inputErrorsIndexes.includes(index)
 
-          <MnemonicWordInput
-            mnemonicSelectedWords={mnemonicSelectedWords}
-            index={index}
-            suggestedWords={suggestedWords}
-            setSuggestedWords={setSuggestedWords}
-            ref={mnenonicRefs[index]}
-            onSelect={(word: string) => {
-              onSelect(index, word)
-            }}
-            onFocus={() => {
-              if (rowHeightRef.current == null) return
-              const columnNumber = index % 3
-              const rowNumber = (index - columnNumber) / 3
-              scrollView?.scrollTo({y: rowNumber * rowHeightRef.current})
+        return (
+          <View
+            key={index}
+            style={styles.mnemonicInput}
+            onLayout={({nativeEvent}) => (rowHeightRef.current = nativeEvent.layout.height)}
+            testID={`mnemonicInput${index}`}
+          >
+            <Text style={styles.mnemonicIndex}>{index + 1}.</Text>
 
-              onFocus(index)
-            }}
-            isValidPhrase={isValidPhrase}
-            onKeyPress={(currentWord: string) => {
-              if (mnenonicRefs[index].current && isEmptyString(currentWord) && index > 0) {
-                mnenonicRefs[index - 1]?.current?.focus()
-              }
-            }}
-            onError={() => onError(index)}
-            onClearError={() => onClearError(index)}
-          />
-        </View>
-      ))}
+            <MnemonicWordInput
+              selectedWord={word}
+              index={index}
+              suggestedWords={suggestedWords}
+              setSuggestedWords={setSuggestedWords}
+              ref={mnenonicRefs[index]}
+              onSelect={(word: string) => {
+                onSelect(index, word)
+              }}
+              onFocus={() => {
+                if (rowHeightRef.current == null) return
+                const columnNumber = index % 3
+                const rowNumber = (index - columnNumber) / 3
+                scrollView?.scrollTo({y: rowNumber * rowHeightRef.current})
+
+                onFocus(index)
+              }}
+              isValidPhrase={isValidPhrase}
+              onKeyPress={(currentWord: string) => {
+                if (mnenonicRefs[index].current && isEmptyString(currentWord) && index > 0) {
+                  mnenonicRefs[index - 1]?.current?.focus()
+                }
+              }}
+              onError={() => onError(index)}
+              onClearError={() => onClearError(index)}
+              error={error}
+            />
+          </View>
+        )
+      })}
 
       {mnemonicSelectedWords.length === 15 && <View style={styles.mnemonicInput} />}
     </View>
@@ -182,12 +194,13 @@ type MnemonicWordInputProps = {
   onFocus: () => void
   onKeyPress: (word: string) => void
   isValidPhrase: boolean
-  mnemonicSelectedWords: Array<string>
+  selectedWord: string
   index: number
   suggestedWords: Array<string>
   setSuggestedWords: (suggestedWord: Array<string>) => void
   onError: (error: string) => void
   onClearError: () => void
+  error: boolean
 }
 
 const MnemonicWordInput = React.forwardRef<MnemonicWordInputRef, MnemonicWordInputProps>(
@@ -197,19 +210,18 @@ const MnemonicWordInput = React.forwardRef<MnemonicWordInputRef, MnemonicWordInp
       onFocus,
       isValidPhrase = false,
       onKeyPress,
-      mnemonicSelectedWords,
-      index,
+      selectedWord,
       suggestedWords,
       setSuggestedWords,
       onError,
       onClearError,
+      error,
     },
     ref,
   ) => {
     const inputRef = React.useRef<RNTextInput>(null)
     const {styles} = useStyles()
-    const [word, setWord] = React.useState(mnemonicSelectedWords[index])
-    const [error, setError] = React.useState(false)
+    const [word, setWord] = React.useState(selectedWord)
 
     React.useImperativeHandle(
       ref,
@@ -241,15 +253,12 @@ const MnemonicWordInput = React.forwardRef<MnemonicWordInputRef, MnemonicWordInp
           setSuggestedWords(suggestedWords)
 
           if (suggestedWords.length <= 0) {
-            setError(true)
             onError('error')
           } else {
-            setError(false)
             onClearError()
           }
         } else {
           setSuggestedWords([])
-          setError(false)
           onClearError()
         }
       },
