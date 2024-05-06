@@ -14,7 +14,7 @@ import {TransactionInfo} from '../../yoroi-wallets/types'
 import {TxHistoryListItem} from './TxHistoryListItem'
 
 type Props = Partial<FlashListProps<TransactionInfo>>
-export const TxHistoryList = React.memo((props: Props) => {
+export const TxHistoryList = (props: Props) => {
   const styles = useStyles()
   const wallet = useSelectedWallet()
   const {track} = useMetrics()
@@ -52,10 +52,11 @@ export const TxHistoryList = React.memo((props: Props) => {
         testID="txHistoryList"
         onEndReached={handleOnEndReached}
         onEndReachedThreshold={0.5}
+        estimatedItemSize={88}
       />
     </View>
   )
-})
+}
 
 const batchSize = 20
 
@@ -74,8 +75,6 @@ const useStyles = () => {
     content: {
       ...atoms.pt_lg,
       ...atoms.px_lg,
-      flexGrow: 1,
-      height: 'auto',
     },
   })
 

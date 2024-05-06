@@ -48,23 +48,37 @@ export const portfolioApiMaker = ({
         })
         if (isLeft(response)) return response
 
-        const transformedResponseData = toSecondaryTokenInfos(
-          response.value.data,
-        )
+        try {
+          const transformedResponseData = toSecondaryTokenInfos(
+            response.value.data,
+          )
 
-        const transformedResponse: Api.Response<Portfolio.Api.TokenInfosResponse> =
-          freeze(
+          const transformedResponse: Api.Response<Portfolio.Api.TokenInfosResponse> =
+            freeze(
+              {
+                tag: 'right',
+                value: {
+                  status: response.value.status,
+                  data: transformedResponseData,
+                },
+              },
+              true,
+            )
+
+          return transformedResponse
+        } catch (error) {
+          return freeze(
             {
-              tag: 'right',
-              value: {
-                status: response.value.status,
-                data: transformedResponseData,
+              tag: 'left',
+              error: {
+                status: -3,
+                message: 'Failed to transform token infos response',
+                responseData: response.value.data,
               },
             },
             true,
           )
-
-        return transformedResponse
+        }
       },
     },
     true,
