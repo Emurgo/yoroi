@@ -70,8 +70,10 @@ const horizontalPadding = 16
 const verticalPadding = 16
 const gapBetweenColumns = horizontalPadding
 const imageHorizontalPadding = gapBetweenColumns / numberOfColumns
+const batchSize = 20
 
 function GalleryList({
+  data = [],
   imageSize,
   renderMedia,
   withVerticalPadding = false,
@@ -80,10 +82,22 @@ function GalleryList({
   renderMedia: (item: Portfolio.Token.Amount) => React.ReactElement
   withVerticalPadding?: boolean
   imageSize: number
+  data: ReadonlyArray<Portfolio.Token.Amount>
 }) {
+  const [loadedAmounts, setLoadedAmounts] = React.useState(data.slice(0, batchSize))
+  const [currentIndex, setCurrentIndex] = React.useState(batchSize)
+
+  const handleOnEndReached = React.useCallback(() => {
+    if (currentIndex >= data.length) return
+    const nextBatch = data.slice(currentIndex, currentIndex + batchSize)
+    setLoadedAmounts([...loadedAmounts, ...nextBatch])
+    setCurrentIndex(currentIndex + batchSize)
+  }, [currentIndex, data, loadedAmounts])
+
   return (
     <FlashList
       {...rest}
+      data={loadedAmounts}
       numColumns={2}
       renderItem={({item, index}) => (
         <View
@@ -101,6 +115,8 @@ function GalleryList({
       keyExtractor={(_, index) => index.toString()}
       horizontal={false}
       estimatedItemSize={imageSize + imagePadding + textHeight + rowSpacing}
+      onEndReached={handleOnEndReached}
+      onEndReachedThreshold={0.5}
     />
   )
 }

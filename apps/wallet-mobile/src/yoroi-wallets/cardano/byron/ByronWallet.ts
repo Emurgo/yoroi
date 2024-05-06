@@ -487,18 +487,15 @@ export class ByronWallet implements YoroiWallet {
     await this.discoverAddresses()
     const addressesAfterRequest = this.internalChain.addresses.length + this.externalChain.addresses.length
     const hasAddedNewAddress = addressesAfterRequest !== addressesBeforeRequest
+    if (hasAddedNewAddress) await this.save()
+    
+    this.generateNewReceiveAddressIfNeeded()
 
-    const [hasUpdatedUtxos, hasUpdateTxs] = await Promise.all([
+    await Promise.all([
       this.syncUtxos({isForced}),
       this.transactionManager.doSync(this.getAddressesInBlocks(), this.getBackendConfig()),
     ])
 
-    const hasNewLastGeneratedAddress = this.generateNewReceiveAddressIfNeeded()
-
-    const shouldPersist =
-      hasNewLastGeneratedAddress || hasAddedNewAddress || hasUpdateTxs || hasUpdatedUtxos || isForced
-
-    if (shouldPersist) await this.save()
   }
 
   async resync() {

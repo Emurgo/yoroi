@@ -28,6 +28,18 @@ export const ListBalances = (props: Props) => {
   const balances = usePortfolioBalances({wallet})
 
   const [fungibilityFilter, setFungibilityFilter] = React.useState<Exclude<keyof typeof balances, 'records'>>('all')
+  const amounts = balances[fungibilityFilter]
+
+  const [loadedAmounts, setLoadedAmounts] = React.useState(amounts.slice(0, batchSize))
+  const [currentIndex, setCurrentIndex] = React.useState(batchSize)
+
+  const handleOnEndReached = React.useCallback(() => {
+    if (currentIndex >= amounts.length) return
+    const nextBatch = amounts.slice(currentIndex, currentIndex + batchSize)
+    setLoadedAmounts([...loadedAmounts, ...nextBatch])
+    setCurrentIndex(currentIndex + batchSize)
+  }, [amounts, currentIndex, loadedAmounts])
+
   const [isPending, startTransition] = React.useTransition()
 
   const explorers = useExplorers(wallet.network)
@@ -71,7 +83,7 @@ export const ListBalances = (props: Props) => {
       <FlashList
         {...props}
         bounces={false}
-        data={balances[fungibilityFilter]}
+        data={loadedAmounts}
         renderItem={({item: amount}) => (
           <ExplorableAmount
             amount={amount}
@@ -82,6 +94,8 @@ export const ListBalances = (props: Props) => {
         contentContainerStyle={styles.content}
         keyExtractor={(_, index) => index.toString()}
         estimatedItemSize={78}
+        onEndReached={handleOnEndReached}
+        onEndReachedThreshold={0.5}
       />
     </View>
   )
@@ -98,6 +112,8 @@ const ExplorableAmount = ({onPress, ...tokenAmountProps}: ExplorableAssetItemPro
     </TouchableOpacity>
   )
 }
+
+const batchSize = 20
 
 const useStyles = () => {
   const {color, atoms} = useTheme()

@@ -1,25 +1,19 @@
 import {useFocusEffect} from '@react-navigation/native'
-import {isString} from '@yoroi/common'
+import {FlashList, FlashListProps} from '@shopify/flash-list'
 import {useTheme} from '@yoroi/theme'
 import _ from 'lodash'
 import React from 'react'
-import {useIntl} from 'react-intl'
-import {SectionList, SectionListProps, StyleSheet, View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 
-import {Spacer, Text} from '../../components'
+import {Spacer} from '../../components'
 import {ShowBuyBanner} from '../../features/Exchange/common/ShowBuyBanner/ShowBuyBanner'
 import {useSelectedWallet} from '../../features/WalletManager/Context'
-import {formatDateRelative} from '../../legacy/format'
 import {useMetrics} from '../../metrics/metricsManager'
 import {useTransactionInfos} from '../../yoroi-wallets/hooks'
 import {TransactionInfo} from '../../yoroi-wallets/types'
 import {TxHistoryListItem} from './TxHistoryListItem'
 
-type ListProps = SectionListProps<TransactionInfo>
-
-type Props = Partial<ListProps> & {
-  onScroll: ListProps['onScroll']
-}
+type Props = Partial<FlashListProps<TransactionInfo>>
 export const TxHistoryList = React.memo((props: Props) => {
   const styles = useStyles()
   const wallet = useSelectedWallet()
@@ -32,53 +26,43 @@ export const TxHistoryList = React.memo((props: Props) => {
   )
 
   const transactionsInfo = useTransactionInfos(wallet)
-  const groupedTransactions = React.useMemo(() => getTransactionsByDate(transactionsInfo), [transactionsInfo])
+  const sortedTransactions = React.useMemo(() => getTransactionsByDate(transactionsInfo), [transactionsInfo])
+
+  const [loadedTxs, setLoadedTxs] = React.useState(sortedTransactions.slice(0, batchSize))
+  const [currentIndex, setCurrentIndex] = React.useState(batchSize)
+
+  const handleOnEndReached = React.useCallback(() => {
+    if (currentIndex >= sortedTransactions.length) return
+    const nextBatch = sortedTransactions.slice(currentIndex, currentIndex + batchSize)
+    setLoadedTxs([...loadedTxs, ...nextBatch])
+    setCurrentIndex(currentIndex + batchSize)
+  }, [currentIndex, sortedTransactions, loadedTxs])
 
   return (
     <View style={styles.container}>
-      <SectionList
+      <FlashList
         {...props}
+        data={loadedTxs}
         ListHeaderComponent={<ShowBuyBanner />}
         contentContainerStyle={styles.content}
         renderItem={({item}) => <TxHistoryListItem transaction={item} />}
         ItemSeparatorComponent={() => <Spacer height={16} />}
-        renderSectionHeader={({section: {data}}) => <DayHeader ts={data[0].submittedAt} />}
-        sections={groupedTransactions}
-        renderSectionFooter={() => <Spacer height={12} />}
-        keyExtractor={(item) => item.id}
-        stickySectionHeadersEnabled={false}
+        keyExtractor={(_, index) => index.toString()}
         nestedScrollEnabled={true}
-        maxToRenderPerBatch={20}
-        initialNumToRender={20}
         testID="txHistoryList"
+        onEndReached={handleOnEndReached}
+        onEndReachedThreshold={0.5}
       />
     </View>
   )
 })
 
-type DayHeaderProps = {
-  ts: unknown
-}
-
-const DayHeader = ({ts}: DayHeaderProps) => {
-  const intl = useIntl()
-  const styles = useStyles()
-
-  return (
-    <View style={styles.dayHeaderRoot}>
-      <Text testID="dayHeaderText">{isString(ts) ? formatDateRelative(ts, intl) : ''}</Text>
-    </View>
-  )
-}
+const batchSize = 20
 
 const getTransactionsByDate = (transactions: Record<string, TransactionInfo>) =>
   _(transactions)
-    .filter((t) => t.submittedAt != null)
     .sortBy((t) => t.submittedAt)
     .reverse()
-    .groupBy((t) => t.submittedAt?.substring(0, '2001-01-01'.length))
-    .values()
-    .map((data) => ({data}))
     .value()
 
 const useStyles = () => {
@@ -88,13 +72,10 @@ const useStyles = () => {
       flex: 1,
     },
     content: {
+      ...atoms.pt_lg,
       ...atoms.px_lg,
       flexGrow: 1,
       height: 'auto',
-    },
-    dayHeaderRoot: {
-      ...atoms.pb_xs,
-      ...atoms.px_lg,
     },
   })
 

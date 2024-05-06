@@ -459,23 +459,20 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         console.error('ShelleyWallet::sync: wallet not initialized')
         return Promise.resolve()
       }
-
+      
       const addressesBeforeRequest = this.internalChain.addresses.length + this.externalChain.addresses.length
       await this.discoverAddresses()
       const addressesAfterRequest = this.internalChain.addresses.length + this.externalChain.addresses.length
       const hasAddedNewAddress = addressesAfterRequest !== addressesBeforeRequest
+      if (hasAddedNewAddress) await this.save()
 
-      const [hasUpdatedUtxos, hasUpdateTxs] = await Promise.all([
+      this.generateNewReceiveAddressIfNeeded()
+
+      await Promise.all([
         this.syncUtxos({isForced}),
         this.transactionManager.doSync(this.getAddressesInBlocks(), BACKEND),
       ])
 
-      const hasNewLastGeneratedAddress = this.generateNewReceiveAddressIfNeeded()
-
-      const shouldPersist =
-        hasNewLastGeneratedAddress || hasAddedNewAddress || hasUpdateTxs || hasUpdatedUtxos || isForced
-
-      if (shouldPersist) await this.save()
     }
 
     async resync() {
