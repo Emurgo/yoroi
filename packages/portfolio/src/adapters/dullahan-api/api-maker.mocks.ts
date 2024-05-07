@@ -4,12 +4,12 @@ import {Api, Portfolio} from '@yoroi/types'
 
 import {tokenMocks} from '../token.mocks'
 
-export const responseTokenDiscoveriesMocks = asyncBehavior.maker<
+export const responseTokenDiscoveryMocks = asyncBehavior.maker<
   Api.Response<Portfolio.Api.TokenDiscoveryResponse>
 >({
   data: {
     tag: 'right',
-    value: {status: 200, data: tokenMocks.apiResponse.tokenDiscovery},
+    value: {status: 200, data: tokenMocks.nftCryptoKitty.discovery},
   },
   emptyRepresentation: null,
 })
@@ -25,17 +25,17 @@ export const responseTokenInfosMocks = asyncBehavior.maker<
 })
 
 const success: Portfolio.Api.Api = {
-  tokenDiscovery: responseTokenDiscoveriesMocks.success,
+  tokenDiscovery: responseTokenDiscoveryMocks.success,
   tokenInfos: responseTokenInfosMocks.success,
 }
 
 const delayed: Portfolio.Api.Api = {
-  tokenDiscovery: responseTokenDiscoveriesMocks.delayed,
+  tokenDiscovery: responseTokenDiscoveryMocks.delayed,
   tokenInfos: responseTokenInfosMocks.delayed,
 }
 
 const loading: Portfolio.Api.Api = {
-  tokenDiscovery: responseTokenDiscoveriesMocks.loading,
+  tokenDiscovery: responseTokenDiscoveryMocks.loading,
   tokenInfos: responseTokenInfosMocks.loading,
 }
 
@@ -61,7 +61,7 @@ const error: Portfolio.Api.Api = {
 }
 
 const empty: Portfolio.Api.Api = {
-  tokenDiscovery: responseTokenDiscoveriesMocks.empty,
+  tokenDiscovery: responseTokenDiscoveryMocks.empty,
   tokenInfos: responseTokenInfosMocks.empty,
 }
 

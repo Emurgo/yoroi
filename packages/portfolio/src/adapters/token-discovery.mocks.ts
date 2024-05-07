@@ -1,5 +1,5 @@
 import {cacheRecordMaker} from '@yoroi/common'
-import {App, Portfolio} from '@yoroi/types'
+import {Api, App, Portfolio} from '@yoroi/types'
 import {freeze} from 'immer'
 
 import {tokenInfoMocks} from './token-info.mocks'
@@ -61,8 +61,29 @@ const rnftWhatever: Portfolio.Token.Discovery = {
   },
 }
 
-const apiResponseTokenDiscovery: Portfolio.Api.TokenDiscoveryResponse = freeze(
-  nftCryptoKitty,
+const apiResponseTokenDiscovery: Readonly<
+  Record<
+    'success' | 'error',
+    Api.Response<Portfolio.Api.TokenDiscoveryResponse>
+  >
+> = freeze(
+  {
+    success: {
+      tag: 'right',
+      value: {
+        status: 200,
+        data: nftCryptoKitty,
+      },
+    },
+    error: {
+      tag: 'left',
+      error: {
+        status: 404,
+        responseData: null,
+        message: 'Not found',
+      },
+    },
+  },
   true,
 )
 

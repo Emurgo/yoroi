@@ -110,7 +110,8 @@
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}",
       "!src/**/*.d.ts",
-      "!src/**/*.mocks.{js,jsx,ts,tsx}"
+      "!src/**/*.mocks.{js,jsx,ts,tsx}",
+      "!src/fixtures/**/*.{js,jsx,ts,tsx}"
     ],
     "coverageReporters": [
       "text-summary",
