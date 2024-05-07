@@ -6,6 +6,7 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Icon, Spacer, Text, useModal} from '../../../../components'
 import {AmountItem} from '../../../../components/AmountItem/AmountItem'
+import {PairedBalance} from '../../../../components/PairedBalance/PairedBalance'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../yoroi-wallets/utils'
 import {useSelectedWallet} from '../../../WalletManager/Context'
@@ -152,7 +153,13 @@ export const TransactionSummary = () => {
             <>
               <Spacer height={6} />
 
-              {/* <PairedBalance amount={calculation.ptTotalValueSpent} textStyle={styles.cardTextUSD} /> */}
+              <PairedBalance
+                amount={{
+                  info: wallet.portfolioPrimaryTokenInfo,
+                  quantity: BigInt(calculation.ptTotalValueSpent.quantity),
+                }}
+                textStyle={styles.pairedText}
+              />
             </>
           )}
         </View>
@@ -278,11 +285,11 @@ const useStyles = () => {
       lineHeight: 22,
       textAlign: 'right',
     },
-    // cardTextUSD: {
-    //   fontSize: 14,
-    //   color: color.gray_cmin,
-    //   opacity: 0.75,
-    // },
+    pairedText: {
+      fontSize: 14,
+      color: color.gray_cmin,
+      opacity: 0.75,
+    },
     flexBetween: {
       flexDirection: 'row',
       justifyContent: 'space-between',
