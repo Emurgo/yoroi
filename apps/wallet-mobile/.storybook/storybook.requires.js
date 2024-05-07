@@ -178,7 +178,6 @@ const getStories = () => {
     "./src/features/Settings/WalletSettings/WalletSettingsScreen.stories.tsx": require("../src/features/Settings/WalletSettings/WalletSettingsScreen.stories.tsx"),
     "./src/features/SetupWallet/common/ButtonCard/ButtonCard.stories.tsx": require("../src/features/SetupWallet/common/ButtonCard/ButtonCard.stories.tsx"),
     "./src/features/SetupWallet/common/CardAboutPhrase/CardAboutPhrase.stories.tsx": require("../src/features/SetupWallet/common/CardAboutPhrase/CardAboutPhrase.stories.tsx"),
-    "./src/features/SetupWallet/common/Info/Info.stories.tsx": require("../src/features/SetupWallet/common/Info/Info.stories.tsx"),
     "./src/features/SetupWallet/common/LearnMoreButton/LearnMoreButton.stories.tsx": require("../src/features/SetupWallet/common/LearnMoreButton/LearnMoreButton.stories.tsx"),
     "./src/features/SetupWallet/common/LogoBanner/LogoBanner.stories.tsx": require("../src/features/SetupWallet/common/LogoBanner/LogoBanner.stories.tsx"),
     "./src/features/SetupWallet/common/PreparingWallet/PreparingWallet.stories.tsx": require("../src/features/SetupWallet/common/PreparingWallet/PreparingWallet.stories.tsx"),
