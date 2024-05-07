@@ -23,12 +23,12 @@ import {WalletInitRouteNavigation} from '../../../../navigation'
 import {generateAdaMnemonic} from '../../../../yoroi-wallets/cardano/mnemonic'
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
 import {YoroiZendeskLink} from '../../common/constants'
-import {Info} from '../../common/Info/Info'
 import {LearnMoreButton} from '../../common/LearnMoreButton/LearnMoreButton'
 import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
 import {useStrings} from '../../common/useStrings'
 import {EyeClosed as EyeClosedIllustration} from '../../illustrations/EyeClosed'
 import {EyeOpen as EyeOpenIllustration} from '../../illustrations/EyeOpen'
+import {Info as InfoIcon} from '../../illustrations/Info'
 
 const useSizeModal = () => {
   const HEIGHT_SCREEN = useWindowDimensions().height
@@ -130,7 +130,7 @@ export const RecoveryPhraseScreen = () => {
         <Text style={styles.title}>
           {strings.recoveryPhraseTitle(bold)}
 
-          <Info paddingTop={3} onPress={handleOnShowModal} />
+          <Info onPress={handleOnShowModal} />
         </Text>
 
         <View style={styles.mnemonicWords}>
@@ -184,6 +184,17 @@ export const RecoveryPhraseScreen = () => {
   )
 }
 
+const Info = ({onPress}: {onPress: () => void}) => {
+  const {styles} = useStyles()
+  return (
+    <TouchableOpacity style={styles.info} onPress={onPress}>
+      <View style={styles.infoIcon}>
+        <InfoIcon size={24} />
+      </View>
+    </TouchableOpacity>
+  )
+}
+
 const useBold = () => {
   const {styles} = useStyles()
 
@@ -207,8 +218,6 @@ const useStyles = () => {
     title: {
       ...theme.typography['body-1-l-regular'],
       color: theme.color.gray[900],
-      lineHeight: 24,
-      flexDirection: 'row',
     },
     bolder: {
       ...theme.typography['body-1-l-medium'],
@@ -252,6 +261,14 @@ const useStyles = () => {
     blurTextButton: {
       ...theme.typography['button-2-m'],
       color: theme.color.primary[500],
+    },
+    info: {
+      position: 'relative',
+    },
+    infoIcon: {
+      position: 'absolute',
+      top: -18,
+      left: 0,
     },
   })
 
