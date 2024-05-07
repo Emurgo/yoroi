@@ -333,6 +333,7 @@ export const WalletDetailsScreen = () => {
             autoComplete="off"
             disabled={isLoading}
             showErrorOnBlur
+            textContentType="oneTimeCode"
           />
 
           <Space height="xl" />
@@ -350,6 +351,7 @@ export const WalletDetailsScreen = () => {
             autoComplete="off"
             disabled={isLoading}
             showErrorOnBlur
+            textContentType="oneTimeCode"
           />
 
           <Space height="xl" />
