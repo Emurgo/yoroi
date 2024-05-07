@@ -34,6 +34,8 @@ export * from './validators/token-source'
 export * from './validators/token-status'
 export * from './validators/token-type'
 
+export * from './translators/reactjs/usePortfolioTokenDiscovery'
+
 export * from './balance-manager'
 export * from './token-manager'
 
