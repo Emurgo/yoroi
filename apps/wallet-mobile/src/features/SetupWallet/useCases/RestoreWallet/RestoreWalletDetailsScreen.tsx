@@ -15,6 +15,7 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native'
+import {TouchableOpacity} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Icon, KeyboardAvoidingView, TextInput, useModal} from '../../../../components'
@@ -41,11 +42,11 @@ import {useSetSelectedWallet} from '../../../WalletManager/Context/SelectedWalle
 import {useSetSelectedWalletMeta} from '../../../WalletManager/Context/SelectedWalletMetaContext'
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
 import {YoroiZendeskLink} from '../../common/constants'
-import {Info} from '../../common/Info/Info'
 import {LearnMoreButton} from '../../common/LearnMoreButton/LearnMoreButton'
 import {PreparingWallet} from '../../common/PreparingWallet/PreparingWallet'
 import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
 import {useStrings} from '../../common/useStrings'
+import {Info as InfoIcon} from '../../illustrations/Info'
 
 const useSizeModal = () => {
   const HEIGHT_SCREEN = useWindowDimensions().height
@@ -345,6 +346,14 @@ export const RestoreWalletDetailsScreen = () => {
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
+  )
+}
+
+const Info = ({onPress}: {onPress: () => void}) => {
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <InfoIcon size={24} />
+    </TouchableOpacity>
   )
 }
 
