@@ -1,5 +1,5 @@
 import React from 'react'
-import {Dimensions, StyleSheet, useWindowDimensions, View} from 'react-native'
+import {StyleSheet, useWindowDimensions, View} from 'react-native'
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import ViewTransformer from 'react-native-easy-view-transformer'
@@ -20,13 +20,10 @@ const isParams = (params?: Params | object | undefined): params is Params => {
 export const NftDetailsImage = () => {
   const {id} = useParams<Params>(isParams)
   const wallet = useSelectedWallet()
-
-  // TODO: revisit (missing refresh mechanism)
-  // reading from the getter, there is no need to subscribe to changes
-  // until implementation of the new refresh mechanism in here
-  const amount = wallet.balances.records.get(id)
-  
   const dimensions = useWindowDimensions()
+
+  // reading from the getter, there is no need to subscribe to changes
+  const [amount] = React.useState(wallet.balances.records.get(id))
 
   const {track} = useMetrics()
   React.useEffect(() => {
