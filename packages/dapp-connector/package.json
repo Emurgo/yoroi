@@ -69,13 +69,13 @@
   },
   "prettier": {
     "bracketSpacing": false,
+    "printWidth": 120,
     "quoteProps": "consistent",
     "semi": false,
     "singleQuote": true,
     "tabWidth": 2,
     "trailingComma": "all",
-    "useTabs": false,
-    "printWidth": 120
+    "useTabs": false
   },
   "eslintConfig": {
     "extends": [
@@ -108,25 +108,17 @@
   ],
   "jest": {
     "collectCoverage": true,
-    "coveragePathIgnorePatterns": [
-      "connector.js",
-      "manager.mocks.ts"
-    ],
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}",
       "!src/**/*.d.ts"
     ],
+    "coveragePathIgnorePatterns": [
+      "connector.js",
+      "manager.mocks.ts"
+    ],
     "coverageReporters": [
       "text-summary",
       "html"
-    ],
-    "modulePathIgnorePatterns": [
-      "<rootDir>/example/node_modules",
-      "<rootDir>/lib/"
-    ],
-    "preset": "react-native",
-    "setupFiles": [
-      "<rootDir>/jest.setup.js"
     ],
     "coverageThreshold": {
       "global": {
@@ -135,7 +127,22 @@
         "lines": 100,
         "statements": 100
       }
-    }
+    },
+    "moduleNameMapper": {
+      "^react-native$": "<rootDir>/node_modules/react-native"
+    },
+    "modulePathIgnorePatterns": [
+      "<rootDir>/example/node_modules",
+      "<rootDir>/lib/"
+    ],
+    "preset": "react-native",
+    "setupFiles": [
+      "<rootDir>/jest.setup.js"
+    ],
+    "transformIgnorePatterns": [
+      "<rootDir>/node_modules/(?!react-native-mmkv)/",
+      "<rootDir>/node_modules/(?!@testing-library/react-native)/"
+    ]
   },
   "dependencies": {
     "axios": "^1.5.0",

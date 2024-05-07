@@ -37,7 +37,7 @@ export const ModalProvider = ({
   const navigation = useNavigation()
   const actions = React.useRef<ModalActions>({
     closeModal: () => {
-      const lastRouteName = navigation.getState().routes.slice(-1)[0].name
+      const lastRouteName = navigation.getState()?.routes.slice(-1)[0].name
       if (lastRouteName === 'modal') {
         dispatch({type: 'close'})
         navigation.goBack()

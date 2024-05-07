@@ -95,7 +95,7 @@ export const OpenOrders = () => {
     // https://github.com/Emurgo/yoroi/pull/2913
     const currentState = navigation.getState()
     const previousState = navigationRef.current
-    if (currentState === previousState) return
+    if (!currentState || currentState === previousState) return
     track.swapConfirmedPageViewed({swap_tab: 'Open Orders'})
     navigationRef.current = currentState
   }, [track, navigation])

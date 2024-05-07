@@ -3,6 +3,7 @@ module.exports = (api) => {
 
   const presets = ['module:@react-native/babel-preset']
   const plugins = [
+    ['@babel/plugin-transform-private-methods', {loose: true}],
     [
       // Used by @yoroi/dapp-connector to create injectable JS code
       'babel-plugin-show-source',
