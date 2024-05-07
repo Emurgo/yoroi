@@ -50,14 +50,16 @@ export const CardAboutPhrase = ({
           <View key={index + '_ITEM_CARD'} style={styles.itemContainer}>
             <Text style={styles.bullet}>•</Text>
 
-            <Space height="s" />
+            <Space width="s" />
 
             <Text style={styles.textLine}>
               {handleShowChecksum && (
                 <>
-                  <WalletChecksum iconSeed={checksumImage} style={styles.walletChecksum} />
+                  <View style={styles.walletChecksumContainer}>
+                    <WalletChecksum iconSeed={checksumImage} style={styles.walletChecksum} />
 
-                  <Space height="s" />
+                    <Space width="s" />
+                  </View>
                 </>
               )}
 
@@ -96,7 +98,16 @@ const useStyles = (padding?: boolean, background?: boolean) => {
       ...theme.typography['body-1-l-regular'],
       color: background ? theme.color.primary[600] : theme.color.gray[900],
     },
-    walletChecksum: {width: 24, height: 24},
+    walletChecksum: {
+      width: 24,
+      height: 24,
+      position: 'absolute',
+      top: -10,
+    },
+    walletChecksumContainer: {
+      position: 'relative',
+      width: 30,
+    },
   })
 
   const colors = {
