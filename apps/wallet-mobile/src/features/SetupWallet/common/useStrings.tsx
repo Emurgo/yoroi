@@ -342,7 +342,7 @@ export const messages = Object.freeze(
     },
     walletDetailsPasswordHelper: {
       id: 'components.walletinit.walletDetails.walletDetailsPasswordHelper',
-      defaultMessage: '!!!Combine of letters, numbers and symbols to make it stronger',
+      defaultMessage: '!!!Combine letters, numbers and symbols to make it stronger',
     },
     walletDetailsNameInput: {
       id: 'components.walletinit.walletDetails.walletDetailsNameInput',
