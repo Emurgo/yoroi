@@ -9,6 +9,7 @@ import {Text} from '../../../../../components'
 import {ConfirmTxWithHwModal} from '../../../../../components/ConfirmTxWithHwModal'
 import {ConfirmTxWithOsModal} from '../../../../../components/ConfirmTxWithOsModal'
 import {ConfirmTxWithSpendingPasswordModal} from '../../../../../components/ConfirmTxWithSpendingPasswordModal'
+import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
 import {formatTokenWithText} from '../../../../../legacy/format'
 import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useUnsafeParams} from '../../../../../navigation'
@@ -140,7 +141,14 @@ export const ConfirmTxScreen = () => {
         <View style={styles.row}>
           <Text style={styles.total} />
 
-          {/* <PairedBalance amount={feeAmount} textStyle={styles.fiatValue} /> */}
+          <PairedBalance
+            amount={{
+              info: wallet.portfolioPrimaryTokenInfo,
+              quantity: BigInt(feeAmount.quantity),
+            }}
+            textStyle={styles.fiatValue}
+            ignorePrivacy
+          />
         </View>
       </View>
 
@@ -250,13 +258,13 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontWeight: '500',
   },
-  // fiatValue: {
-  //   fontFamily: 'Rubik-Regular',
-  //   fontSize: 14,
-  //   lineHeight: 22,
-  //   color: '#ffffff',
-  //   opacity: 0.5,
-  // },
+  fiatValue: {
+    fontFamily: 'Rubik-Regular',
+    fontSize: 14,
+    lineHeight: 22,
+    color: '#ffffff',
+    opacity: 0.5,
+  },
   normalText: {
     fontFamily: 'Rubik-Regular',
     fontSize: 16,
