@@ -9,7 +9,7 @@ import {Space} from '../../../../components/Space/Space'
 import {ThemeIlustration} from '../../illustrations/ThemeIlustration'
 
 export const DarkThemeAnnouncement = () => {
-  const styles = useStyles()
+  const {styles, color} = useStyles()
   const strings = useStrings()
   const {isLight, selectThemeName} = useTheme()
 
@@ -41,6 +41,8 @@ export const DarkThemeAnnouncement = () => {
             <Switch
               value={isLight === false}
               onValueChange={() => selectThemeName(isLight === true ? 'default-dark' : 'default-light')}
+              trackColor={{false: color.gray_c100, true: color.gray_c100}}
+              thumbColor={isLight === true ? color.sys_yellow_c500 : color.el_primary_medium}
             />
           </View>
 
@@ -86,7 +88,7 @@ const useStyles = () => {
     },
   })
 
-  return styles
+  return {styles, color}
 }
 
 const useStrings = () => {
