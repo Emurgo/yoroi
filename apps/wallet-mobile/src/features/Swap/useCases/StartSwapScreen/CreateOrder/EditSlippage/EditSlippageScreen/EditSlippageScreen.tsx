@@ -215,7 +215,7 @@ const useStyles = () => {
       backgroundColor: color.gray.min,
       ...padding['x-xs'],
       ...typography['body-3-s-regular'],
-      color: color.magenta[500],
+      color: color.gray[900],
     },
 
     disabledInputContainer: {
