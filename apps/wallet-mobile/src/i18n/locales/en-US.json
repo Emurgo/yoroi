@@ -841,7 +841,6 @@
   "global.txLabels.withdrawals": "Withdrawals",
   "global.unknown": "Unknown",
   "global.yoroiZendesk": "Yoroi Zendesk",
-  "menu.stakingCenter": "Staking center",
   "links.askToOpenAWallet.title": "Open a wallet",
   "links.askToOpenAWallet.description": "This action requires a wallet to be opened. Please open a wallet first.",
   "links.askToRedirect.title": "Redirect available",
@@ -1044,5 +1043,8 @@
   "discover.discoverList.done": "DONE",
   "discover.discoverList.openDApp": "Open DApp",
   "discover.discoverList.disconnectWalletFromDApp": "Disconnect wallet from DApp",
-  "discover.discoverList.dAppActions": "DApp actions"
+  "discover.discoverList.dAppActions": "DApp actions",
+  "walletinit.theme.tryDarkTheme": "Try Yoroi dark theme",
+  "walletinit.theme.description": "Press the theme switcher and dive into the new stylish theme crafted to enhance your Cardano wallet experience",
+  "walletinit.theme.chanageTheme": "You can always change your theme later in the App settings"
 }
