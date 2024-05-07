@@ -2,7 +2,7 @@ import {isBoolean} from '@yoroi/common'
 import {SupportedThemes, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Platform, ScrollView, StyleSheet, Switch} from 'react-native'
+import {Platform, ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Icon, Spacer} from '../../../components'
@@ -15,6 +15,7 @@ import {useAuthSetting, useAuthWithOs, useIsAuthOsSupported} from '../../../yoro
 import {useCrashReports} from '../../../yoroi-wallets/hooks'
 import {usePrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
 import {useNavigateTo} from '../common/navigation'
+import {SettingsSwitch} from '../common/SettingsSwitch'
 import {useCurrencyContext} from '../Currency'
 import {useChangeScreenShareSetting, useScreenShareSettingEnabled} from '../ScreenShare'
 import {NavigatedSettingsItem, SettingsItem, SettingsSection} from '../SettingsItems'
@@ -128,7 +129,7 @@ export const ApplicationSettingsScreen = () => {
             info={strings.biometricsSignInInfo}
             disabled={!isAuthOsSupported}
           >
-            <Switch
+            <SettingsSwitch
               value={authSetting === 'os'}
               onValueChange={onToggleAuthWithOs}
               disabled={!isAuthOsSupported || isTogglePrivacyModeLoading}
@@ -180,7 +181,13 @@ const PrivacyModeSwitch = ({isPrivacyOff}: {isPrivacyOff: boolean}) => {
     })
   }
 
-  return <Switch value={isLocalPrivacyOff} onValueChange={onTogglePrivacyMode} disabled={isTogglePrivacyModeLoading} />
+  return (
+    <SettingsSwitch
+      value={isLocalPrivacyOff}
+      onValueChange={onTogglePrivacyMode}
+      disabled={isTogglePrivacyModeLoading}
+    />
+  )
 }
 
 // to avoid switch jumps
@@ -200,7 +207,9 @@ const CrashReportsSwitch = ({crashReportEnabled}: {crashReportEnabled: boolean})
     })
   }
 
-  return <Switch value={isLocalEnabled} onValueChange={onToggleCrashReports} disabled={CONFIG.FORCE_CRASH_REPORTS} />
+  return (
+    <SettingsSwitch value={isLocalEnabled} onValueChange={onToggleCrashReports} disabled={CONFIG.FORCE_CRASH_REPORTS} />
+  )
 }
 
 // to avoid switch jumps
@@ -213,7 +222,7 @@ const ScreenSharingSwitch = ({screenSharingEnabled, disabled}: {screenSharingEna
     setIsLocalEnabled(enabled)
   }
 
-  return <Switch value={isLocalEnabled} onValueChange={onToggle} disabled={disabled} />
+  return <SettingsSwitch value={isLocalEnabled} onValueChange={onToggle} disabled={disabled} />
 }
 
 const useStrings = () => {
