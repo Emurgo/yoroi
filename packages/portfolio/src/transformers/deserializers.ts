@@ -5,7 +5,7 @@ import {
 } from '@yoroi/common'
 import {freeze} from 'immer'
 
-import {parseTokenDiscoveryWithCacheRecord} from '../validators/token-discovery'
+import {parseTokenDiscovery} from '../validators/token-discovery'
 import {parsePrimaryBreakdown} from '../validators/primary-breakdown'
 import {parseTokenAmount} from '../validators/token-amount'
 
@@ -30,12 +30,12 @@ const tokenAmountDeserializer = (jsonString: string | null) => {
   return parsed ?? null
 }
 
-const tokenDiscoveryWithCacheDeserializer = (jsonString: string | null) => {
+const tokenDiscoveryDeserializer = (jsonString: string | null) => {
   if (jsonString == null) return null
   const record = storageDeserializerMaker(tokenDiscoveryReviverMapping)(
     jsonString,
   )
-  const parsed = parseTokenDiscoveryWithCacheRecord(record)
+  const parsed = parseTokenDiscovery(record)
   return parsed ?? null
 }
 
@@ -50,7 +50,7 @@ const primaryBalanceBreakdownDeserializer = (jsonString: string | null) => {
 
 export const deserializers = freeze(
   {
-    tokenDiscoveryWithCache: tokenDiscoveryWithCacheDeserializer,
+    tokenDiscovery: tokenDiscoveryDeserializer,
     tokenAmount: tokenAmountDeserializer,
     primaryBreakdown: primaryBalanceBreakdownDeserializer,
   },

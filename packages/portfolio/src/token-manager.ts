@@ -76,7 +76,6 @@ export const portfolioTokenManagerMaker = (
 
   const clear = ({sourceId}: Portfolio.Event.SourceId) => {
     storage.token.infos.clear()
-    storage.token.discoveries.clear()
     cachedInfosWithoutRecord.clear()
 
     observer.notify({on: Portfolio.Event.ManagerOn.Clear, sourceId})
@@ -94,6 +93,8 @@ export const portfolioTokenManagerMaker = (
       subscribe: observer.subscribe,
       unsubscribe: observer.unsubscribe,
       observable$: observer.observable,
+
+      api,
 
       destroy,
       clear,

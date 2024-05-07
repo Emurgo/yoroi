@@ -5,13 +5,13 @@ import {Api, Portfolio} from '@yoroi/types'
 import {tokenMocks} from '../token.mocks'
 
 export const responseTokenDiscoveriesMocks = asyncBehavior.maker<
-  Api.Response<Portfolio.Api.TokenDiscoveriesResponse>
+  Api.Response<Portfolio.Api.TokenDiscoveryResponse>
 >({
   data: {
     tag: 'right',
-    value: {status: 200, data: tokenMocks.apiResponse.tokenDiscoveries},
+    value: {status: 200, data: tokenMocks.apiResponse.tokenDiscovery},
   },
-  emptyRepresentation: [],
+  emptyRepresentation: null,
 })
 
 export const responseTokenInfosMocks = asyncBehavior.maker<
@@ -21,26 +21,26 @@ export const responseTokenInfosMocks = asyncBehavior.maker<
     tag: 'right',
     value: {status: 200, data: tokenMocks.apiResponse.tokenInfos},
   },
-  emptyRepresentation: [],
+  emptyRepresentation: null,
 })
 
 const success: Portfolio.Api.Api = {
-  tokenDiscoveries: responseTokenDiscoveriesMocks.success,
+  tokenDiscovery: responseTokenDiscoveriesMocks.success,
   tokenInfos: responseTokenInfosMocks.success,
 }
 
 const delayed: Portfolio.Api.Api = {
-  tokenDiscoveries: responseTokenDiscoveriesMocks.delayed,
+  tokenDiscovery: responseTokenDiscoveriesMocks.delayed,
   tokenInfos: responseTokenInfosMocks.delayed,
 }
 
 const loading: Portfolio.Api.Api = {
-  tokenDiscoveries: responseTokenDiscoveriesMocks.loading,
+  tokenDiscovery: responseTokenDiscoveriesMocks.loading,
   tokenInfos: responseTokenInfosMocks.loading,
 }
 
 const error: Portfolio.Api.Api = {
-  tokenDiscoveries: () =>
+  tokenDiscovery: () =>
     Promise.resolve({
       tag: 'left',
       error: {
@@ -61,7 +61,7 @@ const error: Portfolio.Api.Api = {
 }
 
 const empty: Portfolio.Api.Api = {
-  tokenDiscoveries: responseTokenDiscoveriesMocks.empty,
+  tokenDiscovery: responseTokenDiscoveriesMocks.empty,
   tokenInfos: responseTokenInfosMocks.empty,
 }
 

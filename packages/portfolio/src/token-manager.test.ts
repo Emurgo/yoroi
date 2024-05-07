@@ -13,14 +13,8 @@ describe('portfolioTokenManagerMaker', () => {
       path: `/test/token-info/`,
     }),
   )
-  const tokenDiscoveryStorage = observableStorageMaker(
-    mountMMKVStorage<Portfolio.Token.Id>({
-      path: `/test/token-discovery/`,
-    }),
-  )
   const storage = portfolioTokenStorageMaker({
     tokenInfoStorage,
-    tokenDiscoveryStorage,
   })
 
   afterEach(() => {

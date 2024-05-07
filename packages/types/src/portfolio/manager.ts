@@ -11,6 +11,7 @@ import {PortfolioTokenInfo} from './info'
 import {PortfolioTokenId} from './token'
 import {PortfolioPrimaryBreakdown, PortfolioTokenAmount} from './amount'
 import {PortfolioTokenBalances} from './balances'
+import {PortfolioApi} from './api'
 
 export type PortfolioManagerToken = Readonly<{
   hydrate(params: PortfolioEventSourceId): void
@@ -24,6 +25,8 @@ export type PortfolioManagerToken = Readonly<{
   subscribe: AppObserverSubscribe<PortfolioEventTokenManager>
   unsubscribe(subscription: Subscription): void
   observable$: Observable<PortfolioEventTokenManager>
+
+  api: Readonly<PortfolioApi>
 
   destroy(): void
   clear(params: PortfolioEventSourceId): void

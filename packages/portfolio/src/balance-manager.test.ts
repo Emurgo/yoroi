@@ -45,6 +45,10 @@ describe('portfolioBalanceManagerMaker', () => {
     observable$: new BehaviorSubject({} as any).asObservable(),
     sync: jest.fn().mockResolvedValue(new Map()),
     clear: jest.fn(),
+    api: {
+      tokenInfos: jest.fn(),
+      tokenDiscovery: jest.fn(),
+    },
   }
 
   it('should be instantiated', () => {
@@ -85,6 +89,10 @@ describe('hydrate', () => {
     observable$: new BehaviorSubject({} as any).asObservable(),
     sync: jest.fn().mockResolvedValue(new Map()),
     clear: jest.fn(),
+    api: {
+      tokenInfos: jest.fn(),
+      tokenDiscovery: jest.fn(),
+    },
   }
 
   afterEach(() => {
@@ -167,6 +175,10 @@ describe('destroy', () => {
     observable$: tokenManagerObservable,
     sync: jest.fn().mockResolvedValue(new Map()),
     clear: jest.fn(),
+    api: {
+      tokenInfos: jest.fn(),
+      tokenDiscovery: jest.fn(),
+    },
   }
   const queueDestroy = jest.fn()
   const observerDestroy = jest.fn()
@@ -243,6 +255,10 @@ describe('primary updates', () => {
     observable$: tokenManagerObservable.asObservable(),
     sync: jest.fn().mockResolvedValue(new Map()),
     clear: jest.fn(),
+    api: {
+      tokenInfos: jest.fn(),
+      tokenDiscovery: jest.fn(),
+    },
   }
 
   afterEach(() => {
@@ -394,6 +410,10 @@ describe('sync & refresh', () => {
     observable$: tokenManagerObservable.asObservable(),
     sync: jest.fn().mockResolvedValue(new Map()),
     clear: jest.fn(),
+    api: {
+      tokenInfos: jest.fn(),
+      tokenDiscovery: jest.fn(),
+    },
   }
 
   afterEach(() => {
@@ -678,6 +698,10 @@ describe('clear', () => {
     observable$: new BehaviorSubject({} as any).asObservable(),
     sync: jest.fn().mockResolvedValue(new Map()),
     clear: jest.fn(),
+    api: {
+      tokenInfos: jest.fn(),
+      tokenDiscovery: jest.fn(),
+    },
   }
 
   afterEach(() => {

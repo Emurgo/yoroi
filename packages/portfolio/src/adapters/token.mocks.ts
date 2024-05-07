@@ -24,11 +24,11 @@ export const tokenMocks = freeze(
     },
     apiResponse: {
       tokenInfos: infos.tokenInfoMocks.apiResponseResult,
-      tokenDiscoveries: discoveries.tokenDiscoveryMocks.apiResponseResult,
+      tokenDiscovery: discoveries.tokenDiscoveryMocks.apiResponseResult,
     },
     apiRequest: {
       tokenInfos: infos.tokenInfoMocks.apiRequestArgs,
-      tokenDiscoveries: discoveries.tokenDiscoveryMocks.apiRequestArgs,
+      tokenDiscovery: discoveries.tokenDiscoveryMocks.apiRequestArgs,
     },
   },
   true,

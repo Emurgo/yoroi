@@ -29,12 +29,14 @@ export const TokenDiscoverySchema = z.object({
   supply: z.bigint(),
 })
 
-export const isTokenDiscovery = (data: unknown): data is Portfolio.Token.Info =>
+export const isTokenDiscovery = (
+  data: unknown,
+): data is Portfolio.Token.Discovery =>
   TokenDiscoverySchema.safeParse(data).success
 
 export const parseTokenDiscovery = (
   data: unknown,
-): Portfolio.Token.Info | undefined => {
+): Portfolio.Token.Discovery | undefined => {
   return isTokenDiscovery(data) ? data : undefined
 }
 

@@ -1,6 +1,5 @@
 import {AppCacheRecord} from '../app/cache'
 import {PortfolioPrimaryBreakdown, PortfolioTokenAmount} from './amount'
-import {PortfolioTokenDiscovery} from './discovery'
 import {PortfolioTokenInfo} from './info'
 import {PortfolioTokenId} from './token'
 
@@ -39,23 +38,6 @@ export type PortfolioStorageToken = Readonly<{
       >
       all: () => ReadonlyArray<
         [PortfolioTokenId, AppCacheRecord<PortfolioTokenInfo> | null]
-      >
-      keys: () => ReadonlyArray<PortfolioTokenId>
-      clear: () => void
-    }
-    discoveries: {
-      save: (
-        entries: ReadonlyArray<
-          [PortfolioTokenId, AppCacheRecord<PortfolioTokenDiscovery>]
-        >,
-      ) => void
-      read: (
-        keys: ReadonlyArray<PortfolioTokenId>,
-      ) => ReadonlyArray<
-        [PortfolioTokenId, AppCacheRecord<PortfolioTokenDiscovery> | null]
-      >
-      all: () => ReadonlyArray<
-        [PortfolioTokenId, AppCacheRecord<PortfolioTokenDiscovery> | null]
       >
       keys: () => ReadonlyArray<PortfolioTokenId>
       clear: () => void

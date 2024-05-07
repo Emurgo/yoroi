@@ -169,7 +169,7 @@ import {NumbersAtomicValue} from './numbers/atomic-value'
 import {AppErrorInvalidState} from './app/errors'
 import {
   PortfolioApi,
-  PortfolioApiTokenDiscoveriesResponse,
+  PortfolioApiTokenDiscoveryResponse,
   PortfolioApiTokenInfosResponse,
 } from './portfolio/api'
 import {
@@ -441,7 +441,7 @@ export namespace Portfolio {
   // eslint-disable-next-line @typescript-eslint/no-shadow
   export namespace Api {
     export type TokenInfosResponse = PortfolioApiTokenInfosResponse
-    export type TokenDiscoveriesResponse = PortfolioApiTokenDiscoveriesResponse
+    export type TokenDiscoveryResponse = PortfolioApiTokenDiscoveryResponse
     export type Api = PortfolioApi
   }
 
