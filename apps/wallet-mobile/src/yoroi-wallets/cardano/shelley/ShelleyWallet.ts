@@ -459,7 +459,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         console.error('ShelleyWallet::sync: wallet not initialized')
         return Promise.resolve()
       }
-      
+
       const addressesBeforeRequest = this.internalChain.addresses.length + this.externalChain.addresses.length
       await this.discoverAddresses()
       const addressesAfterRequest = this.internalChain.addresses.length + this.externalChain.addresses.length
@@ -472,7 +472,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         this.syncUtxos({isForced}),
         this.transactionManager.doSync(this.getAddressesInBlocks(), BACKEND),
       ])
-
     }
 
     async resync() {
@@ -1091,7 +1090,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         })
 
         const balancesToSync = toBalanceManagerSyncArgs(newUtxos, BigInt(lockedAsStorageCost.toString()))
-  
+
         this.balanceManager.syncBalances(balancesToSync)
 
         this._utxos = newUtxos

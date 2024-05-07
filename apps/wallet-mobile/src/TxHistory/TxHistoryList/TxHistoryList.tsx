@@ -58,7 +58,7 @@ export const TxHistoryList = (props: Props) => {
   )
 }
 
-const batchSize = 20 
+const batchSize = 20
 
 const getTransactionsByDate = (transactions: Record<string, TransactionInfo>) =>
   _(transactions)
