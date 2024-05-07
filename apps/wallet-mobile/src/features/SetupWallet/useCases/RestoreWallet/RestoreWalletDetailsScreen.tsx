@@ -288,6 +288,7 @@ export const RestoreWalletDetailsScreen = () => {
             autoComplete="off"
             disabled={isLoading}
             showErrorOnBlur
+            textContentType="oneTimeCode"
           />
 
           <Space height="xl" />
@@ -305,6 +306,7 @@ export const RestoreWalletDetailsScreen = () => {
             autoComplete="off"
             disabled={isLoading}
             showErrorOnBlur={!isOpenWalletSuccess}
+            textContentType="oneTimeCode"
           />
 
           <Space height="xl" />
