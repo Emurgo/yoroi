@@ -1,34 +1,35 @@
 import {RouteProp, useRoute} from '@react-navigation/native'
 import {isString} from '@yoroi/common'
+import {usePorfolioTokenDiscovery} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
-import {Portfolio} from '@yoroi/types'
+import {Chain, Portfolio} from '@yoroi/types'
 import React, {ReactNode, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Linking, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 
 import {CopyButton, FadeIn, Spacer, Text} from '../components'
 import {Tab, TabPanel, TabPanels, Tabs} from '../components/Tabs'
+import {useExplorers} from '../features/Explorer/common/useExplorers'
 import {MediaPreview} from '../features/Portfolio/common/MediaGallery/MediaPreview'
 import {useSelectedWallet} from '../features/WalletManager/Context'
 import {useMetrics} from '../metrics/metricsManager'
 import {NftRoutes} from '../navigation'
 import {useNavigateTo} from '../Nfts/navigation'
-import {getNetworkConfigById} from '../yoroi-wallets/cardano/networks'
+import {useWalletManager} from '../wallet-manager/WalletManagerContext'
 
 export const NftDetails = () => {
   const styles = useStyles()
   const strings = useStrings()
   const {track} = useMetrics()
 
-  const [activeTab, setActiveTab] = useState<'overview' | 'metadata'>('overview')
+  const [activeTab, setActiveTab] = useState<ActiveTab>('overview')
 
   const {id} = useRoute<RouteProp<NftRoutes, 'nft-details'>>().params
-  const wallet = useSelectedWallet()
+  const {network, balances} = useSelectedWallet()
 
   // reading from the getter, there is no need to subscribe to changes
-  const amount = wallet.balances.records.get(id)
+  const amount = balances.records.get(id)
 
-  // record can be gone when arriving here, need a state
   // TODO: revisit + product definition (missing is gone state)
   if (!amount) return null
 
@@ -64,18 +65,42 @@ export const NftDetails = () => {
             />
           </Tabs>
 
-          <TabPanels>
-            <TabPanel active={activeTab === 'overview'}>
-              <NftOverview info={amount.info} />
-            </TabPanel>
-
-            <TabPanel active={activeTab === 'metadata'}>
-              <NftMetadata info={amount.info} />
-            </TabPanel>
-          </TabPanels>
+          <Details info={amount.info} activeTab={activeTab} network={network} />
         </ScrollView>
       </SafeAreaView>
     </FadeIn>
+  )
+}
+
+type DetailsProps = {
+  info: Portfolio.Token.Info
+  activeTab: ActiveTab
+  network: Chain.SupportedNetworks
+}
+const Details = ({activeTab, info, network}: DetailsProps) => {
+  const walletManager = useWalletManager()
+  const {api} = walletManager.getTokenManager(network)
+
+  const {tokenDiscovery} = usePorfolioTokenDiscovery({
+    id: info.id,
+    network,
+    getTokenDiscovery: api.tokenDiscovery,
+  })
+
+  console.log(tokenDiscovery)
+  // TODO: revisit + product definition (missing is gone state, error state, loading state)
+  if (!tokenDiscovery) return null
+
+  return (
+    <TabPanels>
+      <TabPanel active={activeTab === 'overview'}>
+        <NftOverview info={info} network={network} />
+      </TabPanel>
+
+      <TabPanel active={activeTab === 'metadata'}>
+        <NftMetadata discovery={tokenDiscovery} />
+      </TabPanel>
+    </TabPanels>
   )
 }
 
@@ -113,12 +138,14 @@ const MetadataRow = ({title, copyText, children}: {title: string; children: Reac
   )
 }
 
-// TODO: revisit (missing hit the discovery and product screen)
-const NftOverview = ({info}: {info: Portfolio.Token.Info}) => {
+type NftOverviewProps = {
+  info: Portfolio.Token.Info
+  network: Chain.SupportedNetworks
+}
+const NftOverview = ({info, network}: NftOverviewProps) => {
   const styles = useStyles()
   const strings = useStrings()
-  const wallet = useSelectedWallet()
-  const config = getNetworkConfigById(wallet.networkId)
+  const explorers = useExplorers(network)
 
   const [policyId] = info.id.split('.')
 
@@ -131,12 +158,6 @@ const NftOverview = ({info}: {info: Portfolio.Token.Info}) => {
       <MetadataRow title={strings.description}>
         <Text style={styles.name}>{normalizeMetadataString(info.description)}</Text>
       </MetadataRow>
-
-      {/* {isRecord(info.metadatas.mintNft) && (
-        <MetadataRow title={strings.author}>
-          <Text style={styles.name}>{normalizeMetadataString(info.metadatas.mintNft.author)}</Text>
-        </MetadataRow>
-      )} */}
 
       <MetadataRow title={strings.fingerprint} copyText={info.fingerprint}>
         <Text style={styles.name}>{info.fingerprint}</Text>
@@ -153,7 +174,10 @@ const NftOverview = ({info}: {info: Portfolio.Token.Info}) => {
             flexDirection: 'row',
           }}
         >
-          <TouchableOpacity onPress={() => Linking.openURL(config.EXPLORER_URL_FOR_TOKEN(info.id))} style={{flex: 2}}>
+          <TouchableOpacity
+            onPress={() => Linking.openURL(explorers.cardanoscan.token(info.fingerprint))}
+            style={{flex: 2}}
+          >
             <View style={styles.linkContent}>
               <Spacer width={2} />
 
@@ -161,7 +185,10 @@ const NftOverview = ({info}: {info: Portfolio.Token.Info}) => {
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => Linking.openURL(config.CEXPLORER_URL_FOR_TOKEN(info.id))} style={{flex: 4}}>
+          <TouchableOpacity
+            onPress={() => Linking.openURL(explorers.cexplorer.token(info.fingerprint))}
+            style={{flex: 4}}
+          >
             <View style={styles.linkContent}>
               <Spacer width={2} />
 
@@ -191,12 +218,10 @@ const HR = () => (
   />
 )
 
-// TODO: revisit (missing hit the discovery and product screen)
-const NftMetadata = ({info}: {info: Portfolio.Token.Info}) => {
+const NftMetadata = ({discovery}: {discovery: Portfolio.Token.Discovery}) => {
   const styles = useStyles()
   const strings = useStrings()
-  // const stringifiedMetadata = JSON.stringify(info.metadatas.mintNft, undefined, 2)
-  const stringifiedMetadata = info.name
+  const stringifiedMetadata = JSON.stringify(discovery.originalMetadata, null, 2)
 
   return (
     <View>
@@ -212,6 +237,8 @@ const NftMetadata = ({info}: {info: Portfolio.Token.Info}) => {
     </View>
   )
 }
+
+type ActiveTab = 'overview' | 'metadata'
 
 const useStyles = () => {
   const {atoms, color} = useTheme()

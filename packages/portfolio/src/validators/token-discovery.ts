@@ -26,7 +26,7 @@ export const TokenDiscoverySchema = z.object({
   id: TokenIdSchema,
   source: DiscoverySourceSchema,
   originalMetadata: DiscoveryOriginalMetadataSchema,
-  supply: z.bigint(),
+  supply: z.string(),
 })
 
 export const isTokenDiscovery = (

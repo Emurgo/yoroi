@@ -258,10 +258,7 @@ describe('portfolioApiMaker', () => {
       tag: 'right',
       value: {
         status: 200,
-        data: {
-          ...tokenDiscoveryMocks.nftCryptoKitty,
-          supply: '1234',
-        },
+        data: tokenDiscoveryMocks.nftCryptoKitty,
       },
     })
 
@@ -272,10 +269,7 @@ describe('portfolioApiMaker', () => {
       tag: 'right',
       value: {
         status: 200,
-        data: {
-          ...tokenDiscoveryMocks.nftCryptoKitty,
-          supply: 1234n,
-        },
+        data: tokenDiscoveryMocks.nftCryptoKitty,
       },
     })
   })

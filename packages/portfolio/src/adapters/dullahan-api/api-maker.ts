@@ -1,4 +1,4 @@
-import {FetchData, fetchData, isLeft, isRecord, isRight} from '@yoroi/common'
+import {FetchData, fetchData, isLeft, isRight} from '@yoroi/common'
 import {Api, Chain, Portfolio} from '@yoroi/types'
 import {freeze} from 'immer'
 
@@ -8,7 +8,6 @@ import {
   DullahanApiCachedIdsRequest,
   DullahanApiTokenDiscoveryResponse,
   DullahanApiTokenInfosResponse,
-  DullahanTokenDiscovery,
 } from './types'
 import {parseTokenDiscovery} from '../../validators/token-discovery'
 
@@ -32,9 +31,8 @@ export const portfolioApiMaker = ({
           },
         })
         if (isRight(response)) {
-          const discovery: Portfolio.Token.Discovery | undefined = transformer(
-            response.value.data,
-          )
+          const discovery: Portfolio.Token.Discovery | undefined =
+            parseTokenDiscovery(response.value.data)
 
           if (!discovery) {
             return freeze(
@@ -114,19 +112,6 @@ export const portfolioApiMaker = ({
     },
     true,
   )
-}
-
-function transformer(
-  tokenDiscovery: DullahanTokenDiscovery,
-): Portfolio.Token.Discovery | undefined {
-  if (isRecord(tokenDiscovery)) {
-    const {supply, ...rest} = tokenDiscovery
-    return parseTokenDiscovery({
-      ...rest,
-      supply: supply ? BigInt(supply) : 'error',
-    })
-  }
-  return
 }
 
 export const apiConfig: ApiConfig = freeze(

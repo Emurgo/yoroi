@@ -6,7 +6,7 @@ import {tokenInfoMocks} from './token-info.mocks'
 
 const primaryETH: Portfolio.Token.Discovery = {
   id: '.',
-  supply: 45_000_000_000_000n,
+  supply: 45_000_000_000_000n.toString(),
   originalMetadata: {
     filteredMintMetadatum: null,
     referenceDatum: null,
@@ -25,7 +25,7 @@ const primaryETH: Portfolio.Token.Discovery = {
 
 const nftCryptoKitty: Portfolio.Token.Discovery = {
   id: tokenInfoMocks.nftCryptoKitty.id,
-  supply: 0n,
+  supply: '0',
   originalMetadata: {
     filteredMintMetadatum: null,
     referenceDatum: null,
@@ -44,7 +44,7 @@ const nftCryptoKitty: Portfolio.Token.Discovery = {
 
 const rnftWhatever: Portfolio.Token.Discovery = {
   id: tokenInfoMocks.rnftWhatever.id,
-  supply: 0n,
+  supply: '0',
   originalMetadata: {
     filteredMintMetadatum: null,
     referenceDatum: null,

@@ -19,5 +19,5 @@ export type PortfolioTokenDiscovery = {
     tokenRegistry: null | Record<string, unknown>
   }
 
-  supply: bigint
+  supply: string
 }
