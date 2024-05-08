@@ -1,10 +1,10 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {Button, Spacer, Text} from '../../../../../components'
 import {useNavigateTo, useStrings} from '../../common'
 import {BrokenImage} from '../../illustrations'
-import {useTheme} from '@yoroi/theme'
 
 export const FailedTxScreen = () => {
   const strings = useStrings()

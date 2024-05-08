@@ -1,4 +1,5 @@
 import {useFocusEffect} from '@react-navigation/native'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
@@ -9,7 +10,6 @@ import {useNavigateTo, useStrings} from '../../common'
 import {Routes} from '../../common/navigation'
 import {SuccessTxImage} from '../../illustrations'
 import {GovernanceKindMap} from '../../types'
-import {useTheme} from '@yoroi/theme'
 
 export const SuccessTxScreen = () => {
   const strings = useStrings()

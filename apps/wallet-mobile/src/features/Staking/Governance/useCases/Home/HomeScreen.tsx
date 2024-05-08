@@ -9,6 +9,7 @@ import {
   useStakingKeyState,
   useVotingCertificate,
 } from '@yoroi/staking'
+import {useTheme} from '@yoroi/theme'
 import React, {type ReactNode} from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
@@ -30,7 +31,6 @@ import {Routes} from '../../common/navigation'
 import {GovernanceImage} from '../../illustrations'
 import {GovernanceVote} from '../../types'
 import {EnterDrepIdModal} from '../EnterDrepIdModal'
-import {useTheme} from '@yoroi/theme'
 
 export const HomeScreen = () => {
   const wallet = useSelectedWallet()
@@ -95,6 +95,7 @@ const ParticipatingInGovernanceVariant = ({
   isTxPending?: boolean
 }) => {
   const strings = useStrings()
+  const styles = useStyles()
   const navigateTo = useNavigateTo()
   const {data: bech32DrepId} = useBech32DRepID(action.kind === 'delegate' ? action.drepID : '', {
     enabled: action.kind === 'delegate',
@@ -108,8 +109,8 @@ const ParticipatingInGovernanceVariant = ({
   const selectedActionTitle = actionTitles[action.kind]
 
   const introduction = isTxPending
-    ? strings.actionYouHaveSelectedTxPending(selectedActionTitle, formattingOptions)
-    : strings.actionYouHaveSelected(selectedActionTitle, formattingOptions)
+    ? strings.actionYouHaveSelectedTxPending(selectedActionTitle, formattingOptions(styles))
+    : strings.actionYouHaveSelected(selectedActionTitle, formattingOptions(styles))
 
   const navigateToChangeVote = () => {
     navigateTo.changeVote()
@@ -168,13 +169,19 @@ const ParticipatingInGovernanceVariant = ({
   )
 }
 
-const formattingOptions = {
-  b: (text: ReactNode) => <Text style={[styles.description, styles.bold]}>{text}</Text>,
-  textComponent: (text: ReactNode) => <Text style={styles.description}>{text}</Text>,
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const formattingOptions = (styles: any) => {
+  return {
+    b: (text: ReactNode) => {
+      return <Text style={[styles.description, styles.bold]}>{text}</Text>
+    },
+    textComponent: (text: ReactNode) => <Text style={styles.description}>{text}</Text>,
+  }
 }
 
 const NeverParticipatedInGovernanceVariant = () => {
   const strings = useStrings()
+  const styles = useStyles()
   const navigateTo = useNavigateTo()
   const wallet = useSelectedWallet()
   const {manager} = useGovernance()
@@ -328,6 +335,7 @@ const NeverParticipatedInGovernanceVariant = () => {
 
 const HardwareWalletSupportComingSoon = () => {
   const strings = useStrings()
+  const styles = useStyles()
   const walletNavigateTo = useWalletNavigation()
   const handleOnPress = () => walletNavigateTo.navigateToTxHistory()
   return (

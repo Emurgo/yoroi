@@ -1,10 +1,10 @@
 import {isNonNullable} from '@yoroi/common'
+import {useTheme} from '@yoroi/theme'
 import React, {ReactNode} from 'react'
 import {ActivityIndicator, StyleSheet, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import {Icon, Spacer, Text} from '../../../../../components'
-import {useTheme} from '@yoroi/theme'
 
 type Props = {
   title: string
