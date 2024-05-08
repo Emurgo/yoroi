@@ -81,13 +81,15 @@
       "json",
       "node"
     ],
+    "moduleNameMapper": {
+      "^react-native$": "<rootDir>/../../node_modules/react-native"
+    },
     "preset": "react-native",
     "setupFiles": [
       "<rootDir>/jestSetup.ts"
     ],
     "transformIgnorePatterns": [
-      "node_modules/(?!(jest-)?(@react-native|react-native|react-native-iphone-x-helper|react-native-color-picker|react-native-reanimated|react-native-linear-gradient|react-native-mmkv)/)",
-      "node_modules/(?!@testing-library/react-native)/"
+      "node_modules/(?!(jest-)?(@react-native|react-native|react-native-iphone-x-helper|react-native-color-picker|react-native-reanimated|react-native-linear-gradient|react-native-mmkv)/)"
     ]
   },
   "dependencies": {

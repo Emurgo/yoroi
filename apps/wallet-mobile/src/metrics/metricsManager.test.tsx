@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/require-await */
-import {act, render} from '@testing-library/react-native'
+import {render} from '@testing-library/react-native'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
@@ -29,10 +29,6 @@ describe('MetricsProvider', () => {
         <TestInit />
       </MetricsProvider>,
     )
-
-    await act(async () => {
-      jest.advanceTimersByTime(1000)
-    })
 
     expect(await findByText('Loaded')).toBeTruthy()
     expect(metricsManager.init).toHaveBeenCalled()
