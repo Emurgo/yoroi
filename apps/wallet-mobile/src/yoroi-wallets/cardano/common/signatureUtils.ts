@@ -47,7 +47,11 @@ export const convertBech32ToHex = async (bech32Address: string) => {
 
 export const harden = (num: number) => HARD_DERIVATION_START + num
 
-export const getRequiredSigners = async (tx: CSL_TYPES.Transaction, wallet: YoroiWallet): Promise<number[][]> => {
+export const getRequiredSigners = async (
+  tx: CSL_TYPES.Transaction,
+  wallet: YoroiWallet,
+  partial = true,
+): Promise<number[][]> => {
   const stakeVKHash = await wallet.getStakingKey().then((key) => key.hash())
   const body = await tx.body()
 
@@ -74,6 +78,7 @@ export const getRequiredSigners = async (tx: CSL_TYPES.Transaction, wallet: Yoro
     stakeVKHash,
     getAddressAddressing,
     addressedUtxos,
+    partial,
   )
 
   return getUniquePaths(signers.map((s) => s.path))
@@ -101,7 +106,7 @@ const getDerivationPathForAddress = (address: string, wallet: YoroiWallet) => {
   return [purpose, harden(1815), harden(0), role, index]
 }
 
-export const getTransactionSigners = async (cbor: string, wallet: YoroiWallet) => {
+export const getTransactionSigners = async (cbor: string, wallet: YoroiWallet, partial = true) => {
   const tx = await CardanoMobile.Transaction.fromHex(cbor)
-  return getRequiredSigners(tx, wallet)
+  return getRequiredSigners(tx, wallet, partial)
 }

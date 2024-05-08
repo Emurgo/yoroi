@@ -46,7 +46,7 @@ import {generatePrivateKeyForCatalyst} from '../catalyst/catalystUtils'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
 import * as cip30 from '../cip30'
 import {cardanoUtxoFromRemoteFormat} from '../cip30'
-import {createSwapCancellationLedgerPayload} from '../common/signatureUtils'
+import {createSwapCancellationLedgerPayload, getTransactionSigners} from '../common/signatureUtils'
 import * as MAINNET from '../constants/mainnet/constants'
 import * as SANCHONET from '../constants/sanchonet/constants'
 import * as TESTNET from '../constants/testnet/constants'
@@ -70,7 +70,7 @@ import {
   YoroiWallet,
 } from '../types'
 import {yoroiUnsignedTx} from '../unsignedTx'
-import {deriveRewardAddressHex, normalizeToAddress, toRecipients} from '../utils'
+import {createRawTxSigningKey, deriveRewardAddressHex, normalizeToAddress, toRecipients} from '../utils'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
 import {collateralConfig, findCollateralCandidates, utxosMaker} from '../utxoManager/utxos'
 import {makeKeys} from './makeKeys'
@@ -958,7 +958,9 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       const valueStr = value?.trim() ?? ''
 
       if (valueStr.length === 0) {
-        const validUtxos = await this.getUtxos({[this.primaryTokenInfo.id]: asQuantity(valueStr)})
+        const validUtxos = await Promise.all(
+          this.utxos.map((o) => cardanoUtxoFromRemoteFormat(rawUtxoToRemoteUnspentOutput(o))),
+        )
         return paginate(validUtxos, pagination)
       }
 
@@ -1044,6 +1046,14 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       const txId = await Cardano.calculateTxId(base64, 'base64')
       await this.submitTransaction(base64)
       return txId
+    }
+
+    async CIP30signTx(cbor: string, partial: boolean = false) {
+      const signers = await getTransactionSigners(cbor, this, partial)
+      const keys = await Promise.all(signers.map(async (signer) => createRawTxSigningKey(rootKey, signer)))
+      const signedTxBytes = await signRawTransaction(CardanoMobile, cbor, keys)
+      const signedTx = await CardanoMobile.Transaction.fromBytes(signedTxBytes)
+      return await signedTx.witnessSet()
     }
 
     async signSwapCancellationWithLedger(cbor: string, useUSB: boolean): Promise<void> {

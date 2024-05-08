@@ -28,6 +28,8 @@ type Resolver = {
     getUtxos: ResolvableMethod<string[]>
     getCollateral: ResolvableMethod<string[] | null>
     submitTx: ResolvableMethod<string>
+    signTx: ResolvableMethod<string>
+    signData: ResolvableMethod<string>
   }
 }
 
@@ -50,6 +52,34 @@ export const resolver: Resolver = {
     return hasWalletAcceptedConnection(context)
   },
   api: {
+    signTx: async (params: unknown, context: Context) => {
+      assertOriginsMatch(context)
+      await assertWalletAcceptedConnection(context)
+      const tx =
+        isRecord(params) && isKeyOf('args', params) && Array.isArray(params.args) && typeof params.args[0] === 'string'
+          ? params.args[0]
+          : undefined
+      const partialSign =
+        isRecord(params) && isKeyOf('args', params) && Array.isArray(params.args) && typeof params.args[1] === 'boolean'
+          ? params.args[1]
+          : undefined
+      if (tx === undefined) throw new Error('Invalid params')
+      return context.wallet.signTx(tx, partialSign ?? false)
+    },
+    signData: async (params: unknown, context: Context) => {
+      assertOriginsMatch(context)
+      await assertWalletAcceptedConnection(context)
+      const address =
+        isRecord(params) && isKeyOf('args', params) && Array.isArray(params.args) && typeof params.args[0] === 'string'
+          ? params.args[0]
+          : undefined
+      const payload =
+        isRecord(params) && isKeyOf('args', params) && Array.isArray(params.args) && typeof params.args[1] === 'string'
+          ? params.args[1]
+          : undefined
+      if (address === undefined || payload === undefined) throw new Error('Invalid params')
+      return context.wallet.signData(address, payload)
+    },
     submitTx: async (params: unknown, context: Context) => {
       assertOriginsMatch(context)
       await assertWalletAcceptedConnection(context)
@@ -232,6 +262,8 @@ export type ResolverWallet = {
   getUtxos: (value?: string, pagination?: Pagination) => Promise<string[]>
   getCollateral: (value?: string) => Promise<string[] | null>
   submitTx: (cbor: string) => Promise<string>
+  signTx: (txHex: string, partialSign?: boolean) => Promise<string>
+  signData: (address: string, payload: string) => Promise<string>
 }
 
 type Pagination = {

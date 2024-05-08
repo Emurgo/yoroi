@@ -38,7 +38,7 @@ export async function cardanoUtxoFromRemoteFormat(u: RemoteUnspentOutput): Promi
   if ((u.assets || []).length > 0) {
     await value.setMultiasset(await assetToRustMultiasset([...u.assets]))
   }
-  const receiver = await normalizeToAddress(u.receiver)
+  const receiver = await CardanoMobile.Address.fromBech32(u.receiver)
   if (!receiver) throw new Error('Invalid receiver')
   const output = await CardanoMobile.TransactionOutput.new(receiver, value)
   return CardanoMobile.TransactionUnspentOutput.new(input, output)

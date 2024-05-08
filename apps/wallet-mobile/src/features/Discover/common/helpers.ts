@@ -87,6 +87,11 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
       return Promise.all(result.map((v) => v.toHex()))
     },
     confirmConnection: (origin: string) => confirmConnection(origin, manager),
+    signData: async (address, payload) => wallet.CIP30signData(address, payload),
+    signTx: async (tx, partial) => {
+      const result = await wallet.CIP30signTx(tx, partial)
+      return result.toHex()
+    },
   }
   const storage = connectionStorageMaker({storage: appStorage.join('dapp-connections/')})
   const manager = dappConnectorMaker(storage, handlerWallet, api)

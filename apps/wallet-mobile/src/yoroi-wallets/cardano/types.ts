@@ -1,6 +1,6 @@
 import {WalletChecksum as WalletChecksumType} from '@emurgo/cip4-js'
 import * as CoreTypes from '@emurgo/cross-csl-core'
-import {BaseAddress, PrivateKey, TransactionUnspentOutput} from '@emurgo/cross-csl-core'
+import {BaseAddress, PrivateKey, TransactionUnspentOutput, TransactionWitnessSet} from '@emurgo/cross-csl-core'
 import {
   Addressing as AddressingType,
   CardanoAddressedUtxo as CardanoAddressedUtxoType,
@@ -200,6 +200,8 @@ export type YoroiWallet = {
   CIP30getUtxos(value?: string, paginate?: {page: number; limit: number}): Promise<TransactionUnspentOutput[] | null>
   CIP30getCollateral(value?: string): Promise<TransactionUnspentOutput[] | null>
   CIP30submitTx(cbor: string): Promise<string>
+  CIP30signTx(txHex: string, partialSign?: boolean): Promise<TransactionWitnessSet>
+  CIP30signData(address: string, payload: string): Promise<string>
 }
 
 export const isYoroiWallet = (wallet: unknown): wallet is YoroiWallet => {
