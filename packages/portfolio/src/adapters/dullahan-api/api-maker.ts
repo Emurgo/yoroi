@@ -118,19 +118,19 @@ export const apiConfig: ApiConfig = freeze(
   {
     mainnet: {
       tokenDiscovery:
-        'https://dev-yoroi-backend-zero-mainnet.emurgornd.com/token/discovery',
+        'https://dev-yoroi-backend-zero-mainnet.emurgornd.com/tokens/discovery',
       tokenInfos:
         'https://dev-yoroi-backend-zero-mainnet.emurgornd.com/tokens/info/multi',
     },
     preprod: {
       tokenDiscovery:
-        'https://dev-yoroi-backend-zero-preprod.emurgornd.com/token/discovery',
+        'https://dev-yoroi-backend-zero-preprod.emurgornd.com/tokens/discovery',
       tokenInfos:
         'https://dev-yoroi-backend-zero-preprod.emurgornd.com/tokens/info/multi',
     },
     sancho: {
       tokenDiscovery:
-        'https://dev-yoroi-backend-zero-preprod.emurgornd.com/token/discovery',
+        'https://dev-yoroi-backend-zero-preprod.emurgornd.com/tokens/discovery',
       tokenInfos:
         'https://dev-yoroi-backend-zero-preprod.emurgornd.com/tokens/info/multi',
     },
