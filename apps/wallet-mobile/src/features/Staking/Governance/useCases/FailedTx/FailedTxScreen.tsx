@@ -4,10 +4,12 @@ import {StyleSheet, View} from 'react-native'
 import {Button, Spacer, Text} from '../../../../../components'
 import {useNavigateTo, useStrings} from '../../common'
 import {BrokenImage} from '../../illustrations'
+import {useTheme} from '@yoroi/theme'
 
 export const FailedTxScreen = () => {
   const strings = useStrings()
   const navigate = useNavigateTo()
+  const styles = useStyles()
 
   const handleOnTryAgain = () => {
     navigate.home()
@@ -34,33 +36,39 @@ export const FailedTxScreen = () => {
   )
 }
 
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    padding: 16,
-  },
-  center: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontFamily: 'Rubik-Medium',
-    fontSize: 20,
-    lineHeight: 30,
-    color: '#000000',
-    fontWeight: '500',
-    textAlign: 'center',
-  },
-  description: {
-    fontFamily: 'Rubik-Regular',
-    fontSize: 16,
-    lineHeight: 24,
-    color: '#6B7384',
-    textAlign: 'center',
-  },
-  button: {
-    paddingHorizontal: 24,
-    paddingVertical: 15,
-  },
-})
+const useStyles = () => {
+  const {color} = useTheme()
+
+  const styles = StyleSheet.create({
+    root: {
+      flex: 1,
+      padding: 16,
+    },
+    center: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    title: {
+      fontFamily: 'Rubik-Medium',
+      fontSize: 20,
+      lineHeight: 30,
+      color: color.gray_cmax,
+      fontWeight: '500',
+      textAlign: 'center',
+    },
+    description: {
+      fontFamily: 'Rubik-Regular',
+      fontSize: 16,
+      lineHeight: 24,
+      color: color.gray_c600,
+      textAlign: 'center',
+    },
+    button: {
+      paddingHorizontal: 24,
+      paddingVertical: 15,
+    },
+  })
+
+  return styles
+}

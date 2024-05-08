@@ -30,6 +30,7 @@ import {Routes} from '../../common/navigation'
 import {GovernanceImage} from '../../illustrations'
 import {GovernanceVote} from '../../types'
 import {EnterDrepIdModal} from '../EnterDrepIdModal'
+import {useTheme} from '@yoroi/theme'
 
 export const HomeScreen = () => {
   const wallet = useSelectedWallet()
@@ -356,62 +357,68 @@ const isTxConfirmed = (txId: string, txInfos: Record<string, TransactionInfo>) =
   return Object.values(txInfos).some((tx) => tx.id === txId)
 }
 
-const styles = StyleSheet.create({
-  supportRoot: {
-    paddingHorizontal: 18,
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  button: {
-    paddingHorizontal: 24,
-    paddingVertical: 15,
-  },
-  supportTitle: {
-    fontFamily: 'Rubik-Medium',
-    fontWeight: '500',
-    fontSize: 20,
-    lineHeight: 30,
-    color: '#000000',
-    textAlign: 'center',
-  },
-  supportDescription: {
-    fontFamily: 'Rubik-Regular',
-    fontSize: 14,
-    lineHeight: 22,
-    color: '#6B7384',
-    textAlign: 'center',
-  },
-  root: {
-    paddingHorizontal: 18,
-    flex: 1,
-    justifyContent: 'space-between',
-  },
-  description: {
-    fontFamily: 'Rubik-Regular',
-    fontSize: 16,
-    lineHeight: 24,
-    color: '#242838',
-  },
-  bold: {
-    fontFamily: 'Rubik-Medium',
-    fontWeight: '500',
-  },
-  actions: {
-    flex: 1,
-    gap: 16,
-  },
-  drepInfoTitle: {
-    fontFamily: 'Rubik-Medium',
-    fontWeight: '500',
-    fontSize: 16,
-    lineHeight: 24,
-    color: '#242838',
-  },
-  drepInfoDescription: {
-    fontFamily: 'Rubik-Regular',
-    fontSize: 12,
-    lineHeight: 18,
-    color: '#6B7384',
-  },
-})
+const useStyles = () => {
+  const {color} = useTheme()
+
+  const styles = StyleSheet.create({
+    supportRoot: {
+      paddingHorizontal: 18,
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    button: {
+      paddingHorizontal: 24,
+      paddingVertical: 15,
+    },
+    supportTitle: {
+      fontFamily: 'Rubik-Medium',
+      fontWeight: '500',
+      fontSize: 20,
+      lineHeight: 30,
+      color: color.gray_cmax,
+      textAlign: 'center',
+    },
+    supportDescription: {
+      fontFamily: 'Rubik-Regular',
+      fontSize: 14,
+      lineHeight: 22,
+      color: color.gray_c600,
+      textAlign: 'center',
+    },
+    root: {
+      paddingHorizontal: 18,
+      flex: 1,
+      justifyContent: 'space-between',
+    },
+    description: {
+      fontFamily: 'Rubik-Regular',
+      fontSize: 16,
+      lineHeight: 24,
+      color: color.gray_c900,
+    },
+    bold: {
+      fontFamily: 'Rubik-Medium',
+      fontWeight: '500',
+    },
+    actions: {
+      flex: 1,
+      gap: 16,
+    },
+    drepInfoTitle: {
+      fontFamily: 'Rubik-Medium',
+      fontWeight: '500',
+      fontSize: 16,
+      lineHeight: 24,
+      color: color.gray_c900,
+    },
+    drepInfoDescription: {
+      fontFamily: 'Rubik-Regular',
+      fontSize: 12,
+      lineHeight: 18,
+      color: color.gray_c600,
+    },
+  })
+
+  return styles
+}

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useFocusEffect} from '@react-navigation/native'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, Image, ImageSourcePropType, ScrollView, StyleSheet, View, ViewStyle} from 'react-native'
@@ -39,6 +40,7 @@ export const WalletNameForm = ({
   isWaiting = false,
 }: Props) => {
   const strings = useStrings()
+  const styles = useStyles()
   const [name, setName] = React.useState(defaultWalletName ?? '')
   const walletManager = useWalletManager()
   const {track} = useMetrics()
@@ -104,30 +106,35 @@ export const WalletNameForm = ({
   )
 }
 
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  container: {
-    paddingVertical: 24,
-    paddingHorizontal: 16,
-    flex: 1,
-  },
-  heading: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: spacing.paragraphBottomMargin,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    marginTop: 12,
-  },
-  button: {
-    marginHorizontal: 10,
-    marginVertical: 16,
-  },
-})
+const useStyles = () => {
+  const {color} = useTheme()
+  const styles = StyleSheet.create({
+    root: {
+      flex: 1,
+      backgroundColor: color.gray_cmin,
+    },
+    container: {
+      paddingVertical: 24,
+      paddingHorizontal: 16,
+      flex: 1,
+    },
+    heading: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: spacing.paragraphBottomMargin,
+    },
+    buttonContainer: {
+      flexDirection: 'row',
+      marginTop: 12,
+    },
+    button: {
+      marginHorizontal: 10,
+      marginVertical: 16,
+    },
+  })
+
+  return styles
+}
 
 const messages = defineMessages({
   walletNameInputLabel: {

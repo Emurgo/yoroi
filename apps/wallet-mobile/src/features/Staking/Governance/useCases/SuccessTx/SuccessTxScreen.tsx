@@ -9,6 +9,7 @@ import {useNavigateTo, useStrings} from '../../common'
 import {Routes} from '../../common/navigation'
 import {SuccessTxImage} from '../../illustrations'
 import {GovernanceKindMap} from '../../types'
+import {useTheme} from '@yoroi/theme'
 
 export const SuccessTxScreen = () => {
   const strings = useStrings()
@@ -73,29 +74,35 @@ export const SuccessTxScreen = () => {
   )
 }
 
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    padding: 16,
-  },
-  center: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontFamily: 'Rubik-Medium',
-    fontSize: 20,
-    lineHeight: 30,
-    color: '#000000',
-    fontWeight: '500',
-    textAlign: 'center',
-  },
-  description: {
-    fontFamily: 'Rubik-Regular',
-    fontSize: 16,
-    lineHeight: 24,
-    color: '#6B7384',
-    textAlign: 'center',
-  },
-})
+const useStyles = () => {
+  const {color} = useTheme()
+
+  const styles = StyleSheet.create({
+    root: {
+      flex: 1,
+      padding: 16,
+    },
+    center: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    title: {
+      fontFamily: 'Rubik-Medium',
+      fontSize: 20,
+      lineHeight: 30,
+      color: color.gray_cmax,
+      fontWeight: '500',
+      textAlign: 'center',
+    },
+    description: {
+      fontFamily: 'Rubik-Regular',
+      fontSize: 16,
+      lineHeight: 24,
+      color: color.gray_c600,
+      textAlign: 'center',
+    },
+  })
+
+  return styles
+}
