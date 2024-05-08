@@ -5,7 +5,7 @@ import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import ViewTransformer from 'react-native-easy-view-transformer'
 
 import {FadeIn} from '../components'
-import {MediaPreview} from '../features/Portfolio/common/MediaGallery/MediaPreview'
+import {MediaPreview} from '../features/Portfolio/common/MediaPreview/MediaPreview'
 import {useSelectedWallet} from '../features/WalletManager/Context'
 import {useMetrics} from '../metrics/metricsManager'
 import {NftRoutes, useParams} from '../navigation'

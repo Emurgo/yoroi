@@ -3,9 +3,9 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
+import {MediaDetails} from '../features/Portfolio/common/MediaDetails/MediaDetails'
 import {useMetrics} from '../metrics/metricsManager'
 import {defaultStackNavigationOptions, NftRoutes} from '../navigation'
-import {NftDetails} from '../NftDetails/NftDetails'
 import {NftDetailsImage} from '../NftDetails/NftDetailsImage'
 import {Nfts} from './Nfts'
 
@@ -35,7 +35,7 @@ export const NftsNavigator = () => {
           headerTitleAlign: 'center',
         }}
         listeners={trackDetails}
-        component={NftDetails}
+        component={MediaDetails}
       />
 
       <Stack.Screen name="nft-image-zoom" options={{headerTitle: () => null}} component={NftDetailsImage} />

@@ -7,17 +7,17 @@ import React, {ReactNode, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Linking, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 
-import {CopyButton, FadeIn, Spacer, Text} from '../components'
-import {Tab, TabPanel, TabPanels, Tabs} from '../components/Tabs'
-import {useExplorers} from '../features/Explorer/common/useExplorers'
-import {MediaPreview} from '../features/Portfolio/common/MediaGallery/MediaPreview'
-import {useSelectedWallet} from '../features/WalletManager/Context'
-import {useMetrics} from '../metrics/metricsManager'
-import {NftRoutes} from '../navigation'
-import {useNavigateTo} from '../Nfts/navigation'
-import {useWalletManager} from '../wallet-manager/WalletManagerContext'
+import {CopyButton, FadeIn, Spacer, Text} from '../../../../components'
+import {Tab, TabPanel, TabPanels, Tabs} from '../../../../components/Tabs'
+import {useMetrics} from '../../../../metrics/metricsManager'
+import {NftRoutes} from '../../../../navigation'
+import {useNavigateTo} from '../../../../Nfts/navigation'
+import {useWalletManager} from '../../../../wallet-manager/WalletManagerContext'
+import {useExplorers} from '../../../Explorer/common/useExplorers'
+import {useSelectedWallet} from '../../../WalletManager/Context'
+import {MediaPreview} from '../MediaPreview/MediaPreview'
 
-export const NftDetails = () => {
+export const MediaDetails = () => {
   const styles = useStyles()
   const strings = useStrings()
   const {track} = useMetrics()
@@ -87,7 +87,6 @@ const Details = ({activeTab, info, network}: DetailsProps) => {
     getTokenDiscovery: api.tokenDiscovery,
   })
 
-  console.log(tokenDiscovery)
   // TODO: revisit + product definition (missing is gone state, error state, loading state)
   if (!tokenDiscovery) return null
 
