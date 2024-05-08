@@ -3,13 +3,12 @@ import {render} from '@testing-library/react-native'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
+jest.useFakeTimers()
 import {Ampli} from './ampli'
 import {makeMetricsManager, MetricsProvider, useMetrics} from './metricsManager'
 import {mockMetricsManager} from './mocks'
 
 const initialMockedMetricsManager = mockMetricsManager()
-
-jest.useFakeTimers()
 
 const TestInit = () => {
   const {isLoaded} = useMetrics()
