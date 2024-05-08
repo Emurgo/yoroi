@@ -3,20 +3,11 @@ import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
 import {BlurView} from 'expo-blur'
 import * as React from 'react'
-import {
-  Linking,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  useWindowDimensions,
-  View,
-} from 'react-native'
+import {Linking, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, useModal} from '../../../../components'
+import {Button, Spacer, useModal} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {WalletInitRouteNavigation} from '../../../../navigation'
@@ -30,19 +21,8 @@ import {EyeClosed as EyeClosedIllustration} from '../../illustrations/EyeClosed'
 import {EyeOpen as EyeOpenIllustration} from '../../illustrations/EyeOpen'
 import {Info as InfoIcon} from '../../illustrations/Info'
 
-const useSizeModal = () => {
-  const HEIGHT_SCREEN = useWindowDimensions().height
-  const mediumScreenHeight = 800
-  const largerScreenHeight = 900
-  const PERCENTAGE = HEIGHT_SCREEN >= largerScreenHeight ? 48 : HEIGHT_SCREEN >= mediumScreenHeight ? 55 : 75
-  const HEIGHT_MODAL = (HEIGHT_SCREEN / 100) * PERCENTAGE
-
-  return {HEIGHT_MODAL} as const
-}
-
 export const RecoveryPhraseScreen = () => {
   const {styles, colors} = useStyles()
-  const {HEIGHT_MODAL} = useSizeModal()
   const {openModal, closeModal} = useModal()
   const [isBlur, setIsBlur] = React.useState(true)
   const navigation = useNavigation<WalletInitRouteNavigation>()
@@ -63,28 +43,26 @@ export const RecoveryPhraseScreen = () => {
     openModal(
       strings.recoveryPhraseModalTitle,
       <View style={styles.modal}>
-        <ScrollView>
-          <View style={styles.content}>
-            <CardAboutPhrase
-              title={strings.recoveryPhraseCardTitle}
-              linesOfText={[
-                strings.recoveryPhraseCardFirstItem,
-                strings.recoveryPhraseCardSecondItem,
-                strings.recoveryPhraseCardThirdItem,
-                strings.recoveryPhraseCardFourthItem,
-                strings.recoveryPhraseCardFifthItem,
-              ]}
-            />
+        <CardAboutPhrase
+          title={strings.recoveryPhraseCardTitle}
+          linesOfText={[
+            strings.recoveryPhraseCardFirstItem,
+            strings.recoveryPhraseCardSecondItem,
+            strings.recoveryPhraseCardThirdItem,
+            strings.recoveryPhraseCardFourthItem,
+            strings.recoveryPhraseCardFifthItem,
+          ]}
+        />
 
-            <LearnMoreButton
-              onPress={() => {
-                Linking.openURL(YoroiZendeskLink)
-              }}
-            />
-          </View>
-        </ScrollView>
+        <Spacer fill />
 
-        <Space height="s" />
+        <LearnMoreButton
+          onPress={() => {
+            Linking.openURL(YoroiZendeskLink)
+          }}
+        />
+
+        <Space height="xl" />
 
         <Button
           title={strings.continueButton}
@@ -94,13 +72,10 @@ export const RecoveryPhraseScreen = () => {
             showCreateWalletInfoModalChanged(false)
           }}
         />
-
-        <Space height="l" />
       </View>,
-      HEIGHT_MODAL,
+      552,
     )
   }, [
-    HEIGHT_MODAL,
     closeModal,
     openModal,
     showCreateWalletInfoModalChanged,
@@ -113,7 +88,6 @@ export const RecoveryPhraseScreen = () => {
     strings.recoveryPhraseCardTitle,
     strings.recoveryPhraseModalTitle,
     styles.button,
-    styles.content,
     styles.modal,
   ])
 
@@ -167,19 +141,19 @@ export const RecoveryPhraseScreen = () => {
         </TouchableOpacity>
       </View>
 
-      <View>
-        <Button
-          title={strings.next}
-          style={styles.button}
-          disabled={isBlur}
-          onPress={() => {
-            mnemonicChanged(mnemonic)
-            navigation.navigate('setup-wallet-verify-recovery-phrase-mnemonic')
-          }}
-        />
+      <Spacer fill />
 
-        <Space height="s" />
-      </View>
+      <Button
+        title={strings.next}
+        style={styles.button}
+        disabled={isBlur}
+        onPress={() => {
+          mnemonicChanged(mnemonic)
+          navigation.navigate('setup-wallet-verify-recovery-phrase-mnemonic')
+        }}
+      />
+
+      <Space height="l" />
     </SafeAreaView>
   )
 }
@@ -216,6 +190,7 @@ const useStyles = () => {
       flex: 1,
     },
     title: {
+      lineHeight: 24,
       ...theme.typography['body-1-l-regular'],
       color: theme.color.gray[900],
     },
@@ -225,7 +200,9 @@ const useStyles = () => {
     content: {
       gap: 16,
     },
-    button: {backgroundColor: theme.color.primary[500]},
+    button: {
+      backgroundColor: theme.color.primary[500],
+    },
     mnemonicWords: {
       flexDirection: 'row',
       flexWrap: 'wrap',
@@ -267,7 +244,7 @@ const useStyles = () => {
     },
     infoIcon: {
       position: 'absolute',
-      top: -18,
+      top: Platform.OS === 'ios' ? -22 : -18,
       left: 0,
     },
   })
