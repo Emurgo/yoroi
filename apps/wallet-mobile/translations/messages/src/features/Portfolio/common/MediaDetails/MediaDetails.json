@@ -4,14 +4,14 @@
     "defaultMessage": "!!!NFT Details",
     "file": "src/features/Portfolio/common/MediaDetails/MediaDetails.tsx",
     "start": {
-      "line": 308,
+      "line": 313,
       "column": 9,
-      "index": 8707
+      "index": 8764
     },
     "end": {
-      "line": 311,
+      "line": 316,
       "column": 3,
-      "index": 8778
+      "index": 8835
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Overview",
     "file": "src/features/Portfolio/common/MediaDetails/MediaDetails.tsx",
     "start": {
-      "line": 312,
+      "line": 317,
       "column": 12,
-      "index": 8792
+      "index": 8849
     },
     "end": {
-      "line": 315,
+      "line": 320,
       "column": 3,
-      "index": 8863
+      "index": 8920
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Metadata",
     "file": "src/features/Portfolio/common/MediaDetails/MediaDetails.tsx",
     "start": {
-      "line": 316,
+      "line": 321,
       "column": 12,
-      "index": 8877
+      "index": 8934
     },
     "end": {
-      "line": 319,
+      "line": 324,
       "column": 3,
-      "index": 8948
+      "index": 9005
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!NFT Name",
     "file": "src/features/Portfolio/common/MediaDetails/MediaDetails.tsx",
     "start": {
-      "line": 320,
+      "line": 325,
       "column": 11,
-      "index": 8961
+      "index": 9018
     },
     "end": {
-      "line": 323,
+      "line": 328,
       "column": 3,
-      "index": 9031
+      "index": 9088
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Created",
     "file": "src/features/Portfolio/common/MediaDetails/MediaDetails.tsx",
     "start": {
-      "line": 324,
+      "line": 329,
       "column": 13,
-      "index": 9046
+      "index": 9103
     },
     "end": {
-      "line": 327,
+      "line": 332,
       "column": 3,
-      "index": 9117
+      "index": 9174
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!Description",
     "file": "src/features/Portfolio/common/MediaDetails/MediaDetails.tsx",
     "start": {
-      "line": 328,
+      "line": 333,
       "column": 15,
-      "index": 9134
+      "index": 9191
     },
     "end": {
-      "line": 331,
+      "line": 336,
       "column": 3,
-      "index": 9211
+      "index": 9268
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!Author",
     "file": "src/features/Portfolio/common/MediaDetails/MediaDetails.tsx",
     "start": {
-      "line": 332,
+      "line": 337,
       "column": 10,
-      "index": 9223
+      "index": 9280
     },
     "end": {
-      "line": 335,
+      "line": 340,
       "column": 3,
-      "index": 9290
+      "index": 9347
     }
   },
   {
@@ -109,14 +109,14 @@
     "defaultMessage": "!!!Fingerprint",
     "file": "src/features/Portfolio/common/MediaDetails/MediaDetails.tsx",
     "start": {
-      "line": 336,
+      "line": 341,
       "column": 15,
-      "index": 9307
+      "index": 9364
     },
     "end": {
-      "line": 339,
+      "line": 344,
       "column": 3,
-      "index": 9384
+      "index": 9441
     }
   },
   {
@@ -124,14 +124,14 @@
     "defaultMessage": "!!!Policy id",
     "file": "src/features/Portfolio/common/MediaDetails/MediaDetails.tsx",
     "start": {
-      "line": 340,
+      "line": 345,
       "column": 12,
-      "index": 9398
+      "index": 9455
     },
     "end": {
-      "line": 343,
+      "line": 348,
       "column": 3,
-      "index": 9470
+      "index": 9527
     }
   },
   {
@@ -139,14 +139,14 @@
     "defaultMessage": "!!!Details on",
     "file": "src/features/Portfolio/common/MediaDetails/MediaDetails.tsx",
     "start": {
-      "line": 344,
+      "line": 349,
       "column": 16,
-      "index": 9488
+      "index": 9545
     },
     "end": {
-      "line": 347,
+      "line": 352,
       "column": 3,
-      "index": 9565
+      "index": 9622
     }
   },
   {
@@ -154,14 +154,14 @@
     "defaultMessage": "!!!Copy metadata",
     "file": "src/features/Portfolio/common/MediaDetails/MediaDetails.tsx",
     "start": {
-      "line": 348,
+      "line": 353,
       "column": 16,
-      "index": 9583
+      "index": 9640
     },
     "end": {
-      "line": 351,
+      "line": 356,
       "column": 3,
-      "index": 9663
+      "index": 9720
     }
   }
 ]

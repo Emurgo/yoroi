@@ -81,13 +81,16 @@ const Details = ({activeTab, info, network}: DetailsProps) => {
   const walletManager = useWalletManager()
   const {api} = walletManager.getTokenManager(network)
 
-  const {tokenDiscovery} = usePorfolioTokenDiscovery({
-    id: info.id,
-    network,
-    getTokenDiscovery: api.tokenDiscovery,
-  }, {
-    staleTime: Infinity,
-  })
+  const {tokenDiscovery} = usePorfolioTokenDiscovery(
+    {
+      id: info.id,
+      network,
+      getTokenDiscovery: api.tokenDiscovery,
+    },
+    {
+      staleTime: Infinity,
+    },
+  )
 
   // TODO: revisit + product definition (missing is gone state, error state, loading state)
   if (!tokenDiscovery) return null
