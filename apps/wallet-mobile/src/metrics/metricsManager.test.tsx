@@ -1,14 +1,15 @@
 /* eslint-disable @typescript-eslint/require-await */
-import {render} from '@testing-library/react-native'
+import {act, render} from '@testing-library/react-native'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-jest.useFakeTimers()
 import {Ampli} from './ampli'
 import {makeMetricsManager, MetricsProvider, useMetrics} from './metricsManager'
 import {mockMetricsManager} from './mocks'
 
 const initialMockedMetricsManager = mockMetricsManager()
+
+jest.useFakeTimers()
 
 const TestInit = () => {
   const {isLoaded} = useMetrics()
@@ -28,6 +29,10 @@ describe('MetricsProvider', () => {
         <TestInit />
       </MetricsProvider>,
     )
+
+    await act(async () => {
+      jest.advanceTimersByTime(1000)
+    })
 
     expect(await findByText('Loaded')).toBeTruthy()
     expect(metricsManager.init).toHaveBeenCalled()
