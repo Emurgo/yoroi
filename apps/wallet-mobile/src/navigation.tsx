@@ -315,8 +315,9 @@ export type FirstRunRouteNavigation = StackNavigationProp<FirstRunRoutes>
 export type NftRoutes = {
   'nft-gallery': undefined
   'nft-details': {id: Portfolio.Token.Id}
-  'image-zoom': {id: Portfolio.Token.Id}
+  'nft-image-zoom': {id: Portfolio.Token.Id}
 }
+export type NftRouteNavigation = StackNavigationProp<NftRoutes>
 
 export type MenuRoutes = {
   menu: undefined

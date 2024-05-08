@@ -10,11 +10,9 @@ export const usePortfolioTokenManager = ({network}: {network: Chain.SupportedNet
 
 export const buildPortfolioTokenManager = ({network}: {network: Chain.SupportedNetworks}) => {
   const rootStorage = mountMMKVStorage<Portfolio.Token.Id>({path: '/', id: `${network}.token-manager`})
-  const appTokenDiscoveryStorage = rootStorage.join('token-discovery/')
   const appTokenInfoStorage = rootStorage.join('token-info/')
 
   const tokenStorage = portfolioTokenStorageMaker({
-    tokenDiscoveryStorage: observableStorageMaker(appTokenDiscoveryStorage),
     tokenInfoStorage: observableStorageMaker(appTokenInfoStorage),
   })
   const api = portfolioApiMaker({

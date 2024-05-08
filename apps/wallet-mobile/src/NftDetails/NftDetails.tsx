@@ -25,9 +25,7 @@ export const NftDetails = () => {
   const {id} = useRoute<RouteProp<NftRoutes, 'nft-details'>>().params
   const wallet = useSelectedWallet()
 
-  // TODO: revisit (missing refresh mechanism)
   // reading from the getter, there is no need to subscribe to changes
-  // until implementation of the new refresh mechanism in here
   const amount = wallet.balances.records.get(id)
 
   // record can be gone when arriving here, need a state
@@ -83,12 +81,13 @@ export const NftDetails = () => {
 
 const imageHeight = 380
 const imagePadding = 16
+const horizontalPadding = imagePadding * 2 // left and right
 
 const SelectableMedia = ({info}: {info: Portfolio.Token.Info}) => {
   const styles = useStyles()
   const navigateTo = useNavigateTo()
   const dimensions = useWindowDimensions()
-  const imageWidth = dimensions.width - imagePadding * 2
+  const imageWidth = dimensions.width - horizontalPadding
 
   return (
     <TouchableOpacity onPress={() => navigateTo.nftZoom(info.id)} style={styles.imageWrapper}>
