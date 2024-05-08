@@ -85,6 +85,8 @@ const Details = ({activeTab, info, network}: DetailsProps) => {
     id: info.id,
     network,
     getTokenDiscovery: api.tokenDiscovery,
+  }, {
+    staleTime: Infinity,
   })
 
   // TODO: revisit + product definition (missing is gone state, error state, loading state)
