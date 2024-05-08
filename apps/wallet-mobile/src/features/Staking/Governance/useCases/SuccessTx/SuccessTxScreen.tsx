@@ -13,6 +13,7 @@ import {GovernanceKindMap} from '../../types'
 
 export const SuccessTxScreen = () => {
   const strings = useStrings()
+  const styles = useStyles()
   const navigate = useNavigateTo()
   const walletNavigateTo = useWalletNavigation()
   const params = useUnsafeParams<Routes['staking-gov-tx-success']>()
