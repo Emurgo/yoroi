@@ -27,7 +27,7 @@ export const DarkThemeAnnouncement = () => {
     <View style={styles.container}>
       <ScrollView bounces={false} ref={scrollViewRef} persistentScrollbar={true} showsVerticalScrollIndicator={true}>
         <View style={styles.content}>
-          <Space height="md" />
+          <Space height="_2xl" />
 
           <ThemeIlustration />
 
@@ -64,7 +64,7 @@ const useStyles = () => {
     },
     content: {
       alignItems: 'center',
-      paddingTop: 60,
+      ...atoms.pt_2xl,
       ...atoms.body_1_lg_regular,
     },
     title: {
@@ -82,9 +82,8 @@ const useStyles = () => {
       textAlign: 'center',
       ...atoms.body_3_sm_regular,
     },
-
     toggle: {
-      paddingBottom: 44,
+      ...atoms.pb_2xl,
     },
   })
 

@@ -131,10 +131,10 @@ const useStyles = () => {
     },
     pinCircleInactive: {
       borderWidth: 2,
-      borderColor: '#3154CB',
+      borderColor: color.primary_c600,
     },
     pinCircleActive: {
-      backgroundColor: '#3154CB',
+      backgroundColor: color.primary_c600,
     },
   })
   return styles

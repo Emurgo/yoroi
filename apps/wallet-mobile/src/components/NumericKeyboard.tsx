@@ -104,7 +104,7 @@ const useStyles = () => {
       borderTopWidth: 2 * StyleSheet.hairlineWidth,
       borderLeftWidth: StyleSheet.hairlineWidth,
       borderRightWidth: StyleSheet.hairlineWidth,
-      borderColor: '#B7B7B7',
+      borderColor: color.gray_c400,
     },
     keyboardKeyDisabled: {
       backgroundColor: color.gray_c100,

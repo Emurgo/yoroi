@@ -49,7 +49,6 @@ export const YoroiApp = () => {
 
   const themeStorage = useThemeStorageMaker()
 
-
   if (!migrated) return null
 
   return (
