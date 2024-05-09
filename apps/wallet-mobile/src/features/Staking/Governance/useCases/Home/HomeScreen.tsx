@@ -9,6 +9,7 @@ import {
   useStakingKeyState,
   useVotingCertificate,
 } from '@yoroi/staking'
+import {useTheme} from '@yoroi/theme'
 import React, {type ReactNode} from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
@@ -94,6 +95,7 @@ const ParticipatingInGovernanceVariant = ({
   isTxPending?: boolean
 }) => {
   const strings = useStrings()
+  const styles = useStyles()
   const navigateTo = useNavigateTo()
   const {data: bech32DrepId} = useBech32DRepID(action.kind === 'delegate' ? action.drepID : '', {
     enabled: action.kind === 'delegate',
@@ -107,8 +109,8 @@ const ParticipatingInGovernanceVariant = ({
   const selectedActionTitle = actionTitles[action.kind]
 
   const introduction = isTxPending
-    ? strings.actionYouHaveSelectedTxPending(selectedActionTitle, formattingOptions)
-    : strings.actionYouHaveSelected(selectedActionTitle, formattingOptions)
+    ? strings.actionYouHaveSelectedTxPending(selectedActionTitle, formattingOptions(styles))
+    : strings.actionYouHaveSelected(selectedActionTitle, formattingOptions(styles))
 
   const navigateToChangeVote = () => {
     navigateTo.changeVote()
@@ -167,13 +169,19 @@ const ParticipatingInGovernanceVariant = ({
   )
 }
 
-const formattingOptions = {
-  b: (text: ReactNode) => <Text style={[styles.description, styles.bold]}>{text}</Text>,
-  textComponent: (text: ReactNode) => <Text style={styles.description}>{text}</Text>,
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const formattingOptions = (styles: any) => {
+  return {
+    b: (text: ReactNode) => {
+      return <Text style={[styles.description, styles.bold]}>{text}</Text>
+    },
+    textComponent: (text: ReactNode) => <Text style={styles.description}>{text}</Text>,
+  }
 }
 
 const NeverParticipatedInGovernanceVariant = () => {
   const strings = useStrings()
+  const styles = useStyles()
   const navigateTo = useNavigateTo()
   const wallet = useSelectedWallet()
   const {manager} = useGovernance()
@@ -327,6 +335,7 @@ const NeverParticipatedInGovernanceVariant = () => {
 
 const HardwareWalletSupportComingSoon = () => {
   const strings = useStrings()
+  const styles = useStyles()
   const walletNavigateTo = useWalletNavigation()
   const handleOnPress = () => walletNavigateTo.navigateToTxHistory()
   return (
@@ -356,62 +365,68 @@ const isTxConfirmed = (txId: string, txInfos: Record<string, TransactionInfo>) =
   return Object.values(txInfos).some((tx) => tx.id === txId)
 }
 
-const styles = StyleSheet.create({
-  supportRoot: {
-    paddingHorizontal: 18,
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  button: {
-    paddingHorizontal: 24,
-    paddingVertical: 15,
-  },
-  supportTitle: {
-    fontFamily: 'Rubik-Medium',
-    fontWeight: '500',
-    fontSize: 20,
-    lineHeight: 30,
-    color: '#000000',
-    textAlign: 'center',
-  },
-  supportDescription: {
-    fontFamily: 'Rubik-Regular',
-    fontSize: 14,
-    lineHeight: 22,
-    color: '#6B7384',
-    textAlign: 'center',
-  },
-  root: {
-    paddingHorizontal: 18,
-    flex: 1,
-    justifyContent: 'space-between',
-  },
-  description: {
-    fontFamily: 'Rubik-Regular',
-    fontSize: 16,
-    lineHeight: 24,
-    color: '#242838',
-  },
-  bold: {
-    fontFamily: 'Rubik-Medium',
-    fontWeight: '500',
-  },
-  actions: {
-    flex: 1,
-    gap: 16,
-  },
-  drepInfoTitle: {
-    fontFamily: 'Rubik-Medium',
-    fontWeight: '500',
-    fontSize: 16,
-    lineHeight: 24,
-    color: '#242838',
-  },
-  drepInfoDescription: {
-    fontFamily: 'Rubik-Regular',
-    fontSize: 12,
-    lineHeight: 18,
-    color: '#6B7384',
-  },
-})
+const useStyles = () => {
+  const {color} = useTheme()
+
+  const styles = StyleSheet.create({
+    supportRoot: {
+      paddingHorizontal: 18,
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    button: {
+      paddingHorizontal: 24,
+      paddingVertical: 15,
+    },
+    supportTitle: {
+      fontFamily: 'Rubik-Medium',
+      fontWeight: '500',
+      fontSize: 20,
+      lineHeight: 30,
+      color: color.gray_cmax,
+      textAlign: 'center',
+    },
+    supportDescription: {
+      fontFamily: 'Rubik-Regular',
+      fontSize: 14,
+      lineHeight: 22,
+      color: color.gray_c600,
+      textAlign: 'center',
+    },
+    root: {
+      paddingHorizontal: 18,
+      flex: 1,
+      justifyContent: 'space-between',
+    },
+    description: {
+      fontFamily: 'Rubik-Regular',
+      fontSize: 16,
+      lineHeight: 24,
+      color: color.gray_c900,
+    },
+    bold: {
+      fontFamily: 'Rubik-Medium',
+      fontWeight: '500',
+    },
+    actions: {
+      flex: 1,
+      gap: 16,
+    },
+    drepInfoTitle: {
+      fontFamily: 'Rubik-Medium',
+      fontWeight: '500',
+      fontSize: 16,
+      lineHeight: 24,
+      color: color.gray_c900,
+    },
+    drepInfoDescription: {
+      fontFamily: 'Rubik-Regular',
+      fontSize: 12,
+      lineHeight: 18,
+      color: color.gray_c600,
+    },
+  })
+
+  return styles
+}

@@ -432,6 +432,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
+      backgroundColor: color.gray_cmin,
     },
     contentContainer: {
       ...atoms.px_lg,

@@ -28,6 +28,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       alignItems: 'center',
+      backgroundColor: color.gray_cmin,
     },
     title: {
       color: color.primary_c500,

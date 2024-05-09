@@ -1,5 +1,6 @@
 import {useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image, Platform, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
@@ -12,6 +13,7 @@ import {WalletInitRouteNavigation} from '../../../../navigation'
 
 export const CheckNanoXScreen = () => {
   const strings = useStrings()
+  const styles = useStyles()
 
   const navigation = useNavigation<WalletInitRouteNavigation>()
   const onContinue = () => navigation.navigate('setup-wallet-connect-nano-x')
@@ -56,7 +58,10 @@ export const CheckNanoXScreen = () => {
   )
 }
 
-const Actions = (props: ViewProps) => <View {...props} style={styles.actions} />
+const Actions = (props: ViewProps) => {
+  const styles = useStyles()
+  return <View {...props} style={styles.actions} />
+}
 
 const messages = defineMessages({
   introline: {
@@ -80,25 +85,30 @@ const useStrings = () => {
   }
 }
 
-const styles = StyleSheet.create({
-  safeAreaView: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  image: {
-    alignSelf: 'center',
-  },
-  introline: {
-    paddingHorizontal: 16,
-  },
-  contentContainer: {
-    paddingHorizontal: 16,
-  },
-  item: {
-    fontSize: 14,
-    lineHeight: 22,
-  },
-  actions: {
-    padding: 16,
-  },
-})
+const useStyles = () => {
+  const {color} = useTheme()
+  const styles = StyleSheet.create({
+    safeAreaView: {
+      flex: 1,
+      backgroundColor: color.gray_cmin,
+    },
+    image: {
+      alignSelf: 'center',
+    },
+    introline: {
+      paddingHorizontal: 16,
+    },
+    contentContainer: {
+      paddingHorizontal: 16,
+    },
+    item: {
+      fontSize: 14,
+      lineHeight: 22,
+    },
+    actions: {
+      padding: 16,
+    },
+  })
+
+  return styles
+}

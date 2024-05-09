@@ -313,7 +313,7 @@ const useStyles = () => {
       flex: 1,
       ...atoms.px_lg,
       justifyContent: 'space-between',
-      backgroundColor: color.white_static,
+      backgroundColor: color.gray_cmin,
     },
     modal: {
       flex: 1,

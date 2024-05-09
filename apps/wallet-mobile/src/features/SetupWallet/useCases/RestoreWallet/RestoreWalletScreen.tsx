@@ -86,7 +86,7 @@ const useStyles = () => {
     root: {
       flex: 1,
       justifyContent: 'space-between',
-      backgroundColor: color.white_static,
+      backgroundColor: color.gray_cmin,
     },
     title: {
       ...atoms.body_1_lg_regular,

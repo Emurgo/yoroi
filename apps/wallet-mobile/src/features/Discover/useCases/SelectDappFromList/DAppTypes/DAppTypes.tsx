@@ -106,7 +106,7 @@ const useStyles = () => {
     },
     chipContentBox: {
       paddingHorizontal: 14,
-      backgroundColor: color.white_static,
+      backgroundColor: color.gray_cmin,
       flexDirection: 'row',
       alignItems: 'center',
       gap: 8,
@@ -114,7 +114,7 @@ const useStyles = () => {
       height: '100%',
     },
     chipBgWhite: {
-      backgroundColor: color.white_static,
+      backgroundColor: color.gray_cmin,
     },
     chipText: {
       color: color.primary_c600,

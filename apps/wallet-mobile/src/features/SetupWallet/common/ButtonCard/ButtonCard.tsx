@@ -64,7 +64,7 @@ const useStyles = () => {
     },
     titleCentre: {
       ...atoms.heading_4_medium,
-      color: color.black_static,
+      color: color.gray_cmax,
       textAlign: 'center',
     },
     subTitle: {

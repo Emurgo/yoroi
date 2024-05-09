@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Enter PIN",
     "file": "src/auth/PinLoginScreen/PinLoginScreen.tsx",
     "start": {
-      "line": 51,
+      "line": 66,
       "column": 9,
-      "index": 1305
+      "index": 1615
     },
     "end": {
-      "line": 54,
+      "line": 69,
       "column": 3,
-      "index": 1395
+      "index": 1705
     }
   }
 ]

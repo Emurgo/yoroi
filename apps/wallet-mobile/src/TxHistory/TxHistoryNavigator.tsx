@@ -550,9 +550,10 @@ const useStrings = () => {
 }
 
 const SettingsIconButton = (props: TouchableOpacityProps) => {
+  const {color} = useTheme()
   return (
     <TouchableOpacity {...props}>
-      <Icon.Settings size={30} color={COLORS.BLACK} />
+      <Icon.Settings size={30} color={color.gray_cmax} />
     </TouchableOpacity>
   )
 }

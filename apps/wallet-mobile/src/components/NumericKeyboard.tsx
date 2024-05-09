@@ -1,13 +1,15 @@
 /* eslint-disable react/jsx-newline */
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {Image, StyleSheet, TouchableHighlight, View, ViewProps} from 'react-native'
+import {StyleSheet, TouchableHighlight, View, ViewProps} from 'react-native'
 
-import backspaceIcon from '../assets/img/backspace.png'
+import {Backspace} from './Icon/Backspace'
 import {Text} from './Text'
 
 export const BACKSPACE = 'BACKSPACE'
 
 export const NumericKeyboard = ({onKeyDown}: {onKeyDown: (key: string) => void}) => {
+  const {styles} = useStyles()
   return (
     <View style={styles.keyboard}>
       <Row>
@@ -42,6 +44,7 @@ type KeyboardKeyProps = {
   onPress: (value: string) => void
 }
 const Key = ({value, onPress}: KeyboardKeyProps) => {
+  const {styles} = useStyles()
   const isEmpty = value === ''
   const isDigit = !isEmpty
 
@@ -59,46 +62,59 @@ const Key = ({value, onPress}: KeyboardKeyProps) => {
 }
 
 const EmptyKey = () => {
+  const {styles} = useStyles()
   return <View style={[styles.keyboardKey, styles.keyboardKeyDisabled]} testID="pinKeyEmpty" />
 }
 
-const BackspaceKey = ({onPress}: {onPress: (value: string) => void}) => (
-  <TouchableHighlight
-    style={[styles.keyboardKey, styles.keyboardKeyDisabled]}
-    onPress={() => onPress('BACKSPACE')}
-    underlayColor="#bbbbbb"
-    testID="pinKeyBACKSPACE"
-  >
-    <Image source={backspaceIcon} />
-  </TouchableHighlight>
-)
+const BackspaceKey = ({onPress}: {onPress: (value: string) => void}) => {
+  const {styles, color} = useStyles()
+  return (
+    <TouchableHighlight
+      style={[styles.keyboardKey, styles.keyboardKeyDisabled]}
+      onPress={() => onPress('BACKSPACE')}
+      underlayColor="#bbbbbb"
+      testID="pinKeyBACKSPACE"
+    >
+      <Backspace color={color.gray_cmax} />
+    </TouchableHighlight>
+  )
+}
 
-const Row = (props: ViewProps) => <View {...props} style={styles.keyboardRow} />
+const Row = (props: ViewProps) => {
+  const {styles} = useStyles()
+  return <View {...props} style={styles.keyboardRow} />
+}
 
-const styles = StyleSheet.create({
-  keyboard: {
-    height: 250,
-    backgroundColor: '#fff',
-  },
-  keyboardRow: {
-    flex: 1,
-    flexDirection: 'row',
-  },
-  keyboardKey: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderTopWidth: 2 * StyleSheet.hairlineWidth,
-    borderLeftWidth: StyleSheet.hairlineWidth,
-    borderRightWidth: StyleSheet.hairlineWidth,
-    borderColor: '#B7B7B7',
-  },
-  keyboardKeyDisabled: {
-    backgroundColor: '#D8D8D8',
-  },
-  keyboardKeyText: {
-    fontSize: 30,
-    lineHeight: 35,
-    textAlign: 'center',
-  },
-})
+const useStyles = () => {
+  const {color} = useTheme()
+
+  const styles = StyleSheet.create({
+    keyboard: {
+      height: 250,
+      backgroundColor: color.gray_cmin,
+    },
+    keyboardRow: {
+      flex: 1,
+      flexDirection: 'row',
+    },
+    keyboardKey: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderTopWidth: 2 * StyleSheet.hairlineWidth,
+      borderLeftWidth: StyleSheet.hairlineWidth,
+      borderRightWidth: StyleSheet.hairlineWidth,
+      borderColor: color.gray_c400,
+    },
+    keyboardKeyDisabled: {
+      backgroundColor: color.gray_c100,
+    },
+    keyboardKeyText: {
+      fontSize: 30,
+      lineHeight: 35,
+      textAlign: 'center',
+    },
+  })
+
+  return {styles, color}
+}

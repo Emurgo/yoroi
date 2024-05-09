@@ -107,7 +107,7 @@ const useStyles = () => {
     container: {
       flex: 1,
       ...atoms.px_lg,
-      backgroundColor: color.white_static,
+      backgroundColor: color.gray_cmin,
     },
   })
 

@@ -264,6 +264,7 @@ const useStyles = () => {
     },
     container: {
       flex: 1,
+      backgroundColor: color.gray_cmin,
     },
     image: {
       flexGrow: 1,
@@ -292,6 +293,7 @@ const useStyles = () => {
     },
     title: {
       ...atoms.body_1_lg_medium,
+      color: color.text_gray_normal,
     },
     name: {
       color: color.gray_c600,
