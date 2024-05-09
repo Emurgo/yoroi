@@ -61,6 +61,8 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: React.For
     autoFocus,
     selectTextOnAutoFocus,
     isValidPhrase = false,
+    cursorColor,
+    selectionColor,
     ...restProps
   } = props
 
@@ -148,7 +150,12 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: React.For
         error={errorTextEnabled && !isEmptyString(errorText)}
         render={({style, ...inputProps}) => (
           <InputContainer>
-            <RNTextInput {...inputProps} style={[style, renderComponentStyle, {color: colors.text, flex: 1}]} />
+            <RNTextInput
+              {...inputProps}
+              cursorColor={cursorColor}
+              selectionColor={selectionColor}
+              style={[style, renderComponentStyle, {color: colors.text, flex: 1}]}
+            />
           </InputContainer>
         )}
         onBlur={(e) => {
