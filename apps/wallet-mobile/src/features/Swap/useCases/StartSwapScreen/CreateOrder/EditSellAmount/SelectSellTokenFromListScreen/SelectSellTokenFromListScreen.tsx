@@ -10,6 +10,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Spacer, Text} from '../../../../../../../components'
 import {useMetrics} from '../../../../../../../metrics/metricsManager'
 import {useSearch, useSearchOnNavBar} from '../../../../../../../Search/SearchContext'
+import {getTokenIdParts} from '../../../../../../../yoroi-wallets/cardano/get-token-id-parts'
 import {usePortfolioBalances} from '../../../../../../Portfolio/common/hooks/usePortfolioBalances'
 import {TokenAmountItem} from '../../../../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
 import {NoAssetFoundImage} from '../../../../../../Send/common/NoAssetFoundImage'
@@ -107,7 +108,7 @@ const SelectableToken = ({amount}: {amount: Portfolio.Token.Amount}) => {
   } = useSwapForm()
   const navigateTo = useNavigateTo()
   const {track} = useMetrics()
-  const [policyId] = amount.info.id.split('.')
+  const {policyId} = getTokenIdParts(amount.info.id)
 
   const shouldUpdateToken = amount.info.id !== orderData.amounts.sell.tokenId || !isSellTouched
   const shouldSwitchTokens = amount.info.id === orderData.amounts.buy.tokenId && isBuyTouched

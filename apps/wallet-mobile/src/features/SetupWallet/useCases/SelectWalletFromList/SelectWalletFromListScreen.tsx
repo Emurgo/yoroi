@@ -64,11 +64,11 @@ export const SelectWalletFromList = () => {
 
   const data = React.useMemo(
     () =>
-      walletMetas?.map((walletMeta, index, allData) => (
+      walletMetas?.map((walletMeta) => (
         <React.Fragment key={walletMeta.id}>
           <WalletListItem wallet={walletMeta} onPress={handleOnSelect} />
 
-          {index < allData.length - 1 && <Space height="lg" />}
+          <Space height="lg" />
         </React.Fragment>
       )),
     [handleOnSelect, walletMetas],
@@ -86,6 +86,8 @@ export const SelectWalletFromList = () => {
         bounces={false}
       >
         {data}
+
+        <Space height="lg" />
       </ScrollView>
 
       <View

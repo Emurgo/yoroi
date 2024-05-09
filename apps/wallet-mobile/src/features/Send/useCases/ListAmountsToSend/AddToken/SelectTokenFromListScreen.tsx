@@ -28,7 +28,7 @@ export const SelectTokenFromListScreen = () => {
 
   const wallet = useSelectedWallet()
   const balances = usePortfolioBalances({wallet})
-  const [fungibilityFilter, setFungibilityFilter] = React.useState<Exclude<keyof typeof balances, 'records'>>('all')
+  const [fungibilityFilter, setFungibilityFilter] = React.useState<Portfolio.FungibilityFilter>('all')
   const [isPending, startTransition] = React.useTransition()
 
   useSearchOnNavBar({

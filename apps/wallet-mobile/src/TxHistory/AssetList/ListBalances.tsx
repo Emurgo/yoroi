@@ -28,7 +28,7 @@ export const ListBalances = (props: Props) => {
   const explorers = useExplorers(wallet.network)
   const balances = usePortfolioBalances({wallet})
 
-  const [fungibilityFilter, setFungibilityFilter] = React.useState<Exclude<keyof typeof balances, 'records'>>('all')
+  const [fungibilityFilter, setFungibilityFilter] = React.useState<Portfolio.FungibilityFilter>('all')
   const [amounts, setAmounts] = React.useState(balances[fungibilityFilter])
 
   const [loadedAmounts, setLoadedAmounts] = React.useState(amounts.slice(0, batchSize))
@@ -51,7 +51,7 @@ export const ListBalances = (props: Props) => {
   )
 
   const handleOnChangeFilter = React.useCallback(
-    (filter: Exclude<keyof typeof balances, 'records'>) =>
+    (filter: Portfolio.FungibilityFilter) =>
       startTransition(() => {
         setFungibilityFilter(filter)
         setCurrentIndex(batchSize)

@@ -7,3 +7,8 @@ export type PortfolioTokenBalances = {
   fts: ReadonlyArray<PortfolioTokenAmount>
   nfts: ReadonlyArray<PortfolioTokenAmount>
 }
+
+export type PortfolioFungibilityFilter = keyof Omit<
+  PortfolioTokenBalances,
+  'records'
+>

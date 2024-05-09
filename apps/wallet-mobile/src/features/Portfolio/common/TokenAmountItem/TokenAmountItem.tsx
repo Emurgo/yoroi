@@ -94,34 +94,12 @@ const Middle = ({style, ...props}: ViewProps) => (
 const Right = ({style, ...props}: ViewProps) => <View style={style} {...props} />
 
 export const AmountItemPlaceholder = ({style}: ViewProps) => {
-  const {colors} = useStyles()
+  const {styles} = useStyles()
   return (
-    <View
-      style={[
-        style,
-        {
-          display: 'flex',
-          flexDirection: 'row',
-          gap: 12,
-          height: 56,
-        },
-      ]}
-    >
-      <View
-        style={{
-          backgroundColor: colors.background,
-          borderRadius: 8,
-          flexGrow: 3,
-        }}
-      />
+    <View style={[style, styles.skeletonLogo]}>
+      <View style={styles.skeletonTitle} />
 
-      <View
-        style={{
-          backgroundColor: colors.background,
-          borderRadius: 8,
-          flexGrow: 1,
-        }}
-      />
+      <View style={styles.skeletonBorder} />
     </View>
   )
 }
@@ -146,11 +124,26 @@ const useStyles = () => {
       color: color.gray_c900,
       ...atoms.body_1_lg_regular,
     },
+    skeletonLogo: {
+      display: 'flex',
+      flexDirection: 'row',
+      gap: 12,
+      height: 56,
+    },
+    skeletonTitle: {
+      backgroundColor: color.gray_c200,
+      borderRadius: 8,
+      flexGrow: 3,
+    },
+    skeletonBorder: {
+      backgroundColor: color.gray_c200,
+      borderRadius: 8,
+      flexGrow: 1,
+    },
   })
 
   const colors = {
     text: color.gray_c900,
-    background: color.gray_c200,
     icon: color.secondary_c600,
   }
 

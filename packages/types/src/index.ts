@@ -191,7 +191,10 @@ import {
   PortfolioManagerBalance,
   PortfolioManagerToken,
 } from './portfolio/manager'
-import {PortfolioTokenBalances} from './portfolio/balances'
+import {
+  PortfolioFungibilityFilter,
+  PortfolioTokenBalances,
+} from './portfolio/balances'
 import {AppQueueTask, AppQueueTaskManager} from './app/queue-task-manager'
 
 export namespace App {
@@ -422,6 +425,7 @@ export namespace Transfer {
 
 export namespace Portfolio {
   export type PrimaryBreakdown = PortfolioPrimaryBreakdown
+  export type FungibilityFilter = PortfolioFungibilityFilter
 
   export namespace Event {
     export type SourceId = PortfolioEventSourceId
