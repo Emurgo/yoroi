@@ -265,6 +265,13 @@ const MnemonicWordInput = React.forwardRef<MnemonicWordInputRef, MnemonicWordInp
       [onClearError, onError, onSubmitEditing, setSuggestedWords],
     )
 
+    const onBlur = React.useCallback(() => {
+      if (word !== selectedWord) {
+        onSubmitEditing()
+      }
+      setSuggestedWords([])
+    }, [onSubmitEditing, selectedWord, setSuggestedWords, word])
+
     return (
       <TextInput
         ref={inputRef}
@@ -299,7 +306,7 @@ const MnemonicWordInput = React.forwardRef<MnemonicWordInputRef, MnemonicWordInp
             onKeyPress(word)
           }
         }}
-        onBlur={() => setSuggestedWords([])}
+        onBlur={onBlur}
         keyboardType={Platform.OS === 'android' ? 'visible-password' : undefined} // to hide keyboard suggestions on android
       />
     )
