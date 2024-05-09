@@ -220,7 +220,7 @@ const MnemonicWordInput = React.forwardRef<MnemonicWordInputRef, MnemonicWordInp
     ref,
   ) => {
     const inputRef = React.useRef<RNTextInput>(null)
-    const {styles} = useStyles()
+    const {styles, colors} = useStyles()
     const [word, setWord] = React.useState(selectedWord)
 
     React.useImperativeHandle(
@@ -307,6 +307,8 @@ const MnemonicWordInput = React.forwardRef<MnemonicWordInputRef, MnemonicWordInp
           }
         }}
         onBlur={handleOnBlur}
+        cursorColor={colors.primary[600]} // only works for android
+        selectionColor={Platform.OS === 'android' ? colors.gray[100] : undefined} // on ios, selectionColor changes cursor and selection
         keyboardType={Platform.OS === 'android' ? 'visible-password' : undefined} // to hide keyboard suggestions on android
       />
     )
@@ -329,7 +331,10 @@ const useAutoFocus = (ref: React.RefObject<MnemonicWordInputRef>) =>
   }, [ref])
 
 const useStyles = () => {
-  const {theme} = useTheme()
+  const {
+    theme: {color, padding, typography},
+  } = useTheme()
+
   const styles = StyleSheet.create({
     mnemonicInputView: {
       flexDirection: 'row',
@@ -341,8 +346,8 @@ const useStyles = () => {
       alignItems: 'center',
       justifyContent: 'space-evenly',
       width: '50%',
-      ...theme.padding['x-xs'],
-      ...theme.padding['y-xxs'],
+      ...padding['x-xs'],
+      ...padding['y-xxs'],
     },
     textInput: {
       minWidth: 143,
@@ -350,8 +355,8 @@ const useStyles = () => {
       textAlign: 'center',
     },
     mnemonicIndex: {
-      color: theme.color.primary[400],
-      ...theme.typography['body-1-l-regular'],
+      color: color.primary[400],
+      ...typography['body-1-l-regular'],
     },
     textView: {
       flexDirection: 'row',
@@ -359,19 +364,19 @@ const useStyles = () => {
       alignItems: 'center',
     },
     errorText: {
-      ...theme.typography['body-1-l-regular'],
-      color: theme.color.magenta[500],
+      ...typography['body-1-l-regular'],
+      color: color.magenta[500],
     },
     successText: {
-      ...theme.typography['body-1-l-medium'],
-      color: theme.color.gray.max,
+      ...typography['body-1-l-medium'],
+      color: color.gray.max,
     },
     clearAll: {
-      ...theme.typography['button-2-m'],
-      ...theme.padding['l-s'],
-      color: theme.color.primary[500],
+      ...typography['button-2-m'],
+      ...padding['l-s'],
+      color: color.primary[500],
       textTransform: 'uppercase',
     },
   })
-  return {styles} as const
+  return {styles, colors: color} as const
 }
