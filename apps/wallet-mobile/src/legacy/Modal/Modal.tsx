@@ -94,7 +94,7 @@ const useStyles = () => {
       alignItems: 'stretch',
       justifyContent: 'center',
       ...atoms.px_xl,
-      backgroundColor: color.white_static,
+      backgroundColor: color.gray_cmin,
     },
     noPadding: {
       padding: 0,

@@ -1,11 +1,27 @@
 import React from 'react'
-import {useColorScheme} from 'react-native'
+import {ColorSchemeName, useColorScheme as _useColorScheme} from 'react-native'
 
 import {ThemedPalette, SupportedThemes, Theme, ThemeStorage} from './types'
 import {defaultLightTheme} from './themes/default-light'
 import {defaultDarkTheme} from './themes/default-dark'
 import {detectTheme} from './helpers/detect-theme'
 import {Atoms} from './atoms/atoms'
+
+type ThemeType = {
+  themeName: SupportedThemes
+}
+
+const themesData: ThemeType[] = [
+  {
+    themeName: 'system',
+  },
+  {
+    themeName: 'default-light',
+  },
+  {
+    themeName: 'default-dark',
+  },
+]
 
 const ThemeContext = React.createContext<undefined | ThemeContext>(undefined)
 export const ThemeProvider = ({
@@ -34,6 +50,7 @@ export const ThemeProvider = ({
       isLight: themes[themeName].base === 'light',
       isDark: themes[themeName].base === 'dark',
       atoms: themes[themeName].atoms,
+      data: themesData,
     }),
     [colorScheme, storage, themeName],
   )
@@ -53,6 +70,7 @@ type ThemeContext = {
   isLight: boolean
   isDark: boolean
   atoms: Atoms
+  data: ThemeType[]
 }
 
 const themes: Record<Exclude<SupportedThemes, 'system'>, Theme> = {
@@ -62,4 +80,8 @@ const themes: Record<Exclude<SupportedThemes, 'system'>, Theme> = {
 
 const missingProvider = () => {
   throw new Error('ThemeProvider is missing')
+}
+
+const useColorScheme = (): NonNullable<ColorSchemeName> => {
+  return _useColorScheme() as NonNullable<ColorSchemeName>
 }

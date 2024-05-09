@@ -22,6 +22,7 @@ import {About} from './About'
 import {ApplicationSettingsScreen} from './ApplicationSettings'
 import {ChangeLanguageScreen} from './ChangeLanguage'
 import {ChangePasswordScreen} from './ChangePassword'
+import {ChangeThemeScreen} from './ChangeTheme/ChangeThemeScreen'
 import {ChangeWalletName} from './ChangeWalletName'
 import {ChangeCurrencyScreen} from './Currency/ChangeCurrencyScreen'
 import {DisableEasyConfirmationScreen, EnableEasyConfirmationScreen} from './EasyConfirmation'
@@ -111,6 +112,14 @@ export const SettingsScreenNavigator = () => {
           component={ChangeCurrencyScreen}
           options={{
             title: strings.currency,
+          }}
+        />
+
+        <Stack.Screen //
+          name="change-theme"
+          component={ChangeThemeScreen}
+          options={{
+            title: strings.themeTitle,
           }}
         />
 
@@ -276,6 +285,10 @@ const messages = defineMessages({
     id: 'components.settings.changelanguagescreen.title',
     defaultMessage: '!!!Language',
   },
+  themeTitle: {
+    id: 'components.settings.changeThemescreen.title',
+    defaultMessage: '!!!Theming',
+  },
   appSettingsTitle: {
     id: 'components.settings.applicationsettingsscreen.appSettingsTitle',
     defaultMessage: '!!!App settings',
@@ -311,6 +324,7 @@ const useStrings = () => {
     customPinTitle: intl.formatMessage(messages.customPinTitle),
     settingsTitle: intl.formatMessage(messages.settingsTitle),
     languageTitle: intl.formatMessage(messages.languageTitle),
+    themeTitle: intl.formatMessage(messages.themeTitle),
     currency: intl.formatMessage(globalMessages.currency),
     aboutTitle: intl.formatMessage(messages.aboutTitle),
     appSettingsTitle: intl.formatMessage(messages.appSettingsTitle),

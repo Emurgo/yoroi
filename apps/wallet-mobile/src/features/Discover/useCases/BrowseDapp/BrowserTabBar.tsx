@@ -118,7 +118,7 @@ const useStyles = () => {
       gap: 16,
       ...atoms.px_lg,
       paddingVertical: 12,
-      backgroundColor: color.white_static,
+      backgroundColor: color.gray_cmin,
     },
     shadow: {
       shadowColor: '#054037',

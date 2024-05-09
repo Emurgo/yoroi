@@ -84,7 +84,7 @@ const useStyles = () => {
       flex: 1,
       ...atoms.px_lg,
       justifyContent: 'space-between',
-      backgroundColor: color.white_static,
+      backgroundColor: color.gray_cmin,
     },
     aboutRecoveryPhraseTitle: {
       ...atoms.body_1_lg_regular,

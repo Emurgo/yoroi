@@ -30,7 +30,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: color.white_static,
+      backgroundColor: color.gray_cmin,
     },
   })
 

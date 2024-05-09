@@ -213,6 +213,7 @@ type Props = {
 }
 const InputSearch = ({placeholder}: Props) => {
   const {search, searchChanged} = useSearch()
+  const {color} = useTheme()
 
   return (
     <TextInput
@@ -221,17 +222,22 @@ const InputSearch = ({placeholder}: Props) => {
       placeholder={placeholder}
       onChangeText={(search) => searchChanged(search)}
       autoCapitalize="none"
-      style={{flex: 1, color: '#000000'}}
+      style={{flex: 1, color: color.el_gray_high}}
       testID="inputSearch"
+      placeholderTextColor={color.text_gray_medium}
     />
   )
 }
 
-const SearchButton = (props: TouchableOpacityProps) => (
-  <TouchableOpacity testID="iconSearch" {...props}>
-    <Icon.Magnify size={26} />
-  </TouchableOpacity>
-)
+const SearchButton = (props: TouchableOpacityProps) => {
+  const {color} = useTheme()
+
+  return (
+    <TouchableOpacity testID="iconSearch" {...props}>
+      <Icon.Magnify size={26} color={color.text_gray_normal} />
+    </TouchableOpacity>
+  )
+}
 
 const EraseButton = (props: TouchableOpacityProps) => (
   <TouchableOpacity {...props}>

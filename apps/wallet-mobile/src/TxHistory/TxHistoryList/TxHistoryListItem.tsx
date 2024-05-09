@@ -27,7 +27,7 @@ type Props = {
 
 export const TxHistoryListItem = ({transaction}: Props) => {
   const strings = useStrings()
-  const {styles, colors} = useStyles()
+  const {styles, colors, isDark} = useStyles()
   const navigation = useNavigation<TxHistoryRouteNavigation>()
 
   const wallet = useSelectedWallet()
@@ -68,7 +68,7 @@ export const TxHistoryListItem = ({transaction}: Props) => {
       onPress={showDetails}
       activeOpacity={0.5}
       testID="txHistoryListItem"
-      style={[styles.item, {backgroundColor: rootBgColor}]}
+      style={[styles.item, {backgroundColor: isDark ? colors.background : rootBgColor}]}
     >
       <Left>
         <Icon.Direction transaction={transaction} />
@@ -138,7 +138,7 @@ const Amount = ({wallet, transaction}: {wallet: YoroiWallet; transaction: Transa
 }
 
 const useStyles = () => {
-  const {color, atoms} = useTheme()
+  const {color, atoms, isDark} = useTheme()
   const styles = StyleSheet.create({
     item: {
       flex: 1,
@@ -170,8 +170,9 @@ const useStyles = () => {
   const colors = {
     default: color.white_static,
     failed: color.primary_c200,
+    background: color.gray_cmin,
   }
-  return {styles, colors}
+  return {styles, colors, isDark}
 }
 
 const messages = defineMessages({

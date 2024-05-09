@@ -100,7 +100,7 @@ const useStyles = () => {
     timeBlock: {
       ...atoms.body_1_lg_regular,
       ...atoms.py_xs,
-      backgroundColor: color.gray_c900,
+      backgroundColor: color.gray_cmin,
       color: color.gray_c900,
       marginHorizontal: 4,
       borderRadius: 2,

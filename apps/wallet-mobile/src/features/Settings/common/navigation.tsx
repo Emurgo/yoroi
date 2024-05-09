@@ -11,6 +11,7 @@ export const useNavigateTo = () => {
     enableLoginWithOs: () => navigation.navigate('enable-login-with-os'),
     changeLanguage: () => navigation.navigate('change-language'),
     changeCurrency: () => navigation.navigate('change-currency'),
+    changeTheme: () => navigation.navigate('change-theme'),
     about: () => navigation.navigate('about'),
     termsOfUse: () => navigation.navigate('terms-of-use'),
     privacyPolicy: () => navigation.navigate('privacy-policy'),

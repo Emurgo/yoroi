@@ -75,6 +75,7 @@ const WalletTabNavigator = () => {
           tabBarActiveTintColor: colors.active,
           tabBarInactiveTintColor: colors.inactive,
           tabBarStyle: {
+            backgroundColor: colors.background,
             // keyboardWillShow keyboardWillHiden dont work on android
             display: isKeyboardOpen ? 'none' : undefined,
           },
@@ -89,7 +90,10 @@ const WalletTabNavigator = () => {
             tabBarIcon: ({focused}) => <Icon.TabWallet size={24} color={focused ? colors.active : colors.inactive} />,
             tabBarLabel: strings.walletTabBarLabel,
             tabBarTestID: 'walletTabBarButton',
-            tabBarStyle: hideTabBarForRoutes(route),
+            tabBarStyle: {
+              ...hideTabBarForRoutes(route),
+              backgroundColor: colors.background,
+            },
           })}
         >
           {() => (
@@ -121,7 +125,10 @@ const WalletTabNavigator = () => {
               tabBarIcon: ({focused}) => <Icon.Discover size={28} color={focused ? colors.active : colors.inactive} />,
               tabBarLabel: strings.discoverTabBarLabel,
               tabBarTestID: 'discoverTabBarButton',
-              tabBarStyle: hideTabBarForRoutes(route),
+              tabBarStyle: {
+                ...hideTabBarForRoutes(route),
+                backgroundColor: colors.background,
+              },
             })}
           >
             {() => (
@@ -233,8 +240,9 @@ const useStyles = () => {
   const {color} = useTheme()
 
   const colors = {
-    active: color.primary_c600,
+    active: color.text_gray_normal,
     inactive: color.gray_c600,
+    background: color.gray_cmin,
   }
   return {colors}
 }
