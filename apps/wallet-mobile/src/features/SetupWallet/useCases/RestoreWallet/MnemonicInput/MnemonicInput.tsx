@@ -232,18 +232,18 @@ const MnemonicWordInput = React.forwardRef<MnemonicWordInputRef, MnemonicWordInp
       [],
     )
 
-    const onSubmitEditing = React.useCallback(() => {
+    const handleOnSubmitEditing = React.useCallback(() => {
       if (!isEmptyString(suggestedWords[0])) {
         onSelect(normalizeText(suggestedWords[0]))
       }
     }, [suggestedWords, onSelect])
 
-    const onChangeText = React.useCallback(
+    const handleOnChangeText = React.useCallback(
       (text: string) => {
         if (text.endsWith(' ')) {
           text = text.trimEnd()
           setWord(normalizeText(text))
-          onSubmitEditing()
+          handleOnSubmitEditing()
         } else {
           setWord(normalizeText(text))
         }
@@ -262,8 +262,15 @@ const MnemonicWordInput = React.forwardRef<MnemonicWordInputRef, MnemonicWordInp
           onClearError()
         }
       },
-      [onClearError, onError, onSubmitEditing, setSuggestedWords],
+      [onClearError, onError, handleOnSubmitEditing, setSuggestedWords],
     )
+
+    const handleOnBlur = React.useCallback(() => {
+      if (word !== selectedWord) {
+        handleOnSubmitEditing()
+      }
+      setSuggestedWords([])
+    }, [handleOnSubmitEditing, selectedWord, setSuggestedWords, word])
 
     return (
       <TextInput
@@ -279,10 +286,10 @@ const MnemonicWordInput = React.forwardRef<MnemonicWordInputRef, MnemonicWordInp
 
           onFocus()
         }}
-        onChangeText={onChangeText}
+        onChangeText={handleOnChangeText}
         enablesReturnKeyAutomatically
         blurOnSubmit={false}
-        onSubmitEditing={onSubmitEditing}
+        onSubmitEditing={handleOnSubmitEditing}
         dense
         selectTextOnFocus
         noHelper
@@ -299,7 +306,7 @@ const MnemonicWordInput = React.forwardRef<MnemonicWordInputRef, MnemonicWordInp
             onKeyPress(word)
           }
         }}
-        onBlur={() => setSuggestedWords([])}
+        onBlur={handleOnBlur}
         cursorColor={colors.primary[600]} // only works for android
         selectionColor={Platform.OS === 'android' ? colors.gray[100] : undefined} // on ios, selectionColor changes cursor and selection
         keyboardType={Platform.OS === 'android' ? 'visible-password' : undefined} // to hide keyboard suggestions on android
