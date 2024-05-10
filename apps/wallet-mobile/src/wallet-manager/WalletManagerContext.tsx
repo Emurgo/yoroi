@@ -8,6 +8,10 @@ export const WalletManagerProvider: React.FC<React.PropsWithChildren<{walletMana
   children,
   walletManager,
 }) => {
+  React.useEffect(() => {
+    walletManager.startSyncingAllWallets()
+  }, [walletManager])
+
   return <WalletManagerContext.Provider value={walletManager}>{children}</WalletManagerContext.Provider>
 }
 

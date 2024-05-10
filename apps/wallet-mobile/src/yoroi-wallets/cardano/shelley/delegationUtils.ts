@@ -4,7 +4,6 @@ import {CardanoAddressedUtxo} from '@emurgo/yoroi-lib'
 import assert from 'assert'
 import {sortBy} from 'lodash'
 
-import {Logger} from '../../logging'
 import {StakingStatus} from '../../types'
 import {CardanoMobile} from '../../wallets'
 import type {TimestampedCertMeta} from '../transactionManager'
@@ -61,7 +60,6 @@ export const getDelegationStatus = (
 ): StakingStatus => {
   // start with older certificate
   const sortedCerts: any = sortBy(txCertificatesForKey, (txCerts) => txCerts.submittedAt)
-  Logger.debug('txCertificatesForKey', sortedCerts)
   let status: StakingStatus = {isRegistered: false}
 
   for (const certData of Object.values(sortedCerts)) {

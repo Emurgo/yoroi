@@ -1,3 +1,4 @@
+import {toBigInt} from '@yoroi/common'
 import {linksCardanoModuleMaker, useLinks} from '@yoroi/links'
 import {useTransfer} from '@yoroi/transfer'
 import {Links} from '@yoroi/types'
@@ -6,7 +7,6 @@ import {InteractionManager} from 'react-native'
 
 import {useModal} from '../../../components/Modal/ModalContext'
 import {Logger} from '../../../yoroi-wallets/logging'
-import {asQuantity, Quantities} from '../../../yoroi-wallets/utils/utils'
 import {useSelectedWalletContext} from '../../WalletManager/Context'
 import {RequestedAdaPaymentWithLinkScreen} from '../useCases/RequestedAdaPaymentWithLinkScreen/RequestedAdaPaymentWithLinkScreen'
 import {useNavigateTo} from './useNavigationTo'
@@ -28,19 +28,24 @@ export const useLinksRequestAction = () => {
         reset()
         try {
           const link = decodeURIComponent(action.info.params.link)
-          const parsedCardanoLink = linksCardanoModuleMaker().parse(link)
-          if (parsedCardanoLink) {
-            const redirectTo = action.info.params.redirectTo
-            if (redirectTo != null) linkActionChanged(action)
+          if (wallet) {
+            const parsedCardanoLink = linksCardanoModuleMaker().parse(link)
+            if (parsedCardanoLink) {
+              const redirectTo = action.info.params.redirectTo
+              if (redirectTo != null) linkActionChanged(action)
 
-            const {address: receiver, amount, memo} = parsedCardanoLink.params
-            const ptAmount = Quantities.integer(asQuantity(amount ?? 0), decimals)
-            memoChanged(memo ?? '')
-            receiverResolveChanged(receiver ?? '')
-            amountChanged(ptAmount)
-            closeModal()
-            actionFinished()
-            navigateTo.startTransfer()
+              const {address: receiver, amount, memo} = parsedCardanoLink.params
+              const ptAmount = toBigInt(amount, decimals)
+              memoChanged(memo ?? '')
+              receiverResolveChanged(receiver ?? '')
+              amountChanged({
+                quantity: ptAmount,
+                info: wallet.portfolioPrimaryTokenInfo,
+              })
+              closeModal()
+              actionFinished()
+              navigateTo.startTransfer()
+            }
           }
         } catch (error) {
           // TODO: revisit it should display an alert
@@ -59,6 +64,7 @@ export const useLinksRequestAction = () => {
       navigateTo,
       receiverResolveChanged,
       reset,
+      wallet,
     ],
   )
 

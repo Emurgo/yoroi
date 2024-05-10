@@ -1,7 +1,10 @@
 import {Api, Portfolio} from '@yoroi/types'
 
 import {parseSecondaryTokenInfoWithCacheRecord} from '../../validators/token-info'
-import {DullahanApiTokenInfosResponse} from './types'
+import {
+  DullahanApiCachedIdsRequest,
+  DullahanApiTokenInfosResponse,
+} from './types'
 
 export const toSecondaryTokenInfo = (
   tokenInfo: Omit<Portfolio.Token.Info, 'nature'>,
@@ -47,3 +50,10 @@ export const toSecondaryTokenInfos = (
     apiCachedTokenInfos,
   )
 }
+
+export const toDullahanRequest = (
+  request: ReadonlyArray<Api.RequestWithCache<Portfolio.Token.Id>>,
+) =>
+  request.map(
+    ([tokenId, hash]) => `${tokenId}:${hash}`,
+  ) as DullahanApiCachedIdsRequest

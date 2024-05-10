@@ -4,9 +4,9 @@ import {parseSafe} from '../../utils/parsers'
 import {mountMMKVMultiStorage, mountMMKVStorage} from './mmkv-storage'
 import {MMKV} from 'react-native-mmkv'
 
-const mmkv = new MMKV({id: 'default.mmkv'})
+const mmkv = new MMKV({id: 'test.mmkv'})
 const rootStorage = mountMMKVStorage(
-  {path: '/', id: 'default.mmkv'},
+  {path: '/', id: 'test.mmkv'},
   {instance: mmkv},
 )
 
@@ -129,12 +129,12 @@ describe('prefixed storage', () => {
       rootStorage.setItem('item', item, (data: unknown) => {
         expect(data).toBe(item)
         return storedItem
-      }) // overrides JSON.stringify
+      })
 
       const parsedResult = rootStorage.getItem('item', (data: unknown) => {
         expect(data).toBe(storedItem)
         return item
-      }) // overrides JSON.parse
+      })
 
       expect(parsedResult).toBe(item)
     })
@@ -152,7 +152,7 @@ describe('prefixed storage', () => {
       rootStorage.multiSet(tuples, (data: unknown) => {
         expect([item1, item2]).toContain(data)
         return `${data}-modified`
-      }) // overrides JSON.stringify
+      })
 
       const parsedResult = rootStorage.multiGet(
         ['item1', 'item2'],
@@ -160,7 +160,7 @@ describe('prefixed storage', () => {
           expect([storedItem1, storedItem2]).toContain(data)
           return data?.slice(0, 5)
         },
-      ) // overrides JSON.parse
+      )
 
       expect(parsedResult).toEqual(tuples)
     })

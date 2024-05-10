@@ -4,7 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {LayoutAnimation, StyleSheet, View} from 'react-native'
 
 import infoIcon from '../assets/img/icon/info-light-green.png'
-import {Boundary, ResetErrorRef, Spacer} from '../components'
+import {Boundary, Spacer} from '../components'
 import {Tab, TabPanel, TabPanels, Tabs} from '../components/Tabs'
 import {useSelectedWallet} from '../features/WalletManager/Context'
 import {assetMessages, txLabels} from '../i18n/global-messages'
@@ -12,7 +12,7 @@ import {usePoolTransitionModal} from '../Staking/PoolTransition/usePoolTransitio
 import {isByron} from '../yoroi-wallets/cardano/utils'
 import {useSync} from '../yoroi-wallets/hooks'
 import {ActionsBanner} from './ActionsBanner'
-import {AssetList} from './AssetList'
+import {ListBalances} from './AssetList/ListBalances'
 import {BalanceBanner} from './BalanceBanner'
 import {CollapsibleHeader} from './CollapsibleHeader'
 import {LockedDeposit} from './LockedDeposit'
@@ -23,7 +23,6 @@ import {WarningBanner} from './WarningBanner'
 type Tab = 'transactions' | 'assets'
 
 export const TxHistory = () => {
-  const resetErrorRef = React.useRef<null | ResetErrorRef>(null)
   const strings = useStrings()
   const styles = useStyles()
   const wallet = useSelectedWallet()
@@ -46,15 +45,12 @@ export const TxHistory = () => {
     onScrollDown: () => setExpanded(false),
   })
 
-  const onRefresh = () => {
-    resetErrorRef.current?.reset()
-    sync()
-  }
+  const handleOnRefresh = () => sync()
 
   return (
     <View style={styles.scrollView}>
       <CollapsibleHeader expanded={expanded}>
-        <BalanceBanner ref={resetErrorRef} />
+        <BalanceBanner />
 
         <ActionsBanner disabled={isLoading} />
       </CollapsibleHeader>
@@ -105,12 +101,12 @@ export const TxHistory = () => {
             />
           )}
 
-          <TxHistoryList onScroll={onScroll} refreshing={isLoading} onRefresh={onRefresh} />
+          <TxHistoryList onScroll={onScroll} refreshing={isLoading} onRefresh={handleOnRefresh} />
         </TabPanel>
 
         <TabPanel active={activeTab === 'assets'}>
           <Boundary loading={{size: 'full'}}>
-            <AssetList onScroll={onScroll} refreshing={isLoading} onRefresh={onRefresh} />
+            <ListBalances onScroll={onScroll} refreshing={isLoading} onRefresh={handleOnRefresh} />
           </Boundary>
         </TabPanel>
       </TabPanels>

@@ -12,10 +12,8 @@ import {ConfirmTx} from '../../../../components/ConfirmTx'
 import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../../../i18n/global-messages'
 import {assetsToSendProperties} from '../../../../metrics/helpers'
 import {useMetrics} from '../../../../metrics/metricsManager'
-import {sortTokenInfos} from '../../../../utils'
-import {useSaveMemo, useTokenInfos} from '../../../../yoroi-wallets/hooks'
+import {useSaveMemo} from '../../../../yoroi-wallets/hooks'
 import {YoroiSignedTx} from '../../../../yoroi-wallets/types'
-import {Amounts} from '../../../../yoroi-wallets/utils'
 import {debugWalletInfo, features} from '../../..'
 import {useSelectedWallet} from '../../../WalletManager/Context'
 import {useNavigateTo} from '../../common/navigation'
@@ -38,11 +36,6 @@ export const ConfirmTxScreen = () => {
 
   const {memo, selectedTargetIndex, unsignedTx: yoroiUnsignedTx, targets} = useTransfer()
   const {amounts} = targets[selectedTargetIndex].entry
-  const tokenInfos = useTokenInfos({
-    wallet,
-    tokenIds: Amounts.toArray(amounts).map(({tokenId}) => tokenId),
-  })
-  const tokens = sortTokenInfos({wallet, tokenInfos})
 
   const {saveMemo} = useSaveMemo({wallet})
 
@@ -52,7 +45,7 @@ export const ConfirmTxScreen = () => {
     }
   }, [])
 
-  const sendProperties = React.useMemo(() => assetsToSendProperties({tokens, amounts}), [amounts, tokens])
+  const sendProperties = React.useMemo(() => assetsToSendProperties({amounts}), [amounts])
 
   useFocusEffect(
     React.useCallback(() => {

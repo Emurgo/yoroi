@@ -13,16 +13,19 @@ type CommonTokenInfo = {
   name: string
   symbol: string // Shorthand as monetary i.e., Ω
 
-  status: PortfolioTokenStatus // Backend meta (needs logic / starts as normal)
+  status: PortfolioTokenStatus // Backend meta
   application: PortfolioTokenApplication // Backend meta (based on policyId)
 
   tag: string
   reference: string // output
   fingerprint: string
+  description: string
 
-  website: string // Full link with protocol URI
+  website: string // Full link with protocol
 
-  originalImage: string // Base link to image or base64 - fullsize
+  originalImage: string // Base link
+  icon: string // base64 - 32x32
+  mediaType: string
 }
 
 type PrimaryTokenInfo = {

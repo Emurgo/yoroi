@@ -5,41 +5,27 @@ import {
 } from '@yoroi/common'
 import {freeze} from 'immer'
 
-import {parseTokenBalance} from '../validators/token-balance'
-import {parseTokenDiscoveryWithCacheRecord} from '../validators/token-discovery'
-import {parsePrimaryBalanceBreakdown} from '../validators/primary-balance-breakdown'
+import {parsePrimaryBreakdown} from '../validators/primary-breakdown'
+import {parseTokenAmount} from '../validators/token-amount'
 
 export const tokenDiscoveryReviverMapping: StorageReviverMapping = {
   supply: StorageReviverType.AsBigInt,
 }
 
-export const tokenBalanceReviverMapping: StorageReviverMapping = {
-  balance: StorageReviverType.AsBigInt,
-  lockedInBuiltTxs: StorageReviverType.AsBigInt,
-}
-
-export const primaryBalanceBreakdownReviverMapping: StorageReviverMapping = {
-  balance: StorageReviverType.AsBigInt,
-  lockedInBuiltTxs: StorageReviverType.AsBigInt,
-  minRequiredByTokens: StorageReviverType.AsBigInt,
+export const tokenAmountReviverMapping: StorageReviverMapping = {
   quantity: StorageReviverType.AsBigInt,
 }
 
-const tokenBalanceDeserializer = (jsonString: string | null) => {
-  if (jsonString == null) return null
-  const record = storageDeserializerMaker(tokenBalanceReviverMapping)(
-    jsonString,
-  )
-  const parsed = parseTokenBalance(record)
-  return parsed ?? null
+export const primaryBalanceBreakdownReviverMapping: StorageReviverMapping = {
+  availableRewards: StorageReviverType.AsBigInt,
+  totalFromTxs: StorageReviverType.AsBigInt,
+  lockedAsStorageCost: StorageReviverType.AsBigInt,
 }
 
-const tokenDiscoveryWithCacheDeserializer = (jsonString: string | null) => {
+const tokenAmountDeserializer = (jsonString: string | null) => {
   if (jsonString == null) return null
-  const record = storageDeserializerMaker(tokenDiscoveryReviverMapping)(
-    jsonString,
-  )
-  const parsed = parseTokenDiscoveryWithCacheRecord(record)
+  const record = storageDeserializerMaker(tokenAmountReviverMapping)(jsonString)
+  const parsed = parseTokenAmount(record)
   return parsed ?? null
 }
 
@@ -48,14 +34,13 @@ const primaryBalanceBreakdownDeserializer = (jsonString: string | null) => {
   const record = storageDeserializerMaker(
     primaryBalanceBreakdownReviverMapping,
   )(jsonString)
-  const parsed = parsePrimaryBalanceBreakdown(record)
+  const parsed = parsePrimaryBreakdown(record)
   return parsed ?? null
 }
 
 export const deserializers = freeze(
   {
-    tokenDiscoveryWithCache: tokenDiscoveryWithCacheDeserializer,
-    tokenBalance: tokenBalanceDeserializer,
+    tokenAmount: tokenAmountDeserializer,
     primaryBreakdown: primaryBalanceBreakdownDeserializer,
   },
   true,

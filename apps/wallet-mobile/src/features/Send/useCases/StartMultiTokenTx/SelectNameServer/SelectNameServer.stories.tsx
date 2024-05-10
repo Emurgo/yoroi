@@ -1,5 +1,6 @@
 import {init} from '@emurgo/cross-csl-mobile'
 import {storiesOf} from '@storybook/react-native'
+import {tokenBalanceMocks} from '@yoroi/portfolio'
 import {resolverApiMaker, resolverManagerMaker, ResolverProvider, resolverStorageMaker} from '@yoroi/resolver'
 import {defaultTransferState, TransferProvider, TransferState} from '@yoroi/transfer'
 import {Resolver} from '@yoroi/types'
@@ -75,7 +76,12 @@ const mockSelectedNameServer: TransferState = {
   ...defaultTransferState,
   targets: [
     {
-      entry: {address: 'addr1vxggvx6uq9mtf6e0tyda2mahg84w8azngpvkwr5808ey6qsy2ww7d', amounts: {'': '1000000'}},
+      entry: {
+        address: 'addr1vxggvx6uq9mtf6e0tyda2mahg84w8azngpvkwr5808ey6qsy2ww7d',
+        amounts: {
+          [tokenBalanceMocks.primaryETH.info.id]: tokenBalanceMocks.primaryETH,
+        },
+      },
       receiver: {
         as: 'domain',
         resolve: '$stackchain',
@@ -92,7 +98,12 @@ const mockUnselectedNameServer: TransferState = {
   ...defaultTransferState,
   targets: [
     {
-      entry: {address: '', amounts: {'': '1000000'}},
+      entry: {
+        address: '',
+        amounts: {
+          [tokenBalanceMocks.primaryETH.info.id]: tokenBalanceMocks.primaryETH,
+        },
+      },
       receiver: {
         as: 'domain',
         resolve: '$stackchain',

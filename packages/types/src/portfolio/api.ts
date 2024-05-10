@@ -7,9 +7,7 @@ import {PortfolioTokenDiscovery} from './discovery'
 import {PortfolioTokenInfo} from './info'
 import {PortfolioTokenId} from './token'
 
-export type PortfolioApiTokenDiscoveriesResponse = {
-  [key: PortfolioTokenId]: ApiResponseRecordWithCache<PortfolioTokenDiscovery>
-}
+export type PortfolioApiTokenDiscoveryResponse = PortfolioTokenDiscovery
 
 export type PortfolioApiTokenInfosResponse = {
   [key: PortfolioTokenId]: ApiResponseRecordWithCache<PortfolioTokenInfo>
@@ -19,7 +17,7 @@ export type PortfolioApi = Readonly<{
   tokenInfos(
     idsWithETag: ReadonlyArray<ApiRequestRecordWithCache<PortfolioTokenId>>,
   ): Promise<Readonly<ApiResponse<PortfolioApiTokenInfosResponse>>>
-  tokenDiscoveries(
-    idsWithETag: ReadonlyArray<ApiRequestRecordWithCache<PortfolioTokenId>>,
-  ): Promise<Readonly<ApiResponse<PortfolioApiTokenDiscoveriesResponse>>>
+  tokenDiscovery(
+    id: PortfolioTokenId,
+  ): Promise<Readonly<ApiResponse<PortfolioApiTokenDiscoveryResponse>>>
 }>

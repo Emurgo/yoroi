@@ -48,7 +48,7 @@ export const AppNavigator = () => {
   })
 
   const firstAction = useFirstAction()
-  const onReady = () => {
+  const onReady = React.useCallback(() => {
     if (isLoggedIn) return
 
     // try first OS auth before navigating to os login screen
@@ -69,12 +69,12 @@ export const AppNavigator = () => {
     } else {
       RNBootSplash.hide({fade: true})
     }
-  }
+  }, [authWithOs, firstAction, isLoggedIn])
 
-  const handleStateChange = () => {
+  const handleStateChange = React.useCallback(() => {
     const currentRouteName = navRef.current?.getCurrentRoute()?.name
     setRouteName(currentRouteName)
-  }
+  }, [])
 
   return (
     <NavigationContainer

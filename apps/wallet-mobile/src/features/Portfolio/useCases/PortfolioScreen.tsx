@@ -1,107 +1,53 @@
-import {useNavigation} from '@react-navigation/native'
-import {useObserver} from '@yoroi/common'
 import {Chain} from '@yoroi/types'
 import * as React from 'react'
-import {Text, View} from 'react-native'
-import {FlatList} from 'react-native-gesture-handler'
+import {FlatList, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer} from '../../../components'
-import {WalletMeta} from '../../../wallet-manager/types'
 import {useWalletManager} from '../../../wallet-manager/WalletManagerContext'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
-import {useSelectedWallet} from '../../WalletManager/Context'
-import {usePortfolioBalanceManager} from '../common/usePortfolioBalanceManager'
-import {usePortfolioTokenManager} from '../common/usePortfolioTokenManager'
 
-type OpenWallets = Record<number, Array<Partial<YoroiWallet & WalletMeta>>>
 export const PortfolioScreen = () => {
-  const navigation = useNavigation()
   const manager = useWalletManager()
-  const wallet = useSelectedWallet()
-  const [openedWalletsByNetwork, setOpenedWalletsByNetwork] = React.useState<OpenWallets>({})
+  const [openedWalletsByNetwork] = React.useState<Map<Chain.SupportedNetworks, Set<YoroiWallet['id']>>>(
+    manager.getOpenedWalletsByNetwork(),
+  )
+  const [canWipe, setCanWipe] = React.useState(!manager.isSyncActive && !manager.isSyncing)
+  const [isActive, setIsActive] = React.useState(manager.isSyncActive)
 
   React.useEffect(() => {
-    manager.listWallets().then(async (walletMetas) => {
-      const walletsPerNetwork: OpenWallets = {}
-
-      for (const meta of walletMetas) {
-        const wallet = await manager.openWallet(meta)
-        if (walletsPerNetwork[wallet.networkId] == null) walletsPerNetwork[wallet.networkId] = []
-        walletsPerNetwork[wallet.networkId].push({
-          id: wallet.id,
-          name: meta.name,
-          utxos: wallet.utxos,
-        })
-      }
-
-      setOpenedWalletsByNetwork(walletsPerNetwork)
-
-      for (const networkId in walletsPerNetwork) {
-        const wallets = walletsPerNetwork[networkId]
-        for (const wallet of wallets) {
-          console.log(wallet.name)
-          if (wallet.utxos == null) continue
-          for (const utxo of wallet.utxos) {
-            for (const record of utxo.assets) {
-              console.log(record.assetId)
-            }
-          }
-        }
-      }
+    const subSyncActivity = manager.syncActive$.subscribe((isActive) => {
+      setIsActive(isActive)
+      setCanWipe(() => !isActive && !manager.isSyncing)
     })
-  }, [manager, openedWalletsByNetwork])
-
-  const {tokenManager, tokenStorage} = usePortfolioTokenManager({network: Chain.Network.Main})
-  const {balanceManager: bmW1, balanceStorage: bs1} = usePortfolioBalanceManager({
-    tokenManager,
-    walletId: wallet.id,
-  })
-
-  // wallet 2 for testing
-  const {balanceManager: bmW2, balanceStorage: bs2} = usePortfolioBalanceManager({
-    tokenManager,
-    walletId: 'wallet-2',
-  })
-  const {data: balancesW2, isPending: isPendingW2} = useObserver({
-    observable: bmW2.observable,
-    executor: () => bmW2.getBalances().all,
-  })
-  // end of wallet 2
-
-  const {data: balances, isPending} = useObserver({
-    observable: bmW1.observable,
-    executor: () => bmW1.getBalances().all,
-  })
-  const opacity = isPending || isPendingW2 ? 0.5 : 1
-
-  const handleOnSync = () => {
-    bmW1.sync({
-      primaryBalance: {
-        balance: 1n,
-        lockedInBuiltTxs: 2n,
-        minRequiredByTokens: 0n,
-        records: [],
-      },
-      secondaryBalances: new Map([]),
+    const subIsSyncing = manager.syncing$.subscribe((isSyncing) => {
+      setCanWipe(() => !isSyncing)
     })
 
-    bmW2.sync({
-      primaryBalance: {
-        balance: 2n,
-        lockedInBuiltTxs: 3n,
-        minRequiredByTokens: 0n,
-        records: [],
-      },
-      secondaryBalances: new Map([]),
+    return () => {
+      subSyncActivity.unsubscribe()
+      subIsSyncing.unsubscribe()
+    }
+  })
+
+  const handleOnReset = () => {
+    manager.pauseSyncing()
+    openedWalletsByNetwork.forEach((walletIds, network) => {
+      const tm = manager.getTokenManager(network)
+      walletIds.forEach((walletId) => {
+        const wallet = manager.getOpenedWalletById(walletId)
+        if (wallet) wallet.balanceManager.clear()
+      })
+      tm.clear({sourceId: 'PortfolioScreen'})
     })
   }
 
-  const handleOnReset = () => {
-    bs1.clear()
-    bs2.clear()
-    tokenStorage.clear()
-    navigation.goBack()
+  const handleOnSync = () => {
+    if (!isActive) {
+      manager.resumeSyncing()
+    } else {
+      manager.pauseSyncing()
+    }
   }
 
   return (
@@ -109,47 +55,54 @@ export const PortfolioScreen = () => {
       <View style={{padding: 16}}>
         <Text>Portfolio playground</Text>
 
-        <Spacer height={16} />
-
-        <Button title="sync" onPress={handleOnSync} shelleyTheme />
+        <Text>{manager.isSyncActive ? 'active' : 'stopped'}</Text>
 
         <Spacer height={16} />
 
-        <Button title="reset" onPress={handleOnReset} outlineShelley />
+        <Button title={!isActive ? 'start sync' : 'stop sync'} onPress={handleOnSync} shelleyTheme />
 
         <Spacer height={16} />
 
-        <Text>w1 {wallet.id}</Text>
+        <Button title="reset" onPress={handleOnReset} outlineShelley disabled={!canWipe} />
 
-        <Text>all: {balances.length}</Text>
+        <Spacer height={16} />
 
-        <FlatList
-          data={balances}
-          keyExtractor={(item) => item.info.id}
-          renderItem={({item}) => (
-            <View style={{padding: 8, backgroundColor: 'lightgray', marginVertical: 4, opacity}}>
-              <Text>{item.info.name}</Text>
+        {Array.from(openedWalletsByNetwork).map(([network, walletIds]) => {
+          return Array.from(walletIds).map((walletId, index) => {
+            const wallet = manager.getOpenedWalletById(walletId)
+            return (
+              <View key={walletId}>
+                {index === 0 && <Text>{network}</Text>}
 
-              <Text>{item.balance.toString()}</Text>
-            </View>
-          )}
-        />
+                {wallet && (
+                  <FlatList
+                    style={{height: 120}}
+                    ListHeaderComponent={() => {
+                      return (
+                        <View>
+                          <Text>walelt: {walletId}</Text>
 
-        <Text>wallet 2</Text>
+                          <Text>balance: {wallet.primaryBalance.quantity.toString()}</Text>
 
-        <Text>all: {balances.length}</Text>
+                          <Text>locked: {wallet.primaryBreakdown.lockedAsStorageCost.toString()}</Text>
+                        </View>
+                      )
+                    }}
+                    data={wallet.balances.all}
+                    keyExtractor={(item) => item.info.id}
+                    renderItem={({item}) => (
+                      <View style={{padding: 8, backgroundColor: 'lightgray', marginVertical: 4}}>
+                        <Text>{item.info.name}</Text>
 
-        <FlatList
-          data={balancesW2}
-          keyExtractor={(item) => item.info.id}
-          renderItem={({item}) => (
-            <View style={{padding: 8, backgroundColor: 'lightgray', marginVertical: 4, opacity}}>
-              <Text>{item.info.name}</Text>
-
-              <Text>{item.balance.toString()}</Text>
-            </View>
-          )}
-        />
+                        <Text>{item.quantity.toString()}</Text>
+                      </View>
+                    )}
+                  />
+                )}
+              </View>
+            )
+          })
+        })}
       </View>
     </SafeAreaView>
   )

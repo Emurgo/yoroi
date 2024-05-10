@@ -23,7 +23,10 @@ export * from './utils/parsers'
 export * from './utils/predicates'
 export * from './utils/strings'
 
-export * from './numbers/as-atomic-value'
+export * from './numbers/to-bigint'
+export * from './numbers/split-bigint'
+export * from './numbers/bigint-formatter'
+export * from './numbers/parse-input-to-bigint'
 
 export * from './observer/observer'
 
@@ -38,4 +41,4 @@ export * from './storage/helpers/storage-serializer'
 export * from './storage/helpers/storage-deserializer-maker'
 
 export * from './translators/reactjs/hooks/useMutationWithInvalidations'
-export * from './translators/reactjs/hooks/useObserver'
+export * from './translators/reactjs/hooks/useObservableValue'

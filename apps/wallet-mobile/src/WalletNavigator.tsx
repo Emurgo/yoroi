@@ -25,7 +25,6 @@ import {ToggleAnalyticsSettingsNavigator} from './features/ToggleAnalyticsSettin
 import {CONFIG} from './legacy/config'
 import {useMetrics} from './metrics/metricsManager'
 import {defaultStackNavigationOptions, hideTabBarForRoutes, WalletStackRoutes, WalletTabRoutes} from './navigation'
-import {NftDetailsNavigator} from './NftDetails/NftDetailsNavigator'
 import {NftsNavigator} from './Nfts/NftsNavigator'
 import {SearchProvider} from './Search/SearchContext'
 import {TxHistoryNavigator} from './TxHistory'
@@ -80,7 +79,7 @@ const WalletTabNavigator = () => {
             // keyboardWillShow keyboardWillHiden dont work on android
             display: isKeyboardOpen ? 'none' : undefined,
           },
-          tabBarHideOnKeyboard: Platform.OS === 'android',
+          tabBarHideOnKeyboard: true,
         }}
         initialRouteName={initialRoute}
         backBehavior="initialRoute"
@@ -219,8 +218,6 @@ export const WalletNavigator = () => {
       />
 
       <Stack.Screen name="main-wallet-routes" options={{headerShown: false}} component={WalletTabNavigator} />
-
-      <Stack.Screen name="nft-details-routes" options={{headerShown: false}} component={NftDetailsNavigator} />
 
       <Stack.Screen name="settings" options={{headerShown: false}} component={SettingsScreenNavigator} />
 

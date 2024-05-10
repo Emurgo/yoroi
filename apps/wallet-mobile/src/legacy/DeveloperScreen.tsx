@@ -145,6 +145,23 @@ export const DeveloperScreen = () => {
           style={styles.button}
           onPress={() =>
             createWallet({
+              mnemonicPhrase: config['WALLET_3_MNEMONIC'] ?? '',
+              name: 'Wallet 3',
+              networkId: Number(config['WALLET_3_NETWORK_ID'] ?? 300) as NetworkId,
+              password: '1234567890',
+              walletImplementationId: 'haskell-shelley',
+              addressMode: 'multiple',
+            })
+          }
+          testID="btnRestoreWallet3"
+          title="Restore Wallet 3"
+        />
+
+        <Button
+          disabled={isLoading}
+          style={styles.button}
+          onPress={() =>
+            createWallet({
               mnemonicPhrase: generateAdaMnemonic(),
               name: 'RO-Mainnet',
               networkId: 1,

@@ -1,6 +1,7 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {StackNavigationOptions} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
+import {produce} from 'immer'
 import React, {createContext, ReactNode, useCallback, useContext, useReducer} from 'react'
 import {TextInput, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 
@@ -10,6 +11,7 @@ import {defaultStackNavigationOptions} from '../navigation'
 type SearchState = {
   search: string
   visible: boolean
+  isSearching: boolean
 }
 type SearchActions = {
   searchChanged: (search: string) => void
@@ -58,37 +60,41 @@ type SearchAction =
   | {type: 'hideSearch'}
 
 function searchReducer(state: SearchState, action: SearchAction) {
-  switch (action.type) {
-    case 'clear':
-      return {...state, search: ''}
+  return produce(state, (draft) => {
+    switch (action.type) {
+      case 'clear':
+        draft.search = ''
+        draft.isSearching = false
+        break
 
-    case 'close':
-      return {...state, search: '', visible: false}
+      case 'close':
+        draft.search = ''
+        draft.visible = false
+        draft.isSearching = false
+        break
 
-    case 'searchChanged':
-      return {
-        ...state,
-        search: action.search,
-      }
+      case 'searchChanged':
+        draft.search = action.search
+        draft.isSearching = action.search.length > 0 && draft.visible
+        break
 
-    case 'showSearch':
-      return {
-        ...state,
-        visible: true,
-      }
+      case 'showSearch':
+        draft.visible = true
+        draft.isSearching = draft.search.length > 0
+        break
 
-    case 'hideSearch':
-      return {
-        ...state,
-        visible: false,
-      }
+      case 'hideSearch':
+        draft.visible = false
+        draft.isSearching = false
+        break
 
-    default:
-      throw new Error(`searchReducer invalid action`)
-  }
+      default:
+        throw new Error(`searchReducer invalid action`)
+    }
+  })
 }
 
-const defaultState: SearchState = Object.freeze({search: '', visible: false})
+const defaultState: SearchState = Object.freeze({search: '', visible: false, isSearching: false})
 
 export const useSearchOnNavBar = ({
   placeholder,

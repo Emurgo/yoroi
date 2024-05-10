@@ -141,7 +141,14 @@ export const ConfirmTxScreen = () => {
         <View style={styles.row}>
           <Text style={styles.total} />
 
-          <PairedBalance amount={feeAmount} textStyle={styles.fiatValue} />
+          <PairedBalance
+            amount={{
+              info: wallet.portfolioPrimaryTokenInfo,
+              quantity: BigInt(feeAmount.quantity),
+            }}
+            textStyle={styles.fiatValue}
+            ignorePrivacy
+          />
         </View>
       </View>
 

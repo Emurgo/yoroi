@@ -1,4 +1,5 @@
 import {Portfolio} from '@yoroi/types'
 
-export const isFt = (tokenInfo: Portfolio.Token.Info): boolean =>
-  tokenInfo.type === Portfolio.Token.Type.FT
+export function isFt(tokenInfo: Portfolio.Token.Info) {
+  return tokenInfo.type === Portfolio.Token.Type.FT
+}
