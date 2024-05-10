@@ -3,6 +3,7 @@ import {DappConnector} from '@yoroi/dapp-connector'
 import {App} from '@yoroi/types'
 
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
+import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 
 export const validUrl = (url: string) => {
   return /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!&',,=.+]+$/g.test(url)
@@ -60,10 +61,11 @@ type CreateDappConnectorOptions = {
   appStorage: App.Storage
   wallet: YoroiWallet
   confirmConnection: (origin: string, manager: DappConnector) => Promise<boolean>
+  signTx: (cbor: string) => Promise<string>
 }
 
 export const createDappConnector = (options: CreateDappConnectorOptions) => {
-  const {wallet, appStorage, confirmConnection} = options
+  const {wallet, appStorage, confirmConnection, signTx} = options
   const api = dappConnectorApiMaker()
   const handlerWallet: ResolverWallet = {
     id: wallet.id,
@@ -88,8 +90,9 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
     },
     confirmConnection: (origin: string) => confirmConnection(origin, manager),
     signData: async (address, payload) => wallet.CIP30signData(address, payload),
-    signTx: async (tx, partial) => {
-      const result = await wallet.CIP30signTx(tx, partial)
+    signTx: async (cbor: string, partial?: boolean) => {
+      const password = await signTx(cbor)
+      const result = await wallet.CIP30signTx(password, cbor, partial)
       return result.toHex()
     },
   }

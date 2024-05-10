@@ -276,6 +276,8 @@ const createEvent = (method: string, params?: object) => {
 
 const walletId = 'b5d94758-26c5-48b0-af2b-6e68c3ef2dbf'
 const mockWallet: ResolverWallet = {
+  signTx: () => Promise.resolve(''),
+  signData: () => Promise.resolve(''),
   id: walletId,
   networkId: 1,
   confirmConnection: async () => true,

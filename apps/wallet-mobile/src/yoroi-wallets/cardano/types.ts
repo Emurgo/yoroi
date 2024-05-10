@@ -200,7 +200,7 @@ export type YoroiWallet = {
   CIP30getUtxos(value?: string, paginate?: {page: number; limit: number}): Promise<TransactionUnspentOutput[] | null>
   CIP30getCollateral(value?: string): Promise<TransactionUnspentOutput[] | null>
   CIP30submitTx(cbor: string): Promise<string>
-  CIP30signTx(txHex: string, partialSign?: boolean): Promise<TransactionWitnessSet>
+  CIP30signTx(password: string, txHex: string, partialSign?: boolean): Promise<TransactionWitnessSet>
   CIP30signData(address: string, payload: string): Promise<string>
 }
 

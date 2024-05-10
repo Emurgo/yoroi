@@ -1048,7 +1048,12 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       return txId
     }
 
-    async CIP30signTx(cbor: string, partial: boolean = false) {
+    async CIP30signData(address: string, payload: string): Promise<string> {
+      throw new Error('Not implemented')
+    }
+
+    async CIP30signTx(password: string, cbor: string, partial: boolean = false) {
+      const rootKey = await this.getDecryptedRootKey(password)
       const signers = await getTransactionSigners(cbor, this, partial)
       const keys = await Promise.all(signers.map(async (signer) => createRawTxSigningKey(rootKey, signer)))
       const signedTxBytes = await signRawTransaction(CardanoMobile, cbor, keys)
