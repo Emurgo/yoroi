@@ -4,5 +4,5 @@
 
 YOMO-
 
-[!NOTE]
-Please create the ticket if missing it.
+> [!NOTE]
+> Please create the ticket if missing it.
