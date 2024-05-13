@@ -7,7 +7,6 @@ import {isNonNullable, parseSafe} from '@yoroi/common'
 import {Api, App, Balance, Chain, Portfolio} from '@yoroi/types'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
-import ExtendableError from 'es6-error'
 import _ from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 import {defaultMemoize} from 'reselect'
@@ -1027,7 +1026,7 @@ export class ByronWallet implements YoroiWallet {
         }),
       }
     } catch (e) {
-      if (e instanceof LocalizableError || e instanceof ExtendableError) throw e
+      if (e instanceof LocalizableError || e instanceof Error) throw e
       throw new CardanoError((e as Error).message)
     }
   }

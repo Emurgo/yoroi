@@ -3,7 +3,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import {useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import assert from 'assert'
-import ExtendableError from 'es6-error'
 import _ from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
@@ -263,7 +262,7 @@ const useStyles = () => {
   return {styles}
 }
 
-export class StorageError extends ExtendableError {}
+export class StorageError extends Error {}
 
 const checkPathFormat = (path: string) => path.startsWith('/') && !path.endsWith('/')
 

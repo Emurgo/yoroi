@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import ExtendableError from 'es6-error'
 import {defineMessages} from 'react-intl'
 
 const messages = defineMessages({})
 
 // Base class to allow wrapping a localizable message into an ES6-error
-class LocalizableError extends ExtendableError {
+class LocalizableError extends Error {
   id: string
   defaultMessage: string
   values: Record<string, unknown>

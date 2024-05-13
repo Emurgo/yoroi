@@ -1,5 +1,3 @@
-import ExtendableError from 'es6-error'
-
 import {errorMessages} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
 
@@ -36,10 +34,10 @@ export class ApiHistoryError extends ApiError {
   }
 }
 
-export class CardanoError extends ExtendableError {}
-export class WrongPassword extends ExtendableError {
+export class CardanoError extends Error {}
+export class WrongPassword extends Error {
   constructor() {
     super('WrongPassword')
   }
 }
-export class InvalidState extends ExtendableError {}
+export class InvalidState extends Error {}
