@@ -1,11 +1,12 @@
 import {useNavigation} from '@react-navigation/native'
+import {Portfolio} from '@yoroi/types'
 
-import {WalletStackRouteNavigation} from '../navigation'
+import {NftRouteNavigation} from '../navigation'
 
 export const useNavigateTo = () => {
-  const navigation = useNavigation<WalletStackRouteNavigation>()
-  const nftDetails = (id: string) => navigation.navigate('nft-details-routes', {screen: 'nft-details', params: {id}})
-  const nftZoom = (id: string) => navigation.navigate('nft-details-routes', {screen: 'image-zoom', params: {id}})
+  const navigation = useNavigation<NftRouteNavigation>()
+  const nftDetails = (id: Portfolio.Token.Id) => navigation.navigate('nft-details', {id})
+  const nftZoom = (id: Portfolio.Token.Id) => navigation.navigate('nft-image-zoom', {id})
 
   return {
     nftDetails,

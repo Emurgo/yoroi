@@ -1,7 +1,8 @@
 import {useNavigation} from '@react-navigation/native'
+import {isNft} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
-import type {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {useLayoutEffect} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -10,17 +11,15 @@ import {FlatList} from 'react-native-gesture-handler'
 import {useMutation} from 'react-query'
 
 import {Boundary, Button, Icon, Spacer} from '../../../../components'
-import {AmountItem} from '../../../../components/AmountItem/AmountItem'
 import globalMessages from '../../../../i18n/global-messages'
 import {assetsToSendProperties} from '../../../../metrics/helpers'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useSearch} from '../../../../Search/SearchContext'
-import {sortTokenInfos} from '../../../../utils'
-import {useTokenInfo, useTokenInfos} from '../../../../yoroi-wallets/hooks'
 import {YoroiEntry} from '../../../../yoroi-wallets/types'
-import {Amounts} from '../../../../yoroi-wallets/utils'
+import {TokenAmountItem} from '../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
 import {useSelectedWallet} from '../../../WalletManager/Context'
 import {useNavigateTo, useOverridePreviousSendTxRoute} from '../../common/navigation'
+import {toYoroiEntry} from '../../common/toYoroiEntry'
 import {AddTokenButton} from './AddToken/AddToken'
 import {RemoveAmountButton} from './RemoveAmount'
 
@@ -46,15 +45,9 @@ export const ListAmountsToSendScreen = () => {
     unsignedTxChanged: yoroiUnsignedTxChanged,
   } = useTransfer()
   const {amounts} = targets[selectedTargetIndex].entry
-
-  const selectedTokensCounter = Amounts.toArray(amounts).length
+  const selectedTokensCounter = Object.keys(amounts).length
 
   const wallet = useSelectedWallet()
-  const tokenInfos = useTokenInfos({
-    wallet,
-    tokenIds: Amounts.toArray(amounts).map(({tokenId}) => tokenId),
-  })
-  const tokens = sortTokenInfos({wallet, tokenInfos})
   const {mutate: createUnsignedTx, isLoading} = useMutation({
     mutationFn: (entries: YoroiEntry[]) => wallet.createUnsignedTx(entries),
     retry: false,
@@ -62,18 +55,17 @@ export const ListAmountsToSendScreen = () => {
   })
 
   React.useEffect(() => {
-    track.sendSelectAssetUpdated(assetsToSendProperties({tokens, amounts}))
+    track.sendSelectAssetUpdated(assetsToSendProperties({amounts}))
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [amounts, tokens.length, track])
+  }, [amounts, selectedTokensCounter, track])
 
-  const onEdit = (tokenId: string) => {
-    const tokenInfo = tokenInfos.find((tokenInfo) => tokenInfo.id === tokenId)
-    if (tokenInfo?.kind === 'nft') return
+  const onEdit = (tokenId: Portfolio.Token.Id) => {
+    if (isNft(amounts[tokenId].info)) return
 
     tokenSelectedChanged(tokenId)
     navigateTo.editAmount()
   }
-  const onRemove = (tokenId: string) => {
+  const onRemove = (tokenId: Portfolio.Token.Id) => {
     // use case: redirect to add token screen if there is no token left
     if (selectedTokensCounter === 1) {
       clearSearch()
@@ -82,8 +74,10 @@ export const ListAmountsToSendScreen = () => {
     amountRemoved(tokenId)
   }
   const onNext = () => {
-    track.sendSelectAssetSelected(assetsToSendProperties({tokens, amounts}))
-    createUnsignedTx([targets[selectedTargetIndex].entry], {
+    track.sendSelectAssetSelected(assetsToSendProperties({amounts}))
+    // since the user can't see many targets we just send the first one
+    // NOTE: update on multi target support
+    createUnsignedTx([toYoroiEntry(targets[selectedTargetIndex].entry)], {
       onSuccess: (yoroiUnsignedTx) => {
         yoroiUnsignedTxChanged(yoroiUnsignedTx)
         navigateTo.confirmTx()
@@ -98,14 +92,14 @@ export const ListAmountsToSendScreen = () => {
   return (
     <View style={styles.container}>
       <AmountsList
-        data={tokens}
-        renderItem={({item: {id}}: {item: Balance.TokenInfo}) => (
+        data={Object.values(amounts)}
+        renderItem={({item: amount}) => (
           <Boundary>
-            <ActionableAmount amount={Amounts.getAmount(amounts, id)} onRemove={onRemove} onEdit={onEdit} />
+            <ActionableAmount amount={amount} onRemove={onRemove} onEdit={onEdit} />
           </Boundary>
         )}
         bounces={false}
-        keyExtractor={({id}) => id}
+        keyExtractor={({info}) => info.id}
         testID="selectedTokens"
       />
 
@@ -130,24 +124,21 @@ export const ListAmountsToSendScreen = () => {
 }
 
 type ActionableAmountProps = {
-  amount: Balance.Amount
-  onEdit(tokenId: string): void
-  onRemove(tokenId: string): void
+  amount: Portfolio.Token.Amount
+  onEdit(tokenId: Portfolio.Token.Id): void
+  onRemove(tokenId: Portfolio.Token.Id): void
 }
 const ActionableAmount = ({amount, onRemove, onEdit}: ActionableAmountProps) => {
-  const wallet = useSelectedWallet()
   const {styles} = useStyles()
-  const {tokenId} = amount
-  const tokenInfo = useTokenInfo({wallet, tokenId})
 
-  const handleRemove = () => onRemove(tokenId)
-  const handleEdit = () => (tokenInfo.kind === 'nft' ? null : onEdit(tokenId))
+  const handleRemove = () => onRemove(amount.info.id)
+  const handleEdit = () => (isNft(amount.info) ? null : onEdit(amount.info.id))
 
   return (
     <View style={styles.amountItem} testID="amountItem">
       <Left>
         <EditAmountButton onPress={handleEdit}>
-          <AmountItem amount={amount} wallet={wallet} />
+          <TokenAmountItem amount={amount} ignorePrivacy />
         </EditAmountButton>
       </Left>
 

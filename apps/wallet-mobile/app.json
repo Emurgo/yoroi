@@ -2,6 +2,10 @@
   "name": "yoroi",
   "displayName": "Yoroi",
   "expo": {
-    "plugins": ["sentry-expo"]
+    "name": "yoroi",
+    "slug": "yoroi",
+    "plugins": [
+      "sentry-expo"
+    ]
   }
 }

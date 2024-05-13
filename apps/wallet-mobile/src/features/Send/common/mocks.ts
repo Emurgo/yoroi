@@ -1,11 +1,8 @@
+import {tokenBalanceMocks, tokenMocks} from '@yoroi/portfolio'
 import {defaultTransferState} from '@yoroi/transfer'
 
 import {mocks as walletMocks} from '../../../yoroi-wallets/mocks/wallet'
-import {Amounts, asQuantity, Quantities} from '../../../yoroi-wallets/utils'
 
-const secondaryTokenId = '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950'
-const secondaryAmount = Amounts.getAmount(walletMocks.balances, secondaryTokenId)
-const primaryAmount = Amounts.getAmount(walletMocks.balances, walletMocks.wallet.primaryTokenInfo.id)
 export const mocks = {
   startTx: {
     error: {
@@ -47,14 +44,17 @@ export const mocks = {
   editingAmount: {
     adding: {
       ...defaultTransferState,
-      selectedTokenId: walletMocks.wallet.primaryTokenInfo.id,
+      selectedTokenId: tokenBalanceMocks.primaryETH.info.id,
       targets: [
         {
           ...defaultTransferState.targets[0],
           entry: {
             ...defaultTransferState.targets[0].entry,
             amounts: {
-              [walletMocks.wallet.primaryTokenInfo.id]: Quantities.zero,
+              [tokenMocks.primaryETH.info.id]: {
+                ...tokenMocks.primaryETH.balance,
+                quantity: 0n,
+              },
             },
           },
         },
@@ -62,14 +62,14 @@ export const mocks = {
     },
     initialQuantity: {
       ...defaultTransferState,
-      selectedTokenId: walletMocks.wallet.primaryTokenInfo.id,
+      selectedTokenId: tokenBalanceMocks.primaryETH.info.id,
       targets: [
         {
           ...defaultTransferState.targets[0],
           entry: {
             ...defaultTransferState.targets[0].entry,
             amounts: {
-              [walletMocks.wallet.primaryTokenInfo.id]: asQuantity(50000),
+              [tokenMocks.primaryETH.info.id]: tokenMocks.primaryETH.balance,
             },
           },
         },
@@ -77,14 +77,14 @@ export const mocks = {
     },
     insuficientBalance: {
       ...defaultTransferState,
-      selectedTokenId: secondaryTokenId,
+      selectedTokenId: tokenMocks.nftCryptoKitty.info.id,
       targets: [
         {
           ...defaultTransferState.targets[0],
           entry: {
             ...defaultTransferState.targets[0].entry,
             amounts: {
-              [secondaryTokenId]: Quantities.sum([secondaryAmount.quantity, asQuantity(1000)]),
+              [tokenMocks.nftCryptoKitty.info.id]: tokenMocks.nftCryptoKitty.balance,
             },
           },
         },
@@ -92,14 +92,14 @@ export const mocks = {
     },
     secondaryToken: {
       ...defaultTransferState,
-      selectedTokenId: secondaryTokenId,
+      selectedTokenId: tokenMocks.nftCryptoKitty.info.id,
       targets: [
         {
           ...defaultTransferState.targets[0],
           entry: {
             ...defaultTransferState.targets[0].entry,
             amounts: {
-              [secondaryTokenId]: secondaryAmount.quantity,
+              [tokenMocks.nftCryptoKitty.info.id]: tokenMocks.nftCryptoKitty.balance,
             },
           },
         },
@@ -107,14 +107,17 @@ export const mocks = {
     },
     overSpendable: {
       ...defaultTransferState,
-      selectedTokenId: walletMocks.wallet.primaryTokenInfo.id,
+      selectedTokenId: tokenBalanceMocks.primaryETH.info.id,
       targets: [
         {
           ...defaultTransferState.targets[0],
           entry: {
             ...defaultTransferState.targets[0].entry,
             amounts: {
-              [walletMocks.wallet.primaryTokenInfo.id]: Quantities.sum([primaryAmount.quantity, asQuantity(1000)]),
+              [tokenMocks.primaryETH.info.id]: {
+                ...tokenMocks.primaryETH.balance,
+                quantity: 1_000_000_000_000_000n,
+              },
             },
           },
         },
@@ -125,16 +128,14 @@ export const mocks = {
     success: {
       ...defaultTransferState,
       yoroiUnsignedTx: walletMocks.yoroiUnsignedTx,
-      selectedTokenId: walletMocks.wallet.primaryTokenInfo.id,
+      selectedTokenId: tokenBalanceMocks.primaryETH.info.id,
       targets: [
         {
           ...defaultTransferState.targets[0],
           entry: {
             ...defaultTransferState.targets[0].entry,
             amounts: {
-              [walletMocks.wallet.primaryTokenInfo.id]: asQuantity(
-                walletMocks.yoroiUnsignedTx.entries[0].amounts[walletMocks.wallet.primaryTokenInfo.id],
-              ),
+              [tokenMocks.primaryETH.info.id]: tokenMocks.primaryETH.balance,
             },
           },
         },
@@ -150,7 +151,7 @@ export const mocks = {
           entry: {
             ...defaultTransferState.targets[0].entry,
             amounts: {
-              [walletMocks.wallet.primaryTokenInfo.id]: asQuantity(50000),
+              [tokenMocks.primaryETH.info.id]: tokenMocks.primaryETH.balance,
             },
           },
         },
@@ -163,11 +164,7 @@ export const mocks = {
           ...defaultTransferState.targets[0],
           entry: {
             ...defaultTransferState.targets[0].entry,
-            amounts: {
-              [secondaryTokenId]: asQuantity(1),
-              ['other.01']: asQuantity(2),
-              ['another.02']: asQuantity(3),
-            },
+            amounts: tokenBalanceMocks.storage.entries1,
           },
         },
       ],
@@ -179,13 +176,7 @@ export const mocks = {
           ...defaultTransferState.targets[0],
           entry: {
             ...defaultTransferState.targets[0].entry,
-            amounts: {
-              [secondaryTokenId]: asQuantity(1),
-              ['other.01']: asQuantity(2),
-              ['another.02']: asQuantity(3),
-              ['more.03']: asQuantity(4),
-              [walletMocks.wallet.primaryTokenInfo.id]: asQuantity(50000),
-            },
+            amounts: tokenBalanceMocks.storage.entries1WithPrimary,
           },
         },
       ],

@@ -1,6 +1,7 @@
+import {toBigInt} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
-import {Balance} from '@yoroi/types'
+import {Balance, Portfolio} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {
@@ -24,9 +25,9 @@ import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {useCollateralInfo} from '../../../yoroi-wallets/cardano/utxoManager/useCollateralInfo'
 import {useSetCollateralId} from '../../../yoroi-wallets/cardano/utxoManager/useSetCollateralId'
 import {collateralConfig, utxosMaker} from '../../../yoroi-wallets/cardano/utxoManager/utxos'
-import {useBalances, useLockedAmount} from '../../../yoroi-wallets/hooks'
+import {useBalances} from '../../../yoroi-wallets/hooks'
 import {RawUtxo, YoroiEntry} from '../../../yoroi-wallets/types'
-import {Amounts, Quantities} from '../../../yoroi-wallets/utils'
+import {Amounts, asQuantity, Quantities} from '../../../yoroi-wallets/utils'
 import {useSelectedWallet} from '../../WalletManager/Context'
 import {usePrivacyMode} from '../PrivacyMode/PrivacyMode'
 import {createCollateralEntry} from './helpers'
@@ -42,7 +43,7 @@ export const ManageCollateralScreen = () => {
   const navigateTo = useNavigateTo()
   const strings = useStrings()
   const balances = useBalances(wallet)
-  const lockedAmount = useLockedAmount({wallet})
+  const lockedAmount = asQuantity(wallet.primaryBreakdown.lockedAsStorageCost.toString())
 
   const params = useUnsafeParams<SettingsStackRoutes['manage-collateral']>()
 
@@ -70,16 +71,16 @@ export const ManageCollateralScreen = () => {
   }
   const createCollateralTransaction = () => {
     const address = wallet.externalAddresses[0]
-    const amount: Balance.Amount = {
-      quantity: collateralConfig.minLovelace,
-      tokenId: wallet.primaryTokenInfo.id,
+    const amount: Portfolio.Token.Amount = {
+      quantity: toBigInt(collateralConfig.minLovelace, wallet.portfolioPrimaryTokenInfo.decimals),
+      info: wallet.portfolioPrimaryTokenInfo,
     }
 
     // populate for confirmation screen
     resetSendState()
     receiverResolveChanged(address)
-    tokenSelectedChanged(amount.tokenId)
-    amountChanged(amount.quantity)
+    tokenSelectedChanged(amount.info.id)
+    amountChanged(amount)
 
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
 

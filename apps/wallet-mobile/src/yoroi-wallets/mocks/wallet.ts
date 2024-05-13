@@ -2,8 +2,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {action} from '@storybook/addon-actions'
 import {AppApi, CardanoApi} from '@yoroi/api'
-import {Balance} from '@yoroi/types'
+import {createPrimaryTokenInfo} from '@yoroi/portfolio'
+import {Balance, Chain, Portfolio} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
+import {noop} from 'lodash'
+import {Observable} from 'rxjs'
 
 import {getTokenFingerprint} from '../../legacy/format'
 import {WalletMeta} from '../../wallet-manager/types'
@@ -32,6 +35,20 @@ import {mockEncryptedStorage} from './storage'
 import {mockTransactionInfo, mockTransactionInfos} from './transaction'
 import {utxos} from './utxos'
 
+const primaryTokenInfoMainnet = createPrimaryTokenInfo({
+  decimals: 6,
+  name: 'ADA',
+  ticker: 'ADA',
+  symbol: '₳',
+  reference: '',
+  tag: '',
+  website: 'https://www.cardano.org/',
+  originalImage: '',
+  description: 'Cardano',
+  icon: '',
+  mediaType: '',
+})
+
 const walletMeta: WalletMeta = {
   id: 'wallet-id',
   name: 'my-wallet',
@@ -48,6 +65,8 @@ const walletMeta: WalletMeta = {
 }
 
 const wallet: YoroiWallet = {
+  isEmpty: false,
+  hasOnlyPrimary: false,
   id: 'wallet-id',
   api: AppApi.mockAppApi,
   primaryToken: PRIMARY_TOKEN,
@@ -68,6 +87,36 @@ const wallet: YoroiWallet = {
   utxos,
   allUtxos: utxos,
   collateralId: '22d391c7a97559cb4784bd975214919618acce75cde573a7150a176700e76181:2',
+
+  balance$: new Observable<Portfolio.Event.BalanceManager>(),
+  balances: {
+    records: new Map(),
+    all: [],
+    fts: [],
+    nfts: [],
+  },
+  primaryBalance: {
+    quantity: 0n,
+    info: primaryTokenInfoMainnet,
+  },
+  primaryBreakdown: {
+    availableRewards: 0n,
+    lockedAsStorageCost: 0n,
+    totalFromTxs: 0n,
+  },
+
+  isMainnet: true,
+  portfolioPrimaryTokenInfo: primaryTokenInfoMainnet,
+  network: Chain.Network.Mainnet,
+
+  balanceManager: {
+    clear: noop,
+    sync: noop,
+    resync: noop,
+    startSync: noop,
+    stopSync: noop,
+  } as any,
+
   getStakingInfo: async () => {
     throw new Error('not implemented: getStakingInfo')
   },

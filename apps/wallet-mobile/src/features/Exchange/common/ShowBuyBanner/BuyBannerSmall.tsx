@@ -51,7 +51,7 @@ const useStyles = () => {
   const {color} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: color.white_static,
+      backgroundColor: color.gray_cmin,
       paddingBottom: 18,
     },
     gradient: {

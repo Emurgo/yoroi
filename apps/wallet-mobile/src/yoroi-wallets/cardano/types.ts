@@ -11,7 +11,7 @@ import {
   TxMetadata as TxMetadataType,
   UnsignedTx as UnsignedTxType,
 } from '@emurgo/yoroi-lib'
-import {Api, App, Balance} from '@yoroi/types'
+import {Api, App, Balance, Chain, Portfolio} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 
 import {HWDeviceInfo} from '../hw'
@@ -96,6 +96,28 @@ export type YoroiWallet = {
   primaryToken: Readonly<DefaultAsset>
   primaryTokenInfo: Readonly<Balance.TokenInfo>
 
+  readonly network: Chain.SupportedNetworks
+  readonly portfolioPrimaryTokenInfo: Portfolio.Token.Info
+  readonly balanceManager: Readonly<Portfolio.Manager.Balance>
+
+  // ---------------------------------------------------------------------------------------
+  //                     ########## Interface  -  V2 ##########
+  get isMainnet(): boolean
+
+  // Portfolio
+  balance$: Portfolio.Manager.Balance['observable$']
+  get balances(): ReturnType<Portfolio.Manager.Balance['getBalances']>
+  get primaryBalance(): ReturnType<Portfolio.Manager.Balance['getPrimaryBalance']>
+  get primaryBreakdown(): ReturnType<Portfolio.Manager.Balance['getPrimaryBreakdown']>
+  get isEmpty(): boolean
+  get hasOnlyPrimary(): boolean
+
+  // sync
+  resync(): Promise<void>
+  clear(): Promise<void>
+  sync(params: {isForced?: boolean}): Promise<void>
+  // ---------------------------------------------------------------------------------------
+
   // API
   api: App.Api
 
@@ -155,10 +177,7 @@ export type YoroiWallet = {
   fetchNftModerationStatus(fingerprint: string): Promise<YoroiNftModerationStatus>
 
   // Sync, Save
-  resync(): Promise<void>
-  clear(): Promise<void>
   save(): Promise<void>
-  sync(): Promise<void>
   saveMemo(txId: string, memo: string): Promise<void>
 
   // Balances, TxDetails
@@ -219,6 +238,12 @@ const yoroiWalletKeys: Array<keyof YoroiWallet> = [
   'isReadOnly',
   'primaryToken',
   'primaryTokenInfo',
+
+  // Portfolio
+  'balance$',
+  'balances',
+  'primaryBalance',
+  'primaryBreakdown',
 
   // Sending
   'createUnsignedTx',

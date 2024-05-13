@@ -32,7 +32,7 @@ const useStyles = () => {
       ...atoms.p_2xs,
     },
     labelContainer: {
-      backgroundColor: color.white_static,
+      backgroundColor: color.gray_cmin,
       ...atoms.px_xs,
       paddingVertical: 3,
       borderRadius: 999,

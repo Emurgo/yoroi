@@ -25,7 +25,6 @@ import {ToggleAnalyticsSettingsNavigator} from './features/ToggleAnalyticsSettin
 import {CONFIG} from './legacy/config'
 import {useMetrics} from './metrics/metricsManager'
 import {defaultStackNavigationOptions, hideTabBarForRoutes, WalletStackRoutes, WalletTabRoutes} from './navigation'
-import {NftDetailsNavigator} from './NftDetails/NftDetailsNavigator'
 import {NftsNavigator} from './Nfts/NftsNavigator'
 import {SearchProvider} from './Search/SearchContext'
 import {TxHistoryNavigator} from './TxHistory'
@@ -76,10 +75,11 @@ const WalletTabNavigator = () => {
           tabBarActiveTintColor: colors.active,
           tabBarInactiveTintColor: colors.inactive,
           tabBarStyle: {
+            backgroundColor: colors.background,
             // keyboardWillShow keyboardWillHiden dont work on android
             display: isKeyboardOpen ? 'none' : undefined,
           },
-          tabBarHideOnKeyboard: Platform.OS === 'android',
+          tabBarHideOnKeyboard: true,
         }}
         initialRouteName={initialRoute}
         backBehavior="initialRoute"
@@ -90,7 +90,10 @@ const WalletTabNavigator = () => {
             tabBarIcon: ({focused}) => <Icon.TabWallet size={24} color={focused ? colors.active : colors.inactive} />,
             tabBarLabel: strings.walletTabBarLabel,
             tabBarTestID: 'walletTabBarButton',
-            tabBarStyle: hideTabBarForRoutes(route),
+            tabBarStyle: {
+              ...hideTabBarForRoutes(route),
+              backgroundColor: colors.background,
+            },
           })}
         >
           {() => (
@@ -122,7 +125,10 @@ const WalletTabNavigator = () => {
               tabBarIcon: ({focused}) => <Icon.Discover size={28} color={focused ? colors.active : colors.inactive} />,
               tabBarLabel: strings.discoverTabBarLabel,
               tabBarTestID: 'discoverTabBarButton',
-              tabBarStyle: hideTabBarForRoutes(route),
+              tabBarStyle: {
+                ...hideTabBarForRoutes(route),
+                backgroundColor: colors.background,
+              },
             })}
           >
             {() => (
@@ -213,8 +219,6 @@ export const WalletNavigator = () => {
 
       <Stack.Screen name="main-wallet-routes" options={{headerShown: false}} component={WalletTabNavigator} />
 
-      <Stack.Screen name="nft-details-routes" options={{headerShown: false}} component={NftDetailsNavigator} />
-
       <Stack.Screen name="settings" options={{headerShown: false}} component={SettingsScreenNavigator} />
 
       <Stack.Screen name="voting-registration" options={{headerShown: false}} component={VotingRegistration} />
@@ -236,8 +240,9 @@ const useStyles = () => {
   const {color} = useTheme()
 
   const colors = {
-    active: color.primary_c600,
+    active: color.text_gray_normal,
     inactive: color.gray_c600,
+    background: color.gray_cmin,
   }
   return {colors}
 }

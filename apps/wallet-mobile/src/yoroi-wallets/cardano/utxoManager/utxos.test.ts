@@ -42,7 +42,6 @@ describe('UTXO utility functions', () => {
     })
 
     it('findCollateralCandidates returns UTXOs that are pure and within the specified range', () => {
-      console.log(utils.findCollateralCandidates())
       expect(utils.findCollateralCandidates()).toEqual([mockRawUtxos[0], mockRawUtxos[2]])
     })
 

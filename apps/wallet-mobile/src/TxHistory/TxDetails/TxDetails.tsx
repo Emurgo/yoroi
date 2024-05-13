@@ -37,7 +37,6 @@ export const TxDetails = () => {
   const [addressDetail, setAddressDetail] = React.useState<null | string>(null)
   const transactions = useTransactionInfos(wallet)
   const transaction = transactions[id]
-  const {isPrivacyOff} = usePrivacyMode()
   const memo = !isEmptyString(transaction.memo) ? transaction.memo : '-'
 
   useTitle(isNonNullable(transaction.submittedAt) ? formatDateAndTime(transaction.submittedAt, intl) : '')
@@ -67,7 +66,7 @@ export const TxDetails = () => {
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <Banner label={strings[transaction.direction]}>
           <Boundary>
-            <AdaAmount amount={amount} isPrivacyOff={isPrivacyOff} />
+            <AdaAmount amount={amount} />
 
             {txFee && <Fee amount={txFee} />}
           </Boundary>
@@ -103,11 +102,7 @@ export const TxDetails = () => {
               </TouchableOpacity>
             )}
 
-            <ExpandableAssetList
-              isPrivacyOff={isPrivacyOff}
-              expanded={expandedInItemId === item.id}
-              assets={item.assets}
-            />
+            <ExpandableAssetList expanded={expandedInItemId === item.id} assets={item.assets} />
           </View>
         ))}
 
@@ -135,11 +130,7 @@ export const TxDetails = () => {
               </TouchableOpacity>
             )}
 
-            <ExpandableAssetList
-              isPrivacyOff={isPrivacyOff}
-              expanded={expandedOutItemId === item.id}
-              assets={item.assets}
-            />
+            <ExpandableAssetList expanded={expandedOutItemId === item.id} assets={item.assets} />
           </View>
         ))}
 
@@ -201,13 +192,14 @@ const Label = ({children}: {children: string}) => {
   return <Text style={styles.label}>{children}</Text>
 }
 
-const AdaAmount = ({amount, isPrivacyOff}: {amount: BigNumber; isPrivacyOff?: boolean}) => {
+const AdaAmount = ({amount}: {amount: BigNumber}) => {
   const wallet = useSelectedWallet()
   const {styles} = useStyles()
+  const {isPrivacyOn, privacyPlaceholder} = usePrivacyMode()
   const amountStyle = amount.gte(0) ? styles.positiveAmount : styles.negativeAmount
 
-  if (isPrivacyOff) {
-    return <Text style={amountStyle}>*.******</Text>
+  if (isPrivacyOn) {
+    return <Text style={amountStyle}>{privacyPlaceholder}</Text>
   }
 
   return <Text style={amountStyle}>{formatTokenWithSymbol(asQuantity(amount), wallet.primaryToken)}</Text>
@@ -224,16 +216,11 @@ const Fee = ({amount}: {amount: BigNumber}) => {
 const ExpandableAssetList: React.VFC<{
   expanded: boolean
   assets: CardanoTypes.TokenEntry[]
-  isPrivacyOff?: boolean
-}> = ({expanded, assets, isPrivacyOff}) => {
+}> = ({expanded, assets}) => {
   const assetListStyle = useAssetListStyles()
   return (
     <View style={{borderWidth: 1, borderColor: 'transparent'}}>
-      {/* ↑↑↑ View wrapper fixes bug ↑↑↑ */}
-
-      {expanded && <AssetList isPrivacyOff={isPrivacyOff} styles={assetListStyle} assets={assets} />}
-
-      {/* ↓↓↓ View wrapper fixes bug ↓↓↓ */}
+      {expanded && <AssetList styles={assetListStyle} assets={assets} />}
     </View>
   )
 }
@@ -432,6 +419,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
+      backgroundColor: color.gray_cmin,
     },
     contentContainer: {
       ...atoms.px_lg,

@@ -1,8 +1,6 @@
 import {Balance} from '@yoroi/types'
 
-import {FungibilityFilter} from '../useCases/ListAmountsToSend/AddToken/SelectTokenFromListScreen'
-
-export const filterByFungibility = ({fungibilityFilter}: {fungibilityFilter: FungibilityFilter}) => {
+export const filterByFungibility = ({fungibilityFilter}: {fungibilityFilter: 'all' | 'ft' | 'nft'}) => {
   if (fungibilityFilter === 'all') return () => true
   if (fungibilityFilter === 'nft') return (tokenInfo: Balance.TokenInfo) => tokenInfo.kind === 'nft'
   if (fungibilityFilter === 'ft') return (tokenInfo: Balance.TokenInfo) => tokenInfo.kind === 'ft'

@@ -1,6 +1,5 @@
 import {Balance} from '@yoroi/types'
 
-import {FungibilityFilter} from '../useCases/ListAmountsToSend/AddToken/SelectTokenFromListScreen'
 import {filterByFungibility} from './filterByFungibility'
 
 describe('filterByFungibility', () => {
@@ -68,7 +67,7 @@ describe('filterByFungibility', () => {
   const nftTokenInfos: Balance.TokenInfo[] = [nft1, nft2]
   const ftTokenInfos: Balance.TokenInfo[] = [fakeToken1, fakeToken2]
 
-  it.each<{fungibilityFilter: FungibilityFilter; result: Balance.TokenInfo[]}>([
+  it.each<{fungibilityFilter: 'all' | 'ft' | 'nft'; result: Balance.TokenInfo[]}>([
     {
       fungibilityFilter: 'all',
       result: allTokenInfos,
@@ -82,7 +81,7 @@ describe('filterByFungibility', () => {
       result: ftTokenInfos,
     },
     {
-      fungibilityFilter: 'random-value' as FungibilityFilter,
+      fungibilityFilter: 'random-value' as never,
       result: allTokenInfos,
     },
   ])('should return correct tokenInfos if fungibility is "$fungibility"', ({fungibilityFilter, result}) => {

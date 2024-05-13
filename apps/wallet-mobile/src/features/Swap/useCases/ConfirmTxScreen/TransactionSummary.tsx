@@ -153,7 +153,13 @@ export const TransactionSummary = () => {
             <>
               <Spacer height={6} />
 
-              <PairedBalance amount={calculation.ptTotalValueSpent} textStyle={styles.cardTextUSD} />
+              <PairedBalance
+                amount={{
+                  info: wallet.portfolioPrimaryTokenInfo,
+                  quantity: BigInt(calculation.ptTotalValueSpent.quantity),
+                }}
+                textStyle={styles.pairedText}
+              />
             </>
           )}
         </View>
@@ -279,7 +285,7 @@ const useStyles = () => {
       lineHeight: 22,
       textAlign: 'right',
     },
-    cardTextUSD: {
+    pairedText: {
       fontSize: 14,
       color: color.gray_cmin,
       opacity: 0.75,

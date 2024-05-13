@@ -1,5 +1,7 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
+import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {showErrorDialog} from '../../dialogs'
@@ -11,6 +13,7 @@ import {PinInput, PinInputRef} from '../PinInput'
 
 export const PinLoginScreen = () => {
   const pinInputRef = React.useRef<null | PinInputRef>(null)
+  const styles = useStyles()
   const intl = useIntl()
   const strings = useStrings()
   const {login} = useAuth()
@@ -27,7 +30,7 @@ export const PinLoginScreen = () => {
   })
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={{flex: 1}}>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
       <PinInput
         ref={pinInputRef}
         enabled={!isLoading}
@@ -45,6 +48,18 @@ const useStrings = () => {
   return {
     title: intl.formatMessage(messages.title),
   }
+}
+
+const useStyles = () => {
+  const {color} = useTheme()
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: color.gray_cmin,
+    },
+  })
+  return styles
 }
 
 const messages = defineMessages({

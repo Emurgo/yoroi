@@ -1,43 +1,75 @@
-import {FetchData, fetchData, isLeft} from '@yoroi/common'
+import {FetchData, fetchData, isLeft, isRight} from '@yoroi/common'
 import {Api, Chain, Portfolio} from '@yoroi/types'
 import {freeze} from 'immer'
 
 import {ApiConfig} from '../../types'
-import {toSecondaryTokenInfos} from './transformers'
-import {DullahanApiTokenInfosResponse} from './types'
+import {toDullahanRequest, toSecondaryTokenInfos} from './transformers'
+import {
+  DullahanApiCachedIdsRequest,
+  DullahanApiTokenDiscoveryResponse,
+  DullahanApiTokenInfosResponse,
+} from './types'
+import {parseTokenDiscovery} from '../../validators/token-discovery'
 
 export const portfolioApiMaker = ({
   network,
   request = fetchData,
 }: {
-  network: Chain.Network
+  network: Chain.SupportedNetworks
   request?: FetchData
 }): Portfolio.Api.Api => {
   const config = apiConfig[network]
   return freeze(
     {
-      async tokenDiscoveries(idsWithCache) {
-        return request<
-          Portfolio.Api.TokenDiscoveriesResponse,
-          ReadonlyArray<Api.RequestWithCache<Portfolio.Token.Id>>
-        >({
-          method: 'post',
-          url: config.tokenDiscoveries,
-          data: idsWithCache,
+      async tokenDiscovery(id) {
+        const response = await request<DullahanApiTokenDiscoveryResponse>({
+          method: 'get',
+          url: `${config.tokenDiscovery}/${id}`,
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
           },
         })
+        if (isRight(response)) {
+          const discovery: Portfolio.Token.Discovery | undefined =
+            parseTokenDiscovery(response.value.data)
+
+          if (!discovery) {
+            return freeze(
+              {
+                tag: 'left',
+                error: {
+                  status: -3,
+                  message: 'Failed to transform token discovery response',
+                  responseData: response.value.data,
+                },
+              },
+              true,
+            )
+          }
+
+          return freeze(
+            {
+              tag: 'right',
+              value: {
+                status: response.value.status,
+                data: discovery,
+              },
+            },
+            true,
+          )
+        }
+
+        return response
       },
       async tokenInfos(idsWithCache) {
         const response = await request<
           DullahanApiTokenInfosResponse,
-          ReadonlyArray<Api.RequestWithCache<Portfolio.Token.Id>>
+          DullahanApiCachedIdsRequest
         >({
           method: 'post',
           url: config.tokenInfos,
-          data: idsWithCache,
+          data: toDullahanRequest(idsWithCache),
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -45,23 +77,37 @@ export const portfolioApiMaker = ({
         })
         if (isLeft(response)) return response
 
-        const transformedResponseData = toSecondaryTokenInfos(
-          response.value.data,
-        )
+        try {
+          const transformedResponseData = toSecondaryTokenInfos(
+            response.value.data,
+          )
 
-        const transformedResponse: Api.Response<Portfolio.Api.TokenInfosResponse> =
-          freeze(
+          const transformedResponse: Api.Response<Portfolio.Api.TokenInfosResponse> =
+            freeze(
+              {
+                tag: 'right',
+                value: {
+                  status: response.value.status,
+                  data: transformedResponseData,
+                },
+              },
+              true,
+            )
+
+          return transformedResponse
+        } catch (error) {
+          return freeze(
             {
-              tag: 'right',
-              value: {
-                status: response.value.status,
-                data: transformedResponseData,
+              tag: 'left',
+              error: {
+                status: -3,
+                message: 'Failed to transform token infos response',
+                responseData: response.value.data,
               },
             },
             true,
           )
-
-        return transformedResponse
+        }
       },
     },
     true,
@@ -70,35 +116,23 @@ export const portfolioApiMaker = ({
 
 export const apiConfig: ApiConfig = freeze(
   {
-    main: {
-      tokenDiscoveries:
-        'https://add50d9d-76d7-47b7-b17f-e34021f63a02.mock.pstmn.io/v1/token-discoveries',
+    mainnet: {
+      tokenDiscovery:
+        'https://dev-yoroi-backend-zero-mainnet.emurgornd.com/tokens/discovery',
       tokenInfos:
         'https://dev-yoroi-backend-zero-mainnet.emurgornd.com/tokens/info/multi',
     },
     preprod: {
-      tokenDiscoveries:
-        'https://add50d9d-76d7-47b7-b17f-e34021f63a02.mock.pstmn.io/v1/token-discoveries',
+      tokenDiscovery:
+        'https://dev-yoroi-backend-zero-preprod.emurgornd.com/tokens/discovery',
       tokenInfos:
         'https://dev-yoroi-backend-zero-preprod.emurgornd.com/tokens/info/multi',
     },
-    preview: {
-      tokenDiscoveries:
-        'https://yoroi-backend-zero-mainnet.emurgornd.com/stakekeys/{{STAKE_KEY_HASH}}/state',
-      tokenInfos:
-        'https://yoroi-backend-zero-mainnet.emurgornd.com/dreps/{{DREP_ID}}/state',
-    },
     sancho: {
-      tokenDiscoveries:
-        'https://yoroi-backend-zero-mainnet.emurgornd.com/stakekeys/{{STAKE_KEY_HASH}}/state',
+      tokenDiscovery:
+        'https://dev-yoroi-backend-zero-preprod.emurgornd.com/tokens/discovery',
       tokenInfos:
-        'https://yoroi-backend-zero-mainnet.emurgornd.com/dreps/{{DREP_ID}}/state',
-    },
-    test: {
-      tokenDiscoveries:
-        'https://yoroi-backend-zero-mainnet.emurgornd.com/stakekeys/{{STAKE_KEY_HASH}}/state',
-      tokenInfos:
-        'https://yoroi-backend-zero-mainnet.emurgornd.com/dreps/{{DREP_ID}}/state',
+        'https://dev-yoroi-backend-zero-preprod.emurgornd.com/tokens/info/multi',
     },
   },
   true,

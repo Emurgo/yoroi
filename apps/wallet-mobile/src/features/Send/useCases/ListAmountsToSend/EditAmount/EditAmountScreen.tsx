@@ -1,20 +1,21 @@
+import {parseInputToBigInt, splitBigInt} from '@yoroi/common'
+import {isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
-import {Balance} from '@yoroi/types'
 import * as React from 'react'
 import {ScrollView, StyleSheet, Text, TouchableOpacity, View, ViewProps} from 'react-native'
 
 import {Button, KeyboardAvoidingView, Spacer, TextInput} from '../../../../../components'
-import {AmountItem} from '../../../../../components/AmountItem/AmountItem'
 import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
-import {selectFtOrThrow} from '../../../../../yoroi-wallets/cardano/utils'
-import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
+import {useLanguage} from '../../../../../i18n'
 import {Logger} from '../../../../../yoroi-wallets/logging'
-import {asQuantity, editedFormatter, pastedFormatter, Quantities} from '../../../../../yoroi-wallets/utils'
+import {editedFormatter, pastedFormatter} from '../../../../../yoroi-wallets/utils'
+import {usePortfolioBalances} from '../../../../Portfolio/common/hooks/usePortfolioBalances'
+import {usePortfolioPrimaryBreakdown} from '../../../../Portfolio/common/hooks/usePortfolioPrimaryBreakdown'
+import {TokenAmountItem} from '../../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
 import {useSelectedWallet} from '../../../../WalletManager/Context'
 import {useNavigateTo, useOverridePreviousSendTxRoute} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
-import {useTokenQuantities} from '../../../common/useTokenQuantities'
 import {NoBalance} from './ShowError/NoBalance'
 import {UnableToSpend} from './ShowError/UnableToSpend'
 
@@ -22,48 +23,71 @@ export const EditAmountScreen = () => {
   const strings = useStrings()
   const {styles} = useStyles()
   const navigateTo = useNavigateTo()
-  const {selectedTokenId, amountChanged} = useTransfer()
-  const {available, spendable, initialQuantity} = useTokenQuantities(selectedTokenId)
+  const {numberLocale} = useLanguage()
 
   const wallet = useSelectedWallet()
-  const tokenInfo = useTokenInfo({wallet, tokenId: selectedTokenId}, {select: selectFtOrThrow})
-  const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
+  const balances = usePortfolioBalances({wallet})
+  const primaryBreakdown = usePortfolioPrimaryBreakdown({wallet})
 
-  const [quantity, setQuantity] = React.useState<Balance.Quantity>(initialQuantity)
-  const [inputValue, setInputValue] = React.useState<string>(
-    Quantities.denominated(initialQuantity, tokenInfo.decimals ?? 0),
-  )
+  const {selectedTokenId, amountChanged, allocated, selectedTargetIndex, targets} = useTransfer()
 
-  useOverridePreviousSendTxRoute(
-    Quantities.isZero(initialQuantity) ? 'send-select-token-from-list' : 'send-list-amounts-to-send',
-  )
+  const amount = targets[selectedTargetIndex].entry.amounts[selectedTokenId]
+  const initialQuantity = amount.quantity
+  const available =
+    (balances.records.get(selectedTokenId)?.quantity ?? 0n) -
+    (allocated.get(selectedTargetIndex)?.get(selectedTokenId) ?? 0n)
+  const isPrimary = isPrimaryToken(amount.info)
+
+  const [quantity, setQuantity] = React.useState(initialQuantity)
+  const [inputValue, setInputValue] = React.useState(splitBigInt(initialQuantity, amount.info.decimals).bn.toFormat())
+  const spendable = isPrimary ? available - primaryBreakdown.lockedAsStorageCost : available
+
+  useOverridePreviousSendTxRoute(initialQuantity === 0n ? 'send-select-token-from-list' : 'send-list-amounts-to-send')
 
   React.useEffect(() => {
     setQuantity(initialQuantity)
-    setInputValue(Quantities.denominated(initialQuantity, tokenInfo.decimals ?? 0))
-  }, [initialQuantity, tokenInfo.decimals])
+    setInputValue(splitBigInt(initialQuantity, amount.info.decimals).bn.toFormat())
+  }, [amount.info.decimals, initialQuantity])
 
-  const hasBalance = !Quantities.isGreaterThan(quantity, available)
-  const isUnableToSpend = isPrimary && Quantities.isGreaterThan(quantity, spendable)
-  const isZero = Quantities.isZero(quantity)
+  const hasBalance = available >= quantity
+  // primary can have locked amount
+  const isUnableToSpend = isPrimary && quantity > spendable
+  const isZero = quantity === 0n
 
-  const onChangeQuantity = (text: string) => {
-    try {
-      const quantity = asQuantity(text.length > 0 ? text : '0')
-      setInputValue(text)
-      setQuantity(Quantities.integer(quantity, tokenInfo.decimals ?? 0))
-    } catch (error) {
-      Logger.error('EditAmountScreen::onChangeQuantity', error)
-    }
-  }
-  const onMaxBalance = () => {
-    setInputValue(Quantities.denominated(spendable, tokenInfo.decimals ?? 0))
-    setQuantity(spendable)
-  }
-  const onApply = () => {
-    amountChanged(quantity)
+  const handleOnChangeQuantity = React.useCallback(
+    (text: string) => {
+      try {
+        const [newInputValue, newQuantity] = parseInputToBigInt({
+          input: text,
+          decimalPlaces: amount.info.decimals,
+          format: numberLocale,
+        })
+        setInputValue(newInputValue)
+        setQuantity(newQuantity)
+      } catch (error) {
+        Logger.error('EditAmountScreen::onChangeQuantity', error)
+      }
+    },
+    [amount.info.decimals, numberLocale],
+  )
+
+  const handleOnMaxBalance = React.useCallback(() => {
+    const [newInputValue, newQuantity] = parseInputToBigInt({
+      input: spendable.toString(),
+      decimalPlaces: amount.info.decimals,
+      format: numberLocale,
+    })
+    setInputValue(newInputValue)
+    setQuantity(newQuantity)
+  }, [amount.info.decimals, numberLocale, spendable])
+
+  const handleOnApply = React.useCallback(() => {
+    amountChanged({
+      info: amount.info,
+      quantity,
+    })
     navigateTo.selectedTokens()
-  }
+  }, [amount.info, amountChanged, navigateTo, quantity])
 
   return (
     <View style={styles.container}>
@@ -71,18 +95,24 @@ export const EditAmountScreen = () => {
         <ScrollView style={styles.scrollView} bounces={false}>
           <Spacer height={16} />
 
-          <AmountItem amount={{quantity: available, tokenId: tokenInfo.id}} wallet={wallet} />
+          <TokenAmountItem
+            amount={{
+              info: amount.info,
+              quantity: spendable,
+            }}
+            ignorePrivacy
+          />
 
           <Spacer height={40} />
 
-          <AmountInput onChange={onChangeQuantity} value={inputValue} ticker={tokenInfo.ticker} />
+          <AmountInput onChange={handleOnChangeQuantity} value={inputValue} ticker={amount.info.ticker} />
 
           <Center>
-            {isPrimary && <PairedBalance amount={{tokenId: tokenInfo.id, quantity}} />}
+            {isPrimary && <PairedBalance amount={amount} ignorePrivacy />}
 
             <Spacer height={22} />
 
-            {!isPrimary && <MaxBalanceButton onPress={onMaxBalance} />}
+            {!isPrimary && <MaxBalanceButton onPress={handleOnMaxBalance} />}
 
             <Spacer height={22} />
 
@@ -96,7 +126,7 @@ export const EditAmountScreen = () => {
 
         <Actions>
           <ApplyButton
-            onPress={onApply}
+            onPress={handleOnApply}
             title={strings.apply.toLocaleUpperCase()}
             shelleyTheme
             disabled={isUnableToSpend || !hasBalance || isZero}

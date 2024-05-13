@@ -1,68 +1,68 @@
+import {amountFormatter} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
+import {Portfolio} from '@yoroi/types'
 import React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
-import {Boundary, ResetErrorRef, Spacer} from '../components'
+import {ResetErrorRef, Spacer} from '../components'
 import {Icon} from '../components/Icon'
 import {PairedBalance} from '../components/PairedBalance/PairedBalance'
+import {usePortfolioPrimaryBalance} from '../features/Portfolio/common/hooks/usePortfolioPrimaryBalance'
 import {usePrivacyMode} from '../features/Settings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../features/WalletManager/Context'
-import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../legacy/format'
-import {useBalances} from '../yoroi-wallets/hooks'
-import {Amounts} from '../yoroi-wallets/utils'
 
 export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
   const wallet = useSelectedWallet()
   const styles = useStyles()
-  const balances = useBalances(wallet)
-  const primaryAmount = Amounts.getAmount(balances, wallet.primaryTokenInfo.id)
-  const {isPrivacyOff, togglePrivacyMode} = usePrivacyMode()
+  const primaryBalance = usePortfolioPrimaryBalance({wallet})
+  const {togglePrivacyMode} = usePrivacyMode()
 
   return (
     <View>
       <Spacer height={14} />
 
-      <Row>
+      <CenteredRow>
         <Icon.WalletAccount style={styles.walletIcon} iconSeed={wallet.checksum.ImagePart} scalePx={7} />
-      </Row>
+      </CenteredRow>
 
       <Spacer height={10} />
 
       <TouchableOpacity onPress={() => togglePrivacyMode()} style={styles.button}>
-        <Row>
-          <Boundary loading={{size: 'small'}} error={{size: 'inline'}}>
-            <Balance isPrivacyOff={isPrivacyOff} />
-          </Boundary>
-        </Row>
+        <CenteredRow>
+          <Balance amount={primaryBalance} />
+        </CenteredRow>
 
-        <Row>
-          <PairedBalance isPrivacyOff={isPrivacyOff} amount={primaryAmount} ref={ref} />
-        </Row>
+        <CenteredRow>
+          <PairedBalance amount={primaryBalance} ref={ref} />
+        </CenteredRow>
       </TouchableOpacity>
     </View>
   )
 })
 
-const hiddenBalance = '*.******'
-const Balance = ({isPrivacyOff}: {isPrivacyOff: boolean}) => {
+type BalanceProps = {amount: Portfolio.Token.Amount; ignorePrivacy?: boolean}
+const Balance = ({amount, ignorePrivacy}: BalanceProps) => {
+  const {isPrivacyOff, privacyPlaceholder} = usePrivacyMode()
   const styles = useStyles()
-  const wallet = useSelectedWallet()
-  const balances = useBalances(wallet)
 
-  const balance = isPrivacyOff
-    ? formatTokenWithTextWhenHidden(hiddenBalance, wallet.primaryToken)
-    : formatTokenWithText(Amounts.getAmount(balances, wallet.primaryToken.identifier).quantity, wallet.primaryToken)
+  const balance = React.useMemo(
+    () =>
+      isPrivacyOff || ignorePrivacy
+        ? amountFormatter({template: '{{value}} {{ticker}}'})(amount)
+        : amountFormatter({template: `${privacyPlaceholder} {{ticker}}`})(amount),
+    [amount, ignorePrivacy, isPrivacyOff, privacyPlaceholder],
+  )
 
   return (
-    <Row>
+    <CenteredRow>
       <Text style={styles.balanceText} testID="balanceText">
         {balance}
       </Text>
-    </Row>
+    </CenteredRow>
   )
 }
 
-const Row = ({children}: {children: React.ReactNode}) => {
+const CenteredRow = ({children}: {children: React.ReactNode}) => {
   const styles = useStyles()
   return <View style={styles.centered}>{children}</View>
 }

@@ -1,6 +1,7 @@
+import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
-import {Text, View} from 'react-native'
+import {StyleSheet, Text, View} from 'react-native'
 
 import {StandardModal} from '../components'
 import {useSelectedWallet} from '../features/WalletManager/Context'
@@ -12,6 +13,7 @@ import {Amounts, asQuantity} from '../yoroi-wallets/utils'
 
 export const InsufficientFundsModal = ({visible, onRequestClose}: {visible: boolean; onRequestClose: () => void}) => {
   const strings = useStrings()
+  const styles = useStyles()
   const wallet = useSelectedWallet()
   const balances = useBalances(wallet)
 
@@ -27,7 +29,7 @@ export const InsufficientFundsModal = ({visible, onRequestClose}: {visible: bool
       showCloseIcon
     >
       <View>
-        <Text>
+        <Text style={styles.text}>
           {strings.insufficientBalance({
             requiredBalance: formatTokenWithText(asQuantity(CATALYST.DISPLAYED_MIN_ADA), wallet.primaryToken),
             currentBalance: formatTokenWithText(
@@ -53,4 +55,16 @@ const useStrings = () => {
     attention: intl.formatMessage(globalMessages.attention),
     back: intl.formatMessage(confirmationMessages.commonButtons.backButton),
   }
+}
+
+const useStyles = () => {
+  const {color} = useTheme()
+
+  const styles = StyleSheet.create({
+    text: {
+      color: color.gray_cmax,
+    },
+  })
+
+  return styles
 }

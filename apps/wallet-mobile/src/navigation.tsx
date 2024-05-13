@@ -8,6 +8,7 @@ import {
 } from '@react-navigation/native'
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack'
 import {Atoms, ThemedPalette, useTheme} from '@yoroi/theme'
+import {Portfolio} from '@yoroi/types'
 import React from 'react'
 import {Dimensions, TouchableOpacity, TouchableOpacityProps, ViewStyle} from 'react-native'
 
@@ -232,6 +233,7 @@ export type SettingsStackRoutes = {
   'remove-wallet': undefined
   'change-language': undefined
   'change-currency': undefined
+  'change-theme': undefined
   'enable-easy-confirmation': undefined
   'disable-easy-confirmation': undefined
   'change-password': undefined
@@ -313,9 +315,10 @@ export type FirstRunRouteNavigation = StackNavigationProp<FirstRunRoutes>
 
 export type NftRoutes = {
   'nft-gallery': undefined
-  'nft-details': {id: string}
-  'image-zoom': {id: string}
+  'nft-details': {id: Portfolio.Token.Id}
+  'nft-image-zoom': {id: Portfolio.Token.Id}
 }
+export type NftRouteNavigation = StackNavigationProp<NftRoutes>
 
 export type MenuRoutes = {
   menu: undefined

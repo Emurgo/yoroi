@@ -31,7 +31,7 @@ const poolInfoApi = new PoolInfoApi()
 export const usePoolTransition = () => {
   const navigation = useNavigation()
   const wallet = useSelectedWallet()
-  const {stakingInfo} = useStakingInfo(wallet)
+  const {stakingInfo, isLoading} = useStakingInfo(wallet)
 
   const isStaked = stakingInfo?.status === 'staked'
   const currentPoolId = isStaked ? stakingInfo?.poolId : ''
@@ -74,6 +74,7 @@ export const usePoolTransition = () => {
 
   return {
     ...poolTransitionQuery,
+    isLoading: isLoading || poolTransitionQuery.isLoading,
     poolTransition,
     isPoolRetiring: poolTransition !== null,
     navigateToUpdate,

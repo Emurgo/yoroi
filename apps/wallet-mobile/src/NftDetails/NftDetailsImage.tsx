@@ -1,16 +1,15 @@
 import React from 'react'
-import {Dimensions, StyleSheet, View} from 'react-native'
+import {StyleSheet, useWindowDimensions, View} from 'react-native'
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import ViewTransformer from 'react-native-easy-view-transformer'
 
 import {FadeIn} from '../components'
-import {NftPreview} from '../components/NftPreview'
+import {MediaPreview} from '../features/Portfolio/common/MediaPreview/MediaPreview'
 import {useSelectedWallet} from '../features/WalletManager/Context'
 import {useMetrics} from '../metrics/metricsManager'
 import {NftRoutes, useParams} from '../navigation'
 import {isEmptyString} from '../utils/utils'
-import {useNft} from '../yoroi-wallets/hooks'
 
 type Params = NftRoutes['nft-details']
 
@@ -21,20 +20,25 @@ const isParams = (params?: Params | object | undefined): params is Params => {
 export const NftDetailsImage = () => {
   const {id} = useParams<Params>(isParams)
   const wallet = useSelectedWallet()
-  const nft = useNft(wallet, {id})
+  const dimensions = useWindowDimensions()
+
+  // reading from the getter, there is no need to subscribe to changes
+  const [amount] = React.useState(wallet.balances.records.get(id))
+
   const {track} = useMetrics()
-
   React.useEffect(() => {
-    if (!isEmptyString(nft?.id)) track.nftGalleryDetailsImageViewed()
-  }, [nft?.id, track])
+    track.nftGalleryDetailsImageViewed()
+  }, [track, id])
 
-  const dimensions = Dimensions.get('window')
+  // record can be gone when arriving here, need a state
+  // TODO: revisit + product definition (missing is gone state)
+  if (!amount) return null
 
   return (
     <FadeIn style={styles.container}>
       <ViewTransformer maxScale={3} minScale={1}>
         <View style={styles.contentContainer}>
-          <NftPreview nft={nft} width={dimensions.width} height={dimensions.height} zoom={1} contentFit="contain" />
+          <MediaPreview info={amount.info} width={dimensions.width} height={dimensions.height} contentFit="contain" />
         </View>
       </ViewTransformer>
     </FadeIn>

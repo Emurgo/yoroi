@@ -1,20 +1,17 @@
 import {isNameServer, isResolvableDomain} from '@yoroi/resolver'
-import {Balance, Chain, Links, Resolver, Transfer} from '@yoroi/types'
+import {Chain, Links, Portfolio, Resolver, Transfer} from '@yoroi/types'
 import {castDraft, freeze, produce} from 'immer'
+
+import {targetGetAllocatedToOthers} from '../../../helpers/target-get-allocated-to-others'
+import {TransferAllocatedToOtherTargets} from '../../../types'
 
 export const combinedReducers = (
   state: TransferState,
   action: TransferAction | TargetAction,
 ) => {
-  return {
-    ...transferReducer(
-      {
-        ...state,
-        targets: targetsReducer(state, action as TargetAction),
-      },
-      action as TransferAction,
-    ),
-  }
+  let newState = transferReducer(state, action as TransferAction)
+  newState = targetsReducer(newState, action as TargetAction)
+  return newState
 }
 
 const transferReducer = (state: TransferState, action: TransferAction) => {
@@ -33,10 +30,11 @@ const transferReducer = (state: TransferState, action: TransferAction) => {
         draft.linkAction = castDraft(action.linkAction)
         break
       case TransferActionType.Reset:
-        draft.selectedTokenId = defaultTransferState.selectedTokenId
-        draft.memo = defaultTransferState.memo
-        draft.unsignedTx = castDraft(defaultTransferState.unsignedTx)
+        draft.allocated = defaultTransferState.allocated
         draft.selectedTargetIndex = defaultTransferState.selectedTargetIndex
+        draft.selectedTokenId = defaultTransferState.selectedTokenId
+        draft.unsignedTx = castDraft(defaultTransferState.unsignedTx)
+        draft.memo = defaultTransferState.memo
         draft.linkAction = castDraft(defaultTransferState.linkAction)
         draft.targets = defaultTransferState.targets
         break
@@ -45,13 +43,13 @@ const transferReducer = (state: TransferState, action: TransferAction) => {
 }
 
 const targetsReducer = (state: TransferState, action: TargetAction) => {
-  return produce(state.targets, (draft) => {
+  return produce(state, (draft) => {
     switch (action.type) {
       case TransferActionType.ReceiverResolveChanged: {
         const {resolve} = action
         const selectedTargetIndex = state.selectedTargetIndex
 
-        draft.forEach((target, index) => {
+        draft.targets.forEach((target, index) => {
           if (index === selectedTargetIndex) {
             const isDomain: boolean = isResolvableDomain(resolve)
             const as: Resolver.Receiver['as'] = isDomain ? 'domain' : 'address'
@@ -72,7 +70,7 @@ const targetsReducer = (state: TransferState, action: TargetAction) => {
         const {addressRecords} = action
         const selectedTargetIndex = state.selectedTargetIndex
 
-        draft.forEach((target, index) => {
+        draft.targets.forEach((target, index) => {
           if (index === selectedTargetIndex) {
             if (addressRecords !== undefined) {
               const keys = Object.keys(addressRecords).filter(isNameServer)
@@ -94,7 +92,7 @@ const targetsReducer = (state: TransferState, action: TargetAction) => {
         const {nameServer} = action
         const selectedTargetIndex = state.selectedTargetIndex
 
-        draft.forEach((target, index) => {
+        draft.targets.forEach((target, index) => {
           if (index === selectedTargetIndex) {
             target.receiver.selectedNameServer = nameServer
 
@@ -111,15 +109,16 @@ const targetsReducer = (state: TransferState, action: TargetAction) => {
       }
 
       case TransferActionType.AmountChanged: {
-        const {quantity} = action
+        const {amount} = action
         const selectedTargetIndex = state.selectedTargetIndex
         const selectedTokenId = state.selectedTokenId
 
-        draft.forEach((target, index) => {
+        draft.targets.forEach((target, index) => {
           if (index === selectedTargetIndex) {
-            target.entry.amounts[selectedTokenId] = quantity
+            target.entry.amounts[selectedTokenId] = amount
           }
         })
+        draft.allocated = targetGetAllocatedToOthers({targets: draft.targets})
         break
       }
 
@@ -127,11 +126,12 @@ const targetsReducer = (state: TransferState, action: TargetAction) => {
         const {tokenId} = action
         const selectedTargetIndex = state.selectedTargetIndex
 
-        draft.forEach((target, index) => {
+        draft.targets.forEach((target, index) => {
           if (index === selectedTargetIndex) {
             delete target.entry.amounts[tokenId]
           }
         })
+        draft.allocated = targetGetAllocatedToOthers({targets: draft.targets})
         break
       }
     }
@@ -140,11 +140,15 @@ const targetsReducer = (state: TransferState, action: TargetAction) => {
 
 export const defaultTransferState: TransferState = freeze(
   {
+    allocated: new Map(),
+
     selectedTargetIndex: 0,
-    selectedTokenId: '',
+    selectedTokenId: '.', // it's ok satisfying the type here, if ptId is dif it needs init by the client
     unsignedTx: undefined,
     memo: '',
+
     linkAction: undefined,
+
     targets: [
       {
         receiver: {
@@ -185,18 +189,24 @@ export const defaultTransferActions = {
 } as const
 
 export type TransferState = Readonly<{
+  // inputs
   selectedTargetIndex: number
-  selectedTokenId: string
+  selectedTokenId: Portfolio.Token.Id
   unsignedTx: Chain.Cardano.UnsignedTx | undefined
   memo: string
+
+  // derived state
   targets: Transfer.Targets
+  allocated: TransferAllocatedToOtherTargets
+
+  // injected when deeplink request transfer
   linkAction: Links.YoroiAction | undefined
 }>
 
 export type TargetActions = Readonly<{
   // Amount
-  amountChanged: (quantity: Balance.Quantity) => void
-  amountRemoved: (tokenId: string) => void
+  amountChanged: (amount: Portfolio.Token.Amount) => void
+  amountRemoved: (tokenId: Portfolio.Token.Id) => void
   // Receiver
   receiverResolveChanged: (resolve: Resolver.Receiver['resolve']) => void
   nameServerSelectedChanged: (
@@ -209,7 +219,7 @@ export type TargetActions = Readonly<{
 
 export type TransferActions = Readonly<{
   unsignedTxChanged: (UnsignedTx: Chain.Cardano.UnsignedTx | undefined) => void
-  tokenSelectedChanged: (tokenId: string) => void
+  tokenSelectedChanged: (tokenId: Portfolio.Token.Id) => void
   reset: () => void
   memoChanged: (memo: string) => void
   linkActionChanged: (linkAction: Links.YoroiAction) => void
@@ -234,15 +244,15 @@ export type TargetAction = Readonly<
     }
   | {
       type: TransferActionType.TokenSelectedChanged
-      tokenId: string
+      tokenId: Portfolio.Token.Id
     }
   | {
       type: TransferActionType.AmountChanged
-      quantity: Balance.Quantity
+      amount: Portfolio.Token.Amount
     }
   | {
       type: TransferActionType.AmountRemoved
-      tokenId: string
+      tokenId: Portfolio.Token.Id
     }
 >
 
@@ -256,7 +266,7 @@ export type TransferAction = Readonly<
     }
   | {
       type: TransferActionType.TokenSelectedChanged
-      tokenId: string
+      tokenId: Portfolio.Token.Id
     }
   | {
       type: TransferActionType.UnsignedTxChanged
@@ -284,5 +294,5 @@ export enum TransferActionType {
 
 /* istanbul ignore next */
 function missingInit() {
-  console.error('[@yoroi/swap] missing initialization')
+  console.error('[@yoroi/transfer] missing initialization')
 }

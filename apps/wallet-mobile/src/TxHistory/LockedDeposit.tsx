@@ -1,39 +1,34 @@
+import {amountFormatter} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 
-import {Boundary, Spacer, Text} from '../components'
+import {Spacer, Text} from '../components'
+import {usePortfolioPrimaryBreakdown} from '../features/Portfolio/common/hooks/usePortfolioPrimaryBreakdown'
 import {usePrivacyMode} from '../features/Settings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../features/WalletManager/Context'
 import globalMessages from '../i18n/global-messages'
-import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../legacy/format'
-import {useLockedAmount} from '../yoroi-wallets/hooks'
 
-export const LockedDeposit = () => {
-  const {isPrivacyOff} = usePrivacyMode()
+export const LockedDeposit = ({ignorePrivacy = false}: {ignorePrivacy?: boolean}) => {
   const wallet = useSelectedWallet()
-  const loadingAmount = formatTokenWithTextWhenHidden('...', wallet.primaryToken)
-  const hiddenAmount = formatTokenWithTextWhenHidden('*.******', wallet.primaryToken)
+  const {isPrivacyOff, privacyPlaceholder} = usePrivacyMode()
+  const {lockedAsStorageCost} = usePortfolioPrimaryBreakdown({wallet})
 
-  if (isPrivacyOff) return <FormattedAmount amount={hiddenAmount} />
-
-  return (
-    <Boundary
-      loading={{
-        fallback: <FormattedAmount amount={loadingAmount} />,
-      }}
-      error={{size: 'inline'}}
-    >
-      <LockedAmount />
-    </Boundary>
+  const amount = React.useMemo(
+    () =>
+      isPrivacyOff || ignorePrivacy
+        ? amountFormatter({template: '{{value}} {{ticker}}'})({
+            quantity: lockedAsStorageCost,
+            info: wallet.portfolioPrimaryTokenInfo,
+          })
+        : amountFormatter({template: `${privacyPlaceholder} {{ticker}}`})({
+            quantity: 0n,
+            info: wallet.portfolioPrimaryTokenInfo,
+          }),
+    [ignorePrivacy, isPrivacyOff, lockedAsStorageCost, privacyPlaceholder, wallet.portfolioPrimaryTokenInfo],
   )
-}
 
-const LockedAmount = () => {
-  const wallet = useSelectedWallet()
-  const lockedAmount = useLockedAmount({wallet})
-  const amount = formatTokenWithText(lockedAmount, wallet.primaryToken)
   return <FormattedAmount amount={amount} />
 }
 

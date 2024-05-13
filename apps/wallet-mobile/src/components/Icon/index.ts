@@ -3,6 +3,7 @@ import {Analytics} from './Analytics'
 import {ArrowDown} from './ArrowDown'
 import {ArrowRight} from './ArrowRight'
 import {Assets} from './Assets'
+import {Backspace} from './Backspace'
 import {Backward} from './Backward'
 import {Bio} from './Bio'
 import {Bug} from './Bug'
@@ -104,6 +105,7 @@ import {TabStaking} from './TabStaking'
 import {TabWallet} from './TabWallet'
 import {Telegram} from './Telegram'
 import {TermsOfUse} from './TermsOfUse'
+import {Theme} from './Theme'
 import {ThumbsUp} from './ThumbsUp'
 import {Tokens} from './Tokens'
 import {TotalAda} from './TotalAda'
@@ -130,6 +132,7 @@ export const Icon = {
   Assets,
   Bio,
   Bug,
+  Backspace,
   Burger,
   Cardano,
   Catalyst,
@@ -200,6 +203,7 @@ export const Icon = {
   TabStaking,
   TabWallet,
   Table,
+  Theme,
   Telegram,
   TermsOfUse,
   ThumbsUp,

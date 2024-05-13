@@ -31,7 +31,6 @@ import {parseWalletMeta} from '../../wallet-manager/validators'
 import {WalletManager} from '../../wallet-manager/walletManager'
 import {useWalletManager} from '../../wallet-manager/WalletManagerContext'
 import {getSpendingKey, getStakingKey} from '../cardano/addressInfo/addressInfo'
-import {calcLockedDeposit} from '../cardano/assetUtils'
 import {generateShelleyPlateFromKey} from '../cardano/shelley/plate'
 import {WalletEvent, YoroiWallet} from '../cardano/types'
 import {HWDeviceInfo} from '../hw'
@@ -165,43 +164,10 @@ export const useAssetIds = (wallet: YoroiWallet): string[] => {
   return Object.keys(balances).filter((id) => wallet.primaryTokenInfo.id !== id)
 }
 
-/**
- * Calculate the lovelace locked up to hold utxos with assets
- *
- * @summary Returns the locked amount in Lovelace
- */
-export const useLockedAmount = (
-  {wallet}: {wallet: YoroiWallet},
-  options?: UseQueryOptions<Balance.Quantity, Error, Balance.Quantity, [string, string, 'lockedAmount']>,
-) => {
-  const {protocolParams} = useProtocolParams(wallet, {suspense: true})
-  const coinsPerUtxoByte = protocolParams?.coinsPerUtxoByte ?? ''
-
-  const query = useQuery({
-    ...options,
-    suspense: true,
-    queryKey: [wallet.id, coinsPerUtxoByte, 'lockedAmount'],
-    queryFn: () =>
-      calcLockedDeposit(wallet.utxos, wallet.receiveAddresses[0], coinsPerUtxoByte).then(
-        (amount) => amount.toString() as Balance.Quantity,
-      ),
-  })
-
-  React.useEffect(() => {
-    const unsubscribe = wallet.subscribe(({type}) => type === 'utxos' && query.refetch())
-
-    return () => unsubscribe?.()
-  }, [query, wallet])
-
-  if (query.data == null) throw new Error('invalid state')
-
-  return query.data
-}
-
 export const useSync = (wallet: YoroiWallet, options?: UseMutationOptions<void, Error>) => {
   const mutation = useMutation({
     ...options,
-    mutationFn: () => wallet.sync(),
+    mutationFn: () => wallet.sync({isForced: true}),
   })
 
   return {
@@ -620,19 +586,6 @@ export const useEasyConfirmationEnabled = (wallet: YoroiWallet) => {
   return wallet.isEasyConfirmationEnabled
 }
 
-export const useOpenWallet = (options?: UseMutationOptions<[YoroiWallet, WalletMeta], Error, WalletMeta>) => {
-  const walletManager = useWalletManager()
-  const mutation = useMutation({
-    ...options,
-    mutationFn: (walletMeta) => Promise.all([walletManager.openWallet(walletMeta), walletMeta]),
-  })
-
-  return {
-    openWallet: mutation.mutate,
-    ...mutation,
-  }
-}
-
 export const useWalletNames = (
   walletManager: WalletManager,
   options?: UseQueryOptions<Array<WalletMeta>, Error, Array<string>>,
@@ -1016,7 +969,7 @@ const supportedTypes = [
   'image/tiff',
 ]
 
-const supportedSizes = [64, 72, 128, 256, 480, 512, 640, 720, 1080, 1280, 1440] as const
+const supportedSizes = [64, 128, 256, 512, 720] as const
 
 const getClosestSize = (size: string | number) => {
   const pixels = PixelRatio.getPixelSizeForLayoutSize(Number(size))

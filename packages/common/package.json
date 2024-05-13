@@ -147,6 +147,7 @@
     "@types/react-test-renderer": "^18.0.7",
     "axios": "^1.5.0",
     "axios-mock-adapter": "^1.21.5",
+    "bignumber.js": "^9.0.1",
     "commitlint": "^17.0.2",
     "del-cli": "^5.0.0",
     "dependency-cruiser": "^13.1.1",

@@ -6,7 +6,7 @@ import React from 'react'
 import {LogBox, Platform, StyleSheet, UIManager} from 'react-native'
 import Config from 'react-native-config'
 import * as RNP from 'react-native-paper'
-import {SafeAreaProvider} from 'react-native-safe-area-context'
+import {initialWindowMetrics, SafeAreaProvider} from 'react-native-safe-area-context'
 import {enableFreeze, enableScreens} from 'react-native-screens'
 import {QueryClient, QueryClientProvider} from 'react-query'
 
@@ -61,7 +61,7 @@ export const YoroiApp = () => {
                 <LoadingBoundary style={StyleSheet.absoluteFill}>
                   <LanguageProvider>
                     <CurrencyProvider>
-                      <SafeAreaProvider>
+                      <SafeAreaProvider initialMetrics={initialWindowMetrics}>
                         <RNP.Provider>
                           <AuthProvider>
                             <SelectedWalletMetaProvider>

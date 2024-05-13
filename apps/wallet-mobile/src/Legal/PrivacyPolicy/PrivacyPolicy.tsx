@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import Markdown from 'react-native-markdown-display'
@@ -18,6 +19,7 @@ export const usePrivacyPolicy = ({languageCode}: {languageCode: LanguageCode}) =
 
 export const PrivacyPolicy = ({languageCode}: {languageCode: LanguageCode}) => {
   const privacyPolicy = usePrivacyPolicy({languageCode})
+  const styles = useStyles()
 
   return privacyPolicy != null ? (
     <View>
@@ -31,26 +33,27 @@ export const PrivacyPolicy = ({languageCode}: {languageCode: LanguageCode}) => {
   )
 }
 
-const styles = StyleSheet.create({
-  body: {
-    fontFamily: 'Rubik-Regular',
-    fontSize: 16,
-    lineHeight: 24,
-    color: '#000000',
-    paddingVertical: 8,
-  },
-  heading2: {
-    fontFamily: 'Rubik-Medium',
-    lineHeight: 24,
-    fontSize: 16,
-    color: '#000000',
-    paddingVertical: 8,
-  },
-  heading1: {
-    fontFamily: 'Rubik-Bold',
-    fontSize: 20,
-    lineHeight: 30,
-    color: '#000000',
-    paddingVertical: 10,
-  },
-})
+const useStyles = () => {
+  const {atoms, color} = useTheme()
+  const styles = StyleSheet.create({
+    body: {
+      ...atoms.body_1_lg_regular,
+      ...atoms.py_sm,
+      color: color.gray_cmax,
+    },
+    heading2: {
+      ...atoms.body_1_lg_medium,
+      ...atoms.py_sm,
+      color: color.gray_cmax,
+    },
+    heading1: {
+      fontFamily: 'Rubik-Bold',
+      fontSize: 20,
+      lineHeight: 30,
+      color: color.gray_cmax,
+      paddingVertical: 10,
+    },
+  })
+
+  return styles
+}

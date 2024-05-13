@@ -33,7 +33,7 @@ export const NotifySupportedNameServers = () => {
         <View style={styles.header}>
           <Text style={styles.title}>{`${strings.resolverNoticeTitle} `}😇</Text>
 
-          <PressableIcon icon={Icon.CrossCircle} onPress={handleOnClose} size={24} />
+          <PressableIcon icon={Icon.CrossCircle} onPress={handleOnClose} size={24} color={colors.iconColor} />
         </View>
 
         <Spacer height={10} />
@@ -102,6 +102,7 @@ const useStyles = () => {
   const colors = {
     lightGreen: color.secondary_c200,
     lightBlue: color.primary_c100,
+    iconColor: color.gray_cmax,
   }
 
   return {styles, colors}
