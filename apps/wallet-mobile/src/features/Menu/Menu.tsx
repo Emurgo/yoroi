@@ -11,6 +11,7 @@ import {useCanVote} from '../../Catalyst/hooks'
 import {InsufficientFundsModal} from '../../Catalyst/InsufficientFundsModal'
 import {Boundary, Icon, Spacer, Text} from '../../components'
 import {usePrefetchStakingInfo} from '../../Dashboard/StakePoolInfos'
+import {CONFIG} from '../../legacy/config'
 import {useMetrics} from '../../metrics/metricsManager'
 import {defaultStackNavigationOptions, useWalletNavigation} from '../../navigation'
 import {usePoolTransition} from '../../Staking/PoolTransition/usePoolTransition'
@@ -61,12 +62,14 @@ export const Menu = () => {
           left={<Icon.Gear size={24} color={color.gray['600']} />}
         />
 
-        <Staking
-          label={strings.stakingCenter}
-          onPress={navigateTo.stakingCenter}
-          left={<Icon.TabStaking size={24} color={color.gray['600']} />}
-          right={isPoolRetiring ? <Icon.Warning size={24} color={color.magenta[500]} /> : null}
-        />
+        {CONFIG.DAPP_EXPLORER_ENABLED && (
+          <Staking
+            label={strings.stakingCenter}
+            onPress={navigateTo.stakingCenter}
+            left={<Icon.TabStaking size={24} color={color.gray_c600} />}
+            right={isPoolRetiring ? <Icon.Warning size={24} color={color.sys_magenta_c500} /> : null}
+          />
+        )}
 
         {isGovernanceFeatureEnabled && (
           <Governance
