@@ -201,7 +201,7 @@ const useAlertStyles = () => {
   const {color, typography} = theme
   const alertStyles = StyleSheet.create({
     container: {
-      backgroundColor: '#ff10510f', // not en theme. deprecated.
+      backgroundColor: '#ff10510f', // not in theme. deprecated.
       borderRadius: 8,
       padding: 16,
     },
