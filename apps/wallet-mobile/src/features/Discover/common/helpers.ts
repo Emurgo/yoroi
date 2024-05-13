@@ -3,7 +3,6 @@ import {DappConnector} from '@yoroi/dapp-connector'
 import {App} from '@yoroi/types'
 
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
-import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 
 export const validUrl = (url: string) => {
   return /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!&',,=.+]+$/g.test(url)

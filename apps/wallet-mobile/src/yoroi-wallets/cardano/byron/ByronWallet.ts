@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {PrivateKey} from '@emurgo/cross-csl-core'
-import {signRawTransaction} from '@emurgo/yoroi-lib'
-import {Datum} from '@emurgo/yoroi-lib/dist/internals/models'
+import {PrivateKey, TransactionUnspentOutput, TransactionWitnessSet} from '@emurgo/cross-csl-core'
+import {Datum, signRawTransaction} from '@emurgo/yoroi-lib'
 import {AppApi, CardanoApi} from '@yoroi/api'
 import {isNonNullable, parseSafe} from '@yoroi/common'
 import {Api, App, Balance, Chain, Portfolio} from '@yoroi/types'
@@ -22,8 +21,7 @@ import walletManager from '../../../wallet-manager/walletManager'
 import {HWDeviceInfo} from '../../hw'
 import {Logger} from '../../logging'
 import {makeMemosManager, MemosManager} from '../../memos'
-import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../storage'
-import {Keychain} from '../../storage/Keychain'
+import {Keychain, makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../storage'
 import {
   AccountStateResponse,
   BackendConfig,
@@ -46,9 +44,7 @@ import {
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../../types'
-import {asQuantity, isMainnetNetworkId, Quantities} from '../../utils'
-import {genTimeToSlot} from '../../utils/timeUtils'
-import {validatePassword} from '../../utils/validators'
+import {asQuantity, genTimeToSlot, isMainnetNetworkId, Quantities, validatePassword} from '../../utils'
 import {Cardano, CardanoMobile} from '../../wallets'
 import * as legacyApi from '../api'
 import {calcLockedDeposit} from '../assetUtils'
@@ -1469,6 +1465,48 @@ export class ByronWallet implements YoroiWallet {
       isReadOnly: this.isReadOnly,
       isEasyConfirmationEnabled: this.isEasyConfirmationEnabled,
     }
+  }
+
+  CIP30getChangeAddress(): Promise<string> {
+    throw new Error('Method not implemented.')
+  }
+
+  CIP30getCollateral(_value?: string): Promise<TransactionUnspentOutput[] | null> {
+    throw new Error('Method not implemented.')
+  }
+
+  CIP30getRewardAddresses(): Promise<string[]> {
+    throw new Error('Method not implemented.')
+  }
+
+  CIP30getUtxos(
+    _value?: string,
+    _paginate?: {
+      page: number
+      limit: number
+    },
+  ): Promise<TransactionUnspentOutput[] | null> {
+    throw new Error('Method not implemented.')
+  }
+
+  CIP30signData(_address: string, _payload: string): Promise<string> {
+    throw new Error('Method not implemented.')
+  }
+
+  CIP30signTx(_password: string, _txHex: string, _partialSign?: boolean): Promise<TransactionWitnessSet> {
+    throw new Error('Method not implemented.')
+  }
+
+  CIP30submitTx(_cbor: string): Promise<string> {
+    throw new Error('Method not implemented.')
+  }
+
+  getUnusedAddresses(): Promise<string[]> {
+    throw new Error('Method not implemented.')
+  }
+
+  getUsedAddresses(_params?: {page: number; limit: number}): Promise<string[]> {
+    throw new Error('Method not implemented.')
   }
 }
 

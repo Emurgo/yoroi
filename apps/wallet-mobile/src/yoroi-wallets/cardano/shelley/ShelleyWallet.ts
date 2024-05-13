@@ -10,7 +10,6 @@ import {BalanceAmounts} from '@yoroi/types/src/balance/token'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
-import ExtendableError from 'es6-error'
 import _ from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 import {defaultMemoize} from 'reselect'
@@ -1114,17 +1113,17 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       return txId
     }
 
-    async CIP30signData(address: string, payload: string): Promise<string> {
-      throw new Error('Not implemented')
+    CIP30signData(_address: string, _payload: string): Promise<string> {
+      return Promise.reject(new Error('Not implemented'))
     }
 
-    async CIP30signTx(password: string, cbor: string, partial: boolean = false) {
+    async CIP30signTx(password: string, cbor: string, partial = false) {
       const rootKey = await this.getDecryptedRootKey(password)
       const signers = await getTransactionSigners(cbor, this, partial)
       const keys = await Promise.all(signers.map(async (signer) => createRawTxSigningKey(rootKey, signer)))
       const signedTxBytes = await signRawTransaction(CardanoMobile, cbor, keys)
       const signedTx = await CardanoMobile.Transaction.fromBytes(signedTxBytes)
-      return await signedTx.witnessSet()
+      return signedTx.witnessSet()
     }
 
     async signSwapCancellationWithLedger(cbor: string, useUSB: boolean): Promise<void> {

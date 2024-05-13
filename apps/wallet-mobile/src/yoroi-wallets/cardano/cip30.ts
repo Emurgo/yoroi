@@ -7,7 +7,7 @@ import {RawUtxo} from '../types'
 import {Utxos} from '../utils'
 import {CardanoMobile} from '../wallets'
 import {toAssetNameHex, toPolicyId} from './api'
-import {identifierToCardanoAsset, normalizeToAddress} from './utils'
+import {identifierToCardanoAsset} from './utils'
 
 export async function assetToRustMultiasset(remoteAssets: UtxoAsset[]): Promise<CSL.MultiAsset> {
   const groupedAssets = remoteAssets.reduce((res, a) => {

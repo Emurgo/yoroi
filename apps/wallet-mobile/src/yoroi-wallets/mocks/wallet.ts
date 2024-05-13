@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/require-await */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {TransactionUnspentOutput, TransactionWitnessSet} from '@emurgo/cross-csl-core'
 import {action} from '@storybook/addon-actions'
 import {AppApi, CardanoApi} from '@yoroi/api'
 import {createPrimaryTokenInfo} from '@yoroi/portfolio'
@@ -303,6 +304,39 @@ const wallet: YoroiWallet = {
   createUnsignedGovernanceTx: () => {
     throw new Error('not implemented: createUnsignedGovernanceTx')
   },
+  CIP30getCollateral(_value?: string): Promise<TransactionUnspentOutput[] | null> {
+    throw new Error('not implemented: CIP30getCollateral')
+  },
+  CIP30getRewardAddresses(): Promise<string[]> {
+    throw new Error('not implemented: CIP30getRewardAddresses')
+  },
+  CIP30getChangeAddress(): Promise<string> {
+    throw new Error('not implemented: CIP30getChangeAddress')
+  },
+  CIP30getUtxos(
+    _value?: string,
+    _paginate?: {
+      page: number
+      limit: number
+    },
+  ): Promise<TransactionUnspentOutput[] | null> {
+    throw new Error('not implemented: CIP30getUtxos')
+  },
+  CIP30signData(_address: string, _payload: string): Promise<string> {
+    throw new Error('not implemented: CIP30signData')
+  },
+  CIP30submitTx(_cbor: string) {
+    throw new Error('not implemented: CIP30submitTx')
+  },
+  CIP30signTx(_password: string, _txHex: string, _partialSign?: boolean): Promise<TransactionWitnessSet> {
+    throw new Error('not implemented: CIP30signTx')
+  },
+  getUnusedAddresses(): Promise<string[]> {
+    throw new Error('not implemented: getUnusedAddresses')
+  },
+  getUsedAddresses(_params?: {page: number; limit: number}): Promise<string[]> {
+    throw new Error('not implemented: getUsedAddresses')
+  },
 }
 
 const hwWallet: YoroiWallet = {
@@ -577,7 +611,6 @@ const signTxWithLedger = {
 const submitTransaction = {
   success: async (...args: unknown[]) => {
     action('submitTransaction')(...args)
-    return [] as unknown as []
   },
   error: async (...args: unknown[]) => {
     action('submitTransaction')(...args)
@@ -585,7 +618,7 @@ const submitTransaction = {
   },
   loading: async (...args: unknown[]) => {
     action('submitTransaction')(...args)
-    return new Promise(() => null) as unknown as []
+    return new Promise<void>(() => null)
   },
 }
 

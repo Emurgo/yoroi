@@ -74,8 +74,8 @@ const useDappConnectorManager = () => {
     [openConfirmConnectionModal],
   )
 
-  const signTx = React.useCallback(async () => {
-    return 'passwordpassword'
+  const signTx = React.useCallback(() => {
+    return Promise.resolve('passwordpassword')
   }, [])
 
   return createDappConnector({appStorage, wallet, confirmConnection, signTx})

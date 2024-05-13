@@ -56,7 +56,7 @@ export function utxosMaker(
   return {
     findById,
     isAmountInCollateralRange,
-    findCollateralCandidates,
+    findCollateralCandidates: () => findCollateralCandidates(utxos, {maxLovelace, minLovelace}),
     drawnCollateral,
     exists,
   } as const
