@@ -4,7 +4,7 @@ import * as React from 'react'
 import {StyleSheet, TouchableOpacity, TouchableWithoutFeedback, useWindowDimensions, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import QRCode from 'react-native-qrcode-svg'
-import Animated, {FadeInDown, FadeOutDown, Layout} from 'react-native-reanimated'
+import Animated, {FadeInDown, FadeOutDown, LinearTransition} from 'react-native-reanimated'
 import Share from 'react-native-share'
 import ViewShot, {captureRef} from 'react-native-view-shot'
 
@@ -91,7 +91,7 @@ export const ShareQRCodeCard = ({content, title, isCopying, onLongPress, testId}
         </View>
 
         {isCopying && (
-          <Animated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
+          <Animated.View layout={LinearTransition} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
             <Text style={styles.copiedText}>{strings.addressCopiedMsg}</Text>
           </Animated.View>
         )}

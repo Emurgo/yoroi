@@ -5,7 +5,7 @@ import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 import LinearGradient from 'react-native-linear-gradient'
-import Animated, {FadeIn, FadeOut, Layout} from 'react-native-reanimated'
+import Animated, {FadeIn, FadeOut, LinearTransition} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../../components'
@@ -183,7 +183,7 @@ const MnemonicInput = ({defaultMnemonic, userEntries, onPress}: MnemonicInputPro
   }
 
   return (
-    <Animated.View layout={Layout} entering={FadeIn} exiting={FadeOut} style={styles.recoveryPhrase}>
+    <Animated.View layout={LinearTransition} entering={FadeIn} exiting={FadeOut} style={styles.recoveryPhrase}>
       <LinearGradient
         style={[StyleSheet.absoluteFill, {opacity: 1}]}
         start={{x: 1, y: 0}}
@@ -201,7 +201,7 @@ const MnemonicInput = ({defaultMnemonic, userEntries, onPress}: MnemonicInputPro
               <Animated.View
                 key={entry.id}
                 style={styles.wordBadgeView}
-                layout={Layout}
+                layout={LinearTransition}
                 entering={FadeIn}
                 exiting={FadeOut}
               >
@@ -215,7 +215,7 @@ const MnemonicInput = ({defaultMnemonic, userEntries, onPress}: MnemonicInputPro
                 />
 
                 <Animated.View
-                  layout={Layout}
+                  layout={LinearTransition}
                   entering={FadeIn}
                   exiting={FadeOut}
                   style={[styles.wordBadgeContainerOutline, recoveryWordError && styles.errorBadgeBackground]}
@@ -286,7 +286,7 @@ const WordBadges = ({
   const {styles, colors} = useStyles()
 
   return (
-    <Animated.View layout={Layout} style={styles.words}>
+    <Animated.View layout={LinearTransition} style={styles.words}>
       {mnemonicEntries.map((entry) => {
         const isUsed = isWordUsed(entry.id)
 
@@ -295,7 +295,7 @@ const WordBadges = ({
         return (
           <Animated.View
             key={entry.id}
-            layout={Layout}
+            layout={LinearTransition}
             entering={FadeIn}
             exiting={FadeOut}
             style={[styles.wordBadgeContainer]}
@@ -338,7 +338,7 @@ type WordBadgeProps = {
 const WordBadge = ({word, onPress, disabled, testID, used, usedError, recoveryWordError}: WordBadgeProps) => {
   const {styles} = useStyles()
   return (
-    <Animated.View layout={Layout} entering={FadeIn} exiting={FadeOut}>
+    <Animated.View layout={LinearTransition} entering={FadeIn} exiting={FadeOut}>
       <TouchableOpacity
         testID={testID}
         activeOpacity={0.5}
@@ -347,7 +347,7 @@ const WordBadge = ({word, onPress, disabled, testID, used, usedError, recoveryWo
         style={styles.wordBadge}
       >
         <Animated.Text
-          layout={Layout}
+          layout={LinearTransition}
           entering={FadeIn}
           exiting={FadeOut}
           style={[styles.wordBadgeText, used && !usedError && styles.usedWord, recoveryWordError && styles.errorBadge]}

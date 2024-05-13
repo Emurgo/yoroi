@@ -2,7 +2,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, View, ViewToken} from 'react-native'
-import Animated, {Layout} from 'react-native-reanimated'
+import Animated, {LinearTransition} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer} from '../../../components'
@@ -87,7 +87,7 @@ export const ListMultipleAddressesScreen = () => {
           data={addressInfos}
           keyExtractor={(addressInfo) => addressInfo.address}
           renderItem={renderAddressInfo}
-          layout={Layout}
+          layout={LinearTransition}
           showsVerticalScrollIndicator={false}
           onViewableItemsChanged={onViewableItemsChanged}
         />
@@ -98,7 +98,7 @@ export const ListMultipleAddressesScreen = () => {
           styles.footer,
           {display: hasReachedGapLimit ? 'none' : 'flex', borderTopWidth: inView.current < addressInfos.length ? 1 : 0},
         ]}
-        layout={Layout}
+        layout={LinearTransition}
       >
         <Button
           shelleyTheme

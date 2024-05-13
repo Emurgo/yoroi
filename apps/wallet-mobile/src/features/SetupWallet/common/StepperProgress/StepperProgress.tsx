@@ -1,7 +1,7 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, ViewStyle} from 'react-native'
-import Animated, {Layout} from 'react-native-reanimated'
+import Animated, {LinearTransition} from 'react-native-reanimated'
 
 import {CheckIllustration} from '../../illustrations/CheckIllustration'
 
@@ -17,7 +17,7 @@ const Step = ({currentStep, currentStepTitle, isNext, isPrevious}: StepProps) =>
   return (
     <Animated.View style={styles.root}>
       <Animated.View
-        layout={Layout}
+        layout={LinearTransition}
         style={[styles.step, isNext && styles.isNext, isPrevious && styles.isPrevious, styles.markedStep]}
       >
         {!isPrevious ? (
@@ -28,7 +28,7 @@ const Step = ({currentStep, currentStepTitle, isNext, isPrevious}: StepProps) =>
       </Animated.View>
 
       {shouldDisplayStepTitle && (
-        <Animated.Text layout={Layout} style={[styles.currentStepTitle]}>
+        <Animated.Text layout={LinearTransition} style={[styles.currentStepTitle]}>
           {currentStepTitle}
         </Animated.Text>
       )}
@@ -58,7 +58,7 @@ export const StepperProgress = ({currentStep, currentStepTitle, totalSteps, styl
   }
   const {styles} = useStyles()
   return (
-    <Animated.View layout={Layout} style={[styles.bar, style]}>
+    <Animated.View layout={LinearTransition} style={[styles.bar, style]}>
       {stepIndicator}
     </Animated.View>
   )

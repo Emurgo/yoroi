@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
-import Animated, {FadeInDown, FadeInUp, FadeOut, FadeOutDown, Layout} from 'react-native-reanimated'
+import Animated, {FadeInDown, FadeInUp, FadeOut, FadeOutDown, LinearTransition} from 'react-native-reanimated'
 
 import {useCopy} from '../../../../../src/legacy/useCopy'
 import {Spacer} from '../../../../components'
@@ -35,7 +35,7 @@ export const SmallAddressCard = ({address, isUsed, date, onPress, loading, testI
   if (!loading)
     return (
       <>
-        <Animated.View layout={Layout} entering={FadeInUp} exiting={FadeOut}>
+        <Animated.View layout={LinearTransition} entering={FadeInUp} exiting={FadeOut}>
           <TouchableOpacity
             style={styles.smallAddressCard}
             activeOpacity={0.6}
@@ -69,7 +69,7 @@ export const SmallAddressCard = ({address, isUsed, date, onPress, loading, testI
         <Spacer height={16} />
 
         {isCopying && (
-          <Animated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
+          <Animated.View layout={LinearTransition} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
             <Text style={styles.copiedText}>{strings.addressCopiedMsg}</Text>
           </Animated.View>
         )}

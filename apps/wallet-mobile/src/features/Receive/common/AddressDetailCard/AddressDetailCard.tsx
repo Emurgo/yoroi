@@ -1,7 +1,7 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, useWindowDimensions, View} from 'react-native'
-import Animated, {Layout} from 'react-native-reanimated'
+import Animated, {LinearTransition} from 'react-native-reanimated'
 
 import {Spacer} from '../../../../components'
 import {useCopy} from '../../../../legacy/useCopy'
@@ -89,7 +89,7 @@ export const AddressDetailCard = ({title}: AddressDetailCardProps) => {
     <>
       <View style={styles.container}>
         <Animated.FlatList
-          layout={Layout}
+          layout={LinearTransition}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
           data={cards}

@@ -1,9 +1,8 @@
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native'
-import Animated, {FadeInDown, FadeOutDown, Layout} from 'react-native-reanimated'
+import {StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle} from 'react-native'
+import Animated, {FadeInDown, FadeOutDown, LinearTransition} from 'react-native-reanimated'
 
-import {Text} from '../../../wallet-mobile/src/components'
 import {isEmptyString} from '../../../wallet-mobile/src/utils/utils'
 import {Icon} from '../components/Icon'
 import {useCopy} from '../legacy/useCopy'
@@ -48,7 +47,12 @@ const AnimatedCopyButton = ({
       {isCopying ? (
         <View style={styles.rowContainer}>
           {!isEmptyString(message) ? (
-            <Animated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
+            <Animated.View
+              layout={LinearTransition}
+              entering={FadeInDown}
+              exiting={FadeOutDown}
+              style={styles.isCopying}
+            >
               <Text style={styles.copiedText}>{message}</Text>
             </Animated.View>
           ) : (
