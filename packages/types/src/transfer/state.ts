@@ -1,12 +1,13 @@
 import {Datum as DatumType} from '@emurgo/yoroi-lib'
-import {BalanceAmounts} from '../balance/token'
 import {ResolverReceiver} from '../resolver/receiver'
+import {PortfolioTokenAmount} from '../portfolio/amount'
+import {PortfolioTokenId} from '../portfolio/token'
 
 export type TransferAddress = string
 
 export type TransferEntry = {
   address: TransferAddress
-  amounts: BalanceAmounts
+  amounts: Record<PortfolioTokenId, PortfolioTokenAmount>
   datum?: DatumType
 }
 

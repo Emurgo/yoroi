@@ -1,5 +1,6 @@
 import {init} from '@emurgo/cross-csl-mobile'
 import {storiesOf} from '@storybook/react-native'
+import {tokenBalanceMocks} from '@yoroi/portfolio'
 import {resolverApiMaker, resolverManagerMaker, ResolverProvider, resolverStorageMaker} from '@yoroi/resolver'
 import {defaultTransferState, TransferProvider, TransferState} from '@yoroi/transfer'
 import {Resolver} from '@yoroi/types'
@@ -53,7 +54,12 @@ const handle: TransferState = {
   ...defaultTransferState,
   targets: [
     {
-      entry: {address: 'addr1vxggvx6uq9mtf6e0tyda2mahg84w8azngpvkwr5808ey6qsy2ww7d', amounts: {'': '1000000'}},
+      entry: {
+        address: 'addr1vxggvx6uq9mtf6e0tyda2mahg84w8azngpvkwr5808ey6qsy2ww7d',
+        amounts: {
+          [tokenBalanceMocks.ftNoTicker.info.id]: tokenBalanceMocks.primaryETH,
+        },
+      },
       receiver: {
         as: 'domain',
         resolve: '$stackchain',
@@ -75,7 +81,9 @@ const cns: TransferState = {
       entry: {
         address:
           'addr1qywgh46dqu7lq6mp5c6tzldpmzj6uwx335ydrpq8k7rru4q6yhkfqn5pc9f3z76e4cr64e5mf98aaeht6zwf8xl2nc9qr66sqg',
-        amounts: {'': '1000000'},
+        amounts: {
+          [tokenBalanceMocks.ftNoTicker.info.id]: tokenBalanceMocks.primaryETH,
+        },
       },
       receiver: {
         as: 'domain',
@@ -98,7 +106,9 @@ const unstoppable: TransferState = {
       entry: {
         address:
           'addr1qywgh46dqu7lq6mp5c6tzldpmzj6uwx335ydrpq8k7rru4q6yhkfqn5pc9f3z76e4cr64e5mf98aaeht6zwf8xl2nc9qr66sqg',
-        amounts: {'': '1000000'},
+        amounts: {
+          [tokenBalanceMocks.ftNoTicker.info.id]: tokenBalanceMocks.primaryETH,
+        },
       },
       receiver: {
         as: 'domain',

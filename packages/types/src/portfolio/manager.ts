@@ -3,55 +3,68 @@ import {Observable, Subscription} from 'rxjs'
 import {AppCacheRecord} from '../app/cache'
 import {AppObserverSubscribe} from '../app/observer-manager'
 import {
-  PortfolioBalancePrimaryBreakdown,
-  PortfolioTokenBalance,
-} from './balance'
-import {
   PortfolioEventBalanceManager,
   PortfolioEventSourceId,
   PortfolioEventTokenManager,
 } from './event'
 import {PortfolioTokenInfo} from './info'
 import {PortfolioTokenId} from './token'
+import {PortfolioPrimaryBreakdown, PortfolioTokenAmount} from './amount'
+import {PortfolioTokenBalances} from './balances'
+import {PortfolioApi} from './api'
 
 export type PortfolioManagerToken = Readonly<{
-  hydrate: (params: PortfolioEventSourceId) => void
-  sync: (
+  hydrate(params: PortfolioEventSourceId): void
+  sync(
     params: Readonly<{
       secondaryTokenIds: ReadonlyArray<PortfolioTokenId>
     }> &
       PortfolioEventSourceId,
-  ) => Promise<Map<PortfolioTokenId, AppCacheRecord<PortfolioTokenInfo> | null>>
+  ): Promise<Map<PortfolioTokenId, AppCacheRecord<PortfolioTokenInfo> | null>>
 
   subscribe: AppObserverSubscribe<PortfolioEventTokenManager>
-  unsubscribe: (sub: Subscription) => void
-  observable: Observable<PortfolioEventTokenManager>
+  unsubscribe(subscription: Subscription): void
+  observable$: Observable<PortfolioEventTokenManager>
 
-  destroy: () => void
+  api: Readonly<PortfolioApi>
+
+  destroy(): void
+  clear(params: PortfolioEventSourceId): void
 }>
 
 export type PortfolioManagerBalance = Readonly<{
-  hydrate: () => void
-  refresh: () => void
-  sync: (
+  hydrate(): void
+  refresh(): void
+
+  updatePrimaryStated(
+    params: Readonly<
+      Pick<PortfolioPrimaryBreakdown, 'totalFromTxs' | 'lockedAsStorageCost'>
+    >,
+  ): void
+  updatePrimaryDerived(
+    params: Readonly<Pick<PortfolioPrimaryBreakdown, 'availableRewards'>>,
+  ): void
+  syncBalances(
     params: Readonly<{
-      primaryBalance: Readonly<Omit<PortfolioBalancePrimaryBreakdown, 'info'>>
+      primaryStated: Readonly<
+        Pick<PortfolioPrimaryBreakdown, 'totalFromTxs' | 'lockedAsStorageCost'>
+      >
       secondaryBalances: Readonly<
-        | Map<PortfolioTokenId, Omit<PortfolioTokenBalance, 'info'>>
-        | Map<PortfolioTokenId, PortfolioTokenBalance>
+        Map<PortfolioTokenId, Pick<PortfolioTokenAmount, 'quantity'>>
       >
     }>,
-  ) => void
+  ): void
 
   subscribe: AppObserverSubscribe<PortfolioEventBalanceManager>
-  unsubscribe: (sub: Subscription) => void
-  observable: Observable<PortfolioEventBalanceManager>
+  unsubscribe(subscription: Subscription): void
+  observable$: Observable<PortfolioEventBalanceManager>
 
-  getPrimaryBreakdown: () => Readonly<PortfolioBalancePrimaryBreakdown>
-  getBalances: () => Readonly<{
-    all: ReadonlyArray<PortfolioTokenBalance>
-    fts: ReadonlyArray<PortfolioTokenBalance>
-    nfts: ReadonlyArray<PortfolioTokenBalance>
-  }>
-  destroy: () => void
+  getPrimaryBreakdown(): Readonly<PortfolioPrimaryBreakdown>
+  getPrimaryBalance(): Readonly<PortfolioTokenAmount>
+  getHasOnlyPrimary(): boolean
+  getBalances(): Readonly<PortfolioTokenBalances>
+  getIsEmpty(): boolean
+
+  destroy(): void
+  clear(): void
 }>

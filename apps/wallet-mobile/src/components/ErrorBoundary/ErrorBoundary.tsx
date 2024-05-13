@@ -1,6 +1,5 @@
 import React, {Component, ErrorInfo, ReactNode} from 'react'
 import {BackHandler, Image, Platform, ScrollView, StyleSheet, Text, View, ViewProps} from 'react-native'
-import {Divider} from 'react-native-paper'
 
 import errorImage from '../../assets/img/error.png'
 import {Logger} from '../../legacy/logging'
@@ -51,8 +50,6 @@ export class ErrorBoundary extends Component<Props, State> {
 
               <Image source={errorImage} />
             </View>
-
-            <Divider />
 
             <Spacer height={16} />
 

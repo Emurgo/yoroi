@@ -3,7 +3,6 @@ import {z} from 'zod'
 
 import {responseRecordWithCacheSchemaMaker} from './response-record-with-cache-schema-maker'
 import {TokenSourceSchema} from './token-source'
-import {TokenPropertyTypeSchema} from './token-property-type'
 import {TokenIdSchema} from './token-id'
 import {cacheRecordSchemaMaker} from '@yoroi/common'
 
@@ -12,7 +11,9 @@ const DiscoverySourceSchema = z.object({
   decimals: TokenSourceSchema,
   ticker: TokenSourceSchema,
   symbol: TokenSourceSchema,
-  image: TokenSourceSchema,
+  originalImage: TokenSourceSchema,
+  description: TokenSourceSchema,
+  website: TokenSourceSchema,
 })
 
 const DiscoveryOriginalMetadataSchema = z.object({
@@ -21,37 +22,21 @@ const DiscoveryOriginalMetadataSchema = z.object({
   tokenRegistry: z.record(z.unknown()).nullable(),
 })
 
-const DiscoveryCountersSchema = z.object({
-  supply: z.bigint(),
-  items: z.number(),
-  totalItems: z.number(),
-})
-
-const DiscoveryPropertiesSchema = z.record(
-  z.union([
-    z.object({
-      rarity: z.number(),
-      detectedType: TokenPropertyTypeSchema,
-      value: z.unknown(),
-    }),
-    z.object({}),
-  ]),
-)
-
 export const TokenDiscoverySchema = z.object({
   id: TokenIdSchema,
   source: DiscoverySourceSchema,
   originalMetadata: DiscoveryOriginalMetadataSchema,
-  counters: DiscoveryCountersSchema,
-  properties: DiscoveryPropertiesSchema,
+  supply: z.string(),
 })
 
-export const isTokenDiscovery = (data: unknown): data is Portfolio.Token.Info =>
+export const isTokenDiscovery = (
+  data: unknown,
+): data is Portfolio.Token.Discovery =>
   TokenDiscoverySchema.safeParse(data).success
 
 export const parseTokenDiscovery = (
   data: unknown,
-): Portfolio.Token.Info | undefined => {
+): Portfolio.Token.Discovery | undefined => {
   return isTokenDiscovery(data) ? data : undefined
 }
 

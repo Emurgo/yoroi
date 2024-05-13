@@ -3,12 +3,6 @@ import {freeze} from 'immer'
 import * as infos from './token-info.mocks'
 import * as discoveries from './token-discovery.mocks'
 import * as balances from './token-balance.mocks'
-import {TokenInfoAndDiscovery} from '../types'
-
-const primaryToken: Readonly<TokenInfoAndDiscovery> = freeze({
-  info: infos.tokenInfoMocks.primaryETH,
-  discovery: discoveries.tokenDiscoveryMocks.primaryETH,
-})
 
 export const tokenMocks = freeze(
   {
@@ -30,14 +24,11 @@ export const tokenMocks = freeze(
     },
     apiResponse: {
       tokenInfos: infos.tokenInfoMocks.apiResponseResult,
-      tokenDiscoveries: discoveries.tokenDiscoveryMocks.apiResponseResult,
+      tokenDiscovery: discoveries.tokenDiscoveryMocks.apiResponseResult,
     },
     apiRequest: {
       tokenInfos: infos.tokenInfoMocks.apiRequestArgs,
-      tokenDiscoveries: discoveries.tokenDiscoveryMocks.apiRequestArgs,
-    },
-    managerMaker: {
-      primaryToken,
+      tokenDiscovery: discoveries.tokenDiscoveryMocks.apiRequestArgs,
     },
   },
   true,

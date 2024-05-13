@@ -4,24 +4,9 @@
     "defaultMessage": "!!!Fee",
     "file": "src/TxHistory/TxHistoryList/TxHistoryListItem.tsx",
     "start": {
-      "line": 175,
-      "column": 7,
-      "index": 6173
-    },
-    "end": {
-      "line": 178,
-      "column": 3,
-      "index": 6262
-    }
-  },
-  {
-    "id": "components.txhistory.txhistorylistitem.transactionTypeSent",
-    "defaultMessage": "!!!ADA sent",
-    "file": "src/TxHistory/TxHistoryList/TxHistoryListItem.tsx",
-    "start": {
       "line": 179,
-      "column": 23,
-      "index": 6287
+      "column": 7,
+      "index": 6308
     },
     "end": {
       "line": 182,
@@ -30,18 +15,33 @@
     }
   },
   {
-    "id": "components.txhistory.txhistorylistitem.transactionTypeReceived",
-    "defaultMessage": "!!!ADA received",
+    "id": "components.txhistory.txhistorylistitem.transactionTypeSent",
+    "defaultMessage": "!!!ADA sent",
     "file": "src/TxHistory/TxHistoryList/TxHistoryListItem.tsx",
     "start": {
       "line": 183,
-      "column": 27,
-      "index": 6426
+      "column": 23,
+      "index": 6422
     },
     "end": {
       "line": 186,
       "column": 3,
-      "index": 6544
+      "index": 6532
+    }
+  },
+  {
+    "id": "components.txhistory.txhistorylistitem.transactionTypeReceived",
+    "defaultMessage": "!!!ADA received",
+    "file": "src/TxHistory/TxHistoryList/TxHistoryListItem.tsx",
+    "start": {
+      "line": 187,
+      "column": 27,
+      "index": 6561
+    },
+    "end": {
+      "line": 190,
+      "column": 3,
+      "index": 6679
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Intrawallet",
     "file": "src/TxHistory/TxHistoryList/TxHistoryListItem.tsx",
     "start": {
-      "line": 187,
+      "line": 191,
       "column": 23,
-      "index": 6569
+      "index": 6704
     },
     "end": {
-      "line": 190,
+      "line": 194,
       "column": 3,
-      "index": 6682
+      "index": 6817
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Multiparty",
     "file": "src/TxHistory/TxHistoryList/TxHistoryListItem.tsx",
     "start": {
-      "line": 191,
+      "line": 195,
       "column": 24,
-      "index": 6708
+      "index": 6843
     },
     "end": {
-      "line": 194,
+      "line": 198,
       "column": 3,
-      "index": 6821
+      "index": 6956
     }
   },
   {
@@ -80,14 +80,14 @@
     "defaultMessage": "!!!{cnt} assets",
     "file": "src/TxHistory/TxHistoryList/TxHistoryListItem.tsx",
     "start": {
-      "line": 195,
+      "line": 199,
       "column": 10,
-      "index": 6833
+      "index": 6968
     },
     "end": {
-      "line": 199,
+      "line": 203,
       "column": 3,
-      "index": 6985
+      "index": 7120
     }
   }
 ]

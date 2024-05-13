@@ -1,27 +1,21 @@
-import React, {createContext, ReactNode, useCallback, useContext, useState} from 'react'
+import * as React from 'react'
 
-const AuthContext = createContext<undefined | (AuthContextState & AuthContextActions)>(undefined)
-export const AuthProvider = ({children}: {children: ReactNode}) => {
-  const [state, setState] = useState<AuthContextState>(initialState)
+const AuthContext = React.createContext<undefined | (AuthContextState & AuthContextActions)>(undefined)
+export const AuthProvider = ({children}: {children: React.ReactNode}) => {
+  const [state, setState] = React.useState<AuthContextState>(initialState)
 
-  const actions = {
-    login: useCallback(() => setState(loggedInState), []),
-    logout: useCallback(() => setState(loggedOutState), []),
-  }
-
-  return (
-    <AuthContext.Provider
-      value={{
-        ...state,
-        ...actions,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
+  const value = React.useMemo(
+    () => ({
+      ...state,
+      login: () => setState(loggedInState),
+      logout: () => setState(loggedOutState),
+    }),
+    [state],
   )
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
-export const useAuth = () => useContext(AuthContext) || missingProvider()
+export const useAuth = () => React.useContext(AuthContext) || missingProvider()
 
 const missingProvider = () => {
   throw new Error('AuthProvider is missing')

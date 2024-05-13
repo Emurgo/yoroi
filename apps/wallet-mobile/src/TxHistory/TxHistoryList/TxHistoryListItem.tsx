@@ -12,7 +12,7 @@ import {Spacer, Text} from '../../components'
 import {Icon} from '../../components/Icon'
 import {usePrivacyMode} from '../../features/Settings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../../features/WalletManager/Context'
-import {formatTime, formatTokenFractional, formatTokenInteger} from '../../legacy/format'
+import {formatDateRelative, formatTime, formatTokenFractional, formatTokenInteger} from '../../legacy/format'
 import utfSymbols from '../../legacy/utfSymbols'
 import {TxHistoryRouteNavigation} from '../../navigation'
 import {isEmptyString} from '../../utils/utils'
@@ -34,7 +34,9 @@ export const TxHistoryListItem = ({transaction}: Props) => {
   const intl = useIntl()
 
   const showDetails = () => navigation.navigate('history-details', {id: transaction.id})
-  const submittedAt = isNonNullable(transaction.submittedAt) ? formatTime(transaction.submittedAt, intl) : ''
+  const submittedAt = isNonNullable(transaction.submittedAt)
+    ? `${formatDateRelative(transaction.submittedAt, intl) + ' ' + formatTime(transaction.submittedAt, intl)}`
+    : ''
 
   const isPending = transaction.assurance === 'PENDING'
   const isReceived = transaction.direction === 'RECEIVED'
@@ -109,7 +111,7 @@ const Middle = ({style, ...props}: ViewProps) => (
 const Right = ({style, ...props}: ViewProps) => <View style={[style, {padding: 4}]} {...props} />
 const Amount = ({wallet, transaction}: {wallet: YoroiWallet; transaction: TransactionInfo}) => {
   const {styles} = useStyles()
-  const {isPrivacyOff} = usePrivacyMode()
+  const {isPrivacyOff, privacyPlaceholder} = usePrivacyMode()
   const amountAsMT = MultiToken.fromArray(transaction.amount)
   const amount: BigNumber = amountAsMT.getDefault()
   const fee = transaction.fee ? transaction.fee[0] : null
@@ -123,9 +125,11 @@ const Amount = ({wallet, transaction}: {wallet: YoroiWallet; transaction: Transa
   return (
     <View style={styles.amount} testID="transactionAmount">
       <Text style={style} secondary={transaction.assurance === 'PENDING'}>
-        <Text>{isPrivacyOff ? '*' : formatTokenInteger(asQuantity(amount), wallet.primaryToken)}</Text>
+        <Text>{isPrivacyOff && formatTokenInteger(asQuantity(amount), wallet.primaryToken)}</Text>
 
-        <Text small>{isPrivacyOff ? '.******' : formatTokenFractional(asQuantity(amount), wallet.primaryToken)}</Text>
+        <Text small>
+          {isPrivacyOff ? formatTokenFractional(asQuantity(amount), wallet.primaryToken) : privacyPlaceholder}
+        </Text>
       </Text>
 
       <Text style={style}>{`${utfSymbols.NBSP}${wallet.primaryTokenInfo.symbol}`}</Text>

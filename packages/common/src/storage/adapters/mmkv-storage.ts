@@ -5,8 +5,6 @@ import {parseSafe} from '../../utils/parsers'
 import {isFolderKey} from '../helpers/is-folder-key'
 import {isFileKey} from '../helpers/is-file-key'
 
-// -------
-// FACTORY
 export const mountMMKVStorage = <Key extends string = string>(
   {
     path,
@@ -17,10 +15,7 @@ export const mountMMKVStorage = <Key extends string = string>(
   },
   {instance}: {instance?: MMKV} = {},
 ): App.Storage<false, Key> => {
-  // mmkv uses id as file and the path is irrelevant if sharing content amongst app (iOS)
-  // therefore the client needs to know all the ids to delete all data
-  // which means that it works differently than AsyncStorage
-  // think of the id as the volume
+  // think of the id as the filename and the path as filter
   const storage = instance ?? new MMKV({id})
 
   const withPath = (key: string) =>

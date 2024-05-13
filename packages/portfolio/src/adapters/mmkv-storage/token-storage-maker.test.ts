@@ -3,23 +3,15 @@ import {App, Portfolio} from '@yoroi/types'
 
 import {portfolioTokenStorageMaker} from './token-storage-maker' // Adjust the path accordingly
 import {tokenMocks} from '../token.mocks'
-import {deserializers} from '../../transformers/deserializers'
-import {tokenDiscoveryMocks} from '../token-discovery.mocks'
 import {tokenInfoMocks} from '../token-info.mocks'
 
 describe('portfolioTokenStorageMaker', () => {
   let tokenInfoStorage: App.ObservableStorage<false, Portfolio.Token.Id>
-  let tokenDiscoveryStorage: App.ObservableStorage<false, Portfolio.Token.Id>
 
   beforeEach(() => {
     tokenInfoStorage = createMockStorage('v2/mainnet/token-info/')
-    tokenDiscoveryStorage = createMockStorage(
-      'v2/mainnet/token-discovery/',
-      deserializers.tokenDiscoveryWithCache,
-    )
 
     tokenInfoStorage.clear()
-    tokenDiscoveryStorage.clear()
 
     jest.clearAllMocks()
   })
@@ -27,7 +19,6 @@ describe('portfolioTokenStorageMaker', () => {
   it('should instantiate storage', () => {
     const storage = portfolioTokenStorageMaker({
       tokenInfoStorage,
-      tokenDiscoveryStorage,
     })
 
     expect(storage).toBeDefined()
@@ -40,7 +31,6 @@ describe('portfolioTokenStorageMaker', () => {
 
     const {token} = portfolioTokenStorageMaker({
       tokenInfoStorage,
-      tokenDiscoveryStorage,
     })
 
     const entries: ReadonlyArray<
@@ -67,7 +57,6 @@ describe('portfolioTokenStorageMaker', () => {
 
     const {token} = portfolioTokenStorageMaker({
       tokenInfoStorage,
-      tokenDiscoveryStorage,
     })
 
     const entries: ReadonlyArray<
@@ -89,122 +78,48 @@ describe('portfolioTokenStorageMaker', () => {
     expect(tokenInfoStorage.multiGet).toHaveBeenCalledWith(keys)
   })
 
-  it('should read token discovery entries', () => {
-    const nftCryptoKitty = tokenMocks.nftCryptoKitty.discovery
-    const primaryETH = tokenMocks.primaryETH.discovery
-
-    const {token} = portfolioTokenStorageMaker({
-      tokenInfoStorage,
-      tokenDiscoveryStorage,
-    })
-
-    const entries: ReadonlyArray<
-      [Portfolio.Token.Id, App.CacheRecord<Portfolio.Token.Discovery>]
-    > = [
-      [
-        nftCryptoKitty.id,
-        cacheRecordMaker({expires: 0, hash: ''}, nftCryptoKitty),
-      ],
-      [primaryETH.id, cacheRecordMaker({expires: 0, hash: ''}, primaryETH)],
-    ] as const
-
-    token.discoveries.save(entries)
-
-    const keys = [nftCryptoKitty.id, primaryETH.id]
-    const result = token.discoveries.read(keys)
-
-    expect(result).toEqual(entries)
-    expect(tokenDiscoveryStorage.multiGet).toHaveBeenCalledWith(
-      keys,
-      deserializers.tokenDiscoveryWithCache,
-    )
-  })
-
-  it('should save token discovery entries', () => {
-    const nftCryptoKitty = tokenMocks.nftCryptoKitty.discovery
-    const primaryETH = tokenMocks.primaryETH.discovery
-
-    const {token} = portfolioTokenStorageMaker({
-      tokenInfoStorage,
-      tokenDiscoveryStorage,
-    })
-
-    const entries: ReadonlyArray<
-      [Portfolio.Token.Id, App.CacheRecord<Portfolio.Token.Discovery>]
-    > = [
-      [
-        nftCryptoKitty.id,
-        cacheRecordMaker({expires: 0, hash: ''}, nftCryptoKitty),
-      ],
-      [primaryETH.id, cacheRecordMaker({expires: 0, hash: ''}, primaryETH)],
-    ] as const
-
-    token.discoveries.save(entries)
-
-    expect(tokenDiscoveryStorage.multiSet).toHaveBeenCalledWith(
-      entries,
-      storageSerializer,
-    )
-  })
-
   it('should clear all portfolio records', () => {
     const {token, clear} = portfolioTokenStorageMaker({
       tokenInfoStorage,
-      tokenDiscoveryStorage,
     })
 
-    token.discoveries.save(tokenDiscoveryMocks.storage.entries1)
     token.infos.save(tokenInfoMocks.storage.entries1)
 
     let infoResult = token.infos.all()
-    let dicoveryResult = token.discoveries.all()
 
     expect(infoResult).toEqual(tokenInfoMocks.storage.entries1)
-    expect(dicoveryResult).toEqual(tokenDiscoveryMocks.storage.entries1)
 
     clear()
 
     infoResult = token.infos.all()
-    dicoveryResult = token.discoveries.all()
 
     // keys are gone
     expect(infoResult).toEqual([])
-    expect(dicoveryResult).toEqual([])
 
-    expect(tokenDiscoveryStorage.clear).toHaveBeenCalled()
     expect(tokenInfoStorage.clear).toHaveBeenCalled()
   })
 
   it('should return all keys', () => {
     const {token} = portfolioTokenStorageMaker({
       tokenInfoStorage,
-      tokenDiscoveryStorage,
     })
 
-    token.discoveries.save(tokenDiscoveryMocks.storage.entries1)
     token.infos.save(tokenInfoMocks.storage.entries1)
 
     let infoResult = token.infos.keys()
-    let dicoveryResult = token.discoveries.keys()
 
     expect(infoResult).toEqual([
       ...new Map(tokenInfoMocks.storage.entries1).keys(),
-    ])
-    expect(dicoveryResult).toEqual([
-      ...new Map(tokenDiscoveryMocks.storage.entries1).keys(),
     ])
   })
 
   it('should call clear', () => {
     const {token} = portfolioTokenStorageMaker({
       tokenInfoStorage,
-      tokenDiscoveryStorage,
     })
 
-    token.discoveries.clear()
     token.infos.clear()
 
-    expect(tokenDiscoveryStorage.clear).toHaveBeenCalled()
     expect(tokenInfoStorage.clear).toHaveBeenCalled()
   })
 })

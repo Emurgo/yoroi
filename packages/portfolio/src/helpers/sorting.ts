@@ -40,9 +40,7 @@ export const sortTokenInfos = ({
       toEnd<Portfolio.Token.Info>((tokenInfo) => {
         switch (tokenInfo.status) {
           case Portfolio.Token.Status.Unknown:
-            return true
           case Portfolio.Token.Status.Invalid:
-            return true
           case Portfolio.Token.Status.Scam:
             return true
         }
@@ -57,16 +55,16 @@ export const sortTokenInfos = ({
     )
     .sort(toStart((tokenInfo) => tokenInfo.id === primaryTokenInfo.id))
 
-export const sortTokenBalances = ({
+export const sortTokenAmountsByInfo = ({
   primaryTokenInfo,
-  tokenBalances,
+  amounts,
 }: {
   primaryTokenInfo: Readonly<Portfolio.Token.Info>
-  tokenBalances: ReadonlyArray<Portfolio.Token.Balance>
-}): ReadonlyArray<Portfolio.Token.Balance> =>
-  [...tokenBalances]
+  amounts: ReadonlyArray<Portfolio.Token.Amount>
+}): ReadonlyArray<Portfolio.Token.Amount> =>
+  [...amounts]
     .sort(
-      alpha<Portfolio.Token.Balance>((tokenBalance) => {
+      alpha<Portfolio.Token.Amount>((tokenBalance) => {
         switch (tokenBalance.info.type) {
           case Portfolio.Token.Type.FT: {
             if (tokenBalance.info.ticker !== '')
@@ -79,12 +77,10 @@ export const sortTokenBalances = ({
       }),
     )
     .sort(
-      toEnd<Portfolio.Token.Balance>((tokenBalance) => {
+      toEnd<Portfolio.Token.Amount>((tokenBalance) => {
         switch (tokenBalance.info.status) {
           case Portfolio.Token.Status.Unknown:
-            return true
           case Portfolio.Token.Status.Invalid:
-            return true
           case Portfolio.Token.Status.Scam:
             return true
         }

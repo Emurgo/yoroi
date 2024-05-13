@@ -9,7 +9,6 @@ import {Button, KeyboardAvoidingView, Spacer} from '../../../../components'
 import {ScrollView, useScrollView} from '../../../../components/ScrollView/ScrollView'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useHasPendingTx, useIsOnline} from '../../../../yoroi-wallets/hooks'
-import {Amounts} from '../../../../yoroi-wallets/utils'
 import {useSelectedWallet} from '../../../WalletManager/Context'
 import {memoMaxLenght} from '../../common/constants'
 import {AddressErrorWrongNetwork} from '../../common/errors'
@@ -41,7 +40,6 @@ export const StartMultiTokenTxScreen = () => {
   const {targets, selectedTargetIndex, memo, memoChanged, receiverResolveChanged} = useTransfer()
   const {amounts} = targets[selectedTargetIndex].entry
   const receiver = targets[selectedTargetIndex].receiver
-  const shouldOpenAddToken = Amounts.toArray(amounts).length === 0
   const {isScrollBarShown, setIsScrollBarShown, scrollViewRef} = useScrollView()
 
   const {isWrongBlockchainError, isResolvingAddressess, receiverError, isUnsupportedDomain, isNotResolvedDomain} =
@@ -57,13 +55,13 @@ export const StartMultiTokenTxScreen = () => {
     receiverError,
     addressError,
   })
+
   const isValidAddress = addressValidated && !hasReceiverError
-
   const hasMemoError = memo.length > memoMaxLenght
-
   const canGoNext = isOnline && !hasPendingTx && isValidAddress && !hasMemoError
 
   const handleOnNext = () => {
+    const shouldOpenAddToken = Object.keys(amounts).length === 0
     if (shouldOpenAddToken) {
       navigateTo.addToken()
     } else {

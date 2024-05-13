@@ -3,6 +3,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {FlatList, Text, TouchableOpacity, View} from 'react-native'
 
 import {Boundary} from '../../components'
+import {usePrivacyMode} from '../../features/Settings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../../features/WalletManager/Context'
 import globalMessages, {txLabels} from '../../i18n/global-messages'
 import {formatTokenAmount} from '../../legacy/format'
@@ -15,9 +16,8 @@ type AssetListProps = {
   assets: Array<CardanoTypes.TokenEntry>
   styles: NodeStyle
   onSelect?: (tokenEntry: CardanoTypes.TokenEntry) => void
-  isPrivacyOff?: boolean
 }
-export const AssetList = ({assets, styles, onSelect, isPrivacyOff}: AssetListProps) => {
+export const AssetList = ({assets, styles, onSelect}: AssetListProps) => {
   const intl = useIntl()
   const colors = [styles.rowColor1, styles.rowColor2]
 
@@ -35,13 +35,7 @@ export const AssetList = ({assets, styles, onSelect, isPrivacyOff}: AssetListPro
           keyExtractor={(item) => item.identifier}
           renderItem={({item: entry, index}) => (
             <Boundary loading={{size: 'small', style: {padding: 16}}}>
-              <AssetRow
-                isPrivacyOff={isPrivacyOff}
-                entry={entry}
-                styles={styles}
-                backColor={colors[index % colors.length]}
-                onSelect={onSelect}
-              />
+              <AssetRow entry={entry} styles={styles} backColor={colors[index % colors.length]} onSelect={onSelect} />
             </Boundary>
           )}
         />
@@ -58,11 +52,11 @@ type AssetRowProps = {
   entry: CardanoTypes.TokenEntry
   backColor: {backgroundColor: string}
   onSelect?: (tokenEntry: CardanoTypes.TokenEntry) => void
-  isPrivacyOff?: boolean
 }
-const AssetRow = ({styles, entry, backColor, onSelect, isPrivacyOff}: AssetRowProps) => {
+const AssetRow = ({styles, entry, backColor, onSelect}: AssetRowProps) => {
   const intl = useIntl()
   const wallet = useSelectedWallet()
+  const {isPrivacyOn, privacyPlaceholder} = usePrivacyMode()
   const tokenInfo = useTokenInfo({wallet, tokenId: entry.identifier})
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
   const primaryTicker = wallet.primaryTokenInfo.ticker
@@ -81,7 +75,7 @@ const AssetRow = ({styles, entry, backColor, onSelect, isPrivacyOff}: AssetRowPr
 
       <View style={styles.assetBalanceView}>
         <Text style={styles.assetBalance}>
-          {isPrivacyOff ? '*.****' : formatTokenAmount(asQuantity(entry.amount), tokenInfo)}
+          {isPrivacyOn ? privacyPlaceholder : formatTokenAmount(asQuantity(entry.amount), tokenInfo)}
         </Text>
       </View>
     </>

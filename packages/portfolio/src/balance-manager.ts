@@ -8,8 +8,7 @@ import {
 import {freeze} from 'immer'
 import {filter} from 'rxjs'
 
-import {sortTokenBalances} from './helpers/sorting'
-import {TokenInfoAndDiscovery} from './types'
+import {sortTokenAmountsByInfo} from './helpers/sorting'
 import {isEventTokenManagerSync} from './validators/token-manager-event-sync'
 import {isFt} from './helpers/is-ft'
 import {isNft} from './helpers/is-nft'
@@ -17,13 +16,13 @@ import {isNft} from './helpers/is-nft'
 export const portfolioBalanceManagerMaker = (
   {
     tokenManager,
-    primaryToken,
+    primaryTokenInfo,
     storage,
     sourceId,
   }: {
     tokenManager: Portfolio.Manager.Token
     storage: Portfolio.Storage.Balance
-    primaryToken: TokenInfoAndDiscovery
+    primaryTokenInfo: Portfolio.Token.Info
   } & Portfolio.Event.SourceId,
   {
     observer = observerMaker<Portfolio.Event.BalanceManager>(),
@@ -34,37 +33,46 @@ export const portfolioBalanceManagerMaker = (
   } = {},
 ): Portfolio.Manager.Balance => {
   let isHydrated = false
-  let secondaries: Readonly<Map<Portfolio.Token.Id, Portfolio.Token.Balance>> =
+  let secondaries: Readonly<Map<Portfolio.Token.Id, Portfolio.Token.Amount>> =
     freeze(new Map())
   let sortedBalances: Readonly<{
-    all: ReadonlyArray<Portfolio.Token.Balance>
-    nfts: ReadonlyArray<Portfolio.Token.Balance>
-    fts: ReadonlyArray<Portfolio.Token.Balance>
+    records: Readonly<Map<Portfolio.Token.Id, Portfolio.Token.Amount>>
+    all: ReadonlyArray<Portfolio.Token.Amount>
+    nfts: ReadonlyArray<Portfolio.Token.Amount>
+    fts: ReadonlyArray<Portfolio.Token.Amount>
   }> = freeze({
+    records: new Map(),
     all: [],
     nfts: [],
     fts: [],
   })
-  let primaryBreakdown: Readonly<Portfolio.BalancePrimaryBreakdown> = freeze(
+  let primaryBreakdown: Readonly<Portfolio.PrimaryBreakdown> = freeze(
     {
-      info: primaryToken.info,
-      balance: 0n,
-      lockedInBuiltTxs: 0n,
-      minRequiredByTokens: 0n,
-      records: [],
+      lockedAsStorageCost: 0n,
+      availableRewards: 0n,
+      totalFromTxs: 0n,
     },
     true,
   )
+  let primaryBalance: Readonly<Portfolio.Token.Amount> = freeze(
+    {
+      quantity: 0n,
+      info: primaryTokenInfo,
+    },
+    true,
+  )
+  let hasOnlyPrimary = true
+  let isEmpty = true
 
-  const sort = sortTokenBalancesWrapper({
-    primaryTokenInfo: primaryToken.info,
+  const sortBalances = balancesSorter({
+    primaryTokenInfo,
   })
-  const updatePrimary = primaryTokenUpdaterWrapper({
-    primaryTokenInfo: primaryToken.info,
-    storagePrimaryBalanceBreakdown: storage.primaryBalanceBreakdown,
+  const updatePrimary = primaryUpdater({
+    primaryTokenInfo,
+    storagePrimaryBreakdown: storage.primaryBreakdown,
   })
 
-  const subscription = tokenManager.observable
+  const subscription = tokenManager.observable$
     .pipe(
       filter(() => isHydrated),
       filter((dtoEvent) => isNotTriggeredBySelf(sourceId)(dtoEvent)),
@@ -93,18 +101,24 @@ export const portfolioBalanceManagerMaker = (
     })
 
   const hydrate = () => {
-    const cachedPrimaryBreakdown = freeze(
-      storage.primaryBalanceBreakdown.read(primaryToken.info.id),
-      true,
-    )
-    if (cachedPrimaryBreakdown) {
-      primaryBreakdown = cachedPrimaryBreakdown
-    }
-    const primaryTokenBalance: Readonly<Portfolio.Token.Balance> = freeze(
+    const cachedPrimaryBreakdown = freeze(storage.primaryBreakdown.read(), true)
+    const lockedAsStorageCost =
+      cachedPrimaryBreakdown?.lockedAsStorageCost ?? 0n
+    const totalFromTxs = cachedPrimaryBreakdown?.totalFromTxs ?? 0n
+    const availableRewards = cachedPrimaryBreakdown?.availableRewards ?? 0n
+
+    const balance = totalFromTxs + availableRewards
+
+    const newPrimaryBreakdown: Readonly<Portfolio.PrimaryBreakdown> = freeze({
+      lockedAsStorageCost,
+      availableRewards,
+      totalFromTxs,
+    })
+
+    const newPrimaryBalance: Readonly<Portfolio.Token.Amount> = freeze(
       {
-        balance: primaryBreakdown.balance,
-        lockedInBuiltTxs: primaryBreakdown.lockedInBuiltTxs,
-        info: primaryToken.info,
+        quantity: balance,
+        info: primaryTokenInfo,
       },
       true,
     )
@@ -112,30 +126,82 @@ export const portfolioBalanceManagerMaker = (
       new Map(storage.balances.all().filter(hasEntryValue)),
       true,
     )
-    const sorted = sort({
-      balances: [...secondaries.values(), primaryTokenBalance],
+    const sorted = sortBalances({
+      balances: [...secondaries.values(), newPrimaryBalance],
     })
     sortedBalances = splitByType(sorted)
+    primaryBreakdown = newPrimaryBreakdown
+    primaryBalance = newPrimaryBalance
+    hasOnlyPrimary = sortedBalances.all.length === 1
+    isEmpty = hasOnlyPrimary && primaryBalance.quantity === 0n
     isHydrated = true
 
     observer.notify({on: Portfolio.Event.ManagerOn.Hydrate, sourceId})
   }
 
-  const refresh = async () =>
-    sync({primaryBalance: primaryBreakdown, secondaryBalances: secondaries})
+  const refresh = () =>
+    syncBalances({
+      primaryStated: primaryBreakdown,
+      secondaryBalances: secondaries,
+    })
 
-  const sync = ({
-    primaryBalance,
+  const updatePrimaryStated = ({
+    lockedAsStorageCost,
+    totalFromTxs,
+  }: Pick<
+    Portfolio.PrimaryBreakdown,
+    'totalFromTxs' | 'lockedAsStorageCost'
+  >) => {
+    // state
+    const {availableRewards} = primaryBreakdown
+    const newPrimaryBreakdown: Readonly<Portfolio.PrimaryBreakdown> = {
+      availableRewards,
+      // args
+      lockedAsStorageCost,
+      totalFromTxs,
+    }
+    const newPrimaryBalance = updatePrimary(newPrimaryBreakdown)
+    primaryBreakdown = newPrimaryBreakdown
+    primaryBalance = newPrimaryBalance
+    observer.notify({
+      on: Portfolio.Event.ManagerOn.Sync,
+      sourceId,
+      mode: 'primary-stated',
+    })
+  }
+
+  const updatePrimaryDerived = ({
+    availableRewards,
+  }: Pick<Portfolio.PrimaryBreakdown, 'availableRewards'>) => {
+    // state
+    const {totalFromTxs, lockedAsStorageCost} = primaryBreakdown
+    const newPrimaryBreakdown: Readonly<Portfolio.PrimaryBreakdown> = {
+      lockedAsStorageCost,
+      totalFromTxs,
+      // args
+      availableRewards,
+    }
+    const newPrimaryBalance = updatePrimary(newPrimaryBreakdown)
+    primaryBreakdown = newPrimaryBreakdown
+    primaryBalance = newPrimaryBalance
+    observer.notify({
+      on: Portfolio.Event.ManagerOn.Sync,
+      sourceId,
+      mode: 'primary-derived',
+    })
+  }
+
+  const syncBalances = ({
+    primaryStated,
     secondaryBalances,
   }: {
-    primaryBalance: Readonly<Omit<Portfolio.BalancePrimaryBreakdown, 'info'>>
+    primaryStated: Readonly<
+      Pick<Portfolio.PrimaryBreakdown, 'totalFromTxs' | 'lockedAsStorageCost'>
+    >
     secondaryBalances: Readonly<
-      | Map<Portfolio.Token.Id, Omit<Portfolio.Token.Balance, 'info'>>
-      | Map<Portfolio.Token.Id, Portfolio.Token.Balance>
+      Map<Portfolio.Token.Id, Pick<Portfolio.Token.Amount, 'quantity'>>
     >
   }) => {
-    if (!isHydrated) hydrate()
-
     queue.enqueue(
       () =>
         new Promise<void>((resolve, reject) => {
@@ -146,11 +212,9 @@ export const portfolioBalanceManagerMaker = (
               sourceId,
             })
 
-            const newBalances: Map<
-              Portfolio.Token.Id,
-              Portfolio.Token.Balance
-            > = new Map()
-            secondaryBalances.forEach(({balance, lockedInBuiltTxs}, id) => {
+            const newBalances: Map<Portfolio.Token.Id, Portfolio.Token.Amount> =
+              new Map()
+            secondaryBalances.forEach(({quantity}, id) => {
               const cachedTokenInfo = tokenInfos.get(id)
               if (!cachedTokenInfo)
                 return reject(
@@ -159,30 +223,42 @@ export const portfolioBalanceManagerMaker = (
                   ),
                 )
 
-              const tokenBalance: Portfolio.Token.Balance = {
+              const secondaryBalance: Portfolio.Token.Amount = {
                 info: cachedTokenInfo.record,
-                balance,
-                lockedInBuiltTxs,
+                quantity,
               }
-              newBalances.set(id, tokenBalance)
+              newBalances.set(id, secondaryBalance)
             })
+
+            const {availableRewards} = primaryBreakdown
+            const {totalFromTxs, lockedAsStorageCost} = primaryStated
+            const newPrimaryBreakdown: Readonly<Portfolio.PrimaryBreakdown> = {
+              totalFromTxs,
+              lockedAsStorageCost,
+              availableRewards,
+            }
 
             // persist
             storage.balances.clear()
             storage.balances.save([...newBalances.entries()])
-
-            const {newPrimaryBreakdown, newPrimaryTokenBalance} =
-              updatePrimary(primaryBalance)
+            const newPrimaryBalance = updatePrimary(newPrimaryBreakdown)
 
             // update state
             secondaries = freeze(newBalances, true)
-            const sorted = sort({
-              balances: [...secondaries.values(), newPrimaryTokenBalance],
+            const sorted = sortBalances({
+              balances: [...secondaries.values(), newPrimaryBalance],
             })
             sortedBalances = splitByType(sorted)
             primaryBreakdown = newPrimaryBreakdown
+            primaryBalance = newPrimaryBalance
+            hasOnlyPrimary = sortedBalances.all.length === 1
+            isEmpty = hasOnlyPrimary && primaryBalance.quantity === 0n
 
-            observer.notify({on: Portfolio.Event.ManagerOn.Sync, sourceId})
+            observer.notify({
+              on: Portfolio.Event.ManagerOn.Sync,
+              sourceId,
+              mode: 'all',
+            })
             resolve()
           }
           asyncExecutor()
@@ -190,48 +266,100 @@ export const portfolioBalanceManagerMaker = (
     )
   }
 
-  function getPrimaryBreakdown() {
-    return primaryBreakdown
-  }
+  const getPrimaryBreakdown = () => primaryBreakdown
+  const getPrimaryBalance = () => primaryBalance
+  const getHasOnlyPrimary = () => hasOnlyPrimary
+  const getBalances = () => sortedBalances
+  const getIsEmpty = () => isEmpty
 
-  function getBalances() {
-    return sortedBalances
-  }
-
-  function destroy() {
+  const destroy = () => {
     observer.destroy()
     queue.destroy()
     tokenManager.unsubscribe(subscription)
+  }
+
+  const clear = () => {
+    queue.enqueue(
+      () =>
+        new Promise<void>((resolve) => {
+          const asyncExecutor = async () => {
+            storage.balances.clear()
+            storage.primaryBreakdown.clear()
+
+            secondaries = freeze(new Map(), true)
+            primaryBreakdown = freeze(
+              {
+                lockedAsStorageCost: 0n,
+                availableRewards: 0n,
+                totalFromTxs: 0n,
+              },
+              true,
+            )
+            primaryBalance = freeze(
+              {
+                quantity: 0n,
+                info: primaryTokenInfo,
+              },
+              true,
+            )
+            sortedBalances = freeze(
+              {
+                records: new Map(),
+                all: [],
+                nfts: [],
+                fts: [],
+              },
+              true,
+            )
+
+            observer.notify({
+              on: Portfolio.Event.ManagerOn.Clear,
+              sourceId,
+            })
+
+            resolve()
+          }
+          asyncExecutor()
+        }),
+    )
   }
 
   return freeze(
     {
       hydrate,
       refresh,
-      sync,
+
+      syncBalances,
+      updatePrimaryDerived,
+      updatePrimaryStated,
 
       subscribe: observer.subscribe,
       unsubscribe: observer.unsubscribe,
-      observable: observer.observable,
+      observable$: observer.observable,
 
       getPrimaryBreakdown,
+      getPrimaryBalance,
+      getHasOnlyPrimary,
       getBalances,
+      getIsEmpty,
+
       destroy,
+      clear,
     },
     true,
   )
 }
 
-const sortTokenBalancesWrapper =
+const balancesSorter =
   ({primaryTokenInfo}: {primaryTokenInfo: Portfolio.Token.Info}) =>
   ({
     balances,
   }: {
-    balances: ReadonlyArray<Portfolio.Token.Balance | null | undefined>
+    balances: ReadonlyArray<Portfolio.Token.Amount | null | undefined>
   }) =>
     freeze(
-      sortTokenBalances({
-        tokenBalances: balances.filter(hasValue),
+      sortTokenAmountsByInfo({
+        amounts: balances.filter(hasValue),
         primaryTokenInfo,
       }),
       true,
@@ -243,9 +371,7 @@ const isNotTriggeredBySelf =
     dtoEvent.sourceId !== sourceId
 
 const hasStaleTokenInfo =
-  (
-    secondaries: Readonly<Map<`${string}.${string}`, Portfolio.Token.Balance>>,
-  ) =>
+  (secondaries: Readonly<Map<`${string}.${string}`, Portfolio.Token.Amount>>) =>
   (dtoEvent: Portfolio.Event.TokenManagerSync) =>
     dtoEvent.ids.some((id) => secondaries.has(id))
 
@@ -255,19 +381,19 @@ const refreshTokenInfos = async ({
   sourceId,
 }: {
   tokenManager: Portfolio.Manager.Token
-  secondaries: Readonly<Map<Portfolio.Token.Id, Portfolio.Token.Balance | null>>
+  secondaries: Readonly<Map<Portfolio.Token.Id, Portfolio.Token.Amount | null>>
 } & Portfolio.Event.SourceId) => {
   const tokenInfos = await tokenManager.sync({
     secondaryTokenIds: [...secondaries.keys()],
     sourceId,
   })
 
-  const newBalances: Array<[Portfolio.Token.Id, Portfolio.Token.Balance]> = [
+  const newBalances: Array<[Portfolio.Token.Id, Portfolio.Token.Amount]> = [
     ...secondaries.values(),
   ]
     .filter(hasValue)
     .map((balance) => {
-      const newBalance: Portfolio.Token.Balance = {
+      const newBalance: Portfolio.Token.Amount = {
         ...balance,
         info: tokenInfos.get(balance.info.id)?.record ?? balance.info,
       }
@@ -277,11 +403,12 @@ const refreshTokenInfos = async ({
   return freeze(new Map(newBalances), true)
 }
 
-const splitByType = (
-  sortedBalances: ReadonlyArray<Portfolio.Token.Balance>,
-) => {
+const splitByType = (sortedBalances: ReadonlyArray<Portfolio.Token.Amount>) => {
   return freeze(
     {
+      records: new Map(
+        sortedBalances.map(({info, quantity}) => [info.id, {info, quantity}]),
+      ),
       all: sortedBalances,
       fts: sortedBalances.filter(({info}) => isFt(info)),
       nfts: sortedBalances.filter(({info}) => isNft(info)),
@@ -290,32 +417,27 @@ const splitByType = (
   )
 }
 
-const primaryTokenUpdaterWrapper =
+const primaryUpdater =
   ({
-    storagePrimaryBalanceBreakdown,
+    storagePrimaryBreakdown,
     primaryTokenInfo,
   }: Readonly<{
-    storagePrimaryBalanceBreakdown: Portfolio.Storage.Balance['primaryBalanceBreakdown']
+    storagePrimaryBreakdown: Portfolio.Storage.Balance['primaryBreakdown']
     primaryTokenInfo: Portfolio.Token.Info
   }>) =>
   (
-    primaryBalance: Readonly<Omit<Portfolio.BalancePrimaryBreakdown, 'info'>>,
-  ) => {
-    const newPrimaryBreakdown: Readonly<Portfolio.BalancePrimaryBreakdown> = {
-      ...primaryBalance,
-      info: primaryTokenInfo,
-    }
-    const newPrimaryTokenBalance: Readonly<Portfolio.Token.Balance> = freeze(
+    newPrimaryBreakdown: Readonly<Portfolio.PrimaryBreakdown>,
+  ): Readonly<Portfolio.Token.Amount> => {
+    storagePrimaryBreakdown.clear()
+    storagePrimaryBreakdown.save(newPrimaryBreakdown)
+    const {availableRewards, totalFromTxs} = newPrimaryBreakdown
+    return freeze(
       {
-        balance: primaryBalance.balance,
-        lockedInBuiltTxs: primaryBalance.lockedInBuiltTxs,
         info: primaryTokenInfo,
+        quantity: availableRewards + totalFromTxs,
       },
       true,
     )
-    storagePrimaryBalanceBreakdown.clear()
-    storagePrimaryBalanceBreakdown.save(newPrimaryBreakdown)
-    return freeze({newPrimaryBreakdown, newPrimaryTokenBalance}, true)
   }
 
 // TODO list
