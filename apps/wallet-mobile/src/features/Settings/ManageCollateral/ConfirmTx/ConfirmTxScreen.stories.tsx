@@ -10,7 +10,7 @@ import {ConfirmTxScreen} from './ConfirmTxScreen'
 storiesOf('Confirm Tx', module).add('initial', () => {
   return (
     <SelectedWalletProvider wallet={walletMocks.wallet}>
-      <TransferProvider initialState={sendMocks.confirmTx.success}>
+      <TransferProvider initialState={sendMocks.confirmTx.success as never}>
         <ConfirmTxScreen />
       </TransferProvider>
     </SelectedWalletProvider>

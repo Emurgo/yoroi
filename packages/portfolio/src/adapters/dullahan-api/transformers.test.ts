@@ -1,4 +1,8 @@
-import {toSecondaryTokenInfo, toSecondaryTokenInfos} from './transformers'
+import {
+  toDullahanRequest,
+  toSecondaryTokenInfo,
+  toSecondaryTokenInfos,
+} from './transformers'
 import {Portfolio, Api} from '@yoroi/types'
 
 import {tokenMocks} from '../token.mocks'
@@ -82,5 +86,19 @@ describe('transformers', () => {
         ],
       })
     })
+  })
+})
+
+describe('toDullahanRequest', () => {
+  it('success', () => {
+    const request: ReadonlyArray<Api.RequestWithCache<Portfolio.Token.Id>> = [
+      ['token.1', 'hash1'],
+      ['token.2', 'hash2'],
+      ['token.3', 'hash3'],
+    ]
+
+    const result = toDullahanRequest(request)
+
+    expect(result).toEqual(['token.1:hash1', 'token.2:hash2', 'token.3:hash3'])
   })
 })

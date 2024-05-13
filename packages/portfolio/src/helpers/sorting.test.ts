@@ -5,7 +5,7 @@ import {tokenBalanceMocks} from '../adapters/token-balance.mocks'
 import {tokenInfoMocks} from '../adapters/token-info.mocks'
 import {
   alpha,
-  sortTokenBalances,
+  sortTokenAmountsByInfo,
   sortTokenInfos,
   toEnd,
   toStart,
@@ -80,9 +80,9 @@ describe('sorting', () => {
     ])
   })
 
-  it('sort token balances', () => {
+  it('sort token amounts by info', () => {
     const primaryTokenInfo = tokenInfoMocks.primaryETH
-    const tokenBalances = [
+    const amounts = [
       tokenBalanceMocks.ftNoTicker,
       tokenBalanceMocks.nftCryptoKitty,
       tokenBalanceMocks.ftNameless,
@@ -111,9 +111,9 @@ describe('sorting', () => {
       },
     ]
 
-    const sortedTokenBalances = sortTokenBalances({
+    const sortedTokenBalances = sortTokenAmountsByInfo({
       primaryTokenInfo,
-      tokenBalances,
+      amounts,
     })
 
     const serialized = sortedTokenBalances.map(storageSerializer)

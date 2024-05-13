@@ -2,9 +2,9 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
 import {QueryProvider, RouteProvider} from '../../.storybook/decorators'
+import {MediaDetails} from '../features/Portfolio/common/MediaDetails/MediaDetails'
 import {SelectedWalletProvider} from '../features/WalletManager/Context'
 import {mocks, nft} from '../yoroi-wallets/mocks'
-import {NftDetails} from './NftDetails'
 
 storiesOf('NFT/Details', module)
   .add('Default', () => {
@@ -17,7 +17,7 @@ storiesOf('NFT/Details', module)
       <RouteProvider params={{id: nft.id}}>
         <QueryProvider>
           <SelectedWalletProvider wallet={loadedWallet}>
-            <NftDetails />
+            <MediaDetails />
           </SelectedWalletProvider>
         </QueryProvider>
       </RouteProvider>
@@ -33,7 +33,7 @@ storiesOf('NFT/Details', module)
       <RouteProvider params={{id: nft.id}}>
         <QueryProvider>
           <SelectedWalletProvider wallet={wallet}>
-            <NftDetails />
+            <MediaDetails />
           </SelectedWalletProvider>
         </QueryProvider>
       </RouteProvider>
@@ -49,7 +49,7 @@ storiesOf('NFT/Details', module)
       <RouteProvider params={{id: nft.id}}>
         <QueryProvider>
           <SelectedWalletProvider wallet={wallet}>
-            <NftDetails />
+            <MediaDetails />
           </SelectedWalletProvider>
         </QueryProvider>
       </RouteProvider>

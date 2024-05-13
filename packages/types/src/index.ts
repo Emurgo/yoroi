@@ -158,20 +158,18 @@ import {
 import {PortfolioTokenDiscovery} from './portfolio/discovery'
 import {PortfolioTokenInfo} from './portfolio/info'
 import {
-  PortfolioAmount,
-  PortfolioAmounts,
-  PortfolioBalancePrimaryBreakdown,
-  PortfolioBalancePrimaryRecord,
-  PortfolioTokenBalance,
-} from './portfolio/balance'
+  PortfolioTokenAmount,
+  PortfolioTokenAmountRecords,
+  PortfolioPrimaryBreakdown,
+} from './portfolio/amount'
 import {PortfolioTokenPrice} from './portfolio/price'
-import {ChainNetwork} from './chain/network'
+import {ChainNetwork, ChainSupportedNetworks} from './chain/network'
 import {NumbersErrorInvalidAtomicValue} from './numbers/errors'
 import {NumbersAtomicValue} from './numbers/atomic-value'
 import {AppErrorInvalidState} from './app/errors'
 import {
   PortfolioApi,
-  PortfolioApiTokenDiscoveriesResponse,
+  PortfolioApiTokenDiscoveryResponse,
   PortfolioApiTokenInfosResponse,
 } from './portfolio/api'
 import {
@@ -193,6 +191,10 @@ import {
   PortfolioManagerBalance,
   PortfolioManagerToken,
 } from './portfolio/manager'
+import {
+  PortfolioFungibilityFilter,
+  PortfolioTokenBalances,
+} from './portfolio/balances'
 import {AppQueueTask, AppQueueTaskManager} from './app/queue-task-manager'
 
 export namespace App {
@@ -422,10 +424,8 @@ export namespace Transfer {
 }
 
 export namespace Portfolio {
-  export type Amount = PortfolioAmount
-  export type Amounts = PortfolioAmounts
-  export type BalancePrimaryRecord = PortfolioBalancePrimaryRecord
-  export type BalancePrimaryBreakdown = PortfolioBalancePrimaryBreakdown
+  export type PrimaryBreakdown = PortfolioPrimaryBreakdown
+  export type FungibilityFilter = PortfolioFungibilityFilter
 
   export namespace Event {
     export type SourceId = PortfolioEventSourceId
@@ -445,7 +445,7 @@ export namespace Portfolio {
   // eslint-disable-next-line @typescript-eslint/no-shadow
   export namespace Api {
     export type TokenInfosResponse = PortfolioApiTokenInfosResponse
-    export type TokenDiscoveriesResponse = PortfolioApiTokenDiscoveriesResponse
+    export type TokenDiscoveryResponse = PortfolioApiTokenDiscoveryResponse
     export type Api = PortfolioApi
   }
 
@@ -460,6 +460,10 @@ export namespace Portfolio {
   }
 
   export namespace Token {
+    export type Balances = PortfolioTokenBalances
+    export type Amount = PortfolioTokenAmount
+    export type AmountRecords = PortfolioTokenAmountRecords
+
     export type Id = PortfolioTokenId
 
     export type Type = PortfolioTokenType
@@ -482,7 +486,6 @@ export namespace Portfolio {
 
     export type Info = PortfolioTokenInfo
     export type Discovery = PortfolioTokenDiscovery
-    export type Balance = PortfolioTokenBalance
     export type Price = PortfolioTokenPrice
   }
 }
@@ -490,6 +493,7 @@ export namespace Portfolio {
 export namespace Chain {
   export type Network = ChainNetwork
   export const Network = ChainNetwork
+  export type SupportedNetworks = ChainSupportedNetworks
 
   export namespace Cardano {
     export type UnsignedTx = CardanoUnsignedTx

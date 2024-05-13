@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {BigNumber} from 'bignumber.js'
-import ExtendableError from 'es6-error'
 
 import {isHaskellShelleyNetwork, NETWORKS} from '../cardano/networks'
 import {Token} from '../types'
 
-export class InvalidAssetAmount extends ExtendableError {
+export class InvalidAssetAmount extends Error {
   static ERROR_CODES = {
     // general parsing problem or amount is equal to 0
     INVALID_AMOUNT: 'INVALID_AMOUNT',

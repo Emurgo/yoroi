@@ -1,5 +1,6 @@
 import {useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
@@ -28,6 +29,7 @@ type Props = {
 export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
   const intl = useIntl()
   const strings = useStrings()
+  const styles = useStyles()
   const navigation = useNavigation<WalletInitRouteNavigation>()
 
   const {hwDeviceInfoChanged, walletImplementationId, useUSB} = useSetupWallet()
@@ -91,9 +93,13 @@ const useStrings = () => {
   }
 }
 
-const styles = StyleSheet.create({
-  safeAreaView: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-})
+const useStyles = () => {
+  const {color} = useTheme()
+  const styles = StyleSheet.create({
+    safeAreaView: {
+      flex: 1,
+      backgroundColor: color.gray_cmin,
+    },
+  })
+  return styles
+}

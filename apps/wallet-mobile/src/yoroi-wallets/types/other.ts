@@ -292,6 +292,12 @@ export const supportedCurrencies = Object.freeze({
   KRW: 'KRW',
   USD: 'USD',
 })
+
+export const supportedThemes = Object.freeze({
+  system: 'system',
+  'default-light': 'default-light',
+  'default-dark': 'default-dark',
+})
 export type CurrencySymbol = keyof typeof supportedCurrencies
 export type ConfigCurrencies = typeof configCurrencies
 export const configCurrencies = {

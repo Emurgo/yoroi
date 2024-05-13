@@ -3,7 +3,7 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import type {MessageDescriptor} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
-import {InteractionManager, ScrollView, StyleSheet, Switch} from 'react-native'
+import {InteractionManager, ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useAuth} from '../../../auth/AuthProvider'
@@ -20,6 +20,7 @@ import {useEasyConfirmationEnabled, useResync} from '../../../yoroi-wallets/hook
 import {NetworkId, WalletImplementationId} from '../../../yoroi-wallets/types'
 import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../WalletManager/Context'
 import {useNavigateTo} from '../common/navigation'
+import {SettingsSwitch} from '../common/SettingsSwitch'
 import {
   NavigatedSettingsItem,
   SettingsBuildItem,
@@ -36,7 +37,7 @@ const iconProps = {
 export const WalletSettingsScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
-  const styles = useStyles()
+  const {styles} = useStyles()
   const {resetToWalletSelection} = useWalletNavigation()
   const wallet = useSelectedWallet()
   const authSetting = useAuthSetting()
@@ -93,7 +94,7 @@ export const WalletSettingsScreen = () => {
             label={strings.easyConfirmation}
             disabled={authSetting === 'pin' || wallet.isHW || wallet.isReadOnly}
           >
-            <Switch
+            <SettingsSwitch
               value={easyConfirmationEnabled}
               onValueChange={onToggleEasyConfirmation}
               disabled={authSetting === 'pin' || wallet.isHW || wallet.isReadOnly}
@@ -205,7 +206,11 @@ const AddressModeSwitcher = (props: {isSingle: boolean}) => {
   }
 
   return (
-    <Switch value={!isSingleLocal} onValueChange={handleOnSwitchAddressMode} disabled={addressMode.isToggleLoading} />
+    <SettingsSwitch
+      value={!isSingleLocal}
+      onValueChange={handleOnSwitchAddressMode}
+      disabled={addressMode.isToggleLoading}
+    />
   )
 }
 
@@ -351,5 +356,5 @@ const useStyles = () => {
       padding: 16,
     },
   })
-  return styles
+  return {styles}
 }

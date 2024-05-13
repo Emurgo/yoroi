@@ -40,13 +40,3 @@ storiesOf('AssetList', module)
       </QueryClientProvider>
     )
   })
-  .add('privacyMode enabled', () => {
-    const styles = useSendStyles()
-    return (
-      <QueryClientProvider client={new QueryClient()}>
-        <SelectedWalletProvider wallet={mocks.wallet}>
-          <AssetList assets={mocks.tokenEntries} styles={styles} onSelect={action('onSelect')} isPrivacyOff />
-        </SelectedWalletProvider>
-      </QueryClientProvider>
-    )
-  })

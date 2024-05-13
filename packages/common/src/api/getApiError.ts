@@ -10,6 +10,8 @@ export const getApiError = (error: Api.ResponseError) => {
       return new Api.Errors.Network(error.message)
     case -2:
       return new Api.Errors.InvalidState(error.message)
+    case -3:
+      return new Api.Errors.ResponseMalformed(error.message)
     case 400:
       return new Api.Errors.BadRequest(error.message)
     case 401:

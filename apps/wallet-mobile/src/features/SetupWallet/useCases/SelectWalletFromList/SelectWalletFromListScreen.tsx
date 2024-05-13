@@ -1,10 +1,9 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
-import {NetworkError} from '@yoroi/common'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
-import {InteractionManager, Linking, RefreshControl, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Linking, RefreshControl, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../../components/Button'
@@ -17,9 +16,8 @@ import {useWalletNavigation} from '../../../../navigation'
 import {WalletMeta} from '../../../../wallet-manager/types'
 import {useWalletManager} from '../../../../wallet-manager/WalletManagerContext'
 import * as HASKELL_SHELLEY from '../../../../yoroi-wallets/cardano/constants/mainnet/constants'
-import {InvalidState} from '../../../../yoroi-wallets/cardano/errors'
 import {isJormungandr} from '../../../../yoroi-wallets/cardano/networks'
-import {useOpenWallet, useWalletMetas} from '../../../../yoroi-wallets/hooks'
+import {useWalletMetas} from '../../../../yoroi-wallets/hooks'
 import {useLinksRequestWallet} from '../../../Links/common/useLinksRequestWallet'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../../../WalletManager/Context'
 import {useStrings} from '../../common/useStrings'
@@ -48,46 +46,32 @@ export const SelectWalletFromList = () => {
   const selectWalletMeta = useSetSelectedWalletMeta()
   const selectWallet = useSetSelectedWallet()
 
-  const {openWallet} = useOpenWallet({
-    onSuccess: ([wallet, walletMeta]) => {
-      selectWalletMeta(walletMeta)
-      selectWallet(wallet)
-      walletManager.setSelectedWalletId(walletMeta.id)
-      navigateToTxHistory()
-    },
-    onError: (error) => {
-      InteractionManager.runAfterInteractions(() => {
-        return error instanceof InvalidState
-          ? showErrorDialog(errorMessages.walletStateInvalid, intl)
-          : error instanceof NetworkError
-          ? showErrorDialog(errorMessages.networkError, intl)
-          : showErrorDialog(errorMessages.generalError, intl, {message: error.message})
-      })
-    },
-  })
-
-  const onSelect = React.useCallback(
+  const handleOnSelect = React.useCallback(
     async (walletMeta: WalletMeta) => {
       if (walletMeta.isShelley || isJormungandr(walletMeta.networkId)) {
         await showErrorDialog(errorMessages.itnNotSupported, intl)
         return
       }
 
-      return openWallet(walletMeta)
+      selectWalletMeta(walletMeta)
+      const wallet = walletManager.getOpenedWalletById(walletMeta.id)
+      selectWallet(wallet)
+      walletManager.setSelectedWalletId(walletMeta.id)
+      navigateToTxHistory()
     },
-    [intl, openWallet],
+    [selectWalletMeta, walletManager, selectWallet, navigateToTxHistory, intl],
   )
 
   const data = React.useMemo(
     () =>
-      walletMetas?.map((walletMeta, index, allData) => (
+      walletMetas?.map((walletMeta) => (
         <React.Fragment key={walletMeta.id}>
-          <WalletListItem wallet={walletMeta} onPress={onSelect} />
+          <WalletListItem wallet={walletMeta} onPress={handleOnSelect} />
 
-          {index < allData.length - 1 && <Space height="lg" />}
+          <Space height="lg" />
         </React.Fragment>
       )),
-    [onSelect, walletMetas],
+    [handleOnSelect, walletMetas],
   )
 
   return (
@@ -99,8 +83,11 @@ export const SelectWalletFromList = () => {
         onScrollBarChange={setIsScrollBarShown}
         onScrollBeginDrag={() => setShowLine(true)}
         onScrollEndDrag={() => setShowLine(false)}
+        bounces={false}
       >
         {data}
+
+        <Space height="lg" />
       </ScrollView>
 
       <View
@@ -125,10 +112,10 @@ export const SelectWalletFromList = () => {
   )
 }
 
-const SUPPORT_TICKET_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/requests/new?ticket_form_id=360013330335'
+const linkToSupportOpenTicket = 'https://emurgohelpdesk.zendesk.com/hc/en-us/requests/new?ticket_form_id=360013330335'
 
 const SupportTicketLink = () => {
-  const onPress = () => Linking.openURL(SUPPORT_TICKET_LINK)
+  const onPress = () => Linking.openURL(linkToSupportOpenTicket)
   const strings = useStrings()
   const {styles} = useStyles()
 
@@ -186,7 +173,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     safeAreaView: {
       flex: 1,
-      backgroundColor: color.white_static,
+      backgroundColor: color.gray_cmin,
     },
     topButton: {
       backgroundColor: color.primary_c500,

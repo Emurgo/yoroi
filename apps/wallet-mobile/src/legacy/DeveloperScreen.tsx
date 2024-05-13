@@ -3,7 +3,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import {useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import assert from 'assert'
-import ExtendableError from 'es6-error'
 import _ from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
@@ -145,6 +144,23 @@ export const DeveloperScreen = () => {
           style={styles.button}
           onPress={() =>
             createWallet({
+              mnemonicPhrase: config['WALLET_3_MNEMONIC'] ?? '',
+              name: 'Wallet 3',
+              networkId: Number(config['WALLET_3_NETWORK_ID'] ?? 300) as NetworkId,
+              password: '1234567890',
+              walletImplementationId: 'haskell-shelley',
+              addressMode: 'multiple',
+            })
+          }
+          testID="btnRestoreWallet3"
+          title="Restore Wallet 3"
+        />
+
+        <Button
+          disabled={isLoading}
+          style={styles.button}
+          onPress={() =>
+            createWallet({
               mnemonicPhrase: generateAdaMnemonic(),
               name: 'RO-Mainnet',
               networkId: 1,
@@ -246,7 +262,7 @@ const useStyles = () => {
   return {styles}
 }
 
-export class StorageError extends ExtendableError {}
+export class StorageError extends Error {}
 
 const checkPathFormat = (path: string) => path.startsWith('/') && !path.endsWith('/')
 

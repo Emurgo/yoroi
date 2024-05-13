@@ -11,7 +11,6 @@ import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../yoroi-wallets/hooks'
 import {Quantities} from '../../yoroi-wallets/utils'
 import {Boundary, Icon, Spacer, Text, TokenIcon, TokenIconPlaceholder} from '..'
-import {PairedBalance} from '../PairedBalance/PairedBalance'
 
 export type AmountItemProps = {
   wallet: YoroiWallet
@@ -88,10 +87,6 @@ export const AmountItem = ({
               {isPrivacyOff ? '**.*******' : formattedQuantity}
             </Text>
           </View>
-        )}
-
-        {isPrimary && variant !== 'swap' && (
-          <PairedBalance isPrivacyOff={isPrivacyOff} amount={{quantity, tokenId: tokenInfo.id}} />
         )}
       </Right>
     </View>

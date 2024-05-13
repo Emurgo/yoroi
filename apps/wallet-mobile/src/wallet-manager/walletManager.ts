@@ -1,8 +1,21 @@
 import {parseSafe} from '@yoroi/common'
-import {App} from '@yoroi/types'
-import {catchError, concatMap, finalize, from, interval, of, Subject} from 'rxjs'
+import {App, Chain} from '@yoroi/types'
+import {
+  BehaviorSubject,
+  catchError,
+  concatMap,
+  finalize,
+  from,
+  interval,
+  of,
+  startWith,
+  Subject,
+  Subscription,
+  switchMap,
+} from 'rxjs'
 import uuid from 'uuid'
 
+import {buildPortfolioTokenManagers} from '../features/Portfolio/common/hooks/usePortfolioTokenManager'
 import {getCardanoWalletFactory} from '../yoroi-wallets/cardano/getWallet'
 import {isYoroiWallet, YoroiWallet} from '../yoroi-wallets/cardano/types'
 import {HWDeviceInfo} from '../yoroi-wallets/hw'
@@ -16,23 +29,36 @@ import {isWalletMeta, parseWalletMeta} from './validators'
 const thirtyFiveSeconds = 35 * 1e3
 
 export class WalletManager {
-  readonly #walletsRootStorage: App.Storage
-  readonly #rootStorage: App.Storage
-  readonly #openedWallets: Map<string, YoroiWallet> = new Map()
+  static #instance: WalletManager
+  readonly #walletsRootStorage: App.Storage = rootStorage.join('wallet/')
+  readonly #rootStorage: App.Storage = rootStorage
+  readonly #openedWallets: Map<YoroiWallet['id'], YoroiWallet> = new Map()
   public readonly walletInfos$ = new Subject<WalletInfos>()
   readonly #walletInfos: WalletInfos = new Map()
+  readonly #tokenManagersByNetwork = buildPortfolioTokenManagers()
+  readonly #isSyncing$ = new BehaviorSubject<boolean>(false)
   #selectedWalletId: YoroiWallet['id'] | null = null
   #subscriptions: Array<WalletManagerSubscription> = []
-  #isSyncing = false
+  #syncControl$ = new BehaviorSubject<boolean>(true)
+  #syncSubscription: Subscription | null = null
 
   constructor() {
-    this.#walletsRootStorage = rootStorage.join('wallet/')
-    this.#rootStorage = rootStorage
+    if (WalletManager.#instance) return WalletManager.#instance
+    WalletManager.#instance = this
+  }
+
+  static instance() {
+    if (!WalletManager.#instance) return new WalletManager()
+    return WalletManager.#instance
   }
 
   setSelectedWalletId(id: YoroiWallet['id']) {
     this.#selectedWalletId = id
     this._notify({type: 'selected-wallet-id', id})
+  }
+
+  getTokenManager(network: Chain.SupportedNetworks) {
+    return this.#tokenManagersByNetwork[network]
   }
 
   get selectedWalledId() {
@@ -41,9 +67,9 @@ export class WalletManager {
 
   startSyncingAllWallets() {
     const syncWallets = () => {
-      if (this.#isSyncing) return
+      if (this.#isSyncing$.value) return
 
-      this.#isSyncing = true
+      this.#isSyncing$.next(true)
 
       from(this.openWallets())
         .pipe(
@@ -58,40 +84,82 @@ export class WalletManager {
           concatMap((wallet) => {
             this.#walletInfos.set(wallet.id, {sync: {status: 'syncing', updatedAt: Date.now()}})
             this.walletInfos$.next(new Map(this.#walletInfos))
-            return from(wallet.sync()).pipe(
+            return from(wallet.sync({isForced: false})).pipe(
+              catchError((error) => {
+                this.#walletInfos.set(wallet.id, {sync: {status: 'error', error, updatedAt: Date.now()}})
+                this.walletInfos$.next(new Map(this.#walletInfos))
+                return of()
+              }),
               finalize(() => {
                 if (this.#walletInfos.get(wallet.id)?.sync.status !== 'error') {
                   this.#walletInfos.set(wallet.id, {sync: {status: 'done', updatedAt: Date.now()}})
                   this.walletInfos$.next(new Map(this.#walletInfos))
                 }
               }),
-              catchError((error) => {
-                this.#walletInfos.set(wallet.id, {sync: {status: 'error', error, updatedAt: Date.now()}})
-                this.walletInfos$.next(new Map(this.#walletInfos))
-                return of()
-              }),
             )
           }),
           finalize(() => {
-            this.#isSyncing = false
+            this.#isSyncing$.next(false)
           }),
         )
         .subscribe()
     }
 
-    const subscription = interval(thirtyFiveSeconds).subscribe(syncWallets)
+    if (!this.#syncSubscription) {
+      this.#syncSubscription = this.#syncControl$
+        .pipe(
+          switchMap((isActive) => (isActive ? interval(thirtyFiveSeconds).pipe(startWith(0)) : of())),
+          concatMap(() => of(syncWallets())),
+        )
+        .subscribe()
+    }
 
     return {
       destroy: () => {
-        subscription.unsubscribe()
+        this.#syncSubscription?.unsubscribe()
+        this.#syncSubscription = null
       },
     }
   }
 
+  get syncing$() {
+    return this.#isSyncing$.asObservable()
+  }
+
+  get isSyncing() {
+    return this.#isSyncing$.value
+  }
+
+  get syncActive$() {
+    return this.#syncControl$.asObservable()
+  }
+
+  get isSyncActive() {
+    return this.#syncControl$.value
+  }
+
+  pauseSyncing() {
+    this.#syncControl$.next(false)
+  }
+
+  resumeSyncing() {
+    this.#syncControl$.next(true)
+  }
+
   getOpenedWalletsByNetwork = () => {
-    const openedWalletsByNetwork: Map<NetworkId, YoroiWallet['id']> = new Map()
-    this.#openedWallets.forEach(({id, networkId}) => openedWalletsByNetwork.set(networkId, id))
+    const openedWalletsByNetwork = new Map<Chain.SupportedNetworks, Set<YoroiWallet['id']>>()
+
+    this.#openedWallets.forEach(({id, network}) => {
+      if (!openedWalletsByNetwork.has(network)) openedWalletsByNetwork.set(network, new Set())
+
+      openedWalletsByNetwork.get(network)?.add(id)
+    })
+
     return openedWalletsByNetwork
+  }
+
+  getOpenedWalletById = (id: YoroiWallet['id']) => {
+    return this.#openedWallets.get(id)
   }
 
   async openWallets() {
@@ -185,8 +253,8 @@ export class WalletManager {
     walletImplementationId: WalletImplementationId,
     addressMode: AddressMode,
   ) {
-    await wallet.save()
-    if (!wallet.checksum) throw new Error('invalid wallet')
+    if (!isYoroiWallet(wallet)) throw new Error('invalid wallet')
+
     const walletMeta: WalletMeta = {
       id,
       name,
@@ -198,14 +266,10 @@ export class WalletManager {
       isEasyConfirmationEnabled: false,
     }
 
+    await wallet.save()
     await this.#walletsRootStorage.setItem(id, walletMeta)
 
-    if (isYoroiWallet(wallet)) {
-      this.#openedWallets.set(id, wallet)
-      return wallet
-    }
-
-    throw new Error('invalid wallet')
+    return wallet
   }
 
   async openWallet(walletMeta: WalletMeta): Promise<YoroiWallet> {
@@ -291,8 +355,7 @@ export class WalletManager {
   }
 }
 
-export const walletManager = new WalletManager()
-walletManager.startSyncingAllWallets()
+export const walletManager = WalletManager.instance()
 
 export default walletManager
 

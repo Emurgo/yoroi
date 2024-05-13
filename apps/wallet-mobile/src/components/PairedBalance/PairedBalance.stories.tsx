@@ -1,4 +1,5 @@
 import {storiesOf} from '@storybook/react-native'
+import {tokenBalanceMocks} from '@yoroi/portfolio'
 import React from 'react'
 import {View} from 'react-native'
 
@@ -19,7 +20,7 @@ storiesOf('PairedBalance', module)
         >
           <View style={{flex: 1, justifyContent: 'center'}}>
             <View style={{borderWidth: 1}}>
-              <PairedBalance amount={{quantity: '2', tokenId: mocks.wallet.primaryTokenInfo.id}} />
+              <PairedBalance amount={tokenBalanceMocks.primaryETH} />
             </View>
           </View>
         </SelectedWalletProvider>
@@ -37,7 +38,7 @@ storiesOf('PairedBalance', module)
         >
           <View style={{flex: 1, justifyContent: 'center'}}>
             <View style={{borderWidth: 1}}>
-              <PairedBalance amount={{quantity: '2', tokenId: mocks.wallet.primaryTokenInfo.id}} />
+              <PairedBalance amount={tokenBalanceMocks.primaryETH} />
             </View>
           </View>
         </SelectedWalletProvider>
@@ -55,7 +56,7 @@ storiesOf('PairedBalance', module)
         >
           <View style={{flex: 1, justifyContent: 'center'}}>
             <View style={{borderWidth: 1}}>
-              <PairedBalance amount={{quantity: '2', tokenId: mocks.wallet.primaryTokenInfo.id}} isPrivacyOff />
+              <PairedBalance amount={tokenBalanceMocks.primaryETH} ignorePrivacy />
             </View>
           </View>
         </SelectedWalletProvider>
@@ -73,7 +74,7 @@ storiesOf('PairedBalance', module)
         >
           <View style={{flex: 1, justifyContent: 'center'}}>
             <View style={{borderWidth: 1}}>
-              <PairedBalance amount={{quantity: '2', tokenId: mocks.wallet.primaryTokenInfo.id}} />
+              <PairedBalance amount={tokenBalanceMocks.primaryETH} />
             </View>
           </View>
         </SelectedWalletProvider>

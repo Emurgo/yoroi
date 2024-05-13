@@ -69,5 +69,6 @@ export const usePrivacyMode = () => {
     isTogglePrivacyModeLoading,
     setPrivacyModeOff: () => writePrivacyMode('HIDDEN'),
     setPrivacyModeOn: () => writePrivacyMode('SHOWN'),
+    privacyPlaceholder: '*.******',
   }
 }

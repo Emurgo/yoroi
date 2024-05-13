@@ -5,7 +5,6 @@ import {StyleSheet, TouchableOpacity, TouchableOpacityProps, View} from 'react-n
 
 import {Hr, Icon, Spacer, Text} from '../../components'
 import {formatTokenWithSymbol} from '../../legacy/format'
-import {lightPalette} from '../../theme'
 import {useCollateralInfo} from '../../yoroi-wallets/cardano/utxoManager/useCollateralInfo'
 import {useSelectedWallet} from '../WalletManager/Context'
 
@@ -26,7 +25,7 @@ export const SettingsSection = ({title, children}: SettingsSectionProps) => {
 
           <Spacer height={5} />
 
-          <Hr />
+          <Hr style={styles.separator} />
         </>
       )}
 
@@ -68,7 +67,7 @@ export const SettingsItem = ({label, children, disabled, icon, info}: SettingsIt
         )}
       </View>
 
-      <Hr />
+      <Hr style={styles.separator} />
     </View>
   )
 }
@@ -81,7 +80,7 @@ type NavigatedSettingsItemProps = {
 }
 
 export const NavigatedSettingsItem = ({label, onNavigate, icon, disabled, selected}: NavigatedSettingsItemProps) => {
-  const {styles} = useStyles()
+  const {styles, color} = useStyles()
   return (
     <Touchable onPress={onNavigate} disabled={disabled}>
       <SettingsItem icon={icon} label={label} disabled={disabled}>
@@ -90,7 +89,7 @@ export const NavigatedSettingsItem = ({label, onNavigate, icon, disabled, select
 
           <Spacer width={16} />
 
-          <Icon.Chevron direction="right" size={28} color={lightPalette.gray['600']} />
+          <Icon.Chevron direction="right" size={28} color={color.gray_c600} />
         </View>
       </SettingsItem>
     </Touchable>
@@ -162,11 +161,15 @@ const useStyles = () => {
       color: color.gray_c500,
       ...atoms.body_1_lg_regular,
     },
+    separator: {
+      backgroundColor: color.gray_c200,
+      height: 1,
+    },
     row: {flexDirection: 'row', alignItems: 'center'},
   })
 
   const colors = {
     iconColor: color.gray_c600,
   }
-  return {styles, colors}
+  return {styles, colors, color}
 }

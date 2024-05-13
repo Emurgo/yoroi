@@ -13,3 +13,22 @@ export function asConcatenedString(
   if (isArrayOfType(value, isString)) return (value as string[]).join('')
   return // TS
 }
+
+export function truncateString({
+  value,
+  maxLength,
+  separator = '...',
+}: {
+  value: string
+  maxLength: number
+  separator?: string
+}): string {
+  if (value.length <= maxLength) return value
+
+  const partLength = Math.floor((maxLength - separator.length) / 2)
+
+  const start = value.substring(0, partLength)
+  const end = value.substring(value.length - partLength)
+
+  return `${start}${separator}${end}`
+}

@@ -6,107 +6,88 @@ import {tokenInfoMocks} from './token-info.mocks'
 
 const primaryETH: Portfolio.Token.Discovery = {
   id: '.',
-  counters: {
-    items: 1,
-    totalItems: 1,
-    supply: 45_000_000_000_000n,
-  },
+  supply: 45_000_000_000_000n.toString(),
   originalMetadata: {
     filteredMintMetadatum: null,
     referenceDatum: null,
     tokenRegistry: null,
   },
-  properties: {},
   source: {
     decimals: Portfolio.Token.Source.Metadata,
-    image: Portfolio.Token.Source.Metadata,
+    originalImage: Portfolio.Token.Source.Metadata,
     name: Portfolio.Token.Source.Metadata,
     symbol: Portfolio.Token.Source.Metadata,
     ticker: Portfolio.Token.Source.Metadata,
+    description: Portfolio.Token.Source.Metadata,
+    website: Portfolio.Token.Source.Metadata,
   },
 }
 
 const nftCryptoKitty: Portfolio.Token.Discovery = {
   id: tokenInfoMocks.nftCryptoKitty.id,
-  counters: {
-    items: 1,
-    totalItems: 1,
-    supply: 0n,
-  },
+  supply: '0',
   originalMetadata: {
     filteredMintMetadatum: null,
     referenceDatum: null,
     tokenRegistry: null,
   },
-  properties: {
-    eyes: {
-      detectedType: Portfolio.Token.PropertyType.String,
-      rarity: 0.9,
-      value: 'green',
-    },
-    hair: {
-      detectedType: Portfolio.Token.PropertyType.String,
-      rarity: 0.001,
-      value: 'black',
-    },
-  },
   source: {
     decimals: Portfolio.Token.Source.Metadata,
-    image: Portfolio.Token.Source.Metadata,
+    originalImage: Portfolio.Token.Source.Metadata,
     name: Portfolio.Token.Source.Metadata,
     symbol: Portfolio.Token.Source.Metadata,
     ticker: Portfolio.Token.Source.Metadata,
+    description: Portfolio.Token.Source.Metadata,
+    website: Portfolio.Token.Source.Metadata,
   },
 }
 
 const rnftWhatever: Portfolio.Token.Discovery = {
   id: tokenInfoMocks.rnftWhatever.id,
-  counters: {
-    items: 1,
-    totalItems: 1,
-    supply: 0n,
-  },
+  supply: '0',
   originalMetadata: {
     filteredMintMetadatum: null,
     referenceDatum: null,
     tokenRegistry: null,
   },
-  properties: {
-    head: {
-      detectedType: Portfolio.Token.PropertyType.String,
-      rarity: 0.9,
-      value: 'alien',
-    },
-    neck: {
-      detectedType: Portfolio.Token.PropertyType.String,
-      rarity: 0.001,
-      value: true,
-    },
-  },
   source: {
     decimals: Portfolio.Token.Source.Metadata,
-    image: Portfolio.Token.Source.Metadata,
+    originalImage: Portfolio.Token.Source.Metadata,
     name: Portfolio.Token.Source.Metadata,
     symbol: Portfolio.Token.Source.Metadata,
     ticker: Portfolio.Token.Source.Metadata,
+    description: Portfolio.Token.Source.Metadata,
+    website: Portfolio.Token.Source.Metadata,
   },
 }
 
-const apiResponseTokenDiscoveries: Portfolio.Api.TokenDiscoveriesResponse =
-  freeze(
-    {
-      [nftCryptoKitty.id]: [200, nftCryptoKitty, 'hash2', 10],
-      [rnftWhatever.id]: [304, 0],
+const apiResponseTokenDiscovery: Readonly<
+  Record<
+    'success' | 'error',
+    Api.Response<Portfolio.Api.TokenDiscoveryResponse>
+  >
+> = freeze(
+  {
+    success: {
+      tag: 'right',
+      value: {
+        status: 200,
+        data: nftCryptoKitty,
+      },
     },
-    true,
-  )
+    error: {
+      tag: 'left',
+      error: {
+        status: 404,
+        responseData: null,
+        message: 'Not found',
+      },
+    },
+  },
+  true,
+)
 
-const apiRequestTokenDiscoveries: ReadonlyArray<
-  Api.RequestWithCache<Portfolio.Token.Id>
-> = [
-  [nftCryptoKitty.id, 'hash2'],
-  [rnftWhatever.id, 'hash3'],
-]
+const apiRequestTokenDiscovery: Portfolio.Token.Id = nftCryptoKitty.id
 
 const storage: {
   entries1: ReadonlyArray<
@@ -152,8 +133,8 @@ export const tokenDiscoveryMocks = freeze({
   nftCryptoKitty,
   rnftWhatever,
 
-  apiResponseResult: apiResponseTokenDiscoveries,
-  apiRequestArgs: apiRequestTokenDiscoveries,
+  apiResponseResult: apiResponseTokenDiscovery,
+  apiRequestArgs: apiRequestTokenDiscovery,
 
   storage,
 })

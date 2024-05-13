@@ -4,16 +4,21 @@ import {createSignedLedgerTxFromCbor, signRawTransaction} from '@emurgo/yoroi-li
 import {Datum} from '@emurgo/yoroi-lib/dist/internals/models'
 import {AppApi, CardanoApi} from '@yoroi/api'
 import {isNonNullable, parseSafe} from '@yoroi/common'
-import {Api, App, Balance} from '@yoroi/types'
+import {Api, App, Balance, Chain, Portfolio} from '@yoroi/types'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
-import ExtendableError from 'es6-error'
 import _ from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 import {defaultMemoize} from 'reselect'
+import {Observable} from 'rxjs'
 
+import {buildPortfolioBalanceManager} from '../../../features/Portfolio/common/hooks/usePortfolioBalanceManager'
+import {toBalanceManagerSyncArgs} from '../../../features/Portfolio/common/transformers/toBalanceManagerSyncArgs'
+import {toChainSupportedNetwork} from '../../../features/Portfolio/common/transformers/toChainSupportedNetwork'
+import {networksConfig} from '../../../features/WalletManager/common/constants'
 import LocalizableError from '../../../i18n/LocalizableError'
 import {WalletMeta} from '../../../wallet-manager/types'
+import walletManager from '../../../wallet-manager/walletManager'
 import {HWDeviceInfo} from '../../hw'
 import {Logger} from '../../logging'
 import {makeMemosManager, MemosManager} from '../../memos'
@@ -38,6 +43,7 @@ import {asQuantity, Quantities} from '../../utils'
 import {validatePassword} from '../../utils/validators'
 import {Cardano, CardanoMobile} from '../../wallets'
 import * as legacyApi from '../api'
+import {calcLockedDeposit} from '../assetUtils'
 import {encryptWithPassword} from '../catalyst/catalystCipher'
 import {generatePrivateKeyForCatalyst} from '../catalyst/catalystUtils'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
@@ -168,6 +174,10 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     readonly checksum: CardanoTypes.WalletChecksum
     readonly encryptedStorage: WalletEncryptedStorage
     isEasyConfirmationEnabled = false
+    readonly balance$: Observable<Portfolio.Event.BalanceManager>
+    readonly network: Chain.SupportedNetworks
+    readonly portfolioPrimaryTokenInfo: Readonly<Portfolio.Token.Info>
+    readonly balanceManager: Readonly<Portfolio.Manager.Balance>
 
     private _utxos: RawUtxo[]
     private readonly storage: App.Storage
@@ -291,6 +301,16 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
             : 'preprod',
       })
 
+      const network = toChainSupportedNetwork(NETWORK_ID)
+      const portfolioPrimaryTokenInfo = networksConfig[network].primaryTokenInfo
+      const tokenManager = walletManager.getTokenManager(network)
+      const {balanceManager} = buildPortfolioBalanceManager({
+        walletId: id,
+        primaryTokenInfo: portfolioPrimaryTokenInfo,
+        tokenManager,
+        network,
+      })
+
       const wallet = new ShelleyWallet({
         storage,
         id,
@@ -306,6 +326,9 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         transactionManager,
         memosManager,
         cardanoApi,
+        balanceManager,
+        network,
+        portfolioPrimaryTokenInfo,
       })
 
       await wallet.discoverAddresses()
@@ -333,6 +356,9 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       transactionManager,
       memosManager,
       cardanoApi,
+      balanceManager,
+      network,
+      portfolioPrimaryTokenInfo,
     }: {
       storage: App.Storage
       id: string
@@ -348,6 +374,9 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       transactionManager: TransactionManager
       memosManager: MemosManager
       cardanoApi: Api.Cardano.Actions
+      balanceManager: Readonly<Portfolio.Manager.Balance>
+      network: Chain.SupportedNetworks
+      portfolioPrimaryTokenInfo: Readonly<Portfolio.Token.Info>
     }) {
       this.id = id
       this.storage = storage
@@ -372,10 +401,40 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       this.isEasyConfirmationEnabled = isEasyConfirmationEnabled
       this.state = {lastGeneratedAddressIndex}
       this.cardanoApi = cardanoApi
+      this.balanceManager = balanceManager
+      this.balance$ = balanceManager.observable$
+      this.network = network
+      this.portfolioPrimaryTokenInfo = portfolioPrimaryTokenInfo
     }
+
+    // portfolio - here to get snapshots only, avoid using it directly
+    get balances() {
+      return this.balanceManager.getBalances()
+    }
+
+    get primaryBalance() {
+      return this.balanceManager.getPrimaryBalance()
+    }
+
+    get primaryBreakdown() {
+      return this.balanceManager.getPrimaryBreakdown()
+    }
+
+    get hasOnlyPrimary() {
+      return this.balanceManager.getHasOnlyPrimary()
+    }
+
+    get isEmpty() {
+      return this.balanceManager.getIsEmpty()
+    }
+    // end of portfolio
 
     get receiveAddresses(): Addresses {
       return this.externalAddresses.slice(0, this.numReceiveAddresses)
+    }
+
+    get isMainnet() {
+      return this.network === Chain.Network.Mainnet
     }
 
     save() {
@@ -383,6 +442,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     }
 
     async clear() {
+      this.balanceManager.clear()
       await this.transactionManager.clear()
       this.transactionManager.resetState()
       await this.utxoManager.clear()
@@ -393,19 +453,24 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     }
 
     // =================== persistence =================== //
-    async sync() {
+    async sync({isForced = false}: {isForced?: boolean} = {}) {
       if (!this.isInitialized) {
         console.error('ShelleyWallet::sync: wallet not initialized')
         return Promise.resolve()
       }
 
+      const addressesBeforeRequest = this.internalChain.addresses.length + this.externalChain.addresses.length
       await this.discoverAddresses()
+      const addressesAfterRequest = this.internalChain.addresses.length + this.externalChain.addresses.length
+      const hasAddedNewAddress = addressesAfterRequest !== addressesBeforeRequest
+      if (hasAddedNewAddress) await this.save()
 
-      await Promise.all([this.syncUtxos(), this.transactionManager.doSync(this.getAddressesInBlocks(), BACKEND)])
+      this.generateNewReceiveAddressIfNeeded()
 
-      this.updateLastGeneratedAddressIndex()
-
-      await this.save()
+      await Promise.all([
+        this.syncUtxos({isForced}),
+        this.transactionManager.doSync(this.getAddressesInBlocks(), BACKEND),
+      ])
     }
 
     async resync() {
@@ -859,7 +924,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
           }),
         }
       } catch (e) {
-        if (e instanceof LocalizableError || e instanceof ExtendableError) throw e
+        if (e instanceof LocalizableError || e instanceof Error) throw e
         throw new CardanoError((e as Error).message)
       }
     }
@@ -1006,18 +1071,31 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       return response as any
     }
 
-    private async syncUtxos() {
+    private async syncUtxos({isForced = false}: {isForced?: boolean} = {}) {
       const addresses = [...this.internalAddresses, ...this.externalAddresses]
 
       await this.utxoManager.sync(addresses)
-
       const newUtxos = await this.utxoManager.getCachedUtxos()
 
-      if (this.didUtxosUpdate(this._utxos, newUtxos)) {
-        this._utxos = newUtxos
+      // NOTE: wallet is not aware of utxos state
+      // if it crashes, the utxo manager will be out of sync with wallet
+      if (this.didUtxosUpdate(this._utxos, newUtxos) || isForced) {
+        // NOTE: recalc locked deposit should happen also when epoch changes after conway
+        const {coinsPerUtxoByte} = await this.getProtocolParams()
+        const lockedAsStorageCost = await calcLockedDeposit({
+          rawUtxos: newUtxos,
+          coinsPerUtxoByteStr: coinsPerUtxoByte,
+        })
 
+        const balancesToSync = toBalanceManagerSyncArgs(newUtxos, BigInt(lockedAsStorageCost.toString()))
+
+        this.balanceManager.syncBalances(balancesToSync)
+
+        this._utxos = newUtxos
         this.notify({type: 'utxos', utxos: this.utxos})
+        return true
       }
+      return false
     }
 
     get utxos() {
@@ -1264,7 +1342,9 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       const lastUsedIndex = this.getLastUsedIndex(this.externalChain)
       if (lastUsedIndex > this.state.lastGeneratedAddressIndex) {
         this.state.lastGeneratedAddressIndex = lastUsedIndex
+        return true
       }
+      return false
     }
 
     // ========== UI state ============= //
