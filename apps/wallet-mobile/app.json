@@ -4,6 +4,14 @@
   "expo": {
     "name": "yoroi",
     "slug": "yoroi",
-    "plugins": ["@sentry/react-native"]
+    "plugins": [
+      [
+        "@sentry/react-native/expo",
+        {
+          "organization": "emurgo",
+          "project": "yoroi"
+        }
+      ]
+    ]
   }
 }
