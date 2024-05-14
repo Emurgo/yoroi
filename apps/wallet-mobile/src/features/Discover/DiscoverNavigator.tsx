@@ -14,6 +14,7 @@ import {createDappConnector} from './common/helpers'
 import {useStrings} from './common/useStrings'
 import {ListSkeleton} from './useCases/SelectDappFromList/ListSkeleton'
 import {SelectDappFromListScreen} from './useCases/SelectDappFromList/SelectDappFromListScreen'
+import {useConfirmRawTx} from './common/hooks'
 
 const Stack = createStackNavigator<DiscoverRoutes>()
 
@@ -54,6 +55,7 @@ const useDappConnectorManager = () => {
   const appStorage = useAsyncStorage()
   const wallet = useSelectedWallet()
   const {openConfirmConnectionModal} = useOpenConfirmConnectionModal()
+  const confirmRawTx = useConfirmRawTx(wallet)
   const confirmConnection = React.useCallback(
     async (origin: string, manager: DappConnector) => {
       const recommendedDApps = await manager.getDAppList()
@@ -75,7 +77,13 @@ const useDappConnectorManager = () => {
   )
 
   const signTx = React.useCallback(() => {
-    return Promise.resolve('passwordpassword')
+    return new Promise<string>((resolve) => {
+      confirmRawTx({
+        onConfirm: async (rootKey) => {
+          resolve(rootKey)
+        },
+      })
+    })
   }, [])
 
   return createDappConnector({appStorage, wallet, confirmConnection, signTx})

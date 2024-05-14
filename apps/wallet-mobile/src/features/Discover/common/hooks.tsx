@@ -6,6 +6,9 @@ import {WebView, WebViewMessageEvent} from 'react-native-webview'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {Logger} from '../../../yoroi-wallets/logging'
 import {walletConfig} from './wallet-config'
+import {ConfirmRawTxWithOs} from '../../Swap/common/ConfirmRawTx/ConfirmRawTxWithOs'
+import {ConfirmRawTxWithPassword} from '../../Swap/common/ConfirmRawTx/ConfirmRawTxWithPassword'
+import {useModal} from '../../../components'
 
 export const useConnectWalletToWebView = (wallet: YoroiWallet, webViewRef: React.RefObject<WebView | null>) => {
   const {manager, sessionId} = useDappConnector()
@@ -51,4 +54,22 @@ const getInitScript = (sessionId: string, dappConnector: DappConnectorManager) =
     walletName: walletConfig.name,
     sessionId,
   })
+}
+
+export const useConfirmRawTx = (wallet: YoroiWallet) => {
+  const {openModal, closeModal} = useModal()
+  return ({onConfirm}: {onConfirm: (rootKey: string) => Promise<void>}) => {
+    const handleOnConfirm = async (rootKey: string) => {
+      const result = await onConfirm(rootKey)
+      closeModal()
+      return result
+    }
+
+    if (wallet.isEasyConfirmationEnabled) {
+      openModal('Confirm TX', <ConfirmRawTxWithOs onConfirm={handleOnConfirm} />)
+      return
+    }
+
+    openModal('Confirm TX', <ConfirmRawTxWithPassword onConfirm={handleOnConfirm} />)
+  }
 }

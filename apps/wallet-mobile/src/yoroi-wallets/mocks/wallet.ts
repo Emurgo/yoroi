@@ -328,7 +328,7 @@ const wallet: YoroiWallet = {
   CIP30submitTx(_cbor: string) {
     throw new Error('not implemented: CIP30submitTx')
   },
-  CIP30signTx(_password: string, _txHex: string, _partialSign?: boolean): Promise<TransactionWitnessSet> {
+  CIP30signTx(_rootKey: string, _txHex: string, _partialSign?: boolean): Promise<TransactionWitnessSet> {
     throw new Error('not implemented: CIP30signTx')
   },
   getUnusedAddresses(): Promise<string[]> {

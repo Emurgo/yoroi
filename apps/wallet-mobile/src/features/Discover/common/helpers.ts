@@ -3,6 +3,9 @@ import {DappConnector} from '@yoroi/dapp-connector'
 import {App} from '@yoroi/types'
 
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
+import {ConfirmRawTxWithOs} from '../../Swap/common/ConfirmRawTx/ConfirmRawTxWithOs'
+import {ConfirmRawTxWithPassword} from '../../Swap/common/ConfirmRawTx/ConfirmRawTxWithPassword'
+import React from 'react'
 
 export const validUrl = (url: string) => {
   return /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!&',,=.+]+$/g.test(url)
@@ -90,8 +93,8 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
     confirmConnection: (origin: string) => confirmConnection(origin, manager),
     signData: async (address, payload) => wallet.CIP30signData(address, payload),
     signTx: async (cbor: string, partial?: boolean) => {
-      const password = await signTx(cbor)
-      const result = await wallet.CIP30signTx(password, cbor, partial)
+      const rootKey = await signTx(cbor)
+      const result = await wallet.CIP30signTx(rootKey, cbor, partial)
       return result.toHex()
     },
   }

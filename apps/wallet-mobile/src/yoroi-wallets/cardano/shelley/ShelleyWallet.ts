@@ -991,7 +991,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     }
 
     getUsedAddresses(pagination?: {page: number; limit: number}) {
-      const allAddresses = this.receiveAddresses.filter((address) => this.isUsedAddressIndex[address])
+      const allAddresses = this.externalAddresses
       const selectedAddresses = paginate(allAddresses, pagination)
       return Promise.all(selectedAddresses.map((addr) => Cardano.Wasm.Address.fromBech32(addr).then((a) => a.toHex())))
     }
@@ -1117,8 +1117,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       return Promise.reject(new Error('Not implemented'))
     }
 
-    async CIP30signTx(password: string, cbor: string, partial = false) {
-      const rootKey = await this.getDecryptedRootKey(password)
+    async CIP30signTx(rootKey: string, cbor: string, partial = false) {
       const signers = await getTransactionSigners(cbor, this, partial)
       const keys = await Promise.all(signers.map(async (signer) => createRawTxSigningKey(rootKey, signer)))
       const signedTxBytes = await signRawTransaction(CardanoMobile, cbor, keys)
