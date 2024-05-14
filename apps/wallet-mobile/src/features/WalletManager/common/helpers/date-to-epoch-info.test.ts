@@ -1,4 +1,4 @@
-import {byronEraConfig, networksConfig, shelleyEraConfig} from '../constants'
+import {byronEraConfig, networksConfig, shelleyEraConfig} from '../networks'
 import {dateToEpochInfo} from './date-to-epoch-info'
 
 describe('dateToEpochInfo', () => {
