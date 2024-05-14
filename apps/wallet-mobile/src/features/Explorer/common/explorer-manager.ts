@@ -3,7 +3,7 @@ import {freeze} from 'immer'
 
 import {ExplorerManager, Explorers} from './types'
 
-export const explorersConfig: Readonly<Record<Chain.SupportedNetworks, Readonly<Record<Explorers, ExplorerManager>>>> =
+export const explorerManager: Readonly<Record<Chain.SupportedNetworks, Readonly<Record<Explorers, ExplorerManager>>>> =
   freeze({
     [Chain.Network.Mainnet]: {
       [Explorers.CardanoScan]: {

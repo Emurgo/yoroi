@@ -1,7 +1,7 @@
 import {Chain} from '@yoroi/types'
 
-import {explorersConfig} from './constants'
+import {explorerManager} from './explorer-manager'
 
 export function useExplorers(network: Chain.SupportedNetworks) {
-  return explorersConfig[network]
+  return explorerManager[network]
 }

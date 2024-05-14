@@ -1,8 +1,8 @@
 import {freeze} from 'immer'
 
-import {NetworkConfig, NetworkEpochInfo} from '../types'
+import {NetworkEpochInfo, NetworkManager} from '../types'
 
-export function dateToEpochInfo(eras: NetworkConfig['eras']) {
+export function dateToEpochInfo(eras: NetworkManager['eras']) {
   return (date: Date): Readonly<NetworkEpochInfo> => {
     let epochCount = 0
 

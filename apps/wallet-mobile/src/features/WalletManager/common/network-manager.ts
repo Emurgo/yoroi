@@ -2,7 +2,7 @@ import {createPrimaryTokenInfo} from '@yoroi/portfolio'
 import {Chain} from '@yoroi/types'
 import {freeze} from 'immer'
 
-import {NetworkConfig, NetworkEraConfig} from './types'
+import {NetworkEraConfig, NetworkManager} from './types'
 
 export const primaryTokenInfoMainnet = createPrimaryTokenInfo({
   decimals: 6,
@@ -54,7 +54,7 @@ export const byronEraConfig: NetworkEraConfig = freeze(
   true,
 )
 
-export const networksConfig: Readonly<Record<Chain.SupportedNetworks, NetworkConfig>> = freeze({
+export const networkManager: Readonly<Record<Chain.SupportedNetworks, NetworkManager>> = freeze({
   [Chain.Network.Mainnet]: {
     primaryTokenInfo: primaryTokenInfoMainnet,
     chainId: 1,

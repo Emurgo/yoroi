@@ -1,5 +1,5 @@
 import {epochProgress} from '../helpers/epoch-progress'
-import {shelleyEraConfig} from '../networks'
+import {shelleyEraConfig} from '../network-manager'
 
 describe('epochProgress', () => {
   const epochInfo = {

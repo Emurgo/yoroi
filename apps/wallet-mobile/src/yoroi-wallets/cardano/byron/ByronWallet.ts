@@ -15,7 +15,7 @@ import {Observable} from 'rxjs'
 import {buildPortfolioBalanceManager} from '../../../features/Portfolio/common/hooks/usePortfolioBalanceManager'
 import {toBalanceManagerSyncArgs} from '../../../features/Portfolio/common/transformers/toBalanceManagerSyncArgs'
 import {toChainSupportedNetwork} from '../../../features/WalletManager/common/helpers/to-chain-supported-network'
-import {networksConfig} from '../../../features/WalletManager/common/networks'
+import {networkManager} from '../../../features/WalletManager/common/network-manager'
 import LocalizableError from '../../../i18n/LocalizableError'
 import {WalletMeta} from '../../../wallet-manager/types'
 import walletManager from '../../../wallet-manager/walletManager'
@@ -285,7 +285,7 @@ export class ByronWallet implements YoroiWallet {
     })
 
     const network = toChainSupportedNetwork(networkId)
-    const portfolioPrimaryTokenInfo = networksConfig[network].primaryTokenInfo
+    const portfolioPrimaryTokenInfo = networkManager[network].primaryTokenInfo
     const tokenManager = walletManager.getTokenManager(network)
     const {balanceManager} = buildPortfolioBalanceManager({
       walletId: id,
