@@ -1,6 +1,6 @@
 import {Chain} from '@yoroi/types'
 
-import {toChainSupportedNetwork} from './toChainSupportedNetwork'
+import {toChainSupportedNetwork} from './to-chain-supported-network'
 
 describe('toChainSupportedNetwork', () => {
   it('should return Chain.Network.Main for networkId 0', () => {
