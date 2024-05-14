@@ -1,7 +1,6 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import Share from 'react-native-share'
 import WebView from 'react-native-webview'
 

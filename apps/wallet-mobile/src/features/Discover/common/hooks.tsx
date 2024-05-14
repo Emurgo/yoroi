@@ -3,12 +3,12 @@ import {DappConnectorManager} from '@yoroi/dapp-connector/src/dapp-connector'
 import * as React from 'react'
 import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
+import {useModal} from '../../../components'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {Logger} from '../../../yoroi-wallets/logging'
-import {walletConfig} from './wallet-config'
 import {ConfirmRawTxWithOs} from '../../Swap/common/ConfirmRawTx/ConfirmRawTxWithOs'
 import {ConfirmRawTxWithPassword} from '../../Swap/common/ConfirmRawTx/ConfirmRawTxWithPassword'
-import {useModal} from '../../../components'
+import {walletConfig} from './wallet-config'
 
 export const useConnectWalletToWebView = (wallet: YoroiWallet, webViewRef: React.RefObject<WebView | null>) => {
   const {manager, sessionId} = useDappConnector()
@@ -20,7 +20,7 @@ export const useConnectWalletToWebView = (wallet: YoroiWallet, webViewRef: React
       Logger.info('DappConnector', 'sending result to webview', result, 'as a response to', event)
     }
 
-    webViewRef.current?.injectJavaScript(getInjectableMessage({id, result, error: error?.message || null}))
+    webViewRef.current?.injectJavaScript(getInjectableMessage({id, result, error: error?.message ?? null}))
   }
 
   const handleWebViewEvent = async (e: WebViewMessageEvent) => {

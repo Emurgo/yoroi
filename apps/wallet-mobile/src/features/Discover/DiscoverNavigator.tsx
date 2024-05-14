@@ -11,10 +11,10 @@ import {BrowserNavigator} from './BrowserNavigator'
 import {BrowserProvider} from './common/BrowserProvider'
 import {useOpenConfirmConnectionModal} from './common/ConfirmConnectionModal'
 import {createDappConnector} from './common/helpers'
+import {useConfirmRawTx} from './common/hooks'
 import {useStrings} from './common/useStrings'
 import {ListSkeleton} from './useCases/SelectDappFromList/ListSkeleton'
 import {SelectDappFromListScreen} from './useCases/SelectDappFromList/SelectDappFromListScreen'
-import {useConfirmRawTx} from './common/hooks'
 
 const Stack = createStackNavigator<DiscoverRoutes>()
 
@@ -79,12 +79,13 @@ const useDappConnectorManager = () => {
   const signTx = React.useCallback(() => {
     return new Promise<string>((resolve) => {
       confirmRawTx({
-        onConfirm: async (rootKey) => {
+        onConfirm: (rootKey) => {
           resolve(rootKey)
+          return Promise.resolve()
         },
       })
     })
-  }, [])
+  }, [confirmRawTx])
 
   return createDappConnector({appStorage, wallet, confirmConnection, signTx})
 }
