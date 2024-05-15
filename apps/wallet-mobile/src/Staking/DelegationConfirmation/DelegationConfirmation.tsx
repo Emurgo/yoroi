@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
 import React, {useEffect, useState} from 'react'

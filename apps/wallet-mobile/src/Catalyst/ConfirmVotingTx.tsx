@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet} from 'react-native'
@@ -138,6 +137,7 @@ const useStrings = () => {
 
   return {
     errorMessage: (error: LocalizableError) =>
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       intl.formatMessage({id: error.id, defaultMessage: error.defaultMessage}, (error as any).values),
     fees: intl.formatMessage(txLabels.fees),
     subTitle: intl.formatMessage(messages.subTitle),
