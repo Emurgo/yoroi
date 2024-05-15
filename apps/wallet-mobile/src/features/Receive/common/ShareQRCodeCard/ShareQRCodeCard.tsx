@@ -138,7 +138,7 @@ const useStyles = () => {
     },
     textAddress: {
       textAlign: 'center',
-      ...typography['body-2-m-medium'],
+      ...typography['body-2-m-regular'],
       color: color.gray.max,
     },
     textShareAddress: {
