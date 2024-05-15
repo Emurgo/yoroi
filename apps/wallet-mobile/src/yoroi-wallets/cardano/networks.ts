@@ -146,74 +146,24 @@ const HASKELL_SHELLEY_TESTNET = {
   POOL_DEPOSIT: '500000000',
   KEY_DEPOSIT: '2000000',
 }
-const JORMUNGANDR = {
-  PROVIDER_ID: YOROI_PROVIDER_IDS.JORMUNGANDR,
-  NETWORK_ID: NETWORK_REGISTRY.JORMUNGANDR,
-  MARKETING_NAME: 'Incentivized Testnet (ITN)',
-  ENABLED: false,
-  IS_MAINNET: false,
-  PROTOCOL_MAGIC: 764824073,
-  BACKEND: {
-    API_ROOT: 'https://shelley-itn-yoroi-backend.yoroiwallet.com/api',
-    NFT_STORAGE_URL: 'https://validated-nft-images.s3.amazonaws.com',
-    ..._DEFAULT_BACKEND_RULES,
-  },
-  SEIZA_STAKING_SIMPLE: (ADA: string) =>
-    `https://testnet.seiza-website.emurgo.io/staking-simple/list?sortBy=RANDOM&searchText=&performance[]=0&performance[]=100&source=mobile&userAda=${ADA}`,
-  EXPLORER_URL_FOR_ADDRESS: (address: string) => `https://shelleyexplorer.cardano.org/address/?id=${address}`,
-  EXPLORER_URL_FOR_TOKEN: (_addr: string) => {
-    throw new Error('Deprecated network')
-  },
-  CEXPLORER_URL_FOR_TOKEN: (_addr: string) => {
-    throw new Error('Deprecated network')
-  },
-  EXPLORER_URL_FOR_TX: (_tx: string) => {
-    throw new Error('Deprecated network')
-  },
-  LINEAR_FEE: {
-    CONSTANT: '200000',
-    COEFFICIENT: '100000',
-    CERTIFICATE: '400000',
-    PER_CERTIFICATE_FEES: {
-      CERTIFICATE_POOL_REGISTRATION: '500000000',
-      CERTIFICATE_STAKE_DELEGATION: '400000',
-    },
-  },
-  ADDRESS_DISCRIMINATION: {
-    PRODUCTION: '0',
-    TEST: '1',
-  },
-  GENESISHASH: '8e4d2a343f3dcf9330ad9035b3e8d168e6728904262f2c434a4f8f934ec7b676',
-  BLOCK0_DATE: 1576264417000,
-  SLOTS_PER_EPOCH: 43200,
-  SLOT_DURATION: 2,
-  PER_EPOCH_PERCENTAGE_REWARD: 19666,
-  BECH32_PREFIX: {
-    ADDRESS: 'addr',
-  },
-}
 
 export const NETWORKS = {
   // Deprecated
   BYRON_MAINNET,
+
   HASKELL_SHELLEY,
   HASKELL_SHELLEY_TESTNET,
-  // Deprecated. Consider removing
-  JORMUNGANDR,
   SANCHONET: SANCHONET_CONFIG.NETWORK_CONFIG,
 }
 export type NetworkConfig =
   | typeof NETWORKS.BYRON_MAINNET
   | typeof NETWORKS.HASKELL_SHELLEY
   | typeof NETWORKS.HASKELL_SHELLEY_TESTNET
-  | typeof NETWORKS.JORMUNGANDR
   | typeof NETWORKS.SANCHONET
 
 /**
  * queries related to blockchain/network parameters
  */
-// TODO: perhaps rename as isJormungandrNetwork for better naming consistency
-export const isJormungandr = (networkId: NetworkId): boolean => networkId === NETWORK_REGISTRY.JORMUNGANDR
 export const isHaskellShelleyNetwork = (networkId: NetworkId): boolean =>
   networkId === NETWORK_REGISTRY.HASKELL_SHELLEY ||
   networkId === NETWORK_REGISTRY.HASKELL_SHELLEY_TESTNET ||
@@ -251,7 +201,6 @@ export const getCardanoNetworkConfigById = (networkId: NetworkId): CardanoHaskel
 }
 export const PRIMARY_ASSET_CONSTANTS = {
   CARDANO: '', // ERGO: '',
-  // JORMUNGANDR: '',
 }
 export const DEFAULT_ASSETS: Array<Record<string, any>> = flatten(
   getKeys(NETWORKS)

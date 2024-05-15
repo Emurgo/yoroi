@@ -2,19 +2,15 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {useIntl} from 'react-intl'
 import {Linking, RefreshControl, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../../components/Button'
 import {ScrollView, useScrollView} from '../../../../components/ScrollView/ScrollView'
 import {Space} from '../../../../components/Space/Space'
-import {showErrorDialog} from '../../../../dialogs'
-import {errorMessages} from '../../../../i18n/global-messages'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useWalletNavigation} from '../../../../navigation'
 import * as HASKELL_SHELLEY from '../../../../yoroi-wallets/cardano/constants/mainnet/constants'
-import {isJormungandr} from '../../../../yoroi-wallets/cardano/networks'
 import {useWalletMetas} from '../../../../yoroi-wallets/hooks'
 import {useLinksRequestWallet} from '../../../Links/common/useLinksRequestWallet'
 import {WalletMeta} from '../../../WalletManager/common/types'
@@ -33,7 +29,6 @@ export const SelectWalletFromList = () => {
   const {walletMetas, isFetching, refetch} = useWalletMetas(walletManager, {
     select: (walletMetas) => walletMetas.sort(byName),
   })
-  const intl = useIntl()
   const {track} = useMetrics()
   const {isScrollBarShown, setIsScrollBarShown, scrollViewRef} = useScrollView()
   const [showLine, setShowLine] = React.useState(false)
@@ -48,19 +43,14 @@ export const SelectWalletFromList = () => {
   const selectWallet = useSetSelectedWallet()
 
   const handleOnSelect = React.useCallback(
-    async (walletMeta: WalletMeta) => {
-      if (walletMeta.isShelley || isJormungandr(walletMeta.networkId)) {
-        await showErrorDialog(errorMessages.itnNotSupported, intl)
-        return
-      }
-
+    (walletMeta: WalletMeta) => {
       selectWalletMeta(walletMeta)
       const wallet = walletManager.getOpenedWalletById(walletMeta.id)
       selectWallet(wallet)
       walletManager.setSelectedWalletId(walletMeta.id)
       navigateToTxHistory()
     },
-    [selectWalletMeta, walletManager, selectWallet, navigateToTxHistory, intl],
+    [selectWalletMeta, walletManager, selectWallet, navigateToTxHistory],
   )
 
   const data = React.useMemo(
