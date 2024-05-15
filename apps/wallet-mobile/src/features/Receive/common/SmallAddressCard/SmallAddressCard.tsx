@@ -23,7 +23,7 @@ export const SmallAddressCard = ({address, isUsed, date, onPress, loading, testI
   const [isCopying, copy] = useCopy()
   const {styles, colors} = useStyles()
 
-  if (loading)
+  if (loading) {
     return (
       <View>
         <SkeletonSmallCardAddress />
@@ -31,50 +31,50 @@ export const SmallAddressCard = ({address, isUsed, date, onPress, loading, testI
         <Spacer height={16} />
       </View>
     )
+  }
 
-  if (!loading)
-    return (
-      <>
-        <Animated.View layout={Layout} entering={FadeInUp} exiting={FadeOut}>
-          <TouchableOpacity
-            style={styles.smallAddressCard}
-            activeOpacity={0.6}
-            onLongPress={() => copy(address)}
-            onPress={onPress}
-            testID={testId}
-          >
-            <LinearGradient
-              style={[StyleSheet.absoluteFill, {opacity: 1}]}
-              start={{x: 0, y: 0}}
-              end={{x: 0, y: 1}}
-              colors={colors.bgCard}
-            />
+  return (
+    <>
+      <Animated.View layout={Layout} entering={FadeInUp} exiting={FadeOut}>
+        <TouchableOpacity
+          style={styles.smallAddressCard}
+          activeOpacity={0.6}
+          onLongPress={() => copy(address)}
+          onPress={onPress}
+          testID={testId}
+        >
+          <LinearGradient
+            style={[StyleSheet.absoluteFill, {opacity: 1}]}
+            start={{x: 0, y: 0}}
+            end={{x: 0, y: 1}}
+            colors={colors.bgCard}
+          />
 
-            <Text style={styles.textAddress}>{address}</Text>
+          <Text style={styles.textAddress}>{address}</Text>
 
-            <Spacer height={12} />
+          <Spacer height={12} />
 
-            <View style={styles.footer}>
-              <View style={isUsed ? styles.statusUsed : styles.statusUnused}>
-                <Text style={isUsed ? styles.statusUsedText : styles.statusUnusedText}>
-                  {isUsed ? strings.usedAddress : strings.unusedAddress}
-                </Text>
-              </View>
-
-              {isUsed && <Text style={styles.date}>{date}</Text>}
+          <View style={styles.footer}>
+            <View style={isUsed ? styles.statusUsed : styles.statusUnused}>
+              <Text style={isUsed ? styles.statusUsedText : styles.statusUnusedText}>
+                {isUsed ? strings.usedAddress : strings.unusedAddress}
+              </Text>
             </View>
-          </TouchableOpacity>
+
+            {isUsed && <Text style={styles.date}>{date}</Text>}
+          </View>
+        </TouchableOpacity>
+      </Animated.View>
+
+      <Spacer height={16} />
+
+      {isCopying && (
+        <Animated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
+          <Text style={styles.copiedText}>{strings.addressCopiedMsg}</Text>
         </Animated.View>
-
-        <Spacer height={16} />
-
-        {isCopying && (
-          <Animated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
-            <Text style={styles.copiedText}>{strings.addressCopiedMsg}</Text>
-          </Animated.View>
-        )}
-      </>
-    )
+      )}
+    </>
+  )
 }
 
 const useStyles = () => {
@@ -93,7 +93,7 @@ const useStyles = () => {
       padding: 16,
     },
     textAddress: {
-      ...typography['body-1-l-regular'],
+      ...typography['body-2-m-regular'],
       color: color.gray.max,
     },
     footer: {

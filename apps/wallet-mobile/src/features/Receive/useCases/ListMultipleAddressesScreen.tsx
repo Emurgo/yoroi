@@ -112,6 +112,20 @@ export const ListMultipleAddressesScreen = () => {
   )
 }
 
+const toAddressInfos = (addresses: {unused: string[]; used: string[]}): AddressInfo[] => {
+  const unusedAddresses = addresses.unused.map((address) => ({
+    address,
+    isUsed: false,
+  }))
+
+  const usedAddresses = addresses.used.map((address) => ({
+    address,
+    isUsed: true,
+  }))
+
+  return [...unusedAddresses, ...usedAddresses]
+}
+
 const useStyles = () => {
   const {theme} = useTheme()
   const styles = StyleSheet.create({
@@ -141,18 +155,4 @@ const useStyles = () => {
   }
 
   return {styles, colors} as const
-}
-
-const toAddressInfos = (addresses: {unused: string[]; used: string[]}): AddressInfo[] => {
-  const unusedAddresses = addresses.unused.map((address) => ({
-    address,
-    isUsed: false,
-  }))
-
-  const usedAddresses = addresses.used.map((address) => ({
-    address,
-    isUsed: true,
-  }))
-
-  return [...unusedAddresses, ...usedAddresses]
 }

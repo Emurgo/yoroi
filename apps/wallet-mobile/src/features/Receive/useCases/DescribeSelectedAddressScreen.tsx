@@ -118,8 +118,8 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       flex: 1,
+      ...theme.padding.l,
       backgroundColor: theme.color.gray.min,
-      padding: 16,
     },
     address: {
       flex: 1,
