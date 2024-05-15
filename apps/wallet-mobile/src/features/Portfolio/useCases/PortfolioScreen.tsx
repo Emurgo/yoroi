@@ -4,8 +4,8 @@ import {FlatList, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer} from '../../../components'
-import {useWalletManager} from '../../../wallet-manager/WalletManagerContext'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
+import {useWalletManager} from '../../WalletManager/context/WalletManagerContext'
 
 export const PortfolioScreen = () => {
   const manager = useWalletManager()

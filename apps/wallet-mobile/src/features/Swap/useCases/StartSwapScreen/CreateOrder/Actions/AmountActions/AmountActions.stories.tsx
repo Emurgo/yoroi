@@ -5,7 +5,7 @@ import {StyleSheet, View} from 'react-native'
 
 import {SearchProvider} from '../../../../../../../Search/SearchContext'
 import {mocks} from '../../../../../../../yoroi-wallets/mocks/wallet'
-import {SelectedWalletProvider} from '../../../../../../WalletManager/Context'
+import {SelectedWalletProvider} from '../../../../../../WalletManager/context/SelectedWalletContext'
 import {SwapFormProvider} from '../../../../../common/SwapFormProvider'
 import {AmountActions} from '../AmountActions/AmountActions'
 

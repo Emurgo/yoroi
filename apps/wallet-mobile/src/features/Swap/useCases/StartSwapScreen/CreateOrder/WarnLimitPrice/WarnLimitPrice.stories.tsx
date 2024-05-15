@@ -6,7 +6,7 @@ import {Button, StyleSheet, View} from 'react-native'
 
 import {useModal} from '../../../../../../components'
 import {mocks as walletMocks} from '../../../../../../yoroi-wallets/mocks'
-import {SelectedWalletProvider} from '../../../../../WalletManager/Context'
+import {SelectedWalletProvider} from '../../../../../WalletManager/context/SelectedWalletContext'
 import {mocks} from '../../../../common/mocks'
 import {useStrings} from '../../../../common/strings'
 import {SwapFormProvider} from '../../../../common/SwapFormProvider'

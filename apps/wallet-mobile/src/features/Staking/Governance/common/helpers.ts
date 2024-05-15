@@ -7,7 +7,7 @@ import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useStakingKey, useTipStatus} from '../../../../yoroi-wallets/hooks'
 import {isMainnetNetworkId, isSanchoNetworkId} from '../../../../yoroi-wallets/utils'
 import {CardanoMobile} from '../../../../yoroi-wallets/wallets'
-import {useSelectedWallet} from '../../../WalletManager/Context'
+import {useSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'
 import {GovernanceVote} from '../types'
 
 export const useIsParticipatingInGovernance = (wallet: YoroiWallet) => {

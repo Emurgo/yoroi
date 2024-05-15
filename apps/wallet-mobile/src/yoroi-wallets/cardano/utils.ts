@@ -26,7 +26,7 @@ import {
 } from './constants/mainnet/constants'
 import {withMinAmounts} from './getMinAmounts'
 import {MultiToken} from './MultiToken'
-import {CardanoHaskellShelleyNetwork, PRIMARY_ASSET_CONSTANTS} from './networks'
+import {CardanoHaskellShelleyNetwork} from './networks'
 import {NUMBERS} from './numbers'
 import {CardanoTypes, WalletImplementation} from './types'
 
@@ -155,10 +155,10 @@ type RemoteValue = {
 export const multiTokenFromRemote = (remoteValue: RemoteValue, networkId: number) => {
   const result = new MultiToken([], {
     defaultNetworkId: networkId,
-    defaultIdentifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
+    defaultIdentifier: '',
   })
   result.add({
-    identifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
+    identifier: '',
     amount: new BigNumber(remoteValue.amount),
     networkId,
   })

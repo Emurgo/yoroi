@@ -25,11 +25,11 @@ import {
   UseQueryOptions,
 } from 'react-query'
 
+import {AddressMode, WalletMeta} from '../../features/WalletManager/common/types'
+import {parseWalletMeta} from '../../features/WalletManager/common/validators'
+import {WalletManager} from '../../features/WalletManager/common/walletManager'
+import {useWalletManager} from '../../features/WalletManager/context/WalletManagerContext'
 import {CONFIG} from '../../legacy/config'
-import {AddressMode, WalletMeta} from '../../wallet-manager/types'
-import {parseWalletMeta} from '../../wallet-manager/validators'
-import {WalletManager} from '../../wallet-manager/walletManager'
-import {useWalletManager} from '../../wallet-manager/WalletManagerContext'
 import {getSpendingKey, getStakingKey} from '../cardano/addressInfo/addressInfo'
 import {generateShelleyPlateFromKey} from '../cardano/shelley/plate'
 import {WalletEvent, YoroiWallet} from '../cardano/types'

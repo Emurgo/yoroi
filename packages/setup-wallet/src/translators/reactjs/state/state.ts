@@ -198,6 +198,7 @@ function missingInit() {
   console.error('[ExchangeContext] missing initialization')
 }
 
+// TODO: @yoroi/types
 export type HWDeviceInfo = {
   bip44AccountPublic: string
   hwFeatures: HWFeatures
@@ -223,8 +224,6 @@ export type DeviceObj = {
 export const NETWORK_REGISTRY = {
   BYRON_MAINNET: 0,
   HASKELL_SHELLEY: 1,
-  JORMUNGANDR: 100,
-  // ERGO: 200,
   HASKELL_SHELLEY_TESTNET: 300,
   UNDEFINED: -1,
   SANCHONET: 450,

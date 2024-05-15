@@ -5,7 +5,7 @@ import {StyleSheet, View} from 'react-native'
 
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks'
-import {SelectedWalletProvider} from '../../../WalletManager/Context'
+import {SelectedWalletProvider} from '../../../WalletManager/context/SelectedWalletContext'
 import {mocks} from '../mocks'
 import {SwapFormProvider} from '../SwapFormProvider'
 import {ConfirmRawTx} from './ConfirmRawTx'

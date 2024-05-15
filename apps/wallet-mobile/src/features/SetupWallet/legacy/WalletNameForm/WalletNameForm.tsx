@@ -9,9 +9,9 @@ import {Button, KeyboardAvoidingView, ProgressStep, TextInput} from '../../../..
 import globalMessages from '../../../../i18n/global-messages'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {spacing} from '../../../../theme'
-import {useWalletManager} from '../../../../wallet-manager/WalletManagerContext'
 import {useWalletNames} from '../../../../yoroi-wallets/hooks'
 import {getWalletNameError, validateWalletName} from '../../../../yoroi-wallets/utils/validators'
+import {useWalletManager} from '../../../WalletManager/context/WalletManagerContext'
 
 type Props = {
   onSubmit: ({name}: {name: string}) => void

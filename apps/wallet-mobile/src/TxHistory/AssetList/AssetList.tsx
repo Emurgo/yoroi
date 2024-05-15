@@ -1,5 +1,6 @@
 import {useFocusEffect} from '@react-navigation/native'
 import {FlashList, FlashListProps} from '@shopify/flash-list'
+import {useExplorers} from '@yoroi/explorers'
 import {useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
 import React from 'react'
@@ -8,10 +9,9 @@ import {Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {AmountItem, AmountItemProps} from '../../components/AmountItem/AmountItem'
 import {Spacer} from '../../components/Spacer'
 import {usePrivacyMode} from '../../features/Settings/PrivacyMode/PrivacyMode'
-import {useSelectedWallet} from '../../features/WalletManager/Context'
+import {useSelectedWallet} from '../../features/WalletManager/context/SelectedWalletContext'
 import {useMetrics} from '../../metrics/metricsManager'
 import {sortTokenInfos} from '../../utils'
-import {getNetworkConfigById} from '../../yoroi-wallets/cardano/networks'
 import {useBalances, useTokenInfos} from '../../yoroi-wallets/hooks'
 import {Amounts} from '../../yoroi-wallets/utils'
 
@@ -24,6 +24,7 @@ type Props = Partial<ListProps> & {
 export const AssetList = (props: Props) => {
   const styles = useStyles()
   const wallet = useSelectedWallet()
+  const explorers = useExplorers(wallet.network)
   const balances = useBalances(wallet)
   const {track} = useMetrics()
 
@@ -32,8 +33,6 @@ export const AssetList = (props: Props) => {
       track.assetsPageViewed()
     }, [track]),
   )
-
-  const config = getNetworkConfigById(wallet.networkId)
 
   const tokenInfos = useTokenInfos({
     wallet,
@@ -49,7 +48,7 @@ export const AssetList = (props: Props) => {
           <ExplorableAssetItem
             wallet={wallet}
             amount={Amounts.getAmount(balances, tokenInfo.id)}
-            onPress={() => Linking.openURL(config.EXPLORER_URL_FOR_TOKEN(tokenInfo.id))}
+            onPress={() => Linking.openURL(explorers.cardanoscan.token(tokenInfo.id))}
           />
         )}
         ItemSeparatorComponent={() => <Spacer height={16} />}

@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import {WalletManager} from './walletManager'
+import {WalletManager} from '../common/walletManager'
 
 const WalletManagerContext = React.createContext<WalletManager | undefined>(undefined)
 

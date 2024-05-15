@@ -1,4 +1,5 @@
 import {useSetupWallet} from '@yoroi/setup-wallet'
+import {Chain} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {FlatList, InteractionManager, ScrollView, StyleSheet, View} from 'react-native'
@@ -11,11 +12,11 @@ import {useMetrics} from '../../../../metrics/metricsManager'
 import {useWalletNavigation} from '../../../../navigation'
 import {theme} from '../../../../theme'
 import {isEmptyString} from '../../../../utils/utils'
-import {AddressMode} from '../../../../wallet-manager/types'
 import {NetworkError} from '../../../../yoroi-wallets/cardano/errors'
 import {NUMBERS} from '../../../../yoroi-wallets/cardano/numbers'
 import {useCreateBip44Wallet, usePlate} from '../../../../yoroi-wallets/hooks'
 import {NetworkId, WalletImplementationId} from '../../../../yoroi-wallets/types'
+import {AddressMode} from '../../../WalletManager/common/types'
 import {WalletAddress} from '../WalletAddress/WalletAddress'
 import {WalletNameForm} from '../WalletNameForm/WalletNameForm'
 
@@ -192,6 +193,9 @@ const WalletInfoView = ({normalizedPath, publicKeyHex, networkId}: WalletInfoPro
   const strings = useStrings()
   const plate = usePlate({networkId, publicKeyHex})
 
+  // will change when merging 4.27
+  const network = networkId === 1 ? Chain.Network.Mainnet : Chain.Network.Preprod
+
   return (
     <View style={styles.walletInfoContainer}>
       <ScrollView style={styles.scrollView}>
@@ -209,7 +213,7 @@ const WalletInfoView = ({normalizedPath, publicKeyHex, networkId}: WalletInfoPro
           <FlatList
             data={plate.addresses}
             keyExtractor={(item) => item}
-            renderItem={({item}) => <WalletAddress addressHash={item} networkId={networkId} />}
+            renderItem={({item}) => <WalletAddress addressHash={item} network={network} />}
           />
         </View>
 

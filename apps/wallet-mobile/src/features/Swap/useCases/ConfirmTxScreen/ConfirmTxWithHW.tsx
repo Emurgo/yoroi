@@ -3,11 +3,11 @@ import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
 
 import {Text} from '../../../../components'
 import {LedgerConnect} from '../../../../HW'
-import {walletManager} from '../../../../wallet-manager/walletManager'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useSignWithHwAndSubmitTx} from '../../../../yoroi-wallets/hooks'
 import {DeviceId, DeviceObj, withBLE, withUSB} from '../../../../yoroi-wallets/hw'
 import {YoroiSignedTx, YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
+import {walletManager} from '../../../WalletManager/common/walletManager'
 import {useStrings} from '../../common/strings'
 import {LedgerTransportSwitch} from './LedgerTransportSwitch'
 

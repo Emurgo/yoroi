@@ -7,7 +7,7 @@ import {StyleSheet, View} from 'react-native'
 
 import {Spacer} from '../../components'
 import {ShowBuyBanner} from '../../features/Exchange/common/ShowBuyBanner/ShowBuyBanner'
-import {useSelectedWallet} from '../../features/WalletManager/Context'
+import {useSelectedWallet} from '../../features/WalletManager/context/SelectedWalletContext'
 import {useMetrics} from '../../metrics/metricsManager'
 import {useTransactionInfos} from '../../yoroi-wallets/hooks'
 import {TransactionInfo} from '../../yoroi-wallets/types'

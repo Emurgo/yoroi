@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
 import React, {useEffect, useState} from 'react'
@@ -9,7 +8,7 @@ import {KeyboardSpacer, Text, ValidatedTextInput} from '../../components'
 import {ConfirmTx} from '../../components/ConfirmTx'
 import {useStakePoolInfoAndHistory} from '../../Dashboard/StakePoolInfo'
 import {debugWalletInfo, features} from '../../features'
-import {useSelectedWallet} from '../../features/WalletManager/Context'
+import {useSelectedWallet} from '../../features/WalletManager/context/SelectedWalletContext'
 import {Instructions as HWInstructions} from '../../HW'
 import globalMessages, {txLabels} from '../../i18n/global-messages'
 import {formatTokenAmount, formatTokenWithText} from '../../legacy/format'

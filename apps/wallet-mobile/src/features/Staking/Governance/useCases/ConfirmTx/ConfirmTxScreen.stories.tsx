@@ -5,7 +5,7 @@ import React from 'react'
 
 import {SafeArea} from '../../../../../components/SafeArea'
 import {mocks} from '../../../../../yoroi-wallets/mocks'
-import {SelectedWalletProvider} from '../../../../WalletManager/Context'
+import {SelectedWalletProvider} from '../../../../WalletManager/context/SelectedWalletContext'
 import {mocks as governanceMocks} from '../../common'
 import {Routes} from '../../common/navigation'
 import {ConfirmTxScreen} from './ConfirmTxScreen'

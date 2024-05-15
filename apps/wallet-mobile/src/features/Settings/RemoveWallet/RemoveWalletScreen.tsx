@@ -16,7 +16,7 @@ import {
 } from '../../../components'
 import {useWalletNavigation} from '../../../navigation'
 import {useRemoveWallet, useWalletName} from '../../../yoroi-wallets/hooks'
-import {useSelectedWallet} from '../../WalletManager/Context'
+import {useSelectedWallet} from '../../WalletManager/context/SelectedWalletContext'
 
 export const RemoveWalletScreen = () => {
   const strings = useStrings()
