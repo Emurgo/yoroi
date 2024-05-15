@@ -109,7 +109,7 @@ const useStyles = () => {
       gap: 16,
     },
     textAddressDetails: {
-      ...typography['body-1-l-regular'],
+      ...typography['body-2-m-regular'],
       lineHeight: 24,
       textAlign: 'left',
       flex: 1,
