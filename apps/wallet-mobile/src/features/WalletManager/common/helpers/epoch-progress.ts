@@ -1,3 +1,5 @@
+import {freeze} from 'immer'
+
 import {NetworkEpochInfo} from '../types'
 
 export function epochProgress(epochInfo: NetworkEpochInfo) {
@@ -5,12 +7,26 @@ export function epochProgress(epochInfo: NetworkEpochInfo) {
     const epochStart = epochInfo.start
     const epochEnd = epochInfo.end
 
-    if (date > epochEnd || date < epochStart) throw new Error('Date is out of the current epoch')
+    if (date > epochEnd || date < epochStart)
+      return freeze(
+        {
+          progress: 100,
+          currentSlot: epochInfo.era.slotsPerEpoch,
+          timeRemaining: {
+            days: 0,
+            hours: 0,
+            minutes: 0,
+            seconds: 0,
+          },
+        },
+        true,
+      )
 
-    const progress = Math.min(
-      ((date.getTime() - epochStart.getTime()) / (epochEnd.getTime() - epochStart.getTime())) * 100,
-      100,
-    )
+    const progress =
+      Math.round(
+        Math.min(((date.getTime() - epochStart.getTime()) / (epochEnd.getTime() - epochStart.getTime())) * 100, 100) *
+          100,
+      ) / 100
     const currentSlot = Math.floor((date.getTime() - epochStart.getTime()) / 1e3 / epochInfo.era.slotInSeconds)
     const timeRemainingSeconds = (epochEnd.getTime() - date.getTime()) / 1e3
 
@@ -19,15 +35,18 @@ export function epochProgress(epochInfo: NetworkEpochInfo) {
     const minutes = Math.floor((timeRemainingSeconds % 3_600) / 60)
     const seconds = Math.floor(timeRemainingSeconds % 60)
 
-    return {
-      progress: progress,
-      currentSlot: currentSlot,
-      timeRemaining: {
-        days: days,
-        hours: hours,
-        minutes: minutes,
-        seconds: seconds,
+    return freeze(
+      {
+        progress: progress,
+        currentSlot: currentSlot,
+        timeRemaining: {
+          days: days,
+          hours: hours,
+          minutes: minutes,
+          seconds: seconds,
+        },
       },
-    }
+      true,
+    )
   }
 }

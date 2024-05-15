@@ -1,4 +1,4 @@
-import {byronEraConfig, networkManager, shelleyEraConfig} from '../network-manager'
+import {byronEraConfig, networkManager, shelleyEraConfig, shelleyPreprodEraConfig} from '../network-manager'
 import {dateToEpochInfo} from './date-to-epoch-info'
 
 describe('dateToEpochInfo', () => {
@@ -45,7 +45,7 @@ describe('dateToEpochInfo', () => {
   it('should return the last byron epoch - 207', () => {
     const convertDateToEpoch = dateToEpochInfo(networkManager['mainnet'].eras)
 
-    const inputDate = new Date(Date.UTC(2020, 6, 29, 21, 44, 50))
+    const inputDate = new Date('2020-07-29T21:44:50.000Z')
     const expectedOutput = {
       epoch: 207,
       start: new Date('2020-07-24T21:44:51.000Z'),
@@ -61,13 +61,29 @@ describe('dateToEpochInfo', () => {
   it('should return the first shelley epoch - 208', () => {
     const convertDateToEpoch = dateToEpochInfo(networkManager['mainnet'].eras)
 
-    const inputDate = new Date(Date.UTC(2020, 6, 29, 21, 44, 51))
+    const inputDate = new Date('2020-07-29T21:44:51.000Z')
 
     const expectedOutput = {
       epoch: 208,
       start: new Date('2020-07-29T21:44:51.000Z'),
       end: new Date('2020-08-03T21:44:51.000Z'),
       era: shelleyEraConfig,
+    }
+
+    const result = convertDateToEpoch(inputDate)
+
+    expect(result).toEqual(expectedOutput)
+  })
+
+  it('should return the correct epoch information - preprod', () => {
+    const convertDateToEpoch = dateToEpochInfo(networkManager['preprod'].eras)
+
+    const inputDate = new Date('2024-05-14T15:09:00.000Z')
+    const expectedOutput = {
+      epoch: 142,
+      start: new Date('2024-05-11T01:00:00.000Z'),
+      end: new Date('2024-05-16T01:00:00.000Z'),
+      era: shelleyPreprodEraConfig,
     }
 
     const result = convertDateToEpoch(inputDate)

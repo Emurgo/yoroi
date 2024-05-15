@@ -7,7 +7,7 @@ export function dateToEpochInfo(eras: NetworkManager['eras']) {
     let epochCount = 0
 
     for (const era of eras) {
-      if (date >= era.start && (era.end === undefined || date <= era.end)) {
+      if (date >= era.start && (era.end === undefined || date < era.end)) {
         const timeInEra = (date.getTime() - era.start.getTime()) / 1e3
         const epochInEra = Math.floor(timeInEra / (era.slotInSeconds * era.slotsPerEpoch))
         const epochStart = new Date(era.start.getTime() + epochInEra * era.slotInSeconds * era.slotsPerEpoch * 1e3)

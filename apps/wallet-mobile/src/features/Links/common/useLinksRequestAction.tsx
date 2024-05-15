@@ -7,7 +7,7 @@ import {InteractionManager} from 'react-native'
 
 import {useModal} from '../../../components/Modal/ModalContext'
 import {Logger} from '../../../yoroi-wallets/logging'
-import {useSelectedWalletContext} from '../../WalletManager/Context'
+import {useSelectedWalletContext} from '../../WalletManager/context/SelectedWalletContext'
 import {RequestedAdaPaymentWithLinkScreen} from '../useCases/RequestedAdaPaymentWithLinkScreen/RequestedAdaPaymentWithLinkScreen'
 import {useNavigateTo} from './useNavigationTo'
 import {useStrings} from './useStrings'

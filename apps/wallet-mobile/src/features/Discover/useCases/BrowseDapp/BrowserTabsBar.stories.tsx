@@ -1,8 +1,8 @@
 import {storiesOf} from '@storybook/react-native'
 import * as React from 'react'
 
-import {SelectedWalletProvider} from '../../../../features/WalletManager/Context'
 import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks'
+import {SelectedWalletProvider} from '../../../WalletManager/context/SelectedWalletContext'
 import {BrowserProvider} from '../../common/BrowserProvider'
 import {BrowserTabsBar} from './BrowserTabsBar'
 

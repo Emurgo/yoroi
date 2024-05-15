@@ -3,7 +3,7 @@ import React from 'react'
 
 import {QueryProvider, RouteProvider} from '../../.storybook/decorators'
 import {MediaDetails} from '../features/Portfolio/common/MediaDetails/MediaDetails'
-import {SelectedWalletProvider} from '../features/WalletManager/Context'
+import {SelectedWalletProvider} from '../features/WalletManager/context/SelectedWalletContext'
 import {mocks, nft} from '../yoroi-wallets/mocks'
 
 storiesOf('NFT/Details', module)

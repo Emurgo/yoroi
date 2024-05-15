@@ -6,7 +6,7 @@ import {StyleSheet, TouchableOpacity, TouchableOpacityProps, View} from 'react-n
 import {Hr, Icon, Spacer, Text} from '../../components'
 import {formatTokenWithSymbol} from '../../legacy/format'
 import {useCollateralInfo} from '../../yoroi-wallets/cardano/utxoManager/useCollateralInfo'
-import {useSelectedWallet} from '../WalletManager/Context'
+import {useSelectedWallet} from '../WalletManager/context/SelectedWalletContext'
 
 const Touchable = (props: TouchableOpacityProps) => <TouchableOpacity {...props} activeOpacity={0.5} />
 

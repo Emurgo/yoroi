@@ -8,7 +8,6 @@ import globalMessages from '../../../i18n/global-messages'
 import {useMetrics} from '../../../metrics/metricsManager'
 import {COLORS} from '../../../theme'
 import {isEmptyString} from '../../../utils/utils'
-import {useWalletManager} from '../../../wallet-manager/WalletManagerContext'
 import {useWalletNames} from '../../../yoroi-wallets/hooks'
 import {
   getWalletNameError,
@@ -17,6 +16,7 @@ import {
   validateWalletName,
 } from '../../../yoroi-wallets/utils/validators'
 import {debugWalletInfo, features} from '../..'
+import {useWalletManager} from '../../WalletManager/context/WalletManagerContext'
 
 type Props = {
   onSubmit: (credentials: {name: string; password: string}) => void

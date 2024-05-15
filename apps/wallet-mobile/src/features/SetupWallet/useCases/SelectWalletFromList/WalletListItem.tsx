@@ -5,11 +5,11 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {Icon} from '../../../../components'
 import {Loading} from '../../../../components/Loading/Loading'
 import {Space} from '../../../../components/Space/Space'
-import {WalletInfo, WalletMeta} from '../../../../wallet-manager/types'
-import {useWalletManager} from '../../../../wallet-manager/WalletManagerContext'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {isByron, isHaskellShelley, isJormun} from '../../../../yoroi-wallets/cardano/utils'
 import {features} from '../../..'
+import {WalletInfo, WalletMeta} from '../../../WalletManager/common/types'
+import {useWalletManager} from '../../../WalletManager/context/WalletManagerContext'
 import {ChevronRightDarkIllustration, ChevronRightGrayIllustration} from '../../illustrations/ChevronRightIllustration'
 
 type Props = {

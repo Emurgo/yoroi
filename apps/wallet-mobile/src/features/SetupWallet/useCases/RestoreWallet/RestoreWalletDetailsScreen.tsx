@@ -25,8 +25,6 @@ import {errorMessages} from '../../../../i18n/global-messages'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useWalletNavigation} from '../../../../navigation'
 import {isEmptyString} from '../../../../utils'
-import {AddressMode} from '../../../../wallet-manager/types'
-import {useWalletManager} from '../../../../wallet-manager/WalletManagerContext'
 import {useCreateWallet, usePlate, useWalletNames} from '../../../../yoroi-wallets/hooks'
 import {WalletImplementationId} from '../../../../yoroi-wallets/types'
 import {
@@ -36,6 +34,8 @@ import {
   validateWalletName,
 } from '../../../../yoroi-wallets/utils'
 import {debugWalletInfo, features} from '../../..'
+import {AddressMode} from '../../../WalletManager/common/types'
+import {useWalletManager} from '../../../WalletManager/context/WalletManagerContext'
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
 import {YoroiZendeskLink} from '../../common/contants'
 import {LearnMoreButton} from '../../common/LearnMoreButton/LearnMoreButton'

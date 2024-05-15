@@ -3,7 +3,7 @@ import React, {useEffect, useRef, useState} from 'react'
 import {ActivityIndicator, StyleSheet, TextInput as RNTextInput, View} from 'react-native'
 
 import {debugWalletInfo, features} from '../../features'
-import {useSelectedWallet} from '../../features/WalletManager/Context'
+import {useSelectedWallet} from '../../features/WalletManager/context/SelectedWalletContext'
 import {WrongPassword} from '../../yoroi-wallets/cardano/errors'
 import {useSignTxWithPassword, useSubmitTx} from '../../yoroi-wallets/hooks'
 import {YoroiSignedTx, YoroiUnsignedTx} from '../../yoroi-wallets/types'

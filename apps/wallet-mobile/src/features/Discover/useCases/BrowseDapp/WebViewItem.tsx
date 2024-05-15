@@ -8,7 +8,7 @@ import WebView from 'react-native-webview'
 import {WebViewNavigation, WebViewNavigationEvent} from 'react-native-webview/lib/WebViewTypes'
 
 import {Icon, Spacer} from '../../../../components'
-import {useSelectedWallet} from '../../../WalletManager/Context'
+import {useSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'
 import {TabItem, useBrowser} from '../../common/BrowserProvider'
 import {getDomainFromUrl} from '../../common/helpers'
 import {useConnectWalletToWebView} from '../../common/hooks'

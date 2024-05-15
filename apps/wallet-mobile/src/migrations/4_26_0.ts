@@ -1,6 +1,6 @@
 import {App} from '@yoroi/types'
 
-import {WalletMeta} from '../wallet-manager/types'
+import {WalletMeta} from '../features/WalletManager/common/types'
 import {WALLET_IMPLEMENTATION_REGISTRY} from '../yoroi-wallets/types/other'
 
 export const migrateAddressMode = async (rootStorage: App.Storage) => {

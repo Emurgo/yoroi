@@ -15,7 +15,7 @@ import {limitOfSecondaryAmountsPerTx} from '../../../../../yoroi-wallets/contant
 import {usePortfolioBalances} from '../../../../Portfolio/common/hooks/usePortfolioBalances'
 import {MediaGallery} from '../../../../Portfolio/common/MediaGallery/MediaGallery'
 import {TokenAmountItem} from '../../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
-import {useSelectedWallet} from '../../../../WalletManager/Context'
+import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
 import {useOverridePreviousSendTxRoute} from '../../../common/navigation'
 import {NoAssetFoundImage} from '../../../common/NoAssetFoundImage'
 import {useStrings} from '../../../common/strings'

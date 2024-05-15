@@ -2,7 +2,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {parseSafe} from '@yoroi/common'
 
-import {isYoroiWallet} from '../yoroi-wallets/cardano/types'
+import {isYoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {WalletManager} from './walletManager'
 
 // ! Actually hitting the API

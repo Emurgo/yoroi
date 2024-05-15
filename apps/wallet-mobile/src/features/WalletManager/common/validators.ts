@@ -1,6 +1,6 @@
 import {parseSafe} from '@yoroi/common'
 
-import {WALLET_IMPLEMENTATION_REGISTRY} from '../yoroi-wallets/types/other'
+import {WALLET_IMPLEMENTATION_REGISTRY} from '../../../yoroi-wallets/types/other'
 import {AddressMode, WalletMeta} from './types'
 
 export const parseWalletMeta = (data: unknown) => {

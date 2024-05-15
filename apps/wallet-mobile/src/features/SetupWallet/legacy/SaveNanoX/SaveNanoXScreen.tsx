@@ -8,10 +8,10 @@ import {showErrorDialog} from '../../../../dialogs'
 import {errorMessages} from '../../../../i18n/global-messages'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useWalletNavigation} from '../../../../navigation'
-import {AddressMode} from '../../../../wallet-manager/types'
 import {NetworkError} from '../../../../yoroi-wallets/cardano/errors'
 import {useCreateBip44Wallet} from '../../../../yoroi-wallets/hooks'
 import {WalletImplementationId} from '../../../../yoroi-wallets/types'
+import {AddressMode} from '../../../WalletManager/common/types'
 import {WalletNameForm} from '../WalletNameForm/WalletNameForm'
 
 // when hw, later will be part of the onboarding

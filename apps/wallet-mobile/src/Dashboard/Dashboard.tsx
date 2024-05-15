@@ -14,7 +14,7 @@ import {
   WithdrawWarningModal,
 } from '../features/Staking/Governance'
 import {useIsGovernanceFeatureEnabled} from '../features/Staking/Governance'
-import {useSelectedWallet} from '../features/WalletManager/Context'
+import {useSelectedWallet} from '../features/WalletManager/context/SelectedWalletContext'
 import globalMessages from '../i18n/global-messages'
 import {Modal} from '../legacy/Modal'
 import {DashboardRoutes, useWalletNavigation} from '../navigation'

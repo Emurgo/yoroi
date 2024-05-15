@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import {WalletMeta} from '../../../wallet-manager/types'
+import {WalletMeta} from '../common/types'
 
 type SelectedWalletMeta = WalletMeta
 type SetSelectedWalletMeta = (selectedWalletMeta?: SelectedWalletMeta) => void

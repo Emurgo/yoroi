@@ -35,10 +35,10 @@ export const primaryTokenInfoAnyTestnet = createPrimaryTokenInfo({
 export const shelleyEraConfig: NetworkEraConfig = freeze(
   {
     name: 'shelley',
-    start: new Date(Date.UTC(2020, 6, 29, 21, 44, 51)), // July 29, 2020 21:44:51 UTC
+    start: new Date('2020-07-29T21:44:51.000Z'),
     end: undefined,
-    slotInSeconds: 1, // slotLength (shelley)
-    slotsPerEpoch: 432000, // epochLength 5 days * 24 hours * 60 minutes * 60 seconds = 5 * 86_400 = 432_000 / 1
+    slotInSeconds: 1,
+    slotsPerEpoch: 432000,
   },
   true,
 )
@@ -46,10 +46,21 @@ export const shelleyEraConfig: NetworkEraConfig = freeze(
 export const byronEraConfig: NetworkEraConfig = freeze(
   {
     name: 'byron',
-    start: new Date(Date.UTC(2017, 8, 23, 21, 44, 51)), // September 23, 2017 21:44:51 UTC
-    end: new Date(Date.UTC(2020, 6, 29, 21, 44, 50)), // July 29, 2020 21:44:50 UTC
-    slotInSeconds: 20, // slotDuration (byron)
-    slotsPerEpoch: 21600, // 5 days * 24 hours * 60 minutes * 60 seconds = 5 * 86_400 = 432_000 / 20 = 21_600
+    start: new Date('2017-09-23T21:44:51.000Z'),
+    end: new Date('2020-07-29T21:44:51.000Z'),
+    slotInSeconds: 20,
+    slotsPerEpoch: 21600,
+  },
+  true,
+)
+
+export const shelleyPreprodEraConfig: NetworkEraConfig = freeze(
+  {
+    name: 'shelley',
+    start: new Date('2022-06-01T01:00:00.000Z'),
+    end: undefined,
+    slotInSeconds: 1,
+    slotsPerEpoch: 432000,
   },
   true,
 )
@@ -63,7 +74,7 @@ export const networkManager: Readonly<Record<Chain.SupportedNetworks, NetworkMan
   [Chain.Network.Preprod]: {
     primaryTokenInfo: primaryTokenInfoAnyTestnet,
     chainId: 0,
-    eras: [shelleyEraConfig],
+    eras: [shelleyPreprodEraConfig],
   },
   [Chain.Network.Sancho]: {
     primaryTokenInfo: primaryTokenInfoAnyTestnet,

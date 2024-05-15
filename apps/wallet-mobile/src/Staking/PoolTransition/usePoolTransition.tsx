@@ -8,7 +8,7 @@ import {useQuery} from 'react-query'
 
 import {useStakingInfo} from '../../Dashboard/StakePoolInfos'
 import {features} from '../../features'
-import {useSelectedWallet} from '../../features/WalletManager/Context'
+import {useSelectedWallet} from '../../features/WalletManager/context/SelectedWalletContext'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {asQuantity, Quantities} from '../../yoroi-wallets/utils'
 

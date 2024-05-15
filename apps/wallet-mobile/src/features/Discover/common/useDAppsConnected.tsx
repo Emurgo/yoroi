@@ -2,7 +2,7 @@ import {useDappConnector} from '@yoroi/dapp-connector'
 import {DappConnection} from '@yoroi/dapp-connector/src/adapters/async-storage'
 import {useQuery, UseQueryOptions} from 'react-query'
 
-import {useSelectedWallet} from '../../../features/WalletManager/Context'
+import {useSelectedWallet} from '../../WalletManager/context/SelectedWalletContext'
 
 export const useDAppsConnected = (options?: UseQueryOptions<DappConnection[], Error, string[], [string, string]>) => {
   const wallet = useSelectedWallet()
