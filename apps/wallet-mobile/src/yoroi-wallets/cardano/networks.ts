@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {getKeys, isKeyOf} from '@yoroi/common'
-import {flatten} from 'lodash'
+import {isKeyOf} from '@yoroi/common'
 
 import * as SANCHONET_CONFIG from '../cardano/constants/sanchonet/constants'
 import type {NetworkId} from '../types/other'
@@ -199,35 +198,3 @@ export const getCardanoNetworkConfigById = (networkId: NetworkId): CardanoHaskel
       throw new Error('network id is not a valid Haskell Shelley id')
   }
 }
-export const PRIMARY_ASSET_CONSTANTS = {
-  CARDANO: '', // ERGO: '',
-}
-export const DEFAULT_ASSETS: Array<Record<string, any>> = flatten(
-  getKeys(NETWORKS)
-    .map((key) => NETWORKS[key])
-    .filter((network) => network.ENABLED)
-    .map((network) => {
-      if (isHaskellShelleyNetwork(network.NETWORK_ID)) {
-        return [
-          {
-            NETWORK_ID: network.NETWORK_ID,
-            IDENTIFIER: PRIMARY_ASSET_CONSTANTS.CARDANO,
-            IS_DEFAULT: true,
-            METADATA: {
-              TYPE: 'Cardano',
-              POLICY_ID: PRIMARY_ASSET_CONSTANTS.CARDANO,
-              ASSET_NAME: PRIMARY_ASSET_CONSTANTS.CARDANO,
-              TICKER: network.IS_MAINNET ? 'ADA' : 'TADA',
-              LONG_NAME: null,
-              NUMBER_OF_DECIMALS: 6,
-              MAX_SUPPLY: '45 000 000 000 000000'.replace(/ /g, ''),
-            },
-          },
-        ]
-      }
-
-      throw new Error(`Missing default asset for network type ${JSON.stringify(network)}`)
-    }),
-)
-export const MAX_VALUE_BYTES = 5000
-export const MAX_TX_BYTES = 16 * 1024
