@@ -1,5 +1,6 @@
 import {useFocusEffect} from '@react-navigation/native'
 import {isString} from '@yoroi/common'
+import {useExplorers} from '@yoroi/explorers'
 import {getPoolUrlByProvider} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
 import {Balance, Swap} from '@yoroi/types'
@@ -8,7 +9,7 @@ import _ from 'lodash'
 import {capitalize} from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 import Config from 'react-native-config'
 import {FlatList} from 'react-native-gesture-handler'
 
@@ -26,7 +27,7 @@ import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useSearch} from '../../../../../Search/SearchContext'
 import {useSync, useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
 import {TransactionInfo, TxMetadataInfo} from '../../../../../yoroi-wallets/types'
-import {asQuantity, openInExplorer, Quantities} from '../../../../../yoroi-wallets/utils'
+import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils'
 import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
 import {PRICE_PRECISION} from '../../../common/constants'
 import {Counter} from '../../../common/Counter/Counter'
@@ -162,6 +163,7 @@ export const ExpandableOrder = ({order, tokenInfos}: {order: MappedRawOrder; tok
   const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
   const wallet = useSelectedWallet()
   const intl = useIntl()
+  const explorers = useExplorers(wallet.network)
   const metadata = order.metadata
   const id = order.id
   const expanded = id === hiddenInfoOpenId
@@ -185,7 +187,7 @@ export const ExpandableOrder = ({order, tokenInfos}: {order: MappedRawOrder; tok
         <HiddenInfo
           txId={id}
           total={`${sellQuantity} ${sellLabel}`}
-          onTxPress={() => openInExplorer(id, wallet.networkId)}
+          onTxPress={() => Linking.openURL(explorers.cardanoscan.tx(id))}
           provider={metadata.provider}
         />
       }

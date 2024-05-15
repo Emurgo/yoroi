@@ -1,4 +1,5 @@
 import {useSetupWallet} from '@yoroi/setup-wallet'
+import {Chain} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {FlatList, InteractionManager, ScrollView, StyleSheet, View} from 'react-native'
@@ -192,6 +193,9 @@ const WalletInfoView = ({normalizedPath, publicKeyHex, networkId}: WalletInfoPro
   const strings = useStrings()
   const plate = usePlate({networkId, publicKeyHex})
 
+  // will change when merging 4.27
+  const network = networkId === 1 ? Chain.Network.Mainnet : Chain.Network.Preprod
+
   return (
     <View style={styles.walletInfoContainer}>
       <ScrollView style={styles.scrollView}>
@@ -209,7 +213,7 @@ const WalletInfoView = ({normalizedPath, publicKeyHex, networkId}: WalletInfoPro
           <FlatList
             data={plate.addresses}
             keyExtractor={(item) => item}
-            renderItem={({item}) => <WalletAddress addressHash={item} networkId={networkId} />}
+            renderItem={({item}) => <WalletAddress addressHash={item} network={network} />}
           />
         </View>
 

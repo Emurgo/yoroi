@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation, useRoute} from '@react-navigation/native'
 import {isNonNullable} from '@yoroi/common'
+import {useExplorers} from '@yoroi/explorers'
 import {useTheme} from '@yoroi/theme'
 import {BigNumber} from 'bignumber.js'
 import {fromPairs} from 'lodash'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, IntlShape, useIntl} from 'react-intl'
-import {LayoutAnimation, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
+import {LayoutAnimation, Linking, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {Banner, Boundary, Button, CopyButton, FadeIn, Icon, Text} from '../../components'
@@ -20,7 +21,7 @@ import {MultiToken} from '../../yoroi-wallets/cardano/MultiToken'
 import {CardanoTypes, YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {useTipStatus, useTransactionInfos} from '../../yoroi-wallets/hooks'
 import {TransactionInfo} from '../../yoroi-wallets/types'
-import {asQuantity, openInExplorer} from '../../yoroi-wallets/utils'
+import {asQuantity} from '../../yoroi-wallets/utils'
 import {AssetList} from './AssetList'
 import {useAssetListStyles} from './AssetListTransaction.style'
 
@@ -30,6 +31,7 @@ export const TxDetails = () => {
   const intl = useIntl()
   const {id} = useRoute().params as Params
   const wallet = useSelectedWallet()
+  const explorers = useExplorers(wallet.network)
   const internalAddressIndex = fromPairs(wallet.internalAddresses.map((addr, i) => [addr, i]))
   const externalAddressIndex = fromPairs(wallet.externalAddresses.map((addr, i) => [addr, i]))
   const [expandedInItemId, setExpandedInItemId] = useState<null | ItemId>(null)
@@ -157,7 +159,7 @@ export const TxDetails = () => {
 
       <Actions>
         <Button
-          onPress={() => openInExplorer(transaction.id, wallet.networkId)}
+          onPress={() => Linking.openURL(explorers.cardanoscan.tx(transaction.id))}
           title={strings.openInExplorer}
           shelleyTheme
         />

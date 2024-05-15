@@ -1,4 +1,5 @@
 import {invalid} from '@yoroi/common'
+import {useExplorers} from '@yoroi/explorers'
 import {useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
 import React from 'react'
@@ -12,7 +13,6 @@ import {PressableIcon} from '../../../components/PressableIcon/PressableIcon'
 import {Spacer} from '../../../components/Spacer/Spacer'
 import {sortTokenInfos} from '../../../utils/sorting'
 import {isEmptyString} from '../../../utils/utils'
-import {getNetworkConfigById} from '../../../yoroi-wallets/cardano/networks'
 import {useTokenInfos} from '../../../yoroi-wallets/hooks'
 import {Amounts} from '../../../yoroi-wallets/utils/utils'
 import {useSelectedWallet} from '../../WalletManager/context/SelectedWalletContext'
@@ -97,7 +97,7 @@ const TxHash = ({txHash}: {txHash: string}) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const {styles, colors} = useStyles()
-  const config = getNetworkConfigById(wallet.networkId)
+  const explorers = useExplorers(wallet.network)
 
   return (
     <>
@@ -116,7 +116,7 @@ const TxHash = ({txHash}: {txHash: string}) => {
 
         <PressableIcon
           icon={Icon.ExternalLink}
-          onPress={() => Linking.openURL(config.EXPLORER_URL_FOR_TX(txHash))}
+          onPress={() => Linking.openURL(explorers.cardanoscan.tx(txHash))}
           color={colors.icon}
           size={16}
         />
