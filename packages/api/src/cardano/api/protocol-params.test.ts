@@ -1,7 +1,4 @@
-import {
-  getProtocolParams,
-  isFrontendProtocolParamsResponse,
-} from './protocol-params'
+import {getProtocolParams, isProtocolParamsResponse} from './protocol-params'
 import {paramsMockResponse} from './protocol-params.mocks'
 import axios from 'axios'
 
@@ -61,18 +58,18 @@ describe('getProtocolParams', () => {
     await expect(protocolParams()).rejects.toThrow(networkError.message)
   })
 })
-describe('isFrontendProtocolParamsResponse', () => {
+describe('isProtocolParamsResponse', () => {
   it('returns true for a valid protocol parameters response', () => {
-    expect(isFrontendProtocolParamsResponse(paramsMockResponse)).toBe(true)
+    expect(isProtocolParamsResponse(paramsMockResponse)).toBe(true)
   })
 
   it('returns false for an invalid protocol parameters response', () => {
     const invalidResponse = {...paramsMockResponse, epoch: 'invalid'}
-    expect(isFrontendProtocolParamsResponse(invalidResponse)).toBe(true)
+    expect(isProtocolParamsResponse(invalidResponse)).toBe(true)
   })
 
   it('returns false for an incomplete protocol parameters response', () => {
     const incompleteResponse = {min_fee_a: 44, min_fee_b: 155381}
-    expect(isFrontendProtocolParamsResponse(incompleteResponse)).toBe(false)
+    expect(isProtocolParamsResponse(incompleteResponse)).toBe(false)
   })
 })
