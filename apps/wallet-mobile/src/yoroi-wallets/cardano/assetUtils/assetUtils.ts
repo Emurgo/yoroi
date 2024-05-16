@@ -1,9 +1,10 @@
+import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
 import BigNumber from 'bignumber.js'
 
 import {RawUtxo} from '../../types/other'
 import {CardanoMobile} from '../../wallets'
 import {COINS_PER_UTXO_BYTE} from '../constants/common'
-import {cardanoValueFromRemoteFormat, normalizeToAddress} from '../utils'
+import {cardanoValueFromRemoteFormat} from '../utils'
 
 const addressPlaceholder =
   'addr1qx8nuj8a7gy8kes4pedpfdscrlxr6p8gkzyzmhdmsf4209xssydveuc8xyx4zh27fwcmr62mraeezjwf24hzkyejwfmqmpfpy5'
@@ -21,7 +22,7 @@ export async function calcLockedDeposit({
 
   const coinsPerUtxoByte = await CardanoMobile.BigNum.fromStr(coinsPerUtxoByteStr)
   const dataCost = await CardanoMobile.DataCost.newCoinsPerByte(coinsPerUtxoByte)
-  const normalizedAddress = await normalizeToAddress(address)
+  const normalizedAddress = await normalizeToAddress(CardanoMobile, address)
   if (normalizedAddress === undefined) throw new Error('calcLockedDeposit::Error not a valid address')
 
   const promises = utxosWithAssets.map((u) => {
