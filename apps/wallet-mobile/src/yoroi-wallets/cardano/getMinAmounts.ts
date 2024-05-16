@@ -37,11 +37,14 @@ export const getMinAmounts = async (address: Address, amounts: Balance.Amounts, 
     {defaultNetworkId: primaryToken.networkId, defaultIdentifier: primaryToken.identifier},
   )
 
-  const [value, coinsPerUtxoByte, normalizedAddress] = await Promise.all([
+  const [value, coinsPerUtxoByte] = await Promise.all([
     cardanoValueFromMultiToken(multiToken),
     CardanoMobile.BigNum.fromStr(COINS_PER_UTXO_BYTE),
-    normalizeToAddress(CardanoMobile, address),
   ])
+
+  const normalizedAddress = await normalizeToAddress(CardanoMobile, address).catch(() => {
+    throw new Error('getMinAmounts::Error not a valid address')
+  })
 
   if (normalizedAddress === undefined) throw new Error('getMinAmounts::Error not a valid address')
 
