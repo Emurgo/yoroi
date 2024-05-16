@@ -99,3 +99,8 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
   const manager = dappConnectorMaker(storage, handlerWallet, api)
   return manager
 }
+
+export const getDappFallbackLogo = (website: string) => {
+  const withoutProtocol = website.replace(/(^\w+:|^)\/\//, '')
+  return `https://api.faviconkit.com/${withoutProtocol}/144`
+}

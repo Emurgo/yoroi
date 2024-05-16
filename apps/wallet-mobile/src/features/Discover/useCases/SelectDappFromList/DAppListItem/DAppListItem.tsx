@@ -7,7 +7,7 @@ import uuid from 'uuid'
 
 import {Icon, Spacer, useModal} from '../../../../../components'
 import {useBrowser} from '../../../common/BrowserProvider'
-import {type DAppItem, isGoogleSearchItem} from '../../../common/helpers'
+import {type DAppItem, getDappFallbackLogo, isGoogleSearchItem} from '../../../common/helpers'
 import {LabelCategoryDApp} from '../../../common/LabelCategoryDApp'
 import {LabelConnected} from '../../../common/LabelConnected'
 import {useNavigateTo} from '../../../common/useNavigateTo'
@@ -32,6 +32,8 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
   const dialogHeight = DIALOG_DAPP_ACTIONS_HEIGHT + insets.bottom
 
   const [isPressed, setIsPressed] = React.useState(false)
+
+  const logo = dApp.logo || getDappFallbackLogo(dApp.origins[0])
 
   const handlePressing = (isPressIn: boolean) => {
     setIsPressed(isPressIn)
@@ -67,7 +69,7 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
       strings.dAppActions,
       <View>
         <View style={styles.dAppInfo}>
-          <Image source={{uri: dApp.logo}} style={styles.dAppLogoDialog} />
+          <Image source={{uri: logo}} style={styles.dAppLogoDialog} />
 
           <Text style={styles.dAppName}>{dApp.name}</Text>
         </View>
@@ -88,8 +90,6 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
     )
   }
 
-  const showIconPlaceholder = dApp.logo.length === 0
-
   return (
     <TouchableWithoutFeedback
       onPressIn={() => handlePressing(true)}
@@ -99,11 +99,9 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
       <View style={styles.dAppItemContainer}>
         {isGoogleSearchItem(dApp) ? (
           <Icon.Google />
-        ) : showIconPlaceholder ? (
-          <EmptyIcon />
         ) : (
           <View>
-            <Image source={{uri: dApp.logo}} style={styles.dAppLogo} />
+            <Image source={{uri: logo}} style={styles.dAppLogo} />
           </View>
         )}
 

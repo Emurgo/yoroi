@@ -10,7 +10,10 @@ import {BrowserSearchToolbar} from '../BrowseDapp/BrowserSearchToolbar'
 import {DAppListItem} from '../SelectDappFromList/DAppListItem/DAppListItem'
 
 const getUrl = (searchValue: string, isEngineSearch: boolean) => {
-  if (isEngineSearch || !validUrl(searchValue)) {
+  if (isEngineSearch) {
+    if (validUrl(searchValue)) {
+      return urlWithProtocol(searchValue)
+    }
     return 'https://www.google.com/search?q=' + encodeURIComponent(searchValue)
   }
 
