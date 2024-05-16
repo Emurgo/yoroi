@@ -1,14 +1,16 @@
 import {nameServerName} from '@yoroi/resolver'
+import {useTheme} from '@yoroi/theme'
+import {useTransfer} from '@yoroi/transfer'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Spacer} from '../../../../../components'
-import {useSend} from '../../../common/SendContext'
 import {useStrings} from '../../../common/strings'
 
 export const ShowResolvedAddressSelected = () => {
   const strings = useStrings()
-  const {targets, selectedTargetIndex} = useSend()
+  const styles = useStyles()
+  const {targets, selectedTargetIndex} = useTransfer()
   const {selectedNameServer} = targets[selectedTargetIndex].receiver
   const {address} = targets[selectedTargetIndex].entry
 
@@ -44,21 +46,23 @@ const shortenString = (text: string) => {
   return text
 }
 
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  serverName: {
-    fontFamily: 'Rubik',
-    fontSize: 12,
-    fontWeight: '400',
-    color: '#4A5065',
-  },
-  address: {
-    fontFamily: 'Rubik',
-    fontSize: 12,
-    fontWeight: '400',
-    color: '#8A92A3',
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, typography} = theme
+  const styles = StyleSheet.create({
+    row: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    serverName: {
+      ...typography['body-3-s-regular'],
+      color: color.gray[700],
+    },
+    address: {
+      ...typography['body-3-s-regular'],
+      color: color.gray[500],
+    },
+  })
+
+  return styles
+}

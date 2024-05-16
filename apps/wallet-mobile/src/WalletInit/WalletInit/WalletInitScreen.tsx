@@ -4,7 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, ScreenBackground, StatusBar} from '../../components'
+import {Button, ScreenBackground} from '../../components'
 import {LedgerTransportSwitchModal} from '../../HW'
 import globalMessages from '../../i18n/global-messages'
 import {Modal} from '../../legacy/Modal'
@@ -28,8 +28,6 @@ export const WalletInitScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <StatusBar type="light" />
-
       <ScreenBackground>
         <View style={styles.container}>
           <View style={styles.content}>

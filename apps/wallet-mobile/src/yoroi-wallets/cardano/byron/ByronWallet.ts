@@ -13,6 +13,7 @@ import DeviceInfo from 'react-native-device-info'
 import {defaultMemoize} from 'reselect'
 
 import LocalizableError from '../../../i18n/LocalizableError'
+import {WalletMeta} from '../../../wallet-manager/types'
 import {HWDeviceInfo} from '../../hw'
 import {Logger} from '../../logging'
 import {makeMemosManager, MemosManager} from '../../memos'
@@ -43,7 +44,6 @@ import {
 import {asQuantity, isMainnetNetworkId, Quantities} from '../../utils'
 import {genTimeToSlot} from '../../utils/timeUtils'
 import {validatePassword} from '../../utils/validators'
-import {WalletMeta} from '../../walletManager'
 import {Cardano, CardanoMobile} from '../../wallets'
 import * as legacyApi from '../api'
 import {encryptWithPassword} from '../catalyst/catalystCipher'
@@ -222,8 +222,6 @@ export class ByronWallet implements YoroiWallet {
   static async restore({walletMeta, storage}: {storage: App.Storage; walletMeta: WalletMeta}) {
     const data = await storage.getItem('data', parseWalletJSON)
     if (!data) throw new Error('Cannot read saved data')
-    Logger.debug('openWallet::data', data)
-    Logger.info('restore wallet', walletMeta.name)
 
     const networkId = data.networkId ?? walletMeta.networkId // can be null for versions < 3.0.0
     const {internalChain, externalChain} = addressChains.restore({data, networkId})
@@ -395,8 +393,6 @@ export class ByronWallet implements YoroiWallet {
   timeout: NodeJS.Timeout | null = null
 
   startSync() {
-    Logger.info(`starting wallet: ${this.id}`)
-
     const backgroundSync = async () => {
       try {
         await this.tryDoFullSync()
@@ -415,7 +411,6 @@ export class ByronWallet implements YoroiWallet {
 
   stopSync() {
     if (!this.timeout) return
-    Logger.info(`stopping wallet: ${this.id}`)
     clearTimeout(this.timeout)
   }
 
@@ -453,7 +448,6 @@ export class ByronWallet implements YoroiWallet {
         assert(this.hwDeviceInfo != null, 'no device info for hardware wallet')
       }
     } catch (e) {
-      Logger.error('wallet::_integrityCheck', e)
       throw new InvalidState((e as Error).message)
     }
   }
@@ -541,7 +535,6 @@ export class ByronWallet implements YoroiWallet {
       .then((key) => key.derive(NUMBERS.STAKING_KEY_INDEX))
       .then((key) => key.toRawKey())
 
-    Logger.info(`getStakingKey: ${Buffer.from(await stakingKey.asBytes()).toString('hex')}`)
     return stakingKey
   }
 
@@ -725,7 +718,7 @@ export class ByronWallet implements YoroiWallet {
             constant: containsDatum ? String(BigInt(constant) * 2n) : constant,
           },
           minimumUtxoVal: networkConfig.MINIMUM_UTXO_VAL,
-          coinsPerUtxoWord: String(Number(coinsPerUtxoByte) * 8),
+          coinsPerUtxoByte,
           poolDeposit,
           networkId: networkConfig.NETWORK_ID,
         },
@@ -773,7 +766,7 @@ export class ByronWallet implements YoroiWallet {
           keyDeposit,
           linearFee,
           minimumUtxoVal: networkConfig.MINIMUM_UTXO_VAL,
-          coinsPerUtxoWord: String(Number(coinsPerUtxoByte) * 8),
+          coinsPerUtxoByte,
           poolDeposit,
           networkId: networkConfig.NETWORK_ID,
         },
@@ -792,7 +785,6 @@ export class ByronWallet implements YoroiWallet {
       })
     } catch (e) {
       if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError) throw e
-      Logger.error(`shelley::createUnsignedGovernanceTx:: ${(e as Error).message}`, e)
       throw new CardanoError((e as Error).message)
     }
   }
@@ -879,7 +871,7 @@ export class ByronWallet implements YoroiWallet {
         keyDeposit,
         linearFee,
         minimumUtxoVal: networkConfig.MINIMUM_UTXO_VAL,
-        coinsPerUtxoWord: String(Number(coinsPerUtxoByte) * 8),
+        coinsPerUtxoByte,
         poolDeposit,
         networkId: networkConfig.NETWORK_ID,
       },
@@ -907,8 +899,6 @@ export class ByronWallet implements YoroiWallet {
   }
 
   async createVotingRegTx(pin: string, supportsCIP36: boolean) {
-    Logger.debug('CardanoWallet::createVotingRegTx called')
-
     const bytes = await generatePrivateKeyForCatalyst()
       .then((key) => key.toRawKey())
       .then((key) => key.asBytes())
@@ -935,7 +925,7 @@ export class ByronWallet implements YoroiWallet {
         keyDeposit,
         linearFee,
         minimumUtxoVal: networkConfig.MINIMUM_UTXO_VAL,
-        coinsPerUtxoWord: String(Number(coinsPerUtxoByte) * 8),
+        coinsPerUtxoByte,
         poolDeposit,
         networkId: networkConfig.NETWORK_ID,
       }
@@ -999,7 +989,6 @@ export class ByronWallet implements YoroiWallet {
       }
     } catch (e) {
       if (e instanceof LocalizableError || e instanceof ExtendableError) throw e
-      Logger.error(`shelley::createVotingRegTx:: ${(e as Error).message}`, e)
       throw new CardanoError((e as Error).message)
     }
   }
@@ -1037,7 +1026,7 @@ export class ByronWallet implements YoroiWallet {
         keyDeposit,
         linearFee,
         minimumUtxoVal: networkConfig.MINIMUM_UTXO_VAL,
-        coinsPerUtxoWord: String(Number(coinsPerUtxoByte) * 8),
+        coinsPerUtxoByte,
         poolDeposit,
         networkId,
       },
@@ -1058,7 +1047,6 @@ export class ByronWallet implements YoroiWallet {
     const appAdaVersion = await getCardanoAppMajorVersion(this.hwDeviceInfo, useUSB)
 
     if (!doesCardanoAppVersionSupportCIP36(appAdaVersion) && unsignedTx.voting.registration) {
-      Logger.info('CardanoWallet::signTxWithLedger: Ledger app version <= 5')
       const ledgerPayload = await Cardano.buildVotingLedgerPayloadV5(
         unsignedTx.unsignedTx,
         Number.parseInt(this.getChainNetworkId(), 10),
@@ -1118,7 +1106,6 @@ export class ByronWallet implements YoroiWallet {
 
   async submitTransaction(signedTx: string) {
     const response: any = await legacyApi.submitTransaction(signedTx, this.getBackendConfig())
-    Logger.info(response)
     return response as any
   }
 
@@ -1383,8 +1370,6 @@ export class ByronWallet implements YoroiWallet {
     assert(this.isInitialized, 'doFullSync: isInitialized')
 
     if (isJormungandr(this.networkId)) return
-    Logger.info('Discovery done, now syncing transactions')
-
     await this.discoverAddresses()
 
     await Promise.all([
@@ -1434,8 +1419,6 @@ export class ByronWallet implements YoroiWallet {
   // ========== UI state ============= //
 
   private updateState(update: Partial<WalletState>) {
-    Logger.debug('Wallet::updateState', update)
-
     this.state = {
       ...this.state,
       ...update,

@@ -4,7 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {BulletPointItem, Button, Icon, Spacer, StatusBar, Text} from '../../components'
+import {BulletPointItem, Button, Icon, Spacer, Text} from '../../components'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
 import {generateByronPlateFromMnemonics} from '../../yoroi-wallets/cardano/byron/plate'
@@ -34,8 +34,6 @@ export const VerifyRestoredWalletScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-      <StatusBar type="dark" />
-
       <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
         <WalletInfo>
           <Text style={styles.checksumLabel}>{strings.checksumLabel}</Text>

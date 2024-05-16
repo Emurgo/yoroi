@@ -6,7 +6,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Platform, ScrollView, StyleSheet, Switch} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Icon, Spacer, StatusBar} from '../../../components'
+import {Icon, Spacer} from '../../../components'
 import {useLanguage} from '../../../i18n'
 import {defaultLanguage} from '../../../i18n/languages'
 import {CONFIG, isNightly, isProduction} from '../../../legacy/config'
@@ -26,6 +26,7 @@ const iconProps = {
 
 export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
+  const styles = useStyles()
   const {colorScheme} = useTheme()
   const {languageCode, supportedLanguages} = useLanguage()
   const language = supportedLanguages.find((lang) => lang.code === languageCode) ?? defaultLanguage
@@ -40,7 +41,6 @@ export const ApplicationSettingsScreen = () => {
   const {authWithOs} = useAuthWithOs({onSuccess: navigateTo.enableLoginWithPin})
 
   const {data: screenShareEnabled} = useScreenShareSettingEnabled()
-
   const displayScreenShareSetting = Platform.OS === 'android' && !isProduction()
   const displayToggleThemeSetting = !isNightly() && !isProduction()
 
@@ -55,8 +55,6 @@ export const ApplicationSettingsScreen = () => {
   return (
     <SafeAreaView edges={['bottom', 'right', 'left']} style={styles.root}>
       <ScrollView bounces={false} style={styles.settings}>
-        <StatusBar type="dark" />
-
         <SettingsSection title={strings.general}>
           <NavigatedSettingsItem
             icon={<Icon.Globe {...iconProps} />}
@@ -332,13 +330,19 @@ const messages = defineMessages({
   },
 })
 
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  settings: {
-    flex: 1,
-    padding: 16,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
+  const styles = StyleSheet.create({
+    root: {
+      flex: 1,
+      backgroundColor: color.gray.min,
+    },
+    settings: {
+      flex: 1,
+      padding: 16,
+    },
+  })
+
+  return styles
+}

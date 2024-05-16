@@ -1,32 +1,44 @@
 import {useNavigation} from '@react-navigation/native'
 import {useSwap} from '@yoroi/swap'
+import {useTheme} from '@yoroi/theme'
+import {useTransfer} from '@yoroi/transfer'
 import React, {ReactNode} from 'react'
 import {useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import Animated, {FadeInDown, FadeOutDown, Layout} from 'react-native-reanimated'
 
+import {useCopy} from '../../src/legacy/useCopy'
 import {Icon, Spacer, Text} from '../components'
-import {useSend} from '../features/Send/common/SendContext'
+import {useReceive} from '../features/Receive/common/ReceiveProvider'
+import {useMultipleAddressesInfo} from '../features/Receive/common/useMultipleAddressesInfo'
+import {useReceiveAddressesStatus} from '../features/Receive/common/useReceiveAddressesStatus'
+import {messages as receiveMessages} from '../features/Receive/common/useStrings'
 import {useSwapForm} from '../features/Swap/common/SwapFormProvider'
 import {actionMessages} from '../i18n/global-messages'
 import {useMetrics} from '../metrics/metricsManager'
 import {TxHistoryRouteNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
-import {COLORS} from '../theme'
+import {useAddressModeManager} from '../wallet-manager/useAddressModeManager'
 import {useTokenInfo} from '../yoroi-wallets/hooks'
 
-const ACTION_PROPS = {
-  size: 24,
-  color: COLORS.WHITE,
-}
-
 export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
+  const {styles, colors} = useStyles()
   const strings = useStrings()
   const navigateTo = useNavigateTo()
-  const wallet = useSelectedWallet()
-  const {reset: resetSendState} = useSend()
+
+  const {isSingle, addressMode} = useAddressModeManager()
+  const {next: nextReceiveAddress, used: usedAddresses} = useReceiveAddressesStatus(addressMode)
+  const {selectedAddressChanged} = useReceive()
+  const [isCopying, copy] = useCopy()
+  const {hideMultipleAddressesInfo, isShowingMultipleAddressInfo} = useMultipleAddressesInfo()
+
+  const {reset: resetSendState} = useTransfer()
   const {orderData} = useSwap()
   const {resetSwapForm} = useSwapForm()
+
   const {track} = useMetrics()
+
+  const wallet = useSelectedWallet()
   const sellTokenInfo = useTokenInfo({
     wallet,
     tokenId: orderData.amounts.sell.tokenId,
@@ -56,25 +68,61 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
     navigateTo.swap()
   }
 
-  const handleExchange = () => {
+  const handleOnExchange = () => {
     track.walletPageExchangeClicked()
     navigateTo.exchange()
   }
 
+  const handleOnPressReceive = () => {
+    if (!isSingle) {
+      navigateTo.receiveMultipleAddresses()
+      return
+    }
+
+    if (usedAddresses.length <= 1 && isShowingMultipleAddressInfo) {
+      hideMultipleAddressesInfo({
+        onSuccess: () => {
+          selectedAddressChanged(nextReceiveAddress)
+          navigateTo.receiveSingleAddress()
+        },
+      })
+      return
+    }
+    selectedAddressChanged(nextReceiveAddress)
+    navigateTo.receiveSingleAddress()
+  }
+
+  const handleOnLongPressReceive = () => {
+    track.receiveCopyAddressClicked({copy_address_location: 'Long Press wallet Address'})
+    copy(nextReceiveAddress)
+  }
+
+  const iconProps = {
+    size: 24,
+    color: colors.actionColor,
+  }
+
   return (
-    <View style={styles.banner}>
+    <View>
       <Spacer height={16} />
 
       <View style={styles.centralized}>
         <View style={[styles.row, disabled && styles.disabled]}>
+          {isCopying && (
+            <Animated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
+              <Text style={styles.textCopy}>{strings.addressCopiedMsg}</Text>
+            </Animated.View>
+          )}
+
           <View style={styles.centralized}>
             <TouchableOpacity
               style={styles.actionIcon}
-              onPress={navigateTo.receive}
+              onPress={handleOnPressReceive}
               testID="receiveButton"
               disabled={disabled}
+              onLongPress={handleOnLongPressReceive}
             >
-              <Icon.Received {...ACTION_PROPS} />
+              <Icon.Received {...iconProps} />
             </TouchableOpacity>
 
             <Text style={styles.actionLabel}>{strings.receiveLabel}</Text>
@@ -90,7 +138,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
                 testID="sendButton"
                 disabled={disabled}
               >
-                <Icon.Send {...ACTION_PROPS} />
+                <Icon.Send {...iconProps} />
               </TouchableOpacity>
 
               <Text style={styles.actionLabel}>{strings.sendLabel}</Text>
@@ -108,7 +156,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
                   testID="swapButton"
                   disabled={disabled}
                 >
-                  <Icon.Swap {...ACTION_PROPS} />
+                  <Icon.Swap {...iconProps} />
                 </TouchableOpacity>
 
                 <Text style={styles.actionLabel}>{strings.swapLabel}</Text>
@@ -119,11 +167,11 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
               <View style={styles.centralized}>
                 <TouchableOpacity
                   style={styles.actionIcon}
-                  onPress={handleExchange}
+                  onPress={handleOnExchange}
                   testID="buyButton"
                   disabled={disabled}
                 >
-                  <Icon.Exchange {...ACTION_PROPS} />
+                  <Icon.Exchange {...iconProps} />
                 </TouchableOpacity>
 
                 <Text style={styles.actionLabel}>{strings.exchange}</Text>
@@ -138,37 +186,57 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   )
 }
 
-const styles = StyleSheet.create({
-  banner: {},
-  centralized: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  actionIcon: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 56,
-    width: 56,
-    borderRadius: 28,
-    backgroundColor: '#4B6DDE',
-  },
-  actionLabel: {
-    paddingTop: 8,
-    fontSize: 12,
-    color: '#000000',
-    fontFamily: 'Rubik-Regular',
-    fontWeight: '500',
-    lineHeight: 18,
-  },
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, padding, typography} = theme
+  const styles = StyleSheet.create({
+    centralized: {
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    row: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+    },
+    actionIcon: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: 56,
+      width: 56,
+      borderRadius: 28,
+      backgroundColor: color.primary[500],
+    },
+    actionLabel: {
+      ...padding['t-s'],
+      color: color.gray.max,
+      ...typography['body-3-s-medium'],
+    },
+    disabled: {
+      opacity: 0.5,
+    },
+    isCopying: {
+      position: 'absolute',
+      backgroundColor: color.gray.max,
+      alignItems: 'center',
+      justifyContent: 'center',
+      top: -40,
+      borderRadius: 4,
+      zIndex: 10,
+      left: -25,
+    },
+    textCopy: {
+      textAlign: 'center',
+      ...padding['s'],
+      ...typography['body-2-m-medium'],
+      color: color.gray.min,
+    },
+  })
 
-  disabled: {
-    opacity: 0.5,
-  },
-})
+  const colors = {
+    actionColor: theme.color.gray.min,
+  }
+  return {styles, colors}
+}
 
 const useStrings = () => {
   const intl = useIntl()
@@ -183,6 +251,7 @@ const useStrings = () => {
     swapLabel: intl.formatMessage(actionMessages.swap),
     messageBuy: intl.formatMessage(actionMessages.soon),
     exchange: intl.formatMessage(actionMessages.exchange),
+    addressCopiedMsg: intl.formatMessage(receiveMessages.addressCopiedMsg),
   }
 }
 
@@ -193,8 +262,9 @@ const useNavigateTo = () => {
 
   return {
     send: () => navigation.navigate('send-start-tx'),
-    receive: () => navigation.navigate('receive'),
+    receiveSingleAddress: () => navigation.navigate('receive-single'),
+    receiveMultipleAddresses: () => navigation.navigate('receive-multiple'),
     swap: () => navigation.navigate('swap-start-swap'),
-    exchange: () => navigation.navigate('rampOnOff-start-rampOnOff'),
+    exchange: () => navigation.navigate('exchange-create-order'),
   }
 }

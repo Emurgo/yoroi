@@ -5,7 +5,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
-import {Banner, Button, StatusBar, useModal} from '../components'
+import {Banner, Button, useModal} from '../components'
 import {
   useGovernanceStrings,
   useIsParticipatingInGovernance,
@@ -72,8 +72,6 @@ export const Dashboard = () => {
 
   return (
     <View style={styles.root}>
-      <StatusBar type="dark" />
-
       <View style={styles.container}>
         {isOnline && error && <SyncErrorBanner showRefresh={!(isLoading || isSyncing)} />}
 

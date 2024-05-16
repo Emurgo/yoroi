@@ -41,16 +41,12 @@ export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error, onPassw
         value={spendingPassword}
         onChangeText={(text) => {
           setSpendingPassword(text)
-          onPasswordChange && onPasswordChange()
+          onPasswordChange?.()
         }}
+        error={errorMessage != null}
+        errorText={errorMessage ?? undefined}
         autoComplete="off"
       />
-
-      {errorMessage != null && (
-        <Text style={styles.errorMessage} numberOfLines={3}>
-          {errorMessage}
-        </Text>
-      )}
 
       <Spacer fill />
 
@@ -80,10 +76,7 @@ const useStyles = () => {
       paddingHorizontal: 70,
       textAlign: 'center',
       paddingBottom: 8,
-    },
-    errorMessage: {
-      color: color.magenta[500],
-      textAlign: 'center',
+      color: color.gray[900],
     },
     loading: {
       position: 'absolute',

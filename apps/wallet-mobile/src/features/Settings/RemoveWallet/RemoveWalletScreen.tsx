@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
@@ -9,18 +10,17 @@ import {
   Checkmark,
   KeyboardAvoidingView,
   Spacer,
-  StatusBar,
   Text,
   TextInput,
   TextInputProps,
 } from '../../../components'
 import {useWalletNavigation} from '../../../navigation'
 import {useSelectedWallet} from '../../../SelectedWallet'
-import {COLORS} from '../../../theme'
 import {useRemoveWallet, useWalletName} from '../../../yoroi-wallets/hooks'
 
 export const RemoveWalletScreen = () => {
   const strings = useStrings()
+  const styles = useStyles()
   const wallet = useSelectedWallet()
   const walletName = useWalletName(wallet)
 
@@ -36,8 +36,6 @@ export const RemoveWalletScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
-      <StatusBar type="dark" />
-
       <KeyboardAvoidingView style={{flex: 1}}>
         <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
           <Description>
@@ -98,12 +96,14 @@ const Description = (props: ViewProps) => {
   return <View {...props} />
 }
 const WalletInfo = (props: ViewProps) => {
+  const styles = useStyles()
   return <View {...props} style={styles.descriptionContainer} />
 }
 const WalletNameInput = (props: TextInputProps) => {
   return <TextInput {...props} autoFocus enablesReturnKeyAutomatically returnKeyType="done" />
 }
 const Actions = (props: ViewProps) => {
+  const styles = useStyles()
   return <View {...props} style={styles.actions} />
 }
 
@@ -153,41 +153,43 @@ const useStrings = () => {
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.BACKGROUND,
-  },
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, typography} = theme
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: color.gray.min,
+    },
 
-  descriptionContainer: {
-    backgroundColor: COLORS.BACKGROUND,
-  },
-  description: {
-    fontSize: 16,
-    lineHeight: 24,
-  },
+    descriptionContainer: {
+      backgroundColor: color.gray.min,
+    },
+    description: {
+      ...typography['body-1-l-regular'],
+    },
 
-  walletNameLabel: {
-    fontSize: 16,
-    fontFamily: 'Rubik',
-    fontWeight: '500',
-  },
-  walletName: {
-    fontSize: 16,
-  },
+    walletNameLabel: {
+      ...typography['body-1-l-medium'],
+    },
+    walletName: {
+      ...typography['body-1-l-regular'],
+    },
 
-  contentContainer: {
-    padding: 16,
-  },
+    contentContainer: {
+      padding: 16,
+    },
 
-  actions: {
-    padding: 16,
-  },
-  removeButton: {
-    backgroundColor: COLORS.RED,
-  },
-  buttonContainer: {
-    paddingHorizontal: 16,
-    paddingBottom: 36,
-  },
-})
+    actions: {
+      padding: 16,
+    },
+    removeButton: {
+      backgroundColor: color.magenta[500],
+    },
+    buttonContainer: {
+      paddingHorizontal: 16,
+      paddingBottom: 36,
+    },
+  })
+  return styles
+}

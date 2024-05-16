@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useFocusEffect} from '@react-navigation/native'
+import {useTheme} from '@yoroi/theme'
+import {useTransfer} from '@yoroi/transfer'
 import React, {useEffect} from 'react'
 import {useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
@@ -11,14 +13,12 @@ import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../
 import {assetsToSendProperties} from '../../../../metrics/helpers'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../SelectedWallet'
-import {COLORS} from '../../../../theme'
 import {sortTokenInfos} from '../../../../utils'
 import {useSaveMemo, useTokenInfos} from '../../../../yoroi-wallets/hooks'
 import {YoroiSignedTx} from '../../../../yoroi-wallets/types'
 import {Amounts} from '../../../../yoroi-wallets/utils'
 import {debugWalletInfo, features} from '../../..'
 import {useNavigateTo} from '../../common/navigation'
-import {useSend} from '../../common/SendContext'
 import {useFlashAndScroll} from '../../common/useFlashAndScroll'
 import {BalanceAfter} from './Summary/BalanceAfter'
 import {CurrentBalance} from './Summary/CurrentBalance'
@@ -29,13 +29,14 @@ import {SecondaryTotals} from './Summary/SecondaryTotals'
 
 export const ConfirmTxScreen = () => {
   const strings = useStrings()
+  const styles = useStyles()
   const wallet = useSelectedWallet()
   const navigateTo = useNavigateTo()
   const [password, setPassword] = React.useState('')
   const [useUSB, setUseUSB] = React.useState(false)
   const {track} = useMetrics()
 
-  const {memo, selectedTargetIndex, yoroiUnsignedTx, targets} = useSend()
+  const {memo, selectedTargetIndex, unsignedTx: yoroiUnsignedTx, targets} = useTransfer()
   const {amounts} = targets[selectedTargetIndex].entry
   const tokenInfos = useTokenInfos({
     wallet,
@@ -51,14 +52,17 @@ export const ConfirmTxScreen = () => {
     }
   }, [])
 
+  const sendProperties = React.useMemo(() => assetsToSendProperties({tokens, amounts}), [amounts, tokens])
+
   useFocusEffect(
     React.useCallback(() => {
-      track.sendSummaryPageViewed(assetsToSendProperties({tokens, amounts}))
-    }, [amounts, tokens, track]),
+      track.sendSummaryPageViewed(sendProperties)
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [track]),
   )
 
   const onSuccess = (signedTx: YoroiSignedTx) => {
-    track.sendSummarySubmitted(assetsToSendProperties({tokens, amounts}))
+    track.sendSummarySubmitted(sendProperties)
     navigateTo.submittedTx(signedTx.signedTx.id)
 
     if (memo.length > 0) {
@@ -67,13 +71,13 @@ export const ConfirmTxScreen = () => {
   }
 
   const onError = () => {
-    track.sendSummarySubmitted(assetsToSendProperties({tokens, amounts}))
+    track.sendSummarySubmitted(sendProperties)
     navigateTo.failedTx()
   }
 
   const scrollViewRef = useFlashAndScroll()
 
-  if (!yoroiUnsignedTx) throw new Error('Missing yoroiUnsignedTx')
+  if (yoroiUnsignedTx === undefined) throw new Error('Missing yoroiUnsignedTx')
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
@@ -129,19 +133,31 @@ export const ConfirmTxScreen = () => {
   )
 }
 
-const Actions = (props: ViewProps) => <View {...props} style={{padding: 16}} />
+const Actions = (props: ViewProps) => {
+  const styles = useStyles()
+  return <View {...props} style={styles.actions} />
+}
 
-const styles = StyleSheet.create({
-  root: {
-    backgroundColor: COLORS.WHITE,
-    flex: 1,
-  },
-  container: {
-    backgroundColor: COLORS.WHITE,
-    flex: 1,
-    paddingHorizontal: 16,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, padding} = theme
+
+  const styles = StyleSheet.create({
+    root: {
+      backgroundColor: color.gray.min,
+      flex: 1,
+    },
+    container: {
+      backgroundColor: color.gray.min,
+      flex: 1,
+      ...padding['x-l'],
+    },
+    actions: {
+      ...padding['l'],
+    },
+  })
+  return styles
+}
 
 const useStrings = () => {
   const intl = useIntl()

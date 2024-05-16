@@ -1,5 +1,5 @@
 import {CardanoApi} from '@yoroi/api'
-import {FetchData, fetchData, handleApiError, isLeft} from '@yoroi/common'
+import {FetchData, fetchData, getApiError, isLeft} from '@yoroi/common'
 import {Api, Resolver} from '@yoroi/types'
 import {AxiosRequestConfig} from 'axios'
 import {z} from 'zod'
@@ -22,19 +22,16 @@ export const makeCnsCardanoApi = (
       fetcherConfig,
     )
 
-    if (isLeft(response)) {
-      handleApiError(response.error)
-    } else {
-      const validatedResponse = getAssetAddressSchema.safeParse(
-        response.value.data,
-      )
+    if (isLeft(response)) throw getApiError(response.error)
 
-      if (validatedResponse.success) {
-        return response.value.data?.[0]
-      }
-
-      throw new Resolver.Errors.NotFound()
+    const validatedResponse = getAssetAddressSchema.safeParse(
+      response.value.data,
+    )
+    if (validatedResponse.success) {
+      return response.value.data?.[0]
     }
+
+    throw new Resolver.Errors.NotFound()
   }
 
   const getMetadata = async (
@@ -70,19 +67,16 @@ export const makeCnsCardanoApi = (
       fetcherConfig,
     )
 
-    if (isLeft(response)) {
-      handleApiError(response.error)
-    } else {
-      const validatedResponse = assetInlineDatumResponseSchema.safeParse(
-        response.value.data,
-      )
+    if (isLeft(response)) throw getApiError(response.error)
 
-      if (validatedResponse.success) {
-        return response.value.data[0]?.inline_datum?.plutus_data
-      }
-
-      throw new Resolver.Errors.NotFound()
+    const validatedResponse = assetInlineDatumResponseSchema.safeParse(
+      response.value.data,
+    )
+    if (validatedResponse.success) {
+      return response.value.data[0]?.inline_datum?.plutus_data
     }
+
+    throw new Resolver.Errors.NotFound()
   }
 
   return {

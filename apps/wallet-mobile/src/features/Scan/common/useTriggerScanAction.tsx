@@ -1,3 +1,4 @@
+import {useTransfer} from '@yoroi/transfer'
 import * as React from 'react'
 import {Alert} from 'react-native'
 
@@ -7,7 +8,6 @@ import {useStrings as useStringsClaim} from '../../../features/Claim/common/useS
 import {useClaim} from '../../../features/Claim/module/ClaimProvider'
 import {useClaimTokens} from '../../../features/Claim/module/useClaimTokens'
 import {AskConfirmation} from '../../../features/Claim/useCases/AskConfirmation'
-import {useSend} from '../../../features/Send/common/SendContext'
 import {useSelectedWallet} from '../../../SelectedWallet/Context/SelectedWalletContext'
 import {pastedFormatter} from '../../../yoroi-wallets/utils/amountUtils'
 import {asQuantity, Quantities} from '../../../yoroi-wallets/utils/utils'
@@ -19,7 +19,13 @@ export const useTriggerScanAction = ({insideFeature}: {insideFeature: ScanFeatur
   const {openModal, closeModal, startLoading, stopLoading} = useModal()
   const navigateTo = useNavigateTo()
 
-  const {receiverResolveChanged, amountChanged, tokenSelectedChanged, reset: resetSendState, memoChanged} = useSend()
+  const {
+    receiverResolveChanged,
+    amountChanged,
+    tokenSelectedChanged,
+    reset: resetTransferState,
+    memoChanged,
+  } = useTransfer()
 
   const {reset: resetClaimState, scanActionClaimChanged, address, claimTokenChanged} = useClaim()
   const claimErrorResolver = useClaimErrorResolver()
@@ -40,10 +46,7 @@ export const useTriggerScanAction = ({insideFeature}: {insideFeature: ScanFeatur
   const trigger = (scanAction: ScanAction) => {
     switch (scanAction.action) {
       case 'send-single-pt': {
-        navigateTo.back()
-        navigateTo.send()
-
-        if (insideFeature !== 'send') resetSendState()
+        if (insideFeature !== 'send') resetTransferState()
 
         receiverResolveChanged(scanAction.receiver)
 
@@ -59,16 +62,17 @@ export const useTriggerScanAction = ({insideFeature}: {insideFeature: ScanFeatur
           }
           if ('memo' in scanAction.params) memoChanged(scanAction.params?.memo ?? '')
         }
+
+        navigateTo.startTransfer()
         break
       }
 
       case 'send-only-receiver': {
-        navigateTo.back()
-        navigateTo.send()
-
-        if (insideFeature !== 'send') resetSendState()
+        if (insideFeature !== 'send') resetTransferState()
 
         receiverResolveChanged(scanAction.receiver)
+
+        navigateTo.startTransfer()
         break
       }
 
@@ -91,7 +95,6 @@ export const useTriggerScanAction = ({insideFeature}: {insideFeature: ScanFeatur
         )
 
         openModal(stringsClaim.askConfirmationTitle, claimContent, 400)
-
         break
       }
     }

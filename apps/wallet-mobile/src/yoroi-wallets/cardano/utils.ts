@@ -322,7 +322,7 @@ export const generateCIP30UtxoCbor = async (utxo: RawUtxo) => {
   const txHash = await CardanoMobile.TransactionHash.fromBytes(Buffer.from(utxo.tx_hash, 'hex'))
   if (!txHash) throw new Error('Invalid tx hash')
 
-  const index = parseInt(utxo.utxo_id.split(':')[1] || '0', 10)
+  const index = utxo.tx_index
   const input = await CardanoMobile.TransactionInput.new(txHash, index)
   const address = await CardanoMobile.Address.fromBech32(utxo.receiver)
   if (!address) throw new Error('Invalid address')

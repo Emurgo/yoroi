@@ -2,10 +2,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import {App, Nullable} from '@yoroi/types'
 
 import {parseSafe} from '../../helpers/parsers'
+import {isFolderKey} from '../helpers/is-folder-key'
+import {isFileKey} from '../helpers/is-file-key'
 
 // -------
-// ADAPTER + "FACTORY"
-export const mountStorage = (path: App.StorageFolderName): App.Storage => {
+// FACTORY
+export const mountAsyncStorage = (path: App.StorageFolderName): App.Storage => {
   const withPath = (key: string) =>
     `${path}${key}` as `${App.StorageFolderName}${string}`
   const withoutPath = (value: string) => value.slice(path.length)
@@ -37,7 +39,7 @@ export const mountStorage = (path: App.StorageFolderName): App.Storage => {
 
   return {
     join: (folderName: App.StorageFolderName) =>
-      mountStorage(`${path}${folderName}`),
+      mountAsyncStorage(`${path}${folderName}`),
 
     getItem,
     multiGet,
@@ -92,7 +94,7 @@ export const mountStorage = (path: App.StorageFolderName): App.Storage => {
   } as const
 }
 
-export const mountMultiStorage = <T = unknown>(
+export const mountAsyncMultiStorage = <T = unknown>(
   options: App.MultiStorageOptions<T>,
 ): Readonly<App.MultiStorage<T>> => {
   const {
@@ -122,6 +124,8 @@ export const mountMultiStorage = <T = unknown>(
     )
   const readMany = (keysToRead: ReadonlyArray<string>) =>
     dataStorage.multiGet<Nullable<T>>(keysToRead, deserializer)
+  const removeMany = (keysToRead: ReadonlyArray<string>) =>
+    dataStorage.multiRemove(keysToRead)
   const getAllKeys = () => getAllKeysStorage().then((keys) => keys)
 
   return {
@@ -130,12 +134,6 @@ export const mountMultiStorage = <T = unknown>(
     readAll,
     saveMany,
     readMany,
+    removeMany,
   } as const
 }
-
-// -------
-// HELPERS
-const isFileKey = ({key, path}: {key: string; path: string}) =>
-  !key.slice(path.length).includes('/')
-const isFolderKey = ({key, path}: {key: string; path: string}) =>
-  !isFileKey({key, path})

@@ -1,5 +1,7 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {FlashList} from '@shopify/flash-list'
+import {useTheme} from '@yoroi/theme'
+import {useTransfer} from '@yoroi/transfer'
 import {Balance} from '@yoroi/types'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
@@ -21,16 +23,18 @@ import {filterByFungibility} from '../../../common/filterByFungibility'
 import {filterBySearch} from '../../../common/filterBySearch'
 import {useOverridePreviousSendTxRoute} from '../../../common/navigation'
 import {NoAssetFoundImage} from '../../../common/NoAssetFoundImage'
-import {useSelectedSecondaryAmountsCounter, useSend, useTokenQuantities} from '../../../common/SendContext'
 import {useStrings} from '../../../common/strings'
+import {useSelectedSecondaryAmountsCounter} from '../../../common/useSelectedSecondaryAmountsCounter'
+import {useTokenQuantities} from '../../../common/useTokenQuantities'
 import {MaxAmountsPerTx} from './Show/MaxAmountsPerTx'
 
 export type FungibilityFilter = 'all' | 'ft' | 'nft'
 
 export const SelectTokenFromListScreen = () => {
   const strings = useStrings()
+  const styles = useStyles()
   const [fungibilityFilter, setFungibilityFilter] = React.useState<FungibilityFilter>('all')
-  const {targets, selectedTargetIndex} = useSend()
+  const {targets, selectedTargetIndex} = useTransfer()
   const {track} = useMetrics()
 
   useFocusEffect(
@@ -99,9 +103,10 @@ const List = ({fungibilityFilter, isSearching, canAddAmount}: ListProps) => {
 }
 
 const NftList = ({canAddAmount}: {canAddAmount: boolean}) => {
+  const styles = useStyles()
   const wallet = useSelectedWallet()
   const navigation = useNavigation<TxHistoryRouteNavigation>()
-  const {tokenSelectedChanged, amountChanged, targets, selectedTargetIndex} = useSend()
+  const {tokenSelectedChanged, amountChanged, targets, selectedTargetIndex} = useTransfer()
   const {closeSearch} = useSearch()
   const balances = useBalances(wallet)
   const strings = useStrings()
@@ -143,6 +148,7 @@ type AssetListProps = {
   fungibilityFilter: FungibilityFilter
 }
 const AssetList = ({canAddAmount, fungibilityFilter}: AssetListProps) => {
+  const styles = useStyles()
   const wallet = useSelectedWallet()
   const tokenInfos = useAllTokenInfos({wallet})
   const filteredTokenInfos = useFilteredTokenInfos({fungibilityFilter, tokenInfos})
@@ -174,6 +180,7 @@ const AssetList = ({canAddAmount, fungibilityFilter}: AssetListProps) => {
 }
 
 const Tabs = ({children}: {children: React.ReactNode}) => {
+  const styles = useStyles()
   return <View style={styles.tabs}>{children}</View>
 }
 
@@ -183,28 +190,32 @@ type TabProps = {
   tab: FungibilityFilter
   label: string
 }
-const Tab = ({onPress, active, tab, label}: TabProps) => (
-  <TouchableOpacity
-    onPress={() => onPress(tab)}
-    style={[styles.tabContainer, active === tab && styles.tabContainerActive]}
-  >
-    <Text
-      style={[
-        styles.tab,
-        {
-          color: active === tab ? COLORS.SHELLEY_BLUE : COLORS.TEXT_INPUT,
-        },
-      ]}
+const Tab = ({onPress, active, tab, label}: TabProps) => {
+  const styles = useStyles()
+  return (
+    <TouchableOpacity
+      onPress={() => onPress(tab)}
+      style={[styles.tabContainer, active === tab && styles.tabContainerActive]}
     >
-      {label}
-    </Text>
-  </TouchableOpacity>
-)
+      <Text
+        style={[
+          styles.tab,
+          {
+            color: active === tab ? COLORS.SHELLEY_BLUE : COLORS.TEXT_INPUT,
+          },
+        ]}
+      >
+        {label}
+      </Text>
+    </TouchableOpacity>
+  )
+}
 
 type SelectableAssetItemProps = {disabled?: boolean; tokenInfo: Balance.TokenInfo; wallet: YoroiWallet}
 const SelectableAssetItem = ({tokenInfo, disabled, wallet}: SelectableAssetItemProps) => {
+  const styles = useStyles()
   const {closeSearch} = useSearch()
-  const {tokenSelectedChanged, amountChanged} = useSend()
+  const {tokenSelectedChanged, amountChanged} = useTransfer()
   const {spendable} = useTokenQuantities(tokenInfo.id)
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const balances = useBalances(wallet)
@@ -249,7 +260,7 @@ const ListEmptyComponent = ({
 }) => {
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
   const wallet = useSelectedWallet()
-  const {targets, selectedTargetIndex} = useSend()
+  const {targets, selectedTargetIndex} = useTransfer()
   const selectedTokenIds = Object.keys(targets[selectedTargetIndex].entry.amounts)
   const isSelectTokenFromListEmpty = areAllTokensSelected(selectedTokenIds, allTokenInfos)
   const strings = useStrings()
@@ -264,6 +275,7 @@ const ListEmptyComponent = ({
 }
 
 const NoAssetsYet = ({text}: {text: string}) => {
+  const styles = useStyles()
   return (
     <View style={styles.imageContainer}>
       <Spacer height={160} />
@@ -278,6 +290,7 @@ const NoAssetsYet = ({text}: {text: string}) => {
 }
 
 const EmptySearchResult = () => {
+  const styles = useStyles()
   const strings = useStrings()
   return (
     <View style={styles.imageContainer}>
@@ -295,6 +308,7 @@ const EmptySearchResult = () => {
 const Counter = ({fungibilityFilter, counter}: {fungibilityFilter: FungibilityFilter; counter: number}) => {
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
   const strings = useStrings()
+  const styles = useStyles()
 
   if (!isSearching && fungibilityFilter === 'all') {
     return (
@@ -350,7 +364,7 @@ const useFilteredTokenInfos = ({
 }) => {
   const wallet = useSelectedWallet()
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
-  const {targets, selectedTargetIndex} = useSend()
+  const {targets, selectedTargetIndex} = useTransfer()
   const isWalletEmpty = useIsWalletEmpty(wallet)
 
   /*
@@ -384,73 +398,78 @@ const filterOutSelected = (selectedTokenIds: Array<string>) => (token: Balance.T
   !selectedTokenIds.includes(token.id)
 const sortNfts = (nftNameA: string, nftNameB: string): number => nftNameA.localeCompare(nftNameB)
 
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  subheader: {
-    paddingHorizontal: 16,
-  },
-  item: {
-    paddingVertical: 14,
-  },
-  borderBottom: {
-    borderBottomColor: COLORS.BORDER_GRAY,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-  },
-  panel: {
-    paddingTop: 16,
-  },
-  tabs: {
-    flexDirection: 'row',
-  },
-  tabContainer: {
-    flex: 1,
-  },
-  tabContainerActive: {
-    borderBottomColor: COLORS.SHELLEY_BLUE,
-    borderBottomWidth: 2,
-  },
-  tab: {
-    textAlign: 'center',
-    fontWeight: 'bold',
-    paddingVertical: 12,
-  },
-  list: {
-    flex: 1,
-  },
-  assetListContent: {
-    paddingHorizontal: 16,
-  },
-  image: {
-    flex: 1,
-    alignSelf: 'center',
-    width: 200,
-    height: 228,
-  },
-  imageContainer: {
-    flex: 1,
-    textAlign: 'center',
-  },
-  contentText: {
-    flex: 1,
-    textAlign: 'center',
-    fontWeight: 'bold',
-    fontSize: 20,
-    color: '#000',
-  },
-  counter: {
-    padding: 16,
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  counterText: {
-    fontWeight: '400',
-    color: COLORS.SHELLEY_BLUE,
-  },
-  counterTextBold: {
-    fontWeight: 'bold',
-    color: COLORS.SHELLEY_BLUE,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, typography, padding} = theme
+  const styles = StyleSheet.create({
+    root: {
+      flex: 1,
+      backgroundColor: color.gray.min,
+    },
+    subheader: {
+      ...padding['x-l'],
+    },
+    item: {
+      ...padding['y-m'],
+    },
+    borderBottom: {
+      borderBottomColor: color.gray[200],
+      borderBottomWidth: StyleSheet.hairlineWidth,
+    },
+    panel: {
+      ...padding['x-l'],
+    },
+    tabs: {
+      flexDirection: 'row',
+    },
+    tabContainer: {
+      flex: 1,
+    },
+    tabContainerActive: {
+      borderBottomColor: color.primary[600],
+      borderBottomWidth: 2,
+    },
+    tab: {
+      textAlign: 'center',
+      ...padding['y-m'],
+      ...typography['body-1-l-medium'],
+    },
+    list: {
+      flex: 1,
+    },
+    assetListContent: {
+      ...padding['x-l'],
+    },
+    image: {
+      flex: 1,
+      alignSelf: 'center',
+      width: 200,
+      height: 228,
+    },
+    imageContainer: {
+      flex: 1,
+      textAlign: 'center',
+    },
+    contentText: {
+      ...typography['heading-3-medium'],
+      color: color.gray.max,
+      flex: 1,
+      textAlign: 'center',
+    },
+    counter: {
+      ...padding['l'],
+      justifyContent: 'center',
+      flexDirection: 'row',
+    },
+    counterText: {
+      color: color.primary[600],
+      ...typography['body-2-m-regular'],
+    },
+    counterTextBold: {
+      color: color.primary[600],
+      ...typography['body-2-m-medium'],
+    },
+  })
+
+  return styles
+}

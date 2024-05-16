@@ -2,7 +2,7 @@ import * as React from 'react'
 import {Linking, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Analytics, StatusBar} from '../../../components'
+import {Analytics} from '../../../components'
 import {useAgreeWithLegal, useNavigateTo} from '../common'
 
 export const AnalyticsNoticeScreen = () => {
@@ -20,8 +20,6 @@ export const AnalyticsNoticeScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar type="dark" />
-
       <Analytics type="notice" onClose={onClose} onReadMore={onReadMore} />
     </SafeAreaView>
   )

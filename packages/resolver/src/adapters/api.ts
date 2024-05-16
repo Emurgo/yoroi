@@ -53,7 +53,6 @@ export const resolverApiMaker = (
     apiConfig[Resolver.NameServer.Unstoppable],
   )
   const getCnsCryptoAddress = cnsApi.getCryptoAddress(cslFactory)
-  // @ts-expect-error TODO: bugfix on TS 5.4 (readonly array of readonly array)
   const operationsGetCryptoAddress: GetCryptoAddressOperations = [
     [Resolver.NameServer.Handle, getHandleCryptoAddress],
     [Resolver.NameServer.Unstoppable, getUnstoppableCryptoAddress],

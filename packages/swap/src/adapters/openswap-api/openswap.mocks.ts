@@ -1,6 +1,13 @@
-import {OpenSwap} from '@yoroi/openswap'
+import {
+  CompletedOrder,
+  LiquidityPool,
+  ListTokensResponse,
+  OpenOrder,
+  PriceResponse,
+  TokenPairsResponse,
+} from './types'
 
-const getTokens: OpenSwap.ListTokensResponse = [
+const getTokens: ListTokensResponse = [
   {
     supply: {
       total: '10000000',
@@ -73,9 +80,27 @@ const getTokens: OpenSwap.ListTokensResponse = [
     },
     categories: [],
   },
+  {
+    supply: {
+      total: '45000000003000000',
+      circulating: null,
+    },
+    status: 'verified',
+    website: 'https://eduladder.com',
+    symbol: 'ELADR',
+    decimalPlaces: 6,
+    image:
+      'https://tokens.muesliswap.com/static/img/tokens/2d420236ffaada336c21e3f4520b799f6e246d8618f2fc89a4907da6.4564756c6164646572546f6b656e.png',
+    description: 'Proof Of Contribution.',
+    address: {
+      policyId: '2d420236ffaada336c21e3f4520b799f6e246d8618f2fc89a4907da6',
+      name: 'FFFFFF',
+    },
+    categories: [],
+  },
 ]
 
-const getTokenPairs: OpenSwap.TokenPairsResponse = [
+const getTokenPairs: TokenPairsResponse = [
   {
     info: {
       supply: {
@@ -317,7 +342,7 @@ const getTokenPairs: OpenSwap.TokenPairsResponse = [
   },
 ]
 
-const getCompletedOrders: OpenSwap.CompletedOrder[] = [
+const getCompletedOrders: CompletedOrder[] = [
   {
     toToken: {
       address: {
@@ -347,7 +372,7 @@ const getCompletedOrders: OpenSwap.CompletedOrder[] = [
   },
 ]
 
-const getOpenOrders: OpenSwap.OpenOrder[] = [
+const getOpenOrders: OpenOrder[] = [
   {
     from: {
       amount: '1000000',
@@ -385,7 +410,7 @@ const getOpenOrders: OpenSwap.OpenOrder[] = [
   },
 ]
 
-const getLiquidityPools: OpenSwap.LiquidityPool[] = [
+const getLiquidityPools: LiquidityPool[] = [
   {
     provider: 'minswap',
     poolFee: '0.3',
@@ -600,7 +625,7 @@ const getLiquidityPools: OpenSwap.LiquidityPool[] = [
   },
 ]
 
-const getPrice: OpenSwap.PriceResponse = {
+const getPrice: PriceResponse = {
   baseDecimalPlaces: 6,
   quoteDecimalPlaces: 6,
   baseAddress: {

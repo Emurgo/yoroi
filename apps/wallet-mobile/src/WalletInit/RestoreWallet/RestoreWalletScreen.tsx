@@ -4,7 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, KeyboardAvoidingView, KeyboardSpacer, ScrollableView, Spacer, StatusBar, Text} from '../../components'
+import {Button, KeyboardAvoidingView, KeyboardSpacer, ScrollableView, Spacer, Text} from '../../components'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {isEmptyString} from '../../utils/utils'
 import {getWalletConfigById} from '../../yoroi-wallets/cardano/utils'
@@ -27,8 +27,6 @@ export const RestoreWalletScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={{flex: 1, backgroundColor: 'white'}}>
-      <StatusBar type="dark" />
-
       <KeyboardAvoidingView style={{flex: 1}}>
         <ScrollableView bounces={false} style={{paddingHorizontal: 16}} keyboardShouldPersistTaps="always">
           <Spacer height={24} />

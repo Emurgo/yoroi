@@ -6,6 +6,7 @@ import {Balance} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 
 import {getTokenFingerprint} from '../../legacy/format'
+import {WalletMeta} from '../../wallet-manager/types'
 import {fallbackTokenInfo, toTokenInfo, utf8ToHex} from '../cardano/api/utils'
 import * as HASKELL_SHELLEY_TESTNET from '../cardano/constants/testnet/constants'
 import {
@@ -26,7 +27,6 @@ import {
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../types'
-import {WalletMeta} from '../walletManager'
 import {CardanoMobile} from '../wallets'
 import {mockEncryptedStorage} from './storage'
 import {mockTransactionInfo, mockTransactionInfos} from './transaction'
@@ -44,6 +44,7 @@ const walletMeta: WalletMeta = {
       'b04dc22991594170974bbbb5908cc50b48f236d680a9ebfe6c1d00f52f8f4813341943eb66dec48cfe7f3be5beec705b91300a07641e668ff19dfa2fbeccbfba',
   },
   walletImplementationId: 'haskell-shelley-24',
+  addressMode: 'multiple',
 }
 
 const wallet: YoroiWallet = {

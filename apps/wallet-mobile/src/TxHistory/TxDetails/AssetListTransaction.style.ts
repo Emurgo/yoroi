@@ -1,56 +1,58 @@
+import {useTheme} from '@yoroi/theme'
 import {StyleSheet} from 'react-native'
 
-import {brand, COLORS} from '../../theme'
-
-export default StyleSheet.create({
-  assetHeading: {
-    color: COLORS.BLACK,
-    opacity: 0.5,
-    fontSize: 12,
-  },
-  assetMeta: {
-    color: COLORS.TEXT_GRAY2,
-    opacity: 0.5,
-    fontSize: 14,
-  },
-  assetRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  assetTitle: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 10,
-  },
-  assetName: {
-    fontFamily: brand.defaultFont,
-    fontSize: 14,
-    color: COLORS.TEXT_GRAY,
-    marginBottom: 2,
-  },
-  assetBalanceView: {
-    flex: 1,
-    alignItems: 'flex-end',
-    justifyContent: 'flex-start',
-  },
-  assetBalance: {
-    fontFamily: brand.defaultFont,
-    fontSize: 14,
-    color: COLORS.BLACK,
-  },
-  py5: {
-    paddingVertical: 10,
-  },
-  px5: {
-    paddingHorizontal: 0,
-  },
-  rowColor1: {
-    backgroundColor: 'transparent',
-  },
-  rowColor2: {
-    backgroundColor: 'transparent',
-  },
-  tokenMetaView: {
-    flex: 2,
-  },
-})
+export const useAssetListStyles = () => {
+  const {theme} = useTheme()
+  const {color, typography} = theme
+  const styles = StyleSheet.create({
+    assetHeading: {
+      color: color.gray.max,
+      opacity: 0.5,
+      ...typography['body-3-s-regular'],
+    },
+    assetMeta: {
+      color: color.gray[500],
+      opacity: 0.5,
+      ...typography['body-2-m-regular'],
+    },
+    assetRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    assetTitle: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginBottom: 10,
+    },
+    assetName: {
+      ...typography['body-2-m-regular'],
+      color: color.gray[900],
+      marginBottom: 2,
+    },
+    assetBalanceView: {
+      flex: 1,
+      alignItems: 'flex-end',
+      justifyContent: 'flex-start',
+    },
+    assetBalance: {
+      ...typography['body-2-m-regular'],
+      color: color.gray.max,
+    },
+    py5: {
+      paddingVertical: 10,
+    },
+    px5: {
+      paddingHorizontal: 0,
+    },
+    rowColor1: {
+      backgroundColor: 'transparent',
+    },
+    rowColor2: {
+      backgroundColor: 'transparent',
+    },
+    tokenMetaView: {
+      flex: 2,
+    },
+  })
+  return styles
+}

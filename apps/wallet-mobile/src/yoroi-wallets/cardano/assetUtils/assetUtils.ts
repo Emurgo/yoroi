@@ -1,19 +1,24 @@
 import BigNumber from 'bignumber.js'
 
-import {NetworkId, RawUtxo} from '../../types/other'
+import {Address} from '../../types'
+import {RawUtxo} from '../../types/other'
 import {CardanoMobile} from '../../wallets'
-import {getCardanoNetworkConfigById} from '../networks'
-import {cardanoValueFromRemoteFormat} from '../utils'
+import {COINS_PER_UTXO_BYTE} from '../constants/common'
+import {cardanoValueFromRemoteFormat, normalizeToAddress} from '../utils'
 
-export async function calcLockedDeposit(utxos: RawUtxo[], networkId: NetworkId) {
-  const networkConfig = getCardanoNetworkConfigById(networkId)
-  const coinsPerUtxoWord = await CardanoMobile.BigNum.fromStr(networkConfig.COINS_PER_UTXO_WORD)
+export async function calcLockedDeposit(utxos: RawUtxo[], address: Address, coinsPerUtxoByteStr: string) {
   const utxosWithAssets = utxos.filter((u) => u.assets.length > 0)
+
+  const coinsPerUtxoByte = await CardanoMobile.BigNum.fromStr(coinsPerUtxoByteStr ?? COINS_PER_UTXO_BYTE)
+  const dataCost = await CardanoMobile.DataCost.newCoinsPerByte(coinsPerUtxoByte)
+  const normalizedAddress = await normalizeToAddress(address)
+  if (normalizedAddress === undefined) throw new Error('calcLockedDeposit::Error not a valid address')
 
   const promises = utxosWithAssets.map((u) => {
     return cardanoValueFromRemoteFormat(u)
-      .then((v) => CardanoMobile.minAdaRequired(v, false, coinsPerUtxoWord))
-      .then((v) => v.toStr())
+      .then((v) => CardanoMobile.TransactionOutput.new(normalizedAddress, v))
+      .then((txOutput) => CardanoMobile.minAdaForOutput(txOutput, dataCost))
+      .then((m) => m.toStr())
   })
   const results = await Promise.all(promises)
   const totalLocked = results.reduce((acc, v) => acc.plus(v), new BigNumber(0))

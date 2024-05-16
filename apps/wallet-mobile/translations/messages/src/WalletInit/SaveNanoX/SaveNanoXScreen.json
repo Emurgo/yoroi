@@ -4,14 +4,14 @@
     "defaultMessage": "!!!My Ledger Wallet",
     "file": "src/WalletInit/SaveNanoX/SaveNanoXScreen.tsx",
     "start": {
-      "line": 66,
+      "line": 73,
       "column": 30,
-      "index": 2027
+      "index": 2325
     },
     "end": {
-      "line": 69,
+      "line": 76,
       "column": 3,
-      "index": 2164
+      "index": 2462
     }
   }
 ]

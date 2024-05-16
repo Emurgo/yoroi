@@ -1,6 +1,7 @@
+import {useTheme} from '@yoroi/theme'
 import React, {ReactNode} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, Switch, TouchableOpacity, useWindowDimensions, View} from 'react-native'
+import {StyleSheet, Switch, TextStyle, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {Button, Spacer, Text, YoroiLogo} from '../../components'
@@ -25,6 +26,7 @@ export const Analytics = ({type, onClose, onReadMore}: Props) => {
 const BOTTOM_BUTTON_ROW_HEIGHT = 80
 
 const Notice = ({onClose, onReadMore}: {onClose?: () => void; onReadMore?: () => void}) => {
+  const styles = useStyles()
   const strings = useStrings()
   const metrics = useMetrics()
   const {height: deviceHeight} = useWindowDimensions()
@@ -104,6 +106,7 @@ const Notice = ({onClose, onReadMore}: {onClose?: () => void; onReadMore?: () =>
 const Settings = ({onReadMore}: {onReadMore?: () => void}) => {
   const strings = useStrings()
   const metrics = useMetrics()
+  const styles = useStyles()
 
   const scrollViewRef = React.useRef<ScrollView | null>(null)
 
@@ -139,6 +142,9 @@ const Settings = ({onReadMore}: {onReadMore?: () => void}) => {
 
 const CommonContent = ({onReadMore, showLogo}: {onReadMore?: () => void; showLogo?: boolean}) => {
   const strings = useStrings()
+  const styles = useStyles()
+  const list = uselist(styles)
+
   return (
     <>
       <Spacer height={12} />
@@ -180,77 +186,86 @@ const CommonContent = ({onReadMore, showLogo}: {onReadMore?: () => void; showLog
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  content: {
-    alignItems: 'center',
-    paddingHorizontal: 16,
-  },
-  text: {
-    fontSize: 16,
-    lineHeight: 22,
-  },
-  list: {
-    flex: 1,
-    flexGrow: 1,
-    alignSelf: 'flex-start',
-  },
-  item: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'baseline',
-  },
-  link: {
-    color: COLORS.BLUE_LIGHTER,
-    textAlign: 'center',
-  },
-  title: {
-    fontSize: 20,
-    lineHeight: 22,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  skip: {
-    borderWidth: 0,
-  },
-  skipText: {
-    color: '#242838',
-  },
-  tick: {
-    color: COLORS.DARK_BLUE,
-    paddingRight: 8,
-    fontSize: 16,
-  },
-  cross: {
-    color: COLORS.RED,
-    paddingRight: 8,
-    fontSize: 16,
-  },
-  toggle: {
-    padding: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  buttonRow: {
-    width: '100%',
-    position: 'absolute',
-    bottom: 0,
-    backgroundColor: '#fff',
-    height: BOTTOM_BUTTON_ROW_HEIGHT,
-    padding: 16,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, typography} = theme
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: color.gray.min,
+    },
+    content: {
+      alignItems: 'center',
+      paddingHorizontal: 16,
+    },
+    text: {
+      ...typography['body-1-l-regular'],
+    },
+    list: {
+      flex: 1,
+      flexGrow: 1,
+      alignSelf: 'flex-start',
+    },
+    item: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'baseline',
+    },
+    link: {
+      color: color.primary[600],
+      textAlign: 'center',
+    },
+    title: {
+      ...typography['heading-3-medium'],
+      textAlign: 'center',
+    },
+    skip: {
+      borderWidth: 0,
+    },
+    skipText: {
+      color: color.primary[900],
+    },
+    tick: {
+      color: color.primary[700],
+      paddingRight: 8,
+      fontSize: 16,
+    },
+    cross: {
+      color: color.magenta[500],
+      paddingRight: 8,
+      fontSize: 16,
+    },
+    toggle: {
+      padding: 16,
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    buttonRow: {
+      width: '100%',
+      position: 'absolute',
+      bottom: 0,
+      backgroundColor: color.gray.min,
+      height: BOTTOM_BUTTON_ROW_HEIGHT,
+      padding: 16,
+    },
+  })
+  return styles
+}
 
-const list = [
-  {style: styles.tick, icon: '✓', key: 'anonymous'},
-  {style: styles.tick, icon: '✓', key: 'optout'},
-  {style: styles.cross, icon: '✕', key: 'private'},
-  {style: styles.cross, icon: '✕', key: 'noip'},
-  {style: styles.cross, icon: '✕', key: 'nosell'},
-] as const
+type ListStyles = {
+  tick: TextStyle
+  cross: TextStyle
+}
+
+const uselist = (styles: ListStyles) => {
+  return [
+    {style: styles.tick, icon: '✓', key: 'anonymous'},
+    {style: styles.tick, icon: '✓', key: 'optout'},
+    {style: styles.cross, icon: '✕', key: 'private'},
+    {style: styles.cross, icon: '✕', key: 'noip'},
+    {style: styles.cross, icon: '✕', key: 'nosell'},
+  ] as const
+}
 
 const bold = {b: (text: ReactNode) => <Text bold>{text}</Text>}
 
