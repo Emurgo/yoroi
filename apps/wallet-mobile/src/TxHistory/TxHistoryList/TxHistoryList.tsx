@@ -8,9 +8,9 @@ import {Platform, SectionList, SectionListProps, StyleSheet, View} from 'react-n
 
 import {Spacer, Text} from '../../components'
 import {ShowBuyBanner} from '../../features/Exchange/common/ShowBuyBanner/ShowBuyBanner'
+import {useSelectedWallet} from '../../features/WalletManager/Context/SelectedWalletContext'
 import {formatDateRelative} from '../../legacy/format'
 import {useMetrics} from '../../metrics/metricsManager'
-import {useSelectedWallet} from '../../SelectedWallet'
 import {useTransactionInfos} from '../../yoroi-wallets/hooks'
 import {TransactionInfo} from '../../yoroi-wallets/types'
 import {TxHistoryListItem} from './TxHistoryListItem'

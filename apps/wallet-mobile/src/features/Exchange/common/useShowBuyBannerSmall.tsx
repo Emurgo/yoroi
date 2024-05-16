@@ -1,9 +1,9 @@
 import {isNumber, parseNumber, useAsyncStorage} from '@yoroi/common'
 import {useQuery, UseQueryOptions} from 'react-query'
 
-import {useSelectedWallet} from '../../../SelectedWallet/Context/SelectedWalletContext'
 import {useBalances} from '../../../yoroi-wallets/hooks'
 import {Amounts, asQuantity, Quantities} from '../../../yoroi-wallets/utils/utils'
+import {useSelectedWallet} from '../../WalletManager/Context/SelectedWalletContext'
 import {storageKeyShowBuyBannerSmall, storageRootExchange} from './constants'
 
 export const useShowBuyBannerSmall = (options?: UseQueryOptions<boolean, Error, boolean, [string, string]>) => {

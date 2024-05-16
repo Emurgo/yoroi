@@ -64,7 +64,7 @@ const getStatusBarStyleByRoute = ({
   }
 }
 
-const oldBlueRoutes = ['wallet-selection', 'choose-create-restore', 'enable-login-with-os', 'auth-with-os']
+const oldBlueRoutes = ['enable-login-with-os', 'auth-with-os']
 
 /**
  *

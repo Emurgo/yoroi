@@ -4,8 +4,8 @@ import {storiesOf} from '@storybook/react-native'
 import {TransferProvider} from '@yoroi/transfer'
 import React from 'react'
 
-import {SelectedWalletProvider} from '../../../../../SelectedWallet'
 import {mocks as walletMocks} from '../../../../../yoroi-wallets/mocks'
+import {SelectedWalletProvider} from '../../../../WalletManager/Context/SelectedWalletContext'
 import {mocks as sendMocks} from '../../../common/mocks'
 import {EditAmountScreen} from './EditAmountScreen'
 

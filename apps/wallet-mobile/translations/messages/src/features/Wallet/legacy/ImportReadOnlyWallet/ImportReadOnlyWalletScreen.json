@@ -1,0 +1,62 @@
+[
+  {
+    "id": "components.walletinit.importreadonlywalletscreen.paragraph",
+    "defaultMessage": "!!!To import a read-only wallet from the Yoroi extension, you will need to:",
+    "file": "src/features/Wallet/legacy/ImportReadOnlyWallet/ImportReadOnlyWalletScreen.tsx",
+    "start": {
+      "line": 64,
+      "column": 13,
+      "index": 2204
+    },
+    "end": {
+      "line": 67,
+      "column": 3,
+      "index": 2378
+    }
+  },
+  {
+    "id": "components.walletinit.importreadonlywalletscreen.line1",
+    "defaultMessage": "!!!Open \"My wallets\" page in the Yoroi extension.",
+    "file": "src/features/Wallet/legacy/ImportReadOnlyWallet/ImportReadOnlyWalletScreen.tsx",
+    "start": {
+      "line": 68,
+      "column": 9,
+      "index": 2389
+    },
+    "end": {
+      "line": 71,
+      "column": 3,
+      "index": 2533
+    }
+  },
+  {
+    "id": "components.walletinit.importreadonlywalletscreen.line2",
+    "defaultMessage": "!!!Look for the {buttonType} for the wallet you want to import in the mobile app.",
+    "file": "src/features/Wallet/legacy/ImportReadOnlyWallet/ImportReadOnlyWalletScreen.tsx",
+    "start": {
+      "line": 72,
+      "column": 9,
+      "index": 2544
+    },
+    "end": {
+      "line": 75,
+      "column": 3,
+      "index": 2720
+    }
+  },
+  {
+    "id": "components.walletinit.importreadonlywalletscreen.buttonType",
+    "defaultMessage": "!!!export read-only wallet button",
+    "file": "src/features/Wallet/legacy/ImportReadOnlyWallet/ImportReadOnlyWalletScreen.tsx",
+    "start": {
+      "line": 76,
+      "column": 14,
+      "index": 2736
+    },
+    "end": {
+      "line": 79,
+      "column": 3,
+      "index": 2869
+    }
+  }
+]

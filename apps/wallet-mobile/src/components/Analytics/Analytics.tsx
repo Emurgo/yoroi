@@ -6,7 +6,6 @@ import {ScrollView} from 'react-native-gesture-handler'
 
 import {Button, Spacer, Text, YoroiLogo} from '../../components'
 import {useMetrics} from '../../metrics/metricsManager'
-import {COLORS} from '../../theme'
 import {AnalyticsImage} from './AnalyticsImage'
 
 type Props = {
@@ -82,10 +81,7 @@ const Notice = ({onClose, onReadMore}: {onClose?: () => void; onReadMore?: () =>
           styles.buttonRow,
           {
             // only show border top if the content is scrollable
-            ...(deviceHeight < contentHeight && {
-              borderTopWidth: 1,
-              borderTopColor: COLORS.ACTION_GRAY,
-            }),
+            ...(deviceHeight < contentHeight && styles.borderTop),
           },
         ]}
       >
@@ -248,7 +244,12 @@ const useStyles = () => {
       height: BOTTOM_BUTTON_ROW_HEIGHT,
       padding: 16,
     },
+    borderTop: {
+      borderTopWidth: 1,
+      borderTopColor: color.gray[500],
+    },
   })
+
   return styles
 }
 

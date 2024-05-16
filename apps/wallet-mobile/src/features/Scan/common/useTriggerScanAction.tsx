@@ -8,9 +8,9 @@ import {useStrings as useStringsClaim} from '../../../features/Claim/common/useS
 import {useClaim} from '../../../features/Claim/module/ClaimProvider'
 import {useClaimTokens} from '../../../features/Claim/module/useClaimTokens'
 import {AskConfirmation} from '../../../features/Claim/useCases/AskConfirmation'
-import {useSelectedWallet} from '../../../SelectedWallet/Context/SelectedWalletContext'
 import {pastedFormatter} from '../../../yoroi-wallets/utils/amountUtils'
 import {asQuantity, Quantities} from '../../../yoroi-wallets/utils/utils'
+import {useSelectedWallet} from '../../WalletManager/Context/SelectedWalletContext'
 import {ScanAction, ScanFeature} from './types'
 import {useNavigateTo} from './useNavigateTo'
 

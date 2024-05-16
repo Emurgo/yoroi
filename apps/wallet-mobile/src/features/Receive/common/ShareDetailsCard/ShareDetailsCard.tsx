@@ -45,7 +45,7 @@ export const ShareDetailsCard = ({address, spendingHash, stakingHash}: AddressDe
         <View style={styles.textRow}>
           <Text style={styles.textAddressDetails}>{address}</Text>
 
-          <CopyButton value={address} onCopy={handleAddressOnCopy} />
+          <CopyButton value={address} onCopy={handleAddressOnCopy} message={strings.addressCopiedMsg} />
         </View>
       </View>
 
@@ -56,7 +56,7 @@ export const ShareDetailsCard = ({address, spendingHash, stakingHash}: AddressDe
           <View style={styles.textRow}>
             <Text style={styles.textAddressDetails}>{stakingHash}</Text>
 
-            <CopyButton value={stakingHash} />
+            <CopyButton value={stakingHash} message={strings.addressCopiedMsg} />
           </View>
         </View>
       )}
@@ -68,7 +68,7 @@ export const ShareDetailsCard = ({address, spendingHash, stakingHash}: AddressDe
           <View style={styles.textRow}>
             <Text style={styles.textAddressDetails}>{spendingHash}</Text>
 
-            <CopyButton value={spendingHash} />
+            <CopyButton value={spendingHash} message={strings.addressCopiedMsg} />
           </View>
         </View>
       )}

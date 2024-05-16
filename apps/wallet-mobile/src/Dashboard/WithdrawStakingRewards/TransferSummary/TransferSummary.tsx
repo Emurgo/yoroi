@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Linking, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
@@ -5,7 +6,6 @@ import {Linking, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-nati
 import {Text} from '../../../components'
 import {confirmationMessages, txLabels} from '../../../i18n/global-messages'
 import {formatTokenWithText} from '../../../legacy/format'
-import {COLORS} from '../../../theme'
 import {getNetworkConfigById} from '../../../yoroi-wallets/cardano/networks'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {YoroiStaking, YoroiUnsignedTx} from '../../../yoroi-wallets/types'
@@ -13,6 +13,7 @@ import {Amounts, Entries} from '../../../yoroi-wallets/utils'
 
 export const TransferSummary = ({wallet, unsignedTx}: {wallet: YoroiWallet; unsignedTx: YoroiUnsignedTx}) => {
   const strings = useStrings()
+  const styles = useStyles()
   const {deregistrations, withdrawals, refundAmount, feeAmount, totalAmount} = withdrawalInfo(
     unsignedTx,
     wallet.primaryToken.identifier,
@@ -144,7 +145,10 @@ const Deregistrations = ({
   )
 }
 
-const Item = (props: ViewProps) => <View {...props} style={styles.item} />
+const Item = (props: ViewProps) => {
+  const styles = useStyles()
+  return <View {...props} style={styles.item} />
+}
 
 const useStrings = () => {
   const intl = useIntl()
@@ -185,13 +189,17 @@ const messages = defineMessages({
   },
 })
 
-const styles = StyleSheet.create({
-  item: {
-    paddingBottom: 5,
-  },
-  balanceAmount: {
-    color: COLORS.POSITIVE_AMOUNT,
-    lineHeight: 24,
-    fontSize: 16,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, typography, padding} = theme
+  const styles = StyleSheet.create({
+    item: {
+      ...padding['b-xs'],
+    },
+    balanceAmount: {
+      color: color.secondary[500],
+      ...typography['body-1-l-regular'],
+    },
+  })
+  return styles
+}

@@ -1,6 +1,6 @@
 import {canAuthWithOS} from '../auth/auth'
 
-describe('authOsEnabled', () => {
+describe('isAuthOsSupported', () => {
   describe('android', () => {
     describe('with fingerprint', () => {
       it('can auth', () => {

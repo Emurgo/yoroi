@@ -14,7 +14,7 @@ export const useNavigateTo = () => {
         index: 0,
         routes: [
           {
-            name: 'app-root',
+            name: 'manage-wallets',
             state: {
               routes: [
                 {name: 'wallet-selection'},

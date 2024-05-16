@@ -2,8 +2,8 @@ import {useTheme} from '@yoroi/theme'
 import React, {useEffect} from 'react'
 import {ActivityIndicator, StyleSheet, Text, View} from 'react-native'
 
-import {useSelectedWallet} from '../../../../SelectedWallet'
 import {useAuthOsWithEasyConfirmation} from '../../../../yoroi-wallets/auth'
+import {useSelectedWallet} from '../../../WalletManager/Context/SelectedWalletContext'
 import {getErrorMessage} from '../errors'
 import {useStrings} from '../strings'
 

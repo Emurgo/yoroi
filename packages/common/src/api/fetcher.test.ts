@@ -1,9 +1,10 @@
 // fetcher.test.ts
 
 import {fetcher} from './fetcher' // adjust the import to your file structure
-import {ApiError, NetworkError} from '../errors/errors' // adjust the import to your file structure
+import {ApiError} from '../errors/errors' // adjust the import to your file structure
 import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
+import {Api} from '@yoroi/types'
 
 const mock = new MockAdapter(axios)
 
@@ -38,10 +39,7 @@ describe('fetcher', () => {
 
     await expect(
       fetcher({url: '/network-error', method: 'GET'}),
-    ).rejects.toThrow(NetworkError)
-    await expect(
-      fetcher({url: '/network-error', method: 'GET'}),
-    ).rejects.toHaveProperty('message', 'No response received')
+    ).rejects.toThrow(Api.Errors.Network)
   })
 
   it('throws generic Error for other cases', async () => {

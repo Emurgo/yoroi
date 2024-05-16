@@ -3,6 +3,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
+import {useQueryClient} from 'react-query'
 
 import {
   Button,
@@ -15,29 +16,44 @@ import {
   TextInputProps,
 } from '../../../components'
 import {useWalletNavigation} from '../../../navigation'
-import {useSelectedWallet} from '../../../SelectedWallet'
-import {useRemoveWallet, useWalletName} from '../../../yoroi-wallets/hooks'
+import {useWalletManager} from '../../../wallet-manager/WalletManagerContext'
+import {hasWalletsKey, useRemoveWallet, useWalletName} from '../../../yoroi-wallets/hooks'
+import {useSelectedWallet} from '../../WalletManager/Context/SelectedWalletContext'
 
 export const RemoveWalletScreen = () => {
   const strings = useStrings()
   const styles = useStyles()
   const wallet = useSelectedWallet()
   const walletName = useWalletName(wallet)
+  const {resetToWalletSetupInit, resetToWalletSelection} = useWalletNavigation()
+  const walletManager = useWalletManager()
+  const queryClient = useQueryClient()
 
-  const {resetToWalletSelection} = useWalletNavigation()
-  const {removeWallet, isLoading} = useRemoveWallet(wallet.id, {
-    onSuccess: () => resetToWalletSelection(),
+  const {removeWallet, isLoading: isRemoveWalletLoading} = useRemoveWallet(wallet.id, {
+    onSuccess: async () => {
+      queryClient.invalidateQueries({queryKey: [hasWalletsKey]})
+
+      const walletMetas = await walletManager.listWallets()
+      const hasWallets = walletMetas.length > 0
+
+      if (hasWallets) {
+        resetToWalletSelection()
+        return
+      }
+
+      resetToWalletSetupInit()
+    },
   })
 
   const [hasMnemonicWrittenDown, setHasMnemonicWrittenDown] = React.useState(false)
   const [typedWalletName, setTypedWalletName] = React.useState('')
 
-  const disabled = isLoading || (!wallet.isHW && !hasMnemonicWrittenDown) || walletName !== typedWalletName
+  const disabled = isRemoveWalletLoading || (!wallet.isHW && !hasMnemonicWrittenDown) || walletName !== typedWalletName
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
-      <KeyboardAvoidingView style={{flex: 1}}>
-        <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
+      <KeyboardAvoidingView style={styles.keyboardAvoider}>
+        <ScrollView contentContainerStyle={styles.contentContainer} bounces={false}>
           <Description>
             {!wallet.isHW && <Text style={styles.description}>{strings.descriptionParagraph1}</Text>}
 
@@ -66,6 +82,8 @@ export const RemoveWalletScreen = () => {
           </WalletInfo>
         </ScrollView>
 
+        <Spacer fill />
+
         <Actions>
           {!wallet.isHW && (
             <Checkbox
@@ -77,15 +95,12 @@ export const RemoveWalletScreen = () => {
 
           <Spacer height={30} />
 
-          <View style={styles.buttonContainer}>
-            <Button
-              onPress={() => removeWallet()}
-              title={strings.remove}
-              style={styles.removeButton}
-              disabled={disabled}
-              block
-            />
-          </View>
+          <Button
+            onPress={() => removeWallet()}
+            title={strings.remove}
+            style={styles.removeButton}
+            disabled={disabled}
+          />
         </Actions>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -155,13 +170,15 @@ const useStrings = () => {
 
 const useStyles = () => {
   const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, typography, padding} = theme
   const styles = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: color.gray.min,
     },
-
+    contentContainer: {
+      ...padding['x-l'],
+    },
     descriptionContainer: {
       backgroundColor: color.gray.min,
     },
@@ -175,20 +192,14 @@ const useStyles = () => {
     walletName: {
       ...typography['body-1-l-regular'],
     },
-
-    contentContainer: {
-      padding: 16,
-    },
-
     actions: {
-      padding: 16,
+      ...padding['l'],
+    },
+    keyboardAvoider: {
+      flex: 1,
     },
     removeButton: {
       backgroundColor: color.magenta[500],
-    },
-    buttonContainer: {
-      paddingHorizontal: 16,
-      paddingBottom: 36,
     },
   })
   return styles

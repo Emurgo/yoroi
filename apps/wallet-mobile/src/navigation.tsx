@@ -9,14 +9,12 @@ import {
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack'
 import {Theme, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {Dimensions, Platform, TouchableOpacity, TouchableOpacityProps, ViewStyle} from 'react-native'
+import {Dimensions, TouchableOpacity, TouchableOpacityProps, ViewStyle} from 'react-native'
 
 import {Icon} from './components'
 import {ScanFeature} from './features/Scan/common/types'
 import {Routes as StakingGovernanceRoutes} from './features/Staking/Governance/common/navigation'
-import {COLORS} from './theme'
-import {HWDeviceInfo} from './yoroi-wallets/hw'
-import {NetworkId, WalletImplementationId, YoroiUnsignedTx} from './yoroi-wallets/types'
+import {YoroiUnsignedTx} from './yoroi-wallets/types'
 
 // prettier-ignore
 export const useUnsafeParams = <Params, >() => {
@@ -80,21 +78,6 @@ export const defaultStackNavigationOptions = (theme: Theme): StackNavigationOpti
   }
 }
 
-export const DEPRECATED_defaultStackNavigationOptions: StackNavigationOptions = {
-  headerStyle: {
-    backgroundColor: COLORS.BACKGROUND_BLUE,
-    elevation: 0,
-    shadowOpacity: 0,
-  },
-  headerTintColor: '#fff',
-  headerBackTitleVisible: false,
-  headerTitleAlign: 'center',
-  headerLeftContainerStyle: {
-    paddingLeft: Platform.OS === 'ios' ? 8 : undefined,
-  },
-  headerLeft: (props) => <BackButton color="#fff" {...props} />,
-}
-
 // NAVIGATOR TOP TABS OPTIONS
 export const defaultMaterialTopTabNavigationOptions = (theme: Theme): MaterialTopTabNavigationOptions => {
   return {
@@ -118,6 +101,8 @@ export type WalletTabRoutes = {
 }
 
 export type WalletStackRoutes = {
+  'choose-biometric-login': undefined
+  'setup-wallet': undefined
   'wallet-selection': undefined
   'exchange-result': undefined
   'main-wallet-routes': NavigatorScreenParams<WalletTabRoutes>
@@ -130,68 +115,22 @@ export type WalletStackRoutes = {
 export type WalletStackRouteNavigation = StackNavigationProp<WalletStackRoutes>
 
 export type WalletInitRoutes = {
-  'choose-create-restore': {
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
-  }
-  'initial-choose-create-restore': undefined
-  'create-wallet-form': {
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
-  }
-  'restore-wallet-form': {
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
-  }
-  'import-read-only': {
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
-  }
-  'save-read-only': {
-    publicKeyHex: string
-    path: number[]
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
-  }
-  'check-nano-x': {
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
-    useUSB: boolean
-  }
-  'connect-nano-x': {
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
-    useUSB: boolean
-  }
-  'save-nano-x': {
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
-    hwDeviceInfo: HWDeviceInfo
-  }
-  'mnemonic-show': {
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
-    password: string
-    name: string
-    mnemonic: string
-  }
-  'mnemonic-check': {
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
-    password: string
-    name: string
-    mnemonic: string
-  }
-  'wallet-account-checksum': {
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
-    phrase: string
-  }
-  'wallet-credentials': {
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
-    phrase: string
-  }
+  'setup-wallet-choose-setup-type': undefined
+  'setup-wallet-choose-setup-type-init': undefined
+  'setup-wallet-create-choose-network': undefined
+  'setup-wallet-restore-choose-network': undefined
+  'setup-wallet-restore-choose-mnemonic-type': undefined
+  'setup-wallet-details-form': undefined
+  'setup-wallet-restore-form': undefined
+  'setup-wallet-restore-details': undefined
+  'setup-wallet-import-read-only': undefined
+  'setup-wallet-save-read-only': undefined
+  'setup-wallet-check-nano-x': undefined
+  'setup-wallet-connect-nano-x': undefined
+  'setup-wallet-save-nano-x': undefined
+  'setup-wallet-about-recovery-phase': undefined
+  'setup-wallet-recovery-phrase-mnemonic': undefined
+  'setup-wallet-verify-recovery-phrase-mnemonic': undefined
 }
 export type WalletInitRouteNavigation = StackNavigationProp<WalletInitRoutes>
 
@@ -241,7 +180,7 @@ export type SwapTokenRoutes = {
   'swap-select-pool': undefined
   'swap-submitted-tx': {txId: string}
   'swap-failed-tx': undefined
-  'app-root': undefined
+  'manage-wallets': undefined
 }
 export type SwapTokenRouteseNavigation = StackNavigationProp<SwapTokenRoutes>
 
@@ -263,7 +202,7 @@ export type ExchangeRoutes = {
   'exchange-result': undefined
   'exchange-select-buy-provider': undefined
   'exchange-select-sell-provider': undefined
-  'app-root': undefined
+  'manage-wallets': undefined
 }
 
 export type ExchangeRoutesNavigation = StackNavigationProp<ExchangeRoutes>
@@ -367,14 +306,15 @@ export type AppRoutes = {
   'first-run': NavigatorScreenParams<FirstRunRoutes>
   developer: undefined
   storybook: undefined
-  'new-wallet': NavigatorScreenParams<WalletInitRoutes>
-  'app-root': NavigatorScreenParams<WalletStackRoutes>
+  'manage-wallets': NavigatorScreenParams<WalletStackRoutes>
   'custom-pin-auth': undefined
   'exchange-result': undefined
   'bio-auth-initial': undefined
   'enable-login-with-pin': undefined
   'agreement-changed-notice': undefined
   modal: undefined
+  'choose-biometric-login': undefined
+  'setup-wallet': undefined
 }
 export type AppRouteNavigation = StackNavigationProp<AppRoutes>
 
@@ -410,7 +350,7 @@ export const useWalletNavigation = () => {
         index: 0,
         routes: [
           {
-            name: 'app-root',
+            name: 'manage-wallets',
             state: {
               routes: [
                 {name: 'wallet-selection'},
@@ -439,7 +379,7 @@ export const useWalletNavigation = () => {
         index: 0,
         routes: [
           {
-            name: 'app-root',
+            name: 'manage-wallets',
             state: {
               routes: [
                 {name: 'wallet-selection'},
@@ -464,7 +404,7 @@ export const useWalletNavigation = () => {
     },
 
     navigateToStartTransfer: () => {
-      navigation.navigate('app-root', {
+      navigation.navigate('manage-wallets', {
         screen: 'main-wallet-routes',
         params: {
           screen: 'history',
@@ -475,12 +415,55 @@ export const useWalletNavigation = () => {
       })
     },
 
+    resetToWalletSetupInit: () => {
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'manage-wallets',
+            state: {
+              routes: [
+                {
+                  name: 'setup-wallet',
+                  state: {
+                    routes: [{name: 'setup-wallet-choose-setup-type-init'}],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      })
+    },
+
+    resetToWalletSetup: () => {
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'manage-wallets',
+            state: {
+              routes: [
+                {name: 'wallet-selection'},
+                {
+                  name: 'setup-wallet',
+                  state: {
+                    routes: [{name: 'setup-wallet-choose-setup-type'}],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      })
+    },
+
     resetToWalletSelection: () => {
       navigation.reset({
         index: 0,
         routes: [
           {
-            name: 'app-root',
+            name: 'manage-wallets',
             state: {
               routes: [{name: 'wallet-selection'}],
             },
@@ -490,7 +473,7 @@ export const useWalletNavigation = () => {
     },
 
     navigateToStakingDashboard: () => {
-      navigation.navigate('app-root', {
+      navigation.navigate('manage-wallets', {
         screen: 'main-wallet-routes',
         params: {
           screen: 'staking-dashboard',
@@ -502,7 +485,7 @@ export const useWalletNavigation = () => {
     },
 
     navigateToSettings: () => {
-      navigation.navigate('app-root', {
+      navigation.navigate('manage-wallets', {
         screen: 'settings',
         params: {
           screen: 'main-settings',
@@ -511,7 +494,7 @@ export const useWalletNavigation = () => {
     },
 
     navigateToTxHistory: () => {
-      navigation.navigate('app-root', {
+      navigation.navigate('manage-wallets', {
         screen: 'main-wallet-routes',
         params: {
           screen: 'history',
@@ -523,7 +506,7 @@ export const useWalletNavigation = () => {
     },
 
     navigateToNftGallery: () => {
-      navigation.navigate('app-root', {
+      navigation.navigate('manage-wallets', {
         screen: 'main-wallet-routes',
         params: {
           screen: 'nfts',
@@ -535,7 +518,7 @@ export const useWalletNavigation = () => {
     },
 
     navigateToAppSettings: () => {
-      navigation.navigate('app-root', {
+      navigation.navigate('manage-wallets', {
         screen: 'settings',
         params: {
           screen: 'app-settings',
@@ -544,7 +527,7 @@ export const useWalletNavigation = () => {
     },
 
     navigateToCollateralSettings: (params?: SettingsStackRoutes['manage-collateral']) => {
-      navigation.navigate('app-root', {
+      navigation.navigate('manage-wallets', {
         screen: 'settings',
         params: {
           screen: 'manage-collateral',
@@ -554,7 +537,7 @@ export const useWalletNavigation = () => {
     },
 
     navigateToAnalyticsSettings: () => {
-      navigation.navigate('app-root', {
+      navigation.navigate('manage-wallets', {
         screen: 'toggle-analytics-settings',
         params: {
           screen: 'settings',
@@ -563,7 +546,7 @@ export const useWalletNavigation = () => {
     },
 
     navigateToGovernanceCentre: ({navigateToStakingOnSuccess = false} = {}) => {
-      navigation.navigate('app-root', {
+      navigation.navigate('manage-wallets', {
         screen: 'governance',
         params: {
           screen: 'staking-gov-home',

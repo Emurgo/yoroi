@@ -5,10 +5,10 @@ import {SwapApi} from '@yoroi/types/src/swap/api'
 import {useMutation, UseMutationOptions} from 'react-query'
 import {z} from 'zod'
 
-import {useSelectedWallet} from '../../../SelectedWallet'
 import {convertBech32ToHex} from '../../../yoroi-wallets/cardano/common/signatureUtils'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {generateCIP30UtxoCbor} from '../../../yoroi-wallets/cardano/utils'
+import {useSelectedWallet} from '../../WalletManager/Context/SelectedWalletContext'
 import {PRICE_IMPACT_HIGH_RISK, PRICE_IMPACT_MODERATE_RISK} from './constants'
 import {SwapPriceImpactRisk} from './types'
 

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -8,12 +9,11 @@ import {KeyboardSpacer, Text, ValidatedTextInput} from '../../components'
 import {ConfirmTx} from '../../components/ConfirmTx'
 import {useStakePoolInfoAndHistory} from '../../Dashboard/StakePoolInfo'
 import {debugWalletInfo, features} from '../../features'
+import {useSelectedWallet} from '../../features/WalletManager/Context/SelectedWalletContext'
 import {Instructions as HWInstructions} from '../../HW'
 import globalMessages, {txLabels} from '../../i18n/global-messages'
 import {formatTokenAmount, formatTokenWithText} from '../../legacy/format'
 import {StakingCenterRoutes, useParams, useWalletNavigation} from '../../navigation'
-import {useSelectedWallet} from '../../SelectedWallet'
-import {COLORS} from '../../theme'
 import {NETWORKS} from '../../yoroi-wallets/cardano/networks'
 import {NUMBERS} from '../../yoroi-wallets/cardano/numbers'
 import {Amounts, Entries, Quantities} from '../../yoroi-wallets/utils'
@@ -34,6 +34,7 @@ export const DelegationConfirmation = () => {
   const {resetToTxHistory} = useWalletNavigation()
   const wallet = useSelectedWallet()
   const strings = useStrings()
+  const styles = useStyles()
 
   const {poolId, yoroiUnsignedTx} = useParams<Params>(isParams)
 
@@ -177,36 +178,38 @@ const approximateReward = (stakedQuantity: Balance.Quantity): Balance.Quantity =
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.BACKGROUND,
-  },
-  scrollView: {
-    paddingHorizontal: 16,
-    paddingBottom: 24,
-    flex: 1,
-  },
-  itemBlock: {
-    marginTop: 24,
-  },
-  itemTitle: {
-    fontSize: 14,
-    lineHeight: 22,
-    color: '#353535',
-  },
-  input: {
-    marginTop: 16,
-  },
-  rewards: {
-    marginTop: 5,
-    fontSize: 16,
-    lineHeight: 19,
-    color: COLORS.SHELLEY_BLUE,
-    fontWeight: '500',
-  },
-  fees: {
-    textAlign: 'right',
-    color: '#353535',
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, padding, typography} = theme
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: color.gray.min,
+    },
+    scrollView: {
+      ...padding['x-l'],
+      ...padding['b-xl'],
+      flex: 1,
+    },
+    itemBlock: {
+      marginTop: 24,
+    },
+    itemTitle: {
+      color: color.gray[900],
+      ...typography['body-2-m-regular'],
+    },
+    input: {
+      marginTop: 16,
+    },
+    rewards: {
+      marginTop: 5,
+      ...typography['body-1-l-medium'],
+      color: color.primary[600],
+    },
+    fees: {
+      textAlign: 'right',
+      color: color.gray[900],
+    },
+  })
+  return styles
+}

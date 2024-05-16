@@ -6,10 +6,10 @@ import DeviceInfo from 'react-native-device-info'
 
 import {Text} from '../../../components'
 import {CONFIG} from '../../../legacy/config'
-import {useSelectedWallet} from '../../../SelectedWallet'
 import {lightPalette} from '../../../theme'
 import {getNetworkConfigById} from '../../../yoroi-wallets/cardano/networks'
 import {isHaskellShelley} from '../../../yoroi-wallets/cardano/utils'
+import {useSelectedWallet} from '../../WalletManager/Context/SelectedWalletContext'
 
 const version = DeviceInfo.getVersion()
 

@@ -4,8 +4,8 @@ import {produce} from 'immer'
 import React from 'react'
 
 import {SearchProvider} from '../../../../../../Search/SearchContext'
-import {SelectedWalletProvider} from '../../../../../../SelectedWallet'
 import {mocks} from '../../../../../../yoroi-wallets/mocks/wallet'
+import {SelectedWalletProvider} from '../../../../../WalletManager/Context/SelectedWalletContext'
 import {SwapFormProvider} from '../../../../common/SwapFormProvider'
 import {EditSlippage} from './EditSlippage'
 

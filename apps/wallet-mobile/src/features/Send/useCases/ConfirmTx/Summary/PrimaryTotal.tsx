@@ -6,9 +6,9 @@ import {StyleSheet} from 'react-native'
 import {Text} from '../../../../../components/Text'
 import globalMessages from '../../../../../i18n/global-messages'
 import {formatTokenWithSymbol} from '../../../../../legacy/format'
-import {useSelectedWallet} from '../../../../../SelectedWallet/Context/SelectedWalletContext'
 import {YoroiUnsignedTx} from '../../../../../yoroi-wallets/types/yoroi'
 import {Amounts} from '../../../../../yoroi-wallets/utils/utils'
+import {useSelectedWallet} from '../../../../WalletManager/Context/SelectedWalletContext'
 
 export const PrimaryTotal = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => {
   const strings = useStrings()

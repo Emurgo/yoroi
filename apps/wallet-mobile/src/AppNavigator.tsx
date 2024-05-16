@@ -19,13 +19,19 @@ import {ModalScreen} from './components/Modal/ModalScreen'
 import {AgreementChangedNavigator, InitializationNavigator} from './features/Initialization'
 import {LegalAgreement, useLegalAgreement} from './features/Initialization/common'
 import {useDeepLinkWatcher} from './features/Links/common/useDeepLinkWatcher'
+import {SetupWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
+import {
+  ChooseBiometricLoginScreen,
+  useShowBiometricsScreen,
+} from './features/SetupWallet/useCases/ChooseBiometricLogin/ChooseBiometricLoginScreen'
 import {CONFIG} from './legacy/config'
 import {DeveloperScreen} from './legacy/DeveloperScreen'
 import {AppRoutes} from './navigation'
 import {SearchProvider} from './Search/SearchContext'
-import {WalletInitNavigator} from './WalletInit/WalletInitNavigator'
+import {useWalletManager} from './wallet-manager/WalletManagerContext'
 import {WalletNavigator} from './WalletNavigator'
-import {AuthSetting, useAuthOsEnabled, useAuthSetting, useAuthWithOs} from './yoroi-wallets/auth'
+import {AuthSetting, useAuthSetting, useAuthWithOs, useIsAuthOsSupported} from './yoroi-wallets/auth'
+import {useHasWallets} from './yoroi-wallets/hooks'
 
 const Stack = createStackNavigator<AppRoutes>()
 const navRef = React.createRef<NavigationContainerRef<ReactNavigation.RootParamList>>()
@@ -36,9 +42,16 @@ export const AppNavigator = () => {
   const strings = useStrings()
   const [routeName, setRouteName] = React.useState<string>()
   useStatusBar(routeName)
-
+  const {showBiometricsScreen} = useShowBiometricsScreen()
+  const isAuthOsSupported = useIsAuthOsSupported()
+  const authSetting = useAuthSetting()
+  const walletManager = useWalletManager()
+  const {hasWallets} = useHasWallets(walletManager)
   useHideScreenInAppSwitcher()
+
   useAutoLogout()
+
+  const shouldAskToUseAuthWithOs = showBiometricsScreen && isAuthOsSupported && authSetting !== 'os'
 
   const {isLoggedIn, isLoggedOut, login} = useAuth()
   const {authWithOs} = useAuthWithOs({
@@ -134,7 +147,23 @@ export const AppNavigator = () => {
           {isLoggedIn && (
             <>
               <Stack.Group>
-                <Stack.Screen name="app-root">
+                {!hasWallets && shouldAskToUseAuthWithOs && (
+                  <Stack.Screen //
+                    name="choose-biometric-login"
+                    options={{headerShown: false}}
+                    component={ChooseBiometricLoginScreen}
+                  />
+                )}
+
+                {!hasWallets && !shouldAskToUseAuthWithOs && (
+                  <Stack.Screen //
+                    name="setup-wallet"
+                    options={{headerShown: false}}
+                    component={SetupWalletNavigator}
+                  />
+                )}
+
+                <Stack.Screen name="manage-wallets">
                   {() => (
                     <SearchProvider>
                       <TransferProvider>
@@ -143,8 +172,6 @@ export const AppNavigator = () => {
                     </SearchProvider>
                   )}
                 </Stack.Screen>
-
-                <Stack.Screen name="new-wallet" component={WalletInitNavigator} />
               </Stack.Group>
 
               <Stack.Group screenOptions={{presentation: 'transparentModal'}}>
@@ -208,8 +235,8 @@ const useAutoLogout = () => {
   const authSetting = useAuthSetting()
   const strings = useStrings()
   const {logout} = useAuth()
-  const authOsEnabled = useAuthOsEnabled()
-  const osAuthDisabled = !authOsEnabled && authSetting === 'os'
+  const isAuthOsSupported = useIsAuthOsSupported()
+  const osAuthDisabled = !isAuthOsSupported && authSetting === 'os'
 
   useBackgroundTimeout({
     onTimeout: logout,
@@ -246,7 +273,7 @@ const useHideScreenInAppSwitcher = () => {
 
 type FirstAction = 'auth-with-pin' | 'auth-with-os' | 'request-new-pin' | 'first-run' | 'show-agreement-changed-notice'
 const getFirstAction = (
-  authOsEnabled: boolean,
+  isAuthOsSupported: boolean,
   authSetting: AuthSetting,
   agreement: LegalAgreement | undefined,
 ): FirstAction => {
@@ -255,16 +282,16 @@ const getFirstAction = (
   if (isString(authSetting) && !hasAccepted) return 'show-agreement-changed-notice'
 
   if (authSetting === 'pin') return 'auth-with-pin'
-  if (authSetting === 'os' && authOsEnabled) return 'auth-with-os'
-  if (authSetting === 'os' && !authOsEnabled) return 'request-new-pin'
+  if (authSetting === 'os' && isAuthOsSupported) return 'auth-with-os'
+  if (authSetting === 'os' && !isAuthOsSupported) return 'request-new-pin'
 
   return 'first-run' // setup not completed
 }
 
 const useFirstAction = () => {
   const authSetting = useAuthSetting()
-  const authOsEnabled = useAuthOsEnabled()
+  const isAuthOsSupported = useIsAuthOsSupported()
   const terms = useLegalAgreement()
 
-  return getFirstAction(authOsEnabled, authSetting, terms)
+  return getFirstAction(isAuthOsSupported, authSetting, terms)
 }

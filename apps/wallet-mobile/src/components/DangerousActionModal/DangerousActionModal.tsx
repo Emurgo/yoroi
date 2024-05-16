@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View} from 'react-native'
@@ -5,7 +6,6 @@ import {ScrollView, StyleSheet, View} from 'react-native'
 import {Icon} from '../../components/Icon'
 import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
 import {Modal} from '../../legacy/Modal'
-import {COLORS} from '../../theme'
 import {Button, Checkbox, Spacer, Text} from '..'
 
 type DangerousActionProps = {
@@ -39,6 +39,7 @@ export const DangerousAction = ({
   secondaryButton,
   checkboxLabel,
 }: DangerousActionProps) => {
+  const styles = useStyles()
   const [isChecked, setIsChecked] = React.useState(false)
   const intl = useIntl()
 
@@ -147,11 +148,11 @@ export const DangerousActionModal = ({
 
 const AlertBox = ({title, content}: {title?: string; content: string[]}) => {
   const intl = useIntl()
-
+  const {alertStyles, colors} = useAlertStyles()
   return (
     <View style={alertStyles.container}>
       <View style={alertStyles.header}>
-        <Icon.Info size={26} color={COLORS.ALERT_TEXT_COLOR} />
+        <Icon.Info size={26} color={colors.iconColor} />
 
         <Spacer width={8} />
 
@@ -173,48 +174,56 @@ const AlertBox = ({title, content}: {title?: string; content: string[]}) => {
   )
 }
 
-const styles = StyleSheet.create({
-  header: {
-    alignItems: 'center',
-  },
-  heading: {
-    fontSize: 20,
-    lineHeight: 22,
-    fontWeight: 'bold',
-  },
-  checkbox: {
-    paddingLeft: 4,
-  },
-  actions: {},
-  primaryButton: {},
-  secondaryButton: {
-    backgroundColor: COLORS.BACKGROUND_RED,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, typography} = theme
+  const styles = StyleSheet.create({
+    header: {
+      alignItems: 'center',
+    },
+    heading: {
+      ...typography['body-3-s-medium'],
+    },
+    checkbox: {
+      paddingLeft: 4,
+    },
+    actions: {},
+    primaryButton: {},
+    secondaryButton: {
+      backgroundColor: color.magenta[500],
+    },
+  })
+  return styles
+}
 
-const alertStyles = StyleSheet.create({
-  container: {
-    backgroundColor: COLORS.BACKGROUND_LIGHT_RED,
-    borderRadius: 8,
-    padding: 16,
-  },
-  header: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-    paddingRight: 16,
-  },
-  title: {
-    color: COLORS.ALERT_TEXT_COLOR,
-    fontSize: 20,
-    lineHeight: 22,
-    fontWeight: 'bold',
-  },
-  paragraph: {
-    fontSize: 14,
-    lineHeight: 22,
-  },
-  text: {
-    color: COLORS.ERROR_TEXT_COLOR_DARK,
-  },
-})
+const useAlertStyles = () => {
+  const {theme} = useTheme()
+  const {color, typography} = theme
+  const alertStyles = StyleSheet.create({
+    container: {
+      backgroundColor: '#ff10510f', // not in theme. deprecated.
+      borderRadius: 8,
+      padding: 16,
+    },
+    header: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexDirection: 'row',
+      paddingRight: 16,
+    },
+    title: {
+      color: color.magenta[500],
+      ...typography['body-3-s-medium'],
+    },
+    paragraph: {
+      ...typography['body-2-m-regular'],
+    },
+    text: {
+      color: color.gray[900],
+    },
+  })
+  const colors = {
+    iconColor: color.magenta[500],
+  }
+  return {alertStyles, colors}
+}

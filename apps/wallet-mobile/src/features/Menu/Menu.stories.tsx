@@ -2,8 +2,8 @@ import {storiesOf} from '@storybook/react-native'
 import * as React from 'react'
 import {QueryClient, QueryClientProvider} from 'react-query'
 
-import {SelectedWalletProvider} from '../../SelectedWallet'
 import {mocks} from '../../yoroi-wallets/mocks'
+import {SelectedWalletProvider} from '../WalletManager/Context/SelectedWalletContext'
 import {Menu} from './Menu'
 
 storiesOf('Menu', module)

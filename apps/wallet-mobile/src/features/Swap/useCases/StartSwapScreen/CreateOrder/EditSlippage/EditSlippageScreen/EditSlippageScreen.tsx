@@ -9,7 +9,6 @@ import {Button, KeyboardAvoidingView} from '../../../../../../../components'
 import {useLanguage} from '../../../../../../../i18n'
 import {NumberLocale} from '../../../../../../../i18n/languages'
 import {useMetrics} from '../../../../../../../metrics/metricsManager'
-import {COLORS} from '../../../../../../../theme'
 import {Quantities} from '../../../../../../../yoroi-wallets/utils'
 import {useNavigateTo} from '../../../../../common/navigation'
 import {useStrings} from '../../../../../common/strings'
@@ -158,7 +157,7 @@ export const EditSlippageScreen = () => {
 
 const useStyles = () => {
   const {theme} = useTheme()
-  const {color} = theme
+  const {color, padding, typography} = theme
   const styles = StyleSheet.create({
     flex: {
       flex: 1,
@@ -166,95 +165,83 @@ const useStyles = () => {
     container: {
       flex: 1,
       backgroundColor: color.gray.min,
-      paddingHorizontal: 16,
-      paddingBottom: 16,
+      ...padding['l'],
     },
     textInfo: {
-      fontSize: 12,
+      ...typography['body-3-s-regular'],
       color: color.gray[600],
     },
     description: {
-      paddingVertical: 16,
-      fontSize: 16,
-      lineHeight: 24,
-      fontFamily: 'Rubik',
-      color: '#242838',
+      ...padding['y-l'],
+      ...typography['body-1-l-regular'],
+      color: color.gray[900],
     },
     bottomText: {
-      paddingTop: 16,
-      color: '#4A5065',
-      lineHeight: 16,
-      fontSize: 12,
-      fontFamily: 'Rubik-Regular',
+      color: color.gray[700],
+      ...typography['body-3-s-regular'],
+      ...padding['t-l'],
     },
     choicesContainer: {
       flexDirection: 'row',
-      paddingBottom: 24,
+      ...padding['b-xl'],
       flexWrap: 'wrap',
     },
     choiceButton: {
       padding: 8,
+      ...padding['s'],
     },
     selectedChoiceButton: {
-      backgroundColor: COLORS.BORDER_GRAY,
+      backgroundColor: color.gray[200],
       borderRadius: 8,
     },
     choiceLabel: {
-      fontSize: 15,
-      fontWeight: '500',
-      color: COLORS.BLACK,
-      fontFamily: 'Rubik-Medium',
+      ...typography['body-1-l-medium'],
+      color: color.gray.max,
     },
     selectedChoiceLabel: {
-      color: COLORS.BLACK,
+      color: color.gray.max,
     },
     inputContainer: {
       borderRadius: 6,
       borderWidth: 1,
-      borderColor: '#C4CAD7',
-      padding: 16,
+      borderColor: color.gray[300],
+      ...padding['l'],
       position: 'relative',
     },
     label: {
       position: 'absolute',
       top: -7,
       left: 10,
-      backgroundColor: COLORS.WHITE,
-      paddingHorizontal: 5,
-      fontSize: 12,
-      color: COLORS.ERROR_TEXT_COLOR_DARK,
-      fontFamily: 'Rubik-Regular',
+      backgroundColor: color.gray.min,
+      ...padding['x-xs'],
+      ...typography['body-3-s-regular'],
+      color: color.gray[900],
     },
 
     disabledInputContainer: {
-      backgroundColor: '#F0F3F5',
+      backgroundColor: color.gray[50],
     },
     errorText: {
-      color: COLORS.ALERT_TEXT_COLOR,
-      fontSize: 12,
+      color: color.magenta[500],
+      ...typography['body-3-s-regular'],
     },
     errorInput: {
-      borderColor: COLORS.ALERT_TEXT_COLOR,
+      borderColor: color.magenta[500],
     },
     input: {
-      height: 24,
-      padding: 0,
-      fontSize: 16,
-      fontFamily: 'Rubik',
-      color: '#242838',
+      ...padding['none'],
+      ...typography['body-1-l-regular'],
+      color: color.gray[900],
     },
     inputFocused: {
-      borderColor: '#242838',
+      borderColor: color.gray[900],
       borderWidth: 2,
     },
     percentLabel: {
-      lineHeight: 24,
-      fontFamily: 'Rubik',
-      fontWeight: '400',
-      color: '#242838',
+      ...typography['body-1-l-regular'],
+      color: color.gray[900],
+      ...padding['l'],
       position: 'absolute',
-      padding: 16,
-      fontSize: 16,
       right: 0,
       top: 0,
     },

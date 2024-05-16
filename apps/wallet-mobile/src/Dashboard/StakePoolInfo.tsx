@@ -1,17 +1,18 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, Linking, StyleSheet, View} from 'react-native'
 import {useQuery, UseQueryOptions} from 'react-query'
 
 import {Button, CopyButton, Text, TitledCard} from '../components'
-import {useSelectedWallet} from '../SelectedWallet'
-import {COLORS} from '../theme'
+import {useSelectedWallet} from '../features/WalletManager/Context/SelectedWalletContext'
 import {isEmptyString} from '../utils/utils'
 import {YoroiWallet} from '../yoroi-wallets/cardano/types'
 import {StakePoolInfoAndHistory} from '../yoroi-wallets/types'
 
 export const StakePoolInfo = ({stakePoolId}: {stakePoolId: string}) => {
   const strings = useStrings()
+  const styles = useStyles()
   const wallet = useSelectedWallet()
   const {stakePoolInfoAndHistory, isLoading} = useStakePoolInfoAndHistory({wallet, stakePoolId})
   const homepage = stakePoolInfoAndHistory?.info?.homepage
@@ -90,37 +91,39 @@ export const useStakePoolInfoAndHistory = (
   }
 }
 
-const styles = StyleSheet.create({
-  topBlock: {
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-  },
-  poolName: {
-    lineHeight: 24,
-    fontSize: 16,
-  },
-  poolIdBlock: {
-    flexDirection: 'row',
-  },
-  poolId: {
-    color: COLORS.LIGHT_GRAY_TEXT,
-    lineHeight: 22,
-    fontSize: 14,
-    flex: 1,
-  },
-  bottomBlock: {
-    paddingHorizontal: 16,
-    paddingVertical: 20,
-  },
-  warning: {
-    padding: 8,
-  },
-  warningText: {
-    fontStyle: 'italic',
-    fontSize: 12,
-    lineHeight: 14,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, padding, typography} = theme
+  const styles = StyleSheet.create({
+    topBlock: {
+      ...padding['y-s'],
+      ...padding['y-l'],
+    },
+    poolName: {
+      ...typography['body-1-l-regular'],
+    },
+    poolIdBlock: {
+      flexDirection: 'row',
+    },
+    poolId: {
+      color: color.gray[700],
+      ...typography['body-2-m-regular'],
+      flex: 1,
+    },
+    bottomBlock: {
+      ...padding['x-l'],
+      ...padding['y-xl'],
+    },
+    warning: {
+      ...padding['s'],
+    },
+    warningText: {
+      fontStyle: 'italic',
+      ...typography['body-3-s-regular'],
+    },
+  })
+  return styles
+}
 
 const messages = defineMessages({
   title: {
