@@ -1,4 +1,5 @@
 import {BigNum} from '@emurgo/cross-csl-core'
+import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
 import {Balance} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 
@@ -7,7 +8,7 @@ import {Amounts, asQuantity, Quantities} from '../utils'
 import {CardanoMobile} from '../wallets'
 import {COINS_PER_UTXO_BYTE} from './constants/common'
 import {MultiToken} from './MultiToken'
-import {cardanoValueFromMultiToken, normalizeToAddress} from './utils'
+import {cardanoValueFromMultiToken} from './utils'
 
 export const withMinAmounts = async (
   address: Address,
@@ -39,7 +40,7 @@ export const getMinAmounts = async (address: Address, amounts: Balance.Amounts, 
   const [value, coinsPerUtxoByte, normalizedAddress] = await Promise.all([
     cardanoValueFromMultiToken(multiToken),
     CardanoMobile.BigNum.fromStr(COINS_PER_UTXO_BYTE),
-    normalizeToAddress(address),
+    normalizeToAddress(CardanoMobile, address),
   ])
 
   if (normalizedAddress === undefined) throw new Error('getMinAmounts::Error not a valid address')
