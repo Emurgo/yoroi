@@ -138,7 +138,7 @@ export const TransactionSummary = () => {
       <View style={styles.card}>
         <Text style={styles.cardText}>{strings.total}</Text>
 
-        <View>
+        <View style={styles.total}>
           <Text style={[styles.cardText, styles.cardTextValue]}>{formattedSellText}</Text>
 
           {!isSellPrimary && (
@@ -335,6 +335,10 @@ const useStyles = () => {
     },
     bold: {
       ...typography['body-2-m-medium'],
+    },
+    total: {
+      flexDirection: 'column',
+      alignItems: 'flex-end',
     },
   })
 
