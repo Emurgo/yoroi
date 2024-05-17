@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/require-await */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {TransactionUnspentOutput, TransactionWitnessSet} from '@emurgo/cross-csl-core'
+
 import {action} from '@storybook/addon-actions'
 import {AppApi, CardanoApi} from '@yoroi/api'
 import {createPrimaryTokenInfo} from '@yoroi/portfolio'
@@ -125,9 +125,7 @@ const wallet: YoroiWallet = {
   ledgerSupportsCIP36: async () => {
     return true
   },
-  getBalance: (): Promise<string> => {
-    return Promise.resolve('1a062ea8a0')
-  },
+
   getCollateralInfo: () => {
     return {
       utxo: {
@@ -304,38 +302,41 @@ const wallet: YoroiWallet = {
   createUnsignedGovernanceTx: () => {
     throw new Error('not implemented: createUnsignedGovernanceTx')
   },
-  CIP30getCollateral(_value?: string): Promise<TransactionUnspentOutput[] | null> {
+  CIP30getCollateral: (_value?: string) => {
     throw new Error('not implemented: CIP30getCollateral')
   },
-  CIP30getRewardAddresses(): Promise<string[]> {
+  CIP30getRewardAddresses: () => {
     throw new Error('not implemented: CIP30getRewardAddresses')
   },
-  CIP30getChangeAddress(): Promise<string> {
+  CIP30getChangeAddress: () => {
     throw new Error('not implemented: CIP30getChangeAddress')
   },
-  CIP30getUtxos(
+  CIP30getUtxos: (
     _value?: string,
     _paginate?: {
       page: number
       limit: number
     },
-  ): Promise<TransactionUnspentOutput[] | null> {
+  ) => {
     throw new Error('not implemented: CIP30getUtxos')
   },
-  CIP30signData(_rootKey: string, _address: string, _payload: string): Promise<{signature: string; key: string}> {
+  CIP30signData(_rootKey: string, _address: string, _payload: string) {
     throw new Error('not implemented: CIP30signData')
   },
   CIP30submitTx(_cbor: string) {
     throw new Error('not implemented: CIP30submitTx')
   },
-  CIP30signTx(_rootKey: string, _txHex: string, _partialSign?: boolean): Promise<TransactionWitnessSet> {
+  CIP30signTx(_rootKey: string, _txHex: string, _partialSign?: boolean) {
     throw new Error('not implemented: CIP30signTx')
   },
-  getUnusedAddresses(): Promise<string[]> {
+  CIP30getUnusedAddresses() {
     throw new Error('not implemented: getUnusedAddresses')
   },
-  getUsedAddresses(_params?: {page: number; limit: number}): Promise<string[]> {
+  CIP30getUsedAddresses(_params?: {page: number; limit: number}) {
     throw new Error('not implemented: getUsedAddresses')
+  },
+  CIP30getBalance(_tokenId?: string) {
+    throw new Error('not implemented: getBalance')
   },
 }
 

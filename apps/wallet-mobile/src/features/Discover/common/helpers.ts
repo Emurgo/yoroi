@@ -70,24 +70,14 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
   const handlerWallet: ResolverWallet = {
     id: wallet.id,
     networkId: wallet.networkId,
-    getUsedAddresses: (params) => wallet.getUsedAddresses(params),
-    getUnusedAddresses: () => wallet.getUnusedAddresses(),
-    getBalance: (tokenId) => wallet.getBalance(tokenId),
+    getUsedAddresses: (params) => wallet.CIP30getUsedAddresses(params),
+    getUnusedAddresses: () => wallet.CIP30getUnusedAddresses(),
+    getBalance: (tokenId) => wallet.CIP30getBalance(tokenId),
     getChangeAddress: () => wallet.CIP30getChangeAddress(),
     getRewardAddresses: () => wallet.CIP30getRewardAddresses(),
-    submitTx: async (cbor) => wallet.CIP30submitTx(cbor),
-    getCollateral: async (value) => {
-      // TODO: Move serialisation out of here
-      const result = await wallet.CIP30getCollateral(value)
-      if (!result) return null
-      if (result.length === 0) return []
-      return Promise.all(result.map((v) => v.toHex()))
-    },
-    getUtxos: async (value, pagination) => {
-      const result = await wallet.CIP30getUtxos(value, pagination)
-      if (!result) return [] // TODO: return null if value was given
-      return Promise.all(result.map((v) => v.toHex()))
-    },
+    submitTx: (cbor) => wallet.CIP30submitTx(cbor),
+    getCollateral: (value) => wallet.CIP30getCollateral(value),
+    getUtxos: (value, pagination) => wallet.CIP30getUtxos(value, pagination),
     confirmConnection: (origin: string) => confirmConnection(origin, manager),
     signData: async (address, payload) => {
       const rootKey = await signData(address, payload)
@@ -95,8 +85,7 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
     },
     signTx: async (cbor: string, partial?: boolean) => {
       const rootKey = await signTx(cbor)
-      const result = await wallet.CIP30signTx(rootKey, cbor, partial)
-      return result.toHex()
+      return wallet.CIP30signTx(rootKey, cbor, partial)
     },
   }
   const storage = connectionStorageMaker({storage: appStorage.join('dapp-connections/')})

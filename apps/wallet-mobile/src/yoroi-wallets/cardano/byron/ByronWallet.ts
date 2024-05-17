@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {PrivateKey, TransactionUnspentOutput, TransactionWitnessSet} from '@emurgo/cross-csl-core'
+import * as CSL from '@emurgo/cross-csl-core'
 import {Datum, signRawTransaction} from '@emurgo/yoroi-lib'
 import {AppApi, CardanoApi} from '@yoroi/api'
 import {isNonNullable, parseSafe} from '@yoroi/common'
@@ -69,6 +69,7 @@ import {
   legacyWalletChecksum,
   NoOutputsError,
   NotEnoughMoneyToSendError,
+  Pagination,
   RegistrationStatus,
   walletChecksum,
   WalletEvent,
@@ -471,10 +472,6 @@ export class ByronWallet implements YoroiWallet {
     } catch (e) {
       throw new InvalidState((e as Error).message)
     }
-  }
-
-  getBalance(tokenId = '*') {
-    return cip30.getBalance(tokenId, this.utxos, this.primaryTokenInfo.id)
   }
 
   async sync({isForced = false}: {isForced?: boolean} = {}) {
@@ -1233,7 +1230,7 @@ export class ByronWallet implements YoroiWallet {
     return legacyApi.getPoolInfo(request, this.getBackendConfig())
   }
 
-  public async signRawTx(txHex: string, pKeys: PrivateKey[]) {
+  public async signRawTx(txHex: string, pKeys: CSL.PrivateKey[]) {
     return signRawTransaction(CardanoMobile, txHex, pKeys)
   }
 
@@ -1467,46 +1464,45 @@ export class ByronWallet implements YoroiWallet {
     }
   }
 
-  CIP30getChangeAddress(): Promise<string> {
-    throw new Error('Method not implemented.')
+  CIP30getBalance(tokenId = '*'): Promise<CSL.Value> {
+    return cip30.getBalance(this, tokenId)
   }
 
-  CIP30getCollateral(_value?: string): Promise<TransactionUnspentOutput[] | null> {
-    throw new Error('Method not implemented.')
+  CIP30getUnusedAddresses(): Promise<CSL.Address[]> {
+    return cip30.getUnusedAddresses(this)
   }
 
-  CIP30getRewardAddresses(): Promise<string[]> {
-    throw new Error('Method not implemented.')
+  CIP30getUsedAddresses(pagination?: Pagination): Promise<CSL.Address[]> {
+    return cip30.getUsedAddresses(this, pagination)
   }
 
-  CIP30getUtxos(
-    _value?: string,
-    _paginate?: {
-      page: number
-      limit: number
-    },
-  ): Promise<TransactionUnspentOutput[] | null> {
-    throw new Error('Method not implemented.')
+  CIP30getChangeAddress() {
+    const changeAddr = this.getChangeAddress()
+    return Cardano.Wasm.Address.fromBech32(changeAddr)
   }
 
-  CIP30signData(_rootKey: string, _address: string, _payload: string): Promise<{signature: string; key: string}> {
-    throw new Error('Method not implemented.')
+  CIP30getRewardAddresses(): Promise<CSL.Address[]> {
+    return cip30.getRewardAddress(this)
   }
 
-  CIP30signTx(_rootKey: string, _txHex: string, _partialSign?: boolean): Promise<TransactionWitnessSet> {
-    throw new Error('Method not implemented.')
+  CIP30getUtxos(value?: string, pagination?: Pagination): Promise<CSL.TransactionUnspentOutput[] | null> {
+    return cip30.getUtxos(this, value, pagination)
   }
 
-  CIP30submitTx(_cbor: string): Promise<string> {
-    throw new Error('Method not implemented.')
+  CIP30getCollateral(value?: string): Promise<CSL.TransactionUnspentOutput[] | null> {
+    return cip30.getCollateral(this, value)
   }
 
-  getUnusedAddresses(): Promise<string[]> {
-    throw new Error('Method not implemented.')
+  CIP30submitTx(cbor: string): Promise<string> {
+    return cip30.submitTx(this, cbor)
   }
 
-  getUsedAddresses(_params?: {page: number; limit: number}): Promise<string[]> {
-    throw new Error('Method not implemented.')
+  CIP30signData(rootKey: string, address: string, payload: string): Promise<{signature: string; key: string}> {
+    return cip30.signData(this, rootKey, address, payload)
+  }
+
+  CIP30signTx(rootKey: string, cbor: string, partial = false): Promise<CSL.TransactionWitnessSet> {
+    return cip30.signTx(this, rootKey, cbor, partial)
   }
 }
 

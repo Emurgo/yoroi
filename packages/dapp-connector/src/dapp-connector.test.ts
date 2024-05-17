@@ -5,6 +5,7 @@ import {dappConnectorMaker} from './dapp-connector'
 import {Api, dappConnectorApiMaker} from './adapters/api'
 import {mockedDAppList} from './manager.mocks'
 import {ResolverWallet} from './resolver'
+import {init} from '@emurgo/cross-csl-nodejs'
 
 const getDappConnector = (wallet = mockWallet) => {
   const storage = connectionStorageMaker({storage: storageMock})
@@ -275,20 +276,23 @@ const createEvent = (method: string, params?: object) => {
 }
 
 const walletId = 'b5d94758-26c5-48b0-af2b-6e68c3ef2dbf'
+
+const CSL = init('test')
 const mockWallet: ResolverWallet = {
-  signTx: () => Promise.resolve(''),
+  signTx: () => Promise.resolve(CSL.TransactionWitnessSet.new()),
   signData: () => Promise.resolve({key: '', signature: ''}),
   id: walletId,
   networkId: 1,
   confirmConnection: async () => true,
-  getBalance: () => Promise.resolve('1a062ea8a0'),
+  getBalance: () => CSL.Value.fromHex('1a062ea8a0'),
   getUnusedAddresses: () => Promise.resolve([]),
   getUsedAddresses: () => Promise.resolve([]),
   getChangeAddress: () =>
-    Promise.resolve(
+    CSL.Address.fromHex(
       '017ef00ee3672330155382a2857573868af466b88aa8c4081f45583e1784d958399bcce03402fd853d43a4e7366f2018932e5aff4eea904693',
     ),
-  getRewardAddresses: () => Promise.resolve(['e184d958399bcce03402fd853d43a4e7366f2018932e5aff4eea904693']),
+  getRewardAddresses: () =>
+    Promise.all([CSL.Address.fromHex('e184d958399bcce03402fd853d43a4e7366f2018932e5aff4eea904693')]),
   getUtxos: () => Promise.resolve([]),
   getCollateral: () => Promise.resolve([]),
   submitTx: () => Promise.resolve(''),

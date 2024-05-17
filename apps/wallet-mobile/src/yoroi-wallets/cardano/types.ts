@@ -1,6 +1,5 @@
 import {WalletChecksum as WalletChecksumType} from '@emurgo/cip4-js'
 import * as CoreTypes from '@emurgo/cross-csl-core'
-import {BaseAddress, PrivateKey, TransactionUnspentOutput, TransactionWitnessSet} from '@emurgo/cross-csl-core'
 import {
   Addressing as AddressingType,
   CardanoAddressedUtxo as CardanoAddressedUtxoType,
@@ -83,6 +82,11 @@ export type SignedTxLegacy = {
   base64: string
 }
 
+export type Pagination = {
+  page: number
+  limit: number
+}
+
 export type YoroiWallet = {
   id: string
 
@@ -121,7 +125,7 @@ export type YoroiWallet = {
   // API
   api: App.Api
 
-  signRawTx(txHex: string, pKeys: PrivateKey[]): Promise<Uint8Array | undefined>
+  signRawTx(txHex: string, pKeys: CoreTypes.PrivateKey[]): Promise<Uint8Array | undefined>
 
   // Sending
   createUnsignedTx(entries: YoroiEntry[], metadata?: Array<CardanoTypes.TxMetadata>): Promise<YoroiUnsignedTx>
@@ -206,20 +210,23 @@ export type YoroiWallet = {
   checkServerStatus(): Promise<ServerStatus>
 
   // CIP36 Payment Address
-  getFirstPaymentAddress(): Promise<BaseAddress>
+  getFirstPaymentAddress(): Promise<CoreTypes.BaseAddress>
 
   getProtocolParams(): Promise<Api.Cardano.ProtocolParamsResult>
 
   // CIP-30
-  getBalance(tokenId?: string): Promise<string>
-  getUnusedAddresses(): Promise<string[]>
-  getUsedAddresses(params?: {page: number; limit: number}): Promise<string[]>
-  CIP30getChangeAddress(): Promise<string>
-  CIP30getRewardAddresses(): Promise<string[]>
-  CIP30getUtxos(value?: string, paginate?: {page: number; limit: number}): Promise<TransactionUnspentOutput[] | null>
-  CIP30getCollateral(value?: string): Promise<TransactionUnspentOutput[] | null>
+  CIP30getBalance(tokenId?: string): Promise<CoreTypes.Value>
+  CIP30getUnusedAddresses(): Promise<CoreTypes.Address[]>
+  CIP30getUsedAddresses(params?: {page: number; limit: number}): Promise<CoreTypes.Address[]>
+  CIP30getChangeAddress(): Promise<CoreTypes.Address>
+  CIP30getRewardAddresses(): Promise<CoreTypes.Address[]>
+  CIP30getUtxos(
+    value?: string,
+    paginate?: {page: number; limit: number},
+  ): Promise<CoreTypes.TransactionUnspentOutput[] | null>
+  CIP30getCollateral(value?: string): Promise<CoreTypes.TransactionUnspentOutput[] | null>
   CIP30submitTx(cbor: string): Promise<string>
-  CIP30signTx(rootKey: string, txHex: string, partialSign?: boolean): Promise<TransactionWitnessSet>
+  CIP30signTx(rootKey: string, txHex: string, partialSign?: boolean): Promise<CoreTypes.TransactionWitnessSet>
   CIP30signData(rootKey: string, address: string, payload: string): Promise<{signature: string; key: string}>
 }
 

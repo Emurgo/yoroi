@@ -1,7 +1,7 @@
-import {isKeyOf, isRecord} from '@yoroi/common'
+import {isKeyOf, isRecord, createTypeGuardFromSchema} from '@yoroi/common'
 import {Storage} from './adapters/async-storage'
 import {z} from 'zod'
-import {createTypeGuardFromSchema} from '@yoroi/common/src'
+import {Address, TransactionUnspentOutput, TransactionWitnessSet, Value} from '@emurgo/cross-csl-core'
 
 type Context = {
   browserOrigin: string
@@ -25,10 +25,10 @@ type Resolver = {
     getUsedAddresses: ResolvableMethod<string[]>
     getExtensions: ResolvableMethod<Array<{cip: number}>>
     getUnusedAddresses: ResolvableMethod<string[]>
-    getUtxos: ResolvableMethod<string[]>
+    getUtxos: ResolvableMethod<string[] | null>
     getCollateral: ResolvableMethod<string[] | null>
     submitTx: ResolvableMethod<string>
-    signTx: ResolvableMethod<string>
+    signTx: ResolvableMethod<TransactionWitnessSet>
     signData: ResolvableMethod<{signature: string; key: string}>
   }
 }
@@ -94,8 +94,6 @@ export const resolver: Resolver = {
       return context.wallet.submitTx(params.args[0])
     },
     getCollateral: async (params: unknown, context: Context) => {
-      // offer to reorganise transactions if possible
-      // check if collateral is less than or equal to 5 ADA
       assertOriginsMatch(context)
       await assertWalletAcceptedConnection(context)
       const value =
@@ -104,18 +102,16 @@ export const resolver: Resolver = {
           : undefined
       const result = await context.wallet.getCollateral(value)
 
-      if (value !== undefined && (result === null || result.length === 0)) {
-        // TODO: Offer to reorganise transactions if possible
-        return null
-      }
+      if (result === null || result.length === 0) return null
 
-      return result
+      return Promise.all(result.map((u) => u.toHex()))
     },
 
     getUnusedAddresses: async (_params: unknown, context: Context) => {
       assertOriginsMatch(context)
       await assertWalletAcceptedConnection(context)
-      return context.wallet.getUnusedAddresses()
+      const addresses = await context.wallet.getUnusedAddresses()
+      return Promise.all(addresses.map((a) => a.toHex()))
     },
     getExtensions: async (_params: unknown, context: Context) => {
       assertOriginsMatch(context)
@@ -127,12 +123,14 @@ export const resolver: Resolver = {
       await assertWalletAcceptedConnection(context)
       if (!isGetBalanceParams(params)) throw new Error('Invalid params')
       const [tokenId = '*'] = params.args || []
-      return context.wallet.getBalance(tokenId)
+      const balance = await context.wallet.getBalance(tokenId)
+      return balance.toHex()
     },
     getChangeAddress: async (_params: unknown, context: Context) => {
       assertOriginsMatch(context)
       await assertWalletAcceptedConnection(context)
-      return context.wallet.getChangeAddress()
+      const address = await context.wallet.getChangeAddress()
+      return address.toHex()
     },
     getNetworkId: async (_params: unknown, context: Context) => {
       assertOriginsMatch(context)
@@ -142,7 +140,8 @@ export const resolver: Resolver = {
     getRewardAddresses: async (_params: unknown, context: Context) => {
       assertOriginsMatch(context)
       await assertWalletAcceptedConnection(context)
-      return context.wallet.getRewardAddresses()
+      const addresses = await context.wallet.getRewardAddresses()
+      return Promise.all(addresses.map((a) => a.toHex()))
     },
     getUtxos: async (params: unknown, context: Context) => {
       assertOriginsMatch(context)
@@ -155,7 +154,9 @@ export const resolver: Resolver = {
         isRecord(params) && Array.isArray(params.args) && isPaginationParams(params.args[1])
           ? params.args[1]
           : undefined
-      return context.wallet.getUtxos(value, pagination)
+      const utxos = await context.wallet.getUtxos(value, pagination)
+      if (utxos === null || utxos.length === 0) return null
+      return Promise.all(utxos.map((u) => u.toHex()))
     },
     getUsedAddresses: async (params: unknown, context: Context) => {
       assertOriginsMatch(context)
@@ -164,7 +165,8 @@ export const resolver: Resolver = {
         isRecord(params) && Array.isArray(params.args) && isPaginationParams(params.args[0])
           ? params.args[0]
           : undefined
-      return context.wallet.getUsedAddresses(pagination)
+      const addresses = await context.wallet.getUsedAddresses(pagination)
+      return Promise.all(addresses.map((a) => a.toHex()))
     },
   },
 } as const
@@ -254,15 +256,15 @@ export type ResolverWallet = {
   id: string
   networkId: number
   confirmConnection: (dappOrigin: string) => Promise<boolean>
-  getBalance: (tokenId?: string) => Promise<string>
-  getUnusedAddresses: () => Promise<string[]>
-  getUsedAddresses: (pagination?: Pagination) => Promise<string[]>
-  getChangeAddress: () => Promise<string>
-  getRewardAddresses: () => Promise<string[]>
-  getUtxos: (value?: string, pagination?: Pagination) => Promise<string[]>
-  getCollateral: (value?: string) => Promise<string[] | null>
+  getBalance: (tokenId?: string) => Promise<Value>
+  getUnusedAddresses: () => Promise<Address[]>
+  getUsedAddresses: (pagination?: Pagination) => Promise<Address[]>
+  getChangeAddress: () => Promise<Address>
+  getRewardAddresses: () => Promise<Address[]>
+  getUtxos: (value?: string, pagination?: Pagination) => Promise<TransactionUnspentOutput[] | null>
+  getCollateral: (value?: string) => Promise<TransactionUnspentOutput[] | null>
   submitTx: (cbor: string) => Promise<string>
-  signTx: (txHex: string, partialSign?: boolean) => Promise<string>
+  signTx: (txHex: string, partialSign?: boolean) => Promise<TransactionWitnessSet>
   signData: (address: string, payload: string) => Promise<{signature: string; key: string}>
 }
 
