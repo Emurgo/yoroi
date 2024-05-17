@@ -1,0 +1,17 @@
+[
+  {
+    "id": "nft.detail.title",
+    "defaultMessage": "!!!NFT Details",
+    "file": "src/Nfts/NftsNavigator.tsx",
+    "start": {
+      "line": 47,
+      "column": 9,
+      "index": 1376
+    },
+    "end": {
+      "line": 50,
+      "column": 3,
+      "index": 1447
+    }
+  }
+]

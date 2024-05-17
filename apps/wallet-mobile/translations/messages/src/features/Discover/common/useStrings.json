@@ -1,0 +1,182 @@
+[
+  {
+    "id": "discover.discoverList.discoverTitle",
+    "defaultMessage": "!!!Discover Cardano",
+    "file": "src/features/Discover/common/useStrings.tsx",
+    "start": {
+      "line": 25,
+      "column": 19,
+      "index": 1056
+    },
+    "end": {
+      "line": 28,
+      "column": 5,
+      "index": 1157
+    }
+  },
+  {
+    "id": "discover.discoverList.searchDApps",
+    "defaultMessage": "!!!Search DApps",
+    "file": "src/features/Discover/common/useStrings.tsx",
+    "start": {
+      "line": 29,
+      "column": 17,
+      "index": 1176
+    },
+    "end": {
+      "line": 32,
+      "column": 5,
+      "index": 1271
+    }
+  },
+  {
+    "id": "discover.discoverList.welcomeToYoroiDAppExplorer",
+    "defaultMessage": "!!!Welcome to Yoroi DApp Explorer",
+    "file": "src/features/Discover/common/useStrings.tsx",
+    "start": {
+      "line": 33,
+      "column": 32,
+      "index": 1305
+    },
+    "end": {
+      "line": 36,
+      "column": 5,
+      "index": 1433
+    }
+  },
+  {
+    "id": "discover.discoverList.welcomeToYoroiDAppExplorerDescription",
+    "defaultMessage": "!!!Discover, inspect, and connect to Cardano decentralized applications (DApps) with ease. Our solution helps to interact with DApps and their smart contracts, seamlessly enhancing your Cardano experience",
+    "file": "src/features/Discover/common/useStrings.tsx",
+    "start": {
+      "line": 37,
+      "column": 43,
+      "index": 1478
+    },
+    "end": {
+      "line": 41,
+      "column": 5,
+      "index": 1796
+    }
+  },
+  {
+    "id": "global.next",
+    "defaultMessage": "!!!Next",
+    "file": "src/features/Discover/common/useStrings.tsx",
+    "start": {
+      "line": 42,
+      "column": 10,
+      "index": 1808
+    },
+    "end": {
+      "line": 45,
+      "column": 5,
+      "index": 1873
+    }
+  },
+  {
+    "id": "discover.discoverList.dAppAvailable",
+    "defaultMessage": "!!!DApp(s) available",
+    "file": "src/features/Discover/common/useStrings.tsx",
+    "start": {
+      "line": 46,
+      "column": 24,
+      "index": 1899
+    },
+    "end": {
+      "line": 49,
+      "column": 5,
+      "index": 2001
+    }
+  },
+  {
+    "id": "discover.discoverList.connected",
+    "defaultMessage": "!!!Connected",
+    "file": "src/features/Discover/common/useStrings.tsx",
+    "start": {
+      "line": 50,
+      "column": 15,
+      "index": 2018
+    },
+    "end": {
+      "line": 53,
+      "column": 5,
+      "index": 2108
+    }
+  },
+  {
+    "id": "discover.discoverList.recommended",
+    "defaultMessage": "!!!Recommended",
+    "file": "src/features/Discover/common/useStrings.tsx",
+    "start": {
+      "line": 54,
+      "column": 17,
+      "index": 2127
+    },
+    "end": {
+      "line": 57,
+      "column": 5,
+      "index": 2221
+    }
+  },
+  {
+    "id": "discover.discoverList.done",
+    "defaultMessage": "!!!DONE",
+    "file": "src/features/Discover/common/useStrings.tsx",
+    "start": {
+      "line": 58,
+      "column": 10,
+      "index": 2233
+    },
+    "end": {
+      "line": 61,
+      "column": 5,
+      "index": 2313
+    }
+  },
+  {
+    "id": "discover.discoverList.openDApp",
+    "defaultMessage": "!!!Open DApp",
+    "file": "src/features/Discover/common/useStrings.tsx",
+    "start": {
+      "line": 62,
+      "column": 14,
+      "index": 2329
+    },
+    "end": {
+      "line": 65,
+      "column": 5,
+      "index": 2418
+    }
+  },
+  {
+    "id": "discover.discoverList.disconnectWalletFromDApp",
+    "defaultMessage": "!!!Disconnect wallet from DApp",
+    "file": "src/features/Discover/common/useStrings.tsx",
+    "start": {
+      "line": 66,
+      "column": 30,
+      "index": 2450
+    },
+    "end": {
+      "line": 69,
+      "column": 5,
+      "index": 2573
+    }
+  },
+  {
+    "id": "discover.discoverList.dAppActions",
+    "defaultMessage": "!!!DApp actions",
+    "file": "src/features/Discover/common/useStrings.tsx",
+    "start": {
+      "line": 70,
+      "column": 17,
+      "index": 2592
+    },
+    "end": {
+      "line": 73,
+      "column": 5,
+      "index": 2687
+    }
+  }
+]

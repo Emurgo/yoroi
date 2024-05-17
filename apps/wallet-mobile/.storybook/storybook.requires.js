@@ -260,7 +260,7 @@ const getStories = () => {
     "./src/features/Swap/useCases/StartSwapScreen/ListOrders/ListOrders.stories.tsx": require("../src/features/Swap/useCases/StartSwapScreen/ListOrders/ListOrders.stories.tsx"),
     "./src/features/Swap/useCases/StartSwapScreen/ListOrders/OpenOrders.stories.tsx": require("../src/features/Swap/useCases/StartSwapScreen/ListOrders/OpenOrders.stories.tsx"),
     "./src/features/ToggleAnalyticsSettings/ToggleAnalyticsSettings.stories.tsx": require("../src/features/ToggleAnalyticsSettings/ToggleAnalyticsSettings.stories.tsx"),
-    "./src/features/WalletManager/SelectWalletFromList/SelectWalletFromListScreen.stories.tsx": require("../src/features/WalletManager/SelectWalletFromList/SelectWalletFromListScreen.stories.tsx"),
+    "./src/features/WalletManager/useCases/SelectWalletFromListScreen/SelectWalletFromListScreen.stories.tsx": require("../src/features/WalletManager/useCases/SelectWalletFromListScreen/SelectWalletFromListScreen.stories.tsx"),
     "./src/HW/Instructions/Instructions.stories.tsx": require("../src/HW/Instructions/Instructions.stories.tsx"),
     "./src/HW/LedgerConnect/DeviceItem/DeviceItem.stories.tsx": require("../src/HW/LedgerConnect/DeviceItem/DeviceItem.stories.tsx"),
     "./src/HW/LedgerConnect/LedgerConnect.stories.tsx": require("../src/HW/LedgerConnect/LedgerConnect.stories.tsx"),
