@@ -1,5 +1,6 @@
 import * as CSL from '@emurgo/cross-csl-core'
 import {RemoteUnspentOutput, signRawTransaction, UtxoAsset} from '@emurgo/yoroi-lib'
+import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
 import {parseTokenList} from '@emurgo/yoroi-lib/dist/internals/utils/assets'
 import {Balance} from '@yoroi/types'
 import {BalanceAmounts} from '@yoroi/types/src/balance/token'
@@ -15,7 +16,6 @@ import {getTransactionSigners} from './common/signatureUtils'
 import {Pagination, YoroiWallet} from './types'
 import {createRawTxSigningKey, identifierToCardanoAsset} from './utils'
 import {collateralConfig, findCollateralCandidates, utxosMaker} from './utxoManager/utxos'
-import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
 
 const remoteAssetToMultiasset = async (remoteAssets: UtxoAsset[]): Promise<CSL.MultiAsset> => {
   const groupedAssets = remoteAssets.reduce((res, a) => {
