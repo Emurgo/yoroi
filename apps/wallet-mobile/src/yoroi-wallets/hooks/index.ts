@@ -655,12 +655,13 @@ export const useWalletMetas = (walletManager: WalletManager, options?: UseQueryO
   }
 }
 
+export const hasWalletsKey = 'hasWallets'
 export const useHasWallets = (
   walletManager: WalletManager,
   options?: UseQueryOptions<Array<WalletMeta>, Error, boolean>,
 ) => {
   const query = useQuery({
-    queryKey: ['walletMetas'],
+    queryKey: [hasWalletsKey],
     queryFn: async () => walletManager.listWallets(),
     select: (walletMetas) => walletMetas.length > 0,
     suspense: true,
@@ -669,7 +670,10 @@ export const useHasWallets = (
 
   if (query.data == null) throw new Error('invalid state')
 
-  return query.data
+  return {
+    ...query,
+    hasWallets: query.data,
+  }
 }
 
 export const useRemoveWallet = (id: YoroiWallet['id'], options: UseMutationOptions<void, Error, void> = {}) => {

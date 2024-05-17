@@ -15,28 +15,21 @@ import {useLinksRequestAction} from './features/Links/common/useLinksRequestActi
 import {useLinksShowActionResult} from './features/Links/common/useLinksShowActionResult'
 import {MenuNavigator} from './features/Menu'
 import {SettingsScreenNavigator} from './features/Settings'
-import {
-  ChooseBiometricLoginScreen,
-  useShowBiometricsScreen,
-} from './features/SetupWallet/useCases/ChooseBiometricLogin/ChooseBiometricLoginScreen'
-import {SelectWalletFromList} from './features/SetupWallet/useCases/SelectWalletFromList'
+import {SetupWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
 import {GovernanceNavigator} from './features/Staking/Governance'
 import {ToggleAnalyticsSettingsNavigator} from './features/ToggleAnalyticsSettings'
-import {useWalletManager} from './features/WalletManager/context/WalletManagerContext'
+import {SelectWalletFromList} from './features/WalletManager/useCases/SelectWalletFromListScreen/SelectWalletFromListScreen'
 import {CONFIG} from './legacy/config'
 import {useMetrics} from './metrics/metricsManager'
 import {defaultStackNavigationOptions, hideTabBarForRoutes, WalletStackRoutes, WalletTabRoutes} from './navigation'
 import {NftsNavigator} from './Nfts/NftsNavigator'
 import {SearchProvider} from './Search/SearchContext'
 import {TxHistoryNavigator} from './TxHistory'
-import {useAuthSetting, useIsAuthOsSupported} from './yoroi-wallets/auth'
-import {useHasWallets} from './yoroi-wallets/hooks'
 
 const Tab = createBottomTabNavigator<WalletTabRoutes>()
 const WalletTabNavigator = () => {
   const strings = useStrings()
   const {colors} = useStyles()
-  const initialRoute = 'history'
 
   const [isKeyboardOpen, setIsKeyboardOpen] = React.useState(false)
 
@@ -81,7 +74,6 @@ const WalletTabNavigator = () => {
           },
           tabBarHideOnKeyboard: true,
         }}
-        initialRouteName={initialRoute}
         backBehavior="initialRoute"
       >
         <Tab.Screen
@@ -171,14 +163,6 @@ export const WalletNavigator = () => {
   const strings = useStrings()
   const {atoms, color} = useTheme()
   useLinksRequestAction()
-  const isAuthOsSupported = useIsAuthOsSupported()
-  const {showBiometricsScreen} = useShowBiometricsScreen()
-  const walletManager = useWalletManager()
-  const hasWallets = useHasWallets(walletManager)
-  const authSetting = useAuthSetting()
-
-  const shouldAskToUseAuthWithOs =
-    !hasWallets && showBiometricsScreen && isAuthOsSupported === true && authSetting !== 'os'
 
   // initialRoute doesn't update the state of the navigator, only at first render
   // https://reactnavigation.org/docs/auth-flow/
@@ -203,18 +187,16 @@ export const WalletNavigator = () => {
         detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
       }}
     >
-      {shouldAskToUseAuthWithOs && (
-        <Stack.Screen //
-          name="choose-biometric-login"
-          options={{headerShown: false}}
-          component={ChooseBiometricLoginScreen}
-        />
-      )}
-
       <Stack.Screen
         name="wallet-selection"
         options={{title: strings.walletSelectionScreenHeader}}
         component={SelectWalletFromList}
+      />
+
+      <Stack.Screen //
+        name="setup-wallet"
+        options={{headerShown: false}}
+        component={SetupWalletNavigator}
       />
 
       <Stack.Screen name="main-wallet-routes" options={{headerShown: false}} component={WalletTabNavigator} />

@@ -146,7 +146,7 @@ export const messages = defineMessages({
   singleOrMultipleDetails: {
     id: 'components.receive.receivescreen.singleOrMultipleDetails',
     defaultMessage:
-      '!!!Single keeps things simple and secure. Multiple may offer some extra privacy. For most users, single address is the way to go! You can always change it in settings.',
+      '!!!Single keeps things simple and secure. For most users, single address is the way to go! You can always change it in settings.',
   },
   selectMultiple: {
     id: 'components.receive.receivescreen.selectMultiple',

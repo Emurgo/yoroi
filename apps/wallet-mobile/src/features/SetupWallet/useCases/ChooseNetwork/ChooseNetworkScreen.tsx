@@ -96,7 +96,7 @@ export const useNavigateTo = () => {
   return React.useRef({
     create: () => navigation.navigate('setup-wallet-about-recovery-phase'),
     restore: () => navigation.navigate('setup-wallet-restore-form'),
-    mnemonicType: () => navigation.navigate('setup-wallet-choose-mnemonic-type'),
+    mnemonicType: () => navigation.navigate('setup-wallet-restore-choose-mnemonic-type'),
     hw: () => navigation.navigate('setup-wallet-check-nano-x'),
   }).current
 }

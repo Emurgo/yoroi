@@ -113,13 +113,13 @@ export const DescribeSelectedAddressScreen = () => {
 }
 
 const useStyles = () => {
-  const {color} = useTheme()
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
     root: {
       flex: 1,
       backgroundColor: color.gray_cmin,
-      padding: 16,
+      ...atoms.p_lg,
     },
     address: {
       flex: 1,

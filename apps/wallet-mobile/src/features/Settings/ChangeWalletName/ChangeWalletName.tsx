@@ -5,7 +5,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, KeyboardAvoidingView, TextInput} from '../../../components'
+import {Button, KeyboardAvoidingView, Spacer, TextInput} from '../../../components'
 import globalMessages from '../../../i18n/global-messages'
 import {isEmptyString} from '../../../utils/utils'
 import {useChangeWalletName, useWalletName, useWalletNames} from '../../../yoroi-wallets/hooks'
@@ -39,6 +39,8 @@ export const ChangeWalletName = () => {
   return (
     <SafeAreaView style={styles.safeAreaView} edges={['left', 'right', 'bottom']}>
       <KeyboardAvoidingView style={{flex: 1}}>
+        <Spacer height={40} />
+
         <ScrollView
           keyboardDismissMode="on-drag"
           keyboardShouldPersistTaps="always"
@@ -57,6 +59,8 @@ export const ChangeWalletName = () => {
           />
         </ScrollView>
 
+        <Spacer fill />
+
         <View style={styles.action}>
           <Button
             onPress={() => {
@@ -74,19 +78,17 @@ export const ChangeWalletName = () => {
 }
 
 const useStyles = () => {
-  const {color} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     safeAreaView: {
       backgroundColor: color.gray_cmin,
       flex: 1,
     },
     scrollContentContainer: {
-      flex: 1,
-      paddingHorizontal: 16,
-      paddingTop: 40,
+      ...atoms.px_lg,
     },
     action: {
-      paddingHorizontal: 16,
+      ...atoms.p_lg,
       backgroundColor: color.gray_cmin,
     },
   })

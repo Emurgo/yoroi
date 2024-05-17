@@ -1,12 +1,12 @@
 import {useFocusEffect} from '@react-navigation/native'
-import {NetworkError} from '@yoroi/common'
+import {useAsyncStorage} from '@yoroi/common'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
+import {Api} from '@yoroi/types'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {
   InteractionManager,
-  Keyboard,
   Linking,
   ScrollView,
   StyleSheet,
@@ -17,8 +17,9 @@ import {
   View,
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
+import {ViewProps} from 'react-native-svg/lib/typescript/fabric/utils'
 
-import {Button, Icon, TextInput, useModal} from '../../../../components'
+import {Button, Icon, KeyboardAvoidingView, TextInput, useModal} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
 import {showErrorDialog} from '../../../../dialogs'
 import {errorMessages} from '../../../../i18n/global-messages'
@@ -35,12 +36,15 @@ import {
 } from '../../../../yoroi-wallets/utils'
 import {debugWalletInfo, features} from '../../..'
 import {AddressMode} from '../../../WalletManager/common/types'
+import {parseWalletMeta} from '../../../WalletManager/common/validators'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerContext'
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
-import {YoroiZendeskLink} from '../../common/contants'
+import {YoroiZendeskLink} from '../../common/constants'
 import {LearnMoreButton} from '../../common/LearnMoreButton/LearnMoreButton'
+import {PreparingWallet} from '../../common/PreparingWallet/PreparingWallet'
 import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
 import {useStrings} from '../../common/useStrings'
+import {Info as InfoIcon} from '../../illustrations/Info'
 
 const useSizeModal = () => {
   const HEIGHT_SCREEN = useWindowDimensions().height
@@ -63,31 +67,31 @@ export const WalletDetailsScreen = () => {
   const {styles} = useStyles()
   const {HEIGHT_MODAL_NAME_PASSWORD, HEIGHT_MODAL_CHECKSUM} = useSizeModal()
   const {openModal, closeModal} = useModal()
-  const {resetToWalletSelection} = useWalletNavigation()
+  const {resetToTxHistory} = useWalletNavigation()
   const strings = useStrings()
   const walletManager = useWalletManager()
   const {walletNames} = useWalletNames(walletManager)
   const {track} = useMetrics()
+  const intl = useIntl()
+  const storage = useAsyncStorage()
+  const {
+    mnemonic,
+    networkId,
+    publicKeyHex,
+    walletImplementationId,
+    showRestoreWalletInfoModal,
+    showRestoreWalletInfoModalChanged,
+  } = useSetupWallet()
+  const plate = usePlate({networkId, publicKeyHex})
+  const [name, setName] = React.useState(features.prefillWalletInfo ? debugWalletInfo.WALLET_NAME : '')
+  const passwordRef = React.useRef<RNTextInput>(null)
+  const [password, setPassword] = React.useState(features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '')
 
   useFocusEffect(
     React.useCallback(() => {
       track.createWalletDetailsStepViewed()
     }, [track]),
   )
-
-  const {mnemonic, networkId, publicKeyHex, walletImplementationId} = useSetupWallet()
-  const plate = usePlate({networkId, publicKeyHex})
-
-  const [name, setName] = React.useState(features.prefillWalletInfo ? debugWalletInfo.WALLET_NAME : '')
-
-  const nameErrors = validateWalletName(name, null, walletNames ?? [])
-  const walletNameErrorText = getWalletNameError(
-    {tooLong: strings.tooLong, nameAlreadyTaken: strings.nameAlreadyTaken, mustBeFilled: strings.mustBeFilled},
-    nameErrors,
-  )
-
-  const passwordRef = React.useRef<RNTextInput>(null)
-  const [password, setPassword] = React.useState(features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '')
 
   const passwordConfirmationRef = React.useRef<RNTextInput>(null)
   const [passwordConfirmation, setPasswordConfirmation] = React.useState(
@@ -101,20 +105,36 @@ export const WalletDetailsScreen = () => {
     ? strings.repeatPasswordInputError
     : undefined
 
-  const intl = useIntl()
-  const {createWallet, isLoading, isSuccess} = useCreateWallet({
-    onSuccess: () => {
+  const {
+    createWallet,
+    isLoading,
+    isSuccess: isCreateWalletSuccess,
+  } = useCreateWallet({
+    onSuccess: async (wallet) => {
+      const walletStorage = storage.join('wallet/')
+      const walletMeta = await walletStorage.getItem(wallet.id, parseWalletMeta)
+
+      if (!walletMeta) throw new Error('invalid wallet meta')
+
       track.createWalletDetailsSettled()
-      resetToWalletSelection()
+
+      // TODO: revisit needs to open the new wallet - should wait for done sync event from manager
+      resetToTxHistory()
     },
     onError: (error) => {
       InteractionManager.runAfterInteractions(() => {
-        return error instanceof NetworkError
+        return error instanceof Api.Errors.Network
           ? showErrorDialog(errorMessages.networkError, intl)
           : showErrorDialog(errorMessages.generalError, intl, {message: error.message})
       })
     },
   })
+
+  const nameErrors = validateWalletName(name, null, walletNames && !isCreateWalletSuccess ? walletNames : [])
+  const walletNameErrorText = getWalletNameError(
+    {tooLong: strings.tooLong, nameAlreadyTaken: strings.nameAlreadyTaken, mustBeFilled: strings.mustBeFilled},
+    nameErrors,
+  )
 
   const handleCreateWallet = React.useCallback(() => {
     track.createWalletDetailsSubmitted()
@@ -129,8 +149,7 @@ export const WalletDetailsScreen = () => {
     })
   }, [createWallet, mnemonic, name, networkId, password, track, walletImplementationId])
 
-  const showModalTipsPassword = () => {
-    Keyboard.dismiss()
+  const showModalTipsPassword = React.useCallback(() => {
     openModal(
       strings.walletDetailsModalTitle,
       <View style={styles.modal}>
@@ -160,16 +179,42 @@ export const WalletDetailsScreen = () => {
 
         <Space height="sm" />
 
-        <Button title={strings.continueButton} style={styles.button} onPress={closeModal} />
+        <Button
+          title={strings.continueButton}
+          style={styles.button}
+          onPress={() => {
+            closeModal()
+            showRestoreWalletInfoModalChanged(false)
+          }}
+        />
 
         <Space height="lg" />
       </View>,
       HEIGHT_MODAL_NAME_PASSWORD,
     )
-  }
+  }, [
+    HEIGHT_MODAL_NAME_PASSWORD,
+    closeModal,
+    openModal,
+    showRestoreWalletInfoModalChanged,
+    strings.continueButton,
+    strings.walletDetailsModalTitle,
+    strings.walletNameModalCardFirstItem,
+    strings.walletNameModalCardSecondItem,
+    strings.walletNameModalCardTitle,
+    strings.walletPasswordModalCardFirstItem,
+    strings.walletPasswordModalCardSecondItem,
+    strings.walletPasswordModalCardTitle,
+    styles.button,
+    styles.modal,
+  ])
+
+  React.useEffect(() => {
+    if (showRestoreWalletInfoModal) showModalTipsPassword()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showRestoreWalletInfoModal])
 
   const showModalTipsPlateNumber = () => {
-    Keyboard.dismiss()
     openModal(
       strings.walletDetailsModalTitle,
       <View style={styles.modal}>
@@ -181,7 +226,7 @@ export const WalletDetailsScreen = () => {
               checksumLine={1}
               linesOfText={[
                 strings.walletChecksumModalCardFirstItem,
-                strings.walletChecksumModalCardSecondItem,
+                strings.walletChecksumModalCardSecondItem(plate.accountPlate.TextPart),
                 strings.walletChecksumModalCardThirdItem,
               ]}
             />
@@ -206,97 +251,122 @@ export const WalletDetailsScreen = () => {
     )
   }
 
+  if (isLoading) return <PreparingWallet />
+
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
-      <View>
-        <StepperProgress currentStep={4} currentStepTitle={strings.stepWalletDetails} totalSteps={4} />
+      <KeyboardAvoidingView style={styles.container}>
+        <StepperProgress
+          style={styles.steps}
+          currentStep={4}
+          currentStepTitle={strings.stepWalletDetails}
+          totalSteps={4}
+        />
 
-        <Text style={styles.title}>
-          {strings.walletDetailsTitle(bold)}
+        <View style={styles.infoText}>
+          <Text style={styles.title}>{strings.walletDetailsTitle(bold)}</Text>
 
-          <TouchableOpacity onPress={showModalTipsPassword}>
-            <Icon.Info size={28} />
-          </TouchableOpacity>
-        </Text>
+          <Info onPress={showModalTipsPassword} />
+        </View>
 
         <Space height="xl" />
 
-        <TextInput
-          enablesReturnKeyAutomatically
-          autoFocus
-          label={strings.walletDetailsNameInput}
-          value={name}
-          onChangeText={(walletName: string) => setName(walletName)}
-          errorText={!isEmptyString(walletNameErrorText) ? walletNameErrorText : undefined}
-          errorDelay={0}
-          returnKeyType="next"
-          onSubmitEditing={() => passwordRef.current?.focus()}
-          testID="walletNameInput"
-          autoComplete="off"
-          showErrorOnBlur
-        />
+        <ScrollView style={styles.scroll}>
+          <TextInput
+            enablesReturnKeyAutomatically
+            autoFocus={!showRestoreWalletInfoModal}
+            label={strings.walletDetailsNameInput}
+            value={name}
+            onChangeText={(walletName: string) => setName(walletName)}
+            errorText={!isEmptyString(walletNameErrorText) ? walletNameErrorText : undefined}
+            errorDelay={0}
+            returnKeyType="next"
+            onSubmitEditing={() => passwordRef.current?.focus()}
+            testID="walletNameInput"
+            autoComplete="off"
+            disabled={isLoading}
+            showErrorOnBlur
+          />
 
-        <TextInput
-          enablesReturnKeyAutomatically
-          ref={passwordRef}
-          secureTextEntry
-          label={strings.walletDetailsPasswordInput}
-          value={password}
-          onChangeText={setPassword}
-          errorText={passwordErrorText}
-          returnKeyType="next"
-          helper={strings.walletDetailsPasswordHelper}
-          onSubmitEditing={() => passwordConfirmationRef.current?.focus()}
-          testID="walletPasswordInput"
-          autoComplete="off"
-          showErrorOnBlur
-        />
+          <Space height="xl" />
 
-        <Space height="xl" />
+          <TextInput
+            enablesReturnKeyAutomatically
+            ref={passwordRef}
+            secureTextEntry
+            label={strings.walletDetailsPasswordInput}
+            value={password}
+            onChangeText={setPassword}
+            errorText={passwordErrorText}
+            returnKeyType="next"
+            helper={strings.walletDetailsPasswordHelper}
+            onSubmitEditing={() => passwordConfirmationRef.current?.focus()}
+            testID="walletPasswordInput"
+            autoComplete="off"
+            disabled={isLoading}
+            showErrorOnBlur
+            textContentType="oneTimeCode"
+          />
 
-        <TextInput
-          enablesReturnKeyAutomatically
-          ref={passwordConfirmationRef}
-          secureTextEntry
-          returnKeyType="done"
-          label={strings.walletDetailsConfirmPasswordInput}
-          value={passwordConfirmation}
-          onChangeText={setPasswordConfirmation}
-          errorText={passwordConfirmationErrorText}
-          testID="walletRepeatPasswordInput"
-          autoComplete="off"
-          showErrorOnBlur
-        />
+          <Space height="xl" />
 
-        <View style={styles.checksum}>
-          <Icon.WalletAccount iconSeed={plate.accountPlate.ImagePart} style={styles.walletChecksum} />
+          <TextInput
+            enablesReturnKeyAutomatically
+            ref={passwordConfirmationRef}
+            secureTextEntry
+            returnKeyType="done"
+            label={strings.walletDetailsConfirmPasswordInput}
+            value={passwordConfirmation}
+            onChangeText={setPasswordConfirmation}
+            errorText={passwordConfirmationErrorText}
+            testID="walletRepeatPasswordInput"
+            autoComplete="off"
+            disabled={isLoading}
+            showErrorOnBlur
+            textContentType="oneTimeCode"
+          />
 
-          <Space width="sm" />
+          <Space height="xl" />
 
-          <Text style={styles.plateNumber}>
-            {plate.accountPlate.TextPart}
+          <View style={styles.checksum}>
+            <Icon.WalletAccount iconSeed={plate.accountPlate.ImagePart} style={styles.walletChecksum} />
 
             <Space width="sm" />
 
-            <TouchableOpacity onPress={showModalTipsPlateNumber}>
-              <Icon.Info size={28} />
-            </TouchableOpacity>
-          </Text>
-        </View>
-      </View>
+            <Text style={styles.plateNumber}>{plate.accountPlate.TextPart}</Text>
 
-      <View>
-        <Button
-          title={strings.next}
-          style={styles.button}
-          onPress={isLoading || isSuccess ? NOOP : () => handleCreateWallet()}
-          disabled={Object.keys(passwordErrors).length > 0 || Object.keys(nameErrors).length > 0}
-        />
+            <Space width="sm" />
 
-        <Space height="sm" />
-      </View>
+            <Info onPress={showModalTipsPlateNumber} />
+          </View>
+        </ScrollView>
+
+        <Actions>
+          <Button
+            title={strings.next}
+            style={styles.button}
+            onPress={() => handleCreateWallet()}
+            disabled={isLoading || Object.keys(passwordErrors).length > 0 || Object.keys(nameErrors).length > 0}
+          />
+
+          <Space height="sm" />
+        </Actions>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   )
+}
+
+const Info = ({onPress}: {onPress: () => void}) => {
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <InfoIcon size={24} />
+    </TouchableOpacity>
+  )
+}
+
+const Actions = ({style, ...props}: ViewProps) => {
+  const {styles} = useStyles()
+  return <View style={[styles.actions, style]} {...props} />
 }
 
 const useBold = () => {
@@ -311,9 +381,16 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      ...atoms.px_lg,
       justifyContent: 'space-between',
       backgroundColor: color.gray_cmin,
+    },
+    container: {
+      flex: 1,
+    },
+    infoText: {
+      ...atoms.px_lg,
+      flexDirection: 'row',
+      lineHeight: 24,
     },
     modal: {
       flex: 1,
@@ -336,12 +413,24 @@ const useStyles = () => {
     },
     checksum: {
       flexDirection: 'row',
+      alignItems: 'center',
       justifyContent: 'center',
+      textAlignVertical: 'center',
     },
-    walletChecksum: {width: 24, height: 24},
+    walletChecksum: {
+      width: 24,
+      height: 24,
+    },
+    actions: {
+      ...atoms.p_lg,
+    },
+    scroll: {
+      ...atoms.px_lg,
+    },
+    steps: {
+      ...atoms.px_lg,
+    },
   })
 
   return {styles} as const
 }
-
-const NOOP = () => undefined
