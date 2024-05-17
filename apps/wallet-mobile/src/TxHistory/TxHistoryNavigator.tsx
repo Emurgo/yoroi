@@ -77,6 +77,7 @@ export const TxHistoryNavigator = () => {
   const storage = useAsyncStorage()
   const {atoms, color} = useTheme()
   const {styles} = useStyles()
+  const isMainnet = isMainnetNetworkId(wallet.networkId)
 
   // modal
   const [isModalInfoVisible, setIsModalInfoVisible] = React.useState(false)
@@ -86,17 +87,17 @@ export const TxHistoryNavigator = () => {
   const {frontendFees} = useFrontendFees(wallet)
   const stakingKey = useStakingKey(wallet)
   const swapManager = React.useMemo(() => {
-    const aggregatorTokenId = isMainnetNetworkId(wallet.networkId) ? milkTokenId.mainnet : milkTokenId.preprod
+    const aggregatorTokenId = isMainnet ? milkTokenId.mainnet : milkTokenId.preprod
     const swapStorage = swapStorageMaker()
     const swapApi = swapApiMaker({
-      isMainnet: isMainnetNetworkId(wallet.networkId),
+      isMainnet,
       stakingKey,
       primaryTokenId: wallet.primaryTokenInfo.id,
       supportedProviders,
     })
     const frontendFeeTiers = frontendFees?.[aggregator] ?? ([] as const)
     return swapManagerMaker({swapStorage, swapApi, frontendFeeTiers, aggregator, aggregatorTokenId})
-  }, [wallet.networkId, wallet.primaryTokenInfo.id, stakingKey, frontendFees])
+  }, [isMainnet, stakingKey, wallet.primaryTokenInfo.id, frontendFees])
 
   // resolver
   const resolverManager = React.useMemo(() => {
@@ -107,11 +108,12 @@ export const TxHistoryNavigator = () => {
         },
       },
       cslFactory: init,
+      isMainnet,
     })
     const walletStorage = storage.join(`wallet/${wallet.id}/`)
     const resolverStorage = resolverStorageMaker({storage: walletStorage})
     return resolverManagerMaker(resolverStorage, resolverApi)
-  }, [storage, wallet.id])
+  }, [storage, wallet.id, isMainnet])
 
   // claim
   const claimApi = React.useMemo(() => {

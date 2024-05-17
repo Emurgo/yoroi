@@ -5,6 +5,7 @@ import {handleApiGetCryptoAddress} from './handle/api'
 import {unstoppableApiGetCryptoAddress} from './unstoppable/api'
 import {cnsCryptoAddress} from './cns/api'
 import {WasmModuleProxy} from '@emurgo/cross-csl-core'
+import {fetchData} from '@yoroi/common'
 
 type ApiConfig = {
   [Resolver.NameServer.Unstoppable]: {
@@ -28,9 +29,11 @@ export const resolverApiMaker = (
   {
     apiConfig,
     cslFactory,
+    isMainnet = true,
   }: {
     apiConfig: Readonly<ApiConfig>
     cslFactory: (scope: string) => WasmModuleProxy
+    isMainnet?: boolean
   },
   {
     unstoppableApi,
@@ -48,11 +51,14 @@ export const resolverApiMaker = (
     }
   } = initialDeps,
 ): Resolver.Api => {
-  const getHandleCryptoAddress = handleApi.getCryptoAddress()
+  const getHandleCryptoAddress = handleApi.getCryptoAddress({
+    request: fetchData,
+    isMainnet,
+  })
   const getUnstoppableCryptoAddress = unstoppableApi.getCryptoAddress(
     apiConfig[Resolver.NameServer.Unstoppable],
   )
-  const getCnsCryptoAddress = cnsApi.getCryptoAddress(cslFactory)
+  const getCnsCryptoAddress = cnsApi.getCryptoAddress(cslFactory, isMainnet)
   const operationsGetCryptoAddress: GetCryptoAddressOperations = [
     [Resolver.NameServer.Handle, getHandleCryptoAddress],
     [Resolver.NameServer.Unstoppable, getUnstoppableCryptoAddress],
