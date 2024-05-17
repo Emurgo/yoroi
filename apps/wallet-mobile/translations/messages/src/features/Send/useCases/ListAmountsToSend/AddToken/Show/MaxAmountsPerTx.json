@@ -1,0 +1,17 @@
+[
+  {
+    "id": "components.send.sendscreen.errorBannerMaxTokenLimit",
+    "defaultMessage": "!!!is the maximum number allowed to send in one transaction",
+    "file": "src/features/Send/useCases/ListAmountsToSend/AddToken/Show/MaxAmountsPerTx.tsx",
+    "start": {
+      "line": 26,
+      "column": 19,
+      "index": 760
+    },
+    "end": {
+      "line": 29,
+      "column": 3,
+      "index": 911
+    }
+  }
+]
