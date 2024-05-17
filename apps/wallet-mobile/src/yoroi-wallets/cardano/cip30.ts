@@ -13,8 +13,9 @@ import {Cardano, CardanoMobile} from '../wallets'
 import {toAssetNameHex, toPolicyId} from './api'
 import {getTransactionSigners} from './common/signatureUtils'
 import {Pagination, YoroiWallet} from './types'
-import {createRawTxSigningKey, identifierToCardanoAsset, normalizeToAddress} from './utils'
+import {createRawTxSigningKey, identifierToCardanoAsset} from './utils'
 import {collateralConfig, findCollateralCandidates, utxosMaker} from './utxoManager/utxos'
+import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
 
 const remoteAssetToMultiasset = async (remoteAssets: UtxoAsset[]): Promise<CSL.MultiAsset> => {
   const groupedAssets = remoteAssets.reduce((res, a) => {
@@ -188,7 +189,7 @@ export const signData = async (
   address: string,
   _payload: string,
 ): Promise<{key: string; signature: string}> => {
-  const normalisedAddress = await normalizeToAddress(address)
+  const normalisedAddress = await normalizeToAddress(CardanoMobile, address)
   const bech32Address = await normalisedAddress?.toBech32(undefined)
   if (!bech32Address) throw new Error('Invalid wallet state')
 
@@ -201,7 +202,7 @@ const _getRequiredUtxos = async (
   allUtxos: RawUtxo[],
 ): Promise<CSL.TransactionUnspentOutput[] | null> => {
   const remoteUnspentOutputs: RemoteUnspentOutput[] = allUtxos.map((utxo) => rawUtxoToRemoteUnspentOutput(utxo))
-  const rewardAddress = await (await normalizeToAddress(wallet.rewardAddressHex))?.toBech32(undefined)
+  const rewardAddress = await (await normalizeToAddress(CardanoMobile, wallet.rewardAddressHex))?.toBech32(undefined)
   if (!rewardAddress) throw new Error('Invalid wallet state')
 
   try {
