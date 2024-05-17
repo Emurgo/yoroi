@@ -16,7 +16,7 @@ import {Pagination, YoroiWallet} from './types'
 import {createRawTxSigningKey, identifierToCardanoAsset, normalizeToAddress} from './utils'
 import {collateralConfig, findCollateralCandidates, utxosMaker} from './utxoManager/utxos'
 
-export async function remoteAssetToMultiasset(remoteAssets: UtxoAsset[]): Promise<CSL.MultiAsset> {
+const remoteAssetToMultiasset = async (remoteAssets: UtxoAsset[]): Promise<CSL.MultiAsset> => {
   const groupedAssets = remoteAssets.reduce((res, a) => {
     ;(res[toPolicyId(a.assetId)] = res[toPolicyId(a.assetId)] || []).push(a)
     return res
@@ -36,7 +36,7 @@ export async function remoteAssetToMultiasset(remoteAssets: UtxoAsset[]): Promis
   }
   return multiasset
 }
-export async function cardanoUtxoFromRemoteFormat(u: RemoteUnspentOutput): Promise<CSL.TransactionUnspentOutput> {
+const cardanoUtxoFromRemoteFormat = async (u: RemoteUnspentOutput): Promise<CSL.TransactionUnspentOutput> => {
   const input = await CardanoMobile.TransactionInput.new(
     await CardanoMobile.TransactionHash.fromHex(u.txHash),
     u.txIndex,
