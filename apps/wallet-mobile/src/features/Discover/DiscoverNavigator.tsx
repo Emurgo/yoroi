@@ -67,7 +67,6 @@ const useDappConnectorManager = () => {
           logo: selectedDapp?.logo ?? '',
           onConfirm: () => resolve(true),
           onClose: () => {
-            console.log('confirmConnection onClose') // TODO: Fix close
             resolve(false)
           },
         })
@@ -77,23 +76,25 @@ const useDappConnectorManager = () => {
   )
 
   const signTx = React.useCallback(() => {
-    return new Promise<string>((resolve) => {
+    return new Promise<string>((resolve, reject) => {
       confirmRawTx({
         onConfirm: (rootKey) => {
           resolve(rootKey)
           return Promise.resolve()
         },
+        onClose: () => reject(new Error('User rejected')),
       })
     })
   }, [confirmRawTx])
 
   const signData = React.useCallback(() => {
-    return new Promise<string>((resolve) => {
+    return new Promise<string>((resolve, reject) => {
       confirmRawTx({
         onConfirm: (rootKey) => {
           resolve(rootKey)
           return Promise.resolve()
         },
+        onClose: () => reject(new Error('User rejected')),
       })
     })
   }, [confirmRawTx])
