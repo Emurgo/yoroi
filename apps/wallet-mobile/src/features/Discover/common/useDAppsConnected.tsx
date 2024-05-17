@@ -1,5 +1,4 @@
-import {useDappConnector} from '@yoroi/dapp-connector'
-import {DappConnection} from '@yoroi/dapp-connector/src/adapters/async-storage'
+import {DappConnection, useDappConnector} from '@yoroi/dapp-connector'
 import {useQuery, UseQueryOptions} from 'react-query'
 
 import {useSelectedWallet} from '../../../features/WalletManager/Context'
