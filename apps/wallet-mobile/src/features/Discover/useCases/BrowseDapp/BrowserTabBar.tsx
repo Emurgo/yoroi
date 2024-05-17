@@ -1,6 +1,7 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import Share from 'react-native-share'
 import WebView from 'react-native-webview'
 
@@ -15,6 +16,7 @@ type Props = {
 export const BrowserTabBar = ({webViewRef, webViewState}: Props) => {
   const {styles, color, colors} = useStyles()
   const {tabs, openTabs} = useBrowser()
+  const insets = useSafeAreaInsets()
 
   const totalTabs = Math.min(tabs.length, 99)
 
@@ -54,7 +56,7 @@ export const BrowserTabBar = ({webViewRef, webViewState}: Props) => {
   }
 
   return (
-    <View style={[styles.root, styles.shadow, {height: 46}]}>
+    <View style={[styles.root, styles.shadow, {height: 46 + insets.bottom, paddingBottom: insets.bottom}]}>
       <Touch disabled={!webViewState.canGoBack} onPress={handleBackward}>
         <Icon.Backward color={colorBackward} />
       </Touch>
