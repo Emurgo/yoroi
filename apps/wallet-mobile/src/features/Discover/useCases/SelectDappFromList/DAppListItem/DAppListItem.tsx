@@ -33,7 +33,7 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
 
   const [isPressed, setIsPressed] = React.useState(false)
 
-  const logo = dApp.logo || getDappFallbackLogo(dApp.origins[0])
+  const logo = dApp.logo.length === 0 ? getDappFallbackLogo(dApp.origins[0]) : dApp.logo
 
   const handlePressing = (isPressIn: boolean) => {
     setIsPressed(isPressIn)
@@ -127,16 +127,6 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
   )
 }
 
-const EmptyIcon = () => {
-  const {colors, styles} = useStyles()
-
-  return (
-    <View style={styles.emptyIcon}>
-      <Icon.DApp color={colors.dappIcon} />
-    </View>
-  )
-}
-
 type DAppActionProps = {
   icon: React.ReactNode
   title: string
@@ -158,13 +148,6 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
-    emptyIcon: {
-      borderRadius: 8,
-      backgroundColor: color.gray_c50,
-      padding: 8,
-      width: 40,
-      height: 40,
-    },
     dAppItemContainer: {
       flexDirection: 'row',
       gap: 12,

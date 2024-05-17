@@ -64,7 +64,7 @@ const useDappConnectorManager = () => {
         openConfirmConnectionModal({
           name: selectedDapp?.name ?? origin,
           website: origin,
-          logo: selectedDapp?.logo ?? '', // TODO: Add placeholder
+          logo: selectedDapp?.logo ?? '',
           onConfirm: () => resolve(true),
           onClose: () => {
             console.log('confirmConnection onClose') // TODO: Fix close
@@ -87,5 +87,16 @@ const useDappConnectorManager = () => {
     })
   }, [confirmRawTx])
 
-  return createDappConnector({appStorage, wallet, confirmConnection, signTx})
+  const signData = React.useCallback(() => {
+    return new Promise<string>((resolve) => {
+      confirmRawTx({
+        onConfirm: (rootKey) => {
+          resolve(rootKey)
+          return Promise.resolve()
+        },
+      })
+    })
+  }, [confirmRawTx])
+
+  return createDappConnector({appStorage, wallet, confirmConnection, signTx, signData})
 }

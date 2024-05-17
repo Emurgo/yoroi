@@ -1113,8 +1113,13 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       return txId
     }
 
-    CIP30signData(_address: string, _payload: string): Promise<string> {
-      return Promise.reject(new Error('Not implemented'))
+    async CIP30signData(rootKey: string, address: string, payload: string): Promise<{signature: string; key: string}> {
+      const normalisedAddress = await normalizeToAddress(address)
+      const bech32Address = await normalisedAddress?.toBech32(undefined)
+      if (!bech32Address) throw new Error('Invalid wallet state')
+      const addressing = this.getAddressing(bech32Address)
+
+      return cip30.signData(rootKey, addressing.path, address, payload)
     }
 
     async CIP30signTx(rootKey: string, cbor: string, partial = false) {

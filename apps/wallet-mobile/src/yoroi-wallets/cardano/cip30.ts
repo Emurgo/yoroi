@@ -82,3 +82,12 @@ export const getBalance = async (tokenId = '*', utxos: RawUtxo[], primaryTokenId
 
   return Buffer.from(await value.toBytes()).toString('hex')
 }
+
+export const signData = (
+  _rootKey: string,
+  _path: number[],
+  _address: string,
+  _payload: string,
+): Promise<{key: string; signature: string}> => {
+  throw new Error('Not implemented')
+}

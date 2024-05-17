@@ -29,7 +29,7 @@ type Resolver = {
     getCollateral: ResolvableMethod<string[] | null>
     submitTx: ResolvableMethod<string>
     signTx: ResolvableMethod<string>
-    signData: ResolvableMethod<string>
+    signData: ResolvableMethod<{signature: string; key: string}>
   }
 }
 
@@ -263,7 +263,7 @@ export type ResolverWallet = {
   getCollateral: (value?: string) => Promise<string[] | null>
   submitTx: (cbor: string) => Promise<string>
   signTx: (txHex: string, partialSign?: boolean) => Promise<string>
-  signData: (address: string, payload: string) => Promise<string>
+  signData: (address: string, payload: string) => Promise<{signature: string; key: string}>
 }
 
 type Pagination = {

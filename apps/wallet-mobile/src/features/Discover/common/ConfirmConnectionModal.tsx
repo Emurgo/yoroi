@@ -3,8 +3,8 @@ import * as React from 'react'
 import {Image, StyleSheet, Text, View} from 'react-native'
 
 import {Button, Icon, Spacer, useModal} from '../../../components'
-import {useStrings} from './useStrings'
 import {getDappFallbackLogo} from './helpers'
+import {useStrings} from './useStrings'
 
 type Props = {
   name: string
@@ -51,7 +51,7 @@ export const ConfirmConnectionModal = ({name, website, onConfirm, logo}: Props) 
 
         <Icon.Connection size={20} color={colors.connection} />
 
-        <Image source={{uri: logo || getDappFallbackLogo(website)}} style={styles.image} />
+        <Image source={{uri: logo.length === 0 ? getDappFallbackLogo(website) : logo}} style={styles.image} />
       </View>
 
       <Spacer height={8} />

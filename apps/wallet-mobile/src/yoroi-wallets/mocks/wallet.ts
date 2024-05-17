@@ -322,7 +322,7 @@ const wallet: YoroiWallet = {
   ): Promise<TransactionUnspentOutput[] | null> {
     throw new Error('not implemented: CIP30getUtxos')
   },
-  CIP30signData(_address: string, _payload: string): Promise<string> {
+  CIP30signData(_rootKey: string, _address: string, _payload: string): Promise<{signature: string; key: string}> {
     throw new Error('not implemented: CIP30signData')
   },
   CIP30submitTx(_cbor: string) {

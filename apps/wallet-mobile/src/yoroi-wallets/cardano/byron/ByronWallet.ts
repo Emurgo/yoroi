@@ -1489,7 +1489,7 @@ export class ByronWallet implements YoroiWallet {
     throw new Error('Method not implemented.')
   }
 
-  CIP30signData(_address: string, _payload: string): Promise<string> {
+  CIP30signData(_rootKey: string, _address: string, _payload: string): Promise<{signature: string; key: string}> {
     throw new Error('Method not implemented.')
   }
 

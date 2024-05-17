@@ -61,10 +61,11 @@ type CreateDappConnectorOptions = {
   wallet: YoroiWallet
   confirmConnection: (origin: string, manager: DappConnector) => Promise<boolean>
   signTx: (cbor: string) => Promise<string>
+  signData: (address: string, payload: string) => Promise<string>
 }
 
 export const createDappConnector = (options: CreateDappConnectorOptions) => {
-  const {wallet, appStorage, confirmConnection, signTx} = options
+  const {wallet, appStorage, confirmConnection, signTx, signData} = options
   const api = dappConnectorApiMaker()
   const handlerWallet: ResolverWallet = {
     id: wallet.id,
@@ -88,7 +89,10 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
       return Promise.all(result.map((v) => v.toHex()))
     },
     confirmConnection: (origin: string) => confirmConnection(origin, manager),
-    signData: async (address, payload) => wallet.CIP30signData(address, payload),
+    signData: async (address, payload) => {
+      const rootKey = await signData(address, payload)
+      return wallet.CIP30signData(rootKey, address, payload)
+    },
     signTx: async (cbor: string, partial?: boolean) => {
       const rootKey = await signTx(cbor)
       const result = await wallet.CIP30signTx(rootKey, cbor, partial)

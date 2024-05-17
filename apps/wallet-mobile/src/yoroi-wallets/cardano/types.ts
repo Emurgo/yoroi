@@ -220,7 +220,7 @@ export type YoroiWallet = {
   CIP30getCollateral(value?: string): Promise<TransactionUnspentOutput[] | null>
   CIP30submitTx(cbor: string): Promise<string>
   CIP30signTx(rootKey: string, txHex: string, partialSign?: boolean): Promise<TransactionWitnessSet>
-  CIP30signData(address: string, payload: string): Promise<string>
+  CIP30signData(rootKey: string, address: string, payload: string): Promise<{signature: string; key: string}>
 }
 
 export const isYoroiWallet = (wallet: unknown): wallet is YoroiWallet => {
