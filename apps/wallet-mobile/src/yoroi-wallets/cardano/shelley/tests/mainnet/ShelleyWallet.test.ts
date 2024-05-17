@@ -3,7 +3,7 @@ import {Address} from '@emurgo/cross-csl-core'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {Balance} from '@yoroi/types'
 
-import {WalletMeta} from '../../../../../wallet-manager/types'
+import {WalletMeta} from '../../../../../features/WalletManager/common/types'
 import {HWDeviceInfo} from '../../../../hw'
 import {EncryptedStorage, EncryptedStorageKeys} from '../../../../storage'
 import {rootStorage} from '../../../../storage/rootStorage'

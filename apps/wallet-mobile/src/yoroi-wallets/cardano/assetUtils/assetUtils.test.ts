@@ -14,7 +14,7 @@ describe('assetUtils', () => {
         coinsPerUtxoByteStr: '4310',
       })
 
-      expect(lockedDeposit).toEqual(new BigNumber('18149410'))
+      expect(lockedDeposit).toEqual(new BigNumber('20360440'))
     })
 
     it('should return 0 when there are no assets', async () => {

@@ -12,13 +12,14 @@ import {DIALOG_BUTTONS, showConfirmationDialog} from '../../../dialogs'
 import {confirmationMessages} from '../../../i18n/global-messages'
 import {SettingsRouteNavigation, useWalletNavigation} from '../../../navigation'
 import {lightPalette} from '../../../theme'
-import {useAddressModeManager} from '../../../wallet-manager/useAddressModeManager'
 import {useAuthSetting} from '../../../yoroi-wallets/auth'
 import {getNetworkConfigById} from '../../../yoroi-wallets/cardano/networks'
 import {isByron, isHaskellShelley} from '../../../yoroi-wallets/cardano/utils'
 import {useEasyConfirmationEnabled, useResync} from '../../../yoroi-wallets/hooks'
 import {NetworkId, WalletImplementationId} from '../../../yoroi-wallets/types'
-import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../WalletManager/Context'
+import {useAddressModeManager} from '../../WalletManager/common/useAddressModeManager'
+import {useSelectedWallet, useSetSelectedWallet} from '../../WalletManager/context/SelectedWalletContext'
+import {useSetSelectedWalletMeta} from '../../WalletManager/context/SelectedWalletMetaContext'
 import {useNavigateTo} from '../common/navigation'
 import {SettingsSwitch} from '../common/SettingsSwitch'
 import {
@@ -92,6 +93,7 @@ export const WalletSettingsScreen = () => {
           <SettingsItem
             icon={<Icon.Bio {...iconProps} />}
             label={strings.easyConfirmation}
+            info={strings.easyConfirmationInfo}
             disabled={authSetting === 'pin' || wallet.isHW || wallet.isReadOnly}
           >
             <SettingsSwitch
@@ -266,6 +268,10 @@ const messages = defineMessages({
     id: 'components.settings.walletsettingscreen.easyConfirmation',
     defaultMessage: '!!!Easy transaction confirmation',
   },
+  easyConfirmationInfo: {
+    id: 'components.settings.walletsettingscreen.easyConfirmationInfo',
+    defaultMessage: '!!!Skip the password and approve transactions with biometrics',
+  },
   removeWallet: {
     id: 'components.settings.walletsettingscreen.removeWallet',
     defaultMessage: '!!!Remove wallet',
@@ -329,6 +335,7 @@ const useStrings = () => {
     security: intl.formatMessage(messages.security),
     changePassword: intl.formatMessage(messages.changePassword),
     easyConfirmation: intl.formatMessage(messages.easyConfirmation),
+    easyConfirmationInfo: intl.formatMessage(messages.easyConfirmationInfo),
     removeWallet: intl.formatMessage(messages.removeWallet),
     network: intl.formatMessage(messages.network),
     walletType: intl.formatMessage(messages.walletType),

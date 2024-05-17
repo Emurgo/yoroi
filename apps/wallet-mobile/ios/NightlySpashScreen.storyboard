@@ -29,7 +29,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" fixedFrame="YES" image="BootSplashLogoNightly" translatesAutoresizingMaskIntoConstraints="NO" id="d1G-66-mAJ">
-                                <rect key="frame" x="74" y="295" width="245" height="263"/>
+                                <rect key="frame" x="74" y="293" width="245" height="263"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                         </subviews>
@@ -51,6 +51,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="BootSplashLogoNightly" width="218" height="223"/>
+        <image name="BootSplashLogoNightly" width="239" height="223"/>
     </resources>
 </document>

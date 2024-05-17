@@ -25,11 +25,11 @@ import {
   UseQueryOptions,
 } from 'react-query'
 
+import {AddressMode, WalletMeta} from '../../features/WalletManager/common/types'
+import {parseWalletMeta} from '../../features/WalletManager/common/validators'
+import {WalletManager} from '../../features/WalletManager/common/walletManager'
+import {useWalletManager} from '../../features/WalletManager/context/WalletManagerContext'
 import {CONFIG} from '../../legacy/config'
-import {AddressMode, WalletMeta} from '../../wallet-manager/types'
-import {parseWalletMeta} from '../../wallet-manager/validators'
-import {WalletManager} from '../../wallet-manager/walletManager'
-import {useWalletManager} from '../../wallet-manager/WalletManagerContext'
 import {getSpendingKey, getStakingKey} from '../cardano/addressInfo/addressInfo'
 import {generateShelleyPlateFromKey} from '../cardano/shelley/plate'
 import {WalletEvent, YoroiWallet} from '../cardano/types'
@@ -655,12 +655,13 @@ export const useWalletMetas = (walletManager: WalletManager, options?: UseQueryO
   }
 }
 
+export const hasWalletsKey = 'hasWallets'
 export const useHasWallets = (
   walletManager: WalletManager,
   options?: UseQueryOptions<Array<WalletMeta>, Error, boolean>,
 ) => {
   const query = useQuery({
-    queryKey: ['walletMetas'],
+    queryKey: [hasWalletsKey],
     queryFn: async () => walletManager.listWallets(),
     select: (walletMetas) => walletMetas.length > 0,
     suspense: true,
@@ -669,7 +670,10 @@ export const useHasWallets = (
 
   if (query.data == null) throw new Error('invalid state')
 
-  return query.data
+  return {
+    ...query,
+    hasWallets: query.data,
+  }
 }
 
 export const useRemoveWallet = (id: YoroiWallet['id'], options: UseMutationOptions<void, Error, void> = {}) => {

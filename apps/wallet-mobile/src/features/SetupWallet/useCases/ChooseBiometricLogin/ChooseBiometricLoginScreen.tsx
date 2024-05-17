@@ -1,4 +1,3 @@
-import {useNavigation} from '@react-navigation/native'
 import {parseBoolean, useAsyncStorage} from '@yoroi/common'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
@@ -10,6 +9,7 @@ import {useQuery, UseQueryOptions} from 'react-query'
 
 import {Button} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
+import {useWalletNavigation} from '../../../../navigation'
 import {useEnableAuthWithOs} from '../../../../yoroi-wallets/auth'
 import * as HASKELL_SHELLEY from '../../../../yoroi-wallets/cardano/constants/mainnet/constants'
 import {useStrings} from '../../common/useStrings'
@@ -20,12 +20,11 @@ export const ChooseBiometricLoginScreen = () => {
   const strings = useStrings()
   const storage = useAsyncStorage()
   const {walletImplementationIdChanged} = useSetupWallet()
+  const {resetToWalletSetupInit} = useWalletNavigation()
 
   const navigate = () => {
     walletImplementationIdChanged(HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID)
-    navigation.navigate('new-wallet', {
-      screen: 'setup-wallet-choose-setup-type',
-    })
+    resetToWalletSetupInit()
   }
 
   const {enableAuthWithOs, isLoading} = useEnableAuthWithOs({
@@ -38,8 +37,6 @@ export const ChooseBiometricLoginScreen = () => {
   const setScreenShown = () => {
     storage.setItem(chooseBiometricLoginScreenShownKey, JSON.stringify(false))
   }
-
-  const navigation = useNavigation()
 
   return (
     <SafeAreaView edges={['left', 'right', 'top', 'bottom']} style={styles.root}>

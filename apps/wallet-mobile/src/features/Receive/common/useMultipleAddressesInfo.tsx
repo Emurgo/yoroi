@@ -1,7 +1,7 @@
 import {isBoolean, parseSafe, useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
 import {UseMutationOptions, useQuery, UseQueryOptions} from 'react-query'
 
-import {useSelectedWallet} from '../../WalletManager/Context'
+import {useSelectedWallet} from '../../WalletManager/context/SelectedWalletContext'
 
 const isShowingMultipleAddressInfoKey = 'isShowingMultipleAddressesModal'
 

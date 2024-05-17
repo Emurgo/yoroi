@@ -10,7 +10,7 @@ import {QueryProvider} from '../../../../../../.storybook/decorators'
 import {Boundary} from '../../../../../components'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {mocks as walletMocks} from '../../../../../yoroi-wallets/mocks/wallet'
-import {SelectedWalletProvider} from '../../../../WalletManager/Context'
+import {SelectedWalletProvider} from '../../../../WalletManager/context/SelectedWalletContext'
 import {SelectNameServer} from './SelectNameServer'
 
 storiesOf('Send SelectNameServer', module)

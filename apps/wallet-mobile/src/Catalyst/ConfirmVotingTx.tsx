@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet} from 'react-native'
@@ -7,7 +6,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {KeyboardAvoidingView, ProgressStep, Spacer, TextInput} from '../components'
 import {ConfirmTx} from '../components/ConfirmTx'
 import {debugWalletInfo, features} from '../features'
-import {useSelectedWallet} from '../features/WalletManager/Context'
+import {useSelectedWallet} from '../features/WalletManager/context/SelectedWalletContext'
 import {Instructions as HWInstructions} from '../HW'
 import {errorMessages, txLabels} from '../i18n/global-messages'
 import LocalizableError from '../i18n/LocalizableError'
@@ -138,6 +137,7 @@ const useStrings = () => {
 
   return {
     errorMessage: (error: LocalizableError) =>
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       intl.formatMessage({id: error.id, defaultMessage: error.defaultMessage}, (error as any).values),
     fees: intl.formatMessage(txLabels.fees),
     subTitle: intl.formatMessage(messages.subTitle),

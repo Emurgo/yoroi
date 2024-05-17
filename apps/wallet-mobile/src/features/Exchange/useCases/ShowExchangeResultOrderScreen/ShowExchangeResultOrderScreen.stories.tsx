@@ -5,7 +5,7 @@ import React from 'react'
 
 import {ModalProvider} from '../../../../components'
 import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks'
-import {SelectedWalletProvider} from '../../../WalletManager/Context'
+import {SelectedWalletProvider} from '../../../WalletManager/context/SelectedWalletContext'
 import {ShowExchangeResultOrderScreen} from './ShowExchangeResultOrderScreen'
 
 storiesOf('Exchange ShowExchangeResultOrderScreen', module).add('with deep link data', () => <WithDeepLinkData />)

@@ -7,9 +7,9 @@ import uuid from 'uuid'
 
 import {AppNavigator} from './AppNavigator'
 import {useInitScreenShare} from './features/Settings/ScreenShare'
+import {walletManager} from './features/WalletManager/common/walletManager'
 import {CONFIG, isProduction} from './legacy/config'
 import {storageVersionMaker} from './migrations/storageVersion'
-import {walletManager} from './wallet-manager/walletManager'
 import {useCrashReportsEnabled} from './yoroi-wallets/hooks'
 
 if (Platform.OS === 'android') {

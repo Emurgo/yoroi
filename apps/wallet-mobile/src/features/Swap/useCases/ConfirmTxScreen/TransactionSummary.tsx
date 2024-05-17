@@ -9,7 +9,7 @@ import {AmountItem} from '../../../../components/AmountItem/AmountItem'
 import {PairedBalance} from '../../../../components/PairedBalance/PairedBalance'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../yoroi-wallets/utils'
-import {useSelectedWallet} from '../../../WalletManager/Context'
+import {useSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'
 import {PRICE_IMPACT_HIGH_RISK, PRICE_IMPACT_MODERATE_RISK, PRICE_PRECISION} from '../../common/constants'
 import {getPriceImpactRisk, usePriceImpactRiskTheme} from '../../common/helpers'
 import {LiquidityPool} from '../../common/LiquidityPool/LiquidityPool'
@@ -138,7 +138,7 @@ export const TransactionSummary = () => {
       <View style={styles.card}>
         <Text style={styles.cardText}>{strings.total}</Text>
 
-        <View>
+        <View style={styles.total}>
           <Text style={[styles.cardText, styles.cardTextValue]}>{formattedSellText}</Text>
 
           {!isSellPrimary && (
@@ -340,6 +340,10 @@ const useStyles = () => {
     },
     bold: {
       ...atoms.body_2_md_medium,
+    },
+    total: {
+      flexDirection: 'column',
+      alignItems: 'flex-end',
     },
   })
 

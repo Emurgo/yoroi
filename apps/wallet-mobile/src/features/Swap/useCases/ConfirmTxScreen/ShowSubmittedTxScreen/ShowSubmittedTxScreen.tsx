@@ -1,4 +1,5 @@
 import {createTypeGuardFromSchema, isString} from '@yoroi/common'
+import {useExplorers} from '@yoroi/explorers'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Linking, StyleSheet, View} from 'react-native'
@@ -7,8 +8,7 @@ import {z} from 'zod'
 
 import {Button, Spacer, Text} from '../../../../../components'
 import {useBlockGoBack, useUnsafeParams, useWalletNavigation} from '../../../../../navigation'
-import {getNetworkConfigById} from '../../../../../yoroi-wallets/cardano/networks'
-import {useSelectedWallet} from '../../../../WalletManager/Context'
+import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
 import {useStrings} from '../../../common/strings'
 import {SubmittedTxImage} from './SubmittedTxImage'
 
@@ -20,14 +20,17 @@ export const ShowSubmittedTxScreen = () => {
   const strings = useStrings()
   const styles = useStyles()
   const wallet = useSelectedWallet()
+  const explorers = useExplorers(wallet.network)
   const walletNavigate = useWalletNavigation()
 
   const unsafeParams = useUnsafeParams()
   const params = isParams(unsafeParams) ? unsafeParams : null
 
+  if (!params) throw new Error('Invalid params')
+
   const navigateToExplorer = () => {
     const txId = params?.txId ?? ''
-    Linking.openURL(getNetworkConfigById(wallet.networkId).EXPLORER_URL_FOR_TX(txId))
+    Linking.openURL(explorers.cardanoscan.tx(txId))
   }
 
   return (

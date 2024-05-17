@@ -2,7 +2,7 @@ import {storiesOf} from '@storybook/react-native'
 import * as React from 'react'
 
 import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks'
-import {SelectedWalletProvider} from '../../../WalletManager/Context'
+import {SelectedWalletProvider} from '../../../WalletManager/context/SelectedWalletContext'
 import {BrowserProvider} from '../../common/BrowserProvider'
 import {WelcomeDAppModal} from './WelcomeDAppModal'
 

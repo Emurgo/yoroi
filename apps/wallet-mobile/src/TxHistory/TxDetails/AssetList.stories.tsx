@@ -3,7 +3,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {QueryClient, QueryClientProvider} from 'react-query'
 
-import {SelectedWalletProvider} from '../../features/WalletManager/Context'
+import {SelectedWalletProvider} from '../../features/WalletManager/context/SelectedWalletContext'
 import {mocks} from '../../yoroi-wallets/mocks'
 import {AssetList} from './AssetList'
 import {useSendStyles} from './AssetListSend.style'

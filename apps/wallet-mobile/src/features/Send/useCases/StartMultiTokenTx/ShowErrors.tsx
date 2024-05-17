@@ -2,7 +2,7 @@ import React from 'react'
 
 import {Banner, ClickableBanner, Spacer} from '../../../../components'
 import {useHasPendingTx, useSync} from '../../../../yoroi-wallets/hooks'
-import {useSelectedWallet} from '../../../WalletManager/Context'
+import {useSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'
 import {useStrings} from '../../common/strings'
 
 export const ShowErrors = () => {

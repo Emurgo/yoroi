@@ -9,8 +9,8 @@ import {Button, Spacer, useModal} from '../../../components'
 import {useCopy} from '../../../legacy/useCopy'
 import {useMetrics} from '../../../metrics/metricsManager'
 import {isEmptyString} from '../../../utils'
-import {AddressMode} from '../../../wallet-manager/types'
-import {useAddressModeManager} from '../../../wallet-manager/useAddressModeManager'
+import {AddressMode} from '../../WalletManager/common/types'
+import {useAddressModeManager} from '../../WalletManager/common/useAddressModeManager'
 import {AddressDetailCard} from '../common/AddressDetailCard/AddressDetailCard'
 import {useReceive} from '../common/ReceiveProvider'
 import {
@@ -113,13 +113,13 @@ export const DescribeSelectedAddressScreen = () => {
 }
 
 const useStyles = () => {
-  const {color} = useTheme()
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
     root: {
       flex: 1,
       backgroundColor: color.gray_cmin,
-      padding: 16,
+      ...atoms.p_lg,
     },
     address: {
       flex: 1,

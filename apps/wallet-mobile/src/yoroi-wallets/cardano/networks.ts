@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {getKeys, isKeyOf} from '@yoroi/common'
-import {flatten} from 'lodash'
+import {isKeyOf} from '@yoroi/common'
 
 import * as SANCHONET_CONFIG from '../cardano/constants/sanchonet/constants'
 import type {NetworkId} from '../types/other'
@@ -33,10 +32,6 @@ export const BYRON_MAINNET = {
   MARKETING_NAME: 'Mainnet',
   ENABLED: false,
   IS_MAINNET: true,
-  EXPLORER_URL_FOR_ADDRESS: (_addr: string) => '',
-  EXPLORER_URL_FOR_TOKEN: (_addr: string) => '',
-  CEXPLORER_URL_FOR_TOKEN: (_addr: string) => '',
-  EXPLORER_URL_FOR_TX: (_addr: string) => '',
   PROTOCOL_MAGIC: 764824073,
   GENESIS_DATE: '1506203091000',
   START_AT: 0,
@@ -52,12 +47,6 @@ const HASKELL_SHELLEY = {
   CHAIN_NETWORK_ID: '1',
   IS_MAINNET: true,
 
-  EXPLORER_URL_FOR_ADDRESS: (address: string) => `https://cardanoscan.io/address/${address}`,
-  EXPLORER_URL_FOR_TOKEN: (fingerprint: string) =>
-    fingerprint.length > 0 ? `https://cardanoscan.io/token/${fingerprint}` : `https://cardanoscan.io/tokens`,
-  CEXPLORER_URL_FOR_TOKEN: (fingerprint: string) =>
-    fingerprint.length > 0 ? `https://cexplorer.io/asset/${fingerprint}` : `https://cexplorer.io/asset`,
-  EXPLORER_URL_FOR_TX: (txid: string) => `https://cardanoscan.io/transaction/${txid}`,
   POOL_EXPLORER: 'https://adapools.yoroiwallet.com/?source=mobile',
 
   BACKEND: {
@@ -103,14 +92,6 @@ const HASKELL_SHELLEY_TESTNET = {
   CHAIN_NETWORK_ID: '0',
   IS_MAINNET: false,
 
-  EXPLORER_URL_FOR_ADDRESS: (address: string) => `https://preprod.cardanoscan.io/address/${address}`,
-  EXPLORER_URL_FOR_TOKEN: (fingerprint: string) =>
-    fingerprint.length > 0
-      ? `https://preprod.cardanoscan.io/token/${fingerprint}`
-      : `https://preprod.cardanoscan.io/tokens`,
-  CEXPLORER_URL_FOR_TOKEN: (fingerprint: string) =>
-    fingerprint.length > 0 ? `https://preprod.cexplorer.io/asset/${fingerprint}` : `https://preprod.cexplorer.io/asset`,
-  EXPLORER_URL_FOR_TX: (txid: string) => `https://preprod.cardanoscan.io/transaction/${txid}`,
   POOL_EXPLORER: 'https://adapools.yoroiwallet.com/?source=mobile',
 
   BACKEND: {
@@ -146,74 +127,24 @@ const HASKELL_SHELLEY_TESTNET = {
   POOL_DEPOSIT: '500000000',
   KEY_DEPOSIT: '2000000',
 }
-const JORMUNGANDR = {
-  PROVIDER_ID: YOROI_PROVIDER_IDS.JORMUNGANDR,
-  NETWORK_ID: NETWORK_REGISTRY.JORMUNGANDR,
-  MARKETING_NAME: 'Incentivized Testnet (ITN)',
-  ENABLED: false,
-  IS_MAINNET: false,
-  PROTOCOL_MAGIC: 764824073,
-  BACKEND: {
-    API_ROOT: 'https://shelley-itn-yoroi-backend.yoroiwallet.com/api',
-    NFT_STORAGE_URL: 'https://validated-nft-images.s3.amazonaws.com',
-    ..._DEFAULT_BACKEND_RULES,
-  },
-  SEIZA_STAKING_SIMPLE: (ADA: string) =>
-    `https://testnet.seiza-website.emurgo.io/staking-simple/list?sortBy=RANDOM&searchText=&performance[]=0&performance[]=100&source=mobile&userAda=${ADA}`,
-  EXPLORER_URL_FOR_ADDRESS: (address: string) => `https://shelleyexplorer.cardano.org/address/?id=${address}`,
-  EXPLORER_URL_FOR_TOKEN: (_addr: string) => {
-    throw new Error('Deprecated network')
-  },
-  CEXPLORER_URL_FOR_TOKEN: (_addr: string) => {
-    throw new Error('Deprecated network')
-  },
-  EXPLORER_URL_FOR_TX: (_tx: string) => {
-    throw new Error('Deprecated network')
-  },
-  LINEAR_FEE: {
-    CONSTANT: '200000',
-    COEFFICIENT: '100000',
-    CERTIFICATE: '400000',
-    PER_CERTIFICATE_FEES: {
-      CERTIFICATE_POOL_REGISTRATION: '500000000',
-      CERTIFICATE_STAKE_DELEGATION: '400000',
-    },
-  },
-  ADDRESS_DISCRIMINATION: {
-    PRODUCTION: '0',
-    TEST: '1',
-  },
-  GENESISHASH: '8e4d2a343f3dcf9330ad9035b3e8d168e6728904262f2c434a4f8f934ec7b676',
-  BLOCK0_DATE: 1576264417000,
-  SLOTS_PER_EPOCH: 43200,
-  SLOT_DURATION: 2,
-  PER_EPOCH_PERCENTAGE_REWARD: 19666,
-  BECH32_PREFIX: {
-    ADDRESS: 'addr',
-  },
-}
 
 export const NETWORKS = {
   // Deprecated
   BYRON_MAINNET,
+
   HASKELL_SHELLEY,
   HASKELL_SHELLEY_TESTNET,
-  // Deprecated. Consider removing
-  JORMUNGANDR,
   SANCHONET: SANCHONET_CONFIG.NETWORK_CONFIG,
 }
 export type NetworkConfig =
   | typeof NETWORKS.BYRON_MAINNET
   | typeof NETWORKS.HASKELL_SHELLEY
   | typeof NETWORKS.HASKELL_SHELLEY_TESTNET
-  | typeof NETWORKS.JORMUNGANDR
   | typeof NETWORKS.SANCHONET
 
 /**
  * queries related to blockchain/network parameters
  */
-// TODO: perhaps rename as isJormungandrNetwork for better naming consistency
-export const isJormungandr = (networkId: NetworkId): boolean => networkId === NETWORK_REGISTRY.JORMUNGANDR
 export const isHaskellShelleyNetwork = (networkId: NetworkId): boolean =>
   networkId === NETWORK_REGISTRY.HASKELL_SHELLEY ||
   networkId === NETWORK_REGISTRY.HASKELL_SHELLEY_TESTNET ||
@@ -249,36 +180,3 @@ export const getCardanoNetworkConfigById = (networkId: NetworkId): CardanoHaskel
       throw new Error('network id is not a valid Haskell Shelley id')
   }
 }
-export const PRIMARY_ASSET_CONSTANTS = {
-  CARDANO: '', // ERGO: '',
-  // JORMUNGANDR: '',
-}
-export const DEFAULT_ASSETS: Array<Record<string, any>> = flatten(
-  getKeys(NETWORKS)
-    .map((key) => NETWORKS[key])
-    .filter((network) => network.ENABLED)
-    .map((network) => {
-      if (isHaskellShelleyNetwork(network.NETWORK_ID)) {
-        return [
-          {
-            NETWORK_ID: network.NETWORK_ID,
-            IDENTIFIER: PRIMARY_ASSET_CONSTANTS.CARDANO,
-            IS_DEFAULT: true,
-            METADATA: {
-              TYPE: 'Cardano',
-              POLICY_ID: PRIMARY_ASSET_CONSTANTS.CARDANO,
-              ASSET_NAME: PRIMARY_ASSET_CONSTANTS.CARDANO,
-              TICKER: network.IS_MAINNET ? 'ADA' : 'TADA',
-              LONG_NAME: null,
-              NUMBER_OF_DECIMALS: 6,
-              MAX_SUPPLY: '45 000 000 000 000000'.replace(/ /g, ''),
-            },
-          },
-        ]
-      }
-
-      throw new Error(`Missing default asset for network type ${JSON.stringify(network)}`)
-    }),
-)
-export const MAX_VALUE_BYTES = 5000
-export const MAX_TX_BYTES = 16 * 1024

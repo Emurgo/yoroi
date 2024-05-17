@@ -60,6 +60,20 @@ export const SetupWalletProvider = ({
     useUSBChanged: (useUSB: SetupWalletState['useUSB']) =>
       dispatch({type: SetupWalletActionType.UseUSBChanged, useUSB}),
     reset: () => dispatch({type: SetupWalletActionType.Reset}),
+    showRestoreWalletInfoModalChanged: (
+      showRestoreWalletInfoModal: SetupWalletState['showRestoreWalletInfoModal'],
+    ) =>
+      dispatch({
+        type: SetupWalletActionType.ShowRestoreWalletInfoModalChanged,
+        showRestoreWalletInfoModal,
+      }),
+    showCreateWalletInfoModalChanged: (
+      showCreateWalletInfoModal: SetupWalletState['showCreateWalletInfoModal'],
+    ) =>
+      dispatch({
+        type: SetupWalletActionType.ShowCreateWalletInfoModalChanged,
+        showCreateWalletInfoModal,
+      }),
   }).current
 
   const context = React.useMemo(

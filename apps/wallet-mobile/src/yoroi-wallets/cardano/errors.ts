@@ -15,16 +15,6 @@ export class ApiError extends LocalizableError {
   }
 }
 
-// thrown when api failed to connect to the server
-export class NetworkError extends LocalizableError {
-  constructor() {
-    super({
-      id: errorMessages.networkError.message.id,
-      defaultMessage: errorMessages.networkError.message.defaultMessage || '',
-    })
-  }
-}
-
 // thrown by the backend after a rollback
 export class ApiHistoryError extends ApiError {
   public static readonly errors = {

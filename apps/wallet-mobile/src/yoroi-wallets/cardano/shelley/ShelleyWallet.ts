@@ -15,11 +15,11 @@ import {Observable} from 'rxjs'
 
 import {buildPortfolioBalanceManager} from '../../../features/Portfolio/common/hooks/usePortfolioBalanceManager'
 import {toBalanceManagerSyncArgs} from '../../../features/Portfolio/common/transformers/toBalanceManagerSyncArgs'
-import {toChainSupportedNetwork} from '../../../features/Portfolio/common/transformers/toChainSupportedNetwork'
-import {networksConfig} from '../../../features/WalletManager/common/constants'
+import {toChainSupportedNetwork} from '../../../features/WalletManager/common/helpers/to-chain-supported-network'
+import {networkManager} from '../../../features/WalletManager/common/network-manager'
+import {WalletMeta} from '../../../features/WalletManager/common/types'
+import walletManager from '../../../features/WalletManager/common/walletManager'
 import LocalizableError from '../../../i18n/LocalizableError'
-import {WalletMeta} from '../../../wallet-manager/types'
-import walletManager from '../../../wallet-manager/walletManager'
 import {HWDeviceInfo} from '../../hw'
 import {Logger} from '../../logging'
 import {makeMemosManager, MemosManager} from '../../memos'
@@ -306,7 +306,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       })
 
       const network = toChainSupportedNetwork(NETWORK_ID)
-      const portfolioPrimaryTokenInfo = networksConfig[network].primaryTokenInfo
+      const portfolioPrimaryTokenInfo = networkManager[network].primaryTokenInfo
       const tokenManager = walletManager.getTokenManager(network)
       const {balanceManager} = buildPortfolioBalanceManager({
         walletId: id,

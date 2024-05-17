@@ -1,14 +1,23 @@
 import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, View, ViewToken} from 'react-native'
+import {
+  InteractionManager,
+  LayoutAnimation,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  ScrollView,
+  StyleSheet,
+  View,
+  ViewToken,
+} from 'react-native'
 import Animated, {Layout} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer} from '../../../components'
 import {useMetrics} from '../../../metrics/metricsManager'
-import {useAddressModeManager} from '../../../wallet-manager/useAddressModeManager'
-import {useSelectedWallet} from '../../WalletManager/Context'
+import {useAddressModeManager} from '../../WalletManager/common/useAddressModeManager'
+import {useSelectedWallet} from '../../WalletManager/context/SelectedWalletContext'
 import {BIP32_HD_GAP_LIMIT} from '../common/contants'
 import {useReceive} from '../common/ReceiveProvider'
 import {ShowAddressLimitInfo} from '../common/ShowAddressLimitInfo/ShowAddressLimitInfo'
@@ -72,10 +81,32 @@ export const ListMultipleAddressesScreen = () => {
     }, [track]),
   )
 
+  const [showAddressLimitInfo, setShowAddressLimitInfo] = React.useState(true)
+  const scrollViewRef = React.useRef<ScrollView>(null)
+
+  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    if (event.nativeEvent.contentOffset.y <= 0) {
+      InteractionManager.runAfterInteractions(() => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+        setShowAddressLimitInfo(true)
+      })
+    } else if (showAddressLimitInfo && event.nativeEvent.contentOffset.y > 0) {
+      setShowAddressLimitInfo(false)
+    }
+  }
+  React.useEffect(() => {
+    if (hasReachedGapLimit) {
+      InteractionManager.runAfterInteractions(() => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+        setShowAddressLimitInfo(true)
+      })
+    }
+  }, [hasReachedGapLimit])
+
   return (
     <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
       <View style={styles.content}>
-        {hasReachedGapLimit && (
+        {showAddressLimitInfo && hasReachedGapLimit && (
           <>
             <ShowAddressLimitInfo />
 
@@ -83,14 +114,21 @@ export const ListMultipleAddressesScreen = () => {
           </>
         )}
 
-        <Animated.FlatList
-          data={addressInfos}
-          keyExtractor={(addressInfo) => addressInfo.address}
-          renderItem={renderAddressInfo}
-          layout={Layout}
+        <ScrollView
+          ref={scrollViewRef}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
           showsVerticalScrollIndicator={false}
-          onViewableItemsChanged={onViewableItemsChanged}
-        />
+        >
+          <Animated.FlatList
+            data={addressInfos}
+            keyExtractor={(addressInfo) => addressInfo.address}
+            renderItem={renderAddressInfo}
+            layout={Layout}
+            showsVerticalScrollIndicator={false}
+            onViewableItemsChanged={onViewableItemsChanged}
+          />
+        </ScrollView>
       </View>
 
       <Animated.View
@@ -110,6 +148,20 @@ export const ListMultipleAddressesScreen = () => {
       </Animated.View>
     </SafeAreaView>
   )
+}
+
+const toAddressInfos = (addresses: {unused: string[]; used: string[]}): AddressInfo[] => {
+  const unusedAddresses = addresses.unused.map((address) => ({
+    address,
+    isUsed: false,
+  }))
+
+  const usedAddresses = addresses.used.map((address) => ({
+    address,
+    isUsed: true,
+  }))
+
+  return [...unusedAddresses, ...usedAddresses]
 }
 
 const useStyles = () => {
@@ -141,18 +193,4 @@ const useStyles = () => {
   }
 
   return {styles, colors} as const
-}
-
-const toAddressInfos = (addresses: {unused: string[]; used: string[]}): AddressInfo[] => {
-  const unusedAddresses = addresses.unused.map((address) => ({
-    address,
-    isUsed: false,
-  }))
-
-  const usedAddresses = addresses.used.map((address) => ({
-    address,
-    isUsed: true,
-  }))
-
-  return [...unusedAddresses, ...usedAddresses]
 }

@@ -5,7 +5,7 @@ import {TransferProvider} from '@yoroi/transfer'
 import React from 'react'
 
 import {mocks as walletMocks} from '../../../../../yoroi-wallets/mocks'
-import {SelectedWalletProvider} from '../../../../WalletManager/Context'
+import {SelectedWalletProvider} from '../../../../WalletManager/context/SelectedWalletContext'
 import {mocks as sendMocks} from '../../../common/mocks'
 import {EditAmountScreen} from './EditAmountScreen'
 

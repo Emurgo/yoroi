@@ -16,7 +16,7 @@ import {useMetrics} from '../../metrics/metricsManager'
 import {defaultStackNavigationOptions, useWalletNavigation} from '../../navigation'
 import {usePoolTransition} from '../../Staking/PoolTransition/usePoolTransition'
 import {useIsGovernanceFeatureEnabled} from '../Staking/Governance'
-import {useSelectedWallet} from '../WalletManager/Context'
+import {useSelectedWallet} from '../WalletManager/context/SelectedWalletContext'
 
 const MenuStack = createStackNavigator()
 
@@ -197,11 +197,10 @@ const useNavigateTo = () => {
   const prefetchStakingInfo = usePrefetchStakingInfo(wallet)
 
   return {
-    allWallets: () => navigation.navigate('app-root', {screen: 'wallet-selection'}),
     catalystVoting: () => {
       prefetchStakingInfo()
 
-      navigation.navigate('app-root', {
+      navigation.navigate('manage-wallets', {
         screen: 'voting-registration',
         params: {
           screen: 'download-catalyst',

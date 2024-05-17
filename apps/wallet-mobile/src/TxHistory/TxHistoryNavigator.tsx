@@ -50,7 +50,7 @@ import {
 } from '../features/Swap/useCases'
 import {SelectBuyTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
 import {SelectSellTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/EditSellAmount/SelectSellTokenFromListScreen/SelectSellTokenFromListScreen'
-import {useSelectedWallet} from '../features/WalletManager/Context'
+import {useSelectedWallet} from '../features/WalletManager/context/SelectedWalletContext'
 import {CONFIG} from '../legacy/config'
 import {
   BackButton,

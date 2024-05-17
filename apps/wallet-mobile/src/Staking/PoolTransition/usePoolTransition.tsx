@@ -8,7 +8,7 @@ import {useQuery} from 'react-query'
 
 import {useStakingInfo} from '../../Dashboard/StakePoolInfos'
 import {features} from '../../features'
-import {useSelectedWallet} from '../../features/WalletManager/Context'
+import {useSelectedWallet} from '../../features/WalletManager/context/SelectedWalletContext'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {asQuantity, Quantities} from '../../yoroi-wallets/utils'
 
@@ -50,7 +50,7 @@ export const usePoolTransition = () => {
   const navigateToUpdate = React.useCallback(async () => {
     try {
       const yoroiUnsignedTx = await createDelegationTx(wallet, poolId)
-      navigation.navigate('app-root', {
+      navigation.navigate('manage-wallets', {
         screen: 'staking-dashboard',
         params: {
           screen: 'delegation-confirmation',
@@ -62,7 +62,7 @@ export const usePoolTransition = () => {
         },
       })
     } catch (err) {
-      navigation.navigate('app-root', {
+      navigation.navigate('manage-wallets', {
         screen: 'staking-dashboard',
         params: {
           screen: 'delegation-failed-tx',

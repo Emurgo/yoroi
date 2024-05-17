@@ -6,7 +6,7 @@ import * as React from 'react'
 
 import {LoadingBoundary} from '../../components'
 import {defaultStackNavigationOptions, DiscoverRoutes} from '../../navigation'
-import {useSelectedWallet} from '../WalletManager/Context'
+import {useSelectedWallet} from '../WalletManager/context/SelectedWalletContext'
 import {BrowserNavigator} from './BrowserNavigator'
 import {BrowserProvider} from './common/BrowserProvider'
 import {useOpenConfirmConnectionModal} from './common/ConfirmConnectionModal'
