@@ -1,0 +1,47 @@
+[
+  {
+    "id": "components.stakingcenter.confirmDelegation.delegateButtonLabel",
+    "defaultMessage": "!!!Delegate",
+    "file": "src/Staking/PoolDetails/PoolDetailScreen.tsx",
+    "start": {
+      "line": 81,
+      "column": 12,
+      "index": 1845
+    },
+    "end": {
+      "line": 84,
+      "column": 3,
+      "index": 1959
+    }
+  },
+  {
+    "id": "components.stakingcenter.pooldetailscreen.title",
+    "defaultMessage": "!!!Nightly delegation",
+    "file": "src/Staking/PoolDetails/PoolDetailScreen.tsx",
+    "start": {
+      "line": 85,
+      "column": 9,
+      "index": 1970
+    },
+    "end": {
+      "line": 88,
+      "column": 3,
+      "index": 2079
+    }
+  },
+  {
+    "id": "global.staking.stakePoolHash",
+    "defaultMessage": "!!!Stake pool hash",
+    "file": "src/Staking/PoolDetails/PoolDetailScreen.tsx",
+    "start": {
+      "line": 89,
+      "column": 12,
+      "index": 2093
+    },
+    "end": {
+      "line": 92,
+      "column": 3,
+      "index": 2180
+    }
+  }
+]

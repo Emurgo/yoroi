@@ -1,0 +1,167 @@
+[
+  {
+    "id": "analytics.header",
+    "defaultMessage": "!!!Join the journey to improve Yoroi",
+    "file": "src/components/Analytics/Analytics.tsx",
+    "start": {
+      "line": 290,
+      "column": 10,
+      "index": 7238
+    },
+    "end": {
+      "line": 293,
+      "column": 3,
+      "index": 7331
+    }
+  },
+  {
+    "id": "analytics.description",
+    "defaultMessage": "!!!Share user insights to help us fine tune Yoroi to better serve your needs.",
+    "file": "src/components/Analytics/Analytics.tsx",
+    "start": {
+      "line": 294,
+      "column": 15,
+      "index": 7348
+    },
+    "end": {
+      "line": 297,
+      "column": 3,
+      "index": 7487
+    }
+  },
+  {
+    "id": "analytics.anonymous",
+    "defaultMessage": "!!!Anonymous analytics data",
+    "file": "src/components/Analytics/Analytics.tsx",
+    "start": {
+      "line": 298,
+      "column": 13,
+      "index": 7502
+    },
+    "end": {
+      "line": 301,
+      "column": 3,
+      "index": 7589
+    }
+  },
+  {
+    "id": "analytics.optout",
+    "defaultMessage": "!!!You can always opt-out via Settings",
+    "file": "src/components/Analytics/Analytics.tsx",
+    "start": {
+      "line": 302,
+      "column": 10,
+      "index": 7601
+    },
+    "end": {
+      "line": 305,
+      "column": 3,
+      "index": 7696
+    }
+  },
+  {
+    "id": "analytics.private",
+    "defaultMessage": "!!!We <b>cannot</b> access private keys",
+    "file": "src/components/Analytics/Analytics.tsx",
+    "start": {
+      "line": 306,
+      "column": 11,
+      "index": 7709
+    },
+    "end": {
+      "line": 309,
+      "column": 3,
+      "index": 7806
+    }
+  },
+  {
+    "id": "analytics.noip",
+    "defaultMessage": "!!!We <b>are not</b> recording IP addresses",
+    "file": "src/components/Analytics/Analytics.tsx",
+    "start": {
+      "line": 310,
+      "column": 8,
+      "index": 7816
+    },
+    "end": {
+      "line": 313,
+      "column": 3,
+      "index": 7914
+    }
+  },
+  {
+    "id": "analytics.nosell",
+    "defaultMessage": "!!!We <b>do not</b> sell data",
+    "file": "src/components/Analytics/Analytics.tsx",
+    "start": {
+      "line": 314,
+      "column": 10,
+      "index": 7926
+    },
+    "end": {
+      "line": 317,
+      "column": 3,
+      "index": 8012
+    }
+  },
+  {
+    "id": "analytics.more",
+    "defaultMessage": "!!!Learn more about user insights",
+    "file": "src/components/Analytics/Analytics.tsx",
+    "start": {
+      "line": 318,
+      "column": 8,
+      "index": 8022
+    },
+    "end": {
+      "line": 321,
+      "column": 3,
+      "index": 8110
+    }
+  },
+  {
+    "id": "analytics.skip",
+    "defaultMessage": "!!!Skip",
+    "file": "src/components/Analytics/Analytics.tsx",
+    "start": {
+      "line": 322,
+      "column": 8,
+      "index": 8120
+    },
+    "end": {
+      "line": 325,
+      "column": 3,
+      "index": 8182
+    }
+  },
+  {
+    "id": "analytics.accept",
+    "defaultMessage": "!!!Accept",
+    "file": "src/components/Analytics/Analytics.tsx",
+    "start": {
+      "line": 326,
+      "column": 10,
+      "index": 8194
+    },
+    "end": {
+      "line": 329,
+      "column": 3,
+      "index": 8260
+    }
+  },
+  {
+    "id": "analytics.toggle",
+    "defaultMessage": "!!!Allow Yoroi analytics",
+    "file": "src/components/Analytics/Analytics.tsx",
+    "start": {
+      "line": 330,
+      "column": 10,
+      "index": 8272
+    },
+    "end": {
+      "line": 333,
+      "column": 3,
+      "index": 8353
+    }
+  }
+]

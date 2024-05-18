@@ -1,0 +1,32 @@
+[
+  {
+    "id": "components.delegationsummary.epochProgress.title",
+    "defaultMessage": "!!!Epoch progress",
+    "file": "src/Dashboard/EpochProgress.tsx",
+    "start": {
+      "line": 60,
+      "column": 22,
+      "index": 1665
+    },
+    "end": {
+      "line": 63,
+      "column": 3,
+      "index": 1771
+    }
+  },
+  {
+    "id": "components.delegationsummary.epochProgress.endsIn",
+    "defaultMessage": "!!!Ends in",
+    "file": "src/Dashboard/EpochProgress.tsx",
+    "start": {
+      "line": 64,
+      "column": 15,
+      "index": 1788
+    },
+    "end": {
+      "line": 67,
+      "column": 3,
+      "index": 1888
+    }
+  }
+]
