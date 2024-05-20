@@ -8,4 +8,8 @@ export const adaHandleDomainNormalizer: Record<
     if (!domain.startsWith('$')) return `$${domain}`
     return domain
   },
+  [handleApiConfig.preprod.policyId]: (domain: string) => {
+    if (!domain.startsWith('$')) return `$${domain}`
+    return domain
+  },
 }

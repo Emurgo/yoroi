@@ -7,6 +7,7 @@ import {resolveAddress} from './api-helpers'
 
 export const cnsCryptoAddress = (
   cslFactory: (scope: string) => WasmModuleProxy,
+  isMainnet: boolean = true,
 ) => {
   return async (receiver: string, fetcherConfig?: AxiosRequestConfig) => {
     if (!receiver.includes('.')) throw new Resolver.Errors.InvalidDomain()
@@ -15,10 +16,12 @@ export const cnsCryptoAddress = (
     const cslScopeId = String(Math.random())
     const csl = cslFactory(cslScopeId)
     try {
-      const cnsCardanoApi = makeCnsCardanoApi(cnsApiConfig.mainnet.baseUrl)
+      const cnsCardanoApi = makeCnsCardanoApi(
+        isMainnet ? cnsApiConfig.mainnet.baseUrl : cnsApiConfig.preprod.baseUrl,
+      )
       const address = await resolveAddress(
         receiver,
-        cnsApiConfig.mainnet,
+        isMainnet ? cnsApiConfig.mainnet : cnsApiConfig.preprod,
         cnsCardanoApi,
         csl,
         fetcherConfig,
@@ -44,6 +47,16 @@ export const cnsApiConfig = {
     recordAddress:
       'addr1z8dyldfnnpg4w85d32lv64f5ldra02juhnzxdvlyyrpfs0leh7ahm4pdpqxx0mc0wvmu6n025jml40g7pfd0j0vf6aqsl2tlcx',
     networkId: 1,
+    domainLevels: 2,
+    virtualSubdomainLevels: 3,
+  },
+  preprod: {
+    baseUrl: 'https://preprod-backend.yoroiwallet.com',
+    cnsPolicyId: 'baefdc6c5b191be372a794cd8d40d839ec0dbdd3c28957267dc81700',
+    recordPolicyId: 'a048db3b45c2aa5f1ad472338e6e6dea41a45f4350c8753a231403aa',
+    recordAddress:
+      'addr_test1wzzfgjazt5ts34cstrhzaac4xav8x7z2m3vg76s8qmaztzglsw8k5',
+    networkId: 0,
     domainLevels: 2,
     virtualSubdomainLevels: 3,
   },
