@@ -214,20 +214,7 @@ export type YoroiWallet = {
 
   getProtocolParams(): Promise<Api.Cardano.ProtocolParamsResult>
 
-  // CIP-30
-  CIP30getBalance(tokenId?: string): Promise<CoreTypes.Value>
-  CIP30getUnusedAddresses(): Promise<CoreTypes.Address[]>
-  CIP30getUsedAddresses(params?: {page: number; limit: number}): Promise<CoreTypes.Address[]>
-  CIP30getChangeAddress(): Promise<CoreTypes.Address>
-  CIP30getRewardAddresses(): Promise<CoreTypes.Address[]>
-  CIP30getUtxos(
-    value?: string,
-    paginate?: {page: number; limit: number},
-  ): Promise<CoreTypes.TransactionUnspentOutput[] | null>
-  CIP30getCollateral(value?: string): Promise<CoreTypes.TransactionUnspentOutput[] | null>
-  CIP30submitTx(cbor: string): Promise<string>
-  CIP30signTx(rootKey: string, txHex: string, partialSign?: boolean): Promise<CoreTypes.TransactionWitnessSet>
-  CIP30signData(rootKey: string, address: string, payload: string): Promise<{signature: string; key: string}>
+  getChangeAddress(): string
 }
 
 export const isYoroiWallet = (wallet: unknown): wallet is YoroiWallet => {

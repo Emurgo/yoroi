@@ -7,8 +7,8 @@ import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {Logger} from '../../../yoroi-wallets/logging'
 import {ConfirmRawTxWithOs} from '../../Swap/common/ConfirmRawTx/ConfirmRawTxWithOs'
 import {ConfirmRawTxWithPassword} from '../../Swap/common/ConfirmRawTx/ConfirmRawTxWithPassword'
-import {walletConfig} from './wallet-config'
 import {useStrings} from './useStrings'
+import {walletConfig} from './wallet-config'
 
 export const useConnectWalletToWebView = (wallet: YoroiWallet, webViewRef: React.RefObject<WebView | null>) => {
   const {manager, sessionId} = useDappConnector()

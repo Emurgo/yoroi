@@ -48,7 +48,6 @@ import {calcLockedDeposit} from '../assetUtils'
 import {encryptWithPassword} from '../catalyst/catalystCipher'
 import {generatePrivateKeyForCatalyst} from '../catalyst/catalystUtils'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
-import * as cip30 from '../cip30'
 import {createSwapCancellationLedgerPayload} from '../common/signatureUtils'
 import * as MAINNET from '../constants/mainnet/constants'
 import * as SANCHONET from '../constants/sanchonet/constants'
@@ -66,7 +65,6 @@ import {
   isYoroiWallet,
   NoOutputsError,
   NotEnoughMoneyToSendError,
-  Pagination,
   RegistrationStatus,
   walletChecksum,
   WalletEvent,
@@ -485,13 +483,12 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
 
     // =================== utils =================== //
     // returns the address in bech32 (Shelley) or base58 (Byron) format
-    private getChangeAddress(): string {
+    getChangeAddress(): string {
       const candidateAddresses = this.internalChain.addresses
       const unseen = candidateAddresses.filter((addr) => !this.isUsedAddress(addr))
       assert(unseen.length > 0, 'Cannot find change address')
       const changeAddress = _.first(unseen)
       if (!changeAddress) throw new Error('invalid wallet state')
-
       return changeAddress
     }
 
@@ -977,47 +974,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     async ledgerSupportsCIP36(useUSB: boolean): Promise<boolean> {
       if (!this.hwDeviceInfo) throw new Error('Invalid wallet state')
       return doesCardanoAppVersionSupportCIP36(await getCardanoAppMajorVersion(this.hwDeviceInfo, useUSB))
-    }
-
-    CIP30getBalance(tokenId = '*'): Promise<CSL.Value> {
-      return cip30.getBalance(this, tokenId)
-    }
-
-    CIP30getUnusedAddresses(): Promise<CSL.Address[]> {
-      return cip30.getUnusedAddresses(this)
-    }
-
-    CIP30getUsedAddresses(pagination?: Pagination): Promise<CSL.Address[]> {
-      return cip30.getUsedAddresses(this, pagination)
-    }
-
-    CIP30getChangeAddress() {
-      const changeAddr = this.getChangeAddress()
-      return Cardano.Wasm.Address.fromBech32(changeAddr)
-    }
-
-    CIP30getRewardAddresses(): Promise<CSL.Address[]> {
-      return cip30.getRewardAddress(this)
-    }
-
-    CIP30getUtxos(value?: string, pagination?: Pagination): Promise<CSL.TransactionUnspentOutput[] | null> {
-      return cip30.getUtxos(this, value, pagination)
-    }
-
-    CIP30getCollateral(value?: string): Promise<CSL.TransactionUnspentOutput[] | null> {
-      return cip30.getCollateral(this, value)
-    }
-
-    CIP30submitTx(cbor: string): Promise<string> {
-      return cip30.submitTx(this, cbor)
-    }
-
-    CIP30signData(rootKey: string, address: string, payload: string): Promise<{signature: string; key: string}> {
-      return cip30.signData(this, rootKey, address, payload)
-    }
-
-    CIP30signTx(rootKey: string, cbor: string, partial = false): Promise<CSL.TransactionWitnessSet> {
-      return cip30.signTx(this, rootKey, cbor, partial)
     }
 
     async signSwapCancellationWithLedger(cbor: string, useUSB: boolean): Promise<void> {

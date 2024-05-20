@@ -2,6 +2,7 @@ import {connectionStorageMaker, dappConnectorApiMaker, dappConnectorMaker, Resol
 import {DappConnector} from '@yoroi/dapp-connector'
 import {App} from '@yoroi/types'
 
+import {cip30ExtensionMaker} from '../../../yoroi-wallets/cardano/cip30'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 
 export const validUrl = (url: string) => {
@@ -67,25 +68,26 @@ type CreateDappConnectorOptions = {
 export const createDappConnector = (options: CreateDappConnectorOptions) => {
   const {wallet, appStorage, confirmConnection, signTx, signData} = options
   const api = dappConnectorApiMaker()
+  const cip30 = cip30ExtensionMaker(wallet)
   const handlerWallet: ResolverWallet = {
     id: wallet.id,
     networkId: wallet.networkId,
-    getUsedAddresses: (params) => wallet.CIP30getUsedAddresses(params),
-    getUnusedAddresses: () => wallet.CIP30getUnusedAddresses(),
-    getBalance: (tokenId) => wallet.CIP30getBalance(tokenId),
-    getChangeAddress: () => wallet.CIP30getChangeAddress(),
-    getRewardAddresses: () => wallet.CIP30getRewardAddresses(),
-    submitTx: (cbor) => wallet.CIP30submitTx(cbor),
-    getCollateral: (value) => wallet.CIP30getCollateral(value),
-    getUtxos: (value, pagination) => wallet.CIP30getUtxos(value, pagination),
+    getUsedAddresses: (params) => cip30.getUsedAddresses(params),
+    getUnusedAddresses: () => cip30.getUnusedAddresses(),
+    getBalance: (tokenId) => cip30.getBalance(tokenId),
+    getChangeAddress: () => cip30.getChangeAddress(),
+    getRewardAddresses: () => cip30.getRewardAddresses(),
+    submitTx: (cbor) => cip30.submitTx(cbor),
+    getCollateral: (value) => cip30.getCollateral(value),
+    getUtxos: (value, pagination) => cip30.getUtxos(value, pagination),
     confirmConnection: (origin: string) => confirmConnection(origin, manager),
     signData: async (address, payload) => {
       const rootKey = await signData(address, payload)
-      return wallet.CIP30signData(rootKey, address, payload)
+      return cip30.signData(rootKey, address, payload)
     },
     signTx: async (cbor: string, partial?: boolean) => {
       const rootKey = await signTx(cbor)
-      return wallet.CIP30signTx(rootKey, cbor, partial)
+      return cip30.signTx(rootKey, cbor, partial)
     },
   }
   const storage = connectionStorageMaker({storage: appStorage.join('dapp-connections/')})
