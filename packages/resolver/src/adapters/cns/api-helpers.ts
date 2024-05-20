@@ -36,6 +36,7 @@ export const resolveDomain = async (
     cnsApiConfig.cnsPolicyId,
     assetName,
   )
+
   if (!address) throw new Resolver.Errors.NotFound()
 
   return address

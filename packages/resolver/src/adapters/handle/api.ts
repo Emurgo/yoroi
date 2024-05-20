@@ -5,11 +5,12 @@ import {AxiosRequestConfig} from 'axios'
 
 import {handleZodErrors} from '../zod-errors'
 
-const initialDeps = {request: fetchData} as const
+const initialDeps = {request: fetchData, isMainnet: true} as const
 
 export const handleApiGetCryptoAddress = ({
   request,
-}: {request: FetchData} = initialDeps) => {
+  isMainnet = true,
+}: {request: FetchData; isMainnet?: boolean} = initialDeps) => {
   return async (
     resolve: Resolver.Receiver['resolve'],
     fetcherConfig?: AxiosRequestConfig,
@@ -18,7 +19,11 @@ export const handleApiGetCryptoAddress = ({
 
     const sanitizedDomain = resolve.replace(/^\$/, '')
     const config = {
-      url: `${handleApiConfig.mainnet.getCryptoAddress}${sanitizedDomain}`,
+      url: `${
+        isMainnet
+          ? handleApiConfig.mainnet.getCryptoAddress
+          : handleApiConfig.preprod.getCryptoAddress
+      }${sanitizedDomain}`,
     } as const
 
     try {
@@ -90,6 +95,11 @@ export const handleApiConfig = {
     getCryptoAddress: 'https://api.handle.me/handles/',
     // https://docs.adahandle.com/official-policy-ids
     policyId: 'f0ff48bbb7bbe9d59a40f1ce90e9e9d0ff5002ec48f232b49ca0fb9a',
+  },
+  preprod: {
+    getCryptoAddress: 'https://preprod.api.handle.me/handles/',
+    // https://docs.adahandle.com/official-policy-ids
+    policyId: '8d18d786e92776c824607fd8e193ec535c79dc61ea2405ddf3b09fe3',
   },
 } as const
 
