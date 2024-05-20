@@ -131,7 +131,7 @@
     "@yoroi/resolver": "2.0.5",
     "@yoroi/setup-wallet": "1.0.0",
     "@yoroi/staking": "1.5.1",
-    "@yoroi/swap": "1.5.3",
+    "@yoroi/swap": "1.6.0",
     "@yoroi/theme": "^1.0.0",
     "@yoroi/transfer": "1.0.0",
     "add": "2.0.6",
