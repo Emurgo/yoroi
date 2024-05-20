@@ -62,7 +62,6 @@ import {
 } from '../navigation'
 import {COLORS} from '../theme'
 import {useFrontendFees, useStakingKey, useWalletName} from '../yoroi-wallets/hooks'
-import {isMainnetNetworkId} from '../yoroi-wallets/utils'
 import {ModalInfo} from './ModalInfo'
 import {TxDetails} from './TxDetails'
 import {TxHistory} from './TxHistory'
@@ -77,7 +76,6 @@ export const TxHistoryNavigator = () => {
   const storage = useAsyncStorage()
   const {atoms, color} = useTheme()
   const {styles} = useStyles()
-  const isMainnet = isMainnetNetworkId(wallet.networkId)
 
   // modal
   const [isModalInfoVisible, setIsModalInfoVisible] = React.useState(false)
@@ -87,17 +85,17 @@ export const TxHistoryNavigator = () => {
   const {frontendFees} = useFrontendFees(wallet)
   const stakingKey = useStakingKey(wallet)
   const swapManager = React.useMemo(() => {
-    const aggregatorTokenId = isMainnet ? milkTokenId.mainnet : milkTokenId.preprod
+    const aggregatorTokenId = wallet.isMainnet ? milkTokenId.mainnet : milkTokenId.preprod
     const swapStorage = swapStorageMaker()
     const swapApi = swapApiMaker({
-      isMainnet,
+      isMainnet: wallet.isMainnet,
       stakingKey,
       primaryTokenId: wallet.primaryTokenInfo.id,
       supportedProviders,
     })
     const frontendFeeTiers = frontendFees?.[aggregator] ?? ([] as const)
     return swapManagerMaker({swapStorage, swapApi, frontendFeeTiers, aggregator, aggregatorTokenId})
-  }, [isMainnet, stakingKey, wallet.primaryTokenInfo.id, frontendFees])
+  }, [wallet.isMainnet, wallet.primaryTokenInfo.id, stakingKey, frontendFees])
 
   // resolver
   const resolverManager = React.useMemo(() => {
@@ -108,12 +106,12 @@ export const TxHistoryNavigator = () => {
         },
       },
       cslFactory: init,
-      isMainnet,
+      isMainnet: wallet.isMainnet,
     })
     const walletStorage = storage.join(`wallet/${wallet.id}/`)
     const resolverStorage = resolverStorageMaker({storage: walletStorage})
     return resolverManagerMaker(resolverStorage, resolverApi)
-  }, [storage, wallet.id, isMainnet])
+  }, [storage, wallet.id, wallet.isMainnet])
 
   // claim
   const claimApi = React.useMemo(() => {
