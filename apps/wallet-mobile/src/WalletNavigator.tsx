@@ -13,6 +13,7 @@ import {useLinksRequestAction} from './features/Links/common/useLinksRequestActi
 import {useLinksShowActionResult} from './features/Links/common/useLinksShowActionResult'
 import {MenuNavigator} from './features/Menu'
 import {NftsNavigator} from './features/Nfts/NftsNavigator'
+import {PortfolioNavigator} from './features/Portfolio2/PortfolioNavigator'
 import {SearchProvider} from './features/Search/SearchContext'
 import {SettingsScreenNavigator} from './features/Settings'
 import {SetupWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
@@ -99,6 +100,18 @@ const WalletTabNavigator = () => {
             </SearchProvider>
           )}
         </Tab.Screen>
+
+        <Tab.Screen
+          component={PortfolioNavigator}
+          name="portfolio"
+          options={{
+            tabBarIcon: ({focused}) => (
+              <Icon.TabPortfolio size={24} color={focused ? colors.active : colors.inactive} />
+            ),
+            tabBarLabel: strings.portfolioButton,
+            tabBarTestID: 'portfolioTabBarButton',
+          }}
+        />
 
         <Tab.Screen
           name="nfts"
@@ -279,12 +292,17 @@ const messages = defineMessages({
     id: 'components.walletselection.walletselectionscreen.header',
     defaultMessage: '!!!My wallets',
   },
+  portfolioButton: {
+    id: 'global.portfolio',
+    defaultMessage: '!!!Portfolio',
+  },
 })
 
 const useStrings = () => {
   const intl = useIntl()
 
   return {
+    portfolioButton: intl.formatMessage(messages.portfolioButton),
     stakingButton: intl.formatMessage(messages.stakingButton),
     txHistoryTabBarLabel: intl.formatMessage(messages.transactionsButton),
     sendTabBarLabel: intl.formatMessage(messages.sendButton),

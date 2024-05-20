@@ -101,6 +101,7 @@ import {Support} from './Support'
 import {Swap} from './Swap'
 import {Switch} from './Switch'
 import {Table} from './Table'
+import { TabPortfolio } from './TabPortfolio'
 import {TabStaking} from './TabStaking'
 import {TabWallet} from './TabWallet'
 import {Telegram} from './Telegram'
@@ -252,4 +253,5 @@ export const Icon = {
   Google,
   Connection,
   YoroiApp,
+  TabPortfolio,
 }

@@ -106,6 +106,7 @@ export type WalletTabRoutes = {
   history: NavigatorScreenParams<TxHistoryRoutes>
   'staking-dashboard': NavigatorScreenParams<DashboardRoutes>
   nfts: NavigatorScreenParams<NftRoutes>
+  portfolio: NavigatorScreenParams<Portfolio2Routes>
   discover: NavigatorScreenParams<DiscoverRoutes>
   menu: NavigatorScreenParams<MenuRoutes>
 }
@@ -288,6 +289,12 @@ export type DashboardRoutes = {
     yoroiUnsignedTx: YoroiUnsignedTx
   }
   'delegation-failed-tx': undefined
+}
+
+export type Portfolio2Routes = {
+  'portfolio-dashboard': undefined
+  'portfolio-tokens-list': undefined
+  'portfolio-token-details': undefined
 }
 
 export type VotingRegistrationRoutes = {
