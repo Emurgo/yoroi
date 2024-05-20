@@ -14,7 +14,6 @@ import {
 } from '@yoroi/swap'
 import {Atoms, ThemedPalette, useTheme} from '@yoroi/theme'
 import {Resolver, Swap} from '@yoroi/types'
-import _ from 'lodash'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View, ViewProps} from 'react-native'
