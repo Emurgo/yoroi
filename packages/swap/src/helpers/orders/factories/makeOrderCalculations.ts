@@ -97,10 +97,7 @@ export const makeOrderCalculations = ({
       : new BigNumber(pool.ptPriceTokenA)
 
     const sellInPtTerms = asQuantity(
-      sellQuantity
-        .multipliedBy(ptPriceSell.shiftedBy(tokens.ptInfo.decimals))
-        .shiftedBy(-1 * tokens.sellInfo.decimals)
-        .integerValue(BigNumber.ROUND_DOWN),
+      sellQuantity.multipliedBy(ptPriceSell).integerValue(BigNumber.ROUND_DOWN),
     )
 
     // ffee is based on PT value range + LP holding range
