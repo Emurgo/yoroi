@@ -15,6 +15,7 @@ import {Dimensions, TouchableOpacity, TouchableOpacityProps, ViewStyle} from 're
 import {Icon} from './components'
 import {ScanFeature} from './features/Scan/common/types'
 import {Routes as StakingGovernanceRoutes} from './features/Staking/Governance/common/navigation'
+import {CONFIG} from './legacy/config'
 import {YoroiUnsignedTx} from './yoroi-wallets/types'
 
 // prettier-ignore
@@ -503,6 +504,16 @@ export const useWalletNavigation = () => {
     },
 
     navigateToStakingDashboard: () => {
+      if (CONFIG.DAPP_EXPLORER_ENABLED) {
+        navigation.navigate('manage-wallets', {
+          screen: 'staking-dashboard',
+          params: {
+            screen: 'staking-dashboard-main',
+          },
+        })
+        return
+      }
+
       navigation.navigate('manage-wallets', {
         screen: 'main-wallet-routes',
         params: {
