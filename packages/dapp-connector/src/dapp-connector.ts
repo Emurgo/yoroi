@@ -59,4 +59,4 @@ type SupportedExtension = {
   cip: number
 }
 
-const supportedExtensions: SupportedExtension[] = []
+const supportedExtensions: SupportedExtension[] = [{cip: 30}]
