@@ -1,0 +1,17 @@
+[
+  {
+    "id": "global.portfolio",
+    "defaultMessage": "!!!Portfolio",
+    "file": "src/features/Portfolio2/common/useStrings.tsx",
+    "start": {
+      "line": 12,
+      "column": 13,
+      "index": 239
+    },
+    "end": {
+      "line": 15,
+      "column": 3,
+      "index": 308
+    }
+  }
+]
