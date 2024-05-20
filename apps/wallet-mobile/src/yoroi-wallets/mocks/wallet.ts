@@ -301,41 +301,8 @@ const wallet: YoroiWallet = {
   createUnsignedGovernanceTx: () => {
     throw new Error('not implemented: createUnsignedGovernanceTx')
   },
-  CIP30getCollateral: (_value?: string) => {
-    throw new Error('not implemented: CIP30getCollateral')
-  },
-  CIP30getRewardAddresses: () => {
-    throw new Error('not implemented: CIP30getRewardAddresses')
-  },
-  CIP30getChangeAddress: () => {
-    throw new Error('not implemented: CIP30getChangeAddress')
-  },
-  CIP30getUtxos: (
-    _value?: string,
-    _paginate?: {
-      page: number
-      limit: number
-    },
-  ) => {
-    throw new Error('not implemented: CIP30getUtxos')
-  },
-  CIP30signData(_rootKey: string, _address: string, _payload: string) {
-    throw new Error('not implemented: CIP30signData')
-  },
-  CIP30submitTx(_cbor: string) {
-    throw new Error('not implemented: CIP30submitTx')
-  },
-  CIP30signTx(_rootKey: string, _txHex: string, _partialSign?: boolean) {
-    throw new Error('not implemented: CIP30signTx')
-  },
-  CIP30getUnusedAddresses() {
-    throw new Error('not implemented: getUnusedAddresses')
-  },
-  CIP30getUsedAddresses(_params?: {page: number; limit: number}) {
-    throw new Error('not implemented: getUsedAddresses')
-  },
-  CIP30getBalance(_tokenId?: string) {
-    throw new Error('not implemented: getBalance')
+  getChangeAddress(): string {
+    return 'addr1qxy9yjhvxh700xeluhvdpwlauuvnzav42edveyggy8fusqvg2f9wcd0u77dnlewc6zalmecex96e24j6ejgssgwneqqs762af9'
   },
 }
 
