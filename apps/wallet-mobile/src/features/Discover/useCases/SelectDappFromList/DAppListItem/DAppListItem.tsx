@@ -33,7 +33,7 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
 
   const [isPressed, setIsPressed] = React.useState(false)
 
-  const logo = dApp.logo.length === 0 ? getDappFallbackLogo(dApp.origins[0]) : dApp.logo
+  const logo = dApp.logo.length === 0 ? getDappFallbackLogo(dApp.uri) : dApp.logo
 
   const handlePressing = (isPressIn: boolean) => {
     setIsPressed(isPressIn)
@@ -97,13 +97,7 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
       onPress={handlePress}
     >
       <View style={styles.dAppItemContainer}>
-        {isGoogleSearchItem(dApp) ? (
-          <Icon.Google />
-        ) : (
-          <View>
-            <Image source={{uri: logo}} style={styles.dAppLogo} />
-          </View>
-        )}
+        {isGoogleSearchItem(dApp) ? <Icon.Google /> : <Image source={{uri: logo}} style={styles.dAppLogo} />}
 
         <View style={styles.flexFull}>
           <Text numberOfLines={1} style={styles.nameText}>

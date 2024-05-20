@@ -23,11 +23,16 @@ export const useStrings = () => {
     confirmConnectionModalAllowThisDAppTo: intl.formatMessage(messages.confirmConnectionModalAllowThisDAppTo),
     confirmConnectionModalPermission1: intl.formatMessage(messages.confirmConnectionModalPermission1),
     confirmConnectionModalPermission2: intl.formatMessage(messages.confirmConnectionModalPermission2),
+    confirmTx: intl.formatMessage(messages.confirmTx),
   }).current
 }
 
 export const messages = Object.freeze(
   defineMessages({
+    confirmTx: {
+      id: 'global.confirmationTransaction',
+      defaultMessage: '!!!Confirm transaction',
+    },
     discoverTitle: {
       id: 'discover.discoverList.discoverTitle',
       defaultMessage: '!!!Discover Cardano',

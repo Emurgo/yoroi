@@ -8,6 +8,7 @@ import {Logger} from '../../../yoroi-wallets/logging'
 import {ConfirmRawTxWithOs} from '../../Swap/common/ConfirmRawTx/ConfirmRawTxWithOs'
 import {ConfirmRawTxWithPassword} from '../../Swap/common/ConfirmRawTx/ConfirmRawTxWithPassword'
 import {walletConfig} from './wallet-config'
+import {useStrings} from './useStrings'
 
 export const useConnectWalletToWebView = (wallet: YoroiWallet, webViewRef: React.RefObject<WebView | null>) => {
   const {manager, sessionId} = useDappConnector()
@@ -57,6 +58,8 @@ const getInitScript = (sessionId: string, dappConnector: DappConnectorManager) =
 
 export const useConfirmRawTx = (wallet: YoroiWallet) => {
   const {openModal, closeModal} = useModal()
+  const strings = useStrings()
+  const modalHeight = 350
 
   return ({onConfirm, onClose}: {onConfirm: (rootKey: string) => Promise<void>; onClose: () => void}) => {
     const handleOnConfirm = async (rootKey: string) => {
@@ -70,10 +73,10 @@ export const useConfirmRawTx = (wallet: YoroiWallet) => {
     }
 
     if (wallet.isEasyConfirmationEnabled) {
-      openModal('Confirm TX', <ConfirmRawTxWithOs onConfirm={handleOnConfirm} />, undefined, onClose)
+      openModal(strings.confirmTx, <ConfirmRawTxWithOs onConfirm={handleOnConfirm} />, modalHeight, onClose)
       return
     }
 
-    openModal('Confirm TX', <ConfirmRawTxWithPassword onConfirm={handleOnConfirm} />, undefined, onClose)
+    openModal(strings.confirmTx, <ConfirmRawTxWithPassword onConfirm={handleOnConfirm} />, modalHeight, onClose)
   }
 }
