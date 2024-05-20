@@ -24,41 +24,19 @@ export const dappConnectorApiMaker = ({request}: {request: FetchData} = initialD
 
     const value = response.value.data
     return {
-      dapps: value.dapps
-        .map((dapp) => ({
-          id: dapp.id,
-          name: dapp.name,
-          description: dapp.description,
-          category: dapp.category,
-          logo: `${dappListHost}/${dapp.logo}`,
-          uri: dapp.uri,
-          origins: dapp.origins,
-        }))
-        .map(modifyDapp),
+      dapps: value.dapps.map((dapp) => ({
+        id: dapp.id,
+        name: dapp.name,
+        description: dapp.description,
+        category: dapp.category,
+        logo: `${dappListHost}/${dapp.logo}`,
+        uri: dapp.uri,
+        origins: dapp.origins,
+      })),
       filters: value.filters,
     }
   }
   return {getDApps}
-}
-
-const modifyDapp = (dapp: DappResponse): DappResponse => {
-  if (dapp.id === 'wingriders') {
-    return {...dapp, origins: ['https://www.wingriders.com', 'https://app.wingriders.com']}
-  }
-
-  if (dapp.id === 'ada_handle') {
-    return {...dapp, origins: ['https://adahandle.com', 'https://mint.handle.me']}
-  }
-
-  if (dapp.id === 'geniusyield') {
-    return {...dapp, origins: ['https://www.geniusyield.co', 'https://app.geniusyield.co']}
-  }
-
-  if (dapp.id === 'sundaeswap') {
-    return {...dapp, origins: ['https://sundae.fi', 'https://app.sundae.fi']}
-  }
-
-  return dapp
 }
 
 const DappResponseSchema = z.object({
