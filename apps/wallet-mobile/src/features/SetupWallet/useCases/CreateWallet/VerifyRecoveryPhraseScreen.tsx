@@ -205,7 +205,12 @@ const MnemonicInput = ({defaultMnemonic, userEntries, onPress}: MnemonicInputPro
                 disabled={!isLast || !recoveryWordError}
                 style={styles.wordBadge}
               >
-                <Animated.View style={styles.wordBadgeView} layout={LinearTransition} entering={FadeIn} exiting={FadeOut}>
+                <Animated.View
+                  style={styles.wordBadgeView}
+                  layout={LinearTransition}
+                  entering={FadeIn}
+                  exiting={FadeOut}
+                >
                   <WordBadge
                     word={`${(index + 1).toString()}.`}
                     used
@@ -298,7 +303,12 @@ const WordBadges = ({
             disabled={isUsed}
             onPress={() => selectWord(entry)}
           >
-            <Animated.View layout={LinearTransition} entering={FadeIn} exiting={FadeOut} style={[styles.wordBadgeContainer]}>
+            <Animated.View
+              layout={LinearTransition}
+              entering={FadeIn}
+              exiting={FadeOut}
+              style={[styles.wordBadgeContainer]}
+            >
               <LinearGradient
                 style={[StyleSheet.absoluteFill, {opacity: 1}]}
                 start={{x: 1, y: 0}}
