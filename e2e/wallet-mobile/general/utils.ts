@@ -5,7 +5,6 @@ import yargs from 'yargs/yargs'
 
 import {mnemonicBadgeByWord, mnemonicByIndexText} from '../screens/createWalletFlow.screen'
 import * as initialScreen from '../screens/initialScreen.screen'
-import * as myWalletsScreen from '../screens/myWallets.screen'
 import {pinKeyButton} from '../screens/pinCode.screen'
 import {mnemonicByIndexInput} from '../screens/restoreWalletFlow.screen'
 import * as userInsightScreen from '../screens/shareUserInsights.screen'
@@ -53,7 +52,6 @@ export const prepareApp = async (pin: string): Promise<void> => {
  await expect(pinKeyButton('1')).toBeVisible()
  await enterPIN(pin)
  await enterPIN(pin)
- await expect(myWalletsScreen.pageTitle()).toBeVisible()
 }
 
 export const delay = (milliseconds: number) => new Promise((resolve) => setTimeout(resolve, milliseconds))

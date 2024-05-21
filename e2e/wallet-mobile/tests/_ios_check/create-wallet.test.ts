@@ -3,6 +3,8 @@ import {device, expect} from 'detox'
 import * as constants from '../../general/constants'
 import * as createWalletFlow from '../../screens/createWalletFlow.screen'
 import * as chooseSetupTypeScreen from '../../screens/chooseSetupType.screen'
+import * as chooseNetworkTypeScreen from '../../screens/chooseNetworkType.screen'
+import * as createWalletStepsScreen from '../../screens/createWalletSteps.screen'
 import * as myWalletsScreen from '../../screens/myWallets.screen'
 import * as utils from '../../general/utils'
 
@@ -13,11 +15,19 @@ describe('Create a wallet', () => {
   await utils.prepareApp(constants.valid_Pin)
  })
 
- it('should be able to initiate the "create wallet" process from the home screen', async () => {
-  await utils.takeScreenshot('Home Screen')
+ it('should be able to select "Create new wallet"', async () => {
   await chooseSetupTypeScreen.createNewWalletButton().tap()
-  await myWalletsScreen.addWalletTestnetButton().tap()
-  await myWalletsScreen.createWalletButton().tap()
+  await expect(chooseNetworkTypeScreen.pageTitleCreateFlow()).toBeVisible()
+ })
+
+ it('should be able to select "testnet" network', async () => {
+  await chooseNetworkTypeScreen.networkTestnetButton().tap()
+  await expect(createWalletStepsScreen.step1Title()).toBeVisible()
+ })
+
+ it('should be able to complete "step1"', async () => {
+  await expect(createWalletStepsScreen.step1TextToValidate()).toBeVisible()
+  await createWalletStepsScreen.step1NextButton().tap()
  })
 
  it('should be able to set the spending password', async () => {
