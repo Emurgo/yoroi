@@ -3,6 +3,7 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 
 import {defaultStackNavigationOptions, Portfolio2Routes} from '../../navigation'
+import {useStrings} from './common/useStrings'
 import {PortfolioDashboardScreen} from './useCases/PortfolioDashboard/PortfolioDashboardScreen'
 import {PortfolioTokenDetailsScreen} from './useCases/PortfolioTokenDetails/PortfolioTokenDetailsScreen'
 import {PortfolioTokensListScreen} from './useCases/PortfolioTokensList/PortfolioTokensListScreen'
@@ -11,6 +12,7 @@ const Stack = createStackNavigator<Portfolio2Routes>()
 
 export const PortfolioNavigator = () => {
   const {atoms, color} = useTheme()
+  const strings = useStrings()
 
   return (
     <Stack.Navigator
@@ -22,7 +24,11 @@ export const PortfolioNavigator = () => {
       }}
       initialRouteName="portfolio-dashboard"
     >
-      <Stack.Screen name="portfolio-dashboard" component={PortfolioDashboardScreen} />
+      <Stack.Screen
+        name="portfolio-dashboard"
+        component={PortfolioDashboardScreen}
+        options={{title: strings.portfolio}}
+      />
 
       <Stack.Screen name="portfolio-tokens-list" component={PortfolioTokensListScreen} />
 

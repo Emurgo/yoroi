@@ -3,10 +3,16 @@ import * as React from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {ADABalanceCard} from '../../common/ADABalanceCard/ADABalanceCard'
+
 export const PortfolioDashboardScreen = () => {
   const {styles} = useStyles()
 
-  return <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}></SafeAreaView>
+  return (
+    <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
+      <ADABalanceCard />
+    </SafeAreaView>
+  )
 }
 
 const useStyles = () => {
@@ -15,7 +21,7 @@ const useStyles = () => {
     root: {
       flex: 1,
       backgroundColor: color.gray_cmin,
-      ...atoms.pt_lg,
+      ...atoms.px_lg,
     },
   })
 
