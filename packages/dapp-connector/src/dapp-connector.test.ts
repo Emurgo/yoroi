@@ -6,6 +6,7 @@ import {Api, dappConnectorApiMaker} from './adapters/api'
 import {mockedDAppList} from './manager.mocks'
 import {ResolverWallet} from './resolver'
 import {init} from '@emurgo/cross-csl-nodejs'
+import {TransactionWitnessSet} from '@emurgo/cross-csl-core'
 
 const getDappConnector = (wallet = mockWallet) => {
   const storage = connectionStorageMaker({storage: storageMock})
@@ -132,6 +133,13 @@ describe('DappConnector', () => {
       await dappConnector.handleEvent(createEvent('log_message'), trustedUrl, sendMessage)
     })
 
+    it('should ignore log_message event if it has no arguments', async () => {
+      const dappConnector = getDappConnector()
+      const sendMessage = jest.fn()
+      await dappConnector.handleEvent(createEvent('log_message', {args: undefined}), trustedUrl, sendMessage)
+      expect(sendMessage).not.toHaveBeenCalledWith(sendMessage)
+    })
+
     it('should handle cardano_enable event with true if the user confirms connection', async () => {
       const dappConnector = getDappConnector({...mockWallet, confirmConnection: () => Promise.resolve(true)})
       const event = createEvent('cardano_enable')
@@ -234,6 +242,14 @@ describe('DappConnector', () => {
       expect(sendMessage).toHaveBeenCalledWith('1', mockedData[walletId].balance)
     })
 
+    it('should throw in getBalance with when incorrect arguments are presented', async () => {
+      const dappConnector = getDappConnector()
+      const sendMessage = jest.fn()
+      await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
+      await dappConnector.handleEvent(createEvent('api.getBalance', {args: [1]}), trustedUrl, sendMessage)
+      expect(sendMessage).toHaveBeenCalledWith('1', null, new Error(`Invalid params`))
+    })
+
     it('should resolve getChangeAddress with mocked data', async () => {
       const dappConnector = getDappConnector()
       const sendMessage = jest.fn()
@@ -251,11 +267,174 @@ describe('DappConnector', () => {
     })
 
     it('should resolve getUsedAddresses with mocked data', async () => {
-      const dappConnector = getDappConnector()
+      const dappConnector = getDappConnector({
+        ...mockWallet,
+        getUsedAddresses: () => Promise.resolve([{toHex: () => '00'}] as any),
+      })
       const sendMessage = jest.fn()
       await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
       await dappConnector.handleEvent(createEvent('api.getUsedAddresses'), trustedUrl, sendMessage)
-      expect(sendMessage).toHaveBeenCalledWith('1', [])
+      expect(sendMessage).toHaveBeenCalledWith('1', ['00'])
+    })
+
+    it('should resolve getUsedAddresses with mocked data also when pagination is provided', async () => {
+      const dappConnector = getDappConnector({
+        ...mockWallet,
+        getUsedAddresses: () => Promise.resolve([{toHex: () => '00'}] as any),
+      })
+      const sendMessage = jest.fn()
+      await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
+      await dappConnector.handleEvent(
+        createEvent('api.getUsedAddresses', {
+          args: [{page: 1, limit: 1}],
+        }),
+        trustedUrl,
+        sendMessage,
+      )
+      expect(sendMessage).toHaveBeenCalledWith('1', ['00'])
+    })
+
+    it('should resolve signTx with mocked data if partial sign is unknown', async () => {
+      const dappConnector = getDappConnector()
+      const sendMessage = jest.fn()
+      await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
+      await dappConnector.handleEvent(createEvent('api.signTx', {args: ['CBOR']}), trustedUrl, sendMessage)
+      expect(sendMessage).toHaveBeenCalledTimes(1)
+      const result: TransactionWitnessSet = sendMessage.mock.calls[0][1]
+      expect(await result.toHex()).toBe('a0')
+    })
+
+    it('should resolve signTx with mocked data if partial sign is known', async () => {
+      const dappConnector = getDappConnector()
+      const sendMessage = jest.fn()
+      await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
+      await dappConnector.handleEvent(createEvent('api.signTx', {args: ['CBOR', true]}), trustedUrl, sendMessage)
+      expect(sendMessage).toHaveBeenCalledTimes(1)
+      const result: TransactionWitnessSet = sendMessage.mock.calls[0][1]
+      expect(await result.toHex()).toBe('a0')
+    })
+
+    it('should throw in signTx with when incorrect arguments are presented', async () => {
+      const dappConnector = getDappConnector()
+      const sendMessage = jest.fn()
+      await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
+      await dappConnector.handleEvent(createEvent('api.signTx', {args: []}), trustedUrl, sendMessage)
+      expect(sendMessage).toHaveBeenCalledWith('1', null, new Error(`Invalid params`))
+    })
+
+    it('should resolve signData with mocked data', async () => {
+      const dappConnector = getDappConnector()
+      const sendMessage = jest.fn()
+      await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
+      await dappConnector.handleEvent(
+        createEvent('api.signData', {
+          args: [
+            'addr1qxxvt9rzpdxxysmqp50d7f5a3gdescgrejsu7zsdxqjy8yun4cngaq46gr8c9qyz4td9ddajzqhjnrqvfh0gspzv9xnsmq6nqx',
+            'CBOR',
+          ],
+        }),
+        trustedUrl,
+        sendMessage,
+      )
+      expect(sendMessage).toHaveBeenCalledWith('1', {key: '', signature: ''})
+    })
+
+    it('should throw in signData with when incorrect arguments are presented', async () => {
+      const dappConnector = getDappConnector()
+      const sendMessage = jest.fn()
+      await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
+      await dappConnector.handleEvent(createEvent('api.signData', {args: []}), trustedUrl, sendMessage)
+      expect(sendMessage).toHaveBeenCalledWith('1', null, new Error(`Invalid params`))
+    })
+
+    it('should resolve submitTx with mocked data', async () => {
+      const dappConnector = getDappConnector()
+      const sendMessage = jest.fn()
+      await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
+      await dappConnector.handleEvent(createEvent('api.submitTx', {args: ['CBOR']}), trustedUrl, sendMessage)
+      expect(sendMessage).toHaveBeenCalledWith('1', 'tx-id')
+    })
+
+    it('should throw in submitTx with when incorrect arguments are presented', async () => {
+      const dappConnector = getDappConnector()
+      const sendMessage = jest.fn()
+      await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
+      await dappConnector.handleEvent(createEvent('api.submitTx', {args: []}), trustedUrl, sendMessage)
+      expect(sendMessage).toHaveBeenCalledWith('1', null, new Error(`Invalid params`))
+    })
+
+    it('should resolve getCollateral with mocked data', async () => {
+      const dappConnector = getDappConnector({
+        ...mockWallet,
+        getCollateral: () => Promise.resolve([{toHex: () => '00'}] as any),
+      })
+      const sendMessage = jest.fn()
+      await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
+      await dappConnector.handleEvent(createEvent('api.getCollateral'), trustedUrl, sendMessage)
+      expect(sendMessage).toHaveBeenCalledWith('1', ['00'])
+    })
+
+    it('should resolve getCollateral with null if not enough funds', async () => {
+      const dappConnector = getDappConnector()
+      const sendMessage = jest.fn()
+      await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
+      await dappConnector.handleEvent(createEvent('api.getCollateral', {args: ['100000000']}), trustedUrl, sendMessage)
+      expect(sendMessage).toHaveBeenCalledWith('1', null)
+    })
+
+    it('should resolve getUnusedAddresses with mocked data', async () => {
+      const dappConnector = getDappConnector({
+        ...mockWallet,
+        getUnusedAddresses: () => Promise.resolve([{toHex: () => '00'}] as any),
+      })
+      const sendMessage = jest.fn()
+      await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
+      await dappConnector.handleEvent(createEvent('api.getUnusedAddresses'), trustedUrl, sendMessage)
+      expect(sendMessage).toHaveBeenCalledWith('1', ['00'])
+    })
+
+    it('should resolve getExtensions with CIP30', async () => {
+      const dappConnector = getDappConnector()
+      const sendMessage = jest.fn()
+      await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
+      await dappConnector.handleEvent(createEvent('api.getExtensions'), trustedUrl, sendMessage)
+      expect(sendMessage).toHaveBeenCalledWith('1', [{cip: 30}])
+    })
+
+    it('should resolve getUtxos with mocked data', async () => {
+      const dappConnector = getDappConnector({
+        ...mockWallet,
+        getUtxos: () => Promise.resolve([{toHex: () => '00'}] as any),
+      })
+      const sendMessage = jest.fn()
+      await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
+      await dappConnector.handleEvent(createEvent('api.getUtxos'), trustedUrl, sendMessage)
+      expect(sendMessage).toHaveBeenCalledWith('1', ['00'])
+    })
+
+    it('should resolve getUtxos with mocked data also when pagination is provided', async () => {
+      const dappConnector = getDappConnector({
+        ...mockWallet,
+        getUtxos: () => Promise.resolve([{toHex: () => '00'}] as any),
+      })
+      const sendMessage = jest.fn()
+      await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
+      await dappConnector.handleEvent(
+        createEvent('api.getUtxos', {
+          args: ['100000000', {page: 1, limit: 1}],
+        }),
+        trustedUrl,
+        sendMessage,
+      )
+      expect(sendMessage).toHaveBeenCalledWith('1', ['00'])
+    })
+
+    it('should resolve getUtxos with null if not enough funds', async () => {
+      const dappConnector = getDappConnector()
+      const sendMessage = jest.fn()
+      await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
+      await dappConnector.handleEvent(createEvent('api.getUtxos', {args: ['100000000']}), trustedUrl, sendMessage)
+      expect(sendMessage).toHaveBeenCalledWith('1', null)
     })
   })
 
@@ -295,6 +474,6 @@ const mockWallet: ResolverWallet = {
     Promise.all([CSL.Address.fromHex('e184d958399bcce03402fd853d43a4e7366f2018932e5aff4eea904693')]),
   getUtxos: () => Promise.resolve([]),
   getCollateral: () => Promise.resolve([]),
-  submitTx: () => Promise.resolve(''),
+  submitTx: () => Promise.resolve('tx-id'),
 }
 const trustedUrl = 'https://yoroi-wallet.com/'

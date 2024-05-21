@@ -1,5 +1,6 @@
-import {init} from '@emurgo/cross-csl-mobile'
 import {WasmModuleProxy} from '@emurgo/cross-csl-core'
+import {init} from '@emurgo/cross-csl-mobile'
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 const cardano = init('wrappedCSL')
 
@@ -13,7 +14,9 @@ export const wrappedCsl = (): {csl: WasmModuleProxy; release: VoidFunction} => {
       if (p?.ptr !== 0) {
         try {
           p.free()
-        } catch (e) {}
+        } catch (e) {
+          //
+        }
       }
     })
     pointers = []

@@ -102,7 +102,7 @@ export const resolver: Resolver = {
           : undefined
       const result = await context.wallet.getCollateral(value)
 
-      if (result === null || result.length === 0) return null
+      if (result === null || (result.length === 0 && typeof value === 'string')) return null
 
       return Promise.all(result.map((u) => u.toHex()))
     },
@@ -122,7 +122,7 @@ export const resolver: Resolver = {
       assertOriginsMatch(context)
       await assertWalletAcceptedConnection(context)
       if (!isGetBalanceParams(params)) throw new Error('Invalid params')
-      const [tokenId = '*'] = params.args || []
+      const [tokenId = '*'] = params.args
       const balance = await context.wallet.getBalance(tokenId)
       return balance.toHex()
     },
@@ -155,7 +155,7 @@ export const resolver: Resolver = {
           ? params.args[1]
           : undefined
       const utxos = await context.wallet.getUtxos(value, pagination)
-      if (utxos === null || utxos.length === 0) return null
+      if (utxos === null || (utxos.length === 0 && typeof value === 'string')) return null
       return Promise.all(utxos.map((u) => u.toHex()))
     },
     getUsedAddresses: async (params: unknown, context: Context) => {

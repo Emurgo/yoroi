@@ -1,4 +1,5 @@
 import * as CSL from '@emurgo/cross-csl-core'
+import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {RemoteUnspentOutput, signRawTransaction, UtxoAsset} from '@emurgo/yoroi-lib'
 import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
 import {parseTokenList} from '@emurgo/yoroi-lib/dist/internals/utils/assets'
@@ -17,7 +18,6 @@ import {Pagination, YoroiWallet} from './types'
 import {createRawTxSigningKey, identifierToCardanoAsset} from './utils'
 import {collateralConfig, findCollateralCandidates, utxosMaker} from './utxoManager/utxos'
 import {wrappedCsl} from './wrappedCsl'
-import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 
 export const cip30ExtensionMaker = (wallet: YoroiWallet) => {
   return new CIP30Extension(wallet)
@@ -27,10 +27,6 @@ const getCSL = () => wrappedCsl()
 
 const recreateValue = async (value: CSL.Value) => {
   return CardanoMobile.Value.fromHex(await value.toHex())
-}
-
-const recreateAddress = async (address: CSL.Address) => {
-  return CardanoMobile.Address.fromBech32(await address.toBech32(undefined))
 }
 
 const recreateMultiple = async <T>(items: T[], recreate: (item: T) => Promise<T>) => {
