@@ -151,6 +151,7 @@ const getStories = () => {
     "./src/features/Nfts/useCases/Nfts.stories.tsx": require("../src/features/Nfts/useCases/Nfts.stories.tsx"),
     "./src/features/Nfts/useCases/NoNftsScreen.stories.tsx": require("../src/features/Nfts/useCases/NoNftsScreen.stories.tsx"),
     "./src/features/Portfolio/common/TokenAmountItem/TokenAmountItem.stories.tsx": require("../src/features/Portfolio/common/TokenAmountItem/TokenAmountItem.stories.tsx"),
+    "./src/features/Portfolio2/common/PnlTag/PnlTag.stories.tsx": require("../src/features/Portfolio2/common/PnlTag/PnlTag.stories.tsx"),
     "./src/features/Receive/common/AddressDetailCard/AddressDetailCard.stories.tsx": require("../src/features/Receive/common/AddressDetailCard/AddressDetailCard.stories.tsx"),
     "./src/features/Receive/common/AddressModal/AddressModal.stories.tsx": require("../src/features/Receive/common/AddressModal/AddressModal.stories.tsx"),
     "./src/features/Receive/common/ShareDetailsCard/ShareDetailsCard.stories.tsx": require("../src/features/Receive/common/ShareDetailsCard/ShareDetailsCard.stories.tsx"),
