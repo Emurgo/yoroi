@@ -50,6 +50,14 @@ export const setupWalletReducer = (
         draft.useUSB = action.useUSB
         return
 
+      case SetupWalletActionType.ShowCreateWalletInfoModalChanged:
+        draft.showCreateWalletInfoModal = action.showCreateWalletInfoModal
+        return
+
+      case SetupWalletActionType.ShowRestoreWalletInfoModalChanged:
+        draft.showRestoreWalletInfoModal = action.showRestoreWalletInfoModal
+        return
+
       case SetupWalletActionType.Reset:
         return setupWalletDefaultState
 
@@ -72,6 +80,8 @@ export const setupWalletDefaultState: Readonly<SetupWalletState> = freeze(
     setUpType: null,
     mnemonicType: null,
     useUSB: false,
+    showRestoreWalletInfoModal: true,
+    showCreateWalletInfoModal: true,
   },
   true,
 )
@@ -88,6 +98,8 @@ export type SetupWalletState = {
   setUpType: 'restore' | 'create' | 'hw' | null
   mnemonicType: 15 | 24 | null
   useUSB: boolean
+  showRestoreWalletInfoModal: boolean
+  showCreateWalletInfoModal: boolean
 }
 
 export enum SetupWalletActionType {
@@ -103,6 +115,8 @@ export enum SetupWalletActionType {
   MnemonicTypeChanged = 'mnemonicTypeChanged',
   UseUSBChanged = 'useUSBChanged',
   Reset = 'reset',
+  ShowRestoreWalletInfoModalChanged = 'showRestoreWalletInfoModalChanged',
+  ShowCreateWalletInfoModalChanged = 'showCreateWalletInfoModalChanged',
 }
 
 export type SetupWalletAction =
@@ -153,6 +167,14 @@ export type SetupWalletAction =
   | {
       type: SetupWalletActionType.Reset
     }
+  | {
+      type: SetupWalletActionType.ShowRestoreWalletInfoModalChanged
+      showRestoreWalletInfoModal: SetupWalletState['showRestoreWalletInfoModal']
+    }
+  | {
+      type: SetupWalletActionType.ShowCreateWalletInfoModalChanged
+      showCreateWalletInfoModal: SetupWalletState['showCreateWalletInfoModal']
+    }
 
 export type SetupWalletActions = {
   mnemonicChanged: (mnemonic: SetupWalletState['mnemonic']) => void
@@ -171,6 +193,10 @@ export type SetupWalletActions = {
   mnemonicTypeChanged: (mnemonicType: SetupWalletState['mnemonicType']) => void
   useUSBChanged: (useUSB: SetupWalletState['useUSB']) => void
   reset: () => void
+  showRestoreWalletInfoModalChanged: (
+    showRestoreWalletInfoModal: boolean,
+  ) => void
+  showCreateWalletInfoModalChanged: (showCreateWalletInfoModal: boolean) => void
 }
 
 export type SetupWalletContext = SetupWalletState & SetupWalletActions
@@ -189,6 +215,8 @@ export const setupWalletInitialContext: SetupWalletContext = freeze(
     mnemonicTypeChanged: missingInit,
     useUSBChanged: missingInit,
     reset: missingInit,
+    showRestoreWalletInfoModalChanged: missingInit,
+    showCreateWalletInfoModalChanged: missingInit,
   },
   true,
 )
@@ -198,6 +226,7 @@ function missingInit() {
   console.error('[ExchangeContext] missing initialization')
 }
 
+// TODO: @yoroi/types
 export type HWDeviceInfo = {
   bip44AccountPublic: string
   hwFeatures: HWFeatures
@@ -223,8 +252,6 @@ export type DeviceObj = {
 export const NETWORK_REGISTRY = {
   BYRON_MAINNET: 0,
   HASKELL_SHELLEY: 1,
-  JORMUNGANDR: 100,
-  // ERGO: 200,
   HASKELL_SHELLEY_TESTNET: 300,
   UNDEFINED: -1,
   SANCHONET: 450,

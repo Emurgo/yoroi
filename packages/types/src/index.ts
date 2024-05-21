@@ -196,6 +196,8 @@ import {
   PortfolioTokenBalances,
 } from './portfolio/balances'
 import {AppQueueTask, AppQueueTaskManager} from './app/queue-task-manager'
+import {ExplorersManager} from './explorers/manager'
+import {ExplorersExplorer} from './explorers/explorer'
 
 export namespace App {
   export namespace Errors {
@@ -421,6 +423,12 @@ export namespace Transfer {
   export type Entry = TransferEntry
   export type Target = TransferTarget
   export type Targets = TransferTargets
+}
+
+export namespace Explorers {
+  export type Manager = ExplorersManager
+  export const Explorer = ExplorersExplorer
+  export type Explorer = ExplorersExplorer
 }
 
 export namespace Portfolio {

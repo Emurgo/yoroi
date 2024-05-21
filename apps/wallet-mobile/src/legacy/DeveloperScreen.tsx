@@ -2,6 +2,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
+import {Api} from '@yoroi/types'
 import assert from 'assert'
 import _ from 'lodash'
 import React from 'react'
@@ -13,12 +14,11 @@ import {useAuth} from '../auth/AuthProvider'
 import {Button, Text, TextInput} from '../components'
 import {showErrorDialog} from '../dialogs'
 import {useLegalAgreement, useResetLegalAgreement} from '../features/Initialization/common'
-import {useSelectedWalletContext} from '../features/WalletManager/Context'
+import {useSelectedWalletContext} from '../features/WalletManager/context/SelectedWalletContext'
 import {errorMessages} from '../i18n/global-messages'
 import {storageVersionMaker} from '../migrations/storageVersion'
 import {AppRoutes, useWalletNavigation} from '../navigation'
 import {isEmptyString} from '../utils/utils'
-import {NetworkError} from '../yoroi-wallets/cardano/errors'
 import {generateAdaMnemonic} from '../yoroi-wallets/cardano/mnemonic'
 import {useCreateWallet} from '../yoroi-wallets/hooks'
 import {rootStorage} from '../yoroi-wallets/storage/rootStorage'
@@ -27,7 +27,7 @@ import {CONFIG} from './config'
 
 const routes: Array<{label: string; path: keyof AppRoutes}> = [
   {label: 'Storybook', path: 'storybook'},
-  {label: 'Skip to wallet list', path: 'app-root'},
+  {label: 'Skip to wallet list', path: 'manage-wallets'},
 ]
 
 const crash = () => {
@@ -44,7 +44,7 @@ export const DeveloperScreen = () => {
     onSuccess: () => resetToWalletSelection(),
     onError: (error) => {
       InteractionManager.runAfterInteractions(() => {
-        return error instanceof NetworkError
+        return error instanceof Api.Errors.Network
           ? showErrorDialog(errorMessages.networkError, intl)
           : showErrorDialog(errorMessages.generalError, intl, {message: error.message})
       })

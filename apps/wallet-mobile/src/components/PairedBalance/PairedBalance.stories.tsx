@@ -4,7 +4,7 @@ import React from 'react'
 import {View} from 'react-native'
 
 import {QueryProvider} from '../../../.storybook/decorators'
-import {SelectedWalletProvider} from '../../features/WalletManager/Context'
+import {SelectedWalletProvider} from '../../features/WalletManager/context/SelectedWalletContext'
 import {mocks} from '../../yoroi-wallets/mocks'
 import {PairedBalance} from './PairedBalance'
 

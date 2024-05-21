@@ -20,7 +20,7 @@ storiesOf('TextInput', module)
       label="This is a label"
       onChangeText={action('onChangeText')}
       autoComplete="off"
-      isPhraseValid={false}
+      isValidPhrase={false}
     />
   ))
   .add('secure entry', () => (
@@ -31,7 +31,7 @@ storiesOf('TextInput', module)
       keyboardType={Platform.OS === 'ios' ? 'default' : 'visible-password'}
       onChangeText={action('onChangeText')}
       autoComplete="off"
-      isPhraseValid={false}
+      isValidPhrase={false}
     />
   ))
   .add('secure entry, with checkmark', () => (
@@ -42,7 +42,7 @@ storiesOf('TextInput', module)
       keyboardType={Platform.OS === 'ios' ? 'default' : 'visible-password'}
       onChangeText={action('onChangeText')}
       autoComplete="off"
-      isPhraseValid={false}
+      isValidPhrase={false}
     />
   ))
   .add('with error', () => (
@@ -52,7 +52,7 @@ storiesOf('TextInput', module)
       onChangeText={action('onChangeText')}
       errorText="This is what an error text look like"
       autoComplete="off"
-      isPhraseValid={false}
+      isValidPhrase={false}
     />
   ))
   .add('with error, with label', () => (
@@ -62,7 +62,7 @@ storiesOf('TextInput', module)
       onChangeText={action('onChangeText')}
       errorText="error text"
       autoComplete="off"
-      isPhraseValid={false}
+      isValidPhrase={false}
     />
   ))
   .add('numeric entry', () => (
@@ -72,7 +72,7 @@ storiesOf('TextInput', module)
       keyboardType="numeric"
       onChangeText={action('onChangeText')}
       autoComplete="off"
-      isPhraseValid={false}
+      isValidPhrase={false}
     />
   ))
   .add('prefilled', () => (
@@ -82,7 +82,7 @@ storiesOf('TextInput', module)
       value="prefilled"
       onChangeText={action('onChangeText')}
       autoComplete="off"
-      isPhraseValid={false}
+      isValidPhrase={false}
     />
   ))
   .add('disabled', () => (
@@ -93,7 +93,7 @@ storiesOf('TextInput', module)
       disabled
       onChangeText={action('onChangeText')}
       autoComplete="off"
-      isPhraseValid={false}
+      isValidPhrase={false}
     />
   ))
   .add('with helper text', () => (
@@ -103,7 +103,7 @@ storiesOf('TextInput', module)
       onChangeText={action('onChangeText')}
       helper="This is what helper text looks like"
       autoComplete="off"
-      isPhraseValid={false}
+      isValidPhrase={false}
     />
   ))
   .add('with helper text and error text', () => (
@@ -114,6 +114,6 @@ storiesOf('TextInput', module)
       helper="This is what helper text looks like"
       errorText="This is what an error looks likes"
       autoComplete="off"
-      isPhraseValid={false}
+      isValidPhrase={false}
     />
   ))

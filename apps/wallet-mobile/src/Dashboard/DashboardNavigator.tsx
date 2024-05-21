@@ -7,7 +7,7 @@ import {defineMessages, useIntl} from 'react-intl'
 
 import {SettingsButton} from '../components/Button'
 import {useGovernanceManagerMaker} from '../features/Staking/Governance'
-import {useSelectedWallet} from '../features/WalletManager/Context'
+import {useSelectedWallet} from '../features/WalletManager/context/SelectedWalletContext'
 import {DashboardRoutes, defaultStackNavigationOptions, useWalletNavigation} from '../navigation'
 import {DelegationConfirmation, FailedTxScreen} from '../Staking'
 import {StakingCenter} from '../Staking/StakingCenter'

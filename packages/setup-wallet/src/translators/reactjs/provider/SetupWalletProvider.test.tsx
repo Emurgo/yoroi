@@ -114,6 +114,26 @@ describe('SetupWalletContext :: hooks', () => {
     expect(result.current.useUSB).toBe(true)
   })
 
+  test('showRestoreWalletInfoModalChanged', () => {
+    const {result} = renderHook(() => useSetupWallet(), {wrapper})
+
+    act(() => {
+      result.current.showRestoreWalletInfoModalChanged(true)
+    })
+
+    expect(result.current.showRestoreWalletInfoModal).toBe(true)
+  })
+
+  test('showCreateWalletInfoModalChanged', () => {
+    const {result} = renderHook(() => useSetupWallet(), {wrapper})
+
+    act(() => {
+      result.current.showCreateWalletInfoModalChanged(true)
+    })
+
+    expect(result.current.showCreateWalletInfoModal).toBe(true)
+  })
+
   test('reset', () => {
     const {result} = renderHook(() => useSetupWallet(), {wrapper})
 

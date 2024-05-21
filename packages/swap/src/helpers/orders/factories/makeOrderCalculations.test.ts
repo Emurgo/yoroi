@@ -31,11 +31,11 @@ describe('makeOrderCalculations', () => {
       pools: pools,
       tokens: {
         sellInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenA',
         },
         buyInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenB',
         },
         ptInfo: {
@@ -153,11 +153,11 @@ describe('makeOrderCalculations', () => {
       pools: pools,
       tokens: {
         sellInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenB',
         },
         buyInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenA',
         },
         ptInfo: {
@@ -275,11 +275,11 @@ describe('makeOrderCalculations', () => {
       pools: pools,
       tokens: {
         sellInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenA',
         },
         buyInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenB',
         },
         ptInfo: {
@@ -398,11 +398,11 @@ describe('makeOrderCalculations', () => {
       pools: pools,
       tokens: {
         sellInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenA',
         },
         buyInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenB',
         },
         ptInfo: {
@@ -521,11 +521,11 @@ describe('makeOrderCalculations', () => {
       pools: pools,
       tokens: {
         sellInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenA',
         },
         buyInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenB',
         },
         ptInfo: {
@@ -639,11 +639,11 @@ describe('makeOrderCalculations', () => {
       pools: pools,
       tokens: {
         sellInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenA',
         },
         buyInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenB',
         },
         ptInfo: {
@@ -755,11 +755,11 @@ describe('makeOrderCalculations', () => {
       pools: pools,
       tokens: {
         sellInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenA',
         },
         buyInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenB',
         },
         ptInfo: {
@@ -872,11 +872,11 @@ describe('makeOrderCalculations', () => {
       pools: pools,
       tokens: {
         sellInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenB',
         },
         buyInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenA',
         },
         ptInfo: {
@@ -989,11 +989,11 @@ describe('makeOrderCalculations', () => {
       pools: pools,
       tokens: {
         sellInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenA',
         },
         buyInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenB',
         },
         ptInfo: {
@@ -1106,11 +1106,11 @@ describe('makeOrderCalculations', () => {
       pools: pools,
       tokens: {
         sellInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenA',
         },
         buyInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenB',
         },
         ptInfo: {
@@ -1223,11 +1223,11 @@ describe('makeOrderCalculations', () => {
       pools: pools,
       tokens: {
         sellInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenB',
         },
         buyInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenA',
         },
         ptInfo: {
@@ -1337,11 +1337,11 @@ describe('makeOrderCalculations', () => {
       pools: pools,
       tokens: {
         sellInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenB',
         },
         buyInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenA',
         },
         ptInfo: {
@@ -1454,11 +1454,11 @@ describe('makeOrderCalculations', () => {
       pools: pools,
       tokens: {
         sellInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenB',
         },
         buyInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenA',
         },
         ptInfo: {
@@ -1571,11 +1571,11 @@ describe('makeOrderCalculations', () => {
       pools: pools,
       tokens: {
         sellInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenB',
         },
         buyInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenA',
         },
         ptInfo: {
@@ -1688,11 +1688,11 @@ describe('makeOrderCalculations', () => {
       pools: pools,
       tokens: {
         sellInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenA',
         },
         buyInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenB',
         },
         ptInfo: {
@@ -1802,11 +1802,11 @@ describe('makeOrderCalculations', () => {
       pools: pools,
       tokens: {
         sellInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenA',
         },
         buyInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenB',
         },
         ptInfo: {
@@ -1919,11 +1919,11 @@ describe('makeOrderCalculations', () => {
       pools: pools,
       tokens: {
         sellInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenB',
         },
         buyInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenA',
         },
         ptInfo: {
@@ -2036,11 +2036,11 @@ describe('makeOrderCalculations', () => {
       pools: pools,
       tokens: {
         sellInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenA',
         },
         buyInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenB',
         },
         ptInfo: {
@@ -2153,11 +2153,11 @@ describe('makeOrderCalculations', () => {
       pools: pools,
       tokens: {
         sellInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenA',
         },
         buyInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenB',
         },
         ptInfo: {
@@ -2270,11 +2270,11 @@ describe('makeOrderCalculations', () => {
       pools: pools,
       tokens: {
         sellInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenB',
         },
         buyInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenA',
         },
         ptInfo: {
@@ -2387,11 +2387,11 @@ describe('makeOrderCalculations', () => {
       pools: pools,
       tokens: {
         sellInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenB',
         },
         buyInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenA',
         },
         ptInfo: {
@@ -2504,11 +2504,11 @@ describe('makeOrderCalculations', () => {
       pools: pools,
       tokens: {
         sellInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenB',
         },
         buyInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenA',
         },
         ptInfo: {
@@ -2632,11 +2632,11 @@ describe('makeOrderCalculations', () => {
       pools: pools,
       tokens: {
         sellInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenB',
         },
         buyInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenA',
         },
         ptInfo: {
@@ -2760,11 +2760,11 @@ describe('makeOrderCalculations', () => {
       pools: pools,
       tokens: {
         sellInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenB',
         },
         buyInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenA',
         },
         ptInfo: {
@@ -2888,11 +2888,11 @@ describe('makeOrderCalculations', () => {
       pools: pools,
       tokens: {
         sellInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenB',
         },
         buyInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenA',
         },
         ptInfo: {
@@ -3008,11 +3008,11 @@ describe('makeOrderCalculations', () => {
       pools: pools,
       tokens: {
         sellInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenB',
         },
         buyInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenA',
         },
         ptInfo: {
@@ -3127,11 +3127,11 @@ describe('makeOrderCalculations', () => {
       pools: pools,
       tokens: {
         sellInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenB',
         },
         buyInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenA',
         },
         ptInfo: {
@@ -3246,11 +3246,11 @@ describe('makeOrderCalculations', () => {
       pools: pools,
       tokens: {
         sellInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenB',
         },
         buyInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenA',
         },
         ptInfo: {
@@ -3365,11 +3365,11 @@ describe('makeOrderCalculations', () => {
       pools: pools,
       tokens: {
         sellInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenB',
         },
         buyInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenA',
         },
         ptInfo: {
@@ -3484,11 +3484,11 @@ describe('makeOrderCalculations', () => {
       pools: pools,
       tokens: {
         sellInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenB',
         },
         buyInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenA',
         },
         ptInfo: {
@@ -3603,11 +3603,11 @@ describe('makeOrderCalculations', () => {
       pools: pools,
       tokens: {
         sellInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenB',
         },
         buyInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenA',
         },
         ptInfo: {
@@ -3722,11 +3722,11 @@ describe('makeOrderCalculations', () => {
       pools: pools,
       tokens: {
         sellInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenB',
         },
         buyInfo: {
-          decimals: 0,
+          decimals: 6,
           id: 'tokenA',
         },
         ptInfo: {

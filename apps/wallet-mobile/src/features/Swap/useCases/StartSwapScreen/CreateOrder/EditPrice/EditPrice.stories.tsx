@@ -3,7 +3,7 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {mocks} from '../../../../../../yoroi-wallets/mocks'
-import {SelectedWalletProvider} from '../../../../../WalletManager/Context'
+import {SelectedWalletProvider} from '../../../../../WalletManager/context/SelectedWalletContext'
 import {SwapFormProvider} from '../../../../common/SwapFormProvider'
 import {EditPrice} from './EditPrice'
 

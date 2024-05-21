@@ -14,7 +14,6 @@ import {
 } from '@yoroi/swap'
 import {Atoms, ThemedPalette, useTheme} from '@yoroi/theme'
 import {Resolver, Swap} from '@yoroi/types'
-import _ from 'lodash'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View, ViewProps} from 'react-native'
@@ -51,7 +50,7 @@ import {
 } from '../features/Swap/useCases'
 import {SelectBuyTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
 import {SelectSellTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/EditSellAmount/SelectSellTokenFromListScreen/SelectSellTokenFromListScreen'
-import {useSelectedWallet} from '../features/WalletManager/Context'
+import {useSelectedWallet} from '../features/WalletManager/context/SelectedWalletContext'
 import {CONFIG} from '../legacy/config'
 import {
   BackButton,
@@ -62,7 +61,6 @@ import {
 } from '../navigation'
 import {COLORS} from '../theme'
 import {useFrontendFees, useStakingKey, useWalletName} from '../yoroi-wallets/hooks'
-import {isMainnetNetworkId} from '../yoroi-wallets/utils'
 import {ModalInfo} from './ModalInfo'
 import {TxDetails} from './TxDetails'
 import {TxHistory} from './TxHistory'
@@ -86,17 +84,17 @@ export const TxHistoryNavigator = () => {
   const {frontendFees} = useFrontendFees(wallet)
   const stakingKey = useStakingKey(wallet)
   const swapManager = React.useMemo(() => {
-    const aggregatorTokenId = isMainnetNetworkId(wallet.networkId) ? milkTokenId.mainnet : milkTokenId.preprod
+    const aggregatorTokenId = wallet.isMainnet ? milkTokenId.mainnet : milkTokenId.preprod
     const swapStorage = swapStorageMaker()
     const swapApi = swapApiMaker({
-      isMainnet: isMainnetNetworkId(wallet.networkId),
+      isMainnet: wallet.isMainnet,
       stakingKey,
       primaryTokenId: wallet.primaryTokenInfo.id,
       supportedProviders,
     })
     const frontendFeeTiers = frontendFees?.[aggregator] ?? ([] as const)
     return swapManagerMaker({swapStorage, swapApi, frontendFeeTiers, aggregator, aggregatorTokenId})
-  }, [wallet.networkId, wallet.primaryTokenInfo.id, stakingKey, frontendFees])
+  }, [wallet.isMainnet, wallet.primaryTokenInfo.id, stakingKey, frontendFees])
 
   // resolver
   const resolverManager = React.useMemo(() => {
@@ -107,11 +105,12 @@ export const TxHistoryNavigator = () => {
         },
       },
       cslFactory: init,
+      isMainnet: wallet.isMainnet,
     })
     const walletStorage = storage.join(`wallet/${wallet.id}/`)
     const resolverStorage = resolverStorageMaker({storage: walletStorage})
     return resolverManagerMaker(resolverStorage, resolverApi)
-  }, [storage, wallet.id])
+  }, [storage, wallet.id, wallet.isMainnet])
 
   // claim
   const claimApi = React.useMemo(() => {

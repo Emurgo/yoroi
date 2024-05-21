@@ -391,7 +391,7 @@
   },
   {
     "id": "components.receive.receivescreen.singleOrMultipleDetails",
-    "defaultMessage": "!!!Single keeps things simple and secure. Multiple may offer some extra privacy. For most users, single address is the way to go! You can always change it in settings.",
+    "defaultMessage": "!!!Single keeps things simple and secure. For most users, single address is the way to go! You can always change it in settings.",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
       "line": 146,
@@ -401,7 +401,7 @@
     "end": {
       "line": 150,
       "column": 3,
-      "index": 5830
+      "index": 5791
     }
   },
   {
@@ -411,12 +411,12 @@
     "start": {
       "line": 151,
       "column": 18,
-      "index": 5850
+      "index": 5811
     },
     "end": {
       "line": 154,
       "column": 3,
-      "index": 5964
+      "index": 5925
     }
   },
   {
@@ -426,12 +426,12 @@
     "start": {
       "line": 155,
       "column": 23,
-      "index": 5989
+      "index": 5950
     },
     "end": {
       "line": 158,
       "column": 3,
-      "index": 6106
+      "index": 6067
     }
   },
   {
@@ -441,12 +441,12 @@
     "start": {
       "line": 159,
       "column": 6,
-      "index": 6114
+      "index": 6075
     },
     "end": {
       "line": 162,
       "column": 3,
-      "index": 6169
+      "index": 6130
     }
   },
   {
@@ -456,12 +456,12 @@
     "start": {
       "line": 163,
       "column": 16,
-      "index": 6187
+      "index": 6148
     },
     "end": {
       "line": 166,
       "column": 3,
-      "index": 6263
+      "index": 6224
     }
   }
 ]

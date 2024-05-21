@@ -95,7 +95,10 @@ export const makeOrderCalculations = ({
     const ptPriceSell = isBuyTokenA
       ? new BigNumber(pool.ptPriceTokenB)
       : new BigNumber(pool.ptPriceTokenA)
-    const sellInPtTerms = asQuantity(sellQuantity.multipliedBy(ptPriceSell))
+
+    const sellInPtTerms = asQuantity(
+      sellQuantity.multipliedBy(ptPriceSell).integerValue(BigNumber.ROUND_DOWN),
+    )
 
     // ffee is based on PT value range + LP holding range
     const frontendFeeInfo = getFrontendFee({

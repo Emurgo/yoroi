@@ -7,7 +7,7 @@ import {StyleSheet, View} from 'react-native'
 import {Spacer, Text} from '../components'
 import {usePortfolioPrimaryBreakdown} from '../features/Portfolio/common/hooks/usePortfolioPrimaryBreakdown'
 import {usePrivacyMode} from '../features/Settings/PrivacyMode/PrivacyMode'
-import {useSelectedWallet} from '../features/WalletManager/Context'
+import {useSelectedWallet} from '../features/WalletManager/context/SelectedWalletContext'
 import globalMessages from '../i18n/global-messages'
 
 export const LockedDeposit = ({ignorePrivacy = false}: {ignorePrivacy?: boolean}) => {

@@ -14,6 +14,7 @@ fi
 
 yarn workspace @yoroi/api add -D "$1"
 yarn workspace @yoroi/exchange add -D "$1"
+yarn workspace @yoroi/explorers add -D "$1"
 yarn workspace @yoroi/common add -D "$1"
 yarn workspace @yoroi/links add -D "$1"
 yarn workspace @yoroi/resolver add -D "$1"

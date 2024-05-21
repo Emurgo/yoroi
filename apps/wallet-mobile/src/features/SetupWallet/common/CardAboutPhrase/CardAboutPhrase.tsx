@@ -50,14 +50,16 @@ export const CardAboutPhrase = ({
           <View key={index + '_ITEM_CARD'} style={styles.itemContainer}>
             <Text style={styles.bullet}>•</Text>
 
-            <Space height="sm" />
+            <Space width="sm" />
 
             <Text style={styles.textLine}>
               {handleShowChecksum && (
                 <>
-                  <WalletChecksum iconSeed={checksumImage} style={styles.walletChecksum} />
+                  <View style={styles.walletChecksumContainer}>
+                    <WalletChecksum iconSeed={checksumImage} style={styles.walletChecksum} />
 
-                  <Space height="sm" />
+                    <Space width="sm" />
+                  </View>
                 </>
               )}
 
@@ -96,7 +98,16 @@ const useStyles = (padding?: boolean, background?: boolean) => {
       ...atoms.body_1_lg_regular,
       color: background ? color.primary_c600 : color.gray_c900,
     },
-    walletChecksum: {width: 24, height: 24},
+    walletChecksum: {
+      width: 24,
+      height: 24,
+      position: 'absolute',
+      top: -10,
+    },
+    walletChecksumContainer: {
+      position: 'relative',
+      width: 30,
+    },
   })
 
   const colors = {

@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/wallet-mobile",
-  "version": "4.25.1",
+  "version": "4.27.0",
   "private": true,
   "scripts": {
     "android-bundle": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
@@ -128,12 +128,13 @@
     "@yoroi/api": "1.5.1",
     "@yoroi/common": "1.5.2",
     "@yoroi/exchange": "2.0.1",
+    "@yoroi/explorers": "1.0.0",
     "@yoroi/links": "1.5.4",
     "@yoroi/portfolio": "1.0.0",
-    "@yoroi/resolver": "2.0.4",
+    "@yoroi/resolver": "2.0.5",
     "@yoroi/setup-wallet": "1.0.0",
     "@yoroi/staking": "1.5.1",
-    "@yoroi/swap": "1.5.3",
+    "@yoroi/swap": "1.6.0",
     "@yoroi/theme": "^1.0.0",
     "@yoroi/transfer": "1.0.0",
     "add": "2.0.6",

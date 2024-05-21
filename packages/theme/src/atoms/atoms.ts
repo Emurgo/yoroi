@@ -381,10 +381,10 @@ export const atoms = {
     flexDirection: 'row',
   },
   flex_col_reverse: {
-    flexDirection: 'column_reverse',
+    flexDirection: 'column-reverse',
   },
   flex_row_reverse: {
-    flexDirection: 'row_reverse',
+    flexDirection: 'row-reverse',
   },
   flex_wrap: {
     flexWrap: 'wrap',
@@ -399,25 +399,25 @@ export const atoms = {
     flexShrink: 1,
   },
   justify_start: {
-    justifyContent: 'flex_start',
+    justifyContent: 'flex-start',
   },
   justify_center: {
     justifyContent: 'center',
   },
   justify_between: {
-    justifyContent: 'space_between',
+    justifyContent: 'space-between',
   },
   justify_end: {
-    justifyContent: 'flex_end',
+    justifyContent: 'flex-end',
   },
   align_center: {
     alignItems: 'center',
   },
   align_start: {
-    alignItems: 'flex_start',
+    alignItems: 'flex-start',
   },
   align_end: {
-    alignItems: 'flex_end',
+    alignItems: 'flex-end',
   },
   align_baseline: {
     alignItems: 'baseline',
@@ -429,10 +429,10 @@ export const atoms = {
     alignSelf: 'auto',
   },
   self_start: {
-    alignSelf: 'flex_start',
+    alignSelf: 'flex-start',
   },
   self_end: {
-    alignSelf: 'flex_end',
+    alignSelf: 'flex-end',
   },
   self_center: {
     alignSelf: 'center',

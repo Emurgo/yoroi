@@ -51,9 +51,9 @@ export const VerifyRecoveryPhraseScreen = () => {
   }
 
   const isPhraseComplete = userEntries.length === mnemonicEntries.length
-  const isPhraseValid = userEntries.map((entry) => entry.word).join(' ') === mnemonic
+  const isValidPhrase = userEntries.map((entry) => entry.word).join(' ') === mnemonic
 
-  const disabled = !isPhraseComplete || !isPhraseValid
+  const disabled = !isPhraseComplete || !isValidPhrase
 
   const lastUserEntry = userEntries.findLast((last) => last)
 
@@ -79,7 +79,7 @@ export const VerifyRecoveryPhraseScreen = () => {
         onPress={removeLastEntry}
         defaultMnemonic={mnemonicDefault}
         userEntries={userEntries}
-        error={isPhraseComplete && !isPhraseValid}
+        error={isPhraseComplete && !isValidPhrase}
       />
 
       {isPhraseComplete && isLastWordValid() && (
@@ -170,7 +170,7 @@ const MnemonicInput = ({defaultMnemonic, userEntries, onPress}: MnemonicInputPro
   const {mnemonic} = useSetupWallet()
 
   const isPhraseComplete = userEntries.length === defaultMnemonic.length
-  const isPhraseValid = userEntries.map((entry) => entry.word).join(' ') === mnemonic
+  const isValidPhrase = userEntries.map((entry) => entry.word).join(' ') === mnemonic
 
   const lastUserEntry = userEntries.findLast((last) => last)
 
@@ -198,46 +198,44 @@ const MnemonicInput = ({defaultMnemonic, userEntries, onPress}: MnemonicInputPro
             const recoveryWordError = !isLastWordValid() && lastUserEntry?.id === entry.id
 
             return (
-              <Animated.View
+              <TouchableOpacity
                 key={entry.id}
-                style={styles.wordBadgeView}
-                layout={LinearTransition}
-                entering={FadeIn}
-                exiting={FadeOut}
+                activeOpacity={0.5}
+                onPress={onPress}
+                disabled={!isLast || !recoveryWordError}
+                style={styles.wordBadge}
               >
-                <WordBadge
-                  word={`${(index + 1).toString()}.`}
-                  used
-                  disabled={!isLast || !recoveryWordError}
-                  onPress={onPress}
-                  recoveryWordError={recoveryWordError}
-                  defaultMnemonic={defaultMnemonic}
-                />
-
-                <Animated.View
-                  layout={LinearTransition}
-                  entering={FadeIn}
-                  exiting={FadeOut}
-                  style={[styles.wordBadgeContainerOutline, recoveryWordError && styles.errorBadgeBackground]}
-                >
-                  {!recoveryWordError && (
-                    <LinearGradient
-                      style={[StyleSheet.absoluteFill, {opacity: 1}]}
-                      start={isPhraseComplete && isPhraseValid ? {x: 0, y: 0} : {x: 1, y: 0}}
-                      end={isPhraseComplete && isPhraseValid ? {x: 0, y: 1} : {x: 0, y: 0}}
-                      colors={isPhraseComplete && isPhraseValid ? colors.gradientGreen : colors.gradientBlueGreen}
-                    />
-                  )}
-
+                <Animated.View style={styles.wordBadgeView} layout={LinearTransition} entering={FadeIn} exiting={FadeOut}>
                   <WordBadge
-                    word={entry.word}
-                    disabled={!isLast || !recoveryWordError}
-                    onPress={onPress}
+                    word={`${(index + 1).toString()}.`}
+                    used
                     recoveryWordError={recoveryWordError}
                     defaultMnemonic={defaultMnemonic}
                   />
+
+                  <Animated.View
+                    layout={LinearTransition}
+                    entering={FadeIn}
+                    exiting={FadeOut}
+                    style={[styles.wordBadgeContainerOutline, recoveryWordError && styles.errorBadgeBackground]}
+                  >
+                    {!recoveryWordError && (
+                      <LinearGradient
+                        style={[StyleSheet.absoluteFill, {opacity: 1}]}
+                        start={isPhraseComplete && isValidPhrase ? {x: 0, y: 0} : {x: 1, y: 0}}
+                        end={isPhraseComplete && isValidPhrase ? {x: 0, y: 1} : {x: 0, y: 0}}
+                        colors={isPhraseComplete && isValidPhrase ? colors.gradientGreen : colors.gradientBlueGreen}
+                      />
+                    )}
+
+                    <WordBadge
+                      word={entry.word}
+                      recoveryWordError={recoveryWordError}
+                      defaultMnemonic={defaultMnemonic}
+                    />
+                  </Animated.View>
                 </Animated.View>
-              </Animated.View>
+              </TouchableOpacity>
             )
           })}
         </View>
@@ -293,32 +291,26 @@ const WordBadges = ({
         const usedError = isUsed && !isLastWordValid() && lastUserEntry?.id === entry.id
 
         return (
-          <Animated.View
+          <TouchableOpacity
+            testID={isUsed ? `wordBadgeTapped-${entry.word}` : `wordBadgeNonTapped-${entry.word}`}
             key={entry.id}
-            layout={LinearTransition}
-            entering={FadeIn}
-            exiting={FadeOut}
-            style={[styles.wordBadgeContainer]}
+            activeOpacity={0.5}
+            disabled={isUsed}
+            onPress={() => selectWord(entry)}
           >
-            <LinearGradient
-              style={[StyleSheet.absoluteFill, {opacity: 1}]}
-              start={{x: 1, y: 0}}
-              end={{x: 0, y: 0}}
-              colors={!usedError ? colors.gradientBlueGreen : [colors.error, colors.error]}
-            />
+            <Animated.View layout={LinearTransition} entering={FadeIn} exiting={FadeOut} style={[styles.wordBadgeContainer]}>
+              <LinearGradient
+                style={[StyleSheet.absoluteFill, {opacity: 1}]}
+                start={{x: 1, y: 0}}
+                end={{x: 0, y: 0}}
+                colors={!usedError ? colors.gradientBlueGreen : [colors.error, colors.error]}
+              />
 
-            {isUsed && <View style={styles.usedWordBackground} />}
+              {isUsed && <View style={styles.usedWordBackground} />}
 
-            <WordBadge
-              word={entry.word}
-              onPress={() => selectWord(entry)}
-              disabled={isUsed}
-              used={isUsed}
-              usedError={usedError}
-              testID={isUsed ? `wordBadgeTapped-${entry.word}` : `wordBadgeNonTapped-${entry.word}`}
-              defaultMnemonic={defaultMnemonic}
-            />
-          </Animated.View>
+              <WordBadge word={entry.word} used={isUsed} usedError={usedError} defaultMnemonic={defaultMnemonic} />
+            </Animated.View>
+          </TouchableOpacity>
         )
       })}
     </Animated.View>
@@ -327,34 +319,23 @@ const WordBadges = ({
 
 type WordBadgeProps = {
   word: string
-  disabled?: boolean
   used?: boolean
   usedError?: boolean
   recoveryWordError?: boolean
-  onPress?: () => void
-  testID?: string
   defaultMnemonic: Array<Entry>
 }
-const WordBadge = ({word, onPress, disabled, testID, used, usedError, recoveryWordError}: WordBadgeProps) => {
+const WordBadge = ({word, used, usedError, recoveryWordError}: WordBadgeProps) => {
   const {styles} = useStyles()
   return (
-    <Animated.View layout={LinearTransition} entering={FadeIn} exiting={FadeOut}>
-      <TouchableOpacity
-        testID={testID}
-        activeOpacity={0.5}
-        onPress={onPress}
-        disabled={disabled}
-        style={styles.wordBadge}
+    <Animated.View layout={LinearTransition} entering={FadeIn} exiting={FadeOut} style={styles.wordBadge}>
+      <Animated.Text
+        layout={LinearTransition}
+        entering={FadeIn}
+        exiting={FadeOut}
+        style={[styles.wordBadgeText, used && !usedError && styles.usedWord, recoveryWordError && styles.errorBadge]}
       >
-        <Animated.Text
-          layout={LinearTransition}
-          entering={FadeIn}
-          exiting={FadeOut}
-          style={[styles.wordBadgeText, used && !usedError && styles.usedWord, recoveryWordError && styles.errorBadge]}
-        >
-          {word}
-        </Animated.Text>
-      </TouchableOpacity>
+        {word}
+      </Animated.Text>
     </Animated.View>
   )
 }

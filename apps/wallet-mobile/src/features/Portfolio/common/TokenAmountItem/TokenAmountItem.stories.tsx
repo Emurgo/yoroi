@@ -6,7 +6,7 @@ import {Text, View} from 'react-native'
 import {QueryProvider} from '../../../../../.storybook/decorators'
 import {Spacer} from '../../../../components'
 import {mocks} from '../../../../yoroi-wallets/mocks'
-import {SelectedWalletProvider} from '../../../WalletManager/Context'
+import {SelectedWalletProvider} from '../../../WalletManager/context/SelectedWalletContext'
 import {TokenAmountItem} from './TokenAmountItem'
 
 const primaryAmount = tokenMocks.primaryETH.balance

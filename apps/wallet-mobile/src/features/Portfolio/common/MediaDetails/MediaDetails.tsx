@@ -1,5 +1,6 @@
 import {RouteProp, useRoute} from '@react-navigation/native'
 import {isString} from '@yoroi/common'
+import {useExplorers} from '@yoroi/explorers'
 import {usePorfolioTokenDiscovery} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Chain, Portfolio} from '@yoroi/types'
@@ -12,9 +13,8 @@ import {Tab, TabPanel, TabPanels, Tabs} from '../../../../components/Tabs'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {NftRoutes} from '../../../../navigation'
 import {useNavigateTo} from '../../../../Nfts/navigation'
-import {useWalletManager} from '../../../../wallet-manager/WalletManagerContext'
-import {useExplorers} from '../../../Explorer/common/useExplorers'
-import {useSelectedWallet} from '../../../WalletManager/Context'
+import {useSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'
+import {useWalletManager} from '../../../WalletManager/context/WalletManagerContext'
 import {MediaPreview} from '../MediaPreview/MediaPreview'
 
 export const MediaDetails = () => {

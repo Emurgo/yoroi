@@ -72,7 +72,8 @@ export const useStrings = () => {
     walletPasswordModalCardSecondItem: intl.formatMessage(messages.walletPasswordModalCardSecondItem),
     walletChecksumModalCardTitle: intl.formatMessage(messages.walletChecksumModalCardTitle),
     walletChecksumModalCardFirstItem: intl.formatMessage(messages.walletChecksumModalCardFirstItem),
-    walletChecksumModalCardSecondItem: intl.formatMessage(messages.walletChecksumModalCardSecondItem),
+    walletChecksumModalCardSecondItem: (checksum: string) =>
+      intl.formatMessage(messages.walletChecksumModalCardSecondItem, {checksum}),
     walletChecksumModalCardThirdItem: intl.formatMessage(messages.walletChecksumModalCardThirdItem),
     stepWalletDetails: intl.formatMessage(messages.stepWalletDetails),
     walletDetailsTitle: (options: {b: (content: React.ReactNode[]) => React.ReactNode}) =>
@@ -91,10 +92,15 @@ export const useStrings = () => {
     invalidChecksum: intl.formatMessage(messages.invalidChecksum),
     validChecksum: intl.formatMessage(messages.validChecksum),
     stepRestoreWalletScreen: intl.formatMessage(messages.stepRestoreWalletScreen),
+    wordNotFound: intl.formatMessage(messages.wordNotFound),
     choose15WordsMnemonicTitle: intl.formatMessage(messages.choose15WordsMnemonicTitle),
     choose24WordsMnemonicTitle: intl.formatMessage(messages.choose24WordsMnemonicTitle),
     restoreWalletScreenTitle: (options: {b: (content: React.ReactNode[]) => React.ReactNode}) =>
       intl.formatMessage(messages.restoreWalletScreenTitle, {...options}),
+    restoreDuplicatedWalletModalTitle: intl.formatMessage(messages.restoreDuplicatedWalletModalTitle),
+    restoreDuplicatedWalletModalText: intl.formatMessage(messages.restoreDuplicatedWalletModalText),
+    restoreDuplicatedWalletModalButton: intl.formatMessage(messages.restoreDuplicatedWalletModalButton),
+    preparingWallet: intl.formatMessage(messages.preparingWallet),
   }).current
 }
 
@@ -320,7 +326,7 @@ export const messages = Object.freeze(
     },
     walletChecksumModalCardSecondItem: {
       id: 'components.walletinit.walletDetails.walletChecksumModalCardItem.second',
-      defaultMessage: '!!!Plate number BONE-0770 is a auto-generated sign of four letters and four digits.',
+      defaultMessage: '!!!Plate number {checksum} is a auto-generated sign of four letters and four digits.',
     },
     walletChecksumModalCardThirdItem: {
       id: 'components.walletinit.walletDetails.walletChecksumModalCardItem.third',
@@ -336,7 +342,7 @@ export const messages = Object.freeze(
     },
     walletDetailsPasswordHelper: {
       id: 'components.walletinit.walletDetails.walletDetailsPasswordHelper',
-      defaultMessage: '!!!Use a combination of letters, numbers and symbols to make your password stronger',
+      defaultMessage: '!!!Combine letters, numbers and symbols to make it stronger',
     },
     walletDetailsNameInput: {
       id: 'components.walletinit.walletDetails.walletDetailsNameInput',
@@ -393,6 +399,27 @@ export const messages = Object.freeze(
     restoreWalletScreenTitle: {
       id: 'components.walletinit.restorewallet.restorewalletscreen.restoreWalletScreenTitle',
       defaultMessage: '!!!Add the recovery phrase you received upon your wallet creation process.',
+    },
+    restoreDuplicatedWalletModalTitle: {
+      id: 'components.walletinit.restorewallet.restorewalletscreen.restoreDuplicatedWalletModalTitle',
+      defaultMessage: '!!!This wallet is already added',
+    },
+    restoreDuplicatedWalletModalText: {
+      id: 'components.walletinit.restorewallet.restorewalletscreen.restoreDuplicatedWalletModalText',
+      defaultMessage:
+        '!!!This wallet already exist on your device, You can open it or go back and restore another wallet.',
+    },
+    restoreDuplicatedWalletModalButton: {
+      id: 'components.walletinit.restorewallet.restorewalletscreen.restoreDuplicatedWalletModalButton',
+      defaultMessage: '!!!Open wallet',
+    },
+    preparingWallet: {
+      id: 'components.walletinit.restorewallet.restorewalletscreen.preparingWallet',
+      defaultMessage: '!!!Preparing your wallet...',
+    },
+    wordNotFound: {
+      id: 'components.walletinit.restorewallet.restorewalletscreen.wordNotFound',
+      defaultMessage: '!!!Word not found',
     },
   }),
 )

@@ -1,3 +1,4 @@
+import {useExplorers} from '@yoroi/explorers'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -6,7 +7,6 @@ import {Linking, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-nati
 import {Text} from '../../../components'
 import {confirmationMessages, txLabels} from '../../../i18n/global-messages'
 import {formatTokenWithText} from '../../../legacy/format'
-import {getNetworkConfigById} from '../../../yoroi-wallets/cardano/networks'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {YoroiStaking, YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {Amounts, Entries} from '../../../yoroi-wallets/utils'
@@ -79,6 +79,7 @@ const Withdrawals = ({
   withdrawals: NonNullable<YoroiStaking['withdrawals']>
 }) => {
   const strings = useStrings()
+  const explorers = useExplorers(wallet.network)
 
   const addresses = Entries.toAddresses(withdrawals)
   if (addresses.length < 1) return null
@@ -91,7 +92,7 @@ const Withdrawals = ({
         <TouchableOpacity
           key={address}
           activeOpacity={0.5}
-          onPress={() => Linking.openURL(getNetworkConfigById(wallet.networkId).EXPLORER_URL_FOR_ADDRESS(address))}
+          onPress={() => Linking.openURL(explorers.cardanoscan.address(address))}
         >
           <Text numberOfLines={1} ellipsizeMode="middle" secondary>
             {address}
@@ -110,6 +111,8 @@ const Deregistrations = ({
   deregistrations: NonNullable<YoroiStaking['deregistrations']>
 }) => {
   const strings = useStrings()
+  const explorers = useExplorers(wallet.network)
+
   const refundAmounts = Entries.toAmounts(deregistrations)
   const primaryAmount = Amounts.getAmount(refundAmounts, '')
 
@@ -125,7 +128,7 @@ const Deregistrations = ({
           <TouchableOpacity
             key={address}
             activeOpacity={0.5}
-            onPress={() => Linking.openURL(getNetworkConfigById(wallet.networkId).EXPLORER_URL_FOR_ADDRESS(address))}
+            onPress={() => Linking.openURL(explorers.cardanoscan.address(address))}
           >
             <Text numberOfLines={1} ellipsizeMode="middle" secondary>
               {address}

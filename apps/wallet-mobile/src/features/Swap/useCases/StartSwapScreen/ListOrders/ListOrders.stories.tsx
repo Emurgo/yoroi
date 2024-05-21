@@ -5,7 +5,7 @@ import React from 'react'
 import {QueryProvider} from '../../../../../../.storybook/decorators'
 import {SearchProvider} from '../../../../../Search/SearchContext'
 import {mocks} from '../../../../../yoroi-wallets/mocks/wallet'
-import {SelectedWalletProvider} from '../../../../WalletManager/Context'
+import {SelectedWalletProvider} from '../../../../WalletManager/context/SelectedWalletContext'
 import {SwapFormProvider} from '../../../common/SwapFormProvider'
 import {ListOrders} from './ListOrders'
 

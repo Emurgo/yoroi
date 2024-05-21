@@ -1,0 +1,32 @@
+[
+  {
+    "id": "components.walletselection.walletselectionscreen.addWalletButton",
+    "defaultMessage": "!!!Add wallet",
+    "file": "src/features/WalletManager/common/useStrings.tsx",
+    "start": {
+      "line": 15,
+      "column": 21,
+      "index": 409
+    },
+    "end": {
+      "line": 18,
+      "column": 5,
+      "index": 533
+    }
+  },
+  {
+    "id": "components.walletselection.walletselectionscreen.supportTicketLink",
+    "defaultMessage": "!!!Ask our support team",
+    "file": "src/features/WalletManager/common/useStrings.tsx",
+    "start": {
+      "line": 19,
+      "column": 23,
+      "index": 558
+    },
+    "end": {
+      "line": 22,
+      "column": 5,
+      "index": 694
+    }
+  }
+]

@@ -14,11 +14,11 @@ import {useMultipleAddressesInfo} from '../features/Receive/common/useMultipleAd
 import {useReceiveAddressesStatus} from '../features/Receive/common/useReceiveAddressesStatus'
 import {messages as receiveMessages} from '../features/Receive/common/useStrings'
 import {useSwapForm} from '../features/Swap/common/SwapFormProvider'
-import {useSelectedWallet} from '../features/WalletManager/Context'
+import {useAddressModeManager} from '../features/WalletManager/common/useAddressModeManager'
+import {useSelectedWallet} from '../features/WalletManager/context/SelectedWalletContext'
 import {actionMessages} from '../i18n/global-messages'
 import {useMetrics} from '../metrics/metricsManager'
 import {TxHistoryRouteNavigation} from '../navigation'
-import {useAddressModeManager} from '../wallet-manager/useAddressModeManager'
 import {useTokenInfo} from '../yoroi-wallets/hooks'
 
 export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {

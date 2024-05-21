@@ -9,15 +9,29 @@ jest.mock('./api-helpers')
 describe('cnsCryptoAddress', () => {
   beforeEach(jest.clearAllMocks)
 
-  it('should return an address for a valid receiver', async () => {
+  it('should return an address for a valid receiver in mainnet', async () => {
     const cls = init
     const receiver = 'fake.ada'
     const address = 'fake-address'
+    const isMainnet = true
 
     // @ts-ignore
     resolveAddress.mockReturnValue(address)
 
-    const getAddress = cnsCryptoAddress(cls)
+    const getAddress = cnsCryptoAddress(cls, isMainnet)
+    await expect(getAddress(receiver)).resolves.toBe(address)
+  })
+
+  it('should return an address for a valid receiver  in preprod', async () => {
+    const cls = init
+    const receiver = 'fake.ada'
+    const address = 'fake-address'
+    const isMainnet = false
+
+    // @ts-ignore
+    resolveAddress.mockReturnValue(address)
+
+    const getAddress = cnsCryptoAddress(cls, isMainnet)
     await expect(getAddress(receiver)).resolves.toBe(address)
   })
 

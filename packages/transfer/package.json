@@ -162,7 +162,7 @@
   },
   "peerDependencies": {
     "@yoroi/portfolio": "1.0.0",
-    "@yoroi/resolver": "2.0.4",
+    "@yoroi/resolver": "2.0.5",
     "immer": "^10.0.2",
     "react": ">= 16.8.0 <= 19.0.0",
     "react-query": "^3.39.3"

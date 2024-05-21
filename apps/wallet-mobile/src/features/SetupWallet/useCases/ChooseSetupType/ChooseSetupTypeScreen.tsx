@@ -21,7 +21,12 @@ import {RestoreWallet} from '../../illustrations/RestoreWallet'
 export const ChooseSetupTypeScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
-  const {networkIdChanged, setUpTypeChanged, useUSBChanged: USBChanged} = useSetupWallet()
+  const {
+    walletImplementationIdChanged,
+    networkIdChanged,
+    setUpTypeChanged,
+    useUSBChanged: USBChanged,
+  } = useSetupWallet()
   const [isModalOpen, setIsModalOpen] = React.useState(false)
   const {track} = useMetrics()
 
@@ -34,6 +39,7 @@ export const ChooseSetupTypeScreen = () => {
   const navigation = useNavigation<WalletInitRouteNavigation>()
 
   const handleCreate = () => {
+    walletImplementationIdChanged(HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID)
     setUpTypeChanged('create')
 
     if (isProduction()) {
@@ -42,19 +48,22 @@ export const ChooseSetupTypeScreen = () => {
       return
     }
 
-    navigation.navigate('setup-wallet-choose-network')
+    // On production the step of network is skipped
+    navigation.navigate('setup-wallet-create-choose-network')
   }
 
   const handleRestore = () => {
+    walletImplementationIdChanged(HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID)
     setUpTypeChanged('restore')
 
     if (isProduction()) {
       networkIdChanged(HASKELL_SHELLEY.NETWORK_ID)
-      navigation.navigate('setup-wallet-choose-mnemonic-type')
+      navigation.navigate('setup-wallet-restore-choose-mnemonic-type')
       return
     }
 
-    navigation.navigate('setup-wallet-choose-network')
+    // On production the step of network is skipped
+    navigation.navigate('setup-wallet-restore-choose-network')
   }
 
   const handleHw = () => {
@@ -63,6 +72,7 @@ export const ChooseSetupTypeScreen = () => {
 
   const navigateHw = () => {
     setIsModalOpen(false)
+    walletImplementationIdChanged(HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID)
     setUpTypeChanged('hw')
 
     if (isProduction()) {
@@ -71,7 +81,8 @@ export const ChooseSetupTypeScreen = () => {
       return
     }
 
-    navigation.navigate('setup-wallet-choose-network')
+    // On production the step of network is skipped
+    navigation.navigate('setup-wallet-restore-choose-network')
   }
 
   return (
