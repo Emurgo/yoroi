@@ -41,8 +41,7 @@ export const WebViewItem = ({tab, index}: Props) => {
 
   const {initScript, handleEvent} = useConnectWalletToWebView(wallet, webViewRef)
 
-  const topInset = Math.max(insets.top, initialWindowMetrics?.insets.top ?? 0)
-  const visibleAreaHeight = SCREEN_HEIGHT - topInset
+  const visibleAreaHeight = SCREEN_HEIGHT - insets.top - insets.bottom
 
   const containerStyleAnimated = useAnimatedStyle(() => {
     return {
