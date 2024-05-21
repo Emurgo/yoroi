@@ -56,7 +56,7 @@ export const BrowserTabBar = ({webViewRef, webViewState}: Props) => {
   }
 
   return (
-    <View style={[styles.root, styles.shadow, {height: 46 + insets.bottom, paddingBottom: insets.bottom}]}>
+    <View style={[styles.root, styles.shadow, {height: tabBarHeight + insets.bottom, paddingBottom: insets.bottom}]}>
       <Touch disabled={!webViewState.canGoBack} onPress={handleBackward}>
         <Icon.Backward color={colorBackward} />
       </Touch>
@@ -79,6 +79,8 @@ export const BrowserTabBar = ({webViewRef, webViewState}: Props) => {
     </View>
   )
 }
+
+const tabBarHeight = 46
 
 const Touch = ({children, ...props}: React.PropsWithChildren<TouchableOpacityProps>) => {
   return <TouchableOpacity {...props}>{children}</TouchableOpacity>
