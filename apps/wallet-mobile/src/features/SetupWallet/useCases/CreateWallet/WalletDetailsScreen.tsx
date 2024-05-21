@@ -26,7 +26,14 @@ import {errorMessages} from '../../../../i18n/global-messages'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useWalletNavigation} from '../../../../navigation'
 import {isEmptyString} from '../../../../utils'
-import {useCreateWallet, usePlate, useWalletNames} from '../../../../yoroi-wallets/hooks'
+import {InvalidState} from '../../../../yoroi-wallets/cardano/errors'
+import {
+  useCreateWallet,
+  useOpenWallet,
+  usePlate,
+  useSubscribeToWalletInfoStatus,
+  useWalletNames,
+} from '../../../../yoroi-wallets/hooks'
 import {WalletImplementationId} from '../../../../yoroi-wallets/types'
 import {
   getWalletNameError,
@@ -37,6 +44,8 @@ import {
 import {debugWalletInfo, features} from '../../..'
 import {AddressMode} from '../../../WalletManager/common/types'
 import {parseWalletMeta} from '../../../WalletManager/common/validators'
+import {useSetSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'
+import {useSetSelectedWalletMeta} from '../../../WalletManager/context/SelectedWalletMetaContext'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerContext'
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
 import {YoroiZendeskLink} from '../../common/constants'
@@ -67,11 +76,13 @@ export const WalletDetailsScreen = () => {
   const {styles} = useStyles()
   const {HEIGHT_MODAL_NAME_PASSWORD, HEIGHT_MODAL_CHECKSUM} = useSizeModal()
   const {openModal, closeModal} = useModal()
-  const {resetToTxHistory} = useWalletNavigation()
   const strings = useStrings()
   const walletManager = useWalletManager()
   const {walletNames} = useWalletNames(walletManager)
   const {track} = useMetrics()
+  const selectWalletMeta = useSetSelectedWalletMeta()
+  const selectWallet = useSetSelectedWallet()
+  const {resetToTxHistory} = useWalletNavigation()
   const intl = useIntl()
   const storage = useAsyncStorage()
   const {
@@ -105,21 +116,43 @@ export const WalletDetailsScreen = () => {
     ? strings.repeatPasswordInputError
     : undefined
 
+  const {openWallet, isLoading: isOpenWalletLoading} = useOpenWallet({
+    onSuccess: ([wallet, walletMeta]) => {
+      selectWalletMeta(walletMeta)
+      selectWallet(wallet)
+      resetToTxHistory()
+    },
+    onError: (error) => {
+      InteractionManager.runAfterInteractions(() => {
+        return error instanceof InvalidState
+          ? showErrorDialog(errorMessages.walletStateInvalid, intl)
+          : error instanceof Api.Errors.Network
+          ? showErrorDialog(errorMessages.networkError, intl)
+          : showErrorDialog(errorMessages.generalError, intl, {message: error.message})
+      })
+    },
+  })
+
+  const {subscribeToWalletInfoStatus, isLoading: isWalletInfoLoading} = useSubscribeToWalletInfoStatus(walletManager, {
+    onSuccess: async (walletId) => {
+      const walletStorage = storage.join('wallet/')
+      const walletMeta = await walletStorage.getItem(walletId, parseWalletMeta)
+
+      if (!walletMeta) throw new Error('invalid wallet meta')
+
+      openWallet(walletMeta)
+
+      track.createWalletDetailsSettled()
+    },
+  })
+
   const {
     createWallet,
     isLoading,
     isSuccess: isCreateWalletSuccess,
   } = useCreateWallet({
-    onSuccess: async (wallet) => {
-      const walletStorage = storage.join('wallet/')
-      const walletMeta = await walletStorage.getItem(wallet.id, parseWalletMeta)
-
-      if (!walletMeta) throw new Error('invalid wallet meta')
-
-      track.createWalletDetailsSettled()
-
-      // TODO: revisit needs to open the new wallet - should wait for done sync event from manager
-      resetToTxHistory()
+    onSuccess: (wallet) => {
+      subscribeToWalletInfoStatus({walletId: wallet.id, status: 'done'})
     },
     onError: (error) => {
       InteractionManager.runAfterInteractions(() => {
@@ -251,7 +284,7 @@ export const WalletDetailsScreen = () => {
     )
   }
 
-  if (isLoading) return <PreparingWallet />
+  if (isLoading || isOpenWalletLoading || isWalletInfoLoading) return <PreparingWallet />
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>

@@ -24,6 +24,7 @@ import {
   useQueryClient,
   UseQueryOptions,
 } from 'react-query'
+import {Subscription} from 'rxjs'
 
 import {AddressMode, WalletMeta} from '../../features/WalletManager/common/types'
 import {parseWalletMeta} from '../../features/WalletManager/common/validators'
@@ -1107,4 +1108,45 @@ export const useThemeStorageMaker = () => {
   const themeStorage = themeStorageMaker({storage: themeDiscoveryStorage})
 
   return themeStorage
+}
+
+export const useSubscribeToWalletInfoStatus = (
+  walletManager: WalletManager,
+  options?: UseMutationOptions<
+    YoroiWallet['id'],
+    Error,
+    {walletId: YoroiWallet['id']; status: 'waiting' | 'syncing' | 'done' | 'error'},
+    [YoroiWallet['id'], 'walletInfoStatus']
+  >,
+) => {
+  let subscription: Subscription
+
+  const mutation = useMutation({
+    ...options,
+    mutationFn: ({walletId, status}) =>
+      new Promise<YoroiWallet['id']>((resolve) => {
+        subscription = walletManager.subscribeToWalletInfoStatus(walletId, status, () => {
+          subscription.unsubscribe()
+          resolve(walletId)
+        })
+      }),
+  })
+
+  return {
+    ...mutation,
+    subscribeToWalletInfoStatus: mutation.mutate,
+  }
+}
+
+export const useOpenWallet = (options?: UseMutationOptions<[YoroiWallet, WalletMeta], Error, WalletMeta>) => {
+  const walletManager = useWalletManager()
+  const mutation = useMutation({
+    ...options,
+    mutationFn: (walletMeta) => Promise.all([walletManager.openWallet(walletMeta), walletMeta]),
+  })
+
+  return {
+    openWallet: mutation.mutate,
+    ...mutation,
+  }
 }

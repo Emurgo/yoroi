@@ -65,6 +65,25 @@ export class WalletManager {
     return this.#selectedWalletId
   }
 
+  syncWalletInfos() {
+    this.walletInfos$.next(new Map(this.#walletInfos))
+  }
+
+  subscribeToWalletInfoStatus(
+    walletId: YoroiWallet['id'],
+    status: 'waiting' | 'syncing' | 'done' | 'error',
+    callback: () => void,
+  ) {
+    const subscription = walletManager.walletInfos$.subscribe((walletInfos) => {
+      const walletInfo = walletInfos.get(walletId)
+      if (walletInfo?.sync.status === status) {
+        callback()
+      }
+    })
+
+    return subscription
+  }
+
   startSyncingAllWallets() {
     const syncWallets = () => {
       if (this.#isSyncing$.value) return
@@ -77,23 +96,24 @@ export class WalletManager {
             this.#walletInfos.clear()
             wallets.forEach((wallet) => {
               this.#walletInfos.set(wallet.id, {sync: {status: 'waiting', updatedAt: Date.now()}})
-              this.walletInfos$.next(new Map(this.#walletInfos))
+              this.syncWalletInfos()
             })
             return from(wallets)
           }),
           concatMap((wallet) => {
             this.#walletInfos.set(wallet.id, {sync: {status: 'syncing', updatedAt: Date.now()}})
-            this.walletInfos$.next(new Map(this.#walletInfos))
+            this.syncWalletInfos()
+
             return from(wallet.sync({isForced: false})).pipe(
               catchError((error) => {
                 this.#walletInfos.set(wallet.id, {sync: {status: 'error', error, updatedAt: Date.now()}})
-                this.walletInfos$.next(new Map(this.#walletInfos))
+                this.syncWalletInfos()
                 return of()
               }),
               finalize(() => {
                 if (this.#walletInfos.get(wallet.id)?.sync.status !== 'error') {
                   this.#walletInfos.set(wallet.id, {sync: {status: 'done', updatedAt: Date.now()}})
-                  this.walletInfos$.next(new Map(this.#walletInfos))
+                  this.syncWalletInfos()
                 }
               }),
             )

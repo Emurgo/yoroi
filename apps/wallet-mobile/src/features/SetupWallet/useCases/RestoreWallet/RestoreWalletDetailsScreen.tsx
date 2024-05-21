@@ -25,7 +25,14 @@ import {errorMessages} from '../../../../i18n/global-messages'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useWalletNavigation} from '../../../../navigation'
 import {isEmptyString} from '../../../../utils'
-import {useCreateWallet, usePlate, useWalletNames} from '../../../../yoroi-wallets/hooks'
+import {InvalidState} from '../../../../yoroi-wallets/cardano/errors'
+import {
+  useCreateWallet,
+  useOpenWallet,
+  usePlate,
+  useSubscribeToWalletInfoStatus,
+  useWalletNames,
+} from '../../../../yoroi-wallets/hooks'
 import {WalletImplementationId} from '../../../../yoroi-wallets/types'
 import {
   getWalletNameError,
@@ -36,6 +43,8 @@ import {
 import {debugWalletInfo, features} from '../../..'
 import {AddressMode} from '../../../WalletManager/common/types'
 import {parseWalletMeta} from '../../../WalletManager/common/validators'
+import {useSetSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'
+import {useSetSelectedWalletMeta} from '../../../WalletManager/context/SelectedWalletMetaContext'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerContext'
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
 import {YoroiZendeskLink} from '../../common/constants'
@@ -67,12 +76,14 @@ export const RestoreWalletDetailsScreen = () => {
   const {HEIGHT_MODAL_NAME_PASSWORD, HEIGHT_MODAL_CHECKSUM} = useSizeModal()
   const {openModal, closeModal} = useModal()
   const strings = useStrings()
-  const {resetToTxHistory} = useWalletNavigation()
   const walletManager = useWalletManager()
   const {track} = useMetrics()
+  const storage = useAsyncStorage()
+  const selectWalletMeta = useSetSelectedWalletMeta()
+  const selectWallet = useSetSelectedWallet()
+  const {resetToTxHistory} = useWalletNavigation()
   const {walletNames} = useWalletNames(walletManager)
   const [name, setName] = React.useState(features.prefillWalletInfo ? debugWalletInfo.WALLET_NAME : '')
-  const storage = useAsyncStorage()
   const {mnemonic, networkId, publicKeyHex, walletImplementationId} = useSetupWallet()
   const plate = usePlate({networkId, publicKeyHex})
 
@@ -92,21 +103,47 @@ export const RestoreWalletDetailsScreen = () => {
     ? strings.repeatPasswordInputError
     : undefined
 
+  const {
+    openWallet,
+    isLoading: isOpenWalletLoading,
+    isSuccess: isOpenWalletSuccess,
+  } = useOpenWallet({
+    onSuccess: ([wallet, walletMeta]) => {
+      selectWalletMeta(walletMeta)
+      selectWallet(wallet)
+      resetToTxHistory()
+    },
+    onError: (error) => {
+      InteractionManager.runAfterInteractions(() => {
+        return error instanceof InvalidState
+          ? showErrorDialog(errorMessages.walletStateInvalid, intl)
+          : error instanceof Api.Errors.Network
+          ? showErrorDialog(errorMessages.networkError, intl)
+          : showErrorDialog(errorMessages.generalError, intl, {message: error.message})
+      })
+    },
+  })
+
+  const {subscribeToWalletInfoStatus, isLoading: isWalletInfoLoading} = useSubscribeToWalletInfoStatus(walletManager, {
+    onSuccess: async (walletId) => {
+      const walletStorage = storage.join('wallet/')
+      const walletMeta = await walletStorage.getItem(walletId, parseWalletMeta)
+
+      if (!walletMeta) throw new Error('invalid wallet meta')
+
+      openWallet(walletMeta)
+      track.restoreWalletDetailsSettled()
+    },
+  })
+
   const intl = useIntl()
   const {
     createWallet,
     isLoading,
     isSuccess: isCreateWalletSuccess,
   } = useCreateWallet({
-    onSuccess: async (wallet) => {
-      const walletStorage = storage.join('wallet/')
-      const walletMeta = await walletStorage.getItem(wallet.id, parseWalletMeta)
-
-      if (!walletMeta) throw new Error('invalid wallet meta')
-
-      track.restoreWalletDetailsSettled()
-      // TODO: revist should open the wallet and navigate to it
-      resetToTxHistory()
+    onSuccess: (wallet) => {
+      subscribeToWalletInfoStatus({walletId: wallet.id, status: 'done'})
     },
     onError: (error) => {
       InteractionManager.runAfterInteractions(() => {
@@ -123,7 +160,7 @@ export const RestoreWalletDetailsScreen = () => {
     }, [track]),
   )
 
-  if (isLoading) return <PreparingWallet />
+  if (isLoading || isWalletInfoLoading || isOpenWalletLoading) return <PreparingWallet />
 
   const nameErrors = validateWalletName(name, null, walletNames && !isCreateWalletSuccess ? walletNames : [])
   const walletNameErrorText = getWalletNameError(
@@ -276,6 +313,7 @@ export const RestoreWalletDetailsScreen = () => {
             autoComplete="off"
             disabled={isLoading}
             textContentType="oneTimeCode"
+            showErrorOnBlur={!isOpenWalletSuccess}
           />
 
           <Space height="xl" />
