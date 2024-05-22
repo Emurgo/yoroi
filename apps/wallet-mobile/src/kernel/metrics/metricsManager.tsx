@@ -4,8 +4,8 @@ import {App} from '@yoroi/types'
 import * as React from 'react'
 import Config from 'react-native-config'
 
-import {Logger} from '../../yoroi-wallets/logging'
 import {rootStorage} from '../../yoroi-wallets/storage/rootStorage'
+import {logger} from '../logger/logger'
 import {Ampli, ampli} from './ampli'
 import {mockMetricsManager} from './mocks'
 
@@ -96,8 +96,8 @@ export const makeMetricsManager = (
           metricsModule.client.add(infoPlugin)
         }
       })
-      .catch((e) => {
-        Logger.error(`[metrics-react-native] metrics.load failed:`, e)
+      .catch((error) => {
+        logger.error(`makeMetricsManager: init failed:`, {error})
       })
 
   const track = {
@@ -224,9 +224,9 @@ const defaultState: MetricsState = {
   isConsentRequested: false,
 } as const
 const defaultActions: MetricsActions = {
-  isLoadedChanged: (_loaded: boolean) => Logger.error('[metrics-react] missing initialization'),
-  isEnabledChanged: (_enabled: boolean) => Logger.error('[metrics-react] missing initialization'),
-  isConsentRequestedChanged: (_consentRequested: boolean) => Logger.error('[metrics-react] missing initialization'),
+  isLoadedChanged: (_loaded: boolean) => logger.error('[metrics-react] missing initialization'),
+  isEnabledChanged: (_enabled: boolean) => logger.error('[metrics-react] missing initialization'),
+  isConsentRequestedChanged: (_consentRequested: boolean) => logger.error('[metrics-react] missing initialization'),
 } as const
 const defaultManager: MetricsManager = mockMetricsManager()
 const MetricsContext = React.createContext<MetricsContextType>({

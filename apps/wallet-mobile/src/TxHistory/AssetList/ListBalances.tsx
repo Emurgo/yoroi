@@ -11,7 +11,7 @@ import {Spacer} from '../../components/Spacer'
 import {usePortfolioBalances} from '../../features/Portfolio/common/hooks/usePortfolioBalances'
 import {TokenAmountItem, TokenAmountItemProps} from '../../features/Portfolio/common/TokenAmountItem/TokenAmountItem'
 import {useSelectedWallet} from '../../features/WalletManager/context/SelectedWalletContext'
-import globalMessages from '../../i18n/global-messages'
+import globalMessages from '../../kernel/i18n/global-messages'
 import {useMetrics} from '../../kernel/metrics/metricsManager'
 import {FilterBalancesByType} from './FilterBalancesByType'
 

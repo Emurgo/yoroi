@@ -4,8 +4,8 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Image, Platform, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import fingerprintImage from '../../../assets/img/fingerprint.png'
 import {Icon, ScreenBackground, Text} from '../../../components'
-import fingerprintImage from '../../assets/img/fingerprint.png'
 import {supportsAndroidFingerprintOverlay} from '../common/biometrics'
 
 type Props = {

@@ -3,7 +3,6 @@ import React from 'react'
 import {Image, ImageSourcePropType, StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native'
 
 import {Button, Icon, Text} from '../components'
-import {COLORS} from '../theme'
 
 type Props = {
   title: string
@@ -26,7 +25,7 @@ export const WarningBanner = ({
   onRequestClose,
   style,
 }: Props) => {
-  const styles = useStyles()
+  const {styles, colors} = useStyles()
 
   return (
     <View style={[styles.wrapper, style]}>
@@ -46,7 +45,7 @@ export const WarningBanner = ({
 
       {showCloseIcon === true && (
         <TouchableOpacity style={styles.close} onPress={onRequestClose}>
-          <Icon.Cross size={22} color={COLORS.GRAY} />
+          <Icon.Cross size={22} color={colors.icon} />
         </TouchableOpacity>
       )}
     </View>
@@ -99,5 +98,5 @@ const useStyles = () => {
       marginVertical: 16,
     },
   })
-  return styles
+  return {styles, colors: {icon: color.gray_c600}} as const
 }

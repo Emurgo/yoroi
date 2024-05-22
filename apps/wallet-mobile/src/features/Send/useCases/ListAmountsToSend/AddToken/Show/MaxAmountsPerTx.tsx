@@ -3,8 +3,8 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Text} from 'react-native'
 
 import {ErrorPanel} from '../../../../../../components/ErrorPanel/ErrorPanel'
-import globalMessages from '../../../../../../i18n/global-messages'
-import {limitOfSecondaryAmountsPerTx} from '../../../../../../yoroi-wallets/contants'
+import globalMessages from '../../../../../../kernel/i18n/global-messages'
+import {limitOfSecondaryAmountsPerTx} from '../../../../common/constants'
 
 export const MaxAmountsPerTx = () => {
   const strings = useStrings()

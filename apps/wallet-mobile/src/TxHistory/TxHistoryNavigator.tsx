@@ -59,7 +59,6 @@ import {
   TxHistoryRoutes,
   useWalletNavigation,
 } from '../kernel/navigation'
-import {COLORS} from '../theme'
 import {useFrontendFees, useStakingKey, useWalletName} from '../yoroi-wallets/hooks'
 import {ModalInfo} from './ModalInfo'
 import {TxDetails} from './TxDetails'
@@ -397,8 +396,8 @@ export const TxHistoryNavigator = () => {
                       ...sendOptions(atoms, color),
                       headerTransparent: true,
                       title: strings.scanTitle,
-                      headerTintColor: COLORS.WHITE,
-                      headerLeft: (props) => <BackButton color={COLORS.WHITE} {...props} />,
+                      headerTintColor: color.white_static,
+                      headerLeft: (props) => <BackButton color={color.white_static} {...props} />,
                     }}
                   />
 
@@ -561,13 +560,16 @@ const HeaderRightHistory = React.memo(() => {
   const wallet = useSelectedWallet()
   const {navigateToSettings} = useWalletNavigation()
   const navigation = useNavigation<TxHistoryRouteNavigation>()
-  const {styles, color} = useStyles()
+  const {styles, colors} = useStyles()
 
   return (
     <Row style={styles.row}>
       {!wallet.isReadOnly && (
         <>
-          <CodeScannerButton onPress={() => navigation.navigate('scan-start', {insideFeature: 'scan'})} color={color} />
+          <CodeScannerButton
+            onPress={() => navigation.navigate('scan-start', {insideFeature: 'scan'})}
+            color={colors.gray}
+          />
 
           <Spacer width={10} />
         </>
@@ -599,7 +601,11 @@ const useStyles = () => {
       paddingStart: 8,
     },
   })
-  return {styles, backgroundColor: color.primary_c100, color: color.gray_cmax}
+
+  return {
+    styles,
+    colors: {gray: color.gray_cmax},
+  } as const
 }
 
 const sendOptions = (atoms: Atoms, color: ThemedPalette) => ({

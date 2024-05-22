@@ -4,7 +4,7 @@ import {ActivityIndicator, View} from 'react-native'
 
 import {TextInput, TwoActionView} from '../../../components'
 import {debugWalletInfo, features} from '../../../features'
-import {confirmationMessages, txLabels} from '../../../i18n/global-messages'
+import {confirmationMessages, txLabels} from '../../../kernel/i18n/global-messages'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {useSignWithPasswordAndSubmitTx} from '../../../yoroi-wallets/hooks'
 import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'

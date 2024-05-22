@@ -7,7 +7,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
 import {Boundary} from '../../components'
-import globalMessages from '../../i18n/global-messages'
+import globalMessages from '../../kernel/i18n/global-messages'
 import {useMetrics} from '../../kernel/metrics/metricsManager'
 import {
   defaultMaterialTopTabNavigationOptions,

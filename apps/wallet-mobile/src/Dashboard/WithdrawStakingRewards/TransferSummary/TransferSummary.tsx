@@ -5,7 +5,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Linking, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 
 import {Text} from '../../../components'
-import {confirmationMessages, txLabels} from '../../../i18n/global-messages'
+import {confirmationMessages, txLabels} from '../../../kernel/i18n/global-messages'
 import {formatTokenWithText} from '../../../legacy/format'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {YoroiStaking, YoroiUnsignedTx} from '../../../yoroi-wallets/types'

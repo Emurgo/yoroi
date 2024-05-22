@@ -5,11 +5,10 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StatusBar, StyleSheet, View} from 'react-native'
 
 import {BulletPointItem, CameraCodeScanner, Spacer, Text} from '../../../../components'
-import {showErrorDialog} from '../../../../dialogs'
-import {errorMessages} from '../../../../i18n/global-messages'
+import {showErrorDialog} from '../../../../kernel/dialogs'
+import {errorMessages} from '../../../../kernel/i18n/global-messages'
 import {logger} from '../../../../kernel/logger/logger'
 import {WalletInitRouteNavigation} from '../../../../kernel/navigation'
-import {theme} from '../../../../theme'
 import {isCIP1852AccountPath, isValidPublicKey} from '../../../../yoroi-wallets/cardano/bip44Validators'
 
 export const ImportReadOnlyWalletScreen = () => {
@@ -93,7 +92,6 @@ const useStrings = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.COLORS.BACKGROUND,
   },
   cameraContainer: {
     flex: 2,

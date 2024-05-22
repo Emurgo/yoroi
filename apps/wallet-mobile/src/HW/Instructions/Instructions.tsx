@@ -3,7 +3,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Platform, StyleSheet, Text, View} from 'react-native'
 
 import {BulletPointItem} from '../../components'
-import {ledgerMessages} from '../../i18n/global-messages'
+import {ledgerMessages} from '../../kernel/i18n/global-messages'
 
 type Props = {
   useUSB?: boolean

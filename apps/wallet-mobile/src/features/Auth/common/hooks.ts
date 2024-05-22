@@ -6,13 +6,13 @@ import {Alert, AppState, Platform} from 'react-native'
 import RNKeychain from 'react-native-keychain'
 import {useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
-import {parseWalletMeta} from '../../features/WalletManager/common/validators'
-import {useWalletManager} from '../../features/WalletManager/context/WalletManagerContext'
-import globalMessages from '../../i18n/global-messages'
-import {WrongPassword} from '../cardano/errors'
-import {YoroiWallet} from '../cardano/types'
-import {decryptData, encryptData} from '../encryption'
-import {AuthenticationPrompt, Keychain} from '../storage'
+import globalMessages from '../../../kernel/i18n/global-messages'
+import {WrongPassword} from '../../../yoroi-wallets/cardano/errors'
+import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
+import {decryptData, encryptData} from '../../../yoroi-wallets/encryption'
+import {AuthenticationPrompt, Keychain} from '../../../yoroi-wallets/storage'
+import {parseWalletMeta} from '../../WalletManager/common/validators'
+import {useWalletManager} from '../../WalletManager/context/WalletManagerContext'
 
 export const useIsAuthOsSupported = (options?: UseQueryOptions<boolean, Error>) => {
   const queryClient = useQueryClient()

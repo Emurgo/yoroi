@@ -3,6 +3,7 @@
 // @ts-ignore
 import TransportHID from '@emurgo/react-native-hid'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
+import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import type {IntlShape} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
@@ -11,16 +12,16 @@ import {ActivityIndicator, Alert, FlatList, Image, RefreshControl, ScrollView, S
 import bleImage from '../../assets/img/bluetooth.png'
 import usbImage from '../../assets/img/ledger-nano-usb.png'
 import {BulletPointItem, Button, Text} from '../../components'
-import globalMessages, {confirmationMessages, ledgerMessages} from '../../i18n/global-messages'
-import LocalizableError from '../../i18n/LocalizableError'
+import globalMessages, {confirmationMessages, ledgerMessages} from '../../kernel/i18n/global-messages'
+import LocalizableError from '../../kernel/i18n/LocalizableError'
 import {logger} from '../../kernel/logger/logger'
-import {COLORS, spacing} from '../../theme'
 import {BluetoothDisabledError, DeviceId, DeviceObj, RejectedByUserError} from '../../yoroi-wallets/hw'
 import {Device} from '../../yoroi-wallets/types'
 import {DeviceItem} from './DeviceItem'
 
 type Props = {
   intl: IntlShape
+  styles: ReturnType<typeof useStyles>
   defaultDevices?: Array<Device> | null // for storybook
   onConnectUSB: (deviceObj: DeviceObj) => Promise<void> | void
   onConnectBLE: (deviceId: DeviceId) => Promise<void> | void
@@ -39,7 +40,7 @@ type State = {
 }
 
 // eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
-class _LedgerConnect extends React.Component<Props, State> {
+class LedgerConnectInt extends React.Component<Props, State> {
   state: State = {
     devices: this.props.defaultDevices ? this.props.defaultDevices : [],
     deviceId: null,
@@ -202,7 +203,7 @@ class _LedgerConnect extends React.Component<Props, State> {
 
   ListHeader = () => {
     const {error, waiting, deviceObj} = this.state
-    const {intl, onWaitingMessage} = this.props
+    const {intl, onWaitingMessage, styles} = this.props
 
     const ListHeaderWrapper = ({msg, err}: {msg: string; err?: string | null}) => (
       <View style={styles.listHeader}>
@@ -234,7 +235,7 @@ class _LedgerConnect extends React.Component<Props, State> {
   }
 
   render() {
-    const {intl, useUSB, fillSpace} = this.props
+    const {intl, useUSB, fillSpace, styles} = this.props
     const {error, devices, refreshing, deviceId, deviceObj, waiting} = this.state
 
     const rows = [intl.formatMessage(ledgerMessages.enterPin), intl.formatMessage(ledgerMessages.openApp)]
@@ -305,10 +306,11 @@ class _LedgerConnect extends React.Component<Props, State> {
   }
 }
 
-export const LedgerConnect = (props: Omit<Props, 'intl'>) => {
+export const LedgerConnect = (props: Omit<Props, 'intl' | 'styles'>) => {
   const intl = useIntl()
+  const styles = useStyles()
 
-  return <_LedgerConnect {...props} intl={intl} />
+  return <LedgerConnectInt {...props} intl={intl} styles={styles} />
 }
 
 const messages = defineMessages({
@@ -338,57 +340,62 @@ const deviceAddition =
     }
   }
 
-const styles = StyleSheet.create({
-  container: {
-    paddingTop: 30,
-    paddingHorizontal: 20,
-  },
-  fillSpace: {
-    flex: 1,
-  },
-  scrollView: {
-    marginBottom: 22,
-  },
-  heading: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: spacing.paragraphBottomMargin,
-  },
-  caption: {
-    marginTop: 12,
-  },
-  flatList: {
-    flex: 1,
-    flexDirection: 'column',
-    height: 150,
-  },
-  flatListContentContainer: {
-    flexGrow: 1,
-  },
-  listHeader: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  paragraph: {
-    marginBottom: spacing.paragraphBottomMargin,
-  },
-  error: {
-    color: COLORS.ERROR_TEXT_COLOR,
-  },
-  instructionsBlock: {
-    marginVertical: 24,
-  },
-  paragraphText: {
-    fontSize: 14,
-    lineHeight: 22,
-  },
-  item: {
-    marginTop: 12,
-    fontSize: 14,
-    lineHeight: 22,
-  },
-  button: {
-    marginHorizontal: 10,
-    marginBottom: 8,
-  },
-})
+const useStyles = () => {
+  const {color} = useTheme()
+  const styles = StyleSheet.create({
+    container: {
+      paddingTop: 30,
+      paddingHorizontal: 20,
+    },
+    fillSpace: {
+      flex: 1,
+    },
+    scrollView: {
+      marginBottom: 22,
+    },
+    heading: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: 16,
+    },
+    caption: {
+      marginTop: 12,
+    },
+    flatList: {
+      flex: 1,
+      flexDirection: 'column',
+      height: 150,
+    },
+    flatListContentContainer: {
+      flexGrow: 1,
+    },
+    listHeader: {
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    paragraph: {
+      marginBottom: 16,
+    },
+    error: {
+      color: color.sys_magenta_c500,
+    },
+    instructionsBlock: {
+      marginVertical: 24,
+    },
+    paragraphText: {
+      fontSize: 14,
+      lineHeight: 22,
+    },
+    item: {
+      marginTop: 12,
+      fontSize: 14,
+      lineHeight: 22,
+    },
+    button: {
+      marginHorizontal: 10,
+      marginBottom: 8,
+    },
+  })
+
+  return styles
+}

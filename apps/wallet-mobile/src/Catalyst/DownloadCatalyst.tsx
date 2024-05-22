@@ -10,7 +10,7 @@ import AppDownload from '../assets/img/pic-catalyst-step1.png'
 import {Button, ProgressStep, Spacer, StandardModal, Text} from '../components'
 import {useStakingInfo} from '../Dashboard/StakePoolInfos'
 import {useSelectedWallet} from '../features/WalletManager/context/SelectedWalletContext'
-import globalMessages, {confirmationMessages} from '../i18n/global-messages'
+import globalMessages, {confirmationMessages} from '../kernel/i18n/global-messages'
 import {Actions, Row} from './components'
 
 type Props = {

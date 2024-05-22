@@ -7,16 +7,15 @@ import {InteractionManager, ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Icon, Spacer} from '../../../components'
-import {DIALOG_BUTTONS, showConfirmationDialog} from '../../../dialogs'
-import {confirmationMessages} from '../../../i18n/global-messages'
+import {DIALOG_BUTTONS, showConfirmationDialog} from '../../../kernel/dialogs'
+import {confirmationMessages} from '../../../kernel/i18n/global-messages'
 import {SettingsRouteNavigation, useWalletNavigation} from '../../../kernel/navigation'
-import {lightPalette} from '../../../theme'
-import {useAuthSetting} from '../../../yoroi-wallets/auth'
 import {getNetworkConfigById} from '../../../yoroi-wallets/cardano/networks'
 import {isByron, isHaskellShelley} from '../../../yoroi-wallets/cardano/utils'
 import {useEasyConfirmationEnabled, useResync} from '../../../yoroi-wallets/hooks'
 import {NetworkId, WalletImplementationId} from '../../../yoroi-wallets/types'
 import {useAuth} from '../../Auth/AuthProvider'
+import {useAuthSetting} from '../../Auth/common/hooks'
 import {useAddressModeManager} from '../../WalletManager/common/useAddressModeManager'
 import {useSelectedWallet, useSetSelectedWallet} from '../../WalletManager/context/SelectedWalletContext'
 import {useSetSelectedWalletMeta} from '../../WalletManager/context/SelectedWalletMetaContext'
@@ -30,15 +29,10 @@ import {
   SettingsSection,
 } from '../SettingsItems'
 
-const iconProps = {
-  color: lightPalette.gray['600'],
-  size: 23,
-}
-
 export const WalletSettingsScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
-  const {styles} = useStyles()
+  const {styles, colors} = useStyles()
   const {resetToWalletSelection} = useWalletNavigation()
   const wallet = useSelectedWallet()
   const authSetting = useAuthSetting()
@@ -59,6 +53,11 @@ export const WalletSettingsScreen = () => {
 
   const onSwitchWallet = () => {
     resetToWalletSelection()
+  }
+
+  const iconProps = {
+    color: colors.icon,
+    size: 23,
   }
 
   return (
@@ -168,6 +167,7 @@ const getWalletType = (implementationId: WalletImplementationId): MessageDescrip
 const ResyncButton = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
+  const {colors} = useStyles()
   const {navigateToTxHistory} = useWalletNavigation()
   const intl = useIntl()
   const {resync, isLoading} = useResync(wallet, {
@@ -179,6 +179,11 @@ const ResyncButton = () => {
     if (selection === DIALOG_BUTTONS.YES) {
       resync()
     }
+  }
+
+  const iconProps = {
+    color: colors.icon,
+    size: 23,
   }
 
   return (
@@ -363,5 +368,5 @@ const useStyles = () => {
       padding: 16,
     },
   })
-  return {styles}
+  return {styles, colors: {icon: color.gray_c500}} as const
 }

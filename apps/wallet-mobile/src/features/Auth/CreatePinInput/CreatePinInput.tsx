@@ -1,10 +1,10 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {showErrorDialog} from '../../../dialogs'
-import {errorMessages} from '../../../i18n/global-messages'
-import {useCreatePin} from '../../../yoroi-wallets/auth'
+import {showErrorDialog} from '../../../kernel/dialogs'
+import {errorMessages} from '../../../kernel/i18n/global-messages'
 import {PIN_LENGTH} from '../common/constants'
+import {useCreatePin} from '../common/hooks'
 import {PinInput, PinInputRef} from '../PinInput'
 
 type Props = {onDone: (pin: string) => void}

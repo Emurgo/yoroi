@@ -11,7 +11,7 @@ import {FlatList} from 'react-native-gesture-handler'
 import {useMutation} from 'react-query'
 
 import {Boundary, Button, Icon, Spacer} from '../../../../components'
-import globalMessages from '../../../../i18n/global-messages'
+import globalMessages from '../../../../kernel/i18n/global-messages'
 import {assetsToSendProperties} from '../../../../kernel/metrics/helpers'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useSearch} from '../../../../Search/SearchContext'

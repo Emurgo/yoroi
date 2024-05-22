@@ -1,11 +1,11 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import Blockies from '@emurgo/react-native-blockies-svg'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, View, ViewStyle} from 'react-native'
 import tinycolor from 'tinycolor2'
 
-import {COLORS as APP_COLORS} from '../../../theme'
 import {isEmptyString} from '../../../utils/utils'
 
 const mkcolor = (primary: string, secondary: string, spots: string) => ({primary, secondary, spots})
@@ -28,17 +28,21 @@ const saturation = (color: string, factor = 0) => {
   return tcol.toHexString()
 }
 
-const styles = StyleSheet.create({
-  defaultStyle: {
-    borderColor: APP_COLORS.LIGHT_GRAY,
-    borderRadius: 6,
-    borderWidth: 0.5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    aspectRatio: 1,
-    overflow: 'hidden',
-  },
-})
+const useStyles = () => {
+  const {color} = useTheme()
+  const styles = StyleSheet.create({
+    defaultStyle: {
+      borderColor: color.gray_cmax,
+      borderRadius: 6,
+      borderWidth: 0.5,
+      alignItems: 'center',
+      justifyContent: 'center',
+      aspectRatio: 1,
+      overflow: 'hidden',
+    },
+  })
+  return styles
+}
 
 type Props = {
   iconSeed?: string
@@ -48,6 +52,7 @@ type Props = {
 }
 
 export const WalletChecksum = ({iconSeed, scalePx = 5, saturationFactor = 0, style}: Props) => {
+  const styles = useStyles()
   const colorIdx = isEmptyString(iconSeed) || iconSeed.length < 2 ? 0 : Buffer.from(iconSeed, 'hex')[0] % COLORS.length
   const color = COLORS[colorIdx]
   return (

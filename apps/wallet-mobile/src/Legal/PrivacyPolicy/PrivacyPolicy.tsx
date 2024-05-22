@@ -5,7 +5,7 @@ import Markdown from 'react-native-markdown-display'
 import {useQuery} from 'react-query'
 
 import {Spacer} from '../../components'
-import {LanguageCode} from '../../i18n/languages'
+import {LanguageCode} from '../../kernel/i18n/languages'
 import {loadPrivacyPolicy} from './loadPrivacyPolicy'
 
 export const usePrivacyPolicy = ({languageCode}: {languageCode: LanguageCode}) => {

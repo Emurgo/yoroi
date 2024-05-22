@@ -2,7 +2,7 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 
 import {Banner} from '../components'
-import globalMessages from '../i18n/global-messages'
+import globalMessages from '../kernel/i18n/global-messages'
 
 type Props = {
   showRefresh: boolean

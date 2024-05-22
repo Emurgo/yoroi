@@ -1,6 +1,6 @@
 import {defineMessages} from 'react-intl'
 
-import {supportedCurrencies, supportedThemes} from '../yoroi-wallets/types/other'
+import {supportedCurrencies, supportedThemes} from '../../yoroi-wallets/types/other'
 
 /*
  * Some messages need to be used in multiple components

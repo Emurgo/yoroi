@@ -4,11 +4,11 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {showErrorDialog} from '../../../dialogs'
-import {errorMessages} from '../../../i18n/global-messages'
-import {useCheckPin} from '../../../yoroi-wallets/auth'
+import {showErrorDialog} from '../../../kernel/dialogs'
+import {errorMessages} from '../../../kernel/i18n/global-messages'
 import {useAuth} from '../AuthProvider'
 import {PIN_LENGTH} from '../common/constants'
+import {useCheckPin} from '../common/hooks'
 import {PinInput, PinInputRef} from '../PinInput'
 
 export const PinLoginScreen = () => {

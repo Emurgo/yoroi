@@ -9,7 +9,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {KeyboardAvoidingView, Spacer, ValidatedTextInput} from '../../../../components'
 import {ConfirmTx} from '../../../../components/ConfirmTx'
-import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../../../i18n/global-messages'
+import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../../../kernel/i18n/global-messages'
 import {assetsToSendProperties} from '../../../../kernel/metrics/helpers'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useSaveMemo} from '../../../../yoroi-wallets/hooks'

@@ -1,4 +1,4 @@
-import {canAuthWithOS} from '../auth/auth'
+import {canAuthWithOS} from '../../features/Auth/common/hooks'
 
 describe('isAuthOsSupported', () => {
   describe('android', () => {

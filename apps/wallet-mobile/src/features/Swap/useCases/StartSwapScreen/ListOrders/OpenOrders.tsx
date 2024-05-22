@@ -24,7 +24,7 @@ import {
   useModal,
 } from '../../../../../components'
 import {LoadingOverlay} from '../../../../../components/LoadingOverlay'
-import {useLanguage} from '../../../../../i18n'
+import {useLanguage} from '../../../../../kernel/i18n'
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../../kernel/navigation'
 import {useSearch} from '../../../../../Search/SearchContext'

@@ -6,7 +6,6 @@ import DeviceInfo from 'react-native-device-info'
 
 import {Text} from '../../../components'
 import {commit} from '../../../kernel/env'
-import {lightPalette} from '../../../theme'
 import {getNetworkConfigById} from '../../../yoroi-wallets/cardano/networks'
 import {isHaskellShelley} from '../../../yoroi-wallets/cardano/utils'
 import {useSelectedWallet} from '../../WalletManager/context/SelectedWalletContext'
@@ -80,19 +79,19 @@ const useStyles = () => {
     about: {
       flex: 1,
       backgroundColor: color.gray_cmin,
-      padding: 16,
+      ...atoms.p_lg,
     },
     row: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      paddingVertical: 16,
+      ...atoms.py_lg,
     },
     labelText: {
       color: color.gray_c900,
       ...atoms.body_1_lg_medium,
     },
     valueText: {
-      color: lightPalette.gray['500'],
+      color: color.gray_c500,
       ...atoms.body_1_lg_regular,
     },
   })

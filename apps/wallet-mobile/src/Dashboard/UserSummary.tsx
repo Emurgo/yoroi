@@ -7,7 +7,7 @@ import {StyleSheet, View} from 'react-native'
 import {Button, Icon, Text, TitledCard} from '../components'
 import {usePrivacyMode} from '../features/Settings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../features/WalletManager/context/SelectedWalletContext'
-import globalMessages from '../i18n/global-messages'
+import globalMessages from '../kernel/i18n/global-messages'
 import {formatAdaWithText} from '../legacy/format'
 import {asQuantity} from '../yoroi-wallets/utils'
 

@@ -1,11 +1,11 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
 import Markdown from 'react-native-markdown-display'
 
 import {Boundary, DangerousAction, PleaseWaitView, Spacer} from '../../components'
-import globalMessages, {ledgerMessages} from '../../i18n/global-messages'
-import {theme} from '../../theme'
+import globalMessages, {ledgerMessages} from '../../kernel/i18n/global-messages'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {useWithdrawalTx} from '../../yoroi-wallets/hooks'
 import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
@@ -49,6 +49,7 @@ export const WithdrawalTxForm = ({
   wallet: YoroiWallet
   onDone: (withdrawalTx: YoroiUnsignedTx) => void
 }) => {
+  const styles = useStyles()
   const {stakingInfo} = useStakingInfo(wallet, {suspense: true})
   const strings = useStrings()
   const [deregister, setDeregister] = React.useState<boolean>()
@@ -97,11 +98,15 @@ export const WithdrawalTxForm = ({
 
 const Route = ({active, children}: {active: boolean; children: React.ReactNode}) => <>{active ? children : null}</>
 
-const styles = StyleSheet.create({
-  paragraph: {
-    ...theme.text,
-  },
-})
+const useStyles = () => {
+  const {atoms} = useTheme()
+  const styles = StyleSheet.create({
+    paragraph: {
+      ...atoms.body_1_lg_regular,
+    },
+  })
+  return styles
+}
 
 const useStrings = () => {
   const intl = useIntl()

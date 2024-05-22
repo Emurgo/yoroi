@@ -15,7 +15,7 @@ import {
 } from '../features/Staking/Governance'
 import {useIsGovernanceFeatureEnabled} from '../features/Staking/Governance'
 import {useSelectedWallet} from '../features/WalletManager/context/SelectedWalletContext'
-import globalMessages from '../i18n/global-messages'
+import globalMessages from '../kernel/i18n/global-messages'
 import {DashboardRoutes, useWalletNavigation} from '../kernel/navigation'
 import {Modal} from '../legacy/Modal'
 import {PoolTransitionNotice} from '../Staking/PoolTransition/PoolTransitionNotice'

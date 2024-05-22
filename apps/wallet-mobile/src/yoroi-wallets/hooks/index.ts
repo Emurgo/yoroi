@@ -29,7 +29,7 @@ import {AddressMode, WalletMeta} from '../../features/WalletManager/common/types
 import {parseWalletMeta} from '../../features/WalletManager/common/validators'
 import {WalletManager} from '../../features/WalletManager/common/walletManager'
 import {useWalletManager} from '../../features/WalletManager/context/WalletManagerContext'
-import {isNightly} from '../../kernel/env'
+import {isDev, isNightly} from '../../kernel/env'
 import {logger} from '../../kernel/logger/logger'
 import {getSpendingKey, getStakingKey} from '../cardano/addressInfo/addressInfo'
 import {generateShelleyPlateFromKey} from '../cardano/shelley/plate'
@@ -49,7 +49,7 @@ import {Amounts, Quantities, Utxos} from '../utils/utils'
 const crashReportsStorageKey = 'sendCrashReports'
 
 export const getCrashReportsEnabled = async (storage: AsyncStorageStatic = AsyncStorage) => {
-  if (isNightly) return true
+  if (isNightly || isDev) return true
   const data = await storage.getItem(crashReportsStorageKey)
   return parseBoolean(data) ?? false
 }

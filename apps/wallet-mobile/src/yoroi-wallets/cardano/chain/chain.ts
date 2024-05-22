@@ -3,7 +3,7 @@ import assert from 'assert'
 import _ from 'lodash'
 import {defaultMemoize} from 'reselect'
 
-import {Logger} from '../../logging'
+import {logger} from '../../../kernel/logger/logger'
 import {NetworkId, WalletImplementationId} from '../../types'
 import {CardanoMobile} from '../../wallets'
 import type {CryptoAccount} from '../byron/util'
@@ -236,7 +236,7 @@ export class AddressChain {
     const newAddresses = await this._addressGenerator.generate(idxs)
 
     if (this.addresses !== addresses) {
-      Logger.warn('Concurrent modification to addresses')
+      logger.warn('AddressChain: discoverNewBlock concurrent modification to addresses')
     } else {
       this._extendAddresses(newAddresses)
     }

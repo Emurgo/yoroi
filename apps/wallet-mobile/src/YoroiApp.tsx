@@ -3,8 +3,7 @@ import {LinksProvider} from '@yoroi/links'
 import {SetupWalletProvider} from '@yoroi/setup-wallet'
 import {ThemeProvider} from '@yoroi/theme'
 import React from 'react'
-import {LogBox, Platform, StyleSheet, UIManager} from 'react-native'
-import Config from 'react-native-config'
+import {LogBox, StyleSheet} from 'react-native'
 import * as RNP from 'react-native-paper'
 import {initialWindowMetrics, SafeAreaProvider} from 'react-native-safe-area-context'
 import {enableFreeze, enableScreens} from 'react-native-screens'
@@ -18,8 +17,9 @@ import {walletManager} from './features/WalletManager/common/walletManager'
 import {SelectedWalletProvider} from './features/WalletManager/context/SelectedWalletContext'
 import {SelectedWalletMetaProvider} from './features/WalletManager/context/SelectedWalletMetaContext'
 import {WalletManagerProvider} from './features/WalletManager/context/WalletManagerContext'
-import {LanguageProvider} from './i18n'
 import {InitApp} from './InitApp'
+import {disableLogbox} from './kernel/env'
+import {LanguageProvider} from './kernel/i18n'
 import {makeMetricsManager, MetricsProvider} from './kernel/metrics/metricsManager'
 import {useMigrations} from './migrations/useMigrations'
 import {useThemeStorageMaker} from './yoroi-wallets/hooks'
@@ -28,14 +28,7 @@ import {rootStorage} from './yoroi-wallets/storage/rootStorage'
 enableScreens(true)
 enableFreeze(true)
 
-if (Platform.OS === 'android') {
-  if (UIManager.setLayoutAnimationEnabledExperimental != null) {
-    UIManager.setLayoutAnimationEnabledExperimental(true)
-  }
-}
-
-// eslint-disable-next-line no-extra-boolean-cast
-if (Boolean(Config.DISABLE_LOGBOX)) LogBox.ignoreAllLogs()
+if (disableLogbox) LogBox.ignoreAllLogs()
 
 const queryClient = new QueryClient()
 
@@ -51,9 +44,9 @@ export const YoroiApp = () => {
   return (
     <AsyncStorageProvider storage={rootStorage}>
       <ThemeProvider storage={themeStorage}>
-        <MetricsProvider metricsManager={metricsManager}>
-          <WalletManagerProvider walletManager={walletManager}>
-            <ErrorBoundary>
+        <ErrorBoundary>
+          <MetricsProvider metricsManager={metricsManager}>
+            <WalletManagerProvider walletManager={walletManager}>
               <QueryClientProvider client={queryClient}>
                 <LoadingBoundary style={StyleSheet.absoluteFill}>
                   <LanguageProvider>
@@ -77,9 +70,9 @@ export const YoroiApp = () => {
                   </LanguageProvider>
                 </LoadingBoundary>
               </QueryClientProvider>
-            </ErrorBoundary>
-          </WalletManagerProvider>
-        </MetricsProvider>
+            </WalletManagerProvider>
+          </MetricsProvider>
+        </ErrorBoundary>
       </ThemeProvider>
     </AsyncStorageProvider>
   )

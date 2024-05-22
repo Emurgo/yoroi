@@ -6,8 +6,8 @@ import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../components'
-import {useAuthWithOs} from '../../../yoroi-wallets/auth'
 import {useAuth} from '../AuthProvider'
+import {useAuthWithOs} from '../common/hooks'
 import {Logo} from './Logo'
 
 export const OsLoginScreen = () => {
