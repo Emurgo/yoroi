@@ -295,6 +295,12 @@ export type Portfolio2Routes = {
   'dashboard-portfolio': undefined
   'portfolio-tokens-list': undefined
   'portfolio-token-details': undefined
+  nfts: undefined
+}
+
+export type PortfolioTokenListTabRoutes = {
+  'wallet-token': undefined
+  'dapps-token': undefined
 }
 
 export type VotingRegistrationRoutes = {

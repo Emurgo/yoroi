@@ -11,11 +11,10 @@ export const useGetPortfolioBalance = (
 ) => {
   const query = useQuery({
     useErrorBoundary: true,
-    suspense: true,
     ...options,
     queryKey: ['useGetPortfolioBalance'],
     queryFn: async () => {
-      await new Promise((resolve) => setTimeout(resolve, 500))
+      await new Promise((resolve) => setTimeout(resolve, 5000))
       return {
         currentADABalance: '2416.66123',
         oldADABalance: '2418.02123',

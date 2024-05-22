@@ -1,12 +1,11 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
+import {StyleSheet, View} from 'react-native'
 
-export const PortfolioTokensListScreen = () => {
+export const PortfolioWalletTokenScreen = () => {
   const {styles} = useStyles()
 
-  return <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}></SafeAreaView>
+  return <View style={styles.root}></View>
 }
 
 const useStyles = () => {
@@ -14,7 +13,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       ...atoms.flex_1,
-      ...atoms.pt_lg,
+      ...atoms.px_lg,
       backgroundColor: color.gray_cmin,
     },
   })

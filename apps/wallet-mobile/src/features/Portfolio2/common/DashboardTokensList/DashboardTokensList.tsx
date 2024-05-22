@@ -15,7 +15,7 @@ import {TradeTokensBanner} from './TradeTokensBanner'
 
 const makeSkeletonList = makeList(3).map(() => ({
   logo: '',
-  symbol: '',
+  symbol: 'skeleton',
   name: '',
   balance: '',
   usdExchangeRate: 0,
