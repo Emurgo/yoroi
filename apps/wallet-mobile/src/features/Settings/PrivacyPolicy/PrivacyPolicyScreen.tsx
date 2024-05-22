@@ -4,7 +4,7 @@ import {ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useLanguage} from '../../../kernel/i18n'
-import {PrivacyPolicy} from '../../../Legal'
+import {PrivacyPolicy} from '../../Legal/PrivacyPolicy/PrivacyPolicy'
 
 export const PrivacyPolicyScreen = () => {
   const styles = useStyles()

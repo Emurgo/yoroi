@@ -1,4 +1,4 @@
-import {LanguageCode} from '../../kernel/i18n/languages'
+import {LanguageCode} from '../../../kernel/i18n/languages'
 import BN_BD_PRIVACY_POLICY from './privacyPolicy/bn-BD.md'
 import CS_CZ_PRIVACY_POLICY from './privacyPolicy/cs-CZ.md'
 import DE_DE_PRIVACY_POLICY from './privacyPolicy/de-DE.md'
