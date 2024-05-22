@@ -7,8 +7,8 @@ import {ScrollView, StatusBar, StyleSheet, View} from 'react-native'
 import {BulletPointItem, CameraCodeScanner, Spacer, Text} from '../../../../components'
 import {showErrorDialog} from '../../../../dialogs'
 import {errorMessages} from '../../../../i18n/global-messages'
-import {Logger} from '../../../../legacy/logging'
-import {WalletInitRouteNavigation} from '../../../../navigation'
+import {logger} from '../../../../kernel/logger/logger'
+import {WalletInitRouteNavigation} from '../../../../kernel/navigation'
 import {theme} from '../../../../theme'
 import {isCIP1852AccountPath, isValidPublicKey} from '../../../../yoroi-wallets/cardano/bip44Validators'
 
@@ -27,7 +27,7 @@ export const ImportReadOnlyWalletScreen = () => {
 
       navigation.navigate('setup-wallet-save-read-only')
     } catch (error) {
-      Logger.debug('ImportReadOnlyWalletScreen::onRead::error', error)
+      logger.error(error as Error)
       await showErrorDialog(errorMessages.invalidQRCode, intl)
       return Promise.resolve(true)
     }
@@ -121,15 +121,11 @@ const styles = StyleSheet.create({
 })
 
 const parseReadOnlyWalletKey = async (text: string): Promise<{publicKeyHex: string; path: number[]}> => {
-  Logger.debug('ImportReadOnlyWalletScreen::handleOnRead::data', text)
   const dataObj = JSON.parse(text)
   const {publicKeyHex, path} = dataObj
   if (isCIP1852AccountPath(path) && (await isValidPublicKey(publicKeyHex))) {
-    Logger.debug('ImportReadOnlyWalletScreen::publicKeyHex', publicKeyHex)
-    Logger.debug('ImportReadOnlyWalletScreen::path', path)
-  } else {
-    throw new Error('invalid QR code')
+    return {publicKeyHex, path}
   }
 
-  return {publicKeyHex, path}
+  throw new Error('invalid QR code')
 }

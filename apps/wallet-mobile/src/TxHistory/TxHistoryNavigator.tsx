@@ -51,14 +51,14 @@ import {
 import {SelectBuyTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
 import {SelectSellTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/EditSellAmount/SelectSellTokenFromListScreen/SelectSellTokenFromListScreen'
 import {useSelectedWallet} from '../features/WalletManager/context/SelectedWalletContext'
-import {CONFIG} from '../legacy/config'
+import {unstoppableApiKey} from '../kernel/env'
 import {
   BackButton,
   defaultStackNavigationOptions,
   TxHistoryRouteNavigation,
   TxHistoryRoutes,
   useWalletNavigation,
-} from '../navigation'
+} from '../kernel/navigation'
 import {COLORS} from '../theme'
 import {useFrontendFees, useStakingKey, useWalletName} from '../yoroi-wallets/hooks'
 import {ModalInfo} from './ModalInfo'
@@ -101,7 +101,7 @@ export const TxHistoryNavigator = () => {
     const resolverApi = resolverApiMaker({
       apiConfig: {
         [Resolver.NameServer.Unstoppable]: {
-          apiKey: CONFIG.UNSTOPPABLE_API_KEY,
+          apiKey: unstoppableApiKey,
         },
       },
       cslFactory: init,

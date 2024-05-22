@@ -15,7 +15,7 @@ import {
   TextInput,
   TextInputProps,
 } from '../../../components'
-import {useWalletNavigation} from '../../../navigation'
+import {useWalletNavigation} from '../../../kernel/navigation'
 import {hasWalletsKey, useRemoveWallet, useWalletName} from '../../../yoroi-wallets/hooks'
 import {useSelectedWallet} from '../../WalletManager/context/SelectedWalletContext'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerContext'

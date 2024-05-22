@@ -5,12 +5,12 @@ import {Swap} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {Alert, StyleSheet, useWindowDimensions, View, ViewProps} from 'react-native'
-import Config from 'react-native-config'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {Button, KeyboardAvoidingView, Spacer, useModal} from '../../../../../components'
-import {useMetrics} from '../../../../../metrics/metricsManager'
-import {useWalletNavigation} from '../../../../../navigation'
+import {frontendFeeAddressMainnet, frontendFeeAddressPreprod} from '../../../../../kernel/env'
+import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
+import {useWalletNavigation} from '../../../../../kernel/navigation'
 import {useDisableSearchOnBar} from '../../../../../Search/SearchContext'
 import {NotEnoughMoneyToSendError} from '../../../../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
@@ -129,9 +129,7 @@ export const CreateOrder = () => {
 
       const isMainnet = isMainnetNetworkId(wallet.networkId)
       const frontendFee = selectedPoolCalculation.cost.frontendFeeInfo.fee
-      const frontendFeeDepositAddress = isMainnet
-        ? Config['FRONTEND_FEE_ADDRESS_MAINNET']
-        : Config['FRONTEND_FEE_ADDRESS_PREPROD']
+      const frontendFeeDepositAddress = isMainnet ? frontendFeeAddressMainnet : frontendFeeAddressPreprod
       const frontendFeeEntry = makePossibleFrontendFeeEntry(frontendFee, frontendFeeDepositAddress)
 
       const entries = frontendFeeEntry != null ? [orderEntry, frontendFeeEntry] : [orderEntry]

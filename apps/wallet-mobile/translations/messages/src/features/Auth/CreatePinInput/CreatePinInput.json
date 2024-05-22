@@ -1,0 +1,62 @@
+[
+  {
+    "id": "components.initialization.custompinscreen.pinInputTitle",
+    "defaultMessage": "!!!Enter PIN",
+    "file": "src/features/Auth/CreatePinInput/CreatePinInput.tsx",
+    "start": {
+      "line": 78,
+      "column": 17,
+      "index": 2441
+    },
+    "end": {
+      "line": 81,
+      "column": 3,
+      "index": 2549
+    }
+  },
+  {
+    "id": "components.initialization.custompinscreen.pinInputSubtitle",
+    "defaultMessage": "!!!Choose a new PIN to quickly access your wallet",
+    "file": "src/features/Auth/CreatePinInput/CreatePinInput.tsx",
+    "start": {
+      "line": 82,
+      "column": 20,
+      "index": 2571
+    },
+    "end": {
+      "line": 85,
+      "column": 3,
+      "index": 2719
+    }
+  },
+  {
+    "id": "components.initialization.custompinscreen.pinConfirmationTitle",
+    "defaultMessage": "!!!Repeat PIN",
+    "file": "src/features/Auth/CreatePinInput/CreatePinInput.tsx",
+    "start": {
+      "line": 86,
+      "column": 29,
+      "index": 2750
+    },
+    "end": {
+      "line": 89,
+      "column": 3,
+      "index": 2866
+    }
+  },
+  {
+    "id": "components.firstrun.custompinscreen.pinInputConfirmationSubTitle",
+    "defaultMessage": "!!!Repeat a new PIN to quickly access your wallet",
+    "file": "src/features/Auth/CreatePinInput/CreatePinInput.tsx",
+    "start": {
+      "line": 90,
+      "column": 32,
+      "index": 2900
+    },
+    "end": {
+      "line": 93,
+      "column": 3,
+      "index": 3054
+    }
+  }
+]

@@ -5,7 +5,7 @@ import {StyleSheet, TextProps, View, ViewProps} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
 import {Text} from '../../../components'
-import {CONFIG} from '../../../legacy/config'
+import {commit} from '../../../kernel/env'
 import {lightPalette} from '../../../theme'
 import {getNetworkConfigById} from '../../../yoroi-wallets/cardano/networks'
 import {isHaskellShelley} from '../../../yoroi-wallets/cardano/utils'
@@ -32,7 +32,7 @@ export const About = () => {
       <Row>
         <LabelText>{strings.commit}</LabelText>
 
-        <ValueText>{CONFIG.COMMIT}</ValueText>
+        <ValueText>{commit}</ValueText>
       </Row>
 
       <Row>

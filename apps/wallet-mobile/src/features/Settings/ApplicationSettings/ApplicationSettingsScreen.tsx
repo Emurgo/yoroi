@@ -9,7 +9,7 @@ import {Icon, Spacer} from '../../../components'
 import {useLanguage} from '../../../i18n'
 import {themeNames} from '../../../i18n/global-messages'
 import {defaultLanguage} from '../../../i18n/languages'
-import {CONFIG, isNightly, isProduction} from '../../../legacy/config'
+import {isNightly, isProduction} from '../../../kernel/env'
 import {lightPalette} from '../../../theme'
 import {useAuthSetting, useAuthWithOs, useIsAuthOsSupported} from '../../../yoroi-wallets/auth'
 import {useCrashReports} from '../../../yoroi-wallets/hooks'
@@ -42,8 +42,8 @@ export const ApplicationSettingsScreen = () => {
   const {authWithOs} = useAuthWithOs({onSuccess: navigateTo.enableLoginWithPin})
 
   const {data: screenShareEnabled} = useScreenShareSettingEnabled()
-  const displayScreenShareSetting = Platform.OS === 'android' && !isProduction()
-  const displayToggleThemeSetting = !isNightly() && !isProduction()
+  const displayScreenShareSetting = Platform.OS === 'android' && !isProduction
+  const displayToggleThemeSetting = !isNightly && !isProduction
 
   const onToggleAuthWithOs = () => {
     if (authSetting === 'os') {
@@ -207,9 +207,7 @@ const CrashReportsSwitch = ({crashReportEnabled}: {crashReportEnabled: boolean})
     })
   }
 
-  return (
-    <SettingsSwitch value={isLocalEnabled} onValueChange={onToggleCrashReports} disabled={CONFIG.FORCE_CRASH_REPORTS} />
-  )
+  return <SettingsSwitch value={isLocalEnabled} onValueChange={onToggleCrashReports} disabled={isNightly} />
 }
 
 // to avoid switch jumps

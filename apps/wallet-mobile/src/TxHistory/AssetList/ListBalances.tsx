@@ -12,7 +12,7 @@ import {usePortfolioBalances} from '../../features/Portfolio/common/hooks/usePor
 import {TokenAmountItem, TokenAmountItemProps} from '../../features/Portfolio/common/TokenAmountItem/TokenAmountItem'
 import {useSelectedWallet} from '../../features/WalletManager/context/SelectedWalletContext'
 import globalMessages from '../../i18n/global-messages'
-import {useMetrics} from '../../metrics/metricsManager'
+import {useMetrics} from '../../kernel/metrics/metricsManager'
 import {FilterBalancesByType} from './FilterBalancesByType'
 
 type ListProps = FlashListProps<Portfolio.Token.Amount>

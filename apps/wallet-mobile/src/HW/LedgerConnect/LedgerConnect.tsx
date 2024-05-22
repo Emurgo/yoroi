@@ -13,7 +13,7 @@ import usbImage from '../../assets/img/ledger-nano-usb.png'
 import {BulletPointItem, Button, Text} from '../../components'
 import globalMessages, {confirmationMessages, ledgerMessages} from '../../i18n/global-messages'
 import LocalizableError from '../../i18n/LocalizableError'
-import {Logger} from '../../legacy/logging'
+import {logger} from '../../kernel/logger/logger'
 import {COLORS, spacing} from '../../theme'
 import {BluetoothDisabledError, DeviceId, DeviceObj, RejectedByUserError} from '../../yoroi-wallets/hw'
 import {Device} from '../../yoroi-wallets/types'
@@ -67,7 +67,7 @@ class _LedgerConnect extends React.Component<Props, State> {
       TransportBLE.observeState({
         next: (e: {available: boolean}) => {
           if (this._isMounted) {
-            Logger.debug('BLE observeState event', e)
+            logger.debug('BLE observeState event', e)
             if (this._bluetoothEnabled == null && !e.available) {
               this.setState({
                 error: new BluetoothDisabledError(),
@@ -103,7 +103,7 @@ class _LedgerConnect extends React.Component<Props, State> {
     const {useUSB} = this.props
 
     const onComplete = () => {
-      Logger.debug('listen: subscription completed')
+      logger.debug('listen: subscription completed', {useUSB})
       this.setState({refreshing: false})
     }
 
@@ -113,7 +113,7 @@ class _LedgerConnect extends React.Component<Props, State> {
 
     const onBLENext = (e: {type: string; descriptor: Device}) => {
       if (e.type === 'add') {
-        Logger.debug('listen: new device detected')
+        logger.debug('listen: new device detected', {useUSB, event: e})
         // with bluetooth, new devices are appended in the screen
         this.setState(deviceAddition(e.descriptor))
       }
@@ -121,7 +121,7 @@ class _LedgerConnect extends React.Component<Props, State> {
 
     const onHWNext = (e: {type: string; descriptor: DeviceObj}) => {
       if (e.type === 'add') {
-        Logger.debug('listen: new device detected')
+        logger.debug('listen: new device detected', {useUSB, event: e})
         // if a device is detected, save it in state immediately
         this.setState({refreshing: false, deviceObj: e.descriptor})
       }
@@ -169,11 +169,11 @@ class _LedgerConnect extends React.Component<Props, State> {
       await onConnectBLE(device.id.toString())
     } catch (e) {
       if (!(e instanceof Error)) return
-      Logger.debug(e as any)
       if (e instanceof RejectedByUserError) {
         this.reload()
         return
       }
+      logger.error(e, {device})
       this.setState({error: e})
     } finally {
       this.setState({waiting: false})
@@ -189,11 +189,11 @@ class _LedgerConnect extends React.Component<Props, State> {
       await this.props.onConnectUSB(deviceObj)
     } catch (e) {
       if (!(e instanceof Error)) return
-      Logger.debug(e as any)
       if (e instanceof RejectedByUserError) {
         this.reload()
         return
       }
+      logger.error(e, {deviceObj})
       this.setState({error: e})
     } finally {
       this.setState({waiting: false})

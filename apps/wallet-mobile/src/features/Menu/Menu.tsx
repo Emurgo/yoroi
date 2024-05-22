@@ -11,9 +11,9 @@ import {useCanVote} from '../../Catalyst/hooks'
 import {InsufficientFundsModal} from '../../Catalyst/InsufficientFundsModal'
 import {Boundary, Icon, Spacer, Text} from '../../components'
 import {usePrefetchStakingInfo} from '../../Dashboard/StakePoolInfos'
-import {CONFIG} from '../../legacy/config'
-import {useMetrics} from '../../metrics/metricsManager'
-import {defaultStackNavigationOptions, useWalletNavigation} from '../../navigation'
+import {dappExplorerEnabled} from '../../kernel/config'
+import {useMetrics} from '../../kernel/metrics/metricsManager'
+import {defaultStackNavigationOptions, useWalletNavigation} from '../../kernel/navigation'
 import {usePoolTransition} from '../../Staking/PoolTransition/usePoolTransition'
 import {useIsGovernanceFeatureEnabled} from '../Staking/Governance'
 import {useSelectedWallet} from '../WalletManager/context/SelectedWalletContext'
@@ -62,7 +62,7 @@ export const Menu = () => {
           left={<Icon.Gear size={24} color={color.gray_c600} />}
         />
 
-        {CONFIG.DAPP_EXPLORER_ENABLED && (
+        {dappExplorerEnabled && (
           <Staking
             label={strings.stakingCenter}
             onPress={navigateTo.stakingCenter}

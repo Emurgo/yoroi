@@ -1,8 +1,12 @@
 import {useNavigation} from '@react-navigation/native'
 import {useRef} from 'react'
 
-import {AppRouteNavigation, TxHistoryRouteNavigation, TxHistoryRoutes} from '../../../navigation'
-import {useOverridePreviousRoute} from '../../../utils/navigation'
+import {
+  AppRouteNavigation,
+  TxHistoryRouteNavigation,
+  TxHistoryRoutes,
+  useOverridePreviousRoute,
+} from '../../../kernel/navigation'
 
 export const useNavigateTo = () => {
   const navigation = useNavigation<TxHistoryRouteNavigation & AppRouteNavigation>()

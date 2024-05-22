@@ -1,5 +1,4 @@
 import {useFocusEffect} from '@react-navigation/native'
-import {isString} from '@yoroi/common'
 import {useExplorers} from '@yoroi/explorers'
 import {getPoolUrlByProvider} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
@@ -10,7 +9,6 @@ import {capitalize} from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
-import Config from 'react-native-config'
 import {FlatList} from 'react-native-gesture-handler'
 
 import {
@@ -23,7 +21,8 @@ import {
   Text,
   TokenIcon,
 } from '../../../../../components'
-import {useMetrics} from '../../../../../metrics/metricsManager'
+import {frontendFeeAddressMainnet, frontendFeeAddressPreprod} from '../../../../../kernel/env'
+import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {useSearch} from '../../../../../Search/SearchContext'
 import {useSync, useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
 import {TransactionInfo, TxMetadataInfo} from '../../../../../yoroi-wallets/types'
@@ -86,11 +85,8 @@ const findCompletedOrderTx = (transactions: TransactionInfo[]): MappedRawOrder[]
 const hasFrontendFeeReturn = (tx: TransactionInfo): boolean => {
   const addresses = tx.inputs.map((input) => input.address).filter(Boolean)
 
-  const frontendFeeMainnetAddress = Config['FRONTEND_FEE_ADDRESS_MAINNET']
-  const frontendFeePreprodAddress = Config['FRONTEND_FEE_ADDRESS_PREPROD']
-
-  const containsMainnetFeeAddress = isString(frontendFeeMainnetAddress) && addresses.includes(frontendFeeMainnetAddress)
-  const containsPreprodFeeAddress = isString(frontendFeePreprodAddress) && addresses.includes(frontendFeePreprodAddress)
+  const containsMainnetFeeAddress = addresses.includes(frontendFeeAddressMainnet)
+  const containsPreprodFeeAddress = addresses.includes(frontendFeeAddressPreprod)
 
   return containsMainnetFeeAddress || containsPreprodFeeAddress
 }

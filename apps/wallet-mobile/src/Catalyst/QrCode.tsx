@@ -7,7 +7,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, CopyButton, ProgressStep, Spacer, Text} from '../components'
 import {confirmationMessages} from '../i18n/global-messages'
-import {useBlockGoBack} from '../navigation'
+import {useBlockGoBack} from '../kernel/navigation'
 import {useAllowScreenshots} from '../utils'
 import {Actions, Description, Title} from './components'
 import {useCountdown} from './hooks'

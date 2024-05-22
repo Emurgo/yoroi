@@ -1,14 +1,13 @@
-import {isString, useAsyncStorage} from '@yoroi/common'
+import {useAsyncStorage} from '@yoroi/common'
 import {App} from '@yoroi/types'
-import React, {useEffect, useRef} from 'react'
+import React, {useEffect} from 'react'
 import {Platform, UIManager} from 'react-native'
-import * as Sentry from 'sentry-expo'
 import uuid from 'uuid'
 
 import {AppNavigator} from './AppNavigator'
 import {useInitScreenShare} from './features/Settings/ScreenShare'
 import {walletManager} from './features/WalletManager/common/walletManager'
-import {CONFIG, isProduction} from './legacy/config'
+import {useInitLogger} from './kernel/logger/hooks/useInitLogger'
 import {storageVersionMaker} from './migrations/storageVersion'
 import {useCrashReportsEnabled} from './yoroi-wallets/hooks'
 
@@ -32,7 +31,7 @@ const useInitApp = () => {
 
   const {initialised: screenShareInitialized} = useInitScreenShare()
 
-  useInitSentry({enabled: crashReportsEnabled})
+  useInitLogger({enabled: crashReportsEnabled})
 
   useEffect(() => {
     const load = async () => {
@@ -60,24 +59,4 @@ const initInstallationId = async (storage: App.Storage) => {
 export const initApp = async (storage: App.Storage) => {
   await initInstallationId(storage)
   await walletManager.removeDeletedWallets()
-}
-
-const useInitSentry = (options: {enabled: boolean}) => {
-  const ref = useRef(options.enabled)
-  ref.current = options.enabled
-
-  useEffect(() => {
-    if (!isString(CONFIG.SENTRY_DSN)) return
-    Sentry.init({
-      dsn: CONFIG.SENTRY_DSN,
-      patchGlobalPromise: true,
-      enableInExpoDevelopment: true,
-      tracesSampleRate: isProduction() ? 0.25 : 1,
-      beforeSend(event) {
-        // https://github.com/getsentry/sentry-javascript/issues/2039
-        const isEnabled = ref.current
-        return isEnabled ? event : null
-      },
-    })
-  }, [])
 }

@@ -7,7 +7,7 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Icon, Spacer, Text, useModal} from '../../../../components'
-import {useWalletNavigation} from '../../../../navigation'
+import {useWalletNavigation} from '../../../../kernel/navigation'
 import {DescribeAction} from '../../common/DescribeAction/DescribeAction'
 import {useStrings} from '../../common/useStrings'
 import {BanxaLogo} from '../../illustrations/BanxaLogo'

@@ -10,20 +10,20 @@ import {useIntl} from 'react-intl'
 import {Alert, InteractionManager, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity} from 'react-native'
 import config from 'react-native-config'
 
-import {useAuth} from '../auth/AuthProvider'
 import {Button, Text, TextInput} from '../components'
 import {showErrorDialog} from '../dialogs'
+import {useAuth} from '../features/Auth/AuthProvider'
 import {useLegalAgreement, useResetLegalAgreement} from '../features/Initialization/common'
 import {useSelectedWalletContext} from '../features/WalletManager/context/SelectedWalletContext'
 import {errorMessages} from '../i18n/global-messages'
+import {agreementDate} from '../kernel/config'
+import {AppRoutes, useWalletNavigation} from '../kernel/navigation'
 import {storageVersionMaker} from '../migrations/storageVersion'
-import {AppRoutes, useWalletNavigation} from '../navigation'
 import {isEmptyString} from '../utils/utils'
 import {generateAdaMnemonic} from '../yoroi-wallets/cardano/mnemonic'
 import {useCreateWallet} from '../yoroi-wallets/hooks'
 import {rootStorage} from '../yoroi-wallets/storage/rootStorage'
 import {NetworkId} from '../yoroi-wallets/types'
-import {CONFIG} from './config'
 
 const routes: Array<{label: string; path: keyof AppRoutes}> = [
   {label: 'Storybook', path: 'storybook'},
@@ -54,7 +54,7 @@ export const DeveloperScreen = () => {
   const [addresses, setAddresses] = React.useState('')
   const agreement = useLegalAgreement()
   const {reset: resetLegalAgreement} = useResetLegalAgreement()
-  const agreedToLegal = agreement?.latestAcceptedAgreementsDate === CONFIG.AGREEMENT_DATE
+  const agreedToLegal = agreement?.latestAcceptedAgreementsDate === agreementDate
 
   return (
     <SafeAreaView style={styles.safeAreaView}>

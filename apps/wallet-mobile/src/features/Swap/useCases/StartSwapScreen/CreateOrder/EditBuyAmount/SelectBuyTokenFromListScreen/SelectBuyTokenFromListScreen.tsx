@@ -9,7 +9,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Boundary, Icon, Spacer, Text} from '../../../../../../../components'
 import {AmountItem, AmountItemPlaceholder} from '../../../../../../../components/AmountItem/AmountItem'
-import {useMetrics} from '../../../../../../../metrics/metricsManager'
+import {useMetrics} from '../../../../../../../kernel/metrics/metricsManager'
 import {useSearch, useSearchOnNavBar} from '../../../../../../../Search/SearchContext'
 import {YoroiWallet} from '../../../../../../../yoroi-wallets/cardano/types'
 import {useBalance, useBalances} from '../../../../../../../yoroi-wallets/hooks'

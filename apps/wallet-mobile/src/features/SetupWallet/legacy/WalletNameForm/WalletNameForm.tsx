@@ -7,7 +7,7 @@ import {ActivityIndicator, Image, ImageSourcePropType, ScrollView, StyleSheet, V
 
 import {Button, KeyboardAvoidingView, ProgressStep, TextInput} from '../../../../components'
 import globalMessages from '../../../../i18n/global-messages'
-import {useMetrics} from '../../../../metrics/metricsManager'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {spacing} from '../../../../theme'
 import {useWalletNames} from '../../../../yoroi-wallets/hooks'
 import {getWalletNameError, validateWalletName} from '../../../../yoroi-wallets/utils/validators'

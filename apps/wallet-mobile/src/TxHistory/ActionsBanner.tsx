@@ -17,8 +17,8 @@ import {useSwapForm} from '../features/Swap/common/SwapFormProvider'
 import {useAddressModeManager} from '../features/WalletManager/common/useAddressModeManager'
 import {useSelectedWallet} from '../features/WalletManager/context/SelectedWalletContext'
 import {actionMessages} from '../i18n/global-messages'
-import {useMetrics} from '../metrics/metricsManager'
-import {TxHistoryRouteNavigation} from '../navigation'
+import {useMetrics} from '../kernel/metrics/metricsManager'
+import {TxHistoryRouteNavigation} from '../kernel/navigation'
 import {useTokenInfo} from '../yoroi-wallets/hooks'
 
 export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {

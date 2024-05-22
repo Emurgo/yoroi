@@ -6,13 +6,13 @@ import {useIntl} from 'react-intl'
 
 import {Boundary} from '../components'
 import globalMessages from '../i18n/global-messages'
-import {useMetrics} from '../metrics/metricsManager'
+import {useMetrics} from '../kernel/metrics/metricsManager'
 import {
   defaultStackNavigationOptions,
   useWalletNavigation,
   VotingRegistrationRouteNavigation,
   VotingRegistrationRoutes,
-} from '../navigation'
+} from '../kernel/navigation'
 import {ConfirmPin} from './ConfirmPin'
 import {ConfirmVotingTx} from './ConfirmVotingTx'
 import {DisplayPin} from './DisplayPin'

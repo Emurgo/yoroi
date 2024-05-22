@@ -9,7 +9,7 @@ import {useQuery, UseQueryOptions} from 'react-query'
 
 import {Button} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
-import {useWalletNavigation} from '../../../../navigation'
+import {useWalletNavigation} from '../../../../kernel/navigation'
 import {useEnableAuthWithOs} from '../../../../yoroi-wallets/auth'
 import * as HASKELL_SHELLEY from '../../../../yoroi-wallets/cardano/constants/mainnet/constants'
 import {useStrings} from '../../common/useStrings'

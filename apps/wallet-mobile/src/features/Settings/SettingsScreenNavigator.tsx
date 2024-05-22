@@ -6,17 +6,17 @@ import {TransferProvider} from '@yoroi/transfer'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {ChangePinScreen} from '../../auth'
-import {EnableLoginWithPin} from '../../auth/EnableLoginWithPin'
 import {Boundary} from '../../components'
 import globalMessages from '../../i18n/global-messages'
-import {useMetrics} from '../../metrics/metricsManager'
+import {useMetrics} from '../../kernel/metrics/metricsManager'
 import {
   defaultMaterialTopTabNavigationOptions,
   defaultStackNavigationOptions,
   SettingsStackRoutes,
   SettingsTabRoutes,
-} from '../../navigation'
+} from '../../kernel/navigation'
+import {ChangePinScreen} from '../Auth'
+import {EnableLoginWithPin} from '../Auth/EnableLoginWithPin'
 import {useSelectedWallet} from '../WalletManager/context/SelectedWalletContext'
 import {About} from './About'
 import {ApplicationSettingsScreen} from './ApplicationSettings'

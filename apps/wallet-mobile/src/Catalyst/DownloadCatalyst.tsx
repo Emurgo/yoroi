@@ -11,7 +11,6 @@ import {Button, ProgressStep, Spacer, StandardModal, Text} from '../components'
 import {useStakingInfo} from '../Dashboard/StakePoolInfos'
 import {useSelectedWallet} from '../features/WalletManager/context/SelectedWalletContext'
 import globalMessages, {confirmationMessages} from '../i18n/global-messages'
-import {Logger} from '../legacy/logging'
 import {Actions, Row} from './components'
 
 type Props = {
@@ -77,11 +76,7 @@ const Tip = (props: ViewProps) => <View {...props} style={styles.tip} />
 
 const PlayStoreButton = () => {
   const openPlayStore = async () => {
-    try {
-      await Linking.openURL('https://play.google.com/store/apps/details?id=io.iohk.vitvoting')
-    } catch (e) {
-      Logger.error(e as any)
-    }
+    await Linking.openURL('https://play.google.com/store/apps/details?id=io.iohk.vitvoting')
   }
 
   return (
@@ -93,11 +88,7 @@ const PlayStoreButton = () => {
 
 const AppStoreButton = () => {
   const openAppStore = async () => {
-    try {
-      await Linking.openURL('https://apps.apple.com/kg/app/catalyst-voting/id1517473397')
-    } catch (e) {
-      Logger.error(e as any)
-    }
+    await Linking.openURL('https://apps.apple.com/kg/app/catalyst-voting/id1517473397')
   }
 
   return (

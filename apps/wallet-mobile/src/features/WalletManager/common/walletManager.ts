@@ -42,7 +42,7 @@ export class WalletManager {
   #syncControl$ = new BehaviorSubject<boolean>(true)
   #syncSubscription: Subscription | null = null
 
-  constructor() {
+  private constructor() {
     if (WalletManager.#instance) return WalletManager.#instance
     WalletManager.#instance = this
   }

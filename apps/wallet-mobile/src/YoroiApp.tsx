@@ -10,9 +10,9 @@ import {initialWindowMetrics, SafeAreaProvider} from 'react-native-safe-area-con
 import {enableFreeze, enableScreens} from 'react-native-screens'
 import {QueryClient, QueryClientProvider} from 'react-query'
 
-import {AuthProvider} from './auth/AuthProvider'
 import {LoadingBoundary} from './components'
 import {ErrorBoundary} from './components/ErrorBoundary'
+import {AuthProvider} from './features/Auth/AuthProvider'
 import {CurrencyProvider} from './features/Settings/Currency/CurrencyContext'
 import {walletManager} from './features/WalletManager/common/walletManager'
 import {SelectedWalletProvider} from './features/WalletManager/context/SelectedWalletContext'
@@ -20,9 +20,7 @@ import {SelectedWalletMetaProvider} from './features/WalletManager/context/Selec
 import {WalletManagerProvider} from './features/WalletManager/context/WalletManagerContext'
 import {LanguageProvider} from './i18n'
 import {InitApp} from './InitApp'
-import {CONFIG} from './legacy/config'
-import {setLogLevel} from './legacy/logging'
-import {makeMetricsManager, MetricsProvider} from './metrics/metricsManager'
+import {makeMetricsManager, MetricsProvider} from './kernel/metrics/metricsManager'
 import {useMigrations} from './migrations/useMigrations'
 import {useThemeStorageMaker} from './yoroi-wallets/hooks'
 import {rootStorage} from './yoroi-wallets/storage/rootStorage'
@@ -35,8 +33,6 @@ if (Platform.OS === 'android') {
     UIManager.setLayoutAnimationEnabledExperimental(true)
   }
 }
-
-setLogLevel(CONFIG.LOG_LEVEL)
 
 // eslint-disable-next-line no-extra-boolean-cast
 if (Boolean(Config.DISABLE_LOGBOX)) LogBox.ignoreAllLogs()
