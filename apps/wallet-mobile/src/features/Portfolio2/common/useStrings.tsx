@@ -6,12 +6,13 @@ export const useStrings = () => {
   return {
     portfolio: intl.formatMessage(messages.portfolio),
     totalWalletValue: intl.formatMessage(messages.totalWalletValue),
-    tokens: intl.formatMessage(messages.tokens),
+    tokens: (qty: number) => intl.formatMessage(messages.tokens, {countTokens: qty}),
     buyADATitle: intl.formatMessage(messages.buyADATitle),
     buyADADescription: intl.formatMessage(messages.buyADADescription),
     buyCrypto: intl.formatMessage(messages.buyCrypto),
     tradeTokens: intl.formatMessage(messages.tradeTokens),
     swap: intl.formatMessage(messages.swap),
+    nfts: (qty: number) => intl.formatMessage(messages.nfts, {countNfts: qty}),
   }
 }
 
@@ -26,7 +27,7 @@ export const messages = defineMessages({
   },
   tokens: {
     id: 'portfolio.portfolioDashboardScreen.tokens',
-    defaultMessage: '!!!Tokens',
+    defaultMessage: '!!!Tokens ({countTokens})',
   },
   buyADATitle: {
     id: 'portfolio.portfolioDashboardScreen.buyADATitle',
@@ -48,5 +49,9 @@ export const messages = defineMessages({
   swap: {
     id: 'global.swap',
     defaultMessage: '!!!Swap',
+  },
+  nfts: {
+    id: 'portfolio.portfolioDashboardScreen.nfts',
+    defaultMessage: '!!!NFTs ({countNfts})',
   },
 })

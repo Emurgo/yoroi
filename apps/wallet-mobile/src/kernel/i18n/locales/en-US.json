@@ -1060,8 +1060,9 @@
   "discover.confirmConnectionModal.permission1": "View addresses, account balance, activity",
   "discover.confirmConnectionModal.permission2": "Request approval for transactions",
   "portfolio.portfolioDashboardScreen.totalWalletValue": "Total wallet value",
-  "portfolio.portfolioDashboardScreen.tokens": "Tokens",
+  "portfolio.portfolioDashboardScreen.tokens": "Tokens ({countTokens})",
   "portfolio.portfolioDashboardScreen.buyADATitle": "Start your crypto journey",
   "portfolio.portfolioDashboardScreen.buyADADescription": "Get started with Cardano's native currency, ADA. It's your key to unlocking a world of possibilities",
-  "portfolio.portfolioDashboardScreen.tradeTokens": "Trade Tokens"
+  "portfolio.portfolioDashboardScreen.tradeTokens": "Trade Tokens",
+  "portfolio.portfolioDashboardScreen.nfts": "NFTs ({countNfts})"
 }
