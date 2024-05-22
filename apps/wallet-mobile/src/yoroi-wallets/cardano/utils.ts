@@ -63,7 +63,7 @@ export const deriveRewardAddressHex = async (accountPubKeyHex: string, networkId
 /**
  * Multi-asset related
  */
-const identifierToCardanoAsset = async (
+export const identifierToCardanoAsset = async (
   tokenId: string,
 ): Promise<{
   policyId: CardanoTypes.ScriptHash

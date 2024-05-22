@@ -3,7 +3,7 @@ import * as React from 'react'
 import {Dimensions, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import Animated, {Easing, useAnimatedStyle, useSharedValue, withTiming} from 'react-native-reanimated'
-import {initialWindowMetrics, useSafeAreaInsets} from 'react-native-safe-area-context'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import WebView from 'react-native-webview'
 import {WebViewNavigation, WebViewNavigationEvent} from 'react-native-webview/lib/WebViewTypes'
 
@@ -41,8 +41,7 @@ export const WebViewItem = ({tab, index}: Props) => {
 
   const {initScript, handleEvent} = useConnectWalletToWebView(wallet, webViewRef)
 
-  const topInset = Math.max(insets.top, initialWindowMetrics?.insets.top ?? 0)
-  const visibleAreaHeight = SCREEN_HEIGHT - topInset
+  const visibleAreaHeight = SCREEN_HEIGHT - insets.top - insets.bottom
 
   const containerStyleAnimated = useAnimatedStyle(() => {
     return {

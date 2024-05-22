@@ -1,6 +1,6 @@
 import {createStackNavigator} from '@react-navigation/stack'
 import {useAsyncStorage} from '@yoroi/common'
-import {DappConnectorProvider} from '@yoroi/dapp-connector'
+import {DappConnector, DappConnectorProvider} from '@yoroi/dapp-connector'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 
@@ -9,7 +9,9 @@ import {defaultStackNavigationOptions, DiscoverRoutes} from '../../navigation'
 import {useSelectedWallet} from '../WalletManager/context/SelectedWalletContext'
 import {BrowserNavigator} from './BrowserNavigator'
 import {BrowserProvider} from './common/BrowserProvider'
+import {useOpenConfirmConnectionModal} from './common/ConfirmConnectionModal'
 import {createDappConnector} from './common/helpers'
+import {useConfirmRawTx} from './common/hooks'
 import {useStrings} from './common/useStrings'
 import {ListSkeleton} from './useCases/SelectDappFromList/ListSkeleton'
 import {SelectDappFromListScreen} from './useCases/SelectDappFromList/SelectDappFromListScreen'
@@ -20,9 +22,7 @@ export const DiscoverNavigator = () => {
   const {atoms, color} = useTheme()
   const strings = useStrings()
 
-  const appStorage = useAsyncStorage()
-  const wallet = useSelectedWallet()
-  const manager = React.useMemo(() => createDappConnector(appStorage, wallet), [appStorage, wallet])
+  const manager = useDappConnectorManager()
 
   return (
     <DappConnectorProvider manager={manager}>
@@ -48,5 +48,58 @@ export const DiscoverNavigator = () => {
         </Stack.Navigator>
       </BrowserProvider>
     </DappConnectorProvider>
+  )
+}
+
+const useDappConnectorManager = () => {
+  const appStorage = useAsyncStorage()
+  const wallet = useSelectedWallet()
+  const {openConfirmConnectionModal} = useOpenConfirmConnectionModal()
+  const confirmRawTx = useConfirmRawTx(wallet)
+
+  const confirmConnection = React.useCallback(
+    async (origin: string, manager: DappConnector) => {
+      const recommendedDApps = await manager.getDAppList()
+      const selectedDapp = recommendedDApps.dapps.find((dapp) => dapp.origins.includes(origin))
+      return new Promise<boolean>((resolve) => {
+        openConfirmConnectionModal({
+          name: selectedDapp?.name ?? origin,
+          website: origin,
+          logo: selectedDapp?.logo ?? '',
+          onConfirm: () => resolve(true),
+          onClose: () => resolve(false),
+        })
+      })
+    },
+    [openConfirmConnectionModal],
+  )
+
+  const signTx = React.useCallback(() => {
+    return new Promise<string>((resolve, reject) => {
+      confirmRawTx({
+        onConfirm: (rootKey) => {
+          resolve(rootKey)
+          return Promise.resolve()
+        },
+        onClose: () => reject(new Error('User rejected')),
+      })
+    })
+  }, [confirmRawTx])
+
+  const signData = React.useCallback(() => {
+    return new Promise<string>((resolve, reject) => {
+      confirmRawTx({
+        onConfirm: (rootKey) => {
+          resolve(rootKey)
+          return Promise.resolve()
+        },
+        onClose: () => reject(new Error('User rejected')),
+      })
+    })
+  }, [confirmRawTx])
+
+  return React.useMemo(
+    () => createDappConnector({appStorage, wallet, confirmConnection, signTx, signData}),
+    [appStorage, wallet, confirmConnection, signTx, signData],
   )
 }

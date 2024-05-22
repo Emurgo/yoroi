@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/require-await */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
 import {action} from '@storybook/addon-actions'
 import {AppApi, CardanoApi} from '@yoroi/api'
 import {createPrimaryTokenInfo} from '@yoroi/portfolio'
@@ -123,6 +124,7 @@ const wallet: YoroiWallet = {
   ledgerSupportsCIP36: async () => {
     return true
   },
+
   getCollateralInfo: () => {
     return {
       utxo: {
@@ -298,6 +300,9 @@ const wallet: YoroiWallet = {
 
   createUnsignedGovernanceTx: () => {
     throw new Error('not implemented: createUnsignedGovernanceTx')
+  },
+  getChangeAddress(): string {
+    return 'addr1qxy9yjhvxh700xeluhvdpwlauuvnzav42edveyggy8fusqvg2f9wcd0u77dnlewc6zalmecex96e24j6ejgssgwneqqs762af9'
   },
 }
 
@@ -573,7 +578,6 @@ const signTxWithLedger = {
 const submitTransaction = {
   success: async (...args: unknown[]) => {
     action('submitTransaction')(...args)
-    return [] as unknown as []
   },
   error: async (...args: unknown[]) => {
     action('submitTransaction')(...args)
@@ -581,7 +585,7 @@ const submitTransaction = {
   },
   loading: async (...args: unknown[]) => {
     action('submitTransaction')(...args)
-    return new Promise(() => null) as unknown as []
+    return new Promise<void>(() => null)
   },
 }
 

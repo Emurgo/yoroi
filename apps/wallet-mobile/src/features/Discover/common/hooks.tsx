@@ -1,10 +1,13 @@
-import {useDappConnector} from '@yoroi/dapp-connector'
-import {DappConnectorManager} from '@yoroi/dapp-connector/src/dapp-connector'
+import {DappConnectorManager, useDappConnector} from '@yoroi/dapp-connector'
 import * as React from 'react'
 import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
+import {useModal} from '../../../components'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {Logger} from '../../../yoroi-wallets/logging'
+import {ConfirmRawTxWithOs} from '../../Swap/common/ConfirmRawTx/ConfirmRawTxWithOs'
+import {ConfirmRawTxWithPassword} from '../../Swap/common/ConfirmRawTx/ConfirmRawTxWithPassword'
+import {useStrings} from './useStrings'
 import {walletConfig} from './wallet-config'
 
 export const useConnectWalletToWebView = (wallet: YoroiWallet, webViewRef: React.RefObject<WebView | null>) => {
@@ -17,7 +20,7 @@ export const useConnectWalletToWebView = (wallet: YoroiWallet, webViewRef: React
       Logger.info('DappConnector', 'sending result to webview', result, 'as a response to', event)
     }
 
-    webViewRef.current?.injectJavaScript(getInjectableMessage({id, result, error: error?.message || null}))
+    webViewRef.current?.injectJavaScript(getInjectableMessage({id, result, error: error?.message ?? null}))
   }
 
   const handleWebViewEvent = async (e: WebViewMessageEvent) => {
@@ -51,4 +54,32 @@ const getInitScript = (sessionId: string, dappConnector: DappConnectorManager) =
     walletName: walletConfig.name,
     sessionId,
   })
+}
+
+export const useConfirmRawTx = (wallet: YoroiWallet) => {
+  const {openModal, closeModal} = useModal()
+  const strings = useStrings()
+  const modalHeight = 350
+
+  return React.useCallback(
+    ({onConfirm, onClose}: {onConfirm: (rootKey: string) => Promise<void>; onClose: () => void}) => {
+      const handleOnConfirm = async (rootKey: string) => {
+        const result = await onConfirm(rootKey)
+        closeModal()
+        return result
+      }
+
+      if (wallet.isHW) {
+        throw new Error('Not implemented yet')
+      }
+
+      if (wallet.isEasyConfirmationEnabled) {
+        openModal(strings.confirmTx, <ConfirmRawTxWithOs onConfirm={handleOnConfirm} />, modalHeight, onClose)
+        return
+      }
+
+      openModal(strings.confirmTx, <ConfirmRawTxWithPassword onConfirm={handleOnConfirm} />, modalHeight, onClose)
+    },
+    [openModal, closeModal, strings, modalHeight, wallet],
+  )
 }

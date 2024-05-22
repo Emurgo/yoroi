@@ -112,6 +112,7 @@ const getStories = () => {
     "./src/features/Claim/illustrations/Ilustrations.stories.tsx": require("../src/features/Claim/illustrations/Ilustrations.stories.tsx"),
     "./src/features/Claim/useCases/AskConfirmation.stories.tsx": require("../src/features/Claim/useCases/AskConfirmation.stories.tsx"),
     "./src/features/Claim/useCases/ShowSuccessScreen.stories.tsx": require("../src/features/Claim/useCases/ShowSuccessScreen.stories.tsx"),
+    "./src/features/Discover/common/ConfirmConnectionModal.stories.tsx": require("../src/features/Discover/common/ConfirmConnectionModal.stories.tsx"),
     "./src/features/Discover/common/LabelCategoryDApp.stories.tsx": require("../src/features/Discover/common/LabelCategoryDApp.stories.tsx"),
     "./src/features/Discover/common/LabelConnected.stories.tsx": require("../src/features/Discover/common/LabelConnected.stories.tsx"),
     "./src/features/Discover/useCases/BrowseDapp/BrowseDappScreen.stories.tsx": require("../src/features/Discover/useCases/BrowseDapp/BrowseDappScreen.stories.tsx"),

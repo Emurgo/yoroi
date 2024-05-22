@@ -272,6 +272,10 @@ storiesOf('Icon', module).add('Gallery', () => {
         <Item icon={<Icon.Square />} title="Square" />
 
         <Item icon={<Icon.Google />} title="Google" />
+
+        <Item icon={<Icon.Connection />} title="Connection" />
+
+        <Item icon={<Icon.YoroiApp />} title="YoroiApp" />
       </ScrollView>
     </FilterProvider>
   )

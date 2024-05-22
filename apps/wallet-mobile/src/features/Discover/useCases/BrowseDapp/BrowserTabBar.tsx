@@ -1,7 +1,6 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import Share from 'react-native-share'
 import WebView from 'react-native-webview'
 
@@ -16,7 +15,6 @@ type Props = {
 export const BrowserTabBar = ({webViewRef, webViewState}: Props) => {
   const {styles, color, colors} = useStyles()
   const {tabs, openTabs} = useBrowser()
-  const insets = useSafeAreaInsets()
 
   const totalTabs = Math.min(tabs.length, 99)
 
@@ -56,7 +54,7 @@ export const BrowserTabBar = ({webViewRef, webViewState}: Props) => {
   }
 
   return (
-    <View style={[styles.root, styles.shadow, {paddingBottom: insets.bottom + 12}]}>
+    <View style={[styles.root, styles.shadow, {height: tabBarHeight}]}>
       <Touch disabled={!webViewState.canGoBack} onPress={handleBackward}>
         <Icon.Backward color={colorBackward} />
       </Touch>
@@ -80,14 +78,10 @@ export const BrowserTabBar = ({webViewRef, webViewState}: Props) => {
   )
 }
 
-const Touch = ({children, ...props}: React.PropsWithChildren<TouchableOpacityProps>) => {
-  const {styles} = useStyles()
+const tabBarHeight = 46
 
-  return (
-    <TouchableOpacity style={styles.touchBox} {...props}>
-      {children}
-    </TouchableOpacity>
-  )
+const Touch = ({children, ...props}: React.PropsWithChildren<TouchableOpacityProps>) => {
+  return <TouchableOpacity {...props}>{children}</TouchableOpacity>
 }
 
 type TabItemProps = {
@@ -132,9 +126,6 @@ const useStyles = () => {
       elevation: 14,
 
       zIndex: 1,
-    },
-    touchBox: {
-      ...atoms.py_2xl,
     },
     tabViewContainer: {
       position: 'relative',
