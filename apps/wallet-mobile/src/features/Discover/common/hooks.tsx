@@ -61,22 +61,25 @@ export const useConfirmRawTx = (wallet: YoroiWallet) => {
   const strings = useStrings()
   const modalHeight = 350
 
-  return ({onConfirm, onClose}: {onConfirm: (rootKey: string) => Promise<void>; onClose: () => void}) => {
-    const handleOnConfirm = async (rootKey: string) => {
-      const result = await onConfirm(rootKey)
-      closeModal()
-      return result
-    }
+  return React.useCallback(
+    ({onConfirm, onClose}: {onConfirm: (rootKey: string) => Promise<void>; onClose: () => void}) => {
+      const handleOnConfirm = async (rootKey: string) => {
+        const result = await onConfirm(rootKey)
+        closeModal()
+        return result
+      }
 
-    if (wallet.isHW) {
-      throw new Error('Not implemented yet')
-    }
+      if (wallet.isHW) {
+        throw new Error('Not implemented yet')
+      }
 
-    if (wallet.isEasyConfirmationEnabled) {
-      openModal(strings.confirmTx, <ConfirmRawTxWithOs onConfirm={handleOnConfirm} />, modalHeight, onClose)
-      return
-    }
+      if (wallet.isEasyConfirmationEnabled) {
+        openModal(strings.confirmTx, <ConfirmRawTxWithOs onConfirm={handleOnConfirm} />, modalHeight, onClose)
+        return
+      }
 
-    openModal(strings.confirmTx, <ConfirmRawTxWithPassword onConfirm={handleOnConfirm} />, modalHeight, onClose)
-  }
+      openModal(strings.confirmTx, <ConfirmRawTxWithPassword onConfirm={handleOnConfirm} />, modalHeight, onClose)
+    },
+    [openModal, closeModal, strings, modalHeight, wallet],
+  )
 }

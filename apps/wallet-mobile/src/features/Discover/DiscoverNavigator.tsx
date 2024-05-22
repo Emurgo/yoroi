@@ -56,6 +56,7 @@ const useDappConnectorManager = () => {
   const wallet = useSelectedWallet()
   const {openConfirmConnectionModal} = useOpenConfirmConnectionModal()
   const confirmRawTx = useConfirmRawTx(wallet)
+
   const confirmConnection = React.useCallback(
     async (origin: string, manager: DappConnector) => {
       const recommendedDApps = await manager.getDAppList()
@@ -99,5 +100,8 @@ const useDappConnectorManager = () => {
     })
   }, [confirmRawTx])
 
-  return createDappConnector({appStorage, wallet, confirmConnection, signTx, signData})
+  return React.useMemo(
+    () => createDappConnector({appStorage, wallet, confirmConnection, signTx, signData}),
+    [appStorage, wallet, confirmConnection, signTx, signData],
+  )
 }
