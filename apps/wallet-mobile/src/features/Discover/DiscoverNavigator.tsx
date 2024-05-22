@@ -67,9 +67,7 @@ const useDappConnectorManager = () => {
           website: origin,
           logo: selectedDapp?.logo ?? '',
           onConfirm: () => resolve(true),
-          onClose: () => {
-            resolve(false)
-          },
+          onClose: () => resolve(false),
         })
       })
     },
