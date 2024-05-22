@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Portfolio",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 19,
+      "line": 20,
       "column": 13,
-      "index": 646
+      "index": 763
     },
     "end": {
-      "line": 22,
+      "line": 23,
       "column": 3,
-      "index": 715
+      "index": 832
     }
   },
   {
@@ -19,29 +19,29 @@
     "defaultMessage": "!!!Total wallet value",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 23,
+      "line": 24,
       "column": 20,
-      "index": 737
+      "index": 854
     },
     "end": {
-      "line": 26,
+      "line": 27,
       "column": 3,
-      "index": 850
+      "index": 967
     }
   },
   {
     "id": "portfolio.portfolioDashboardScreen.tokens",
-    "defaultMessage": "!!!Tokens",
+    "defaultMessage": "!!!Tokens ({countTokens})",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 27,
+      "line": 28,
       "column": 10,
-      "index": 862
+      "index": 979
     },
     "end": {
-      "line": 30,
+      "line": 31,
       "column": 3,
-      "index": 953
+      "index": 1086
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Start your crypto journey",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 31,
+      "line": 32,
       "column": 15,
-      "index": 970
+      "index": 1103
     },
     "end": {
-      "line": 34,
+      "line": 35,
       "column": 3,
-      "index": 1085
+      "index": 1218
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Get started with Cardano's native currency, ADA. It's your key to unlocking a world of possibilities",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 35,
+      "line": 36,
       "column": 21,
-      "index": 1108
+      "index": 1241
     },
     "end": {
-      "line": 39,
+      "line": 40,
       "column": 3,
-      "index": 1310
+      "index": 1443
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!Buy ADA",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 40,
+      "line": 41,
       "column": 13,
-      "index": 1325
+      "index": 1458
     },
     "end": {
-      "line": 43,
+      "line": 44,
       "column": 3,
-      "index": 1411
+      "index": 1544
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!Trade Tokens",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 44,
+      "line": 45,
       "column": 15,
-      "index": 1428
+      "index": 1561
     },
     "end": {
-      "line": 47,
+      "line": 48,
       "column": 3,
-      "index": 1530
+      "index": 1663
     }
   },
   {
@@ -109,14 +109,29 @@
     "defaultMessage": "!!!Swap",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 48,
+      "line": 49,
       "column": 8,
-      "index": 1540
+      "index": 1673
     },
     "end": {
-      "line": 51,
+      "line": 52,
       "column": 3,
-      "index": 1599
+      "index": 1732
+    }
+  },
+  {
+    "id": "portfolio.portfolioDashboardScreen.nfts",
+    "defaultMessage": "!!!NFTs ({countNfts})",
+    "file": "src/features/Portfolio2/common/useStrings.tsx",
+    "start": {
+      "line": 53,
+      "column": 8,
+      "index": 1742
+    },
+    "end": {
+      "line": 56,
+      "column": 3,
+      "index": 1843
     }
   }
 ]

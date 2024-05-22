@@ -5,6 +5,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Spacer} from '../../../../components'
 import {ADABalanceCard} from '../../common/ADABalanceCard/ADABalanceCard'
+import {DashboardNFTsList} from '../../common/DashboardNFTsList/DashboardNFTsList'
 import {DashboardTokensList} from '../../common/DashboardTokensList/DashboardTokensList'
 
 export const PortfolioDashboardScreen = () => {
@@ -18,6 +19,10 @@ export const PortfolioDashboardScreen = () => {
         <Spacer height={16} />
 
         <DashboardTokensList />
+
+        <Spacer height={16} />
+
+        <DashboardNFTsList />
       </ScrollView>
     </SafeAreaView>
   )
