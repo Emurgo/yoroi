@@ -1,27 +1,34 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet} from 'react-native'
+import {ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {Spacer} from '../../../../components'
 import {ADABalanceCard} from '../../common/ADABalanceCard/ADABalanceCard'
+import {DashboardTokensList} from '../../common/DashboardTokensList/DashboardTokensList'
 
 export const PortfolioDashboardScreen = () => {
   const {styles} = useStyles()
 
   return (
     <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
-      <ADABalanceCard />
+      <ScrollView style={styles.root}>
+        <ADABalanceCard />
+
+        <Spacer height={16} />
+
+        <DashboardTokensList />
+      </ScrollView>
     </SafeAreaView>
   )
 }
 
 const useStyles = () => {
-  const {atoms, color} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      flex: 1,
+      ...atoms.flex_1,
       backgroundColor: color.gray_cmin,
-      ...atoms.px_lg,
     },
   })
 

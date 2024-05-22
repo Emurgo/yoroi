@@ -104,13 +104,17 @@ const WalletTabNavigator = () => {
         <Tab.Screen
           component={PortfolioNavigator}
           name="portfolio"
-          options={{
+          options={({route}: {route: RouteProp<WalletTabRoutes, 'portfolio'>}) => ({
             tabBarIcon: ({focused}) => (
               <Icon.TabPortfolio size={24} color={focused ? colors.active : colors.inactive} />
             ),
             tabBarLabel: strings.portfolioButton,
             tabBarTestID: 'portfolioTabBarButton',
-          }}
+            tabBarStyle: {
+              ...hideTabBarForRoutes(route),
+              backgroundColor: colors.background,
+            },
+          })}
         />
 
         <Tab.Screen

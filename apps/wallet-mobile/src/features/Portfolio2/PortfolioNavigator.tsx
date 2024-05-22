@@ -18,14 +18,13 @@ export const PortfolioNavigator = () => {
     <Stack.Navigator
       screenOptions={{
         ...defaultStackNavigationOptions(atoms, color),
-        headerLeft: () => null,
         detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
         gestureEnabled: true,
       }}
-      initialRouteName="portfolio-dashboard"
+      initialRouteName="dashboard-portfolio"
     >
       <Stack.Screen
-        name="portfolio-dashboard"
+        name="dashboard-portfolio"
         component={PortfolioDashboardScreen}
         options={{title: strings.portfolio}}
       />

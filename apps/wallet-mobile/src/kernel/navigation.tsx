@@ -292,7 +292,7 @@ export type DashboardRoutes = {
 }
 
 export type Portfolio2Routes = {
-  'portfolio-dashboard': undefined
+  'dashboard-portfolio': undefined
   'portfolio-tokens-list': undefined
   'portfolio-token-details': undefined
 }
@@ -611,12 +611,15 @@ export const useWalletNavigation = () => {
   } as const).current
 }
 
-export const hideTabBarForRoutes = (route: RouteProp<WalletTabRoutes, 'history' | 'discover'>): ViewStyle | undefined =>
+export const hideTabBarForRoutes = (
+  route: RouteProp<WalletTabRoutes, 'history' | 'discover' | 'portfolio'>,
+): ViewStyle | undefined =>
   getFocusedRouteNameFromRoute(route)?.startsWith('scan') ||
   getFocusedRouteNameFromRoute(route)?.startsWith('swap') ||
   getFocusedRouteNameFromRoute(route)?.startsWith('receive') ||
   getFocusedRouteNameFromRoute(route)?.startsWith('exchange') ||
-  getFocusedRouteNameFromRoute(route)?.startsWith('discover-browser')
+  getFocusedRouteNameFromRoute(route)?.startsWith('discover-browser') ||
+  getFocusedRouteNameFromRoute(route)?.startsWith('portfolio')
     ? {display: 'none'}
     : undefined
 

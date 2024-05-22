@@ -4,12 +4,12 @@
     "defaultMessage": "!!!Note:",
     "file": "src/TxHistory/TxHistory.tsx",
     "start": {
-      "line": 129,
+      "line": 141,
       "column": 9,
       "index": 4243
     },
     "end": {
-      "line": 132,
+      "line": 144,
       "column": 3,
       "index": 4342
     }
@@ -19,12 +19,12 @@
     "defaultMessage": "!!!The Shelley protocol upgrade adds a new Shelley wallet type which supports delegation.",
     "file": "src/TxHistory/TxHistory.tsx",
     "start": {
-      "line": 133,
+      "line": 145,
       "column": 11,
       "index": 4355
     },
     "end": {
-      "line": 136,
+      "line": 148,
       "column": 3,
       "index": 4537
     }
