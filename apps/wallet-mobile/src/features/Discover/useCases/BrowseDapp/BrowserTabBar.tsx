@@ -54,7 +54,7 @@ export const BrowserTabBar = ({webViewRef, webViewState}: Props) => {
   }
 
   return (
-    <View style={[styles.root, styles.shadow, {height: tabBarHeight, backgroundColor: 'red'}]}>
+    <View style={[styles.root, styles.shadow, {height: tabBarHeight}]}>
       <Touch disabled={!webViewState.canGoBack} onPress={handleBackward}>
         <Icon.Backward color={colorBackward} />
       </Touch>

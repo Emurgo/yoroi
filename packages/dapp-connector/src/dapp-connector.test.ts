@@ -6,7 +6,6 @@ import {Api, dappConnectorApiMaker} from './adapters/api'
 import {mockedDAppList} from './manager.mocks'
 import {ResolverWallet} from './resolver'
 import {init} from '@emurgo/cross-csl-nodejs'
-import {TransactionWitnessSet} from '@emurgo/cross-csl-core'
 
 const getDappConnector = (wallet = mockWallet) => {
   const storage = connectionStorageMaker({storage: storageMock})
@@ -299,9 +298,7 @@ describe('DappConnector', () => {
       const sendMessage = jest.fn()
       await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
       await dappConnector.handleEvent(createEvent('api.signTx', {args: ['CBOR']}), trustedUrl, sendMessage)
-      expect(sendMessage).toHaveBeenCalledTimes(1)
-      const result: TransactionWitnessSet = sendMessage.mock.calls[0][1]
-      expect(await result.toHex()).toBe('a0')
+      expect(sendMessage).toHaveBeenCalledWith('1', 'a0')
     })
 
     it('should resolve signTx with mocked data if partial sign is known', async () => {
@@ -309,9 +306,7 @@ describe('DappConnector', () => {
       const sendMessage = jest.fn()
       await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
       await dappConnector.handleEvent(createEvent('api.signTx', {args: ['CBOR', true]}), trustedUrl, sendMessage)
-      expect(sendMessage).toHaveBeenCalledTimes(1)
-      const result: TransactionWitnessSet = sendMessage.mock.calls[0][1]
-      expect(await result.toHex()).toBe('a0')
+      expect(sendMessage).toHaveBeenCalledWith('1', 'a0')
     })
 
     it('should throw in signTx with when incorrect arguments are presented', async () => {

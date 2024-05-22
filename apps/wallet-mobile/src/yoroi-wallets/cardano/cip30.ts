@@ -308,6 +308,7 @@ const _drawCollateralInOneUtxo = async (wallet: YoroiWallet, quantity: Balance.Q
   const utxos = utxosMaker(wallet.utxos, {
     maxLovelace: collateralConfig.maxLovelace,
     minLovelace: quantity,
+    maxUTxOs: collateralConfig.maxUTxOs,
   })
 
   const possibleCollateralId = utxos.drawnCollateral()
@@ -325,9 +326,18 @@ const _drawCollateralInMultipleUtxos = async (
   const possibleUtxos = findCollateralCandidates(wallet.utxos, {
     maxLovelace: collateralConfig.maxLovelace,
     minLovelace: asQuantity('0'),
+    maxUTxOs: collateralConfig.maxUTxOs,
   })
 
-  const utxos = await _getRequiredUtxos(csl, wallet, {[wallet.primaryTokenInfo.id]: quantity}, possibleUtxos)
+  const sortedFromMaxToMin = possibleUtxos.sort((a, b) => {
+    const aAmount = new BigNumber(a.amount)
+    const bAmount = new BigNumber(b.amount)
+    return bAmount.comparedTo(aAmount)
+  })
+
+  const utxosWithLimitAccounted = sortedFromMaxToMin.slice(0, collateralConfig.maxUTxOs)
+
+  const utxos = await _getRequiredUtxos(csl, wallet, {[wallet.primaryTokenInfo.id]: quantity}, utxosWithLimitAccounted)
 
   if (utxos !== null && utxos.length > 0) {
     return utxos

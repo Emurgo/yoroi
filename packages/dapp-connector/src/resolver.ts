@@ -28,7 +28,7 @@ type Resolver = {
     getUtxos: ResolvableMethod<string[] | null>
     getCollateral: ResolvableMethod<string[] | null>
     submitTx: ResolvableMethod<string>
-    signTx: ResolvableMethod<TransactionWitnessSet>
+    signTx: ResolvableMethod<string>
     signData: ResolvableMethod<{signature: string; key: string}>
   }
 }
@@ -64,7 +64,8 @@ export const resolver: Resolver = {
           ? params.args[1]
           : undefined
       if (tx === undefined) throw new Error('Invalid params')
-      return context.wallet.signTx(tx, partialSign ?? false)
+      const result = await context.wallet.signTx(tx, partialSign ?? false)
+      return result.toHex()
     },
     signData: async (params: unknown, context: Context) => {
       assertOriginsMatch(context)
