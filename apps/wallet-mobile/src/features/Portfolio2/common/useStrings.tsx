@@ -13,6 +13,10 @@ export const useStrings = () => {
     tradeTokens: intl.formatMessage(messages.tradeTokens),
     swap: intl.formatMessage(messages.swap),
     nfts: (qty: number) => intl.formatMessage(messages.nfts, {countNfts: qty}),
+    tokenList: intl.formatMessage(messages.tokenList),
+    walletToken: intl.formatMessage(messages.walletToken),
+    dappsToken: intl.formatMessage(messages.dappsToken),
+    tokensAvailable: (qty: number) => intl.formatMessage(messages.tokensAvailable, {countTokens: qty}),
   }
 }
 
@@ -53,5 +57,21 @@ export const messages = defineMessages({
   nfts: {
     id: 'portfolio.portfolioDashboardScreen.nfts',
     defaultMessage: '!!!NFTs ({countNfts})',
+  },
+  tokenList: {
+    id: 'portfolio.PortfolioTokensListScreen.tokenList',
+    defaultMessage: '!!!Token list',
+  },
+  walletToken: {
+    id: 'portfolio.PortfolioTokensListScreen.walletToken',
+    defaultMessage: '!!!Wallet token',
+  },
+  dappsToken: {
+    id: 'portfolio.PortfolioTokensListScreen.dappsToken',
+    defaultMessage: '!!!DApps token',
+  },
+  tokensAvailable: {
+    id: 'portfolio.PortfolioTokensListScreen.tokensAvailable',
+    defaultMessage: '!!!{countTokens} token(s) available',
   },
 })

@@ -8,5 +8,6 @@ export const useNavigateTo = () => {
 
   return React.useRef({
     tokensList: () => navigation.navigate('portfolio-tokens-list'),
+    nftsList: () => navigation.navigate('nfts'),
   } as const).current
 }

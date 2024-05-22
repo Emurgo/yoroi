@@ -16,11 +16,10 @@ export const useGetTokensWithBalance = (
 ) => {
   const query = useQuery({
     useErrorBoundary: true,
-    suspense: true,
     ...options,
     queryKey: ['useGetTokensWithBalance'],
     queryFn: async () => {
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      await new Promise((resolve) => setTimeout(resolve, 5000))
       return [{
         logo: AdaLogo,
         symbol: 'ADA',

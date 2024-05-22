@@ -22,7 +22,7 @@ export const DashboardNFTsList = () => {
   const hasNotNfts = nftsList.length === 0
 
   const handleDirectNFTsList = () => {
-    navigationTo.tokensList()
+    navigationTo.nftsList()
   }
 
   return (
