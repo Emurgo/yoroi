@@ -13,9 +13,9 @@ const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      flex: 1,
-      backgroundColor: color.gray_cmin,
+      ...atoms.flex_1,
       ...atoms.pt_lg,
+      backgroundColor: color.gray_cmin,
     },
   })
 
