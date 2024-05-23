@@ -6,9 +6,9 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Icon, Text} from '../components'
 import {useSelectedWallet} from '../features/WalletManager/context/SelectedWalletContext'
-import globalMessages, {confirmationMessages} from '../i18n/global-messages'
-import {isNightly} from '../legacy/config'
-import {Logger} from '../legacy/logging'
+import {isNightly} from '../kernel/env'
+import globalMessages, {confirmationMessages} from '../kernel/i18n/global-messages'
+import {logger} from '../kernel/logger/logger'
 import {useCanVote} from './hooks'
 import {InsufficientFundsModal} from './InsufficientFundsModal'
 
@@ -38,14 +38,14 @@ export const VotingBanner = ({onPress, disabled}: Props) => {
               registrationEnd: currentFund.registrationEnd,
             }
           }
-        } catch (e) {
-          Logger.debug('Could not get Catalyst fund info from server', e)
+        } catch (error) {
+          logger.error(error as Error)
         }
       }
 
       const catalyst = catalystManagerMaker()
 
-      setShowCatalystBanner((canVote && catalyst.isRegistrationOpen(fundInfo)) || isNightly() || __DEV__)
+      setShowCatalystBanner((canVote && catalyst.isRegistrationOpen(fundInfo)) || isNightly || __DEV__)
     }
 
     checkCatalystFundInfo()

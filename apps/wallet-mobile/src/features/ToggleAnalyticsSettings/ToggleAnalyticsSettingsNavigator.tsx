@@ -3,7 +3,7 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {defaultStackNavigationOptions, ToggleAnalyticsSettingsRoutes} from '../../navigation'
+import {defaultStackNavigationOptions, ToggleAnalyticsSettingsRoutes} from '../../kernel/navigation'
 import {ToggleAnalyticsSettingsScreen} from './ToggleAnalyticsSettingsScreen'
 
 const Stack = createStackNavigator<ToggleAnalyticsSettingsRoutes>()

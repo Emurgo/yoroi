@@ -9,7 +9,7 @@ import {ActivityIndicator, Image, LayoutAnimation, StyleSheet, TouchableOpacity,
 import {useQueryErrorResetBoundary} from 'react-query'
 
 import image from '../../assets/img/error.png'
-import LocalizableError from '../../i18n/LocalizableError'
+import LocalizableError from '../../kernel/i18n/LocalizableError'
 import {Button} from '../Button'
 import {Spacer} from '../Spacer'
 import {Text} from '../Text'

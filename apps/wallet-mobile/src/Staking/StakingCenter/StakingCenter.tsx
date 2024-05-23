@@ -7,16 +7,16 @@ import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
 import {PleaseWaitModal, Spacer} from '../../components'
 import {useStakingTx} from '../../Dashboard/StakePoolInfos'
-import {showErrorDialog} from '../../dialogs'
 import {features} from '../../features'
 import {useSelectedWallet} from '../../features/WalletManager/context/SelectedWalletContext'
-import {useLanguage} from '../../i18n'
-import globalMessages from '../../i18n/global-messages'
-import {isNightly} from '../../legacy/config'
-import {Logger} from '../../legacy/logging'
-import {useMetrics} from '../../metrics/metricsManager'
-import {StakingCenterRouteNavigation} from '../../navigation'
-import {getNetworkConfigById, NETWORKS} from '../../yoroi-wallets/cardano/networks'
+import {showErrorDialog} from '../../kernel/dialogs'
+import {isDev, isNightly} from '../../kernel/env'
+import {useLanguage} from '../../kernel/i18n'
+import globalMessages from '../../kernel/i18n/global-messages'
+import {logger} from '../../kernel/logger/logger'
+import {useMetrics} from '../../kernel/metrics/metricsManager'
+import {StakingCenterRouteNavigation} from '../../kernel/navigation'
+import {NETWORKS} from '../../yoroi-wallets/cardano/networks'
 import {NotEnoughMoneyToSendError} from '../../yoroi-wallets/cardano/types'
 import {PoolDetailScreen} from '../PoolDetails'
 
@@ -51,7 +51,7 @@ export const StakingCenter = () => {
         if (error instanceof NotEnoughMoneyToSendError) {
           navigation.navigate('delegation-failed-tx')
         } else {
-          Logger.error(error as any)
+          logger.error(error as Error)
           navigation.navigate('delegation-failed-tx')
         }
       },
@@ -63,21 +63,19 @@ export const StakingCenter = () => {
     if (!Array.isArray(selectedPoolHashes) || selectedPoolHashes.length < 1) {
       await showErrorDialog(noPoolDataDialog, intl)
     }
-    Logger.debug('selected pools from explorer:', selectedPoolHashes)
+    logger.debug('selected pools from explorer:', selectedPoolHashes)
     setSelectedPoolId(selectedPoolHashes[0])
   }
 
-  const config = getNetworkConfigById(wallet.networkId)
-
   return (
     <>
-      {(__DEV__ || (isNightly() && !config.IS_MAINNET)) && (
+      {(isDev || (isNightly && !wallet.isMainnet)) && (
         <View style={{flex: 1}}>
           <PoolDetailScreen onPressDelegate={setSelectedPoolId} />
         </View>
       )}
 
-      {(config.IS_MAINNET || features.showProdPoolsInDev) && (
+      {(wallet.isMainnet || features.showProdPoolsInDev) && (
         <View style={{flex: 1, backgroundColor: '#fff'}}>
           <Spacer height={8} />
 

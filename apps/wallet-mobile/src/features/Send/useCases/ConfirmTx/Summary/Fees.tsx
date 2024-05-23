@@ -2,7 +2,7 @@ import * as React from 'react'
 import {useIntl} from 'react-intl'
 
 import {Text} from '../../../../../components/Text'
-import {txLabels} from '../../../../../i18n/global-messages'
+import {txLabels} from '../../../../../kernel/i18n/global-messages'
 import {formatTokenWithSymbol} from '../../../../../legacy/format'
 import {YoroiUnsignedTx} from '../../../../../yoroi-wallets/types/yoroi'
 import {Amounts} from '../../../../../yoroi-wallets/utils/utils'

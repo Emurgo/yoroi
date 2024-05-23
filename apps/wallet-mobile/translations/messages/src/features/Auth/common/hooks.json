@@ -1,0 +1,47 @@
+[
+  {
+    "id": "components.send.biometricauthscreen.authorizeOperation",
+    "defaultMessage": "!!!Authorize",
+    "file": "src/features/Auth/common/hooks.ts",
+    "start": {
+      "line": 261,
+      "column": 13,
+      "index": 9001
+    },
+    "end": {
+      "line": 264,
+      "column": 3,
+      "index": 9108
+    }
+  },
+  {
+    "id": "components.send.biometricauthscreen.SENSOR_LOCKOUT",
+    "defaultMessage": "!!!Too many attempts",
+    "file": "src/features/Auth/common/hooks.ts",
+    "start": {
+      "line": 265,
+      "column": 19,
+      "index": 9129
+    },
+    "end": {
+      "line": 268,
+      "column": 3,
+      "index": 9240
+    }
+  },
+  {
+    "id": "components.send.biometricauthscreen.UNKNOWN_ERROR",
+    "defaultMessage": "!!!Unknown error!",
+    "file": "src/features/Auth/common/hooks.ts",
+    "start": {
+      "line": 269,
+      "column": 16,
+      "index": 9258
+    },
+    "end": {
+      "line": 272,
+      "column": 3,
+      "index": 9365
+    }
+  }
+]

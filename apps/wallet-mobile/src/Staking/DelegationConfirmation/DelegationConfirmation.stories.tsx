@@ -4,7 +4,7 @@ import {QueryClient, QueryClientProvider} from 'react-query'
 
 import {RouteProvider} from '../../../.storybook/decorators'
 import {SelectedWalletProvider} from '../../features/WalletManager/context/SelectedWalletContext'
-import {StakingCenterRoutes} from '../../navigation'
+import {StakingCenterRoutes} from '../../kernel/navigation'
 import {mocks} from '../../yoroi-wallets/mocks'
 import {DelegationConfirmation} from './DelegationConfirmation'
 

@@ -6,13 +6,12 @@ import {Platform, ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Icon, Spacer} from '../../../components'
-import {useLanguage} from '../../../i18n'
-import {themeNames} from '../../../i18n/global-messages'
-import {defaultLanguage} from '../../../i18n/languages'
-import {CONFIG, isNightly, isProduction} from '../../../legacy/config'
-import {lightPalette} from '../../../theme'
-import {useAuthSetting, useAuthWithOs, useIsAuthOsSupported} from '../../../yoroi-wallets/auth'
+import {isNightly, isProduction} from '../../../kernel/env'
+import {useLanguage} from '../../../kernel/i18n'
+import {themeNames} from '../../../kernel/i18n/global-messages'
+import {defaultLanguage} from '../../../kernel/i18n/languages'
 import {useCrashReports} from '../../../yoroi-wallets/hooks'
+import {useAuthSetting, useAuthWithOs, useIsAuthOsSupported} from '../../Auth/common/hooks'
 import {usePrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
 import {useNavigateTo} from '../common/navigation'
 import {SettingsSwitch} from '../common/SettingsSwitch'
@@ -20,14 +19,9 @@ import {useCurrencyContext} from '../Currency'
 import {useChangeScreenShareSetting, useScreenShareSettingEnabled} from '../ScreenShare'
 import {NavigatedSettingsItem, SettingsItem, SettingsSection} from '../SettingsItems'
 
-const iconProps = {
-  color: lightPalette.gray['600'],
-  size: 23,
-}
-
 export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {styles, colors} = useStyles()
   const {name} = useTheme()
   const {languageCode, supportedLanguages} = useLanguage()
   const language = supportedLanguages.find((lang) => lang.code === languageCode) ?? defaultLanguage
@@ -42,8 +36,8 @@ export const ApplicationSettingsScreen = () => {
   const {authWithOs} = useAuthWithOs({onSuccess: navigateTo.enableLoginWithPin})
 
   const {data: screenShareEnabled} = useScreenShareSettingEnabled()
-  const displayScreenShareSetting = Platform.OS === 'android' && !isProduction()
-  const displayToggleThemeSetting = !isNightly() && !isProduction()
+  const displayScreenShareSetting = Platform.OS === 'android' && !isProduction
+  const displayToggleThemeSetting = !isNightly && !isProduction
 
   const onToggleAuthWithOs = () => {
     if (authSetting === 'os') {
@@ -51,6 +45,11 @@ export const ApplicationSettingsScreen = () => {
     } else {
       navigateTo.enableLoginWithOs()
     }
+  }
+
+  const iconProps = {
+    color: colors.icon,
+    size: 23,
   }
 
   return (
@@ -207,9 +206,7 @@ const CrashReportsSwitch = ({crashReportEnabled}: {crashReportEnabled: boolean})
     })
   }
 
-  return (
-    <SettingsSwitch value={isLocalEnabled} onValueChange={onToggleCrashReports} disabled={CONFIG.FORCE_CRASH_REPORTS} />
-  )
+  return <SettingsSwitch value={isLocalEnabled} onValueChange={onToggleCrashReports} disabled={isNightly} />
 }
 
 // to avoid switch jumps
@@ -340,5 +337,5 @@ const useStyles = () => {
     },
   })
 
-  return styles
+  return {styles, colors: {icon: color.gray_c600}} as const
 }

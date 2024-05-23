@@ -6,7 +6,7 @@ import React, {createContext, ReactNode, useCallback, useContext, useReducer} fr
 import {TextInput, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 
 import {Icon} from '../components/Icon'
-import {defaultStackNavigationOptions} from '../navigation'
+import {defaultStackNavigationOptions} from '../kernel/navigation'
 
 type SearchState = {
   search: string

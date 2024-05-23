@@ -6,7 +6,7 @@ import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Space} from '../../../../components/Space/Space'
-import {WalletInitRouteNavigation} from '../../../../navigation'
+import {WalletInitRouteNavigation} from '../../../../kernel/navigation'
 import * as HASKELL_SHELLEY from '../../../../yoroi-wallets/cardano/constants/mainnet/constants'
 import * as SANCHONET from '../../../../yoroi-wallets/cardano/constants/sanchonet/constants'
 import * as HASKELL_SHELLEY_TESTNET from '../../../../yoroi-wallets/cardano/constants/testnet/constants'

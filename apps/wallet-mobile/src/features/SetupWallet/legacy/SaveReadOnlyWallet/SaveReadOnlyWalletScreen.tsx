@@ -6,11 +6,10 @@ import {FlatList, InteractionManager, ScrollView, StyleSheet, View} from 'react-
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Boundary, Icon, Line, Text} from '../../../../components'
-import {showErrorDialog} from '../../../../dialogs'
-import {errorMessages} from '../../../../i18n/global-messages'
-import {useMetrics} from '../../../../metrics/metricsManager'
-import {useWalletNavigation} from '../../../../navigation'
-import {theme} from '../../../../theme'
+import {showErrorDialog} from '../../../../kernel/dialogs'
+import {errorMessages} from '../../../../kernel/i18n/global-messages'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
+import {useWalletNavigation} from '../../../../kernel/navigation'
 import {isEmptyString} from '../../../../utils/utils'
 import {NUMBERS} from '../../../../yoroi-wallets/cardano/numbers'
 import {useCreateBip44Wallet, usePlate} from '../../../../yoroi-wallets/hooks'
@@ -92,7 +91,6 @@ const LABEL_MARGIN = 6
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.COLORS.BACKGROUND,
     paddingHorizontal: 16,
   },
   scrollView: {
@@ -127,7 +125,6 @@ const styles = StyleSheet.create({
   },
   keyView: {
     padding: 4,
-    backgroundColor: theme.COLORS.CODE_STYLE_BACKGROUND,
     marginBottom: 10,
   },
   walletFormStyle: {

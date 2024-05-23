@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native'
 import {Portfolio} from '@yoroi/types'
 
-import {NftRouteNavigation} from '../navigation'
+import {NftRouteNavigation} from '../kernel/navigation'
 
 export const useNavigateTo = () => {
   const navigation = useNavigation<NftRouteNavigation>()

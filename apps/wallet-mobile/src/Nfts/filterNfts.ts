@@ -1,7 +1,7 @@
 import {Balance} from '@yoroi/types'
 import React from 'react'
 
-import {useMetrics} from '../metrics/metricsManager'
+import {useMetrics} from '../kernel/metrics/metricsManager'
 
 export const filterNfts = (searchTerm: string, nfts: Balance.TokenInfo[]): Balance.TokenInfo[] => {
   const searchTermLowerCase = searchTerm.toLowerCase()

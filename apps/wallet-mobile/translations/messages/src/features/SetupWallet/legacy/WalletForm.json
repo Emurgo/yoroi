@@ -4,12 +4,12 @@
     "defaultMessage": "!!!Wallet name",
     "file": "src/features/SetupWallet/legacy/WalletForm.tsx",
     "start": {
-      "line": 142,
+      "line": 146,
       "column": 24,
       "index": 5315
     },
     "end": {
-      "line": 145,
+      "line": 149,
       "column": 3,
       "index": 5423
     }
@@ -19,12 +19,12 @@
     "defaultMessage": "!!!Spending password",
     "file": "src/features/SetupWallet/legacy/WalletForm.tsx",
     "start": {
-      "line": 146,
+      "line": 150,
       "column": 20,
       "index": 5445
     },
     "end": {
-      "line": 149,
+      "line": 153,
       "column": 3,
       "index": 5555
     }
@@ -34,12 +34,12 @@
     "defaultMessage": "!!!Continue",
     "file": "src/features/SetupWallet/legacy/WalletForm.tsx",
     "start": {
-      "line": 150,
+      "line": 154,
       "column": 18,
       "index": 5575
     },
     "end": {
-      "line": 153,
+      "line": 157,
       "column": 3,
       "index": 5674
     }
@@ -49,12 +49,12 @@
     "defaultMessage": "!!!Minimum characters",
     "file": "src/features/SetupWallet/legacy/WalletForm.tsx",
     "start": {
-      "line": 154,
+      "line": 158,
       "column": 31,
       "index": 5707
     },
     "end": {
-      "line": 157,
+      "line": 161,
       "column": 3,
       "index": 5848
     }
@@ -64,12 +64,12 @@
     "defaultMessage": "!!!Repeat password",
     "file": "src/features/SetupWallet/legacy/WalletForm.tsx",
     "start": {
-      "line": 158,
+      "line": 162,
       "column": 28,
       "index": 5878
     },
     "end": {
-      "line": 161,
+      "line": 165,
       "column": 3,
       "index": 5994
     }
@@ -79,12 +79,12 @@
     "defaultMessage": "!!!Passwords do not match",
     "file": "src/features/SetupWallet/legacy/WalletForm.tsx",
     "start": {
-      "line": 162,
+      "line": 166,
       "column": 28,
       "index": 6024
     },
     "end": {
-      "line": 165,
+      "line": 169,
       "column": 3,
       "index": 6147
     }

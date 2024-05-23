@@ -1,7 +1,7 @@
 import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
 
-import {defaultStackNavigationOptions, InititalizationRoutes} from '../../navigation'
+import {defaultStackNavigationOptions, InititalizationRoutes} from '../../kernel/navigation'
 import {AnalyticsChangedScreen} from './AnalyticsChangedScreen'
 import {useStrings} from './common'
 import {ReadPrivacyPolicyScreen} from './ReadPrivacyPolicyScreen'

@@ -15,8 +15,8 @@ import {StyleSheet, Text, View} from 'react-native'
 
 import {Button, Spacer, useModal} from '../../../../../components'
 import {useStakingInfo} from '../../../../../Dashboard/StakePoolInfos'
-import {useMetrics} from '../../../../../metrics/metricsManager'
-import {useUnsafeParams, useWalletNavigation} from '../../../../../navigation'
+import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
+import {useUnsafeParams, useWalletNavigation} from '../../../../../kernel/navigation'
 import {
   useCreateGovernanceTx,
   useStakingKey,

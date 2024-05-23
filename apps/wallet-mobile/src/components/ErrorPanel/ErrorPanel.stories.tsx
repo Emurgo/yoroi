@@ -3,8 +3,8 @@ import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Text} from 'react-native'
 
-import globalMessages from '../../i18n/global-messages'
-import {limitOfSecondaryAmountsPerTx} from '../../yoroi-wallets/contants'
+import {limitOfSecondaryAmountsPerTx} from '../../features/Send/common/constants'
+import globalMessages from '../../kernel/i18n/global-messages'
 import {ScreenBackground} from '../ScreenBackground'
 import {ErrorPanel} from './ErrorPanel'
 

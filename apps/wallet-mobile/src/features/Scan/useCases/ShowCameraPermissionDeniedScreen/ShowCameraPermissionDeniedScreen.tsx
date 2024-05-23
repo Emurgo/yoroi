@@ -4,7 +4,7 @@ import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer, Text} from '../../../../components'
-import {useBlockGoBack, useWalletNavigation} from '../../../../navigation'
+import {useBlockGoBack, useWalletNavigation} from '../../../../kernel/navigation'
 import {useStrings} from '../../common/useStrings'
 import {CameraPermissionDeniedIllustration} from '../../illustrations/CameraPermissionDeniedIlustration'
 import {OpenDeviceAppSettingsButton} from './OpenDeviceAppSettingsButton'

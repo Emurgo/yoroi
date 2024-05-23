@@ -4,7 +4,7 @@ import {ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, ProgressStep, Spacer} from '../components'
-import {confirmationMessages} from '../i18n/global-messages'
+import {confirmationMessages} from '../kernel/i18n/global-messages'
 import {Actions, Description, PinBox, Row, Title} from './components'
 import {useCountdown} from './hooks'
 

@@ -5,8 +5,8 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {ProgressStep, Spacer} from '../components'
 import {BACKSPACE, NumericKeyboard} from '../components/NumericKeyboard'
-import {showErrorDialog} from '../dialogs'
-import {errorMessages} from '../i18n/global-messages'
+import {showErrorDialog} from '../kernel/dialogs'
+import {errorMessages} from '../kernel/i18n/global-messages'
 import {Description, PinBox, Row, Title} from './components'
 
 const PIN_LENGTH = 4

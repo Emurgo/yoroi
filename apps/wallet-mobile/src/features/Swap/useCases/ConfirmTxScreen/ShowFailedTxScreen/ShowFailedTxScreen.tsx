@@ -3,7 +3,7 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {Button, Spacer, Text} from '../../../../../components'
-import {useBlockGoBack} from '../../../../../navigation'
+import {useBlockGoBack} from '../../../../../kernel/navigation'
 import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
 import {FailedTxImage} from './FailedTxImage'

@@ -29,7 +29,8 @@ import {AddressMode, WalletMeta} from '../../features/WalletManager/common/types
 import {parseWalletMeta} from '../../features/WalletManager/common/validators'
 import {WalletManager} from '../../features/WalletManager/common/walletManager'
 import {useWalletManager} from '../../features/WalletManager/context/WalletManagerContext'
-import {CONFIG} from '../../legacy/config'
+import {isDev, isNightly} from '../../kernel/env'
+import {logger} from '../../kernel/logger/logger'
 import {getSpendingKey, getStakingKey} from '../cardano/addressInfo/addressInfo'
 import {generateShelleyPlateFromKey} from '../cardano/shelley/plate'
 import {WalletEvent, YoroiWallet} from '../cardano/types'
@@ -48,8 +49,8 @@ import {Amounts, Quantities, Utxos} from '../utils/utils'
 const crashReportsStorageKey = 'sendCrashReports'
 
 export const getCrashReportsEnabled = async (storage: AsyncStorageStatic = AsyncStorage) => {
+  if (isNightly || isDev) return true
   const data = await storage.getItem(crashReportsStorageKey)
-  if (CONFIG.FORCE_CRASH_REPORTS) return true
   return parseBoolean(data) ?? false
 }
 
@@ -68,7 +69,14 @@ export const useCrashReportsEnabled = (storage: AsyncStorageStatic = AsyncStorag
 export const useSetCrashReportsEnabled = (storage: AsyncStorageStatic = AsyncStorage) => {
   const mutation = useMutationWithInvalidations<void, Error, boolean>({
     useErrorBoundary: true,
-    mutationFn: (enabled) => storage.setItem(crashReportsStorageKey, JSON.stringify(enabled)),
+    mutationFn: async (enabled) => {
+      if (enabled) {
+        logger.enable()
+      } else {
+        logger.disable()
+      }
+      return storage.setItem(crashReportsStorageKey, JSON.stringify(enabled))
+    },
     invalidateQueries: [[crashReportsStorageKey]],
   })
 

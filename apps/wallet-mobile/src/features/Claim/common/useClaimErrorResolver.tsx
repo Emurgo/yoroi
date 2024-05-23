@@ -1,4 +1,4 @@
-import {useApiErrorResolver} from '../../../api/useApiErrorResolver'
+import {useApiErrorResolver} from '../../../kernel/api/useApiErrorResolver'
 import {
   ClaimApiErrorsAlreadyClaimed,
   ClaimApiErrorsExpired,

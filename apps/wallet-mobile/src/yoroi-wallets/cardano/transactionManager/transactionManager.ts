@@ -7,7 +7,7 @@ import {fromPairs, mapValues, max} from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 import {defaultMemoize} from 'reselect'
 
-import {Logger} from '../../logging'
+import {logger} from '../../../kernel/logger/logger'
 import {
   BackendConfig,
   CERTIFICATE_KIND,
@@ -219,17 +219,26 @@ export async function syncTxs({
             )
             return newTxs
           } else {
-            Logger.error(`API returned an unexpected error response`)
+            logger.error(`API returned an unexpected error response`, {
+              type: 'http',
+              error: e,
+            })
           }
           break
 
         // UNKNOWN
         default:
-          Logger.error(`API returned an unknown error response: ${e}`)
+          logger.error(`API returned an unknown error response`, {
+            type: 'http',
+            error: e,
+          })
           return
       }
     }
-    Logger.error(`Unknown error: ${e}`)
+    logger.error(`Unknown error`, {
+      type: 'http',
+      error: e,
+    })
     return
   }
 }
@@ -495,7 +504,7 @@ export const makeTxManagerStorage = (storage: App.Storage): TxManagerStorage => 
 
     return tuples.reduce((result: TransactionManagerState['transactions'], [txid, tx]) => {
       if (!tx) {
-        Logger.warn('corrupted transaction', {txid})
+        logger.warn('makeTxManagerStorage: corrupted transaction', {txid})
         return result
       }
 

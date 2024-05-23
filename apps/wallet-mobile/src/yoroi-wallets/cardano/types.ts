@@ -13,8 +13,8 @@ import {
 import {Api, App, Balance, Chain, Portfolio} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 
+import {WalletEncryptedStorage} from '../../kernel/storage/EncryptedStorage'
 import {HWDeviceInfo} from '../hw'
-import {WalletEncryptedStorage} from '../storage'
 import {
   AccountStates,
   NetworkId,

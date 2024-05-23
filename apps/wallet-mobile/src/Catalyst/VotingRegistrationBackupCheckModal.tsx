@@ -3,7 +3,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 
 import {Button, Checkbox, Spacer, Text} from '../components'
-import globalMessages, {confirmationMessages} from '../i18n/global-messages'
+import globalMessages, {confirmationMessages} from '../kernel/i18n/global-messages'
 import {Modal} from '../legacy/Modal'
 
 type Props = {

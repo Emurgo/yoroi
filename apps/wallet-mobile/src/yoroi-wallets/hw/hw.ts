@@ -1,8 +1,8 @@
 import {Permission, PermissionsAndroid, Platform} from 'react-native'
 import {useMutation, UseMutationOptions} from 'react-query'
 
-import {ledgerMessages} from '../../i18n/global-messages'
-import LocalizableError from '../../i18n/LocalizableError'
+import {ledgerMessages} from '../../kernel/i18n/global-messages'
+import LocalizableError from '../../kernel/i18n/LocalizableError'
 
 // this type is used by @ledgerhq/react-native-hid and it's not exposed
 // so we redefine it here

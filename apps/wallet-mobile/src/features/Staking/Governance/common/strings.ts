@@ -1,7 +1,7 @@
 import {ReactNode} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import globalMessages, {errorMessages, ledgerMessages, txLabels} from '../../../../i18n/global-messages'
+import globalMessages, {errorMessages, ledgerMessages, txLabels} from '../../../../kernel/i18n/global-messages'
 
 export const useStrings = () => {
   const intl = useIntl()

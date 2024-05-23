@@ -17,11 +17,12 @@ import {toChainSupportedNetwork} from '../../../features/WalletManager/common/he
 import {networkManager} from '../../../features/WalletManager/common/network-manager'
 import {WalletMeta} from '../../../features/WalletManager/common/types'
 import walletManager from '../../../features/WalletManager/common/walletManager'
-import LocalizableError from '../../../i18n/LocalizableError'
+import LocalizableError from '../../../kernel/i18n/LocalizableError'
+import {logger} from '../../../kernel/logger/logger'
+import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../../kernel/storage/EncryptedStorage'
+import {Keychain} from '../../../kernel/storage/Keychain'
 import {HWDeviceInfo} from '../../hw'
-import {Logger} from '../../logging'
 import {makeMemosManager, MemosManager} from '../../memos'
-import {Keychain, makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../storage'
 import {
   AccountStateResponse,
   BackendConfig,
@@ -769,7 +770,7 @@ export class ByronWallet implements YoroiWallet {
       })
     } catch (e) {
       if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError) throw e
-      Logger.error(`shelley::createUnsignedTx:: ${(e as Error).message}`, e)
+      logger.error(`ByronWallet: createUnsignedTx error creating tx`, {error: e, type: 'transaction'})
       throw new CardanoError((e as Error).message)
     }
   }
@@ -1100,8 +1101,6 @@ export class ByronWallet implements YoroiWallet {
 
       return yoroiSignedTx({unsignedTx, signedTx})
     }
-
-    Logger.info('CardanoWallet::signTxWithLedger: Ledger app version > 5, using CIP-36')
 
     const ledgerPayload = await Cardano.buildLedgerPayload(
       unsignedTx.unsignedTx,

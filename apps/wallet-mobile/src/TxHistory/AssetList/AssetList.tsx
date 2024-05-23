@@ -10,7 +10,7 @@ import {AmountItem, AmountItemProps} from '../../components/AmountItem/AmountIte
 import {Spacer} from '../../components/Spacer'
 import {usePrivacyMode} from '../../features/Settings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../../features/WalletManager/context/SelectedWalletContext'
-import {useMetrics} from '../../metrics/metricsManager'
+import {useMetrics} from '../../kernel/metrics/metricsManager'
 import {sortTokenInfos} from '../../utils'
 import {useBalances, useTokenInfos} from '../../yoroi-wallets/hooks'
 import {Amounts} from '../../yoroi-wallets/utils'

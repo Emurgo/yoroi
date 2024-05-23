@@ -4,7 +4,7 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {Button, Spacer, Text} from '../../../../../components'
-import {useBlockGoBack, useWalletNavigation} from '../../../../../navigation'
+import {useBlockGoBack, useWalletNavigation} from '../../../../../kernel/navigation'
 import {useLinksRequestRedirect} from '../../../../Links/common/useLinksRequestRedirect'
 import {useStrings} from '../../../common/strings'
 import {SubmittedTxImage} from './SubmittedTxImage'

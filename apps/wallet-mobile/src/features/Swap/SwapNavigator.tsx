@@ -5,7 +5,7 @@ import React from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {defaultMaterialTopTabNavigationOptions, SwapTabRoutes} from '../../navigation'
+import {defaultMaterialTopTabNavigationOptions, SwapTabRoutes} from '../../kernel/navigation'
 import {useBalance} from '../../yoroi-wallets/hooks'
 import {useSelectedWallet} from '../WalletManager/context/SelectedWalletContext'
 import {useStrings} from './common/strings'

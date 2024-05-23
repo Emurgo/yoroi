@@ -6,9 +6,9 @@ import {ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'r
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, KeyboardAvoidingView} from '../../../../../../../components'
-import {useLanguage} from '../../../../../../../i18n'
-import {NumberLocale} from '../../../../../../../i18n/languages'
-import {useMetrics} from '../../../../../../../metrics/metricsManager'
+import {useLanguage} from '../../../../../../../kernel/i18n'
+import {NumberLocale} from '../../../../../../../kernel/i18n/languages'
+import {useMetrics} from '../../../../../../../kernel/metrics/metricsManager'
 import {Quantities} from '../../../../../../../yoroi-wallets/utils'
 import {useNavigateTo} from '../../../../../common/navigation'
 import {useStrings} from '../../../../../common/strings'

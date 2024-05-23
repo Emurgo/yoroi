@@ -19,9 +19,14 @@ import {SetupWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
 import {GovernanceNavigator} from './features/Staking/Governance'
 import {ToggleAnalyticsSettingsNavigator} from './features/ToggleAnalyticsSettings'
 import {SelectWalletFromList} from './features/WalletManager/useCases/SelectWalletFromListScreen/SelectWalletFromListScreen'
-import {CONFIG} from './legacy/config'
-import {useMetrics} from './metrics/metricsManager'
-import {defaultStackNavigationOptions, hideTabBarForRoutes, WalletStackRoutes, WalletTabRoutes} from './navigation'
+import {dappExplorerEnabled} from './kernel/config'
+import {useMetrics} from './kernel/metrics/metricsManager'
+import {
+  defaultStackNavigationOptions,
+  hideTabBarForRoutes,
+  WalletStackRoutes,
+  WalletTabRoutes,
+} from './kernel/navigation'
 import {NftsNavigator} from './Nfts/NftsNavigator'
 import {SearchProvider} from './Search/SearchContext'
 import {TxHistoryNavigator} from './TxHistory'
@@ -110,7 +115,7 @@ const WalletTabNavigator = () => {
           )}
         </Tab.Screen>
 
-        {CONFIG.DAPP_EXPLORER_ENABLED ? (
+        {dappExplorerEnabled ? (
           <Tab.Screen
             name="discover"
             options={({route}: {route: RouteProp<WalletTabRoutes, 'discover'>}) => ({

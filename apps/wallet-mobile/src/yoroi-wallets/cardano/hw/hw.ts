@@ -14,8 +14,9 @@ import TransportHID from '@emurgo/react-native-hid'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
 import {BleError} from 'react-native-ble-plx'
 
-import {ledgerMessages} from '../../../i18n/global-messages'
-import LocalizableError from '../../../i18n/LocalizableError'
+import {ledgerMessages} from '../../../kernel/i18n/global-messages'
+import LocalizableError from '../../../kernel/i18n/LocalizableError'
+import {logger} from '../../../kernel/logger/logger'
 import {
   AdaAppClosedError,
   DeviceId,
@@ -26,7 +27,6 @@ import {
   LedgerUserError,
   RejectedByUserError,
 } from '../../hw'
-import {Logger} from '../../logging'
 import {WalletImplementationId} from '../../types'
 import {NUMBERS} from '../numbers'
 import {isByron, isHaskellShelley} from '../utils'
@@ -104,7 +104,7 @@ const mapLedgerError = (e: Error | any): Error | LocalizableError => {
   } else if (e instanceof DeprecatedAdaAppError) {
     return e
   } else {
-    Logger.error('ledgerUtils::mapLedgerError: Unexpected error', e)
+    logger.error('mapLedgerError: Unexpected error', {e})
     return e
   }
 }
@@ -140,7 +140,7 @@ export const checkDeviceVersion = (versionResponse: GetVersionResponse): void =>
     versionResponse.version.minor == null ||
     versionResponse.version.patch == null
   ) {
-    Logger.warn('ledgerUtils::checkDeviceVersion: incomplete version data from device')
+    logger.warn('checkDeviceVersion: incomplete version data from device', {versionResponse})
     return
   }
 
@@ -152,7 +152,7 @@ export const checkDeviceVersion = (versionResponse: GetVersionResponse): void =>
   const minVersionArray = MIN_ADA_APP_VERSION.split('.')
 
   if (minVersionArray.length !== deviceVersionArray.length) {
-    Logger.warn('ledgerUtils::checkDeviceVersion: version formats mismatch')
+    logger.warn('checkDeviceVersion: version formats mismatch', {minVersionArray, deviceVersionArray})
     return
   }
 
@@ -196,7 +196,7 @@ const connectionHandler = async (
 
     const appAda = new AppAda(transport)
     const versionResp: GetVersionResponse = await appAda.getVersion()
-    Logger.debug('ledgerUtils::connectionHandler: AppAda version', versionResp)
+    logger.debug('connectionHandler: AppAda version', {versionResp})
     checkDeviceVersion(versionResp)
     return appAda
   } catch (e) {
@@ -275,7 +275,7 @@ export const doesCardanoAppVersionSupportCIP36 = (majorVersion: number) => {
 export const getCardanoAppMajorVersion = async (hwDeviceInfo: HWDeviceInfo, useUSB: boolean) => {
   const appAda = await connectionHandler(hwDeviceInfo.hwFeatures.deviceId, hwDeviceInfo.hwFeatures.deviceObj, useUSB)
   const {version} = await appAda.getVersion()
-  Logger.debug('ledgerUtils::getCardanoAppMajorVersion', version.major)
+  logger.debug('getCardanoAppMajorVersion: version', {version})
   return version.major
 }
 

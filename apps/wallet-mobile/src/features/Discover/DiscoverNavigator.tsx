@@ -5,7 +5,7 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 
 import {LoadingBoundary} from '../../components'
-import {defaultStackNavigationOptions, DiscoverRoutes} from '../../navigation'
+import {defaultStackNavigationOptions, DiscoverRoutes} from '../../kernel/navigation'
 import {useSelectedWallet} from '../WalletManager/context/SelectedWalletContext'
 import {BrowserNavigator} from './BrowserNavigator'
 import {BrowserProvider} from './common/BrowserProvider'

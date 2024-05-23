@@ -7,7 +7,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import {Spacer} from '../../../../../components'
-import {useMetrics} from '../../../../../metrics/metricsManager'
+import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils'
 import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
