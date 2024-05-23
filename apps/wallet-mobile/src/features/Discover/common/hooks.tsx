@@ -15,7 +15,7 @@ export const useConnectWalletToWebView = (wallet: YoroiWallet, webViewRef: React
 
   const sendMessageToWebView = (event: string) => (id: string, result: unknown, error?: Error) => {
     if (error) {
-      logger.debug('useConnectWalletToWebView: error sending to webview', {error, event})
+      logger.debug('useConnectWalletToWebView: sending error to webview', {error, event})
     } else {
       logger.debug('useConnectWalletToWebView: sending result to webview', {result, event})
     }
