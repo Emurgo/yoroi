@@ -2,8 +2,8 @@ import {EnrichmentPlugin, Event, PluginType} from '@amplitude/analytics-types'
 import {isKeyOf, parseBoolean} from '@yoroi/common'
 import {App} from '@yoroi/types'
 import * as React from 'react'
-import Config from 'react-native-config'
 
+import {buildVariant} from '../env'
 import {logger} from '../logger/logger'
 import {rootStorage} from '../storage/rootStorage'
 import {Ampli, ampli} from './ampli'
@@ -21,7 +21,7 @@ type BUILD_VARIANT_KEY = keyof typeof buildVariants
 const isBuildVariant = (variant?: string): variant is BUILD_VARIANT_KEY =>
   typeof variant === 'string' && isKeyOf(variant, buildVariants)
 
-const currentBuildVariant = isBuildVariant(Config?.BUILD_VARIANT) ? Config.BUILD_VARIANT : 'DEV'
+const currentBuildVariant = isBuildVariant(buildVariant) ? buildVariant : 'DEV'
 const environment: MetricsEnv = Object.keys(buildVariants).includes(currentBuildVariant)
   ? buildVariants[currentBuildVariant]
   : buildVariants.DEV
