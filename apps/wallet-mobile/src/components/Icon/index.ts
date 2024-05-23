@@ -1,5 +1,7 @@
 import {Ada} from './Ada'
 import {Analytics} from './Analytics'
+import {AngleDown} from './AngleDown'
+import {AngleUp} from './AngleUp'
 import {ArrowDown} from './ArrowDown'
 import {ArrowRight} from './ArrowRight'
 import {Assets} from './Assets'
@@ -53,6 +55,7 @@ import {Governance} from './Governance'
 import {HardwareWallet} from './HardwareWallet'
 import {Image} from './Image'
 import {Info} from './Info'
+import {InfoCircle} from './InfoCircle'
 import {Launchpad} from './Launchpad'
 import {Lightning} from './Lightning'
 import {Link} from './Link'
@@ -101,7 +104,7 @@ import {Support} from './Support'
 import {Swap} from './Swap'
 import {Switch} from './Switch'
 import {Table} from './Table'
-import { TabPortfolio } from './TabPortfolio'
+import {TabPortfolio} from './TabPortfolio'
 import {TabStaking} from './TabStaking'
 import {TabWallet} from './TabWallet'
 import {Telegram} from './Telegram'
@@ -127,9 +130,6 @@ import {YoroiNightly} from './YoroiNightly'
 import {YoroiWallet} from './YoroiWallet'
 
 export const Icon = {
-  InfoCircle,
-  AngleUp,
-  AngleDown,
   Ada,
   Exchange,
   Analytics,
@@ -257,4 +257,7 @@ export const Icon = {
   Connection,
   YoroiApp,
   TabPortfolio,
+  InfoCircle,
+  AngleUp,
+  AngleDown,
 }

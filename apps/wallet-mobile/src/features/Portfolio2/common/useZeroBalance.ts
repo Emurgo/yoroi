@@ -1,6 +1,6 @@
-import { useSelectedWallet } from '../../../features/WalletManager/context/SelectedWalletContext';
-import { useBalances } from '../../../yoroi-wallets/hooks';
-import { Amounts, Quantities } from '../../../yoroi-wallets/utils';
+import {useSelectedWallet} from '../../../features/WalletManager/context/SelectedWalletContext'
+import {useBalances} from '../../../yoroi-wallets/hooks'
+import {Amounts, Quantities} from '../../../yoroi-wallets/utils'
 
 export const useZeroBalance = () => {
   const wallet = useSelectedWallet()
@@ -9,4 +9,4 @@ export const useZeroBalance = () => {
   const hasZeroPt = Quantities.isZero(primaryAmount.quantity)
 
   return hasZeroPt
-};
+}

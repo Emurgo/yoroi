@@ -1,4 +1,4 @@
-import { useQuery, UseQueryOptions } from "react-query"
+import {useQuery, UseQueryOptions} from 'react-query'
 
 interface IPortfolioBalance {
   currentBalance: string
