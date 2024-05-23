@@ -28,7 +28,11 @@ export const PortfolioNavigator = () => {
         component={PortfolioTokenListNavigator}
       />
 
-      <Stack.Screen name="portfolio-token-details" component={PortfolioTokenDetailsScreen} />
+      <Stack.Screen
+        name="portfolio-token-details"
+        options={{title: strings.tokenDetail}}
+        component={PortfolioTokenDetailsScreen}
+      />
     </Stack.Navigator>
   )
 }
