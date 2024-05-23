@@ -127,6 +127,7 @@ import {YoroiNightly} from './YoroiNightly'
 import {YoroiWallet} from './YoroiWallet'
 
 export const Icon = {
+  InfoCircle,
   AngleUp,
   AngleDown,
   Ada,
