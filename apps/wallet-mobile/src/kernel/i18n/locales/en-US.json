@@ -1071,5 +1071,6 @@
   "portfolio.portfolioTokensListScreen.tokensAvailable": "{countTokens} token(s) available",
   "portfolio.portfolioTokensListScreen.searchTokens": "Search tokens",
   "portfolio.portfolioTokensListScreen.noTokensFound": "No tokens found",
-  "portfolio.portfolioTokensListScreen.totalDAppsValue": "Total Dapps value"
+  "portfolio.portfolioTokensListScreen.totalDAppsValue": "Total Dapps value",
+  "portfolio.portfolioTokensDetailScreen.tokenDetail": "Token details"
 }

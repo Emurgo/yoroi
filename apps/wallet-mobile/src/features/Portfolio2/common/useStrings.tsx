@@ -20,6 +20,7 @@ export const useStrings = () => {
     searchTokens: intl.formatMessage(messages.searchTokens),
     noTokensFound: intl.formatMessage(messages.noTokensFound),
     totalDAppValue: intl.formatMessage(messages.totalDAppValue),
+    tokenDetail: intl.formatMessage(messages.tokenDetail),
   }
 }
 
@@ -88,5 +89,9 @@ export const messages = defineMessages({
   totalDAppValue: {
     id: 'portfolio.portfolioTokensListScreen.totalDAppsValue',
     defaultMessage: '!!!Total dapps value',
+  },
+  tokenDetail: {
+    id: 'portfolio.portfolioTokensDetailScreen.tokenDetail',
+    defaultMessage: '!!!Token details',
   },
 })

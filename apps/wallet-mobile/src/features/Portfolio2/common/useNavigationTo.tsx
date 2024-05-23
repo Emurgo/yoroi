@@ -8,6 +8,7 @@ export const useNavigateTo = () => {
 
   return React.useRef({
     tokensList: () => navigation.navigate('portfolio-tokens-list'),
+    tokenDetail: (id: string) => navigation.navigate('portfolio-token-details', {id}),
     nftsList: () => navigation.navigate('nfts'),
   } as const).current
 }

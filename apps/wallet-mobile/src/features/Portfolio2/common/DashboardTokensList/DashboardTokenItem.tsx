@@ -1,9 +1,10 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {Image, ImageSourcePropType, StyleSheet, Text, View} from 'react-native'
+import {Image, ImageSourcePropType, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Spacer} from '../../../../components'
 import {PnlTag} from '../PnlTag/PnlTag'
+import {useNavigateTo} from '../useNavigationTo'
 import {DashboardTokenSkeletonItem} from './DashboardTokenSkeletonItem'
 
 type Props = {
@@ -16,35 +17,39 @@ type Props = {
 
 export const DashboardTokenItem = ({tokenInfo}: Props) => {
   const {styles} = useStyles()
+  const navigationTo = useNavigateTo()
+
   if (!tokenInfo) return <DashboardTokenSkeletonItem />
 
   return (
-    <View style={styles.root}>
-      <View style={styles.tokenInfoContainer}>
-        <Image
-          source={typeof tokenInfo.logo === 'string' ? {uri: tokenInfo.logo} : tokenInfo.logo}
-          style={styles.tokenLogo}
-        />
+    <TouchableOpacity onPress={() => navigationTo.tokenDetail(tokenInfo.name)}>
+      <View style={styles.root}>
+        <View style={styles.tokenInfoContainer}>
+          <Image
+            source={typeof tokenInfo.logo === 'string' ? {uri: tokenInfo.logo} : tokenInfo.logo}
+            style={styles.tokenLogo}
+          />
+
+          <View>
+            <Text style={styles.symbol}>{tokenInfo.symbol}</Text>
+
+            <Text style={styles.name}>{tokenInfo.name}</Text>
+          </View>
+        </View>
+
+        <Spacer height={16} />
 
         <View>
-          <Text style={styles.symbol}>{tokenInfo.symbol}</Text>
+          <PnlTag variant="success" withIcon>
+            <Text>0.03%</Text>
+          </PnlTag>
 
-          <Text style={styles.name}>{tokenInfo.name}</Text>
+          <Text style={styles.tokenValue}>2083,33</Text>
+
+          <Text style={styles.usdValue}>2083,33</Text>
         </View>
       </View>
-
-      <Spacer height={16} />
-
-      <View>
-        <PnlTag variant="success" withIcon>
-          <Text>0.03%</Text>
-        </PnlTag>
-
-        <Text style={styles.tokenValue}>2083,33</Text>
-
-        <Text style={styles.usdValue}>2083,33</Text>
-      </View>
-    </View>
+    </TouchableOpacity>
   )
 }
 
