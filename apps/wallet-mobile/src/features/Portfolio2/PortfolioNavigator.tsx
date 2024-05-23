@@ -15,14 +15,7 @@ export const PortfolioNavigator = () => {
   const strings = useStrings()
 
   return (
-    <Stack.Navigator
-      screenOptions={{
-        ...defaultStackNavigationOptions(atoms, color),
-        detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
-        gestureEnabled: true,
-      }}
-      initialRouteName="dashboard-portfolio"
-    >
+    <Stack.Navigator screenOptions={defaultStackNavigationOptions(atoms, color)}>
       <Stack.Screen
         name="dashboard-portfolio"
         component={PortfolioDashboardScreen}
@@ -31,8 +24,8 @@ export const PortfolioNavigator = () => {
 
       <Stack.Screen
         name="portfolio-tokens-list"
-        component={PortfolioTokenListNavigator}
         options={{title: strings.tokenList}}
+        component={PortfolioTokenListNavigator}
       />
 
       <Stack.Screen name="portfolio-token-details" component={PortfolioTokenDetailsScreen} />

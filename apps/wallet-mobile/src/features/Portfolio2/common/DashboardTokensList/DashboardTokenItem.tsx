@@ -4,9 +4,10 @@ import {Image, ImageSourcePropType, StyleSheet, Text, View} from 'react-native'
 
 import {Spacer} from '../../../../components'
 import {PnlTag} from '../PnlTag/PnlTag'
+import {DashboardTokenSkeletonItem} from './DashboardTokenSkeletonItem'
 
 type Props = {
-  tokenInfo: {
+  tokenInfo?: {
     logo: ImageSourcePropType | string
     symbol: string
     name: string
@@ -15,6 +16,7 @@ type Props = {
 
 export const DashboardTokenItem = ({tokenInfo}: Props) => {
   const {styles} = useStyles()
+  if (!tokenInfo) return <DashboardTokenSkeletonItem />
 
   return (
     <View style={styles.root}>
