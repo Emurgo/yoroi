@@ -16,8 +16,8 @@ if (Platform.OS === 'android') {
 }
 
 export const InitApp = () => {
-  const loaded = useInitApp()
-  if (!loaded) return null
+  const isLoaded = useInitApp()
+  if (!isLoaded) return null
 
   return <AppNavigator />
 }

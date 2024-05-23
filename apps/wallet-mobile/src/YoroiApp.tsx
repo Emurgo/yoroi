@@ -20,6 +20,7 @@ import {WalletManagerProvider} from './features/WalletManager/context/WalletMana
 import {InitApp} from './InitApp'
 import {disableLogbox} from './kernel/env'
 import {LanguageProvider} from './kernel/i18n'
+import {useSetupLogger} from './kernel/logger/hooks/useSetupLogger'
 import {makeMetricsManager, MetricsProvider} from './kernel/metrics/metricsManager'
 import {useMigrations} from './kernel/storage/migrations/useMigrations'
 import {rootStorage} from './kernel/storage/rootStorage'
@@ -31,15 +32,13 @@ enableFreeze(true)
 if (disableLogbox) LogBox.ignoreAllLogs()
 
 const queryClient = new QueryClient()
-
 const metricsManager = makeMetricsManager()
 
-export const YoroiApp = () => {
-  const migrated = useMigrations(rootStorage)
-
+const Yoroi = () => {
+  const isMigrated = useMigrations(rootStorage)
   const themeStorage = useThemeStorageMaker()
 
-  if (!migrated) return null
+  if (!isMigrated) return null
 
   return (
     <AsyncStorageProvider storage={rootStorage}>
@@ -51,21 +50,17 @@ export const YoroiApp = () => {
                 <LoadingBoundary style={StyleSheet.absoluteFill}>
                   <LanguageProvider>
                     <CurrencyProvider>
-                      <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-                        <RNP.Provider>
-                          <AuthProvider>
-                            <SelectedWalletMetaProvider>
-                              <SelectedWalletProvider>
-                                <LinksProvider>
-                                  <SetupWalletProvider>
-                                    <InitApp />
-                                  </SetupWalletProvider>
-                                </LinksProvider>
-                              </SelectedWalletProvider>
-                            </SelectedWalletMetaProvider>
-                          </AuthProvider>
-                        </RNP.Provider>
-                      </SafeAreaProvider>
+                      <AuthProvider>
+                        <SelectedWalletMetaProvider>
+                          <SelectedWalletProvider>
+                            <LinksProvider>
+                              <SetupWalletProvider>
+                                <InitApp />
+                              </SetupWalletProvider>
+                            </LinksProvider>
+                          </SelectedWalletProvider>
+                        </SelectedWalletMetaProvider>
+                      </AuthProvider>
                     </CurrencyProvider>
                   </LanguageProvider>
                 </LoadingBoundary>
@@ -75,5 +70,19 @@ export const YoroiApp = () => {
         </ErrorBoundary>
       </ThemeProvider>
     </AsyncStorageProvider>
+  )
+}
+
+export const YoroiApp = () => {
+  const isReady = useSetupLogger()
+
+  if (!isReady) return null
+
+  return (
+    <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+      <RNP.Provider>
+        <Yoroi />
+      </RNP.Provider>
+    </SafeAreaProvider>
   )
 }
