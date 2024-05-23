@@ -57,7 +57,7 @@ We may disclose Personal Data to third parties in the following circumstances:
 2.  To comply with legal obligations or enforceable governmental requests;
 
 3.  To protect our rights, privacy, safety, or property, as well as that of our users or the public; 
-    
+
 4.  In the event of a merger, acquisition, or sale of all or a portion of our assets, with appropriate notice and safeguards to protect your rights.
 
 

@@ -4,13 +4,13 @@
 
 This Privacy Policy ("Policy") governs the collection, use, and disclosure of personal data on Yoroi Wallet ("Software") in accordance with the General Data Protection Regulation (GDPR) and the California Consumer Privacy Act (CCPA). By using or accessing the Software, you agree to the practices outlined in this Policy.
 
-## 2. Definitions
+## 2. Definições
 
-"Personal Data" refers to any information that identifies or can be used to identify an individual, directly or indirectly.
+“Dados Pessoais” referem-se a qualquer informação que identifique ou possa ser usada para identificar um indivíduo, direta ou indiretamente.
 
-## 3. Collection of Personal Data
+## 3. Coletagem de Dados Pessoais
 
-3.1 We collect Personal Data from you when you voluntarily provide it to us through forms, registration, surveys, or other interactions on the Software.
+3.1 Coletamos seus Dados Pessoais quando você os fornece voluntariamente por meio de formulários, registros, pesquisas ou outras interações no Software.
 
 3.2 The types of Personal Data we may collect include, but are not limited to:
 
@@ -18,13 +18,13 @@ This Privacy Policy ("Policy") governs the collection, use, and disclosure of pe
 
   *   Name
 
-  *   IP address
+  *   Endereço IP
 
-  *   Email
+  *   Endereço eletrônico
 
-  *   Cookies and usage data
+  *   ‘Cookies’ e dados de uso
 
-  *   Any other information you provide to us voluntarily
+  *   Qualquer outra informação que você nos forneça voluntariamente
 
 
 - 3.3 We may also collect Personal Data automatically when you interact with the Software. This includes usage data, such as pages visited, links clicked, and other interactions with the Software.
@@ -57,7 +57,7 @@ We may disclose Personal Data to third parties in the following circumstances:
 2.  To comply with legal obligations or enforceable governmental requests;
 
 3.  To protect our rights, privacy, safety, or property, as well as that of our users or the public; 
-    
+
 4.  In the event of a merger, acquisition, or sale of all or a portion of our assets, with appropriate notice and safeguards to protect your rights.
 
 
