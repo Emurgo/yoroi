@@ -20,6 +20,7 @@ import {Clock} from './Clock'
 import {Close} from './Close'
 import {Coins} from './Coins'
 import {Collateral} from './Collateral'
+import {Connection} from './Connection'
 import {Copy} from './Copy'
 import {CopySuccess} from './CopySuccess'
 import {Cross} from './Cross'
@@ -120,6 +121,7 @@ import {Wallets} from './Wallets'
 import {WalletStack} from './WalletStack'
 import {Warning} from './Warning'
 import {WingRiders} from './WingRiders'
+import {YoroiApp} from './YoroiApp'
 import {YoroiNightly} from './YoroiNightly'
 import {YoroiWallet} from './YoroiWallet'
 
@@ -248,4 +250,6 @@ export const Icon = {
   Reload,
   Square,
   Google,
+  Connection,
+  YoroiApp,
 }

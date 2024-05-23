@@ -1050,5 +1050,11 @@
   "discover.discoverList.dAppActions": "DApp actions",
   "walletinit.theme.tryDarkTheme": "Try Yoroi dark theme",
   "walletinit.theme.description": "Press the theme switcher and dive into the new stylish theme crafted to enhance your Cardano wallet experience",
-  "walletinit.theme.chanageTheme": "You can always change your theme later in the App settings"
+  "walletinit.theme.chanageTheme": "You can always change your theme later in the App settings",
+  "discover.confirmConnectionModal.title": "Confirm connection",
+  "discover.confirmConnectionModal.connectTo": "Connect to",
+  "discover.confirmConnectionModal.connect": "Connect",
+  "discover.confirmConnectionModal.allowThisDAppTo": "Allow this DApp to:",
+  "discover.confirmConnectionModal.permission1": "View addresses, account balance, activity",
+  "discover.confirmConnectionModal.permission2": "Request approval for transactions"
 }

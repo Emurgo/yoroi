@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {PrivateKey} from '@emurgo/cross-csl-core'
+import * as CSL from '@emurgo/cross-csl-core'
 import {createSignedLedgerTxFromCbor, signRawTransaction} from '@emurgo/yoroi-lib'
 import {Datum} from '@emurgo/yoroi-lib/dist/internals/models'
 import {AppApi, CardanoApi} from '@yoroi/api'
@@ -7,6 +7,7 @@ import {isNonNullable, parseSafe} from '@yoroi/common'
 import {Api, App, Balance, Chain, Portfolio} from '@yoroi/types'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
+import {Buffer} from 'buffer'
 import _ from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 import {defaultMemoize} from 'reselect'
@@ -75,6 +76,7 @@ import {deriveRewardAddressHex, toRecipients} from '../utils'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
 import {utxosMaker} from '../utxoManager/utxos'
 import {makeKeys} from './makeKeys'
+
 type WalletState = {
   lastGeneratedAddressIndex: number
 }
@@ -481,13 +483,12 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
 
     // =================== utils =================== //
     // returns the address in bech32 (Shelley) or base58 (Byron) format
-    private getChangeAddress(): string {
+    getChangeAddress(): string {
       const candidateAddresses = this.internalChain.addresses
       const unseen = candidateAddresses.filter((addr) => !this.isUsedAddress(addr))
       assert(unseen.length > 0, 'Cannot find change address')
       const changeAddress = _.first(unseen)
       if (!changeAddress) throw new Error('invalid wallet state')
-
       return changeAddress
     }
 
@@ -512,7 +513,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       return stakingKey
     }
 
-    public async signRawTx(txHex: string, pKeys: PrivateKey[]) {
+    public async signRawTx(txHex: string, pKeys: CSL.PrivateKey[]) {
       return signRawTransaction(CardanoMobile, txHex, pKeys)
     }
 
@@ -1066,9 +1067,8 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       return this.cardanoApi.getProtocolParams()
     }
 
-    async submitTransaction(signedTx: string) {
-      const response: any = await legacyApi.submitTransaction(signedTx, BACKEND)
-      return response as any
+    async submitTransaction(base64SignedTx: string) {
+      await legacyApi.submitTransaction(base64SignedTx, BACKEND)
     }
 
     private async syncUtxos({isForced = false}: {isForced?: boolean} = {}) {
