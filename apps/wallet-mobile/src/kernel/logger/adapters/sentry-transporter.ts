@@ -5,13 +5,13 @@ import {LoggerTransporter} from '../types'
 import {Sentry} from './sentry'
 
 export const sentryAdapter = (sentryRuntime = Sentry) => {
-  const transporter: LoggerTransporter = ({level, message, metadata, timestamp, origin}) => {
+  const transporter: LoggerTransporter = ({level, message, metadata, timestamp}) => {
     const {type, ...meta} = metadata
     const formattedMetadata = toLoggerMetadata(meta)
 
     // simple message, add a breadcrumb
     if (typeof message === 'string') {
-      const formattedMessage = origin.length ? `${origin} ${message}` : message
+      const formattedMessage = metadata.origin?.length ? `${origin} ${message}` : message
       sentryRuntime.addBreadcrumb({
         message: formattedMessage,
         data: formattedMetadata,

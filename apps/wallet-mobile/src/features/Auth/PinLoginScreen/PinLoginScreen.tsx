@@ -6,6 +6,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {showErrorDialog} from '../../../kernel/dialogs'
 import {errorMessages} from '../../../kernel/i18n/global-messages'
+import {logger} from '../../../kernel/logger/logger'
 import {useAuth} from '../AuthProvider'
 import {PIN_LENGTH} from '../common/constants'
 import {useCheckPin} from '../common/hooks'
@@ -21,8 +22,10 @@ export const PinLoginScreen = () => {
   const {checkPin, isLoading} = useCheckPin({
     onSuccess: (isValid) => {
       if (isValid) {
+        logger.debug(`Auth: Logged in with PIN`)
         login()
       } else {
+        logger.error(`Auth: Incorrect PIN`)
         showErrorDialog(errorMessages.incorrectPin, intl)
         pinInputRef.current?.clear()
       }

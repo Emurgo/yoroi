@@ -33,6 +33,7 @@ import {FailedTxScreen} from './ManageCollateral/ConfirmTx/FailedTx/FailedTxScre
 import {SubmittedTxScreen} from './ManageCollateral/ConfirmTx/SubmittedTx/SubmittedTxScreen'
 import {PrivacyPolicyScreen} from './PrivacyPolicy'
 import {RemoveWalletScreen} from './RemoveWallet'
+import {SystemLogScreen} from './SystemLogScreen/SystemLogScreen'
 import {TermsOfServiceScreen} from './TermsOfService'
 import {WalletSettingsScreen} from './WalletSettings'
 
@@ -64,6 +65,12 @@ export const SettingsScreenNavigator = () => {
         />
 
         <Stack.Screen name="about" component={About} options={{title: strings.aboutTitle}} />
+
+        <Stack.Screen
+          name="settings-system-log"
+          component={SystemLogScreen}
+          options={{title: strings.systemLogTitle}}
+        />
 
         <Stack.Screen //
           name="main-settings"
@@ -305,30 +312,35 @@ const messages = defineMessages({
     id: 'global.collateral',
     defaultMessage: '!!!Collateral',
   },
+  systemLogTitle: {
+    id: 'global.log',
+    defaultMessage: '!!!Log',
+  },
 })
 
 const useStrings = () => {
   const intl = useIntl()
 
   return {
-    walletTabTitle: intl.formatMessage(messages.walletTabTitle),
+    aboutTitle: intl.formatMessage(messages.aboutTitle),
+    appSettingsTitle: intl.formatMessage(messages.appSettingsTitle),
     appTabTitle: intl.formatMessage(messages.appTabTitle),
     changeCustomPinTitle: intl.formatMessage(messages.changeCustomPinTitle),
     changePasswordTitle: intl.formatMessage(messages.changePasswordTitle),
-    removeWalletTitle: intl.formatMessage(messages.removeWalletTitle),
-    termsOfServiceTitle: intl.formatMessage(messages.termsOfServiceTitle),
     changeWalletNameTitle: intl.formatMessage(messages.changeWalletNameTitle),
-    supportTitle: intl.formatMessage(messages.supportTitle),
-    enableEasyConfirmationTitle: intl.formatMessage(messages.enableEasyConfirmationTitle),
-    disableEasyConfirmationTitle: intl.formatMessage(messages.disableEasyConfirmationTitle),
-    customPinTitle: intl.formatMessage(messages.customPinTitle),
-    settingsTitle: intl.formatMessage(messages.settingsTitle),
-    languageTitle: intl.formatMessage(messages.languageTitle),
-    themeTitle: intl.formatMessage(messages.themeTitle),
-    currency: intl.formatMessage(globalMessages.currency),
-    aboutTitle: intl.formatMessage(messages.aboutTitle),
-    appSettingsTitle: intl.formatMessage(messages.appSettingsTitle),
-    privacyPolicyTitle: intl.formatMessage(messages.privacyPolicyTitle),
     collateral: intl.formatMessage(messages.collateral),
+    currency: intl.formatMessage(globalMessages.currency),
+    customPinTitle: intl.formatMessage(messages.customPinTitle),
+    disableEasyConfirmationTitle: intl.formatMessage(messages.disableEasyConfirmationTitle),
+    enableEasyConfirmationTitle: intl.formatMessage(messages.enableEasyConfirmationTitle),
+    languageTitle: intl.formatMessage(messages.languageTitle),
+    systemLogTitle: intl.formatMessage(messages.systemLogTitle),
+    privacyPolicyTitle: intl.formatMessage(messages.privacyPolicyTitle),
+    removeWalletTitle: intl.formatMessage(messages.removeWalletTitle),
+    settingsTitle: intl.formatMessage(messages.settingsTitle),
+    supportTitle: intl.formatMessage(messages.supportTitle),
+    termsOfServiceTitle: intl.formatMessage(messages.termsOfServiceTitle),
+    themeTitle: intl.formatMessage(messages.themeTitle),
+    walletTabTitle: intl.formatMessage(messages.walletTabTitle),
   }
 }

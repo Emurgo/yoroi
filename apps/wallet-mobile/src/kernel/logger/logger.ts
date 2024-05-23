@@ -1,43 +1,62 @@
 import {freeze} from 'immer'
 
-import {LoggerLevel, LoggerManager, LoggerMetadata, LoggerTransporter, LoggerTransporterOptions} from './types'
+import {
+  LoggerEntry,
+  LoggerLevel,
+  LoggerManager,
+  LoggerMetadata,
+  LoggerTransporter,
+  LoggerTransporterOptions,
+} from './types'
 
-export class Logger implements LoggerManager {
-  #enabled = false
+class Logger implements LoggerManager {
+  static readonly trailLimit = 500
   static #instance: Logger
+
+  #enabled = false
+  #trail: Array<LoggerEntry> = []
 
   level = LoggerLevel.Info
 
   readonly #transporters: LoggerTransporter[] = []
 
-  static instance() {
-    if (!Logger.#instance) return new Logger()
+  static instance(): Logger {
+    if (!Logger.#instance) {
+      Logger.#instance = new Logger()
+    }
     return Logger.#instance
   }
 
   private constructor() {
-    if (Logger.#instance) return Logger.#instance
+    if (Logger.#instance) {
+      return Logger.#instance
+    }
     Logger.#instance = this
   }
 
-  debug(message: string, metadata: LoggerMetadata = {}, origin = '') {
-    this.transport({level: LoggerLevel.Debug, message, metadata, origin})
+  debug(message: string, metadata: LoggerMetadata = {}) {
+    const entry = {level: LoggerLevel.Debug, message, metadata}
+    this.transport(entry)
   }
 
-  log(message: string, metadata: LoggerMetadata = {}, origin = '') {
-    this.transport({level: LoggerLevel.Log, message, metadata, origin})
+  log(message: string, metadata: LoggerMetadata = {}) {
+    const entry = {level: LoggerLevel.Debug, message, metadata}
+    this.transport(entry)
   }
 
-  info(message: string, metadata: LoggerMetadata = {}, origin = '') {
-    this.transport({level: LoggerLevel.Info, message, metadata, origin})
+  info(message: string, metadata: LoggerMetadata = {}) {
+    const entry = {level: LoggerLevel.Debug, message, metadata}
+    this.transport(entry)
   }
 
-  warn(message: string, metadata: LoggerMetadata = {}, origin = '') {
-    this.transport({level: LoggerLevel.Warn, message, metadata, origin})
+  warn(message: string, metadata: LoggerMetadata = {}) {
+    const entry = {level: LoggerLevel.Debug, message, metadata}
+    this.transport(entry)
   }
 
-  error(error: Error | string, metadata: LoggerMetadata = {}, origin = '') {
-    this.transport({level: LoggerLevel.Error, message: error, metadata, origin})
+  error(error: Error | string, metadata: LoggerMetadata = {}) {
+    const entry = {level: LoggerLevel.Debug, message: error, metadata}
+    this.transport(entry)
   }
 
   addTransport(transport: LoggerTransporter) {
@@ -53,27 +72,30 @@ export class Logger implements LoggerManager {
     this.#enabled = true
   }
 
+  get trail() {
+    return this.#trail.slice(0)
+  }
+
   // NOTE: needs `@babel/plugin-transform-private-methods` to use as #transport
-  private transport({
-    level,
-    message,
-    metadata,
-    origin,
-  }: Pick<LoggerTransporterOptions, 'level' | 'message' | 'metadata' | 'origin'>) {
+  private transport({level, message, metadata}: Pick<LoggerTransporterOptions, 'level' | 'message' | 'metadata'>) {
     if (!this.#enabled) return
-    if (loggerHierarchy[this.level] <= loggerHierarchy[level]) return
+    if (loggerHierarchy[level] > loggerHierarchy[this.level]) return
 
     const timestamp = Date.now()
+    const entry = {level, message, metadata, timestamp}
 
-    for (const transport of this.#transporters) {
-      transport({
-        level,
-        message,
-        metadata,
-        timestamp,
-        origin,
-      })
+    this.trailTransporter(entry)
+    for (const transport of this.#transporters) transport(entry)
+  }
+
+  private trailTransporter(options: LoggerTransporterOptions) {
+    const newEntry: LoggerEntry = {
+      ...options,
+      message: options.message.toString(),
+      id: `${Math.random().toString(36).slice(2)}`,
     }
+    this.#trail.unshift(newEntry)
+    this.#trail = this.#trail.slice(0, Logger.trailLimit)
   }
 }
 

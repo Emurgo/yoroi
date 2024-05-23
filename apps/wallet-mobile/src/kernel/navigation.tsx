@@ -229,6 +229,7 @@ export type SettingsTabRoutes = {
 }
 
 export type SettingsStackRoutes = {
+  'settings-system-log': undefined
   about: undefined
   'app-settings': undefined
   'main-settings': undefined

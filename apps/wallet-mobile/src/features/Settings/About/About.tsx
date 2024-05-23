@@ -1,20 +1,21 @@
+import {useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, TextProps, View, ViewProps} from 'react-native'
-import DeviceInfo from 'react-native-device-info'
+import {Pressable, StyleSheet, TextProps, View, ViewProps} from 'react-native'
 
 import {Text} from '../../../components'
+import {appInfo} from '../../../kernel/appInfo'
 import {commit} from '../../../kernel/env'
+import {SettingsRouteNavigation} from '../../../kernel/navigation'
 import {getNetworkConfigById} from '../../../yoroi-wallets/cardano/networks'
 import {isHaskellShelley} from '../../../yoroi-wallets/cardano/utils'
 import {useSelectedWallet} from '../../WalletManager/context/SelectedWalletContext'
 
-const version = DeviceInfo.getVersion()
-
 export const About = () => {
   const strings = useStrings()
   const styles = useStyles()
+  const navigation = useNavigation<SettingsRouteNavigation>()
 
   const wallet = useSelectedWallet()
   const network = getNetworkConfigById(wallet.networkId).MARKETING_NAME
@@ -25,7 +26,9 @@ export const About = () => {
       <Row>
         <LabelText>{strings.currentVersion}</LabelText>
 
-        <ValueText>{version}</ValueText>
+        <Pressable onLongPress={() => navigation.navigate('settings-system-log')}>
+          <ValueText>{appInfo.version}</ValueText>
+        </Pressable>
       </Row>
 
       <Row>

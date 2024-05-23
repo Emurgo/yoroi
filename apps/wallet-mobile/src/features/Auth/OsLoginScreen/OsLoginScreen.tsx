@@ -6,6 +6,7 @@ import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../components'
+import {logger} from '../../../kernel/logger/logger'
 import {useAuth} from '../AuthProvider'
 import {useAuthWithOs} from '../common/hooks'
 import {Logo} from './Logo'
@@ -14,7 +15,13 @@ export const OsLoginScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
   const {login} = useAuth()
-  const {authWithOs, isLoading} = useAuthWithOs({onSuccess: login})
+
+  const handleOnLogin = React.useCallback(() => {
+    logger.debug(`Auth: Logged in with OS`)
+    login()
+  }, [login])
+
+  const {authWithOs, isLoading} = useAuthWithOs({onSuccess: handleOnLogin})
 
   return (
     <SafeAreaView edges={['bottom']} style={styles.root}>

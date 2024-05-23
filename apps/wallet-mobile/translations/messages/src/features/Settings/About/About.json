@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Current Version",
     "file": "src/features/Settings/About/About.tsx",
     "start": {
-      "line": 117,
+      "line": 120,
       "column": 18,
-      "index": 3022
+      "index": 3288
     },
     "end": {
-      "line": 120,
+      "line": 123,
       "column": 3,
-      "index": 3102
+      "index": 3368
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Commit",
     "file": "src/features/Settings/About/About.tsx",
     "start": {
-      "line": 121,
+      "line": 124,
       "column": 10,
-      "index": 3114
+      "index": 3380
     },
     "end": {
-      "line": 124,
+      "line": 127,
       "column": 3,
-      "index": 3177
+      "index": 3443
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Network",
     "file": "src/features/Settings/About/About.tsx",
     "start": {
-      "line": 125,
+      "line": 128,
       "column": 11,
-      "index": 3190
+      "index": 3456
     },
     "end": {
-      "line": 128,
+      "line": 131,
       "column": 3,
-      "index": 3255
+      "index": 3521
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Wallet type",
     "file": "src/features/Settings/About/About.tsx",
     "start": {
-      "line": 129,
+      "line": 132,
       "column": 14,
-      "index": 3271
+      "index": 3537
     },
     "end": {
-      "line": 132,
+      "line": 135,
       "column": 3,
-      "index": 3382
+      "index": 3648
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Byron-era wallet",
     "file": "src/features/Settings/About/About.tsx",
     "start": {
-      "line": 133,
+      "line": 136,
       "column": 15,
-      "index": 3399
+      "index": 3665
     },
     "end": {
-      "line": 136,
+      "line": 139,
       "column": 3,
-      "index": 3510
+      "index": 3776
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!Shelley-era wallet",
     "file": "src/features/Settings/About/About.tsx",
     "start": {
-      "line": 137,
+      "line": 140,
       "column": 17,
-      "index": 3529
+      "index": 3795
     },
     "end": {
-      "line": 140,
+      "line": 143,
       "column": 3,
-      "index": 3644
+      "index": 3910
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!Unknown Wallet Type",
     "file": "src/features/Settings/About/About.tsx",
     "start": {
-      "line": 141,
+      "line": 144,
       "column": 21,
-      "index": 3667
+      "index": 3933
     },
     "end": {
-      "line": 144,
+      "line": 147,
       "column": 3,
-      "index": 3787
+      "index": 4053
     }
   }
 ]

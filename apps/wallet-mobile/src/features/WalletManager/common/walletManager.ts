@@ -48,7 +48,9 @@ export class WalletManager {
   }
 
   static instance() {
-    if (!WalletManager.#instance) return new WalletManager()
+    if (!WalletManager.#instance) {
+      WalletManager.#instance = new WalletManager()
+    }
     return WalletManager.#instance
   }
 

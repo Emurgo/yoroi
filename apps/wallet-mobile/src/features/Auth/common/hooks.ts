@@ -7,6 +7,7 @@ import RNKeychain from 'react-native-keychain'
 import {useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
 import globalMessages from '../../../kernel/i18n/global-messages'
+import {logger} from '../../../kernel/logger/logger'
 import {WrongPassword} from '../../../yoroi-wallets/cardano/errors'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {decryptData, encryptData} from '../../../yoroi-wallets/encryption'
@@ -84,6 +85,7 @@ export const useAuthWithOs = (
     ...options,
     mutationFn: () => Keychain.authenticate(authenticationPrompt ?? defaultAuthenticationPrompt),
     onError: (error, variables, context) => {
+      logger.error('useAuthWithOs: Loging with OS has failed', {error})
       alert(error)
       options?.onError?.(error, variables, context)
     },
@@ -116,6 +118,7 @@ export const useAuthOsWithEasyConfirmation = (
     ...options,
     mutationFn: () => Keychain.getWalletKey(id, authenticationPrompt ?? defaultAuthenticationPrompt),
     onError: (error, variables, context) => {
+      logger.error('useAuthWithOs: Signing Tx with OS has failed', {error})
       alert(error)
       options?.onError?.(error, variables, context)
     },
@@ -201,6 +204,7 @@ export const useCheckPin = (options: UseMutationOptions<boolean, Error, string> 
       return decryptData(encryptedPinHash, pin)
         .then(() => true)
         .catch((error) => {
+          logger.error('useCheckPin: Checking pin has failed', {error})
           if (error instanceof WrongPassword) return false
           throw error
         })
