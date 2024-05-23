@@ -1065,8 +1065,11 @@
   "portfolio.portfolioDashboardScreen.buyADADescription": "Get started with Cardano's native currency, ADA. It's your key to unlocking a world of possibilities",
   "portfolio.portfolioDashboardScreen.tradeTokens": "Trade Tokens",
   "portfolio.portfolioDashboardScreen.nfts": "NFTs ({countNfts})",
-  "portfolio.PortfolioTokensListScreen.tokenList": "Token list",
-  "portfolio.PortfolioTokensListScreen.walletToken": "Wallet token",
-  "portfolio.PortfolioTokensListScreen.dappsToken": "DApps token",
-  "portfolio.PortfolioTokensListScreen.tokensAvailable": "{countTokens} token(s) available"
+  "portfolio.portfolioTokensListScreen.tokenList": "Token list",
+  "portfolio.portfolioTokensListScreen.walletToken": "Wallet token",
+  "portfolio.portfolioTokensListScreen.dappsToken": "DApps token",
+  "portfolio.portfolioTokensListScreen.tokensAvailable": "{countTokens} token(s) available",
+  "portfolio.portfolioTokensListScreen.searchTokens": "Search tokens",
+  "portfolio.portfolioTokensListScreen.noTokensFound": "No tokens found",
+  "portfolio.portfolioTokensListScreen.totalDAppsValue": "Total Dapps value"
 }

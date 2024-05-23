@@ -1,6 +1,6 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {FlatList, ListRenderItem, StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
+import {FlatList, StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
 import {Icon, Spacer} from '../../../../components'
 import {makeList} from '../../../../utils'
@@ -10,16 +10,7 @@ import {useNavigateTo} from '../useNavigationTo'
 import {useStrings} from '../useStrings'
 import {useZeroBalance} from '../useZeroBalance'
 import {DashboardTokenItem} from './DashboardTokenItem'
-import {DashboardTokenSkeletonItem} from './DashboardTokenSkeletonItem'
 import {TradeTokensBanner} from './TradeTokensBanner'
-
-const makeSkeletonList = makeList(3).map(() => ({
-  logo: '',
-  symbol: 'skeleton',
-  name: '',
-  balance: '',
-  usdExchangeRate: 0,
-}))
 
 export const DashboardTokensList = () => {
   const {styles} = useStyles()
@@ -31,30 +22,43 @@ export const DashboardTokensList = () => {
 
   const isJustADA = tokensList.length === 1 && tokensList[0].symbol === 'ADA'
 
-  const listTokens = isLoading ? makeSkeletonList : tokensList
-
   const handleDirectTokensList = () => {
     navigationTo.tokensList()
   }
 
-  const renderTokenItem: ListRenderItem<IPortfolioBalance> = ({item, index}) => {
-    if (isLoading) return <DashboardTokenSkeletonItem key={index} />
-    return <DashboardTokenItem key={index} tokenInfo={{logo: item.logo, symbol: item.symbol, name: item.name}} />
+  const renderTokenItem = (item: IPortfolioBalance | undefined, index: number) => {
+    return (
+      <DashboardTokenItem
+        key={item?.symbol ?? index}
+        tokenInfo={item ? {logo: item.logo, symbol: item.symbol, name: item.name} : undefined}
+      />
+    )
   }
 
-  const renderFooterList = () => (
-    <View style={styles.tradeTokensContainer}>
-      {isJustADA && (
-        <View style={styles.tradeTokensContainer}>
+  const renderFooterList = () => {
+    if (isLoading)
+      return (
+        <View style={styles.containerLoading}>
+          {makeList(3).map((_, index) => renderTokenItem(undefined, index))}
+
           <Spacer width={16} />
-
-          <TradeTokensBanner />
         </View>
-      )}
+      )
 
-      <Spacer width={16} />
-    </View>
-  )
+    return (
+      <View style={styles.tradeTokensContainer}>
+        {isJustADA && (
+          <View style={styles.tradeTokensContainer}>
+            <Spacer width={16} />
+
+            <TradeTokensBanner />
+          </View>
+        )}
+
+        <Spacer width={16} />
+      </View>
+    )
+  }
 
   return (
     <View style={styles.root}>
@@ -72,13 +76,13 @@ export const DashboardTokensList = () => {
 
       <FlatList
         horizontal
-        data={listTokens}
+        data={tokensList}
         ListHeaderComponent={<Spacer width={16} />}
         ListFooterComponent={renderFooterList()}
         ItemSeparatorComponent={() => <Spacer width={8} />}
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item) => item.symbol}
-        renderItem={renderTokenItem}
+        renderItem={({item, index}) => renderTokenItem(item, index)}
       />
     </View>
   )
@@ -111,6 +115,10 @@ const useStyles = () => {
     tradeTokensContainer: {
       ...atoms.flex_row,
       ...atoms.flex_1,
+    },
+    containerLoading: {
+      ...atoms.flex_row,
+      ...atoms.gap_sm,
     },
   })
 

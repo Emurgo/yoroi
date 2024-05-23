@@ -102,7 +102,6 @@ const WalletTabNavigator = () => {
         </Tab.Screen>
 
         <Tab.Screen
-          component={PortfolioNavigator}
           name="portfolio"
           options={({route}: {route: RouteProp<WalletTabRoutes, 'portfolio'>}) => ({
             tabBarIcon: ({focused}) => (
@@ -115,7 +114,13 @@ const WalletTabNavigator = () => {
               backgroundColor: colors.background,
             },
           })}
-        />
+        >
+          {() => (
+            <SearchProvider>
+              <PortfolioNavigator />
+            </SearchProvider>
+          )}
+        </Tab.Screen>
 
         <Tab.Screen
           name="nfts"

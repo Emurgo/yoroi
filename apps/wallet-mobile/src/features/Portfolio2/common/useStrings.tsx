@@ -17,6 +17,9 @@ export const useStrings = () => {
     walletToken: intl.formatMessage(messages.walletToken),
     dappsToken: intl.formatMessage(messages.dappsToken),
     tokensAvailable: (qty: number) => intl.formatMessage(messages.tokensAvailable, {countTokens: qty}),
+    searchTokens: intl.formatMessage(messages.searchTokens),
+    noTokensFound: intl.formatMessage(messages.noTokensFound),
+    totalDAppValue: intl.formatMessage(messages.totalDAppValue),
   }
 }
 
@@ -59,19 +62,31 @@ export const messages = defineMessages({
     defaultMessage: '!!!NFTs ({countNfts})',
   },
   tokenList: {
-    id: 'portfolio.PortfolioTokensListScreen.tokenList',
+    id: 'portfolio.portfolioTokensListScreen.tokenList',
     defaultMessage: '!!!Token list',
   },
   walletToken: {
-    id: 'portfolio.PortfolioTokensListScreen.walletToken',
+    id: 'portfolio.portfolioTokensListScreen.walletToken',
     defaultMessage: '!!!Wallet token',
   },
   dappsToken: {
-    id: 'portfolio.PortfolioTokensListScreen.dappsToken',
+    id: 'portfolio.portfolioTokensListScreen.dappsToken',
     defaultMessage: '!!!DApps token',
   },
   tokensAvailable: {
-    id: 'portfolio.PortfolioTokensListScreen.tokensAvailable',
+    id: 'portfolio.portfolioTokensListScreen.tokensAvailable',
     defaultMessage: '!!!{countTokens} token(s) available',
+  },
+  searchTokens: {
+    id: 'portfolio.portfolioTokensListScreen.searchTokens',
+    defaultMessage: '!!!Search tokens',
+  },
+  noTokensFound: {
+    id: 'portfolio.portfolioTokensListScreen.noTokensFound',
+    defaultMessage: '!!!No tokens found',
+  },
+  totalDAppValue: {
+    id: 'portfolio.portfolioTokensListScreen.totalDAppsValue',
+    defaultMessage: '!!!Total dapps value',
   },
 })

@@ -4,7 +4,7 @@ import {ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Spacer} from '../../../../components'
-import {ADABalanceCard} from '../../common/ADABalanceCard/ADABalanceCard'
+import {BalanceCard} from '../../common/BalanceCard/BalanceCard'
 import {DashboardNFTsList} from '../../common/DashboardNFTsList/DashboardNFTsList'
 import {DashboardTokensList} from '../../common/DashboardTokensList/DashboardTokensList'
 
@@ -14,7 +14,7 @@ export const PortfolioDashboardScreen = () => {
   return (
     <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
       <ScrollView style={styles.root}>
-        <ADABalanceCard />
+        <BalanceCard />
 
         <Spacer height={16} />
 

@@ -1,9 +1,9 @@
 import { useQuery, UseQueryOptions } from "react-query"
 
 interface IPortfolioBalance {
-  currentADABalance: string
-  oldADABalance: string
-  exchangeRate: number
+  currentBalance: string
+  oldBalance: string
+  usdExchangeRate: number
 }
 
 export const useGetPortfolioBalance = (
@@ -16,9 +16,9 @@ export const useGetPortfolioBalance = (
     queryFn: async () => {
       await new Promise((resolve) => setTimeout(resolve, 5000))
       return {
-        currentADABalance: '2416.66123',
-        oldADABalance: '2418.02123',
-        exchangeRate: 0.48,
+        currentBalance: '2416.66123',
+        oldBalance: '2418.02123',
+        usdExchangeRate: 0.48,
       }
     },
   })

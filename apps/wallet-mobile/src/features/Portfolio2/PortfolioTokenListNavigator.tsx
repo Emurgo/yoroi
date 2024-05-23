@@ -5,6 +5,7 @@ import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {defaultMaterialTopTabNavigationOptions, PortfolioTokenListTabRoutes} from '../../navigation'
+import {useSearchOnNavBar} from '../../Search/SearchContext'
 import {useStrings} from './common/useStrings'
 import {PortfolioDAppsTokenScreen} from './useCases/PortfolioTokensList/PortfolioDAppsTokenScreen'
 import {PortfolioWalletTokenScreen} from './useCases/PortfolioTokensList/PortfolioWalletTokenScreen'
@@ -13,6 +14,12 @@ const Tab = createMaterialTopTabNavigator<PortfolioTokenListTabRoutes>()
 export const PortfolioTokenListNavigator = () => {
   const {styles, atoms, color} = useStyles()
   const strings = useStrings()
+
+  useSearchOnNavBar({
+    title: strings.tokenList,
+    placeholder: strings.searchTokens,
+  })
+
   const hasWithDAps = false
   const swipeEnabled = hasWithDAps
 
