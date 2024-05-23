@@ -6,7 +6,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {MediaDetails} from '../features/Portfolio/common/MediaDetails/MediaDetails'
 import {useMetrics} from '../kernel/metrics/metricsManager'
 import {defaultStackNavigationOptions, NftRoutes} from '../kernel/navigation'
-import {NftDetailsImage} from '../NftDetails/NftDetailsImage'
+import {NftDetailsImage} from './NftDetails/NftDetailsImage'
 import {Nfts} from './Nfts'
 
 const Stack = createStackNavigator<NftRoutes>()

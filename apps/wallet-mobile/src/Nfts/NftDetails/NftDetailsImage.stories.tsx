@@ -1,9 +1,9 @@
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {QueryProvider, RouteProvider} from '../../.storybook'
-import {SelectedWalletProvider} from '../features/WalletManager/context/SelectedWalletContext'
-import {mocks, nft} from '../yoroi-wallets/mocks'
+import {QueryProvider, RouteProvider} from '../../../.storybook'
+import {SelectedWalletProvider} from '../../features/WalletManager/context/SelectedWalletContext'
+import {mocks, nft} from '../../yoroi-wallets/mocks'
 import {NftDetailsImage} from './NftDetailsImage'
 
 storiesOf('NFT/Details Image', module)

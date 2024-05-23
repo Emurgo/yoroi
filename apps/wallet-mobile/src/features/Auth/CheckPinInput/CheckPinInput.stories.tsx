@@ -4,7 +4,7 @@ import {storiesOf} from '@storybook/react-native'
 import {AsyncStorageProvider} from '@yoroi/common'
 import React from 'react'
 
-import {rootStorage} from '../../../yoroi-wallets/storage/rootStorage'
+import {rootStorage} from '../../../kernel/storage/rootStorage'
 import {CheckPinInput} from './CheckPinInput'
 
 storiesOf('CheckPinInput', module).add('Default', () => (

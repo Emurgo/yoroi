@@ -21,10 +21,10 @@ import {WalletMeta} from '../../../features/WalletManager/common/types'
 import walletManager from '../../../features/WalletManager/common/walletManager'
 import LocalizableError from '../../../kernel/i18n/LocalizableError'
 import {logger} from '../../../kernel/logger/logger'
+import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../../kernel/storage/EncryptedStorage'
+import {Keychain} from '../../../kernel/storage/Keychain'
 import {HWDeviceInfo} from '../../hw'
 import {makeMemosManager, MemosManager} from '../../memos'
-import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../storage'
-import {Keychain} from '../../storage/Keychain'
 import type {
   AccountStateResponse,
   CurrencySymbol,

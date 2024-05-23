@@ -4,8 +4,8 @@ import {App} from '@yoroi/types'
 import * as React from 'react'
 import Config from 'react-native-config'
 
-import {rootStorage} from '../../yoroi-wallets/storage/rootStorage'
 import {logger} from '../logger/logger'
+import {rootStorage} from '../storage/rootStorage'
 import {Ampli, ampli} from './ampli'
 import {mockMetricsManager} from './mocks'
 

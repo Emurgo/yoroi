@@ -32,13 +32,13 @@ describe('storageVersion', () => {
     expect(result).toBe(version)
   })
 
-  it('should return 0 if storage version is not a number', async () => {
+  it('should return current if storage version is not initialized', async () => {
     const version = 'invalid'
     jest.spyOn(storage, 'getItem').mockResolvedValueOnce(version)
-    const {read} = storageVersionMaker(storage)
+    const {read, current} = storageVersionMaker(storage)
     const result = await read()
     expect(storage.getItem).toHaveBeenCalledWith('storageVersion')
-    expect(result).toBe(0)
+    expect(result).toBe(current)
   })
 
   it('should throw an error if saving storage version constant is lt provided version', async () => {

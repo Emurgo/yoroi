@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Authorize",
     "file": "src/features/Auth/common/hooks.ts",
     "start": {
-      "line": 260,
+      "line": 261,
       "column": 13,
-      "index": 8944
+      "index": 9001
     },
     "end": {
-      "line": 263,
+      "line": 264,
       "column": 3,
-      "index": 9051
+      "index": 9108
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Too many attempts",
     "file": "src/features/Auth/common/hooks.ts",
     "start": {
-      "line": 264,
+      "line": 265,
       "column": 19,
-      "index": 9072
+      "index": 9129
     },
     "end": {
-      "line": 267,
+      "line": 268,
       "column": 3,
-      "index": 9183
+      "index": 9240
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Unknown error!",
     "file": "src/features/Auth/common/hooks.ts",
     "start": {
-      "line": 268,
+      "line": 269,
       "column": 16,
-      "index": 9201
+      "index": 9258
     },
     "end": {
-      "line": 271,
+      "line": 272,
       "column": 3,
-      "index": 9308
+      "index": 9365
     }
   }
 ]

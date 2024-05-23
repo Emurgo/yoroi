@@ -1,7 +1,12 @@
 import {parseBoolean} from '@yoroi/common'
 import {App} from '@yoroi/types'
 
-import {AUTH_WITH_OS, AUTH_WITH_PIN, disableAllEasyConfirmation, getAuthSetting} from '../features/Auth/common/hooks'
+import {
+  AUTH_WITH_OS,
+  AUTH_WITH_PIN,
+  disableAllEasyConfirmation,
+  getAuthSetting,
+} from '../../../features/Auth/common/hooks'
 
 export const migrateAuthSetting = async (storage: App.Storage) => {
   const authSetting = await getAuthSetting(storage)

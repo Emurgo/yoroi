@@ -7,9 +7,7 @@ import uuid from 'uuid'
 import {AppNavigator} from './AppNavigator'
 import {useInitScreenShare} from './features/Settings/ScreenShare'
 import {walletManager} from './features/WalletManager/common/walletManager'
-import {useInitLogger} from './kernel/logger/hooks/useInitLogger'
-import {storageVersionMaker} from './migrations/storageVersion'
-import {useCrashReportsEnabled} from './yoroi-wallets/hooks'
+import {storageVersionMaker} from './kernel/storage/migrations/storageVersion'
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental != null) {
@@ -27,11 +25,8 @@ export const InitApp = () => {
 const useInitApp = () => {
   const [loaded, setLoaded] = React.useState(false)
   const storage = useAsyncStorage()
-  const crashReportsEnabled = useCrashReportsEnabled()
 
   const {initialised: screenShareInitialized} = useInitScreenShare()
-
-  useInitLogger({enabled: crashReportsEnabled})
 
   useEffect(() => {
     const load = async () => {
@@ -53,6 +48,7 @@ const initInstallationId = async (storage: App.Storage) => {
   await storage.setItem('appSettings/installationId', newInstallationId, () => newInstallationId) // LEGACY: installationId is not serialized
 
   // new installation set the storage version to the current version
+  // migrations happend before this, so when reading if empty returns current version
   await storageVersionMaker(storage).newInstallation()
 }
 

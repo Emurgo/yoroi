@@ -8,10 +8,11 @@ import {useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptio
 
 import globalMessages from '../../../kernel/i18n/global-messages'
 import {logger} from '../../../kernel/logger/logger'
+import {Keychain} from '../../../kernel/storage/Keychain'
+import {AuthenticationPrompt} from '../../../kernel/storage/KeychainStorage'
 import {WrongPassword} from '../../../yoroi-wallets/cardano/errors'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {decryptData, encryptData} from '../../../yoroi-wallets/encryption'
-import {AuthenticationPrompt, Keychain} from '../../../yoroi-wallets/storage'
 import {parseWalletMeta} from '../../WalletManager/common/validators'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerContext'
 

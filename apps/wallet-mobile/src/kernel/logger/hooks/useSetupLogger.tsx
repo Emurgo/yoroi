@@ -8,7 +8,7 @@ import {Sentry} from '../adapters/sentry'
 import {sentryAdapter} from '../adapters/sentry-transporter'
 import {logger} from '../logger'
 
-export const useInitLogger = (initialState: {enabled: boolean}) => {
+export const useSetupLogger = (initialState: {enabled: boolean}) => {
   const ref = React.useRef(initialState.enabled)
   ref.current = initialState.enabled
 

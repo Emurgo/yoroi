@@ -21,9 +21,9 @@ import {InitApp} from './InitApp'
 import {disableLogbox} from './kernel/env'
 import {LanguageProvider} from './kernel/i18n'
 import {makeMetricsManager, MetricsProvider} from './kernel/metrics/metricsManager'
-import {useMigrations} from './migrations/useMigrations'
+import {useMigrations} from './kernel/storage/migrations/useMigrations'
+import {rootStorage} from './kernel/storage/rootStorage'
 import {useThemeStorageMaker} from './yoroi-wallets/hooks'
-import {rootStorage} from './yoroi-wallets/storage/rootStorage'
 
 enableScreens(true)
 enableFreeze(true)

@@ -1,4 +1,4 @@
-import {rootStorage} from '../../storage/rootStorage'
+import {rootStorage} from '../../../kernel/storage/rootStorage'
 import {makeUtxoManagerStorage, makeUtxoStorage} from './utxoManager'
 
 describe('utxo manager storage', () => {
