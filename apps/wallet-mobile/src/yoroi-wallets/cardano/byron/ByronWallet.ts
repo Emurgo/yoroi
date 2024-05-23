@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {PrivateKey} from '@emurgo/cross-csl-core'
-import {signRawTransaction} from '@emurgo/yoroi-lib'
-import {Datum} from '@emurgo/yoroi-lib/dist/internals/models'
+import * as CSL from '@emurgo/cross-csl-core'
+import {Datum, signRawTransaction} from '@emurgo/yoroi-lib'
 import {AppApi, CardanoApi} from '@yoroi/api'
 import {isNonNullable, parseSafe} from '@yoroi/common'
 import {Api, App, Balance, Chain, Portfolio} from '@yoroi/types'
@@ -22,8 +21,7 @@ import LocalizableError from '../../../i18n/LocalizableError'
 import {HWDeviceInfo} from '../../hw'
 import {Logger} from '../../logging'
 import {makeMemosManager, MemosManager} from '../../memos'
-import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../storage'
-import {Keychain} from '../../storage/Keychain'
+import {Keychain, makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../storage'
 import {
   AccountStateResponse,
   BackendConfig,
@@ -46,9 +44,7 @@ import {
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../../types'
-import {asQuantity, isMainnetNetworkId, Quantities} from '../../utils'
-import {genTimeToSlot} from '../../utils/timeUtils'
-import {validatePassword} from '../../utils/validators'
+import {asQuantity, genTimeToSlot, isMainnetNetworkId, Quantities, validatePassword} from '../../utils'
 import {Cardano, CardanoMobile} from '../../wallets'
 import * as legacyApi from '../api'
 import {calcLockedDeposit} from '../assetUtils'
@@ -542,7 +538,7 @@ export class ByronWallet implements YoroiWallet {
   }
 
   // returns the address in bech32 (Shelley) or base58 (Byron) format
-  private getChangeAddress(): string {
+  getChangeAddress(): string {
     const candidateAddresses = this.internalChain.addresses
     const unseen = candidateAddresses.filter((addr) => !this.isUsedAddress(addr))
     assert(unseen.length > 0, 'Cannot find change address')
@@ -1232,7 +1228,7 @@ export class ByronWallet implements YoroiWallet {
     return legacyApi.getPoolInfo(request, this.getBackendConfig())
   }
 
-  public async signRawTx(txHex: string, pKeys: PrivateKey[]) {
+  public async signRawTx(txHex: string, pKeys: CSL.PrivateKey[]) {
     return signRawTransaction(CardanoMobile, txHex, pKeys)
   }
 

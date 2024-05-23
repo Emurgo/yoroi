@@ -56,7 +56,7 @@ export const filterUsedAddresses = async (addresses: Addresses, config: BackendC
   return copy.filter((addr) => used.includes(addr))
 }
 
-export const submitTransaction = async (signedTx: string, config: BackendConfig) => {
+export const submitTransaction = async (signedTx: string, config: BackendConfig): Promise<void> => {
   try {
     await fetchDefault('txs/signed', {signedTx}, config)
   } catch (e) {

@@ -1,6 +1,5 @@
 import {WalletChecksum as WalletChecksumType} from '@emurgo/cip4-js'
 import * as CoreTypes from '@emurgo/cross-csl-core'
-import {BaseAddress, PrivateKey} from '@emurgo/cross-csl-core'
 import {
   Addressing as AddressingType,
   CardanoAddressedUtxo as CardanoAddressedUtxoType,
@@ -83,6 +82,11 @@ export type SignedTxLegacy = {
   base64: string
 }
 
+export type Pagination = {
+  page: number
+  limit: number
+}
+
 export type YoroiWallet = {
   id: string
 
@@ -121,13 +125,13 @@ export type YoroiWallet = {
   // API
   api: App.Api
 
-  signRawTx(txHex: string, pKeys: PrivateKey[]): Promise<Uint8Array | undefined>
+  signRawTx(txHex: string, pKeys: CoreTypes.PrivateKey[]): Promise<Uint8Array | undefined>
 
   // Sending
   createUnsignedTx(entries: YoroiEntry[], metadata?: Array<CardanoTypes.TxMetadata>): Promise<YoroiUnsignedTx>
   signTxWithLedger(request: YoroiUnsignedTx, useUSB: boolean): Promise<YoroiSignedTx>
   signTx(signRequest: YoroiUnsignedTx, rootKey: string): Promise<YoroiSignedTx>
-  submitTransaction(signedTx: string): Promise<[]>
+  submitTransaction(signedTx: string): Promise<void>
 
   // Voting
   createVotingRegTx(
@@ -206,9 +210,11 @@ export type YoroiWallet = {
   checkServerStatus(): Promise<ServerStatus>
 
   // CIP36 Payment Address
-  getFirstPaymentAddress(): Promise<BaseAddress>
+  getFirstPaymentAddress(): Promise<CoreTypes.BaseAddress>
 
   getProtocolParams(): Promise<Api.Cardano.ProtocolParamsResult>
+
+  getChangeAddress(): string
 }
 
 export const isYoroiWallet = (wallet: unknown): wallet is YoroiWallet => {

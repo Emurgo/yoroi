@@ -1,4 +1,4 @@
-import {resolverHandleEvent} from './resolver'
+import {resolverHandleEvent, ResolverWallet} from './resolver'
 // @ts-ignore-next-line
 import {connectWallet} from './connector'
 import {DappConnection, Storage} from './adapters/async-storage'
@@ -17,12 +17,12 @@ export type DappConnectorManager = {
   ): Promise<void>
 }
 
-export const dappConnectorMaker = (storage: Storage, wallet: Wallet, api: Api): DappConnector => {
+export const dappConnectorMaker = (storage: Storage, wallet: ResolverWallet, api: Api): DappConnector => {
   return new DappConnector(storage, wallet, api)
 }
 
 export class DappConnector implements DappConnectorManager {
-  constructor(private storage: Storage, private wallet: Wallet, private api: Api) {}
+  constructor(private storage: Storage, private wallet: ResolverWallet, private api: Api) {}
 
   async getDAppList() {
     return this.api.getDApps()
@@ -51,7 +51,7 @@ export class DappConnector implements DappConnectorManager {
     trustedUrl: string,
     sendMessage: (id: string, result: unknown, error?: Error) => void,
   ) {
-    return await resolverHandleEvent(eventData, trustedUrl, this.wallet, sendMessage, this.storage)
+    return await resolverHandleEvent(eventData, trustedUrl, this.wallet, sendMessage, this.storage, supportedExtensions)
   }
 }
 
@@ -59,10 +59,4 @@ type SupportedExtension = {
   cip: number
 }
 
-const supportedExtensions: SupportedExtension[] = []
-
-type Wallet = {
-  id: string
-  networkId: number
-  confirmConnection: (dappOrigin: string) => Promise<boolean>
-}
+const supportedExtensions: SupportedExtension[] = [{cip: 30}]

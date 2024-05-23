@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native'
+import {NavigationProp, useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {Keyboard} from 'react-native'
 
@@ -10,7 +10,12 @@ type ModalState = {
   isLoading: boolean
 }
 type ModalActions = {
-  openModal: (title: ModalState['title'], content: ModalState['content'], height?: ModalState['height']) => void
+  openModal: (
+    title: ModalState['title'],
+    content: ModalState['content'],
+    height?: ModalState['height'],
+    onClose?: () => void,
+  ) => void
   closeModal: () => void
   startLoading: () => void
   stopLoading: () => void
@@ -35,18 +40,25 @@ export const ModalProvider = ({
 }) => {
   const [state, dispatch] = React.useReducer(modalReducer, {...defaultState, ...initialState})
   const navigation = useNavigation()
+  const onCloseRef = React.useRef<() => void>()
   const actions = React.useRef<ModalActions>({
     closeModal: () => {
-      const lastRouteName = navigation.getState().routes.slice(-1)[0].name
-      if (lastRouteName === 'modal') {
+      if (getLastRouteName(navigation) === 'modal') {
         dispatch({type: 'close'})
         navigation.goBack()
+        onCloseRef.current?.()
       }
     },
-    openModal: (title: ModalState['title'], content: ModalState['content'], height?: ModalState['height']) => {
+    openModal: (
+      title: ModalState['title'],
+      content: ModalState['content'],
+      height?: ModalState['height'],
+      onClose?: () => void,
+    ) => {
       Keyboard.dismiss()
       dispatch({type: 'open', title, content, height})
       navigation.navigate('modal')
+      onCloseRef.current = onClose
     },
     startLoading: () => dispatch({type: 'startLoading'}),
     stopLoading: () => dispatch({type: 'stopLoading'}),
@@ -96,3 +108,7 @@ const defaultState: ModalState = Object.freeze({
   isOpen: false,
   isLoading: false,
 })
+
+const getLastRouteName = (navigation: NavigationProp<ReactNavigation.RootParamList>) => {
+  return navigation.getState().routes.slice(-1)[0].name
+}
