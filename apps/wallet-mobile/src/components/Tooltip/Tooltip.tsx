@@ -156,27 +156,30 @@ const Tooltip = ({
     <>
       {visible && (
         <Portal>
-          <View
-            onLayout={handleOnLayout}
-            style={[
-              styles.tooltip,
-              {
-                ...getTooltipPosition(measurement as Measurement, children),
-                ...(measurement.measured ? styles.visible : styles.hidden),
-              },
-            ]}
-            testID="tooltip-container"
-          >
-            <Text
-              style={styles.content}
-              accessibilityLiveRegion="polite"
-              numberOfLines={numberOfLine}
-              selectable={false}
-              maxFontSizeMultiplier={titleMaxFontSizeMultiplier}
+          {/* Close it when touch on screen */}
+          <Pressable style={{...StyleSheet.absoluteFillObject}} onPress={() => setVisible(false)}>
+            <View
+              onLayout={handleOnLayout}
+              style={[
+                styles.tooltip,
+                {
+                  ...getTooltipPosition(measurement as Measurement, children),
+                  ...(measurement.measured ? styles.visible : styles.hidden),
+                },
+              ]}
+              testID="tooltip-container"
             >
-              {title}
-            </Text>
-          </View>
+              <Text
+                style={styles.content}
+                accessibilityLiveRegion="polite"
+                numberOfLines={numberOfLine}
+                selectable={false}
+                maxFontSizeMultiplier={titleMaxFontSizeMultiplier}
+              >
+                {title}
+              </Text>
+            </View>
+          </Pressable>
         </Portal>
       )}
 
@@ -204,6 +207,7 @@ const useStyles = () => {
       paddingHorizontal: 12,
       backgroundColor: color.gray_cmax,
       borderRadius: 4,
+      position: 'absolute',
     },
     visible: {
       opacity: 1,
