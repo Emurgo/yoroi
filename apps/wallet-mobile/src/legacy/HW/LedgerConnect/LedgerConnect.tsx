@@ -9,14 +9,14 @@ import type {IntlShape} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, Alert, FlatList, Image, RefreshControl, ScrollView, StyleSheet, View} from 'react-native'
 
+import bleImage from '../../../assets/img/bluetooth.png'
+import usbImage from '../../../assets/img/ledger-nano-usb.png'
 import {BulletPointItem, Button, Text} from '../../../components'
 import globalMessages, {confirmationMessages, ledgerMessages} from '../../../kernel/i18n/global-messages'
 import LocalizableError from '../../../kernel/i18n/LocalizableError'
 import {logger} from '../../../kernel/logger/logger'
 import {BluetoothDisabledError, DeviceId, DeviceObj, RejectedByUserError} from '../../../yoroi-wallets/hw'
-import {Device} from '../../../yoroi-wallets/types'
-import bleImage from '../../assets/img/bluetooth.png'
-import usbImage from '../../assets/img/ledger-nano-usb.png'
+import {Device} from '../../../yoroi-wallets/types/hw'
 import {DeviceItem} from './DeviceItem'
 
 type Props = {

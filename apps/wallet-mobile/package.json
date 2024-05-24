@@ -155,7 +155,6 @@
     "immer": "^10.0.2",
     "jsc-android": "241213.1.0",
     "lodash": "^4.17.21",
-    "p-limit": "^5.0.0",
     "react": "18.2.0",
     "react-error-boundary": "^3.1.4",
     "react-intl": "^6.6.2",
