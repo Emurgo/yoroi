@@ -3,7 +3,7 @@ import {Atoms, ThemedPalette, useTheme} from '@yoroi/theme'
 import React from 'react'
 
 import {SafeArea} from '../../../components/SafeArea'
-import {defaultStackNavigationOptions} from '../../../navigation'
+import {defaultStackNavigationOptions} from '../../../kernel/navigation'
 import {NavigationStack, useGovernanceManagerMaker, useStrings} from './common'
 import {ChangeVoteScreen, ConfirmTxScreen, FailedTxScreen, HomeScreen, SuccessTxScreen} from './useCases'
 

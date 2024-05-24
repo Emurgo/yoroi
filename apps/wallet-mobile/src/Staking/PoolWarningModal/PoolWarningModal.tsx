@@ -5,7 +5,7 @@ import {Image, ScrollView, StyleSheet, TextStyle, View} from 'react-native'
 
 import image from '../../assets/img/mnemonic_explanation.png'
 import {Button, Text} from '../../components'
-import {confirmationMessages} from '../../i18n/global-messages'
+import {confirmationMessages} from '../../kernel/i18n/global-messages'
 import {Modal} from '../../legacy/Modal'
 
 type Props = {

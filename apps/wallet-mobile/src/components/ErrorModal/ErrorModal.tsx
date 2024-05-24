@@ -4,7 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Image, LayoutAnimation, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import image from '../../assets/img/error.png'
-import globalMessages, {errorMessages} from '../../i18n/global-messages'
+import globalMessages, {errorMessages} from '../../kernel/i18n/global-messages'
 import {Modal} from '../../legacy/Modal'
 import {isEmptyString} from '../../utils/utils'
 import {Button} from '../Button'

@@ -5,7 +5,7 @@ import {StyleSheet, Switch, TextStyle, TouchableOpacity, useWindowDimensions, Vi
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {Button, Spacer, Text, YoroiLogo} from '../../components'
-import {useMetrics} from '../../metrics/metricsManager'
+import {useMetrics} from '../../kernel/metrics/metricsManager'
 import {AnalyticsImage} from './AnalyticsImage'
 
 type Props = {

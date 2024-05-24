@@ -1,0 +1,17 @@
+[
+  {
+    "id": "components.walletinit.walletdescription.slogan",
+    "defaultMessage": "!!!Your gateway to the financial world",
+    "file": "src/features/SetupWallet/legacy/WalletDescription.tsx",
+    "start": {
+      "line": 24,
+      "column": 10,
+      "index": 616
+    },
+    "end": {
+      "line": 27,
+      "column": 3,
+      "index": 741
+    }
+  }
+]

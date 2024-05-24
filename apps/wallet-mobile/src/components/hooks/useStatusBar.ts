@@ -2,8 +2,6 @@ import {ThemedPalette, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Platform, StatusBar, StatusBarStyle} from 'react-native'
 
-import {HexColor} from '../../theme/types'
-
 type StatusBarColor = {
   bgColorAndroid: HexColor
   statusBarStyle: StatusBarStyle
@@ -44,6 +42,7 @@ const getStatusBarStyleByRoute = ({
       }
     } else if (oldBlueRoutes.includes(currentRouteName)) {
       return {
+        // old blue, not present in the current theming
         bgColorAndroid: '#254BC9',
         statusBarStyle: 'light-content',
       }
@@ -111,3 +110,5 @@ const expandColor = (color: HexColor) => {
   }
   return color
 }
+
+type HexColor = `#${string}`

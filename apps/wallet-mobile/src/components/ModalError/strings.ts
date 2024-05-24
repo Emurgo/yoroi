@@ -1,6 +1,6 @@
 import {useIntl} from 'react-intl'
 
-import globalMessages, {ledgerMessages} from '../../i18n/global-messages'
+import globalMessages, {ledgerMessages} from '../../kernel/i18n/global-messages'
 
 export const useStrings = () => {
   const intl = useIntl()

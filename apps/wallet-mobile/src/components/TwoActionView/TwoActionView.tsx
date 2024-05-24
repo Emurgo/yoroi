@@ -2,8 +2,7 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View} from 'react-native'
 
-import {confirmationMessages} from '../../i18n/global-messages'
-import {spacing} from '../../theme'
+import {confirmationMessages} from '../../kernel/i18n/global-messages'
 import {Button} from '../Button'
 import {Text} from '../Text'
 
@@ -75,7 +74,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
-    marginBottom: spacing.paragraphBottomMargin,
+    marginBottom: 16,
   },
   titleText: {
     fontSize: 20,

@@ -4,7 +4,7 @@ import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import {CopyButton, Text} from '../../../../components'
-import {useMetrics} from '../../../../metrics/metricsManager'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {isEmptyString} from '../../../../utils/utils'
 import {useStrings} from '../useStrings'
 import {useLastDateAddressUsed} from './useLastDateAddressUsed'

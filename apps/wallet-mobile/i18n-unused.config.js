@@ -1,4 +1,4 @@
 module.exports = {
-  localesPath: 'src/i18n/locales/',
+  localesPath: 'src/kernel/i18n/locales/',
   srcPath: 'src'
 }

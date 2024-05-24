@@ -4,9 +4,8 @@ import {Alert, Platform, ScrollView, StyleSheet, View} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
 import {Button, Text} from '../../components'
-import globalMessages from '../../i18n/global-messages'
+import globalMessages from '../../kernel/i18n/global-messages'
 import {Modal} from '../../legacy/Modal'
-import {spacing} from '../../theme'
 import {HARDWARE_WALLETS, useLedgerPermissions} from '../../yoroi-wallets/hw'
 
 type Props = {
@@ -154,7 +153,7 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
   paragraph: {
-    marginBottom: spacing.paragraphBottomMargin,
+    marginBottom: 16,
     fontSize: 14,
     lineHeight: 22,
   },
@@ -170,10 +169,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
     lineHeight: 22,
     fontWeight: 'bold',
-    marginBottom: spacing.paragraphBottomMargin,
+    marginBottom: 16,
   },
   button: {
     marginHorizontal: 10,
-    marginBottom: spacing.paragraphBottomMargin,
+    marginBottom: 16,
   },
 })

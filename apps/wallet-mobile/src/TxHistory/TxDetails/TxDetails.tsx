@@ -14,7 +14,7 @@ import {Banner, Boundary, Button, CopyButton, FadeIn, Icon, Text} from '../../co
 import AddressModal from '../../features/Receive/common/AddressModal/AddressModal'
 import {usePrivacyMode} from '../../features/Settings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../../features/WalletManager/context/SelectedWalletContext'
-import globalMessages from '../../i18n/global-messages'
+import globalMessages from '../../kernel/i18n/global-messages'
 import {formatDateAndTime, formatTokenWithSymbol} from '../../legacy/format'
 import {isEmptyString} from '../../utils/utils'
 import {MultiToken} from '../../yoroi-wallets/cardano/MultiToken'

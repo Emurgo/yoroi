@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {PrivateKey} from '@emurgo/cross-csl-core'
+import * as CSL from '@emurgo/cross-csl-core'
 import {createSignedLedgerTxFromCbor, signRawTransaction} from '@emurgo/yoroi-lib'
 import {Datum} from '@emurgo/yoroi-lib/dist/internals/models'
 import {AppApi, CardanoApi} from '@yoroi/api'
@@ -7,6 +7,7 @@ import {isNonNullable, parseSafe} from '@yoroi/common'
 import {Api, App, Balance, Chain, Portfolio} from '@yoroi/types'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
+import {Buffer} from 'buffer'
 import _ from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 import {defaultMemoize} from 'reselect'
@@ -18,12 +19,12 @@ import {toChainSupportedNetwork} from '../../../features/WalletManager/common/he
 import {networkManager} from '../../../features/WalletManager/common/network-manager'
 import {WalletMeta} from '../../../features/WalletManager/common/types'
 import walletManager from '../../../features/WalletManager/common/walletManager'
-import LocalizableError from '../../../i18n/LocalizableError'
+import LocalizableError from '../../../kernel/i18n/LocalizableError'
+import {logger} from '../../../kernel/logger/logger'
+import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../../kernel/storage/EncryptedStorage'
+import {Keychain} from '../../../kernel/storage/Keychain'
 import {HWDeviceInfo} from '../../hw'
-import {Logger} from '../../logging'
 import {makeMemosManager, MemosManager} from '../../memos'
-import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../storage'
-import {Keychain} from '../../storage/Keychain'
 import type {
   AccountStateResponse,
   CurrencySymbol,
@@ -75,6 +76,7 @@ import {deriveRewardAddressHex, toRecipients} from '../utils'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
 import {utxosMaker} from '../utxoManager/utxos'
 import {makeKeys} from './makeKeys'
+
 type WalletState = {
   lastGeneratedAddressIndex: number
 }
@@ -481,13 +483,12 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
 
     // =================== utils =================== //
     // returns the address in bech32 (Shelley) or base58 (Byron) format
-    private getChangeAddress(): string {
+    getChangeAddress(): string {
       const candidateAddresses = this.internalChain.addresses
       const unseen = candidateAddresses.filter((addr) => !this.isUsedAddress(addr))
       assert(unseen.length > 0, 'Cannot find change address')
       const changeAddress = _.first(unseen)
       if (!changeAddress) throw new Error('invalid wallet state')
-
       return changeAddress
     }
 
@@ -512,7 +513,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       return stakingKey
     }
 
-    public async signRawTx(txHex: string, pKeys: PrivateKey[]) {
+    public async signRawTx(txHex: string, pKeys: CSL.PrivateKey[]) {
       return signRawTransaction(CardanoMobile, txHex, pKeys)
     }
 
@@ -1008,7 +1009,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       const appAdaVersion = await getCardanoAppMajorVersion(this.hwDeviceInfo, useUSB)
 
       if (!doesCardanoAppVersionSupportCIP36(appAdaVersion) && unsignedTx.voting.registration) {
-        Logger.info('CardanoWallet::signTxWithLedger: Ledger app version <= 5')
+        logger.info('ShelleyWallet: signTxWithLedger ledger app version <= 5, no CIP-36 support', {appAdaVersion})
         const ledgerPayload = await Cardano.buildVotingLedgerPayloadV5(
           unsignedTx.unsignedTx,
           CHAIN_NETWORK_ID,
@@ -1029,7 +1030,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         return yoroiSignedTx({unsignedTx, signedTx})
       }
 
-      Logger.info('CardanoWallet::signTxWithLedger: Ledger app version > 5, using CIP-36')
+      logger.info('ShelleyWallet: signTxWithLedger ledger app version > 5, using CIP-36', {appAdaVersion})
 
       const ledgerPayload = await Cardano.buildLedgerPayload(
         unsignedTx.unsignedTx,
@@ -1067,9 +1068,8 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       return this.cardanoApi.getProtocolParams()
     }
 
-    async submitTransaction(signedTx: string) {
-      const response: any = await legacyApi.submitTransaction(signedTx, BACKEND)
-      return response as any
+    async submitTransaction(base64SignedTx: string) {
+      await legacyApi.submitTransaction(base64SignedTx, BACKEND)
     }
 
     private async syncUtxos({isForced = false}: {isForced?: boolean} = {}) {

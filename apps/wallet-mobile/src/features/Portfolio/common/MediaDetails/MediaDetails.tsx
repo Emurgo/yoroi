@@ -10,8 +10,8 @@ import {Linking, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, useWind
 
 import {CopyButton, FadeIn, Spacer, Text} from '../../../../components'
 import {Tab, TabPanel, TabPanels, Tabs} from '../../../../components/Tabs'
-import {useMetrics} from '../../../../metrics/metricsManager'
-import {NftRoutes} from '../../../../navigation'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
+import {NftRoutes} from '../../../../kernel/navigation'
 import {useNavigateTo} from '../../../../Nfts/navigation'
 import {useSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerContext'

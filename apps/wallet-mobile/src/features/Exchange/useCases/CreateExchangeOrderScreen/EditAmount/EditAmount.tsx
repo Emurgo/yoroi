@@ -2,7 +2,7 @@ import {useExchange, useExchangeProvidersByOrderType} from '@yoroi/exchange'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
 
-import {useLanguage} from '../../../../../i18n'
+import {useLanguage} from '../../../../../kernel/i18n'
 import {useBalance, useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
 import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'

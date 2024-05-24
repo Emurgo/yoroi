@@ -7,8 +7,8 @@ import {ScrollView, StyleSheet, Text, TouchableOpacity, View, ViewProps} from 'r
 
 import {Button, KeyboardAvoidingView, Spacer, TextInput} from '../../../../../components'
 import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
-import {useLanguage} from '../../../../../i18n'
-import {Logger} from '../../../../../yoroi-wallets/logging'
+import {useLanguage} from '../../../../../kernel/i18n'
+import {logger} from '../../../../../kernel/logger/logger'
 import {editedFormatter, pastedFormatter} from '../../../../../yoroi-wallets/utils'
 import {usePortfolioBalances} from '../../../../Portfolio/common/hooks/usePortfolioBalances'
 import {usePortfolioPrimaryBreakdown} from '../../../../Portfolio/common/hooks/usePortfolioPrimaryBreakdown'
@@ -65,7 +65,7 @@ export const EditAmountScreen = () => {
         setInputValue(newInputValue)
         setQuantity(newQuantity)
       } catch (error) {
-        Logger.error('EditAmountScreen::onChangeQuantity', error)
+        logger.error('EditAmountScreen: handleOnChangeQuantity error parsing input', {error})
       }
     },
     [amount.info.decimals, numberLocale],

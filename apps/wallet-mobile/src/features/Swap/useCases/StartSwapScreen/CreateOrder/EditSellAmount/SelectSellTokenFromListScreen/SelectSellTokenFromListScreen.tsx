@@ -8,7 +8,7 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Spacer, Text} from '../../../../../../../components'
-import {useMetrics} from '../../../../../../../metrics/metricsManager'
+import {useMetrics} from '../../../../../../../kernel/metrics/metricsManager'
 import {useSearch, useSearchOnNavBar} from '../../../../../../../Search/SearchContext'
 import {usePortfolioBalances} from '../../../../../../Portfolio/common/hooks/usePortfolioBalances'
 import {TokenAmountItem} from '../../../../../../Portfolio/common/TokenAmountItem/TokenAmountItem'

@@ -24,9 +24,9 @@ import {
   useModal,
 } from '../../../../../components'
 import {LoadingOverlay} from '../../../../../components/LoadingOverlay'
-import {useLanguage} from '../../../../../i18n'
-import {useMetrics} from '../../../../../metrics/metricsManager'
-import {useWalletNavigation} from '../../../../../navigation'
+import {useLanguage} from '../../../../../kernel/i18n'
+import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
+import {useWalletNavigation} from '../../../../../kernel/navigation'
 import {useSearch} from '../../../../../Search/SearchContext'
 import {SubmitTxInsufficientCollateralError} from '../../../../../yoroi-wallets/cardano/api/errors'
 import {convertBech32ToHex, getTransactionSigners} from '../../../../../yoroi-wallets/cardano/common/signatureUtils'

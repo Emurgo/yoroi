@@ -47,7 +47,11 @@ export const convertBech32ToHex = async (bech32Address: string) => {
 
 export const harden = (num: number) => HARD_DERIVATION_START + num
 
-export const getRequiredSigners = async (tx: CSL_TYPES.Transaction, wallet: YoroiWallet): Promise<number[][]> => {
+export const getRequiredSigners = async (
+  tx: CSL_TYPES.Transaction,
+  wallet: YoroiWallet,
+  partial = true,
+): Promise<number[][]> => {
   const stakeVKHash = await wallet.getStakingKey().then((key) => key.hash())
   const body = await tx.body()
 
@@ -60,11 +64,11 @@ export const getRequiredSigners = async (tx: CSL_TYPES.Transaction, wallet: Yoro
     receiver: utxo.receiver,
     utxoId: utxo.utxo_id,
     assets: utxo.assets,
-    addressing: {path: getDerivationPathForAddress(utxo.receiver, wallet), startLevel},
+    addressing: {path: getDerivationPathForAddress(utxo.receiver, wallet, partial), startLevel},
   }))
 
   const getAddressAddressing = (bech32Address: string) => {
-    const path = getDerivationPathForAddress(bech32Address, wallet)
+    const path = getDerivationPathForAddress(bech32Address, wallet, partial)
     return {path, startLevel}
   }
   const signers = await getAllSigners(
@@ -74,6 +78,7 @@ export const getRequiredSigners = async (tx: CSL_TYPES.Transaction, wallet: Yoro
     stakeVKHash,
     getAddressAddressing,
     addressedUtxos,
+    partial,
   )
 
   return getUniquePaths(signers.map((s) => s.path))
@@ -87,13 +92,16 @@ const arePathsEqual = (path1: number[], path2: number[]) => {
   return path1.every((value, index) => value === path2[index]) && path1.length === path2.length
 }
 
-const getDerivationPathForAddress = (address: string, wallet: YoroiWallet) => {
+const getDerivationPathForAddress = (address: string, wallet: YoroiWallet, partial = false) => {
   const internalIndex = wallet.internalAddresses.indexOf(address)
   const externalIndex = wallet.externalAddresses.indexOf(address)
   const purpose = isHaskellShelley(wallet.walletImplementationId)
     ? NUMBERS.WALLET_TYPE_PURPOSE.CIP1852
     : NUMBERS.WALLET_TYPE_PURPOSE.BIP44
-  if (internalIndex === -1 && externalIndex === -1) throw new Error('Could not find matching address')
+  if (internalIndex === -1 && externalIndex === -1) {
+    if (!partial) throw new Error('Could not find matching address')
+    return [purpose, harden(1815), harden(0), 0, 0]
+  }
 
   const role = internalIndex > -1 ? 1 : 0
   const index = Math.max(internalIndex, externalIndex)
@@ -101,7 +109,7 @@ const getDerivationPathForAddress = (address: string, wallet: YoroiWallet) => {
   return [purpose, harden(1815), harden(0), role, index]
 }
 
-export const getTransactionSigners = async (cbor: string, wallet: YoroiWallet) => {
+export const getTransactionSigners = async (cbor: string, wallet: YoroiWallet, partial = true) => {
   const tx = await CardanoMobile.Transaction.fromHex(cbor)
-  return getRequiredSigners(tx, wallet)
+  return getRequiredSigners(tx, wallet, partial)
 }

@@ -3,7 +3,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {FlatList, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 
-import {useLanguage} from '../../i18n'
+import {useLanguage} from '../../kernel/i18n'
 import {useSearch, useSearchOnNavBar} from '../../Search/SearchContext'
 import {Icon} from '../Icon'
 import {Text} from '../Text'

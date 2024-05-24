@@ -5,7 +5,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import {Icon, Spacer} from '../../../../components'
-import {TxHistoryRouteNavigation} from '../../../../navigation'
+import {TxHistoryRouteNavigation} from '../../../../kernel/navigation'
 import {useStrings} from '../useStrings'
 
 type SmallBannerProps = {

@@ -5,7 +5,7 @@ import {Alert, AlertButton} from 'react-native'
 import {z} from 'zod'
 
 import {CameraCodeScanner, CameraCodeScannerMethods} from '../../../components/CameraCodeScanner/CameraCodeScanner'
-import {ScanRoutes, useParams} from '../../../navigation'
+import {ScanRoutes, useParams} from '../../../kernel/navigation'
 import * as feedback from '../../../utils/feedback'
 import {parseScanAction} from '../common/parsers'
 import {useNavigateTo} from '../common/useNavigateTo'

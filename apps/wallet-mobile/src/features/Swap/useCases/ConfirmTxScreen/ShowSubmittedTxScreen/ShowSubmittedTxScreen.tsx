@@ -7,7 +7,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {z} from 'zod'
 
 import {Button, Spacer, Text} from '../../../../../components'
-import {useBlockGoBack, useUnsafeParams, useWalletNavigation} from '../../../../../navigation'
+import {useBlockGoBack, useUnsafeParams, useWalletNavigation} from '../../../../../kernel/navigation'
 import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
 import {useStrings} from '../../../common/strings'
 import {SubmittedTxImage} from './SubmittedTxImage'

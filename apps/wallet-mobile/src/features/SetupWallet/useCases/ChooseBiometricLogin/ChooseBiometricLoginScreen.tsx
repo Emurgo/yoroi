@@ -9,9 +9,9 @@ import {useQuery, UseQueryOptions} from 'react-query'
 
 import {Button} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
-import {useWalletNavigation} from '../../../../navigation'
-import {useEnableAuthWithOs} from '../../../../yoroi-wallets/auth'
+import {useWalletNavigation} from '../../../../kernel/navigation'
 import * as HASKELL_SHELLEY from '../../../../yoroi-wallets/cardano/constants/mainnet/constants'
+import {useEnableAuthWithOs} from '../../../Auth/common/hooks'
 import {useStrings} from '../../common/useStrings'
 import {Biometric as BiometricIlustration} from '../../illustrations/Biometric'
 

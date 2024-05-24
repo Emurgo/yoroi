@@ -1,14 +1,12 @@
 /* eslint-env jest */
 /* This module sets up Jest */
 import 'react-native-gesture-handler/jestSetup'
-
 import fetch from 'node-fetch'
 
-import {Logger, LogLevel} from './src/legacy/logging'
-import * as YoroiLogging from './src/yoroi-wallets/logging'
+import {logger} from './src/kernel/logger/logger'
+logger.disable()
 
 global.fetch = fetch
-Logger.setLogLevel(LogLevel.Warn)
 
 jest.mock('react-native-device-info', () => ({getVersion: () => '1.5.1'}))
 jest.mock('react-native-randombytes', () => require('crypto').randomBytes)
@@ -60,5 +58,3 @@ jest.mock('react-native-localize', () => ({
   usesAutoTimeZone: () => true,
 }))
 
-Logger.setLogLevel(LogLevel.Nothing)
-YoroiLogging.Logger.setLogLevel(YoroiLogging.LogLevel.Nothing)
