@@ -6,21 +6,27 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Spacer} from '../../../../components'
 import {ScrollView} from '../../../../components/ScrollView/ScrollView'
+import {PortfolioTokenAction} from './PortfolioTokenAction'
 import {PortfolioTokenBalance} from './PortfolioTokenBalance/PortfolioTokenBalance'
 import {PortfolioTokenChart} from './PortfolioTokenChart/PortfolioTokenChart'
+import {PortfolioTokenInfo} from './PortfolioTokenInfo/PortfolioTokenInfo'
 
 export const PortfolioTokenDetailsScreen = () => {
   const {styles} = useStyles()
 
   return (
     <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
-      <ScrollView style={styles.container} bounces={false}>
+      <ScrollView nestedScrollEnabled={true} style={styles.container} bounces={false}>
         <PortfolioTokenBalance />
 
         <Spacer height={16} />
 
         <PortfolioTokenChart />
+
+        <PortfolioTokenInfo />
       </ScrollView>
+
+      <PortfolioTokenAction />
     </SafeAreaView>
   )
 }

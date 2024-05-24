@@ -1,21 +1,24 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {type ViewProps, StyleSheet, Text, View} from 'react-native'
 
 import {Icon} from '../../../../../src/components'
 
-interface Props extends React.ComponentPropsWithoutRef<'view'> {
+interface Props extends ViewProps {
   variant?: 'danger' | 'success'
   withIcon?: boolean
 }
 
-export const PnlTag = ({children, withIcon = false, variant}: Props) => {
+export const PnlTag = ({children, withIcon = false, variant, style, ...etc}: Props) => {
   const {styles} = useStyles()
 
   const icon = variant === 'danger' ? <Icon.AngleDown size={16} /> : <Icon.AngleUp size={16} />
 
   return (
-    <View style={[styles.pnlTagContainer, variant === 'success' ? styles.pnlSuccess : styles.pnlDanger]}>
+    <View
+      style={[styles.pnlTagContainer, variant === 'success' ? styles.pnlSuccess : styles.pnlDanger, style]}
+      {...etc}
+    >
       {withIcon && icon}
 
       <Text style={[styles.label, variant === 'success' ? styles.labelSuccess : styles.labelDanger]}>{children}</Text>

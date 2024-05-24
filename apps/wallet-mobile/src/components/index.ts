@@ -1,3 +1,4 @@
+export * from './Accordion'
 export * from './Analytics'
 export * from './Banner'
 export * from './Boundary'

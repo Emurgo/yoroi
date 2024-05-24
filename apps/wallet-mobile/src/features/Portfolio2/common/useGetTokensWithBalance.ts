@@ -20,7 +20,7 @@ export const useGetTokensWithBalance = (
     ...options,
     queryKey: ['useGetTokensWithBalance'],
     queryFn: async () => {
-      await new Promise((resolve) => setTimeout(resolve, 10000))
+      await new Promise((resolve) => setTimeout(resolve, 3000))
       return [
         {
           logo: AdaLogo,

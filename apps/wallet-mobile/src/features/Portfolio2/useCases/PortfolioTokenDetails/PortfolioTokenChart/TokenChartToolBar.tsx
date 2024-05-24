@@ -9,15 +9,21 @@ import {type TokenChartTimeInterval, TOKEN_CHART_TIME_INTERVAL} from '../../../c
 interface Props {
   timeInterval: TokenChartTimeInterval
   onChange: (timeInterval: TokenChartTimeInterval) => void
+  disabled?: boolean
 }
-export const TokenChartToolbar = ({timeInterval, onChange}: Props) => {
+export const TokenChartToolbar = ({timeInterval, disabled, onChange}: Props) => {
   const {styles} = useStyles()
+
+  const handleChange = (itv: TokenChartTimeInterval) => {
+    if (disabled) return
+    onChange(itv)
+  }
 
   return (
     <View style={styles.chartToolbar}>
       {Object.values(TOKEN_CHART_TIME_INTERVAL).map((itv) => (
         <TouchableOpacity
-          onPress={() => onChange(itv)}
+          onPress={() => handleChange(itv)}
           style={[itv === timeInterval ? styles.chartToolbarItemActive : {}, styles.chartToolbarItem]}
           key={itv}
         >

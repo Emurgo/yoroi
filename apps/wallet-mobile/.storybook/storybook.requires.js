@@ -50,11 +50,23 @@ if (parameters) {
 
 try {
   argsEnhancers.forEach((enhancer) => addArgsEnhancer(enhancer));
-} catch {}
+} catch { }
 
 const getStories = () => {
   return {
     "./.storybook/stories/Button/ExampleButton.stories.js": require("./stories/Button/ExampleButton.stories.js"),
+    "./src/auth/backgroundTimeout.stories.tsx": require("../src/auth/backgroundTimeout.stories.tsx"),
+    "./src/auth/ChangePinScreen/ChangePinScreen.stories.tsx": require("../src/auth/ChangePinScreen/ChangePinScreen.stories.tsx"),
+    "./src/auth/CheckPinInput/CheckPinInput.stories.tsx": require("../src/auth/CheckPinInput/CheckPinInput.stories.tsx"),
+    "./src/auth/CreatePinInput/CreatePinInput.stories.tsx": require("../src/auth/CreatePinInput/CreatePinInput.stories.tsx"),
+    "./src/auth/CreatePinScreen/CreatePinScreen.stories.tsx": require("../src/auth/CreatePinScreen/CreatePinScreen.stories.tsx"),
+    "./src/auth/OsAuthScreen/OsAuthScreen.stories.tsx": require("../src/auth/OsAuthScreen/OsAuthScreen.stories.tsx"),
+    "./src/auth/OsLoginScreen/OsLoginScreen.stories.tsx": require("../src/auth/OsLoginScreen/OsLoginScreen.stories.tsx"),
+    "./src/auth/PinInput/PinInput.stories.tsx": require("../src/auth/PinInput/PinInput.stories.tsx"),
+    "./src/auth/PinLoginScreen/PinLoginScreen.stories.tsx": require("../src/auth/PinLoginScreen/PinLoginScreen.stories.tsx"),
+    "./src/Catalyst/VotingBanner.stories.tsx": require("../src/Catalyst/VotingBanner.stories.tsx"),
+    "./src/Catalyst/VotingRegistration.stories.tsx": require("../src/Catalyst/VotingRegistration.stories.tsx"),
+    "./src/components/Accordion/Accordion.stories.tsx": require("../src/components/Accordion/Accordion.stories.tsx"),
     "./src/components/AmountItem/AmountItem.stories.tsx": require("../src/components/AmountItem/AmountItem.stories.tsx"),
     "./src/components/Analytics/Analytics.stories.tsx": require("../src/components/Analytics/Analytics.stories.tsx"),
     "./src/components/BlueCheckbox/BlueCheckbox.stories.tsx": require("../src/components/BlueCheckbox/BlueCheckbox.stories.tsx"),

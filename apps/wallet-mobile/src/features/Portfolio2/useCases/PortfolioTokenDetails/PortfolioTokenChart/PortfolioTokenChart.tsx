@@ -49,7 +49,7 @@ export const PortfolioTokenChart = () => {
         </>
       )}
 
-      <TokenChartToolbar timeInterval={timeInterval} onChange={setTimeInterval} />
+      <TokenChartToolbar disabled={isFetching} timeInterval={timeInterval} onChange={setTimeInterval} />
     </View>
   )
 }
