@@ -37,25 +37,8 @@ export const PortfolioWalletTokenScreen = () => {
   }, [isSearching, search, tokensData])
 
   const renderFooterList = () => {
-    if (tokensLoading)
-      return makeList(6).map((_, index) => (
-        <View key={index}>
-          <TokenBalanceItem />
-
-          <Spacer height={16} />
-        </View>
-      ))
-
-    if (getListTokens.length === 0)
-      return (
-        <View style={styles.containerAssetToken}>
-          <View style={styles.boxAssetToken}>
-            <AssetTokenImage />
-          </View>
-
-          <Text style={styles.textEmpty}>{strings.noTokensFound}</Text>
-        </View>
-      )
+    if (tokensLoading) return makeList(6).map((_, index) => <SkeletonItem key={index} />)
+    if (getListTokens.length === 0) return <EmptyList />
 
     return null
   }
@@ -94,6 +77,31 @@ export const PortfolioWalletTokenScreen = () => {
 const Line = () => {
   const {styles} = useStyles()
   return <View style={styles.line} />
+}
+
+const EmptyList = () => {
+  const strings = useStrings()
+  const {styles} = useStyles()
+
+  return (
+    <View style={styles.containerAssetToken}>
+      <View style={styles.boxAssetToken}>
+        <AssetTokenImage />
+      </View>
+
+      <Text style={styles.textEmpty}>{strings.noTokensFound}</Text>
+    </View>
+  )
+}
+
+const SkeletonItem = () => {
+  return (
+    <View>
+      <TokenBalanceItem />
+
+      <Spacer height={16} />
+    </View>
+  )
 }
 
 const useStyles = () => {

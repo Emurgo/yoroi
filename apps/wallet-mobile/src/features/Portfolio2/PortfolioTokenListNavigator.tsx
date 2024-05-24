@@ -1,58 +1,55 @@
-import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {defaultMaterialTopTabNavigationOptions, PortfolioTokenListTabRoutes} from '../../navigation'
+import {Tab, TabPanel, Tabs} from '../../components/Tabs'
 import {useSearchOnNavBar} from '../../Search/SearchContext'
 import {useStrings} from './common/useStrings'
 import {PortfolioDAppsTokenScreen} from './useCases/PortfolioTokensList/PortfolioDAppsTokenScreen'
 import {PortfolioWalletTokenScreen} from './useCases/PortfolioTokensList/PortfolioWalletTokenScreen'
 
-const Tab = createMaterialTopTabNavigator<PortfolioTokenListTabRoutes>()
 export const PortfolioTokenListNavigator = () => {
-  const {styles, atoms, color} = useStyles()
+  const {styles} = useStyles()
   const strings = useStrings()
+  const [activeTab, setActiveTab] = React.useState<'wallet' | 'dapps'>('wallet')
 
   useSearchOnNavBar({
     title: strings.tokenList,
     placeholder: strings.searchTokens,
   })
 
-  const hasWithDAps = false
-  const swipeEnabled = hasWithDAps
+  const hasWithDAps = true
 
   return (
     <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
-      <Tab.Navigator
-        screenOptions={{
-          ...defaultMaterialTopTabNavigationOptions(atoms, color),
-          swipeEnabled,
-        }}
-      >
-        <Tab.Screen
-          name="wallet-token"
-          component={PortfolioWalletTokenScreen}
-          options={{
-            title: strings.walletToken,
-            tabBarStyle: {
-              height: hasWithDAps ? 'auto' : 0,
-            },
-          }}
-        />
+      {hasWithDAps ? (
+        <Tabs>
+          <Tab
+            onPress={() => {
+              setActiveTab('wallet')
+            }}
+            label={strings.walletToken}
+            active={activeTab === 'wallet'}
+          />
 
-        <Tab.Screen
-          name="dapps-token"
-          component={PortfolioDAppsTokenScreen}
-          options={{
-            title: strings.dappsToken,
-            tabBarStyle: {
-              height: hasWithDAps ? 'auto' : 0,
-            },
-          }}
-        />
-      </Tab.Navigator>
+          <Tab
+            onPress={() => {
+              setActiveTab('dapps')
+            }}
+            label={strings.dappsToken}
+            active={activeTab === 'dapps'}
+          />
+        </Tabs>
+      ) : null}
+
+      <TabPanel active={activeTab === 'wallet'}>
+        <PortfolioWalletTokenScreen />
+      </TabPanel>
+
+      <TabPanel active={activeTab === 'dapps'}>
+        <PortfolioDAppsTokenScreen />
+      </TabPanel>
     </SafeAreaView>
   )
 }

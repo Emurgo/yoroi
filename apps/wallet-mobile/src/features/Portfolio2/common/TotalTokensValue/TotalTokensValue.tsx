@@ -30,6 +30,7 @@ export const TotalTokensValue = ({isLoading, balance, oldBalance, usdExchangeRat
           balance={balance}
           oldBalance={oldBalance}
           usdExchangeRate={usdExchangeRate}
+          cardType={cardType}
           headerCard={
             <View style={styles.rowBetween}>
               <View>
