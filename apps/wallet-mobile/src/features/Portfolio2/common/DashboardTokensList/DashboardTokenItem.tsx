@@ -22,7 +22,7 @@ export const DashboardTokenItem = ({tokenInfo}: Props) => {
   if (!tokenInfo) return <DashboardTokenSkeletonItem />
 
   return (
-    <TouchableOpacity onPress={() => navigationTo.tokenDetail(tokenInfo.name)}>
+    <TouchableOpacity onPress={() => navigationTo.tokenDetail({id: 'some_id', name: tokenInfo.symbol})}>
       <View style={styles.root}>
         <View style={styles.tokenInfoContainer}>
           <Image

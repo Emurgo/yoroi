@@ -6,19 +6,22 @@ import {StyleSheet, Text, View} from 'react-native'
 
 import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
 import {useGetPortfolioTokenInfo} from '../../../common/useGetPortfolioTokenInfo'
+import {usePortfolioTokenDetailParams} from '../../../common/useNavigationTo'
 import {PortfolioTokenDetailBalanceSkeleton} from './PortfolioTokenDetailBalanceSkeleton'
 
 export const PortfolioTokenBalance = () => {
   const {styles} = useStyles()
-  const {data, isFetching} = useGetPortfolioTokenInfo('ADA')
+  const {name: tokenName} = usePortfolioTokenDetailParams()
+
+  const {data, isFetching} = useGetPortfolioTokenInfo(tokenName)
 
   if (isFetching || !data) return <PortfolioTokenDetailBalanceSkeleton />
   return (
     <View>
       <View style={styles.tokenWrapper}>
-        <Text style={styles.tokenLabel}>{amountFormatter({dropTraillingZeros: true})(data.amount)}</Text>
+        <Text style={styles.tokenLabel}>{amountFormatter({dropTraillingZeros: true})(data.amount ?? 0)}</Text>
 
-        <Text style={styles.symbol}>ADA</Text>
+        <Text style={styles.symbol}>{tokenName}</Text>
       </View>
 
       <PairedBalance textStyle={styles.usdLabel} ignorePrivacy amount={data.amount} />

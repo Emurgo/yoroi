@@ -1,14 +1,31 @@
 import {NavigationProp, useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 
-import {Portfolio2Routes} from '../../../navigation'
+import {Portfolio2Routes, useParams} from '../../../navigation'
+import {isEmptyString} from '../../../utils'
 
 export const useNavigateTo = () => {
   const navigation = useNavigation<NavigationProp<Portfolio2Routes>>()
 
   return React.useRef({
     tokensList: () => navigation.navigate('portfolio-tokens-list'),
-    tokenDetail: (id: string) => navigation.navigate('portfolio-token-details', {id}),
+    tokenDetail: (params: PortfolioTokenDetailParams) =>
+      navigation.navigate('portfolio-token-details', {id: params.id, name: params.name}),
     nftsList: () => navigation.navigate('nfts'),
   } as const).current
+}
+
+export type PortfolioTokenDetailParams = Portfolio2Routes['portfolio-token-details']
+
+export const isPortfolioTokenDetailParams = (
+  params?: PortfolioTokenDetailParams | object | undefined,
+): params is PortfolioTokenDetailParams => {
+  const isValidId = !!params && 'id' in params && !isEmptyString(params.id)
+  const isValidName = !!params && 'name' in params && !isEmptyString(params.name)
+
+  return isValidId && isValidName
+}
+
+export const usePortfolioTokenDetailParams = () => {
+  return useParams<PortfolioTokenDetailParams>(isPortfolioTokenDetailParams)
 }
