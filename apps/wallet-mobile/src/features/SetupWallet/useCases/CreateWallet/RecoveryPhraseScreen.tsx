@@ -72,6 +72,8 @@ export const RecoveryPhraseScreen = () => {
             showCreateWalletInfoModalChanged(false)
           }}
         />
+
+        <Space height="_2xl" />
       </View>,
       552,
     )
