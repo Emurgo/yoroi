@@ -1,6 +1,6 @@
 export async function* runTasks<T>(
   taskIterator: Iterable<() => Promise<T>>,
-  maxConcurrency = 3,
+  maxConcurrency = initialMaxConcurrency,
 ): AsyncGenerator<T, void, unknown> {
   async function* workerMaker(): AsyncGenerator<T, void, unknown> {
     for (const task of taskIterator) {
@@ -48,21 +48,25 @@ async function* raceAsyncIterators<T>(
 }
 
 export function PromiseAllLimited<T>(
-  taskIterator: Iterable<() => Promise<T>>,
-  maxConcurrency = 3,
+  tasks: Array<() => Promise<T>>,
+  maxConcurrency = initialMaxConcurrency,
 ): Promise<T[]> {
   return new Promise<T[]>((resolve, reject) => {
     const results: T[] = []
 
-    ;(async () => {
+    const runner = async () => {
       try {
-        for await (const result of runTasks(taskIterator, maxConcurrency)) {
+        for await (const result of runTasks(tasks.values(), maxConcurrency)) {
           results.push(result)
         }
         resolve(results)
       } catch (error) {
         reject(error)
       }
-    })()
+    }
+
+    runner()
   })
 }
+
+const initialMaxConcurrency = 3

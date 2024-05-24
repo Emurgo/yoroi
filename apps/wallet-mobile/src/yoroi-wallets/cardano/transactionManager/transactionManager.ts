@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {isArray, parseSafe} from '@yoroi/common'
+import {isArray, parseSafe, PromiseAllLimited} from '@yoroi/common'
 import {App} from '@yoroi/types'
 import assert from 'assert'
 import {fromPairs, mapValues, max} from 'lodash'
@@ -147,51 +147,52 @@ export async function syncTxs({
   const lastTx = getLatestYoroiTransaction(Object.values(transactions))
 
   // the way the addresses are arranged are make it slower (getting the same tx twice)
-  const tasks = addressesByChunks.map(async (addrs) => {
-    const taskResult: Array<Array<RawTransaction>> = []
-    let bestTx: TimeForTx | undefined
-    let isPaginating = false
-    let historyPayload = txHistoryPayloadFactory(
-      addrs,
-      {
-        // tip
-        bestBlockNum: bestBlock.height,
-        // current - from state txs saved
-        bestBlockHash: lastTx?.blockHash,
-        bestTxHash: lastTx?.txHash,
-      },
-      bestBlock.hash!,
-    )
+  const tasks = addressesByChunks.map((addrs) => {
+    const promise = async () => {
+      const taskResult: Array<Array<RawTransaction>> = []
+      let bestTx: TimeForTx | undefined
+      let isPaginating = false
+      let historyPayload = txHistoryPayloadFactory(
+        addrs,
+        {
+          // tip
+          bestBlockNum: bestBlock.height,
+          // current - from state txs saved
+          bestBlockHash: lastTx?.blockHash,
+          bestTxHash: lastTx?.txHash,
+        },
+        bestBlock.hash!,
+      )
 
-    do {
-      const response = await api.fetchNewTxHistory(historyPayload, backendConfig)
-      taskResult.push(response.transactions)
+      do {
+        const response = await api.fetchNewTxHistory(historyPayload, backendConfig)
+        taskResult.push(response.transactions)
 
-      // next payload
-      isPaginating = !response.isLast
-      if (isPaginating) {
-        bestTx = getLatestApiTransaction(response.transactions)
-        historyPayload = txHistoryPayloadFactory(
-          addrs,
-          {
-            // tip
-            bestBlockNum: bestBlock.height,
-            // current - from api txs just received
-            bestBlockHash: bestTx?.blockHash,
-            bestTxHash: bestTx?.txHash,
-          },
-          bestBlock.hash!,
-        )
-      }
-    } while (isPaginating)
+        // next payload
+        isPaginating = !response.isLast
+        if (isPaginating) {
+          bestTx = getLatestApiTransaction(response.transactions)
+          historyPayload = txHistoryPayloadFactory(
+            addrs,
+            {
+              // tip
+              bestBlockNum: bestBlock.height,
+              // current - from api txs just received
+              bestBlockHash: bestTx?.blockHash,
+              bestTxHash: bestTx?.txHash,
+            },
+            bestBlock.hash!,
+          )
+        }
+      } while (isPaginating)
 
-    return taskResult
+      return taskResult
+    }
+    return promise
   })
 
   try {
-    // const limit = pLimit(5)
-    // const tasksWithLimit = tasks.map((task) => limit(() => task))
-    const result = await Promise.all(tasks)
+    const result = await PromiseAllLimited(tasks, 2)
     const newTxs = result.flat(2).map((tx) => [tx.hash, toCachedTx(tx)])
     // .map((tx) => processTxHistoryData(tx, addressesByChunks.flat(), 0, networkId))
 

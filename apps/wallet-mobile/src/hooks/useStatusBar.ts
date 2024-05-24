@@ -38,7 +38,7 @@ const getStatusBarStyleByRoute = ({
     if (currentRouteName === 'history-list') {
       return {
         bgColorAndroid: color.primary_c100,
-        statusBarStyle: 'dark-content',
+        statusBarStyle: isDark ? 'light-content' : 'dark-content',
       }
     } else if (oldBlueRoutes.includes(currentRouteName)) {
       return {

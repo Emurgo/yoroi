@@ -45,48 +45,30 @@ describe('runTasks', () => {
 })
 
 describe('PromiseAllLimited', () => {
-  it('should limit concurrent tasks and resolve with all results', async () => {
-    const taskIterator = function* () {
-      for (let i = 1; i <= 5; i++) {
-        yield async () => {
-          await new Promise((resolve) => setTimeout(resolve, 100))
-          return i
-        }
-      }
-    }
+  const tasks = [
+    () => new Promise((resolve) => setTimeout(() => resolve(1), 100)),
+    () => new Promise((resolve) => setTimeout(() => resolve(2), 100)),
+    () => new Promise((resolve) => setTimeout(() => resolve(3), 100)),
+    () => new Promise((resolve) => setTimeout(() => resolve(4), 100)),
+    () => new Promise((resolve) => setTimeout(() => resolve(5), 100)),
+  ]
 
-    const results = await PromiseAllLimited(taskIterator(), 2)
+  it('should limit concurrent tasks and resolve with all results', async () => {
+    const results = await PromiseAllLimited(tasks, 2)
     expect(results).toEqual([1, 2, 3, 4, 5])
   })
 
   it('should limit with default the tasks and resolve with all results', async () => {
-    const taskIterator = function* () {
-      for (let i = 1; i <= 5; i++) {
-        yield async () => {
-          await new Promise((resolve) => setTimeout(resolve, 100))
-          return i
-        }
-      }
-    }
-
-    const results = await PromiseAllLimited(taskIterator())
+    const results = await PromiseAllLimited(tasks)
     expect(results).toEqual([1, 2, 3, 4, 5])
   })
 
   it('should handle task errors', async () => {
-    const taskIterator = function* () {
-      yield async () => {
-        await new Promise((resolve) => setTimeout(resolve, 100))
-        throw new Error('Task failed')
-      }
-      yield async () => {
-        await new Promise((resolve) => setTimeout(resolve, 100))
-        return 1
-      }
-    }
-
-    await expect(PromiseAllLimited(taskIterator(), 2)).rejects.toThrow(
-      'Task failed',
-    )
+    await expect(
+      PromiseAllLimited(
+        [() => new Promise((_, reject) => reject(new Error('Task failed')))],
+        2,
+      ),
+    ).rejects.toThrow('Task failed')
   })
 })
