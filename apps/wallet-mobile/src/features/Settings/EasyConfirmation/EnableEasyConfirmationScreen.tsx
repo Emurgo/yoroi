@@ -9,7 +9,7 @@ import {Button, KeyboardAvoidingView, Text, TextInput} from '../../../components
 import {LoadingOverlay} from '../../../components/LoadingOverlay'
 import {showErrorDialog} from '../../../kernel/dialogs'
 import {errorMessages} from '../../../kernel/i18n/global-messages'
-import {isEmptyString} from '../../../utils/utils'
+import {isEmptyString} from '../../../kernel/utils'
 import {WrongPassword} from '../../../yoroi-wallets/cardano/errors'
 import {useEnableEasyConfirmation} from '../../../yoroi-wallets/hooks'
 import {useSelectedWallet} from '../../WalletManager/context/SelectedWalletContext'

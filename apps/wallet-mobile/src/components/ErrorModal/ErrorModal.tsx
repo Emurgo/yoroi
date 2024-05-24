@@ -5,10 +5,10 @@ import {Image, LayoutAnimation, ScrollView, StyleSheet, Text, TouchableOpacity, 
 
 import image from '../../assets/img/error.png'
 import globalMessages, {errorMessages} from '../../kernel/i18n/global-messages'
-import {Modal} from '../../legacy/Modal'
-import {isEmptyString} from '../../utils/utils'
+import {isEmptyString} from '../../kernel/utils'
 import {Button} from '../Button'
 import {Icon} from '../Icon'
+import {Modal} from '../legacy/Modal/Modal'
 
 type ErrorViewProps = {
   title?: string

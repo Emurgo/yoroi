@@ -7,7 +7,7 @@ import {ScrollView, StyleSheet, TextInput as RNTextInput, View, ViewProps} from 
 import {Button, Checkmark, KeyboardAvoidingView, Spacer, TextInput} from '../../../components'
 import globalMessages from '../../../kernel/i18n/global-messages'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
-import {isEmptyString} from '../../../utils/utils'
+import {isEmptyString} from '../../../kernel/utils'
 import {useWalletNames} from '../../../yoroi-wallets/hooks'
 import {
   getWalletNameError,

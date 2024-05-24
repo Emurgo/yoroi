@@ -1,4 +1,10 @@
-import {FetchData, fetchData, isLeft, isRight} from '@yoroi/common'
+import {
+  FetchData,
+  PromiseAllLimited,
+  fetchData,
+  isLeft,
+  isRight,
+} from '@yoroi/common'
 import {Api, Chain, Portfolio} from '@yoroi/types'
 import {freeze} from 'immer'
 
@@ -13,9 +19,13 @@ import {parseTokenDiscovery} from '../../validators/token-discovery'
 
 export const portfolioApiMaker = ({
   network,
+  maxIdsPerRequest,
+  maxConcurrentRequests,
   request = fetchData,
 }: {
   network: Chain.SupportedNetworks
+  maxIdsPerRequest: number
+  maxConcurrentRequests: number
   request?: FetchData
 }): Portfolio.Api.Api => {
   const config = apiConfig[network]
@@ -63,31 +73,46 @@ export const portfolioApiMaker = ({
         return response
       },
       async tokenInfos(idsWithCache) {
-        const response = await request<
-          DullahanApiTokenInfosResponse,
-          DullahanApiCachedIdsRequest
-        >({
-          method: 'post',
-          url: config.tokenInfos,
-          data: toDullahanRequest(idsWithCache),
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-        })
-        if (isLeft(response)) return response
+        const chunks = []
+        for (let i = 0; i < idsWithCache.length; i += maxIdsPerRequest)
+          chunks.push(idsWithCache.slice(i, i + maxIdsPerRequest))
+
+        const tasks = chunks.map(
+          (ids) => () =>
+            request<DullahanApiTokenInfosResponse, DullahanApiCachedIdsRequest>(
+              {
+                method: 'post',
+                url: config.tokenInfos,
+                data: toDullahanRequest(ids),
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Accept': 'application/json',
+                },
+              },
+            ),
+        )
+
+        const responses = await PromiseAllLimited(tasks, maxConcurrentRequests)
+        const infos = responses
+          .filter(isRight)
+          .reduce(
+            (acc, {value: {data}}) => Object.assign(acc, data),
+            {} as DullahanApiTokenInfosResponse,
+          )
+
+        // return with the first error only if none of responses were successful
+        const firstError = responses.find(isLeft)
+        if (Object.keys(infos).length === 0 && firstError) return firstError
 
         try {
-          const transformedResponseData = toSecondaryTokenInfos(
-            response.value.data,
-          )
+          const transformedResponseData = toSecondaryTokenInfos(infos)
 
           const transformedResponse: Api.Response<Portfolio.Api.TokenInfosResponse> =
             freeze(
               {
                 tag: 'right',
                 value: {
-                  status: response.value.status,
+                  status: Api.HttpStatusCode.Ok,
                   data: transformedResponseData,
                 },
               },
@@ -102,7 +127,7 @@ export const portfolioApiMaker = ({
               error: {
                 status: -3,
                 message: 'Failed to transform token infos response',
-                responseData: response.value.data,
+                responseData: infos,
               },
             },
             true,

@@ -5,7 +5,7 @@ import LinearGradient from 'react-native-linear-gradient'
 
 import {CopyButton, Text} from '../../../../components'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {isEmptyString} from '../../../../utils/utils'
+import {isEmptyString} from '../../../../kernel/utils'
 import {useStrings} from '../useStrings'
 import {useLastDateAddressUsed} from './useLastDateAddressUsed'
 

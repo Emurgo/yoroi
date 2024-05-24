@@ -3,7 +3,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {QueryClientProvider} from 'react-query'
 
-import {queryClientFixture} from '../../../utils/fixtures'
+import {queryClientFixture} from '../../../kernel/fixtures/fixtures'
 import {mocks as walletMocks} from '../../../yoroi-wallets/mocks/wallet'
 import {SelectedWalletProvider} from '../../WalletManager/context/SelectedWalletContext'
 import {claimApiMockInstances} from '../module/api.mocks'

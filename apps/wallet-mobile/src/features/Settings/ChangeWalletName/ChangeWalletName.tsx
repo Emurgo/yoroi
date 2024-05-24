@@ -7,7 +7,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, KeyboardAvoidingView, Spacer, TextInput} from '../../../components'
 import globalMessages from '../../../kernel/i18n/global-messages'
-import {isEmptyString} from '../../../utils/utils'
+import {isEmptyString} from '../../../kernel/utils'
 import {useChangeWalletName, useWalletName, useWalletNames} from '../../../yoroi-wallets/hooks'
 import {getWalletNameError, validateWalletName} from '../../../yoroi-wallets/utils/validators'
 import {useSelectedWallet} from '../../WalletManager/context/SelectedWalletContext'

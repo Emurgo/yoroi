@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Platform, StyleSheet, TextInput, TextInputProps, TouchableOpacity, View, ViewStyle} from 'react-native'
 
-import {isEmptyString} from '../utils/utils'
+import {isEmptyString} from '../kernel/utils'
 import {Icon} from './Icon'
 import {Text} from './Text'
 

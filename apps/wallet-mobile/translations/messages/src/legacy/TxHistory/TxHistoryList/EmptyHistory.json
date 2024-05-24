@@ -1,0 +1,17 @@
+[
+  {
+    "id": "components.txhistory.txhistory.noTransactions",
+    "defaultMessage": "!!!No transactions to show yet",
+    "file": "src/legacy/TxHistory/TxHistoryList/EmptyHistory.tsx",
+    "start": {
+      "line": 50,
+      "column": 18,
+      "index": 1131
+    },
+    "end": {
+      "line": 53,
+      "column": 3,
+      "index": 1247
+    }
+  }
+]

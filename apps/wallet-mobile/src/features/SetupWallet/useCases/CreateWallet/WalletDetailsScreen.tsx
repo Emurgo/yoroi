@@ -25,7 +25,7 @@ import {showErrorDialog} from '../../../../kernel/dialogs'
 import {errorMessages} from '../../../../kernel/i18n/global-messages'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../kernel/navigation'
-import {isEmptyString} from '../../../../utils'
+import {isEmptyString} from '../../../../kernel/utils'
 import {useCreateWallet, usePlate, useWalletNames} from '../../../../yoroi-wallets/hooks'
 import {WalletImplementationId} from '../../../../yoroi-wallets/types'
 import {

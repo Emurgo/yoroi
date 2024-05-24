@@ -21,8 +21,8 @@ import LocalizableError from '../../../kernel/i18n/LocalizableError'
 import {logger} from '../../../kernel/logger/logger'
 import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../../kernel/storage/EncryptedStorage'
 import {Keychain} from '../../../kernel/storage/Keychain'
+import {makeMemosManager, MemosManager} from '../../../legacy/TxHistory/common/memos/memosManager'
 import {HWDeviceInfo} from '../../hw'
-import {makeMemosManager, MemosManager} from '../../memos'
 import {
   AccountStateResponse,
   BackendConfig,
@@ -45,7 +45,7 @@ import {
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../../types'
-import {asQuantity, genTimeToSlot, isMainnetNetworkId, Quantities, validatePassword} from '../../utils'
+import {asQuantity, genTimeToSlot, Quantities, validatePassword} from '../../utils'
 import {Cardano, CardanoMobile} from '../../wallets'
 import * as legacyApi from '../api'
 import {calcLockedDeposit} from '../assetUtils'
@@ -1235,7 +1235,7 @@ export class ByronWallet implements YoroiWallet {
     const apiUrl = this.getBackendConfig().TOKEN_INFO_SERVICE
     if (!apiUrl) throw new Error('invalid wallet')
 
-    const isMainnet = isMainnetNetworkId(this.networkId)
+    const isMainnet = this.isMainnet
     const isTestnet = !isMainnet
 
     if ((tokenId === '' || tokenId === 'ADA') && isMainnet) {

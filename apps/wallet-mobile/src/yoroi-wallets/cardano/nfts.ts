@@ -4,7 +4,7 @@ import {Balance} from '@yoroi/types'
 import {z} from 'zod'
 
 import {features} from '../../features'
-import {getAssetFingerprint} from '../../legacy/format'
+import {getAssetFingerprint} from '../utils/format'
 import {toDisplayAssetName} from './api'
 export const convertNft = (options: {
   metadata?: unknown
@@ -46,10 +46,6 @@ export const convertNft = (options: {
 const normalizeProperty = (value: string | string[]): string => {
   if (isArrayOfType(value, isString)) return value.join('')
   return value
-}
-
-export const isSvgMediaType = (mediaType: unknown): boolean => {
-  return mediaType === 'image/svg+xml'
 }
 
 export const getNftMainImageMediaType = (nft: Balance.TokenInfo): string | undefined => {

@@ -12,8 +12,6 @@ type Props = TextProps & {
   adjustsFontSizeToFit?: boolean
 }
 
-export const foo: StyleProp<TextStyle> = false
-
 const androidAdjustsFontSizeToFitFix = (width: number, childrenLength: number) => {
   return Math.floor(1.4 * (width / childrenLength))
 }

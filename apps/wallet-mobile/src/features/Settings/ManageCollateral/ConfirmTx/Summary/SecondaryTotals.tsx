@@ -5,10 +5,10 @@ import {StyleSheet, View} from 'react-native'
 
 import {Boundary} from '../../../../../components/Boundary/Boundary'
 import {Text} from '../../../../../components/Text'
-import {formatTokenWithText} from '../../../../../legacy/format'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {useToken} from '../../../../../yoroi-wallets/hooks'
 import {YoroiUnsignedTx} from '../../../../../yoroi-wallets/types/yoroi'
+import {formatTokenWithText} from '../../../../../yoroi-wallets/utils/format'
 import {Amounts, Quantities} from '../../../../../yoroi-wallets/utils/utils'
 import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
 

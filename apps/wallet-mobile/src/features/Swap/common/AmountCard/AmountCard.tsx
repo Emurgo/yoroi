@@ -6,11 +6,11 @@ import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
 import {Boundary, Icon, Spacer, TokenIcon, TokenIconPlaceholder} from '../../../../components'
-import {formatTokenWithText} from '../../../../legacy/format'
-import {isEmptyString} from '../../../../utils'
+import {isEmptyString} from '../../../../kernel/utils'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../yoroi-wallets/utils'
+import {formatTokenWithText} from '../../../../yoroi-wallets/utils/format'
 
 type Props = {
   label?: string
