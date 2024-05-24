@@ -14,7 +14,6 @@ import {usePrivacyMode} from '../../features/Settings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../../features/WalletManager/context/SelectedWalletContext'
 import {TxHistoryRouteNavigation} from '../../kernel/navigation'
 import {formatDateRelative, formatTime, formatTokenFractional, formatTokenInteger} from '../../legacy/format'
-import utfSymbols from '../../legacy/utfSymbols'
 import {isEmptyString} from '../../utils/utils'
 import {MultiToken} from '../../yoroi-wallets/cardano/MultiToken'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
@@ -132,7 +131,7 @@ const Amount = ({wallet, transaction}: {wallet: YoroiWallet; transaction: Transa
         </Text>
       </Text>
 
-      <Text style={style}>{`${utfSymbols.NBSP}${wallet.primaryTokenInfo.symbol}`}</Text>
+      <Text style={style}>{` ${wallet.primaryTokenInfo.symbol}`}</Text>
     </View>
   )
 }

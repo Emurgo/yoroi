@@ -4,7 +4,7 @@ import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import Animated, {Layout} from 'react-native-reanimated'
 
 import {Spacer} from '../../../../components'
-import {useCopy} from '../../../../legacy/useCopy'
+import {useCopy} from '../../../../hooks/useCopy'
 import {isEmptyString} from '../../../../utils/utils'
 import {useKeyHashes} from '../../../../yoroi-wallets/hooks'
 import {useReceive} from '../ReceiveProvider'

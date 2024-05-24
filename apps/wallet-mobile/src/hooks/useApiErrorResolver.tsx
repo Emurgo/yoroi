@@ -1,9 +1,9 @@
 import {Api} from '@yoroi/types'
 
-import {useDialogsApi} from './useDialogsApi'
+import {useApiDialogs} from './useApiDialogs'
 
 export const useApiErrorResolver = () => {
-  const dialogs = useDialogsApi()
+  const dialogs = useApiDialogs()
 
   const resolver = (error: unknown) => {
     if (error instanceof Api.Errors.BadRequest) return dialogs.errorBadRequest

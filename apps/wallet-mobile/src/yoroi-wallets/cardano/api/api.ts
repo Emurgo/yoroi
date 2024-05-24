@@ -64,16 +64,6 @@ export const submitTransaction = async (signedTx: string, config: BackendConfig)
   }
 }
 
-export const getTransactions = async (
-  txids: Array<string>,
-  config: BackendConfig,
-): Promise<Record<string, RawTransaction>> => {
-  const txs = await fetchDefault('v2/txs/get', {txHashes: txids}, config)
-  const entries: Array<[string, RawTransaction]> = Object.entries(txs)
-
-  return Object.fromEntries(entries)
-}
-
 export const getAccountState = (request: AccountStateRequest, config: BackendConfig): Promise<AccountStateResponse> => {
   assert(request.addresses.length <= config.FETCH_UTXOS_MAX_ADDRESSES, 'getAccountState: too many addresses')
   return fetchDefault('account/state', request, config)

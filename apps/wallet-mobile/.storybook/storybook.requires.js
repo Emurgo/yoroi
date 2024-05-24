@@ -84,7 +84,6 @@ const getStories = () => {
     "./src/components/LoadingOverlay/LoadingOverlay.stories.tsx": require("../src/components/LoadingOverlay/LoadingOverlay.stories.tsx"),
     "./src/components/ModalError/ModalError.stories.tsx": require("../src/components/ModalError/ModalError.stories.tsx"),
     "./src/components/ModalScreenWrapper/ModalScreenWrapper.stories.tsx": require("../src/components/ModalScreenWrapper/ModalScreenWrapper.stories.tsx"),
-    "./src/components/NftImageGallery/NftImageGallery.stories.tsx": require("../src/components/NftImageGallery/NftImageGallery.stories.tsx"),
     "./src/components/NftPreview/NftPreview.stories.tsx": require("../src/components/NftPreview/NftPreview.stories.tsx"),
     "./src/components/PairedBalance/PairedBalance.stories.tsx": require("../src/components/PairedBalance/PairedBalance.stories.tsx"),
     "./src/components/PressableIcon/PressableIcon.stories.tsx": require("../src/components/PressableIcon/PressableIcon.stories.tsx"),

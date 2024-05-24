@@ -7,7 +7,6 @@ import {defineMessages} from 'react-intl'
 
 import {isTokenInfo} from '../yoroi-wallets/cardano/utils'
 import {DefaultAsset, Token} from '../yoroi-wallets/types'
-import utfSymbols from './utfSymbols'
 
 export const getTokenFingerprint = ({policyId, assetNameHex}: {policyId: string; assetNameHex: string}) => {
   const assetFingerprint = AssetFingerprint.fromParts(Buffer.from(policyId, 'hex'), Buffer.from(assetNameHex, 'hex'))
@@ -32,7 +31,7 @@ const getTicker = (token: Balance.TokenInfo | DefaultAsset) => {
 }
 const getSymbol = (token: Balance.TokenInfo | DefaultAsset) => {
   const ticker = getTicker(token)
-  return (ticker && utfSymbols.CURRENCIES[ticker]) ?? ticker
+  return ticker
 }
 
 const getName = (token: Balance.TokenInfo | DefaultAsset) => {
@@ -84,7 +83,7 @@ const getTokenV2Fingerprint = (token: Balance.TokenInfo | DefaultAsset): string 
 
 export const formatTokenWithSymbol = (quantity: Balance.Quantity, token: Balance.TokenInfo | DefaultAsset): string => {
   const denomination = getSymbol(token) ?? getTokenV2Fingerprint(token)
-  return `${formatTokenAmount(quantity, token)}${utfSymbols.NBSP}${denomination}`
+  return `${formatTokenAmount(quantity, token)} ${denomination}`
 }
 // We assume that tickers are non-localized. If ticker doesn't exist, default
 // to identifier
@@ -97,12 +96,12 @@ export const formatTokenWithText = (
   if (isTokenInfo(token)) {
     switch (token.kind) {
       case 'nft':
-        return `${formatTokenAmount(quantity, token)}${utfSymbols.NBSP}${truncateWithEllipsis(
+        return `${formatTokenAmount(quantity, token)} ${truncateWithEllipsis(
           token.name || token.fingerprint,
           maxLength,
         )}`
       case 'ft':
-        return `${formatTokenAmount(quantity, token)}${utfSymbols.NBSP}${truncateWithEllipsis(
+        return `${formatTokenAmount(quantity, token)} ${truncateWithEllipsis(
           token.ticker || token.name || token.fingerprint,
           maxLength,
         )}`
@@ -110,12 +109,12 @@ export const formatTokenWithText = (
   }
 
   const tickerOrId = getTicker(token) || getName(token) || getTokenV2Fingerprint(token)
-  return `${formatTokenAmount(quantity, token)}${utfSymbols.NBSP}${tickerOrId}`
+  return `${formatTokenAmount(quantity, token)} ${tickerOrId}`
 }
 
 export const formatTokenWithTextWhenHidden = (text: string, token: Balance.TokenInfo | DefaultAsset) => {
   const tickerOrId = getTicker(token) || getName(token) || getTokenV2Fingerprint(token)
-  return `${text}${utfSymbols.NBSP}${tickerOrId}`
+  return `${text} ${tickerOrId}`
 }
 
 export const formatTokenInteger = (amount: Balance.Quantity, token: Token | DefaultAsset) => {
@@ -157,7 +156,7 @@ const formatAda = (quantity: Balance.Quantity, defaultAsset: DefaultAsset) => {
 
 export const formatAdaWithText = (quantity: Balance.Quantity, defaultAsset: DefaultAsset) => {
   const defaultAssetMeta = defaultAsset.metadata
-  return `${formatAda(quantity, defaultAsset)}${utfSymbols.NBSP}${defaultAssetMeta.ticker}`
+  return `${formatAda(quantity, defaultAsset)} ${defaultAssetMeta.ticker}`
 }
 
 export const formatTime = (timestamp: string, intl: IntlShape) => {

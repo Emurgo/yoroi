@@ -2,8 +2,9 @@ import {parseSafe, useAsyncStorage} from '@yoroi/common'
 import React from 'react'
 import {useMutation, UseMutationOptions, useQuery, useQueryClient} from 'react-query'
 
+import {configCurrencies, supportedCurrencies} from '../../../kernel/constants'
 import {isEmptyString} from '../../../utils'
-import {ConfigCurrencies, configCurrencies, CurrencySymbol, supportedCurrencies} from '../../../yoroi-wallets/types'
+import {ConfigCurrencies, CurrencySymbol} from '../../../yoroi-wallets/types'
 
 const CurrencyContext = React.createContext<undefined | CurrencyContext>(undefined)
 export const CurrencyProvider = ({children}: {children: React.ReactNode}) => {

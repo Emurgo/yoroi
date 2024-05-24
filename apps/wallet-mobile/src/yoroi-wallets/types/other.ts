@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {BigNumber} from 'bignumber.js'
-
+import {configCurrencies, supportedCurrencies} from '../../kernel/constants'
 import {
   WALLET_CONFIG as HASKELL_SHELLEY,
   WALLET_CONFIG_24 as HASKELL_SHELLEY_24,
@@ -26,7 +25,6 @@ export type LegacyAddressing = {
     index: number
   }
 }
-export type LegacyAddressedUtxo = RawUtxo & LegacyAddressing
 export type Addressing = {
   readonly addressing: {
     readonly path: Array<number>
@@ -48,62 +46,6 @@ export type TransactionInput = LegacyAddressing & {
     value: string
   }
 }
-export type PreparedTransactionData = {
-  changeAddress: string
-  fee: BigNumber
-  inputs: Array<TransactionInput>
-  outputs: Array<TransactionOutput>
-}
-export type V1SignedTx = {
-  cbor_encoded_tx: string
-  fee: BigNumber
-  changedUsed: boolean
-}
-
-/**
- * Jormungandr-era tx types
- */
-// similar to yoroi-frontend's V3UnsignedTxUtxoResponse
-export type V3UnsignedTxData<T> = {
-  senderUtxos: Array<RawUtxo>
-  IOs: T
-  changeAddr: Array<
-    Addressing & {
-      address: string
-      value: void | BigNumber
-    }
-  >
-}
-// similar to yoroi-frontend's V3UnsignedTxAddressedUtxoResponse
-export type V3UnsignedTxAddressedUtxoData<T> = {
-  senderUtxos: Array<AddressedUtxo>
-  IOs: T
-  changeAddr: Array<
-    Addressing & {
-      address: string
-      value: void | BigNumber
-    }
-  >
-  certificate: void | any
-}
-
-/**
- * Haskell-Shelley-era tx types
- */
-export type TxOutput = AddressObj & {
-  amount: MultiToken
-}
-export type V4UnsignedTxUtxoResponse = {
-  senderUtxos: Array<RawUtxo>
-  txBuilder: CardanoTypes.TransactionBuilder
-  changeAddr: Array<AddressObj & Value & Addressing>
-}
-export type V4UnsignedTxAddressedUtxoResponse = {
-  senderUtxos: Array<AddressedUtxo>
-  txBuilder: CardanoTypes.TransactionBuilder
-  changeAddr: Array<AddressObj & Value & Addressing>
-  certificates: ReadonlyArray<CardanoTypes.Certificate>
-}
 
 /**
  * wallet types
@@ -111,19 +53,9 @@ export type V4UnsignedTxAddressedUtxoResponse = {
 export type WalletState = {
   lastGeneratedAddressIndex: number
 }
-export type EncryptionMethod = 'SYSTEM_PIN' | 'MASTER_PASSWORD'
 export type PlateResponse = {
   addresses: Array<string>
   accountPlate: CardanoTypes.WalletChecksum
-}
-export type ProtocolParameters = {
-  readonly linearFee: CardanoTypes.LinearFee
-  readonly minimumUtxoVal: CardanoTypes.BigNum
-  readonly poolDeposit: CardanoTypes.BigNum
-  readonly keyDeposit: CardanoTypes.BigNum
-  readonly networkId: number
-  readonly maxValueBytes?: number
-  readonly maxTxBytes?: number
 }
 
 /**
@@ -159,26 +91,10 @@ export type AccountStateRequest = {
 }
 export type AccountStateResponse = Record<string, null | RemoteAccountState>
 
-export type RemotePoolMetaFailure = {
-  error: Record<string, any>
-}
 export type PoolInfoRequest = {
   poolIds: Array<string>
 }
 
-// reputation
-export type ReputationObject = {
-  node_flags?: number // note: could be more metrics that are not handled
-}
-export type ReputationResponse = Record<string, ReputationObject>
-// serverstatus
-export type ServerStatusResponse = {
-  isServerOk: boolean
-  isMaintenance: boolean
-  serverTime: number
-  // in milliseconds
-  isQueueOnline?: boolean
-}
 // bestblock
 export type BestblockResponse = {
   height: number
@@ -281,63 +197,10 @@ export type TxStatusResponse = {
   readonly submissionStatus?: Record<string, TxSubmissionStatus>
 }
 // Pricing api
-export const supportedCurrencies = Object.freeze({
-  ADA: 'ADA',
-  BRL: 'BRL',
-  BTC: 'BTC',
-  CNY: 'CNY',
-  ETH: 'ETH',
-  EUR: 'EUR',
-  JPY: 'JPY',
-  KRW: 'KRW',
-  USD: 'USD',
-})
 
-export const supportedThemes = Object.freeze({
-  system: 'system',
-  'default-light': 'default-light',
-  'default-dark': 'default-dark',
-})
 export type CurrencySymbol = keyof typeof supportedCurrencies
 export type ConfigCurrencies = typeof configCurrencies
-export const configCurrencies = {
-  [supportedCurrencies.ADA]: {
-    decimals: 6,
-    nativeName: 'Cardano',
-  },
-  [supportedCurrencies.BRL]: {
-    decimals: 2,
-    nativeName: 'Real',
-  },
-  [supportedCurrencies.BTC]: {
-    decimals: 4,
-    nativeName: 'Bitcoin',
-  },
-  [supportedCurrencies.CNY]: {
-    decimals: 2,
-    nativeName: '人民币',
-  },
-  [supportedCurrencies.ETH]: {
-    decimals: 4,
-    nativeName: 'Ethereum',
-  },
-  [supportedCurrencies.EUR]: {
-    decimals: 2,
-    nativeName: 'Euro',
-  },
-  [supportedCurrencies.JPY]: {
-    decimals: 2,
-    nativeName: '日本円',
-  },
-  [supportedCurrencies.KRW]: {
-    decimals: 2,
-    nativeName: '대한민국 원',
-  },
-  [supportedCurrencies.USD]: {
-    decimals: 2,
-    nativeName: 'US Dollar',
-  },
-}
+
 export type PriceResponse = {
   error: string | null
   ticker: {
@@ -488,18 +351,4 @@ export type Transaction = {
   }>
   memo: string | null
   readonly metadata?: TxMetadata
-}
-
-export type CommonMetadata = {
-  readonly numberOfDecimals: number
-  readonly ticker: null | string
-  readonly longName: null | string
-  readonly maxSupply: null | string
-}
-
-export type MultiAssetRequest = {
-  assets: Array<{
-    nameHex: string
-    policy: string
-  }>
 }

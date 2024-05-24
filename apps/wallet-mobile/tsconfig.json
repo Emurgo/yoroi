@@ -13,5 +13,5 @@
       "*.md": ["text-loader"]
     }
   },
-  "include": ["./.d.ts", "./src", ".storybook/decorators", "src/kernel/logger/logger.ts"]
+  "include": ["./.d.ts", "./src", ".storybook/decorators"]
 }

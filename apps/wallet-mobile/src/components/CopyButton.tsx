@@ -6,7 +6,7 @@ import Animated, {FadeInDown, FadeOutDown, Layout} from 'react-native-reanimated
 import {Text} from '../../../wallet-mobile/src/components'
 import {isEmptyString} from '../../../wallet-mobile/src/utils/utils'
 import {Icon} from '../components/Icon'
-import {useCopy} from '../legacy/useCopy'
+import {useCopy} from '../hooks/useCopy'
 
 export type CopyButtonProps = {
   value: string

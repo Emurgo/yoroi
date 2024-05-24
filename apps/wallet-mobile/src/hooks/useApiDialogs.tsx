@@ -1,9 +1,9 @@
 import * as React from 'react'
 
-import {useStringsApiErrors} from './useStringsApiErrors'
+import {useApiStringsErrors} from './useApiStringsErrors'
 
-export const useDialogsApi = () => {
-  const strings = useStringsApiErrors()
+export const useApiDialogs = () => {
+  const strings = useApiStringsErrors()
 
   return React.useRef({
     errorBadRequest: {

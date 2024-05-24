@@ -1,9 +1,9 @@
 import * as React from 'react'
 import {useIntl} from 'react-intl'
 
-import {apiErrors} from '../i18n/global-messages'
+import {apiErrors} from '../kernel/i18n/global-messages'
 
-export const useStringsApiErrors = () => {
+export const useApiStringsErrors = () => {
   const intl = useIntl()
 
   return React.useRef({

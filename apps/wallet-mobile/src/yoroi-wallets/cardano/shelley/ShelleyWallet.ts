@@ -23,8 +23,8 @@ import LocalizableError from '../../../kernel/i18n/LocalizableError'
 import {logger} from '../../../kernel/logger/logger'
 import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../../kernel/storage/EncryptedStorage'
 import {Keychain} from '../../../kernel/storage/Keychain'
+import {makeMemosManager, MemosManager} from '../../../TxHistory/common/memos/memosManager'
 import {HWDeviceInfo} from '../../hw'
-import {makeMemosManager, MemosManager} from '../../memos'
 import type {
   AccountStateResponse,
   CurrencySymbol,

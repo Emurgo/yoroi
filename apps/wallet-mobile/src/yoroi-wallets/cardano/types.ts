@@ -69,19 +69,6 @@ export type ServerStatus = {
   isQueueOnline?: boolean
 }
 
-export type Block = {
-  height: number
-  epoch: number
-  slot: number
-  hash: string
-}
-
-export type SignedTxLegacy = {
-  id: string
-  encodedTx: Uint8Array
-  base64: string
-}
-
 export type Pagination = {
   page: number
   limit: number

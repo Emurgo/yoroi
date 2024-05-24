@@ -3,57 +3,6 @@ export type ToAbsoluteSlotNumberRequest = {
   slot: number
 }
 export type ToAbsoluteSlotNumberResponse = number
-export type ToAbsoluteSlotNumberFunc = (request: ToAbsoluteSlotNumberRequest) => ToAbsoluteSlotNumberResponse
-
-export function genToAbsoluteSlotNumber(
-  config: Array<{
-    StartAt?: number
-    SlotsPerEpoch?: number
-  }>,
-): ToAbsoluteSlotNumberFunc {
-  return (request: ToAbsoluteSlotNumberRequest) => {
-    let SlotsPerEpoch = config[0].SlotsPerEpoch
-    let slotCount = 0
-    let epochsLeft = request.epoch
-
-    // for pairs of config changes (x, x+1), get the time between these pairs
-    for (let i = 0; i < config.length - 1; i++) {
-      const start =
-        config[i].StartAt ??
-        (() => {
-          throw new Error('genToAbsoluteSlotNumber missing start')
-        })()
-      const end =
-        config[i + 1].StartAt ??
-        (() => {
-          throw new Error('genToAbsoluteSlotNumber missing end')
-        })()
-
-      // queried time is before the next protocol parameter choice
-      if (end > request.epoch) {
-        break
-      }
-      const numEpochs = end - start
-
-      if (SlotsPerEpoch == null) {
-        throw new Error('genToAbsoluteSlotNumber missing params')
-      }
-      slotCount += SlotsPerEpoch * numEpochs
-      epochsLeft -= numEpochs
-
-      SlotsPerEpoch = config[i + 1].SlotsPerEpoch ?? SlotsPerEpoch
-    }
-
-    if (SlotsPerEpoch == null) {
-      throw new Error('genToAbsoluteSlotNumber missing params')
-    }
-
-    // find how many slots in the epochs since the last update
-    slotCount += SlotsPerEpoch * epochsLeft
-
-    return slotCount + request.slot
-  }
-}
 
 export type ToRelativeSlotNumberRequest = ToAbsoluteSlotNumberResponse
 export type ToRelativeSlotNumberResponse = ToAbsoluteSlotNumberRequest
@@ -185,6 +134,7 @@ export function genTimeToSlot(
 }
 
 export type CurrentEpochLengthRequest = void
+
 /** slots per epoch */
 export type CurrentEpochLengthResponse = number
 export type CurrentEpochLengthFunc = (request: CurrentEpochLengthRequest) => CurrentEpochLengthResponse
@@ -213,96 +163,13 @@ export function genCurrentSlotLength(
   }
 }
 
-export type TimeSinceGenesisRequest = {
-  absoluteSlotNum: number
-}
-export type TimeSinceGenesisResponse = number /* seconds */
-export type TimeSinceGenesisFunc = (request: TimeSinceGenesisRequest) => TimeSinceGenesisResponse
-export function genTimeSinceGenesis(
-  config: Array<{
-    StartAt?: number
-    GenesisDate?: string
-    SlotsPerEpoch?: number
-    SlotDuration?: number
-  }>,
-): TimeSinceGenesisFunc {
-  return (request: TimeSinceGenesisRequest) => {
-    let SlotDuration = config[0].SlotDuration
-    let SlotsPerEpoch = config[0].SlotsPerEpoch
-    let time = 0
-    let slotsLeft = request.absoluteSlotNum
-
-    // for pairs of config changes (x, x+1), get the time between these pairs
-    for (let i = 0; i < config.length - 1; i++) {
-      const start =
-        config[i].StartAt ??
-        (() => {
-          throw new Error('genTimeSinceGenesis missing start')
-        })()
-      const end =
-        config[i + 1].StartAt ??
-        (() => {
-          throw new Error('genTimeSinceGenesis missing end')
-        })()
-      const numEpochs = end - start
-
-      if (SlotDuration == null || SlotsPerEpoch == null) {
-        throw new Error('genTimeSinceGenesis missing params')
-      }
-
-      // queried time is before the next protocol parameter choice
-      if (slotsLeft < SlotsPerEpoch * numEpochs) {
-        break
-      }
-      time += SlotsPerEpoch * SlotDuration * numEpochs
-      slotsLeft -= SlotsPerEpoch * numEpochs
-
-      SlotDuration = config[i + 1].SlotDuration ?? SlotDuration
-      SlotsPerEpoch = config[i + 1].SlotsPerEpoch ?? SlotsPerEpoch
-    }
-
-    if (SlotDuration == null || SlotsPerEpoch == null) {
-      throw new Error('genTimeSinceGenesis:: missing params')
-    }
-
-    // add seconds into the current update
-    time += slotsLeft * SlotDuration
-
-    return time
-  }
-}
-
-export type ToRealTimeRequest = {
-  absoluteSlotNum: number
-  timeSinceGenesisFunc: TimeSinceGenesisFunc
-}
-export type ToRealTimeResponse = Date
-export type ToRealTimeFunc = (request: ToRealTimeRequest) => ToRealTimeResponse
-export function genToRealTime(
-  config: Array<{
-    GenesisDate?: string
-  }>,
-): ToRealTimeFunc {
-  return (request: ToRealTimeRequest) => {
-    const {GenesisDate} = config[0]
-    if (GenesisDate == null) {
-      throw new Error('genToRealTime:: missing genesis start date')
-    }
-
-    const timeSinceGenesis = request.timeSinceGenesisFunc({
-      absoluteSlotNum: request.absoluteSlotNum,
-    })
-    const time = new Date(Number.parseInt(GenesisDate, 10)).getTime() + 1000 * timeSinceGenesis
-    return new Date(time)
-  }
-}
-
 export const delay = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms))
 
 const ms_in_sec = 1000,
   sec_in_day = 86400,
   sec_in_hour = 3600,
   sec_in_min = 60
+
 export const formatTimeSpan = (ms: number) => {
   if (ms < 0) return ''
 

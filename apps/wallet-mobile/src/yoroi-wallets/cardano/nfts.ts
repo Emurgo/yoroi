@@ -48,10 +48,6 @@ const normalizeProperty = (value: string | string[]): string => {
   return value
 }
 
-export const isSvgMediaType = (mediaType: unknown): boolean => {
-  return mediaType === 'image/svg+xml'
-}
-
 export const getNftMainImageMediaType = (nft: Balance.TokenInfo): string | undefined => {
   const originalMetadata = nft.metadatas.mintNft
   return hasMediaTypeProperty(originalMetadata) ? normalizeProperty(originalMetadata.mediaType) : undefined

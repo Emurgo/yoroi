@@ -15,7 +15,7 @@ import {useDisableSearchOnBar} from '../../../../../Search/SearchContext'
 import {NotEnoughMoneyToSendError} from '../../../../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {YoroiEntry} from '../../../../../yoroi-wallets/types'
-import {isMainnetNetworkId, Quantities} from '../../../../../yoroi-wallets/utils'
+import {Quantities} from '../../../../../yoroi-wallets/utils'
 import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
 import {createOrderEntry, makePossibleFrontendFeeEntry} from '../../../common/entries'
 import {getPriceImpactRisk} from '../../../common/helpers'
@@ -127,7 +127,7 @@ export const CreateOrder = () => {
         datum,
       )
 
-      const isMainnet = isMainnetNetworkId(wallet.networkId)
+      const isMainnet = wallet.isMainnet
       const frontendFee = selectedPoolCalculation.cost.frontendFeeInfo.fee
       const frontendFeeDepositAddress = isMainnet ? frontendFeeAddressMainnet : frontendFeeAddressPreprod
       const frontendFeeEntry = makePossibleFrontendFeeEntry(frontendFee, frontendFeeDepositAddress)

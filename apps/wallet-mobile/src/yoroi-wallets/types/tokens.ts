@@ -20,16 +20,6 @@ export type Token = {
   metadata: TokenMetadata
 }
 
-type SendToken = {
-  token: Token
-  amount: string // in lovelaces
-}
-type SendAllToken = {
-  token: Token
-  shouldSendAll: true
-}
-export type SendTokenList = Array<SendToken | SendAllToken>
-
 export type DefaultAssetMetadata = TokenCommonMetadata & {
   type: 'Cardano'
   policyId: string // empty string for ADA
