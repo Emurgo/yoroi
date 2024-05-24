@@ -1,0 +1,17 @@
+[
+  {
+    "id": "components.send.confirmscreen.beforeConfirm",
+    "defaultMessage": "!!!Before tapping on confirm, please follow these instructions:",
+    "file": "src/legacy/HW/Instructions/Instructions.tsx",
+    "start": {
+      "line": 52,
+      "column": 17,
+      "index": 1574
+    },
+    "end": {
+      "line": 55,
+      "column": 3,
+      "index": 1721
+    }
+  }
+]

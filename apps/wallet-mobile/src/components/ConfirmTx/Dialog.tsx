@@ -2,10 +2,10 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 
 import {ErrorView, PleaseWaitView} from '../../components'
-import {LedgerConnect, LedgerTransportSwitchView} from '../../HW'
 import globalMessages, {ledgerMessages, txLabels} from '../../kernel/i18n/global-messages'
-import {Modal} from '../../legacy/Modal'
+import {LedgerConnect, LedgerTransportSwitchView} from '../../legacy/HW'
 import {DeviceId, DeviceObj} from '../../yoroi-wallets/hw'
+import {Modal} from '../legacy/Modal/Modal'
 
 type ErrorData = {
   errorMessage: string

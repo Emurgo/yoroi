@@ -5,7 +5,7 @@ import {StyleSheet, View, ViewProps} from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
 
 import {CopyButton, Spacer, Text} from '../../../../components'
-import {Modal} from '../../../../legacy/Modal'
+import {Modal} from '../../../../components/legacy/Modal/Modal'
 import {AddressType, formatPath} from '../../../../yoroi-wallets/cardano/formatPath/formatPath'
 import {useKeyHashes} from '../../../../yoroi-wallets/hooks'
 import {useSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'

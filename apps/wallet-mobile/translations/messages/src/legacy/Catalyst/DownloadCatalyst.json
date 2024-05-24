@@ -1,0 +1,47 @@
+[
+  {
+    "id": "components.catalyst.step1.subTitle",
+    "defaultMessage": "!!!Before you begin, make sure to download the Catalyst Voting App.",
+    "file": "src/legacy/Catalyst/DownloadCatalyst.tsx",
+    "start": {
+      "line": 122,
+      "column": 12,
+      "index": 3413
+    },
+    "end": {
+      "line": 125,
+      "column": 3,
+      "index": 3555
+    }
+  },
+  {
+    "id": "components.catalyst.step1.stakingKeyNotRegistered",
+    "defaultMessage": "!!!Catalyst voting rewards are sent to delegation accounts and your wallet does not seem to have a registered delegation certificate. If you want to receive voting rewards, you need to delegate your funds first.",
+    "file": "src/legacy/Catalyst/DownloadCatalyst.tsx",
+    "start": {
+      "line": 126,
+      "column": 27,
+      "index": 3584
+    },
+    "end": {
+      "line": 132,
+      "column": 3,
+      "index": 3913
+    }
+  },
+  {
+    "id": "components.catalyst.step1.tip",
+    "defaultMessage": "!!!Tip: Make sure you know how to take a screenshot with your device, so that you can backup your catalyst QR code.",
+    "file": "src/legacy/Catalyst/DownloadCatalyst.tsx",
+    "start": {
+      "line": 133,
+      "column": 7,
+      "index": 3922
+    },
+    "end": {
+      "line": 138,
+      "column": 3,
+      "index": 4124
+    }
+  }
+]

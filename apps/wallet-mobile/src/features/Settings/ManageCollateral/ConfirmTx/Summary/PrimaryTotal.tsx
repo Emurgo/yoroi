@@ -5,8 +5,8 @@ import {StyleSheet, View} from 'react-native'
 
 import {Text} from '../../../../../components/Text'
 import globalMessages from '../../../../../kernel/i18n/global-messages'
-import {formatTokenWithSymbol} from '../../../../../legacy/format'
 import {YoroiUnsignedTx} from '../../../../../yoroi-wallets/types/yoroi'
+import {formatTokenWithSymbol} from '../../../../../yoroi-wallets/utils/format'
 import {Amounts} from '../../../../../yoroi-wallets/utils/utils'
 import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
 

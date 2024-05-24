@@ -21,6 +21,7 @@ import {AgreementChangedNavigator, InitializationNavigator} from './features/Ini
 import {LegalAgreement, useLegalAgreement} from './features/Initialization/common'
 import {useDeepLinkWatcher} from './features/Links/common/useDeepLinkWatcher'
 import {PortfolioScreen} from './features/Portfolio/useCases/PortfolioScreen'
+import {SearchProvider} from './features/Search/SearchContext'
 import {SetupWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
 import {
   ChooseBiometricLoginScreen,
@@ -30,7 +31,6 @@ import {useWalletManager} from './features/WalletManager/context/WalletManagerCo
 import {useStatusBar} from './hooks/useStatusBar'
 import {agreementDate} from './kernel/config'
 import {AppRoutes} from './kernel/navigation'
-import {SearchProvider} from './Search/SearchContext'
 import {WalletNavigator} from './WalletNavigator'
 import {useHasWallets} from './yoroi-wallets/hooks'
 

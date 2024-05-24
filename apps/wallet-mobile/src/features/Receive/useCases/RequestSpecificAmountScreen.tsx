@@ -17,7 +17,7 @@ import {Button, KeyboardAvoidingView, Spacer, TextInput, useModal} from '../../.
 import {ScrollView, useScrollView} from '../../../components/ScrollView/ScrollView'
 import {useCopy} from '../../../hooks/useCopy'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
-import {isEmptyString} from '../../../utils'
+import {isEmptyString} from '../../../kernel/utils'
 import {editedFormatter} from '../../../yoroi-wallets/utils'
 import {useSelectedWallet} from '../../WalletManager/context/SelectedWalletContext'
 import {useReceive} from '../common/ReceiveProvider'

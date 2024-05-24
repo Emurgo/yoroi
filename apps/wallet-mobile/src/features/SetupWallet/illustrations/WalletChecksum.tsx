@@ -6,7 +6,7 @@ import React from 'react'
 import {StyleSheet, View, ViewStyle} from 'react-native'
 import tinycolor from 'tinycolor2'
 
-import {isEmptyString} from '../../../utils/utils'
+import {isEmptyString} from '../../../kernel/utils'
 
 const mkcolor = (primary: string, secondary: string, spots: string) => ({primary, secondary, spots})
 const COLORS = [

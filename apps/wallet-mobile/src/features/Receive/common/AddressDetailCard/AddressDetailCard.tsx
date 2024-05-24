@@ -5,7 +5,7 @@ import Animated, {Layout} from 'react-native-reanimated'
 
 import {Spacer} from '../../../../components'
 import {useCopy} from '../../../../hooks/useCopy'
-import {isEmptyString} from '../../../../utils/utils'
+import {isEmptyString} from '../../../../kernel/utils'
 import {useKeyHashes} from '../../../../yoroi-wallets/hooks'
 import {useReceive} from '../ReceiveProvider'
 import {ShareDetailsCard} from '../ShareDetailsCard/ShareDetailsCard'

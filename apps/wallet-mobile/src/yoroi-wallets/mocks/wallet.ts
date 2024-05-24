@@ -10,7 +10,6 @@ import {noop} from 'lodash'
 import {Observable} from 'rxjs'
 
 import {WalletMeta} from '../../features/WalletManager/common/types'
-import {getTokenFingerprint} from '../../legacy/format'
 import {fallbackTokenInfo, toTokenInfo, utf8ToHex} from '../cardano/api/utils'
 import * as HASKELL_SHELLEY_TESTNET from '../cardano/constants/testnet/constants'
 import {
@@ -30,6 +29,7 @@ import {
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../types'
+import {getTokenFingerprint} from '../utils/format'
 import {CardanoMobile} from '../wallets'
 import {mockEncryptedStorage} from './storage'
 import {mockTransactionInfo, mockTransactionInfos} from './transaction'

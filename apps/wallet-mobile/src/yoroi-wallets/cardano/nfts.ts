@@ -4,7 +4,7 @@ import {Balance} from '@yoroi/types'
 import {z} from 'zod'
 
 import {features} from '../../features'
-import {getAssetFingerprint} from '../../legacy/format'
+import {getAssetFingerprint} from '../utils/format'
 import {toDisplayAssetName} from './api'
 export const convertNft = (options: {
   metadata?: unknown

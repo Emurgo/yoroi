@@ -6,7 +6,7 @@ import {ScrollView, StyleSheet, Text, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer, useModal} from '../../../../components'
-import {isEmptyString} from '../../../../utils/utils'
+import {isEmptyString} from '../../../../kernel/utils'
 import {useStrings} from '../../common/useStrings'
 import {ShowDisclaimer} from './ShowDisclaimer/ShowDisclaimer'
 

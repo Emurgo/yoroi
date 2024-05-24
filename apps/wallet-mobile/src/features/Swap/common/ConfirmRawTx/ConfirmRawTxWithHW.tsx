@@ -4,7 +4,7 @@ import React, {useState} from 'react'
 import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
 
 import {Text} from '../../../../components'
-import {LedgerConnect} from '../../../../HW'
+import {LedgerConnect} from '../../../../legacy/HW'
 import {DeviceId, DeviceObj, withBLE, withUSB} from '../../../../yoroi-wallets/hw'
 import {walletManager} from '../../../WalletManager/common/walletManager'
 import {useSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'

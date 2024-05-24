@@ -12,7 +12,7 @@ import {
 } from 'react-native'
 import {HelperText as HelperTextRNP, TextInput as RNPTextInput} from 'react-native-paper'
 
-import {isEmptyString} from '../../utils/utils'
+import {isEmptyString} from '../../kernel/utils'
 import {Icon} from '../Icon'
 
 export type TextInputProps = RNTextInputProps &

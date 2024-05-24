@@ -12,7 +12,7 @@ import {Button, Icon, KeyboardAvoidingView, useModal} from '../../../../componen
 import {Space} from '../../../../components/Space/Space'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation, WalletInitRouteNavigation} from '../../../../kernel/navigation'
-import {isEmptyString} from '../../../../utils'
+import {isEmptyString} from '../../../../kernel/utils'
 import {makeKeys} from '../../../../yoroi-wallets/cardano/shelley/makeKeys'
 import {usePlate, useWalletMetas} from '../../../../yoroi-wallets/hooks'
 import {WalletMeta} from '../../../WalletManager/common/types'

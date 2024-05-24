@@ -5,7 +5,7 @@ import {StyleSheet, TextInput as RNTextInput, TextInputProps as RNTextInputProps
 import LinearGradient from 'react-native-linear-gradient'
 import {HelperText as HelperTextRNP, TextInput as RNPTextInput} from 'react-native-paper'
 
-import {isEmptyString} from '../../../../utils/utils'
+import {isEmptyString} from '../../../../kernel/utils'
 
 export type TextInputProps = RNTextInputProps &
   Omit<React.ComponentProps<typeof RNPTextInput>, 'theme'> & {

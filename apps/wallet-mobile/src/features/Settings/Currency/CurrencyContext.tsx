@@ -3,7 +3,7 @@ import React from 'react'
 import {useMutation, UseMutationOptions, useQuery, useQueryClient} from 'react-query'
 
 import {configCurrencies, supportedCurrencies} from '../../../kernel/constants'
-import {isEmptyString} from '../../../utils'
+import {isEmptyString} from '../../../kernel/utils'
 import {ConfigCurrencies, CurrencySymbol} from '../../../yoroi-wallets/types'
 
 const CurrencyContext = React.createContext<undefined | CurrencyContext>(undefined)

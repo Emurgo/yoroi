@@ -6,7 +6,7 @@ import {StyleSheet, View, ViewProps} from 'react-native'
 
 import {usePriceImpactRiskTheme} from '../../features/Swap/common/helpers'
 import {SwapPriceImpactRisk} from '../../features/Swap/common/types'
-import {isEmptyString} from '../../utils'
+import {isEmptyString} from '../../kernel/utils'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../yoroi-wallets/hooks'
 import {Quantities} from '../../yoroi-wallets/utils'
