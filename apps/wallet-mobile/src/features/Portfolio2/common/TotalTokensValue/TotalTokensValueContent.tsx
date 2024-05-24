@@ -11,11 +11,13 @@ type Props = {
   oldBalance: BigNumber
   usdExchangeRate: number
   headerCard: React.ReactNode
+  cardType: 'wallet' | 'dapps'
 }
 
-export const TotalTokensValueContent = ({balance, oldBalance, usdExchangeRate, headerCard}: Props) => {
+export const TotalTokensValueContent = ({balance, oldBalance, usdExchangeRate, headerCard, cardType}: Props) => {
   const {styles} = useStyles()
 
+  const isWallet = cardType === 'wallet'
   const formatBalance = balance.toFixed(2)
   const currentUSDBalance = balance.multipliedBy(usdExchangeRate)
   const oldUSDBalance = oldBalance.multipliedBy(usdExchangeRate)
@@ -40,7 +42,7 @@ export const TotalTokensValueContent = ({balance, oldBalance, usdExchangeRate, h
 
           <Text style={[styles.adaSymbol]}>ADA</Text>
 
-          <Text style={[styles.usdSymbol]}>/USD</Text>
+          {isWallet ? <Text style={[styles.usdSymbol]}>/USD</Text> : null}
         </View>
 
         <View style={styles.rowBetween}>
