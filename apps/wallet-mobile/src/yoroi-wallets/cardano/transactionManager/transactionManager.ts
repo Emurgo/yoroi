@@ -4,6 +4,7 @@ import {isArray, parseSafe} from '@yoroi/common'
 import {App} from '@yoroi/types'
 import assert from 'assert'
 import {fromPairs, mapValues, max} from 'lodash'
+import pLimit from 'p-limit'
 import DeviceInfo from 'react-native-device-info'
 import {defaultMemoize} from 'reselect'
 
@@ -189,7 +190,9 @@ export async function syncTxs({
   })
 
   try {
-    const result = await Promise.all(tasks)
+    const limit = pLimit(5)
+    const tasksWithLimit = tasks.map((task) => limit(() => task))
+    const result = await Promise.all(tasksWithLimit)
     const newTxs = result.flat(2).map((tx) => [tx.hash, toCachedTx(tx)])
     // .map((tx) => processTxHistoryData(tx, addressesByChunks.flat(), 0, networkId))
 
