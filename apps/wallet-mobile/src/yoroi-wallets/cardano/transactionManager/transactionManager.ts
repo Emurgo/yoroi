@@ -192,7 +192,7 @@ export async function syncTxs({
   })
 
   try {
-    const result = await PromiseAllLimited(tasks, 2)
+    const result = await PromiseAllLimited(tasks, 4)
     const newTxs = result.flat(2).map((tx) => [tx.hash, toCachedTx(tx)])
     // .map((tx) => processTxHistoryData(tx, addressesByChunks.flat(), 0, networkId))
 
