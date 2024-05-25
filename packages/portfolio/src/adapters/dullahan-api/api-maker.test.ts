@@ -16,6 +16,8 @@ describe('portfolioApiMaker', () => {
     const api = portfolioApiMaker({
       network: mockNetwork,
       request: mockRequest,
+      maxIdsPerRequest: 10,
+      maxConcurrentRequests: 10,
     })
 
     expect(Object.isFrozen(api)).toBe(true)
@@ -27,6 +29,8 @@ describe('portfolioApiMaker', () => {
   it('should return a PortfolioApi object with default fetchData (coverage)', () => {
     const api = portfolioApiMaker({
       network: mockNetwork,
+      maxIdsPerRequest: 10,
+      maxConcurrentRequests: 10,
     })
 
     expect(api).toBeDefined()
@@ -45,6 +49,8 @@ describe('portfolioApiMaker', () => {
     const api = portfolioApiMaker({
       network: mockNetwork,
       request: mockRequest,
+      maxIdsPerRequest: 10,
+      maxConcurrentRequests: 10,
     })
     const mockTokenIdsWithCache: ReadonlyArray<
       Api.RequestWithCache<Portfolio.Token.Id>
@@ -92,6 +98,8 @@ describe('portfolioApiMaker', () => {
     const api = portfolioApiMaker({
       network: mockNetwork,
       request: mockRequest,
+      maxIdsPerRequest: 10,
+      maxConcurrentRequests: 10,
     })
     const mockTokenIdsWithCache: ReadonlyArray<
       Api.RequestWithCache<Portfolio.Token.Id>
@@ -151,6 +159,8 @@ describe('portfolioApiMaker', () => {
     const api = portfolioApiMaker({
       network: mockNetwork,
       request: mockRequest,
+      maxIdsPerRequest: 10,
+      maxConcurrentRequests: 10,
     })
     const mockTokenIdsWithCache: ReadonlyArray<
       Api.RequestWithCache<Portfolio.Token.Id>
@@ -198,6 +208,8 @@ describe('portfolioApiMaker', () => {
     const api = portfolioApiMaker({
       network: mockNetwork,
       request: mockRequest,
+      maxIdsPerRequest: 10,
+      maxConcurrentRequests: 10,
     })
 
     const wrong = await api.tokenDiscovery(

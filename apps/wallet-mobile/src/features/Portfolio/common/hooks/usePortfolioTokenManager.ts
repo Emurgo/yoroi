@@ -2,11 +2,6 @@ import {mountMMKVStorage, observableStorageMaker} from '@yoroi/common'
 import {portfolioApiMaker, portfolioTokenManagerMaker, portfolioTokenStorageMaker} from '@yoroi/portfolio'
 import {Chain, Portfolio} from '@yoroi/types'
 import {freeze} from 'immer'
-import * as React from 'react'
-
-export const usePortfolioTokenManager = ({network}: {network: Chain.SupportedNetworks}) => {
-  return React.useMemo(() => buildPortfolioTokenManager({network}), [network])
-}
 
 export const buildPortfolioTokenManager = ({network}: {network: Chain.SupportedNetworks}) => {
   const rootStorage = mountMMKVStorage<Portfolio.Token.Id>({path: '/', id: `${network}.token-manager`})
@@ -17,6 +12,8 @@ export const buildPortfolioTokenManager = ({network}: {network: Chain.SupportedN
   })
   const api = portfolioApiMaker({
     network,
+    maxConcurrentRequests: 4,
+    maxIdsPerRequest: 80,
   })
 
   const tokenManager = portfolioTokenManagerMaker({
@@ -32,10 +29,6 @@ export const buildPortfolioTokenManagers = () => {
   const mainnetPortfolioTokenManager = buildPortfolioTokenManager({network: Chain.Network.Mainnet})
   const preprodPortfolioTokenManager = buildPortfolioTokenManager({network: Chain.Network.Preprod})
   const sanchoPortfolioTokenManager = buildPortfolioTokenManager({network: Chain.Network.Sancho})
-
-  mainnetPortfolioTokenManager.tokenManager.hydrate({sourceId: 'initial'})
-  preprodPortfolioTokenManager.tokenManager.hydrate({sourceId: 'initial'})
-  sanchoPortfolioTokenManager.tokenManager.hydrate({sourceId: 'initial'})
 
   const tokenManagers: Readonly<{
     [Chain.Network.Mainnet]: Portfolio.Manager.Token

@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
 
 import {Text} from '../../../../components'
-import {LedgerConnect} from '../../../../HW'
+import {LedgerConnect} from '../../../../legacy/HW'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useSignWithHwAndSubmitTx} from '../../../../yoroi-wallets/hooks'
 import {DeviceId, DeviceObj, withBLE, withUSB} from '../../../../yoroi-wallets/hw'

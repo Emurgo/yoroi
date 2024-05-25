@@ -9,7 +9,6 @@ import {Alert, AppState, AppStateStatus, InteractionManager, Platform} from 'rea
 import RNBootSplash from 'react-native-bootsplash'
 
 import StorybookScreen from '../.storybook'
-import {useStatusBar} from './components/hooks/useStatusBar'
 import {ModalProvider} from './components/Modal/ModalContext'
 import {ModalScreen} from './components/Modal/ModalScreen'
 import {OsLoginScreen, PinLoginScreen, useBackgroundTimeout} from './features/Auth'
@@ -22,15 +21,16 @@ import {AgreementChangedNavigator, InitializationNavigator} from './features/Ini
 import {LegalAgreement, useLegalAgreement} from './features/Initialization/common'
 import {useDeepLinkWatcher} from './features/Links/common/useDeepLinkWatcher'
 import {PortfolioScreen} from './features/Portfolio/useCases/PortfolioScreen'
+import {SearchProvider} from './features/Search/SearchContext'
 import {SetupWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
 import {
   ChooseBiometricLoginScreen,
   useShowBiometricsScreen,
 } from './features/SetupWallet/useCases/ChooseBiometricLogin/ChooseBiometricLoginScreen'
 import {useWalletManager} from './features/WalletManager/context/WalletManagerContext'
+import {useStatusBar} from './hooks/useStatusBar'
 import {agreementDate} from './kernel/config'
 import {AppRoutes} from './kernel/navigation'
-import {SearchProvider} from './Search/SearchContext'
 import {WalletNavigator} from './WalletNavigator'
 import {useHasWallets} from './yoroi-wallets/hooks'
 

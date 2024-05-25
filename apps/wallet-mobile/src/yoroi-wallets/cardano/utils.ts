@@ -7,7 +7,6 @@ import {Buffer} from 'buffer'
 
 import {YoroiEntry} from '../types'
 import {
-  Addressing,
   BaseAsset,
   DERIVATION_TYPES,
   NetworkId,
@@ -29,22 +28,6 @@ import {MultiToken} from './MultiToken'
 import {CardanoHaskellShelleyNetwork} from './networks'
 import {NUMBERS} from './numbers'
 import {CardanoTypes, WalletImplementation} from './types'
-
-// need to format shelley addresses as base16 but only legacy addresses as base58
-
-export const verifyFromBip44Root = (request: Addressing['addressing']) => {
-  const accountPosition = request.startLevel
-
-  if (accountPosition !== NUMBERS.BIP44_DERIVATION_LEVELS.PURPOSE) {
-    throw new Error('verifyFromBip44Root: addressing does not start from root')
-  }
-
-  const lastLevelSpecified = request.startLevel + request.path.length - 1
-
-  if (lastLevelSpecified !== NUMBERS.BIP44_DERIVATION_LEVELS.ADDRESS) {
-    throw new Error('verifyFromBip44Root: incorrect addressing size')
-  }
-}
 
 export const deriveRewardAddressHex = async (accountPubKeyHex: string, networkId: NetworkId): Promise<string> => {
   const accountPubKeyPtr = await CardanoMobile.Bip32PublicKey.fromBytes(Buffer.from(accountPubKeyHex, 'hex'))
@@ -175,8 +158,6 @@ export const isByron = (id: WalletImplementationId): boolean => id === WALLET_IM
 export const isHaskellShelley = (id: WalletImplementationId): boolean =>
   id === HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID || id === HASKELL_SHELLEY_24.WALLET_IMPLEMENTATION_ID
 
-export const isJormun = (id: WalletImplementationId): boolean => id === WALLET_IMPLEMENTATION_REGISTRY.JORMUNGANDR_ITN
-
 export const getWalletConfigById = (id: WalletImplementationId): WalletImplementation => {
   const idx = Object.values(WALLET_IMPLEMENTATION_REGISTRY).indexOf(id)
   const walletKey = Object.keys(WALLET_IMPLEMENTATION_REGISTRY)[idx]
@@ -286,13 +267,6 @@ export const toSendToken =
 
 export const isTokenInfo = (token: Balance.TokenInfo | DefaultAsset): token is Balance.TokenInfo => {
   return !!(token as Balance.TokenInfo).kind
-}
-
-export const selectFtOrThrow = (token: Balance.TokenInfo): Balance.TokenInfo => {
-  if (token.kind === 'ft') {
-    return token
-  }
-  throw new Error(`Token type "${token.kind}" is not a fungible token`)
 }
 
 export const generateCIP30UtxoCbor = async (utxo: RawUtxo) => {

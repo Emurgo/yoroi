@@ -3,9 +3,9 @@ import {useIntl} from 'react-intl'
 
 import {Text} from '../../../../../components/Text'
 import {txLabels} from '../../../../../kernel/i18n/global-messages'
-import {formatTokenWithSymbol} from '../../../../../legacy/format'
 import {useBalances} from '../../../../../yoroi-wallets/hooks'
 import {YoroiUnsignedTx} from '../../../../../yoroi-wallets/types/yoroi'
+import {formatTokenWithSymbol} from '../../../../../yoroi-wallets/utils/format'
 import {Amounts} from '../../../../../yoroi-wallets/utils/utils'
 import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
 

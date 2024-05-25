@@ -4,10 +4,10 @@ import * as React from 'react'
 import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native'
 
 import {Boundary, Spacer, TokenIcon, TokenIconPlaceholder} from '../../../../components'
-import {formatTokenWithText} from '../../../../legacy/format'
-import {isEmptyString} from '../../../../utils'
+import {isEmptyString} from '../../../../kernel/utils'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
+import {formatTokenWithText} from '../../../../yoroi-wallets/utils/format'
 import {useStrings} from '../useStrings'
 
 type AmountCardProps = {

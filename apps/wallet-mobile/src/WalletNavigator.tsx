@@ -6,14 +6,14 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Keyboard, Platform} from 'react-native'
 
-import {VotingRegistration} from './Catalyst'
 import {Icon, OfflineBanner} from './components'
-import {DashboardNavigator} from './Dashboard'
 import {DiscoverNavigator} from './features/Discover'
 import {ShowExchangeResultOrderScreen} from './features/Exchange/useCases/ShowExchangeResultOrderScreen/ShowExchangeResultOrderScreen'
 import {useLinksRequestAction} from './features/Links/common/useLinksRequestAction'
 import {useLinksShowActionResult} from './features/Links/common/useLinksShowActionResult'
 import {MenuNavigator} from './features/Menu'
+import {NftsNavigator} from './features/Nfts/NftsNavigator'
+import {SearchProvider} from './features/Search/SearchContext'
 import {SettingsScreenNavigator} from './features/Settings'
 import {SetupWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
 import {GovernanceNavigator} from './features/Staking/Governance'
@@ -27,9 +27,9 @@ import {
   WalletStackRoutes,
   WalletTabRoutes,
 } from './kernel/navigation'
-import {NftsNavigator} from './Nfts/NftsNavigator'
-import {SearchProvider} from './Search/SearchContext'
-import {TxHistoryNavigator} from './TxHistory'
+import {VotingRegistration} from './legacy/Catalyst'
+import {DashboardNavigator} from './legacy/Dashboard'
+import {TxHistoryNavigator} from './legacy/TxHistory'
 
 const Tab = createBottomTabNavigator<WalletTabRoutes>()
 const WalletTabNavigator = () => {

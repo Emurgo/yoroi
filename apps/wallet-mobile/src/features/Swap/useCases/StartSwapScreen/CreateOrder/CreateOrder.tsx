@@ -11,11 +11,11 @@ import {Button, KeyboardAvoidingView, Spacer, useModal} from '../../../../../com
 import {frontendFeeAddressMainnet, frontendFeeAddressPreprod} from '../../../../../kernel/env'
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../../kernel/navigation'
-import {useDisableSearchOnBar} from '../../../../../Search/SearchContext'
 import {NotEnoughMoneyToSendError} from '../../../../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {YoroiEntry} from '../../../../../yoroi-wallets/types'
-import {isMainnetNetworkId, Quantities} from '../../../../../yoroi-wallets/utils'
+import {Quantities} from '../../../../../yoroi-wallets/utils'
+import {useDisableSearchOnBar} from '../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
 import {createOrderEntry, makePossibleFrontendFeeEntry} from '../../../common/entries'
 import {getPriceImpactRisk} from '../../../common/helpers'
@@ -127,7 +127,7 @@ export const CreateOrder = () => {
         datum,
       )
 
-      const isMainnet = isMainnetNetworkId(wallet.networkId)
+      const isMainnet = wallet.isMainnet
       const frontendFee = selectedPoolCalculation.cost.frontendFeeInfo.fee
       const frontendFeeDepositAddress = isMainnet ? frontendFeeAddressMainnet : frontendFeeAddressPreprod
       const frontendFeeEntry = makePossibleFrontendFeeEntry(frontendFee, frontendFeeDepositAddress)

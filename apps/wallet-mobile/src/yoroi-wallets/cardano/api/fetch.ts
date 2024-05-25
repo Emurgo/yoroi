@@ -90,6 +90,9 @@ export const fetchDefault = <T = Record<string, any>>(
     checkResponse: options?.checkResponse ?? _checkResponse,
     headers,
   }
+  logger.debug(`fetchDefault: API call ${fullPath}`)
+  // when full request needs to be logged
+  // logger.debug(`fetchDefault: API call ${fullPath}`, {request})
   return checkedFetch(request)
 }
 export default fetchDefault

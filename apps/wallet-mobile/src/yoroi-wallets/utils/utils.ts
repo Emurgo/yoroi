@@ -2,7 +2,7 @@ import {Balance} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 
 import {NumberLocale} from '../../kernel/i18n/languages'
-import {NetworkId, RawUtxo, TokenId, YoroiEntry} from '../types'
+import {RawUtxo, TokenId, YoroiEntry} from '../types'
 
 export const Entries = {
   first: (entries: YoroiEntry[]): YoroiEntry => {
@@ -226,12 +226,4 @@ export const splitStringInto64CharArray = (inputString: string): string[] => {
   }
 
   return resultArray
-}
-
-export const isMainnetNetworkId = (networkId: NetworkId) => {
-  return networkId !== 300 && !isSanchoNetworkId(networkId)
-}
-
-export const isSanchoNetworkId = (networkId: NetworkId) => {
-  return networkId === 450
 }

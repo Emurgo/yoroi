@@ -3,7 +3,7 @@ import {AssetNameUtils} from '@emurgo/yoroi-lib/dist/internals/utils/assets'
 import {Balance} from '@yoroi/types'
 import {Buffer} from 'memfs/lib/internal/buffer'
 
-import {LegacyToken, YoroiTokenId} from '../../types'
+import {LegacyToken} from '../../types'
 import {TokenRegistryEntry} from './tokenRegistry'
 
 export const tokenInfo = (entry: TokenRegistryEntry): Balance.TokenInfo => {
@@ -84,12 +84,6 @@ export const toTokenId = (tokenIdentifier: string) => {
   return `${tokenSubject.slice(0, 56)}.${toAssetNameHex(tokenIdentifier)}`
 }
 
-export const asTokenId = (tokenIdentifier: string): YoroiTokenId => {
-  const tokenSubject = toTokenSubject(tokenIdentifier)
-  return `${tokenSubject.slice(0, 56)}.${toAssetNameHex(tokenIdentifier)}`
-}
-
-export const hexToUtf8 = (hex: string) => Buffer.from(hex, 'hex').toString('utf-8')
 export const utf8ToHex = (text: string) => Buffer.from(text, 'utf-8').toString('hex')
 
 export const toTokenInfo = (token: LegacyToken): Balance.TokenInfo => {

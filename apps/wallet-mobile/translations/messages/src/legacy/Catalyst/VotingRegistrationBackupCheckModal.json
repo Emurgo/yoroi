@@ -1,0 +1,47 @@
+[
+  {
+    "id": "components.catalyst.catalystbackupcheckmodal.pinCheckbox",
+    "defaultMessage": "!!!I have written down my Catalyst PIN which I obtained in previous steps.",
+    "file": "src/legacy/Catalyst/VotingRegistrationBackupCheckModal.tsx",
+    "start": {
+      "line": 59,
+      "column": 15,
+      "index": 1816
+    },
+    "end": {
+      "line": 62,
+      "column": 3,
+      "index": 1987
+    }
+  },
+  {
+    "id": "components.catalyst.catalystbackupcheckmodal.qrCodeCheckbox",
+    "defaultMessage": "!!!I have taken a screenshot of my QR code and saved my Catalyst secret code as a fallback.",
+    "file": "src/legacy/Catalyst/VotingRegistrationBackupCheckModal.tsx",
+    "start": {
+      "line": 63,
+      "column": 18,
+      "index": 2007
+    },
+    "end": {
+      "line": 66,
+      "column": 3,
+      "index": 2198
+    }
+  },
+  {
+    "id": "components.catalyst.catalystbackupcheckmodal.consequencesCheckbox",
+    "defaultMessage": "!!!I understand that if I did not save my Catalyst PIN and QR code (or secret code) I will not be able to register and vote for Catalystproposals.",
+    "file": "src/legacy/Catalyst/VotingRegistrationBackupCheckModal.tsx",
+    "start": {
+      "line": 67,
+      "column": 24,
+      "index": 2224
+    },
+    "end": {
+      "line": 73,
+      "column": 3,
+      "index": 2504
+    }
+  }
+]

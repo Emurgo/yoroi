@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {Certificate} from '@emurgo/cross-csl-core'
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
-import {useNavigation} from '@react-navigation/native'
 import {
   mountMMKVStorage,
   observableStorageMaker,
@@ -303,17 +302,6 @@ export const useTokenInfos = (
 ) => {
   const results = useTokenInfosDetailed({wallet, tokenIds}, options)
   return results.reduce((result, {data}) => (data ? [...result, data] : result), [] as Array<Balance.TokenInfo>)
-}
-
-export const useAllTokenInfos = ({wallet}: {wallet: YoroiWallet}) => {
-  const balances = useBalances(wallet)
-
-  const tokenInfos = useTokenInfos({
-    wallet,
-    tokenIds: Amounts.toArray(balances).map(({tokenId}) => tokenId),
-  })
-
-  return tokenInfos
 }
 
 export const usePlate = ({networkId, publicKeyHex}: {networkId: NetworkId; publicKeyHex: string}) => {
@@ -936,17 +924,6 @@ export const useSaveMemo = (
   }
 }
 
-export const useNfts = (wallet: YoroiWallet, options: UseQueryOptions<Balance.TokenInfo, Error> = {}) => {
-  const assetIds = useAssetIds(wallet)
-  const results = useTokenInfosDetailed({wallet, tokenIds: assetIds}, options)
-  const nfts = results.map((r) => r.data).filter((t): t is Balance.TokenInfo => t?.kind === 'nft')
-  const isLoading = results.some((r) => r.isLoading)
-  const isError = results.some((r) => r.isError)
-  const error = results.find((r) => r.isError)?.error
-  const refetch = () => results.forEach((r) => r.refetch())
-  return {nfts, refetch, error, isLoading, isError}
-}
-
 export const useNft = (wallet: YoroiWallet, {id}: {id: string}): Balance.TokenInfo => {
   const tokenInfo = useTokenInfo({wallet, tokenId: id}, {suspense: true})
 
@@ -954,19 +931,6 @@ export const useNft = (wallet: YoroiWallet, {id}: {id: string}): Balance.TokenIn
     throw new Error(`Invalid id used "${id}" to get NFT`)
   }
   return tokenInfo
-}
-
-export const useIsWalletEmpty = (wallet: YoroiWallet) => {
-  const balances = useBalances(wallet)
-  return Amounts.toArray(balances).every(({quantity}) => Quantities.isZero(quantity))
-}
-export function useHideBottomTabBar() {
-  const navigation = useNavigation()
-
-  React.useLayoutEffect(() => {
-    navigation.getParent()?.setOptions({tabBarStyle: {display: 'none'}, tabBarVisible: false})
-    return () => navigation.getParent()?.setOptions({tabBarStyle: true, tabBarVisible: undefined})
-  }, [navigation])
 }
 
 const supportedTypes = [
@@ -1067,32 +1031,6 @@ export const useNativeAssetImage = ({
     isLoading: isLoading || query.isLoading,
     onError,
     onLoad,
-  }
-}
-
-type NativeAssetInvalidationRequest = {
-  networkId: NetworkId
-  policy: string
-  name: string
-}
-export const useNativeAssetInvalidation = ({networkId, policy, name}: NativeAssetInvalidationRequest) => {
-  const network = networkId === 300 ? 'preprod' : 'mainnet'
-  const mutation = useMutationWithInvalidations({
-    invalidateQueries: [['native-asset-img', policy, name]],
-    mutationFn: async () => {
-      const response = await fetch(`https://${network}.processed-media.yoroiwallet.com/invalidate`, {
-        method: 'POST',
-        body: JSON.stringify({policy, name}),
-      })
-      if (!response.ok) {
-        throw new Error(`NativeAsset invalid request body for policy=${policy} name=${name}`)
-      }
-    },
-  })
-
-  return {
-    ...mutation,
-    invalidate: mutation.mutate,
   }
 }
 
