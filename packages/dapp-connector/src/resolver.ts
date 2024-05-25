@@ -103,7 +103,20 @@ export const resolver: Resolver = {
           : undefined
       const result = await context.wallet.getCollateral(value)
 
-      if (result === null || (result.length === 0 && typeof value === 'string')) return null
+      if (result === null) {
+        // offer reorganisation
+        const balance = await context.wallet.getBalance('*')
+        const coin = await balance.coin()
+        // check min collateral value
+        if ((await coin.toStr()) !== '0') {
+          const utxos = await context.wallet.getUtxos(value ?? '1000000')
+          if (utxos === null || utxos.length === 0) {
+            return null
+          }
+        }
+
+        return null
+      }
 
       return Promise.all(result.map((u) => u.toHex()))
     },
@@ -212,27 +225,28 @@ const handleMethod = async (
     supportedExtensions: trustedContext.supportedExtensions,
   }
 
-  if (method === 'cardano_enable') {
-    return resolver.enable(params, context)
-  }
+  if (!method) throw new Error('Method is required')
+  const isValidMethod = isKeyOf(method, methods)
+  if (!isValidMethod) throw new Error(`Unknown method '${method}'`)
+  return methods[method](params, context)
+}
 
-  if (method === 'cardano_is_enabled') {
-    return resolver.isEnabled(params, context)
-  }
-
-  if (method === LOG_MESSAGE_EVENT) {
-    return resolver.logMessage(params, context)
-  }
-
-  if (method.startsWith('api.')) {
-    const methodParts = method.split('.')
-    if (methodParts.length !== 2) throw new Error(`Invalid method ${method}`)
-    const apiMethod = methodParts[1]
-    if (!isKeyOf(apiMethod, resolver.api)) throw new Error(`Unknown method ${method}`)
-    return resolver.api[apiMethod](params, context)
-  }
-
-  throw new Error(`Unknown method '${method}' with params ${JSON.stringify(params)}`)
+const methods = {
+  'cardano_enable': resolver.enable,
+  'cardano_is_enabled': resolver.isEnabled,
+  'log_message': resolver.logMessage,
+  'api.getBalance': resolver.api.getBalance,
+  'api.getChangeAddress': resolver.api.getChangeAddress,
+  'api.getNetworkId': resolver.api.getNetworkId,
+  'api.getRewardAddresses': resolver.api.getRewardAddresses,
+  'api.getUsedAddresses': resolver.api.getUsedAddresses,
+  'api.getExtensions': resolver.api.getExtensions,
+  'api.getUnusedAddresses': resolver.api.getUnusedAddresses,
+  'api.getUtxos': resolver.api.getUtxos,
+  'api.getCollateral': resolver.api.getCollateral,
+  'api.submitTx': resolver.api.submitTx,
+  'api.signTx': resolver.api.signTx,
+  'api.signData': resolver.api.signData,
 }
 
 export const resolverHandleEvent = async (

@@ -25,20 +25,22 @@ export const cip30ExtensionMaker = (wallet: YoroiWallet) => {
 
 const getCSL = () => wrappedCsl()
 
-const recreateValue = async (value: CSL.Value) => {
-  return CardanoMobile.Value.fromHex(await value.toHex())
+const copy = async <T extends {toHex: () => Promise<string>}>(
+  creator: {fromHex: (hex: string) => Promise<T>},
+  value: T,
+): Promise<T> => {
+  return creator.fromHex(await value.toHex())
 }
 
-const recreateMultiple = async <T>(items: T[], recreate: (item: T) => Promise<T>) => {
-  return Promise.all(items.map(recreate))
+const copyMultiple = async <T extends {toHex: () => Promise<string>}>(
+  items: T[],
+  creator: {fromHex: (hex: string) => Promise<T>},
+) => {
+  return Promise.all(items.map((item) => copy(creator, item)))
 }
 
 const recreateTransactionUnspentOutput = async (utxo: CSL.TransactionUnspentOutput) => {
-  return CardanoMobile.TransactionUnspentOutput.fromHex(await utxo.toHex())
-}
-
-const recreateWitnessSet = async (witnessSet: CSL.TransactionWitnessSet) => {
-  return CardanoMobile.TransactionWitnessSet.fromHex(await witnessSet.toHex())
+  return copy(CardanoMobile.TransactionUnspentOutput, utxo)
 }
 
 class CIP30Extension {
@@ -48,7 +50,7 @@ class CIP30Extension {
     const {csl, release} = getCSL()
     try {
       const value = await _getBalance(csl, tokenId, this.wallet.utxos, this.wallet.primaryTokenInfo.id)
-      return recreateValue(value)
+      return copy(CardanoMobile.Value, value)
     } finally {
       release()
     }
@@ -111,7 +113,7 @@ class CIP30Extension {
 
       const multipleUtxosCollateral = await _drawCollateralInMultipleUtxos(csl, this.wallet, asQuantity(valueNum))
       if (multipleUtxosCollateral && multipleUtxosCollateral.length > 0) {
-        return recreateMultiple(multipleUtxosCollateral, recreateTransactionUnspentOutput)
+        return copyMultiple(multipleUtxosCollateral, CardanoMobile.TransactionUnspentOutput)
       }
 
       return null
@@ -146,7 +148,7 @@ class CIP30Extension {
       const keys = await Promise.all(signers.map(async (signer) => createRawTxSigningKey(rootKey, signer)))
       const signedTxBytes = await signRawTransaction(csl, cbor, keys)
       const signedTx = await csl.Transaction.fromBytes(signedTxBytes)
-      return recreateWitnessSet(await signedTx.witnessSet())
+      return copy(CardanoMobile.TransactionWitnessSet, await signedTx.witnessSet())
     } finally {
       release()
     }
