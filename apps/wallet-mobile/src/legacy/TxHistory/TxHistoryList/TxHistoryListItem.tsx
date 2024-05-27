@@ -115,7 +115,7 @@ const Middle = ({style, ...props}: ViewProps) => (
 const Right = ({style, ...props}: ViewProps) => <View style={[style, {padding: 4}]} {...props} />
 const Amount = ({wallet, transaction}: {wallet: YoroiWallet; transaction: TransactionInfo}) => {
   const {styles} = useStyles()
-  const {isPrivacyOff, privacyPlaceholder} = usePrivacyMode()
+  const {isPrivacyOn, privacyPlaceholder} = usePrivacyMode()
   const amountAsMT = MultiToken.fromArray(transaction.amount)
   const amount: BigNumber = amountAsMT.getDefault()
   const fee = transaction.fee ? transaction.fee[0] : null
@@ -129,10 +129,10 @@ const Amount = ({wallet, transaction}: {wallet: YoroiWallet; transaction: Transa
   return (
     <View style={styles.amount} testID="transactionAmount">
       <Text style={style} secondary={transaction.assurance === 'PENDING'}>
-        <Text>{isPrivacyOff && formatTokenInteger(asQuantity(amount), wallet.primaryToken)}</Text>
+        <Text>{isPrivacyOn && formatTokenInteger(asQuantity(amount), wallet.primaryToken)}</Text>
 
         <Text small>
-          {isPrivacyOff ? formatTokenFractional(asQuantity(amount), wallet.primaryToken) : privacyPlaceholder}
+          {isPrivacyOn ? formatTokenFractional(asQuantity(amount), wallet.primaryToken) : privacyPlaceholder}
         </Text>
       </Text>
 

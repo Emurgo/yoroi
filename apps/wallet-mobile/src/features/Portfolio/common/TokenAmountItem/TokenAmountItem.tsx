@@ -33,7 +33,7 @@ export const TokenAmountItem = ({
   orderType,
 }: TokenAmountItemProps) => {
   const {styles, colors} = useStyles()
-  const {privacyPlaceholder, isPrivacyOff} = usePrivacyMode()
+  const {privacyPlaceholder, isPrivacyOn} = usePrivacyMode()
   const priceImpactRiskTheme = usePriceImpactRiskTheme(priceImpactRisk ?? 'none')
 
   const {info} = amount
@@ -41,7 +41,7 @@ export const TokenAmountItem = ({
   const detail = isPrimary ? info.description : info.fingerprint
   const name = infoExtractName(info)
 
-  const formattedQuantity = isPrivacyOff || ignorePrivacy ? amountFormatter()(amount) : privacyPlaceholder
+  const formattedQuantity = isPrivacyOn || !ignorePrivacy ? amountFormatter()(amount) : privacyPlaceholder
 
   const showSwapDetails = !isPrimary && variant === 'swap'
   const priceImpactRiskTextColor = orderType === 'market' ? priceImpactRiskTheme.text : colors.text
