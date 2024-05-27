@@ -8,11 +8,11 @@ export const TraitSchema = z.object({
 })
 
 const TraitsSchema = z.object({
-  // is part of the token id, it's not used by Portfolio
+  totalItems: z.number().nonnegative(),
+  traits: z.array(TraitSchema),
+  // useful only if client doen't have the info
   // collection: z.string().optional(),
   // name: z.string().optional(),
-  totalItems: z.number(),
-  traits: z.array(TraitSchema),
 })
 
 export const isTokenTraits = (data: unknown): data is Portfolio.Token.Traits =>

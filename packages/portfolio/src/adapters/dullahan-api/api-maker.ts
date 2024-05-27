@@ -188,7 +188,7 @@ export const apiConfig: ApiConfig = freeze(
     mainnet: {
       tokenDiscovery: 'https://zero.yoroiwallet.com/tokens/discovery',
       tokenInfos: 'https://zero.yoroiwallet.com/tokens/info/multi',
-      tokenTraits: 'https://zero.yoroiwallet.com/nft/traits',
+      tokenTraits: 'https://zero.yoroiwallet.com/tokens/nft/traits',
     },
     preprod: {
       tokenDiscovery:
@@ -196,7 +196,7 @@ export const apiConfig: ApiConfig = freeze(
       tokenInfos:
         'https://dev-yoroi-backend-zero-preprod.emurgornd.com/tokens/info/multi',
       tokenTraits:
-        'https://dev-yoroi-backend-zero-preprod.emurgornd.com/nft/traits',
+        'https://dev-yoroi-backend-zero-preprod.emurgornd.com/tokens/nft/traits',
     },
     sancho: {
       tokenDiscovery:
@@ -204,7 +204,7 @@ export const apiConfig: ApiConfig = freeze(
       tokenInfos:
         'https://dev-yoroi-backend-zero-preprod.emurgornd.com/tokens/info/multi',
       tokenTraits:
-        'https://dev-yoroi-backend-zero-preprod.emurgornd.com/nft/traits',
+        'https://dev-yoroi-backend-zero-preprod.emurgornd.com/tokens/nft/traits',
     },
   },
   true,
