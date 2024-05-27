@@ -1109,5 +1109,9 @@
   "portfolio.portfolioTokensDetailScreen.website": "Website",
   "portfolio.portfolioTokensDetailScreen.policyID": "Policy ID",
   "portfolio.portfolioTokensDetailScreen.fingerprint": "Fingerprint",
-  "portfolio.portfolioTokensDetailScreen.detailsOn": "Details on"
+  "portfolio.portfolioTokensDetailScreen.detailsOn": "Details on",
+  "portfolio.portfolioTokensListScreen.noDataFound": "No Data Found",
+  "portfolio.portfolioTokensListScreen.value": "Value",
+  "portfolio.portfolioTokensListScreen.dex": "DEX",
+  "portfolio.portfolioTokensListScreen.lp": "LP"
 }

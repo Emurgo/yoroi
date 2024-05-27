@@ -6,8 +6,9 @@ import {Spacer} from '../../../../../components'
 import {makeList} from '../../../../../utils'
 import {TokenEmptyList} from '../../../common/TokenEmptyList'
 import {IOpenOrders} from '../../../common/useGetOpenOrders'
+import {useShowOpenOrderModal} from '../../../common/useShowOpenOrderModal'
 import {useStrings} from '../../../common/useStrings'
-import {DAppTokenITem} from './DAppTokenITem/DAppTokenITem'
+import {DAppTokenITem} from './DAppTokenItem/DAppTokenItem'
 
 type Props = {
   tokensList: IOpenOrders[]
@@ -19,8 +20,22 @@ export const OpenOrdersTab = ({isLoading, tokensList, isSearching}: Props) => {
   const {styles} = useStyles()
   const hasEmpty = tokensList.length === 0
 
+  const {onShow} = useShowOpenOrderModal()
+
+  const onTokenPress = (order?: IOpenOrders) => {
+    if (!order) return
+    onShow(order)
+  }
+
   const renderTokenItem = (item: IOpenOrders | undefined, index: number) => {
-    return <DAppTokenITem key={item?.id ?? index} tokenInfo={item ? item : undefined} splitTokenSymbol="/" />
+    return (
+      <DAppTokenITem
+        onPress={() => onTokenPress(item)}
+        key={item?.id ?? index}
+        tokenInfo={item ? item : undefined}
+        splitTokenSymbol="/"
+      />
+    )
   }
 
   const renderHeaderList = () => {
@@ -52,6 +67,7 @@ export const OpenOrdersTab = ({isLoading, tokensList, isSearching}: Props) => {
       <Spacer height={16} />
 
       <FlatList
+        scrollEnabled={false}
         data={tokensList}
         ListHeaderComponent={renderHeaderList()}
         ListFooterComponent={renderFooterList()}

@@ -2,7 +2,7 @@ import {createStackNavigator} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 
-import {defaultStackNavigationOptions, Portfolio2Routes} from '../../navigation'
+import {defaultStackNavigationOptions, Portfolio2Routes} from '../../kernel/navigation'
 import {useStrings} from './common/useStrings'
 import {PortfolioDashboardScreen} from './useCases/PortfolioDashboard/PortfolioDashboardScreen'
 import {PortfolioTokenDetailsScreen} from './useCases/PortfolioTokenDetails/PortfolioTokenDetailsScreen'

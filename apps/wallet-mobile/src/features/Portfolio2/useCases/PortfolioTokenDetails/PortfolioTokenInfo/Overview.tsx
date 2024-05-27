@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react-native/no-raw-text */
 import {useTheme} from '@yoroi/theme'
 import React, {ReactNode, useState} from 'react'
 import {
@@ -16,9 +14,8 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Accordion, CopyButton, Spacer} from '../../../../../components'
 import {ScrollView} from '../../../../../components/ScrollView/ScrollView'
-import {Logger} from '../../../../../legacy/logging'
 import {useGetPortfolioTokenInfo} from '../../../common/useGetPortfolioTokenInfo'
-import {usePortfolioTokenDetailParams} from '../../../common/useNavigationTo'
+import {usePortfolioTokenDetailParams} from '../../../common/useNavigateTo'
 import {useStrings} from '../../../common/useStrings'
 interface Props {
   onScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
@@ -33,12 +30,7 @@ export const Overview = ({onScroll, topContent}: Props) => {
 
   const handleOpenLink = async (url?: string) => {
     if (url == null) return
-    try {
-      await Linking.canOpenURL(url)
-      await Linking.openURL(url)
-    } catch (e: any) {
-      Logger.error(e)
-    }
+    await Linking.openURL(url)
   }
 
   return (

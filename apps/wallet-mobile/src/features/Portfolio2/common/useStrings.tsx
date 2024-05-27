@@ -60,6 +60,13 @@ export const useStrings = () => {
     policyID: intl.formatMessage(messages.policyID),
     fingerprint: intl.formatMessage(messages.fingerprint),
     detailsOn: intl.formatMessage(messages.detailsOn),
+    value: intl.formatMessage(messages.value),
+    dex: intl.formatMessage(messages.dex),
+    lp: intl.formatMessage(messages.lp),
+    total: intl.formatMessage(messages.total),
+    assetPrice: intl.formatMessage(messages.assetPrice),
+    assetAmount: intl.formatMessage(messages.assetAmount),
+    txId: intl.formatMessage(messages.txId),
   }
 }
 
@@ -158,7 +165,7 @@ export const messages = defineMessages({
     defaultMessage: '!!!{countOpenOrders} open order(s)',
   },
   noDataFound: {
-    id: 'portfolio.portfolioTokensDetailScreen.noDataFound',
+    id: 'portfolio.portfolioTokensListScreen.noDataFound',
     defaultMessage: '!!!No Data Found',
   },
   performance: {
@@ -280,5 +287,33 @@ export const messages = defineMessages({
   detailsOn: {
     id: 'portfolio.portfolioTokensDetailScreen.detailsOn',
     defaultMessage: '!!!Details on',
+  },
+  value: {
+    id: 'portfolio.portfolioTokensListScreen.value',
+    defaultMessage: '!!!Value',
+  },
+  dex: {
+    id: 'portfolio.portfolioTokensListScreen.dex',
+    defaultMessage: '!!!DEX',
+  },
+  lp: {
+    id: 'portfolio.portfolioTokensListScreen.lp',
+    defaultMessage: '!!!LP',
+  },
+  total: {
+    id: 'components.governance.total',
+    defaultMessage: '!!!Total',
+  },
+  assetPrice: {
+    id: 'swap.listOrders.sheet.assetPrice',
+    defaultMessage: '!!!Asset price',
+  },
+  assetAmount: {
+    id: 'swap.listOrders.sheet.assetAmount',
+    defaultMessage: '!!!Asset amount',
+  },
+  txId: {
+    id: 'swap.listOrders.txId',
+    defaultMessage: '!!!Transaction ID',
   },
 })

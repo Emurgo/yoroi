@@ -9,7 +9,7 @@ import {Icon, Spacer} from '../../../../../components'
 import {ScrollView} from '../../../../../components/ScrollView/ScrollView'
 import {useStrings} from '../../..//common/useStrings'
 import {useGetPortfolioTokenInfo} from '../../../common/useGetPortfolioTokenInfo'
-import {usePortfolioTokenDetailParams} from '../../../common/useNavigationTo'
+import {usePortfolioTokenDetailParams} from '../../../common/useNavigateTo'
 
 interface Props {
   onScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => void

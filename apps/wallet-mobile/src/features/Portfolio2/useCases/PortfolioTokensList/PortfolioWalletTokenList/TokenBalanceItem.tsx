@@ -1,11 +1,12 @@
 import {useTheme} from '@yoroi/theme'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
-import {Image, StyleSheet, Text, View} from 'react-native'
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Spacer} from '../../../../../components'
 import {PnlTag} from '../../../common/PnlTag/PnlTag'
 import {IPortfolioBalance} from '../../../common/useGetTokensWithBalance'
+import {useNavigateTo} from '../../../common/useNavigateTo'
 import {TokenBalanceSkeletonItem} from './TokenBalanceSkeletonItem'
 
 type Props = {
@@ -13,6 +14,8 @@ type Props = {
 }
 export const TokenBalanceItem = ({info}: Props) => {
   const {styles} = useStyles()
+  const navigationTo = useNavigateTo()
+
   if (!info) return <TokenBalanceSkeletonItem />
 
   const balance = new BigNumber(info?.balance ?? 0)
@@ -26,7 +29,7 @@ export const TokenBalanceItem = ({info}: Props) => {
   const pnlPercentFormatted = pnl.dividedBy(oldBalance).multipliedBy(100).toFixed(2)
 
   return (
-    <View style={styles.root}>
+    <TouchableOpacity onPress={() => navigationTo.tokenDetail({id: 'some_id', name: info.symbol})} style={styles.root}>
       <View style={styles.rowCenter}>
         <Image source={typeof info.logo === 'string' ? {uri: info.logo} : info.logo} style={styles.tokenLogo} />
 
@@ -46,7 +49,7 @@ export const TokenBalanceItem = ({info}: Props) => {
 
         <Text style={styles.usdBalance}>{usdFormatted} USD</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   )
 }
 

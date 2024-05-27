@@ -7,7 +7,7 @@ import {Icon, Spacer} from '../../../../../components'
 import {usePortfolioBalances} from '../../../../Portfolio/common/hooks/usePortfolioBalances'
 import {MediaPreview} from '../../../../Portfolio/common/MediaPreview/MediaPreview'
 import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
-import {useNavigateTo} from '../../../common/useNavigationTo'
+import {useNavigateTo} from '../../../common/useNavigateTo'
 import {useStrings} from '../../../common/useStrings'
 
 export const DashboardNFTsList = () => {

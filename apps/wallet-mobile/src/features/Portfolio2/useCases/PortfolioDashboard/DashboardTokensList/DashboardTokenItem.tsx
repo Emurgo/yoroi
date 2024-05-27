@@ -4,7 +4,7 @@ import {Image, ImageSourcePropType, StyleSheet, Text, TouchableOpacity, View} fr
 
 import {Spacer} from '../../../../../components'
 import {PnlTag} from '../../../common/PnlTag/PnlTag'
-import {useNavigateTo} from '../../../common/useNavigationTo'
+import {useNavigateTo} from '../../../common/useNavigateTo'
 import {DashboardTokenSkeletonItem} from './DashboardTokenSkeletonItem'
 
 type Props = {

@@ -10,7 +10,7 @@ import {Spacer} from '../../../../../../components/Spacer'
 import {formatDateRelative} from '../../../../../../legacy/format'
 import {makeList} from '../../../../../../utils'
 import {useGetPortfolioTokenTransaction} from '../../../../common/useGetPortfolioTokenTransaction'
-import {usePortfolioTokenDetailParams} from '../../../../common/useNavigationTo'
+import {usePortfolioTokenDetailParams} from '../../../../common/useNavigateTo'
 import {TransactionItem} from './TransactionItem'
 import {TransactionItemSkeleton} from './TransactionItemSkeleton'
 interface Props {

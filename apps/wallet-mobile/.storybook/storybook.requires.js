@@ -55,18 +55,6 @@ try {
 const getStories = () => {
   return {
     "./.storybook/stories/Button/ExampleButton.stories.js": require("./stories/Button/ExampleButton.stories.js"),
-    "./src/auth/backgroundTimeout.stories.tsx": require("../src/auth/backgroundTimeout.stories.tsx"),
-    "./src/auth/ChangePinScreen/ChangePinScreen.stories.tsx": require("../src/auth/ChangePinScreen/ChangePinScreen.stories.tsx"),
-    "./src/auth/CheckPinInput/CheckPinInput.stories.tsx": require("../src/auth/CheckPinInput/CheckPinInput.stories.tsx"),
-    "./src/auth/CreatePinInput/CreatePinInput.stories.tsx": require("../src/auth/CreatePinInput/CreatePinInput.stories.tsx"),
-    "./src/auth/CreatePinScreen/CreatePinScreen.stories.tsx": require("../src/auth/CreatePinScreen/CreatePinScreen.stories.tsx"),
-    "./src/auth/OsAuthScreen/OsAuthScreen.stories.tsx": require("../src/auth/OsAuthScreen/OsAuthScreen.stories.tsx"),
-    "./src/auth/OsLoginScreen/OsLoginScreen.stories.tsx": require("../src/auth/OsLoginScreen/OsLoginScreen.stories.tsx"),
-    "./src/auth/PinInput/PinInput.stories.tsx": require("../src/auth/PinInput/PinInput.stories.tsx"),
-    "./src/auth/PinLoginScreen/PinLoginScreen.stories.tsx": require("../src/auth/PinLoginScreen/PinLoginScreen.stories.tsx"),
-    "./src/Catalyst/VotingBanner.stories.tsx": require("../src/Catalyst/VotingBanner.stories.tsx"),
-    "./src/Catalyst/VotingRegistration.stories.tsx": require("../src/Catalyst/VotingRegistration.stories.tsx"),
-    "./src/components/Accordion/Accordion.stories.tsx": require("../src/components/Accordion/Accordion.stories.tsx"),
     "./src/components/AmountItem/AmountItem.stories.tsx": require("../src/components/AmountItem/AmountItem.stories.tsx"),
     "./src/components/Analytics/Analytics.stories.tsx": require("../src/components/Analytics/Analytics.stories.tsx"),
     "./src/components/BlueCheckbox/BlueCheckbox.stories.tsx": require("../src/components/BlueCheckbox/BlueCheckbox.stories.tsx"),
@@ -102,7 +90,6 @@ const getStories = () => {
     "./src/components/TextInput/TextInput.stories.tsx": require("../src/components/TextInput/TextInput.stories.tsx"),
     "./src/components/TokenIcon/ModeratedNftIcon.stories.tsx": require("../src/components/TokenIcon/ModeratedNftIcon.stories.tsx"),
     "./src/components/TokenIcon/TokenIcon.stories.tsx": require("../src/components/TokenIcon/TokenIcon.stories.tsx"),
-    "./src/components/Tooltip/Tooltip.stories.tsx": require("../src/components/Tooltip/Tooltip.stories.tsx"),
     "./src/components/YoroiLogo/YoroiLogo.stories.tsx": require("../src/components/YoroiLogo/YoroiLogo.stories.tsx"),
     "./src/features/Auth/backgroundTimeout.stories.tsx": require("../src/features/Auth/backgroundTimeout.stories.tsx"),
     "./src/features/Auth/ChangePinScreen/ChangePinScreen.stories.tsx": require("../src/features/Auth/ChangePinScreen/ChangePinScreen.stories.tsx"),
@@ -163,7 +150,6 @@ const getStories = () => {
     "./src/features/Nfts/useCases/Nfts.stories.tsx": require("../src/features/Nfts/useCases/Nfts.stories.tsx"),
     "./src/features/Nfts/useCases/NoNftsScreen.stories.tsx": require("../src/features/Nfts/useCases/NoNftsScreen.stories.tsx"),
     "./src/features/Portfolio/common/TokenAmountItem/TokenAmountItem.stories.tsx": require("../src/features/Portfolio/common/TokenAmountItem/TokenAmountItem.stories.tsx"),
-    "./src/features/Portfolio2/common/PnlTag/PnlTag.stories.tsx": require("../src/features/Portfolio2/common/PnlTag/PnlTag.stories.tsx"),
     "./src/features/Receive/common/AddressDetailCard/AddressDetailCard.stories.tsx": require("../src/features/Receive/common/AddressDetailCard/AddressDetailCard.stories.tsx"),
     "./src/features/Receive/common/AddressModal/AddressModal.stories.tsx": require("../src/features/Receive/common/AddressModal/AddressModal.stories.tsx"),
     "./src/features/Receive/common/ShareDetailsCard/ShareDetailsCard.stories.tsx": require("../src/features/Receive/common/ShareDetailsCard/ShareDetailsCard.stories.tsx"),
@@ -302,6 +288,9 @@ const getStories = () => {
     "./src/legacy/TxHistory/TxDetails/TxDetails.stories.tsx": require("../src/legacy/TxHistory/TxDetails/TxDetails.stories.tsx"),
     "./src/legacy/TxHistory/TxHistory.stories.tsx": require("../src/legacy/TxHistory/TxHistory.stories.tsx"),
     "./src/legacy/TxHistory/TxHistoryList/ActionsBanner/ActionsBanner.stories.tsx": require("../src/legacy/TxHistory/TxHistoryList/ActionsBanner/ActionsBanner.stories.tsx"),
+    "./src/components/Accordion/Accordion.stories.tsx": require("../src/components/Accordion/Accordion.stories.tsx"),
+    "./src/components/Tooltip/Tooltip.stories.tsx": require("../src/components/Tooltip/Tooltip.stories.tsx"),
+    "./src/features/Portfolio2/common/PnlTag/PnlTag.stories.tsx": require("../src/features/Portfolio2/common/PnlTag/PnlTag.stories.tsx"),
   };
 };
 

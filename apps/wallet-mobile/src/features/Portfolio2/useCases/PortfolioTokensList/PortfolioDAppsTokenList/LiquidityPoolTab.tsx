@@ -6,8 +6,9 @@ import {Spacer} from '../../../../../components'
 import {makeList} from '../../../../../utils'
 import {TokenEmptyList} from '../../../common/TokenEmptyList'
 import {ILiquidityPool} from '../../../common/useGetLiquidityPool'
+import {useShowLiquidityPoolModal} from '../../../common/useShowLiquidityPoolModal'
 import {useStrings} from '../../../common/useStrings'
-import {DAppTokenITem} from './DAppTokenITem/DAppTokenITem'
+import {DAppTokenITem} from './DAppTokenItem/DAppTokenItem'
 
 type Props = {
   tokensList: ILiquidityPool[]
@@ -19,8 +20,22 @@ export const LiquidityPoolTab = ({tokensList = [], isLoading, isSearching}: Prop
   const {styles} = useStyles()
   const hasEmpty = tokensList.length === 0
 
+  const {onShow} = useShowLiquidityPoolModal()
+
+  const onTokenPress = (liquidityPool?: ILiquidityPool) => {
+    if (!liquidityPool) return
+    onShow(liquidityPool)
+  }
+
   const renderTokenItem = (item: ILiquidityPool | undefined, index: number) => {
-    return <DAppTokenITem key={item?.id ?? index} tokenInfo={item ? item : undefined} splitTokenSymbol="-" />
+    return (
+      <DAppTokenITem
+        onPress={() => onTokenPress(item)}
+        key={item?.id ?? index}
+        tokenInfo={item ? item : undefined}
+        splitTokenSymbol="-"
+      />
+    )
   }
 
   const renderHeaderList = () => {
@@ -52,6 +67,7 @@ export const LiquidityPoolTab = ({tokensList = [], isLoading, isSearching}: Prop
       <Spacer height={16} />
 
       <FlatList
+        scrollEnabled={false}
         data={tokensList}
         ListHeaderComponent={renderHeaderList()}
         ListFooterComponent={renderFooterList()}
