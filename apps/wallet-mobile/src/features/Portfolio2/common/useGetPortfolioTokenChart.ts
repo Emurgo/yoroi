@@ -1,4 +1,4 @@
-import {useQuery, UseQueryOptions} from 'react-query'
+import { useQuery, UseQueryOptions } from 'react-query'
 
 export const TOKEN_CHART_TIME_INTERVAL = {
   HOUR: '24 H',
@@ -54,9 +54,9 @@ function generateMockChartData(
     const label = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1)
       .toString()
       .padStart(2, '0')}/${date.getFullYear().toString().substr(-2)} ${date.getHours()}:${date
-      .getMinutes()
-      .toString()
-      .padStart(2, '0')}`
+        .getMinutes()
+        .toString()
+        .padStart(2, '0')}`
     const value = i === 0 ? startValue : previousValue + (Math.random() - 0.5) * volatility
     const changeValue = i === 0 ? 0 : value - previousValue
     const changePercentage = i === 0 ? 0 : (changeValue / previousValue) * 100
@@ -85,6 +85,7 @@ const useGetPortfolioTokenChart = (
 ) => {
   const query = useQuery({
     useErrorBoundary: true,
+    refetchOnMount: false,
     ...options,
     queryKey: ['useGetPortfolioTokenChart', timeInterval],
     queryFn: async () => {

@@ -7,6 +7,7 @@ import {StyleSheet, Text, View} from 'react-native'
 
 import {Icon} from '../../../../../../components/Icon'
 import {type ITokenTransaction, TokenTransactionDirection} from '../../../../common/useGetPortfolioTokenTransaction'
+import {useStrings} from '../../../../common/useStrings'
 import {formatDateRelative, formatTime} from './../../../../../../legacy/format'
 
 interface Props {
@@ -18,6 +19,8 @@ const hideAssetDirections: TokenTransactionDirection[] = ['STAKE_DELEGATED', 'ST
 
 export const TransactionItem = ({tx, tokenName}: Props) => {
   const {styles, colors} = useStyles()
+  const strings = useStrings()
+
   const intl = useIntl()
 
   const submittedAt = useMemo(() => {
@@ -35,48 +38,48 @@ export const TransactionItem = ({tx, tokenName}: Props) => {
     switch (tx.direction) {
       case 'RECEIVED':
         return {
-          label: 'Received',
-          icon: <Icon.CrossCircle size={24} color={colors.success} />,
+          label: strings.received,
+          icon: <Icon.Received size={24} color={colors.success} />,
           color: colors.success,
           backgroundColor: colors.successLight,
         }
       case 'STAKE_REWARD':
         return {
-          label: 'Staking Reward',
-          icon: <Icon.Received size={24} color={colors.success} />,
+          label: strings.stakingReward,
+          icon: <Icon.Staking size={24} color={colors.success} />,
           color: colors.success,
           backgroundColor: colors.successLight,
         }
       case 'SENT':
         return {
-          label: 'Sent',
+          label: strings.sent,
           icon: <Icon.Send size={24} color={colors.info} />,
           color: colors.info,
           backgroundColor: colors.infoLight,
         }
       case 'STAKE_DELEGATED':
         return {
-          label: 'Stake delegated',
+          label: strings.stakeDelegated,
           icon: <Icon.Staking size={24} color={colors.info} />,
           color: colors.info,
           backgroundColor: colors.infoLight,
         }
       case 'FAILED':
         return {
-          label: 'Failed',
-          icon: <Icon.CrossCircle size={24}color={colors.danger} />,
+          label: strings.failed,
+          icon: <Icon.CrossCircle size={24} color={colors.danger} />,
           color: colors.danger,
           backgroundColor: colors.dangerLight,
         }
       default:
         return {
-          label: 'Unknown',
-          icon: <Icon.InfoCircle size={24}color={colors.info} />,
+          label: strings.unknown,
+          icon: <Icon.InfoCircle size={24} color={colors.info} />,
           color: colors.info,
           backgroundColor: colors.infoLight,
         }
     }
-  }, [tx.direction, colors])
+  }, [tx.direction, colors, strings])
 
   return (
     <View style={styles.root}>
@@ -93,7 +96,9 @@ export const TransactionItem = ({tx, tokenName}: Props) => {
       <View style={styles.rightContainer}>
         <Text style={styles.amountText}>{`${tx.amount} ${tokenName}`}</Text>
 
-        {hideAssetDirections.includes(tx.direction) ? null : <Text style={styles.assetText}>{tx.asset} assets</Text>}
+        {hideAssetDirections.includes(tx.direction) ? null : (
+          <Text style={styles.assetText}>{`${tx.asset} ${strings.assets}`}</Text>
+        )}
       </View>
     </View>
   )

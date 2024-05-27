@@ -34,7 +34,7 @@ export const PortfolioTokenChart = () => {
   }, [selectedIndex, data])
 
   return (
-    <View style={styles.chartContainer}>
+    <View style={styles.root}>
       {isFetching ? (
         <PortfolioTokenChartSkeleton />
       ) : (
@@ -57,7 +57,8 @@ export const PortfolioTokenChart = () => {
 const useStyles = () => {
   const {atoms} = useTheme()
   const styles = StyleSheet.create({
-    chartContainer: {
+    root: {
+      ...atoms.flex_1,
       ...atoms.flex_col,
     },
   })

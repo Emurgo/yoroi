@@ -6,6 +6,7 @@ import {StyleSheet, View} from 'react-native'
 import {Icon, Text} from '../../../../../components'
 import {Tooltip} from '../../../../../components/Tooltip'
 import {PnlTag} from '../../../common/PnlTag/PnlTag'
+import {useStrings} from '../../../common/useStrings'
 
 interface Props {
   changePercent?: number
@@ -15,6 +16,7 @@ interface Props {
 
 export const TokenPerformance = ({changePercent = 0, changeValue = 0, value = 0}: Props) => {
   const {styles} = useStyles()
+  const strings = useStrings()
 
   const variant = Number(changePercent) >= 0 ? 'success' : 'danger'
 
@@ -27,7 +29,7 @@ export const TokenPerformance = ({changePercent = 0, changeValue = 0, value = 0}
 
         <PnlTag variant={variant}>{`${changeValue.toFixed(1)} USD`}</PnlTag>
 
-        <Tooltip numberOfLine={3} title={`Token price change \nin 24 hours`}>
+        <Tooltip numberOfLine={3} title={strings.tokenPriceChangeTooltip}>
           <Icon.InfoCircle />
         </Tooltip>
       </View>

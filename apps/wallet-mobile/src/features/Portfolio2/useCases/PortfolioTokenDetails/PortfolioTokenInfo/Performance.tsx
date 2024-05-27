@@ -1,94 +1,116 @@
 /* eslint-disable react-native/no-raw-text */
 import {useTheme} from '@yoroi/theme'
 import React, {ReactNode} from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {NativeScrollEvent, NativeSyntheticEvent, StyleSheet, Text, View} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 import {Icon, Spacer} from '../../../../../components'
+import {ScrollView} from '../../../../../components/ScrollView/ScrollView'
+import {useStrings} from '../../..//common/useStrings'
 import {useGetPortfolioTokenInfo} from '../../../common/useGetPortfolioTokenInfo'
 import {usePortfolioTokenDetailParams} from '../../../common/useNavigationTo'
 
-export const Performance = () => {
+interface Props {
+  onScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
+  topContent?: ReactNode
+}
+
+export const Performance = ({onScroll, topContent}: Props) => {
   const {styles, colors} = useStyles()
   const {name: tokenName} = usePortfolioTokenDetailParams()
   const {data, isFetching} = useGetPortfolioTokenInfo(tokenName)
+  const strings = useStrings()
 
   const value = data?.info?.performance
 
   return (
-    <View style={styles.root}>
-      <View style={styles.container}>
-        <TextGroup loading={isFetching} value={`${value?.user?.pnl ?? '-/-'} %`}>
-          <View style={styles.labelGroup}>
-            <Text style={styles.label}>PnL</Text>
-
-            <Icon.InfoCircle size={20} color={colors.label} />
-          </View>
-        </TextGroup>
-
-        <Spacer height={2} />
-
-        <TextGroup loading={isFetching} value={`${value?.user?.invested ?? '-/-'} USD`}>
-          <View style={styles.labelGroup}>
-            <Text style={styles.label}>Net invested</Text>
-
-            <Icon.InfoCircle size={20} color={colors.label} />
-          </View>
-        </TextGroup>
+    <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
+      <ScrollView scrollEventThrottle={16} onScroll={onScroll} style={styles.scrollView}>
+        {topContent}
 
         <Spacer height={16} />
 
-        <TextGroup loading={isFetching} value={`${value?.user?.bought ?? '-/-'} USD`} label="Bought" />
+        <View style={styles.container}>
+          <TextGroup loading={isFetching} value={`${value?.user?.pnl ?? '-/-'} %`}>
+            <View style={styles.labelGroup}>
+              <Text style={styles.label}>PnL</Text>
 
-        <TextGroup loading={isFetching} value={`${value?.user?.receive ?? '-/-'} USD`} label="Received" />
+              <Icon.InfoCircle size={20} color={colors.label} />
+            </View>
+          </TextGroup>
 
-        <TextGroup loading={isFetching} value={`${value?.user?.sent ?? '-/-'} USD`} label="Sent" />
+          <Spacer height={2} />
 
-        <TextGroup loading={isFetching} value={`${value?.user?.sold ?? '-/-'} USD`} label="Sold" />
-      </View>
+          <TextGroup loading={isFetching} value={`${value?.user?.invested ?? '-/-'} USD`}>
+            <View style={styles.labelGroup}>
+              <Text style={styles.label}>Net invested</Text>
 
-      <Spacer height={24} />
+              <Icon.InfoCircle size={20} color={colors.label} />
+            </View>
+          </TextGroup>
 
-      <Text style={styles.title}>Market data</Text>
+          <Spacer height={16} />
 
-      <Spacer height={16} />
+          <TextGroup loading={isFetching} value={`${value?.user?.bought ?? '-/-'} USD`} label={strings.bought} />
 
-      <View style={styles.container}>
-        <TextGroup loading={isFetching} value={`${value?.market?.change ?? '-/-'} %`} label="Token price change" />
+          <TextGroup loading={isFetching} value={`${value?.user?.receive ?? '-/-'} USD`} label={strings.received} />
 
-        <TextGroup loading={isFetching} value={`${value?.market?.price ?? '-/-'} USD`} label="Token price" />
+          <TextGroup loading={isFetching} value={`${value?.user?.sent ?? '-/-'} USD`} label={strings.sent} />
 
-        <TextGroup loading={isFetching} value={`${value?.market?.cap ?? '-/-'} USD`} label="Market cap" />
+          <TextGroup loading={isFetching} value={`${value?.user?.sold ?? '-/-'} USD`} label={strings.sold} />
+        </View>
 
-        <TextGroup loading={isFetching} value={`${value?.market?.vol ?? '-/-'} USD`} label="24h volume" />
+        <Spacer height={24} />
 
-        <TextGroup loading={isFetching} value={`#${value?.market?.rank ?? '-/-'}`} label="Rank" />
+        <Text style={styles.title}>{strings.marketData}</Text>
 
         <Spacer height={16} />
 
-        <TextGroup
-          loading={isFetching}
-          value={`${value?.market?.circulating ?? '-/-'} ${data?.name}`}
-          label="Circulating"
-        />
+        <View style={styles.container}>
+          <TextGroup
+            loading={isFetching}
+            value={`${value?.market?.change ?? '-/-'} %`}
+            label={strings.tokenPriceChange}
+          />
 
-        <TextGroup
-          loading={isFetching}
-          value={`${value?.market?.total_supply ?? '-/-'} ${data?.name}`}
-          label="Total supply"
-        />
+          <TextGroup loading={isFetching} value={`${value?.market?.price ?? '-/-'} USD`} label={strings.tokenPrice} />
 
-        <TextGroup
-          loading={isFetching}
-          value={`${value?.market?.max_supply ?? '-/-'} ${data?.name}`}
-          label="Max supply"
-        />
+          <TextGroup loading={isFetching} value={`${value?.market?.cap ?? '-/-'} USD`} label={strings.marketCap} />
 
-        <TextGroup loading={isFetching} value={`${value?.market?.ath ?? '-/-'} USD`} label="All time high" />
+          <TextGroup loading={isFetching} value={`${value?.market?.vol ?? '-/-'} USD`} label={strings._24hVolume} />
 
-        <TextGroup loading={isFetching} value={`${value?.market?.atl ?? '-/-'} USD`} label="All time low" />
-      </View>
-    </View>
+          <TextGroup loading={isFetching} value={`#${value?.market?.rank ?? '-/-'}`} label={strings.rank} />
+
+          <Spacer height={16} />
+
+          <TextGroup
+            loading={isFetching}
+            value={`${value?.market?.circulating ?? '-/-'} ${data?.name}`}
+            label={strings.circulating}
+          />
+
+          <TextGroup
+            loading={isFetching}
+            value={`${value?.market?.total_supply ?? '-/-'} ${data?.name}`}
+            label={strings.totalSupply}
+          />
+
+          <TextGroup
+            loading={isFetching}
+            value={`${value?.market?.max_supply ?? '-/-'} ${data?.name}`}
+            label={strings.maxSupply}
+          />
+
+          <TextGroup loading={isFetching} value={`${value?.market?.ath ?? '-/-'} USD`} label={strings.allTimeHigh} />
+
+          <TextGroup loading={isFetching} value={`${value?.market?.atl ?? '-/-'} USD`} label={strings.allTimeLow} />
+        </View>
+
+        {/* Fix the bounce when scroll down */}
+        <Spacer height={150} />
+      </ScrollView>
+    </SafeAreaView>
   )
 }
 
@@ -131,6 +153,10 @@ const useStyles = () => {
       ...atoms.flex_1,
       ...atoms.flex_col,
       backgroundColor: color.gray_cmin,
+    },
+    scrollView: {
+      ...atoms.px_lg,
+      ...atoms.flex_1,
     },
     container: {
       ...atoms.flex_1,

@@ -41,9 +41,9 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     chartToolbar: {
       ...atoms.flex_row,
-      ...atoms.flex_1,
       ...atoms.justify_between,
       ...atoms.align_center,
+      height: 30,
     },
     chartToolbarItem: {
       ...atoms.rounded_sm,
