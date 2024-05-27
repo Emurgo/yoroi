@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Portfolio",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 28,
+      "line": 36,
       "column": 13,
-      "index": 1286
+      "index": 1843
     },
     "end": {
-      "line": 31,
+      "line": 39,
       "column": 3,
-      "index": 1355
+      "index": 1912
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Total wallet value",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 32,
+      "line": 40,
       "column": 20,
-      "index": 1377
+      "index": 1934
     },
     "end": {
-      "line": 35,
+      "line": 43,
       "column": 3,
-      "index": 1490
+      "index": 2047
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Tokens ({countTokens})",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 36,
+      "line": 44,
       "column": 10,
-      "index": 1502
+      "index": 2059
     },
     "end": {
-      "line": 39,
+      "line": 47,
       "column": 3,
-      "index": 1609
+      "index": 2166
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Start your crypto journey",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 40,
+      "line": 48,
       "column": 15,
-      "index": 1626
+      "index": 2183
     },
     "end": {
-      "line": 43,
+      "line": 51,
       "column": 3,
-      "index": 1741
+      "index": 2298
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Get started with Cardano's native currency, ADA. It's your key to unlocking a world of possibilities",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 44,
+      "line": 52,
       "column": 21,
-      "index": 1764
+      "index": 2321
     },
     "end": {
-      "line": 48,
+      "line": 56,
       "column": 3,
-      "index": 1966
+      "index": 2523
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!Buy ADA",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 49,
+      "line": 57,
       "column": 13,
-      "index": 1981
+      "index": 2538
     },
     "end": {
-      "line": 52,
+      "line": 60,
       "column": 3,
-      "index": 2067
+      "index": 2624
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!Trade Tokens",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 53,
+      "line": 61,
       "column": 15,
-      "index": 2084
+      "index": 2641
     },
     "end": {
-      "line": 56,
+      "line": 64,
       "column": 3,
-      "index": 2186
+      "index": 2743
     }
   },
   {
@@ -109,14 +109,14 @@
     "defaultMessage": "!!!Swap",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 57,
+      "line": 65,
       "column": 8,
-      "index": 2196
+      "index": 2753
     },
     "end": {
-      "line": 60,
+      "line": 68,
       "column": 3,
-      "index": 2255
+      "index": 2812
     }
   },
   {
@@ -124,14 +124,14 @@
     "defaultMessage": "!!!NFTs ({countNfts})",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 61,
+      "line": 69,
       "column": 8,
-      "index": 2265
+      "index": 2822
     },
     "end": {
-      "line": 64,
+      "line": 72,
       "column": 3,
-      "index": 2366
+      "index": 2923
     }
   },
   {
@@ -139,14 +139,14 @@
     "defaultMessage": "!!!Token list",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 65,
+      "line": 73,
       "column": 13,
-      "index": 2381
+      "index": 2938
     },
     "end": {
-      "line": 68,
+      "line": 76,
       "column": 3,
-      "index": 2480
+      "index": 3037
     }
   },
   {
@@ -154,14 +154,14 @@
     "defaultMessage": "!!!Wallet token",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 69,
+      "line": 77,
       "column": 15,
-      "index": 2497
+      "index": 3054
     },
     "end": {
-      "line": 72,
+      "line": 80,
       "column": 3,
-      "index": 2600
+      "index": 3157
     }
   },
   {
@@ -169,14 +169,14 @@
     "defaultMessage": "!!!DApps token",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 73,
+      "line": 81,
       "column": 14,
-      "index": 2616
+      "index": 3173
     },
     "end": {
-      "line": 76,
+      "line": 84,
       "column": 3,
-      "index": 2717
+      "index": 3274
     }
   },
   {
@@ -184,14 +184,14 @@
     "defaultMessage": "!!!{countTokens} token(s) available",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 77,
+      "line": 85,
       "column": 19,
-      "index": 2738
+      "index": 3295
     },
     "end": {
-      "line": 80,
+      "line": 88,
       "column": 3,
-      "index": 2865
+      "index": 3422
     }
   },
   {
@@ -199,14 +199,14 @@
     "defaultMessage": "!!!Search tokens",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 81,
+      "line": 89,
       "column": 16,
-      "index": 2883
+      "index": 3440
     },
     "end": {
-      "line": 84,
+      "line": 92,
       "column": 3,
-      "index": 2988
+      "index": 3545
     }
   },
   {
@@ -214,14 +214,14 @@
     "defaultMessage": "!!!No tokens found",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 85,
+      "line": 93,
       "column": 17,
-      "index": 3007
+      "index": 3564
     },
     "end": {
-      "line": 88,
+      "line": 96,
       "column": 3,
-      "index": 3115
+      "index": 3672
     }
   },
   {
@@ -229,14 +229,59 @@
     "defaultMessage": "!!!Total dapps value",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 89,
+      "line": 97,
       "column": 18,
-      "index": 3135
+      "index": 3692
     },
     "end": {
-      "line": 92,
+      "line": 100,
       "column": 3,
-      "index": 3247
+      "index": 3804
+    }
+  },
+  {
+    "id": "portfolio.portfolioTokensListScreen.liquidityPool",
+    "defaultMessage": "!!!Liquidity pool",
+    "file": "src/features/Portfolio2/common/useStrings.tsx",
+    "start": {
+      "line": 101,
+      "column": 17,
+      "index": 3823
+    },
+    "end": {
+      "line": 104,
+      "column": 3,
+      "index": 3930
+    }
+  },
+  {
+    "id": "portfolio.portfolioTokensListScreen.openOrders",
+    "defaultMessage": "!!!Open orders",
+    "file": "src/features/Portfolio2/common/useStrings.tsx",
+    "start": {
+      "line": 105,
+      "column": 14,
+      "index": 3946
+    },
+    "end": {
+      "line": 108,
+      "column": 3,
+      "index": 4047
+    }
+  },
+  {
+    "id": "portfolio.portfolioTokensListScreen.lendAndBorrow",
+    "defaultMessage": "!!!Lend & borrow",
+    "file": "src/features/Portfolio2/common/useStrings.tsx",
+    "start": {
+      "line": 109,
+      "column": 17,
+      "index": 4066
+    },
+    "end": {
+      "line": 112,
+      "column": 3,
+      "index": 4172
     }
   },
   {
@@ -244,14 +289,74 @@
     "defaultMessage": "!!!Token details",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 93,
+      "line": 113,
       "column": 15,
-      "index": 3264
+      "index": 4189
     },
     "end": {
-      "line": 96,
+      "line": 116,
       "column": 3,
-      "index": 3370
+      "index": 4295
+    }
+  },
+  {
+    "id": "portfolio.portfolioTokensDetailScreen.availableSoon",
+    "defaultMessage": "!!!Available soon",
+    "file": "src/features/Portfolio2/common/useStrings.tsx",
+    "start": {
+      "line": 117,
+      "column": 17,
+      "index": 4314
+    },
+    "end": {
+      "line": 120,
+      "column": 3,
+      "index": 4423
+    }
+  },
+  {
+    "id": "portfolio.portfolioTokensDetailScreen.countLiquidityPoolsAvailable",
+    "defaultMessage": "!!!{countLiquidityPools} liquidity pool(s) available",
+    "file": "src/features/Portfolio2/common/useStrings.tsx",
+    "start": {
+      "line": 121,
+      "column": 32,
+      "index": 4457
+    },
+    "end": {
+      "line": 124,
+      "column": 3,
+      "index": 4616
+    }
+  },
+  {
+    "id": "portfolio.portfolioTokensDetailScreen.countOpenOrders",
+    "defaultMessage": "!!!{countOpenOrders} open order(s)",
+    "file": "src/features/Portfolio2/common/useStrings.tsx",
+    "start": {
+      "line": 125,
+      "column": 19,
+      "index": 4637
+    },
+    "end": {
+      "line": 128,
+      "column": 3,
+      "index": 4765
+    }
+  },
+  {
+    "id": "portfolio.portfolioTokensDetailScreen.noDataFound",
+    "defaultMessage": "!!!No Data Found",
+    "file": "src/features/Portfolio2/common/useStrings.tsx",
+    "start": {
+      "line": 129,
+      "column": 15,
+      "index": 4782
+    },
+    "end": {
+      "line": 132,
+      "column": 3,
+      "index": 4888
     }
   }
 ]

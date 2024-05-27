@@ -20,7 +20,15 @@ export const useStrings = () => {
     searchTokens: intl.formatMessage(messages.searchTokens),
     noTokensFound: intl.formatMessage(messages.noTokensFound),
     totalDAppValue: intl.formatMessage(messages.totalDAppValue),
+    liquidityPool: intl.formatMessage(messages.liquidityPool),
+    openOrders: intl.formatMessage(messages.openOrders),
+    lendAndBorrow: intl.formatMessage(messages.lendAndBorrow),
     tokenDetail: intl.formatMessage(messages.tokenDetail),
+    availableSoon: intl.formatMessage(messages.availableSoon),
+    countLiquidityPoolsAvailable: (qty: number) =>
+      intl.formatMessage(messages.countLiquidityPoolsAvailable, {countLiquidityPools: qty}),
+    countOpenOrders: (qty: number) => intl.formatMessage(messages.countOpenOrders, {countOpenOrders: qty}),
+    noDataFound: intl.formatMessage(messages.noDataFound),
   }
 }
 
@@ -90,8 +98,36 @@ export const messages = defineMessages({
     id: 'portfolio.portfolioTokensListScreen.totalDAppsValue',
     defaultMessage: '!!!Total dapps value',
   },
+  liquidityPool: {
+    id: 'portfolio.portfolioTokensListScreen.liquidityPool',
+    defaultMessage: '!!!Liquidity pool',
+  },
+  openOrders: {
+    id: 'portfolio.portfolioTokensListScreen.openOrders',
+    defaultMessage: '!!!Open orders',
+  },
+  lendAndBorrow: {
+    id: 'portfolio.portfolioTokensListScreen.lendAndBorrow',
+    defaultMessage: '!!!Lend & borrow',
+  },
   tokenDetail: {
     id: 'portfolio.portfolioTokensDetailScreen.tokenDetail',
     defaultMessage: '!!!Token details',
+  },
+  availableSoon: {
+    id: 'portfolio.portfolioTokensDetailScreen.availableSoon',
+    defaultMessage: '!!!Available soon',
+  },
+  countLiquidityPoolsAvailable: {
+    id: 'portfolio.portfolioTokensDetailScreen.countLiquidityPoolsAvailable',
+    defaultMessage: '!!!{countLiquidityPools} liquidity pool(s) available',
+  },
+  countOpenOrders: {
+    id: 'portfolio.portfolioTokensDetailScreen.countOpenOrders',
+    defaultMessage: '!!!{countOpenOrders} open order(s)',
+  },
+  noDataFound: {
+    id: 'portfolio.portfolioTokensDetailScreen.noDataFound',
+    defaultMessage: '!!!No Data Found',
   },
 })

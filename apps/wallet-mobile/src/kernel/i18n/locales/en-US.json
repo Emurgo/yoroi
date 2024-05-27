@@ -1072,5 +1072,12 @@
   "portfolio.portfolioTokensListScreen.searchTokens": "Search tokens",
   "portfolio.portfolioTokensListScreen.noTokensFound": "No tokens found",
   "portfolio.portfolioTokensListScreen.totalDAppsValue": "Total Dapps value",
-  "portfolio.portfolioTokensDetailScreen.tokenDetail": "Token details"
+  "portfolio.portfolioTokensListScreen.liquidityPool": "Liquidity pool",
+  "portfolio.portfolioTokensListScreen.openOrders": "Open orders",
+  "portfolio.portfolioTokensListScreen.lendAndBorrow": "Lend & borrow",
+  "portfolio.portfolioTokensDetailScreen.tokenDetail": "Token details",
+  "portfolio.portfolioTokensDetailScreen.availableSoon": "Available soon",
+  "portfolio.portfolioTokensDetailScreen.countLiquidityPoolsAvailable": "{countLiquidityPools} liquidity pool(s) available",
+  "portfolio.portfolioTokensDetailScreen.countOpenOrders": "{countOpenOrders} open order(s)",
+  "portfolio.portfolioTokensDetailScreen.noDataFound": "No Data Found"
 }

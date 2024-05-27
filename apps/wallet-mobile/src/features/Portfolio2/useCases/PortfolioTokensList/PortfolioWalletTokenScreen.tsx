@@ -6,8 +6,9 @@ import {FlatList, StyleSheet, Text, View} from 'react-native'
 import {Spacer} from '../../../../components'
 import {useSearch} from '../../../../Search/SearchContext'
 import {makeList} from '../../../../utils'
-import {AssetTokenImage} from '../../common/AssetTokenImage'
+import {Line} from '../../common/Line'
 import {TokenBalanceItem} from '../../common/TokenBalanceItem/TokenBalanceItem'
+import {TokenEmptyList} from '../../common/TokenEmptyList'
 import {TotalTokensValue} from '../../common/TotalTokensValue/TotalTokensValue'
 import {useGetPortfolioBalance} from '../../common/useGetPortfolioBalance'
 import {useGetTokensWithBalance} from '../../common/useGetTokensWithBalance'
@@ -29,7 +30,7 @@ export const PortfolioWalletTokenScreen = () => {
   const getListTokens = React.useMemo(() => {
     const tokensList = tokensData ?? []
 
-    if (isSearching && search?.length > 0) {
+    if (isSearching) {
       return tokensList.filter((token) => token.symbol.toLowerCase().includes(search.toLowerCase()))
     }
 
@@ -38,7 +39,7 @@ export const PortfolioWalletTokenScreen = () => {
 
   const renderFooterList = () => {
     if (tokensLoading) return makeList(6).map((_, index) => <SkeletonItem key={index} />)
-    if (getListTokens.length === 0) return <EmptyList />
+    if (getListTokens.length === 0) return <TokenEmptyList />
 
     return null
   }
@@ -74,26 +75,6 @@ export const PortfolioWalletTokenScreen = () => {
   )
 }
 
-const Line = () => {
-  const {styles} = useStyles()
-  return <View style={styles.line} />
-}
-
-const EmptyList = () => {
-  const strings = useStrings()
-  const {styles} = useStyles()
-
-  return (
-    <View style={styles.containerAssetToken}>
-      <View style={styles.boxAssetToken}>
-        <AssetTokenImage />
-      </View>
-
-      <Text style={styles.textEmpty}>{strings.noTokensFound}</Text>
-    </View>
-  )
-}
-
 const SkeletonItem = () => {
   return (
     <View>
@@ -112,32 +93,9 @@ const useStyles = () => {
       ...atoms.px_lg,
       backgroundColor: color.gray_cmin,
     },
-    line: {
-      height: 1,
-      ...atoms.w_full,
-      backgroundColor: color.gray_c200,
-    },
     textAvailable: {
       color: color.gray_c700,
       ...atoms.body_2_md_regular,
-    },
-    boxAssetToken: {
-      width: 280,
-      height: 280,
-      ...atoms.justify_center,
-      ...atoms.align_center,
-    },
-    containerAssetToken: {
-      ...atoms.flex_col,
-      ...atoms.justify_center,
-      ...atoms.align_center,
-      ...atoms.w_full,
-      ...atoms.gap_lg,
-      ...atoms.h_full,
-    },
-    textEmpty: {
-      ...atoms.heading_3_medium,
-      ...atoms.font_semibold,
     },
   })
 
