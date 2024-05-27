@@ -3,7 +3,7 @@ import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
-import {Spacer} from '../../../../components'
+import {Spacer} from '../../../../../components'
 
 export const DashboardTokenSkeletonItem = () => {
   const {color, styles} = useStyles()

@@ -4,8 +4,8 @@ import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {useGetPortfolioBalance} from '../useGetPortfolioBalance'
-import {useStrings} from '../useStrings'
+import {useGetPortfolioBalance} from '../../../common/useGetPortfolioBalance'
+import {useStrings} from '../../../common/useStrings'
 import {BalanceCardContent} from './BalanceCardContent'
 import {BalanceCardSkeleton} from './BalanceCardSkeleton'
 

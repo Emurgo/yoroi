@@ -2,17 +2,16 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {FlatList, Image, StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
-import nftPlaceholder from '../../../../assets/img/nft-placeholder.png'
-import {Icon, Spacer} from '../../../../components'
-import {usePortfolioBalances} from '../../../../features/Portfolio/common/hooks/usePortfolioBalances'
-import {MediaPreview} from '../../../../features/Portfolio/common/MediaPreview/MediaPreview'
-import {useSelectedWallet} from '../../../../features/WalletManager/context/SelectedWalletContext'
-import {useNavigateTo} from '../useNavigationTo'
-import {useStrings} from '../useStrings'
+import nftPlaceholder from '../../../../../assets/img/nft-placeholder.png'
+import {Icon, Spacer} from '../../../../../components'
+import {usePortfolioBalances} from '../../../../Portfolio/common/hooks/usePortfolioBalances'
+import {MediaPreview} from '../../../../Portfolio/common/MediaPreview/MediaPreview'
+import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
+import {useNavigateTo} from '../../../common/useNavigationTo'
+import {useStrings} from '../../../common/useStrings'
 
 export const DashboardNFTsList = () => {
   const {styles} = useStyles()
-  const strings = useStrings()
   const navigationTo = useNavigateTo()
 
   const wallet = useSelectedWallet()
@@ -27,11 +26,7 @@ export const DashboardNFTsList = () => {
 
   return (
     <View style={styles.root}>
-      <View style={[styles.container, styles.actionsContainer]}>
-        <Text style={styles.title}>{strings.nfts(nftsList.length)}</Text>
-
-        <TouchNFTsList onPress={handleDirectNFTsList} />
-      </View>
+      <Heading countNfts={nftsList.length} onPress={handleDirectNFTsList} />
 
       {hasNotNfts ? (
         <View style={styles.container}>
@@ -53,6 +48,23 @@ export const DashboardNFTsList = () => {
           </View>
         )}
       />
+    </View>
+  )
+}
+
+type HeadingProps = {
+  countNfts: number
+  onPress: () => void
+}
+const Heading = ({countNfts, onPress}: HeadingProps) => {
+  const {styles} = useStyles()
+  const strings = useStrings()
+
+  return (
+    <View style={[styles.container, styles.actionsContainer]}>
+      <Text style={styles.title}>{strings.nfts(countNfts)}</Text>
+
+      <TouchNFTsList onPress={onPress} />
     </View>
   )
 }

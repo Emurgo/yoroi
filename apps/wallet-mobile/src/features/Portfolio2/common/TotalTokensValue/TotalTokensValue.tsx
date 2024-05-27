@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {BalanceCardSkeleton} from '../BalanceCard/BalanceCardSkeleton'
+import {BalanceCardSkeleton} from '../../useCases/PortfolioDashboard/BalanceCard/BalanceCardSkeleton'
 import {useStrings} from '../useStrings'
 import {TotalTokensValueContent} from './TotalTokensValueContent'
 

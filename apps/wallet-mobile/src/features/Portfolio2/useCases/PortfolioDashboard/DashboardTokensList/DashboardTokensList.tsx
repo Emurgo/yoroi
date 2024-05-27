@@ -2,24 +2,22 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {FlatList, StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
-import {Icon, Spacer} from '../../../../components'
-import {makeList} from '../../../../utils'
-import {BuyADABanner} from '../BuyADABanner/BuyADABanner'
-import {IPortfolioBalance, useGetTokensWithBalance} from '../useGetTokensWithBalance'
-import {useNavigateTo} from '../useNavigationTo'
-import {useStrings} from '../useStrings'
-import {useZeroBalance} from '../useZeroBalance'
+import {Icon, Spacer} from '../../../../../components'
+import {makeList} from '../../../../../utils'
+import {BuyADABanner} from '../../../common/BuyADABanner/BuyADABanner'
+import {IPortfolioBalance, useGetTokensWithBalance} from '../../../common/useGetTokensWithBalance'
+import {useNavigateTo} from '../../../common/useNavigationTo'
+import {useStrings} from '../../../common/useStrings'
+import {useZeroBalance} from '../../../common/useZeroBalance'
 import {DashboardTokenItem} from './DashboardTokenItem'
 import {TradeTokensBanner} from './TradeTokensBanner'
 
 export const DashboardTokensList = () => {
   const {styles} = useStyles()
-  const strings = useStrings()
   const navigationTo = useNavigateTo()
   const isZeroADABalance = useZeroBalance()
   const {data, isLoading} = useGetTokensWithBalance()
   const tokensList = data ?? []
-
   const isJustADA = tokensList.length === 1 && tokensList[0].symbol === 'ADA'
 
   const handleDirectTokensList = () => {
@@ -62,11 +60,7 @@ export const DashboardTokensList = () => {
 
   return (
     <View style={styles.root}>
-      <View style={[styles.container, styles.actionsContainer]}>
-        <Text style={styles.title}>{strings.tokens(tokensList.length)}</Text>
-
-        <TouchTokensList onPress={handleDirectTokensList} />
-      </View>
+      <Heading countTokens={tokensList.length} onPress={handleDirectTokensList} />
 
       {isZeroADABalance ? (
         <View style={styles.container}>
@@ -84,6 +78,23 @@ export const DashboardTokensList = () => {
         keyExtractor={(item) => item.symbol}
         renderItem={({item, index}) => renderTokenItem(item, index)}
       />
+    </View>
+  )
+}
+
+type HeadingProps = {
+  countTokens: number
+  onPress: () => void
+}
+const Heading = ({countTokens, onPress}: HeadingProps) => {
+  const {styles} = useStyles()
+  const strings = useStrings()
+
+  return (
+    <View style={[styles.container, styles.actionsContainer]}>
+      <Text style={styles.title}>{strings.tokens(countTokens)}</Text>
+
+      <TouchTokensList onPress={onPress} />
     </View>
   )
 }
