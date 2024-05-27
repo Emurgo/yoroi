@@ -2,8 +2,8 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {TokenEmptyList} from '../TokenEmptyList'
-import {useStrings} from '../useStrings'
+import {TokenEmptyList} from '../../../common/TokenEmptyList'
+import {useStrings} from '../../../common/useStrings'
 
 export const LendAndBorrowTab = () => {
   const {styles} = useStyles()

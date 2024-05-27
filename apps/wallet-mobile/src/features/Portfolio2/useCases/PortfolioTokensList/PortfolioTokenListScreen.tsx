@@ -6,8 +6,8 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Tab, TabPanel, Tabs} from '../../../../components/Tabs'
 import {useSearchOnNavBar} from '../../../../Search/SearchContext'
 import {useStrings} from '../../common/useStrings'
-import {PortfolioDAppsTokenScreen} from './PortfolioDAppsTokenScreen'
-import {PortfolioWalletTokenScreen} from './PortfolioWalletTokenScreen'
+import {PortfolioDAppsTokenList} from './PortfolioDAppsTokenList/PortfolioDAppsTokenList'
+import {PortfolioWalletTokenList} from './PortfolioWalletTokenList/PortfolioWalletTokenList'
 
 export const PortfolioTokenListScreen = () => {
   const {styles} = useStyles()
@@ -44,11 +44,11 @@ export const PortfolioTokenListScreen = () => {
       ) : null}
 
       <TabPanel active={activeTab === 'wallet'}>
-        <PortfolioWalletTokenScreen />
+        <PortfolioWalletTokenList />
       </TabPanel>
 
       <TabPanel active={activeTab === 'dapps'}>
-        <PortfolioDAppsTokenScreen />
+        <PortfolioDAppsTokenList />
       </TabPanel>
     </SafeAreaView>
   )

@@ -3,8 +3,8 @@ import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {BalanceCardSkeleton} from '../../useCases/PortfolioDashboard/BalanceCard/BalanceCardSkeleton'
-import {useStrings} from '../useStrings'
+import {useStrings} from '../../../common/useStrings'
+import {BalanceCardSkeleton} from '../../PortfolioDashboard/BalanceCard/BalanceCardSkeleton'
 import {TotalTokensValueContent} from './TotalTokensValueContent'
 
 type Props = {
