@@ -14,8 +14,10 @@ import {
   DullahanApiCachedIdsRequest,
   DullahanApiTokenDiscoveryResponse,
   DullahanApiTokenInfosResponse,
+  DullahanApiTokenTraitsResponse,
 } from './types'
 import {parseTokenDiscovery} from '../../validators/token-discovery'
+import {parseTokenTraits} from '../../validators/token-traits'
 
 export const portfolioApiMaker = ({
   network,
@@ -134,6 +136,48 @@ export const portfolioApiMaker = ({
           )
         }
       },
+      async tokenTraits(id) {
+        const response = await request<DullahanApiTokenTraitsResponse>({
+          method: 'get',
+          url: `${config.tokenTraits}/${id}`,
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+        })
+        if (isRight(response)) {
+          const traits: Portfolio.Token.Traits | undefined = parseTokenTraits(
+            response.value.data,
+          )
+
+          if (!traits) {
+            return freeze(
+              {
+                tag: 'left',
+                error: {
+                  status: -3,
+                  message: 'Failed to transform token traits response',
+                  responseData: response.value.data,
+                },
+              },
+              true,
+            )
+          }
+
+          return freeze(
+            {
+              tag: 'right',
+              value: {
+                status: response.value.status,
+                data: traits,
+              },
+            },
+            true,
+          )
+        }
+
+        return response
+      },
     },
     true,
   )
@@ -142,22 +186,25 @@ export const portfolioApiMaker = ({
 export const apiConfig: ApiConfig = freeze(
   {
     mainnet: {
-      tokenDiscovery:
-        'https://dev-yoroi-backend-zero-mainnet.emurgornd.com/tokens/discovery',
-      tokenInfos:
-        'https://dev-yoroi-backend-zero-mainnet.emurgornd.com/tokens/info/multi',
+      tokenDiscovery: 'https://zero.yoroiwallet.com/tokens/discovery',
+      tokenInfos: 'https://zero.yoroiwallet.com/tokens/info/multi',
+      tokenTraits: 'https://zero.yoroiwallet.com/nft/traits',
     },
     preprod: {
       tokenDiscovery:
         'https://dev-yoroi-backend-zero-preprod.emurgornd.com/tokens/discovery',
       tokenInfos:
         'https://dev-yoroi-backend-zero-preprod.emurgornd.com/tokens/info/multi',
+      tokenTraits:
+        'https://dev-yoroi-backend-zero-preprod.emurgornd.com/nft/traits',
     },
     sancho: {
       tokenDiscovery:
         'https://dev-yoroi-backend-zero-preprod.emurgornd.com/tokens/discovery',
       tokenInfos:
         'https://dev-yoroi-backend-zero-preprod.emurgornd.com/tokens/info/multi',
+      tokenTraits:
+        'https://dev-yoroi-backend-zero-preprod.emurgornd.com/nft/traits',
     },
   },
   true,
