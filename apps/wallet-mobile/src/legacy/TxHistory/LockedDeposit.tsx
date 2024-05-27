@@ -17,7 +17,7 @@ export const LockedDeposit = ({ignorePrivacy = false}: {ignorePrivacy?: boolean}
 
   const amount = React.useMemo(
     () =>
-      isPrivacyOn || ignorePrivacy
+      isPrivacyOn || !ignorePrivacy
         ? amountFormatter({template: '{{value}} {{ticker}}'})({
             quantity: lockedAsStorageCost,
             info: wallet.portfolioPrimaryTokenInfo,
