@@ -3,9 +3,9 @@ import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {Image, StyleSheet, Text, View} from 'react-native'
 
-import {Spacer} from '../../../../components'
-import {PnlTag} from '../PnlTag/PnlTag'
-import {IPortfolioBalance} from '../useGetTokensWithBalance'
+import {Spacer} from '../../../../../components'
+import {PnlTag} from '../../../common/PnlTag/PnlTag'
+import {IPortfolioBalance} from '../../../common/useGetTokensWithBalance'
 import {TokenBalanceSkeletonItem} from './TokenBalanceSkeletonItem'
 
 type Props = {

@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {Image, ImageSourcePropType, ImageStyle, StyleProp, StyleSheet, Text, View} from 'react-native'
 
-import {ILiquidityPool} from '../useGetLiquidityPool'
+import {ILiquidityPool} from '../../../../common/useGetLiquidityPool'
 import {DAppTokenITemSkeleton} from './DAppTokenITemSkeleton'
 
 type Props = {

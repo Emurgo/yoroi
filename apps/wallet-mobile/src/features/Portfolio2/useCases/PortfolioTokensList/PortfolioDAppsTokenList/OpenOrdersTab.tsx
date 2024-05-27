@@ -2,25 +2,25 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {FlatList, StyleSheet, Text, View} from 'react-native'
 
-import {Spacer} from '../../../../components'
-import {makeList} from '../../../../utils'
-import {DAppTokenITem} from '../DAppTokenITem/DAppTokenITem'
-import {TokenEmptyList} from '../TokenEmptyList'
-import {ILiquidityPool} from '../useGetLiquidityPool'
-import {useStrings} from '../useStrings'
+import {Spacer} from '../../../../../components'
+import {makeList} from '../../../../../utils'
+import {TokenEmptyList} from '../../../common/TokenEmptyList'
+import {IOpenOrders} from '../../../common/useGetOpenOrders'
+import {useStrings} from '../../../common/useStrings'
+import {DAppTokenITem} from './DAppTokenITem/DAppTokenITem'
 
 type Props = {
-  tokensList: ILiquidityPool[]
+  tokensList: IOpenOrders[]
   isLoading: boolean
   isSearching: boolean
 }
-export const LiquidityPoolTab = ({tokensList = [], isLoading, isSearching}: Props) => {
+export const OpenOrdersTab = ({isLoading, tokensList, isSearching}: Props) => {
   const strings = useStrings()
   const {styles} = useStyles()
   const hasEmpty = tokensList.length === 0
 
-  const renderTokenItem = (item: ILiquidityPool | undefined, index: number) => {
-    return <DAppTokenITem key={item?.id ?? index} tokenInfo={item ? item : undefined} splitTokenSymbol="-" />
+  const renderTokenItem = (item: IOpenOrders | undefined, index: number) => {
+    return <DAppTokenITem key={item?.id ?? index} tokenInfo={item ? item : undefined} splitTokenSymbol="/" />
   }
 
   const renderHeaderList = () => {
@@ -28,7 +28,7 @@ export const LiquidityPoolTab = ({tokensList = [], isLoading, isSearching}: Prop
     if (isSearching)
       return (
         <View>
-          <Text style={styles.textAvailable}>{strings.countLiquidityPoolsAvailable(tokensList.length)}</Text>
+          <Text style={styles.textAvailable}>{strings.countOpenOrders(tokensList.length)}</Text>
 
           <Spacer height={16} />
         </View>
@@ -42,8 +42,8 @@ export const LiquidityPoolTab = ({tokensList = [], isLoading, isSearching}: Prop
       return (
         <View style={styles.containerLoading}>{makeList(3).map((_, index) => renderTokenItem(undefined, index))}</View>
       )
-    if (hasEmpty) return <TokenEmptyList emptyText={strings.noDataFound} />
 
+    if (tokensList.length === 0) return <TokenEmptyList emptyText={strings.noDataFound} />
     return null
   }
 

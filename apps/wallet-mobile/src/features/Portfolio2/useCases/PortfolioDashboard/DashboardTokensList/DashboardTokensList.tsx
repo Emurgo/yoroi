@@ -4,11 +4,11 @@ import {FlatList, StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, Vie
 
 import {Icon, Spacer} from '../../../../../components'
 import {makeList} from '../../../../../utils'
-import {BuyADABanner} from '../../../common/BuyADABanner/BuyADABanner'
 import {IPortfolioBalance, useGetTokensWithBalance} from '../../../common/useGetTokensWithBalance'
 import {useNavigateTo} from '../../../common/useNavigationTo'
 import {useStrings} from '../../../common/useStrings'
 import {useZeroBalance} from '../../../common/useZeroBalance'
+import {BuyADABanner} from './BuyADABanner/BuyADABanner'
 import {DashboardTokenItem} from './DashboardTokenItem'
 import {TradeTokensBanner} from './TradeTokensBanner'
 

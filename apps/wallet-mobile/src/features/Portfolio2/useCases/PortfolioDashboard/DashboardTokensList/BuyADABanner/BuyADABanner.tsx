@@ -4,9 +4,9 @@ import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Button, Spacer} from '../../../../components'
-import {TxHistoryRouteNavigation} from '../../../../navigation'
-import {useStrings} from '../useStrings'
+import {Button, Spacer} from '../../../../../../components'
+import {TxHistoryRouteNavigation} from '../../../../../../navigation'
+import {useStrings} from '../../../../common/useStrings'
 import {AssetImage} from './AssetImage'
 
 export const BuyADABanner = () => {

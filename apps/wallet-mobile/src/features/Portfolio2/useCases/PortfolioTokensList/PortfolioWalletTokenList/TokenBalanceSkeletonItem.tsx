@@ -3,7 +3,7 @@ import * as React from 'react'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 export const TokenBalanceSkeletonItem = () => {
-  const {color} = useStyles()
+  const {color} = useTheme()
   return (
     <SkeletonPlaceholder backgroundColor={color.gray_c100}>
       <SkeletonPlaceholder.Item flexDirection="row" justifyContent="space-between">
@@ -25,9 +25,4 @@ export const TokenBalanceSkeletonItem = () => {
       </SkeletonPlaceholder.Item>
     </SkeletonPlaceholder>
   )
-}
-
-const useStyles = () => {
-  const {color} = useTheme()
-  return {color} as const
 }
