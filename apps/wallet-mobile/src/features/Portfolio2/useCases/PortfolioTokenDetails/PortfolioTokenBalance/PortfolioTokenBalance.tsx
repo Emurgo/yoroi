@@ -6,7 +6,7 @@ import {StyleSheet, Text, View} from 'react-native'
 
 import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
 import {useGetPortfolioTokenInfo} from '../../../common/useGetPortfolioTokenInfo'
-import {usePortfolioTokenDetailParams} from '../../../common/useNavigationTo'
+import {usePortfolioTokenDetailParams} from '../../../common/useNavigateTo'
 import {PortfolioTokenDetailBalanceSkeleton} from './PortfolioTokenDetailBalanceSkeleton'
 
 export const PortfolioTokenBalance = () => {

@@ -4,7 +4,6 @@ import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {useStrings} from '../../../common/useStrings'
-import {BalanceCardSkeleton} from '../../PortfolioDashboard/BalanceCard/BalanceCardSkeleton'
 import {TotalTokensValueContent} from './TotalTokensValueContent'
 
 type Props = {
@@ -23,23 +22,20 @@ export const TotalTokensValue = ({isLoading, balance, oldBalance, usdExchangeRat
 
   return (
     <View style={styles.root}>
-      {isLoading ? (
-        <BalanceCardSkeleton />
-      ) : (
-        <TotalTokensValueContent
-          balance={balance}
-          oldBalance={oldBalance}
-          usdExchangeRate={usdExchangeRate}
-          cardType={cardType}
-          headerCard={
-            <View style={styles.rowBetween}>
-              <View>
-                <Text style={[styles.normalText]}>{title}</Text>
-              </View>
+      <TotalTokensValueContent
+        balance={balance}
+        oldBalance={oldBalance}
+        usdExchangeRate={usdExchangeRate}
+        cardType={cardType}
+        isLoading={isLoading}
+        headerCard={
+          <View style={styles.rowBetween}>
+            <View>
+              <Text style={[styles.normalText]}>{title}</Text>
             </View>
-          }
-        />
-      )}
+          </View>
+        }
+      />
     </View>
   )
 }

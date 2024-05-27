@@ -1,17 +1,19 @@
 import {useTheme} from '@yoroi/theme'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
-import {Image, ImageSourcePropType, ImageStyle, StyleProp, StyleSheet, Text, View} from 'react-native'
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
+import {AssetLogo} from '../../../../common/AssetLogo/AssetLogo'
 import {ILiquidityPool} from '../../../../common/useGetLiquidityPool'
-import {DAppTokenITemSkeleton} from './DAppTokenITemSkeleton'
+import {DAppTokenITemSkeleton} from './DAppTokenItemSkeleton'
 
 type Props = {
   tokenInfo?: ILiquidityPool
   splitTokenSymbol: string
+  onPress?: () => void
 }
 
-export const DAppTokenITem = ({tokenInfo, splitTokenSymbol}: Props) => {
+export const DAppTokenITem = ({tokenInfo, splitTokenSymbol, onPress}: Props) => {
   const {styles} = useStyles()
   if (!tokenInfo) return <DAppTokenITemSkeleton />
 
@@ -25,12 +27,12 @@ export const DAppTokenITem = ({tokenInfo, splitTokenSymbol}: Props) => {
   const usdFormatted = usd.toFixed(0)
 
   return (
-    <View style={styles.root}>
+    <TouchableOpacity onPress={onPress} style={styles.root}>
       <View style={styles.tokenInfoContainer}>
         <View style={styles.logoContainer}>
-          <Logo source={firstToken.logo} style={styles.logoFirst} />
+          <AssetLogo source={firstToken.logo} style={styles.logoFirst} />
 
-          <Logo source={secondToken.logo} style={styles.logoSecond} />
+          <AssetLogo source={secondToken.logo} style={styles.logoSecond} />
         </View>
 
         <View>
@@ -47,16 +49,8 @@ export const DAppTokenITem = ({tokenInfo, splitTokenSymbol}: Props) => {
 
         <Text style={styles.usd}>{usdFormatted} USD</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   )
-}
-
-type LogoProps = {
-  source: string | ImageSourcePropType
-  style: StyleProp<ImageStyle>
-}
-const Logo = ({source, style}: LogoProps) => {
-  return <Image source={typeof source === 'string' ? {uri: source} : source} style={[style]} />
 }
 
 const useStyles = () => {

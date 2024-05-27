@@ -1,7 +1,7 @@
 import {useTheme} from '@yoroi/theme'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {ScrollView, StyleSheet, View} from 'react-native'
 
 import {Spacer} from '../../../../../components'
 import {TabPanel} from '../../../../../components/Tabs'
@@ -51,7 +51,7 @@ export const PortfolioDAppsTokenList = () => {
   }, [isSearching, search, liquidityPools])
 
   return (
-    <View style={styles.root}>
+    <ScrollView style={styles.root}>
       {!isSearching ? (
         <View>
           <TotalTokensValue
@@ -85,7 +85,7 @@ export const PortfolioDAppsTokenList = () => {
       <TabPanel active={activeTab === 'lendAndBorrow'}>
         <LendAndBorrowTab />
       </TabPanel>
-    </View>
+    </ScrollView>
   )
 }
 

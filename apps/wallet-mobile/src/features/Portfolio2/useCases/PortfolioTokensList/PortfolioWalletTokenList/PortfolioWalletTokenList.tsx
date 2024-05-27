@@ -15,7 +15,6 @@ import {TotalTokensValue} from '../TotalTokensValue/TotalTokensValue'
 import {TokenBalanceItem} from './TokenBalanceItem'
 
 export const PortfolioWalletTokenList = () => {
-  const strings = useStrings()
   const {styles} = useStyles()
   const {search, isSearching} = useSearch()
 
@@ -49,28 +48,55 @@ export const PortfolioWalletTokenList = () => {
       <FlatList
         data={getListTokens}
         ListHeaderComponent={
-          <View>
-            <TotalTokensValue
-              balance={currentBalance}
-              oldBalance={oldBalance}
-              usdExchangeRate={usdExchangeRate}
-              isLoading={balanceLoading}
-              cardType="wallet"
-            />
-
-            <Line />
-
-            <Spacer height={16} />
-
-            <Text style={styles.textAvailable}>{strings.tokensAvailable(getListTokens.length)}</Text>
-
-            <Spacer height={16} />
-          </View>
+          <HeadingList
+            isShowBalanceCard={!isSearching}
+            countTokensList={getListTokens.length}
+            balanceInfo={{currentBalance, oldBalance, usdExchangeRate, isLoadingBalance: balanceLoading}}
+          />
         }
+        ListFooterComponent={renderFooterList}
         ItemSeparatorComponent={() => <Spacer height={16} />}
         renderItem={({item}) => <TokenBalanceItem info={item} />}
-        ListFooterComponent={renderFooterList}
       />
+    </View>
+  )
+}
+
+type HeadingListProps = {
+  isShowBalanceCard: boolean
+  countTokensList: number
+  balanceInfo: {
+    currentBalance: BigNumber
+    oldBalance: BigNumber
+    usdExchangeRate: number
+    isLoadingBalance: boolean
+  }
+}
+const HeadingList = ({isShowBalanceCard, countTokensList, balanceInfo}: HeadingListProps) => {
+  const strings = useStrings()
+  const {styles} = useStyles()
+
+  return (
+    <View>
+      {isShowBalanceCard ? (
+        <View>
+          <TotalTokensValue
+            balance={balanceInfo.currentBalance}
+            oldBalance={balanceInfo.oldBalance}
+            usdExchangeRate={balanceInfo.usdExchangeRate}
+            isLoading={balanceInfo.isLoadingBalance}
+            cardType="wallet"
+          />
+
+          <Line />
+        </View>
+      ) : null}
+
+      <Spacer height={16} />
+
+      <Text style={styles.textAvailable}>{strings.tokensAvailable(countTokensList)}</Text>
+
+      <Spacer height={8} />
     </View>
   )
 }

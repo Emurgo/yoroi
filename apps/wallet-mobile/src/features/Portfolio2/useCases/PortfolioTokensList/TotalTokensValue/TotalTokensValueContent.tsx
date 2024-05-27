@@ -2,6 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 import {Spacer} from '../../../../../components'
 import {PnlTag} from '../../../common/PnlTag/PnlTag'
@@ -12,9 +13,17 @@ type Props = {
   usdExchangeRate: number
   headerCard: React.ReactNode
   cardType: 'wallet' | 'dapps'
+  isLoading: boolean
 }
 
-export const TotalTokensValueContent = ({balance, oldBalance, usdExchangeRate, headerCard, cardType}: Props) => {
+export const TotalTokensValueContent = ({
+  balance,
+  oldBalance,
+  usdExchangeRate,
+  headerCard,
+  cardType,
+  isLoading,
+}: Props) => {
   const {styles} = useStyles()
 
   const isWallet = cardType === 'wallet'
@@ -37,29 +46,64 @@ export const TotalTokensValueContent = ({balance, oldBalance, usdExchangeRate, h
       <Spacer height={6} />
 
       <View style={styles.balanceContainer}>
-        <View style={[styles.balanceBox]}>
-          <Text style={[styles.balanceText]}>{formatBalance}</Text>
+        <View style={styles.balanceBox}>
+          {isLoading ? <SkeletonADABalance /> : <Text style={[styles.balanceText]}>{formatBalance}</Text>}
 
-          <Text style={[styles.adaSymbol]}>ADA</Text>
+          <Text style={styles.adaSymbol}>ADA</Text>
 
           {isWallet ? <Text style={[styles.usdSymbol]}>/USD</Text> : null}
         </View>
 
         <View style={styles.rowBetween}>
-          <Text style={[styles.usdBalance]}>{formatUSDBalance} USD</Text>
+          {isLoading ? <SkeletonUSDBalance /> : <Text style={[styles.usdBalance]}>{formatUSDBalance} USD</Text>}
 
           <View style={styles.varyContainer}>
-            <PnlTag variant={variantPnl} withIcon>
-              <Text>{pnlPercentFormat}%</Text>
-            </PnlTag>
+            {isLoading ? (
+              <SkeletonPnlTag />
+            ) : (
+              <PnlTag variant={variantPnl} withIcon>
+                <Text>{pnlPercentFormat}%</Text>
+              </PnlTag>
+            )}
 
-            <PnlTag variant={variantPnl}>
-              <Text>{pnlNumberFormat} USD</Text>
-            </PnlTag>
+            {isLoading ? (
+              <SkeletonPnlTag />
+            ) : (
+              <PnlTag variant={variantPnl}>
+                <Text>{pnlNumberFormat} USD</Text>
+              </PnlTag>
+            )}
           </View>
         </View>
       </View>
     </View>
+  )
+}
+
+const SkeletonADABalance = () => {
+  const {color} = useTheme()
+  return (
+    <SkeletonPlaceholder backgroundColor={color.gray_c100}>
+      <SkeletonPlaceholder.Item width={108} height={28} marginVertical={4} borderRadius={20} />
+    </SkeletonPlaceholder>
+  )
+}
+
+const SkeletonUSDBalance = () => {
+  const {color} = useTheme()
+  return (
+    <SkeletonPlaceholder backgroundColor={color.gray_c100}>
+      <SkeletonPlaceholder.Item width={85} height={20} marginVertical={2} borderRadius={20} />
+    </SkeletonPlaceholder>
+  )
+}
+
+const SkeletonPnlTag = () => {
+  const {color} = useTheme()
+  return (
+    <SkeletonPlaceholder backgroundColor={color.gray_c100}>
+      <SkeletonPlaceholder.Item width={66} height={24} borderRadius={20} />
+    </SkeletonPlaceholder>
   )
 }
 
@@ -74,7 +118,7 @@ const useStyles = () => {
     balanceBox: {
       ...atoms.flex_row,
       ...atoms.gap_2xs,
-      ...atoms.align_baseline,
+      ...atoms.align_center,
     },
     balanceText: {
       ...atoms.heading_1_regular,
@@ -87,7 +131,7 @@ const useStyles = () => {
     usdSymbol: {
       ...atoms.body_1_lg_regular,
       ...atoms.font_semibold,
-      color: color.gray_c400,
+      color: color.gray_c200,
     },
     balanceContainer: {
       ...atoms.gap_2xs,
