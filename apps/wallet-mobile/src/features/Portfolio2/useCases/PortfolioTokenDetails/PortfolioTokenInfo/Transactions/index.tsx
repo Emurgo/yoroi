@@ -1,9 +1,10 @@
 /* eslint-disable react-native/no-raw-text */
 import {useTheme} from '@yoroi/theme'
 import _ from 'lodash'
-import React, {useMemo} from 'react'
+import React, {ReactNode, useMemo} from 'react'
 import {useIntl} from 'react-intl'
-import {SafeAreaView, SectionList, StyleSheet, Text, View} from 'react-native'
+import {NativeScrollEvent, NativeSyntheticEvent, SectionList, StyleSheet, Text, View} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Spacer} from '../../../../../../components/Spacer'
 import {formatDateRelative} from '../../../../../../legacy/format'
@@ -12,8 +13,11 @@ import {useGetPortfolioTokenTransaction} from '../../../../common/useGetPortfoli
 import {usePortfolioTokenDetailParams} from '../../../../common/useNavigationTo'
 import {TransactionItem} from './TransactionItem'
 import {TransactionItemSkeleton} from './TransactionItemSkeleton'
-
-export const Transactions = () => {
+interface Props {
+  onScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
+  topContent?: ReactNode
+}
+export const Transactions = ({onScroll, topContent}: Props) => {
   const {styles} = useStyles()
   const {name: tokenName} = usePortfolioTokenDetailParams()
   const {data, isLoading} = useGetPortfolioTokenTransaction(tokenName)
@@ -42,28 +46,41 @@ export const Transactions = () => {
   }
 
   return (
-    <SafeAreaView style={styles.root}>
+    <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
+      {isLoading ? (
+        <View style={styles.containerLoading}>
+          {makeList(6).map((_, index) => (
+            <TransactionItemSkeleton key={index} />
+          ))}
+        </View>
+      ) : null}
+
       <SectionList
-        // We disabled the scroll because we already have one on the root screen
-        scrollEnabled={false}
-        nestedScrollEnabled={true}
+        ListHeaderComponent={
+          <>
+            {topContent}
+
+            <Spacer height={16} />
+          </>
+        }
+        ListFooterComponent={
+          <>
+            <Spacer height={150} />
+          </>
+        }
+        style={styles.scrollView}
+        onScroll={onScroll}
+        scrollEventThrottle={16}
         sections={groupedData}
         keyExtractor={(_, index) => index.toString()}
         renderItem={({item, index}) => <TransactionItem key={item?.id ?? index} tx={item} tokenName={tokenName} />}
         ItemSeparatorComponent={() => <Spacer height={24} />}
         SectionSeparatorComponent={() => <Spacer height={16} />}
         renderSectionHeader={({section: {title}}) => <Text style={styles.textHeader}>{title}</Text>}
+        stickySectionHeadersEnabled={false}
         onEndReached={loadMoreItems}
         onEndReachedThreshold={0.5} // Trigger the load more half-way to the bottom
       />
-
-      {isLoading ? (
-        <View style={styles.containerLoading}>
-          {makeList(3).map((_, index) => (
-            <TransactionItemSkeleton key={index} />
-          ))}
-        </View>
-      ) : null}
     </SafeAreaView>
   )
 }
@@ -73,11 +90,17 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       ...atoms.flex_1,
+      ...atoms.flex_col,
       backgroundColor: color.gray_cmin,
+    },
+    scrollView: {
+      ...atoms.flex_1,
+      ...atoms.px_lg,
     },
     containerLoading: {
       ...atoms.flex_col,
       ...atoms.gap_xl,
+      ...atoms.px_lg,
     },
     textHeader: {
       ...atoms.body_3_sm_medium,

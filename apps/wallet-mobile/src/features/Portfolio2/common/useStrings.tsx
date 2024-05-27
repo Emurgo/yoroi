@@ -29,6 +29,37 @@ export const useStrings = () => {
       intl.formatMessage(messages.countLiquidityPoolsAvailable, {countLiquidityPools: qty}),
     countOpenOrders: (qty: number) => intl.formatMessage(messages.countOpenOrders, {countOpenOrders: qty}),
     noDataFound: intl.formatMessage(messages.noDataFound),
+
+    performance: intl.formatMessage(messages.performance),
+    overview: intl.formatMessage(messages.overview),
+    transactions: intl.formatMessage(messages.transactions),
+    tokenPriceChangeTooltip: intl.formatMessage(messages.tokenPriceChangeTooltip),
+    netInvested: intl.formatMessage(messages.netInvested),
+    bought: intl.formatMessage(messages.bought),
+    received: intl.formatMessage(messages.received),
+    sent: intl.formatMessage(messages.sent),
+    sold: intl.formatMessage(messages.sold),
+    failed: intl.formatMessage(messages.failed),
+    stakeDelegated: intl.formatMessage(messages.stakeDelegated),
+    stakingReward: intl.formatMessage(messages.stakingReward),
+    unknown: intl.formatMessage(messages.unknown),
+    assets: intl.formatMessage(messages.assets),
+    marketData: intl.formatMessage(messages.marketData),
+    tokenPriceChange: intl.formatMessage(messages.tokenPriceChange),
+    tokenPrice: intl.formatMessage(messages.tokenPrice),
+    marketCap: intl.formatMessage(messages.marketCap),
+    _24hVolume: intl.formatMessage(messages._24hVolume),
+    rank: intl.formatMessage(messages.rank),
+    circulating: intl.formatMessage(messages.circulating),
+    totalSupply: intl.formatMessage(messages.totalSupply),
+    maxSupply: intl.formatMessage(messages.maxSupply),
+    allTimeHigh: intl.formatMessage(messages.allTimeHigh),
+    allTimeLow: intl.formatMessage(messages.allTimeLow),
+    info: intl.formatMessage(messages.info),
+    website: intl.formatMessage(messages.website),
+    policyID: intl.formatMessage(messages.policyID),
+    fingerprint: intl.formatMessage(messages.fingerprint),
+    detailsOn: intl.formatMessage(messages.detailsOn),
   }
 }
 
@@ -129,5 +160,125 @@ export const messages = defineMessages({
   noDataFound: {
     id: 'portfolio.portfolioTokensDetailScreen.noDataFound',
     defaultMessage: '!!!No Data Found',
+  },
+  performance: {
+    id: 'portfolio.portfolioTokensDetailScreen.performance',
+    defaultMessage: '!!!Performance',
+  },
+  overview: {
+    id: 'portfolio.portfolioTokensDetailScreen.overview',
+    defaultMessage: '!!!Overview',
+  },
+  transactions: {
+    id: 'portfolio.portfolioTokensDetailScreen.transactions',
+    defaultMessage: '!!!Transactions',
+  },
+  tokenPriceChangeTooltip: {
+    id: 'portfolio.portfolioTokensDetailScreen.tokenPriceChangeTooltip',
+    defaultMessage: '!!!Token price change in 24 hours',
+  },
+  netInvested: {
+    id: 'portfolio.portfolioTokensDetailScreen.netInvested',
+    defaultMessage: '!!!Net Invested',
+  },
+  bought: {
+    id: 'portfolio.portfolioTokensDetailScreen.bought',
+    defaultMessage: '!!!Bought',
+  },
+  received: {
+    id: 'portfolio.portfolioTokensDetailScreen.received',
+    defaultMessage: '!!!Received',
+  },
+  sent: {
+    id: 'portfolio.portfolioTokensDetailScreen.sent',
+    defaultMessage: '!!!Sent',
+  },
+  sold: {
+    id: 'portfolio.portfolioTokensDetailScreen.sold',
+    defaultMessage: '!!!Sold',
+  },
+  failed: {
+    id: 'portfolio.portfolioTokensDetailScreen.failed',
+    defaultMessage: '!!!Failed',
+  },
+  stakeDelegated: {
+    id: 'portfolio.portfolioTokensDetailScreen.stakeDelegated',
+    defaultMessage: '!!!Stake Delegated',
+  },
+  stakingReward: {
+    id: 'portfolio.portfolioTokensDetailScreen.stakingReward',
+    defaultMessage: '!!!Staking Reward',
+  },
+  unknown: {
+    id: 'portfolio.portfolioTokensDetailScreen.unknown',
+    defaultMessage: '!!!Unknown',
+  },
+  assets: {
+    id: 'portfolio.portfolioTokensDetailScreen.assets',
+    defaultMessage: '!!!assets',
+  },
+  marketData: {
+    id: 'portfolio.portfolioTokensDetailScreen.marketData',
+    defaultMessage: '!!!Market data',
+  },
+  tokenPriceChange: {
+    id: 'portfolio.portfolioTokensDetailScreen.tokenPriceChange',
+    defaultMessage: '!!!Token price change',
+  },
+  tokenPrice: {
+    id: 'portfolio.portfolioTokensDetailScreen.tokenPrice',
+    defaultMessage: '!!!Token price ',
+  },
+  marketCap: {
+    id: 'portfolio.portfolioTokensDetailScreen.marketCap',
+    defaultMessage: '!!!Market cap ',
+  },
+  _24hVolume: {
+    id: 'portfolio.portfolioTokensDetailScreen._24hVolume',
+    defaultMessage: '!!!24h volume',
+  },
+  rank: {
+    id: 'portfolio.portfolioTokensDetailScreen.rank',
+    defaultMessage: '!!!Rank',
+  },
+  circulating: {
+    id: 'portfolio.portfolioTokensDetailScreen.circulating',
+    defaultMessage: '!!!Circulating',
+  },
+  totalSupply: {
+    id: 'portfolio.portfolioTokensDetailScreen.totalSupply',
+    defaultMessage: '!!!Total supply',
+  },
+  maxSupply: {
+    id: 'portfolio.portfolioTokensDetailScreen.maxSupply',
+    defaultMessage: '!!!Max supply',
+  },
+  allTimeHigh: {
+    id: 'portfolio.portfolioTokensDetailScreen.allTimeHigh',
+    defaultMessage: '!!!All time high',
+  },
+  allTimeLow: {
+    id: 'portfolio.portfolioTokensDetailScreen.allTimeLow',
+    defaultMessage: '!!!All time low',
+  },
+  info: {
+    id: 'portfolio.portfolioTokensDetailScreen.info',
+    defaultMessage: '!!!Info',
+  },
+  website: {
+    id: 'portfolio.portfolioTokensDetailScreen.website',
+    defaultMessage: '!!!Website',
+  },
+  policyID: {
+    id: 'portfolio.portfolioTokensDetailScreen.policyID',
+    defaultMessage: '!!!Policy ID',
+  },
+  fingerprint: {
+    id: 'portfolio.portfolioTokensDetailScreen.fingerprint',
+    defaultMessage: '!!!Fingerprint',
+  },
+  detailsOn: {
+    id: 'portfolio.portfolioTokensDetailScreen.detailsOn',
+    defaultMessage: '!!!Details on',
   },
 })

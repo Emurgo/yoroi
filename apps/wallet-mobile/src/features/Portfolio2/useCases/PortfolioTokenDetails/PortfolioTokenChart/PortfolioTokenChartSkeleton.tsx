@@ -9,7 +9,7 @@ import {Icon, Tooltip} from '../../../../../components'
 export const PortfolioTokenChartSkeleton = () => {
   const {color, styles} = useStyles()
   return (
-    <View style={{flex: 1}}>
+    <View style={styles.root}>
       <View style={styles.container}>
         <View style={styles.group}>
           <SkeletonPlaceholder borderRadius={20} backgroundColor={color.gray_c100}>
@@ -38,8 +38,10 @@ export const PortfolioTokenChartSkeleton = () => {
 const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
+    root: {
+      ...atoms.flex_col,
+    },
     container: {
-      ...atoms.flex_1,
       ...atoms.flex_row,
       ...atoms.justify_between,
       ...atoms.align_center,
@@ -52,8 +54,7 @@ const useStyles = () => {
       ...atoms.gap_2xs,
     },
     chartPlaceholder: {
-      ...atoms.flex_1,
-      minHeight: 112,
+      height: 112,
       marginVertical: 16,
       resizeMode: 'cover',
     },

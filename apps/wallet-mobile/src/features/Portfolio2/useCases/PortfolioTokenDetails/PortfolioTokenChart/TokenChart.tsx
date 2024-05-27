@@ -159,8 +159,7 @@ const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      minHeight: 200,
-      paddingVertical: 2,
+      height: 144,
     },
     fill: {
       ...atoms.flex_1,
