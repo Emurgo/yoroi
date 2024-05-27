@@ -5,8 +5,8 @@ import {StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {TxHistoryRouteNavigation} from 'src/navigation'
 
-import {Button} from '../../../../components'
-import {useStrings} from '../useStrings'
+import {Button} from '../../../../../components'
+import {useStrings} from '../../../common/useStrings'
 import {TradeTokensAsset} from './TradeTokensAsset'
 
 export const TradeTokensBanner = () => {

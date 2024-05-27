@@ -2,9 +2,9 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Image, ImageSourcePropType, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
-import {Spacer} from '../../../../components'
-import {PnlTag} from '../PnlTag/PnlTag'
-import {useNavigateTo} from '../useNavigationTo'
+import {Spacer} from '../../../../../components'
+import {PnlTag} from '../../../common/PnlTag/PnlTag'
+import {useNavigateTo} from '../../../common/useNavigationTo'
 import {DashboardTokenSkeletonItem} from './DashboardTokenSkeletonItem'
 
 type Props = {

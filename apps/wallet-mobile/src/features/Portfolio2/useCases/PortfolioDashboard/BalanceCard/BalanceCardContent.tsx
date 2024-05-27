@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {PnlTag} from '../PnlTag/PnlTag'
+import {PnlTag} from '../../../common/PnlTag/PnlTag'
 
 type Props = {
   balance: BigNumber
