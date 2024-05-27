@@ -21,7 +21,7 @@ export const BalanceCard = () => {
   return (
     <View style={styles.root}>
       {isLoading ? (
-        <BalanceCardSkeleton />
+        <BalanceCardSkeleton cardHeight={114} />
       ) : (
         <LinearGradient style={styles.gradientRoot} colors={colors.gradientColor}>
           <BalanceCardContent

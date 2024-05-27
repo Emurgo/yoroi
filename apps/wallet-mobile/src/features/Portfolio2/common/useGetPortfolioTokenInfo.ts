@@ -1,6 +1,6 @@
-import { type Portfolio } from '@yoroi/types'
-import { ImageSourcePropType } from 'react-native'
-import { useQuery, UseQueryOptions } from 'react-query'
+import {type Portfolio} from '@yoroi/types'
+import {ImageSourcePropType} from 'react-native'
+import {useQuery, UseQueryOptions} from 'react-query'
 
 import AdaLogo from '../../../assets/img/ada.png'
 
@@ -57,7 +57,7 @@ const mockInfo = {
       max_supply: '400,67T',
       ath: '1,55',
       atl: '0,00002',
-    }
+    },
   },
 }
 
@@ -67,28 +67,28 @@ const MockTokenList = [
     name: 'ADA',
     symbol: '₳',
     amount: mockAmount,
-    info: mockInfo
+    info: mockInfo,
   },
   {
     logo: AdaLogo,
     name: 'TADA',
     symbol: '₳',
     amount: mockAmount,
-    info: mockInfo
+    info: mockInfo,
   },
   {
     logo: AdaLogo,
     symbol: 'AGIX',
     name: 'AGIX',
     amount: mockAmount,
-    info: mockInfo
+    info: mockInfo,
   },
   {
     logo: AdaLogo,
     symbol: 'HOSKY',
     name: 'HOSKY',
     amount: mockAmount,
-    info: mockInfo
+    info: mockInfo,
   },
 ] as IPortfolioTokenInfo[]
 

@@ -3,13 +3,13 @@ import * as React from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Tab, TabPanel, Tabs} from '../../components/Tabs'
-import {useSearchOnNavBar} from '../../Search/SearchContext'
-import {useStrings} from './common/useStrings'
-import {PortfolioDAppsTokenScreen} from './useCases/PortfolioTokensList/PortfolioDAppsTokenScreen'
-import {PortfolioWalletTokenScreen} from './useCases/PortfolioTokensList/PortfolioWalletTokenScreen'
+import {Tab, TabPanel, Tabs} from '../../../../components/Tabs'
+import {useSearchOnNavBar} from '../../../../Search/SearchContext'
+import {useStrings} from '../../common/useStrings'
+import {PortfolioDAppsTokenScreen} from './PortfolioDAppsTokenScreen'
+import {PortfolioWalletTokenScreen} from './PortfolioWalletTokenScreen'
 
-export const PortfolioTokenListNavigator = () => {
+export const PortfolioTokenListScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
   const [activeTab, setActiveTab] = React.useState<'wallet' | 'dapps'>('wallet')
