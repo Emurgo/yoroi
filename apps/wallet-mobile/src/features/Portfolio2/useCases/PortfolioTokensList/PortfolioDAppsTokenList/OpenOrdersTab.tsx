@@ -3,12 +3,12 @@ import * as React from 'react'
 import {FlatList, StyleSheet, Text, View} from 'react-native'
 
 import {Spacer} from '../../../../../components'
-import {makeList} from '../../../../../utils'
+import {makeList} from '../../../../../kernel/utils'
 import {TokenEmptyList} from '../../../common/TokenEmptyList'
 import {IOpenOrders} from '../../../common/useGetOpenOrders'
 import {useShowOpenOrderModal} from '../../../common/useShowOpenOrderModal'
 import {useStrings} from '../../../common/useStrings'
-import {DAppTokenITem} from './DAppTokenItem/DAppTokenItem'
+import {DAppTokenItem} from './DAppTokenItem/DAppTokenItem'
 
 type Props = {
   tokensList: IOpenOrders[]
@@ -29,7 +29,7 @@ export const OpenOrdersTab = ({isLoading, tokensList, isSearching}: Props) => {
 
   const renderTokenItem = (item: IOpenOrders | undefined, index: number) => {
     return (
-      <DAppTokenITem
+      <DAppTokenItem
         onPress={() => onTokenPress(item)}
         key={item?.id ?? index}
         tokenInfo={item ? item : undefined}

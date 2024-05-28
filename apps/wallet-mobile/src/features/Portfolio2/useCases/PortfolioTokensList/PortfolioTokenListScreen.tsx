@@ -4,7 +4,7 @@ import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Tab, TabPanel, Tabs} from '../../../../components/Tabs'
-import {useSearchOnNavBar} from '../../../../Search/SearchContext'
+import {useSearchOnNavBar} from '../../../../features/Search/SearchContext'
 import {useStrings} from '../../common/useStrings'
 import {PortfolioDAppsTokenList} from './PortfolioDAppsTokenList/PortfolioDAppsTokenList'
 import {PortfolioWalletTokenList} from './PortfolioWalletTokenList/PortfolioWalletTokenList'

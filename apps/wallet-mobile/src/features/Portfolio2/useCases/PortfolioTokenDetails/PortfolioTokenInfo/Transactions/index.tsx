@@ -7,8 +7,8 @@ import {NativeScrollEvent, NativeSyntheticEvent, SectionList, StyleSheet, Text, 
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Spacer} from '../../../../../../components/Spacer'
-import {formatDateRelative} from '../../../../../../legacy/format'
-import {makeList} from '../../../../../../utils'
+import {makeList} from '../../../../../../kernel/utils'
+import {formatDateRelative} from '../../../../../../yoroi-wallets/utils/format'
 import {useGetPortfolioTokenTransaction} from '../../../../common/useGetPortfolioTokenTransaction'
 import {usePortfolioTokenDetailParams} from '../../../../common/useNavigateTo'
 import {TransactionItem} from './TransactionItem'

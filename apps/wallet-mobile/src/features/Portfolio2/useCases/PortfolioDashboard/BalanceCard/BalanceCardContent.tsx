@@ -32,7 +32,7 @@ export const BalanceCardContent = ({balance, oldBalance, usdExchangeRate, header
       {headerCard}
 
       <View style={styles.balanceContainer}>
-        <View style={[styles.balanceBox]}>
+        <View style={styles.balanceBox}>
           <Text style={[styles.balanceText, styles.textWhite]}>{formatBalance}</Text>
 
           <Text style={[styles.adaSymbol, styles.textWhite]}>ADA</Text>

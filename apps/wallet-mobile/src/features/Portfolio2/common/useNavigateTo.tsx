@@ -1,8 +1,8 @@
 import {NavigationProp, useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 
-import {Portfolio2Routes, useParams} from '../../../navigation'
-import {isEmptyString} from '../../../utils'
+import {Portfolio2Routes, useParams} from '../../../kernel/navigation'
+import {isEmptyString} from '../../../kernel/utils'
 
 export const useNavigateTo = () => {
   const navigation = useNavigation<NavigationProp<Portfolio2Routes>>()
