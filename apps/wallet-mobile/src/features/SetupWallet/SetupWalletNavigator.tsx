@@ -3,7 +3,7 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {defaultStackNavigationOptions, WalletInitRoutes} from '../../navigation'
+import {defaultStackNavigationOptions, WalletInitRoutes} from '../../kernel/navigation'
 import {CheckNanoXScreen} from './legacy/CheckNanoX/CheckNanoXScreen'
 import {ConnectNanoXScreen} from './legacy/ConnectNanoX/ConnectNanoXScreen'
 import {ImportReadOnlyWalletScreen} from './legacy/ImportReadOnlyWallet/ImportReadOnlyWalletScreen'

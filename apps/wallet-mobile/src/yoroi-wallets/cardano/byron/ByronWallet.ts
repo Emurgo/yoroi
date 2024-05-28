@@ -17,11 +17,12 @@ import {toChainSupportedNetwork} from '../../../features/WalletManager/common/he
 import {networkManager} from '../../../features/WalletManager/common/network-manager'
 import {WalletMeta} from '../../../features/WalletManager/common/types'
 import walletManager from '../../../features/WalletManager/common/walletManager'
-import LocalizableError from '../../../i18n/LocalizableError'
+import LocalizableError from '../../../kernel/i18n/LocalizableError'
+import {logger} from '../../../kernel/logger/logger'
+import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../../kernel/storage/EncryptedStorage'
+import {Keychain} from '../../../kernel/storage/Keychain'
+import {makeMemosManager, MemosManager} from '../../../legacy/TxHistory/common/memos/memosManager'
 import {HWDeviceInfo} from '../../hw'
-import {Logger} from '../../logging'
-import {makeMemosManager, MemosManager} from '../../memos'
-import {Keychain, makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../storage'
 import {
   AccountStateResponse,
   BackendConfig,
@@ -44,7 +45,7 @@ import {
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../../types'
-import {asQuantity, genTimeToSlot, isMainnetNetworkId, Quantities, validatePassword} from '../../utils'
+import {asQuantity, genTimeToSlot, Quantities, validatePassword} from '../../utils'
 import {Cardano, CardanoMobile} from '../../wallets'
 import * as legacyApi from '../api'
 import {calcLockedDeposit} from '../assetUtils'
@@ -769,7 +770,7 @@ export class ByronWallet implements YoroiWallet {
       })
     } catch (e) {
       if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError) throw e
-      Logger.error(`shelley::createUnsignedTx:: ${(e as Error).message}`, e)
+      logger.error(`ByronWallet: createUnsignedTx error creating tx`, {error: e, type: 'transaction'})
       throw new CardanoError((e as Error).message)
     }
   }
@@ -1101,8 +1102,6 @@ export class ByronWallet implements YoroiWallet {
       return yoroiSignedTx({unsignedTx, signedTx})
     }
 
-    Logger.info('CardanoWallet::signTxWithLedger: Ledger app version > 5, using CIP-36')
-
     const ledgerPayload = await Cardano.buildLedgerPayload(
       unsignedTx.unsignedTx,
       Number.parseInt(this.getChainNetworkId(), 10),
@@ -1236,7 +1235,7 @@ export class ByronWallet implements YoroiWallet {
     const apiUrl = this.getBackendConfig().TOKEN_INFO_SERVICE
     if (!apiUrl) throw new Error('invalid wallet')
 
-    const isMainnet = isMainnetNetworkId(this.networkId)
+    const isMainnet = this.isMainnet
     const isTestnet = !isMainnet
 
     if ((tokenId === '' || tokenId === 'ADA') && isMainnet) {

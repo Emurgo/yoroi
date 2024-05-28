@@ -4,8 +4,8 @@ import {ActivityIndicator, Button, StyleSheet, Text, View} from 'react-native'
 import {useQuery} from 'react-query'
 
 import {QueryProvider} from '../../../.storybook/decorators'
-import {errorMessages} from '../../i18n/global-messages'
-import LocalizableError from '../../i18n/LocalizableError'
+import {errorMessages} from '../../kernel/i18n/global-messages'
+import LocalizableError from '../../kernel/i18n/LocalizableError'
 import {Boundary} from './Boundary'
 
 storiesOf('Boundary', module)

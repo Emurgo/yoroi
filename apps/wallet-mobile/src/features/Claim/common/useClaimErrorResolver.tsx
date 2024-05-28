@@ -1,4 +1,4 @@
-import {useApiErrorResolver} from '../../../api/useApiErrorResolver'
+import {useApiErrorResolver} from '../../../hooks/useApiErrorResolver'
 import {
   ClaimApiErrorsAlreadyClaimed,
   ClaimApiErrorsExpired,

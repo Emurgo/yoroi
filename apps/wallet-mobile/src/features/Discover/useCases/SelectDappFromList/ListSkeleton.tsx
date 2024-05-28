@@ -3,7 +3,6 @@ import * as React from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 
 import {Spacer} from '../../../../components'
-import {makeList} from '../../../../utils'
 import {DAppItemSkeleton} from './DAppListItem/DAppItemSkeleton'
 
 export const ListSkeleton = () => {
@@ -11,7 +10,7 @@ export const ListSkeleton = () => {
   return (
     <View style={styles.root}>
       <ScrollView>
-        {makeList(7).map((_, index) => (
+        {Array.from({length: 7}).map((_, index) => (
           <View style={styles.dAppItemBox} key={index}>
             <DAppItemSkeleton />
 

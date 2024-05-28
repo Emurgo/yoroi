@@ -2,7 +2,7 @@ import React, {Component, ErrorInfo, ReactNode} from 'react'
 import {BackHandler, Image, Platform, ScrollView, StyleSheet, Text, View, ViewProps} from 'react-native'
 
 import errorImage from '../../assets/img/error.png'
-import {Logger} from '../../legacy/logging'
+import {logger} from '../../kernel/logger/logger'
 import {Button} from '../Button/Button'
 import {CopyButton} from '../CopyButton'
 import {Spacer} from '../Spacer'
@@ -26,8 +26,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    Logger.error('ErrorBoundary::Error: ' + JSON.stringify(error))
-    Logger.error('ErrorBoundary::ErrorInfo: ' + JSON.stringify(errorInfo))
+    logger.error(error, {errorInfo})
     this.setState({
       error: error.toString(),
       errorInfo: JSON.stringify(errorInfo),

@@ -6,9 +6,8 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, Image, ImageSourcePropType, ScrollView, StyleSheet, View, ViewStyle} from 'react-native'
 
 import {Button, KeyboardAvoidingView, ProgressStep, TextInput} from '../../../../components'
-import globalMessages from '../../../../i18n/global-messages'
-import {useMetrics} from '../../../../metrics/metricsManager'
-import {spacing} from '../../../../theme'
+import globalMessages from '../../../../kernel/i18n/global-messages'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useWalletNames} from '../../../../yoroi-wallets/hooks'
 import {getWalletNameError, validateWalletName} from '../../../../yoroi-wallets/utils/validators'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerContext'
@@ -121,7 +120,7 @@ const useStyles = () => {
     heading: {
       alignItems: 'center',
       justifyContent: 'center',
-      marginBottom: spacing.paragraphBottomMargin,
+      marginBottom: 16,
     },
     buttonContainer: {
       flexDirection: 'row',

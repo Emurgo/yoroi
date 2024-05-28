@@ -4,7 +4,7 @@ import * as React from 'react'
 import {FlatList, StyleSheet, View} from 'react-native'
 
 import {Spacer} from '../../../../components'
-import {useSearch, useSearchOnNavBar} from '../../../../Search/SearchContext'
+import {useSearch, useSearchOnNavBar} from '../../../Search/SearchContext'
 import {getGoogleSearchItem} from '../../common/helpers'
 import {useDAppsConnected} from '../../common/useDAppsConnected'
 import {useStrings} from '../../common/useStrings'

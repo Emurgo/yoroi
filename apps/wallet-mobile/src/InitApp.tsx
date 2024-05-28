@@ -1,16 +1,13 @@
-import * as Sentry from '@sentry/react-native'
-import {isString, useAsyncStorage} from '@yoroi/common'
+import {useAsyncStorage} from '@yoroi/common'
 import {App} from '@yoroi/types'
-import React, {useEffect, useRef} from 'react'
+import React, {useEffect} from 'react'
 import {Platform, UIManager} from 'react-native'
 import uuid from 'uuid'
 
 import {AppNavigator} from './AppNavigator'
 import {useInitScreenShare} from './features/Settings/ScreenShare'
 import {walletManager} from './features/WalletManager/common/walletManager'
-import {CONFIG, isProduction} from './legacy/config'
-import {storageVersionMaker} from './migrations/storageVersion'
-import {useCrashReportsEnabled} from './yoroi-wallets/hooks'
+import {storageVersionMaker} from './kernel/storage/migrations/storageVersion'
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental != null) {
@@ -19,8 +16,8 @@ if (Platform.OS === 'android') {
 }
 
 export const InitApp = () => {
-  const loaded = useInitApp()
-  if (!loaded) return null
+  const isLoaded = useInitApp()
+  if (!isLoaded) return null
 
   return <AppNavigator />
 }
@@ -28,11 +25,8 @@ export const InitApp = () => {
 const useInitApp = () => {
   const [loaded, setLoaded] = React.useState(false)
   const storage = useAsyncStorage()
-  const crashReportsEnabled = useCrashReportsEnabled()
 
   const {initialised: screenShareInitialized} = useInitScreenShare()
-
-  useInitSentry({enabled: crashReportsEnabled})
 
   useEffect(() => {
     const load = async () => {
@@ -54,29 +48,11 @@ const initInstallationId = async (storage: App.Storage) => {
   await storage.setItem('appSettings/installationId', newInstallationId, () => newInstallationId) // LEGACY: installationId is not serialized
 
   // new installation set the storage version to the current version
+  // migrations happend before this, so when reading if empty returns current version
   await storageVersionMaker(storage).newInstallation()
 }
 
 export const initApp = async (storage: App.Storage) => {
   await initInstallationId(storage)
   await walletManager.removeDeletedWallets()
-}
-
-const useInitSentry = (options: {enabled: boolean}) => {
-  const ref = useRef(options.enabled)
-  ref.current = options.enabled
-
-  useEffect(() => {
-    if (!isString(CONFIG.SENTRY_DSN)) return
-    Sentry.init({
-      dsn: CONFIG.SENTRY_DSN,
-      patchGlobalPromise: true,
-      tracesSampleRate: isProduction() ? 0.25 : 1,
-      beforeSend(event) {
-        // https://github.com/getsentry/sentry-javascript/issues/2039
-        const isEnabled = ref.current
-        return isEnabled ? event : null
-      },
-    })
-  }, [])
 }

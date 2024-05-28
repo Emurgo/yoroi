@@ -1,0 +1,17 @@
+[
+  {
+    "id": "components.login.custompinlogin.title",
+    "defaultMessage": "!!!Enter PIN",
+    "file": "src/features/Auth/PinLoginScreen/PinLoginScreen.tsx",
+    "start": {
+      "line": 69,
+      "column": 9,
+      "index": 1769
+    },
+    "end": {
+      "line": 72,
+      "column": 3,
+      "index": 1859
+    }
+  }
+]

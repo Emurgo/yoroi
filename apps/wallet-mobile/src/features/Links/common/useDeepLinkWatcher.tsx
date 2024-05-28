@@ -2,7 +2,7 @@ import {linksYoroiParser, useLinks} from '@yoroi/links'
 import * as React from 'react'
 import {Linking} from 'react-native'
 
-import {Logger} from '../../../yoroi-wallets/logging'
+import {logger} from '../../../kernel/logger/logger'
 
 export const useDeepLinkWatcher = () => {
   const {actionStarted} = useLinks()
@@ -11,15 +11,15 @@ export const useDeepLinkWatcher = () => {
     (url: string) => {
       const parsedAction = linksYoroiParser(url)
       if (parsedAction == null) {
-        Logger.debug('useDeepLinksWatcher :: link is malformated, ignoring...')
+        logger.debug('useDeepLinkWatcher: link is malformated, ignored')
         return
       }
       if (parsedAction.params?.isSandbox === true && __DEV__ === false) {
-        Logger.debug('useDeepLinksWatcher :: link is sandboxed, ignoring...')
+        logger.debug('useDeepLinkWatcher: link is sandboxed, ignored')
         return
       }
       // TODO: implement isTrusted if signature was provided and doesn't match with authorization ignore it
-      Logger.debug('parsedAction', JSON.stringify(parsedAction, null, 2))
+      logger.debug('useDeepLinkWatcher: parsedAction', {parsedAction})
       actionStarted({info: parsedAction, isTrusted: false})
     },
     [actionStarted],

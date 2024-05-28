@@ -3,9 +3,9 @@ import React from 'react'
 import {StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle} from 'react-native'
 import Animated, {FadeInDown, FadeOutDown, LinearTransition} from 'react-native-reanimated'
 
-import {isEmptyString} from '../../../wallet-mobile/src/utils/utils'
 import {Icon} from '../components/Icon'
-import {useCopy} from '../legacy/useCopy'
+import {useCopy} from '../hooks/useCopy'
+import {isEmptyString} from '../kernel/utils'
 
 export type CopyButtonProps = {
   value: string

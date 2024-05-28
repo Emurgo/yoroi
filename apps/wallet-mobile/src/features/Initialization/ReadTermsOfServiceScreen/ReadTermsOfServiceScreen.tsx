@@ -3,8 +3,8 @@ import React from 'react'
 import {ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useLanguage} from '../../../i18n'
-import {TermsOfService} from '../../../Legal'
+import {useLanguage} from '../../../kernel/i18n'
+import {TermsOfService} from '../../Legal/TermsOfService/TermsOfService'
 
 export const ReadTermsOfServiceScreen = () => {
   const styles = useStyles()

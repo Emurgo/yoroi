@@ -6,8 +6,8 @@ import LinearGradient from 'react-native-linear-gradient'
 
 import {Button} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
-import {useMetrics} from '../../../../metrics/metricsManager'
-import {TxHistoryRouteNavigation} from '../../../../navigation'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
+import {TxHistoryRouteNavigation} from '../../../../kernel/navigation'
 import {BuyBannerIllustration} from '../../illustrations/BuyBannerIllustration'
 import {useStrings} from '../useStrings'
 

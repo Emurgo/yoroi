@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native'
 import {useRef} from 'react'
 
-import {ExchangeRoutesNavigation} from '../../../navigation'
+import {ExchangeRoutesNavigation} from '../../../kernel/navigation'
 
 export const useNavigateTo = () => {
   const navigation = useNavigation<ExchangeRoutesNavigation>()

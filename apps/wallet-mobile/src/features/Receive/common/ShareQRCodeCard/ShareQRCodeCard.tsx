@@ -9,7 +9,7 @@ import Share from 'react-native-share'
 import ViewShot, {captureRef} from 'react-native-view-shot'
 
 import {Spacer, Text} from '../../../../components'
-import {useMetrics} from '../../../../metrics/metricsManager'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {CaptureShareQRCodeCard} from '../CaptureShareQRCodeCard/CaptureShareQRCodeCard'
 import {useStrings} from '../useStrings'
 

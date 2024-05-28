@@ -1,21 +1,21 @@
+import {useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, TextProps, View, ViewProps} from 'react-native'
-import DeviceInfo from 'react-native-device-info'
+import {Pressable, StyleSheet, TextProps, View, ViewProps} from 'react-native'
 
 import {Text} from '../../../components'
-import {CONFIG} from '../../../legacy/config'
-import {lightPalette} from '../../../theme'
+import {appInfo} from '../../../kernel/appInfo'
+import {commit} from '../../../kernel/env'
+import {SettingsRouteNavigation} from '../../../kernel/navigation'
 import {getNetworkConfigById} from '../../../yoroi-wallets/cardano/networks'
 import {isHaskellShelley} from '../../../yoroi-wallets/cardano/utils'
 import {useSelectedWallet} from '../../WalletManager/context/SelectedWalletContext'
 
-const version = DeviceInfo.getVersion()
-
 export const About = () => {
   const strings = useStrings()
   const styles = useStyles()
+  const navigation = useNavigation<SettingsRouteNavigation>()
 
   const wallet = useSelectedWallet()
   const network = getNetworkConfigById(wallet.networkId).MARKETING_NAME
@@ -26,13 +26,15 @@ export const About = () => {
       <Row>
         <LabelText>{strings.currentVersion}</LabelText>
 
-        <ValueText>{version}</ValueText>
+        <Pressable onLongPress={() => navigation.navigate('settings-system-log')}>
+          <ValueText>{appInfo.version}</ValueText>
+        </Pressable>
       </Row>
 
       <Row>
         <LabelText>{strings.commit}</LabelText>
 
-        <ValueText>{CONFIG.COMMIT}</ValueText>
+        <ValueText>{commit}</ValueText>
       </Row>
 
       <Row>
@@ -80,19 +82,19 @@ const useStyles = () => {
     about: {
       flex: 1,
       backgroundColor: color.gray_cmin,
-      padding: 16,
+      ...atoms.p_lg,
     },
     row: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      paddingVertical: 16,
+      ...atoms.py_lg,
     },
     labelText: {
       color: color.gray_c900,
       ...atoms.body_1_lg_medium,
     },
     valueText: {
-      color: lightPalette.gray['500'],
+      color: color.gray_c500,
       ...atoms.body_1_lg_regular,
     },
   })

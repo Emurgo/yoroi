@@ -2,8 +2,7 @@ import React from 'react'
 import {Alert, ScrollView, StyleSheet, View} from 'react-native'
 
 import {Button, Spacer, Text} from '../../../../components'
-import {useIsUsbSupported} from '../../../../HW'
-import {spacing} from '../../../../theme'
+import {useIsUsbSupported} from '../../../../legacy/HW'
 import {HARDWARE_WALLETS, useLedgerPermissions} from '../../../../yoroi-wallets/hw'
 import {useStrings} from '../../common/strings'
 
@@ -55,7 +54,7 @@ export const LedgerTransportSwitch = LedgerTransportSwitchView
 
 const styles = StyleSheet.create({
   paragraph: {
-    marginBottom: spacing.paragraphBottomMargin,
+    marginBottom: 16,
     fontSize: 14,
     lineHeight: 22,
   },

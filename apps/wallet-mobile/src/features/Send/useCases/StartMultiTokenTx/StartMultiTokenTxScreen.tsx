@@ -7,7 +7,7 @@ import {StyleSheet, View, ViewProps} from 'react-native'
 
 import {Button, KeyboardAvoidingView, Spacer} from '../../../../components'
 import {ScrollView, useScrollView} from '../../../../components/ScrollView/ScrollView'
-import {useMetrics} from '../../../../metrics/metricsManager'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useHasPendingTx, useIsOnline} from '../../../../yoroi-wallets/hooks'
 import {useSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'
 import {memoMaxLenght} from '../../common/constants'

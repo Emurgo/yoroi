@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Fee",
     "file": "src/TxHistory/TxHistoryList/TxHistoryListItem.tsx",
     "start": {
-      "line": 179,
+      "line": 183,
       "column": 7,
-      "index": 6330
+      "index": 6296
     },
     "end": {
-      "line": 182,
+      "line": 186,
       "column": 3,
-      "index": 6419
+      "index": 6385
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!ADA sent",
     "file": "src/TxHistory/TxHistoryList/TxHistoryListItem.tsx",
     "start": {
-      "line": 183,
+      "line": 187,
       "column": 23,
-      "index": 6444
+      "index": 6410
     },
     "end": {
-      "line": 186,
+      "line": 190,
       "column": 3,
-      "index": 6554
+      "index": 6520
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!ADA received",
     "file": "src/TxHistory/TxHistoryList/TxHistoryListItem.tsx",
     "start": {
-      "line": 187,
+      "line": 191,
       "column": 27,
-      "index": 6583
+      "index": 6549
     },
     "end": {
-      "line": 190,
+      "line": 194,
       "column": 3,
-      "index": 6701
+      "index": 6667
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Intrawallet",
     "file": "src/TxHistory/TxHistoryList/TxHistoryListItem.tsx",
     "start": {
-      "line": 191,
+      "line": 195,
       "column": 23,
-      "index": 6726
+      "index": 6692
     },
     "end": {
-      "line": 194,
+      "line": 198,
       "column": 3,
-      "index": 6839
+      "index": 6805
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Multiparty",
     "file": "src/TxHistory/TxHistoryList/TxHistoryListItem.tsx",
     "start": {
-      "line": 195,
+      "line": 199,
       "column": 24,
-      "index": 6865
+      "index": 6831
     },
     "end": {
-      "line": 198,
+      "line": 202,
       "column": 3,
-      "index": 6978
+      "index": 6944
     }
   },
   {
@@ -80,14 +80,14 @@
     "defaultMessage": "!!!{cnt} assets",
     "file": "src/TxHistory/TxHistoryList/TxHistoryListItem.tsx",
     "start": {
-      "line": 199,
+      "line": 203,
       "column": 10,
-      "index": 6990
+      "index": 6956
     },
     "end": {
-      "line": 203,
+      "line": 207,
       "column": 3,
-      "index": 7142
+      "index": 7108
     }
   }
 ]

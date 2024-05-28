@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import {useWalletNavigation} from '../../../navigation'
+import {useWalletNavigation} from '../../../kernel/navigation'
 
 export const useNavigateTo = () => {
   const walletNavigation = useWalletNavigation()

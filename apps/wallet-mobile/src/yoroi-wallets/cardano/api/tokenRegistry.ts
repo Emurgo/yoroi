@@ -2,7 +2,6 @@ import {createTypeGuardFromSchema} from '@yoroi/common'
 import {Balance} from '@yoroi/types'
 import {z} from 'zod'
 
-import {promiseAny} from '../../../utils'
 import {BackendConfig} from '../../types'
 import {checkedFetch} from './fetch'
 import {getNFT} from './metadata'
@@ -101,3 +100,17 @@ const TokenRegistryEntrySchema: z.ZodSchema<TokenRegistryEntry> = z.object({
 })
 
 const isTokenRegistryEntry = createTypeGuardFromSchema(TokenRegistryEntrySchema)
+
+function promiseAny<T>(promises: Promise<T>[]): Promise<T> {
+  return new Promise((resolve, reject) => {
+    let rejectedCount = 0
+    for (const promise of promises) {
+      promise.then(resolve).catch(() => {
+        rejectedCount++
+        if (rejectedCount === promises.length) {
+          reject(new Error('All promises were rejected'))
+        }
+      })
+    }
+  })
+}

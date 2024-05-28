@@ -15,12 +15,12 @@ import {
 } from 'rxjs'
 import uuid from 'uuid'
 
+import {makeWalletEncryptedStorage} from '../../../kernel/storage/EncryptedStorage'
+import {Keychain} from '../../../kernel/storage/Keychain'
+import {rootStorage} from '../../../kernel/storage/rootStorage'
 import {getCardanoWalletFactory} from '../../../yoroi-wallets/cardano/getWallet'
 import {isYoroiWallet, YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {HWDeviceInfo} from '../../../yoroi-wallets/hw'
-import {makeWalletEncryptedStorage} from '../../../yoroi-wallets/storage'
-import {Keychain} from '../../../yoroi-wallets/storage/Keychain'
-import {rootStorage} from '../../../yoroi-wallets/storage/rootStorage'
 import {NetworkId, WalletImplementationId} from '../../../yoroi-wallets/types'
 import {buildPortfolioTokenManagers} from '../../Portfolio/common/hooks/usePortfolioTokenManager'
 import {AddressMode, WalletInfos, WalletManagerEvent, WalletManagerSubscription, WalletMeta} from './types'
@@ -42,13 +42,15 @@ export class WalletManager {
   #syncControl$ = new BehaviorSubject<boolean>(true)
   #syncSubscription: Subscription | null = null
 
-  constructor() {
+  private constructor() {
     if (WalletManager.#instance) return WalletManager.#instance
     WalletManager.#instance = this
   }
 
   static instance() {
-    if (!WalletManager.#instance) return new WalletManager()
+    if (!WalletManager.#instance) {
+      WalletManager.#instance = new WalletManager()
+    }
     return WalletManager.#instance
   }
 

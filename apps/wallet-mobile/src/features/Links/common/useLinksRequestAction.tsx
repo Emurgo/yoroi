@@ -6,7 +6,7 @@ import * as React from 'react'
 import {InteractionManager} from 'react-native'
 
 import {useModal} from '../../../components/Modal/ModalContext'
-import {Logger} from '../../../yoroi-wallets/logging'
+import {logger} from '../../../kernel/logger/logger'
 import {useSelectedWalletContext} from '../../WalletManager/context/SelectedWalletContext'
 import {RequestedAdaPaymentWithLinkScreen} from '../useCases/RequestedAdaPaymentWithLinkScreen/RequestedAdaPaymentWithLinkScreen'
 import {useNavigateTo} from './useNavigationTo'
@@ -23,7 +23,7 @@ export const useLinksRequestAction = () => {
   const {memoChanged, receiverResolveChanged, amountChanged, reset, linkActionChanged} = useTransfer()
   const startTransferWithLink = React.useCallback(
     (action: Links.YoroiAction, decimals: number) => {
-      Logger.debug('startTransferWithLink', action, decimals)
+      logger.debug('useLinksRequestAction: startTransferWithLink', {action, decimals})
       if (action.info.useCase === 'request/ada-with-link') {
         reset()
         try {
@@ -51,7 +51,7 @@ export const useLinksRequestAction = () => {
           // TODO: revisit it should display an alert
           closeModal()
           actionFinished()
-          Logger.error('Error parsing Cardano link', error)
+          logger.error('Error parsing Cardano link', {error})
         }
       }
     },

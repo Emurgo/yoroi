@@ -8,8 +8,8 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import image from '../../../../assets/img/ledger_1.png'
 import {BulletPointItem, Button, ProgressStep, Spacer, Text} from '../../../../components'
-import {confirmationMessages, ledgerMessages} from '../../../../i18n/global-messages'
-import {WalletInitRouteNavigation} from '../../../../navigation'
+import {confirmationMessages, ledgerMessages} from '../../../../kernel/i18n/global-messages'
+import {WalletInitRouteNavigation} from '../../../../kernel/navigation'
 
 export const CheckNanoXScreen = () => {
   const strings = useStrings()

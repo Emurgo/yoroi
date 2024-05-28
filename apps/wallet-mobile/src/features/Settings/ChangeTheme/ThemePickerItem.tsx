@@ -5,7 +5,7 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Icon} from '../../../components/Icon'
 import {Text} from '../../../components/Text'
-import {themeNames} from '../../../i18n/global-messages'
+import {themeNames} from '../../../kernel/i18n/global-messages'
 import {useThemeStorageMaker} from '../../../yoroi-wallets/hooks'
 
 type Props = {

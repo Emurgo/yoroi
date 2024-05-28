@@ -1,6 +1,7 @@
 import {FlashList, FlashListProps} from '@shopify/flash-list'
+import {useTheme} from '@yoroi/theme'
 import {Balance, Portfolio} from '@yoroi/types'
-import React from 'react'
+import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 
 import {Spacer} from '../../../../components/Spacer/Spacer'
@@ -49,6 +50,7 @@ export const MediaGallery = ({
 }
 
 function Media({info, imageSize}: {info: Portfolio.Token.Info; imageSize: number}) {
+  const styles = useStyles()
   return (
     <View>
       <View style={styles.imageWrapper}>
@@ -121,18 +123,23 @@ function GalleryList({
   )
 }
 
-const styles = StyleSheet.create({
-  imageWrapper: {
-    position: 'relative',
-    overflow: 'hidden',
-    borderRadius: 8,
-  },
-  image: {
-    borderRadius: 8,
-    overlayColor: '#FFFFFF',
-  },
-  text: {
-    fontSize: 14,
-    lineHeight: textHeight,
-  },
-})
+const useStyles = () => {
+  const {atoms, color} = useTheme()
+  const styles = StyleSheet.create({
+    imageWrapper: {
+      position: 'relative',
+      overflow: 'hidden',
+      borderRadius: 8,
+    },
+    image: {
+      borderRadius: 8,
+      overlayColor: '#FFFFFF',
+    },
+    text: {
+      ...atoms.body_3_sm_medium,
+      color: color.gray_c600,
+      lineHeight: textHeight,
+    },
+  })
+  return styles
+}

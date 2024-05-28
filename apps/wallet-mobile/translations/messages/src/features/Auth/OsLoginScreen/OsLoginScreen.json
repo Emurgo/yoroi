@@ -1,0 +1,17 @@
+[
+  {
+    "id": "components.common.osloginscreen.button.title",
+    "defaultMessage": "!!!Login",
+    "file": "src/features/Auth/OsLoginScreen/OsLoginScreen.tsx",
+    "start": {
+      "line": 65,
+      "column": 9,
+      "index": 1692
+    },
+    "end": {
+      "line": 68,
+      "column": 3,
+      "index": 1785
+    }
+  }
+]

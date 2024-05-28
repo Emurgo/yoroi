@@ -1,7 +1,7 @@
 preserve_hierarchy: true
 files:
-  - source: /apps/wallet-mobile/src/i18n/locales/**/en-US.json
-    translation: /apps/wallet-mobile/src/i18n/locales/**/%locale%.json
+  - source: /apps/wallet-mobile/src/kernel/i18n/locales/**/en-US.json
+    translation: /apps/wallet-mobile/src/kernel/i18n/locales/**/%locale%.json
     languages_mapping:
       locale:
         zh-CN: zh-Hans
@@ -17,8 +17,8 @@ files:
         it: it-IT
         nl: nl-NL
         cz: cs-CZ
-  - source: /apps/wallet-mobile/src/i18n/locales/**/en-US.md
-    translation: /apps/wallet-mobile/src/i18n/locales/**/%locale%.md
+  - source: /apps/wallet-mobile/src/features/Legal/**/en-US.md
+    translation: /apps/wallet-mobile/src/features/Legal/**/%locale%.md
     languages_mapping:
       locale:
         zh-CN: zh-Hans
