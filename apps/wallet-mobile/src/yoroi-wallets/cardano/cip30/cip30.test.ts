@@ -1,7 +1,8 @@
-import {mocks} from '../mocks'
-import {getMasterKeyFromMnemonic} from './byron/util'
+import {mocks} from '../../mocks'
+import {getMasterKeyFromMnemonic} from '../byron/util'
 import {cip30ExtensionMaker} from './cip30'
-import {YoroiWallet} from './types'
+import {YoroiWallet} from '../types'
+import {Addresses} from '../chain'
 
 describe('cip30ExtensionMaker', () => {
   it('should support submitTx', async () => {
@@ -76,8 +77,30 @@ describe('cip30ExtensionMaker', () => {
 
   it('should support signTx', async () => {
     const cip30 = cip30ExtensionMaker(mocks.wallet)
-    const result = await cip30.signTx(await getMasterKeyFromMnemonic(mnemonic), txCbor, true)
+    const rootKey = await getMasterKeyFromMnemonic(mnemonic)
+    const result = await cip30.signTx(rootKey, txCbor, true)
     expect(result).toBeDefined()
+  })
+
+  it('should support signData', async () => {
+    const cip30 = cip30ExtensionMaker({
+      ...mocks.wallet,
+      get externalAddresses(): Addresses {
+        return [
+          'addr_test1qrg0x4sx2wfd3l26zqs658u8vyg8qz4dzqw0zke45lpy0vkr3y3kdut55a40jff00qmg74686vz44v6k363md06qkq0qzplc3l',
+        ]
+      },
+    })
+    const rootKey = await getMasterKeyFromMnemonic(mnemonic)
+    const address =
+      'addr_test1qrg0x4sx2wfd3l26zqs658u8vyg8qz4dzqw0zke45lpy0vkr3y3kdut55a40jff00qmg74686vz44v6k363md06qkq0qzplc3l'
+    const data = 'hello'
+    const result = await cip30.signData(rootKey, address, data)
+    expect(result).toEqual({
+      key: '00d0f356065392d8fd5a1021aa1f876110700aad101cf15b35a7c247b2c3892366f174a76af9252f78368f5747d3055ab3568ea3b6bf40b01e',
+      signature:
+        'cc273ddc49feed05551cc891c1b6bbc86974e63a4974812525929453beb7e917420fade369e5220c739acf43f50314a6cc3805d310dde9ac7f43b8de4489fc01',
+    })
   })
 })
 

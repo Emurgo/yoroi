@@ -2,7 +2,7 @@ import {connectionStorageMaker, dappConnectorApiMaker, dappConnectorMaker, Resol
 import {DappConnector} from '@yoroi/dapp-connector'
 import {App} from '@yoroi/types'
 
-import {cip30ExtensionMaker} from '../../../yoroi-wallets/cardano/cip30'
+import {cip30ExtensionMaker} from '../../../yoroi-wallets/cardano/cip30/cip30'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 
 export const validUrl = (url: string) => {
