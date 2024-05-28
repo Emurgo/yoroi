@@ -4,6 +4,7 @@ import {
   NavigationProp,
   NavigationState,
   NavigatorScreenParams,
+  ParamListBase,
   RouteProp,
   useNavigation,
   useNavigationState,
@@ -624,7 +625,10 @@ function useKeepRoutesInHistory(routesToKeep: string[]) {
     if (currentRouteId !== initialRouteId) {
       return
     }
-    const {routes} = navigation.getState()
+    const state = navigation.getState()
+    if (!state) return
+
+    const {routes} = state
     const currentRouteNames = routes.map((r) => r.name)
 
     if (compareArrays(currentRouteNames, routesToKeep)) {
@@ -639,7 +643,9 @@ function useKeepRoutesInHistory(routesToKeep: string[]) {
         routes: newRoutes.map((r) => ({...r, state: undefined})),
         routeNames: newRoutes.map((r) => r.name),
       }
-      navigation.reset(newState)
+      // Type 'string[]' is not assignable to type '(keyof RootParamList)[]'
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      navigation.reset(newState as any)
     })
 
     return () => task.cancel()
@@ -656,7 +662,7 @@ export const useIsRouteActive = () => {
 export function useOverridePreviousRoute<RouteName extends string>(previousRouteName: RouteName) {
   const navigation = useNavigation()
   const [initialRouteName] = React.useState(() => getNavigationRouteName(navigation))
-  const allRouteNames: string[] = navigation.getState().routes.map((route) => route.name)
+  const allRouteNames: string[] = navigation.getState()?.routes.map((route) => route.name) ?? ['']
   const previousRouteIndex = allRouteNames.indexOf(previousRouteName)
   const currentRouteIndex = allRouteNames.indexOf(initialRouteName)
 
@@ -673,13 +679,18 @@ export function useOverridePreviousRoute<RouteName extends string>(previousRoute
   useKeepRoutesInHistory(newRoutes)
 }
 
-function getNavigationRouteId(navigation: NavigationProp<ReactNavigation.RootParamList>) {
-  const state = navigation.getState()
-  return state.routes[state.index].key
+// https://github.com/react-navigation/react-navigation/issues/11893
+type Navigation = Omit<NavigationProp<ParamListBase, string>, 'getState'> & {
+  getState(): NavigationState | undefined
 }
 
-function getNavigationRouteName(navigation: NavigationProp<ReactNavigation.RootParamList>) {
+function getNavigationRouteId(navigation: Navigation) {
+  const state = navigation.getState()
+  return state?.routes[state.index].key
+}
+
+function getNavigationRouteName(navigation: Navigation) {
   return selectRouteName(navigation.getState())
 }
 
-const selectRouteName = (state: NavigationState) => state.routes[state.index].name
+const selectRouteName = (state?: NavigationState) => state?.routes[state.index].name ?? ''
