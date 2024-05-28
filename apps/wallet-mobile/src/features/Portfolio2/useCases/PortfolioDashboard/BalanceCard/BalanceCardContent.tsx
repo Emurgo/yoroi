@@ -1,8 +1,10 @@
 import {useTheme} from '@yoroi/theme'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
+import {Spacer} from '../../../../../components'
+import {usePrivacyMode} from '../../../../../features/Settings/PrivacyMode/PrivacyMode'
 import {PnlTag} from '../../../common/PnlTag/PnlTag'
 
 type Props = {
@@ -14,40 +16,61 @@ type Props = {
 
 export const BalanceCardContent = ({balance, oldBalance, usdExchangeRate, headerCard}: Props) => {
   const {styles} = useStyles()
+  const {isPrivacyOff, privacyPlaceholder, setPrivacyModeOff, setPrivacyModeOn} = usePrivacyMode({
+    decimals: 2,
+    numbers: 3,
+  })
 
-  const formatBalance = balance.toFixed(2)
+  const togglePrivacyMode = () => {
+    if (isPrivacyOff) {
+      setPrivacyModeOn()
+    } else {
+      setPrivacyModeOff()
+    }
+  }
+
   const currentUSDBalance = balance.multipliedBy(usdExchangeRate)
   const oldUSDBalance = oldBalance.multipliedBy(usdExchangeRate)
 
-  const formatUSDBalance = currentUSDBalance.toFixed(2)
+  const usdBalanceFormatted = React.useMemo(() => {
+    return isPrivacyOff ? currentUSDBalance.toFixed(2) : privacyPlaceholder
+  }, [currentUSDBalance, isPrivacyOff, privacyPlaceholder])
+
+  const balanceFormatted = React.useMemo(() => {
+    return isPrivacyOff ? balance.toFixed(2) : privacyPlaceholder
+  }, [balance, isPrivacyOff, privacyPlaceholder])
 
   const pnl = currentUSDBalance.minus(oldUSDBalance)
   const variantPnl = new BigNumber(pnl).gte(0) ? 'success' : 'danger'
-  const pnlPercentFormat = balance.minus(oldBalance).dividedBy(oldBalance).multipliedBy(100).toFixed(2)
+  const pnlPercentFormatted = balance.minus(oldBalance).dividedBy(oldBalance).multipliedBy(100).toFixed(2)
   const pnlNumber = currentUSDBalance.minus(oldUSDBalance)
-  const pnlNumberFormat = pnlNumber.gte(0) ? `+${pnlNumber.toFixed(2)}` : `${pnlNumber.toFixed(2)}`
+  const pnlNumberFormatted = pnlNumber.gte(0) ? `+${pnlNumber.toFixed(2)}` : `${pnlNumber.toFixed(2)}`
 
   return (
     <View>
       {headerCard}
 
+      <Spacer height={6} />
+
       <View style={styles.balanceContainer}>
-        <View style={styles.balanceBox}>
-          <Text style={[styles.balanceText, styles.textWhite]}>{formatBalance}</Text>
+        <TouchableOpacity style={styles.balanceBox} onPress={togglePrivacyMode}>
+          <Text style={[styles.balanceText, styles.textWhite]}>{balanceFormatted}</Text>
 
           <Text style={[styles.adaSymbol, styles.textWhite]}>ADA</Text>
-        </View>
+        </TouchableOpacity>
 
         <View style={styles.rowBetween}>
-          <Text style={[styles.textWhite, styles.usdBalance]}>{formatUSDBalance} USD</Text>
+          <TouchableOpacity style={styles.balanceBox} onPress={togglePrivacyMode}>
+            <Text style={[styles.textWhite, styles.usdBalance]}>{usdBalanceFormatted} USD</Text>
+          </TouchableOpacity>
 
           <View style={styles.varyContainer}>
             <PnlTag variant={variantPnl} withIcon>
-              <Text>{pnlPercentFormat}%</Text>
+              <Text>{pnlPercentFormatted}%</Text>
             </PnlTag>
 
             <PnlTag variant={variantPnl}>
-              <Text>{pnlNumberFormat} USD</Text>
+              <Text>{pnlNumberFormatted} USD</Text>
             </PnlTag>
           </View>
         </View>

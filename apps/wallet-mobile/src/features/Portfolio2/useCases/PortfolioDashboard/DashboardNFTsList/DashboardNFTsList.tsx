@@ -76,7 +76,7 @@ const TouchNFTsList = ({onPress}: TouchableOpacityProps) => (
 )
 
 const useStyles = () => {
-  const {atoms} = useTheme()
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     container: {
       ...atoms.px_lg,
@@ -92,6 +92,7 @@ const useStyles = () => {
     },
     title: {
       ...atoms.body_1_lg_medium,
+      color: color.gray_c900,
     },
     image: {
       ...atoms.rounded_sm,

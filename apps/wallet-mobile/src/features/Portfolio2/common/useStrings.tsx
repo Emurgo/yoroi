@@ -182,7 +182,7 @@ export const messages = defineMessages({
   },
   tokenPriceChangeTooltip: {
     id: 'portfolio.portfolioTokensDetailScreen.tokenPriceChangeTooltip',
-    defaultMessage: '!!!Token price change in 24 hours',
+    defaultMessage: '!!!Token price change \nin 24 hours',
   },
   netInvested: {
     id: 'portfolio.portfolioTokensDetailScreen.netInvested',

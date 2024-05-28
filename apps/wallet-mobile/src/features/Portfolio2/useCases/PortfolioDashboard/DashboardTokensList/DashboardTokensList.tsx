@@ -25,12 +25,7 @@ export const DashboardTokensList = () => {
   }
 
   const renderTokenItem = (item: IPortfolioBalance | undefined, index: number) => {
-    return (
-      <DashboardTokenItem
-        key={item?.symbol ?? index}
-        tokenInfo={item ? {logo: item.logo, symbol: item.symbol, name: item.name} : undefined}
-      />
-    )
+    return <DashboardTokenItem key={item?.symbol ?? index} tokenInfo={item ? item : undefined} />
   }
 
   const renderFooterList = () => {
@@ -106,7 +101,7 @@ const TouchTokensList = ({onPress}: TouchableOpacityProps) => (
 )
 
 const useStyles = () => {
-  const {atoms} = useTheme()
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     container: {
       ...atoms.px_lg,
@@ -122,6 +117,7 @@ const useStyles = () => {
     },
     title: {
       ...atoms.body_1_lg_medium,
+      color: color.gray_c900,
     },
     tradeTokensContainer: {
       ...atoms.flex_row,
