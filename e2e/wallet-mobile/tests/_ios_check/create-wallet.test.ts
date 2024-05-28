@@ -30,6 +30,26 @@ describe('Create a wallet', () => {
   await createWalletStepsScreen.step1NextButton().tap()
  })
 
+ it('should be able to complete "step2 - modal autoappear"', async () => {
+  await expect(createWalletStepsScreen.step2TextToValidate1()).toBeVisible()
+  await expect(createWalletStepsScreen.step2TextToValidate2()).toBeVisible()
+  await createWalletStepsScreen.step2ContinueButton().tap()
+ })
+
+ it('should be able to complete "step2 - info modal"', async () => {
+  await createWalletStepsScreen.step2InfoIcon().tap()
+  await expect(createWalletStepsScreen.step2TextToValidate2()).toBeVisible()
+  await createWalletStepsScreen.step2ContinueButton().tap()
+ })
+
+ it('should be able to complete "step2 - store mnemonic"', async () => {
+  await createWalletStepsScreen.step2ShowRecoveryPhraseButton().tap()
+  seedPhraseText = await utils.getSeedPhrase()
+  await utils.takeScreenshot('Seed Phrase')
+  await createWalletStepsScreen.step2NextButton().tap()
+  await utils.addMsgToReport(seedPhraseText[2])
+ })
+
  it('should be able to set the spending password', async () => {
   await expect(createWalletFlow.credentialsView()).toBeVisible()
   await createWalletFlow.walletNameInput().typeText(constants.wallet_Name)
