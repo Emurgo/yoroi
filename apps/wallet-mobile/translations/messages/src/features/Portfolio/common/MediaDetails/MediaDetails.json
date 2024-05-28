@@ -4,14 +4,14 @@
     "defaultMessage": "!!!NFT Details",
     "file": "src/features/Portfolio/common/MediaDetails/MediaDetails.tsx",
     "start": {
-      "line": 315,
+      "line": 339,
       "column": 9,
-      "index": 8864
+      "index": 9572
     },
     "end": {
-      "line": 318,
+      "line": 342,
       "column": 3,
-      "index": 8935
+      "index": 9643
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Overview",
     "file": "src/features/Portfolio/common/MediaDetails/MediaDetails.tsx",
     "start": {
-      "line": 319,
+      "line": 343,
       "column": 12,
-      "index": 8949
+      "index": 9657
     },
     "end": {
-      "line": 322,
+      "line": 346,
       "column": 3,
-      "index": 9020
+      "index": 9728
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Metadata",
     "file": "src/features/Portfolio/common/MediaDetails/MediaDetails.tsx",
     "start": {
-      "line": 323,
+      "line": 347,
       "column": 12,
-      "index": 9034
+      "index": 9742
     },
     "end": {
-      "line": 326,
+      "line": 350,
       "column": 3,
-      "index": 9105
+      "index": 9813
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!NFT Name",
     "file": "src/features/Portfolio/common/MediaDetails/MediaDetails.tsx",
     "start": {
-      "line": 327,
+      "line": 351,
       "column": 11,
-      "index": 9118
+      "index": 9826
     },
     "end": {
-      "line": 330,
+      "line": 354,
       "column": 3,
-      "index": 9188
+      "index": 9896
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Created",
     "file": "src/features/Portfolio/common/MediaDetails/MediaDetails.tsx",
     "start": {
-      "line": 331,
+      "line": 355,
       "column": 13,
-      "index": 9203
+      "index": 9911
     },
     "end": {
-      "line": 334,
+      "line": 358,
       "column": 3,
-      "index": 9274
+      "index": 9982
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!Description",
     "file": "src/features/Portfolio/common/MediaDetails/MediaDetails.tsx",
     "start": {
-      "line": 335,
+      "line": 359,
       "column": 15,
-      "index": 9291
+      "index": 9999
     },
     "end": {
-      "line": 338,
+      "line": 362,
       "column": 3,
-      "index": 9368
+      "index": 10076
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!Author",
     "file": "src/features/Portfolio/common/MediaDetails/MediaDetails.tsx",
     "start": {
-      "line": 339,
+      "line": 363,
       "column": 10,
-      "index": 9380
+      "index": 10088
     },
     "end": {
-      "line": 342,
+      "line": 366,
       "column": 3,
-      "index": 9447
+      "index": 10155
     }
   },
   {
@@ -109,14 +109,14 @@
     "defaultMessage": "!!!Fingerprint",
     "file": "src/features/Portfolio/common/MediaDetails/MediaDetails.tsx",
     "start": {
-      "line": 343,
+      "line": 367,
       "column": 15,
-      "index": 9464
+      "index": 10172
     },
     "end": {
-      "line": 346,
+      "line": 370,
       "column": 3,
-      "index": 9541
+      "index": 10249
     }
   },
   {
@@ -124,14 +124,14 @@
     "defaultMessage": "!!!Policy id",
     "file": "src/features/Portfolio/common/MediaDetails/MediaDetails.tsx",
     "start": {
-      "line": 347,
+      "line": 371,
       "column": 12,
-      "index": 9555
+      "index": 10263
     },
     "end": {
-      "line": 350,
+      "line": 374,
       "column": 3,
-      "index": 9627
+      "index": 10335
     }
   },
   {
@@ -139,14 +139,14 @@
     "defaultMessage": "!!!Details on",
     "file": "src/features/Portfolio/common/MediaDetails/MediaDetails.tsx",
     "start": {
-      "line": 351,
+      "line": 375,
       "column": 16,
-      "index": 9645
+      "index": 10353
     },
     "end": {
-      "line": 354,
+      "line": 378,
       "column": 3,
-      "index": 9722
+      "index": 10430
     }
   },
   {
@@ -154,14 +154,14 @@
     "defaultMessage": "!!!Copy metadata",
     "file": "src/features/Portfolio/common/MediaDetails/MediaDetails.tsx",
     "start": {
-      "line": 355,
+      "line": 379,
       "column": 16,
-      "index": 9740
+      "index": 10448
     },
     "end": {
-      "line": 358,
+      "line": 382,
       "column": 3,
-      "index": 9820
+      "index": 10528
     }
   }
 ]

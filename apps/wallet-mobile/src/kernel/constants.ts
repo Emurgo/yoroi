@@ -1,11 +1,13 @@
-export const supportedThemes = Object.freeze({
+import {freeze} from 'immer'
+
+export const supportedThemes = freeze({
   system: 'system',
   'default-light': 'default-light',
   'default-dark': 'default-dark',
 })
 
 // NOTE: to be moved into pairing module once it's implemented
-export const supportedCurrencies = Object.freeze({
+export const supportedCurrencies = freeze({
   ADA: 'ADA',
   BRL: 'BRL',
   BTC: 'BTC',
@@ -17,7 +19,7 @@ export const supportedCurrencies = Object.freeze({
   USD: 'USD',
 })
 
-export const configCurrencies = {
+export const configCurrencies = freeze({
   [supportedCurrencies.ADA]: {
     decimals: 6,
     nativeName: 'Cardano',
@@ -54,4 +56,14 @@ export const configCurrencies = {
     decimals: 2,
     nativeName: 'US Dollar',
   },
-}
+})
+
+export const time = freeze({
+  oneMinute: 60 * 1e3,
+  fiveMinutes: 5 * 60 * 1e3,
+  halfHour: 30 * 60 * 1e3,
+  oneHour: 60 * 60 * 1e3,
+  oneDay: 24 * 60 * 60 * 1e3,
+  // session here means while the wallet is open
+  session: Infinity,
+})

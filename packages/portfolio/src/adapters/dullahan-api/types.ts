@@ -6,6 +6,13 @@ export type DullahanApiTokenInfosResponse = Readonly<{
   >
 }>
 
+export type DullahanApiTokenTraitsResponse = Readonly<
+  Portfolio.Token.Traits & {
+    collection: string
+    name: string
+  }
+>
+
 export type DullahanTokenDiscovery = Omit<
   Portfolio.Token.Discovery,
   'supply'
