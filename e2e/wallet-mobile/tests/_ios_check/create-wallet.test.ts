@@ -44,10 +44,14 @@ describe('Create a wallet', () => {
 
  it('should be able to complete "step2 - store mnemonic"', async () => {
   await createWalletStepsScreen.step2ShowRecoveryPhraseButton().tap()
-  seedPhraseText = await utils.getSeedPhrase()
-  await utils.takeScreenshot('Seed Phrase')
+  seedPhraseText = await createWalletStepsScreen.getSeedPhrase()
   await createWalletStepsScreen.step2NextButton().tap()
-  await utils.addMsgToReport(seedPhraseText[2])
+  await utils.addMsgToReport(`Seedphrase: ${seedPhraseText}`)
+ })
+
+ it('should be able to enter and verify the stored mnemonic', async () => {
+  await utils.repeatSeedPhrase(seedPhraseText)
+  await createWalletStepsScreen.step3NextButton().tap()
  })
 
  it('should be able to set the spending password', async () => {
@@ -73,12 +77,5 @@ describe('Create a wallet', () => {
   await createWalletFlow.mnemonicWarningModalCheckbox1().tap()
   await createWalletFlow.mnemonicWarningModalCheckbox2().tap()
   await createWalletFlow.mnemonicWarningModalConfirm().tap()
- })
-
- it('should be able to enter and verify the stored mnemonic', async () => {
-  await utils.repeatSeedPhrase(seedPhraseText)
-  await createWalletFlow.mnemonicCheckScreenConfirmButton().tap()
-  await expect(myWalletsScreen.walletByNameButton(constants.wallet_Name)).toBeVisible()
-  await utils.takeScreenshot(`Wallet "${constants.wallet_Name} is added.`)
  })
 })

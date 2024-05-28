@@ -11,3 +11,19 @@ export const step2ContinueButton = () => element(by.id('setup-step2-continue-but
 export const step2InfoIcon = () => element(by.id('step2-info-icon'))
 export const step2ShowRecoveryPhraseButton = () => element(by.id('step2-show_hide-recovery-phrase-button'))
 export const step2NextButton = () => element(by.id('setup-step2-next-button'))
+
+export const mnemonicByIndexText = (index: number) => element(by.id(`mnemonic-${index}`))
+
+export const getSeedPhrase = async (): Promise<Array<string>> => {
+ const allWords: Array<string | any> = []
+ for (let i = 0; i < 15; i++) {
+  const elementAttrs = await mnemonicByIndexText(i).getAttributes()
+  // https://github.com/wix/Detox/issues/3179#issuecomment-1016420709
+  if (!('elements' in elementAttrs)) {
+   allWords.push(elementAttrs.label?.split('. ')[1])
+  }
+ }
+ return allWords
+}
+
+export const step3NextButton = () => element(by.id('setup-step3-next-button'))
