@@ -9,29 +9,29 @@ import {Alert, AppState, AppStateStatus, InteractionManager, Platform} from 'rea
 import RNBootSplash from 'react-native-bootsplash'
 
 import StorybookScreen from '../.storybook'
-import {OsLoginScreen, PinLoginScreen, useBackgroundTimeout} from './auth'
-import {useAuth} from './auth/AuthProvider'
-import {supportsAndroidFingerprintOverlay} from './auth/biometrics'
-import {EnableLoginWithPin} from './auth/EnableLoginWithPin'
-import {useStatusBar} from './components/hooks/useStatusBar'
 import {ModalProvider} from './components/Modal/ModalContext'
 import {ModalScreen} from './components/Modal/ModalScreen'
+import {OsLoginScreen, PinLoginScreen, useBackgroundTimeout} from './features/Auth'
+import {useAuth} from './features/Auth/AuthProvider'
+import {supportsAndroidFingerprintOverlay} from './features/Auth/common/biometrics'
+import {AuthSetting, useAuthSetting, useAuthWithOs, useIsAuthOsSupported} from './features/Auth/common/hooks'
+import {EnableLoginWithPin} from './features/Auth/EnableLoginWithPin'
+import {DeveloperScreen} from './features/Dev/DeveloperScreen'
 import {AgreementChangedNavigator, InitializationNavigator} from './features/Initialization'
 import {LegalAgreement, useLegalAgreement} from './features/Initialization/common'
 import {useDeepLinkWatcher} from './features/Links/common/useDeepLinkWatcher'
 import {PortfolioScreen} from './features/Portfolio/useCases/PortfolioScreen'
+import {SearchProvider} from './features/Search/SearchContext'
 import {SetupWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
 import {
   ChooseBiometricLoginScreen,
   useShowBiometricsScreen,
 } from './features/SetupWallet/useCases/ChooseBiometricLogin/ChooseBiometricLoginScreen'
 import {useWalletManager} from './features/WalletManager/context/WalletManagerContext'
-import {CONFIG} from './legacy/config'
-import {DeveloperScreen} from './legacy/DeveloperScreen'
-import {AppRoutes} from './navigation'
-import {SearchProvider} from './Search/SearchContext'
+import {useStatusBar} from './hooks/useStatusBar'
+import {agreementDate} from './kernel/config'
+import {AppRoutes} from './kernel/navigation'
 import {WalletNavigator} from './WalletNavigator'
-import {AuthSetting, useAuthSetting, useAuthWithOs, useIsAuthOsSupported} from './yoroi-wallets/auth'
 import {useHasWallets} from './yoroi-wallets/hooks'
 
 const Stack = createStackNavigator<AppRoutes>()
@@ -280,7 +280,7 @@ const getFirstAction = (
   authSetting: AuthSetting,
   legalAgreement: LegalAgreement | undefined | null,
 ): FirstAction => {
-  const hasAccepted = legalAgreement?.latestAcceptedAgreementsDate === CONFIG.AGREEMENT_DATE
+  const hasAccepted = legalAgreement?.latestAcceptedAgreementsDate === agreementDate
 
   if (isString(authSetting) && !hasAccepted) return 'show-agreement-changed-notice'
 

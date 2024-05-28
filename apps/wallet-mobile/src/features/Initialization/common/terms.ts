@@ -2,7 +2,7 @@ import {useAsyncStorage} from '@yoroi/common'
 import {useCallback} from 'react'
 import {useMutation, useQuery, useQueryClient} from 'react-query'
 
-import {CONFIG} from '../../../legacy/config'
+import {agreementDate} from '../../../kernel/config'
 
 export type LegalAgreement = {
   latestAcceptedAgreementsDate: number
@@ -26,9 +26,7 @@ export const useAgreeWithLegal = () => {
   const queryClient = useQueryClient()
 
   const mutationFn = useCallback(async () => {
-    await storage
-      .join('appSettings/')
-      .setItem<LegalAgreement>(queryKey, {latestAcceptedAgreementsDate: CONFIG.AGREEMENT_DATE})
+    await storage.join('appSettings/').setItem<LegalAgreement>(queryKey, {latestAcceptedAgreementsDate: agreementDate})
   }, [storage])
 
   const mutation = useMutation({

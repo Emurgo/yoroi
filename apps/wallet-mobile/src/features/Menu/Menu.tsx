@@ -7,14 +7,14 @@ import {useIntl} from 'react-intl'
 import {Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useCanVote} from '../../Catalyst/hooks'
-import {InsufficientFundsModal} from '../../Catalyst/InsufficientFundsModal'
 import {Boundary, Icon, Spacer, Text} from '../../components'
-import {usePrefetchStakingInfo} from '../../Dashboard/StakePoolInfos'
-import {CONFIG} from '../../legacy/config'
-import {useMetrics} from '../../metrics/metricsManager'
-import {defaultStackNavigationOptions, useWalletNavigation} from '../../navigation'
-import {usePoolTransition} from '../../Staking/PoolTransition/usePoolTransition'
+import {dappExplorerEnabled} from '../../kernel/config'
+import {useMetrics} from '../../kernel/metrics/metricsManager'
+import {defaultStackNavigationOptions, useWalletNavigation} from '../../kernel/navigation'
+import {useCanVote} from '../../legacy/Catalyst/hooks'
+import {InsufficientFundsModal} from '../../legacy/Catalyst/InsufficientFundsModal'
+import {usePrefetchStakingInfo} from '../../legacy/Dashboard/StakePoolInfos'
+import {usePoolTransition} from '../../legacy/Staking/PoolTransition/usePoolTransition'
 import {useIsGovernanceFeatureEnabled} from '../Staking/Governance'
 import {useSelectedWallet} from '../WalletManager/context/SelectedWalletContext'
 
@@ -62,7 +62,7 @@ export const Menu = () => {
           left={<Icon.Gear size={24} color={color.gray_c600} />}
         />
 
-        {CONFIG.DAPP_EXPLORER_ENABLED && (
+        {dappExplorerEnabled && (
           <Staking
             label={strings.stakingCenter}
             onPress={navigateTo.stakingCenter}

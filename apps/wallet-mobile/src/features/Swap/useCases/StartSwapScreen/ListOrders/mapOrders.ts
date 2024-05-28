@@ -3,7 +3,7 @@ import {getPoolUrlByProvider} from '@yoroi/swap'
 import {Balance, Swap} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 
-import {NumberLocale} from '../../../../../i18n/languages'
+import {NumberLocale} from '../../../../../kernel/i18n/languages'
 import {NETWORK_CONFIG} from '../../../../../yoroi-wallets/cardano/constants/mainnet/constants'
 import {TransactionInfo} from '../../../../../yoroi-wallets/types'
 import {Quantities} from '../../../../../yoroi-wallets/utils'

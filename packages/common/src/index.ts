@@ -22,6 +22,7 @@ export * from './utils/monads'
 export * from './utils/parsers'
 export * from './utils/predicates'
 export * from './utils/strings'
+export * from './utils/promises'
 
 export * from './numbers/to-bigint'
 export * from './numbers/split-bigint'

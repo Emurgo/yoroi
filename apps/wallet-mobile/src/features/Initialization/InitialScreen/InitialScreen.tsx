@@ -5,8 +5,8 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Icon, Spacer, YoroiLogo} from '../../../components'
 import {BlueCheckbox} from '../../../components/BlueCheckbox'
-import {useLanguage} from '../../../i18n'
-import {defaultLanguage} from '../../../i18n/languages'
+import {useLanguage} from '../../../kernel/i18n'
+import {defaultLanguage} from '../../../kernel/i18n/languages'
 import {useNavigateTo, useStrings} from '../common'
 
 export const InitialScreen = () => {

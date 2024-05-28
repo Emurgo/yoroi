@@ -10,8 +10,8 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button, Icon, KeyboardAvoidingView} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
 import {Warning} from '../../../../components/Warning'
-import env from '../../../../legacy/env'
-import {useMetrics} from '../../../../metrics/metricsManager'
+import {banxaTestWallet} from '../../../../kernel/env'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../yoroi-wallets/utils'
 import {useSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'
@@ -58,9 +58,7 @@ export const CreateExchangeOrderScreen = () => {
       appId: providerSelected?.appId,
     }),
   )
-  const sandboxWallet = env.getString('BANXA_TEST_WALLET')
-  const isMainnet = wallet.networkId === 1
-  const walletAddress = isMainnet ? wallet.externalAddresses[0] : sandboxWallet
+  const walletAddress = wallet.isMainnet ? wallet.externalAddresses[0] : banxaTestWallet
 
   const urlOptions: Exchange.ReferralUrlQueryStringParams = {
     orderType: orderType,

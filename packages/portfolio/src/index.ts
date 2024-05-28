@@ -33,8 +33,10 @@ export * from './validators/token-property-type'
 export * from './validators/token-source'
 export * from './validators/token-status'
 export * from './validators/token-type'
+export * from './validators/token-traits'
 
 export * from './translators/reactjs/usePortfolioTokenDiscovery'
+export * from './translators/reactjs/usePortfolioTokenTraits'
 
 export * from './balance-manager'
 export * from './token-manager'

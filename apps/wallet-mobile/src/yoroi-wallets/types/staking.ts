@@ -51,19 +51,6 @@ export type RemoteCertificate = {
   poolParams: Record<string, unknown> // don't think this is relevant
 }
 
-export type Certificate =
-  | 'StakeRegistration'
-  | 'StakeDeregistration'
-  | 'StakeDelegation'
-  | 'PoolRegistration'
-  | 'PoolRetirement'
-  | 'MoveInstantaneousRewardsCert'
-
-export type Withdrawal = {
-  address: string // hex
-  amount: string
-}
-
 export type RemoteCertificateMeta =
   | {
       kind: 'StakeRegistration'

@@ -6,25 +6,30 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Keyboard, Platform} from 'react-native'
 
-import {VotingRegistration} from './Catalyst'
 import {Icon, OfflineBanner} from './components'
-import {DashboardNavigator} from './Dashboard'
 import {DiscoverNavigator} from './features/Discover'
 import {ShowExchangeResultOrderScreen} from './features/Exchange/useCases/ShowExchangeResultOrderScreen/ShowExchangeResultOrderScreen'
 import {useLinksRequestAction} from './features/Links/common/useLinksRequestAction'
 import {useLinksShowActionResult} from './features/Links/common/useLinksShowActionResult'
 import {MenuNavigator} from './features/Menu'
+import {NftsNavigator} from './features/Nfts/NftsNavigator'
+import {SearchProvider} from './features/Search/SearchContext'
 import {SettingsScreenNavigator} from './features/Settings'
 import {SetupWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
 import {GovernanceNavigator} from './features/Staking/Governance'
 import {ToggleAnalyticsSettingsNavigator} from './features/ToggleAnalyticsSettings'
 import {SelectWalletFromList} from './features/WalletManager/useCases/SelectWalletFromListScreen/SelectWalletFromListScreen'
-import {CONFIG} from './legacy/config'
-import {useMetrics} from './metrics/metricsManager'
-import {defaultStackNavigationOptions, hideTabBarForRoutes, WalletStackRoutes, WalletTabRoutes} from './navigation'
-import {NftsNavigator} from './Nfts/NftsNavigator'
-import {SearchProvider} from './Search/SearchContext'
-import {TxHistoryNavigator} from './TxHistory'
+import {dappExplorerEnabled} from './kernel/config'
+import {useMetrics} from './kernel/metrics/metricsManager'
+import {
+  defaultStackNavigationOptions,
+  hideTabBarForRoutes,
+  WalletStackRoutes,
+  WalletTabRoutes,
+} from './kernel/navigation'
+import {VotingRegistration} from './legacy/Catalyst'
+import {DashboardNavigator} from './legacy/Dashboard'
+import {TxHistoryNavigator} from './legacy/TxHistory'
 
 const Tab = createBottomTabNavigator<WalletTabRoutes>()
 const WalletTabNavigator = () => {
@@ -110,7 +115,7 @@ const WalletTabNavigator = () => {
           )}
         </Tab.Screen>
 
-        {CONFIG.DAPP_EXPLORER_ENABLED ? (
+        {dappExplorerEnabled ? (
           <Tab.Screen
             name="discover"
             options={({route}: {route: RouteProp<WalletTabRoutes, 'discover'>}) => ({

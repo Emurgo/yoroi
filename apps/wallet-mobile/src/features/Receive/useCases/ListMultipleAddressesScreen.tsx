@@ -15,7 +15,7 @@ import Animated, {Layout} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer} from '../../../components'
-import {useMetrics} from '../../../metrics/metricsManager'
+import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {useAddressModeManager} from '../../WalletManager/common/useAddressModeManager'
 import {useSelectedWallet} from '../../WalletManager/context/SelectedWalletContext'
 import {BIP32_HD_GAP_LIMIT} from '../common/contants'

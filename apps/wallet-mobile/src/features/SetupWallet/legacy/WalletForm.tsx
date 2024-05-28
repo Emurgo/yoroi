@@ -1,13 +1,13 @@
 import {useFocusEffect} from '@react-navigation/native'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, TextInput as RNTextInput, View, ViewProps} from 'react-native'
 
 import {Button, Checkmark, KeyboardAvoidingView, Spacer, TextInput} from '../../../components'
-import globalMessages from '../../../i18n/global-messages'
-import {useMetrics} from '../../../metrics/metricsManager'
-import {COLORS} from '../../../theme'
-import {isEmptyString} from '../../../utils/utils'
+import globalMessages from '../../../kernel/i18n/global-messages'
+import {useMetrics} from '../../../kernel/metrics/metricsManager'
+import {isEmptyString} from '../../../kernel/utils'
 import {useWalletNames} from '../../../yoroi-wallets/hooks'
 import {
   getWalletNameError,
@@ -23,6 +23,7 @@ type Props = {
 }
 
 export const WalletForm = ({onSubmit}: Props) => {
+  const styles = useStyles()
   const strings = useStrings()
   const walletManager = useWalletManager()
   const {track} = useMetrics()
@@ -136,7 +137,10 @@ export const WalletForm = ({onSubmit}: Props) => {
 const WalletNameInput = TextInput
 const PasswordInput = TextInput
 const PasswordConfirmationInput = TextInput
-const Actions = (props: ViewProps) => <View {...props} style={styles.actions} />
+const Actions = (props: ViewProps) => {
+  const styles = useStyles()
+  return <View {...props} style={styles.actions} />
+}
 
 const messages = defineMessages({
   walletNameInputLabel: {
@@ -182,16 +186,20 @@ const useStrings = () => {
   }
 }
 
-const styles = StyleSheet.create({
-  safeAreaView: {
-    flex: 1,
-  },
-  scrollContentContainer: {
-    paddingHorizontal: 16,
-    paddingTop: 40,
-  },
-  actions: {
-    padding: 16,
-    backgroundColor: COLORS.BACKGROUND,
-  },
-})
+const useStyles = () => {
+  const {atoms, color} = useTheme()
+  const styles = StyleSheet.create({
+    safeAreaView: {
+      flex: 1,
+    },
+    scrollContentContainer: {
+      paddingHorizontal: 16,
+      paddingTop: 40,
+    },
+    actions: {
+      ...atoms.p_lg,
+      backgroundColor: color.gray_cmin,
+    },
+  })
+  return styles
+}

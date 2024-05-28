@@ -1,18 +1,19 @@
 import {RouteProp, useRoute} from '@react-navigation/native'
 import {isString} from '@yoroi/common'
 import {useExplorers} from '@yoroi/explorers'
-import {usePorfolioTokenDiscovery} from '@yoroi/portfolio'
+import {usePorfolioTokenDiscovery, usePorfolioTokenTraits} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Chain, Portfolio} from '@yoroi/types'
 import React, {ReactNode, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Linking, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 
-import {CopyButton, FadeIn, Spacer, Text} from '../../../../components'
+import {Boundary, CopyButton, FadeIn, Spacer, Text} from '../../../../components'
 import {Tab, TabPanel, TabPanels, Tabs} from '../../../../components/Tabs'
-import {useMetrics} from '../../../../metrics/metricsManager'
-import {NftRoutes} from '../../../../navigation'
-import {useNavigateTo} from '../../../../Nfts/navigation'
+import {time} from '../../../../kernel/constants'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
+import {NftRoutes} from '../../../../kernel/navigation'
+import {useNavigateTo} from '../../../Nfts/common/navigation'
 import {useSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerContext'
 import {MediaPreview} from '../MediaPreview/MediaPreview'
@@ -65,7 +66,9 @@ export const MediaDetails = () => {
             />
           </Tabs>
 
-          <Details info={amount.info} activeTab={activeTab} network={network} />
+          <Boundary>
+            <Details info={amount.info} activeTab={activeTab} network={network} />
+          </Boundary>
         </ScrollView>
       </SafeAreaView>
     </FadeIn>
@@ -88,7 +91,17 @@ const Details = ({activeTab, info, network}: DetailsProps) => {
       getTokenDiscovery: api.tokenDiscovery,
     },
     {
-      staleTime: Infinity,
+      staleTime: time.session,
+    },
+  )
+  const {tokenTraits} = usePorfolioTokenTraits(
+    {
+      id: info.id,
+      network,
+      getTokenTraits: api.tokenTraits,
+    },
+    {
+      staleTime: time.oneDay,
     },
   )
 
@@ -98,7 +111,7 @@ const Details = ({activeTab, info, network}: DetailsProps) => {
   return (
     <TabPanels>
       <TabPanel active={activeTab === 'overview'}>
-        <NftOverview info={info} network={network} />
+        <NftOverview info={info} network={network} traits={tokenTraits} />
       </TabPanel>
 
       <TabPanel active={activeTab === 'metadata'}>
@@ -129,7 +142,7 @@ const MetadataRow = ({title, copyText, children}: {title: string; children: Reac
   const styles = useStyles()
   return (
     <View style={styles.rowContainer}>
-      <View style={styles.rowTitleContainer}>
+      <View style={styles.rowBetween}>
         <Text style={styles.title}>{title}</Text>
 
         {copyText !== undefined ? <CopyButton value={copyText} /> : null}
@@ -144,9 +157,10 @@ const MetadataRow = ({title, copyText, children}: {title: string; children: Reac
 
 type NftOverviewProps = {
   info: Portfolio.Token.Info
+  traits: Portfolio.Token.Traits | undefined
   network: Chain.SupportedNetworks
 }
-const NftOverview = ({info, network}: NftOverviewProps) => {
+const NftOverview = ({info, network, traits}: NftOverviewProps) => {
   const styles = useStyles()
   const strings = useStrings()
   const explorers = useExplorers(network)
@@ -170,6 +184,16 @@ const NftOverview = ({info, network}: NftOverviewProps) => {
       <MetadataRow title={strings.policyId} copyText={policyId}>
         <Text style={styles.name}>{policyId}</Text>
       </MetadataRow>
+
+      {traits?.traits.map((trait) => (
+        <MetadataRow key={`${info.id}-trait-${trait.type}`} title={trait.type}>
+          <View style={styles.rowBetween}>
+            <Text style={styles.name}>{trait.value}</Text>
+
+            <Text style={styles.name}>{trait.rarity}</Text>
+          </View>
+        </MetadataRow>
+      ))}
 
       <MetadataRow title={strings.detailsLinks}>
         <View
@@ -283,7 +307,7 @@ const useStyles = () => {
     rowContainer: {
       paddingVertical: imagePadding,
     },
-    rowTitleContainer: {
+    rowBetween: {
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',

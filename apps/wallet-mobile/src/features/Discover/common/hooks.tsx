@@ -3,8 +3,8 @@ import * as React from 'react'
 import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
 import {useModal} from '../../../components'
+import {logger} from '../../../kernel/logger/logger'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
-import {Logger} from '../../../yoroi-wallets/logging'
 import {ConfirmRawTxWithOs} from '../../Swap/common/ConfirmRawTx/ConfirmRawTxWithOs'
 import {ConfirmRawTxWithPassword} from '../../Swap/common/ConfirmRawTx/ConfirmRawTxWithPassword'
 import {useStrings} from './useStrings'
@@ -15,9 +15,9 @@ export const useConnectWalletToWebView = (wallet: YoroiWallet, webViewRef: React
 
   const sendMessageToWebView = (event: string) => (id: string, result: unknown, error?: Error) => {
     if (error) {
-      Logger.info('DappConnector', 'sending error to webview', error, 'as a response to', event)
+      logger.debug('useConnectWalletToWebView: sending error to webview', {error, event})
     } else {
-      Logger.info('DappConnector', 'sending result to webview', result, 'as a response to', event)
+      logger.debug('useConnectWalletToWebView: sending result to webview', {result, event})
     }
 
     webViewRef.current?.injectJavaScript(getInjectableMessage({id, result, error: error?.message ?? null}))
@@ -29,8 +29,8 @@ export const useConnectWalletToWebView = (wallet: YoroiWallet, webViewRef: React
 
     try {
       await manager.handleEvent(data, webViewUrl, sendMessageToWebView(data))
-    } catch (e) {
-      Logger.error('DappConnector', 'handleWebViewEvent::error', e)
+    } catch (error) {
+      logger.error('useConnectWalletToWebView: error handling web event', {error, data})
     }
   }
 

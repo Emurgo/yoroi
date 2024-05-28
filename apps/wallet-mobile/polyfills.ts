@@ -1,4 +1,6 @@
 import {Buffer} from 'buffer'
+import 'react-native-url-polyfill/auto'
+import './src/kernel/i18n/polyfills' // https://formatjs.io/docs/polyfills
 
 Object.fromEntries = Object.fromEntries || ((arr) => arr.reduce((acc, [k, v]) => ((acc[k] = v), acc), {}))
 

@@ -3,8 +3,8 @@ import {exchangeDefaultState, ExchangeProvider, successManagerMock} from '@yoroi
 import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {SearchProvider} from '../../../../../Search/SearchContext'
 import {mocks} from '../../../../../yoroi-wallets/mocks'
+import {SearchProvider} from '../../../../Search/SearchContext'
 import {SelectedWalletProvider} from '../../../../WalletManager/context/SelectedWalletContext'
 import {EditAmount} from './EditAmount'
 

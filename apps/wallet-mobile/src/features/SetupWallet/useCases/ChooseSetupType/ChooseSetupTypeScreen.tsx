@@ -6,10 +6,10 @@ import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Space} from '../../../../components/Space/Space'
-import {LedgerTransportSwitchModal} from '../../../../HW'
-import {isProduction} from '../../../../legacy/config'
-import {useMetrics} from '../../../../metrics/metricsManager'
-import {WalletInitRouteNavigation} from '../../../../navigation'
+import {isProduction} from '../../../../kernel/env'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
+import {WalletInitRouteNavigation} from '../../../../kernel/navigation'
+import {LedgerTransportSwitchModal} from '../../../../legacy/HW'
 import * as HASKELL_SHELLEY from '../../../../yoroi-wallets/cardano/constants/mainnet/constants'
 import {ButtonCard} from '../../common/ButtonCard/ButtonCard'
 import {LogoBanner} from '../../common/LogoBanner/LogoBanner'
@@ -42,7 +42,7 @@ export const ChooseSetupTypeScreen = () => {
     walletImplementationIdChanged(HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID)
     setUpTypeChanged('create')
 
-    if (isProduction()) {
+    if (isProduction) {
       networkIdChanged(HASKELL_SHELLEY.NETWORK_ID)
       navigation.navigate('setup-wallet-about-recovery-phase')
       return
@@ -56,7 +56,7 @@ export const ChooseSetupTypeScreen = () => {
     walletImplementationIdChanged(HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID)
     setUpTypeChanged('restore')
 
-    if (isProduction()) {
+    if (isProduction) {
       networkIdChanged(HASKELL_SHELLEY.NETWORK_ID)
       navigation.navigate('setup-wallet-restore-choose-mnemonic-type')
       return
@@ -75,7 +75,7 @@ export const ChooseSetupTypeScreen = () => {
     walletImplementationIdChanged(HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID)
     setUpTypeChanged('hw')
 
-    if (isProduction()) {
+    if (isProduction) {
       networkIdChanged(HASKELL_SHELLEY.NETWORK_ID)
       navigation.navigate('setup-wallet-check-nano-x')
       return

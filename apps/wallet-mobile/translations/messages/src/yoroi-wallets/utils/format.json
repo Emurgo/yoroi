@@ -1,0 +1,47 @@
+[
+  {
+    "id": "utils.format.today",
+    "defaultMessage": "!!!Today",
+    "file": "src/yoroi-wallets/utils/format.ts",
+    "start": {
+      "line": 214,
+      "column": 9,
+      "index": 6667
+    },
+    "end": {
+      "line": 217,
+      "column": 3,
+      "index": 6734
+    }
+  },
+  {
+    "id": "utils.format.yesterday",
+    "defaultMessage": "!!!Yesterday",
+    "file": "src/yoroi-wallets/utils/format.ts",
+    "start": {
+      "line": 218,
+      "column": 13,
+      "index": 6749
+    },
+    "end": {
+      "line": 221,
+      "column": 3,
+      "index": 6824
+    }
+  },
+  {
+    "id": "utils.format.unknownAssetName",
+    "defaultMessage": "!!![Unknown asset name]",
+    "file": "src/yoroi-wallets/utils/format.ts",
+    "start": {
+      "line": 222,
+      "column": 20,
+      "index": 6846
+    },
+    "end": {
+      "line": 225,
+      "column": 3,
+      "index": 6939
+    }
+  }
+]

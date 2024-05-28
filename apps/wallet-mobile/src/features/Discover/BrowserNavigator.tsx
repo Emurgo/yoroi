@@ -3,7 +3,7 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {BrowserRoutes} from 'src/navigation'
+import {BrowserRoutes} from 'src/kernel/navigation'
 
 import {BrowseDappScreen} from './useCases/BrowseDapp/BrowseDappScreen'
 import {SearchDappInBrowserScreen} from './useCases/SearchDappInBrowser/SearchDappInBrowserScreen'

@@ -19,12 +19,12 @@ import {toChainSupportedNetwork} from '../../../features/WalletManager/common/he
 import {networkManager} from '../../../features/WalletManager/common/network-manager'
 import {WalletMeta} from '../../../features/WalletManager/common/types'
 import walletManager from '../../../features/WalletManager/common/walletManager'
-import LocalizableError from '../../../i18n/LocalizableError'
+import LocalizableError from '../../../kernel/i18n/LocalizableError'
+import {logger} from '../../../kernel/logger/logger'
+import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../../kernel/storage/EncryptedStorage'
+import {Keychain} from '../../../kernel/storage/Keychain'
+import {makeMemosManager, MemosManager} from '../../../legacy/TxHistory/common/memos/memosManager'
 import {HWDeviceInfo} from '../../hw'
-import {Logger} from '../../logging'
-import {makeMemosManager, MemosManager} from '../../memos'
-import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../storage'
-import {Keychain} from '../../storage/Keychain'
 import type {
   AccountStateResponse,
   CurrencySymbol,
@@ -1009,7 +1009,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       const appAdaVersion = await getCardanoAppMajorVersion(this.hwDeviceInfo, useUSB)
 
       if (!doesCardanoAppVersionSupportCIP36(appAdaVersion) && unsignedTx.voting.registration) {
-        Logger.info('CardanoWallet::signTxWithLedger: Ledger app version <= 5')
+        logger.info('ShelleyWallet: signTxWithLedger ledger app version <= 5, no CIP-36 support', {appAdaVersion})
         const ledgerPayload = await Cardano.buildVotingLedgerPayloadV5(
           unsignedTx.unsignedTx,
           CHAIN_NETWORK_ID,
@@ -1030,7 +1030,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         return yoroiSignedTx({unsignedTx, signedTx})
       }
 
-      Logger.info('CardanoWallet::signTxWithLedger: Ledger app version > 5, using CIP-36')
+      logger.info('ShelleyWallet: signTxWithLedger ledger app version > 5, using CIP-36', {appAdaVersion})
 
       const ledgerPayload = await Cardano.buildLedgerPayload(
         unsignedTx.unsignedTx,

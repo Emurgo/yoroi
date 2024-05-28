@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native'
 
-import {SettingsRouteNavigation, useWalletNavigation} from '../../../navigation'
+import {SettingsRouteNavigation, useWalletNavigation} from '../../../kernel/navigation'
 
 export const useNavigateTo = () => {
   const navigation = useNavigation<SettingsRouteNavigation>()

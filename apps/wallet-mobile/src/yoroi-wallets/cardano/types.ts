@@ -13,8 +13,8 @@ import {
 import {Api, App, Balance, Chain, Portfolio} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 
+import {WalletEncryptedStorage} from '../../kernel/storage/EncryptedStorage'
 import {HWDeviceInfo} from '../hw'
-import {WalletEncryptedStorage} from '../storage'
 import {
   AccountStates,
   NetworkId,
@@ -67,19 +67,6 @@ export type ServerStatus = {
   isMaintenance: boolean
   serverTime: number | undefined
   isQueueOnline?: boolean
-}
-
-export type Block = {
-  height: number
-  epoch: number
-  slot: number
-  hash: string
-}
-
-export type SignedTxLegacy = {
-  id: string
-  encodedTx: Uint8Array
-  base64: string
 }
 
 export type Pagination = {

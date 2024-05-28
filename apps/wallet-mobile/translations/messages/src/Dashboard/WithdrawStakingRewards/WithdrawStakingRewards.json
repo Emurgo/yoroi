@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Also deregister staking key?",
     "file": "src/Dashboard/WithdrawStakingRewards/WithdrawStakingRewards.tsx",
     "start": {
-      "line": 125,
+      "line": 130,
       "column": 21,
-      "index": 4213
+      "index": 4349
     },
     "end": {
-      "line": 128,
+      "line": 133,
       "column": 3,
-      "index": 4341
+      "index": 4477
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!When **withdrawing rewards**, you also have the option to deregister the staking key.",
     "file": "src/Dashboard/WithdrawStakingRewards/WithdrawStakingRewards.tsx",
     "start": {
-      "line": 129,
+      "line": 134,
       "column": 16,
-      "index": 4359
+      "index": 4495
     },
     "end": {
-      "line": 132,
+      "line": 137,
       "column": 3,
-      "index": 4539
+      "index": 4675
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!**Keeping the staking key** will allow you to withdraw the rewards, but continue delegating to the same pool.",
     "file": "src/Dashboard/WithdrawStakingRewards/WithdrawStakingRewards.tsx",
     "start": {
-      "line": 133,
+      "line": 138,
       "column": 16,
-      "index": 4557
+      "index": 4693
     },
     "end": {
-      "line": 138,
+      "line": 143,
       "column": 3,
-      "index": 4778
+      "index": 4914
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!**Deregistering the staking key** will give you back your deposit and undelegate the key from any pool.",
     "file": "src/Dashboard/WithdrawStakingRewards/WithdrawStakingRewards.tsx",
     "start": {
-      "line": 139,
+      "line": 144,
       "column": 16,
-      "index": 4796
+      "index": 4932
     },
     "end": {
-      "line": 143,
+      "line": 148,
       "column": 3,
-      "index": 5000
+      "index": 5136
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!You do NOT need to deregister to delegate to a different stake pool. You can change your delegation preference at any time.",
     "file": "src/Dashboard/WithdrawStakingRewards/WithdrawStakingRewards.tsx",
     "start": {
-      "line": 144,
+      "line": 149,
       "column": 12,
-      "index": 5014
+      "index": 5150
     },
     "end": {
-      "line": 149,
+      "line": 154,
       "column": 3,
-      "index": 5245
+      "index": 5381
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!You should NOT deregister if this staking key is used as a stake pool's reward account, as this will cause all pool operator rewards to be sent back to the reserve.",
     "file": "src/Dashboard/WithdrawStakingRewards/WithdrawStakingRewards.tsx",
     "start": {
-      "line": 150,
+      "line": 155,
       "column": 12,
-      "index": 5259
+      "index": 5395
     },
     "end": {
-      "line": 156,
+      "line": 161,
       "column": 3,
-      "index": 5542
+      "index": 5678
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!Deregistering means this key will no longer receive rewards until you re-register the staking key (usually by delegating to a pool again)",
     "file": "src/Dashboard/WithdrawStakingRewards/WithdrawStakingRewards.tsx",
     "start": {
-      "line": 157,
+      "line": 162,
       "column": 12,
-      "index": 5556
+      "index": 5692
     },
     "end": {
-      "line": 162,
+      "line": 167,
       "column": 3,
-      "index": 5801
+      "index": 5937
     }
   },
   {
@@ -109,14 +109,14 @@
     "defaultMessage": "!!!Keep registered",
     "file": "src/Dashboard/WithdrawStakingRewards/WithdrawStakingRewards.tsx",
     "start": {
-      "line": 163,
+      "line": 168,
       "column": 14,
-      "index": 5817
+      "index": 5953
     },
     "end": {
-      "line": 166,
+      "line": 171,
       "column": 3,
-      "index": 5925
+      "index": 6061
     }
   },
   {
@@ -124,14 +124,14 @@
     "defaultMessage": "!!!Deregister",
     "file": "src/Dashboard/WithdrawStakingRewards/WithdrawStakingRewards.tsx",
     "start": {
-      "line": 167,
+      "line": 172,
       "column": 20,
-      "index": 5947
+      "index": 6083
     },
     "end": {
-      "line": 170,
+      "line": 175,
       "column": 3,
-      "index": 6056
+      "index": 6192
     }
   }
 ]

@@ -9,8 +9,8 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer, useModal} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
-import {useMetrics} from '../../../../metrics/metricsManager'
-import {WalletInitRouteNavigation} from '../../../../navigation'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
+import {WalletInitRouteNavigation} from '../../../../kernel/navigation'
 import {generateAdaMnemonic} from '../../../../yoroi-wallets/cardano/mnemonic'
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
 import {YoroiZendeskLink} from '../../common/constants'
@@ -73,6 +73,8 @@ export const RecoveryPhraseScreen = () => {
           }}
           testId='setup-step2-continue-button'
         />
+
+        <Space height="_2xl" />
       </View>,
       552,
     )

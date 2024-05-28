@@ -3,7 +3,6 @@ import {Balance} from '@yoroi/types'
 import {TokenRegistryEntry} from './tokenRegistry'
 import {
   fallbackTokenInfo,
-  hexToUtf8,
   toDisplayAssetName,
   tokenInfo,
   toPolicyId,
@@ -94,7 +93,6 @@ describe('api utils', () => {
   it('hexToAscii/asciiToHex', () => {
     const hex = '61737365744e616d65'
     const ascii = 'assetName'
-    expect(hexToUtf8(hex)).toBe(ascii)
     expect(utf8ToHex(ascii)).toBe(hex)
   })
 
