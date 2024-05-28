@@ -8,7 +8,7 @@ import {StyleSheet, Text, View} from 'react-native'
 import {Icon} from '../../../../../../components/Icon'
 import {type ITokenTransaction, TokenTransactionDirection} from '../../../../common/useGetPortfolioTokenTransaction'
 import {useStrings} from '../../../../common/useStrings'
-import {formatDateRelative, formatTime} from './../../../../../../legacy/format'
+import {formatDateRelative, formatTime} from './../../../../../../yoroi-wallets/utils/format'
 
 interface Props {
   tx: ITokenTransaction

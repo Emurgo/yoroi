@@ -5,7 +5,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {AssetLogo} from '../../../../common/AssetLogo/AssetLogo'
 import {ILiquidityPool} from '../../../../common/useGetLiquidityPool'
-import {DAppTokenITemSkeleton} from './DAppTokenItemSkeleton'
+import {DAppTokenItemSkeleton} from './DAppTokenItemSkeleton'
 
 type Props = {
   tokenInfo?: ILiquidityPool
@@ -13,9 +13,9 @@ type Props = {
   onPress?: () => void
 }
 
-export const DAppTokenITem = ({tokenInfo, splitTokenSymbol, onPress}: Props) => {
+export const DAppTokenItem = ({tokenInfo, splitTokenSymbol, onPress}: Props) => {
   const {styles} = useStyles()
-  if (!tokenInfo) return <DAppTokenITemSkeleton />
+  if (!tokenInfo) return <DAppTokenItemSkeleton />
 
   const [firstToken, secondToken] = tokenInfo.assets
   const firstTokenBalance = new BigNumber(firstToken.balance)

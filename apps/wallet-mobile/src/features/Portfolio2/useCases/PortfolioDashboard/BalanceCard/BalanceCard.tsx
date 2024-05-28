@@ -21,7 +21,7 @@ export const BalanceCard = () => {
   return (
     <View style={styles.root}>
       {isLoading ? (
-        <BalanceCardSkeleton cardHeight={114} />
+        <BalanceCardSkeleton />
       ) : (
         <LinearGradient style={styles.gradientRoot} colors={colors.gradientColor}>
           <BalanceCardContent
@@ -30,14 +30,12 @@ export const BalanceCard = () => {
             usdExchangeRate={usdExchangeRate}
             headerCard={
               <View style={styles.rowBetween}>
-                <View>
-                  <Text style={[styles.textWhite, styles.normalText]}>{strings.totalWalletValue}</Text>
-                </View>
+                <Text style={[styles.textWhite, styles.normalText]}>{strings.totalWalletValue}</Text>
 
                 <Text style={[styles.boxExchange]}>
                   <Text style={[styles.textWhite, styles.normalText]}>1 ADA = </Text>
 
-                  <Text style={[styles.textWhite, styles.normalText, styles.usdExchangeText]}>0,48</Text>
+                  <Text style={[styles.textWhite, styles.normalText, styles.usdExchangeText]}>{usdExchangeRate}</Text>
 
                   <Text style={[styles.textWhite, styles.usdExchangeFiat]}>USD</Text>
                 </Text>
@@ -57,10 +55,8 @@ const useStyles = () => {
       ...atoms.px_lg,
     },
     gradientRoot: {
-      backgroundColor: color.gray_cmin,
       ...atoms.p_lg,
       borderRadius: 9,
-      gap: 6,
     },
     textWhite: {
       color: color.white_static,

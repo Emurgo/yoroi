@@ -3,7 +3,7 @@ import * as React from 'react'
 import {FlatList, StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
 import {Icon, Spacer} from '../../../../../components'
-import {makeList} from '../../../../../utils'
+import {makeList} from '../../../../../kernel/utils'
 import {IPortfolioBalance, useGetTokensWithBalance} from '../../../common/useGetTokensWithBalance'
 import {useNavigateTo} from '../../../common/useNavigateTo'
 import {useStrings} from '../../../common/useStrings'

@@ -3,12 +3,11 @@ import * as React from 'react'
 import {FlatList, StyleSheet, Text, View} from 'react-native'
 
 import {Spacer} from '../../../../../components'
-import {makeList} from '../../../../../utils'
 import {TokenEmptyList} from '../../../common/TokenEmptyList'
 import {ILiquidityPool} from '../../../common/useGetLiquidityPool'
 import {useShowLiquidityPoolModal} from '../../../common/useShowLiquidityPoolModal'
 import {useStrings} from '../../../common/useStrings'
-import {DAppTokenITem} from './DAppTokenItem/DAppTokenItem'
+import {DAppTokenItem} from './DAppTokenItem/DAppTokenItem'
 
 type Props = {
   tokensList: ILiquidityPool[]
@@ -29,7 +28,7 @@ export const LiquidityPoolTab = ({tokensList = [], isLoading, isSearching}: Prop
 
   const renderTokenItem = (item: ILiquidityPool | undefined, index: number) => {
     return (
-      <DAppTokenITem
+      <DAppTokenItem
         onPress={() => onTokenPress(item)}
         key={item?.id ?? index}
         tokenInfo={item ? item : undefined}

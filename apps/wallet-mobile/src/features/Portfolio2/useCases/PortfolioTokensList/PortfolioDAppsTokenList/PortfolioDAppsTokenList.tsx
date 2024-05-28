@@ -5,7 +5,7 @@ import {ScrollView, StyleSheet, View} from 'react-native'
 
 import {Spacer} from '../../../../../components'
 import {TabPanel} from '../../../../../components/Tabs'
-import {useSearch} from '../../../../../Search/SearchContext'
+import {useSearch} from '../../../../../features/Search/SearchContext'
 import {Line} from '../../../common/Line'
 import {useGetLiquidityPool} from '../../../common/useGetLiquidityPool'
 import {useGetOpenOrders} from '../../../common/useGetOpenOrders'
