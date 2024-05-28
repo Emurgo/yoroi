@@ -36,7 +36,7 @@ const useStyles = () => {
       ...atoms.align_center,
       borderRadius: 999,
       paddingHorizontal: 6,
-      paddingVertical: 2,
+      paddingVertical: 3,
     },
     pnlSuccess: {
       backgroundColor: color.secondary_c100,

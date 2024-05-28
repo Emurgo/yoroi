@@ -19,7 +19,7 @@ export const BuyADABanner = () => {
   }
 
   return (
-    <View style={styles.root}>
+    <View>
       <LinearGradient style={styles.gradientRoot} colors={colors.gradientColor}>
         <Text style={styles.title}>{strings.buyADATitle}</Text>
 
@@ -48,7 +48,6 @@ export const BuyADABanner = () => {
 const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
-    root: {},
     gradientRoot: {
       ...atoms.p_lg,
       ...atoms.flex_col,
@@ -67,9 +66,11 @@ const useStyles = () => {
     title: {
       ...atoms.body_1_lg_medium,
       ...atoms.font_semibold,
+      color: color.gray_cmax,
     },
     description: {
       ...atoms.body_2_md_regular,
+      color: color.gray_cmax,
       maxWidth: 220,
     },
     assetImageBox: {

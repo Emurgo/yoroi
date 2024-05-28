@@ -1,23 +1,49 @@
 import {useTheme} from '@yoroi/theme'
+import BigNumber from 'bignumber.js'
 import * as React from 'react'
-import {Image, ImageSourcePropType, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {IPortfolioBalance} from 'src/features/Portfolio2/common/useGetTokensWithBalance'
 
 import {Spacer} from '../../../../../components'
+import {usePrivacyMode} from '../../../../../features/Settings/PrivacyMode/PrivacyMode'
 import {PnlTag} from '../../../common/PnlTag/PnlTag'
 import {useNavigateTo} from '../../../common/useNavigateTo'
 import {DashboardTokenSkeletonItem} from './DashboardTokenSkeletonItem'
 
 type Props = {
-  tokenInfo?: {
-    logo: ImageSourcePropType | string
-    symbol: string
-    name: string
-  }
+  tokenInfo?: IPortfolioBalance
 }
 
 export const DashboardTokenItem = ({tokenInfo}: Props) => {
   const {styles} = useStyles()
   const navigationTo = useNavigateTo()
+  const {isPrivacyOff, privacyPlaceholder} = usePrivacyMode({
+    decimals: 2,
+    numbers: 3,
+  })
+
+  const {balance = 0, oldBalance = 0, usdExchangeRate = 1} = tokenInfo ?? {}
+  const convertBalance = React.useMemo(() => new BigNumber(balance), [balance])
+  const convertOldBalance = React.useMemo(() => new BigNumber(oldBalance), [oldBalance])
+
+  const currentUSDBalance = convertBalance.multipliedBy(usdExchangeRate)
+  const oldUSDBalance = convertOldBalance.multipliedBy(usdExchangeRate)
+
+  const usdBalanceFormatted = React.useMemo(() => {
+    return isPrivacyOff ? currentUSDBalance.toFixed(2) : privacyPlaceholder
+  }, [currentUSDBalance, isPrivacyOff, privacyPlaceholder])
+
+  const balanceFormatted = React.useMemo(() => {
+    return isPrivacyOff ? convertBalance.toFixed(2) : privacyPlaceholder
+  }, [convertBalance, isPrivacyOff, privacyPlaceholder])
+
+  const pnl = currentUSDBalance.minus(oldUSDBalance)
+  const variantPnl = new BigNumber(pnl).gte(0) ? 'success' : 'danger'
+  const pnlPercentFormatted = convertBalance
+    .minus(convertOldBalance)
+    .dividedBy(convertOldBalance)
+    .multipliedBy(100)
+    .toFixed(2)
 
   if (!tokenInfo) return <DashboardTokenSkeletonItem />
 
@@ -40,13 +66,13 @@ export const DashboardTokenItem = ({tokenInfo}: Props) => {
         <Spacer height={16} />
 
         <View>
-          <PnlTag variant="success" withIcon>
-            <Text>0.03%</Text>
+          <PnlTag variant={variantPnl} withIcon>
+            <Text>{pnlPercentFormatted}%</Text>
           </PnlTag>
 
-          <Text style={styles.tokenValue}>2083,33</Text>
+          <Text style={styles.tokenValue}>{balanceFormatted}</Text>
 
-          <Text style={styles.usdValue}>2083,33</Text>
+          <Text style={styles.usdValue}>{usdBalanceFormatted}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -68,6 +94,7 @@ const useStyles = () => {
     symbol: {
       ...atoms.body_2_md_medium,
       ...atoms.font_semibold,
+      color: color.gray_cmax,
       textTransform: 'uppercase',
     },
     name: {
@@ -77,6 +104,7 @@ const useStyles = () => {
     tokenValue: {
       ...atoms.heading_4_medium,
       ...atoms.font_semibold,
+      color: color.gray_cmax,
     },
     usdValue: {
       ...atoms.body_3_sm_regular,

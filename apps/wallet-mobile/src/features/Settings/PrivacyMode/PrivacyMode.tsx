@@ -56,10 +56,13 @@ const parsePrivacyMode = (data: unknown) => {
   return isPrivacyMode(parsed) ? parsed : undefined
 }
 
-export const usePrivacyMode = () => {
+export const usePrivacyMode = ({decimals = 6, numbers = 1} = {}) => {
   const privacyMode = useReadPrivacyMode()
   const {togglePrivacyMode, isTogglePrivacyModeLoading} = useTooglePrivacyMode()
   const writePrivacyMode = useWritePrivacyMode()
+
+  const privacyPlaceholder = new Array(numbers).fill('*').join('')
+  const decimalsPlaceholder = new Array(decimals).fill('*').join('')
 
   return {
     isPrivacyActive: privacyMode === 'HIDDEN',
@@ -68,6 +71,6 @@ export const usePrivacyMode = () => {
     isTogglePrivacyModeLoading,
     setPrivacyModeOff: () => writePrivacyMode('HIDDEN'),
     setPrivacyModeOn: () => writePrivacyMode('SHOWN'),
-    privacyPlaceholder: '*.******',
+    privacyPlaceholder: `${privacyPlaceholder}.${decimalsPlaceholder}`,
   }
 }

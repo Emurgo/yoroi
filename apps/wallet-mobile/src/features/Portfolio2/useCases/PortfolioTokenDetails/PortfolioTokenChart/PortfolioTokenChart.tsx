@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-raw-text */
 import {useTheme} from '@yoroi/theme'
 import React, {useMemo, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
