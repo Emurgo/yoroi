@@ -4,6 +4,7 @@ import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
 import {defaultStackNavigationOptions, WalletInitRoutes} from '../../kernel/navigation'
+import {PreparingWalletScreen} from './common/PreparingWalletScreen/PreparingWalletScreen'
 import {CheckNanoXScreen} from './legacy/CheckNanoX/CheckNanoXScreen'
 import {ConnectNanoXScreen} from './legacy/ConnectNanoX/ConnectNanoXScreen'
 import {ImportReadOnlyWalletScreen} from './legacy/ImportReadOnlyWallet/ImportReadOnlyWalletScreen'
@@ -133,6 +134,12 @@ export const SetupWalletNavigator = () => {
         name="setup-wallet-verify-recovery-phrase-mnemonic"
         component={VerifyRecoveryPhraseScreen}
         options={{title: strings.createWalletTitle}}
+      />
+
+      <Stack.Screen
+        name="setup-wallet-preparing-wallet"
+        component={PreparingWalletScreen}
+        options={{headerShown: false}}
       />
     </Stack.Navigator>
   )

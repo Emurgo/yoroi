@@ -8,13 +8,13 @@ import {BulletPointItem, CameraCodeScanner, Spacer, Text} from '../../../../comp
 import {showErrorDialog} from '../../../../kernel/dialogs'
 import {errorMessages} from '../../../../kernel/i18n/global-messages'
 import {logger} from '../../../../kernel/logger/logger'
-import {WalletInitRouteNavigation} from '../../../../kernel/navigation'
+import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import {isCIP1852AccountPath, isValidPublicKey} from '../../../../yoroi-wallets/cardano/bip44Validators'
 
 export const ImportReadOnlyWalletScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
-  const navigation = useNavigation<WalletInitRouteNavigation>()
+  const navigation = useNavigation<SetupWalletRouteNavigation>()
   const {publicKeyHexChanged, pathChanged} = useSetupWallet()
 
   const onRead = async (event: {data: string}): Promise<boolean> => {

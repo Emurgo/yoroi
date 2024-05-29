@@ -10,7 +10,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button, Spacer, useModal} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {WalletInitRouteNavigation} from '../../../../kernel/navigation'
+import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import {generateAdaMnemonic} from '../../../../yoroi-wallets/cardano/mnemonic'
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
 import {YoroiZendeskLink} from '../../common/constants'
@@ -25,7 +25,7 @@ export const RecoveryPhraseScreen = () => {
   const {styles, colors} = useStyles()
   const {openModal, closeModal} = useModal()
   const [isBlur, setIsBlur] = React.useState(true)
-  const navigation = useNavigation<WalletInitRouteNavigation>()
+  const navigation = useNavigation<SetupWalletRouteNavigation>()
   const strings = useStrings()
   const {mnemonicChanged, showCreateWalletInfoModal, showCreateWalletInfoModalChanged} = useSetupWallet()
   const {track} = useMetrics()

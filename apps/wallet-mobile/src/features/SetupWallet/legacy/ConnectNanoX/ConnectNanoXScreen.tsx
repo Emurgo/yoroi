@@ -10,7 +10,7 @@ import {ProgressStep} from '../../../../components'
 import {showErrorDialog} from '../../../../kernel/dialogs'
 import {errorMessages} from '../../../../kernel/i18n/global-messages'
 import LocalizableError from '../../../../kernel/i18n/LocalizableError'
-import {WalletInitRouteNavigation} from '../../../../kernel/navigation'
+import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import {LedgerConnect} from '../../../../legacy/HW'
 import {getHWDeviceInfo} from '../../../../yoroi-wallets/cardano/hw'
 import {DeviceId, DeviceObj, HWDeviceInfo} from '../../../../yoroi-wallets/hw'
@@ -30,7 +30,7 @@ export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
   const intl = useIntl()
   const strings = useStrings()
   const styles = useStyles()
-  const navigation = useNavigation<WalletInitRouteNavigation>()
+  const navigation = useNavigation<SetupWalletRouteNavigation>()
 
   const {hwDeviceInfoChanged, walletImplementationId, useUSB} = useSetupWallet()
 

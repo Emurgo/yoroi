@@ -16,7 +16,7 @@ const fontFamily = {
       default: 'monospace',
     }),
   },
-}
+} as const
 
 const size = {
   h1: {
@@ -183,7 +183,7 @@ const typograpghy = {
   text_right: {
     textAlign: 'right',
   },
-}
+} as const
 
 const padding = {
   p_0: {padding: tokens.space.none},

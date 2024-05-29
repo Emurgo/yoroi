@@ -171,6 +171,7 @@ import {
   PortfolioApi,
   PortfolioApiTokenDiscoveryResponse,
   PortfolioApiTokenInfosResponse,
+  PortfolioApiTokenTraitsResponse,
 } from './portfolio/api'
 import {
   PortfolioEventBalanceManager,
@@ -198,6 +199,7 @@ import {
 import {AppQueueTask, AppQueueTaskManager} from './app/queue-task-manager'
 import {ExplorersManager} from './explorers/manager'
 import {ExplorersExplorer} from './explorers/explorer'
+import {PortfolioTokenTraits} from './portfolio/traits'
 
 export namespace App {
   export namespace Errors {
@@ -454,6 +456,7 @@ export namespace Portfolio {
   export namespace Api {
     export type TokenInfosResponse = PortfolioApiTokenInfosResponse
     export type TokenDiscoveryResponse = PortfolioApiTokenDiscoveryResponse
+    export type TokenTraitsResponse = PortfolioApiTokenTraitsResponse
     export type Api = PortfolioApi
   }
 
@@ -468,6 +471,7 @@ export namespace Portfolio {
   }
 
   export namespace Token {
+    export type Traits = PortfolioTokenTraits
     export type Balances = PortfolioTokenBalances
     export type Amount = PortfolioTokenAmount
     export type AmountRecords = PortfolioTokenAmountRecords
