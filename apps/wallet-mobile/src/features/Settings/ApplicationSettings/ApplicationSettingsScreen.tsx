@@ -26,7 +26,7 @@ export const ApplicationSettingsScreen = () => {
   const {languageCode, supportedLanguages} = useLanguage()
   const language = supportedLanguages.find((lang) => lang.code === languageCode) ?? defaultLanguage
 
-  const {isTogglePrivacyModeLoading, isPrivacyOff} = usePrivacyMode()
+  const {isTogglePrivacyModeLoading, isPrivacyActive} = usePrivacyMode()
   const {currency} = useCurrencyContext()
   const {enabled: crashReportEnabled} = useCrashReports()
 
@@ -119,7 +119,7 @@ export const ApplicationSettingsScreen = () => {
             label={strings.privacyMode}
             info={strings.privacyModeInfo}
           >
-            <PrivacyModeSwitch isPrivacyOff={isPrivacyOff} />
+            <PrivacyModeSwitch isPrivacyActive={isPrivacyActive} />
           </SettingsItem>
 
           <SettingsItem
@@ -164,9 +164,9 @@ export const ApplicationSettingsScreen = () => {
 }
 
 // to avoid switch jumps
-const PrivacyModeSwitch = ({isPrivacyOff}: {isPrivacyOff: boolean}) => {
+const PrivacyModeSwitch = ({isPrivacyActive}: {isPrivacyActive: boolean}) => {
   const {setPrivacyModeOn, setPrivacyModeOff, isTogglePrivacyModeLoading} = usePrivacyMode()
-  const [isLocalPrivacyOff, setIsLocalPrivacyOff] = React.useState(isPrivacyOff)
+  const [isLocalPrivacyActive, setIsLocalPrivacyOff] = React.useState(isPrivacyActive)
 
   const onTogglePrivacyMode = () => {
     setIsLocalPrivacyOff((prevState) => {
@@ -182,7 +182,7 @@ const PrivacyModeSwitch = ({isPrivacyOff}: {isPrivacyOff: boolean}) => {
 
   return (
     <SettingsSwitch
-      value={isLocalPrivacyOff}
+      value={isLocalPrivacyActive}
       onValueChange={onTogglePrivacyMode}
       disabled={isTogglePrivacyModeLoading}
     />

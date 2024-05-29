@@ -43,17 +43,17 @@ export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(({amount, te
 const Price = ({amount, textStyle, ignorePrivacy}: Props) => {
   const styles = useStyles()
   const wallet = useSelectedWallet()
-  const {isPrivacyOn, privacyPlaceholder} = usePrivacyMode()
+  const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
   const {currency, config} = useCurrencyContext()
   const rate = useExchangeRate({wallet, to: currency})
 
   const price = React.useMemo(() => {
     if (rate == null) return `... ${currency}`
 
-    return isPrivacyOn || !ignorePrivacy
+    return !isPrivacyActive || ignorePrivacy === true
       ? `${amountBreakdown(amount).bn.times(rate).toFormat(config.decimals)} ${currency}`
       : `${privacyPlaceholder} ${currency}`
-  }, [amount, config.decimals, currency, ignorePrivacy, isPrivacyOn, privacyPlaceholder, rate])
+  }, [amount, config.decimals, currency, ignorePrivacy, isPrivacyActive, privacyPlaceholder, rate])
 
   return (
     <Text style={[styles.pairedBalanceText, textStyle]} testID="pairedTotalText">
