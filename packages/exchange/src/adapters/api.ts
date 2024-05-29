@@ -80,6 +80,14 @@ export const providers: Readonly<Record<string, Exchange.Provider>> = freeze(
       supportUrl: 'https://support.encryptus.com/',
       appId: '18d1545a-a59b-45cb-a180-157b110c77fe',
     },
+    nmkr: {
+      id: 'nmkr',
+      name: 'NMKR',
+      logo: 'nmkr',
+      supportUrl: 'https://www.nmkr.io/support',
+      appId: 'fee6bfc1-6934-418a-aa78-5eea5cf1b576',
+      supportedOrders: {},
+    },
   },
   true,
 )
