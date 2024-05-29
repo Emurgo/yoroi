@@ -285,7 +285,9 @@ export const RestoreWalletDetailsScreen = () => {
 
             <Space width="sm" />
 
-            <Text style={styles.plateNumber}>{plate.accountPlate.TextPart}</Text>
+            <Text style={styles.plateNumber} testID="wallet-plate-number">
+              {plate.accountPlate.TextPart}
+            </Text>
 
             <Space width="sm" />
 
@@ -307,6 +309,7 @@ export const RestoreWalletDetailsScreen = () => {
                 addressMode,
               })
             }
+            testId="setup-restore-step2-next-button"
             disabled={isLoading || Object.keys(passwordErrors).length > 0 || Object.keys(nameErrors).length > 0}
           />
         </View>

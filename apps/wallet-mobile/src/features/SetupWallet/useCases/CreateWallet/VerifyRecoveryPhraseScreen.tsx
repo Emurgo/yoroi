@@ -122,7 +122,7 @@ export const VerifyRecoveryPhraseScreen = () => {
             publicKeyHexChanged(accountPubKeyHex)
             navigation.navigate('setup-wallet-details-form')
           }}
-          testId="setup-step3-next-button"
+          testId="setup-next-button"
         />
 
         <Space height="sm" />

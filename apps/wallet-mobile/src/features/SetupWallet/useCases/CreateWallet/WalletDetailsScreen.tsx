@@ -186,7 +186,7 @@ export const WalletDetailsScreen = () => {
             closeModal()
             showRestoreWalletInfoModalChanged(false)
           }}
-          testId="setup-step4-modal-continue-button"
+          testId="setup-modal-continue-button"
         />
 
         <Space height="lg" />

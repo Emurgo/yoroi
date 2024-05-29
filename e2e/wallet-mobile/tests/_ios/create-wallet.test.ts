@@ -18,7 +18,7 @@ describe('Create a wallet', () => {
   await expect(chooseNetworkTypeScreen.pageTitleCreateFlow()).toBeVisible()
  })
 
- it('should be able to select "testnet" network', async () => {
+ it('should be able to select "preprod" network', async () => {
   await chooseNetworkTypeScreen.networkTestnetButton().tap()
   await expect(createWalletStepsScreen.step1Title()).toBeVisible()
  })

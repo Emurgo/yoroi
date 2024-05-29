@@ -27,7 +27,7 @@ export const getSeedPhrase = async (): Promise<Array<string>> => {
  return allWords
 }
 
-export const step3NextButton = () => element(by.id('setup-step3-next-button'))
+export const step3NextButton = () => element(by.id('setup-next-button'))
 
 export const repeatSeedPhrase = async (phraseArray: string[]): Promise<void> => {
  for (const phraseArrayWord of phraseArray) {
@@ -38,7 +38,7 @@ export const step3RecoveryPhraseValidatedText = () => element(by.text('The recov
 
 export const step4Title1OnModal = () => element(by.text('What is wallet name'))
 export const step4Title2OnModal = () => element(by.text('What is password'))
-export const step4ModalContinueButton = () => element(by.id('setup-step4-modal-continue-button'))
+export const step4ModalContinueButton = () => element(by.id('setup-modal-continue-button'))
 
 export const step4WalletNameInput = () => element(by.id('walletNameInput'))
 export const step4SpendingPasswordInput = () => element(by.id('walletPasswordInput'))

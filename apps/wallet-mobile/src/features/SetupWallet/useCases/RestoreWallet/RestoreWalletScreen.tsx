@@ -212,7 +212,7 @@ const NextButton = ({onPress}: {onPress: () => void}) => {
 
   return (
     <View style={styles.padding}>
-      <Button title={strings.next} style={styles.button} onPress={onPress} />
+      <Button title={strings.next} style={styles.button} onPress={onPress} testID="setup-restore-step1-next-button" />
     </View>
   )
 }

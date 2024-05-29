@@ -40,7 +40,9 @@ export const CardAboutPhrase = ({
 
       {title !== undefined && (
         <>
-          <Text style={styles.title} testID={testId}>{title}</Text>
+          <Text style={styles.title} testID={testId}>
+            {title}
+          </Text>
 
           <Space height="sm" />
         </>
