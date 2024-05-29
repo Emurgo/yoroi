@@ -1,22 +1,26 @@
+import {infoExtractName} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
-import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {useGetPortfolioBalance} from '../../../common/useGetPortfolioBalance'
+import {usePortfolioPrimaryBalance} from '../../../../../features/Portfolio/common/hooks/usePortfolioPrimaryBalance'
+import {useCurrencyContext} from '../../../../../features/Settings/Currency'
+import {useSelectedWallet} from '../../../../../features/WalletManager/context/SelectedWalletContext'
 import {useStrings} from '../../../common/useStrings'
+import {useTokenExchangeRate} from '../../../common/useTokenExchangeRate'
 import {BalanceCardContent} from './BalanceCardContent'
 import {BalanceCardSkeleton} from './BalanceCardSkeleton'
 
 export const BalanceCard = () => {
   const strings = useStrings()
   const {styles, colors} = useStyles()
-  const {data: portfolioData, isLoading} = useGetPortfolioBalance()
-  const usdExchangeRate = portfolioData?.usdExchangeRate ?? 1
 
-  const currentBalance = new BigNumber(portfolioData?.currentBalance ?? 0)
-  const oldBalance = new BigNumber(portfolioData?.oldBalance ?? 0)
+  const wallet = useSelectedWallet()
+  const primaryBalance = usePortfolioPrimaryBalance({wallet})
+  const name = infoExtractName(primaryBalance.info)
+  const rate = useTokenExchangeRate()
+  const isLoading = rate === undefined
 
   return (
     <View style={styles.root}>
@@ -25,26 +29,36 @@ export const BalanceCard = () => {
       ) : (
         <LinearGradient style={styles.gradientRoot} colors={colors.gradientColor}>
           <BalanceCardContent
-            balance={currentBalance}
-            oldBalance={oldBalance}
-            usdExchangeRate={usdExchangeRate}
+            rate={rate}
+            amount={primaryBalance}
+            name={name}
             headerCard={
               <View style={styles.rowBetween}>
                 <Text style={[styles.textWhite, styles.normalText]}>{strings.totalWalletValue}</Text>
 
-                <Text style={[styles.boxExchange]}>
-                  <Text style={[styles.textWhite, styles.normalText]}>1 ADA = </Text>
-
-                  <Text style={[styles.textWhite, styles.normalText, styles.usdExchangeText]}>{usdExchangeRate}</Text>
-
-                  <Text style={[styles.textWhite, styles.usdExchangeFiat]}>USD</Text>
-                </Text>
+                <Rate rate={rate} name={name} />
               </View>
             }
           />
         </LinearGradient>
       )}
     </View>
+  )
+}
+
+type RateProps = {rate: number; name: string}
+const Rate = ({rate, name}: RateProps) => {
+  const {styles} = useStyles()
+  const {currency} = useCurrencyContext()
+
+  return (
+    <Text style={[styles.boxExchange]}>
+      <Text style={[styles.textWhite, styles.normalText]}>1 {name} = </Text>
+
+      <Text style={[styles.textWhite, styles.normalText, styles.usdExchangeText]}>{rate.toFixed(2)}</Text>
+
+      <Text style={[styles.textWhite, styles.usdExchangeFiat]}>{currency}</Text>
+    </Text>
   )
 }
 

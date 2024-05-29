@@ -1,38 +1,48 @@
+import {isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {FlatList, StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
 import {Icon, Spacer} from '../../../../../components'
+import {usePortfolioBalances} from '../../../../../features/Portfolio/common/hooks/usePortfolioBalances'
+import {useSelectedWallet} from '../../../../../features/WalletManager/context/SelectedWalletContext'
 import {makeList} from '../../../../../kernel/utils'
-import {IPortfolioBalance, useGetTokensWithBalance} from '../../../common/useGetTokensWithBalance'
+import {useGetTokensWithBalance} from '../../../common/useGetTokensWithBalance'
 import {useNavigateTo} from '../../../common/useNavigateTo'
 import {useStrings} from '../../../common/useStrings'
 import {useZeroBalance} from '../../../common/useZeroBalance'
 import {BuyADABanner} from './BuyADABanner/BuyADABanner'
 import {DashboardTokenItem} from './DashboardTokenItem'
+import {DashboardTokenSkeletonItem} from './DashboardTokenSkeletonItem'
 import {TradeTokensBanner} from './TradeTokensBanner'
 
 export const DashboardTokensList = () => {
   const {styles} = useStyles()
   const navigationTo = useNavigateTo()
   const isZeroADABalance = useZeroBalance()
-  const {data, isLoading} = useGetTokensWithBalance()
-  const tokensList = data ?? []
-  const isJustADA = tokensList.length === 1 && tokensList[0].symbol === 'ADA'
+  const {isLoading} = useGetTokensWithBalance()
+  const wallet = useSelectedWallet()
+  const balances = usePortfolioBalances({wallet})
+
+  const tokensList = React.useMemo(() => balances.fts ?? [], [balances.fts])
+  const isJustADA = React.useMemo(() => {
+    if (tokensList.length > 1) return false
+    const tokenInfo = tokensList[0].info
+    const isPrimary = isPrimaryToken(tokenInfo)
+    return isPrimary
+  }, [tokensList])
 
   const handleDirectTokensList = () => {
     navigationTo.tokensList()
-  }
-
-  const renderTokenItem = (item: IPortfolioBalance | undefined, index: number) => {
-    return <DashboardTokenItem key={item?.symbol ?? index} tokenInfo={item ? item : undefined} />
   }
 
   const renderFooterList = () => {
     if (isLoading)
       return (
         <View style={styles.containerLoading}>
-          {makeList(3).map((_, index) => renderTokenItem(undefined, index))}
+          {makeList(3).map((_, index) => (
+            <DashboardTokenSkeletonItem key={index} />
+          ))}
 
           <Spacer width={16} />
         </View>
@@ -70,8 +80,8 @@ export const DashboardTokensList = () => {
         ListFooterComponent={renderFooterList()}
         ItemSeparatorComponent={() => <Spacer width={8} />}
         showsHorizontalScrollIndicator={false}
-        keyExtractor={(item) => item.symbol}
-        renderItem={({item, index}) => renderTokenItem(item, index)}
+        keyExtractor={(item) => item.info.id}
+        renderItem={({item}) => <DashboardTokenItem key={item?.info?.id} tokenInfo={item} />}
       />
     </View>
   )

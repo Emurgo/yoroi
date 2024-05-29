@@ -5,7 +5,7 @@ import {type ViewProps, StyleSheet, Text, View} from 'react-native'
 import {Icon} from '../../../../../src/components'
 
 interface Props extends ViewProps {
-  variant?: 'danger' | 'success'
+  variant?: 'danger' | 'success' | 'neutral'
   withIcon?: boolean
 }
 
@@ -14,14 +14,23 @@ export const PnlTag = ({children, withIcon = false, variant, style, ...etc}: Pro
 
   const icon = variant === 'danger' ? <Icon.AngleDown size={16} /> : <Icon.AngleUp size={16} />
 
-  return (
-    <View
-      style={[styles.pnlTagContainer, variant === 'success' ? styles.pnlSuccess : styles.pnlDanger, style]}
-      {...etc}
-    >
-      {withIcon && icon}
+  const textStyles = React.useMemo(() => {
+    if (variant === 'neutral') return [styles.label, styles.labelNeutral]
+    if (variant === 'success') return [styles.label, styles.labelSuccess]
+    return [styles.label, styles.labelDanger]
+  }, [styles.label, styles.labelDanger, styles.labelNeutral, styles.labelSuccess, variant])
 
-      <Text style={[styles.label, variant === 'success' ? styles.labelSuccess : styles.labelDanger]}>{children}</Text>
+  const variantStyles = React.useMemo(() => {
+    if (variant === 'neutral') return [styles.pnlTagContainer, styles.pnlNeutral]
+    if (variant === 'success') return [styles.pnlTagContainer, styles.pnlSuccess]
+    return [styles.pnlTagContainer, styles.pnlDanger]
+  }, [styles.pnlDanger, styles.pnlNeutral, styles.pnlSuccess, styles.pnlTagContainer, variant])
+
+  return (
+    <View style={[...variantStyles, style]} {...etc}>
+      {withIcon && variant !== 'neutral' && icon}
+
+      <Text style={[styles.label, textStyles]}>{children}</Text>
     </View>
   )
 }
@@ -44,6 +53,9 @@ const useStyles = () => {
     pnlDanger: {
       backgroundColor: color.sys_magenta_c100,
     },
+    pnlNeutral: {
+      backgroundColor: color.gray_c100,
+    },
     label: {
       ...atoms.body_3_sm_medium,
     },
@@ -52,6 +64,9 @@ const useStyles = () => {
     },
     labelDanger: {
       color: color.sys_magenta_c700,
+    },
+    labelNeutral: {
+      color: color.gray_c600,
     },
   })
 
