@@ -9,13 +9,13 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import image from '../../../../assets/img/ledger_1.png'
 import {BulletPointItem, Button, ProgressStep, Spacer, Text} from '../../../../components'
 import {confirmationMessages, ledgerMessages} from '../../../../kernel/i18n/global-messages'
-import {WalletInitRouteNavigation} from '../../../../kernel/navigation'
+import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 
 export const CheckNanoXScreen = () => {
   const strings = useStrings()
   const styles = useStyles()
 
-  const navigation = useNavigation<WalletInitRouteNavigation>()
+  const navigation = useNavigation<SetupWalletRouteNavigation>()
   const onContinue = () => navigation.navigate('setup-wallet-connect-nano-x')
   const {useUSB} = useSetupWallet()
 

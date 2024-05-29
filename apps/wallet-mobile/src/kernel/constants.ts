@@ -59,6 +59,7 @@ export const configCurrencies = freeze({
 })
 
 export const time = freeze({
+  oneSecond: 1e3,
   oneMinute: 60 * 1e3,
   fiveMinutes: 5 * 60 * 1e3,
   halfHour: 30 * 60 * 1e3,

@@ -1,4 +1,4 @@
-import {useFocusEffect} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useAsyncStorage} from '@yoroi/common'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
@@ -22,8 +22,9 @@ import {Button, Icon, KeyboardAvoidingView, TextInput, useModal} from '../../../
 import {Space} from '../../../../components/Space/Space'
 import {showErrorDialog} from '../../../../kernel/dialogs'
 import {errorMessages} from '../../../../kernel/i18n/global-messages'
+import {logger} from '../../../../kernel/logger/logger'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {useWalletNavigation} from '../../../../kernel/navigation'
+import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import {isEmptyString} from '../../../../kernel/utils'
 import {useCreateWallet, usePlate, useWalletNames} from '../../../../yoroi-wallets/hooks'
 import {WalletImplementationId} from '../../../../yoroi-wallets/types'
@@ -40,7 +41,6 @@ import {useWalletManager} from '../../../WalletManager/context/WalletManagerCont
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
 import {YoroiZendeskLink} from '../../common/constants'
 import {LearnMoreButton} from '../../common/LearnMoreButton/LearnMoreButton'
-import {PreparingWallet} from '../../common/PreparingWallet/PreparingWallet'
 import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
 import {useStrings} from '../../common/useStrings'
 import {Info as InfoIcon} from '../../illustrations/Info'
@@ -62,18 +62,18 @@ const useSizeModal = () => {
 // when restoring, later will be part of the onboarding
 const addressMode: AddressMode = 'single'
 export const RestoreWalletDetailsScreen = () => {
-  const bold = useBold()
+  const navigation = useNavigation<SetupWalletRouteNavigation>()
+  const strings = useStrings()
   const {styles} = useStyles()
+  const {track} = useMetrics()
+  const bold = useBold()
   const {HEIGHT_MODAL_NAME_PASSWORD, HEIGHT_MODAL_CHECKSUM} = useSizeModal()
   const {openModal, closeModal} = useModal()
-  const strings = useStrings()
-  const {resetToTxHistory} = useWalletNavigation()
   const walletManager = useWalletManager()
-  const {track} = useMetrics()
   const {walletNames} = useWalletNames(walletManager)
   const [name, setName] = React.useState(features.prefillWalletInfo ? debugWalletInfo.WALLET_NAME : '')
   const storage = useAsyncStorage()
-  const {mnemonic, networkId, publicKeyHex, walletImplementationId} = useSetupWallet()
+  const {mnemonic, networkId, publicKeyHex, walletImplementationId, walletIdChanged} = useSetupWallet()
   const plate = usePlate({networkId, publicKeyHex})
 
   const passwordRef = React.useRef<RNTextInput>(null)
@@ -99,14 +99,19 @@ export const RestoreWalletDetailsScreen = () => {
     isSuccess: isCreateWalletSuccess,
   } = useCreateWallet({
     onSuccess: async (wallet) => {
+      walletIdChanged(wallet.id)
       const walletStorage = storage.join('wallet/')
       const walletMeta = await walletStorage.getItem(wallet.id, parseWalletMeta)
 
-      if (!walletMeta) throw new Error('invalid wallet meta')
+      if (!walletMeta) {
+        const error = new Error('RestoreWalletDetailsScreen: wallet meta is invalid, reached an invalid state.')
+        logger.error(error)
+        throw error
+      }
 
       track.restoreWalletDetailsSettled()
-      // TODO: revist should open the wallet and navigate to it
-      resetToTxHistory()
+
+      navigation.navigate('setup-wallet-preparing-wallet')
     },
     onError: (error) => {
       InteractionManager.runAfterInteractions(() => {
@@ -122,8 +127,6 @@ export const RestoreWalletDetailsScreen = () => {
       track.restoreWalletDetailsStepViewed()
     }, [track]),
   )
-
-  if (isLoading) return <PreparingWallet />
 
   const nameErrors = validateWalletName(name, null, walletNames && !isCreateWalletSuccess ? walletNames : [])
   const walletNameErrorText = getWalletNameError(

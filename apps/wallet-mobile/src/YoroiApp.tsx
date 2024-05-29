@@ -18,7 +18,7 @@ import {SelectedWalletProvider} from './features/WalletManager/context/SelectedW
 import {SelectedWalletMetaProvider} from './features/WalletManager/context/SelectedWalletMetaContext'
 import {WalletManagerProvider} from './features/WalletManager/context/WalletManagerContext'
 import {InitApp} from './InitApp'
-import {disableLogbox} from './kernel/env'
+import {disableLogbox, loggerFilter} from './kernel/env'
 import {LanguageProvider} from './kernel/i18n'
 import {useSetupLogger} from './kernel/logger/hooks/useSetupLogger'
 import {makeMetricsManager, MetricsProvider} from './kernel/metrics/metricsManager'
@@ -29,7 +29,11 @@ import {useThemeStorageMaker} from './yoroi-wallets/hooks'
 enableScreens(true)
 enableFreeze(true)
 
-if (disableLogbox) LogBox.ignoreAllLogs()
+if (disableLogbox) {
+  LogBox.ignoreAllLogs()
+} else {
+  LogBox.ignoreLogs(['Require cycle:'])
+}
 
 const queryClient = new QueryClient()
 const metricsManager = makeMetricsManager()
@@ -74,7 +78,7 @@ const Yoroi = () => {
 }
 
 export const YoroiApp = () => {
-  const isReady = useSetupLogger()
+  const isReady = useSetupLogger(loggerFilter)
 
   if (!isReady) return null
 
