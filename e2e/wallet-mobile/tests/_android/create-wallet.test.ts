@@ -62,11 +62,12 @@ describe('Create a wallet', () => {
  it('should be able to complete "step4 - set credentials"', async () => {
   await createWalletStepsScreen.step4WalletNameInput().tap()
   await createWalletStepsScreen.step4WalletNameInput().typeText(constants.wallet_Name)
+  await device.disableSynchronization()
   await createWalletStepsScreen.step4SpendingPasswordInput().tap()
   await createWalletStepsScreen.step4SpendingPasswordInput().typeText(`${constants.spending_Password}\n`)
   await createWalletStepsScreen.step4RepeatSpendingPasswordInput().tap()
   await createWalletStepsScreen.step4RepeatSpendingPasswordInput().typeText(constants.spending_Password)
-  await utils.takeScreenshot('Set the spending password')
+  await device.enableSynchronization()
   await createWalletStepsScreen.step4NextButton().tap()
   await expect(createWalletStepsScreen.praparingYourWalletMessage()).toBeVisible()
  })

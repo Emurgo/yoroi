@@ -18,7 +18,7 @@ describe('Restore a wallet', () => {
 
  it('should be able to select "restore wallet"', async () => {
   await chooseSetupTypeScreen.restoreWalletButton().tap()
-  await expect(chooseNetworkTypeScreen.pageTitleCreateFlow()).toBeVisible()
+  await expect(chooseNetworkTypeScreen.pageTitleRestoreFlow()).toBeVisible()
  })
 
  it('should be able to select "preprod" network', async () => {
@@ -32,8 +32,9 @@ describe('Restore a wallet', () => {
  })
 
  it('should be able to complete "step1: 15-word recovery phrase"', async () => {
+  await device.disableSynchronization()
   await restoreWalletFlow.enterRecoveryPhrase(constants.normal_15_Word_Wallet.phrase, platform)
-  await utils.takeScreenshot('Recovery Phrase entered')
+  await device.enableSynchronization()
   await expect(restoreWalletFlow.step1RecoveryPhraseSuccessMessage()).toBeVisible()
   await restoreWalletFlow.step1NextButton().tap()
   await expect(restoreWalletFlow.walletPlateNumber()).toBeVisible()
@@ -42,12 +43,13 @@ describe('Restore a wallet', () => {
  it('should be able to complete "step2 : set credentials"', async () => {
   await expect(restoreWalletFlow.walletPlateNumber()).toHaveText(constants.normal_15_Word_Wallet.checksum)
   await restoreWalletFlow.step2WalletNameInput().tap()
+  await device.disableSynchronization()
   await restoreWalletFlow.step2WalletNameInput().typeText(constants.wallet_Name)
   await restoreWalletFlow.step2SpendingPasswordInput().tap()
   await restoreWalletFlow.step2SpendingPasswordInput().typeText(`${constants.spending_Password}\n`)
   await restoreWalletFlow.step2RepeatSpendingPasswordInput().tap()
   await restoreWalletFlow.step2RepeatSpendingPasswordInput().typeText(constants.spending_Password)
-  await utils.takeScreenshot('Set the spending password')
+  await device.enableSynchronization()
   await restoreWalletFlow.step2NextButton().tap()
   await expect(restoreWalletFlow.praparingYourWalletMessage()).toBeVisible()
  })
