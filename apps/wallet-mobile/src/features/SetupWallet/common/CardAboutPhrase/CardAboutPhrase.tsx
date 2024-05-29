@@ -13,6 +13,7 @@ type CardAboutPhraseProps = {
   includeSpacing?: boolean
   checksumImage?: string
   checksumLine?: number
+  testId?: string
 }
 
 export const CardAboutPhrase = ({
@@ -22,6 +23,7 @@ export const CardAboutPhrase = ({
   includeSpacing,
   checksumImage,
   checksumLine,
+  testId,
 }: CardAboutPhraseProps) => {
   const {styles, colors} = useStyles(includeSpacing, showBackgroundColor)
 
@@ -38,7 +40,7 @@ export const CardAboutPhrase = ({
 
       {title !== undefined && (
         <>
-          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.title} testID={testId}>{title}</Text>
 
           <Space height="sm" />
         </>

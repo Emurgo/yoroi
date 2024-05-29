@@ -14,11 +14,12 @@ export const step2NextButton = () => element(by.id('setup-step2-next-button'))
 
 export const mnemonicByIndexText = (index: number) => element(by.id(`mnemonic-${index}`))
 
+export const mnemonicBadgeByWord = (word: string) => element(by.id(`wordBadgeNonTapped-${word}`)).atIndex(0)
+
 export const getSeedPhrase = async (): Promise<Array<string>> => {
  const allWords: Array<string | any> = []
  for (let i = 0; i < 15; i++) {
   const elementAttrs = await mnemonicByIndexText(i).getAttributes()
-  // https://github.com/wix/Detox/issues/3179#issuecomment-1016420709
   if (!('elements' in elementAttrs)) {
    allWords.push(elementAttrs.label?.split('. ')[1])
   }
@@ -27,3 +28,21 @@ export const getSeedPhrase = async (): Promise<Array<string>> => {
 }
 
 export const step3NextButton = () => element(by.id('setup-step3-next-button'))
+
+export const repeatSeedPhrase = async (phraseArray: string[]): Promise<void> => {
+ for (const phraseArrayWord of phraseArray) {
+  await mnemonicBadgeByWord(phraseArrayWord).tap()
+ }
+}
+export const step3RecoveryPhraseValidatedText = () => element(by.text('The recovery phrase is verified'))
+
+export const step4Title1OnModal = () => element(by.text('What is wallet name'))
+export const step4Title2OnModal = () => element(by.text('What is password'))
+export const step4ModalContinueButton = () => element(by.id('setup-step4-modal-continue-button'))
+
+export const step4WalletNameInput = () => element(by.id('walletNameInput'))
+export const step4SpendingPasswordInput = () => element(by.id('walletPasswordInput'))
+export const step4RepeatSpendingPasswordInput = () => element(by.id('walletRepeatPasswordInput'))
+export const step4NextButton = () => element(by.id('walletFormContinueButton'))
+
+export const praparingYourWalletMessage = () => element(by.text('Preparing your wallet...'))
