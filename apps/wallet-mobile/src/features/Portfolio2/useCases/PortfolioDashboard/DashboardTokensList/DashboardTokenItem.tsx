@@ -1,81 +1,78 @@
+import {amountFormatter, infoExtractName, isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
-import BigNumber from 'bignumber.js'
+import {Portfolio} from '@yoroi/types'
+import {PortfolioTokenAmount} from '@yoroi/types/lib/typescript/portfolio/amount'
 import * as React from 'react'
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
-import {IPortfolioBalance} from 'src/features/Portfolio2/common/useGetTokensWithBalance'
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Spacer} from '../../../../../components'
+import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
+import {TokenInfoIcon} from '../../../../../features/Portfolio/common/TokenAmountItem/TokenInfoIcon'
 import {usePrivacyMode} from '../../../../../features/Settings/PrivacyMode/PrivacyMode'
 import {PnlTag} from '../../../common/PnlTag/PnlTag'
+import {useGetQuantityChange} from '../../../common/useGetQuantityChange'
 import {useNavigateTo} from '../../../common/useNavigateTo'
-import {DashboardTokenSkeletonItem} from './DashboardTokenSkeletonItem'
+import {useQuantityChange} from '../../../common/useQuantityChange'
 
 type Props = {
-  tokenInfo?: IPortfolioBalance
+  tokenInfo: PortfolioTokenAmount
 }
-
 export const DashboardTokenItem = ({tokenInfo}: Props) => {
   const {styles} = useStyles()
   const navigationTo = useNavigateTo()
-  const {isPrivacyOff, privacyPlaceholder} = usePrivacyMode({
-    decimals: 2,
-    numbers: 3,
-  })
+  const {isPrivacyOff, privacyPlaceholder} = usePrivacyMode()
 
-  const {balance = 0, oldBalance = 0, usdExchangeRate = 1} = tokenInfo ?? {}
-  const convertBalance = React.useMemo(() => new BigNumber(balance), [balance])
-  const convertOldBalance = React.useMemo(() => new BigNumber(oldBalance), [oldBalance])
+  const {info, quantity} = tokenInfo ?? {}
+  const name = infoExtractName(info)
 
-  const currentUSDBalance = convertBalance.multipliedBy(usdExchangeRate)
-  const oldUSDBalance = convertOldBalance.multipliedBy(usdExchangeRate)
+  const quantityChangeData = useGetQuantityChange({name, quantity})
+  const {previousQuantity} = quantityChangeData ?? {}
 
-  const usdBalanceFormatted = React.useMemo(() => {
-    return isPrivacyOff ? currentUSDBalance.toFixed(2) : privacyPlaceholder
-  }, [currentUSDBalance, isPrivacyOff, privacyPlaceholder])
+  const formattedQuantity = isPrivacyOff ? amountFormatter({dropTraillingZeros: true})(tokenInfo) : privacyPlaceholder
 
-  const balanceFormatted = React.useMemo(() => {
-    return isPrivacyOff ? convertBalance.toFixed(2) : privacyPlaceholder
-  }, [convertBalance, isPrivacyOff, privacyPlaceholder])
-
-  const pnl = currentUSDBalance.minus(oldUSDBalance)
-  const variantPnl = new BigNumber(pnl).gte(0) ? 'success' : 'danger'
-  const pnlPercentFormatted = convertBalance
-    .minus(convertOldBalance)
-    .dividedBy(convertOldBalance)
-    .multipliedBy(100)
-    .toFixed(2)
-
-  if (!tokenInfo) return <DashboardTokenSkeletonItem />
+  const {quantityChangePercent, variantPnl} = useQuantityChange({previousQuantity, quantity})
 
   return (
-    <TouchableOpacity onPress={() => navigationTo.tokenDetail({id: 'some_id', name: tokenInfo.symbol})}>
+    <TouchableOpacity onPress={() => navigationTo.tokenDetail({id: 'some_id', name: name})}>
       <View style={styles.root}>
-        <View style={styles.tokenInfoContainer}>
-          <Image
-            source={typeof tokenInfo.logo === 'string' ? {uri: tokenInfo.logo} : tokenInfo.logo}
-            style={styles.tokenLogo}
-          />
-
-          <View>
-            <Text style={styles.symbol}>{tokenInfo.symbol}</Text>
-
-            <Text style={styles.name}>{tokenInfo.name}</Text>
-          </View>
-        </View>
+        <TokenInfo info={info} />
 
         <Spacer height={16} />
 
-        <View>
+        <View style={styles.quantityContainer}>
           <PnlTag variant={variantPnl} withIcon>
-            <Text>{pnlPercentFormatted}%</Text>
+            <Text>{quantityChangePercent}%</Text>
           </PnlTag>
 
-          <Text style={styles.tokenValue}>{balanceFormatted}</Text>
+          <Text style={styles.tokenValue}>{formattedQuantity}</Text>
 
-          <Text style={styles.usdValue}>{usdBalanceFormatted}</Text>
+          <PairedBalance textStyle={styles.usdValue} amount={tokenInfo} />
         </View>
       </View>
     </TouchableOpacity>
+  )
+}
+
+const TokenInfo = ({info}: {info: Portfolio.Token.Info}) => {
+  const {styles} = useStyles()
+  const name = infoExtractName(info)
+  const isPrimary = isPrimaryToken(info)
+  const detail = isPrimary ? info.description : info.fingerprint
+
+  return (
+    <View style={styles.tokenInfoContainer}>
+      <TokenInfoIcon info={info} size="md" />
+
+      <View style={styles.flexFull}>
+        <Text numberOfLines={1} ellipsizeMode="middle" style={styles.symbol}>
+          {name}
+        </Text>
+
+        <Text numberOfLines={1} ellipsizeMode="middle" style={styles.name}>
+          {detail}
+        </Text>
+      </View>
+    </View>
   )
 }
 
@@ -88,8 +85,10 @@ const useStyles = () => {
       ...atoms.flex_col,
       ...atoms.align_start,
       ...atoms.border,
+      ...atoms.flex_1,
       borderColor: color.gray_c300,
       width: 164,
+      ...atoms.h_full,
     },
     symbol: {
       ...atoms.body_2_md_medium,
@@ -111,14 +110,17 @@ const useStyles = () => {
       color: color.gray_c600,
     },
     tokenInfoContainer: {
+      ...atoms.flex_1,
       ...atoms.flex_row,
       ...atoms.align_center,
       ...atoms.gap_sm,
     },
-    tokenLogo: {
-      width: 40,
-      height: 40,
-      resizeMode: 'cover',
+    flexFull: {
+      ...atoms.flex_1,
+    },
+    quantityContainer: {
+      ...atoms.flex_col,
+      ...atoms.align_start,
     },
   })
 
