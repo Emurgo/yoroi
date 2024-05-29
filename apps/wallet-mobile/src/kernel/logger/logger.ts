@@ -16,6 +16,7 @@ class Logger implements LoggerManager {
   #enabled = false
   #trail: Array<LoggerEntry> = []
 
+  filter: RegExp | null = null
   level = LoggerLevel.Info
 
   readonly #transporters: LoggerTransporter[] = []
@@ -80,6 +81,7 @@ class Logger implements LoggerManager {
   private transport({level, message, metadata}: Pick<LoggerTransporterOptions, 'level' | 'message' | 'metadata'>) {
     if (!this.#enabled) return
     if (loggerHierarchy[level] > loggerHierarchy[this.level]) return
+    if (this.filter && !this.filter.test(JSON.stringify({message, metadata}))) return
 
     const timestamp = Date.now()
     const entry = {level, message, metadata, timestamp}

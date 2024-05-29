@@ -1,4 +1,4 @@
-import {parseSafe} from '@yoroi/common'
+import {difference, parseSafe} from '@yoroi/common'
 import {App, Chain} from '@yoroi/types'
 import {
   BehaviorSubject,
@@ -15,6 +15,7 @@ import {
 } from 'rxjs'
 import uuid from 'uuid'
 
+import {logger} from '../../../kernel/logger/logger'
 import {makeWalletEncryptedStorage} from '../../../kernel/storage/EncryptedStorage'
 import {Keychain} from '../../../kernel/storage/Keychain'
 import {rootStorage} from '../../../kernel/storage/rootStorage'
@@ -67,6 +68,25 @@ export class WalletManager {
     return this.#selectedWalletId
   }
 
+  private initWalletInfos(wallets: ReadonlyArray<YoroiWallet>) {
+    for (const wallet of wallets) {
+      this.#walletInfos.set(wallet.id, {
+        sync: {status: 'waiting', updatedAt: Date.now()},
+      })
+      this.walletInfos$.next(new Map(this.#walletInfos))
+    }
+
+    // drop wallets that are not returned by the list (deleted wallets)
+    // can't delete on removeWallet cuz a wallet can be marked to be deleted while it's syncing
+    difference(
+      wallets.map(({id}) => id),
+      Array.from(this.#walletInfos.keys()),
+    ).forEach((id) => {
+      this.#walletInfos.delete(id)
+      this.walletInfos$.next(new Map(this.#walletInfos))
+    })
+  }
+
   startSyncingAllWallets() {
     const syncWallets = () => {
       if (this.#isSyncing$.value) return
@@ -75,27 +95,26 @@ export class WalletManager {
 
       from(this.openWallets())
         .pipe(
-          concatMap((wallets) => {
-            this.#walletInfos.clear()
-            wallets.forEach((wallet) => {
-              this.#walletInfos.set(wallet.id, {sync: {status: 'waiting', updatedAt: Date.now()}})
-              this.walletInfos$.next(new Map(this.#walletInfos))
-            })
+          concatMap(({wallets}) => {
+            this.initWalletInfos(wallets)
             return from(wallets)
           }),
           concatMap((wallet) => {
             this.#walletInfos.set(wallet.id, {sync: {status: 'syncing', updatedAt: Date.now()}})
             this.walletInfos$.next(new Map(this.#walletInfos))
+            logger.debug('WalletManager: startSyncingAllWallets syncing walet', {walletId: wallet.id})
             return from(wallet.sync({isForced: false})).pipe(
               catchError((error) => {
                 this.#walletInfos.set(wallet.id, {sync: {status: 'error', error, updatedAt: Date.now()}})
                 this.walletInfos$.next(new Map(this.#walletInfos))
+                logger.error('WalletManager: startSyncingAllWallets error syncing walet', {error, walletId: wallet.id})
                 return of()
               }),
               finalize(() => {
                 if (this.#walletInfos.get(wallet.id)?.sync.status !== 'error') {
                   this.#walletInfos.set(wallet.id, {sync: {status: 'done', updatedAt: Date.now()}})
                   this.walletInfos$.next(new Map(this.#walletInfos))
+                  logger.debug('WalletManager: startSyncingAllWallets done syncing walet', {walletId: wallet.id})
                 }
               }),
             )
@@ -141,10 +160,12 @@ export class WalletManager {
   }
 
   pauseSyncing() {
+    logger.debug('WalletManager: pauseSyncing requested')
     this.#syncControl$.next(false)
   }
 
   resumeSyncing() {
+    logger.debug('WalletManager: resumeSyncing requested')
     this.#syncControl$.next(true)
   }
 
@@ -164,12 +185,19 @@ export class WalletManager {
     return this.#openedWallets.get(id)
   }
 
+  /**
+   * It populates the wallet manager with the wallets stored in the storage
+   * and ensures that after a wallet is loaded that instance is returned on subsequent calls
+   * A wallet should be instantianted only here, otherwise the stream mechanism will not work
+   *
+   * @returns {Promise<{wallets: YoroiWallet[]; metas: WalletMeta[]}>}
+   */
   async openWallets() {
     const walletMetas = await this.listWallets()
     const closedWallets = walletMetas.filter((meta) => !this.#openedWallets.has(meta.id))
     const wallets = await Promise.all(closedWallets.map((meta) => this.openWallet(meta)))
     wallets.forEach((wallet) => this.#openedWallets.set(wallet.id, wallet))
-    return [...this.#openedWallets.values()]
+    return {wallets: Array.from(this.#openedWallets.values()), metas: walletMetas}
   }
 
   async listWallets() {
@@ -293,8 +321,10 @@ export class WalletManager {
 
   async removeWallet(id: string) {
     const deletedWalletIds = await this.deletedWalletIds()
-    this.#openedWallets.delete(id)
     await this.#rootStorage.setItem('deletedWalletIds', [...deletedWalletIds, id])
+
+    // can't update the walletInfo here cuz it might be in the middle of wallet syncing
+    this.#openedWallets.delete(id)
   }
 
   // TODO(ppershing): how should we deal with race conditions?

@@ -58,6 +58,10 @@ export const setupWalletReducer = (
         draft.showRestoreWalletInfoModal = action.showRestoreWalletInfoModal
         return
 
+      case SetupWalletActionType.WalletIdChanged:
+        draft.walletId = action.walletId
+        return
+
       case SetupWalletActionType.Reset:
         return setupWalletDefaultState
 
@@ -82,6 +86,7 @@ export const setupWalletDefaultState: Readonly<SetupWalletState> = freeze(
     useUSB: false,
     showRestoreWalletInfoModal: true,
     showCreateWalletInfoModal: true,
+    walletId: null,
   },
   true,
 )
@@ -100,6 +105,7 @@ export type SetupWalletState = {
   useUSB: boolean
   showRestoreWalletInfoModal: boolean
   showCreateWalletInfoModal: boolean
+  walletId: string | null
 }
 
 export enum SetupWalletActionType {
@@ -113,6 +119,7 @@ export enum SetupWalletActionType {
   HwDeviceInfoChanged = 'hwDeviceInfoChanged',
   SetUpTypeChanged = 'setUpTypeChanged',
   MnemonicTypeChanged = 'mnemonicTypeChanged',
+  WalletIdChanged = 'walletIdChanged',
   UseUSBChanged = 'useUSBChanged',
   Reset = 'reset',
   ShowRestoreWalletInfoModalChanged = 'showRestoreWalletInfoModalChanged',
@@ -175,6 +182,10 @@ export type SetupWalletAction =
       type: SetupWalletActionType.ShowCreateWalletInfoModalChanged
       showCreateWalletInfoModal: SetupWalletState['showCreateWalletInfoModal']
     }
+  | {
+      type: SetupWalletActionType.WalletIdChanged
+      walletId: SetupWalletState['walletId']
+    }
 
 export type SetupWalletActions = {
   mnemonicChanged: (mnemonic: SetupWalletState['mnemonic']) => void
@@ -192,6 +203,7 @@ export type SetupWalletActions = {
   setUpTypeChanged: (setUpType: SetupWalletState['setUpType']) => void
   mnemonicTypeChanged: (mnemonicType: SetupWalletState['mnemonicType']) => void
   useUSBChanged: (useUSB: SetupWalletState['useUSB']) => void
+  walletIdChanged: (walletId: SetupWalletState['walletId']) => void
   reset: () => void
   showRestoreWalletInfoModalChanged: (
     showRestoreWalletInfoModal: boolean,
@@ -217,6 +229,7 @@ export const setupWalletInitialContext: SetupWalletContext = freeze(
     reset: missingInit,
     showRestoreWalletInfoModalChanged: missingInit,
     showCreateWalletInfoModalChanged: missingInit,
+    walletIdChanged: missingInit,
   },
   true,
 )

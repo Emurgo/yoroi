@@ -8,7 +8,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Space} from '../../../../components/Space/Space'
 import {isProduction} from '../../../../kernel/env'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {WalletInitRouteNavigation} from '../../../../kernel/navigation'
+import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import {LedgerTransportSwitchModal} from '../../../../legacy/HW'
 import * as HASKELL_SHELLEY from '../../../../yoroi-wallets/cardano/constants/mainnet/constants'
 import {ButtonCard} from '../../common/ButtonCard/ButtonCard'
@@ -36,7 +36,7 @@ export const ChooseSetupTypeScreen = () => {
     }, [track]),
   )
 
-  const navigation = useNavigation<WalletInitRouteNavigation>()
+  const navigation = useNavigation<SetupWalletRouteNavigation>()
 
   const handleCreate = () => {
     walletImplementationIdChanged(HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID)
