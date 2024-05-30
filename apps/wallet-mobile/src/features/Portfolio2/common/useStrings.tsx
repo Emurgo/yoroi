@@ -68,6 +68,8 @@ export const useStrings = () => {
     detailsOn: intl.formatMessage(messages.detailsOn),
     totalPortfolioValue: intl.formatMessage(messages.totalPortfolioValue),
     totalPortfolioValueTooltip: intl.formatMessage(messages.totalPortfolioValueTooltip),
+    totalWalletValueTooltip: intl.formatMessage(messages.totalWalletValueTooltip),
+    totalDAppsValueTooltip: intl.formatMessage(messages.totalDAppsValueTooltip),
   }
 }
 
@@ -176,6 +178,42 @@ export const messages = defineMessages({
   noDataFound: {
     id: 'portfolio.portfolioTokensListScreen.noDataFound',
     defaultMessage: '!!!No Data Found',
+  },
+  value: {
+    id: 'portfolio.portfolioTokensListScreen.value',
+    defaultMessage: '!!!Value',
+  },
+  dex: {
+    id: 'portfolio.portfolioTokensListScreen.dex',
+    defaultMessage: '!!!DEX',
+  },
+  lp: {
+    id: 'portfolio.portfolioTokensListScreen.lp',
+    defaultMessage: '!!!LP',
+  },
+  totalWalletValueTooltip: {
+    id: 'portfolio.portfolioTokensListScreen.totalWalletValueTooltip',
+    defaultMessage: '!!!% Balance performance \n+/- Balance change \nin 24 hours',
+  },
+  totalDAppsValueTooltip: {
+    id: 'portfolio.portfolioTokensListScreen.totalDAppsValueTooltip',
+    defaultMessage: '!!!% Performance \n+/- Balance change \nin 24 hours (DApps)',
+  },
+  total: {
+    id: 'components.governance.total',
+    defaultMessage: '!!!Total',
+  },
+  assetPrice: {
+    id: 'swap.listOrders.sheet.assetPrice',
+    defaultMessage: '!!!Asset price',
+  },
+  assetAmount: {
+    id: 'swap.listOrders.sheet.assetAmount',
+    defaultMessage: '!!!Asset amount',
+  },
+  txId: {
+    id: 'swap.listOrders.txId',
+    defaultMessage: '!!!Transaction ID',
   },
   performance: {
     id: 'portfolio.portfolioTokensDetailScreen.performance',
@@ -296,33 +334,5 @@ export const messages = defineMessages({
   detailsOn: {
     id: 'portfolio.portfolioTokensDetailScreen.detailsOn',
     defaultMessage: '!!!Details on',
-  },
-  value: {
-    id: 'portfolio.portfolioTokensListScreen.value',
-    defaultMessage: '!!!Value',
-  },
-  dex: {
-    id: 'portfolio.portfolioTokensListScreen.dex',
-    defaultMessage: '!!!DEX',
-  },
-  lp: {
-    id: 'portfolio.portfolioTokensListScreen.lp',
-    defaultMessage: '!!!LP',
-  },
-  total: {
-    id: 'components.governance.total',
-    defaultMessage: '!!!Total',
-  },
-  assetPrice: {
-    id: 'swap.listOrders.sheet.assetPrice',
-    defaultMessage: '!!!Asset price',
-  },
-  assetAmount: {
-    id: 'swap.listOrders.sheet.assetAmount',
-    defaultMessage: '!!!Asset amount',
-  },
-  txId: {
-    id: 'swap.listOrders.txId',
-    defaultMessage: '!!!Transaction ID',
   },
 })

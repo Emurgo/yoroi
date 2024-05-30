@@ -1,4 +1,3 @@
-import {splitBigInt} from '@yoroi/common'
 import {amountFormatter} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
@@ -16,18 +15,21 @@ import {useQuantityChange} from '../../../common/useQuantityChange'
 type Props = {
   amount: Portfolio.Token.Amount
   headerCard: React.ReactNode
-  rate: number
   name: string
 }
 
-export const BalanceCardContent = ({amount, headerCard, rate, name}: Props) => {
+export const BalanceCardContent = ({amount, headerCard, name}: Props) => {
   const {styles} = useStyles()
   const {isPrivacyOff, setPrivacyModeOff, setPrivacyModeOn} = usePrivacyMode()
 
   const quantityChangeData = useGetQuantityChange({name, quantity: amount.quantity})
   const {previousQuantity} = quantityChangeData ?? {}
 
-  const {quantityChange, variantPnl} = useQuantityChange({quantity: amount.quantity, previousQuantity})
+  const {quantityChange, variantPnl, quantityChangePercent, pairedBalanceChange} = useQuantityChange({
+    quantity: amount.quantity,
+    previousQuantity,
+    decimals: amount.info.decimals,
+  })
 
   const togglePrivacyMode = () => {
     if (isPrivacyOff) {
@@ -54,17 +56,12 @@ export const BalanceCardContent = ({amount, headerCard, rate, name}: Props) => {
           </TouchableOpacity>
 
           <View style={styles.varyContainer}>
-            <PnlPercentChange
-              previousQuantity={previousQuantity}
-              quantityChange={quantityChange}
-              variantPnl={variantPnl}
-            />
+            <PnlPercentChange variantPnl={variantPnl} quantityChangePercent={quantityChangePercent} />
 
             <PnlPairedChange
-              decimalPlaces={amount.info.decimals}
-              rate={rate}
               variantPnl={variantPnl}
               quantityChange={quantityChange}
+              pairedBalanceChange={pairedBalanceChange}
             />
           </View>
         </View>
@@ -92,17 +89,8 @@ const Balance = ({amount}: BalanceProps) => {
   )
 }
 
-type PnlPercentChangeProps = {
-  variantPnl: 'danger' | 'success' | 'neutral'
-  quantityChange?: bigint
-  previousQuantity?: bigint
-}
-const PnlPercentChange = ({variantPnl, previousQuantity, quantityChange}: PnlPercentChangeProps) => {
-  const quantityChangePercent = React.useMemo(() => {
-    if (quantityChange === undefined || previousQuantity === undefined || Number(previousQuantity) === 0) return '0.00'
-    return ((Number(quantityChange) / Number(previousQuantity)) * 100).toFixed(2)
-  }, [previousQuantity, quantityChange])
-
+type PnlPercentChangeProps = {variantPnl: 'danger' | 'success' | 'neutral'; quantityChangePercent: string}
+const PnlPercentChange = ({variantPnl, quantityChangePercent}: PnlPercentChangeProps) => {
   return (
     <PnlTag variant={variantPnl} withIcon>
       <Text>{quantityChangePercent}%</Text>
@@ -113,16 +101,10 @@ const PnlPercentChange = ({variantPnl, previousQuantity, quantityChange}: PnlPer
 type PnlPairedChangeProps = {
   variantPnl: 'danger' | 'success' | 'neutral'
   quantityChange?: bigint
-  decimalPlaces: number
-  rate: number
+  pairedBalanceChange: string
 }
-const PnlPairedChange = ({decimalPlaces, rate, variantPnl, quantityChange}: PnlPairedChangeProps) => {
+const PnlPairedChange = ({variantPnl, quantityChange, pairedBalanceChange}: PnlPairedChangeProps) => {
   const {currency} = useCurrencyContext()
-
-  const pairedBalanceChange = React.useMemo(() => {
-    if (quantityChange === undefined) return '0.00'
-    return splitBigInt(quantityChange, decimalPlaces).bn.times(rate).toFormat(2)
-  }, [decimalPlaces, quantityChange, rate])
 
   return (
     <PnlTag variant={variantPnl}>

@@ -1077,6 +1077,12 @@
   "portfolio.portfolioTokensListScreen.liquidityPool": "Liquidity pool",
   "portfolio.portfolioTokensListScreen.openOrders": "Open orders",
   "portfolio.portfolioTokensListScreen.lendAndBorrow": "Lend & borrow",
+  "portfolio.portfolioTokensListScreen.noDataFound": "No Data Found",
+  "portfolio.portfolioTokensListScreen.value": "Value",
+  "portfolio.portfolioTokensListScreen.dex": "DEX",
+  "portfolio.portfolioTokensListScreen.lp": "LP",
+  "portfolio.portfolioTokensListScreen.totalWalletValueTooltip": "% Balance performance \n+/- Balance change \nin 24 hours",
+  "portfolio.portfolioTokensListScreen.totalDAppsValueTooltip": "% Performance \n+/- Balance change \nin 24 hours (DApps)",
   "portfolio.portfolioTokensDetailScreen.tokenDetail": "Token details",
   "portfolio.portfolioTokensDetailScreen.availableSoon": "Available soon",
   "portfolio.portfolioTokensDetailScreen.countLiquidityPoolsAvailable": "{countLiquidityPools} liquidity pool(s) available",
@@ -1111,9 +1117,5 @@
   "portfolio.portfolioTokensDetailScreen.website": "Website",
   "portfolio.portfolioTokensDetailScreen.policyID": "Policy ID",
   "portfolio.portfolioTokensDetailScreen.fingerprint": "Fingerprint",
-  "portfolio.portfolioTokensDetailScreen.detailsOn": "Details on",
-  "portfolio.portfolioTokensListScreen.noDataFound": "No Data Found",
-  "portfolio.portfolioTokensListScreen.value": "Value",
-  "portfolio.portfolioTokensListScreen.dex": "DEX",
-  "portfolio.portfolioTokensListScreen.lp": "LP"
+  "portfolio.portfolioTokensDetailScreen.detailsOn": "Details on"
 }

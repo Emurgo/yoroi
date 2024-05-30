@@ -1,21 +1,20 @@
 import {useTheme} from '@yoroi/theme'
-import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 
 import {Spacer} from '../../../../../components'
 import {TabPanel} from '../../../../../components/Tabs'
 import {useSearch} from '../../../../../features/Search/SearchContext'
+import {usePortfolioPrimaryBalance} from '../../../../Portfolio/common/hooks/usePortfolioPrimaryBalance'
+import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
 import {Line} from '../../../common/Line'
 import {useGetLiquidityPool} from '../../../common/useGetLiquidityPool'
 import {useGetOpenOrders} from '../../../common/useGetOpenOrders'
-import {useGetPortfolioBalance} from '../../../common/useGetPortfolioBalance'
 import {TotalTokensValue} from '../TotalTokensValue/TotalTokensValue'
 import {LendAndBorrowTab} from './LendAndBorrowTab'
 import {LiquidityPoolTab} from './LiquidityPoolTab'
 import {OpenOrdersTab} from './OpenOrdersTab'
 import {PortfolioDAppTabs} from './PortfolioDAppTabs'
-
 export const portfolioDAppsTabs = {
   LIQUIDITY_POOL: 'liquidityPool',
   OPEN_ORDERS: 'openOrders',
@@ -27,14 +26,10 @@ export type TPortfolioDAppsTabs = (typeof portfolioDAppsTabs)[keyof typeof portf
 export const PortfolioDAppsTokenList = () => {
   const {styles} = useStyles()
   const {search, isSearching} = useSearch()
+  const wallet = useSelectedWallet()
+  const primaryBalance = usePortfolioPrimaryBalance({wallet})
 
   const [activeTab, setActiveTab] = React.useState<TPortfolioDAppsTabs>(portfolioDAppsTabs.LIQUIDITY_POOL)
-
-  const {data: portfolioData, isLoading: balanceLoading} = useGetPortfolioBalance()
-  const usdExchangeRate = portfolioData?.usdExchangeRate ?? 1
-
-  const currentBalance = new BigNumber(portfolioData?.currentBalance ?? 0)
-  const oldBalance = new BigNumber(portfolioData?.oldBalance ?? 0)
 
   const {data: liquidityPools, isLoading: liquidityPoolLoading} = useGetLiquidityPool()
   const {data: openOrders, isLoading: openOrdersLoading} = useGetOpenOrders()
@@ -54,13 +49,7 @@ export const PortfolioDAppsTokenList = () => {
     <ScrollView style={styles.root}>
       {!isSearching ? (
         <View>
-          <TotalTokensValue
-            balance={currentBalance}
-            oldBalance={oldBalance}
-            usdExchangeRate={usdExchangeRate}
-            isLoading={balanceLoading}
-            cardType="dapps"
-          />
+          <TotalTokensValue amount={primaryBalance} cardType="dapps" />
 
           <Line />
         </View>

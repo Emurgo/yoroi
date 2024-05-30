@@ -16,7 +16,8 @@ const mockAmount = {
   info: {
     application: 'coin',
     decimals: 6,
-    description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
+    description:
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
     fingerprint: 'asset155kudknt05ealtvcvsy7nw554g6wnc9dee3d',
     icon: '',
     id: '.',

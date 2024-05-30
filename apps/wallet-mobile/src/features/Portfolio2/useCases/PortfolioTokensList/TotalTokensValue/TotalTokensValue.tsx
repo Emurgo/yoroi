@@ -1,20 +1,18 @@
 import {useTheme} from '@yoroi/theme'
-import BigNumber from 'bignumber.js'
+import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
+import {Icon, Tooltip} from '../../../../../components'
 import {useStrings} from '../../../common/useStrings'
 import {TotalTokensValueContent} from './TotalTokensValueContent'
 
 type Props = {
-  balance: BigNumber
-  oldBalance: BigNumber
-  usdExchangeRate: number
-  isLoading: boolean
+  amount: Portfolio.Token.Amount
   cardType: 'wallet' | 'dapps'
 }
 
-export const TotalTokensValue = ({isLoading, balance, oldBalance, usdExchangeRate, cardType}: Props) => {
+export const TotalTokensValue = ({amount, cardType}: Props) => {
   const strings = useStrings()
   const {styles} = useStyles()
   const isWallet = cardType === 'wallet'
@@ -23,16 +21,14 @@ export const TotalTokensValue = ({isLoading, balance, oldBalance, usdExchangeRat
   return (
     <View style={styles.root}>
       <TotalTokensValueContent
-        balance={balance}
-        oldBalance={oldBalance}
-        usdExchangeRate={usdExchangeRate}
-        cardType={cardType}
-        isLoading={isLoading}
+        amount={amount}
         headerCard={
-          <View style={styles.rowBetween}>
-            <View>
-              <Text style={[styles.normalText]}>{title}</Text>
-            </View>
+          <View style={styles.labelContainer}>
+            <Text style={[styles.normalText]}>{title}</Text>
+
+            <Tooltip title={strings.totalWalletValueTooltip}>
+              <Icon.InfoCircle />
+            </Tooltip>
           </View>
         }
       />
@@ -48,10 +44,10 @@ const useStyles = () => {
     normalText: {
       ...atoms.body_2_md_regular,
     },
-    rowBetween: {
+    labelContainer: {
       ...atoms.flex_row,
-      ...atoms.justify_between,
       ...atoms.align_center,
+      ...atoms.gap_xs,
     },
   })
 
