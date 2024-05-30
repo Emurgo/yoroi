@@ -5,6 +5,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Tab, TabPanel, Tabs} from '../../../../components/Tabs'
 import {useSearchOnNavBar} from '../../../../features/Search/SearchContext'
+import {useGetDAppsPortfolioBalance} from '../../common/useGetDAppsPortfolioBalance'
 import {useStrings} from '../../common/useStrings'
 import {PortfolioDAppsTokenList} from './PortfolioDAppsTokenList/PortfolioDAppsTokenList'
 import {PortfolioWalletTokenList} from './PortfolioWalletTokenList/PortfolioWalletTokenList'
@@ -12,6 +13,9 @@ import {PortfolioWalletTokenList} from './PortfolioWalletTokenList/PortfolioWall
 export const PortfolioTokenListScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
+  const dAppsBalance = useGetDAppsPortfolioBalance()
+  const hasDApps = dAppsBalance !== undefined && Number(dAppsBalance.quantity) > 0
+
   const [activeTab, setActiveTab] = React.useState<'wallet' | 'dapps'>('wallet')
 
   useSearchOnNavBar({
@@ -19,11 +23,9 @@ export const PortfolioTokenListScreen = () => {
     placeholder: strings.searchTokens,
   })
 
-  const hasWithDAps = true
-
   return (
     <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
-      {hasWithDAps ? (
+      {hasDApps ? (
         <Tabs>
           <Tab
             onPress={() => {

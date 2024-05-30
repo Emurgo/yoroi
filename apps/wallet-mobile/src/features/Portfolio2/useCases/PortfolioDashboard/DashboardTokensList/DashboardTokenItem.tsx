@@ -30,7 +30,7 @@ export const DashboardTokenItem = ({tokenInfo}: Props) => {
 
   const formattedQuantity = isPrivacyOff ? amountFormatter({dropTraillingZeros: true})(tokenInfo) : privacyPlaceholder
 
-  const {quantityChangePercent, variantPnl} = useQuantityChange({previousQuantity, quantity})
+  const {quantityChangePercent, variantPnl} = useQuantityChange({previousQuantity, quantity, decimals: info.decimals})
 
   return (
     <TouchableOpacity onPress={() => navigationTo.tokenDetail({id: 'some_id', name: name})}>

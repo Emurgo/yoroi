@@ -1,14 +1,15 @@
 import {useTheme} from '@yoroi/theme'
-import BigNumber from 'bignumber.js'
+import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {FlatList, StyleSheet, Text, View} from 'react-native'
 
 import {Spacer} from '../../../../../components'
 import {useSearch} from '../../../../../features/Search/SearchContext'
 import {makeList} from '../../../../../kernel/utils'
+import {usePortfolioPrimaryBalance} from '../../../../Portfolio/common/hooks/usePortfolioPrimaryBalance'
+import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
 import {Line} from '../../../common/Line'
 import {TokenEmptyList} from '../../../common/TokenEmptyList'
-import {useGetPortfolioBalance} from '../../../common/useGetPortfolioBalance'
 import {useGetTokensWithBalance} from '../../../common/useGetTokensWithBalance'
 import {useStrings} from '../../../common/useStrings'
 import {TotalTokensValue} from '../TotalTokensValue/TotalTokensValue'
@@ -18,12 +19,8 @@ export const PortfolioWalletTokenList = () => {
   const {styles} = useStyles()
   const {search, isSearching} = useSearch()
 
-  const {data: portfolioData, isLoading: balanceLoading} = useGetPortfolioBalance()
-  const usdExchangeRate = portfolioData?.usdExchangeRate ?? 1
-
-  const currentBalance = new BigNumber(portfolioData?.currentBalance ?? 0)
-  const oldBalance = new BigNumber(portfolioData?.oldBalance ?? 0)
-
+  const wallet = useSelectedWallet()
+  const primaryBalance = usePortfolioPrimaryBalance({wallet})
   const {data: tokensData, isLoading: tokensLoading} = useGetTokensWithBalance()
 
   const getListTokens = React.useMemo(() => {
@@ -51,7 +48,7 @@ export const PortfolioWalletTokenList = () => {
           <HeadingList
             isShowBalanceCard={!isSearching}
             countTokensList={getListTokens.length}
-            balanceInfo={{currentBalance, oldBalance, usdExchangeRate, isLoadingBalance: balanceLoading}}
+            amount={primaryBalance}
           />
         }
         ListFooterComponent={renderFooterList}
@@ -65,14 +62,9 @@ export const PortfolioWalletTokenList = () => {
 type HeadingListProps = {
   isShowBalanceCard: boolean
   countTokensList: number
-  balanceInfo: {
-    currentBalance: BigNumber
-    oldBalance: BigNumber
-    usdExchangeRate: number
-    isLoadingBalance: boolean
-  }
+  amount: Portfolio.Token.Amount
 }
-const HeadingList = ({isShowBalanceCard, countTokensList, balanceInfo}: HeadingListProps) => {
+const HeadingList = ({isShowBalanceCard, countTokensList, amount}: HeadingListProps) => {
   const strings = useStrings()
   const {styles} = useStyles()
 
@@ -80,13 +72,7 @@ const HeadingList = ({isShowBalanceCard, countTokensList, balanceInfo}: HeadingL
     <View>
       {isShowBalanceCard ? (
         <View>
-          <TotalTokensValue
-            balance={balanceInfo.currentBalance}
-            oldBalance={balanceInfo.oldBalance}
-            usdExchangeRate={balanceInfo.usdExchangeRate}
-            isLoading={balanceInfo.isLoadingBalance}
-            cardType="wallet"
-          />
+          <TotalTokensValue amount={amount} cardType="wallet" />
 
           <Line />
         </View>

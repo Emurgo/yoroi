@@ -1,43 +1,40 @@
+import {infoExtractName} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
-import BigNumber from 'bignumber.js'
+import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Spacer} from '../../../../../components'
+import {useCurrencyContext} from '../../../../../features/Settings/Currency'
 import {PnlTag} from '../../../common/PnlTag/PnlTag'
+import {useGetQuantityChange} from '../../../common/useGetQuantityChange'
+import {useQuantityChange} from '../../../common/useQuantityChange'
+import {useTokenExchangeRate} from '../../../common/useTokenExchangeRate'
+import {SkeletonQuantityChange} from './SkeletonQuantityChange'
+import {TokenValueBalance} from './TokenValueBalance'
+import {TokenValuePairedBalance} from './TokenValuePairedBalance'
 
 type Props = {
-  balance: BigNumber
-  oldBalance: BigNumber
-  usdExchangeRate: number
+  amount: Portfolio.Token.Amount
   headerCard: React.ReactNode
-  cardType: 'wallet' | 'dapps'
-  isLoading: boolean
 }
 
-export const TotalTokensValueContent = ({
-  balance,
-  oldBalance,
-  usdExchangeRate,
-  headerCard,
-  cardType,
-  isLoading,
-}: Props) => {
+export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
   const {styles} = useStyles()
+  const [isPrimaryPair, setIsPrimaryPair] = React.useState(false)
+  const name = infoExtractName(amount.info)
+  const quantityChangeData = useGetQuantityChange({name, quantity: amount.quantity})
+  const {previousQuantity} = quantityChangeData ?? {}
+  const {currency} = useCurrencyContext()
+  const rate = useTokenExchangeRate()
 
-  const isWallet = cardType === 'wallet'
-  const formatBalance = balance.toFixed(2)
-  const currentUSDBalance = balance.multipliedBy(usdExchangeRate)
-  const oldUSDBalance = oldBalance.multipliedBy(usdExchangeRate)
+  const {variantPnl, quantityChange, quantityChangePercent, pairedBalanceChange} = useQuantityChange({
+    quantity: amount.quantity,
+    previousQuantity,
+    decimals: amount.info.decimals,
+  })
 
-  const formatUSDBalance = currentUSDBalance.toFixed(2)
-
-  const pnl = currentUSDBalance.minus(oldUSDBalance)
-  const variantPnl = new BigNumber(pnl).gte(0) ? 'success' : 'danger'
-  const pnlPercentFormat = balance.minus(oldBalance).dividedBy(oldBalance).multipliedBy(100).toFixed(2)
-  const pnlNumber = currentUSDBalance.minus(oldUSDBalance)
-  const pnlNumberFormat = pnlNumber.gte(0) ? `+${pnlNumber.toFixed(2)}` : `${pnlNumber.toFixed(2)}`
+  const isFetching = quantityChangeData?.previousQuantity === undefined || rate === undefined
 
   return (
     <View>
@@ -46,31 +43,27 @@ export const TotalTokensValueContent = ({
       <Spacer height={6} />
 
       <View style={styles.balanceContainer}>
-        <View style={styles.balanceBox}>
-          {isLoading ? <SkeletonADABalance /> : <Text style={[styles.balanceText]}>{formatBalance}</Text>}
-
-          <Text style={styles.adaSymbol}>ADA</Text>
-
-          {isWallet ? <Text style={[styles.usdSymbol]}>/USD</Text> : null}
-        </View>
+        <TouchableOpacity style={styles.balanceBox} onPress={() => setIsPrimaryPair(!isPrimaryPair)}>
+          <TokenValueBalance amount={amount} isFetching={isFetching} isPrimaryPair={isPrimaryPair} />
+        </TouchableOpacity>
 
         <View style={styles.rowBetween}>
-          {isLoading ? <SkeletonUSDBalance /> : <Text style={[styles.usdBalance]}>{formatUSDBalance} USD</Text>}
+          <TokenValuePairedBalance amount={amount} isFetching={isFetching} isPrimaryPair={isPrimaryPair} />
 
           <View style={styles.varyContainer}>
-            {isLoading ? (
-              <SkeletonPnlTag />
+            {isFetching ? (
+              <SkeletonQuantityChange />
             ) : (
               <PnlTag variant={variantPnl} withIcon>
-                <Text>{pnlPercentFormat}%</Text>
+                <Text>{quantityChangePercent}%</Text>
               </PnlTag>
             )}
 
-            {isLoading ? (
-              <SkeletonPnlTag />
+            {isFetching ? (
+              <SkeletonQuantityChange />
             ) : (
               <PnlTag variant={variantPnl}>
-                <Text>{pnlNumberFormat} USD</Text>
+                <Text>{`${Number(quantityChange) > 0 ? '+' : ''}${pairedBalanceChange} ${currency}`}</Text>
               </PnlTag>
             )}
           </View>
@@ -80,35 +73,8 @@ export const TotalTokensValueContent = ({
   )
 }
 
-const SkeletonADABalance = () => {
-  const {color} = useTheme()
-  return (
-    <SkeletonPlaceholder backgroundColor={color.gray_c100}>
-      <SkeletonPlaceholder.Item width={108} height={28} marginVertical={4} borderRadius={20} />
-    </SkeletonPlaceholder>
-  )
-}
-
-const SkeletonUSDBalance = () => {
-  const {color} = useTheme()
-  return (
-    <SkeletonPlaceholder backgroundColor={color.gray_c100}>
-      <SkeletonPlaceholder.Item width={85} height={20} marginVertical={2} borderRadius={20} />
-    </SkeletonPlaceholder>
-  )
-}
-
-const SkeletonPnlTag = () => {
-  const {color} = useTheme()
-  return (
-    <SkeletonPlaceholder backgroundColor={color.gray_c100}>
-      <SkeletonPlaceholder.Item width={66} height={24} borderRadius={20} />
-    </SkeletonPlaceholder>
-  )
-}
-
 const useStyles = () => {
-  const {atoms, color} = useTheme()
+  const {atoms} = useTheme()
   const styles = StyleSheet.create({
     rowBetween: {
       ...atoms.flex_row,
@@ -120,25 +86,8 @@ const useStyles = () => {
       ...atoms.gap_2xs,
       ...atoms.align_center,
     },
-    balanceText: {
-      ...atoms.heading_1_regular,
-      ...atoms.font_semibold,
-    },
-    adaSymbol: {
-      ...atoms.body_1_lg_regular,
-      ...atoms.font_semibold,
-    },
-    usdSymbol: {
-      ...atoms.body_1_lg_regular,
-      ...atoms.font_semibold,
-      color: color.gray_c200,
-    },
     balanceContainer: {
       ...atoms.gap_2xs,
-    },
-    usdBalance: {
-      ...atoms.body_2_md_regular,
-      color: color.gray_c600,
     },
     varyContainer: {
       ...atoms.flex_row,
@@ -147,9 +96,5 @@ const useStyles = () => {
     },
   })
 
-  const colors = {
-    gradientColor: color.bg_gradient_3,
-  }
-
-  return {styles, colors} as const
+  return {styles} as const
 }
