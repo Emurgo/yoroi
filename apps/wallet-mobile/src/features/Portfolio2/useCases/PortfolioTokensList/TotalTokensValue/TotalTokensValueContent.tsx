@@ -44,7 +44,7 @@ export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
 
       <View style={styles.balanceContainer}>
         <TouchableOpacity style={styles.balanceBox} onPress={() => setIsPrimaryPair(!isPrimaryPair)}>
-          <TokenValueBalance amount={amount} isFetching={isFetching} isPrimaryPair={isPrimaryPair} />
+          <TokenValueBalance rate={rate} amount={amount} isFetching={isFetching} isPrimaryPair={isPrimaryPair} />
         </TouchableOpacity>
 
         <View style={styles.rowBetween}>

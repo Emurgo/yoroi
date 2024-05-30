@@ -27,21 +27,9 @@ export const PortfolioTokenListScreen = () => {
     <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
       {hasDApps ? (
         <Tabs>
-          <Tab
-            onPress={() => {
-              setActiveTab('wallet')
-            }}
-            label={strings.walletToken}
-            active={activeTab === 'wallet'}
-          />
+          <Tab onPress={() => setActiveTab('wallet')} label={strings.walletToken} active={activeTab === 'wallet'} />
 
-          <Tab
-            onPress={() => {
-              setActiveTab('dapps')
-            }}
-            label={strings.dappsToken}
-            active={activeTab === 'dapps'}
-          />
+          <Tab onPress={() => setActiveTab('dapps')} label={strings.dappsToken} active={activeTab === 'dapps'} />
         </Tabs>
       ) : null}
 

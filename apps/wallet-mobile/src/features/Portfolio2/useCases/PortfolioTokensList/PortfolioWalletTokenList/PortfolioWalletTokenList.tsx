@@ -1,3 +1,4 @@
+import {infoExtractName} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
@@ -6,6 +7,7 @@ import {FlatList, StyleSheet, Text, View} from 'react-native'
 import {Spacer} from '../../../../../components'
 import {useSearch} from '../../../../../features/Search/SearchContext'
 import {makeList} from '../../../../../kernel/utils'
+import {usePortfolioBalances} from '../../../../Portfolio/common/hooks/usePortfolioBalances'
 import {usePortfolioPrimaryBalance} from '../../../../Portfolio/common/hooks/usePortfolioPrimaryBalance'
 import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
 import {Line} from '../../../common/Line'
@@ -14,24 +16,29 @@ import {useGetTokensWithBalance} from '../../../common/useGetTokensWithBalance'
 import {useStrings} from '../../../common/useStrings'
 import {TotalTokensValue} from '../TotalTokensValue/TotalTokensValue'
 import {TokenBalanceItem} from './TokenBalanceItem'
+import {TokenBalanceSkeletonItem} from './TokenBalanceSkeletonItem'
 
 export const PortfolioWalletTokenList = () => {
   const {styles} = useStyles()
   const {search, isSearching} = useSearch()
 
   const wallet = useSelectedWallet()
+  const balances = usePortfolioBalances({wallet})
+  const tokensList = React.useMemo(() => balances.fts ?? [], [balances.fts])
+
   const primaryBalance = usePortfolioPrimaryBalance({wallet})
-  const {data: tokensData, isLoading: tokensLoading} = useGetTokensWithBalance()
+  const {isLoading: tokensLoading} = useGetTokensWithBalance()
 
   const getListTokens = React.useMemo(() => {
-    const tokensList = tokensData ?? []
-
     if (isSearching) {
-      return tokensList.filter((token) => token.symbol.toLowerCase().includes(search.toLowerCase()))
+      return tokensList.filter((token) => {
+        const name = infoExtractName(token.info)
+        return name.toLowerCase().includes(search.toLowerCase())
+      })
     }
 
     return tokensList
-  }, [isSearching, search, tokensData])
+  }, [isSearching, search, tokensList])
 
   const renderFooterList = () => {
     if (tokensLoading) return makeList(6).map((_, index) => <SkeletonItem key={index} />)
@@ -53,7 +60,8 @@ export const PortfolioWalletTokenList = () => {
         }
         ListFooterComponent={renderFooterList}
         ItemSeparatorComponent={() => <Spacer height={16} />}
-        renderItem={({item}) => <TokenBalanceItem info={item} />}
+        renderItem={({item}) => <TokenBalanceItem amount={item} />}
+        contentContainerStyle={styles.container}
       />
     </View>
   )
@@ -90,7 +98,7 @@ const HeadingList = ({isShowBalanceCard, countTokensList, amount}: HeadingListPr
 const SkeletonItem = () => {
   return (
     <View>
-      <TokenBalanceItem />
+      <TokenBalanceSkeletonItem />
 
       <Spacer height={16} />
     </View>
@@ -102,12 +110,14 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       ...atoms.flex_1,
-      ...atoms.px_lg,
       backgroundColor: color.gray_cmin,
     },
     textAvailable: {
       color: color.gray_c700,
       ...atoms.body_2_md_regular,
+    },
+    container: {
+      ...atoms.px_lg,
     },
   })
 
