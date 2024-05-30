@@ -10,9 +10,10 @@ type ButtonCardProps = {
   subTitle?: string
   icon?: React.ReactNode
   onPress: () => void
+  testId?: string
 }
 
-export const ButtonCard = ({title, subTitle, icon = null, onPress}: ButtonCardProps) => {
+export const ButtonCard = ({title, subTitle, icon = null, onPress, testId}: ButtonCardProps) => {
   const {styles, colors} = useStyles()
 
   return (
@@ -20,6 +21,7 @@ export const ButtonCard = ({title, subTitle, icon = null, onPress}: ButtonCardPr
       activeOpacity={0.5}
       style={[styles.container, icon !== null && styles.justifySpaceBetween]}
       onPress={onPress}
+      testID={testId}
     >
       <LinearGradient
         style={[StyleSheet.absoluteFill, {opacity: 1}]}

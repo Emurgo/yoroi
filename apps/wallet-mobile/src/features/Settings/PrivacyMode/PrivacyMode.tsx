@@ -62,8 +62,7 @@ export const usePrivacyMode = () => {
   const writePrivacyMode = useWritePrivacyMode()
 
   return {
-    isPrivacyOff: privacyMode === 'HIDDEN',
-    isPrivacyOn: privacyMode === 'SHOWN',
+    isPrivacyActive: privacyMode === 'HIDDEN',
     privacyMode,
     togglePrivacyMode,
     isTogglePrivacyModeLoading,

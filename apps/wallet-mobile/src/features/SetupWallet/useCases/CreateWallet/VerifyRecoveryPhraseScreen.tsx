@@ -11,7 +11,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {WalletInitRouteNavigation} from '../../../../kernel/navigation'
+import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import {makeKeys} from '../../../../yoroi-wallets/cardano/shelley/makeKeys'
 import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
 import {useStrings} from '../../common/useStrings'
@@ -21,7 +21,7 @@ import {Check2 as Check2Illustration} from '../../illustrations/Check2'
 export const VerifyRecoveryPhraseScreen = () => {
   const {styles} = useStyles()
   const bold = useBold()
-  const navigation = useNavigation<WalletInitRouteNavigation>()
+  const navigation = useNavigation<SetupWalletRouteNavigation>()
   const strings = useStrings()
   const {mnemonic, publicKeyHexChanged} = useSetupWallet()
   const {track} = useMetrics()
@@ -122,6 +122,7 @@ export const VerifyRecoveryPhraseScreen = () => {
             publicKeyHexChanged(accountPubKeyHex)
             navigation.navigate('setup-wallet-details-form')
           }}
+          testId="setup-next-button"
         />
 
         <Space height="sm" />

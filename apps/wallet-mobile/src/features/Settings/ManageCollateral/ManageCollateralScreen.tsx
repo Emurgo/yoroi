@@ -187,14 +187,14 @@ type ActionableAmountProps = {
 }
 const ActionableAmount = ({amount, onRemove, wallet, collateralId, disabled}: ActionableAmountProps) => {
   const {styles} = useStyles()
-  const {isPrivacyOff} = usePrivacyMode()
+  const {isPrivacyActive} = usePrivacyMode()
 
   const handleRemove = () => onRemove()
 
   return (
     <View style={styles.amountItem} testID="amountItem">
       <Left>
-        <AmountItem amount={amount} wallet={wallet} isPrivacyOff={isPrivacyOff} />
+        <AmountItem amount={amount} wallet={wallet} isPrivacyActive={isPrivacyActive} />
       </Left>
 
       {collateralId !== '' && (

@@ -12,6 +12,7 @@ import {Space} from '../../../../components/Space/Space'
 import {Warning} from '../../../../components/Warning'
 import {banxaTestWallet} from '../../../../kernel/env'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
+import {useWalletNavigation} from '../../../../kernel/navigation'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../yoroi-wallets/utils'
 import {useSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'
@@ -31,6 +32,7 @@ export const CreateExchangeOrderScreen = () => {
   const styles = useStyles()
   const {track} = useMetrics()
   const wallet = useSelectedWallet()
+  const walletNavigation = useWalletNavigation()
   const [contentHeight, setContentHeight] = React.useState(0)
 
   const navigateTo = useNavigateTo()
@@ -88,7 +90,7 @@ export const CreateExchangeOrderScreen = () => {
         if (referralLink.toString() !== '') {
           Linking.openURL(referralLink.toString())
           track.exchangeSubmitted({ramp_type: orderType === 'sell' ? 'Sell' : 'Buy', ada_amount: orderAmount})
-          navigateTo.exchangeOpenOrder()
+          walletNavigation.navigateToTxHistory()
         }
       },
     },

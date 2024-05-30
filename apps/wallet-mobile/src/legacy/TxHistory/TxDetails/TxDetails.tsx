@@ -197,10 +197,10 @@ const Label = ({children}: {children: string}) => {
 const AdaAmount = ({amount}: {amount: BigNumber}) => {
   const wallet = useSelectedWallet()
   const {styles} = useStyles()
-  const {isPrivacyOn, privacyPlaceholder} = usePrivacyMode()
+  const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
   const amountStyle = amount.gte(0) ? styles.positiveAmount : styles.negativeAmount
 
-  if (isPrivacyOn) {
+  if (isPrivacyActive) {
     return <Text style={amountStyle}>{privacyPlaceholder}</Text>
   }
 

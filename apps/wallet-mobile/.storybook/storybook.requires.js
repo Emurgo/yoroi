@@ -197,7 +197,7 @@ const getStories = () => {
     "./src/features/SetupWallet/common/CardAboutPhrase/CardAboutPhrase.stories.tsx": require("../src/features/SetupWallet/common/CardAboutPhrase/CardAboutPhrase.stories.tsx"),
     "./src/features/SetupWallet/common/LearnMoreButton/LearnMoreButton.stories.tsx": require("../src/features/SetupWallet/common/LearnMoreButton/LearnMoreButton.stories.tsx"),
     "./src/features/SetupWallet/common/LogoBanner/LogoBanner.stories.tsx": require("../src/features/SetupWallet/common/LogoBanner/LogoBanner.stories.tsx"),
-    "./src/features/SetupWallet/common/PreparingWallet/PreparingWallet.stories.tsx": require("../src/features/SetupWallet/common/PreparingWallet/PreparingWallet.stories.tsx"),
+    "./src/features/SetupWallet/common/PreparingWalletScreen/PreparingWalletScreen.stories.tsx": require("../src/features/SetupWallet/common/PreparingWalletScreen/PreparingWalletScreen.stories.tsx"),
     "./src/features/SetupWallet/common/StepperProgress/StepperProgress.stories.tsx": require("../src/features/SetupWallet/common/StepperProgress/StepperProgress.stories.tsx"),
     "./src/features/SetupWallet/common/TextInput/TextInput.stories.tsx": require("../src/features/SetupWallet/common/TextInput/TextInput.stories.tsx"),
     "./src/features/SetupWallet/legacy/CheckNanoX/CheckNanoXScreen.stories.tsx": require("../src/features/SetupWallet/legacy/CheckNanoX/CheckNanoXScreen.stories.tsx"),

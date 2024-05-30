@@ -4,7 +4,7 @@ describe('Array Utils', () => {
   describe('difference', () => {
     it('should return the difference of two arrays', () => {
       const a = [1, 2, 3, 4, 5]
-      const b = [2, 4, 6]
+      const b = [2, 4, 6, 7]
       const result = difference(a, b)
       expect(result).toEqual([1, 3, 5])
     })

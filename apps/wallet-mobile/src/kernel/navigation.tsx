@@ -143,8 +143,9 @@ export type WalletInitRoutes = {
   'setup-wallet-about-recovery-phase': undefined
   'setup-wallet-recovery-phrase-mnemonic': undefined
   'setup-wallet-verify-recovery-phrase-mnemonic': undefined
+  'setup-wallet-preparing-wallet': undefined
 }
-export type WalletInitRouteNavigation = StackNavigationProp<WalletInitRoutes>
+export type SetupWalletRouteNavigation = StackNavigationProp<WalletInitRoutes>
 
 export type ReceiveRoutes = {
   'receive-ada-main': undefined
@@ -184,7 +185,7 @@ export type ClaimRoutes = {
 }
 
 export type SwapTokenRoutes = {
-  'swap-start-swap': undefined
+  'swap-start-swap': NavigatorScreenParams<SwapTabRoutes>
   'swap-confirm-tx': undefined
   'swap-select-sell-token': undefined
   'swap-select-buy-token': undefined
@@ -192,7 +193,6 @@ export type SwapTokenRoutes = {
   'swap-select-pool': undefined
   'swap-submitted-tx': {txId: string}
   'swap-failed-tx': undefined
-  'manage-wallets': undefined
 }
 export type SwapTokenRouteseNavigation = StackNavigationProp<SwapTokenRoutes>
 
@@ -215,7 +215,6 @@ export type ExchangeRoutes = {
   'exchange-result': undefined
   'exchange-select-buy-provider': undefined
   'exchange-select-sell-provider': undefined
-  'manage-wallets': undefined
 }
 
 export type ExchangeRoutesNavigation = StackNavigationProp<ExchangeRoutes>

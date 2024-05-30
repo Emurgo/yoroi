@@ -59,6 +59,17 @@ describe('State Actions', () => {
     expect(state.networkId).toBe(action.networkId)
   })
 
+  it('WalletIdChanged', () => {
+    const action: SetupWalletAction = {
+      type: SetupWalletActionType.WalletIdChanged,
+      walletId: '1',
+    }
+
+    const state = setupWalletReducer(setupWalletDefaultState, action)
+
+    expect(state.walletId).toBe(action.walletId)
+  })
+
   it('WalletImplementationIdChanged', () => {
     const action: SetupWalletAction = {
       type: SetupWalletActionType.WalletImplementationIdChanged,
@@ -178,6 +189,7 @@ describe('State Actions', () => {
         useUSB: true,
         showCreateWalletInfoModal: true,
         showRestoreWalletInfoModal: true,
+        walletId: null,
       },
       action,
     )

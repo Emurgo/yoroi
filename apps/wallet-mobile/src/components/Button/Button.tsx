@@ -19,6 +19,7 @@ export type ButtonProps = TouchableOpacityProps & {
   textStyles?: TextStyle
   isCopying?: boolean
   copiedText?: string
+  testId?: string
 }
 
 export const Button = (props: ButtonProps) => {
@@ -38,13 +39,20 @@ export const Button = (props: ButtonProps) => {
     textStyles,
     isCopying,
     copiedText,
+    testId,
     ...rest
   } = props
 
   const {styles} = useStyles()
 
   return (
-    <TouchableOpacity onPress={onPress} style={[block && styles.block, containerStyle]} activeOpacity={0.5} {...rest}>
+    <TouchableOpacity
+      onPress={onPress}
+      style={[block && styles.block, containerStyle]}
+      activeOpacity={0.5}
+      testID={testId}
+      {...rest}
+    >
       {isCopying && (
         <Animated.View layout={LinearTransition} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
           <Text style={styles.copiedText}>{copiedText}</Text>

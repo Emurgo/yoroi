@@ -25,7 +25,7 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
   const styles = useStyles()
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const {isPrivacyOn} = usePrivacyMode()
+  const {isPrivacyActive} = usePrivacyMode()
 
   return (
     <View style={styles.wrapper}>
@@ -40,7 +40,7 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
               <Text style={styles.label}>{strings.availableFunds}:</Text>
 
               <Text bold style={styles.value} testID="userSummaryAvailableFundsText">
-                {isPrivacyOn
+                {!isPrivacyActive
                   ? totalAdaSum != null
                     ? formatAdaWithText(asQuantity(totalAdaSum), wallet.primaryToken)
                     : '-'
@@ -58,7 +58,7 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
               <Text style={styles.label}>{strings.rewardsLabel}:</Text>
 
               <Text bold style={styles.value} testID="userSummaryRewardsText">
-                {isPrivacyOn
+                {!isPrivacyActive
                   ? totalRewards != null
                     ? formatAdaWithText(asQuantity(totalRewards), wallet.primaryToken)
                     : '-'
@@ -88,7 +88,7 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
               <Text style={styles.label}>{strings.delegatedLabel}:</Text>
 
               <Text bold style={styles.value} testID="userSummaryDelegatedText">
-                {isPrivacyOn
+                {!isPrivacyActive
                   ? totalDelegated != null
                     ? formatAdaWithText(asQuantity(totalDelegated), wallet.primaryToken)
                     : '-'

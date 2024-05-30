@@ -7,7 +7,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Space} from '../../../../components/Space/Space'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {WalletInitRouteNavigation} from '../../../../kernel/navigation'
+import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import {ButtonCard} from '../../common/ButtonCard/ButtonCard'
 import {LogoBanner} from '../../common/LogoBanner/LogoBanner'
 import {useStrings} from '../../common/useStrings'
@@ -20,7 +20,7 @@ export const ChooseMnemonicTypeScreen = () => {
   const {mnemonicTypeChanged} = useSetupWallet()
   const {track} = useMetrics()
 
-  const navigation = useNavigation<WalletInitRouteNavigation>()
+  const navigation = useNavigation<SetupWalletRouteNavigation>()
 
   const handle15Words = () => {
     mnemonicTypeChanged(15)
@@ -51,6 +51,7 @@ export const ChooseMnemonicTypeScreen = () => {
           title={strings.choose15WordsMnemonicTitle}
           icon={<Mnemonic15Words style={styles.icon} />}
           onPress={handle15Words}
+          testId="mnemonic-15-word"
         />
 
         <Space height="lg" />
@@ -59,6 +60,7 @@ export const ChooseMnemonicTypeScreen = () => {
           title={strings.choose24WordsMnemonicTitle}
           icon={<Mnemonic24Words style={styles.icon} />}
           onPress={handle24Words}
+          testId="mnemonic-24-word"
         />
 
         <Space height="lg" />

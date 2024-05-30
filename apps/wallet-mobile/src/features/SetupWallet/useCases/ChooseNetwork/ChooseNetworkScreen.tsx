@@ -6,7 +6,7 @@ import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Space} from '../../../../components/Space/Space'
-import {WalletInitRouteNavigation} from '../../../../kernel/navigation'
+import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import * as HASKELL_SHELLEY from '../../../../yoroi-wallets/cardano/constants/mainnet/constants'
 import * as SANCHONET from '../../../../yoroi-wallets/cardano/constants/sanchonet/constants'
 import * as HASKELL_SHELLEY_TESTNET from '../../../../yoroi-wallets/cardano/constants/testnet/constants'
@@ -49,6 +49,7 @@ export const ChooseNetworkScreen = () => {
             title={strings.cardanoMainnet}
             subTitle={strings.cardanoMainnetDescription}
             onPress={handleMainnet}
+            testId="setup-network-select-mainnet-button"
           />
 
           <Space height="lg" />
@@ -57,6 +58,7 @@ export const ChooseNetworkScreen = () => {
             title={strings.cardanoTestnet}
             subTitle={strings.cardanoTestnetDescription}
             onPress={handleTestnet}
+            testId="setup-network-select-testnet-button"
           />
 
           <Space height="lg" />
@@ -65,6 +67,7 @@ export const ChooseNetworkScreen = () => {
             title={strings.cardanoSanchonet}
             subTitle={strings.cardanoSanchonetDescription}
             onPress={handleSanchonet}
+            testId="setup-network-select-sanchonet-button"
           />
 
           <Space height="lg" />
@@ -91,7 +94,7 @@ const useNavigate = () => {
 }
 
 export const useNavigateTo = () => {
-  const navigation = useNavigation<WalletInitRouteNavigation>()
+  const navigation = useNavigation<SetupWalletRouteNavigation>()
 
   return React.useRef({
     create: () => navigation.navigate('setup-wallet-about-recovery-phase'),
