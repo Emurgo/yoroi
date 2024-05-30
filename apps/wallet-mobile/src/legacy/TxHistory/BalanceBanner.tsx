@@ -45,8 +45,6 @@ const Balance = ({amount, ignorePrivacy}: BalanceProps) => {
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
   const styles = useStyles()
 
-  console.log('ignorePrivacy', ignorePrivacy)
-
   const balance = React.useMemo(
     () =>
       !isPrivacyActive || ignorePrivacy === true
