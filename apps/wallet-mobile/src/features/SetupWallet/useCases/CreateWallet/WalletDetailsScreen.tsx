@@ -191,6 +191,7 @@ export const WalletDetailsScreen = () => {
             closeModal()
             showRestoreWalletInfoModalChanged(false)
           }}
+          testId="setup-modal-continue-button"
         />
 
         <Space height="lg" />
@@ -350,6 +351,7 @@ export const WalletDetailsScreen = () => {
             style={styles.button}
             onPress={() => handleCreateWallet()}
             disabled={isLoading || Object.keys(passwordErrors).length > 0 || Object.keys(nameErrors).length > 0}
+            testID="walletFormContinueButton"
           />
 
           <Space height="sm" />

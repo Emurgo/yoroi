@@ -49,6 +49,7 @@ export const ChooseNetworkScreen = () => {
             title={strings.cardanoMainnet}
             subTitle={strings.cardanoMainnetDescription}
             onPress={handleMainnet}
+            testId="setup-network-select-mainnet-button"
           />
 
           <Space height="lg" />
@@ -57,6 +58,7 @@ export const ChooseNetworkScreen = () => {
             title={strings.cardanoTestnet}
             subTitle={strings.cardanoTestnetDescription}
             onPress={handleTestnet}
+            testId="setup-network-select-testnet-button"
           />
 
           <Space height="lg" />
@@ -65,6 +67,7 @@ export const ChooseNetworkScreen = () => {
             title={strings.cardanoSanchonet}
             subTitle={strings.cardanoSanchonetDescription}
             onPress={handleSanchonet}
+            testId="setup-network-select-sanchonet-button"
           />
 
           <Space height="lg" />

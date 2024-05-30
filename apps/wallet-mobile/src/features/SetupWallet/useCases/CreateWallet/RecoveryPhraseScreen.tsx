@@ -71,6 +71,7 @@ export const RecoveryPhraseScreen = () => {
             closeModal()
             showCreateWalletInfoModalChanged(false)
           }}
+          testId="setup-step2-continue-button"
         />
 
         <Space height="_2xl" />
@@ -106,7 +107,7 @@ export const RecoveryPhraseScreen = () => {
         <Text style={styles.title}>
           {strings.recoveryPhraseTitle(bold)}
 
-          <Info onPress={handleOnShowModal} />
+          <Info onPress={handleOnShowModal} testId="step2-info-icon" />
         </Text>
 
         <View style={styles.mnemonicWords}>
@@ -134,7 +135,12 @@ export const RecoveryPhraseScreen = () => {
           ))}
         </View>
 
-        <TouchableOpacity activeOpacity={0.5} style={styles.blurButton} onPress={() => setIsBlur(!isBlur)}>
+        <TouchableOpacity
+          activeOpacity={0.5}
+          style={styles.blurButton}
+          onPress={() => setIsBlur(!isBlur)}
+          testID="step2-show_hide-recovery-phrase-button"
+        >
           {isBlur ? <EyeOpenIllustration /> : <EyeClosedIllustration />}
 
           <Text style={styles.blurTextButton}>
@@ -153,6 +159,7 @@ export const RecoveryPhraseScreen = () => {
           mnemonicChanged(mnemonic)
           navigation.navigate('setup-wallet-verify-recovery-phrase-mnemonic')
         }}
+        testId="setup-step2-next-button"
       />
 
       <Space height="lg" />
@@ -160,11 +167,11 @@ export const RecoveryPhraseScreen = () => {
   )
 }
 
-const Info = ({onPress}: {onPress: () => void}) => {
+const Info = ({onPress, testId}: {onPress: () => void; testId?: string}) => {
   const {styles} = useStyles()
   return (
     <TouchableOpacity style={styles.info} onPress={onPress}>
-      <View style={styles.infoIcon}>
+      <View style={styles.infoIcon} testID={testId}>
         <InfoIcon size={24} />
       </View>
     </TouchableOpacity>

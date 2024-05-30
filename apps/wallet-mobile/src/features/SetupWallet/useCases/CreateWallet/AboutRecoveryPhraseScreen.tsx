@@ -68,6 +68,7 @@ export const AboutRecoveryPhraseScreen = () => {
           title={strings.next}
           style={styles.button}
           onPress={() => navigation.navigate('setup-wallet-recovery-phrase-mnemonic')}
+          testID="setup-step1-next-button"
         />
       </Actions>
     </SafeAreaView>
