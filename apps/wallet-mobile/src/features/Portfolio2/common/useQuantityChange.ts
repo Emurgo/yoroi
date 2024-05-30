@@ -21,7 +21,7 @@ export const useQuantityChange = ({ quantity, previousQuantity }: Props): {
 
   const variantPnl = React.useMemo(() => {
     if (quantityChange === undefined) return 'neutral'
-    return quantityChange > 0 ? 'success' : 'danger'
+    return quantityChange >= 0 ? 'success' : 'danger'
   }, [quantityChange])
 
   return {

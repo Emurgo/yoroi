@@ -1,0 +1,59 @@
+import {useTheme} from '@yoroi/theme'
+import * as React from 'react'
+import {StyleSheet, Text, View} from 'react-native'
+
+import {Icon, Tooltip} from '../../../../../components'
+import {useStrings} from '../../../common/useStrings'
+import {Rate} from './Rate'
+
+type Props = {
+  rate: number
+  name: string
+  hasDApps: boolean
+}
+export const BalanceHeaderCard = ({name, rate, hasDApps}: Props) => {
+  const {styles, color} = useStyles()
+  const strings = useStrings()
+
+  return (
+    <View style={styles.rowBetween}>
+      <View style={styles.labelContainer}>
+        <Text style={[styles.textWhite, styles.normalText]}>
+          {hasDApps ? strings.totalPortfolioValue : strings.totalWalletValue}
+        </Text>
+
+        {hasDApps && (
+          <Tooltip numberOfLine={3} title={strings.totalPortfolioValueTooltip}>
+            <Icon.InfoCircle color={color.white_static} />
+          </Tooltip>
+        )}
+      </View>
+
+      <Rate rate={rate} name={name} />
+    </View>
+  )
+}
+
+const useStyles = () => {
+  const {atoms, color} = useTheme()
+  const styles = StyleSheet.create({
+    textWhite: {
+      color: color.white_static,
+    },
+    normalText: {
+      ...atoms.body_2_md_regular,
+    },
+    rowBetween: {
+      ...atoms.flex_row,
+      ...atoms.justify_between,
+      ...atoms.align_center,
+    },
+    labelContainer: {
+      ...atoms.flex_row,
+      ...atoms.align_center,
+      ...atoms.gap_xs,
+    },
+  })
+
+  return {styles, color} as const
+}

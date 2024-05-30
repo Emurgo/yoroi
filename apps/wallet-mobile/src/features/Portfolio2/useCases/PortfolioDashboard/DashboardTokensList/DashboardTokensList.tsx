@@ -26,11 +26,11 @@ export const DashboardTokensList = () => {
 
   const tokensList = React.useMemo(() => balances.fts ?? [], [balances.fts])
   const isJustADA = React.useMemo(() => {
-    if (tokensList.length > 1) return false
+    if (tokensList.length > 2) return false
     const tokenInfo = tokensList[0].info
     const isPrimary = isPrimaryToken(tokenInfo)
-    return isPrimary
-  }, [tokensList])
+    return isPrimary && !isZeroADABalance
+  }, [isZeroADABalance, tokensList])
 
   const handleDirectTokensList = () => {
     navigationTo.tokensList()
@@ -71,18 +71,18 @@ export const DashboardTokensList = () => {
         <View style={styles.container}>
           <BuyADABanner />
         </View>
-      ) : null}
-
-      <FlatList
-        horizontal
-        data={tokensList}
-        ListHeaderComponent={<Spacer width={16} />}
-        ListFooterComponent={renderFooterList()}
-        ItemSeparatorComponent={() => <Spacer width={8} />}
-        showsHorizontalScrollIndicator={false}
-        keyExtractor={(item) => item.info.id}
-        renderItem={({item}) => <DashboardTokenItem key={item?.info?.id} tokenInfo={item} />}
-      />
+      ) : (
+        <FlatList
+          horizontal
+          data={tokensList}
+          ListHeaderComponent={<Spacer width={16} />}
+          ListFooterComponent={renderFooterList()}
+          ItemSeparatorComponent={() => <Spacer width={8} />}
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item) => item.info.id}
+          renderItem={({item}) => <DashboardTokenItem key={item?.info?.id} tokenInfo={item} />}
+        />
+      )}
     </View>
   )
 }
