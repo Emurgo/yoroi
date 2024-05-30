@@ -29,7 +29,13 @@ export const useStrings = () => {
       intl.formatMessage(messages.countLiquidityPoolsAvailable, {countLiquidityPools: qty}),
     countOpenOrders: (qty: number) => intl.formatMessage(messages.countOpenOrders, {countOpenOrders: qty}),
     noDataFound: intl.formatMessage(messages.noDataFound),
-
+    value: intl.formatMessage(messages.value),
+    dex: intl.formatMessage(messages.dex),
+    lp: intl.formatMessage(messages.lp),
+    total: intl.formatMessage(messages.total),
+    assetPrice: intl.formatMessage(messages.assetPrice),
+    assetAmount: intl.formatMessage(messages.assetAmount),
+    txId: intl.formatMessage(messages.txId),
     performance: intl.formatMessage(messages.performance),
     overview: intl.formatMessage(messages.overview),
     transactions: intl.formatMessage(messages.transactions),
@@ -60,13 +66,8 @@ export const useStrings = () => {
     policyID: intl.formatMessage(messages.policyID),
     fingerprint: intl.formatMessage(messages.fingerprint),
     detailsOn: intl.formatMessage(messages.detailsOn),
-    value: intl.formatMessage(messages.value),
-    dex: intl.formatMessage(messages.dex),
-    lp: intl.formatMessage(messages.lp),
-    total: intl.formatMessage(messages.total),
-    assetPrice: intl.formatMessage(messages.assetPrice),
-    assetAmount: intl.formatMessage(messages.assetAmount),
-    txId: intl.formatMessage(messages.txId),
+    totalPortfolioValue: intl.formatMessage(messages.totalPortfolioValue),
+    totalPortfolioValueTooltip: intl.formatMessage(messages.totalPortfolioValueTooltip),
   }
 }
 
@@ -107,6 +108,14 @@ export const messages = defineMessages({
   nfts: {
     id: 'portfolio.portfolioDashboardScreen.nfts',
     defaultMessage: '!!!NFTs ({countNfts})',
+  },
+  totalPortfolioValue: {
+    id: 'portfolio.portfolioDashboardScreen.totalPortfolioValue',
+    defaultMessage: '!!!Total portfolio value',
+  },
+  totalPortfolioValueTooltip: {
+    id: 'portfolio.portfolioDashboardScreen.totalPortfolioValueTooltip',
+    defaultMessage: '!!!Funds in the wallet \nand associated DApps.',
   },
   tokenList: {
     id: 'portfolio.portfolioTokensListScreen.tokenList',

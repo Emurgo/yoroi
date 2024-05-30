@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Portfolio",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 74,
+      "line": 75,
       "column": 13,
-      "index": 3859
+      "index": 4022
     },
     "end": {
-      "line": 77,
+      "line": 78,
       "column": 3,
-      "index": 3928
+      "index": 4091
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Total wallet value",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 78,
+      "line": 79,
       "column": 20,
-      "index": 3950
+      "index": 4113
     },
     "end": {
-      "line": 81,
+      "line": 82,
       "column": 3,
-      "index": 4063
+      "index": 4226
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Tokens ({countTokens})",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 82,
+      "line": 83,
       "column": 10,
-      "index": 4075
+      "index": 4238
     },
     "end": {
-      "line": 85,
+      "line": 86,
       "column": 3,
-      "index": 4182
+      "index": 4345
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Start your crypto journey",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 86,
+      "line": 87,
       "column": 15,
-      "index": 4199
+      "index": 4362
     },
     "end": {
-      "line": 89,
+      "line": 90,
       "column": 3,
-      "index": 4314
+      "index": 4477
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Get started with Cardano's native currency, ADA. It's your key to unlocking a world of possibilities",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 90,
+      "line": 91,
       "column": 21,
-      "index": 4337
+      "index": 4500
     },
     "end": {
-      "line": 94,
+      "line": 95,
       "column": 3,
-      "index": 4539
+      "index": 4702
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!Buy ADA",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 95,
+      "line": 96,
       "column": 13,
-      "index": 4554
+      "index": 4717
     },
     "end": {
-      "line": 98,
+      "line": 99,
       "column": 3,
-      "index": 4640
+      "index": 4803
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!Trade Tokens",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 99,
+      "line": 100,
       "column": 15,
-      "index": 4657
+      "index": 4820
     },
     "end": {
-      "line": 102,
+      "line": 103,
       "column": 3,
-      "index": 4759
+      "index": 4922
     }
   },
   {
@@ -109,14 +109,14 @@
     "defaultMessage": "!!!Swap",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 103,
+      "line": 104,
       "column": 8,
-      "index": 4769
+      "index": 4932
     },
     "end": {
-      "line": 106,
+      "line": 107,
       "column": 3,
-      "index": 4828
+      "index": 4991
     }
   },
   {
@@ -124,14 +124,44 @@
     "defaultMessage": "!!!NFTs ({countNfts})",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 107,
+      "line": 108,
       "column": 8,
-      "index": 4838
+      "index": 5001
     },
     "end": {
-      "line": 110,
+      "line": 111,
       "column": 3,
-      "index": 4939
+      "index": 5102
+    }
+  },
+  {
+    "id": "portfolio.portfolioDashboardScreen.totalPortfolioValue",
+    "defaultMessage": "!!!Total portfolio value",
+    "file": "src/features/Portfolio2/common/useStrings.tsx",
+    "start": {
+      "line": 112,
+      "column": 23,
+      "index": 5127
+    },
+    "end": {
+      "line": 115,
+      "column": 3,
+      "index": 5246
+    }
+  },
+  {
+    "id": "portfolio.portfolioDashboardScreen.totalPortfolioValueTooltip",
+    "defaultMessage": "!!!Funds in the wallet \nand associated DApps.",
+    "file": "src/features/Portfolio2/common/useStrings.tsx",
+    "start": {
+      "line": 116,
+      "column": 30,
+      "index": 5278
+    },
+    "end": {
+      "line": 119,
+      "column": 3,
+      "index": 5426
     }
   },
   {
@@ -139,14 +169,14 @@
     "defaultMessage": "!!!Token list",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 111,
+      "line": 120,
       "column": 13,
-      "index": 4954
+      "index": 5441
     },
     "end": {
-      "line": 114,
+      "line": 123,
       "column": 3,
-      "index": 5053
+      "index": 5540
     }
   },
   {
@@ -154,14 +184,14 @@
     "defaultMessage": "!!!Wallet token",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 115,
+      "line": 124,
       "column": 15,
-      "index": 5070
+      "index": 5557
     },
     "end": {
-      "line": 118,
+      "line": 127,
       "column": 3,
-      "index": 5173
+      "index": 5660
     }
   },
   {
@@ -169,14 +199,14 @@
     "defaultMessage": "!!!DApps token",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 119,
+      "line": 128,
       "column": 14,
-      "index": 5189
+      "index": 5676
     },
     "end": {
-      "line": 122,
+      "line": 131,
       "column": 3,
-      "index": 5290
+      "index": 5777
     }
   },
   {
@@ -184,14 +214,14 @@
     "defaultMessage": "!!!{countTokens} token(s) available",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 123,
+      "line": 132,
       "column": 19,
-      "index": 5311
+      "index": 5798
     },
     "end": {
-      "line": 126,
+      "line": 135,
       "column": 3,
-      "index": 5438
+      "index": 5925
     }
   },
   {
@@ -199,14 +229,14 @@
     "defaultMessage": "!!!Search tokens",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 127,
+      "line": 136,
       "column": 16,
-      "index": 5456
+      "index": 5943
     },
     "end": {
-      "line": 130,
+      "line": 139,
       "column": 3,
-      "index": 5561
+      "index": 6048
     }
   },
   {
@@ -214,14 +244,14 @@
     "defaultMessage": "!!!No tokens found",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 131,
+      "line": 140,
       "column": 17,
-      "index": 5580
+      "index": 6067
     },
     "end": {
-      "line": 134,
+      "line": 143,
       "column": 3,
-      "index": 5688
+      "index": 6175
     }
   },
   {
@@ -229,14 +259,14 @@
     "defaultMessage": "!!!Total dapps value",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 135,
+      "line": 144,
       "column": 18,
-      "index": 5708
+      "index": 6195
     },
     "end": {
-      "line": 138,
+      "line": 147,
       "column": 3,
-      "index": 5820
+      "index": 6307
     }
   },
   {
@@ -244,14 +274,14 @@
     "defaultMessage": "!!!Liquidity pool",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 139,
+      "line": 148,
       "column": 17,
-      "index": 5839
+      "index": 6326
     },
     "end": {
-      "line": 142,
+      "line": 151,
       "column": 3,
-      "index": 5946
+      "index": 6433
     }
   },
   {
@@ -259,14 +289,14 @@
     "defaultMessage": "!!!Open orders",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 143,
+      "line": 152,
       "column": 14,
-      "index": 5962
+      "index": 6449
     },
     "end": {
-      "line": 146,
+      "line": 155,
       "column": 3,
-      "index": 6063
+      "index": 6550
     }
   },
   {
@@ -274,14 +304,14 @@
     "defaultMessage": "!!!Lend & borrow",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 147,
+      "line": 156,
       "column": 17,
-      "index": 6082
+      "index": 6569
     },
     "end": {
-      "line": 150,
+      "line": 159,
       "column": 3,
-      "index": 6188
+      "index": 6675
     }
   },
   {
@@ -289,14 +319,14 @@
     "defaultMessage": "!!!Token details",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 151,
+      "line": 160,
       "column": 15,
-      "index": 6205
+      "index": 6692
     },
     "end": {
-      "line": 154,
+      "line": 163,
       "column": 3,
-      "index": 6311
+      "index": 6798
     }
   },
   {
@@ -304,14 +334,14 @@
     "defaultMessage": "!!!Available soon",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 155,
+      "line": 164,
       "column": 17,
-      "index": 6330
+      "index": 6817
     },
     "end": {
-      "line": 158,
+      "line": 167,
       "column": 3,
-      "index": 6439
+      "index": 6926
     }
   },
   {
@@ -319,14 +349,14 @@
     "defaultMessage": "!!!{countLiquidityPools} liquidity pool(s) available",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 159,
+      "line": 168,
       "column": 32,
-      "index": 6473
+      "index": 6960
     },
     "end": {
-      "line": 162,
+      "line": 171,
       "column": 3,
-      "index": 6632
+      "index": 7119
     }
   },
   {
@@ -334,14 +364,14 @@
     "defaultMessage": "!!!{countOpenOrders} open order(s)",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 163,
+      "line": 172,
       "column": 19,
-      "index": 6653
+      "index": 7140
     },
     "end": {
-      "line": 166,
+      "line": 175,
       "column": 3,
-      "index": 6781
+      "index": 7268
     }
   },
   {
@@ -349,14 +379,14 @@
     "defaultMessage": "!!!No Data Found",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 167,
+      "line": 176,
       "column": 15,
-      "index": 6798
+      "index": 7285
     },
     "end": {
-      "line": 170,
+      "line": 179,
       "column": 3,
-      "index": 6902
+      "index": 7389
     }
   },
   {
@@ -364,14 +394,14 @@
     "defaultMessage": "!!!Performance",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 171,
+      "line": 180,
       "column": 15,
-      "index": 6919
+      "index": 7406
     },
     "end": {
-      "line": 174,
+      "line": 183,
       "column": 3,
-      "index": 7023
+      "index": 7510
     }
   },
   {
@@ -379,14 +409,14 @@
     "defaultMessage": "!!!Overview",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 175,
+      "line": 184,
       "column": 12,
-      "index": 7037
+      "index": 7524
     },
     "end": {
-      "line": 178,
+      "line": 187,
       "column": 3,
-      "index": 7135
+      "index": 7622
     }
   },
   {
@@ -394,14 +424,14 @@
     "defaultMessage": "!!!Transactions",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 179,
+      "line": 188,
       "column": 16,
-      "index": 7153
+      "index": 7640
     },
     "end": {
-      "line": 182,
+      "line": 191,
       "column": 3,
-      "index": 7259
+      "index": 7746
     }
   },
   {
@@ -409,14 +439,14 @@
     "defaultMessage": "!!!Token price change \nin 24 hours",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 183,
+      "line": 192,
       "column": 27,
-      "index": 7288
+      "index": 7775
     },
     "end": {
-      "line": 186,
+      "line": 195,
       "column": 3,
-      "index": 7425
+      "index": 7912
     }
   },
   {
@@ -424,14 +454,14 @@
     "defaultMessage": "!!!Net Invested",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 187,
+      "line": 196,
       "column": 15,
-      "index": 7442
+      "index": 7929
     },
     "end": {
-      "line": 190,
+      "line": 199,
       "column": 3,
-      "index": 7547
+      "index": 8034
     }
   },
   {
@@ -439,14 +469,14 @@
     "defaultMessage": "!!!Bought",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 191,
+      "line": 200,
       "column": 10,
-      "index": 7559
+      "index": 8046
     },
     "end": {
-      "line": 194,
+      "line": 203,
       "column": 3,
-      "index": 7653
+      "index": 8140
     }
   },
   {
@@ -454,14 +484,14 @@
     "defaultMessage": "!!!Received",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 195,
+      "line": 204,
       "column": 12,
-      "index": 7667
+      "index": 8154
     },
     "end": {
-      "line": 198,
+      "line": 207,
       "column": 3,
-      "index": 7765
+      "index": 8252
     }
   },
   {
@@ -469,14 +499,14 @@
     "defaultMessage": "!!!Sent",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 199,
+      "line": 208,
       "column": 8,
-      "index": 7775
+      "index": 8262
     },
     "end": {
-      "line": 202,
+      "line": 211,
       "column": 3,
-      "index": 7865
+      "index": 8352
     }
   },
   {
@@ -484,14 +514,14 @@
     "defaultMessage": "!!!Sold",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 203,
+      "line": 212,
       "column": 8,
-      "index": 7875
+      "index": 8362
     },
     "end": {
-      "line": 206,
+      "line": 215,
       "column": 3,
-      "index": 7965
+      "index": 8452
     }
   },
   {
@@ -499,14 +529,14 @@
     "defaultMessage": "!!!Failed",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 207,
+      "line": 216,
       "column": 10,
-      "index": 7977
+      "index": 8464
     },
     "end": {
-      "line": 210,
+      "line": 219,
       "column": 3,
-      "index": 8071
+      "index": 8558
     }
   },
   {
@@ -514,14 +544,14 @@
     "defaultMessage": "!!!Stake Delegated",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 211,
+      "line": 220,
       "column": 18,
-      "index": 8091
+      "index": 8578
     },
     "end": {
-      "line": 214,
+      "line": 223,
       "column": 3,
-      "index": 8202
+      "index": 8689
     }
   },
   {
@@ -529,14 +559,14 @@
     "defaultMessage": "!!!Staking Reward",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 215,
+      "line": 224,
       "column": 17,
-      "index": 8221
+      "index": 8708
     },
     "end": {
-      "line": 218,
+      "line": 227,
       "column": 3,
-      "index": 8330
+      "index": 8817
     }
   },
   {
@@ -544,14 +574,14 @@
     "defaultMessage": "!!!Unknown",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 219,
+      "line": 228,
       "column": 11,
-      "index": 8343
+      "index": 8830
     },
     "end": {
-      "line": 222,
+      "line": 231,
       "column": 3,
-      "index": 8439
+      "index": 8926
     }
   },
   {
@@ -559,14 +589,14 @@
     "defaultMessage": "!!!assets",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 223,
+      "line": 232,
       "column": 10,
-      "index": 8451
+      "index": 8938
     },
     "end": {
-      "line": 226,
+      "line": 235,
       "column": 3,
-      "index": 8545
+      "index": 9032
     }
   },
   {
@@ -574,14 +604,14 @@
     "defaultMessage": "!!!Market data",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 227,
+      "line": 236,
       "column": 14,
-      "index": 8561
+      "index": 9048
     },
     "end": {
-      "line": 230,
+      "line": 239,
       "column": 3,
-      "index": 8664
+      "index": 9151
     }
   },
   {
@@ -589,14 +619,14 @@
     "defaultMessage": "!!!Token price change",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 231,
+      "line": 240,
       "column": 20,
-      "index": 8686
+      "index": 9173
     },
     "end": {
-      "line": 234,
+      "line": 243,
       "column": 3,
-      "index": 8802
+      "index": 9289
     }
   },
   {
@@ -604,14 +634,14 @@
     "defaultMessage": "!!!Token price",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 235,
+      "line": 244,
       "column": 14,
-      "index": 8818
+      "index": 9305
     },
     "end": {
-      "line": 238,
+      "line": 247,
       "column": 3,
-      "index": 8922
+      "index": 9409
     }
   },
   {
@@ -619,14 +649,14 @@
     "defaultMessage": "!!!Market cap",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 239,
+      "line": 248,
       "column": 13,
-      "index": 8937
+      "index": 9424
     },
     "end": {
-      "line": 242,
+      "line": 251,
       "column": 3,
-      "index": 9039
+      "index": 9526
     }
   },
   {
@@ -634,14 +664,14 @@
     "defaultMessage": "!!!24h volume",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 243,
+      "line": 252,
       "column": 14,
-      "index": 9055
+      "index": 9542
     },
     "end": {
-      "line": 246,
+      "line": 255,
       "column": 3,
-      "index": 9157
+      "index": 9644
     }
   },
   {
@@ -649,14 +679,14 @@
     "defaultMessage": "!!!Rank",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 247,
+      "line": 256,
       "column": 8,
-      "index": 9167
+      "index": 9654
     },
     "end": {
-      "line": 250,
+      "line": 259,
       "column": 3,
-      "index": 9257
+      "index": 9744
     }
   },
   {
@@ -664,14 +694,14 @@
     "defaultMessage": "!!!Circulating",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 251,
+      "line": 260,
       "column": 15,
-      "index": 9274
+      "index": 9761
     },
     "end": {
-      "line": 254,
+      "line": 263,
       "column": 3,
-      "index": 9378
+      "index": 9865
     }
   },
   {
@@ -679,14 +709,14 @@
     "defaultMessage": "!!!Total supply",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 255,
+      "line": 264,
       "column": 15,
-      "index": 9395
+      "index": 9882
     },
     "end": {
-      "line": 258,
+      "line": 267,
       "column": 3,
-      "index": 9500
+      "index": 9987
     }
   },
   {
@@ -694,14 +724,14 @@
     "defaultMessage": "!!!Max supply",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 259,
+      "line": 268,
       "column": 13,
-      "index": 9515
+      "index": 10002
     },
     "end": {
-      "line": 262,
+      "line": 271,
       "column": 3,
-      "index": 9616
+      "index": 10103
     }
   },
   {
@@ -709,14 +739,14 @@
     "defaultMessage": "!!!All time high",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 263,
+      "line": 272,
       "column": 15,
-      "index": 9633
+      "index": 10120
     },
     "end": {
-      "line": 266,
+      "line": 275,
       "column": 3,
-      "index": 9739
+      "index": 10226
     }
   },
   {
@@ -724,14 +754,14 @@
     "defaultMessage": "!!!All time low",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 267,
+      "line": 276,
       "column": 14,
-      "index": 9755
+      "index": 10242
     },
     "end": {
-      "line": 270,
+      "line": 279,
       "column": 3,
-      "index": 9859
+      "index": 10346
     }
   },
   {
@@ -739,14 +769,14 @@
     "defaultMessage": "!!!Info",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 271,
+      "line": 280,
       "column": 8,
-      "index": 9869
+      "index": 10356
     },
     "end": {
-      "line": 274,
+      "line": 283,
       "column": 3,
-      "index": 9959
+      "index": 10446
     }
   },
   {
@@ -754,14 +784,14 @@
     "defaultMessage": "!!!Website",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 275,
+      "line": 284,
       "column": 11,
-      "index": 9972
+      "index": 10459
     },
     "end": {
-      "line": 278,
+      "line": 287,
       "column": 3,
-      "index": 10068
+      "index": 10555
     }
   },
   {
@@ -769,14 +799,14 @@
     "defaultMessage": "!!!Policy ID",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 279,
+      "line": 288,
       "column": 12,
-      "index": 10082
+      "index": 10569
     },
     "end": {
-      "line": 282,
+      "line": 291,
       "column": 3,
-      "index": 10181
+      "index": 10668
     }
   },
   {
@@ -784,14 +814,14 @@
     "defaultMessage": "!!!Fingerprint",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 283,
+      "line": 292,
       "column": 15,
-      "index": 10198
+      "index": 10685
     },
     "end": {
-      "line": 286,
+      "line": 295,
       "column": 3,
-      "index": 10302
+      "index": 10789
     }
   },
   {
@@ -799,14 +829,14 @@
     "defaultMessage": "!!!Details on",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 287,
+      "line": 296,
       "column": 13,
-      "index": 10317
+      "index": 10804
     },
     "end": {
-      "line": 290,
+      "line": 299,
       "column": 3,
-      "index": 10418
+      "index": 10905
     }
   },
   {
@@ -814,14 +844,14 @@
     "defaultMessage": "!!!Value",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 291,
+      "line": 300,
       "column": 9,
-      "index": 10429
+      "index": 10916
     },
     "end": {
-      "line": 294,
+      "line": 303,
       "column": 3,
-      "index": 10519
+      "index": 11006
     }
   },
   {
@@ -829,14 +859,14 @@
     "defaultMessage": "!!!DEX",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 295,
+      "line": 304,
       "column": 7,
-      "index": 10528
+      "index": 11015
     },
     "end": {
-      "line": 298,
+      "line": 307,
       "column": 3,
-      "index": 10614
+      "index": 11101
     }
   },
   {
@@ -844,14 +874,14 @@
     "defaultMessage": "!!!LP",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 299,
+      "line": 308,
       "column": 6,
-      "index": 10622
+      "index": 11109
     },
     "end": {
-      "line": 302,
+      "line": 311,
       "column": 3,
-      "index": 10706
+      "index": 11193
     }
   },
   {
@@ -859,14 +889,14 @@
     "defaultMessage": "!!!Total",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 303,
+      "line": 312,
       "column": 9,
-      "index": 10717
+      "index": 11204
     },
     "end": {
-      "line": 306,
+      "line": 315,
       "column": 3,
-      "index": 10793
+      "index": 11280
     }
   },
   {
@@ -874,14 +904,14 @@
     "defaultMessage": "!!!Asset price",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 307,
+      "line": 316,
       "column": 14,
-      "index": 10809
+      "index": 11296
     },
     "end": {
-      "line": 310,
+      "line": 319,
       "column": 3,
-      "index": 10896
+      "index": 11383
     }
   },
   {
@@ -889,14 +919,14 @@
     "defaultMessage": "!!!Asset amount",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 311,
+      "line": 320,
       "column": 15,
-      "index": 10913
+      "index": 11400
     },
     "end": {
-      "line": 314,
+      "line": 323,
       "column": 3,
-      "index": 11002
+      "index": 11489
     }
   },
   {
@@ -904,14 +934,14 @@
     "defaultMessage": "!!!Transaction ID",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
-      "line": 315,
+      "line": 324,
       "column": 8,
-      "index": 11012
+      "index": 11499
     },
     "end": {
-      "line": 318,
+      "line": 327,
       "column": 3,
-      "index": 11090
+      "index": 11577
     }
   }
 ]
