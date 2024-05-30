@@ -106,8 +106,7 @@ const cardanoLink = create({
 
 const yoroiPaymentRequestWithAdaLink = transfer.request.adaWithLink({
   link: cardanoLink.link,
-  business: 'exchange',
-  partnerId: 'encryptus',
+  appId: 'app-id',
   authorization: 'uuid-v4',
   redirectTo: 'https://my.amazing.web/?amountRequested=1&session=03bf4dd213d',
 })
@@ -142,8 +141,8 @@ Yoroi validates deeplinks and univeral links in a stricted way, missing params i
 This schema is designed for adding information about how Yoroi should behave, even though all are flagged as optional, it will change how Yoroi reacts to it, and for some funnels it might block the user, or trigger some red alerts about dangerous actions. **`PartnerInfoParams` is part of all links**. It includes the following fields:
 
 - `isSandbox`: A boolean indicating the environment, when `true` deeplinks only work on non-production builds.
-- `isTestnet`: A boolean that restrics whether it should list only `mainnet` wallets or testnets wallets. 
-- `appId`: A string with a maximum length of 40 characters that identifies that app. 
+- `isTestnet`: A boolean that restrics whether it should list only `mainnet` wallets or testnets wallets.
+- `appId`: A string with a maximum length of 40 characters that identifies that app.
 - `redirectTo`: Yoroi may present a link button or automatic redirect the user based on funnel.
 - `authorization`: All actions initiated within Yoroi will provide an authorization, that works along with the wallet used.
 - `message`: Yoroi may present this message for some actions, be descriptive and concise around the action needed from Yoroi, otherwise users might reject your request.
