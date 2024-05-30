@@ -56,7 +56,7 @@ type AssetRowProps = {
 const AssetRow = ({styles, entry, backColor, onSelect}: AssetRowProps) => {
   const intl = useIntl()
   const wallet = useSelectedWallet()
-  const {isPrivacyOn, privacyPlaceholder} = usePrivacyMode()
+  const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
   const tokenInfo = useTokenInfo({wallet, tokenId: entry.identifier})
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
   const primaryTicker = wallet.primaryTokenInfo.ticker
@@ -75,7 +75,7 @@ const AssetRow = ({styles, entry, backColor, onSelect}: AssetRowProps) => {
 
       <View style={styles.assetBalanceView}>
         <Text style={styles.assetBalance}>
-          {isPrivacyOn ? privacyPlaceholder : formatTokenAmount(asQuantity(entry.amount), tokenInfo)}
+          {isPrivacyActive ? privacyPlaceholder : formatTokenAmount(asQuantity(entry.amount), tokenInfo)}
         </Text>
       </View>
     </>
