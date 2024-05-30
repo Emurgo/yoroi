@@ -41,7 +41,7 @@ export const TokenAmountItem = ({
   const detail = isPrimary ? info.description : info.fingerprint
   const name = infoExtractName(info)
 
-  const formattedQuantity = !isPrivacyActive && ignorePrivacy == true ? amountFormatter()(amount) : privacyPlaceholder
+  const formattedQuantity = !isPrivacyActive || ignorePrivacy === true ? amountFormatter()(amount) : privacyPlaceholder
 
   const showSwapDetails = !isPrimary && variant === 'swap'
   const priceImpactRiskTextColor = orderType === 'market' ? priceImpactRiskTheme.text : colors.text
