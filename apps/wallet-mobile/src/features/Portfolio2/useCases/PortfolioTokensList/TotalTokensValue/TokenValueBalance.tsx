@@ -1,10 +1,9 @@
-import {amountFormatter, infoExtractName} from '@yoroi/portfolio'
+import {amountBreakdown, amountFormatter, infoExtractName} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
 import {useCurrencyContext} from '../../../../../features/Settings/Currency'
 import {SkeletonPrimaryToken} from './SkeletonPrimaryToken'
 
@@ -12,15 +11,19 @@ type Props = {
   amount: Portfolio.Token.Amount
   isFetching: boolean
   isPrimaryPair: boolean
+  rate?: number
 }
-export const TokenValueBalance = ({amount, isFetching, isPrimaryPair}: Props) => {
-  const {currency} = useCurrencyContext()
+export const TokenValueBalance = ({amount, isFetching, isPrimaryPair, rate}: Props) => {
+  const {currency, config} = useCurrencyContext()
   const {styles} = useStyles()
   const name = infoExtractName(amount.info)
 
   const renderBalance = () => {
-    if (isFetching) return <SkeletonPrimaryToken />
-    if (isPrimaryPair) return <PairedBalance amount={amount} textStyle={styles.balanceText} />
+    if (isFetching || rate === undefined) return <SkeletonPrimaryToken />
+    if (isPrimaryPair)
+      return (
+        <Text style={[styles.balanceText]}>{amountBreakdown(amount).bn.times(rate).toFormat(config.decimals)}</Text>
+      )
 
     return <Text style={[styles.balanceText]}>{amountFormatter()(amount)}</Text>
   }
@@ -47,7 +50,7 @@ const useStyles = () => {
     balanceBox: {
       ...atoms.flex_row,
       ...atoms.gap_2xs,
-      ...atoms.align_center,
+      ...atoms.align_baseline,
     },
     balanceText: {
       ...atoms.heading_1_regular,

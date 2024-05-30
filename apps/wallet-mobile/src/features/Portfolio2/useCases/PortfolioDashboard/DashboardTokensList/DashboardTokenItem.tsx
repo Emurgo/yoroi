@@ -33,7 +33,7 @@ export const DashboardTokenItem = ({tokenInfo}: Props) => {
   const {quantityChangePercent, variantPnl} = useQuantityChange({previousQuantity, quantity, decimals: info.decimals})
 
   return (
-    <TouchableOpacity onPress={() => navigationTo.tokenDetail({id: 'some_id', name: name})}>
+    <TouchableOpacity onPress={() => navigationTo.tokenDetail({id: info.id, name: name})}>
       <View style={styles.root}>
         <TokenInfo info={info} />
 
@@ -46,7 +46,7 @@ export const DashboardTokenItem = ({tokenInfo}: Props) => {
 
           <Text style={styles.tokenValue}>{formattedQuantity}</Text>
 
-          <PairedBalance textStyle={styles.usdValue} amount={tokenInfo} />
+          <PairedBalance textStyle={styles.pairedTokenValue} amount={tokenInfo} />
         </View>
       </View>
     </TouchableOpacity>
@@ -105,7 +105,7 @@ const useStyles = () => {
       ...atoms.font_semibold,
       color: color.gray_cmax,
     },
-    usdValue: {
+    pairedTokenValue: {
       ...atoms.body_3_sm_regular,
       color: color.gray_c600,
     },

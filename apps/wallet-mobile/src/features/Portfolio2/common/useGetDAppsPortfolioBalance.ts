@@ -13,7 +13,7 @@ export const useGetDAppsPortfolioBalance = (
     ...options,
     queryKey: ['useGetDAppsPortfolioBalance'],
     queryFn: async () => {
-      await new Promise((resolve) => setTimeout(resolve, 5000))
+      await new Promise((resolve) => setTimeout(resolve, 1000))
       return {
         quantity: BigInt(120000000),
         previousQuantity: BigInt(120160000),

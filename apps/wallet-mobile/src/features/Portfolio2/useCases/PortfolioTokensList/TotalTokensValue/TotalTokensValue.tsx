@@ -17,6 +17,7 @@ export const TotalTokensValue = ({amount, cardType}: Props) => {
   const {styles} = useStyles()
   const isWallet = cardType === 'wallet'
   const title = isWallet ? strings.totalWalletValue : strings.totalDAppValue
+  const tooltip = isWallet ? strings.totalWalletValueTooltip : strings.totalDAppsValueTooltip
 
   return (
     <View style={styles.root}>
@@ -26,7 +27,7 @@ export const TotalTokensValue = ({amount, cardType}: Props) => {
           <View style={styles.labelContainer}>
             <Text style={[styles.normalText]}>{title}</Text>
 
-            <Tooltip title={strings.totalWalletValueTooltip}>
+            <Tooltip title={tooltip}>
               <Icon.InfoCircle />
             </Tooltip>
           </View>
