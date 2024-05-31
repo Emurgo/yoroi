@@ -11,7 +11,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button, Icon, KeyboardAvoidingView, useModal} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {useWalletNavigation, WalletInitRouteNavigation} from '../../../../kernel/navigation'
+import {SetupWalletRouteNavigation, useWalletNavigation} from '../../../../kernel/navigation'
 import {isEmptyString} from '../../../../kernel/utils'
 import {makeKeys} from '../../../../yoroi-wallets/cardano/shelley/makeKeys'
 import {usePlate, useWalletMetas} from '../../../../yoroi-wallets/hooks'
@@ -33,13 +33,13 @@ export const RestoreWalletScreen = () => {
   const strings = useStrings()
   const bold = useBold()
   const [mnemonic, setMnemonic] = React.useState('')
-  const navigation = useNavigation<WalletInitRouteNavigation>()
+  const navigation = useNavigation<SetupWalletRouteNavigation>()
   const {publicKeyHexChanged, mnemonicChanged, mnemonicType} = useSetupWallet()
   const {track} = useMetrics()
   const walletManager = useWalletManager()
   const {walletMetas} = useWalletMetas(walletManager)
   const {openModal} = useModal()
-  const {navigateToTxHistory} = useWalletNavigation()
+  const {resetToTxHistory} = useWalletNavigation()
   const selectWalletMeta = useSetSelectedWalletMeta()
   const selectWallet = useSetSelectedWallet()
   const [focusedIndex, setFocusedIndex] = React.useState<number>(0)
@@ -120,9 +120,9 @@ export const RestoreWalletScreen = () => {
       const wallet = walletManager.getOpenedWalletById(walletMeta.id)
       selectWallet(wallet)
       walletManager.setSelectedWalletId(walletMeta.id)
-      navigateToTxHistory()
+      resetToTxHistory()
     },
-    [selectWalletMeta, walletManager, selectWallet, navigateToTxHistory],
+    [selectWalletMeta, walletManager, selectWallet, resetToTxHistory],
   )
 
   const handleOnNext = React.useCallback(async () => {
@@ -212,7 +212,7 @@ const NextButton = ({onPress}: {onPress: () => void}) => {
 
   return (
     <View style={styles.padding}>
-      <Button title={strings.next} style={styles.button} onPress={onPress} />
+      <Button title={strings.next} style={styles.button} onPress={onPress} testID="setup-restore-step1-next-button" />
     </View>
   )
 }

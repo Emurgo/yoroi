@@ -42,15 +42,15 @@ export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
 
 type BalanceProps = {amount: Portfolio.Token.Amount; ignorePrivacy?: boolean}
 const Balance = ({amount, ignorePrivacy}: BalanceProps) => {
-  const {isPrivacyOff, privacyPlaceholder} = usePrivacyMode()
+  const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
   const styles = useStyles()
 
   const balance = React.useMemo(
     () =>
-      isPrivacyOff || ignorePrivacy
+      !isPrivacyActive || ignorePrivacy === true
         ? amountFormatter({template: '{{value}} {{ticker}}'})(amount)
         : amountFormatter({template: `${privacyPlaceholder} {{ticker}}`})(amount),
-    [amount, ignorePrivacy, isPrivacyOff, privacyPlaceholder],
+    [amount, ignorePrivacy, isPrivacyActive, privacyPlaceholder],
   )
 
   return (

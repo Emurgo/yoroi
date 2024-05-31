@@ -8,7 +8,7 @@ import {ViewProps} from 'react-native-svg/lib/typescript/fabric/utils'
 import {Button, Spacer} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {WalletInitRouteNavigation} from '../../../../kernel/navigation'
+import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
 import {YoroiZendeskLink} from '../../common/constants'
 import {LearnMoreButton} from '../../common/LearnMoreButton/LearnMoreButton'
@@ -19,7 +19,7 @@ export const AboutRecoveryPhraseScreen = () => {
   const bold = useBold()
   const {styles} = useStyles()
   const strings = useStrings()
-  const navigation = useNavigation<WalletInitRouteNavigation>()
+  const navigation = useNavigation<SetupWalletRouteNavigation>()
   const {track} = useMetrics()
 
   useFocusEffect(
@@ -68,6 +68,7 @@ export const AboutRecoveryPhraseScreen = () => {
           title={strings.next}
           style={styles.button}
           onPress={() => navigation.navigate('setup-wallet-recovery-phrase-mnemonic')}
+          testID="setup-step1-next-button"
         />
       </Actions>
     </SafeAreaView>

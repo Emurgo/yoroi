@@ -3,6 +3,7 @@ import {asyncBehavior} from '@yoroi/common'
 import {Api, Portfolio} from '@yoroi/types'
 
 import {tokenMocks} from '../token.mocks'
+import {tokenTraitsMocks} from '../token-traits.mocks'
 
 export const responseTokenDiscoveryMocks = asyncBehavior.maker<
   Api.Response<Portfolio.Api.TokenDiscoveryResponse>
@@ -24,19 +25,32 @@ export const responseTokenInfosMocks = asyncBehavior.maker<
   emptyRepresentation: null,
 })
 
+export const responseTokenTraits = asyncBehavior.maker<
+  Api.Response<Portfolio.Api.TokenTraitsResponse>
+>({
+  data: {
+    tag: 'right',
+    value: {status: 200, data: tokenTraitsMocks.nftCryptoKitty},
+  },
+  emptyRepresentation: null,
+})
+
 const success: Portfolio.Api.Api = {
   tokenDiscovery: responseTokenDiscoveryMocks.success,
   tokenInfos: responseTokenInfosMocks.success,
+  tokenTraits: responseTokenTraits.success,
 }
 
 const delayed: Portfolio.Api.Api = {
   tokenDiscovery: responseTokenDiscoveryMocks.delayed,
   tokenInfos: responseTokenInfosMocks.delayed,
+  tokenTraits: responseTokenTraits.delayed,
 }
 
 const loading: Portfolio.Api.Api = {
   tokenDiscovery: responseTokenDiscoveryMocks.loading,
   tokenInfos: responseTokenInfosMocks.loading,
+  tokenTraits: responseTokenTraits.loading,
 }
 
 const error: Portfolio.Api.Api = {
@@ -58,11 +72,21 @@ const error: Portfolio.Api.Api = {
         responseData: {message: 'Bad Request'},
       },
     }),
+  tokenTraits: () =>
+    Promise.resolve({
+      tag: 'left',
+      error: {
+        status: 400,
+        message: 'Bad Request',
+        responseData: {message: 'Bad Request'},
+      },
+    }),
 }
 
 const empty: Portfolio.Api.Api = {
   tokenDiscovery: responseTokenDiscoveryMocks.empty,
   tokenInfos: responseTokenInfosMocks.empty,
+  tokenTraits: responseTokenTraits.empty,
 }
 
 export const portfolioApiMock = freeze(

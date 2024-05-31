@@ -124,6 +124,16 @@ describe('SetupWalletContext :: hooks', () => {
     expect(result.current.showRestoreWalletInfoModal).toBe(true)
   })
 
+  test('walletIdChanged', () => {
+    const {result} = renderHook(() => useSetupWallet(), {wrapper})
+
+    act(() => {
+      result.current.walletIdChanged('1')
+    })
+
+    expect(result.current.walletId).toBe('1')
+  })
+
   test('showCreateWalletInfoModalChanged', () => {
     const {result} = renderHook(() => useSetupWallet(), {wrapper})
 

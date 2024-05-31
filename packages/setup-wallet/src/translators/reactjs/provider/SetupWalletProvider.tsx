@@ -74,6 +74,8 @@ export const SetupWalletProvider = ({
         type: SetupWalletActionType.ShowCreateWalletInfoModalChanged,
         showCreateWalletInfoModal,
       }),
+    walletIdChanged: (walletId: SetupWalletState['walletId']) =>
+      dispatch({type: SetupWalletActionType.WalletIdChanged, walletId}),
   }).current
 
   const context = React.useMemo(

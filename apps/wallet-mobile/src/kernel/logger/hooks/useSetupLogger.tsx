@@ -9,7 +9,7 @@ import {Sentry} from '../adapters/sentry'
 import {sentryAdapter} from '../adapters/sentry-transporter'
 import {logger} from '../logger'
 
-export const useSetupLogger = () => {
+export const useSetupLogger = (filter: RegExp | null = null) => {
   const [done, setDone] = React.useState(false)
 
   React.useEffect(() => {
@@ -18,7 +18,10 @@ export const useSetupLogger = () => {
       const isEnabled = await getCrashReportsEnabled()
 
       logger.level = loggerLevel
-      if (isDev) logger.addTransport(devAdapter().transporter)
+      if (isDev) {
+        logger.addTransport(devAdapter().transporter)
+        logger.filter = filter
+      }
 
       if (isEnabled) {
         logger.enable()
@@ -44,7 +47,7 @@ export const useSetupLogger = () => {
       setDone(true)
     }
     initLogger()
-  }, [])
+  }, [filter])
 
   return done
 }

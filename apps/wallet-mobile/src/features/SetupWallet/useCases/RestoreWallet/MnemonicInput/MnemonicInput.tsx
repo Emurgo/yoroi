@@ -89,6 +89,7 @@ export const MnemonicInput = ({
             mnenonicRefs.forEach((ref) => ref.current?.selectWord(''))
             mnenonicRefs[0].current?.focus()
           }}
+          testId="clearAll-button"
         />
       )}
 
@@ -97,11 +98,11 @@ export const MnemonicInput = ({
   )
 }
 
-const ClearAllButton = ({onPress}: {onPress: () => void}) => {
+const ClearAllButton = ({onPress, testId}: {onPress: () => void; testId?: string}) => {
   const {styles} = useStyles()
   const strings = useStrings()
   return (
-    <View style={styles.textView}>
+    <View style={styles.textView} testID={testId}>
       <TouchableOpacity activeOpacity={0.5} onPress={onPress}>
         <Text style={styles.clearAll}>{strings.clearAll}</Text>
       </TouchableOpacity>

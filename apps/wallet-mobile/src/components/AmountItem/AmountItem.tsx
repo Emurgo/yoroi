@@ -16,7 +16,7 @@ export type AmountItemProps = {
   wallet: YoroiWallet
   amount: Balance.Amount
   style?: ViewProps['style']
-  isPrivacyOff?: boolean
+  isPrivacyActive?: boolean
   status?: string
   inWallet?: boolean
   variant?: 'swap'
@@ -25,7 +25,7 @@ export type AmountItemProps = {
 }
 
 export const AmountItem = ({
-  isPrivacyOff,
+  isPrivacyActive,
   wallet,
   style,
   amount,
@@ -84,7 +84,7 @@ export const AmountItem = ({
             {priceImpactRisk === 'high' && <Icon.Warning size={24} color={priceImpactRiskTextColor} />}
 
             <Text style={[styles.quantity, {color: priceImpactRiskTextColor}]}>
-              {isPrivacyOff ? '**.*******' : formattedQuantity}
+              {isPrivacyActive ? '**.*******' : formattedQuantity}
             </Text>
           </View>
         )}
