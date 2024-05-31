@@ -157,7 +157,7 @@ class CIP30Extension {
   async buildReorganisationTx(): Promise<YoroiUnsignedTx> {
     const bech32Address = this.wallet.externalAddresses[0]
     const amounts = {[this.wallet.primaryTokenInfo.id]: asQuantity(collateralConfig.minLovelace)}
-    return await this.wallet.createUnsignedTx([{address: bech32Address, amounts}])
+    return this.wallet.createUnsignedTx([{address: bech32Address, amounts}])
   }
 
   async sendReorganisationTx(signedTx: YoroiSignedTx): Promise<CSL.TransactionUnspentOutput> {
