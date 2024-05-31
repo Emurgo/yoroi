@@ -13,7 +13,7 @@ import {RawUtxo, YoroiUnsignedTx} from '../../types'
 import {asQuantity, Utxos} from '../../utils'
 import {Cardano, CardanoMobile} from '../../wallets'
 import {toAssetNameHex, toPolicyId} from '../api'
-import {getDerivationPathForAddress, getTransactionSigners} from '../common/signatureUtils'
+import {getDerivationPathForAddress, getTransactionSigners, harden} from '../common/signatureUtils'
 import {Pagination, YoroiWallet} from '../types'
 import {createRawTxSigningKey, identifierToCardanoAsset} from '../utils'
 import {collateralConfig, findCollateralCandidates, utxosMaker} from '../utxoManager/utxos'
@@ -134,12 +134,13 @@ class CIP30Extension {
       const normalisedAddress = await normalizeToAddress(csl, address)
       const bech32Address = await normalisedAddress?.toBech32(undefined)
       if (!bech32Address) throw new Error('Invalid address')
-      const path = getDerivationPathForAddress(bech32Address, this.wallet, false)
+      const path = [harden(1852), harden(1815), harden(0), 0, 0]
+      console.log('path', path)
       const signingKey = await createRawTxSigningKey(rootKey, path)
-      const payloadInBytes = Buffer.from(payload, 'hex')
+      const payloadInBytes = Uint8Array.from(Buffer.from(payload, 'utf-8'))
       const signingKeyBytes = await signingKey.asBytes()
       const signature = signBip32(payloadInBytes, signingKeyBytes)
-      const key = await normalisedAddress?.toHex()
+      const key = await (await signingKey.toPublic())?.toHex()
       if (!key) throw new Error('Invalid key')
       return {signature: Buffer.from(signature).toString('hex'), key}
     } finally {
