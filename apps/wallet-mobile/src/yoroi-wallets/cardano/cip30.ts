@@ -9,7 +9,7 @@ import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
 import _ from 'lodash'
 
-import {RawUtxo, YoroiUnsignedTx} from '../types'
+import {RawUtxo, YoroiSignedTx, YoroiUnsignedTx} from '../types'
 import {asQuantity, Utxos} from '../utils'
 import {Cardano, CardanoMobile} from '../wallets'
 import {toAssetNameHex, toPolicyId} from './api'
@@ -149,6 +149,43 @@ class CIP30Extension {
       const signedTxBytes = await signRawTransaction(csl, cbor, keys)
       const signedTx = await csl.Transaction.fromBytes(signedTxBytes)
       return copy(CardanoMobile.TransactionWitnessSet, await signedTx.witnessSet())
+    } finally {
+      release()
+    }
+  }
+
+  async buildReorganisationTx(): Promise<YoroiUnsignedTx> {
+    const {csl, release} = getCSL()
+    try {
+      const address = await csl.Address.fromHex(this.wallet.rewardAddressHex)
+      const bech32Address = await address.toBech32(undefined)
+      return await this.wallet.createUnsignedTx([
+        {
+          address: bech32Address,
+          amounts: {[this.wallet.primaryTokenInfo.id]: asQuantity(collateralConfig.minLovelace)},
+        },
+      ])
+    } finally {
+      release()
+    }
+  }
+
+  async sendReorganisationTx(signedTx: YoroiSignedTx): Promise<CSL.TransactionUnspentOutput> {
+    const {csl, release} = getCSL()
+    try {
+      const tx = await csl.Transaction.fromBytes(signedTx.signedTx.encodedTx)
+      const txId = signedTx.signedTx.id
+      const txIndex = 0
+      const body = await tx.body()
+      const originalOutput = await (await body.outputs()).get(txIndex)
+
+      const txHash = txId.split(':')[0]
+      const input = await csl.TransactionInput.new(await csl.TransactionHash.fromHex(txHash), txIndex)
+      const value = await originalOutput.amount()
+      const receiver = await originalOutput.address()
+      const output = await csl.TransactionOutput.new(receiver, value)
+      await this.wallet.submitTransaction(Buffer.from(signedTx.signedTx.encodedTx).toString('base64'))
+      return copy(CardanoMobile.TransactionUnspentOutput, await csl.TransactionUnspentOutput.new(input, output))
     } finally {
       release()
     }

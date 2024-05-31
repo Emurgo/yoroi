@@ -2,6 +2,7 @@ import {isKeyOf, isRecord, createTypeGuardFromSchema} from '@yoroi/common'
 import {Storage} from './adapters/async-storage'
 import {z} from 'zod'
 import {Address, TransactionUnspentOutput, TransactionWitnessSet, Value} from '@emurgo/cross-csl-core'
+import BigNumber from 'bignumber.js'
 
 type Context = {
   browserOrigin: string
@@ -97,20 +98,22 @@ export const resolver: Resolver = {
     getCollateral: async (params: unknown, context: Context) => {
       assertOriginsMatch(context)
       await assertWalletAcceptedConnection(context)
+
+      const defaultCollateral = '1000000'
       const value =
         isRecord(params) && Array.isArray(params.args) && typeof params.args[0] === 'string'
           ? params.args[0]
-          : undefined
+          : defaultCollateral
       const result = await context.wallet.getCollateral(value)
 
-      if (result === null) {
-        // offer reorganisation
+      if (result === null || result.length === 0) {
         const balance = await context.wallet.getBalance('*')
-        const coin = await balance.coin()
-        // check min collateral value
-        if ((await coin.toStr()) !== '0') {
-          const utxos = await context.wallet.getUtxos(value ?? '1000000')
-          if (utxos === null || utxos.length === 0) {
+        const coin = BigNumber(await (await balance.coin()).toStr())
+        if (coin.isGreaterThan(BigNumber(value))) {
+          try {
+            const utxo = await context.wallet.sendReorganisationTx()
+            return [await utxo.toHex()]
+          } catch {
             return null
           }
         }
@@ -281,6 +284,7 @@ export type ResolverWallet = {
   submitTx: (cbor: string) => Promise<string>
   signTx: (txHex: string, partialSign?: boolean) => Promise<TransactionWitnessSet>
   signData: (address: string, payload: string) => Promise<{signature: string; key: string}>
+  sendReorganisationTx: () => Promise<TransactionUnspentOutput>
 }
 
 type Pagination = {
