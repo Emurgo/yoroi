@@ -157,7 +157,7 @@ class CIP30Extension {
   async buildReorganisationTx(): Promise<YoroiUnsignedTx> {
     const {csl, release} = getCSL()
     try {
-      const address = await csl.Address.fromHex(this.wallet.rewardAddressHex)
+      const address = await csl.Address.fromHex(this.wallet.externalAddresses[0])
       const bech32Address = await address.toBech32(undefined)
       return await this.wallet.createUnsignedTx([
         {
