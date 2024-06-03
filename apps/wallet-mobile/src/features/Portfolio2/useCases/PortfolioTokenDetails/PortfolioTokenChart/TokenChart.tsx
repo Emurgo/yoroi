@@ -107,11 +107,11 @@ const TokenChartComponent = ({dataSources = [], onValueSelected}: Props) => {
     let adjustedX = -ttWidth / 2
     // when hit the start edge of the screen we move the tooltip to the right
     if (xPosition <= minX + ttWidth) {
-      adjustedX = minX - 16
+      adjustedX = minX
     }
 
     if (xPosition >= maxX - ttWidth) {
-      adjustedX = -ttWidth + 16
+      adjustedX = -ttWidth
     }
 
     return (

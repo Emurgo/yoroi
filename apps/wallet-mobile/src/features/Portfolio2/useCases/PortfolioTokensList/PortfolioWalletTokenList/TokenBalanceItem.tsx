@@ -20,6 +20,7 @@ export const TokenBalanceItem = ({amount}: Props) => {
   const navigationTo = useNavigateTo()
   const {info, quantity} = amount
   const name = infoExtractName(info)
+  const symbol = infoExtractName(info, {mode: 'currency'})
   const quantityChangeData = useGetQuantityChange({name, quantity})
   const {previousQuantity} = quantityChangeData ?? {}
   const {variantPnl, quantityChangePercent} = useQuantityChange({decimals: info.decimals, quantity, previousQuantity})
@@ -44,7 +45,7 @@ export const TokenBalanceItem = ({amount}: Props) => {
       </View>
 
       <View>
-        <Text style={styles.tokenBalance}>{`${balanceFormatted} ${name.slice(0, 5)}`}</Text>
+        <Text style={styles.tokenBalance}>{`${balanceFormatted} ${symbol}`}</Text>
 
         <PairedBalance amount={amount} textStyle={styles.pairedBalance} />
       </View>
