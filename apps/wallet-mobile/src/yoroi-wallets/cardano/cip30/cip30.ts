@@ -1,5 +1,6 @@
 import * as CSL from '@emurgo/cross-csl-core'
 import {PrivateKey, WasmModuleProxy} from '@emurgo/cross-csl-core'
+import {init} from '@emurgo/cross-msl-mobile'
 import {RemoteUnspentOutput, signRawTransaction, UtxoAsset} from '@emurgo/yoroi-lib'
 import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
 import {parseTokenList} from '@emurgo/yoroi-lib/dist/internals/utils/assets'
@@ -18,7 +19,6 @@ import {Pagination, YoroiWallet} from '../types'
 import {createRawTxSigningKey, identifierToCardanoAsset} from '../utils'
 import {collateralConfig, findCollateralCandidates, utxosMaker} from '../utxoManager/utxos'
 import {wrappedCsl} from '../wrappedCsl'
-import {init} from '@emurgo/cross-msl-nodejs'
 
 const MSL = init('msl')
 

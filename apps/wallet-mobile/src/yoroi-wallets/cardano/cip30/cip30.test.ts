@@ -1,9 +1,9 @@
+import verifySignature from '@cardano-foundation/cardano-verify-datasignature'
+
 import {mocks} from '../../mocks'
 import {getMasterKeyFromMnemonic} from '../byron/util'
 import {YoroiWallet} from '../types'
 import {cip30ExtensionMaker} from './cip30'
-import {wrappedCsl} from '../wrappedCsl'
-import verifySignature from '@cardano-foundation/cardano-verify-datasignature'
 
 describe('cip30ExtensionMaker', () => {
   it('should support submitTx', async () => {
@@ -85,7 +85,7 @@ describe('cip30ExtensionMaker', () => {
 
   it('should support signData', async () => {
     const rootKey = await getMasterKeyFromMnemonic(mnemonic)
-    const {csl} = wrappedCsl()
+    // const {csl} = wrappedCsl()
     const message = 'whatever'
     const addressBech32 =
       'addr1qynqc23tpx4dqps6xgqy9s2l3xz5fxu734wwmzj9uddn0h2z6epfcukqmswgwwfruxh7gaddv9x0d5awccwahnhwleqqc4zkh4'
