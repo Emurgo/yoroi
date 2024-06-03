@@ -1,7 +1,7 @@
+import {useQuery} from '@tanstack/react-query'
 import {isBoolean, useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
 import {useEffect, useState} from 'react'
 import {NativeModules, Platform} from 'react-native'
-import {useQuery} from '@tanstack/react-query'
 
 const {FlagSecure} = NativeModules
 

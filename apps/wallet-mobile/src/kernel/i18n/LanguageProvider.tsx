@@ -1,12 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {parseSafe, useAsyncStorage} from '@yoroi/common'
-import React, {useMemo} from 'react'
-import {IntlProvider} from 'react-intl'
-import {Text} from 'react-native'
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import TimeZone from 'react-native-timezone'
 import {
   QueryKey,
   QueryObserver,
@@ -16,6 +9,13 @@ import {
   useQueryClient,
   UseQueryOptions,
 } from '@tanstack/react-query'
+import {parseSafe, useAsyncStorage} from '@yoroi/common'
+import React, {useMemo} from 'react'
+import {IntlProvider} from 'react-intl'
+import {Text} from 'react-native'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import TimeZone from 'react-native-timezone'
 
 import {numberLocale, systemLocale} from './initialization'
 import {LanguageCode, NumberLocale, supportedLanguages} from './languages'

@@ -2,6 +2,15 @@
 import {Certificate} from '@emurgo/cross-csl-core'
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
 import {
+  onlineManager,
+  useMutation,
+  UseMutationOptions,
+  useQueries,
+  useQuery,
+  useQueryClient,
+  UseQueryOptions,
+} from '@tanstack/react-query'
+import {
   mountMMKVStorage,
   observableStorageMaker,
   parseBoolean,
@@ -14,15 +23,6 @@ import {Buffer} from 'buffer'
 import * as React from 'react'
 import {useCallback, useMemo} from 'react'
 import {PixelRatio, Platform} from 'react-native'
-import {
-  onlineManager,
-  useMutation,
-  UseMutationOptions,
-  useQueries,
-  useQuery,
-  useQueryClient,
-  UseQueryOptions,
-} from '@tanstack/react-query'
 
 import {AddressMode, WalletMeta} from '../../features/WalletManager/common/types'
 import {parseWalletMeta} from '../../features/WalletManager/common/validators'
@@ -145,24 +145,26 @@ export const useStakingKey = (wallet: YoroiWallet) => {
 }
 
 export const useKeyHashes = ({address}: {address: string}) => {
-  const [spendingData, stakingData] = useQueries([
-    {
-      suspense: true,
-      queryKey: [address, 'spendingKeyHash'],
-      queryFn: () =>
-        getSpendingKey(address).then((spending) => {
-          return {spending}
-        }),
-    },
-    {
-      suspense: true,
-      queryKey: [address, 'stakingkeyHash'],
-      queryFn: () =>
-        getStakingKey(address).then((staking) => {
-          return {staking}
-        }),
-    },
-  ])
+  const [spendingData, stakingData] = useQueries({
+    queries: [
+      {
+        suspense: true,
+        queryKey: [address, 'spendingKeyHash'],
+        queryFn: () =>
+          getSpendingKey(address).then((spending) => {
+            return {spending}
+          }),
+      },
+      {
+        suspense: true,
+        queryKey: [address, 'stakingkeyHash'],
+        queryFn: () =>
+          getStakingKey(address).then((staking) => {
+            return {staking}
+          }),
+      },
+    ],
+  })
   return {spending: spendingData.data?.spending, staking: stakingData.data?.staking}
 }
 
@@ -293,7 +295,7 @@ export const useTokenInfosDetailed = (
     queryFn: () => wallet.fetchTokenInfo(tokenId),
     staleTime: 600_000,
   }))
-  return useQueries(queries)
+  return useQueries({queries})
 }
 
 export const useTokenInfos = (

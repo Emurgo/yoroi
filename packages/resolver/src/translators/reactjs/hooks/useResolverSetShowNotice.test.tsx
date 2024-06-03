@@ -21,7 +21,7 @@ describe('useResolverSetShowNotice', () => {
   const mockResolverManager = {...resolverManagerMocks.success}
 
   it('success', async () => {
-    mockResolverManager.showNotice.save = jest.fn().mockResolvedValue(undefined)
+    mockResolverManager.showNotice.save = jest.fn().mockResolvedValue(null)
     const wrapper = wrapperManagerFixture({
       queryClient,
       resolverManager: mockResolverManager,

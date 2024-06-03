@@ -1,9 +1,9 @@
+import {useQueryClient} from '@tanstack/react-query'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useQueryClient} from '@tanstack/react-query'
 
 import {
   Button,

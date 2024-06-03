@@ -1,7 +1,7 @@
 import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
-import React from 'react'
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
+import React from 'react'
 
 import {SelectedWalletProvider} from '../../../features/WalletManager/context/SelectedWalletContext'
 import {mocks} from '../../../yoroi-wallets/mocks'
