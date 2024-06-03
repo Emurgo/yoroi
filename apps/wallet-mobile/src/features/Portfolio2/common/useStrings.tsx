@@ -70,6 +70,9 @@ export const useStrings = () => {
     totalPortfolioValueTooltip: intl.formatMessage(messages.totalPortfolioValueTooltip),
     totalWalletValueTooltip: intl.formatMessage(messages.totalWalletValueTooltip),
     totalDAppsValueTooltip: intl.formatMessage(messages.totalDAppsValueTooltip),
+    portfolioSwapTokensTitle: intl.formatMessage(messages.portfolioSwapTokensTitle),
+    portfolioSwapTokensDescription: intl.formatMessage(messages.portfolioSwapTokensDescription),
+    startSwapping: intl.formatMessage(messages.startSwapping),
   }
 }
 
@@ -334,5 +337,17 @@ export const messages = defineMessages({
   detailsOn: {
     id: 'portfolio.portfolioTokensDetailScreen.detailsOn',
     defaultMessage: '!!!Details on',
+  },
+  portfolioSwapTokensTitle: {
+    id: 'portfolio.portfolioDashboardScreen.portfolioSwapTokensTitle',
+    defaultMessage: '!!!Trade Tokens. Explore Possibilities',
+  },
+  portfolioSwapTokensDescription: {
+    id: 'portfolio.portfolioDashboardScreen.portfolioSwapTokensDescription',
+    defaultMessage: '!!!Swap tokens seamlessly within Yoroi. Access new investment opportunities and explore DeFi',
+  },
+  startSwapping: {
+    id: 'portfolio.portfolioDashboardScreen.startSwapping',
+    defaultMessage: '!!!Start Swapping',
   },
 })

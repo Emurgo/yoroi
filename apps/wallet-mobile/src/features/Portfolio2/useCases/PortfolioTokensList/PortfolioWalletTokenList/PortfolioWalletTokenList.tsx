@@ -1,4 +1,4 @@
-import {infoExtractName} from '@yoroi/portfolio'
+import {infoExtractName, isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
@@ -14,17 +14,28 @@ import {Line} from '../../../common/Line'
 import {TokenEmptyList} from '../../../common/TokenEmptyList'
 import {useGetTokensWithBalance} from '../../../common/useGetTokensWithBalance'
 import {useStrings} from '../../../common/useStrings'
+import {useZeroBalance} from '../../../common/useZeroBalance'
+import {BuyADABanner} from '../../PortfolioDashboard/DashboardTokensList/BuyADABanner/BuyADABanner'
 import {TotalTokensValue} from '../TotalTokensValue/TotalTokensValue'
 import {TokenBalanceItem} from './TokenBalanceItem'
 import {TokenBalanceSkeletonItem} from './TokenBalanceSkeletonItem'
+import {TradeTokensBannerBig} from './TradeTokensBannerBig'
 
 export const PortfolioWalletTokenList = () => {
   const {styles} = useStyles()
   const {search, isSearching} = useSearch()
-
+  const isZeroADABalance = useZeroBalance()
   const wallet = useSelectedWallet()
   const balances = usePortfolioBalances({wallet})
   const tokensList = React.useMemo(() => balances.fts ?? [], [balances.fts])
+
+  const isJustADA = React.useMemo(() => {
+    if (tokensList.length >= 2) return false
+    const tokenInfo = tokensList[0].info
+    const isPrimary = isPrimaryToken(tokenInfo)
+    return isPrimary
+  }, [tokensList])
+  const isFirstUser = isJustADA && isZeroADABalance
 
   const primaryBalance = usePortfolioPrimaryBalance({wallet})
   const {isLoading: tokensLoading} = useGetTokensWithBalance()
@@ -42,6 +53,23 @@ export const PortfolioWalletTokenList = () => {
 
   const renderFooterList = () => {
     if (tokensLoading) return makeList(6).map((_, index) => <SkeletonItem key={index} />)
+    if (isZeroADABalance) {
+      return (
+        <View>
+          <Spacer height={16} />
+
+          <BuyADABanner />
+        </View>
+      )
+    }
+    if (isJustADA)
+      return (
+        <View>
+          <Spacer height={16} />
+
+          <TradeTokensBannerBig />
+        </View>
+      )
 
     return null
   }
@@ -55,6 +83,7 @@ export const PortfolioWalletTokenList = () => {
             isShowBalanceCard={!isSearching}
             countTokensList={getListTokens.length}
             amount={primaryBalance}
+            isFirstUser={isFirstUser}
           />
         }
         ListFooterComponent={renderFooterList}
@@ -68,11 +97,12 @@ export const PortfolioWalletTokenList = () => {
 }
 
 type HeadingListProps = {
+  isFirstUser: boolean
   isShowBalanceCard: boolean
   countTokensList: number
   amount: Portfolio.Token.Amount
 }
-const HeadingList = ({isShowBalanceCard, countTokensList, amount}: HeadingListProps) => {
+const HeadingList = ({isFirstUser, isShowBalanceCard, countTokensList, amount}: HeadingListProps) => {
   const strings = useStrings()
   const {styles} = useStyles()
 
@@ -88,7 +118,7 @@ const HeadingList = ({isShowBalanceCard, countTokensList, amount}: HeadingListPr
 
       <Spacer height={16} />
 
-      <Text style={styles.textAvailable}>{strings.tokensAvailable(countTokensList)}</Text>
+      <Text style={styles.textAvailable}>{strings.tokensAvailable(isFirstUser ? 0 : countTokensList)}</Text>
 
       <Spacer height={8} />
     </View>

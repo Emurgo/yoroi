@@ -26,11 +26,13 @@ export const DashboardTokensList = () => {
 
   const tokensList = React.useMemo(() => balances.fts ?? [], [balances.fts])
   const isJustADA = React.useMemo(() => {
-    if (tokensList.length > 2) return false
+    if (tokensList.length >= 2) return false
     const tokenInfo = tokensList[0].info
     const isPrimary = isPrimaryToken(tokenInfo)
-    return isPrimary && !isZeroADABalance
-  }, [isZeroADABalance, tokensList])
+    return isPrimary
+  }, [tokensList])
+
+  const isFirstUser = isJustADA && isZeroADABalance
 
   const handleDirectTokensList = () => {
     navigationTo.tokensList()
@@ -40,11 +42,13 @@ export const DashboardTokensList = () => {
     if (isLoading)
       return (
         <View style={styles.containerLoading}>
+          <View />
+
           {makeList(3).map((_, index) => (
             <DashboardTokenSkeletonItem key={index} />
           ))}
 
-          <Spacer width={16} />
+          <Spacer width={8} />
         </View>
       )
 
@@ -65,7 +69,7 @@ export const DashboardTokensList = () => {
 
   return (
     <View style={styles.root}>
-      <Heading countTokens={tokensList.length} onPress={handleDirectTokensList} />
+      <Heading countTokens={tokensList.length} onPress={handleDirectTokensList} isFirstUser={isFirstUser} />
 
       {isZeroADABalance ? (
         <View style={styles.container}>
@@ -89,15 +93,18 @@ export const DashboardTokensList = () => {
 
 type HeadingProps = {
   countTokens: number
+  isFirstUser: boolean
   onPress: () => void
 }
-const Heading = ({countTokens, onPress}: HeadingProps) => {
+const Heading = ({countTokens, onPress, isFirstUser}: HeadingProps) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
+  console.log(isFirstUser)
+
   return (
     <View style={[styles.container, styles.actionsContainer]}>
-      <Text style={styles.title}>{strings.tokens(countTokens)}</Text>
+      <Text style={styles.title}>{strings.tokens(isFirstUser ? 0 : countTokens)}</Text>
 
       <TouchTokensList onPress={onPress} />
     </View>

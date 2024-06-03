@@ -5,11 +5,11 @@ import {StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {TxHistoryRouteNavigation} from 'src/navigation'
 
-import {Button} from '../../../../../components'
+import {Button, Spacer} from '../../../../../components'
 import {useStrings} from '../../../common/useStrings'
-import {TradeTokensAsset} from './TradeTokensAsset'
+import {TradeTokensAsset} from '../../PortfolioDashboard/DashboardTokensList/TradeTokensAsset'
 
-export const TradeTokensBanner = () => {
+export const TradeTokensBannerBig = () => {
   const {styles, colors} = useStyles()
   const strings = useStrings()
 
@@ -21,11 +21,17 @@ export const TradeTokensBanner = () => {
   return (
     <View style={styles.root}>
       <LinearGradient style={styles.gradientRoot} colors={colors.gradientColor}>
-        <Text style={styles.title}>{strings.tradeTokens}</Text>
+        <Text style={styles.title}>{strings.portfolioSwapTokensTitle}</Text>
+
+        <Spacer height={13} />
+
+        <Text style={styles.description}>{strings.portfolioSwapTokensDescription}</Text>
+
+        <Spacer height={37} />
 
         <Button
           mainTheme
-          title={strings.swap.toLocaleUpperCase()}
+          title={strings.startSwapping.toLocaleUpperCase()}
           style={styles.spaceButton}
           textStyles={styles.spaceButtonText}
           onPress={handleSwap}
@@ -43,7 +49,6 @@ const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      width: 164,
       ...atoms.flex_1,
     },
     gradientRoot: {
@@ -66,14 +71,19 @@ const useStyles = () => {
     title: {
       ...atoms.body_1_lg_medium,
       ...atoms.font_semibold,
+      color: color.gray_cmax,
     },
     assetBox: {
       ...atoms.absolute,
       ...atoms.flex_col,
       ...atoms.justify_center,
       ...atoms.align_center,
-      right: -17.09,
-      top: 37.61,
+      bottom: 6.21,
+      right: 1.43,
+    },
+    description: {
+      ...atoms.body_2_md_regular,
+      color: color.gray_cmax,
     },
   })
 
