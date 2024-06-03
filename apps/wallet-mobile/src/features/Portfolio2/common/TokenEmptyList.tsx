@@ -39,7 +39,7 @@ const useStyles = () => {
       ...atoms.align_center,
       ...atoms.w_full,
       ...atoms.gap_lg,
-      ...atoms.h_full,
+      ...atoms.flex_1,
     },
     textEmpty: {
       ...atoms.heading_3_medium,

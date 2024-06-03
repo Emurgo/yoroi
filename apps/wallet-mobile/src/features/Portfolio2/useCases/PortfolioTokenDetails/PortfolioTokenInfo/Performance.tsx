@@ -1,4 +1,5 @@
 /* eslint-disable react-native/no-raw-text */
+import {infoExtractName} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import React, {ReactNode} from 'react'
 import {NativeScrollEvent, NativeSyntheticEvent, StyleSheet, Text, View} from 'react-native'
@@ -7,9 +8,10 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 import {Icon, Spacer} from '../../../../../components'
 import {ScrollView} from '../../../../../components/ScrollView/ScrollView'
-import {useStrings} from '../../..//common/useStrings'
+import {useSelectedWallet} from '../../../../../features/WalletManager/context/SelectedWalletContext'
 import {useGetPortfolioTokenInfo} from '../../../common/useGetPortfolioTokenInfo'
 import {usePortfolioTokenDetailParams} from '../../../common/useNavigateTo'
+import {useStrings} from '../../../common/useStrings'
 
 interface Props {
   onScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
@@ -18,8 +20,12 @@ interface Props {
 
 export const Performance = ({onScroll, topContent}: Props) => {
   const {styles, colors} = useStyles()
-  const {name: tokenName} = usePortfolioTokenDetailParams()
-  const {data, isFetching} = useGetPortfolioTokenInfo(tokenName)
+  const {id: tokenId} = usePortfolioTokenDetailParams()
+  const wallet = useSelectedWallet()
+  const {balances} = wallet
+  const tokenInfo = balances.records.get(tokenId)
+  const tokenSymbol = tokenInfo ? infoExtractName(tokenInfo.info, {mode: 'currency'}) : '-'
+  const {data, isFetching} = useGetPortfolioTokenInfo(tokenSymbol)
   const strings = useStrings()
 
   const value = data?.info?.performance
@@ -86,19 +92,19 @@ export const Performance = ({onScroll, topContent}: Props) => {
 
           <TextGroup
             loading={isFetching}
-            value={`${value?.market?.circulating ?? '-/-'} ${data?.name}`}
+            value={`${value?.market?.circulating ?? '-/-'} ${tokenSymbol}`}
             label={strings.circulating}
           />
 
           <TextGroup
             loading={isFetching}
-            value={`${value?.market?.total_supply ?? '-/-'} ${data?.name}`}
+            value={`${value?.market?.total_supply ?? '-/-'} ${tokenSymbol}`}
             label={strings.totalSupply}
           />
 
           <TextGroup
             loading={isFetching}
-            value={`${value?.market?.max_supply ?? '-/-'} ${data?.name}`}
+            value={`${value?.market?.max_supply ?? '-/-'} ${tokenSymbol}`}
             label={strings.maxSupply}
           />
 

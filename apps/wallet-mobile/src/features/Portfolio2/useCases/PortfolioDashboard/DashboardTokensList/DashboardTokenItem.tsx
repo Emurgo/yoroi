@@ -23,7 +23,7 @@ export const DashboardTokenItem = ({tokenInfo}: Props) => {
   const {isPrivacyOff, privacyPlaceholder} = usePrivacyMode()
 
   const {info, quantity} = tokenInfo ?? {}
-  const name = infoExtractName(info)
+  const name = infoExtractName(info, {mode: 'currency'})
 
   const quantityChangeData = useGetQuantityChange({name, quantity})
   const {previousQuantity} = quantityChangeData ?? {}

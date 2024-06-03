@@ -180,7 +180,8 @@ export const formatDateRelative = (
     year: 'numeric',
     month: 'numeric',
     day: 'numeric',
-  } as FormatDateOptions) => {
+  } as FormatDateOptions,
+) => {
   if (timestamp.length === 0) {
     return ''
   }

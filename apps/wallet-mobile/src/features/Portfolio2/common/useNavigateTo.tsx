@@ -10,7 +10,7 @@ export const useNavigateTo = () => {
   return React.useRef({
     tokensList: () => navigation.navigate('portfolio-tokens-list'),
     tokenDetail: (params: PortfolioTokenDetailParams) =>
-      navigation.navigate('portfolio-token-details', {id: params.id, name: params.name}),
+      navigation.navigate('portfolio-token-details', {id: params.id}),
     nftsList: () => navigation.navigate('nfts'),
   } as const).current
 }
@@ -21,9 +21,8 @@ export const isPortfolioTokenDetailParams = (
   params?: PortfolioTokenDetailParams | object | undefined,
 ): params is PortfolioTokenDetailParams => {
   const isValidId = !!params && 'id' in params && !isEmptyString(params.id)
-  const isValidName = !!params && 'name' in params && !isEmptyString(params.name)
 
-  return isValidId && isValidName
+  return isValidId
 }
 
 export const usePortfolioTokenDetailParams = () => {

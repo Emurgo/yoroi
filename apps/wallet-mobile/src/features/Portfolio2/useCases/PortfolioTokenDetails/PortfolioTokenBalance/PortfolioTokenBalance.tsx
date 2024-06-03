@@ -1,31 +1,36 @@
-/* eslint-disable react-native/no-raw-text */
-import {amountFormatter} from '@yoroi/portfolio'
+import {amountFormatter, infoExtractName} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
+import {LoadingBoundary} from '../../../../../components'
 import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
-import {useGetPortfolioTokenInfo} from '../../../common/useGetPortfolioTokenInfo'
+import {useSelectedWallet} from '../../../../../features/WalletManager/context/SelectedWalletContext'
 import {usePortfolioTokenDetailParams} from '../../../common/useNavigateTo'
 import {PortfolioTokenDetailBalanceSkeleton} from './PortfolioTokenDetailBalanceSkeleton'
 
 export const PortfolioTokenBalance = () => {
   const {styles} = useStyles()
-  const {name: tokenName} = usePortfolioTokenDetailParams()
+  const wallet = useSelectedWallet()
+  const {balances} = wallet
+  const {id: tokenId} = usePortfolioTokenDetailParams()
+  const tokenInfo = balances.records.get(tokenId)
+  const tokenName = tokenInfo ? infoExtractName(tokenInfo.info, {mode: 'currency'}) : '-'
 
-  const {data, isFetching} = useGetPortfolioTokenInfo(tokenName)
+  if (!tokenInfo) return <PortfolioTokenDetailBalanceSkeleton />
 
-  if (isFetching || !data) return <PortfolioTokenDetailBalanceSkeleton />
   return (
-    <View>
-      <View style={styles.tokenWrapper}>
-        <Text style={styles.tokenLabel}>{amountFormatter({dropTraillingZeros: true})(data.amount ?? 0)}</Text>
+    <LoadingBoundary fallback={<PortfolioTokenDetailBalanceSkeleton />}>
+      <View>
+        <View style={styles.tokenWrapper}>
+          <Text style={styles.tokenLabel}>{amountFormatter({dropTraillingZeros: true})(tokenInfo)}</Text>
 
-        <Text style={styles.symbol}>{tokenName}</Text>
+          <Text style={styles.symbol}>{tokenName}</Text>
+        </View>
+
+        <PairedBalance textStyle={styles.usdLabel} ignorePrivacy amount={tokenInfo} />
       </View>
-
-      <PairedBalance textStyle={styles.usdLabel} ignorePrivacy amount={data.amount} />
-    </View>
+    </LoadingBoundary>
   )
 }
 

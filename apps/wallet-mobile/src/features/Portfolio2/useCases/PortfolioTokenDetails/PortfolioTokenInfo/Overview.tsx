@@ -1,22 +1,17 @@
+import {useExplorers} from '@yoroi/explorers'
+import {infoExtractName} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import React, {ReactNode, useState} from 'react'
-import {
-  Image,
-  Linking,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import {Linking, NativeScrollEvent, NativeSyntheticEvent, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Accordion, CopyButton, Spacer} from '../../../../../components'
 import {ScrollView} from '../../../../../components/ScrollView/ScrollView'
-import {useGetPortfolioTokenInfo} from '../../../common/useGetPortfolioTokenInfo'
+import {TokenInfoIcon} from '../../../../../features/Portfolio/common/TokenAmountItem/TokenInfoIcon'
+import {useSelectedWallet} from '../../../../../features/WalletManager/context/SelectedWalletContext'
 import {usePortfolioTokenDetailParams} from '../../../common/useNavigateTo'
 import {useStrings} from '../../../common/useStrings'
+
 interface Props {
   onScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
   topContent?: ReactNode
@@ -24,13 +19,24 @@ interface Props {
 export const Overview = ({onScroll, topContent}: Props) => {
   const {styles} = useStyles()
   const strings = useStrings()
-  const {name: tokenName} = usePortfolioTokenDetailParams()
-  const {data} = useGetPortfolioTokenInfo(tokenName)
+  const {id: tokenId} = usePortfolioTokenDetailParams()
+  const wallet = useSelectedWallet()
+  const explorers = useExplorers(wallet.network)
+  const {balances} = wallet
+  const tokenInfo = balances.records.get(tokenId)
+  const tokenSymbol = tokenInfo ? infoExtractName(tokenInfo.info, {mode: 'currency'}) : ''
+  const [policyId] = tokenInfo?.info.id.split('.') ?? []
+
   const [expanded, setExpanded] = useState(true)
 
-  const handleOpenLink = async (url?: string) => {
-    if (url == null) return
-    await Linking.openURL(url)
+  const handleOpenLink = async () => {
+    if (tokenInfo == null) return
+    // try {
+    //   await Linking.canOpenURL(explorers.cardanoscan.token(tokenInfo.info.id))
+    // } catch (e) {
+    //   Logger.error(e)
+    // }
+    await Linking.openURL(explorers.cardanoscan.token(tokenInfo.info.id))
   }
 
   return (
@@ -40,20 +46,18 @@ export const Overview = ({onScroll, topContent}: Props) => {
 
         <Spacer height={16} />
 
-        <Accordion label="Info" expanded={expanded} onChange={setExpanded} wrapperStyle={styles.container}>
+        <Accordion label={strings.info} expanded={expanded} onChange={setExpanded} wrapperStyle={styles.container}>
           <View style={styles.tokenInfoContainer}>
-            {data?.logo != null ? (
-              <Image source={typeof data?.logo === 'string' ? {uri: data.logo} : data.logo} style={styles.tokenLogo} />
-            ) : null}
+            {tokenInfo?.info ? <TokenInfoIcon info={tokenInfo?.info} imageStyle={styles.tokenLogo} /> : null}
 
-            <Text style={styles?.tokenName}>{data?.name}</Text>
+            <Text style={styles?.tokenName}>{tokenSymbol}</Text>
           </View>
 
-          <Text style={styles.textBody}>{data?.amount?.info?.description}</Text>
+          <Text style={styles.textBody}>{tokenInfo?.info?.description}</Text>
 
-          <TouchableOpacity onPress={() => handleOpenLink(data?.amount?.info?.website)}>
-            <Text style={styles.link}>{data?.amount?.info?.website}</Text>
-          </TouchableOpacity>
+          {/* <TouchableOpacity onPress={() => handleOpenLink(tokenInfo?.info?.website)}>
+            <Text style={styles.link}>{tokenInfo?.info?.website}</Text>
+          </TouchableOpacity> */}
 
           <Spacer height={24} />
 
@@ -62,7 +66,7 @@ export const Overview = ({onScroll, topContent}: Props) => {
 
             <Spacer height={4} />
 
-            <Text style={styles.textBody}>-</Text>
+            <Text style={styles.textBody}>{tokenInfo?.info?.website ?? '-'}</Text>
           </View>
 
           <Spacer height={24} />
@@ -72,8 +76,8 @@ export const Overview = ({onScroll, topContent}: Props) => {
 
             <Spacer height={4} />
 
-            <CopyButton value={data?.info?.policyId ?? ''} style={styles.copyButton}>
-              <Text style={styles.copyText}>{data?.info?.policyId ?? ''}</Text>
+            <CopyButton value={policyId ?? ''} style={styles.copyButton}>
+              <Text style={styles.copyText}>{policyId ?? ''}</Text>
             </CopyButton>
           </View>
 
@@ -84,8 +88,8 @@ export const Overview = ({onScroll, topContent}: Props) => {
 
             <Spacer height={4} />
 
-            <CopyButton value={data?.amount?.info?.fingerprint ?? ''} style={styles.copyButton}>
-              <Text style={styles.copyText}>{data?.amount?.info?.fingerprint}</Text>
+            <CopyButton value={tokenInfo?.info?.fingerprint ?? ''} style={styles.copyButton}>
+              <Text style={styles.copyText}>{tokenInfo?.info?.fingerprint}</Text>
             </CopyButton>
           </View>
 
@@ -97,11 +101,11 @@ export const Overview = ({onScroll, topContent}: Props) => {
             <Spacer height={4} />
 
             <View style={styles.linkGroup}>
-              <TouchableOpacity onPress={() => handleOpenLink(data?.amount?.info?.website)}>
+              <TouchableOpacity onPress={() => handleOpenLink()}>
                 <Text style={styles.link}>Cardanoscan</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity onPress={() => handleOpenLink(data?.amount?.info?.website)}>
+              <TouchableOpacity onPress={() => handleOpenLink()}>
                 <Text style={styles.link}>Adaex</Text>
               </TouchableOpacity>
             </View>

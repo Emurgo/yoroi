@@ -42,7 +42,6 @@ export const PortfolioWalletTokenList = () => {
 
   const renderFooterList = () => {
     if (tokensLoading) return makeList(6).map((_, index) => <SkeletonItem key={index} />)
-    if (getListTokens.length === 0) return <TokenEmptyList />
 
     return null
   }
@@ -62,6 +61,7 @@ export const PortfolioWalletTokenList = () => {
         ItemSeparatorComponent={() => <Spacer height={16} />}
         renderItem={({item}) => <TokenBalanceItem amount={item} />}
         contentContainerStyle={styles.container}
+        ListEmptyComponent={() => <TokenEmptyList />}
       />
     </View>
   )
@@ -118,6 +118,7 @@ const useStyles = () => {
     },
     container: {
       ...atoms.px_lg,
+      ...atoms.flex_grow,
     },
   })
 
