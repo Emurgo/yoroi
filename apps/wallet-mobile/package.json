@@ -127,7 +127,7 @@
     "@types/pbkdf2": "^3.1.2",
     "@yoroi/api": "1.5.1",
     "@yoroi/common": "1.5.2",
-    "@yoroi/exchange": "2.0.1",
+    "@yoroi/exchange": "2.1.0",
     "@yoroi/explorers": "1.0.0",
     "@yoroi/links": "1.5.4",
     "@yoroi/portfolio": "1.0.0",
