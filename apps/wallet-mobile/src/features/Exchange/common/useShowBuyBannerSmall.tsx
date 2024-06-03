@@ -1,5 +1,5 @@
 import {isNumber, parseNumber, useAsyncStorage} from '@yoroi/common'
-import {useQuery, UseQueryOptions} from 'react-query'
+import {useQuery, UseQueryOptions} from '@tanstack/react-query'
 
 import {useBalances} from '../../../yoroi-wallets/hooks'
 import {Amounts, asQuantity, Quantities} from '../../../yoroi-wallets/utils/utils'

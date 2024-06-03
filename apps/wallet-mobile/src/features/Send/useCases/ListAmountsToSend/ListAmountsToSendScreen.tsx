@@ -8,7 +8,7 @@ import {useLayoutEffect} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 import {FlatList} from 'react-native-gesture-handler'
-import {useMutation} from 'react-query'
+import {useMutation} from '@tanstack/react-query'
 
 import {Boundary, Button, Icon, Spacer} from '../../../../components'
 import globalMessages from '../../../../kernel/i18n/global-messages'

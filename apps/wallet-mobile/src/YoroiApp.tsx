@@ -7,7 +7,7 @@ import {LogBox, StyleSheet} from 'react-native'
 import * as RNP from 'react-native-paper'
 import {initialWindowMetrics, SafeAreaProvider} from 'react-native-safe-area-context'
 import {enableFreeze, enableScreens} from 'react-native-screens'
-import {QueryClient, QueryClientProvider} from 'react-query'
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
 
 import {LoadingBoundary} from './components'
 import {ErrorBoundary} from './components/ErrorBoundary'

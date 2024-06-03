@@ -1,6 +1,6 @@
 import {useMutationWithInvalidations} from '@yoroi/common'
 import {useSwap} from '@yoroi/swap'
-import {UseMutationOptions} from 'react-query'
+import {UseMutationOptions} from '@tanstack/react-query'
 
 import {YoroiEntry, YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {splitStringInto64CharArray} from '../../../yoroi-wallets/utils'

@@ -4,7 +4,7 @@ import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Alert, AppState, Platform} from 'react-native'
 import RNKeychain from 'react-native-keychain'
-import {useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptions} from 'react-query'
+import {useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptions} from '@tanstack/react-query'
 
 import globalMessages from '../../../kernel/i18n/global-messages'
 import {logger} from '../../../kernel/logger/logger'

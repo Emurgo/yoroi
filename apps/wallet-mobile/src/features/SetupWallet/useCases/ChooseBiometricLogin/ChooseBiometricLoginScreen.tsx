@@ -5,7 +5,7 @@ import * as React from 'react'
 import {Alert, StyleSheet, Text, View} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useQuery, UseQueryOptions} from 'react-query'
+import {useQuery, UseQueryOptions} from '@tanstack/react-query'
 
 import {Button} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'

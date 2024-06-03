@@ -1,5 +1,5 @@
 import {useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
-import {UseMutationOptions, useQuery} from 'react-query'
+import {UseMutationOptions, useQuery} from '@tanstack/react-query'
 
 import {useSelectedWallet} from '../context/SelectedWalletContext'
 import {AddressMode} from './types'

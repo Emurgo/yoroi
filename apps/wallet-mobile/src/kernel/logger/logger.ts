@@ -37,7 +37,7 @@ class Logger implements LoggerManager {
 
   debug(message: string, metadata: LoggerMetadata = {}) {
     const entry = {level: LoggerLevel.Debug, message, metadata}
-    this.transport(entry)
+    // this.transport(entry)
   }
 
   log(message: string, metadata: LoggerMetadata = {}) {

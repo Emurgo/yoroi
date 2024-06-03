@@ -118,19 +118,19 @@
         "statements": 100
       }
     },
+    "moduleNameMapper": {
+      "^react-native$": "<rootDir>/node_modules/react-native"
+    },
     "modulePathIgnorePatterns": [
       "<rootDir>/example/node_modules",
       "<rootDir>/lib/"
     ],
-    "moduleNameMapper": {
-      "^react-native$": "<rootDir>/node_modules/react-native"
-    },
-    "transformIgnorePatterns": [
-      "<rootDir>/node_modules/(?!react-native-mmkv)/"
-    ],
     "preset": "react-native",
     "setupFiles": [
       "<rootDir>/jest.setup.js"
+    ],
+    "transformIgnorePatterns": [
+      "<rootDir>/node_modules/(?!react-native-mmkv)/"
     ]
   },
   "dependencies": {
@@ -142,6 +142,7 @@
     "@react-native-async-storage/async-storage": "^1.19.3",
     "@react-native-community/eslint-config": "^3.0.2",
     "@release-it/conventional-changelog": "^5.0.0",
+    "@tanstack/react-query": "4.36.1",
     "@testing-library/react-hooks": "^8.0.1",
     "@testing-library/react-native": "^12.3.0",
     "@tsconfig/react-native": "^3.0.3",
@@ -164,7 +165,6 @@
     "react": "18.2.0",
     "react-native": "~0.71.0",
     "react-native-builder-bob": "^0.23.2",
-    "react-query": "^3.39.3",
     "react-test-renderer": "^18.2.0",
     "release-it": "^15.0.0",
     "typescript": "^5.3.3",
@@ -172,10 +172,10 @@
   },
   "peerDependencies": {
     "@react-native-async-storage/async-storage": ">= 1.19.3 <= 1.20.0",
+    "@tanstack/react-query": "4.36.1",
     "axios": "^1.5.0",
     "immer": "^10.0.2",
     "react": ">= 16.8.0 <= 19.0.0",
-    "react-query": "^3.39.3",
     "zod": "^3.22.4"
   },
   "optionalDependencies": {

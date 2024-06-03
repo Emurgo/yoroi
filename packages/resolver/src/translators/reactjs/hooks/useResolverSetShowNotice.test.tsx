@@ -1,4 +1,4 @@
-import {QueryClient} from 'react-query'
+import {QueryClient} from '@tanstack/react-query'
 import {renderHook, act} from '@testing-library/react-hooks'
 
 import {queryClientFixture} from '../../../fixtures/query-client'

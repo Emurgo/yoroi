@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {QueryClient} from 'react-query'
+import {QueryClient} from '@tanstack/react-query'
 import {Text, View} from 'react-native'
 import {render, waitFor} from '@testing-library/react-native'
 
@@ -54,7 +54,7 @@ describe('useResolverCryptoAddresses', () => {
       const showNotice = useResolverShowNotice()
       return (
         <View>
-          <Text testID="showNotifce">{JSON.stringify(showNotice)}</Text>
+          <Text testID="showNotice">{JSON.stringify(showNotice)}</Text>
         </View>
       )
     }

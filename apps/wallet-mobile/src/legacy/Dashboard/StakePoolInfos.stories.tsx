@@ -1,6 +1,6 @@
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
-import {QueryClient, QueryClientProvider} from 'react-query'
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
 
 import {SelectedWalletProvider} from '../../features/WalletManager/context/SelectedWalletContext'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'

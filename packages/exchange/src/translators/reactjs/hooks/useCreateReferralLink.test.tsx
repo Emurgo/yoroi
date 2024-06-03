@@ -2,7 +2,7 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 import {render, waitFor} from '@testing-library/react-native'
 import {Exchange} from '@yoroi/types'
-import {QueryClient} from 'react-query'
+import {QueryClient} from '@tanstack/react-query'
 import {queryClientFixture} from '@yoroi/common'
 
 import {useCreateReferralLink} from './useCreateReferralLink'

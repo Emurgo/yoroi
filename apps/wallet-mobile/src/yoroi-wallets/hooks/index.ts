@@ -22,7 +22,7 @@ import {
   useQuery,
   useQueryClient,
   UseQueryOptions,
-} from 'react-query'
+} from '@tanstack/react-query'
 
 import {AddressMode, WalletMeta} from '../../features/WalletManager/common/types'
 import {parseWalletMeta} from '../../features/WalletManager/common/validators'

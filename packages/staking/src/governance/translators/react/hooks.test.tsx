@@ -10,7 +10,7 @@ import {
 import {GovernanceProvider} from './context'
 import {managerMock} from '../../mocks'
 import {act, renderHook, waitFor} from '@testing-library/react-native'
-import {QueryClient, QueryClientProvider} from 'react-query'
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
 import {GovernanceManager} from '../../manager'
 import {init} from '@emurgo/cross-csl-nodejs'
 

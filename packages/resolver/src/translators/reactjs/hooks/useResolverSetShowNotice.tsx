@@ -1,7 +1,7 @@
-import {UseMutationOptions} from 'react-query'
+import {UseMutationOptions} from '@tanstack/react-query'
+import {useMutationWithInvalidations} from '@yoroi/common'
 
 import {useResolver} from '../provider/ResolverProvider'
-import {useMutationWithInvalidations} from '../../../utils/useMutationWithInvalidations'
 
 export const useResolverSetShowNotice = (
   options?: UseMutationOptions<void, Error, boolean>,
