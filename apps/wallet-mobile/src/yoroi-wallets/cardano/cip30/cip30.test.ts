@@ -1,10 +1,9 @@
-import verifySignature from '@cardano-foundation/cardano-verify-datasignature'
-
 import {mocks} from '../../mocks'
 import {getMasterKeyFromMnemonic} from '../byron/util'
 import {YoroiWallet} from '../types'
 import {cip30ExtensionMaker} from './cip30'
 import {wrappedCsl} from '../wrappedCsl'
+import verifySignature from '@cardano-foundation/cardano-verify-datasignature'
 
 describe('cip30ExtensionMaker', () => {
   it('should support submitTx', async () => {
@@ -87,36 +86,19 @@ describe('cip30ExtensionMaker', () => {
   it('should support signData', async () => {
     const rootKey = await getMasterKeyFromMnemonic(mnemonic)
     const {csl} = wrappedCsl()
-    const message = 'Hello'
+    const message = 'whatever'
     const addressBech32 =
       'addr1qynqc23tpx4dqps6xgqy9s2l3xz5fxu734wwmzj9uddn0h2z6epfcukqmswgwwfruxh7gaddv9x0d5awccwahnhwleqqc4zkh4'
-    console.log('addressBech32', addressBech32)
-
-    const key = 'a4010103272006215820be6a4d7e9789dd7458049c971ad783107e7f041c6f1f542b4530d63d5fe5afb1'
-    const signature =
-      '845846a201276761646472657373583901260c2a2b09aad0061a320042c15f8985449b9e8d5ced8a45e35b37dd42d6429c72c0dc1c873923e1afe475ad614cf6d3aec61ddbceeefe40a166686173686564f44548656c6c6f58400b6a6aac7a95656ab241bf4dedec8b5ca0d4893747093f3382223b1d2e869de1b6b9809f0b974536b1191b6e193cf4ec5dc506b21b52e6bc5d352f04c60bf30d'
+    // console.log('addressBech32', addressBech32)
 
     // console.log('bech32', addressBech32)
 
     const cip30 = cip30ExtensionMaker(mocks.wallet)
 
     const result = await cip30.signData(rootKey, addressBech32, message)
-    // expect(result).toEqual({key, signature})
-    const pub = await csl..fromHex(
-      '3e08cf0e6eac6cf54f26ecf07de4e615dc970ca7ec551b0d39d21d9ce1b34c15d8b562dd58d6b89756299854f5545ac5d3a6592f1b5b1ebb4993d0c3d35f7c3c',
-    )
-
-    pub.
-
-    const address = await pub.toBech32()
-    expect(
-      verifySignature(
-        '84584da30127045820294f305e91ab3988fc22110083fdd29d59911250f232343c3da8d263d15977466761646472657373581d603469016f543d8510a7e01fa92533c22b83913fb4501e806d964ef8bca166686173686564f44877686174657665725840bd4d761706730739c168f06450de0d3636cbb6367bb9bae1525616b312db9764736c6b6fb79c130e0288fb460b98dedf86cba5914e193e34f9b38f4f48080108',
-        'a4010103272006215820294f305e91ab3988fc22110083fdd29d59911250f232343c3da8d263d1597746',
-        'whatever',
-        address,
-      ),
-    ).toBe(true)
+    console.log('result', result)
+    expect(result.key).toHaveLength(84)
+    expect(verifySignature(result.signature, result.key, message)).toEqual(true)
   })
 
   // it('should support signData 2', async () => {

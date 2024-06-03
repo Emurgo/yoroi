@@ -1,5 +1,5 @@
 import * as CSL from '@emurgo/cross-csl-core'
-import {WasmModuleProxy} from '@emurgo/cross-csl-core'
+import {PrivateKey, WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {RemoteUnspentOutput, signRawTransaction, UtxoAsset} from '@emurgo/yoroi-lib'
 import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
 import {parseTokenList} from '@emurgo/yoroi-lib/dist/internals/utils/assets'
@@ -18,7 +18,9 @@ import {Pagination, YoroiWallet} from '../types'
 import {createRawTxSigningKey, identifierToCardanoAsset} from '../utils'
 import {collateralConfig, findCollateralCandidates, utxosMaker} from '../utxoManager/utxos'
 import {wrappedCsl} from '../wrappedCsl'
-import {signBip32} from './helpers'
+import {init} from '@emurgo/cross-msl-nodejs'
+
+const MSL = init('msl')
 
 export const cip30ExtensionMaker = (wallet: YoroiWallet) => {
   return new CIP30Extension(wallet)
@@ -131,18 +133,30 @@ class CIP30Extension {
   async signData(rootKey: string, address: string, payload: string): Promise<{signature: string; key: string}> {
     const {csl, release} = getCSL()
     try {
+      const payloadInBytes = Buffer.from(payload, 'utf-8')
+
       const normalisedAddress = await normalizeToAddress(csl, address)
       const bech32Address = await normalisedAddress?.toBech32(undefined)
       if (!bech32Address) throw new Error('Invalid address')
+
       const path = [harden(1852), harden(1815), harden(0), 0, 0]
-      console.log('path', path)
       const signingKey = await createRawTxSigningKey(rootKey, path)
-      const payloadInBytes = Uint8Array.from(Buffer.from(payload, 'utf-8'))
-      const signingKeyBytes = await signingKey.asBytes()
-      const signature = signBip32(payloadInBytes, signingKeyBytes)
-      const key = await (await signingKey.toPublic())?.toHex()
-      if (!key) throw new Error('Invalid key')
-      return {signature: Buffer.from(signature).toString('hex'), key}
+      const coseSign1 = await cip8Sign(Buffer.from(address, 'hex'), signingKey, payloadInBytes)
+      const key = await MSL.COSEKey.new(await MSL.Label.fromKeyType(MSL.KeyType.OKP))
+      await key.setAlgorithmId(await MSL.Label.fromAlgorithmId(MSL.AlgorithmId.EdDSA))
+      await key.setHeader(
+        await MSL.Label.newInt(await MSL.Int.newNegative(await MSL.BigNum.fromStr('1'))),
+        await MSL.CBORValue.newInt(await MSL.Int.newI32(6)),
+      )
+      await key.setHeader(
+        await MSL.Label.newInt(await MSL.Int.newNegative(await MSL.BigNum.fromStr('2'))),
+        await MSL.CBORValue.newBytes(await (await signingKey.toPublic()).asBytes()),
+      )
+
+      return {
+        signature: Buffer.from(await coseSign1.toBytes()).toString('hex'),
+        key: Buffer.from(await key.toBytes()).toString('hex'),
+      }
     } finally {
       release()
     }
@@ -369,4 +383,17 @@ const getAmountsFromValue = async (csl: WasmModuleProxy, value: string, primaryT
     }
   }
   return amounts
+}
+
+export const cip8Sign = async (address: Buffer, signKey: PrivateKey, payload: Buffer) => {
+  const protectedHeader = await MSL.HeaderMap.new()
+  await protectedHeader.setAlgorithmId(await MSL.Label.fromAlgorithmId(MSL.AlgorithmId.EdDSA))
+  await protectedHeader.setHeader(await MSL.Label.newText('address'), await MSL.CBORValue.newBytes(address))
+  const protectedSerialized = await MSL.ProtectedHeaderMap.new(protectedHeader)
+  const unprotected = await MSL.HeaderMap.new()
+  const headers = await MSL.Headers.new(protectedSerialized, unprotected)
+  const builder = await MSL.COSESign1Builder.new(headers, payload, false)
+  const toSign = await (await builder.makeDataToSign()).toBytes()
+  const signedSigStruct = await (await signKey.sign(toSign)).toBytes()
+  return builder.build(signedSigStruct)
 }
