@@ -89,6 +89,13 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
       const rootKey = await signTx(cbor)
       return cip30.signTx(rootKey, cbor, partial)
     },
+    sendReorganisationTx: async () => {
+      const unsignedTx = await cip30.buildReorganisationTx()
+      const tx = await unsignedTx.unsignedTx.txBuilder.build()
+      const rootKey = await signTx(await tx.toHex())
+      const signedTx = await wallet.signTx(unsignedTx, rootKey)
+      return cip30.sendReorganisationTx(signedTx)
+    },
   }
   const storage = connectionStorageMaker({storage: appStorage.join('dapp-connections/')})
   const manager = dappConnectorMaker(storage, handlerWallet, api)
