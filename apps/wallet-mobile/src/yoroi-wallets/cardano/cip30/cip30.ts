@@ -19,6 +19,7 @@ import {Pagination, YoroiWallet} from '../types'
 import {createRawTxSigningKey, identifierToCardanoAsset} from '../utils'
 import {collateralConfig, findCollateralCandidates, utxosMaker} from '../utxoManager/utxos'
 import {wrappedCsl} from '../wrappedCsl'
+import * as cip8 from '../cip8/cip8'
 
 const MSL = init('msl')
 
@@ -141,7 +142,7 @@ class CIP30Extension {
 
       const path = [harden(1852), harden(1815), harden(0), 0, 0]
       const signingKey = await createRawTxSigningKey(rootKey, path)
-      const coseSign1 = await cip8Sign(Buffer.from(address, 'hex'), signingKey, payloadInBytes)
+      const coseSign1 = await cip8.sign(Buffer.from(address, 'hex'), signingKey, payloadInBytes)
       const key = await MSL.COSEKey.new(await MSL.Label.fromKeyType(MSL.KeyType.OKP))
       await key.setAlgorithmId(await MSL.Label.fromAlgorithmId(MSL.AlgorithmId.EdDSA))
       await key.setHeader(
@@ -383,17 +384,4 @@ const getAmountsFromValue = async (csl: WasmModuleProxy, value: string, primaryT
     }
   }
   return amounts
-}
-
-export const cip8Sign = async (address: Buffer, signKey: PrivateKey, payload: Buffer) => {
-  const protectedHeader = await MSL.HeaderMap.new()
-  await protectedHeader.setAlgorithmId(await MSL.Label.fromAlgorithmId(MSL.AlgorithmId.EdDSA))
-  await protectedHeader.setHeader(await MSL.Label.newText('address'), await MSL.CBORValue.newBytes(address))
-  const protectedSerialized = await MSL.ProtectedHeaderMap.new(protectedHeader)
-  const unprotected = await MSL.HeaderMap.new()
-  const headers = await MSL.Headers.new(protectedSerialized, unprotected)
-  const builder = await MSL.COSESign1Builder.new(headers, payload, false)
-  const toSign = await (await builder.makeDataToSign()).toBytes()
-  const signedSigStruct = await (await signKey.sign(toSign)).toBytes()
-  return builder.build(signedSigStruct)
 }

@@ -1,5 +1,3 @@
-import verifySignature from '@cardano-foundation/cardano-verify-datasignature'
-
 import {mocks} from '../../mocks'
 import {getMasterKeyFromMnemonic} from '../byron/util'
 import {YoroiWallet} from '../types'
@@ -85,51 +83,19 @@ describe('cip30ExtensionMaker', () => {
 
   it('should support signData', async () => {
     const rootKey = await getMasterKeyFromMnemonic(mnemonic)
-    // const {csl} = wrappedCsl()
     const message = 'whatever'
     const addressBech32 =
       'addr1qynqc23tpx4dqps6xgqy9s2l3xz5fxu734wwmzj9uddn0h2z6epfcukqmswgwwfruxh7gaddv9x0d5awccwahnhwleqqc4zkh4'
-    // console.log('addressBech32', addressBech32)
-
-    // console.log('bech32', addressBech32)
 
     const cip30 = cip30ExtensionMaker(mocks.wallet)
-
     const result = await cip30.signData(rootKey, addressBech32, message)
-    console.log('result', result)
-    expect(result.key).toHaveLength(84)
-    expect(verifySignature(result.signature, result.key, message)).toEqual(true)
-  })
 
-  // it('should support signData 2', async () => {
-  //   const csl = wrappedCsl().csl
-  //   const privateKeyCBOR =
-  //     'c831be0c2d612bd23c9c6b5313c169fbbf2973cc8227a6377101f76fffb1985d72ed1e556348bf7383435ebf14e8d0570ef03e1c584e21be81476806a12a05b5d8b562dd58d6b89756299854f5545ac5d3a6592f1b5b1ebb4993d0c3d35f7c3c'
-  //   const pub =
-  //     '3e08cf0e6eac6cf54f26ecf07de4e615dc970ca7ec551b0d39d21d9ce1b34c15d8b562dd58d6b89756299854f5545ac5d3a6592f1b5b1ebb4993d0c3d35f7c3c'
-  //
-  //   const expected = {
-  //     signature:
-  //       '84584da30127045820294f305e91ab3988fc22110083fdd29d59911250f232343c3da8d263d15977466761646472657373581d603469016f543d8510a7e01fa92533c22b83913fb4501e806d964ef8bca166686173686564f44877686174657665725840bd4d761706730739c168f06450de0d3636cbb6367bb9bae1525616b312db9764736c6b6fb79c130e0288fb460b98dedf86cba5914e193e34f9b38f4f48080108',
-  //     key: 'a4010103272006215820294f305e91ab3988fc22110083fdd29d59911250f232343c3da8d263d1597746',
-  //   }
-  //
-  //   console.log('privateKeyCBOR', privateKeyCBOR)
-  //   const privateKey = await csl.Bip32PrivateKey.fromBytes(Buffer.from(privateKeyCBOR, 'hex'))
-  //   console.log('privateKey', privateKey)
-  //   const rootKey = Buffer.from(await privateKey.asBytes()).toString('hex')
-  //   console.log('rootKey', rootKey)
-  //
-  //   const addressBech32 = await csl.PublicKey.fromHex(pub).then((address) => address.toBech32())
-  //
-  //   console.log('addressBech32', addressBech32)
-  //   const message = 'whatever'
-  //
-  //   const cip30 = cip30ExtensionMaker(mocks.wallet)
-  //
-  //   const result = await cip30.signData(rootKey, addressBech32, message)
-  //   expect(result).toEqual(expected)
-  // })
+    expect(result).toEqual({
+      signature:
+        '844da20127676164647265737341ada166686173686564f448776861746576657258403b3d212ee8cfafaa52def7352aca719d4c0ef14adcd220019f5d9ff6d7b44d0095831cb412ecfd2ecb71036e2311b6177645e0fd8a4fb282c76814a6e20cb80d',
+      key: 'a4010103272006215820be6a4d7e9789dd7458049c971ad783107e7f041c6f1f542b4530d63d5fe5afb1',
+    })
+  })
 })
 
 const mnemonic = [
