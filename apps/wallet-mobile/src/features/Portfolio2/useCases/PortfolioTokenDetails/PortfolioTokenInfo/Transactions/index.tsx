@@ -1,26 +1,33 @@
-/* eslint-disable react-native/no-raw-text */
+import {infoExtractName} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import _ from 'lodash'
 import React, {ReactNode, useMemo} from 'react'
 import {useIntl} from 'react-intl'
-import {NativeScrollEvent, NativeSyntheticEvent, SectionList, StyleSheet, Text, View} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
+import {Dimensions, NativeScrollEvent, NativeSyntheticEvent, SectionList, StyleSheet, Text, View} from 'react-native'
 
 import {Spacer} from '../../../../../../components/Spacer'
+import {useSelectedWallet} from '../../../../../../features/WalletManager/context/SelectedWalletContext'
 import {makeList} from '../../../../../../kernel/utils'
 import {formatDateRelative} from '../../../../../../yoroi-wallets/utils/format'
 import {useGetPortfolioTokenTransaction} from '../../../../common/useGetPortfolioTokenTransaction'
 import {usePortfolioTokenDetailParams} from '../../../../common/useNavigateTo'
 import {TransactionItem} from './TransactionItem'
 import {TransactionItemSkeleton} from './TransactionItemSkeleton'
+
+const HEIGHT = Dimensions.get('window').height
+
 interface Props {
   onScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
   topContent?: ReactNode
 }
 export const Transactions = ({onScroll, topContent}: Props) => {
   const {styles} = useStyles()
-  const {name: tokenName} = usePortfolioTokenDetailParams()
-  const {data, isLoading} = useGetPortfolioTokenTransaction(tokenName)
+  const {id: tokenId} = usePortfolioTokenDetailParams()
+  const wallet = useSelectedWallet()
+  const {balances} = wallet
+  const tokenInfo = balances.records.get(tokenId)
+  const name = tokenInfo?.info ? infoExtractName(tokenInfo.info) : ''
+  const {data, isLoading} = useGetPortfolioTokenTransaction(name)
 
   const intl = useIntl()
 
@@ -46,7 +53,7 @@ export const Transactions = ({onScroll, topContent}: Props) => {
   }
 
   return (
-    <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
+    <View style={styles.root}>
       {isLoading ? (
         <View style={styles.containerLoading}>
           {makeList(6).map((_, index) => (
@@ -63,17 +70,14 @@ export const Transactions = ({onScroll, topContent}: Props) => {
             <Spacer height={16} />
           </>
         }
-        ListFooterComponent={
-          <>
-            <Spacer height={150} />
-          </>
-        }
+        contentContainerStyle={{minHeight: HEIGHT}}
+        bounces
         style={styles.scrollView}
         onScroll={onScroll}
         scrollEventThrottle={16}
         sections={groupedData}
         keyExtractor={(_, index) => index.toString()}
-        renderItem={({item, index}) => <TransactionItem key={item?.id ?? index} tx={item} tokenName={tokenName} />}
+        renderItem={({item, index}) => <TransactionItem key={item?.id ?? index} tx={item} tokenName={name} />}
         ItemSeparatorComponent={() => <Spacer height={24} />}
         SectionSeparatorComponent={() => <Spacer height={16} />}
         renderSectionHeader={({section: {title}}) => <Text style={styles.textHeader}>{title}</Text>}
@@ -81,7 +85,7 @@ export const Transactions = ({onScroll, topContent}: Props) => {
         onEndReached={loadMoreItems}
         onEndReachedThreshold={0.5} // Trigger the load more half-way to the bottom
       />
-    </SafeAreaView>
+    </View>
   )
 }
 

@@ -1099,6 +1099,7 @@
   "portfolio.portfolioTokensDetailScreen.bought": "Bought",
   "portfolio.portfolioTokensDetailScreen.received": "Received",
   "portfolio.portfolioTokensDetailScreen.sent": "Sent",
+  "portfolio.portfolioTokensDetailScreen.send": "Send",
   "portfolio.portfolioTokensDetailScreen.sold": "Sold",
   "portfolio.portfolioTokensDetailScreen.stakeDelegated": "Stake delegated",
   "portfolio.portfolioTokensDetailScreen.stakingReward": "Staking Reward",

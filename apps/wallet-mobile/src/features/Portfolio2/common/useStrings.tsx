@@ -44,6 +44,7 @@ export const useStrings = () => {
     bought: intl.formatMessage(messages.bought),
     received: intl.formatMessage(messages.received),
     sent: intl.formatMessage(messages.sent),
+    send: intl.formatMessage(messages.send),
     sold: intl.formatMessage(messages.sold),
     failed: intl.formatMessage(messages.failed),
     stakeDelegated: intl.formatMessage(messages.stakeDelegated),
@@ -249,6 +250,10 @@ export const messages = defineMessages({
   sent: {
     id: 'portfolio.portfolioTokensDetailScreen.sent',
     defaultMessage: '!!!Sent',
+  },
+  send: {
+    id: 'portfolio.portfolioTokensDetailScreen.send',
+    defaultMessage: '!!!Send',
   },
   sold: {
     id: 'portfolio.portfolioTokensDetailScreen.sold',

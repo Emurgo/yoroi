@@ -1,22 +1,24 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-/* eslint-disable react-native/no-raw-text */
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {Animated, NativeScrollEvent, NativeSyntheticEvent, StyleSheet} from 'react-native'
+import {Animated, StyleSheet} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Spacer} from '../../../../components'
+import {Tab, Tabs} from '../../../../components/Tabs'
+import {useStrings} from '../../common/useStrings'
 import {PortfolioTokenAction} from './PortfolioTokenAction'
 import {PortfolioTokenBalance} from './PortfolioTokenBalance/PortfolioTokenBalance'
 import {PortfolioTokenChart} from './PortfolioTokenChart/PortfolioTokenChart'
 import {PortfolioTokenInfo} from './PortfolioTokenInfo/PortfolioTokenInfo'
 
 const HEADER_HEIGHT = 304
-
+export type ActiveTab = 'performance' | 'overview' | 'transactions'
 export const PortfolioTokenDetailsScreen = () => {
   const {styles} = useStyles()
+  const strings = useStrings()
   const scrollY = React.useRef(new Animated.Value(0)).current
 
-  const [isScrolled, setIsScrolled] = React.useState(false)
+  const [activeTab, setActiveTab] = React.useState<ActiveTab>('performance')
 
   // Animation for header opacity
   const headerOpacity = scrollY.interpolate({
@@ -40,10 +42,6 @@ export const PortfolioTokenDetailsScreen = () => {
 
   const onScroll = Animated.event([{nativeEvent: {contentOffset: {y: scrollY}}}], {
     useNativeDriver: false,
-    listener: (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-      const currentScrollPosition = event.nativeEvent.contentOffset.y
-      setIsScrolled(currentScrollPosition > HEADER_HEIGHT)
-    },
   })
 
   /**
@@ -53,34 +51,65 @@ export const PortfolioTokenDetailsScreen = () => {
     scrollY.setValue(0)
   }
 
+  const handleChangeTab = (value: ActiveTab) =>
+    React.startTransition(() => {
+      setActiveTab(value)
+      handleTabChange()
+    })
+
   return (
-    <Animated.View style={styles.root}>
-      <Animated.View
-        style={[
-          styles.header,
-          isScrolled ? styles.headerInvisible : styles.headerVisible,
-          {opacity: headerOpacity, height: invertHeaderHeight},
-        ]}
-      >
-        <Spacer height={16} />
+    <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
+      <Animated.View style={{opacity: headerOpacity, height: invertHeaderHeight}}>
+        <Animated.View
+          style={[
+            styles.header,
+            styles.headerInvisible,
+            // isScrolled ? styles.headerInvisible : styles.headerVisible,
+          ]}
+        >
+          <Spacer height={16} />
 
-        <PortfolioTokenBalance />
+          <PortfolioTokenBalance />
 
-        <Spacer height={16} />
+          <Spacer height={16} />
 
-        <PortfolioTokenChart />
+          <PortfolioTokenChart />
 
-        <Spacer height={16} />
+          <Spacer height={16} />
+        </Animated.View>
       </Animated.View>
 
+      <Tabs style={styles.tabs}>
+        <Tab
+          style={styles.tab}
+          active={activeTab === 'performance'}
+          onPress={() => handleChangeTab('performance')}
+          label={strings.performance}
+        />
+
+        <Tab
+          style={styles.tab}
+          active={activeTab === 'overview'}
+          onPress={() => handleChangeTab('overview')}
+          label={strings.overview}
+        />
+
+        <Tab
+          style={styles.tab}
+          active={activeTab === 'transactions'}
+          onPress={() => handleChangeTab('transactions')}
+          label={strings.transactions}
+        />
+      </Tabs>
+
       <PortfolioTokenInfo
-        onTabChange={handleTabChange}
+        activeTab={activeTab}
         onScroll={onScroll}
-        offsetTopContent={<Animated.View style={{height: headerHeight ?? 0}} />}
+        offsetTopContent={<Animated.View style={{paddingTop: headerHeight ?? 0}} />}
       />
 
       <PortfolioTokenAction />
-    </Animated.View>
+    </SafeAreaView>
   )
 }
 
@@ -96,14 +125,19 @@ const useStyles = () => {
       height: HEADER_HEIGHT,
       ...atoms.px_lg,
     },
-    headerVisible: {
-      position: 'relative',
-    },
     headerInvisible: {
       position: 'absolute',
       top: 0,
       left: 0,
       right: 0,
+    },
+    tabs: {
+      ...atoms.justify_between,
+      ...atoms.px_lg,
+      backgroundColor: color.gray_cmin,
+    },
+    tab: {
+      flex: 0,
     },
   })
 
