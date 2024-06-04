@@ -2,8 +2,7 @@ import {useExplorers} from '@yoroi/explorers'
 import {infoExtractName} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import React, {ReactNode, useState} from 'react'
-import {Linking, NativeScrollEvent, NativeSyntheticEvent, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
+import {Dimensions, Linking, ScrollViewProps, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Accordion, CopyButton, Spacer} from '../../../../../components'
 import {ScrollView} from '../../../../../components/ScrollView/ScrollView'
@@ -12,8 +11,10 @@ import {useSelectedWallet} from '../../../../../features/WalletManager/context/S
 import {usePortfolioTokenDetailParams} from '../../../common/useNavigateTo'
 import {useStrings} from '../../../common/useStrings'
 
+const HEIGHT = Dimensions.get('window').height
+
 interface Props {
-  onScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
+  onScroll: ScrollViewProps['onScroll']
   topContent?: ReactNode
 }
 export const Overview = ({onScroll, topContent}: Props) => {
@@ -31,19 +32,14 @@ export const Overview = ({onScroll, topContent}: Props) => {
 
   const handleOpenLink = async () => {
     if (tokenInfo == null) return
-    // try {
-    //   await Linking.canOpenURL(explorers.cardanoscan.token(tokenInfo.info.id))
-    // } catch (e) {
-    //   Logger.error(e)
-    // }
     await Linking.openURL(explorers.cardanoscan.token(tokenInfo.info.id))
   }
 
   return (
-    <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
-      <ScrollView scrollEventThrottle={16} onScroll={onScroll} style={styles.scrollView}>
-        {topContent}
+    <ScrollView scrollEventThrottle={16} bounces={false} onScroll={onScroll} style={styles.scrollView}>
+      {topContent}
 
+      <View style={{minHeight: HEIGHT}}>
         <Spacer height={16} />
 
         <Accordion label={strings.info} expanded={expanded} onChange={setExpanded} wrapperStyle={styles.container}>
@@ -54,10 +50,6 @@ export const Overview = ({onScroll, topContent}: Props) => {
           </View>
 
           <Text style={styles.textBody}>{tokenInfo?.info?.description}</Text>
-
-          {/* <TouchableOpacity onPress={() => handleOpenLink(tokenInfo?.info?.website)}>
-            <Text style={styles.link}>{tokenInfo?.info?.website}</Text>
-          </TouchableOpacity> */}
 
           <Spacer height={24} />
 
@@ -115,21 +107,14 @@ export const Overview = ({onScroll, topContent}: Props) => {
             <View style={styles.divider} />
           </View>
         </Accordion>
-
-        <Spacer height={150} />
-      </ScrollView>
-    </SafeAreaView>
+      </View>
+    </ScrollView>
   )
 }
 
 const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
-    root: {
-      ...atoms.flex_1,
-      ...atoms.flex_col,
-      backgroundColor: color.gray_cmin,
-    },
     scrollView: {
       ...atoms.px_lg,
       ...atoms.flex_1,

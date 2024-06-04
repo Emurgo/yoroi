@@ -1,9 +1,7 @@
-/* eslint-disable react-native/no-raw-text */
 import {infoExtractName} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import React, {ReactNode} from 'react'
-import {NativeScrollEvent, NativeSyntheticEvent, StyleSheet, Text, View} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
+import {Dimensions, ScrollViewProps, StyleSheet, Text, View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 import {Icon, Spacer} from '../../../../../components'
@@ -13,8 +11,10 @@ import {useGetPortfolioTokenInfo} from '../../../common/useGetPortfolioTokenInfo
 import {usePortfolioTokenDetailParams} from '../../../common/useNavigateTo'
 import {useStrings} from '../../../common/useStrings'
 
+const HEIGHT = Dimensions.get('window').height
+
 interface Props {
-  onScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
+  onScroll: ScrollViewProps['onScroll']
   topContent?: ReactNode
 }
 
@@ -31,11 +31,11 @@ export const Performance = ({onScroll, topContent}: Props) => {
   const value = data?.info?.performance
 
   return (
-    <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
-      <ScrollView scrollEventThrottle={16} onScroll={onScroll} style={styles.scrollView}>
+    <ScrollView scrollEventThrottle={16} bounces={false} onScroll={onScroll} style={styles.scrollView}>
+      <View style={{minHeight: HEIGHT}}>
         {topContent}
 
-        <Spacer height={16} />
+        <Spacer height={8} />
 
         <View style={styles.container}>
           <TextGroup loading={isFetching} value={`${value?.user?.pnl ?? '-/-'} %`}>
@@ -112,11 +112,8 @@ export const Performance = ({onScroll, topContent}: Props) => {
 
           <TextGroup loading={isFetching} value={`${value?.market?.atl ?? '-/-'} USD`} label={strings.allTimeLow} />
         </View>
-
-        {/* Fix the bounce when scroll down */}
-        <Spacer height={150} />
-      </ScrollView>
-    </SafeAreaView>
+      </View>
+    </ScrollView>
   )
 }
 
@@ -155,11 +152,6 @@ const TextGroup = ({label, loading, value, children}: TextGroupProps) => {
 const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
-    root: {
-      ...atoms.flex_1,
-      ...atoms.flex_col,
-      backgroundColor: color.gray_cmin,
-    },
     scrollView: {
       ...atoms.px_lg,
       ...atoms.flex_1,
