@@ -20,7 +20,7 @@ export const TradeTokensBanner = () => {
 
   return (
     <View style={styles.root}>
-      <LinearGradient style={styles.gradientRoot} colors={colors.gradientColor}>
+      <LinearGradient style={styles.gradientRoot} colors={colors.gradientColor} start={{x: 0, y: 0}} end={{x: 1, y: 0}}>
         <Text style={styles.title}>{strings.tradeTokens}</Text>
 
         <Button
@@ -78,7 +78,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    gradientColor: color.bg_gradient_2,
+    gradientColor: color.bg_gradient_1,
   }
 
   return {styles, colors} as const
