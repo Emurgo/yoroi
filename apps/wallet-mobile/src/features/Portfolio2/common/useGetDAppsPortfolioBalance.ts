@@ -6,14 +6,27 @@ interface IDAppPortfolioBalance {
 }
 
 export const useGetDAppsPortfolioBalance = (
-  options: UseQueryOptions<IDAppPortfolioBalance, Error, IDAppPortfolioBalance, ['useGetDAppsPortfolioBalance']> = {},
+  quantity: bigint,
+  options: UseQueryOptions<
+    IDAppPortfolioBalance,
+    Error,
+    IDAppPortfolioBalance,
+    ['useGetDAppsPortfolioBalance', number]
+  > = {},
 ) => {
   const query = useQuery({
     useErrorBoundary: true,
     ...options,
-    queryKey: ['useGetDAppsPortfolioBalance'],
+    queryKey: ['useGetDAppsPortfolioBalance', Number(quantity)],
     queryFn: async () => {
       await new Promise((resolve) => setTimeout(resolve, 1000))
+      if (Number(quantity) === 0) {
+        return {
+          quantity: BigInt(0),
+          previousQuantity: BigInt(0),
+        }
+      }
+
       return {
         quantity: BigInt(120000000),
         previousQuantity: BigInt(120160000),

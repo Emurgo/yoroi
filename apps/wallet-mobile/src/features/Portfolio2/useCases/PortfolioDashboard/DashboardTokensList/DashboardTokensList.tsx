@@ -100,8 +100,6 @@ const Heading = ({countTokens, onPress, isFirstUser}: HeadingProps) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
-  console.log(isFirstUser)
-
   return (
     <View style={[styles.container, styles.actionsContainer]}>
       <Text style={styles.title}>{strings.tokens(isFirstUser ? 0 : countTokens)}</Text>
