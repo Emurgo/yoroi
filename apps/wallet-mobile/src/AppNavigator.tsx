@@ -17,6 +17,7 @@ import {supportsAndroidFingerprintOverlay} from './features/Auth/common/biometri
 import {AuthSetting, useAuthSetting, useAuthWithOs, useIsAuthOsSupported} from './features/Auth/common/hooks'
 import {EnableLoginWithPin} from './features/Auth/EnableLoginWithPin'
 import {DeveloperScreen} from './features/Dev/DeveloperScreen'
+import {Playground} from './features/Dev/Playground'
 import {AgreementChangedNavigator, InitializationNavigator} from './features/Initialization'
 import {LegalAgreement, useLegalAgreement} from './features/Initialization/common'
 import {useDeepLinkWatcher} from './features/Links/common/useDeepLinkWatcher'
@@ -188,6 +189,8 @@ export const AppNavigator = () => {
               <Stack.Screen name="developer" component={DeveloperScreen} options={{headerShown: false}} />
 
               <Stack.Screen name="storybook" component={StorybookScreen} />
+
+              <Stack.Screen name="playground" component={Playground} />
 
               <Stack.Screen name="portfolio-dashboard" component={PortfolioScreen} />
             </Stack.Group>
