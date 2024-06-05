@@ -156,7 +156,7 @@ const useStyles = () => {
       borderColor: color.gray_c300,
     },
     warningBorder: {
-      borderWidth: 1,
+      borderWidth: 2,
       borderColor: color.sys_magenta_c500,
     },
     poolTicker: {

@@ -151,7 +151,7 @@
   },
   {
     "id": "components.pooltransition.skipNoRewards",
-    "defaultMessage": "!!!Skip and stop receiving rewards",
+    "defaultMessage": "!!!SKIP AND STOP RECEIVING REWARDS",
     "file": "src/legacy/Staking/PoolTransition/usePoolTransition.tsx",
     "start": {
       "line": 147,
@@ -166,7 +166,7 @@
   },
   {
     "id": "components.pooltransition.updateKeepEarning",
-    "defaultMessage": "!!!Update now and keep earning",
+    "defaultMessage": "!!!UPDATE NOW AND KEEP EARNING",
     "file": "src/legacy/Staking/PoolTransition/usePoolTransition.tsx",
     "start": {
       "line": 151,
