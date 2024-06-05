@@ -1,6 +1,6 @@
-import {Buffer} from 'buffer'
 import {PrivateKey} from '@emurgo/cross-csl-core'
 import {init} from '@emurgo/cross-msl-mobile'
+import {Buffer} from 'buffer'
 
 const MSL = init('cip8')
 
