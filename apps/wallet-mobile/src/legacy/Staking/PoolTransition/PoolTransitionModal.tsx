@@ -125,9 +125,19 @@ export const PoolTransitionModal = ({
       <Space height="xl" />
 
       <Actions>
-        <Button outline title={strings.skipNoRewards.toLocaleUpperCase()} textStyles={styles.outlineButton} onPress={handleOnSkip} />
+        <Button
+          outline
+          title={strings.skipNoRewards.toLocaleUpperCase()}
+          textStyles={styles.outlineButton}
+          onPress={handleOnSkip}
+        />
 
-        <Button shelleyTheme title={strings.updateKeepEarning.toLocaleUpperCase()} onPress={handleOnUpdate} textStyles={styles.button} />
+        <Button
+          shelleyTheme
+          title={strings.updateKeepEarning.toLocaleUpperCase()}
+          onPress={handleOnUpdate}
+          textStyles={styles.button}
+        />
       </Actions>
 
       <Space height="xl" />
