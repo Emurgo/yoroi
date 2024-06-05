@@ -146,11 +146,11 @@ const messages = defineMessages({
   },
   skipNoRewards: {
     id: 'components.pooltransition.skipNoRewards',
-    defaultMessage: '!!!SKIP AND STOP RECEIVING REWARDS',
+    defaultMessage: '!!!Skip and stop receiving rewards',
   },
   updateKeepEarning: {
     id: 'components.pooltransition.updateKeepEarning',
-    defaultMessage: '!!!UPDATE NOW AND KEEP EARNING',
+    defaultMessage: '!!!Update now and keep earning',
   },
   update: {
     id: 'components.pooltransition.update',
