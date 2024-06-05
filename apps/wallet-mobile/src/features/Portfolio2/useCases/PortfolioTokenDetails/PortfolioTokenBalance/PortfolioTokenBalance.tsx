@@ -1,4 +1,4 @@
-import {amountFormatter, infoExtractName} from '@yoroi/portfolio'
+import {amountBreakdown, infoExtractName} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
@@ -23,7 +23,7 @@ export const PortfolioTokenBalance = () => {
     <LoadingBoundary fallback={<PortfolioTokenDetailBalanceSkeleton />}>
       <View>
         <View style={styles.tokenWrapper}>
-          <Text style={styles.tokenLabel}>{amountFormatter({dropTraillingZeros: true})(tokenInfo)}</Text>
+          <Text style={styles.tokenLabel}>{amountBreakdown(tokenInfo).bn.toFormat(2)}</Text>
 
           <Text style={styles.symbol}>{tokenName}</Text>
         </View>

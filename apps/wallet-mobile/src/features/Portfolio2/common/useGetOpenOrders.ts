@@ -1,14 +1,8 @@
 import {ImageSourcePropType} from 'react-native'
 import {useQuery, UseQueryOptions} from 'react-query'
 
-import AdaLogo from '../../../assets/img/ada.png'
 import {getDappFallbackLogo} from '../../Discover/common/helpers'
-
-interface IAsset {
-  logo: ImageSourcePropType | string
-  symbol: string
-  balance: string
-}
+import {IAsset, mockAmount} from './useGetLiquidityPool'
 
 export interface IOpenOrders {
   usdExchangeRate: number
@@ -28,18 +22,7 @@ const listOpenOrders: IOpenOrders[] = [
       name: 'Minswap',
     },
     usdExchangeRate: 0.48,
-    assets: [
-      {
-        logo: AdaLogo,
-        balance: '2418.02123',
-        symbol: 'ADA',
-      },
-      {
-        logo: AdaLogo,
-        balance: '2418.02123',
-        symbol: 'LVLC',
-      },
-    ],
+    assets: [mockAmount('ADA'), mockAmount('LVLC')],
   },
   {
     id: 2,
@@ -47,19 +30,8 @@ const listOpenOrders: IOpenOrders[] = [
       logo: getDappFallbackLogo('https://minswap.org'),
       name: 'Minswap',
     },
-    usdExchangeRate: 0.48,
-    assets: [
-      {
-        logo: AdaLogo,
-        balance: '2418.02123',
-        symbol: 'ADA',
-      },
-      {
-        logo: AdaLogo,
-        balance: '2418.02123',
-        symbol: 'LVLC',
-      },
-    ],
+    usdExchangeRate: 0.42,
+    assets: [mockAmount('ADA'), mockAmount('HOSKY')],
   },
 ]
 

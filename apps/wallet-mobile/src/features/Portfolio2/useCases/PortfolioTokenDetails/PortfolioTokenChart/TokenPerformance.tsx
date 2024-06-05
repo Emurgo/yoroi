@@ -5,6 +5,7 @@ import {StyleSheet, View} from 'react-native'
 
 import {Icon, Text} from '../../../../../components'
 import {Tooltip} from '../../../../../components/Tooltip'
+import {useCurrencyContext} from '../../../../../features/Settings/Currency'
 import {PnlTag} from '../../../common/PnlTag/PnlTag'
 import {useStrings} from '../../../common/useStrings'
 
@@ -17,17 +18,23 @@ interface Props {
 export const TokenPerformance = ({changePercent = 0, changeValue = 0, value = 0}: Props) => {
   const {styles} = useStyles()
   const strings = useStrings()
+  const {currency} = useCurrencyContext()
 
-  const variant = Number(changePercent) >= 0 ? 'success' : 'danger'
+  const variant = React.useMemo(() => {
+    if (Number(changePercent) > 0) return 'success'
+    if (Number(changePercent) < 0) return 'danger'
+
+    return 'neutral'
+  }, [changePercent])
 
   return (
     <View style={styles.root}>
       <View style={styles.tokenChangeWrapper}>
-        <PnlTag withIcon variant={variant}>
+        <PnlTag withIcon={variant !== 'neutral'} variant={variant}>
           {changePercent.toFixed(2)}%
         </PnlTag>
 
-        <PnlTag variant={variant}>{`${changeValue.toFixed(1)} USD`}</PnlTag>
+        <PnlTag variant={variant}>{`${changeValue.toFixed(1)} ${currency}`}</PnlTag>
 
         <Tooltip numberOfLine={3} title={strings.tokenPriceChangeTooltip}>
           <Icon.InfoCircle />
@@ -37,7 +44,7 @@ export const TokenPerformance = ({changePercent = 0, changeValue = 0, value = 0}
       <View style={styles.tokenWrapper}>
         <Text style={styles.tokenPrice}>{value.toFixed(0)}</Text>
 
-        <Text style={styles.tokenPriceSymbol}>USD</Text>
+        <Text style={styles.tokenPriceSymbol}>{currency}</Text>
       </View>
     </View>
   )

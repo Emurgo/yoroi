@@ -1,4 +1,4 @@
-import {amountFormatter, infoExtractName} from '@yoroi/portfolio'
+import {amountBreakdown, infoExtractName} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
@@ -9,7 +9,10 @@ import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalan
 import {TokenInfoIcon} from '../../../../../features/Portfolio/common/TokenAmountItem/TokenInfoIcon'
 import {useGetQuantityChange} from '../../../../../features/Portfolio2/common/useGetQuantityChange'
 import {useQuantityChange} from '../../../../../features/Portfolio2/common/useQuantityChange'
+import {useCurrencyContext} from '../../../../../features/Settings/Currency'
+import {CurrencySymbol} from '../../../../../yoroi-wallets/types'
 import {PnlTag} from '../../../common/PnlTag/PnlTag'
+import {usePortfolio} from '../../../common/PortfolioProvider'
 import {useNavigateTo} from '../../../common/useNavigateTo'
 
 type Props = {
@@ -24,10 +27,14 @@ export const TokenBalanceItem = ({amount}: Props) => {
   const quantityChangeData = useGetQuantityChange({name, quantity})
   const {previousQuantity} = quantityChangeData ?? {}
   const {variantPnl, quantityChangePercent} = useQuantityChange({decimals: info.decimals, quantity, previousQuantity})
-  const balanceFormatted = amountFormatter({dropTraillingZeros: true})(amount)
+  const balanceFormatted = amountBreakdown(amount).bn.toFormat(2)
+
+  const {isPrimaryTokenActive} = usePortfolio()
+  const {currency} = useCurrencyContext()
+  const currencyPaired = isPrimaryTokenActive ? 'ADA' : currency
 
   return (
-    <TouchableOpacity onPress={() => navigationTo.tokenDetail({id: info.id, name})} style={styles.root}>
+    <TouchableOpacity onPress={() => navigationTo.tokenDetail({id: info.id})} style={styles.root}>
       <View style={[styles.rowCenter, styles.tokenInfoContainer]}>
         <TokenInfoIcon info={info} size="md" />
 
@@ -47,7 +54,12 @@ export const TokenBalanceItem = ({amount}: Props) => {
       <View>
         <Text style={styles.tokenBalance}>{`${balanceFormatted} ${symbol}`}</Text>
 
-        <PairedBalance amount={amount} textStyle={styles.pairedBalance} />
+        <PairedBalance
+          isHidePairPrimaryToken={false}
+          currency={currencyPaired as CurrencySymbol}
+          amount={amount}
+          textStyle={styles.pairedBalance}
+        />
       </View>
     </TouchableOpacity>
   )

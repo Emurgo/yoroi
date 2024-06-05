@@ -1,4 +1,4 @@
-import {amountFormatter, infoExtractName} from '@yoroi/portfolio'
+import {amountBreakdown, amountFormatter, infoExtractName} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
@@ -10,15 +10,15 @@ import {SkeletonPairedToken} from './SkeletonPairedToken'
 type Props = {
   amount: Portfolio.Token.Amount
   isFetching: boolean
-  isPrimaryPair: boolean
+  isPrimaryTokenActive: boolean
 }
-export const TokenValuePairedBalance = ({amount, isFetching, isPrimaryPair}: Props) => {
+export const TokenValuePairedBalance = ({amount, isFetching, isPrimaryTokenActive}: Props) => {
   const {styles} = useStyles()
   const name = infoExtractName(amount.info)
 
   if (isFetching) return <SkeletonPairedToken />
-  if (!isPrimaryPair) return <PairedBalance amount={amount} textStyle={styles.pairedBalance} />
-  return <Text style={[styles.pairedBalance]}>{`${amountFormatter()(amount)} ${name}`}</Text>
+  if (isPrimaryTokenActive) return <PairedBalance amount={amount} textStyle={styles.pairedBalance} />
+  return <Text style={[styles.pairedBalance]}>{`${amountBreakdown(amount).bn.toFormat(2)} ${name}`}</Text>
 }
 
 const useStyles = () => {

@@ -3,18 +3,20 @@ import * as React from 'react'
 import {FlatList, StyleSheet, Text, View} from 'react-native'
 
 import {Spacer} from '../../../../../components'
+import {makeList} from '../../../../../kernel/utils'
 import {TokenEmptyList} from '../../../common/TokenEmptyList'
 import {ILiquidityPool} from '../../../common/useGetLiquidityPool'
 import {useShowLiquidityPoolModal} from '../../../common/useShowLiquidityPoolModal'
 import {useStrings} from '../../../common/useStrings'
 import {DAppTokenItem} from './DAppTokenItem/DAppTokenItem'
+import {DAppTokenItemSkeleton} from './DAppTokenItem/DAppTokenItemSkeleton'
 
 type Props = {
   tokensList: ILiquidityPool[]
-  isLoading: boolean
+  isFetching: boolean
   isSearching: boolean
 }
-export const LiquidityPoolTab = ({tokensList = [], isLoading, isSearching}: Props) => {
+export const LiquidityPoolTab = ({tokensList = [], isFetching, isSearching}: Props) => {
   const strings = useStrings()
   const {styles} = useStyles()
   const hasEmpty = tokensList.length === 0
@@ -26,19 +28,8 @@ export const LiquidityPoolTab = ({tokensList = [], isLoading, isSearching}: Prop
     onShow(liquidityPool)
   }
 
-  const renderTokenItem = (item: ILiquidityPool | undefined, index: number) => {
-    return (
-      <DAppTokenItem
-        onPress={() => onTokenPress(item)}
-        key={item?.id ?? index}
-        tokenInfo={item ? item : undefined}
-        splitTokenSymbol="-"
-      />
-    )
-  }
-
   const renderHeaderList = () => {
-    if (isLoading || hasEmpty) return null
+    if (isFetching || hasEmpty) return null
     if (isSearching)
       return (
         <View>
@@ -52,9 +43,13 @@ export const LiquidityPoolTab = ({tokensList = [], isLoading, isSearching}: Prop
   }
 
   const renderFooterList = () => {
-    if (isLoading)
+    if (isFetching)
       return (
-        <View style={styles.containerLoading}>{makeList(3).map((_, index) => renderTokenItem(undefined, index))}</View>
+        <View style={styles.containerLoading}>
+          {makeList(3).map((_, index) => (
+            <DAppTokenItemSkeleton key={index} />
+          ))}
+        </View>
       )
     if (hasEmpty) return <TokenEmptyList emptyText={strings.noDataFound} />
 
@@ -73,7 +68,9 @@ export const LiquidityPoolTab = ({tokensList = [], isLoading, isSearching}: Prop
         ItemSeparatorComponent={() => <Spacer width={8} />}
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item, index) => index.toString()}
-        renderItem={({item, index}) => renderTokenItem(item, index)}
+        renderItem={({item}) => (
+          <DAppTokenItem onPress={() => onTokenPress(item)} tokenInfo={item} splitTokenSymbol="-" />
+        )}
       />
     </View>
   )

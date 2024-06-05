@@ -31,8 +31,8 @@ export const useQuantityChange = ({
   }, [previousQuantity, quantityChange])
 
   const variantPnl = React.useMemo(() => {
-    if (quantityChange === undefined || rate === undefined) return 'neutral'
-    return quantityChange >= 0 ? 'success' : 'danger'
+    if (quantityChange === undefined || rate === undefined || Number(quantityChange) === 0) return 'neutral'
+    return quantityChange > 0 ? 'success' : 'danger'
   }, [quantityChange, rate])
 
   const pairedBalanceChange = React.useMemo(() => {
