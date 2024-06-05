@@ -2,7 +2,7 @@ import {useExplorers} from '@yoroi/explorers'
 import {infoExtractName} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import React, {ReactNode, useState} from 'react'
-import {Dimensions, Linking, ScrollViewProps, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Linking, ScrollViewProps, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Accordion, CopyButton, Spacer} from '../../../../../components'
 import {ScrollView} from '../../../../../components/ScrollView/ScrollView'
@@ -10,8 +10,6 @@ import {TokenInfoIcon} from '../../../../../features/Portfolio/common/TokenAmoun
 import {useSelectedWallet} from '../../../../../features/WalletManager/context/SelectedWalletContext'
 import {usePortfolioTokenDetailParams} from '../../../common/useNavigateTo'
 import {useStrings} from '../../../common/useStrings'
-
-const HEIGHT = Dimensions.get('window').height
 
 interface Props {
   onScroll: ScrollViewProps['onScroll']
@@ -30,84 +28,86 @@ export const Overview = ({onScroll, topContent}: Props) => {
 
   const [expanded, setExpanded] = useState(true)
 
-  const handleOpenLink = async () => {
+  const handleOpenLink = async (direction: 'cardanoscan' | 'adaex') => {
     if (tokenInfo == null) return
-    await Linking.openURL(explorers.cardanoscan.token(tokenInfo.info.id))
+    if (direction === 'cardanoscan') {
+      await Linking.openURL(explorers.cardanoscan.token(tokenInfo.info.id))
+    } else {
+      await Linking.openURL(explorers.cexplorer.token(tokenInfo.info.id))
+    }
   }
 
   return (
     <ScrollView scrollEventThrottle={16} bounces={false} onScroll={onScroll} style={styles.scrollView}>
       {topContent}
 
-      <View style={{minHeight: HEIGHT}}>
-        <Spacer height={16} />
+      <Spacer height={8} />
 
-        <Accordion label={strings.info} expanded={expanded} onChange={setExpanded} wrapperStyle={styles.container}>
-          <View style={styles.tokenInfoContainer}>
-            {tokenInfo?.info ? <TokenInfoIcon info={tokenInfo?.info} imageStyle={styles.tokenLogo} /> : null}
+      <Accordion label={strings.info} expanded={expanded} onChange={setExpanded} wrapperStyle={styles.container}>
+        <View style={styles.tokenInfoContainer}>
+          {tokenInfo?.info ? <TokenInfoIcon info={tokenInfo?.info} imageStyle={styles.tokenLogo} /> : null}
 
-            <Text style={styles?.tokenName}>{tokenSymbol}</Text>
+          <Text style={styles?.tokenName}>{tokenSymbol}</Text>
+        </View>
+
+        <Text style={styles.textBody}>{tokenInfo?.info?.description}</Text>
+
+        <Spacer height={24} />
+
+        <View>
+          <Text style={styles.title}>{strings.website}</Text>
+
+          <Spacer height={4} />
+
+          <Text style={styles.textBody}>{tokenInfo?.info?.website ?? '-'}</Text>
+        </View>
+
+        <Spacer height={24} />
+
+        <View>
+          <Text style={styles.title}>{strings.policyID}</Text>
+
+          <Spacer height={4} />
+
+          <CopyButton value={policyId ?? ''} style={styles.copyButton}>
+            <Text style={styles.copyText}>{policyId ?? ''}</Text>
+          </CopyButton>
+        </View>
+
+        <Spacer height={24} />
+
+        <View>
+          <Text style={styles.title}>{strings.fingerprint}</Text>
+
+          <Spacer height={4} />
+
+          <CopyButton value={tokenInfo?.info?.fingerprint ?? ''} style={styles.copyButton}>
+            <Text style={styles.copyText}>{tokenInfo?.info?.fingerprint}</Text>
+          </CopyButton>
+        </View>
+
+        <Spacer height={24} />
+
+        <View>
+          <Text style={styles.title}>{strings.detailsOn}</Text>
+
+          <Spacer height={4} />
+
+          <View style={styles.linkGroup}>
+            <TouchableOpacity onPress={() => handleOpenLink('cardanoscan')}>
+              <Text style={styles.link}>Cardanoscan</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => handleOpenLink('adaex')}>
+              <Text style={styles.link}>Adaex</Text>
+            </TouchableOpacity>
           </View>
 
-          <Text style={styles.textBody}>{tokenInfo?.info?.description}</Text>
+          <Spacer height={16} />
 
-          <Spacer height={24} />
-
-          <View>
-            <Text style={styles.title}>{strings.website}</Text>
-
-            <Spacer height={4} />
-
-            <Text style={styles.textBody}>{tokenInfo?.info?.website ?? '-'}</Text>
-          </View>
-
-          <Spacer height={24} />
-
-          <View>
-            <Text style={styles.title}>{strings.policyID}</Text>
-
-            <Spacer height={4} />
-
-            <CopyButton value={policyId ?? ''} style={styles.copyButton}>
-              <Text style={styles.copyText}>{policyId ?? ''}</Text>
-            </CopyButton>
-          </View>
-
-          <Spacer height={24} />
-
-          <View>
-            <Text style={styles.title}>{strings.fingerprint}</Text>
-
-            <Spacer height={4} />
-
-            <CopyButton value={tokenInfo?.info?.fingerprint ?? ''} style={styles.copyButton}>
-              <Text style={styles.copyText}>{tokenInfo?.info?.fingerprint}</Text>
-            </CopyButton>
-          </View>
-
-          <Spacer height={24} />
-
-          <View>
-            <Text style={styles.title}>{strings.detailsOn}</Text>
-
-            <Spacer height={4} />
-
-            <View style={styles.linkGroup}>
-              <TouchableOpacity onPress={() => handleOpenLink()}>
-                <Text style={styles.link}>Cardanoscan</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity onPress={() => handleOpenLink()}>
-                <Text style={styles.link}>Adaex</Text>
-              </TouchableOpacity>
-            </View>
-
-            <Spacer height={16} />
-
-            <View style={styles.divider} />
-          </View>
-        </Accordion>
-      </View>
+          <View style={styles.divider} />
+        </View>
+      </Accordion>
     </ScrollView>
   )
 }

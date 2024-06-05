@@ -10,26 +10,24 @@ import {SkeletonPrimaryToken} from './SkeletonPrimaryToken'
 type Props = {
   amount: Portfolio.Token.Amount
   isFetching: boolean
-  isPrimaryPair: boolean
+  isPrimaryTokenActive: boolean
   rate?: number
 }
-export const TokenValueBalance = ({amount, isFetching, isPrimaryPair, rate}: Props) => {
-  const {currency, config} = useCurrencyContext()
+export const TokenValueBalance = ({amount, isFetching, isPrimaryTokenActive, rate}: Props) => {
+  const {currency} = useCurrencyContext()
   const {styles} = useStyles()
   const name = infoExtractName(amount.info)
 
   const renderBalance = () => {
     if (isFetching || rate === undefined) return <SkeletonPrimaryToken />
-    if (isPrimaryPair)
-      return (
-        <Text style={[styles.balanceText]}>{amountBreakdown(amount).bn.times(rate).toFormat(config.decimals)}</Text>
-      )
+    if (!isPrimaryTokenActive)
+      return <Text style={[styles.balanceText]}>{amountBreakdown(amount).bn.times(rate).toFormat(2)}</Text>
 
-    return <Text style={[styles.balanceText]}>{amountFormatter()(amount)}</Text>
+    return <Text style={[styles.balanceText]}>{amountBreakdown(amount).bn.toFormat(2)}</Text>
   }
 
-  const firstSymbol = isPrimaryPair ? currency : name
-  const secondSymbol = isPrimaryPair ? name : currency
+  const firstSymbol = isPrimaryTokenActive ? name : currency
+  const secondSymbol = isPrimaryTokenActive ? currency : name
 
   return (
     <View style={styles.balanceBox}>

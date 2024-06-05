@@ -1,14 +1,19 @@
+import {amountBreakdown, infoExtractName} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
-import BigNumber from 'bignumber.js'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
-import {ILiquidityPool} from 'src/features/Portfolio2/common/useGetLiquidityPool'
+import {Image, ImageSourcePropType, ImageStyle, StyleSheet, Text, View} from 'react-native'
 
+import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
+import {TokenInfoIcon} from '../../../../../features/Portfolio/common/TokenAmountItem/TokenInfoIcon'
+import {useCurrencyContext} from '../../../../../features/Settings/Currency'
+import {CurrencySymbol} from '../../../../../yoroi-wallets/types'
 import {AssetLogo} from '../../../common/AssetLogo/AssetLogo'
+import {usePortfolio} from '../../../common/PortfolioProvider'
+import {ILiquidityPool} from '../../../common/useGetLiquidityPool'
 import {useStrings} from '../../../common/useStrings'
 
 type Props = {
-  tokenInfo?: ILiquidityPool
+  tokenInfo: ILiquidityPool
   splitTokenSymbol: string
 }
 
@@ -16,59 +21,63 @@ export const LiquidityPoolModal = ({tokenInfo, splitTokenSymbol}: Props) => {
   const strings = useStrings()
   const {styles} = useStyles()
 
-  if (!tokenInfo) return <></>
-
   const [firstToken, secondToken] = tokenInfo.assets
-  const firstTokenBalance = new BigNumber(firstToken.balance)
-  const secondTokenBalance = new BigNumber(secondToken.balance)
-  const sumBalance = firstTokenBalance.plus(secondTokenBalance)
-  const usdExchangeRate = tokenInfo.usdExchangeRate ?? 1
-  const usd = sumBalance.multipliedBy(usdExchangeRate)
-  const sumBalanceFormatted = sumBalance.toFixed(2)
-  const usdFormatted = usd.toFixed(2)
-  const firstTokenBalanceFormatted = firstTokenBalance.toFixed(2)
-  const secondTokenBalanceFormatted = secondTokenBalance.toFixed(2)
+  const firstTokenBalance = amountBreakdown(firstToken).bn.toFormat(2)
+  const secondTokenBalance = amountBreakdown(secondToken).bn.toFormat(2)
+  const firstTokenName = infoExtractName(firstToken.info)
+  const secondTokenName = infoExtractName(secondToken.info)
+
+  const {isPrimaryTokenActive} = usePortfolio()
+  const {currency} = useCurrencyContext()
+  const currencyPaired = isPrimaryTokenActive ? 'ADA' : currency
 
   return (
     <View style={styles.root}>
       <View style={styles.tokenInfoContainer}>
         <View style={styles.logoContainer}>
-          <AssetLogo source={firstToken.logo} style={styles.logoFirst} />
+          <AssetLogo style={styles.logoFirst}>
+            <TokenInfoIcon info={firstToken.info} size="sm" imageStyle={styles.logoSize} />
+          </AssetLogo>
 
-          <AssetLogo source={secondToken.logo} style={styles.logoSecond} />
+          <AssetLogo style={styles.logoSecond}>
+            <TokenInfoIcon info={secondToken.info} size="sm" imageStyle={styles.logoSize} />
+          </AssetLogo>
         </View>
 
-        <Text style={styles.symbol}>
-          {`${tokenInfo.assets[0].symbol} ${splitTokenSymbol} ${tokenInfo.assets[1].symbol}`}
-        </Text>
+        <Text style={styles.symbol}>{`${firstTokenName} ${splitTokenSymbol} ${secondTokenName}`}</Text>
       </View>
 
       <InfoGroup label={strings.value}>
         <View>
-          <Text style={styles.valueNumber}>{sumBalanceFormatted} ADA</Text>
+          <Text style={styles.valueNumber}>{`${firstTokenBalance} ${firstTokenName}`}</Text>
 
-          <Text style={styles.usdNumber}>{usdFormatted} USD</Text>
+          <PairedBalance
+            isHidePairPrimaryToken={false}
+            currency={currencyPaired as CurrencySymbol}
+            amount={firstToken}
+            textStyle={styles.pairedBalance}
+          />
         </View>
       </InfoGroup>
 
       <InfoGroup label={strings.dex}>
         <View style={styles.dexContainer}>
-          <AssetLogo source={tokenInfo.dex.logo} style={styles.dexLogo} />
+          <DexLogo source={tokenInfo.dex.logo} style={styles.dexLogo} />
 
           <Text style={styles.dexName}>{tokenInfo.dex.name}</Text>
         </View>
       </InfoGroup>
 
       <InfoGroup label={strings.lp}>
-        <Text style={styles.valueNumber}>{sumBalanceFormatted}</Text>
+        <Text style={styles.valueNumber}>{firstTokenBalance}</Text>
       </InfoGroup>
 
-      <InfoGroup label={firstToken.symbol}>
-        <Text style={styles.valueNumber}>{firstTokenBalanceFormatted}</Text>
+      <InfoGroup label={firstTokenName}>
+        <Text style={styles.valueNumber}>{firstTokenBalance}</Text>
       </InfoGroup>
 
-      <InfoGroup label={secondToken.symbol}>
-        <Text style={styles.valueNumber}>{secondTokenBalanceFormatted}</Text>
+      <InfoGroup label={secondTokenName}>
+        <Text style={styles.valueNumber}>{secondTokenBalance}</Text>
       </InfoGroup>
     </View>
   )
@@ -89,6 +98,10 @@ const InfoGroup = ({children, label}: React.PropsWithChildren<InfoGroupProps>) =
   )
 }
 
+const DexLogo = ({source, style}: {source: string | ImageSourcePropType; style: ImageStyle}) => {
+  return <Image source={typeof source === 'string' ? {uri: source} : source} style={[style]} />
+}
+
 const useStyles = () => {
   const {atoms, color} = useTheme()
 
@@ -97,21 +110,22 @@ const useStyles = () => {
       ...atoms.flex_col,
       ...atoms.gap_sm,
     },
+    logoSize: {width: 26, height: 26},
     logoFirst: {
       ...atoms.rounded_sm,
       ...atoms.absolute,
       top: 0,
       left: 0,
-      width: 25,
-      height: 25,
+      width: 26,
+      height: 26,
     },
     logoSecond: {
       ...atoms.rounded_sm,
       ...atoms.absolute,
       bottom: 0,
       right: 0,
-      width: 25,
-      height: 25,
+      width: 26,
+      height: 26,
     },
     logoContainer: {
       ...atoms.relative,
@@ -141,7 +155,7 @@ const useStyles = () => {
       ...atoms.text_right,
       color: color.gray_c900,
     },
-    usdNumber: {
+    pairedBalance: {
       ...atoms.body_3_sm_regular,
       ...atoms.text_right,
       color: color.gray_c600,

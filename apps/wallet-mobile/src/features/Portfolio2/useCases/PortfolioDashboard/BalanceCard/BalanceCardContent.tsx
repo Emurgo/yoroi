@@ -1,4 +1,4 @@
-import {amountFormatter} from '@yoroi/portfolio'
+import {amountBreakdown, amountFormatter} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
@@ -20,7 +20,7 @@ type Props = {
 
 export const BalanceCardContent = ({amount, headerCard, name}: Props) => {
   const {styles} = useStyles()
-  const {isPrivacyOff, setPrivacyModeOff, setPrivacyModeOn} = usePrivacyMode()
+  const {isPrivacyActive, setPrivacyModeOff, setPrivacyModeOn} = usePrivacyMode()
 
   const quantityChangeData = useGetQuantityChange({name, quantity: amount.quantity})
   const {previousQuantity} = quantityChangeData ?? {}
@@ -32,7 +32,7 @@ export const BalanceCardContent = ({amount, headerCard, name}: Props) => {
   })
 
   const togglePrivacyMode = () => {
-    if (isPrivacyOff) {
+    if (isPrivacyActive === true) {
       setPrivacyModeOn()
     } else {
       setPrivacyModeOff()
@@ -72,12 +72,15 @@ export const BalanceCardContent = ({amount, headerCard, name}: Props) => {
 
 type BalanceProps = {amount: Portfolio.Token.Amount}
 const Balance = ({amount}: BalanceProps) => {
-  const {isPrivacyOff, privacyPlaceholder} = usePrivacyMode()
+  const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
   const {styles} = useStyles()
 
   const balance = React.useMemo(
-    () => (isPrivacyOff ? amountFormatter()(amount) : amountFormatter({template: `${privacyPlaceholder}`})(amount)),
-    [amount, isPrivacyOff, privacyPlaceholder],
+    () =>
+      isPrivacyActive === false
+        ? amountBreakdown(amount).bn.toFormat(2)
+        : amountFormatter({template: `${privacyPlaceholder}`})(amount),
+    [amount, isPrivacyActive, privacyPlaceholder],
   )
 
   return (

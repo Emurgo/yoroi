@@ -1,17 +1,15 @@
 import {infoExtractName} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import React, {ReactNode} from 'react'
-import {Dimensions, ScrollViewProps, StyleSheet, Text, View} from 'react-native'
+import {ScrollViewProps, StyleSheet, Text, View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
-import {Icon, Spacer} from '../../../../../components'
+import {Spacer} from '../../../../../components'
 import {ScrollView} from '../../../../../components/ScrollView/ScrollView'
 import {useSelectedWallet} from '../../../../../features/WalletManager/context/SelectedWalletContext'
 import {useGetPortfolioTokenInfo} from '../../../common/useGetPortfolioTokenInfo'
 import {usePortfolioTokenDetailParams} from '../../../common/useNavigateTo'
 import {useStrings} from '../../../common/useStrings'
-
-const HEIGHT = Dimensions.get('window').height
 
 interface Props {
   onScroll: ScrollViewProps['onScroll']
@@ -19,7 +17,7 @@ interface Props {
 }
 
 export const Performance = ({onScroll, topContent}: Props) => {
-  const {styles, colors} = useStyles()
+  const {styles} = useStyles()
   const {id: tokenId} = usePortfolioTokenDetailParams()
   const wallet = useSelectedWallet()
   const {balances} = wallet
@@ -32,13 +30,12 @@ export const Performance = ({onScroll, topContent}: Props) => {
 
   return (
     <ScrollView scrollEventThrottle={16} bounces={false} onScroll={onScroll} style={styles.scrollView}>
-      <View style={{minHeight: HEIGHT}}>
-        {topContent}
+      {topContent}
 
-        <Spacer height={8} />
+      <Spacer height={8} />
 
-        <View style={styles.container}>
-          <TextGroup loading={isFetching} value={`${value?.user?.pnl ?? '-/-'} %`}>
+      <View style={styles.container}>
+        {/* <TextGroup loading={isFetching} value={`${value?.user?.pnl ?? '-/-'} %`}>
             <View style={styles.labelGroup}>
               <Text style={styles.label}>PnL</Text>
 
@@ -56,62 +53,61 @@ export const Performance = ({onScroll, topContent}: Props) => {
             </View>
           </TextGroup>
 
-          <Spacer height={16} />
+        <Spacer height={16} /> */}
 
-          <TextGroup loading={isFetching} value={`${value?.user?.bought ?? '-/-'} USD`} label={strings.bought} />
+        <TextGroup loading={isFetching} value={`${value?.user?.bought ?? '-/-'} USD`} label={strings.bought} />
 
-          <TextGroup loading={isFetching} value={`${value?.user?.receive ?? '-/-'} USD`} label={strings.received} />
+        <TextGroup loading={isFetching} value={`${value?.user?.receive ?? '-/-'} USD`} label={strings.received} />
 
-          <TextGroup loading={isFetching} value={`${value?.user?.sent ?? '-/-'} USD`} label={strings.sent} />
+        <TextGroup loading={isFetching} value={`${value?.user?.sent ?? '-/-'} USD`} label={strings.sent} />
 
-          <TextGroup loading={isFetching} value={`${value?.user?.sold ?? '-/-'} USD`} label={strings.sold} />
-        </View>
+        <TextGroup loading={isFetching} value={`${value?.user?.sold ?? '-/-'} USD`} label={strings.sold} />
+      </View>
 
-        <Spacer height={24} />
+      <Spacer height={24} />
 
-        <Text style={styles.title}>{strings.marketData}</Text>
+      <Text style={styles.title}>{strings.marketData}</Text>
+
+      <Spacer height={16} />
+
+      <View style={styles.container}>
+        <TextGroup
+          loading={isFetching}
+          value={`${value?.market?.change ?? '-/-'} %`}
+          label={strings.tokenPriceChange}
+        />
+
+        <TextGroup loading={isFetching} value={`${value?.market?.price ?? '-/-'} USD`} label={strings.tokenPrice} />
+
+        <TextGroup loading={isFetching} value={`${value?.market?.cap ?? '-/-'} USD`} label={strings.marketCap} />
+
+        <TextGroup loading={isFetching} value={`${value?.market?.vol ?? '-/-'} USD`} label={strings._24hVolume} />
+
+        <TextGroup loading={isFetching} value={`#${value?.market?.rank ?? '-/-'}`} label={strings.rank} />
 
         <Spacer height={16} />
 
-        <View style={styles.container}>
-          <TextGroup
-            loading={isFetching}
-            value={`${value?.market?.change ?? '-/-'} %`}
-            label={strings.tokenPriceChange}
-          />
+        <TextGroup
+          loading={isFetching}
+          value={`${value?.market?.circulating ?? '-/-'} ${tokenSymbol}`}
+          label={strings.circulating}
+        />
 
-          <TextGroup loading={isFetching} value={`${value?.market?.price ?? '-/-'} USD`} label={strings.tokenPrice} />
+        <TextGroup
+          loading={isFetching}
+          value={`${value?.market?.total_supply ?? '-/-'} ${tokenSymbol}`}
+          label={strings.totalSupply}
+        />
 
-          <TextGroup loading={isFetching} value={`${value?.market?.cap ?? '-/-'} USD`} label={strings.marketCap} />
+        <TextGroup
+          loading={isFetching}
+          value={`${value?.market?.max_supply ?? '-/-'} ${tokenSymbol}`}
+          label={strings.maxSupply}
+        />
 
-          <TextGroup loading={isFetching} value={`${value?.market?.vol ?? '-/-'} USD`} label={strings._24hVolume} />
+        <TextGroup loading={isFetching} value={`${value?.market?.ath ?? '-/-'} USD`} label={strings.allTimeHigh} />
 
-          <TextGroup loading={isFetching} value={`#${value?.market?.rank ?? '-/-'}`} label={strings.rank} />
-
-          <Spacer height={16} />
-
-          <TextGroup
-            loading={isFetching}
-            value={`${value?.market?.circulating ?? '-/-'} ${tokenSymbol}`}
-            label={strings.circulating}
-          />
-
-          <TextGroup
-            loading={isFetching}
-            value={`${value?.market?.total_supply ?? '-/-'} ${tokenSymbol}`}
-            label={strings.totalSupply}
-          />
-
-          <TextGroup
-            loading={isFetching}
-            value={`${value?.market?.max_supply ?? '-/-'} ${tokenSymbol}`}
-            label={strings.maxSupply}
-          />
-
-          <TextGroup loading={isFetching} value={`${value?.market?.ath ?? '-/-'} USD`} label={strings.allTimeHigh} />
-
-          <TextGroup loading={isFetching} value={`${value?.market?.atl ?? '-/-'} USD`} label={strings.allTimeLow} />
-        </View>
+        <TextGroup loading={isFetching} value={`${value?.market?.atl ?? '-/-'} USD`} label={strings.allTimeLow} />
       </View>
     </ScrollView>
   )
@@ -167,12 +163,12 @@ const useStyles = () => {
       ...atoms.justify_between,
       ...atoms.align_center,
     },
-    labelGroup: {
-      ...atoms.flex_1,
-      ...atoms.flex_row,
-      ...atoms.align_center,
-      gap: 3,
-    },
+    // labelGroup: {
+    //   ...atoms.flex_1,
+    //   ...atoms.flex_row,
+    //   ...atoms.align_center,
+    //   gap: 3,
+    // },
     label: {
       ...atoms.body_1_lg_regular,
       color: color.gray_c600,

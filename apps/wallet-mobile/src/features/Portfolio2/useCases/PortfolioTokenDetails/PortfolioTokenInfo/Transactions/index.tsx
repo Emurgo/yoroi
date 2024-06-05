@@ -3,7 +3,7 @@ import {useTheme} from '@yoroi/theme'
 import _ from 'lodash'
 import React, {ReactNode, useMemo} from 'react'
 import {useIntl} from 'react-intl'
-import {Dimensions, NativeScrollEvent, NativeSyntheticEvent, SectionList, StyleSheet, Text, View} from 'react-native'
+import {NativeScrollEvent, NativeSyntheticEvent, SectionList, StyleSheet, Text, View} from 'react-native'
 
 import {Spacer} from '../../../../../../components/Spacer'
 import {useSelectedWallet} from '../../../../../../features/WalletManager/context/SelectedWalletContext'
@@ -13,8 +13,6 @@ import {useGetPortfolioTokenTransaction} from '../../../../common/useGetPortfoli
 import {usePortfolioTokenDetailParams} from '../../../../common/useNavigateTo'
 import {TransactionItem} from './TransactionItem'
 import {TransactionItemSkeleton} from './TransactionItemSkeleton'
-
-const HEIGHT = Dimensions.get('window').height
 
 interface Props {
   onScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
@@ -67,10 +65,9 @@ export const Transactions = ({onScroll, topContent}: Props) => {
           <>
             {topContent}
 
-            <Spacer height={16} />
+            <Spacer height={8} />
           </>
         }
-        contentContainerStyle={{minHeight: HEIGHT}}
         bounces
         style={styles.scrollView}
         onScroll={onScroll}

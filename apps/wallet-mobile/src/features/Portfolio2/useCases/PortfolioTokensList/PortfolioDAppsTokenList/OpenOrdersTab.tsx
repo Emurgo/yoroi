@@ -9,13 +9,14 @@ import {IOpenOrders} from '../../../common/useGetOpenOrders'
 import {useShowOpenOrderModal} from '../../../common/useShowOpenOrderModal'
 import {useStrings} from '../../../common/useStrings'
 import {DAppTokenItem} from './DAppTokenItem/DAppTokenItem'
+import {DAppTokenItemSkeleton} from './DAppTokenItem/DAppTokenItemSkeleton'
 
 type Props = {
   tokensList: IOpenOrders[]
-  isLoading: boolean
+  isFetching: boolean
   isSearching: boolean
 }
-export const OpenOrdersTab = ({isLoading, tokensList, isSearching}: Props) => {
+export const OpenOrdersTab = ({isFetching, tokensList, isSearching}: Props) => {
   const strings = useStrings()
   const {styles} = useStyles()
   const hasEmpty = tokensList.length === 0
@@ -27,19 +28,8 @@ export const OpenOrdersTab = ({isLoading, tokensList, isSearching}: Props) => {
     onShow(order)
   }
 
-  const renderTokenItem = (item: IOpenOrders | undefined, index: number) => {
-    return (
-      <DAppTokenItem
-        onPress={() => onTokenPress(item)}
-        key={item?.id ?? index}
-        tokenInfo={item ? item : undefined}
-        splitTokenSymbol="/"
-      />
-    )
-  }
-
   const renderHeaderList = () => {
-    if (isLoading || hasEmpty) return null
+    if (isFetching || hasEmpty) return null
     if (isSearching)
       return (
         <View>
@@ -53,9 +43,13 @@ export const OpenOrdersTab = ({isLoading, tokensList, isSearching}: Props) => {
   }
 
   const renderFooterList = () => {
-    if (isLoading)
+    if (isFetching)
       return (
-        <View style={styles.containerLoading}>{makeList(3).map((_, index) => renderTokenItem(undefined, index))}</View>
+        <View style={styles.containerLoading}>
+          {makeList(3).map((_, index) => (
+            <DAppTokenItemSkeleton key={index} />
+          ))}
+        </View>
       )
 
     if (tokensList.length === 0) return <TokenEmptyList emptyText={strings.noDataFound} />
@@ -74,7 +68,9 @@ export const OpenOrdersTab = ({isLoading, tokensList, isSearching}: Props) => {
         ItemSeparatorComponent={() => <Spacer width={8} />}
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item, index) => index.toString()}
-        renderItem={({item, index}) => renderTokenItem(item, index)}
+        renderItem={({item}) => (
+          <DAppTokenItem onPress={() => onTokenPress(item)} tokenInfo={item} splitTokenSymbol="/" />
+        )}
       />
     </View>
   )

@@ -53,6 +53,7 @@ export const PortfolioWalletTokenList = () => {
 
   const renderFooterList = () => {
     if (tokensLoading) return makeList(6).map((_, index) => <SkeletonItem key={index} />)
+    if (isSearching) return null
     if (isZeroADABalance) {
       return (
         <View>

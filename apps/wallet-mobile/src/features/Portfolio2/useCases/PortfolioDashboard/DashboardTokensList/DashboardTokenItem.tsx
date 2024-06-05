@@ -1,4 +1,4 @@
-import {amountFormatter, infoExtractName, isPrimaryToken} from '@yoroi/portfolio'
+import {amountBreakdown, infoExtractName, isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import {PortfolioTokenAmount} from '@yoroi/types/lib/typescript/portfolio/amount'
@@ -20,20 +20,17 @@ type Props = {
 export const DashboardTokenItem = ({tokenInfo}: Props) => {
   const {styles} = useStyles()
   const navigationTo = useNavigateTo()
-  const {isPrivacyOff, privacyPlaceholder} = usePrivacyMode()
+  const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
 
   const {info, quantity} = tokenInfo ?? {}
   const name = infoExtractName(info, {mode: 'currency'})
-
   const quantityChangeData = useGetQuantityChange({name, quantity})
   const {previousQuantity} = quantityChangeData ?? {}
-
-  const formattedQuantity = isPrivacyOff ? amountFormatter({dropTraillingZeros: true})(tokenInfo) : privacyPlaceholder
-
+  const formattedQuantity = isPrivacyActive === false ? amountBreakdown(tokenInfo).bn.toFormat(2) : privacyPlaceholder
   const {quantityChangePercent, variantPnl} = useQuantityChange({previousQuantity, quantity, decimals: info.decimals})
 
   return (
-    <TouchableOpacity onPress={() => navigationTo.tokenDetail({id: info.id, name: name})}>
+    <TouchableOpacity onPress={() => navigationTo.tokenDetail({id: info.id})}>
       <View style={styles.root}>
         <TokenInfo info={info} />
 

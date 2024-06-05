@@ -2,7 +2,7 @@
 /* eslint-disable react-native/no-raw-text */
 import {useTheme} from '@yoroi/theme'
 import * as shape from 'd3-shape'
-import React, {memo, useMemo, useState} from 'react'
+import React, {memo, useEffect, useMemo, useState} from 'react'
 import {Dimensions, PanResponder, StyleSheet, View} from 'react-native'
 import {Circle, G, Line, Rect, Text as SvgText} from 'react-native-svg'
 import {LineChart as SvgLineChart} from 'react-native-svg-charts'
@@ -55,6 +55,7 @@ const TokenChartComponent = ({dataSources = [], onValueSelected}: Props) => {
     },
     onPanResponderRelease: () => {
       setPositionX(-1)
+      onValueSelected(dataSize - 1)
     },
   })
 
@@ -135,6 +136,10 @@ const TokenChartComponent = ({dataSources = [], onValueSelected}: Props) => {
       </G>
     )
   }
+
+  useEffect(() => {
+    onValueSelected(dataSize - 1)
+  }, [dataSize, onValueSelected])
 
   return (
     <View style={styles.root}>

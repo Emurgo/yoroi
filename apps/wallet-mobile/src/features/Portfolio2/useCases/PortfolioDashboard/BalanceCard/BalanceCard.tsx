@@ -19,7 +19,7 @@ export const BalanceCard = () => {
   const primaryBalance = usePortfolioPrimaryBalance({wallet})
   const name = infoExtractName(primaryBalance.info)
   const rate = useTokenExchangeRate()
-  const dAppsBalance = useGetDAppsPortfolioBalance()
+  const dAppsBalance = useGetDAppsPortfolioBalance(primaryBalance.quantity)
   const hasDApps = dAppsBalance !== undefined && Number(dAppsBalance.quantity) > 0
 
   const isFetching = rate === undefined || dAppsBalance === undefined

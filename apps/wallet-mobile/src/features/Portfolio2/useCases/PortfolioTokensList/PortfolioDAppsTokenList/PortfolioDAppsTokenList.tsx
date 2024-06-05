@@ -31,8 +31,8 @@ export const PortfolioDAppsTokenList = () => {
 
   const [activeTab, setActiveTab] = React.useState<TPortfolioDAppsTabs>(portfolioDAppsTabs.LIQUIDITY_POOL)
 
-  const {data: liquidityPools, isLoading: liquidityPoolLoading} = useGetLiquidityPool()
-  const {data: openOrders, isLoading: openOrdersLoading} = useGetOpenOrders()
+  const {data: liquidityPools, isFetching: liquidityPoolFetching} = useGetLiquidityPool()
+  const {data: openOrders, isFetching: openOrdersFetching} = useGetOpenOrders()
   const listOpenOrders = openOrders ?? []
 
   const getListLiquidityPool = React.useMemo(() => {
@@ -62,13 +62,13 @@ export const PortfolioDAppsTokenList = () => {
       <TabPanel active={activeTab === 'liquidityPool'}>
         <LiquidityPoolTab
           tokensList={getListLiquidityPool}
-          isLoading={liquidityPoolLoading}
+          isFetching={liquidityPoolFetching}
           isSearching={isSearching}
         />
       </TabPanel>
 
       <TabPanel active={activeTab === 'openOrders'}>
-        <OpenOrdersTab tokensList={listOpenOrders} isLoading={openOrdersLoading} isSearching={isSearching} />
+        <OpenOrdersTab tokensList={listOpenOrders} isFetching={openOrdersFetching} isSearching={isSearching} />
       </TabPanel>
 
       <TabPanel active={activeTab === 'lendAndBorrow'}>

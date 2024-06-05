@@ -7,6 +7,7 @@ import {Tab, TabPanel, Tabs} from '../../../../components/Tabs'
 import {usePortfolioPrimaryBalance} from '../../../../features/Portfolio/common/hooks/usePortfolioPrimaryBalance'
 import {useSearchOnNavBar} from '../../../../features/Search/SearchContext'
 import {useSelectedWallet} from '../../../../features/WalletManager/context/SelectedWalletContext'
+import {PortfolioProvider} from '../../common/PortfolioProvider'
 import {useGetDAppsPortfolioBalance} from '../../common/useGetDAppsPortfolioBalance'
 import {useStrings} from '../../common/useStrings'
 import {PortfolioDAppsTokenList} from './PortfolioDAppsTokenList/PortfolioDAppsTokenList'
@@ -28,23 +29,25 @@ export const PortfolioTokenListScreen = () => {
   })
 
   return (
-    <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
-      {hasDApps ? (
-        <Tabs>
-          <Tab onPress={() => setActiveTab('wallet')} label={strings.walletToken} active={activeTab === 'wallet'} />
+    <PortfolioProvider>
+      <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
+        {hasDApps ? (
+          <Tabs>
+            <Tab onPress={() => setActiveTab('wallet')} label={strings.walletToken} active={activeTab === 'wallet'} />
 
-          <Tab onPress={() => setActiveTab('dapps')} label={strings.dappsToken} active={activeTab === 'dapps'} />
-        </Tabs>
-      ) : null}
+            <Tab onPress={() => setActiveTab('dapps')} label={strings.dappsToken} active={activeTab === 'dapps'} />
+          </Tabs>
+        ) : null}
 
-      <TabPanel active={activeTab === 'wallet'}>
-        <PortfolioWalletTokenList />
-      </TabPanel>
+        <TabPanel active={activeTab === 'wallet'}>
+          <PortfolioWalletTokenList />
+        </TabPanel>
 
-      <TabPanel active={activeTab === 'dapps'}>
-        <PortfolioDAppsTokenList />
-      </TabPanel>
-    </SafeAreaView>
+        <TabPanel active={activeTab === 'dapps'}>
+          <PortfolioDAppsTokenList />
+        </TabPanel>
+      </SafeAreaView>
+    </PortfolioProvider>
   )
 }
 

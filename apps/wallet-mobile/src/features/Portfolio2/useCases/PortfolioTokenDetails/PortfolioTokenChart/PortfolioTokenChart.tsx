@@ -1,5 +1,5 @@
 import {useTheme} from '@yoroi/theme'
-import React, {useMemo, useState} from 'react'
+import React, {useCallback, useMemo, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import useGetPortfolioTokenChart, {
@@ -20,11 +20,11 @@ export const PortfolioTokenChart = () => {
 
   const {data, isFetching} = useGetPortfolioTokenChart(timeInterval)
 
-  const handleChartSelected = (index: number) => {
+  const handleChartSelected = useCallback((index: number) => {
     // We ignore index = -1 cause it used for hide the tooltip.
     if (index < 0) return
     setSelectedIndex(index)
-  }
+  }, [])
 
   const tokenPerformance = useMemo(() => {
     if (!data) return undefined

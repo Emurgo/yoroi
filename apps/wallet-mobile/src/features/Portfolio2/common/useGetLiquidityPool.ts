@@ -1,15 +1,10 @@
+import {Portfolio} from '@yoroi/types'
 import {ImageSourcePropType} from 'react-native'
 import {useQuery, UseQueryOptions} from 'react-query'
 
-import AdaLogo from '../../../assets/img/ada.png'
 import {getDappFallbackLogo} from '../../../features/Discover/common/helpers'
 
-interface IAsset {
-  logo: ImageSourcePropType | string
-  symbol: string
-  balance: string
-}
-
+export type IAsset = Portfolio.Token.Amount
 export interface ILiquidityPool {
   usdExchangeRate: number
   assets: [IAsset, IAsset]
@@ -20,6 +15,31 @@ export interface ILiquidityPool {
   id: number
 }
 
+export const mockAmount = (symbol: string) =>
+  ({
+    info: {
+      application: 'coin',
+      decimals: 6,
+      description:
+        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
+      fingerprint: 'asset155kudknt05ealtvcvsy7nw554g6wnc9dee3d',
+      icon: '',
+      id: symbol,
+      mediaType: '',
+      name: symbol,
+      nature: 'primary',
+      originalImage: '',
+      reference: '',
+      status: 'valid',
+      symbol: '₳',
+      tag: '',
+      ticker: symbol,
+      type: 'ft',
+      website: 'https://www.cardano.org/',
+    },
+    quantity: BigInt(4800000),
+  } as Portfolio.Token.Amount)
+
 const listLiquidityPool: ILiquidityPool[] = [
   {
     id: 1,
@@ -28,18 +48,7 @@ const listLiquidityPool: ILiquidityPool[] = [
       name: 'Minswap',
     },
     usdExchangeRate: 0.48,
-    assets: [
-      {
-        logo: AdaLogo,
-        balance: '2418.02123',
-        symbol: 'ADA',
-      },
-      {
-        logo: AdaLogo,
-        balance: '2418.02123',
-        symbol: 'LVLC',
-      },
-    ],
+    assets: [mockAmount('ADA'), mockAmount('LVLC')],
   },
   {
     id: 2,
@@ -48,18 +57,7 @@ const listLiquidityPool: ILiquidityPool[] = [
       name: 'Minswap',
     },
     usdExchangeRate: 0.48,
-    assets: [
-      {
-        logo: AdaLogo,
-        balance: '2418.02123',
-        symbol: 'ADA',
-      },
-      {
-        logo: AdaLogo,
-        balance: '2418.02123',
-        symbol: 'LVLC',
-      },
-    ],
+    assets: [mockAmount('ADA'), mockAmount('HOSKY')],
   },
 ]
 

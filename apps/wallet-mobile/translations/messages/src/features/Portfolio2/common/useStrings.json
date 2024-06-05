@@ -390,8 +390,8 @@
     }
   },
   {
-    "id": "portfolio.portfolioTokensDetailScreen.performance",
-    "defaultMessage": "!!!Performance",
+    "id": "portfolio.portfolioTokensListScreen.value",
+    "defaultMessage": "!!!Value",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
       "line": 186,
@@ -405,8 +405,8 @@
     }
   },
   {
-    "id": "portfolio.portfolioTokensDetailScreen.overview",
-    "defaultMessage": "!!!Overview",
+    "id": "portfolio.portfolioTokensListScreen.dex",
+    "defaultMessage": "!!!DEX",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
       "line": 190,
@@ -420,8 +420,8 @@
     }
   },
   {
-    "id": "portfolio.portfolioTokensDetailScreen.transactions",
-    "defaultMessage": "!!!Transactions",
+    "id": "portfolio.portfolioTokensListScreen.lp",
+    "defaultMessage": "!!!LP",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
       "line": 194,
@@ -465,8 +465,8 @@
     }
   },
   {
-    "id": "portfolio.portfolioTokensDetailScreen.tokenPriceChangeTooltip",
-    "defaultMessage": "!!!Token price change \nin 24 hours",
+    "id": "components.governance.total",
+    "defaultMessage": "!!!Total",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
       "line": 206,
@@ -480,8 +480,8 @@
     }
   },
   {
-    "id": "portfolio.portfolioTokensDetailScreen.netInvested",
-    "defaultMessage": "!!!Net Invested",
+    "id": "swap.listOrders.sheet.assetPrice",
+    "defaultMessage": "!!!Asset price",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
       "line": 210,
@@ -495,8 +495,8 @@
     }
   },
   {
-    "id": "portfolio.portfolioTokensDetailScreen.bought",
-    "defaultMessage": "!!!Bought",
+    "id": "swap.listOrders.sheet.assetAmount",
+    "defaultMessage": "!!!Asset amount",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
       "line": 214,
@@ -510,8 +510,8 @@
     }
   },
   {
-    "id": "portfolio.portfolioTokensDetailScreen.received",
-    "defaultMessage": "!!!Received",
+    "id": "swap.listOrders.txId",
+    "defaultMessage": "!!!Transaction ID",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
       "line": 218,
@@ -525,8 +525,8 @@
     }
   },
   {
-    "id": "portfolio.portfolioTokensDetailScreen.sent",
-    "defaultMessage": "!!!Sent",
+    "id": "portfolio.portfolioTokensDetailScreen.performance",
+    "defaultMessage": "!!!Performance",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
       "line": 222,
@@ -540,8 +540,8 @@
     }
   },
   {
-    "id": "portfolio.portfolioTokensDetailScreen.sold",
-    "defaultMessage": "!!!Sold",
+    "id": "portfolio.portfolioTokensDetailScreen.overview",
+    "defaultMessage": "!!!Overview",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
       "line": 226,
@@ -555,8 +555,8 @@
     }
   },
   {
-    "id": "portfolio.portfolioTokensDetailScreen.failed",
-    "defaultMessage": "!!!Failed",
+    "id": "portfolio.portfolioTokensDetailScreen.transactions",
+    "defaultMessage": "!!!Transactions",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
       "line": 230,
@@ -570,8 +570,8 @@
     }
   },
   {
-    "id": "portfolio.portfolioTokensDetailScreen.stakeDelegated",
-    "defaultMessage": "!!!Stake Delegated",
+    "id": "portfolio.portfolioTokensDetailScreen.tokenPriceChangeTooltip",
+    "defaultMessage": "!!!Token price change \nin 24 hours",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
       "line": 234,
@@ -585,8 +585,8 @@
     }
   },
   {
-    "id": "portfolio.portfolioTokensDetailScreen.stakingReward",
-    "defaultMessage": "!!!Staking Reward",
+    "id": "portfolio.portfolioTokensDetailScreen.netInvested",
+    "defaultMessage": "!!!Net Invested",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
       "line": 238,
@@ -600,8 +600,8 @@
     }
   },
   {
-    "id": "portfolio.portfolioTokensDetailScreen.unknown",
-    "defaultMessage": "!!!Unknown",
+    "id": "portfolio.portfolioTokensDetailScreen.bought",
+    "defaultMessage": "!!!Bought",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
       "line": 242,
@@ -615,8 +615,8 @@
     }
   },
   {
-    "id": "portfolio.portfolioTokensDetailScreen.assets",
-    "defaultMessage": "!!!assets",
+    "id": "portfolio.portfolioTokensDetailScreen.received",
+    "defaultMessage": "!!!Received",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
       "line": 246,
@@ -630,8 +630,8 @@
     }
   },
   {
-    "id": "portfolio.portfolioTokensDetailScreen.marketData",
-    "defaultMessage": "!!!Market data",
+    "id": "portfolio.portfolioTokensDetailScreen.sent",
+    "defaultMessage": "!!!Sent",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
       "line": 250,
@@ -660,8 +660,8 @@
     }
   },
   {
-    "id": "portfolio.portfolioTokensDetailScreen.tokenPriceChange",
-    "defaultMessage": "!!!Token price change",
+    "id": "portfolio.portfolioTokensDetailScreen.sold",
+    "defaultMessage": "!!!Sold",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
       "line": 258,
@@ -675,8 +675,8 @@
     }
   },
   {
-    "id": "portfolio.portfolioTokensDetailScreen.tokenPrice",
-    "defaultMessage": "!!!Token price",
+    "id": "portfolio.portfolioTokensDetailScreen.failed",
+    "defaultMessage": "!!!Failed",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
       "line": 262,
@@ -690,8 +690,8 @@
     }
   },
   {
-    "id": "portfolio.portfolioTokensDetailScreen.marketCap",
-    "defaultMessage": "!!!Market cap",
+    "id": "portfolio.portfolioTokensDetailScreen.stakeDelegated",
+    "defaultMessage": "!!!Stake Delegated",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
       "line": 266,
@@ -705,8 +705,8 @@
     }
   },
   {
-    "id": "portfolio.portfolioTokensDetailScreen._24hVolume",
-    "defaultMessage": "!!!24h volume",
+    "id": "portfolio.portfolioTokensDetailScreen.stakingReward",
+    "defaultMessage": "!!!Staking Reward",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
       "line": 270,
@@ -720,8 +720,8 @@
     }
   },
   {
-    "id": "portfolio.portfolioTokensDetailScreen.rank",
-    "defaultMessage": "!!!Rank",
+    "id": "portfolio.portfolioTokensDetailScreen.unknown",
+    "defaultMessage": "!!!Unknown",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
       "line": 274,
@@ -735,8 +735,8 @@
     }
   },
   {
-    "id": "portfolio.portfolioTokensDetailScreen.circulating",
-    "defaultMessage": "!!!Circulating",
+    "id": "portfolio.portfolioTokensDetailScreen.assets",
+    "defaultMessage": "!!!assets",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
       "line": 278,
@@ -750,8 +750,8 @@
     }
   },
   {
-    "id": "portfolio.portfolioTokensDetailScreen.totalSupply",
-    "defaultMessage": "!!!Total supply",
+    "id": "portfolio.portfolioTokensDetailScreen.marketData",
+    "defaultMessage": "!!!Market data",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
       "line": 282,
@@ -765,8 +765,8 @@
     }
   },
   {
-    "id": "portfolio.portfolioTokensDetailScreen.maxSupply",
-    "defaultMessage": "!!!Max supply",
+    "id": "portfolio.portfolioTokensDetailScreen.tokenPriceChange",
+    "defaultMessage": "!!!Token price change",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
       "line": 286,
@@ -780,8 +780,8 @@
     }
   },
   {
-    "id": "portfolio.portfolioTokensDetailScreen.allTimeHigh",
-    "defaultMessage": "!!!All time high",
+    "id": "portfolio.portfolioTokensDetailScreen.tokenPrice",
+    "defaultMessage": "!!!Token price",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
       "line": 290,
@@ -795,8 +795,8 @@
     }
   },
   {
-    "id": "portfolio.portfolioTokensDetailScreen.allTimeLow",
-    "defaultMessage": "!!!All time low",
+    "id": "portfolio.portfolioTokensDetailScreen.marketCap",
+    "defaultMessage": "!!!Market cap",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
       "line": 294,
@@ -810,8 +810,8 @@
     }
   },
   {
-    "id": "portfolio.portfolioTokensDetailScreen.info",
-    "defaultMessage": "!!!Info",
+    "id": "portfolio.portfolioTokensDetailScreen._24hVolume",
+    "defaultMessage": "!!!24h volume",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
       "line": 298,
@@ -825,8 +825,8 @@
     }
   },
   {
-    "id": "portfolio.portfolioTokensDetailScreen.website",
-    "defaultMessage": "!!!Website",
+    "id": "portfolio.portfolioTokensDetailScreen.rank",
+    "defaultMessage": "!!!Rank",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
       "line": 302,
@@ -840,8 +840,8 @@
     }
   },
   {
-    "id": "portfolio.portfolioTokensDetailScreen.policyID",
-    "defaultMessage": "!!!Policy ID",
+    "id": "portfolio.portfolioTokensDetailScreen.circulating",
+    "defaultMessage": "!!!Circulating",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
       "line": 306,
@@ -855,8 +855,8 @@
     }
   },
   {
-    "id": "portfolio.portfolioTokensDetailScreen.fingerprint",
-    "defaultMessage": "!!!Fingerprint",
+    "id": "portfolio.portfolioTokensDetailScreen.totalSupply",
+    "defaultMessage": "!!!Total supply",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
       "line": 310,
@@ -870,8 +870,8 @@
     }
   },
   {
-    "id": "portfolio.portfolioTokensDetailScreen.detailsOn",
-    "defaultMessage": "!!!Details on",
+    "id": "portfolio.portfolioTokensDetailScreen.maxSupply",
+    "defaultMessage": "!!!Max supply",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
       "line": 314,
@@ -885,8 +885,8 @@
     }
   },
   {
-    "id": "portfolio.portfolioTokensListScreen.value",
-    "defaultMessage": "!!!Value",
+    "id": "portfolio.portfolioTokensDetailScreen.allTimeHigh",
+    "defaultMessage": "!!!All time high",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
       "line": 318,
@@ -900,8 +900,8 @@
     }
   },
   {
-    "id": "portfolio.portfolioTokensListScreen.dex",
-    "defaultMessage": "!!!DEX",
+    "id": "portfolio.portfolioTokensDetailScreen.allTimeLow",
+    "defaultMessage": "!!!All time low",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
       "line": 322,
@@ -915,8 +915,8 @@
     }
   },
   {
-    "id": "portfolio.portfolioTokensListScreen.lp",
-    "defaultMessage": "!!!LP",
+    "id": "portfolio.portfolioTokensDetailScreen.info",
+    "defaultMessage": "!!!Info",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
       "line": 326,
@@ -930,8 +930,8 @@
     }
   },
   {
-    "id": "components.governance.total",
-    "defaultMessage": "!!!Total",
+    "id": "portfolio.portfolioTokensDetailScreen.website",
+    "defaultMessage": "!!!Website",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
       "line": 330,
@@ -945,8 +945,8 @@
     }
   },
   {
-    "id": "swap.listOrders.sheet.assetPrice",
-    "defaultMessage": "!!!Asset price",
+    "id": "portfolio.portfolioTokensDetailScreen.policyID",
+    "defaultMessage": "!!!Policy ID",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
       "line": 334,
@@ -960,8 +960,8 @@
     }
   },
   {
-    "id": "swap.listOrders.sheet.assetAmount",
-    "defaultMessage": "!!!Asset amount",
+    "id": "portfolio.portfolioTokensDetailScreen.fingerprint",
+    "defaultMessage": "!!!Fingerprint",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
       "line": 338,
@@ -975,8 +975,8 @@
     }
   },
   {
-    "id": "swap.listOrders.txId",
-    "defaultMessage": "!!!Transaction ID",
+    "id": "portfolio.portfolioTokensDetailScreen.detailsOn",
+    "defaultMessage": "!!!Details on",
     "file": "src/features/Portfolio2/common/useStrings.tsx",
     "start": {
       "line": 342,
