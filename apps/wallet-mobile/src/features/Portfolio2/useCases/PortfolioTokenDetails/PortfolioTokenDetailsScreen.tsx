@@ -20,13 +20,6 @@ export const PortfolioTokenDetailsScreen = () => {
 
   const [activeTab, setActiveTab] = React.useState<ActiveTab>('performance')
 
-  // Animation for header opacity
-  const headerOpacity = scrollY.interpolate({
-    inputRange: [0, HEADER_HEIGHT / 2, HEADER_HEIGHT],
-    outputRange: [1, 0.5, 0],
-    extrapolate: 'clamp',
-  })
-
   // Calculate the header's height based on scroll position and header height
   const headerHeight = scrollY.interpolate({
     inputRange: [0, HEADER_HEIGHT],
@@ -59,14 +52,8 @@ export const PortfolioTokenDetailsScreen = () => {
 
   return (
     <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
-      <Animated.View style={{opacity: headerOpacity, height: invertHeaderHeight}}>
-        <Animated.View
-          style={[
-            styles.header,
-            styles.headerInvisible,
-            // isScrolled ? styles.headerInvisible : styles.headerVisible,
-          ]}
-        >
+      <Animated.View style={{height: invertHeaderHeight}}>
+        <Animated.View style={[styles.header, styles.headerInvisible]}>
           <Spacer height={16} />
 
           <PortfolioTokenBalance />
@@ -127,7 +114,7 @@ const useStyles = () => {
     },
     headerInvisible: {
       position: 'absolute',
-      top: 0,
+      bottom: 0,
       left: 0,
       right: 0,
     },
