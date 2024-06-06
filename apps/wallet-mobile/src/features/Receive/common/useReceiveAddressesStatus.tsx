@@ -1,6 +1,6 @@
 import {useReceiveAddresses} from '../../../yoroi-wallets/hooks'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {AddressMode} from '../../WalletManager/common/types'
-import {useSelectedWallet} from '../../WalletManager/context/SelectedWalletContext'
 
 type ReceiveAddressesStatus = {
   used: string[]

@@ -14,7 +14,7 @@ import {time} from '../../../../kernel/constants'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {NftRoutes} from '../../../../kernel/navigation'
 import {useNavigateTo} from '../../../Nfts/common/navigation'
-import {useSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {MediaPreview} from '../MediaPreview/MediaPreview'
 

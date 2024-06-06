@@ -50,8 +50,8 @@ import {
 } from '../../features/Swap/useCases'
 import {SelectBuyTokenFromListScreen} from '../../features/Swap/useCases/StartSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
 import {SelectSellTokenFromListScreen} from '../../features/Swap/useCases/StartSwapScreen/CreateOrder/EditSellAmount/SelectSellTokenFromListScreen/SelectSellTokenFromListScreen'
+import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {useSelectedWalletMeta} from '../../features/WalletManager/common/hooks/useSelectedWalletMeta'
-import {useSelectedWallet} from '../../features/WalletManager/context/SelectedWalletContext'
 import {unstoppableApiKey} from '../../kernel/env'
 import {
   BackButton,

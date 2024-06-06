@@ -9,7 +9,7 @@ import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {NftRoutes, useParams} from '../../../../kernel/navigation'
 import {isEmptyString} from '../../../../kernel/utils'
 import {MediaPreview} from '../../../Portfolio/common/MediaPreview/MediaPreview'
-import {useSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 
 type Params = NftRoutes['nft-details']
 

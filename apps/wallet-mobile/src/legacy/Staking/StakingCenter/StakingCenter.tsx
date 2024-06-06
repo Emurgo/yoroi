@@ -7,7 +7,7 @@ import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
 import {PleaseWaitModal, Spacer} from '../../../components'
 import {features} from '../../../features'
-import {useSelectedWallet} from '../../../features/WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
 import {showErrorDialog} from '../../../kernel/dialogs'
 import {isDev, isNightly} from '../../../kernel/env'
 import {useLanguage} from '../../../kernel/i18n'

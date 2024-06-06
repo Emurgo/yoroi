@@ -345,16 +345,16 @@ export class WalletManager {
     }
   }
 
-  async disableEasyConfirmation(wallet: YoroiWallet) {
+  async disableEasyConfirmation(id: YoroiWallet['id']) {
     if (!this.#keychainManager) {
       const error = new Error('KeychainManager not available for disableEasyConfirmation')
       logger.error(error)
       throw error
     }
 
-    await this.#keychainManager.removeWalletKey(wallet.id)
+    await this.#keychainManager.removeWalletKey(id)
 
-    this.updateMeta(wallet.id, {
+    this.updateMeta(id, {
       isEasyConfirmationEnabled: false,
     })
   }

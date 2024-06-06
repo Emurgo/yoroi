@@ -3,7 +3,7 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import type {MessageDescriptor} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
-import {InteractionManager, ScrollView, StyleSheet} from 'react-native'
+import {ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Icon, Spacer} from '../../../components'
@@ -16,10 +16,9 @@ import {useResync} from '../../../yoroi-wallets/hooks'
 import {NetworkId, WalletImplementationId} from '../../../yoroi-wallets/types'
 import {useAuth} from '../../Auth/AuthProvider'
 import {useAuthSetting} from '../../Auth/common/hooks'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useSelectedWalletMeta} from '../../WalletManager/common/hooks/useSelectedWalletMeta'
 import {useAddressModeManager} from '../../WalletManager/common/useAddressModeManager'
-import {useSelectedWallet, useSetSelectedWallet} from '../../WalletManager/context/SelectedWalletContext'
-import {useSetSelectedWalletMeta} from '../../WalletManager/context/SelectedWalletMetaContext'
 import {useNavigateTo} from '../common/navigation'
 import {SettingsSwitch} from '../common/SettingsSwitch'
 import {
@@ -225,18 +224,11 @@ const AddressModeSwitcher = (props: {isSingle: boolean}) => {
 const useLogout = () => {
   const {logout} = useAuth()
   const intl = useIntl()
-  const setSelectedWallet = useSetSelectedWallet()
-  const setSelectedWalletMeta = useSetSelectedWalletMeta()
 
   return async () => {
     const selection = await showConfirmationDialog(confirmationMessages.logout, intl)
     if (selection === DIALOG_BUTTONS.YES) {
       logout() // triggers navigation to login
-
-      InteractionManager.runAfterInteractions(() => {
-        setSelectedWallet(undefined)
-        setSelectedWalletMeta(undefined)
-      })
     }
   }
 }

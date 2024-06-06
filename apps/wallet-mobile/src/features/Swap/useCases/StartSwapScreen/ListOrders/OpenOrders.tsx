@@ -35,7 +35,7 @@ import {useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/h
 import {Quantities} from '../../../../../yoroi-wallets/utils'
 import {useSearch} from '../../../../Search/SearchContext'
 import {getCollateralAmountInLovelace} from '../../../../Settings/ManageCollateral/helpers'
-import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {ConfirmRawTx} from '../../../common/ConfirmRawTx/ConfirmRawTx'
 import {Counter} from '../../../common/Counter/Counter'
 import {EmptyOpenOrdersIllustration} from '../../../common/Illustrations/EmptyOpenOrdersIllustration'
