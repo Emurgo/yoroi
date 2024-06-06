@@ -19,7 +19,15 @@ export const walletManagerReducer = (state: WalletManagerState, action: WalletMa
         break
 
       case WalletManagerActionType.SelectedMetaUpdated:
-        draft.selected.meta = action.meta
+        // only cares if selected one has been updated
+        if (draft.selected.meta != null) {
+          const newMeta = action.metas.get(draft.selected.meta.id)
+          if (newMeta != null) {
+            draft.selected.meta = newMeta
+          } else {
+            logger.error('walletManagerReducer: selected meta is gone')
+          }
+        }
         break
     }
   })
@@ -37,7 +45,7 @@ export type WalletManagerAction =
     }
   | {
       type: WalletManagerActionType.SelectedMetaUpdated
-      meta: WalletMeta
+      metas: Map<YoroiWallet['id'], WalletMeta>
     }
 
 export type WalletManagerState = {
@@ -67,7 +75,7 @@ export enum WalletManagerActionType {
 export type WalletManagerActions = {
   walletSelected(args: {wallet: YoroiWallet | null; meta: WalletMeta | null}): void
   networkSelected(network: Chain.SupportedNetworks): void
-  selectedMetaUpdated(meta: WalletMeta): void
+  selectedMetaUpdated(metas: Map<YoroiWallet['id'], WalletMeta>): void
 }
 
 export type WalletManagerContextType = WalletManagerState & {walletManager: WalletManager | null}

@@ -35,14 +35,17 @@ export const WalletManagerProvider: React.FC<
       dispatch({type: WalletManagerActionType.NetworkSelected, network}),
     walletSelected: ({wallet, meta}: {wallet: YoroiWallet | null; meta: WalletMeta | null}) =>
       dispatch({type: WalletManagerActionType.WalletSelected, wallet, meta}),
-    selectedMetaUpdated: (meta: WalletMeta) => dispatch({type: WalletManagerActionType.SelectedMetaUpdated, meta}),
+    selectedMetaUpdated: (metas: Map<YoroiWallet['id'], WalletMeta>) =>
+      dispatch({type: WalletManagerActionType.SelectedMetaUpdated, metas}),
   }).current
 
   React.useEffect(() => {
-    // it doesn't wait for the login
-    // sync
+    // sync, it doesn't wait for the login
     const unsubscribeSync = walletManager.startSyncing()
+    return () => unsubscribeSync()
+  }, [walletManager])
 
+  React.useEffect(() => {
     // selected wallet
     const subSelectedWalletId = walletManager.selectedWalletId$.subscribe((id) => {
       if (id == null) {
@@ -52,36 +55,29 @@ export const WalletManagerProvider: React.FC<
       const wallet = walletManager.getWalletById(id)
       const meta = walletManager.getWalletMetaById(id)
       if (wallet == null || meta == null) {
-        logger.error('WalletManagerProvider: subscriptions wallet or meta not found', {id})
+        logger.error('WalletManagerProvider: wallet or meta selected not found', {id})
         return
       }
       actions.walletSelected({wallet, meta})
     })
+    return () => subSelectedWalletId.unsubscribe()
+  }, [actions, walletManager])
 
+  React.useEffect(() => {
     // meta
     const subWalletMeta = walletManager.walletMetas$.subscribe((metas) => {
-      if (state.selected.meta == null || state.selected.wallet == null) return
-      const meta = metas.get(state.selected.meta?.id)
-      if (meta == null) {
-        logger.error('WalletManagerProvider: subscriptions meta not found', {meta})
-        return
-      }
-      actions.selectedMetaUpdated(meta)
+      actions.selectedMetaUpdated(metas)
     })
+    return () => subWalletMeta.unsubscribe()
+  }, [actions, walletManager])
 
+  React.useEffect(() => {
     // selected network
     const subSelectedNetwork = walletManager.selectedNetwork$.subscribe((network) => {
       actions.networkSelected(network)
     })
-
-    // unsubscribe
-    return () => {
-      unsubscribeSync()
-      subSelectedWalletId.unsubscribe()
-      subSelectedNetwork.unsubscribe()
-      subWalletMeta.unsubscribe()
-    }
-  }, [actions, walletManager, state.selected.meta, state.selected.wallet])
+    return () => subSelectedNetwork.unsubscribe()
+  }, [actions, walletManager])
 
   const context = React.useMemo(() => ({...state, walletManager}), [state, walletManager])
 

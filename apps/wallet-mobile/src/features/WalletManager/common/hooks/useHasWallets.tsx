@@ -1,15 +1,18 @@
-import {useObservableValue} from '@yoroi/common'
 import * as React from 'react'
 
 import {useWalletManager} from '../../context/WalletManagerProvider'
 
 export const useHasWallets = () => {
   const {walletManager} = useWalletManager()
-  const observable$ = React.useMemo(() => walletManager.walletMetas$, [walletManager])
-  const getter = React.useCallback(() => walletManager.hasWallets, [walletManager])
+  const [hasWallets, setHasWallets] = React.useState(walletManager.hasWallets)
 
-  return useObservableValue({
-    observable$,
-    getter,
+  React.useEffect(() => {
+    const sub = walletManager.walletMetas$.subscribe(() => {
+      setHasWallets(() => walletManager.hasWallets)
+    })
+
+    return () => sub.unsubscribe()
   })
+
+  return hasWallets
 }
