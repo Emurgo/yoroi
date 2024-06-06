@@ -1,11 +1,12 @@
-import * as cip8 from './cip8'
-import {Buffer} from 'buffer'
-import {wrappedCsl} from '../wrappedCsl'
 import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
 import assert from 'assert'
+import {Buffer} from 'buffer'
+
 import {getMasterKeyFromMnemonic} from '../byron/util'
 import {harden} from '../common/signatureUtils'
 import {createRawTxSigningKey} from '../utils'
+import {wrappedCsl} from '../wrappedCsl'
+import * as cip8 from './cip8'
 
 describe('CIP8', () => {
   it('should support signing', async () => {
