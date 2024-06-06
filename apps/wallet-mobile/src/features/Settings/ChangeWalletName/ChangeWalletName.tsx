@@ -8,10 +8,11 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button, KeyboardAvoidingView, Spacer, TextInput} from '../../../components'
 import globalMessages from '../../../kernel/i18n/global-messages'
 import {isEmptyString} from '../../../kernel/utils'
-import {useChangeWalletName, useWalletName, useWalletNames} from '../../../yoroi-wallets/hooks'
+import {useChangeWalletName} from '../../../yoroi-wallets/hooks'
 import {getWalletNameError, validateWalletName} from '../../../yoroi-wallets/utils/validators'
+import {useSelectedWalletMeta} from '../../WalletManager/common/hooks/useSelectedWalletMeta'
 import {useSelectedWallet} from '../../WalletManager/context/SelectedWalletContext'
-import {useWalletManager} from '../../WalletManager/context/WalletManagerContext'
+import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 
 export const ChangeWalletName = () => {
   const strings = useStrings()
@@ -19,13 +20,13 @@ export const ChangeWalletName = () => {
   const navigation = useNavigation()
 
   const wallet = useSelectedWallet()
-  const walletName = useWalletName(wallet)
+  const {name: walletName} = useSelectedWalletMeta()
   const {renameWallet, isLoading} = useChangeWalletName(wallet, {onSuccess: () => navigation.goBack()})
 
-  const walletManager = useWalletManager()
-  const {walletNames} = useWalletNames(walletManager)
-  const [newWalletName, setNewWalletName] = React.useState(walletName ?? '')
-  const validationErrors = validateWalletName(newWalletName, walletName ?? null, walletNames || [])
+  const {walletManager} = useWalletManager()
+  const walletNames = Array.from(walletManager.walletMetas.values()).map(({name}) => name)
+  const [newWalletName, setNewWalletName] = React.useState(walletName)
+  const validationErrors = validateWalletName(newWalletName, walletName, walletNames)
   const hasErrors = Object.keys(validationErrors).length > 0
   const errorText = getWalletNameError(
     {

@@ -10,9 +10,10 @@ import {
   TxMetadata as TxMetadataType,
   UnsignedTx as UnsignedTxType,
 } from '@emurgo/yoroi-lib'
-import {Api, App, Balance, Chain, Portfolio} from '@yoroi/types'
+import {Api, App, Balance, Portfolio} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 
+import {NetworkManager} from '../../features/WalletManager/common/types'
 import {WalletEncryptedStorage} from '../../kernel/storage/EncryptedStorage'
 import {HWDeviceInfo} from '../hw'
 import {
@@ -86,17 +87,17 @@ export type YoroiWallet = {
   isReadOnly: boolean
   primaryToken: Readonly<DefaultAsset>
   primaryTokenInfo: Readonly<Balance.TokenInfo>
-
-  readonly network: Chain.SupportedNetworks
-  readonly portfolioPrimaryTokenInfo: Portfolio.Token.Info
-  readonly balanceManager: Readonly<Portfolio.Manager.Balance>
+  readonly portfolioPrimaryTokenInfo: Readonly<Portfolio.Token.Info>
 
   // ---------------------------------------------------------------------------------------
   //                     ########## Interface  -  V2 ##########
   get isMainnet(): boolean
 
+  readonly networkManager: Readonly<NetworkManager>
+
   // Portfolio
-  balance$: Portfolio.Manager.Balance['observable$']
+  readonly balanceManager: Readonly<Portfolio.Manager.Balance>
+  readonly balance$: Readonly<Portfolio.Manager.Balance['observable$']>
   get balances(): ReturnType<Portfolio.Manager.Balance['getBalances']>
   get primaryBalance(): ReturnType<Portfolio.Manager.Balance['getPrimaryBalance']>
   get primaryBreakdown(): ReturnType<Portfolio.Manager.Balance['getPrimaryBreakdown']>
@@ -148,11 +149,6 @@ export type YoroiWallet = {
   // Password
   encryptedStorage: WalletEncryptedStorage
   changePassword: (password: string, newPassword: string) => Promise<void>
-
-  // EasyConfirmation
-  isEasyConfirmationEnabled: boolean
-  disableEasyConfirmation(): Promise<void>
-  enableEasyConfirmation(rootKey: string): Promise<void>
 
   // Addresses
   get externalAddresses(): Addresses
@@ -249,11 +245,6 @@ const yoroiWalletKeys: Array<keyof YoroiWallet> = [
   // Password
   'encryptedStorage',
   'changePassword',
-
-  // EasyConfirmation
-  'isEasyConfirmationEnabled',
-  'disableEasyConfirmation',
-  'enableEasyConfirmation',
 
   // Addresses
   'externalAddresses',

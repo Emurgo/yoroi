@@ -7,6 +7,7 @@ import {logger} from '../../../kernel/logger/logger'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {ConfirmRawTxWithOs} from '../../Swap/common/ConfirmRawTx/ConfirmRawTxWithOs'
 import {ConfirmRawTxWithPassword} from '../../Swap/common/ConfirmRawTx/ConfirmRawTxWithPassword'
+import {useSelectedWalletMeta} from '../../WalletManager/common/hooks/useSelectedWalletMeta'
 import {useStrings} from './useStrings'
 import {walletConfig} from './wallet-config'
 
@@ -58,6 +59,7 @@ const getInitScript = (sessionId: string, dappConnector: DappConnectorManager) =
 
 export const useConfirmRawTx = (wallet: YoroiWallet) => {
   const {openModal, closeModal} = useModal()
+  const meta = useSelectedWalletMeta()
   const strings = useStrings()
   const modalHeight = 350
 
@@ -73,13 +75,13 @@ export const useConfirmRawTx = (wallet: YoroiWallet) => {
         throw new Error('Not implemented yet')
       }
 
-      if (wallet.isEasyConfirmationEnabled) {
+      if (meta.isEasyConfirmationEnabled) {
         openModal(strings.confirmTx, <ConfirmRawTxWithOs onConfirm={handleOnConfirm} />, modalHeight, onClose)
         return
       }
 
       openModal(strings.confirmTx, <ConfirmRawTxWithPassword onConfirm={handleOnConfirm} />, modalHeight, onClose)
     },
-    [openModal, closeModal, strings, modalHeight, wallet],
+    [wallet.isHW, meta.isEasyConfirmationEnabled, openModal, strings.confirmTx, closeModal],
   )
 }

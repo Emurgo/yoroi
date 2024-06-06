@@ -4,12 +4,14 @@
 import {action} from '@storybook/addon-actions'
 import {AppApi, CardanoApi} from '@yoroi/api'
 import {createPrimaryTokenInfo} from '@yoroi/portfolio'
-import {Balance, Chain, Portfolio} from '@yoroi/types'
+import {Balance, Portfolio} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import {noop} from 'lodash'
 import {Observable} from 'rxjs'
 
+import {buildPortfolioTokenManagers} from '../../features/Portfolio/common/helpers/build-token-managers'
 import {WalletMeta} from '../../features/WalletManager/common/types'
+import {buildNetworkManagers} from '../../features/WalletManager/network-manager/network-manager'
 import {fallbackTokenInfo, toTokenInfo, utf8ToHex} from '../cardano/api/utils'
 import * as HASKELL_SHELLEY_TESTNET from '../cardano/constants/testnet/constants'
 import {
@@ -64,7 +66,12 @@ const walletMeta: WalletMeta = {
   addressMode: 'multiple',
 }
 
+// TODO: should be mocked
+const {tokenManagers} = buildPortfolioTokenManagers()
+const networkManagers = buildNetworkManagers({tokenManagers})
+
 const wallet: YoroiWallet = {
+  networkManager: networkManagers.mainnet,
   isEmpty: false,
   hasOnlyPrimary: false,
   id: 'wallet-id',
@@ -81,7 +88,6 @@ const wallet: YoroiWallet = {
   isHW: false,
   hwDeviceInfo: null as any,
   isReadOnly: false,
-  isEasyConfirmationEnabled: false,
   rewardAddressHex: 'reward-address-hex',
   publicKeyHex: 'publicKeyHex',
   utxos,
@@ -107,7 +113,6 @@ const wallet: YoroiWallet = {
 
   isMainnet: true,
   portfolioPrimaryTokenInfo: primaryTokenInfoMainnet,
-  network: Chain.Network.Mainnet,
 
   balanceManager: {
     clear: noop,
@@ -286,12 +291,6 @@ const wallet: YoroiWallet = {
   resync: async (...args: unknown[]) => {
     action('resync')(...args)
   },
-  enableEasyConfirmation: async (rootKey: string) => {
-    action('enableEasyConfirmation')(rootKey)
-  },
-  disableEasyConfirmation: async () => {
-    action('disableEasyConfirmation')
-  },
   getProtocolParams: CardanoApi.mockCardanoApi.getProtocolParams,
 
   fetchFundInfo: () => {
@@ -318,11 +317,6 @@ const hwWallet: YoroiWallet = {
       deviceObj: null,
     },
   },
-}
-
-const osWallet: YoroiWallet = {
-  ...wallet,
-  isEasyConfirmationEnabled: true,
 }
 
 const readonlyWallet: YoroiWallet = {
@@ -968,7 +962,6 @@ export const nft: Balance.TokenInfo = {
 export const mocks = {
   walletMeta,
   wallet,
-  osWallet,
   hwWallet,
   readonlyWallet,
 

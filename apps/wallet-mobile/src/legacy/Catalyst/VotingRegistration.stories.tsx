@@ -91,7 +91,7 @@ storiesOf('Catalyst', module)
   .add('ConfirmVotingTx, os', () => (
     <Providers
       wallet={{
-        ...mocks.osWallet,
+        ...mocks.wallet,
         createVotingRegTx: mocks.createVotingRegTx.success,
       }}
     >

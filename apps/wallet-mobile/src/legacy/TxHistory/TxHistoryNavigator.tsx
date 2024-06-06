@@ -50,6 +50,7 @@ import {
 } from '../../features/Swap/useCases'
 import {SelectBuyTokenFromListScreen} from '../../features/Swap/useCases/StartSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
 import {SelectSellTokenFromListScreen} from '../../features/Swap/useCases/StartSwapScreen/CreateOrder/EditSellAmount/SelectSellTokenFromListScreen/SelectSellTokenFromListScreen'
+import {useSelectedWalletMeta} from '../../features/WalletManager/common/hooks/useSelectedWalletMeta'
 import {useSelectedWallet} from '../../features/WalletManager/context/SelectedWalletContext'
 import {unstoppableApiKey} from '../../kernel/env'
 import {
@@ -59,7 +60,7 @@ import {
   TxHistoryRoutes,
   useWalletNavigation,
 } from '../../kernel/navigation'
-import {useFrontendFees, useStakingKey, useWalletName} from '../../yoroi-wallets/hooks'
+import {useFrontendFees, useStakingKey} from '../../yoroi-wallets/hooks'
 import {ModalInfo} from './ModalInfo'
 import {TxDetails} from './TxDetails'
 import {TxHistory} from './TxHistory'
@@ -70,7 +71,7 @@ const Stack = createStackNavigator<TxHistoryRoutes>()
 export const TxHistoryNavigator = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const walletName = useWalletName(wallet)
+  const meta = useSelectedWalletMeta()
   const storage = useAsyncStorage()
   const {atoms, color} = useTheme()
   const {styles} = useStyles()
@@ -159,7 +160,7 @@ export const TxHistoryNavigator = () => {
                     name="history-list"
                     component={TxHistory}
                     options={{
-                      title: walletName ?? '',
+                      title: meta.name,
                       headerRight: headerRightHistory,
                       headerStyle: {
                         elevation: 0,

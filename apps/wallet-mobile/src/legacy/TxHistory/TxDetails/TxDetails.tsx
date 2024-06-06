@@ -31,7 +31,7 @@ export const TxDetails = () => {
   const intl = useIntl()
   const {id} = useRoute().params as Params
   const wallet = useSelectedWallet()
-  const explorers = useExplorers(wallet.network)
+  const explorers = useExplorers(wallet.networkManager.network)
   const internalAddressIndex = fromPairs(wallet.internalAddresses.map((addr, i) => [addr, i]))
   const externalAddressIndex = fromPairs(wallet.externalAddresses.map((addr, i) => [addr, i]))
   const [expandedInItemId, setExpandedInItemId] = useState<null | ItemId>(null)

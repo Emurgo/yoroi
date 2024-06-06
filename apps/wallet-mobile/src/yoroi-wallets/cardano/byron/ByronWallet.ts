@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import * as CSL from '@emurgo/cross-csl-core'
+import {PrivateKey} from '@emurgo/cross-csl-core'
 import {Datum, signRawTransaction} from '@emurgo/yoroi-lib'
 import {AppApi, CardanoApi} from '@yoroi/api'
 import {isNonNullable, parseSafe} from '@yoroi/common'
-import {Api, App, Balance, Chain, Portfolio} from '@yoroi/types'
+import {Api, App, Balance, Portfolio} from '@yoroi/types'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
 import _ from 'lodash'
@@ -11,16 +11,12 @@ import DeviceInfo from 'react-native-device-info'
 import {defaultMemoize} from 'reselect'
 import {Observable} from 'rxjs'
 
-import {buildPortfolioBalanceManager} from '../../../features/Portfolio/common/hooks/usePortfolioBalanceManager'
+import {buildPortfolioBalanceManager} from '../../../features/Portfolio/common/helpers/build-balance-manager'
 import {toBalanceManagerSyncArgs} from '../../../features/Portfolio/common/transformers/toBalanceManagerSyncArgs'
-import {toChainSupportedNetwork} from '../../../features/WalletManager/common/helpers/to-chain-supported-network'
-import {networkManager} from '../../../features/WalletManager/common/network-manager'
-import {WalletMeta} from '../../../features/WalletManager/common/types'
-import walletManager from '../../../features/WalletManager/common/walletManager'
+import {NetworkManager, WalletMeta} from '../../../features/WalletManager/common/types'
 import LocalizableError from '../../../kernel/i18n/LocalizableError'
 import {logger} from '../../../kernel/logger/logger'
 import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../../kernel/storage/EncryptedStorage'
-import {Keychain} from '../../../kernel/storage/Keychain'
 import {makeMemosManager, MemosManager} from '../../../legacy/TxHistory/common/memos/memosManager'
 import {HWDeviceInfo} from '../../hw'
 import {
@@ -101,7 +97,6 @@ export type ShelleyWalletJSON = {
   isHW: boolean
   hwDeviceInfo: null | HWDeviceInfo
   isReadOnly: boolean
-  isEasyConfirmationEnabled: boolean
 
   publicKeyHex?: string
 
@@ -136,12 +131,6 @@ export class ByronWallet implements YoroiWallet {
   readonly version: string
   readonly checksum: CardanoTypes.WalletChecksum
   readonly encryptedStorage: WalletEncryptedStorage
-  isEasyConfirmationEnabled = false
-  readonly balance$: Observable<Portfolio.Event.BalanceManager>
-  readonly network: Chain.SupportedNetworks
-  readonly portfolioPrimaryTokenInfo: Readonly<Portfolio.Token.Info>
-  readonly balanceManager: Readonly<Portfolio.Manager.Balance>
-
   private _utxos: RawUtxo[]
   private readonly storage: App.Storage
   private readonly utxoManager: UtxoManager
@@ -151,18 +140,24 @@ export class ByronWallet implements YoroiWallet {
   private _collateralId = ''
   private readonly cardanoApi: Api.Cardano.Actions
 
-  // =================== create =================== //
+  readonly balance$: Observable<Portfolio.Event.BalanceManager>
+  readonly portfolioPrimaryTokenInfo: Readonly<Portfolio.Token.Info>
+  readonly balanceManager: Readonly<Portfolio.Manager.Balance>
+  readonly networkManager: Readonly<NetworkManager>
 
+  // =================== create =================== //
   static async create({
     id,
     storage,
     mnemonic,
     password,
+    networkManager,
   }: {
     id: string
-    storage: App.Storage
+    storage: Readonly<App.Storage>
     mnemonic: string
     password: string
+    networkManager: Readonly<NetworkManager>
   }): Promise<YoroiWallet> {
     const {rootKey, accountPubKeyHex} = await makeKeys({mnemonic})
     const {internalChain, externalChain} = await addressChains.create({implementationId, networkId, accountPubKeyHex})
@@ -177,7 +172,7 @@ export class ByronWallet implements YoroiWallet {
       isReadOnly: false, // readonly wallet
       internalChain,
       externalChain,
-      isEasyConfirmationEnabled: false,
+      networkManager,
     })
 
     await encryptAndSaveRootKey(wallet, rootKey, password)
@@ -191,12 +186,14 @@ export class ByronWallet implements YoroiWallet {
     accountPubKeyHex,
     hwDeviceInfo, // hw wallet
     isReadOnly, // readonly wallet
+    networkManager,
   }: {
     accountPubKeyHex: string
     hwDeviceInfo: HWDeviceInfo | null
     id: string
     isReadOnly: boolean
-    storage: App.Storage
+    storage: Readonly<App.Storage>
+    networkManager: Readonly<NetworkManager>
   }): Promise<YoroiWallet> {
     const {internalChain, externalChain} = await addressChains.create({implementationId, networkId, accountPubKeyHex})
 
@@ -210,11 +207,19 @@ export class ByronWallet implements YoroiWallet {
       isReadOnly, // readonly wallet
       internalChain,
       externalChain,
-      isEasyConfirmationEnabled: false,
+      networkManager,
     })
   }
 
-  static async restore({walletMeta, storage}: {storage: App.Storage; walletMeta: WalletMeta}) {
+  static async restore({
+    walletMeta,
+    storage,
+    networkManager,
+  }: {
+    storage: Readonly<App.Storage>
+    walletMeta: Readonly<WalletMeta>
+    networkManager: Readonly<NetworkManager>
+  }) {
     const data = await storage.getItem('data', parseWalletJSON)
     if (!data) throw new Error('Cannot read saved data')
 
@@ -232,8 +237,8 @@ export class ByronWallet implements YoroiWallet {
       accountPubKeyHex: data.publicKeyHex ?? internalChain.publicKey, // can be null for versions < 3.0.2, in which case we can just retrieve from address generator
       hwDeviceInfo: data.hwDeviceInfo, // hw wallet
       isReadOnly: data.isReadOnly ?? false, // readonly wallet
-      isEasyConfirmationEnabled: data.isEasyConfirmationEnabled,
       lastGeneratedAddressIndex: data.lastGeneratedAddressIndex ?? 0, // AddressManager
+      networkManager,
     })
 
     wallet.integrityCheck()
@@ -252,20 +257,23 @@ export class ByronWallet implements YoroiWallet {
     accountPubKeyHex,
     hwDeviceInfo, // hw wallet
     isReadOnly, // readonly wallet
-    isEasyConfirmationEnabled,
     lastGeneratedAddressIndex = 0,
+
+    networkManager,
   }: {
-    accountPubKeyHex: string
-    hwDeviceInfo: HWDeviceInfo | null
     id: string
-    implementationId: WalletImplementationId
     networkId: NetworkId
+    implementationId: WalletImplementationId
     storage: App.Storage
     internalChain: AddressChain
     externalChain: AddressChain
+
+    accountPubKeyHex: string
+    hwDeviceInfo: HWDeviceInfo | null
     isReadOnly: boolean
-    isEasyConfirmationEnabled: boolean
     lastGeneratedAddressIndex?: number
+
+    networkManager: Readonly<NetworkManager>
   }) => {
     const rewardAddressHex = await deriveRewardAddressHex(accountPubKeyHex, networkId)
     const apiUrl = getCardanoNetworkConfigById(networkId).BACKEND.API_ROOT
@@ -281,15 +289,8 @@ export class ByronWallet implements YoroiWallet {
           : 'preprod',
     })
 
-    const network = toChainSupportedNetwork(networkId)
-    const portfolioPrimaryTokenInfo = networkManager[network].primaryTokenInfo
-    const tokenManager = walletManager.getTokenManager(network)
-    const {balanceManager} = buildPortfolioBalanceManager({
-      walletId: id,
-      primaryTokenInfo: portfolioPrimaryTokenInfo,
-      tokenManager,
-      network,
-    })
+    const {rootStorage: networkRootStorage, tokenManager, primaryTokenInfo} = networkManager
+    const {balanceManager} = buildPortfolioBalanceManager({primaryTokenInfo, tokenManager, networkRootStorage})(id)
 
     const wallet = new ByronWallet({
       storage,
@@ -303,18 +304,16 @@ export class ByronWallet implements YoroiWallet {
       rewardAddressHex,
       internalChain,
       externalChain,
-      isEasyConfirmationEnabled,
       lastGeneratedAddressIndex,
       transactionManager,
       memosManager,
       cardanoApi,
       balanceManager,
-      network,
-      portfolioPrimaryTokenInfo,
+      networkManager,
+      portfolioPrimaryTokenInfo: primaryTokenInfo,
     })
 
     await wallet.discoverAddresses()
-    wallet.setupSubscriptions()
     wallet.isInitialized = true
     wallet.save()
     wallet.notify({type: 'initialize'})
@@ -335,13 +334,13 @@ export class ByronWallet implements YoroiWallet {
     rewardAddressHex,
     internalChain,
     externalChain,
-    isEasyConfirmationEnabled,
     lastGeneratedAddressIndex,
     transactionManager,
     memosManager,
     cardanoApi,
+
     balanceManager,
-    network,
+    networkManager,
     portfolioPrimaryTokenInfo,
   }: {
     storage: App.Storage
@@ -355,13 +354,13 @@ export class ByronWallet implements YoroiWallet {
     rewardAddressHex: string
     internalChain: AddressChain
     externalChain: AddressChain
-    isEasyConfirmationEnabled: boolean
     lastGeneratedAddressIndex: number
     transactionManager: TransactionManager
     memosManager: MemosManager
     cardanoApi: Api.Cardano.Actions
+
     balanceManager: Readonly<Portfolio.Manager.Balance>
-    network: Chain.SupportedNetworks
+    networkManager: Readonly<NetworkManager>
     portfolioPrimaryTokenInfo: Readonly<Portfolio.Token.Info>
   }) {
     this.id = id
@@ -388,9 +387,6 @@ export class ByronWallet implements YoroiWallet {
       ? legacyWalletChecksum(accountPubKeyHex)
       : walletChecksum(accountPubKeyHex)
     this.setupSubscriptions()
-    this.notify({type: 'initialize'})
-    this.isInitialized = true
-    this.isEasyConfirmationEnabled = isEasyConfirmationEnabled
     this.state = {lastGeneratedAddressIndex}
     this.stakingKeyPath = isByron(this.walletImplementationId)
       ? []
@@ -402,9 +398,10 @@ export class ByronWallet implements YoroiWallet {
           NUMBERS.STAKING_KEY_INDEX,
         ]
     this.cardanoApi = cardanoApi
+
     this.balanceManager = balanceManager
     this.balance$ = balanceManager.observable$
-    this.network = network
+    this.networkManager = networkManager
     this.portfolioPrimaryTokenInfo = portfolioPrimaryTokenInfo
   }
 
@@ -434,7 +431,7 @@ export class ByronWallet implements YoroiWallet {
   }
 
   get isMainnet() {
-    return this.network === Chain.Network.Mainnet
+    return this.networkManager.isMainnet
   }
 
   save() {
@@ -1227,7 +1224,7 @@ export class ByronWallet implements YoroiWallet {
     return legacyApi.getPoolInfo(request, this.getBackendConfig())
   }
 
-  public async signRawTx(txHex: string, pKeys: CSL.PrivateKey[]) {
+  public async signRawTx(txHex: string, pKeys: PrivateKey[]) {
     return signRawTransaction(CardanoMobile, txHex, pKeys)
   }
 
@@ -1334,20 +1331,6 @@ export class ByronWallet implements YoroiWallet {
 
   getDecryptedRootKey(password: string) {
     return this.encryptedStorage.rootKey.read(password)
-  }
-
-  async enableEasyConfirmation(rootKey: string) {
-    await Keychain.setWalletKey(this.id, rootKey)
-    this.isEasyConfirmationEnabled = true
-
-    this.notify({type: 'easy-confirmation', enabled: this.isEasyConfirmationEnabled})
-  }
-
-  async disableEasyConfirmation() {
-    await Keychain.removeWalletKey(this.id)
-    this.isEasyConfirmationEnabled = false
-
-    this.notify({type: 'easy-confirmation', enabled: this.isEasyConfirmationEnabled})
   }
 
   async changePassword(oldPassword: string, newPassword: string) {
@@ -1457,7 +1440,6 @@ export class ByronWallet implements YoroiWallet {
       isHW: this.isHW,
       hwDeviceInfo: this.hwDeviceInfo,
       isReadOnly: this.isReadOnly,
-      isEasyConfirmationEnabled: this.isEasyConfirmationEnabled,
     }
   }
 }
@@ -1517,7 +1499,6 @@ const keys: Array<keyof WalletJSON> = [
   'walletImplementationId',
   'internalChain',
   'externalChain',
-  'isEasyConfirmationEnabled',
   'lastGeneratedAddressIndex',
 ]
 

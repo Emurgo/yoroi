@@ -26,7 +26,7 @@ import {logger} from '../../../../kernel/logger/logger'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import {isEmptyString} from '../../../../kernel/utils'
-import {useCreateWallet, usePlate, useWalletNames} from '../../../../yoroi-wallets/hooks'
+import {useCreateWallet, usePlate} from '../../../../yoroi-wallets/hooks'
 import {WalletImplementationId} from '../../../../yoroi-wallets/types'
 import {
   getWalletNameError,
@@ -37,7 +37,7 @@ import {
 import {debugWalletInfo, features} from '../../..'
 import {AddressMode} from '../../../WalletManager/common/types'
 import {parseWalletMeta} from '../../../WalletManager/common/validators'
-import {useWalletManager} from '../../../WalletManager/context/WalletManagerContext'
+import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
 import {YoroiZendeskLink} from '../../common/constants'
 import {LearnMoreButton} from '../../common/LearnMoreButton/LearnMoreButton'
@@ -69,8 +69,8 @@ export const RestoreWalletDetailsScreen = () => {
   const bold = useBold()
   const {HEIGHT_MODAL_NAME_PASSWORD, HEIGHT_MODAL_CHECKSUM} = useSizeModal()
   const {openModal, closeModal} = useModal()
-  const walletManager = useWalletManager()
-  const {walletNames} = useWalletNames(walletManager)
+  const {walletManager} = useWalletManager()
+  const walletNames = Array.from(walletManager.walletMetas.values()).map(({name}) => name)
   const [name, setName] = React.useState(features.prefillWalletInfo ? debugWalletInfo.WALLET_NAME : '')
   const storage = useAsyncStorage()
   const {mnemonic, networkId, publicKeyHex, walletImplementationId, walletIdChanged} = useSetupWallet()
@@ -128,7 +128,7 @@ export const RestoreWalletDetailsScreen = () => {
     }, [track]),
   )
 
-  const nameErrors = validateWalletName(name, null, walletNames && !isCreateWalletSuccess ? walletNames : [])
+  const nameErrors = validateWalletName(name, null, !isCreateWalletSuccess ? walletNames : [])
   const walletNameErrorText = getWalletNameError(
     {tooLong: strings.tooLong, nameAlreadyTaken: strings.nameAlreadyTaken, mustBeFilled: strings.mustBeFilled},
     nameErrors,

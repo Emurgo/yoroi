@@ -3,8 +3,8 @@ import {ErrorBoundary} from 'react-error-boundary'
 import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
 
 import {LedgerTransportSwitch} from '../../features/Swap/useCases/ConfirmTxScreen/LedgerTransportSwitch'
-import {walletManager} from '../../features/WalletManager/common/walletManager'
 import {useSelectedWallet} from '../../features/WalletManager/context/SelectedWalletContext'
+import {useWalletManager} from '../../features/WalletManager/context/WalletManagerProvider'
 import {LedgerConnect} from '../../legacy/HW'
 import {useSignTxWithHW, useSubmitTx} from '../../yoroi-wallets/hooks'
 import {DeviceId, DeviceObj, withBLE, withUSB} from '../../yoroi-wallets/hw'
@@ -35,6 +35,7 @@ export const ConfirmTxWithHwModal = ({onSuccess, unsignedTx, onCancel}: Props) =
 }
 
 const ConfirmTxWithHwModalContent = ({onSuccess, unsignedTx}: Omit<Props, 'onCancel'>) => {
+  const {walletManager} = useWalletManager()
   const [transportType, setTransportType] = useState<TransportType>('USB')
   const [step, setStep] = useState<Step>('select-transport')
   const wallet = useSelectedWallet()

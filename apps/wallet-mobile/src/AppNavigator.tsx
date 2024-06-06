@@ -2,7 +2,6 @@ import {NavigationContainer, NavigationContainerRef} from '@react-navigation/nat
 import {createStackNavigator} from '@react-navigation/stack'
 import {isString} from '@yoroi/common'
 import {supportedPrefixes} from '@yoroi/links'
-import {TransferProvider} from '@yoroi/transfer'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Alert, AppState, AppStateStatus, InteractionManager, Platform} from 'react-native'
@@ -27,12 +26,11 @@ import {
   ChooseBiometricLoginScreen,
   useShowBiometricsScreen,
 } from './features/SetupWallet/useCases/ChooseBiometricLogin/ChooseBiometricLoginScreen'
-import {useWalletManager} from './features/WalletManager/context/WalletManagerContext'
+import {useHasWallets} from './features/WalletManager/common/hooks/useHasWallets'
 import {useStatusBar} from './hooks/useStatusBar'
 import {agreementDate} from './kernel/config'
 import {AppRoutes} from './kernel/navigation'
 import {WalletNavigator} from './WalletNavigator'
-import {useHasWallets} from './yoroi-wallets/hooks'
 
 const Stack = createStackNavigator<AppRoutes>()
 const navRef = React.createRef<NavigationContainerRef<ReactNavigation.RootParamList>>()
@@ -46,8 +44,7 @@ export const AppNavigator = () => {
   const {showBiometricsScreen} = useShowBiometricsScreen()
   const isAuthOsSupported = useIsAuthOsSupported()
   const authSetting = useAuthSetting()
-  const walletManager = useWalletManager()
-  const {hasWallets} = useHasWallets(walletManager)
+  const hasWallets = useHasWallets()
   useHideScreenInAppSwitcher()
 
   useAutoLogout()
@@ -164,15 +161,7 @@ export const AppNavigator = () => {
                   />
                 )}
 
-                <Stack.Screen name="manage-wallets">
-                  {() => (
-                    <SearchProvider>
-                      <TransferProvider>
-                        <WalletNavigator />
-                      </TransferProvider>
-                    </SearchProvider>
-                  )}
-                </Stack.Screen>
+                <Stack.Screen name="manage-wallets" getComponent={() => WalletNavigator} />
               </Stack.Group>
 
               <Stack.Group screenOptions={{presentation: 'transparentModal'}}>

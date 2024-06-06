@@ -1,6 +1,6 @@
 import {mountMMKVStorage, observableStorageMaker} from '@yoroi/common'
 import {portfolioApiMaker, portfolioTokenManagerMaker, portfolioTokenStorageMaker} from '@yoroi/portfolio'
-import {Chain, Portfolio} from '@yoroi/types'
+import {App, Chain, Portfolio} from '@yoroi/types'
 import {freeze} from 'immer'
 
 export const buildPortfolioTokenManager = ({network}: {network: Chain.SupportedNetworks}) => {
@@ -12,8 +12,8 @@ export const buildPortfolioTokenManager = ({network}: {network: Chain.SupportedN
   })
   const api = portfolioApiMaker({
     network,
-    maxConcurrentRequests: 4,
-    maxIdsPerRequest: 80,
+    maxConcurrentRequests: 3,
+    maxIdsPerRequest: 120,
   })
 
   const tokenManager = portfolioTokenManagerMaker({
@@ -22,7 +22,7 @@ export const buildPortfolioTokenManager = ({network}: {network: Chain.SupportedN
   })
 
   tokenManager.hydrate({sourceId: 'initial'})
-  return {tokenManager, tokenStorage}
+  return {tokenManager, storage: rootStorage}
 }
 
 export const buildPortfolioTokenManagers = () => {
@@ -43,5 +43,18 @@ export const buildPortfolioTokenManagers = () => {
     true,
   )
 
-  return tokenManagers
+  const tokenStorages: Readonly<{
+    [Chain.Network.Mainnet]: App.Storage<false, Portfolio.Token.Id>
+    [Chain.Network.Preprod]: App.Storage<false, Portfolio.Token.Id>
+    [Chain.Network.Sancho]: App.Storage<false, Portfolio.Token.Id>
+  }> = freeze(
+    {
+      [Chain.Network.Mainnet]: mainnetPortfolioTokenManager.storage,
+      [Chain.Network.Preprod]: preprodPortfolioTokenManager.storage,
+      [Chain.Network.Sancho]: sanchoPortfolioTokenManager.storage,
+    },
+    true,
+  )
+
+  return {tokenManagers, tokenStorages}
 }

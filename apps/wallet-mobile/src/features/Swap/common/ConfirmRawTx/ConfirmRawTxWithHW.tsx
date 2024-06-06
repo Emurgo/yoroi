@@ -6,8 +6,8 @@ import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
 import {Text} from '../../../../components'
 import {LedgerConnect} from '../../../../legacy/HW'
 import {DeviceId, DeviceObj, withBLE, withUSB} from '../../../../yoroi-wallets/hw'
-import {walletManager} from '../../../WalletManager/common/walletManager'
 import {useSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'
+import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {LedgerTransportSwitch} from '../../useCases/ConfirmTxScreen/LedgerTransportSwitch'
 import {useCancelOrderWithHw} from '../helpers'
 import {useStrings} from '../strings'
@@ -23,6 +23,7 @@ type Props = {
 }
 
 export const ConfirmRawTxWithHW = ({onConfirm, utxo, bech32Address, cancelOrder}: Props) => {
+  const {walletManager} = useWalletManager()
   const [transportType, setTransportType] = useState<TransportType>('USB')
   const [step, setStep] = useState<Step>('select-transport')
   const wallet = useSelectedWallet()

@@ -25,7 +25,7 @@ export const ListBalances = (props: Props) => {
   const strings = useStrings()
   const styles = useStyles()
   const wallet = useSelectedWallet()
-  const explorers = useExplorers(wallet.network)
+  const explorers = useExplorers(wallet.networkManager.network)
   const balances = usePortfolioBalances({wallet})
 
   const [fungibilityFilter, setFungibilityFilter] = React.useState<Portfolio.FungibilityFilter>('all')

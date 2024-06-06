@@ -3,12 +3,14 @@ import React, {useEffect} from 'react'
 import {ActivityIndicator, StyleSheet, Text, View} from 'react-native'
 
 import {useAuthOsWithEasyConfirmation} from '../../../Auth/common/hooks'
+import {useSelectedWalletMeta} from '../../../WalletManager/common/hooks/useSelectedWalletMeta'
 import {useSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'
 import {getErrorMessage} from '../errors'
 import {useStrings} from '../strings'
 
 export const ConfirmRawTxWithOs = ({onConfirm}: {onConfirm?: (rootKey: string) => Promise<void>}) => {
   const wallet = useSelectedWallet()
+  const meta = useSelectedWalletMeta()
   const strings = useStrings()
   const styles = useStyles()
 
@@ -18,9 +20,9 @@ export const ConfirmRawTxWithOs = ({onConfirm}: {onConfirm?: (rootKey: string) =
   )
 
   useEffect(() => {
-    if (!wallet.isEasyConfirmationEnabled) return
+    if (!meta.isEasyConfirmationEnabled) return
     authWithOs()
-  }, [wallet.isEasyConfirmationEnabled, authWithOs])
+  }, [meta.isEasyConfirmationEnabled, authWithOs])
 
   const errorMessage = error ? getErrorMessage(error, strings) : null
 

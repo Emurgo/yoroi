@@ -1,6 +1,6 @@
 import {freeze} from 'immer'
 
-import {NetworkEpochInfo, NetworkManager} from '../types'
+import {NetworkEpochInfo, NetworkManager} from '../../common/types'
 
 export function dateToEpochInfo(eras: NetworkManager['eras']) {
   return (date: Date): Readonly<NetworkEpochInfo> => {

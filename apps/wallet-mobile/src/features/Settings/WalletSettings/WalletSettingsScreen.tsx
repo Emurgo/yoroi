@@ -12,10 +12,11 @@ import {confirmationMessages} from '../../../kernel/i18n/global-messages'
 import {SettingsRouteNavigation, useWalletNavigation} from '../../../kernel/navigation'
 import {getNetworkConfigById} from '../../../yoroi-wallets/cardano/networks'
 import {isByron, isHaskellShelley} from '../../../yoroi-wallets/cardano/utils'
-import {useEasyConfirmationEnabled, useResync} from '../../../yoroi-wallets/hooks'
+import {useResync} from '../../../yoroi-wallets/hooks'
 import {NetworkId, WalletImplementationId} from '../../../yoroi-wallets/types'
 import {useAuth} from '../../Auth/AuthProvider'
 import {useAuthSetting} from '../../Auth/common/hooks'
+import {useSelectedWalletMeta} from '../../WalletManager/common/hooks/useSelectedWalletMeta'
 import {useAddressModeManager} from '../../WalletManager/common/useAddressModeManager'
 import {useSelectedWallet, useSetSelectedWallet} from '../../WalletManager/context/SelectedWalletContext'
 import {useSetSelectedWalletMeta} from '../../WalletManager/context/SelectedWalletMetaContext'
@@ -40,11 +41,11 @@ export const WalletSettingsScreen = () => {
 
   const logout = useLogout()
   const settingsNavigation = useNavigation<SettingsRouteNavigation>()
-  const easyConfirmationEnabled = useEasyConfirmationEnabled(wallet)
+  const {isEasyConfirmationEnabled} = useSelectedWalletMeta()
   const navigateTo = useNavigateTo()
 
   const onToggleEasyConfirmation = () => {
-    if (easyConfirmationEnabled) {
+    if (isEasyConfirmationEnabled) {
       navigateTo.disableEasyConfirmation()
     } else {
       navigateTo.enableEasyConfirmation()
@@ -96,7 +97,7 @@ export const WalletSettingsScreen = () => {
             disabled={authSetting === 'pin' || wallet.isHW || wallet.isReadOnly}
           >
             <SettingsSwitch
-              value={easyConfirmationEnabled}
+              value={isEasyConfirmationEnabled}
               onValueChange={onToggleEasyConfirmation}
               disabled={authSetting === 'pin' || wallet.isHW || wallet.isReadOnly}
             />

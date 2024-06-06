@@ -1,12 +1,12 @@
 import * as React from 'react'
 
-import {time} from '../../../kernel/constants'
-import {logger} from '../../../kernel/logger/logger'
-import {useWalletNavigation} from '../../../kernel/navigation'
-import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
-import {useSetSelectedWallet} from '../context/SelectedWalletContext'
-import {useSetSelectedWalletMeta} from '../context/SelectedWalletMetaContext'
-import {useWalletManager} from '../context/WalletManagerContext'
+import {time} from '../../../../kernel/constants'
+import {logger} from '../../../../kernel/logger/logger'
+import {useWalletNavigation} from '../../../../kernel/navigation'
+import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
+import {useSetSelectedWallet} from '../../context/SelectedWalletContext'
+import {useSetSelectedWalletMeta} from '../../context/SelectedWalletMetaContext'
+import {useWalletManager} from '../../context/WalletManagerProvider'
 
 /**
  * Custom hook to launch a new wallet first time or when a previous sync is required, it will follow these steps:
@@ -35,7 +35,7 @@ export function useLaunchWalletAfterSyncing({
   walletId: YoroiWallet['id'] | null
 }) {
   const walletNavigation = useWalletNavigation()
-  const manager = useWalletManager()
+  const {walletManager} = useWalletManager()
   const setSelectedWallet = useSetSelectedWallet()
   const setSelectedWalletMeta = useSetSelectedWalletMeta()
 
@@ -45,11 +45,11 @@ export function useLaunchWalletAfterSyncing({
 
     const process = async () => {
       started = true
-      // openning wallets force manager to add it to the sync queue
-      // it's ok if the wallet is already opened by manager
-      const {metas} = await manager.openWallets()
+      // hydrate force manager to add wallets to the sync queue
+      // it's ok if the wallet is already loaded by manager
+      const {metas} = await walletManager.hydrate()
 
-      const wallet = manager.getOpenedWalletById(walletId)
+      const wallet = walletManager.getWalletById(walletId)
       const meta = metas.find(({id}) => id === walletId)
       if (!wallet || !meta) {
         const error = new Error(
@@ -69,5 +69,5 @@ export function useLaunchWalletAfterSyncing({
 
     const timer = setTimeout(() => process(), time.oneSecond)
     return () => clearTimeout(timer)
-  }, [isGlobalSyncPaused, walletId, manager, walletNavigation, setSelectedWallet, setSelectedWalletMeta])
+  }, [isGlobalSyncPaused, walletId, walletNavigation, setSelectedWallet, setSelectedWalletMeta, walletManager])
 }

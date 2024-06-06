@@ -2,6 +2,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {RouteProp, useFocusEffect} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
+import {TransferProvider} from '@yoroi/transfer'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Keyboard, Platform} from 'react-native'
@@ -19,6 +20,7 @@ import {SettingsScreenNavigator} from './features/Settings'
 import {SetupWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
 import {GovernanceNavigator} from './features/Staking/Governance'
 import {ToggleAnalyticsSettingsNavigator} from './features/ToggleAnalyticsSettings'
+import {useWalletManager} from './features/WalletManager/context/WalletManagerProvider'
 import {SelectWalletFromList} from './features/WalletManager/useCases/SelectWalletFromListScreen/SelectWalletFromListScreen'
 import {dappExplorerEnabled} from './kernel/config'
 import {useMetrics} from './kernel/metrics/metricsManager'
@@ -190,6 +192,9 @@ export const WalletNavigator = () => {
   const strings = useStrings()
   const {atoms, color} = useTheme()
   useLinksRequestAction()
+  const {
+    selected: {meta},
+  } = useWalletManager()
 
   // initialRoute doesn't update the state of the navigator, only at first render
   // https://reactnavigation.org/docs/auth-flow/
@@ -207,41 +212,48 @@ export const WalletNavigator = () => {
   }
 
   return (
-    <Stack.Navigator
-      screenOptions={{
-        ...defaultStackNavigationOptions(atoms, color),
-        headerLeft: undefined,
-        detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
-      }}
-    >
-      <Stack.Screen
-        name="wallet-selection"
-        options={{title: strings.walletSelectionScreenHeader}}
-        component={SelectWalletFromList}
-      />
+    // Ensures that entire react tree is re-rendered when wallet changes
+    <React.Fragment key={`wallet-routes-${meta?.id}`}>
+      <TransferProvider>
+        <SearchProvider>
+          <Stack.Navigator
+            screenOptions={{
+              ...defaultStackNavigationOptions(atoms, color),
+              headerLeft: undefined,
+              detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+            }}
+          >
+            <Stack.Screen
+              name="wallet-selection"
+              options={{title: strings.walletSelectionScreenHeader}}
+              component={SelectWalletFromList}
+            />
 
-      <Stack.Screen //
-        name="setup-wallet"
-        options={{headerShown: false}}
-        component={SetupWalletNavigator}
-      />
+            <Stack.Screen //
+              name="setup-wallet"
+              options={{headerShown: false}}
+              component={SetupWalletNavigator}
+            />
 
-      <Stack.Screen name="main-wallet-routes" options={{headerShown: false}} component={WalletTabNavigator} />
+            <Stack.Screen name="main-wallet-routes" options={{headerShown: false}} component={WalletTabNavigator} />
 
-      <Stack.Screen name="settings" options={{headerShown: false}} component={SettingsScreenNavigator} />
+            <Stack.Screen name="settings" options={{headerShown: false}} component={SettingsScreenNavigator} />
 
-      <Stack.Screen name="voting-registration" options={{headerShown: false}} component={VotingRegistration} />
+            <Stack.Screen name="voting-registration" options={{headerShown: false}} component={VotingRegistration} />
 
-      <Stack.Screen
-        name="toggle-analytics-settings"
-        options={{headerShown: false}}
-        component={ToggleAnalyticsSettingsNavigator}
-      />
+            <Stack.Screen
+              name="toggle-analytics-settings"
+              options={{headerShown: false}}
+              component={ToggleAnalyticsSettingsNavigator}
+            />
 
-      <Stack.Screen name="governance" options={{headerShown: false}} component={GovernanceNavigator} />
+            <Stack.Screen name="governance" options={{headerShown: false}} component={GovernanceNavigator} />
 
-      <Stack.Screen name="staking-dashboard" options={{headerShown: false}} component={DashboardNavigator} />
-    </Stack.Navigator>
+            <Stack.Screen name="staking-dashboard" options={{headerShown: false}} component={DashboardNavigator} />
+          </Stack.Navigator>
+        </SearchProvider>
+      </TransferProvider>
+    </React.Fragment>
   )
 }
 

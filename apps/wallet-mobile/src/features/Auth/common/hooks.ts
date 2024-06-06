@@ -14,7 +14,7 @@ import {WrongPassword} from '../../../yoroi-wallets/cardano/errors'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {decryptData, encryptData} from '../../../yoroi-wallets/encryption'
 import {parseWalletMeta} from '../../WalletManager/common/validators'
-import {useWalletManager} from '../../WalletManager/context/WalletManagerContext'
+import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 
 export const useIsAuthOsSupported = (options?: UseQueryOptions<boolean, Error>) => {
   const queryClient = useQueryClient()
@@ -135,7 +135,7 @@ export const useDisableAllEasyConfirmation = (
   wallet: YoroiWallet | undefined,
   options?: UseMutationOptions<void, Error>,
 ) => {
-  const walletManager = useWalletManager()
+  const {walletManager} = useWalletManager()
   const storage = useAsyncStorage()
   const mutation = useMutationWithInvalidations({
     mutationFn: async () => {

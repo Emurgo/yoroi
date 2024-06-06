@@ -1,5 +1,6 @@
 import React from 'react'
 
+import {useSelectedWalletMeta} from '../../../../features/WalletManager/common/hooks/useSelectedWalletMeta'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
 import {ConfirmTxWithHW} from './ConfirmTxWithHW'
@@ -14,6 +15,7 @@ type Props = {
 }
 
 export const ConfirmTx = ({wallet, onSuccess, onCancel, unsignedTx}: Props) => {
+  const meta = useSelectedWalletMeta()
   return wallet.isHW ? (
     <ConfirmTxWithHW //
       wallet={wallet}
@@ -21,7 +23,7 @@ export const ConfirmTx = ({wallet, onSuccess, onCancel, unsignedTx}: Props) => {
       onSuccess={onSuccess}
       onCancel={onCancel}
     />
-  ) : wallet.isEasyConfirmationEnabled ? (
+  ) : meta.isEasyConfirmationEnabled ? (
     <ConfirmTxWithOS //
       wallet={wallet}
       unsignedTx={unsignedTx}

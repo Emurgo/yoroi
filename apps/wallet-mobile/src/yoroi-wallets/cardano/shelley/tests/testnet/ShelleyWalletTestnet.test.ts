@@ -1,20 +1,31 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {Address} from '@emurgo/cross-csl-core'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {Balance} from '@yoroi/types'
+import {Balance, Chain} from '@yoroi/types'
 
+import {buildPortfolioTokenManagers} from '../../../../../features/Portfolio/common/helpers/build-token-managers'
 import {WalletMeta} from '../../../../../features/WalletManager/common/types'
+import {getWalletFactory} from '../../../../../features/WalletManager/network-manager/helpers/get-wallet-factory'
+import {buildNetworkManagers} from '../../../../../features/WalletManager/network-manager/network-manager'
 import {EncryptedStorage, EncryptedStorageKeys} from '../../../../../kernel/storage/EncryptedStorage'
 import {rootStorage} from '../../../../../kernel/storage/rootStorage'
 import {HWDeviceInfo} from '../../../../hw'
 import {DefaultAsset} from '../../../../types'
 import {ShelleyAddressGeneratorJSON} from '../../../chain'
 import {WalletJSON} from '../../../shelley/ShelleyWallet'
-import {ShelleyWalletTestnet} from '../../../shelley/wallets'
 import {YoroiWallet} from '../../../types'
 
 describe('ShelleyWalletTestnet', () => {
   afterEach(() => AsyncStorage.clear())
+
+  const ShelleyWalletTestnet = getWalletFactory({
+    implementationId: 'haskell-shelley',
+    network: Chain.Network.Preprod,
+  })
+  // TODO: should be mocked
+  const networkManagers = buildNetworkManagers({
+    tokenManagers: buildPortfolioTokenManagers().tokenManagers,
+  })
 
   it('create', async () => {
     const mnemonic =
@@ -26,11 +37,11 @@ describe('ShelleyWalletTestnet', () => {
       mnemonic,
       storage: rootStorage.join(`${walletMeta.id}/`),
       password,
+      networkManager: networkManagers.preprod,
     })
 
     expect(wallet.id).toBe('261c7e0f-dd72-490c-8ce9-6714b512b969')
     expect(wallet.networkId).toBe(300)
-    expect(wallet.isEasyConfirmationEnabled).toBe(false)
     expect(wallet.isHW).toBe(false)
     expect(wallet.hwDeviceInfo).toBe(null)
     expect(wallet.checksum?.TextPart).toBe('OSEC-2869')
@@ -138,12 +149,12 @@ describe('ShelleyWalletTestnet', () => {
     const wallet: YoroiWallet & Record<string, any> = await ShelleyWalletTestnet.restore({
       storage: rootStorage.join(`${walletMeta.id}/`),
       walletMeta,
+      networkManager: networkManagers.preprod,
     })
     await wallet.internalChain?._addressGenerator.getRewardAddressHex()
 
     expect(wallet.id).toBe('261c7e0f-dd72-490c-8ce9-6714b512b969')
     expect(wallet.networkId).toBe(300)
-    expect(wallet.isEasyConfirmationEnabled).toBe(false)
     expect(wallet.isHW).toBe(false)
     expect(wallet.hwDeviceInfo).toBe(null)
     expect(wallet.checksum?.TextPart).toBe('OSEC-2869')
@@ -260,11 +271,11 @@ describe('ShelleyWalletTestnet', () => {
       storage: rootStorage.join(`${walletMeta.id}/`),
       hwDeviceInfo,
       isReadOnly,
+      networkManager: networkManagers.preprod,
     })
 
     expect(wallet.id).toBe('261c7e0f-dd72-490c-8ce9-6714b512b969')
     expect(wallet.networkId).toBe(300)
-    expect(wallet.isEasyConfirmationEnabled).toBe(false)
     expect(wallet.isHW).toBe(true)
     expect(wallet.hwDeviceInfo).toEqual(hwDeviceInfo)
     expect(wallet.checksum?.TextPart).toBe('SHCZ-0679')
@@ -489,7 +500,6 @@ const data: WalletJSON = {
   isHW: false,
   hwDeviceInfo: null,
   isReadOnly: false,
-  isEasyConfirmationEnabled: false,
 }
 
 const getBech32InternalChain = (wallet: any) => wallet.internalChain?._addressGenerator._accountPubKeyPtr?.toBech32()

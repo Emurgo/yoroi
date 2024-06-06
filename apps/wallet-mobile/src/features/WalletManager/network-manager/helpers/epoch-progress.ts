@@ -1,6 +1,6 @@
 import {freeze} from 'immer'
 
-import {NetworkEpochInfo} from '../types'
+import {NetworkEpochInfo} from '../../common/types'
 
 export function epochProgress(epochInfo: NetworkEpochInfo) {
   return (date: Date) => {

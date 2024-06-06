@@ -24,10 +24,9 @@ import {
   UseQueryOptions,
 } from 'react-query'
 
-import {AddressMode, WalletMeta} from '../../features/WalletManager/common/types'
+import {AddressMode} from '../../features/WalletManager/common/types'
 import {parseWalletMeta} from '../../features/WalletManager/common/validators'
-import {WalletManager} from '../../features/WalletManager/common/walletManager'
-import {useWalletManager} from '../../features/WalletManager/context/WalletManagerContext'
+import {useWalletManager} from '../../features/WalletManager/context/WalletManagerProvider'
 import {isDev, isNightly} from '../../kernel/env'
 import {logger} from '../../kernel/logger/logger'
 import {getSpendingKey, getStakingKey} from '../cardano/addressInfo/addressInfo'
@@ -100,23 +99,16 @@ export const useWallet = (wallet: YoroiWallet, event: WalletEvent['type']) => {
 }
 
 export const useWalletEvent = (wallet: YoroiWallet, event: WalletEvent['type'], callback: () => void) => {
-  const walletManager = useWalletManager()
-
   React.useEffect(() => {
     const unsubWallet = wallet.subscribe((subscriptionEvent) => {
-      if (subscriptionEvent.type !== event) return
-      callback()
-    })
-    const unsubWalletManager = walletManager.subscribe((subscriptionEvent) => {
       if (subscriptionEvent.type !== event) return
       callback()
     })
 
     return () => {
       unsubWallet()
-      unsubWalletManager()
     }
-  }, [event, wallet, walletManager, callback])
+  }, [event, wallet, callback])
 }
 
 export const useReceiveAddresses = (wallet: YoroiWallet) => {
@@ -181,22 +173,6 @@ export const useSync = (wallet: YoroiWallet, options?: UseMutationOptions<void, 
     ...mutation,
     sync: mutation.mutate,
   }
-}
-
-export const useWalletName = (wallet: YoroiWallet, options?: UseQueryOptions<string, Error>) => {
-  const storage = useAsyncStorage()
-  const query = useQuery({
-    queryKey: [wallet.id, 'name'],
-    queryFn: async () => {
-      const walletMeta = await storage.join('wallet/').getItem(wallet.id, parseWalletMeta)
-      if (!walletMeta) throw new Error('Invalid wallet id')
-
-      return walletMeta.name
-    },
-    ...options,
-  })
-
-  return query.data
 }
 
 export const useChangeWalletName = (wallet: YoroiWallet, options: UseMutationOptions<void, Error, string> = {}) => {
@@ -549,7 +525,7 @@ export const useHasPendingTx = (wallet: YoroiWallet) => {
 
 // WALLET MANAGER
 export const useDisableEasyConfirmation = (wallet: YoroiWallet, options?: UseMutationOptions) => {
-  const walletManager = useWalletManager()
+  const {walletManager} = useWalletManager()
   const mutation = useMutationWithInvalidations({
     ...options,
     mutationFn: () => walletManager.disableEasyConfirmation(wallet),
@@ -563,7 +539,7 @@ export const useDisableEasyConfirmation = (wallet: YoroiWallet, options?: UseMut
 }
 
 export const useEnableEasyConfirmation = (wallet: YoroiWallet, options?: UseMutationOptions<void, Error, string>) => {
-  const walletManager = useWalletManager()
+  const {walletManager} = useWalletManager()
   const mutation = useMutationWithInvalidations({
     ...options,
     mutationFn: (password: string) => walletManager.enableEasyConfirmation(wallet, password),
@@ -573,29 +549,6 @@ export const useEnableEasyConfirmation = (wallet: YoroiWallet, options?: UseMuta
   return {
     ...mutation,
     enableEasyConfirmation: mutation.mutate,
-  }
-}
-
-export const useEasyConfirmationEnabled = (wallet: YoroiWallet) => {
-  useWallet(wallet, 'easy-confirmation')
-
-  return wallet.isEasyConfirmationEnabled
-}
-
-export const useWalletNames = (
-  walletManager: WalletManager,
-  options?: UseQueryOptions<Array<WalletMeta>, Error, Array<string>>,
-) => {
-  const query = useQuery({
-    queryKey: ['walletMetas'],
-    queryFn: async () => walletManager.listWallets(),
-    select: (walletMetas) => walletMetas.map((walletMeta) => walletMeta.name),
-    ...options,
-  })
-
-  return {
-    ...query,
-    walletNames: query.data,
   }
 }
 
@@ -638,54 +591,6 @@ export const useProtocolParams = (
   }
 }
 
-export const useWalletMetas = (walletManager: WalletManager, options?: UseQueryOptions<Array<WalletMeta>, Error>) => {
-  const query = useQuery({
-    queryKey: ['walletMetas'],
-    queryFn: async () => walletManager.listWallets(),
-    ...options,
-  })
-
-  return {
-    ...query,
-    walletMetas: query.data,
-  }
-}
-
-export const hasWalletsKey = 'hasWallets'
-export const useHasWallets = (
-  walletManager: WalletManager,
-  options?: UseQueryOptions<Array<WalletMeta>, Error, boolean>,
-) => {
-  const query = useQuery({
-    queryKey: [hasWalletsKey],
-    queryFn: async () => walletManager.listWallets(),
-    select: (walletMetas) => walletMetas.length > 0,
-    suspense: true,
-    ...options,
-  })
-
-  if (query.data == null) throw new Error('invalid state')
-
-  return {
-    ...query,
-    hasWallets: query.data,
-  }
-}
-
-export const useRemoveWallet = (id: YoroiWallet['id'], options: UseMutationOptions<void, Error, void> = {}) => {
-  const walletManager = useWalletManager()
-  const mutation = useMutationWithInvalidations({
-    mutationFn: () => walletManager.removeWallet(id),
-    invalidateQueries: [['walletMetas']],
-    ...options,
-  })
-
-  return {
-    removeWallet: mutation.mutate,
-    ...mutation,
-  }
-}
-
 type CreateBip44WalletInfo = {
   name: string
   bip44AccountPublic: string
@@ -697,7 +602,7 @@ type CreateBip44WalletInfo = {
 }
 
 export const useCreateBip44Wallet = (options?: UseMutationOptions<YoroiWallet, Error, CreateBip44WalletInfo>) => {
-  const walletManager = useWalletManager()
+  const {walletManager} = useWalletManager()
   const mutation = useMutationWithInvalidations<YoroiWallet, Error, CreateBip44WalletInfo>({
     mutationFn: ({name, bip44AccountPublic, networkId, implementationId, hwDeviceInfo, readOnly, addressMode}) =>
       walletManager.createWalletWithBip44Account(
@@ -729,7 +634,7 @@ export type CreateWalletInfo = {
 }
 
 export const useCreateWallet = (options?: UseMutationOptions<YoroiWallet, Error, CreateWalletInfo>) => {
-  const walletManager = useWalletManager()
+  const {walletManager} = useWalletManager()
   const mutation = useMutationWithInvalidations({
     mutationFn: ({name, mnemonicPhrase, password, networkId, walletImplementationId, addressMode}) =>
       walletManager.createWallet(name, mnemonicPhrase, password, networkId, walletImplementationId, addressMode),

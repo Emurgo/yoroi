@@ -31,7 +31,7 @@ export const mapStakingKeyStateToGovernanceAction = (state: StakingKeyState): Go
 
 export const useIsGovernanceFeatureEnabled = (wallet: YoroiWallet) => {
   const {bestBlock} = useTipStatus({wallet, options: {suspense: true}})
-  return bestBlock.height >= governaceAfterBlock[wallet.network]
+  return bestBlock.height >= governaceAfterBlock[wallet.networkManager.network]
 }
 
 export const useGovernanceManagerMaker = () => {

@@ -2,7 +2,7 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 
 import {Boundary, TwoActionView} from '../../../../components'
-import {walletManager} from '../../../../features/WalletManager/common/walletManager'
+import {useWalletManager} from '../../../../features/WalletManager/context/WalletManagerProvider'
 import {confirmationMessages, txLabels} from '../../../../kernel/i18n/global-messages'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useSignWithHwAndSubmitTx} from '../../../../yoroi-wallets/hooks'
@@ -22,6 +22,7 @@ type TransportType = 'USB' | 'BLE'
 
 export const ConfirmTxWithHW = (props: Props) => {
   const {wallet} = props
+  const {walletManager} = useWalletManager()
   const [transportType, setTransportType] = React.useState<TransportType>('USB')
   const [step, setStep] = React.useState<'select-transport' | 'connect-transport' | 'confirm'>('select-transport')
 

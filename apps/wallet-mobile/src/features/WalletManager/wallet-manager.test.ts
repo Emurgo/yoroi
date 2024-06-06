@@ -2,19 +2,27 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {parseSafe} from '@yoroi/common'
 
-import {isYoroiWallet} from '../../../yoroi-wallets/cardano/types'
-import {WalletManager} from './walletManager'
+import {rootStorage} from '../../kernel/storage/rootStorage'
+import {isYoroiWallet} from '../../yoroi-wallets/cardano/types'
+import {buildPortfolioTokenManagers} from '../Portfolio/common/helpers/build-token-managers'
+import {buildNetworkManagers} from './network-manager/network-manager'
+import {WalletManager} from './wallet-manager'
 
-// ! Actually hitting the API
-describe('walletMananger', () => {
-  beforeEach(() => AsyncStorage.clear())
-  afterAll(() => {
-    jest.useRealTimers()
+describe('walletManager', () => {
+  // TODO: should be mocked
+  const {tokenManagers} = buildPortfolioTokenManagers()
+  const networkManagers = buildNetworkManagers({tokenManagers})
+
+  beforeEach(() => {
+    AsyncStorage.clear()
   })
 
   it('creates a wallet', async () => {
-    const walletManager = WalletManager.instance()
-    await expect(walletManager.listWallets()).resolves.toEqual([])
+    const walletManager = new WalletManager({
+      rootStorage,
+      networkManagers,
+    })
+    await expect(walletManager.hydrate()).resolves.toEqual({wallets: [], metas: []})
 
     const name = 'name'
     const mnemonic = [
@@ -36,60 +44,53 @@ describe('walletMananger', () => {
     )
     expect(isYoroiWallet(wallet)).toBe(true)
 
-    before: {
-      const shot = await snapshot()
-      const walletMeta = getWalletMeta(wallet.id, shot)
-      const walletJSON = getWalletJSON(wallet.id, shot)
-      const masterPassword = getMasterPassword(wallet.id, shot)
+    const shot = await snapshot()
+    const walletMeta = getWalletMeta(wallet.id, shot)
+    const walletJSON = getWalletJSON(wallet.id, shot)
+    const masterPassword = getMasterPassword(wallet.id, shot)
 
-      expect(walletMeta).toBeTruthy()
-      expect(walletJSON).toBeTruthy()
-      expect(masterPassword).toBeTruthy()
+    expect(walletMeta).toBeTruthy()
+    expect(walletJSON).toBeTruthy()
+    expect(masterPassword).toBeTruthy()
 
-      expect(await walletManager.listWallets()).toEqual([
+    await expect(walletManager.hydrate()).resolves.toEqual({
+      wallets: expect.any(Array),
+      metas: [
         {
-          checksum: {
-            ImagePart:
-              '33166efaf23401b284eadb3b7d353d6c0d666369e8424d88ec1d00c6188777412412232d9b5f64353c03eac83bec4be0dba9877bce27d7bd7e00788bbdc3e61f',
-            TextPart: 'NNPB-3784',
-          },
+          checksum: wallet.checksum,
           id: wallet.id,
           isEasyConfirmationEnabled: false,
           isHW: false,
-          name: 'name',
-          networkId: 300,
-          walletImplementationId: 'haskell-shelley',
-          addressMode: 'single',
+          name,
+          networkId,
+          walletImplementationId,
+          addressMode,
         },
-      ])
-    }
+      ],
+    })
+
+    expect(walletManager.walletMetas.size).toBe(1)
 
     await walletManager.removeWallet(wallet.id)
 
-    expect(await walletManager.deletedWalletIds()).toEqual([wallet.id])
-    expect(await walletManager.listWallets()).toEqual([])
+    await expect(walletManager.walletIdsMarkedForDeletion()).resolves.toEqual([wallet.id])
+    await expect(walletManager.hydrate()).resolves.toEqual({wallets: [], metas: []})
 
-    after: {
-      const walletManager = WalletManager.instance()
-      expect(await walletManager.listWallets()).toEqual([])
+    await walletManager.removeWalletsMarkedForDeletion()
 
-      await walletManager.removeDeletedWallets()
-
-      const shot = await snapshot()
-      const walletMeta = getWalletMeta(wallet.id, shot)
-      const walletJSON = getWalletJSON(wallet.id, shot)
-      const masterPassword = getMasterPassword(wallet.id, shot)
-
-      expect(await walletManager.listWallets()).toEqual([])
-      expect(walletMeta).toBeFalsy()
-      expect(walletJSON).toBeFalsy()
-      expect(masterPassword).toBeFalsy()
-    }
+    await expect(walletManager.hydrate()).resolves.toEqual({wallets: [], metas: []})
+    const finalSnapshot = await snapshot()
+    expect(finalSnapshot).not.toHaveProperty(`/wallet/${wallet.id}`)
+    expect(finalSnapshot).not.toHaveProperty(`/wallet/${wallet.id}/data`)
+    expect(finalSnapshot).not.toHaveProperty(`/keystore/${wallet.id}-MASTER_PASSWORD`)
   })
 
   it('creates a readonly wallet', async () => {
-    const walletManager = WalletManager.instance()
-    await expect(walletManager.listWallets()).resolves.toEqual([])
+    const walletManager = new WalletManager({
+      rootStorage,
+      networkManagers,
+    })
+    await expect(walletManager.hydrate()).resolves.toEqual({wallets: [], metas: []})
 
     const name = 'name'
     const accountPubKeyHex =
@@ -109,9 +110,9 @@ describe('walletMananger', () => {
     )
     expect(isYoroiWallet(wallet)).toBe(true)
 
-    const walletMetas = await walletManager.listWallets()
-    expect(walletMetas).toHaveLength(1)
-    const [walletMeta] = walletMetas
+    const {metas} = await walletManager.hydrate()
+    expect(metas).toHaveLength(1)
+    const [walletMeta] = metas
     expect(walletMeta.name).toEqual(name)
     expect(walletMeta.isEasyConfirmationEnabled).toEqual(false)
     expect(walletMeta.networkId).toEqual(networkId)
@@ -121,8 +122,11 @@ describe('walletMananger', () => {
   })
 
   it('creates a hw wallet', async () => {
-    const walletManager = WalletManager.instance()
-    await expect(walletManager.listWallets()).resolves.toEqual([])
+    const walletManager = new WalletManager({
+      rootStorage,
+      networkManagers,
+    })
+    await expect(walletManager.hydrate()).resolves.toEqual({wallets: [], metas: []})
 
     const name = 'name'
     const accountPubKeyHex =
@@ -152,9 +156,9 @@ describe('walletMananger', () => {
     )
     expect(isYoroiWallet(wallet)).toBe(true)
 
-    const walletMetas = await walletManager.listWallets()
-    expect(walletMetas).toHaveLength(1)
-    const [walletMeta] = walletMetas
+    const {metas} = await walletManager.hydrate()
+    expect(metas).toHaveLength(1)
+    const [walletMeta] = metas
     expect(walletMeta.name).toEqual(name)
     expect(walletMeta.isEasyConfirmationEnabled).toEqual(false)
     expect(walletMeta.networkId).toEqual(networkId)

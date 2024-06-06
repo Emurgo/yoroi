@@ -1,6 +1,6 @@
 import {Portfolio} from '@yoroi/types'
 
-import {filterBySyncEvent} from './filterBySyncEvent'
+import {filterBySyncEvent} from './filter-by-sync-event'
 
 describe('filterBySyncEvent', () => {
   it('should return true if the event is a sync event', () => {

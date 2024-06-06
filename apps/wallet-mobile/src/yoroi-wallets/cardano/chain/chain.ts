@@ -49,7 +49,7 @@ export class AddressGenerator {
     this.networkId = networkId
   }
 
-  get byronAccount(): CryptoAccount {
+  byronAccount(): CryptoAccount {
     assert(isByron(this.walletImplementationId), 'chain::get::byronAccount: not a byron wallet')
     return {
       derivation_scheme: 'V2',
@@ -113,8 +113,7 @@ export class AddressGenerator {
         }),
       )
     }
-
-    return util.getAddresses(this.byronAccount, this.type, idxs)
+    return util.getAddresses(this.byronAccount(), this.type, idxs)
   }
 
   toJSON(): AddressGeneratorJSON {

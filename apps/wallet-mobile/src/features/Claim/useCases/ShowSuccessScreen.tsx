@@ -97,7 +97,7 @@ const TxHash = ({txHash}: {txHash: string}) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const {styles, colors} = useStyles()
-  const explorers = useExplorers(wallet.network)
+  const explorers = useExplorers(wallet.networkManager.network)
 
   return (
     <>

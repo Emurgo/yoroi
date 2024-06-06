@@ -7,7 +7,7 @@ import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useSignWithHwAndSubmitTx} from '../../../../yoroi-wallets/hooks'
 import {DeviceId, DeviceObj, withBLE, withUSB} from '../../../../yoroi-wallets/hw'
 import {YoroiSignedTx, YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
-import {walletManager} from '../../../WalletManager/common/walletManager'
+import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {useStrings} from '../../common/strings'
 import {LedgerTransportSwitch} from './LedgerTransportSwitch'
 
@@ -22,6 +22,7 @@ type TransportType = 'USB' | 'BLE'
 type Step = 'select-transport' | 'connect-transport' | 'loading'
 
 export const ConfirmTxWithHW = ({onSuccess, wallet, unsignedTx}: Props) => {
+  const {walletManager} = useWalletManager()
   const [transportType, setTransportType] = React.useState<TransportType>('USB')
   const [step, setStep] = useState<Step>('select-transport')
   const strings = useStrings()

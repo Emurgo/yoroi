@@ -7,17 +7,15 @@ import {defineMessages, useIntl} from 'react-intl'
 
 import {SettingsButton} from '../../components/Button'
 import {useGovernanceManagerMaker} from '../../features/Staking/Governance'
-import {useSelectedWallet} from '../../features/WalletManager/context/SelectedWalletContext'
+import {useSelectedWalletMeta} from '../../features/WalletManager/common/hooks/useSelectedWalletMeta'
 import {DashboardRoutes, defaultStackNavigationOptions, useWalletNavigation} from '../../kernel/navigation'
-import {useWalletName} from '../../yoroi-wallets/hooks'
 import {DelegationConfirmation, FailedTxScreen} from '../Staking'
 import {StakingCenter} from '../Staking/StakingCenter'
 import {Dashboard} from './Dashboard'
 
 const Stack = createStackNavigator<DashboardRoutes>()
 export const DashboardNavigator = () => {
-  const wallet = useSelectedWallet()
-  const walletName = useWalletName(wallet)
+  const meta = useSelectedWalletMeta()
   const strings = useStrings()
   const {color, atoms} = useTheme()
 
@@ -30,7 +28,7 @@ export const DashboardNavigator = () => {
           name="staking-dashboard-main"
           component={Dashboard}
           options={{
-            title: walletName,
+            title: meta.name,
             headerRight: () => <HeaderRight />,
           }}
         />

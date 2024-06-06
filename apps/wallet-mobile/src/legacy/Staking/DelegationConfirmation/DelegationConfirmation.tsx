@@ -7,6 +7,7 @@ import {Platform, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {KeyboardSpacer, Text, ValidatedTextInput} from '../../../components'
 import {ConfirmTx} from '../../../components/ConfirmTx'
 import {debugWalletInfo, features} from '../../../features'
+import {useSelectedWalletMeta} from '../../../features/WalletManager/common/hooks/useSelectedWalletMeta'
 import {useSelectedWallet} from '../../../features/WalletManager/context/SelectedWalletContext'
 import globalMessages, {txLabels} from '../../../kernel/i18n/global-messages'
 import {StakingCenterRoutes, useParams, useWalletNavigation} from '../../../kernel/navigation'
@@ -32,6 +33,7 @@ const isParams = (params?: Params | object | undefined): params is Params => {
 export const DelegationConfirmation = () => {
   const {resetToTxHistory} = useWalletNavigation()
   const wallet = useSelectedWallet()
+  const meta = useSelectedWalletMeta()
   const strings = useStrings()
   const styles = useStyles()
 
@@ -84,7 +86,7 @@ export const DelegationConfirmation = () => {
           />
         </View>
 
-        {!wallet.isEasyConfirmationEnabled && !wallet.isHW && (
+        {!meta.isEasyConfirmationEnabled && !wallet.isHW && (
           <View style={styles.input} testID="spendingPassword">
             <ValidatedTextInput secureTextEntry value={password} label={strings.password} onChangeText={setPassword} />
           </View>

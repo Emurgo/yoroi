@@ -8,9 +8,8 @@ import {ActivityIndicator, Image, ImageSourcePropType, ScrollView, StyleSheet, V
 import {Button, KeyboardAvoidingView, ProgressStep, TextInput} from '../../../../components'
 import globalMessages from '../../../../kernel/i18n/global-messages'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {useWalletNames} from '../../../../yoroi-wallets/hooks'
 import {getWalletNameError, validateWalletName} from '../../../../yoroi-wallets/utils/validators'
-import {useWalletManager} from '../../../WalletManager/context/WalletManagerContext'
+import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 
 type Props = {
   onSubmit: ({name}: {name: string}) => void
@@ -41,10 +40,10 @@ export const WalletNameForm = ({
   const strings = useStrings()
   const styles = useStyles()
   const [name, setName] = React.useState(defaultWalletName ?? '')
-  const walletManager = useWalletManager()
   const {track} = useMetrics()
-  const {walletNames} = useWalletNames(walletManager)
-  const validationErrors = validateWalletName(name, null, walletNames || [])
+  const {walletManager} = useWalletManager()
+  const walletNames = Array.from(walletManager.walletMetas.values()).map(({name}) => name)
+  const validationErrors = validateWalletName(name, null, walletNames)
   const hasErrors = Object.keys(validationErrors).length > 0
   const errorMessages = {
     tooLong: strings.walletNameErrorTooLong,

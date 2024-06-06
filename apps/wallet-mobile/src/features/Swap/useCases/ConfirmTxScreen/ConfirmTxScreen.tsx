@@ -13,6 +13,7 @@ import {useSignAndSubmitTx, useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {YoroiSignedTx} from '../../../../yoroi-wallets/types'
 import {Quantities} from '../../../../yoroi-wallets/utils'
 import {useAuthOsWithEasyConfirmation} from '../../../Auth/common/hooks'
+import {useSelectedWalletMeta} from '../../../WalletManager/common/hooks/useSelectedWalletMeta'
 import {useSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'
 import {useNavigateTo} from '../../common/navigation'
 import {useStrings} from '../../common/strings'
@@ -26,6 +27,7 @@ export const ConfirmTxScreen = () => {
   const strings = useStrings()
   const styles = useStyles()
   const wallet = useSelectedWallet()
+  const meta = useSelectedWalletMeta()
   const navigate = useNavigateTo()
   const {track} = useMetrics()
   const {openModal, closeModal} = useModal()
@@ -133,7 +135,7 @@ export const ConfirmTxScreen = () => {
           shelleyTheme
           title={strings.confirm}
           onPress={() => {
-            if (wallet.isEasyConfirmationEnabled) {
+            if (meta.isEasyConfirmationEnabled) {
               authWithOs()
               return
             }

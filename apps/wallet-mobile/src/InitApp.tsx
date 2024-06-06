@@ -6,7 +6,7 @@ import uuid from 'uuid'
 
 import {AppNavigator} from './AppNavigator'
 import {useInitScreenShare} from './features/Settings/ScreenShare'
-import {walletManager} from './features/WalletManager/common/walletManager'
+import {useWalletManager} from './features/WalletManager/context/WalletManagerProvider'
 import {storageVersionMaker} from './kernel/storage/migrations/storageVersion'
 
 if (Platform.OS === 'android') {
@@ -25,17 +25,19 @@ export const InitApp = () => {
 const useInitApp = () => {
   const [loaded, setLoaded] = React.useState(false)
   const storage = useAsyncStorage()
+  const {walletManager} = useWalletManager()
 
   const {initialised: screenShareInitialized} = useInitScreenShare()
 
   useEffect(() => {
     const load = async () => {
-      await initApp(storage)
+      await initInstallationId(storage)
+      await walletManager.removeWalletsMarkedForDeletion()
       setLoaded(true)
     }
 
     load()
-  }, [storage])
+  }, [storage, walletManager])
 
   return loaded && screenShareInitialized
 }
@@ -50,9 +52,4 @@ const initInstallationId = async (storage: App.Storage) => {
   // new installation set the storage version to the current version
   // migrations happend before this, so when reading if empty returns current version
   await storageVersionMaker(storage).newInstallation()
-}
-
-export const initApp = async (storage: App.Storage) => {
-  await initInstallationId(storage)
-  await walletManager.removeDeletedWallets()
 }

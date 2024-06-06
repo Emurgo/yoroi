@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import {useWalletManager} from '../context/WalletManagerContext'
+import {useWalletManager} from '../../context/WalletManagerProvider'
 
 /**
  * This is used to stop syncing and resume syncing automaticaly
@@ -12,18 +12,18 @@ import {useWalletManager} from '../context/WalletManagerContext'
  * @returns {boolean} isTemporarilyPaused - A boolean to indicate if syncing is stopped
  */
 export function useSyncTemporarilyPaused() {
-  const manager = useWalletManager()
+  const {walletManager} = useWalletManager()
   const [isSyncTemporarilyPaused, setIsSyncTemporarilyPaused] = React.useState(
-    !manager.isSyncActive && !manager.isSyncing,
+    !walletManager.isSyncActive && !walletManager.isSyncing,
   )
 
   React.useEffect(() => {
-    manager.pauseSyncing()
+    walletManager.pauseSyncing()
 
-    const subSyncActivity = manager.syncActive$.subscribe((isActive) => {
-      setIsSyncTemporarilyPaused(() => !isActive && !manager.isSyncing)
+    const subSyncActivity = walletManager.syncActive$.subscribe((isActive) => {
+      setIsSyncTemporarilyPaused(() => !isActive && !walletManager.isSyncing)
     })
-    const subIsSyncing = manager.syncing$.subscribe((isSyncing) => {
+    const subIsSyncing = walletManager.syncing$.subscribe((isSyncing) => {
       setIsSyncTemporarilyPaused(() => !isSyncing)
     })
 
@@ -31,9 +31,9 @@ export function useSyncTemporarilyPaused() {
       subSyncActivity.unsubscribe()
       subIsSyncing.unsubscribe()
 
-      manager.resumeSyncing()
+      walletManager.resumeSyncing()
     }
-  }, [manager])
+  }, [walletManager])
 
   return isSyncTemporarilyPaused
 }

@@ -7,8 +7,9 @@ import {StyleSheet, View} from 'react-native'
 
 import {debugWalletInfo, features} from '../../features'
 import {useAuthOsWithEasyConfirmation} from '../../features/Auth/common/hooks'
-import {walletManager} from '../../features/WalletManager/common/walletManager'
+import {useSelectedWalletMeta} from '../../features/WalletManager/common/hooks/useSelectedWalletMeta'
 import {useSelectedWallet} from '../../features/WalletManager/context/SelectedWalletContext'
+import {useWalletManager} from '../../features/WalletManager/context/WalletManagerProvider'
 import {confirmationMessages, errorMessages, txLabels} from '../../kernel/i18n/global-messages'
 import LocalizableError from '../../kernel/i18n/LocalizableError'
 import {isEmptyString} from '../../kernel/utils'
@@ -64,6 +65,8 @@ export const ConfirmTx = ({
   const navigation = useNavigation()
 
   const wallet = useSelectedWallet()
+  const {walletManager} = useWalletManager()
+  const meta = useSelectedWalletMeta()
 
   const {mutateAsync: submitTx} = useSubmitTx({wallet})
 
@@ -160,7 +163,7 @@ export const ConfirmTx = ({
         setIsProcessing(true)
 
         let signedTx: YoroiSignedTx
-        if (wallet.isEasyConfirmationEnabled) {
+        if (meta.isEasyConfirmationEnabled) {
           if (!isEmptyString(easyConfirmDecryptKey)) {
             setDialogStep(DialogStep.Signing)
             signedTx = await smoothModalNotification(wallet.signTx(yoroiUnsignedTx, easyConfirmDecryptKey))
@@ -218,7 +221,7 @@ export const ConfirmTx = ({
         setIsProcessing(false)
       }
     },
-    [onError, onSuccess, password, strings, submitTx, useUSB, wallet, yoroiUnsignedTx],
+    [meta.isEasyConfirmationEnabled, onError, onSuccess, password, strings, submitTx, useUSB, wallet, yoroiUnsignedTx],
   )
 
   const {authWithOs} = useAuthOsWithEasyConfirmation({id: wallet.id}, {onSuccess: onConfirm})
@@ -226,20 +229,20 @@ export const ConfirmTx = ({
   const _onConfirm = React.useCallback(async () => {
     if (wallet.isHW && chooseTransportOnConfirmation) {
       setDialogStep(DialogStep.ChooseTransport)
-    } else if (wallet.isEasyConfirmationEnabled) {
+    } else if (meta.isEasyConfirmationEnabled) {
       return authWithOs()
     } else {
       return onConfirm()
     }
-  }, [wallet.isHW, wallet.isEasyConfirmationEnabled, chooseTransportOnConfirmation, authWithOs, onConfirm])
+  }, [wallet.isHW, meta.isEasyConfirmationEnabled, chooseTransportOnConfirmation, authWithOs, onConfirm])
 
-  const isConfirmationDisabled = !wallet.isEasyConfirmationEnabled && isEmptyString(password) && !wallet.isHW
+  const isConfirmationDisabled = !meta.isEasyConfirmationEnabled && isEmptyString(password) && !wallet.isHW
 
   useEffect(() => {
-    if (wallet.isEasyConfirmationEnabled && autoSignIfEasyConfirmation) {
+    if (meta.isEasyConfirmationEnabled && autoSignIfEasyConfirmation) {
       _onConfirm()
     }
-  }, [autoSignIfEasyConfirmation, wallet.isEasyConfirmationEnabled, _onConfirm])
+  }, [autoSignIfEasyConfirmation, meta.isEasyConfirmationEnabled, _onConfirm])
 
   useEffect(() => {
     if (!autoConfirm || isProcessing || isProcessed) return
@@ -255,7 +258,7 @@ export const ConfirmTx = ({
   return (
     <View style={styles.root}>
       <View style={styles.actionContainer}>
-        {!wallet.isEasyConfirmationEnabled && !wallet.isHW && !isProvidingPassword && (
+        {!meta.isEasyConfirmationEnabled && !wallet.isHW && !isProvidingPassword && (
           <ValidatedTextInput
             secureTextEntry
             value={password ?? ''}

@@ -1,7 +1,7 @@
 import {Datum} from '@emurgo/yoroi-lib'
 import {App, Balance, Resolver} from '@yoroi/types'
 
-import {WalletMeta} from '../../features/WalletManager/common/types'
+import {NetworkManager, WalletMeta} from '../../features/WalletManager/common/types'
 import {CardanoTypes, YoroiWallet} from '../cardano/types'
 import {HWDeviceInfo} from '../hw'
 
@@ -67,11 +67,13 @@ export type WalletFactory = {
     storage,
     mnemonic,
     password,
+    networkManager,
   }: {
     id: string
     storage: App.Storage
     mnemonic: string
     password: string
+    networkManager: NetworkManager
   }): Promise<YoroiWallet>
 
   createBip44({
@@ -80,13 +82,23 @@ export type WalletFactory = {
     accountPubKeyHex,
     hwDeviceInfo, // hw wallet
     isReadOnly, // readonly wallet
+    networkManager,
   }: {
     accountPubKeyHex: string
     hwDeviceInfo: HWDeviceInfo | null
     id: string
     isReadOnly: boolean
     storage: App.Storage
+    networkManager: NetworkManager
   }): Promise<YoroiWallet>
 
-  restore({walletMeta, storage}: {storage: App.Storage; walletMeta: WalletMeta}): Promise<YoroiWallet>
+  restore({
+    walletMeta,
+    storage,
+    networkManager,
+  }: {
+    storage: App.Storage
+    walletMeta: WalletMeta
+    networkManager: NetworkManager
+  }): Promise<YoroiWallet>
 }

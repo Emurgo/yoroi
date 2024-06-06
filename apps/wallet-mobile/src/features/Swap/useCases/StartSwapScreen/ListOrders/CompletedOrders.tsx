@@ -159,7 +159,7 @@ export const ExpandableOrder = ({order, tokenInfos}: {order: MappedRawOrder; tok
   const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
   const wallet = useSelectedWallet()
   const intl = useIntl()
-  const explorers = useExplorers(wallet.network)
+  const explorers = useExplorers(wallet.networkManager.network)
   const metadata = order.metadata
   const id = order.id
   const expanded = id === hiddenInfoOpenId

@@ -14,6 +14,7 @@ import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {useUnsafeParams} from '../../../../../kernel/navigation'
 import {Amounts} from '../../../../../yoroi-wallets/utils'
 import {formatTokenWithText} from '../../../../../yoroi-wallets/utils/format'
+import {useSelectedWalletMeta} from '../../../../WalletManager/common/hooks/useSelectedWalletMeta'
 import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
 import {useNavigateTo, useStrings} from '../../common'
 import {Routes} from '../../common/navigation'
@@ -22,6 +23,7 @@ import {GovernanceKindMap} from '../../types'
 export const ConfirmTxScreen = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
+  const meta = useSelectedWalletMeta()
   const params = useUnsafeParams<Routes['staking-gov-confirm-tx']>()
   const navigateTo = useNavigateTo()
   const {updateLatestGovernanceAction} = useUpdateLatestGovernanceAction(wallet.id)
@@ -96,7 +98,7 @@ export const ConfirmTxScreen = () => {
       return
     }
 
-    if (!wallet.isHW && !wallet.isEasyConfirmationEnabled) {
+    if (!wallet.isHW && !meta.isEasyConfirmationEnabled) {
       openModal(
         strings.signTransaction,
         <ConfirmTxWithSpendingPasswordModal
@@ -108,7 +110,7 @@ export const ConfirmTxScreen = () => {
       return
     }
 
-    if (!wallet.isHW && wallet.isEasyConfirmationEnabled) {
+    if (!wallet.isHW && meta.isEasyConfirmationEnabled) {
       openModal(
         strings.signTransaction,
         <ConfirmTxWithOsModal
