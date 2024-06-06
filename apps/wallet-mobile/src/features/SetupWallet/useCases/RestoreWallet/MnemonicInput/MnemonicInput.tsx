@@ -6,11 +6,11 @@ import {Platform, StyleSheet, Text, TextInput as RNTextInput, TouchableOpacity, 
 import {Spacer, useScrollView} from '../../../../../components'
 import {Space} from '../../../../../components/Space/Space'
 import {isEmptyString} from '../../../../../kernel/utils'
-import {TextInput} from '../../../common/TextInput'
 import {useStrings} from '../../../common/useStrings'
 import {Alert as AlertIllustration} from '../../../illustrations/Alert'
 import {Check2} from '../../../illustrations/Check2'
 import {MnemonicWordInputRef} from '../RestoreWalletScreen'
+import {TextInput} from './TextInput/TextInput'
 
 export const MnemonicInput = ({
   length,

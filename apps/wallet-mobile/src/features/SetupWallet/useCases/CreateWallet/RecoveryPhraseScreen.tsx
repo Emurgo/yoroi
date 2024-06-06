@@ -4,7 +4,6 @@ import {useTheme} from '@yoroi/theme'
 import {BlurView} from 'expo-blur'
 import * as React from 'react'
 import {Linking, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer, useModal} from '../../../../components'
@@ -22,7 +21,7 @@ import {EyeOpen as EyeOpenIllustration} from '../../illustrations/EyeOpen'
 import {Info as InfoIcon} from '../../illustrations/Info'
 
 export const RecoveryPhraseScreen = () => {
-  const {styles, colors} = useStyles()
+  const {styles} = useStyles()
   const {openModal, closeModal} = useModal()
   const [isBlur, setIsBlur] = React.useState(true)
   const navigation = useNavigation<SetupWalletRouteNavigation>()
@@ -119,12 +118,7 @@ export const RecoveryPhraseScreen = () => {
 
           {mnemonic.split(' ').map((word, index) => (
             <View key={`mnemonic-${index}`} testID={`mnemonic-${index}`} style={styles.mnemonicTextContainer}>
-              <LinearGradient
-                style={[StyleSheet.absoluteFill, {opacity: 1}]}
-                start={{x: 1, y: 0}}
-                end={{x: 0, y: 0}}
-                colors={colors.gradientBlueGreen}
-              />
+              <View style={[StyleSheet.absoluteFill, styles.buttonBackground]} />
 
               <Text style={styles.mnemonicText}>
                 <Text style={styles.mnemonicText}>{index + 1}. </Text>
@@ -169,10 +163,11 @@ export const RecoveryPhraseScreen = () => {
 
 const Info = ({onPress, testId}: {onPress: () => void; testId?: string}) => {
   const {styles} = useStyles()
+  const {color, isDark} = useTheme()
   return (
     <TouchableOpacity style={styles.info} onPress={onPress}>
       <View style={styles.infoIcon} testID={testId}>
-        <InfoIcon size={24} />
+        <InfoIcon size={24} color={isDark ? color.white_static : color.black_static} />
       </View>
     </TouchableOpacity>
   )
@@ -253,6 +248,9 @@ const useStyles = () => {
       position: 'absolute',
       top: Platform.OS === 'ios' ? -22 : -18,
       left: 0,
+    },
+    buttonBackground: {
+      backgroundColor: color.primary_c100,
     },
   })
 
