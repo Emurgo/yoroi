@@ -125,9 +125,19 @@ export const PoolTransitionModal = ({
       <Space height="xl" />
 
       <Actions>
-        <Button outline title={strings.skipNoRewards} textStyles={styles.outlineButton} onPress={handleOnSkip} />
+        <Button
+          outline
+          title={strings.skipNoRewards.toLocaleUpperCase()}
+          textStyles={styles.outlineButton}
+          onPress={handleOnSkip}
+        />
 
-        <Button shelleyTheme title={strings.updateKeepEarning} onPress={handleOnUpdate} textStyles={styles.button} />
+        <Button
+          shelleyTheme
+          title={strings.updateKeepEarning.toLocaleUpperCase()}
+          onPress={handleOnUpdate}
+          textStyles={styles.button}
+        />
       </Actions>
 
       <Space height="xl" />
@@ -156,7 +166,7 @@ const useStyles = () => {
       borderColor: color.gray_c300,
     },
     warningBorder: {
-      borderWidth: 1,
+      borderWidth: 2,
       borderColor: color.sys_magenta_c500,
     },
     poolTicker: {
