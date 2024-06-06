@@ -1,13 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {Certificate} from '@emurgo/cross-csl-core'
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
-import {
-  mountMMKVStorage,
-  observableStorageMaker,
-  parseBoolean,
-  useAsyncStorage,
-  useMutationWithInvalidations,
-} from '@yoroi/common'
+import {mountMMKVStorage, observableStorageMaker, parseBoolean, useMutationWithInvalidations} from '@yoroi/common'
 import {themeStorageMaker} from '@yoroi/theme'
 import {Api, App, Balance} from '@yoroi/types'
 import {Buffer} from 'buffer'
@@ -25,7 +19,6 @@ import {
 } from 'react-query'
 
 import {AddressMode} from '../../features/WalletManager/common/types'
-import {parseWalletMeta} from '../../features/WalletManager/common/validators'
 import {useWalletManager} from '../../features/WalletManager/context/WalletManagerProvider'
 import {isDev, isNightly} from '../../kernel/env'
 import {logger} from '../../kernel/logger/logger'
@@ -172,26 +165,6 @@ export const useSync = (wallet: YoroiWallet, options?: UseMutationOptions<void, 
   return {
     ...mutation,
     sync: mutation.mutate,
-  }
-}
-
-export const useChangeWalletName = (wallet: YoroiWallet, options: UseMutationOptions<void, Error, string> = {}) => {
-  const storage = useAsyncStorage()
-  const mutation = useMutationWithInvalidations<void, Error, string>({
-    mutationFn: async (newName) => {
-      const walletMeta = await storage.join('wallet/').getItem(wallet.id, parseWalletMeta)
-      if (!walletMeta) throw new Error('Invalid wallet id')
-
-      return storage.join('wallet/').setItem(wallet.id, {...walletMeta, name: newName})
-    },
-    invalidateQueries: [[wallet.id, 'name'], ['walletMetas']],
-    ...options,
-  })
-
-  return {
-    renameWallet: mutation.mutate,
-
-    ...mutation,
   }
 }
 

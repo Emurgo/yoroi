@@ -85,19 +85,21 @@ export class WalletManager {
   ) {
     const walletMeta = this.#walletMetas$.value.get(id)
     if (!walletMeta) {
-      const error = new Error('WalletManager: updateMeta wallet not found')
+      const error = new Error('WalletManager: updateMeta meta not found')
       logger.error(error, {id})
       throw error
     }
 
+    // optmistic update
     const newMeta: WalletMeta = {...walletMeta, ...meta}
+    const newMetas = new Map(this.#walletMetas$.value)
+    newMetas.set(id, newMeta)
+    this.#walletMetas$.next(freeze(newMetas))
+    logger.info('WalletManager: update meta', {from: walletMeta, to: newMeta})
 
-    const update = async () => {
-      await this.#walletsRootStorage.setItem(id, newMeta)
-      this.#walletMetas$.next(freeze(new Map(this.#walletMetas$.value.set(id, newMeta))))
-    }
-
-    update()
+    this.#walletsRootStorage.setItem(id, newMeta).catch((error) => {
+      logger.error(error, {id})
+    })
   }
 
   get selectedWalledId() {

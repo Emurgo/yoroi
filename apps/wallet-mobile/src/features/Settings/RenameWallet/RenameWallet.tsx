@@ -8,20 +8,18 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button, KeyboardAvoidingView, Spacer, TextInput} from '../../../components'
 import globalMessages from '../../../kernel/i18n/global-messages'
 import {isEmptyString} from '../../../kernel/utils'
-import {useChangeWalletName} from '../../../yoroi-wallets/hooks'
 import {getWalletNameError, validateWalletName} from '../../../yoroi-wallets/utils/validators'
 import {useSelectedWalletMeta} from '../../WalletManager/common/hooks/useSelectedWalletMeta'
 import {useSelectedWallet} from '../../WalletManager/context/SelectedWalletContext'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 
-export const ChangeWalletName = () => {
+export const RenameWallet = () => {
   const strings = useStrings()
   const styles = useStyles()
   const navigation = useNavigation()
 
   const wallet = useSelectedWallet()
   const {name: walletName} = useSelectedWalletMeta()
-  const {renameWallet, isLoading} = useChangeWalletName(wallet, {onSuccess: () => navigation.goBack()})
 
   const {walletManager} = useWalletManager()
   const walletNames = Array.from(walletManager.walletMetas.values()).map(({name}) => name)
@@ -36,6 +34,10 @@ export const ChangeWalletName = () => {
     },
     validationErrors,
   )
+  const handleOnRename = () => {
+    walletManager.renameWallet(wallet.id, newWalletName.trim())
+    navigation.goBack()
+  }
 
   return (
     <SafeAreaView style={styles.safeAreaView} edges={['left', 'right', 'bottom']}>
@@ -64,12 +66,9 @@ export const ChangeWalletName = () => {
 
         <View style={styles.action}>
           <Button
-            onPress={() => {
-              if (hasErrors || isEmptyString(newWalletName)) return
-              renameWallet(newWalletName.trim())
-            }}
+            onPress={handleOnRename}
             title={strings.changeButton}
-            disabled={hasErrors || isLoading}
+            disabled={hasErrors || isEmptyString(newWalletName)}
             shelleyTheme
           />
         </View>

@@ -23,7 +23,6 @@ import {ApplicationSettingsScreen} from './ApplicationSettings'
 import {ChangeLanguageScreen} from './ChangeLanguage'
 import {ChangePasswordScreen} from './ChangePassword'
 import {ChangeThemeScreen} from './ChangeTheme/ChangeThemeScreen'
-import {ChangeWalletName} from './ChangeWalletName'
 import {ChangeCurrencyScreen} from './Currency/ChangeCurrencyScreen'
 import {DisableEasyConfirmationScreen, EnableEasyConfirmationScreen} from './EasyConfirmation'
 import {EnableLoginWithOsScreen} from './EnableLoginWithOs'
@@ -33,6 +32,7 @@ import {FailedTxScreen} from './ManageCollateral/ConfirmTx/FailedTx/FailedTxScre
 import {SubmittedTxScreen} from './ManageCollateral/ConfirmTx/SubmittedTx/SubmittedTxScreen'
 import {PrivacyPolicyScreen} from './PrivacyPolicy'
 import {RemoveWalletScreen} from './RemoveWallet'
+import {RenameWallet} from './RenameWallet'
 import {SystemLogScreen} from './SystemLogScreen/SystemLogScreen'
 import {TermsOfServiceScreen} from './TermsOfService'
 import {WalletSettingsScreen} from './WalletSettings'
@@ -80,7 +80,7 @@ export const SettingsScreenNavigator = () => {
 
         <Stack.Screen
           name="change-wallet-name"
-          component={ChangeWalletName}
+          component={RenameWallet}
           options={{title: strings.changeWalletNameTitle}}
         />
 

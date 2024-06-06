@@ -3,10 +3,10 @@ import React from 'react'
 
 import {mocks} from '../../../yoroi-wallets/mocks'
 import {SelectedWalletProvider} from '../../WalletManager/context/SelectedWalletContext'
-import {ChangeWalletName} from './ChangeWalletName'
+import {RenameWallet} from './RenameWallet'
 
-storiesOf('ChangeWalletName', module).add('Default', () => (
+storiesOf('RenameWallet', module).add('Default', () => (
   <SelectedWalletProvider wallet={mocks.wallet}>
-    <ChangeWalletName />
+    <RenameWallet />
   </SelectedWalletProvider>
 ))
