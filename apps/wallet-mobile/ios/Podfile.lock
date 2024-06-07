@@ -354,7 +354,7 @@ PODS:
     - React-Core
   - react-native-haskell-shelley (6.0.0-alpha.9):
     - React
-  - react-native-message_signing-library (1.0.1):
+  - react-native-message_signing-library (1.0.2):
     - React
   - react-native-mmkv (2.11.0):
     - MMKV (>= 1.2.13)
@@ -877,7 +877,7 @@ SPEC CHECKSUMS:
   react-native-ble-plx: f10240444452dfb2d2a13a0e4f58d7783e92d76e
   react-native-config: 86038147314e2e6d10ea9972022aa171e6b1d4d8
   react-native-haskell-shelley: 4015aef14eca3ecf5e8d8718e8d1b47cdcf60f84
-  react-native-message_signing-library: 70b9e51c7ff9990979d605be8c8028eb7fce9569
+  react-native-message_signing-library: e81294a3cd40d74d3d83f0a1de72aa319238f09a
   react-native-mmkv: e97c0c79403fb94577e5d902ab1ebd42b0715b43
   react-native-pager-view: 0ccb8bf60e2ebd38b1f3669fa3650ecce81db2df
   react-native-quick-base64: 62290829c619fbabca4c41cfec75ae759d08fc1c

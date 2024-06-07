@@ -2160,10 +2160,17 @@
   dependencies:
     base-64 "0.1.0"
 
-"@emurgo/msl-mobile-bridge@1.0.1", "@emurgo/msl-mobile-bridge@^1.0.1":
+"@emurgo/msl-mobile-bridge@1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@emurgo/msl-mobile-bridge/-/msl-mobile-bridge-1.0.1.tgz#4a912e182118dc4462e90cbfda5ebedf6048b4e6"
   integrity sha512-ed0KobdbEmNParq33pTkYOMWrF8kMP6R3HdIPDy/YycwW9nvvWlWhlpUR4wKDjM3qQzhE/rN6gb/dG8rwWa4IQ==
+  dependencies:
+    base-64 "0.1.0"
+
+"@emurgo/msl-mobile-bridge@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@emurgo/msl-mobile-bridge/-/msl-mobile-bridge-1.0.2.tgz#3241ff5728a7b34b890641843b36c62b6876d09f"
+  integrity sha512-RQ+X8ovF09jPr3xwG1XVAr/O2YFVZFDGALbLPMEjszvSw12Su3FNgLGvMwXfSvL9T/csR0BF1NqkGauJONedmw==
   dependencies:
     base-64 "0.1.0"
 
