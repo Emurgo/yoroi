@@ -16,7 +16,6 @@ export const frontendFeeAddressPreprod = getString('FRONTEND_FEE_ADDRESS_PREPROD
 
 export const banxaTestWallet = getString('BANXA_TEST_WALLET')
 
-export const dappExplorerEnabled = Boolean(BuildConfig['DAPP_EXPLORER_ENABLED'])
 export const disableLogbox = Boolean(BuildConfig['DISABLE_LOGBOX'])
 
 const possibleLoggerFilter = getString('LOGGER_FILTER')
