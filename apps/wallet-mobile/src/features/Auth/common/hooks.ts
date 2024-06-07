@@ -6,13 +6,12 @@ import {Alert, AppState, Platform} from 'react-native'
 import RNKeychain from 'react-native-keychain'
 import {useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
+import {decryptData, encryptData} from '../../../kernel/encryption/encryption'
 import globalMessages from '../../../kernel/i18n/global-messages'
 import {logger} from '../../../kernel/logger/logger'
 import {Keychain} from '../../../kernel/storage/Keychain'
 import {AuthenticationPrompt} from '../../../kernel/storage/KeychainStorage'
-import {WrongPassword} from '../../../yoroi-wallets/cardano/errors'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
-import {decryptData, encryptData} from '../../../yoroi-wallets/encryption'
 import {parseWalletMeta} from '../../WalletManager/common/validators'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 
@@ -130,9 +129,9 @@ export const useAuthOsWithEasyConfirmation = (
     authWithOs: mutation.mutate,
   }
 }
-
+// TODO: revisit
 export const useDisableAllEasyConfirmation = (
-  wallet: YoroiWallet | undefined,
+  wallet: YoroiWallet | undefined | null,
   options?: UseMutationOptions<void, Error>,
 ) => {
   const {walletManager} = useWalletManager()
@@ -141,9 +140,8 @@ export const useDisableAllEasyConfirmation = (
     mutationFn: async () => {
       await disableAllEasyConfirmation(storage)
       // if there is a wallet selected it needs to trigger event for subcribers
-      if (wallet !== undefined) await walletManager.disableEasyConfirmation(wallet)
+      if (wallet != null) await walletManager.disableEasyConfirmation(wallet.id)
     },
-    invalidateQueries: [['walletMetas']],
     ...options,
   })
 
@@ -206,7 +204,7 @@ export const useCheckPin = (options: UseMutationOptions<boolean, Error, string> 
         .then(() => true)
         .catch((error) => {
           logger.error('useCheckPin: Checking pin has failed', {error})
-          if (error instanceof WrongPassword) return false
+          if (error instanceof App.Errors.WrongPassword) return false
           throw error
         })
     },

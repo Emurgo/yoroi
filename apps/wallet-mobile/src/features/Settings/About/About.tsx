@@ -10,7 +10,7 @@ import {commit} from '../../../kernel/env'
 import {SettingsRouteNavigation} from '../../../kernel/navigation'
 import {getNetworkConfigById} from '../../../yoroi-wallets/cardano/networks'
 import {isHaskellShelley} from '../../../yoroi-wallets/cardano/utils'
-import {useSelectedWallet} from '../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 
 export const About = () => {
   const strings = useStrings()

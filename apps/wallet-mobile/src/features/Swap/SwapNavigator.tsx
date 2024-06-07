@@ -7,7 +7,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {defaultMaterialTopTabNavigationOptions, SwapTabRoutes} from '../../kernel/navigation'
 import {useBalance} from '../../yoroi-wallets/hooks'
-import {useSelectedWallet} from '../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from './common/strings'
 import {CreateOrder} from './useCases/StartSwapScreen/CreateOrder/CreateOrder'
 import {ListOrders} from './useCases/StartSwapScreen/ListOrders/ListOrders'

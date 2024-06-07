@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
+import {App} from '@yoroi/types'
 import React, {useEffect, useState} from 'react'
 import {useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
@@ -13,7 +14,6 @@ import {useWalletManager} from '../../features/WalletManager/context/WalletManag
 import {confirmationMessages, errorMessages, txLabels} from '../../kernel/i18n/global-messages'
 import LocalizableError from '../../kernel/i18n/LocalizableError'
 import {isEmptyString} from '../../kernel/utils'
-import {WrongPassword} from '../../yoroi-wallets/cardano/errors'
 import {useSubmitTx} from '../../yoroi-wallets/hooks'
 import {DeviceId, DeviceObj, withBLE, withUSB} from '../../yoroi-wallets/hw'
 import {YoroiSignedTx, YoroiUnsignedTx} from '../../yoroi-wallets/types'
@@ -203,7 +203,7 @@ export const ConfirmTx = ({
           onError?.(err as Error)
         }
       } catch (err) {
-        if (err instanceof WrongPassword) {
+        if (err instanceof App.Errors.WrongPassword) {
           showError({
             errorMessage: strings.incorrectPasswordTitle,
             errorLogs: strings.incorrectPasswordMessage,

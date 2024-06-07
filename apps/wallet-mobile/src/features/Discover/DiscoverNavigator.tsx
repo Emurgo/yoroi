@@ -7,7 +7,7 @@ import {InteractionManager} from 'react-native'
 
 import {LoadingBoundary} from '../../components'
 import {defaultStackNavigationOptions, DiscoverRoutes} from '../../kernel/navigation'
-import {useSelectedWallet} from '../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 import {BrowserNavigator} from './BrowserNavigator'
 import {BrowserProvider} from './common/BrowserProvider'
 import {useOpenConfirmConnectionModal} from './common/ConfirmConnectionModal'

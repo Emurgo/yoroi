@@ -14,8 +14,6 @@ import {useLinksRequestWallet} from '../../../Links/common/useLinksRequestWallet
 import {useWalletMetas} from '../../common/hooks/useWalletMetas'
 import {WalletMeta} from '../../common/types'
 import {useStrings} from '../../common/useStrings'
-import {useSetSelectedWallet} from '../../context/SelectedWalletContext'
-import {useSetSelectedWalletMeta} from '../../context/SelectedWalletMetaContext'
 import {useWalletManager} from '../../context/WalletManagerProvider'
 import {SupportIllustration} from '../../illustrations/SupportIllustration'
 import {WalletListItem} from './WalletListItem'
@@ -36,18 +34,12 @@ export const SelectWalletFromList = () => {
     }, [track]),
   )
 
-  const selectWalletMeta = useSetSelectedWalletMeta()
-  const selectWallet = useSetSelectedWallet()
-
   const handleOnSelect = React.useCallback(
     (walletMeta: WalletMeta) => {
-      selectWalletMeta(walletMeta)
-      const wallet = walletManager.getWalletById(walletMeta.id)
-      selectWallet(wallet)
       walletManager.setSelectedWalletId(walletMeta.id)
       navigateToTxHistory()
     },
-    [selectWalletMeta, walletManager, selectWallet, navigateToTxHistory],
+    [walletManager, navigateToTxHistory],
   )
 
   const data = React.useMemo(

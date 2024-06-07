@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {Address} from '@emurgo/cross-csl-core'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {Balance, Chain} from '@yoroi/types'
+import {App, Balance, Chain} from '@yoroi/types'
 
 import {buildPortfolioTokenManagers} from '../../../../../features/Portfolio/common/helpers/build-token-managers'
 import {WalletMeta} from '../../../../../features/WalletManager/common/types'
@@ -79,20 +79,16 @@ describe('ShelleyWallet', () => {
     )
 
     // Decrypted Root Key / Change Password
-    expect(wallet.getDecryptedRootKey('wrong password')).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"Decryption error"`,
-    )
+    expect(wallet.getDecryptedRootKey('wrong password')).rejects.toThrow(App.Errors.WrongPassword)
     await expect(wallet.getDecryptedRootKey(password)).resolves.toBe(
       'a0cf109fd1346748a20f2ade2b3d1e1561485d2f28ae6d8c36e289b4d0ca22544b4e892132ca15095d48370d4cb2bc7c8cde3f68b8a2f63cfeda4c5ac2752599065111b0929f2b3e6fa0f4bddbc90f9a00d1997d4164f6361d2c0f3c4be1f050',
     )
 
-    expect(wallet.changePassword('wrong password', 'new password')).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"Decryption error"`,
-    )
+    expect(wallet.changePassword('wrong password', 'new password')).rejects.toThrow(App.Errors.WrongPassword)
     const newPassword = 'new-password'
     await wallet.changePassword(password, newPassword)
 
-    expect(wallet.getDecryptedRootKey(password)).rejects.toThrowErrorMatchingInlineSnapshot(`"Decryption error"`)
+    expect(wallet.getDecryptedRootKey(password)).rejects.toThrow(App.Errors.WrongPassword)
     await expect(wallet.getDecryptedRootKey(newPassword)).resolves.toBe(
       'a0cf109fd1346748a20f2ade2b3d1e1561485d2f28ae6d8c36e289b4d0ca22544b4e892132ca15095d48370d4cb2bc7c8cde3f68b8a2f63cfeda4c5ac2752599065111b0929f2b3e6fa0f4bddbc90f9a00d1997d4164f6361d2c0f3c4be1f050',
     )
@@ -192,20 +188,16 @@ describe('ShelleyWallet', () => {
     )
 
     // Decrypted Root Key / Change Password
-    expect(wallet.getDecryptedRootKey('wrong password')).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"Decryption error"`,
-    )
+    expect(wallet.getDecryptedRootKey('wrong password')).rejects.toThrow(App.Errors.WrongPassword)
     await expect(wallet.getDecryptedRootKey(password)).resolves.toBe(
       'a0cf109fd1346748a20f2ade2b3d1e1561485d2f28ae6d8c36e289b4d0ca22544b4e892132ca15095d48370d4cb2bc7c8cde3f68b8a2f63cfeda4c5ac2752599065111b0929f2b3e6fa0f4bddbc90f9a00d1997d4164f6361d2c0f3c4be1f050',
     )
 
-    expect(wallet.changePassword('wrong password', 'new password')).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"Decryption error"`,
-    )
+    expect(wallet.changePassword('wrong password', 'new password')).rejects.toThrow(App.Errors.WrongPassword)
     const newPassword = 'new-password'
     await wallet.changePassword(password, newPassword)
 
-    expect(wallet.getDecryptedRootKey(password)).rejects.toThrowErrorMatchingInlineSnapshot(`"Decryption error"`)
+    expect(wallet.getDecryptedRootKey(password)).rejects.toThrow(App.Errors.WrongPassword)
     await expect(wallet.getDecryptedRootKey(newPassword)).resolves.toBe(
       'a0cf109fd1346748a20f2ade2b3d1e1561485d2f28ae6d8c36e289b4d0ca22544b4e892132ca15095d48370d4cb2bc7c8cde3f68b8a2f63cfeda4c5ac2752599065111b0929f2b3e6fa0f4bddbc90f9a00d1997d4164f6361d2c0f3c4be1f050',
     )

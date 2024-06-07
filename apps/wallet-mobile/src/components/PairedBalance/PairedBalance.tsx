@@ -7,7 +7,7 @@ import {StyleSheet, Text, TextStyle} from 'react-native'
 
 import {useCurrencyContext} from '../../features/Settings/Currency'
 import {usePrivacyMode} from '../../features/Settings/PrivacyMode/PrivacyMode'
-import {useSelectedWallet} from '../../features/WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {useExchangeRate} from '../../yoroi-wallets/hooks'
 import {CurrencySymbol} from '../../yoroi-wallets/types'
 import {Boundary, ResetError, ResetErrorRef} from '..'

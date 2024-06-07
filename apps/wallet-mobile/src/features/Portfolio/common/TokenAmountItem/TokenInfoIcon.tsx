@@ -7,7 +7,7 @@ import {ImageStyle, StyleSheet, View} from 'react-native'
 
 import {Icon} from '../../../../components/Icon'
 import {isEmptyString} from '../../../../kernel/utils'
-import {useSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 
 type TokenInfoIconProps = {
   info: Portfolio.Token.Info

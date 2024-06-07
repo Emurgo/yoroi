@@ -3,7 +3,7 @@ import * as React from 'react'
 import {InteractionManager} from 'react-native'
 
 import {useModal} from '../../../components/Modal/ModalContext'
-import {useSelectedWalletContext} from '../../WalletManager/context/SelectedWalletContext'
+import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 import {AskToOpenWalletScreen} from '../useCases/AskToOpenAWalletScreen/AskToOpenAWalletScreen'
 import {useStrings} from './useStrings'
 
@@ -11,7 +11,9 @@ const heightBreakpoint = 367
 export const useLinksRequestWallet = () => {
   const strings = useStrings()
   const {openModal} = useModal()
-  const [wallet] = useSelectedWalletContext()
+  const {
+    selected: {wallet},
+  } = useWalletManager()
   const {action} = useLinks()
 
   const askToOpenAWallet = React.useCallback(() => {

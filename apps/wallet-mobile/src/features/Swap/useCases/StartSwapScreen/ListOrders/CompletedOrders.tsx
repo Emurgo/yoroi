@@ -27,7 +27,7 @@ import {useSync, useTokenInfos, useTransactionInfos} from '../../../../../yoroi-
 import {TransactionInfo, TxMetadataInfo} from '../../../../../yoroi-wallets/types'
 import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils'
 import {useSearch} from '../../../../Search/SearchContext'
-import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {PRICE_PRECISION} from '../../../common/constants'
 import {Counter} from '../../../common/Counter/Counter'
 import {parseOrderTxMetadata} from '../../../common/helpers'

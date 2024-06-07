@@ -23,7 +23,7 @@ import {useCreateWallet} from '../../yoroi-wallets/hooks'
 import {NetworkId} from '../../yoroi-wallets/types'
 import {useAuth} from '../Auth/AuthProvider'
 import {useLegalAgreement, useResetLegalAgreement} from '../Initialization/common'
-import {useSelectedWalletContext} from '../WalletManager/context/SelectedWalletContext'
+import {useWalletManager} from '../WalletManager/context/WalletManagerProvider'
 
 const routes: Array<{label: string; path: keyof AppRoutes}> = [
   {label: 'Storybook', path: 'storybook'},
@@ -50,7 +50,9 @@ export const DeveloperScreen = () => {
       })
     },
   })
-  const [wallet] = useSelectedWalletContext()
+  const {
+    selected: {wallet},
+  } = useWalletManager()
   const [addresses, setAddresses] = React.useState('')
   const agreement = useLegalAgreement()
   const {reset: resetLegalAgreement} = useResetLegalAgreement()

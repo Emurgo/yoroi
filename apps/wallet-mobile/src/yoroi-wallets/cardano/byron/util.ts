@@ -1,7 +1,7 @@
+import {App} from '@yoroi/types'
 import bs58 from 'bs58'
 
 import {CardanoMobile} from '../../wallets'
-import {CardanoError} from '../errors'
 import {ADDRESS_TYPE_TO_CHANGE, AddressType} from '../formatPath'
 import {generateWalletRootKey} from '../mnemonic'
 import {getCardanoByronConfig} from '../networks'
@@ -12,18 +12,6 @@ const BYRON_PROTOCOL_MAGIC = getCardanoByronConfig().PROTOCOL_MAGIC
 export type CryptoAccount = {
   derivation_scheme: string
   root_cached_key: string
-}
-
-export const KNOWN_ERROR_MSG = {
-  DECRYPT_FAILED: 'Decryption failed. Check your password.',
-  INSUFFICIENT_FUNDS_RE: /NotEnoughInput/,
-  SIGN_TX_BUG: /TxBuildError\(CoinError\(Negative\)\)/,
-  // over 45000000000000000
-  AMOUNT_OVERFLOW1: /Coin of value [0-9]+ is out of bound./,
-  // way over 45000000000000000
-  AMOUNT_OVERFLOW2: /ParseIntError { kind: Overflow }"/,
-  // output sum over 45000000000000000
-  AMOUNT_SUM_OVERFLOW: /CoinError\(OutOfBound/,
 }
 
 /**
@@ -80,32 +68,16 @@ export const getAddresses = async (
   return addrs
 }
 
-export const getAddressesFromMnemonics = async (
-  mnemonic: string,
-  type: AddressType,
-  indexes: Array<number>,
-): Promise<Array<string>> => {
-  const rootKey = await getMasterKeyFromMnemonic(mnemonic)
-  const account = await getAccountFromMasterKey(rootKey)
-  return getAddresses(account, type, indexes)
-}
-
 export const getExternalAddresses = (
   account: CryptoAccount,
   indexes: Array<number>,
   protocolMagic: number = BYRON_PROTOCOL_MAGIC,
 ): Promise<Array<string>> => getAddresses(account, 'External', indexes, protocolMagic)
 
-export const getInternalAddresses = (
-  account: CryptoAccount,
-  indexes: Array<number>,
-  protocolMagic: number = BYRON_PROTOCOL_MAGIC,
-): Promise<Array<string>> => getAddresses(account, 'Internal', indexes, protocolMagic)
-
 export const getAddressInHex = (address: string): string => {
   try {
     return bs58.decode(address).toString('hex')
   } catch (err) {
-    throw new CardanoError((err as Error).message)
+    throw new App.Errors.LibraryError((err as Error).message)
   }
 }

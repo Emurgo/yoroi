@@ -16,7 +16,7 @@ import {InsufficientFundsModal} from '../../legacy/Catalyst/InsufficientFundsMod
 import {usePrefetchStakingInfo} from '../../legacy/Dashboard/StakePoolInfos'
 import {usePoolTransition} from '../../legacy/Staking/PoolTransition/usePoolTransition'
 import {useIsGovernanceFeatureEnabled} from '../Staking/Governance'
-import {useSelectedWallet} from '../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 
 const MenuStack = createStackNavigator()
 

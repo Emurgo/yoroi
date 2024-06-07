@@ -2,7 +2,7 @@ import {invalid, useAsyncStorage} from '@yoroi/common'
 import {produce} from 'immer'
 import * as React from 'react'
 
-import {useSelectedWallet} from '../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 
 export const defaultActions: BrowserActions = {
   addTab: () => invalid('missing init'),

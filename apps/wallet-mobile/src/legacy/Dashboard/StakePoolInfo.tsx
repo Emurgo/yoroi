@@ -5,7 +5,7 @@ import {ActivityIndicator, Linking, StyleSheet, View} from 'react-native'
 import {useQuery, UseQueryOptions} from 'react-query'
 
 import {Button, CopyButton, Text, TitledCard} from '../../components'
-import {useSelectedWallet} from '../../features/WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {isEmptyString} from '../../kernel/utils'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {StakePoolInfoAndHistory} from '../../yoroi-wallets/types'

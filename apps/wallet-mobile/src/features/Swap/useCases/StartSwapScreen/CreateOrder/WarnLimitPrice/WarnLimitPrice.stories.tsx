@@ -6,7 +6,7 @@ import {Button, StyleSheet, View} from 'react-native'
 
 import {useModal} from '../../../../../../components'
 import {mocks as walletMocks} from '../../../../../../yoroi-wallets/mocks'
-import {SelectedWalletProvider} from '../../../../../WalletManager/context/SelectedWalletContext'
+import {WalletManagerProviderMock} from '../../../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {mocks} from '../../../../common/mocks'
 import {useStrings} from '../../../../common/strings'
 import {SwapFormProvider} from '../../../../common/SwapFormProvider'
@@ -19,7 +19,7 @@ const Initial = () => {
   const strings = useStrings()
   const {orderData} = mocks.confirmTx
   return (
-    <SelectedWalletProvider wallet={walletMocks.wallet}>
+    <WalletManagerProviderMock wallet={walletMocks.wallet}>
       <SwapProvider swapManager={mockSwapManager}>
         <SwapFormProvider>
           <View style={{...StyleSheet.absoluteFillObject}}>
@@ -30,7 +30,7 @@ const Initial = () => {
                   ? closeModal()
                   : openModal(
                       strings.limitPriceWarningTitle,
-                      <SelectedWalletProvider wallet={walletMocks.wallet}>
+                      <WalletManagerProviderMock wallet={walletMocks.wallet}>
                         <WarnLimitPrice
                           orderData={orderData}
                           onConfirm={() => {
@@ -38,13 +38,13 @@ const Initial = () => {
                             action('onConfirm')
                           }}
                         />
-                      </SelectedWalletProvider>,
+                      </WalletManagerProviderMock>,
                     )
               }}
             />
           </View>
         </SwapFormProvider>
       </SwapProvider>
-    </SelectedWalletProvider>
+    </WalletManagerProviderMock>
   )
 }

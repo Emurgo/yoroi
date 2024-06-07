@@ -4,7 +4,7 @@ import React from 'react'
 
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {mocks} from '../../../yoroi-wallets/mocks'
-import {SelectedWalletProvider} from '../../WalletManager/context/SelectedWalletContext'
+import {WalletManagerProviderMock} from '../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {ChangePasswordScreen} from './ChangePasswordScreen'
 
 const wallet: YoroiWallet = {
@@ -15,7 +15,7 @@ const wallet: YoroiWallet = {
 }
 
 storiesOf('ChangePasswordScreen', module).add('Default', () => (
-  <SelectedWalletProvider wallet={wallet}>
+  <WalletManagerProviderMock wallet={wallet}>
     <ChangePasswordScreen />
-  </SelectedWalletProvider>
+  </WalletManagerProviderMock>
 ))

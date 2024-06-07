@@ -4,8 +4,6 @@ import {time} from '../../../../kernel/constants'
 import {logger} from '../../../../kernel/logger/logger'
 import {useWalletNavigation} from '../../../../kernel/navigation'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
-import {useSetSelectedWallet} from '../../context/SelectedWalletContext'
-import {useSetSelectedWalletMeta} from '../../context/SelectedWalletMetaContext'
 import {useWalletManager} from '../../context/WalletManagerProvider'
 
 /**
@@ -36,8 +34,6 @@ export function useLaunchWalletAfterSyncing({
 }) {
   const walletNavigation = useWalletNavigation()
   const {walletManager} = useWalletManager()
-  const setSelectedWallet = useSetSelectedWallet()
-  const setSelectedWalletMeta = useSetSelectedWalletMeta()
 
   React.useEffect(() => {
     let started = false
@@ -60,8 +56,7 @@ export function useLaunchWalletAfterSyncing({
         return
       }
 
-      setSelectedWallet(wallet)
-      setSelectedWalletMeta(meta)
+      walletManager.setSelectedWalletId(walletId)
       await wallet.sync({isForced: true})
 
       walletNavigation.resetToTxHistory()
@@ -69,5 +64,5 @@ export function useLaunchWalletAfterSyncing({
 
     const timer = setTimeout(() => process(), time.oneSecond)
     return () => clearTimeout(timer)
-  }, [isGlobalSyncPaused, walletId, walletNavigation, setSelectedWallet, setSelectedWalletMeta, walletManager])
+  }, [isGlobalSyncPaused, walletId, walletNavigation, walletManager])
 }

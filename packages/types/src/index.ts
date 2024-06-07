@@ -166,7 +166,11 @@ import {PortfolioTokenPrice} from './portfolio/price'
 import {ChainNetwork, ChainSupportedNetworks} from './chain/network'
 import {NumbersErrorInvalidAtomicValue} from './numbers/errors'
 import {NumbersAtomicValue} from './numbers/atomic-value'
-import {AppErrorInvalidState} from './app/errors'
+import {
+  AppErrorInvalidState,
+  AppErrorWrongPassword,
+  AppErrorLibraryFailed,
+} from './app/errors'
 import {
   PortfolioApi,
   PortfolioApiTokenDiscoveryResponse,
@@ -204,6 +208,8 @@ import {PortfolioTokenTraits} from './portfolio/traits'
 export namespace App {
   export namespace Errors {
     export class InvalidState extends AppErrorInvalidState {}
+    export class WrongPassword extends AppErrorWrongPassword {}
+    export class LibraryError extends AppErrorLibraryFailed {}
   }
 
   export interface Storage<

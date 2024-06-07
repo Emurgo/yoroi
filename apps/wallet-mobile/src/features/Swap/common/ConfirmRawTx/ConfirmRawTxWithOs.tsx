@@ -3,8 +3,8 @@ import React, {useEffect} from 'react'
 import {ActivityIndicator, StyleSheet, Text, View} from 'react-native'
 
 import {useAuthOsWithEasyConfirmation} from '../../../Auth/common/hooks'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useSelectedWalletMeta} from '../../../WalletManager/common/hooks/useSelectedWalletMeta'
-import {useSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'
 import {getErrorMessage} from '../errors'
 import {useStrings} from '../strings'
 

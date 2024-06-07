@@ -5,8 +5,8 @@ import React from 'react'
 import {QueryProvider} from '../../../../../../.storybook/decorators'
 import {Boundary} from '../../../../../components'
 import {mocks} from '../../../../../yoroi-wallets/mocks/wallet'
+import {WalletManagerProviderMock} from '../../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {SearchProvider} from '../../../../Search/SearchContext'
-import {SelectedWalletProvider} from '../../../../WalletManager/context/SelectedWalletContext'
 import {SwapFormProvider} from '../../../common/SwapFormProvider'
 import {CompletedOrders, CompletedOrdersSkeleton} from './CompletedOrders'
 
@@ -14,7 +14,7 @@ storiesOf('Swap Completed orders', module)
   .add('Default', () => {
     return (
       <QueryProvider>
-        <SelectedWalletProvider wallet={mocks.wallet}>
+        <WalletManagerProviderMock wallet={mocks.wallet}>
           <SearchProvider>
             <SwapProvider swapManager={mockSwapManager}>
               <SwapFormProvider>
@@ -22,14 +22,14 @@ storiesOf('Swap Completed orders', module)
               </SwapFormProvider>
             </SwapProvider>
           </SearchProvider>
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryProvider>
     )
   })
   .add('Loading', () => {
     return (
       <QueryProvider>
-        <SelectedWalletProvider wallet={mocks.wallet}>
+        <WalletManagerProviderMock wallet={mocks.wallet}>
           <SearchProvider>
             <SwapProvider
               swapManager={{
@@ -50,7 +50,7 @@ storiesOf('Swap Completed orders', module)
               </SwapFormProvider>
             </SwapProvider>
           </SearchProvider>
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryProvider>
     )
   })

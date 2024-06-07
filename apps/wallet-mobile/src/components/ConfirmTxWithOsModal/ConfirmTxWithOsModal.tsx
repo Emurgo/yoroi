@@ -3,8 +3,8 @@ import React, {useEffect} from 'react'
 import {ActivityIndicator, StyleSheet, Text, View} from 'react-native'
 
 import {useAuthOsWithEasyConfirmation} from '../../features/Auth/common/hooks'
+import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {useSelectedWalletMeta} from '../../features/WalletManager/common/hooks/useSelectedWalletMeta'
-import {useSelectedWallet} from '../../features/WalletManager/context/SelectedWalletContext'
 import {useSignTx, useSubmitTx} from '../../yoroi-wallets/hooks'
 import {YoroiSignedTx, YoroiUnsignedTx} from '../../yoroi-wallets/types'
 

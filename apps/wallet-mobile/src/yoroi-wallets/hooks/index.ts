@@ -496,35 +496,6 @@ export const useHasPendingTx = (wallet: YoroiWallet) => {
   )
 }
 
-// WALLET MANAGER
-export const useDisableEasyConfirmation = (wallet: YoroiWallet, options?: UseMutationOptions) => {
-  const {walletManager} = useWalletManager()
-  const mutation = useMutationWithInvalidations({
-    ...options,
-    mutationFn: () => walletManager.disableEasyConfirmation(wallet),
-    invalidateQueries: [['walletMetas']],
-  })
-
-  return {
-    ...mutation,
-    disableEasyConfirmation: mutation.mutate,
-  }
-}
-
-export const useEnableEasyConfirmation = (wallet: YoroiWallet, options?: UseMutationOptions<void, Error, string>) => {
-  const {walletManager} = useWalletManager()
-  const mutation = useMutationWithInvalidations({
-    ...options,
-    mutationFn: (password: string) => walletManager.enableEasyConfirmation(wallet, password),
-    invalidateQueries: [['walletMetas']],
-  })
-
-  return {
-    ...mutation,
-    enableEasyConfirmation: mutation.mutate,
-  }
-}
-
 export const useFrontendFees = (
   wallet: YoroiWallet,
   options?: UseQueryOptions<App.FrontendFeesResponse, Error, App.FrontendFeesResponse, [string, 'frontend-fees']>,

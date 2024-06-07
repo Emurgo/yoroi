@@ -1,7 +1,7 @@
 import {useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
 import {UseMutationOptions} from 'react-query'
 
-import {useSelectedWallet} from '../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {storageKeyShowBuyBannerSmall, storageRootExchange} from './constants'
 
 const thirtyDaysInMs = 30 * 24 * 60 * 60 * 1000

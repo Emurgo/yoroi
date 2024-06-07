@@ -3,7 +3,7 @@ import {ErrorBoundary} from 'react-error-boundary'
 import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
 
 import {LedgerTransportSwitch} from '../../features/Swap/useCases/ConfirmTxScreen/LedgerTransportSwitch'
-import {useSelectedWallet} from '../../features/WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../features/WalletManager/context/WalletManagerProvider'
 import {LedgerConnect} from '../../legacy/HW'
 import {useSignTxWithHW, useSubmitTx} from '../../yoroi-wallets/hooks'

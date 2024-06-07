@@ -9,8 +9,8 @@ import {Button, KeyboardAvoidingView, Spacer, TextInput} from '../../../componen
 import globalMessages from '../../../kernel/i18n/global-messages'
 import {isEmptyString} from '../../../kernel/utils'
 import {getWalletNameError, validateWalletName} from '../../../yoroi-wallets/utils/validators'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useSelectedWalletMeta} from '../../WalletManager/common/hooks/useSelectedWalletMeta'
-import {useSelectedWallet} from '../../WalletManager/context/SelectedWalletContext'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 
 export const RenameWallet = () => {

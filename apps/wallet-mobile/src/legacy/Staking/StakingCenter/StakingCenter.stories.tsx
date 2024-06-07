@@ -2,14 +2,14 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {QueryClient, QueryClientProvider} from 'react-query'
 
-import {SelectedWalletProvider} from '../../../features/WalletManager/context/SelectedWalletContext'
 import {mocks} from '../../../yoroi-wallets/mocks'
+import {WalletManagerProviderMock} from '../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {StakingCenter} from './StakingCenter'
 
 storiesOf('StakingCenter', module)
   .add('loaded', () => (
     <QueryClientProvider client={new QueryClient()}>
-      <SelectedWalletProvider
+      <WalletManagerProviderMock
         wallet={{
           ...mocks.wallet,
           networkId: 1,
@@ -17,12 +17,12 @@ storiesOf('StakingCenter', module)
         }}
       >
         <StakingCenter />
-      </SelectedWalletProvider>
+      </WalletManagerProviderMock>
     </QueryClientProvider>
   ))
   .add('loading', () => (
     <QueryClientProvider client={new QueryClient()}>
-      <SelectedWalletProvider
+      <WalletManagerProviderMock
         wallet={{
           ...mocks.wallet,
           networkId: 1,
@@ -30,12 +30,12 @@ storiesOf('StakingCenter', module)
         }}
       >
         <StakingCenter />
-      </SelectedWalletProvider>
+      </WalletManagerProviderMock>
     </QueryClientProvider>
   ))
   .add('error', () => (
     <QueryClientProvider client={new QueryClient()}>
-      <SelectedWalletProvider
+      <WalletManagerProviderMock
         wallet={{
           ...mocks.wallet,
           networkId: 1,
@@ -43,6 +43,6 @@ storiesOf('StakingCenter', module)
         }}
       >
         <StakingCenter />
-      </SelectedWalletProvider>
+      </WalletManagerProviderMock>
     </QueryClientProvider>
   ))

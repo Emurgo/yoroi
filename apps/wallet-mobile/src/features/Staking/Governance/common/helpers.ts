@@ -6,7 +6,7 @@ import {governaceAfterBlock} from '../../../../kernel/config'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useStakingKey, useTipStatus} from '../../../../yoroi-wallets/hooks'
 import {CardanoMobile} from '../../../../yoroi-wallets/wallets'
-import {useSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {GovernanceVote} from '../types'
 
 export const useIsParticipatingInGovernance = (wallet: YoroiWallet) => {

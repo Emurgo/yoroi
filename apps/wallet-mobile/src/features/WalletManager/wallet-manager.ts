@@ -359,10 +359,17 @@ export class WalletManager {
     })
   }
 
-  async enableEasyConfirmation(wallet: YoroiWallet, password: string) {
+  async enableEasyConfirmation(walletId: YoroiWallet['id'], password: string) {
     if (!this.#keychainManager) {
       const error = new Error('KeychainManager not available for enableEasyConfirmation')
       logger.error(error)
+      throw error
+    }
+
+    const wallet = this.#wallets.get(walletId)
+    if (!wallet) {
+      const error = new Error('WalletManager: esnableEasyConfirmation wallet not found (should be loaded)')
+      logger.error(error, {walletId})
       throw error
     }
 

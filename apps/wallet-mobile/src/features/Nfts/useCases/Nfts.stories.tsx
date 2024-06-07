@@ -3,8 +3,8 @@ import React from 'react'
 
 import {QueryProvider} from '../../../../.storybook/decorators'
 import {mocks} from '../../../yoroi-wallets/mocks'
+import {WalletManagerProviderMock} from '../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {SearchProvider} from '../../Search/SearchContext'
-import {SelectedWalletProvider} from '../../WalletManager/context/SelectedWalletContext'
 import {Nfts} from './Nfts'
 
 storiesOf('NFT/Gallery', module)
@@ -12,11 +12,11 @@ storiesOf('NFT/Gallery', module)
     const wallet = {...mocks.wallet, fetchTokenInfo: mocks.fetchTokenInfo.success.randomNft}
     return (
       <QueryProvider>
-        <SelectedWalletProvider wallet={wallet}>
+        <WalletManagerProviderMock wallet={wallet}>
           <SearchProvider>
             <Nfts />
           </SearchProvider>
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryProvider>
     )
   })
@@ -28,11 +28,11 @@ storiesOf('NFT/Gallery', module)
 
     return (
       <QueryProvider>
-        <SelectedWalletProvider wallet={loadedWallet}>
+        <WalletManagerProviderMock wallet={loadedWallet}>
           <SearchProvider>
             <Nfts />
           </SearchProvider>
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryProvider>
     )
   })
@@ -45,11 +45,11 @@ storiesOf('NFT/Gallery', module)
 
     return (
       <QueryProvider>
-        <SelectedWalletProvider wallet={loadedWallet}>
+        <WalletManagerProviderMock wallet={loadedWallet}>
           <SearchProvider>
             <Nfts />
           </SearchProvider>
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryProvider>
     )
   })
@@ -62,11 +62,11 @@ storiesOf('NFT/Gallery', module)
 
     return (
       <QueryProvider>
-        <SelectedWalletProvider wallet={loadedWallet}>
+        <WalletManagerProviderMock wallet={loadedWallet}>
           <SearchProvider>
             <Nfts />
           </SearchProvider>
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryProvider>
     )
   })
@@ -79,11 +79,11 @@ storiesOf('NFT/Gallery', module)
 
     return (
       <QueryProvider>
-        <SelectedWalletProvider wallet={loadedWallet}>
+        <WalletManagerProviderMock wallet={loadedWallet}>
           <SearchProvider>
             <Nfts />
           </SearchProvider>
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryProvider>
     )
   })
@@ -96,11 +96,11 @@ storiesOf('NFT/Gallery', module)
 
     return (
       <QueryProvider>
-        <SelectedWalletProvider wallet={loadedWallet}>
+        <WalletManagerProviderMock wallet={loadedWallet}>
           <SearchProvider>
             <Nfts />
           </SearchProvider>
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryProvider>
     )
   })
@@ -113,11 +113,11 @@ storiesOf('NFT/Gallery', module)
 
     return (
       <QueryProvider>
-        <SelectedWalletProvider wallet={loadedWallet}>
+        <WalletManagerProviderMock wallet={loadedWallet}>
           <SearchProvider>
             <Nfts />
           </SearchProvider>
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryProvider>
     )
   })
@@ -130,11 +130,11 @@ storiesOf('NFT/Gallery', module)
 
     return (
       <QueryProvider>
-        <SelectedWalletProvider wallet={loadedWallet}>
+        <WalletManagerProviderMock wallet={loadedWallet}>
           <SearchProvider>
             <Nfts />
           </SearchProvider>
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryProvider>
     )
   })
@@ -145,11 +145,11 @@ storiesOf('NFT/Gallery', module)
     }
     return (
       <QueryProvider>
-        <SelectedWalletProvider wallet={errorWallet}>
+        <WalletManagerProviderMock wallet={errorWallet}>
           <SearchProvider>
             <Nfts />
           </SearchProvider>
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryProvider>
     )
   })
@@ -160,11 +160,11 @@ storiesOf('NFT/Gallery', module)
     }
     return (
       <QueryProvider>
-        <SelectedWalletProvider wallet={errorWallet}>
+        <WalletManagerProviderMock wallet={errorWallet}>
           <SearchProvider>
             <Nfts />
           </SearchProvider>
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryProvider>
     )
   })

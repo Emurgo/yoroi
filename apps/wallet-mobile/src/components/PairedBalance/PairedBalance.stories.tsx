@@ -4,15 +4,15 @@ import React from 'react'
 import {View} from 'react-native'
 
 import {QueryProvider} from '../../../.storybook/decorators'
-import {SelectedWalletProvider} from '../../features/WalletManager/context/SelectedWalletContext'
 import {mocks} from '../../yoroi-wallets/mocks'
+import {WalletManagerProviderMock} from '../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {PairedBalance} from './PairedBalance'
 
 storiesOf('PairedBalance', module)
   .add('loading', () => {
     return (
       <QueryProvider>
-        <SelectedWalletProvider
+        <WalletManagerProviderMock
           wallet={{
             ...mocks.wallet,
             fetchCurrentPrice: mocks.fetchCurrentPrice.loading,
@@ -23,14 +23,14 @@ storiesOf('PairedBalance', module)
               <PairedBalance amount={tokenBalanceMocks.primaryETH} />
             </View>
           </View>
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryProvider>
     )
   })
   .add('success', () => {
     return (
       <QueryProvider>
-        <SelectedWalletProvider
+        <WalletManagerProviderMock
           wallet={{
             ...mocks.wallet,
             fetchCurrentPrice: mocks.fetchCurrentPrice.success,
@@ -41,14 +41,14 @@ storiesOf('PairedBalance', module)
               <PairedBalance amount={tokenBalanceMocks.primaryETH} />
             </View>
           </View>
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryProvider>
     )
   })
   .add('success (privacy on)', () => {
     return (
       <QueryProvider>
-        <SelectedWalletProvider
+        <WalletManagerProviderMock
           wallet={{
             ...mocks.wallet,
             fetchCurrentPrice: mocks.fetchCurrentPrice.success,
@@ -59,14 +59,14 @@ storiesOf('PairedBalance', module)
               <PairedBalance amount={tokenBalanceMocks.primaryETH} ignorePrivacy />
             </View>
           </View>
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryProvider>
     )
   })
   .add('error', () => {
     return (
       <QueryProvider>
-        <SelectedWalletProvider
+        <WalletManagerProviderMock
           wallet={{
             ...mocks.wallet,
             fetchCurrentPrice: mocks.fetchCurrentPrice.error,
@@ -77,7 +77,7 @@ storiesOf('PairedBalance', module)
               <PairedBalance amount={tokenBalanceMocks.primaryETH} />
             </View>
           </View>
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryProvider>
     )
   })

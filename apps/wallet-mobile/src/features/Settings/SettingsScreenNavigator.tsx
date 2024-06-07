@@ -17,7 +17,7 @@ import {
 } from '../../kernel/navigation'
 import {ChangePinScreen} from '../Auth'
 import {EnableLoginWithPin} from '../Auth/EnableLoginWithPin'
-import {useSelectedWallet} from '../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 import {About} from './About'
 import {ApplicationSettingsScreen} from './ApplicationSettings'
 import {ChangeLanguageScreen} from './ChangeLanguage'

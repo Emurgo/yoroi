@@ -14,8 +14,6 @@ import {ErrorBoundary} from './components/ErrorBoundary'
 import {AuthProvider} from './features/Auth/AuthProvider'
 import {buildPortfolioTokenManagers} from './features/Portfolio/common/helpers/build-token-managers'
 import {CurrencyProvider} from './features/Settings/Currency/CurrencyContext'
-import {SelectedWalletProvider} from './features/WalletManager/context/SelectedWalletContext'
-import {SelectedWalletMetaProvider} from './features/WalletManager/context/SelectedWalletMetaContext'
 import {WalletManagerProvider} from './features/WalletManager/context/WalletManagerProvider'
 import {buildNetworkManagers} from './features/WalletManager/network-manager/network-manager'
 import {WalletManager} from './features/WalletManager/wallet-manager'
@@ -64,15 +62,11 @@ const Yoroi = () => {
                   <LanguageProvider>
                     <CurrencyProvider>
                       <AuthProvider>
-                        <SelectedWalletMetaProvider>
-                          <SelectedWalletProvider>
-                            <LinksProvider>
-                              <SetupWalletProvider>
-                                <InitApp />
-                              </SetupWalletProvider>
-                            </LinksProvider>
-                          </SelectedWalletProvider>
-                        </SelectedWalletMetaProvider>
+                        <LinksProvider>
+                          <SetupWalletProvider>
+                            <InitApp />
+                          </SetupWalletProvider>
+                        </LinksProvider>
                       </AuthProvider>
                     </CurrencyProvider>
                   </LanguageProvider>

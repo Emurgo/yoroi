@@ -5,8 +5,8 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {mocks} from '../../../../../../yoroi-wallets/mocks/wallet'
+import {WalletManagerProviderMock} from '../../../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {SearchProvider} from '../../../../../Search/SearchContext'
-import {SelectedWalletProvider} from '../../../../../WalletManager/context/SelectedWalletContext'
 import {SwapFormProvider} from '../../../../common/SwapFormProvider'
 import {EditSellAmount} from './EditSellAmount'
 
@@ -58,7 +58,7 @@ const mockSwapStateWithIconBigDecimals = produce(mockSwapStateDefault, (draft) =
 storiesOf('Swap Edit Sell Amount', module)
   .add('initial primary token', () => {
     return (
-      <SelectedWalletProvider wallet={mocks.wallet}>
+      <WalletManagerProviderMock wallet={mocks.wallet}>
         <SearchProvider>
           <SwapProvider swapManager={mockSwapManager}>
             <SwapFormProvider>
@@ -68,12 +68,12 @@ storiesOf('Swap Edit Sell Amount', module)
             </SwapFormProvider>
           </SwapProvider>
         </SearchProvider>
-      </SelectedWalletProvider>
+      </WalletManagerProviderMock>
     )
   })
   .add('with balance', () => {
     return (
-      <SelectedWalletProvider wallet={mocks.wallet}>
+      <WalletManagerProviderMock wallet={mocks.wallet}>
         <SearchProvider>
           <SwapProvider swapManager={mockSwapManager}>
             <SwapFormProvider>
@@ -83,12 +83,12 @@ storiesOf('Swap Edit Sell Amount', module)
             </SwapFormProvider>
           </SwapProvider>
         </SearchProvider>
-      </SelectedWalletProvider>
+      </WalletManagerProviderMock>
     )
   })
   .add('secondary token', () => {
     return (
-      <SelectedWalletProvider wallet={mockWallet}>
+      <WalletManagerProviderMock wallet={mockWallet}>
         <SearchProvider>
           <SwapProvider swapManager={mockSwapManager} initialState={mockSwapStateSecodaryToken}>
             <SwapFormProvider>
@@ -98,12 +98,12 @@ storiesOf('Swap Edit Sell Amount', module)
             </SwapFormProvider>
           </SwapProvider>
         </SearchProvider>
-      </SelectedWalletProvider>
+      </WalletManagerProviderMock>
     )
   })
   .add('secondary unamed token', () => {
     return (
-      <SelectedWalletProvider wallet={mockWallet}>
+      <WalletManagerProviderMock wallet={mockWallet}>
         <SearchProvider>
           <SwapProvider swapManager={mockSwapManager} initialState={mockSwapStateUnamedToken}>
             <SwapFormProvider>
@@ -113,12 +113,12 @@ storiesOf('Swap Edit Sell Amount', module)
             </SwapFormProvider>
           </SwapProvider>
         </SearchProvider>
-      </SelectedWalletProvider>
+      </WalletManagerProviderMock>
     )
   })
   .add('icon + big decimals', () => {
     return (
-      <SelectedWalletProvider wallet={mockWallet}>
+      <WalletManagerProviderMock wallet={mockWallet}>
         <SearchProvider>
           <SwapProvider swapManager={mockSwapManager} initialState={mockSwapStateWithIconBigDecimals}>
             <SwapFormProvider>
@@ -128,7 +128,7 @@ storiesOf('Swap Edit Sell Amount', module)
             </SwapFormProvider>
           </SwapProvider>
         </SearchProvider>
-      </SelectedWalletProvider>
+      </WalletManagerProviderMock>
     )
   })
 

@@ -5,9 +5,9 @@ import React from 'react'
 
 import {QueryProvider, WithModalProps} from '../../../.storybook/decorators'
 import {Boundary} from '../../components'
-import {SelectedWalletProvider} from '../../features/WalletManager/context/SelectedWalletContext'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {mocks} from '../../yoroi-wallets/mocks'
+import {WalletManagerProviderMock} from '../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {ConfirmPin} from './ConfirmPin'
 import {ConfirmVotingTx} from './ConfirmVotingTx'
 import {DisplayPin} from './DisplayPin'
@@ -145,9 +145,9 @@ storiesOf('Catalyst', module)
 const Providers = ({wallet, children}: {wallet: YoroiWallet; children: React.ReactNode}) => {
   return (
     <QueryProvider>
-      <SelectedWalletProvider wallet={wallet}>
+      <WalletManagerProviderMock wallet={wallet}>
         <Boundary loading={{size: 'full'}}>{children}</Boundary>
-      </SelectedWalletProvider>
+      </WalletManagerProviderMock>
     </QueryProvider>
   )
 }

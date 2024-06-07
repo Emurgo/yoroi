@@ -48,7 +48,6 @@ import {createSwapCancellationLedgerPayload} from '../common/signatureUtils'
 import * as MAINNET from '../constants/mainnet/constants'
 import * as SANCHONET from '../constants/sanchonet/constants'
 import * as TESTNET from '../constants/testnet/constants'
-import {CardanoError} from '../errors'
 import {ADDRESS_TYPE_TO_CHANGE} from '../formatPath'
 import {getTime} from '../getTime'
 import {doesCardanoAppVersionSupportCIP36, getCardanoAppMajorVersion, signTxWithLedger} from '../hw'
@@ -689,7 +688,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         return yoroiUnsignedTx({unsignedTx, networkConfig: NETWORK_CONFIG, addressedUtxos, entries, primaryTokenId})
       } catch (e) {
         if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError) throw e
-        throw new CardanoError((e as Error).message)
+        throw new App.Errors.LibraryError((e as Error).message)
       }
     }
 
@@ -733,7 +732,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         })
       } catch (e) {
         if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError) throw e
-        throw new CardanoError((e as Error).message)
+        throw new App.Errors.LibraryError((e as Error).message)
       }
     }
 
@@ -927,7 +926,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         }
       } catch (e) {
         if (e instanceof LocalizableError || e instanceof Error) throw e
-        throw new CardanoError((e as Error).message)
+        throw new App.Errors.LibraryError((e as Error).message)
       }
     }
 

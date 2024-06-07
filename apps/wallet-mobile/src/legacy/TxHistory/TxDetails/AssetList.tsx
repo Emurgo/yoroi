@@ -4,7 +4,7 @@ import {FlatList, Text, TouchableOpacity, View} from 'react-native'
 
 import {Boundary} from '../../../components'
 import {usePrivacyMode} from '../../../features/Settings/PrivacyMode/PrivacyMode'
-import {useSelectedWallet} from '../../../features/WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
 import globalMessages, {txLabels} from '../../../kernel/i18n/global-messages'
 import {isEmptyString} from '../../../kernel/utils'
 import {CardanoTypes} from '../../../yoroi-wallets/cardano/types'

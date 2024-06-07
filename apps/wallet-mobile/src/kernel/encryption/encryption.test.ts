@@ -1,5 +1,6 @@
-import {CardanoError} from '../cardano/errors'
-import {generateAdaMnemonic, generateWalletRootKey} from '../cardano/mnemonic'
+import {App} from '@yoroi/types'
+
+import {generateAdaMnemonic, generateWalletRootKey} from '../../yoroi-wallets/cardano/mnemonic/mnemonic'
 import {decryptData, encryptData} from './encryption'
 
 const mnemonic = [
@@ -38,7 +39,7 @@ describe('encryption/decryption', () => {
   it('Throws on wrong password', async () => {
     expect.assertions(1)
     const encryptedData = await encryptData('308f9977d04e7f3a45abd148905c628e2bb2621360a585f352', 'password')
-    await expect(decryptData(encryptedData, 'wrong-password')).rejects.toThrow(CardanoError)
+    await expect(decryptData(encryptedData, 'wrong-password')).rejects.toThrow(App.Errors.WrongPassword)
   })
 
   it('Can decrypt data encrypted with rust v2 library', async () => {

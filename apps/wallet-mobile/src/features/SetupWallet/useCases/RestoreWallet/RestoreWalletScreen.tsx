@@ -16,8 +16,6 @@ import {isEmptyString} from '../../../../kernel/utils'
 import {makeKeys} from '../../../../yoroi-wallets/cardano/shelley/makeKeys'
 import {usePlate} from '../../../../yoroi-wallets/hooks'
 import {WalletMeta} from '../../../WalletManager/common/types'
-import {useSetSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'
-import {useSetSelectedWalletMeta} from '../../../WalletManager/context/SelectedWalletMetaContext'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
 import {useStrings} from '../../common/useStrings'
@@ -39,8 +37,6 @@ export const RestoreWalletScreen = () => {
   const {walletManager} = useWalletManager()
   const {openModal} = useModal()
   const {resetToTxHistory} = useWalletNavigation()
-  const selectWalletMeta = useSetSelectedWalletMeta()
-  const selectWallet = useSetSelectedWallet()
   const [focusedIndex, setFocusedIndex] = React.useState<number>(0)
   const [isValidPhrase, setIsValidPhrase] = React.useState(false)
 
@@ -115,13 +111,10 @@ export const RestoreWalletScreen = () => {
 
   const handleOpenWalletWithDuplicatedName = React.useCallback(
     (walletMeta: WalletMeta) => {
-      selectWalletMeta(walletMeta)
-      const wallet = walletManager.getWalletById(walletMeta.id)
-      selectWallet(wallet)
       walletManager.setSelectedWalletId(walletMeta.id)
       resetToTxHistory()
     },
-    [selectWalletMeta, walletManager, selectWallet, resetToTxHistory],
+    [walletManager, resetToTxHistory],
   )
 
   const handleOnNext = React.useCallback(async () => {

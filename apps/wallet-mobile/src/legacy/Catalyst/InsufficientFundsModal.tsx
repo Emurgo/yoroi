@@ -4,7 +4,7 @@ import {useIntl} from 'react-intl'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {StandardModal} from '../../components'
-import {useSelectedWallet} from '../../features/WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import globalMessages, {confirmationMessages} from '../../kernel/i18n/global-messages'
 import {CATALYST} from '../../yoroi-wallets/cardano/utils'
 import {useBalances} from '../../yoroi-wallets/hooks'

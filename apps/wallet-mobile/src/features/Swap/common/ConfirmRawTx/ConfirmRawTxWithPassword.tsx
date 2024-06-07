@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 
 import {Spacer} from '../../../../components'
-import {useSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {ConfirmWithSpendingPassword} from '../ConfirmWithSpendingPassword'
 
 export const ConfirmRawTxWithPassword = ({onConfirm}: {onConfirm?: (rootKey: string) => Promise<void>}) => {

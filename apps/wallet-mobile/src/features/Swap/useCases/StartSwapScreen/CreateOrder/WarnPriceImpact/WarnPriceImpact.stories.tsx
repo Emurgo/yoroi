@@ -6,17 +6,17 @@ import {Button, StyleSheet, View} from 'react-native'
 
 import {useModal} from '../../../../../../components'
 import {mocks as walletMocks} from '../../../../../../yoroi-wallets/mocks'
-import {SelectedWalletProvider} from '../../../../../WalletManager/context/SelectedWalletContext'
+import {WalletManagerProviderMock} from '../../../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {useStrings} from '../../../../common/strings'
 import {WarnPriceImpact} from './WarnPriceImpact'
 
 storiesOf('Swap Warn Price Impact', module)
   .addDecorator((getStory) => (
-    <SelectedWalletProvider wallet={walletMocks.wallet}>
+    <WalletManagerProviderMock wallet={walletMocks.wallet}>
       <SwapProvider swapManager={mockSwapManager}>
         <View style={{...StyleSheet.absoluteFillObject}}>{getStory()}</View>
       </SwapProvider>
-    </SelectedWalletProvider>
+    </WalletManagerProviderMock>
   ))
   .add('Initial', () => {
     const {openModal, content, closeModal} = useModal()

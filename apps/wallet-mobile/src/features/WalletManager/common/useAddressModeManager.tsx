@@ -1,10 +1,11 @@
 import {useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
 import {UseMutationOptions, useQuery} from 'react-query'
 
-import {useSelectedWallet} from '../context/SelectedWalletContext'
+import {useSelectedWallet} from './hooks/useSelectedWallet'
 import {AddressMode} from './types'
 import {parseWalletMeta} from './validators'
 
+// TODO: revisit
 const useAddressMode = () => {
   const storage = useAsyncStorage()
   const wallet = useSelectedWallet()

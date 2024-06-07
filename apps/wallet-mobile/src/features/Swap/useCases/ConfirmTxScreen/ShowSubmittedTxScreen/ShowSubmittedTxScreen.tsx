@@ -8,7 +8,7 @@ import {z} from 'zod'
 
 import {Button, Spacer, Text} from '../../../../../components'
 import {useBlockGoBack, useUnsafeParams, useWalletNavigation} from '../../../../../kernel/navigation'
-import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from '../../../common/strings'
 import {SubmittedTxImage} from './SubmittedTxImage'
 

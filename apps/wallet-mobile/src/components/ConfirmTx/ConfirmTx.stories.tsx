@@ -2,15 +2,15 @@ import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {SelectedWalletProvider} from '../../features/WalletManager/context/SelectedWalletContext'
 import {mocks} from '../../yoroi-wallets/mocks'
+import {WalletManagerProviderMock} from '../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {ConfirmTx} from './ConfirmTx'
 
 storiesOf('ConfirmTx', module)
   .add('Not providing password', () => {
     return (
-      <SelectedWalletProvider wallet={mocks.wallet}>
+      <WalletManagerProviderMock wallet={mocks.wallet}>
         <ConfirmTx
           onSuccess={action('onSuccess')}
           yoroiUnsignedTx={{} as unknown as YoroiUnsignedTx}
@@ -18,12 +18,12 @@ storiesOf('ConfirmTx', module)
           isProvidingPassword={false}
           useUSB={false}
         />
-      </SelectedWalletProvider>
+      </WalletManagerProviderMock>
     )
   })
   .add('Providing password', () => {
     return (
-      <SelectedWalletProvider wallet={mocks.wallet}>
+      <WalletManagerProviderMock wallet={mocks.wallet}>
         <ConfirmTx
           onSuccess={action('onSuccess')}
           yoroiUnsignedTx={{} as unknown as YoroiUnsignedTx}
@@ -32,12 +32,12 @@ storiesOf('ConfirmTx', module)
           providedPassword="1234567890"
           useUSB={false}
         />
-      </SelectedWalletProvider>
+      </WalletManagerProviderMock>
     )
   })
   .add('With customized button', () => {
     return (
-      <SelectedWalletProvider wallet={mocks.wallet}>
+      <WalletManagerProviderMock wallet={mocks.wallet}>
         <ConfirmTx
           onSuccess={action('onSuccess')}
           yoroiUnsignedTx={{} as unknown as YoroiUnsignedTx}
@@ -50,6 +50,6 @@ storiesOf('ConfirmTx', module)
             shelleyTheme: true,
           }}
         />
-      </SelectedWalletProvider>
+      </WalletManagerProviderMock>
     )
   })

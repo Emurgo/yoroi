@@ -7,7 +7,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {useQuery} from 'react-query'
 
 import {features} from '../../../features'
-import {useSelectedWallet} from '../../../features/WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
 import {getCardanoNetworkConfigById} from '../../../yoroi-wallets/cardano/networks'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {asQuantity, Quantities} from '../../../yoroi-wallets/utils'

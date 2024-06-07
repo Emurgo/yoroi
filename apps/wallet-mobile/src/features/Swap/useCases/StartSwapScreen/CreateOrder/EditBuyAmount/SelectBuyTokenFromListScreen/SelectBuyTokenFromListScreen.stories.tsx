@@ -3,15 +3,15 @@ import {mockSwapManager, SwapProvider} from '@yoroi/swap'
 import React from 'react'
 
 import {mocks} from '../../../../../../../yoroi-wallets/mocks/wallet'
+import {WalletManagerProviderMock} from '../../../../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {SearchProvider} from '../../../../../../Search/SearchContext'
-import {SelectedWalletProvider} from '../../../../../../WalletManager/context/SelectedWalletContext'
 import {SwapFormProvider} from '../../../../../common/SwapFormProvider'
 import {SelectBuyTokenFromListScreen} from './SelectBuyTokenFromListScreen'
 
 storiesOf('Swap Select Token To Buy', module)
   .add('initial', () => {
     return (
-      <SelectedWalletProvider wallet={mocks.wallet}>
+      <WalletManagerProviderMock wallet={mocks.wallet}>
         <SearchProvider>
           <SwapProvider swapManager={mockSwapManager}>
             <SwapFormProvider>
@@ -19,7 +19,7 @@ storiesOf('Swap Select Token To Buy', module)
             </SwapFormProvider>
           </SwapProvider>
         </SearchProvider>
-      </SelectedWalletProvider>
+      </WalletManagerProviderMock>
     )
   })
   .add('loading tokenInfo', () => {
@@ -28,7 +28,7 @@ storiesOf('Swap Select Token To Buy', module)
       fetchTokenInfo: mocks.fetchTokenInfo.loading,
     }
     return (
-      <SelectedWalletProvider wallet={loading}>
+      <WalletManagerProviderMock wallet={loading}>
         <SearchProvider>
           <SwapProvider swapManager={mockSwapManager}>
             <SwapFormProvider>
@@ -36,6 +36,6 @@ storiesOf('Swap Select Token To Buy', module)
             </SwapFormProvider>
           </SwapProvider>
         </SearchProvider>
-      </SelectedWalletProvider>
+      </WalletManagerProviderMock>
     )
   })

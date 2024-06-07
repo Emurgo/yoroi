@@ -14,7 +14,7 @@ import {usePortfolioBalances} from '../../../../../../Portfolio/common/hooks/use
 import {TokenAmountItem} from '../../../../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
 import {useSearch, useSearchOnNavBar} from '../../../../../../Search/SearchContext'
 import {NoAssetFoundImage} from '../../../../../../Send/common/NoAssetFoundImage'
-import {useSelectedWallet} from '../../../../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../../../../WalletManager/common/hooks/useSelectedWallet'
 import {Counter} from '../../../../../common/Counter/Counter'
 import {useNavigateTo} from '../../../../../common/navigation'
 import {useStrings} from '../../../../../common/strings'

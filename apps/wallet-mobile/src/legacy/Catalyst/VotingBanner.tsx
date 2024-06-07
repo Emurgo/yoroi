@@ -5,7 +5,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Icon, Text} from '../../components'
-import {useSelectedWallet} from '../../features/WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {isNightly} from '../../kernel/env'
 import globalMessages, {confirmationMessages} from '../../kernel/i18n/global-messages'
 import {logger} from '../../kernel/logger/logger'

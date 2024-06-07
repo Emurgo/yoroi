@@ -110,7 +110,7 @@ exports[`ShelleyWallet create 2`] = `
 ]
 `;
 
-exports[`ShelleyWallet create 6`] = `
+exports[`ShelleyWallet create 3`] = `
 {
   "externalChain": {
     "addressGenerator": {
@@ -605,7 +605,7 @@ exports[`ShelleyWallet restore 2`] = `
 ]
 `;
 
-exports[`ShelleyWallet restore 6`] = `
+exports[`ShelleyWallet restore 3`] = `
 {
   "externalChain": {
     "addressGenerator": {

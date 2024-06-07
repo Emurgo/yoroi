@@ -49,11 +49,10 @@ import {encryptWithPassword} from '../catalyst/catalystCipher'
 import {generatePrivateKeyForCatalyst} from '../catalyst/catalystUtils'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
 import {API_ROOT, MAX_GENERATED_UNUSED, PRIMARY_TOKEN, PRIMARY_TOKEN_INFO} from '../constants/mainnet/constants'
-import {CardanoError, InvalidState} from '../errors'
 import {ADDRESS_TYPE_TO_CHANGE} from '../formatPath'
 import {getTime} from '../getTime'
 import {doesCardanoAppVersionSupportCIP36, getCardanoAppMajorVersion, signTxWithLedger} from '../hw'
-import {CardanoHaskellShelleyNetwork, getCardanoNetworkConfigById, isHaskellShelleyNetwork} from '../networks'
+import {CardanoHaskellShelleyNetwork, getCardanoNetworkConfigById} from '../networks'
 import {NUMBERS} from '../numbers'
 import {processTxHistoryData} from '../processTransactions'
 import {filterAddressesByStakingKey, getDelegationStatus} from '../shelley/delegationUtils'
@@ -240,8 +239,6 @@ export class ByronWallet implements YoroiWallet {
       lastGeneratedAddressIndex: data.lastGeneratedAddressIndex ?? 0, // AddressManager
       networkManager,
     })
-
-    wallet.integrityCheck()
 
     return wallet
   }
@@ -450,26 +447,6 @@ export class ByronWallet implements YoroiWallet {
   }
 
   // =================== persistence =================== //
-
-  private integrityCheck(): void {
-    try {
-      assert(isHaskellShelleyNetwork(this.networkId), 'invalid networkId')
-      if (this.walletImplementationId == null) throw new Error('Invalid wallet: walletImplementationId')
-      assert(
-        isByron(this.walletImplementationId) || isHaskellShelley(this.walletImplementationId),
-        'invalid walletImplementationId',
-      )
-      if (isHaskellShelley(this.walletImplementationId)) {
-        assert(this.rewardAddressHex != null, 'reward address is null')
-      }
-      if (this.isHW) {
-        assert(this.hwDeviceInfo != null, 'no device info for hardware wallet')
-      }
-    } catch (e) {
-      throw new InvalidState((e as Error).message)
-    }
-  }
-
   async sync({isForced = false}: {isForced?: boolean} = {}) {
     if (!this.isInitialized) {
       console.error('ShelleyWallet::sync: wallet not initialized')
@@ -768,7 +745,7 @@ export class ByronWallet implements YoroiWallet {
     } catch (e) {
       if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError) throw e
       logger.error(`ByronWallet: createUnsignedTx error creating tx`, {error: e, type: 'transaction'})
-      throw new CardanoError((e as Error).message)
+      throw new App.Errors.LibraryError((e as Error).message)
     }
   }
 
@@ -817,7 +794,7 @@ export class ByronWallet implements YoroiWallet {
       })
     } catch (e) {
       if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError) throw e
-      throw new CardanoError((e as Error).message)
+      throw new App.Errors.LibraryError((e as Error).message)
     }
   }
 
@@ -1021,7 +998,7 @@ export class ByronWallet implements YoroiWallet {
       }
     } catch (e) {
       if (e instanceof LocalizableError || e instanceof Error) throw e
-      throw new CardanoError((e as Error).message)
+      throw new App.Errors.LibraryError((e as Error).message)
     }
   }
 

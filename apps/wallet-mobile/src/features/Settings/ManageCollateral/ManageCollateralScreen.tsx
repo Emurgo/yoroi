@@ -28,7 +28,7 @@ import {collateralConfig, utxosMaker} from '../../../yoroi-wallets/cardano/utxoM
 import {useBalances} from '../../../yoroi-wallets/hooks'
 import {RawUtxo, YoroiEntry} from '../../../yoroi-wallets/types'
 import {Amounts, asQuantity, Quantities} from '../../../yoroi-wallets/utils'
-import {useSelectedWallet} from '../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {usePrivacyMode} from '../PrivacyMode/PrivacyMode'
 import {createCollateralEntry} from './helpers'
 import {useNavigateTo} from './navigation'

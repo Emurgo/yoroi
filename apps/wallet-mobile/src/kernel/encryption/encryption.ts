@@ -1,8 +1,8 @@
+import {App} from '@yoroi/types'
 import assert from 'assert'
 import cryptoRandomString from 'crypto-random-string'
 
-import {CardanoError, WrongPassword} from '../cardano/errors'
-import {Cardano} from '../wallets'
+import {Cardano} from '../../yoroi-wallets/wallets'
 
 export const encryptData = async (plaintextHex: string, secretKey: string): Promise<string> => {
   assert(!!plaintextHex, 'encrypt:: !!plaintextHex')
@@ -18,17 +18,18 @@ export const encryptData = async (plaintextHex: string, secretKey: string): Prom
 }
 
 export const decryptData = async (ciphertext: string, secretKey: string): Promise<string> => {
-  assert(!!ciphertext, 'decrypt:: !!cyphertext')
-  assert(!!secretKey, 'decrypt:: !!secretKey')
   const secretKeyHex = Buffer.from(secretKey, 'utf8').toString('hex')
 
   try {
     return await Cardano.decryptWithPassword(secretKeyHex, ciphertext)
   } catch (error) {
-    if ((error as Error).message === 'Decryption error') {
-      throw new WrongPassword()
+    // NOTE: Library doesn't throw error, it throws a string
+    if ((error as Error)?.message === libraryError || error === libraryError) {
+      throw new App.Errors.WrongPassword()
     }
 
-    throw new CardanoError(String(error))
+    throw new App.Errors.LibraryError(String(error))
   }
 }
+
+const libraryError = 'Decryption error'

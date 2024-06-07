@@ -6,8 +6,8 @@ import {StyleSheet, View} from 'react-native'
 import {rootStorage} from '../../../../kernel/storage/rootStorage'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks'
+import {WalletManagerProviderMock} from '../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {buildPortfolioTokenManagers} from '../../../Portfolio/common/helpers/build-token-managers'
-import {SelectedWalletProvider} from '../../../WalletManager/context/SelectedWalletContext'
 import {WalletManagerProvider} from '../../../WalletManager/context/WalletManagerProvider'
 import {buildNetworkManagers} from '../../../WalletManager/network-manager/network-manager'
 import {WalletManager} from '../../../WalletManager/wallet-manager'
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
 const Provider = ({children, wallet}: {children: React.ReactNode; wallet: YoroiWallet}) => {
   return (
     <WalletManagerProvider walletManager={walletManager}>
-      <SelectedWalletProvider wallet={wallet}>
+      <WalletManagerProviderMock wallet={wallet}>
         <SwapProvider
           initialState={{
             ...mockSwapStateDefault,
@@ -68,7 +68,7 @@ const Provider = ({children, wallet}: {children: React.ReactNode; wallet: YoroiW
         >
           <SwapFormProvider>{children}</SwapFormProvider>
         </SwapProvider>
-      </SelectedWalletProvider>
+      </WalletManagerProviderMock>
     </WalletManagerProvider>
   )
 }

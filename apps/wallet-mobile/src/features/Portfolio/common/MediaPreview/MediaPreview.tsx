@@ -4,7 +4,7 @@ import React from 'react'
 import {ImageStyle, View} from 'react-native'
 
 import placeholder from '../../../../assets/img/nft-placeholder.png'
-import {useSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 
 type MediaPreviewProps = {
   info: Portfolio.Token.Info

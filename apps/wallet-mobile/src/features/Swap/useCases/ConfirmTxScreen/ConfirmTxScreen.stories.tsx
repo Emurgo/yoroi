@@ -4,8 +4,8 @@ import React from 'react'
 
 import {rootStorage} from '../../../../kernel/storage/rootStorage'
 import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks'
+import {WalletManagerProviderMock} from '../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {buildPortfolioTokenManagers} from '../../../Portfolio/common/helpers/build-token-managers'
-import {SelectedWalletProvider} from '../../../WalletManager/context/SelectedWalletContext'
 import {WalletManagerProvider} from '../../../WalletManager/context/WalletManagerProvider'
 import {buildNetworkManagers} from '../../../WalletManager/network-manager/network-manager'
 import {WalletManager} from '../../../WalletManager/wallet-manager'
@@ -34,7 +34,7 @@ storiesOf('Swap ConfirmTxScreen', module) //
 
 const ConfirmTxWithPasswordScreen = () => {
   return (
-    <SelectedWalletProvider wallet={{...walletMocks.wallet}}>
+    <WalletManagerProviderMock wallet={{...walletMocks.wallet}}>
       <SwapProvider
         initialState={{
           ...mockSwapStateDefault,
@@ -52,13 +52,13 @@ const ConfirmTxWithPasswordScreen = () => {
           <ConfirmTxScreen />
         </SwapFormProvider>
       </SwapProvider>
-    </SelectedWalletProvider>
+    </WalletManagerProviderMock>
   )
 }
 const ConfirmTxWithOSScreen = () => {
   return (
     <WalletManagerProvider walletManager={walletManager}>
-      <SelectedWalletProvider wallet={{...walletMocks.wallet}}>
+      <WalletManagerProviderMock wallet={{...walletMocks.wallet}}>
         <SwapProvider
           initialState={{
             ...mockSwapStateDefault,
@@ -76,13 +76,13 @@ const ConfirmTxWithOSScreen = () => {
             <ConfirmTxScreen />
           </SwapFormProvider>
         </SwapProvider>
-      </SelectedWalletProvider>
+      </WalletManagerProviderMock>
     </WalletManagerProvider>
   )
 }
 const ConfirmTxWithHWScreen = () => {
   return (
-    <SelectedWalletProvider wallet={{...walletMocks.wallet, isHW: true}}>
+    <WalletManagerProviderMock wallet={{...walletMocks.wallet, isHW: true}}>
       <SwapProvider
         initialState={{
           ...mockSwapStateDefault,
@@ -100,7 +100,7 @@ const ConfirmTxWithHWScreen = () => {
           <ConfirmTxScreen />
         </SwapFormProvider>
       </SwapProvider>
-    </SelectedWalletProvider>
+    </WalletManagerProviderMock>
   )
 }
 
