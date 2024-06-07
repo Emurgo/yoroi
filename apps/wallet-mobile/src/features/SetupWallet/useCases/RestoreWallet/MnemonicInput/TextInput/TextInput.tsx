@@ -2,10 +2,9 @@ import {isString} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, TextInput as RNTextInput, TextInputProps as RNTextInputProps, View, ViewStyle} from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
 import {HelperText as HelperTextRNP, TextInput as RNPTextInput} from 'react-native-paper'
 
-import {isEmptyString} from '../../../../kernel/utils'
+import {isEmptyString} from '../../../../../../kernel/utils'
 
 export type TextInputProps = RNTextInputProps &
   Omit<React.ComponentProps<typeof RNPTextInput>, 'theme'> & {
@@ -67,8 +66,9 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: React.For
   } = props
 
   const [errorTextEnabled, setErrorTextEnabled] = React.useState(errorOnMount)
-  const [isWordValid, setIsWordValid] = React.useState(false)
+  const [isValidWord, setIsValidWord] = React.useState(false)
   const {colors} = useStyles()
+  const {isDark} = useTheme()
 
   useDebounced(
     React.useCallback(() => setErrorTextEnabled(true), []),
@@ -91,17 +91,21 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: React.For
   )
 
   React.useEffect(() => {
-    if (value === '') setIsWordValid(false)
+    if (value === '') setIsValidWord(false)
   }, [value])
 
   return (
     <View style={containerStyle}>
-      {isWordValid && isEmptyString(errorText) && (
-        <LinearGradient
-          style={[StyleSheet.absoluteFill, {opacity: 1, borderRadius: 8, top: 6}]}
-          start={{x: isValidPhrase ? 0 : 1, y: 0}}
-          end={{x: 0, y: isValidPhrase ? 1 : 0}}
-          colors={isValidPhrase ? colors.gradientGreen : colors.gradientBlueGreen}
+      {isValidWord && isEmptyString(errorText) && (
+        <View
+          style={[
+            StyleSheet.absoluteFill,
+            {
+              borderRadius: 8,
+              top: 6,
+              backgroundColor: isValidPhrase ? colors.positiveGreen : colors.positiveGray,
+            },
+          ]}
         />
       )}
 
@@ -111,13 +115,13 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: React.For
         value={value}
         onChange={(e) => {
           setErrorTextEnabled(false)
-          setIsWordValid(false)
+          setIsValidWord(false)
 
           onChange?.(e)
         }}
         onChangeText={(e) => {
           setErrorTextEnabled(false)
-          setIsWordValid(false)
+          setIsValidWord(false)
 
           onChangeText?.(e)
         }}
@@ -139,7 +143,7 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: React.For
             background: colors.none,
             placeholder: faded
               ? colors.focusInput
-              : isWordValid && isEmptyString(errorText)
+              : isValidWord && isEmptyString(errorText)
               ? colors.none
               : colors.input,
             primary: faded ? colors.input : colors.focusInput,
@@ -154,19 +158,23 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: React.For
               {...inputProps}
               cursorColor={cursorColor}
               selectionColor={selectionColor}
-              style={[style, renderComponentStyle, {color: colors.text, flex: 1}]}
+              style={[
+                style,
+                renderComponentStyle,
+                {color: isDark && isValidPhrase && isValidWord ? colors.successText : colors.text, flex: 1},
+              ]}
             />
           </InputContainer>
         )}
         onBlur={(e) => {
           if (!isEmptyString(errorText)) {
             if (showErrorOnBlur && !errorTextEnabled) setErrorTextEnabled(true)
-            setIsWordValid(false)
+            setIsValidWord(false)
           } else if (value === '') {
-            setIsWordValid(false)
+            setIsValidWord(false)
             setErrorTextEnabled(false)
           } else {
-            setIsWordValid(true)
+            setIsValidWord(true)
           }
 
           onBlur?.(e)
@@ -239,10 +247,10 @@ const useStyles = () => {
     text: color.primary_c600,
     textError: color.sys_magenta_c500,
     infoGray: color.gray_c700,
-    positiveGreen: color.secondary_c500,
-    gradientBlueGreen: color.bg_gradient_1,
-    gradientGreen: color.bg_gradient_2,
+    positiveGreen: color.secondary_c300,
+    positiveGray: color.primary_c100,
     none: 'transparent',
+    successText: color.black_static,
   }
 
   return {styles, colors}
