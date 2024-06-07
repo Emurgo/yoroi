@@ -265,6 +265,7 @@ export const WalletDetailsScreen = () => {
           currentStep={4}
           currentStepTitle={strings.stepWalletDetails}
           totalSteps={4}
+          isLast
         />
 
         <View style={styles.infoText}>
@@ -362,9 +363,10 @@ export const WalletDetailsScreen = () => {
 }
 
 const Info = ({onPress}: {onPress: () => void}) => {
+  const {color, isDark} = useTheme()
   return (
     <TouchableOpacity onPress={onPress}>
-      <InfoIcon size={24} />
+      <InfoIcon size={24} color={isDark ? color.white_static : color.black_static} />
     </TouchableOpacity>
   )
 }

@@ -17,7 +17,7 @@ type StepProps = {
   currentStepTitle: string
   isNext: boolean
   isPrevious: boolean
-  isLast: boolean
+  isLast?: boolean
 }
 const Step = ({currentStep, currentStepTitle, isNext, isPrevious, isLast}: StepProps) => {
   const {styles} = useStyles()
@@ -30,7 +30,7 @@ const Step = ({currentStep, currentStepTitle, isNext, isPrevious, isLast}: StepP
       {StepLogo && <StepLogo />}
 
       {shouldDisplayStepTitle && (
-        <Animated.Text layout={Layout} style={[styles.currentStepTitle]}>
+        <Animated.Text layout={Layout} style={styles.currentStepTitle}>
           {currentStepTitle}
         </Animated.Text>
       )}
@@ -43,23 +43,28 @@ type StepperProgressProps = {
   currentStepTitle: string
   totalSteps: number
   style?: ViewStyle
+  isLast?: boolean
 }
-export const StepperProgress = ({currentStep, currentStepTitle, totalSteps, style}: StepperProgressProps) => {
+export const StepperProgress = ({currentStep, currentStepTitle, totalSteps, style, isLast}: StepperProgressProps) => {
+  const {styles} = useStyles()
   const stepIndicator: Array<React.ReactNode> = []
-  for (let i = 0; i < totalSteps; i++) {
-    const currentIndex = i + 1
+
+  for (let currentIndex = 1; currentIndex <= totalSteps; currentIndex++) {
+    const isPrevious = currentIndex < currentStep
+    const isNext = currentIndex > currentStep
+
     stepIndicator.push(
       <Step
-        currentStep={currentIndex}
+        currentStep={currentStep}
         currentStepTitle={currentStepTitle}
-        isPrevious={currentIndex < currentStep}
-        isNext={currentIndex > currentStep}
-        isLast={currentIndex === totalSteps}
-        key={i}
+        isPrevious={isPrevious}
+        isNext={isNext}
+        key={currentIndex}
+        isLast={isLast}
       />,
     )
   }
-  const {styles} = useStyles()
+
   return (
     <Animated.View layout={Layout} style={[styles.bar, style]}>
       {stepIndicator}

@@ -21,7 +21,7 @@ import {useSetSelectedWalletMeta} from '../../../WalletManager/context/SelectedW
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerContext'
 import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
 import {useStrings} from '../../common/useStrings'
-import {MnemonicInput} from './MnemonicInput'
+import {MnemonicInput} from './MnemonicInput/MnemonicInput'
 
 export type MnemonicWordInputRef = {
   focus: () => void
@@ -361,7 +361,7 @@ const useStyles = () => {
       flex: 1,
     },
     suggestions: {
-      backgroundColor: 'rgba(255, 255, 255, 0.80)',
+      backgroundColor: color.gray_cmin,
       borderColor: color.gray_c200,
       borderTopWidth: 1,
       flexDirection: 'row',
@@ -381,7 +381,7 @@ const useStyles = () => {
       color: color.primary_c500,
     },
     suggestionArea: {
-      backgroundColor: 'rgba(255, 255, 255, 0.80)',
+      backgroundColor: color.gray_cmin,
       borderColor: color.gray_c200,
       borderTopWidth: 1,
       alignItems: 'center',

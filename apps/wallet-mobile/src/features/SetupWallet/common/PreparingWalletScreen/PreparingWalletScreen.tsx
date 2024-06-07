@@ -41,6 +41,7 @@ const useStyles = () => {
       ...atoms.flex_1,
       ...atoms.align_center,
       ...atoms.justify_center,
+      backgroundColor: color.gray_cmin,
     },
     title: {
       color: color.primary_c500,
