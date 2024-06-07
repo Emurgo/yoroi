@@ -16,6 +16,9 @@ jest.mock('react-native-ble-plx', () => ({}))
 jest.mock('@react-native-async-storage/async-storage', () =>
   require('@react-native-async-storage/async-storage/jest/async-storage-mock'),
 )
+
+jest.mock('@emurgo/cross-msl-mobile', () => require('@emurgo/cross-msl-nodejs'))
+
 jest.mock('react-native-keychain', () => ({
   resetGenericPassword: jest.fn(),
 }))
@@ -57,4 +60,3 @@ jest.mock('react-native-localize', () => ({
   usesAutoDateAndTime: () => true,
   usesAutoTimeZone: () => true,
 }))
-
