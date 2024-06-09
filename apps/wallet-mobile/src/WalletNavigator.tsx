@@ -13,7 +13,7 @@ import {useLinksRequestAction} from './features/Links/common/useLinksRequestActi
 import {useLinksShowActionResult} from './features/Links/common/useLinksShowActionResult'
 import {MenuNavigator} from './features/Menu'
 import {NftsNavigator} from './features/Nfts/NftsNavigator'
-import {PortfolioNavigator} from './features/Portfolio2/PortfolioNavigator'
+import {PortfolioNavigator} from './features/Portfolio/PortfolioNavigator'
 import {SearchProvider} from './features/Search/SearchContext'
 import {SettingsScreenNavigator} from './features/Settings'
 import {SetupWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
