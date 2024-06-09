@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Today",
     "file": "src/legacy/format.ts",
     "start": {
-      "line": 219,
+      "line": 224,
       "column": 9,
-      "index": 6925
+      "index": 7172
     },
     "end": {
-      "line": 222,
+      "line": 227,
       "column": 3,
-      "index": 6992
+      "index": 7239
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Yesterday",
     "file": "src/legacy/format.ts",
     "start": {
-      "line": 223,
+      "line": 228,
       "column": 13,
-      "index": 7007
+      "index": 7254
     },
     "end": {
-      "line": 226,
+      "line": 231,
       "column": 3,
-      "index": 7082
+      "index": 7329
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!![Unknown asset name]",
     "file": "src/legacy/format.ts",
     "start": {
-      "line": 227,
+      "line": 232,
       "column": 20,
-      "index": 7104
+      "index": 7351
     },
     "end": {
-      "line": 230,
+      "line": 235,
       "column": 3,
-      "index": 7197
+      "index": 7444
     }
   }
 ]

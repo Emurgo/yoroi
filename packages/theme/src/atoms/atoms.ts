@@ -248,7 +248,7 @@ const padding = {
   pr_lg: {paddingRight: tokens.space.lg},
   pr_xl: {paddingRight: tokens.space.xl},
   pr_2xl: {paddingRight: tokens.space._2xl},
-}
+} as const
 
 export const atoms = {
   ...typograpghy,

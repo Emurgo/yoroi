@@ -2,7 +2,7 @@
 import AssetFingerprint from '@emurgo/cip14-js'
 import {Balance} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
-import type {IntlShape} from 'react-intl'
+import type {FormatDateOptions, IntlShape} from 'react-intl'
 import {defineMessages} from 'react-intl'
 
 import {isTokenInfo} from '../cardano/utils'
@@ -173,7 +173,15 @@ export const formatDateAndTime = (timestamp: string, intl: IntlShape) => {
   })
 }
 
-export const formatDateRelative = (timestamp: string, intl: IntlShape) => {
+export const formatDateRelative = (
+  timestamp: string,
+  intl: IntlShape,
+  opts = {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+  } as FormatDateOptions,
+) => {
   if (timestamp.length === 0) {
     return ''
   }
@@ -189,11 +197,7 @@ export const formatDateRelative = (timestamp: string, intl: IntlShape) => {
     return intl.formatMessage(messages.yesterday)
   }
 
-  return intl.formatDate(new Date(timestamp), {
-    year: 'numeric',
-    month: 'numeric',
-    day: 'numeric',
-  })
+  return intl.formatDate(new Date(timestamp), opts)
 }
 
 function getDateString(date: Date) {

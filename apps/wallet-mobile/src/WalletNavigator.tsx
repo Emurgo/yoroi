@@ -13,6 +13,7 @@ import {useLinksRequestAction} from './features/Links/common/useLinksRequestActi
 import {useLinksShowActionResult} from './features/Links/common/useLinksShowActionResult'
 import {MenuNavigator} from './features/Menu'
 import {NftsNavigator} from './features/Nfts/NftsNavigator'
+import {PortfolioNavigator} from './features/Portfolio/PortfolioNavigator'
 import {SearchProvider} from './features/Search/SearchContext'
 import {SettingsScreenNavigator} from './features/Settings'
 import {SetupWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
@@ -96,6 +97,27 @@ const WalletTabNavigator = () => {
           {() => (
             <SearchProvider>
               <TxHistoryNavigator />
+            </SearchProvider>
+          )}
+        </Tab.Screen>
+
+        <Tab.Screen
+          name="portfolio"
+          options={({route}: {route: RouteProp<WalletTabRoutes, 'portfolio'>}) => ({
+            tabBarIcon: ({focused}) => (
+              <Icon.TabPortfolio size={24} color={focused ? colors.active : colors.inactive} />
+            ),
+            tabBarLabel: strings.portfolioButton,
+            tabBarTestID: 'portfolioTabBarButton',
+            tabBarStyle: {
+              ...hideTabBarForRoutes(route),
+              backgroundColor: colors.background,
+            },
+          })}
+        >
+          {() => (
+            <SearchProvider>
+              <PortfolioNavigator />
             </SearchProvider>
           )}
         </Tab.Screen>
@@ -279,12 +301,17 @@ const messages = defineMessages({
     id: 'components.walletselection.walletselectionscreen.header',
     defaultMessage: '!!!My wallets',
   },
+  portfolioButton: {
+    id: 'global.portfolio',
+    defaultMessage: '!!!Portfolio',
+  },
 })
 
 const useStrings = () => {
   const intl = useIntl()
 
   return {
+    portfolioButton: intl.formatMessage(messages.portfolioButton),
     stakingButton: intl.formatMessage(messages.stakingButton),
     txHistoryTabBarLabel: intl.formatMessage(messages.transactionsButton),
     sendTabBarLabel: intl.formatMessage(messages.sendButton),
