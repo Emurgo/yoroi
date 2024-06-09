@@ -6,7 +6,7 @@ import {Linking, ScrollViewProps, StyleSheet, Text, TouchableOpacity, View} from
 
 import {Accordion, CopyButton, Spacer} from '../../../../../components'
 import {ScrollView} from '../../../../../components/ScrollView/ScrollView'
-import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {TokenInfoIcon} from '../../../common/TokenAmountItem/TokenInfoIcon'
 import {usePortfolioTokenDetailParams} from '../../../common/useNavigateTo'
 import {useStrings} from '../../../common/useStrings'
@@ -20,7 +20,7 @@ export const Overview = ({onScroll, topContent}: Props) => {
   const strings = useStrings()
   const {id: tokenId} = usePortfolioTokenDetailParams()
   const wallet = useSelectedWallet()
-  const explorers = useExplorers(wallet.network)
+  const explorers = useExplorers(wallet.networkManager.network)
   const {balances} = wallet
   const tokenInfo = balances.records.get(tokenId)
   const tokenSymbol = tokenInfo ? infoExtractName(tokenInfo.info, {mode: 'currency'}) : ''

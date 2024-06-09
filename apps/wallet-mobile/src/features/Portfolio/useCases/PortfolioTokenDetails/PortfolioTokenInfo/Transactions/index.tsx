@@ -8,7 +8,7 @@ import {NativeScrollEvent, NativeSyntheticEvent, SectionList, StyleSheet, Text, 
 import {Spacer} from '../../../../../../components/Spacer'
 import {makeList} from '../../../../../../kernel/utils'
 import {formatDateRelative} from '../../../../../../yoroi-wallets/utils/format'
-import {useSelectedWallet} from '../../../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../../../WalletManager/common/hooks/useSelectedWallet'
 import {useGetPortfolioTokenTransaction} from '../../../../common/useGetPortfolioTokenTransaction'
 import {usePortfolioTokenDetailParams} from '../../../../common/useNavigateTo'
 import {TransactionItem} from './TransactionItem'

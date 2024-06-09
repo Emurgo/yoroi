@@ -5,7 +5,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Tab, TabPanel, Tabs} from '../../../../components/Tabs'
 import {useSearchOnNavBar} from '../../../Search/SearchContext'
-import {useSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {usePortfolioPrimaryBalance} from '../../common/hooks/usePortfolioPrimaryBalance'
 import {PortfolioProvider} from '../../common/PortfolioProvider'
 import {useGetDAppsPortfolioBalance} from '../../common/useGetDAppsPortfolioBalance'
