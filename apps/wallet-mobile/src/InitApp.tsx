@@ -33,6 +33,7 @@ const useInitApp = () => {
     const load = async () => {
       await initInstallationId(storage)
       await walletManager.removeWalletsMarkedForDeletion()
+      await walletManager.hydrate()
       setLoaded(true)
     }
 
