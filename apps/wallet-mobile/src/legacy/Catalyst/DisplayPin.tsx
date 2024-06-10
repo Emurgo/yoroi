@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet} from 'react-native'
@@ -12,9 +13,10 @@ type Props = {
   pin: string
   onNext: () => void
 }
-export const DisplayPin = ({pin, onNext}: Props) => {
+export const DisplayPin = ({pin: [pin0, pin1, pin2, pin3], onNext}: Props) => {
   const strings = useStrings()
   const countdown = useCountdown()
+  const styles = useStyles()
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
@@ -32,19 +34,19 @@ export const DisplayPin = ({pin, onNext}: Props) => {
         <Spacer height={48} />
 
         <Row style={{justifyContent: 'center'}}>
-          <PinBox>{pin[0]}</PinBox>
+          <PinBox>{pin0}</PinBox>
 
           <Spacer width={10} />
 
-          <PinBox>{pin[1]}</PinBox>
+          <PinBox>{pin1}</PinBox>
 
           <Spacer width={10} />
 
-          <PinBox>{pin[2]}</PinBox>
+          <PinBox>{pin2}</PinBox>
 
           <Spacer width={10} />
 
-          <PinBox>{pin[3]}</PinBox>
+          <PinBox>{pin3}</PinBox>
         </Row>
       </ScrollView>
 
@@ -73,15 +75,20 @@ const messages = defineMessages({
   },
 })
 
-const styles = StyleSheet.create({
-  safeAreaView: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  contentContainer: {
-    paddingHorizontal: 16,
-  },
-})
+const useStyles = () => {
+  const {color, atoms} = useTheme()
+  const styles = StyleSheet.create({
+    safeAreaView: {
+      flex: 1,
+      backgroundColor: color.gray_cmin,
+    },
+    contentContainer: {
+      ...atoms.px_lg,
+    },
+  })
+
+  return styles
+}
 
 const useStrings = () => {
   const intl = useIntl()

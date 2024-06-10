@@ -90,7 +90,7 @@ export const Button = (props: ButtonProps) => {
             textStyles,
           ]}
         >
-          {title}
+          {title.toLocaleUpperCase()}
         </Text>
 
         {endContent != null ? endContent : null}
@@ -100,7 +100,7 @@ export const Button = (props: ButtonProps) => {
 }
 
 const useStyles = () => {
-  const {color, atoms} = useTheme()
+  const {color, atoms, isDark} = useTheme()
 
   const buttonOutline = {
     borderWidth: 2,
@@ -138,11 +138,10 @@ const useStyles = () => {
       borderColor: color.primary_c600,
     },
     text: {
-      color: color.gray_cmin,
+      color: isDark ? color.white_static : color.gray_cmin,
       ...atoms.body_2_md_medium,
       ...atoms.p_sm,
       textAlign: 'center',
-      textTransform: 'uppercase',
     },
     textOutlineOnLight: {
       color: color.secondary_c500,
