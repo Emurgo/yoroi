@@ -11,6 +11,7 @@ export const sign = async (address: Buffer, signKey: PrivateKey, payload: Buffer
   console.log('MSL.HeaderMap', MSL.HeaderMap)
   console.log('MSL.HeaderMap.new', MSL.HeaderMap.new)
   try {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const h = await MSL.HeaderMap.new()
   } catch (e) {
     console.log('error', e)
