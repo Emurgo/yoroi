@@ -11,13 +11,14 @@ import {showErrorDialog} from '../../dialogs'
 import {features} from '../../features'
 import {useSelectedWallet} from '../../features/WalletManager/Context/SelectedWalletContext'
 import {useLanguage} from '../../i18n'
-import globalMessages, {errorMessages} from '../../i18n/global-messages'
+import globalMessages from '../../i18n/global-messages'
 import {isNightly} from '../../legacy/config'
 import {Logger} from '../../legacy/logging'
 import {useMetrics} from '../../metrics/metricsManager'
 import {StakingCenterRouteNavigation} from '../../navigation'
 import {getNetworkConfigById, NETWORKS} from '../../yoroi-wallets/cardano/networks'
 import {NotEnoughMoneyToSendError} from '../../yoroi-wallets/cardano/types'
+import {usePlate} from '../../yoroi-wallets/hooks'
 import {PoolDetailScreen} from '../PoolDetails'
 
 export const StakingCenter = () => {
@@ -27,7 +28,7 @@ export const StakingCenter = () => {
   const {languageCode} = useLanguage()
   const wallet = useSelectedWallet()
   const {track} = useMetrics()
-
+  const plate = usePlate({networkId: wallet.networkId, publicKeyHex: wallet.publicKeyHex})
   useFocusEffect(
     React.useCallback(() => {
       track.stakingCenterPageViewed()
@@ -49,12 +50,10 @@ export const StakingCenter = () => {
       },
       onError: (error) => {
         if (error instanceof NotEnoughMoneyToSendError) {
-          showErrorDialog(errorMessages.insufficientBalance, intl)
+          navigation.navigate('delegation-failed-tx')
         } else {
           Logger.error(error as any)
-          showErrorDialog(errorMessages.generalError, intl, {
-            message: error.message,
-          })
+          navigation.navigate('delegation-failed-tx')
         }
       },
     },
@@ -86,7 +85,7 @@ export const StakingCenter = () => {
           <WebView
             originWhitelist={['*']}
             androidLayerType="software"
-            source={{uri: prepareStakingURL(languageCode)}}
+            source={{uri: prepareStakingURL(languageCode, plate.accountPlate.TextPart)}}
             onMessage={(event) => handleOnMessage(event)}
           />
         </View>
@@ -112,12 +111,14 @@ const noPoolDataDialog = defineMessages({
  * Prepares WebView's target staking URI
  * @param {*} poolList : Array of delegated pool hash
  */
-const prepareStakingURL = (locale: string): string => {
+const prepareStakingURL = (locale: string, plate: string): string => {
   // source=mobile is constant and already included
   let finalURL = NETWORKS.HASKELL_SHELLEY.POOL_EXPLORER
 
   const lang = locale.slice(0, 2)
   finalURL += `&lang=${lang}`
+
+  finalURL += `&bias=${plate}`
 
   return finalURL
 }

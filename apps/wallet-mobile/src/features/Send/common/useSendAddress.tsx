@@ -1,8 +1,10 @@
+import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
 import {useTransfer} from '@yoroi/transfer'
 import * as React from 'react'
 import {useQuery, UseQueryOptions} from 'react-query'
 
-import {normalizeToAddress, toCardanoNetworkId} from '../../../yoroi-wallets/cardano/utils'
+import {toCardanoNetworkId} from '../../../yoroi-wallets/cardano/utils'
+import {CardanoMobile} from '../../../yoroi-wallets/wallets'
 import {useSelectedWallet} from '../../WalletManager/Context/SelectedWalletContext'
 import {AddressErrorInvalid, AddressErrorWrongNetwork} from './errors'
 
@@ -58,7 +60,7 @@ const useValidateAddress = (
 
 // NOTE: should be a wallet function from address manager
 const validateAddress = async (address: string, chainId: number) => {
-  const chainAddress = await normalizeToAddress(address)
+  const chainAddress = await normalizeToAddress(CardanoMobile, address)
   if (!chainAddress) throw new AddressErrorInvalid()
 
   const chainAddressChainId = await chainAddress.networkId()
