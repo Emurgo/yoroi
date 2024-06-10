@@ -35,7 +35,7 @@ import type {
   YoroiEntry,
   YoroiNftModerationStatus,
 } from '../../types'
-import {NETWORK_REGISTRY, StakingInfo, YoroiSignedTx, YoroiUnsignedTx} from '../../types'
+import {StakingInfo, YoroiSignedTx, YoroiUnsignedTx} from '../../types'
 import {asQuantity, Quantities} from '../../utils'
 import {validatePassword} from '../../utils/validators'
 import {Cardano, CardanoMobile} from '../../wallets'
@@ -297,19 +297,13 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       networkManager: NetworkManager
     }) => {
       const rewardAddressHex = await deriveRewardAddressHex(accountPubKeyHex, NETWORK_ID)
+
       const utxoManager = await makeUtxoManager({storage: storage.join('utxoManager/'), apiUrl: API_ROOT})
       const transactionManager = await TransactionManager.create(storage.join('txs/'))
       const memosManager = await makeMemosManager(storage.join('memos/'))
-      const cardanoApi = CardanoApi.cardanoApiMaker({
-        network:
-          NETWORK_ID === NETWORK_REGISTRY.HASKELL_SHELLEY
-            ? 'mainnet'
-            : NETWORK_ID === NETWORK_REGISTRY.SANCHONET
-            ? 'sanchonet'
-            : 'preprod',
-      })
 
-      const {rootStorage: networkRootStorage, tokenManager, primaryTokenInfo} = networkManager
+      const {rootStorage: networkRootStorage, tokenManager, primaryTokenInfo, network} = networkManager
+      const cardanoApi = CardanoApi.cardanoApiMaker({network})
       const {balanceManager} = buildPortfolioBalanceManager({primaryTokenInfo, tokenManager, networkRootStorage})(id)
 
       const wallet = new ShelleyWallet({

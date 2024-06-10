@@ -34,7 +34,7 @@ describe('walletManager', () => {
     const walletImplementationId = 'haskell-shelley'
     const addressMode = 'single'
 
-    const wallet = await walletManager.createWallet(
+    const wallet = await walletManager.createWalletMnemonic(
       name,
       mnemonic,
       'password',
@@ -99,7 +99,7 @@ describe('walletManager', () => {
     const walletImplementationId = 'haskell-shelley'
     const addressMode = 'single'
 
-    const wallet = await walletManager.createWalletWithBip44Account(
+    const wallet = await walletManager.createWalletXPub(
       name,
       accountPubKeyHex,
       networkId,
@@ -145,7 +145,7 @@ describe('walletManager', () => {
     }
     const addressMode = 'single'
 
-    const wallet = await walletManager.createWalletWithBip44Account(
+    const wallet = await walletManager.createWalletXPub(
       name,
       accountPubKeyHex,
       networkId,

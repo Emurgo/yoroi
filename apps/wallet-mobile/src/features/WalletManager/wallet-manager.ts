@@ -15,6 +15,7 @@ import {
 } from 'rxjs'
 import uuid from 'uuid'
 
+import {time} from '../../kernel/constants'
 import {logger} from '../../kernel/logger/logger'
 import {makeWalletEncryptedStorage} from '../../kernel/storage/EncryptedStorage'
 import {KeychainManager} from '../../kernel/storage/Keychain'
@@ -35,8 +36,6 @@ import {isWalletMeta, parseWalletMeta} from './common/validators'
 import {getWalletFactory} from './network-manager/helpers/get-wallet-factory'
 import {toChainSupportedNetwork} from './network-manager/helpers/to-chain-supported-network'
 
-const thirtyFiveSeconds = 35 * 1e3
-
 export class WalletManager {
   readonly #wallets: Map<YoroiWallet['id'], YoroiWallet> = new Map()
   readonly #walletMetas$ = new BehaviorSubject<Map<YoroiWallet['id'], WalletMeta>>(new Map())
@@ -46,6 +45,9 @@ export class WalletManager {
   readonly #isSyncing$ = new BehaviorSubject<boolean>(false)
   readonly #syncControl$ = new BehaviorSubject<boolean>(true)
 
+  #syncSubscription: Subscription | null = null
+  #syncInterval = time.seconds(35)
+
   // injected (constructor)
   readonly #keychainManager?: KeychainManager
   readonly #rootStorage: App.Storage
@@ -54,9 +56,9 @@ export class WalletManager {
   // @deprecated legacy to be replaced by networkManager.rootStorage
   readonly #walletsRootStorage: App.Storage
 
-  // NOTE: to be replaced - deprecated
-  #syncSubscription: Subscription | null = null
+  // @deprecated should consume one of the streams
   #subscriptions: Array<WalletManagerSubscription> = []
+
   constructor({keychainManager, rootStorage, networkManagers}: WalletManagerOptions) {
     this.#networkManagers = networkManagers
     this.#keychainManager = keychainManager
@@ -265,7 +267,7 @@ export class WalletManager {
     if (!this.#syncSubscription) {
       this.#syncSubscription = this.#syncControl$
         .pipe(
-          switchMap((isActive) => (isActive ? interval(thirtyFiveSeconds).pipe(startWith(0)) : of())),
+          switchMap((isActive) => (isActive ? interval(this.#syncInterval).pipe(startWith(0)) : of())),
           concatMap(() => of(syncWallets())),
         )
         .subscribe()
@@ -465,7 +467,7 @@ export class WalletManager {
    * @returns {Promise<YoroiWallet>} wallet
    * @throws {Error} if the wallet factory is not found
    */
-  async createWallet(
+  async createWalletMnemonic(
     name: string,
     mnemonic: string,
     password: string,
@@ -520,7 +522,7 @@ export class WalletManager {
    * @returns {Promise<YoroiWallet>} wallet
    * @throws {Error} if the wallet factory is not found
    */
-  async createWalletWithBip44Account(
+  async createWalletXPub(
     name: string,
     accountPubKeyHex: string,
     networkId: NetworkId,

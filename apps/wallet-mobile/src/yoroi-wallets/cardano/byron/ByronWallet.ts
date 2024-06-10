@@ -273,20 +273,15 @@ export class ByronWallet implements YoroiWallet {
     networkManager: Readonly<NetworkManager>
   }) => {
     const rewardAddressHex = await deriveRewardAddressHex(accountPubKeyHex, networkId)
+
     const apiUrl = getCardanoNetworkConfigById(networkId).BACKEND.API_ROOT
     const utxoManager = await makeUtxoManager({storage: storage.join('utxoManager/'), apiUrl})
+
     const transactionManager = await TransactionManager.create(storage.join('txs/'))
     const memosManager = await makeMemosManager(storage.join('memos/'))
-    const cardanoApi = CardanoApi.cardanoApiMaker({
-      network:
-        networkId === NETWORK_REGISTRY.HASKELL_SHELLEY
-          ? 'mainnet'
-          : networkId === NETWORK_REGISTRY.SANCHONET
-          ? 'sanchonet'
-          : 'preprod',
-    })
 
-    const {rootStorage: networkRootStorage, tokenManager, primaryTokenInfo} = networkManager
+    const {rootStorage: networkRootStorage, tokenManager, primaryTokenInfo, network} = networkManager
+    const cardanoApi = CardanoApi.cardanoApiMaker({network})
     const {balanceManager} = buildPortfolioBalanceManager({primaryTokenInfo, tokenManager, networkRootStorage})(id)
 
     const wallet = new ByronWallet({

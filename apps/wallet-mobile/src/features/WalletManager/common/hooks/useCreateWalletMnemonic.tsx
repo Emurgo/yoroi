@@ -18,7 +18,14 @@ export const useCreateWalletMnemonic = (options?: UseMutationOptions<YoroiWallet
   const {walletManager} = useWalletManager()
   const mutation = useMutation({
     mutationFn: ({name, mnemonicPhrase, password, networkId, walletImplementationId, addressMode}) =>
-      walletManager.createWallet(name, mnemonicPhrase, password, networkId, walletImplementationId, addressMode),
+      walletManager.createWalletMnemonic(
+        name,
+        mnemonicPhrase,
+        password,
+        networkId,
+        walletImplementationId,
+        addressMode,
+      ),
     ...options,
   })
 

@@ -1,14 +1,14 @@
 import {Fetcher, fetcher} from '@yoroi/common'
 
 import {getProtocolParams as getProtocolParamsWrapper} from './protocol-params'
-import {Api} from '@yoroi/types'
+import {Api, Chain} from '@yoroi/types'
 import {API_ENDPOINTS} from './config'
 
 export const cardanoApiMaker = ({
   network,
   request = fetcher,
 }: {
-  network: 'mainnet' | 'preprod' | 'sanchonet'
+  network: Chain.SupportedNetworks
   request?: Fetcher
 }): Readonly<Api.Cardano.Actions> => {
   const baseUrl = API_ENDPOINTS[network].root

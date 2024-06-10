@@ -21,7 +21,7 @@ export const useCreateWalletXPub = (options?: UseMutationOptions<YoroiWallet, Er
   const {walletManager} = useWalletManager()
   const mutation = useMutation({
     mutationFn: ({name, bip44AccountPublic, networkId, implementationId, hwDeviceInfo, readOnly, addressMode}) =>
-      walletManager.createWalletWithBip44Account(
+      walletManager.createWalletXPub(
         name,
         bip44AccountPublic,
         networkId,
