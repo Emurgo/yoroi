@@ -368,7 +368,7 @@ export class WalletManager {
 
     const wallet = this.#wallets.get(walletId)
     if (!wallet) {
-      const error = new Error('WalletManager: esnableEasyConfirmation wallet not found (should be loaded)')
+      const error = new Error('WalletManager: enableEasyConfirmation wallet not found (should be loaded)')
       logger.error(error, {walletId})
       throw error
     }

@@ -1,8 +1,8 @@
 import {useMutationWithInvalidations} from '@yoroi/common'
 import {UseMutationOptions} from 'react-query'
 
-import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
-import {useWalletManager} from '../../context/WalletManagerProvider'
+import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
+import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 
 export const useEnableEasyConfirmation = (
   walletId: YoroiWallet['id'],

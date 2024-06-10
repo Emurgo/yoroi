@@ -11,7 +11,7 @@ import {LoadingOverlay} from '../../../components/LoadingOverlay'
 import {showErrorDialog} from '../../../kernel/dialogs'
 import {errorMessages} from '../../../kernel/i18n/global-messages'
 import {isEmptyString} from '../../../kernel/utils'
-import {useEnableEasyConfirmation} from '../../WalletManager/common/hooks/useEnableEasyConfirmation'
+import {useEnableEasyConfirmation} from '../../Auth/common/useEnableEasyConfirmation'
 import {useSelectedWalletMeta} from '../../WalletManager/common/hooks/useSelectedWalletMeta'
 
 export const EnableEasyConfirmationScreen = () => {

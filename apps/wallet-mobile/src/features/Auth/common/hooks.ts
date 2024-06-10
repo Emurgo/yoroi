@@ -12,8 +12,6 @@ import {logger} from '../../../kernel/logger/logger'
 import {Keychain} from '../../../kernel/storage/Keychain'
 import {AuthenticationPrompt} from '../../../kernel/storage/KeychainStorage'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
-import {parseWalletMeta} from '../../WalletManager/common/validators'
-import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 
 export const useIsAuthOsSupported = (options?: UseQueryOptions<boolean, Error>) => {
   const queryClient = useQueryClient()
@@ -128,47 +126,6 @@ export const useAuthOsWithEasyConfirmation = (
     ...mutation,
     authWithOs: mutation.mutate,
   }
-}
-// TODO: revisit
-export const useDisableAllEasyConfirmation = (
-  wallet: YoroiWallet | undefined | null,
-  options?: UseMutationOptions<void, Error>,
-) => {
-  const {walletManager} = useWalletManager()
-  const storage = useAsyncStorage()
-  const mutation = useMutationWithInvalidations({
-    mutationFn: async () => {
-      await disableAllEasyConfirmation(storage)
-      // if there is a wallet selected it needs to trigger event for subcribers
-      if (wallet != null) await walletManager.disableEasyConfirmation(wallet.id)
-    },
-    ...options,
-  })
-
-  return {
-    ...mutation,
-    disableAllEasyConfirmation: mutation.mutate,
-  }
-}
-
-export const disableAllEasyConfirmation = async (storage: App.Storage) => {
-  const walletStorage = storage.join('wallet/')
-  const walletIds = await walletStorage.getAllKeys()
-
-  const updateWalletMetas = walletIds.map(async (walletId) => {
-    const walletMeta = await walletStorage.getItem(walletId, parseWalletMeta)
-    await walletStorage.setItem(walletId, {...walletMeta, isEasyConfirmationEnabled: false})
-  })
-
-  const updateWalletJSONs = walletIds.map(async (walletId) => {
-    const walletJSON: null | (Record<string, unknown> & {isEasyConfirmationEnabled: boolean}) = await walletStorage
-      .join(`${walletId}/`)
-      .getItem('data')
-    if (walletJSON == null) return
-    await walletStorage.join(`${walletId}/`).setItem('data', {...walletJSON, isEasyConfirmationEnabled: false})
-  })
-
-  return Promise.all([...updateWalletMetas, ...updateWalletJSONs])
 }
 
 export const useCreatePin = (options: UseMutationOptions<void, Error, string>) => {

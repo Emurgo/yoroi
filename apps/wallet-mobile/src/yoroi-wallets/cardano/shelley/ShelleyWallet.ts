@@ -1087,7 +1087,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
           coinsPerUtxoByteStr: coinsPerUtxoByte,
         })
 
-        const balancesToSync = toBalanceManagerSyncArgs(newUtxos, BigInt(lockedAsStorageCost.toString()))
+        const balancesToSync = toBalanceManagerSyncArgs(newUtxos, BigInt(lockedAsStorageCost?.toString() ?? 0))
 
         this.balanceManager.syncBalances(balancesToSync)
 
