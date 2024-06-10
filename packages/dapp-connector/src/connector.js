@@ -214,16 +214,6 @@ const initWallet = ({iconUrl, apiVersion, walletName, supportedExtensions, sessi
   window.cardano[walletName] = walletObj
 
   logMessage('Wallet connected')
-
-  if (window.confirm('sign message?')) {
-    window.cardano.yoroi.enable().then(async (api) => {
-      const usedAddresses = await api.getUsedAddresses()
-      const unusedAddresses = await api.getUnusedAddresses()
-      const firstAddress = usedAddresses[0] || unusedAddresses[0]
-      const message = '00'
-      api.signData(firstAddress, message)
-    })
-  }
 }
 
 const connectWalletBody = initWallet.toString()
