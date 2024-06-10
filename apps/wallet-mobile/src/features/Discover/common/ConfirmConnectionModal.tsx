@@ -43,7 +43,9 @@ export const useOpenConfirmConnectionModal = () => {
 export const ConfirmConnectionModal = ({name, website, onConfirm, logo}: Props) => {
   const {styles, colors} = useStyles()
   const strings = useStrings()
+  const imageUri = logo.length === 0 ? getDappFallbackLogo(website) : logo
 
+  console.log('imageUri', imageUri)
   return (
     <View>
       <View style={styles.imagesLine}>
@@ -51,7 +53,7 @@ export const ConfirmConnectionModal = ({name, website, onConfirm, logo}: Props) 
 
         <Icon.Connection size={20} color={colors.connection} />
 
-        <Image source={{uri: logo.length === 0 ? getDappFallbackLogo(website) : logo}} style={styles.image} />
+        <Image source={{uri: imageUri, cache: 'reload', headers: {}}} style={styles.image} />
       </View>
 
       <Spacer height={8} />
