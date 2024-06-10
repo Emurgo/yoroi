@@ -96,7 +96,7 @@
     "@emurgo/cip4-js": "1.0.7",
     "@emurgo/cross-csl-core": "4.4.0",
     "@emurgo/cross-csl-mobile": "4.4.0",
-    "@emurgo/cross-msl-mobile": "^1.0.0",
+    "@emurgo/cross-msl-mobile": "^1.0.1",
     "@emurgo/csl-mobile-bridge": "6.0.0-alpha.9",
     "@emurgo/msl-mobile-bridge": "^1.0.3",
     "@emurgo/react-native-blockies-svg": "^0.0.2",

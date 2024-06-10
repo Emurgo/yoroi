@@ -2130,13 +2130,12 @@
     hash-wasm "^4.9.0"
     mocha "^10.0.0"
 
-"@emurgo/cross-msl-mobile@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@emurgo/cross-msl-mobile/-/cross-msl-mobile-1.0.0.tgz#677434190af90ed43fac46dd6c4c331ec0a0bcce"
-  integrity sha512-pHMc6P0TjskUAmeI52BId+w253M0EceolnN2m8xdFdqMw4FmrrdpLbfP4uqACHWiM3Vy419SzSczv1r/BHqCNw==
+"@emurgo/cross-msl-mobile@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@emurgo/cross-msl-mobile/-/cross-msl-mobile-1.0.1.tgz#ee49be7c6e887538a59f9c02a1ac1bbc9abe4e2f"
+  integrity sha512-/I9UJ/5+2R3UwadcY3cdO9UL2ONFkdDQW2FkICAooDubpmN+8mkwrwyK50Jp08KJv67XPNcMRpE1ffVpj0KZEw==
   dependencies:
     "@emurgo/cross-msl-core" "1.0.0"
-    "@emurgo/msl-mobile-bridge" "1.0.1"
 
 "@emurgo/cross-msl-nodejs@^1.0.0":
   version "1.0.0"
@@ -2157,13 +2156,6 @@
   version "6.0.0-alpha.9"
   resolved "https://registry.yarnpkg.com/@emurgo/csl-mobile-bridge/-/csl-mobile-bridge-6.0.0-alpha.9.tgz#b4a8be282518bc94c37e2c92aa340dc3d51743a7"
   integrity sha512-ys8IyzVMk0yC6qRiqtMamb47NpNZZ0blITUcYv/8uJ7HNhm8swyq9tRwUwbl8GtrzbdkFeBzUX1/cXunvGXETw==
-  dependencies:
-    base-64 "0.1.0"
-
-"@emurgo/msl-mobile-bridge@1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@emurgo/msl-mobile-bridge/-/msl-mobile-bridge-1.0.1.tgz#4a912e182118dc4462e90cbfda5ebedf6048b4e6"
-  integrity sha512-ed0KobdbEmNParq33pTkYOMWrF8kMP6R3HdIPDy/YycwW9nvvWlWhlpUR4wKDjM3qQzhE/rN6gb/dG8rwWa4IQ==
   dependencies:
     base-64 "0.1.0"
 
