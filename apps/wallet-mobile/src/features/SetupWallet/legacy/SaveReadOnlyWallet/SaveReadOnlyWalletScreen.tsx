@@ -12,8 +12,9 @@ import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../kernel/navigation'
 import {isEmptyString} from '../../../../kernel/utils'
 import {NUMBERS} from '../../../../yoroi-wallets/cardano/numbers'
-import {useCreateBip44Wallet, usePlate} from '../../../../yoroi-wallets/hooks'
+import {usePlate} from '../../../../yoroi-wallets/hooks'
 import {NetworkId, WalletImplementationId} from '../../../../yoroi-wallets/types'
+import {useCreateWalletXPub} from '../../../WalletManager/common/hooks/useCreateWalletXPub'
 import {AddressMode} from '../../../WalletManager/common/types'
 import {WalletAddress} from '../WalletAddress/WalletAddress'
 import {WalletNameForm} from '../WalletNameForm/WalletNameForm'
@@ -35,7 +36,7 @@ export const SaveReadOnlyWalletScreen = () => {
     return i
   })
 
-  const {createWallet, isLoading} = useCreateBip44Wallet({
+  const {createWallet, isLoading} = useCreateWalletXPub({
     onSuccess: () => {
       track.restoreWalletDetailsSettled()
       resetToWalletSelection()

@@ -19,10 +19,10 @@ import {storageVersionMaker} from '../../kernel/storage/migrations/storageVersio
 import {rootStorage} from '../../kernel/storage/rootStorage'
 import {isEmptyString} from '../../kernel/utils'
 import {generateAdaMnemonic} from '../../yoroi-wallets/cardano/mnemonic'
-import {useCreateWallet} from '../../yoroi-wallets/hooks'
 import {NetworkId} from '../../yoroi-wallets/types'
 import {useAuth} from '../Auth/AuthProvider'
 import {useLegalAgreement, useResetLegalAgreement} from '../Initialization/common'
+import {useCreateWalletMnemonic} from '../WalletManager/common/hooks/useCreateWalletMnemonic'
 import {useWalletManager} from '../WalletManager/context/WalletManagerProvider'
 
 const routes: Array<{label: string; path: keyof AppRoutes}> = [
@@ -40,7 +40,7 @@ export const DeveloperScreen = () => {
   const {logout} = useAuth()
   const {resetToWalletSelection} = useWalletNavigation()
   const intl = useIntl()
-  const {createWallet, isLoading} = useCreateWallet({
+  const {createWallet, isLoading} = useCreateWalletMnemonic({
     onSuccess: () => resetToWalletSelection(),
     onError: (error) => {
       InteractionManager.runAfterInteractions(() => {

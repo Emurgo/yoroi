@@ -9,8 +9,8 @@ import {showErrorDialog} from '../../../../kernel/dialogs'
 import {errorMessages} from '../../../../kernel/i18n/global-messages'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../kernel/navigation'
-import {useCreateBip44Wallet} from '../../../../yoroi-wallets/hooks'
 import {WalletImplementationId} from '../../../../yoroi-wallets/types'
+import {useCreateWalletXPub} from '../../../WalletManager/common/hooks/useCreateWalletXPub'
 import {AddressMode} from '../../../WalletManager/common/types'
 import {WalletNameForm} from '../WalletNameForm/WalletNameForm'
 
@@ -23,7 +23,7 @@ export const SaveNanoXScreen = () => {
   const intl = useIntl()
   const {track} = useMetrics()
 
-  const {createWallet, isLoading} = useCreateBip44Wallet({
+  const {createWallet, isLoading} = useCreateWalletXPub({
     onSuccess: () => {
       track.restoreWalletDetailsSettled()
       resetToWalletSelection()

@@ -26,7 +26,7 @@ import {logger} from '../../../../kernel/logger/logger'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import {isEmptyString} from '../../../../kernel/utils'
-import {useCreateWallet, usePlate} from '../../../../yoroi-wallets/hooks'
+import {usePlate} from '../../../../yoroi-wallets/hooks'
 import {WalletImplementationId} from '../../../../yoroi-wallets/types'
 import {
   getWalletNameError,
@@ -35,6 +35,7 @@ import {
   validateWalletName,
 } from '../../../../yoroi-wallets/utils'
 import {debugWalletInfo, features} from '../../..'
+import {useCreateWalletMnemonic} from '../../../WalletManager/common/hooks/useCreateWalletMnemonic'
 import {AddressMode} from '../../../WalletManager/common/types'
 import {parseWalletMeta} from '../../../WalletManager/common/validators'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
@@ -97,7 +98,7 @@ export const RestoreWalletDetailsScreen = () => {
     createWallet,
     isLoading,
     isSuccess: isCreateWalletSuccess,
-  } = useCreateWallet({
+  } = useCreateWalletMnemonic({
     onSuccess: async (wallet) => {
       walletIdChanged(wallet.id)
       const walletStorage = storage.join('wallet/')
