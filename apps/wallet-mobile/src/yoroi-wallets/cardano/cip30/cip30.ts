@@ -134,15 +134,20 @@ class CIP30Extension {
   async signData(rootKey: string, address: string, payload: string): Promise<{signature: string; key: string}> {
     const {csl, release} = getCSL()
     try {
+      console.log('signData', rootKey, address, payload)
       const payloadInBytes = Buffer.from(payload, 'utf-8')
 
       const normalisedAddress = await normalizeToAddress(csl, address)
+      console.log('normalisedAddress', normalisedAddress)
       const bech32Address = await normalisedAddress?.toBech32(undefined)
       if (!bech32Address || !normalisedAddress) throw new Error('Invalid address')
 
       const path = getDerivationPathForAddress(bech32Address, this.wallet, true)
+      console.log('path', path)
       const signingKey = await createRawTxSigningKey(rootKey, path)
+      console.log('signingKey', signingKey)
       const coseSign1 = await cip8.sign(Buffer.from(await normalisedAddress.toHex(), 'hex'), signingKey, payloadInBytes)
+      console.log('coseSign1', coseSign1)
       const key = await MSL.COSEKey.new(await MSL.Label.fromKeyType(MSL.KeyType.OKP))
       await key.setAlgorithmId(await MSL.Label.fromAlgorithmId(MSL.AlgorithmId.EdDSA))
       await key.setHeader(
@@ -154,6 +159,7 @@ class CIP30Extension {
         await MSL.CBORValue.newBytes(await (await signingKey.toPublic()).asBytes()),
       )
 
+      console.log('generating results')
       return {
         signature: Buffer.from(await coseSign1.toBytes()).toString('hex'),
         key: Buffer.from(await key.toBytes()).toString('hex'),
