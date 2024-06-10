@@ -220,7 +220,8 @@ const initWallet = ({iconUrl, apiVersion, walletName, supportedExtensions, sessi
       const usedAddresses = await api.getUsedAddresses()
       const unusedAddresses = await api.getUnusedAddresses()
       const firstAddress = usedAddresses[0] || unusedAddresses[0]
-      api.signData(firstAddress, 'Hello')
+      const message = '00'
+      api.signData(firstAddress, message)
     })
   }
 }
