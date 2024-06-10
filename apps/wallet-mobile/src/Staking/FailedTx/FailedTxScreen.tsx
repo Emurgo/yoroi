@@ -39,7 +39,7 @@ const useNavigateTo = () => {
 
   return {
     buyAda: () =>
-      navigation.navigate('app-root', {
+      navigation.navigate('manage-wallets', {
         screen: 'main-wallet-routes',
         params: {
           screen: 'history',
@@ -49,7 +49,7 @@ const useNavigateTo = () => {
         },
       }),
     main: () =>
-      navigation.navigate('app-root', {
+      navigation.navigate('manage-wallets', {
         screen: 'main-wallet-routes',
         params: {
           screen: 'history',

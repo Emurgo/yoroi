@@ -5,7 +5,7 @@ import {useQuery, UseQueryOptions} from 'react-query'
 
 import {toCardanoNetworkId} from '../../../yoroi-wallets/cardano/utils'
 import {CardanoMobile} from '../../../yoroi-wallets/wallets'
-import {useSelectedWallet} from '../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../WalletManager/Context/SelectedWalletContext'
 import {AddressErrorInvalid, AddressErrorWrongNetwork} from './errors'
 
 export const useSendAddress = () => {

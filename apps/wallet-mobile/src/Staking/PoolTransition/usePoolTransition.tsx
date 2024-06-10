@@ -6,14 +6,10 @@ import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {useQuery} from 'react-query'
 
-import {features} from '../../../features'
-import {useSelectedWallet} from '../../../features/WalletManager/context/SelectedWalletContext'
-import {getCardanoNetworkConfigById} from '../../../yoroi-wallets/cardano/networks'
-import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
-import {asQuantity, Quantities} from '../../../yoroi-wallets/utils'
 import {useStakingInfo} from '../../Dashboard/StakePoolInfos'
 import {features} from '../../features'
-import {useSelectedWallet} from '../../features/WalletManager/Context'
+import {useSelectedWallet} from '../../features/WalletManager/Context/SelectedWalletContext'
+import {getCardanoNetworkConfigById} from '../../yoroi-wallets/cardano/networks'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {asQuantity, Quantities} from '../../yoroi-wallets/utils'
 
@@ -57,23 +53,29 @@ export const usePoolTransition = () => {
   const navigateToUpdate = React.useCallback(async () => {
     try {
       const yoroiUnsignedTx = await createDelegationTx(wallet, poolId)
-      navigation.navigate('app-root', {
-        screen: 'staking-dashboard',
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
         params: {
-          screen: 'delegation-confirmation',
-          initial: false,
+          screen: 'staking-dashboard',
           params: {
-            poolId,
-            yoroiUnsignedTx,
+            screen: 'delegation-confirmation',
+            initial: false,
+            params: {
+              poolId,
+              yoroiUnsignedTx,
+            },
           },
         },
       })
     } catch (err) {
-      navigation.navigate('app-root', {
-        screen: 'staking-dashboard',
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
         params: {
-          screen: 'delegation-failed-tx',
-          initial: false,
+          screen: 'staking-dashboard',
+          params: {
+            screen: 'delegation-failed-tx',
+            initial: false,
+          },
         },
       })
     }

@@ -108,7 +108,7 @@ const useStyles = () => {
     },
     sheet: {
       flex: 1,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.gray['min'],
       alignSelf: 'stretch',
       paddingHorizontal: 16,
       paddingBottom: 16,
