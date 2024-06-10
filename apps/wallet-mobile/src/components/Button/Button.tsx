@@ -90,7 +90,7 @@ export const Button = (props: ButtonProps) => {
             textStyles,
           ]}
         >
-          {title.toLocaleUpperCase()}
+          {title}
         </Text>
 
         {endContent != null ? endContent : null}
@@ -142,6 +142,7 @@ const useStyles = () => {
       ...atoms.body_2_md_medium,
       ...atoms.p_sm,
       textAlign: 'center',
+      textTransform: 'uppercase',
     },
     textOutlineOnLight: {
       color: color.secondary_c500,
