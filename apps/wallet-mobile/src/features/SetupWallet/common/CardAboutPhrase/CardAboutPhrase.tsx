@@ -3,8 +3,8 @@ import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
+import {Icon} from '../../../../components/Icon'
 import {Space} from '../../../../components/Space/Space'
-import {WalletChecksum} from '../../illustrations/WalletChecksum'
 
 type CardAboutPhraseProps = {
   linesOfText: string[] | React.ReactNode[]
@@ -60,7 +60,7 @@ export const CardAboutPhrase = ({
               {handleShowChecksum && (
                 <>
                   <View style={styles.walletChecksumContainer}>
-                    <WalletChecksum iconSeed={checksumImage} style={styles.walletChecksum} />
+                    <Icon.WalletAccount iconSeed={checksumImage} style={styles.walletChecksum} />
 
                     <Space width="sm" />
                   </View>

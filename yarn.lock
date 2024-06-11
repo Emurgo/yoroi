@@ -2166,13 +2166,6 @@
   dependencies:
     base-64 "0.1.0"
 
-"@emurgo/react-native-blockies-svg@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@emurgo/react-native-blockies-svg/-/react-native-blockies-svg-0.0.2.tgz#afe2ce2776b0c6430ce3bc9a94ceb4f9fcb302f9"
-  integrity sha512-9/NO9k8N26deQmnqzynfxQz3Nd6XguU0f7onf6z5/Jq2nJdpvJ3mOV9HQUemUQR5DbI0RyU9/uVKL87KF8nQUQ==
-  dependencies:
-    react-native-svg "13.8.0"
-
 "@emurgo/react-native-hid@^5.15.6":
   version "5.15.6"
   resolved "https://registry.yarnpkg.com/@emurgo/react-native-hid/-/react-native-hid-5.15.6.tgz#bade99f9434a1d4080b777e9f724f4634a73330f"
