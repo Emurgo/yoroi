@@ -14,8 +14,9 @@ export const PoolTransitionModal = ({
   onContinue,
 }: {
   poolTransition: PoolTransition
-  onContinue: () => void
+  onContinue: () => Promise<void> | void
 }) => {
+  const [isLoading, setIsLoading] = React.useState(false)
   const {styles, colors} = useStyles()
   const strings = useStrings()
 
@@ -25,9 +26,14 @@ export const PoolTransitionModal = ({
     closeModal()
   }
 
-  const handleOnUpdate = () => {
-    closeModal()
-    onContinue()
+  const handleOnUpdate = async () => {
+    try {
+      setIsLoading(true)
+      await onContinue()
+    } finally {
+      setIsLoading(false)
+      closeModal()
+    }
   }
 
   const timeSpan = poolTransition.deadlineMilliseconds - Date.now()
@@ -37,7 +43,9 @@ export const PoolTransitionModal = ({
     <View style={styles.modal}>
       <Text style={styles.details}>{isActive ? strings.warning : strings.finalWarning}</Text>
 
-      <Space fill height="lg" />
+      <Space fill />
+
+      <Space height="l" />
 
       <View style={[styles.card, isActive ? styles.border : styles.warningBorder]}>
         <Row>
@@ -134,9 +142,10 @@ export const PoolTransitionModal = ({
 
         <Button
           shelleyTheme
-          title={strings.updateKeepEarning.toLocaleUpperCase()}
+          title={strings.updateKeepEarning}
           onPress={handleOnUpdate}
           textStyles={styles.button}
+          disabled={isLoading}
         />
       </Actions>
 
