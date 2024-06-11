@@ -14,7 +14,7 @@ export const PoolTransitionModal = ({
   onContinue,
 }: {
   poolTransition: PoolTransition
-  onContinue: () => void
+  onContinue: () => Promise<void>
 }) => {
   const {styles, colors} = useStyles()
   const strings = useStrings()
@@ -25,9 +25,9 @@ export const PoolTransitionModal = ({
     closeModal()
   }
 
-  const handleOnUpdate = () => {
+  const handleOnUpdate = async () => {
+    await onContinue()
     closeModal()
-    onContinue()
   }
 
   const timeSpan = poolTransition.deadlineMilliseconds - Date.now()
