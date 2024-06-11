@@ -27,10 +27,13 @@ export const PoolTransitionModal = ({
   }
 
   const handleOnUpdate = async () => {
-    setIsLoading(true)
-    await onContinue()
-    setIsLoading(false)
-    closeModal()
+    try {
+      setIsLoading(true)
+      await onContinue()
+    } finally {
+      setIsLoading(false)
+      closeModal()
+    }
   }
 
   const timeSpan = poolTransition.deadlineMilliseconds - Date.now()
