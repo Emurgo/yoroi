@@ -16,6 +16,7 @@ export const PoolTransitionModal = ({
   poolTransition: PoolTransition
   onContinue: () => Promise<void>
 }) => {
+  const [isLoading, setIsLoading] = React.useState(false)
   const {styles, colors} = useStyles()
   const strings = useStrings()
 
@@ -26,7 +27,9 @@ export const PoolTransitionModal = ({
   }
 
   const handleOnUpdate = async () => {
+    setIsLoading(true)
     await onContinue()
+    setIsLoading(false)
     closeModal()
   }
 
@@ -129,7 +132,13 @@ export const PoolTransitionModal = ({
       <Actions>
         <Button outline title={strings.skipNoRewards} textStyles={styles.outlineButton} onPress={handleOnSkip} />
 
-        <Button shelleyTheme title={strings.updateKeepEarning} onPress={handleOnUpdate} textStyles={styles.button} />
+        <Button
+          shelleyTheme
+          title={strings.updateKeepEarning}
+          onPress={handleOnUpdate}
+          textStyles={styles.button}
+          disabled={isLoading}
+        />
       </Actions>
 
       <Space height="xl" />
