@@ -9,7 +9,7 @@ type Props = {
   onConfirm: () => void
 }
 
-export const unverifiedDappModalHeight = 350
+export const unverifiedDappModalHeight = 334
 
 export const useOpenUnverifiedDappModal = () => {
   const {openModal, closeModal} = useModal()
@@ -33,15 +33,15 @@ export const UnverifiedDappModal = ({onConfirm}: Props) => {
   const strings = useStrings()
 
   return (
-    <View>
+    <>
       <View style={styles.line}>
         <Text style={styles.text}>{strings.disclaimerModalText}</Text>
       </View>
 
-      <Spacer height={26} />
+      <Spacer fill />
 
       <Button title={strings.understand} shelleyTheme onPress={onConfirm} />
-    </View>
+    </>
   )
 }
 
