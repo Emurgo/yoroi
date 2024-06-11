@@ -24,6 +24,9 @@ export const useStrings = () => {
     confirmConnectionModalPermission1: intl.formatMessage(messages.confirmConnectionModalPermission1),
     confirmConnectionModalPermission2: intl.formatMessage(messages.confirmConnectionModalPermission2),
     confirmTx: intl.formatMessage(messages.confirmTx),
+    understand: intl.formatMessage(messages.understand),
+    disclaimerModalText: intl.formatMessage(messages.disclaimerModalText),
+    disclaimerModalTitle: intl.formatMessage(messages.disclaimerModalTitle),
   }).current
 }
 
@@ -105,6 +108,19 @@ export const messages = Object.freeze(
     confirmConnectionModalPermission2: {
       id: 'discover.confirmConnectionModal.permission2',
       defaultMessage: '!!!Request approval for transactions',
+    },
+    understand: {
+      id: 'discover.unverifiedDappModal.understand',
+      defaultMessage: '!!!I understand',
+    },
+    disclaimerModalText: {
+      id: 'discover.unverifiedDappModal.disclaimerModalText',
+      defaultMessage:
+        '!!!You are accessing a third-party Cardano application that is not verified by EMURGO, the developers of Yoroi Wallet, or any of its affiliated divisions. Make sure this DApp is reliable to stay safe from malicious apps in a sustainable way.',
+    },
+    disclaimerModalTitle: {
+      id: 'discover.unverifiedDappModal.disclaimerModalTitle',
+      defaultMessage: '!!!Disclaimer',
     },
   }),
 )

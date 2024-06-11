@@ -45,7 +45,6 @@ export const ConfirmConnectionModal = ({name, website, onConfirm, logo}: Props) 
   const strings = useStrings()
   const imageUri = logo.length === 0 ? getDappFallbackLogo(website) : logo
 
-  console.log('imageUri', imageUri)
   return (
     <View>
       <View style={styles.imagesLine}>
