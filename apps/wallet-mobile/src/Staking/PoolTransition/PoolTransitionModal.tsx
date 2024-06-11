@@ -14,7 +14,7 @@ export const PoolTransitionModal = ({
   onContinue,
 }: {
   poolTransition: PoolTransition
-  onContinue: () => Promise<void>
+  onContinue: () => Promise<void> | void
 }) => {
   const [isLoading, setIsLoading] = React.useState(false)
   const {styles, colors} = useStyles()
