@@ -8,7 +8,7 @@ import * as SANCHONET from '../../../../yoroi-wallets/cardano/constants/sanchone
 import * as TESTNET from '../../../../yoroi-wallets/cardano/constants/testnet/constants'
 import {makeShelleyWallet} from '../../../../yoroi-wallets/cardano/shelley/ShelleyWallet'
 import {WalletImplementationId} from '../../../../yoroi-wallets/types'
-import {WalletFactory} from '../../../../yoroi-wallets/types/yoroi'
+import {WalletFactory} from '../../common/types'
 
 const ShelleyWalletMainnet = makeShelleyWallet(MAINNET)
 const ShelleyWalletTestnet = makeShelleyWallet(TESTNET)

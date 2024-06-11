@@ -6,6 +6,7 @@ import {ADDRESS_TYPE_TO_CHANGE, AddressType} from '../formatPath'
 import {generateWalletRootKey} from '../mnemonic'
 import {getCardanoByronConfig} from '../networks'
 import {NUMBERS} from '../numbers'
+import {wrappedCsl} from '../wrappedCsl'
 
 const BYRON_PROTOCOL_MAGIC = getCardanoByronConfig().PROTOCOL_MAGIC
 
@@ -18,8 +19,11 @@ export type CryptoAccount = {
  * returns a root key for HD wallets
  */
 export const getMasterKeyFromMnemonic = async (mnemonic: string) => {
-  const rootKeyPtr = await generateWalletRootKey(mnemonic)
-  return Buffer.from(await rootKeyPtr.asBytes()).toString('hex')
+  const {csl, release} = wrappedCsl()
+  const rootKeyPtr = await generateWalletRootKey(mnemonic, csl)
+  const rootKey = Buffer.from(await rootKeyPtr.asBytes()).toString('hex')
+  release()
+  return rootKey
 }
 
 /**

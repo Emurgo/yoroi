@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {walletChecksum} from '@emurgo/cip4-js'
 import * as CSL from '@emurgo/cross-csl-core'
 import {createSignedLedgerTxFromCbor, signRawTransaction} from '@emurgo/yoroi-lib'
 import {Datum} from '@emurgo/yoroi-lib/dist/internals/models'
@@ -61,7 +62,6 @@ import {
   NoOutputsError,
   NotEnoughMoneyToSendError,
   RegistrationStatus,
-  walletChecksum,
   WalletEvent,
   WalletSubscription,
   YoroiWallet,
@@ -167,7 +167,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     readonly publicKeyHex: string
     readonly rewardAddressHex: string
     readonly version: string
-    readonly checksum: CardanoTypes.WalletChecksum
     readonly encryptedStorage: WalletEncryptedStorage
     private _utxos: RawUtxo[]
     private readonly storage: App.Storage
@@ -182,47 +181,41 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     readonly balanceManager: Readonly<Portfolio.Manager.Balance>
     readonly networkManager: Readonly<NetworkManager>
 
+    static readonly calcChecksum = walletChecksum
+    static readonly makeKeys = makeKeys
+
     // =================== create =================== //
-    static async create({
+    static async createFromXPriv({
       id,
       storage,
-      mnemonic,
-      password,
+      accountPubKeyHex,
       networkManager,
     }: {
       id: string
       storage: Readonly<App.Storage>
-      mnemonic: string
-      password: string
+      accountPubKeyHex: string
       networkManager: Readonly<NetworkManager>
     }): Promise<YoroiWallet> {
-      // NOTE: keys are part of wallet manager and should be passed by the caller
-      // TODO: encrypt root pubkey
-      const {rootKey, accountPubKeyHex} = await makeKeys({mnemonic})
       const {internalChain, externalChain} = await addressChains.create({accountPubKeyHex})
 
-      const wallet = await this.commonCreate({
+      return this.commonCreate({
         id,
         storage,
         accountPubKeyHex,
-        hwDeviceInfo: null, // hw wallet
-        isReadOnly: false, // readonly wallet
+        hwDeviceInfo: null,
+        isReadOnly: false,
         internalChain,
         externalChain,
         networkManager,
       })
-
-      await encryptAndSaveRootKey(wallet, rootKey, password)
-
-      return wallet
     }
 
-    static async createBip44({
+    static async createFromXPub({
       id,
       storage,
       accountPubKeyHex,
-      hwDeviceInfo, // hw wallet
-      isReadOnly, // readonly wallet
+      hwDeviceInfo,
+      isReadOnly,
       networkManager,
     }: {
       accountPubKeyHex: string
@@ -238,8 +231,8 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         id,
         storage,
         accountPubKeyHex,
-        hwDeviceInfo, // hw wallet
-        isReadOnly, // readonly wallet
+        hwDeviceInfo,
+        isReadOnly,
         internalChain,
         externalChain,
         networkManager,
@@ -260,7 +253,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
 
       const {internalChain, externalChain} = addressChains.restore({data})
 
-      const wallet = await this.commonCreate({
+      return this.commonCreate({
         id: walletMeta.id,
         storage,
         internalChain,
@@ -271,8 +264,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         lastGeneratedAddressIndex: data.lastGeneratedAddressIndex ?? 0, // AddressManager
         networkManager,
       })
-
-      return wallet
     }
 
     private static commonCreate = async ({
@@ -391,7 +382,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       this.rewardAddressHex = rewardAddressHex
       this.publicKeyHex = accountPubKeyHex
       this.version = DeviceInfo.getVersion()
-      this.checksum = walletChecksum(accountPubKeyHex)
       this.setupSubscriptions()
       this.state = {lastGeneratedAddressIndex}
       this.cardanoApi = cardanoApi
@@ -1368,6 +1358,3 @@ const isWalletJSON = (data: unknown): data is WalletJSON => {
 }
 
 const keys: Array<keyof WalletJSON> = ['publicKeyHex', 'internalChain', 'externalChain', 'lastGeneratedAddressIndex']
-
-const encryptAndSaveRootKey = (wallet: YoroiWallet, rootKey: string, password: string) =>
-  wallet.encryptedStorage.rootKey.write(rootKey, password)

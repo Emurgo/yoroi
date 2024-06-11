@@ -1,8 +1,10 @@
+import {WasmModuleProxy} from '@emurgo/cross-csl-core'
+
 import {generateWalletRootKey} from '../mnemonic'
 import {NUMBERS} from '../numbers'
 
-export const makeKeys = async ({mnemonic}: {mnemonic: string}) => {
-  const rootKeyPtr = await generateWalletRootKey(mnemonic)
+export const makeKeys = async ({mnemonic, csl}: {mnemonic: string; csl: WasmModuleProxy}) => {
+  const rootKeyPtr = await generateWalletRootKey(mnemonic, csl)
   const rootKey: string = Buffer.from(await rootKeyPtr.asBytes()).toString('hex')
 
   const purpose = NUMBERS.WALLET_TYPE_PURPOSE.BIP44

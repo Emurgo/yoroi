@@ -1,6 +1,7 @@
 import {App} from '@yoroi/types'
 
 import {generateAdaMnemonic, generateWalletRootKey} from '../../yoroi-wallets/cardano/mnemonic/mnemonic'
+import {wrappedCsl} from '../../yoroi-wallets/cardano/wrappedCsl'
 import {decryptData, encryptData} from './encryption'
 
 const mnemonic = [
@@ -21,19 +22,23 @@ describe('BIP39', () => {
   })
 
   it('correctly derives wallet root key', async () => {
-    const rootKey = await generateWalletRootKey(mnemonic)
+    const {csl, release} = wrappedCsl()
+    const rootKey = await generateWalletRootKey(mnemonic, csl)
     expect(Buffer.from(await rootKey.asBytes()).toString('hex')).toEqual(expectedKey)
+    release()
   })
 })
 
 describe('encryption/decryption', () => {
   it('Can encrypt / decrypt rootKey', async () => {
     expect.assertions(1)
-    const rootKeyPtr = await generateWalletRootKey(mnemonic)
+    const {csl, release} = wrappedCsl()
+    const rootKeyPtr = await generateWalletRootKey(mnemonic, csl)
     const rootKey = Buffer.from(await rootKeyPtr.asBytes()).toString('hex')
     const encryptedKey = await encryptData(rootKey, 'password')
     const decryptedKey = await decryptData(encryptedKey, 'password')
     expect(rootKey).toEqual(decryptedKey)
+    release()
   })
 
   it('Throws on wrong password', async () => {

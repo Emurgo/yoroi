@@ -1,4 +1,5 @@
 import {difference, parseSafe} from '@yoroi/common'
+import {Blockies} from '@yoroi/identicon'
 import {App, Chain} from '@yoroi/types'
 import {freeze} from 'immer'
 import {
@@ -20,6 +21,7 @@ import {logger} from '../../kernel/logger/logger'
 import {makeWalletEncryptedStorage} from '../../kernel/storage/EncryptedStorage'
 import {KeychainManager} from '../../kernel/storage/Keychain'
 import {WalletEvent, YoroiWallet} from '../../yoroi-wallets/cardano/types'
+import {wrappedCsl} from '../../yoroi-wallets/cardano/wrappedCsl'
 import {HWDeviceInfo} from '../../yoroi-wallets/hw'
 import {NetworkId, WalletImplementationId} from '../../yoroi-wallets/types'
 import {
@@ -482,24 +484,38 @@ export class WalletManager {
 
     const storage = this.#walletsRootStorage.join(`${id}/`)
 
-    const wallet = await walletFactory.create({
+    // keys
+    const {csl, release} = wrappedCsl()
+    const {rootKey, accountPubKeyHex} = await walletFactory.makeKeys({mnemonic, csl})
+    release()
+
+    const wallet = await walletFactory.createFromXPriv({
       storage,
       id,
-      mnemonic,
-      password,
       networkManager,
+      accountPubKeyHex,
     })
+
+    await wallet.encryptedStorage.rootKey.write(rootKey, password)
+
+    const checksum = walletFactory.calcChecksum(accountPubKeyHex)
+    const plate = checksum.TextPart
+    const avatar = new Blockies().asBase64({seed: checksum.ImagePart})
 
     const meta: WalletMeta = {
       id,
       name,
-      networkId,
+      avatar,
+      plate,
+
       addressMode,
-      isEasyConfirmationEnabled: false,
       walletImplementationId: implementationId,
 
-      isHW: wallet.isHW,
-      checksum: wallet.checksum,
+      isEasyConfirmationEnabled: false,
+      isHW: false,
+
+      networkId,
+      checksum,
     }
     await this.#walletsRootStorage.setItem(id, meta)
 
@@ -538,7 +554,7 @@ export class WalletManager {
 
     const storage = this.#walletsRootStorage.join(`${id}/`)
 
-    const wallet = await walletFactory.createBip44({
+    const wallet = await walletFactory.createFromXPub({
       storage,
       id,
       accountPubKeyHex,
@@ -547,16 +563,24 @@ export class WalletManager {
       networkManager,
     })
 
+    const checksum = walletFactory.calcChecksum(accountPubKeyHex)
+    const plate = checksum.TextPart
+    const avatar = new Blockies().asBase64({seed: checksum.ImagePart})
+
     const meta: WalletMeta = {
       id,
       name,
-      networkId,
+      avatar,
+      plate,
+
       addressMode,
-      isEasyConfirmationEnabled: false,
       walletImplementationId: implementationId,
 
-      isHW: wallet.isHW,
-      checksum: wallet.checksum,
+      isEasyConfirmationEnabled: false,
+      isHW: hwDeviceInfo !== null,
+
+      networkId,
+      checksum,
     }
     await this.#walletsRootStorage.setItem(id, meta)
 

@@ -75,11 +75,10 @@ export type Pagination = {
   limit: number
 }
 
-export type YoroiWallet = {
+export interface YoroiWallet {
   id: string
 
   publicKeyHex: string
-  checksum: CardanoTypes.WalletChecksum
   networkId: NetworkId
   walletImplementationId: WalletImplementationId
   isHW: boolean
@@ -91,11 +90,11 @@ export type YoroiWallet = {
 
   // ---------------------------------------------------------------------------------------
   //                     ########## Interface  -  V2 ##########
+  // network
+  readonly networkManager: Readonly<NetworkManager>
   get isMainnet(): boolean
 
-  readonly networkManager: Readonly<NetworkManager>
-
-  // Portfolio
+  // portfolio
   readonly balanceManager: Readonly<Portfolio.Manager.Balance>
   readonly balance$: Readonly<Portfolio.Manager.Balance['observable$']>
   get balances(): ReturnType<Portfolio.Manager.Balance['getBalances']>
@@ -207,7 +206,6 @@ export const isYoroiWallet = (wallet: unknown): wallet is YoroiWallet => {
 const yoroiWalletKeys: Array<keyof YoroiWallet> = [
   'id',
   'publicKeyHex',
-  'checksum',
   'networkId',
   'walletImplementationId',
   'isHW',
@@ -312,6 +310,5 @@ export namespace CardanoTypes {
   export type TokenEntry = TokenEntryType
 }
 
-export {legacyWalletChecksum, walletChecksum} from '@emurgo/cip4-js'
 export {RegistrationStatus} from '@emurgo/yoroi-lib'
 export {AssetOverflowError, NoOutputsError, NotEnoughMoneyToSendError} from '@emurgo/yoroi-lib/dist/errors'

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {legacyWalletChecksum} from '@emurgo/cip4-js'
 import {PrivateKey} from '@emurgo/cross-csl-core'
 import {Datum, signRawTransaction} from '@emurgo/yoroi-lib'
 import {AppApi, CardanoApi} from '@yoroi/api'
@@ -61,11 +62,9 @@ import {TransactionManager} from '../transactionManager'
 import {
   CardanoTypes,
   isYoroiWallet,
-  legacyWalletChecksum,
   NoOutputsError,
   NotEnoughMoneyToSendError,
   RegistrationStatus,
-  walletChecksum,
   WalletEvent,
   WalletSubscription,
   YoroiWallet,
@@ -128,7 +127,6 @@ export class ByronWallet implements YoroiWallet {
   readonly publicKeyHex: string
   readonly rewardAddressHex: string
   readonly version: string
-  readonly checksum: CardanoTypes.WalletChecksum
   readonly encryptedStorage: WalletEncryptedStorage
   private _utxos: RawUtxo[]
   private readonly storage: App.Storage
@@ -144,54 +142,19 @@ export class ByronWallet implements YoroiWallet {
   readonly balanceManager: Readonly<Portfolio.Manager.Balance>
   readonly networkManager: Readonly<NetworkManager>
 
+  static readonly calcChecksum = legacyWalletChecksum
+  static readonly makeKeys = makeKeys
+
   // =================== create =================== //
-  static async create({
-    id,
-    storage,
-    mnemonic,
-    password,
-    networkManager,
-  }: {
-    id: string
-    storage: Readonly<App.Storage>
-    mnemonic: string
-    password: string
-    networkManager: Readonly<NetworkManager>
-  }): Promise<YoroiWallet> {
-    const {rootKey, accountPubKeyHex} = await makeKeys({mnemonic})
-    const {internalChain, externalChain} = await addressChains.create({implementationId, networkId, accountPubKeyHex})
-
-    const wallet = await this.commonCreate({
-      id,
-      networkId,
-      implementationId,
-      storage,
-      accountPubKeyHex,
-      hwDeviceInfo: null, // hw wallet
-      isReadOnly: false, // readonly wallet
-      internalChain,
-      externalChain,
-      networkManager,
-    })
-
-    await encryptAndSaveRootKey(wallet, rootKey, password)
-
-    return wallet
-  }
-
-  static async createBip44({
+  static async createFromXPriv({
     id,
     storage,
     accountPubKeyHex,
-    hwDeviceInfo, // hw wallet
-    isReadOnly, // readonly wallet
     networkManager,
   }: {
-    accountPubKeyHex: string
-    hwDeviceInfo: HWDeviceInfo | null
     id: string
-    isReadOnly: boolean
     storage: Readonly<App.Storage>
+    accountPubKeyHex: string
     networkManager: Readonly<NetworkManager>
   }): Promise<YoroiWallet> {
     const {internalChain, externalChain} = await addressChains.create({implementationId, networkId, accountPubKeyHex})
@@ -202,8 +165,39 @@ export class ByronWallet implements YoroiWallet {
       implementationId,
       storage,
       accountPubKeyHex,
-      hwDeviceInfo, // hw wallet
-      isReadOnly, // readonly wallet
+      hwDeviceInfo: null,
+      isReadOnly: false,
+      internalChain,
+      externalChain,
+      networkManager,
+    })
+  }
+
+  static async createFromXPub({
+    id,
+    storage,
+    accountPubKeyHex,
+    hwDeviceInfo,
+    isReadOnly,
+    networkManager,
+  }: {
+    id: string
+    storage: Readonly<App.Storage>
+    accountPubKeyHex: string
+    hwDeviceInfo: HWDeviceInfo | null
+    isReadOnly: boolean
+    networkManager: Readonly<NetworkManager>
+  }): Promise<YoroiWallet> {
+    const {internalChain, externalChain} = await addressChains.create({implementationId, networkId, accountPubKeyHex})
+
+    return this.commonCreate({
+      id,
+      networkId,
+      implementationId,
+      storage,
+      accountPubKeyHex,
+      hwDeviceInfo,
+      isReadOnly,
       internalChain,
       externalChain,
       networkManager,
@@ -225,7 +219,7 @@ export class ByronWallet implements YoroiWallet {
     const networkId = data.networkId ?? walletMeta.networkId // can be null for versions < 3.0.0
     const {internalChain, externalChain} = addressChains.restore({data, networkId})
 
-    const wallet = await this.commonCreate({
+    return this.commonCreate({
       id: walletMeta.id,
       networkId,
       storage,
@@ -239,8 +233,6 @@ export class ByronWallet implements YoroiWallet {
       lastGeneratedAddressIndex: data.lastGeneratedAddressIndex ?? 0, // AddressManager
       networkManager,
     })
-
-    return wallet
   }
 
   private static commonCreate = async ({
@@ -375,9 +367,6 @@ export class ByronWallet implements YoroiWallet {
     this.rewardAddressHex = rewardAddressHex
     this.publicKeyHex = accountPubKeyHex
     this.version = DeviceInfo.getVersion()
-    this.checksum = isByron(implementationId)
-      ? legacyWalletChecksum(accountPubKeyHex)
-      : walletChecksum(accountPubKeyHex)
     this.setupSubscriptions()
     this.state = {lastGeneratedAddressIndex}
     this.stakingKeyPath = isByron(this.walletImplementationId)
@@ -1504,6 +1493,3 @@ export const primaryTokenInfo: Record<'mainnet' | 'testnet', Balance.TokenInfo> 
     metadatas: {},
   },
 }
-
-const encryptAndSaveRootKey = (wallet: YoroiWallet, rootKey: string, password: string) =>
-  wallet.encryptedStorage.rootKey.write(rootKey, password)

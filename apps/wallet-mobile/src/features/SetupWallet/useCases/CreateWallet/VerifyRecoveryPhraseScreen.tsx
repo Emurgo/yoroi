@@ -12,6 +12,7 @@ import {Space} from '../../../../components/Space/Space'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import {makeKeys} from '../../../../yoroi-wallets/cardano/shelley/makeKeys'
+import {wrappedCsl} from '../../../../yoroi-wallets/cardano/wrappedCsl'
 import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
 import {useStrings} from '../../common/useStrings'
 import {Alert as AlertIllustration} from '../../illustrations/Alert'
@@ -117,8 +118,10 @@ export const VerifyRecoveryPhraseScreen = () => {
           style={styles.button}
           disabled={disabled}
           onPress={async () => {
-            const {accountPubKeyHex} = await makeKeys({mnemonic})
+            const {csl, release} = wrappedCsl()
+            const {accountPubKeyHex} = await makeKeys({mnemonic, csl})
             publicKeyHexChanged(accountPubKeyHex)
+            release()
             navigation.navigate('setup-wallet-details-form')
           }}
           testId="setup-next-button"

@@ -1,3 +1,4 @@
+import {wrappedCsl} from '../wrappedCsl'
 import {makeKeys} from './makeKeys'
 
 describe('makeKeys', () => {
@@ -8,7 +9,8 @@ describe('makeKeys', () => {
       'slide assault bus',
     ].join(' ')
 
-    const keys = await makeKeys({mnemonic})
+    const {csl, release} = wrappedCsl()
+    const keys = await makeKeys({mnemonic, csl})
 
     expect(keys).toEqual({
       accountPubKeyHex:
@@ -16,5 +18,7 @@ describe('makeKeys', () => {
       rootKey:
         '9053adfb225e91c0bf2db38e1978907cfeff6e66b9a9c3d8945aa686a9d29851bf83c8e2e556464605afeb9651fab3ef3f0aa205685c8f1e6f818629f843bde9a7e129fd35d072ce79b40a49cefcbc8526a3cb8d4bfa7a47afddaddc31dbb728',
     })
+
+    release()
   })
 })

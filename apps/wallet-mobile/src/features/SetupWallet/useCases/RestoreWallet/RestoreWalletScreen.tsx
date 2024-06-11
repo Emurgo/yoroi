@@ -14,6 +14,7 @@ import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation, useWalletNavigation} from '../../../../kernel/navigation'
 import {isEmptyString} from '../../../../kernel/utils'
 import {makeKeys} from '../../../../yoroi-wallets/cardano/shelley/makeKeys'
+import {wrappedCsl} from '../../../../yoroi-wallets/cardano/wrappedCsl'
 import {usePlate} from '../../../../yoroi-wallets/hooks'
 import {WalletMeta} from '../../../WalletManager/common/types'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
@@ -118,8 +119,11 @@ export const RestoreWalletScreen = () => {
   )
 
   const handleOnNext = React.useCallback(async () => {
-    const {accountPubKeyHex} = await makeKeys({mnemonic})
+    const {csl, release} = wrappedCsl()
+
+    const {accountPubKeyHex} = await makeKeys({mnemonic, csl})
     const checksum = walletChecksum(accountPubKeyHex)
+    release()
 
     const duplicatedWalletMeta = Array.from(walletManager.walletMetas.values()).find(
       (walletMeta) => walletMeta.checksum.TextPart === checksum.TextPart,

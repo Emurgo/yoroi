@@ -13,6 +13,8 @@ import {HWDeviceInfo} from '../../../../hw'
 import {DefaultAsset} from '../../../../types'
 import {ShelleyAddressGeneratorJSON} from '../../../chain'
 import {YoroiWallet} from '../../../types'
+import {wrappedCsl} from '../../../wrappedCsl'
+import {makeKeys} from '../../makeKeys'
 import {WalletJSON} from '../../ShelleyWallet'
 
 describe('ShelleyWallet', () => {
@@ -35,12 +37,16 @@ describe('ShelleyWallet', () => {
       'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon oak'
     const password = 'password'
 
-    const wallet: YoroiWallet & Record<string, any> = await ShelleyWalletMainnet.create({
+    // keys
+    const {csl, release} = wrappedCsl()
+    const {accountPubKeyHex} = await makeKeys({mnemonic, csl})
+    release()
+
+    const wallet: YoroiWallet & Record<string, any> = await ShelleyWalletMainnet.createFromXPriv({
       id: walletMeta.id,
-      mnemonic,
       storage: rootStorage.join(`${walletMeta.id}/`),
-      password,
       networkManager: networkManagers.mainnet,
+      accountPubKeyHex,
     })
 
     expect(wallet.id).toBe('261c7e0f-dd72-490c-8ce9-6714b512b969')
@@ -261,7 +267,7 @@ describe('ShelleyWallet', () => {
     }
     const isReadOnly = false
 
-    const wallet: YoroiWallet & Record<string, any> = await ShelleyWalletMainnet.createBip44({
+    const wallet: YoroiWallet & Record<string, any> = await ShelleyWalletMainnet.createFromXPub({
       id: walletMeta.id,
       accountPubKeyHex,
       storage: rootStorage.join(`${walletMeta.id}/`),
@@ -363,7 +369,7 @@ describe('ShelleyWallet', () => {
     }
     const isReadOnly = false
 
-    const wallet: YoroiWallet & Record<string, any> = await ShelleyWalletMainnet.createBip44({
+    const wallet: YoroiWallet & Record<string, any> = await ShelleyWalletMainnet.createFromXPub({
       id: walletMeta.id,
       accountPubKeyHex,
       storage: rootStorage.join(`${walletMeta.id}/`),

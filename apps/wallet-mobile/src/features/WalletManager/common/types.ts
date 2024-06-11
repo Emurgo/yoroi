@@ -1,3 +1,4 @@
+import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {App, Chain, Portfolio} from '@yoroi/types'
 
 import {KeychainManager} from '../../../kernel/storage/Keychain'
@@ -48,15 +49,25 @@ export type NetworkEpochProgress = {
 export type NetworkTokenManagers = Readonly<Record<Chain.SupportedNetworks, Portfolio.Manager.Token>>
 
 export type WalletMeta = {
+  // identification
   id: string
+  plate: string
   name: string
-  networkId: NetworkId
+  avatar: string
+
+  // operation
   walletImplementationId: WalletImplementationId
+  addressMode: AddressMode
+
+  // authorization
   isHW: boolean
   isEasyConfirmationEnabled: boolean
+
+  // @deprecated
+  networkId: NetworkId
+
+  // legacy
   checksum: CardanoTypes.WalletChecksum
-  addressMode: AddressMode
-  // legacy jormungandr
   isShelley?: boolean | null | undefined
 }
 
@@ -79,3 +90,53 @@ export type SyncWalletInfo = {
   error?: Error
 }
 export type SyncWalletInfos = Readonly<Map<YoroiWallet['id'], SyncWalletInfo>>
+
+export type WalletFactory = {
+  createFromXPriv({
+    id,
+    storage,
+    accountPubKeyHex,
+    networkManager,
+  }: {
+    id: string
+    storage: App.Storage
+    accountPubKeyHex: string
+    networkManager: NetworkManager
+  }): Promise<YoroiWallet>
+
+  createFromXPub({
+    id,
+    storage,
+    accountPubKeyHex,
+    hwDeviceInfo,
+    isReadOnly,
+    networkManager,
+  }: {
+    id: string
+    accountPubKeyHex: string
+    hwDeviceInfo: HWDeviceInfo | null
+    isReadOnly: boolean
+    storage: App.Storage
+    networkManager: NetworkManager
+  }): Promise<YoroiWallet>
+
+  restore({
+    walletMeta,
+    storage,
+    networkManager,
+  }: {
+    storage: App.Storage
+    walletMeta: WalletMeta
+    networkManager: NetworkManager
+  }): Promise<YoroiWallet>
+
+  calcChecksum(pubKeyHex: string): CardanoTypes.WalletChecksum
+
+  makeKeys({
+    mnemonic,
+    csl,
+  }: {
+    mnemonic: string
+    csl: WasmModuleProxy
+  }): Promise<{rootKey: string; accountPubKeyHex: string}>
+}

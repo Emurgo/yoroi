@@ -1,3 +1,4 @@
+import {wrappedCsl} from '../wrappedCsl'
 import {makeKeys} from './makeKeys'
 
 describe('makeKeys', () => {
@@ -8,7 +9,9 @@ describe('makeKeys', () => {
       'slide assault bus',
     ].join(' ')
 
-    const keys = await makeKeys({mnemonic})
+    const {csl, release} = wrappedCsl()
+    const keys = await makeKeys({mnemonic, csl})
+    release()
 
     expect(keys).toEqual({
       accountPubKeyHex:
