@@ -6,7 +6,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Platform, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {useQueryClient} from 'react-query'
 
-import {Button, KeyboardSpacer, Text, ValidatedTextInput} from '../../components'
+import {KeyboardSpacer, Text, ValidatedTextInput} from '../../components'
 import {ConfirmTx} from '../../components/ConfirmTx'
 import {useStakePoolInfoAndHistory} from '../../Dashboard/StakePoolInfo'
 import {debugWalletInfo, features} from '../../features'
