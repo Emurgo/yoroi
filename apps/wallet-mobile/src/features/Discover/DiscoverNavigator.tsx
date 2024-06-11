@@ -66,7 +66,7 @@ const useDappConnectorManager = () => {
       const selectedDapp = recommendedDApps.dapps.find((dapp) => dapp.origins.includes(origin))
 
       return new Promise<boolean>((resolve) => {
-        const openMainModal = () =>
+        const openMainModal = () => {
           openConfirmConnectionModal({
             name: selectedDapp?.name ?? origin,
             website: origin,
@@ -74,17 +74,23 @@ const useDappConnectorManager = () => {
             onConfirm: () => resolve(true),
             onClose: () => resolve(false),
           })
+        }
 
         if (!selectedDapp) {
-          return openUnverifiedDappModal({
-            onClose: () => resolve(false),
+          let shouldResolveOnClose = true
+          openUnverifiedDappModal({
+            onClose: () => {
+              if (shouldResolveOnClose) resolve(false)
+            },
             onConfirm: () => {
+              shouldResolveOnClose = false
               closeModal()
               InteractionManager.runAfterInteractions(() => {
                 openMainModal()
               })
             },
           })
+          return
         }
 
         openMainModal()

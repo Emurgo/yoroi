@@ -52,7 +52,7 @@ export const ConfirmConnectionModal = ({name, website, onConfirm, logo}: Props) 
 
         <Icon.Connection size={20} color={colors.connection} />
 
-        <Image source={{uri: imageUri, cache: 'reload', headers: {}}} style={styles.image} />
+        <Image source={{uri: imageUri}} style={styles.image} />
       </View>
 
       <Spacer height={8} />
