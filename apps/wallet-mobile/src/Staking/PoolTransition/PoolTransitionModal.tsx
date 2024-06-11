@@ -37,7 +37,9 @@ export const PoolTransitionModal = ({
     <View style={styles.modal}>
       <Text style={styles.details}>{isActive ? strings.warning : strings.finalWarning}</Text>
 
-      <Space fill height="l" />
+      <Space fill />
+
+      <Space height="l" />
 
       <View style={[styles.card, isActive ? styles.border : styles.warningBorder]}>
         <Row>
