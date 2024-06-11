@@ -128,6 +128,7 @@
     "@yoroi/common": "1.5.2",
     "@yoroi/exchange": "2.1.0",
     "@yoroi/explorers": "1.0.0",
+    "@yoroi/identicon": "1.0.0",
     "@yoroi/links": "1.5.4",
     "@yoroi/portfolio": "1.0.0",
     "@yoroi/resolver": "2.0.5",
