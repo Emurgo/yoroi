@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View} from 'react-native'
@@ -19,6 +20,7 @@ export const ConfirmPin = ({pin, onNext}: Props) => {
   const intl = useIntl()
   const strings = useStrings()
   const [confirmPin, setConfirmPin] = useState('')
+  const styles = useStyles()
 
   const onKeyDown = (key: string) => {
     const enteredPin = key === BACKSPACE ? confirmPin.slice(0, confirmPin.length - 1) : confirmPin + key
@@ -84,15 +86,20 @@ const messages = defineMessages({
   },
 })
 
-const styles = StyleSheet.create({
-  safeAreaView: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  contentContainer: {
-    paddingHorizontal: 16,
-  },
-})
+const useStyles = () => {
+  const {color, atoms} = useTheme()
+  const styles = StyleSheet.create({
+    safeAreaView: {
+      flex: 1,
+      backgroundColor: color.gray_cmin,
+    },
+    contentContainer: {
+      ...atoms.px_lg,
+    },
+  })
+
+  return styles
+}
 
 const useStrings = () => {
   const intl = useIntl()

@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Enter PIN",
     "file": "src/legacy/Catalyst/ConfirmPin.tsx",
     "start": {
-      "line": 77,
+      "line": 79,
       "column": 12,
-      "index": 2225
+      "index": 2292
     },
     "end": {
-      "line": 80,
+      "line": 82,
       "column": 3,
-      "index": 2312
+      "index": 2379
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Please enter the PIN as you will need it every time you want to access the Catalyst Voting app",
     "file": "src/legacy/Catalyst/ConfirmPin.tsx",
     "start": {
-      "line": 81,
+      "line": 83,
       "column": 15,
-      "index": 2329
+      "index": 2396
     },
     "end": {
-      "line": 84,
+      "line": 86,
       "column": 3,
-      "index": 2504
+      "index": 2571
     }
   }
 ]

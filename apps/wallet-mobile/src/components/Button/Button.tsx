@@ -138,7 +138,7 @@ const useStyles = () => {
       borderColor: color.primary_c600,
     },
     text: {
-      color: color.gray_cmin,
+      color: color.white_static,
       ...atoms.body_2_md_medium,
       ...atoms.p_sm,
       textAlign: 'center',
