@@ -2780,10 +2780,10 @@
     bignumber.js "^9.0.1"
     easy-crc "1.1.0"
 
-"@emurgo/yoroi-lib@0.15.5-alpha.8":
-  version "0.15.5-alpha.8"
-  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib/-/yoroi-lib-0.15.5-alpha.8.tgz#71791392419f718d19256c4aaedd1ac8d3a37bbe"
-  integrity sha512-avc0cwttCgEgBMflxKK2Kaxw4IbErLa+ezlWWgJ4iGN0fgHYcpY335xXd2g+cQmsRKpPyhNWWqPXafo6e8lT8Q==
+"@emurgo/yoroi-lib@0.15.5":
+  version "0.15.5"
+  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib/-/yoroi-lib-0.15.5.tgz#534cf4b81376f2b185b73e05a2103d9712be4a8d"
+  integrity sha512-Fq6MN/l5Na14d3LOsnT7xzKDky1ugbKxQ6+zzxchZkcF+w0OXGtK4sFGXccR47E7JhRLhjLqOzKSKhKGkTVt+A==
   dependencies:
     "@cardano-foundation/ledgerjs-hw-app-cardano" "^6.0.0"
     "@emurgo/cross-csl-core" "4.4.0"

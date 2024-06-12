@@ -4,8 +4,8 @@ import {useModal} from '../../components'
 import {PoolTransitionModal} from './PoolTransitionModal'
 import {usePoolTransition, useStrings} from './usePoolTransition'
 
-export const usePoolTransitionModal = () => {
-  const {poolTransition, isPoolRetiring, isLoading, navigateToUpdate} = usePoolTransition()
+export const usePoolTransitionModal = (disabled?: boolean) => {
+  const {poolTransition, isPoolRetiring, isLoading, navigateToUpdate} = usePoolTransition(disabled)
   const {openModal} = useModal()
   const strings = useStrings()
   const modalHeight = 700

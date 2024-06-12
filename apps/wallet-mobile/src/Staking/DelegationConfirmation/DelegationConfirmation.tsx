@@ -17,7 +17,7 @@ import {formatTokenAmount, formatTokenWithText} from '../../legacy/format'
 import {StakingCenterRoutes, useParams, useWalletNavigation} from '../../navigation'
 import {NETWORKS} from '../../yoroi-wallets/cardano/networks'
 import {NUMBERS} from '../../yoroi-wallets/cardano/numbers'
-import {Amounts, Entries, Quantities} from '../../yoroi-wallets/utils'
+import {Amounts, delay, Entries, Quantities} from '../../yoroi-wallets/utils'
 
 type Params = StakingCenterRoutes['delegation-confirmation']
 
@@ -51,7 +51,8 @@ export const DelegationConfirmation = () => {
     if (features.prefillWalletInfo && __DEV__) setPassword(debugWalletInfo.PASSWORD)
   }, [])
 
-  const onSuccess = () => {
+  const onSuccess = async () => {
+    await delay(1000)
     queryClient.resetQueries([wallet.id, 'stakingInfo'])
     resetToTxHistory()
   }

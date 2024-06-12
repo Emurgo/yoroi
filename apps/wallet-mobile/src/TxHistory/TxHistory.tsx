@@ -38,7 +38,7 @@ export const TxHistory = () => {
   }
 
   const {sync, isLoading: isLoadingWallet} = useSync(wallet)
-  const {isLoading: isLoadingPoolTransition} = usePoolTransitionModal()
+  const {isLoading: isLoadingPoolTransition} = usePoolTransitionModal(isLoadingWallet)
   const isLoading = isLoadingWallet || isLoadingPoolTransition
 
   useFocusEffect(React.useCallback(() => sync(), [sync]))
