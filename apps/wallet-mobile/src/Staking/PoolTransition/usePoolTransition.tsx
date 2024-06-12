@@ -27,7 +27,7 @@ const createDelegationTx = async (wallet: YoroiWallet, poolId: string) => {
   return wallet.createDelegationTx(poolId, new BigNumber(amountToDelegate))
 }
 
-export const usePoolTransition = (disabled?: boolean) => {
+export const usePoolTransition = () => {
   const navigation = useNavigation()
   const wallet = useSelectedWallet()
   const {stakingInfo, isLoading} = useStakingInfo(wallet)
@@ -40,7 +40,7 @@ export const usePoolTransition = (disabled?: boolean) => {
   const currentPoolId = isStaked ? stakingInfo?.poolId : ''
 
   const poolTransitionQuery = useQuery({
-    enabled: !disabled && isStaked,
+    enabled: isStaked,
     retry: false,
     staleTime: Infinity,
     queryKey: [wallet.id, 'poolTransition', currentPoolId],
