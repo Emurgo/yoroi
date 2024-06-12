@@ -3,6 +3,7 @@ import {useAsyncStorage} from '@yoroi/common'
 import {DappConnector, DappConnectorProvider} from '@yoroi/dapp-connector'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
+import {InteractionManager} from 'react-native'
 
 import {LoadingBoundary} from '../../components'
 import {defaultStackNavigationOptions, DiscoverRoutes} from '../../kernel/navigation'
@@ -12,6 +13,7 @@ import {BrowserProvider} from './common/BrowserProvider'
 import {useOpenConfirmConnectionModal} from './common/ConfirmConnectionModal'
 import {createDappConnector} from './common/helpers'
 import {useConfirmRawTx} from './common/hooks'
+import {useOpenUnverifiedDappModal} from './common/UnverifiedDappModal'
 import {useStrings} from './common/useStrings'
 import {ListSkeleton} from './useCases/SelectDappFromList/ListSkeleton'
 import {SelectDappFromListScreen} from './useCases/SelectDappFromList/SelectDappFromListScreen'
@@ -55,23 +57,46 @@ const useDappConnectorManager = () => {
   const appStorage = useAsyncStorage()
   const wallet = useSelectedWallet()
   const {openConfirmConnectionModal} = useOpenConfirmConnectionModal()
+  const {openUnverifiedDappModal, closeModal} = useOpenUnverifiedDappModal()
   const confirmRawTx = useConfirmRawTx(wallet)
 
   const confirmConnection = React.useCallback(
     async (origin: string, manager: DappConnector) => {
       const recommendedDApps = await manager.getDAppList()
       const selectedDapp = recommendedDApps.dapps.find((dapp) => dapp.origins.includes(origin))
+
       return new Promise<boolean>((resolve) => {
-        openConfirmConnectionModal({
-          name: selectedDapp?.name ?? origin,
-          website: origin,
-          logo: selectedDapp?.logo ?? '',
-          onConfirm: () => resolve(true),
-          onClose: () => resolve(false),
-        })
+        const openMainModal = () => {
+          openConfirmConnectionModal({
+            name: selectedDapp?.name ?? origin,
+            website: origin,
+            logo: selectedDapp?.logo ?? '',
+            onConfirm: () => resolve(true),
+            onClose: () => resolve(false),
+          })
+        }
+
+        if (!selectedDapp) {
+          let shouldResolveOnClose = true
+          openUnverifiedDappModal({
+            onClose: () => {
+              if (shouldResolveOnClose) resolve(false)
+            },
+            onConfirm: () => {
+              shouldResolveOnClose = false
+              closeModal()
+              InteractionManager.runAfterInteractions(() => {
+                openMainModal()
+              })
+            },
+          })
+          return
+        }
+
+        openMainModal()
       })
     },
-    [openConfirmConnectionModal],
+    [openConfirmConnectionModal, openUnverifiedDappModal, closeModal],
   )
 
   const signTx = React.useCallback(() => {

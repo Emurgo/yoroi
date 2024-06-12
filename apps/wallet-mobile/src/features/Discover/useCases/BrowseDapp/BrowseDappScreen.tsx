@@ -11,9 +11,10 @@ export const BrowseDappScreen = () => {
   const {styles} = useStyles()
   const flatListRef = React.useRef<FlatList>(null)
   const {tabs, tabsOpen} = useBrowser()
+  const [rootHeight, setRootHeight] = React.useState<number | undefined>(undefined)
 
   return (
-    <View style={styles.root}>
+    <View style={styles.root} onLayout={(e) => setRootHeight(e.nativeEvent.layout.height)}>
       <FlatList
         ref={flatListRef}
         style={styles.root}
@@ -24,7 +25,7 @@ export const BrowseDappScreen = () => {
         ItemSeparatorComponent={() => tabsOpen && <Spacer height={16} />}
         keyExtractor={(item) => item.id}
         renderItem={function ({item: tab, index}) {
-          return <WebViewItem tab={tab} index={index} />
+          return <WebViewItem tab={tab} index={index} nativeHeight={rootHeight} />
         }}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
