@@ -112,7 +112,6 @@ export type WalletTabRoutes = {
 }
 
 export type WalletStackRoutes = {
-  'choose-biometric-login': undefined
   'setup-wallet': undefined
   'wallet-selection': undefined
   'exchange-result': undefined
@@ -362,6 +361,7 @@ export type AppRoutes = PortfolioRoutes & {
   'agreement-changed-notice': undefined
   modal: undefined
   'choose-biometric-login': undefined
+  'dark-theme-announcement': undefined
   'setup-wallet': undefined
 }
 export type AppRouteNavigation = StackNavigationProp<AppRoutes>
