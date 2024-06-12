@@ -12,9 +12,11 @@ import {useStrings} from './usePoolTransition'
 export const PoolTransitionModal = ({
   poolTransition,
   onContinue,
+  onClose = () => null,
 }: {
   poolTransition: PoolTransition
   onContinue: () => Promise<void> | void
+  onClose: () => void
 }) => {
   const [isLoading, setIsLoading] = React.useState(false)
   const {styles, colors} = useStyles()
@@ -23,11 +25,13 @@ export const PoolTransitionModal = ({
   const {closeModal} = useModal()
 
   const handleOnSkip = () => {
+    onClose()
     closeModal()
   }
 
   const handleOnUpdate = async () => {
     try {
+      onClose()
       setIsLoading(true)
       await onContinue()
     } finally {
