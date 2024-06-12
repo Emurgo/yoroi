@@ -22,7 +22,7 @@ type StepperProgressProps = {
 export const StepperProgress = ({currentStep, currentStepTitle, totalSteps, style}: StepperProgressProps) => {
   const {styles} = useStyles()
 
-  const stepIndicator1: Array<React.ReactNode> = Array.from({length: currentStep}).map((_, index) => {
+  const stepIndicatorFirstPart: Array<React.ReactNode> = Array.from({length: currentStep}).map((_, index) => {
     if (index <= currentStep - 2) return <CheckIllustration key={index} />
 
     return (
@@ -36,11 +36,11 @@ export const StepperProgress = ({currentStep, currentStepTitle, totalSteps, styl
     )
   })
 
-  const stepIndicator2: Array<React.ReactNode> = Array.from({length: totalSteps - currentStep}).map((_, index) =>
-    getStepperLogo(index + currentStep + 1, true),
+  const stepIndicatorSecondPart: Array<React.ReactNode> = Array.from({length: totalSteps - currentStep}).map(
+    (_, index) => getStepperLogo(index + currentStep + 1, true),
   )
 
-  const stepIndicator = [...stepIndicator1, ...stepIndicator2]
+  const stepIndicator = [...stepIndicatorFirstPart, ...stepIndicatorSecondPart]
 
   return (
     <Animated.View layout={Layout} style={[styles.bar, style]}>
