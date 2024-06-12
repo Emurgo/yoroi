@@ -216,7 +216,7 @@ export class ByronWallet implements YoroiWallet {
     const data = await storage.getItem('data', parseWalletJSON)
     if (!data) throw new Error('Cannot read saved data')
 
-    const networkId = data.networkId ?? walletMeta.networkId // can be null for versions < 3.0.0
+    const networkId = data.networkId
     const {internalChain, externalChain} = addressChains.restore({data, networkId})
 
     return this.commonCreate({
@@ -226,10 +226,10 @@ export class ByronWallet implements YoroiWallet {
       internalChain,
       externalChain,
 
-      implementationId: data.walletImplementationId ?? walletMeta.walletImplementationId, // can be null for versions < 3.0.2
-      accountPubKeyHex: data.publicKeyHex ?? internalChain.publicKey, // can be null for versions < 3.0.2, in which case we can just retrieve from address generator
-      hwDeviceInfo: data.hwDeviceInfo, // hw wallet
-      isReadOnly: data.isReadOnly ?? false, // readonly wallet
+      implementationId: data.walletImplementationId,
+      accountPubKeyHex: data.publicKeyHex ?? internalChain.publicKey,
+      hwDeviceInfo: data.hwDeviceInfo,
+      isReadOnly: data.isReadOnly ?? false,
       lastGeneratedAddressIndex: data.lastGeneratedAddressIndex ?? 0, // AddressManager
       networkManager,
     })

@@ -42,6 +42,7 @@ export const SelectWalletFromList = () => {
     [walletManager, navigateToTxHistory],
   )
 
+  walletMetas.forEach((meta) => console.log(meta.checksum))
   const data = React.useMemo(
     () =>
       walletMetas?.map((walletMeta) => (

@@ -1,6 +1,6 @@
 import {difference, parseSafe} from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
-import {App, Chain} from '@yoroi/types'
+import {App, Chain, HW, Network, Wallet} from '@yoroi/types'
 import {freeze} from 'immer'
 import {
   BehaviorSubject,
@@ -22,25 +22,21 @@ import {makeWalletEncryptedStorage} from '../../kernel/storage/EncryptedStorage'
 import {KeychainManager} from '../../kernel/storage/Keychain'
 import {WalletEvent, YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {wrappedCsl} from '../../yoroi-wallets/cardano/wrappedCsl'
-import {HWDeviceInfo} from '../../yoroi-wallets/hw'
-import {NetworkId, WalletImplementationId} from '../../yoroi-wallets/types'
+import {isWalletMeta, parseWalletMeta} from './common/constants'
 import {
-  AddressMode,
-  NetworkManager,
   SyncWalletInfo,
   SyncWalletInfos,
   WalletManagerEvent,
   WalletManagerOptions,
   WalletManagerSubscription,
-  WalletMeta,
 } from './common/types'
-import {isWalletMeta, parseWalletMeta} from './common/validators'
 import {getWalletFactory} from './network-manager/helpers/get-wallet-factory'
-import {toChainSupportedNetwork} from './network-manager/helpers/to-chain-supported-network'
 
 export class WalletManager {
+  // keep it in sync with storage version
+  static readonly version = 3
   readonly #wallets: Map<YoroiWallet['id'], YoroiWallet> = new Map()
-  readonly #walletMetas$ = new BehaviorSubject<Map<YoroiWallet['id'], WalletMeta>>(new Map())
+  readonly #walletMetas$ = new BehaviorSubject<Map<YoroiWallet['id'], Wallet.Meta>>(new Map())
   readonly #syncWalletInfos$ = new BehaviorSubject<SyncWalletInfos>(freeze(new Map()))
   readonly #selectedWalletId$ = new BehaviorSubject<YoroiWallet['id'] | null>(null)
   readonly #selectedNetwork$ = new BehaviorSubject<Chain.SupportedNetworks>(Chain.Network.Mainnet)
@@ -53,7 +49,7 @@ export class WalletManager {
   // injected (constructor)
   readonly #keychainManager?: KeychainManager
   readonly #rootStorage: App.Storage
-  readonly #networkManagers: Readonly<Record<Chain.SupportedNetworks, NetworkManager>>
+  readonly #networkManagers: Readonly<Record<Chain.SupportedNetworks, Network.Manager>>
 
   // @deprecated legacy to be replaced by networkManager.rootStorage
   readonly #walletsRootStorage: App.Storage
@@ -84,8 +80,8 @@ export class WalletManager {
    * @throws {Error} if the wallet meta is not loaded/found
    */
   private updateMeta(
-    id: WalletMeta['id'],
-    meta: Partial<Pick<WalletMeta, 'addressMode' | 'isEasyConfirmationEnabled' | 'name'>>,
+    id: Wallet.Meta['id'],
+    meta: Partial<Pick<Wallet.Meta, 'addressMode' | 'isEasyConfirmationEnabled' | 'name'>>,
   ) {
     const walletMeta = this.#walletMetas$.value.get(id)
     if (!walletMeta) {
@@ -95,7 +91,7 @@ export class WalletManager {
     }
 
     // optmistic update
-    const newMeta: WalletMeta = {...walletMeta, ...meta}
+    const newMeta: Wallet.Meta = {...walletMeta, ...meta}
     const newMetas = new Map(this.#walletMetas$.value)
     newMetas.set(id, newMeta)
     this.#walletMetas$.next(freeze(newMetas))
@@ -389,7 +385,7 @@ export class WalletManager {
     this.updateMeta(id, {name})
   }
 
-  changeWalletAddressMode(id: YoroiWallet['id'], addressMode: AddressMode) {
+  changeWalletAddressMode(id: YoroiWallet['id'], addressMode: Wallet.AddressMode) {
     this.updateMeta(id, {addressMode})
   }
 
@@ -403,16 +399,16 @@ export class WalletManager {
    * It loads the wallet only if it's not already loaded
    * if it's already loaded it returns the instance
    *
-   * @param {WalletMeta} walletMeta
+   * @param {Wallet.Meta} walletMeta
    * @returns {Promise<YoroiWallet>} wallet
    */
-  private async loadWallet(walletMeta: WalletMeta): Promise<YoroiWallet> {
+  private async loadWallet(walletMeta: Wallet.Meta): Promise<YoroiWallet> {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (this.#wallets.has(walletMeta.id)) return this.#wallets.get(walletMeta.id)!
 
-    const {id, walletImplementationId, networkId} = walletMeta
-    const network = toChainSupportedNetwork(networkId)
-    const walletFactory = getWalletFactory({network, implementationId: walletImplementationId})
+    const network = this.selectedNetwork
+    const {id, implementation} = walletMeta
+    const walletFactory = getWalletFactory({network, implementation})
     const networkManager = this.#networkManagers[network]
 
     const storage = this.#walletsRootStorage.join(`${id}/`)
@@ -449,7 +445,7 @@ export class WalletManager {
     this.#walletMetas$.next(freeze(metas))
   }
 
-  async updateHWDeviceInfo(wallet: YoroiWallet, hwDeviceInfo: HWDeviceInfo) {
+  async updateHWDeviceInfo(wallet: YoroiWallet, hwDeviceInfo: HW.DeviceInfo) {
     wallet.hwDeviceInfo = hwDeviceInfo
     await this.saveWallet(wallet)
   }
@@ -463,9 +459,8 @@ export class WalletManager {
    * @param {string} name
    * @param {string} mnemonic
    * @param {string} password
-   * @param {NetworkId} networkId
-   * @param {WalletImplementationId} implementationId
-   * @param {AddressMode} addressMode
+   * @param {Wallet.Implementation} implementation
+   * @param {Wallet.AddressMode} addressMode
    * @returns {Promise<YoroiWallet>} wallet
    * @throws {Error} if the wallet factory is not found
    */
@@ -473,18 +468,17 @@ export class WalletManager {
     name: string,
     mnemonic: string,
     password: string,
-    networkId: NetworkId,
-    implementationId: WalletImplementationId,
-    addressMode: AddressMode,
+    implementation: Wallet.Implementation,
+    addressMode: Wallet.AddressMode,
   ) {
-    const network = toChainSupportedNetwork(networkId)
-    const walletFactory = getWalletFactory({network, implementationId})
+    const network = this.selectedNetwork
+
+    const walletFactory = getWalletFactory({network, implementation})
     const id = uuid.v4()
     const networkManager = this.#networkManagers[network]
 
     const storage = this.#walletsRootStorage.join(`${id}/`)
 
-    // keys
     const {csl, release} = wrappedCsl()
     const {rootKey, accountPubKeyHex} = await walletFactory.makeKeys({mnemonic, csl})
     release()
@@ -498,24 +492,21 @@ export class WalletManager {
 
     await wallet.encryptedStorage.rootKey.write(rootKey, password)
 
-    const checksum = walletFactory.calcChecksum(accountPubKeyHex)
-    const plate = checksum.TextPart
-    const avatar = new Blockies().asBase64({seed: checksum.ImagePart})
+    const {ImagePart: seed, TextPart: plate} = walletFactory.calcChecksum(accountPubKeyHex)
+    const avatar = new Blockies().asBase64({seed})
 
-    const meta: WalletMeta = {
+    const meta: Wallet.Meta = {
+      version: WalletManager.version,
       id,
       name,
       avatar,
       plate,
+      implementation,
 
       addressMode,
-      walletImplementationId: implementationId,
-
+      isReadOnly: false,
       isEasyConfirmationEnabled: false,
       isHW: false,
-
-      networkId,
-      checksum,
     }
     await this.#walletsRootStorage.setItem(id, meta)
 
@@ -523,32 +514,31 @@ export class WalletManager {
   }
 
   /**
-   * It creates a wallet with the given mnemonic and password
+   * It creates a wallet with the given xpub key
    * and persists it to the storage
    * **It does not hydrate right away**, it will on the next sync call
    * or if manually called by the client
    *
    * @param {string} name
    * @param {string} accountPubKeyHex
-   * @param {NetworkId} networkId
-   * @param {WalletImplementationId} implementationId
-   * @param {HWDeviceInfo | null} hwDeviceInfo
+   * @param {Wallet.Implementation} implementation
+   * @param {HW.DeviceInfo | null} hwDeviceInfo
    * @param {boolean} isReadOnly
-   * @param {AddressMode} addressMode
+   * @param {Wallet.AddressMode} addressMode
    * @returns {Promise<YoroiWallet>} wallet
    * @throws {Error} if the wallet factory is not found
    */
   async createWalletXPub(
     name: string,
     accountPubKeyHex: string,
-    networkId: NetworkId,
-    implementationId: WalletImplementationId,
-    hwDeviceInfo: null | HWDeviceInfo,
+    implementation: Wallet.Implementation,
+    hwDeviceInfo: null | HW.DeviceInfo,
     isReadOnly: boolean,
-    addressMode: AddressMode,
+    addressMode: Wallet.AddressMode,
   ) {
-    const network = toChainSupportedNetwork(networkId)
-    const walletFactory = getWalletFactory({network, implementationId})
+    const network = this.selectedNetwork
+
+    const walletFactory = getWalletFactory({network, implementation})
     const id = uuid.v4()
     const networkManager = this.#networkManagers[network]
 
@@ -563,24 +553,21 @@ export class WalletManager {
       networkManager,
     })
 
-    const checksum = walletFactory.calcChecksum(accountPubKeyHex)
-    const plate = checksum.TextPart
-    const avatar = new Blockies().asBase64({seed: checksum.ImagePart})
+    const {ImagePart: seed, TextPart: plate} = walletFactory.calcChecksum(accountPubKeyHex)
+    const avatar = new Blockies().asBase64({seed})
 
-    const meta: WalletMeta = {
+    const meta: Wallet.Meta = {
+      version: WalletManager.version,
       id,
       name,
       avatar,
       plate,
+      implementation,
 
       addressMode,
-      walletImplementationId: implementationId,
-
+      isReadOnly,
       isEasyConfirmationEnabled: false,
       isHW: hwDeviceInfo !== null,
-
-      networkId,
-      checksum,
     }
     await this.#walletsRootStorage.setItem(id, meta)
 

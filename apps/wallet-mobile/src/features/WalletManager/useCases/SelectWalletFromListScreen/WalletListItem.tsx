@@ -40,7 +40,7 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
         onPressIn={() => setIsButtonPressed(true)}
         onPressOut={() => setIsButtonPressed(false)}
       >
-        <Icon.WalletAccount iconSeed={walletMeta.checksum.ImagePart} />
+        <Icon.WalletAvatar image={walletMeta.avatar} />
 
         <Space height="md" />
 
@@ -50,7 +50,7 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
           </Text>
 
           <Text style={[styles.walletMeta, isButtonPressed && styles.walletMetaPressed]}>
-            {walletMeta.checksum != null ? `${walletMeta.checksum.TextPart} | ${era}` : era}
+            {`${walletMeta.plate} | ${era}`}
           </Text>
         </View>
 

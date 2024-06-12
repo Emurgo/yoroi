@@ -86,7 +86,7 @@ export const ConfirmTxScreen = () => {
   }
 
   const onSubmit = () => {
-    if (wallet.isHW) {
+    if (meta.isHW) {
       openModal(
         strings.signTransaction,
         <ConfirmTxWithHwModal
@@ -98,7 +98,7 @@ export const ConfirmTxScreen = () => {
       return
     }
 
-    if (!wallet.isHW && !meta.isEasyConfirmationEnabled) {
+    if (!meta.isHW && !meta.isEasyConfirmationEnabled) {
       openModal(
         strings.signTransaction,
         <ConfirmTxWithSpendingPasswordModal
@@ -110,7 +110,7 @@ export const ConfirmTxScreen = () => {
       return
     }
 
-    if (!wallet.isHW && meta.isEasyConfirmationEnabled) {
+    if (!meta.isHW && meta.isEasyConfirmationEnabled) {
       openModal(
         strings.signTransaction,
         <ConfirmTxWithOsModal

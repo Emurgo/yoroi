@@ -1,5 +1,6 @@
+import {Blockies} from '@yoroi/identicon'
 import {useSetupWallet} from '@yoroi/setup-wallet'
-import {Api, Chain} from '@yoroi/types'
+import {Api, Chain, Wallet} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {FlatList, InteractionManager, ScrollView, StyleSheet, View} from 'react-native'
@@ -13,21 +14,20 @@ import {useWalletNavigation} from '../../../../kernel/navigation'
 import {isEmptyString} from '../../../../kernel/utils'
 import {NUMBERS} from '../../../../yoroi-wallets/cardano/numbers'
 import {usePlate} from '../../../../yoroi-wallets/hooks'
-import {NetworkId, WalletImplementationId} from '../../../../yoroi-wallets/types'
+import {NetworkId} from '../../../../yoroi-wallets/types'
 import {useCreateWalletXPub} from '../../../WalletManager/common/hooks/useCreateWalletXPub'
-import {AddressMode} from '../../../WalletManager/common/types'
 import {WalletAddress} from '../WalletAddress/WalletAddress'
 import {WalletNameForm} from '../WalletNameForm/WalletNameForm'
 
 // when ro, later will be part of the onboarding
-const addressMode: AddressMode = 'single'
+const addressMode: Wallet.AddressMode = 'single'
 export const SaveReadOnlyWalletScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
   const {resetToWalletSelection} = useWalletNavigation()
   const {track} = useMetrics()
 
-  const {publicKeyHex, path, networkId, walletImplementationId} = useSetupWallet()
+  const {publicKeyHex, path, walletImplementation} = useSetupWallet()
 
   const normalizedPath = path.map((i) => {
     if (i >= NUMBERS.HARD_DERIVATION_START) {
@@ -54,14 +54,14 @@ export const SaveReadOnlyWalletScreen = () => {
     ({name}: {name: string}) => {
       createWallet({
         name,
-        networkId: networkId as NetworkId,
-        implementationId: walletImplementationId as WalletImplementationId,
+        implementation: walletImplementation,
         bip44AccountPublic: publicKeyHex,
         readOnly: true,
         addressMode,
+        hwDeviceInfo: null,
       })
     },
-    [createWallet, networkId, publicKeyHex, walletImplementationId],
+    [createWallet, publicKeyHex, walletImplementation],
   )
 
   return (
@@ -174,7 +174,7 @@ const useStrings = () => {
 
 const CheckSumView = ({icon, checksum}: {icon: string; checksum: string}) => (
   <View style={styles.checksumView}>
-    <Icon.WalletAccount iconSeed={icon} />
+    <Icon.WalletAvatar image={new Blockies().asBase64({seed: icon})} />
 
     <Text style={styles.checksumText}>{checksum}</Text>
   </View>

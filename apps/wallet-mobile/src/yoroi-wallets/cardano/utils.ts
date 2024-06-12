@@ -1,33 +1,24 @@
 /* eslint-disable no-empty */
 import {SendToken} from '@emurgo/yoroi-lib'
-import {isKeyOf} from '@yoroi/common'
-import {Balance} from '@yoroi/types'
+import {Balance, Wallet} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
 
 import {YoroiEntry} from '../types'
 import {
   BaseAsset,
-  DERIVATION_TYPES,
   NetworkId,
   RawUtxo,
-  WALLET_IMPLEMENTATION_REGISTRY,
-  WalletImplementationId,
 } from '../types/other'
 import {DefaultAsset, Token} from '../types/tokens'
 import {Amounts} from '../utils'
 import {CardanoMobile} from '../wallets'
 import {toAssetNameHex, toPolicyId} from './api/utils'
-import {
-  NETWORK_ID as mainnetId,
-  WALLET_CONFIG as HASKELL_SHELLEY,
-  WALLET_CONFIG_24 as HASKELL_SHELLEY_24,
-} from './constants/mainnet/constants'
 import {withMinAmounts} from './getMinAmounts'
 import {MultiToken} from './MultiToken'
 import {CardanoHaskellShelleyNetwork} from './networks'
 import {NUMBERS} from './numbers'
-import {CardanoTypes, WalletImplementation} from './types'
+import {CardanoTypes} from './types'
 
 export const deriveRewardAddressHex = async (accountPubKeyHex: string, networkId: NetworkId): Promise<string> => {
   const accountPubKeyPtr = await CardanoMobile.Bip32PublicKey.fromBytes(Buffer.from(accountPubKeyHex, 'hex'))
@@ -136,36 +127,9 @@ export const multiTokenFromRemote = (remoteValue: RemoteValue, networkId: number
   return result
 }
 
-/**
- * Wrapper function to lodash.isEmpty that
- * returns true if the string is empty.
- * The lodash.isEmpty function doesn't have the typescript's safeguard signature.
- * It will be fixed in this PR https://github.com/DefinitelyTyped/DefinitelyTyped/pull/60401
- *
- * @summary Returns true if the value is empty: length === 0, null or undefined, else false.
- *
- * @param value The string to inspect
- * @return {boolean} Returns true if the string is empty, else false.
- *
- * @example isEmptyString('') returns true
- * @example isEmptyString(' ') returns false
- * @example isEmptyString(null) returns true
- * @example isEmptyString(undefined) returns true
- */
+export const isByron = (implementation: Wallet.Implementation) => implementation === 'cardano-byron'
 
-export const isByron = (id: WalletImplementationId): boolean => id === WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON
-
-export const isHaskellShelley = (id: WalletImplementationId): boolean =>
-  id === HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID || id === HASKELL_SHELLEY_24.WALLET_IMPLEMENTATION_ID
-
-export const getWalletConfigById = (id: WalletImplementationId): WalletImplementation => {
-  const idx = Object.values(WALLET_IMPLEMENTATION_REGISTRY).indexOf(id)
-  const walletKey = Object.keys(WALLET_IMPLEMENTATION_REGISTRY)[idx]
-  if (walletKey != null && walletKey !== 'UNDEFINED' && isKeyOf(walletKey, WALLETS) && WALLETS[walletKey] != null) {
-    return WALLETS[walletKey]
-  }
-  throw new Error('invalid walletImplementationId')
-}
+export const isShelley = (implementation: Wallet.Implementation) => implementation === 'cardano-shelley'
 
 // need to accomodate base config parameters as required by certain API shared
 // by yoroi extension and yoroi mobile
@@ -190,43 +154,14 @@ export const getCardanoBaseConfig = (
   },
 ]
 
-const _DEFAULT_DISCOVERY_SETTINGS = {
-  DISCOVERY_GAP_SIZE: 20,
-  DISCOVERY_BLOCK_SIZE: 50, // should be less than API limitations
-  MAX_GENERATED_UNUSED: 20, // must be <= gap size
-}
-
-export const WALLETS = {
-  HASKELL_BYRON: {
-    WALLET_IMPLEMENTATION_ID: WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON,
-    TYPE: DERIVATION_TYPES.BIP44,
-    MNEMONIC_LEN: 15,
-    ..._DEFAULT_DISCOVERY_SETTINGS,
-  },
-  HASKELL_SHELLEY,
-  HASKELL_SHELLEY_24,
-  JORMUNGANDR_ITN: {
-    WALLET_IMPLEMENTATION_ID: WALLET_IMPLEMENTATION_REGISTRY.JORMUNGANDR_ITN,
-    TYPE: DERIVATION_TYPES.CIP1852,
-    MNEMONIC_LEN: 15,
-    ..._DEFAULT_DISCOVERY_SETTINGS,
-  },
-} as const
-
 export const CATALYST = {
   MIN_ADA: NUMBERS.LOVELACES_PER_ADA.times(450),
   DISPLAYED_MIN_ADA: NUMBERS.LOVELACES_PER_ADA.times(500),
-  VOTING_ROUNDS: [
-    {
-      ROUND: 4,
-      START_DATE: '2021-06-03T19:00:00Z',
-      END_DATE: '2021-06-10T19:00:00Z',
-    },
-  ],
 }
 
+// @deprecated use networkManager to get chain id
 export const toCardanoNetworkId = (networkId: number) => {
-  if (networkId === mainnetId) return 1
+  if (networkId === 1) return 1
 
   return 0
 }

@@ -18,6 +18,7 @@ import {
   UseQueryOptions,
 } from 'react-query'
 
+import {useSelectedNetwork} from '../../features/WalletManager/common/hooks/useSelectedNetwork'
 import {isDev, isNightly} from '../../kernel/env'
 import {logger} from '../../kernel/logger/logger'
 import {getSpendingKey, getStakingKey} from '../cardano/addressInfo/addressInfo'
@@ -625,6 +626,7 @@ const fetchTxStatus = async (
   }
 }
 
+// TODO: tipStatus is a network responsability
 export const useTipStatus = ({
   wallet,
   options,
@@ -632,12 +634,13 @@ export const useTipStatus = ({
   wallet: YoroiWallet
   options?: UseQueryOptions<TipStatusResponse, Error>
 }) => {
+  const network = useSelectedNetwork()
   const query = useQuery<TipStatusResponse, Error>({
     suspense: true,
     staleTime: 10000,
     retry: 3,
     retryDelay: 1000,
-    queryKey: [wallet.networkId, 'tipStatus'],
+    queryKey: [network, 'tipStatus'],
     queryFn: () => wallet.fetchTipStatus(),
     ...options,
   })

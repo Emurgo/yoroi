@@ -10,20 +10,16 @@ import {
   TxMetadata as TxMetadataType,
   UnsignedTx as UnsignedTxType,
 } from '@emurgo/yoroi-lib'
-import {Api, App, Balance, Portfolio} from '@yoroi/types'
+import {Api, App, Balance, HW, Network, Portfolio} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 
-import {NetworkManager} from '../../features/WalletManager/common/types'
 import {WalletEncryptedStorage} from '../../kernel/storage/EncryptedStorage'
-import {HWDeviceInfo} from '../hw'
 import {
   AccountStates,
-  NetworkId,
   StakePoolInfoRequest,
   StakePoolInfosAndHistories,
   StakingInfo,
   StakingStatus,
-  WalletImplementationId,
   YoroiEntry,
   YoroiNftModerationStatus,
   YoroiSignedTx,
@@ -44,7 +40,6 @@ import type {Addresses} from './chain'
 
 export type WalletEvent =
   | {type: 'initialize'}
-  | {type: 'easy-confirmation'; enabled: boolean}
   | {type: 'transactions'; transactions: Record<string, TransactionInfo>}
   | {type: 'addresses'; addresses: Addresses}
   | {type: 'state'; state: WalletState}
@@ -53,15 +48,6 @@ export type WalletEvent =
 
 export type WalletSubscription = (event: WalletEvent) => void
 export type Unsubscribe = () => void
-
-export type WalletImplementation = {
-  WALLET_IMPLEMENTATION_ID: WalletImplementationId
-  TYPE: 'bip44' | 'cip1852'
-  MNEMONIC_LEN: number
-  DISCOVERY_GAP_SIZE: number
-  DISCOVERY_BLOCK_SIZE: number
-  MAX_GENERATED_UNUSED: number
-}
 
 export type ServerStatus = {
   isServerOk: boolean
@@ -77,13 +63,8 @@ export type Pagination = {
 
 export interface YoroiWallet {
   id: string
-
   publicKeyHex: string
-  networkId: NetworkId
-  walletImplementationId: WalletImplementationId
-  isHW: boolean
-  hwDeviceInfo: null | HWDeviceInfo
-  isReadOnly: boolean
+  hwDeviceInfo: null | HW.DeviceInfo
   primaryToken: Readonly<DefaultAsset>
   primaryTokenInfo: Readonly<Balance.TokenInfo>
   readonly portfolioPrimaryTokenInfo: Readonly<Portfolio.Token.Info>
@@ -91,7 +72,7 @@ export interface YoroiWallet {
   // ---------------------------------------------------------------------------------------
   //                     ########## Interface  -  V2 ##########
   // network
-  readonly networkManager: Readonly<NetworkManager>
+  readonly networkManager: Readonly<Network.Manager>
   get isMainnet(): boolean
 
   // portfolio
@@ -206,11 +187,6 @@ export const isYoroiWallet = (wallet: unknown): wallet is YoroiWallet => {
 const yoroiWalletKeys: Array<keyof YoroiWallet> = [
   'id',
   'publicKeyHex',
-  'networkId',
-  'walletImplementationId',
-  'isHW',
-  'hwDeviceInfo',
-  'isReadOnly',
   'primaryToken',
   'primaryTokenInfo',
 

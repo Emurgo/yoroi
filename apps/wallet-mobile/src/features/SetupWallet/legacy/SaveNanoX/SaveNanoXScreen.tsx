@@ -1,5 +1,5 @@
 import {useSetupWallet} from '@yoroi/setup-wallet'
-import {Api} from '@yoroi/types'
+import {Api, Wallet} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {InteractionManager} from 'react-native'
@@ -9,17 +9,15 @@ import {showErrorDialog} from '../../../../kernel/dialogs'
 import {errorMessages} from '../../../../kernel/i18n/global-messages'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../kernel/navigation'
-import {WalletImplementationId} from '../../../../yoroi-wallets/types'
 import {useCreateWalletXPub} from '../../../WalletManager/common/hooks/useCreateWalletXPub'
-import {AddressMode} from '../../../WalletManager/common/types'
 import {WalletNameForm} from '../WalletNameForm/WalletNameForm'
 
 // when hw, later will be part of the onboarding
-const addressMode: AddressMode = 'single'
+const addressMode: Wallet.AddressMode = 'single'
 export const SaveNanoXScreen = () => {
   const strings = useStrings()
   const {resetToWalletSelection} = useWalletNavigation()
-  const {networkId, walletImplementationId, hwDeviceInfo} = useSetupWallet()
+  const {walletImplementation, hwDeviceInfo} = useSetupWallet()
   const intl = useIntl()
   const {track} = useMetrics()
 
@@ -43,15 +41,14 @@ export const SaveNanoXScreen = () => {
     ({name}: {name: string}) => {
       createWallet({
         name,
-        networkId,
         bip44AccountPublic: hwDeviceInfo.bip44AccountPublic,
-        implementationId: walletImplementationId as WalletImplementationId,
+        implementation: walletImplementation,
         hwDeviceInfo,
         readOnly: false,
         addressMode,
       })
     },
-    [createWallet, hwDeviceInfo, networkId, walletImplementationId],
+    [createWallet, hwDeviceInfo, walletImplementation],
   )
 
   return (

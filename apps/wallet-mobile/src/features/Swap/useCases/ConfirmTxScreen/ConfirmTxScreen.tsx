@@ -140,7 +140,7 @@ export const ConfirmTxScreen = () => {
               return
             }
             openModal(
-              wallet.isHW ? strings.chooseConnectionMethod : strings.signTransaction,
+              meta.isHW ? strings.chooseConnectionMethod : strings.signTransaction,
               <View style={styles.modalContent}>
                 <ConfirmTx
                   wallet={wallet}
@@ -151,7 +151,7 @@ export const ConfirmTxScreen = () => {
 
                 <Spacer height={16} />
               </View>,
-              wallet.isHW ? 430 : 350,
+              meta.isHW ? 430 : 350,
             )
           }}
         />

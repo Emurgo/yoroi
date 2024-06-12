@@ -38,14 +38,12 @@ export const SetupWalletProvider = ({
         type: SetupWalletActionType.WalletPasswordChanged,
         walletPassword,
       }),
-    networkIdChanged: (networkId: SetupWalletState['networkId']) =>
-      dispatch({type: SetupWalletActionType.NetworkIdChanged, networkId}),
-    walletImplementationIdChanged: (
-      walletImplementationId: SetupWalletState['walletImplementationId'],
+    walletImplementationChanged: (
+      walletImplementation: SetupWalletState['walletImplementation'],
     ) =>
       dispatch({
-        type: SetupWalletActionType.WalletImplementationIdChanged,
-        walletImplementationId,
+        type: SetupWalletActionType.WalletImplementationChanged,
+        walletImplementation,
       }),
     publicKeyHexChanged: (publicKeyHex: SetupWalletState['publicKeyHex']) =>
       dispatch({type: SetupWalletActionType.PublicKeyHexChanged, publicKeyHex}),

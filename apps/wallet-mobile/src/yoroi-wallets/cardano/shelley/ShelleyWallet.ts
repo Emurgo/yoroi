@@ -5,7 +5,7 @@ import {createSignedLedgerTxFromCbor, signRawTransaction} from '@emurgo/yoroi-li
 import {Datum} from '@emurgo/yoroi-lib/dist/internals/models'
 import {AppApi, CardanoApi} from '@yoroi/api'
 import {isNonNullable, parseSafe} from '@yoroi/common'
-import {Api, App, Balance, Portfolio} from '@yoroi/types'
+import {Api, App, Balance, HW, Network, Portfolio, Wallet} from '@yoroi/types'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
@@ -16,12 +16,10 @@ import {Observable} from 'rxjs'
 
 import {buildPortfolioBalanceManager} from '../../../features/Portfolio/common/helpers/build-balance-manager'
 import {toBalanceManagerSyncArgs} from '../../../features/Portfolio/common/transformers/toBalanceManagerSyncArgs'
-import {NetworkManager, WalletMeta} from '../../../features/WalletManager/common/types'
 import LocalizableError from '../../../kernel/i18n/LocalizableError'
 import {logger} from '../../../kernel/logger/logger'
 import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../../kernel/storage/EncryptedStorage'
 import {makeMemosManager, MemosManager} from '../../../legacy/TxHistory/common/memos/memosManager'
-import {HWDeviceInfo} from '../../hw'
 import type {
   AccountStateResponse,
   CurrencySymbol,
@@ -78,20 +76,13 @@ type WalletState = {
 
 export type ShelleyWalletJSON = {
   version: string
-
-  isHW: boolean
-  hwDeviceInfo: null | HWDeviceInfo
-  isReadOnly: boolean
-
-  publicKeyHex?: string
-
+  hwDeviceInfo: null | HW.DeviceInfo
+  publicKeyHex: string
   lastGeneratedAddressIndex: number
   internalChain: AddressChainJSON
   externalChain: AddressChainJSON
 }
-
-export type ByronWalletJSON = Omit<ShelleyWalletJSON, 'account'>
-
+export type ByronWalletJSON = ShelleyWalletJSON
 export type WalletJSON = ShelleyWalletJSON | ByronWalletJSON
 
 export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | typeof SANCHONET) => {
@@ -157,11 +148,8 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     readonly primaryToken: DefaultAsset = PRIMARY_TOKEN
     readonly primaryTokenInfo: Balance.TokenInfo = PRIMARY_TOKEN_INFO
     readonly walletImplementationId = WALLET_IMPLEMENTATION_ID
-    readonly networkId = NETWORK_ID
     readonly id: string
-    readonly hwDeviceInfo: null | HWDeviceInfo
-    readonly isHW: boolean
-    readonly isReadOnly: boolean
+    readonly hwDeviceInfo: null | HW.DeviceInfo
     readonly internalChain: AddressChain
     readonly externalChain: AddressChain
     readonly publicKeyHex: string
@@ -179,7 +167,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     readonly balance$: Observable<Portfolio.Event.BalanceManager>
     readonly portfolioPrimaryTokenInfo: Readonly<Portfolio.Token.Info>
     readonly balanceManager: Readonly<Portfolio.Manager.Balance>
-    readonly networkManager: Readonly<NetworkManager>
+    readonly networkManager: Readonly<Network.Manager>
 
     static readonly calcChecksum = walletChecksum
     static readonly makeKeys = makeKeys
@@ -194,16 +182,15 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       id: string
       storage: Readonly<App.Storage>
       accountPubKeyHex: string
-      networkManager: Readonly<NetworkManager>
+      networkManager: Readonly<Network.Manager>
     }): Promise<YoroiWallet> {
       const {internalChain, externalChain} = await addressChains.create({accountPubKeyHex})
 
-      return this.commonCreate({
+      return this.build({
         id,
         storage,
         accountPubKeyHex,
         hwDeviceInfo: null,
-        isReadOnly: false,
         internalChain,
         externalChain,
         networkManager,
@@ -215,24 +202,22 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       storage,
       accountPubKeyHex,
       hwDeviceInfo,
-      isReadOnly,
       networkManager,
     }: {
       accountPubKeyHex: string
-      hwDeviceInfo: HWDeviceInfo | null
+      hwDeviceInfo: HW.DeviceInfo | null
       id: string
       isReadOnly: boolean
       storage: Readonly<App.Storage>
-      networkManager: Readonly<NetworkManager>
+      networkManager: Readonly<Network.Manager>
     }): Promise<YoroiWallet> {
       const {internalChain, externalChain} = await addressChains.create({accountPubKeyHex})
 
-      return this.commonCreate({
+      return this.build({
         id,
         storage,
         accountPubKeyHex,
         hwDeviceInfo,
-        isReadOnly,
         internalChain,
         externalChain,
         networkManager,
@@ -245,47 +230,44 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       networkManager,
     }: {
       storage: App.Storage
-      walletMeta: WalletMeta
-      networkManager: NetworkManager
+      walletMeta: Wallet.Meta
+      networkManager: Network.Manager
     }) {
       const data = await storage.getItem('data', parseWalletJSON)
       if (!data) throw new Error('Cannot read saved data')
 
       const {internalChain, externalChain} = addressChains.restore({data})
 
-      return this.commonCreate({
+      return this.build({
         id: walletMeta.id,
         storage,
         internalChain,
         externalChain,
-        accountPubKeyHex: data.publicKeyHex ?? internalChain.publicKey, // can be null for versions < 3.0.2, in which case we can just retrieve from address generator
-        hwDeviceInfo: data.hwDeviceInfo, // hw wallet
-        isReadOnly: data.isReadOnly ?? false, // readonly wallet
+        accountPubKeyHex: data.publicKeyHex ?? internalChain.publicKey,
+        hwDeviceInfo: data.hwDeviceInfo,
         lastGeneratedAddressIndex: data.lastGeneratedAddressIndex ?? 0, // AddressManager
         networkManager,
       })
     }
 
-    private static commonCreate = async ({
+    private static build = async ({
       id,
       storage,
       internalChain,
       externalChain,
       accountPubKeyHex,
-      hwDeviceInfo, // hw wallet
-      isReadOnly, // readonly wallet
+      hwDeviceInfo,
       lastGeneratedAddressIndex = 0,
       networkManager,
     }: {
       accountPubKeyHex: string
-      hwDeviceInfo: HWDeviceInfo | null
+      hwDeviceInfo: HW.DeviceInfo | null
       id: string
       storage: App.Storage
       internalChain: AddressChain
       externalChain: AddressChain
-      isReadOnly: boolean
       lastGeneratedAddressIndex?: number
-      networkManager: NetworkManager
+      networkManager: Network.Manager
     }) => {
       const rewardAddressHex = await deriveRewardAddressHex(accountPubKeyHex, NETWORK_ID)
 
@@ -302,7 +284,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         id,
         utxoManager,
         hwDeviceInfo,
-        isReadOnly,
         accountPubKeyHex,
         rewardAddressHex,
         internalChain,
@@ -334,7 +315,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       id,
       utxoManager,
       hwDeviceInfo,
-      isReadOnly,
       accountPubKeyHex,
       rewardAddressHex,
       internalChain,
@@ -351,8 +331,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       storage: App.Storage
       id: string
       utxoManager: UtxoManager
-      hwDeviceInfo: HWDeviceInfo | null
-      isReadOnly: boolean
+      hwDeviceInfo: HW.DeviceInfo | null
       accountPubKeyHex: string
       rewardAddressHex: string
       internalChain: AddressChain
@@ -363,7 +342,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       cardanoApi: Api.Cardano.Actions
 
       balanceManager: Readonly<Portfolio.Manager.Balance>
-      networkManager: Readonly<NetworkManager>
+      networkManager: Readonly<Network.Manager>
       portfolioPrimaryTokenInfo: Readonly<Portfolio.Token.Info>
     }) {
       this.id = id
@@ -372,9 +351,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       this._utxos = utxoManager.initialUtxos
       this._collateralId = utxoManager.initialCollateralId
       this.encryptedStorage = makeWalletEncryptedStorage(id)
-      this.isHW = hwDeviceInfo != null
       this.hwDeviceInfo = hwDeviceInfo
-      this.isReadOnly = isReadOnly
       this.transactionManager = transactionManager
       this.memosManager = memosManager
       this.internalChain = internalChain
@@ -1337,9 +1314,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         version: this.version,
         internalChain: this.internalChain.toJSON(),
         externalChain: this.externalChain.toJSON(),
-        isHW: this.isHW,
         hwDeviceInfo: this.hwDeviceInfo,
-        isReadOnly: this.isReadOnly,
       }
     }
   }

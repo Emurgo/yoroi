@@ -1,9 +1,8 @@
-import {Chain} from '@yoroi/types'
+import {Chain, Wallet} from '@yoroi/types'
 import {castDraft, freeze, produce} from 'immer'
 
 import {logger} from '../../../kernel/logger/logger'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
-import {WalletMeta} from '../common/types'
 import {WalletManager} from '../wallet-manager'
 
 export const walletManagerReducer = (state: WalletManagerState, action: WalletManagerAction) => {
@@ -41,17 +40,17 @@ export type WalletManagerAction =
   | {
       type: WalletManagerActionType.WalletSelected
       wallet: YoroiWallet | null
-      meta: WalletMeta | null
+      meta: Wallet.Meta | null
     }
   | {
       type: WalletManagerActionType.SelectedMetaUpdated
-      metas: Map<YoroiWallet['id'], WalletMeta>
+      metas: Map<YoroiWallet['id'], Wallet.Meta>
     }
 
 export type WalletManagerState = {
   selected: {
     wallet: YoroiWallet | null
-    meta: WalletMeta | null
+    meta: Wallet.Meta | null
     network: Chain.SupportedNetworks
   }
 }
@@ -73,9 +72,9 @@ export enum WalletManagerActionType {
   SelectedMetaUpdated = 'selectedMetaUpdated',
 }
 export type WalletManagerActions = {
-  walletSelected(args: {wallet: YoroiWallet | null; meta: WalletMeta | null}): void
+  walletSelected(args: {wallet: YoroiWallet | null; meta: Wallet.Meta | null}): void
   networkSelected(network: Chain.SupportedNetworks): void
-  selectedMetaUpdated(metas: Map<YoroiWallet['id'], WalletMeta>): void
+  selectedMetaUpdated(metas: Map<YoroiWallet['id'], Wallet.Meta>): void
 }
 
 export type WalletManagerContextType = WalletManagerState & {walletManager: WalletManager | null}

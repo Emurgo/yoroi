@@ -4,6 +4,7 @@ import {ErrorBoundary} from 'react-error-boundary'
 import {ModalError} from '../../../../components/ModalError/ModalError'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {YoroiSignedTx, YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
+import {useSelectedWalletMeta} from '../../../WalletManager/common/hooks/useSelectedWalletMeta'
 import {ConfirmTxWithHW} from './ConfirmTxWithHW'
 import {ConfirmTxWithPassword} from './ConfirmTxWithPassword'
 
@@ -15,7 +16,8 @@ type Props = {
 }
 
 export const ConfirmTx = ({wallet, onSuccess, onCancel, unsignedTx}: Props) => {
-  return wallet.isHW ? (
+  const meta = useSelectedWalletMeta()
+  return meta.isHW ? (
     <ErrorBoundary
       fallbackRender={({error, resetErrorBoundary}) => (
         <ModalError error={error} resetErrorBoundary={resetErrorBoundary} onCancel={onCancel} />

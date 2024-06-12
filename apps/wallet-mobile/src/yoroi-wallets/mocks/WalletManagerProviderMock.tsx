@@ -1,7 +1,7 @@
+import {Wallet} from '@yoroi/types'
 import * as React from 'react'
 
 import {buildPortfolioTokenManagers} from '../../features/Portfolio/common/helpers/build-token-managers'
-import {WalletMeta} from '../../features/WalletManager/common/types'
 import {WalletManagerProvider} from '../../features/WalletManager/context/WalletManagerProvider'
 import {buildNetworkManagers} from '../../features/WalletManager/network-manager/network-manager'
 import {WalletManager} from '../../features/WalletManager/wallet-manager'
@@ -27,7 +27,7 @@ export const WalletManagerProviderMock = ({
 }: {
   children: React.ReactNode
   wallet?: YoroiWallet
-  meta?: WalletMeta
+  meta?: Wallet.Meta
   walletManager?: WalletManager
 }) => {
   return (

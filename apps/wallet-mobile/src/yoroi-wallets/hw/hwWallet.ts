@@ -1,7 +1,8 @@
-import {YoroiWallet} from '../cardano/types'
-import {DeviceId, DeviceObj} from './hw'
+import {HW} from '@yoroi/types'
 
-export const withUSB = (wallet: YoroiWallet, deviceObj: DeviceObj) => {
+import {YoroiWallet} from '../cardano/types'
+
+export const withUSB = (wallet: YoroiWallet, deviceObj: HW.DeviceObj) => {
   if (!wallet.hwDeviceInfo) throw new Error('invalid wallet')
   return {
     ...wallet.hwDeviceInfo,
@@ -12,7 +13,7 @@ export const withUSB = (wallet: YoroiWallet, deviceObj: DeviceObj) => {
   }
 }
 
-export const withBLE = (wallet: YoroiWallet, deviceId: DeviceId) => {
+export const withBLE = (wallet: YoroiWallet, deviceId: string) => {
   if (!wallet.hwDeviceInfo) throw new Error('invalid wallet')
   return {
     ...wallet.hwDeviceInfo,

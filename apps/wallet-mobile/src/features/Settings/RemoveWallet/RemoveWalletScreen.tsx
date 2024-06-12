@@ -15,14 +15,12 @@ import {
   TextInputProps,
 } from '../../../components'
 import {useWalletNavigation} from '../../../kernel/navigation'
-import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useSelectedWalletMeta} from '../../WalletManager/common/hooks/useSelectedWalletMeta'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 
 export const RemoveWalletScreen = () => {
   const strings = useStrings()
   const styles = useStyles()
-  const wallet = useSelectedWallet()
   const {resetToWalletSetupInit, resetToWalletSelection} = useWalletNavigation()
   const {walletManager} = useWalletManager()
   const meta = useSelectedWalletMeta()
@@ -39,14 +37,14 @@ export const RemoveWalletScreen = () => {
   const [hasMnemonicWrittenDown, setHasMnemonicWrittenDown] = React.useState(false)
   const [typedWalletName, setTypedWalletName] = React.useState('')
 
-  const disabled = (!wallet.isHW && !hasMnemonicWrittenDown) || meta.name !== typedWalletName
+  const disabled = (!meta.isHW && !hasMnemonicWrittenDown) || meta.name !== typedWalletName
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
       <KeyboardAvoidingView style={styles.keyboardAvoider}>
         <ScrollView contentContainerStyle={styles.contentContainer} bounces={false}>
           <Description>
-            {!wallet.isHW && <Text style={styles.description}>{strings.descriptionParagraph1}</Text>}
+            {!meta.isHW && <Text style={styles.description}>{strings.descriptionParagraph1}</Text>}
 
             <Spacer height={24} />
 
@@ -76,7 +74,7 @@ export const RemoveWalletScreen = () => {
         <Spacer fill />
 
         <Actions>
-          {!wallet.isHW && (
+          {!meta.isHW && (
             <Checkbox
               checked={hasMnemonicWrittenDown}
               text={strings.hasWrittenDownMnemonic}

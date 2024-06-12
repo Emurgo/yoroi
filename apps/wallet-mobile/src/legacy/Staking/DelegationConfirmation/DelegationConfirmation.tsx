@@ -86,7 +86,7 @@ export const DelegationConfirmation = () => {
           />
         </View>
 
-        {!meta.isEasyConfirmationEnabled && !wallet.isHW && (
+        {!meta.isEasyConfirmationEnabled && !meta.isHW && (
           <View style={styles.input} testID="spendingPassword">
             <ValidatedTextInput secureTextEntry value={password} label={strings.password} onChangeText={setPassword} />
           </View>
@@ -98,7 +98,7 @@ export const DelegationConfirmation = () => {
           <Text style={styles.rewards}>{formatTokenWithText(reward, wallet.primaryToken)}</Text>
         </View>
 
-        {wallet.isHW && <HWInstructions useUSB={useUSB} addMargin />}
+        {meta.isHW && <HWInstructions useUSB={useUSB} addMargin />}
       </ScrollView>
 
       <Actions>

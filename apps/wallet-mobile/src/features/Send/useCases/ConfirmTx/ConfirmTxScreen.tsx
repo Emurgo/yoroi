@@ -100,7 +100,7 @@ export const ConfirmTxScreen = () => {
 
           <SecondaryTotals yoroiUnsignedTx={yoroiUnsignedTx} />
 
-          {!meta.isEasyConfirmationEnabled && !wallet.isHW && (
+          {!meta.isEasyConfirmationEnabled && !meta.isHW && (
             <ValidatedTextInput
               secureTextEntry
               value={password}

@@ -1,6 +1,6 @@
 import {Chain} from '@yoroi/types'
 
-import {WalletImplementationId} from '../../../../yoroi-wallets/types'
+import {WalletImplementation} from '../../common/types'
 import {getWalletFactory} from './get-wallet-factory'
 
 describe('getWalletFactory', () => {
@@ -10,55 +10,51 @@ describe('getWalletFactory', () => {
 
   it('should return the correct wallet factory for Mainnet', () => {
     const network = Chain.Network.Mainnet
-    const implementationId: WalletImplementationId = 'haskell-shelley'
+    const implementation: WalletImplementation = 'cardano-shelley'
 
-    const result = getWalletFactory({network, implementationId})
+    const result = getWalletFactory({network, implementation})
 
     expect(result).toBeDefined()
   })
 
   it('should return the correct wallet factory for Preprod', () => {
     const network = Chain.Network.Preprod
-    const implementationId: WalletImplementationId = 'haskell-shelley'
+    const implementation: WalletImplementation = 'cardano-shelley'
 
-    const result = getWalletFactory({network, implementationId})
+    const result = getWalletFactory({network, implementation})
 
     expect(result).toBeDefined()
   })
 
   it('should return the correct wallet factory for Sancho', () => {
     const network = Chain.Network.Sancho
-    const implementationId: WalletImplementationId = 'haskell-shelley'
+    const implementation: WalletImplementation = 'cardano-shelley'
 
-    const result = getWalletFactory({network, implementationId})
+    const result = getWalletFactory({network, implementation})
 
     expect(result).toBeDefined()
   })
 
-  it('should return the correct wallet factory for Mainnet with implementationId "haskell-byron"', () => {
+  it('should return the correct wallet factory for Mainnet with implementation "haskell-byron"', () => {
     const network = Chain.Network.Mainnet
-    const implementationId: WalletImplementationId = 'haskell-byron'
+    const implementation: WalletImplementation = 'cardano-byron'
 
-    const result = getWalletFactory({network, implementationId})
+    const result = getWalletFactory({network, implementation})
 
     expect(result).toBeDefined()
   })
 
   it('should throw for unknown network', () => {
     const network = 'unknown-network' as Chain.SupportedNetworks
-    const implementationId: WalletImplementationId = 'haskell-shelley'
+    const implementation: WalletImplementation = 'cardano-shelley'
 
-    expect(() => getWalletFactory({network, implementationId})).toThrow(
-      'getWalletFactory Unable to find wallet factory',
-    )
+    expect(() => getWalletFactory({network, implementation})).toThrow('getWalletFactory Unable to find wallet factory')
   })
 
-  it('should throw for unknown implementationId', () => {
+  it('should throw for unknown implementation', () => {
     const network = Chain.Network.Mainnet
-    const implementationId = 'unknown-implementationId' as WalletImplementationId
+    const implementation = 'unknown-implementation' as WalletImplementation
 
-    expect(() => getWalletFactory({network, implementationId})).toThrow(
-      'getWalletFactory Unable to find wallet factory',
-    )
+    expect(() => getWalletFactory({network, implementation})).toThrow('getWalletFactory Unable to find wallet factory')
   })
 })

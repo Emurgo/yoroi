@@ -1,8 +1,10 @@
+import {walletChecksum} from '@emurgo/cip4-js'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useAsyncStorage} from '@yoroi/common'
+import {Blockies} from '@yoroi/identicon'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
-import {Api} from '@yoroi/types'
+import {Api, Wallet} from '@yoroi/types'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {
@@ -26,8 +28,6 @@ import {logger} from '../../../../kernel/logger/logger'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import {isEmptyString} from '../../../../kernel/utils'
-import {usePlate} from '../../../../yoroi-wallets/hooks'
-import {WalletImplementationId} from '../../../../yoroi-wallets/types'
 import {
   getWalletNameError,
   REQUIRED_PASSWORD_LENGTH,
@@ -36,8 +36,7 @@ import {
 } from '../../../../yoroi-wallets/utils'
 import {debugWalletInfo, features} from '../../..'
 import {useCreateWalletMnemonic} from '../../../WalletManager/common/hooks/useCreateWalletMnemonic'
-import {AddressMode} from '../../../WalletManager/common/types'
-import {parseWalletMeta} from '../../../WalletManager/common/validators'
+import {parseWalletMeta} from '../../../WalletManager/common/validators/wallet-meta'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
 import {YoroiZendeskLink} from '../../common/constants'
@@ -61,7 +60,7 @@ const useSizeModal = () => {
 }
 
 // when restoring, later will be part of the onboarding
-const addressMode: AddressMode = 'single'
+const addressMode: Wallet.AddressMode = 'single'
 export const RestoreWalletDetailsScreen = () => {
   const navigation = useNavigation<SetupWalletRouteNavigation>()
   const strings = useStrings()
@@ -74,8 +73,8 @@ export const RestoreWalletDetailsScreen = () => {
   const walletNames = Array.from(walletManager.walletMetas.values()).map(({name}) => name)
   const [name, setName] = React.useState(features.prefillWalletInfo ? debugWalletInfo.WALLET_NAME : '')
   const storage = useAsyncStorage()
-  const {mnemonic, networkId, publicKeyHex, walletImplementationId, walletIdChanged} = useSetupWallet()
-  const plate = usePlate({networkId, publicKeyHex})
+  const {mnemonic, publicKeyHex, walletImplementation, walletIdChanged} = useSetupWallet()
+  const plate = walletChecksum(publicKeyHex)
 
   const passwordRef = React.useRef<RNTextInput>(null)
   const [password, setPassword] = React.useState(features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '')
@@ -181,11 +180,11 @@ export const RestoreWalletDetailsScreen = () => {
           <View>
             <CardAboutPhrase
               title={strings.walletChecksumModalCardTitle}
-              checksumImage={plate.accountPlate.ImagePart}
+              checksumImage={plate.ImagePart}
               checksumLine={1}
               linesOfText={[
                 strings.walletChecksumModalCardFirstItem,
-                strings.walletChecksumModalCardSecondItem(plate.accountPlate.TextPart),
+                strings.walletChecksumModalCardSecondItem(plate.TextPart),
                 strings.walletChecksumModalCardThirdItem,
               ]}
             />
@@ -285,12 +284,12 @@ export const RestoreWalletDetailsScreen = () => {
           <Space height="xl" />
 
           <View style={styles.checksum}>
-            <Icon.WalletAccount iconSeed={plate.accountPlate.ImagePart} style={styles.walletChecksum} />
+            <Icon.WalletAvatar image={new Blockies().asBase64({seed: plate.ImagePart})} style={styles.walletChecksum} />
 
             <Space width="sm" />
 
             <Text style={styles.plateNumber} testID="wallet-plate-number">
-              {plate.accountPlate.TextPart}
+              {plate.TextPart}
             </Text>
 
             <Space width="sm" />
@@ -308,8 +307,7 @@ export const RestoreWalletDetailsScreen = () => {
                 name,
                 password,
                 mnemonicPhrase: mnemonic,
-                networkId,
-                walletImplementationId: walletImplementationId as WalletImplementationId,
+                implementation: walletImplementation,
                 addressMode,
               })
             }

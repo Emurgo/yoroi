@@ -1,3 +1,4 @@
+import {Blockies} from '@yoroi/identicon'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
@@ -60,7 +61,10 @@ export const CardAboutPhrase = ({
               {handleShowChecksum && (
                 <>
                   <View style={styles.walletChecksumContainer}>
-                    <Icon.WalletAccount iconSeed={checksumImage} style={styles.walletChecksum} />
+                    <Icon.WalletAvatar
+                      image={new Blockies().asBase64({seed: checksumImage})}
+                      style={styles.walletChecksum}
+                    />
 
                     <Space width="sm" />
                   </View>

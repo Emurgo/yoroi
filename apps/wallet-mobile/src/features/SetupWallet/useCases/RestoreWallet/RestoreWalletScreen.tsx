@@ -1,5 +1,6 @@
 import {walletChecksum} from '@emurgo/cip4-js'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {Blockies} from '@yoroi/identicon'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
 import {validateMnemonic} from 'bip39'
@@ -126,7 +127,7 @@ export const RestoreWalletScreen = () => {
     release()
 
     const duplicatedWalletMeta = Array.from(walletManager.walletMetas.values()).find(
-      (walletMeta) => walletMeta.checksum.TextPart === checksum.TextPart,
+      (walletMeta) => walletMeta.plate === checksum.TextPart,
     )
 
     if (duplicatedWalletMeta) {
@@ -236,7 +237,10 @@ const Modal = ({
       <Space height="lg" />
 
       <View style={styles.checksum}>
-        <Icon.WalletAccount iconSeed={plate.accountPlate.ImagePart} style={styles.walletChecksum} />
+        <Icon.WalletAvatar
+          image={new Blockies().asBase64({seed: plate.accountPlate.ImagePart})}
+          style={styles.walletChecksum}
+        />
 
         <Space width="sm" />
 

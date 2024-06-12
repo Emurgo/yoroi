@@ -1,4 +1,5 @@
 import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
+import {PromiseAllLimited} from '@yoroi/common'
 import BigNumber from 'bignumber.js'
 
 import {logger} from '../../../kernel/logger/logger'
@@ -19,10 +20,10 @@ export async function calcLockedDeposit({
   address?: string
   coinsPerUtxoByteStr?: string
 }) {
-  return BigNumber(0)
   const cslLocal = wrappedCsl()
   const csl = cslLocal.csl
   const cslProvided = wrappedCsl()
+  const result = new BigNumber(0)
   try {
     const utxosWithAssets = rawUtxos.filter((u) => u.assets.length > 0)
     const coinsPerUtxoByte = await csl.BigNum.fromStr(coinsPerUtxoByteStr)
@@ -32,17 +33,19 @@ export async function calcLockedDeposit({
     if (normalizedAddress === undefined) throw new Error('calcLockedDeposit::Error not a valid address')
 
     const promises = utxosWithAssets.map((u) => {
-      return cardanoValueFromRemoteFormat(u)
-        .then((v) => csl.TransactionOutput.new(normalizedAddress, v))
-        .then((txOutput) => csl.minAdaForOutput(txOutput, dataCost))
-        .then((m) => m.toStr())
+      return () =>
+        cardanoValueFromRemoteFormat(u)
+          .then((v) => csl.TransactionOutput.new(normalizedAddress, v))
+          .then((txOutput) => csl.minAdaForOutput(txOutput, dataCost))
+          .then((m) => m.toStr())
     })
-    const results = await Promise.all(promises)
-    const totalLocked = results.reduce((acc, v) => acc.plus(v), new BigNumber(0))
+    const results = await PromiseAllLimited(promises, 20)
+    const totalLocked = results.reduce((acc, v) => acc.plus(v), result)
 
     return totalLocked
   } catch (e) {
-    logger.error(e as Error, {rawUtxos, address, coinsPerUtxoByteStr})
+    logger.error(e as Error, {utxosLength: rawUtxos.length, coinsPerUtxoByteStr})
+    return result
   } finally {
     cslProvided.release()
     cslLocal.release()

@@ -1,15 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {Address} from '@emurgo/cross-csl-core'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {Balance, Chain} from '@yoroi/types'
+import {Balance, Chain, HW, Wallet} from '@yoroi/types'
 
 import {buildPortfolioTokenManagers} from '../../../../../features/Portfolio/common/helpers/build-token-managers'
-import {WalletMeta} from '../../../../../features/WalletManager/common/types'
 import {getWalletFactory} from '../../../../../features/WalletManager/network-manager/helpers/get-wallet-factory'
 import {buildNetworkManagers} from '../../../../../features/WalletManager/network-manager/network-manager'
 import {EncryptedStorage, EncryptedStorageKeys} from '../../../../../kernel/storage/EncryptedStorage'
 import {rootStorage} from '../../../../../kernel/storage/rootStorage'
-import {HWDeviceInfo} from '../../../../hw'
 import {DefaultAsset} from '../../../../types'
 import {ShelleyAddressGeneratorJSON} from '../../../chain'
 import {WalletJSON} from '../../../shelley/ShelleyWallet'
@@ -21,7 +19,7 @@ describe('ShelleyWalletTestnet', () => {
   afterEach(() => AsyncStorage.clear())
 
   const ShelleyWalletTestnet = getWalletFactory({
-    implementationId: 'haskell-shelley',
+    implementation: 'cardano-shelley',
     network: Chain.Network.Preprod,
   })
   // TODO: should be mocked
@@ -47,13 +45,7 @@ describe('ShelleyWalletTestnet', () => {
     })
 
     expect(wallet.id).toBe('261c7e0f-dd72-490c-8ce9-6714b512b969')
-    expect(wallet.networkId).toBe(300)
-    expect(wallet.isHW).toBe(false)
     expect(wallet.hwDeviceInfo).toBe(null)
-    expect(wallet.checksum?.TextPart).toBe('OSEC-2869')
-    expect(wallet.checksum?.ImagePart).toBe(
-      '4252069ffbf52c5bbae1dd6a8e1801dd27cc279a88602292287146b21c5668edc8393502b27b21ca9954062ecde30beea06caf775a3580dd23017cfe19a2c2db',
-    )
     expect(wallet.rewardAddressHex).toBe('e0c11ef08c44f3610b7e56d46e086b90186c12e9a68f0521b7c4c72e4b')
     expect(wallet.publicKeyHex).toBe(
       '6c2311e6e7a934751c55054cb21ab844f2e55baa48fc8f298dd54430f116d1c14c5f12d15611670454e05efac74e8f5d5e887ae2c15ef3086e0691d0d8439665',
@@ -156,13 +148,7 @@ describe('ShelleyWalletTestnet', () => {
     await wallet.internalChain?._addressGenerator.getRewardAddressHex()
 
     expect(wallet.id).toBe('261c7e0f-dd72-490c-8ce9-6714b512b969')
-    expect(wallet.networkId).toBe(300)
-    expect(wallet.isHW).toBe(false)
     expect(wallet.hwDeviceInfo).toBe(null)
-    expect(wallet.checksum?.TextPart).toBe('OSEC-2869')
-    expect(wallet.checksum?.ImagePart).toBe(
-      '4252069ffbf52c5bbae1dd6a8e1801dd27cc279a88602292287146b21c5668edc8393502b27b21ca9954062ecde30beea06caf775a3580dd23017cfe19a2c2db',
-    )
     expect(wallet.rewardAddressHex).toBe('e0c11ef08c44f3610b7e56d46e086b90186c12e9a68f0521b7c4c72e4b')
     expect(wallet.publicKeyHex).toBe(
       '6c2311e6e7a934751c55054cb21ab844f2e55baa48fc8f298dd54430f116d1c14c5f12d15611670454e05efac74e8f5d5e887ae2c15ef3086e0691d0d8439665',
@@ -251,7 +237,7 @@ describe('ShelleyWalletTestnet', () => {
   it('create hw ', async () => {
     const accountPubKeyHex =
       '1ba2332dca14d6f1f5a5282512e725852a34d3aee1cc26057e9cfb2c2730f1665934fa0b0fa42e16ded504fa81198e45dc22d10dab69398e730542a198dcbfcf'
-    const hwDeviceInfo: HWDeviceInfo = {
+    const hwDeviceInfo: HW.DeviceInfo = {
       bip44AccountPublic: accountPubKeyHex,
       hwFeatures: {
         deviceId: 'DE:F1:F3:14:AE:93',
@@ -273,13 +259,7 @@ describe('ShelleyWalletTestnet', () => {
     })
 
     expect(wallet.id).toBe('261c7e0f-dd72-490c-8ce9-6714b512b969')
-    expect(wallet.networkId).toBe(300)
-    expect(wallet.isHW).toBe(true)
     expect(wallet.hwDeviceInfo).toEqual(hwDeviceInfo)
-    expect(wallet.checksum?.TextPart).toBe('SHCZ-0679')
-    expect(wallet.checksum?.ImagePart).toBe(
-      'bc210d41df754ddf71057ea8186e7ec61f6effa28e5ea6a205684673da32eea2c3f4115ddd1fe9cbcbf7482cea56b16bd1244614d6e868ff433a92e01b92bcae',
-    )
     expect(wallet.rewardAddressHex).toBe('e09a38e3de94ca136b1a80fa90d7360ec1fe5a8dbc26d427ffece54ee2')
     expect(wallet.publicKeyHex).toBe(
       '1ba2332dca14d6f1f5a5282512e725852a34d3aee1cc26057e9cfb2c2730f1665934fa0b0fa42e16ded504fa81198e45dc22d10dab69398e730542a198dcbfcf',
@@ -351,19 +331,17 @@ describe('ShelleyWalletTestnet', () => {
   })
 })
 
-const walletMeta: WalletMeta = {
+const walletMeta: Wallet.Meta = {
   id: '261c7e0f-dd72-490c-8ce9-6714b512b969',
   name: 'My Wallet',
-  networkId: 1,
-  walletImplementationId: 'haskell-shelley',
+  implementation: 'cardano-shelley',
   isHW: false,
-  checksum: {
-    ImagePart:
-      '4252069ffbf52c5bbae1dd6a8e1801dd27cc279a88602292287146b21c5668edc8393502b27b21ca9954062ecde30beea06caf775a3580dd23017cfe19a2c2db',
-    TextPart: 'OSEC-2869',
-  },
+  avatar: 'https://avatars.io/twitter/emurgo_io',
+  plate: 'OSEC-2869',
+  version: 3,
   isEasyConfirmationEnabled: false,
   addressMode: 'multiple',
+  isReadOnly: false,
 }
 
 const data: WalletJSON = {
@@ -495,9 +473,7 @@ const data: WalletJSON = {
       type: 'External',
     },
   },
-  isHW: false,
   hwDeviceInfo: null,
-  isReadOnly: false,
 }
 
 const getBech32InternalChain = (wallet: any) => wallet.internalChain?._addressGenerator._accountPubKeyPtr?.toBech32()

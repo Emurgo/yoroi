@@ -1,5 +1,6 @@
 import {useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
+import {Wallet} from '@yoroi/types'
 import React from 'react'
 import type {MessageDescriptor} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
@@ -10,15 +11,12 @@ import {Icon, Spacer} from '../../../components'
 import {DIALOG_BUTTONS, showConfirmationDialog} from '../../../kernel/dialogs'
 import {confirmationMessages} from '../../../kernel/i18n/global-messages'
 import {SettingsRouteNavigation, useWalletNavigation} from '../../../kernel/navigation'
-import {getNetworkConfigById} from '../../../yoroi-wallets/cardano/networks'
-import {isByron, isHaskellShelley} from '../../../yoroi-wallets/cardano/utils'
 import {useResync} from '../../../yoroi-wallets/hooks'
-import {NetworkId, WalletImplementationId} from '../../../yoroi-wallets/types'
 import {useAuth} from '../../Auth/AuthProvider'
 import {useAuthSetting} from '../../Auth/common/hooks'
+import {useAddressModeManager} from '../../WalletManager/common/hooks/useAddressMode'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useSelectedWalletMeta} from '../../WalletManager/common/hooks/useSelectedWalletMeta'
-import {useAddressModeManager} from '../../WalletManager/common/useAddressModeManager'
 import {useNavigateTo} from '../common/navigation'
 import {SettingsSwitch} from '../common/SettingsSwitch'
 import {
@@ -34,13 +32,12 @@ export const WalletSettingsScreen = () => {
   const strings = useStrings()
   const {styles, colors} = useStyles()
   const {resetToWalletSelection} = useWalletNavigation()
-  const wallet = useSelectedWallet()
   const authSetting = useAuthSetting()
   const addressMode = useAddressModeManager()
 
   const logout = useLogout()
   const settingsNavigation = useNavigation<SettingsRouteNavigation>()
-  const {isEasyConfirmationEnabled} = useSelectedWalletMeta()
+  const {isEasyConfirmationEnabled, isHW, isReadOnly, implementation} = useSelectedWalletMeta()
   const navigateTo = useNavigateTo()
 
   const onToggleEasyConfirmation = () => {
@@ -86,19 +83,19 @@ export const WalletSettingsScreen = () => {
             icon={<Icon.Lock {...iconProps} />}
             label={strings.changePassword}
             onNavigate={() => settingsNavigation.navigate('change-password')}
-            disabled={wallet.isReadOnly || wallet.isHW}
+            disabled={isReadOnly || isHW}
           />
 
           <SettingsItem
             icon={<Icon.Bio {...iconProps} />}
             label={strings.easyConfirmation}
             info={strings.easyConfirmationInfo}
-            disabled={authSetting === 'pin' || wallet.isHW || wallet.isReadOnly}
+            disabled={authSetting === 'pin' || isHW || isReadOnly}
           >
             <SettingsSwitch
               value={isEasyConfirmationEnabled}
               onValueChange={onToggleEasyConfirmation}
-              disabled={authSetting === 'pin' || wallet.isHW || wallet.isReadOnly}
+              disabled={authSetting === 'pin' || isHW || isReadOnly}
             />
           </SettingsItem>
         </SettingsSection>
@@ -133,12 +130,7 @@ export const WalletSettingsScreen = () => {
         <Spacer height={24} />
 
         <SettingsSection title={strings.about}>
-          <SettingsBuildItem label={strings.network} value={getNetworkName(wallet.networkId)} />
-
-          <SettingsBuildItem
-            label={strings.walletType}
-            value={intl.formatMessage(getWalletType(wallet.walletImplementationId))}
-          />
+          <SettingsBuildItem label={strings.walletType} value={intl.formatMessage(getWalletType(implementation))} />
         </SettingsSection>
 
         <Spacer height={24} />
@@ -147,19 +139,9 @@ export const WalletSettingsScreen = () => {
   )
 }
 
-const getNetworkName = (networkId: NetworkId) => {
-  // note(v-almonacid): this throws when switching wallet
-  try {
-    const config = getNetworkConfigById(networkId)
-    return config.MARKETING_NAME
-  } catch (_e) {
-    return '-'
-  }
-}
-
-const getWalletType = (implementationId: WalletImplementationId): MessageDescriptor => {
-  if (isByron(implementationId)) return messages.byronWallet
-  if (isHaskellShelley(implementationId)) return messages.shelleyWallet
+const getWalletType = (implementation: Wallet.Implementation): MessageDescriptor => {
+  if (implementation === 'cardano-byron') return messages.byronWallet
+  if (implementation === 'cardano-shelley') return messages.shelleyWallet
 
   return messages.unknownWalletType
 }

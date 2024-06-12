@@ -126,13 +126,14 @@ export const TxHistoryNavigator = () => {
   // exchange
   const exchangeManager = React.useMemo(() => {
     const api = exchangeApiMaker({
-      isProduction: wallet.networkId === 1,
+      // TODO: update exchange with isMainnet
+      isProduction: wallet.isMainnet,
       partner: 'yoroi',
     })
 
     const manager = exchangeManagerMaker({api})
     return manager
-  }, [wallet.networkId])
+  }, [wallet.isMainnet])
 
   return (
     <ReceiveProvider key={wallet.id}>
@@ -558,14 +559,14 @@ const SettingsIconButton = (props: TouchableOpacityProps) => {
 }
 
 const HeaderRightHistory = React.memo(() => {
-  const wallet = useSelectedWallet()
+  const meta = useSelectedWalletMeta()
   const {navigateToSettings} = useWalletNavigation()
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const {styles, colors} = useStyles()
 
   return (
     <Row style={styles.row}>
-      {!wallet.isReadOnly && (
+      {!meta.isReadOnly && (
         <>
           <CodeScannerButton
             onPress={() => navigation.navigate('scan-start', {insideFeature: 'scan'})}

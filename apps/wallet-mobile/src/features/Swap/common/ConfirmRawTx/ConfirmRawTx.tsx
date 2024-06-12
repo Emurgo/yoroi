@@ -3,7 +3,6 @@ import React from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
 
 import {ModalError} from '../../../../components/ModalError/ModalError'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useSelectedWalletMeta} from '../../../WalletManager/common/hooks/useSelectedWalletMeta'
 import {ConfirmRawTxWithHW} from './ConfirmRawTxWithHW'
 import {ConfirmRawTxWithOs} from './ConfirmRawTxWithOs'
@@ -19,10 +18,9 @@ type Props = {
 }
 
 export const ConfirmRawTx = ({onConfirm, onHWConfirm, onCancel, utxo, bech32Address, cancelOrder}: Props) => {
-  const wallet = useSelectedWallet()
   const meta = useSelectedWalletMeta()
 
-  if (wallet.isHW) {
+  if (meta.isHW) {
     return (
       <ErrorBoundary
         fallbackRender={({error, resetErrorBoundary}) => (

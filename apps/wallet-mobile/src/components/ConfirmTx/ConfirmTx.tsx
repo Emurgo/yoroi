@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
-import {App} from '@yoroi/types'
+import {App, HW} from '@yoroi/types'
 import React, {useEffect, useState} from 'react'
 import {useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
@@ -15,7 +15,7 @@ import {confirmationMessages, errorMessages, txLabels} from '../../kernel/i18n/g
 import LocalizableError from '../../kernel/i18n/LocalizableError'
 import {isEmptyString} from '../../kernel/utils'
 import {useSubmitTx} from '../../yoroi-wallets/hooks'
-import {DeviceId, DeviceObj, withBLE, withUSB} from '../../yoroi-wallets/hw'
+import {withBLE, withUSB} from '../../yoroi-wallets/hw'
 import {YoroiSignedTx, YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {delay} from '../../yoroi-wallets/utils/timeUtils'
 import {Button, ButtonProps, ValidatedTextInput} from '..'
@@ -119,7 +119,7 @@ export const ConfirmTx = ({
     }
   }
 
-  const onConnectUSB = async (deviceObj: DeviceObj) => {
+  const onConnectUSB = async (deviceObj: HW.DeviceObj) => {
     await walletManager.updateHWDeviceInfo(wallet, withUSB(wallet, deviceObj))
 
     if (yoroiUnsignedTx.unsignedTx.catalystRegistrationData && onCIP36SupportChange) {
@@ -138,7 +138,7 @@ export const ConfirmTx = ({
     }
   }
 
-  const onConnectBLE = async (deviceId: DeviceId) => {
+  const onConnectBLE = async (deviceId: string) => {
     await walletManager.updateHWDeviceInfo(wallet, withBLE(wallet, deviceId))
 
     if (yoroiUnsignedTx.unsignedTx.catalystRegistrationData && onCIP36SupportChange) {
@@ -171,7 +171,7 @@ export const ConfirmTx = ({
             throw new Error('Empty decrypt key')
           }
         } else {
-          if (wallet.isHW) {
+          if (meta.isHW) {
             setDialogStep(DialogStep.WaitingHwResponse)
             signedTx = await wallet.signTxWithLedger(yoroiUnsignedTx, useUSB)
           } else {
@@ -221,22 +221,33 @@ export const ConfirmTx = ({
         setIsProcessing(false)
       }
     },
-    [meta.isEasyConfirmationEnabled, onError, onSuccess, password, strings, submitTx, useUSB, wallet, yoroiUnsignedTx],
+    [
+      meta.isEasyConfirmationEnabled,
+      meta.isHW,
+      onError,
+      onSuccess,
+      password,
+      strings,
+      submitTx,
+      useUSB,
+      wallet,
+      yoroiUnsignedTx,
+    ],
   )
 
   const {authWithOs} = useAuthOsWithEasyConfirmation({id: wallet.id}, {onSuccess: onConfirm})
 
   const _onConfirm = React.useCallback(async () => {
-    if (wallet.isHW && chooseTransportOnConfirmation) {
+    if (meta.isHW && chooseTransportOnConfirmation) {
       setDialogStep(DialogStep.ChooseTransport)
     } else if (meta.isEasyConfirmationEnabled) {
       return authWithOs()
     } else {
       return onConfirm()
     }
-  }, [wallet.isHW, meta.isEasyConfirmationEnabled, chooseTransportOnConfirmation, authWithOs, onConfirm])
+  }, [meta.isHW, meta.isEasyConfirmationEnabled, chooseTransportOnConfirmation, authWithOs, onConfirm])
 
-  const isConfirmationDisabled = !meta.isEasyConfirmationEnabled && isEmptyString(password) && !wallet.isHW
+  const isConfirmationDisabled = !meta.isEasyConfirmationEnabled && isEmptyString(password) && !meta.isHW
 
   useEffect(() => {
     if (meta.isEasyConfirmationEnabled && autoSignIfEasyConfirmation) {
@@ -250,15 +261,15 @@ export const ConfirmTx = ({
   }, [autoConfirm, onConfirm, isProcessing, isProcessed])
 
   useEffect(() => {
-    if (wallet.isHW && !chooseTransportOnConfirmation) {
+    if (meta.isHW && !chooseTransportOnConfirmation) {
       setDialogStep(DialogStep.ChooseTransport)
     }
-  }, [chooseTransportOnConfirmation, wallet.isHW])
+  }, [chooseTransportOnConfirmation, meta.isHW, wallet.isHW])
 
   return (
     <View style={styles.root}>
       <View style={styles.actionContainer}>
-        {!meta.isEasyConfirmationEnabled && !wallet.isHW && !isProvidingPassword && (
+        {!meta.isEasyConfirmationEnabled && !meta.isHW && !isProvidingPassword && (
           <ValidatedTextInput
             secureTextEntry
             value={password ?? ''}

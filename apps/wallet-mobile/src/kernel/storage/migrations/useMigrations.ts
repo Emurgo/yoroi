@@ -28,7 +28,7 @@ export const useMigrations = (storage: App.Storage) => {
           logger.info('useMigrations: Storages migrated to version 2')
         }
       } else {
-        logger.info('useMigrations: No migraitons needed')
+        logger.info('useMigrations: No migrations needed')
       }
 
       const savedVersion = await storageVersion.read()

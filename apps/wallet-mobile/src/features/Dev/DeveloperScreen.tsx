@@ -19,7 +19,6 @@ import {storageVersionMaker} from '../../kernel/storage/migrations/storageVersio
 import {rootStorage} from '../../kernel/storage/rootStorage'
 import {isEmptyString} from '../../kernel/utils'
 import {generateAdaMnemonic} from '../../yoroi-wallets/cardano/mnemonic'
-import {NetworkId} from '../../yoroi-wallets/types'
 import {useAuth} from '../Auth/AuthProvider'
 import {useLegalAgreement, useResetLegalAgreement} from '../Initialization/common'
 import {useCreateWalletMnemonic} from '../WalletManager/common/hooks/useCreateWalletMnemonic'
@@ -114,9 +113,8 @@ export const DeveloperScreen = () => {
             createWallet({
               mnemonicPhrase: config['WALLET_1_MNEMONIC'] ?? '',
               name: 'Wallet 1',
-              networkId: Number(config['WALLET_1_NETWORK_ID'] ?? 300) as NetworkId,
               password: '1234567890',
-              walletImplementationId: 'haskell-shelley',
+              implementation: 'cardano-shelley',
               addressMode: 'multiple',
             })
           }
@@ -131,9 +129,8 @@ export const DeveloperScreen = () => {
             createWallet({
               mnemonicPhrase: config['WALLET_2_MNEMONIC'] ?? '',
               name: 'Wallet 2',
-              networkId: Number(config['WALLET_2_NETWORK_ID'] ?? 300) as NetworkId,
               password: '1234567890',
-              walletImplementationId: 'haskell-shelley',
+              implementation: 'cardano-shelley',
               addressMode: 'multiple',
             })
           }
@@ -148,9 +145,8 @@ export const DeveloperScreen = () => {
             createWallet({
               mnemonicPhrase: config['WALLET_3_MNEMONIC'] ?? '',
               name: 'Wallet 3',
-              networkId: Number(config['WALLET_3_NETWORK_ID'] ?? 300) as NetworkId,
               password: '1234567890',
-              walletImplementationId: 'haskell-shelley',
+              implementation: 'cardano-shelley',
               addressMode: 'multiple',
             })
           }
@@ -165,9 +161,8 @@ export const DeveloperScreen = () => {
             createWallet({
               mnemonicPhrase: generateAdaMnemonic(),
               name: 'RO-Mainnet',
-              networkId: 1,
               password: '1234567890',
-              walletImplementationId: 'haskell-shelley',
+              implementation: 'cardano-shelley',
               addressMode: 'single',
             })
           }

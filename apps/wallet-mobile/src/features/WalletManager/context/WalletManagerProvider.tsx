@@ -1,9 +1,8 @@
-import {Chain} from '@yoroi/types'
+import {Chain, Wallet} from '@yoroi/types'
 import * as React from 'react'
 
 import {logger} from '../../../kernel/logger/logger'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
-import {WalletMeta} from '../common/types'
 import {WalletManager} from '../wallet-manager'
 import {
   WalletManagerActions,
@@ -33,9 +32,9 @@ export const WalletManagerProvider: React.FC<
   const actions = React.useRef<WalletManagerActions>({
     networkSelected: (network: Chain.SupportedNetworks) =>
       dispatch({type: WalletManagerActionType.NetworkSelected, network}),
-    walletSelected: ({wallet, meta}: {wallet: YoroiWallet | null; meta: WalletMeta | null}) =>
+    walletSelected: ({wallet, meta}: {wallet: YoroiWallet | null; meta: Wallet.Meta | null}) =>
       dispatch({type: WalletManagerActionType.WalletSelected, wallet, meta}),
-    selectedMetaUpdated: (metas: Map<YoroiWallet['id'], WalletMeta>) =>
+    selectedMetaUpdated: (metas: Map<YoroiWallet['id'], Wallet.Meta>) =>
       dispatch({type: WalletManagerActionType.SelectedMetaUpdated, metas}),
   }).current
 

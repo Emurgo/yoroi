@@ -16,7 +16,7 @@ type Props = {
 
 export const ConfirmTx = ({wallet, onSuccess, onCancel, unsignedTx}: Props) => {
   const meta = useSelectedWalletMeta()
-  return wallet.isHW ? (
+  return meta.isHW ? (
     <ConfirmTxWithHW //
       wallet={wallet}
       unsignedTx={unsignedTx}

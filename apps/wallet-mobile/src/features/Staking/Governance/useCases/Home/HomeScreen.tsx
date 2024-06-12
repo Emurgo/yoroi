@@ -25,6 +25,7 @@ import {
 } from '../../../../../yoroi-wallets/hooks'
 import {TransactionInfo} from '../../../../../yoroi-wallets/types'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWalletMeta} from '../../../../WalletManager/common/hooks/useSelectedWalletMeta'
 import {Action, LearnMoreLink, useNavigateTo, useStrings} from '../../common'
 import {mapStakingKeyStateToGovernanceAction} from '../../common/helpers'
 import {Routes} from '../../common/navigation'
@@ -34,6 +35,7 @@ import {EnterDrepIdModal} from '../EnterDrepIdModal'
 
 export const HomeScreen = () => {
   const wallet = useSelectedWallet()
+  const meta = useSelectedWalletMeta()
   const txInfos = useTransactionInfos(wallet)
   const stakingKeyHash = useStakingKey(wallet)
   const [isPendingRefetchAfterTxConfirmation, setIsPendingRefetchAfterTxConfirmation] = React.useState(false)
@@ -60,7 +62,7 @@ export const HomeScreen = () => {
 
   const txPendingDisplayed = isTxPending || isPendingRefetchAfterTxConfirmation
 
-  if (wallet.isHW) {
+  if (meta.isHW) {
     return <HardwareWalletSupportComingSoon />
   }
 

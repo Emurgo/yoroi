@@ -57,7 +57,7 @@ const getInitScript = (sessionId: string, dappConnector: DappConnectorManager) =
   })
 }
 
-export const useConfirmRawTx = (wallet: YoroiWallet) => {
+export const useConfirmRawTx = () => {
   const {openModal, closeModal} = useModal()
   const meta = useSelectedWalletMeta()
   const strings = useStrings()
@@ -71,7 +71,7 @@ export const useConfirmRawTx = (wallet: YoroiWallet) => {
         return result
       }
 
-      if (wallet.isHW) {
+      if (meta.isHW) {
         throw new Error('Not implemented yet')
       }
 
@@ -82,6 +82,6 @@ export const useConfirmRawTx = (wallet: YoroiWallet) => {
 
       openModal(strings.confirmTx, <ConfirmRawTxWithPassword onConfirm={handleOnConfirm} />, modalHeight, onClose)
     },
-    [wallet.isHW, meta.isEasyConfirmationEnabled, openModal, strings.confirmTx, closeModal],
+    [meta.isHW, meta.isEasyConfirmationEnabled, openModal, strings.confirmTx, closeModal],
   )
 }

@@ -55,7 +55,7 @@ export const ConfirmVotingTx = ({
 
           <Spacer height={16} />
 
-          {wallet.isHW ? (
+          {meta.isHW ? (
             <HWInstructions useUSB={useUSB} />
           ) : (
             <Description>
@@ -75,7 +75,7 @@ export const ConfirmVotingTx = ({
             autoComplete="off"
           />
 
-          {!meta.isEasyConfirmationEnabled && !wallet.isHW && (
+          {!meta.isEasyConfirmationEnabled && !meta.isHW && (
             <TextInput
               secureTextEntry
               value={password}

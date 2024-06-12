@@ -50,11 +50,12 @@ export class Blockies {
    * The width and height of the image are both `size * scale` defaulting to 64x64
    *
    * @param options - The options for generating the identicon
-   * @param options.seed - The seed used for generating the identicon
+   * @param options.seed - The seed used for generating the identicon **(must be hex)**
    * @param options.size - The size of the identicon (default: 8)
    * @param options.scale - The scale factor of the identicon (default: 8)
    * @param options.saturationFactor - The saturation factor of the identicon (default: 0)
    * @returns {string} The base64-encoded SVG image
+   * @throws {Error} If the seed is not a valid hex
    */
   public asBase64({
     seed,

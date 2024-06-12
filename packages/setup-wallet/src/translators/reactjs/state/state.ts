@@ -1,3 +1,4 @@
+import {HW, Wallet} from '@yoroi/types'
 import {freeze, produce} from 'immer'
 
 export const setupWalletReducer = (
@@ -18,12 +19,8 @@ export const setupWalletReducer = (
         draft.walletPassword = action.walletPassword
         return
 
-      case SetupWalletActionType.NetworkIdChanged:
-        draft.networkId = action.networkId
-        return
-
-      case SetupWalletActionType.WalletImplementationIdChanged:
-        draft.walletImplementationId = action.walletImplementationId
+      case SetupWalletActionType.WalletImplementationChanged:
+        draft.walletImplementation = action.walletImplementation
         return
 
       case SetupWalletActionType.PublicKeyHexChanged:
@@ -76,8 +73,7 @@ export const setupWalletDefaultState: Readonly<SetupWalletState> = freeze(
     mnemonic: '',
     walletName: '',
     walletPassword: '',
-    networkId: -1,
-    walletImplementationId: '',
+    walletImplementation: 'cardano-shelley',
     publicKeyHex: '',
     path: [],
     hwDeviceInfo: null,
@@ -95,13 +91,12 @@ export type SetupWalletState = {
   mnemonic: string
   walletName: string
   walletPassword: string
-  networkId: NetworkId
-  walletImplementationId: string
+  walletImplementation: Wallet.Implementation
   publicKeyHex: string
   path: Array<number>
-  hwDeviceInfo: HWDeviceInfo | null
+  hwDeviceInfo: HW.DeviceInfo | null
   setUpType: 'restore' | 'create' | 'hw' | null
-  mnemonicType: 15 | 24 | null
+  mnemonicType: 12 | 15 | 24 | null
   useUSB: boolean
   showRestoreWalletInfoModal: boolean
   showCreateWalletInfoModal: boolean
@@ -112,8 +107,7 @@ export enum SetupWalletActionType {
   MnemonicChanged = 'mnemonicChanged',
   WalletNameChanged = 'walletNameChanged',
   WalletPasswordChanged = 'walletPasswordChanged',
-  NetworkIdChanged = 'networkIdChanged',
-  WalletImplementationIdChanged = 'walletImplementationIdChanged',
+  WalletImplementationChanged = 'walletImplementationChanged',
   PublicKeyHexChanged = 'publicKeyHexChanged',
   PathChanged = 'pathChanged',
   HwDeviceInfoChanged = 'hwDeviceInfoChanged',
@@ -140,12 +134,8 @@ export type SetupWalletAction =
       walletPassword: SetupWalletState['walletPassword']
     }
   | {
-      type: SetupWalletActionType.NetworkIdChanged
-      networkId: SetupWalletState['networkId']
-    }
-  | {
-      type: SetupWalletActionType.WalletImplementationIdChanged
-      walletImplementationId: SetupWalletState['walletImplementationId']
+      type: SetupWalletActionType.WalletImplementationChanged
+      walletImplementation: SetupWalletState['walletImplementation']
     }
   | {
       type: SetupWalletActionType.PublicKeyHexChanged
@@ -193,9 +183,8 @@ export type SetupWalletActions = {
   walletPasswordChanged: (
     walletPassword: SetupWalletState['walletPassword'],
   ) => void
-  networkIdChanged: (networkId: SetupWalletState['networkId']) => void
-  walletImplementationIdChanged: (
-    walletImplementationId: SetupWalletState['walletImplementationId'],
+  walletImplementationChanged: (
+    walletImplementation: SetupWalletState['walletImplementation'],
   ) => void
   publicKeyHexChanged: (publicKeyHex: SetupWalletState['publicKeyHex']) => void
   pathChanged: (path: SetupWalletState['path']) => void
@@ -218,8 +207,7 @@ export const setupWalletInitialContext: SetupWalletContext = freeze(
     mnemonicChanged: missingInit,
     walletNameChanged: missingInit,
     walletPasswordChanged: missingInit,
-    networkIdChanged: missingInit,
-    walletImplementationIdChanged: missingInit,
+    walletImplementationChanged: missingInit,
     publicKeyHexChanged: missingInit,
     pathChanged: missingInit,
     hwDeviceInfoChanged: missingInit,
@@ -236,37 +224,5 @@ export const setupWalletInitialContext: SetupWalletContext = freeze(
 
 /* istanbul ignore next */
 function missingInit() {
-  console.error('[ExchangeContext] missing initialization')
+  console.error('[SetupWallet] missing initialization')
 }
-
-// TODO: @yoroi/types
-export type HWDeviceInfo = {
-  bip44AccountPublic: string
-  hwFeatures: HWFeatures
-}
-
-type HWFeatures = {
-  vendor: string
-  model: string
-  deviceId: DeviceId | null | undefined
-  // for establishing a connection through BLE
-  deviceObj: DeviceObj | null | undefined
-  // for establishing a connection through USB
-  serialHex?: string
-}
-
-export type DeviceId = string
-
-export type DeviceObj = {
-  vendorId: number
-  productId: number
-}
-
-export const NETWORK_REGISTRY = {
-  BYRON_MAINNET: 0,
-  HASKELL_SHELLEY: 1,
-  HASKELL_SHELLEY_TESTNET: 300,
-  UNDEFINED: -1,
-  SANCHONET: 450,
-} as const
-export type NetworkId = (typeof NETWORK_REGISTRY)[keyof typeof NETWORK_REGISTRY]
