@@ -22,7 +22,7 @@ type StepperProgressProps = {
 export const StepperProgress = ({currentStep, currentStepTitle, totalSteps, style}: StepperProgressProps) => {
   const {styles} = useStyles()
 
-  if (currentStep > totalSteps) throw new Error("StepperProgress: currentStep can' be greater that totalSteps")
+  if (currentStep > totalSteps) throw new Error("StepperProgress: currentStep can't be greater that totalSteps")
   if (nonEmptyIcons.length > totalSteps || emptyIcons.length > totalSteps)
     throw new Error('StepperProgress: total steps greater that number of icons')
 
