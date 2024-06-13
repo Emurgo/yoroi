@@ -43,94 +43,96 @@ export const PoolTransitionModal = ({
   return (
     <View style={styles.modal}>
       <ScrollView style={styles.scroll}>
-        <Text style={styles.details}>{isActive ? strings.warning : strings.finalWarning}</Text>
+        <View style={styles.modal}>
+          <Text style={styles.details}>{isActive ? strings.warning : strings.finalWarning}</Text>
 
-        <Space height="l" />
+          <Space height="l" />
 
-        <View style={[styles.card, isActive ? styles.border : styles.warningBorder]}>
-          <Row>
-            <Text style={styles.label}>{strings.currentPool}</Text>
+          <View style={[styles.card, isActive ? styles.border : styles.warningBorder]}>
+            <Row>
+              <Text style={styles.label}>{strings.currentPool}</Text>
 
-            <View style={styles.poolTicker}>
-              {poolTransition.current.pic != null && (
-                <Image source={{uri: poolTransition.current.pic}} style={styles.pic} />
+              <View style={styles.poolTicker}>
+                {poolTransition.current.pic != null && (
+                  <Image source={{uri: poolTransition.current.pic}} style={styles.pic} />
+                )}
+
+                <Text
+                  style={styles.poolTickerText}
+                >{`[${poolTransition.current.ticker}] ${poolTransition.current.name}`}</Text>
+              </View>
+            </Row>
+
+            <Row>
+              <Text style={styles.label}>{strings.estimatedRoa}</Text>
+
+              <Text style={styles.currentValue}>{poolTransition.current.roa} %</Text>
+            </Row>
+
+            <Row>
+              <Text style={styles.label}>{strings.fee}</Text>
+
+              <Text style={styles.currentValue}>{formatFee(poolTransition.current.taxRatio)} %</Text>
+            </Row>
+
+            <Text style={styles.warning}>
+              <Text style={styles.warningText}>{isActive ? strings.poolWillStopRewards : strings.poolNoRewards}</Text>
+
+              {isActive && (
+                <Text style={styles.warningTimer}>
+                  {'\n'}
+
+                  {formatTimeSpan(timeSpan)}
+                </Text>
               )}
+            </Text>
+          </View>
 
-              <Text
-                style={styles.poolTickerText}
-              >{`[${poolTransition.current.ticker}] ${poolTransition.current.name}`}</Text>
-            </View>
-          </Row>
+          <Space height="s" />
 
-          <Row>
-            <Text style={styles.label}>{strings.estimatedRoa}</Text>
+          <Icon.ArrowDown size={17} />
 
-            <Text style={styles.currentValue}>{poolTransition.current.roa} %</Text>
-          </Row>
+          <Space height="s" />
 
-          <Row>
-            <Text style={styles.label}>{strings.fee}</Text>
+          <View style={styles.card}>
+            <LinearGradient
+              style={[StyleSheet.absoluteFill, {opacity: 1, borderRadius: 8}]}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0.5}}
+              colors={colors.backgroundGradientCard}
+            />
 
-            <Text style={styles.currentValue}>{formatFee(poolTransition.current.taxRatio)} %</Text>
-          </Row>
+            <Row>
+              <Text style={styles.label}>{strings.newPool}</Text>
 
-          <Text style={styles.warning}>
-            <Text style={styles.warningText}>{isActive ? strings.poolWillStopRewards : strings.poolNoRewards}</Text>
+              <View style={styles.poolTicker}>
+                {poolTransition.suggested.pic != null && (
+                  <Image source={{uri: poolTransition.suggested.pic}} style={styles.pic} />
+                )}
 
-            {isActive && (
-              <Text style={styles.warningTimer}>
-                {'\n'}
+                <Text
+                  style={styles.poolTickerText}
+                >{`[${poolTransition.suggested.ticker}] ${poolTransition.suggested.name}`}</Text>
+              </View>
+            </Row>
 
-                {formatTimeSpan(timeSpan)}
-              </Text>
-            )}
-          </Text>
+            <Row>
+              <Text style={styles.label}>{strings.estimatedRoa}</Text>
+
+              <Text style={styles.suggestedValue}>{poolTransition.suggested.roa} %</Text>
+            </Row>
+
+            <Row>
+              <Text style={styles.label}>{strings.fee}</Text>
+
+              <Text style={styles.suggestedValue}>{formatFee(poolTransition.suggested.taxRatio)} %</Text>
+            </Row>
+
+            <Text style={styles.currentValue}>{strings.poolGeneratesRewards}</Text>
+          </View>
+
+          <Space height="xl" />
         </View>
-
-        <Space height="s" />
-
-        <Icon.ArrowDown size={17} />
-
-        <Space height="s" />
-
-        <View style={styles.card}>
-          <LinearGradient
-            style={[StyleSheet.absoluteFill, {opacity: 1, borderRadius: 8}]}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 0.5}}
-            colors={colors.backgroundGradientCard}
-          />
-
-          <Row>
-            <Text style={styles.label}>{strings.newPool}</Text>
-
-            <View style={styles.poolTicker}>
-              {poolTransition.suggested.pic != null && (
-                <Image source={{uri: poolTransition.suggested.pic}} style={styles.pic} />
-              )}
-
-              <Text
-                style={styles.poolTickerText}
-              >{`[${poolTransition.suggested.ticker}] ${poolTransition.suggested.name}`}</Text>
-            </View>
-          </Row>
-
-          <Row>
-            <Text style={styles.label}>{strings.estimatedRoa}</Text>
-
-            <Text style={styles.suggestedValue}>{poolTransition.suggested.roa} %</Text>
-          </Row>
-
-          <Row>
-            <Text style={styles.label}>{strings.fee}</Text>
-
-            <Text style={styles.suggestedValue}>{formatFee(poolTransition.suggested.taxRatio)} %</Text>
-          </Row>
-
-          <Text style={styles.currentValue}>{strings.poolGeneratesRewards}</Text>
-        </View>
-
-        <Space height="xl" />
       </ScrollView>
 
       <Actions>
