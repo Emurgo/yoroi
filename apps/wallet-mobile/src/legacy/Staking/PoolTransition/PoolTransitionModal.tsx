@@ -5,7 +5,7 @@ import {Image, StyleSheet, Text, View, ViewProps} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import {Button, Icon, useModal} from '../../components'
-import {ScrollView} from '../../components/ScrollView/ScrollView'
+import {ScrollView, useScrollView} from '../../components/ScrollView/ScrollView'
 import {Space} from '../../components/Space/Space'
 import {formatTimeSpan} from '../../yoroi-wallets/utils'
 import {useStrings} from './usePoolTransition'
@@ -18,8 +18,9 @@ export const PoolTransitionModal = ({
   onContinue: () => Promise<void> | void
 }) => {
   const [isLoading, setIsLoading] = React.useState(false)
-  const {styles, colors} = useStyles()
   const strings = useStrings()
+  const {isScrollBarShown, scrollViewRef, setIsScrollBarShown} = useScrollView()
+  const {styles, colors} = useStyles()
 
   const {closeModal} = useModal()
 
@@ -42,7 +43,7 @@ export const PoolTransitionModal = ({
 
   return (
     <View style={styles.modal}>
-      <ScrollView style={styles.scroll}>
+      <ScrollView style={styles.scroll} ref={scrollViewRef} onScrollBarChange={setIsScrollBarShown}>
         <View style={styles.modal}>
           <Text style={styles.details}>{isActive ? strings.warning : strings.finalWarning}</Text>
 
@@ -135,6 +136,8 @@ export const PoolTransitionModal = ({
         </View>
       </ScrollView>
 
+      {isScrollBarShown && <View style={styles.line} />}
+
       <Actions>
         <Button
           outline
@@ -226,6 +229,7 @@ const useStyles = () => {
       height: 24,
       alignItems: 'center',
     },
+    line: {width: '120%', height: StyleSheet.hairlineWidth, backgroundColor: theme.color.gray[200]},
     actions: {
       alignSelf: 'stretch',
       backgroundColor: color.gray_cmin,
