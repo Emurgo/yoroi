@@ -25,6 +25,7 @@ import {makeMetricsManager, MetricsProvider} from './kernel/metrics/metricsManag
 import {useMigrations} from './kernel/storage/migrations/useMigrations'
 import {rootStorage} from './kernel/storage/rootStorage'
 import {useThemeStorageMaker} from './yoroi-wallets/hooks'
+import {PoolTransitionProvider} from './legacy/Staking/PoolTransition/PoolTransitionProvider'
 
 enableScreens(true)
 enableFreeze(true)
@@ -54,17 +55,23 @@ const Yoroi = () => {
                 <LoadingBoundary style={StyleSheet.absoluteFill}>
                   <LanguageProvider>
                     <CurrencyProvider>
-                      <AuthProvider>
-                        <SelectedWalletMetaProvider>
-                          <SelectedWalletProvider>
-                            <LinksProvider>
-                              <SetupWalletProvider>
-                                <InitApp />
-                              </SetupWalletProvider>
-                            </LinksProvider>
-                          </SelectedWalletProvider>
-                        </SelectedWalletMetaProvider>
-                      </AuthProvider>
+                      <SafeAreaProvider>
+                        <RNP.Provider>
+                          <AuthProvider>
+                            <SelectedWalletMetaProvider>
+                              <SelectedWalletProvider>
+                                <LinksProvider>
+                                  <SetupWalletProvider>
+                                    <PoolTransitionProvider>
+                                      <InitApp />
+                                    </PoolTransitionProvider>
+                                  </SetupWalletProvider>
+                                </LinksProvider>
+                              </SelectedWalletProvider>
+                            </SelectedWalletMetaProvider>
+                          </AuthProvider>
+                        </RNP.Provider>
+                      </SafeAreaProvider>
                     </CurrencyProvider>
                   </LanguageProvider>
                 </LoadingBoundary>
