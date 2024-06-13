@@ -26,7 +26,7 @@ import {SetupWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
 import {
   ChooseBiometricLoginScreen,
   useShowBiometricsScreen,
-} from './features/SetupWallet/useCases/ChooseBiometricLogin/ChooseBiometricLoginScreen'
+} from './features/Initialization/ChooseBiometricLogin/ChooseBiometricLoginScreen'
 import {useWalletManager} from './features/WalletManager/context/WalletManagerContext'
 import {useStatusBar} from './hooks/useStatusBar'
 import {agreementDate} from './kernel/config'
