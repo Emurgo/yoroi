@@ -6,7 +6,9 @@ import LinearGradient from 'react-native-linear-gradient'
 
 import {Button, Icon, useModal} from '../../components'
 import {Space} from '../../components/Space/Space'
+import {useSelectedWallet} from '../../features/WalletManager/Context/SelectedWalletContext'
 import {formatTimeSpan} from '../../yoroi-wallets/utils'
+import {usePoolTransitionContext} from './PoolTransitionProvider'
 import {useStrings} from './usePoolTransition'
 
 export const PoolTransitionModal = ({
@@ -21,8 +23,11 @@ export const PoolTransitionModal = ({
   const strings = useStrings()
 
   const {closeModal} = useModal()
+  const wallet = useSelectedWallet()
+  const [, setClosedWallets] = usePoolTransitionContext()
 
-  const handleOnSkip = () => {
+  const handleClose = () => {
+    setClosedWallets((closedWallets) => [wallet.id, ...closedWallets])
     closeModal()
   }
 
@@ -32,7 +37,7 @@ export const PoolTransitionModal = ({
       await onContinue()
     } finally {
       setIsLoading(false)
-      closeModal()
+      handleClose()
     }
   }
 
@@ -133,7 +138,7 @@ export const PoolTransitionModal = ({
       <Space height="xl" />
 
       <Actions>
-        <Button outline title={strings.skipNoRewards} textStyles={styles.outlineButton} onPress={handleOnSkip} />
+        <Button outline title={strings.skipNoRewards} textStyles={styles.outlineButton} onPress={handleClose} />
 
         <Button
           shelleyTheme

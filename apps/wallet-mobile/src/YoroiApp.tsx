@@ -22,6 +22,7 @@ import {CONFIG} from './legacy/config'
 import {setLogLevel} from './legacy/logging'
 import {makeMetricsManager, MetricsProvider} from './metrics/metricsManager'
 import {useMigrations} from './migrations/useMigrations'
+import {PoolTransitionProvider} from './Staking/PoolTransition/PoolTransitionProvider'
 import {walletManager} from './wallet-manager/walletManager'
 import {WalletManagerProvider} from './wallet-manager/WalletManagerContext'
 import {rootStorage} from './yoroi-wallets/storage/rootStorage'
@@ -66,7 +67,9 @@ export const YoroiApp = () => {
                               <SelectedWalletProvider>
                                 <LinksProvider>
                                   <SetupWalletProvider>
-                                    <InitApp />
+                                    <PoolTransitionProvider>
+                                      <InitApp />
+                                    </PoolTransitionProvider>
                                   </SetupWalletProvider>
                                 </LinksProvider>
                               </SelectedWalletProvider>
