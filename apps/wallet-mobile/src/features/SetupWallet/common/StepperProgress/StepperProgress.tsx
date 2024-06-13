@@ -22,9 +22,9 @@ type StepperProgressProps = {
 export const StepperProgress = ({currentStep, currentStepTitle, totalSteps, style}: StepperProgressProps) => {
   const {styles} = useStyles()
 
-  if (currentStep > totalSteps) throw new Error("StepperProgress:: currentStep can' be greater that totalSteps")
-  if (nonEmptyIcons.length > totalSteps || emptyIcons.length > emptyIcons.length)
-    throw new Error('StepperProgress:: total steps greater that number of icons')
+  if (currentStep > totalSteps) throw new Error("StepperProgress: currentStep can' be greater that totalSteps")
+  if (nonEmptyIcons.length > totalSteps || emptyIcons.length > totalSteps)
+    throw new Error('StepperProgress: total steps greater that number of icons')
 
   const stepIndicatorFirstPart: Array<React.ReactNode> = Array.from({length: currentStep}).map((_, index) => {
     if (index <= currentStep - 2) return <CheckIllustration key={index} />
