@@ -55,23 +55,19 @@ const Yoroi = () => {
                 <LoadingBoundary style={StyleSheet.absoluteFill}>
                   <LanguageProvider>
                     <CurrencyProvider>
-                      <SafeAreaProvider>
-                        <RNP.Provider>
-                          <AuthProvider>
-                            <SelectedWalletMetaProvider>
-                              <SelectedWalletProvider>
-                                <LinksProvider>
-                                  <SetupWalletProvider>
-                                    <PoolTransitionProvider>
-                                      <InitApp />
-                                    </PoolTransitionProvider>
-                                  </SetupWalletProvider>
-                                </LinksProvider>
-                              </SelectedWalletProvider>
-                            </SelectedWalletMetaProvider>
-                          </AuthProvider>
-                        </RNP.Provider>
-                      </SafeAreaProvider>
+                      <AuthProvider>
+                        <SelectedWalletMetaProvider>
+                          <SelectedWalletProvider>
+                            <LinksProvider>
+                              <SetupWalletProvider>
+                                <PoolTransitionProvider>
+                                  <InitApp />
+                                </PoolTransitionProvider>
+                              </SetupWalletProvider>
+                            </LinksProvider>
+                          </SelectedWalletProvider>
+                        </SelectedWalletMetaProvider>
+                      </AuthProvider>
                     </CurrencyProvider>
                   </LanguageProvider>
                 </LoadingBoundary>
