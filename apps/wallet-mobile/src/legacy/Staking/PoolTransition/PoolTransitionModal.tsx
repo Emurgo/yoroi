@@ -229,7 +229,7 @@ const useStyles = () => {
       height: 24,
       alignItems: 'center',
     },
-    line: {width: '120%', height: StyleSheet.hairlineWidth, backgroundColor: theme.color.gray[200]},
+    line: {width: '120%', height: StyleSheet.hairlineWidth, backgroundColor: color.gray_c200},
     actions: {
       alignSelf: 'stretch',
       backgroundColor: color.gray_cmin,
