@@ -2,9 +2,8 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {StyleProp, StyleSheet, Text, TextStyle, TouchableOpacity, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
-import LinearGradient from 'react-native-linear-gradient'
 import Animated, {FadeIn, FadeOut, Layout} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -185,15 +184,10 @@ const MnemonicInput = ({defaultMnemonic, userEntries, onPress}: MnemonicInputPro
 
   return (
     <Animated.View layout={Layout} entering={FadeIn} exiting={FadeOut} style={styles.recoveryPhrase}>
-      <LinearGradient
-        style={[StyleSheet.absoluteFill, {opacity: 1}]}
-        start={{x: 1, y: 0}}
-        end={{x: 0, y: 0}}
-        colors={colors.gradientBlueGreen}
-      />
+      <View style={[StyleSheet.absoluteFill, {backgroundColor: colors.gradientBlueGreen}]} />
 
       <View style={styles.recoveryPhraseBackground}>
-        <View style={[styles.recoveryPhraseOutline]}>
+        <View style={styles.recoveryPhraseOutline}>
           {userEntries.map((entry, index, array) => {
             const isLast = index === array.length - 1
             const recoveryWordError = !isLastWordValid() && lastUserEntry?.id === entry.id
@@ -212,6 +206,7 @@ const MnemonicInput = ({defaultMnemonic, userEntries, onPress}: MnemonicInputPro
                     used
                     recoveryWordError={recoveryWordError}
                     defaultMnemonic={defaultMnemonic}
+                    style={styles.mnemonicNumberWordBadge}
                   />
 
                   <Animated.View
@@ -221,11 +216,14 @@ const MnemonicInput = ({defaultMnemonic, userEntries, onPress}: MnemonicInputPro
                     style={[styles.wordBadgeContainerOutline, recoveryWordError && styles.errorBadgeBackground]}
                   >
                     {!recoveryWordError && (
-                      <LinearGradient
-                        style={[StyleSheet.absoluteFill, {opacity: 1}]}
-                        start={isPhraseComplete && isValidPhrase ? {x: 0, y: 0} : {x: 1, y: 0}}
-                        end={isPhraseComplete && isValidPhrase ? {x: 0, y: 1} : {x: 0, y: 0}}
-                        colors={isPhraseComplete && isValidPhrase ? colors.gradientGreen : colors.gradientBlueGreen}
+                      <View
+                        style={[
+                          StyleSheet.absoluteFill,
+                          {
+                            backgroundColor:
+                              isPhraseComplete && isValidPhrase ? colors.gradientGreen : colors.gradientBlueGreen,
+                          },
+                        ]}
                       />
                     )}
 
@@ -233,6 +231,10 @@ const MnemonicInput = ({defaultMnemonic, userEntries, onPress}: MnemonicInputPro
                       word={entry.word}
                       recoveryWordError={recoveryWordError}
                       defaultMnemonic={defaultMnemonic}
+                      style={[
+                        styles.mnemonicInputWordBadge,
+                        isPhraseComplete && isValidPhrase && {color: colors.black},
+                      ]}
                     />
                   </Animated.View>
                 </Animated.View>
@@ -299,17 +301,23 @@ const WordBadges = ({
             disabled={isUsed}
             onPress={() => selectWord(entry)}
           >
-            <Animated.View layout={Layout} entering={FadeIn} exiting={FadeOut} style={[styles.wordBadgeContainer]}>
-              <LinearGradient
-                style={[StyleSheet.absoluteFill, {opacity: 1}]}
-                start={{x: 1, y: 0}}
-                end={{x: 0, y: 0}}
-                colors={!usedError ? colors.gradientBlueGreen : [colors.error, colors.error]}
+            <Animated.View layout={Layout} entering={FadeIn} exiting={FadeOut} style={styles.wordBadgeContainer}>
+              <View
+                style={[
+                  StyleSheet.absoluteFill,
+                  {backgroundColor: !usedError ? colors.gradientBlueGreen : colors.error},
+                ]}
               />
 
               {isUsed && <View style={styles.usedWordBackground} />}
 
-              <WordBadge word={entry.word} used={isUsed} usedError={usedError} defaultMnemonic={defaultMnemonic} />
+              <WordBadge
+                word={entry.word}
+                used={isUsed}
+                usedError={usedError}
+                defaultMnemonic={defaultMnemonic}
+                style={styles.wordBadgeBottom}
+              />
             </Animated.View>
           </TouchableOpacity>
         )
@@ -324,8 +332,9 @@ type WordBadgeProps = {
   usedError?: boolean
   recoveryWordError?: boolean
   defaultMnemonic: Array<Entry>
+  style?: StyleProp<Animated.AnimateStyle<StyleProp<TextStyle>>>
 }
-const WordBadge = ({word, used, usedError, recoveryWordError}: WordBadgeProps) => {
+const WordBadge = ({word, used, usedError, recoveryWordError, style}: WordBadgeProps) => {
   const {styles} = useStyles()
   return (
     <Animated.View layout={Layout} entering={FadeIn} exiting={FadeOut} style={styles.wordBadge}>
@@ -333,7 +342,12 @@ const WordBadge = ({word, used, usedError, recoveryWordError}: WordBadgeProps) =
         layout={Layout}
         entering={FadeIn}
         exiting={FadeOut}
-        style={[styles.wordBadgeText, used && !usedError && styles.usedWord, recoveryWordError && styles.errorBadge]}
+        style={[
+          styles.wordBadgeText,
+          used && !usedError && styles.usedWord,
+          recoveryWordError && styles.errorBadge,
+          style,
+        ]}
       >
         {word}
       </Animated.Text>
@@ -421,7 +435,6 @@ const useStyles = () => {
       overflow: 'hidden',
     },
     wordBadgeContainer: {
-      ...atoms.px_lg,
       ...atoms.py_sm,
       borderRadius: 8,
       overflow: 'hidden',
@@ -449,12 +462,22 @@ const useStyles = () => {
     bolder: {
       ...atoms.body_1_lg_medium,
     },
+    mnemonicInputWordBadge: {
+      ...atoms.px_sm,
+    },
+    mnemonicNumberWordBadge: {
+      ...atoms.pr_xs,
+    },
+    wordBadgeBottom: {
+      ...atoms.px_lg,
+    },
   })
 
   const colors = {
     error: color.sys_magenta_c500,
-    gradientBlueGreen: color.bg_gradient_1,
-    gradientGreen: color.bg_gradient_2,
+    gradientBlueGreen: color.primary_c100,
+    gradientGreen: color.secondary_c300,
+    black: color.black_static,
   }
 
   return {styles, colors} as const

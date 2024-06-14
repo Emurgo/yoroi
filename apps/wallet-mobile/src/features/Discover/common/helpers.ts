@@ -2,7 +2,7 @@ import {connectionStorageMaker, dappConnectorApiMaker, dappConnectorMaker, Resol
 import {DappConnector} from '@yoroi/dapp-connector'
 import {App} from '@yoroi/types'
 
-import {cip30ExtensionMaker} from '../../../yoroi-wallets/cardano/cip30'
+import {cip30ExtensionMaker} from '../../../yoroi-wallets/cardano/cip30/cip30'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 
 export const validUrl = (url: string) => {
@@ -88,6 +88,13 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
     signTx: async (cbor: string, partial?: boolean) => {
       const rootKey = await signTx(cbor)
       return cip30.signTx(rootKey, cbor, partial)
+    },
+    sendReorganisationTx: async () => {
+      const unsignedTx = await cip30.buildReorganisationTx()
+      const tx = await unsignedTx.unsignedTx.txBuilder.build()
+      const rootKey = await signTx(await tx.toHex())
+      const signedTx = await wallet.signTx(unsignedTx, rootKey)
+      return cip30.sendReorganisationTx(signedTx)
     },
   }
   const storage = connectionStorageMaker({storage: appStorage.join('dapp-connections/')})

@@ -17,6 +17,7 @@ import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {StakingCenterRouteNavigation} from '../../../kernel/navigation'
 import {NETWORKS} from '../../../yoroi-wallets/cardano/networks'
 import {NotEnoughMoneyToSendError} from '../../../yoroi-wallets/cardano/types'
+import {usePlate} from '../../../yoroi-wallets/hooks'
 import {useStakingTx} from '../../Dashboard/StakePoolInfos'
 import {PoolDetailScreen} from '../PoolDetails'
 
@@ -27,7 +28,7 @@ export const StakingCenter = () => {
   const {languageCode} = useLanguage()
   const wallet = useSelectedWallet()
   const {track} = useMetrics()
-
+  const plate = usePlate({networkId: wallet.networkId, publicKeyHex: wallet.publicKeyHex})
   useFocusEffect(
     React.useCallback(() => {
       track.stakingCenterPageViewed()
@@ -82,7 +83,7 @@ export const StakingCenter = () => {
           <WebView
             originWhitelist={['*']}
             androidLayerType="software"
-            source={{uri: prepareStakingURL(languageCode)}}
+            source={{uri: prepareStakingURL(languageCode, plate.accountPlate.TextPart)}}
             onMessage={(event) => handleOnMessage(event)}
           />
         </View>
@@ -108,12 +109,14 @@ const noPoolDataDialog = defineMessages({
  * Prepares WebView's target staking URI
  * @param {*} poolList : Array of delegated pool hash
  */
-const prepareStakingURL = (locale: string): string => {
+const prepareStakingURL = (locale: string, plate: string): string => {
   // source=mobile is constant and already included
   let finalURL = NETWORKS.HASKELL_SHELLEY.POOL_EXPLORER
 
   const lang = locale.slice(0, 2)
   finalURL += `&lang=${lang}`
+
+  finalURL += `&bias=${plate}`
 
   return finalURL
 }

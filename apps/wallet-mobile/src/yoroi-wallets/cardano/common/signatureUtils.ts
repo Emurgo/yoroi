@@ -92,7 +92,7 @@ const arePathsEqual = (path1: number[], path2: number[]) => {
   return path1.every((value, index) => value === path2[index]) && path1.length === path2.length
 }
 
-const getDerivationPathForAddress = (address: string, wallet: YoroiWallet, partial = false) => {
+export const getDerivationPathForAddress = (address: string, wallet: YoroiWallet, partial = false) => {
   const internalIndex = wallet.internalAddresses.indexOf(address)
   const externalIndex = wallet.externalAddresses.indexOf(address)
   const purpose = isHaskellShelley(wallet.walletImplementationId)

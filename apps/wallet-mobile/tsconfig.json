@@ -13,5 +13,5 @@
       "*.md": ["text-loader"]
     }
   },
-  "include": ["./.d.ts", "./src", ".storybook/decorators"]
+  "include": ["./.d.ts", "react-native-svg-charts.d.ts", "./src", ".storybook/decorators"]
 }

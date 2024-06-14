@@ -1,5 +1,6 @@
 import * as CSL from '@emurgo/cross-csl-core'
 import {WasmModuleProxy} from '@emurgo/cross-csl-core'
+import {init} from '@emurgo/cross-msl-mobile'
 import {RemoteUnspentOutput, signRawTransaction, UtxoAsset} from '@emurgo/yoroi-lib'
 import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
 import {parseTokenList} from '@emurgo/yoroi-lib/dist/internals/utils/assets'
@@ -9,36 +10,39 @@ import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
 import _ from 'lodash'
 
-import {RawUtxo, YoroiUnsignedTx} from '../types'
-import {asQuantity, Utxos} from '../utils'
-import {Cardano, CardanoMobile} from '../wallets'
-import {toAssetNameHex, toPolicyId} from './api'
-import {getTransactionSigners} from './common/signatureUtils'
-import {Pagination, YoroiWallet} from './types'
-import {createRawTxSigningKey, identifierToCardanoAsset} from './utils'
-import {collateralConfig, findCollateralCandidates, utxosMaker} from './utxoManager/utxos'
-import {wrappedCsl} from './wrappedCsl'
+import {RawUtxo, YoroiSignedTx, YoroiUnsignedTx} from '../../types'
+import {asQuantity, Utxos} from '../../utils'
+import {Cardano, CardanoMobile} from '../../wallets'
+import {toAssetNameHex, toPolicyId} from '../api'
+import * as cip8 from '../cip8/cip8'
+import {getDerivationPathForAddress, getTransactionSigners} from '../common/signatureUtils'
+import {Pagination, YoroiWallet} from '../types'
+import {createRawTxSigningKey, identifierToCardanoAsset} from '../utils'
+import {collateralConfig, findCollateralCandidates, utxosMaker} from '../utxoManager/utxos'
+import {wrappedCsl as getCSL} from '../wrappedCsl'
+
+const MSL = init('msl')
 
 export const cip30ExtensionMaker = (wallet: YoroiWallet) => {
   return new CIP30Extension(wallet)
 }
 
-const getCSL = () => wrappedCsl()
-
-const recreateValue = async (value: CSL.Value) => {
-  return CardanoMobile.Value.fromHex(await value.toHex())
+const copy = async <T extends {toHex: () => Promise<string>}>(
+  creator: {fromHex: (hex: string) => Promise<T>},
+  value: T,
+): Promise<T> => {
+  return creator.fromHex(await value.toHex())
 }
 
-const recreateMultiple = async <T>(items: T[], recreate: (item: T) => Promise<T>) => {
-  return Promise.all(items.map(recreate))
+const copyMultiple = async <T extends {toHex: () => Promise<string>}>(
+  items: T[],
+  creator: {fromHex: (hex: string) => Promise<T>},
+) => {
+  return Promise.all(items.map((item) => copy(creator, item)))
 }
 
 const recreateTransactionUnspentOutput = async (utxo: CSL.TransactionUnspentOutput) => {
-  return CardanoMobile.TransactionUnspentOutput.fromHex(await utxo.toHex())
-}
-
-const recreateWitnessSet = async (witnessSet: CSL.TransactionWitnessSet) => {
-  return CardanoMobile.TransactionWitnessSet.fromHex(await witnessSet.toHex())
+  return copy(CardanoMobile.TransactionUnspentOutput, utxo)
 }
 
 class CIP30Extension {
@@ -48,7 +52,7 @@ class CIP30Extension {
     const {csl, release} = getCSL()
     try {
       const value = await _getBalance(csl, tokenId, this.wallet.utxos, this.wallet.primaryTokenInfo.id)
-      return recreateValue(value)
+      return copy(CardanoMobile.Value, value)
     } finally {
       release()
     }
@@ -92,7 +96,7 @@ class CIP30Extension {
       const valueStr = value?.trim() ?? collateralConfig.minLovelace.toString()
       const valueNum = new BigNumber(valueStr)
 
-      if (valueNum.gte(collateralConfig.maxLovelace)) {
+      if (valueNum.gte(new BigNumber(collateralConfig.maxLovelace))) {
         throw new Error('Collateral value is too high')
       }
 
@@ -111,7 +115,7 @@ class CIP30Extension {
 
       const multipleUtxosCollateral = await _drawCollateralInMultipleUtxos(csl, this.wallet, asQuantity(valueNum))
       if (multipleUtxosCollateral && multipleUtxosCollateral.length > 0) {
-        return recreateMultiple(multipleUtxosCollateral, recreateTransactionUnspentOutput)
+        return copyMultiple(multipleUtxosCollateral, CardanoMobile.TransactionUnspentOutput)
       }
 
       return null
@@ -127,13 +131,33 @@ class CIP30Extension {
     return txId
   }
 
-  async signData(_rootKey: string, address: string, _payload: string): Promise<{signature: string; key: string}> {
+  async signData(rootKey: string, address: string, payload: string): Promise<{signature: string; key: string}> {
     const {csl, release} = getCSL()
     try {
+      const payloadInBytes = Buffer.from(payload, 'utf-8')
+
       const normalisedAddress = await normalizeToAddress(csl, address)
       const bech32Address = await normalisedAddress?.toBech32(undefined)
-      if (!bech32Address) throw new Error('Invalid wallet state')
-      throw new Error('Not implemented')
+      if (!bech32Address || !normalisedAddress) throw new Error('Invalid address')
+
+      const path = getDerivationPathForAddress(bech32Address, this.wallet, true)
+      const signingKey = await createRawTxSigningKey(rootKey, path)
+      const coseSign1 = await cip8.sign(Buffer.from(await normalisedAddress.toHex(), 'hex'), signingKey, payloadInBytes)
+      const key = await MSL.COSEKey.new(await MSL.Label.fromKeyType(MSL.KeyType.OKP))
+      await key.setAlgorithmId(await MSL.Label.fromAlgorithmId(MSL.AlgorithmId.EdDSA))
+      await key.setHeader(
+        await MSL.Label.newInt(await MSL.Int.newNegative(await MSL.BigNum.fromStr('1'))),
+        await MSL.CBORValue.newInt(await MSL.Int.newI32(6)),
+      )
+      await key.setHeader(
+        await MSL.Label.newInt(await MSL.Int.newNegative(await MSL.BigNum.fromStr('2'))),
+        await MSL.CBORValue.newBytes(await (await signingKey.toPublic()).asBytes()),
+      )
+
+      return {
+        signature: Buffer.from(await coseSign1.toBytes()).toString('hex'),
+        key: Buffer.from(await key.toBytes()).toString('hex'),
+      }
     } finally {
       release()
     }
@@ -146,7 +170,34 @@ class CIP30Extension {
       const keys = await Promise.all(signers.map(async (signer) => createRawTxSigningKey(rootKey, signer)))
       const signedTxBytes = await signRawTransaction(csl, cbor, keys)
       const signedTx = await csl.Transaction.fromBytes(signedTxBytes)
-      return recreateWitnessSet(await signedTx.witnessSet())
+      return copy(CardanoMobile.TransactionWitnessSet, await signedTx.witnessSet())
+    } finally {
+      release()
+    }
+  }
+
+  async buildReorganisationTx(): Promise<YoroiUnsignedTx> {
+    const bech32Address = this.wallet.externalAddresses[0]
+    const amounts = {[this.wallet.primaryTokenInfo.id]: asQuantity(collateralConfig.minLovelace)}
+    return this.wallet.createUnsignedTx([{address: bech32Address, amounts}])
+  }
+
+  async sendReorganisationTx(signedTx: YoroiSignedTx): Promise<CSL.TransactionUnspentOutput> {
+    const {csl, release} = getCSL()
+    try {
+      const tx = await csl.Transaction.fromBytes(signedTx.signedTx.encodedTx)
+      const txId = signedTx.signedTx.id
+      const txIndex = 0
+      const body = await tx.body()
+      const originalOutput = await (await body.outputs()).get(txIndex)
+
+      const txHash = txId.split(':')[0]
+      const input = await csl.TransactionInput.new(await csl.TransactionHash.fromHex(txHash), txIndex)
+      const value = await originalOutput.amount()
+      const receiver = await originalOutput.address()
+      const output = await csl.TransactionOutput.new(receiver, value)
+      await this.wallet.submitTransaction(Buffer.from(signedTx.signedTx.encodedTx).toString('base64'))
+      return copy(CardanoMobile.TransactionUnspentOutput, await csl.TransactionUnspentOutput.new(input, output))
     } finally {
       release()
     }

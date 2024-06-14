@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet} from 'react-native'
@@ -25,6 +26,7 @@ export const ConfirmVotingTx = ({
   pin: string
 }) => {
   const [supportsCIP36, setSupportsCIP36] = useState(true)
+  const styles = useStyles()
 
   const strings = useStrings()
   const wallet = useSelectedWallet()
@@ -122,15 +124,20 @@ const messages = defineMessages({
   },
 })
 
-const styles = StyleSheet.create({
-  safeAreaView: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  contentContainer: {
-    paddingHorizontal: 16,
-  },
-})
+const useStyles = () => {
+  const {color, atoms} = useTheme()
+  const styles = StyleSheet.create({
+    safeAreaView: {
+      flex: 1,
+      backgroundColor: color.gray_cmin,
+    },
+    contentContainer: {
+      ...atoms.px_lg,
+    },
+  })
+
+  return styles
+}
 
 const useStrings = () => {
   const intl = useIntl()

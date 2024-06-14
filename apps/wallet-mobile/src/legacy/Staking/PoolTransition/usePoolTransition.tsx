@@ -8,6 +8,7 @@ import {useQuery} from 'react-query'
 
 import {features} from '../../../features'
 import {useSelectedWallet} from '../../../features/WalletManager/context/SelectedWalletContext'
+import {getCardanoNetworkConfigById} from '../../../yoroi-wallets/cardano/networks'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {asQuantity, Quantities} from '../../../yoroi-wallets/utils'
 import {useStakingInfo} from '../../Dashboard/StakePoolInfos'
@@ -26,12 +27,14 @@ const createDelegationTx = async (wallet: YoroiWallet, poolId: string) => {
   return wallet.createDelegationTx(poolId, new BigNumber(amountToDelegate))
 }
 
-const poolInfoApi = new PoolInfoApi()
-
 export const usePoolTransition = () => {
   const navigation = useNavigation()
   const wallet = useSelectedWallet()
   const {stakingInfo, isLoading} = useStakingInfo(wallet)
+  const poolInfoApi = React.useMemo(
+    () => new PoolInfoApi(getCardanoNetworkConfigById(wallet.networkId).BACKEND.API_ROOT),
+    [wallet.networkId],
+  )
 
   const isStaked = stakingInfo?.status === 'staked'
   const currentPoolId = isStaked ? stakingInfo?.poolId : ''

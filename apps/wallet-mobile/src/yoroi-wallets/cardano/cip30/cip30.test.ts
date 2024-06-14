@@ -1,7 +1,7 @@
-import {mocks} from '../mocks'
-import {getMasterKeyFromMnemonic} from './byron/util'
+import {mocks} from '../../mocks'
+import {getMasterKeyFromMnemonic} from '../byron/util'
+import {YoroiWallet} from '../types'
 import {cip30ExtensionMaker} from './cip30'
-import {YoroiWallet} from './types'
 
 describe('cip30ExtensionMaker', () => {
   it('should support submitTx', async () => {
@@ -76,8 +76,25 @@ describe('cip30ExtensionMaker', () => {
 
   it('should support signTx', async () => {
     const cip30 = cip30ExtensionMaker(mocks.wallet)
-    const result = await cip30.signTx(await getMasterKeyFromMnemonic(mnemonic), txCbor, true)
+    const rootKey = await getMasterKeyFromMnemonic(mnemonic)
+    const result = await cip30.signTx(rootKey, txCbor, true)
     expect(result).toBeDefined()
+  })
+
+  it('should support signData', async () => {
+    const rootKey = await getMasterKeyFromMnemonic(mnemonic)
+    const message = 'whatever'
+    const addressBech32 =
+      'addr1qynqc23tpx4dqps6xgqy9s2l3xz5fxu734wwmzj9uddn0h2z6epfcukqmswgwwfruxh7gaddv9x0d5awccwahnhwleqqc4zkh4'
+
+    const cip30 = cip30ExtensionMaker(mocks.wallet)
+    const result = await cip30.signData(rootKey, addressBech32, message)
+
+    expect(result).toEqual({
+      signature:
+        '845846a201276761646472657373583901260c2a2b09aad0061a320042c15f8985449b9e8d5ced8a45e35b37dd42d6429c72c0dc1c873923e1afe475ad614cf6d3aec61ddbceeefe40a166686173686564f448776861746576657258406a16fcb9cc6c3f7d83fdd623e8896d4b81c0ef6a9fb68d916794e2e4c3c0766666b485f71c6f1f56241cb30905cc18618c7e95721dba3e91bcd9918f51e8b90a',
+      key: 'a4010103272006215820be6a4d7e9789dd7458049c971ad783107e7f041c6f1f542b4530d63d5fe5afb1',
+    })
   })
 })
 

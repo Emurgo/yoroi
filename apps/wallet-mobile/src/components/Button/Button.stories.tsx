@@ -4,6 +4,7 @@ import React from 'react'
 import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
 import icon from '../../assets/img/icon/dashboard.png'
+import {Icon} from '../Icon'
 import {Button} from './Button'
 
 storiesOf('Button', module).add('default', () => (
@@ -34,6 +35,26 @@ storiesOf('Button', module).add('default', () => (
 
     <Row>
       <Button block shelleyTheme iconImage={icon} onPress={() => action('onPress')()} title="Submit, with image" />
+    </Row>
+
+    <Row>
+      <Button
+        block
+        shelleyTheme
+        startContent={<Icon.Plus size={24} color="white" />}
+        onPress={() => action('onPress')()}
+        title="Submit, with start content"
+      />
+    </Row>
+
+    <Row>
+      <Button
+        block
+        shelleyTheme
+        endContent={<Icon.Plus size={24} color="white" />}
+        onPress={() => action('onPress')()}
+        title="Submit, with end content"
+      />
     </Row>
   </ScrollView>
 ))

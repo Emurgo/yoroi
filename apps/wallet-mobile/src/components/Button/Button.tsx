@@ -1,5 +1,5 @@
 import {useTheme} from '@yoroi/theme'
-import React from 'react'
+import React, {type ReactNode} from 'react'
 import {Image, StyleSheet, TextStyle, TouchableOpacity, TouchableOpacityProps, View, ViewStyle} from 'react-native'
 import Animated, {FadeInDown, FadeOutDown, Layout} from 'react-native-reanimated'
 
@@ -20,6 +20,8 @@ export type ButtonProps = TouchableOpacityProps & {
   isCopying?: boolean
   copiedText?: string
   testId?: string
+  startContent?: ReactNode
+  endContent?: ReactNode
 }
 
 export const Button = (props: ButtonProps) => {
@@ -40,6 +42,8 @@ export const Button = (props: ButtonProps) => {
     isCopying,
     copiedText,
     testId,
+    startContent,
+    endContent,
     ...rest
   } = props
 
@@ -75,6 +79,8 @@ export const Button = (props: ButtonProps) => {
       >
         {iconImage != null && <Image source={iconImage} />}
 
+        {startContent != null ? startContent : null}
+
         <Text
           style={[
             styles.text,
@@ -86,6 +92,8 @@ export const Button = (props: ButtonProps) => {
         >
           {title}
         </Text>
+
+        {endContent != null ? endContent : null}
       </View>
     </TouchableOpacity>
   )
@@ -130,7 +138,7 @@ const useStyles = () => {
       borderColor: color.primary_c600,
     },
     text: {
-      color: color.gray_cmin,
+      color: color.white_static,
       ...atoms.body_2_md_medium,
       ...atoms.p_sm,
       textAlign: 'center',

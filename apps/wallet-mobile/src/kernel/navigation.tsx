@@ -20,7 +20,7 @@ import {ScanFeature} from '../features/Scan/common/types'
 import {Routes as StakingGovernanceRoutes} from '../features/Staking/Governance/common/navigation'
 import {YoroiUnsignedTx} from '../yoroi-wallets/types'
 import {compareArrays} from '../yoroi-wallets/utils/utils'
-import {dappExplorerEnabled} from './env'
+import {dappExplorerEnabled} from './config'
 
 // prettier-ignore
 export const useUnsafeParams = <Params, >() => {
@@ -106,6 +106,7 @@ export type WalletTabRoutes = {
   history: NavigatorScreenParams<TxHistoryRoutes>
   'staking-dashboard': NavigatorScreenParams<DashboardRoutes>
   nfts: NavigatorScreenParams<NftRoutes>
+  portfolio: NavigatorScreenParams<Portfolio2Routes>
   discover: NavigatorScreenParams<DiscoverRoutes>
   menu: NavigatorScreenParams<MenuRoutes>
 }
@@ -288,6 +289,18 @@ export type DashboardRoutes = {
     yoroiUnsignedTx: YoroiUnsignedTx
   }
   'delegation-failed-tx': undefined
+}
+
+export type Portfolio2Routes = {
+  'dashboard-portfolio': undefined
+  'portfolio-tokens-list': undefined
+  'portfolio-token-details': {id: Portfolio.Token.Info['id']}
+  nfts: undefined
+}
+
+export type PortfolioTokenListTabRoutes = {
+  'wallet-token': undefined
+  'dapps-token': undefined
 }
 
 export type VotingRegistrationRoutes = {
@@ -605,12 +618,15 @@ export const useWalletNavigation = () => {
   } as const).current
 }
 
-export const hideTabBarForRoutes = (route: RouteProp<WalletTabRoutes, 'history' | 'discover'>): ViewStyle | undefined =>
+export const hideTabBarForRoutes = (
+  route: RouteProp<WalletTabRoutes, 'history' | 'discover' | 'portfolio'>,
+): ViewStyle | undefined =>
   getFocusedRouteNameFromRoute(route)?.startsWith('scan') ||
   getFocusedRouteNameFromRoute(route)?.startsWith('swap') ||
   getFocusedRouteNameFromRoute(route)?.startsWith('receive') ||
   getFocusedRouteNameFromRoute(route)?.startsWith('exchange') ||
-  getFocusedRouteNameFromRoute(route)?.startsWith('discover-browser')
+  getFocusedRouteNameFromRoute(route)?.startsWith('discover-browser') ||
+  getFocusedRouteNameFromRoute(route)?.startsWith('portfolio')
     ? {display: 'none'}
     : undefined
 

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {useTheme} from '@yoroi/theme'
 import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image, Linking, ScrollView, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
@@ -21,6 +22,7 @@ export const DownloadCatalyst = ({onNext}: Props) => {
   const wallet = useSelectedWallet()
   const {stakingInfo} = useStakingInfo(wallet, {suspense: true})
   const [showModal, setShowModal] = useState<boolean>(stakingInfo?.status === 'not-registered')
+  const styles = useStyles()
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
@@ -29,7 +31,7 @@ export const DownloadCatalyst = ({onNext}: Props) => {
       <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
         <Spacer height={48} />
 
-        <Text style={styles.text}>{strings.subTitle}</Text>
+        <Text>{strings.subTitle}</Text>
 
         <Spacer height={48} />
 
@@ -72,7 +74,10 @@ export const DownloadCatalyst = ({onNext}: Props) => {
   )
 }
 
-const Tip = (props: ViewProps) => <View {...props} style={styles.tip} />
+const Tip = (props: ViewProps) => {
+  const styles = useStyles()
+  return <View {...props} style={styles.tip} />
+}
 
 const PlayStoreButton = () => {
   const openPlayStore = async () => {
@@ -97,26 +102,6 @@ const AppStoreButton = () => {
     </TouchableOpacity>
   )
 }
-
-const styles = StyleSheet.create({
-  safeAreaView: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  contentContainer: {
-    paddingHorizontal: 16,
-    alignItems: 'center',
-  },
-  text: {
-    color: '#38393D',
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  tip: {
-    paddingHorizontal: 24,
-  },
-})
 
 const messages = defineMessages({
   subTitle: {
@@ -149,4 +134,23 @@ const useStrings = () => {
     iUnderstandButton: intl.formatMessage(confirmationMessages.commonButtons.iUnderstandButton),
     attention: intl.formatMessage(globalMessages.attention),
   }
+}
+
+const useStyles = () => {
+  const {color, atoms} = useTheme()
+  const styles = StyleSheet.create({
+    safeAreaView: {
+      flex: 1,
+      backgroundColor: color.gray_cmin,
+    },
+    contentContainer: {
+      ...atoms.px_lg,
+      alignItems: 'center',
+    },
+    tip: {
+      ...atoms.px_xl,
+    },
+  })
+
+  return styles
 }
