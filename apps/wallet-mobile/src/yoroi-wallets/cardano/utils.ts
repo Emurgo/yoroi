@@ -30,29 +30,6 @@ import {CardanoHaskellShelleyNetwork, PRIMARY_ASSET_CONSTANTS} from './networks'
 import {NUMBERS} from './numbers'
 import {CardanoTypes, WalletImplementation} from './types'
 
-export const normalizeToAddress = async (addr: string) => {
-  // in Shelley, addresses can be base16, bech32 or base58
-  // in this function, we try parsing in all encodings possible
-  // 1) Try converting from base58
-  try {
-    if (await CardanoMobile.ByronAddress.isValid(addr)) {
-      return await (await CardanoMobile.ByronAddress.fromBase58(addr)).toAddress()
-    }
-  } catch (_e) {}
-
-  // 2) If already base16, simply return
-  try {
-    return await CardanoMobile.Address.fromBytes(Buffer.from(addr, 'hex'))
-  } catch (_e) {}
-
-  // 3) Try converting from bech32
-  try {
-    return await CardanoMobile.Address.fromBech32(addr)
-  } catch (_e) {}
-
-  return undefined
-}
-
 // need to format shelley addresses as base16 but only legacy addresses as base58
 
 export const verifyFromBip44Root = (request: Addressing['addressing']) => {

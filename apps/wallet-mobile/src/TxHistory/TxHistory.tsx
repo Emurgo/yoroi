@@ -9,6 +9,7 @@ import {Boundary, ResetErrorRef, Spacer} from '../components'
 import {Tab, TabPanel, TabPanels, Tabs} from '../components/Tabs'
 import {useSelectedWallet} from '../features/WalletManager/Context/SelectedWalletContext'
 import {assetMessages, txLabels} from '../i18n/global-messages'
+import {usePoolTransitionModal} from '../Staking/PoolTransition/usePoolTransitionModal'
 import {isByron} from '../yoroi-wallets/cardano/utils'
 import {useSync} from '../yoroi-wallets/hooks'
 import {ActionsBanner} from './ActionsBanner'
@@ -36,7 +37,10 @@ export const TxHistory = () => {
     setActiveTab(tab)
   }
 
-  const {sync, isLoading} = useSync(wallet)
+  const {sync, isLoading: isLoadingWallet} = useSync(wallet)
+  const {isLoading: isLoadingPoolTransition} = usePoolTransitionModal()
+  const isLoading = isLoadingWallet || isLoadingPoolTransition
+
   useFocusEffect(React.useCallback(() => sync(), [sync]))
 
   const [expanded, setExpanded] = useState(true)

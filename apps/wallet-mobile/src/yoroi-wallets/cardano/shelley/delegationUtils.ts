@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import {CardanoAddressedUtxo} from '@emurgo/yoroi-lib'
+import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
 import assert from 'assert'
 import {sortBy} from 'lodash'
 
@@ -9,14 +10,13 @@ import {StakingStatus} from '../../types'
 import {CardanoMobile} from '../../wallets'
 import type {TimestampedCertMeta} from '../transactionManager'
 import {CardanoTypes} from '../types'
-import {normalizeToAddress} from '../utils'
 
 const addrContainsAccountKey = async (
   address: string,
   targetAccountKey: CardanoTypes.StakeCredential,
   acceptTypeMismatch: boolean,
 ) => {
-  const wasmAddr = await normalizeToAddress(address)
+  const wasmAddr = await normalizeToAddress(CardanoMobile, address)
 
   if (wasmAddr == null) {
     throw new Error(`addrContainsAccountKey: invalid address ${address}`)

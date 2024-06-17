@@ -1,5 +1,6 @@
 import {Ada} from './Ada'
 import {Analytics} from './Analytics'
+import {ArrowDown} from './ArrowDown'
 import {ArrowRight} from './ArrowRight'
 import {Assets} from './Assets'
 import {Bio} from './Bio'
@@ -217,6 +218,7 @@ export const Icon = {
   Share,
   Governance,
   ArrowRight,
+  ArrowDown,
   Close,
   Warning,
   Collateral,

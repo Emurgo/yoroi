@@ -4,6 +4,7 @@ import {Balance} from '@yoroi/types'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Platform, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {useQueryClient} from 'react-query'
 
 import {KeyboardSpacer, Text, ValidatedTextInput} from '../../components'
 import {ConfirmTx} from '../../components/ConfirmTx'
@@ -35,6 +36,7 @@ export const DelegationConfirmation = () => {
   const wallet = useSelectedWallet()
   const strings = useStrings()
   const styles = useStyles()
+  const queryClient = useQueryClient()
 
   const {poolId, yoroiUnsignedTx} = useParams<Params>(isParams)
 
@@ -50,6 +52,7 @@ export const DelegationConfirmation = () => {
   }, [])
 
   const onSuccess = () => {
+    queryClient.resetQueries([wallet.id, 'stakingInfo'])
     resetToTxHistory()
   }
 
