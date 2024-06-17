@@ -18,7 +18,7 @@ export const BrowserNavigator = () => {
       <Tab.Navigator screenOptions={{animationEnabled: false, headerShown: false}}>
         <Tab.Screen name="discover-browse-dapp" component={BrowseDappScreen} />
 
-        <Tab.Screen name="discover-search-dapp-in-browser" component={SearchDappInBrowserScreen} />
+        {/*<Tab.Screen name="discover-search-dapp-in-browser" component={SearchDappInBrowserScreen} />*/}
       </Tab.Navigator>
     </SafeAreaView>
   )

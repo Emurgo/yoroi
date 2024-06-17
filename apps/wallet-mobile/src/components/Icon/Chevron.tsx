@@ -14,7 +14,13 @@ export const Chevron = ({
   const rotate = direction === 'down' ? 0 : direction === 'right' ? 270 : direction === 'left' ? 90 : 180
 
   return (
-    <Svg width={size} height={size} viewBox="-7 -14 28 28" style={{transform: [{rotate: `${rotate}deg`}]}}>
+    <Svg
+      width={size}
+      pointerEvents={'none'}
+      height={size}
+      viewBox="-7 -14 28 28"
+      style={{transform: [{rotate: `${rotate}deg`}]}}
+    >
       <Path
         fillRule="evenodd"
         clipRule="evenodd"

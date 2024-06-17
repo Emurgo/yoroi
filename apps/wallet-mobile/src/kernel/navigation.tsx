@@ -13,7 +13,7 @@ import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/sta
 import {Atoms, ThemedPalette, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import React from 'react'
-import {Dimensions, InteractionManager, TouchableOpacity, TouchableOpacityProps, ViewStyle} from 'react-native'
+import {Dimensions, InteractionManager, TouchableOpacity, TouchableOpacityProps, View, ViewStyle} from 'react-native'
 
 import {Icon} from '../components'
 import {ScanFeature} from '../features/Scan/common/types'
@@ -46,7 +46,7 @@ export const BackButton = (props: TouchableOpacityProps & {color?: string}) => {
   const {color} = useTheme()
 
   return (
-    <TouchableOpacity {...props} testID="buttonBack2">
+    <TouchableOpacity {...props} testID="buttonBack2" style={{backgroundColor: 'red'}}>
       <Icon.Chevron direction="left" color={props.color ?? color.gray_cmax} />
     </TouchableOpacity>
   )
@@ -58,9 +58,9 @@ export const defaultStackNavigationOptions = (atoms: Atoms, color: ThemedPalette
   return {
     headerTintColor: color.gray_cmax,
     headerStyle: {
-      elevation: 0,
+      elevation: 3,
       shadowOpacity: 0,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: 'orange',
     },
     headerTitleStyle: {
       ...atoms.body_1_lg_medium,
@@ -73,14 +73,26 @@ export const defaultStackNavigationOptions = (atoms: Atoms, color: ThemedPalette
       alignItems: 'center',
       justifyContent: 'center',
     },
-    headerLeftContainerStyle: {
-      ...atoms.pl_sm,
-    },
     headerRightContainerStyle: {
       ...atoms.pr_sm,
     },
     cardStyle: {backgroundColor: 'white'},
-    headerLeft: (props) => <BackButton {...props} />,
+    headerLeft: (props) => (
+      <TouchableOpacity
+        style={{...atoms.pl_sm, ...atoms.pt_sm, ...atoms.pb_sm, elevation: 10000, backgroundColor: 'brown'}}
+        {...props}
+      >
+        <BackButton />
+      </TouchableOpacity>
+    ),
+
+    headerLeftLabelVisible: false,
+    headerBackgroundContainerStyle: {
+      backgroundColor: 'purple',
+    },
+    headerBackTitleStyle: {
+      backfaceVisibility: 'hidden',
+    },
   }
 }
 

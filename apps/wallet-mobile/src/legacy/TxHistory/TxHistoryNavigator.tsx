@@ -152,7 +152,7 @@ export const TxHistoryNavigator = () => {
                   screenOptions={{
                     ...defaultStackNavigationOptions(atoms, color),
                     detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
-                    gestureEnabled: true,
+                    gestureEnabled: false,
                   }}
                 >
                   <Stack.Screen

@@ -137,38 +137,38 @@ const WalletTabNavigator = () => {
           )}
         </Tab.Screen>
 
-        {dappExplorerEnabled ? (
-          <Tab.Screen
-            name="discover"
-            options={({route}: {route: RouteProp<WalletTabRoutes, 'discover'>}) => ({
-              tabBarIcon: ({focused}) => <Icon.Discover size={28} color={focused ? colors.active : colors.inactive} />,
-              tabBarLabel: strings.discoverTabBarLabel,
-              tabBarTestID: 'discoverTabBarButton',
-              tabBarStyle: {
-                ...hideTabBarForRoutes(route),
-                backgroundColor: colors.background,
-              },
-            })}
-          >
-            {() => (
-              <SearchProvider>
-                <DiscoverNavigator />
-              </SearchProvider>
-            )}
-          </Tab.Screen>
-        ) : (
-          <Tab.Screen
-            name="staking-dashboard"
-            component={DashboardNavigator}
-            options={{
-              tabBarIcon: ({focused}) => (
-                <Icon.TabStaking size={24} color={focused ? colors.active : colors.inactive} />
-              ),
-              tabBarLabel: strings.stakingButton,
-              tabBarTestID: 'stakingTabBarButton',
-            }}
-          />
-        )}
+        {/*{dappExplorerEnabled ? (*/}
+        {/*  <Tab.Screen*/}
+        {/*    name="discover"*/}
+        {/*    options={({route}: {route: RouteProp<WalletTabRoutes, 'discover'>}) => ({*/}
+        {/*      tabBarIcon: ({focused}) => <Icon.Discover size={28} color={focused ? colors.active : colors.inactive} />,*/}
+        {/*      tabBarLabel: strings.discoverTabBarLabel,*/}
+        {/*      tabBarTestID: 'discoverTabBarButton',*/}
+        {/*      tabBarStyle: {*/}
+        {/*        ...hideTabBarForRoutes(route),*/}
+        {/*        backgroundColor: colors.background,*/}
+        {/*      },*/}
+        {/*    })}*/}
+        {/*  >*/}
+        {/*    {() => (*/}
+        {/*      <SearchProvider>*/}
+        {/*        <DiscoverNavigator />*/}
+        {/*      </SearchProvider>*/}
+        {/*    )}*/}
+        {/*  </Tab.Screen>*/}
+        {/*) : (*/}
+        {/*  <Tab.Screen*/}
+        {/*    name="staking-dashboard"*/}
+        {/*    component={DashboardNavigator}*/}
+        {/*    options={{*/}
+        {/*      tabBarIcon: ({focused}) => (*/}
+        {/*        <Icon.TabStaking size={24} color={focused ? colors.active : colors.inactive} />*/}
+        {/*      ),*/}
+        {/*      tabBarLabel: strings.stakingButton,*/}
+        {/*      tabBarTestID: 'stakingTabBarButton',*/}
+        {/*    }}*/}
+        {/*  />*/}
+        {/*)}*/}
 
         <Tab.Screen
           name="menu"
