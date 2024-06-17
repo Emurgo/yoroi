@@ -7,13 +7,13 @@ import {useStrings} from '../../../common/useStrings'
 type Props = {
   total: number
 }
-export const CountDAppsAvailable = ({total}: Props) => {
+export const CountDAppsConnected = ({total}: Props) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
   return (
     <View style={styles.countAvailableBox}>
-      <Text style={styles.availableText}>{`${strings.totalDAppAvailable(total)}`}</Text>
+      <Text style={styles.availableText}>{`${strings.totalDAppConnected(total)}`}</Text>
     </View>
   )
 }

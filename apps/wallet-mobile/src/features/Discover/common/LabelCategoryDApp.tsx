@@ -10,12 +10,7 @@ export const LabelCategoryDApp = ({category}: Props) => {
   const {styles, colors} = useStyles()
 
   return (
-    <LinearGradient
-      style={styles.labelGradientBox}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 1}}
-      colors={colors.gradientColor}
-    >
+    <LinearGradient style={styles.labelGradientBox} start={{x: 0, y: 0}} end={{x: 1, y: 1}} colors={colors.gradientBg}>
       <View style={styles.labelContainer}>
         <Text style={styles.labelText}>{category}</Text>
       </View>
@@ -28,14 +23,16 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     labelGradientBox: {
-      borderRadius: 999,
+      borderRadius: 20,
       ...atoms.p_2xs,
+      height: 24,
     },
     labelContainer: {
+      borderRadius: 24,
       backgroundColor: color.gray_cmin,
-      ...atoms.px_xs,
-      paddingVertical: 3,
-      borderRadius: 999,
+      ...atoms.h_full,
+      paddingVertical: 1,
+      paddingHorizontal: 6,
     },
     labelText: {
       ...atoms.body_3_sm_medium,
@@ -44,7 +41,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    gradientColor: color.bg_gradient_1,
+    gradientBg: ['#17D1AA', '#1ACBAF', '#21B8BC', '#2E9BD3', '#3F71F1', '#475FFF'],
   }
   return {styles, colors} as const
 }

@@ -2,7 +2,6 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {useMemo} from 'react'
 import {ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
 
 import {Icon, Spacer} from '../../../../../components'
 
@@ -41,28 +40,31 @@ type TypeItemProps = {
   isLimited?: boolean
 }
 const TypeItem = ({name, isActive = false, onToggle, disabled = false, isLimited = false}: TypeItemProps) => {
-  const {styles, colors} = useStyles()
+  const {styles} = useStyles()
 
   const [isPressed, setIsPressed] = React.useState(false)
 
-  const getBoxGradientBg = () => {
-    if (disabled) return colors.gradientDisabledColor
-    if (isLimited) return colors.gradientLimited
+  const getBoxChipStyle = useMemo(() => {
+    if (disabled) return styles.boxDisabledStyle
+    if (isLimited) return styles.boxLimitedStyle
 
-    if (isActive && isPressed) return colors.gradientColorPressed
-    if (isActive && !isPressed) return colors.gradientColorSelected
+    if (isActive && isPressed) return styles.boxActivePressedStyle
+    if (isActive && !isPressed) return styles.boxActiveNonPressedStyle
 
-    if (isPressed) return colors.gradientGreenBlue
+    if (isPressed) return styles.boxPressedStyle
 
-    return colors.gradientIdle
-  }
+    return styles.boxIdleStyle
+  }, [styles, disabled, isActive, isLimited, isPressed])
 
-  const getBoxContentBg = () => {
-    if (disabled) return styles.chipBgWhite
-    if (isActive) return styles.bgTransparent
+  const getTextChipStyle = useMemo(() => {
+    if (disabled) return styles.textDisabledStyle
+    if (isLimited) return styles.textLimitedStyle
+    if (isActive) return styles.textActiveStyle
 
-    return styles.chipBgWhite
-  }
+    if (isPressed) return styles.textPressedStyle
+
+    return styles.textIdleStyle
+  }, [disabled, isActive, isLimited, isPressed, styles])
 
   const handlePress = (isPressIn: boolean) => {
     setIsPressed(isPressIn)
@@ -75,13 +77,11 @@ const TypeItem = ({name, isActive = false, onToggle, disabled = false, isLimited
         onPress={onToggle}
         onPressOut={() => handlePress(false)}
       >
-        <LinearGradient style={styles.gradient} start={{x: 0, y: 0}} end={{x: 1, y: 1}} colors={getBoxGradientBg()}>
-          <View style={[styles.chipContentBox, getBoxContentBg()]}>
-            {isActive && <Icon.CheckFilled2 fill={colors.iconCheckFilledColor} color={colors.whiteStatic} />}
+        <View style={[styles.chipContentBox, getBoxChipStyle]}>
+          {isActive && <Icon.CheckFilled2 color={getTextChipStyle.color} />}
 
-            <Text style={styles.chipText}>{name}</Text>
-          </View>
-        </LinearGradient>
+          <Text style={[styles.chipText, getTextChipStyle]}>{name}</Text>
+        </View>
       </TouchableWithoutFeedback>
     </View>
   )
@@ -91,30 +91,18 @@ const useStyles = () => {
   const {atoms, color} = useTheme()
 
   const styles = StyleSheet.create({
-    gradient: {
-      opacity: 1,
-      borderRadius: 8,
-      ...atoms.p_2xs,
-      overflow: 'hidden',
-      height: 40,
-    },
     chip: {
       marginRight: 8,
     },
-    bgTransparent: {
-      backgroundColor: 'transparent',
-    },
     chipContentBox: {
+      borderRadius: 8,
+      ...atoms.p_2xs,
+      height: 40,
       paddingHorizontal: 14,
       backgroundColor: color.gray_cmin,
       flexDirection: 'row',
       alignItems: 'center',
       gap: 8,
-      borderRadius: 6,
-      height: '100%',
-    },
-    chipBgWhite: {
-      backgroundColor: color.gray_cmin,
     },
     chipText: {
       color: color.primary_c600,
@@ -124,17 +112,45 @@ const useStyles = () => {
       ...atoms.pl_lg,
       ...atoms.pb_lg,
     },
+    boxDisabledStyle: {
+      borderWidth: 2,
+      ...atoms.rounded_sm,
+      borderColor: color.el_primary_low,
+    },
+    textDisabledStyle: {
+      color: color.primary_c300,
+    },
+    boxIdleStyle: {
+      borderWidth: 2,
+      borderColor: color.el_primary_medium,
+    },
+    textIdleStyle: {
+      color: color.text_primary_medium,
+    },
+    boxLimitedStyle: {
+      backgroundColor: color.el_secondary_medium,
+    },
+    textLimitedStyle: {
+      color: color.black_static,
+    },
+    boxActivePressedStyle: {
+      backgroundColor: color.primary_c600,
+    },
+    boxActiveNonPressedStyle: {
+      backgroundColor: color.primary_c500,
+    },
+    textActiveStyle: {
+      color: color.white_static,
+    },
+    boxPressedStyle: {
+      borderWidth: 2,
+      borderColor: color.el_primary_high,
+      backgroundColor: color.primary_c100,
+    },
+    textPressedStyle: {
+      color: color.text_primary_high,
+    },
   })
 
-  const colors = {
-    gradientColorSelected: color.bg_gradient_1,
-    gradientColorPressed: ['#C4CFF5', '#93F5E1'],
-    iconCheckFilledColor: color.primary_c600,
-    gradientDisabledColor: [color.primary_c200, '#C4CFF5'],
-    gradientGreenBlue: color.bg_gradient_1,
-    gradientLimited: ['#93F5E1', '#C6F7ED'],
-    gradientIdle: ['#E4E8F7', '#C6F7ED'],
-    whiteStatic: color.white_static,
-  }
-  return {styles, colors} as const
+  return {styles} as const
 }

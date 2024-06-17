@@ -24,9 +24,8 @@ export type WebViewState = Partial<WebViewNavigation> & Required<Pick<WebViewNav
 type Props = {
   tab: TabItem
   index: number
-  nativeHeight?: number
 }
-export const WebViewItem = ({tab, index, nativeHeight}: Props) => {
+export const WebViewItem = ({tab, index}: Props) => {
   const {styles, colors} = useStyles()
   const webViewRef = React.useRef<WebView>(null)
   const {tabs, updateTab, tabsOpen, openTabs, setTabActive, removeTab, tabActiveIndex} = useBrowser()
@@ -42,7 +41,7 @@ export const WebViewItem = ({tab, index, nativeHeight}: Props) => {
 
   const {initScript, handleEvent} = useConnectWalletToWebView(wallet, webViewRef)
 
-  const visibleAreaHeight = nativeHeight ?? SCREEN_HEIGHT - insets.top - insets.bottom
+  const visibleAreaHeight = SCREEN_HEIGHT - insets.top
 
   const containerStyleAnimated = useAnimatedStyle(() => {
     return {transform: [{scaleX: scaleXWebview.value}]}

@@ -1,7 +1,8 @@
 import {useDappConnector} from '@yoroi/dapp-connector'
 import {useTheme} from '@yoroi/theme'
+import {Image} from 'expo-image'
 import * as React from 'react'
-import {Image, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native'
+import {Alert, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import uuid from 'uuid'
 
@@ -13,7 +14,7 @@ import {LabelConnected} from '../../../common/LabelConnected'
 import {useNavigateTo} from '../../../common/useNavigateTo'
 import {useStrings} from '../../../common/useStrings'
 
-const DIALOG_DAPP_ACTIONS_HEIGHT = 294
+const DIALOG_DAPP_ACTIONS_HEIGHT = 286
 
 type Props = {
   dApp: DAppItem
@@ -55,6 +56,14 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
     closeModal()
   }
 
+  const handleConfirmDisconnect = (dApp: DAppItem) => {
+    closeModal()
+    Alert.alert(strings.disconnectDApp, strings.confirmDisconnectDAppDescription, [
+      {text: strings.cancel, style: 'cancel'},
+      {text: strings.confirm, onPress: () => handleDisconnectDApp(dApp)},
+    ])
+  }
+
   const handlePress = () => {
     if (onPress) {
       onPress()
@@ -80,7 +89,7 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
           <DAppAction onPress={handleOpenDApp} icon={<Icon.DApp color={colors.icon} />} title={strings.openDApp} />
 
           <DAppAction
-            onPress={() => handleDisconnectDApp(dApp)}
+            onPress={() => handleConfirmDisconnect(dApp)}
             icon={<Icon.Disconnect color={colors.icon} />}
             title={strings.disconnectWalletFromDApp}
           />
@@ -186,7 +195,7 @@ const useStyles = () => {
       flexDirection: 'row',
       alignItems: 'center',
       gap: 12,
-      ...atoms.py_md,
+      ...atoms.py_lg,
     },
     actionTitle: {
       ...atoms.body_1_lg_medium,
