@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import {useExplorers} from '@yoroi/explorers'
 import {infoExtractName} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
@@ -64,7 +65,7 @@ export const Overview = () => {
           <Spacer height={4} />
 
           <CopyButton value={policyId ?? ''} style={styles.copyButton}>
-            <Text style={styles.copyText}>{policyId ?? ''}</Text>
+            <Text style={styles.copyText}>{policyId || '--'}</Text>
           </CopyButton>
         </View>
 
@@ -76,7 +77,7 @@ export const Overview = () => {
           <Spacer height={4} />
 
           <CopyButton value={tokenInfo?.info?.fingerprint ?? ''} style={styles.copyButton}>
-            <Text style={styles.copyText}>{tokenInfo?.info?.fingerprint}</Text>
+            <Text style={styles.copyText}>{tokenInfo?.info?.fingerprint || '--'}</Text>
           </CopyButton>
         </View>
 

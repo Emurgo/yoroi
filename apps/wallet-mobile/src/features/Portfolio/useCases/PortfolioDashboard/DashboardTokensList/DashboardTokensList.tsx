@@ -109,11 +109,15 @@ const Heading = ({countTokens, onPress, isFirstUser}: HeadingProps) => {
   )
 }
 
-const TouchTokensList = ({onPress}: TouchableOpacityProps) => (
-  <TouchableOpacity onPress={onPress}>
-    <Icon.ArrowRight size={24} />
-  </TouchableOpacity>
-)
+const TouchTokensList = ({onPress}: TouchableOpacityProps) => {
+  const {colors} = useStyles()
+
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <Icon.ArrowRight color={colors.gray_800} size={24} />
+    </TouchableOpacity>
+  )
+}
 
 const useStyles = () => {
   const {atoms, color} = useTheme()
@@ -144,5 +148,9 @@ const useStyles = () => {
     },
   })
 
-  return {styles} as const
+  const colors = {
+    gray_800: color.gray_c800,
+  }
+
+  return {styles, colors} as const
 }
