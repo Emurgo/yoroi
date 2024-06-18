@@ -63,7 +63,7 @@ export const TokenPerformance = ({changePercent = 0, changeValue = 0, value = 0,
       </View>
 
       <View style={styles.tokenWrapper}>
-        <Text style={styles.tokenPrice}>{value.toFixed(0)}</Text>
+        <Text style={styles.tokenPrice}>{value.toFixed(2)}</Text>
 
         <Text style={styles.tokenPriceSymbol}>{currency}</Text>
       </View>

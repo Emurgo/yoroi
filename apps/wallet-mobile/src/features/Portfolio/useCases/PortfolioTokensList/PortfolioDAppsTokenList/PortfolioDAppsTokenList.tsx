@@ -33,7 +33,6 @@ export const PortfolioDAppsTokenList = () => {
 
   const {data: liquidityPools, isFetching: liquidityPoolFetching} = useGetLiquidityPool()
   const {data: openOrders, isFetching: openOrdersFetching} = useGetOpenOrders()
-  const listOpenOrders = openOrders ?? []
 
   const getListLiquidityPool = React.useMemo(() => {
     const listLiquidityPool = liquidityPools ?? []
@@ -45,8 +44,18 @@ export const PortfolioDAppsTokenList = () => {
     return listLiquidityPool
   }, [isSearching, search, liquidityPools])
 
+  const getListOpenOrders = React.useMemo(() => {
+    const listOpenOrders = openOrders ?? []
+
+    if (isSearching) {
+      return listOpenOrders.filter((token) => token.dex.name.toLowerCase().includes(search.toLowerCase()))
+    }
+
+    return listOpenOrders
+  }, [openOrders, isSearching, search])
+
   return (
-    <ScrollView style={styles.root}>
+    <ScrollView style={styles.root} contentContainerStyle={styles.container}>
       {!isSearching ? (
         <View>
           <TotalTokensValue amount={primaryBalance} cardType="dapps" />
@@ -68,7 +77,7 @@ export const PortfolioDAppsTokenList = () => {
       </TabPanel>
 
       <TabPanel active={activeTab === 'openOrders'}>
-        <OpenOrdersTab tokensList={listOpenOrders} isFetching={openOrdersFetching} isSearching={isSearching} />
+        <OpenOrdersTab tokensList={getListOpenOrders} isFetching={openOrdersFetching} isSearching={isSearching} />
       </TabPanel>
 
       <TabPanel active={activeTab === 'lendAndBorrow'}>
@@ -85,6 +94,9 @@ const useStyles = () => {
       ...atoms.flex_1,
       ...atoms.px_lg,
       backgroundColor: color.gray_cmin,
+    },
+    container: {
+      ...atoms.flex_grow,
     },
   })
 

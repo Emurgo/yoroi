@@ -32,11 +32,15 @@ export const OpenOrdersTab = ({isFetching, tokensList, isSearching}: Props) => {
     if (isFetching || hasEmpty) return null
     if (isSearching)
       return (
-        <View>
-          <Text style={styles.textAvailable}>{strings.countOpenOrders(tokensList.length)}</Text>
+        <>
+          {tokensList.length !== 0 && <Spacer height={16} />}
 
-          <Spacer height={16} />
-        </View>
+          <View>
+            <Text style={styles.textAvailable}>{strings.countOpenOrders(tokensList.length)}</Text>
+
+            <Spacer height={16} />
+          </View>
+        </>
       )
 
     return null
@@ -52,7 +56,6 @@ export const OpenOrdersTab = ({isFetching, tokensList, isSearching}: Props) => {
         </View>
       )
 
-    if (tokensList.length === 0) return <TokenEmptyList emptyText={strings.noDataFound} />
     return null
   }
 
@@ -71,6 +74,8 @@ export const OpenOrdersTab = ({isFetching, tokensList, isSearching}: Props) => {
         renderItem={({item}) => (
           <DAppTokenItem onPress={() => onTokenPress(item)} tokenInfo={item} splitTokenSymbol="/" />
         )}
+        ListEmptyComponent={!isFetching ? <TokenEmptyList emptyText={strings.noDataFound} /> : undefined}
+        contentContainerStyle={styles.listContainer}
       />
     </View>
   )
@@ -81,6 +86,10 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       ...atoms.flex_1,
+    },
+    listContainer: {
+      ...atoms.flex_1,
+      ...atoms.flex_grow,
     },
     containerLoading: {
       ...atoms.gap_lg,

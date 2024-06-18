@@ -45,13 +45,16 @@ export const LiquidityPoolTab = ({tokensList = [], isFetching, isSearching}: Pro
   const renderFooterList = () => {
     if (isFetching)
       return (
-        <View style={styles.containerLoading}>
-          {makeList(3).map((_, index) => (
-            <DAppTokenItemSkeleton key={index} />
-          ))}
-        </View>
+        <>
+          {tokensList.length !== 0 && <Spacer height={16} />}
+
+          <View style={styles.containerLoading}>
+            {makeList(3).map((_, index) => (
+              <DAppTokenItemSkeleton key={index} />
+            ))}
+          </View>
+        </>
       )
-    if (hasEmpty) return <TokenEmptyList emptyText={strings.noDataFound} />
 
     return null
   }
@@ -71,6 +74,8 @@ export const LiquidityPoolTab = ({tokensList = [], isFetching, isSearching}: Pro
         renderItem={({item}) => (
           <DAppTokenItem onPress={() => onTokenPress(item)} tokenInfo={item} splitTokenSymbol="-" />
         )}
+        ListEmptyComponent={!isFetching ? <TokenEmptyList emptyText={strings.noDataFound} /> : undefined}
+        contentContainerStyle={styles.listContainer}
       />
     </View>
   )
@@ -81,6 +86,10 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       ...atoms.flex_1,
+    },
+    listContainer: {
+      ...atoms.flex_1,
+      ...atoms.flex_grow,
     },
     containerLoading: {
       ...atoms.gap_lg,
