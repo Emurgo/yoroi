@@ -354,6 +354,7 @@ export type AppRoutes = PortfolioRoutes & {
   'first-run': NavigatorScreenParams<FirstRunRoutes>
   developer: undefined
   storybook: undefined
+  playground: undefined
   'manage-wallets': NavigatorScreenParams<WalletStackRoutes>
   'custom-pin-auth': undefined
   'exchange-result': undefined
