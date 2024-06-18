@@ -2,6 +2,7 @@ import {Portfolio} from '@yoroi/types'
 import {Image} from 'expo-image'
 import React from 'react'
 import {ImageStyle, View} from 'react-native'
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 import placeholder from '../../../../assets/img/nft-placeholder.png'
 import {useSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'
@@ -26,6 +27,8 @@ export const MediaPreview = ({
   blurRadius,
 }: MediaPreviewProps) => {
   const {network} = useSelectedWallet()
+  const [loading, setLoading] = React.useState(false)
+  const [error, setError] = React.useState(false)
 
   const [policy, name] = info.id.split('.')
   const uri = showPlaceholder
@@ -39,16 +42,25 @@ export const MediaPreview = ({
         contentFit={contentFit}
         style={{width, height, ...style}}
         blurRadius={blurRadius}
-        placeholder={blurhash}
         cachePolicy="memory-disk"
-      />
+        placeholder={error && placeholder}
+        onLoadStart={() => {
+          setLoading(true)
+        }}
+        onLoad={() => {
+          setLoading(false)
+        }}
+        onError={() => {
+          setError(true)
+        }}
+      >
+        <SkeletonPlaceholder enabled={loading} borderRadius={blurRadius} highlightColor="#DCE0E9" speed={300}>
+          <View style={{height: height - 1, width: width - 1}} />
+        </SkeletonPlaceholder>
+      </Image>
     </View>
   )
 }
-
-const blurhash =
-  '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj['
-
 const headers = {
   Accept: 'image/webp',
 } as const

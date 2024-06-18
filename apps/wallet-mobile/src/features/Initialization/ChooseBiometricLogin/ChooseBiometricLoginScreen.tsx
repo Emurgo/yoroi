@@ -1,4 +1,5 @@
-import {parseBoolean, useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
+import {parseBoolean, useAsyncStorage} from '@yoroi/common'
+import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Alert, StyleSheet, Text, View} from 'react-native'
@@ -6,23 +7,36 @@ import DeviceInfo from 'react-native-device-info'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useQuery, UseQueryOptions} from 'react-query'
 
-import {Button} from '../../../../components'
-import {Space} from '../../../../components/Space/Space'
-import {useEnableAuthWithOs} from '../../../Auth/common/hooks'
-import {useStrings} from '../../common/useStrings'
-import {Biometric as BiometricIlustration} from '../../illustrations/Biometric'
+import {Button} from '../../../components'
+import {Space} from '../../../components/Space/Space'
+import {useWalletNavigation} from '../../../kernel/navigation'
+import * as HASKELL_SHELLEY from '../../../yoroi-wallets/cardano/constants/mainnet/constants'
+import {useEnableAuthWithOs} from '../../Auth/common/hooks'
+import {Biometric as BiometricIlustration} from '../../SetupWallet/illustrations/Biometric'
+import {useStrings} from '../common'
 
 export const ChooseBiometricLoginScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
+  const storage = useAsyncStorage()
+  const {walletImplementationIdChanged} = useSetupWallet()
+  const {resetToWalletSetupInit} = useWalletNavigation()
 
-  const {setScreenShown, isLoading: isSetScreenShownLoading} = useSetScreenShown()
+  const navigate = () => {
+    walletImplementationIdChanged(HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID)
+    resetToWalletSetupInit()
+  }
 
   const {enableAuthWithOs, isLoading} = useEnableAuthWithOs({
     onSuccess: () => {
       setScreenShown()
+      navigate()
     },
   })
+
+  const setScreenShown = () => {
+    storage.setItem(chooseBiometricLoginScreenShownKey, JSON.stringify(false))
+  }
 
   return (
     <SafeAreaView edges={['left', 'right', 'top', 'bottom']} style={styles.root}>
@@ -43,6 +57,7 @@ export const ChooseBiometricLoginScreen = () => {
           textStyles={styles.textOutlineButton}
           onPress={() => {
             setScreenShown()
+            navigate()
           }}
           disabled={isLoading}
         />
@@ -59,7 +74,7 @@ export const ChooseBiometricLoginScreen = () => {
                 [
                   {
                     text: 'OK',
-                    onPress: () => setScreenShown(),
+                    onPress: navigate,
                   },
                 ],
               )
@@ -69,7 +84,7 @@ export const ChooseBiometricLoginScreen = () => {
 
             enableAuthWithOs()
           }}
-          disabled={isLoading || isSetScreenShownLoading}
+          disabled={isLoading}
         />
 
         <Space height="sm" />
@@ -106,7 +121,6 @@ const useStyles = () => {
   return {styles} as const
 }
 
-export const chooseBiometricLoginScreenShownKey = 'choose-biometric-login-screen-shown'
 export const useShowBiometricsScreen = (
   options: UseQueryOptions<boolean, Error, boolean, ['useShowBiometricsScreen']> = {},
 ) => {
@@ -126,16 +140,4 @@ export const useShowBiometricsScreen = (
   }
 }
 
-const useSetScreenShown = () => {
-  const storage = useAsyncStorage()
-
-  const mutation = useMutationWithInvalidations({
-    mutationFn: async () => storage.setItem(chooseBiometricLoginScreenShownKey, JSON.stringify(false)),
-    invalidateQueries: [['useShowBiometricsScreen']],
-  })
-
-  return {
-    ...mutation,
-    setScreenShown: mutation.mutate,
-  }
-}
+export const chooseBiometricLoginScreenShownKey = 'choose-biometric-login-screen-shown'

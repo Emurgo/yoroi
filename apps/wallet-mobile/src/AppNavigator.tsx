@@ -17,7 +17,12 @@ import {supportsAndroidFingerprintOverlay} from './features/Auth/common/biometri
 import {AuthSetting, useAuthSetting, useAuthWithOs, useIsAuthOsSupported} from './features/Auth/common/hooks'
 import {EnableLoginWithPin} from './features/Auth/EnableLoginWithPin'
 import {DeveloperScreen} from './features/Dev/DeveloperScreen'
+import {Playground} from './features/Dev/Playground'
 import {AgreementChangedNavigator, InitializationNavigator} from './features/Initialization'
+import {
+  ChooseBiometricLoginScreen,
+  useShowBiometricsScreen,
+} from './features/Initialization/ChooseBiometricLogin/ChooseBiometricLoginScreen'
 import {LegalAgreement, useLegalAgreement} from './features/Initialization/common'
 import {
   DarkThemeAnnouncement,
@@ -27,10 +32,6 @@ import {useDeepLinkWatcher} from './features/Links/common/useDeepLinkWatcher'
 import {PortfolioScreen} from './features/Portfolio/useCases/PortfolioScreen'
 import {SearchProvider} from './features/Search/SearchContext'
 import {SetupWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
-import {
-  ChooseBiometricLoginScreen,
-  useShowBiometricsScreen,
-} from './features/SetupWallet/useCases/ChooseBiometricLogin/ChooseBiometricLoginScreen'
 import {useWalletManager} from './features/WalletManager/context/WalletManagerContext'
 import {useStatusBar} from './hooks/useStatusBar'
 import {agreementDate} from './kernel/config'
@@ -198,6 +199,8 @@ export const AppNavigator = () => {
               <Stack.Screen name="developer" component={DeveloperScreen} options={{headerShown: false}} />
 
               <Stack.Screen name="storybook" component={StorybookScreen} />
+
+              <Stack.Screen name="playground" component={Playground} />
 
               <Stack.Screen name="portfolio-dashboard" component={PortfolioScreen} />
             </Stack.Group>

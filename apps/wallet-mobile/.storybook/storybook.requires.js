@@ -292,6 +292,8 @@ const getStories = () => {
     "./src/legacy/TxHistory/TxDetails/TxDetails.stories.tsx": require("../src/legacy/TxHistory/TxDetails/TxDetails.stories.tsx"),
     "./src/legacy/TxHistory/TxHistory.stories.tsx": require("../src/legacy/TxHistory/TxHistory.stories.tsx"),
     "./src/legacy/TxHistory/TxHistoryList/ActionsBanner/ActionsBanner.stories.tsx": require("../src/legacy/TxHistory/TxHistoryList/ActionsBanner/ActionsBanner.stories.tsx"),
+    "./src/Staking/FailedTx/FailedTxScreen.stories.tsx": require("../src/Staking/FailedTx/FailedTxScreen.stories.tsx"),
+    "./src/Staking/PoolTransition/PoolTransitionModal.stories.tsx": require("../src/Staking/PoolTransition/PoolTransitionModal.stories.tsx"),
   };
 };
 

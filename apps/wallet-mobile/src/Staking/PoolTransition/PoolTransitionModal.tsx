@@ -4,10 +4,10 @@ import * as React from 'react'
 import {Image, StyleSheet, Text, View, ViewProps} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Button, Icon, useModal} from '../../../components'
-import {ScrollView, useScrollView} from '../../../components/ScrollView/ScrollView'
-import {Space} from '../../../components/Space/Space'
-import {formatTimeSpan} from '../../../yoroi-wallets/utils'
+import {Button, Icon, useModal} from '../../components'
+import {ScrollView, useScrollView} from '../../components/ScrollView/ScrollView'
+import {Space} from '../../components/Space/Space'
+import {formatTimeSpan} from '../../yoroi-wallets/utils'
 import {useStrings} from './usePoolTransition'
 
 export const PoolTransitionModal = ({
@@ -47,7 +47,7 @@ export const PoolTransitionModal = ({
         <View style={styles.modal}>
           <Text style={styles.details}>{isActive ? strings.warning : strings.finalWarning}</Text>
 
-          <Space height="lg" />
+          <Space height="l" />
 
           <View style={[styles.card, isActive ? styles.border : styles.warningBorder]}>
             <Row>
@@ -89,11 +89,11 @@ export const PoolTransitionModal = ({
             </Text>
           </View>
 
-          <Space height="sm" />
+          <Space height="s" />
 
           <Icon.ArrowDown size={17} />
 
-          <Space height="sm" />
+          <Space height="s" />
 
           <View style={styles.card}>
             <LinearGradient
@@ -139,12 +139,7 @@ export const PoolTransitionModal = ({
       {isScrollBarShown && <View style={styles.line} />}
 
       <Actions>
-        <Button
-          outline
-          title={strings.skipNoRewards.toLocaleUpperCase()}
-          textStyles={styles.outlineButton}
-          onPress={handleOnSkip}
-        />
+        <Button outline title={strings.skipNoRewards} textStyles={styles.outlineButton} onPress={handleOnSkip} />
 
         <Button
           shelleyTheme
@@ -161,7 +156,7 @@ export const PoolTransitionModal = ({
 }
 
 const useStyles = () => {
-  const {atoms, color} = useTheme()
+  const {theme} = useTheme()
 
   const styles = StyleSheet.create({
     modal: {
@@ -175,17 +170,17 @@ const useStyles = () => {
     card: {
       borderRadius: 8,
       gap: 8,
-      ...atoms.p_lg,
+      ...theme.padding.l,
       width: '100%',
       overflow: 'hidden',
     },
     border: {
       borderWidth: 1,
-      borderColor: color.gray_c300,
+      borderColor: theme.color.gray['300'],
     },
     warningBorder: {
-      borderWidth: 2,
-      borderColor: color.sys_magenta_c500,
+      borderWidth: 1,
+      borderColor: theme.color.magenta['500'],
     },
     poolTicker: {
       alignItems: 'center',
@@ -193,8 +188,8 @@ const useStyles = () => {
       gap: 8,
     },
     poolTickerText: {
-      ...atoms.body_1_lg_regular,
-      color: color.primary_c600,
+      ...theme.typography['body-1-l-regular'],
+      color: theme.color.primary[600],
     },
     pic: {
       width: 24,
@@ -202,25 +197,25 @@ const useStyles = () => {
       borderRadius: 100,
     },
     label: {
-      ...atoms.body_1_lg_regular,
-      color: color.gray_c600,
+      ...theme.typography['body-1-l-regular'],
+      color: theme.color.gray['600'],
     },
     currentValue: {
-      ...atoms.body_1_lg_regular,
-      color: color.gray_cmax,
+      ...theme.typography['body-1-l-regular'],
+      color: theme.color.gray['max'],
     },
     suggestedValue: {
-      ...atoms.body_1_lg_medium,
-      color: color.gray_cmax,
+      ...theme.typography['body-1-l-medium'],
+      color: theme.color.gray['max'],
     },
     warning: {
-      color: color.sys_magenta_c500,
+      color: theme.color.magenta['500'],
     },
     warningText: {
-      ...atoms.body_1_lg_regular,
+      ...theme.typography['body-1-l-regular'],
     },
     warningTimer: {
-      ...atoms.body_1_lg_medium,
+      ...theme.typography['body-1-l-medium'],
     },
     row: {
       width: '100%',
@@ -229,34 +224,28 @@ const useStyles = () => {
       height: 24,
       alignItems: 'center',
     },
-    line: {
-      width: '120%',
-      height: StyleSheet.hairlineWidth,
-      backgroundColor: color.gray_c200,
-    },
+    line: {width: '120%', height: StyleSheet.hairlineWidth, backgroundColor: theme.color.gray[200]},
     actions: {
       alignSelf: 'stretch',
-      backgroundColor: color.gray_cmin,
+      backgroundColor: theme.color.gray.min,
       gap: 4,
     },
     details: {
-      ...atoms.body_1_lg_regular,
-      color: color.gray_c900,
+      ...theme.typography['body-1-l-regular'],
+      color: theme.color.gray['900'],
       width: '100%',
     },
     outlineButton: {
-      color: color.gray_c900,
-      ...atoms.button_2_md,
-      textTransform: 'none',
+      color: theme.color.gray[900],
+      ...theme.typography['button-2-m'],
     },
     button: {
-      ...atoms.button_1_lg,
-      textTransform: 'none',
+      ...theme.typography['button-1-l'],
     },
   })
 
   const colors = {
-    backgroundGradientCard: color.bg_gradient_1,
+    backgroundGradientCard: theme.color.gradients['blue-green'],
   }
 
   return {styles, colors} as const

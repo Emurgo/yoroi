@@ -1,8 +1,8 @@
 import * as React from 'react'
 import {useWindowDimensions} from 'react-native'
 
-import {useModal} from '../../../components'
-import {useSelectedWallet} from '../../../features/WalletManager/context/SelectedWalletContext'
+import {useModal} from '../../components'
+import {useSelectedWallet} from '../../features/WalletManager/Context/SelectedWalletContext'
 import {PoolTransitionModal} from './PoolTransitionModal'
 import {usePoolTransitionContext} from './PoolTransitionProvider'
 import {usePoolTransition, useStrings} from './usePoolTransition'
