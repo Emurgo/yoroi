@@ -45,6 +45,20 @@ export const PortfolioDAppsTokenList = () => {
     return listLiquidityPool
   }, [isSearching, search, liquidityPools])
 
+  React.useEffect(() => {
+    let timeout: NodeJS.Timeout | undefined
+
+    const sendMetrics = () => {
+      timeout = setTimeout(() => {
+        console.log('metrics-sent', new Date().getTime())
+      }, 500)
+    }
+
+    if (isSearching && search.length > 0) sendMetrics()
+
+    return () => clearTimeout(timeout)
+  }, [isSearching, search])
+
   return (
     <ScrollView style={styles.root}>
       {!isSearching ? (
