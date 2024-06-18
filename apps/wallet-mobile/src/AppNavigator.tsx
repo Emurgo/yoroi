@@ -306,7 +306,10 @@ const useFirstAction = () => {
   const isAuthOsSupported = useIsAuthOsSupported()
   const legalAgreement = useLegalAgreement()
 
-  return getFirstAction(isAuthOsSupported, authSetting, legalAgreement)
+  return React.useMemo(
+    () => getFirstAction(isAuthOsSupported, authSetting, legalAgreement),
+    [authSetting, isAuthOsSupported, legalAgreement],
+  )
 }
 
 type AfterLoginAction = 'choose-biometric-login' | 'dark-theme-announcement' | 'setup-wallet' | 'manage-wallets'
@@ -329,7 +332,8 @@ const useAfterLoginAction = () => {
   const isAuthOsSupported = useIsAuthOsSupported()
   const authSetting = useAuthSetting()
 
-  const shouldAskToUseAuthWithOs = (showBiometricsScreen && isAuthOsSupported && authSetting !== 'os') ?? false
-
-  return getAfterLoginAction(shouldAskToUseAuthWithOs, showDarkThemeAnnouncement ?? false, hasWallets)
+  return React.useMemo(() => {
+    const shouldAskToUseAuthWithOs = (showBiometricsScreen && isAuthOsSupported && authSetting !== 'os') ?? false
+    return getAfterLoginAction(shouldAskToUseAuthWithOs, showDarkThemeAnnouncement ?? false, hasWallets)
+  }, [authSetting, hasWallets, isAuthOsSupported, showBiometricsScreen, showDarkThemeAnnouncement])
 }
