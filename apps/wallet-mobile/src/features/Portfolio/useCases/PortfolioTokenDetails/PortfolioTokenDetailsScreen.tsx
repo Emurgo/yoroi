@@ -4,28 +4,22 @@ import {Animated, NativeScrollEvent, NativeSyntheticEvent, StyleSheet} from 'rea
 
 import {Spacer} from '../../../../components'
 import {Tab, Tabs} from '../../../../components/Tabs'
+import {usePortfolioTokenDetailContext} from '../../common/PortfolioTokenDetailContext'
 import {useStrings} from '../../common/useStrings'
 import {PortfolioTokenAction} from './PortfolioTokenAction'
 import {PortfolioTokenBalance} from './PortfolioTokenBalance/PortfolioTokenBalance'
 import {PortfolioTokenChart} from './PortfolioTokenChart/PortfolioTokenChart'
+import {PortfolioTokenDetailLayout} from './PortfolioTokenDetailLayout'
 import {PortfolioTokenInfo} from './PortfolioTokenInfo/PortfolioTokenInfo'
 import {useTokenDetailTransactions} from './PortfolioTokenInfo/Transactions'
-import {PortfolioTokenLayout} from './PortfolioTokenLayout'
 
 const HEADER_HEIGHT = 304
-export type ActiveTab = 'performance' | 'overview' | 'transactions'
 export const PortfolioTokenDetailsScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
+  const {activeTab, setActiveTab} = usePortfolioTokenDetailContext()
 
-  const [activeTab, setActiveTab] = React.useState<ActiveTab>('performance')
   const [isStickyTab, setIsStickyTab] = React.useState(false)
-
-  const handleChangeTab = (value: ActiveTab) => {
-    React.startTransition(() => {
-      setActiveTab(value)
-    })
-  }
 
   const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const offsetY = e.nativeEvent.contentOffset.y
@@ -42,29 +36,29 @@ export const PortfolioTokenDetailsScreen = () => {
         <Tab
           style={styles.tab}
           active={activeTab === 'performance'}
-          onPress={() => handleChangeTab('performance')}
+          onPress={() => setActiveTab('performance')}
           label={strings.performance}
         />
 
         <Tab
           style={styles.tab}
           active={activeTab === 'overview'}
-          onPress={() => handleChangeTab('overview')}
+          onPress={() => setActiveTab('overview')}
           label={strings.overview}
         />
 
         <Tab
           style={styles.tab}
           active={activeTab === 'transactions'}
-          onPress={() => handleChangeTab('transactions')}
+          onPress={() => setActiveTab('transactions')}
           label={strings.transactions}
         />
       </Tabs>
     )
-  }, [activeTab, strings.overview, strings.performance, strings.transactions, styles.tab, styles.tabs])
+  }, [activeTab, setActiveTab, strings.overview, strings.performance, strings.transactions, styles.tab, styles.tabs])
 
   return (
-    <PortfolioTokenLayout
+    <PortfolioTokenDetailLayout
       topContent={
         <Animated.View style={[styles.tabsSticky, isStickyTab ? styles.tabsStickyActive : styles.tabsStickyInactive]}>
           {renderTabs}
@@ -87,14 +81,14 @@ export const PortfolioTokenDetailsScreen = () => {
 
           <Animated.View>{renderTabs}</Animated.View>
 
-          <PortfolioTokenInfo activeTab={activeTab} />
+          <PortfolioTokenInfo />
         </>
       }
       ListFooterComponent={loadingView}
       {...getSectionListProps}
     >
       <PortfolioTokenAction />
-    </PortfolioTokenLayout>
+    </PortfolioTokenDetailLayout>
   )
 }
 

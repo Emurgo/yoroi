@@ -10,7 +10,7 @@ interface Props extends SectionListProps<ITokenTransaction> {
   topContent?: React.ReactNode
 }
 
-export const PortfolioTokenLayout = ({children, topContent, ...props}: Props) => {
+export const PortfolioTokenDetailLayout = ({children, topContent, ...props}: Props) => {
   const {styles} = useStyles()
 
   return (

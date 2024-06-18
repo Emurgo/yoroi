@@ -7,15 +7,17 @@ import {Icon, Text} from '../../../../../components'
 import {Tooltip} from '../../../../../components/Tooltip'
 import {useCurrencyContext} from '../../../../Settings/Currency'
 import {PnlTag} from '../../../common/PnlTag/PnlTag'
+import {TOKEN_CHART_TIME_INTERVAL, TokenChartTimeInterval} from '../../../common/useGetPortfolioTokenChart'
 import {useStrings} from '../../../common/useStrings'
 
 interface Props {
   changePercent?: number
   changeValue?: number
   value?: number
+  timeInterval?: TokenChartTimeInterval
 }
 
-export const TokenPerformance = ({changePercent = 0, changeValue = 0, value = 0}: Props) => {
+export const TokenPerformance = ({changePercent = 0, changeValue = 0, value = 0, timeInterval}: Props) => {
   const {styles} = useStyles()
   const strings = useStrings()
   const {currency} = useCurrencyContext()
@@ -27,6 +29,25 @@ export const TokenPerformance = ({changePercent = 0, changeValue = 0, value = 0}
     return 'neutral'
   }, [changePercent])
 
+  const intervalLabel = React.useMemo(() => {
+    switch (timeInterval) {
+      case TOKEN_CHART_TIME_INTERVAL.HOUR:
+        return strings._24_hours
+      case TOKEN_CHART_TIME_INTERVAL.WEEK:
+        return strings._1_week
+      case TOKEN_CHART_TIME_INTERVAL.MONTH:
+        return strings._1_month
+      case TOKEN_CHART_TIME_INTERVAL.SIX_MONTHS:
+        return strings._6_months
+      case TOKEN_CHART_TIME_INTERVAL.YEAR:
+        return strings._1_year
+      case TOKEN_CHART_TIME_INTERVAL.ALL:
+        return strings.all_time
+      default:
+        return strings._24_hours
+    }
+  }, [strings, timeInterval])
+
   return (
     <View style={styles.root}>
       <View style={styles.tokenChangeWrapper}>
@@ -36,7 +57,7 @@ export const TokenPerformance = ({changePercent = 0, changeValue = 0, value = 0}
 
         <PnlTag variant={variant}>{`${changeValue.toFixed(1)} ${currency}`}</PnlTag>
 
-        <Tooltip numberOfLine={3} title={strings.tokenPriceChangeTooltip}>
+        <Tooltip numberOfLine={3} title={strings.tokenPriceChangeTooltip(intervalLabel)}>
           <Icon.InfoCircle />
         </Tooltip>
       </View>

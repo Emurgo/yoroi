@@ -1097,7 +1097,7 @@
   "portfolio.portfolioTokensDetailScreen.performance": "Performance",
   "portfolio.portfolioTokensDetailScreen.overview": "Overview",
   "portfolio.portfolioTokensDetailScreen.transactions": "Transactions",
-  "portfolio.portfolioTokensDetailScreen.tokenPriceChangeTooltip": "Token price change \nin 24 hours",
+  "portfolio.portfolioTokensDetailScreen.tokenPriceChangeTooltip": "Token price change \nin {timeInterval}",
   "portfolio.portfolioTokensDetailScreen.netInvested": "Net Invested",
   "portfolio.portfolioTokensDetailScreen.bought": "Bought",
   "portfolio.portfolioTokensDetailScreen.received": "Received",
@@ -1124,5 +1124,12 @@
   "portfolio.portfolioTokensDetailScreen.website": "Website",
   "portfolio.portfolioTokensDetailScreen.policyID": "Policy ID",
   "portfolio.portfolioTokensDetailScreen.fingerprint": "Fingerprint",
+  "portfolio.portfolioTokensDetailScreen.news": "News",
+  "portfolio.portfolioTokensDetailScreen.24_hours": "24 hours",
+  "portfolio.portfolioTokensDetailScreen.1_week": "1 week",
+  "portfolio.portfolioTokensDetailScreen.1_month": "1 month",
+  "portfolio.portfolioTokensDetailScreen.6_months": "6 months",
+  "portfolio.portfolioTokensDetailScreen.1_year": "1 year",
+  "portfolio.portfolioTokensDetailScreen.all_time": "all time",
   "portfolio.portfolioTokensDetailScreen.detailsOn": "Details on"
 }

@@ -4,11 +4,12 @@ import {useTheme} from '@yoroi/theme'
 import React, {useState} from 'react'
 import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
-import {Accordion, CopyButton, Spacer} from '../../../../../components'
-import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
-import {TokenInfoIcon} from '../../../common/TokenAmountItem/TokenInfoIcon'
-import {usePortfolioTokenDetailParams} from '../../../common/useNavigateTo'
-import {useStrings} from '../../../common/useStrings'
+import {Accordion, CopyButton, Spacer} from '../../../../../../components'
+import {useSelectedWallet} from '../../../../../WalletManager/context/SelectedWalletContext'
+import {TokenInfoIcon} from '../../../../common/TokenAmountItem/TokenInfoIcon'
+import {usePortfolioTokenDetailParams} from '../../../../common/useNavigateTo'
+import {useStrings} from '../../../../common/useStrings'
+import {TokenNews} from './TokenNews'
 
 export const Overview = () => {
   const {styles} = useStyles()
@@ -99,6 +100,12 @@ export const Overview = () => {
           <Spacer height={16} />
 
           <View style={styles.divider} />
+
+          <Spacer height={16} />
+
+          <TokenNews />
+
+          <Spacer height={16} />
         </View>
       </Accordion>
     </View>
