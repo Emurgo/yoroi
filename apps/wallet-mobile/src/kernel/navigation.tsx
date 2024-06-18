@@ -627,7 +627,7 @@ export const hideTabBarForRoutes = (
   getFocusedRouteNameFromRoute(route)?.startsWith('exchange') ||
   getFocusedRouteNameFromRoute(route)?.startsWith('discover-browser') ||
   getFocusedRouteNameFromRoute(route)?.startsWith('portfolio')
-    ? {display: 'none'}
+    ? {display: 'none', height: 0}
     : undefined
 
 function useKeepRoutesInHistory(routesToKeep: string[]) {
