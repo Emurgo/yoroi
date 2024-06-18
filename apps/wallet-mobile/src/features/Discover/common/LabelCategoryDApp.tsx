@@ -37,8 +37,5 @@ const useStyles = () => {
     },
   })
 
-  const colors = {
-    gradientBg: ['#17D1AA', '#1ACBAF', '#21B8BC', '#2E9BD3', '#3F71F1', '#475FFF'],
-  }
-  return {styles, colors} as const
+  return {styles} as const
 }
