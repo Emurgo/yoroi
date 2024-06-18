@@ -4,6 +4,7 @@ import {ScrollView, StyleSheet, View} from 'react-native'
 
 import {Spacer} from '../../../../../components'
 import {TabPanel} from '../../../../../components/Tabs'
+import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {useSearch} from '../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
 import {usePortfolioPrimaryBalance} from '../../../common/hooks/usePortfolioPrimaryBalance'
@@ -27,6 +28,7 @@ export const PortfolioDAppsTokenList = () => {
   const {styles} = useStyles()
   const {search, isSearching} = useSearch()
   const wallet = useSelectedWallet()
+  const {track} = useMetrics()
   const primaryBalance = usePortfolioPrimaryBalance({wallet})
 
   const [activeTab, setActiveTab] = React.useState<TPortfolioDAppsTabs>(portfolioDAppsTabs.LIQUIDITY_POOL)
@@ -49,15 +51,17 @@ export const PortfolioDAppsTokenList = () => {
     let timeout: NodeJS.Timeout | undefined
 
     const sendMetrics = () => {
+      clearTimeout(timeout)
+
       timeout = setTimeout(() => {
-        console.log('metrics-sent', new Date().getTime())
+        track.portfolioTokensListSearchActivated({search_term: search})
       }, 500)
     }
 
     if (isSearching && search.length > 0) sendMetrics()
 
     return () => clearTimeout(timeout)
-  }, [isSearching, search])
+  }, [isSearching, search, track])
 
   return (
     <ScrollView style={styles.root}>
