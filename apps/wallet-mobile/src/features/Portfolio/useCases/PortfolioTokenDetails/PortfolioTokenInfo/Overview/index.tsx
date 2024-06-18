@@ -100,14 +100,14 @@ export const Overview = () => {
           <Spacer height={16} />
 
           <View style={styles.divider} />
-
-          <Spacer height={16} />
-
-          <TokenNews />
-
-          <Spacer height={16} />
         </View>
       </Accordion>
+
+      <Spacer height={16} />
+
+      <TokenNews />
+
+      <Spacer height={16} />
     </View>
   )
 }
