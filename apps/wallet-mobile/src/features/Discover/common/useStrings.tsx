@@ -137,7 +137,7 @@ export const messages = Object.freeze(
     },
     confirmDisconnectDAppDescription: {
       id: 'discover.confirmDisconnectDApp.confirmDisconnectDAppDescription',
-      defaultMessage: "!!!Here's an alert description that uses \nAuto Layout!",
+      defaultMessage: '!!!Are you sure you want to disconnect this DApp?',
     },
     cancel: {
       id: 'global.actions.dialogs.commonbuttons.cancelButton',

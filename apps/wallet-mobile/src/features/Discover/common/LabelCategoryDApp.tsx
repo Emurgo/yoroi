@@ -1,20 +1,17 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
 
 type Props = {
   category: string
 }
 export const LabelCategoryDApp = ({category}: Props) => {
-  const {styles, colors} = useStyles()
+  const {styles} = useStyles()
 
   return (
-    <LinearGradient style={styles.labelGradientBox} start={{x: 0, y: 0}} end={{x: 1, y: 1}} colors={colors.gradientBg}>
-      <View style={styles.labelContainer}>
-        <Text style={styles.labelText}>{category}</Text>
-      </View>
-    </LinearGradient>
+    <View style={styles.labelContainer}>
+      <Text style={styles.labelText}>{category}</Text>
+    </View>
   )
 }
 
@@ -22,17 +19,17 @@ const useStyles = () => {
   const {atoms, color} = useTheme()
 
   const styles = StyleSheet.create({
-    labelGradientBox: {
-      borderRadius: 20,
-      ...atoms.p_2xs,
-      height: 24,
-    },
     labelContainer: {
-      borderRadius: 24,
+      borderRadius: 20,
       backgroundColor: color.gray_cmin,
-      ...atoms.h_full,
       paddingVertical: 1,
       paddingHorizontal: 6,
+      height: 24,
+      borderWidth: 2,
+      borderColor: color.el_primary_medium,
+      ...atoms.flex_row,
+      ...atoms.align_center,
+      ...atoms.justify_center,
     },
     labelText: {
       ...atoms.body_3_sm_medium,

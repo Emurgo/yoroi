@@ -361,7 +361,7 @@
   },
   {
     "id": "discover.confirmDisconnectDApp.confirmDisconnectDAppDescription",
-    "defaultMessage": "!!!Here's an alert description that uses \nAuto Layout!",
+    "defaultMessage": "!!!Are you sure you want to disconnect this DApp?",
     "file": "src/features/Discover/common/useStrings.tsx",
     "start": {
       "line": 138,
@@ -371,7 +371,7 @@
     "end": {
       "line": 141,
       "column": 5,
-      "index": 6078
+      "index": 6072
     }
   },
   {
@@ -381,12 +381,12 @@
     "start": {
       "line": 142,
       "column": 12,
-      "index": 6092
+      "index": 6086
     },
     "end": {
       "line": 145,
       "column": 5,
-      "index": 6197
+      "index": 6191
     }
   },
   {
@@ -396,12 +396,12 @@
     "start": {
       "line": 146,
       "column": 13,
-      "index": 6212
+      "index": 6206
     },
     "end": {
       "line": 149,
       "column": 5,
-      "index": 6319
+      "index": 6313
     }
   }
 ]

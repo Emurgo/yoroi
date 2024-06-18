@@ -111,7 +111,7 @@ const useStyles = () => {
       justifyContent: 'space-between',
       gap: 16,
       ...atoms.px_lg,
-      paddingTop: 12,
+      ...atoms.pt_md,
       backgroundColor: color.gray_cmin,
     },
     shadow: {

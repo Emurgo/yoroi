@@ -1064,7 +1064,7 @@
   "discover.unverifiedDappModal.disclaimerModalText": "You are accessing a third-party Cardano application that is not verified by EMURGO, the developers of Yoroi Wallet, or any of its affiliated divisions. Make sure this DApp is reliable to stay safe from malicious apps in a sustainable way.",
   "discover.unverifiedDappModal.disclaimerModalTitle": "Disclaimer",
   "discover.confirmDisconnectDApp.disconnectDApp": "Disconnect DApp",
-  "discover.confirmDisconnectDApp.confirmDisconnectDAppDescription": "Here's an alert description that uses \nAuto Layout!",
+  "discover.confirmDisconnectDApp.confirmDisconnectDAppDescription": "Are you sure you want to disconnect this DApp?",
   "portfolio.portfolioDashboardScreen.totalWalletValue": "Total wallet value",
   "portfolio.portfolioDashboardScreen.tokens": "Tokens ({countTokens})",
   "portfolio.portfolioDashboardScreen.buyADATitle": "Start your crypto journey",
