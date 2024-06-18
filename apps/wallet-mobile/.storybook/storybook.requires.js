@@ -109,6 +109,7 @@ const getStories = () => {
     "./src/features/Discover/common/ConfirmConnectionModal.stories.tsx": require("../src/features/Discover/common/ConfirmConnectionModal.stories.tsx"),
     "./src/features/Discover/common/LabelCategoryDApp.stories.tsx": require("../src/features/Discover/common/LabelCategoryDApp.stories.tsx"),
     "./src/features/Discover/common/LabelConnected.stories.tsx": require("../src/features/Discover/common/LabelConnected.stories.tsx"),
+    "./src/features/Discover/common/UnverifiedDappModal.stories.tsx": require("../src/features/Discover/common/UnverifiedDappModal.stories.tsx"),
     "./src/features/Discover/useCases/BrowseDapp/BrowseDappScreen.stories.tsx": require("../src/features/Discover/useCases/BrowseDapp/BrowseDappScreen.stories.tsx"),
     "./src/features/Discover/useCases/BrowseDapp/BrowserSearchToolbar.stories.tsx": require("../src/features/Discover/useCases/BrowseDapp/BrowserSearchToolbar.stories.tsx"),
     "./src/features/Discover/useCases/BrowseDapp/BrowserTabBar.stories.tsx": require("../src/features/Discover/useCases/BrowseDapp/BrowserTabBar.stories.tsx"),
@@ -291,6 +292,8 @@ const getStories = () => {
     "./src/legacy/TxHistory/TxDetails/TxDetails.stories.tsx": require("../src/legacy/TxHistory/TxDetails/TxDetails.stories.tsx"),
     "./src/legacy/TxHistory/TxHistory.stories.tsx": require("../src/legacy/TxHistory/TxHistory.stories.tsx"),
     "./src/legacy/TxHistory/TxHistoryList/ActionsBanner/ActionsBanner.stories.tsx": require("../src/legacy/TxHistory/TxHistoryList/ActionsBanner/ActionsBanner.stories.tsx"),
+    "./src/Staking/FailedTx/FailedTxScreen.stories.tsx": require("../src/Staking/FailedTx/FailedTxScreen.stories.tsx"),
+    "./src/Staking/PoolTransition/PoolTransitionModal.stories.tsx": require("../src/Staking/PoolTransition/PoolTransitionModal.stories.tsx"),
   };
 };
 

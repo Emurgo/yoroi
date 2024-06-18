@@ -27,9 +27,7 @@ export const useStrings = () => {
     cardanoMainnetDescription: intl.formatMessage(messages.cardanoMainnetDescription),
     cardanoTestnetDescription: intl.formatMessage(messages.cardanoTestnetDescription),
     cardanoSanchonetDescription: intl.formatMessage(messages.cardanoSanchonetDescription),
-    biometricDescription: intl.formatMessage(messages.biometricDescription),
-    enableButton: intl.formatMessage(messages.enableButton),
-    ignoreButton: intl.formatMessage(messages.ignoreButton),
+
     continueButton: intl.formatMessage(messages.continueButton),
     next: intl.formatMessage(messages.next),
     learnMore: intl.formatMessage(messages.learnMore),
@@ -181,19 +179,6 @@ export const messages = Object.freeze(
     cardanoSanchonetDescription: {
       id: 'components.walletinit.walletinitmenu.cardanoSanchonetbutton.description',
       defaultMessage: '!!!Testnet for rolling out governance',
-    },
-    biometricDescription: {
-      id: 'components.walletinit.biometricScreen.biometricDescription.description',
-      defaultMessage:
-        '!!!Use your device biometrics for a more convenient access to your Yoroi wallet and transaction confirmation',
-    },
-    enableButton: {
-      id: 'components.walletinit.biometricScreen.enableButton.title',
-      defaultMessage: '!!!Enable biometrics',
-    },
-    ignoreButton: {
-      id: 'components.walletinit.biometricScreen.ignoreButton.title',
-      defaultMessage: '!!!Recovery phrase is a unique combination of words',
     },
     aboutRecoveryPhraseTitle: {
       id: 'components.walletinit.aboutRecoveryPhrase.aboutRecoveryPhrase.title',

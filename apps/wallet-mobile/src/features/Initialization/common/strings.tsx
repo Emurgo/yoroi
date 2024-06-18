@@ -15,6 +15,9 @@ export const useStrings = () => {
     languagePickerTitle: intl.formatMessage(messages.languagePickerTitle),
     tosAnd: intl.formatMessage(messages.tosAnd),
     privacyPolicy: intl.formatMessage(messages.privacyPolicy),
+    biometricDescription: intl.formatMessage(messages.biometricDescription),
+    ignoreButton: intl.formatMessage(messages.ignoreButton),
+    enableButton: intl.formatMessage(messages.enableButton),
   }
 }
 
@@ -63,5 +66,17 @@ const messages = defineMessages({
   languagePickerTitle: {
     id: 'components.initialization.languagepicker.title',
     defaultMessage: '!!!Select language',
+  },
+  biometricDescription: {
+    id: 'components.walletinit.biometricScreen.biometricDescription.description',
+    defaultMessage: '!!!Use your device biometrics for a more convenient access to your Yoroi wallet',
+  },
+  ignoreButton: {
+    id: 'components.walletinit.biometricScreen.ignoreButton.title',
+    defaultMessage: '!!!Recovery phrase is a unique combination of words',
+  },
+  enableButton: {
+    id: 'components.walletinit.biometricScreen.enableButton.title',
+    defaultMessage: '!!!Enable biometrics',
   },
 })

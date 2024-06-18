@@ -2,196 +2,196 @@
   {
     "id": "components.pooltransition.title",
     "defaultMessage": "!!!Upgrade your stake pool",
-    "file": "src/Staking/PoolTransition/usePoolTransition.tsx",
+    "file": "src/TxHistory/usePoolTransition.tsx",
     "start": {
-      "line": 105,
+      "line": 108,
       "column": 9,
-      "index": 4001
+      "index": 3854
     },
     "end": {
-      "line": 108,
+      "line": 111,
       "column": 3,
-      "index": 4099
+      "index": 3952
     }
   },
   {
     "id": "components.pooltransition.warning",
     "defaultMessage": "!!!The current stake pool you're using will soon close. Migrate to the new EMURGO pool to sustain reward generation.",
-    "file": "src/Staking/PoolTransition/usePoolTransition.tsx",
+    "file": "src/TxHistory/usePoolTransition.tsx",
     "start": {
-      "line": 109,
+      "line": 112,
       "column": 11,
-      "index": 4112
+      "index": 3965
     },
     "end": {
-      "line": 113,
+      "line": 116,
       "column": 3,
-      "index": 4308
+      "index": 4161
     }
   },
   {
     "id": "components.pooltransition.finalWarning",
     "defaultMessage": "!!!The current stake pool you're using is decommissioned and NOT generating reward anymore. Update it to continue earning",
-    "file": "src/Staking/PoolTransition/usePoolTransition.tsx",
+    "file": "src/TxHistory/usePoolTransition.tsx",
     "start": {
-      "line": 114,
+      "line": 117,
       "column": 16,
-      "index": 4326
+      "index": 4179
     },
     "end": {
-      "line": 118,
+      "line": 121,
       "column": 3,
-      "index": 4532
+      "index": 4385
     }
   },
   {
     "id": "components.pooltransition.currentPool",
     "defaultMessage": "!!!Current pool",
-    "file": "src/Staking/PoolTransition/usePoolTransition.tsx",
+    "file": "src/TxHistory/usePoolTransition.tsx",
     "start": {
-      "line": 119,
+      "line": 122,
       "column": 15,
-      "index": 4549
+      "index": 4402
     },
     "end": {
-      "line": 122,
+      "line": 125,
       "column": 3,
-      "index": 4642
+      "index": 4495
     }
   },
   {
     "id": "components.pooltransition.newPool",
     "defaultMessage": "!!!New pool",
-    "file": "src/Staking/PoolTransition/usePoolTransition.tsx",
+    "file": "src/TxHistory/usePoolTransition.tsx",
     "start": {
-      "line": 123,
+      "line": 126,
       "column": 11,
-      "index": 4655
+      "index": 4508
     },
     "end": {
-      "line": 126,
+      "line": 129,
       "column": 3,
-      "index": 4740
+      "index": 4593
     }
   },
   {
     "id": "components.pooltransition.estimatedRoa",
     "defaultMessage": "!!!Estimated ROA",
-    "file": "src/Staking/PoolTransition/usePoolTransition.tsx",
+    "file": "src/TxHistory/usePoolTransition.tsx",
     "start": {
-      "line": 127,
+      "line": 130,
       "column": 16,
-      "index": 4758
+      "index": 4611
     },
     "end": {
-      "line": 130,
+      "line": 133,
       "column": 3,
-      "index": 4853
+      "index": 4706
     }
   },
   {
     "id": "components.pooltransition.fee",
     "defaultMessage": "!!!Fee",
-    "file": "src/Staking/PoolTransition/usePoolTransition.tsx",
+    "file": "src/TxHistory/usePoolTransition.tsx",
     "start": {
-      "line": 131,
+      "line": 134,
       "column": 7,
-      "index": 4862
+      "index": 4715
     },
     "end": {
-      "line": 134,
+      "line": 137,
       "column": 3,
-      "index": 4938
+      "index": 4791
     }
   },
   {
     "id": "components.pooltransition.poolGeneratesRewards",
     "defaultMessage": "!!!This pool continues to generate staking rewards",
-    "file": "src/Staking/PoolTransition/usePoolTransition.tsx",
+    "file": "src/TxHistory/usePoolTransition.tsx",
     "start": {
-      "line": 135,
+      "line": 138,
       "column": 24,
-      "index": 4964
+      "index": 4817
     },
     "end": {
-      "line": 138,
+      "line": 141,
       "column": 3,
-      "index": 5101
+      "index": 4954
     }
   },
   {
     "id": "components.pooltransition.poolNoRewards",
     "defaultMessage": "!!!This pool is NOT generating staking rewards anymore",
-    "file": "src/Staking/PoolTransition/usePoolTransition.tsx",
+    "file": "src/TxHistory/usePoolTransition.tsx",
     "start": {
-      "line": 139,
+      "line": 142,
       "column": 17,
-      "index": 5120
+      "index": 4973
     },
     "end": {
-      "line": 142,
+      "line": 145,
       "column": 3,
-      "index": 5254
+      "index": 5107
     }
   },
   {
     "id": "components.pooltransition.poolWillStopRewards",
     "defaultMessage": "!!!This pool will stop generating rewards in",
-    "file": "src/Staking/PoolTransition/usePoolTransition.tsx",
+    "file": "src/TxHistory/usePoolTransition.tsx",
     "start": {
-      "line": 143,
+      "line": 146,
       "column": 23,
-      "index": 5279
+      "index": 5132
     },
     "end": {
-      "line": 146,
+      "line": 149,
       "column": 3,
-      "index": 5409
+      "index": 5262
     }
   },
   {
     "id": "components.pooltransition.skipNoRewards",
     "defaultMessage": "!!!Skip and stop receiving rewards",
-    "file": "src/Staking/PoolTransition/usePoolTransition.tsx",
+    "file": "src/TxHistory/usePoolTransition.tsx",
     "start": {
-      "line": 147,
+      "line": 150,
       "column": 17,
-      "index": 5428
+      "index": 5281
     },
     "end": {
-      "line": 150,
+      "line": 153,
       "column": 3,
-      "index": 5542
+      "index": 5395
     }
   },
   {
     "id": "components.pooltransition.updateKeepEarning",
     "defaultMessage": "!!!Update now and keep earning",
-    "file": "src/Staking/PoolTransition/usePoolTransition.tsx",
+    "file": "src/TxHistory/usePoolTransition.tsx",
     "start": {
-      "line": 151,
+      "line": 154,
       "column": 21,
-      "index": 5565
+      "index": 5418
     },
     "end": {
-      "line": 154,
+      "line": 157,
       "column": 3,
-      "index": 5679
+      "index": 5532
     }
   },
   {
     "id": "components.pooltransition.update",
     "defaultMessage": "!!!Update pool",
-    "file": "src/Staking/PoolTransition/usePoolTransition.tsx",
+    "file": "src/TxHistory/usePoolTransition.tsx",
     "start": {
-      "line": 155,
+      "line": 158,
       "column": 10,
-      "index": 5691
+      "index": 5544
     },
     "end": {
-      "line": 158,
+      "line": 161,
       "column": 3,
-      "index": 5778
+      "index": 5631
     }
   }
 ]

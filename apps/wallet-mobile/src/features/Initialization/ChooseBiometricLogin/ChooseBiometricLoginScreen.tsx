@@ -7,13 +7,13 @@ import DeviceInfo from 'react-native-device-info'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useQuery, UseQueryOptions} from 'react-query'
 
-import {Button} from '../../../../components'
-import {Space} from '../../../../components/Space/Space'
-import {useWalletNavigation} from '../../../../kernel/navigation'
-import * as HASKELL_SHELLEY from '../../../../yoroi-wallets/cardano/constants/mainnet/constants'
-import {useEnableAuthWithOs} from '../../../Auth/common/hooks'
-import {useStrings} from '../../common/useStrings'
-import {Biometric as BiometricIlustration} from '../../illustrations/Biometric'
+import {Button} from '../../../components'
+import {Space} from '../../../components/Space/Space'
+import {useWalletNavigation} from '../../../kernel/navigation'
+import * as HASKELL_SHELLEY from '../../../yoroi-wallets/cardano/constants/mainnet/constants'
+import {useEnableAuthWithOs} from '../../Auth/common/hooks'
+import {Biometric as BiometricIlustration} from '../../SetupWallet/illustrations/Biometric'
+import {useStrings} from '../common'
 
 export const ChooseBiometricLoginScreen = () => {
   const {styles} = useStyles()

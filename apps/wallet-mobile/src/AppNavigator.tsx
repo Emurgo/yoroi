@@ -19,15 +19,15 @@ import {EnableLoginWithPin} from './features/Auth/EnableLoginWithPin'
 import {DeveloperScreen} from './features/Dev/DeveloperScreen'
 import {Playground} from './features/Dev/Playground'
 import {AgreementChangedNavigator, InitializationNavigator} from './features/Initialization'
+import {
+  ChooseBiometricLoginScreen,
+  useShowBiometricsScreen,
+} from './features/Initialization/ChooseBiometricLogin/ChooseBiometricLoginScreen'
 import {LegalAgreement, useLegalAgreement} from './features/Initialization/common'
 import {useDeepLinkWatcher} from './features/Links/common/useDeepLinkWatcher'
 import {PortfolioScreen} from './features/Portfolio/useCases/PortfolioScreen'
 import {SearchProvider} from './features/Search/SearchContext'
 import {SetupWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
-import {
-  ChooseBiometricLoginScreen,
-  useShowBiometricsScreen,
-} from './features/SetupWallet/useCases/ChooseBiometricLogin/ChooseBiometricLoginScreen'
 import {useWalletManager} from './features/WalletManager/context/WalletManagerContext'
 import {useStatusBar} from './hooks/useStatusBar'
 import {agreementDate} from './kernel/config'
