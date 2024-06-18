@@ -1,7 +1,6 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {Animated, StyleSheet} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
+import {Animated, NativeScrollEvent, NativeSyntheticEvent, StyleSheet} from 'react-native'
 
 import {Spacer} from '../../../../components'
 import {Tab, Tabs} from '../../../../components/Tabs'
@@ -10,62 +9,35 @@ import {PortfolioTokenAction} from './PortfolioTokenAction'
 import {PortfolioTokenBalance} from './PortfolioTokenBalance/PortfolioTokenBalance'
 import {PortfolioTokenChart} from './PortfolioTokenChart/PortfolioTokenChart'
 import {PortfolioTokenInfo} from './PortfolioTokenInfo/PortfolioTokenInfo'
+import {useTokenDetailTransactions} from './PortfolioTokenInfo/Transactions'
+import {PortfolioTokenLayout} from './PortfolioTokenLayout'
 
 const HEADER_HEIGHT = 304
 export type ActiveTab = 'performance' | 'overview' | 'transactions'
 export const PortfolioTokenDetailsScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
-  const scrollY = React.useRef(new Animated.Value(0)).current
 
   const [activeTab, setActiveTab] = React.useState<ActiveTab>('performance')
+  const [isStickyTab, setIsStickyTab] = React.useState(false)
 
-  // Calculate the header's height based on scroll position and header height
-  const headerHeight = scrollY.interpolate({
-    inputRange: [0, HEADER_HEIGHT],
-    outputRange: [0, HEADER_HEIGHT],
-    extrapolate: 'clamp',
-  })
-
-  const invertHeaderHeight = scrollY.interpolate({
-    inputRange: [0, HEADER_HEIGHT],
-    outputRange: [HEADER_HEIGHT, 0],
-    extrapolate: 'clamp',
-  })
-
-  const onScroll = Animated.event([{nativeEvent: {contentOffset: {y: scrollY}}}], {
-    useNativeDriver: false,
-  })
-
-  /**
-   * Prevent blank space because of tab scroll event unmounted
-   */
-  const handleTabChange = () => {
-    scrollY.setValue(0)
-  }
-
-  const handleChangeTab = (value: ActiveTab) =>
+  const handleChangeTab = (value: ActiveTab) => {
     React.startTransition(() => {
       setActiveTab(value)
-      handleTabChange()
     })
+  }
 
-  return (
-    <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
-      <Animated.View style={{height: invertHeaderHeight}}>
-        <Animated.View style={[styles.header, styles.headerInvisible]}>
-          <Spacer height={16} />
+  const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const offsetY = e.nativeEvent.contentOffset.y
+    setIsStickyTab(offsetY > HEADER_HEIGHT)
+  }
 
-          <PortfolioTokenBalance />
+  const {getSectionListProps, loadingView} = useTokenDetailTransactions({
+    active: activeTab === 'transactions',
+  })
 
-          <Spacer height={16} />
-
-          <PortfolioTokenChart />
-
-          <Spacer height={16} />
-        </Animated.View>
-      </Animated.View>
-
+  const renderTabs = React.useMemo(() => {
+    return (
       <Tabs style={styles.tabs}>
         <Tab
           style={styles.tab}
@@ -88,35 +60,67 @@ export const PortfolioTokenDetailsScreen = () => {
           label={strings.transactions}
         />
       </Tabs>
+    )
+  }, [activeTab, strings.overview, strings.performance, strings.transactions, styles.tab, styles.tabs])
 
-      <PortfolioTokenInfo
-        activeTab={activeTab}
-        onScroll={onScroll}
-        offsetTopContent={<Animated.View style={{paddingTop: headerHeight ?? 0}} />}
-      />
+  return (
+    <PortfolioTokenLayout
+      topContent={
+        <Animated.View style={[styles.tabsSticky, isStickyTab ? styles.tabsStickyActive : styles.tabsStickyInactive]}>
+          {renderTabs}
+        </Animated.View>
+      }
+      onScroll={onScroll}
+      ListHeaderComponent={
+        <>
+          <Animated.View style={styles.header}>
+            <Spacer height={16} />
 
+            <PortfolioTokenBalance />
+
+            <Spacer height={16} />
+
+            <PortfolioTokenChart />
+
+            <Spacer height={16} />
+          </Animated.View>
+
+          <Animated.View>{renderTabs}</Animated.View>
+
+          <PortfolioTokenInfo activeTab={activeTab} />
+        </>
+      }
+      ListFooterComponent={loadingView}
+      {...getSectionListProps}
+    >
       <PortfolioTokenAction />
-    </SafeAreaView>
+    </PortfolioTokenLayout>
   )
 }
 
 const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
-    root: {
-      ...atoms.flex_1,
-      backgroundColor: color.gray_cmin,
-    },
     header: {
       overflow: 'hidden',
       height: HEADER_HEIGHT,
       ...atoms.px_lg,
     },
-    headerInvisible: {
+    tabsSticky: {
       position: 'absolute',
-      bottom: 0,
+      top: 0,
       left: 0,
       right: 0,
+      width: '100%',
+      zIndex: 10,
+    },
+    tabsStickyActive: {
+      opacity: 1,
+      display: 'flex',
+    },
+    tabsStickyInactive: {
+      opacity: 0,
+      display: 'none',
     },
     tabs: {
       ...atoms.justify_between,

@@ -1,22 +1,16 @@
 import {infoExtractName} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import React, {ReactNode} from 'react'
-import {ScrollViewProps, StyleSheet, Text, View} from 'react-native'
+import {StyleSheet, Text, View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 import {Spacer} from '../../../../../components'
-import {ScrollView} from '../../../../../components/ScrollView/ScrollView'
 import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
 import {useGetPortfolioTokenInfo} from '../../../common/useGetPortfolioTokenInfo'
 import {usePortfolioTokenDetailParams} from '../../../common/useNavigateTo'
 import {useStrings} from '../../../common/useStrings'
 
-interface Props {
-  onScroll: ScrollViewProps['onScroll']
-  topContent?: ReactNode
-}
-
-export const Performance = ({onScroll, topContent}: Props) => {
+export const Performance = () => {
   const {styles} = useStyles()
   const {id: tokenId} = usePortfolioTokenDetailParams()
   const wallet = useSelectedWallet()
@@ -29,9 +23,7 @@ export const Performance = ({onScroll, topContent}: Props) => {
   const value = data?.info?.performance
 
   return (
-    <ScrollView scrollEventThrottle={16} bounces={false} onScroll={onScroll} style={styles.scrollView}>
-      {topContent}
-
+    <View style={styles.scrollView}>
       <Spacer height={8} />
 
       <View style={styles.container}>
@@ -109,7 +101,7 @@ export const Performance = ({onScroll, topContent}: Props) => {
 
         <TextGroup loading={isFetching} value={`${value?.market?.atl ?? '-/-'} USD`} label={strings.allTimeLow} />
       </View>
-    </ScrollView>
+    </View>
   )
 }
 
