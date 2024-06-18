@@ -1,5 +1,12 @@
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
-import {RouteProp, useFocusEffect} from '@react-navigation/native'
+import {createBottomTabNavigator, BottomTabBar} from '@react-navigation/bottom-tabs'
+import {
+  getFocusedRouteNameFromRoute,
+  RouteProp,
+  useFocusEffect,
+  useNavigation,
+  useNavigationState,
+  useRoute,
+} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
@@ -33,6 +40,24 @@ import {DashboardNavigator} from './legacy/Dashboard'
 import {TxHistoryNavigator} from './legacy/TxHistory'
 
 const Tab = createBottomTabNavigator<WalletTabRoutes>()
+
+type State = {
+  index: number
+  routes: Array<{state?: State; name: string}>
+}
+
+const getFocusedName = (state: State): string => {
+  const currentState = state.routes[state.index]
+  if (currentState.state) {
+    return getFocusedName(currentState.state)
+  }
+  return currentState.name
+}
+
+const CustomTabBar = (props: any) => {
+  const focused = getFocusedName(props.state)
+  return focused?.startsWith('receive') ? null : <BottomTabBar {...props} />
+}
 const WalletTabNavigator = () => {
   const strings = useStrings()
   const {colors} = useStyles()
@@ -80,6 +105,7 @@ const WalletTabNavigator = () => {
           },
           tabBarHideOnKeyboard: true,
         }}
+        tabBar={(props) => <CustomTabBar {...props} />}
         backBehavior="initialRoute"
       >
         <Tab.Screen
