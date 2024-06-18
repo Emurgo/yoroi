@@ -54,7 +54,7 @@ export const MediaPreview = ({
           setError(true)
         }}
       >
-        <SkeletonPlaceholder enabled={loading} borderRadius={blurRadius} highlightColor="#DCE0E9" speed={300}>
+        <SkeletonPlaceholder enabled={loading} borderRadius={blurRadius} highlightColor="#DCE0E9" speed={800}>
           <View style={{height: height - 1, width: width - 1}} />
         </SkeletonPlaceholder>
       </Image>
