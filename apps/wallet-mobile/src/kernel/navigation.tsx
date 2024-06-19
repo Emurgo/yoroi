@@ -625,7 +625,7 @@ export const shouldHideTabBarForRoutes = (state: NavigationState) => {
     routeName.startsWith('receive') ||
     routeName.startsWith('exchange') ||
     routeName.startsWith('discover-browser') ||
-    routeName.startsWith('portfolio')
+    (routeName.startsWith('portfolio') && routeName !== 'portfolio')
   )
 }
 
