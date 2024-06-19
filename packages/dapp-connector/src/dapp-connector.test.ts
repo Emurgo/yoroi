@@ -415,7 +415,7 @@ describe('DappConnector', () => {
       const sendMessage = jest.fn()
       await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
       await dappConnector.handleEvent(createEvent('api.getExtensions'), trustedUrl, sendMessage)
-      expect(sendMessage).toHaveBeenCalledWith('1', [{cip: 30}])
+      expect(sendMessage).toHaveBeenCalledWith('1', [{cip: 30}, {cip: 95}])
     })
 
     it('should resolve getUtxos with mocked data', async () => {
