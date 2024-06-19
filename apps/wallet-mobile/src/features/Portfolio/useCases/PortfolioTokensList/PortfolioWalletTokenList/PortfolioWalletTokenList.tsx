@@ -61,7 +61,7 @@ export const PortfolioWalletTokenList = () => {
 
       timeout = setTimeout(() => {
         track.portfolioTokensListSearchActivated({search_term: search})
-      }, 500) // 0.5s requeriment
+      }, 500) // 0.5s requirement
     }
 
     if (isSearching && search.length > 0) sendMetrics()
