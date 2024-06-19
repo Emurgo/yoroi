@@ -1,10 +1,8 @@
 import {MaterialTopTabNavigationOptions} from '@react-navigation/material-top-tabs'
 import {
-  getFocusedRouteNameFromRoute,
   NavigationProp,
   NavigationState,
   NavigatorScreenParams,
-  RouteProp,
   useNavigation,
   useNavigationState,
   useRoute,
@@ -13,7 +11,7 @@ import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/sta
 import {Atoms, ThemedPalette, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import React from 'react'
-import {Dimensions, InteractionManager, TouchableOpacity, TouchableOpacityProps, ViewStyle} from 'react-native'
+import {Dimensions, InteractionManager, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 
 import {Icon} from '../components'
 import {ScanFeature} from '../features/Scan/common/types'
@@ -618,17 +616,32 @@ export const useWalletNavigation = () => {
   } as const).current
 }
 
-export const hideTabBarForRoutes = (
-  route: RouteProp<WalletTabRoutes, 'history' | 'discover' | 'portfolio'>,
-): ViewStyle | undefined =>
-  getFocusedRouteNameFromRoute(route)?.startsWith('scan') ||
-  getFocusedRouteNameFromRoute(route)?.startsWith('swap') ||
-  getFocusedRouteNameFromRoute(route)?.startsWith('receive') ||
-  getFocusedRouteNameFromRoute(route)?.startsWith('exchange') ||
-  getFocusedRouteNameFromRoute(route)?.startsWith('discover-browser') ||
-  getFocusedRouteNameFromRoute(route)?.startsWith('portfolio')
-    ? {display: 'none', height: 0}
-    : undefined
+export const shouldHideTabBarForRoutes = (state: NavigationState) => {
+  const routeName = getFocusedRouteName(state)
+  if (routeName === null) return false
+  return (
+    routeName.startsWith('scan') ||
+    routeName.startsWith('swap') ||
+    routeName.startsWith('receive') ||
+    routeName.startsWith('exchange') ||
+    routeName.startsWith('discover-browser') ||
+    routeName.startsWith('portfolio')
+  )
+}
+
+type FocusedRouteNavigationState = {
+  index?: number
+  routes: {name: string; state?: FocusedRouteNavigationState}[]
+}
+
+const getFocusedRouteName = (state: Partial<FocusedRouteNavigationState>): string | null => {
+  const currentRoute = state.routes?.[state?.index ?? -1]
+  const currentState = currentRoute?.state
+  if (currentState) {
+    return getFocusedRouteName(currentState)
+  }
+  return currentRoute?.name ?? null
+}
 
 function useKeepRoutesInHistory(routesToKeep: string[]) {
   const navigation = useNavigation()
