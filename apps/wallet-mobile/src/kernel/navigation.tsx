@@ -629,13 +629,10 @@ export const shouldHideTabBarForRoutes = (state: NavigationState) => {
   )
 }
 
-type FocusedRouteNavigationState = {
-  index?: number
-  routes: {name: string; state?: FocusedRouteNavigationState}[]
-}
-
-const getFocusedRouteName = (state: Partial<FocusedRouteNavigationState>): string | null => {
-  const currentRoute = state.routes?.[state?.index ?? -1]
+const getFocusedRouteName = (
+  state?: Partial<NavigationState> | NavigationState['routes'][0]['state'],
+): string | null => {
+  const currentRoute = state?.routes?.[state?.index ?? -1]
   const currentState = currentRoute?.state
   if (currentState) {
     return getFocusedRouteName(currentState)
