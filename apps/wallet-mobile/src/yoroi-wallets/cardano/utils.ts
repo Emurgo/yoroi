@@ -305,3 +305,17 @@ export const createRawTxSigningKey = async (rootKey: string, derivationPath: num
   if (!pkey) throw new Error('Invalid private key')
   return pkey
 }
+
+export const copyFromCSL = async <T extends {toHex: () => Promise<string>}>(
+  creator: {fromHex: (hex: string) => Promise<T>},
+  value: T,
+): Promise<T> => {
+  return creator.fromHex(await value.toHex())
+}
+
+export const copyMultipleFromCSL = async <T extends {toHex: () => Promise<string>}>(
+  items: T[],
+  creator: {fromHex: (hex: string) => Promise<T>},
+) => {
+  return Promise.all(items.map((item) => copyFromCSL(creator, item)))
+}

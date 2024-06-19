@@ -17,7 +17,7 @@ import {toAssetNameHex, toPolicyId} from '../api'
 import * as cip8 from '../cip8/cip8'
 import {getDerivationPathForAddress, getTransactionSigners} from '../common/signatureUtils'
 import {Pagination, YoroiWallet} from '../types'
-import {createRawTxSigningKey, identifierToCardanoAsset} from '../utils'
+import {copyFromCSL, copyMultipleFromCSL, createRawTxSigningKey, identifierToCardanoAsset} from '../utils'
 import {collateralConfig, findCollateralCandidates, utxosMaker} from '../utxoManager/utxos'
 import {wrappedCsl as getCSL} from '../wrappedCsl'
 
@@ -27,22 +27,8 @@ export const cip30ExtensionMaker = (wallet: YoroiWallet) => {
   return new CIP30Extension(wallet)
 }
 
-const copy = async <T extends {toHex: () => Promise<string>}>(
-  creator: {fromHex: (hex: string) => Promise<T>},
-  value: T,
-): Promise<T> => {
-  return creator.fromHex(await value.toHex())
-}
-
-const copyMultiple = async <T extends {toHex: () => Promise<string>}>(
-  items: T[],
-  creator: {fromHex: (hex: string) => Promise<T>},
-) => {
-  return Promise.all(items.map((item) => copy(creator, item)))
-}
-
 const recreateTransactionUnspentOutput = async (utxo: CSL.TransactionUnspentOutput) => {
-  return copy(CardanoMobile.TransactionUnspentOutput, utxo)
+  return copyFromCSL(CardanoMobile.TransactionUnspentOutput, utxo)
 }
 
 class CIP30Extension {
@@ -52,7 +38,7 @@ class CIP30Extension {
     const {csl, release} = getCSL()
     try {
       const value = await _getBalance(csl, tokenId, this.wallet.utxos, this.wallet.primaryTokenInfo.id)
-      return copy(CardanoMobile.Value, value)
+      return copyFromCSL(CardanoMobile.Value, value)
     } finally {
       release()
     }
@@ -115,7 +101,7 @@ class CIP30Extension {
 
       const multipleUtxosCollateral = await _drawCollateralInMultipleUtxos(csl, this.wallet, asQuantity(valueNum))
       if (multipleUtxosCollateral && multipleUtxosCollateral.length > 0) {
-        return copyMultiple(multipleUtxosCollateral, CardanoMobile.TransactionUnspentOutput)
+        return copyMultipleFromCSL(multipleUtxosCollateral, CardanoMobile.TransactionUnspentOutput)
       }
 
       return null
@@ -170,7 +156,7 @@ class CIP30Extension {
       const keys = await Promise.all(signers.map(async (signer) => createRawTxSigningKey(rootKey, signer)))
       const signedTxBytes = await signRawTransaction(csl, cbor, keys)
       const signedTx = await csl.Transaction.fromBytes(signedTxBytes)
-      return copy(CardanoMobile.TransactionWitnessSet, await signedTx.witnessSet())
+      return copyFromCSL(CardanoMobile.TransactionWitnessSet, await signedTx.witnessSet())
     } finally {
       release()
     }
@@ -197,7 +183,7 @@ class CIP30Extension {
       const receiver = await originalOutput.address()
       const output = await csl.TransactionOutput.new(receiver, value)
       await this.wallet.submitTransaction(Buffer.from(signedTx.signedTx.encodedTx).toString('base64'))
-      return copy(CardanoMobile.TransactionUnspentOutput, await csl.TransactionUnspentOutput.new(input, output))
+      return copyFromCSL(CardanoMobile.TransactionUnspentOutput, await csl.TransactionUnspentOutput.new(input, output))
     } finally {
       release()
     }

@@ -31,6 +31,12 @@ type Resolver = {
     submitTx: ResolvableMethod<string>
     signTx: ResolvableMethod<string>
     signData: ResolvableMethod<{signature: string; key: string}>
+    cip95: {
+      getPubDRepKey: ResolvableMethod<string>
+      getRegisteredPubStakeKeys: ResolvableMethod<string[]>
+      getUnregisteredPubStakeKeys: ResolvableMethod<string[]>
+      signData: ResolvableMethod<{signature: string; key: string}>
+    }
   }
 }
 
@@ -123,7 +129,6 @@ export const resolver: Resolver = {
 
       return Promise.all(result.map((u) => u.toHex()))
     },
-
     getUnusedAddresses: async (_params: unknown, context: Context) => {
       assertOriginsMatch(context)
       await assertWalletAcceptedConnection(context)
@@ -184,6 +189,43 @@ export const resolver: Resolver = {
           : undefined
       const addresses = await context.wallet.getUsedAddresses(pagination)
       return Promise.all(addresses.map((a) => a.toHex()))
+    },
+    cip95: {
+      getPubDRepKey: async (_params: unknown, context: Context) => {
+        assertOriginsMatch(context)
+        await assertWalletAcceptedConnection(context)
+        return context.wallet.cip95.getPubDRepKey()
+      },
+      getRegisteredPubStakeKeys: async (_params: unknown, context: Context) => {
+        assertOriginsMatch(context)
+        await assertWalletAcceptedConnection(context)
+        return context.wallet.cip95.getRegisteredPubStakeKeys()
+      },
+      getUnregisteredPubStakeKeys: async (_params: unknown, context: Context) => {
+        assertOriginsMatch(context)
+        await assertWalletAcceptedConnection(context)
+        return context.wallet.cip95.getUnregisteredPubStakeKeys()
+      },
+      signData: async (params: unknown, context: Context) => {
+        assertOriginsMatch(context)
+        await assertWalletAcceptedConnection(context)
+        const address =
+          isRecord(params) &&
+          isKeyOf('args', params) &&
+          Array.isArray(params.args) &&
+          typeof params.args[0] === 'string'
+            ? params.args[0]
+            : undefined
+        const payload =
+          isRecord(params) &&
+          isKeyOf('args', params) &&
+          Array.isArray(params.args) &&
+          typeof params.args[1] === 'string'
+            ? params.args[1]
+            : undefined
+        if (address === undefined || payload === undefined) throw new Error('Invalid params')
+        return context.wallet.cip95.signData(address, payload)
+      },
     },
   },
 } as const
@@ -250,6 +292,10 @@ const methods = {
   'api.submitTx': resolver.api.submitTx,
   'api.signTx': resolver.api.signTx,
   'api.signData': resolver.api.signData,
+  'api.cip95.signData': resolver.api.cip95.signData,
+  'api.cip95.getPubDRepKey': resolver.api.cip95.getPubDRepKey,
+  'api.cip95.getRegisteredPubStakeKeys': resolver.api.cip95.getRegisteredPubStakeKeys,
+  'api.cip95.getUnregisteredPubStakeKeys': resolver.api.cip95.getUnregisteredPubStakeKeys,
 }
 
 export const resolverHandleEvent = async (
@@ -285,6 +331,12 @@ export type ResolverWallet = {
   signTx: (txHex: string, partialSign?: boolean) => Promise<TransactionWitnessSet>
   signData: (address: string, payload: string) => Promise<{signature: string; key: string}>
   sendReorganisationTx: () => Promise<TransactionUnspentOutput>
+  cip95: {
+    getPubDRepKey: () => Promise<string>
+    getRegisteredPubStakeKeys: () => Promise<string[]>
+    getUnregisteredPubStakeKeys: () => Promise<string[]>
+    signData: (address: string, payload: string) => Promise<{signature: string; key: string}>
+  }
 }
 
 type Pagination = {

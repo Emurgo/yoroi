@@ -96,6 +96,15 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
       const signedTx = await wallet.signTx(unsignedTx, rootKey)
       return cip30.sendReorganisationTx(signedTx)
     },
+    cip95: {
+      signData: async (address, payload) => {
+        const rootKey = await signData(address, payload)
+        return cip30.signData(rootKey, address, payload)
+      },
+      getPubDRepKey: async () => Promise.reject(new Error('Not implemented')),
+      getRegisteredPubStakeKeys: async () => Promise.reject(new Error('Not implemented')),
+      getUnregisteredPubStakeKeys: async () => Promise.reject(new Error('Not implemented')),
+    },
   }
   const storage = connectionStorageMaker({storage: appStorage.join('dapp-connections/')})
   const manager = dappConnectorMaker(storage, handlerWallet, api)

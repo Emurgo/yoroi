@@ -13,6 +13,12 @@
  * @Property {(...args: any[]) => Promise} submitTx Function to submit transaction.
  * @Property {(...args: any[]) => Promise} getCollateral Function to get collateral.
  * @Property {(...args: any[]) => Promise} getExtensions Function to get extensions.
+ *
+ * @Property {Object} cip95
+ * @Property {(...args: any[]) => Promise} cip95.signData Function to sign data.
+ * @Property {(...args: any[]) => Promise} cip95.getPubDRepKey Function to get public delegation key.
+ * @Property {(...args: any[]) => Promise} cip95.getRegisteredPubStakeKeys Function to get registered public stake keys.
+ * @Property {(...args: any[]) => Promise} cip95.getUnregisteredPubStakeKeys Function to get unregistered public stake keys.
  */
 
 /**
@@ -144,6 +150,12 @@ const initWallet = ({iconUrl, apiVersion, walletName, supportedExtensions, sessi
       signTx: (...args) => callExternalMethod('api.signTx', args),
       signData: (...args) => callExternalMethod('api.signData', args),
       submitTx: (...args) => callExternalMethod('api.submitTx', args),
+      cip95: {
+        signData: (...args) => callExternalMethod('api.cip95.signData', args),
+        getPubDRepKey: (...args) => callExternalMethod('api.cip95.getPubDRepKey', args),
+        getRegisteredPubStakeKeys: (...args) => callExternalMethod('api.cip95.getRegisteredPubStakeKeys', args),
+        getUnregisteredPubStakeKeys: (...args) => callExternalMethod('api.cip95.getUnregisteredPubStakeKeys', args),
+      },
     }
   }
 

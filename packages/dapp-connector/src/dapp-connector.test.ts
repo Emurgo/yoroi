@@ -194,7 +194,7 @@ describe('DappConnector', () => {
     })
   })
 
-  describe('api calls', () => {
+  describe('authentication and validation of api calls', () => {
     it('should throw error if method is not set', async () => {
       const dappConnector = getDappConnector()
       const sendMessage = jest.fn()
@@ -222,7 +222,9 @@ describe('DappConnector', () => {
         'Wallet b5d94758-26c5-48b0-af2b-6e68c3ef2dbf has not accepted the connection to https://yoroi-wallet.com'
       expect(sendMessage).toHaveBeenCalledWith('1', null, new Error(errorMessage))
     })
+  })
 
+  describe('CIP-30', () => {
     it('should resolve getNetworkId with given networkId', async () => {
       const dappConnector = getDappConnector()
       const sendMessage = jest.fn()
@@ -232,33 +234,29 @@ describe('DappConnector', () => {
     })
 
     it('should resolve getBalance with mocked data', async () => {
-      const dappConnector = getDappConnector()
+      const dappConnector = await initDappConnectorWithConnection()
       const sendMessage = jest.fn()
-      await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
       await dappConnector.handleEvent(createEvent('api.getBalance'), trustedUrl, sendMessage)
       expect(sendMessage).toHaveBeenCalledWith('1', mockedData[walletId].balance)
     })
 
     it('should throw in getBalance with when incorrect arguments are presented', async () => {
-      const dappConnector = getDappConnector()
+      const dappConnector = await initDappConnectorWithConnection()
       const sendMessage = jest.fn()
-      await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
       await dappConnector.handleEvent(createEvent('api.getBalance', {args: [1]}), trustedUrl, sendMessage)
       expect(sendMessage).toHaveBeenCalledWith('1', null, new Error(`Invalid params`))
     })
 
     it('should resolve getChangeAddress with mocked data', async () => {
-      const dappConnector = getDappConnector()
+      const dappConnector = await initDappConnectorWithConnection()
       const sendMessage = jest.fn()
-      await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
       await dappConnector.handleEvent(createEvent('api.getChangeAddress'), trustedUrl, sendMessage)
       expect(sendMessage).toHaveBeenCalledWith('1', mockedData[walletId].changeAddresses[0])
     })
 
     it('should resolve getRewardAddresses with mocked data', async () => {
-      const dappConnector = getDappConnector()
+      const dappConnector = await initDappConnectorWithConnection()
       const sendMessage = jest.fn()
-      await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
       await dappConnector.handleEvent(createEvent('api.getRewardAddresses'), trustedUrl, sendMessage)
       expect(sendMessage).toHaveBeenCalledWith('1', mockedData[walletId].rewardAddresses)
     })
@@ -292,33 +290,29 @@ describe('DappConnector', () => {
     })
 
     it('should resolve signTx with mocked data if partial sign is unknown', async () => {
-      const dappConnector = getDappConnector()
+      const dappConnector = await initDappConnectorWithConnection()
       const sendMessage = jest.fn()
-      await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
       await dappConnector.handleEvent(createEvent('api.signTx', {args: ['CBOR']}), trustedUrl, sendMessage)
       expect(sendMessage).toHaveBeenCalledWith('1', 'a0')
     })
 
     it('should resolve signTx with mocked data if partial sign is known', async () => {
-      const dappConnector = getDappConnector()
+      const dappConnector = await initDappConnectorWithConnection()
       const sendMessage = jest.fn()
-      await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
       await dappConnector.handleEvent(createEvent('api.signTx', {args: ['CBOR', true]}), trustedUrl, sendMessage)
       expect(sendMessage).toHaveBeenCalledWith('1', 'a0')
     })
 
     it('should throw in signTx with when incorrect arguments are presented', async () => {
-      const dappConnector = getDappConnector()
+      const dappConnector = await initDappConnectorWithConnection()
       const sendMessage = jest.fn()
-      await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
       await dappConnector.handleEvent(createEvent('api.signTx', {args: []}), trustedUrl, sendMessage)
       expect(sendMessage).toHaveBeenCalledWith('1', null, new Error(`Invalid params`))
     })
 
     it('should resolve signData with mocked data', async () => {
-      const dappConnector = getDappConnector()
+      const dappConnector = await initDappConnectorWithConnection()
       const sendMessage = jest.fn()
-      await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
       await dappConnector.handleEvent(
         createEvent('api.signData', {
           args: [
@@ -333,25 +327,22 @@ describe('DappConnector', () => {
     })
 
     it('should throw in signData with when incorrect arguments are presented', async () => {
-      const dappConnector = getDappConnector()
+      const dappConnector = await initDappConnectorWithConnection()
       const sendMessage = jest.fn()
-      await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
       await dappConnector.handleEvent(createEvent('api.signData', {args: []}), trustedUrl, sendMessage)
       expect(sendMessage).toHaveBeenCalledWith('1', null, new Error(`Invalid params`))
     })
 
     it('should resolve submitTx with mocked data', async () => {
-      const dappConnector = getDappConnector()
+      const dappConnector = await initDappConnectorWithConnection()
       const sendMessage = jest.fn()
-      await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
       await dappConnector.handleEvent(createEvent('api.submitTx', {args: ['CBOR']}), trustedUrl, sendMessage)
       expect(sendMessage).toHaveBeenCalledWith('1', 'tx-id')
     })
 
     it('should throw in submitTx with when incorrect arguments are presented', async () => {
-      const dappConnector = getDappConnector()
+      const dappConnector = await initDappConnectorWithConnection()
       const sendMessage = jest.fn()
-      await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
       await dappConnector.handleEvent(createEvent('api.submitTx', {args: []}), trustedUrl, sendMessage)
       expect(sendMessage).toHaveBeenCalledWith('1', null, new Error(`Invalid params`))
     })
@@ -456,11 +447,56 @@ describe('DappConnector', () => {
     })
 
     it('should resolve getUtxos with null if not enough funds', async () => {
-      const dappConnector = getDappConnector()
+      const dappConnector = await initDappConnectorWithConnection()
       const sendMessage = jest.fn()
-      await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
       await dappConnector.handleEvent(createEvent('api.getUtxos', {args: ['100000000']}), trustedUrl, sendMessage)
       expect(sendMessage).toHaveBeenCalledWith('1', null)
+    })
+  })
+
+  describe('CIP-95', () => {
+    it('should throw an error on getPubDRepKey', async () => {
+      const dappConnector = await initDappConnectorWithConnection()
+      const sendMessage = jest.fn()
+      await dappConnector.handleEvent(createEvent('api.cip95.getPubDRepKey'), trustedUrl, sendMessage)
+      expect(sendMessage).toHaveBeenCalledWith('1', null, new Error('Not implemented'))
+    })
+
+    it('should throw an error on getUnregisteredPubStakeKeys', async () => {
+      const dappConnector = await initDappConnectorWithConnection()
+      const sendMessage = jest.fn()
+      await dappConnector.handleEvent(createEvent('api.cip95.getUnregisteredPubStakeKeys'), trustedUrl, sendMessage)
+      expect(sendMessage).toHaveBeenCalledWith('1', null, new Error('Not implemented'))
+    })
+
+    it('should throw an error on getRegisteredPubStakeKeys', async () => {
+      const dappConnector = await initDappConnectorWithConnection()
+      const sendMessage = jest.fn()
+      await dappConnector.handleEvent(createEvent('api.cip95.getRegisteredPubStakeKeys'), trustedUrl, sendMessage)
+      expect(sendMessage).toHaveBeenCalledWith('1', null, new Error('Not implemented'))
+    })
+
+    it('should throw an error on signData if params are invalid', async () => {
+      const dappConnector = await initDappConnectorWithConnection()
+      const sendMessage = jest.fn()
+      await dappConnector.handleEvent(createEvent('api.cip95.signData'), trustedUrl, sendMessage)
+      expect(sendMessage).toHaveBeenCalledWith('1', null, new Error('Invalid params'))
+    })
+
+    it('should throw an error on signData', async () => {
+      const dappConnector = await initDappConnectorWithConnection()
+      const sendMessage = jest.fn()
+      await dappConnector.handleEvent(
+        createEvent('api.cip95.signData', {
+          args: [
+            'addr1qxxvt9rzpdxxysmqp50d7f5a3gdescgrejsu7zsdxqjy8yun4cngaq46gr8c9qyz4td9ddajzqhjnrqvfh0gspzv9xnsmq6nqx',
+            'CBOR',
+          ],
+        }),
+        trustedUrl,
+        sendMessage,
+      )
+      expect(sendMessage).toHaveBeenCalledWith('1', null, new Error('Not implemented'))
     })
   })
 
@@ -471,6 +507,12 @@ describe('DappConnector', () => {
     })
   })
 })
+
+const initDappConnectorWithConnection = async () => {
+  const dappConnector = getDappConnector()
+  await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
+  return dappConnector
+}
 
 const createEvent = (method: string, params?: object) => {
   return JSON.stringify({
@@ -503,6 +545,12 @@ const mockWallet: ResolverWallet = {
   submitTx: () => Promise.resolve('tx-id'),
   sendReorganisationTx: async () => {
     throw new Error('Not implemented')
+  },
+  cip95: {
+    getPubDRepKey: () => Promise.reject(new Error('Not implemented')),
+    getUnregisteredPubStakeKeys: () => Promise.reject(new Error('Not implemented')),
+    getRegisteredPubStakeKeys: () => Promise.reject(new Error('Not implemented')),
+    signData: () => Promise.reject(new Error('Not implemented')),
   },
 }
 const trustedUrl = 'https://yoroi-wallet.com/'
