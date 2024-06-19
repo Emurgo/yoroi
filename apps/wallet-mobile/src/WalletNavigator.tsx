@@ -34,7 +34,7 @@ import {TxHistoryNavigator} from './legacy/TxHistory'
 
 const Tab = createBottomTabNavigator<WalletTabRoutes>()
 
-const CustomTabBar = (props: BottomTabBarProps) => {
+const TabBarWithHiddenContent = (props: BottomTabBarProps) => {
   const shouldHide = shouldHideTabBarForRoutes(props.state)
   return shouldHide ? null : <BottomTabBar {...props} />
 }
@@ -86,7 +86,7 @@ const WalletTabNavigator = () => {
           },
           tabBarHideOnKeyboard: true,
         }}
-        tabBar={(props) => <CustomTabBar {...props} />}
+        tabBar={(props) => <TabBarWithHiddenContent {...props} />}
         backBehavior="initialRoute"
       >
         <Tab.Screen
