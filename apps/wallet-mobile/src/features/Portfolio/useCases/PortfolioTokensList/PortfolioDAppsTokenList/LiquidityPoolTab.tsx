@@ -29,7 +29,9 @@ export const LiquidityPoolTab = ({tokensList = [], isFetching, isSearching}: Pro
   }
 
   const renderHeaderList = () => {
-    if (isFetching || hasEmpty) return null
+    if (hasEmpty) return null
+    if (isFetching) return <Spacer height={16} />
+
     if (isSearching)
       return (
         <View>

@@ -29,18 +29,16 @@ export const OpenOrdersTab = ({isFetching, tokensList, isSearching}: Props) => {
   }
 
   const renderHeaderList = () => {
-    if (isFetching || hasEmpty) return null
+    if (hasEmpty) return null
+    if (isFetching) return <Spacer height={16} />
+
     if (isSearching)
       return (
-        <>
-          {tokensList.length !== 0 && <Spacer height={16} />}
+        <View>
+          <Text style={styles.textAvailable}>{strings.countOpenOrders(tokensList.length)}</Text>
 
-          <View>
-            <Text style={styles.textAvailable}>{strings.countOpenOrders(tokensList.length)}</Text>
-
-            <Spacer height={16} />
-          </View>
-        </>
+          <Spacer height={16} />
+        </View>
       )
 
     return null

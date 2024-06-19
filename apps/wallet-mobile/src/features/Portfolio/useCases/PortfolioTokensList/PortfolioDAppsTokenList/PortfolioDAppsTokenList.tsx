@@ -1,3 +1,4 @@
+import {infoExtractName} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
@@ -8,8 +9,8 @@ import {useSearch} from '../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
 import {usePortfolioPrimaryBalance} from '../../../common/hooks/usePortfolioPrimaryBalance'
 import {Line} from '../../../common/Line'
-import {useGetLiquidityPool} from '../../../common/useGetLiquidityPool'
-import {useGetOpenOrders} from '../../../common/useGetOpenOrders'
+import {ILiquidityPool, useGetLiquidityPool} from '../../../common/useGetLiquidityPool'
+import {IOpenOrders, useGetOpenOrders} from '../../../common/useGetOpenOrders'
 import {TotalTokensValue} from '../TotalTokensValue/TotalTokensValue'
 import {LendAndBorrowTab} from './LendAndBorrowTab'
 import {LiquidityPoolTab} from './LiquidityPoolTab'
@@ -34,25 +35,40 @@ export const PortfolioDAppsTokenList = () => {
   const {data: liquidityPools, isFetching: liquidityPoolFetching} = useGetLiquidityPool()
   const {data: openOrders, isFetching: openOrdersFetching} = useGetOpenOrders()
 
+  const filterListWithSearch = React.useCallback(
+    <T extends ILiquidityPool & IOpenOrders>(tokensList: T[]) => {
+      return tokensList.filter((token) => {
+        const tokenNameFirst = infoExtractName(token.assets[0].info)
+        const tokenNameSecond = infoExtractName(token.assets[1].info)
+        return (
+          token.dex.name.toLowerCase().includes(search.toLowerCase()) ||
+          tokenNameFirst.toLowerCase().includes(search.toLowerCase()) ||
+          tokenNameSecond.toLowerCase().includes(search.toLowerCase())
+        )
+      })
+    },
+    [search],
+  )
+
   const getListLiquidityPool = React.useMemo(() => {
     const listLiquidityPool = liquidityPools ?? []
 
     if (isSearching) {
-      return listLiquidityPool.filter((token) => token.dex.name.toLowerCase().includes(search.toLowerCase()))
+      return filterListWithSearch(listLiquidityPool)
     }
 
     return listLiquidityPool
-  }, [isSearching, search, liquidityPools])
+  }, [liquidityPools, isSearching, filterListWithSearch])
 
   const getListOpenOrders = React.useMemo(() => {
     const listOpenOrders = openOrders ?? []
 
     if (isSearching) {
-      return listOpenOrders.filter((token) => token.dex.name.toLowerCase().includes(search.toLowerCase()))
+      return filterListWithSearch(listOpenOrders)
     }
 
     return listOpenOrders
-  }, [openOrders, isSearching, search])
+  }, [openOrders, isSearching, filterListWithSearch])
 
   return (
     <ScrollView style={styles.root} contentContainerStyle={styles.container}>
