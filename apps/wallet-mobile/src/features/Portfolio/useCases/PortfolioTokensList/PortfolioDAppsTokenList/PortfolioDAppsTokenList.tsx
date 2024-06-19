@@ -55,7 +55,7 @@ export const PortfolioDAppsTokenList = () => {
 
       timeout = setTimeout(() => {
         track.portfolioTokensListSearchActivated({search_term: search})
-      }, 500)
+      }, 500) // 0.5s requeriment
     }
 
     if (isSearching && search.length > 0) sendMetrics()
