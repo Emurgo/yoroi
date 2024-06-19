@@ -21,7 +21,7 @@ type Props = {
 }
 
 export const WalletListItem = ({wallet, onPress}: Props) => {
-  const {styles} = useStyles()
+  const {styles, colors} = useStyles()
   const era = useEra(wallet)
   const walletManager = useWalletManager()
 
@@ -77,7 +77,7 @@ export const WalletListItem = ({wallet, onPress}: Props) => {
 
             <Space width="md" />
 
-            {isSelected && <Icon.Check size={20} />}
+            {isSelected && <Icon.Check size={20} color={colors.icon} />}
 
             <Space width="md" />
           </>
@@ -135,6 +135,7 @@ const useStyles = () => {
 
   const colors = {
     white: color.white_static,
+    icon: color.primary_c600,
   }
 
   return {styles, colors} as const

@@ -139,6 +139,8 @@ const getStories = () => {
     "./src/features/Exchange/useCases/ShowExchangeResultOrderScreen/ContentResult/ContentResult.stories.tsx": require("../src/features/Exchange/useCases/ShowExchangeResultOrderScreen/ContentResult/ContentResult.stories.tsx"),
     "./src/features/Exchange/useCases/ShowExchangeResultOrderScreen/ShowExchangeResultOrderScreen.stories.tsx": require("../src/features/Exchange/useCases/ShowExchangeResultOrderScreen/ShowExchangeResultOrderScreen.stories.tsx"),
     "./src/features/Initialization/AnalyticsChangedScreen/AnalyticsChangedScreen.stories.tsx": require("../src/features/Initialization/AnalyticsChangedScreen/AnalyticsChangedScreen.stories.tsx"),
+    "./src/features/Initialization/DarkThemeAnnouncement/DarkThemeAnnouncement.stories.tsx": require("../src/features/Initialization/DarkThemeAnnouncement/DarkThemeAnnouncement.stories.tsx"),
+    "./src/features/Initialization/ChooseBiometricLogin/ChooseBiometricLoginScreen.stories.tsx": require("../src/features/Initialization/ChooseBiometricLogin/ChooseBiometricLoginScreen.stories.tsx"),
     "./src/features/Initialization/InitialScreen/InitialScreen.stories.tsx": require("../src/features/Initialization/InitialScreen/InitialScreen.stories.tsx"),
     "./src/features/Initialization/LanguagePickerScreen/LanguagePickerScreen.stories.tsx": require("../src/features/Initialization/LanguagePickerScreen/LanguagePickerScreen.stories.tsx"),
     "./src/features/Initialization/TermsOfServiceChangedScreen/TermsOfServiceChangedScreen.stories.tsx": require("../src/features/Initialization/TermsOfServiceChangedScreen/TermsOfServiceChangedScreen.stories.tsx"),
@@ -210,14 +212,12 @@ const getStories = () => {
     "./src/features/SetupWallet/legacy/SaveReadOnlyWallet/SaveReadOnlyWalletScreen.stories.tsx": require("../src/features/SetupWallet/legacy/SaveReadOnlyWallet/SaveReadOnlyWalletScreen.stories.tsx"),
     "./src/features/SetupWallet/legacy/WalletAddress/WalletAddress.stories.tsx": require("../src/features/SetupWallet/legacy/WalletAddress/WalletAddress.stories.tsx"),
     "./src/features/SetupWallet/legacy/WalletNameForm/WalletNameForm.stories.tsx": require("../src/features/SetupWallet/legacy/WalletNameForm/WalletNameForm.stories.tsx"),
-    "./src/features/SetupWallet/useCases/ChooseBiometricLogin/ChooseBiometricLoginScreen.stories.tsx": require("../src/features/SetupWallet/useCases/ChooseBiometricLogin/ChooseBiometricLoginScreen.stories.tsx"),
     "./src/features/SetupWallet/useCases/ChooseNetwork/ChooseNetworkScreen.stories.tsx": require("../src/features/SetupWallet/useCases/ChooseNetwork/ChooseNetworkScreen.stories.tsx"),
     "./src/features/SetupWallet/useCases/ChooseSetupType/ChooseSetupTypeScreen.stories.tsx": require("../src/features/SetupWallet/useCases/ChooseSetupType/ChooseSetupTypeScreen.stories.tsx"),
     "./src/features/SetupWallet/useCases/CreateWallet/AboutRecoveryPhraseScreen.stories.tsx": require("../src/features/SetupWallet/useCases/CreateWallet/AboutRecoveryPhraseScreen.stories.tsx"),
     "./src/features/SetupWallet/useCases/CreateWallet/RecoveryPhraseScreen.stories.tsx": require("../src/features/SetupWallet/useCases/CreateWallet/RecoveryPhraseScreen.stories.tsx"),
     "./src/features/SetupWallet/useCases/CreateWallet/VerifyRecoveryPhraseScreen.stories.tsx": require("../src/features/SetupWallet/useCases/CreateWallet/VerifyRecoveryPhraseScreen.stories.tsx"),
     "./src/features/SetupWallet/useCases/CreateWallet/WalletDetailsScreen.stories.tsx": require("../src/features/SetupWallet/useCases/CreateWallet/WalletDetailsScreen.stories.tsx"),
-    "./src/features/SetupWallet/useCases/DarkThemeAnnouncement/DarkThemeAnnouncement.stories.tsx": require("../src/features/SetupWallet/useCases/DarkThemeAnnouncement/DarkThemeAnnouncement.stories.tsx"),
     "./src/features/SetupWallet/useCases/RestoreWallet/MnemonicInput/MnemonicInput.stories.tsx": require("../src/features/SetupWallet/useCases/RestoreWallet/MnemonicInput/MnemonicInput.stories.tsx"),
     "./src/features/SetupWallet/useCases/RestoreWallet/MnemonicInput/TextInput/TextInput.stories.tsx": require("../src/features/SetupWallet/useCases/RestoreWallet/MnemonicInput/TextInput/TextInput.stories.tsx"),
     "./src/features/SetupWallet/useCases/RestoreWallet/RestoreWalletDetailsScreen.stories.tsx": require("../src/features/SetupWallet/useCases/RestoreWallet/RestoreWalletDetailsScreen.stories.tsx"),
@@ -292,8 +292,6 @@ const getStories = () => {
     "./src/legacy/TxHistory/TxDetails/TxDetails.stories.tsx": require("../src/legacy/TxHistory/TxDetails/TxDetails.stories.tsx"),
     "./src/legacy/TxHistory/TxHistory.stories.tsx": require("../src/legacy/TxHistory/TxHistory.stories.tsx"),
     "./src/legacy/TxHistory/TxHistoryList/ActionsBanner/ActionsBanner.stories.tsx": require("../src/legacy/TxHistory/TxHistoryList/ActionsBanner/ActionsBanner.stories.tsx"),
-    "./src/Staking/FailedTx/FailedTxScreen.stories.tsx": require("../src/Staking/FailedTx/FailedTxScreen.stories.tsx"),
-    "./src/Staking/PoolTransition/PoolTransitionModal.stories.tsx": require("../src/Staking/PoolTransition/PoolTransitionModal.stories.tsx"),
   };
 };
 

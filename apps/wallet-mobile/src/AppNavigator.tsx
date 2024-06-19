@@ -17,12 +17,17 @@ import {supportsAndroidFingerprintOverlay} from './features/Auth/common/biometri
 import {AuthSetting, useAuthSetting, useAuthWithOs, useIsAuthOsSupported} from './features/Auth/common/hooks'
 import {EnableLoginWithPin} from './features/Auth/EnableLoginWithPin'
 import {DeveloperScreen} from './features/Dev/DeveloperScreen'
+import {Playground} from './features/Dev/Playground'
 import {AgreementChangedNavigator, InitializationNavigator} from './features/Initialization'
 import {
   ChooseBiometricLoginScreen,
   useShowBiometricsScreen,
 } from './features/Initialization/ChooseBiometricLogin/ChooseBiometricLoginScreen'
 import {LegalAgreement, useLegalAgreement} from './features/Initialization/common'
+import {
+  DarkThemeAnnouncement,
+  useShowDarkThemeAnnouncementScreen,
+} from './features/Initialization/DarkThemeAnnouncement/DarkThemeAnnouncement'
 import {useDeepLinkWatcher} from './features/Links/common/useDeepLinkWatcher'
 import {PortfolioScreen} from './features/Portfolio/useCases/PortfolioScreen'
 import {SearchProvider} from './features/Search/SearchContext'
@@ -43,16 +48,10 @@ export const AppNavigator = () => {
   const strings = useStrings()
   const [routeName, setRouteName] = React.useState<string>()
   useStatusBar(routeName)
-  const {showBiometricsScreen} = useShowBiometricsScreen()
-  const isAuthOsSupported = useIsAuthOsSupported()
-  const authSetting = useAuthSetting()
-  const walletManager = useWalletManager()
-  const {hasWallets} = useHasWallets(walletManager)
+
   useHideScreenInAppSwitcher()
 
   useAutoLogout()
-
-  const shouldAskToUseAuthWithOs = showBiometricsScreen && isAuthOsSupported && authSetting !== 'os'
 
   const {isLoggedIn, isLoggedOut, login} = useAuth()
   const {authWithOs} = useAuthWithOs({
@@ -88,6 +87,8 @@ export const AppNavigator = () => {
     const currentRouteName = navRef.current?.getCurrentRoute()?.name
     setRouteName(currentRouteName)
   }, [])
+
+  const afterLoginAction = useAfterLoginAction()
 
   return (
     <NavigationContainer
@@ -148,7 +149,7 @@ export const AppNavigator = () => {
           {isLoggedIn && (
             <>
               <Stack.Group>
-                {!hasWallets && shouldAskToUseAuthWithOs && (
+                {afterLoginAction === 'choose-biometric-login' && (
                   <Stack.Screen //
                     name="choose-biometric-login"
                     options={{headerShown: false}}
@@ -156,7 +157,15 @@ export const AppNavigator = () => {
                   />
                 )}
 
-                {!hasWallets && !shouldAskToUseAuthWithOs && (
+                {afterLoginAction === 'dark-theme-announcement' && (
+                  <Stack.Screen //
+                    name="dark-theme-announcement"
+                    options={{headerShown: false}}
+                    component={DarkThemeAnnouncement}
+                  />
+                )}
+
+                {afterLoginAction === 'setup-wallet' && (
                   <Stack.Screen //
                     name="setup-wallet"
                     options={{headerShown: false}}
@@ -164,15 +173,17 @@ export const AppNavigator = () => {
                   />
                 )}
 
-                <Stack.Screen name="manage-wallets">
-                  {() => (
-                    <SearchProvider>
-                      <TransferProvider>
-                        <WalletNavigator />
-                      </TransferProvider>
-                    </SearchProvider>
-                  )}
-                </Stack.Screen>
+                {afterLoginAction === 'manage-wallets' && (
+                  <Stack.Screen name="manage-wallets">
+                    {() => (
+                      <SearchProvider>
+                        <TransferProvider>
+                          <WalletNavigator />
+                        </TransferProvider>
+                      </SearchProvider>
+                    )}
+                  </Stack.Screen>
+                )}
               </Stack.Group>
 
               <Stack.Group screenOptions={{presentation: 'transparentModal'}}>
@@ -188,6 +199,8 @@ export const AppNavigator = () => {
               <Stack.Screen name="developer" component={DeveloperScreen} options={{headerShown: false}} />
 
               <Stack.Screen name="storybook" component={StorybookScreen} />
+
+              <Stack.Screen name="playground" component={Playground} />
 
               <Stack.Screen name="portfolio-dashboard" component={PortfolioScreen} />
             </Stack.Group>
@@ -296,5 +309,34 @@ const useFirstAction = () => {
   const isAuthOsSupported = useIsAuthOsSupported()
   const legalAgreement = useLegalAgreement()
 
-  return getFirstAction(isAuthOsSupported, authSetting, legalAgreement)
+  return React.useMemo(
+    () => getFirstAction(isAuthOsSupported, authSetting, legalAgreement),
+    [authSetting, isAuthOsSupported, legalAgreement],
+  )
+}
+
+type AfterLoginAction = 'choose-biometric-login' | 'dark-theme-announcement' | 'setup-wallet' | 'manage-wallets'
+const getAfterLoginAction = (
+  shouldAskToUseAuthWithOs: boolean,
+  showDarkThemeAnnouncement: boolean,
+  hasWallets: boolean,
+): AfterLoginAction => {
+  if (!hasWallets && shouldAskToUseAuthWithOs) return 'choose-biometric-login'
+  if (!hasWallets && showDarkThemeAnnouncement && !shouldAskToUseAuthWithOs) return 'dark-theme-announcement'
+  if (!hasWallets && !shouldAskToUseAuthWithOs && !showDarkThemeAnnouncement) return 'setup-wallet'
+
+  return 'manage-wallets'
+}
+const useAfterLoginAction = () => {
+  const walletManager = useWalletManager()
+  const {hasWallets} = useHasWallets(walletManager)
+  const {showBiometricsScreen} = useShowBiometricsScreen()
+  const {showDarkThemeAnnouncement} = useShowDarkThemeAnnouncementScreen()
+  const isAuthOsSupported = useIsAuthOsSupported()
+  const authSetting = useAuthSetting()
+
+  return React.useMemo(() => {
+    const shouldAskToUseAuthWithOs = (showBiometricsScreen && isAuthOsSupported && authSetting !== 'os') ?? false
+    return getAfterLoginAction(shouldAskToUseAuthWithOs, showDarkThemeAnnouncement ?? false, hasWallets)
+  }, [authSetting, hasWallets, isAuthOsSupported, showBiometricsScreen, showDarkThemeAnnouncement])
 }

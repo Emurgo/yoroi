@@ -514,7 +514,7 @@
   "components.uikit.offlinebanner.offline": "您已离线。请检查您设备的网络设置。",
   "components.walletinit.txnavigationbuttons.continueButton": "Continue",
   "components.walletinit.txnavigationbuttons.nextButton": "Next",
-  "components.walletinit.biometricScreen.biometricDescription.description": "Use your device biometrics for a more convenient access to your Yoroi wallet and transaction confirmation",
+  "components.walletinit.biometricScreen.biometricDescription.description": "Use your device biometrics for a more convenient access to your Yoroi wallet",
   "components.walletinit.biometricScreen.enableButton.title": "Enable biometrics",
   "components.walletinit.biometricScreen.ignoreButton.title": "Not now",
   "components.walletinit.learnMoreInfo.button.title": "Learn more on Yoroi Zendesk",
