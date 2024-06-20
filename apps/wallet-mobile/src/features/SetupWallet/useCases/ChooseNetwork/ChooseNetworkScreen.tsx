@@ -17,22 +17,20 @@ export const ChooseNetworkScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
   const navigate = useNavigate()
-  const {
-    walletManager: {setSelectedNetwork},
-  } = useWalletManager()
+  const {walletManager} = useWalletManager()
 
   const handleMainnet = () => {
-    setSelectedNetwork(Chain.Network.Mainnet)
+    walletManager.setSelectedNetwork(Chain.Network.Mainnet)
     navigate?.()
   }
 
   const handleTestnet = () => {
-    setSelectedNetwork(Chain.Network.Preprod)
+    walletManager.setSelectedNetwork(Chain.Network.Preprod)
     navigate?.()
   }
 
   const handleSanchonet = () => {
-    setSelectedNetwork(Chain.Network.Sancho)
+    walletManager.setSelectedNetwork(Chain.Network.Sancho)
     navigate?.()
   }
 

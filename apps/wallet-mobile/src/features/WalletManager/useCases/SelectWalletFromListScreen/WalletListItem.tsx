@@ -12,6 +12,7 @@ import {
   ChevronRightDarkIllustration,
   ChevronRightGrayIllustration,
 } from '../../../SetupWallet/illustrations/ChevronRight'
+import {useSelectedNetwork} from '../../common/hooks/useSelectedNetwork'
 import {useSyncWalletInfo} from '../../common/hooks/useSyncWalletInfo'
 import {useWalletManager} from '../../context/WalletManagerProvider'
 
@@ -24,7 +25,10 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
   const {styles} = useStyles()
   const [isButtonPressed, setIsButtonPressed] = React.useState(false)
   const implementationName = React.useMemo(() => getImplementationName(walletMeta), [walletMeta])
+
+  const {network} = useSelectedNetwork()
   const syncWalletInfo = useSyncWalletInfo(walletMeta.id)
+  const hasSyncedLastSelectedNetwork = network === syncWalletInfo?.network
 
   const {
     selected: {meta},
@@ -35,8 +39,9 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
     <View style={styles.item}>
       <TouchableOpacity
         activeOpacity={1}
+        disabled={!hasSyncedLastSelectedNetwork}
         onPress={() => onPress(walletMeta)}
-        style={styles.leftSide}
+        style={[styles.leftSide, !hasSyncedLastSelectedNetwork && styles.disabled]}
         onPressIn={() => setIsButtonPressed(true)}
         onPressOut={() => setIsButtonPressed(false)}
       >
@@ -107,6 +112,9 @@ const useStyles = () => {
     walletMetaPressed: {
       color: color.gray_cmax,
       opacity: 1,
+    },
+    disabled: {
+      opacity: 0.5,
     },
   })
 

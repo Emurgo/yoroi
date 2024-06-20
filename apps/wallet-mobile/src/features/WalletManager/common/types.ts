@@ -21,6 +21,8 @@ export type SyncWalletInfo = {
   updatedAt: number
   status: 'waiting' | 'syncing' | 'done' | 'error'
   error?: Error
+  // last sync network updated only on error/success
+  network: Chain.SupportedNetworks | null
 }
 export type SyncWalletInfos = Readonly<Map<YoroiWallet['id'], SyncWalletInfo>>
 

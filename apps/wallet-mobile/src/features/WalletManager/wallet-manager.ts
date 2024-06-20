@@ -111,7 +111,9 @@ export class WalletManager {
   }
 
   setSelectedNetwork(network: Chain.SupportedNetworks) {
+    logger.debug('WalletManager: setSelectedNetwork new network selected', {network})
     this.#selectedNetwork$.next(network)
+    this.hydrate({isForced: true}).then(() => this.restartSyncing())
   }
 
   get selectedNetwork() {
@@ -200,7 +202,12 @@ export class WalletManager {
   private resetSyncWalletInfos(wallets: ReadonlyArray<YoroiWallet>) {
     const infos = new Map(this.#syncWalletInfos$.value)
     for (const wallet of wallets) {
-      const syncWalletInfo: SyncWalletInfo = {status: 'waiting', updatedAt: Date.now(), id: wallet.id}
+      const syncWalletInfo: SyncWalletInfo = {
+        status: 'waiting',
+        updatedAt: Date.now(),
+        id: wallet.id,
+        network: infos.get(wallet.id)?.network ?? null,
+      }
       infos.set(wallet.id, syncWalletInfo)
     }
 
@@ -231,14 +238,26 @@ export class WalletManager {
           }),
           concatMap((wallet) => {
             logger.debug('WalletManager: syncAll syncing walet', {walletId: wallet.id})
-            const syncWalletInfo: SyncWalletInfo = {status: 'syncing', updatedAt: Date.now(), id: wallet.id}
+            const info = this.#syncWalletInfos$.value.get(wallet.id)
+            const syncWalletInfo: SyncWalletInfo = {
+              status: 'syncing',
+              updatedAt: Date.now(),
+              id: wallet.id,
+              network: info?.network ?? null,
+            }
             const infos = new Map(this.#syncWalletInfos$.value)
             infos.set(wallet.id, syncWalletInfo)
             this.#syncWalletInfos$.next(freeze(infos))
             return from(wallet.sync({isForced: false})).pipe(
               catchError((error) => {
                 logger.error('WalletManager: syncAll error syncing walet', {error, walletId: wallet.id})
-                const syncWalletInfo: SyncWalletInfo = {status: 'error', error, updatedAt: Date.now(), id: wallet.id}
+                const syncWalletInfo: SyncWalletInfo = {
+                  status: 'error',
+                  error,
+                  updatedAt: Date.now(),
+                  id: wallet.id,
+                  network: this.selectedNetwork,
+                }
                 const infos = new Map(this.#syncWalletInfos$.value)
                 infos.set(wallet.id, syncWalletInfo)
                 this.#syncWalletInfos$.next(freeze(infos))
@@ -247,7 +266,12 @@ export class WalletManager {
               finalize(() => {
                 if (this.#syncWalletInfos$.value.get(wallet.id)?.status !== 'error') {
                   logger.debug('WalletManager: syncAll done syncing walet', {walletId: wallet.id})
-                  const syncWalletInfo: SyncWalletInfo = {status: 'done', updatedAt: Date.now(), id: wallet.id}
+                  const syncWalletInfo: SyncWalletInfo = {
+                    status: 'done',
+                    updatedAt: Date.now(),
+                    id: wallet.id,
+                    network: this.selectedNetwork,
+                  }
                   const infos = new Map(this.#syncWalletInfos$.value)
                   infos.set(wallet.id, syncWalletInfo)
                   this.#syncWalletInfos$.next(freeze(infos))
@@ -270,11 +294,19 @@ export class WalletManager {
         )
         .subscribe()
     }
+  }
 
-    return () => {
-      this.#syncSubscription?.unsubscribe()
-      this.#syncSubscription = null
-    }
+  /**
+   * It destroys the stream, while pause is just a temporary stop in the emitter
+   */
+  stopSyncing() {
+    this.#syncSubscription?.unsubscribe()
+    this.#syncSubscription = null
+  }
+
+  restartSyncing() {
+    this.stopSyncing()
+    this.startSyncing()
   }
 
   /**
@@ -284,7 +316,7 @@ export class WalletManager {
    *
    * @returns {Promise<{wallets: YoroiWallet[]; metas: WalletMeta[]}>}
    */
-  async hydrate() {
+  async hydrate({isForced = false}: {isForced?: boolean} = {}) {
     const deletedWalletIds = await this.walletIdsMarkedForDeletion()
     const walletIds = await this.#walletsRootStorage
       .getAllKeys()
@@ -294,15 +326,23 @@ export class WalletManager {
       .then((tuples) => tuples.map(([_, walletMeta]) => walletMeta))
       .then((walletMetas) => walletMetas.filter(isWalletMeta)) // filter corrupted wallet metas
 
-    const toLoad = walletMetas.filter((meta) => !this.#walletMetas$.value.has(meta.id))
+    const metasToLoad = walletMetas.filter((meta) => !this.#walletMetas$.value.has(meta.id) || isForced)
 
     // metas dictates wallets to be loaded
-    if (toLoad.length > 0) {
-      const loadedWallets = await Promise.all(toLoad.map((meta) => this.loadWallet(meta)))
+    if (metasToLoad.length > 0) {
+      const loadedWallets = await Promise.all(
+        metasToLoad.map(({id, implementation}) =>
+          this.loadWallet({
+            id,
+            implementation,
+            isForced,
+          }),
+        ),
+      )
       for (const wallet of loadedWallets) this.#wallets.set(wallet.id, wallet)
 
       const metas = new Map(this.#walletMetas$.value)
-      for (const meta of toLoad) metas.set(meta.id, meta)
+      for (const meta of metasToLoad) metas.set(meta.id, meta)
       this.#walletMetas$.next(freeze(metas))
     }
 
@@ -410,9 +450,19 @@ export class WalletManager {
    * @param {Wallet.Meta} walletMeta
    * @returns {Promise<YoroiWallet>} wallet
    */
-  private async loadWallet({id, implementation}: Wallet.Meta, accountVisual = 0): Promise<YoroiWallet> {
+  private async loadWallet({
+    id,
+    implementation,
+    accountVisual = 0,
+    isForced = false,
+  }: {
+    id: YoroiWallet['id']
+    implementation: Wallet.Implementation
+    accountVisual?: number
+    isForced?: boolean
+  }): Promise<YoroiWallet> {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    if (this.#wallets.has(id)) return this.#wallets.get(id)!
+    if (this.#wallets.has(id) && !isForced) return this.#wallets.get(id)!
 
     const network = this.selectedNetwork
     const walletFactory = getWalletFactory({network, implementation})
@@ -420,7 +470,7 @@ export class WalletManager {
     const encryptedStorage = makeWalletEncryptedStorage(id)
     const accountPubKeyHex = await encryptedStorage.xpub.read(accountVisual)
 
-    logger.debug('WalletManager: loadWallet loading wallet', {id, accountVisual})
+    logger.debug('WalletManager: loadWallet loading wallet', {id, accountVisual, implementation, isForced})
     if (!accountPubKeyHex) throwLoggedError('WalletManager: loadWallet accountPubKeyHex not found')
 
     const wallet = await walletFactory.build({

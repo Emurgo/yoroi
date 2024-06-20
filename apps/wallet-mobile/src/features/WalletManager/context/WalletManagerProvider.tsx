@@ -40,8 +40,8 @@ export const WalletManagerProvider: React.FC<
 
   React.useEffect(() => {
     // sync, it doesn't wait for the login
-    const unsubscribeSync = walletManager.startSyncing()
-    return () => unsubscribeSync()
+    walletManager.startSyncing()
+    return () => walletManager.stopSyncing()
   }, [walletManager])
 
   React.useEffect(() => {

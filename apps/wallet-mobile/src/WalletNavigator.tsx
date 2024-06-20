@@ -3,9 +3,10 @@ import {RouteProp, useFocusEffect} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
 import {TransferProvider} from '@yoroi/transfer'
+import {Chain} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Keyboard, Platform} from 'react-native'
+import {Keyboard, Platform, Pressable, StyleSheet, Text, useWindowDimensions} from 'react-native'
 
 import {Icon, OfflineBanner} from './components'
 import {DiscoverNavigator} from './features/Discover'
@@ -20,6 +21,8 @@ import {SettingsScreenNavigator} from './features/Settings'
 import {SetupWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
 import {GovernanceNavigator} from './features/Staking/Governance'
 import {ToggleAnalyticsSettingsNavigator} from './features/ToggleAnalyticsSettings'
+import {useSelectedNetwork} from './features/WalletManager/common/hooks/useSelectedNetwork'
+import {useWalletManager} from './features/WalletManager/context/WalletManagerProvider'
 import {SelectWalletFromList} from './features/WalletManager/useCases/SelectWalletFromListScreen/SelectWalletFromListScreen'
 import {dappExplorerEnabled} from './kernel/config'
 import {useMetrics} from './kernel/metrics/metricsManager'
@@ -190,7 +193,11 @@ export const WalletNavigator = () => {
   const initialRoute = useLinksShowActionResult()
   const strings = useStrings()
   const {atoms, color} = useTheme()
+  const {styles} = useStyles()
   useLinksRequestAction()
+  const navOptions = React.useMemo(() => defaultStackNavigationOptions(atoms, color), [atoms, color])
+  const {walletManager} = useWalletManager()
+  const {network} = useSelectedNetwork()
 
   // initialRoute doesn't update the state of the navigator, only at first render
   // https://reactnavigation.org/docs/auth-flow/
@@ -212,9 +219,30 @@ export const WalletNavigator = () => {
       <SearchProvider>
         <Stack.Navigator
           screenOptions={{
-            ...defaultStackNavigationOptions(atoms, color),
+            ...navOptions,
             headerLeft: undefined,
             detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+            headerTitle: ({children}) => {
+              return (
+                <Pressable
+                  style={styles.headerTitleContainerStyle}
+                  onPress={() => {
+                    const networks: Array<Chain.SupportedNetworks> = [
+                      Chain.Network.Mainnet,
+                      Chain.Network.Preprod,
+                      Chain.Network.Sancho,
+                    ]
+                    walletManager.setSelectedNetwork(networks[(networks.indexOf(network) + 1) % networks.length])
+                  }}
+                >
+                  <Text style={styles.headerTitleStyle}>
+                    {children}
+
+                    <Text style={styles.headerTitleStyle}> ({network})</Text>
+                  </Text>
+                </Pressable>
+              )
+            },
           }}
         >
           <Stack.Screen
@@ -251,14 +279,27 @@ export const WalletNavigator = () => {
 }
 
 const useStyles = () => {
-  const {color} = useTheme()
+  const {color, atoms} = useTheme()
+  const width = useWindowDimensions().width
 
+  const styles = StyleSheet.create({
+    headerTitleStyle: {
+      ...atoms.body_1_lg_medium,
+      width: width - 75,
+      textAlign: 'center',
+    },
+    headerTitleContainerStyle: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+  })
   const colors = {
     active: color.text_gray_normal,
     inactive: color.gray_c600,
     background: color.gray_cmin,
   }
-  return {colors}
+  return {colors, styles}
 }
 
 const messages = defineMessages({

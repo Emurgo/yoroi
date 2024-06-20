@@ -33,6 +33,7 @@ const useInitApp = () => {
     const load = async () => {
       await initInstallationId(storage)
       await walletManager.removeWalletsMarkedForDeletion()
+      // NOTE: startSyncing will load again but it's fine, to hydrate asap
       await walletManager.hydrate()
       setLoaded(true)
     }
