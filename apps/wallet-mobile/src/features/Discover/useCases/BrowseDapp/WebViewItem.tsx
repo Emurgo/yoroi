@@ -179,7 +179,7 @@ const useStyles = () => {
     },
     domainText: {
       ...atoms.body_2_md_regular,
-      color: color.black_static,
+      color: color.text_gray_normal,
     },
     closeTabPosition: {
       position: 'absolute',
