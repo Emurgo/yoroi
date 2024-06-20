@@ -7,7 +7,7 @@ import {defaultMemoize} from 'reselect'
 import {logger} from '../../../kernel/logger/logger'
 import {BackendConfig} from '../../types'
 import {CardanoMobile} from '../../wallets'
-import * as legacyApi from '../api'
+import * as legacyApi from '../api/api'
 import {cardanoConfig} from '../constants/cardano-config'
 import {CardanoTypes} from '../types'
 

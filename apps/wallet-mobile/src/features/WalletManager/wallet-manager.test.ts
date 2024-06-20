@@ -2,6 +2,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {parseSafe} from '@yoroi/common'
 
+import {decryptData} from '../../kernel/encryption/encryption'
 import {rootStorage} from '../../kernel/storage/rootStorage'
 import {buildPortfolioTokenManagers} from '../Portfolio/common/helpers/build-token-managers'
 import {buildNetworkManagers} from './network-manager/network-manager'
@@ -42,27 +43,42 @@ describe('walletManager', () => {
     })
 
     const shot = await snapshot()
-    await expect(getXPub(meta.id, shot)).resolves.toEqual('$a')
-    await expect(getXPriv(meta.id, shot)).resolves.toEqual('$a')
-    await expect(getWalletMeta(meta.id, shot)).resolves.toEqual({
-      checksum: 'x',
+    expect(getXPub(meta.id, shot)).toEqual(
+      '7cc9d816f272eb78a2db936a839d3bf53fa960dd470ddbaadabb6a7bf2019b837d20b2cd13cbb22b6f6938abea40d425f5539b6bb1fe0813ccb4c21676a7fd6b',
+    )
+    const decriptedData = await decryptData(getXPriv(meta.id, shot) as string, 'password')
+    expect(decriptedData).toEqual(
+      '9053adfb225e91c0bf2db38e1978907cfeff6e66b9a9c3d8945aa686a9d29851bf83c8e2e556464605afeb9651fab3ef3f0aa205685c8f1e6f818629f843bde9a7e129fd35d072ce79b40a49cefcbc8526a3cb8d4bfa7a47afddaddc31dbb728',
+    )
+    expect(getWalletMeta(meta.id, shot)).toEqual({
       id: meta.id,
       isEasyConfirmationEnabled: false,
       isHW: false,
       name,
       addressMode,
+      isReadOnly: false,
+      plate: 'NNPB-3784',
+      version: 3,
+      implementation: 'cardano-cip1852',
+      hwDeviceInfo: null,
+      avatar: expect.any(String),
     })
 
     await expect(walletManager.hydrate()).resolves.toEqual({
       wallets: expect.any(Array),
       metas: [
         {
-          checksum: 'x',
           id: meta.id,
           isEasyConfirmationEnabled: false,
           isHW: false,
           name,
           addressMode,
+          isReadOnly: false,
+          plate: 'NNPB-3784',
+          version: 3,
+          implementation: 'cardano-cip1852',
+          hwDeviceInfo: null,
+          avatar: expect.any(String),
         },
       ],
     })

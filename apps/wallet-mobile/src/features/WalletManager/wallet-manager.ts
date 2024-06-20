@@ -20,10 +20,12 @@ import {time} from '../../kernel/constants'
 import {throwLoggedError} from '../../kernel/logger/helpers/throw-logged-error'
 import {logger} from '../../kernel/logger/logger'
 import {makeWalletEncryptedStorage} from '../../kernel/storage/EncryptedStorage'
-import {KeychainManager} from '../../kernel/storage/Keychain'
+import {Keychain, KeychainManager} from '../../kernel/storage/Keychain'
+import {rootStorage} from '../../kernel/storage/rootStorage'
 import {WalletEvent, YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {wrappedCsl} from '../../yoroi-wallets/cardano/wrappedCsl'
 import {validatePassword} from '../../yoroi-wallets/utils/validators'
+import {networkManagers} from './common/constants'
 import {
   SyncWalletInfo,
   SyncWalletInfos,
@@ -550,6 +552,8 @@ export class WalletManager {
     return meta
   }
 }
+
+export const walletManager = new WalletManager({networkManagers, rootStorage, keychainManager: Keychain})
 
 export const mockWalletManager = {} as WalletManager
 
