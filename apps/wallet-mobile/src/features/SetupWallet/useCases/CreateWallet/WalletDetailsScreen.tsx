@@ -265,7 +265,6 @@ export const WalletDetailsScreen = () => {
           currentStep={4}
           currentStepTitle={strings.stepWalletDetails}
           totalSteps={4}
-          isLast
         />
 
         <View style={styles.infoText}>

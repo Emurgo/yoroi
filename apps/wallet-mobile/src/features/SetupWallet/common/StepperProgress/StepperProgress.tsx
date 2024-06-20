@@ -12,58 +12,39 @@ import {Number3Empty} from '../../illustrations/Number3Empty'
 import {Number4} from '../../illustrations/Number4'
 import {Number4Empty} from '../../illustrations/Number4Empty'
 
-type StepProps = {
-  currentStep: number
-  currentStepTitle: string
-  isNext: boolean
-  isPrevious: boolean
-  isLast?: boolean
-}
-const Step = ({currentStep, currentStepTitle, isNext, isPrevious, isLast}: StepProps) => {
-  const {styles} = useStyles()
-  const shouldDisplayStepTitle = !isNext && !isPrevious && currentStepTitle !== undefined && !isLast
-
-  const StepLogo = !isPrevious ? getStepperLogo(currentStep, isNext) : CheckIllustration
-
-  return (
-    <Animated.View style={styles.root}>
-      {StepLogo && <StepLogo />}
-
-      {shouldDisplayStepTitle && (
-        <Animated.Text layout={Layout} style={styles.currentStepTitle}>
-          {currentStepTitle}
-        </Animated.Text>
-      )}
-    </Animated.View>
-  )
-}
-
 type StepperProgressProps = {
   currentStep: number
   currentStepTitle: string
   totalSteps: number
   style?: ViewStyle
-  isLast?: boolean
 }
-export const StepperProgress = ({currentStep, currentStepTitle, totalSteps, style, isLast}: StepperProgressProps) => {
+
+export const StepperProgress = ({currentStep, currentStepTitle, totalSteps, style}: StepperProgressProps) => {
   const {styles} = useStyles()
-  const stepIndicator: Array<React.ReactNode> = []
 
-  for (let currentIndex = 1; currentIndex <= totalSteps; currentIndex++) {
-    const isPrevious = currentIndex < currentStep
-    const isNext = currentIndex > currentStep
+  if (currentStep > totalSteps) throw new Error("StepperProgress: currentStep can't be greater that totalSteps")
+  if (nonEmptyIcons.length < totalSteps || emptyIcons.length < totalSteps)
+    throw new Error('StepperProgress: total steps greater that number of icons')
 
-    stepIndicator.push(
-      <Step
-        currentStep={currentStep}
-        currentStepTitle={currentStepTitle}
-        isPrevious={isPrevious}
-        isNext={isNext}
-        key={currentIndex}
-        isLast={isLast}
-      />,
+  const stepIndicatorFirstPart: Array<React.ReactNode> = Array.from({length: currentStep}).map((_, index) => {
+    if (index <= currentStep - 2) return <CheckIllustration key={index} />
+
+    return (
+      <Animated.View key={index} style={styles.root}>
+        {getStepperLogo(currentStep, false)}
+
+        <Animated.Text layout={Layout} style={styles.currentStepTitle}>
+          {currentStepTitle}
+        </Animated.Text>
+      </Animated.View>
     )
-  }
+  })
+
+  const stepIndicatorSecondPart: Array<React.ReactNode> = Array.from({length: totalSteps - currentStep}).map(
+    (_, index) => getStepperLogo(index + currentStep + 1, true),
+  )
+
+  const stepIndicator = [...stepIndicatorFirstPart, ...stepIndicatorSecondPart]
 
   return (
     <Animated.View layout={Layout} style={[styles.bar, style]}>
@@ -72,8 +53,8 @@ export const StepperProgress = ({currentStep, currentStepTitle, totalSteps, styl
   )
 }
 
-const nonEmptyIcons = [Number1, Number2, Number3, Number4]
-const emptyIcons = [null, Number2Empty, Number3Empty, Number4Empty]
+const nonEmptyIcons = [<Number1 key="1" />, <Number2 key="2" />, <Number3 key="3" />, <Number4 key="4" />]
+const emptyIcons = [null, <Number2Empty key="5" />, <Number3Empty key="6" />, <Number4Empty key="7" />]
 const getStepperLogo = (step: number, empty: boolean) => {
   return empty ? emptyIcons[step - 1] : nonEmptyIcons[step - 1]
 }

@@ -27,6 +27,7 @@ import {useWalletManager} from '../WalletManager/context/WalletManagerProvider'
 const routes: Array<{label: string; path: keyof AppRoutes}> = [
   {label: 'Storybook', path: 'storybook'},
   {label: 'Skip to wallet list', path: 'manage-wallets'},
+  {label: 'Playground', path: 'playground'},
 ]
 
 const crash = () => {

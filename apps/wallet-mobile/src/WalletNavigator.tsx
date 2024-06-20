@@ -1,5 +1,5 @@
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
-import {RouteProp, useFocusEffect} from '@react-navigation/native'
+import {BottomTabBar, BottomTabBarProps, createBottomTabNavigator} from '@react-navigation/bottom-tabs'
+import {useFocusEffect} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
 import {TransferProvider} from '@yoroi/transfer'
@@ -28,7 +28,7 @@ import {dappExplorerEnabled} from './kernel/config'
 import {useMetrics} from './kernel/metrics/metricsManager'
 import {
   defaultStackNavigationOptions,
-  hideTabBarForRoutes,
+  shouldHideTabBarForRoutes,
   WalletStackRoutes,
   WalletTabRoutes,
 } from './kernel/navigation'
@@ -37,6 +37,12 @@ import {DashboardNavigator} from './legacy/Dashboard'
 import {TxHistoryNavigator} from './legacy/TxHistory'
 
 const Tab = createBottomTabNavigator<WalletTabRoutes>()
+
+const TabBarWithHiddenContent = (props: BottomTabBarProps) => {
+  const shouldHide = shouldHideTabBarForRoutes(props.state)
+  return shouldHide ? null : <BottomTabBar {...props} />
+}
+
 const WalletTabNavigator = () => {
   const strings = useStrings()
   const {colors} = useStyles()
@@ -84,19 +90,17 @@ const WalletTabNavigator = () => {
           },
           tabBarHideOnKeyboard: true,
         }}
+        tabBar={(props) => <TabBarWithHiddenContent {...props} />}
         backBehavior="initialRoute"
       >
         <Tab.Screen
           name="history"
-          options={({route}: {route: RouteProp<WalletTabRoutes, 'history'>}) => ({
+          options={{
             tabBarIcon: ({focused}) => <Icon.TabWallet size={24} color={focused ? colors.active : colors.inactive} />,
             tabBarLabel: strings.walletTabBarLabel,
             tabBarTestID: 'walletTabBarButton',
-            tabBarStyle: {
-              ...hideTabBarForRoutes(route),
-              backgroundColor: colors.background,
-            },
-          })}
+            tabBarStyle: {backgroundColor: colors.background},
+          }}
         >
           {() => (
             <SearchProvider>
@@ -107,17 +111,16 @@ const WalletTabNavigator = () => {
 
         <Tab.Screen
           name="portfolio"
-          options={({route}: {route: RouteProp<WalletTabRoutes, 'portfolio'>}) => ({
+          options={{
             tabBarIcon: ({focused}) => (
               <Icon.TabPortfolio size={24} color={focused ? colors.active : colors.inactive} />
             ),
             tabBarLabel: strings.portfolioButton,
             tabBarTestID: 'portfolioTabBarButton',
             tabBarStyle: {
-              ...hideTabBarForRoutes(route),
               backgroundColor: colors.background,
             },
-          })}
+          }}
         >
           {() => (
             <SearchProvider>
@@ -144,15 +147,14 @@ const WalletTabNavigator = () => {
         {dappExplorerEnabled ? (
           <Tab.Screen
             name="discover"
-            options={({route}: {route: RouteProp<WalletTabRoutes, 'discover'>}) => ({
+            options={{
               tabBarIcon: ({focused}) => <Icon.Discover size={28} color={focused ? colors.active : colors.inactive} />,
               tabBarLabel: strings.discoverTabBarLabel,
               tabBarTestID: 'discoverTabBarButton',
               tabBarStyle: {
-                ...hideTabBarForRoutes(route),
                 backgroundColor: colors.background,
               },
-            })}
+            }}
           >
             {() => (
               <SearchProvider>

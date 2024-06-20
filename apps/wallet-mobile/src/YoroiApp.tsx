@@ -22,6 +22,7 @@ import {useSetupLogger} from './kernel/logger/hooks/useSetupLogger'
 import {makeMetricsManager, MetricsProvider} from './kernel/metrics/metricsManager'
 import {useMigrations} from './kernel/storage/migrations/useMigrations'
 import {rootStorage} from './kernel/storage/rootStorage'
+import {PoolTransitionProvider} from './legacy/Staking/PoolTransition/PoolTransitionProvider'
 import {useThemeStorageMaker} from './yoroi-wallets/hooks'
 
 enableScreens(true)

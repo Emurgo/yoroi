@@ -5,6 +5,7 @@ import {Image, StyleSheet, Text, View, ViewProps} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import {Button, Icon, useModal} from '../../../components'
+import {ScrollView, useScrollView} from '../../../components/ScrollView/ScrollView'
 import {Space} from '../../../components/Space/Space'
 import {formatTimeSpan} from '../../../yoroi-wallets/utils'
 import {useStrings} from './usePoolTransition'
@@ -14,10 +15,12 @@ export const PoolTransitionModal = ({
   onContinue,
 }: {
   poolTransition: PoolTransition
-  onContinue: () => void
+  onContinue: () => Promise<void> | void
 }) => {
-  const {styles, colors} = useStyles()
+  const [isLoading, setIsLoading] = React.useState(false)
   const strings = useStrings()
+  const {isScrollBarShown, scrollViewRef, setIsScrollBarShown} = useScrollView()
+  const {styles, colors} = useStyles()
 
   const {closeModal} = useModal()
 
@@ -25,9 +28,14 @@ export const PoolTransitionModal = ({
     closeModal()
   }
 
-  const handleOnUpdate = () => {
-    closeModal()
-    onContinue()
+  const handleOnUpdate = async () => {
+    try {
+      setIsLoading(true)
+      await onContinue()
+    } finally {
+      setIsLoading(false)
+      closeModal()
+    }
   }
 
   const timeSpan = poolTransition.deadlineMilliseconds - Date.now()
@@ -35,94 +43,100 @@ export const PoolTransitionModal = ({
 
   return (
     <View style={styles.modal}>
-      <Text style={styles.details}>{isActive ? strings.warning : strings.finalWarning}</Text>
+      <ScrollView style={styles.scroll} ref={scrollViewRef} onScrollBarChange={setIsScrollBarShown}>
+        <View style={styles.modal}>
+          <Text style={styles.details}>{isActive ? strings.warning : strings.finalWarning}</Text>
 
-      <Space fill height="lg" />
+          <Space height="lg" />
 
-      <View style={[styles.card, isActive ? styles.border : styles.warningBorder]}>
-        <Row>
-          <Text style={styles.label}>{strings.currentPool}</Text>
+          <View style={[styles.card, isActive ? styles.border : styles.warningBorder]}>
+            <Row>
+              <Text style={styles.label}>{strings.currentPool}</Text>
 
-          <View style={styles.poolTicker}>
-            {poolTransition.current.pic != null && (
-              <Image source={{uri: poolTransition.current.pic}} style={styles.pic} />
-            )}
+              <View style={styles.poolTicker}>
+                {poolTransition.current.pic != null && (
+                  <Image source={{uri: poolTransition.current.pic}} style={styles.pic} />
+                )}
 
-            <Text
-              style={styles.poolTickerText}
-            >{`[${poolTransition.current.ticker}] ${poolTransition.current.name}`}</Text>
-          </View>
-        </Row>
+                <Text
+                  style={styles.poolTickerText}
+                >{`[${poolTransition.current.ticker}] ${poolTransition.current.name}`}</Text>
+              </View>
+            </Row>
 
-        <Row>
-          <Text style={styles.label}>{strings.estimatedRoa}</Text>
+            <Row>
+              <Text style={styles.label}>{strings.estimatedRoa}</Text>
 
-          <Text style={styles.currentValue}>{poolTransition.current.roa} %</Text>
-        </Row>
+              <Text style={styles.currentValue}>{poolTransition.current.roa} %</Text>
+            </Row>
 
-        <Row>
-          <Text style={styles.label}>{strings.fee}</Text>
+            <Row>
+              <Text style={styles.label}>{strings.fee}</Text>
 
-          <Text style={styles.currentValue}>{formatFee(poolTransition.current.taxRatio)} %</Text>
-        </Row>
+              <Text style={styles.currentValue}>{formatFee(poolTransition.current.taxRatio)} %</Text>
+            </Row>
 
-        <Text style={styles.warning}>
-          <Text style={styles.warningText}>{isActive ? strings.poolWillStopRewards : strings.poolNoRewards}</Text>
+            <Text style={styles.warning}>
+              <Text style={styles.warningText}>{isActive ? strings.poolWillStopRewards : strings.poolNoRewards}</Text>
 
-          {isActive && (
-            <Text style={styles.warningTimer}>
-              {'\n'}
+              {isActive && (
+                <Text style={styles.warningTimer}>
+                  {'\n'}
 
-              {formatTimeSpan(timeSpan)}
+                  {formatTimeSpan(timeSpan)}
+                </Text>
+              )}
             </Text>
-          )}
-        </Text>
-      </View>
-
-      <Space height="sm" />
-
-      <Icon.ArrowDown size={17} />
-
-      <Space height="sm" />
-
-      <View style={styles.card}>
-        <LinearGradient
-          style={[StyleSheet.absoluteFill, {opacity: 1, borderRadius: 8}]}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 0.5}}
-          colors={colors.backgroundGradientCard}
-        />
-
-        <Row>
-          <Text style={styles.label}>{strings.newPool}</Text>
-
-          <View style={styles.poolTicker}>
-            {poolTransition.suggested.pic != null && (
-              <Image source={{uri: poolTransition.suggested.pic}} style={styles.pic} />
-            )}
-
-            <Text
-              style={styles.poolTickerText}
-            >{`[${poolTransition.suggested.ticker}] ${poolTransition.suggested.name}`}</Text>
           </View>
-        </Row>
 
-        <Row>
-          <Text style={styles.label}>{strings.estimatedRoa}</Text>
+          <Space height="sm" />
 
-          <Text style={styles.suggestedValue}>{poolTransition.suggested.roa} %</Text>
-        </Row>
+          <Icon.ArrowDown size={17} />
 
-        <Row>
-          <Text style={styles.label}>{strings.fee}</Text>
+          <Space height="sm" />
 
-          <Text style={styles.suggestedValue}>{formatFee(poolTransition.suggested.taxRatio)} %</Text>
-        </Row>
+          <View style={styles.card}>
+            <LinearGradient
+              style={[StyleSheet.absoluteFill, {opacity: 1, borderRadius: 8}]}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0.5}}
+              colors={colors.backgroundGradientCard}
+            />
 
-        <Text style={styles.currentValue}>{strings.poolGeneratesRewards}</Text>
-      </View>
+            <Row>
+              <Text style={styles.label}>{strings.newPool}</Text>
 
-      <Space height="xl" />
+              <View style={styles.poolTicker}>
+                {poolTransition.suggested.pic != null && (
+                  <Image source={{uri: poolTransition.suggested.pic}} style={styles.pic} />
+                )}
+
+                <Text
+                  style={styles.poolTickerText}
+                >{`[${poolTransition.suggested.ticker}] ${poolTransition.suggested.name}`}</Text>
+              </View>
+            </Row>
+
+            <Row>
+              <Text style={styles.label}>{strings.estimatedRoa}</Text>
+
+              <Text style={styles.suggestedValue}>{poolTransition.suggested.roa} %</Text>
+            </Row>
+
+            <Row>
+              <Text style={styles.label}>{strings.fee}</Text>
+
+              <Text style={styles.suggestedValue}>{formatFee(poolTransition.suggested.taxRatio)} %</Text>
+            </Row>
+
+            <Text style={styles.currentValue}>{strings.poolGeneratesRewards}</Text>
+          </View>
+
+          <Space height="xl" />
+        </View>
+      </ScrollView>
+
+      {isScrollBarShown && <View style={styles.line} />}
 
       <Actions>
         <Button
@@ -134,9 +148,10 @@ export const PoolTransitionModal = ({
 
         <Button
           shelleyTheme
-          title={strings.updateKeepEarning.toLocaleUpperCase()}
+          title={strings.updateKeepEarning}
           onPress={handleOnUpdate}
           textStyles={styles.button}
+          disabled={isLoading}
         />
       </Actions>
 
@@ -153,6 +168,9 @@ const useStyles = () => {
       alignItems: 'center',
       flex: 1,
       justifyContent: 'flex-end',
+    },
+    scroll: {
+      width: '100%',
     },
     card: {
       borderRadius: 8,
@@ -210,6 +228,11 @@ const useStyles = () => {
       justifyContent: 'space-between',
       height: 24,
       alignItems: 'center',
+    },
+    line: {
+      width: '120%',
+      height: StyleSheet.hairlineWidth,
+      backgroundColor: color.gray_c200,
     },
     actions: {
       alignSelf: 'stretch',

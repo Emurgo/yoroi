@@ -271,8 +271,6 @@ const useStyles = () => {
       flexDirection: 'row',
       backgroundColor: color.gray_cmin,
       padding: 16,
-      borderTopLeftRadius: 8,
-      borderTopRightRadius: 8,
       elevation: 1,
       shadowOpacity: 0.06,
       shadowColor: color.black_static,
