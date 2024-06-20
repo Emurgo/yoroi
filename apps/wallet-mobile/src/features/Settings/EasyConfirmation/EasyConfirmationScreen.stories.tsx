@@ -40,6 +40,7 @@ storiesOf('EasyConfirmation Screen', module)
             isReadOnly: false,
             hwDeviceInfo: null,
           },
+          networkManager: networkManagers[Chain.Network.Mainnet],
         },
       }}
     >
@@ -52,6 +53,7 @@ storiesOf('EasyConfirmation Screen', module)
       initialState={{
         selected: {
           network: Chain.Network.Mainnet,
+          networkManager: networkManagers[Chain.Network.Mainnet],
           wallet: mocks.wallet,
           meta: {
             avatar: 'a',

@@ -12,7 +12,7 @@ import {showErrorDialog} from '../../../kernel/dialogs'
 import {errorMessages} from '../../../kernel/i18n/global-messages'
 import {isEmptyString} from '../../../kernel/utils'
 import {useEnableEasyConfirmation} from '../../Auth/common/useEnableEasyConfirmation'
-import {useSelectedWalletMeta} from '../../WalletManager/common/hooks/useSelectedWalletMeta'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 
 export const EnableEasyConfirmationScreen = () => {
   const intl = useIntl()
@@ -20,8 +20,10 @@ export const EnableEasyConfirmationScreen = () => {
   const styles = useStyles()
   const navigation = useNavigation()
   const [rootPassword, setRootPassword] = React.useState('')
-  const walletMeta = useSelectedWalletMeta()
-  const {enableEasyConfirmation, isLoading} = useEnableEasyConfirmation(walletMeta.id, {
+  const {
+    meta: {id},
+  } = useSelectedWallet()
+  const {enableEasyConfirmation, isLoading} = useEnableEasyConfirmation(id, {
     onSuccess: () => {
       navigation.goBack()
     },

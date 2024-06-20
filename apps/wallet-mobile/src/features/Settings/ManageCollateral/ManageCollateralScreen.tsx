@@ -29,7 +29,6 @@ import {useBalances} from '../../../yoroi-wallets/hooks'
 import {RawUtxo, YoroiEntry} from '../../../yoroi-wallets/types'
 import {Amounts, asQuantity, Quantities} from '../../../yoroi-wallets/utils'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
-import {useSelectedWalletMeta} from '../../WalletManager/common/hooks/useSelectedWalletMeta'
 import {usePrivacyMode} from '../PrivacyMode/PrivacyMode'
 import {createCollateralEntry} from './helpers'
 import {useNavigateTo} from './navigation'
@@ -37,7 +36,10 @@ import {useStrings} from './strings'
 
 export const ManageCollateralScreen = () => {
   const {styles} = useStyles()
-  const {wallet} = useSelectedWallet()
+  const {
+    wallet,
+    meta: {addressMode},
+  } = useSelectedWallet()
   const {amount, collateralId, utxo} = useCollateralInfo(wallet)
   const hasCollateral = collateralId !== '' && utxo !== undefined
   const didSpend = collateralId !== '' && utxo === undefined
@@ -45,7 +47,6 @@ export const ManageCollateralScreen = () => {
   const strings = useStrings()
   const balances = useBalances(wallet)
   const lockedAmount = asQuantity(wallet.primaryBreakdown.lockedAsStorageCost.toString())
-  const {addressMode} = useSelectedWalletMeta()
 
   const params = useUnsafeParams<SettingsStackRoutes['manage-collateral']>()
 

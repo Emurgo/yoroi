@@ -115,11 +115,13 @@ const Modal = ({amount, address}: {amount: string; address: string}) => {
     },
   })
 
-  const {primaryTokenInfo} = useSelectedWallet()
+  const {
+    wallet: {portfolioPrimaryTokenInfo},
+  } = useSelectedWallet()
   const hasAmount = !isEmptyString(amount)
   const hasAddress = !isEmptyString(address)
   const content = hasAmount ? requestData.link : address
-  const title = hasAmount ? `${amount} ${primaryTokenInfo.ticker?.toLocaleUpperCase()}` : ''
+  const title = hasAmount ? `${amount} ${portfolioPrimaryTokenInfo.ticker.toLocaleUpperCase()}` : ''
 
   const [isCopying, copy] = useCopy()
   const handOnCopy = () => copy(content)

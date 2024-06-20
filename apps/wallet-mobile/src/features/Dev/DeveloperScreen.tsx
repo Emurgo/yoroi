@@ -116,6 +116,7 @@ export const DeveloperScreen = () => {
               password: '1234567890',
               implementation: 'cardano-cip1852',
               addressMode: 'multiple',
+              accountVisual: 0,
             })
           }
           testID="btnRestoreWallet1"
@@ -132,6 +133,7 @@ export const DeveloperScreen = () => {
               password: '1234567890',
               implementation: 'cardano-cip1852',
               addressMode: 'multiple',
+              accountVisual: 0,
             })
           }
           testID="btnRestoreWallet2"
@@ -148,6 +150,7 @@ export const DeveloperScreen = () => {
               password: '1234567890',
               implementation: 'cardano-cip1852',
               addressMode: 'multiple',
+              accountVisual: 0,
             })
           }
           testID="btnRestoreWallet3"
@@ -164,6 +167,7 @@ export const DeveloperScreen = () => {
               password: '1234567890',
               implementation: 'cardano-cip1852',
               addressMode: 'single',
+              accountVisual: 0,
             })
           }
           title="RO Mainnet For Forced Addresses"
