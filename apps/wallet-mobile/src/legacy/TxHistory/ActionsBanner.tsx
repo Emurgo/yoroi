@@ -15,7 +15,6 @@ import {messages as receiveMessages} from '../../features/Receive/common/useStri
 import {useSwapForm} from '../../features/Swap/common/SwapFormProvider'
 import {useAddressMode} from '../../features/WalletManager/common/hooks/useAddressMode'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
-import {useSelectedWalletMeta} from '../../features/WalletManager/common/hooks/useSelectedWalletMeta'
 import {useCopy} from '../../hooks/useCopy'
 import {actionMessages} from '../../kernel/i18n/global-messages'
 import {useMetrics} from '../../kernel/metrics/metricsManager'
@@ -39,8 +38,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
 
   const {track} = useMetrics()
 
-  const meta = useSelectedWalletMeta()
-  const wallet = useSelectedWallet()
+  const {meta, wallet} = useSelectedWallet()
   const sellTokenInfo = useTokenInfo({
     wallet,
     tokenId: orderData.amounts.sell.tokenId,

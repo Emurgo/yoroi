@@ -7,7 +7,7 @@ import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWal
 import {storageKeyShowBuyBannerSmall, storageRootExchange} from './constants'
 
 export const useShowBuyBannerSmall = (options?: UseQueryOptions<boolean, Error, boolean, [string, string]>) => {
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
 
   const balances = useBalances(wallet)
   const primaryAmount = Amounts.getAmount(balances, wallet.primaryTokenInfo.id)

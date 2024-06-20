@@ -28,7 +28,7 @@ export const SwapFormProvider = ({
     limitPriceChanged,
     resetQuantities,
   } = useSwap()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {numberLocale} = useLanguage()
   const strings = useStrings()
 

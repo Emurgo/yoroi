@@ -3,7 +3,7 @@ import React from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
 
 import {ModalError} from '../../../../components/ModalError/ModalError'
-import {useSelectedWalletMeta} from '../../../WalletManager/common/hooks/useSelectedWalletMeta'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {ConfirmRawTxWithHW} from './ConfirmRawTxWithHW'
 import {ConfirmRawTxWithOs} from './ConfirmRawTxWithOs'
 import {ConfirmRawTxWithPassword} from './ConfirmRawTxWithPassword'
@@ -18,7 +18,7 @@ type Props = {
 }
 
 export const ConfirmRawTx = ({onConfirm, onHWConfirm, onCancel, utxo, bech32Address, cancelOrder}: Props) => {
-  const meta = useSelectedWalletMeta()
+  const {meta} = useSelectedWallet()
 
   if (meta.isHW) {
     return (

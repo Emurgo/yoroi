@@ -17,7 +17,7 @@ type Props = {onPress: () => void; disabled?: boolean}
 export const VotingBanner = ({onPress, disabled}: Props) => {
   const strings = useStrings()
   const {styles, colors} = useStyles()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {canVote, sufficientFunds} = useCanVote(wallet)
   const [showInsufficientFundsModal, setShowInsufficientFundsModal] = useState(false)
   const [showCatalystBanner, setShowCatalystBanner] = useState(canVote)

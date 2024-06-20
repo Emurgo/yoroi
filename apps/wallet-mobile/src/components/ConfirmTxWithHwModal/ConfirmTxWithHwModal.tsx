@@ -5,7 +5,6 @@ import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
 
 import {LedgerTransportSwitch} from '../../features/Swap/useCases/ConfirmTxScreen/LedgerTransportSwitch'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
-import {useSelectedWalletMeta} from '../../features/WalletManager/common/hooks/useSelectedWalletMeta'
 import {useWalletManager} from '../../features/WalletManager/context/WalletManagerProvider'
 import {LedgerConnect} from '../../legacy/HW'
 import {useSignTxWithHW, useSubmitTx} from '../../yoroi-wallets/hooks'
@@ -40,8 +39,7 @@ const ConfirmTxWithHwModalContent = ({onSuccess, unsignedTx}: Omit<Props, 'onCan
   const {walletManager} = useWalletManager()
   const [transportType, setTransportType] = useState<TransportType>('USB')
   const [step, setStep] = useState<Step>('select-transport')
-  const wallet = useSelectedWallet()
-  const meta = useSelectedWalletMeta()
+  const {wallet, meta} = useSelectedWallet()
   const strings = useStrings()
 
   const {submitTx} = useSubmitTx({wallet}, {useErrorBoundary: true})

@@ -19,7 +19,7 @@ export const WarnLimitPrice = ({onConfirm, orderData}: LimitPriceWarningProps) =
   const strings = useStrings()
   const styles = useStyles()
   const limitPrice = Quantities.format(orderData.limitPrice ?? Quantities.zero, orderData.tokens.priceDenomination)
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {closeModal} = useModal()
   const tokenToSellInfo = useTokenInfo({wallet, tokenId: orderData.amounts.sell.tokenId})
   const tokenToBuyInfo = useTokenInfo({wallet, tokenId: orderData.amounts.buy.tokenId})

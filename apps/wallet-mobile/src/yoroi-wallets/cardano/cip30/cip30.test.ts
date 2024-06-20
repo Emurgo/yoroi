@@ -10,39 +10,39 @@ describe('cip30ExtensionMaker', () => {
       submitTransaction: jest.fn(),
     }
 
-    const cip30 = cip30ExtensionMaker(mockWallet)
+    const cip30 = cip30ExtensionMaker(mockWallet, mocks.walletMeta)
     const result = await cip30.submitTx(txCbor)
     expect(mockWallet.submitTransaction).toHaveBeenCalled()
     expect(result).toBe('1a6205dc7a5a0493ef64487ca7033d12ba8f85a7d4a6e62d3c8eaa570d74eb53')
   })
 
   it('should support getUtxos', async () => {
-    const cip30 = cip30ExtensionMaker(mocks.wallet)
+    const cip30 = cip30ExtensionMaker(mocks.wallet, mocks.walletMeta)
     const result = await cip30.getUtxos(undefined, undefined)
     expect(result).toHaveLength(mocks.wallet.utxos.length)
   })
 
   it('should support getBalance', async () => {
-    const cip30 = cip30ExtensionMaker(mocks.wallet)
+    const cip30 = cip30ExtensionMaker(mocks.wallet, mocks.walletMeta)
     const result = await cip30.getBalance()
     expect(result).toBeDefined()
     expect(await (await result.coin()).toStr()).toBe('2282543724')
   })
 
   it('should support getUnusedAddresses', async () => {
-    const cip30 = cip30ExtensionMaker(mocks.wallet)
+    const cip30 = cip30ExtensionMaker(mocks.wallet, mocks.walletMeta)
     const result = await cip30.getUnusedAddresses()
     expect(result).toEqual([])
   })
 
   it('should support getUsedAddresses', async () => {
-    const cip30 = cip30ExtensionMaker(mocks.wallet)
+    const cip30 = cip30ExtensionMaker(mocks.wallet, mocks.walletMeta)
     const result = await cip30.getUsedAddresses()
     expect(result).toEqual([])
   })
 
   it('should support getChangeAddress', async () => {
-    const cip30 = cip30ExtensionMaker(mocks.wallet)
+    const cip30 = cip30ExtensionMaker(mocks.wallet, mocks.walletMeta)
     const result = await cip30.getChangeAddress()
     const bech32 = await result.toBech32(undefined)
     const expectedAddress =
@@ -51,11 +51,14 @@ describe('cip30ExtensionMaker', () => {
   })
 
   it('should support getRewardAddresses', async () => {
-    const cip30 = cip30ExtensionMaker({
-      ...mocks.wallet,
-      rewardAddressHex:
-        '0188524aec35fcf79b3fe5d8d0bbfde719317595565acc910821d3c80188524aec35fcf79b3fe5d8d0bbfde719317595565acc910821d3c801',
-    })
+    const cip30 = cip30ExtensionMaker(
+      {
+        ...mocks.wallet,
+        rewardAddressHex:
+          '0188524aec35fcf79b3fe5d8d0bbfde719317595565acc910821d3c80188524aec35fcf79b3fe5d8d0bbfde719317595565acc910821d3c801',
+      },
+      mocks.walletMeta,
+    )
     const result = await cip30.getRewardAddresses()
     expect(result).toHaveLength(1)
     const [address] = result
@@ -65,7 +68,7 @@ describe('cip30ExtensionMaker', () => {
   })
 
   it('should support getCollateral', async () => {
-    const cip30 = cip30ExtensionMaker(mocks.wallet)
+    const cip30 = cip30ExtensionMaker(mocks.wallet, mocks.walletMeta)
     const result = await cip30.getCollateral()
     expect(result).toHaveLength(1)
     const [utxo] = result ?? []
@@ -75,7 +78,7 @@ describe('cip30ExtensionMaker', () => {
   })
 
   it('should support signTx', async () => {
-    const cip30 = cip30ExtensionMaker(mocks.wallet)
+    const cip30 = cip30ExtensionMaker(mocks.wallet, mocks.walletMeta)
     const rootKey = await getMasterKeyFromMnemonic(mnemonic)
     const result = await cip30.signTx(rootKey, txCbor, true)
     expect(result).toBeDefined()
@@ -87,7 +90,7 @@ describe('cip30ExtensionMaker', () => {
     const addressBech32 =
       'addr1qynqc23tpx4dqps6xgqy9s2l3xz5fxu734wwmzj9uddn0h2z6epfcukqmswgwwfruxh7gaddv9x0d5awccwahnhwleqqc4zkh4'
 
-    const cip30 = cip30ExtensionMaker(mocks.wallet)
+    const cip30 = cip30ExtensionMaker(mocks.wallet, mocks.walletMeta)
     const result = await cip30.signData(rootKey, addressBech32, message)
 
     expect(result).toEqual({

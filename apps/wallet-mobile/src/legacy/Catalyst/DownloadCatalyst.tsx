@@ -19,7 +19,7 @@ type Props = {
 }
 export const DownloadCatalyst = ({onNext}: Props) => {
   const strings = useStrings()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {stakingInfo} = useStakingInfo(wallet, {suspense: true})
   const [showModal, setShowModal] = useState<boolean>(stakingInfo?.status === 'not-registered')
   const styles = useStyles()

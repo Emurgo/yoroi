@@ -7,7 +7,7 @@ import {logger} from '../../../kernel/logger/logger'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {ConfirmRawTxWithOs} from '../../Swap/common/ConfirmRawTx/ConfirmRawTxWithOs'
 import {ConfirmRawTxWithPassword} from '../../Swap/common/ConfirmRawTx/ConfirmRawTxWithPassword'
-import {useSelectedWalletMeta} from '../../WalletManager/common/hooks/useSelectedWalletMeta'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from './useStrings'
 import {walletConfig} from './wallet-config'
 
@@ -59,7 +59,7 @@ const getInitScript = (sessionId: string, dappConnector: DappConnectorManager) =
 
 export const useConfirmRawTx = () => {
   const {openModal, closeModal} = useModal()
-  const meta = useSelectedWalletMeta()
+  const {meta} = useSelectedWallet()
   const strings = useStrings()
   const modalHeight = 350
 

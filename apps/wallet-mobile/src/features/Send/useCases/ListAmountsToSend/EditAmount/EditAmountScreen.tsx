@@ -25,7 +25,7 @@ export const EditAmountScreen = () => {
   const navigateTo = useNavigateTo()
   const {numberLocale} = useLanguage()
 
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const balances = usePortfolioBalances({wallet})
   const primaryBreakdown = usePortfolioPrimaryBreakdown({wallet})
 

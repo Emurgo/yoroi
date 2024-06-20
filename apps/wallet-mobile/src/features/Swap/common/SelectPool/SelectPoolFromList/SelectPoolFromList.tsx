@@ -23,7 +23,7 @@ type Props = {
 }
 export const SelectPoolFromList = ({pools = []}: Props) => {
   const strings = useStrings()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {selectedPoolChanged, orderData} = useSwap()
   const {poolTouched} = useSwapForm()
   const [selectedCardIndex, setSelectedCardIndex] = useState(orderData.selectedPoolId)

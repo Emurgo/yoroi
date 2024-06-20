@@ -16,7 +16,6 @@ import {useAuth} from '../../Auth/AuthProvider'
 import {useAuthSetting} from '../../Auth/common/hooks'
 import {useAddressMode} from '../../WalletManager/common/hooks/useAddressMode'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
-import {useSelectedWalletMeta} from '../../WalletManager/common/hooks/useSelectedWalletMeta'
 import {useNavigateTo} from '../common/navigation'
 import {SettingsSwitch} from '../common/SettingsSwitch'
 import {
@@ -37,7 +36,9 @@ export const WalletSettingsScreen = () => {
 
   const logout = useLogout()
   const settingsNavigation = useNavigation<SettingsRouteNavigation>()
-  const {isEasyConfirmationEnabled, isHW, isReadOnly, implementation} = useSelectedWalletMeta()
+  const {
+    meta: {isEasyConfirmationEnabled, isHW, isReadOnly, implementation},
+  } = useSelectedWallet()
   const navigateTo = useNavigateTo()
 
   const onToggleEasyConfirmation = () => {
@@ -147,7 +148,7 @@ const getWalletType = (implementation: Wallet.Implementation): MessageDescriptor
 
 const ResyncButton = () => {
   const strings = useStrings()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {colors} = useStyles()
   const {navigateToTxHistory} = useWalletNavigation()
   const intl = useIntl()

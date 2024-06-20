@@ -37,7 +37,7 @@ import {useStrings} from './strings'
 
 export const ManageCollateralScreen = () => {
   const {styles} = useStyles()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {amount, collateralId, utxo} = useCollateralInfo(wallet)
   const hasCollateral = collateralId !== '' && utxo !== undefined
   const didSpend = collateralId !== '' && utxo === undefined

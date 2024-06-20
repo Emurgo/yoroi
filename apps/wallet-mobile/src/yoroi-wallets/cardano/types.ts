@@ -83,6 +83,9 @@ export interface YoroiWallet {
   get isEmpty(): boolean
   get hasOnlyPrimary(): boolean
 
+  // account
+  readonly accountVisual: number
+
   // sync
   resync(): Promise<void>
   clear(): Promise<void>

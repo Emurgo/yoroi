@@ -52,11 +52,12 @@ const primaryTokenInfoMainnet = createPrimaryTokenInfo({
 
 const walletMeta: Wallet.Meta = {
   id: 'wallet-id',
+  hwDeviceInfo: null,
   isReadOnly: false,
   name: 'my-wallet',
   isHW: false,
   isEasyConfirmationEnabled: true,
-  implementation: 'cardano-shelley',
+  implementation: 'cardano-cip1852',
   plate: 'XXXX-1234',
   version: 3,
   avatar:
@@ -76,12 +77,12 @@ const wallet: YoroiWallet = {
   api: AppApi.mockAppApi,
   primaryToken: PRIMARY_TOKEN,
   primaryTokenInfo: PRIMARY_TOKEN_INFO,
-  hwDeviceInfo: null as any,
   rewardAddressHex: 'reward-address-hex',
   publicKeyHex: 'publicKeyHex',
   utxos,
   allUtxos: utxos,
   collateralId: '22d391c7a97559cb4784bd975214919618acce75cde573a7150a176700e76181:2',
+  accountVisual: 0,
 
   balance$: new Observable<Portfolio.Event.BalanceManager>(),
   balances: {
@@ -177,7 +178,7 @@ const wallet: YoroiWallet = {
   },
   getDelegationStatus: (...args: unknown[]) => {
     action('getDelegationStatus')(...args)
-    return Promise.resolve({isRegistered: false, poolKeyHash: null})
+    return {isRegistered: false, poolKeyHash: null}
   },
   subscribeOnTxHistoryUpdate: () => {
     return () => null
@@ -185,9 +186,6 @@ const wallet: YoroiWallet = {
   fetchAccountState: (...args: unknown[]) => {
     action('fetchAccountState')(...args)
     return Promise.resolve({['reward-address-hex']: {remainingAmount: '0', rewards: '0', withdrawals: ''}})
-  },
-  changePassword: () => {
-    throw new Error('Not implemented: changePassword')
   },
   signTx: () => {
     throw new Error('Not implemented: signTx')
@@ -265,9 +263,6 @@ const wallet: YoroiWallet = {
     action('generateNewReceiveAddress')(...args)
     return true
   },
-  save: async (...args: unknown[]) => {
-    action('save')(...args)
-  },
   saveMemo: async (...args: unknown[]) => {
     action('saveMemo')(...args)
   },
@@ -294,8 +289,9 @@ const wallet: YoroiWallet = {
   },
 }
 
-const hwWallet: YoroiWallet = {
-  ...wallet,
+export const metaHw: Wallet.Meta = {
+  ...walletMeta,
+  isHW: true,
   hwDeviceInfo: {
     bip44AccountPublic: '1234567',
     hwFeatures: {
@@ -401,24 +397,24 @@ const fetchNftModerationStatus = {
 
 const getDelegationStatus = {
   success: {
-    delegating: async (...args: unknown[]) => {
+    delegating: (...args: unknown[]) => {
       action('getDelegationStatus')(...args)
       return {isRegistered: true, poolKeyHash: stakePoolId} as StakingStatus
     },
-    registered: async (...args: unknown[]) => {
+    registered: (...args: unknown[]) => {
       action('getDelegationStatus')(...args)
       return {isRegistered: true} as StakingStatus
     },
-    notRegistered: async (...args: unknown[]) => {
+    notRegistered: (...args: unknown[]) => {
       action('getDelegationStatus')(...args)
       return {isRegistered: false, poolKeyHash: null} as StakingStatus
     },
   },
-  error: async (...args: unknown[]) => {
+  error: (...args: unknown[]) => {
     action('getDelegationStatus')(...args)
-    return Promise.reject(new Error('storybook error message'))
+    throw new Error('storybook error message')
   },
-  loading: async (...args: unknown[]) => {
+  loading: (...args: unknown[]) => {
     action('getDelegationStatus')(...args)
     return new Promise(() => null) as unknown as StakingStatus
   },
@@ -945,7 +941,7 @@ export const nft: Balance.TokenInfo = {
 export const mocks = {
   walletMeta,
   wallet,
-  hwWallet,
+  metaHw,
 
   stakePoolId,
 

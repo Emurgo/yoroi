@@ -49,7 +49,7 @@ export const BrowserProvider = ({
   initialState?: Partial<BrowserState>
 }) => {
   const storage = useAsyncStorage()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const browserStorage = storage.join(`wallet/${wallet.id}/${storageRootBrowser}/`)
 
   const [browserState, dispatch] = React.useReducer(browserReducer, {...defaultState, ...initialState})

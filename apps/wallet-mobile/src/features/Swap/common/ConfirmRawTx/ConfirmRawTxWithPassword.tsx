@@ -5,7 +5,7 @@ import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelected
 import {ConfirmWithSpendingPassword} from '../ConfirmWithSpendingPassword'
 
 export const ConfirmRawTxWithPassword = ({onConfirm}: {onConfirm?: (rootKey: string) => Promise<void>}) => {
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
 
   const handlePasswordConfirm = async (password: string) => {
     const rootKey = await wallet.encryptedStorage.rootKey.read(password)

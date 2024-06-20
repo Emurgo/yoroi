@@ -59,7 +59,6 @@ storiesOf('V2/TxHistory', module)
         <WalletManagerProviderMock
           wallet={{
             ...mocks.wallet,
-            walletImplementationId: 'haskell-byron',
           }}
         >
           <TransferProvider>

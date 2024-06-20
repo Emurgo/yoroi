@@ -10,7 +10,7 @@ import {AmountCard} from '../../../common/AmountCard/AmountCard'
 import {useStrings} from '../../../common/useStrings'
 
 export const EditAmount = ({disabled}: {disabled?: boolean}) => {
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
 
   const tokenId = wallet.primaryTokenInfo.id
   const balance = useBalance({wallet, tokenId})

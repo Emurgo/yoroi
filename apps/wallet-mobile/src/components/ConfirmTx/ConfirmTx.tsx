@@ -9,7 +9,6 @@ import {StyleSheet, View} from 'react-native'
 import {debugWalletInfo, features} from '../../features'
 import {useAuthOsWithEasyConfirmation} from '../../features/Auth/common/hooks'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
-import {useSelectedWalletMeta} from '../../features/WalletManager/common/hooks/useSelectedWalletMeta'
 import {useWalletManager} from '../../features/WalletManager/context/WalletManagerProvider'
 import {confirmationMessages, errorMessages, txLabels} from '../../kernel/i18n/global-messages'
 import LocalizableError from '../../kernel/i18n/LocalizableError'
@@ -64,9 +63,8 @@ export const ConfirmTx = ({
   const styles = useStyles()
   const navigation = useNavigation()
 
-  const wallet = useSelectedWallet()
+  const {wallet, meta} = useSelectedWallet()
   const {walletManager} = useWalletManager()
-  const meta = useSelectedWalletMeta()
 
   const {mutateAsync: submitTx} = useSubmitTx({wallet})
 

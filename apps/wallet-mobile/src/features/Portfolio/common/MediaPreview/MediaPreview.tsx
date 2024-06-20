@@ -25,12 +25,12 @@ export const MediaPreview = ({
   contentFit = 'cover',
   blurRadius,
 }: MediaPreviewProps) => {
-  const {networkManager} = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
 
   const [policy, name] = info.id.split('.')
   const uri = showPlaceholder
     ? placeholder
-    : `https://${networkManager.network}.processed-media.yoroiwallet.com/${policy}/${name}?width=512&height=512&kind=metadata&fit=${contentFit}`
+    : `https://${wallet.networkManager.network}.processed-media.yoroiwallet.com/${policy}/${name}?width=512&height=512&kind=metadata&fit=${contentFit}`
 
   return (
     <View style={{width, height, overflow: 'hidden'}}>

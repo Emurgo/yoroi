@@ -12,7 +12,7 @@ import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelec
 export const CurrentBalance = () => {
   const strings = useStrings()
   const styles = useStyles()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const balances = useBalances(wallet)
 
   const balance = formatTokenWithText(

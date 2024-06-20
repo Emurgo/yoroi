@@ -15,7 +15,7 @@ import {
   TextInputProps,
 } from '../../../components'
 import {useWalletNavigation} from '../../../kernel/navigation'
-import {useSelectedWalletMeta} from '../../WalletManager/common/hooks/useSelectedWalletMeta'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 
 export const RemoveWalletScreen = () => {
@@ -23,7 +23,7 @@ export const RemoveWalletScreen = () => {
   const styles = useStyles()
   const {resetToWalletSetupInit, resetToWalletSelection} = useWalletNavigation()
   const {walletManager} = useWalletManager()
-  const meta = useSelectedWalletMeta()
+  const {meta} = useSelectedWallet()
 
   const handleOnRemoveWallet = React.useCallback(() => {
     if (walletManager.walletMetas.size === 1) {

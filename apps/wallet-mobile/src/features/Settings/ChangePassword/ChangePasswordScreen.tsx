@@ -31,7 +31,7 @@ export const ChangePasswordScreen = () => {
 
   const hasErrors = Object.keys(currentPasswordErrors).length > 0 || Object.keys(newPasswordErrors).length > 0
 
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {changePassword, isError, reset} = useChangePassword(wallet, {
     onSuccess: () => navigation.goBack(),
     onError: () => currentPasswordRef.current?.focus(),

@@ -55,7 +55,7 @@ type AssetRowProps = {
 }
 const AssetRow = ({styles, entry, backColor, onSelect}: AssetRowProps) => {
   const intl = useIntl()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
   const tokenInfo = useTokenInfo({wallet, tokenId: entry.identifier})
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id

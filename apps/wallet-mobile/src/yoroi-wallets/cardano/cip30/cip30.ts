@@ -4,7 +4,7 @@ import {init} from '@emurgo/cross-msl-mobile'
 import {RemoteUnspentOutput, signRawTransaction, UtxoAsset} from '@emurgo/yoroi-lib'
 import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
 import {parseTokenList} from '@emurgo/yoroi-lib/dist/internals/utils/assets'
-import {Balance} from '@yoroi/types'
+import {Balance, Wallet} from '@yoroi/types'
 import {BalanceAmounts} from '@yoroi/types/src/balance/token'
 import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
@@ -23,8 +23,8 @@ import {wrappedCsl as getCSL} from '../wrappedCsl'
 
 const MSL = init('msl')
 
-export const cip30ExtensionMaker = (wallet: YoroiWallet) => {
-  return new CIP30Extension(wallet)
+export const cip30ExtensionMaker = (wallet: YoroiWallet, meta: Wallet.Meta) => {
+  return new CIP30Extension(wallet, meta)
 }
 
 const copy = async <T extends {toHex: () => Promise<string>}>(
@@ -46,7 +46,7 @@ const recreateTransactionUnspentOutput = async (utxo: CSL.TransactionUnspentOutp
 }
 
 class CIP30Extension {
-  constructor(private wallet: YoroiWallet) {}
+  constructor(private wallet: YoroiWallet, private meta: Wallet.Meta) {}
 
   async getBalance(tokenId = '*'): Promise<CSL.Value> {
     const {csl, release} = getCSL()
@@ -70,7 +70,7 @@ class CIP30Extension {
   }
 
   getChangeAddress(): Promise<CSL.Address> {
-    const changeAddr = this.wallet.getChangeAddress()
+    const changeAddr = this.wallet.getChangeAddress(this.meta.addressMode)
     return CardanoMobile.Address.fromBech32(changeAddr)
   }
 
@@ -82,7 +82,7 @@ class CIP30Extension {
   async getUtxos(value?: string, pagination?: Pagination): Promise<CSL.TransactionUnspentOutput[] | null> {
     const {csl, release} = getCSL()
     try {
-      const utxos = await _getUtxos(csl, this.wallet, value, pagination)
+      const utxos = await _getUtxos(csl, this.wallet, this.meta, value, pagination)
       if (utxos === null) return null
       return Promise.all(utxos.map(async (u) => CardanoMobile.TransactionUnspentOutput.fromHex(await u.toHex())))
     } finally {
@@ -113,7 +113,12 @@ class CIP30Extension {
         return [await recreateTransactionUnspentOutput(oneUtxoCollateral)]
       }
 
-      const multipleUtxosCollateral = await _drawCollateralInMultipleUtxos(csl, this.wallet, asQuantity(valueNum))
+      const multipleUtxosCollateral = await _drawCollateralInMultipleUtxos(
+        csl,
+        this.wallet,
+        this.meta,
+        asQuantity(valueNum),
+      )
       if (multipleUtxosCollateral && multipleUtxosCollateral.length > 0) {
         return copyMultiple(multipleUtxosCollateral, CardanoMobile.TransactionUnspentOutput)
       }
@@ -140,7 +145,7 @@ class CIP30Extension {
       const bech32Address = await normalisedAddress?.toBech32(undefined)
       if (!bech32Address || !normalisedAddress) throw new Error('Invalid address')
 
-      const path = getDerivationPathForAddress(bech32Address, this.wallet, true)
+      const path = getDerivationPathForAddress(bech32Address, this.wallet, this.meta, true)
       const signingKey = await createRawTxSigningKey(rootKey, path)
       const coseSign1 = await cip8.sign(Buffer.from(await normalisedAddress.toHex(), 'hex'), signingKey, payloadInBytes)
       const key = await MSL.COSEKey.new(await MSL.Label.fromKeyType(MSL.KeyType.OKP))
@@ -166,7 +171,7 @@ class CIP30Extension {
   async signTx(rootKey: string, cbor: string, partial = false): Promise<CSL.TransactionWitnessSet> {
     const {csl, release} = getCSL()
     try {
-      const signers = await getTransactionSigners(cbor, this.wallet, partial)
+      const signers = await getTransactionSigners(cbor, this.wallet, this.meta, partial)
       const keys = await Promise.all(signers.map(async (signer) => createRawTxSigningKey(rootKey, signer)))
       const signedTxBytes = await signRawTransaction(csl, cbor, keys)
       const signedTx = await csl.Transaction.fromBytes(signedTxBytes)
@@ -179,7 +184,10 @@ class CIP30Extension {
   async buildReorganisationTx(): Promise<YoroiUnsignedTx> {
     const bech32Address = this.wallet.externalAddresses[0]
     const amounts = {[this.wallet.primaryTokenInfo.id]: asQuantity(collateralConfig.minLovelace)}
-    return this.wallet.createUnsignedTx([{address: bech32Address, amounts}])
+    return this.wallet.createUnsignedTx({
+      entries: [{address: bech32Address, amounts}],
+      addressMode: this.meta.addressMode,
+    })
   }
 
   async sendReorganisationTx(signedTx: YoroiSignedTx): Promise<CSL.TransactionUnspentOutput> {
@@ -279,7 +287,13 @@ const _getBalance = async (csl: WasmModuleProxy, tokenId = '*', utxos: RawUtxo[]
   return value
 }
 
-export const _getUtxos = async (csl: WasmModuleProxy, wallet: YoroiWallet, value?: string, pagination?: Pagination) => {
+export const _getUtxos = async (
+  csl: WasmModuleProxy,
+  wallet: YoroiWallet,
+  meta: Wallet.Meta,
+  value?: string,
+  pagination?: Pagination,
+) => {
   const valueStr = value?.trim() ?? ''
 
   if (valueStr.length === 0) {
@@ -303,7 +317,7 @@ export const _getUtxos = async (csl: WasmModuleProxy, wallet: YoroiWallet, value
     }
   }
 
-  const validUtxos = await _getRequiredUtxos(csl, wallet, amounts, wallet.utxos)
+  const validUtxos = await _getRequiredUtxos(csl, wallet, amounts, wallet.utxos, meta)
   if (validUtxos === null) return null
   return paginate(validUtxos, pagination)
 }
@@ -313,13 +327,17 @@ const _getRequiredUtxos = async (
   wallet: YoroiWallet,
   amounts: Balance.Amounts,
   allUtxos: RawUtxo[],
+  meta: Wallet.Meta,
 ): Promise<CSL.TransactionUnspentOutput[] | null> => {
   const remoteUnspentOutputs: RemoteUnspentOutput[] = allUtxos.map((utxo) => rawUtxoToRemoteUnspentOutput(utxo))
   const rewardAddress = await (await normalizeToAddress(csl, wallet.rewardAddressHex))?.toBech32(undefined)
   if (!rewardAddress) throw new Error('Invalid wallet state')
 
   try {
-    const unsignedTx = await wallet.createUnsignedTx([{address: rewardAddress, amounts}])
+    const unsignedTx = await wallet.createUnsignedTx({
+      entries: [{address: rewardAddress, amounts}],
+      addressMode: meta.addressMode,
+    })
     const requiredUtxos = await findUtxosInUnsignedTx(unsignedTx, remoteUnspentOutputs)
     return Promise.all(requiredUtxos.map((o) => cardanoUtxoFromRemoteFormat(o)))
   } catch (e) {
@@ -372,6 +390,7 @@ const _drawCollateralInOneUtxo = async (wallet: YoroiWallet, quantity: Balance.Q
 const _drawCollateralInMultipleUtxos = async (
   csl: WasmModuleProxy,
   wallet: YoroiWallet,
+  meta: Wallet.Meta,
   quantity: Balance.Quantity,
 ) => {
   const possibleUtxos = findCollateralCandidates(wallet.utxos, {
@@ -388,7 +407,13 @@ const _drawCollateralInMultipleUtxos = async (
 
   const utxosWithLimitAccounted = sortedFromMaxToMin.slice(0, collateralConfig.maxUTxOs)
 
-  const utxos = await _getRequiredUtxos(csl, wallet, {[wallet.primaryTokenInfo.id]: quantity}, utxosWithLimitAccounted)
+  const utxos = await _getRequiredUtxos(
+    csl,
+    wallet,
+    {[wallet.primaryTokenInfo.id]: quantity},
+    utxosWithLimitAccounted,
+    meta,
+  )
 
   if (utxos !== null && utxos.length > 0) {
     return utxos

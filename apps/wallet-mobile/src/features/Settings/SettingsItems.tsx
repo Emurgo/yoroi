@@ -109,7 +109,7 @@ export const SettingsBuildItem = ({label, value}: SettingsBuildItemProps) => (
 
 export const SettingsCollateralItem = ({label, onNavigate, icon, disabled}: NavigatedSettingsItemProps) => {
   const {styles, colors} = useStyles()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {amount} = useCollateralInfo(wallet)
 
   const formattedAmount = formatTokenWithSymbol(amount.quantity, wallet.primaryTokenInfo)

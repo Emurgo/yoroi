@@ -23,7 +23,7 @@ export const Nfts = () => {
   const styles = useStyles()
   const {track} = useMetrics()
 
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const balances = usePortfolioBalances({wallet})
 
   // use case: search nfts

@@ -39,7 +39,7 @@ export const SelectSellTokenFromListScreen = () => {
 const TokenList = () => {
   const strings = useStrings()
   const styles = useStyles()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const balances = usePortfolioBalances({wallet})
   const {search, isSearching} = useSearch()
 

@@ -51,7 +51,6 @@ import {
 import {SelectBuyTokenFromListScreen} from '../../features/Swap/useCases/StartSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
 import {SelectSellTokenFromListScreen} from '../../features/Swap/useCases/StartSwapScreen/CreateOrder/EditSellAmount/SelectSellTokenFromListScreen/SelectSellTokenFromListScreen'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
-import {useSelectedWalletMeta} from '../../features/WalletManager/common/hooks/useSelectedWalletMeta'
 import {unstoppableApiKey} from '../../kernel/env'
 import {
   BackButton,
@@ -70,8 +69,7 @@ const aggregator: Swap.Aggregator = 'muesliswap'
 const Stack = createStackNavigator<TxHistoryRoutes>()
 export const TxHistoryNavigator = () => {
   const strings = useStrings()
-  const wallet = useSelectedWallet()
-  const meta = useSelectedWalletMeta()
+  const {wallet, meta} = useSelectedWallet()
   const storage = useAsyncStorage()
   const {atoms, color} = useTheme()
   const {styles} = useStyles()
@@ -559,7 +557,7 @@ const SettingsIconButton = (props: TouchableOpacityProps) => {
 }
 
 const HeaderRightHistory = React.memo(() => {
-  const meta = useSelectedWalletMeta()
+  const {meta} = useSelectedWallet()
   const {navigateToSettings} = useWalletNavigation()
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const {styles, colors} = useStyles()

@@ -9,7 +9,7 @@ type ReceiveAddressesStatus = {
   next: string
 }
 export const useReceiveAddressesStatus = (addressMode: Wallet.AddressMode): Readonly<ReceiveAddressesStatus> => {
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const receiveAddresses = useReceiveAddresses(wallet)
 
   const isSingle = addressMode === 'single'

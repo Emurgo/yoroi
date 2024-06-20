@@ -55,7 +55,7 @@ export const DiscoverNavigator = () => {
 
 const useDappConnectorManager = () => {
   const appStorage = useAsyncStorage()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {openConfirmConnectionModal} = useOpenConfirmConnectionModal()
   const {openUnverifiedDappModal, closeModal} = useOpenUnverifiedDappModal()
   const confirmRawTx = useConfirmRawTx()

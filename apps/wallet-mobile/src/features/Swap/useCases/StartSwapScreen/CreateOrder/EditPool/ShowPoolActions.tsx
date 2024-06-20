@@ -26,7 +26,7 @@ export const ShowPoolActions = () => {
   const {orderData} = useSwap()
   const {selectedPoolCalculation: calculation, amounts} = orderData
 
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const sellTokenInfo = useTokenInfo({wallet, tokenId: amounts.sell.tokenId})
   const sellTokenName = sellTokenInfo.ticker ?? sellTokenInfo.name
 
@@ -93,7 +93,7 @@ const FeeBreakdown = ({totalFees, orderType}: {totalFees: string; orderType: Swa
 const ShowLimitOrderFeeBreakdown = ({totalFees}: {totalFees: string}) => {
   const strings = useStrings()
   const styles = useStyles()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {openModal} = useModal()
 
   const {orderData} = useSwap()
@@ -168,7 +168,7 @@ const ShowLimitOrderFeeBreakdown = ({totalFees}: {totalFees: string}) => {
 const ShowMarketOrderFeeBreakdown = ({totalFees}: {totalFees: string}) => {
   const strings = useStrings()
   const styles = useStyles()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {openModal} = useModal()
   const bold = useBold()
 

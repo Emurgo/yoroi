@@ -4,7 +4,7 @@ import {useIntl} from 'react-intl'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 
 export const useLastDateAddressUsed = (address: string) => {
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const intl = useIntl()
   return React.useMemo(() => {
     const lastUsed = Object.values(wallet.transactions).reduce((currentLast, tx) => {

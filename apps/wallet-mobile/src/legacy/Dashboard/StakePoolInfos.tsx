@@ -1,4 +1,4 @@
-import {Balance} from '@yoroi/types'
+import {Balance, Wallet} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import React from 'react'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
@@ -11,7 +11,7 @@ import {Quantities} from '../../yoroi-wallets/utils'
 import {StakePoolInfo} from './StakePoolInfo'
 
 export const StakePoolInfos = () => {
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {stakePoolIds, isLoading} = useStakePoolIds(wallet)
 
   return stakePoolIds != null ? (
@@ -79,7 +79,7 @@ export const useStakePoolIds = (
 }
 
 export const useStakingTx = (
-  {wallet, poolId}: {wallet: YoroiWallet; poolId?: string},
+  {wallet, meta, poolId}: {wallet: YoroiWallet; poolId?: string; meta: Wallet.Meta},
   options: UseQueryOptions<YoroiUnsignedTx, Error, YoroiUnsignedTx, [string, 'stakingTx']>,
 ) => {
   const query = useQuery({
@@ -89,7 +89,6 @@ export const useStakingTx = (
       if (poolId == null) throw new Error('invalid state')
       const accountStates = await wallet.fetchAccountState()
       const accountState = accountStates[wallet.rewardAddressHex]
-      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (!accountState) throw new Error('Account state not found')
 
       const stakingUtxos = await wallet.getAllUtxosForKey()
@@ -98,7 +97,11 @@ export const useStakingTx = (
         accountState.remainingAmount as Balance.Quantity,
       ])
 
-      return wallet.createDelegationTx(poolId, new BigNumber(amountToDelegate))
+      return wallet.createDelegationTx({
+        poolId,
+        delegatedAmount: new BigNumber(amountToDelegate),
+        addressMode: meta.addressMode,
+      })
     },
     enabled: poolId != null,
   })

@@ -7,7 +7,7 @@ import {defineMessages, useIntl} from 'react-intl'
 
 import {SettingsButton} from '../../components/Button'
 import {useGovernanceManagerMaker} from '../../features/Staking/Governance'
-import {useSelectedWalletMeta} from '../../features/WalletManager/common/hooks/useSelectedWalletMeta'
+import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {DashboardRoutes, defaultStackNavigationOptions, useWalletNavigation} from '../../kernel/navigation'
 import {DelegationConfirmation, FailedTxScreen} from '../Staking'
 import {StakingCenter} from '../Staking/StakingCenter'
@@ -15,7 +15,7 @@ import {Dashboard} from './Dashboard'
 
 const Stack = createStackNavigator<DashboardRoutes>()
 export const DashboardNavigator = () => {
-  const meta = useSelectedWalletMeta()
+  const {meta} = useSelectedWallet()
   const strings = useStrings()
   const {color, atoms} = useTheme()
 

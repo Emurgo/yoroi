@@ -13,7 +13,7 @@ import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelec
 export const PrimaryTotal = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => {
   const strings = useStrings()
   const styles = useStyles()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const primaryAmount = Amounts.getAmount(
     Amounts.getAmountsFromEntries(yoroiUnsignedTx.entries),
     wallet.primaryToken.identifier,

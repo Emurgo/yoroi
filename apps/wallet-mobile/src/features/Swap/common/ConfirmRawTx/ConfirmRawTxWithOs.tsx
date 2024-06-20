@@ -4,13 +4,11 @@ import {ActivityIndicator, StyleSheet, Text, View} from 'react-native'
 
 import {useAuthOsWithEasyConfirmation} from '../../../Auth/common/hooks'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
-import {useSelectedWalletMeta} from '../../../WalletManager/common/hooks/useSelectedWalletMeta'
 import {getErrorMessage} from '../errors'
 import {useStrings} from '../strings'
 
 export const ConfirmRawTxWithOs = ({onConfirm}: {onConfirm?: (rootKey: string) => Promise<void>}) => {
-  const wallet = useSelectedWallet()
-  const meta = useSelectedWalletMeta()
+  const {wallet, meta} = useSelectedWallet()
   const strings = useStrings()
   const styles = useStyles()
 

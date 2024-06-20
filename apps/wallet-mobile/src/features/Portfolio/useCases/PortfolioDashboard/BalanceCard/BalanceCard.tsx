@@ -15,7 +15,7 @@ import {BalanceHeaderCard} from './BalanceHeaderCard'
 export const BalanceCard = () => {
   const {styles, colors} = useStyles()
 
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const primaryBalance = usePortfolioPrimaryBalance({wallet})
   const name = infoExtractName(primaryBalance.info)
   const rate = useTokenExchangeRate()

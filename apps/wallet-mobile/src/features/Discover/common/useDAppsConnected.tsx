@@ -4,7 +4,7 @@ import {useQuery, UseQueryOptions} from 'react-query'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 
 export const useDAppsConnected = (options?: UseQueryOptions<DappConnection[], Error, string[], [string, string]>) => {
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {manager} = useDappConnector()
 
   return useQuery({

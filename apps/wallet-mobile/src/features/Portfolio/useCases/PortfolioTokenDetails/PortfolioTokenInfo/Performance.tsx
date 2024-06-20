@@ -19,8 +19,9 @@ interface Props {
 export const Performance = ({onScroll, topContent}: Props) => {
   const {styles} = useStyles()
   const {id: tokenId} = usePortfolioTokenDetailParams()
-  const wallet = useSelectedWallet()
-  const {balances} = wallet
+  const {
+    wallet: {balances},
+  } = useSelectedWallet()
   const tokenInfo = balances.records.get(tokenId)
   const tokenSymbol = tokenInfo ? infoExtractName(tokenInfo.info, {mode: 'currency'}) : '-'
   const {data, isFetching} = useGetPortfolioTokenInfo(tokenSymbol)

@@ -1,6 +1,7 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
+import {Wallet} from '@yoroi/types'
 import * as React from 'react'
 import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -12,7 +13,6 @@ import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../kernel/navigation'
 import {useLinksRequestWallet} from '../../../Links/common/useLinksRequestWallet'
 import {useWalletMetas} from '../../common/hooks/useWalletMetas'
-import {WalletMeta} from '../../common/types'
 import {useStrings} from '../../common/useStrings'
 import {useWalletManager} from '../../context/WalletManagerProvider'
 import {SupportIllustration} from '../../illustrations/SupportIllustration'
@@ -35,14 +35,13 @@ export const SelectWalletFromList = () => {
   )
 
   const handleOnSelect = React.useCallback(
-    (walletMeta: WalletMeta) => {
+    (walletMeta: Wallet.Meta) => {
       walletManager.setSelectedWalletId(walletMeta.id)
       navigateToTxHistory()
     },
     [walletManager, navigateToTxHistory],
   )
 
-  walletMetas.forEach((meta) => console.log(meta.checksum))
   const data = React.useMemo(
     () =>
       walletMetas?.map((walletMeta) => (

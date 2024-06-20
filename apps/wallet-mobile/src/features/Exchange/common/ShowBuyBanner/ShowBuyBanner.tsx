@@ -9,7 +9,7 @@ import {BuyBannerBig} from './BuyBannerBig'
 import {BuyBannerSmall} from './BuyBannerSmall'
 
 export const ShowBuyBanner = () => {
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const balances = useBalances(wallet)
   const primaryAmount = Amounts.getAmount(balances, wallet.primaryTokenInfo.id)
   const hasZeroPt = Quantities.isZero(primaryAmount.quantity)

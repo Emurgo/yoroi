@@ -8,7 +8,7 @@ import {useStrings} from '../../common/strings'
 export const ShowErrors = () => {
   const strings = useStrings()
 
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const hasPendingTx = useHasPendingTx(wallet)
   const {isLoading, error, sync} = useSync(wallet)
 

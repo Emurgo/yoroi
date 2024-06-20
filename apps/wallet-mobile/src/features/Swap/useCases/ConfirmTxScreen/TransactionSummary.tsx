@@ -21,7 +21,7 @@ import {SwapInfoLink} from '../../common/SwapInfoLink/SwapInfoLink'
 export const TransactionSummary = () => {
   const strings = useStrings()
   const styles = useStyles()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {orderData} = useSwap()
   const {
     limitPrice: {displayValue: limitDisplayValue},

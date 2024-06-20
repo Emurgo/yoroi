@@ -44,7 +44,7 @@ export const Dashboard = () => {
   const governanceStrings = useGovernanceStrings()
   const {isPoolRetiring} = usePoolTransition()
 
-  const wallet = useSelectedWallet()
+  const {wallet, meta} = useSelectedWallet()
   const {isLoading: isSyncing, sync} = useSync(wallet)
   const isOnline = useIsOnline(wallet)
   const {openModal} = useModal()
@@ -115,7 +115,7 @@ export const Dashboard = () => {
                 totalRewards={new BigNumber(stakingInfo.rewards)}
                 totalDelegated={new BigNumber(stakingInfo.amount)}
                 onWithdraw={onWithdraw}
-                disableWithdraw={wallet.isReadOnly}
+                disableWithdraw={meta.isReadOnly}
               />
             ) : (
               <UserSummary
@@ -139,7 +139,7 @@ export const Dashboard = () => {
           <Button
             onPress={navigateTo.stakingCenter}
             title={intl.formatMessage(messages.stakingCenterButton)}
-            disabled={wallet.isReadOnly}
+            disabled={meta.isReadOnly}
             shelleyTheme
             block
             testID="stakingCenterButton"
@@ -196,8 +196,9 @@ const useCurrentTime = () => {
 
 const EpochInfo = () => {
   const currentTime = useCurrentTime()
-  const wallet = useSelectedWallet()
-  const config = getCardanoBaseConfig(getCardanoNetworkConfigById(wallet.networkId))
+  const {wallet} = useSelectedWallet()
+  // TODO: revisit drop in favor of epochUtils
+  const config = getCardanoBaseConfig(getCardanoNetworkConfigById(wallet.isMainnet ? 1 : 300))
 
   const toRelativeSlotNumberFn = genToRelativeSlotNumber(config)
   const timeToSlotFn = genTimeToSlot(config)

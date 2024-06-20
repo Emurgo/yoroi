@@ -8,12 +8,12 @@ import {StandardModal} from '../../components'
 import {usePortfolioPrimaryBalance} from '../../features/Portfolio/common/hooks/usePortfolioPrimaryBalance'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import globalMessages, {confirmationMessages} from '../../kernel/i18n/global-messages'
-import {catalystConfig} from '../../yoroi-wallets/cardano/constants/common'
+import {catalystConfig} from '../../yoroi-wallets/cardano/constants/catalyst-config'
 
 export const InsufficientFundsModal = ({visible, onRequestClose}: {visible: boolean; onRequestClose: () => void}) => {
   const strings = useStrings()
   const styles = useStyles()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
 
   const primaryBalance = usePortfolioPrimaryBalance({wallet})
   const fmtMinPrimaryBalance = amountFormatter()({

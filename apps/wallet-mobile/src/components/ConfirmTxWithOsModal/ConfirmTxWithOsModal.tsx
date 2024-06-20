@@ -4,7 +4,6 @@ import {ActivityIndicator, StyleSheet, Text, View} from 'react-native'
 
 import {useAuthOsWithEasyConfirmation} from '../../features/Auth/common/hooks'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
-import {useSelectedWalletMeta} from '../../features/WalletManager/common/hooks/useSelectedWalletMeta'
 import {useSignTx, useSubmitTx} from '../../yoroi-wallets/hooks'
 import {YoroiSignedTx, YoroiUnsignedTx} from '../../yoroi-wallets/types'
 
@@ -15,8 +14,7 @@ type Props = {
 }
 
 export const ConfirmTxWithOsModal = ({onSuccess, unsignedTx, onError}: Props) => {
-  const wallet = useSelectedWallet()
-  const meta = useSelectedWalletMeta()
+  const {wallet, meta} = useSelectedWallet()
   const styles = useStyles()
 
   const {signTx, error: signError} = useSignTx({wallet})

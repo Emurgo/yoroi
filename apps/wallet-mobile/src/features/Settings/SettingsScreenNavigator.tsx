@@ -40,7 +40,7 @@ import {WalletSettingsScreen} from './WalletSettings'
 const Stack = createStackNavigator<SettingsStackRoutes>()
 export const SettingsScreenNavigator = () => {
   const strings = useStrings()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {track} = useMetrics()
   const {atoms, color} = useTheme()
 

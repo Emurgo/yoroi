@@ -15,15 +15,13 @@ import {useUnsafeParams} from '../../../../../kernel/navigation'
 import {Amounts} from '../../../../../yoroi-wallets/utils'
 import {formatTokenWithText} from '../../../../../yoroi-wallets/utils/format'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
-import {useSelectedWalletMeta} from '../../../../WalletManager/common/hooks/useSelectedWalletMeta'
 import {useNavigateTo, useStrings} from '../../common'
 import {Routes} from '../../common/navigation'
 import {GovernanceKindMap} from '../../types'
 
 export const ConfirmTxScreen = () => {
   const strings = useStrings()
-  const wallet = useSelectedWallet()
-  const meta = useSelectedWalletMeta()
+  const {wallet, meta} = useSelectedWallet()
   const params = useUnsafeParams<Routes['staking-gov-confirm-tx']>()
   const navigateTo = useNavigateTo()
   const {updateLatestGovernanceAction} = useUpdateLatestGovernanceAction(wallet.id)

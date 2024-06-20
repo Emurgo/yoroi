@@ -12,7 +12,7 @@ import {useStrings} from '../../../common/strings'
 export const CurrentBalance = () => {
   const styles = useStyles()
   const strings = useStrings()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const balances = useBalances(wallet)
 
   const balance = formatTokenWithText(

@@ -8,7 +8,7 @@ import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWal
 import {AddressErrorInvalid, AddressErrorWrongNetwork} from './errors'
 
 export const useSendAddress = () => {
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {chainId} = wallet.networkManager
 
   const {targets, selectedTargetIndex} = useTransfer()

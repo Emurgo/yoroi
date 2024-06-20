@@ -19,7 +19,7 @@ export const SwapTabNavigator = () => {
   const {atoms, color} = useTheme()
 
   // state data
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {
     aggregatorTokenId,
     lpTokenHeldChanged,

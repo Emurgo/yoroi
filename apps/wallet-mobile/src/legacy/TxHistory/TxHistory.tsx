@@ -8,7 +8,6 @@ import {Boundary, Spacer} from '../../components'
 import {Tab, TabPanel, TabPanels, Tabs} from '../../components/Tabs'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {assetMessages, txLabels} from '../../kernel/i18n/global-messages'
-import {isByron} from '../../yoroi-wallets/cardano/utils'
 import {useSync} from '../../yoroi-wallets/hooks'
 import {usePoolTransitionModal} from '../Staking/PoolTransition/usePoolTransitionModal'
 import {ActionsBanner} from './ActionsBanner'
@@ -25,8 +24,8 @@ type Tab = 'transactions' | 'assets'
 export const TxHistory = () => {
   const strings = useStrings()
   const styles = useStyles()
-  const wallet = useSelectedWallet()
-  const [showWarning, setShowWarning] = React.useState(isByron(wallet.walletImplementationId))
+  const {wallet, meta} = useSelectedWallet()
+  const [showWarning, setShowWarning] = React.useState(meta.implementation === 'cardano-bip44')
 
   const [activeTab, setActiveTab] = React.useState<Tab>('transactions')
 
@@ -87,7 +86,7 @@ export const TxHistory = () => {
         <Spacer height={8} />
 
         <TabPanel active={activeTab === 'transactions'}>
-          {isByron(wallet.walletImplementationId) && showWarning && (
+          {meta.implementation === 'cardano-bip44' && showWarning && (
             <WarningBanner
               title={strings.warningTitle.toUpperCase()}
               icon={infoIcon}

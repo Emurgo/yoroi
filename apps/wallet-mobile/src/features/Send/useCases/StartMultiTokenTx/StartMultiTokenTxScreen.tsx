@@ -26,7 +26,7 @@ export const StartMultiTokenTxScreen = () => {
   const strings = useStrings()
   const styles = useStyles()
   const navigateTo = useNavigateTo()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {track} = useMetrics()
   const isFocused = useIsFocused()
 

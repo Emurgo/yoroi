@@ -16,7 +16,7 @@ const BORDER_SIZE = 1
 
 export const EditPrice = () => {
   const strings = useStrings()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const [isFocused, setIsFocused] = React.useState(false)
   const styles = useStyles()
 

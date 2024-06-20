@@ -16,7 +16,7 @@ import {TxHistoryListItem} from './TxHistoryListItem'
 type Props = Partial<FlashListProps<TransactionInfo>>
 export const TxHistoryList = (props: Props) => {
   const styles = useStyles()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {track} = useMetrics()
 
   useFocusEffect(

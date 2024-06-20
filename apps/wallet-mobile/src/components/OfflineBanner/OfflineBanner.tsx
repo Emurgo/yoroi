@@ -8,7 +8,7 @@ import {LoadingBoundary} from '../Boundary'
 
 export const OfflineBannerInner = () => {
   const intl = useIntl()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const isOnline = useIsOnline(wallet)
 
   return isOnline ? null : <Banner error text={intl.formatMessage(messages.offline)} />

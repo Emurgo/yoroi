@@ -8,7 +8,6 @@ import {KeyboardAvoidingView, ProgressStep, Spacer, TextInput} from '../../compo
 import {ConfirmTx} from '../../components/ConfirmTx'
 import {debugWalletInfo, features} from '../../features'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
-import {useSelectedWalletMeta} from '../../features/WalletManager/common/hooks/useSelectedWalletMeta'
 import {errorMessages, txLabels} from '../../kernel/i18n/global-messages'
 import LocalizableError from '../../kernel/i18n/LocalizableError'
 import {useVotingRegTx} from '../../yoroi-wallets/hooks'
@@ -30,10 +29,9 @@ export const ConfirmVotingTx = ({
   const styles = useStyles()
 
   const strings = useStrings()
-  const wallet = useSelectedWallet()
-  const meta = useSelectedWalletMeta()
+  const {wallet, meta} = useSelectedWallet()
   const votingRegTx = useVotingRegTx(
-    {wallet, pin, supportsCIP36},
+    {wallet, pin, supportsCIP36, addressMode: meta.addressMode},
     {onSuccess: ({votingKeyEncrypted}) => onSuccess(votingKeyEncrypted)},
   )
   const [password, setPassword] = useState(features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '')

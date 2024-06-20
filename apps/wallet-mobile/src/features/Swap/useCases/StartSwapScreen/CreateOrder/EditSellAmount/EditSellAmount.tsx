@@ -11,7 +11,7 @@ import {useSwapForm} from '../../../../common/SwapFormProvider'
 export const EditSellAmount = () => {
   const strings = useStrings()
   const navigate = useNavigateTo()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {orderData} = useSwap()
   const {
     sellQuantity: {isTouched: isSellTouched, displayValue: sellDisplayValue, error},

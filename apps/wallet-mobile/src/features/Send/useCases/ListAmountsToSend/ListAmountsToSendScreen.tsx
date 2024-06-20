@@ -48,7 +48,7 @@ export const ListAmountsToSendScreen = () => {
   const {amounts} = targets[selectedTargetIndex].entry
   const selectedTokensCounter = Object.keys(amounts).length
 
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {addressMode} = useSelectedWalletMeta()
   const {mutate: createUnsignedTx, isLoading} = useMutation({
     mutationFn: (entries: YoroiEntry[]) => wallet.createUnsignedTx({entries, addressMode}),

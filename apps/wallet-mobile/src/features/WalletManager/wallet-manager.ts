@@ -499,6 +499,8 @@ export class WalletManager {
       hwDeviceInfo: null,
     }
     await this.#walletsRootStorage.setItem(id, meta)
+    await this.hydrate()
+    return meta
   }
 
   async createWalletXPub({
@@ -544,6 +546,8 @@ export class WalletManager {
       hwDeviceInfo,
     }
     await this.#walletsRootStorage.setItem(id, meta)
+    await this.hydrate()
+    return meta
   }
 }
 

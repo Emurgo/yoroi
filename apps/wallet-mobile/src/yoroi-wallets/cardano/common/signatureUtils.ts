@@ -7,7 +7,8 @@ import _ from 'lodash'
 
 import {throwLoggedError} from '../../../kernel/logger/helpers/throw-logged-error'
 import {CardanoMobile} from '../../wallets'
-import {BIP44_DERIVATION_LEVELS, cardanoConfig, HARD_DERIVATION_START} from '../constants/common'
+import {cardanoConfig} from '../constants/cardano-config'
+import {BIP44_DERIVATION_LEVELS, HARD_DERIVATION_START} from '../constants/common'
 import {YoroiWallet} from '../types'
 
 export const createSwapCancellationLedgerPayload = async (
@@ -106,14 +107,25 @@ export const getDerivationPathForAddress = (
 
   if (internalIndex === -1 && externalIndex === -1) {
     if (!partial) throwLoggedError('Could not find matching address')
-    return Array.from(config.addressing.external)
+    return [
+      config.derivations.base.harden.purpose,
+      config.derivations.base.harden.coinType,
+      cardanoConfig.derivation.hardStart + wallet.accountVisual,
+      config.derivations.base.roles.external,
+      0,
+    ]
   }
 
   const shouldUseInternal = internalIndex > -1
-  const role = shouldUseInternal ? 1 : 0
-  const addressing = (shouldUseInternal ? config.addressing.internal : config.addressing.external).slice(0, 3)
+  const role = shouldUseInternal ? config.derivations.base.roles.internal : config.derivations.base.roles.external
 
-  return [...addressing, role, index]
+  return [
+    config.derivations.base.harden.purpose,
+    config.derivations.base.harden.coinType,
+    cardanoConfig.derivation.hardStart + wallet.accountVisual,
+    role,
+    index,
+  ]
 }
 
 export const getTransactionSigners = async (cbor: string, wallet: YoroiWallet, meta: Wallet.Meta, partial = true) => {

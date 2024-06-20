@@ -35,7 +35,7 @@ export const WebViewItem = ({tab, index, nativeHeight}: Props) => {
   const isTabActive = index === tabActiveIndex
   const navigationTo = useNavigateTo()
   const insets = useSafeAreaInsets()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
 
   const scaleXWebview = useSharedValue(1)
   const opacityValue = useSharedValue(0)

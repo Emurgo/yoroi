@@ -9,7 +9,7 @@ const storageDAppWelcome = 'dapp-explorer-welcome-dialog'
 const isShowWelcomeDAppKey = 'isShowWelcomeDApp'
 
 const useSetShowWelcomeDApp = (options?: UseMutationOptions<void, Error, boolean>) => {
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const storage = useAsyncStorage()
   const dAppExplorerStorage = storage.join(`wallet/${wallet.id}/${storageRootDAppExplorer}/`)
 
@@ -22,7 +22,7 @@ const useSetShowWelcomeDApp = (options?: UseMutationOptions<void, Error, boolean
 }
 
 const useShowedWelcomeDApp = (options?: UseQueryOptions<boolean, Error, boolean>) => {
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const storage = useAsyncStorage()
   const dAppExplorerStorage = storage.join(`wallet/${wallet.id}/${storageRootDAppExplorer}/`)
 

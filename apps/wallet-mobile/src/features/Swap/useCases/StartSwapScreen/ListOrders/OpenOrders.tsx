@@ -52,7 +52,7 @@ export const OpenOrders = () => {
   const strings = useStrings()
   const styles = useStyles()
   const intl = useIntl()
-  const wallet = useSelectedWallet()
+  const {wallet, meta} = useSelectedWallet()
   const {order: swapApiOrder} = useSwap()
   const {navigateToTxHistory} = useWalletNavigation()
   const [isLoading, setIsLoading] = React.useState(false)
@@ -223,7 +223,7 @@ export const OpenOrders = () => {
         utxos: {collateral: collateralUtxo, order: utxo},
         address: addressHex,
       })
-      const signers = await getTransactionSigners(cbor, wallet)
+      const signers = await getTransactionSigners(cbor, wallet, meta)
       const keys = await Promise.all(signers.map(async (signer) => createRawTxSigningKey(rootKey, signer)))
       const response = await wallet.signRawTx(cbor, keys)
       if (!response) return

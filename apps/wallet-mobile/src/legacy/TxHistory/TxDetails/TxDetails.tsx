@@ -30,7 +30,7 @@ export const TxDetails = () => {
   const {styles, colors} = useStyles()
   const intl = useIntl()
   const {id} = useRoute().params as Params
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const explorers = useExplorers(wallet.networkManager.network)
   const internalAddressIndex = fromPairs(wallet.internalAddresses.map((addr, i) => [addr, i]))
   const externalAddressIndex = fromPairs(wallet.externalAddresses.map((addr, i) => [addr, i]))
@@ -195,7 +195,7 @@ const Label = ({children}: {children: string}) => {
 }
 
 const AdaAmount = ({amount}: {amount: BigNumber}) => {
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {styles} = useStyles()
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
   const amountStyle = amount.gte(0) ? styles.positiveAmount : styles.negativeAmount
@@ -209,7 +209,7 @@ const AdaAmount = ({amount}: {amount: BigNumber}) => {
 
 const Fee = ({amount}: {amount: BigNumber}) => {
   const strings = useStrings()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
 
   const text = `${strings.fee} ${formatTokenWithSymbol(asQuantity(amount), wallet.primaryToken)}`
   return <Text small>{text}</Text>

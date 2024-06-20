@@ -29,7 +29,7 @@ export const RequestSpecificAmountScreen = () => {
   const strings = useStrings()
   const {colors, styles} = useStyles()
   const [amount, setAmount] = React.useState('')
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
 
   const {track} = useMetrics()
   const hasAmount = !isEmptyString(amount)

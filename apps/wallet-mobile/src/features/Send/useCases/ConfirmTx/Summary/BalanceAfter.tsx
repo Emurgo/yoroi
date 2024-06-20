@@ -11,7 +11,7 @@ import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelec
 
 export const BalanceAfter = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => {
   const strings = useStrings()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const balances = useBalances(wallet)
 
   // prettier-ignore

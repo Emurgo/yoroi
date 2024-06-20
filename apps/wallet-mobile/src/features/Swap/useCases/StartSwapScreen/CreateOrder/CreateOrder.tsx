@@ -44,7 +44,7 @@ export const CreateOrder = () => {
   const navigateTo = useNavigateTo()
   const {navigateToTxHistory} = useWalletNavigation()
   const {orderData, unsignedTxChanged, poolPairsChanged} = useSwap()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {track} = useMetrics()
   const {openModal} = useModal()
   const {height: deviceHeight} = useWindowDimensions()

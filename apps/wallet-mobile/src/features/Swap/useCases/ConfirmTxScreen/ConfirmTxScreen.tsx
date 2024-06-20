@@ -14,7 +14,6 @@ import {YoroiSignedTx} from '../../../../yoroi-wallets/types'
 import {Quantities} from '../../../../yoroi-wallets/utils'
 import {useAuthOsWithEasyConfirmation} from '../../../Auth/common/hooks'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
-import {useSelectedWalletMeta} from '../../../WalletManager/common/hooks/useSelectedWalletMeta'
 import {useNavigateTo} from '../../common/navigation'
 import {useStrings} from '../../common/strings'
 import {ConfirmTx} from './ConfirmTx'
@@ -26,8 +25,7 @@ export const ConfirmTxScreen = () => {
   const [contentHeight, setContentHeight] = React.useState(0)
   const strings = useStrings()
   const styles = useStyles()
-  const wallet = useSelectedWallet()
-  const meta = useSelectedWalletMeta()
+  const {wallet, meta} = useSelectedWallet()
   const navigate = useNavigateTo()
   const {track} = useMetrics()
   const {openModal, closeModal} = useModal()

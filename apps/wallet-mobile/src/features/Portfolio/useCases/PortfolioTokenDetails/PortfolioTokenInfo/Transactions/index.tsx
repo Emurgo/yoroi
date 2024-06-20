@@ -21,8 +21,9 @@ interface Props {
 export const Transactions = ({onScroll, topContent}: Props) => {
   const {styles} = useStyles()
   const {id: tokenId} = usePortfolioTokenDetailParams()
-  const wallet = useSelectedWallet()
-  const {balances} = wallet
+  const {
+    wallet: {balances},
+  } = useSelectedWallet()
   const tokenInfo = balances.records.get(tokenId)
   const name = tokenInfo?.info ? infoExtractName(tokenInfo.info) : ''
   const {data, isLoading} = useGetPortfolioTokenTransaction(name)

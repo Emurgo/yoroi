@@ -16,7 +16,7 @@ export const useCancelOrderWithHw = (
   {cancelOrder}: {cancelOrder: SwapApi['cancelOrder']},
   options?: UseMutationOptions<void, Error, {utxo: string; bech32Address: string; useUSB: boolean}>,
 ) => {
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const mutation = useMutation({
     ...options,
     useErrorBoundary: true,

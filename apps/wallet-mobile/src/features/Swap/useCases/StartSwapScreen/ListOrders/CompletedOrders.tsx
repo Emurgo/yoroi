@@ -94,7 +94,7 @@ const hasFrontendFeeReturn = (tx: TransactionInfo): boolean => {
 export const CompletedOrders = () => {
   const strings = useStrings()
   const styles = useStyles()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {sync} = useSync(wallet)
 
   const {track} = useMetrics()
@@ -157,7 +157,7 @@ export const CompletedOrders = () => {
 
 export const ExpandableOrder = ({order, tokenInfos}: {order: MappedRawOrder; tokenInfos: Array<Balance.TokenInfo>}) => {
   const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const intl = useIntl()
   const explorers = useExplorers(wallet.networkManager.network)
   const metadata = order.metadata

@@ -25,7 +25,7 @@ export const PortfolioWalletTokenList = () => {
   const {styles} = useStyles()
   const {search, isSearching} = useSearch()
   const isZeroADABalance = useZeroBalance()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const balances = usePortfolioBalances({wallet})
   const tokensList = React.useMemo(() => balances.fts ?? [], [balances.fts])
 

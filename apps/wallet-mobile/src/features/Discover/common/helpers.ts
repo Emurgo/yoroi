@@ -1,6 +1,6 @@
 import {connectionStorageMaker, dappConnectorApiMaker, dappConnectorMaker, ResolverWallet} from '@yoroi/dapp-connector'
 import {DappConnector} from '@yoroi/dapp-connector'
-import {App} from '@yoroi/types'
+import {App, Wallet} from '@yoroi/types'
 
 import {cip30ExtensionMaker} from '../../../yoroi-wallets/cardano/cip30/cip30'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
@@ -60,15 +60,16 @@ export const isGoogleSearchItem = (dApp: DAppItem) => dApp.id === googleDappId
 type CreateDappConnectorOptions = {
   appStorage: App.Storage
   wallet: YoroiWallet
+  meta: Wallet.Meta
   confirmConnection: (origin: string, manager: DappConnector) => Promise<boolean>
   signTx: (cbor: string) => Promise<string>
   signData: (address: string, payload: string) => Promise<string>
 }
 
 export const createDappConnector = (options: CreateDappConnectorOptions) => {
-  const {wallet, appStorage, confirmConnection, signTx, signData} = options
+  const {wallet, meta, appStorage, confirmConnection, signTx, signData} = options
   const api = dappConnectorApiMaker()
-  const cip30 = cip30ExtensionMaker(wallet)
+  const cip30 = cip30ExtensionMaker(wallet, meta)
   const handlerWallet: ResolverWallet = {
     id: wallet.id,
     networkId: wallet.networkManager.chainId,

@@ -7,7 +7,7 @@ const isShowingMultipleAddressInfoKey = 'isShowingMultipleAddressesModal'
 
 const useSetShowMultipleAddressesInfo = (options?: UseMutationOptions<void, Error, boolean>) => {
   const storage = useAsyncStorage()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const walletStorage = storage.join(`wallet/${wallet.id}/`)
 
   const mutation = useMutationWithInvalidations({
@@ -21,7 +21,7 @@ const useSetShowMultipleAddressesInfo = (options?: UseMutationOptions<void, Erro
 
 const useIsShowingMultipleAddressesInfo = (options?: UseQueryOptions<boolean, Error, boolean>) => {
   const storage = useAsyncStorage()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const walletStorage = storage.join(`wallet/${wallet.id}/`)
 
   const query = useQuery({

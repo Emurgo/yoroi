@@ -18,7 +18,7 @@ export const RenameWallet = () => {
   const styles = useStyles()
   const navigation = useNavigation()
 
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {name: walletName} = useSelectedWalletMeta()
 
   const {walletManager} = useWalletManager()

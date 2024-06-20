@@ -16,7 +16,7 @@ import {PortfolioWalletTokenList} from './PortfolioWalletTokenList/PortfolioWall
 export const PortfolioTokenListScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const primaryBalance = usePortfolioPrimaryBalance({wallet})
   const dAppsBalance = useGetDAppsPortfolioBalance(primaryBalance.quantity)
   const hasDApps = dAppsBalance !== undefined && Number(dAppsBalance.quantity) > 0

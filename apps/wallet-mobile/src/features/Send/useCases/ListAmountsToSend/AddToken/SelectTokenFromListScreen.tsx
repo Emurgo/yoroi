@@ -26,7 +26,7 @@ export const SelectTokenFromListScreen = () => {
   const {styles} = useStyles()
   const {targets, selectedTargetIndex, allocated} = useTransfer()
 
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const balances = usePortfolioBalances({wallet})
   const [fungibilityFilter, setFungibilityFilter] = React.useState<Portfolio.FungibilityFilter>('all')
   const [isPending, startTransition] = React.useTransition()

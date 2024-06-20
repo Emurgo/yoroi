@@ -19,7 +19,7 @@ const isParams = (params?: Params | object | undefined): params is Params => {
 
 export const NftDetailsImage = () => {
   const {id} = useParams<Params>(isParams)
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const dimensions = useWindowDimensions()
 
   // reading from the getter, there is no need to subscribe to changes

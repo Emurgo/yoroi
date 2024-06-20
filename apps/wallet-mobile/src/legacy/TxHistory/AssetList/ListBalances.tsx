@@ -24,7 +24,7 @@ type Props = Partial<ListProps> & {
 export const ListBalances = (props: Props) => {
   const strings = useStrings()
   const styles = useStyles()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const explorers = useExplorers(wallet.networkManager.network)
   const balances = usePortfolioBalances({wallet})
 

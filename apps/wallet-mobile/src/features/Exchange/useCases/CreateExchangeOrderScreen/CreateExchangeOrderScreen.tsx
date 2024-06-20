@@ -31,7 +31,7 @@ export const CreateExchangeOrderScreen = () => {
   const strings = useStrings()
   const styles = useStyles()
   const {track} = useMetrics()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const walletNavigation = useWalletNavigation()
   const [contentHeight, setContentHeight] = React.useState(0)
 

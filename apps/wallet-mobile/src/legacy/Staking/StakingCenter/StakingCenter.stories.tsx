@@ -12,7 +12,6 @@ storiesOf('StakingCenter', module)
       <WalletManagerProviderMock
         wallet={{
           ...mocks.wallet,
-          networkId: 1,
           createDelegationTx: mocks.createDelegationTx.success,
         }}
       >
@@ -25,7 +24,6 @@ storiesOf('StakingCenter', module)
       <WalletManagerProviderMock
         wallet={{
           ...mocks.wallet,
-          networkId: 1,
           createDelegationTx: mocks.createDelegationTx.loading,
         }}
       >
@@ -38,7 +36,6 @@ storiesOf('StakingCenter', module)
       <WalletManagerProviderMock
         wallet={{
           ...mocks.wallet,
-          networkId: 1,
           createDelegationTx: mocks.createDelegationTx.error,
         }}
       >

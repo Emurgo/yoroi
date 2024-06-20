@@ -26,7 +26,9 @@ export const MediaDetails = () => {
   const [activeTab, setActiveTab] = useState<ActiveTab>('overview')
 
   const {id} = useRoute<RouteProp<NftRoutes, 'nft-details'>>().params
-  const {networkManager, balances} = useSelectedWallet()
+  const {
+    wallet: {networkManager, balances},
+  } = useSelectedWallet()
 
   // reading from the getter, there is no need to subscribe to changes
   const amount = balances.records.get(id)

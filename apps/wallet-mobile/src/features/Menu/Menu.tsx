@@ -42,7 +42,7 @@ export const Menu = () => {
   const strings = useStrings()
   const {styles, color} = useStyles()
   const navigateTo = useNavigateTo()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {isPoolRetiring} = usePoolTransition()
   const {track} = useMetrics()
 
@@ -166,7 +166,7 @@ const Governance = Item
 const AppSettings = Item
 const KnowledgeBase = Item
 const Catalyst = ({label, left, onPress}: {label: string; left: React.ReactElement; onPress: () => void}) => {
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {canVote, sufficientFunds} = useCanVote(wallet)
 
   const [showInsufficientFundsModal, setShowInsufficientFundsModal] = React.useState(false)
@@ -193,7 +193,7 @@ const KNOWLEDGE_BASE_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/categor
 
 const useNavigateTo = () => {
   const {navigation, navigateToSettings, navigateToGovernanceCentre, navigateToStakingDashboard} = useWalletNavigation()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const prefetchStakingInfo = usePrefetchStakingInfo(wallet)
 
   return {

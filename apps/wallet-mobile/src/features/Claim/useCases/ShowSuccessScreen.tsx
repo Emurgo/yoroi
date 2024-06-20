@@ -95,7 +95,7 @@ const Status = ({status, style, ...props}: TextProps & {status: ClaimStatus}) =>
 
 const TxHash = ({txHash}: {txHash: string}) => {
   const strings = useStrings()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {styles, colors} = useStyles()
   const explorers = useExplorers(wallet.networkManager.network)
 
@@ -126,7 +126,7 @@ const TxHash = ({txHash}: {txHash: string}) => {
 }
 
 export const AmountList = ({amounts}: {amounts: Balance.Amounts}) => {
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
 
   const tokenInfos = useTokenInfos({
     wallet,

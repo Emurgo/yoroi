@@ -36,6 +36,7 @@ export const WalletManagerProviderMock = ({
       initialState={{
         selected: {
           network: wallet.networkManager.network,
+          networkManager: networkManagers[wallet.networkManager.network],
           wallet,
           meta,
         },

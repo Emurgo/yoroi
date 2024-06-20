@@ -35,7 +35,7 @@ export const ListMultipleAddressesScreen = () => {
   const inView = React.useRef(Number.MAX_SAFE_INTEGER)
   const strings = useStrings()
   const {styles} = useStyles()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const navigate = useNavigateTo()
   const {track} = useMetrics()
 

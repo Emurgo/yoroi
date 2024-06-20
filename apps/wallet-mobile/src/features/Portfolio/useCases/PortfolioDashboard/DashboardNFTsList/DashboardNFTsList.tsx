@@ -14,7 +14,7 @@ export const DashboardNFTsList = () => {
   const {styles} = useStyles()
   const navigationTo = useNavigateTo()
 
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const balances = usePortfolioBalances({wallet})
   const nftsList = balances.nfts ?? []
   const hasNotNfts = nftsList.length === 0

@@ -47,7 +47,7 @@ export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(
 
 const Price = ({amount, textStyle, ignorePrivacy, currency}: Props & Required<Pick<Props, 'currency'>>) => {
   const styles = useStyles()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
   const {config} = useCurrencyContext()
   const rate = useExchangeRate({wallet, to: currency})

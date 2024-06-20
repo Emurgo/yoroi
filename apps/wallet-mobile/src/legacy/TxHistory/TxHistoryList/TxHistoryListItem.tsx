@@ -34,7 +34,7 @@ export const TxHistoryListItem = ({transaction}: Props) => {
   const {styles, colors, isDark} = useStyles()
   const navigation = useNavigation<TxHistoryRouteNavigation>()
 
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const intl = useIntl()
 
   const showDetails = () => navigation.navigate('history-details', {id: transaction.id})

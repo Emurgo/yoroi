@@ -11,7 +11,7 @@ import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSe
 import globalMessages from '../../kernel/i18n/global-messages'
 
 export const LockedDeposit = ({ignorePrivacy = false}: {ignorePrivacy?: boolean}) => {
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
   const {lockedAsStorageCost} = usePortfolioPrimaryBreakdown({wallet})
 

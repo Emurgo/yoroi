@@ -19,7 +19,7 @@ export const ShowSubmittedTxScreen = () => {
   useBlockGoBack()
   const strings = useStrings()
   const styles = useStyles()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const explorers = useExplorers(wallet.networkManager.network)
   const walletNavigate = useWalletNavigation()
 

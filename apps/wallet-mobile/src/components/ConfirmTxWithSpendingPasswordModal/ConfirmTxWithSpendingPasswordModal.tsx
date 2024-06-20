@@ -21,7 +21,7 @@ type Props = {
 
 export const ConfirmTxWithSpendingPasswordModal = ({onSuccess, unsignedTx, onError}: Props) => {
   const spendingPasswordRef = useRef<RNTextInput>(null)
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const styles = useStyles()
   const {signTx, error: signError, isLoading: signIsLoading} = useSignTxWithPassword({wallet})
   const {submitTx, error: submitError, isLoading: submitIsLoading} = useSubmitTx({wallet}, {onError})
@@ -87,7 +87,7 @@ export const ConfirmTxWithSpendingPasswordModal = ({onSuccess, unsignedTx, onErr
 }
 
 const useIsPasswordCorrect = (password: string) => {
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const [isPasswordCorrect, setIsPasswordCorrect] = useState(false)
 
   useEffect(() => {

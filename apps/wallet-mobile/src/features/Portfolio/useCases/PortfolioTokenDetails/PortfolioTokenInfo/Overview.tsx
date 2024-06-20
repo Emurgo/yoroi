@@ -19,9 +19,10 @@ export const Overview = ({onScroll, topContent}: Props) => {
   const {styles} = useStyles()
   const strings = useStrings()
   const {id: tokenId} = usePortfolioTokenDetailParams()
-  const wallet = useSelectedWallet()
-  const explorers = useExplorers(wallet.networkManager.network)
-  const {balances} = wallet
+  const {
+    wallet: {balances, networkManager},
+  } = useSelectedWallet()
+  const explorers = useExplorers(networkManager.network)
   const tokenInfo = balances.records.get(tokenId)
   const tokenSymbol = tokenInfo ? infoExtractName(tokenInfo.info, {mode: 'currency'}) : ''
   const [policyId] = tokenInfo?.info.id.split('.') ?? []

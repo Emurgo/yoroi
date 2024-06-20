@@ -1,14 +1,14 @@
 import {useEffect, useState} from 'react'
 
 import {usePortfolioPrimaryBalance} from '../../features/Portfolio/common/hooks/usePortfolioPrimaryBalance'
-import {useSelectedWalletMeta} from '../../features/WalletManager/common/hooks/useSelectedWalletMeta'
+import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {time} from '../../kernel/constants'
-import {catalystConfig} from '../../yoroi-wallets/cardano/constants/common'
+import {catalystConfig} from '../../yoroi-wallets/cardano/constants/catalyst-config'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {isShelley} from '../../yoroi-wallets/cardano/utils'
 
 export const useCanVote = (wallet: YoroiWallet) => {
-  const meta = useSelectedWalletMeta()
+  const {meta} = useSelectedWallet()
   const amount = usePortfolioPrimaryBalance({wallet})
   const sufficientFunds = amount.quantity >= catalystConfig.minAda
 

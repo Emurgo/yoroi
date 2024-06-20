@@ -26,7 +26,7 @@ export type TPortfolioDAppsTabs = (typeof portfolioDAppsTabs)[keyof typeof portf
 export const PortfolioDAppsTokenList = () => {
   const {styles} = useStyles()
   const {search, isSearching} = useSearch()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const primaryBalance = usePortfolioPrimaryBalance({wallet})
 
   const [activeTab, setActiveTab] = React.useState<TPortfolioDAppsTabs>(portfolioDAppsTabs.LIQUIDITY_POOL)

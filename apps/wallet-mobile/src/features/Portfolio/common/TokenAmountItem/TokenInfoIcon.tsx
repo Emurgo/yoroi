@@ -16,7 +16,7 @@ type TokenInfoIconProps = {
 }
 export const TokenInfoIcon = ({info, size = 'md', imageStyle}: TokenInfoIconProps) => {
   const {styles} = useStyles()
-  const {networkManager} = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
 
   if (isPrimaryToken(info)) return <PrimaryIcon size={size} imageStyle={imageStyle} />
 
@@ -40,7 +40,7 @@ export const TokenInfoIcon = ({info, size = 'md', imageStyle}: TokenInfoIconProp
   }
 
   const [policy, name] = info.id.split('.')
-  const uri = `https://${networkManager.network}.processed-media.yoroiwallet.com/${policy}/${name}?width=64&height=64&kind=metadata&fit=cover`
+  const uri = `https://${wallet.networkManager.network}.processed-media.yoroiwallet.com/${policy}/${name}?width=64&height=64&kind=metadata&fit=cover`
 
   return (
     <Image

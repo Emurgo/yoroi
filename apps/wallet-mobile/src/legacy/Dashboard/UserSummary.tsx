@@ -24,7 +24,7 @@ type Props = {
 export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdraw, disableWithdraw}: Props) => {
   const styles = useStyles()
   const strings = useStrings()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {isPrivacyActive} = usePrivacyMode()
 
   return (

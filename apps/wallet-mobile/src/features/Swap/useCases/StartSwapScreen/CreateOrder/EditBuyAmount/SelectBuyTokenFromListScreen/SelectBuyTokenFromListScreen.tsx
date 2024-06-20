@@ -67,7 +67,7 @@ export const SelectBuyTokenFromListScreen = () => {
 const TokenList = () => {
   const strings = useStrings()
   const {styles, colors} = useStyles()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {onlyVerifiedTokens} = useSwapTokensOnlyVerified()
   const {search: assetSearchTerm} = useSearch()
   const balances = useBalances(wallet)

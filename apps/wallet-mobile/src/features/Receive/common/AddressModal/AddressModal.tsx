@@ -9,7 +9,6 @@ import {Modal} from '../../../../components/legacy/Modal/Modal'
 import {derivationPathManagerMaker} from '../../../../yoroi-wallets/cardano/derivation-path-manager/derivation-path-manager'
 import {useKeyHashes} from '../../../../yoroi-wallets/hooks'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
-import {useSelectedWalletMeta} from '../../../WalletManager/common/hooks/useSelectedWalletMeta'
 
 type Path = {
   account: number
@@ -93,7 +92,7 @@ type ExternalProps = {
 }
 
 export default (props: ExternalProps) => {
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const externalIndex: number | undefined = fromPairs(wallet.internalAddresses.map((addr, i) => [addr, i]))[
     props.address
   ]
@@ -113,7 +112,9 @@ type PathInfoProps = {
 const PathInfo = ({path}: PathInfoProps) => {
   const {account, index, role} = path
   const strings = useStrings()
-  const {implementation} = useSelectedWalletMeta()
+  const {
+    meta: {implementation},
+  } = useSelectedWallet()
 
   return (
     <>

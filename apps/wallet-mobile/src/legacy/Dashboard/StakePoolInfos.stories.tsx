@@ -23,37 +23,6 @@ storiesOf('StakePoolInfos', module)
     )
   })
 
-  .add('Loading ids', () => {
-    const loadingWallet: YoroiWallet = {
-      ...mocks.wallet,
-      getDelegationStatus: mocks.getDelegationStatus.loading,
-    }
-
-    return (
-      <QueryClientProvider client={new QueryClient()}>
-        <WalletManagerProviderMock wallet={loadingWallet}>
-          <StakePoolInfos />
-        </WalletManagerProviderMock>
-      </QueryClientProvider>
-    )
-  })
-
-  .add('Loading StakePoolInfo', () => {
-    const loadingWallet: YoroiWallet = {
-      ...mocks.wallet,
-      getDelegationStatus: mocks.getDelegationStatus.success.delegating,
-      fetchPoolInfo: mocks.fetchPoolInfo.loading,
-    }
-
-    return (
-      <QueryClientProvider client={new QueryClient()}>
-        <WalletManagerProviderMock wallet={loadingWallet}>
-          <StakePoolInfos />
-        </WalletManagerProviderMock>
-      </QueryClientProvider>
-    )
-  })
-
   .add('Loaded, StakePoolInfo success', () => {
     const loadedWallet: YoroiWallet = {
       ...mocks.wallet,

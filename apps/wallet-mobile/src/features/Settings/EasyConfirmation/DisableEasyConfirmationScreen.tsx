@@ -14,7 +14,7 @@ export const DisableEasyConfirmationScreen = () => {
   const strings = useStrings()
   const styles = useStyles()
   const navigation = useNavigation()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {walletManager} = useWalletManager()
 
   const handleOnDisableConfirmation = () => {

@@ -19,7 +19,7 @@ import {EnterDrepIdModal} from '../EnterDrepIdModal'
 
 export const ChangeVoteScreen = () => {
   const strings = useStrings()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const navigateTo = useNavigateTo()
   const stakingKeyHash = useStakingKey(wallet)
   const {data: stakingStatus} = useStakingKeyState(stakingKeyHash, {suspense: true})
