@@ -1,35 +1,35 @@
 import {useTheme} from '@yoroi/theme'
+import {Wallet} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Icon} from '../../../../components'
 import {Loading} from '../../../../components/Loading/Loading'
 import {Space} from '../../../../components/Space/Space'
-import {isByron, isHaskellShelley} from '../../../../yoroi-wallets/cardano/utils'
+import {isByron, isShelley} from '../../../../yoroi-wallets/cardano/utils'
 import {features} from '../../..'
 import {
   ChevronRightDarkIllustration,
   ChevronRightGrayIllustration,
 } from '../../../SetupWallet/illustrations/ChevronRight'
 import {useSyncWalletInfo} from '../../common/hooks/useSyncWalletInfo'
-import {WalletMeta} from '../../common/types'
 import {useWalletManager} from '../../context/WalletManagerProvider'
 
 type Props = {
-  walletMeta: WalletMeta
-  onPress: (walletMeta: WalletMeta) => void
+  walletMeta: Wallet.Meta
+  onPress: (walletMeta: Wallet.Meta) => void
 }
 
 export const WalletListItem = ({walletMeta, onPress}: Props) => {
   const {styles} = useStyles()
-  const era = useEra(walletMeta)
+  const [isButtonPressed, setIsButtonPressed] = React.useState(false)
+  const implementationName = React.useMemo(() => getImplementationName(walletMeta), [walletMeta])
   const syncWalletInfo = useSyncWalletInfo(walletMeta.id)
+
   const {
     selected: {meta},
   } = useWalletManager()
   const isSelected = meta?.id === walletMeta.id
-
-  const [isButtonPressed, setIsButtonPressed] = React.useState(false)
 
   return (
     <View style={styles.item}>
@@ -50,7 +50,7 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
           </Text>
 
           <Text style={[styles.walletMeta, isButtonPressed && styles.walletMetaPressed]}>
-            {`${walletMeta.plate} | ${era}`}
+            {`${walletMeta.plate} | ${implementationName}`}
           </Text>
         </View>
 
@@ -72,13 +72,9 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
   )
 }
 
-const useEra = (walletMeta: WalletMeta) => {
-  if (isByron(walletMeta.walletImplementationId)) {
-    return 'Byron'
-  }
-  if (isHaskellShelley(walletMeta.walletImplementationId)) {
-    return 'Shelley'
-  }
+const getImplementationName = (walletMeta: Wallet.Meta) => {
+  if (isByron(walletMeta.implementation)) return 'Byron'
+  if (isShelley(walletMeta.implementation)) return 'Shelley'
   return 'Unknown'
 }
 

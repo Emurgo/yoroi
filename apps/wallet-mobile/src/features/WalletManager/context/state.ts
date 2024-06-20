@@ -1,8 +1,11 @@
 import {Chain, Wallet} from '@yoroi/types'
+import {NetworkManager} from '@yoroi/types/lib/typescript/network/manager'
 import {castDraft, freeze, produce} from 'immer'
 
+import {throwLoggedError} from '../../../kernel/logger/helpers/throw-logged-error'
 import {logger} from '../../../kernel/logger/logger'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
+import {networkManagers} from '../common/constants'
 import {WalletManager} from '../wallet-manager'
 
 export const walletManagerReducer = (state: WalletManagerState, action: WalletManagerAction) => {
@@ -10,6 +13,7 @@ export const walletManagerReducer = (state: WalletManagerState, action: WalletMa
     switch (action.type) {
       case WalletManagerActionType.NetworkSelected:
         draft.selected.network = action.network
+        draft.selected.networkManager = castDraft(networkManagers[action.network])
         break
 
       case WalletManagerActionType.WalletSelected:
@@ -52,6 +56,7 @@ export type WalletManagerState = {
     wallet: YoroiWallet | null
     meta: Wallet.Meta | null
     network: Chain.SupportedNetworks
+    networkManager: NetworkManager
   }
 }
 
@@ -59,6 +64,7 @@ export const walletManagerDefaultState: Readonly<WalletManagerState> = freeze(
   {
     selected: {
       network: Chain.Network.Mainnet,
+      networkManager: networkManagers[Chain.Network.Mainnet],
       wallet: null,
       meta: null,
     },
@@ -90,5 +96,5 @@ export const walletManagerInitialContext: WalletManagerContextType = freeze(
 
 /* istanbul ignore next */
 function missingInit() {
-  logger.error('WalletManagerContext is missing initialization')
+  throwLoggedError('WalletManagerContext is missing initialization')
 }

@@ -70,6 +70,7 @@ export const ConfirmTx = ({
 
   const {mutateAsync: submitTx} = useSubmitTx({wallet})
 
+  const [hwDeviceInfo, setHwDeviceInfo] = useState<HW.DeviceInfo | null>(meta.hwDeviceInfo)
   const [password, setPassword] = useState('')
   const [isProcessed, setIsProcessed] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
@@ -100,17 +101,17 @@ export const ConfirmTx = ({
   }
 
   const onConfirmationChooseTransport = (useUSB: boolean) => {
-    if (!wallet.hwDeviceInfo) throw new Error('No device info')
+    if (meta.hwDeviceInfo == null) throw new App.Errors.InvalidState('ConfirmTx: No HW device info')
     setUseUSB(useUSB)
 
     setDialogStep(DialogStep.LedgerConnect)
   }
 
   const onMountChooseTransport = (useUSB: boolean) => {
-    if (!wallet.hwDeviceInfo) throw new Error('No device info')
+    if (meta.hwDeviceInfo == null) throw new App.Errors.InvalidState('ConfirmTx: No HW device info')
     setUseUSB(useUSB)
 
-    const hwFeatures = wallet.hwDeviceInfo.hwFeatures
+    const hwFeatures = meta.hwDeviceInfo.hwFeatures
 
     if ((useUSB && hwFeatures.deviceObj == null) || (!useUSB && hwFeatures.deviceId == null)) {
       setDialogStep(DialogStep.LedgerConnect)
@@ -120,10 +121,12 @@ export const ConfirmTx = ({
   }
 
   const onConnectUSB = async (deviceObj: HW.DeviceObj) => {
-    await walletManager.updateHWDeviceInfo(wallet, withUSB(wallet, deviceObj))
+    const hwDeviceInfo: HW.DeviceInfo = withUSB(meta, deviceObj)
+    walletManager.updateWalletHWDeviceInfo(meta.id, hwDeviceInfo)
+    setHwDeviceInfo(hwDeviceInfo)
 
     if (yoroiUnsignedTx.unsignedTx.catalystRegistrationData && onCIP36SupportChange) {
-      const isCIP36Supported = await wallet.ledgerSupportsCIP36(useUSB)
+      const isCIP36Supported = await wallet.ledgerSupportsCIP36(useUSB, hwDeviceInfo)
       if (supportsCIP36 !== isCIP36Supported) {
         onCIP36SupportChange(isCIP36Supported)
         return
@@ -139,10 +142,12 @@ export const ConfirmTx = ({
   }
 
   const onConnectBLE = async (deviceId: string) => {
-    await walletManager.updateHWDeviceInfo(wallet, withBLE(wallet, deviceId))
+    const hwDeviceInfo: HW.DeviceInfo = withBLE(meta, deviceId)
+    walletManager.updateWalletHWDeviceInfo(meta.id, hwDeviceInfo)
+    setHwDeviceInfo(hwDeviceInfo)
 
     if (yoroiUnsignedTx.unsignedTx.catalystRegistrationData && onCIP36SupportChange) {
-      const isCIP36Supported = await wallet.ledgerSupportsCIP36(useUSB)
+      const isCIP36Supported = await wallet.ledgerSupportsCIP36(useUSB, hwDeviceInfo)
       if (supportsCIP36 !== isCIP36Supported) {
         onCIP36SupportChange(isCIP36Supported)
         return
@@ -172,10 +177,11 @@ export const ConfirmTx = ({
           }
         } else {
           if (meta.isHW) {
+            if (hwDeviceInfo == null) throw new App.Errors.InvalidState('ConfirmTx: No HW device info')
             setDialogStep(DialogStep.WaitingHwResponse)
-            signedTx = await wallet.signTxWithLedger(yoroiUnsignedTx, useUSB)
+            signedTx = await wallet.signTxWithLedger(yoroiUnsignedTx, useUSB, hwDeviceInfo)
           } else {
-            const rootKey = await wallet.encryptedStorage.rootKey.read(password)
+            const rootKey = await wallet.encryptedStorage.xpriv.read(password)
             setDialogStep(DialogStep.Signing)
             signedTx = await smoothModalNotification(wallet.signTx(yoroiUnsignedTx, rootKey))
           }
@@ -222,6 +228,7 @@ export const ConfirmTx = ({
       }
     },
     [
+      hwDeviceInfo,
       meta.isEasyConfirmationEnabled,
       meta.isHW,
       onError,
@@ -264,7 +271,7 @@ export const ConfirmTx = ({
     if (meta.isHW && !chooseTransportOnConfirmation) {
       setDialogStep(DialogStep.ChooseTransport)
     }
-  }, [chooseTransportOnConfirmation, meta.isHW, wallet.isHW])
+  }, [chooseTransportOnConfirmation, meta.isHW])
 
   return (
     <View style={styles.root}>

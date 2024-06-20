@@ -44,10 +44,10 @@ describe('SetupWalletContext :: hooks', () => {
     const {result} = renderHook(() => useSetupWallet(), {wrapper})
 
     act(() => {
-      result.current.walletImplementationChanged('cardano-shelley')
+      result.current.walletImplementationChanged('cardano-cip1852')
     })
 
-    expect(result.current.walletImplementation).toBe('cardano-shelley')
+    expect(result.current.walletImplementation).toBe('cardano-cip1852')
   })
 
   test('publicKeyHexChanged', () => {
@@ -137,7 +137,7 @@ describe('SetupWalletContext :: hooks', () => {
       result.current.mnemonicChanged('fake-mnemonic')
       result.current.walletNameChanged('fake-walletName')
       result.current.walletPasswordChanged('fake-walletPassword')
-      result.current.walletImplementationChanged('cardano-shelley')
+      result.current.walletImplementationChanged('cardano-cip1852')
       result.current.hwDeviceInfoChanged({
         bip44AccountPublic: 'fake-key',
         hwFeatures: {
@@ -153,7 +153,7 @@ describe('SetupWalletContext :: hooks', () => {
     expect(result.current.mnemonic).toBe('fake-mnemonic')
     expect(result.current.walletName).toBe('fake-walletName')
     expect(result.current.walletPassword).toBe('fake-walletPassword')
-    expect(result.current.walletImplementation).toBe('cardano-shelley')
+    expect(result.current.walletImplementation).toBe('cardano-cip1852')
     expect(result.current.hwDeviceInfo).toEqual({
       bip44AccountPublic: 'fake-key',
       hwFeatures: {

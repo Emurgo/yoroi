@@ -5,10 +5,10 @@ import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/address
 import assert from 'assert'
 import {sortBy} from 'lodash'
 
-import {StakingStatus} from '../../types'
-import {CardanoMobile} from '../../wallets'
-import type {TimestampedCertMeta} from '../transactionManager'
-import {CardanoTypes} from '../types'
+import {StakingStatus} from '../types'
+import {CardanoMobile} from '../wallets'
+import type {TimestampedCertMeta} from './transactionManager'
+import {CardanoTypes} from './types'
 
 const addrContainsAccountKey = async (
   address: string,
@@ -30,11 +30,6 @@ const addrContainsAccountKey = async (
     }
   }
 
-  // TODO(v-almonacid): PointerAddress not yet implemented
-  // const asPointer = await PointerAddress.fromAddress(wasmAddr);
-  // if (asPointer != null) {
-  //   // TODO
-  // }
   return acceptTypeMismatch
 }
 

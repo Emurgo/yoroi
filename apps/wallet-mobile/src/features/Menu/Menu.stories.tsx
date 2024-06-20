@@ -14,9 +14,9 @@ storiesOf('Menu', module)
       </WalletManagerProviderMock>
     </QueryClientProvider>
   ))
-  .add('voting, isHW', () => (
+  .add('voting, is readonly', () => (
     <QueryClientProvider client={new QueryClient()}>
-      <WalletManagerProviderMock wallet={mocks.readonlyWallet}>
+      <WalletManagerProviderMock wallet={mocks.wallet} meta={{...mocks.walletMeta, isReadOnly: true}}>
         <Menu />
       </WalletManagerProviderMock>
     </QueryClientProvider>

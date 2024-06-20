@@ -14,7 +14,7 @@ import {SettingsRouteNavigation, useWalletNavigation} from '../../../kernel/navi
 import {useResync} from '../../../yoroi-wallets/hooks'
 import {useAuth} from '../../Auth/AuthProvider'
 import {useAuthSetting} from '../../Auth/common/hooks'
-import {useAddressModeManager} from '../../WalletManager/common/hooks/useAddressMode'
+import {useAddressMode} from '../../WalletManager/common/hooks/useAddressMode'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useSelectedWalletMeta} from '../../WalletManager/common/hooks/useSelectedWalletMeta'
 import {useNavigateTo} from '../common/navigation'
@@ -33,7 +33,7 @@ export const WalletSettingsScreen = () => {
   const {styles, colors} = useStyles()
   const {resetToWalletSelection} = useWalletNavigation()
   const authSetting = useAuthSetting()
-  const addressMode = useAddressModeManager()
+  const addressMode = useAddressMode()
 
   const logout = useLogout()
   const settingsNavigation = useNavigation<SettingsRouteNavigation>()
@@ -121,7 +121,6 @@ export const WalletSettingsScreen = () => {
             icon={<Icon.Qr {...iconProps} />}
             label={strings.multipleAddresses}
             info={strings.multipleAddressesInfo}
-            disabled={addressMode.isToggleLoading}
           >
             <AddressModeSwitcher isSingle={addressMode.isSingle} />
           </SettingsItem>
@@ -140,8 +139,8 @@ export const WalletSettingsScreen = () => {
 }
 
 const getWalletType = (implementation: Wallet.Implementation): MessageDescriptor => {
-  if (implementation === 'cardano-byron') return messages.byronWallet
-  if (implementation === 'cardano-shelley') return messages.shelleyWallet
+  if (implementation === 'cardano-bip44') return messages.byronWallet
+  if (implementation === 'cardano-cip1852') return messages.shelleyWallet
 
   return messages.unknownWalletType
 }
@@ -179,7 +178,7 @@ const ResyncButton = () => {
 }
 
 const AddressModeSwitcher = (props: {isSingle: boolean}) => {
-  const addressMode = useAddressModeManager()
+  const addressMode = useAddressMode()
   const [isSingleLocal, setIsSingleLocal] = React.useState(props.isSingle)
 
   const handleOnSwitchAddressMode = () => {
@@ -194,13 +193,7 @@ const AddressModeSwitcher = (props: {isSingle: boolean}) => {
     })
   }
 
-  return (
-    <SettingsSwitch
-      value={!isSingleLocal}
-      onValueChange={handleOnSwitchAddressMode}
-      disabled={addressMode.isToggleLoading}
-    />
-  )
+  return <SettingsSwitch value={!isSingleLocal} onValueChange={handleOnSwitchAddressMode} />
 }
 
 const useLogout = () => {

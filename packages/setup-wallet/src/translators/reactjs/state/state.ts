@@ -73,7 +73,7 @@ export const setupWalletDefaultState: Readonly<SetupWalletState> = freeze(
     mnemonic: '',
     walletName: '',
     walletPassword: '',
-    walletImplementation: 'cardano-shelley',
+    walletImplementation: 'cardano-cip1852',
     publicKeyHex: '',
     path: [],
     hwDeviceInfo: null,

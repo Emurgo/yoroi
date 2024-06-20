@@ -1,6 +1,6 @@
 import {Blockies} from '@yoroi/identicon'
 import {useSetupWallet} from '@yoroi/setup-wallet'
-import {Api, Chain, Wallet} from '@yoroi/types'
+import {Api, Wallet} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {FlatList, InteractionManager, ScrollView, StyleSheet, View} from 'react-native'
@@ -14,8 +14,8 @@ import {useWalletNavigation} from '../../../../kernel/navigation'
 import {isEmptyString} from '../../../../kernel/utils'
 import {NUMBERS} from '../../../../yoroi-wallets/cardano/numbers'
 import {usePlate} from '../../../../yoroi-wallets/hooks'
-import {NetworkId} from '../../../../yoroi-wallets/types'
 import {useCreateWalletXPub} from '../../../WalletManager/common/hooks/useCreateWalletXPub'
+import {useSelectedNetwork} from '../../../WalletManager/common/hooks/useSelectedNetwork'
 import {WalletAddress} from '../WalletAddress/WalletAddress'
 import {WalletNameForm} from '../WalletNameForm/WalletNameForm'
 
@@ -72,11 +72,7 @@ export const SaveReadOnlyWalletScreen = () => {
         containerStyle={styles.walletFormStyle}
         bottomContent={
           <Boundary>
-            <WalletInfoView
-              normalizedPath={normalizedPath}
-              publicKeyHex={publicKeyHex}
-              networkId={networkId as NetworkId}
-            />
+            <WalletInfoView normalizedPath={normalizedPath} publicKeyHex={publicKeyHex} />
           </Boundary>
         }
         buttonStyle={styles.walletFormButtonStyle}
@@ -183,15 +179,12 @@ const CheckSumView = ({icon, checksum}: {icon: string; checksum: string}) => (
 type WalletInfoProps = {
   normalizedPath: Array<number>
   publicKeyHex: string
-  networkId: NetworkId
 }
 
-const WalletInfoView = ({normalizedPath, publicKeyHex, networkId}: WalletInfoProps) => {
+const WalletInfoView = ({normalizedPath, publicKeyHex}: WalletInfoProps) => {
   const strings = useStrings()
-  const plate = usePlate({networkId, publicKeyHex})
-
-  // will change when merging 4.27
-  const network = networkId === 1 ? Chain.Network.Mainnet : Chain.Network.Preprod
+  const {chainId} = useSelectedNetwork()
+  const plate = usePlate({chainId, publicKeyHex, implementation: 'cardano-cip1852'})
 
   return (
     <View style={styles.walletInfoContainer}>
@@ -210,7 +203,7 @@ const WalletInfoView = ({normalizedPath, publicKeyHex, networkId}: WalletInfoPro
           <FlatList
             data={plate.addresses}
             keyExtractor={(item) => item}
-            renderItem={({item}) => <WalletAddress addressHash={item} network={network} />}
+            renderItem={({item}) => <WalletAddress addressHash={item} />}
           />
         </View>
 

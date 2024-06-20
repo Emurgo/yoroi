@@ -92,7 +92,7 @@ const useIsPasswordCorrect = (password: string) => {
 
   useEffect(() => {
     let isMounted = true
-    wallet.encryptedStorage.rootKey
+    wallet.encryptedStorage.xpriv
       .read(password)
       .then(() => isMounted && setIsPasswordCorrect(true))
       .catch(() => isMounted && setIsPasswordCorrect(false))

@@ -1,15 +1,14 @@
 import {useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
+import {Chain} from '@yoroi/types'
 import * as React from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Space} from '../../../../components/Space/Space'
 import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
-import * as HASKELL_SHELLEY from '../../../../yoroi-wallets/cardano/constants/mainnet/constants'
-import * as SANCHONET from '../../../../yoroi-wallets/cardano/constants/sanchonet/constants'
-import * as HASKELL_SHELLEY_TESTNET from '../../../../yoroi-wallets/cardano/constants/testnet/constants'
+import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {ButtonCard} from '../../common/ButtonCard/ButtonCard'
 import {LogoBanner} from '../../common/LogoBanner/LogoBanner'
 import {useStrings} from '../../common/useStrings'
@@ -17,21 +16,23 @@ import {useStrings} from '../../common/useStrings'
 export const ChooseNetworkScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
-  const {networkIdChanged} = useSetupWallet()
   const navigate = useNavigate()
+  const {
+    walletManager: {setSelectedNetwork},
+  } = useWalletManager()
 
   const handleMainnet = () => {
-    networkIdChanged(HASKELL_SHELLEY.NETWORK_ID)
+    setSelectedNetwork(Chain.Network.Mainnet)
     navigate?.()
   }
 
   const handleTestnet = () => {
-    networkIdChanged(HASKELL_SHELLEY_TESTNET.NETWORK_ID)
+    setSelectedNetwork(Chain.Network.Preprod)
     navigate?.()
   }
 
   const handleSanchonet = () => {
-    networkIdChanged(SANCHONET.NETWORK_ID)
+    setSelectedNetwork(Chain.Network.Sancho)
     navigate?.()
   }
 

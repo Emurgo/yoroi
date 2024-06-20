@@ -29,6 +29,7 @@ import {useBalances} from '../../../yoroi-wallets/hooks'
 import {RawUtxo, YoroiEntry} from '../../../yoroi-wallets/types'
 import {Amounts, asQuantity, Quantities} from '../../../yoroi-wallets/utils'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWalletMeta} from '../../WalletManager/common/hooks/useSelectedWalletMeta'
 import {usePrivacyMode} from '../PrivacyMode/PrivacyMode'
 import {createCollateralEntry} from './helpers'
 import {useNavigateTo} from './navigation'
@@ -44,6 +45,7 @@ export const ManageCollateralScreen = () => {
   const strings = useStrings()
   const balances = useBalances(wallet)
   const lockedAmount = asQuantity(wallet.primaryBreakdown.lockedAsStorageCost.toString())
+  const {addressMode} = useSelectedWalletMeta()
 
   const params = useUnsafeParams<SettingsStackRoutes['manage-collateral']>()
 
@@ -55,7 +57,7 @@ export const ManageCollateralScreen = () => {
     unsignedTxChanged: yoroiUnsignedTxChanged,
   } = useTransfer()
   const {mutate: createUnsignedTx, isLoading: isLoadingTx} = useMutation({
-    mutationFn: (entries: YoroiEntry[]) => wallet.createUnsignedTx(entries),
+    mutationFn: (entries: YoroiEntry[]) => wallet.createUnsignedTx({entries, addressMode}),
     retry: false,
     useErrorBoundary: true,
   })

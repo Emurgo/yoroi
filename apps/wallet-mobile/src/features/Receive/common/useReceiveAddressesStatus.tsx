@@ -1,13 +1,14 @@
+import {Wallet} from '@yoroi/types'
+
 import {useReceiveAddresses} from '../../../yoroi-wallets/hooks'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
-import {AddressMode} from '../../WalletManager/common/types'
 
 type ReceiveAddressesStatus = {
   used: string[]
   unused: string[]
   next: string
 }
-export const useReceiveAddressesStatus = (addressMode: AddressMode): Readonly<ReceiveAddressesStatus> => {
+export const useReceiveAddressesStatus = (addressMode: Wallet.AddressMode): Readonly<ReceiveAddressesStatus> => {
   const wallet = useSelectedWallet()
   const receiveAddresses = useReceiveAddresses(wallet)
 
@@ -32,5 +33,6 @@ export const useReceiveAddressesStatus = (addressMode: AddressMode): Readonly<Re
     unused: addressesStatus.unused,
     next: nextAddress,
   } as const
+
   return result
 }

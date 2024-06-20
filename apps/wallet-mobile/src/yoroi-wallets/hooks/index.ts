@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {walletChecksum} from '@emurgo/cip4-js'
 import {Certificate} from '@emurgo/cross-csl-core'
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
 import {mountMMKVStorage, observableStorageMaker, parseBoolean, useMutationWithInvalidations} from '@yoroi/common'
 import {themeStorageMaker} from '@yoroi/theme'
-import {Api, App, Balance} from '@yoroi/types'
+import {Api, App, Balance, HW, Wallet} from '@yoroi/types'
 import {Buffer} from 'buffer'
 import * as React from 'react'
 import {useCallback, useMemo} from 'react'
@@ -21,8 +22,9 @@ import {
 import {useSelectedNetwork} from '../../features/WalletManager/common/hooks/useSelectedNetwork'
 import {isDev, isNightly} from '../../kernel/env'
 import {logger} from '../../kernel/logger/logger'
+import {deriveAddressFromXPub} from '../cardano/account-manager/derive-address-from-xpub'
 import {getSpendingKey, getStakingKey} from '../cardano/addressInfo/addressInfo'
-import {generateShelleyPlateFromKey} from '../cardano/shelley/plate'
+import {cardanoConfig} from '../cardano/constants/cardano-config'
 import {WalletEvent, YoroiWallet} from '../cardano/types'
 import {
   TRANSACTION_DIRECTION,
@@ -31,7 +33,7 @@ import {
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../types'
-import {CurrencySymbol, NetworkId, TipStatusResponse, TxSubmissionStatus} from '../types/other'
+import {CurrencySymbol, TipStatusResponse, TxSubmissionStatus} from '../types/other'
 import {delay} from '../utils/timeUtils'
 import {Amounts, Quantities, Utxos} from '../utils/utils'
 
@@ -246,11 +248,33 @@ export const useTokenInfos = (
   return results.reduce((result, {data}) => (data ? [...result, data] : result), [] as Array<Balance.TokenInfo>)
 }
 
-export const usePlate = ({networkId, publicKeyHex}: {networkId: NetworkId; publicKeyHex: string}) => {
+export const usePlate = ({
+  chainId,
+  publicKeyHex,
+  implementation,
+}: {
+  chainId: number
+  publicKeyHex: string
+  implementation: Wallet.Implementation
+}) => {
+  const implementationConfig = cardanoConfig.implementations[implementation]
   const query = useQuery({
     suspense: true,
-    queryKey: ['plate', networkId, publicKeyHex],
-    queryFn: () => generateShelleyPlateFromKey(publicKeyHex, 1, networkId),
+    queryKey: ['plate', chainId, publicKeyHex],
+    queryFn: async () => {
+      const addresses = await deriveAddressFromXPub({
+        accountPubKeyHex: publicKeyHex,
+        chainId,
+        count: 1,
+        implementation,
+        role: implementationConfig.derivations.base.roles.external,
+      })
+      const accountPlate = walletChecksum(publicKeyHex)
+      return {
+        addresses,
+        accountPlate,
+      }
+    },
   })
 
   if (!query.data) throw new Error('invalid state')
@@ -261,9 +285,11 @@ export const usePlate = ({networkId, publicKeyHex}: {networkId: NetworkId; publi
 export const useWithdrawalTx = (
   {
     wallet,
+    addressMode,
     deregister = false,
   }: {
     wallet: YoroiWallet
+    addressMode: Wallet.AddressMode
     deregister?: boolean
   },
   options?: UseQueryOptions<YoroiUnsignedTx, Error, YoroiUnsignedTx, [string, 'withdrawalTx', {deregister: boolean}]>,
@@ -271,7 +297,7 @@ export const useWithdrawalTx = (
   const query = useQuery({
     ...options,
     queryKey: [wallet.id, 'withdrawalTx', {deregister}],
-    queryFn: async () => wallet.createWithdrawalTx(deregister),
+    queryFn: async () => wallet.createWithdrawalTx({shouldDeregister: deregister, addressMode}),
     retry: false,
     cacheTime: 0,
     useErrorBoundary: true,
@@ -290,8 +316,12 @@ export type VotingRegTxAndEncryptedKey = {
 }
 
 export const useVotingRegTx = (
-  {wallet, pin, supportsCIP36}: {wallet: YoroiWallet; pin: string; supportsCIP36: boolean},
-
+  {
+    wallet,
+    pin,
+    supportsCIP36,
+    addressMode,
+  }: {wallet: YoroiWallet; pin: string; supportsCIP36: boolean; addressMode: Wallet.AddressMode},
   options?: UseQueryOptions<
     VotingRegTxAndEncryptedKey,
     Error,
@@ -305,7 +335,7 @@ export const useVotingRegTx = (
     cacheTime: 0,
     suspense: true,
     queryKey: [wallet.id, 'voting-reg-tx', JSON.stringify({supportsCIP36})],
-    queryFn: () => wallet.createVotingRegTx(pin, supportsCIP36),
+    queryFn: () => wallet.createVotingRegTx({pin, supportsCIP36, addressMode}),
   })
 
   if (!query.data) throw new Error('invalid state')
@@ -436,7 +466,7 @@ export const useSignTxWithPassword = (
 ) => {
   const mutation = useMutation({
     mutationFn: async ({unsignedTx, password}) => {
-      const rootKey = await wallet.encryptedStorage.rootKey.read(password)
+      const rootKey = await wallet.encryptedStorage.xpriv.read(password)
       return wallet.signTx(unsignedTx, rootKey)
     },
     retry: false,
@@ -451,10 +481,14 @@ export const useSignTxWithPassword = (
 
 export const useSignTxWithHW = (
   {wallet}: {wallet: YoroiWallet},
-  options: UseMutationOptions<YoroiSignedTx, Error, {unsignedTx: YoroiUnsignedTx; useUSB: boolean}> = {},
+  options: UseMutationOptions<
+    YoroiSignedTx,
+    Error,
+    {unsignedTx: YoroiUnsignedTx; useUSB: boolean; hwDeviceInfo: HW.DeviceInfo}
+  > = {},
 ) => {
   const mutation = useMutation({
-    mutationFn: async ({unsignedTx, useUSB}) => wallet.signTxWithLedger(unsignedTx, useUSB),
+    mutationFn: async ({unsignedTx, useUSB, hwDeviceInfo}) => wallet.signTxWithLedger(unsignedTx, useUSB, hwDeviceInfo),
     retry: false,
     ...options,
   })
@@ -740,7 +774,6 @@ const getClosestSize = (size: string | number) => {
 }
 
 type NativeAssetImageRequest = {
-  networkId: NetworkId
   policy: string
   name: string
   width: string | number
@@ -750,7 +783,6 @@ type NativeAssetImageRequest = {
   kind?: 'logo' | 'metadata'
 }
 export const useNativeAssetImage = ({
-  networkId,
   policy,
   name,
   width: _width,
@@ -759,7 +791,7 @@ export const useNativeAssetImage = ({
   contentFit = 'cover',
   kind = 'metadata',
 }: NativeAssetImageRequest) => {
-  const network = networkId === 300 ? 'preprod' : 'mainnet'
+  const network = useSelectedNetwork()
   const width = getClosestSize(_width)
   const height = getClosestSize(_height)
   const mediaType = _mediaType.toLocaleLowerCase()
@@ -823,10 +855,10 @@ export const useNativeAssetImage = ({
 
 export const useCreateGovernanceTx = (
   wallet: YoroiWallet,
-  options?: UseMutationOptions<YoroiUnsignedTx, Error, Certificate[]>,
+  options?: UseMutationOptions<YoroiUnsignedTx, Error, {certificates: Certificate[]; addressMode: Wallet.AddressMode}>,
 ) => {
-  const mutationFn = (certificates: Certificate[]) => {
-    return wallet.createUnsignedGovernanceTx(certificates)
+  const mutationFn = ({certificates, addressMode}: {certificates: Certificate[]; addressMode: Wallet.AddressMode}) => {
+    return wallet.createUnsignedGovernanceTx({votingCertificates: certificates, addressMode})
   }
 
   const mutation = useMutation({mutationFn, retry: false, ...options})

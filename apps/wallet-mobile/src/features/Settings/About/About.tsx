@@ -8,18 +8,11 @@ import {Text} from '../../../components'
 import {appInfo} from '../../../kernel/appInfo'
 import {commit} from '../../../kernel/env'
 import {SettingsRouteNavigation} from '../../../kernel/navigation'
-import {getNetworkConfigById} from '../../../yoroi-wallets/cardano/networks'
-import {isHaskellShelley} from '../../../yoroi-wallets/cardano/utils'
-import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 
 export const About = () => {
   const strings = useStrings()
   const styles = useStyles()
   const navigation = useNavigation<SettingsRouteNavigation>()
-
-  const wallet = useSelectedWallet()
-  const network = getNetworkConfigById(wallet.networkId).MARKETING_NAME
-  const walletType = isHaskellShelley(wallet.walletImplementationId) ? strings.shelleyWallet : strings.unknownWalletType
 
   return (
     <View style={styles.about}>
@@ -35,18 +28,6 @@ export const About = () => {
         <LabelText>{strings.commit}</LabelText>
 
         <ValueText>{commit}</ValueText>
-      </Row>
-
-      <Row>
-        <LabelText>{strings.network}</LabelText>
-
-        <ValueText>{network}</ValueText>
-      </Row>
-
-      <Row>
-        <LabelText>{strings.walletType}</LabelText>
-
-        <ValueText>{walletType}</ValueText>
       </Row>
     </View>
   )

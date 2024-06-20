@@ -1,10 +1,10 @@
 import {useTheme} from '@yoroi/theme'
+import {Wallet} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Button, Spacer, useModal} from '../../../../components'
-import {useAddressModeManager} from '../../../WalletManager/common/hooks/useAddressMode'
-import {AddressMode} from '../../../WalletManager/common/types'
+import {useAddressMode} from '../../../WalletManager/common/hooks/useAddressMode'
 import {QRs as QRsIllustration} from '../../illustrations/QRs'
 import {useMultipleAddressesInfo} from '../useMultipleAddressesInfo'
 import {useStrings} from '../useStrings'
@@ -12,13 +12,13 @@ import {useStrings} from '../useStrings'
 export const singleOrMultipleAddressesModalHeight = 580
 
 type Props = {
-  onConfirm: (method: AddressMode) => void
+  onConfirm: (addressMode: Wallet.AddressMode) => void
 }
 
 export const SingleOrMultipleAddressesModal = ({onConfirm}: Props) => {
   const {styles, colors} = useStyles()
   const strings = useStrings()
-  const {enableMultipleMode, enableSingleMode} = useAddressModeManager()
+  const {enableMultipleMode, enableSingleMode} = useAddressMode()
 
   const {hideMultipleAddressesInfo} = useMultipleAddressesInfo()
 

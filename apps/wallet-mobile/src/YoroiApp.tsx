@@ -12,17 +12,14 @@ import {QueryClient, QueryClientProvider} from 'react-query'
 import {LoadingBoundary} from './components'
 import {ErrorBoundary} from './components/ErrorBoundary'
 import {AuthProvider} from './features/Auth/AuthProvider'
-import {buildPortfolioTokenManagers} from './features/Portfolio/common/helpers/build-token-managers'
 import {CurrencyProvider} from './features/Settings/Currency/CurrencyContext'
+import {walletManager} from './features/WalletManager/common/constants'
 import {WalletManagerProvider} from './features/WalletManager/context/WalletManagerProvider'
-import {buildNetworkManagers} from './features/WalletManager/network-manager/network-manager'
-import {WalletManager} from './features/WalletManager/wallet-manager'
 import {InitApp} from './InitApp'
 import {disableLogbox, loggerFilter} from './kernel/env'
 import {LanguageProvider} from './kernel/i18n'
 import {useSetupLogger} from './kernel/logger/hooks/useSetupLogger'
 import {makeMetricsManager, MetricsProvider} from './kernel/metrics/metricsManager'
-import {Keychain} from './kernel/storage/Keychain'
 import {useMigrations} from './kernel/storage/migrations/useMigrations'
 import {rootStorage} from './kernel/storage/rootStorage'
 import {useThemeStorageMaker} from './yoroi-wallets/hooks'
@@ -36,18 +33,12 @@ if (disableLogbox) {
   LogBox.ignoreLogs(['Require cycle:'])
 }
 
+const metricsManager = makeMetricsManager()
+const queryClient = new QueryClient()
+
 const Yoroi = () => {
   const isMigrated = useMigrations(rootStorage)
   const themeStorage = useThemeStorageMaker()
-
-  // ref would make it mutable
-  const [{tokenManagers}] = React.useState(() => buildPortfolioTokenManagers())
-  const [networkManagers] = React.useState(() => buildNetworkManagers({tokenManagers}))
-  const [walletManager] = React.useState(
-    () => new WalletManager({networkManagers, rootStorage, keychainManager: Keychain}),
-  )
-  const [metricsManager] = React.useState(() => makeMetricsManager())
-  const [queryClient] = React.useState(() => new QueryClient())
 
   if (!isMigrated) return null
 

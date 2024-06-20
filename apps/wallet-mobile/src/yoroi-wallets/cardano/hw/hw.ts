@@ -25,8 +25,7 @@ import {
   LedgerUserError,
   RejectedByUserError,
 } from '../../hw'
-import {NUMBERS} from '../numbers'
-import {isByron, isShelley} from '../utils'
+import {cardanoConfig} from '../constants/cardano-config'
 
 const MIN_ADA_APP_VERSION = '2.2.1'
 const MIN_ADA_APP_VERSION_SUPPORTING_CIP36 = 6
@@ -108,28 +107,16 @@ const mapLedgerError = (e: Error | any): Error | LocalizableError => {
 
 //
 // ============== General util ==================
-//
-
-const HARDENED = NUMBERS.HARD_DERIVATION_START
-const WALLET_TYPE_PURPOSE = NUMBERS.WALLET_TYPE_PURPOSE
-const COIN_TYPE = NUMBERS.COIN_TYPES.CARDANO
-
-const getWalletType = (implementation: Wallet.Implementation): WalletType => {
-  if (isByron(implementation)) {
-    return 'BIP44'
-  } else if (isShelley(implementation)) {
-    return 'CIP1852'
-  } else {
-    throw new Error('ledgerUtils::getWalletType: wallet type not supported')
+const getXPubPathRequest = (
+  implementation: Wallet.Implementation,
+  accountVisual: number,
+): GetExtendedPublicKeyRequest => {
+  const implementationConfig = cardanoConfig.implementations[implementation]
+  const {purpose, coinType} = implementationConfig.derivations.base.harden
+  return {
+    path: [purpose, coinType, cardanoConfig.derivation.hardStart + accountVisual],
   }
 }
-
-const makeCardanoAccountBIP44Path: (walletType: WalletType, account: number) => GetExtendedPublicKeyRequest = (
-  walletType: WalletType,
-  account: number,
-) => ({
-  path: [WALLET_TYPE_PURPOSE[walletType], COIN_TYPE, HARDENED + account],
-})
 
 export const checkDeviceVersion = (versionResponse: GetVersionResponse): void => {
   if (
@@ -206,12 +193,12 @@ export const getHWDeviceInfo = async (
   deviceId: string | null | undefined,
   deviceObj: HW.DeviceObj | null | undefined,
   useUSB = false,
+  accountVisual = 0, // default to first account
 ): Promise<HW.DeviceInfo> => {
   try {
     const appAda = await connectionHandler(deviceId, deviceObj, useUSB)
     // assume single account in Yoroi
-    const accountPath = makeCardanoAccountBIP44Path(getWalletType(implementation), NUMBERS.ACCOUNT_INDEX)
-    // get Cardano's first account
+    const accountPath = getXPubPathRequest(implementation, accountVisual)
     // i.e hdPath = [2147483692, 2147485463, 2147483648]
     const extendedPublicKeyResp: GetExtendedPublicKeyResponse = await appAda.getExtendedPublicKey(accountPath)
     const serial: GetSerialResponse = await appAda.getSerial()

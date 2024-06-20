@@ -1,9 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {configCurrencies, supportedCurrencies} from '../../kernel/constants'
-import {
-  WALLET_CONFIG as HASKELL_SHELLEY,
-  WALLET_CONFIG_24 as HASKELL_SHELLEY_24,
-} from '../cardano/constants/mainnet/constants'
 import {TokenEntryPlain} from '../cardano/MultiToken'
 import {CardanoTypes} from '../cardano/types'
 import {RemoteAccountState, RemoteCertificateMeta} from './staking'
@@ -184,15 +180,6 @@ export type NetworkId = (typeof NETWORK_REGISTRY)[keyof typeof NETWORK_REGISTRY]
 export const DERIVATION_TYPES = {
   BIP44: 'bip44',
   CIP1852: 'cip1852',
-} as const
-
-// these are the different wallet implementations we have/had
-export const WALLET_IMPLEMENTATION_REGISTRY = {
-  HASKELL_BYRON: 'haskell-byron', // bip44
-  HASKELL_SHELLEY: HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID, // cip1852/15 words
-  HASKELL_SHELLEY_24: HASKELL_SHELLEY_24.WALLET_IMPLEMENTATION_ID, // cip1852/24 words
-  JORMUNGANDR_ITN: 'jormungandr-itn', // deprecated
-  UNDEFINED: '',
 } as const
 
 export type BackendConfig = {

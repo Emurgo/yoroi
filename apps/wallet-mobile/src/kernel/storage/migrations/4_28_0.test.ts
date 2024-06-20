@@ -1,8 +1,5 @@
-import {WalletChecksum} from '@emurgo/cip4-js'
 import {App} from '@yoroi/types'
 
-import {AddressMode} from '../../../features/WalletManager/common/types'
-import {NetworkId, WalletImplementationId} from '../../../yoroi-wallets/types'
 import {isWalletMetaV2, to4_28_0} from './4_28_0'
 
 describe('4_28_0 migrations', () => {
@@ -15,6 +12,7 @@ describe('4_28_0 migrations', () => {
       getAllKeys: jest.fn(),
       multiGet: jest.fn(),
       setItem: jest.fn(),
+      getItem: jest.fn(),
     } as never
   })
 
@@ -73,6 +71,12 @@ describe('4_28_0 migrations', () => {
     jest.spyOn(storage, 'getAllKeys').mockResolvedValue(walletMetas.map((meta) => meta.id))
     jest.spyOn(storage, 'multiGet').mockResolvedValue(walletMetas.map((meta) => [meta.id, meta]))
     jest.spyOn(storage, 'setItem')
+    jest.spyOn(storage, 'getItem').mockResolvedValue({
+      isReadOnly: false,
+      hwDeviceInfo: null,
+      publicKeyHex:
+        '3056301006072a8648ce3d020106052b8104000a034200041c1bafc7f78c2d456b5d4b3d2e6f0fcbff6a14a16f18ce9e00cf7b5192447c3ea6c8267f9c50c5a1f50deeb0192c0ae3bfb7e20f4ba37f68e5d7b420228cf03d',
+    })
 
     await to4_28_0(storage)
 
@@ -82,36 +86,42 @@ describe('4_28_0 migrations', () => {
       id: '1',
       name: 'Wallet 1',
       addressMode: 'single',
-      implementation: 'cardano-shelley',
+      implementation: 'cardano-cip1852',
       isHW: false,
       isEasyConfirmationEnabled: true,
       version: 3,
       plate: 'AAA-0001',
       avatar: expect.any(String),
+      isReadOnly: false,
+      hwDeviceInfo: null,
     })
 
     expect(storage.setItem).toHaveBeenNthCalledWith(2, '2', {
       id: '2',
       name: 'Wallet 2',
       addressMode: 'multiple',
-      implementation: 'cardano-shelley',
+      implementation: 'cardano-cip1852',
       isHW: true,
       isEasyConfirmationEnabled: false,
       version: 3,
       plate: 'AAA-0002',
       avatar: expect.any(String),
+      isReadOnly: false,
+      hwDeviceInfo: null,
     })
 
     expect(storage.setItem).toHaveBeenNthCalledWith(3, '3', {
       id: '3',
       name: 'Wallet 3',
       addressMode: 'single',
-      implementation: 'cardano-byron',
+      implementation: 'cardano-bip44',
       isHW: false,
       isEasyConfirmationEnabled: true,
       version: 3,
       plate: 'AAA-0003',
       avatar: expect.any(String),
+      isReadOnly: false,
+      hwDeviceInfo: null,
     })
   })
 
@@ -155,15 +165,17 @@ describe('4_28_0 migrations', () => {
   })
 })
 
-// copied over so we don't export this type
 type WalletMetaV2 = {
   id: string
   name: string
   isHW: boolean
   isEasyConfirmationEnabled: boolean
-  addressMode: AddressMode
-  walletImplementationId: WalletImplementationId
-  checksum: WalletChecksum
+  addressMode: 'single' | 'multiple'
+  walletImplementationId: 'haskell-shelley' | 'haskell-shelley-24' | 'haskell-byron' | 'jormungandr'
+  checksum: {
+    ImagePart: string
+    TextPart: string
+  }
 
-  networkId: NetworkId
+  networkId: number
 }

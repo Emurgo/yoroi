@@ -61,7 +61,7 @@ describe('State Actions', () => {
   it('WalletImplementationIdChanged', () => {
     const action: SetupWalletAction = {
       type: SetupWalletActionType.WalletImplementationChanged,
-      walletImplementation: 'cardano-shelley',
+      walletImplementation: 'cardano-cip1852',
     }
 
     const state = setupWalletReducer(setupWalletDefaultState, action)
@@ -167,7 +167,7 @@ describe('State Actions', () => {
         mnemonic: 'fake-mnemonic',
         walletName: 'fake-wallet-name',
         walletPassword: 'fake-password',
-        walletImplementation: 'cardano-shelley',
+        walletImplementation: 'cardano-cip1852',
         publicKeyHex: 'asdd',
         path: [11344, 1325, 6],
         hwDeviceInfo: {

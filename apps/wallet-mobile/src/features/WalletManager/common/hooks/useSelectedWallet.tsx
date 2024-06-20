@@ -1,20 +1,21 @@
+import {App} from '@yoroi/types'
+import {freeze} from 'immer'
 import * as React from 'react'
 
-import {logger} from '../../../../kernel/logger/logger'
+import {throwLoggedError} from '../../../../kernel/logger/helpers/throw-logged-error'
 import {useWalletManager} from '../../context/WalletManagerProvider'
 
 export const useSelectedWallet = () => {
   const {
-    selected: {wallet},
+    selected: {wallet, meta},
   } = useWalletManager()
 
   return React.useMemo(() => {
-    if (!wallet) {
-      const error = new Error('useSelectedWallet wallet is not set when expected, invalid state reached')
-      logger.error(error)
-      throw error
-    }
+    if (!wallet || !meta)
+      throwLoggedError(
+        new App.Errors.InvalidState('useSelectedWallet wallet/meta is not set when expected, invalid state reached'),
+      )
 
-    return wallet
-  }, [wallet])
+    return freeze({wallet, meta})
+  }, [meta, wallet])
 }

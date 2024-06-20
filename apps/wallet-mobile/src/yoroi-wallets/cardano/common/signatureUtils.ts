@@ -1,19 +1,19 @@
 import {SignTransactionRequest} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import * as CSL_TYPES from '@emurgo/cross-csl-core'
 import {Addressing, createLedgerPlutusPayload, getAllSigners} from '@emurgo/yoroi-lib'
+import {Wallet} from '@yoroi/types'
 import {Buffer} from 'buffer'
 import _ from 'lodash'
 
+import {throwLoggedError} from '../../../kernel/logger/helpers/throw-logged-error'
 import {CardanoMobile} from '../../wallets'
-import {BIP44_DERIVATION_LEVELS, HARD_DERIVATION_START} from '../constants/common'
-import {NUMBERS} from '../numbers'
+import {BIP44_DERIVATION_LEVELS, cardanoConfig, HARD_DERIVATION_START} from '../constants/common'
 import {YoroiWallet} from '../types'
-import {isHaskellShelley} from '../utils'
 
 export const createSwapCancellationLedgerPayload = async (
   cbor: string,
   wallet: YoroiWallet,
-  networkId: number,
+  chainId: number,
   protocolMagic: number,
   getAddressing: (address: string) => Addressing,
   stakeVKHash: CSL_TYPES.Ed25519KeyHash,
@@ -30,7 +30,7 @@ export const createSwapCancellationLedgerPayload = async (
     wasm: CardanoMobile,
     cbor,
     addresses: changeAddrs,
-    networkId,
+    networkId: chainId,
     protocolMagic,
     purpose: harden(1852),
     stakeVKHash,
@@ -50,6 +50,7 @@ export const harden = (num: number) => HARD_DERIVATION_START + num
 export const getRequiredSigners = async (
   tx: CSL_TYPES.Transaction,
   wallet: YoroiWallet,
+  meta: Wallet.Meta,
   partial = true,
 ): Promise<number[][]> => {
   const stakeVKHash = await wallet.getStakingKey().then((key) => key.hash())
@@ -64,17 +65,17 @@ export const getRequiredSigners = async (
     receiver: utxo.receiver,
     utxoId: utxo.utxo_id,
     assets: utxo.assets,
-    addressing: {path: getDerivationPathForAddress(utxo.receiver, wallet, partial), startLevel},
+    addressing: {path: getDerivationPathForAddress(utxo.receiver, wallet, meta, partial), startLevel},
   }))
 
   const getAddressAddressing = (bech32Address: string) => {
-    const path = getDerivationPathForAddress(bech32Address, wallet, partial)
+    const path = getDerivationPathForAddress(bech32Address, wallet, meta, partial)
     return {path, startLevel}
   }
   const signers = await getAllSigners(
     CardanoMobile,
     body,
-    wallet.networkId,
+    wallet.networkManager.chainId,
     stakeVKHash,
     getAddressAddressing,
     addressedUtxos,
@@ -92,24 +93,30 @@ const arePathsEqual = (path1: number[], path2: number[]) => {
   return path1.every((value, index) => value === path2[index]) && path1.length === path2.length
 }
 
-export const getDerivationPathForAddress = (address: string, wallet: YoroiWallet, partial = false) => {
+export const getDerivationPathForAddress = (
+  address: string,
+  wallet: YoroiWallet,
+  meta: Wallet.Meta,
+  partial = false,
+) => {
   const internalIndex = wallet.internalAddresses.indexOf(address)
   const externalIndex = wallet.externalAddresses.indexOf(address)
-  const purpose = isHaskellShelley(wallet.walletImplementationId)
-    ? NUMBERS.WALLET_TYPE_PURPOSE.CIP1852
-    : NUMBERS.WALLET_TYPE_PURPOSE.BIP44
-  if (internalIndex === -1 && externalIndex === -1) {
-    if (!partial) throw new Error('Could not find matching address')
-    return [purpose, harden(1815), harden(0), 0, 0]
-  }
-
-  const role = internalIndex > -1 ? 1 : 0
+  const config = cardanoConfig.implementations[meta.implementation]
   const index = Math.max(internalIndex, externalIndex)
 
-  return [purpose, harden(1815), harden(0), role, index]
+  if (internalIndex === -1 && externalIndex === -1) {
+    if (!partial) throwLoggedError('Could not find matching address')
+    return Array.from(config.addressing.external)
+  }
+
+  const shouldUseInternal = internalIndex > -1
+  const role = shouldUseInternal ? 1 : 0
+  const addressing = (shouldUseInternal ? config.addressing.internal : config.addressing.external).slice(0, 3)
+
+  return [...addressing, role, index]
 }
 
-export const getTransactionSigners = async (cbor: string, wallet: YoroiWallet, partial = true) => {
+export const getTransactionSigners = async (cbor: string, wallet: YoroiWallet, meta: Wallet.Meta, partial = true) => {
   const tx = await CardanoMobile.Transaction.fromHex(cbor)
-  return getRequiredSigners(tx, wallet, partial)
+  return getRequiredSigners(tx, wallet, meta, partial)
 }

@@ -1,8 +1,8 @@
 import {WalletChecksum} from '@emurgo/cip4-js'
 import {Blockies} from '@yoroi/identicon'
-import {App, Wallet} from '@yoroi/types'
+import {App, HW, Wallet} from '@yoroi/types'
 
-import {NetworkId, WalletImplementationId} from '../../../yoroi-wallets/types'
+import {makeWalletEncryptedStorage} from '../EncryptedStorage'
 
 const migrateWalletMeta = async (rootStorage: App.Storage) => {
   const walletsRootStorage = rootStorage.join('wallet/')
@@ -19,25 +19,35 @@ const migrateWalletMeta = async (rootStorage: App.Storage) => {
   }
 }
 
+// before 4.28 yoroi supported only account 0
+const accountVisual = 0
 const updateMeta = (walletsRootStorage: App.Storage) => async (meta: WalletMetaV2) => {
   // added
   const version = 3
 
   // migragted
   const implementation: Wallet.Implementation = meta.walletImplementationId.includes('shelley')
-    ? 'cardano-shelley'
-    : 'cardano-byron'
+    ? 'cardano-cip1852'
+    : 'cardano-bip44'
   const plate = meta.checksum.TextPart
   const avatar = new Blockies().asBase64({seed: meta.checksum.ImagePart})
 
   const walletStorage = walletsRootStorage.join(`${meta.id}/`)
-  const data = (await walletStorage.getItem('data')) as {isReadOnly?: boolean}
+  const data = (await walletStorage.getItem('data')) as {
+    isReadOnly?: boolean
+    hwDeviceInfo?: HW.DeviceInfo
+    publicKeyHex?: string
+  }
   const isReadOnly = data?.isReadOnly ?? false
+  const hwDeviceInfo = data?.hwDeviceInfo ?? null
+  const publicKeyHex = data?.publicKeyHex ?? ''
+
+  await makeWalletEncryptedStorage(meta.id).xpub.write(accountVisual, publicKeyHex)
 
   // copied over
   const {isHW, addressMode, name, id, isEasyConfirmationEnabled} = meta
 
-  const upgradedMeta: WalletMeta = {
+  const upgradedMeta: Wallet.Meta = {
     // added
     version,
     isReadOnly,
@@ -46,6 +56,7 @@ const updateMeta = (walletsRootStorage: App.Storage) => async (meta: WalletMetaV
     implementation,
     plate,
     avatar,
+    hwDeviceInfo,
 
     // copied over
     id,
@@ -65,11 +76,10 @@ type WalletMetaV2 = {
   name: string
   isHW: boolean
   isEasyConfirmationEnabled: boolean
-  addressMode: AddressMode
-  walletImplementationId: WalletImplementationId
+  addressMode: Wallet.AddressMode
+  walletImplementationId: string
   checksum: WalletChecksum
-
-  networkId: NetworkId
+  networkId: number
 }
 export function isWalletMetaV2(walletMeta: unknown): walletMeta is WalletMetaV2 {
   if (walletMeta == null) return false

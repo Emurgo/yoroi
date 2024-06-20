@@ -1,8 +1,7 @@
-import {AppStorage} from '../app/storage'
+import {AppObservableStorage} from '../app/observable-storage'
 import {ChainSupportedNetworks} from '../chain/network'
 import {PortfolioTokenInfo} from '../portfolio/info'
 import {PortfolioManagerToken} from '../portfolio/manager'
-import {PortfolioTokenId} from '../portfolio/token'
 
 export type NetworkConfig = {
   network: ChainSupportedNetworks
@@ -11,12 +10,16 @@ export type NetworkConfig = {
   eras: ReadonlyArray<NetworkEraConfig>
   name: string
   isMainnet: boolean
+  protocolMagic: number
+
+  legacyApiBaseUrl: string
 }
 
 // NOTE: NetworkConfig will be a generic type in the future
 export type NetworkManager = {
   tokenManager: PortfolioManagerToken
-  rootStorage: AppStorage<false, PortfolioTokenId>
+  rootStorage: AppObservableStorage<false>
+  legacyRootStorage: AppObservableStorage
 } & NetworkConfig
 
 export type NetworkEraConfig = {

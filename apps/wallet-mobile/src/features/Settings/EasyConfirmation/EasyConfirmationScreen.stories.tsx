@@ -35,9 +35,10 @@ storiesOf('EasyConfirmation Screen', module)
             id: '1',
             name: 'Yoroi',
             addressMode: 'single',
-            implementation: 'cardano-shelley',
+            implementation: 'cardano-cip1852',
             version: 3,
             isReadOnly: false,
+            hwDeviceInfo: null,
           },
         },
       }}
@@ -60,9 +61,10 @@ storiesOf('EasyConfirmation Screen', module)
             id: '1',
             name: 'Yoroi',
             addressMode: 'single',
-            implementation: 'cardano-shelley',
+            implementation: 'cardano-cip1852',
             version: 3,
             isReadOnly: false,
+            hwDeviceInfo: null,
           },
         },
       }}

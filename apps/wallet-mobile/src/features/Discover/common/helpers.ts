@@ -71,7 +71,7 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
   const cip30 = cip30ExtensionMaker(wallet)
   const handlerWallet: ResolverWallet = {
     id: wallet.id,
-    networkId: wallet.networkId,
+    networkId: wallet.networkManager.chainId,
     getUsedAddresses: (params) => cip30.getUsedAddresses(params),
     getUnusedAddresses: () => cip30.getUnusedAddresses(),
     getBalance: (tokenId) => cip30.getBalance(tokenId),

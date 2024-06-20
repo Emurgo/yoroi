@@ -1,5 +1,3 @@
-import {freeze} from 'immer'
-
 export const WALLET_IMPLEMENTATION_ID = 'haskell-shelley'
 export const DISCOVERY_GAP_SIZE = 20
 export const DISCOVERY_BLOCK_SIZE = 50 // should be less than API limitations
@@ -44,12 +42,3 @@ export const MINIMUM_UTXO_VAL = '1000000'
 export const COINS_PER_UTXO_WORD = '34482'
 
 export const COINS_PER_UTXO_BYTE = '4310'
-
-export const denominations = freeze({
-  ada: 1_000_000n,
-})
-
-export const catalystConfig = freeze({
-  minAda: 450n * denominations.ada,
-  displayedMinAda: 500n * denominations.ada,
-})

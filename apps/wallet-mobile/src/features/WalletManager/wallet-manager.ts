@@ -17,12 +17,13 @@ import {
 import uuid from 'uuid'
 
 import {time} from '../../kernel/constants'
+import {throwLoggedError} from '../../kernel/logger/helpers/throw-logged-error'
 import {logger} from '../../kernel/logger/logger'
 import {makeWalletEncryptedStorage} from '../../kernel/storage/EncryptedStorage'
 import {KeychainManager} from '../../kernel/storage/Keychain'
 import {WalletEvent, YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {wrappedCsl} from '../../yoroi-wallets/cardano/wrappedCsl'
-import {isWalletMeta, parseWalletMeta} from './common/constants'
+import {validatePassword} from '../../yoroi-wallets/utils/validators'
 import {
   SyncWalletInfo,
   SyncWalletInfos,
@@ -30,6 +31,7 @@ import {
   WalletManagerOptions,
   WalletManagerSubscription,
 } from './common/types'
+import {isWalletMeta, parseWalletMeta} from './common/validators/wallet-meta'
 import {getWalletFactory} from './network-manager/helpers/get-wallet-factory'
 
 export class WalletManager {
@@ -81,14 +83,10 @@ export class WalletManager {
    */
   private updateMeta(
     id: Wallet.Meta['id'],
-    meta: Partial<Pick<Wallet.Meta, 'addressMode' | 'isEasyConfirmationEnabled' | 'name'>>,
+    meta: Partial<Pick<Wallet.Meta, 'addressMode' | 'isEasyConfirmationEnabled' | 'name' | 'hwDeviceInfo'>>,
   ) {
     const walletMeta = this.#walletMetas$.value.get(id)
-    if (!walletMeta) {
-      const error = new Error('WalletManager: updateMeta meta not found')
-      logger.error(error, {id})
-      throw error
-    }
+    if (!walletMeta) throwLoggedError('WalletManager: updateMeta meta not found')
 
     // optmistic update
     const newMeta: Wallet.Meta = {...walletMeta, ...meta}
@@ -292,7 +290,7 @@ export class WalletManager {
     const walletMetas = await this.#walletsRootStorage
       .multiGet(walletIds, parseWalletMeta)
       .then((tuples) => tuples.map(([_, walletMeta]) => walletMeta))
-      .then((walletMetas) => walletMetas.filter(isWalletMeta)) // filter corrupted wallet metas)
+      .then((walletMetas) => walletMetas.filter(isWalletMeta)) // filter corrupted wallet metas
 
     const toLoad = walletMetas.filter((meta) => !this.#walletMetas$.value.has(meta.id))
 
@@ -322,10 +320,14 @@ export class WalletManager {
     await Promise.all(
       deletedWalletsIds.map(async (id) => {
         const encryptedStorage = makeWalletEncryptedStorage(id)
+        for (const networkManager of Object.values(this.#networkManagers)) {
+          await networkManager.legacyRootStorage.removeItem(id)
+        }
 
         await this.#walletsRootStorage.removeItem(id) // remove wallet meta
-        await this.#walletsRootStorage.removeFolder(`${id}/`) // remove wallet folder
-        await encryptedStorage.rootKey.remove() // remove auth with password
+        await encryptedStorage.xpriv.remove() // remove auth with password
+        await encryptedStorage.xpub.clear() // remove all accounts
+
         await this.#keychainManager?.removeWalletKey(id) // remove auth with os
       }),
     )
@@ -346,11 +348,7 @@ export class WalletManager {
   }
 
   async disableEasyConfirmation(id: YoroiWallet['id']) {
-    if (!this.#keychainManager) {
-      const error = new Error('KeychainManager not available for disableEasyConfirmation')
-      logger.error(error)
-      throw error
-    }
+    if (!this.#keychainManager) throwLoggedError('WalletManager: disableEasyConfirmation KeychainManager not available')
 
     await this.#keychainManager.removeWalletKey(id)
 
@@ -359,24 +357,14 @@ export class WalletManager {
     })
   }
 
-  async enableEasyConfirmation(walletId: YoroiWallet['id'], password: string) {
-    if (!this.#keychainManager) {
-      const error = new Error('KeychainManager not available for enableEasyConfirmation')
-      logger.error(error)
-      throw error
-    }
+  async enableEasyConfirmation(id: YoroiWallet['id'], password: string) {
+    if (!this.#keychainManager) throwLoggedError('WalletManager: enableEasyConfirmation KeychainManager not available')
 
-    const wallet = this.#wallets.get(walletId)
-    if (!wallet) {
-      const error = new Error('WalletManager: enableEasyConfirmation wallet not found (should be loaded)')
-      logger.error(error, {walletId})
-      throw error
-    }
+    const encryptedStorage = makeWalletEncryptedStorage(id)
+    const rootKey = await encryptedStorage.xpriv.read(password)
+    this.#keychainManager.setWalletKey(id, rootKey)
 
-    const rootKey = await wallet.encryptedStorage.rootKey.read(password)
-    this.#keychainManager.setWalletKey(wallet.id, rootKey)
-
-    this.updateMeta(wallet.id, {
+    this.updateMeta(id, {
       isEasyConfirmationEnabled: true,
     })
   }
@@ -389,10 +377,28 @@ export class WalletManager {
     this.updateMeta(id, {addressMode})
   }
 
-  private async saveWallet(wallet: YoroiWallet) {
-    await wallet.save()
+  updateWalletHWDeviceInfo(id: YoroiWallet['id'], hwDeviceInfo: HW.DeviceInfo) {
+    this.updateMeta(id, {hwDeviceInfo})
+  }
 
-    return wallet
+  async changeWalletPassword({
+    id,
+    oldPassword,
+    newPassword,
+  }: {
+    id: YoroiWallet['id']
+    oldPassword: string
+    newPassword: string
+  }) {
+    const validationResult = validatePassword(newPassword, newPassword)
+    if (Object.keys(validationResult).length > 0) {
+      logger.error('WalletManager: changeWalletPassword new password is not valid', {id})
+      throw new Error('New password is not valid')
+    }
+
+    const encryptedStorage = makeWalletEncryptedStorage(id)
+    const rootKey = await encryptedStorage.xpriv.read(oldPassword)
+    return encryptedStorage.xpriv.write(rootKey, newPassword)
   }
 
   /**
@@ -402,21 +408,23 @@ export class WalletManager {
    * @param {Wallet.Meta} walletMeta
    * @returns {Promise<YoroiWallet>} wallet
    */
-  private async loadWallet(walletMeta: Wallet.Meta): Promise<YoroiWallet> {
+  private async loadWallet({id, implementation}: Wallet.Meta, accountVisual = 0): Promise<YoroiWallet> {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    if (this.#wallets.has(walletMeta.id)) return this.#wallets.get(walletMeta.id)!
+    if (this.#wallets.has(id)) return this.#wallets.get(id)!
 
     const network = this.selectedNetwork
-    const {id, implementation} = walletMeta
     const walletFactory = getWalletFactory({network, implementation})
-    const networkManager = this.#networkManagers[network]
 
-    const storage = this.#walletsRootStorage.join(`${id}/`)
+    const encryptedStorage = makeWalletEncryptedStorage(id)
+    const accountPubKeyHex = await encryptedStorage.xpub.read(accountVisual)
 
-    const wallet = await walletFactory.restore({
-      storage,
-      walletMeta,
-      networkManager,
+    logger.debug('WalletManager: loadWallet loading wallet', {id, accountVisual})
+    if (!accountPubKeyHex) throwLoggedError('WalletManager: loadWallet accountPubKeyHex not found')
+
+    const wallet = await walletFactory.build({
+      id,
+      accountPubKeyHex,
+      accountVisual,
     })
 
     wallet.subscribe((event) => this._notify(event))
@@ -445,52 +453,33 @@ export class WalletManager {
     this.#walletMetas$.next(freeze(metas))
   }
 
-  async updateHWDeviceInfo(wallet: YoroiWallet, hwDeviceInfo: HW.DeviceInfo) {
-    wallet.hwDeviceInfo = hwDeviceInfo
-    await this.saveWallet(wallet)
-  }
-
-  /**
-   * It creates a wallet with the given mnemonic and password
-   * and persists it to the storage
-   * **It does not hydrate right away**, it will on the next sync call
-   * or if manually called by the client
-   *
-   * @param {string} name
-   * @param {string} mnemonic
-   * @param {string} password
-   * @param {Wallet.Implementation} implementation
-   * @param {Wallet.AddressMode} addressMode
-   * @returns {Promise<YoroiWallet>} wallet
-   * @throws {Error} if the wallet factory is not found
-   */
-  async createWalletMnemonic(
-    name: string,
-    mnemonic: string,
-    password: string,
-    implementation: Wallet.Implementation,
-    addressMode: Wallet.AddressMode,
-  ) {
+  async createWalletMnemonic({
+    name,
+    mnemonic,
+    password,
+    implementation,
+    addressMode,
+    account,
+  }: {
+    name: string
+    mnemonic: string
+    password: string
+    implementation: Wallet.Implementation
+    addressMode: Wallet.AddressMode
+    account: number
+  }) {
     const network = this.selectedNetwork
 
     const walletFactory = getWalletFactory({network, implementation})
     const id = uuid.v4()
-    const networkManager = this.#networkManagers[network]
-
-    const storage = this.#walletsRootStorage.join(`${id}/`)
 
     const {csl, release} = wrappedCsl()
     const {rootKey, accountPubKeyHex} = await walletFactory.makeKeys({mnemonic, csl})
     release()
 
-    const wallet = await walletFactory.createFromXPriv({
-      storage,
-      id,
-      networkManager,
-      accountPubKeyHex,
-    })
-
-    await wallet.encryptedStorage.rootKey.write(rootKey, password)
+    const encryptedStorage = makeWalletEncryptedStorage(id)
+    await encryptedStorage.xpriv.write(rootKey, password)
+    await encryptedStorage.xpub.write(account, accountPubKeyHex)
 
     const {ImagePart: seed, TextPart: plate} = walletFactory.calcChecksum(accountPubKeyHex)
     const avatar = new Blockies().asBase64({seed})
@@ -507,54 +496,38 @@ export class WalletManager {
       isReadOnly: false,
       isEasyConfirmationEnabled: false,
       isHW: false,
+      hwDeviceInfo: null,
     }
     await this.#walletsRootStorage.setItem(id, meta)
-
-    return this.saveWallet(wallet)
   }
 
-  /**
-   * It creates a wallet with the given xpub key
-   * and persists it to the storage
-   * **It does not hydrate right away**, it will on the next sync call
-   * or if manually called by the client
-   *
-   * @param {string} name
-   * @param {string} accountPubKeyHex
-   * @param {Wallet.Implementation} implementation
-   * @param {HW.DeviceInfo | null} hwDeviceInfo
-   * @param {boolean} isReadOnly
-   * @param {Wallet.AddressMode} addressMode
-   * @returns {Promise<YoroiWallet>} wallet
-   * @throws {Error} if the wallet factory is not found
-   */
-  async createWalletXPub(
-    name: string,
-    accountPubKeyHex: string,
-    implementation: Wallet.Implementation,
-    hwDeviceInfo: null | HW.DeviceInfo,
-    isReadOnly: boolean,
-    addressMode: Wallet.AddressMode,
-  ) {
+  async createWalletXPub({
+    name,
+    accountPubKeyHex,
+    implementation,
+    hwDeviceInfo,
+    isReadOnly,
+    addressMode,
+    account,
+  }: {
+    name: string
+    accountPubKeyHex: string
+    implementation: Wallet.Implementation
+    hwDeviceInfo: null | HW.DeviceInfo
+    isReadOnly: boolean
+    addressMode: Wallet.AddressMode
+    account: number
+  }) {
     const network = this.selectedNetwork
 
     const walletFactory = getWalletFactory({network, implementation})
     const id = uuid.v4()
-    const networkManager = this.#networkManagers[network]
-
-    const storage = this.#walletsRootStorage.join(`${id}/`)
-
-    const wallet = await walletFactory.createFromXPub({
-      storage,
-      id,
-      accountPubKeyHex,
-      hwDeviceInfo,
-      isReadOnly,
-      networkManager,
-    })
 
     const {ImagePart: seed, TextPart: plate} = walletFactory.calcChecksum(accountPubKeyHex)
     const avatar = new Blockies().asBase64({seed})
+
+    const encryptedStorage = makeWalletEncryptedStorage(id)
+    await encryptedStorage.xpub.write(account, accountPubKeyHex)
 
     const meta: Wallet.Meta = {
       version: WalletManager.version,
@@ -568,10 +541,9 @@ export class WalletManager {
       isReadOnly,
       isEasyConfirmationEnabled: false,
       isHW: hwDeviceInfo !== null,
+      hwDeviceInfo,
     }
     await this.#walletsRootStorage.setItem(id, meta)
-
-    return this.saveWallet(wallet)
   }
 }
 

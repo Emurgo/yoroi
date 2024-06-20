@@ -18,7 +18,7 @@ import {AppRoutes, useWalletNavigation} from '../../kernel/navigation'
 import {storageVersionMaker} from '../../kernel/storage/migrations/storageVersion'
 import {rootStorage} from '../../kernel/storage/rootStorage'
 import {isEmptyString} from '../../kernel/utils'
-import {generateAdaMnemonic} from '../../yoroi-wallets/cardano/mnemonic'
+import {generateAdaMnemonic} from '../../yoroi-wallets/cardano/mnemonic/mnemonic'
 import {useAuth} from '../Auth/AuthProvider'
 import {useLegalAgreement, useResetLegalAgreement} from '../Initialization/common'
 import {useCreateWalletMnemonic} from '../WalletManager/common/hooks/useCreateWalletMnemonic'
@@ -114,7 +114,7 @@ export const DeveloperScreen = () => {
               mnemonicPhrase: config['WALLET_1_MNEMONIC'] ?? '',
               name: 'Wallet 1',
               password: '1234567890',
-              implementation: 'cardano-shelley',
+              implementation: 'cardano-cip1852',
               addressMode: 'multiple',
             })
           }
@@ -130,7 +130,7 @@ export const DeveloperScreen = () => {
               mnemonicPhrase: config['WALLET_2_MNEMONIC'] ?? '',
               name: 'Wallet 2',
               password: '1234567890',
-              implementation: 'cardano-shelley',
+              implementation: 'cardano-cip1852',
               addressMode: 'multiple',
             })
           }
@@ -146,7 +146,7 @@ export const DeveloperScreen = () => {
               mnemonicPhrase: config['WALLET_3_MNEMONIC'] ?? '',
               name: 'Wallet 3',
               password: '1234567890',
-              implementation: 'cardano-shelley',
+              implementation: 'cardano-cip1852',
               addressMode: 'multiple',
             })
           }
@@ -162,14 +162,14 @@ export const DeveloperScreen = () => {
               mnemonicPhrase: generateAdaMnemonic(),
               name: 'RO-Mainnet',
               password: '1234567890',
-              implementation: 'cardano-shelley',
+              implementation: 'cardano-cip1852',
               addressMode: 'single',
             })
           }
           title="RO Mainnet For Forced Addresses"
         />
 
-        {wallet?.networkId !== 1 && (
+        {!wallet?.isMainnet && (
           <>
             <TextInput
               autoComplete="off"

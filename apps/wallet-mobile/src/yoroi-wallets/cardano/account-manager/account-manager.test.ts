@@ -1,5 +1,4 @@
-import type {CryptoAccount} from '../byron/util'
-import {AddressChain, AddressGenerator} from './chain'
+import {AddressChain, AddressGenerator} from './account-manager'
 
 const getAddr = (i: number) => `Addr${i}`
 
@@ -73,25 +72,18 @@ describe('AddressChain', () => {
   })
 
   it('can continue after rehydrating', async () => {
-    const networkId = 1 // haskell shelley mainnet
-    const account: CryptoAccount = {
-      derivation_scheme: 'V2',
-      root_cached_key:
+    const chainId = 1
+    const pubKey44 =
         '7f53efa3c08093db3824235769079e96ef96b6680fc254f6c021ec420e4d1555' +
         'b5bafb0b1fc6c8040cc8f69f7c1948dfb4dcadec4acd09730c0efb39c6159362',
-    }
-    chain = new AddressChain(
-      new AddressGenerator(account.root_cached_key, 'Internal', 'haskell-byron', networkId),
-      5,
-      2,
-    )
+      chain = new AddressChain(new AddressGenerator(pubKey44, 1, 'cardano-bip44', chainId), 5, 2)
 
     expect.assertions(2)
 
     await chain.initialize()
 
     const data = chain.toJSON()
-    const chain2 = AddressChain.fromJSON(data, networkId)
+    const chain2 = AddressChain.fromJSON(data, 1)
 
     const used = [
       // '2cWKMJemoBaiAKW7iBFgK3prZAK3gAEgkndCUTkGpUAoRofmXJcbmie2qe6JTN44dQ2Ag', // byron testnet

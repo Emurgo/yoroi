@@ -6,12 +6,12 @@
     "start": {
       "line": 112,
       "column": 12,
-      "index": 3783
+      "index": 3779
     },
     "end": {
       "line": 115,
       "column": 3,
-      "index": 3881
+      "index": 3877
     }
   },
   {
@@ -21,12 +21,12 @@
     "start": {
       "line": 116,
       "column": 15,
-      "index": 3898
+      "index": 3894
     },
     "end": {
       "line": 122,
       "column": 3,
-      "index": 4143
+      "index": 4139
     }
   },
   {
@@ -36,12 +36,12 @@
     "start": {
       "line": 123,
       "column": 22,
-      "index": 4167
+      "index": 4163
     },
     "end": {
       "line": 126,
       "column": 3,
-      "index": 4338
+      "index": 4334
     }
   }
 ]

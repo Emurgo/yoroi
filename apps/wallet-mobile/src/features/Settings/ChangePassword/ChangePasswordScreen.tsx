@@ -11,6 +11,7 @@ import {errorMessages} from '../../../kernel/i18n/global-messages'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {REQUIRED_PASSWORD_LENGTH, validatePassword} from '../../../yoroi-wallets/utils/validators'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
+import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 
 export const ChangePasswordScreen = () => {
   const strings = useStrings()
@@ -179,8 +180,14 @@ const useChangePassword = (
   wallet: YoroiWallet,
   mutationOptions: MutationOptions<void, Error, {currentPassword: string; newPassword: string}>,
 ) => {
+  const {walletManager} = useWalletManager()
   const {mutate, ...mutation} = useMutation(
-    ({currentPassword, newPassword}) => wallet.changePassword(currentPassword, newPassword),
+    ({currentPassword, newPassword}) =>
+      walletManager.changeWalletPassword({
+        id: wallet.id,
+        oldPassword: currentPassword,
+        newPassword,
+      }),
     mutationOptions,
   )
 

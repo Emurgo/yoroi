@@ -6,9 +6,10 @@ import QRCode from 'react-native-qrcode-svg'
 
 import {CopyButton, Spacer, Text} from '../../../../components'
 import {Modal} from '../../../../components/legacy/Modal/Modal'
-import {AddressType, formatPath} from '../../../../yoroi-wallets/cardano/formatPath/formatPath'
+import {derivationPathManagerMaker} from '../../../../yoroi-wallets/cardano/derivation-path-manager/derivation-path-manager'
 import {useKeyHashes} from '../../../../yoroi-wallets/hooks'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {useSelectedWalletMeta} from '../../../WalletManager/common/hooks/useSelectedWalletMeta'
 
 type Path = {
   account: number
@@ -112,15 +113,14 @@ type PathInfoProps = {
 const PathInfo = ({path}: PathInfoProps) => {
   const {account, index, role} = path
   const strings = useStrings()
-  const wallet = useSelectedWallet()
-  const addressType: AddressType = role === 0 ? 'External' : 'Internal'
+  const {implementation} = useSelectedWalletMeta()
 
   return (
     <>
       <Text style={styles.subtitle}>{strings.BIP32path}</Text>
 
       <Text secondary monospace>
-        {formatPath(account, addressType, index, wallet.walletImplementationId)}
+        {derivationPathManagerMaker(implementation)({account, role, index})}
       </Text>
     </>
   )

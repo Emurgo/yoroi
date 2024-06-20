@@ -1,6 +1,5 @@
-import {Chain} from '@yoroi/types'
+import {Chain, Wallet} from '@yoroi/types'
 
-import {WalletImplementation} from '../../common/types'
 import {getWalletFactory} from './get-wallet-factory'
 
 describe('getWalletFactory', () => {
@@ -10,7 +9,7 @@ describe('getWalletFactory', () => {
 
   it('should return the correct wallet factory for Mainnet', () => {
     const network = Chain.Network.Mainnet
-    const implementation: WalletImplementation = 'cardano-shelley'
+    const implementation: Wallet.Implementation = 'cardano-cip1852'
 
     const result = getWalletFactory({network, implementation})
 
@@ -19,7 +18,7 @@ describe('getWalletFactory', () => {
 
   it('should return the correct wallet factory for Preprod', () => {
     const network = Chain.Network.Preprod
-    const implementation: WalletImplementation = 'cardano-shelley'
+    const implementation: Wallet.Implementation = 'cardano-cip1852'
 
     const result = getWalletFactory({network, implementation})
 
@@ -28,7 +27,7 @@ describe('getWalletFactory', () => {
 
   it('should return the correct wallet factory for Sancho', () => {
     const network = Chain.Network.Sancho
-    const implementation: WalletImplementation = 'cardano-shelley'
+    const implementation: Wallet.Implementation = 'cardano-cip1852'
 
     const result = getWalletFactory({network, implementation})
 
@@ -37,7 +36,7 @@ describe('getWalletFactory', () => {
 
   it('should return the correct wallet factory for Mainnet with implementation "haskell-byron"', () => {
     const network = Chain.Network.Mainnet
-    const implementation: WalletImplementation = 'cardano-byron'
+    const implementation: Wallet.Implementation = 'cardano-bip44'
 
     const result = getWalletFactory({network, implementation})
 
@@ -46,15 +45,17 @@ describe('getWalletFactory', () => {
 
   it('should throw for unknown network', () => {
     const network = 'unknown-network' as Chain.SupportedNetworks
-    const implementation: WalletImplementation = 'cardano-shelley'
+    const implementation: Wallet.Implementation = 'cardano-cip1852'
 
-    expect(() => getWalletFactory({network, implementation})).toThrow('getWalletFactory Unable to find wallet factory')
+    expect(() => getWalletFactory({network, implementation})).toThrow(
+      'getWalletFactory: Unable to find network implementations',
+    )
   })
 
   it('should throw for unknown implementation', () => {
     const network = Chain.Network.Mainnet
-    const implementation = 'unknown-implementation' as WalletImplementation
+    const implementation = 'unknown-implementation' as Wallet.Implementation
 
-    expect(() => getWalletFactory({network, implementation})).toThrow('getWalletFactory Unable to find wallet factory')
+    expect(() => getWalletFactory({network, implementation})).toThrow('getWalletFactory: Unable to find wallet factory')
   })
 })

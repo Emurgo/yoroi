@@ -10,7 +10,6 @@ import {useQuery, UseQueryOptions} from 'react-query'
 import {Button} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
 import {useWalletNavigation} from '../../../../kernel/navigation'
-import * as HASKELL_SHELLEY from '../../../../yoroi-wallets/cardano/constants/mainnet/constants'
 import {useEnableAuthWithOs} from '../../../Auth/common/hooks'
 import {useStrings} from '../../common/useStrings'
 import {Biometric as BiometricIlustration} from '../../illustrations/Biometric'
@@ -19,11 +18,11 @@ export const ChooseBiometricLoginScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
   const storage = useAsyncStorage()
-  const {walletImplementationIdChanged} = useSetupWallet()
+  const {walletImplementationChanged} = useSetupWallet()
   const {resetToWalletSetupInit} = useWalletNavigation()
 
   const navigate = () => {
-    walletImplementationIdChanged(HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID)
+    walletImplementationChanged('cardano-cip1852')
     resetToWalletSetupInit()
   }
 

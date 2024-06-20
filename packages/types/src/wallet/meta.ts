@@ -1,3 +1,4 @@
+import {HWDeviceInfo} from '../hw/hw'
 import {WalletAddressMode, WalletImplementation} from './wallet'
 
 export type WalletMeta = {
@@ -12,6 +13,7 @@ export type WalletMeta = {
   readonly implementation: WalletImplementation
   addressMode: WalletAddressMode
   isReadOnly: boolean
+  hwDeviceInfo: HWDeviceInfo | null
 
   // authorization
   readonly isHW: boolean

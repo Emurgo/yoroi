@@ -58,7 +58,7 @@ const useDappConnectorManager = () => {
   const wallet = useSelectedWallet()
   const {openConfirmConnectionModal} = useOpenConfirmConnectionModal()
   const {openUnverifiedDappModal, closeModal} = useOpenUnverifiedDappModal()
-  const confirmRawTx = useConfirmRawTx(wallet)
+  const confirmRawTx = useConfirmRawTx()
 
   const confirmConnection = React.useCallback(
     async (origin: string, manager: DappConnector) => {

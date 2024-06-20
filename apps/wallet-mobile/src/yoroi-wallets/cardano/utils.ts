@@ -5,11 +5,7 @@ import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
 
 import {YoroiEntry} from '../types'
-import {
-  BaseAsset,
-  NetworkId,
-  RawUtxo,
-} from '../types/other'
+import {BaseAsset, RawUtxo} from '../types/other'
 import {DefaultAsset, Token} from '../types/tokens'
 import {Amounts} from '../utils'
 import {CardanoMobile} from '../wallets'
@@ -20,14 +16,13 @@ import {CardanoHaskellShelleyNetwork} from './networks'
 import {NUMBERS} from './numbers'
 import {CardanoTypes} from './types'
 
-export const deriveRewardAddressHex = async (accountPubKeyHex: string, networkId: NetworkId): Promise<string> => {
+export const deriveRewardAddressHex = async (accountPubKeyHex: string, chainId: number): Promise<string> => {
   const accountPubKeyPtr = await CardanoMobile.Bip32PublicKey.fromBytes(Buffer.from(accountPubKeyHex, 'hex'))
   const stakingKey = await (
     await (await accountPubKeyPtr.derive(NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)).derive(NUMBERS.STAKING_KEY_INDEX)
   ).toRawKey()
   const credential = await CardanoMobile.Credential.fromKeyhash(await stakingKey.hash())
-  const chainNetworkId = toCardanoNetworkId(networkId)
-  const rewardAddr = await CardanoMobile.RewardAddress.new(chainNetworkId, credential)
+  const rewardAddr = await CardanoMobile.RewardAddress.new(chainId, credential)
   const rewardAddrAsAddr = await rewardAddr.toAddress()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const result = Buffer.from((await rewardAddrAsAddr.toBytes()) as any, 'hex').toString('hex')
@@ -127,9 +122,9 @@ export const multiTokenFromRemote = (remoteValue: RemoteValue, networkId: number
   return result
 }
 
-export const isByron = (implementation: Wallet.Implementation) => implementation === 'cardano-byron'
+export const isByron = (implementation: Wallet.Implementation) => implementation === 'cardano-bip44'
 
-export const isShelley = (implementation: Wallet.Implementation) => implementation === 'cardano-shelley'
+export const isShelley = (implementation: Wallet.Implementation) => implementation === 'cardano-cip1852'
 
 // need to accomodate base config parameters as required by certain API shared
 // by yoroi extension and yoroi mobile
@@ -153,18 +148,6 @@ export const getCardanoBaseConfig = (
     SlotDuration: networkConfig.BASE_CONFIG[1].SLOT_DURATION,
   },
 ]
-
-export const CATALYST = {
-  MIN_ADA: NUMBERS.LOVELACES_PER_ADA.times(450),
-  DISPLAYED_MIN_ADA: NUMBERS.LOVELACES_PER_ADA.times(500),
-}
-
-// @deprecated use networkManager to get chain id
-export const toCardanoNetworkId = (networkId: number) => {
-  if (networkId === 1) return 1
-
-  return 0
-}
 
 export const toSendTokenList = (amounts: Balance.Amounts, primaryToken: Token): Array<SendToken> => {
   return Amounts.toArray(amounts).map(toSendToken(primaryToken))

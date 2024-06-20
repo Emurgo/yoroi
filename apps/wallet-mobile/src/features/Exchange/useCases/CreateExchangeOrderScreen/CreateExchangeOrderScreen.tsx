@@ -55,8 +55,8 @@ export const CreateExchangeOrderScreen = () => {
       provider: providerSelected?.id ?? '',
       orderType,
       walletId: wallet.id,
-      isTestnet: wallet.networkId !== 1,
-      isSandbox: wallet.networkId !== 1,
+      isTestnet: !wallet.isMainnet,
+      isSandbox: !wallet.isMainnet,
       appId: providerSelected?.appId,
     }),
   )
