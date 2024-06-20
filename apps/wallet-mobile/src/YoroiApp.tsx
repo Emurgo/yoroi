@@ -56,7 +56,9 @@ const Yoroi = () => {
                       <AuthProvider>
                         <LinksProvider>
                           <SetupWalletProvider>
-                            <InitApp />
+                            <PoolTransitionProvider>
+                              <InitApp />
+                            </PoolTransitionProvider>
                           </SetupWalletProvider>
                         </LinksProvider>
                       </AuthProvider>
