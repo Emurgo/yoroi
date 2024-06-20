@@ -3,8 +3,8 @@ import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 
 import {TabsGradient} from '../../../common/TabsGradient/Tabs'
+import {portfolioDAppsTabs, TPortfolioDAppsTabs} from '../../../common/types'
 import {useStrings} from '../../../common/useStrings'
-import {portfolioDAppsTabs, TPortfolioDAppsTabs} from './PortfolioDAppsTokenList'
 
 type DAppTabsProps = {
   activeTab: TPortfolioDAppsTabs

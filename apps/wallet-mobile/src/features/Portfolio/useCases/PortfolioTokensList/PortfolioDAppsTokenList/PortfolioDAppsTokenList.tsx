@@ -8,6 +8,7 @@ import {useSearch} from '../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {usePortfolioPrimaryBalance} from '../../../common/hooks/usePortfolioPrimaryBalance'
 import {Line} from '../../../common/Line'
+import {portfolioDAppsTabs, TPortfolioDAppsTabs} from '../../../common/types'
 import {useGetLiquidityPool} from '../../../common/useGetLiquidityPool'
 import {useGetOpenOrders} from '../../../common/useGetOpenOrders'
 import {TotalTokensValue} from '../TotalTokensValue/TotalTokensValue'
@@ -15,13 +16,6 @@ import {LendAndBorrowTab} from './LendAndBorrowTab'
 import {LiquidityPoolTab} from './LiquidityPoolTab'
 import {OpenOrdersTab} from './OpenOrdersTab'
 import {PortfolioDAppTabs} from './PortfolioDAppTabs'
-export const portfolioDAppsTabs = {
-  LIQUIDITY_POOL: 'liquidityPool',
-  OPEN_ORDERS: 'openOrders',
-  LEND_BORROW: 'lendAndBorrow',
-} as const
-
-export type TPortfolioDAppsTabs = (typeof portfolioDAppsTabs)[keyof typeof portfolioDAppsTabs]
 
 export const PortfolioDAppsTokenList = () => {
   const {styles} = useStyles()

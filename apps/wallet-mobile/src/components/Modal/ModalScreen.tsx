@@ -3,8 +3,9 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Animated, GestureResponderEvent, Pressable, StyleSheet, Text, View} from 'react-native'
 
-import {KeyboardAvoidingView, Spacer} from '..'
+import {KeyboardAvoidingView} from '../KeyboardAvoidingView'
 import {LoadingOverlay} from '../LoadingOverlay/LoadingOverlay'
+import {Spacer} from '../Spacer'
 import {useModal} from './ModalContext'
 
 export const ModalScreen = () => {
