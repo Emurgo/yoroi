@@ -459,14 +459,14 @@ export class WalletManager {
     password,
     implementation,
     addressMode,
-    account,
+    accountVisual,
   }: {
     name: string
     mnemonic: string
     password: string
     implementation: Wallet.Implementation
     addressMode: Wallet.AddressMode
-    account: number
+    accountVisual: number
   }) {
     const network = this.selectedNetwork
 
@@ -479,7 +479,7 @@ export class WalletManager {
 
     const encryptedStorage = makeWalletEncryptedStorage(id)
     await encryptedStorage.xpriv.write(rootKey, password)
-    await encryptedStorage.xpub.write(account, accountPubKeyHex)
+    await encryptedStorage.xpub.write(accountVisual, accountPubKeyHex)
 
     const {ImagePart: seed, TextPart: plate} = walletFactory.calcChecksum(accountPubKeyHex)
     const avatar = new Blockies().asBase64({seed})
@@ -510,7 +510,7 @@ export class WalletManager {
     hwDeviceInfo,
     isReadOnly,
     addressMode,
-    account,
+    accountVisual,
   }: {
     name: string
     accountPubKeyHex: string
@@ -518,7 +518,7 @@ export class WalletManager {
     hwDeviceInfo: null | HW.DeviceInfo
     isReadOnly: boolean
     addressMode: Wallet.AddressMode
-    account: number
+    accountVisual: number
   }) {
     const network = this.selectedNetwork
 
@@ -529,7 +529,7 @@ export class WalletManager {
     const avatar = new Blockies().asBase64({seed})
 
     const encryptedStorage = makeWalletEncryptedStorage(id)
-    await encryptedStorage.xpub.write(account, accountPubKeyHex)
+    await encryptedStorage.xpub.write(accountVisual, accountPubKeyHex)
 
     const meta: Wallet.Meta = {
       version: WalletManager.version,

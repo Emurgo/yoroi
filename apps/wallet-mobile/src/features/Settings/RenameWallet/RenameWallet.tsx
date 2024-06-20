@@ -10,7 +10,6 @@ import globalMessages from '../../../kernel/i18n/global-messages'
 import {isEmptyString} from '../../../kernel/utils'
 import {getWalletNameError, validateWalletName} from '../../../yoroi-wallets/utils/validators'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
-import {useSelectedWalletMeta} from '../../WalletManager/common/hooks/useSelectedWalletMeta'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 
 export const RenameWallet = () => {
@@ -18,8 +17,10 @@ export const RenameWallet = () => {
   const styles = useStyles()
   const navigation = useNavigation()
 
-  const {wallet} = useSelectedWallet()
-  const {name: walletName} = useSelectedWalletMeta()
+  const {
+    wallet,
+    meta: {name: walletName},
+  } = useSelectedWallet()
 
   const {walletManager} = useWalletManager()
   const walletNames = Array.from(walletManager.walletMetas.values()).map(({name}) => name)

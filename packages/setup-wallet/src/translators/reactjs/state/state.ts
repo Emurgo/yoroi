@@ -23,6 +23,10 @@ export const setupWalletReducer = (
         draft.walletImplementation = action.walletImplementation
         return
 
+      case SetupWalletActionType.AccountVisualChanged:
+        draft.accountVisual = action.accountVisual
+        return
+
       case SetupWalletActionType.PublicKeyHexChanged:
         draft.publicKeyHex = action.publicKeyHex
         return
@@ -83,6 +87,7 @@ export const setupWalletDefaultState: Readonly<SetupWalletState> = freeze(
     showRestoreWalletInfoModal: true,
     showCreateWalletInfoModal: true,
     walletId: null,
+    accountVisual: 0,
   },
   true,
 )
@@ -101,6 +106,7 @@ export type SetupWalletState = {
   showRestoreWalletInfoModal: boolean
   showCreateWalletInfoModal: boolean
   walletId: string | null
+  accountVisual: number
 }
 
 export enum SetupWalletActionType {
@@ -108,6 +114,7 @@ export enum SetupWalletActionType {
   WalletNameChanged = 'walletNameChanged',
   WalletPasswordChanged = 'walletPasswordChanged',
   WalletImplementationChanged = 'walletImplementationChanged',
+  AccountVisualChanged = 'accountVisualChanged',
   PublicKeyHexChanged = 'publicKeyHexChanged',
   PathChanged = 'pathChanged',
   HwDeviceInfoChanged = 'hwDeviceInfoChanged',
@@ -136,6 +143,10 @@ export type SetupWalletAction =
   | {
       type: SetupWalletActionType.WalletImplementationChanged
       walletImplementation: SetupWalletState['walletImplementation']
+    }
+  | {
+      type: SetupWalletActionType.AccountVisualChanged
+      accountVisual: SetupWalletState['accountVisual']
     }
   | {
       type: SetupWalletActionType.PublicKeyHexChanged
@@ -186,6 +197,9 @@ export type SetupWalletActions = {
   walletImplementationChanged: (
     walletImplementation: SetupWalletState['walletImplementation'],
   ) => void
+  accountVisualChanged: (
+    accountVisual: SetupWalletState['accountVisual'],
+  ) => void
   publicKeyHexChanged: (publicKeyHex: SetupWalletState['publicKeyHex']) => void
   pathChanged: (path: SetupWalletState['path']) => void
   hwDeviceInfoChanged: (hwDeviceInfo: SetupWalletState['hwDeviceInfo']) => void
@@ -208,6 +222,7 @@ export const setupWalletInitialContext: SetupWalletContext = freeze(
     walletNameChanged: missingInit,
     walletPasswordChanged: missingInit,
     walletImplementationChanged: missingInit,
+    accountVisualChanged: missingInit,
     publicKeyHexChanged: missingInit,
     pathChanged: missingInit,
     hwDeviceInfoChanged: missingInit,

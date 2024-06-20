@@ -17,7 +17,7 @@ const addressMode: Wallet.AddressMode = 'single'
 export const SaveNanoXScreen = () => {
   const strings = useStrings()
   const {resetToWalletSelection} = useWalletNavigation()
-  const {walletImplementation, hwDeviceInfo} = useSetupWallet()
+  const {walletImplementation, hwDeviceInfo, accountVisual} = useSetupWallet()
   const intl = useIntl()
   const {track} = useMetrics()
 
@@ -46,9 +46,10 @@ export const SaveNanoXScreen = () => {
         hwDeviceInfo,
         readOnly: false,
         addressMode,
+        accountVisual,
       })
     },
-    [createWallet, hwDeviceInfo, walletImplementation],
+    [accountVisual, createWallet, hwDeviceInfo, walletImplementation],
   )
 
   return (

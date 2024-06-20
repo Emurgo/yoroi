@@ -40,7 +40,7 @@ storiesOf('ConfirmRawTx', module)
     </Provider>
   ))
   .add('ConfirmRawTxWithHw', () => (
-    <Provider wallet={{...walletMocks.wallet, isHW: true}}>
+    <Provider wallet={{...walletMocks.wallet}}>
       <ConfirmRawTx utxo={utxo} bech32Address={bech32Address} cancelOrder={cancelOrder} />
     </Provider>
   ))

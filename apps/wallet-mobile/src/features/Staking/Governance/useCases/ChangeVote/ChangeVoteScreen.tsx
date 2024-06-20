@@ -19,7 +19,7 @@ import {EnterDrepIdModal} from '../EnterDrepIdModal'
 
 export const ChangeVoteScreen = () => {
   const strings = useStrings()
-  const {wallet} = useSelectedWallet()
+  const {wallet, meta} = useSelectedWallet()
   const navigateTo = useNavigateTo()
   const stakingKeyHash = useStakingKey(wallet)
   const {data: stakingStatus} = useStakingKeyState(stakingKeyHash, {suspense: true})
@@ -63,7 +63,10 @@ export const ChangeVoteScreen = () => {
         {drepID, stakingKey},
         {
           onSuccess: async (certificate) => {
-            const unsignedTx = await createGovernanceTxMutation.mutateAsync([certificate])
+            const unsignedTx = await createGovernanceTxMutation.mutateAsync({
+              certificates: [certificate],
+              addressMode: meta.addressMode,
+            })
             navigateTo.confirmTx({unsignedTx, vote})
           },
         },
@@ -80,7 +83,10 @@ export const ChangeVoteScreen = () => {
       {vote: 'abstain', stakingKey},
       {
         onSuccess: async (certificate) => {
-          const unsignedTx = await createGovernanceTxMutation.mutateAsync([certificate])
+          const unsignedTx = await createGovernanceTxMutation.mutateAsync({
+            certificates: [certificate],
+            addressMode: meta.addressMode,
+          })
           navigateTo.confirmTx({unsignedTx, vote})
         },
       },
@@ -96,7 +102,10 @@ export const ChangeVoteScreen = () => {
       {vote: 'no-confidence', stakingKey},
       {
         onSuccess: async (certificate) => {
-          const unsignedTx = await createGovernanceTxMutation.mutateAsync([certificate])
+          const unsignedTx = await createGovernanceTxMutation.mutateAsync({
+            certificates: [certificate],
+            addressMode: meta.addressMode,
+          })
           navigateTo.confirmTx({unsignedTx, vote})
         },
       },

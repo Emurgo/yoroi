@@ -1,8 +1,7 @@
+import {Network} from '@yoroi/types'
 import {freeze} from 'immer'
 
-import {NetworkEpochInfo} from '../../common/types'
-
-export function epochProgress(epochInfo: NetworkEpochInfo) {
+export function epochProgress(epochInfo: Network.EpochInfo) {
   return (date: Date) => {
     const epochStart = epochInfo.start
     const epochEnd = epochInfo.end

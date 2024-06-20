@@ -82,7 +82,7 @@ const ConfirmTxWithOSScreen = () => {
 }
 const ConfirmTxWithHWScreen = () => {
   return (
-    <WalletManagerProviderMock wallet={{...walletMocks.wallet, isHW: true}}>
+    <WalletManagerProviderMock wallet={{...walletMocks.wallet}}>
       <SwapProvider
         initialState={{
           ...mockSwapStateDefault,

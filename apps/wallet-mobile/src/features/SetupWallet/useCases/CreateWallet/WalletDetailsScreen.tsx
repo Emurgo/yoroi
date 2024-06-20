@@ -81,6 +81,7 @@ export const WalletDetailsScreen = () => {
     showRestoreWalletInfoModal,
     showRestoreWalletInfoModalChanged,
     walletIdChanged,
+    accountVisual,
   } = useSetupWallet()
   const plate = walletChecksum(publicKeyHex)
   const [name, setName] = React.useState(features.prefillWalletInfo ? debugWalletInfo.WALLET_NAME : '')
@@ -149,8 +150,9 @@ export const WalletDetailsScreen = () => {
       mnemonicPhrase: mnemonic,
       implementation: walletImplementation,
       addressMode,
+      accountVisual,
     })
-  }, [createWallet, mnemonic, name, password, track, walletImplementation])
+  }, [accountVisual, createWallet, mnemonic, name, password, track, walletImplementation])
 
   const showModalTipsPassword = React.useCallback(() => {
     openModal(

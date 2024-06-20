@@ -73,7 +73,7 @@ export const RestoreWalletDetailsScreen = () => {
   const walletNames = Array.from(walletManager.walletMetas.values()).map(({name}) => name)
   const [name, setName] = React.useState(features.prefillWalletInfo ? debugWalletInfo.WALLET_NAME : '')
   const storage = useAsyncStorage()
-  const {mnemonic, publicKeyHex, walletImplementation, walletIdChanged} = useSetupWallet()
+  const {mnemonic, publicKeyHex, walletImplementation, walletIdChanged, accountVisual} = useSetupWallet()
   const plate = walletChecksum(publicKeyHex)
 
   const passwordRef = React.useRef<RNTextInput>(null)
@@ -309,6 +309,7 @@ export const RestoreWalletDetailsScreen = () => {
                 mnemonicPhrase: mnemonic,
                 implementation: walletImplementation,
                 addressMode,
+                accountVisual,
               })
             }
             testId="setup-restore-step2-next-button"

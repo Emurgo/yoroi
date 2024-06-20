@@ -27,7 +27,7 @@ export const SaveReadOnlyWalletScreen = () => {
   const {resetToWalletSelection} = useWalletNavigation()
   const {track} = useMetrics()
 
-  const {publicKeyHex, path, walletImplementation} = useSetupWallet()
+  const {publicKeyHex, path, walletImplementation, accountVisual} = useSetupWallet()
 
   const normalizedPath = path.map((i) => {
     if (i >= NUMBERS.HARD_DERIVATION_START) {
@@ -59,9 +59,10 @@ export const SaveReadOnlyWalletScreen = () => {
         readOnly: true,
         addressMode,
         hwDeviceInfo: null,
+        accountVisual,
       })
     },
-    [createWallet, publicKeyHex, walletImplementation],
+    [createWallet, publicKeyHex, walletImplementation, accountVisual],
   )
 
   return (
@@ -183,8 +184,11 @@ type WalletInfoProps = {
 
 const WalletInfoView = ({normalizedPath, publicKeyHex}: WalletInfoProps) => {
   const strings = useStrings()
-  const {chainId} = useSelectedNetwork()
-  const plate = usePlate({chainId, publicKeyHex, implementation: 'cardano-cip1852'})
+  const {walletImplementation} = useSetupWallet()
+  const {
+    networkManager: {chainId},
+  } = useSelectedNetwork()
+  const plate = usePlate({chainId, publicKeyHex, implementation: walletImplementation})
 
   return (
     <View style={styles.walletInfoContainer}>

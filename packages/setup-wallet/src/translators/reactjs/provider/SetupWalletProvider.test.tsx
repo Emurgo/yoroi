@@ -30,6 +30,16 @@ describe('SetupWalletContext :: hooks', () => {
     expect(result.current.walletName).toBe('fake-walletName')
   })
 
+  test('accountVisualChanged', () => {
+    const {result} = renderHook(() => useSetupWallet(), {wrapper})
+
+    act(() => {
+      result.current.accountVisualChanged(1)
+    })
+
+    expect(result.current.accountVisual).toBe(1)
+  })
+
   test('walletPasswordChanged', () => {
     const {result} = renderHook(() => useSetupWallet(), {wrapper})
 

@@ -1,8 +1,8 @@
 import {useObservableValue} from '@yoroi/common'
+import {Wallet} from '@yoroi/types'
 import * as React from 'react'
 
 import {useWalletManager} from '../../context/WalletManagerProvider'
-import {WalletMeta} from '../types'
 
 export const useWalletMetas = () => {
   const {walletManager} = useWalletManager()
@@ -15,7 +15,7 @@ export const useWalletMetas = () => {
   })
 }
 
-function byName(a: {name: WalletMeta['name']}, b: {name: WalletMeta['name']}) {
+function byName(a: {name: Wallet.Meta['name']}, b: {name: Wallet.Meta['name']}) {
   const nameA = a.name.toUpperCase()
   const nameB = b.name.toUpperCase()
 

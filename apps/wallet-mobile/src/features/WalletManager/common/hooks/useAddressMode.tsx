@@ -1,11 +1,13 @@
 import * as React from 'react'
 
 import {useWalletManager} from '../../context/WalletManagerProvider'
-import {useSelectedWalletMeta} from './useSelectedWalletMeta'
+import {useSelectedWallet} from './useSelectedWallet'
 
 export const useAddressMode = () => {
   const {walletManager} = useWalletManager()
-  const {id, addressMode} = useSelectedWalletMeta()
+  const {
+    meta: {id, addressMode},
+  } = useSelectedWallet()
 
   return React.useMemo(() => {
     const enableMultipleMode = () => walletManager.changeWalletAddressMode(id, 'multiple')

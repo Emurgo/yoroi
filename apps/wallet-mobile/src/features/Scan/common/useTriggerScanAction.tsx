@@ -15,7 +15,9 @@ import {ScanAction, ScanFeature} from './types'
 import {useNavigateTo} from './useNavigateTo'
 
 export const useTriggerScanAction = ({insideFeature}: {insideFeature: ScanFeature}) => {
-  const {portfolioPrimaryTokenInfo} = useSelectedWallet()
+  const {
+    wallet: {portfolioPrimaryTokenInfo},
+  } = useSelectedWallet()
   const {openModal, closeModal, startLoading, stopLoading} = useModal()
   const navigateTo = useNavigateTo()
 

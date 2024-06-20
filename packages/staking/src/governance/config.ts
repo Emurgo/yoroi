@@ -1,4 +1,14 @@
-export const GOVERNANCE_ENDPOINTS = {
+import {Chain} from '@yoroi/types'
+
+export const GOVERNANCE_ENDPOINTS: Readonly<
+  Record<
+    Chain.SupportedNetworks,
+    {
+      getStakeKeyState: string
+      getDRepById: string
+    }
+  >
+> = {
   mainnet: {
     getStakeKeyState:
       'https://zero.yoroiwallet.com/stakekeys/{{STAKE_KEY_HASH}}/state',
@@ -7,11 +17,10 @@ export const GOVERNANCE_ENDPOINTS = {
   preprod: {
     getStakeKeyState:
       'https://yoroi-backend-zero-preprod.emurgornd.com/stakekeys/{{STAKE_KEY_HASH}}/state',
-
     getDRepById:
       'https://yoroi-backend-zero-preprod.emurgornd.com/dreps/{{DREP_ID}}/state',
   },
-  sanchonet: {
+  sancho: {
     getStakeKeyState:
       'https://yoroi-backend-zero-sanchonet.emurgornd.com/stakekeys/{{STAKE_KEY_HASH}}/state',
     getDRepById:

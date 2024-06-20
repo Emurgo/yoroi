@@ -47,6 +47,17 @@ describe('State Actions', () => {
     expect(state.walletPassword).toBe(action.walletPassword)
   })
 
+  it('AccountVisualChanged', () => {
+    const action: SetupWalletAction = {
+      type: SetupWalletActionType.AccountVisualChanged,
+      accountVisual: 1,
+    }
+
+    const state = setupWalletReducer(setupWalletDefaultState, action)
+
+    expect(state.accountVisual).toBe(action.accountVisual)
+  })
+
   it('WalletIdChanged', () => {
     const action: SetupWalletAction = {
       type: SetupWalletActionType.WalletIdChanged,
@@ -186,6 +197,7 @@ describe('State Actions', () => {
         showCreateWalletInfoModal: true,
         showRestoreWalletInfoModal: true,
         walletId: null,
+        accountVisual: 0,
       },
       action,
     )

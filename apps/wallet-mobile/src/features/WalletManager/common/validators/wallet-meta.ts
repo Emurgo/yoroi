@@ -29,7 +29,10 @@ export function isWalletMeta(walletMeta: unknown): walletMeta is Wallet.Meta {
     implementations.includes(walletMeta.implementation as never) &&
     'addressMode' in walletMeta &&
     typeof walletMeta.addressMode === 'string' &&
-    addressModes.includes(walletMeta.addressMode as never)
+    addressModes.includes(walletMeta.addressMode as never) &&
+    'hwDeviceInfo' in walletMeta &&
+    // null is object, anyways later zod will be introduced when moving into package
+    (walletMeta.hwDeviceInfo === null || typeof walletMeta.hwDeviceInfo === 'object')
   )
 }
 

@@ -45,6 +45,11 @@ export const SetupWalletProvider = ({
         type: SetupWalletActionType.WalletImplementationChanged,
         walletImplementation,
       }),
+    accountVisualChanged: (accountVisual: SetupWalletState['accountVisual']) =>
+      dispatch({
+        type: SetupWalletActionType.AccountVisualChanged,
+        accountVisual,
+      }),
     publicKeyHexChanged: (publicKeyHex: SetupWalletState['publicKeyHex']) =>
       dispatch({type: SetupWalletActionType.PublicKeyHexChanged, publicKeyHex}),
     pathChanged: (path: SetupWalletState['path']) =>

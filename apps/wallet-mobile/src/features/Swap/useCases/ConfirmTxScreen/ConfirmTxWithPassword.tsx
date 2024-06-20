@@ -44,7 +44,7 @@ export const ConfirmTxWithPassword = ({wallet, onSuccess, unsignedTx}: Props) =>
 
   const onConfirm = async (password: string) => {
     try {
-      const rootKey = await wallet.encryptedStorage.rootKey.read(password)
+      const rootKey = await wallet.encryptedStorage.xpriv.read(password)
       if (rootKey !== undefined) {
         signAndSubmitTx({unsignedTx, password})
       }

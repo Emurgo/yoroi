@@ -55,7 +55,7 @@ export const DiscoverNavigator = () => {
 
 const useDappConnectorManager = () => {
   const appStorage = useAsyncStorage()
-  const {wallet} = useSelectedWallet()
+  const {wallet, meta} = useSelectedWallet()
   const {openConfirmConnectionModal} = useOpenConfirmConnectionModal()
   const {openUnverifiedDappModal, closeModal} = useOpenUnverifiedDappModal()
   const confirmRawTx = useConfirmRawTx()
@@ -124,7 +124,7 @@ const useDappConnectorManager = () => {
   }, [confirmRawTx])
 
   return React.useMemo(
-    () => createDappConnector({appStorage, wallet, confirmConnection, signTx, signData}),
-    [appStorage, wallet, confirmConnection, signTx, signData],
+    () => createDappConnector({appStorage, wallet, confirmConnection, signTx, signData, meta}),
+    [appStorage, wallet, confirmConnection, signTx, signData, meta],
   )
 }

@@ -1,9 +1,8 @@
+import {Network} from '@yoroi/types'
 import {freeze} from 'immer'
 
-import {NetworkEpochInfo, NetworkManager} from '../../common/types'
-
-export function dateToEpochInfo(eras: NetworkManager['eras']) {
-  return (date: Date): Readonly<NetworkEpochInfo> => {
+export function dateToEpochInfo(eras: Network.Manager['eras']) {
+  return (date: Date): Readonly<Network.EpochInfo> => {
     let epochCount = 0
 
     for (const era of eras) {

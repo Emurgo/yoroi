@@ -38,7 +38,7 @@ describe('walletManager', () => {
       password: 'password',
       implementation,
       addressMode,
-      account: 0,
+      accountVisual: 0,
     })
 
     const shot = await snapshot()

@@ -3,6 +3,7 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {Blockies} from '@yoroi/identicon'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
+import {Wallet} from '@yoroi/types'
 import {validateMnemonic} from 'bip39'
 import * as React from 'react'
 import {Keyboard, StyleSheet, Text, View} from 'react-native'
@@ -14,10 +15,8 @@ import {Space} from '../../../../components/Space/Space'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation, useWalletNavigation} from '../../../../kernel/navigation'
 import {isEmptyString} from '../../../../kernel/utils'
-import {makeKeys} from '../../../../yoroi-wallets/cardano/shelley/makeKeys'
+import {keyManager} from '../../../../yoroi-wallets/cardano/key-manager/key-manager'
 import {wrappedCsl} from '../../../../yoroi-wallets/cardano/wrappedCsl'
-import {usePlate} from '../../../../yoroi-wallets/hooks'
-import {WalletMeta} from '../../../WalletManager/common/types'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
 import {useStrings} from '../../common/useStrings'
@@ -34,7 +33,7 @@ export const RestoreWalletScreen = () => {
   const bold = useBold()
   const [mnemonic, setMnemonic] = React.useState('')
   const navigation = useNavigation<SetupWalletRouteNavigation>()
-  const {publicKeyHexChanged, mnemonicChanged, mnemonicType} = useSetupWallet()
+  const {publicKeyHexChanged, mnemonicChanged, mnemonicType, walletImplementation, accountVisual} = useSetupWallet()
   const {track} = useMetrics()
   const {walletManager} = useWalletManager()
   const {openModal} = useModal()
@@ -112,7 +111,7 @@ export const RestoreWalletScreen = () => {
   )
 
   const handleOpenWalletWithDuplicatedName = React.useCallback(
-    (walletMeta: WalletMeta) => {
+    (walletMeta: Wallet.Meta) => {
       walletManager.setSelectedWalletId(walletMeta.id)
       resetToTxHistory()
     },
@@ -122,7 +121,7 @@ export const RestoreWalletScreen = () => {
   const handleOnNext = React.useCallback(async () => {
     const {csl, release} = wrappedCsl()
 
-    const {accountPubKeyHex} = await makeKeys({mnemonic, csl})
+    const {accountPubKeyHex} = await keyManager(walletImplementation)({mnemonic, csl, accountVisual})
     const checksum = walletChecksum(accountPubKeyHex)
     release()
 
@@ -147,6 +146,7 @@ export const RestoreWalletScreen = () => {
     publicKeyHexChanged(accountPubKeyHex)
     navigation.navigate('setup-wallet-restore-details')
   }, [
+    accountVisual,
     handleOpenWalletWithDuplicatedName,
     mnemonic,
     mnemonicChanged,
@@ -154,6 +154,7 @@ export const RestoreWalletScreen = () => {
     openModal,
     publicKeyHexChanged,
     strings.restoreDuplicatedWalletModalTitle,
+    walletImplementation,
     walletManager.walletMetas,
   ])
 
@@ -227,8 +228,7 @@ const Modal = ({
 }) => {
   const {styles} = useStyles()
   const strings = useStrings()
-  const {networkId} = useSetupWallet()
-  const plate = usePlate({networkId, publicKeyHex})
+  const plate = walletChecksum(publicKeyHex)
 
   return (
     <View style={styles.modal}>
@@ -237,17 +237,14 @@ const Modal = ({
       <Space height="lg" />
 
       <View style={styles.checksum}>
-        <Icon.WalletAvatar
-          image={new Blockies().asBase64({seed: plate.accountPlate.ImagePart})}
-          style={styles.walletChecksum}
-        />
+        <Icon.WalletAvatar image={new Blockies().asBase64({seed: plate.ImagePart})} style={styles.walletChecksum} />
 
         <Space width="sm" />
 
         <View>
           <Text style={styles.plateName}>{walletName}</Text>
 
-          <Text style={styles.plateText}>{plate.accountPlate.TextPart}</Text>
+          <Text style={styles.plateText}>{plate.TextPart}</Text>
         </View>
       </View>
 

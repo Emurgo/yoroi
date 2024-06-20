@@ -1,6 +1,6 @@
 import {createTypeGuardFromSchema, parseSafe} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
-import {Balance} from '@yoroi/types'
+import {Balance, HW} from '@yoroi/types'
 import {SwapApi} from '@yoroi/types/src/swap/api'
 import {useMutation, UseMutationOptions} from 'react-query'
 import {z} from 'zod'
@@ -14,22 +14,27 @@ import {SwapPriceImpactRisk} from './types'
 
 export const useCancelOrderWithHw = (
   {cancelOrder}: {cancelOrder: SwapApi['cancelOrder']},
-  options?: UseMutationOptions<void, Error, {utxo: string; bech32Address: string; useUSB: boolean}>,
+  options?: UseMutationOptions<
+    void,
+    Error,
+    {utxo: string; bech32Address: string; useUSB: boolean; hwDeviceInfo: HW.DeviceInfo}
+  >,
 ) => {
-  const {wallet} = useSelectedWallet()
+  const {wallet, meta} = useSelectedWallet()
   const mutation = useMutation({
     ...options,
     useErrorBoundary: true,
-    mutationFn: async ({utxo, useUSB, bech32Address}) => {
+    mutationFn: async ({utxo, useUSB, bech32Address, hwDeviceInfo}) => {
       const collateralUtxo = wallet.getCollateralInfo()
       if (!collateralUtxo.utxo) throw new Error('Collateral not found')
+      if (!meta.hwDeviceInfo) throw new Error('HW device not found')
       const collateralUtxoCBOR = await generateCIP30UtxoCbor(collateralUtxo.utxo)
       const addressHex = await convertBech32ToHex(bech32Address)
       const cbor = await cancelOrder({
         utxos: {collateral: collateralUtxoCBOR, order: utxo},
         address: addressHex,
       })
-      await wallet.signSwapCancellationWithLedger(cbor, useUSB)
+      await wallet.signSwapCancellationWithLedger(cbor, useUSB, hwDeviceInfo)
     },
   })
   return {
