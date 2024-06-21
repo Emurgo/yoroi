@@ -668,7 +668,7 @@ export const useTipStatus = ({
   wallet: YoroiWallet
   options?: UseQueryOptions<TipStatusResponse, Error>
 }) => {
-  const network = useSelectedNetwork()
+  const {network} = useSelectedNetwork()
   const query = useQuery<TipStatusResponse, Error>({
     suspense: true,
     staleTime: 10000,
@@ -791,7 +791,7 @@ export const useNativeAssetImage = ({
   contentFit = 'cover',
   kind = 'metadata',
 }: NativeAssetImageRequest) => {
-  const network = useSelectedNetwork()
+  const {network} = useSelectedNetwork()
   const width = getClosestSize(_width)
   const height = getClosestSize(_height)
   const mediaType = _mediaType.toLocaleLowerCase()
