@@ -19,7 +19,7 @@ storiesOf('Icon', module).add('Gallery', () => {
 
         <Item icon={<Icon.Received />} title="Received" />
 
-        <Item icon={<Icon.WalletAccount iconSeed="" />} title="WalletAccount" />
+        <Item icon={<Icon.WalletAvatar image="" />} title="WalletAccount" />
 
         <Item icon={<Icon.Emurgo width={40} height={40} />} title="Emurgo" />
 

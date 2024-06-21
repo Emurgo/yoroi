@@ -116,6 +116,11 @@ const mockAmpli = {
   receiveShareAddressClicked: jest.fn(),
   receivePageViewed: jest.fn(),
 
+  portfolioDashboardPageViewed: jest.fn(),
+  portfolioTokenDetails: jest.fn(),
+  portfolioTokensListPageViewed: jest.fn(),
+  portfolioTokensListSearchActivated: jest.fn(),
+
   discoverConnectedBottomSheetDisconnectClicked: jest.fn(),
   discoverConnectedBottomSheetOpenDAppClicked: jest.fn(),
   discoverConnectedDAppItemClicked: jest.fn(),
@@ -262,6 +267,7 @@ describe('makeMetricsManager', () => {
     metricsManager.track.receivePageViewed()
     metricsManager.track.receiveShareAddressClicked()
 
+<<<<<<< HEAD
     metricsManager.track.discoverConnectedBottomSheetDisconnectClicked()
     metricsManager.track.discoverConnectedBottomSheetOpenDAppClicked()
     metricsManager.track.discoverConnectedDAppItemClicked()
@@ -282,6 +288,15 @@ describe('makeMetricsManager', () => {
     metricsManager.track.discoverWebViewTabClicked()
     metricsManager.track.discoverWebViewToolbarSearchActivated({search_term: 'random'})
     metricsManager.track.discoverWebViewViewed()
+=======
+    metricsManager.track.portfolioDashboardPageViewed()
+    metricsManager.track.portfolioTokenDetails({token_details_tab: 'Performance'})
+    metricsManager.track.portfolioTokenDetails({token_details_tab: 'Transactions'})
+    metricsManager.track.portfolioTokenDetails({token_details_tab: 'Overview'})
+    metricsManager.track.portfolioTokensListPageViewed({tokens_tab: 'Wallet Token'})
+    metricsManager.track.portfolioTokensListPageViewed({tokens_tab: 'Dapps Token'})
+    metricsManager.track.portfolioTokensListSearchActivated({search_term: 'token'})
+>>>>>>> origin/develop
 
     expect(mockAmpli.nftGalleryDetailsTab).toHaveBeenCalledWith({nft_tab: 'Metadata'})
     expect(mockAmpli.nftGalleryPageViewed).toHaveBeenCalledWith({nft_count: 10})
@@ -373,6 +388,7 @@ describe('makeMetricsManager', () => {
     expect(mockAmpli.receivePageViewed).toHaveBeenCalled()
     expect(mockAmpli.receiveShareAddressClicked).toHaveBeenCalled()
 
+<<<<<<< HEAD
     expect(mockAmpli.discoverConnectedBottomSheetDisconnectClicked).toHaveBeenCalled() //
     expect(mockAmpli.discoverConnectedBottomSheetOpenDAppClicked).toHaveBeenCalled() //
     expect(mockAmpli.discoverConnectedDAppItemClicked).toHaveBeenCalled() //
@@ -393,6 +409,15 @@ describe('makeMetricsManager', () => {
     expect(mockAmpli.discoverWebViewTabClicked).toHaveBeenCalled()
     expect(mockAmpli.discoverWebViewToolbarSearchActivated).toHaveBeenCalledWith({search_term: 'random'})
     expect(mockAmpli.discoverWebViewViewed).toHaveBeenCalled()
+=======
+    expect(mockAmpli.portfolioDashboardPageViewed).toHaveBeenCalled()
+    expect(mockAmpli.portfolioTokenDetails).toHaveBeenCalledWith({token_details_tab: 'Performance'})
+    expect(mockAmpli.portfolioTokenDetails).toHaveBeenCalledWith({token_details_tab: 'Transactions'})
+    expect(mockAmpli.portfolioTokenDetails).toHaveBeenCalledWith({token_details_tab: 'Overview'})
+    expect(mockAmpli.portfolioTokensListPageViewed).toHaveBeenCalledWith({tokens_tab: 'Wallet Token'})
+    expect(mockAmpli.portfolioTokensListPageViewed).toHaveBeenCalledWith({tokens_tab: 'Dapps Token'})
+    expect(mockAmpli.portfolioTokensListSearchActivated).toHaveBeenCalledWith({search_term: 'token'})
+>>>>>>> origin/develop
   })
 
   test('enable should set metrics enabled to true', async () => {

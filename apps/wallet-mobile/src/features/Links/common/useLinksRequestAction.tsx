@@ -7,7 +7,7 @@ import {InteractionManager} from 'react-native'
 
 import {useModal} from '../../../components/Modal/ModalContext'
 import {logger} from '../../../kernel/logger/logger'
-import {useSelectedWalletContext} from '../../WalletManager/context/SelectedWalletContext'
+import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 import {RequestedAdaPaymentWithLinkScreen} from '../useCases/RequestedAdaPaymentWithLinkScreen/RequestedAdaPaymentWithLinkScreen'
 import {useNavigateTo} from './useNavigationTo'
 import {useStrings} from './useStrings'
@@ -17,7 +17,9 @@ export const useLinksRequestAction = () => {
   const strings = useStrings()
   const {action, actionFinished} = useLinks()
   const {openModal, closeModal} = useModal()
-  const [wallet] = useSelectedWalletContext()
+  const {
+    selected: {wallet},
+  } = useWalletManager()
   const navigateTo = useNavigateTo()
 
   const {memoChanged, receiverResolveChanged, amountChanged, reset, linkActionChanged} = useTransfer()

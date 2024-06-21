@@ -1,5 +1,4 @@
 import {parseBoolean, useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
-import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -11,7 +10,6 @@ import {useQuery, UseQueryOptions} from 'react-query'
 import {Button, Text} from '../../../components'
 import {Space} from '../../../components/Space/Space'
 import {useWalletNavigation} from '../../../kernel/navigation'
-import * as HASKELL_SHELLEY from '../../../yoroi-wallets/cardano/constants/mainnet/constants'
 import {ThemeIlustration} from '../illustrations/ThemeIlustration'
 
 export const DarkThemeAnnouncement = () => {
@@ -30,12 +28,10 @@ export const DarkThemeAnnouncement = () => {
     return () => clearTimeout(timeout)
   }, [])
 
-  const {walletImplementationIdChanged} = useSetupWallet()
   const {resetToWalletSetupInit} = useWalletNavigation()
 
   const navigate = () => {
     setScreenShown()
-    walletImplementationIdChanged(HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID)
     resetToWalletSetupInit()
   }
 

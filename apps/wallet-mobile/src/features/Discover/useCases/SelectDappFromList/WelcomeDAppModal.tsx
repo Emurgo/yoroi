@@ -48,8 +48,9 @@ const useStyles = () => {
       ...atoms.py_lg,
     },
     welcomeImage: {
-      width: 343,
+      ...atoms.w_full,
       height: 200,
+      resizeMode: 'cover',
     },
   })
 

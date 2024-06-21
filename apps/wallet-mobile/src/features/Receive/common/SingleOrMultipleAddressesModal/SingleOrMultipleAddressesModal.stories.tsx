@@ -5,11 +5,11 @@ import * as React from 'react'
 
 import {rootStorage} from '../../../../kernel/storage/rootStorage'
 import {mocks} from '../../../../yoroi-wallets/mocks'
-import {SelectedWalletProvider} from '../../../WalletManager/context/SelectedWalletContext'
+import {WalletManagerProviderMock} from '../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {SingleOrMultipleAddressesModal} from './SingleOrMultipleAddressesModal'
 
 storiesOf('Receive SingleOrMultipleAddressesModal', module).add('default', () => (
-  <SelectedWalletProvider wallet={mocks.wallet}>
+  <WalletManagerProviderMock wallet={mocks.wallet}>
     <AsyncStorageProvider
       storage={{
         ...rootStorage,
@@ -30,5 +30,5 @@ storiesOf('Receive SingleOrMultipleAddressesModal', module).add('default', () =>
     >
       <SingleOrMultipleAddressesModal onConfirm={action('onConfirm')} />
     </AsyncStorageProvider>
-  </SelectedWalletProvider>
+  </WalletManagerProviderMock>
 ))

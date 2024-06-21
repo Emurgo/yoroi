@@ -1,6 +1,7 @@
 import {useTheme} from '@yoroi/theme'
+import {Image} from 'expo-image'
 import * as React from 'react'
-import {Image, StyleSheet, Text, View} from 'react-native'
+import {StyleSheet, Text, View} from 'react-native'
 
 import {Button, Icon, Spacer, useModal} from '../../../components'
 import {getDappFallbackLogo} from './helpers'
@@ -52,7 +53,7 @@ export const ConfirmConnectionModal = ({name, website, onConfirm, logo}: Props) 
 
         <Icon.Connection size={20} color={colors.connection} />
 
-        <Image source={{uri: imageUri}} style={styles.image} />
+        <Image source={{uri: imageUri}} style={styles.image} key={imageUri} />
       </View>
 
       <Spacer height={8} />
@@ -71,9 +72,9 @@ export const ConfirmConnectionModal = ({name, website, onConfirm, logo}: Props) 
 
       <Spacer height={16} />
 
-      <View>
-        <Text style={styles.text}>{strings.confirmConnectionModalAllowThisDAppTo}</Text>
+      <Text style={styles.text}>{strings.confirmConnectionModalAllowThisDAppTo}</Text>
 
+      <View style={styles.boxDesAllowConnectDApp}>
         <Text style={styles.text}>{`\u2022 ${strings.confirmConnectionModalPermission1}`}</Text>
 
         <Text style={styles.text}>{`\u2022 ${strings.confirmConnectionModalPermission2}`}</Text>
@@ -88,36 +89,37 @@ export const ConfirmConnectionModal = ({name, website, onConfirm, logo}: Props) 
 
 const useStyles = () => {
   const theme = useTheme()
-  const colors = {connection: theme.color.black_static}
+  const colors = {connection: theme.color.black_static, dAppIconColor: theme.color.gray_c600}
   const styles = StyleSheet.create({
     imagesLine: {
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap: 24,
+      ...theme.atoms.flex,
+      ...theme.atoms.flex_row,
+      ...theme.atoms.align_center,
+      ...theme.atoms.justify_center,
+      ...theme.atoms.gap_xl,
     },
     image: {
       width: 48,
       height: 48,
     },
     line: {
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap: 4,
+      ...theme.atoms.flex,
+      ...theme.atoms.flex_row,
+      ...theme.atoms.align_center,
+      ...theme.atoms.justify_center,
+      ...theme.atoms.gap_xs,
     },
     text: {
       color: theme.color.gray_c900,
-      fontSize: 16,
-      lineHeight: 24,
+      ...theme.atoms.body_1_lg_regular,
     },
     bold: {
-      fontWeight: 'bold',
       color: theme.color.gray_c900,
-      fontSize: 16,
-      lineHeight: 24,
+      ...theme.atoms.body_1_lg_medium,
+      ...theme.atoms.font_semibold,
+    },
+    boxDesAllowConnectDApp: {
+      ...theme.atoms.pl_sm,
     },
   })
   return {styles, colors}

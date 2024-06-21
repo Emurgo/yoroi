@@ -10,6 +10,7 @@ import {getGoogleSearchItem} from '../../common/helpers'
 import {useDAppsConnected} from '../../common/useDAppsConnected'
 import {useStrings} from '../../common/useStrings'
 import {CountDAppsAvailable} from './CountDAppsAvailable/CountDAppsAvailable'
+import {CountDAppsConnected} from './CountDAppsConnected/CountDAppsConnected'
 import {DAppExplorerTabItem} from './DAppExplorerTabItem/DAppExplorerTabItem'
 import {DAppListItem} from './DAppListItem/DAppListItem'
 import {DAppTypes} from './DAppTypes/DAppTypes'
@@ -168,6 +169,14 @@ const HeaderControl = ({
             isActive={currentTab === DAppTabs.recommended}
             onPress={() => onTabChange(DAppTabs.recommended)}
           />
+        </View>
+      )}
+
+      {hasConnectedDapps && currentTab === DAppTabs.connected && (
+        <View style={styles.containerHeader}>
+          <CountDAppsConnected total={connectedOrigins.length} />
+
+          <Spacer style={styles.dAppsBox} />
         </View>
       )}
 

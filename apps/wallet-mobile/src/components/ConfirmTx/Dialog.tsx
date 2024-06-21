@@ -1,10 +1,10 @@
+import {HW} from '@yoroi/types'
 import React from 'react'
 import {useIntl} from 'react-intl'
 
 import {ErrorView, PleaseWaitView} from '../../components'
 import globalMessages, {ledgerMessages, txLabels} from '../../kernel/i18n/global-messages'
 import {LedgerConnect, LedgerTransportSwitchView} from '../../legacy/HW'
-import {DeviceId, DeviceObj} from '../../yoroi-wallets/hw'
 import {Modal} from '../legacy/Modal/Modal'
 
 type ErrorData = {
@@ -31,8 +31,8 @@ type DialogWithLedgerProps = BaseDialogProps & {
   process: 'withLedger'
   step: Step
   onChooseTransport: (bool: boolean) => void
-  onConnectBLE: (id: DeviceId) => void
-  onConnectUSB: (obj: DeviceObj) => void
+  onConnectBLE: (id: string) => void
+  onConnectUSB: (obj: HW.DeviceObj) => void
   useUSB?: boolean
 }
 

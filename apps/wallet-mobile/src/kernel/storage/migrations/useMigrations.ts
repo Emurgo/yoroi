@@ -4,6 +4,7 @@ import * as React from 'react'
 import {logger} from '../../logger/logger'
 import {to4_9_0} from './4_9_0'
 import {to4_26_0} from './4_26_0'
+import {to4_28_0} from './4_28_0'
 import {ErrorMigrationVersion} from './errors'
 import {storageVersionMaker} from './storageVersion'
 
@@ -14,6 +15,7 @@ export const useMigrations = (storage: App.Storage) => {
 
     const runMigrations = async () => {
       const currentVersion = await storageVersion.read()
+      logger.info('useMigrations: Current version', {currentVersion})
 
       if (currentVersion !== storageVersion.current) {
         if (currentVersion < 1) {
@@ -27,8 +29,14 @@ export const useMigrations = (storage: App.Storage) => {
           await storageVersion.save(2)
           logger.info('useMigrations: Storages migrated to version 2')
         }
+
+        if (currentVersion < 3) {
+          await to4_28_0(storage)
+          await storageVersion.save(3)
+          logger.info('useMigrations: Storages migrated to version 3')
+        }
       } else {
-        logger.info('useMigrations: No migraitons needed')
+        logger.info('useMigrations: No migrations needed')
       }
 
       const savedVersion = await storageVersion.read()

@@ -5,14 +5,14 @@ import React from 'react'
 
 import {ModalProvider} from '../../../../components'
 import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks'
-import {SelectedWalletProvider} from '../../../WalletManager/context/SelectedWalletContext'
+import {WalletManagerProviderMock} from '../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {ShowExchangeResultOrderScreen} from './ShowExchangeResultOrderScreen'
 
 storiesOf('Exchange ShowExchangeResultOrderScreen', module).add('with deep link data', () => <WithDeepLinkData />)
 
 const WithDeepLinkData = () => {
   return (
-    <SelectedWalletProvider wallet={{...walletMocks.wallet}}>
+    <WalletManagerProviderMock wallet={{...walletMocks.wallet}}>
       <ModalProvider>
         <LinksProvider
           initialState={{
@@ -49,6 +49,6 @@ const WithDeepLinkData = () => {
           </ExchangeProvider>
         </LinksProvider>
       </ModalProvider>
-    </SelectedWalletProvider>
+    </WalletManagerProviderMock>
   )
 }

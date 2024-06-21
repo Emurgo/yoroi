@@ -24,7 +24,7 @@ import {
   useWalletEvent,
 } from '../../../../../yoroi-wallets/hooks'
 import {TransactionInfo} from '../../../../../yoroi-wallets/types'
-import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {Action, LearnMoreLink, useNavigateTo, useStrings} from '../../common'
 import {mapStakingKeyStateToGovernanceAction} from '../../common/helpers'
 import {Routes} from '../../common/navigation'
@@ -33,7 +33,7 @@ import {GovernanceVote} from '../../types'
 import {EnterDrepIdModal} from '../EnterDrepIdModal'
 
 export const HomeScreen = () => {
-  const wallet = useSelectedWallet()
+  const {wallet, meta} = useSelectedWallet()
   const txInfos = useTransactionInfos(wallet)
   const stakingKeyHash = useStakingKey(wallet)
   const [isPendingRefetchAfterTxConfirmation, setIsPendingRefetchAfterTxConfirmation] = React.useState(false)
@@ -60,7 +60,7 @@ export const HomeScreen = () => {
 
   const txPendingDisplayed = isTxPending || isPendingRefetchAfterTxConfirmation
 
-  if (wallet.isHW) {
+  if (meta.isHW) {
     return <HardwareWalletSupportComingSoon />
   }
 
@@ -183,7 +183,10 @@ const NeverParticipatedInGovernanceVariant = () => {
   const strings = useStrings()
   const styles = useStyles()
   const navigateTo = useNavigateTo()
-  const wallet = useSelectedWallet()
+  const {
+    wallet,
+    meta: {addressMode},
+  } = useSelectedWallet()
   const {manager} = useGovernance()
   const {openModal} = useModal()
   const stakingInfo = useStakingInfo(wallet, {suspense: true})
@@ -242,7 +245,7 @@ const NeverParticipatedInGovernanceVariant = () => {
               ? await manager.createStakeRegistrationCertificate(stakingKey)
               : null
             const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
-            const unsignedTx = await createGovernanceTxMutation.mutateAsync(certs)
+            const unsignedTx = await createGovernanceTxMutation.mutateAsync({certificates: certs, addressMode})
             navigateTo.confirmTx({unsignedTx, vote, registerStakingKey: stakeCert !== null, navigateToStakingOnSuccess})
           },
         },
@@ -263,7 +266,7 @@ const NeverParticipatedInGovernanceVariant = () => {
             ? await manager.createStakeRegistrationCertificate(stakingKey)
             : null
           const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
-          const unsignedTx = await createGovernanceTxMutation.mutateAsync(certs)
+          const unsignedTx = await createGovernanceTxMutation.mutateAsync({certificates: certs, addressMode})
           navigateTo.confirmTx({unsignedTx, vote, registerStakingKey: stakeCert !== null, navigateToStakingOnSuccess})
         },
       },
@@ -283,7 +286,7 @@ const NeverParticipatedInGovernanceVariant = () => {
             ? await manager.createStakeRegistrationCertificate(stakingKey)
             : null
           const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
-          const unsignedTx = await createGovernanceTxMutation.mutateAsync(certs)
+          const unsignedTx = await createGovernanceTxMutation.mutateAsync({certificates: certs, addressMode})
           navigateTo.confirmTx({unsignedTx, vote, registerStakingKey: stakeCert !== null, navigateToStakingOnSuccess})
         },
       },

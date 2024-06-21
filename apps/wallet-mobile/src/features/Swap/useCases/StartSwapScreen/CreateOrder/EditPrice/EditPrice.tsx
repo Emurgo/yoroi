@@ -6,7 +6,7 @@ import {StyleSheet, Text, TextInput, View} from 'react-native'
 
 import {useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../../yoroi-wallets/utils/utils'
-import {useSelectedWallet} from '../../../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../../../WalletManager/common/hooks/useSelectedWallet'
 import {PRICE_PRECISION} from '../../../../common/constants'
 import {useStrings} from '../../../../common/strings'
 import {useSwapForm} from '../../../../common/SwapFormProvider'
@@ -16,7 +16,7 @@ const BORDER_SIZE = 1
 
 export const EditPrice = () => {
   const strings = useStrings()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const [isFocused, setIsFocused] = React.useState(false)
   const styles = useStyles()
 

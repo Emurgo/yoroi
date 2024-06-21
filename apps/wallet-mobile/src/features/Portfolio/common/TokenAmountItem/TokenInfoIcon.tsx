@@ -7,7 +7,7 @@ import {ImageStyle, StyleSheet, View} from 'react-native'
 
 import {Icon} from '../../../../components/Icon'
 import {isEmptyString} from '../../../../kernel/utils'
-import {useSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 
 type TokenInfoIconProps = {
   info: Portfolio.Token.Info
@@ -16,7 +16,7 @@ type TokenInfoIconProps = {
 }
 export const TokenInfoIcon = ({info, size = 'md', imageStyle}: TokenInfoIconProps) => {
   const {styles} = useStyles()
-  const {network} = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
 
   if (isPrimaryToken(info)) return <PrimaryIcon size={size} imageStyle={imageStyle} />
 
@@ -40,7 +40,7 @@ export const TokenInfoIcon = ({info, size = 'md', imageStyle}: TokenInfoIconProp
   }
 
   const [policy, name] = info.id.split('.')
-  const uri = `https://${network}.processed-media.yoroiwallet.com/${policy}/${name}?width=64&height=64&kind=metadata&fit=cover`
+  const uri = `https://${wallet.networkManager.network}.processed-media.yoroiwallet.com/${policy}/${name}?width=64&height=64&kind=metadata&fit=cover`
 
   return (
     <Image

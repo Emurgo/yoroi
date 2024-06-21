@@ -17,7 +17,7 @@ import {
 } from '../mocks'
 import {makeTxManagerStorage, syncTxs, toCachedTx, TransactionManager} from './transactionManager'
 
-jest.mock('../api', () => ({
+jest.mock('../api/api', () => ({
   getTipStatus: jest.fn().mockResolvedValue(mockedTipStatusResponse),
   fetchNewTxHistory: jest
     .fn()

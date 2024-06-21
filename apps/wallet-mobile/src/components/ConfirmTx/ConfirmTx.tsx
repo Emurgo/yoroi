@@ -1,20 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
+import {App, HW} from '@yoroi/types'
 import React, {useEffect, useState} from 'react'
 import {useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 
 import {debugWalletInfo, features} from '../../features'
 import {useAuthOsWithEasyConfirmation} from '../../features/Auth/common/hooks'
-import {walletManager} from '../../features/WalletManager/common/walletManager'
-import {useSelectedWallet} from '../../features/WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
+import {useWalletManager} from '../../features/WalletManager/context/WalletManagerProvider'
 import {confirmationMessages, errorMessages, txLabels} from '../../kernel/i18n/global-messages'
 import LocalizableError from '../../kernel/i18n/LocalizableError'
 import {isEmptyString} from '../../kernel/utils'
-import {WrongPassword} from '../../yoroi-wallets/cardano/errors'
 import {useSubmitTx} from '../../yoroi-wallets/hooks'
-import {DeviceId, DeviceObj, withBLE, withUSB} from '../../yoroi-wallets/hw'
+import {withBLE, withUSB} from '../../yoroi-wallets/hw'
 import {YoroiSignedTx, YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {delay} from '../../yoroi-wallets/utils/timeUtils'
 import {Button, ButtonProps, ValidatedTextInput} from '..'
@@ -63,10 +63,12 @@ export const ConfirmTx = ({
   const styles = useStyles()
   const navigation = useNavigation()
 
-  const wallet = useSelectedWallet()
+  const {wallet, meta} = useSelectedWallet()
+  const {walletManager} = useWalletManager()
 
   const {mutateAsync: submitTx} = useSubmitTx({wallet})
 
+  const [hwDeviceInfo, setHwDeviceInfo] = useState<HW.DeviceInfo | null>(meta.hwDeviceInfo)
   const [password, setPassword] = useState('')
   const [isProcessed, setIsProcessed] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
@@ -97,17 +99,17 @@ export const ConfirmTx = ({
   }
 
   const onConfirmationChooseTransport = (useUSB: boolean) => {
-    if (!wallet.hwDeviceInfo) throw new Error('No device info')
+    if (meta.hwDeviceInfo == null) throw new App.Errors.InvalidState('ConfirmTx: No HW device info')
     setUseUSB(useUSB)
 
     setDialogStep(DialogStep.LedgerConnect)
   }
 
   const onMountChooseTransport = (useUSB: boolean) => {
-    if (!wallet.hwDeviceInfo) throw new Error('No device info')
+    if (meta.hwDeviceInfo == null) throw new App.Errors.InvalidState('ConfirmTx: No HW device info')
     setUseUSB(useUSB)
 
-    const hwFeatures = wallet.hwDeviceInfo.hwFeatures
+    const hwFeatures = meta.hwDeviceInfo.hwFeatures
 
     if ((useUSB && hwFeatures.deviceObj == null) || (!useUSB && hwFeatures.deviceId == null)) {
       setDialogStep(DialogStep.LedgerConnect)
@@ -116,11 +118,13 @@ export const ConfirmTx = ({
     }
   }
 
-  const onConnectUSB = async (deviceObj: DeviceObj) => {
-    await walletManager.updateHWDeviceInfo(wallet, withUSB(wallet, deviceObj))
+  const onConnectUSB = async (deviceObj: HW.DeviceObj) => {
+    const hwDeviceInfo: HW.DeviceInfo = withUSB(meta, deviceObj)
+    walletManager.updateWalletHWDeviceInfo(meta.id, hwDeviceInfo)
+    setHwDeviceInfo(hwDeviceInfo)
 
     if (yoroiUnsignedTx.unsignedTx.catalystRegistrationData && onCIP36SupportChange) {
-      const isCIP36Supported = await wallet.ledgerSupportsCIP36(useUSB)
+      const isCIP36Supported = await wallet.ledgerSupportsCIP36(useUSB, hwDeviceInfo)
       if (supportsCIP36 !== isCIP36Supported) {
         onCIP36SupportChange(isCIP36Supported)
         return
@@ -135,11 +139,13 @@ export const ConfirmTx = ({
     }
   }
 
-  const onConnectBLE = async (deviceId: DeviceId) => {
-    await walletManager.updateHWDeviceInfo(wallet, withBLE(wallet, deviceId))
+  const onConnectBLE = async (deviceId: string) => {
+    const hwDeviceInfo: HW.DeviceInfo = withBLE(meta, deviceId)
+    walletManager.updateWalletHWDeviceInfo(meta.id, hwDeviceInfo)
+    setHwDeviceInfo(hwDeviceInfo)
 
     if (yoroiUnsignedTx.unsignedTx.catalystRegistrationData && onCIP36SupportChange) {
-      const isCIP36Supported = await wallet.ledgerSupportsCIP36(useUSB)
+      const isCIP36Supported = await wallet.ledgerSupportsCIP36(useUSB, hwDeviceInfo)
       if (supportsCIP36 !== isCIP36Supported) {
         onCIP36SupportChange(isCIP36Supported)
         return
@@ -160,7 +166,7 @@ export const ConfirmTx = ({
         setIsProcessing(true)
 
         let signedTx: YoroiSignedTx
-        if (wallet.isEasyConfirmationEnabled) {
+        if (meta.isEasyConfirmationEnabled) {
           if (!isEmptyString(easyConfirmDecryptKey)) {
             setDialogStep(DialogStep.Signing)
             signedTx = await smoothModalNotification(wallet.signTx(yoroiUnsignedTx, easyConfirmDecryptKey))
@@ -168,11 +174,12 @@ export const ConfirmTx = ({
             throw new Error('Empty decrypt key')
           }
         } else {
-          if (wallet.isHW) {
+          if (meta.isHW) {
+            if (hwDeviceInfo == null) throw new App.Errors.InvalidState('ConfirmTx: No HW device info')
             setDialogStep(DialogStep.WaitingHwResponse)
-            signedTx = await wallet.signTxWithLedger(yoroiUnsignedTx, useUSB)
+            signedTx = await wallet.signTxWithLedger(yoroiUnsignedTx, useUSB, hwDeviceInfo)
           } else {
-            const rootKey = await wallet.encryptedStorage.rootKey.read(password)
+            const rootKey = await wallet.encryptedStorage.xpriv.read(password)
             setDialogStep(DialogStep.Signing)
             signedTx = await smoothModalNotification(wallet.signTx(yoroiUnsignedTx, rootKey))
           }
@@ -200,7 +207,7 @@ export const ConfirmTx = ({
           onError?.(err as Error)
         }
       } catch (err) {
-        if (err instanceof WrongPassword) {
+        if (err instanceof App.Errors.WrongPassword) {
           showError({
             errorMessage: strings.incorrectPasswordTitle,
             errorLogs: strings.incorrectPasswordMessage,
@@ -218,28 +225,40 @@ export const ConfirmTx = ({
         setIsProcessing(false)
       }
     },
-    [onError, onSuccess, password, strings, submitTx, useUSB, wallet, yoroiUnsignedTx],
+    [
+      hwDeviceInfo,
+      meta.isEasyConfirmationEnabled,
+      meta.isHW,
+      onError,
+      onSuccess,
+      password,
+      strings,
+      submitTx,
+      useUSB,
+      wallet,
+      yoroiUnsignedTx,
+    ],
   )
 
   const {authWithOs} = useAuthOsWithEasyConfirmation({id: wallet.id}, {onSuccess: onConfirm})
 
   const _onConfirm = React.useCallback(async () => {
-    if (wallet.isHW && chooseTransportOnConfirmation) {
+    if (meta.isHW && chooseTransportOnConfirmation) {
       setDialogStep(DialogStep.ChooseTransport)
-    } else if (wallet.isEasyConfirmationEnabled) {
+    } else if (meta.isEasyConfirmationEnabled) {
       return authWithOs()
     } else {
       return onConfirm()
     }
-  }, [wallet.isHW, wallet.isEasyConfirmationEnabled, chooseTransportOnConfirmation, authWithOs, onConfirm])
+  }, [meta.isHW, meta.isEasyConfirmationEnabled, chooseTransportOnConfirmation, authWithOs, onConfirm])
 
-  const isConfirmationDisabled = !wallet.isEasyConfirmationEnabled && isEmptyString(password) && !wallet.isHW
+  const isConfirmationDisabled = !meta.isEasyConfirmationEnabled && isEmptyString(password) && !meta.isHW
 
   useEffect(() => {
-    if (wallet.isEasyConfirmationEnabled && autoSignIfEasyConfirmation) {
+    if (meta.isEasyConfirmationEnabled && autoSignIfEasyConfirmation) {
       _onConfirm()
     }
-  }, [autoSignIfEasyConfirmation, wallet.isEasyConfirmationEnabled, _onConfirm])
+  }, [autoSignIfEasyConfirmation, meta.isEasyConfirmationEnabled, _onConfirm])
 
   useEffect(() => {
     if (!autoConfirm || isProcessing || isProcessed) return
@@ -247,15 +266,15 @@ export const ConfirmTx = ({
   }, [autoConfirm, onConfirm, isProcessing, isProcessed])
 
   useEffect(() => {
-    if (wallet.isHW && !chooseTransportOnConfirmation) {
+    if (meta.isHW && !chooseTransportOnConfirmation) {
       setDialogStep(DialogStep.ChooseTransport)
     }
-  }, [chooseTransportOnConfirmation, wallet.isHW])
+  }, [chooseTransportOnConfirmation, meta.isHW])
 
   return (
     <View style={styles.root}>
       <View style={styles.actionContainer}>
-        {!wallet.isEasyConfirmationEnabled && !wallet.isHW && !isProvidingPassword && (
+        {!meta.isEasyConfirmationEnabled && !meta.isHW && !isProvidingPassword && (
           <ValidatedTextInput
             secureTextEntry
             value={password ?? ''}

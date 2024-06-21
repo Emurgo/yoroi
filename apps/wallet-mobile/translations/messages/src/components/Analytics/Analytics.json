@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Join the journey to improve Yoroi",
     "file": "src/components/Analytics/Analytics.tsx",
     "start": {
-      "line": 290,
+      "line": 293,
       "column": 10,
-      "index": 7245
+      "index": 7370
     },
     "end": {
-      "line": 293,
+      "line": 296,
       "column": 3,
-      "index": 7338
+      "index": 7463
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Share user insights to help us fine tune Yoroi to better serve your needs.",
     "file": "src/components/Analytics/Analytics.tsx",
     "start": {
-      "line": 294,
+      "line": 297,
       "column": 15,
-      "index": 7355
+      "index": 7480
     },
     "end": {
-      "line": 297,
+      "line": 300,
       "column": 3,
-      "index": 7494
+      "index": 7619
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Anonymous analytics data",
     "file": "src/components/Analytics/Analytics.tsx",
     "start": {
-      "line": 298,
+      "line": 301,
       "column": 13,
-      "index": 7509
+      "index": 7634
     },
     "end": {
-      "line": 301,
+      "line": 304,
       "column": 3,
-      "index": 7596
+      "index": 7721
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!You can always opt-out via Settings",
     "file": "src/components/Analytics/Analytics.tsx",
     "start": {
-      "line": 302,
+      "line": 305,
       "column": 10,
-      "index": 7608
+      "index": 7733
     },
     "end": {
-      "line": 305,
+      "line": 308,
       "column": 3,
-      "index": 7703
+      "index": 7828
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!We <b>cannot</b> access private keys",
     "file": "src/components/Analytics/Analytics.tsx",
     "start": {
-      "line": 306,
+      "line": 309,
       "column": 11,
-      "index": 7716
+      "index": 7841
     },
     "end": {
-      "line": 309,
+      "line": 312,
       "column": 3,
-      "index": 7813
+      "index": 7938
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!We <b>are not</b> recording IP addresses",
     "file": "src/components/Analytics/Analytics.tsx",
     "start": {
-      "line": 310,
+      "line": 313,
       "column": 8,
-      "index": 7823
+      "index": 7948
     },
     "end": {
-      "line": 313,
+      "line": 316,
       "column": 3,
-      "index": 7921
+      "index": 8046
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!We <b>do not</b> sell data",
     "file": "src/components/Analytics/Analytics.tsx",
     "start": {
-      "line": 314,
+      "line": 317,
       "column": 10,
-      "index": 7933
+      "index": 8058
     },
     "end": {
-      "line": 317,
+      "line": 320,
       "column": 3,
-      "index": 8019
+      "index": 8144
     }
   },
   {
@@ -109,14 +109,14 @@
     "defaultMessage": "!!!Learn more about user insights",
     "file": "src/components/Analytics/Analytics.tsx",
     "start": {
-      "line": 318,
+      "line": 321,
       "column": 8,
-      "index": 8029
+      "index": 8154
     },
     "end": {
-      "line": 321,
+      "line": 324,
       "column": 3,
-      "index": 8117
+      "index": 8242
     }
   },
   {
@@ -124,14 +124,14 @@
     "defaultMessage": "!!!Skip",
     "file": "src/components/Analytics/Analytics.tsx",
     "start": {
-      "line": 322,
+      "line": 325,
       "column": 8,
-      "index": 8127
+      "index": 8252
     },
     "end": {
-      "line": 325,
+      "line": 328,
       "column": 3,
-      "index": 8189
+      "index": 8314
     }
   },
   {
@@ -139,14 +139,14 @@
     "defaultMessage": "!!!Accept",
     "file": "src/components/Analytics/Analytics.tsx",
     "start": {
-      "line": 326,
+      "line": 329,
       "column": 10,
-      "index": 8201
+      "index": 8326
     },
     "end": {
-      "line": 329,
+      "line": 332,
       "column": 3,
-      "index": 8267
+      "index": 8392
     }
   },
   {
@@ -154,14 +154,14 @@
     "defaultMessage": "!!!Allow Yoroi analytics",
     "file": "src/components/Analytics/Analytics.tsx",
     "start": {
-      "line": 330,
+      "line": 333,
       "column": 10,
-      "index": 8279
+      "index": 8404
     },
     "end": {
-      "line": 333,
+      "line": 336,
       "column": 3,
-      "index": 8360
+      "index": 8485
     }
   }
 ]

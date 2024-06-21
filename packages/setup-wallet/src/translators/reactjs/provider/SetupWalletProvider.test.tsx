@@ -2,7 +2,7 @@ import {act, renderHook} from '@testing-library/react-hooks'
 import * as React from 'react'
 
 import {useSetupWallet} from '../hooks/useSetupWallet'
-import {HWDeviceInfo, setupWalletDefaultState} from '../state/state'
+import {setupWalletDefaultState} from '../state/state'
 import {SetupWalletProvider} from './SetupWalletProvider'
 
 const wrapper: React.FC<React.PropsWithChildren> = ({children}) => (
@@ -30,6 +30,16 @@ describe('SetupWalletContext :: hooks', () => {
     expect(result.current.walletName).toBe('fake-walletName')
   })
 
+  test('accountVisualChanged', () => {
+    const {result} = renderHook(() => useSetupWallet(), {wrapper})
+
+    act(() => {
+      result.current.accountVisualChanged(1)
+    })
+
+    expect(result.current.accountVisual).toBe(1)
+  })
+
   test('walletPasswordChanged', () => {
     const {result} = renderHook(() => useSetupWallet(), {wrapper})
 
@@ -40,28 +50,14 @@ describe('SetupWalletContext :: hooks', () => {
     expect(result.current.walletPassword).toBe('fake-walletPassword')
   })
 
-  test('networkIdChanged', () => {
+  test('walletImplementationChanged', () => {
     const {result} = renderHook(() => useSetupWallet(), {wrapper})
 
     act(() => {
-      result.current.networkIdChanged(1)
+      result.current.walletImplementationChanged('cardano-cip1852')
     })
 
-    expect(result.current.networkId).toBe(1)
-  })
-
-  test('walletImplementationIdChanged', () => {
-    const {result} = renderHook(() => useSetupWallet(), {wrapper})
-
-    act(() => {
-      result.current.walletImplementationIdChanged(
-        'fake-walletImplementationId',
-      )
-    })
-
-    expect(result.current.walletImplementationId).toBe(
-      'fake-walletImplementationId',
-    )
+    expect(result.current.walletImplementation).toBe('cardano-cip1852')
   })
 
   test('publicKeyHexChanged', () => {
@@ -151,24 +147,32 @@ describe('SetupWalletContext :: hooks', () => {
       result.current.mnemonicChanged('fake-mnemonic')
       result.current.walletNameChanged('fake-walletName')
       result.current.walletPasswordChanged('fake-walletPassword')
-      result.current.networkIdChanged(1)
-      result.current.walletImplementationIdChanged(
-        'fake-walletImplementationId',
-      )
+      result.current.walletImplementationChanged('cardano-cip1852')
       result.current.hwDeviceInfoChanged({
-        foo: 'bar',
-      } as unknown as HWDeviceInfo)
+        bip44AccountPublic: 'fake-key',
+        hwFeatures: {
+          deviceId: 'fake-sevice-id',
+          deviceObj: null,
+          model: 'Nano',
+          serialHex: 'aqerkfofk',
+          vendor: 'ledger.com',
+        },
+      })
     })
 
     expect(result.current.mnemonic).toBe('fake-mnemonic')
     expect(result.current.walletName).toBe('fake-walletName')
     expect(result.current.walletPassword).toBe('fake-walletPassword')
-    expect(result.current.networkId).toBe(1)
-    expect(result.current.walletImplementationId).toBe(
-      'fake-walletImplementationId',
-    )
+    expect(result.current.walletImplementation).toBe('cardano-cip1852')
     expect(result.current.hwDeviceInfo).toEqual({
-      foo: 'bar',
+      bip44AccountPublic: 'fake-key',
+      hwFeatures: {
+        deviceId: 'fake-sevice-id',
+        deviceObj: null,
+        model: 'Nano',
+        serialHex: 'aqerkfofk',
+        vendor: 'ledger.com',
+      },
     })
 
     act(() => {
@@ -180,9 +184,8 @@ describe('SetupWalletContext :: hooks', () => {
     expect(result.current.walletPassword).toBe(
       setupWalletDefaultState.walletPassword,
     )
-    expect(result.current.networkId).toBe(setupWalletDefaultState.networkId)
-    expect(result.current.walletImplementationId).toBe(
-      setupWalletDefaultState.walletImplementationId,
+    expect(result.current.walletImplementation).toBe(
+      setupWalletDefaultState.walletImplementation,
     )
     expect(result.current.hwDeviceInfo).toBe(
       setupWalletDefaultState.hwDeviceInfo,

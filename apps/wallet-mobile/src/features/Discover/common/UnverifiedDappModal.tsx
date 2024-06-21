@@ -1,6 +1,7 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {Button, Spacer, useModal} from '../../../components'
 import {useStrings} from './useStrings'
@@ -9,21 +10,23 @@ type Props = {
   onConfirm: () => void
 }
 
-export const unverifiedDappModalHeight = 334
+export const unverifiedDappModalHeight = 304
 
 export const useOpenUnverifiedDappModal = () => {
   const {openModal, closeModal} = useModal()
   const strings = useStrings()
+  const insets = useSafeAreaInsets()
+
   const open = React.useCallback(
     (options: {onClose: () => void; onConfirm: () => void}) => {
       openModal(
         strings.disclaimerModalTitle,
         <UnverifiedDappModal onConfirm={options.onConfirm} />,
-        unverifiedDappModalHeight,
+        unverifiedDappModalHeight + insets.bottom,
         options.onClose,
       )
     },
-    [openModal, strings.disclaimerModalTitle],
+    [insets.bottom, openModal, strings.disclaimerModalTitle],
   )
   return {openUnverifiedDappModal: open, closeModal}
 }
@@ -33,32 +36,40 @@ export const UnverifiedDappModal = ({onConfirm}: Props) => {
   const strings = useStrings()
 
   return (
-    <>
+    <View style={styles.container}>
       <View style={styles.line}>
         <Text style={styles.text}>{strings.disclaimerModalText}</Text>
       </View>
 
       <Spacer fill />
 
-      <Button title={strings.understand} shelleyTheme onPress={onConfirm} />
-    </>
+      <View style={styles.actions}>
+        <Button title={strings.understand} shelleyTheme onPress={onConfirm} />
+      </View>
+    </View>
   )
 }
 
 const useStyles = () => {
-  const theme = useTheme()
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     line: {
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap: 4,
+      ...atoms.flex,
+      ...atoms.flex_row,
+      ...atoms.align_center,
+      ...atoms.justify_center,
+      ...atoms.gap_xs,
     },
     text: {
-      color: theme.color.gray_c900,
-      fontSize: 16,
-      lineHeight: 24,
+      color: color.gray_c900,
+      ...atoms.body_1_lg_regular,
+    },
+    container: {
+      ...atoms.flex_col,
+      ...atoms.flex_1,
+    },
+    actions: {
+      ...atoms.py_lg,
     },
   })
   return {styles}

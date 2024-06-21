@@ -8,7 +8,6 @@ import {Button, Checkmark, KeyboardAvoidingView, Spacer, TextInput} from '../../
 import globalMessages from '../../../kernel/i18n/global-messages'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {isEmptyString} from '../../../kernel/utils'
-import {useWalletNames} from '../../../yoroi-wallets/hooks'
 import {
   getWalletNameError,
   REQUIRED_PASSWORD_LENGTH,
@@ -16,7 +15,7 @@ import {
   validateWalletName,
 } from '../../../yoroi-wallets/utils/validators'
 import {debugWalletInfo, features} from '../..'
-import {useWalletManager} from '../../WalletManager/context/WalletManagerContext'
+import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 
 type Props = {
   onSubmit: (credentials: {name: string; password: string}) => void
@@ -25,11 +24,11 @@ type Props = {
 export const WalletForm = ({onSubmit}: Props) => {
   const styles = useStyles()
   const strings = useStrings()
-  const walletManager = useWalletManager()
+  const {walletManager} = useWalletManager()
+  const walletNames = Array.from(walletManager.walletMetas.values()).map(({name}) => name)
   const {track} = useMetrics()
-  const {walletNames} = useWalletNames(walletManager)
   const [name, setName] = React.useState(features.prefillWalletInfo ? debugWalletInfo.WALLET_NAME : '')
-  const nameErrors = validateWalletName(name, null, walletNames ?? [])
+  const nameErrors = validateWalletName(name, null, walletNames)
   const walletNameErrorText = getWalletNameError(
     {tooLong: strings.tooLong, nameAlreadyTaken: strings.nameAlreadyTaken, mustBeFilled: strings.mustBeFilled},
     nameErrors,

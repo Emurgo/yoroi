@@ -6,7 +6,7 @@ import {governaceAfterBlock} from '../../../../kernel/config'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useStakingKey, useTipStatus} from '../../../../yoroi-wallets/hooks'
 import {CardanoMobile} from '../../../../yoroi-wallets/wallets'
-import {useSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {GovernanceVote} from '../types'
 
 export const useIsParticipatingInGovernance = (wallet: YoroiWallet) => {
@@ -31,11 +31,16 @@ export const mapStakingKeyStateToGovernanceAction = (state: StakingKeyState): Go
 
 export const useIsGovernanceFeatureEnabled = (wallet: YoroiWallet) => {
   const {bestBlock} = useTipStatus({wallet, options: {suspense: true}})
-  return bestBlock.height >= governaceAfterBlock[wallet.network]
+  return bestBlock.height >= governaceAfterBlock[wallet.networkManager.network]
 }
 
 export const useGovernanceManagerMaker = () => {
-  const {networkId, id: walletId} = useSelectedWallet()
+  const {
+    wallet: {
+      networkManager: {network},
+      id: walletId,
+    },
+  } = useSelectedWallet()
 
   const storage = useAsyncStorage()
   const governanceStorage = storage.join(`wallet/${walletId}/staking-governance/`)
@@ -44,11 +49,11 @@ export const useGovernanceManagerMaker = () => {
     () =>
       governanceManagerMaker({
         walletId,
-        networkId,
-        api: governanceApiMaker({networkId}),
+        network,
+        api: governanceApiMaker({network}),
         cardano: CardanoMobile,
         storage: governanceStorage,
       }),
-    [governanceStorage, networkId, walletId],
+    [governanceStorage, network, walletId],
   )
 }

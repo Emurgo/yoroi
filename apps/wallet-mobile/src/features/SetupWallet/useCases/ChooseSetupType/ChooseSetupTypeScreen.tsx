@@ -10,7 +10,6 @@ import {isProduction} from '../../../../kernel/env'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import {LedgerTransportSwitchModal} from '../../../../legacy/HW'
-import * as HASKELL_SHELLEY from '../../../../yoroi-wallets/cardano/constants/mainnet/constants'
 import {ButtonCard} from '../../common/ButtonCard/ButtonCard'
 import {LogoBanner} from '../../common/LogoBanner/LogoBanner'
 import {useStrings} from '../../common/useStrings'
@@ -21,12 +20,7 @@ import {RestoreWallet} from '../../illustrations/RestoreWallet'
 export const ChooseSetupTypeScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
-  const {
-    walletImplementationIdChanged,
-    networkIdChanged,
-    setUpTypeChanged,
-    useUSBChanged: USBChanged,
-  } = useSetupWallet()
+  const {walletImplementationChanged, setUpTypeChanged, useUSBChanged: USBChanged} = useSetupWallet()
   const [isModalOpen, setIsModalOpen] = React.useState(false)
   const {track} = useMetrics()
 
@@ -39,11 +33,10 @@ export const ChooseSetupTypeScreen = () => {
   const navigation = useNavigation<SetupWalletRouteNavigation>()
 
   const handleCreate = () => {
-    walletImplementationIdChanged(HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID)
+    walletImplementationChanged('cardano-cip1852')
     setUpTypeChanged('create')
 
     if (isProduction) {
-      networkIdChanged(HASKELL_SHELLEY.NETWORK_ID)
       navigation.navigate('setup-wallet-about-recovery-phase')
       return
     }
@@ -53,11 +46,10 @@ export const ChooseSetupTypeScreen = () => {
   }
 
   const handleRestore = () => {
-    walletImplementationIdChanged(HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID)
+    walletImplementationChanged('cardano-cip1852')
     setUpTypeChanged('restore')
 
     if (isProduction) {
-      networkIdChanged(HASKELL_SHELLEY.NETWORK_ID)
       navigation.navigate('setup-wallet-restore-choose-mnemonic-type')
       return
     }
@@ -72,11 +64,10 @@ export const ChooseSetupTypeScreen = () => {
 
   const navigateHw = () => {
     setIsModalOpen(false)
-    walletImplementationIdChanged(HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID)
+    walletImplementationChanged('cardano-cip1852')
     setUpTypeChanged('hw')
 
     if (isProduction) {
-      networkIdChanged(HASKELL_SHELLEY.NETWORK_ID)
       navigation.navigate('setup-wallet-check-nano-x')
       return
     }

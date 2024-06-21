@@ -2,8 +2,8 @@ import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/address
 import assert from 'assert'
 import {Buffer} from 'buffer'
 
-import {getMasterKeyFromMnemonic} from '../byron/util'
 import {harden} from '../common/signatureUtils'
+import {getMasterKeyFromMnemonic} from '../mnemonic/mnemonic'
 import {createRawTxSigningKey} from '../utils'
 import {wrappedCsl} from '../wrappedCsl'
 import * as cip8 from './cip8'

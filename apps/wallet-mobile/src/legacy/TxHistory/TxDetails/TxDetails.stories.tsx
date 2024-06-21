@@ -4,16 +4,16 @@ import {AsyncStorageProvider} from '@yoroi/common'
 import React from 'react'
 
 import {QueryProvider, RouteProvider} from '../../../../.storybook/decorators'
-import {SelectedWalletProvider} from '../../../features/WalletManager/context/SelectedWalletContext'
 import {rootStorage} from '../../../kernel/storage/rootStorage'
 import {mocks} from '../../../yoroi-wallets/mocks'
+import {WalletManagerProviderMock} from '../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {TxDetails} from './TxDetails'
 
 storiesOf('TxDetails', module)
   .add('Default', () => (
     <QueryProvider>
       <RouteProvider params={{id: mockTransaction.id}}>
-        <SelectedWalletProvider
+        <WalletManagerProviderMock
           wallet={{
             ...mocks.wallet,
             transactions: {
@@ -22,14 +22,14 @@ storiesOf('TxDetails', module)
           }}
         >
           <TxDetails />
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </RouteProvider>
     </QueryProvider>
   ))
   .add('With memo', () => (
     <QueryProvider>
       <RouteProvider params={{id: mockTransaction.id}}>
-        <SelectedWalletProvider
+        <WalletManagerProviderMock
           wallet={{
             ...mocks.wallet,
             transactions: {
@@ -41,14 +41,14 @@ storiesOf('TxDetails', module)
           }}
         >
           <TxDetails />
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </RouteProvider>
     </QueryProvider>
   ))
   .add('With privacy mode enabled', () => (
     <QueryProvider>
       <RouteProvider params={{id: mockTransaction.id}}>
-        <SelectedWalletProvider wallet={mocks.wallet}>
+        <WalletManagerProviderMock wallet={mocks.wallet}>
           <AsyncStorageProvider
             storage={{
               ...rootStorage,
@@ -66,7 +66,7 @@ storiesOf('TxDetails', module)
           >
             <TxDetails />
           </AsyncStorageProvider>
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </RouteProvider>
     </QueryProvider>
   ))

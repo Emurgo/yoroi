@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Wallet name",
     "file": "src/features/SetupWallet/legacy/WalletForm.tsx",
     "start": {
-      "line": 146,
+      "line": 145,
       "column": 24,
-      "index": 5401
+      "index": 5375
     },
     "end": {
-      "line": 149,
+      "line": 148,
       "column": 3,
-      "index": 5509
+      "index": 5483
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Spending password",
     "file": "src/features/SetupWallet/legacy/WalletForm.tsx",
     "start": {
-      "line": 150,
+      "line": 149,
       "column": 20,
-      "index": 5531
+      "index": 5505
     },
     "end": {
-      "line": 153,
+      "line": 152,
       "column": 3,
-      "index": 5641
+      "index": 5615
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Continue",
     "file": "src/features/SetupWallet/legacy/WalletForm.tsx",
     "start": {
-      "line": 154,
+      "line": 153,
       "column": 18,
-      "index": 5661
+      "index": 5635
     },
     "end": {
-      "line": 157,
+      "line": 156,
       "column": 3,
-      "index": 5760
+      "index": 5734
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Minimum characters",
     "file": "src/features/SetupWallet/legacy/WalletForm.tsx",
     "start": {
-      "line": 158,
+      "line": 157,
       "column": 31,
-      "index": 5793
+      "index": 5767
     },
     "end": {
-      "line": 161,
+      "line": 160,
       "column": 3,
-      "index": 5934
+      "index": 5908
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Repeat password",
     "file": "src/features/SetupWallet/legacy/WalletForm.tsx",
     "start": {
-      "line": 162,
+      "line": 161,
       "column": 28,
-      "index": 5964
+      "index": 5938
     },
     "end": {
-      "line": 165,
+      "line": 164,
       "column": 3,
-      "index": 6080
+      "index": 6054
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!Passwords do not match",
     "file": "src/features/SetupWallet/legacy/WalletForm.tsx",
     "start": {
-      "line": 166,
+      "line": 165,
       "column": 28,
-      "index": 6110
+      "index": 6084
     },
     "end": {
-      "line": 169,
+      "line": 168,
       "column": 3,
-      "index": 6233
+      "index": 6207
     }
   }
 ]

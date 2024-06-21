@@ -9,7 +9,7 @@ import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {NftRoutes, useParams} from '../../../../kernel/navigation'
 import {isEmptyString} from '../../../../kernel/utils'
 import {MediaPreview} from '../../../Portfolio/common/MediaPreview/MediaPreview'
-import {useSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 
 type Params = NftRoutes['nft-details']
 
@@ -19,7 +19,7 @@ const isParams = (params?: Params | object | undefined): params is Params => {
 
 export const NftDetailsImage = () => {
   const {id} = useParams<Params>(isParams)
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const dimensions = useWindowDimensions()
 
   // reading from the getter, there is no need to subscribe to changes

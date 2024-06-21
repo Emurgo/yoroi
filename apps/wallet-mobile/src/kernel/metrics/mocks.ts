@@ -80,6 +80,11 @@ export const mockMetricsManager = (): MetricsManager => {
     receiveShareAddressClicked: e,
     receivePageViewed: e,
 
+    portfolioDashboardPageViewed: e,
+    portfolioTokenDetails: e,
+    portfolioTokensListPageViewed: e,
+    portfolioTokensListSearchActivated: e,
+
     discoverConnectedBottomSheetDisconnectClicked: e,
     discoverConnectedBottomSheetOpenDAppClicked: e,
     discoverConnectedDAppItemClicked: e,

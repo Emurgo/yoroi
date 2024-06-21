@@ -49,7 +49,7 @@ const AccordionHeader = ({
   expanded?: boolean
   onPress: () => void
 }) => {
-  const {styles} = useStyles()
+  const {styles, colors} = useStyles()
 
   return (
     <TouchableOpacity onPress={onPress} style={styles.header}>
@@ -57,7 +57,11 @@ const AccordionHeader = ({
         {isString(children) ? <Text style={styles.headerLabel}>{children}</Text> : children}
       </View>
 
-      {expanded ? <Icon.Chevron direction="up" size={24} /> : <Icon.Chevron direction="down" size={24} />}
+      {expanded ? (
+        <Icon.Chevron color={colors.gray} direction="up" size={24} />
+      ) : (
+        <Icon.Chevron color={colors.gray} direction="down" size={24} />
+      )}
     </TouchableOpacity>
   )
 }
@@ -94,6 +98,8 @@ const useStyles = () => {
       opacity: 0,
     },
   })
-
-  return {styles} as const
+  const colors = {
+    gray: color.gray_c800,
+  }
+  return {styles, colors} as const
 }

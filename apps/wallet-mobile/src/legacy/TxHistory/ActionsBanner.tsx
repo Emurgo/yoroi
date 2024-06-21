@@ -13,8 +13,8 @@ import {useMultipleAddressesInfo} from '../../features/Receive/common/useMultipl
 import {useReceiveAddressesStatus} from '../../features/Receive/common/useReceiveAddressesStatus'
 import {messages as receiveMessages} from '../../features/Receive/common/useStrings'
 import {useSwapForm} from '../../features/Swap/common/SwapFormProvider'
-import {useAddressModeManager} from '../../features/WalletManager/common/useAddressModeManager'
-import {useSelectedWallet} from '../../features/WalletManager/context/SelectedWalletContext'
+import {useAddressMode} from '../../features/WalletManager/common/hooks/useAddressMode'
+import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {useCopy} from '../../hooks/useCopy'
 import {actionMessages} from '../../kernel/i18n/global-messages'
 import {useMetrics} from '../../kernel/metrics/metricsManager'
@@ -26,7 +26,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
 
-  const {isSingle, addressMode} = useAddressModeManager()
+  const {isSingle, addressMode} = useAddressMode()
   const {next: nextReceiveAddress, used: usedAddresses} = useReceiveAddressesStatus(addressMode)
   const {selectedAddressChanged} = useReceive()
   const [isCopying, copy] = useCopy()
@@ -38,7 +38,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
 
   const {track} = useMetrics()
 
-  const wallet = useSelectedWallet()
+  const {meta, wallet} = useSelectedWallet()
   const sellTokenInfo = useTokenInfo({
     wallet,
     tokenId: orderData.amounts.sell.tokenId,
@@ -128,9 +128,9 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
             <Text style={styles.actionLabel}>{strings.receiveLabel}</Text>
           </View>
 
-          {!wallet.isReadOnly && <Spacer width={18} />}
+          {!meta.isReadOnly && <Spacer width={18} />}
 
-          {!wallet.isReadOnly && (
+          {!meta.isReadOnly && (
             <View style={styles.centralized}>
               <TouchableOpacity
                 style={styles.actionIcon}
@@ -145,7 +145,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
             </View>
           )}
 
-          {!wallet.isReadOnly && (
+          {!meta.isReadOnly && (
             <>
               <Spacer width={18} />
 

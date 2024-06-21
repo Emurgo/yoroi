@@ -1,8 +1,5 @@
 import {App} from '@yoroi/types'
 
-import {WalletMeta} from '../../../features/WalletManager/common/types'
-import {WALLET_IMPLEMENTATION_REGISTRY} from '../../../yoroi-wallets/types/other'
-
 export const migrateAddressMode = async (rootStorage: App.Storage) => {
   const walletsRootStorage = rootStorage.join('wallet/')
   const addAddressMode = addAddressModeWrapper(walletsRootStorage)
@@ -21,13 +18,13 @@ export const migrateAddressMode = async (rootStorage: App.Storage) => {
   await Promise.all(migrations)
 }
 
-const addAddressModeWrapper = (walletsRootStorage: App.Storage) => async (walletMetaToMigrate: WalletMeta) => {
+const addAddressModeWrapper = (walletsRootStorage: App.Storage) => async (walletMetaToMigrate: WalletMetaV1) => {
   return walletsRootStorage.setItem(walletMetaToMigrate.id, {...walletMetaToMigrate, addressMode: 'single'})
 }
 
 export const to4_26_0 = migrateAddressMode
 
-export function isWalletMetaV1(walletMeta: unknown): walletMeta is WalletMeta {
+export function isWalletMetaV1(walletMeta: unknown): walletMeta is WalletMetaV1 {
   if (walletMeta == null) return false
   if (typeof walletMeta !== 'object') return false
   return (
@@ -49,11 +46,22 @@ export function isWalletMetaV1(walletMeta: unknown): walletMeta is WalletMeta {
       && typeof walletMeta.provider === 'string'
       || !('provider' in walletMeta)) &&
     'walletImplementationId' in walletMeta
-      && typeof walletMeta.walletImplementationId === 'string'
-      && Object.values(WALLET_IMPLEMENTATION_REGISTRY).includes(walletMeta?.walletImplementationId as never) &&
+      && typeof walletMeta.walletImplementationId === 'string' &&
     ('isShelley' in walletMeta
       && typeof walletMeta.isShelley === 'boolean'
       || !('isShelley' in walletMeta)) && 
     (!('addressMode' in walletMeta) || typeof walletMeta.addressMode !== 'string')
   )
+}
+
+type WalletMetaV1 = {
+  id: string
+  name: string
+  networkId: number
+  isHW: boolean
+  isEasyConfirmationEnabled: boolean
+  checksum: unknown
+  provider?: string
+  walletImplementationId: string
+  isShelley?: boolean
 }

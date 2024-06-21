@@ -10,12 +10,14 @@ import {useClaim} from '../../../features/Claim/module/ClaimProvider'
 import {useClaimTokens} from '../../../features/Claim/module/useClaimTokens'
 import {AskConfirmation} from '../../../features/Claim/useCases/AskConfirmation'
 import {pastedFormatter} from '../../../yoroi-wallets/utils/amountUtils'
-import {useSelectedWallet} from '../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {ScanAction, ScanFeature} from './types'
 import {useNavigateTo} from './useNavigateTo'
 
 export const useTriggerScanAction = ({insideFeature}: {insideFeature: ScanFeature}) => {
-  const {portfolioPrimaryTokenInfo} = useSelectedWallet()
+  const {
+    wallet: {portfolioPrimaryTokenInfo},
+  } = useSelectedWallet()
   const {openModal, closeModal, startLoading, stopLoading} = useModal()
   const navigateTo = useNavigateTo()
 

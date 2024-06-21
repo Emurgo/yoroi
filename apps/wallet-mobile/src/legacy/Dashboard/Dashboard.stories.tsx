@@ -2,9 +2,9 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
 import {QueryProvider} from '../../../.storybook/decorators'
-import {SelectedWalletProvider} from '../../features/WalletManager/context/SelectedWalletContext'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {mocks} from '../../yoroi-wallets/mocks'
+import {WalletManagerProviderMock} from '../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {Dashboard} from './Dashboard'
 
 storiesOf('Dashboard', module)
@@ -16,9 +16,9 @@ storiesOf('Dashboard', module)
 
     return (
       <QueryProvider>
-        <SelectedWalletProvider wallet={notDelegatingWallet}>
+        <WalletManagerProviderMock wallet={notDelegatingWallet}>
           <Dashboard />
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryProvider>
     )
   })
@@ -30,9 +30,9 @@ storiesOf('Dashboard', module)
 
     return (
       <QueryProvider>
-        <SelectedWalletProvider wallet={loadingWallet}>
+        <WalletManagerProviderMock wallet={loadingWallet}>
           <Dashboard />
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryProvider>
     )
   })
@@ -45,9 +45,9 @@ storiesOf('Dashboard', module)
 
     return (
       <QueryProvider>
-        <SelectedWalletProvider wallet={loadingWallet}>
+        <WalletManagerProviderMock wallet={loadingWallet}>
           <Dashboard />
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryProvider>
     )
   })
@@ -60,9 +60,9 @@ storiesOf('Dashboard', module)
 
     return (
       <QueryProvider>
-        <SelectedWalletProvider wallet={loadedWallet}>
+        <WalletManagerProviderMock wallet={loadedWallet}>
           <Dashboard />
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryProvider>
     )
   })
@@ -75,9 +75,9 @@ storiesOf('Dashboard', module)
 
     return (
       <QueryProvider>
-        <SelectedWalletProvider wallet={loadedWallet}>
+        <WalletManagerProviderMock wallet={loadedWallet}>
           <Dashboard />
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryProvider>
     )
   })
@@ -90,9 +90,9 @@ storiesOf('Dashboard', module)
 
     return (
       <QueryProvider>
-        <SelectedWalletProvider wallet={loadedWallet}>
+        <WalletManagerProviderMock wallet={loadedWallet}>
           <Dashboard />
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryProvider>
     )
   })

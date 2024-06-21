@@ -1,21 +1,26 @@
+import {amountFormatter} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {StandardModal} from '../../components'
-import {useSelectedWallet} from '../../features/WalletManager/context/SelectedWalletContext'
+import {usePortfolioPrimaryBalance} from '../../features/Portfolio/common/hooks/usePortfolioPrimaryBalance'
+import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import globalMessages, {confirmationMessages} from '../../kernel/i18n/global-messages'
-import {CATALYST} from '../../yoroi-wallets/cardano/utils'
-import {useBalances} from '../../yoroi-wallets/hooks'
-import {Amounts, asQuantity} from '../../yoroi-wallets/utils'
-import {formatTokenWithText} from '../../yoroi-wallets/utils/format'
+import {catalystConfig} from '../../yoroi-wallets/cardano/constants/catalyst-config'
 
 export const InsufficientFundsModal = ({visible, onRequestClose}: {visible: boolean; onRequestClose: () => void}) => {
   const strings = useStrings()
   const styles = useStyles()
-  const wallet = useSelectedWallet()
-  const balances = useBalances(wallet)
+  const {wallet} = useSelectedWallet()
+
+  const primaryBalance = usePortfolioPrimaryBalance({wallet})
+  const fmtMinPrimaryBalance = amountFormatter()({
+    info: wallet.portfolioPrimaryTokenInfo,
+    quantity: catalystConfig.displayedMinAda,
+  })
+  const fmtPrimaryBalance = amountFormatter()(primaryBalance)
 
   return (
     <StandardModal
@@ -31,11 +36,8 @@ export const InsufficientFundsModal = ({visible, onRequestClose}: {visible: bool
       <View>
         <Text style={styles.text}>
           {strings.insufficientBalance({
-            requiredBalance: formatTokenWithText(asQuantity(CATALYST.DISPLAYED_MIN_ADA), wallet.primaryToken),
-            currentBalance: formatTokenWithText(
-              Amounts.getAmount(balances, wallet.primaryToken.identifier).quantity,
-              wallet.primaryToken,
-            ),
+            requiredBalance: fmtMinPrimaryBalance,
+            currentBalance: fmtPrimaryBalance,
           })}
         </Text>
       </View>

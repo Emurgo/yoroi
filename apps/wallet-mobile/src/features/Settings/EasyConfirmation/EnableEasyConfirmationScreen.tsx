@@ -1,5 +1,6 @@
 import {useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
+import {App} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
@@ -10,10 +11,8 @@ import {LoadingOverlay} from '../../../components/LoadingOverlay'
 import {showErrorDialog} from '../../../kernel/dialogs'
 import {errorMessages} from '../../../kernel/i18n/global-messages'
 import {isEmptyString} from '../../../kernel/utils'
-import {WrongPassword} from '../../../yoroi-wallets/cardano/errors'
-import {useEnableEasyConfirmation} from '../../../yoroi-wallets/hooks'
-import {useSelectedWallet} from '../../WalletManager/context/SelectedWalletContext'
-import {useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../WalletManager/context/SelectedWalletMetaContext'
+import {useEnableEasyConfirmation} from '../../Auth/common/useEnableEasyConfirmation'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 
 export const EnableEasyConfirmationScreen = () => {
   const intl = useIntl()
@@ -21,20 +20,15 @@ export const EnableEasyConfirmationScreen = () => {
   const styles = useStyles()
   const navigation = useNavigation()
   const [rootPassword, setRootPassword] = React.useState('')
-  const walletMeta = useSelectedWalletMeta()
-  const setSelectedWalletMeta = useSetSelectedWalletMeta()
-  const wallet = useSelectedWallet()
-  const {enableEasyConfirmation, isLoading} = useEnableEasyConfirmation(wallet, {
+  const {
+    meta: {id},
+  } = useSelectedWallet()
+  const {enableEasyConfirmation, isLoading} = useEnableEasyConfirmation(id, {
     onSuccess: () => {
-      if (!walletMeta) throw new Error('Missing walletMeta')
-      setSelectedWalletMeta({
-        ...walletMeta,
-        isEasyConfirmationEnabled: true,
-      })
       navigation.goBack()
     },
     onError: (error) => {
-      if (!(error instanceof WrongPassword)) throw error
+      if (!(error instanceof App.Errors.WrongPassword)) throw error
       showErrorDialog(errorMessages.incorrectPassword, intl)
     },
   })

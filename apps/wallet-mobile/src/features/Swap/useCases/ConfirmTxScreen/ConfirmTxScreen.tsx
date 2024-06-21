@@ -13,7 +13,7 @@ import {useSignAndSubmitTx, useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {YoroiSignedTx} from '../../../../yoroi-wallets/types'
 import {Quantities} from '../../../../yoroi-wallets/utils'
 import {useAuthOsWithEasyConfirmation} from '../../../Auth/common/hooks'
-import {useSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from '../../common/navigation'
 import {useStrings} from '../../common/strings'
 import {ConfirmTx} from './ConfirmTx'
@@ -25,7 +25,7 @@ export const ConfirmTxScreen = () => {
   const [contentHeight, setContentHeight] = React.useState(0)
   const strings = useStrings()
   const styles = useStyles()
-  const wallet = useSelectedWallet()
+  const {wallet, meta} = useSelectedWallet()
   const navigate = useNavigateTo()
   const {track} = useMetrics()
   const {openModal, closeModal} = useModal()
@@ -133,12 +133,12 @@ export const ConfirmTxScreen = () => {
           shelleyTheme
           title={strings.confirm}
           onPress={() => {
-            if (wallet.isEasyConfirmationEnabled) {
+            if (meta.isEasyConfirmationEnabled) {
               authWithOs()
               return
             }
             openModal(
-              wallet.isHW ? strings.chooseConnectionMethod : strings.signTransaction,
+              meta.isHW ? strings.chooseConnectionMethod : strings.signTransaction,
               <View style={styles.modalContent}>
                 <ConfirmTx
                   wallet={wallet}
@@ -149,7 +149,7 @@ export const ConfirmTxScreen = () => {
 
                 <Spacer height={16} />
               </View>,
-              wallet.isHW ? 430 : 350,
+              meta.isHW ? 430 : 350,
             )
           }}
         />

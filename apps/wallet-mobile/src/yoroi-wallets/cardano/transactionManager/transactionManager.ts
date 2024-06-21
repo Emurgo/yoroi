@@ -19,7 +19,7 @@ import {
 } from '../../types/other'
 import {RemoteCertificateMeta} from '../../types/staking'
 import {Version, versionCompare} from '../../utils/versioning'
-import * as yoroiApi from '../api'
+import * as yoroiApi from '../api/api'
 import {ApiHistoryError} from '../errors'
 
 export type TransactionManagerState = {

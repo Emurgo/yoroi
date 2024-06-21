@@ -2,7 +2,6 @@ import {NavigationContainer, NavigationContainerRef} from '@react-navigation/nat
 import {createStackNavigator} from '@react-navigation/stack'
 import {isString} from '@yoroi/common'
 import {supportedPrefixes} from '@yoroi/links'
-import {TransferProvider} from '@yoroi/transfer'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Alert, AppState, AppStateStatus, InteractionManager, Platform} from 'react-native'
@@ -32,12 +31,11 @@ import {useDeepLinkWatcher} from './features/Links/common/useDeepLinkWatcher'
 import {PortfolioScreen} from './features/Portfolio/useCases/PortfolioScreen'
 import {SearchProvider} from './features/Search/SearchContext'
 import {SetupWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
-import {useWalletManager} from './features/WalletManager/context/WalletManagerContext'
+import {useHasWallets} from './features/WalletManager/common/hooks/useHasWallets'
 import {useStatusBar} from './hooks/useStatusBar'
 import {agreementDate} from './kernel/config'
 import {AppRoutes} from './kernel/navigation'
 import {WalletNavigator} from './WalletNavigator'
-import {useHasWallets} from './yoroi-wallets/hooks'
 
 const Stack = createStackNavigator<AppRoutes>()
 const navRef = React.createRef<NavigationContainerRef<ReactNavigation.RootParamList>>()
@@ -48,7 +46,6 @@ export const AppNavigator = () => {
   const strings = useStrings()
   const [routeName, setRouteName] = React.useState<string>()
   useStatusBar(routeName)
-
   useHideScreenInAppSwitcher()
 
   useAutoLogout()
@@ -174,15 +171,7 @@ export const AppNavigator = () => {
                 )}
 
                 {afterLoginAction === 'manage-wallets' && (
-                  <Stack.Screen name="manage-wallets">
-                    {() => (
-                      <SearchProvider>
-                        <TransferProvider>
-                          <WalletNavigator />
-                        </TransferProvider>
-                      </SearchProvider>
-                    )}
-                  </Stack.Screen>
+                  <Stack.Screen name="manage-wallets" getComponent={() => WalletNavigator} />
                 )}
               </Stack.Group>
 
@@ -328,8 +317,7 @@ const getAfterLoginAction = (
   return 'manage-wallets'
 }
 const useAfterLoginAction = () => {
-  const walletManager = useWalletManager()
-  const {hasWallets} = useHasWallets(walletManager)
+  const hasWallets = useHasWallets()
   const {showBiometricsScreen} = useShowBiometricsScreen()
   const {showDarkThemeAnnouncement} = useShowDarkThemeAnnouncementScreen()
   const isAuthOsSupported = useIsAuthOsSupported()

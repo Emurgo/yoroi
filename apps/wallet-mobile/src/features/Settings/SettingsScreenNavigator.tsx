@@ -17,13 +17,12 @@ import {
 } from '../../kernel/navigation'
 import {ChangePinScreen} from '../Auth'
 import {EnableLoginWithPin} from '../Auth/EnableLoginWithPin'
-import {useSelectedWallet} from '../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 import {About} from './About'
 import {ApplicationSettingsScreen} from './ApplicationSettings'
 import {ChangeLanguageScreen} from './ChangeLanguage'
 import {ChangePasswordScreen} from './ChangePassword'
 import {ChangeThemeScreen} from './ChangeTheme/ChangeThemeScreen'
-import {ChangeWalletName} from './ChangeWalletName'
 import {ChangeCurrencyScreen} from './Currency/ChangeCurrencyScreen'
 import {DisableEasyConfirmationScreen, EnableEasyConfirmationScreen} from './EasyConfirmation'
 import {EnableLoginWithOsScreen} from './EnableLoginWithOs'
@@ -33,6 +32,7 @@ import {FailedTxScreen} from './ManageCollateral/ConfirmTx/FailedTx/FailedTxScre
 import {SubmittedTxScreen} from './ManageCollateral/ConfirmTx/SubmittedTx/SubmittedTxScreen'
 import {PrivacyPolicyScreen} from './PrivacyPolicy'
 import {RemoveWalletScreen} from './RemoveWallet'
+import {RenameWallet} from './RenameWallet'
 import {SystemLogScreen} from './SystemLogScreen/SystemLogScreen'
 import {TermsOfServiceScreen} from './TermsOfService'
 import {WalletSettingsScreen} from './WalletSettings'
@@ -40,7 +40,7 @@ import {WalletSettingsScreen} from './WalletSettings'
 const Stack = createStackNavigator<SettingsStackRoutes>()
 export const SettingsScreenNavigator = () => {
   const strings = useStrings()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {track} = useMetrics()
   const {atoms, color} = useTheme()
 
@@ -80,7 +80,7 @@ export const SettingsScreenNavigator = () => {
 
         <Stack.Screen
           name="change-wallet-name"
-          component={ChangeWalletName}
+          component={RenameWallet}
           options={{title: strings.changeWalletNameTitle}}
         />
 

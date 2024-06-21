@@ -2,10 +2,10 @@ import {CardanoTypes} from '../types'
 import {GovernanceApi} from './api'
 import {convertHexKeyHashToBech32Format, parseDrepId} from './helpers'
 import {StakingKeyState} from './types'
-import {App} from '@yoroi/types'
+import {App, Chain} from '@yoroi/types'
 
 export type Config = {
-  networkId: number
+  network: Chain.SupportedNetworks
   walletId: string
   cardano: CardanoTypes.Wasm
   storage: App.Storage

@@ -5,7 +5,7 @@ import {ImageStyle, View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 import placeholder from '../../../../assets/img/nft-placeholder.png'
-import {useSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 
 type MediaPreviewProps = {
   info: Portfolio.Token.Info
@@ -26,14 +26,14 @@ export const MediaPreview = ({
   contentFit = 'cover',
   blurRadius,
 }: MediaPreviewProps) => {
-  const {network} = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const [loading, setLoading] = React.useState(false)
   const [error, setError] = React.useState(false)
 
   const [policy, name] = info.id.split('.')
   const uri = showPlaceholder
     ? placeholder
-    : `https://${network}.processed-media.yoroiwallet.com/${policy}/${name}?width=512&height=512&kind=metadata&fit=${contentFit}`
+    : `https://${wallet.networkManager.network}.processed-media.yoroiwallet.com/${policy}/${name}?width=512&height=512&kind=metadata&fit=${contentFit}`
 
   return (
     <View style={{width, height, overflow: 'hidden'}}>
@@ -54,8 +54,8 @@ export const MediaPreview = ({
           setError(true)
         }}
       >
-        <SkeletonPlaceholder enabled={loading} borderRadius={blurRadius} highlightColor="#DCE0E9" speed={800}>
-          <View style={{height: height - 1, width: width - 1}} />
+        <SkeletonPlaceholder enabled={loading} borderRadius={blurRadius} highlightColor="#DCE0E9" speed={1000}>
+          <View style={{height, width}} />
         </SkeletonPlaceholder>
       </Image>
     </View>

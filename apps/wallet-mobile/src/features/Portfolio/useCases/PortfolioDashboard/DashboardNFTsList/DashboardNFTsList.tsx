@@ -4,7 +4,7 @@ import {FlatList, Image, StyleSheet, Text, TouchableOpacity, TouchableOpacityPro
 
 import nftPlaceholder from '../../../../../assets/img/nft-placeholder.png'
 import {Icon, Spacer} from '../../../../../components'
-import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {usePortfolioBalances} from '../../../common/hooks/usePortfolioBalances'
 import {MediaPreview} from '../../../common/MediaPreview/MediaPreview'
 import {useNavigateTo} from '../../../common/useNavigateTo'
@@ -14,7 +14,7 @@ export const DashboardNFTsList = () => {
   const {styles} = useStyles()
   const navigationTo = useNavigateTo()
 
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const balances = usePortfolioBalances({wallet})
   const nftsList = balances.nfts ?? []
   const hasNotNfts = nftsList.length === 0
@@ -68,11 +68,14 @@ const Heading = ({countNfts, onPress}: HeadingProps) => {
   )
 }
 
-const TouchNFTsList = ({onPress}: TouchableOpacityProps) => (
-  <TouchableOpacity onPress={onPress}>
-    <Icon.ArrowRight size={24} />
-  </TouchableOpacity>
-)
+const TouchNFTsList = ({onPress}: TouchableOpacityProps) => {
+  const {colors} = useStyles()
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <Icon.ArrowRight color={colors.gray_800} size={24} />
+    </TouchableOpacity>
+  )
+}
 
 const useStyles = () => {
   const {atoms, color} = useTheme()
@@ -102,6 +105,9 @@ const useStyles = () => {
       height: 164,
     },
   })
+  const colors = {
+    gray_800: color.gray_c800,
+  }
 
-  return {styles} as const
+  return {styles, colors} as const
 }

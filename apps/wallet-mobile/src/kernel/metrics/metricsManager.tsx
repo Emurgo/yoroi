@@ -169,6 +169,11 @@ export const makeMetricsManager = (
     receiveShareAddressClicked: metricsModule.receiveShareAddressClicked.bind(metricsModule),
     receivePageViewed: metricsModule.receivePageViewed.bind(metricsModule),
 
+    portfolioDashboardPageViewed: metricsModule.portfolioDashboardPageViewed.bind(metricsModule),
+    portfolioTokenDetails: metricsModule.portfolioTokenDetails.bind(metricsModule),
+    portfolioTokensListPageViewed: metricsModule.portfolioTokensListPageViewed.bind(metricsModule),
+    portfolioTokensListSearchActivated: metricsModule.portfolioTokensListSearchActivated.bind(metricsModule),
+
     discoverConnectedBottomSheetDisconnectClicked:
       metricsModule.discoverConnectedBottomSheetDisconnectClicked.bind(metricsModule),
     discoverConnectedBottomSheetOpenDAppClicked:

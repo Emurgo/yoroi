@@ -11,7 +11,8 @@ import {Button} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
-import {makeKeys} from '../../../../yoroi-wallets/cardano/shelley/makeKeys'
+import {keyManager} from '../../../../yoroi-wallets/cardano/key-manager/key-manager'
+import {wrappedCsl} from '../../../../yoroi-wallets/cardano/wrappedCsl'
 import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
 import {useStrings} from '../../common/useStrings'
 import {Alert as AlertIllustration} from '../../illustrations/Alert'
@@ -22,7 +23,7 @@ export const VerifyRecoveryPhraseScreen = () => {
   const bold = useBold()
   const navigation = useNavigation<SetupWalletRouteNavigation>()
   const strings = useStrings()
-  const {mnemonic, publicKeyHexChanged} = useSetupWallet()
+  const {mnemonic, publicKeyHexChanged, accountVisual, walletImplementation} = useSetupWallet()
   const {track} = useMetrics()
 
   useFocusEffect(
@@ -117,8 +118,10 @@ export const VerifyRecoveryPhraseScreen = () => {
           style={styles.button}
           disabled={disabled}
           onPress={async () => {
-            const {accountPubKeyHex} = await makeKeys({mnemonic})
+            const {csl, release} = wrappedCsl()
+            const {accountPubKeyHex} = await keyManager(walletImplementation)({mnemonic, csl, accountVisual})
             publicKeyHexChanged(accountPubKeyHex)
+            release()
             navigation.navigate('setup-wallet-details-form')
           }}
           testId="setup-next-button"
