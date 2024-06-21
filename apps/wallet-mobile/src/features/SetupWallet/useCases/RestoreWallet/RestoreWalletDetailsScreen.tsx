@@ -284,7 +284,7 @@ export const RestoreWalletDetailsScreen = () => {
           <Space height="xl" />
 
           <View style={styles.checksum}>
-            <Icon.WalletAvatar image={new Blockies().asBase64({seed: plate.ImagePart})} style={styles.walletChecksum} />
+            <Icon.WalletAvatar image={new Blockies().asBase64({seed: plate.ImagePart})} style={styles.walletChecksum} size={24} />
 
             <Space width="sm" />
 

@@ -64,6 +64,7 @@ export const CardAboutPhrase = ({
                     <Icon.WalletAvatar
                       image={new Blockies().asBase64({seed: checksumImage})}
                       style={styles.walletChecksum}
+                      size={24}
                     />
 
                     <Space width="sm" />

@@ -289,6 +289,7 @@ const useStyles = () => {
       ...atoms.body_1_lg_medium,
       width: width - 75,
       textAlign: 'center',
+      color: color.text_gray_normal,
     },
     headerTitleContainerStyle: {
       flex: 1,
