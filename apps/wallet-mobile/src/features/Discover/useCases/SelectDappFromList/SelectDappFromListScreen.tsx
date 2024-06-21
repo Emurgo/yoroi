@@ -86,14 +86,11 @@ export const SelectDappFromListScreen = () => {
               onCategoryToggle={handleToggleCategory}
             />
           }
-          renderItem={({item: entry}) => {
-            const connected = isDappConnected(entry.origins)
-            return (
-              <View style={styles.dAppItemBox}>
-                <DAppListItem dApp={entry} connected={connected} />
-              </View>
-            )
-          }}
+          renderItem={({item: entry}) => (
+            <View style={styles.dAppItemBox}>
+              <DAppListItem dApp={entry} connected={isDappConnected(entry.origins)} />
+            </View>
+          )}
           ItemSeparatorComponent={() => <Spacer style={styles.dAppsBox} />}
           ListFooterComponent={() => <Spacer style={styles.dAppsBox} />}
         />
