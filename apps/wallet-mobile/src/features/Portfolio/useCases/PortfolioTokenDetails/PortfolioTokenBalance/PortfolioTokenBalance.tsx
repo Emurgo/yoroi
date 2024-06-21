@@ -24,7 +24,7 @@ export const PortfolioTokenBalance = () => {
     <LoadingBoundary fallback={<PortfolioTokenDetailBalanceSkeleton />}>
       <View>
         <View style={styles.tokenWrapper}>
-          <Text style={styles.tokenLabel}>{amountBreakdown(tokenInfo).bn.toFormat(2)}</Text>
+          <Text style={styles.tokenBalance}>{amountBreakdown(tokenInfo).bn.toFormat(2)}</Text>
 
           <Text style={styles.symbol}>{tokenName}</Text>
         </View>
@@ -43,13 +43,15 @@ const useStyles = () => {
       ...atoms.gap_2xs,
       ...atoms.align_baseline,
     },
-    tokenLabel: {
-      ...atoms.heading_1_regular,
+    tokenBalance: {
+      ...atoms.heading_1_medium,
       ...atoms.font_semibold,
+      color: color.gray_c900,
     },
     symbol: {
-      ...atoms.body_1_lg_regular,
+      ...atoms.body_1_lg_medium,
       ...atoms.font_semibold,
+      color: color.text_gray_normal,
     },
     usdLabel: {
       ...atoms.body_2_md_regular,

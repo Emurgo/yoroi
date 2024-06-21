@@ -25,7 +25,7 @@ export const TokenEmptyList = ({emptyText}: Props) => {
 }
 
 const useStyles = () => {
-  const {atoms} = useTheme()
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     boxAssetToken: {
       width: 280,
@@ -42,6 +42,7 @@ const useStyles = () => {
       ...atoms.flex_1,
     },
     textEmpty: {
+      color: color.gray_cmax,
       ...atoms.heading_3_medium,
       ...atoms.font_semibold,
     },

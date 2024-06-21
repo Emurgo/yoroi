@@ -45,7 +45,7 @@ const TabBarWithHiddenContent = (props: BottomTabBarProps) => {
 
 const WalletTabNavigator = () => {
   const strings = useStrings()
-  const {colors} = useStyles()
+  const {colors, styles} = useStyles()
 
   const [isKeyboardOpen, setIsKeyboardOpen] = React.useState(false)
 
@@ -80,7 +80,7 @@ const WalletTabNavigator = () => {
       <Tab.Navigator
         screenOptions={{
           headerShown: false,
-          tabBarLabelStyle: {fontSize: 11},
+          tabBarLabelStyle: styles.labelStyle,
           tabBarActiveTintColor: colors.active,
           tabBarInactiveTintColor: colors.inactive,
           tabBarStyle: {
@@ -295,12 +295,20 @@ const useStyles = () => {
       alignItems: 'center',
       justifyContent: 'center',
     },
+    labelStyle: {
+      ...atoms.font_semibold,
+      ...atoms.text_center,
+      fontSize: 10,
+      lineHeight: 18,
+    },
   })
+
   const colors = {
-    active: color.text_gray_normal,
-    inactive: color.gray_c600,
+    active: color.text_primary_high,
+    inactive: color.text_gray_medium,
     background: color.gray_cmin,
   }
+
   return {colors, styles}
 }
 

@@ -4,12 +4,10 @@ import {Image, StyleSheet, View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 import ChartPlaceholder from '../../../../../assets/img/chart-placeholder.png'
-import {Icon, Tooltip} from '../../../../../components'
-import {useStrings} from '../../../common/useStrings'
+import {Icon} from '../../../../../components'
 
 export const PortfolioTokenChartSkeleton = () => {
   const {color, styles} = useStyles()
-  const strings = useStrings()
   return (
     <View style={styles.root}>
       <View style={styles.container}>
@@ -22,9 +20,7 @@ export const PortfolioTokenChartSkeleton = () => {
             </SkeletonPlaceholder.Item>
           </SkeletonPlaceholder>
 
-          <Tooltip numberOfLine={3} title={strings.tokenPriceChangeTooltip}>
-            <Icon.InfoCircle />
-          </Tooltip>
+          <Icon.InfoCircle />
         </View>
 
         <SkeletonPlaceholder borderRadius={20} backgroundColor={color.gray_c100}>

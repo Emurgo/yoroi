@@ -140,7 +140,7 @@ export const PoolTransitionModal = ({
 
       <Actions>
         <Button
-          outline
+          withoutBackground
           title={strings.skipNoRewards.toLocaleUpperCase()}
           textStyles={styles.outlineButton}
           onPress={handleOnSkip}
@@ -236,7 +236,6 @@ const useStyles = () => {
     },
     actions: {
       alignSelf: 'stretch',
-      backgroundColor: color.gray_cmin,
       gap: 4,
     },
     details: {
@@ -247,11 +246,11 @@ const useStyles = () => {
     outlineButton: {
       color: color.gray_c900,
       ...atoms.button_2_md,
-      textTransform: 'none',
+      textTransform: 'uppercase',
     },
     button: {
       ...atoms.button_1_lg,
-      textTransform: 'none',
+      textTransform: 'uppercase',
     },
   })
 

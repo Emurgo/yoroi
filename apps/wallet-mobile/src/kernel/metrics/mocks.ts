@@ -79,6 +79,11 @@ export const mockMetricsManager = (): MetricsManager => {
     receivePageListViewed: e,
     receiveShareAddressClicked: e,
     receivePageViewed: e,
+
+    portfolioDashboardPageViewed: e,
+    portfolioTokenDetails: e,
+    portfolioTokensListPageViewed: e,
+    portfolioTokensListSearchActivated: e,
   } as const
 
   return {

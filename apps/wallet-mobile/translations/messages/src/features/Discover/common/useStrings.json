@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Confirm transaction",
     "file": "src/features/Discover/common/useStrings.tsx",
     "start": {
-      "line": 35,
+      "line": 40,
       "column": 15,
-      "index": 1918
+      "index": 2308
     },
     "end": {
-      "line": 38,
+      "line": 43,
       "column": 5,
-      "index": 2017
+      "index": 2407
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Discover Cardano",
     "file": "src/features/Discover/common/useStrings.tsx",
     "start": {
-      "line": 39,
+      "line": 44,
       "column": 19,
-      "index": 2038
+      "index": 2428
     },
     "end": {
-      "line": 42,
+      "line": 47,
       "column": 5,
-      "index": 2139
+      "index": 2529
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Search DApps",
     "file": "src/features/Discover/common/useStrings.tsx",
     "start": {
-      "line": 43,
+      "line": 48,
       "column": 17,
-      "index": 2158
+      "index": 2548
     },
     "end": {
-      "line": 46,
+      "line": 51,
       "column": 5,
-      "index": 2253
+      "index": 2643
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Welcome to Yoroi DApp Explorer",
     "file": "src/features/Discover/common/useStrings.tsx",
     "start": {
-      "line": 47,
+      "line": 52,
       "column": 32,
-      "index": 2287
+      "index": 2677
     },
     "end": {
-      "line": 50,
+      "line": 55,
       "column": 5,
-      "index": 2415
+      "index": 2805
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Discover, inspect, and connect to Cardano decentralized applications (DApps) with ease. Our solution helps to interact with DApps and their smart contracts, seamlessly enhancing your Cardano experience",
     "file": "src/features/Discover/common/useStrings.tsx",
     "start": {
-      "line": 51,
+      "line": 56,
       "column": 43,
-      "index": 2460
+      "index": 2850
     },
     "end": {
-      "line": 55,
+      "line": 60,
       "column": 5,
-      "index": 2778
+      "index": 3168
     }
   },
   {
@@ -79,29 +79,44 @@
     "defaultMessage": "!!!Next",
     "file": "src/features/Discover/common/useStrings.tsx",
     "start": {
-      "line": 56,
+      "line": 61,
       "column": 10,
-      "index": 2790
+      "index": 3180
     },
     "end": {
-      "line": 59,
+      "line": 64,
       "column": 5,
-      "index": 2855
+      "index": 3245
     }
   },
   {
     "id": "discover.discoverList.dAppAvailable",
-    "defaultMessage": "!!!DApp(s) available",
+    "defaultMessage": "!!!{count} DApp(s) available",
     "file": "src/features/Discover/common/useStrings.tsx",
     "start": {
-      "line": 60,
+      "line": 65,
       "column": 24,
-      "index": 2881
+      "index": 3271
     },
     "end": {
-      "line": 63,
+      "line": 68,
       "column": 5,
-      "index": 2983
+      "index": 3381
+    }
+  },
+  {
+    "id": "discover.discoverList.dAppConnected",
+    "defaultMessage": "!!!{count} DApp(s) connected",
+    "file": "src/features/Discover/common/useStrings.tsx",
+    "start": {
+      "line": 69,
+      "column": 19,
+      "index": 3402
+    },
+    "end": {
+      "line": 72,
+      "column": 5,
+      "index": 3512
     }
   },
   {
@@ -109,14 +124,14 @@
     "defaultMessage": "!!!Connected",
     "file": "src/features/Discover/common/useStrings.tsx",
     "start": {
-      "line": 64,
+      "line": 73,
       "column": 15,
-      "index": 3000
+      "index": 3529
     },
     "end": {
-      "line": 67,
+      "line": 76,
       "column": 5,
-      "index": 3090
+      "index": 3619
     }
   },
   {
@@ -124,14 +139,14 @@
     "defaultMessage": "!!!Recommended",
     "file": "src/features/Discover/common/useStrings.tsx",
     "start": {
-      "line": 68,
+      "line": 77,
       "column": 17,
-      "index": 3109
+      "index": 3638
     },
     "end": {
-      "line": 71,
+      "line": 80,
       "column": 5,
-      "index": 3203
+      "index": 3732
     }
   },
   {
@@ -139,14 +154,14 @@
     "defaultMessage": "!!!DONE",
     "file": "src/features/Discover/common/useStrings.tsx",
     "start": {
-      "line": 72,
+      "line": 81,
       "column": 10,
-      "index": 3215
+      "index": 3744
     },
     "end": {
-      "line": 75,
+      "line": 84,
       "column": 5,
-      "index": 3295
+      "index": 3824
     }
   },
   {
@@ -154,14 +169,14 @@
     "defaultMessage": "!!!Open DApp",
     "file": "src/features/Discover/common/useStrings.tsx",
     "start": {
-      "line": 76,
+      "line": 85,
       "column": 14,
-      "index": 3311
+      "index": 3840
     },
     "end": {
-      "line": 79,
+      "line": 88,
       "column": 5,
-      "index": 3400
+      "index": 3929
     }
   },
   {
@@ -169,14 +184,14 @@
     "defaultMessage": "!!!Disconnect wallet from DApp",
     "file": "src/features/Discover/common/useStrings.tsx",
     "start": {
-      "line": 80,
+      "line": 89,
       "column": 30,
-      "index": 3432
+      "index": 3961
     },
     "end": {
-      "line": 83,
+      "line": 92,
       "column": 5,
-      "index": 3555
+      "index": 4084
     }
   },
   {
@@ -184,14 +199,14 @@
     "defaultMessage": "!!!DApp actions",
     "file": "src/features/Discover/common/useStrings.tsx",
     "start": {
-      "line": 84,
+      "line": 93,
       "column": 17,
-      "index": 3574
+      "index": 4103
     },
     "end": {
-      "line": 87,
+      "line": 96,
       "column": 5,
-      "index": 3669
+      "index": 4198
     }
   },
   {
@@ -199,14 +214,14 @@
     "defaultMessage": "!!!Confirm connection",
     "file": "src/features/Discover/common/useStrings.tsx",
     "start": {
-      "line": 88,
+      "line": 97,
       "column": 33,
-      "index": 3704
+      "index": 4233
     },
     "end": {
-      "line": 91,
+      "line": 100,
       "column": 5,
-      "index": 3809
+      "index": 4338
     }
   },
   {
@@ -214,14 +229,14 @@
     "defaultMessage": "!!!Connect to",
     "file": "src/features/Discover/common/useStrings.tsx",
     "start": {
-      "line": 92,
+      "line": 101,
       "column": 37,
-      "index": 3848
+      "index": 4377
     },
     "end": {
-      "line": 95,
+      "line": 104,
       "column": 5,
-      "index": 3949
+      "index": 4478
     }
   },
   {
@@ -229,14 +244,14 @@
     "defaultMessage": "!!!Connect",
     "file": "src/features/Discover/common/useStrings.tsx",
     "start": {
-      "line": 96,
+      "line": 105,
       "column": 35,
-      "index": 3986
+      "index": 4515
     },
     "end": {
-      "line": 99,
+      "line": 108,
       "column": 5,
-      "index": 4082
+      "index": 4611
     }
   },
   {
@@ -244,14 +259,14 @@
     "defaultMessage": "!!!Allow this DApp to:",
     "file": "src/features/Discover/common/useStrings.tsx",
     "start": {
-      "line": 100,
+      "line": 109,
       "column": 43,
-      "index": 4127
+      "index": 4656
     },
     "end": {
-      "line": 103,
+      "line": 112,
       "column": 5,
-      "index": 4243
+      "index": 4772
     }
   },
   {
@@ -259,14 +274,14 @@
     "defaultMessage": "!!!View addresses, account balance, activity",
     "file": "src/features/Discover/common/useStrings.tsx",
     "start": {
-      "line": 104,
+      "line": 113,
       "column": 39,
-      "index": 4284
+      "index": 4813
     },
     "end": {
-      "line": 107,
+      "line": 116,
       "column": 5,
-      "index": 4418
+      "index": 4947
     }
   },
   {
@@ -274,14 +289,14 @@
     "defaultMessage": "!!!Request approval for transactions",
     "file": "src/features/Discover/common/useStrings.tsx",
     "start": {
-      "line": 108,
+      "line": 117,
       "column": 39,
-      "index": 4459
+      "index": 4988
     },
     "end": {
-      "line": 111,
+      "line": 120,
       "column": 5,
-      "index": 4585
+      "index": 5114
     }
   },
   {
@@ -289,14 +304,14 @@
     "defaultMessage": "!!!I understand",
     "file": "src/features/Discover/common/useStrings.tsx",
     "start": {
-      "line": 112,
+      "line": 121,
       "column": 16,
-      "index": 4603
+      "index": 5132
     },
     "end": {
-      "line": 115,
+      "line": 124,
       "column": 5,
-      "index": 4704
+      "index": 5233
     }
   },
   {
@@ -304,14 +319,14 @@
     "defaultMessage": "!!!You are accessing a third-party Cardano application that is not verified by EMURGO, the developers of Yoroi Wallet, or any of its affiliated divisions. Make sure this DApp is reliable to stay safe from malicious apps in a sustainable way.",
     "file": "src/features/Discover/common/useStrings.tsx",
     "start": {
-      "line": 116,
+      "line": 125,
       "column": 25,
-      "index": 4731
+      "index": 5260
     },
     "end": {
-      "line": 120,
+      "line": 129,
       "column": 5,
-      "index": 5075
+      "index": 5604
     }
   },
   {
@@ -319,14 +334,74 @@
     "defaultMessage": "!!!Disclaimer",
     "file": "src/features/Discover/common/useStrings.tsx",
     "start": {
-      "line": 121,
+      "line": 130,
       "column": 26,
-      "index": 5103
+      "index": 5632
     },
     "end": {
-      "line": 124,
+      "line": 133,
       "column": 5,
-      "index": 5212
+      "index": 5741
+    }
+  },
+  {
+    "id": "discover.confirmDisconnectDApp.disconnectDApp",
+    "defaultMessage": "!!!Disconnect DApp",
+    "file": "src/features/Discover/common/useStrings.tsx",
+    "start": {
+      "line": 134,
+      "column": 20,
+      "index": 5763
+    },
+    "end": {
+      "line": 137,
+      "column": 5,
+      "index": 5873
+    }
+  },
+  {
+    "id": "discover.confirmDisconnectDApp.confirmDisconnectDAppDescription",
+    "defaultMessage": "!!!Are you sure you want to disconnect this DApp?",
+    "file": "src/features/Discover/common/useStrings.tsx",
+    "start": {
+      "line": 138,
+      "column": 38,
+      "index": 5913
+    },
+    "end": {
+      "line": 141,
+      "column": 5,
+      "index": 6072
+    }
+  },
+  {
+    "id": "global.actions.dialogs.commonbuttons.cancelButton",
+    "defaultMessage": "!!!Cancel",
+    "file": "src/features/Discover/common/useStrings.tsx",
+    "start": {
+      "line": 142,
+      "column": 12,
+      "index": 6086
+    },
+    "end": {
+      "line": 145,
+      "column": 5,
+      "index": 6191
+    }
+  },
+  {
+    "id": "global.actions.dialogs.commonbuttons.confirmButton",
+    "defaultMessage": "!!!Confirm",
+    "file": "src/features/Discover/common/useStrings.tsx",
+    "start": {
+      "line": 146,
+      "column": 13,
+      "index": 6206
+    },
+    "end": {
+      "line": 149,
+      "column": 5,
+      "index": 6313
     }
   }
 ]

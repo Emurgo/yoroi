@@ -68,11 +68,14 @@ const Heading = ({countNfts, onPress}: HeadingProps) => {
   )
 }
 
-const TouchNFTsList = ({onPress}: TouchableOpacityProps) => (
-  <TouchableOpacity onPress={onPress}>
-    <Icon.ArrowRight size={24} />
-  </TouchableOpacity>
-)
+const TouchNFTsList = ({onPress}: TouchableOpacityProps) => {
+  const {colors} = useStyles()
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <Icon.ArrowRight color={colors.gray_800} size={24} />
+    </TouchableOpacity>
+  )
+}
 
 const useStyles = () => {
   const {atoms, color} = useTheme()
@@ -102,6 +105,9 @@ const useStyles = () => {
       height: 164,
     },
   })
+  const colors = {
+    gray_800: color.gray_c800,
+  }
 
-  return {styles} as const
+  return {styles, colors} as const
 }

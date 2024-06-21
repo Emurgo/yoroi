@@ -292,6 +292,7 @@ export type Portfolio2Routes = {
   'portfolio-tokens-list': undefined
   'portfolio-token-details': {id: Portfolio.Token.Info['id']}
   nfts: undefined
+  history: NavigatorScreenParams<TxHistoryRoutes>
 }
 
 export type PortfolioTokenListTabRoutes = {
