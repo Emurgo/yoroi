@@ -5,6 +5,7 @@ import {Animated, NativeScrollEvent, NativeSyntheticEvent, StyleSheet} from 'rea
 import {Spacer} from '../../../../components'
 import {Tab, Tabs} from '../../../../components/Tabs'
 import {usePortfolioTokenDetailContext} from '../../common/PortfolioTokenDetailContext'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useStrings} from '../../common/useStrings'
 import {PortfolioTokenAction} from './PortfolioTokenAction'
 import {PortfolioTokenBalance} from './PortfolioTokenBalance/PortfolioTokenBalance'
@@ -14,11 +15,21 @@ import {PortfolioTokenInfo} from './PortfolioTokenInfo/PortfolioTokenInfo'
 import {useTokenDetailTransactions} from './PortfolioTokenInfo/Transactions'
 
 const HEADER_HEIGHT = 304
+
+export type ActiveTab = 'performance' | 'overview' | 'transactions'
+type Tabs = 'Performance' | 'Overview' | 'Transactions'
+const tabs: Record<ActiveTab, Tabs> = {
+  performance: 'Performance',
+  overview: 'Overview',
+  transactions: 'Transactions',
+}
+
 export const PortfolioTokenDetailsScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
   const {activeTab, setActiveTab} = usePortfolioTokenDetailContext()
-
+  const scrollY = React.useRef(new Animated.Value(0)).current
+  const {track} = useMetrics()
   const [isStickyTab, setIsStickyTab] = React.useState(false)
 
   const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
