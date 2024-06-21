@@ -4,7 +4,7 @@ import {FlatList, Image, StyleSheet, Text, TouchableOpacity, TouchableOpacityPro
 
 import nftPlaceholder from '../../../../../assets/img/nft-placeholder.png'
 import {Icon, Spacer} from '../../../../../components'
-import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {usePortfolioBalances} from '../../../common/hooks/usePortfolioBalances'
 import {MediaPreview} from '../../../common/MediaPreview/MediaPreview'
 import {useNavigateTo} from '../../../common/useNavigateTo'
@@ -14,7 +14,7 @@ export const DashboardNFTsList = () => {
   const {styles} = useStyles()
   const navigationTo = useNavigateTo()
 
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const balances = usePortfolioBalances({wallet})
   const nftsList = balances.nfts ?? []
   const hasNotNfts = nftsList.length === 0

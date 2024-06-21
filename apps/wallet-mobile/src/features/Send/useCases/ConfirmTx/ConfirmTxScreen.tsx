@@ -15,7 +15,7 @@ import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useSaveMemo} from '../../../../yoroi-wallets/hooks'
 import {YoroiSignedTx} from '../../../../yoroi-wallets/types'
 import {debugWalletInfo, features} from '../../..'
-import {useSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from '../../common/navigation'
 import {useFlashAndScroll} from '../../common/useFlashAndScroll'
 import {BalanceAfter} from './Summary/BalanceAfter'
@@ -28,7 +28,7 @@ import {SecondaryTotals} from './Summary/SecondaryTotals'
 export const ConfirmTxScreen = () => {
   const strings = useStrings()
   const styles = useStyles()
-  const wallet = useSelectedWallet()
+  const {wallet, meta} = useSelectedWallet()
   const navigateTo = useNavigateTo()
   const [password, setPassword] = React.useState('')
   const [useUSB, setUseUSB] = React.useState(false)
@@ -98,7 +98,7 @@ export const ConfirmTxScreen = () => {
 
           <SecondaryTotals yoroiUnsignedTx={yoroiUnsignedTx} />
 
-          {!wallet.isEasyConfirmationEnabled && !wallet.isHW && (
+          {!meta.isEasyConfirmationEnabled && !meta.isHW && (
             <ValidatedTextInput
               secureTextEntry
               value={password}

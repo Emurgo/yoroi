@@ -4,7 +4,10 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Switch, TextStyle, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {Button, Spacer, Text, YoroiLogo} from '../../components'
+import {Button} from '../../components/Button'
+import {Spacer} from '../../components/Spacer'
+import {Text} from '../../components/Text'
+import {YoroiLogo} from '../../components/YoroiLogo'
 import {useMetrics} from '../../kernel/metrics/metricsManager'
 import {AnalyticsImage} from './AnalyticsImage'
 

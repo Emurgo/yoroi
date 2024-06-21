@@ -7,12 +7,12 @@ import {useBalances} from '../../../../../yoroi-wallets/hooks'
 import {formatTokenWithText} from '../../../../../yoroi-wallets/utils/format'
 import {Amounts} from '../../../../../yoroi-wallets/utils/utils'
 import {useStrings} from '../../../../Send/common/strings'
-import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 
 export const CurrentBalance = () => {
   const strings = useStrings()
   const styles = useStyles()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const balances = useBalances(wallet)
 
   const balance = formatTokenWithText(

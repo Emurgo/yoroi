@@ -5,14 +5,15 @@ import {StyleSheet, Text, View} from 'react-native'
 
 import {LoadingBoundary} from '../../../../../components'
 import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
-import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {usePortfolioTokenDetailParams} from '../../../common/useNavigateTo'
 import {PortfolioTokenDetailBalanceSkeleton} from './PortfolioTokenDetailBalanceSkeleton'
 
 export const PortfolioTokenBalance = () => {
   const {styles} = useStyles()
-  const wallet = useSelectedWallet()
-  const {balances} = wallet
+  const {
+    wallet: {balances},
+  } = useSelectedWallet()
   const {id: tokenId} = usePortfolioTokenDetailParams()
   const tokenInfo = balances.records.get(tokenId)
   const tokenName = tokenInfo ? infoExtractName(tokenInfo.info, {mode: 'currency'}) : '-'

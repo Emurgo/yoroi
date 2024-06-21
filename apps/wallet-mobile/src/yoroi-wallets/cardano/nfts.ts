@@ -5,7 +5,7 @@ import {z} from 'zod'
 
 import {features} from '../../features'
 import {getAssetFingerprint} from '../utils/format'
-import {toDisplayAssetName} from './api'
+import {toDisplayAssetName} from './api/utils'
 export const convertNft = (options: {
   metadata?: unknown
   storageUrl: string

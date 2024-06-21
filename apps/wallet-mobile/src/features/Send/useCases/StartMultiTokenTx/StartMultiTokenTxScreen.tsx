@@ -9,7 +9,7 @@ import {Button, KeyboardAvoidingView, Spacer} from '../../../../components'
 import {ScrollView, useScrollView} from '../../../../components/ScrollView/ScrollView'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useHasPendingTx, useIsOnline} from '../../../../yoroi-wallets/hooks'
-import {useSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {memoMaxLenght} from '../../common/constants'
 import {AddressErrorWrongNetwork} from '../../common/errors'
 import {useNavigateTo} from '../../common/navigation'
@@ -26,7 +26,7 @@ export const StartMultiTokenTxScreen = () => {
   const strings = useStrings()
   const styles = useStyles()
   const navigateTo = useNavigateTo()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {track} = useMetrics()
   const isFocused = useIsFocused()
 

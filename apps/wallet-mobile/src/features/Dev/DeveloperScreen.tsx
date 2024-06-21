@@ -18,12 +18,11 @@ import {AppRoutes, useWalletNavigation} from '../../kernel/navigation'
 import {storageVersionMaker} from '../../kernel/storage/migrations/storageVersion'
 import {rootStorage} from '../../kernel/storage/rootStorage'
 import {isEmptyString} from '../../kernel/utils'
-import {generateAdaMnemonic} from '../../yoroi-wallets/cardano/mnemonic'
-import {useCreateWallet} from '../../yoroi-wallets/hooks'
-import {NetworkId} from '../../yoroi-wallets/types'
+import {generateAdaMnemonic} from '../../yoroi-wallets/cardano/mnemonic/mnemonic'
 import {useAuth} from '../Auth/AuthProvider'
 import {useLegalAgreement, useResetLegalAgreement} from '../Initialization/common'
-import {useSelectedWalletContext} from '../WalletManager/context/SelectedWalletContext'
+import {useCreateWalletMnemonic} from '../WalletManager/common/hooks/useCreateWalletMnemonic'
+import {useWalletManager} from '../WalletManager/context/WalletManagerProvider'
 
 const routes: Array<{label: string; path: keyof AppRoutes}> = [
   {label: 'Storybook', path: 'storybook'},
@@ -41,7 +40,7 @@ export const DeveloperScreen = () => {
   const {logout} = useAuth()
   const {resetToWalletSelection} = useWalletNavigation()
   const intl = useIntl()
-  const {createWallet, isLoading} = useCreateWallet({
+  const {createWallet, isLoading} = useCreateWalletMnemonic({
     onSuccess: () => resetToWalletSelection(),
     onError: (error) => {
       InteractionManager.runAfterInteractions(() => {
@@ -51,7 +50,9 @@ export const DeveloperScreen = () => {
       })
     },
   })
-  const [wallet] = useSelectedWalletContext()
+  const {
+    selected: {wallet},
+  } = useWalletManager()
   const [addresses, setAddresses] = React.useState('')
   const agreement = useLegalAgreement()
   const {reset: resetLegalAgreement} = useResetLegalAgreement()
@@ -113,10 +114,10 @@ export const DeveloperScreen = () => {
             createWallet({
               mnemonicPhrase: config['WALLET_1_MNEMONIC'] ?? '',
               name: 'Wallet 1',
-              networkId: Number(config['WALLET_1_NETWORK_ID'] ?? 300) as NetworkId,
               password: '1234567890',
-              walletImplementationId: 'haskell-shelley',
+              implementation: 'cardano-cip1852',
               addressMode: 'multiple',
+              accountVisual: 0,
             })
           }
           testID="btnRestoreWallet1"
@@ -130,10 +131,10 @@ export const DeveloperScreen = () => {
             createWallet({
               mnemonicPhrase: config['WALLET_2_MNEMONIC'] ?? '',
               name: 'Wallet 2',
-              networkId: Number(config['WALLET_2_NETWORK_ID'] ?? 300) as NetworkId,
               password: '1234567890',
-              walletImplementationId: 'haskell-shelley',
+              implementation: 'cardano-cip1852',
               addressMode: 'multiple',
+              accountVisual: 0,
             })
           }
           testID="btnRestoreWallet2"
@@ -147,10 +148,10 @@ export const DeveloperScreen = () => {
             createWallet({
               mnemonicPhrase: config['WALLET_3_MNEMONIC'] ?? '',
               name: 'Wallet 3',
-              networkId: Number(config['WALLET_3_NETWORK_ID'] ?? 300) as NetworkId,
               password: '1234567890',
-              walletImplementationId: 'haskell-shelley',
+              implementation: 'cardano-cip1852',
               addressMode: 'multiple',
+              accountVisual: 0,
             })
           }
           testID="btnRestoreWallet3"
@@ -164,16 +165,16 @@ export const DeveloperScreen = () => {
             createWallet({
               mnemonicPhrase: generateAdaMnemonic(),
               name: 'RO-Mainnet',
-              networkId: 1,
               password: '1234567890',
-              walletImplementationId: 'haskell-shelley',
+              implementation: 'cardano-cip1852',
               addressMode: 'single',
+              accountVisual: 0,
             })
           }
           title="RO Mainnet For Forced Addresses"
         />
 
-        {wallet?.networkId !== 1 && (
+        {!wallet?.isMainnet && (
           <>
             <TextInput
               autoComplete="off"

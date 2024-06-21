@@ -2,13 +2,13 @@ import {storiesOf} from '@storybook/react-native'
 import * as React from 'react'
 
 import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks'
+import {WalletManagerProviderMock} from '../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {SearchProvider} from '../../../Search/SearchContext'
-import {SelectedWalletProvider} from '../../../WalletManager/context/SelectedWalletContext'
 import {BrowserProvider} from '../../common/BrowserProvider'
 import {SelectDappFromListScreen} from './SelectDappFromListScreen'
 
 storiesOf('Discover SelectDappFromListScreen', module)
-  .addDecorator((story) => <SelectedWalletProvider wallet={walletMocks.wallet}>{story()}</SelectedWalletProvider>)
+  .addDecorator((story) => <WalletManagerProviderMock wallet={walletMocks.wallet}>{story()}</WalletManagerProviderMock>)
   .add('initial', () => <Initial />)
   .add('searching dapp', () => <SearchDApp />)
 

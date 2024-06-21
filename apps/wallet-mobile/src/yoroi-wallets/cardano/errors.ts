@@ -23,11 +23,3 @@ export class ApiHistoryError extends ApiError {
     REFERENCE_BEST_BLOCK_MISMATCH: 'REFERENCE_BEST_BLOCK_MISMATCH',
   }
 }
-
-export class CardanoError extends Error {}
-export class WrongPassword extends Error {
-  constructor() {
-    super('WrongPassword')
-  }
-}
-export class InvalidState extends Error {}

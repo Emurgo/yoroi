@@ -9,7 +9,7 @@ import {AmountItem} from '../../../../components/AmountItem/AmountItem'
 import {PairedBalance} from '../../../../components/PairedBalance/PairedBalance'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../yoroi-wallets/utils'
-import {useSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {PRICE_IMPACT_HIGH_RISK, PRICE_IMPACT_MODERATE_RISK, PRICE_PRECISION} from '../../common/constants'
 import {getPriceImpactRisk, usePriceImpactRiskTheme} from '../../common/helpers'
 import {LiquidityPool} from '../../common/LiquidityPool/LiquidityPool'
@@ -21,7 +21,7 @@ import {SwapInfoLink} from '../../common/SwapInfoLink/SwapInfoLink'
 export const TransactionSummary = () => {
   const strings = useStrings()
   const styles = useStyles()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {orderData} = useSwap()
   const {
     limitPrice: {displayValue: limitDisplayValue},

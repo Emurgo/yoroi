@@ -6,7 +6,7 @@ import React, {useState} from 'react'
 import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Accordion, CopyButton, Spacer} from '../../../../../../components'
-import {useSelectedWallet} from '../../../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../../../WalletManager/common/hooks/useSelectedWallet'
 import {TokenInfoIcon} from '../../../../common/TokenAmountItem/TokenInfoIcon'
 import {usePortfolioTokenDetailParams} from '../../../../common/useNavigateTo'
 import {useStrings} from '../../../../common/useStrings'
@@ -16,9 +16,10 @@ export const Overview = () => {
   const {styles} = useStyles()
   const strings = useStrings()
   const {id: tokenId} = usePortfolioTokenDetailParams()
-  const wallet = useSelectedWallet()
-  const explorers = useExplorers(wallet.network)
-  const {balances} = wallet
+  const {
+    wallet: {balances, networkManager},
+  } = useSelectedWallet()
+  const explorers = useExplorers(networkManager.network)
   const tokenInfo = balances.records.get(tokenId)
   const tokenSymbol = tokenInfo ? infoExtractName(tokenInfo.info, {mode: 'currency'}) : ''
   const [policyId] = tokenInfo?.info.id.split('.') ?? []

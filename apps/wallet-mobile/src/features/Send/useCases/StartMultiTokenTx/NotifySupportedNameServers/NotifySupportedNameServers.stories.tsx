@@ -9,7 +9,7 @@ import {QueryProvider} from '../../../../../../.storybook/decorators'
 import {Boundary} from '../../../../../components'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {mocks as walletMocks} from '../../../../../yoroi-wallets/mocks/wallet'
-import {SelectedWalletProvider} from '../../../../WalletManager/context/SelectedWalletContext'
+import {WalletManagerProviderMock} from '../../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {NotifySupportedNameServers} from './NotifySupportedNameServers'
 
 storiesOf('Send NotifySupportedNameServers', module).add('initial', () => <Initial />)
@@ -29,7 +29,7 @@ const Initial = () => {
 
   return (
     <QueryProvider>
-      <SelectedWalletProvider wallet={wallet}>
+      <WalletManagerProviderMock wallet={wallet}>
         <TransferProvider>
           <ResolverProvider resolverManager={resolverManager}>
             <Boundary>
@@ -37,7 +37,7 @@ const Initial = () => {
             </Boundary>
           </ResolverProvider>
         </TransferProvider>
-      </SelectedWalletProvider>
+      </WalletManagerProviderMock>
     </QueryProvider>
   )
 }

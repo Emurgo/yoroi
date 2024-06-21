@@ -16,8 +16,8 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer} from '../../../components'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
-import {useAddressModeManager} from '../../WalletManager/common/useAddressModeManager'
-import {useSelectedWallet} from '../../WalletManager/context/SelectedWalletContext'
+import {useAddressMode} from '../../WalletManager/common/hooks/useAddressMode'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {BIP32_HD_GAP_LIMIT} from '../common/contants'
 import {useReceive} from '../common/ReceiveProvider'
 import {ShowAddressLimitInfo} from '../common/ShowAddressLimitInfo/ShowAddressLimitInfo'
@@ -35,11 +35,11 @@ export const ListMultipleAddressesScreen = () => {
   const inView = React.useRef(Number.MAX_SAFE_INTEGER)
   const strings = useStrings()
   const {styles} = useStyles()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const navigate = useNavigateTo()
   const {track} = useMetrics()
 
-  const {addressMode} = useAddressModeManager()
+  const {addressMode} = useAddressMode()
   const addresses = useReceiveAddressesStatus(addressMode)
   const {selectedAddressChanged} = useReceive()
 

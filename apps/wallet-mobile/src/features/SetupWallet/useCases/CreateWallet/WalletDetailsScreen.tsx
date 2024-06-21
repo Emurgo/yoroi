@@ -1,8 +1,10 @@
+import {walletChecksum} from '@emurgo/cip4-js'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useAsyncStorage} from '@yoroi/common'
+import {Blockies} from '@yoroi/identicon'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
-import {Api} from '@yoroi/types'
+import {Api, Wallet} from '@yoroi/types'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {
@@ -27,8 +29,6 @@ import {logger} from '../../../../kernel/logger/logger'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import {isEmptyString} from '../../../../kernel/utils'
-import {useCreateWallet, usePlate, useWalletNames} from '../../../../yoroi-wallets/hooks'
-import {WalletImplementationId} from '../../../../yoroi-wallets/types'
 import {
   getWalletNameError,
   REQUIRED_PASSWORD_LENGTH,
@@ -36,9 +36,9 @@ import {
   validateWalletName,
 } from '../../../../yoroi-wallets/utils'
 import {debugWalletInfo, features} from '../../..'
-import {AddressMode} from '../../../WalletManager/common/types'
-import {parseWalletMeta} from '../../../WalletManager/common/validators'
-import {useWalletManager} from '../../../WalletManager/context/WalletManagerContext'
+import {useCreateWalletMnemonic} from '../../../WalletManager/common/hooks/useCreateWalletMnemonic'
+import {parseWalletMeta} from '../../../WalletManager/common/validators/wallet-meta'
+import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
 import {YoroiZendeskLink} from '../../common/constants'
 import {LearnMoreButton} from '../../common/LearnMoreButton/LearnMoreButton'
@@ -61,7 +61,7 @@ const useSizeModal = () => {
 }
 
 // when restoring, later will be part of the onboarding
-const addressMode: AddressMode = 'single'
+const addressMode: Wallet.AddressMode = 'single'
 export const WalletDetailsScreen = () => {
   const navigation = useNavigation<SetupWalletRouteNavigation>()
   const strings = useStrings()
@@ -70,20 +70,20 @@ export const WalletDetailsScreen = () => {
   const bold = useBold()
   const {HEIGHT_MODAL_NAME_PASSWORD, HEIGHT_MODAL_CHECKSUM} = useSizeModal()
   const {openModal, closeModal} = useModal()
-  const walletManager = useWalletManager()
-  const {walletNames} = useWalletNames(walletManager)
+  const {walletManager} = useWalletManager()
+  const walletNames = Array.from(walletManager.walletMetas.values()).map(({name}) => name)
   const intl = useIntl()
   const storage = useAsyncStorage()
   const {
     mnemonic,
-    networkId,
     publicKeyHex,
-    walletImplementationId,
+    walletImplementation,
     showRestoreWalletInfoModal,
     showRestoreWalletInfoModalChanged,
     walletIdChanged,
+    accountVisual,
   } = useSetupWallet()
-  const plate = usePlate({networkId, publicKeyHex})
+  const plate = walletChecksum(publicKeyHex)
   const [name, setName] = React.useState(features.prefillWalletInfo ? debugWalletInfo.WALLET_NAME : '')
   const passwordRef = React.useRef<RNTextInput>(null)
   const [password, setPassword] = React.useState(features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '')
@@ -110,7 +110,7 @@ export const WalletDetailsScreen = () => {
     createWallet,
     isLoading,
     isSuccess: isCreateWalletSuccess,
-  } = useCreateWallet({
+  } = useCreateWalletMnemonic({
     onSuccess: async (wallet) => {
       walletIdChanged(wallet.id)
       const walletStorage = storage.join('wallet/')
@@ -135,7 +135,7 @@ export const WalletDetailsScreen = () => {
     },
   })
 
-  const nameErrors = validateWalletName(name, null, walletNames && !isCreateWalletSuccess ? walletNames : [])
+  const nameErrors = validateWalletName(name, null, !isCreateWalletSuccess ? walletNames : [])
   const walletNameErrorText = getWalletNameError(
     {tooLong: strings.tooLong, nameAlreadyTaken: strings.nameAlreadyTaken, mustBeFilled: strings.mustBeFilled},
     nameErrors,
@@ -148,11 +148,11 @@ export const WalletDetailsScreen = () => {
       name,
       password,
       mnemonicPhrase: mnemonic,
-      networkId,
-      walletImplementationId: walletImplementationId as WalletImplementationId,
+      implementation: walletImplementation,
       addressMode,
+      accountVisual,
     })
-  }, [createWallet, mnemonic, name, networkId, password, track, walletImplementationId])
+  }, [accountVisual, createWallet, mnemonic, name, password, track, walletImplementation])
 
   const showModalTipsPassword = React.useCallback(() => {
     openModal(
@@ -228,11 +228,11 @@ export const WalletDetailsScreen = () => {
           <View>
             <CardAboutPhrase
               title={strings.walletChecksumModalCardTitle}
-              checksumImage={plate.accountPlate.ImagePart}
+              checksumImage={plate.ImagePart}
               checksumLine={1}
               linesOfText={[
                 strings.walletChecksumModalCardFirstItem,
-                strings.walletChecksumModalCardSecondItem(plate.accountPlate.TextPart),
+                strings.walletChecksumModalCardSecondItem(plate.TextPart),
                 strings.walletChecksumModalCardThirdItem,
               ]}
             />
@@ -333,11 +333,11 @@ export const WalletDetailsScreen = () => {
           <Space height="xl" />
 
           <View style={styles.checksum}>
-            <Icon.WalletAccount iconSeed={plate.accountPlate.ImagePart} style={styles.walletChecksum} />
+            <Icon.WalletAvatar image={new Blockies().asBase64({seed: plate.ImagePart})} style={styles.walletChecksum} />
 
             <Space width="sm" />
 
-            <Text style={styles.plateNumber}>{plate.accountPlate.TextPart}</Text>
+            <Text style={styles.plateNumber}>{plate.TextPart}</Text>
 
             <Space width="sm" />
 

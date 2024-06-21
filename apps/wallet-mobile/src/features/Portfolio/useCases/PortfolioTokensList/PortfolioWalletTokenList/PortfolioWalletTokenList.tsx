@@ -8,7 +8,7 @@ import {Spacer} from '../../../../../components'
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {makeList} from '../../../../../kernel/utils'
 import {useSearch} from '../../../../Search/SearchContext'
-import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {usePortfolioBalances} from '../../../common/hooks/usePortfolioBalances'
 import {usePortfolioPrimaryBalance} from '../../../common/hooks/usePortfolioPrimaryBalance'
 import {Line} from '../../../common/Line'
@@ -26,7 +26,7 @@ export const PortfolioWalletTokenList = () => {
   const {styles} = useStyles()
   const {search, isSearching} = useSearch()
   const isZeroADABalance = useZeroBalance()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {track} = useMetrics()
   const balances = usePortfolioBalances({wallet})
   const tokensList = React.useMemo(() => balances.fts ?? [], [balances.fts])

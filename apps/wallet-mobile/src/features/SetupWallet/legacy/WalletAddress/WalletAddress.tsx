@@ -1,19 +1,12 @@
 import {useExplorers} from '@yoroi/explorers'
-import {Chain} from '@yoroi/types'
 import React from 'react'
 import {Linking, StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native'
 
 import {CopyButton, Text} from '../../../../components'
+import {useSelectedNetwork} from '../../../WalletManager/common/hooks/useSelectedNetwork'
 
-export const WalletAddress = ({
-  addressHash,
-  style,
-  network,
-}: {
-  addressHash: string
-  style?: ViewStyle
-  network: Chain.SupportedNetworks
-}) => {
+export const WalletAddress = ({addressHash, style}: {addressHash: string; style?: ViewStyle}) => {
+  const {network} = useSelectedNetwork()
   const explorers = useExplorers(network)
   const handleOnPress = () => {
     Linking.openURL(explorers.cardanoscan.address(addressHash))

@@ -17,10 +17,18 @@ const removeWalletKey = async (id: YoroiWallet['id']) => {
   await KeychainStorage.remove(id)
 }
 
-export const Keychain = {
+export const Keychain: KeychainManager = {
   authenticate,
   getWalletKey,
   setWalletKey,
   removeWalletKey,
   Errors: KeychainStorage.Errors,
 } as const
+
+export type KeychainManager = {
+  authenticate: (authenticationPrompt: AuthenticationPrompt) => Promise<void>
+  getWalletKey: (id: YoroiWallet['id'], authenticationPrompt: AuthenticationPrompt) => Promise<string>
+  setWalletKey: (id: YoroiWallet['id'], rootKey: string) => Promise<void>
+  removeWalletKey: (id: YoroiWallet['id']) => Promise<void>
+  Errors: typeof KeychainStorage.Errors
+}

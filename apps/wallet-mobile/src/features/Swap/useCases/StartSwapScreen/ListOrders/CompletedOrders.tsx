@@ -27,7 +27,7 @@ import {useSync, useTokenInfos, useTransactionInfos} from '../../../../../yoroi-
 import {TransactionInfo, TxMetadataInfo} from '../../../../../yoroi-wallets/types'
 import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils'
 import {useSearch} from '../../../../Search/SearchContext'
-import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {PRICE_PRECISION} from '../../../common/constants'
 import {Counter} from '../../../common/Counter/Counter'
 import {parseOrderTxMetadata} from '../../../common/helpers'
@@ -94,7 +94,7 @@ const hasFrontendFeeReturn = (tx: TransactionInfo): boolean => {
 export const CompletedOrders = () => {
   const strings = useStrings()
   const styles = useStyles()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {sync} = useSync(wallet)
 
   const {track} = useMetrics()
@@ -157,9 +157,9 @@ export const CompletedOrders = () => {
 
 export const ExpandableOrder = ({order, tokenInfos}: {order: MappedRawOrder; tokenInfos: Array<Balance.TokenInfo>}) => {
   const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const intl = useIntl()
-  const explorers = useExplorers(wallet.network)
+  const explorers = useExplorers(wallet.networkManager.network)
   const metadata = order.metadata
   const id = order.id
   const expanded = id === hiddenInfoOpenId

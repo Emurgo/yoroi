@@ -3,7 +3,7 @@ import React from 'react'
 
 import {QueryProvider, RouteProvider} from '../../../../../.storybook'
 import {mocks, nft} from '../../../../yoroi-wallets/mocks'
-import {SelectedWalletProvider} from '../../../WalletManager/context/SelectedWalletContext'
+import {WalletManagerProviderMock} from '../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {NftDetailsImage} from './NftDetailsImage'
 
 storiesOf('NFT/Details Image', module)
@@ -16,9 +16,9 @@ storiesOf('NFT/Details Image', module)
     return (
       <RouteProvider params={{id: nft.id}}>
         <QueryProvider>
-          <SelectedWalletProvider wallet={loadedWallet}>
+          <WalletManagerProviderMock wallet={loadedWallet}>
             <NftDetailsImage />
-          </SelectedWalletProvider>
+          </WalletManagerProviderMock>
         </QueryProvider>
       </RouteProvider>
     )
@@ -32,9 +32,9 @@ storiesOf('NFT/Details Image', module)
     return (
       <RouteProvider params={{id: nft.id}}>
         <QueryProvider>
-          <SelectedWalletProvider wallet={wallet}>
+          <WalletManagerProviderMock wallet={wallet}>
             <NftDetailsImage />
-          </SelectedWalletProvider>
+          </WalletManagerProviderMock>
         </QueryProvider>
       </RouteProvider>
     )
@@ -48,9 +48,9 @@ storiesOf('NFT/Details Image', module)
     return (
       <RouteProvider params={{id: nft.id}}>
         <QueryProvider>
-          <SelectedWalletProvider wallet={wallet}>
+          <WalletManagerProviderMock wallet={wallet}>
             <NftDetailsImage />
-          </SelectedWalletProvider>
+          </WalletManagerProviderMock>
         </QueryProvider>
       </RouteProvider>
     )

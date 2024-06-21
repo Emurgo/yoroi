@@ -25,5 +25,4 @@ yarn workspace @yoroi/transfer add -D "$1"
 yarn workspace @yoroi/setup-wallet add -D "$1"
 yarn workspace @yoroi/types add -D "$1"
 yarn workspace @yoroi/wallet-mobile add -D "$1"
-
-
+yarn workspace @yoroi/identicon add -D "$1"

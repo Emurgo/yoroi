@@ -7,11 +7,11 @@ import {useBalances} from '../../../../../yoroi-wallets/hooks'
 import {YoroiUnsignedTx} from '../../../../../yoroi-wallets/types/yoroi'
 import {formatTokenWithSymbol} from '../../../../../yoroi-wallets/utils/format'
 import {Amounts} from '../../../../../yoroi-wallets/utils/utils'
-import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 
 export const BalanceAfter = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => {
   const strings = useStrings()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const balances = useBalances(wallet)
 
   const balancesAfter = Amounts.diff(balances, yoroiUnsignedTx.fee)

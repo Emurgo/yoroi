@@ -4,13 +4,13 @@ import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {mocks} from '../../../../../yoroi-wallets/mocks'
+import {WalletManagerProviderMock} from '../../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {SearchProvider} from '../../../../Search/SearchContext'
-import {SelectedWalletProvider} from '../../../../WalletManager/context/SelectedWalletContext'
 import {EditAmount} from './EditAmount'
 
 storiesOf('Exchange Edit Amount', module).add('initial - message', () => {
   return (
-    <SelectedWalletProvider wallet={mocks.wallet}>
+    <WalletManagerProviderMock wallet={mocks.wallet}>
       <SearchProvider>
         <ExchangeProvider manager={successManagerMock} initialState={{...exchangeDefaultState, providerId: 'banxa'}}>
           <View style={styles.container}>
@@ -18,7 +18,7 @@ storiesOf('Exchange Edit Amount', module).add('initial - message', () => {
           </View>
         </ExchangeProvider>
       </SearchProvider>
-    </SelectedWalletProvider>
+    </WalletManagerProviderMock>
   )
 })
 

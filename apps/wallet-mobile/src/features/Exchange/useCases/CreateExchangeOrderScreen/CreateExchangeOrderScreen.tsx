@@ -15,7 +15,7 @@ import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../kernel/navigation'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../yoroi-wallets/utils'
-import {useSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {ProviderItem} from '../../common/ProviderItem/ProviderItem'
 import {useNavigateTo} from '../../common/useNavigateTo'
 import {useStrings} from '../../common/useStrings'
@@ -31,7 +31,7 @@ export const CreateExchangeOrderScreen = () => {
   const strings = useStrings()
   const styles = useStyles()
   const {track} = useMetrics()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const walletNavigation = useWalletNavigation()
   const [contentHeight, setContentHeight] = React.useState(0)
 
@@ -55,8 +55,8 @@ export const CreateExchangeOrderScreen = () => {
       provider: providerSelected?.id ?? '',
       orderType,
       walletId: wallet.id,
-      isTestnet: wallet.networkId !== 1,
-      isSandbox: wallet.networkId !== 1,
+      isTestnet: !wallet.isMainnet,
+      isSandbox: !wallet.isMainnet,
       appId: providerSelected?.appId,
     }),
   )
