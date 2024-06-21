@@ -16,7 +16,7 @@ export const ChooseBiometricLoginScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
 
-  const {setScreenShown, isLoading: isSetScreenShownLoading} = useSetScreenShown()
+  const {setScreenShown, isLoading: isScreenShownLoading} = useSetScreenShown()
 
   const {enableAuthWithOs, isLoading} = useEnableAuthWithOs({
     onSuccess: () => {
@@ -69,7 +69,7 @@ export const ChooseBiometricLoginScreen = () => {
 
             enableAuthWithOs()
           }}
-          disabled={isLoading || isSetScreenShownLoading}
+          disabled={isLoading || isScreenShownLoading}
         />
 
         <Space height="sm" />

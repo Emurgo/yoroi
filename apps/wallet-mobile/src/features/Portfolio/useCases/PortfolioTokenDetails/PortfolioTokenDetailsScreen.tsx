@@ -4,8 +4,8 @@ import {Animated, NativeScrollEvent, NativeSyntheticEvent, StyleSheet} from 'rea
 
 import {Spacer} from '../../../../components'
 import {Tab, Tabs} from '../../../../components/Tabs'
-import {usePortfolioTokenDetailContext} from '../../common/PortfolioTokenDetailContext'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
+import {usePortfolioTokenDetailContext} from '../../common/PortfolioTokenDetailContext'
 import {useStrings} from '../../common/useStrings'
 import {PortfolioTokenAction} from './PortfolioTokenAction'
 import {PortfolioTokenBalance} from './PortfolioTokenBalance/PortfolioTokenBalance'
@@ -28,7 +28,6 @@ export const PortfolioTokenDetailsScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
   const {activeTab, setActiveTab} = usePortfolioTokenDetailContext()
-  const scrollY = React.useRef(new Animated.Value(0)).current
   const {track} = useMetrics()
   const [isStickyTab, setIsStickyTab] = React.useState(false)
 
@@ -40,6 +39,10 @@ export const PortfolioTokenDetailsScreen = () => {
   const {getSectionListProps, loadingView} = useTokenDetailTransactions({
     active: activeTab === 'transactions',
   })
+
+  React.useEffect(() => {
+    track.portfolioTokenDetails({token_details_tab: tabs[activeTab]})
+  }, [activeTab, track])
 
   const renderTabs = React.useMemo(() => {
     return (
