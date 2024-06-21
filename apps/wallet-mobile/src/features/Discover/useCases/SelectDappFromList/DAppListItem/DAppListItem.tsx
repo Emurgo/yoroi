@@ -6,6 +6,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import uuid from 'uuid'
 
 import {Icon, Spacer, useModal} from '../../../../../components'
+import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {useBrowser} from '../../../common/BrowserProvider'
 import {type DAppItem, getDappFallbackLogo, isGoogleSearchItem} from '../../../common/helpers'
 import {LabelCategoryDApp} from '../../../common/LabelCategoryDApp'
@@ -28,6 +29,7 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
   const insets = useSafeAreaInsets()
   const strings = useStrings()
   const {manager} = useDappConnector()
+  const {track} = useMetrics()
 
   const dialogHeight = DIALOG_DAPP_ACTIONS_HEIGHT + insets.bottom
 
@@ -40,6 +42,8 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
   }
 
   const handleOpenDApp = () => {
+    track.discoverConnectedBottomSheetOpenDAppClicked()
+
     const id = uuid.v4()
     closeModal()
     addTab(dApp.uri, id)
@@ -48,6 +52,8 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
     navigateTo.browseDapp()
   }
   const handleDisconnectDApp = async (dApp: DAppItem) => {
+    track.discoverConnectedBottomSheetDisconnectClicked()
+
     const promises = dApp.origins.map(async (o) => {
       await manager.removeConnection({dappOrigin: o})
     })

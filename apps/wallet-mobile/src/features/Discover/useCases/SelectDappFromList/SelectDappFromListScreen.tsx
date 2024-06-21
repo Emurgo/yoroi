@@ -4,6 +4,7 @@ import * as React from 'react'
 import {FlatList, StyleSheet, View} from 'react-native'
 
 import {Spacer} from '../../../../components'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useSearch, useSearchOnNavBar} from '../../../Search/SearchContext'
 import {getGoogleSearchItem} from '../../common/helpers'
 import {useDAppsConnected} from '../../common/useDAppsConnected'
@@ -19,12 +20,14 @@ const DAppTabs = {
   recommended: 'recommended',
 } as const
 type TDAppTabs = keyof typeof DAppTabs
+type Category = 'Investment' | 'Media' | 'Trading' | 'NFT' | 'Community'
 
 export const SelectDappFromListScreen = () => {
-  const styles = useStyles()
   const strings = useStrings()
+  const styles = useStyles()
   const [currentTab, setCurrentTab] = React.useState<TDAppTabs>('connected')
   const [categoriesSelected, setCategoriesSelected] = React.useState<string[]>([])
+  const {track} = useMetrics()
 
   useSearchOnNavBar({
     title: strings.discoverTitle,
@@ -39,6 +42,8 @@ export const SelectDappFromListScreen = () => {
 
   const handleToggleCategory = React.useCallback(
     (category: string) => {
+      track.discoverFilterSelected({dapp_filter: category as Category})
+
       if (categoriesSelected.includes(category)) {
         setCategoriesSelected(categoriesSelected.filter((c) => c !== category))
         return
@@ -46,13 +51,22 @@ export const SelectDappFromListScreen = () => {
 
       setCategoriesSelected([...categoriesSelected, category])
     },
-    [categoriesSelected],
+    [categoriesSelected, track],
   )
 
   const myDapps = useFilteredDappList(currentTab, categoriesSelected)
 
   const handleChangeTab = (tab: TDAppTabs) => {
     setCurrentTab(tab)
+  }
+
+  const handleOnPress = (connected: boolean) => {
+    track.discoverDAppItemClicked()
+    if (connected) track.discoverConnectedDAppItemClicked()
+  }
+
+  const handleOnEndReached = () => {
+    console.log('handleOnEndReached')
   }
 
   return (
@@ -74,13 +88,17 @@ export const SelectDappFromListScreen = () => {
               onCategoryToggle={handleToggleCategory}
             />
           }
-          renderItem={({item: entry}) => (
-            <View style={styles.dAppItemBox}>
-              <DAppListItem dApp={entry} connected={isDappConnected(entry.origins)} />
-            </View>
-          )}
+          renderItem={({item: entry}) => {
+            const connected = isDappConnected(entry.origins)
+            return (
+              <View style={styles.dAppItemBox}>
+                <DAppListItem dApp={entry} connected={connected} onPress={() => handleOnPress(connected)} />
+              </View>
+            )
+          }}
           ItemSeparatorComponent={() => <Spacer style={styles.dAppsBox} />}
           ListFooterComponent={() => <Spacer style={styles.dAppsBox} />}
+          onEndReached={handleOnEndReached}
         />
       </View>
     </>
