@@ -7,9 +7,10 @@ import {Spacer} from '../../../../../components'
 import {TabPanel} from '../../../../../components/Tabs'
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {useSearch} from '../../../../Search/SearchContext'
-import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {usePortfolioPrimaryBalance} from '../../../common/hooks/usePortfolioPrimaryBalance'
 import {Line} from '../../../common/Line'
+import {portfolioDAppsTabs, TPortfolioDAppsTabs} from '../../../common/types'
 import {ILiquidityPool, useGetLiquidityPool} from '../../../common/useGetLiquidityPool'
 import {IOpenOrders, useGetOpenOrders} from '../../../common/useGetOpenOrders'
 import {TotalTokensValue} from '../TotalTokensValue/TotalTokensValue'
@@ -17,18 +18,11 @@ import {LendAndBorrowTab} from './LendAndBorrowTab'
 import {LiquidityPoolTab} from './LiquidityPoolTab'
 import {OpenOrdersTab} from './OpenOrdersTab'
 import {PortfolioDAppTabs} from './PortfolioDAppTabs'
-export const portfolioDAppsTabs = {
-  LIQUIDITY_POOL: 'liquidityPool',
-  OPEN_ORDERS: 'openOrders',
-  LEND_BORROW: 'lendAndBorrow',
-} as const
-
-export type TPortfolioDAppsTabs = (typeof portfolioDAppsTabs)[keyof typeof portfolioDAppsTabs]
 
 export const PortfolioDAppsTokenList = () => {
   const {styles} = useStyles()
   const {search, isSearching} = useSearch()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {track} = useMetrics()
   const primaryBalance = usePortfolioPrimaryBalance({wallet})
 

@@ -7,7 +7,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {KeyboardAvoidingView, ProgressStep, Spacer, TextInput} from '../../components'
 import {ConfirmTx} from '../../components/ConfirmTx'
 import {debugWalletInfo, features} from '../../features'
-import {useSelectedWallet} from '../../features/WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {errorMessages, txLabels} from '../../kernel/i18n/global-messages'
 import LocalizableError from '../../kernel/i18n/LocalizableError'
 import {useVotingRegTx} from '../../yoroi-wallets/hooks'
@@ -29,9 +29,9 @@ export const ConfirmVotingTx = ({
   const styles = useStyles()
 
   const strings = useStrings()
-  const wallet = useSelectedWallet()
+  const {wallet, meta} = useSelectedWallet()
   const votingRegTx = useVotingRegTx(
-    {wallet, pin, supportsCIP36},
+    {wallet, pin, supportsCIP36, addressMode: meta.addressMode},
     {onSuccess: ({votingKeyEncrypted}) => onSuccess(votingKeyEncrypted)},
   )
   const [password, setPassword] = useState(features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '')
@@ -53,11 +53,11 @@ export const ConfirmVotingTx = ({
 
           <Spacer height={16} />
 
-          {wallet.isHW ? (
+          {meta.isHW ? (
             <HWInstructions useUSB={useUSB} />
           ) : (
             <Description>
-              {wallet.isEasyConfirmationEnabled ? strings.authOsInstructions : strings.description}
+              {meta.isEasyConfirmationEnabled ? strings.authOsInstructions : strings.description}
             </Description>
           )}
 
@@ -73,7 +73,7 @@ export const ConfirmVotingTx = ({
             autoComplete="off"
           />
 
-          {!wallet.isEasyConfirmationEnabled && !wallet.isHW && (
+          {!meta.isEasyConfirmationEnabled && !meta.isHW && (
             <TextInput
               secureTextEntry
               value={password}

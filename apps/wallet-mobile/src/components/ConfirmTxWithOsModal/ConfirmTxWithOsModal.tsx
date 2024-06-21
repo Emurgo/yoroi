@@ -3,7 +3,7 @@ import React, {useEffect} from 'react'
 import {ActivityIndicator, StyleSheet, Text, View} from 'react-native'
 
 import {useAuthOsWithEasyConfirmation} from '../../features/Auth/common/hooks'
-import {useSelectedWallet} from '../../features/WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {useSignTx, useSubmitTx} from '../../yoroi-wallets/hooks'
 import {YoroiSignedTx, YoroiUnsignedTx} from '../../yoroi-wallets/types'
 
@@ -14,7 +14,7 @@ type Props = {
 }
 
 export const ConfirmTxWithOsModal = ({onSuccess, unsignedTx, onError}: Props) => {
-  const wallet = useSelectedWallet()
+  const {wallet, meta} = useSelectedWallet()
   const styles = useStyles()
 
   const {signTx, error: signError} = useSignTx({wallet})
@@ -37,9 +37,9 @@ export const ConfirmTxWithOsModal = ({onSuccess, unsignedTx, onError}: Props) =>
   )
 
   useEffect(() => {
-    if (!wallet.isEasyConfirmationEnabled) return
+    if (!meta.isEasyConfirmationEnabled) return
     authWithOs()
-  }, [wallet.isEasyConfirmationEnabled, authWithOs])
+  }, [meta.isEasyConfirmationEnabled, authWithOs])
 
   const error = signError || authWithOsError
 

@@ -5,7 +5,7 @@ import {StyleSheet, Text, View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 import {Spacer} from '../../../../../components'
-import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {useGetPortfolioTokenInfo} from '../../../common/useGetPortfolioTokenInfo'
 import {usePortfolioTokenDetailParams} from '../../../common/useNavigateTo'
 import {useStrings} from '../../../common/useStrings'
@@ -13,8 +13,9 @@ import {useStrings} from '../../../common/useStrings'
 export const Performance = () => {
   const {styles} = useStyles()
   const {id: tokenId} = usePortfolioTokenDetailParams()
-  const wallet = useSelectedWallet()
-  const {balances} = wallet
+  const {
+    wallet: {balances},
+  } = useSelectedWallet()
   const tokenInfo = balances.records.get(tokenId)
   const tokenSymbol = tokenInfo ? infoExtractName(tokenInfo.info, {mode: 'currency'}) : '-'
   const {data, isFetching} = useGetPortfolioTokenInfo(tokenSymbol)

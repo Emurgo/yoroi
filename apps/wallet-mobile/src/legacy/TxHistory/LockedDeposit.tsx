@@ -7,11 +7,11 @@ import {StyleSheet, View} from 'react-native'
 import {Spacer, Text} from '../../components'
 import {usePortfolioPrimaryBreakdown} from '../../features/Portfolio/common/hooks/usePortfolioPrimaryBreakdown'
 import {usePrivacyMode} from '../../features/Settings/PrivacyMode/PrivacyMode'
-import {useSelectedWallet} from '../../features/WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import globalMessages from '../../kernel/i18n/global-messages'
 
 export const LockedDeposit = ({ignorePrivacy = false}: {ignorePrivacy?: boolean}) => {
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
   const {lockedAsStorageCost} = usePortfolioPrimaryBreakdown({wallet})
 

@@ -2,7 +2,7 @@ import {useSwap} from '@yoroi/swap'
 import * as React from 'react'
 
 import {useBalance} from '../../../../../../yoroi-wallets/hooks'
-import {useSelectedWallet} from '../../../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../../../WalletManager/common/hooks/useSelectedWallet'
 import {AmountCard} from '../../../../common/AmountCard/AmountCard'
 import {useNavigateTo} from '../../../../common/navigation'
 import {useStrings} from '../../../../common/strings'
@@ -11,7 +11,7 @@ import {useSwapForm} from '../../../../common/SwapFormProvider'
 export const EditBuyAmount = () => {
   const strings = useStrings()
   const navigate = useNavigateTo()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {orderData} = useSwap()
   const {
     buyQuantity: {isTouched: isBuyTouched, displayValue: buyDisplayValue, error: buyError},

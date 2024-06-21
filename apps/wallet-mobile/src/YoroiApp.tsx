@@ -13,10 +13,8 @@ import {LoadingBoundary} from './components'
 import {ErrorBoundary} from './components/ErrorBoundary'
 import {AuthProvider} from './features/Auth/AuthProvider'
 import {CurrencyProvider} from './features/Settings/Currency/CurrencyContext'
-import {walletManager} from './features/WalletManager/common/walletManager'
-import {SelectedWalletProvider} from './features/WalletManager/context/SelectedWalletContext'
-import {SelectedWalletMetaProvider} from './features/WalletManager/context/SelectedWalletMetaContext'
-import {WalletManagerProvider} from './features/WalletManager/context/WalletManagerContext'
+import {WalletManagerProvider} from './features/WalletManager/context/WalletManagerProvider'
+import {walletManager} from './features/WalletManager/wallet-manager'
 import {InitApp} from './InitApp'
 import {disableLogbox, loggerFilter} from './kernel/env'
 import {LanguageProvider} from './kernel/i18n'
@@ -36,8 +34,8 @@ if (disableLogbox) {
   LogBox.ignoreLogs(['Require cycle:'])
 }
 
-const queryClient = new QueryClient()
 const metricsManager = makeMetricsManager()
+const queryClient = new QueryClient()
 
 const Yoroi = () => {
   const isMigrated = useMigrations(rootStorage)
@@ -56,17 +54,13 @@ const Yoroi = () => {
                   <LanguageProvider>
                     <CurrencyProvider>
                       <AuthProvider>
-                        <SelectedWalletMetaProvider>
-                          <SelectedWalletProvider>
-                            <LinksProvider>
-                              <SetupWalletProvider>
-                                <PoolTransitionProvider>
-                                  <InitApp />
-                                </PoolTransitionProvider>
-                              </SetupWalletProvider>
-                            </LinksProvider>
-                          </SelectedWalletProvider>
-                        </SelectedWalletMetaProvider>
+                        <LinksProvider>
+                          <SetupWalletProvider>
+                            <PoolTransitionProvider>
+                              <InitApp />
+                            </PoolTransitionProvider>
+                          </SetupWalletProvider>
+                        </LinksProvider>
                       </AuthProvider>
                     </CurrencyProvider>
                   </LanguageProvider>

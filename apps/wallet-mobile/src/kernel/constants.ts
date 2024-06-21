@@ -65,6 +65,11 @@ export const time = freeze({
   halfHour: 30 * 60 * 1e3,
   oneHour: 60 * 60 * 1e3,
   oneDay: 24 * 60 * 60 * 1e3,
+
+  // helpers
+  seconds: (seconds: number) => seconds * 1e3,
+  minutes: (minutes: number) => minutes * 60 * 1e3,
+
   // session here means while the wallet is open
   session: Infinity,
 })

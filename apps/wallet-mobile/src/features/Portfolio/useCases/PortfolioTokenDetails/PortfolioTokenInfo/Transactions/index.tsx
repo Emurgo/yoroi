@@ -8,7 +8,7 @@ import {SectionList, SectionListProps, StyleSheet, Text, View} from 'react-nativ
 import {Spacer} from '../../../../../../components/Spacer'
 import {makeList} from '../../../../../../kernel/utils'
 import {formatDateRelative} from '../../../../../../yoroi-wallets/utils/format'
-import {useSelectedWallet} from '../../../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../../../WalletManager/common/hooks/useSelectedWallet'
 import {ITokenTransaction, useGetPortfolioTokenTransaction} from '../../../../common/useGetPortfolioTokenTransaction'
 import {usePortfolioTokenDetailParams} from '../../../../common/useNavigateTo'
 import {TransactionItem} from './TransactionItem'
@@ -17,8 +17,9 @@ import {TransactionItemSkeleton} from './TransactionItemSkeleton'
 export const Transactions = () => {
   const {styles} = useStyles()
   const {id: tokenId} = usePortfolioTokenDetailParams()
-  const wallet = useSelectedWallet()
-  const {balances} = wallet
+  const {
+    wallet: {balances},
+  } = useSelectedWallet()
   const tokenInfo = balances.records.get(tokenId)
   const name = tokenInfo?.info ? infoExtractName(tokenInfo.info) : ''
   const {data, isLoading} = useGetPortfolioTokenTransaction(name)
@@ -82,8 +83,9 @@ export const Transactions = () => {
 export const useTokenDetailTransactions = ({active}: {active?: boolean}) => {
   const {styles} = useStyles()
   const {id: tokenId} = usePortfolioTokenDetailParams()
-  const wallet = useSelectedWallet()
-  const {balances} = wallet
+  const {
+    wallet: {balances},
+  } = useSelectedWallet()
   const tokenInfo = balances.records.get(tokenId)
   const name = tokenInfo?.info ? infoExtractName(tokenInfo.info) : ''
   const {data, isLoading} = useGetPortfolioTokenTransaction(name, {

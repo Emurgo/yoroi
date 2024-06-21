@@ -2,9 +2,9 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {QueryClient, QueryClientProvider} from 'react-query'
 
-import {SelectedWalletProvider} from '../../features/WalletManager/context/SelectedWalletContext'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {mocks} from '../../yoroi-wallets/mocks'
+import {WalletManagerProviderMock} from '../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {StakePoolInfos} from './StakePoolInfos'
 
 storiesOf('StakePoolInfos', module)
@@ -16,40 +16,9 @@ storiesOf('StakePoolInfos', module)
 
     return (
       <QueryClientProvider client={new QueryClient()}>
-        <SelectedWalletProvider wallet={notDelegatingWallet}>
+        <WalletManagerProviderMock wallet={notDelegatingWallet}>
           <StakePoolInfos />
-        </SelectedWalletProvider>
-      </QueryClientProvider>
-    )
-  })
-
-  .add('Loading ids', () => {
-    const loadingWallet: YoroiWallet = {
-      ...mocks.wallet,
-      getDelegationStatus: mocks.getDelegationStatus.loading,
-    }
-
-    return (
-      <QueryClientProvider client={new QueryClient()}>
-        <SelectedWalletProvider wallet={loadingWallet}>
-          <StakePoolInfos />
-        </SelectedWalletProvider>
-      </QueryClientProvider>
-    )
-  })
-
-  .add('Loading StakePoolInfo', () => {
-    const loadingWallet: YoroiWallet = {
-      ...mocks.wallet,
-      getDelegationStatus: mocks.getDelegationStatus.success.delegating,
-      fetchPoolInfo: mocks.fetchPoolInfo.loading,
-    }
-
-    return (
-      <QueryClientProvider client={new QueryClient()}>
-        <SelectedWalletProvider wallet={loadingWallet}>
-          <StakePoolInfos />
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryClientProvider>
     )
   })
@@ -63,9 +32,9 @@ storiesOf('StakePoolInfos', module)
 
     return (
       <QueryClientProvider client={new QueryClient()}>
-        <SelectedWalletProvider wallet={loadedWallet}>
+        <WalletManagerProviderMock wallet={loadedWallet}>
           <StakePoolInfos />
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryClientProvider>
     )
   })
@@ -79,9 +48,9 @@ storiesOf('StakePoolInfos', module)
 
     return (
       <QueryClientProvider client={new QueryClient()}>
-        <SelectedWalletProvider wallet={loadedWallet}>
+        <WalletManagerProviderMock wallet={loadedWallet}>
           <StakePoolInfos />
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryClientProvider>
     )
   })
@@ -94,9 +63,9 @@ storiesOf('StakePoolInfos', module)
 
     return (
       <QueryClientProvider client={new QueryClient()}>
-        <SelectedWalletProvider wallet={loadedWallet}>
+        <WalletManagerProviderMock wallet={loadedWallet}>
           <StakePoolInfos />
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryClientProvider>
     )
   })

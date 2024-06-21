@@ -3,7 +3,7 @@ import {isKeyOf} from '@yoroi/common'
 
 import * as SANCHONET_CONFIG from '../cardano/constants/sanchonet/constants'
 import type {NetworkId} from '../types/other'
-import {NETWORK_REGISTRY, YOROI_PROVIDER_IDS} from '../types/other'
+import {NETWORK_REGISTRY} from '../types/other'
 import {NUMBERS} from './numbers'
 
 const _DEFAULT_BACKEND_RULES = {
@@ -27,7 +27,6 @@ const _DEFAULT_BACKEND_RULES = {
  *   global object -> ./config.js and not from here.
  */
 export const BYRON_MAINNET = {
-  PROVIDER_ID: YOROI_PROVIDER_IDS.BYRON_MAINNET,
   NETWORK_ID: NETWORK_REGISTRY.BYRON_MAINNET,
   MARKETING_NAME: 'Mainnet',
   ENABLED: false,
@@ -40,7 +39,6 @@ export const BYRON_MAINNET = {
   COIN_TYPE: NUMBERS.COIN_TYPES.CARDANO,
 }
 const HASKELL_SHELLEY = {
-  PROVIDER_ID: YOROI_PROVIDER_IDS.HASKELL_SHELLEY,
   NETWORK_ID: NETWORK_REGISTRY.HASKELL_SHELLEY,
   MARKETING_NAME: 'Cardano Mainnet',
   ENABLED: true,
@@ -85,7 +83,6 @@ const HASKELL_SHELLEY = {
   KEY_DEPOSIT: '2000000',
 }
 const HASKELL_SHELLEY_TESTNET = {
-  PROVIDER_ID: YOROI_PROVIDER_IDS.HASKELL_SHELLEY_TESTNET,
   NETWORK_ID: NETWORK_REGISTRY.HASKELL_SHELLEY_TESTNET,
   MARKETING_NAME: 'Cardano testnet',
   ENABLED: true,

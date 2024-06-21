@@ -1,12 +1,7 @@
 import {parseBoolean} from '@yoroi/common'
 import {App} from '@yoroi/types'
 
-import {
-  AUTH_WITH_OS,
-  AUTH_WITH_PIN,
-  disableAllEasyConfirmation,
-  getAuthSetting,
-} from '../../../features/Auth/common/hooks'
+import {AUTH_WITH_OS, AUTH_WITH_PIN, getAuthSetting} from '../../../features/Auth/common/hooks'
 
 export const migrateAuthSetting = async (storage: App.Storage) => {
   const authSetting = await getAuthSetting(storage)
@@ -21,15 +16,11 @@ export const migrateAuthSetting = async (storage: App.Storage) => {
     .join('appSettings/')
     .getItem(OLD_OS_AUTH_KEY)
     .then((value) => parseBoolean(value) ?? false)
-  if (isAuthWithOS) {
-    await storage.join('appSettings/').setItem('auth', AUTH_WITH_OS)
-    return disableAllEasyConfirmation(storage)
-  }
+
+  if (isAuthWithOS) return storage.join('appSettings/').setItem('auth', AUTH_WITH_OS)
 
   const isAuthWithPIN = await storage.join('appSettings/').getItem('customPinHash').then(Boolean)
-  if (isAuthWithPIN) {
-    return storage.join('appSettings/').setItem('auth', AUTH_WITH_PIN)
-  }
+  if (isAuthWithPIN) return storage.join('appSettings/').setItem('auth', AUTH_WITH_PIN)
 }
 
 export const to4_9_0 = migrateAuthSetting

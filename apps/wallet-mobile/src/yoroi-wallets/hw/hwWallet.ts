@@ -1,23 +1,32 @@
-import {YoroiWallet} from '../cardano/types'
-import {DeviceId, DeviceObj} from './hw'
+import {App, HW, Wallet} from '@yoroi/types'
 
-export const withUSB = (wallet: YoroiWallet, deviceObj: DeviceObj) => {
-  if (!wallet.hwDeviceInfo) throw new Error('invalid wallet')
+import {logger} from '../../kernel/logger/logger'
+
+export const withUSB = (meta: Wallet.Meta, deviceObj: HW.DeviceObj) => {
+  if (!meta.hwDeviceInfo) {
+    logger.error(`HW device info not found in meta, reached invalid state`, {id: meta.name})
+    throw new App.Errors.InvalidState('HW device info not found')
+  }
+
   return {
-    ...wallet.hwDeviceInfo,
+    ...meta.hwDeviceInfo,
     hwFeatures: {
-      ...wallet.hwDeviceInfo.hwFeatures,
+      ...meta.hwDeviceInfo.hwFeatures,
       deviceObj,
     },
   }
 }
 
-export const withBLE = (wallet: YoroiWallet, deviceId: DeviceId) => {
-  if (!wallet.hwDeviceInfo) throw new Error('invalid wallet')
+export const withBLE = (meta: Wallet.Meta, deviceId: string) => {
+  if (!meta.hwDeviceInfo) {
+    logger.error(`HW device info not found in meta, reached invalid state`, {id: meta.name})
+    throw new App.Errors.InvalidState('HW device info not found')
+  }
+
   return {
-    ...wallet.hwDeviceInfo,
+    ...meta.hwDeviceInfo,
     hwFeatures: {
-      ...wallet.hwDeviceInfo.hwFeatures,
+      ...meta.hwDeviceInfo.hwFeatures,
       deviceId,
     },
   }

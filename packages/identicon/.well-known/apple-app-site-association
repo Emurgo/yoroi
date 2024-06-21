@@ -1,0 +1,43 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appIDs": [
+          "F8NVT2G2L4.com.emurgo.yoroi",
+          "F8NVT2G2L4.com.yoroi.app",
+          "F8NVT2G2L4.io.emurgo.yoroi",
+          "F8NVT2G2L4.com.emurgo.yoroi-stag",
+          "F8NVT2G2L4.com.emurgo.yoroi-nightly"
+        ],
+        "components": [
+          {
+            "/": "/w1/*",
+            "?": {
+              "$onlyBrowser": "true"
+            },
+            "exclude": true
+          },
+          {
+            "/": "/w1/*",
+            "?": {
+              "%24onlyBrowser": "true"
+            },
+            "exclude": true
+          },
+          {
+            "/": "/w1/*"
+          },
+          {
+            "/": "*",
+            "exclude": true
+          },
+          {
+            "/": "/",
+            "exclude": true
+          }
+        ]
+      }
+    ]
+  }
+}

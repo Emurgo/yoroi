@@ -1,52 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {configCurrencies, supportedCurrencies} from '../../kernel/constants'
-import {
-  WALLET_CONFIG as HASKELL_SHELLEY,
-  WALLET_CONFIG_24 as HASKELL_SHELLEY_24,
-} from '../cardano/constants/mainnet/constants'
-import {MultiToken, TokenEntryPlain} from '../cardano/MultiToken'
+import {TokenEntryPlain} from '../cardano/MultiToken'
 import {CardanoTypes} from '../cardano/types'
 import {RemoteAccountState, RemoteCertificateMeta} from './staking'
 import {Token} from './tokens'
 
-export type AddressObj = {
-  readonly address: string
-}
-export type Value = {
-  values: MultiToken
-}
-// note(v-almonacid): this is the old addressing format used during the Byron
-// era and the ITN. It was used, for instance, as the tx input format in the
-// rust V1 tx sign function.
-export type LegacyAddressing = {
-  addressing: {
-    account: number
-    change: number
-    index: number
-  }
-}
-export type Addressing = {
-  readonly addressing: {
-    readonly path: Array<number>
-    readonly startLevel: number
-  }
-}
-// equivalent to CardanoAddressedUtxo in the Yoroi extension
-export type AddressedUtxo = RawUtxo & Addressing
-// Byron-era Types
-export type TransactionOutput = AddressObj & {
-  value: string
-}
-export type TransactionInput = LegacyAddressing & {
-  ptr: {
-    id: string
-    index: number
-  }
-  value: AddressObj & {
-    value: string
-  }
-}
-
+// note(v-almonacid): this
 /**
  * wallet types
  */
@@ -84,7 +43,6 @@ export const CERTIFICATE_KIND = {
   POOL_RETIREMENT: 'PoolRetirement',
   MOVE_INSTANTANEOUS_REWARDS: 'MoveInstantaneousRewardsCert',
 }
-export type CertificateKind = (typeof CERTIFICATE_KIND)[keyof typeof CERTIFICATE_KIND]
 // getAccountState
 export type AccountStateRequest = {
   addresses: Array<string>
@@ -219,35 +177,10 @@ export const NETWORK_REGISTRY = {
 } as const
 export type NetworkId = (typeof NETWORK_REGISTRY)[keyof typeof NETWORK_REGISTRY]
 
-// PROVIDERS
-export const ALONZO_FACTOR = 1000
-
-export const YOROI_PROVIDER_IDS = {
-  ...NETWORK_REGISTRY,
-  ALONZO_MAINNET: ALONZO_FACTOR + NETWORK_REGISTRY.HASKELL_SHELLEY,
-  ALONZO_TESTNET: ALONZO_FACTOR + NETWORK_REGISTRY.HASKELL_SHELLEY_TESTNET,
-} as const
-
 export const DERIVATION_TYPES = {
   BIP44: 'bip44',
   CIP1852: 'cip1852',
 } as const
-
-// these are the different wallet implementations we have/had
-export const WALLET_IMPLEMENTATION_REGISTRY = {
-  HASKELL_BYRON: 'haskell-byron', // bip44
-  HASKELL_SHELLEY: HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID, // cip1852/15 words
-  HASKELL_SHELLEY_24: HASKELL_SHELLEY_24.WALLET_IMPLEMENTATION_ID, // cip1852/24 words
-  JORMUNGANDR_ITN: 'jormungandr-itn', // deprecated
-  UNDEFINED: '',
-} as const
-
-export type WalletImplementationId =
-  | typeof HASKELL_SHELLEY.WALLET_IMPLEMENTATION_ID
-  | typeof HASKELL_SHELLEY_24.WALLET_IMPLEMENTATION_ID
-  | typeof WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON
-  | typeof WALLET_IMPLEMENTATION_REGISTRY.JORMUNGANDR_ITN
-  | typeof WALLET_IMPLEMENTATION_REGISTRY.UNDEFINED
 
 export type BackendConfig = {
   API_ROOT: string

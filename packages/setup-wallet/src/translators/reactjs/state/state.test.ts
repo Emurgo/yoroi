@@ -1,5 +1,4 @@
 import {
-  HWDeviceInfo,
   SetupWalletAction,
   SetupWalletActionType,
   setupWalletDefaultState,
@@ -48,15 +47,15 @@ describe('State Actions', () => {
     expect(state.walletPassword).toBe(action.walletPassword)
   })
 
-  it('NetworkIdChanged', () => {
+  it('AccountVisualChanged', () => {
     const action: SetupWalletAction = {
-      type: SetupWalletActionType.NetworkIdChanged,
-      networkId: 0,
+      type: SetupWalletActionType.AccountVisualChanged,
+      accountVisual: 1,
     }
 
     const state = setupWalletReducer(setupWalletDefaultState, action)
 
-    expect(state.networkId).toBe(action.networkId)
+    expect(state.accountVisual).toBe(action.accountVisual)
   })
 
   it('WalletIdChanged', () => {
@@ -72,13 +71,13 @@ describe('State Actions', () => {
 
   it('WalletImplementationIdChanged', () => {
     const action: SetupWalletAction = {
-      type: SetupWalletActionType.WalletImplementationIdChanged,
-      walletImplementationId: 'wallet-implementation-id',
+      type: SetupWalletActionType.WalletImplementationChanged,
+      walletImplementation: 'cardano-cip1852',
     }
 
     const state = setupWalletReducer(setupWalletDefaultState, action)
 
-    expect(state.walletImplementationId).toBe(action.walletImplementationId)
+    expect(state.walletImplementation).toBe(action.walletImplementation)
   })
 
   it('HwDeviceInfoChanged', () => {
@@ -179,17 +178,26 @@ describe('State Actions', () => {
         mnemonic: 'fake-mnemonic',
         walletName: 'fake-wallet-name',
         walletPassword: 'fake-password',
-        networkId: 1,
-        walletImplementationId: 'fake-wallet-implementation-id',
+        walletImplementation: 'cardano-cip1852',
         publicKeyHex: 'asdd',
         path: [11344, 1325, 6],
-        hwDeviceInfo: {foo: 'bar'} as unknown as HWDeviceInfo,
+        hwDeviceInfo: {
+          bip44AccountPublic: 'fake-key',
+          hwFeatures: {
+            deviceId: 'fake-sevice-id',
+            deviceObj: null,
+            model: 'Nano',
+            serialHex: 'aqerkfofk',
+            vendor: 'ledger.com',
+          },
+        },
         setUpType: 'restore',
         mnemonicType: 15,
         useUSB: true,
         showCreateWalletInfoModal: true,
         showRestoreWalletInfoModal: true,
         walletId: null,
+        accountVisual: 0,
       },
       action,
     )

@@ -4,6 +4,7 @@
 import TransportHID from '@emurgo/react-native-hid'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
 import {useTheme} from '@yoroi/theme'
+import {HW} from '@yoroi/types'
 import * as React from 'react'
 import type {IntlShape} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
@@ -15,7 +16,7 @@ import {BulletPointItem, Button, Text} from '../../../components'
 import globalMessages, {confirmationMessages, ledgerMessages} from '../../../kernel/i18n/global-messages'
 import LocalizableError from '../../../kernel/i18n/LocalizableError'
 import {logger} from '../../../kernel/logger/logger'
-import {BluetoothDisabledError, DeviceId, DeviceObj, RejectedByUserError} from '../../../yoroi-wallets/hw'
+import {BluetoothDisabledError, RejectedByUserError} from '../../../yoroi-wallets/hw'
 import {Device} from '../../../yoroi-wallets/types/hw'
 import {DeviceItem} from './DeviceItem'
 
@@ -23,8 +24,8 @@ type Props = {
   intl: IntlShape
   styles: ReturnType<typeof useStyles>
   defaultDevices?: Array<Device> | null // for storybook
-  onConnectUSB: (deviceObj: DeviceObj) => Promise<void> | void
-  onConnectBLE: (deviceId: DeviceId) => Promise<void> | void
+  onConnectUSB: (deviceObj: HW.DeviceObj) => Promise<void> | void
+  onConnectBLE: (deviceId: string) => Promise<void> | void
   useUSB?: boolean
   onWaitingMessage?: string
   fillSpace?: boolean
@@ -32,8 +33,8 @@ type Props = {
 
 type State = {
   devices: Array<Device>
-  deviceId?: null | DeviceId
-  deviceObj?: null | DeviceObj
+  deviceId?: null | string
+  deviceObj?: null | HW.DeviceObj
   error?: Error | null
   refreshing: boolean
   waiting: boolean
@@ -120,7 +121,7 @@ class LedgerConnectInt extends React.Component<Props, State> {
       }
     }
 
-    const onHWNext = (e: {type: string; descriptor: DeviceObj}) => {
+    const onHWNext = (e: {type: string; descriptor: HW.DeviceObj}) => {
       if (e.type === 'add') {
         logger.debug('listen: new device detected', {useUSB, event: e})
         // if a device is detected, save it in state immediately
@@ -181,7 +182,7 @@ class LedgerConnectInt extends React.Component<Props, State> {
     }
   }
 
-  _onConfirm = async (deviceObj: DeviceObj) => {
+  _onConfirm = async (deviceObj: HW.DeviceObj) => {
     this._unsubscribe()
     try {
       this.setState({

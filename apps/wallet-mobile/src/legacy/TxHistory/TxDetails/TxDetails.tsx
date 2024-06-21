@@ -13,7 +13,7 @@ import {ScrollView} from 'react-native-gesture-handler'
 import {Banner, Boundary, Button, CopyButton, FadeIn, Icon, Text} from '../../../components'
 import AddressModal from '../../../features/Receive/common/AddressModal/AddressModal'
 import {usePrivacyMode} from '../../../features/Settings/PrivacyMode/PrivacyMode'
-import {useSelectedWallet} from '../../../features/WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
 import globalMessages from '../../../kernel/i18n/global-messages'
 import {isEmptyString} from '../../../kernel/utils'
 import {MultiToken} from '../../../yoroi-wallets/cardano/MultiToken'
@@ -30,8 +30,8 @@ export const TxDetails = () => {
   const {styles, colors} = useStyles()
   const intl = useIntl()
   const {id} = useRoute().params as Params
-  const wallet = useSelectedWallet()
-  const explorers = useExplorers(wallet.network)
+  const {wallet} = useSelectedWallet()
+  const explorers = useExplorers(wallet.networkManager.network)
   const internalAddressIndex = fromPairs(wallet.internalAddresses.map((addr, i) => [addr, i]))
   const externalAddressIndex = fromPairs(wallet.externalAddresses.map((addr, i) => [addr, i]))
   const [expandedInItemId, setExpandedInItemId] = useState<null | ItemId>(null)
@@ -195,7 +195,7 @@ const Label = ({children}: {children: string}) => {
 }
 
 const AdaAmount = ({amount}: {amount: BigNumber}) => {
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {styles} = useStyles()
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
   const amountStyle = amount.gte(0) ? styles.positiveAmount : styles.negativeAmount
@@ -209,7 +209,7 @@ const AdaAmount = ({amount}: {amount: BigNumber}) => {
 
 const Fee = ({amount}: {amount: BigNumber}) => {
   const strings = useStrings()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
 
   const text = `${strings.fee} ${formatTokenWithSymbol(asQuantity(amount), wallet.primaryToken)}`
   return <Text small>{text}</Text>

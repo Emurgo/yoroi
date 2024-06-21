@@ -37,6 +37,10 @@
       "path": "./packages/api"
     },
     {
+      "name": "@yoroi/identicon",
+      "path": "./packages/identicon"
+    },
+    {
       "name": "@yoroi/explorers",
       "path": "./packages/explorers"
     },

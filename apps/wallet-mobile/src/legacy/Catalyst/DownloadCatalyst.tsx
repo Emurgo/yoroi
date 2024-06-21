@@ -9,7 +9,7 @@ import appstoreBadge from '../../assets/img/app-store-badge.png'
 import playstoreBadge from '../../assets/img/google-play-badge.png'
 import AppDownload from '../../assets/img/pic-catalyst-step1.png'
 import {Button, ProgressStep, Spacer, StandardModal, Text} from '../../components'
-import {useSelectedWallet} from '../../features/WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import globalMessages, {confirmationMessages} from '../../kernel/i18n/global-messages'
 import {useStakingInfo} from '../Dashboard/StakePoolInfos'
 import {Actions, Row} from './components'
@@ -19,7 +19,7 @@ type Props = {
 }
 export const DownloadCatalyst = ({onNext}: Props) => {
   const strings = useStrings()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {stakingInfo} = useStakingInfo(wallet, {suspense: true})
   const [showModal, setShowModal] = useState<boolean>(stakingInfo?.status === 'not-registered')
   const styles = useStyles()

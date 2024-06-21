@@ -3,8 +3,8 @@ import React from 'react'
 import {Text, View} from 'react-native'
 
 import {QueryProvider} from '../../../.storybook/decorators'
-import {SelectedWalletProvider} from '../../features/WalletManager/context/SelectedWalletContext'
 import {mocks} from '../../yoroi-wallets/mocks'
+import {WalletManagerProviderMock} from '../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {Amounts} from '../../yoroi-wallets/utils'
 import {Spacer} from '..'
 import {AmountItem} from './AmountItem'
@@ -18,7 +18,7 @@ const secondaryAmount = Amounts.getAmount(
 storiesOf('AmountItem', module)
   .add('Gallery', () => (
     <QueryProvider>
-      <SelectedWalletProvider wallet={mocks.wallet}>
+      <WalletManagerProviderMock wallet={mocks.wallet}>
         <View style={{flex: 1, justifyContent: 'center', padding: 16}}>
           <Text>Fungible primary token</Text>
 
@@ -38,12 +38,12 @@ storiesOf('AmountItem', module)
             style={{backgroundColor: 'white', padding: 16, borderRadius: 8}}
           />
         </View>
-      </SelectedWalletProvider>
+      </WalletManagerProviderMock>
     </QueryProvider>
   ))
   .add('Loading', () => (
     <QueryProvider>
-      <SelectedWalletProvider
+      <WalletManagerProviderMock
         wallet={{
           ...mocks.wallet,
           fetchTokenInfo: mocks.fetchTokenInfo.loading,
@@ -56,12 +56,12 @@ storiesOf('AmountItem', module)
             style={{backgroundColor: 'white', padding: 16, borderRadius: 8}}
           />
         </View>
-      </SelectedWalletProvider>
+      </WalletManagerProviderMock>
     </QueryProvider>
   ))
   .add('Error', () => (
     <QueryProvider>
-      <SelectedWalletProvider
+      <WalletManagerProviderMock
         wallet={{
           ...mocks.wallet,
           fetchTokenInfo: mocks.fetchTokenInfo.error,
@@ -74,6 +74,6 @@ storiesOf('AmountItem', module)
             style={{backgroundColor: 'white', padding: 16, borderRadius: 8}}
           />
         </View>
-      </SelectedWalletProvider>
+      </WalletManagerProviderMock>
     </QueryProvider>
   ))

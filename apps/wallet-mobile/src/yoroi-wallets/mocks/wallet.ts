@@ -4,12 +4,13 @@
 import {action} from '@storybook/addon-actions'
 import {AppApi, CardanoApi} from '@yoroi/api'
 import {createPrimaryTokenInfo} from '@yoroi/portfolio'
-import {Balance, Chain, Portfolio} from '@yoroi/types'
+import {Balance, Portfolio, Wallet} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import {noop} from 'lodash'
 import {Observable} from 'rxjs'
 
-import {WalletMeta} from '../../features/WalletManager/common/types'
+import {buildPortfolioTokenManagers} from '../../features/Portfolio/common/helpers/build-token-managers'
+import {buildNetworkManagers} from '../../features/WalletManager/network-manager/network-manager'
 import {fallbackTokenInfo, toTokenInfo, utf8ToHex} from '../cardano/api/utils'
 import * as HASKELL_SHELLEY_TESTNET from '../cardano/constants/testnet/constants'
 import {
@@ -49,44 +50,39 @@ const primaryTokenInfoMainnet = createPrimaryTokenInfo({
   mediaType: '',
 })
 
-const walletMeta: WalletMeta = {
+const walletMeta: Wallet.Meta = {
   id: 'wallet-id',
+  hwDeviceInfo: null,
+  isReadOnly: false,
   name: 'my-wallet',
-  networkId: 1,
   isHW: false,
   isEasyConfirmationEnabled: true,
-  checksum: {
-    TextPart: 'JHKT-8080',
-    ImagePart:
-      'b04dc22991594170974bbbb5908cc50b48f236d680a9ebfe6c1d00f52f8f4813341943eb66dec48cfe7f3be5beec705b91300a07641e668ff19dfa2fbeccbfba',
-  },
-  walletImplementationId: 'haskell-shelley-24',
+  implementation: 'cardano-cip1852',
+  plate: 'XXXX-1234',
+  version: 3,
+  avatar:
+    'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCI+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iI2UxZjJmZiIgLz48cmVjdCB4PSI4IiB5PSIwIiB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjMTdkMWFhIiAvPjxyZWN0IHg9IjE2IiB5PSIwIiB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjMTdkMWFhIiAvPjxyZWN0IHg9IjI0IiB5PSIwIiB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjZTFmMmZmIiAvPjxyZWN0IHg9IjMyIiB5PSIwIiB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjZTFmMmZmIiAvPjxyZWN0IHg9IjQwIiB5PSIwIiB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjMTdkMWFhIiAvPjxyZWN0IHg9IjQ4IiB5PSIwIiB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjMTdkMWFhIiAvPjxyZWN0IHg9IjU2IiB5PSIwIiB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjZTFmMmZmIiAvPjxyZWN0IHg9IjAiIHk9IjgiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIGZpbGw9IiNhODBiMzIiIC8+PHJlY3QgeD0iOCIgeT0iOCIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iI2UxZjJmZiIgLz48cmVjdCB4PSIxNiIgeT0iOCIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iI2UxZjJmZiIgLz48cmVjdCB4PSIyNCIgeT0iOCIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iIzE3ZDFhYSIgLz48cmVjdCB4PSIzMiIgeT0iOCIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iIzE3ZDFhYSIgLz48cmVjdCB4PSI0MCIgeT0iOCIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iI2UxZjJmZiIgLz48cmVjdCB4PSI0OCIgeT0iOCIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iI2UxZjJmZiIgLz48cmVjdCB4PSI1NiIgeT0iOCIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iI2E4MGIzMiIgLz48cmVjdCB4PSIwIiB5PSIxNiIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iIzE3ZDFhYSIgLz48cmVjdCB4PSI4IiB5PSIxNiIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iI2UxZjJmZiIgLz48cmVjdCB4PSIxNiIgeT0iMTYiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIGZpbGw9IiMxN2QxYWEiIC8+PHJlY3QgeD0iMjQiIHk9IjE2IiB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjZTFmMmZmIiAvPjxyZWN0IHg9IjMyIiB5PSIxNiIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iI2UxZjJmZiIgLz48cmVjdCB4PSI0MCIgeT0iMTYiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIGZpbGw9IiMxN2QxYWEiIC8+PHJlY3QgeD0iNDgiIHk9IjE2IiB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjZTFmMmZmIiAvPjxyZWN0IHg9IjU2IiB5PSIxNiIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iIzE3ZDFhYSIgLz48cmVjdCB4PSIwIiB5PSIyNCIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iIzE3ZDFhYSIgLz48cmVjdCB4PSI4IiB5PSIyNCIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iI2UxZjJmZiIgLz48cmVjdCB4PSIxNiIgeT0iMjQiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIGZpbGw9IiMxN2QxYWEiIC8+PHJlY3QgeD0iMjQiIHk9IjI0IiB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjMTdkMWFhIiAvPjxyZWN0IHg9IjMyIiB5PSIyNCIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iIzE3ZDFhYSIgLz48cmVjdCB4PSI0MCIgeT0iMjQiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIGZpbGw9IiMxN2QxYWEiIC8+PHJlY3QgeD0iNDgiIHk9IjI0IiB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjZTFmMmZmIiAvPjxyZWN0IHg9IjU2IiB5PSIyNCIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iIzE3ZDFhYSIgLz48cmVjdCB4PSIwIiB5PSIzMiIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iIzE3ZDFhYSIgLz48cmVjdCB4PSI4IiB5PSIzMiIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iIzE3ZDFhYSIgLz48cmVjdCB4PSIxNiIgeT0iMzIiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIGZpbGw9IiMxN2QxYWEiIC8+PHJlY3QgeD0iMjQiIHk9IjMyIiB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjZTFmMmZmIiAvPjxyZWN0IHg9IjMyIiB5PSIzMiIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iI2UxZjJmZiIgLz48cmVjdCB4PSI0MCIgeT0iMzIiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIGZpbGw9IiMxN2QxYWEiIC8+PHJlY3QgeD0iNDgiIHk9IjMyIiB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjMTdkMWFhIiAvPjxyZWN0IHg9IjU2IiB5PSIzMiIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iIzE3ZDFhYSIgLz48cmVjdCB4PSIwIiB5PSI0MCIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iI2UxZjJmZiIgLz48cmVjdCB4PSI4IiB5PSI0MCIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iI2UxZjJmZiIgLz48cmVjdCB4PSIxNiIgeT0iNDAiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIGZpbGw9IiNlMWYyZmYiIC8+PHJlY3QgeD0iMjQiIHk9IjQwIiB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjZTFmMmZmIiAvPjxyZWN0IHg9IjMyIiB5PSI0MCIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iI2UxZjJmZiIgLz48cmVjdCB4PSI0MCIgeT0iNDAiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIGZpbGw9IiNlMWYyZmYiIC8+PHJlY3QgeD0iNDgiIHk9IjQwIiB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjZTFmMmZmIiAvPjxyZWN0IHg9IjU2IiB5PSI0MCIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iI2UxZjJmZiIgLz48cmVjdCB4PSIwIiB5PSI0OCIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iI2E4MGIzMiIgLz48cmVjdCB4PSI4IiB5PSI0OCIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iIzE3ZDFhYSIgLz48cmVjdCB4PSIxNiIgeT0iNDgiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIGZpbGw9IiNlMWYyZmYiIC8+PHJlY3QgeD0iMjQiIHk9IjQ4IiB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjYTgwYjMyIiAvPjxyZWN0IHg9IjMyIiB5PSI0OCIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iI2E4MGIzMiIgLz48cmVjdCB4PSI0MCIgeT0iNDgiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIGZpbGw9IiNlMWYyZmYiIC8+PHJlY3QgeD0iNDgiIHk9IjQ4IiB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjMTdkMWFhIiAvPjxyZWN0IHg9IjU2IiB5PSI0OCIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iI2E4MGIzMiIgLz48cmVjdCB4PSIwIiB5PSI1NiIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iIzE3ZDFhYSIgLz48cmVjdCB4PSI4IiB5PSI1NiIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iI2UxZjJmZiIgLz48cmVjdCB4PSIxNiIgeT0iNTYiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIGZpbGw9IiMxN2QxYWEiIC8+PHJlY3QgeD0iMjQiIHk9IjU2IiB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjMTdkMWFhIiAvPjxyZWN0IHg9IjMyIiB5PSI1NiIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iIzE3ZDFhYSIgLz48cmVjdCB4PSI0MCIgeT0iNTYiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIGZpbGw9IiMxN2QxYWEiIC8+PHJlY3QgeD0iNDgiIHk9IjU2IiB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjZTFmMmZmIiAvPjxyZWN0IHg9IjU2IiB5PSI1NiIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iIzE3ZDFhYSIgLz48L3N2Zz4=',
   addressMode: 'multiple',
 }
 
+// TODO: should be mocked
+const {tokenManagers} = buildPortfolioTokenManagers()
+const networkManagers = buildNetworkManagers({tokenManagers})
+
 const wallet: YoroiWallet = {
+  networkManager: networkManagers.mainnet,
   isEmpty: false,
   hasOnlyPrimary: false,
   id: 'wallet-id',
   api: AppApi.mockAppApi,
   primaryToken: PRIMARY_TOKEN,
   primaryTokenInfo: PRIMARY_TOKEN_INFO,
-  walletImplementationId: 'haskell-shelley',
-  networkId: 300,
-  checksum: {
-    TextPart: 'HTAO-3194',
-    ImagePart:
-      '2d9f9d67bf76d004b925174725170d68135e49eb00ab0dd28e602999be4e548838cfbbf892d738cebd0c2e34db0649999cde3e58dbef3c129f02f7c5dc2139fc',
-  },
-  isHW: false,
-  hwDeviceInfo: null as any,
-  isReadOnly: false,
-  isEasyConfirmationEnabled: false,
   rewardAddressHex: 'reward-address-hex',
   publicKeyHex: 'publicKeyHex',
   utxos,
   allUtxos: utxos,
   collateralId: '22d391c7a97559cb4784bd975214919618acce75cde573a7150a176700e76181:2',
+  accountVisual: 0,
 
   balance$: new Observable<Portfolio.Event.BalanceManager>(),
   balances: {
@@ -107,7 +103,6 @@ const wallet: YoroiWallet = {
 
   isMainnet: true,
   portfolioPrimaryTokenInfo: primaryTokenInfoMainnet,
-  network: Chain.Network.Mainnet,
 
   balanceManager: {
     clear: noop,
@@ -183,7 +178,7 @@ const wallet: YoroiWallet = {
   },
   getDelegationStatus: (...args: unknown[]) => {
     action('getDelegationStatus')(...args)
-    return Promise.resolve({isRegistered: false, poolKeyHash: null})
+    return {isRegistered: false, poolKeyHash: null}
   },
   subscribeOnTxHistoryUpdate: () => {
     return () => null
@@ -191,9 +186,6 @@ const wallet: YoroiWallet = {
   fetchAccountState: (...args: unknown[]) => {
     action('fetchAccountState')(...args)
     return Promise.resolve({['reward-address-hex']: {remainingAmount: '0', rewards: '0', withdrawals: ''}})
-  },
-  changePassword: () => {
-    throw new Error('Not implemented: changePassword')
   },
   signTx: () => {
     throw new Error('Not implemented: signTx')
@@ -271,9 +263,6 @@ const wallet: YoroiWallet = {
     action('generateNewReceiveAddress')(...args)
     return true
   },
-  save: async (...args: unknown[]) => {
-    action('save')(...args)
-  },
   saveMemo: async (...args: unknown[]) => {
     action('saveMemo')(...args)
   },
@@ -285,12 +274,6 @@ const wallet: YoroiWallet = {
   },
   resync: async (...args: unknown[]) => {
     action('resync')(...args)
-  },
-  enableEasyConfirmation: async (rootKey: string) => {
-    action('enableEasyConfirmation')(rootKey)
-  },
-  disableEasyConfirmation: async () => {
-    action('disableEasyConfirmation')
   },
   getProtocolParams: CardanoApi.mockCardanoApi.getProtocolParams,
 
@@ -306,8 +289,8 @@ const wallet: YoroiWallet = {
   },
 }
 
-const hwWallet: YoroiWallet = {
-  ...wallet,
+export const metaHw: Wallet.Meta = {
+  ...walletMeta,
   isHW: true,
   hwDeviceInfo: {
     bip44AccountPublic: '1234567',
@@ -318,16 +301,6 @@ const hwWallet: YoroiWallet = {
       deviceObj: null,
     },
   },
-}
-
-const osWallet: YoroiWallet = {
-  ...wallet,
-  isEasyConfirmationEnabled: true,
-}
-
-const readonlyWallet: YoroiWallet = {
-  ...wallet,
-  isReadOnly: true,
 }
 
 const txid = '31b1abca49857fd50c7959cc019d14c7dc5deaa754ba45372fb21748c411f210'
@@ -424,24 +397,24 @@ const fetchNftModerationStatus = {
 
 const getDelegationStatus = {
   success: {
-    delegating: async (...args: unknown[]) => {
+    delegating: (...args: unknown[]) => {
       action('getDelegationStatus')(...args)
       return {isRegistered: true, poolKeyHash: stakePoolId} as StakingStatus
     },
-    registered: async (...args: unknown[]) => {
+    registered: (...args: unknown[]) => {
       action('getDelegationStatus')(...args)
       return {isRegistered: true} as StakingStatus
     },
-    notRegistered: async (...args: unknown[]) => {
+    notRegistered: (...args: unknown[]) => {
       action('getDelegationStatus')(...args)
       return {isRegistered: false, poolKeyHash: null} as StakingStatus
     },
   },
-  error: async (...args: unknown[]) => {
+  error: (...args: unknown[]) => {
     action('getDelegationStatus')(...args)
-    return Promise.reject(new Error('storybook error message'))
+    throw new Error('storybook error message')
   },
-  loading: async (...args: unknown[]) => {
+  loading: (...args: unknown[]) => {
     action('getDelegationStatus')(...args)
     return new Promise(() => null) as unknown as StakingStatus
   },
@@ -968,9 +941,7 @@ export const nft: Balance.TokenInfo = {
 export const mocks = {
   walletMeta,
   wallet,
-  osWallet,
-  hwWallet,
-  readonlyWallet,
+  metaHw,
 
   stakePoolId,
 

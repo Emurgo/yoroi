@@ -41,22 +41,22 @@ class Logger implements LoggerManager {
   }
 
   log(message: string, metadata: LoggerMetadata = {}) {
-    const entry = {level: LoggerLevel.Debug, message, metadata}
+    const entry = {level: LoggerLevel.Log, message, metadata}
     this.transport(entry)
   }
 
   info(message: string, metadata: LoggerMetadata = {}) {
-    const entry = {level: LoggerLevel.Debug, message, metadata}
+    const entry = {level: LoggerLevel.Info, message, metadata}
     this.transport(entry)
   }
 
   warn(message: string, metadata: LoggerMetadata = {}) {
-    const entry = {level: LoggerLevel.Debug, message, metadata}
+    const entry = {level: LoggerLevel.Warn, message, metadata}
     this.transport(entry)
   }
 
   error(error: Error | string, metadata: LoggerMetadata = {}) {
-    const entry = {level: LoggerLevel.Debug, message: error, metadata}
+    const entry = {level: LoggerLevel.Error, message: error, metadata}
     this.transport(entry)
   }
 

@@ -7,7 +7,7 @@ import {InteractionManager} from 'react-native'
 
 import {LoadingBoundary} from '../../components'
 import {defaultStackNavigationOptions, DiscoverRoutes} from '../../kernel/navigation'
-import {useSelectedWallet} from '../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 import {BrowserNavigator} from './BrowserNavigator'
 import {BrowserProvider} from './common/BrowserProvider'
 import {useOpenConfirmConnectionModal} from './common/ConfirmConnectionModal'
@@ -55,10 +55,10 @@ export const DiscoverNavigator = () => {
 
 const useDappConnectorManager = () => {
   const appStorage = useAsyncStorage()
-  const wallet = useSelectedWallet()
+  const {wallet, meta} = useSelectedWallet()
   const {openConfirmConnectionModal} = useOpenConfirmConnectionModal()
   const {openUnverifiedDappModal, closeModal} = useOpenUnverifiedDappModal()
-  const confirmRawTx = useConfirmRawTx(wallet)
+  const confirmRawTx = useConfirmRawTx()
 
   const confirmConnection = React.useCallback(
     async (origin: string, manager: DappConnector) => {
@@ -124,7 +124,7 @@ const useDappConnectorManager = () => {
   }, [confirmRawTx])
 
   return React.useMemo(
-    () => createDappConnector({appStorage, wallet, confirmConnection, signTx, signData}),
-    [appStorage, wallet, confirmConnection, signTx, signData],
+    () => createDappConnector({appStorage, wallet, confirmConnection, signTx, signData, meta}),
+    [appStorage, wallet, confirmConnection, signTx, signData, meta],
   )
 }

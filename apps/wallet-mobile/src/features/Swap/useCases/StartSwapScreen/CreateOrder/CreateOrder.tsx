@@ -16,7 +16,7 @@ import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {YoroiEntry} from '../../../../../yoroi-wallets/types'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
 import {useDisableSearchOnBar} from '../../../../Search/SearchContext'
-import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {createOrderEntry, makePossibleFrontendFeeEntry} from '../../../common/entries'
 import {getPriceImpactRisk} from '../../../common/helpers'
 import {useNavigateTo} from '../../../common/navigation'
@@ -44,7 +44,7 @@ export const CreateOrder = () => {
   const navigateTo = useNavigateTo()
   const {navigateToTxHistory} = useWalletNavigation()
   const {orderData, unsignedTxChanged, poolPairsChanged} = useSwap()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {track} = useMetrics()
   const {openModal} = useModal()
   const {height: deviceHeight} = useWindowDimensions()

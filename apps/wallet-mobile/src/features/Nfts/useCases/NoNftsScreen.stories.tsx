@@ -4,30 +4,30 @@ import {Text} from 'react-native'
 
 import {QueryProvider} from '../../../../.storybook/decorators'
 import {mocks} from '../../../yoroi-wallets/mocks'
+import {WalletManagerProviderMock} from '../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {SearchProvider} from '../../Search/SearchContext'
-import {SelectedWalletProvider} from '../../WalletManager/context/SelectedWalletContext'
 import {NoNftsScreen} from './NoNftsScreen'
 
 storiesOf('NFT/No Nfts Screen', module)
   .add('Default', () => {
     return (
       <QueryProvider>
-        <SelectedWalletProvider wallet={mocks.wallet}>
+        <WalletManagerProviderMock wallet={mocks.wallet}>
           <SearchProvider>
             <NoNftsScreen message="No NFTs found" />
           </SearchProvider>
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryProvider>
     )
   })
   .add('With Header', () => {
     return (
       <QueryProvider>
-        <SelectedWalletProvider wallet={mocks.wallet}>
+        <WalletManagerProviderMock wallet={mocks.wallet}>
           <SearchProvider>
             <NoNftsScreen message="No NFTs found" heading={<Text>Lorem ipsum</Text>} />
           </SearchProvider>
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryProvider>
     )
   })

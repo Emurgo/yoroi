@@ -3,26 +3,26 @@ import {TransferProvider} from '@yoroi/transfer'
 import React from 'react'
 
 import {QueryProvider} from '../../../.storybook/decorators'
-import {SelectedWalletProvider} from '../../features/WalletManager/context/SelectedWalletContext'
 import {mocks} from '../../yoroi-wallets/mocks'
+import {WalletManagerProviderMock} from '../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {TxHistory} from './TxHistory'
 
 storiesOf('V2/TxHistory', module)
   .add('default', () => {
     return (
       <QueryProvider>
-        <SelectedWalletProvider wallet={mocks.wallet}>
+        <WalletManagerProviderMock wallet={mocks.wallet}>
           <TransferProvider>
             <TxHistory />
           </TransferProvider>
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryProvider>
     )
   })
   .add('1 transaction', () => {
     return (
       <QueryProvider>
-        <SelectedWalletProvider
+        <WalletManagerProviderMock
           wallet={{
             ...mocks.wallet,
             transactions: {
@@ -33,7 +33,7 @@ storiesOf('V2/TxHistory', module)
           <TransferProvider>
             <TxHistory />
           </TransferProvider>
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryProvider>
     )
   })
@@ -45,27 +45,26 @@ storiesOf('V2/TxHistory', module)
 
     return (
       <QueryProvider>
-        <SelectedWalletProvider wallet={wallet}>
+        <WalletManagerProviderMock wallet={wallet}>
           <TransferProvider>
             <TxHistory />
           </TransferProvider>
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryProvider>
     )
   })
   .add('byron', () => {
     return (
       <QueryProvider>
-        <SelectedWalletProvider
+        <WalletManagerProviderMock
           wallet={{
             ...mocks.wallet,
-            walletImplementationId: 'haskell-byron',
           }}
         >
           <TransferProvider>
             <TxHistory />
           </TransferProvider>
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryProvider>
     )
   })

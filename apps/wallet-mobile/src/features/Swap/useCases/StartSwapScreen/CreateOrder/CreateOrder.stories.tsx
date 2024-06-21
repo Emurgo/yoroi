@@ -4,7 +4,7 @@ import {produce} from 'immer'
 import React from 'react'
 
 import {mocks as walletMocks} from '../../../../../yoroi-wallets/mocks'
-import {SelectedWalletProvider} from '../../../../WalletManager/context/SelectedWalletContext'
+import {WalletManagerProviderMock} from '../../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {SwapFormProvider} from '../../../common/SwapFormProvider'
 import {CreateOrder} from './CreateOrder'
 
@@ -15,13 +15,13 @@ storiesOf('Swap Create Order', module) //
 
 const Initial = () => {
   return (
-    <SelectedWalletProvider wallet={walletMocks.wallet}>
+    <WalletManagerProviderMock wallet={walletMocks.wallet}>
       <SwapProvider swapManager={mockSwapManager}>
         <SwapFormProvider>
           <CreateOrder />
         </SwapFormProvider>
       </SwapProvider>
-    </SelectedWalletProvider>
+    </WalletManagerProviderMock>
   )
 }
 
@@ -30,13 +30,13 @@ const MarketOrder = () => {
     draft.orderData.type = 'market'
   })
   return (
-    <SelectedWalletProvider wallet={walletMocks.wallet}>
+    <WalletManagerProviderMock wallet={walletMocks.wallet}>
       <SwapProvider swapManager={mockSwapManager} initialState={initialState}>
         <SwapFormProvider>
           <CreateOrder />
         </SwapFormProvider>
       </SwapProvider>
-    </SelectedWalletProvider>
+    </WalletManagerProviderMock>
   )
 }
 
@@ -45,12 +45,12 @@ const LimitOrder = () => {
     draft.orderData.type = 'limit'
   })
   return (
-    <SelectedWalletProvider wallet={walletMocks.wallet}>
+    <WalletManagerProviderMock wallet={walletMocks.wallet}>
       <SwapProvider swapManager={mockSwapManager} initialState={initialState}>
         <SwapFormProvider>
           <CreateOrder />
         </SwapFormProvider>
       </SwapProvider>
-    </SelectedWalletProvider>
+    </WalletManagerProviderMock>
   )
 }

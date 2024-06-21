@@ -19,7 +19,7 @@ import {useCopy} from '../../../hooks/useCopy'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {isEmptyString} from '../../../kernel/utils'
 import {editedFormatter} from '../../../yoroi-wallets/utils'
-import {useSelectedWallet} from '../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useReceive} from '../common/ReceiveProvider'
 import {ShareQRCodeCard} from '../common/ShareQRCodeCard/ShareQRCodeCard'
 import {SkeletonAdressDetail} from '../common/SkeletonAddressDetail/SkeletonAddressDetail'
@@ -29,7 +29,7 @@ export const RequestSpecificAmountScreen = () => {
   const strings = useStrings()
   const {colors, styles} = useStyles()
   const [amount, setAmount] = React.useState('')
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
 
   const {track} = useMetrics()
   const hasAmount = !isEmptyString(amount)
@@ -115,11 +115,13 @@ const Modal = ({amount, address}: {amount: string; address: string}) => {
     },
   })
 
-  const {primaryTokenInfo} = useSelectedWallet()
+  const {
+    wallet: {portfolioPrimaryTokenInfo},
+  } = useSelectedWallet()
   const hasAmount = !isEmptyString(amount)
   const hasAddress = !isEmptyString(address)
   const content = hasAmount ? requestData.link : address
-  const title = hasAmount ? `${amount} ${primaryTokenInfo.ticker?.toLocaleUpperCase()}` : ''
+  const title = hasAmount ? `${amount} ${portfolioPrimaryTokenInfo.ticker.toLocaleUpperCase()}` : ''
 
   const [isCopying, copy] = useCopy()
   const handOnCopy = () => copy(content)

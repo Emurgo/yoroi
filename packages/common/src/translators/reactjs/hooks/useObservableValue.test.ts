@@ -6,14 +6,14 @@ import {useObservableValue} from './useObservableValue'
 describe('useObservableValue', () => {
   it('should update the data when the observable emits a value', async () => {
     const observable$ = new Subject<void>()
-    const executor = jest.fn()
-    executor.mockReturnValueOnce('Initial Data')
-    executor.mockReturnValue('Updated Data')
+    const getter = jest.fn()
+    getter.mockReturnValueOnce('Initial Data')
+    getter.mockReturnValue('Updated Data')
 
     const {result} = renderHook(() =>
       useObservableValue({
         observable$,
-        executor,
+        getter,
       }),
     )
 

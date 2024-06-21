@@ -1,5 +1,4 @@
 import {storiesOf} from '@storybook/react-native'
-import {Chain} from '@yoroi/types'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
@@ -15,4 +14,4 @@ const styles = StyleSheet.create({
 
 storiesOf('WalletAddress', module)
   .addDecorator((story) => <View style={styles.container}>{story()}</View>)
-  .add('Default', () => <WalletAddress network={Chain.Network.Mainnet} addressHash="addressHash" />)
+  .add('Default', () => <WalletAddress addressHash="addressHash" />)

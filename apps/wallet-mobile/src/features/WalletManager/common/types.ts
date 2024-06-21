@@ -1,68 +1,49 @@
-import {Portfolio} from '@yoroi/types'
+import {WasmModuleProxy} from '@emurgo/cross-csl-core'
+import {App, Chain, HW, Network, Portfolio} from '@yoroi/types'
 
-import {CardanoTypes, YoroiWallet} from '../../../yoroi-wallets/cardano/types'
-import {HWDeviceInfo} from '../../../yoroi-wallets/hw/hw'
-import {NetworkId, WalletImplementationId} from '../../../yoroi-wallets/types/other'
+import {KeychainManager} from '../../../kernel/storage/Keychain'
+import {CardanoTypes, WalletEvent, YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 
-export type NetworkManager = {
-  primaryTokenInfo: Portfolio.Token.Info
-  chainId: number
-  eras: ReadonlyArray<NetworkEraConfig>
+export type NetworkTokenManagers = Readonly<Record<Chain.SupportedNetworks, Portfolio.Manager.Token>>
+
+export type WalletManagerEvent = {type: 'hw-device-info'; hwDeviceInfo: HW.DeviceInfo}
+
+export type WalletManagerOptions = {
+  keychainManager?: Readonly<KeychainManager>
+  networkManagers: Readonly<Record<Chain.SupportedNetworks, Network.Manager>>
+  rootStorage: Readonly<App.Storage>
 }
 
-export type NetworkEraConfig = {
-  name: 'byron' | 'shelley'
-  start: Date
-  end: Date | undefined
-  slotInSeconds: number
-  slotsPerEpoch: number
+export type WalletManagerSubscription = (event: WalletManagerEvent | WalletEvent) => void
+
+export type SyncWalletInfo = {
+  id: YoroiWallet['id']
+  updatedAt: number
+  status: 'waiting' | 'syncing' | 'done' | 'error'
+  error?: Error
+  // last sync network updated only on error/success
+  network: Chain.SupportedNetworks | null
 }
+export type SyncWalletInfos = Readonly<Map<YoroiWallet['id'], SyncWalletInfo>>
 
-export type NetworkEpochInfo = {
-  epoch: number
-  start: Date
-  end: Date
-  era: NetworkEraConfig
+export type WalletFactory = {
+  build({
+    id,
+    accountPubKeyHex,
+    accountVisual,
+  }: {
+    id: string
+    accountPubKeyHex: string
+    accountVisual: number
+  }): Promise<YoroiWallet>
+
+  calcChecksum(pubKeyHex: string): CardanoTypes.WalletChecksum
+
+  makeKeys({
+    mnemonic,
+    csl,
+  }: {
+    mnemonic: string
+    csl: WasmModuleProxy
+  }): Promise<{rootKey: string; accountPubKeyHex: string}>
 }
-
-export type NetworkEpochProgress = {
-  progress: number
-  currentSlot: number
-  timeRemaining: {
-    days: number
-    hours: number
-    minutes: number
-    seconds: number
-  }
-}
-
-export type WalletMeta = {
-  id: string
-  name: string
-  networkId: NetworkId
-  walletImplementationId: WalletImplementationId
-  isHW: boolean
-  isEasyConfirmationEnabled: boolean
-  checksum: CardanoTypes.WalletChecksum
-  addressMode: AddressMode
-  // legacy jormungandr
-  isShelley?: boolean | null | undefined
-}
-
-export type AddressMode = 'single' | 'multiple'
-
-export type WalletManagerEvent =
-  | {type: 'easy-confirmation'; enabled: boolean}
-  | {type: 'hw-device-info'; hwDeviceInfo: HWDeviceInfo}
-  | {type: 'selected-wallet-id'; id: YoroiWallet['id']}
-
-export type WalletManagerSubscription = (event: WalletManagerEvent) => void
-
-export type WalletInfo = {
-  sync: {
-    updatedAt: number
-    status: 'waiting' | 'syncing' | 'done' | 'error'
-    error?: Error
-  }
-}
-export type WalletInfos = Map<YoroiWallet['id'], WalletInfo>

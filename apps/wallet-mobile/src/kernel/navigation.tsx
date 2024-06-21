@@ -77,7 +77,6 @@ export const defaultStackNavigationOptions = (atoms: Atoms, color: ThemedPalette
     headerRightContainerStyle: {
       ...atoms.pr_sm,
     },
-    cardStyle: {backgroundColor: 'white'},
     headerLeft: (props) => <BackButton {...props} />,
   }
 }

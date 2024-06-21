@@ -5,6 +5,7 @@ import {StyleSheet} from 'react-native'
 import Markdown from 'react-native-markdown-display'
 
 import {Boundary, DangerousAction, PleaseWaitView, Spacer} from '../../../components'
+import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
 import globalMessages, {ledgerMessages} from '../../../kernel/i18n/global-messages'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {useWithdrawalTx} from '../../../yoroi-wallets/hooks'
@@ -50,11 +51,12 @@ export const WithdrawalTxForm = ({
   onDone: (withdrawalTx: YoroiUnsignedTx) => void
 }) => {
   const styles = useStyles()
+  const {meta} = useSelectedWallet()
   const {stakingInfo} = useStakingInfo(wallet, {suspense: true})
   const strings = useStrings()
   const [deregister, setDeregister] = React.useState<boolean>()
   const {isLoading} = useWithdrawalTx(
-    {wallet, deregister},
+    {wallet, deregister, addressMode: meta.addressMode},
     {enabled: deregister != null, onSuccess: (withdrawalTx) => onDone(withdrawalTx)},
   )
 

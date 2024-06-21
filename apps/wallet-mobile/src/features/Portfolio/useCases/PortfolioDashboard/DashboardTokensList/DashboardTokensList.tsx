@@ -5,7 +5,7 @@ import {FlatList, StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, Vie
 
 import {Icon, Spacer} from '../../../../../components'
 import {makeList} from '../../../../../kernel/utils'
-import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {usePortfolioBalances} from '../../../common/hooks/usePortfolioBalances'
 import {useGetTokensWithBalance} from '../../../common/useGetTokensWithBalance'
 import {useNavigateTo} from '../../../common/useNavigateTo'
@@ -21,7 +21,7 @@ export const DashboardTokensList = () => {
   const navigationTo = useNavigateTo()
   const isZeroADABalance = useZeroBalance()
   const {isLoading} = useGetTokensWithBalance()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const balances = usePortfolioBalances({wallet})
 
   const tokensList = React.useMemo(() => balances.fts ?? [], [balances.fts])

@@ -5,7 +5,6 @@ import {Image, ImageStyle, View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 import placeholder from '../../assets/img/nft-placeholder.png'
-import {useSelectedWallet} from '../../features/WalletManager/context/SelectedWalletContext'
 import {getNftMainImageMediaType} from '../../yoroi-wallets/cardano/nfts'
 import {useNativeAssetImage} from '../../yoroi-wallets/hooks'
 
@@ -30,10 +29,8 @@ export const NftPreview = ({
   blurRadius,
   zoom = 1,
 }: NftPreviewProps) => {
-  const wallet = useSelectedWallet()
   const [policy, name] = nft.id.split('.')
   const {uri, headers, isLoading, isError, onError, onLoad} = useNativeAssetImage({
-    networkId: wallet.networkId,
     policy,
     name,
     width: width * zoom,

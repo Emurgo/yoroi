@@ -17,13 +17,13 @@ import {useTokenDetailTransactions} from './PortfolioTokenInfo/Transactions'
 const HEADER_HEIGHT = 304
 
 export type ActiveTab = 'performance' | 'overview' | 'transactions'
+
 type Tabs = 'Performance' | 'Overview' | 'Transactions'
 const tabs: Record<ActiveTab, Tabs> = {
   performance: 'Performance',
   overview: 'Overview',
   transactions: 'Transactions',
 }
-
 export const PortfolioTokenDetailsScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()

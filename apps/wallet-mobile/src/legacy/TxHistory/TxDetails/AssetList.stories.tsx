@@ -3,8 +3,8 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {QueryClient, QueryClientProvider} from 'react-query'
 
-import {SelectedWalletProvider} from '../../../features/WalletManager/context/SelectedWalletContext'
 import {mocks} from '../../../yoroi-wallets/mocks'
+import {WalletManagerProviderMock} from '../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {AssetList} from './AssetList'
 import {useSendStyles} from './AssetListSend.style'
 import {useBaseStyles} from './Base.style'
@@ -14,9 +14,9 @@ storiesOf('AssetList', module)
     const styles = useBaseStyles()
     return (
       <QueryClientProvider client={new QueryClient()}>
-        <SelectedWalletProvider wallet={mocks.wallet}>
+        <WalletManagerProviderMock wallet={mocks.wallet}>
           <AssetList assets={mocks.tokenEntries} styles={styles} onSelect={action('onSelect')} />
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryClientProvider>
     )
   })
@@ -24,9 +24,9 @@ storiesOf('AssetList', module)
     const styles = useSendStyles()
     return (
       <QueryClientProvider client={new QueryClient()}>
-        <SelectedWalletProvider wallet={mocks.wallet}>
+        <WalletManagerProviderMock wallet={mocks.wallet}>
           <AssetList assets={mocks.tokenEntries} styles={styles} onSelect={action('onSelect')} />
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryClientProvider>
     )
   })
@@ -34,9 +34,9 @@ storiesOf('AssetList', module)
     const styles = useSendStyles()
     return (
       <QueryClientProvider client={new QueryClient()}>
-        <SelectedWalletProvider wallet={{...mocks.wallet, fetchTokenInfo: () => new Promise(() => undefined)}}>
+        <WalletManagerProviderMock wallet={{...mocks.wallet, fetchTokenInfo: () => new Promise(() => undefined)}}>
           <AssetList assets={mocks.tokenEntries} styles={styles} onSelect={action('onSelect')} />
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryClientProvider>
     )
   })

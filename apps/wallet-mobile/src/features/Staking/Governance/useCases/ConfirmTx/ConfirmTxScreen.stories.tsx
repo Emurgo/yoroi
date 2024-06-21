@@ -5,7 +5,7 @@ import React from 'react'
 
 import {SafeArea} from '../../../../../components/SafeArea'
 import {mocks} from '../../../../../yoroi-wallets/mocks'
-import {SelectedWalletProvider} from '../../../../WalletManager/context/SelectedWalletContext'
+import {WalletManagerProviderMock} from '../../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {mocks as governanceMocks} from '../../common'
 import {Routes} from '../../common/navigation'
 import {ConfirmTxScreen} from './ConfirmTxScreen'
@@ -13,9 +13,9 @@ import {ConfirmTxScreen} from './ConfirmTxScreen'
 storiesOf('Governance/ConfirmTxScreen', module)
   .addDecorator((story) => <SafeArea>{story()}</SafeArea>)
   .addDecorator((story) => (
-    <SelectedWalletProvider wallet={mocks.wallet}>
+    <WalletManagerProviderMock wallet={mocks.wallet}>
       <GovernanceProvider manager={governanceMocks.governanceManager}>{story()}</GovernanceProvider>
-    </SelectedWalletProvider>
+    </WalletManagerProviderMock>
   ))
   .add('Abstain', () => (
     <NavigationRouteContext.Provider value={getContextValue({kind: 'abstain'})}>

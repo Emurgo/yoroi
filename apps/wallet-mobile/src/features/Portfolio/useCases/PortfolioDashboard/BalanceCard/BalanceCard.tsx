@@ -4,7 +4,7 @@ import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {usePortfolioPrimaryBalance} from '../../../common/hooks/usePortfolioPrimaryBalance'
 import {useGetDAppsPortfolioBalance} from '../../../common/useGetDAppsPortfolioBalance'
 import {useTokenExchangeRate} from '../../../common/useTokenExchangeRate'
@@ -15,7 +15,7 @@ import {BalanceHeaderCard} from './BalanceHeaderCard'
 export const BalanceCard = () => {
   const {styles, colors} = useStyles()
 
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const primaryBalance = usePortfolioPrimaryBalance({wallet})
   const name = infoExtractName(primaryBalance.info)
   const rate = useTokenExchangeRate()
