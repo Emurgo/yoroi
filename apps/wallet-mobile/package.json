@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/wallet-mobile",
-  "version": "4.28.0",
+  "version": "5.0.0",
   "private": true,
   "scripts": {
     "android-bundle": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",

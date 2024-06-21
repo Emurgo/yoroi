@@ -1,4 +1,4 @@
-import {Chain, Wallet} from '@yoroi/types'
+import {App, Chain, Wallet} from '@yoroi/types'
 import * as React from 'react'
 
 import {logger} from '../../../kernel/logger/logger'
@@ -84,13 +84,19 @@ export const WalletManagerProvider: React.FC<
 }
 
 export const useWalletManager = () => {
-  const context = React.useContext(WalletManagerContext)
+  const {selected, walletManager} = React.useContext(WalletManagerContext)
 
-  if (context.walletManager == null) {
-    const error = new Error('useWalletManager wallet manager is not set, invalid state reached')
+  if (walletManager == null) {
+    const error = new App.Errors.InvalidState('useWalletManager wallet manager is not set, invalid state reached')
     logger.error(error)
     throw error
   }
 
-  return context
+  return React.useMemo(
+    () => ({
+      selected,
+      walletManager,
+    }),
+    [selected, walletManager],
+  )
 }
