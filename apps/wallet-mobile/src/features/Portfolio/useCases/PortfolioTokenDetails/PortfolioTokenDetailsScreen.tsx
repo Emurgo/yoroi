@@ -5,6 +5,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Spacer} from '../../../../components'
 import {Tab, Tabs} from '../../../../components/Tabs'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useStrings} from '../../common/useStrings'
 import {PortfolioTokenAction} from './PortfolioTokenAction'
 import {PortfolioTokenBalance} from './PortfolioTokenBalance/PortfolioTokenBalance'
@@ -13,12 +14,24 @@ import {PortfolioTokenInfo} from './PortfolioTokenInfo/PortfolioTokenInfo'
 
 const HEADER_HEIGHT = 304
 export type ActiveTab = 'performance' | 'overview' | 'transactions'
+type Tabs = 'Performance' | 'Overview' | 'Transactions'
+const tabs: Record<ActiveTab, Tabs> = {
+  performance: 'Performance',
+  overview: 'Overview',
+  transactions: 'Transactions',
+}
+
 export const PortfolioTokenDetailsScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
   const scrollY = React.useRef(new Animated.Value(0)).current
+  const {track} = useMetrics()
 
   const [activeTab, setActiveTab] = React.useState<ActiveTab>('performance')
+
+  React.useEffect(() => {
+    track.portfolioTokenDetails({token_details_tab: tabs[activeTab]})
+  }, [activeTab, track])
 
   // Calculate the header's height based on scroll position and header height
   const headerHeight = scrollY.interpolate({
