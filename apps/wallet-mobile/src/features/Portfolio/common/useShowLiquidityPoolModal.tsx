@@ -5,7 +5,7 @@ import {useModal} from '../../../components'
 import {LiquidityPoolModal} from '../useCases/PortfolioTokensList/PortfolioDAppsTokenList/LiquidityPoolModal'
 import {ILiquidityPool} from './useGetLiquidityPool'
 
-const LIQUIDITY_POOL_MODAL_HEIGHT = 290
+const LIQUIDITY_POOL_MODAL_HEIGHT = 278
 
 export const useShowLiquidityPoolModal = () => {
   const {openModal, closeModal} = useModal()

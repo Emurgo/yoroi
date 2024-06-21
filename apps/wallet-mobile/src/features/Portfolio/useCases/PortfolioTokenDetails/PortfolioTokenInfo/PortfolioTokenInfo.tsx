@@ -1,39 +1,30 @@
 import {useTheme} from '@yoroi/theme'
-import React, {ReactNode} from 'react'
-import {NativeScrollEvent, NativeSyntheticEvent, StyleSheet, View} from 'react-native'
+import React from 'react'
+import {StyleSheet, View} from 'react-native'
 
 import {TabPanel, TabPanels} from '../../../../../components/Tabs'
+import {usePortfolioTokenDetailContext} from '../../../common/PortfolioTokenDetailContext'
 import {Overview} from './Overview'
 import {Performance} from './Performance'
-import {Transactions} from './Transactions'
 
-type ActiveTab = 'performance' | 'overview' | 'transactions'
-
-interface Props {
-  onScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
-  activeTab: ActiveTab
-  /**
-   * To offset the top content when scroll to top
-   */
-  offsetTopContent?: ReactNode
-}
-export const PortfolioTokenInfo = ({activeTab, onScroll, offsetTopContent}: Props) => {
+export const PortfolioTokenInfo = () => {
   const {styles} = useStyles()
+  const {activeTab} = usePortfolioTokenDetailContext()
 
   return (
     <View style={styles.root}>
       <TabPanels>
         <TabPanel active={activeTab === 'performance'}>
-          <Performance onScroll={onScroll} topContent={offsetTopContent} />
+          <Performance />
         </TabPanel>
 
         <TabPanel active={activeTab === 'overview'}>
-          <Overview onScroll={onScroll} topContent={offsetTopContent} />
+          <Overview />
         </TabPanel>
 
-        <TabPanel active={activeTab === 'transactions'}>
-          <Transactions onScroll={onScroll} topContent={offsetTopContent} />
-        </TabPanel>
+        {/* <TabPanel active={activeTab === 'transactions'}>
+          <Transactions />
+        </TabPanel> */}
       </TabPanels>
     </View>
   )
