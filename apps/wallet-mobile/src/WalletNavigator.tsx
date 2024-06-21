@@ -4,7 +4,7 @@ import {createStackNavigator} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Keyboard, Platform} from 'react-native'
+import {Keyboard, Platform, StyleSheet} from 'react-native'
 
 import {Icon, OfflineBanner} from './components'
 import {DiscoverNavigator} from './features/Discover'
@@ -41,7 +41,7 @@ const TabBarWithHiddenContent = (props: BottomTabBarProps) => {
 
 const WalletTabNavigator = () => {
   const strings = useStrings()
-  const {colors} = useStyles()
+  const {colors, styles} = useStyles()
 
   const [isKeyboardOpen, setIsKeyboardOpen] = React.useState(false)
 
@@ -76,7 +76,7 @@ const WalletTabNavigator = () => {
       <Tab.Navigator
         screenOptions={{
           headerShown: false,
-          tabBarLabelStyle: {fontSize: 11},
+          tabBarLabelStyle: styles.labelStyle,
           tabBarActiveTintColor: colors.active,
           tabBarInactiveTintColor: colors.inactive,
           tabBarStyle: {
@@ -248,14 +248,23 @@ export const WalletNavigator = () => {
 }
 
 const useStyles = () => {
-  const {color} = useTheme()
+  const {color, atoms} = useTheme()
+
+  const styles = StyleSheet.create({
+    labelStyle: {
+      ...atoms.font_semibold,
+      ...atoms.text_center,
+      fontSize: 10,
+      lineHeight: 18,
+    },
+  })
 
   const colors = {
-    active: color.text_gray_normal,
-    inactive: color.gray_c600,
+    active: color.text_primary_high,
+    inactive: color.text_gray_medium,
     background: color.gray_cmin,
   }
-  return {colors}
+  return {colors, styles}
 }
 
 const messages = defineMessages({

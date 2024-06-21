@@ -118,6 +118,7 @@ const getStories = () => {
     "./src/features/Discover/useCases/BrowseDapp/WebViewItem.stories.tsx": require("../src/features/Discover/useCases/BrowseDapp/WebViewItem.stories.tsx"),
     "./src/features/Discover/useCases/SearchDappInBrowser/SearchDappInBrowserScreen.stories.tsx": require("../src/features/Discover/useCases/SearchDappInBrowser/SearchDappInBrowserScreen.stories.tsx"),
     "./src/features/Discover/useCases/SelectDappFromList/CountDAppsAvailable/CountDAppsAvailable.stories.tsx": require("../src/features/Discover/useCases/SelectDappFromList/CountDAppsAvailable/CountDAppsAvailable.stories.tsx"),
+    "./src/features/Discover/useCases/SelectDappFromList/CountDAppsConnected/CountDAppsConnected.stories.tsx": require("../src/features/Discover/useCases/SelectDappFromList/CountDAppsConnected/CountDAppsConnected.stories.tsx"),
     "./src/features/Discover/useCases/SelectDappFromList/DAppExplorerTabItem/DAppExplorerTabItem.stories.tsx": require("../src/features/Discover/useCases/SelectDappFromList/DAppExplorerTabItem/DAppExplorerTabItem.stories.tsx"),
     "./src/features/Discover/useCases/SelectDappFromList/DAppListItem/DAppItemSkeleton.stories.tsx": require("../src/features/Discover/useCases/SelectDappFromList/DAppListItem/DAppItemSkeleton.stories.tsx"),
     "./src/features/Discover/useCases/SelectDappFromList/DAppListItem/DAppListItem.stories.tsx": require("../src/features/Discover/useCases/SelectDappFromList/DAppListItem/DAppListItem.stories.tsx"),

@@ -27,6 +27,7 @@ const useStyles = () => {
     },
     text: {
       ...atoms.body_1_lg_medium,
+      color: color.gray_cmax,
     },
     containerActive: {
       backgroundColor: color.gray_c200,

@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Delegate",
     "file": "src/WalletNavigator.tsx",
     "start": {
-      "line": 278,
+      "line": 287,
       "column": 18,
-      "index": 9267
+      "index": 9481
     },
     "end": {
-      "line": 281,
+      "line": 290,
       "column": 3,
-      "index": 9362
+      "index": 9576
     }
   },
   {
