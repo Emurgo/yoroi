@@ -6,14 +6,15 @@ import {StyleSheet, View, ViewStyle} from 'react-native'
 type Props = {
   image: string
   style?: ViewStyle
+  size?: number
 }
 
-export const WalletAvatar = ({image = '', style}: Props) => {
+export const WalletAvatar = ({image = '', size = 40, style}: Props) => {
   const styles = useStyles()
 
   return (
     <View style={[styles.defaultStyle, style]}>
-      <Image source={{uri: image}} style={{width: 40, height: 40}} />
+      <Image source={{uri: image, width: 64, height: 64}} style={{width: size, height: size}} />
     </View>
   )
 }
