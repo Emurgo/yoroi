@@ -30,6 +30,12 @@ export const SelectDappFromListScreen = () => {
   const [categoriesSelected, setCategoriesSelected] = React.useState<string[]>([])
   const {track} = useMetrics()
 
+  React.useEffect(() => {
+    if (currentTab === 'recommended') {
+      track.discoverPageViewed()
+    }
+  }, [currentTab, track])
+
   useSearchOnNavBar({
     title: strings.discoverTitle,
     placeholder: strings.searchDApps,
@@ -66,10 +72,6 @@ export const SelectDappFromListScreen = () => {
     if (connected) track.discoverConnectedDAppItemClicked()
   }
 
-  const handleOnEndReached = () => {
-    console.log('handleOnEndReached')
-  }
-
   return (
     <>
       <WelcomeDAppModal />
@@ -99,7 +101,6 @@ export const SelectDappFromListScreen = () => {
           }}
           ItemSeparatorComponent={() => <Spacer style={styles.dAppsBox} />}
           ListFooterComponent={() => <Spacer style={styles.dAppsBox} />}
-          onEndReached={handleOnEndReached}
         />
       </View>
     </>
