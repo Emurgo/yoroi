@@ -84,13 +84,13 @@ export const WalletManagerProvider: React.FC<
 }
 
 export const useWalletManager = () => {
-  const {walletManager, ...context} = React.useContext(WalletManagerContext)
+  const context = React.useContext(WalletManagerContext)
 
-  if (walletManager == null) {
+  if (context.walletManager == null) {
     const error = new Error('useWalletManager wallet manager is not set, invalid state reached')
     logger.error(error)
     throw error
   }
 
-  return React.useMemo(() => ({...context, walletManager}), [context, walletManager])
+  return context
 }
