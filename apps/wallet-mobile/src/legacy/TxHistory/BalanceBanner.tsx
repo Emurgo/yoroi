@@ -22,7 +22,7 @@ export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
       <Spacer height={14} />
 
       <CenteredRow>
-        <Icon.WalletAvatar style={styles.walletIcon} image={meta.avatar} />
+        <Icon.WalletAvatar style={styles.walletIcon} image={meta.avatar} size={40} />
       </CenteredRow>
 
       <Spacer height={10} />

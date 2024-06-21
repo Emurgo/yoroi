@@ -237,7 +237,7 @@ const Modal = ({
       <Space height="lg" />
 
       <View style={styles.checksum}>
-        <Icon.WalletAvatar image={new Blockies().asBase64({seed: plate.ImagePart})} style={styles.walletChecksum} />
+        <Icon.WalletAvatar image={new Blockies().asBase64({seed: plate.ImagePart})} style={styles.walletChecksum} size={38} />
 
         <Space width="sm" />
 
