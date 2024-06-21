@@ -72,7 +72,7 @@ const Header = (props: {
 
       <Spacer height={8} />
 
-      <Text style={styles.title}>{title}</Text>
+      {title !== '' && <Text style={styles.title}>{title}</Text>}
     </View>
   )
 }

@@ -86,6 +86,7 @@ const useStyles = () => {
     symbol: {
       ...atoms.body_1_lg_medium,
       ...atoms.font_semibold,
+      color: color.gray_c900,
     },
     tokenBalance: {
       ...atoms.body_1_lg_regular,

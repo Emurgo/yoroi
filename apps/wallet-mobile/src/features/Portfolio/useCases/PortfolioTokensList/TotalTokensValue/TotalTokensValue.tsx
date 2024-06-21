@@ -24,26 +24,27 @@ export const TotalTokensValue = ({amount, cardType}: Props) => {
       <TotalTokensValueContent
         amount={amount}
         headerCard={
-          <View style={styles.labelContainer}>
-            <Text style={[styles.normalText]}>{title}</Text>
+          <Tooltip title={tooltip}>
+            <View style={styles.labelContainer}>
+              <Text style={[styles.normalText]}>{title}</Text>
 
-            <Tooltip title={tooltip}>
               <Icon.InfoCircle />
-            </Tooltip>
-          </View>
+            </View>
+          </Tooltip>
         }
       />
     </View>
   )
 }
 const useStyles = () => {
-  const {atoms} = useTheme()
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
       ...atoms.py_lg,
     },
     normalText: {
-      ...atoms.body_2_md_regular,
+      ...atoms.body_3_sm_regular,
+      color: color.gray_c600,
     },
     labelContainer: {
       ...atoms.flex_row,

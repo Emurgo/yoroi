@@ -2,6 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 
+import {Spacer} from '../../../../../components'
 import {TokenEmptyList} from '../../../common/TokenEmptyList'
 import {useStrings} from '../../../common/useStrings'
 
@@ -11,6 +12,8 @@ export const LendAndBorrowTab = () => {
 
   return (
     <View style={styles.root}>
+      <Spacer height={16} />
+
       <TokenEmptyList emptyText={strings.availableSoon} />
     </View>
   )
