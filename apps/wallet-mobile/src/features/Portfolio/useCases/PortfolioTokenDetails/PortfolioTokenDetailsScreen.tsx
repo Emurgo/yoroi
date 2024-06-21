@@ -4,6 +4,7 @@ import {Animated, NativeScrollEvent, NativeSyntheticEvent, StyleSheet} from 'rea
 
 import {Spacer} from '../../../../components'
 import {Tab, Tabs} from '../../../../components/Tabs'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {usePortfolioTokenDetailContext} from '../../common/PortfolioTokenDetailContext'
 import {useStrings} from '../../common/useStrings'
 import {PortfolioTokenAction} from './PortfolioTokenAction'
@@ -16,12 +17,18 @@ import {useTokenDetailTransactions} from './PortfolioTokenInfo/Transactions'
 const HEADER_HEIGHT = 304
 
 export type ActiveTab = 'performance' | 'overview' | 'transactions'
-type Tabs = 'Performance' | 'Overview' | 'Transactions'
 
+type Tabs = 'Performance' | 'Overview' | 'Transactions'
+const tabs: Record<ActiveTab, Tabs> = {
+  performance: 'Performance',
+  overview: 'Overview',
+  transactions: 'Transactions',
+}
 export const PortfolioTokenDetailsScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
   const {activeTab, setActiveTab} = usePortfolioTokenDetailContext()
+  const {track} = useMetrics()
   const [isStickyTab, setIsStickyTab] = React.useState(false)
 
   const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -32,6 +39,10 @@ export const PortfolioTokenDetailsScreen = () => {
   const {getSectionListProps, loadingView} = useTokenDetailTransactions({
     active: activeTab === 'transactions',
   })
+
+  React.useEffect(() => {
+    track.portfolioTokenDetails({token_details_tab: tabs[activeTab]})
+  }, [activeTab, track])
 
   const renderTabs = React.useMemo(() => {
     return (
