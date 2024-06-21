@@ -165,6 +165,35 @@ export interface NftGallerySearchActivatedProperties {
   nft_search_term: string
 }
 
+export interface PortfolioTokenDetailsProperties {
+  /**
+   * It show what tab from the Token details the user is.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Enum Values | Performance, Overview, Transactions |
+   */
+  token_details_tab: 'Performance' | 'Overview' | 'Transactions'
+}
+
+export interface PortfolioTokensListPageViewedProperties {
+  /**
+   * It shows in what tab are we in the movile version of the Token list
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Enum Values | Wallet Token, Dapps Token |
+   */
+  tokens_tab: 'Wallet Token' | 'Dapps Token'
+}
+
+export interface PortfolioTokensListSearchActivatedProperties {
+  /**
+   * What a user is looking to search.
+   */
+  search_term: string
+}
+
 export interface ReceiveAmountGeneratedPageViewedProperties {
   /**
    * The amount of ADA that the user will be exchanging.
@@ -775,6 +804,14 @@ export class CreateWalletVerifyPhraseWordSelected implements BaseEvent {
   }
 }
 
+export class DappPopupSignTransactionPageViewed implements BaseEvent {
+  event_type = 'Dapp Popup Sign Transaction Page Viewed'
+}
+
+export class DappPopupSignTransactionSubmitted implements BaseEvent {
+  event_type = 'Dapp Popup Sign Transaction Submitted'
+}
+
 export class DiscoverConnectedBottomSheetDisconnectClicked implements BaseEvent {
   event_type = 'Discover Connected Bottom Sheet Disconnect Clicked'
 }
@@ -919,6 +956,34 @@ export class NftGallerySearchActivated implements BaseEvent {
   event_type = 'NFT Gallery Search Activated'
 
   constructor(public event_properties: NftGallerySearchActivatedProperties) {
+    this.event_properties = event_properties
+  }
+}
+
+export class PortfolioDashboardPageViewed implements BaseEvent {
+  event_type = 'Portfolio Dashboard Page Viewed'
+}
+
+export class PortfolioTokenDetails implements BaseEvent {
+  event_type = 'Portfolio Token Details'
+
+  constructor(public event_properties: PortfolioTokenDetailsProperties) {
+    this.event_properties = event_properties
+  }
+}
+
+export class PortfolioTokensListPageViewed implements BaseEvent {
+  event_type = 'Portfolio Tokens List Page Viewed'
+
+  constructor(public event_properties: PortfolioTokensListPageViewedProperties) {
+    this.event_properties = event_properties
+  }
+}
+
+export class PortfolioTokensListSearchActivated implements BaseEvent {
+  event_type = 'Portfolio Tokens List Search Activated'
+
+  constructor(public event_properties: PortfolioTokensListSearchActivatedProperties) {
     this.event_properties = event_properties
   }
 }
@@ -1424,6 +1489,36 @@ export class Ampli {
   }
 
   /**
+   * Dapp Popup Sign Transaction Page Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Dapp%20Popup%20Sign%20Transaction%20Page%20Viewed)
+   *
+   * This event tracks when a user loads a sign transaction screen on the dapp connector. Valid for extension and mobile.
+   *
+   * @param options Amplitude event options.
+   */
+  dappPopupSignTransactionPageViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new DappPopupSignTransactionPageViewed(), options);
+  }
+
+  /**
+   * Dapp Popup Sign Transaction Submitted
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Dapp%20Popup%20Sign%20Transaction%20Submitted)
+   *
+   * This event tracks the submission of a sign transaction request within the Dapp Connector screen. It's a Popup on extension and a full screen in Mobile.
+   *
+   * @param options Amplitude event options.
+   */
+  dappPopupSignTransactionSubmitted(
+    options?: EventOptions,
+  ) {
+    return this.track(new DappPopupSignTransactionSubmitted(), options);
+  }
+
+  /**
    * Discover Connected Bottom Sheet Disconnect Clicked
    *
    * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Discover%20Connected%20Bottom%20Sheet%20Disconnect%20Clicked)
@@ -1860,6 +1955,72 @@ export class Ampli {
     options?: EventOptions,
   ) {
     return this.track(new NftGallerySearchActivated(properties), options);
+  }
+
+  /**
+   * Portfolio Dashboard Page Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Portfolio%20Dashboard%20Page%20Viewed)
+   *
+   * When user loads the Porfolio Dashboard, only on mobile at the moment. That Page Dhas 3 sections, The total portfolio valie, Tokens section and NFT section
+   *
+   * @param options Amplitude event options.
+   */
+  portfolioDashboardPageViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new PortfolioDashboardPageViewed(), options);
+  }
+
+  /**
+   * Portfolio Token Details
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Portfolio%20Token%20Details)
+   *
+   * When user visit the detailed information about a specific token within a user's portfolio. In mobile there's 3 tabs that would be implemented in different iterations.
+   *
+   * @param properties The event's properties (e.g. token_details_tab)
+   * @param options Amplitude event options.
+   */
+  portfolioTokenDetails(
+    properties: PortfolioTokenDetailsProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new PortfolioTokenDetails(properties), options);
+  }
+
+  /**
+   * Portfolio Tokens List Page Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Portfolio%20Tokens%20List%20Page%20Viewed)
+   *
+   * Event to track when a user views the list of tokens in their portfolio.
+   *
+   * @param properties The event's properties (e.g. tokens_tab)
+   * @param options Amplitude event options.
+   */
+  portfolioTokensListPageViewed(
+    properties: PortfolioTokensListPageViewedProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new PortfolioTokensListPageViewed(properties), options);
+  }
+
+  /**
+   * Portfolio Tokens List Search Activated
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Portfolio%20Tokens%20List%20Search%20Activated)
+   *
+   * This event tracks when a user activates and starts a search in the Tokens list page. Delay of 0.5 seconds.
+   *
+   * @param properties The event's properties (e.g. search_term)
+   * @param options Amplitude event options.
+   */
+  portfolioTokensListSearchActivated(
+    properties: PortfolioTokensListSearchActivatedProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new PortfolioTokensListSearchActivated(properties), options);
   }
 
   /**

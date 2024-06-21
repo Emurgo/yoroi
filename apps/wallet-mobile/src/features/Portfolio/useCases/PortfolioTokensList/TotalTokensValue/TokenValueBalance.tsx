@@ -34,9 +34,9 @@ export const TokenValueBalance = ({amount, isFetching, isPrimaryTokenActive, rat
       {renderBalance()}
 
       <Text>
-        <Text style={styles.adaSymbol}>{firstSymbol}</Text>
+        <Text style={styles.firstSymbol}>{firstSymbol}</Text>
 
-        <Text style={[styles.usdSymbol]}>/{secondSymbol}</Text>
+        <Text style={[styles.secondSymbol]}>/{secondSymbol}</Text>
       </Text>
     </View>
   )
@@ -51,17 +51,19 @@ const useStyles = () => {
       ...atoms.align_baseline,
     },
     balanceText: {
-      ...atoms.heading_1_regular,
+      ...atoms.heading_1_medium,
       ...atoms.font_semibold,
+      color: color.text_gray_normal,
     },
-    adaSymbol: {
-      ...atoms.body_1_lg_regular,
+    firstSymbol: {
+      ...atoms.body_1_lg_medium,
       ...atoms.font_semibold,
+      color: color.text_gray_normal,
     },
-    usdSymbol: {
-      ...atoms.body_1_lg_regular,
+    secondSymbol: {
+      ...atoms.body_1_lg_medium,
       ...atoms.font_semibold,
-      color: color.gray_c200,
+      color: color.text_gray_low,
     },
   })
 

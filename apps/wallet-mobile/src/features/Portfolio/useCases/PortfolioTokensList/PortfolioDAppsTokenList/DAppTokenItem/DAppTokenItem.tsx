@@ -71,6 +71,7 @@ const useStyles = () => {
       ...atoms.justify_between,
     },
     symbol: {
+      color: color.gray_c900,
       ...atoms.body_1_lg_medium,
     },
     logoSize: {width: 26, height: 26},

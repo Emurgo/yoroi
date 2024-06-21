@@ -35,6 +35,7 @@ const useStyles = () => {
     },
     usdExchangeText: {
       ...atoms.font_semibold,
+      ...atoms.body_2_md_medium,
     },
     usdExchangeFiat: {
       ...atoms.body_3_sm_regular,

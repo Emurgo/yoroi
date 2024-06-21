@@ -17,17 +17,19 @@ export const BalanceHeaderCard = ({name, rate, hasDApps}: Props) => {
 
   return (
     <View style={styles.rowBetween}>
-      <View style={styles.labelContainer}>
-        <Text style={[styles.textWhite, styles.normalText]}>
-          {hasDApps ? strings.totalPortfolioValue : strings.totalWalletValue}
-        </Text>
+      {hasDApps ? (
+        <Tooltip numberOfLine={3} title={strings.totalPortfolioValueTooltip}>
+          <View style={styles.labelContainer}>
+            <Text style={[styles.textWhite, styles.normalText]}>{strings.totalPortfolioValue}</Text>
 
-        {hasDApps && (
-          <Tooltip numberOfLine={3} title={strings.totalPortfolioValueTooltip}>
             <Icon.InfoCircle color={color.white_static} />
-          </Tooltip>
-        )}
-      </View>
+          </View>
+        </Tooltip>
+      ) : (
+        <View style={styles.labelContainer}>
+          <Text style={[styles.textWhite, styles.normalText]}>{strings.totalWalletValue}</Text>
+        </View>
+      )}
 
       <Rate rate={rate} name={name} />
     </View>

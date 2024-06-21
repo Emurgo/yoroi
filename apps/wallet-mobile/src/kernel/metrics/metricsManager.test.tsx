@@ -115,6 +115,11 @@ const mockAmpli = {
   receivePageListViewed: jest.fn(),
   receiveShareAddressClicked: jest.fn(),
   receivePageViewed: jest.fn(),
+
+  portfolioDashboardPageViewed: jest.fn(),
+  portfolioTokenDetails: jest.fn(),
+  portfolioTokensListPageViewed: jest.fn(),
+  portfolioTokensListSearchActivated: jest.fn(),
 } as unknown as Ampli
 
 const mockMetricsStorage = {
@@ -245,6 +250,14 @@ describe('makeMetricsManager', () => {
     metricsManager.track.receivePageViewed()
     metricsManager.track.receiveShareAddressClicked()
 
+    metricsManager.track.portfolioDashboardPageViewed()
+    metricsManager.track.portfolioTokenDetails({token_details_tab: 'Performance'})
+    metricsManager.track.portfolioTokenDetails({token_details_tab: 'Transactions'})
+    metricsManager.track.portfolioTokenDetails({token_details_tab: 'Overview'})
+    metricsManager.track.portfolioTokensListPageViewed({tokens_tab: 'Wallet Token'})
+    metricsManager.track.portfolioTokensListPageViewed({tokens_tab: 'Dapps Token'})
+    metricsManager.track.portfolioTokensListSearchActivated({search_term: 'token'})
+
     expect(mockAmpli.nftGalleryDetailsTab).toHaveBeenCalledWith({nft_tab: 'Metadata'})
     expect(mockAmpli.nftGalleryPageViewed).toHaveBeenCalledWith({nft_count: 10})
     expect(mockAmpli.nftGallerySearchActivated).toHaveBeenCalledWith({nft_search_term: 'test', nft_count: 10})
@@ -334,6 +347,14 @@ describe('makeMetricsManager', () => {
     expect(mockAmpli.receivePageListViewed).toHaveBeenCalled()
     expect(mockAmpli.receivePageViewed).toHaveBeenCalled()
     expect(mockAmpli.receiveShareAddressClicked).toHaveBeenCalled()
+
+    expect(mockAmpli.portfolioDashboardPageViewed).toHaveBeenCalled()
+    expect(mockAmpli.portfolioTokenDetails).toHaveBeenCalledWith({token_details_tab: 'Performance'})
+    expect(mockAmpli.portfolioTokenDetails).toHaveBeenCalledWith({token_details_tab: 'Transactions'})
+    expect(mockAmpli.portfolioTokenDetails).toHaveBeenCalledWith({token_details_tab: 'Overview'})
+    expect(mockAmpli.portfolioTokensListPageViewed).toHaveBeenCalledWith({tokens_tab: 'Wallet Token'})
+    expect(mockAmpli.portfolioTokensListPageViewed).toHaveBeenCalledWith({tokens_tab: 'Dapps Token'})
+    expect(mockAmpli.portfolioTokensListSearchActivated).toHaveBeenCalledWith({search_term: 'token'})
   })
 
   test('enable should set metrics enabled to true', async () => {

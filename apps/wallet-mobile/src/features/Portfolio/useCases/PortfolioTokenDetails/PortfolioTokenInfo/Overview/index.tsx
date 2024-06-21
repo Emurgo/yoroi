@@ -1,21 +1,18 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import {useExplorers} from '@yoroi/explorers'
 import {infoExtractName} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
-import React, {ReactNode, useState} from 'react'
-import {Linking, ScrollViewProps, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import React, {useState} from 'react'
+import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
-import {Accordion, CopyButton, Spacer} from '../../../../../components'
-import {ScrollView} from '../../../../../components/ScrollView/ScrollView'
-import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
-import {TokenInfoIcon} from '../../../common/TokenAmountItem/TokenInfoIcon'
-import {usePortfolioTokenDetailParams} from '../../../common/useNavigateTo'
-import {useStrings} from '../../../common/useStrings'
+import {Accordion, CopyButton, Spacer} from '../../../../../../components'
+import {useSelectedWallet} from '../../../../../WalletManager/context/SelectedWalletContext'
+import {TokenInfoIcon} from '../../../../common/TokenAmountItem/TokenInfoIcon'
+import {usePortfolioTokenDetailParams} from '../../../../common/useNavigateTo'
+import {useStrings} from '../../../../common/useStrings'
+import {TokenNews} from './TokenNews'
 
-interface Props {
-  onScroll: ScrollViewProps['onScroll']
-  topContent?: ReactNode
-}
-export const Overview = ({onScroll, topContent}: Props) => {
+export const Overview = () => {
   const {styles} = useStyles()
   const strings = useStrings()
   const {id: tokenId} = usePortfolioTokenDetailParams()
@@ -38,9 +35,7 @@ export const Overview = ({onScroll, topContent}: Props) => {
   }
 
   return (
-    <ScrollView scrollEventThrottle={16} bounces={false} onScroll={onScroll} style={styles.scrollView}>
-      {topContent}
-
+    <View style={styles.scrollView}>
       <Spacer height={8} />
 
       <Accordion label={strings.info} expanded={expanded} onChange={setExpanded} wrapperStyle={styles.container}>
@@ -70,7 +65,7 @@ export const Overview = ({onScroll, topContent}: Props) => {
           <Spacer height={4} />
 
           <CopyButton value={policyId ?? ''} style={styles.copyButton}>
-            <Text style={styles.copyText}>{policyId ?? ''}</Text>
+            <Text style={styles.copyText}>{policyId || '--'}</Text>
           </CopyButton>
         </View>
 
@@ -82,7 +77,7 @@ export const Overview = ({onScroll, topContent}: Props) => {
           <Spacer height={4} />
 
           <CopyButton value={tokenInfo?.info?.fingerprint ?? ''} style={styles.copyButton}>
-            <Text style={styles.copyText}>{tokenInfo?.info?.fingerprint}</Text>
+            <Text style={styles.copyText}>{tokenInfo?.info?.fingerprint || '--'}</Text>
           </CopyButton>
         </View>
 
@@ -108,7 +103,13 @@ export const Overview = ({onScroll, topContent}: Props) => {
           <View style={styles.divider} />
         </View>
       </Accordion>
-    </ScrollView>
+
+      <Spacer height={16} />
+
+      <TokenNews />
+
+      <Spacer height={16} />
+    </View>
   )
 }
 

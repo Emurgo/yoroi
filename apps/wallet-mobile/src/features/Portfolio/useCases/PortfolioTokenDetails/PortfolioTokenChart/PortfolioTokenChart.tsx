@@ -42,6 +42,7 @@ export const PortfolioTokenChart = () => {
             changePercent={tokenPerformance?.changePercentage}
             value={tokenPerformance?.value}
             changeValue={tokenPerformance?.changeValue}
+            timeInterval={timeInterval}
           />
 
           <TokenChart onValueSelected={handleChartSelected} dataSources={data} />
