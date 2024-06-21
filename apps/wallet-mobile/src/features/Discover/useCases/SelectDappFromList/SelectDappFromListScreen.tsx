@@ -67,11 +67,6 @@ export const SelectDappFromListScreen = () => {
     setCurrentTab(tab)
   }
 
-  const handleOnPress = (connected: boolean) => {
-    track.discoverDAppItemClicked()
-    if (connected) track.discoverConnectedDAppItemClicked()
-  }
-
   return (
     <>
       <WelcomeDAppModal />
@@ -95,7 +90,7 @@ export const SelectDappFromListScreen = () => {
             const connected = isDappConnected(entry.origins)
             return (
               <View style={styles.dAppItemBox}>
-                <DAppListItem dApp={entry} connected={connected} onPress={() => handleOnPress(connected)} />
+                <DAppListItem dApp={entry} connected={connected} />
               </View>
             )
           }}
@@ -196,6 +191,7 @@ const HeaderControl = ({
 
 const useFilteredDappList = (tab: TDAppTabs, categoriesSelected: string[]) => {
   const {search, visible} = useSearch()
+  const {track} = useMetrics()
   const {data: list} = useDappList({suspense: true})
   const {data: connectedOrigins = []} = useDAppsConnected({refetchOnMount: true, refetchInterval: 500})
   const hasConnectedDapps = connectedOrigins.length > 0
@@ -208,6 +204,22 @@ const useFilteredDappList = (tab: TDAppTabs, categoriesSelected: string[]) => {
   const dAppOriginsThatAreConnectedButNotInList = connectedOrigins.filter((connectedOrigin) => {
     return !list?.dapps.some((dapp) => dapp.origins.includes(connectedOrigin))
   })
+
+  React.useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout> | undefined
+
+    const sendMetrics = () => {
+      clearTimeout(timeout)
+
+      timeout = setTimeout(() => {
+        track.discoverSearchActivated({search_term: search})
+      }, 500) // 0.5s requirement
+    }
+
+    if (isSearching && search.length > 0) sendMetrics()
+
+    return () => clearTimeout(timeout)
+  }, [isSearching, search, track])
 
   const getDAppsConnectedButNotInList = () => {
     return dAppOriginsThatAreConnectedButNotInList.map((origin) => {

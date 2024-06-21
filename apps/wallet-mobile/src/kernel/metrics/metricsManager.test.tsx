@@ -394,15 +394,15 @@ describe('makeMetricsManager', () => {
     expect(mockAmpli.portfolioTokensListPageViewed).toHaveBeenCalledWith({tokens_tab: 'Dapps Token'})
     expect(mockAmpli.portfolioTokensListSearchActivated).toHaveBeenCalledWith({search_term: 'token'})
 
-    expect(mockAmpli.discoverConnectedBottomSheetDisconnectClicked).toHaveBeenCalled() //
-    expect(mockAmpli.discoverConnectedBottomSheetOpenDAppClicked).toHaveBeenCalled() //
-    expect(mockAmpli.discoverConnectedDAppItemClicked).toHaveBeenCalled() //
-    expect(mockAmpli.discoverDAppItemClicked).toHaveBeenCalled() //
-    expect(mockAmpli.discoverFilterSelected).toHaveBeenCalledWith({dapp_filter: 'Investment'}) //
-    expect(mockAmpli.discoverFilterSelected).toHaveBeenCalledWith({dapp_filter: 'Media'}) //
-    expect(mockAmpli.discoverFilterSelected).toHaveBeenCalledWith({dapp_filter: 'Trading'}) //
-    expect(mockAmpli.discoverFilterSelected).toHaveBeenCalledWith({dapp_filter: 'NFT'}) //
-    expect(mockAmpli.discoverFilterSelected).toHaveBeenCalledWith({dapp_filter: 'Community'}) //
+    expect(mockAmpli.discoverConnectedBottomSheetDisconnectClicked).toHaveBeenCalled()
+    expect(mockAmpli.discoverConnectedBottomSheetOpenDAppClicked).toHaveBeenCalled()
+    expect(mockAmpli.discoverConnectedDAppItemClicked).toHaveBeenCalled()
+    expect(mockAmpli.discoverDAppItemClicked).toHaveBeenCalled()
+    expect(mockAmpli.discoverFilterSelected).toHaveBeenCalledWith({dapp_filter: 'Investment'})
+    expect(mockAmpli.discoverFilterSelected).toHaveBeenCalledWith({dapp_filter: 'Media'})
+    expect(mockAmpli.discoverFilterSelected).toHaveBeenCalledWith({dapp_filter: 'Trading'})
+    expect(mockAmpli.discoverFilterSelected).toHaveBeenCalledWith({dapp_filter: 'NFT'})
+    expect(mockAmpli.discoverFilterSelected).toHaveBeenCalledWith({dapp_filter: 'Community'})
     expect(mockAmpli.discoverPageViewed).toHaveBeenCalled()
     expect(mockAmpli.discoverSearchActivated).toHaveBeenCalledWith({search_term: 'random'})
     expect(mockAmpli.discoverWebViewBottomSheetConnectClicked).toHaveBeenCalled()

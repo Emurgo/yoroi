@@ -82,6 +82,9 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
   }
 
   const handlePress = () => {
+    track.discoverDAppItemClicked()
+    if (connected) track.discoverConnectedDAppItemClicked()
+
     if (onPress) {
       onPress()
       return

@@ -6,6 +6,7 @@ import Share from 'react-native-share'
 import WebView from 'react-native-webview'
 
 import {Icon} from '../../../../components'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useBrowser} from '../../common/BrowserProvider'
 import {WebViewState} from './WebViewItem'
 
@@ -17,6 +18,7 @@ export const BrowserTabBar = ({webViewRef, webViewState}: Props) => {
   const {styles, color, colors} = useStyles()
   const {tabs, openTabs} = useBrowser()
   const insets = useSafeAreaInsets()
+  const {track} = useMetrics()
 
   const totalTabs = Math.min(tabs.length, 99)
 
@@ -26,24 +28,29 @@ export const BrowserTabBar = ({webViewRef, webViewState}: Props) => {
 
   const handleRefresh = () => {
     if (!webViewRef.current) return
+    track.discoverWebViewTabBarRefreshClicked()
     webViewRef.current.reload()
   }
 
   const handleBackward = () => {
     if (!webViewRef.current) return
+    track.discoverWebViewTabBarBackwardClicked()
     webViewRef.current.goBack()
   }
 
   const handleForward = () => {
     if (!webViewRef.current) return
+    track.discoverWebViewTabBarForwardClicked()
     webViewRef.current.goForward()
   }
 
   const handleChoseTabs = () => {
+    track.discoverWebViewTabClicked()
     openTabs(true)
   }
 
   const handleShare = async () => {
+    track.discoverWebViewTabBarShareClicked()
     const url = webViewState.url
     const title = webViewState.title
     const message = webViewState.title

@@ -54,7 +54,7 @@ export const PortfolioWalletTokenList = () => {
   }, [isSearching, search, tokensList])
 
   React.useEffect(() => {
-    let timeout: NodeJS.Timeout | undefined
+    let timeout: ReturnType<typeof setTimeout> | undefined
 
     const sendMetrics = () => {
       clearTimeout(timeout)

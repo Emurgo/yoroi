@@ -67,7 +67,7 @@ export const PortfolioDAppsTokenList = () => {
   }, [openOrders, isSearching, filterListWithSearch])
 
   React.useEffect(() => {
-    let timeout: NodeJS.Timeout | undefined
+    let timeout: ReturnType<typeof setTimeout> | undefined
 
     const sendMetrics = () => {
       clearTimeout(timeout)
