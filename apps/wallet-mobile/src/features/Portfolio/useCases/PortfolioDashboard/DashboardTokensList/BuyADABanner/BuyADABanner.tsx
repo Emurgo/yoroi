@@ -1,21 +1,20 @@
-import {useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import {Button, Spacer} from '../../../../../../components'
-import {TxHistoryRouteNavigation} from '../../../../../../kernel/navigation'
+import {useNavigateTo} from '../../../../common/useNavigateTo'
 import {useStrings} from '../../../../common/useStrings'
 import {AssetImage} from './AssetImage'
 
 export const BuyADABanner = () => {
   const {styles, colors} = useStyles()
   const strings = useStrings()
+  const navigationTo = useNavigateTo()
 
-  const navigation = useNavigation<TxHistoryRouteNavigation>()
   const handleExchange = () => {
-    navigation.navigate('exchange-create-order')
+    navigationTo.buyAda()
   }
 
   return (

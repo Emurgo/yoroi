@@ -1,21 +1,20 @@
-import {useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import {Button} from '../../../../../components'
-import {TxHistoryRouteNavigation} from '../../../../../kernel/navigation'
+import {useNavigateTo} from '../../../common/useNavigateTo'
 import {useStrings} from '../../../common/useStrings'
 import {TradeTokensAsset} from './TradeTokensAsset'
 
 export const TradeTokensBanner = () => {
   const {styles, colors} = useStyles()
   const strings = useStrings()
+  const navigationTo = useNavigateTo()
 
-  const navigation = useNavigation<TxHistoryRouteNavigation>()
   const handleSwap = () => {
-    navigation.navigate('swap-start-swap', {screen: 'token-swap'})
+    navigationTo.swap()
   }
 
   return (
@@ -67,6 +66,7 @@ const useStyles = () => {
     title: {
       ...atoms.body_1_lg_medium,
       ...atoms.font_semibold,
+      color: color.gray_cmax,
     },
     assetBox: {
       ...atoms.absolute,
