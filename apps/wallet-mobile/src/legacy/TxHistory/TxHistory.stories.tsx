@@ -40,7 +40,6 @@ storiesOf('V2/TxHistory', module)
   .add('default with API errors', () => {
     const wallet = {
       ...mocks.wallet,
-      fetchCurrentPrice: mocks.fetchCurrentPrice.error,
     }
 
     return (

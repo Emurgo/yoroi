@@ -169,9 +169,6 @@ const wallet: YoroiWallet = {
     action('fetchTokenInfo')(tokenId)
     return Promise.resolve(tokenInfos[tokenId] ?? fallbackTokenInfo(tokenId))
   },
-  fetchNftModerationStatus() {
-    throw new Error('not implemented: fetchNftModerationStatus')
-  },
   fetchPoolInfo: (...args: unknown[]) => {
     action('fetchPoolInfo')(...args)
     return Promise.resolve({[stakePoolId]: poolInfoAndHistory} as StakePoolInfosAndHistories)
@@ -239,10 +236,6 @@ const wallet: YoroiWallet = {
     return (...args: unknown[]) => {
       action('unsubscribe')(...args)
     }
-  },
-  fetchCurrentPrice: (...args: unknown[]) => {
-    action('fetchCurrentPrice')(...args)
-    return Promise.resolve(1.9938153154314795)
   },
   internalAddresses: [],
   externalAddresses: [],
@@ -559,22 +552,6 @@ const submitTransaction = {
   loading: async (...args: unknown[]) => {
     action('submitTransaction')(...args)
     return new Promise<void>(() => null)
-  },
-}
-
-const fetchCurrentPrice = {
-  success: async (...args: unknown[]) => {
-    action('fetchCurrentPrice')(...args)
-    return 0.123456789
-  },
-  error: async (...args: unknown[]) => {
-    action('fetchCurrentPrice')(...args)
-    await new Promise((resolve) => setTimeout(resolve, 3000))
-    return Promise.reject(new Error('storybook error message'))
-  },
-  loading: async (...args: unknown[]) => {
-    action('fetchCurrentPrice')(...args)
-    return new Promise(() => null) as unknown as number
   },
 }
 
@@ -956,7 +933,6 @@ export const mocks = {
   yoroiSignedTx,
   utxos,
   setCollateralId,
-  fetchCurrentPrice,
   fetchNftModerationStatus,
   txid,
   getTransactions,

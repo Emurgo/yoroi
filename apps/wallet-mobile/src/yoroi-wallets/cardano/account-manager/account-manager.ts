@@ -5,7 +5,6 @@ import _ from 'lodash'
 import {defaultMemoize} from 'reselect'
 
 import {logger} from '../../../kernel/logger/logger'
-import {BackendConfig} from '../../types'
 import {CardanoMobile} from '../../wallets'
 import * as legacyApi from '../api/api'
 import {cardanoConfig} from '../constants/cardano-config'
@@ -351,9 +350,9 @@ export const accountManagerMaker = async ({
   }
 
   // TODO: API should be injected
-  const discoverAddresses = async (config: BackendConfig) => {
+  const discoverAddresses = async (baseApiUrl: string) => {
     const addressesBeforeRequest = internalChain.addresses.length + externalChain.addresses.length
-    const filterFn = (addrs: Addresses) => legacyApi.filterUsedAddresses(addrs, config)
+    const filterFn = (addrs: Addresses) => legacyApi.filterUsedAddresses(addrs, baseApiUrl)
     await Promise.all([internalChain.sync(filterFn), externalChain.sync(filterFn)])
     const addressesAfterRequest = internalChain.addresses.length + externalChain.addresses.length
     const hasAddedNewAddress = addressesAfterRequest !== addressesBeforeRequest
@@ -385,7 +384,7 @@ export const accountManagerMaker = async ({
 export type AccountManager = {
   internalChain: AddressChain
   externalChain: AddressChain
-  discoverAddresses: (config: BackendConfig) => Promise<void>
+  discoverAddresses: (baseApiUrl: string) => Promise<void>
   getAddressesInBlocks: (rewardAddressHex: string) => string[][]
   lastGeneratedAddressIndex: number
   save: () => Promise<void>

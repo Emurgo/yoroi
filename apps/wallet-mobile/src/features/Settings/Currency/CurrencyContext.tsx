@@ -4,22 +4,31 @@ import {useMutation, UseMutationOptions, useQuery, useQueryClient} from 'react-q
 
 import {configCurrencies, supportedCurrencies} from '../../../kernel/constants'
 import {isEmptyString} from '../../../kernel/utils'
+import {useAdaPrice} from '../../../yoroi-wallets/cardano/useAdaPrice'
 import {ConfigCurrencies, CurrencySymbol} from '../../../yoroi-wallets/types'
 
 const CurrencyContext = React.createContext<undefined | CurrencyContext>(undefined)
 export const CurrencyProvider = ({children}: {children: React.ReactNode}) => {
   const currency = useCurrency()
   const selectCurrency = useSaveCurrency()
+  const adaPrice = useAdaPrice({to: currency})
 
   const value = React.useMemo(
-    () => ({currency, selectCurrency, supportedCurrencies, configCurrencies, config: configCurrencies[currency]}),
-    [currency, selectCurrency],
+    () => ({
+      currency,
+      selectCurrency,
+      supportedCurrencies,
+      configCurrencies,
+      config: configCurrencies[currency],
+      adaPrice,
+    }),
+    [adaPrice, currency, selectCurrency],
   )
 
   return <CurrencyContext.Provider value={value}>{children}</CurrencyContext.Provider>
 }
 
-export const useCurrencyContext = () => React.useContext(CurrencyContext) || missingProvider()
+export const useCurrencyPairing = () => React.useContext(CurrencyContext) || missingProvider()
 
 const missingProvider = () => {
   throw new Error('CurrencyProvider is missing')
@@ -72,6 +81,10 @@ type CurrencyContext = {
 
   supportedCurrencies: typeof supportedCurrencies
   configCurrencies: ConfigCurrencies
+  adaPrice: {
+    price: number
+    time: number
+  }
 }
 
 const parseCurrencySymbol = (data: unknown) => {

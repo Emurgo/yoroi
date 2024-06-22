@@ -4,7 +4,7 @@ import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {useCurrencyContext} from '../../../../Settings/Currency'
+import {useCurrencyPairing} from '../../../../Settings/Currency'
 import {SkeletonPrimaryToken} from './SkeletonPrimaryToken'
 
 type Props = {
@@ -14,7 +14,7 @@ type Props = {
   rate?: number
 }
 export const TokenValueBalance = ({amount, isFetching, isPrimaryTokenActive, rate}: Props) => {
-  const {currency} = useCurrencyContext()
+  const {currency} = useCurrencyPairing()
   const {styles} = useStyles()
   const name = infoExtractName(amount.info)
 

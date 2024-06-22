@@ -5,7 +5,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {CurrencySymbol} from 'src/yoroi-wallets/types'
 
 import {PairedBalance} from '../../../../../../components/PairedBalance/PairedBalance'
-import {useCurrencyContext} from '../../../../../Settings/Currency'
+import {useCurrencyPairing} from '../../../../../Settings/Currency'
 import {AssetLogo} from '../../../../common/AssetLogo/AssetLogo'
 import {usePortfolio} from '../../../../common/PortfolioProvider'
 import {TokenInfoIcon} from '../../../../common/TokenAmountItem/TokenInfoIcon'
@@ -26,7 +26,7 @@ export const DAppTokenItem = ({tokenInfo, splitTokenSymbol, onPress}: Props) => 
   const secondTokenName = infoExtractName(secondToken.info)
 
   const {isPrimaryTokenActive} = usePortfolio()
-  const {currency} = useCurrencyContext()
+  const {currency} = useCurrencyPairing()
   const currencyPaired = isPrimaryTokenActive ? 'ADA' : currency
 
   return (

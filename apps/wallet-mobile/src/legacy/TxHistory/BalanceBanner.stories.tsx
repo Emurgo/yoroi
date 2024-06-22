@@ -14,7 +14,6 @@ storiesOf('BalanceBanner', module)
         <WalletManagerProviderMock
           wallet={{
             ...mocks.wallet,
-            fetchCurrentPrice: mocks.fetchCurrentPrice.loading,
           }}
         >
           <View style={{flex: 1, justifyContent: 'center'}}>
@@ -32,7 +31,6 @@ storiesOf('BalanceBanner', module)
         <WalletManagerProviderMock
           wallet={{
             ...mocks.wallet,
-            fetchCurrentPrice: mocks.fetchCurrentPrice.success,
           }}
         >
           <View style={{flex: 1, justifyContent: 'center'}}>
@@ -50,7 +48,6 @@ storiesOf('BalanceBanner', module)
         <WalletManagerProviderMock
           wallet={{
             ...mocks.wallet,
-            fetchCurrentPrice: mocks.fetchCurrentPrice.error,
           }}
         >
           <View style={{flex: 1, justifyContent: 'center'}}>

@@ -16,6 +16,7 @@ import {useWalletMetas} from '../../common/hooks/useWalletMetas'
 import {useStrings} from '../../common/useStrings'
 import {useWalletManager} from '../../context/WalletManagerProvider'
 import {SupportIllustration} from '../../illustrations/SupportIllustration'
+import {AggregatedBalance} from './AggregatedBalance'
 import {WalletListItem} from './WalletListItem'
 
 export const SelectWalletFromList = () => {
@@ -56,6 +57,8 @@ export const SelectWalletFromList = () => {
 
   return (
     <SafeAreaView style={styles.safeAreaView} edges={['left', 'right', 'bottom']}>
+      <AggregatedBalance />
+
       <ScrollView
         ref={scrollViewRef}
         style={styles.list}

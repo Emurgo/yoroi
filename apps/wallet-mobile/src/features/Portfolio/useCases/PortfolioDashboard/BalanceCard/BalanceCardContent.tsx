@@ -6,7 +6,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Spacer} from '../../../../../components'
 import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
-import {useCurrencyContext} from '../../../../Settings/Currency'
+import {useCurrencyPairing} from '../../../../Settings/Currency'
 import {usePrivacyMode} from '../../../../Settings/PrivacyMode/PrivacyMode'
 import {PnlTag} from '../../../common/PnlTag/PnlTag'
 import {useGetQuantityChange} from '../../../common/useGetQuantityChange'
@@ -107,7 +107,7 @@ type PnlPairedChangeProps = {
   pairedBalanceChange: string
 }
 const PnlPairedChange = ({variantPnl, quantityChange, pairedBalanceChange}: PnlPairedChangeProps) => {
-  const {currency} = useCurrencyContext()
+  const {currency} = useCurrencyPairing()
 
   return (
     <PnlTag variant={variantPnl}>

@@ -1,11 +1,13 @@
 import {useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
 import * as React from 'react'
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Alert, Animated, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Swipeable} from 'react-native-gesture-handler'
 
 import {Icon} from '../../../../components'
 import {Loading} from '../../../../components/Loading/Loading'
 import {Space} from '../../../../components/Space/Space'
+import {isDev} from '../../../../kernel/env'
 import {isByron, isShelley} from '../../../../yoroi-wallets/cardano/utils'
 import {features} from '../../..'
 import {
@@ -33,48 +35,84 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
 
   const {
     selected: {meta},
+    walletManager,
   } = useWalletManager()
   const isSelected = meta?.id === walletMeta.id
 
+  // NOTE: dev only - temporary to show Product
+  const handleOnDeleteWallet = () => {
+    Alert.alert('Delete Wallet', 'Are you sure you want to delete this wallet?', [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: () => {
+          walletManager.removeWallet(walletMeta.id)
+        },
+      },
+    ])
+  }
+
+  const renderRightActions = (progress: Animated.AnimatedInterpolation<string | number>) => {
+    const translateX = progress.interpolate({
+      inputRange: [0, 1],
+      outputRange: [80, 0],
+    })
+
+    return (
+      <Animated.View style={[styles.rightContainer, {transform: [{translateX}]}]}>
+        <TouchableOpacity style={styles.rigthActionsContainer} onPress={handleOnDeleteWallet}>
+          <Text style={styles.actionDangerousText}>DELETE</Text>
+        </TouchableOpacity>
+      </Animated.View>
+    )
+  }
+  // ____________________________________________________
+
   return (
-    <View style={styles.item}>
-      <TouchableOpacity
-        activeOpacity={1}
-        disabled={!hasSyncedLastSelectedNetwork}
-        onPress={() => onPress(walletMeta)}
-        style={[styles.leftSide, !hasSyncedLastSelectedNetwork && styles.disabled]}
-        onPressIn={() => setIsButtonPressed(true)}
-        onPressOut={() => setIsButtonPressed(false)}
-      >
-        <Icon.WalletAvatar image={walletMeta.avatar} />
+    <Swipeable renderRightActions={(progress) => renderRightActions(progress)} enabled={isDev}>
+      <View style={styles.item}>
+        <TouchableOpacity
+          activeOpacity={1}
+          disabled={!hasSyncedLastSelectedNetwork}
+          onPress={() => onPress(walletMeta)}
+          style={[styles.leftSide, !hasSyncedLastSelectedNetwork && styles.disabled]}
+          onPressIn={() => setIsButtonPressed(true)}
+          onPressOut={() => setIsButtonPressed(false)}
+        >
+          <Icon.WalletAvatar image={walletMeta.avatar} />
 
-        <Space height="md" />
+          <Space height="md" />
 
-        <View style={styles.walletDetails}>
-          <Text style={styles.walletName} numberOfLines={1}>
-            {walletMeta.name}
-          </Text>
+          <View style={styles.walletDetails}>
+            <Text style={styles.walletName} numberOfLines={1}>
+              {walletMeta.name}
+            </Text>
 
-          <Text style={[styles.walletMeta, isButtonPressed && styles.walletMetaPressed]}>
-            {`${walletMeta.plate} | ${implementationName}`}
-          </Text>
-        </View>
+            <Text style={[styles.walletMeta, isButtonPressed && styles.walletMetaPressed]}>
+              {`${walletMeta.plate} | ${implementationName}`}
+            </Text>
+          </View>
 
-        {features.walletListFeedback && (
-          <>
-            {syncWalletInfo?.status === 'syncing' && <Loading />}
+          {features.walletListFeedback && (
+            <>
+              {syncWalletInfo?.status === 'syncing' && <Loading />}
 
-            <Space width="md" />
+              <Space width="md" />
 
-            {isSelected && <Icon.Check size={20} color={colors.icon} />}
+              {isSelected && <Icon.Check size={20} color={colors.selected} />}
 
-            <Space width="md" />
-          </>
-        )}
+              <Space width="md" />
+            </>
+          )}
 
-        {isButtonPressed ? <ChevronRightDarkIllustration /> : <ChevronRightGrayIllustration />}
-      </TouchableOpacity>
-    </View>
+          {isButtonPressed ? <ChevronRightDarkIllustration /> : <ChevronRightGrayIllustration />}
+        </TouchableOpacity>
+      </View>
+    </Swipeable>
   )
 }
 
@@ -117,11 +155,28 @@ const useStyles = () => {
     disabled: {
       opacity: 0.5,
     },
+    rightContainer: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      width: 100,
+    },
+    rigthActionsContainer: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      ...atoms.px_md,
+    },
+    actionDangerousText: {
+      color: color.sys_magenta_c500,
+      ...atoms.body_2_md_medium,
+      ...atoms.p_sm,
+      backgroundColor: color.sys_magenta_c100,
+    },
   })
 
   const colors = {
     white: color.white_static,
-    icon: color.primary_c600,
+    selected: color.primary_c600,
+    icon: color.gray_c600,
   }
 
   return {styles, colors} as const

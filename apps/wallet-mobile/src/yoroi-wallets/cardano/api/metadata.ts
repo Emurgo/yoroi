@@ -14,8 +14,12 @@ export const getNFT = async (tokenId: string, config: BackendConfig): Promise<Ba
   const payload = {assets: [{policy: policyId, nameHex}]}
 
   const [assetMetadatasResult, {supplies: assetSupplies}] = await Promise.all([
-    fetchDefault<Record<string, unknown>>('multiAsset/metadata', payload, config),
-    fetchDefault<{supplies: Record<string, unknown>}>('multiAsset/supply?numberFormat=string', payload, config),
+    fetchDefault<Record<string, unknown>>('multiAsset/metadata', payload, config.API_ROOT),
+    fetchDefault<{supplies: Record<string, unknown>}>(
+      'multiAsset/supply?numberFormat=string',
+      payload,
+      config.API_ROOT,
+    ),
   ])
 
   const assetMetadatas = assetMetadatasResult[tokenId]
