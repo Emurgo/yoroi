@@ -4,6 +4,7 @@ import {App, Wallet} from '@yoroi/types'
 
 import {cip30ExtensionMaker} from '../../../yoroi-wallets/cardano/cip30/cip30'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
+import {cip95ExtensionMaker} from '../../../yoroi-wallets/cardano/cip95/cip95'
 
 export const validUrl = (url: string) => {
   return /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!&',,=.+]+$/g.test(url)
@@ -70,6 +71,7 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
   const {wallet, meta, appStorage, confirmConnection, signTx, signData} = options
   const api = dappConnectorApiMaker()
   const cip30 = cip30ExtensionMaker(wallet, meta)
+  const cip95 = cip95ExtensionMaker(wallet, meta)
   const handlerWallet: ResolverWallet = {
     id: wallet.id,
     networkId: wallet.networkManager.chainId,
@@ -100,11 +102,11 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
     cip95: {
       signData: async (address, payload) => {
         const rootKey = await signData(address, payload)
-        return cip30.signData(rootKey, address, payload)
+        return cip95.signData(rootKey, address, payload)
       },
-      getPubDRepKey: async () => Promise.reject(new Error('Not implemented')),
-      getRegisteredPubStakeKeys: async () => Promise.reject(new Error('Not implemented')),
-      getUnregisteredPubStakeKeys: async () => Promise.reject(new Error('Not implemented')),
+      getPubDRepKey: () => cip95.getPubDRepKey(),
+      getRegisteredPubStakeKeys: () => cip95.getRegisteredPubStakeKeys(),
+      getUnregisteredPubStakeKeys: () => cip95.getUnregisteredPubStakeKeys(),
     },
   }
   const storage = connectionStorageMaker({storage: appStorage.join('dapp-connections/')})

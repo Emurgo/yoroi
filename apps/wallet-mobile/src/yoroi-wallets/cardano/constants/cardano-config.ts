@@ -62,6 +62,7 @@ export const cardanoConfig = freeze(
             roles: {
               external: 0,
               internal: 1,
+              drep: 3,
             },
             harden: {
               purpose: 2_147_483_692,
