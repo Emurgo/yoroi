@@ -1,4 +1,4 @@
-import {governanceApiMaker} from '@yoroi/staking/src'
+import {governanceApiMaker} from '@yoroi/staking'
 import {Wallet} from '@yoroi/types'
 import {Buffer} from 'buffer'
 
