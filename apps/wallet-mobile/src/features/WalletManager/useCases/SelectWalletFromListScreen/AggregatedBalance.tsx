@@ -1,11 +1,12 @@
-import {infoExtractName} from '@yoroi/portfolio'
+import {infoExtractName, isFt, isNft} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {merge, switchMap} from 'rxjs'
 
+import {Space} from '../../../../components/Space/Space'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {BalanceCardContent} from '../../../Portfolio/useCases/PortfolioDashboard/BalanceCard/BalanceCardContent'
 import {BalanceCardSkeleton} from '../../../Portfolio/useCases/PortfolioDashboard/BalanceCard/BalanceCardSkeleton'
@@ -29,7 +30,14 @@ export const AggregatedBalance = () => {
     info: primaryTokenInfo,
     quantity: 0n,
   }
-  const isFetching = price == null || aggregatedBalances == null
+  const isFetching = aggregatedBalances == null
+
+  const tokens = React.useMemo(() => {
+    return {
+      nfts: Object.values(aggregatedBalances ?? {}).filter(({info}) => isNft(info)),
+      fts: Object.values(aggregatedBalances ?? {}).filter(({info}) => isFt(info)),
+    }
+  }, [aggregatedBalances])
 
   return (
     <View style={styles.root}>
@@ -44,6 +52,16 @@ export const AggregatedBalance = () => {
           />
         </LinearGradient>
       )}
+
+      <Space width="lg" />
+
+      <View style={styles.tokens}>
+        <Text style={styles.tokensText}>{tokens.nfts.length} NFT</Text>
+
+        <Space width="lg" />
+
+        <Text style={styles.tokensText}>{tokens.fts.length} FT</Text>
+      </View>
     </View>
   )
 }
@@ -96,6 +114,17 @@ const useStyles = () => {
     },
     gradientRoot: {
       ...atoms.p_lg,
+      borderRadius: 9,
+    },
+    tokens: {
+      ...atoms.flex_row,
+      ...atoms.justify_center,
+    },
+    tokensText: {
+      backgroundColor: color.bg_color_low,
+      color: color.text_gray_max,
+      ...atoms.monospace,
+      ...atoms.p_xs,
       borderRadius: 9,
     },
   })
