@@ -1,13 +1,11 @@
-import {Wallet} from '@yoroi/types'
-import {YoroiWallet} from '../types'
-import {cip30ExtensionMaker} from '../cip30/cip30'
 import {governanceApiMaker} from '@yoroi/staking/src'
+import {Wallet} from '@yoroi/types'
 import {Buffer} from 'buffer'
-import {CardanoMobile} from '../../wallets'
-import {CHIMERIC_ACCOUNT, STAKING_KEY_INDEX} from '../constants/common'
-import {wrappedCsl} from '../wrappedCsl'
+
+import {cip30ExtensionMaker} from '../cip30/cip30'
 import {cardanoConfig} from '../constants/cardano-config'
-import {NUMBERS} from '../numbers'
+import {YoroiWallet} from '../types'
+import {wrappedCsl} from '../wrappedCsl'
 
 export const cip95ExtensionMaker = (wallet: YoroiWallet, meta: Wallet.Meta) => {
   return new CIP95Extension(wallet, meta)

@@ -3,8 +3,8 @@ import {DappConnector} from '@yoroi/dapp-connector'
 import {App, Wallet} from '@yoroi/types'
 
 import {cip30ExtensionMaker} from '../../../yoroi-wallets/cardano/cip30/cip30'
-import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {cip95ExtensionMaker} from '../../../yoroi-wallets/cardano/cip95/cip95'
+import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 
 export const validUrl = (url: string) => {
   return /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!&',,=.+]+$/g.test(url)
