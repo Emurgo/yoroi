@@ -7,7 +7,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {Spacer} from '../../../../../components'
 import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
 import {CurrencySymbol} from '../../../../../yoroi-wallets/types'
-import {useCurrencyContext} from '../../../../Settings/Currency'
+import {useCurrencyPairing} from '../../../../Settings/Currency'
 import {PnlTag} from '../../../common/PnlTag/PnlTag'
 import {usePortfolio} from '../../../common/PortfolioProvider'
 import {TokenInfoIcon} from '../../../common/TokenAmountItem/TokenInfoIcon'
@@ -30,7 +30,7 @@ export const TokenBalanceItem = ({amount}: Props) => {
   const balanceFormatted = amountBreakdown(amount).bn.toFormat(2)
 
   const {isPrimaryTokenActive} = usePortfolio()
-  const {currency} = useCurrencyContext()
+  const {currency} = useCurrencyPairing()
   const currencyPaired = isPrimaryTokenActive ? 'ADA' : currency
 
   return (

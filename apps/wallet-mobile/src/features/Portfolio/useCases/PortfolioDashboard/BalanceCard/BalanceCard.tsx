@@ -4,10 +4,10 @@ import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
+import {useCurrencyPairing} from '../../../../Settings/Currency'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {usePortfolioPrimaryBalance} from '../../../common/hooks/usePortfolioPrimaryBalance'
 import {useGetDAppsPortfolioBalance} from '../../../common/useGetDAppsPortfolioBalance'
-import {useTokenExchangeRate} from '../../../common/useTokenExchangeRate'
 import {BalanceCardContent} from './BalanceCardContent'
 import {BalanceCardSkeleton} from './BalanceCardSkeleton'
 import {BalanceHeaderCard} from './BalanceHeaderCard'
@@ -18,11 +18,11 @@ export const BalanceCard = () => {
   const {wallet} = useSelectedWallet()
   const primaryBalance = usePortfolioPrimaryBalance({wallet})
   const name = infoExtractName(primaryBalance.info)
-  const rate = useTokenExchangeRate()
+  const price = useCurrencyPairing().adaPrice.price
   const dAppsBalance = useGetDAppsPortfolioBalance(primaryBalance.quantity)
   const hasDApps = dAppsBalance !== undefined && Number(dAppsBalance.quantity) > 0
 
-  const isFetching = rate === undefined || dAppsBalance === undefined
+  const isFetching = price === undefined || dAppsBalance === undefined
 
   return (
     <View style={styles.root}>
@@ -33,7 +33,7 @@ export const BalanceCard = () => {
           <BalanceCardContent
             amount={primaryBalance}
             name={name}
-            headerCard={<BalanceHeaderCard rate={rate} name={name} hasDApps={hasDApps} />}
+            headerCard={<BalanceHeaderCard rate={price} name={name} hasDApps={hasDApps} />}
           />
         </LinearGradient>
       )}

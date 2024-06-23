@@ -2,12 +2,12 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text} from 'react-native'
 
-import {useCurrencyContext} from '../../../../Settings/Currency'
+import {useCurrencyPairing} from '../../../../Settings/Currency'
 
 type Props = {rate: number; name: string}
 export const Rate = ({rate, name}: Props) => {
   const {styles} = useStyles()
-  const {currency} = useCurrencyContext()
+  const {currency} = useCurrencyPairing()
 
   return (
     <Text style={[styles.boxExchange]}>

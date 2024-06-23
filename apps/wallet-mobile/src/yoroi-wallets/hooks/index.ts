@@ -26,14 +26,8 @@ import {deriveAddressFromXPub} from '../cardano/account-manager/derive-address-f
 import {getSpendingKey, getStakingKey} from '../cardano/addressInfo/addressInfo'
 import {cardanoConfig} from '../cardano/constants/cardano-config'
 import {WalletEvent, YoroiWallet} from '../cardano/types'
-import {
-  TRANSACTION_DIRECTION,
-  TRANSACTION_STATUS,
-  YoroiNftModerationStatus,
-  YoroiSignedTx,
-  YoroiUnsignedTx,
-} from '../types'
-import {CurrencySymbol, TipStatusResponse, TxSubmissionStatus} from '../types/other'
+import {TRANSACTION_DIRECTION, TRANSACTION_STATUS, YoroiSignedTx, YoroiUnsignedTx} from '../types'
+import {TipStatusResponse, TxSubmissionStatus} from '../types/other'
 import {delay} from '../utils/timeUtils'
 import {Amounts, Quantities, Utxos} from '../utils/utils'
 
@@ -178,35 +172,6 @@ export const useTokenInfo = <T extends Balance.TokenInfo>(
   if (!query.data) throw new Error('Invalid token id')
 
   return query.data
-}
-
-export const useNftModerationStatus = (
-  {wallet, fingerprint}: {wallet: YoroiWallet; fingerprint: string},
-  options?: UseQueryOptions<YoroiNftModerationStatus, Error, YoroiNftModerationStatus, [string, 'nft', string]>,
-) => {
-  const query = useQuery({
-    ...options,
-    queryKey: [wallet.id, 'nft', fingerprint],
-    queryFn: () => wallet.fetchNftModerationStatus(fingerprint),
-  })
-
-  return {
-    ...query,
-    status: query.data,
-  }
-}
-
-export const useNftImageModerated = ({
-  wallet,
-  nftId,
-}: {
-  wallet: YoroiWallet
-  nftId: string
-}): {image?: string; status: YoroiNftModerationStatus} | null => {
-  const nft = useNft(wallet, {id: nftId})
-  const fingerprint = nft.fingerprint
-  const {status} = useNftModerationStatus({wallet, fingerprint})
-  return useMemo(() => (status ? {image: nft.image, status} : null), [nft, status])
 }
 
 export const useToken = (
@@ -680,27 +645,6 @@ export const useTipStatus = ({
   })
 
   if (!query.data) throw new Error('Failed to retrive tipStatus')
-
-  return query.data
-}
-
-export const useExchangeRate = ({
-  wallet,
-  to,
-  options,
-}: {
-  wallet: YoroiWallet
-  to: CurrencySymbol
-  options?: UseQueryOptions<number, Error>
-}) => {
-  const query = useQuery<number, Error>({
-    suspense: true,
-    staleTime: 60000,
-    retryDelay: 1000,
-    queryKey: [wallet.id, 'exchangeRate', {to}],
-    queryFn: () => (to === 'ADA' ? 1 : wallet.fetchCurrentPrice(to)),
-    ...options,
-  })
 
   return query.data
 }

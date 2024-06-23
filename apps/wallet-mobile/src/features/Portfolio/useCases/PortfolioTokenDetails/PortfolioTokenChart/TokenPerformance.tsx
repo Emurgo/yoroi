@@ -5,7 +5,7 @@ import {StyleSheet, View} from 'react-native'
 
 import {Icon, Text} from '../../../../../components'
 import {Tooltip} from '../../../../../components/Tooltip'
-import {useCurrencyContext} from '../../../../Settings/Currency'
+import {useCurrencyPairing} from '../../../../Settings/Currency'
 import {PnlTag} from '../../../common/PnlTag/PnlTag'
 import {TOKEN_CHART_TIME_INTERVAL, TokenChartTimeInterval} from '../../../common/useGetPortfolioTokenChart'
 import {useStrings} from '../../../common/useStrings'
@@ -20,7 +20,7 @@ interface Props {
 export const TokenPerformance = ({changePercent = 0, changeValue = 0, value = 0, timeInterval}: Props) => {
   const {styles} = useStyles()
   const strings = useStrings()
-  const {currency} = useCurrencyContext()
+  const {currency} = useCurrencyPairing()
 
   const variant = React.useMemo(() => {
     if (Number(changePercent) > 0) return 'success'

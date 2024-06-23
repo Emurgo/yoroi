@@ -7,7 +7,7 @@ import {LogBox, StyleSheet} from 'react-native'
 import * as RNP from 'react-native-paper'
 import {initialWindowMetrics, SafeAreaProvider} from 'react-native-safe-area-context'
 import {enableFreeze, enableScreens} from 'react-native-screens'
-import {QueryClient, QueryClientProvider} from 'react-query'
+import {QueryClientProvider} from 'react-query'
 
 import {LoadingBoundary} from './components'
 import {ErrorBoundary} from './components/ErrorBoundary'
@@ -20,6 +20,7 @@ import {disableLogbox, loggerFilter} from './kernel/env'
 import {LanguageProvider} from './kernel/i18n'
 import {useSetupLogger} from './kernel/logger/hooks/useSetupLogger'
 import {makeMetricsManager, MetricsProvider} from './kernel/metrics/metricsManager'
+import {queryInfo} from './kernel/query-client'
 import {useMigrations} from './kernel/storage/migrations/useMigrations'
 import {rootStorage} from './kernel/storage/rootStorage'
 import {PoolTransitionProvider} from './legacy/Staking/PoolTransition/PoolTransitionProvider'
@@ -35,7 +36,6 @@ if (disableLogbox) {
 }
 
 const metricsManager = makeMetricsManager()
-const queryClient = new QueryClient()
 
 const Yoroi = () => {
   const isMigrated = useMigrations(rootStorage)
@@ -48,11 +48,11 @@ const Yoroi = () => {
       <ThemeProvider storage={themeStorage}>
         <ErrorBoundary>
           <MetricsProvider metricsManager={metricsManager}>
-            <WalletManagerProvider walletManager={walletManager}>
-              <QueryClientProvider client={queryClient}>
-                <LoadingBoundary style={StyleSheet.absoluteFill}>
-                  <LanguageProvider>
-                    <CurrencyProvider>
+            <QueryClientProvider client={queryInfo.queryClient}>
+              <CurrencyProvider>
+                <WalletManagerProvider walletManager={walletManager}>
+                  <LoadingBoundary style={StyleSheet.absoluteFill}>
+                    <LanguageProvider>
                       <AuthProvider>
                         <LinksProvider>
                           <SetupWalletProvider>
@@ -62,11 +62,11 @@ const Yoroi = () => {
                           </SetupWalletProvider>
                         </LinksProvider>
                       </AuthProvider>
-                    </CurrencyProvider>
-                  </LanguageProvider>
-                </LoadingBoundary>
-              </QueryClientProvider>
-            </WalletManagerProvider>
+                    </LanguageProvider>
+                  </LoadingBoundary>
+                </WalletManagerProvider>
+              </CurrencyProvider>
+            </QueryClientProvider>
           </MetricsProvider>
         </ErrorBoundary>
       </ThemeProvider>

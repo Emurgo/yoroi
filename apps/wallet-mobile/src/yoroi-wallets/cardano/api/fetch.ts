@@ -73,11 +73,11 @@ export const checkedFetch = (request: FetchRequest<any>) => {
 export const fetchDefault = <T = Record<string, any>>(
   path: string,
   payload: any,
-  networkConfig: BackendConfig,
+  apiBaseUrl: BackendConfig['API_ROOT'],
   method: RequestMethod = 'POST',
   options?: {checkResponse?: ResponseChecker<T>},
 ): Promise<T> => {
-  const fullPath = `${networkConfig.API_ROOT}/${path}`
+  const fullPath = `${apiBaseUrl}/${path}`
   const yoroiVersion = `${Platform.OS} / ${DeviceInfo.getVersion()}`
   const headers = {
     'Content-Type': 'application/json; charset=utf-8',

@@ -1,7 +1,8 @@
 import {splitBigInt} from '@yoroi/common'
 import * as React from 'react'
 
-import {useTokenExchangeRate} from './useTokenExchangeRate'
+import {useCurrencyPairing} from '../../Settings/Currency'
+
 type Props = {
   quantity: bigint
   decimals: number
@@ -18,7 +19,7 @@ export const useQuantityChange = ({
   pairedBalanceChange: string
   variantPnl: 'neutral' | 'success' | 'danger'
 } => {
-  const rate = useTokenExchangeRate()
+  const price = useCurrencyPairing().adaPrice.price
 
   const quantityChange = React.useMemo(() => {
     if (previousQuantity === undefined) return undefined
@@ -31,14 +32,14 @@ export const useQuantityChange = ({
   }, [previousQuantity, quantityChange])
 
   const variantPnl = React.useMemo(() => {
-    if (quantityChange === undefined || rate === undefined || Number(quantityChange) === 0) return 'neutral'
+    if (quantityChange === undefined || price === undefined || Number(quantityChange) === 0) return 'neutral'
     return quantityChange > 0 ? 'success' : 'danger'
-  }, [quantityChange, rate])
+  }, [quantityChange, price])
 
   const pairedBalanceChange = React.useMemo(() => {
-    if (quantityChange === undefined || rate === undefined) return '0.00'
-    return splitBigInt(quantityChange, decimals).bn.times(rate).toFormat(2)
-  }, [decimals, quantityChange, rate])
+    if (quantityChange === undefined || price === undefined) return '0.00'
+    return splitBigInt(quantityChange, decimals).bn.times(price).toFormat(2)
+  }, [decimals, quantityChange, price])
 
   return {
     quantityChange,

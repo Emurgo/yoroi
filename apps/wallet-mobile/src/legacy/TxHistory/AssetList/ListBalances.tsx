@@ -119,7 +119,7 @@ const ExplorableAmount = ({onPress, ...tokenAmountProps}: ExplorableAssetItemPro
   )
 }
 
-const batchSize = 20
+const batchSize = 50
 
 const useStyles = () => {
   const {color, atoms} = useTheme()

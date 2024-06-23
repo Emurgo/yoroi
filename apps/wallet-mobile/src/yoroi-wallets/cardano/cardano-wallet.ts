@@ -23,7 +23,6 @@ import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../kernel/s
 import {makeMemosManager, MemosManager} from '../../legacy/TxHistory/common/memos/memosManager'
 import type {
   AccountStateResponse,
-  CurrencySymbol,
   DefaultAsset,
   FundInfoResponse,
   PoolInfoRequest,
@@ -33,7 +32,6 @@ import type {
   TxStatusRequest,
   TxStatusResponse,
   YoroiEntry,
-  YoroiNftModerationStatus,
 } from '../types'
 import {StakingInfo, YoroiSignedTx, YoroiUnsignedTx} from '../types'
 import {asQuantity, Quantities} from '../utils'
@@ -551,7 +549,10 @@ export const makeCardanoWallet = (
         const absSlotNumber = new BigNumber(getTime(time).absoluteSlot)
         const changeAddr = this.getAddressedChangeAddress(addressMode)
         const addressedUtxos = await this.getAddressedUtxos()
-        const accountState = await legacyApi.getAccountState({addresses: [this.rewardAddressHex]}, BACKEND)
+        const accountState = await legacyApi.getAccountState(
+          {addresses: [this.rewardAddressHex]},
+          networkManager.legacyApiBaseUrl,
+        )
 
         const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} = await this.getProtocolParams()
 
@@ -732,10 +733,13 @@ export const makeCardanoWallet = (
         return Promise.resolve()
       }
 
-      await this.accountManager.discoverAddresses(BACKEND)
+      await this.accountManager.discoverAddresses(networkManager.legacyApiBaseUrl)
       this.generateNewReceiveAddressIfNeeded()
 
-      await Promise.all([this.syncUtxos({isForced}), this.transactionManager.doSync(this.addressesInBlocks, BACKEND)])
+      await Promise.all([
+        this.syncUtxos({isForced}),
+        this.transactionManager.doSync(this.addressesInBlocks, networkManager.legacyApiBaseUrl),
+      ])
     }
 
     async resync() {
@@ -976,7 +980,7 @@ export const makeCardanoWallet = (
     // =================== backend API =================== //
 
     async checkServerStatus() {
-      return legacyApi.checkServerStatus(BACKEND)
+      return legacyApi.checkServerStatus(networkManager.legacyApiBaseUrl)
     }
 
     getProtocolParams() {
@@ -984,7 +988,7 @@ export const makeCardanoWallet = (
     }
 
     async submitTransaction(base64SignedTx: string) {
-      await legacyApi.submitTransaction(base64SignedTx, BACKEND)
+      await legacyApi.submitTransaction(base64SignedTx, networkManager.legacyApiBaseUrl)
     }
 
     private async syncUtxos({isForced = false}: {isForced?: boolean} = {}) {
@@ -1066,11 +1070,11 @@ export const makeCardanoWallet = (
     }
 
     async fetchAccountState(): Promise<AccountStateResponse> {
-      return legacyApi.bulkGetAccountState([this.rewardAddressHex], BACKEND)
+      return legacyApi.bulkGetAccountState([this.rewardAddressHex], networkManager.legacyApiBaseUrl)
     }
 
     async fetchPoolInfo(request: PoolInfoRequest) {
-      return legacyApi.getPoolInfo(request, BACKEND)
+      return legacyApi.getPoolInfo(request, networkManager.legacyApiBaseUrl)
     }
 
     fetchTokenInfo(tokenId: string) {
@@ -1080,24 +1084,15 @@ export const makeCardanoWallet = (
     }
 
     async fetchFundInfo(): Promise<FundInfoResponse> {
-      return legacyApi.getFundInfo(BACKEND, this.isMainnet)
+      return legacyApi.getFundInfo(networkManager.legacyApiBaseUrl, this.isMainnet)
     }
 
     async fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse> {
-      return legacyApi.fetchTxStatus(request, BACKEND)
+      return legacyApi.fetchTxStatus(request, networkManager.legacyApiBaseUrl)
     }
 
     async fetchTipStatus(): Promise<TipStatusResponse> {
-      return legacyApi.getTipStatus(BACKEND)
-    }
-
-    async fetchCurrentPrice(symbol: CurrencySymbol): Promise<number> {
-      return legacyApi.fetchCurrentPrice(symbol, BACKEND)
-    }
-
-    // TODO: caching
-    fetchNftModerationStatus(fingerprint: string): Promise<YoroiNftModerationStatus> {
-      return legacyApi.getNFTModerationStatus(fingerprint, {...BACKEND, mainnet: true})
+      return legacyApi.getTipStatus(networkManager.legacyApiBaseUrl)
     }
 
     private isInitialized = false

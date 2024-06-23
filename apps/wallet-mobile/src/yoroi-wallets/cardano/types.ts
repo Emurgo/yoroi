@@ -21,12 +21,10 @@ import {
   StakingInfo,
   StakingStatus,
   YoroiEntry,
-  YoroiNftModerationStatus,
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../types'
 import type {
-  CurrencySymbol,
   FundInfoResponse,
   RawUtxo,
   TipStatusResponse,
@@ -152,9 +150,6 @@ export interface YoroiWallet {
   generateNewReceiveAddressIfNeeded(): boolean
   getChangeAddress(addressMode: Wallet.AddressMode): string
 
-  // NFTs
-  fetchNftModerationStatus(fingerprint: string): Promise<YoroiNftModerationStatus>
-
   // Balances, TxDetails
   saveMemo(txId: string, memo: string): Promise<void>
   get transactions(): Record<string, TransactionInfo>
@@ -174,9 +169,6 @@ export interface YoroiWallet {
     isConfirmed: boolean
   }
   setCollateralId(collateralId: RawUtxo['utxo_id']): Promise<void>
-
-  // Fiat
-  fetchCurrentPrice(symbol: CurrencySymbol): Promise<number>
 
   // Other
   subscribe: (subscription: WalletSubscription) => Unsubscribe
@@ -238,9 +230,6 @@ const yoroiWalletKeys: Array<keyof YoroiWallet> = [
   'generateNewReceiveAddress',
   'generateNewReceiveAddressIfNeeded',
 
-  // NFTs
-  'fetchNftModerationStatus',
-
   // Sync, Save
   'resync',
   'clear',
@@ -253,9 +242,6 @@ const yoroiWalletKeys: Array<keyof YoroiWallet> = [
   'fetchTipStatus',
   'fetchTxStatus',
   'fetchTokenInfo',
-
-  // Fiat
-  'fetchCurrentPrice',
 
   // Other
   'subscribe',
