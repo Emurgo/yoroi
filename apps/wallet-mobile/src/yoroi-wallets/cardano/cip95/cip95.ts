@@ -1,4 +1,3 @@
-import {governanceApiMaker} from '@yoroi/staking'
 import {Wallet} from '@yoroi/types'
 import {Buffer} from 'buffer'
 
@@ -48,16 +47,9 @@ class CIP95Extension {
 
   private async getStakeKeyStatus() {
     const stakingKey = await this.wallet.getStakingKey()
-
-    const network = this.wallet.networkManager.network
-    const stakingKeyHash = await stakingKey
-      .hash()
-      .then((h) => h.toBytes())
-      .then((bytes) => Buffer.from(bytes).toString('hex'))
-    const api = governanceApiMaker({network})
-    const status = await api.getStakingKeyState(stakingKeyHash)
+    const stakingInfo = await this.wallet.getStakingInfo()
+    const isRegistered = stakingInfo.status !== 'not-registered'
     const hex = await stakingKey.toHex()
-    const isRegistered = !!status.drepDelegation?.tx // TODO: Different API needs to be used to check the status
     return {hex, isRegistered}
   }
 }
