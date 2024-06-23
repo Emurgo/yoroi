@@ -5,7 +5,7 @@ import {Image, ImageSourcePropType, ImageStyle, StyleSheet, Text, View} from 're
 
 import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
 import {CurrencySymbol} from '../../../../../yoroi-wallets/types'
-import {useCurrencyContext} from '../../../../Settings/Currency'
+import {useCurrencyPairing} from '../../../../Settings/Currency'
 import {AssetLogo} from '../../../common/AssetLogo/AssetLogo'
 import {usePortfolio} from '../../../common/PortfolioProvider'
 import {TokenInfoIcon} from '../../../common/TokenAmountItem/TokenInfoIcon'
@@ -28,7 +28,7 @@ export const LiquidityPoolModal = ({tokenInfo, splitTokenSymbol}: Props) => {
   const secondTokenName = infoExtractName(secondToken.info)
 
   const {isPrimaryTokenActive} = usePortfolio()
-  const {currency} = useCurrencyContext()
+  const {currency} = useCurrencyPairing()
   const currencyPaired = isPrimaryTokenActive ? 'ADA' : currency
 
   return (
@@ -109,6 +109,7 @@ const useStyles = () => {
     root: {
       ...atoms.flex_col,
       ...atoms.gap_sm,
+      paddingVertical: 14,
     },
     logoSize: {width: 26, height: 26},
     logoFirst: {

@@ -8,7 +8,7 @@ import WebView from 'react-native-webview'
 import {WebViewNavigation, WebViewNavigationEvent} from 'react-native-webview/lib/WebViewTypes'
 
 import {Icon, Spacer} from '../../../../components'
-import {useSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {TabItem, useBrowser} from '../../common/BrowserProvider'
 import {getDomainFromUrl} from '../../common/helpers'
 import {useConnectWalletToWebView} from '../../common/hooks'
@@ -24,9 +24,8 @@ export type WebViewState = Partial<WebViewNavigation> & Required<Pick<WebViewNav
 type Props = {
   tab: TabItem
   index: number
-  nativeHeight?: number
 }
-export const WebViewItem = ({tab, index, nativeHeight}: Props) => {
+export const WebViewItem = ({tab, index}: Props) => {
   const {styles, colors} = useStyles()
   const webViewRef = React.useRef<WebView>(null)
   const {tabs, updateTab, tabsOpen, openTabs, setTabActive, removeTab, tabActiveIndex} = useBrowser()
@@ -35,14 +34,14 @@ export const WebViewItem = ({tab, index, nativeHeight}: Props) => {
   const isTabActive = index === tabActiveIndex
   const navigationTo = useNavigateTo()
   const insets = useSafeAreaInsets()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
 
   const scaleXWebview = useSharedValue(1)
   const opacityValue = useSharedValue(0)
 
   const {initScript, handleEvent} = useConnectWalletToWebView(wallet, webViewRef)
 
-  const visibleAreaHeight = nativeHeight ?? SCREEN_HEIGHT - insets.top - insets.bottom
+  const visibleAreaHeight = SCREEN_HEIGHT - insets.bottom
 
   const containerStyleAnimated = useAnimatedStyle(() => {
     return {transform: [{scaleX: scaleXWebview.value}]}
@@ -180,7 +179,7 @@ const useStyles = () => {
     },
     domainText: {
       ...atoms.body_2_md_regular,
-      color: color.black_static,
+      color: color.text_gray_normal,
     },
     closeTabPosition: {
       position: 'absolute',

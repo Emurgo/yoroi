@@ -1,18 +1,19 @@
+import {App, HW} from '@yoroi/types'
 import React from 'react'
 import {useIntl} from 'react-intl'
 
 import {Boundary, TwoActionView} from '../../../../components'
-import {walletManager} from '../../../../features/WalletManager/common/walletManager'
+import {useSelectedWallet} from '../../../../features/WalletManager/common/hooks/useSelectedWallet'
+import {useWalletManager} from '../../../../features/WalletManager/context/WalletManagerProvider'
 import {confirmationMessages, txLabels} from '../../../../kernel/i18n/global-messages'
-import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
+import {throwLoggedError} from '../../../../kernel/logger/helpers/throw-logged-error'
 import {useSignWithHwAndSubmitTx} from '../../../../yoroi-wallets/hooks'
-import {DeviceId, DeviceObj, withBLE, withUSB} from '../../../../yoroi-wallets/hw'
+import {withBLE, withUSB} from '../../../../yoroi-wallets/hw'
 import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
 import {LedgerConnect, LedgerTransportSwitch} from '../../../HW'
 import {TransferSummary} from '../TransferSummary'
 
 type Props = {
-  wallet: YoroiWallet
   unsignedTx: YoroiUnsignedTx
   onCancel: () => void
   onSuccess: () => void
@@ -21,7 +22,8 @@ type Props = {
 type TransportType = 'USB' | 'BLE'
 
 export const ConfirmTxWithHW = (props: Props) => {
-  const {wallet} = props
+  const {meta} = useSelectedWallet()
+  const {walletManager} = useWalletManager()
   const [transportType, setTransportType] = React.useState<TransportType>('USB')
   const [step, setStep] = React.useState<'select-transport' | 'connect-transport' | 'confirm'>('select-transport')
 
@@ -30,13 +32,15 @@ export const ConfirmTxWithHW = (props: Props) => {
     setStep('connect-transport')
   }
 
-  const onConnectBLE = async (deviceId: DeviceId) => {
-    await walletManager.updateHWDeviceInfo(wallet, withBLE(wallet, deviceId))
+  const onConnectBLE = (deviceId: string) => {
+    const hwDeviceInfo = withBLE(meta, deviceId)
+    walletManager.updateWalletHWDeviceInfo(meta.id, hwDeviceInfo)
     setStep('confirm')
   }
 
-  const onConnectUSB = async (deviceObj: DeviceObj) => {
-    await walletManager.updateHWDeviceInfo(wallet, withUSB(wallet, deviceObj))
+  const onConnectUSB = (deviceObj: HW.DeviceObj) => {
+    const hwDeviceInfo = withUSB(meta, deviceObj)
+    walletManager.updateWalletHWDeviceInfo(meta.id, hwDeviceInfo)
     setStep('confirm')
   }
 
@@ -62,19 +66,21 @@ export const ConfirmTxWithHW = (props: Props) => {
   )
 }
 
-const Confirm = ({
-  wallet,
-  onSuccess,
-  onCancel,
-  unsignedTx,
-  transport: transportType,
-}: Props & {transport: TransportType}) => {
+const Confirm = ({onSuccess, onCancel, unsignedTx, transport: transportType}: Props & {transport: TransportType}) => {
   const strings = useStrings()
+  const {wallet, meta} = useSelectedWallet()
 
   const {signAndSubmitTx, isLoading} = useSignWithHwAndSubmitTx(
     {wallet}, //
     {signTx: {onSuccess}},
   )
+
+  const handleSignAndSubmitTx = () => {
+    if (meta.hwDeviceInfo == null)
+      throwLoggedError(new App.Errors.InvalidState('ConfirmTxWithHW: HW device info missing'))
+
+    signAndSubmitTx({unsignedTx, useUSB: transportType === 'USB', hwDeviceInfo: meta.hwDeviceInfo})
+  }
 
   return (
     <TwoActionView
@@ -82,7 +88,7 @@ const Confirm = ({
       primaryButton={{
         disabled: isLoading,
         label: strings.confirmButton,
-        onPress: () => signAndSubmitTx({unsignedTx, useUSB: transportType === 'USB'}),
+        onPress: handleSignAndSubmitTx,
       }}
       secondaryButton={{
         disabled: isLoading,

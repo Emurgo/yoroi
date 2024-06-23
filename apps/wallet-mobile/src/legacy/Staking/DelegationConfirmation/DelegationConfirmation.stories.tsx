@@ -3,15 +3,15 @@ import React from 'react'
 import {QueryClient, QueryClientProvider} from 'react-query'
 
 import {RouteProvider} from '../../../../.storybook/decorators'
-import {SelectedWalletProvider} from '../../../features/WalletManager/context/SelectedWalletContext'
 import {StakingCenterRoutes} from '../../../kernel/navigation'
 import {mocks} from '../../../yoroi-wallets/mocks'
+import {WalletManagerProviderMock} from '../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {DelegationConfirmation} from './DelegationConfirmation'
 
 storiesOf('DelegationConfirmation', module)
   .add('Default', () => (
     <QueryClientProvider client={new QueryClient()}>
-      <SelectedWalletProvider
+      <WalletManagerProviderMock
         wallet={{
           ...mocks.wallet,
 
@@ -21,12 +21,12 @@ storiesOf('DelegationConfirmation', module)
         <RouteProvider params={params}>
           <DelegationConfirmation />
         </RouteProvider>
-      </SelectedWalletProvider>
+      </WalletManagerProviderMock>
     </QueryClientProvider>
   ))
   .add('loading', () => (
     <QueryClientProvider client={new QueryClient()}>
-      <SelectedWalletProvider
+      <WalletManagerProviderMock
         wallet={{
           ...mocks.wallet,
 
@@ -36,12 +36,12 @@ storiesOf('DelegationConfirmation', module)
         <RouteProvider params={params}>
           <DelegationConfirmation />
         </RouteProvider>
-      </SelectedWalletProvider>
+      </WalletManagerProviderMock>
     </QueryClientProvider>
   ))
   .add('error', () => (
     <QueryClientProvider client={new QueryClient()}>
-      <SelectedWalletProvider
+      <WalletManagerProviderMock
         wallet={{
           ...mocks.wallet,
 
@@ -51,7 +51,7 @@ storiesOf('DelegationConfirmation', module)
         <RouteProvider params={params}>
           <DelegationConfirmation />
         </RouteProvider>
-      </SelectedWalletProvider>
+      </WalletManagerProviderMock>
     </QueryClientProvider>
   ))
 

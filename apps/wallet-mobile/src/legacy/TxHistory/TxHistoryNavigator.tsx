@@ -50,7 +50,7 @@ import {
 } from '../../features/Swap/useCases'
 import {SelectBuyTokenFromListScreen} from '../../features/Swap/useCases/StartSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
 import {SelectSellTokenFromListScreen} from '../../features/Swap/useCases/StartSwapScreen/CreateOrder/EditSellAmount/SelectSellTokenFromListScreen/SelectSellTokenFromListScreen'
-import {useSelectedWallet} from '../../features/WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {unstoppableApiKey} from '../../kernel/env'
 import {
   BackButton,
@@ -59,7 +59,7 @@ import {
   TxHistoryRoutes,
   useWalletNavigation,
 } from '../../kernel/navigation'
-import {useFrontendFees, useStakingKey, useWalletName} from '../../yoroi-wallets/hooks'
+import {useFrontendFees, useStakingKey} from '../../yoroi-wallets/hooks'
 import {ModalInfo} from './ModalInfo'
 import {TxDetails} from './TxDetails'
 import {TxHistory} from './TxHistory'
@@ -69,8 +69,7 @@ const aggregator: Swap.Aggregator = 'muesliswap'
 const Stack = createStackNavigator<TxHistoryRoutes>()
 export const TxHistoryNavigator = () => {
   const strings = useStrings()
-  const wallet = useSelectedWallet()
-  const walletName = useWalletName(wallet)
+  const {wallet, meta} = useSelectedWallet()
   const storage = useAsyncStorage()
   const {atoms, color} = useTheme()
   const {styles} = useStyles()
@@ -125,13 +124,14 @@ export const TxHistoryNavigator = () => {
   // exchange
   const exchangeManager = React.useMemo(() => {
     const api = exchangeApiMaker({
-      isProduction: wallet.networkId === 1,
+      // TODO: update exchange with isMainnet
+      isProduction: wallet.isMainnet,
       partner: 'yoroi',
     })
 
     const manager = exchangeManagerMaker({api})
     return manager
-  }, [wallet.networkId])
+  }, [wallet.isMainnet])
 
   return (
     <ReceiveProvider key={wallet.id}>
@@ -159,7 +159,7 @@ export const TxHistoryNavigator = () => {
                     name="history-list"
                     component={TxHistory}
                     options={{
-                      title: walletName ?? '',
+                      title: meta.name,
                       headerRight: headerRightHistory,
                       headerStyle: {
                         elevation: 0,
@@ -557,14 +557,14 @@ const SettingsIconButton = (props: TouchableOpacityProps) => {
 }
 
 const HeaderRightHistory = React.memo(() => {
-  const wallet = useSelectedWallet()
+  const {meta} = useSelectedWallet()
   const {navigateToSettings} = useWalletNavigation()
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const {styles, colors} = useStyles()
 
   return (
     <Row style={styles.row}>
-      {!wallet.isReadOnly && (
+      {!meta.isReadOnly && (
         <>
           <CodeScannerButton
             onPress={() => navigation.navigate('scan-start', {insideFeature: 'scan'})}

@@ -10,7 +10,7 @@ import {Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {Spacer} from '../../../components/Spacer'
 import {usePortfolioBalances} from '../../../features/Portfolio/common/hooks/usePortfolioBalances'
 import {TokenAmountItem, TokenAmountItemProps} from '../../../features/Portfolio/common/TokenAmountItem/TokenAmountItem'
-import {useSelectedWallet} from '../../../features/WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
 import globalMessages from '../../../kernel/i18n/global-messages'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {FilterBalancesByType} from './FilterBalancesByType'
@@ -24,8 +24,8 @@ type Props = Partial<ListProps> & {
 export const ListBalances = (props: Props) => {
   const strings = useStrings()
   const styles = useStyles()
-  const wallet = useSelectedWallet()
-  const explorers = useExplorers(wallet.network)
+  const {wallet} = useSelectedWallet()
+  const explorers = useExplorers(wallet.networkManager.network)
   const balances = usePortfolioBalances({wallet})
 
   const [fungibilityFilter, setFungibilityFilter] = React.useState<Portfolio.FungibilityFilter>('all')
@@ -119,7 +119,7 @@ const ExplorableAmount = ({onPress, ...tokenAmountProps}: ExplorableAssetItemPro
   )
 }
 
-const batchSize = 20
+const batchSize = 50
 
 const useStyles = () => {
   const {color, atoms} = useTheme()

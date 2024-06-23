@@ -3,12 +3,12 @@ import * as React from 'react'
 import {ScrollView} from 'react-native'
 
 import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks'
-import {SelectedWalletProvider} from '../../../WalletManager/context/SelectedWalletContext'
+import {WalletManagerProviderMock} from '../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {BrowserProvider} from '../../common/BrowserProvider'
 import {BrowseDappScreen} from './BrowseDappScreen'
 
 storiesOf('Discover BrowseDappScreen', module)
-  .addDecorator((story) => <SelectedWalletProvider wallet={walletMocks.wallet}>{story()}</SelectedWalletProvider>)
+  .addDecorator((story) => <WalletManagerProviderMock wallet={walletMocks.wallet}>{story()}</WalletManagerProviderMock>)
   .add('initial', () => <Initial />)
 
 const Initial = () => {

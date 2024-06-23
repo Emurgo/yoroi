@@ -39,7 +39,14 @@ export const useStrings = () => {
     performance: intl.formatMessage(messages.performance),
     overview: intl.formatMessage(messages.overview),
     transactions: intl.formatMessage(messages.transactions),
-    tokenPriceChangeTooltip: intl.formatMessage(messages.tokenPriceChangeTooltip),
+    tokenPriceChangeTooltip: (timeInterval: string) =>
+      intl.formatMessage(messages.tokenPriceChangeTooltip, {timeInterval}),
+    _1_week: intl.formatMessage(messages._1_week),
+    _24_hours: intl.formatMessage(messages._24_hours),
+    _1_month: intl.formatMessage(messages._1_month),
+    _6_months: intl.formatMessage(messages._6_months),
+    _1_year: intl.formatMessage(messages._1_year),
+    all_time: intl.formatMessage(messages.all_time),
     netInvested: intl.formatMessage(messages.netInvested),
     bought: intl.formatMessage(messages.bought),
     received: intl.formatMessage(messages.received),
@@ -66,6 +73,7 @@ export const useStrings = () => {
     website: intl.formatMessage(messages.website),
     policyID: intl.formatMessage(messages.policyID),
     fingerprint: intl.formatMessage(messages.fingerprint),
+    news: intl.formatMessage(messages.news),
     detailsOn: intl.formatMessage(messages.detailsOn),
     totalPortfolioValue: intl.formatMessage(messages.totalPortfolioValue),
     totalPortfolioValueTooltip: intl.formatMessage(messages.totalPortfolioValueTooltip),
@@ -233,7 +241,31 @@ export const messages = defineMessages({
   },
   tokenPriceChangeTooltip: {
     id: 'portfolio.portfolioTokensDetailScreen.tokenPriceChangeTooltip',
-    defaultMessage: '!!!Token price change \nin 24 hours',
+    defaultMessage: '!!!Token price change \nin {timeInterval}',
+  },
+  _24_hours: {
+    id: 'portfolio.portfolioTokensDetailScreen.24_hours',
+    defaultMessage: '!!!24 hours',
+  },
+  _1_week: {
+    id: 'portfolio.portfolioTokensDetailScreen.1_week',
+    defaultMessage: '!!!1 week',
+  },
+  _1_month: {
+    id: 'portfolio.portfolioTokensDetailScreen.1_month',
+    defaultMessage: '!!!1 month',
+  },
+  _6_months: {
+    id: 'portfolio.portfolioTokensDetailScreen.6_months',
+    defaultMessage: '!!!6 months',
+  },
+  _1_year: {
+    id: 'portfolio.portfolioTokensDetailScreen.1_year',
+    defaultMessage: '!!!1 year',
+  },
+  all_time: {
+    id: 'portfolio.portfolioTokensDetailScreen.all_time',
+    defaultMessage: '!!!all time',
   },
   netInvested: {
     id: 'portfolio.portfolioTokensDetailScreen.netInvested',
@@ -338,6 +370,10 @@ export const messages = defineMessages({
   fingerprint: {
     id: 'portfolio.portfolioTokensDetailScreen.fingerprint',
     defaultMessage: '!!!Fingerprint',
+  },
+  news: {
+    id: 'portfolio.portfolioTokensDetailScreen.news',
+    defaultMessage: '!!!News',
   },
   detailsOn: {
     id: 'portfolio.portfolioTokensDetailScreen.detailsOn',

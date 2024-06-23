@@ -1,7 +1,7 @@
 import {Balance} from '@yoroi/types'
 
 import {nft} from '../mocks'
-import {utf8ToHex} from './api'
+import {utf8ToHex} from './api/utils'
 import {convertNft, getNftFilenameMediaType} from './nfts'
 
 describe('convertNft', () => {

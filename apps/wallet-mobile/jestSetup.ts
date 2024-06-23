@@ -22,7 +22,6 @@ jest.mock('@emurgo/cross-msl-mobile', () => require('@emurgo/cross-msl-nodejs'))
 jest.mock('react-native-keychain', () => ({
   resetGenericPassword: jest.fn(),
 }))
-jest.mock('@emurgo/react-native-blockies-svg', () => {})
 
 jest.mock('react-native-reanimated', () => {
   const Reanimated = require('react-native-reanimated/mock')

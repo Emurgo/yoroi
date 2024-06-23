@@ -126,7 +126,7 @@ storiesOf('WithdrawStakingRewards', module)
       <WithdrawStakingRewards
         {...commonProps}
         wallet={{
-          ...mocks.hwWallet,
+          ...mocks.wallet,
           getStakingInfo: mocks.getStakingInfo.success.registered,
           createWithdrawalTx: mocks.createWithdrawalTx.loading,
         }}
@@ -138,7 +138,7 @@ storiesOf('WithdrawStakingRewards', module)
       <WithdrawStakingRewards
         {...commonProps}
         wallet={{
-          ...mocks.hwWallet,
+          ...mocks.wallet,
           getStakingInfo: mocks.getStakingInfo.success.registered,
           createWithdrawalTx: mocks.createWithdrawalTx.error,
         }}
@@ -151,7 +151,7 @@ storiesOf('WithdrawStakingRewards', module)
       <WithdrawStakingRewards
         {...commonProps}
         wallet={{
-          ...mocks.hwWallet,
+          ...mocks.wallet,
           getStakingInfo: mocks.getStakingInfo.success.registered,
           createWithdrawalTx: mocks.createWithdrawalTx.success,
           signTxWithLedger: mocks.signTxWithLedger.loading,
@@ -164,7 +164,7 @@ storiesOf('WithdrawStakingRewards', module)
       <WithdrawStakingRewards
         {...commonProps}
         wallet={{
-          ...mocks.hwWallet,
+          ...mocks.wallet,
           getStakingInfo: mocks.getStakingInfo.success.registered,
           createWithdrawalTx: mocks.createWithdrawalTx.success,
           signTxWithLedger: mocks.signTxWithLedger.error,
@@ -178,7 +178,7 @@ storiesOf('WithdrawStakingRewards', module)
       <WithdrawStakingRewards
         {...commonProps}
         wallet={{
-          ...mocks.hwWallet,
+          ...mocks.wallet,
           getStakingInfo: mocks.getStakingInfo.success.registered,
           createWithdrawalTx: mocks.createWithdrawalTx.success,
           signTxWithLedger: mocks.signTxWithLedger.success,
@@ -192,7 +192,7 @@ storiesOf('WithdrawStakingRewards', module)
       <WithdrawStakingRewards
         {...commonProps}
         wallet={{
-          ...mocks.hwWallet,
+          ...mocks.wallet,
           getStakingInfo: mocks.getStakingInfo.success.registered,
           createWithdrawalTx: mocks.createWithdrawalTx.success,
           signTxWithLedger: mocks.signTxWithLedger.success,
@@ -207,7 +207,7 @@ storiesOf('WithdrawStakingRewards', module)
       <WithdrawStakingRewards
         {...commonProps}
         wallet={{
-          ...mocks.hwWallet,
+          ...mocks.wallet,
           getStakingInfo: mocks.getStakingInfo.success.registered,
           createWithdrawalTx: mocks.createWithdrawalTx.success,
           signTxWithLedger: mocks.signTxWithLedger.success,
@@ -221,7 +221,7 @@ storiesOf('WithdrawStakingRewards', module)
       <WithdrawStakingRewards
         {...commonProps}
         wallet={{
-          ...mocks.hwWallet,
+          ...mocks.wallet,
           getStakingInfo: async () => ({
             ...mocks.stakingInfo,
             rewards: '0',

@@ -4,7 +4,7 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks'
-import {SelectedWalletProvider} from '../../../WalletManager/context/SelectedWalletContext'
+import {WalletManagerProviderMock} from '../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {mocks} from '../../common/mocks'
 import {SwapFormProvider} from '../../common/SwapFormProvider'
 import {TransactionSummary} from './TransactionSummary'
@@ -34,7 +34,7 @@ storiesOf('TransactionSummary', module) //
 
 const TxSummary = ({calculation}: {calculation: SwapOrderCalculation}) => {
   return (
-    <SelectedWalletProvider wallet={{...walletMocks.wallet}}>
+    <WalletManagerProviderMock wallet={{...walletMocks.wallet}}>
       <SwapProvider
         initialState={{
           ...mockSwapStateDefault,
@@ -49,7 +49,7 @@ const TxSummary = ({calculation}: {calculation: SwapOrderCalculation}) => {
           <TransactionSummary />
         </SwapFormProvider>
       </SwapProvider>
-    </SelectedWalletProvider>
+    </WalletManagerProviderMock>
   )
 }
 

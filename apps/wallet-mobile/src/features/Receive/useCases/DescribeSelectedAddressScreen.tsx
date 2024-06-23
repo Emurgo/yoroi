@@ -1,5 +1,6 @@
 import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
+import {Wallet} from '@yoroi/types'
 import * as React from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -9,8 +10,7 @@ import {Button, Spacer, useModal} from '../../../components'
 import {useCopy} from '../../../hooks/useCopy'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {isEmptyString} from '../../../kernel/utils'
-import {AddressMode} from '../../WalletManager/common/types'
-import {useAddressModeManager} from '../../WalletManager/common/useAddressModeManager'
+import {useAddressMode} from '../../WalletManager/common/hooks/useAddressMode'
 import {AddressDetailCard} from '../common/AddressDetailCard/AddressDetailCard'
 import {useReceive} from '../common/ReceiveProvider'
 import {
@@ -28,7 +28,7 @@ export const DescribeSelectedAddressScreen = () => {
   const {styles, colors} = useStyles()
   const navigateTo = useNavigateTo()
   const {selectedAddress} = useReceive()
-  const {isSingle, addressMode} = useAddressModeManager()
+  const {isSingle, addressMode} = useAddressMode()
   const addresses = useReceiveAddressesStatus(addressMode)
   const isMultipleAddressesUsed = addresses.used.length > 1
   const {isShowingMultipleAddressInfo} = useMultipleAddressesInfo()
@@ -45,7 +45,7 @@ export const DescribeSelectedAddressScreen = () => {
   }
 
   const handleOnModalConfirm = React.useCallback(
-    (method: AddressMode) => {
+    (method: Wallet.AddressMode) => {
       if (method === 'multiple') {
         navigateTo.multipleAddress()
       }

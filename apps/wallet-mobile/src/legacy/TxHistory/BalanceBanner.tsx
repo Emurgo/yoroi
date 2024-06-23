@@ -9,10 +9,10 @@ import {Icon} from '../../components/Icon'
 import {PairedBalance} from '../../components/PairedBalance/PairedBalance'
 import {usePortfolioPrimaryBalance} from '../../features/Portfolio/common/hooks/usePortfolioPrimaryBalance'
 import {usePrivacyMode} from '../../features/Settings/PrivacyMode/PrivacyMode'
-import {useSelectedWallet} from '../../features/WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 
 export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
-  const wallet = useSelectedWallet()
+  const {wallet, meta} = useSelectedWallet()
   const styles = useStyles()
   const primaryBalance = usePortfolioPrimaryBalance({wallet})
   const {togglePrivacyMode} = usePrivacyMode()
@@ -22,7 +22,7 @@ export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
       <Spacer height={14} />
 
       <CenteredRow>
-        <Icon.WalletAccount style={styles.walletIcon} iconSeed={wallet.checksum.ImagePart} scalePx={7} />
+        <Icon.WalletAvatar style={styles.walletIcon} image={meta.avatar} size={40} />
       </CenteredRow>
 
       <Spacer height={10} />

@@ -4,18 +4,18 @@ import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {mocks} from '../../../../yoroi-wallets/mocks'
-import {SelectedWalletProvider} from '../../../WalletManager/context/SelectedWalletContext'
+import {WalletManagerProviderMock} from '../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {SelectProviderFromListScreen} from './SelectProviderFromListScreen'
 
 storiesOf('Exchange SelectProviderFromListScreen', module).add('Default', () => {
   return (
-    <SelectedWalletProvider wallet={mocks.wallet}>
+    <WalletManagerProviderMock wallet={mocks.wallet}>
       <ExchangeProvider manager={successManagerMock} initialState={{...exchangeDefaultState, providerId: 'banxa'}}>
         <View style={styles.container}>
           <SelectProviderFromListScreen />
         </View>
       </ExchangeProvider>
-    </SelectedWalletProvider>
+    </WalletManagerProviderMock>
   )
 })
 

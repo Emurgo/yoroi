@@ -3,9 +3,8 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Image, StyleSheet, View} from 'react-native'
 
-import {features} from '../../features'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
-import {useNft, useNftImageModerated, useTokenInfo} from '../../yoroi-wallets/hooks'
+import {useNft, useTokenInfo} from '../../yoroi-wallets/hooks'
 import {Boundary} from '../Boundary'
 import {Icon} from '../Icon'
 import {ModeratedNftIcon} from './ModeratedNftIcon'
@@ -50,24 +49,7 @@ const PrimaryIcon = ({variant}: PrimaryIconProps) => {
   )
 }
 
-const NftIcon = ({tokenId, wallet}: {tokenId: string; wallet: YoroiWallet}) => {
-  return features.moderatingNftsEnabled ? (
-    <ModeratedIcon wallet={wallet} tokenId={tokenId} />
-  ) : (
-    <UnModeratedNftIcon wallet={wallet} tokenId={tokenId} />
-  )
-}
-
-const ModeratedIcon = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}) => {
-  const nftModeratedImage = useNftImageModerated({wallet, nftId: tokenId})
-  const nft = useNft(wallet, {id: tokenId})
-
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  if (!nftModeratedImage) return <ModeratedNftIcon nft={nft} status="pending" />
-  return <ModeratedNftIcon nft={nft} status={nftModeratedImage.status} />
-}
-
-const UnModeratedNftIcon = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}) => {
+const NftIcon = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}) => {
   const nft = useNft(wallet, {id: tokenId})
   return <ModeratedNftIcon status="approved" nft={nft} />
 }

@@ -6,7 +6,7 @@ import * as React from 'react'
 import {Text} from 'react-native'
 
 import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks'
-import {SelectedWalletProvider} from '../../../WalletManager/context/SelectedWalletContext'
+import {WalletManagerProviderMock} from '../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {ShowBuyBanner} from './ShowBuyBanner'
 
 const thirtyOneDaysInMs = 31 * 24 * 60 * 60 * 1000
@@ -32,35 +32,35 @@ storiesOf('Exchange ShowBuyBanner', module) //
 
 const WithoutBanner = () => {
   return (
-    <SelectedWalletProvider wallet={overThreshold}>
+    <WalletManagerProviderMock wallet={overThreshold}>
       <ExchangeProvider manager={successManagerMock} initialState={{...exchangeDefaultState, providerId: 'banxa'}}>
         <Text>The only thing you should be seeing is this text</Text>
 
         <ShowBuyBanner />
       </ExchangeProvider>
-    </SelectedWalletProvider>
+    </WalletManagerProviderMock>
   )
 }
 const WithSmallBanner = ({text}: {text: string}) => {
   return (
-    <SelectedWalletProvider wallet={smallBanner}>
+    <WalletManagerProviderMock wallet={smallBanner}>
       <ExchangeProvider manager={successManagerMock} initialState={{...exchangeDefaultState, providerId: 'banxa'}}>
         <Text>You should {text} seeing a banner (small)</Text>
 
         <ShowBuyBanner />
       </ExchangeProvider>
-    </SelectedWalletProvider>
+    </WalletManagerProviderMock>
   )
 }
 const WithBigBanner = () => {
   return (
-    <SelectedWalletProvider wallet={bigBanner}>
+    <WalletManagerProviderMock wallet={bigBanner}>
       <ExchangeProvider manager={successManagerMock} initialState={{...exchangeDefaultState, providerId: 'banxa'}}>
         <Text>You should be seeing a banner (big)</Text>
 
         <ShowBuyBanner />
       </ExchangeProvider>
-    </SelectedWalletProvider>
+    </WalletManagerProviderMock>
   )
 }
 

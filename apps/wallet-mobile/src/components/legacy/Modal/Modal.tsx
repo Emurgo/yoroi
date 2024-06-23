@@ -17,7 +17,7 @@ import React from 'react'
 import {Modal as RNModal, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {isEmptyString} from '../../../kernel/utils'
-import {Icon} from '../..'
+import {Cross} from '../../Icon/Cross'
 
 type Props = {
   onRequestClose: () => void
@@ -70,7 +70,7 @@ function ModalClassComponent({
 
           {showCloseIcon && (
             <TouchableOpacity style={styles.close} onPress={onRequestClose}>
-              <Icon.Cross size={26} color={colors.icon} />
+              <Cross size={26} color={colors.icon} />
             </TouchableOpacity>
           )}
 

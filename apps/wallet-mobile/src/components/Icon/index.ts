@@ -120,7 +120,7 @@ import {Twitter} from './Twitter'
 import {Verify} from './Verify'
 import {VyfiSwap} from './VyfiSwap'
 import {Wallet} from './Wallet'
-import {WalletAccount} from './WalletAccount'
+import {WalletAvatar} from './WalletAvatar'
 import {Wallets} from './Wallets'
 import {WalletStack} from './WalletStack'
 import {Warning} from './Warning'
@@ -219,7 +219,7 @@ export const Icon = {
   Twitter,
   Verify,
   Wallet,
-  WalletAccount,
+  WalletAvatar,
   WalletStack,
   Wallets,
   YoroiNightly,

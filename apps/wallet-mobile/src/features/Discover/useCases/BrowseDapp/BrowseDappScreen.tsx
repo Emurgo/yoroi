@@ -1,8 +1,10 @@
+import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {FlatList, StyleSheet, View} from 'react-native'
 
 import {Spacer} from '../../../../components'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useBrowser} from '../../common/BrowserProvider'
 import {BrowserTabsBar} from './BrowserTabsBar'
 import {WebViewItem} from './WebViewItem'
@@ -11,10 +13,16 @@ export const BrowseDappScreen = () => {
   const {styles} = useStyles()
   const flatListRef = React.useRef<FlatList>(null)
   const {tabs, tabsOpen} = useBrowser()
-  const [rootHeight, setRootHeight] = React.useState<number | undefined>(undefined)
+  const {track} = useMetrics()
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.discoverWebViewViewed()
+    }, [track]),
+  )
 
   return (
-    <View style={styles.root} onLayout={(e) => setRootHeight(e.nativeEvent.layout.height)}>
+    <View style={styles.root}>
       <FlatList
         ref={flatListRef}
         style={styles.root}
@@ -25,7 +33,7 @@ export const BrowseDappScreen = () => {
         ItemSeparatorComponent={() => tabsOpen && <Spacer height={16} />}
         keyExtractor={(item) => item.id}
         renderItem={function ({item: tab, index}) {
-          return <WebViewItem tab={tab} index={index} nativeHeight={rootHeight} />
+          return <WebViewItem tab={tab} index={index} />
         }}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}

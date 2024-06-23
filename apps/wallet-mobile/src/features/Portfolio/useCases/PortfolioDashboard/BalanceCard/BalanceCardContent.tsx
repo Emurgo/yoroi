@@ -6,7 +6,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Spacer} from '../../../../../components'
 import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
-import {useCurrencyContext} from '../../../../Settings/Currency'
+import {useCurrencyPairing} from '../../../../Settings/Currency'
 import {usePrivacyMode} from '../../../../Settings/PrivacyMode/PrivacyMode'
 import {PnlTag} from '../../../common/PnlTag/PnlTag'
 import {useGetQuantityChange} from '../../../common/useGetQuantityChange'
@@ -52,7 +52,7 @@ export const BalanceCardContent = ({amount, headerCard, name}: Props) => {
 
         <View style={styles.rowBetween}>
           <TouchableOpacity style={styles.balanceBox} onPress={togglePrivacyMode}>
-            <PairedBalance amount={amount} textStyle={styles.usdBalance} />
+            <PairedBalance amount={amount} textStyle={styles.pairBalance} />
           </TouchableOpacity>
 
           <View style={styles.varyContainer}>
@@ -87,7 +87,7 @@ const Balance = ({amount}: BalanceProps) => {
     <View style={styles.balanceBox}>
       <Text style={[styles.balanceText, styles.textWhite]}>{balance}</Text>
 
-      <Text style={[styles.adaSymbol, styles.textWhite]}>{amount.info.ticker}</Text>
+      <Text style={[styles.symbol, styles.textWhite]}>{amount.info.ticker}</Text>
     </View>
   )
 }
@@ -107,7 +107,7 @@ type PnlPairedChangeProps = {
   pairedBalanceChange: string
 }
 const PnlPairedChange = ({variantPnl, quantityChange, pairedBalanceChange}: PnlPairedChangeProps) => {
-  const {currency} = useCurrencyContext()
+  const {currency} = useCurrencyPairing()
 
   return (
     <PnlTag variant={variantPnl}>
@@ -134,11 +134,11 @@ const useStyles = () => {
       ...atoms.align_baseline,
     },
     balanceText: {
-      ...atoms.heading_1_regular,
+      ...atoms.heading_1_medium,
       ...atoms.font_semibold,
     },
-    adaSymbol: {
-      ...atoms.body_1_lg_regular,
+    symbol: {
+      ...atoms.body_1_lg_medium,
       ...atoms.font_semibold,
     },
     balanceContainer: {
@@ -146,7 +146,7 @@ const useStyles = () => {
       ...atoms.flex_col,
       ...atoms.align_start,
     },
-    usdBalance: {
+    pairBalance: {
       ...atoms.body_2_md_regular,
       color: color.white_static,
     },

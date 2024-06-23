@@ -3,8 +3,8 @@ import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 
 import {TabsGradient} from '../../../common/TabsGradient/Tabs'
+import {portfolioDAppsTabs, TPortfolioDAppsTabs} from '../../../common/types'
 import {useStrings} from '../../../common/useStrings'
-import {portfolioDAppsTabs, TPortfolioDAppsTabs} from './PortfolioDAppsTokenList'
 
 type DAppTabsProps = {
   activeTab: TPortfolioDAppsTabs
@@ -63,9 +63,11 @@ const useStyles = () => {
       ...atoms.rounded_sm,
     },
     tabActive: {
+      color: color.gray_cmax,
       backgroundColor: color.gray_c200,
     },
     tabText: {
+      color: color.el_gray_normal,
       ...atoms.body_1_lg_medium,
       ...atoms.font_semibold,
     },

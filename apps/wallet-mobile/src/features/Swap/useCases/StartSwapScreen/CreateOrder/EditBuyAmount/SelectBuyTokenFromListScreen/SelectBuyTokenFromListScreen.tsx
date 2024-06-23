@@ -15,7 +15,7 @@ import {useBalance, useBalances} from '../../../../../../../yoroi-wallets/hooks'
 import {Amounts} from '../../../../../../../yoroi-wallets/utils'
 import {useSearch, useSearchOnNavBar} from '../../../../../../Search/SearchContext'
 import {NoAssetFoundImage} from '../../../../../../Send/common/NoAssetFoundImage'
-import {useSelectedWallet} from '../../../../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../../../../WalletManager/common/hooks/useSelectedWallet'
 import {Counter} from '../../../../../common/Counter/Counter'
 import {filterBySearch} from '../../../../../common/filterBySearch'
 import {sortTokensByName} from '../../../../../common/helpers'
@@ -67,7 +67,7 @@ export const SelectBuyTokenFromListScreen = () => {
 const TokenList = () => {
   const strings = useStrings()
   const {styles, colors} = useStyles()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {onlyVerifiedTokens} = useSwapTokensOnlyVerified()
   const {search: assetSearchTerm} = useSearch()
   const balances = useBalances(wallet)

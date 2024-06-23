@@ -5,10 +5,8 @@ import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TextStyle} from 'react-native'
 
-import {useCurrencyContext} from '../../features/Settings/Currency'
+import {useCurrencyPairing} from '../../features/Settings/Currency'
 import {usePrivacyMode} from '../../features/Settings/PrivacyMode/PrivacyMode'
-import {useSelectedWallet} from '../../features/WalletManager/context/SelectedWalletContext'
-import {useExchangeRate} from '../../yoroi-wallets/hooks'
 import {CurrencySymbol} from '../../yoroi-wallets/types'
 import {Boundary, ResetError, ResetErrorRef} from '..'
 
@@ -21,7 +19,7 @@ type Props = {
 }
 export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(
   ({amount, textStyle, ignorePrivacy, currency: customCurrencySymbol, isHidePairPrimaryToken = true}, ref) => {
-    const {currency} = useCurrencyContext()
+    const {currency} = useCurrencyPairing()
     const getCurrency = customCurrencySymbol ?? currency
 
     // hide pairing when set to the primary token
@@ -47,10 +45,11 @@ export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(
 
 const Price = ({amount, textStyle, ignorePrivacy, currency}: Props & Required<Pick<Props, 'currency'>>) => {
   const styles = useStyles()
-  const wallet = useSelectedWallet()
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
-  const {config} = useCurrencyContext()
-  const rate = useExchangeRate({wallet, to: currency})
+  const {
+    config,
+    adaPrice: {price: rate},
+  } = useCurrencyPairing()
 
   const price = React.useMemo(() => {
     if (rate == null) return `... ${currency}`

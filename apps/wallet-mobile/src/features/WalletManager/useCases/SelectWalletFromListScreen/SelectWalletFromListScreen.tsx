@@ -1,8 +1,9 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
+import {Wallet} from '@yoroi/types'
 import * as React from 'react'
-import {Linking, RefreshControl, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../../components/Button'
@@ -10,24 +11,20 @@ import {ScrollView, useScrollView} from '../../../../components/ScrollView/Scrol
 import {Space} from '../../../../components/Space/Space'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../kernel/navigation'
-import {useWalletMetas} from '../../../../yoroi-wallets/hooks'
 import {useLinksRequestWallet} from '../../../Links/common/useLinksRequestWallet'
-import {WalletMeta} from '../../common/types'
+import {useWalletMetas} from '../../common/hooks/useWalletMetas'
 import {useStrings} from '../../common/useStrings'
-import {useSetSelectedWallet} from '../../context/SelectedWalletContext'
-import {useSetSelectedWalletMeta} from '../../context/SelectedWalletMetaContext'
-import {useWalletManager} from '../../context/WalletManagerContext'
+import {useWalletManager} from '../../context/WalletManagerProvider'
 import {SupportIllustration} from '../../illustrations/SupportIllustration'
+import {AggregatedBalance} from './AggregatedBalance'
 import {WalletListItem} from './WalletListItem'
 
 export const SelectWalletFromList = () => {
   useLinksRequestWallet()
   const {styles, colors} = useStyles()
-  const walletManager = useWalletManager()
+  const {walletManager} = useWalletManager()
   const {navigateToTxHistory} = useWalletNavigation()
-  const {walletMetas, isFetching, refetch} = useWalletMetas(walletManager, {
-    select: (walletMetas) => walletMetas.sort(byName),
-  })
+  const walletMetas = useWalletMetas()
   const {track} = useMetrics()
   const {isScrollBarShown, setIsScrollBarShown, scrollViewRef} = useScrollView()
   const [showLine, setShowLine] = React.useState(false)
@@ -38,25 +35,19 @@ export const SelectWalletFromList = () => {
     }, [track]),
   )
 
-  const selectWalletMeta = useSetSelectedWalletMeta()
-  const selectWallet = useSetSelectedWallet()
-
   const handleOnSelect = React.useCallback(
-    (walletMeta: WalletMeta) => {
-      selectWalletMeta(walletMeta)
-      const wallet = walletManager.getOpenedWalletById(walletMeta.id)
-      selectWallet(wallet)
+    (walletMeta: Wallet.Meta) => {
       walletManager.setSelectedWalletId(walletMeta.id)
       navigateToTxHistory()
     },
-    [selectWalletMeta, walletManager, selectWallet, navigateToTxHistory],
+    [walletManager, navigateToTxHistory],
   )
 
   const data = React.useMemo(
     () =>
       walletMetas?.map((walletMeta) => (
         <React.Fragment key={walletMeta.id}>
-          <WalletListItem wallet={walletMeta} onPress={handleOnSelect} />
+          <WalletListItem walletMeta={walletMeta} onPress={handleOnSelect} />
 
           <Space height="lg" />
         </React.Fragment>
@@ -66,10 +57,11 @@ export const SelectWalletFromList = () => {
 
   return (
     <SafeAreaView style={styles.safeAreaView} edges={['left', 'right', 'bottom']}>
+      <AggregatedBalance />
+
       <ScrollView
         ref={scrollViewRef}
         style={styles.list}
-        refreshControl={<RefreshControl refreshing={isFetching} onRefresh={refetch} />}
         onScrollBarChange={setIsScrollBarShown}
         onScrollBeginDrag={() => setShowLine(true)}
         onScrollEndDrag={() => setShowLine(false)}
@@ -190,18 +182,4 @@ const useStyles = () => {
   }
 
   return {styles, colors} as const
-}
-
-const byName = (a: {name: string}, b: {name: string}) => {
-  const nameA = a.name.toUpperCase()
-  const nameB = b.name.toUpperCase()
-
-  if (nameA < nameB) {
-    return -1
-  }
-  if (nameA > nameB) {
-    return 1
-  }
-
-  return 0
 }

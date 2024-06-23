@@ -5,9 +5,10 @@ import * as React from 'react'
 import {FlatList, StyleSheet, Text, View} from 'react-native'
 
 import {Spacer} from '../../../../../components'
+import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {makeList} from '../../../../../kernel/utils'
 import {useSearch} from '../../../../Search/SearchContext'
-import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {usePortfolioBalances} from '../../../common/hooks/usePortfolioBalances'
 import {usePortfolioPrimaryBalance} from '../../../common/hooks/usePortfolioPrimaryBalance'
 import {Line} from '../../../common/Line'
@@ -25,7 +26,8 @@ export const PortfolioWalletTokenList = () => {
   const {styles} = useStyles()
   const {search, isSearching} = useSearch()
   const isZeroADABalance = useZeroBalance()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
+  const {track} = useMetrics()
   const balances = usePortfolioBalances({wallet})
   const tokensList = React.useMemo(() => balances.fts ?? [], [balances.fts])
 
@@ -50,6 +52,22 @@ export const PortfolioWalletTokenList = () => {
 
     return tokensList
   }, [isSearching, search, tokensList])
+
+  React.useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout> | undefined
+
+    const sendMetrics = () => {
+      clearTimeout(timeout)
+
+      timeout = setTimeout(() => {
+        track.portfolioTokensListSearchActivated({search_term: search})
+      }, 500) // 0.5s requirement
+    }
+
+    if (isSearching && search.length > 0) sendMetrics()
+
+    return () => clearTimeout(timeout)
+  }, [isSearching, search, track])
 
   const renderFooterList = () => {
     if (tokensLoading) return makeList(6).map((_, index) => <SkeletonItem key={index} />)

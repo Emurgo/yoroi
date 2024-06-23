@@ -6,7 +6,7 @@ import {Text, View} from 'react-native'
 import {QueryProvider} from '../../../../../.storybook/decorators'
 import {Spacer} from '../../../../components'
 import {mocks} from '../../../../yoroi-wallets/mocks'
-import {SelectedWalletProvider} from '../../../WalletManager/context/SelectedWalletContext'
+import {WalletManagerProviderMock} from '../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {TokenAmountItem} from './TokenAmountItem'
 
 const primaryAmount = tokenMocks.primaryETH.balance
@@ -14,7 +14,7 @@ const secondaryAmount = tokenMocks.nftCryptoKitty.balance
 
 storiesOf('TokenAmountItem', module).add('Gallery', () => (
   <QueryProvider>
-    <SelectedWalletProvider wallet={mocks.wallet}>
+    <WalletManagerProviderMock wallet={mocks.wallet}>
       <View style={{flex: 1, justifyContent: 'center', padding: 16}}>
         <Text>Fungible primary token</Text>
 
@@ -26,6 +26,6 @@ storiesOf('TokenAmountItem', module).add('Gallery', () => (
 
         <TokenAmountItem amount={secondaryAmount} style={{backgroundColor: 'white', padding: 16, borderRadius: 8}} />
       </View>
-    </SelectedWalletProvider>
+    </WalletManagerProviderMock>
   </QueryProvider>
 ))

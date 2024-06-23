@@ -79,7 +79,7 @@ const Withdrawals = ({
   withdrawals: NonNullable<YoroiStaking['withdrawals']>
 }) => {
   const strings = useStrings()
-  const explorers = useExplorers(wallet.network)
+  const explorers = useExplorers(wallet.networkManager.network)
 
   const addresses = Entries.toAddresses(withdrawals)
   if (addresses.length < 1) return null
@@ -111,7 +111,7 @@ const Deregistrations = ({
   deregistrations: NonNullable<YoroiStaking['deregistrations']>
 }) => {
   const strings = useStrings()
-  const explorers = useExplorers(wallet.network)
+  const explorers = useExplorers(wallet.networkManager.network)
 
   const refundAmounts = Entries.toAmounts(deregistrations)
   const primaryAmount = Amounts.getAmount(refundAmounts, '')

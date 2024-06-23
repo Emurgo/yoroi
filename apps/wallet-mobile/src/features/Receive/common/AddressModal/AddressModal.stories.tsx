@@ -3,7 +3,7 @@ import React from 'react'
 
 import {WithModalProps} from '../../../../../.storybook/decorators'
 import {mocks} from '../../../../yoroi-wallets/mocks'
-import {SelectedWalletProvider} from '../../../WalletManager/context/SelectedWalletContext'
+import {WalletManagerProviderMock} from '../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {AddressModal} from './AddressModal'
 
 const address =
@@ -11,7 +11,7 @@ const address =
 
 storiesOf('AddressModal', module)
   .add('with path', () => (
-    <SelectedWalletProvider wallet={mocks.wallet}>
+    <WalletManagerProviderMock wallet={mocks.wallet}>
       <WithModalProps>
         {({visible, onRequestClose}) => (
           <AddressModal
@@ -26,14 +26,14 @@ storiesOf('AddressModal', module)
           />
         )}
       </WithModalProps>
-    </SelectedWalletProvider>
+    </WalletManagerProviderMock>
   ))
   .add('without path', () => (
-    <SelectedWalletProvider wallet={{...mocks.wallet}}>
+    <WalletManagerProviderMock wallet={{...mocks.wallet}}>
       <WithModalProps>
         {({visible, onRequestClose}) => (
           <AddressModal address={address} visible={visible} onRequestClose={onRequestClose} />
         )}
       </WithModalProps>
-    </SelectedWalletProvider>
+    </WalletManagerProviderMock>
   ))

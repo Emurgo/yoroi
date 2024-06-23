@@ -17,7 +17,7 @@ import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {YoroiEntry} from '../../../../yoroi-wallets/types'
 import {TokenAmountItem} from '../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
 import {useSearch} from '../../../Search/SearchContext'
-import {useSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo, useOverridePreviousSendTxRoute} from '../../common/navigation'
 import {toYoroiEntry} from '../../common/toYoroiEntry'
 import {AddTokenButton} from './AddToken/AddToken'
@@ -47,9 +47,12 @@ export const ListAmountsToSendScreen = () => {
   const {amounts} = targets[selectedTargetIndex].entry
   const selectedTokensCounter = Object.keys(amounts).length
 
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
+  const {
+    meta: {addressMode},
+  } = useSelectedWallet()
   const {mutate: createUnsignedTx, isLoading} = useMutation({
-    mutationFn: (entries: YoroiEntry[]) => wallet.createUnsignedTx(entries),
+    mutationFn: (entries: YoroiEntry[]) => wallet.createUnsignedTx({entries, addressMode}),
     retry: false,
     useErrorBoundary: true,
   })

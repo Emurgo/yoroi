@@ -5,7 +5,7 @@ import {useModal} from '../../../components'
 import {OpenOrderModal} from '../useCases/PortfolioTokensList/PortfolioDAppsTokenList/OpenOrderModal'
 import {IOpenOrders} from './useGetOpenOrders'
 
-const OPEN_ORDER_MODAL_HEIGHT = 290
+const OPEN_ORDER_MODAL_HEIGHT = 278
 
 export const useShowOpenOrderModal = () => {
   const {openModal, closeModal} = useModal()

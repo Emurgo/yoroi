@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {walletChecksum} from '@emurgo/cip4-js'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -7,7 +8,7 @@ import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
 import {PleaseWaitModal, Spacer} from '../../../components'
 import {features} from '../../../features'
-import {useSelectedWallet} from '../../../features/WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
 import {showErrorDialog} from '../../../kernel/dialogs'
 import {isDev, isNightly} from '../../../kernel/env'
 import {useLanguage} from '../../../kernel/i18n'
@@ -17,7 +18,6 @@ import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {StakingCenterRouteNavigation} from '../../../kernel/navigation'
 import {NETWORKS} from '../../../yoroi-wallets/cardano/networks'
 import {NotEnoughMoneyToSendError} from '../../../yoroi-wallets/cardano/types'
-import {usePlate} from '../../../yoroi-wallets/hooks'
 import {useStakingTx} from '../../Dashboard/StakePoolInfos'
 import {PoolDetailScreen} from '../PoolDetails'
 
@@ -26,9 +26,9 @@ export const StakingCenter = () => {
   const navigation = useNavigation<StakingCenterRouteNavigation>()
 
   const {languageCode} = useLanguage()
-  const wallet = useSelectedWallet()
+  const {wallet, meta} = useSelectedWallet()
   const {track} = useMetrics()
-  const plate = usePlate({networkId: wallet.networkId, publicKeyHex: wallet.publicKeyHex})
+  const plate = walletChecksum(wallet.publicKeyHex)
   useFocusEffect(
     React.useCallback(() => {
       track.stakingCenterPageViewed()
@@ -38,7 +38,7 @@ export const StakingCenter = () => {
   const [selectedPoolId, setSelectedPoolId] = React.useState<string>()
 
   const {isLoading} = useStakingTx(
-    {wallet, poolId: selectedPoolId},
+    {wallet, poolId: selectedPoolId, meta},
     {
       onSuccess: (yoroiUnsignedTx) => {
         if (selectedPoolId == null) return
@@ -83,7 +83,7 @@ export const StakingCenter = () => {
           <WebView
             originWhitelist={['*']}
             androidLayerType="software"
-            source={{uri: prepareStakingURL(languageCode, plate.accountPlate.TextPart)}}
+            source={{uri: prepareStakingURL(languageCode, plate.TextPart)}}
             onMessage={(event) => handleOnMessage(event)}
           />
         </View>

@@ -10,26 +10,21 @@ import {
   TxMetadata as TxMetadataType,
   UnsignedTx as UnsignedTxType,
 } from '@emurgo/yoroi-lib'
-import {Api, App, Balance, Chain, Portfolio} from '@yoroi/types'
+import {Api, App, Balance, HW, Network, Portfolio, Wallet} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 
 import {WalletEncryptedStorage} from '../../kernel/storage/EncryptedStorage'
-import {HWDeviceInfo} from '../hw'
 import {
   AccountStates,
-  NetworkId,
   StakePoolInfoRequest,
   StakePoolInfosAndHistories,
   StakingInfo,
   StakingStatus,
-  WalletImplementationId,
   YoroiEntry,
-  YoroiNftModerationStatus,
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../types'
 import type {
-  CurrencySymbol,
   FundInfoResponse,
   RawUtxo,
   TipStatusResponse,
@@ -39,11 +34,10 @@ import type {
   WalletState,
 } from '../types/other'
 import {DefaultAsset} from '../types/tokens'
-import type {Addresses} from './chain'
+import type {Addresses} from './account-manager/account-manager'
 
 export type WalletEvent =
   | {type: 'initialize'}
-  | {type: 'easy-confirmation'; enabled: boolean}
   | {type: 'transactions'; transactions: Record<string, TransactionInfo>}
   | {type: 'addresses'; addresses: Addresses}
   | {type: 'state'; state: WalletState}
@@ -52,15 +46,6 @@ export type WalletEvent =
 
 export type WalletSubscription = (event: WalletEvent) => void
 export type Unsubscribe = () => void
-
-export type WalletImplementation = {
-  WALLET_IMPLEMENTATION_ID: WalletImplementationId
-  TYPE: 'bip44' | 'cip1852'
-  MNEMONIC_LEN: number
-  DISCOVERY_GAP_SIZE: number
-  DISCOVERY_BLOCK_SIZE: number
-  MAX_GENERATED_UNUSED: number
-}
 
 export type ServerStatus = {
   isServerOk: boolean
@@ -74,34 +59,30 @@ export type Pagination = {
   limit: number
 }
 
-export type YoroiWallet = {
+export interface YoroiWallet {
   id: string
-
   publicKeyHex: string
-  checksum: CardanoTypes.WalletChecksum
-  networkId: NetworkId
-  walletImplementationId: WalletImplementationId
-  isHW: boolean
-  hwDeviceInfo: null | HWDeviceInfo
-  isReadOnly: boolean
   primaryToken: Readonly<DefaultAsset>
   primaryTokenInfo: Readonly<Balance.TokenInfo>
-
-  readonly network: Chain.SupportedNetworks
-  readonly portfolioPrimaryTokenInfo: Portfolio.Token.Info
-  readonly balanceManager: Readonly<Portfolio.Manager.Balance>
+  readonly portfolioPrimaryTokenInfo: Readonly<Portfolio.Token.Info>
 
   // ---------------------------------------------------------------------------------------
   //                     ########## Interface  -  V2 ##########
-  get isMainnet(): boolean
+  // network
+  readonly networkManager: Readonly<Network.Manager>
+  readonly isMainnet: boolean
 
-  // Portfolio
-  balance$: Portfolio.Manager.Balance['observable$']
+  // portfolio
+  readonly balanceManager: Readonly<Portfolio.Manager.Balance>
+  readonly balance$: Readonly<Portfolio.Manager.Balance['observable$']>
   get balances(): ReturnType<Portfolio.Manager.Balance['getBalances']>
   get primaryBalance(): ReturnType<Portfolio.Manager.Balance['getPrimaryBalance']>
   get primaryBreakdown(): ReturnType<Portfolio.Manager.Balance['getPrimaryBreakdown']>
   get isEmpty(): boolean
   get hasOnlyPrimary(): boolean
+
+  // account
+  readonly accountVisual: number
 
   // sync
   resync(): Promise<void>
@@ -115,46 +96,50 @@ export type YoroiWallet = {
   signRawTx(txHex: string, pKeys: CoreTypes.PrivateKey[]): Promise<Uint8Array | undefined>
 
   // Sending
-  createUnsignedTx(entries: YoroiEntry[], metadata?: Array<CardanoTypes.TxMetadata>): Promise<YoroiUnsignedTx>
-  signTxWithLedger(request: YoroiUnsignedTx, useUSB: boolean): Promise<YoroiSignedTx>
+  createUnsignedTx(params: {
+    entries: YoroiEntry[]
+    metadata?: Array<CardanoTypes.TxMetadata>
+    addressMode: Wallet.AddressMode
+  }): Promise<YoroiUnsignedTx>
   signTx(signRequest: YoroiUnsignedTx, rootKey: string): Promise<YoroiSignedTx>
   submitTransaction(signedTx: string): Promise<void>
 
-  // Voting
-  createVotingRegTx(
-    pin: string,
-    supportsCIP36: boolean,
-  ): Promise<{votingRegTx: YoroiUnsignedTx; votingKeyEncrypted: string}>
-  fetchFundInfo(): Promise<FundInfoResponse>
-
-  // CIP36
-  ledgerSupportsCIP36(useUSB: boolean): Promise<boolean>
-
   // Ledger
-  signSwapCancellationWithLedger(cbor: string, useUSB: boolean): Promise<void>
+  signTxWithLedger(request: YoroiUnsignedTx, useUSB: boolean, hwDeviceInfo: HW.DeviceInfo): Promise<YoroiSignedTx>
+  ledgerSupportsCIP36(useUSB: boolean, hwDeviceInfo: HW.DeviceInfo): Promise<boolean>
+  signSwapCancellationWithLedger(cbor: string, useUSB: boolean, hwDeviceInfo: HW.DeviceInfo): Promise<void>
+
+  // Voting
+  createVotingRegTx(params: {
+    pin: string
+    supportsCIP36: boolean
+    addressMode: Wallet.AddressMode
+  }): Promise<{votingRegTx: YoroiUnsignedTx; votingKeyEncrypted: string}>
+  fetchFundInfo(): Promise<FundInfoResponse>
 
   // Staking
   rewardAddressHex: string
-  createDelegationTx(poolRequest: string, valueInAccount: BigNumber): Promise<YoroiUnsignedTx>
-  createWithdrawalTx(shouldDeregister: boolean): Promise<YoroiUnsignedTx>
-  getDelegationStatus(): Promise<StakingStatus>
+  createDelegationTx(params: {
+    poolId: string
+    delegatedAmount: BigNumber
+    addressMode: Wallet.AddressMode
+  }): Promise<YoroiUnsignedTx>
+  createWithdrawalTx(params: {shouldDeregister: boolean; addressMode: Wallet.AddressMode}): Promise<YoroiUnsignedTx>
+  getDelegationStatus(): StakingStatus
   getAllUtxosForKey(): Promise<Array<CardanoTypes.CardanoAddressedUtxo>>
   getStakingInfo: () => Promise<StakingInfo>
   fetchAccountState(): Promise<AccountStates>
   fetchPoolInfo(request: StakePoolInfoRequest): Promise<StakePoolInfosAndHistories>
   getStakingKey: () => Promise<CardanoTypes.PublicKey>
-  createUnsignedGovernanceTx(votingCertificates: CardanoTypes.Certificate[]): Promise<YoroiUnsignedTx>
+  createUnsignedGovernanceTx(params: {
+    addressMode: Wallet.AddressMode
+    votingCertificates: CardanoTypes.Certificate[]
+  }): Promise<YoroiUnsignedTx>
 
   // Password
   encryptedStorage: WalletEncryptedStorage
-  changePassword: (password: string, newPassword: string) => Promise<void>
 
-  // EasyConfirmation
-  isEasyConfirmationEnabled: boolean
-  disableEasyConfirmation(): Promise<void>
-  enableEasyConfirmation(rootKey: string): Promise<void>
-
-  // Addresses
+  // Account -> Addresses
   get externalAddresses(): Addresses
   get internalAddresses(): Addresses
   get isUsedAddressIndex(): Record<string, boolean>
@@ -163,20 +148,17 @@ export type YoroiWallet = {
   canGenerateNewReceiveAddress(): boolean
   generateNewReceiveAddress(): boolean
   generateNewReceiveAddressIfNeeded(): boolean
-
-  // NFTs
-  fetchNftModerationStatus(fingerprint: string): Promise<YoroiNftModerationStatus>
-
-  // Sync, Save
-  save(): Promise<void>
-  saveMemo(txId: string, memo: string): Promise<void>
+  getChangeAddress(addressMode: Wallet.AddressMode): string
 
   // Balances, TxDetails
+  saveMemo(txId: string, memo: string): Promise<void>
   get transactions(): Record<string, TransactionInfo>
   get confirmationCounts(): Record<string, null | number>
   fetchTipStatus(): Promise<TipStatusResponse>
   fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse>
   fetchTokenInfo(tokenId: string): Promise<Balance.TokenInfo>
+
+  // Utxos
   utxos: Array<RawUtxo>
   allUtxos: Array<RawUtxo>
   get collateralId(): string
@@ -188,9 +170,6 @@ export type YoroiWallet = {
   }
   setCollateralId(collateralId: RawUtxo['utxo_id']): Promise<void>
 
-  // Fiat
-  fetchCurrentPrice(symbol: CurrencySymbol): Promise<number>
-
   // Other
   subscribe: (subscription: WalletSubscription) => Unsubscribe
   subscribeOnTxHistoryUpdate(handler: () => void): () => void
@@ -200,8 +179,6 @@ export type YoroiWallet = {
   getFirstPaymentAddress(): Promise<CoreTypes.BaseAddress>
 
   getProtocolParams(): Promise<Api.Cardano.ProtocolParamsResult>
-
-  getChangeAddress(): string
 }
 
 export const isYoroiWallet = (wallet: unknown): wallet is YoroiWallet => {
@@ -211,12 +188,6 @@ export const isYoroiWallet = (wallet: unknown): wallet is YoroiWallet => {
 const yoroiWalletKeys: Array<keyof YoroiWallet> = [
   'id',
   'publicKeyHex',
-  'checksum',
-  'networkId',
-  'walletImplementationId',
-  'isHW',
-  'hwDeviceInfo',
-  'isReadOnly',
   'primaryToken',
   'primaryTokenInfo',
 
@@ -248,12 +219,6 @@ const yoroiWalletKeys: Array<keyof YoroiWallet> = [
 
   // Password
   'encryptedStorage',
-  'changePassword',
-
-  // EasyConfirmation
-  'isEasyConfirmationEnabled',
-  'disableEasyConfirmation',
-  'enableEasyConfirmation',
 
   // Addresses
   'externalAddresses',
@@ -265,13 +230,9 @@ const yoroiWalletKeys: Array<keyof YoroiWallet> = [
   'generateNewReceiveAddress',
   'generateNewReceiveAddressIfNeeded',
 
-  // NFTs
-  'fetchNftModerationStatus',
-
   // Sync, Save
   'resync',
   'clear',
-  'save',
   'sync',
   'saveMemo',
 
@@ -281,9 +242,6 @@ const yoroiWalletKeys: Array<keyof YoroiWallet> = [
   'fetchTipStatus',
   'fetchTxStatus',
   'fetchTokenInfo',
-
-  // Fiat
-  'fetchCurrentPrice',
 
   // Other
   'subscribe',
@@ -321,6 +279,5 @@ export namespace CardanoTypes {
   export type TokenEntry = TokenEntryType
 }
 
-export {legacyWalletChecksum, walletChecksum} from '@emurgo/cip4-js'
 export {RegistrationStatus} from '@emurgo/yoroi-lib'
 export {AssetOverflowError, NoOutputsError, NotEnoughMoneyToSendError} from '@emurgo/yoroi-lib/dist/errors'

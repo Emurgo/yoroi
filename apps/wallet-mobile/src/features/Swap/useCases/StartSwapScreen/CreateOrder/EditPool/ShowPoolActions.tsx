@@ -8,7 +8,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {ExpandableInfoCard, HeaderWrapper, HiddenInfoWrapper, Spacer, useModal} from '../../../../../../components'
 import {useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../../yoroi-wallets/utils'
-import {useSelectedWallet} from '../../../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../../../WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from '../../../../common/navigation'
 import {PoolIcon} from '../../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../../common/strings'
@@ -26,7 +26,7 @@ export const ShowPoolActions = () => {
   const {orderData} = useSwap()
   const {selectedPoolCalculation: calculation, amounts} = orderData
 
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const sellTokenInfo = useTokenInfo({wallet, tokenId: amounts.sell.tokenId})
   const sellTokenName = sellTokenInfo.ticker ?? sellTokenInfo.name
 
@@ -93,7 +93,7 @@ const FeeBreakdown = ({totalFees, orderType}: {totalFees: string; orderType: Swa
 const ShowLimitOrderFeeBreakdown = ({totalFees}: {totalFees: string}) => {
   const strings = useStrings()
   const styles = useStyles()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {openModal} = useModal()
 
   const {orderData} = useSwap()
@@ -168,7 +168,7 @@ const ShowLimitOrderFeeBreakdown = ({totalFees}: {totalFees: string}) => {
 const ShowMarketOrderFeeBreakdown = ({totalFees}: {totalFees: string}) => {
   const strings = useStrings()
   const styles = useStyles()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {openModal} = useModal()
   const bold = useBold()
 

@@ -9,7 +9,7 @@ export const useCopy = () => {
   useEffect(() => {
     const isCopying = !!text
 
-    let timeout: NodeJS.Timeout | undefined
+    let timeout: ReturnType<typeof setTimeout> | undefined
     if (isCopying) {
       Clipboard.setString(text)
       timeout = setTimeout(() => setText(''), MESSAGE_TIMEOUT)

@@ -10,7 +10,7 @@ import {Spacer} from '../../../../../components'
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils'
-import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from '../../navigation'
 import {PoolIcon} from '../../PoolIcon/PoolIcon'
 import {useStrings} from '../../strings'
@@ -23,7 +23,7 @@ type Props = {
 }
 export const SelectPoolFromList = ({pools = []}: Props) => {
   const strings = useStrings()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {selectedPoolChanged, orderData} = useSwap()
   const {poolTouched} = useSwapForm()
   const [selectedCardIndex, setSelectedCardIndex] = useState(orderData.selectedPoolId)

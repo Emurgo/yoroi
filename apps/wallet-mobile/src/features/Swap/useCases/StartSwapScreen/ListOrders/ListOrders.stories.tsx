@@ -4,8 +4,8 @@ import React from 'react'
 
 import {QueryProvider} from '../../../../../../.storybook/decorators'
 import {mocks} from '../../../../../yoroi-wallets/mocks/wallet'
+import {WalletManagerProviderMock} from '../../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {SearchProvider} from '../../../../Search/SearchContext'
-import {SelectedWalletProvider} from '../../../../WalletManager/context/SelectedWalletContext'
 import {SwapFormProvider} from '../../../common/SwapFormProvider'
 import {ListOrders} from './ListOrders'
 
@@ -13,7 +13,7 @@ storiesOf('Swap List orders', module)
   .add('Default', () => {
     return (
       <QueryProvider>
-        <SelectedWalletProvider wallet={mocks.wallet}>
+        <WalletManagerProviderMock wallet={mocks.wallet}>
           <SearchProvider>
             <SwapProvider swapManager={mockSwapManager}>
               <SwapFormProvider>
@@ -21,14 +21,14 @@ storiesOf('Swap List orders', module)
               </SwapFormProvider>
             </SwapProvider>
           </SearchProvider>
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryProvider>
     )
   })
   .add('Loading', () => {
     return (
       <QueryProvider>
-        <SelectedWalletProvider wallet={mocks.wallet}>
+        <WalletManagerProviderMock wallet={mocks.wallet}>
           <SearchProvider>
             <SwapProvider
               swapManager={{
@@ -48,7 +48,7 @@ storiesOf('Swap List orders', module)
               </SwapFormProvider>
             </SwapProvider>
           </SearchProvider>
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryProvider>
     )
   })

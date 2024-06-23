@@ -77,7 +77,6 @@ export const defaultStackNavigationOptions = (atoms: Atoms, color: ThemedPalette
     headerRightContainerStyle: {
       ...atoms.pr_sm,
     },
-    cardStyle: {backgroundColor: 'white'},
     headerLeft: (props) => <BackButton {...props} />,
   }
 }
@@ -293,6 +292,7 @@ export type Portfolio2Routes = {
   'portfolio-tokens-list': undefined
   'portfolio-token-details': {id: Portfolio.Token.Info['id']}
   nfts: undefined
+  history: NavigatorScreenParams<TxHistoryRoutes>
 }
 
 export type PortfolioTokenListTabRoutes = {

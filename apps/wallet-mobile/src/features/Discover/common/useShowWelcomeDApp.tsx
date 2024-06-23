@@ -2,14 +2,14 @@ import {isBoolean, useAsyncStorage} from '@yoroi/common'
 import * as React from 'react'
 import {useMutation, UseMutationOptions, useQuery, UseQueryOptions} from 'react-query'
 
-import {useSelectedWallet} from '../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 
 const storageRootDAppExplorer = 'dapp-explorer'
 const storageDAppWelcome = 'dapp-explorer-welcome-dialog'
 const isShowWelcomeDAppKey = 'isShowWelcomeDApp'
 
 const useSetShowWelcomeDApp = (options?: UseMutationOptions<void, Error, boolean>) => {
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const storage = useAsyncStorage()
   const dAppExplorerStorage = storage.join(`wallet/${wallet.id}/${storageRootDAppExplorer}/`)
 
@@ -22,7 +22,7 @@ const useSetShowWelcomeDApp = (options?: UseMutationOptions<void, Error, boolean
 }
 
 const useShowedWelcomeDApp = (options?: UseQueryOptions<boolean, Error, boolean>) => {
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const storage = useAsyncStorage()
   const dAppExplorerStorage = storage.join(`wallet/${wallet.id}/${storageRootDAppExplorer}/`)
 

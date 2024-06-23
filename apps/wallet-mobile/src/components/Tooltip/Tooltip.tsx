@@ -61,8 +61,8 @@ const Tooltip = ({
     tooltip: {},
     measured: false,
   })
-  const showTooltipTimer = React.useRef<NodeJS.Timeout[]>([])
-  const hideTooltipTimer = React.useRef<NodeJS.Timeout[]>([])
+  const showTooltipTimer = React.useRef<ReturnType<typeof setTimeout>[]>([])
+  const hideTooltipTimer = React.useRef<ReturnType<typeof setTimeout>[]>([])
   const childrenWrapperRef = React.useRef() as React.MutableRefObject<View>
   const touched = React.useRef(false)
 
@@ -116,7 +116,7 @@ const Tooltip = ({
     const id = setTimeout(() => {
       setVisible(false)
       setMeasurement({children: {}, tooltip: {}, measured: false})
-    }, leaveTouchDelay) as unknown as NodeJS.Timeout
+    }, leaveTouchDelay) as unknown as ReturnType<typeof setTimeout>
     hideTooltipTimer.current.push(id)
   }
 
