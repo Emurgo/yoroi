@@ -23,7 +23,6 @@ export const SearchDappInBrowserScreen = () => {
   const {updateTab, tabs, tabActiveIndex} = useBrowser()
   const tabActive = tabs[tabActiveIndex]
   const [searchValue, setSearchValue] = React.useState('')
-
   const isFocused = useIsFocused()
   const googleItem = getGoogleSearchItem(searchValue)
 

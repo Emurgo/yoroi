@@ -4,6 +4,7 @@ import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Button, Icon, Spacer, useModal} from '../../../components'
+import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {getDappFallbackLogo} from './helpers'
 import {useStrings} from './useStrings'
 
@@ -19,6 +20,7 @@ export const confirmConnectionModalHeight = 400
 export const useOpenConfirmConnectionModal = () => {
   const {openModal, closeModal} = useModal()
   const strings = useStrings()
+  const {track} = useMetrics()
   const open = React.useCallback(
     (props: Props & {onClose: () => void}) => {
       openModal(
@@ -28,6 +30,7 @@ export const useOpenConfirmConnectionModal = () => {
           website={props.website}
           logo={props.logo}
           onConfirm={() => {
+            track.discoverWebViewBottomSheetConnectClicked()
             props.onConfirm()
             closeModal()
           }}
@@ -36,7 +39,7 @@ export const useOpenConfirmConnectionModal = () => {
         props.onClose,
       )
     },
-    [openModal, closeModal, strings.confirmConnectionModalTitle],
+    [openModal, strings.confirmConnectionModalTitle, track, closeModal],
   )
   return {openConfirmConnectionModal: open, closeModal}
 }

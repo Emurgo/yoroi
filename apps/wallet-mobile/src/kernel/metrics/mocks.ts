@@ -84,6 +84,23 @@ export const mockMetricsManager = (): MetricsManager => {
     portfolioTokenDetails: e,
     portfolioTokensListPageViewed: e,
     portfolioTokensListSearchActivated: e,
+
+    discoverConnectedBottomSheetDisconnectClicked: e,
+    discoverConnectedBottomSheetOpenDAppClicked: e,
+    discoverConnectedDAppItemClicked: e,
+    discoverDAppItemClicked: e,
+    discoverFilterSelected: e,
+    discoverPageViewed: e,
+    discoverSearchActivated: e,
+    discoverWebViewBottomSheetConnectClicked: e,
+    discoverWebViewCloseClicked: e,
+    discoverWebViewTabBarBackwardClicked: e,
+    discoverWebViewTabBarForwardClicked: e,
+    discoverWebViewTabBarRefreshClicked: e,
+    discoverWebViewTabBarShareClicked: e,
+    discoverWebViewTabClicked: e,
+    discoverWebViewToolbarSearchActivated: e,
+    discoverWebViewViewed: e,
   } as const
 
   return {

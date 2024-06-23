@@ -22,7 +22,7 @@ export const useCountdown = () => {
   const [countdown, setCountdown] = useState(5)
 
   useEffect(() => {
-    let timeout: NodeJS.Timeout
+    let timeout: ReturnType<typeof setTimeout>
     if (countdown > 0) {
       timeout = setTimeout(() => setCountdown(countdown - 1), time.oneSecond)
     }

@@ -173,6 +173,26 @@ export const makeMetricsManager = (
     portfolioTokenDetails: metricsModule.portfolioTokenDetails.bind(metricsModule),
     portfolioTokensListPageViewed: metricsModule.portfolioTokensListPageViewed.bind(metricsModule),
     portfolioTokensListSearchActivated: metricsModule.portfolioTokensListSearchActivated.bind(metricsModule),
+
+    discoverConnectedBottomSheetDisconnectClicked:
+      metricsModule.discoverConnectedBottomSheetDisconnectClicked.bind(metricsModule),
+    discoverConnectedBottomSheetOpenDAppClicked:
+      metricsModule.discoverConnectedBottomSheetOpenDAppClicked.bind(metricsModule),
+    discoverConnectedDAppItemClicked: metricsModule.discoverConnectedDAppItemClicked.bind(metricsModule),
+    discoverDAppItemClicked: metricsModule.discoverDAppItemClicked.bind(metricsModule),
+    discoverFilterSelected: metricsModule.discoverFilterSelected.bind(metricsModule),
+    discoverPageViewed: metricsModule.discoverPageViewed.bind(metricsModule),
+    discoverSearchActivated: metricsModule.discoverSearchActivated.bind(metricsModule),
+    discoverWebViewBottomSheetConnectClicked:
+      metricsModule.discoverWebViewBottomSheetConnectClicked.bind(metricsModule),
+    discoverWebViewCloseClicked: metricsModule.discoverWebViewCloseClicked.bind(metricsModule),
+    discoverWebViewTabBarBackwardClicked: metricsModule.discoverWebViewTabBarBackwardClicked.bind(metricsModule),
+    discoverWebViewTabBarForwardClicked: metricsModule.discoverWebViewTabBarForwardClicked.bind(metricsModule),
+    discoverWebViewTabBarRefreshClicked: metricsModule.discoverWebViewTabBarRefreshClicked.bind(metricsModule),
+    discoverWebViewTabBarShareClicked: metricsModule.discoverWebViewTabBarShareClicked.bind(metricsModule),
+    discoverWebViewTabClicked: metricsModule.discoverWebViewTabClicked.bind(metricsModule),
+    discoverWebViewToolbarSearchActivated: metricsModule.discoverWebViewToolbarSearchActivated.bind(metricsModule),
+    discoverWebViewViewed: metricsModule.discoverWebViewViewed.bind(metricsModule),
   } as const
 
   return {

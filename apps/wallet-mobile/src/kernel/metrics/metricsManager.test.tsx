@@ -120,6 +120,23 @@ const mockAmpli = {
   portfolioTokenDetails: jest.fn(),
   portfolioTokensListPageViewed: jest.fn(),
   portfolioTokensListSearchActivated: jest.fn(),
+
+  discoverConnectedBottomSheetDisconnectClicked: jest.fn(),
+  discoverConnectedBottomSheetOpenDAppClicked: jest.fn(),
+  discoverConnectedDAppItemClicked: jest.fn(),
+  discoverDAppItemClicked: jest.fn(),
+  discoverFilterSelected: jest.fn(),
+  discoverPageViewed: jest.fn(),
+  discoverSearchActivated: jest.fn(),
+  discoverWebViewBottomSheetConnectClicked: jest.fn(),
+  discoverWebViewCloseClicked: jest.fn(),
+  discoverWebViewTabBarBackwardClicked: jest.fn(),
+  discoverWebViewTabBarForwardClicked: jest.fn(),
+  discoverWebViewTabBarRefreshClicked: jest.fn(),
+  discoverWebViewTabBarShareClicked: jest.fn(),
+  discoverWebViewTabClicked: jest.fn(),
+  discoverWebViewToolbarSearchActivated: jest.fn(),
+  discoverWebViewViewed: jest.fn(),
 } as unknown as Ampli
 
 const mockMetricsStorage = {
@@ -258,6 +275,27 @@ describe('makeMetricsManager', () => {
     metricsManager.track.portfolioTokensListPageViewed({tokens_tab: 'Dapps Token'})
     metricsManager.track.portfolioTokensListSearchActivated({search_term: 'token'})
 
+    metricsManager.track.discoverConnectedBottomSheetDisconnectClicked()
+    metricsManager.track.discoverConnectedBottomSheetOpenDAppClicked()
+    metricsManager.track.discoverConnectedDAppItemClicked()
+    metricsManager.track.discoverDAppItemClicked()
+    metricsManager.track.discoverFilterSelected({dapp_filter: 'Investment'})
+    metricsManager.track.discoverFilterSelected({dapp_filter: 'Media'})
+    metricsManager.track.discoverFilterSelected({dapp_filter: 'Trading'})
+    metricsManager.track.discoverFilterSelected({dapp_filter: 'NFT'})
+    metricsManager.track.discoverFilterSelected({dapp_filter: 'Community'})
+    metricsManager.track.discoverPageViewed()
+    metricsManager.track.discoverSearchActivated({search_term: 'random'})
+    metricsManager.track.discoverWebViewBottomSheetConnectClicked()
+    metricsManager.track.discoverWebViewCloseClicked()
+    metricsManager.track.discoverWebViewTabBarBackwardClicked()
+    metricsManager.track.discoverWebViewTabBarForwardClicked()
+    metricsManager.track.discoverWebViewTabBarRefreshClicked()
+    metricsManager.track.discoverWebViewTabBarShareClicked()
+    metricsManager.track.discoverWebViewTabClicked()
+    metricsManager.track.discoverWebViewToolbarSearchActivated({search_term: 'random'})
+    metricsManager.track.discoverWebViewViewed()
+
     expect(mockAmpli.nftGalleryDetailsTab).toHaveBeenCalledWith({nft_tab: 'Metadata'})
     expect(mockAmpli.nftGalleryPageViewed).toHaveBeenCalledWith({nft_count: 10})
     expect(mockAmpli.nftGallerySearchActivated).toHaveBeenCalledWith({nft_search_term: 'test', nft_count: 10})
@@ -355,6 +393,27 @@ describe('makeMetricsManager', () => {
     expect(mockAmpli.portfolioTokensListPageViewed).toHaveBeenCalledWith({tokens_tab: 'Wallet Token'})
     expect(mockAmpli.portfolioTokensListPageViewed).toHaveBeenCalledWith({tokens_tab: 'Dapps Token'})
     expect(mockAmpli.portfolioTokensListSearchActivated).toHaveBeenCalledWith({search_term: 'token'})
+
+    expect(mockAmpli.discoverConnectedBottomSheetDisconnectClicked).toHaveBeenCalled()
+    expect(mockAmpli.discoverConnectedBottomSheetOpenDAppClicked).toHaveBeenCalled()
+    expect(mockAmpli.discoverConnectedDAppItemClicked).toHaveBeenCalled()
+    expect(mockAmpli.discoverDAppItemClicked).toHaveBeenCalled()
+    expect(mockAmpli.discoverFilterSelected).toHaveBeenCalledWith({dapp_filter: 'Investment'})
+    expect(mockAmpli.discoverFilterSelected).toHaveBeenCalledWith({dapp_filter: 'Media'})
+    expect(mockAmpli.discoverFilterSelected).toHaveBeenCalledWith({dapp_filter: 'Trading'})
+    expect(mockAmpli.discoverFilterSelected).toHaveBeenCalledWith({dapp_filter: 'NFT'})
+    expect(mockAmpli.discoverFilterSelected).toHaveBeenCalledWith({dapp_filter: 'Community'})
+    expect(mockAmpli.discoverPageViewed).toHaveBeenCalled()
+    expect(mockAmpli.discoverSearchActivated).toHaveBeenCalledWith({search_term: 'random'})
+    expect(mockAmpli.discoverWebViewBottomSheetConnectClicked).toHaveBeenCalled()
+    expect(mockAmpli.discoverWebViewCloseClicked).toHaveBeenCalled()
+    expect(mockAmpli.discoverWebViewTabBarBackwardClicked).toHaveBeenCalled()
+    expect(mockAmpli.discoverWebViewTabBarForwardClicked).toHaveBeenCalled()
+    expect(mockAmpli.discoverWebViewTabBarRefreshClicked).toHaveBeenCalled()
+    expect(mockAmpli.discoverWebViewTabBarShareClicked).toHaveBeenCalled()
+    expect(mockAmpli.discoverWebViewTabClicked).toHaveBeenCalled()
+    expect(mockAmpli.discoverWebViewToolbarSearchActivated).toHaveBeenCalledWith({search_term: 'random'})
+    expect(mockAmpli.discoverWebViewViewed).toHaveBeenCalled()
   })
 
   test('enable should set metrics enabled to true', async () => {
