@@ -4,8 +4,9 @@ import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
-import {from, map, scan, switchMap} from 'rxjs'
+import {merge, switchMap} from 'rxjs'
 
+import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {BalanceCardContent} from '../../../Portfolio/useCases/PortfolioDashboard/BalanceCard/BalanceCardContent'
 import {BalanceCardSkeleton} from '../../../Portfolio/useCases/PortfolioDashboard/BalanceCard/BalanceCardSkeleton'
 import {BalanceHeaderCard} from '../../../Portfolio/useCases/PortfolioDashboard/BalanceCard/BalanceHeaderCard'
@@ -19,23 +20,23 @@ export const AggregatedBalance = () => {
   const {
     networkManager: {primaryTokenInfo},
   } = useSelectedNetwork()
-  const aggregatedPtBalances = useAggregatedPtBalances()
+  const aggregatedBalances = useAggregatedBalances()
 
   const name = infoExtractName(primaryTokenInfo)
   const price = useCurrencyPairing().adaPrice.price
 
-  const amount = aggregatedPtBalances?.[primaryTokenInfo.id] ?? {
+  const amount = aggregatedBalances?.[primaryTokenInfo.id] ?? {
     info: primaryTokenInfo,
     quantity: 0n,
   }
-  const isFetching = price == null || aggregatedPtBalances == null
+  const isFetching = price == null || aggregatedBalances == null
 
   return (
     <View style={styles.root}>
       {isFetching ? (
         <BalanceCardSkeleton />
       ) : (
-        <LinearGradient style={styles.gradientRoot} colors={colors.gradientColor}>
+        <LinearGradient style={styles.gradientRoot} colors={colors.gradient}>
           <BalanceCardContent
             amount={amount}
             name={name}
@@ -47,31 +48,39 @@ export const AggregatedBalance = () => {
   )
 }
 
-const useAggregatedPtBalances = () => {
+const useAggregatedBalances = () => {
   const {walletManager} = useWalletManager()
   const [aggregatedBalances, setAggregatedBalances] = React.useState<Portfolio.Token.AmountRecords | null>(null)
 
   React.useEffect(() => {
-    const subscription = walletManager.walletMetas$
-      .pipe(
-        map((walletMetas) => Array.from(walletMetas.keys())),
-        switchMap((walletIds) => from(walletIds)),
-        map((walletId) => walletManager.getWalletById(walletId)),
-        scan((acc: Portfolio.Token.AmountRecords, wallet) => {
-          if (wallet?.primaryBalance) {
-            const balanceId = wallet.primaryBalance.info.id
-            if (acc[balanceId] != null) {
-              acc[balanceId].quantity += wallet.primaryBalance.quantity
+    const subscription = merge(
+      walletManager.walletMetas$.pipe(
+        switchMap(() => {
+          const wallets = Array.from(walletManager.walletMetas.values())
+            .map((meta) => walletManager.getWalletById(meta.id))
+            .filter((wallet): wallet is YoroiWallet => wallet != null)
+
+          return merge(...wallets.map((wallet) => wallet.balance$))
+        }),
+      ),
+      walletManager.walletMetas$,
+    ).subscribe(() => {
+      const aggregatedBalances = Array.from(walletManager.walletMetas.values())
+        .map((meta) => walletManager.getWalletById(meta.id))
+        .filter((wallet): wallet is YoroiWallet => wallet != null)
+        .reduce((amounts: Portfolio.Token.AmountRecords, wallet) => {
+          for (const balance of wallet.balances.records.values()) {
+            if (amounts[balance.info.id] != null) {
+              amounts[balance.info.id].quantity += balance.quantity
             } else {
-              acc[balanceId] = {...wallet.primaryBalance}
+              amounts[balance.info.id] = {...balance}
             }
           }
-          return acc
-        }, {}),
-      )
-      .subscribe((aggregatedAmounts) => {
-        setAggregatedBalances(aggregatedAmounts)
-      })
+          return amounts
+        }, {})
+
+      setAggregatedBalances(aggregatedBalances)
+    })
 
     return () => subscription.unsubscribe()
   }, [walletManager])
@@ -92,7 +101,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    gradientColor: color.bg_gradient_3,
+    gradient: color.bg_gradient_3,
     white: color.white_static,
   }
 

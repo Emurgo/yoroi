@@ -3,7 +3,6 @@ import React from 'react'
 import {useMutation, UseMutationOptions, useQuery, useQueryClient} from 'react-query'
 
 import {configCurrencies, supportedCurrencies} from '../../../kernel/constants'
-import {isEmptyString} from '../../../kernel/utils'
 import {useAdaPrice} from '../../../yoroi-wallets/cardano/useAdaPrice'
 import {ConfigCurrencies, CurrencySymbol} from '../../../yoroi-wallets/types'
 
@@ -12,7 +11,6 @@ export const CurrencyProvider = ({children}: {children: React.ReactNode}) => {
   const currency = useCurrency()
   const selectCurrency = useSaveCurrency()
   const adaPrice = useAdaPrice({to: currency})
-
   const value = React.useMemo(
     () => ({
       currency,
@@ -48,12 +46,9 @@ const useCurrency = () => {
 
       return defaultCurrency
     },
-    suspense: true,
   })
 
-  if (isEmptyString(query.data)) throw new Error('Invalid state')
-
-  return query.data
+  return query.data ?? defaultCurrency
 }
 
 const useSaveCurrency = ({onSuccess, ...options}: UseMutationOptions<void, Error, CurrencySymbol> = {}) => {

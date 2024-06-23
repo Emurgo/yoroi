@@ -48,9 +48,9 @@ const Yoroi = () => {
       <ThemeProvider storage={themeStorage}>
         <ErrorBoundary>
           <MetricsProvider metricsManager={metricsManager}>
-            <CurrencyProvider>
-              <WalletManagerProvider walletManager={walletManager}>
-                <QueryClientProvider client={queryInfo.queryClient}>
+            <QueryClientProvider client={queryInfo.queryClient}>
+              <CurrencyProvider>
+                <WalletManagerProvider walletManager={walletManager}>
                   <LoadingBoundary style={StyleSheet.absoluteFill}>
                     <LanguageProvider>
                       <AuthProvider>
@@ -64,9 +64,9 @@ const Yoroi = () => {
                       </AuthProvider>
                     </LanguageProvider>
                   </LoadingBoundary>
-                </QueryClientProvider>
-              </WalletManagerProvider>
-            </CurrencyProvider>
+                </WalletManagerProvider>
+              </CurrencyProvider>
+            </QueryClientProvider>
           </MetricsProvider>
         </ErrorBoundary>
       </ThemeProvider>
