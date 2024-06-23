@@ -57,7 +57,7 @@ class CIP95Extension {
     const api = governanceApiMaker({network})
     const status = await api.getStakingKeyState(stakingKeyHash)
     const hex = await stakingKey.toHex()
-    const isRegistered = !!status.drepDelegation?.tx
+    const isRegistered = !!status.drepDelegation?.tx // TODO: Different API needs to be used to check the status
     return {hex, isRegistered}
   }
 }
