@@ -1,4 +1,3 @@
-import {App} from '@yoroi/types'
 import {useQuery, UseQueryOptions} from 'react-query'
 
 import {time} from '../../kernel/constants'
@@ -8,7 +7,6 @@ import fetchDefault from './api/fetch'
 
 export const useAdaPrice = ({to, options}: {to: CurrencySymbol; options?: UseQueryOptions<Price, Error>}) => {
   const query = useQuery({
-    suspense: true,
     staleTime: time.oneMinute,
     cacheTime: time.fiveMinutes,
     retryDelay: time.oneSecond,
@@ -30,7 +28,11 @@ export const useAdaPrice = ({to, options}: {to: CurrencySymbol; options?: UseQue
     },
   })
 
-  if (query.data == null) throw new App.Errors.InvalidState('useAdaPrice: invalid state')
+  if (query.data == null)
+    return {
+      price: 0,
+      time: 0,
+    }
 
   return query.data
 }
