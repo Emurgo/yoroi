@@ -3,7 +3,6 @@ import * as React from 'react'
 import {Dimensions, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import Animated, {Easing, useAnimatedStyle, useSharedValue, withTiming} from 'react-native-reanimated'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import WebView from 'react-native-webview'
 import {WebViewNavigation, WebViewNavigationEvent} from 'react-native-webview/lib/WebViewTypes'
 
@@ -17,7 +16,6 @@ import {BrowserTabBar} from './BrowserTabBar'
 import {BrowserToolbar} from './BrowserToolbar'
 
 const SCREEN_WIDTH = Dimensions.get('window').width
-const SCREEN_HEIGHT = Dimensions.get('window').height
 
 export type WebViewState = Partial<WebViewNavigation> & Required<Pick<WebViewNavigation, 'url'>>
 
@@ -33,15 +31,12 @@ export const WebViewItem = ({tab, index}: Props) => {
   const {domainName} = getDomainFromUrl(webURL)
   const isTabActive = index === tabActiveIndex
   const navigationTo = useNavigateTo()
-  const insets = useSafeAreaInsets()
   const {wallet} = useSelectedWallet()
 
   const scaleXWebview = useSharedValue(1)
   const opacityValue = useSharedValue(0)
 
   const {initScript, handleEvent} = useConnectWalletToWebView(wallet, webViewRef)
-
-  const visibleAreaHeight = SCREEN_HEIGHT - insets.bottom
 
   const containerStyleAnimated = useAnimatedStyle(() => {
     return {transform: [{scaleX: scaleXWebview.value}]}
@@ -101,7 +96,7 @@ export const WebViewItem = ({tab, index}: Props) => {
         style={[
           containerStyleAnimated,
           {width: SCREEN_WIDTH},
-          tabsOpen ? {height: 'auto'} : {height: isTabActive ? visibleAreaHeight : 0},
+          tabsOpen ? styles.heightAuto : {height: isTabActive ? '100%' : 0},
         ]}
       >
         <Animated.View
@@ -185,6 +180,9 @@ const useStyles = () => {
       position: 'absolute',
       top: 8,
       right: 8,
+    },
+    heightAuto: {
+      height: 'auto',
     },
   })
 
