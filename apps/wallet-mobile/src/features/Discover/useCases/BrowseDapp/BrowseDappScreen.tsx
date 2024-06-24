@@ -26,6 +26,7 @@ export const BrowseDappScreen = () => {
       <FlatList
         ref={flatListRef}
         style={styles.root}
+        contentContainerStyle={styles.listContainer}
         data={tabs}
         pagingEnabled={false}
         ListHeaderComponent={() => tabsOpen && <Spacer height={16} />}
@@ -46,12 +47,15 @@ export const BrowseDappScreen = () => {
 }
 
 const useStyles = () => {
-  const {color} = useTheme()
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
     root: {
-      flex: 1,
+      ...atoms.flex_1,
       backgroundColor: color.gray_cmin,
+    },
+    listContainer: {
+      ...atoms.flex_grow,
     },
   })
 
