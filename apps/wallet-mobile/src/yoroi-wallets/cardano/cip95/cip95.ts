@@ -35,11 +35,12 @@ class CIP95Extension {
       const implementationConfig = cardanoConfig.implementations[this.meta.implementation]
       const baseDerivations = implementationConfig.derivations.base
 
-      return await Promise.resolve(accountPubKey)
-        .then((key) => key.derive(baseDerivations.roles.drep))
+      const rawKey = await accountPubKey
+        .derive(baseDerivations.roles.drep)
         .then((key) => key.derive(0))
         .then((key) => key.toRawKey())
-        .then((key) => key.toHex())
+
+      return rawKey.toHex()
     } finally {
       release()
     }
