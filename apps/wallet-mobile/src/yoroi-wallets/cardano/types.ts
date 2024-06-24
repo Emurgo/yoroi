@@ -90,6 +90,12 @@ export interface YoroiWallet {
   sync(params: {isForced?: boolean}): Promise<void>
   // ---------------------------------------------------------------------------------------
 
+  get receiveAddressInfo(): Readonly<{
+    lastUsedIndexVisual: number
+    lastUsedIndex: number
+    canIncrease: boolean
+  }>
+
   // API
   api: App.Api
 
@@ -143,11 +149,8 @@ export interface YoroiWallet {
   get externalAddresses(): Addresses
   get internalAddresses(): Addresses
   get isUsedAddressIndex(): Record<string, boolean>
-  get numReceiveAddresses(): number
   get receiveAddresses(): Addresses
-  canGenerateNewReceiveAddress(): boolean
   generateNewReceiveAddress(): boolean
-  generateNewReceiveAddressIfNeeded(): boolean
   getChangeAddress(addressMode: Wallet.AddressMode): string
 
   // Balances, TxDetails
@@ -224,11 +227,8 @@ const yoroiWalletKeys: Array<keyof YoroiWallet> = [
   'externalAddresses',
   'internalAddresses',
   'isUsedAddressIndex',
-  'numReceiveAddresses',
   'receiveAddresses',
-  'canGenerateNewReceiveAddress',
   'generateNewReceiveAddress',
-  'generateNewReceiveAddressIfNeeded',
 
   // Sync, Save
   'resync',
