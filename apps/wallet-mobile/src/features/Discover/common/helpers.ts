@@ -3,7 +3,7 @@ import {DappConnector} from '@yoroi/dapp-connector'
 import {App, Wallet} from '@yoroi/types'
 
 import {cip30ExtensionMaker} from '../../../yoroi-wallets/cardano/cip30/cip30'
-import {cip95ExtensionMaker} from '../../../yoroi-wallets/cardano/cip95/cip95'
+import {cip95ExtensionMaker, supportsCIP95} from '../../../yoroi-wallets/cardano/cip95/cip95'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 
 export const validUrl = (url: string) => {
@@ -71,7 +71,22 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
   const {wallet, meta, appStorage, confirmConnection, signTx, signData} = options
   const api = dappConnectorApiMaker()
   const cip30 = cip30ExtensionMaker(wallet, meta)
-  const cip95 = cip95ExtensionMaker(wallet, meta)
+  const cip95 = supportsCIP95(meta.implementation) ? cip95ExtensionMaker(wallet, meta) : null
+
+  console.log('supportsCIP95', supportsCIP95(meta.implementation))
+
+  const cip95handler = cip95
+    ? {
+        signData: async (address: string, payload: string) => {
+          const rootKey = await signData(address, payload)
+          return cip95.signData(rootKey, address, payload)
+        },
+        getPubDRepKey: () => cip95.getPubDRepKey(),
+        getRegisteredPubStakeKeys: () => cip95.getRegisteredPubStakeKeys(),
+        getUnregisteredPubStakeKeys: () => cip95.getUnregisteredPubStakeKeys(),
+      }
+    : undefined
+
   const handlerWallet: ResolverWallet = {
     id: wallet.id,
     networkId: wallet.networkManager.chainId,
@@ -99,15 +114,7 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
       const signedTx = await wallet.signTx(unsignedTx, rootKey)
       return cip30.sendReorganisationTx(signedTx)
     },
-    cip95: {
-      signData: async (address, payload) => {
-        const rootKey = await signData(address, payload)
-        return cip95.signData(rootKey, address, payload)
-      },
-      getPubDRepKey: () => cip95.getPubDRepKey(),
-      getRegisteredPubStakeKeys: () => cip95.getRegisteredPubStakeKeys(),
-      getUnregisteredPubStakeKeys: () => cip95.getUnregisteredPubStakeKeys(),
-    },
+    cip95: cip95handler,
   }
   const storage = connectionStorageMaker({storage: appStorage.join('dapp-connections/')})
   const manager = dappConnectorMaker(storage, handlerWallet, api)

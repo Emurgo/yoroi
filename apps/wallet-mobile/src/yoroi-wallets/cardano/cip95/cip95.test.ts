@@ -3,6 +3,10 @@ import {getMasterKeyFromMnemonic} from '../mnemonic/mnemonic'
 import {cip95ExtensionMaker} from './cip95'
 
 describe('cip95ExtensionMaker', () => {
+  it('should throw an error for unsupported wallet implementation', async () => {
+    expect(() => cip95ExtensionMaker(mocks.wallet, {...mocks.walletMeta, implementation: 'cardano-bip44'})).toThrow()
+  })
+
   it('should support signData', async () => {
     const rootKey = await getMasterKeyFromMnemonic(mnemonic)
     const message = 'whatever'

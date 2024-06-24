@@ -455,36 +455,75 @@ describe('DappConnector', () => {
   })
 
   describe('CIP-95', () => {
-    it('should throw an error on getPubDRepKey', async () => {
-      const dappConnector = await initDappConnectorWithConnection()
+    it('should respond with drep key', async () => {
+      const dappConnector = await initDappConnectorWithConnection({
+        ...mockWallet,
+        cip95: {
+          ...mockWallet.cip95!,
+          getPubDRepKey: () => Promise.resolve('00'),
+        },
+      })
       const sendMessage = jest.fn()
       await dappConnector.handleEvent(createEvent('api.cip95.getPubDRepKey'), trustedUrl, sendMessage)
-      expect(sendMessage).toHaveBeenCalledWith('1', null, new Error('Not implemented'))
+      expect(sendMessage).toHaveBeenCalledWith('1', '00')
     })
 
-    it('should throw an error on getUnregisteredPubStakeKeys', async () => {
-      const dappConnector = await initDappConnectorWithConnection()
+    it('should throw an error on getPubDRepKey if CIP95 is not supported', async () => {
+      const dappConnector = await initDappConnectorWithConnection({...mockWallet, cip95: undefined})
+      const sendMessage = jest.fn()
+      await dappConnector.handleEvent(createEvent('api.cip95.getPubDRepKey'), trustedUrl, sendMessage)
+      expect(sendMessage).toHaveBeenCalledWith('1', null, new Error('CIP95 is not supported'))
+    })
+
+    it('should respond with unregistered pub stake keys', async () => {
+      const dappConnector = await initDappConnectorWithConnection({
+        ...mockWallet,
+        cip95: {
+          ...mockWallet.cip95!,
+          getUnregisteredPubStakeKeys: () => Promise.resolve(['00']),
+        },
+      })
       const sendMessage = jest.fn()
       await dappConnector.handleEvent(createEvent('api.cip95.getUnregisteredPubStakeKeys'), trustedUrl, sendMessage)
-      expect(sendMessage).toHaveBeenCalledWith('1', null, new Error('Not implemented'))
+      expect(sendMessage).toHaveBeenCalledWith('1', ['00'])
     })
 
-    it('should throw an error on getRegisteredPubStakeKeys', async () => {
-      const dappConnector = await initDappConnectorWithConnection()
+    it('should throw an error on getUnregisteredPubStakeKeys if CIP95 is not supported', async () => {
+      const dappConnector = await initDappConnectorWithConnection({...mockWallet, cip95: undefined})
+      const sendMessage = jest.fn()
+      await dappConnector.handleEvent(createEvent('api.cip95.getUnregisteredPubStakeKeys'), trustedUrl, sendMessage)
+      expect(sendMessage).toHaveBeenCalledWith('1', null, new Error('CIP95 is not supported'))
+    })
+
+    it('should respond with registered pub stake keys', async () => {
+      const dappConnector = await initDappConnectorWithConnection({
+        ...mockWallet,
+        cip95: {
+          ...mockWallet.cip95!,
+          getRegisteredPubStakeKeys: () => Promise.resolve(['00']),
+        },
+      })
       const sendMessage = jest.fn()
       await dappConnector.handleEvent(createEvent('api.cip95.getRegisteredPubStakeKeys'), trustedUrl, sendMessage)
-      expect(sendMessage).toHaveBeenCalledWith('1', null, new Error('Not implemented'))
+      expect(sendMessage).toHaveBeenCalledWith('1', ['00'])
     })
 
-    it('should throw an error on signData if params are invalid', async () => {
-      const dappConnector = await initDappConnectorWithConnection()
+    it('should throw an error on getRegisteredPubStakeKeys if CIP95 is not supported', async () => {
+      const dappConnector = await initDappConnectorWithConnection({...mockWallet, cip95: undefined})
       const sendMessage = jest.fn()
-      await dappConnector.handleEvent(createEvent('api.cip95.signData'), trustedUrl, sendMessage)
-      expect(sendMessage).toHaveBeenCalledWith('1', null, new Error('Invalid params'))
+      await dappConnector.handleEvent(createEvent('api.cip95.getRegisteredPubStakeKeys'), trustedUrl, sendMessage)
+      expect(sendMessage).toHaveBeenCalledWith('1', null, new Error('CIP95 is not supported'))
     })
 
-    it('should throw an error on signData', async () => {
-      const dappConnector = await initDappConnectorWithConnection()
+    it('should respond with signed data', async () => {
+      const result = {key: '00', signature: '00'}
+      const dappConnector = await initDappConnectorWithConnection({
+        ...mockWallet,
+        cip95: {
+          ...mockWallet.cip95!,
+          signData: () => Promise.resolve(result),
+        },
+      })
       const sendMessage = jest.fn()
       await dappConnector.handleEvent(
         createEvent('api.cip95.signData', {
@@ -496,7 +535,30 @@ describe('DappConnector', () => {
         trustedUrl,
         sendMessage,
       )
-      expect(sendMessage).toHaveBeenCalledWith('1', null, new Error('Not implemented'))
+      expect(sendMessage).toHaveBeenCalledWith('1', result)
+    })
+
+    it('should throw an error on signData if params are invalid', async () => {
+      const dappConnector = await initDappConnectorWithConnection()
+      const sendMessage = jest.fn()
+      await dappConnector.handleEvent(createEvent('api.cip95.signData'), trustedUrl, sendMessage)
+      expect(sendMessage).toHaveBeenCalledWith('1', null, new Error('Invalid params'))
+    })
+
+    it('should throw an error on signData if CIP95 is not supported', async () => {
+      const dappConnector = await initDappConnectorWithConnection({...mockWallet, cip95: undefined})
+      const sendMessage = jest.fn()
+      await dappConnector.handleEvent(
+        createEvent('api.cip95.signData', {
+          args: [
+            'addr1qxxvt9rzpdxxysmqp50d7f5a3gdescgrejsu7zsdxqjy8yun4cngaq46gr8c9qyz4td9ddajzqhjnrqvfh0gspzv9xnsmq6nqx',
+            'CBOR',
+          ],
+        }),
+        trustedUrl,
+        sendMessage,
+      )
+      expect(sendMessage).toHaveBeenCalledWith('1', null, new Error('CIP95 is not supported'))
     })
   })
 
@@ -508,8 +570,8 @@ describe('DappConnector', () => {
   })
 })
 
-const initDappConnectorWithConnection = async () => {
-  const dappConnector = getDappConnector()
+const initDappConnectorWithConnection = async (wallet?: ResolverWallet) => {
+  const dappConnector = getDappConnector(wallet)
   await dappConnector.addConnection({walletId, dappOrigin: 'https://yoroi-wallet.com'})
   return dappConnector
 }

@@ -1,4 +1,5 @@
 import {Wallet} from '@yoroi/types'
+import {WalletImplementation} from '@yoroi/types/lib/typescript/wallet/wallet'
 import {Buffer} from 'buffer'
 
 import {cip30ExtensionMaker} from '../cip30/cip30'
@@ -10,8 +11,14 @@ export const cip95ExtensionMaker = (wallet: YoroiWallet, meta: Wallet.Meta) => {
   return new CIP95Extension(wallet, meta)
 }
 
+export const supportsCIP95 = (implementation: WalletImplementation): implementation is 'cardano-cip1852' => {
+  return implementation === 'cardano-cip1852'
+}
+
 class CIP95Extension {
-  constructor(private wallet: YoroiWallet, private meta: Wallet.Meta) {}
+  constructor(private wallet: YoroiWallet, private meta: Wallet.Meta) {
+    if (!supportsCIP95(meta.implementation)) throw new Error('CIP95Extension: Unsupported wallet implementation')
+  }
 
   async signData(rootKey: string, address: string, payload: string) {
     const cip30 = cip30ExtensionMaker(this.wallet, this.meta)
@@ -30,11 +37,12 @@ class CIP95Extension {
 
   async getPubDRepKey(): Promise<string> {
     const {csl, release} = wrappedCsl()
+    const walletImplementation = this.meta.implementation
+    if (!supportsCIP95(walletImplementation)) throw new Error('CIP95Extension: Unsupported wallet implementation')
+
     try {
       const accountPubKey = await csl.Bip32PublicKey.fromBytes(Buffer.from(this.wallet.publicKeyHex, 'hex'))
-      const walletImplementation = this.meta.implementation
-      if (walletImplementation !== 'cardano-cip1852')
-        throw new Error('CIP95Extension: Unsupported wallet implementation')
+
       const implementationConfig = cardanoConfig.implementations[walletImplementation]
       const baseDerivations = implementationConfig.derivations.base
 

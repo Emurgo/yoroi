@@ -138,7 +138,10 @@ export const resolver: Resolver = {
     getExtensions: async (_params: unknown, context: Context) => {
       assertOriginsMatch(context)
       await assertWalletAcceptedConnection(context)
-      return context.supportedExtensions
+      return context.supportedExtensions.filter(({cip}) => {
+        if (cip === 95) return supportsCIP95(context)
+        return true
+      })
     },
     getBalance: async (params: unknown, context: Context) => {
       assertOriginsMatch(context)
@@ -194,21 +197,25 @@ export const resolver: Resolver = {
       getPubDRepKey: async (_params: unknown, context: Context) => {
         assertOriginsMatch(context)
         await assertWalletAcceptedConnection(context)
+        if (!supportsCIP95(context)) throw new Error('CIP95 is not supported')
         return context.wallet.cip95.getPubDRepKey()
       },
       getRegisteredPubStakeKeys: async (_params: unknown, context: Context) => {
         assertOriginsMatch(context)
         await assertWalletAcceptedConnection(context)
+        if (!supportsCIP95(context)) throw new Error('CIP95 is not supported')
         return context.wallet.cip95.getRegisteredPubStakeKeys()
       },
       getUnregisteredPubStakeKeys: async (_params: unknown, context: Context) => {
         assertOriginsMatch(context)
         await assertWalletAcceptedConnection(context)
+        if (!supportsCIP95(context)) throw new Error('CIP95 is not supported')
         return context.wallet.cip95.getUnregisteredPubStakeKeys()
       },
       signData: async (params: unknown, context: Context) => {
         assertOriginsMatch(context)
         await assertWalletAcceptedConnection(context)
+        if (!supportsCIP95(context)) throw new Error('CIP95 is not supported')
         const address =
           isRecord(params) &&
           isKeyOf('args', params) &&
@@ -245,6 +252,12 @@ const assertWalletAcceptedConnection = async (context: Context) => {
   if (!(await hasWalletAcceptedConnection(context))) {
     throw new Error(`Wallet ${context.wallet.id} has not accepted the connection to ${context.trustedOrigin}`)
   }
+}
+
+const supportsCIP95 = (
+  context: Context,
+): context is Context & {wallet: ResolverWallet & {cip95: CIP95ResolverWallet}} => {
+  return context.wallet.cip95 !== undefined
 }
 
 const hasWalletAcceptedConnection = async (context: Context) => {
@@ -331,12 +344,14 @@ export type ResolverWallet = {
   signTx: (txHex: string, partialSign?: boolean) => Promise<TransactionWitnessSet>
   signData: (address: string, payload: string) => Promise<{signature: string; key: string}>
   sendReorganisationTx: () => Promise<TransactionUnspentOutput>
-  cip95: {
-    getPubDRepKey: () => Promise<string>
-    getRegisteredPubStakeKeys: () => Promise<string[]>
-    getUnregisteredPubStakeKeys: () => Promise<string[]>
-    signData: (address: string, payload: string) => Promise<{signature: string; key: string}>
-  }
+  cip95?: CIP95ResolverWallet
+}
+
+type CIP95ResolverWallet = {
+  getPubDRepKey: () => Promise<string>
+  getRegisteredPubStakeKeys: () => Promise<string[]>
+  getUnregisteredPubStakeKeys: () => Promise<string[]>
+  signData: (address: string, payload: string) => Promise<{signature: string; key: string}>
 }
 
 type Pagination = {
