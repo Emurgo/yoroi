@@ -32,7 +32,10 @@ class CIP95Extension {
     const {csl, release} = wrappedCsl()
     try {
       const accountPubKey = await csl.Bip32PublicKey.fromBytes(Buffer.from(this.wallet.publicKeyHex, 'hex'))
-      const implementationConfig = cardanoConfig.implementations[this.meta.implementation]
+      const walletImplementation = this.meta.implementation
+      if (walletImplementation !== 'cardano-cip1852')
+        throw new Error('CIP95Extension: Unsupported wallet implementation')
+      const implementationConfig = cardanoConfig.implementations[walletImplementation]
       const baseDerivations = implementationConfig.derivations.base
 
       const rawKey = await accountPubKey
