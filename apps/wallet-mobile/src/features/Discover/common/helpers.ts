@@ -73,8 +73,6 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
   const cip30 = cip30ExtensionMaker(wallet, meta)
   const cip95 = supportsCIP95(meta.implementation) ? cip95ExtensionMaker(wallet, meta) : null
 
-  console.log('supportsCIP95', supportsCIP95(meta.implementation))
-
   const cip95handler = cip95
     ? {
         signData: async (address: string, payload: string) => {
