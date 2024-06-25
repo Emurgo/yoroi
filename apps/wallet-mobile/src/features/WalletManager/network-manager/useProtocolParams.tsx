@@ -1,5 +1,5 @@
+import {useQuery, UseQueryOptions} from '@tanstack/react-query'
 import {Api} from '@yoroi/types'
-import {useQuery, UseQueryOptions} from 'react-query'
 
 import {time} from '../../../kernel/constants'
 import {queryInfo} from '../../../kernel/query-client'

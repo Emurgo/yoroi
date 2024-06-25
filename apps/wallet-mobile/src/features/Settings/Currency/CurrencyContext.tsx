@@ -1,6 +1,6 @@
+import {useMutation, UseMutationOptions, useQuery, useQueryClient} from '@tanstack/react-query'
 import {parseSafe, useAsyncStorage} from '@yoroi/common'
 import React from 'react'
-import {useMutation, UseMutationOptions, useQuery, useQueryClient} from 'react-query'
 
 import {configCurrencies, supportedCurrencies} from '../../../kernel/constants'
 import {useAdaPrice} from '../../../yoroi-wallets/cardano/useAdaPrice'
@@ -58,7 +58,7 @@ const useSaveCurrency = ({onSuccess, ...options}: UseMutationOptions<void, Error
   const mutation = useMutation({
     mutationFn: (currencySymbol) => storage.join('appSettings/').setItem('currencySymbol', currencySymbol),
     onSuccess: (data, variables, context) => {
-      queryClient.invalidateQueries('currencySymbol')
+      queryClient.invalidateQueries(['currencySymbol'])
       onSuccess?.(data, variables, context)
     },
     ...options,

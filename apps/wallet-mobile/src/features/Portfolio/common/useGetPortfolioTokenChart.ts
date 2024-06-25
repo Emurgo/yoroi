@@ -1,4 +1,4 @@
-import {useQuery, UseQueryOptions} from 'react-query'
+import {useQuery, UseQueryOptions} from '@tanstack/react-query'
 
 export const TOKEN_CHART_TIME_INTERVAL = {
   HOUR: '24 H',

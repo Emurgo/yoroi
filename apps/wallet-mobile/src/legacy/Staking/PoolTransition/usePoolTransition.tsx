@@ -1,11 +1,11 @@
 import {init} from '@emurgo/cross-csl-mobile'
 import {PoolInfoApi} from '@emurgo/yoroi-lib'
 import {useNavigation} from '@react-navigation/native'
+import {useQuery} from '@tanstack/react-query'
 import {Wallet} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {useQuery} from 'react-query'
 
 import {features} from '../../../features'
 import {useSelectedNetwork} from '../../../features/WalletManager/common/hooks/useSelectedNetwork'

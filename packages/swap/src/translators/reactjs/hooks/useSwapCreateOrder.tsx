@@ -1,5 +1,5 @@
 import {Swap} from '@yoroi/types'
-import {UseMutationOptions} from 'react-query'
+import {UseMutationOptions} from '@tanstack/react-query'
 import {useMutationWithInvalidations} from '@yoroi/common'
 
 import {useSwap} from './useSwap'

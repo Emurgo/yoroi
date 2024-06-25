@@ -1,4 +1,4 @@
-import {QueryClient} from 'react-query'
+import {QueryClient} from '@tanstack/react-query'
 
 export const queryClientFixture = () =>
   new QueryClient({
@@ -9,6 +9,7 @@ export const queryClientFixture = () =>
       },
       mutations: {
         retry: false,
+        cacheTime: 0,
       },
     },
   })
