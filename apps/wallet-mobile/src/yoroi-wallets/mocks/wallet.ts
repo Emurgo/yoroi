@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import {action} from '@storybook/addon-actions'
-import {AppApi, CardanoApi} from '@yoroi/api'
+import {AppApi} from '@yoroi/api'
 import {createPrimaryTokenInfo} from '@yoroi/portfolio'
 import {Balance, Portfolio, Wallet} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
@@ -264,12 +264,9 @@ const wallet: YoroiWallet = {
   resync: async (...args: unknown[]) => {
     action('resync')(...args)
   },
-  getProtocolParams: CardanoApi.mockCardanoApi.getProtocolParams,
-
   fetchFundInfo: () => {
     throw new Error('not implemented: fetchFundInfo')
   },
-
   createUnsignedGovernanceTx: () => {
     throw new Error('not implemented: createUnsignedGovernanceTx')
   },

@@ -147,7 +147,7 @@ export type ApiTokenIdentity = {
   nameHex: string
 }
 
-export type ApiProtocolParamsResult = Readonly<{
+export type ApiProtocolParams = Readonly<{
   coinsPerUtxoByte: string
   keyDeposit: string
   linearFee: {

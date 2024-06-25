@@ -4,7 +4,7 @@ import {Certificate} from '@emurgo/cross-csl-core'
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
 import {mountMMKVStorage, observableStorageMaker, parseBoolean, useMutationWithInvalidations} from '@yoroi/common'
 import {themeStorageMaker} from '@yoroi/theme'
-import {Api, App, Balance, HW, Wallet} from '@yoroi/types'
+import {App, Balance, HW, Wallet} from '@yoroi/types'
 import {Buffer} from 'buffer'
 import * as React from 'react'
 import {useCallback, useMemo} from 'react'
@@ -502,28 +502,6 @@ export const useFrontendFees = (
   return {
     ...query,
     frontendFees: query.data,
-  }
-}
-
-export const useProtocolParams = (
-  wallet: YoroiWallet,
-  options?: UseQueryOptions<
-    Api.Cardano.ProtocolParamsResult,
-    Error,
-    Api.Cardano.ProtocolParamsResult,
-    [string, 'protocol-params']
-  >,
-) => {
-  const query = useQuery({
-    suspense: true,
-    queryKey: [wallet.id, 'protocol-params'],
-    ...options,
-    queryFn: () => wallet.getProtocolParams(),
-  })
-
-  return {
-    ...query,
-    protocolParams: query.data,
   }
 }
 

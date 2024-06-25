@@ -1,8 +1,10 @@
+import {CardanoApi} from '@yoroi/api'
 import {mountAsyncStorage, mountMMKVStorage, observableStorageMaker} from '@yoroi/common'
 import {createPrimaryTokenInfo} from '@yoroi/portfolio'
 import {Chain, Network} from '@yoroi/types'
 import {freeze} from 'immer'
 
+import {logger} from '../../../kernel/logger/logger'
 import {NetworkTokenManagers} from '../common/types'
 
 export const primaryTokenInfoMainnet = createPrimaryTokenInfo({
@@ -66,6 +68,16 @@ export const shelleyPreprodEraConfig: Readonly<Network.EraConfig> = freeze(
   true,
 )
 
+export const protocolParamsPlaceholder = freeze({
+  linearFee: {
+    constant: '155381',
+    coefficient: '44',
+  },
+  coinsPerUtxoByte: '4310',
+  poolDeposit: '500000000',
+  keyDeposit: '2000000',
+})
+
 const networkConfigs: Readonly<Record<Chain.SupportedNetworks, Readonly<Network.Config>>> = freeze({
   [Chain.Network.Mainnet]: {
     network: Chain.Network.Mainnet,
@@ -118,26 +130,35 @@ export function buildNetworkManagers({
   tokenManagers: NetworkTokenManagers
 }): Readonly<Record<Chain.SupportedNetworks, Network.Manager>> {
   // TODO: receive and attach the explorers here as well
-  return freeze(
-    Object.entries(networkConfigs).reduce<Record<Chain.SupportedNetworks, Network.Manager>>(
-      (networkManagers, [network, config]) => {
-        const tokenManager = tokenManagers[network as Chain.SupportedNetworks]
-        const networkRootStorage = mountMMKVStorage({path: `/`, id: `${network}.manager.v1`})
-        const rootStorage = observableStorageMaker(networkRootStorage)
-        const legacyRootStorage = observableStorageMaker(mountAsyncStorage({path: `/legacy/${network}/v1/`}))
-        const networkManager: Network.Manager = {
-          ...config,
-          tokenManager,
-          rootStorage,
-          // NOTE: we can't use the new rootStorage cuz all modules are async now 🥹
-          legacyRootStorage,
-        }
-        networkManagers[network as Chain.SupportedNetworks] = networkManager
+  const managers = Object.entries(networkConfigs).reduce<Record<Chain.SupportedNetworks, Network.Manager>>(
+    (networkManagers, [network, config]) => {
+      const tokenManager = tokenManagers[network as Chain.SupportedNetworks]
+      const networkRootStorage = mountMMKVStorage({path: `/`, id: `${network}.manager.v1`})
+      const rootStorage = observableStorageMaker(networkRootStorage)
+      const legacyRootStorage = observableStorageMaker(mountAsyncStorage({path: `/legacy/${network}/v1/`}))
+      const {getProtocolParams} = CardanoApi.cardanoApiMaker({network: config.network})
+      const api = {
+        protocolParams: () =>
+          getProtocolParams().catch((error) => {
+            logger.error(`networkManager: ${network} protocolParams has failed`, {error})
+            return protocolParamsPlaceholder
+          }),
+      }
 
-        return networkManagers
-      },
-      {} as Record<Chain.SupportedNetworks, Network.Manager>,
-    ),
-    true,
+      const networkManager: Network.Manager = {
+        ...config,
+        tokenManager,
+        rootStorage,
+        // NOTE: we can't use the new rootStorage cuz all modules are async now 🥹
+        legacyRootStorage,
+        api,
+      }
+      networkManagers[network as Chain.SupportedNetworks] = networkManager
+
+      return networkManagers
+    },
+    {} as Record<Chain.SupportedNetworks, Network.Manager>,
   )
+
+  return freeze(managers, true)
 }

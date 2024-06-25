@@ -93,7 +93,7 @@ import {
   ApiOnChainMetadataRecord,
   ApiOnChainMetadataRequest,
   ApiOnChainMetadataResponse,
-  ApiProtocolParamsResult,
+  ApiProtocolParams,
   ApiTokenId,
   ApiTokenIdentity,
   ApiTokenRegistryEntry,
@@ -208,6 +208,7 @@ import {HWDeviceInfo, HWDeviceObj, HWFeatures} from './hw/hw'
 import {WalletAddressMode, WalletImplementation} from './wallet/wallet'
 import {WalletMeta} from './wallet/meta'
 import {
+  NetworkApi,
   NetworkConfig,
   NetworkEpochInfo,
   NetworkEpochProgress,
@@ -395,10 +396,10 @@ export namespace Api {
     export type MetadataFile = ApiMetadataFile
     export type TokenId = ApiTokenId
 
-    export type ProtocolParamsResult = ApiProtocolParamsResult
+    export type ProtocolParams = ApiProtocolParams
 
     export interface Actions {
-      getProtocolParams: () => Promise<ProtocolParamsResult>
+      getProtocolParams: () => Promise<ProtocolParams>
     }
   }
 }
@@ -566,6 +567,7 @@ export namespace Exchange {
 }
 
 export namespace Network {
+  export type Api = NetworkApi
   export type Manager = NetworkManager
   export type Config = NetworkConfig
   export type EraConfig = NetworkEraConfig

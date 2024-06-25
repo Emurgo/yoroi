@@ -3,7 +3,7 @@ import {walletChecksum} from '@emurgo/cip4-js'
 import * as CSL from '@emurgo/cross-csl-core'
 import {createSignedLedgerTxFromCbor, signRawTransaction} from '@emurgo/yoroi-lib'
 import {Datum} from '@emurgo/yoroi-lib/dist/internals/models'
-import {AppApi, CardanoApi} from '@yoroi/api'
+import {AppApi} from '@yoroi/api'
 import {isNonNullable} from '@yoroi/common'
 import {Api, App, Balance, HW, Network, Portfolio, Wallet} from '@yoroi/types'
 import assert from 'assert'
@@ -16,6 +16,7 @@ import {Observable} from 'rxjs'
 
 import {buildPortfolioBalanceManager} from '../../features/Portfolio/common/helpers/build-balance-manager'
 import {toBalanceManagerSyncArgs} from '../../features/Portfolio/common/transformers/toBalanceManagerSyncArgs'
+import {protocolParamsPlaceholder} from '../../features/WalletManager/network-manager/network-manager'
 import LocalizableError from '../../kernel/i18n/LocalizableError'
 import {throwLoggedError} from '../../kernel/logger/helpers/throw-logged-error'
 import {logger} from '../../kernel/logger/logger'
@@ -88,7 +89,6 @@ export const makeCardanoWallet = (
     readonly encryptedStorage: WalletEncryptedStorage
 
     readonly api: App.Api = appApi
-    private readonly cardanoApi: Api.Cardano.Actions
 
     readonly publicKeyHex: string
     readonly rewardAddressHex: string
@@ -106,6 +106,10 @@ export const makeCardanoWallet = (
     readonly portfolioPrimaryTokenInfo: Readonly<Portfolio.Token.Info>
     readonly networkManager: Readonly<Network.Manager> = networkManager
     readonly isMainnet: boolean = networkManager.isMainnet
+
+    // TODO: needs to be updated when epoch changes after conway. (query needs invalidation)
+    // considering pass it through the tx-builder straigh from the network manager
+    protocolParams: Api.Cardano.ProtocolParams = protocolParamsPlaceholder
 
     static readonly calcChecksum = walletChecksum
     static readonly implementation: Wallet.Implementation = implementation
@@ -125,7 +129,7 @@ export const makeCardanoWallet = (
       accountPubKeyHex: string
       accountVisual: number
     }) => {
-      const {rootStorage: networkRootStorage, primaryTokenInfo, network, chainId, legacyRootStorage} = networkManager
+      const {rootStorage: networkRootStorage, primaryTokenInfo, chainId, legacyRootStorage} = networkManager
       const walletRootStorage = legacyRootStorage.join(`${id}/`)
       const accountStorage = walletRootStorage.join(`accounts/${accountVisual}/`)
       const {legacyApiBaseUrl, tokenManager} = networkManager
@@ -154,12 +158,10 @@ export const makeCardanoWallet = (
         implementation,
         baseApiUrl: legacyApiBaseUrl,
       })
-
-      const cardanoApi = CardanoApi.cardanoApiMaker({network})
+      const protocolParams = await networkManager.api.protocolParams()
 
       const wallet = new CardanoWallet({
         id,
-        cardanoApi,
         accountPubKeyHex,
         rewardAddressHex,
         accountManager,
@@ -169,6 +171,7 @@ export const makeCardanoWallet = (
         balanceManager,
         portfolioPrimaryTokenInfo: primaryTokenInfo,
         accountVisual,
+        protocolParams,
       })
       if (!isYoroiWallet(wallet)) throwLoggedError('ShelleyWallet: build invalid wallet')
 
@@ -190,9 +193,8 @@ export const makeCardanoWallet = (
       balanceManager,
       accountManager,
 
-      cardanoApi,
-
       portfolioPrimaryTokenInfo,
+      protocolParams,
     }: {
       id: string
       accountPubKeyHex: string
@@ -205,9 +207,8 @@ export const makeCardanoWallet = (
       balanceManager: Readonly<Portfolio.Manager.Balance>
       accountManager: AccountManager
 
-      cardanoApi: Api.Cardano.Actions
-
       portfolioPrimaryTokenInfo: Readonly<Portfolio.Token.Info>
+      protocolParams: Api.Cardano.ProtocolParams
     }) {
       this.id = id
       this.publicKeyHex = accountPubKeyHex
@@ -224,7 +225,7 @@ export const makeCardanoWallet = (
       this.accountManager = accountManager
       this.portfolioPrimaryTokenInfo = portfolioPrimaryTokenInfo
 
-      this.cardanoApi = cardanoApi
+      this.protocolParams = protocolParams
 
       this.encryptedStorage = makeWalletEncryptedStorage(id)
 
@@ -386,11 +387,11 @@ export const makeCardanoWallet = (
           ? RegistrationStatus.DelegateOnly
           : RegistrationStatus.RegisterAndDelegate
         const delegatedAmountMT = {
-          values: [{identifier: '', amount: delegatedAmount, networkId: NETWORK_ID}],
+          values: [{identifier: '', amount: delegatedAmount, networkId: this.networkManager.chainId}],
           defaults: PRIMARY_TOKEN,
         }
 
-        const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} = await this.getProtocolParams()
+        const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} = this.protocolParams
 
         const unsignedTx = await Cardano.createUnsignedDelegationTx(
           absSlotNumber,
@@ -448,7 +449,7 @@ export const makeCardanoWallet = (
           const stakingPublicKey = await this.getStakingKey()
           const changeAddr = this.getAddressedChangeAddress(addressMode)
 
-          const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} = await this.getProtocolParams()
+          const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} = this.protocolParams
 
           const config = {
             keyDeposit,
@@ -545,7 +546,7 @@ export const makeCardanoWallet = (
           networkManager.legacyApiBaseUrl,
         )
 
-        const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} = await this.getProtocolParams()
+        const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} = this.protocolParams
 
         const withdrawalTx = await Cardano.createUnsignedWithdrawalTx(
           accountState,
@@ -600,7 +601,7 @@ export const makeCardanoWallet = (
       const changeAddr = this.getAddressedChangeAddress(addressMode)
       const addressedUtxos = await this.getAddressedUtxos()
 
-      const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} = await this.getProtocolParams()
+      const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} = this.protocolParams
 
       try {
         const unsignedTx = await Cardano.createUnsignedTx(
@@ -786,7 +787,7 @@ export const makeCardanoWallet = (
         keyDeposit,
         linearFee: {coefficient, constant},
         poolDeposit,
-      } = await this.getProtocolParams()
+      } = this.protocolParams
 
       try {
         const unsignedTx = await Cardano.createUnsignedTx(
@@ -973,10 +974,6 @@ export const makeCardanoWallet = (
       return legacyApi.checkServerStatus(networkManager.legacyApiBaseUrl)
     }
 
-    getProtocolParams() {
-      return this.cardanoApi.getProtocolParams()
-    }
-
     async submitTransaction(base64SignedTx: string) {
       await legacyApi.submitTransaction(base64SignedTx, networkManager.legacyApiBaseUrl)
     }
@@ -991,10 +988,9 @@ export const makeCardanoWallet = (
       // if it crashes, the utxo manager will be out of sync with wallet
       if (this.didUtxosUpdate(this._utxos, newUtxos) || isForced) {
         // NOTE: recalc locked deposit should happen also when epoch changes after conway
-        const {coinsPerUtxoByte} = await this.getProtocolParams()
         const lockedAsStorageCost = await calcLockedDeposit({
           rawUtxos: newUtxos,
-          coinsPerUtxoByteStr: coinsPerUtxoByte,
+          coinsPerUtxoByteStr: this.protocolParams.coinsPerUtxoByte,
         })
 
         const balancesToSync = toBalanceManagerSyncArgs(newUtxos, BigInt(lockedAsStorageCost.toString()))

@@ -1,3 +1,4 @@
+import {ApiProtocolParams} from '../api/cardano'
 import {AppObservableStorage} from '../app/observable-storage'
 import {ChainSupportedNetworks} from '../chain/network'
 import {PortfolioTokenInfo} from '../portfolio/info'
@@ -16,10 +17,14 @@ export type NetworkConfig = {
 }
 
 // NOTE: NetworkConfig will be a generic type in the future
+export type NetworkApi = {
+  protocolParams: () => Promise<Readonly<ApiProtocolParams>>
+}
 export type NetworkManager = {
   tokenManager: PortfolioManagerToken
   rootStorage: AppObservableStorage<false>
   legacyRootStorage: AppObservableStorage
+  api: NetworkApi
 } & NetworkConfig
 
 export type NetworkEraConfig = {
