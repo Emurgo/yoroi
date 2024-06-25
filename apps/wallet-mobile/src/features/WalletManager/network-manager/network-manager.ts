@@ -98,7 +98,7 @@ const networkConfigs: Readonly<Record<Chain.SupportedNetworks, Readonly<Network.
     name: 'Sancho (Conway)',
     isMainnet: false,
 
-    legacyApiBaseUrl: 'https://sancho-backend.yoroiwallet.com/api',
+    legacyApiBaseUrl: 'https://sanchonet-backend.yoroiwallet.com/api',
   },
   // NOTE: not supported yet on mobile
   // [Chain.Network.Preview]: {
