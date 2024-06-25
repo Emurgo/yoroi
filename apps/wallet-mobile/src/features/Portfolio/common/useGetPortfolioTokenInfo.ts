@@ -104,7 +104,7 @@ export const useGetPortfolioTokenInfo = (
     queryKey: ['useGetPortfolioTokenInfo', name],
     queryFn: async () => {
       await new Promise((resolve) => setTimeout(resolve, 2000))
-      return MockTokenList.find((token) => token.name === name) as IPortfolioTokenInfo
+      return MockTokenList.find((token) => token.name === name) ?? (MockTokenList[0] as IPortfolioTokenInfo)
     },
   })
 
