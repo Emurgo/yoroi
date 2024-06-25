@@ -23,6 +23,7 @@ export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
   const {styles, colors} = useStyles()
   const {name} = useTheme()
+
   const {languageCode, supportedLanguages} = useLanguage()
   const language = supportedLanguages.find((lang) => lang.code === languageCode) ?? defaultLanguage
 

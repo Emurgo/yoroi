@@ -38,7 +38,7 @@ export const ThemeProvider = ({
 
   const value = React.useMemo(
     () => ({
-      name: themes[themeName].name,
+      name: storage.read() ?? 'system',
       color: themes[themeName].color,
 
       selectThemeName: (newTheme: SupportedThemes) => {
