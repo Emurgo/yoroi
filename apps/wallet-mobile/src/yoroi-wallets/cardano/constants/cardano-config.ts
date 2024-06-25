@@ -9,6 +9,7 @@ export const cardanoConfig = freeze(
       minUtxoValue: 1_000_000n,
     },
     derivation: {
+      gapLimit: 20,
       hardStart: 2_147_483_648,
       keyLevel: {
         root: 0,
@@ -31,7 +32,6 @@ export const cardanoConfig = freeze(
           },
         },
         derivations: {
-          gapLimit: 20,
           base: {
             roles: {
               external: 0,
@@ -57,7 +57,6 @@ export const cardanoConfig = freeze(
           staking: false,
         },
         derivations: {
-          gapLimit: 20,
           base: {
             roles: {
               external: 0,

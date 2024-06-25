@@ -242,15 +242,11 @@ const wallet: YoroiWallet = {
   confirmationCounts: {},
   transactions: mockTransactionInfos,
   isUsedAddressIndex: {},
-  numReceiveAddresses: 0,
   receiveAddresses: [],
-  canGenerateNewReceiveAddress: (...args: unknown[]) => {
-    action('canGenerateNewReceiveAddress')(...args)
-    return true
-  },
-  generateNewReceiveAddressIfNeeded: (...args: unknown[]) => {
-    action('generateNewReceiveAddressIfNeeded')(...args)
-    return true
+  receiveAddressInfo: {
+    canIncrease: true,
+    lastUsedIndex: 0,
+    lastUsedIndexVisual: 0,
   },
   generateNewReceiveAddress: (...args: unknown[]) => {
     action('generateNewReceiveAddress')(...args)

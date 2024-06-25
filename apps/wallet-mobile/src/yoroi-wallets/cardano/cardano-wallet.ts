@@ -36,7 +36,7 @@ import type {
 import {StakingInfo, YoroiSignedTx, YoroiUnsignedTx} from '../types'
 import {asQuantity, Quantities} from '../utils'
 import {Cardano, CardanoMobile} from '../wallets'
-import {AccountManager, accountManagerMaker, AddressChain, Addresses} from './account-manager/account-manager'
+import {AccountManager, accountManagerMaker, Addresses} from './account-manager/account-manager'
 import * as legacyApi from './api/api'
 import {calcLockedDeposit} from './assetUtils'
 import {encryptWithPassword} from './catalyst/catalystCipher'
@@ -125,16 +125,10 @@ export const makeCardanoWallet = (
       accountPubKeyHex: string
       accountVisual: number
     }) => {
-      const {
-        rootStorage: networkRootStorage,
-        tokenManager,
-        primaryTokenInfo,
-        network,
-        chainId,
-        legacyRootStorage,
-      } = networkManager
+      const {rootStorage: networkRootStorage, primaryTokenInfo, network, chainId, legacyRootStorage} = networkManager
       const walletRootStorage = legacyRootStorage.join(`${id}/`)
       const accountStorage = walletRootStorage.join(`accounts/${accountVisual}/`)
+      const {legacyApiBaseUrl, tokenManager} = networkManager
 
       // TODO: revisit it should be part of staking manager (when staking is supported/desired)
       const rewardAddressHex = implementationConfig.features.staking
@@ -143,17 +137,22 @@ export const makeCardanoWallet = (
 
       const utxoManager = await makeUtxoManager({
         storage: accountStorage.join('utxos/'),
-        apiUrl: networkManager.legacyApiBaseUrl,
+        apiUrl: legacyApiBaseUrl,
       })
       const transactionManager = await TransactionManager.create(accountStorage.join('txs/'))
       // TODO: revisit memos should be per network and shouldn't be cleared on wallet clear (unless user selects it)
       const memosManager = await makeMemosManager(accountStorage.join('memos/'))
-      const {balanceManager} = buildPortfolioBalanceManager({primaryTokenInfo, tokenManager, networkRootStorage})(id)
+      const {balanceManager} = buildPortfolioBalanceManager({
+        primaryTokenInfo,
+        tokenManager,
+        networkRootStorage,
+      })(id)
       const accountManager = await accountManagerMaker({
         storage: accountStorage,
         accountPubKeyHex,
         chainId,
         implementation,
+        baseApiUrl: legacyApiBaseUrl,
       })
 
       const cardanoApi = CardanoApi.cardanoApiMaker({network})
@@ -274,23 +273,11 @@ export const makeCardanoWallet = (
     }
 
     // -- account -- legacy
-    canGenerateNewReceiveAddress() {
-      const lastUsedIndex = this.getLastUsedIndex(this.externalChain)
-      const maxIndex = lastUsedIndex + implementationConfig.derivations.gapLimit
-      return this.accountManager.lastGeneratedAddressIndex >= maxIndex
-    }
-
-    generateNewReceiveAddressIfNeeded() {
-      /* new address is automatically generated when you use the latest unused */
-      const lastGeneratedAddress = this.externalChain.addresses[this.accountManager.lastGeneratedAddressIndex]
-      if (!this.isUsedAddress(lastGeneratedAddress)) {
-        return false
-      }
-      return this.generateNewReceiveAddress()
-    }
-
     generateNewReceiveAddress() {
-      if (!this.canGenerateNewReceiveAddress()) return false
+      const {canIncrease} = this.receiveAddressInfo
+      if (!canIncrease) return false
+      this.externalChain.increaseVisualIndex()
+      this.accountManager.save()
 
       this.notify({type: 'addresses', addresses: this.receiveAddresses})
 
@@ -340,7 +327,11 @@ export const makeCardanoWallet = (
     }
 
     get receiveAddresses(): Addresses {
-      return this.externalAddresses.slice(0, this.numReceiveAddresses)
+      return this.externalAddresses
+    }
+
+    get receiveAddressInfo() {
+      return this.externalChain.info
     }
     // end of account
 
@@ -733,8 +724,7 @@ export const makeCardanoWallet = (
         return Promise.resolve()
       }
 
-      await this.accountManager.discoverAddresses(networkManager.legacyApiBaseUrl)
-      this.generateNewReceiveAddressIfNeeded()
+      await this.accountManager.discoverAddresses()
 
       await Promise.all([
         this.syncUtxos({isForced}),
@@ -1121,10 +1111,6 @@ export const makeCardanoWallet = (
       return this._isUsedAddressIndexSelector(this.transactionManager.perAddressTxs)
     }
 
-    get numReceiveAddresses() {
-      return this.accountManager.lastGeneratedAddressIndex + 1
-    }
-
     get transactions() {
       const memos = this.memosManager.getMemos()
       return _.mapValues(this.transactionManager.transactions, (tx: Transaction) => {
@@ -1187,15 +1173,6 @@ export const makeCardanoWallet = (
     private isUsedAddress(address: string) {
       const perAddressTxs = this.transactionManager.perAddressTxs
       return !!perAddressTxs[address] && perAddressTxs[address].length > 0
-    }
-
-    private getLastUsedIndex(chain: AddressChain): number {
-      for (let i = chain.size() - 1; i >= 0; i--) {
-        if (this.isUsedAddress(chain.addresses[i])) {
-          return i
-        }
-      }
-      return -1
     }
   }
 }
