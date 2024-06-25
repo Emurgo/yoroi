@@ -121,13 +121,23 @@ export class AddressChain {
   _isInitialized = false
   _subscriptions: Array<(addresses: Addresses) => unknown> = []
   _addressToIdxSelector: (addresses: Addresses) => Record<string, number> = defaultMemoize(_addressToIdxSelector)
+  #lastUsedIndex: number
+  #lastUsedIndexVisual: number
 
-  constructor(addressGenerator: AddressGenerator, blockSize = 50, gapLimit = 20) {
+  constructor(
+    addressGenerator: AddressGenerator,
+    blockSize = 50,
+    gapLimit = 20,
+    lastUsedIndex = 0,
+    lastUsedIndexVisual = lastUsedIndex,
+  ) {
     assert(blockSize > gapLimit, 'Block size needs to be > gap limit')
 
     this._addressGenerator = addressGenerator
     this._blockSize = blockSize
     this._gapLimit = gapLimit
+    this.#lastUsedIndex = lastUsedIndex
+    this.#lastUsedIndexVisual = lastUsedIndexVisual
   }
 
   toJSON(): AddressChainJSON {
@@ -135,13 +145,34 @@ export class AddressChain {
       gapLimit: this._gapLimit,
       blockSize: this._blockSize,
       addresses: this._addresses,
+      lastUsedIndex: this.#lastUsedIndex,
+      lastUsedIndexVirtual: this.#lastUsedIndexVisual,
       addressGenerator: this._addressGenerator.toJSON(),
     }
   }
 
+  get info() {
+    return {
+      lastUsedIndex: this.#lastUsedIndex,
+      lastUsedIndexVisual: this.#lastUsedIndexVisual,
+      canIncrease: this.#lastUsedIndexVisual - this.#lastUsedIndex < this._gapLimit,
+    } as const
+  }
+
+  increaseVisualIndex() {
+    if (this.#lastUsedIndexVisual - this.#lastUsedIndex > this._gapLimit) return
+    this.#lastUsedIndexVisual += 1
+  }
+
   static fromJSON(data: AddressChainJSON, chainId: number) {
-    const {gapLimit, blockSize, addresses, addressGenerator} = data
-    const chain = new AddressChain(AddressGenerator.fromJSON(addressGenerator, chainId), blockSize, gapLimit)
+    const {gapLimit, blockSize, addresses, addressGenerator, lastUsedIndex, lastUsedIndexVirtual} = data
+    const chain = new AddressChain(
+      AddressGenerator.fromJSON(addressGenerator, chainId),
+      blockSize,
+      gapLimit,
+      lastUsedIndex,
+      lastUsedIndexVirtual,
+    )
     // is initialized && addresses
     chain._extendAddresses(addresses)
     chain._isInitialized = true
@@ -155,14 +186,6 @@ export class AddressChain {
 
   get addressToIdxMap() {
     return this._addressToIdxSelector(this.addresses)
-  }
-
-  get publicKey() {
-    return this._addressGenerator.accountPubKeyHex
-  }
-
-  async getRewardAddressHex() {
-    return this._addressGenerator.getRewardAddressHex()
   }
 
   addSubscriberToNewAddresses(subscriber: (addresses: Addresses) => unknown) {
@@ -223,6 +246,11 @@ export class AddressChain {
     // It is okay to "overshoot" with -1 here
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const lastUsedIdx = used.length > 0 ? block.indexOf(_.last(used)!) : -1
+    const lastUsedAddress = lastUsedIdx > 0 ? used[lastUsedIdx] : null
+    const lastUsedRealIndex = lastUsedAddress != null ? this.addresses.indexOf(lastUsedAddress) : 0
+
+    if (lastUsedRealIndex > this.#lastUsedIndex) this.#lastUsedIndex = lastUsedRealIndex
+    if (lastUsedRealIndex > this.#lastUsedIndexVisual) this.#lastUsedIndexVisual = lastUsedRealIndex
 
     const needsNewBlock = lastUsedIdx + this._gapLimit >= this._blockSize
 
@@ -250,25 +278,6 @@ export class AddressChain {
 
   getBlocks() {
     return _.chunk(this.addresses, this._blockSize)
-  }
-
-  // note(v-almonacid): this is an alternative to the method
-  // wallet::getLastUsedIndex, which currently only works in byron environment
-  async getLastUsedIndex(filterFn: AsyncAddressFilter) {
-    await this.sync(filterFn)
-    const totalGenerated = this.addresses.length
-    const block = this._getLastBlock()
-    const used = await filterFn(block)
-    const last = _.last(used)
-    if (last == null) throw new Error('invalid chain state')
-
-    const lastUsedRelIdx = used.length > 0 ? block.indexOf(last) : -1
-    return totalGenerated > this._blockSize ? totalGenerated - this._blockSize + lastUsedRelIdx : lastUsedRelIdx
-  }
-
-  async getNextUnused(filterFn: AsyncAddressFilter) {
-    const lastUsedIdx = await this.getLastUsedIndex(filterFn)
-    return (await this._addressGenerator.generate([lastUsedIdx + 1]))[0]
   }
 }
 
@@ -303,12 +312,14 @@ export const accountManagerMaker = async ({
   addressesPerRequest = initialAddressesPerRequest,
   accountPubKeyHex,
   storage,
+  baseApiUrl,
 }: {
   chainId: number
   addressesPerRequest?: number
   implementation: Wallet.Implementation
   accountPubKeyHex: string
   storage: App.Storage
+  baseApiUrl: string
 }): Promise<AccountManager> => {
   const config = cardanoConfig.implementations[implementation]
 
@@ -320,7 +331,7 @@ export const accountManagerMaker = async ({
       : new AddressChain(
           new AddressGenerator(accountPubKeyHex, config.derivations.base.roles.internal, implementation, chainId),
           addressesPerRequest,
-          config.derivations.gapLimit,
+          cardanoConfig.derivation.gapLimit,
         )
 
   const externalChain =
@@ -329,19 +340,16 @@ export const accountManagerMaker = async ({
       : new AddressChain(
           new AddressGenerator(accountPubKeyHex, config.derivations.base.roles.external, implementation, chainId),
           addressesPerRequest,
-          config.derivations.gapLimit,
+          cardanoConfig.derivation.gapLimit,
         )
 
   await internalChain.initialize()
   await externalChain.initialize()
 
-  const lastGeneratedAddressIndex = addresses?.lastGeneratedAddressIndex ?? 0
-
   const save = async () => {
     await storage.setItem(storageKey, {
       internalChain: internalChain.toJSON(),
       externalChain: externalChain.toJSON(),
-      lastGeneratedAddressIndex,
     })
   }
 
@@ -350,7 +358,7 @@ export const accountManagerMaker = async ({
   }
 
   // TODO: API should be injected
-  const discoverAddresses = async (baseApiUrl: string) => {
+  const discoverAddresses = async () => {
     const addressesBeforeRequest = internalChain.addresses.length + externalChain.addresses.length
     const filterFn = (addrs: Addresses) => legacyApi.filterUsedAddresses(addrs, baseApiUrl)
     await Promise.all([internalChain.sync(filterFn), externalChain.sync(filterFn)])
@@ -374,7 +382,6 @@ export const accountManagerMaker = async ({
 
     discoverAddresses,
     getAddressesInBlocks,
-    lastGeneratedAddressIndex,
 
     save,
     clear,
@@ -384,9 +391,8 @@ export const accountManagerMaker = async ({
 export type AccountManager = {
   internalChain: AddressChain
   externalChain: AddressChain
-  discoverAddresses: (baseApiUrl: string) => Promise<void>
+  discoverAddresses: () => Promise<void>
   getAddressesInBlocks: (rewardAddressHex: string) => string[][]
-  lastGeneratedAddressIndex: number
   save: () => Promise<void>
   clear: () => Promise<void>
 }
@@ -394,12 +400,13 @@ export type AccountManager = {
 type AccountJSON = {
   internalChain: AddressChainJSON
   externalChain: AddressChainJSON
-  lastGeneratedAddressIndex: number
 }
 
 export type AddressChainJSON = {
   gapLimit: number
   blockSize: number
+  lastUsedIndex: number
+  lastUsedIndexVirtual: number
   addresses: Addresses
   addressGenerator: AddressGeneratorJSON
 }
@@ -424,4 +431,4 @@ const isAccountJSON = (data: unknown): data is AccountJSON => {
   return !!candidate && typeof candidate === 'object' && keys.every((key) => key in candidate)
 }
 
-const keys: Array<keyof AccountJSON> = ['internalChain', 'externalChain', 'lastGeneratedAddressIndex']
+const keys: Array<keyof AccountJSON> = ['internalChain', 'externalChain']
