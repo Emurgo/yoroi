@@ -10,7 +10,7 @@ import {
   TxMetadata as TxMetadataType,
   UnsignedTx as UnsignedTxType,
 } from '@emurgo/yoroi-lib'
-import {Api, App, Balance, HW, Network, Portfolio, Wallet} from '@yoroi/types'
+import {App, Balance, HW, Network, Portfolio, Wallet} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 
 import {WalletEncryptedStorage} from '../../kernel/storage/EncryptedStorage'
@@ -180,8 +180,6 @@ export interface YoroiWallet {
 
   // CIP36 Payment Address
   getFirstPaymentAddress(): Promise<CoreTypes.BaseAddress>
-
-  getProtocolParams(): Promise<Api.Cardano.ProtocolParamsResult>
 }
 
 export const isYoroiWallet = (wallet: unknown): wallet is YoroiWallet => {
