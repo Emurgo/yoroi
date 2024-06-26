@@ -35,12 +35,9 @@ export const VotingRegistration = () => {
     }, [track]),
   )
 
-  const {atoms, color, isDark} = useTheme()
+  const {atoms, color} = useTheme()
 
-  const navigationOptions = React.useMemo(
-    () => defaultStackNavigationOptions(atoms, color, isDark),
-    [atoms, color, isDark],
-  )
+  const navigationOptions = React.useMemo(() => defaultStackNavigationOptions(atoms, color), [atoms, color])
 
   return (
     <Stack.Navigator

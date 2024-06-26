@@ -42,7 +42,7 @@ export const SettingsScreenNavigator = () => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
   const {track} = useMetrics()
-  const {atoms, color, isDark} = useTheme()
+  const {atoms, color} = useTheme()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -54,7 +54,7 @@ export const SettingsScreenNavigator = () => {
     <TransferProvider key={wallet.id}>
       <Stack.Navigator
         screenOptions={{
-          ...defaultStackNavigationOptions(atoms, color, isDark),
+          ...defaultStackNavigationOptions(atoms, color),
         }}
       >
         <Stack.Screen //

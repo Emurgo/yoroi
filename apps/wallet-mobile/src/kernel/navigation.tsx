@@ -53,29 +53,20 @@ export const BackButton = (props: TouchableOpacityProps & {color?: string}) => {
 // OPTIONS
 const WIDTH = Dimensions.get('window').width
 
-export const defaultStackNavigationOptions = (
-  atoms: Atoms,
-  color: ThemedPalette,
-  isDark?: boolean,
-): StackNavigationOptions => {
+export const defaultStackNavigationOptions = (atoms: Atoms, color: ThemedPalette): StackNavigationOptions => {
   return {
     detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
     cardStyle: {
       backgroundColor: 'transparent',
     },
-    cardOverlay: () => {
-      if (isDark)
-        return (
-          <View
-            style={{
-              flex: 1,
-              backgroundColor: color.gray_cmin,
-            }}
-          />
-        )
-
-      return undefined
-    },
+    cardOverlay: () => (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: color.gray_cmin,
+        }}
+      />
+    ),
     headerTintColor: color.gray_cmax,
     headerStyle: {
       elevation: 0,

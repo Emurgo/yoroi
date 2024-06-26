@@ -194,13 +194,13 @@ const Stack = createStackNavigator<WalletStackRoutes>()
 export const WalletNavigator = () => {
   const initialRoute = useLinksShowActionResult()
   const strings = useStrings()
-  const {atoms, color, isDark} = useTheme()
+  const {atoms, color} = useTheme()
   const {styles} = useStyles()
   useLinksRequestAction()
   const {walletManager} = useWalletManager()
   const {network} = useSelectedNetwork()
 
-  const navOptions = React.useMemo(() => defaultStackNavigationOptions(atoms, color, isDark), [atoms, color, isDark])
+  const navOptions = React.useMemo(() => defaultStackNavigationOptions(atoms, color), [atoms, color])
 
   // initialRoute doesn't update the state of the navigator, only at first render
   // https://reactnavigation.org/docs/auth-flow/

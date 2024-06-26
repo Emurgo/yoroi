@@ -72,7 +72,7 @@ export const TxHistoryNavigator = () => {
   const {wallet, meta} = useSelectedWallet()
   const storage = useAsyncStorage()
   const {styles} = useStyles()
-  const {atoms, color, isDark} = useTheme()
+  const {atoms, color} = useTheme()
 
   // modal
   const [isModalInfoVisible, setIsModalInfoVisible] = React.useState(false)
@@ -133,10 +133,7 @@ export const TxHistoryNavigator = () => {
     return manager
   }, [wallet.isMainnet])
 
-  const navigationOptions = React.useMemo(
-    () => defaultStackNavigationOptions(atoms, color, isDark),
-    [atoms, color, isDark],
-  )
+  const navigationOptions = React.useMemo(() => defaultStackNavigationOptions(atoms, color), [atoms, color])
 
   return (
     <ReceiveProvider key={wallet.id}>

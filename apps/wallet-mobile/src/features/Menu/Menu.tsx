@@ -22,13 +22,13 @@ const MenuStack = createStackNavigator()
 
 export const MenuNavigator = () => {
   const strings = useStrings()
-  const {atoms, color, isDark} = useTheme()
+  const {atoms, color} = useTheme()
 
   return (
     <MenuStack.Navigator
       initialRouteName="_menu"
       screenOptions={{
-        ...defaultStackNavigationOptions(atoms, color, isDark),
+        ...defaultStackNavigationOptions(atoms, color),
         headerLeft: () => null,
       }}
     >

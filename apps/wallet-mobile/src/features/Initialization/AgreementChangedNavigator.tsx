@@ -12,13 +12,13 @@ import {TermsOfServiceChangedScreen} from './TermsOfServiceChangedScreen'
 const Stack = createStackNavigator<InititalizationRoutes>()
 
 export const AgreementChangedNavigator = () => {
-  const {atoms, color, isDark} = useTheme()
+  const {atoms, color} = useTheme()
   const strings = useStrings()
   return (
     <Stack.Navigator
       initialRouteName="terms-of-service-changed"
       screenOptions={{
-        ...defaultStackNavigationOptions(atoms, color, isDark),
+        ...defaultStackNavigationOptions(atoms, color),
       }}
     >
       <Stack.Screen

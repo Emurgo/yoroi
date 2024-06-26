@@ -12,12 +12,12 @@ const Stack = NavigationStack
 export const GovernanceNavigator = () => {
   const strings = useStrings()
   const manager = useGovernanceManagerMaker()
-  const {atoms, color, isDark} = useTheme()
+  const {atoms, color} = useTheme()
 
   return (
     <GovernanceProvider manager={manager}>
       <SafeArea>
-        <Stack.Navigator screenOptions={screenOptions(atoms, color, isDark)}>
+        <Stack.Navigator screenOptions={screenOptions(atoms, color)}>
           <Stack.Screen
             name="staking-gov-home"
             component={HomeScreen}
@@ -49,7 +49,7 @@ const txStatusOptions = {
   detachPreviousScreen: true,
   header: () => null,
 }
-const screenOptions = (atoms: Atoms, color: ThemedPalette, isDark: boolean) => ({
-  ...defaultStackNavigationOptions(atoms, color, isDark),
+const screenOptions = (atoms: Atoms, color: ThemedPalette) => ({
+  ...defaultStackNavigationOptions(atoms, color),
   gestureEnabled: true,
 })

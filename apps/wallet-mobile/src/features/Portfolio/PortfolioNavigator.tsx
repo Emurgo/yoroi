@@ -13,12 +13,12 @@ import {PortfolioTokenListScreen} from './useCases/PortfolioTokensList/Portfolio
 const Stack = createStackNavigator<Portfolio2Routes>()
 
 export const PortfolioNavigator = () => {
-  const {atoms, color, isDark} = useTheme()
+  const {atoms, color} = useTheme()
   const strings = useStrings()
 
   return (
     <PortfolioTokenDetailProvider>
-      <Stack.Navigator screenOptions={defaultStackNavigationOptions(atoms, color, isDark)}>
+      <Stack.Navigator screenOptions={defaultStackNavigationOptions(atoms, color)}>
         <Stack.Screen
           name="dashboard-portfolio"
           component={PortfolioDashboardScreen}

@@ -48,7 +48,7 @@ export const AppNavigator = () => {
   const [routeName, setRouteName] = React.useState<string>()
   useStatusBar(routeName)
   useHideScreenInAppSwitcher()
-  const {atoms, color, isDark} = useTheme()
+  const {atoms, color} = useTheme()
 
   useAutoLogout()
 
@@ -89,7 +89,7 @@ export const AppNavigator = () => {
 
   const afterLoginAction = useAfterLoginAction()
 
-  const navOptions = React.useMemo(() => defaultStackNavigationOptions(atoms, color, isDark), [atoms, color, isDark])
+  const navOptions = React.useMemo(() => defaultStackNavigationOptions(atoms, color), [atoms, color])
 
   return (
     <NavigationContainer

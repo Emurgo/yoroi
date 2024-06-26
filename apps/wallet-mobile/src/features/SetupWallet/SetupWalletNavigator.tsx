@@ -23,12 +23,9 @@ import {RestoreWalletScreen} from './useCases/RestoreWallet/RestoreWalletScreen'
 const Stack = createStackNavigator<WalletInitRoutes>()
 export const SetupWalletNavigator = () => {
   const strings = useStrings()
-  const {atoms, color, isDark} = useTheme()
+  const {atoms, color} = useTheme()
 
-  const navigationOptions = React.useMemo(
-    () => defaultStackNavigationOptions(atoms, color, isDark),
-    [atoms, color, isDark],
-  )
+  const navigationOptions = React.useMemo(() => defaultStackNavigationOptions(atoms, color), [atoms, color])
 
   return (
     <Stack.Navigator
