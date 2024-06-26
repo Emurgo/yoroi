@@ -1,7 +1,7 @@
+import {useQuery} from '@tanstack/react-query'
 import {isBoolean, useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
 import {useEffect, useState} from 'react'
 import {NativeModules, Platform} from 'react-native'
-import {useQuery} from 'react-query'
 
 const {FlagSecure} = NativeModules
 
@@ -27,7 +27,7 @@ export const useChangeScreenShareSetting = () => {
 export const useScreenShareSettingEnabled = () => {
   const storage = useAsyncStorage()
 
-  return useQuery('screenShareEnabled', async () => {
+  return useQuery(['screenShareEnabled'], async () => {
     if (Platform.OS === 'android') {
       return (await storage.join('appSettings/').getItem<boolean>('screenShareEnabled')) ?? false
     }

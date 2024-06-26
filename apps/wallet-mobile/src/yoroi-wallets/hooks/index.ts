@@ -2,13 +2,6 @@
 import {walletChecksum} from '@emurgo/cip4-js'
 import {Certificate} from '@emurgo/cross-csl-core'
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
-import {mountMMKVStorage, observableStorageMaker, parseBoolean, useMutationWithInvalidations} from '@yoroi/common'
-import {themeStorageMaker} from '@yoroi/theme'
-import {App, Balance, HW, Wallet} from '@yoroi/types'
-import {Buffer} from 'buffer'
-import * as React from 'react'
-import {useCallback, useMemo} from 'react'
-import {PixelRatio, Platform} from 'react-native'
 import {
   onlineManager,
   useMutation,
@@ -17,7 +10,14 @@ import {
   useQuery,
   useQueryClient,
   UseQueryOptions,
-} from 'react-query'
+} from '@tanstack/react-query'
+import {mountMMKVStorage, observableStorageMaker, parseBoolean, useMutationWithInvalidations} from '@yoroi/common'
+import {themeStorageMaker} from '@yoroi/theme'
+import {App, Balance, HW, Wallet} from '@yoroi/types'
+import {Buffer} from 'buffer'
+import * as React from 'react'
+import {useCallback, useMemo} from 'react'
+import {PixelRatio, Platform} from 'react-native'
 
 import {useSelectedNetwork} from '../../features/WalletManager/common/hooks/useSelectedNetwork'
 import {isDev, isNightly} from '../../kernel/env'
@@ -124,24 +124,26 @@ export const useStakingKey = (wallet: YoroiWallet) => {
 }
 
 export const useKeyHashes = ({address}: {address: string}) => {
-  const [spendingData, stakingData] = useQueries([
-    {
-      suspense: true,
-      queryKey: [address, 'spendingKeyHash'],
-      queryFn: () =>
-        getSpendingKey(address).then((spending) => {
-          return {spending}
-        }),
-    },
-    {
-      suspense: true,
-      queryKey: [address, 'stakingkeyHash'],
-      queryFn: () =>
-        getStakingKey(address).then((staking) => {
-          return {staking}
-        }),
-    },
-  ])
+  const [spendingData, stakingData] = useQueries({
+    queries: [
+      {
+        suspense: true,
+        queryKey: [address, 'spendingKeyHash'],
+        queryFn: () =>
+          getSpendingKey(address).then((spending) => {
+            return {spending}
+          }),
+      },
+      {
+        suspense: true,
+        queryKey: [address, 'stakingkeyHash'],
+        queryFn: () =>
+          getStakingKey(address).then((staking) => {
+            return {staking}
+          }),
+      },
+    ],
+  })
   return {spending: spendingData.data?.spending, staking: stakingData.data?.staking}
 }
 
@@ -202,7 +204,7 @@ export const useTokenInfosDetailed = (
     queryFn: () => wallet.fetchTokenInfo(tokenId),
     staleTime: 600_000,
   }))
-  return useQueries(queries)
+  return useQueries({queries})
 }
 
 export const useTokenInfos = (

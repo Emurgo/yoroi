@@ -1,6 +1,6 @@
+import {useQuery, UseQueryOptions} from '@tanstack/react-query'
 import {type Portfolio} from '@yoroi/types'
 import {ImageSourcePropType} from 'react-native'
-import {useQuery, UseQueryOptions} from 'react-query'
 
 import AdaLogo from '../../../assets/img/ada.png'
 
@@ -104,7 +104,7 @@ export const useGetPortfolioTokenInfo = (
     queryKey: ['useGetPortfolioTokenInfo', name],
     queryFn: async () => {
       await new Promise((resolve) => setTimeout(resolve, 2000))
-      return MockTokenList.find((token) => token.name === name) as IPortfolioTokenInfo
+      return MockTokenList.find((token) => token.name === name) ?? (MockTokenList[0] as IPortfolioTokenInfo)
     },
   })
 

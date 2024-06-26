@@ -1,7 +1,7 @@
 import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
+import {useQuery, UseQueryOptions} from '@tanstack/react-query'
 import {useTransfer} from '@yoroi/transfer'
 import * as React from 'react'
-import {useQuery, UseQueryOptions} from 'react-query'
 
 import {CardanoMobile} from '../../../yoroi-wallets/wallets'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'

@@ -69,13 +69,13 @@
   },
   "prettier": {
     "bracketSpacing": false,
+    "printWidth": 120,
     "quoteProps": "consistent",
     "semi": false,
     "singleQuote": true,
     "tabWidth": 2,
     "trailingComma": "all",
-    "useTabs": false,
-    "printWidth": 120
+    "useTabs": false
   },
   "eslintConfig": {
     "extends": [
@@ -108,25 +108,17 @@
   ],
   "jest": {
     "collectCoverage": true,
-    "coveragePathIgnorePatterns": [
-      "connector.js",
-      "manager.mocks.ts"
-    ],
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}",
       "!src/**/*.d.ts"
     ],
+    "coveragePathIgnorePatterns": [
+      "connector.js",
+      "manager.mocks.ts"
+    ],
     "coverageReporters": [
       "text-summary",
       "html"
-    ],
-    "modulePathIgnorePatterns": [
-      "<rootDir>/example/node_modules",
-      "<rootDir>/lib/"
-    ],
-    "preset": "react-native",
-    "setupFiles": [
-      "<rootDir>/jest.setup.js"
     ],
     "coverageThreshold": {
       "global": {
@@ -135,7 +127,15 @@
         "lines": 100,
         "statements": 100
       }
-    }
+    },
+    "modulePathIgnorePatterns": [
+      "<rootDir>/example/node_modules",
+      "<rootDir>/lib/"
+    ],
+    "preset": "react-native",
+    "setupFiles": [
+      "<rootDir>/jest.setup.js"
+    ]
   },
   "dependencies": {
     "axios": "^1.5.0",
@@ -146,6 +146,7 @@
     "@react-native-async-storage/async-storage": "^1.19.3",
     "@react-native-community/eslint-config": "^3.0.2",
     "@release-it/conventional-changelog": "^5.0.0",
+    "@tanstack/react-query": "4.36.1",
     "@testing-library/jest-dom": "^6.0.0",
     "@testing-library/react": "^14.0.0",
     "@testing-library/react-hooks": "^8.0.1",
@@ -172,17 +173,16 @@
     "react-native": "~0.71.0",
     "react-native-builder-bob": "^0.20.4",
     "react-native-mmkv": "^2.11.0",
-    "react-query": "^3.39.3",
     "react-test-renderer": "^18.2.0",
     "release-it": "^15.0.0",
     "typescript": "^5.3.3"
   },
   "peerDependencies": {
     "@react-native-async-storage/async-storage": ">= 1.19.3 <= 1.20.0",
+    "@tanstack/react-query": "4.36.1",
     "bignumber.js": "^9.0.1",
     "react": ">= 16.8.0 <= 19.0.0",
-    "react-native-mmkv": "^2.11.0",
-    "react-query": "^3.39.3"
+    "react-native-mmkv": "^2.11.0"
   },
   "packageManager": "yarn@1.22.21",
   "engines": {

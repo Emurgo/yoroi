@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {QueryClient} from 'react-query'
+import {QueryClient} from '@tanstack/react-query'
 import {Text, View} from 'react-native'
 import {render, waitFor} from '@testing-library/react-native'
 
@@ -49,6 +49,8 @@ describe('useSwapOrdersByStatusOpen', () => {
   })
 
   it('error', async () => {
+    const spy = jest.spyOn(console, 'error')
+    spy.mockImplementation(() => {})
     const TestOpenedOrders = () => {
       const orders = useSwapOrdersByStatusOpen()
       return (
@@ -67,5 +69,6 @@ describe('useSwapOrdersByStatusOpen', () => {
     await waitFor(() => {
       expect(getByTestId('hasError')).toBeDefined()
     })
+    spy.mockRestore()
   })
 })
