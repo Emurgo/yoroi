@@ -30,18 +30,20 @@ export const DashboardTokenItem = ({tokenInfo}: Props) => {
   const {quantityChangePercent, variantPnl} = useQuantityChange({previousQuantity, quantity, decimals: info.decimals})
 
   return (
-    <TouchableOpacity onPress={() => navigationTo.tokenDetail({id: info.id})}>
-      <View style={styles.root}>
+    <TouchableOpacity onPress={() => navigationTo.tokenDetail({id: info.id})} style={styles.root}>
+      <View style={styles.container}>
         <TokenInfo info={info} />
 
-        <Spacer height={16} />
+        <Spacer fill />
 
         <View style={styles.quantityContainer}>
           <PnlTag variant={variantPnl} withIcon>
             <Text>{quantityChangePercent}%</Text>
           </PnlTag>
 
-          <Text style={styles.tokenValue}>{formattedQuantity}</Text>
+          <Text ellipsizeMode="tail" numberOfLines={1} style={styles.tokenValue}>
+            {formattedQuantity}
+          </Text>
 
           <PairedBalance textStyle={styles.pairedTokenValue} amount={tokenInfo} />
         </View>
@@ -77,6 +79,9 @@ const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
+      ...atoms.h_full,
+    },
+    container: {
       ...atoms.p_lg,
       ...atoms.rounded_sm,
       ...atoms.flex_col,
@@ -84,7 +89,6 @@ const useStyles = () => {
       ...atoms.border,
       ...atoms.flex_1,
       borderColor: color.gray_c300,
-      width: 164,
       ...atoms.h_full,
     },
     symbol: {

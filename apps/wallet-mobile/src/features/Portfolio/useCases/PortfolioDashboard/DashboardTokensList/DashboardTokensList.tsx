@@ -1,7 +1,15 @@
 import {isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {FlatList, StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  useWindowDimensions,
+  View,
+} from 'react-native'
 
 import {Icon, Spacer} from '../../../../../components'
 import {makeList} from '../../../../../kernel/utils'
@@ -17,7 +25,7 @@ import {DashboardTokenSkeletonItem} from './DashboardTokenSkeletonItem'
 import {TradeTokensBanner} from './TradeTokensBanner'
 
 export const DashboardTokensList = () => {
-  const {styles} = useStyles()
+  const {styles, cardItemWidth, cardItemWidthForJustAda} = useStyles()
   const navigationTo = useNavigateTo()
   const isZeroADABalance = useZeroBalance()
   const {isLoading} = useGetTokensWithBalance()
@@ -45,25 +53,56 @@ export const DashboardTokensList = () => {
           <View />
 
           {makeList(3).map((_, index) => (
-            <DashboardTokenSkeletonItem key={index} />
+            <View style={[styles.tokenItemContainer, {width: cardItemWidth}]} key={index}>
+              <DashboardTokenSkeletonItem />
+            </View>
           ))}
 
           <Spacer width={8} />
         </View>
       )
 
-    return (
-      <View style={styles.tradeTokensContainer}>
-        {isJustADA && (
-          <View style={styles.tradeTokensContainer}>
-            <Spacer width={16} />
+    return <Spacer width={16} />
+  }
 
+  const renderTokensList = () => {
+    if (isZeroADABalance) {
+      return (
+        <View style={styles.container}>
+          <BuyADABanner />
+        </View>
+      )
+    }
+
+    if (isJustADA) {
+      return (
+        <View style={styles.justAdaContainer}>
+          <View style={[styles.tokenItemContainer, {width: cardItemWidthForJustAda}]}>
+            <DashboardTokenItem tokenInfo={tokensList[0]} />
+          </View>
+
+          <View style={[styles.tokenItemContainer, {width: cardItemWidthForJustAda}]}>
             <TradeTokensBanner />
           </View>
-        )}
+        </View>
+      )
+    }
 
-        <Spacer width={16} />
-      </View>
+    return (
+      <FlatList
+        horizontal
+        data={tokensList}
+        ListHeaderComponent={<Spacer width={16} />}
+        ListFooterComponent={renderFooterList()}
+        ItemSeparatorComponent={() => <Spacer width={8} />}
+        showsHorizontalScrollIndicator={false}
+        keyExtractor={(item) => item.info.id}
+        renderItem={({item}) => (
+          <View style={[styles.tokenItemContainer, {width: cardItemWidth}]}>
+            <DashboardTokenItem tokenInfo={item} />
+          </View>
+        )}
+      />
     )
   }
 
@@ -71,22 +110,7 @@ export const DashboardTokensList = () => {
     <View style={styles.root}>
       <Heading countTokens={tokensList.length} onPress={handleDirectTokensList} isFirstUser={isFirstUser} />
 
-      {isZeroADABalance ? (
-        <View style={styles.container}>
-          <BuyADABanner />
-        </View>
-      ) : (
-        <FlatList
-          horizontal
-          data={tokensList}
-          ListHeaderComponent={<Spacer width={16} />}
-          ListFooterComponent={renderFooterList()}
-          ItemSeparatorComponent={() => <Spacer width={8} />}
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(item) => item.info.id}
-          renderItem={({item}) => <DashboardTokenItem key={item?.info?.id} tokenInfo={item} />}
-        />
-      )}
+      {renderTokensList()}
     </View>
   )
 }
@@ -121,6 +145,16 @@ const TouchTokensList = ({onPress}: TouchableOpacityProps) => {
 
 const useStyles = () => {
   const {atoms, color} = useTheme()
+  const {width: SCREEN_WIDTH} = useWindowDimensions()
+  const PADDING_LEFT_SIDE = 16
+  const PADDING_RIGHT_SIDE_FOR_ITEMS = 15
+  const PADDING_RIGHT_SIDE_FOR_JUST_ADA = 16
+  const GAP_ITEMS = 8
+  const GAP_FOR_JUST_ADA = 16
+  const initCardWidth = SCREEN_WIDTH - PADDING_LEFT_SIDE
+  const cardItemWidth = (initCardWidth - PADDING_RIGHT_SIDE_FOR_ITEMS - GAP_ITEMS) / 2
+  const cardItemWidthForJustAda = (initCardWidth - PADDING_RIGHT_SIDE_FOR_JUST_ADA - GAP_FOR_JUST_ADA) / 2
+
   const styles = StyleSheet.create({
     container: {
       ...atoms.px_lg,
@@ -138,13 +172,21 @@ const useStyles = () => {
       ...atoms.body_1_lg_medium,
       color: color.gray_c900,
     },
-    tradeTokensContainer: {
-      ...atoms.flex_row,
-      ...atoms.flex_1,
-    },
     containerLoading: {
       ...atoms.flex_row,
       ...atoms.gap_sm,
+    },
+    justAdaContainer: {
+      ...atoms.flex_row,
+      ...atoms.gap_lg,
+      ...atoms.overflow_hidden,
+      ...atoms.w_full,
+      ...atoms.pl_lg,
+      paddingRight: 15,
+      ...atoms.align_start,
+    },
+    tokenItemContainer: {
+      aspectRatio: 195 / 186,
     },
   })
 
@@ -152,5 +194,5 @@ const useStyles = () => {
     gray_800: color.gray_c800,
   }
 
-  return {styles, colors} as const
+  return {styles, colors, cardItemWidth, cardItemWidthForJustAda} as const
 }
