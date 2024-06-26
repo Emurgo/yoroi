@@ -4,14 +4,14 @@
     "defaultMessage": "!!!User Insights",
     "file": "src/features/ToggleAnalyticsSettings/ToggleAnalyticsSettingsNavigator.tsx",
     "start": {
-      "line": 39,
+      "line": 45,
       "column": 16,
-      "index": 1178
+      "index": 1193
     },
     "end": {
-      "line": 42,
+      "line": 48,
       "column": 3,
-      "index": 1273
+      "index": 1288
     }
   }
 ]

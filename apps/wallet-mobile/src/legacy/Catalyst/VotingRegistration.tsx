@@ -28,7 +28,6 @@ export const VotingRegistration = () => {
   const [votingKeyEncrypted, setVotingKeyEncrypted] = React.useState<string | undefined>(undefined)
   const [complete, setComplete] = React.useState(false)
   const {track} = useMetrics()
-  const {atoms, color} = useTheme()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -36,12 +35,18 @@ export const VotingRegistration = () => {
     }, [track]),
   )
 
+  const {atoms, color, isDark} = useTheme()
+
+  const navigationOptions = React.useMemo(
+    () => defaultStackNavigationOptions(atoms, color, isDark),
+    [atoms, color, isDark],
+  )
+
   return (
     <Stack.Navigator
       screenOptions={{
-        ...defaultStackNavigationOptions(atoms, color),
+        ...navigationOptions,
         title: strings.title,
-        detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
       }}
     >
       {!complete ? (
@@ -80,7 +85,7 @@ export const VotingRegistration = () => {
           </Stack.Screen>
         </Stack.Group>
       ) : (
-        <Stack.Screen name="qr-code" options={{...defaultStackNavigationOptions(atoms, color), headerLeft: () => null}}>
+        <Stack.Screen name="qr-code" options={{...navigationOptions, headerLeft: () => null}}>
           {() => {
             if (votingKeyEncrypted == null) throw new Error('invalid state')
             return <QrCode onNext={navigateTo.txHistory} votingKeyEncrypted={votingKeyEncrypted} />

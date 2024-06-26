@@ -12,7 +12,7 @@ import {Nfts} from './useCases/Nfts'
 const Stack = createStackNavigator<NftRoutes>()
 
 export const NftsNavigator = () => {
-  const {atoms, color} = useTheme()
+  const {atoms, color, isDark} = useTheme()
   const strings = useStrings()
   const {track} = useMetrics()
 
@@ -25,7 +25,7 @@ export const NftsNavigator = () => {
   }, [track])
 
   return (
-    <Stack.Navigator screenOptions={defaultStackNavigationOptions(atoms, color)}>
+    <Stack.Navigator screenOptions={defaultStackNavigationOptions(atoms, color, isDark)}>
       <Stack.Screen name="nft-gallery" component={Nfts} />
 
       <Stack.Screen

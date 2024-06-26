@@ -46,7 +46,6 @@ const TabBarWithHiddenContent = (props: BottomTabBarProps) => {
 const WalletTabNavigator = () => {
   const strings = useStrings()
   const {colors, styles} = useStyles()
-
   const [isKeyboardOpen, setIsKeyboardOpen] = React.useState(false)
 
   React.useEffect(() => {
@@ -78,6 +77,7 @@ const WalletTabNavigator = () => {
       <OfflineBanner />
 
       <Tab.Navigator
+        sceneContainerStyle={{backgroundColor: colors.background}}
         screenOptions={{
           headerShown: false,
           tabBarLabelStyle: styles.labelStyle,
@@ -194,12 +194,13 @@ const Stack = createStackNavigator<WalletStackRoutes>()
 export const WalletNavigator = () => {
   const initialRoute = useLinksShowActionResult()
   const strings = useStrings()
-  const {atoms, color} = useTheme()
+  const {atoms, color, isDark} = useTheme()
   const {styles} = useStyles()
   useLinksRequestAction()
-  const navOptions = React.useMemo(() => defaultStackNavigationOptions(atoms, color), [atoms, color])
   const {walletManager} = useWalletManager()
   const {network} = useSelectedNetwork()
+
+  const navOptions = React.useMemo(() => defaultStackNavigationOptions(atoms, color, isDark), [atoms, color, isDark])
 
   // initialRoute doesn't update the state of the navigator, only at first render
   // https://reactnavigation.org/docs/auth-flow/
@@ -223,7 +224,6 @@ export const WalletNavigator = () => {
           screenOptions={{
             ...navOptions,
             headerLeft: undefined,
-            detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
             headerTitle: ({children}) => {
               return (
                 <Pressable

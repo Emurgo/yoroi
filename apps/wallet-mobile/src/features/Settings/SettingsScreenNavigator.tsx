@@ -42,7 +42,7 @@ export const SettingsScreenNavigator = () => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
   const {track} = useMetrics()
-  const {atoms, color} = useTheme()
+  const {atoms, color, isDark} = useTheme()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -54,8 +54,7 @@ export const SettingsScreenNavigator = () => {
     <TransferProvider key={wallet.id}>
       <Stack.Navigator
         screenOptions={{
-          ...defaultStackNavigationOptions(atoms, color),
-          detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+          ...defaultStackNavigationOptions(atoms, color, isDark),
         }}
       >
         <Stack.Screen //

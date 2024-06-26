@@ -22,15 +22,14 @@ const MenuStack = createStackNavigator()
 
 export const MenuNavigator = () => {
   const strings = useStrings()
-  const {atoms, color} = useTheme()
+  const {atoms, color, isDark} = useTheme()
 
   return (
     <MenuStack.Navigator
       initialRouteName="_menu"
       screenOptions={{
-        ...defaultStackNavigationOptions(atoms, color),
+        ...defaultStackNavigationOptions(atoms, color, isDark),
         headerLeft: () => null,
-        detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
       }}
     >
       <MenuStack.Screen name="_menu" component={Menu} options={{title: strings.menu}} />

@@ -15,13 +15,12 @@ import {ReadTermsOfServiceScreen} from './ReadTermsOfServiceScreen'
 const Stack = createStackNavigator<InititalizationRoutes>()
 export const InitializationNavigator = () => {
   const strings = useStrings()
-  const {atoms, color} = useTheme()
+  const {atoms, color, isDark} = useTheme()
 
   return (
     <Stack.Navigator
       screenOptions={{
-        ...defaultStackNavigationOptions(atoms, color),
-        detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+        ...defaultStackNavigationOptions(atoms, color, isDark),
       }}
     >
       <Stack.Screen name="initial" component={InitialScreen} options={{headerShown: false}} />

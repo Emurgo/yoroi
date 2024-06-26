@@ -110,8 +110,11 @@ export const useSearchOnNavBar = ({
   isChild?: boolean
 }) => {
   const navigation = useNavigation()
-  const {atoms, color} = useTheme()
-  const defaultNavigationOptions = React.useMemo(() => defaultStackNavigationOptions(atoms, color), [atoms, color])
+  const {atoms, color, isDark} = useTheme()
+  const defaultNavigationOptions = React.useMemo(
+    () => defaultStackNavigationOptions(atoms, color, isDark),
+    [atoms, color, isDark],
+  )
 
   const {search, visible, showSearch, hideSearch, clearSearch} = useSearch()
 
@@ -183,24 +186,24 @@ export const useDisableSearchOnBar = ({
   onBack?: () => void
 }) => {
   const navigation = useNavigation()
-  const {atoms, color} = useTheme()
+  const {atoms, color, isDark} = useTheme()
 
   useFocusEffect(
     React.useCallback(() => {
       if (isChild)
         navigation.getParent()?.setOptions({
-          ...defaultStackNavigationOptions(atoms, color),
+          ...defaultStackNavigationOptions(atoms, color, isDark),
           headerLeft: onBack ? () => <BackButton onPress={onBack} /> : undefined,
           headerRight: undefined,
           title,
         })
-    }, [isChild, navigation, onBack, atoms, color, title]),
+    }, [isChild, navigation, atoms, color, isDark, onBack, title]),
   )
 
   React.useLayoutEffect(() => {
     if (!isChild)
       navigation.setOptions({
-        ...defaultStackNavigationOptions(atoms, color),
+        ...defaultStackNavigationOptions(atoms, color, isDark),
         headerLeft: onBack ? () => <BackButton onPress={onBack} /> : undefined,
         headerRight: undefined,
         title,

@@ -1,6 +1,6 @@
 import {init} from '@emurgo/cross-csl-mobile'
 import {useNavigation} from '@react-navigation/native'
-import {createStackNavigator} from '@react-navigation/stack'
+import {createStackNavigator, StackNavigationOptions} from '@react-navigation/stack'
 import {useAsyncStorage} from '@yoroi/common'
 import {exchangeApiMaker, exchangeManagerMaker, ExchangeProvider} from '@yoroi/exchange'
 import {resolverApiMaker, resolverManagerMaker, ResolverProvider, resolverStorageMaker} from '@yoroi/resolver'
@@ -12,7 +12,7 @@ import {
   SwapProvider,
   swapStorageMaker,
 } from '@yoroi/swap'
-import {Atoms, ThemedPalette, useTheme} from '@yoroi/theme'
+import {ThemedPalette, useTheme} from '@yoroi/theme'
 import {Resolver, Swap} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -71,8 +71,8 @@ export const TxHistoryNavigator = () => {
   const strings = useStrings()
   const {wallet, meta} = useSelectedWallet()
   const storage = useAsyncStorage()
-  const {atoms, color} = useTheme()
   const {styles} = useStyles()
+  const {atoms, color, isDark} = useTheme()
 
   // modal
   const [isModalInfoVisible, setIsModalInfoVisible] = React.useState(false)
@@ -133,6 +133,11 @@ export const TxHistoryNavigator = () => {
     return manager
   }, [wallet.isMainnet])
 
+  const navigationOptions = React.useMemo(
+    () => defaultStackNavigationOptions(atoms, color, isDark),
+    [atoms, color, isDark],
+  )
+
   return (
     <ReceiveProvider key={wallet.id}>
       <SwapProvider key={wallet.id} swapManager={swapManager}>
@@ -150,8 +155,7 @@ export const TxHistoryNavigator = () => {
                 <Stack.Navigator
                   screenListeners={{}}
                   screenOptions={{
-                    ...defaultStackNavigationOptions(atoms, color),
-                    detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+                    ...navigationOptions,
                     gestureEnabled: true,
                   }}
                 >
@@ -253,7 +257,7 @@ export const TxHistoryNavigator = () => {
                     name="swap-start-swap"
                     component={SwapTabNavigator}
                     options={{
-                      ...sendOptions(atoms, color),
+                      ...sendOptions(navigationOptions, color),
                       title: strings.swapTitle,
                     }}
                   />
@@ -270,7 +274,7 @@ export const TxHistoryNavigator = () => {
                     name="swap-select-sell-token"
                     component={SelectSellTokenFromListScreen}
                     options={{
-                      ...sendOptions(atoms, color),
+                      ...sendOptions(navigationOptions, color),
                       title: strings.swapFromTitle,
                     }}
                   />
@@ -279,7 +283,7 @@ export const TxHistoryNavigator = () => {
                     name="swap-select-buy-token"
                     component={SelectBuyTokenFromListScreen}
                     options={{
-                      ...sendOptions(atoms, color),
+                      ...sendOptions(navigationOptions, color),
                       title: strings.swapToTitle,
                     }}
                   />
@@ -316,7 +320,7 @@ export const TxHistoryNavigator = () => {
                     name="send-start-tx"
                     options={{
                       title: strings.sendTitle,
-                      ...sendOptions(atoms, color),
+                      ...sendOptions(navigationOptions, color),
                     }}
                   >
                     {() => (
@@ -330,7 +334,7 @@ export const TxHistoryNavigator = () => {
                     name="send-select-token-from-list"
                     options={{
                       title: strings.selectAssetTitle,
-                      ...sendOptions(atoms, color),
+                      ...sendOptions(navigationOptions, color),
                     }}
                   >
                     {() => (
@@ -344,7 +348,7 @@ export const TxHistoryNavigator = () => {
                     name="send-list-amounts-to-send"
                     options={{
                       title: strings.listAmountsToSendTitle,
-                      ...sendOptions(atoms, color),
+                      ...sendOptions(navigationOptions, color),
                     }}
                   >
                     {() => (
@@ -358,7 +362,7 @@ export const TxHistoryNavigator = () => {
                     name="send-edit-amount"
                     options={{
                       title: strings.editAmountTitle,
-                      ...sendOptions(atoms, color),
+                      ...sendOptions(navigationOptions, color),
                     }}
                   >
                     {() => (
@@ -373,7 +377,7 @@ export const TxHistoryNavigator = () => {
                     component={ConfirmTxScreen}
                     options={{
                       title: strings.confirmTitle,
-                      ...sendOptions(atoms, color),
+                      ...sendOptions(navigationOptions, color),
                     }}
                   />
 
@@ -393,7 +397,7 @@ export const TxHistoryNavigator = () => {
                     name="scan-start"
                     component={ScanCodeScreen}
                     options={{
-                      ...sendOptions(atoms, color),
+                      ...sendOptions(navigationOptions, color),
                       headerTransparent: true,
                       title: strings.scanTitle,
                       headerTintColor: color.white_static,
@@ -608,8 +612,8 @@ const useStyles = () => {
   } as const
 }
 
-const sendOptions = (atoms: Atoms, color: ThemedPalette) => ({
-  ...defaultStackNavigationOptions(atoms, color),
+const sendOptions = (navigationOptions: StackNavigationOptions, color: ThemedPalette) => ({
+  ...navigationOptions,
   headerStyle: {
     elevation: 0,
     shadowOpacity: 0,
