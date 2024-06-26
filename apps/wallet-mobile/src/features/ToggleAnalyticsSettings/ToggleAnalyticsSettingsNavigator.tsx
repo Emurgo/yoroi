@@ -10,12 +10,15 @@ const Stack = createStackNavigator<ToggleAnalyticsSettingsRoutes>()
 
 export const ToggleAnalyticsSettingsNavigator = () => {
   const strings = useStrings()
+
   const {atoms, color} = useTheme()
+
+  const navigationOptions = React.useMemo(() => defaultStackNavigationOptions(atoms, color), [atoms, color])
+
   return (
     <Stack.Navigator
       screenOptions={{
-        ...defaultStackNavigationOptions(atoms, color),
-        detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+        ...navigationOptions,
       }}
     >
       <Stack.Screen

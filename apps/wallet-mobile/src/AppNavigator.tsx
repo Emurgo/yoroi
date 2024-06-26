@@ -2,6 +2,7 @@ import {NavigationContainer, NavigationContainerRef} from '@react-navigation/nat
 import {createStackNavigator} from '@react-navigation/stack'
 import {isString} from '@yoroi/common'
 import {supportedPrefixes} from '@yoroi/links'
+import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Alert, AppState, AppStateStatus, InteractionManager, Platform} from 'react-native'
@@ -34,7 +35,7 @@ import {SetupWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
 import {useHasWallets} from './features/WalletManager/common/hooks/useHasWallets'
 import {useStatusBar} from './hooks/useStatusBar'
 import {agreementDate} from './kernel/config'
-import {AppRoutes} from './kernel/navigation'
+import {AppRoutes, defaultStackNavigationOptions} from './kernel/navigation'
 import {WalletNavigator} from './WalletNavigator'
 
 const Stack = createStackNavigator<AppRoutes>()
@@ -47,6 +48,7 @@ export const AppNavigator = () => {
   const [routeName, setRouteName] = React.useState<string>()
   useStatusBar(routeName)
   useHideScreenInAppSwitcher()
+  const {atoms, color} = useTheme()
 
   useAutoLogout()
 
@@ -87,6 +89,8 @@ export const AppNavigator = () => {
 
   const afterLoginAction = useAfterLoginAction()
 
+  const navOptions = React.useMemo(() => defaultStackNavigationOptions(atoms, color), [atoms, color])
+
   return (
     <NavigationContainer
       onStateChange={handleStateChange}
@@ -97,8 +101,8 @@ export const AppNavigator = () => {
       <ModalProvider>
         <Stack.Navigator
           screenOptions={{
+            ...navOptions,
             headerShown: false /* used only for transition */,
-            detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
           }}
         >
           {/* Not Authenticated */}

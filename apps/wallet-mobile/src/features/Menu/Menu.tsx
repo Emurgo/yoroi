@@ -30,7 +30,6 @@ export const MenuNavigator = () => {
       screenOptions={{
         ...defaultStackNavigationOptions(atoms, color),
         headerLeft: () => null,
-        detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
       }}
     >
       <MenuStack.Screen name="_menu" component={Menu} options={{title: strings.menu}} />

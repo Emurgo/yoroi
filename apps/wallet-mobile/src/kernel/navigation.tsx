@@ -11,7 +11,7 @@ import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/sta
 import {Atoms, ThemedPalette, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import React from 'react'
-import {Dimensions, InteractionManager, TouchableOpacity, TouchableOpacityProps} from 'react-native'
+import {Dimensions, InteractionManager, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
 import {Icon} from '../components'
 import {ScanFeature} from '../features/Scan/common/types'
@@ -52,8 +52,21 @@ export const BackButton = (props: TouchableOpacityProps & {color?: string}) => {
 
 // OPTIONS
 const WIDTH = Dimensions.get('window').width
+
 export const defaultStackNavigationOptions = (atoms: Atoms, color: ThemedPalette): StackNavigationOptions => {
   return {
+    detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+    cardStyle: {
+      backgroundColor: 'transparent',
+    },
+    cardOverlay: () => (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: color.gray_cmin,
+        }}
+      />
+    ),
     headerTintColor: color.gray_cmax,
     headerStyle: {
       elevation: 0,

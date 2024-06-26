@@ -55,7 +55,6 @@ export const SettingsScreenNavigator = () => {
       <Stack.Navigator
         screenOptions={{
           ...defaultStackNavigationOptions(atoms, color),
-          detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
         }}
       >
         <Stack.Screen //

@@ -21,7 +21,6 @@ export const InitializationNavigator = () => {
     <Stack.Navigator
       screenOptions={{
         ...defaultStackNavigationOptions(atoms, color),
-        detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
       }}
     >
       <Stack.Screen name="initial" component={InitialScreen} options={{headerShown: false}} />

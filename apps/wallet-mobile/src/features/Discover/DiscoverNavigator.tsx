@@ -33,7 +33,6 @@ export const DiscoverNavigator = () => {
           screenOptions={{
             ...defaultStackNavigationOptions(atoms, color),
             headerLeft: () => null,
-            detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
             gestureEnabled: true,
           }}
           initialRouteName="discover-select-dapp-from-list"

@@ -194,7 +194,7 @@ export const useDisableSearchOnBar = ({
           headerRight: undefined,
           title,
         })
-    }, [isChild, navigation, onBack, atoms, color, title]),
+    }, [isChild, navigation, atoms, color, onBack, title]),
   )
 
   React.useLayoutEffect(() => {

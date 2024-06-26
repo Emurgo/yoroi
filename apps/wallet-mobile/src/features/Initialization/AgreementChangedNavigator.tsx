@@ -1,4 +1,5 @@
 import {createStackNavigator} from '@react-navigation/stack'
+import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 
 import {defaultStackNavigationOptions, InititalizationRoutes} from '../../kernel/navigation'
@@ -11,13 +12,13 @@ import {TermsOfServiceChangedScreen} from './TermsOfServiceChangedScreen'
 const Stack = createStackNavigator<InititalizationRoutes>()
 
 export const AgreementChangedNavigator = () => {
+  const {atoms, color} = useTheme()
   const strings = useStrings()
   return (
     <Stack.Navigator
       initialRouteName="terms-of-service-changed"
       screenOptions={{
-        ...defaultStackNavigationOptions,
-        detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+        ...defaultStackNavigationOptions(atoms, color),
       }}
     >
       <Stack.Screen
