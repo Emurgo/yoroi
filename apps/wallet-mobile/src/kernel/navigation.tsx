@@ -7,6 +7,7 @@ import {
   useNavigationState,
   useRoute,
 } from '@react-navigation/native'
+import {TransitionPresets} from '@react-navigation/stack'
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack'
 import {Atoms, ThemedPalette, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
@@ -55,6 +56,7 @@ const WIDTH = Dimensions.get('window').width
 
 export const defaultStackNavigationOptions = (atoms: Atoms, color: ThemedPalette): StackNavigationOptions => {
   return {
+    ...TransitionPresets.SlideFromRightIOS,
     detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
     cardStyle: {
       backgroundColor: 'transparent',
