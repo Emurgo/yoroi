@@ -10,10 +10,10 @@ import {useToken} from '../../../../../yoroi-wallets/hooks'
 import {YoroiUnsignedTx} from '../../../../../yoroi-wallets/types/yoroi'
 import {formatTokenWithText} from '../../../../../yoroi-wallets/utils/format'
 import {Amounts, Quantities} from '../../../../../yoroi-wallets/utils/utils'
-import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 
 export const SecondaryTotals = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => {
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const secondaryAmounts = Amounts.remove(Amounts.getAmountsFromEntries(yoroiUnsignedTx.entries), [
     wallet.primaryTokenInfo.id,
   ])

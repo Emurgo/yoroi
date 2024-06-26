@@ -1,5 +1,5 @@
 import {useSetupWallet} from '@yoroi/setup-wallet'
-import {Api} from '@yoroi/types'
+import {Api, Wallet} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {InteractionManager} from 'react-native'
@@ -9,21 +9,19 @@ import {showErrorDialog} from '../../../../kernel/dialogs'
 import {errorMessages} from '../../../../kernel/i18n/global-messages'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../kernel/navigation'
-import {useCreateBip44Wallet} from '../../../../yoroi-wallets/hooks'
-import {WalletImplementationId} from '../../../../yoroi-wallets/types'
-import {AddressMode} from '../../../WalletManager/common/types'
+import {useCreateWalletXPub} from '../../../WalletManager/common/hooks/useCreateWalletXPub'
 import {WalletNameForm} from '../WalletNameForm/WalletNameForm'
 
 // when hw, later will be part of the onboarding
-const addressMode: AddressMode = 'single'
+const addressMode: Wallet.AddressMode = 'single'
 export const SaveNanoXScreen = () => {
   const strings = useStrings()
   const {resetToWalletSelection} = useWalletNavigation()
-  const {networkId, walletImplementationId, hwDeviceInfo} = useSetupWallet()
+  const {walletImplementation, hwDeviceInfo, accountVisual} = useSetupWallet()
   const intl = useIntl()
   const {track} = useMetrics()
 
-  const {createWallet, isLoading} = useCreateBip44Wallet({
+  const {createWallet, isLoading} = useCreateWalletXPub({
     onSuccess: () => {
       track.restoreWalletDetailsSettled()
       resetToWalletSelection()
@@ -43,15 +41,15 @@ export const SaveNanoXScreen = () => {
     ({name}: {name: string}) => {
       createWallet({
         name,
-        networkId,
         bip44AccountPublic: hwDeviceInfo.bip44AccountPublic,
-        implementationId: walletImplementationId as WalletImplementationId,
+        implementation: walletImplementation,
         hwDeviceInfo,
         readOnly: false,
         addressMode,
+        accountVisual,
       })
     },
-    [createWallet, hwDeviceInfo, networkId, walletImplementationId],
+    [accountVisual, createWallet, hwDeviceInfo, walletImplementation],
   )
 
   return (

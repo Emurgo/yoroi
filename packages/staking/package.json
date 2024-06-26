@@ -54,7 +54,7 @@
     "prepublish:prod": "yarn build:release",
     "publish:prod": "npm publish --scope yoroi --access public",
     "release": "release-it",
-    "test": "jest",
+    "test": "jest --maxWorkers=1 --detectOpenHandles",
     "test:watch": "jest --watch",
     "tsc": "tsc --noEmit -p tsconfig.json"
   },

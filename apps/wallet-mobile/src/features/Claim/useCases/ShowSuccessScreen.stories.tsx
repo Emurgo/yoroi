@@ -5,7 +5,7 @@ import React from 'react'
 
 import {queryClientFixture} from '../../../kernel/fixtures/fixtures'
 import {mocks as walletMocks} from '../../../yoroi-wallets/mocks/wallet'
-import {SelectedWalletProvider} from '../../WalletManager/context/SelectedWalletContext'
+import {WalletManagerProviderMock} from '../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {claimApiMockInstances} from '../module/api.mocks'
 import {ClaimProvider} from '../module/ClaimProvider'
 import {mocks as claimMocks} from '../module/state.mocks'
@@ -14,7 +14,7 @@ import {ShowSuccessScreen} from './ShowSuccessScreen'
 const AppDecorator: DecoratorFunction<React.ReactNode> = (story) => {
   return (
     <QueryClientProvider client={queryClientFixture()}>
-      <SelectedWalletProvider wallet={walletMocks.wallet}>{story()}</SelectedWalletProvider>
+      <WalletManagerProviderMock wallet={walletMocks.wallet}>{story()}</WalletManagerProviderMock>
     </QueryClientProvider>
   )
 }

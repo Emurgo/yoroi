@@ -3,23 +3,30 @@ import {parseSafe, useAsyncStorage} from '@yoroi/common'
 import React from 'react'
 
 import {configCurrencies, supportedCurrencies} from '../../../kernel/constants'
-import {isEmptyString} from '../../../kernel/utils'
+import {useAdaPrice} from '../../../yoroi-wallets/cardano/useAdaPrice'
 import {ConfigCurrencies, CurrencySymbol} from '../../../yoroi-wallets/types'
 
 const CurrencyContext = React.createContext<undefined | CurrencyContext>(undefined)
 export const CurrencyProvider = ({children}: {children: React.ReactNode}) => {
   const currency = useCurrency()
   const selectCurrency = useSaveCurrency()
-
+  const adaPrice = useAdaPrice({to: currency})
   const value = React.useMemo(
-    () => ({currency, selectCurrency, supportedCurrencies, configCurrencies, config: configCurrencies[currency]}),
-    [currency, selectCurrency],
+    () => ({
+      currency,
+      selectCurrency,
+      supportedCurrencies,
+      configCurrencies,
+      config: configCurrencies[currency],
+      adaPrice,
+    }),
+    [adaPrice, currency, selectCurrency],
   )
 
   return <CurrencyContext.Provider value={value}>{children}</CurrencyContext.Provider>
 }
 
-export const useCurrencyContext = () => React.useContext(CurrencyContext) || missingProvider()
+export const useCurrencyPairing = () => React.useContext(CurrencyContext) || missingProvider()
 
 const missingProvider = () => {
   throw new Error('CurrencyProvider is missing')
@@ -39,12 +46,9 @@ const useCurrency = () => {
 
       return defaultCurrency
     },
-    suspense: true,
   })
 
-  if (isEmptyString(query.data)) throw new Error('Invalid state')
-
-  return query.data
+  return query.data ?? defaultCurrency
 }
 
 const useSaveCurrency = ({onSuccess, ...options}: UseMutationOptions<void, Error, CurrencySymbol> = {}) => {
@@ -72,6 +76,10 @@ type CurrencyContext = {
 
   supportedCurrencies: typeof supportedCurrencies
   configCurrencies: ConfigCurrencies
+  adaPrice: {
+    price: number
+    time: number
+  }
 }
 
 const parseCurrencySymbol = (data: unknown) => {

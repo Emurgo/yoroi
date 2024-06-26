@@ -4,14 +4,14 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {mocks} from '../../../../../../../yoroi-wallets/mocks/wallet'
+import {WalletManagerProviderMock} from '../../../../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {SearchProvider} from '../../../../../../Search/SearchContext'
-import {SelectedWalletProvider} from '../../../../../../WalletManager/context/SelectedWalletContext'
 import {SwapFormProvider} from '../../../../../common/SwapFormProvider'
 import {SwitchTokens} from '../AmountActions/SwitchTokens'
 
 storiesOf('Swap Switch Tokens', module).add('only enabled', () => {
   return (
-    <SelectedWalletProvider wallet={mocks.wallet}>
+    <WalletManagerProviderMock wallet={mocks.wallet}>
       <SearchProvider>
         <SwapProvider swapManager={mockSwapManager}>
           <SwapFormProvider>
@@ -21,7 +21,7 @@ storiesOf('Swap Switch Tokens', module).add('only enabled', () => {
           </SwapFormProvider>
         </SwapProvider>
       </SearchProvider>
-    </SelectedWalletProvider>
+    </WalletManagerProviderMock>
   )
 })
 

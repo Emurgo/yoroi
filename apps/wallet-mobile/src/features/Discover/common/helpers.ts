@@ -1,8 +1,9 @@
 import {connectionStorageMaker, dappConnectorApiMaker, dappConnectorMaker, ResolverWallet} from '@yoroi/dapp-connector'
 import {DappConnector} from '@yoroi/dapp-connector'
-import {App} from '@yoroi/types'
+import {App, Wallet} from '@yoroi/types'
 
-import {cip30ExtensionMaker} from '../../../yoroi-wallets/cardano/cip30'
+import {cip30ExtensionMaker} from '../../../yoroi-wallets/cardano/cip30/cip30'
+import {cip95ExtensionMaker, supportsCIP95} from '../../../yoroi-wallets/cardano/cip95/cip95'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 
 export const validUrl = (url: string) => {
@@ -60,18 +61,33 @@ export const isGoogleSearchItem = (dApp: DAppItem) => dApp.id === googleDappId
 type CreateDappConnectorOptions = {
   appStorage: App.Storage
   wallet: YoroiWallet
+  meta: Wallet.Meta
   confirmConnection: (origin: string, manager: DappConnector) => Promise<boolean>
   signTx: (cbor: string) => Promise<string>
   signData: (address: string, payload: string) => Promise<string>
 }
 
 export const createDappConnector = (options: CreateDappConnectorOptions) => {
-  const {wallet, appStorage, confirmConnection, signTx, signData} = options
+  const {wallet, meta, appStorage, confirmConnection, signTx, signData} = options
   const api = dappConnectorApiMaker()
-  const cip30 = cip30ExtensionMaker(wallet)
+  const cip30 = cip30ExtensionMaker(wallet, meta)
+  const cip95 = supportsCIP95(meta.implementation) ? cip95ExtensionMaker(wallet, meta) : null
+
+  const cip95handler = cip95
+    ? {
+        signData: async (address: string, payload: string) => {
+          const rootKey = await signData(address, payload)
+          return cip95.signData(rootKey, address, payload)
+        },
+        getPubDRepKey: () => cip95.getPubDRepKey(),
+        getRegisteredPubStakeKeys: () => cip95.getRegisteredPubStakeKeys(),
+        getUnregisteredPubStakeKeys: () => cip95.getUnregisteredPubStakeKeys(),
+      }
+    : undefined
+
   const handlerWallet: ResolverWallet = {
     id: wallet.id,
-    networkId: wallet.networkId,
+    networkId: wallet.networkManager.chainId,
     getUsedAddresses: (params) => cip30.getUsedAddresses(params),
     getUnusedAddresses: () => cip30.getUnusedAddresses(),
     getBalance: (tokenId) => cip30.getBalance(tokenId),
@@ -96,6 +112,7 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
       const signedTx = await wallet.signTx(unsignedTx, rootKey)
       return cip30.sendReorganisationTx(signedTx)
     },
+    cip95: cip95handler,
   }
   const storage = connectionStorageMaker({storage: appStorage.join('dapp-connections/')})
   const manager = dappConnectorMaker(storage, handlerWallet, api)

@@ -49,6 +49,8 @@ describe('useSwapOrdersByStatusOpen', () => {
   })
 
   it('error', async () => {
+    const spy = jest.spyOn(console, 'error')
+    spy.mockImplementation(() => {})
     const TestOpenedOrders = () => {
       const orders = useSwapOrdersByStatusOpen()
       return (
@@ -67,5 +69,6 @@ describe('useSwapOrdersByStatusOpen', () => {
     await waitFor(() => {
       expect(getByTestId('hasError')).toBeDefined()
     })
+    spy.mockRestore()
   })
 })

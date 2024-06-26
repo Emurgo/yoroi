@@ -14,8 +14,8 @@ import {time} from '../../../../kernel/constants'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {NftRoutes} from '../../../../kernel/navigation'
 import {useNavigateTo} from '../../../Nfts/common/navigation'
-import {useSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'
-import {useWalletManager} from '../../../WalletManager/context/WalletManagerContext'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {MediaPreview} from '../MediaPreview/MediaPreview'
 
 export const MediaDetails = () => {
@@ -26,7 +26,9 @@ export const MediaDetails = () => {
   const [activeTab, setActiveTab] = useState<ActiveTab>('overview')
 
   const {id} = useRoute<RouteProp<NftRoutes, 'nft-details'>>().params
-  const {network, balances} = useSelectedWallet()
+  const {
+    wallet: {networkManager, balances},
+  } = useSelectedWallet()
 
   // reading from the getter, there is no need to subscribe to changes
   const amount = balances.records.get(id)
@@ -67,7 +69,7 @@ export const MediaDetails = () => {
           </Tabs>
 
           <Boundary>
-            <Details info={amount.info} activeTab={activeTab} network={network} />
+            <Details info={amount.info} activeTab={activeTab} network={networkManager.network} />
           </Boundary>
         </ScrollView>
       </SafeAreaView>
@@ -81,7 +83,7 @@ type DetailsProps = {
   network: Chain.SupportedNetworks
 }
 const Details = ({activeTab, info, network}: DetailsProps) => {
-  const walletManager = useWalletManager()
+  const {walletManager} = useWalletManager()
   const {api} = walletManager.getTokenManager(network)
 
   const {tokenDiscovery} = usePorfolioTokenDiscovery(

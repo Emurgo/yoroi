@@ -5,22 +5,22 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer} from '../../../components'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
-import {useWalletManager} from '../../WalletManager/context/WalletManagerContext'
+import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 
 export const PortfolioScreen = () => {
-  const manager = useWalletManager()
+  const {walletManager} = useWalletManager()
   const [openedWalletsByNetwork] = React.useState<Map<Chain.SupportedNetworks, Set<YoroiWallet['id']>>>(
-    manager.getOpenedWalletsByNetwork(),
+    walletManager.getWalletsByNetwork(),
   )
-  const [canWipe, setCanWipe] = React.useState(!manager.isSyncActive && !manager.isSyncing)
-  const [isActive, setIsActive] = React.useState(manager.isSyncActive)
+  const [canWipe, setCanWipe] = React.useState(!walletManager.isSyncActive && !walletManager.isSyncing)
+  const [isActive, setIsActive] = React.useState(walletManager.isSyncActive)
 
   React.useEffect(() => {
-    const subSyncActivity = manager.syncActive$.subscribe((isActive) => {
+    const subSyncActivity = walletManager.syncActive$.subscribe((isActive) => {
       setIsActive(isActive)
-      setCanWipe(() => !isActive && !manager.isSyncing)
+      setCanWipe(() => !isActive && !walletManager.isSyncing)
     })
-    const subIsSyncing = manager.syncing$.subscribe((isSyncing) => {
+    const subIsSyncing = walletManager.syncing$.subscribe((isSyncing) => {
       setCanWipe(() => !isSyncing)
     })
 
@@ -31,11 +31,11 @@ export const PortfolioScreen = () => {
   })
 
   const handleOnReset = () => {
-    manager.pauseSyncing()
+    walletManager.pauseSyncing()
     openedWalletsByNetwork.forEach((walletIds, network) => {
-      const tm = manager.getTokenManager(network)
+      const tm = walletManager.getTokenManager(network)
       walletIds.forEach((walletId) => {
-        const wallet = manager.getOpenedWalletById(walletId)
+        const wallet = walletManager.getWalletById(walletId)
         if (wallet) wallet.balanceManager.clear()
       })
       tm.clear({sourceId: 'PortfolioScreen'})
@@ -44,9 +44,9 @@ export const PortfolioScreen = () => {
 
   const handleOnSync = () => {
     if (!isActive) {
-      manager.resumeSyncing()
+      walletManager.resumeSyncing()
     } else {
-      manager.pauseSyncing()
+      walletManager.pauseSyncing()
     }
   }
 
@@ -55,7 +55,7 @@ export const PortfolioScreen = () => {
       <View style={{padding: 16}}>
         <Text>Portfolio playground</Text>
 
-        <Text>{manager.isSyncActive ? 'active' : 'stopped'}</Text>
+        <Text>{walletManager.isSyncActive ? 'active' : 'stopped'}</Text>
 
         <Spacer height={16} />
 
@@ -69,7 +69,7 @@ export const PortfolioScreen = () => {
 
         {Array.from(openedWalletsByNetwork).map(([network, walletIds]) => {
           return Array.from(walletIds).map((walletId, index) => {
-            const wallet = manager.getOpenedWalletById(walletId)
+            const wallet = walletManager.getWalletById(walletId)
             return (
               <View key={walletId}>
                 {index === 0 && <Text>{network}</Text>}

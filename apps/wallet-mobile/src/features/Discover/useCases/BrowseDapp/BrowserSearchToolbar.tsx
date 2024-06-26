@@ -3,6 +3,7 @@ import * as React from 'react'
 import {StyleSheet, TextInput, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
 import {Icon} from '../../../../components'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 
 type Props = {
   searchValue: string
@@ -12,6 +13,23 @@ type Props = {
 }
 export const BrowserSearchToolbar = ({onBack, onSearchChange, onSearchSubmit, searchValue}: Props) => {
   const {styles} = useStyles()
+  const {track} = useMetrics()
+
+  React.useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout> | undefined
+
+    const sendMetrics = () => {
+      clearTimeout(timeout)
+
+      timeout = setTimeout(() => {
+        track.discoverWebViewToolbarSearchActivated({search_term: searchValue})
+      }, 500) // 0.5s requirement
+    }
+
+    if (searchValue.length > 0) sendMetrics()
+
+    return () => clearTimeout(timeout)
+  }, [searchValue, track])
 
   return (
     <View style={styles.root}>

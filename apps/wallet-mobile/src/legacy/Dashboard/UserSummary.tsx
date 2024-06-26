@@ -6,7 +6,7 @@ import {StyleSheet, View} from 'react-native'
 
 import {Button, Icon, Text, TitledCard} from '../../components'
 import {usePrivacyMode} from '../../features/Settings/PrivacyMode/PrivacyMode'
-import {useSelectedWallet} from '../../features/WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import globalMessages from '../../kernel/i18n/global-messages'
 import {asQuantity} from '../../yoroi-wallets/utils'
 import {formatAdaWithText} from '../../yoroi-wallets/utils/format'
@@ -24,7 +24,7 @@ type Props = {
 export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdraw, disableWithdraw}: Props) => {
   const styles = useStyles()
   const strings = useStrings()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {isPrivacyActive} = usePrivacyMode()
 
   return (

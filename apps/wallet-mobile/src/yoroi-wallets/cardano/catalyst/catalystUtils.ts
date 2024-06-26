@@ -1,7 +1,7 @@
 import {mnemonicToEntropy} from 'bip39'
 
 import {CardanoMobile} from '../../wallets'
-import {generateAdaMnemonic} from '../mnemonic'
+import {generateAdaMnemonic} from '../mnemonic/mnemonic'
 
 export async function generatePrivateKeyForCatalyst() {
   const mnemonic = generateAdaMnemonic()

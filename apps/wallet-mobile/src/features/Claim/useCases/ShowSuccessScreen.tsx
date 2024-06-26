@@ -15,7 +15,7 @@ import {isEmptyString} from '../../../kernel/utils'
 import {useTokenInfos} from '../../../yoroi-wallets/hooks'
 import {sortTokenInfos} from '../../../yoroi-wallets/utils/sorting'
 import {Amounts} from '../../../yoroi-wallets/utils/utils'
-import {useSelectedWallet} from '../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useDialogs} from '../common/useDialogs'
 import {useNavigateTo} from '../common/useNavigateTo'
 import {useStrings} from '../common/useStrings'
@@ -95,9 +95,9 @@ const Status = ({status, style, ...props}: TextProps & {status: ClaimStatus}) =>
 
 const TxHash = ({txHash}: {txHash: string}) => {
   const strings = useStrings()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {styles, colors} = useStyles()
-  const explorers = useExplorers(wallet.network)
+  const explorers = useExplorers(wallet.networkManager.network)
 
   return (
     <>
@@ -126,7 +126,7 @@ const TxHash = ({txHash}: {txHash: string}) => {
 }
 
 export const AmountList = ({amounts}: {amounts: Balance.Amounts}) => {
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
 
   const tokenInfos = useTokenInfos({
     wallet,

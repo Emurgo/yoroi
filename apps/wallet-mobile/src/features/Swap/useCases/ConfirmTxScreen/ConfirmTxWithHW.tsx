@@ -1,3 +1,4 @@
+import {HW} from '@yoroi/types'
 import React, {useState} from 'react'
 import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
 
@@ -5,9 +6,10 @@ import {Text} from '../../../../components'
 import {LedgerConnect} from '../../../../legacy/HW'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useSignWithHwAndSubmitTx} from '../../../../yoroi-wallets/hooks'
-import {DeviceId, DeviceObj, withBLE, withUSB} from '../../../../yoroi-wallets/hw'
+import {withBLE, withUSB} from '../../../../yoroi-wallets/hw'
 import {YoroiSignedTx, YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
-import {walletManager} from '../../../WalletManager/common/walletManager'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {useStrings} from '../../common/strings'
 import {LedgerTransportSwitch} from './LedgerTransportSwitch'
 
@@ -22,6 +24,8 @@ type TransportType = 'USB' | 'BLE'
 type Step = 'select-transport' | 'connect-transport' | 'loading'
 
 export const ConfirmTxWithHW = ({onSuccess, wallet, unsignedTx}: Props) => {
+  const {meta} = useSelectedWallet()
+  const {walletManager} = useWalletManager()
   const [transportType, setTransportType] = React.useState<TransportType>('USB')
   const [step, setStep] = useState<Step>('select-transport')
   const strings = useStrings()
@@ -36,16 +40,18 @@ export const ConfirmTxWithHW = ({onSuccess, wallet, unsignedTx}: Props) => {
     setStep('connect-transport')
   }
 
-  const onConnectBLE = async (deviceId: DeviceId) => {
+  const onConnectBLE = (deviceId: string) => {
     setStep('loading')
-    await walletManager.updateHWDeviceInfo(wallet, withBLE(wallet, deviceId))
-    signAndSubmitTx({unsignedTx, useUSB: false})
+    const hwDeviceInfo = withBLE(meta, deviceId)
+    walletManager.updateWalletHWDeviceInfo(meta.id, hwDeviceInfo)
+    signAndSubmitTx({unsignedTx, useUSB: false, hwDeviceInfo})
   }
 
-  const onConnectUSB = async (deviceObj: DeviceObj) => {
+  const onConnectUSB = (deviceObj: HW.DeviceObj) => {
     setStep('loading')
-    await walletManager.updateHWDeviceInfo(wallet, withUSB(wallet, deviceObj))
-    signAndSubmitTx({unsignedTx, useUSB: true})
+    const hwDeviceInfo = withUSB(meta, deviceObj)
+    walletManager.updateWalletHWDeviceInfo(meta.id, hwDeviceInfo)
+    signAndSubmitTx({unsignedTx, useUSB: true, hwDeviceInfo})
   }
 
   if (step === 'select-transport') {

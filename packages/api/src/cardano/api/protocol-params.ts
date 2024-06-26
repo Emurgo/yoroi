@@ -4,13 +4,13 @@ import {Api} from '@yoroi/types'
 
 export const getProtocolParams =
   (baseUrl: string, request: Fetcher = fetcher) =>
-  async (): Promise<Api.Cardano.ProtocolParamsResult> => {
-    return request<Api.Cardano.ProtocolParamsResult>({
+  async (): Promise<Api.Cardano.ProtocolParams> => {
+    return request<Api.Cardano.ProtocolParams>({
       url: `${baseUrl}/protocolparameters`,
       data: undefined,
       method: 'GET',
       headers: {'Content-Type': 'application/json'},
-    }).then((response: Api.Cardano.ProtocolParamsResult) => {
+    }).then((response: Api.Cardano.ProtocolParams) => {
       const parsedResponse = parseProtocolParamsResponse(response)
 
       if (!parsedResponse)
@@ -20,8 +20,8 @@ export const getProtocolParams =
   }
 
 export const parseProtocolParamsResponse = (
-  data: Api.Cardano.ProtocolParamsResult,
-): Api.Cardano.ProtocolParamsResult | undefined => {
+  data: Api.Cardano.ProtocolParams,
+): Api.Cardano.ProtocolParams | undefined => {
   return isProtocolParamsResponse(data) ? data : undefined
 }
 

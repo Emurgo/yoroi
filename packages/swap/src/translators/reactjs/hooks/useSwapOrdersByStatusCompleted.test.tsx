@@ -48,6 +48,8 @@ describe('useSwapOrdersByStatusCompleted', () => {
   })
 
   it('error', async () => {
+    const spy = jest.spyOn(console, 'error')
+    spy.mockImplementation(() => {})
     const TestCompletedOrders = () => {
       const orders = useSwapOrdersByStatusCompleted()
       return (
@@ -68,5 +70,6 @@ describe('useSwapOrdersByStatusCompleted', () => {
     await waitFor(() => {
       expect(getByTestId('hasError')).toBeDefined()
     })
+    spy.mockRestore()
   })
 })

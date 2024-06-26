@@ -87,7 +87,7 @@ export const useSendReceiver = () => {
 }
 
 const debounceMaker = <T extends (...args: never[]) => unknown>(callback: T, delay: number) => {
-  let timeoutId: NodeJS.Timeout | null = null
+  let timeoutId: ReturnType<typeof setTimeout> | null = null
 
   const clear = () => {
     if (timeoutId !== null) {

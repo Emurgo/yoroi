@@ -1,6 +1,6 @@
+import {App} from '@yoroi/types'
 import React from 'react'
 
-import {WrongPassword} from '../../../../yoroi-wallets/cardano/errors'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useSignWithPasswordAndSubmitTx} from '../../../../yoroi-wallets/hooks'
 import {YoroiSignedTx, YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
@@ -44,12 +44,12 @@ export const ConfirmTxWithPassword = ({wallet, onSuccess, unsignedTx}: Props) =>
 
   const onConfirm = async (password: string) => {
     try {
-      const rootKey = await wallet.encryptedStorage.rootKey.read(password)
+      const rootKey = await wallet.encryptedStorage.xpriv.read(password)
       if (rootKey !== undefined) {
         signAndSubmitTx({unsignedTx, password})
       }
     } catch (err) {
-      if (err instanceof WrongPassword) {
+      if (err instanceof App.Errors.WrongPassword) {
         showError({
           errorMessage: strings.incorrectPasswordTitle,
           errorLogs: strings.incorrectPasswordMessage,

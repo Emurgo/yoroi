@@ -9,7 +9,7 @@ import {Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {AmountItem, AmountItemProps} from '../../../components/AmountItem/AmountItem'
 import {Spacer} from '../../../components/Spacer'
 import {usePrivacyMode} from '../../../features/Settings/PrivacyMode/PrivacyMode'
-import {useSelectedWallet} from '../../../features/WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {useBalances, useTokenInfos} from '../../../yoroi-wallets/hooks'
 import {Amounts} from '../../../yoroi-wallets/utils'
@@ -23,8 +23,8 @@ type Props = Partial<ListProps> & {
 }
 export const AssetList = (props: Props) => {
   const styles = useStyles()
-  const wallet = useSelectedWallet()
-  const explorers = useExplorers(wallet.network)
+  const {wallet} = useSelectedWallet()
+  const explorers = useExplorers(wallet.networkManager.network)
   const balances = useBalances(wallet)
   const {track} = useMetrics()
 

@@ -1,6 +1,6 @@
 import {init} from '@emurgo/cross-csl-mobile'
 import {useNavigation} from '@react-navigation/native'
-import {createStackNavigator} from '@react-navigation/stack'
+import {createStackNavigator, StackNavigationOptions} from '@react-navigation/stack'
 import {useAsyncStorage} from '@yoroi/common'
 import {exchangeApiMaker, exchangeManagerMaker, ExchangeProvider} from '@yoroi/exchange'
 import {resolverApiMaker, resolverManagerMaker, ResolverProvider, resolverStorageMaker} from '@yoroi/resolver'
@@ -12,7 +12,7 @@ import {
   SwapProvider,
   swapStorageMaker,
 } from '@yoroi/swap'
-import {Atoms, ThemedPalette, useTheme} from '@yoroi/theme'
+import {ThemedPalette, useTheme} from '@yoroi/theme'
 import {Resolver, Swap} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -50,7 +50,7 @@ import {
 } from '../../features/Swap/useCases'
 import {SelectBuyTokenFromListScreen} from '../../features/Swap/useCases/StartSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
 import {SelectSellTokenFromListScreen} from '../../features/Swap/useCases/StartSwapScreen/CreateOrder/EditSellAmount/SelectSellTokenFromListScreen/SelectSellTokenFromListScreen'
-import {useSelectedWallet} from '../../features/WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {unstoppableApiKey} from '../../kernel/env'
 import {
   BackButton,
@@ -59,7 +59,7 @@ import {
   TxHistoryRoutes,
   useWalletNavigation,
 } from '../../kernel/navigation'
-import {useFrontendFees, useStakingKey, useWalletName} from '../../yoroi-wallets/hooks'
+import {useFrontendFees, useStakingKey} from '../../yoroi-wallets/hooks'
 import {ModalInfo} from './ModalInfo'
 import {TxDetails} from './TxDetails'
 import {TxHistory} from './TxHistory'
@@ -69,11 +69,10 @@ const aggregator: Swap.Aggregator = 'muesliswap'
 const Stack = createStackNavigator<TxHistoryRoutes>()
 export const TxHistoryNavigator = () => {
   const strings = useStrings()
-  const wallet = useSelectedWallet()
-  const walletName = useWalletName(wallet)
+  const {wallet, meta} = useSelectedWallet()
   const storage = useAsyncStorage()
-  const {atoms, color} = useTheme()
   const {styles} = useStyles()
+  const {atoms, color} = useTheme()
 
   // modal
   const [isModalInfoVisible, setIsModalInfoVisible] = React.useState(false)
@@ -125,13 +124,16 @@ export const TxHistoryNavigator = () => {
   // exchange
   const exchangeManager = React.useMemo(() => {
     const api = exchangeApiMaker({
-      isProduction: wallet.networkId === 1,
+      // TODO: update exchange with isMainnet
+      isProduction: wallet.isMainnet,
       partner: 'yoroi',
     })
 
     const manager = exchangeManagerMaker({api})
     return manager
-  }, [wallet.networkId])
+  }, [wallet.isMainnet])
+
+  const navigationOptions = React.useMemo(() => defaultStackNavigationOptions(atoms, color), [atoms, color])
 
   return (
     <ReceiveProvider key={wallet.id}>
@@ -150,8 +152,7 @@ export const TxHistoryNavigator = () => {
                 <Stack.Navigator
                   screenListeners={{}}
                   screenOptions={{
-                    ...defaultStackNavigationOptions(atoms, color),
-                    detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+                    ...navigationOptions,
                     gestureEnabled: true,
                   }}
                 >
@@ -159,7 +160,7 @@ export const TxHistoryNavigator = () => {
                     name="history-list"
                     component={TxHistory}
                     options={{
-                      title: walletName ?? '',
+                      title: meta.name,
                       headerRight: headerRightHistory,
                       headerStyle: {
                         elevation: 0,
@@ -253,7 +254,7 @@ export const TxHistoryNavigator = () => {
                     name="swap-start-swap"
                     component={SwapTabNavigator}
                     options={{
-                      ...sendOptions(atoms, color),
+                      ...sendOptions(navigationOptions, color),
                       title: strings.swapTitle,
                     }}
                   />
@@ -270,7 +271,7 @@ export const TxHistoryNavigator = () => {
                     name="swap-select-sell-token"
                     component={SelectSellTokenFromListScreen}
                     options={{
-                      ...sendOptions(atoms, color),
+                      ...sendOptions(navigationOptions, color),
                       title: strings.swapFromTitle,
                     }}
                   />
@@ -279,7 +280,7 @@ export const TxHistoryNavigator = () => {
                     name="swap-select-buy-token"
                     component={SelectBuyTokenFromListScreen}
                     options={{
-                      ...sendOptions(atoms, color),
+                      ...sendOptions(navigationOptions, color),
                       title: strings.swapToTitle,
                     }}
                   />
@@ -316,7 +317,7 @@ export const TxHistoryNavigator = () => {
                     name="send-start-tx"
                     options={{
                       title: strings.sendTitle,
-                      ...sendOptions(atoms, color),
+                      ...sendOptions(navigationOptions, color),
                     }}
                   >
                     {() => (
@@ -330,7 +331,7 @@ export const TxHistoryNavigator = () => {
                     name="send-select-token-from-list"
                     options={{
                       title: strings.selectAssetTitle,
-                      ...sendOptions(atoms, color),
+                      ...sendOptions(navigationOptions, color),
                     }}
                   >
                     {() => (
@@ -344,7 +345,7 @@ export const TxHistoryNavigator = () => {
                     name="send-list-amounts-to-send"
                     options={{
                       title: strings.listAmountsToSendTitle,
-                      ...sendOptions(atoms, color),
+                      ...sendOptions(navigationOptions, color),
                     }}
                   >
                     {() => (
@@ -358,7 +359,7 @@ export const TxHistoryNavigator = () => {
                     name="send-edit-amount"
                     options={{
                       title: strings.editAmountTitle,
-                      ...sendOptions(atoms, color),
+                      ...sendOptions(navigationOptions, color),
                     }}
                   >
                     {() => (
@@ -373,7 +374,7 @@ export const TxHistoryNavigator = () => {
                     component={ConfirmTxScreen}
                     options={{
                       title: strings.confirmTitle,
-                      ...sendOptions(atoms, color),
+                      ...sendOptions(navigationOptions, color),
                     }}
                   />
 
@@ -393,7 +394,7 @@ export const TxHistoryNavigator = () => {
                     name="scan-start"
                     component={ScanCodeScreen}
                     options={{
-                      ...sendOptions(atoms, color),
+                      ...sendOptions(navigationOptions, color),
                       headerTransparent: true,
                       title: strings.scanTitle,
                       headerTintColor: color.white_static,
@@ -557,14 +558,14 @@ const SettingsIconButton = (props: TouchableOpacityProps) => {
 }
 
 const HeaderRightHistory = React.memo(() => {
-  const wallet = useSelectedWallet()
+  const {meta} = useSelectedWallet()
   const {navigateToSettings} = useWalletNavigation()
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const {styles, colors} = useStyles()
 
   return (
     <Row style={styles.row}>
-      {!wallet.isReadOnly && (
+      {!meta.isReadOnly && (
         <>
           <CodeScannerButton
             onPress={() => navigation.navigate('scan-start', {insideFeature: 'scan'})}
@@ -608,8 +609,8 @@ const useStyles = () => {
   } as const
 }
 
-const sendOptions = (atoms: Atoms, color: ThemedPalette) => ({
-  ...defaultStackNavigationOptions(atoms, color),
+const sendOptions = (navigationOptions: StackNavigationOptions, color: ThemedPalette) => ({
+  ...navigationOptions,
   headerStyle: {
     elevation: 0,
     shadowOpacity: 0,

@@ -1,21 +1,81 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, TextProps, View, ViewProps} from 'react-native'
 
 import {Text} from '../../components'
 
-export const Title = ({style, ...props}: TextProps) => <Text {...props} style={[styles.title, style]} />
-export const Description = ({style, ...props}: TextProps) => <Text {...props} style={[styles.description, style]} />
+export const Title = ({style, ...props}: TextProps) => {
+  const styles = useStyles()
 
-export const Actions = ({style, ...props}: ViewProps) => <View {...props} style={[styles.actions, style]} />
+  return <Text {...props} style={[styles.title, style]} />
+}
+export const Description = ({style, ...props}: TextProps) => {
+  const styles = useStyles()
+
+  return <Text {...props} style={[styles.description, style]} />
+}
+
+export const Actions = ({style, ...props}: ViewProps) => {
+  const styles = useStyles()
+
+  return <View {...props} style={[styles.actions, style]} />
+}
 export const Instructions = (props: ViewProps) => <View {...props} />
-export const Row = ({style, ...props}: ViewProps) => <View {...props} style={[styles.row, style]} />
+export const Row = ({style, ...props}: ViewProps) => {
+  const styles = useStyles()
 
-export const PinBox = ({selected, children}: {selected?: boolean; children: React.ReactNode}) => (
-  <View style={[styles.pinBox, selected && styles.pinBoxSelected]}>
-    <PinDigit>{children}</PinDigit>
-  </View>
-)
+  return <View {...props} style={[styles.row, style]} />
+}
+
+export const PinBox = ({selected, children}: {selected?: boolean; children: React.ReactNode}) => {
+  const styles = useStyles()
+
+  return (
+    <View style={[styles.pinBox, selected && styles.pinBoxSelected]}>
+      <PinDigit>{children}</PinDigit>
+    </View>
+  )
+}
 export const PinDigit = ({style, ...props}: TextProps) => <Text {...props} style={[styles.pinDigit, style]} />
+
+const useStyles = () => {
+  const {color, atoms} = useTheme()
+  const styles = StyleSheet.create({
+    title: {
+      ...atoms.heading_4_medium,
+      color: color.gray_c900,
+    },
+    description: {
+      ...atoms.body_1_lg_regular,
+      color: color.gray_c900,
+    },
+    row: {
+      flexDirection: 'row',
+    },
+    actions: {
+      ...atoms.px_lg,
+    },
+    pinBox: {
+      borderWidth: 1,
+      height: 60,
+      width: 60,
+      borderRadius: 6,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderColor: color.gray_c900,
+    },
+    pinDigit: {
+      fontSize: 20,
+      lineHeight: 22,
+    },
+    pinBoxSelected: {
+      borderWidth: 2,
+      borderColor: '#4A5065',
+    },
+  })
+
+  return styles
+}
 
 const styles = StyleSheet.create({
   title: {

@@ -13,7 +13,7 @@ export const CountDAppsAvailable = ({total}: Props) => {
 
   return (
     <View style={styles.countAvailableBox}>
-      <Text style={styles.availableText}>{`${total} ${strings.totalDAppAvailable}`}</Text>
+      <Text style={styles.availableText}>{`${strings.totalDAppAvailable(total)}`}</Text>
     </View>
   )
 }

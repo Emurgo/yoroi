@@ -3,8 +3,9 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Animated, GestureResponderEvent, Pressable, StyleSheet, Text, View} from 'react-native'
 
-import {KeyboardAvoidingView, Spacer} from '..'
+import {KeyboardAvoidingView} from '../KeyboardAvoidingView'
 import {LoadingOverlay} from '../LoadingOverlay/LoadingOverlay'
+import {Spacer} from '../Spacer'
 import {useModal} from './ModalContext'
 
 export const ModalScreen = () => {
@@ -72,7 +73,7 @@ const Header = (props: {
 
       <Spacer height={8} />
 
-      <Text style={styles.title}>{title}</Text>
+      {title !== '' && <Text style={styles.title}>{title}</Text>}
     </View>
   )
 }
@@ -96,7 +97,7 @@ const useStyles = () => {
     },
     backdrop: {
       ...StyleSheet.absoluteFillObject,
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      backgroundColor: 'rgba(0, 0, 0, 0.64)',
     },
     animatedView: {
       alignSelf: 'stretch',
@@ -107,7 +108,7 @@ const useStyles = () => {
     },
     sheet: {
       flex: 1,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.gray_c50,
       alignSelf: 'stretch',
       paddingHorizontal: 16,
       paddingBottom: 16,
@@ -123,7 +124,7 @@ const useStyles = () => {
     },
     slider: {
       height: 4,
-      backgroundColor: color.gray_cmax,
+      backgroundColor: color.gray_c50,
       width: 32,
       borderRadius: 10,
     },

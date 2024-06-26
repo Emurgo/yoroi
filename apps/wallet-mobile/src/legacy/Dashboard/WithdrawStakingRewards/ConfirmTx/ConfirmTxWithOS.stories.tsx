@@ -14,7 +14,7 @@ storiesOf('ConfirmWithdrawalTx/OS', module)
         <ConfirmTxWithOS
           {...commonProps}
           wallet={{
-            ...mocks.osWallet,
+            ...mocks.wallet,
             submitTransaction: mocks.submitTransaction.success,
           }}
           unsignedTx={{
@@ -34,7 +34,7 @@ storiesOf('ConfirmWithdrawalTx/OS', module)
         <ConfirmTxWithOS
           {...commonProps}
           wallet={{
-            ...mocks.osWallet,
+            ...mocks.wallet,
             submitTransaction: mocks.submitTransaction.success,
           }}
           unsignedTx={{

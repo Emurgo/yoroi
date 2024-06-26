@@ -5,12 +5,12 @@ import * as React from 'react'
 import {useLanguage} from '../../../../../kernel/i18n'
 import {useBalance, useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
-import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {AmountCard} from '../../../common/AmountCard/AmountCard'
 import {useStrings} from '../../../common/useStrings'
 
 export const EditAmount = ({disabled}: {disabled?: boolean}) => {
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
 
   const tokenId = wallet.primaryTokenInfo.id
   const balance = useBalance({wallet, tokenId})

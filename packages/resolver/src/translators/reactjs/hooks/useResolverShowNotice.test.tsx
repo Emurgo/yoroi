@@ -50,6 +50,8 @@ describe('useResolverCryptoAddresses', () => {
   })
 
   it('error', async () => {
+    const spy = jest.spyOn(console, 'error')
+    spy.mockImplementation(() => {})
     const TestResolver = () => {
       const showNotice = useResolverShowNotice()
       return (
@@ -69,5 +71,6 @@ describe('useResolverCryptoAddresses', () => {
     await waitFor(() => {
       expect(getByTestId('hasError')).toBeDefined()
     })
+    spy.mockRestore()
   })
 })

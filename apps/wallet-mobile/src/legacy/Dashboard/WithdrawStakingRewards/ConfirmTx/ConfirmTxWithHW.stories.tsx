@@ -12,10 +12,6 @@ storiesOf('ConfirmWithdrawalTx/HW', module)
     <WithModal>
       <Boundary>
         <ConfirmTxWithHW
-          wallet={{
-            ...mocks.hwWallet,
-            signTxWithLedger: mocks.signTxWithLedger.loading,
-          }}
           unsignedTx={{
             ...mocks.yoroiUnsignedTx,
             staking: {
@@ -33,10 +29,6 @@ storiesOf('ConfirmWithdrawalTx/HW', module)
     <WithModal>
       <Boundary>
         <ConfirmTxWithHW
-          wallet={{
-            ...mocks.hwWallet,
-            signTxWithLedger: mocks.signTxWithLedger.error,
-          }}
           unsignedTx={{
             ...mocks.yoroiUnsignedTx,
             staking: {
@@ -54,11 +46,6 @@ storiesOf('ConfirmWithdrawalTx/HW', module)
     <WithModal>
       <Boundary>
         <ConfirmTxWithHW
-          wallet={{
-            ...mocks.hwWallet,
-            signTxWithLedger: mocks.signTxWithLedger.success,
-            submitTransaction: mocks.submitTransaction.success,
-          }}
           unsignedTx={{
             ...mocks.yoroiUnsignedTx,
             staking: {
@@ -76,11 +63,6 @@ storiesOf('ConfirmWithdrawalTx/HW', module)
     <WithModal>
       <Boundary>
         <ConfirmTxWithHW
-          wallet={{
-            ...mocks.hwWallet,
-            signTxWithLedger: mocks.signTxWithLedger.success,
-            submitTransaction: mocks.submitTransaction.success,
-          }}
           unsignedTx={{
             ...mocks.yoroiUnsignedTx,
             staking: {
@@ -99,11 +81,6 @@ storiesOf('ConfirmWithdrawalTx/HW', module)
     <WithModal>
       <Boundary>
         <ConfirmTxWithHW
-          wallet={{
-            ...mocks.hwWallet,
-            signTxWithLedger: mocks.signTxWithLedger.success,
-            submitTransaction: mocks.submitTransaction.success,
-          }}
           unsignedTx={{
             ...mocks.yoroiUnsignedTx,
             staking: {

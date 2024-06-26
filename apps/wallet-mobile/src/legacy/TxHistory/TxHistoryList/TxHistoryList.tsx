@@ -7,7 +7,7 @@ import {StyleSheet, View} from 'react-native'
 
 import {Spacer} from '../../../components'
 import {ShowBuyBanner} from '../../../features/Exchange/common/ShowBuyBanner/ShowBuyBanner'
-import {useSelectedWallet} from '../../../features/WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {useTransactionInfos} from '../../../yoroi-wallets/hooks'
 import {TransactionInfo} from '../../../yoroi-wallets/types'
@@ -16,7 +16,7 @@ import {TxHistoryListItem} from './TxHistoryListItem'
 type Props = Partial<FlashListProps<TransactionInfo>>
 export const TxHistoryList = (props: Props) => {
   const styles = useStyles()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {track} = useMetrics()
 
   useFocusEffect(
@@ -58,7 +58,7 @@ export const TxHistoryList = (props: Props) => {
   )
 }
 
-const batchSize = 20
+const batchSize = 50
 
 const getTransactionsByDate = (transactions: Record<string, TransactionInfo>) =>
   _(transactions)

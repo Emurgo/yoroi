@@ -5,7 +5,7 @@ import {EncryptedStorage, EncryptedStorageKeys} from './EncryptedStorage'
 describe('EncryptedStorage', () => {
   const password = '1234567890'
   const data = '65656565494949'
-  const key = EncryptedStorageKeys.rootKey('walletId')
+  const key = EncryptedStorageKeys.xPrivKey('walletId')
 
   beforeEach(() => AsyncStorage.clear())
 

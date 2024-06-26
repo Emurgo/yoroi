@@ -4,6 +4,7 @@ import {StyleSheet, Text, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
 import {Icon} from '../../../../components'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {getDomainFromUrl} from '../../common/helpers'
 import {useNavigateTo} from '../../common/useNavigateTo'
 type Props = {
@@ -12,10 +13,12 @@ type Props = {
 export const BrowserToolbar = ({uri}: Props) => {
   const {styles, colors} = useStyles()
   const navigateTo = useNavigateTo()
+  const {track} = useMetrics()
 
   const {isSecure, domainName} = getDomainFromUrl(uri)
 
   const handleCloseBrowser = () => {
+    track.discoverWebViewCloseClicked()
     navigateTo.selectDappFromList()
   }
 
@@ -27,7 +30,7 @@ export const BrowserToolbar = ({uri}: Props) => {
     <View style={styles.root}>
       <View style={styles.boxURI}>
         <TouchableOpacity onPress={handleEditUrl} style={styles.urlContainer}>
-          {isSecure && <Icon.LockFilled />}
+          {isSecure && <Icon.LockFilled color={colors.iconColor} />}
 
           <Text style={styles.uriText}>{domainName}</Text>
         </TouchableOpacity>
@@ -61,7 +64,7 @@ const useStyles = () => {
     },
     uriText: {
       ...atoms.body_2_md_regular,
-      color: color.black_static,
+      color: color.text_gray_normal,
     },
     urlContainer: {
       flexDirection: 'row',
@@ -71,7 +74,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    iconColor: color.gray_c800,
+    iconColor: color.el_gray_normal,
   }
 
   return {styles, colors} as const

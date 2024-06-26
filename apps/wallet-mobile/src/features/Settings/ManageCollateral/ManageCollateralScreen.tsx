@@ -28,7 +28,7 @@ import {collateralConfig, utxosMaker} from '../../../yoroi-wallets/cardano/utxoM
 import {useBalances} from '../../../yoroi-wallets/hooks'
 import {RawUtxo, YoroiEntry} from '../../../yoroi-wallets/types'
 import {Amounts, asQuantity, Quantities} from '../../../yoroi-wallets/utils'
-import {useSelectedWallet} from '../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {usePrivacyMode} from '../PrivacyMode/PrivacyMode'
 import {createCollateralEntry} from './helpers'
 import {useNavigateTo} from './navigation'
@@ -36,7 +36,10 @@ import {useStrings} from './strings'
 
 export const ManageCollateralScreen = () => {
   const {styles} = useStyles()
-  const wallet = useSelectedWallet()
+  const {
+    wallet,
+    meta: {addressMode},
+  } = useSelectedWallet()
   const {amount, collateralId, utxo} = useCollateralInfo(wallet)
   const hasCollateral = collateralId !== '' && utxo !== undefined
   const didSpend = collateralId !== '' && utxo === undefined
@@ -55,7 +58,7 @@ export const ManageCollateralScreen = () => {
     unsignedTxChanged: yoroiUnsignedTxChanged,
   } = useTransfer()
   const {mutate: createUnsignedTx, isLoading: isLoadingTx} = useMutation({
-    mutationFn: (entries: YoroiEntry[]) => wallet.createUnsignedTx(entries),
+    mutationFn: (entries: YoroiEntry[]) => wallet.createUnsignedTx({entries, addressMode}),
     retry: false,
     useErrorBoundary: true,
   })

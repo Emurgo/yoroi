@@ -6,7 +6,7 @@ import {Keyboard, TextInput} from 'react-native'
 import {useLanguage} from '../../../kernel/i18n'
 import {useBalances, useTokenInfo} from '../../../yoroi-wallets/hooks'
 import {Amounts, Quantities} from '../../../yoroi-wallets/utils'
-import {useSelectedWallet} from '../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {PRICE_PRECISION} from './constants'
 import {useStrings} from './strings'
 
@@ -28,7 +28,7 @@ export const SwapFormProvider = ({
     limitPriceChanged,
     resetQuantities,
   } = useSwap()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {numberLocale} = useLanguage()
   const strings = useStrings()
 

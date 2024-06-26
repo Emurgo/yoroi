@@ -11,7 +11,7 @@ import {StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 import {Spacer, Text} from '../../../components'
 import {Icon} from '../../../components/Icon'
 import {usePrivacyMode} from '../../../features/Settings/PrivacyMode/PrivacyMode'
-import {useSelectedWallet} from '../../../features/WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
 import {TxHistoryRouteNavigation} from '../../../kernel/navigation'
 import {isEmptyString} from '../../../kernel/utils'
 import {MultiToken} from '../../../yoroi-wallets/cardano/MultiToken'
@@ -34,7 +34,7 @@ export const TxHistoryListItem = ({transaction}: Props) => {
   const {styles, colors, isDark} = useStyles()
   const navigation = useNavigation<TxHistoryRouteNavigation>()
 
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const intl = useIntl()
 
   const showDetails = () => navigation.navigate('history-details', {id: transaction.id})

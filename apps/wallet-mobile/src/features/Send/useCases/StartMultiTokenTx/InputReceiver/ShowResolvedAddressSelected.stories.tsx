@@ -10,7 +10,7 @@ import {QueryProvider} from '../../../../../../.storybook/decorators'
 import {Boundary} from '../../../../../components'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {mocks as walletMocks} from '../../../../../yoroi-wallets/mocks/wallet'
-import {SelectedWalletProvider} from '../../../../WalletManager/context/SelectedWalletContext'
+import {WalletManagerProviderMock} from '../../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {ShowResolvedAddressSelected} from './ShowResolvedAddressSelected'
 
 storiesOf('Send ShowResolvedAddressSelected', module)
@@ -19,7 +19,7 @@ storiesOf('Send ShowResolvedAddressSelected', module)
 
     return (
       <QueryProvider>
-        <SelectedWalletProvider wallet={wallet}>{story()}</SelectedWalletProvider>
+        <WalletManagerProviderMock wallet={wallet}>{story()}</WalletManagerProviderMock>
       </QueryProvider>
     )
   })

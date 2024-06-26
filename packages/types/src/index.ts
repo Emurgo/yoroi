@@ -93,7 +93,7 @@ import {
   ApiOnChainMetadataRecord,
   ApiOnChainMetadataRequest,
   ApiOnChainMetadataResponse,
-  ApiProtocolParamsResult,
+  ApiProtocolParams,
   ApiTokenId,
   ApiTokenIdentity,
   ApiTokenRegistryEntry,
@@ -166,7 +166,11 @@ import {PortfolioTokenPrice} from './portfolio/price'
 import {ChainNetwork, ChainSupportedNetworks} from './chain/network'
 import {NumbersErrorInvalidAtomicValue} from './numbers/errors'
 import {NumbersAtomicValue} from './numbers/atomic-value'
-import {AppErrorInvalidState} from './app/errors'
+import {
+  AppErrorInvalidState,
+  AppErrorWrongPassword,
+  AppErrorLibraryFailed,
+} from './app/errors'
 import {
   PortfolioApi,
   PortfolioApiTokenDiscoveryResponse,
@@ -200,10 +204,23 @@ import {AppQueueTask, AppQueueTaskManager} from './app/queue-task-manager'
 import {ExplorersManager} from './explorers/manager'
 import {ExplorersExplorer} from './explorers/explorer'
 import {PortfolioTokenTraits} from './portfolio/traits'
+import {HWDeviceInfo, HWDeviceObj, HWFeatures} from './hw/hw'
+import {WalletAddressMode, WalletImplementation} from './wallet/wallet'
+import {WalletMeta} from './wallet/meta'
+import {
+  NetworkApi,
+  NetworkConfig,
+  NetworkEpochInfo,
+  NetworkEpochProgress,
+  NetworkEraConfig,
+  NetworkManager,
+} from './network/manager'
 
 export namespace App {
   export namespace Errors {
     export class InvalidState extends AppErrorInvalidState {}
+    export class WrongPassword extends AppErrorWrongPassword {}
+    export class LibraryError extends AppErrorLibraryFailed {}
   }
 
   export interface Storage<
@@ -379,10 +396,10 @@ export namespace Api {
     export type MetadataFile = ApiMetadataFile
     export type TokenId = ApiTokenId
 
-    export type ProtocolParamsResult = ApiProtocolParamsResult
+    export type ProtocolParams = ApiProtocolParams
 
     export interface Actions {
-      getProtocolParams: () => Promise<ProtocolParamsResult>
+      getProtocolParams: () => Promise<ProtocolParams>
     }
   }
 }
@@ -519,6 +536,18 @@ export namespace Chain {
   }
 }
 
+export namespace HW {
+  export type Features = HWFeatures
+  export type DeviceInfo = HWDeviceInfo
+  export type DeviceObj = HWDeviceObj
+}
+
+export namespace Wallet {
+  export type Implementation = WalletImplementation
+  export type AddressMode = WalletAddressMode
+  export type Meta = WalletMeta
+}
+
 export namespace Exchange {
   export type BlockchainCode = ExchangeBlockchainCode
   export type Manager = ExchangeManager
@@ -535,6 +564,15 @@ export namespace Exchange {
     export class Unknown extends ExchangeUnknownError {}
     export class ProviderNotFound extends ExchangeProviderNotFoundError {}
   }
+}
+
+export namespace Network {
+  export type Api = NetworkApi
+  export type Manager = NetworkManager
+  export type Config = NetworkConfig
+  export type EraConfig = NetworkEraConfig
+  export type EpochInfo = NetworkEpochInfo
+  export type EpochProgress = NetworkEpochProgress
 }
 
 export * from './helpers/types'

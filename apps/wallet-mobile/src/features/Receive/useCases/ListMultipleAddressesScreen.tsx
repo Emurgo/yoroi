@@ -6,7 +6,6 @@ import {
   LayoutAnimation,
   NativeScrollEvent,
   NativeSyntheticEvent,
-  ScrollView,
   StyleSheet,
   View,
   ViewToken,
@@ -16,9 +15,8 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer} from '../../../components'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
-import {useAddressModeManager} from '../../WalletManager/common/useAddressModeManager'
-import {useSelectedWallet} from '../../WalletManager/context/SelectedWalletContext'
-import {BIP32_HD_GAP_LIMIT} from '../common/contants'
+import {useAddressMode} from '../../WalletManager/common/hooks/useAddressMode'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useReceive} from '../common/ReceiveProvider'
 import {ShowAddressLimitInfo} from '../common/ShowAddressLimitInfo/ShowAddressLimitInfo'
 import {SmallAddressCard} from '../common/SmallAddressCard/SmallAddressCard'
@@ -35,20 +33,16 @@ export const ListMultipleAddressesScreen = () => {
   const inView = React.useRef(Number.MAX_SAFE_INTEGER)
   const strings = useStrings()
   const {styles} = useStyles()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const navigate = useNavigateTo()
   const {track} = useMetrics()
 
-  const {addressMode} = useAddressModeManager()
+  const {addressMode} = useAddressMode()
   const addresses = useReceiveAddressesStatus(addressMode)
   const {selectedAddressChanged} = useReceive()
 
-  React.useEffect(() => {
-    wallet.generateNewReceiveAddressIfNeeded()
-  }, [wallet])
-
   const addressInfos = toAddressInfos(addresses)
-  const hasReachedGapLimit = addresses.unused.length >= BIP32_HD_GAP_LIMIT
+  const hasReachedGapLimit = !addresses.canIncrease
 
   const onViewableItemsChanged = React.useCallback(({viewableItems}: {viewableItems: ViewToken[]}) => {
     inView.current = viewableItems.length
@@ -82,7 +76,6 @@ export const ListMultipleAddressesScreen = () => {
   )
 
   const [showAddressLimitInfo, setShowAddressLimitInfo] = React.useState(true)
-  const scrollViewRef = React.useRef<ScrollView>(null)
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     if (event.nativeEvent.contentOffset.y <= 0) {
@@ -114,21 +107,16 @@ export const ListMultipleAddressesScreen = () => {
           </>
         )}
 
-        <ScrollView
-          ref={scrollViewRef}
+        <Animated.FlatList
           onScroll={handleScroll}
           scrollEventThrottle={16}
+          data={addressInfos}
+          keyExtractor={(addressInfo) => addressInfo.address}
+          renderItem={renderAddressInfo}
+          layout={LinearTransition}
           showsVerticalScrollIndicator={false}
-        >
-          <Animated.FlatList
-            data={addressInfos}
-            keyExtractor={(addressInfo) => addressInfo.address}
-            renderItem={renderAddressInfo}
-            layout={LinearTransition}
-            showsVerticalScrollIndicator={false}
-            onViewableItemsChanged={onViewableItemsChanged}
-          />
-        </ScrollView>
+          onViewableItemsChanged={onViewableItemsChanged}
+        />
       </View>
 
       <Animated.View

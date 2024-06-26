@@ -1,6 +1,7 @@
 import {useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
+import {HW, Wallet} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
@@ -13,12 +14,11 @@ import LocalizableError from '../../../../kernel/i18n/LocalizableError'
 import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import {LedgerConnect} from '../../../../legacy/HW'
 import {getHWDeviceInfo} from '../../../../yoroi-wallets/cardano/hw'
-import {DeviceId, DeviceObj, HWDeviceInfo} from '../../../../yoroi-wallets/hw'
-import {Device, NetworkId, WalletImplementationId} from '../../../../yoroi-wallets/types'
+import {Device, NetworkId} from '../../../../yoroi-wallets/types'
 
 export type Params = {
   useUSB?: boolean
-  walletImplementationId: WalletImplementationId
+  walletImplementationId: Wallet.Implementation
   networkId: NetworkId
 }
 
@@ -32,9 +32,9 @@ export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
   const styles = useStyles()
   const navigation = useNavigation<SetupWalletRouteNavigation>()
 
-  const {hwDeviceInfoChanged, walletImplementationId, useUSB} = useSetupWallet()
+  const {hwDeviceInfoChanged, walletImplementation, useUSB} = useSetupWallet()
 
-  const onSuccess = (hwDeviceInfo: HWDeviceInfo) => {
+  const onSuccess = (hwDeviceInfo: HW.DeviceInfo) => {
     hwDeviceInfoChanged(hwDeviceInfo)
     navigation.navigate('setup-wallet-save-nano-x')
   }
@@ -50,16 +50,12 @@ export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
     }
   }
 
-  const onConnectBLE = (deviceId: DeviceId) => {
-    return getHWDeviceInfo(walletImplementationId as WalletImplementationId, deviceId, null, useUSB)
-      .then(onSuccess)
-      .catch(onError)
+  const onConnectBLE = (deviceId: string) => {
+    return getHWDeviceInfo(walletImplementation, deviceId, null, useUSB).then(onSuccess).catch(onError)
   }
 
-  const onConnectUSB = (deviceObj: DeviceObj) => {
-    return getHWDeviceInfo(walletImplementationId as WalletImplementationId, null, deviceObj, useUSB)
-      .then(onSuccess)
-      .catch(onError)
+  const onConnectUSB = (deviceObj: HW.DeviceObj) => {
+    return getHWDeviceInfo(walletImplementation, null, deviceObj, useUSB).then(onSuccess).catch(onError)
   }
 
   return (

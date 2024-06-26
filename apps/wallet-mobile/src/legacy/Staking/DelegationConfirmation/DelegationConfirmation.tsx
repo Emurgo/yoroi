@@ -1,3 +1,4 @@
+import {useQueryClient} from '@tanstack/react-query'
 import {useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
 import React, {useEffect, useState} from 'react'
@@ -7,7 +8,7 @@ import {Platform, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {KeyboardSpacer, Text, ValidatedTextInput} from '../../../components'
 import {ConfirmTx} from '../../../components/ConfirmTx'
 import {debugWalletInfo, features} from '../../../features'
-import {useSelectedWallet} from '../../../features/WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
 import globalMessages, {txLabels} from '../../../kernel/i18n/global-messages'
 import {StakingCenterRoutes, useParams, useWalletNavigation} from '../../../kernel/navigation'
 import {NETWORKS} from '../../../yoroi-wallets/cardano/networks'
@@ -31,9 +32,10 @@ const isParams = (params?: Params | object | undefined): params is Params => {
 
 export const DelegationConfirmation = () => {
   const {resetToTxHistory} = useWalletNavigation()
-  const wallet = useSelectedWallet()
+  const {wallet, meta} = useSelectedWallet()
   const strings = useStrings()
   const styles = useStyles()
+  const queryClient = useQueryClient()
 
   const {poolId, yoroiUnsignedTx} = useParams<Params>(isParams)
 
@@ -49,6 +51,7 @@ export const DelegationConfirmation = () => {
   }, [])
 
   const onSuccess = () => {
+    queryClient.resetQueries([wallet.id, 'stakingInfo'])
     resetToTxHistory()
   }
 
@@ -84,7 +87,7 @@ export const DelegationConfirmation = () => {
           />
         </View>
 
-        {!wallet.isEasyConfirmationEnabled && !wallet.isHW && (
+        {!meta.isEasyConfirmationEnabled && !meta.isHW && (
           <View style={styles.input} testID="spendingPassword">
             <ValidatedTextInput secureTextEntry value={password} label={strings.password} onChangeText={setPassword} />
           </View>
@@ -96,7 +99,7 @@ export const DelegationConfirmation = () => {
           <Text style={styles.rewards}>{formatTokenWithText(reward, wallet.primaryToken)}</Text>
         </View>
 
-        {wallet.isHW && <HWInstructions useUSB={useUSB} addMargin />}
+        {meta.isHW && <HWInstructions useUSB={useUSB} addMargin />}
       </ScrollView>
 
       <Actions>
@@ -125,7 +128,7 @@ const Actions = (props: ViewProps) => <View {...props} style={{padding: 16}} />
 
 const StakePoolName = ({stakePoolId}: {stakePoolId: string}) => {
   const strings = useStrings()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const {stakePoolInfoAndHistory, isLoading, error} = useStakePoolInfoAndHistory({wallet, stakePoolId})
 
   return <Text>{isLoading ? '...' : error ? strings.unknownPool : stakePoolInfoAndHistory?.info.name}</Text>

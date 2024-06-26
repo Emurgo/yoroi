@@ -4,16 +4,13 @@ import * as React from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 
 import {useBrowser} from '../../common/BrowserProvider'
-import {getGoogleSearchItem, urlWithProtocol, validUrl} from '../../common/helpers'
+import {getGoogleSearchItem, urlWithProtocol} from '../../common/helpers'
 import {useNavigateTo} from '../../common/useNavigateTo'
 import {BrowserSearchToolbar} from '../BrowseDapp/BrowserSearchToolbar'
 import {DAppListItem} from '../SelectDappFromList/DAppListItem/DAppListItem'
 
 const getUrl = (searchValue: string, isEngineSearch: boolean) => {
   if (isEngineSearch) {
-    if (validUrl(searchValue)) {
-      return urlWithProtocol(searchValue)
-    }
     return 'https://www.google.com/search?q=' + encodeURIComponent(searchValue)
   }
 
@@ -26,7 +23,6 @@ export const SearchDappInBrowserScreen = () => {
   const {updateTab, tabs, tabActiveIndex} = useBrowser()
   const tabActive = tabs[tabActiveIndex]
   const [searchValue, setSearchValue] = React.useState('')
-
   const isFocused = useIsFocused()
   const googleItem = getGoogleSearchItem(searchValue)
 

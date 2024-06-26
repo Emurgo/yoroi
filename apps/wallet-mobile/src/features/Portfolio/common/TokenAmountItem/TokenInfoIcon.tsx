@@ -3,27 +3,28 @@ import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import {Image} from 'expo-image'
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {ImageStyle, StyleSheet, View} from 'react-native'
 
 import {Icon} from '../../../../components/Icon'
 import {isEmptyString} from '../../../../kernel/utils'
-import {useSelectedWallet} from '../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 
 type TokenInfoIconProps = {
   info: Portfolio.Token.Info
-  size: 'sm' | 'md'
+  size?: 'sm' | 'md'
+  imageStyle?: ImageStyle
 }
-export const TokenInfoIcon = ({info, size = 'md'}: TokenInfoIconProps) => {
+export const TokenInfoIcon = ({info, size = 'md', imageStyle}: TokenInfoIconProps) => {
   const {styles} = useStyles()
-  const {network} = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
 
-  if (isPrimaryToken(info)) return <PrimaryIcon size={size} />
+  if (isPrimaryToken(info)) return <PrimaryIcon size={size} imageStyle={imageStyle} />
 
   if (info.originalImage.startsWith('data:image/png;base64'))
     return (
       <Image
         source={{uri: info.originalImage}}
-        style={[size === 'sm' ? styles.iconSmall : styles.iconMedium]}
+        style={[size === 'sm' ? styles.iconSmall : styles.iconMedium, imageStyle]}
         placeholder={blurhash}
       />
     )
@@ -32,30 +33,30 @@ export const TokenInfoIcon = ({info, size = 'md'}: TokenInfoIconProps) => {
     return (
       <Image
         source={{uri: `data:image/png;base64,${info.icon}`}}
-        style={[size === 'sm' ? styles.iconSmall : styles.iconMedium]}
+        style={[size === 'sm' ? styles.iconSmall : styles.iconMedium, imageStyle]}
         placeholder={blurhash}
       />
     )
   }
 
   const [policy, name] = info.id.split('.')
-  const uri = `https://${network}.processed-media.yoroiwallet.com/${policy}/${name}?width=64&height=64&kind=metadata&fit=cover`
+  const uri = `https://${wallet.networkManager.network}.processed-media.yoroiwallet.com/${policy}/${name}?width=64&height=64&kind=metadata&fit=cover`
 
   return (
     <Image
       source={{uri, headers}}
       contentFit="cover"
-      style={[size === 'sm' ? styles.iconSmall : styles.iconMedium]}
+      style={[size === 'sm' ? styles.iconSmall : styles.iconMedium, imageStyle]}
       placeholder={blurhash}
       cachePolicy="memory-disk"
     />
   )
 }
 
-const PrimaryIcon = ({size = 'md'}: {size?: 'sm' | 'md'}) => {
+const PrimaryIcon = ({size = 'md', imageStyle}: {size?: 'sm' | 'md'; imageStyle?: ImageStyle}) => {
   const {styles} = useStyles()
   return (
-    <View style={[size === 'sm' ? styles.iconSmall : styles.iconMedium, styles.primary]}>
+    <View style={[size === 'sm' ? styles.iconSmall : styles.iconMedium, styles.primary, imageStyle]}>
       <Icon.Cardano color="white" height={size === 'sm' ? 20 : 35} width={size === 'sm' ? 20 : 35} />
     </View>
   )

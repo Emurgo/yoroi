@@ -15,7 +15,7 @@ import {useAuthSetting, useAuthWithOs, useIsAuthOsSupported} from '../../Auth/co
 import {usePrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
 import {useNavigateTo} from '../common/navigation'
 import {SettingsSwitch} from '../common/SettingsSwitch'
-import {useCurrencyContext} from '../Currency'
+import {useCurrencyPairing} from '../Currency'
 import {useChangeScreenShareSetting, useScreenShareSettingEnabled} from '../ScreenShare'
 import {NavigatedSettingsItem, SettingsItem, SettingsSection} from '../SettingsItems'
 
@@ -27,7 +27,7 @@ export const ApplicationSettingsScreen = () => {
   const language = supportedLanguages.find((lang) => lang.code === languageCode) ?? defaultLanguage
 
   const {isTogglePrivacyModeLoading, isPrivacyActive} = usePrivacyMode()
-  const {currency} = useCurrencyContext()
+  const {currency} = useCurrencyPairing()
   const {enabled: crashReportEnabled} = useCrashReports()
 
   const authSetting = useAuthSetting()

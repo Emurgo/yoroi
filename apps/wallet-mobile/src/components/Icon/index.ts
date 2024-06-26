@@ -1,5 +1,7 @@
 import {Ada} from './Ada'
 import {Analytics} from './Analytics'
+import {AngleDown} from './AngleDown'
+import {AngleUp} from './AngleUp'
 import {ArrowDown} from './ArrowDown'
 import {ArrowRight} from './ArrowRight'
 import {Assets} from './Assets'
@@ -53,6 +55,7 @@ import {Governance} from './Governance'
 import {HardwareWallet} from './HardwareWallet'
 import {Image} from './Image'
 import {Info} from './Info'
+import {InfoCircle} from './InfoCircle'
 import {Launchpad} from './Launchpad'
 import {Lightning} from './Lightning'
 import {Link} from './Link'
@@ -101,6 +104,7 @@ import {Support} from './Support'
 import {Swap} from './Swap'
 import {Switch} from './Switch'
 import {Table} from './Table'
+import {TabPortfolio} from './TabPortfolio'
 import {TabStaking} from './TabStaking'
 import {TabWallet} from './TabWallet'
 import {Telegram} from './Telegram'
@@ -116,7 +120,7 @@ import {Twitter} from './Twitter'
 import {Verify} from './Verify'
 import {VyfiSwap} from './VyfiSwap'
 import {Wallet} from './Wallet'
-import {WalletAccount} from './WalletAccount'
+import {WalletAvatar} from './WalletAvatar'
 import {Wallets} from './Wallets'
 import {WalletStack} from './WalletStack'
 import {Warning} from './Warning'
@@ -215,7 +219,7 @@ export const Icon = {
   Twitter,
   Verify,
   Wallet,
-  WalletAccount,
+  WalletAvatar,
   WalletStack,
   Wallets,
   YoroiNightly,
@@ -252,4 +256,8 @@ export const Icon = {
   Google,
   Connection,
   YoroiApp,
+  TabPortfolio,
+  InfoCircle,
+  AngleUp,
+  AngleDown,
 }

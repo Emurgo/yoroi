@@ -1,8 +1,9 @@
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle} from 'react-native'
+import {StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native'
 import Animated, {FadeInDown, FadeOutDown, LinearTransition} from 'react-native-reanimated'
 
+import {Text} from '../../../wallet-mobile/src/components/Text'
 import {Icon} from '../components/Icon'
 import {useCopy} from '../hooks/useCopy'
 import {isEmptyString} from '../kernel/utils'

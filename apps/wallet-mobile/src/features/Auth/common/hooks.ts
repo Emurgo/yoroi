@@ -6,15 +6,12 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Alert, AppState, Platform} from 'react-native'
 import RNKeychain from 'react-native-keychain'
 
+import {decryptData, encryptData} from '../../../kernel/encryption/encryption'
 import globalMessages from '../../../kernel/i18n/global-messages'
 import {logger} from '../../../kernel/logger/logger'
 import {Keychain} from '../../../kernel/storage/Keychain'
 import {AuthenticationPrompt} from '../../../kernel/storage/KeychainStorage'
-import {WrongPassword} from '../../../yoroi-wallets/cardano/errors'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
-import {decryptData, encryptData} from '../../../yoroi-wallets/encryption'
-import {parseWalletMeta} from '../../WalletManager/common/validators'
-import {useWalletManager} from '../../WalletManager/context/WalletManagerContext'
 
 export const useIsAuthOsSupported = (options?: UseQueryOptions<boolean, Error>) => {
   const queryClient = useQueryClient()
@@ -131,48 +128,6 @@ export const useAuthOsWithEasyConfirmation = (
   }
 }
 
-export const useDisableAllEasyConfirmation = (
-  wallet: YoroiWallet | undefined,
-  options?: UseMutationOptions<void, Error>,
-) => {
-  const walletManager = useWalletManager()
-  const storage = useAsyncStorage()
-  const mutation = useMutationWithInvalidations({
-    mutationFn: async () => {
-      await disableAllEasyConfirmation(storage)
-      // if there is a wallet selected it needs to trigger event for subcribers
-      if (wallet !== undefined) await walletManager.disableEasyConfirmation(wallet)
-    },
-    invalidateQueries: [['walletMetas']],
-    ...options,
-  })
-
-  return {
-    ...mutation,
-    disableAllEasyConfirmation: mutation.mutate,
-  }
-}
-
-export const disableAllEasyConfirmation = async (storage: App.Storage) => {
-  const walletStorage = storage.join('wallet/')
-  const walletIds = await walletStorage.getAllKeys()
-
-  const updateWalletMetas = walletIds.map(async (walletId) => {
-    const walletMeta = await walletStorage.getItem(walletId, parseWalletMeta)
-    await walletStorage.setItem(walletId, {...walletMeta, isEasyConfirmationEnabled: false})
-  })
-
-  const updateWalletJSONs = walletIds.map(async (walletId) => {
-    const walletJSON: null | (Record<string, unknown> & {isEasyConfirmationEnabled: boolean}) = await walletStorage
-      .join(`${walletId}/`)
-      .getItem('data')
-    if (walletJSON == null) return
-    await walletStorage.join(`${walletId}/`).setItem('data', {...walletJSON, isEasyConfirmationEnabled: false})
-  })
-
-  return Promise.all([...updateWalletMetas, ...updateWalletJSONs])
-}
-
 export const useCreatePin = (options: UseMutationOptions<void, Error, string>) => {
   const storage = useAsyncStorage()
   const appSettingsStorage = storage.join('appSettings/')
@@ -206,7 +161,7 @@ export const useCheckPin = (options: UseMutationOptions<boolean, Error, string> 
         .then(() => true)
         .catch((error) => {
           logger.error('useCheckPin: Checking pin has failed', {error})
-          if (error instanceof WrongPassword) return false
+          if (error instanceof App.Errors.WrongPassword) return false
           throw error
         })
     },

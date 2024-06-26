@@ -3,18 +3,17 @@ import React from 'react'
 import {View} from 'react-native'
 
 import {QueryProvider} from '../../../.storybook/decorators'
-import {SelectedWalletProvider} from '../../features/WalletManager/context/SelectedWalletContext'
 import {mocks} from '../../yoroi-wallets/mocks'
+import {WalletManagerProviderMock} from '../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {BalanceBanner} from './BalanceBanner'
 
 storiesOf('BalanceBanner', module)
   .add('loading', () => {
     return (
       <QueryProvider>
-        <SelectedWalletProvider
+        <WalletManagerProviderMock
           wallet={{
             ...mocks.wallet,
-            fetchCurrentPrice: mocks.fetchCurrentPrice.loading,
           }}
         >
           <View style={{flex: 1, justifyContent: 'center'}}>
@@ -22,17 +21,16 @@ storiesOf('BalanceBanner', module)
               <BalanceBanner />
             </View>
           </View>
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryProvider>
     )
   })
   .add('success', () => {
     return (
       <QueryProvider>
-        <SelectedWalletProvider
+        <WalletManagerProviderMock
           wallet={{
             ...mocks.wallet,
-            fetchCurrentPrice: mocks.fetchCurrentPrice.success,
           }}
         >
           <View style={{flex: 1, justifyContent: 'center'}}>
@@ -40,17 +38,16 @@ storiesOf('BalanceBanner', module)
               <BalanceBanner />
             </View>
           </View>
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryProvider>
     )
   })
   .add('error', () => {
     return (
       <QueryProvider>
-        <SelectedWalletProvider
+        <WalletManagerProviderMock
           wallet={{
             ...mocks.wallet,
-            fetchCurrentPrice: mocks.fetchCurrentPrice.error,
           }}
         >
           <View style={{flex: 1, justifyContent: 'center'}}>
@@ -58,7 +55,7 @@ storiesOf('BalanceBanner', module)
               <BalanceBanner />
             </View>
           </View>
-        </SelectedWalletProvider>
+        </WalletManagerProviderMock>
       </QueryProvider>
     )
   })

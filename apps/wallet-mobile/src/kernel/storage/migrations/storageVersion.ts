@@ -4,7 +4,7 @@ import {freeze} from 'immer'
 
 import {ErrorMigrationVersion} from './errors'
 
-const currentVersion = 2
+const currentVersion = 3
 const keyStorageVersion = 'storageVersion'
 
 export const storageVersionMaker = (storage: App.Storage) => {

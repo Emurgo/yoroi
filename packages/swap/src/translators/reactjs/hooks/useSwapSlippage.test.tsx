@@ -44,6 +44,8 @@ describe('useSwapSlippage', () => {
   })
 
   it('error', async () => {
+    const spy = jest.spyOn(console, 'error')
+    spy.mockImplementation(() => {})
     const TestSwapSlippage = () => {
       const slippage = useSwapSlippage()
       return (
@@ -63,5 +65,6 @@ describe('useSwapSlippage', () => {
     await waitFor(() => {
       expect(getByTestId('hasError')).toBeDefined()
     })
+    spy.mockRestore()
   })
 })

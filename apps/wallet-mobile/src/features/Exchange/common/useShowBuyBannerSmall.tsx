@@ -3,11 +3,11 @@ import {isNumber, parseNumber, useAsyncStorage} from '@yoroi/common'
 
 import {useBalances} from '../../../yoroi-wallets/hooks'
 import {Amounts, asQuantity, Quantities} from '../../../yoroi-wallets/utils/utils'
-import {useSelectedWallet} from '../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {storageKeyShowBuyBannerSmall, storageRootExchange} from './constants'
 
 export const useShowBuyBannerSmall = (options?: UseQueryOptions<boolean, Error, boolean, [string, string]>) => {
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
 
   const balances = useBalances(wallet)
   const primaryAmount = Amounts.getAmount(balances, wallet.primaryTokenInfo.id)

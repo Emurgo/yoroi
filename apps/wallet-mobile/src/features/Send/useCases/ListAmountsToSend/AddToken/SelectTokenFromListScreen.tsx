@@ -14,7 +14,7 @@ import {usePortfolioBalances} from '../../../../Portfolio/common/hooks/usePortfo
 import {MediaGallery} from '../../../../Portfolio/common/MediaGallery/MediaGallery'
 import {TokenAmountItem} from '../../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
 import {useSearch, useSearchOnNavBar} from '../../../../Search/SearchContext'
-import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {limitOfSecondaryAmountsPerTx} from '../../../common/constants'
 import {useOverridePreviousSendTxRoute} from '../../../common/navigation'
 import {NoAssetFoundImage} from '../../../common/NoAssetFoundImage'
@@ -26,7 +26,7 @@ export const SelectTokenFromListScreen = () => {
   const {styles} = useStyles()
   const {targets, selectedTargetIndex, allocated} = useTransfer()
 
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const balances = usePortfolioBalances({wallet})
   const [fungibilityFilter, setFungibilityFilter] = React.useState<Portfolio.FungibilityFilter>('all')
   const [isPending, startTransition] = React.useTransition()

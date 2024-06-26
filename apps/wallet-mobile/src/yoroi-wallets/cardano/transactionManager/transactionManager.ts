@@ -9,7 +9,6 @@ import {defaultMemoize} from 'reselect'
 
 import {logger} from '../../../kernel/logger/logger'
 import {
-  BackendConfig,
   CERTIFICATE_KIND,
   RawTransaction,
   Transaction,
@@ -19,7 +18,7 @@ import {
 } from '../../types/other'
 import {RemoteCertificateMeta} from '../../types/staking'
 import {Version, versionCompare} from '../../utils/versioning'
-import * as yoroiApi from '../api'
+import * as yoroiApi from '../api/api'
 import {ApiHistoryError} from '../errors'
 
 export type TransactionManagerState = {
@@ -106,10 +105,10 @@ export class TransactionManager {
     return this.#confirmationCountsSelector(this.#state)
   }
 
-  async doSync(addressesByChunks: Array<Array<string>>, backendConfig: BackendConfig) {
+  async doSync(addressesByChunks: Array<Array<string>>, baseApiUrl: string) {
     const txUpdate = await syncTxs({
       addressesByChunks,
-      backendConfig,
+      baseApiUrl,
       transactions: this.#state.transactions,
       api: yoroiApi,
     })
@@ -130,16 +129,16 @@ export class TransactionManager {
 
 export async function syncTxs({
   addressesByChunks,
-  backendConfig,
+  baseApiUrl,
   transactions,
   api,
 }: Readonly<{
   addressesByChunks: Array<Array<string>>
-  backendConfig: BackendConfig
+  baseApiUrl: string
   transactions: Record<string, Transaction>
   api: Pick<typeof yoroiApi, 'getTipStatus' | 'fetchNewTxHistory'>
 }>): Promise<Record<string, Transaction> | undefined> {
-  const {bestBlock} = await api.getTipStatus(backendConfig)
+  const {bestBlock} = await api.getTipStatus(baseApiUrl)
   if (!bestBlock.hash) return
 
   // this should change when backend stop throwing when no tx_hash is passed
@@ -165,7 +164,7 @@ export async function syncTxs({
       )
 
       do {
-        const response = await api.fetchNewTxHistory(historyPayload, backendConfig)
+        const response = await api.fetchNewTxHistory(historyPayload, baseApiUrl)
         taskResult.push(response.transactions)
 
         // next payload

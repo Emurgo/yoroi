@@ -1,4 +1,4 @@
-import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
+import {QueryClientProvider} from '@tanstack/react-query'
 import {AsyncStorageProvider} from '@yoroi/common'
 import {LinksProvider} from '@yoroi/links'
 import {SetupWalletProvider} from '@yoroi/setup-wallet'
@@ -13,17 +13,17 @@ import {LoadingBoundary} from './components'
 import {ErrorBoundary} from './components/ErrorBoundary'
 import {AuthProvider} from './features/Auth/AuthProvider'
 import {CurrencyProvider} from './features/Settings/Currency/CurrencyContext'
-import {walletManager} from './features/WalletManager/common/walletManager'
-import {SelectedWalletProvider} from './features/WalletManager/context/SelectedWalletContext'
-import {SelectedWalletMetaProvider} from './features/WalletManager/context/SelectedWalletMetaContext'
-import {WalletManagerProvider} from './features/WalletManager/context/WalletManagerContext'
+import {WalletManagerProvider} from './features/WalletManager/context/WalletManagerProvider'
+import {walletManager} from './features/WalletManager/wallet-manager'
 import {InitApp} from './InitApp'
 import {disableLogbox, loggerFilter} from './kernel/env'
 import {LanguageProvider} from './kernel/i18n'
 import {useSetupLogger} from './kernel/logger/hooks/useSetupLogger'
 import {makeMetricsManager, MetricsProvider} from './kernel/metrics/metricsManager'
+import {queryInfo} from './kernel/query-client'
 import {useMigrations} from './kernel/storage/migrations/useMigrations'
 import {rootStorage} from './kernel/storage/rootStorage'
+import {PoolTransitionProvider} from './legacy/Staking/PoolTransition/PoolTransitionProvider'
 import {useThemeStorageMaker} from './yoroi-wallets/hooks'
 
 enableScreens(true)
@@ -35,7 +35,6 @@ if (disableLogbox) {
   LogBox.ignoreLogs(['Require cycle:'])
 }
 
-const queryClient = new QueryClient()
 const metricsManager = makeMetricsManager()
 
 const Yoroi = () => {
@@ -49,27 +48,25 @@ const Yoroi = () => {
       <ThemeProvider storage={themeStorage}>
         <ErrorBoundary>
           <MetricsProvider metricsManager={metricsManager}>
-            <WalletManagerProvider walletManager={walletManager}>
-              <QueryClientProvider client={queryClient}>
-                <LoadingBoundary style={StyleSheet.absoluteFill}>
-                  <LanguageProvider>
-                    <CurrencyProvider>
+            <QueryClientProvider client={queryInfo.queryClient}>
+              <CurrencyProvider>
+                <WalletManagerProvider walletManager={walletManager}>
+                  <LoadingBoundary style={StyleSheet.absoluteFill}>
+                    <LanguageProvider>
                       <AuthProvider>
-                        <SelectedWalletMetaProvider>
-                          <SelectedWalletProvider>
-                            <LinksProvider>
-                              <SetupWalletProvider>
-                                <InitApp />
-                              </SetupWalletProvider>
-                            </LinksProvider>
-                          </SelectedWalletProvider>
-                        </SelectedWalletMetaProvider>
+                        <LinksProvider>
+                          <SetupWalletProvider>
+                            <PoolTransitionProvider>
+                              <InitApp />
+                            </PoolTransitionProvider>
+                          </SetupWalletProvider>
+                        </LinksProvider>
                       </AuthProvider>
-                    </CurrencyProvider>
-                  </LanguageProvider>
-                </LoadingBoundary>
-              </QueryClientProvider>
-            </WalletManagerProvider>
+                    </LanguageProvider>
+                  </LoadingBoundary>
+                </WalletManagerProvider>
+              </CurrencyProvider>
+            </QueryClientProvider>
           </MetricsProvider>
         </ErrorBoundary>
       </ThemeProvider>

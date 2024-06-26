@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Upgrade your stake pool",
     "file": "src/legacy/Staking/PoolTransition/usePoolTransition.tsx",
     "start": {
-      "line": 105,
+      "line": 114,
       "column": 9,
-      "index": 3653
+      "index": 4054
     },
     "end": {
-      "line": 108,
+      "line": 117,
       "column": 3,
-      "index": 3751
+      "index": 4152
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!The current stake pool you're using will soon close. Migrate to the new EMURGO pool to sustain reward generation.",
     "file": "src/legacy/Staking/PoolTransition/usePoolTransition.tsx",
     "start": {
-      "line": 109,
+      "line": 118,
       "column": 11,
-      "index": 3764
+      "index": 4165
     },
     "end": {
-      "line": 113,
+      "line": 122,
       "column": 3,
-      "index": 3960
+      "index": 4361
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!The current stake pool you're using is decommissioned and NOT generating reward anymore. Update it to continue earning",
     "file": "src/legacy/Staking/PoolTransition/usePoolTransition.tsx",
     "start": {
-      "line": 114,
+      "line": 123,
       "column": 16,
-      "index": 3978
+      "index": 4379
     },
     "end": {
-      "line": 118,
+      "line": 127,
       "column": 3,
-      "index": 4184
+      "index": 4585
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Current pool",
     "file": "src/legacy/Staking/PoolTransition/usePoolTransition.tsx",
     "start": {
-      "line": 119,
+      "line": 128,
       "column": 15,
-      "index": 4201
+      "index": 4602
     },
     "end": {
-      "line": 122,
+      "line": 131,
       "column": 3,
-      "index": 4294
+      "index": 4695
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!New pool",
     "file": "src/legacy/Staking/PoolTransition/usePoolTransition.tsx",
     "start": {
-      "line": 123,
+      "line": 132,
       "column": 11,
-      "index": 4307
+      "index": 4708
     },
     "end": {
-      "line": 126,
+      "line": 135,
       "column": 3,
-      "index": 4392
+      "index": 4793
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!Estimated ROA",
     "file": "src/legacy/Staking/PoolTransition/usePoolTransition.tsx",
     "start": {
-      "line": 127,
+      "line": 136,
       "column": 16,
-      "index": 4410
+      "index": 4811
     },
     "end": {
-      "line": 130,
+      "line": 139,
       "column": 3,
-      "index": 4505
+      "index": 4906
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!Fee",
     "file": "src/legacy/Staking/PoolTransition/usePoolTransition.tsx",
     "start": {
-      "line": 131,
+      "line": 140,
       "column": 7,
-      "index": 4514
+      "index": 4915
     },
     "end": {
-      "line": 134,
+      "line": 143,
       "column": 3,
-      "index": 4590
+      "index": 4991
     }
   },
   {
@@ -109,14 +109,14 @@
     "defaultMessage": "!!!This pool continues to generate staking rewards",
     "file": "src/legacy/Staking/PoolTransition/usePoolTransition.tsx",
     "start": {
-      "line": 135,
+      "line": 144,
       "column": 24,
-      "index": 4616
+      "index": 5017
     },
     "end": {
-      "line": 138,
+      "line": 147,
       "column": 3,
-      "index": 4753
+      "index": 5154
     }
   },
   {
@@ -124,14 +124,14 @@
     "defaultMessage": "!!!This pool is NOT generating staking rewards anymore",
     "file": "src/legacy/Staking/PoolTransition/usePoolTransition.tsx",
     "start": {
-      "line": 139,
+      "line": 148,
       "column": 17,
-      "index": 4772
+      "index": 5173
     },
     "end": {
-      "line": 142,
+      "line": 151,
       "column": 3,
-      "index": 4906
+      "index": 5307
     }
   },
   {
@@ -139,14 +139,14 @@
     "defaultMessage": "!!!This pool will stop generating rewards in",
     "file": "src/legacy/Staking/PoolTransition/usePoolTransition.tsx",
     "start": {
-      "line": 143,
+      "line": 152,
       "column": 23,
-      "index": 4931
+      "index": 5332
     },
     "end": {
-      "line": 146,
+      "line": 155,
       "column": 3,
-      "index": 5061
+      "index": 5462
     }
   },
   {
@@ -154,14 +154,14 @@
     "defaultMessage": "!!!Skip and stop receiving rewards",
     "file": "src/legacy/Staking/PoolTransition/usePoolTransition.tsx",
     "start": {
-      "line": 147,
+      "line": 156,
       "column": 17,
-      "index": 5080
+      "index": 5481
     },
     "end": {
-      "line": 150,
+      "line": 159,
       "column": 3,
-      "index": 5194
+      "index": 5595
     }
   },
   {
@@ -169,14 +169,14 @@
     "defaultMessage": "!!!Update now and keep earning",
     "file": "src/legacy/Staking/PoolTransition/usePoolTransition.tsx",
     "start": {
-      "line": 151,
+      "line": 160,
       "column": 21,
-      "index": 5217
+      "index": 5618
     },
     "end": {
-      "line": 154,
+      "line": 163,
       "column": 3,
-      "index": 5331
+      "index": 5732
     }
   },
   {
@@ -184,14 +184,14 @@
     "defaultMessage": "!!!Update pool",
     "file": "src/legacy/Staking/PoolTransition/usePoolTransition.tsx",
     "start": {
-      "line": 155,
+      "line": 164,
       "column": 10,
-      "index": 5343
+      "index": 5744
     },
     "end": {
-      "line": 158,
+      "line": 167,
       "column": 3,
-      "index": 5430
+      "index": 5831
     }
   }
 ]

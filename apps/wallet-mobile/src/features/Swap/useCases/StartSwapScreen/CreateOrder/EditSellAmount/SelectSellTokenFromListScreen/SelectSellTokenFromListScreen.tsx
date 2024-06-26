@@ -9,12 +9,12 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Spacer, Text} from '../../../../../../../components'
 import {useMetrics} from '../../../../../../../kernel/metrics/metricsManager'
+import {getTokenIdParts} from '../../../../../../Portfolio/common/helpers/get-token-id-parts'
 import {usePortfolioBalances} from '../../../../../../Portfolio/common/hooks/usePortfolioBalances'
 import {TokenAmountItem} from '../../../../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
 import {useSearch, useSearchOnNavBar} from '../../../../../../Search/SearchContext'
 import {NoAssetFoundImage} from '../../../../../../Send/common/NoAssetFoundImage'
-import {getTokenIdParts} from '../../../../../../WalletManager/common/helpers/get-token-id-parts'
-import {useSelectedWallet} from '../../../../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../../../../WalletManager/common/hooks/useSelectedWallet'
 import {Counter} from '../../../../../common/Counter/Counter'
 import {useNavigateTo} from '../../../../../common/navigation'
 import {useStrings} from '../../../../../common/strings'
@@ -39,7 +39,7 @@ export const SelectSellTokenFromListScreen = () => {
 const TokenList = () => {
   const strings = useStrings()
   const styles = useStyles()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const balances = usePortfolioBalances({wallet})
   const {search, isSearching} = useSearch()
 

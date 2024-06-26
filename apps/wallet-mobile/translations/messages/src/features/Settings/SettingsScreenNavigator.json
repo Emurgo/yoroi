@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Wallet",
     "file": "src/features/Settings/SettingsScreenNavigator.tsx",
     "start": {
-      "line": 243,
+      "line": 242,
       "column": 18,
-      "index": 7473
+      "index": 7354
     },
     "end": {
-      "line": 246,
+      "line": 245,
       "column": 3,
-      "index": 7571
+      "index": 7452
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Application",
     "file": "src/features/Settings/SettingsScreenNavigator.tsx",
     "start": {
-      "line": 247,
+      "line": 246,
       "column": 15,
-      "index": 7588
+      "index": 7469
     },
     "end": {
-      "line": 250,
+      "line": 249,
       "column": 3,
-      "index": 7697
+      "index": 7578
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Change PIN",
     "file": "src/features/Settings/SettingsScreenNavigator.tsx",
     "start": {
-      "line": 251,
+      "line": 250,
       "column": 24,
-      "index": 7723
+      "index": 7604
     },
     "end": {
-      "line": 254,
+      "line": 253,
       "column": 3,
-      "index": 7832
+      "index": 7713
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Change spending password",
     "file": "src/features/Settings/SettingsScreenNavigator.tsx",
     "start": {
-      "line": 255,
+      "line": 254,
       "column": 23,
-      "index": 7857
+      "index": 7738
     },
     "end": {
-      "line": 258,
+      "line": 257,
       "column": 3,
-      "index": 7971
+      "index": 7852
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Remove wallet",
     "file": "src/features/Settings/SettingsScreenNavigator.tsx",
     "start": {
-      "line": 259,
+      "line": 258,
       "column": 21,
-      "index": 7994
+      "index": 7875
     },
     "end": {
-      "line": 262,
+      "line": 261,
       "column": 3,
-      "index": 8095
+      "index": 7976
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!Terms of Service Agreement",
     "file": "src/features/Settings/SettingsScreenNavigator.tsx",
     "start": {
-      "line": 263,
+      "line": 262,
       "column": 23,
-      "index": 8120
+      "index": 8001
     },
     "end": {
-      "line": 266,
+      "line": 265,
       "column": 3,
-      "index": 8236
+      "index": 8117
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!Change wallet name",
     "file": "src/features/Settings/SettingsScreenNavigator.tsx",
     "start": {
-      "line": 267,
+      "line": 266,
       "column": 25,
-      "index": 8263
+      "index": 8144
     },
     "end": {
-      "line": 270,
+      "line": 269,
       "column": 3,
-      "index": 8367
+      "index": 8248
     }
   },
   {
@@ -109,14 +109,14 @@
     "defaultMessage": "!!!Support",
     "file": "src/features/Settings/SettingsScreenNavigator.tsx",
     "start": {
-      "line": 271,
+      "line": 270,
       "column": 16,
-      "index": 8385
+      "index": 8266
     },
     "end": {
-      "line": 274,
+      "line": 273,
       "column": 3,
-      "index": 8476
+      "index": 8357
     }
   },
   {
@@ -124,14 +124,14 @@
     "defaultMessage": "!!!Easy confirmation",
     "file": "src/features/Settings/SettingsScreenNavigator.tsx",
     "start": {
-      "line": 275,
+      "line": 274,
       "column": 31,
-      "index": 8509
+      "index": 8390
     },
     "end": {
-      "line": 278,
+      "line": 277,
       "column": 3,
-      "index": 8624
+      "index": 8505
     }
   },
   {
@@ -139,14 +139,14 @@
     "defaultMessage": "!!!Easy confirmation",
     "file": "src/features/Settings/SettingsScreenNavigator.tsx",
     "start": {
-      "line": 279,
+      "line": 278,
       "column": 32,
-      "index": 8658
+      "index": 8539
     },
     "end": {
-      "line": 282,
+      "line": 281,
       "column": 3,
-      "index": 8774
+      "index": 8655
     }
   },
   {
@@ -154,14 +154,14 @@
     "defaultMessage": "!!!Set PIN",
     "file": "src/features/Settings/SettingsScreenNavigator.tsx",
     "start": {
-      "line": 283,
+      "line": 282,
       "column": 18,
-      "index": 8794
+      "index": 8675
     },
     "end": {
-      "line": 286,
+      "line": 285,
       "column": 3,
-      "index": 8892
+      "index": 8773
     }
   },
   {
@@ -169,14 +169,14 @@
     "defaultMessage": "!!!Settings",
     "file": "src/features/Settings/SettingsScreenNavigator.tsx",
     "start": {
-      "line": 287,
+      "line": 286,
       "column": 17,
-      "index": 8911
+      "index": 8792
     },
     "end": {
-      "line": 290,
+      "line": 289,
       "column": 3,
-      "index": 9014
+      "index": 8895
     }
   },
   {
@@ -184,14 +184,14 @@
     "defaultMessage": "!!!Language",
     "file": "src/features/Settings/SettingsScreenNavigator.tsx",
     "start": {
-      "line": 291,
+      "line": 290,
       "column": 17,
-      "index": 9033
+      "index": 8914
     },
     "end": {
-      "line": 294,
+      "line": 293,
       "column": 3,
-      "index": 9131
+      "index": 9012
     }
   },
   {
@@ -199,14 +199,14 @@
     "defaultMessage": "!!!Theming",
     "file": "src/features/Settings/SettingsScreenNavigator.tsx",
     "start": {
-      "line": 295,
+      "line": 294,
       "column": 14,
-      "index": 9147
+      "index": 9028
     },
     "end": {
-      "line": 298,
+      "line": 297,
       "column": 3,
-      "index": 9241
+      "index": 9122
     }
   },
   {
@@ -214,14 +214,14 @@
     "defaultMessage": "!!!App settings",
     "file": "src/features/Settings/SettingsScreenNavigator.tsx",
     "start": {
-      "line": 299,
+      "line": 298,
       "column": 20,
-      "index": 9263
+      "index": 9144
     },
     "end": {
-      "line": 302,
+      "line": 301,
       "column": 3,
-      "index": 9381
+      "index": 9262
     }
   },
   {
@@ -229,14 +229,14 @@
     "defaultMessage": "!!!About",
     "file": "src/features/Settings/SettingsScreenNavigator.tsx",
     "start": {
-      "line": 303,
+      "line": 302,
       "column": 14,
-      "index": 9397
+      "index": 9278
     },
     "end": {
-      "line": 306,
+      "line": 305,
       "column": 3,
-      "index": 9497
+      "index": 9378
     }
   },
   {
@@ -244,14 +244,14 @@
     "defaultMessage": "!!!Privacy Policy",
     "file": "src/features/Settings/SettingsScreenNavigator.tsx",
     "start": {
-      "line": 307,
+      "line": 306,
       "column": 22,
-      "index": 9521
+      "index": 9402
     },
     "end": {
-      "line": 310,
+      "line": 309,
       "column": 3,
-      "index": 9624
+      "index": 9505
     }
   },
   {
@@ -259,14 +259,14 @@
     "defaultMessage": "!!!Collateral",
     "file": "src/features/Settings/SettingsScreenNavigator.tsx",
     "start": {
-      "line": 311,
+      "line": 310,
       "column": 14,
-      "index": 9640
+      "index": 9521
     },
     "end": {
-      "line": 314,
+      "line": 313,
       "column": 3,
-      "index": 9711
+      "index": 9592
     }
   },
   {
@@ -274,14 +274,14 @@
     "defaultMessage": "!!!Log",
     "file": "src/features/Settings/SettingsScreenNavigator.tsx",
     "start": {
-      "line": 315,
+      "line": 314,
       "column": 18,
-      "index": 9731
+      "index": 9612
     },
     "end": {
-      "line": 318,
+      "line": 317,
       "column": 3,
-      "index": 9788
+      "index": 9669
     }
   }
 ]

@@ -2,17 +2,19 @@ import {init} from '@emurgo/cross-csl-mobile'
 import {PoolInfoApi} from '@emurgo/yoroi-lib'
 import {useNavigation} from '@react-navigation/native'
 import {useQuery} from '@tanstack/react-query'
+import {Wallet} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
 import {features} from '../../../features'
-import {useSelectedWallet} from '../../../features/WalletManager/context/SelectedWalletContext'
+import {useSelectedNetwork} from '../../../features/WalletManager/common/hooks/useSelectedNetwork'
+import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {asQuantity, Quantities} from '../../../yoroi-wallets/utils'
 import {useStakingInfo} from '../../Dashboard/StakePoolInfos'
 
-const createDelegationTx = async (wallet: YoroiWallet, poolId: string) => {
+const createDelegationTx = async (wallet: YoroiWallet, poolId: string, meta: Wallet.Meta) => {
   const accountStates = await wallet.fetchAccountState()
   const accountState = accountStates[wallet.rewardAddressHex]
   if (!accountState) throw new Error('Account state not found')
@@ -23,15 +25,22 @@ const createDelegationTx = async (wallet: YoroiWallet, poolId: string) => {
     asQuantity(accountState.remainingAmount),
   ])
 
-  return wallet.createDelegationTx(poolId, new BigNumber(amountToDelegate))
+  return wallet.createDelegationTx({
+    poolId,
+    delegatedAmount: new BigNumber(amountToDelegate),
+    addressMode: meta.addressMode,
+  })
 }
-
-const poolInfoApi = new PoolInfoApi()
 
 export const usePoolTransition = () => {
   const navigation = useNavigation()
-  const wallet = useSelectedWallet()
+  const {wallet, meta} = useSelectedWallet()
+  const {networkManager} = useSelectedNetwork()
   const {stakingInfo, isLoading} = useStakingInfo(wallet)
+  const poolInfoApi = React.useMemo(
+    () => new PoolInfoApi(networkManager.legacyApiBaseUrl),
+    [networkManager.legacyApiBaseUrl],
+  )
 
   const isStaked = stakingInfo?.status === 'staked'
   const currentPoolId = isStaked ? stakingInfo?.poolId : ''
@@ -49,7 +58,7 @@ export const usePoolTransition = () => {
 
   const navigateToUpdate = React.useCallback(async () => {
     try {
-      const yoroiUnsignedTx = await createDelegationTx(wallet, poolId)
+      const yoroiUnsignedTx = await createDelegationTx(wallet, poolId, meta)
       navigation.navigate('manage-wallets', {
         screen: 'staking-dashboard',
         params: {
@@ -70,7 +79,7 @@ export const usePoolTransition = () => {
         },
       })
     }
-  }, [navigation, poolId, wallet])
+  }, [meta, navigation, poolId, wallet])
 
   return {
     ...poolTransitionQuery,

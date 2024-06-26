@@ -8,12 +8,12 @@ import globalMessages from '../../../../../kernel/i18n/global-messages'
 import {YoroiUnsignedTx} from '../../../../../yoroi-wallets/types/yoroi'
 import {formatTokenWithSymbol} from '../../../../../yoroi-wallets/utils/format'
 import {Amounts} from '../../../../../yoroi-wallets/utils/utils'
-import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 
 export const PrimaryTotal = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => {
   const strings = useStrings()
   const styles = useStyles()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const primaryAmount = Amounts.getAmountFromEntries(yoroiUnsignedTx.entries, wallet.primaryToken.identifier)
 
   return (

@@ -10,7 +10,8 @@ export const useStrings = () => {
     welcomeToYoroiDAppExplorer: intl.formatMessage(messages.welcomeToYoroiDAppExplorer),
     welcomeToYoroiDAppExplorerDescription: intl.formatMessage(messages.welcomeToYoroiDAppExplorerDescription),
     next: intl.formatMessage(messages.next),
-    totalDAppAvailable: intl.formatMessage(messages.totalDAppAvailable),
+    totalDAppAvailable: (count: number) => intl.formatMessage(messages.totalDAppAvailable, {count}),
+    totalDAppConnected: (count: number) => intl.formatMessage(messages.dAppConnected, {count}),
     connected: intl.formatMessage(messages.connected),
     recommended: intl.formatMessage(messages.recommended),
     done: intl.formatMessage(messages.done),
@@ -24,6 +25,13 @@ export const useStrings = () => {
     confirmConnectionModalPermission1: intl.formatMessage(messages.confirmConnectionModalPermission1),
     confirmConnectionModalPermission2: intl.formatMessage(messages.confirmConnectionModalPermission2),
     confirmTx: intl.formatMessage(messages.confirmTx),
+    understand: intl.formatMessage(messages.understand),
+    disclaimerModalText: intl.formatMessage(messages.disclaimerModalText),
+    disclaimerModalTitle: intl.formatMessage(messages.disclaimerModalTitle),
+    disconnectDApp: intl.formatMessage(messages.disconnectDApp),
+    confirmDisconnectDAppDescription: intl.formatMessage(messages.confirmDisconnectDAppDescription),
+    cancel: intl.formatMessage(messages.cancel),
+    confirm: intl.formatMessage(messages.confirm),
   }).current
 }
 
@@ -56,7 +64,11 @@ export const messages = Object.freeze(
     },
     totalDAppAvailable: {
       id: 'discover.discoverList.dAppAvailable',
-      defaultMessage: '!!!DApp(s) available',
+      defaultMessage: '!!!{count} DApp(s) available',
+    },
+    dAppConnected: {
+      id: 'discover.discoverList.dAppConnected',
+      defaultMessage: '!!!{count} DApp(s) connected',
     },
     connected: {
       id: 'discover.discoverList.connected',
@@ -105,6 +117,35 @@ export const messages = Object.freeze(
     confirmConnectionModalPermission2: {
       id: 'discover.confirmConnectionModal.permission2',
       defaultMessage: '!!!Request approval for transactions',
+    },
+    understand: {
+      id: 'discover.unverifiedDappModal.understand',
+      defaultMessage: '!!!I understand',
+    },
+    disclaimerModalText: {
+      id: 'discover.unverifiedDappModal.disclaimerModalText',
+      defaultMessage:
+        '!!!You are accessing a third-party Cardano application that is not verified by EMURGO, the developers of Yoroi Wallet, or any of its affiliated divisions. Make sure this DApp is reliable to stay safe from malicious apps in a sustainable way.',
+    },
+    disclaimerModalTitle: {
+      id: 'discover.unverifiedDappModal.disclaimerModalTitle',
+      defaultMessage: '!!!Disclaimer',
+    },
+    disconnectDApp: {
+      id: 'discover.confirmDisconnectDApp.disconnectDApp',
+      defaultMessage: '!!!Disconnect DApp',
+    },
+    confirmDisconnectDAppDescription: {
+      id: 'discover.confirmDisconnectDApp.confirmDisconnectDAppDescription',
+      defaultMessage: '!!!Are you sure you want to disconnect this DApp?',
+    },
+    cancel: {
+      id: 'global.actions.dialogs.commonbuttons.cancelButton',
+      defaultMessage: '!!!Cancel',
+    },
+    confirm: {
+      id: 'global.actions.dialogs.commonbuttons.confirmButton',
+      defaultMessage: '!!!Confirm',
     },
   }),
 )

@@ -6,13 +6,13 @@ import {Text} from '../../../../../components/Text'
 import {useBalances} from '../../../../../yoroi-wallets/hooks'
 import {formatTokenWithText} from '../../../../../yoroi-wallets/utils/format'
 import {Amounts} from '../../../../../yoroi-wallets/utils/utils'
-import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from '../../../common/strings'
 
 export const CurrentBalance = () => {
   const styles = useStyles()
   const strings = useStrings()
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const balances = useBalances(wallet)
 
   const balance = formatTokenWithText(

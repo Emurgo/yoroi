@@ -13,7 +13,7 @@ import {editedFormatter, pastedFormatter} from '../../../../../yoroi-wallets/uti
 import {usePortfolioBalances} from '../../../../Portfolio/common/hooks/usePortfolioBalances'
 import {usePortfolioPrimaryBreakdown} from '../../../../Portfolio/common/hooks/usePortfolioPrimaryBreakdown'
 import {TokenAmountItem} from '../../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
-import {useSelectedWallet} from '../../../../WalletManager/context/SelectedWalletContext'
+import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo, useOverridePreviousSendTxRoute} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
 import {NoBalance} from './ShowError/NoBalance'
@@ -25,7 +25,7 @@ export const EditAmountScreen = () => {
   const navigateTo = useNavigateTo()
   const {numberLocale} = useLanguage()
 
-  const wallet = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const balances = usePortfolioBalances({wallet})
   const primaryBreakdown = usePortfolioPrimaryBreakdown({wallet})
 

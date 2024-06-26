@@ -1,11 +1,8 @@
 import {MaterialTopTabNavigationOptions} from '@react-navigation/material-top-tabs'
 import {
-  getFocusedRouteNameFromRoute,
   NavigationProp,
   NavigationState,
   NavigatorScreenParams,
-  ParamListBase,
-  RouteProp,
   useNavigation,
   useNavigationState,
   useRoute,
@@ -14,7 +11,7 @@ import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/sta
 import {Atoms, ThemedPalette, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import React from 'react'
-import {Dimensions, InteractionManager, TouchableOpacity, TouchableOpacityProps, ViewStyle} from 'react-native'
+import {Dimensions, InteractionManager, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
 import {Icon} from '../components'
 import {ScanFeature} from '../features/Scan/common/types'
@@ -55,8 +52,21 @@ export const BackButton = (props: TouchableOpacityProps & {color?: string}) => {
 
 // OPTIONS
 const WIDTH = Dimensions.get('window').width
+
 export const defaultStackNavigationOptions = (atoms: Atoms, color: ThemedPalette): StackNavigationOptions => {
   return {
+    detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+    cardStyle: {
+      backgroundColor: 'transparent',
+    },
+    cardOverlay: () => (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: color.gray_cmin,
+        }}
+      />
+    ),
     headerTintColor: color.gray_cmax,
     headerStyle: {
       elevation: 0,
@@ -80,7 +90,6 @@ export const defaultStackNavigationOptions = (atoms: Atoms, color: ThemedPalette
     headerRightContainerStyle: {
       ...atoms.pr_sm,
     },
-    cardStyle: {backgroundColor: 'white'},
     headerLeft: (props) => <BackButton {...props} />,
   }
 }
@@ -107,12 +116,12 @@ export type WalletTabRoutes = {
   history: NavigatorScreenParams<TxHistoryRoutes>
   'staking-dashboard': NavigatorScreenParams<DashboardRoutes>
   nfts: NavigatorScreenParams<NftRoutes>
+  portfolio: NavigatorScreenParams<Portfolio2Routes>
   discover: NavigatorScreenParams<DiscoverRoutes>
   menu: NavigatorScreenParams<MenuRoutes>
 }
 
 export type WalletStackRoutes = {
-  'choose-biometric-login': undefined
   'setup-wallet': undefined
   'wallet-selection': undefined
   'exchange-result': undefined
@@ -291,6 +300,19 @@ export type DashboardRoutes = {
   'delegation-failed-tx': undefined
 }
 
+export type Portfolio2Routes = {
+  'dashboard-portfolio': undefined
+  'portfolio-tokens-list': undefined
+  'portfolio-token-details': {id: Portfolio.Token.Info['id']}
+  nfts: undefined
+  history: NavigatorScreenParams<TxHistoryRoutes>
+}
+
+export type PortfolioTokenListTabRoutes = {
+  'wallet-token': undefined
+  'dapps-token': undefined
+}
+
 export type VotingRegistrationRoutes = {
   'download-catalyst': undefined
   'display-pin': undefined
@@ -342,6 +364,7 @@ export type AppRoutes = PortfolioRoutes & {
   'first-run': NavigatorScreenParams<FirstRunRoutes>
   developer: undefined
   storybook: undefined
+  playground: undefined
   'manage-wallets': NavigatorScreenParams<WalletStackRoutes>
   'custom-pin-auth': undefined
   'exchange-result': undefined
@@ -350,6 +373,7 @@ export type AppRoutes = PortfolioRoutes & {
   'agreement-changed-notice': undefined
   modal: undefined
   'choose-biometric-login': undefined
+  'dark-theme-announcement': undefined
   'setup-wallet': undefined
 }
 export type AppRouteNavigation = StackNavigationProp<AppRoutes>
@@ -605,14 +629,29 @@ export const useWalletNavigation = () => {
   } as const).current
 }
 
-export const hideTabBarForRoutes = (route: RouteProp<WalletTabRoutes, 'history' | 'discover'>): ViewStyle | undefined =>
-  getFocusedRouteNameFromRoute(route)?.startsWith('scan') ||
-  getFocusedRouteNameFromRoute(route)?.startsWith('swap') ||
-  getFocusedRouteNameFromRoute(route)?.startsWith('receive') ||
-  getFocusedRouteNameFromRoute(route)?.startsWith('exchange') ||
-  getFocusedRouteNameFromRoute(route)?.startsWith('discover-browser')
-    ? {display: 'none'}
-    : undefined
+export const shouldHideTabBarForRoutes = (state: NavigationState) => {
+  const routeName = getFocusedRouteName(state)
+  if (routeName === null) return false
+  return (
+    routeName.startsWith('scan') ||
+    routeName.startsWith('swap') ||
+    routeName.startsWith('receive') ||
+    routeName.startsWith('exchange') ||
+    routeName.startsWith('discover-browser') ||
+    (routeName.startsWith('portfolio') && routeName !== 'portfolio')
+  )
+}
+
+const getFocusedRouteName = (
+  state: Partial<NavigationState> | NavigationState['routes'][0]['state'],
+): string | null => {
+  const currentRoute = state?.routes?.[state?.index ?? -1]
+  const currentState = currentRoute?.state
+  if (currentState) {
+    return getFocusedRouteName(currentState)
+  }
+  return currentRoute?.name ?? null
+}
 
 function useKeepRoutesInHistory(routesToKeep: string[]) {
   const navigation = useNavigation()
