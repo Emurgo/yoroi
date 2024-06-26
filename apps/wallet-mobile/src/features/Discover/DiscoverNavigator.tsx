@@ -21,7 +21,7 @@ import {SelectDappFromListScreen} from './useCases/SelectDappFromList/SelectDapp
 const Stack = createStackNavigator<DiscoverRoutes>()
 
 export const DiscoverNavigator = () => {
-  const {atoms, color, isDark} = useTheme()
+  const {atoms, color} = useTheme()
   const strings = useStrings()
 
   const manager = useDappConnectorManager()
@@ -31,7 +31,7 @@ export const DiscoverNavigator = () => {
       <BrowserProvider>
         <Stack.Navigator
           screenOptions={{
-            ...defaultStackNavigationOptions(atoms, color, isDark),
+            ...defaultStackNavigationOptions(atoms, color),
             headerLeft: () => null,
             gestureEnabled: true,
           }}
