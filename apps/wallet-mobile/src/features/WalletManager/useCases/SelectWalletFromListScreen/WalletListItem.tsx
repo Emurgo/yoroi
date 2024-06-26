@@ -7,9 +7,7 @@ import {Swipeable} from 'react-native-gesture-handler'
 import {Icon} from '../../../../components'
 import {Loading} from '../../../../components/Loading/Loading'
 import {Space} from '../../../../components/Space/Space'
-import {isDev} from '../../../../kernel/env'
 import {isByron, isShelley} from '../../../../yoroi-wallets/cardano/utils'
-import {features} from '../../..'
 import {
   ChevronRightDarkIllustration,
   ChevronRightGrayIllustration,
@@ -73,7 +71,7 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
   // ____________________________________________________
 
   return (
-    <Swipeable renderRightActions={(progress) => renderRightActions(progress)} enabled={isDev}>
+    <Swipeable renderRightActions={(progress) => renderRightActions(progress)}>
       <View style={styles.item}>
         <TouchableOpacity
           activeOpacity={1}
@@ -97,17 +95,13 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
             </Text>
           </View>
 
-          {features.walletListFeedback && (
-            <>
-              {syncWalletInfo?.status === 'syncing' && <Loading />}
+          {syncWalletInfo?.status === 'syncing' && <Loading />}
 
-              <Space width="md" />
+          <Space width="md" />
 
-              {isSelected && <Icon.Check size={20} color={colors.selected} />}
+          {isSelected && <Icon.Check size={20} color={colors.selected} />}
 
-              <Space width="md" />
-            </>
-          )}
+          <Space width="md" />
 
           {isButtonPressed ? <ChevronRightDarkIllustration /> : <ChevronRightGrayIllustration />}
         </TouchableOpacity>
