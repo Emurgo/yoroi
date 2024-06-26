@@ -69,7 +69,7 @@ export const defaultStackNavigationOptions = (
           <View
             style={{
               flex: 1,
-              backgroundColor: 'black',
+              backgroundColor: color.gray_cmin,
             }}
           />
         )
