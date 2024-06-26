@@ -5,7 +5,7 @@ import {useTransfer} from '@yoroi/transfer'
 import React, {ReactNode} from 'react'
 import {useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import Animated, {FadeInDown, FadeOutDown, Layout} from 'react-native-reanimated'
+import Animated, {FadeInDown, FadeOutDown, LinearTransition} from 'react-native-reanimated'
 
 import {Icon, Spacer, Text} from '../../components'
 import {useReceive} from '../../features/Receive/common/ReceiveProvider'
@@ -109,7 +109,12 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
       <View style={styles.centralized}>
         <View style={[styles.row, disabled && styles.disabled]}>
           {isCopying && (
-            <Animated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
+            <Animated.View
+              layout={LinearTransition}
+              entering={FadeInDown}
+              exiting={FadeOutDown}
+              style={styles.isCopying}
+            >
               <Text style={styles.textCopy}>{strings.addressCopiedMsg}</Text>
             </Animated.View>
           )}

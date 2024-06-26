@@ -4,7 +4,7 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleProp, StyleSheet, Text, TextStyle, TouchableOpacity, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
-import Animated, {FadeIn, FadeOut, Layout} from 'react-native-reanimated'
+import Animated, {FadeIn, FadeOut, LinearTransition} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../../components'
@@ -186,7 +186,7 @@ const MnemonicInput = ({defaultMnemonic, userEntries, onPress}: MnemonicInputPro
   }
 
   return (
-    <Animated.View layout={Layout} entering={FadeIn} exiting={FadeOut} style={styles.recoveryPhrase}>
+    <Animated.View layout={LinearTransition} entering={FadeIn} exiting={FadeOut} style={styles.recoveryPhrase}>
       <View style={[StyleSheet.absoluteFill, {backgroundColor: colors.gradientBlueGreen}]} />
 
       <View style={styles.recoveryPhraseBackground}>
@@ -203,7 +203,12 @@ const MnemonicInput = ({defaultMnemonic, userEntries, onPress}: MnemonicInputPro
                 disabled={!isLast || !recoveryWordError}
                 style={styles.wordBadge}
               >
-                <Animated.View style={styles.wordBadgeView} layout={Layout} entering={FadeIn} exiting={FadeOut}>
+                <Animated.View
+                  style={styles.wordBadgeView}
+                  layout={LinearTransition}
+                  entering={FadeIn}
+                  exiting={FadeOut}
+                >
                   <WordBadge
                     word={`${(index + 1).toString()}.`}
                     used
@@ -213,7 +218,7 @@ const MnemonicInput = ({defaultMnemonic, userEntries, onPress}: MnemonicInputPro
                   />
 
                   <Animated.View
-                    layout={Layout}
+                    layout={LinearTransition}
                     entering={FadeIn}
                     exiting={FadeOut}
                     style={[styles.wordBadgeContainerOutline, recoveryWordError && styles.errorBadgeBackground]}
@@ -290,7 +295,7 @@ const WordBadges = ({
   const {styles, colors} = useStyles()
 
   return (
-    <Animated.View layout={Layout} style={styles.words}>
+    <Animated.View layout={LinearTransition} style={styles.words}>
       {mnemonicEntries.map((entry) => {
         const isUsed = isWordUsed(entry.id)
 
@@ -304,7 +309,12 @@ const WordBadges = ({
             disabled={isUsed}
             onPress={() => selectWord(entry)}
           >
-            <Animated.View layout={Layout} entering={FadeIn} exiting={FadeOut} style={styles.wordBadgeContainer}>
+            <Animated.View
+              layout={LinearTransition}
+              entering={FadeIn}
+              exiting={FadeOut}
+              style={styles.wordBadgeContainer}
+            >
               <View
                 style={[
                   StyleSheet.absoluteFill,
@@ -340,9 +350,9 @@ type WordBadgeProps = {
 const WordBadge = ({word, used, usedError, recoveryWordError, style}: WordBadgeProps) => {
   const {styles} = useStyles()
   return (
-    <Animated.View layout={Layout} entering={FadeIn} exiting={FadeOut} style={styles.wordBadge}>
+    <Animated.View layout={LinearTransition} entering={FadeIn} exiting={FadeOut} style={styles.wordBadge}>
       <Animated.Text
-        layout={Layout}
+        layout={LinearTransition}
         entering={FadeIn}
         exiting={FadeOut}
         style={[
