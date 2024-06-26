@@ -42,8 +42,8 @@ const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      width: 164,
       ...atoms.flex_1,
+      ...atoms.h_full,
     },
     gradientRoot: {
       ...atoms.p_lg,
