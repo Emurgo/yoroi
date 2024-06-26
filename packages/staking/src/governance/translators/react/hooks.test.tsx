@@ -10,15 +10,13 @@ import {
 import {GovernanceProvider} from './context'
 import {managerMock} from '../../mocks'
 import {act, renderHook, waitFor} from '@testing-library/react-native'
-import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
+import {QueryClient, QueryClientProvider} from 'react-query'
 import {GovernanceManager} from '../../manager'
 import {init} from '@emurgo/cross-csl-nodejs'
 
 const createMocks = (managerPatch: Partial<GovernanceManager>) => {
   const manager = {...managerMock, ...managerPatch}
-  const queryClient = new QueryClient({
-    logger: {log: console.log, warn: console.warn, error: () => {}},
-  })
+  const queryClient = new QueryClient()
   queryClient.setDefaultOptions({queries: {cacheTime: 0, retry: false}})
   const wrapper = ({children}: PropsWithChildren<{}>) => {
     return (
@@ -37,12 +35,9 @@ describe('Governance Translators React', () => {
   })
 
   it('should crash when not called inside GovernanceProvider', () => {
-    const spy = jest.spyOn(console, 'error')
-    spy.mockImplementation(() => {})
     expect(() => renderHook(() => useIsValidDRepID('drepId'))).toThrow(
       /GovernanceProvider/,
     )
-    spy.mockRestore()
   })
 
   it('useIsValidDRepID should call manager.validateDRepID', async () => {

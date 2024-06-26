@@ -1,14 +1,14 @@
-import {DehydratedState, QueryClient} from '@tanstack/react-query'
-import {PersistedClient, Persister, persistQueryClient} from '@tanstack/react-query-persist-client'
 import {freeze} from 'immer'
+import {DehydratedState, QueryClient} from 'react-query'
+import {PersistedClient, Persistor, persistQueryClient} from 'react-query/persistQueryClient-experimental'
 
 import {logger} from './logger/logger'
 import {rootStorage} from './storage/rootStorage'
 
 const queryClient = new QueryClient()
 const keyToPersist = 'persist'
-const queryPersisterStorageKey = 'react-query-persister'
-const queryPersisterStorage: Persister = {
+const queryPersistorStorageKey = 'react-query-persistor'
+const queryPersistorStorage: Persistor = {
   persistClient: async (client: PersistedClient) => {
     try {
       const filteredState: DehydratedState = {
@@ -19,31 +19,31 @@ const queryPersisterStorage: Persister = {
         ...client,
         clientState: filteredState,
       }
-      await rootStorage.setItem(queryPersisterStorageKey, JSON.stringify(filteredClient))
+      await rootStorage.setItem(queryPersistorStorageKey, JSON.stringify(filteredClient))
     } catch (error) {
-      logger.error('ReactQueryPersister: Error saving data to AsyncStorage')
+      logger.error('ReactQueryPersistor: Error saving data to AsyncStorage')
     }
   },
   restoreClient: async () => {
     try {
-      const data = await rootStorage.getItem(queryPersisterStorageKey)
+      const data = await rootStorage.getItem(queryPersistorStorageKey)
       return data != null ? JSON.parse(data as never) : undefined
     } catch (error) {
-      logger.error('ReactQueryPersister: Error restoring data to AsyncStorage')
+      logger.error('ReactQueryPersistor: Error restoring data to AsyncStorage')
       return undefined
     }
   },
   removeClient: async () => {
     try {
-      await rootStorage.removeItem(queryPersisterStorageKey)
+      await rootStorage.removeItem(queryPersistorStorageKey)
     } catch (error) {
-      logger.error('ReactQueryPersister: Error removing data to AsyncStorage')
+      logger.error('ReactQueryPersistor: Error removing data to AsyncStorage')
     }
   },
 }
 persistQueryClient({
   queryClient,
-  persister: queryPersisterStorage,
+  persistor: queryPersistorStorage,
   maxAge: 24 * 60 * 60 * 1000, // Optional, set the maximum age of persisted queries (in milliseconds)
 })
 

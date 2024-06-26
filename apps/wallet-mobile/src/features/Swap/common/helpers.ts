@@ -1,8 +1,8 @@
-import {useMutation, UseMutationOptions} from '@tanstack/react-query'
 import {createTypeGuardFromSchema, parseSafe} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
 import {Balance, HW} from '@yoroi/types'
 import {SwapApi} from '@yoroi/types/src/swap/api'
+import {useMutation, UseMutationOptions} from 'react-query'
 import {z} from 'zod'
 
 import {convertBech32ToHex} from '../../../yoroi-wallets/cardano/common/signatureUtils'

@@ -1,5 +1,12 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {parseSafe, useAsyncStorage} from '@yoroi/common'
+import React, {useMemo} from 'react'
+import {IntlProvider} from 'react-intl'
+import {Text} from 'react-native'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import TimeZone from 'react-native-timezone'
 import {
   QueryKey,
   QueryObserver,
@@ -8,14 +15,7 @@ import {
   useQuery,
   useQueryClient,
   UseQueryOptions,
-} from '@tanstack/react-query'
-import {parseSafe, useAsyncStorage} from '@yoroi/common'
-import React, {useMemo} from 'react'
-import {IntlProvider} from 'react-intl'
-import {Text} from 'react-native'
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import TimeZone from 'react-native-timezone'
+} from 'react-query'
 
 import {numberLocale, systemLocale} from './initialization'
 import {LanguageCode, NumberLocale, supportedLanguages} from './languages'
@@ -28,7 +28,7 @@ export const LanguageProvider = ({children}: {children: React.ReactNode}) => {
   const timeZone = useTimezone()
   const queryClient = useQueryClient()
   const observer = useMemo(
-    () => new QueryObserver<LanguageCode>(queryClient, {queryKey: ['languageCode']}),
+    () => new QueryObserver<LanguageCode>(queryClient, {queryKey: 'languageCode'}),
     [queryClient],
   )
   const initialState = React.useMemo(() => {
@@ -119,7 +119,7 @@ const useSaveLanguageCode = ({onSuccess, ...options}: UseMutationOptions<void, E
   const mutation = useMutation({
     mutationFn: (languageCode) => storage.join('appSettings/').setItem('languageCode', languageCode),
     onSuccess: (data, languageCode, context) => {
-      queryClient.invalidateQueries(['languageCode'])
+      queryClient.invalidateQueries('languageCode')
       onSuccess?.(data, languageCode, context)
     },
     ...options,
