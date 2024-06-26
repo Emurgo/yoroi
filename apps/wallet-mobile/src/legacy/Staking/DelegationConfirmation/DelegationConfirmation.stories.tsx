@@ -1,6 +1,6 @@
 import {storiesOf} from '@storybook/react-native'
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
 import React from 'react'
-import {QueryClient, QueryClientProvider} from 'react-query'
 
 import {RouteProvider} from '../../../../.storybook/decorators'
 import {StakingCenterRoutes} from '../../../kernel/navigation'

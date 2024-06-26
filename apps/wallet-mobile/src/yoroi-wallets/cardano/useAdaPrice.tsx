@@ -1,4 +1,4 @@
-import {useQuery, UseQueryOptions} from 'react-query'
+import {useQuery, UseQueryOptions} from '@tanstack/react-query'
 
 import {time} from '../../kernel/constants'
 import {queryInfo} from '../../kernel/query-client'
@@ -10,10 +10,8 @@ export const useAdaPrice = ({to, options}: {to: CurrencySymbol; options?: UseQue
     staleTime: time.oneMinute,
     cacheTime: time.fiveMinutes,
     retryDelay: time.oneSecond,
-    optimisticResults: true,
     refetchInterval: time.oneMinute,
     queryKey: [queryInfo.keyToPersist, 'useRate', to],
-    ...options,
     queryFn: async () => {
       if (to === 'ADA')
         return {
@@ -26,6 +24,7 @@ export const useAdaPrice = ({to, options}: {to: CurrencySymbol; options?: UseQue
         time: Date.now(),
       }
     },
+    ...options,
   })
 
   if (query.data == null)

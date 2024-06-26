@@ -1,3 +1,4 @@
+import {useMutation} from '@tanstack/react-query'
 import {toBigInt} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
@@ -15,7 +16,6 @@ import {
   ViewProps,
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useMutation} from 'react-query'
 
 import {Button, CopyButton, Icon, Spacer, Text} from '../../../components'
 import {AmountItem} from '../../../components/AmountItem/AmountItem'

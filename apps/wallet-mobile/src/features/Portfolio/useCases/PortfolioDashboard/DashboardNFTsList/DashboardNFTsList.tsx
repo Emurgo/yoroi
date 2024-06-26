@@ -1,6 +1,15 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {FlatList, Image, StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  useWindowDimensions,
+  View,
+} from 'react-native'
 
 import nftPlaceholder from '../../../../../assets/img/nft-placeholder.png'
 import {Icon, Spacer} from '../../../../../components'
@@ -11,7 +20,7 @@ import {useNavigateTo} from '../../../common/useNavigateTo'
 import {useStrings} from '../../../common/useStrings'
 
 export const DashboardNFTsList = () => {
-  const {styles} = useStyles()
+  const {styles, cardItemWidth} = useStyles()
   const navigationTo = useNavigateTo()
 
   const {wallet} = useSelectedWallet()
@@ -42,8 +51,8 @@ export const DashboardNFTsList = () => {
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item) => item.info.id}
         renderItem={({item}) => (
-          <View>
-            <MediaPreview info={item.info} width={164} height={164} style={styles.image} />
+          <View style={[styles.nftItemContainer, {width: cardItemWidth}]}>
+            <MediaPreview info={item.info} width={cardItemWidth} height={cardItemWidth} style={styles.image} />
           </View>
         )}
       />
@@ -79,6 +88,13 @@ const TouchNFTsList = ({onPress}: TouchableOpacityProps) => {
 
 const useStyles = () => {
   const {atoms, color} = useTheme()
+  const {width: SCREEN_WIDTH} = useWindowDimensions()
+  const PADDING_LEFT_SIDE = 16
+  const PADDING_RIGHT_SIDE_FOR_ITEMS = 15
+  const GAP_ITEMS = 8
+  const initCardWidth = SCREEN_WIDTH - PADDING_LEFT_SIDE
+  const cardItemWidth = (initCardWidth - PADDING_RIGHT_SIDE_FOR_ITEMS - GAP_ITEMS) / 2
+
   const styles = StyleSheet.create({
     container: {
       ...atoms.px_lg,
@@ -104,10 +120,13 @@ const useStyles = () => {
       width: 164,
       height: 164,
     },
+    nftItemContainer: {
+      aspectRatio: 1 / 1,
+    },
   })
   const colors = {
     gray_800: color.gray_c800,
   }
 
-  return {styles, colors} as const
+  return {styles, colors, cardItemWidth} as const
 }
