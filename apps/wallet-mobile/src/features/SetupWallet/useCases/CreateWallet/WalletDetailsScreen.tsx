@@ -334,7 +334,7 @@ export const WalletDetailsScreen = () => {
 
           <View style={styles.checksum}>
             <Icon.WalletAvatar
-              image={new Blockies().asBase64({seed: plate.ImagePart})}
+              image={new Blockies({seed: plate.ImagePart}).asBase64()}
               style={styles.walletChecksum}
               size={24}
             />

@@ -1,4 +1,4 @@
-import {colorSaturation} from '../adapters/color-saturation'
+import {colorSaturation} from './color-saturation'
 
 describe('colorSaturation', () => {
   it('should return the color with the specified saturation factor', () => {

@@ -171,7 +171,7 @@ const useStrings = () => {
 
 const CheckSumView = ({icon, checksum}: {icon: string; checksum: string}) => (
   <View style={styles.checksumView}>
-    <Icon.WalletAvatar image={new Blockies().asBase64({seed: icon})} />
+    <Icon.WalletAvatar image={new Blockies({seed: icon}).asBase64()} />
 
     <Text style={styles.checksumText}>{checksum}</Text>
   </View>

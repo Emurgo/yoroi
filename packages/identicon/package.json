@@ -136,6 +136,10 @@
       "<rootDir>/jest.setup.js"
     ]
   },
+  "dependencies": {
+    "mersenne-twister": "^1.1.0",
+    "tinycolor2": "^1.6.0"
+  },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
     "@react-native-async-storage/async-storage": "^1.19.3",
@@ -146,6 +150,7 @@
     "@testing-library/react-native": "^12.3.0",
     "@tsconfig/react-native": "^3.0.3",
     "@types/jest": "^29.5.12",
+    "@types/mersenne-twister": "^1.1.7",
     "@types/react": "^18.2.55",
     "@types/react-test-renderer": "^18.0.7",
     "@types/tinycolor2": "^1.4.6",
@@ -166,12 +171,10 @@
     "react-native-builder-bob": "^0.23.2",
     "react-test-renderer": "^18.2.0",
     "release-it": "^15.0.0",
-    "tinycolor2": "1.4.2",
     "typescript": "^5.3.3"
   },
   "peerDependencies": {
-    "immer": "^10.0.2",
-    "tinycolor2": "1.4.2"
+    "immer": "^10.0.2"
   },
   "packageManager": "yarn@1.22.21",
   "engines": {
