@@ -83,7 +83,7 @@ export const usePoolTransition = () => {
 
   return {
     ...poolTransitionQuery,
-    isLoading: isLoading || poolTransitionQuery.isLoading,
+    isLoading: isLoading || poolTransitionQuery.isInitialLoading,
     poolTransition,
     isPoolRetiring: poolTransition !== null,
     navigateToUpdate,
