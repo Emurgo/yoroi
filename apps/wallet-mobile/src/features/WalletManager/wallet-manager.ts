@@ -534,7 +534,7 @@ export class WalletManager {
     await encryptedStorage.xpub.write(accountVisual, accountPubKeyHex)
 
     const {ImagePart: seed, TextPart: plate} = walletFactory.calcChecksum(accountPubKeyHex)
-    const avatar = new Blockies().asBase64({seed})
+    const avatar = new Blockies({seed}).asBase64()
 
     const meta: Wallet.Meta = {
       version: WalletManager.version,
@@ -578,7 +578,7 @@ export class WalletManager {
     const id = uuid.v4()
 
     const {ImagePart: seed, TextPart: plate} = walletFactory.calcChecksum(accountPubKeyHex)
-    const avatar = new Blockies().asBase64({seed})
+    const avatar = new Blockies({seed}).asBase64()
 
     const encryptedStorage = makeWalletEncryptedStorage(id)
     await encryptedStorage.xpub.write(accountVisual, accountPubKeyHex)
