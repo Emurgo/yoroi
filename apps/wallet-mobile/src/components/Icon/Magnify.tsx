@@ -6,7 +6,7 @@ type Props = {size?: number; color?: string; style?: ImageStyle}
 
 export const Magnify = ({size = 40, color = 'black', style = {}}: Props) => {
   return (
-    <Svg width={size} {...style} height={size} viewBox="-2 -2 28 28">
+    <Svg width={size} style={style} height={size} viewBox="-2 -2 28 28">
       <Path
         fillRule="evenodd"
         clipRule="evenodd"

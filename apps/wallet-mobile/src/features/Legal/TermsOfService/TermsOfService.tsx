@@ -25,7 +25,6 @@ export const TermsOfService = ({languageCode}: {languageCode: LanguageCode}) => 
     <View>
       <Spacer height={16} />
 
-      {/* @ts-expect-error old react */}
       <Markdown style={styles}>{tos}</Markdown>
     </View>
   ) : (

@@ -1,7 +1,7 @@
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Linking, StyleSheet, Text, TouchableWithoutFeedback} from 'react-native'
-import Animated, {FadeInUp, FadeOut, Layout} from 'react-native-reanimated'
+import Animated, {FadeInUp, FadeOut, LinearTransition} from 'react-native-reanimated'
 
 import {Icon} from '../../../../components'
 import {YoroiZendeskLink} from '../contants'
@@ -12,7 +12,7 @@ export const ShowAddressLimitInfo = () => {
   const {styles, colors, color} = useStyles()
 
   return (
-    <Animated.View layout={Layout} entering={FadeInUp} exiting={FadeOut} style={styles.smallAddressCard}>
+    <Animated.View layout={LinearTransition} entering={FadeInUp} exiting={FadeOut} style={styles.smallAddressCard}>
       <Icon.Info size={24} color={colors.icon} />
 
       <Text style={styles.text}>

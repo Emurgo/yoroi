@@ -125,6 +125,9 @@
         "statements": 100
       }
     },
+    "moduleNameMapper": {
+      "^react-native$": "<rootDir>/node_modules/react-native"
+    },
     "modulePathIgnorePatterns": [
       "<rootDir>/example/node_modules",
       "<rootDir>/lib/"
@@ -132,6 +135,9 @@
     "preset": "react-native",
     "setupFiles": [
       "<rootDir>/jest.setup.js"
+    ],
+    "transformIgnorePatterns": [
+      "<rootDir>/node_modules/(?!react-native-mmkv)/"
     ]
   },
   "devDependencies": {

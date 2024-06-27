@@ -1,7 +1,7 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, ViewStyle} from 'react-native'
-import Animated, {Layout} from 'react-native-reanimated'
+import Animated, {LinearTransition} from 'react-native-reanimated'
 
 import {CheckIllustration} from '../../illustrations/Check'
 import {Number1} from '../../illustrations/Number1'
@@ -33,7 +33,7 @@ export const StepperProgress = ({currentStep, currentStepTitle, totalSteps, styl
       <Animated.View key={index} style={styles.root}>
         {getStepperLogo(currentStep, false)}
 
-        <Animated.Text layout={Layout} style={styles.currentStepTitle}>
+        <Animated.Text layout={LinearTransition} style={styles.currentStepTitle}>
           {currentStepTitle}
         </Animated.Text>
       </Animated.View>
@@ -47,7 +47,7 @@ export const StepperProgress = ({currentStep, currentStepTitle, totalSteps, styl
   const stepIndicator = [...stepIndicatorFirstPart, ...stepIndicatorSecondPart]
 
   return (
-    <Animated.View layout={Layout} style={[styles.bar, style]}>
+    <Animated.View layout={LinearTransition} style={[styles.bar, style]}>
       {stepIndicator}
     </Animated.View>
   )

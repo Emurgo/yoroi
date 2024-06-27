@@ -51,7 +51,7 @@
     "!**/.*"
   ],
   "scripts": {
-    "build": "yarn tsc && yarn lint && yarn test --ci --silent && yarn clean && bob build",
+    "build": "yarn tsc && yarn lint && yarn test --maxWorkers=1 --ci --silent && yarn clean && bob build",
     "build:release": "yarn build && yarn flow",
     "clean": "del-cli lib",
     "dgraph": "depcruise src --include-only \"^src\" --output-type dot | dot -T svg > dependency-graph.svg",
@@ -127,6 +127,9 @@
         "statements": 100
       }
     },
+    "moduleNameMapper": {
+      "^react-native$": "<rootDir>/node_modules/react-native"
+    },
     "modulePathIgnorePatterns": [
       "<rootDir>/example/node_modules",
       "<rootDir>/lib/"
@@ -134,6 +137,9 @@
     "preset": "react-native",
     "setupFiles": [
       "<rootDir>/jest.setup.js"
+    ],
+    "transformIgnorePatterns": [
+      "<rootDir>/node_modules/(?!react-native-mmkv)/"
     ]
   },
   "dependencies": {
@@ -163,10 +169,10 @@
     "eslint-plugin-prettier": "^4.0.0",
     "flowgen": "^1.21.0",
     "jest": "^28.1.1",
-    "metro-react-native-babel-preset": "0.73.9",
+    "metro-react-native-babel-preset": "0.77.0",
     "prettier": "^2.0.5",
     "react": "18.2.0",
-    "react-native": "~0.71.0",
+    "react-native": "~0.73.4",
     "react-native-builder-bob": "^0.23.2",
     "react-test-renderer": "^18.2.0",
     "release-it": "^15.0.0",

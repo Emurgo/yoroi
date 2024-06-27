@@ -1,3 +1,4 @@
+import {useQueryClient} from '@tanstack/react-query'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'

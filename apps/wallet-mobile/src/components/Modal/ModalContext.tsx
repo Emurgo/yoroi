@@ -1,4 +1,4 @@
-import {NavigationProp, useNavigation} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {Keyboard} from 'react-native'
 
@@ -43,7 +43,8 @@ export const ModalProvider = ({
   const onCloseRef = React.useRef<() => void>()
   const actions = React.useRef<ModalActions>({
     closeModal: () => {
-      if (getLastRouteName(navigation) === 'modal') {
+      const lastRouteName = navigation.getState()?.routes.slice(-1)[0].name
+      if (lastRouteName === 'modal') {
         dispatch({type: 'close'})
         navigation.goBack()
         onCloseRef.current?.()
@@ -108,7 +109,3 @@ const defaultState: ModalState = Object.freeze({
   isOpen: false,
   isLoading: false,
 })
-
-const getLastRouteName = (navigation: NavigationProp<ReactNavigation.RootParamList>) => {
-  return navigation.getState().routes.slice(-1)[0].name
-}

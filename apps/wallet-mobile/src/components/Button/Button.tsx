@@ -1,7 +1,7 @@
 import {useTheme} from '@yoroi/theme'
 import React, {type ReactNode} from 'react'
 import {Image, StyleSheet, TextStyle, TouchableOpacity, TouchableOpacityProps, View, ViewStyle} from 'react-native'
-import Animated, {FadeInDown, FadeOutDown, Layout} from 'react-native-reanimated'
+import Animated, {FadeInDown, FadeOutDown, LinearTransition} from 'react-native-reanimated'
 
 import {Text} from '../Text'
 
@@ -58,7 +58,7 @@ export const Button = (props: ButtonProps) => {
       {...rest}
     >
       {isCopying && (
-        <Animated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
+        <Animated.View layout={LinearTransition} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
           <Text style={styles.copiedText}>{copiedText}</Text>
         </Animated.View>
       )}
