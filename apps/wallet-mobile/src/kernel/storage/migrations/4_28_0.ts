@@ -30,7 +30,7 @@ const updateMeta = (walletsRootStorage: App.Storage) => async (meta: WalletMetaV
     ? 'cardano-cip1852'
     : 'cardano-bip44'
   const plate = meta.checksum.TextPart
-  const avatar = new Blockies().asBase64({seed: meta.checksum.ImagePart})
+  const avatar = new Blockies({seed: meta.checksum.ImagePart}).asBase64()
 
   const walletStorage = walletsRootStorage.join(`${meta.id}/`)
   const data = (await walletStorage.getItem('data')) as {

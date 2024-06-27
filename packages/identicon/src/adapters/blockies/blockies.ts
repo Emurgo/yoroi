@@ -3,31 +3,34 @@ import {colorSaturation} from './color-saturation'
 import {colorScheme} from './color-scheme'
 
 export class Blockies {
-  private randseed: number[]
+  #randseed: number[]
+  readonly #seed: string
 
-  constructor() {
-    this.randseed = new Array(4).fill(0)
+  constructor({seed}: {seed: string}) {
+    this.#randseed = new Array(4).fill(0)
+    this.#seed = seed
+    this.seedrand(seed)
   }
 
   private seedrand(seed: string) {
-    this.randseed.fill(0)
+    this.#randseed.fill(0)
     for (let i = 0; i < seed.length; i++) {
-      this.randseed[i % 4] =
-        (this.randseed[i % 4]! << 5) -
-        this.randseed[i % 4]! +
+      this.#randseed[i % 4] =
+        (this.#randseed[i % 4]! << 5) -
+        this.#randseed[i % 4]! +
         seed.charCodeAt(i)
     }
   }
 
   private rand(): number {
-    const t = this.randseed[0]! ^ (this.randseed[0]! << 11)
-    this.randseed[0] = this.randseed[1]!
-    this.randseed[1] = this.randseed[2]!
-    this.randseed[2] = this.randseed[3]!
-    this.randseed[3] =
-      this.randseed[3]! ^ (this.randseed[3]! >> 19) ^ t ^ (t >> 8)
+    const t = this.#randseed[0]! ^ (this.#randseed[0]! << 11)
+    this.#randseed[0] = this.#randseed[1]!
+    this.#randseed[1] = this.#randseed[2]!
+    this.#randseed[2] = this.#randseed[3]!
+    this.#randseed[3] =
+      this.#randseed[3]! ^ (this.#randseed[3]! >> 19) ^ t ^ (t >> 8)
 
-    return (this.randseed[3] >>> 0) / ((1 << 31) >>> 0)
+    return (this.#randseed[3] >>> 0) / ((1 << 31) >>> 0)
   }
 
   private createImageData(size: number): number[] {
@@ -58,20 +61,19 @@ export class Blockies {
    * @throws {Error} If the seed is not a valid hex
    */
   public asBase64({
-    seed,
     size = 8,
     scale = 8,
     saturationFactor = 0,
   }: {
-    seed: string
     size?: number
     scale?: number
     saturationFactor?: number
-  }): string {
-    this.seedrand(seed)
-
+  } = {}): string {
     const colorIdx =
-      seed.length < 2 ? 0 : Buffer.from(seed, 'hex')[0]! % colorScheme.length
+      this.#seed.length < 2
+        ? 0
+        : Buffer.from(this.#seed, 'hex')[0]! % colorScheme.length
+
     const colors = colorScheme[colorIdx]!
 
     const backgroundColor = colorSaturation(colors.primary, saturationFactor)
