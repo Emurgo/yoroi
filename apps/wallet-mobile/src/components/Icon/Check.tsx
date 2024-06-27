@@ -1,11 +1,9 @@
 import React from 'react'
-import {ImageStyle} from 'react-native'
 import Svg, {Path} from 'react-native-svg'
 
 type Props = {
   size?: number
   color?: string
-  style?: ImageStyle
 }
 
 export const Check = ({size = 40, color = 'black'}: Props) => (

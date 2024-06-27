@@ -30,6 +30,7 @@ module.exports = {
     },
   ],
   extends: [
+    // '@react-native', // adds too many warnings
     'eslint:recommended',
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',

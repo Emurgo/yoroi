@@ -1,6 +1,13 @@
 const path = require("path");
+const { getDefaultConfig, mergeConfig } = require("@react-native/metro-config");
 
-module.exports = {
+/**
+ * Metro configuration
+ * https://facebook.github.io/metro/docs/configuration
+ *
+ * @type {import('metro-config').MetroConfig}
+ */
+const config = {
   projectRoot: path.resolve(__dirname, "apps/wallet-mobile"),
   watchFolders: [
     path.resolve(__dirname, "apps/wallet-mobile"),
@@ -33,6 +40,7 @@ module.exports = {
       vm: require.resolve("vm-browserify"),
     },
   },
+  /*
   transformer: {
     getTransformOptions: async () => ({
       transform: {
@@ -41,4 +49,6 @@ module.exports = {
       },
     }),
   },
+  */
 };
+module.exports = mergeConfig(getDefaultConfig(__dirname), config);
