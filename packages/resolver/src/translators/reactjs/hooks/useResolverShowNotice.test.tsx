@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {QueryClient} from '@tanstack/react-query'
+import {QueryClient} from 'react-query'
 import {Text, View} from 'react-native'
 import {render, waitFor} from '@testing-library/react-native'
 
@@ -50,13 +50,11 @@ describe('useResolverCryptoAddresses', () => {
   })
 
   it('error', async () => {
-    const spy = jest.spyOn(console, 'error')
-    spy.mockImplementation(() => {})
     const TestResolver = () => {
       const showNotice = useResolverShowNotice()
       return (
         <View>
-          <Text testID="showNotice">{JSON.stringify(showNotice)}</Text>
+          <Text testID="showNotifce">{JSON.stringify(showNotice)}</Text>
         </View>
       )
     }
@@ -71,6 +69,5 @@ describe('useResolverCryptoAddresses', () => {
     await waitFor(() => {
       expect(getByTestId('hasError')).toBeDefined()
     })
-    spy.mockRestore()
   })
 })

@@ -1,5 +1,4 @@
 import {useNavigation} from '@react-navigation/native'
-import {useMutation} from '@tanstack/react-query'
 import {isNft} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
@@ -9,6 +8,7 @@ import {useLayoutEffect} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 import {FlatList} from 'react-native-gesture-handler'
+import {useMutation} from 'react-query'
 
 import {Boundary, Button, Icon, Spacer} from '../../../../components'
 import globalMessages from '../../../../kernel/i18n/global-messages'

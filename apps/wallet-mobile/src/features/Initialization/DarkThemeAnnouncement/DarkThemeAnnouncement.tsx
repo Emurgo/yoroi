@@ -1,4 +1,3 @@
-import {useQuery, UseQueryOptions} from '@tanstack/react-query'
 import {parseBoolean, useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
@@ -6,6 +5,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Platform, StyleSheet, Switch, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
+import {useQuery, UseQueryOptions} from 'react-query'
 
 import {Button, Text} from '../../../components'
 import {Space} from '../../../components/Space/Space'

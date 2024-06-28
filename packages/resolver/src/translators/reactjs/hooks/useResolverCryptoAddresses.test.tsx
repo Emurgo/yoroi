@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {QueryClient} from '@tanstack/react-query'
+import {QueryClient} from 'react-query'
 import {Text, View} from 'react-native'
 import {render, waitFor} from '@testing-library/react-native'
 
@@ -28,9 +28,7 @@ describe('useResolverCryptoAddresses', () => {
       const addresses = useResolverCryptoAddresses({resolve: domain})
       return (
         <View>
-          {!addresses.isLoading && (
-            <Text testID="addresses">{JSON.stringify(addresses.data)}</Text>
-          )}
+          <Text testID="addresses">{JSON.stringify(addresses.data)}</Text>
         </View>
       )
     }

@@ -1,9 +1,9 @@
-import {useQueryClient} from '@tanstack/react-query'
 import {useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Platform, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {useQueryClient} from 'react-query'
 
 import {KeyboardSpacer, Text, ValidatedTextInput} from '../../../components'
 import {ConfirmTx} from '../../../components/ConfirmTx'

@@ -1,4 +1,4 @@
-import {UseQueryOptions, useQuery} from '@tanstack/react-query'
+import {UseQueryOptions, useQuery} from 'react-query'
 import {Resolver} from '@yoroi/types'
 
 import {useResolver} from '../provider/ResolverProvider'

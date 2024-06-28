@@ -1,4 +1,4 @@
-import {UseQueryOptions, useQuery} from '@tanstack/react-query'
+import {UseQueryOptions, useQuery} from 'react-query'
 
 import {swapStorageSlippageKey} from '../../../adapters/async-storage/storage'
 import {useSwap} from './useSwap'
