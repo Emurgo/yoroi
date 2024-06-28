@@ -3,7 +3,7 @@ import {parseBoolean, useAsyncStorage, useMutationWithInvalidations} from '@yoro
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, Switch, View} from 'react-native'
+import {Platform, StyleSheet, Switch, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -64,6 +64,8 @@ export const DarkThemeAnnouncement = () => {
       </ScrollView>
 
       <Button title={strings.continue} disabled={isSetScreenShownLoading} onPress={navigate} shelleyTheme />
+
+      {Platform.OS === 'android' && <Space height="lg" />}
     </SafeAreaView>
   )
 }
