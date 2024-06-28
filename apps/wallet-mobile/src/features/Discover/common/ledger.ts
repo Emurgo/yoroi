@@ -2,8 +2,6 @@ import {
   AddressType,
   AssetGroup,
   CertificateType,
-  CIP36VoteDelegationType,
-  CIP36VoteRegistrationFormat,
   DatumType,
   DeviceOwnedAddress,
   SignTransactionRequest,
@@ -25,15 +23,10 @@ import {
 import {
   Address,
   AuxiliaryData,
-  BaseAddress,
   Bip32PublicKey,
   BootstrapWitness,
-  ByronAddress,
-  Certificate,
   Certificates,
-  EnterpriseAddress,
   MultiAsset,
-  PointerAddress,
   Transaction,
   TransactionBody,
   TransactionInputs,
@@ -54,12 +47,6 @@ export async function createLedgerSignTxPayload(request: {
     txBody: TransactionBody
     senderUtxos: Array<CardanoAddressedUtxo>
     changeAddr: Array<Addressing & {address: string}>
-    ledgerNanoCatalystRegistrationTxSignData?: {
-      votingPublicKey: string
-      stakingKeyPath: Array<number>
-      nonce: number
-      paymentKeyPath: Array<number>
-    }
     metadata?: AuxiliaryData
   }
   byronNetworkMagic: number
@@ -102,68 +89,6 @@ export async function createLedgerSignTxPayload(request: {
   const ttl = txBody.ttl()
 
   let auxiliaryData: TxAuxiliaryData | undefined = undefined
-  if (request.signRequest.ledgerNanoCatalystRegistrationTxSignData) {
-    const {votingPublicKey, stakingKeyPath, nonce, paymentKeyPath} =
-      request.signRequest.ledgerNanoCatalystRegistrationTxSignData
-
-    if (request.cip36) {
-      auxiliaryData = {
-        type: TxAuxiliaryDataType.CIP36_REGISTRATION,
-        params: {
-          format: CIP36VoteRegistrationFormat.CIP_36,
-          delegations: [
-            {
-              type: CIP36VoteDelegationType.KEY,
-              voteKeyHex: votingPublicKey.replace(/^0x/, ''),
-              weight: 1,
-            },
-          ],
-          stakingPath: stakingKeyPath,
-          paymentDestination: {
-            type: TxOutputDestinationType.DEVICE_OWNED,
-            params: {
-              type: AddressType.BASE_PAYMENT_KEY_STAKE_KEY,
-              params: {
-                spendingPath: paymentKeyPath,
-                stakingPath: stakingKeyPath,
-              },
-            },
-          },
-          nonce,
-          votingPurpose: 0,
-        },
-      }
-    } else {
-      auxiliaryData = {
-        type: TxAuxiliaryDataType.CIP36_REGISTRATION,
-        params: {
-          format: CIP36VoteRegistrationFormat.CIP_15,
-          voteKeyHex: votingPublicKey.replace(/^0x/, ''),
-          stakingPath: stakingKeyPath,
-          paymentDestination: {
-            type: TxOutputDestinationType.DEVICE_OWNED,
-            params: {
-              type: AddressType.BASE_PAYMENT_KEY_STAKE_KEY,
-              params: {
-                spendingPath: paymentKeyPath,
-                stakingPath: stakingKeyPath,
-              },
-            },
-          },
-          nonce,
-        },
-      }
-    }
-  } else if (request.signRequest.metadata != null) {
-    auxiliaryData = {
-      type: TxAuxiliaryDataType.ARBITRARY_HASH,
-      params: {
-        hashHex: Buffer.from(await (await csl.hashAuxiliaryData(request.signRequest.metadata)).toBytes()).toString(
-          'hex',
-        ),
-      },
-    }
-  }
 
   return {
     signingMode: TransactionSigningMode.ORDINARY_TRANSACTION,
@@ -413,7 +338,7 @@ async function formatLedgerCertificates(
   return result
 }
 
-export async function toLedgerAddressParameters(request: {
+async function toLedgerAddressParameters(request: {
   csl: WasmModuleProxy
   networkId: number
   address: Address
