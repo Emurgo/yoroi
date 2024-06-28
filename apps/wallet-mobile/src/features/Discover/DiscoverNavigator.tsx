@@ -100,25 +100,33 @@ const useDappConnectorManager = () => {
 
   const signTx = React.useCallback(() => {
     return new Promise<string>((resolve, reject) => {
-      confirmRawTx({
-        onConfirm: (rootKey) => {
-          resolve(rootKey)
-          return Promise.resolve()
-        },
-        onClose: () => reject(new Error('User rejected')),
-      })
+      try {
+        confirmRawTx({
+          onConfirm: (rootKey) => {
+            resolve(rootKey)
+            return Promise.resolve()
+          },
+          onClose: () => reject(new Error('User rejected')),
+        })
+      } catch (error) {
+        reject(error)
+      }
     })
   }, [confirmRawTx])
 
   const signData = React.useCallback(() => {
     return new Promise<string>((resolve, reject) => {
-      confirmRawTx({
-        onConfirm: (rootKey) => {
-          resolve(rootKey)
-          return Promise.resolve()
-        },
-        onClose: () => reject(new Error('User rejected')),
-      })
+      try {
+        confirmRawTx({
+          onConfirm: (rootKey) => {
+            resolve(rootKey)
+            return Promise.resolve()
+          },
+          onClose: () => reject(new Error('User rejected')),
+        })
+      } catch (error) {
+        reject(error)
+      }
     })
   }, [confirmRawTx])
 

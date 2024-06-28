@@ -10,6 +10,8 @@ import {ConfirmRawTxWithPassword} from '../../Swap/common/ConfirmRawTx/ConfirmRa
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from './useStrings'
 import {walletConfig} from './wallet-config'
+import * as LEDGER from '@cardano-foundation/ledgerjs-hw-app-cardano'
+import {TransactionSigningMode} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 
 export const useConnectWalletToWebView = (wallet: YoroiWallet, webViewRef: React.RefObject<WebView | null>) => {
   const {manager, sessionId} = useDappConnector()
@@ -84,4 +86,10 @@ export const useConfirmRawTx = () => {
     },
     [meta.isHW, meta.isEasyConfirmationEnabled, openModal, strings.confirmTx, closeModal],
   )
+}
+
+const createLedgerPayload = () => {
+  const payload: LEDGER.SignTransactionRequest = {
+    signingMode: TransactionSigningMode.ORDINARY_TRANSACTION,
+  }
 }
