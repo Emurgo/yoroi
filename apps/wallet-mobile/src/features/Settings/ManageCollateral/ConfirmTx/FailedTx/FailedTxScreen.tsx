@@ -1,9 +1,10 @@
 import {useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet} from 'react-native'
 
 import {Button, Spacer, Text} from '../../../../../components'
+import {SafeArea} from '../../../../../components/SafeArea'
 import {useStrings} from '../../../../Send/common/strings'
 import {FailedTxImage} from './FailedTxImage'
 
@@ -13,7 +14,7 @@ export const FailedTxScreen = () => {
   const navigation = useNavigation()
 
   return (
-    <View style={styles.container}>
+    <SafeArea style={styles.container}>
       <FailedTxImage />
 
       <Text style={styles.title}>{strings.failedTxTitle}</Text>
@@ -23,7 +24,7 @@ export const FailedTxScreen = () => {
       <Spacer height={22} />
 
       <Button onPress={navigation.goBack} title={strings.failedTxButton} style={styles.button} shelleyTheme />
-    </View>
+    </SafeArea>
   )
 }
 
