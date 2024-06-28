@@ -8,7 +8,7 @@ import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSe
 import globalMessages, {confirmationMessages} from '../../kernel/i18n/global-messages'
 import {useCanVote} from './hooks'
 import {InsufficientFundsModal} from './InsufficientFundsModal'
-import {useCatalystFundStatus} from './useCatalystFundStatus'
+import {useCatalystCurrentFund} from './useCatalystCurrentFund'
 
 type Props = {onPress: () => void; disabled?: boolean}
 
@@ -18,8 +18,8 @@ export const VotingBanner = ({onPress, disabled}: Props) => {
   const {wallet} = useSelectedWallet()
   const {canVote, sufficientFunds} = useCanVote(wallet)
   const [showInsufficientFundsModal, setShowInsufficientFundsModal] = useState(false)
-  const {fundStatus} = useCatalystFundStatus()
-  const showCatalystBanner = canVote && fundStatus.registration === 'running'
+  const {fund} = useCatalystCurrentFund()
+  const showCatalystBanner = canVote && fund.status.registration === 'running'
 
   if (!showCatalystBanner) return null
 

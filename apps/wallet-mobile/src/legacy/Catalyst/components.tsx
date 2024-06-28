@@ -53,7 +53,7 @@ const useStyles = () => {
       flexDirection: 'row',
     },
     actions: {
-      ...atoms.px_lg,
+      ...atoms.p_lg,
     },
     pinBox: {
       borderWidth: 1,

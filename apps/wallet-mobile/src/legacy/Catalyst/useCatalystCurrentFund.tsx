@@ -6,7 +6,9 @@ import {time} from '../../kernel/constants'
 import {throwLoggedError} from '../../kernel/logger/helpers/throw-logged-error'
 import {queryInfo} from '../../kernel/query-client'
 
-export function useCatalystFundStatus(options?: UseQueryOptions<Catalyst.FundStatus, Error>) {
+export function useCatalystCurrentFund(
+  options?: UseQueryOptions<{status: Catalyst.FundStatus; info: Catalyst.FundInfo}, Error>,
+) {
   const catalyst = useCatalyst()
   const query = useQuery({
     suspense: true,
@@ -16,12 +18,17 @@ export function useCatalystFundStatus(options?: UseQueryOptions<Catalyst.FundSta
     retryDelay: time.oneSecond,
     queryKey: [queryInfo.keyToPersist, 'useCatalystFundStatus'],
     ...options,
+
     queryFn: async () => {
       const response = await catalyst.getFundInfo()
 
       if (response.tag === 'left') throwLoggedError(new Error(response.error.message))
+      const info = response.value.data
 
-      return catalyst.fundStatus(response.value.data)
+      return {
+        info,
+        status: catalyst.fundStatus(info),
+      }
     },
   })
 
@@ -29,6 +36,6 @@ export function useCatalystFundStatus(options?: UseQueryOptions<Catalyst.FundSta
 
   return {
     query,
-    fundStatus: query.data,
+    fund: query.data,
   }
 }
