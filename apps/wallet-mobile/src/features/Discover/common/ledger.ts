@@ -45,8 +45,8 @@ import {
   Credential,
 } from '@emurgo/cross-csl-core'
 import {Bip44DerivationLevels, CardanoAddressedUtxo} from '@emurgo/yoroi-lib'
-import {TxOutputDestination} from '@cardano-foundation/ledgerjs-hw-app-cardano/dist/types/public'
-import {ParsedDatum} from '@cardano-foundation/ledgerjs-hw-app-cardano/dist/types/internal'
+import {Datum, TxOutputDestination} from '@cardano-foundation/ledgerjs-hw-app-cardano/dist/types/public'
+import cbor from 'cbor'
 
 export async function createLedgerSignTxPayload(request: {
   csl: WasmModuleProxy
@@ -90,7 +90,7 @@ export async function createLedgerSignTxPayload(request: {
 
   const ttl = txBody.ttl()
 
-  let auxiliaryData = undefined
+  let auxiliaryData: TxAuxiliaryData | undefined = undefined
   if (request.signRequest.ledgerNanoCatalystRegistrationTxSignData) {
     const {votingPublicKey, stakingKeyPath, nonce, paymentKeyPath} =
       request.signRequest.ledgerNanoCatalystRegistrationTxSignData
@@ -258,7 +258,7 @@ async function _transformToLedgerOutputs(request: {
   csl: WasmModuleProxy
   networkId: number
   txOutputs: TransactionOutputs
-  changeAddrs: Array<Addressing>
+  changeAddrs: Array<Addressing & {address: string}>
   addressingMap: AddressingMap
 }): Promise<Array<TxOutput>> {
   const result: Array<TxOutput> = []
@@ -266,12 +266,12 @@ async function _transformToLedgerOutputs(request: {
   for (let i = 0; i < (await request.txOutputs.len()); i++) {
     const output = await request.txOutputs.get(i)
     const address = await output.address()
-    const jsAddr = toHexOrBase58(output.address())
+    const jsAddr = await toHexOrBase58(request.csl, await output.address())
 
     const changeAddr = request.changeAddrs.find((change) => jsAddr === change.address)
     if (changeAddr != null) {
       verifyFromDerivationRoot(changeAddr.addressing)
-      const addressParams = toLedgerAddressParameters({
+      const addressParams = await toLedgerAddressParameters({
         csl: request.csl,
         networkId: request.networkId,
         address,
@@ -532,7 +532,7 @@ export async function buildSignedTransaction(
     verifyFromDerivationRoot(utxo.addressing)
 
     const witness = findWitness(utxo.addressing.path)
-    const addressKey = derivePublicByAddressing({
+    const addressKey = await derivePublicByAddressing({
       addressing: utxo.addressing,
       startingFrom: {
         level: keyLevel,
@@ -543,9 +543,9 @@ export async function buildSignedTransaction(
     if (await csl.ByronAddress.isValid(utxo.receiver)) {
       const byronAddr = await csl.ByronAddress.fromBase58(utxo.receiver)
       const bootstrapWit = await csl.BootstrapWitness.new(
-        await csl.Vkey.new(addressKey.to_raw_key()),
+        await csl.Vkey.new(await addressKey.toRawKey()),
         await csl.Ed25519Signature.fromBytes(Buffer.from(witness, 'hex')),
-        addressKey.chaincode(),
+        await addressKey.chaincode(),
         await byronAddr.attributes(),
       )
       const asString = Buffer.from(await bootstrapWit.toBytes()).toString('hex')
@@ -558,7 +558,7 @@ export async function buildSignedTransaction(
     }
 
     const vkeyWit = await csl.Vkeywitness.new(
-      await csl.Vkey.new(addressKey.to_raw_key()),
+      await csl.Vkey.new(await addressKey.toRawKey()),
       await csl.Ed25519Signature.fromBytes(Buffer.from(witness, 'hex')),
     )
     const asString = Buffer.from(await vkeyWit.toBytes()).toString('hex')
@@ -577,7 +577,7 @@ export async function buildSignedTransaction(
     }
     verifyFromDerivationRoot(addressing)
     if (witness.path[Bip44DerivationLevels.CHAIN.level - 1] === ChainDerivations.CHIMERIC_ACCOUNT) {
-      const stakingKey = derivePublicByAddressing({
+      const stakingKey = await derivePublicByAddressing({
         addressing,
         startingFrom: {
           level: keyLevel,
@@ -585,7 +585,7 @@ export async function buildSignedTransaction(
         },
       })
       const vkeyWit = await csl.Vkeywitness.new(
-        await csl.Vkey.new(stakingKey.to_raw_key()),
+        await csl.Vkey.new(await stakingKey.toRawKey()),
         await csl.Ed25519Signature.fromBytes(Buffer.from(witness.witnessSignatureHex, 'hex')),
       )
       const asString = Buffer.from(await vkeyWit.toBytes()).toString('hex')
@@ -771,7 +771,7 @@ export async function toLedgerSignRequest(
     const scriptRef = await output.scriptRef()
 
     if (isPostAlonzoTransactionOutput || scriptRef || plutusData) {
-      let datum: ParsedDatum | null = null
+      let datum: Datum | null = null
       if (plutusData) {
         datum = {
           type: DatumType.INLINE,
@@ -819,7 +819,7 @@ export async function toLedgerSignRequest(
     return [...set]
   }
 
-  const additionalWitnessPaths = []
+  const additionalWitnessPaths: number[][] = []
   const formattedRequiredSigners: RequiredSigner[] = []
 
   async function hashHexToOwnAddressPath(hashHex: string): Promise<Array<number>> {
@@ -850,18 +850,18 @@ export async function toLedgerSignRequest(
     }
   }
   for (const additionalHashHex of additionalRequiredSigners || []) {
-    const ownAddressPath = hashHexToOwnAddressPath(additionalHashHex)
+    const ownAddressPath = await hashHexToOwnAddressPath(additionalHashHex)
     if (ownAddressPath != null) {
       additionalWitnessPaths.push(ownAddressPath)
     }
   }
 
-  function addressingMap(addr: string): {path: Array<number>} | undefined {
+  const addressingMap: AddressingMap = (addr: string) => {
     const path = ownUtxoAddressMap[addr] || ownStakeAddressMap[addr]
     if (path) {
       return {path}
     }
-    return undefined
+    return null
   }
 
   let formattedCertificates: LedgerCertificate[] | null = null
@@ -963,7 +963,7 @@ export async function buildConnectorSignedTransaction(
     }
     verifyFromDerivationRoot(addressing)
 
-    const witnessKey = derivePublicByAddressing({
+    const witnessKey = await derivePublicByAddressing({
       addressing,
       startingFrom: {
         level: keyLevel,
@@ -971,7 +971,7 @@ export async function buildConnectorSignedTransaction(
       },
     })
     const vkeyWit = await csl.Vkeywitness.new(
-      await csl.Vkey.new(witnessKey.to_raw_key()),
+      await csl.Vkey.new(await witnessKey.toRawKey()),
       await csl.Ed25519Signature.fromBytes(Buffer.from(witness.witnessSignatureHex, 'hex')),
     )
     await vkeyWitWasm.add(vkeyWit)
@@ -993,7 +993,7 @@ function verifyFromDerivationRoot(request: Addressing['addressing']): void {
   }
 }
 
-type AddressingMap = (address: string) => Addressing['addressing'] | null
+type AddressingMap = (address: string) => {path: number[]} | null
 
 type Addressing = {
   addressing: {
@@ -1001,3 +1001,39 @@ type Addressing = {
     path: number[]
   }
 }
+
+async function toHexOrBase58(wasm: WasmModuleProxy, address: Address): Promise<string> {
+  const asByron = await wasm.ByronAddress.fromAddress(address)
+  if (asByron === null || !asByron) {
+    return Buffer.from(await address.toBytes()).toString('hex')
+  }
+  return await asByron.toBase58()
+}
+
+async function derivePublicByAddressing(request: {
+  addressing: Addressing['addressing']
+  startingFrom: {
+    key: Bip32PublicKey
+    level: number
+  }
+}): Promise<Bip32PublicKey> {
+  if (request.startingFrom.level + 1 < request.addressing.startLevel) {
+    throw new Error(`derivePublicByAddressing keyLevel < startLevel`)
+  }
+  let derivedKey = request.startingFrom.key
+  for (
+    let i = request.startingFrom.level - request.addressing.startLevel + 1;
+    i < request.addressing.path.length;
+    i++
+  ) {
+    derivedKey = await derivedKey.derive(request.addressing.path[i])
+  }
+  return derivedKey
+}
+
+const ChainDerivations = Object.freeze({
+  EXTERNAL: 0,
+  INTERNAL: 1,
+  CHIMERIC_ACCOUNT: 2,
+  GOVERNANCE_DREP_KEYS: 3,
+})
