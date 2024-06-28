@@ -1,8 +1,9 @@
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet} from 'react-native'
 
 import {Button, Spacer, Text} from '../../../../../components'
+import {SafeArea} from '../../../../../components/SafeArea'
 import {useBlockGoBack} from '../../../../../kernel/navigation'
 import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
@@ -15,7 +16,7 @@ export const FailedTxScreen = () => {
   const navigateTo = useNavigateTo()
 
   return (
-    <View style={styles.container}>
+    <SafeArea style={styles.container}>
       <FailedTxImage />
 
       <Text style={styles.title}>{strings.failedTxTitle}</Text>
@@ -30,7 +31,7 @@ export const FailedTxScreen = () => {
         style={styles.button}
         shelleyTheme
       />
-    </View>
+    </SafeArea>
   )
 }
 

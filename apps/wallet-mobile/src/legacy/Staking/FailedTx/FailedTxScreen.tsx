@@ -2,9 +2,10 @@ import {useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet} from 'react-native'
 
 import {Button, Spacer, Text} from '../../../components'
+import {SafeArea} from '../../../components/SafeArea'
 import {Space} from '../../../components/Space/Space'
 import {FailedTxImage} from './FailedTxImage'
 
@@ -14,7 +15,7 @@ export const FailedTxScreen = () => {
   const navigateTo = useNavigateTo()
 
   return (
-    <View style={styles.container}>
+    <SafeArea style={styles.container}>
       <FailedTxImage />
 
       <Space height="lg" />
@@ -30,7 +31,7 @@ export const FailedTxScreen = () => {
       <Space height="lg" />
 
       <Button onPress={navigateTo.main} title={strings.goToMain} textStyles={styles.outlineText} outline />
-    </View>
+    </SafeArea>
   )
 }
 
