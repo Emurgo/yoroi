@@ -1,3 +1,5 @@
+import 'cbor-rn-prereqs'
+
 import {
   AddressType,
   AssetGroup,
