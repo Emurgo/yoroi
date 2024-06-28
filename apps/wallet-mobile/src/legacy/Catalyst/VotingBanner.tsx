@@ -1,16 +1,14 @@
-import {catalystManagerMaker} from '@yoroi/staking'
 import {useTheme} from '@yoroi/theme'
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Icon, Text} from '../../components'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
-import {isNightly} from '../../kernel/env'
 import globalMessages, {confirmationMessages} from '../../kernel/i18n/global-messages'
-import {logger} from '../../kernel/logger/logger'
 import {useCanVote} from './hooks'
 import {InsufficientFundsModal} from './InsufficientFundsModal'
+import {useCatalystFundStatus} from './useCatalystFundStatus'
 
 type Props = {onPress: () => void; disabled?: boolean}
 
@@ -20,36 +18,8 @@ export const VotingBanner = ({onPress, disabled}: Props) => {
   const {wallet} = useSelectedWallet()
   const {canVote, sufficientFunds} = useCanVote(wallet)
   const [showInsufficientFundsModal, setShowInsufficientFundsModal] = useState(false)
-  const [showCatalystBanner, setShowCatalystBanner] = useState(canVote)
-
-  useEffect(() => {
-    const checkCatalystFundInfo = async () => {
-      let fundInfo: {
-        registrationStart: string
-        registrationEnd: string
-      } | null = null
-
-      if (canVote) {
-        try {
-          const {currentFund} = await wallet.fetchFundInfo()
-          if (currentFund != null) {
-            fundInfo = {
-              registrationStart: currentFund.registrationStart,
-              registrationEnd: currentFund.registrationEnd,
-            }
-          }
-        } catch (error) {
-          logger.error(error as Error)
-        }
-      }
-
-      const catalyst = catalystManagerMaker()
-
-      setShowCatalystBanner((canVote && catalyst.isRegistrationOpen(fundInfo)) || isNightly || __DEV__)
-    }
-
-    checkCatalystFundInfo()
-  }, [canVote, wallet])
+  const {fundStatus} = useCatalystFundStatus()
+  const showCatalystBanner = canVote && fundStatus.registration === 'running'
 
   if (!showCatalystBanner) return null
 
