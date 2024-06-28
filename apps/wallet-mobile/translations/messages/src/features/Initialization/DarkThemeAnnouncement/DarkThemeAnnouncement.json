@@ -5,21 +5,15 @@
     "file": "src/features/Initialization/DarkThemeAnnouncement/DarkThemeAnnouncement.tsx",
     "start": {
       "line": 157,
+      "line": 157,
       "column": 10,
-<<<<<<< HEAD
       "index": 4575
-=======
-      "index": 4635
->>>>>>> 6ba7c2631 (fix(common): android bottom space)
     },
     "end": {
       "line": 160,
+      "line": 160,
       "column": 3,
-<<<<<<< HEAD
       "index": 4668
-=======
-      "index": 4728
->>>>>>> 6ba7c2631 (fix(common): android bottom space)
     }
   },
   {
@@ -28,21 +22,15 @@
     "file": "src/features/Initialization/DarkThemeAnnouncement/DarkThemeAnnouncement.tsx",
     "start": {
       "line": 161,
+      "line": 161,
       "column": 15,
-<<<<<<< HEAD
       "index": 4685
-=======
-      "index": 4745
->>>>>>> 6ba7c2631 (fix(common): android bottom space)
     },
     "end": {
       "line": 165,
+      "line": 165,
       "column": 3,
-<<<<<<< HEAD
       "index": 4873
-=======
-      "index": 4933
->>>>>>> 6ba7c2631 (fix(common): android bottom space)
     }
   },
   {
@@ -51,21 +39,15 @@
     "file": "src/features/Initialization/DarkThemeAnnouncement/DarkThemeAnnouncement.tsx",
     "start": {
       "line": 166,
+      "line": 166,
       "column": 15,
-<<<<<<< HEAD
       "index": 4890
-=======
-      "index": 4950
->>>>>>> 6ba7c2631 (fix(common): android bottom space)
     },
     "end": {
       "line": 169,
+      "line": 169,
       "column": 3,
-<<<<<<< HEAD
       "index": 4987
-=======
-      "index": 5047
->>>>>>> 6ba7c2631 (fix(common): android bottom space)
     }
   },
   {
@@ -74,21 +56,15 @@
     "file": "src/features/Initialization/DarkThemeAnnouncement/DarkThemeAnnouncement.tsx",
     "start": {
       "line": 170,
+      "line": 170,
       "column": 12,
-<<<<<<< HEAD
       "index": 5001
-=======
-      "index": 5061
->>>>>>> 6ba7c2631 (fix(common): android bottom space)
     },
     "end": {
       "line": 173,
+      "line": 173,
       "column": 3,
-<<<<<<< HEAD
       "index": 5100
-=======
-      "index": 5160
->>>>>>> 6ba7c2631 (fix(common): android bottom space)
     }
   }
 ]
