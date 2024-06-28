@@ -308,7 +308,6 @@
     "typescript-coverage-report": "^0.6.4",
     "yargs": "^17.7.2"
   },
-  "packageManager": "yarn@3.6.4",
   "engineStrict": true,
   "engine": {
     "node": ">=18"
