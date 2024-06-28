@@ -24,21 +24,19 @@
     ]
   },
   "scripts": {
-    "build": "yarn workspaces run build",
-    "build:changed": "lerna run build --since --ignore @yoroi/wallet-mobile --ignore @yoroi/e2e-wallet-mobile",
-    "build:dev": "yarn workspaces run build:dev",
-    "build:start": "yarn build && concurrently \"yarn watch\" \"yarn wallet-mobile:start\"",
-    "clean": "yarn workspaces run rimraf node_modules && yarn rimraf node_modules",
     "reset": "yarn clean && yarn install --frozen-lockfile && yarn wallet-mobile:reset && yarn build && yarn start",
-    "reset:dev": "yarn clean && yarn install --frozen-lockfile && yarn wallet-mobile:reset && yarn build:dev && yarn wallet-mobile:start",
+    "build": "yarn workspaces run build",
+    "clean": "yarn workspaces run rimraf node_modules && yarn rimraf node_modules",
+    "build:start": "yarn build && concurrently \"yarn watch\" \"yarn wallet-mobile:start\"",
     "start": "concurrently \"yarn watch\" \"yarn wallet-mobile:start\"",
-    "wallet-mobile:reset": "cd apps/wallet-mobile && yarn reset && cd ../..",
     "wallet-mobile:start": "cd apps/wallet-mobile && yarn start",
-    "watch": "chokidar \"packages/*/src/**/*\" -c \"yarn build:changed\""
+    "wallet-mobile:reset": "cd apps/wallet-mobile && yarn reset && cd ../..",
+    "watch": "chokidar \"packages/*/src/**/*\" -c \"yarn build:changed\"",
+    "build:changed": "lerna run build --since --ignore @yoroi/wallet-mobile --ignore @yoroi/e2e-wallet-mobile"
   },
   "devDependencies": {
-    "chokidar-cli": "^3.0.0",
     "concurrently": "^8.2.0",
+    "chokidar-cli": "^3.0.0",
     "lerna": "^7.1.5",
     "rimraf": "^5.0.1"
   }
