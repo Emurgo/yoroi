@@ -3,7 +3,7 @@ import {
   UseMutationOptions,
   useQuery,
   UseQueryOptions,
-} from '@tanstack/react-query'
+} from 'react-query'
 import {useGovernance} from './context'
 import {GovernanceAction, VoteKind} from '../../manager'
 import {useMutationWithInvalidations} from '@yoroi/common'

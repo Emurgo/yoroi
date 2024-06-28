@@ -3,7 +3,7 @@ import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
 import * as React from 'react'
-import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Linking, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../../components/Button'
@@ -89,6 +89,8 @@ export const SelectWalletFromList = () => {
         <Space height="md" />
 
         <OnlyDevButton />
+
+        {Platform.OS === 'android' && <Space height="lg" />}
       </View>
     </SafeAreaView>
   )

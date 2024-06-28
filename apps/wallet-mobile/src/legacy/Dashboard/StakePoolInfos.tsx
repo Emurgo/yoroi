@@ -1,8 +1,8 @@
-import {useQuery, useQueryClient, UseQueryOptions} from '@tanstack/react-query'
 import {Balance, Wallet} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import React from 'react'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
+import {useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'

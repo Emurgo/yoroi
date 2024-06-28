@@ -1,4 +1,4 @@
-import {UseMutationOptions} from '@tanstack/react-query'
+import {UseMutationOptions} from 'react-query'
 
 import {useSwap} from './useSwap'
 import {useMutationWithInvalidations} from '@yoroi/common'

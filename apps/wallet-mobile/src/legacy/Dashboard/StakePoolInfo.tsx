@@ -1,8 +1,8 @@
-import {useQuery, UseQueryOptions} from '@tanstack/react-query'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, Linking, StyleSheet, View} from 'react-native'
+import {useQuery, UseQueryOptions} from 'react-query'
 
 import {Button, CopyButton, Text, TitledCard} from '../../components'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'

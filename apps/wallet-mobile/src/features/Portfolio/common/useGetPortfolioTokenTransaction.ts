@@ -1,4 +1,4 @@
-import {useQuery, UseQueryOptions} from '@tanstack/react-query'
+import {useQuery, UseQueryOptions} from 'react-query'
 
 export const TOKEN_TRANSACTION_DIRECTION = {
   SENT: 'SENT',
