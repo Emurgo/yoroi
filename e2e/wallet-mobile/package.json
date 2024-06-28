@@ -22,7 +22,9 @@
     "tsc": "tsc --noEmit -p tsconfig.json",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "lint:fix": "yarn lint --fix",
-    "build": "yarn lint && yarn tsc"
+    "clean": "yarn lint",
+    "build": "yarn lint && yarn tsc",
+    "build:dev": "yarn lint && yarn tsc"
   },
   "prettier": {
     "printWidth": 120,
