@@ -185,12 +185,12 @@ export const useAuthSetting = (options?: UseQueryOptions<AuthSetting, Error>) =>
     ...options,
   })
 
-  return query.data
+  return query.data ?? null
 }
 
 export const getAuthSetting = async (storage: App.Storage) => {
   const authSetting = await storage.join('appSettings/').getItem('auth', parseAuthSetting)
-  return authSetting ?? undefined
+  return authSetting ?? null
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -227,7 +227,7 @@ const messages = defineMessages({
   },
 })
 
-export type AuthSetting = 'pin' | 'os' | undefined
+export type AuthSetting = 'pin' | 'os' | null
 
 export const AUTH_WITH_OS: AuthSetting = 'os'
 export const AUTH_WITH_PIN: AuthSetting = 'pin'
