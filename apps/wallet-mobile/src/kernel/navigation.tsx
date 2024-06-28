@@ -3,6 +3,7 @@ import {
   NavigationProp,
   NavigationState,
   NavigatorScreenParams,
+  ParamListBase,
   useNavigation,
   useNavigationState,
   useRoute,

@@ -110,11 +110,7 @@ export const RecoveryPhraseScreen = () => {
         </Text>
 
         <View style={styles.mnemonicWords}>
-          <BlurView
-            experimentalBlurMethod={Platform.OS === 'android' ? 'dimezisBlurView' : 'none'}
-            intensity={isBlur ? 14 : 0}
-            style={styles.blurView}
-          />
+          <BlurView intensity={isBlur ? 14 : 0} style={styles.blurView} />
 
           {mnemonic.split(' ').map((word, index) => (
             <View key={`mnemonic-${index}`} testID={`mnemonic-${index}`} style={styles.mnemonicTextContainer}>

@@ -155,7 +155,7 @@ dependencies {
 
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
-    implementation("com.facebook.react:flipper-integration")
+    //implementation("com.facebook.react:flipper-integration")
 
     // If your app supports Android versions before Ice Cream Sandwich (API level 14)
     implementation('com.facebook.fresco:animated-base-support:1.3.0')

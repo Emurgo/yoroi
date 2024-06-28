@@ -1,29 +1,33 @@
-const path = require("path");
-const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
-const { withSentryConfig } = require('@sentry/react-native/metro');
+const { resolve } = require("path");
+const { getDefaultConfig, mergeConfig } = require("@react-native/metro-config");
 
-projectRoot = path.resolve(__dirname, "apps/wallet-mobile");
-
-config = {
-  projectRoot: projectRoot,
+const projectRoot = resolve(__dirname, "apps/wallet-mobile");
+/**
+ * Metro configuration
+ * https://reactnative.dev/docs/metro
+ *
+ * @type {import('metro-config').MetroConfig}
+ */
+const config = {
+  projectRoot,
   watchFolders: [
-    path.resolve(__dirname, "apps/wallet-mobile"),
-    path.resolve(__dirname, "node_modules"),
-    path.resolve(__dirname, "packages/api"),
-    path.resolve(__dirname, "packages/common"),
-    path.resolve(__dirname, "packages/dapp-connector"),
-    path.resolve(__dirname, "packages/exchange"),
-    path.resolve(__dirname, "packages/explorers"),
-    path.resolve(__dirname, "packages/identicon"),
-    path.resolve(__dirname, "packages/links"),
-    path.resolve(__dirname, "packages/portfolio"),
-    path.resolve(__dirname, "packages/resolver"),
-    path.resolve(__dirname, "packages/setup-wallet"),
-    path.resolve(__dirname, "packages/staking"),
-    path.resolve(__dirname, "packages/swap"),
-    path.resolve(__dirname, "packages/theme"),
-    path.resolve(__dirname, "packages/transfer"),
-    path.resolve(__dirname, "packages/types"),
+    resolve(__dirname, "apps/wallet-mobile"),
+    resolve(__dirname, "node_modules"),
+    resolve(__dirname, "packages/api"),
+    resolve(__dirname, "packages/common"),
+    resolve(__dirname, "packages/dapp-connector"),
+    resolve(__dirname, "packages/exchange"),
+    resolve(__dirname, "packages/explorers"),
+    resolve(__dirname, "packages/identicon"),
+    resolve(__dirname, "packages/links"),
+    resolve(__dirname, "packages/portfolio"),
+    resolve(__dirname, "packages/resolver"),
+    resolve(__dirname, "packages/setup-wallet"),
+    resolve(__dirname, "packages/staking"),
+    resolve(__dirname, "packages/swap"),
+    resolve(__dirname, "packages/theme"),
+    resolve(__dirname, "packages/transfer"),
+    resolve(__dirname, "packages/types"),
   ],
   resolver: {
     resolverMainFields: ["sbmodern", "react-native", "browser", "main"],
@@ -36,9 +40,9 @@ config = {
       util: require.resolve("util"),
       vm: require.resolve("vm-browserify"),
     },
-    unstable_enableSymlinks: true
-  },
-  transformer: {
+    unstable_enableSymlinks: true,
+    /*
+      transformer: {
     getTransformOptions: async () => ({
       transform: {
         experimentalImportSupport: false,
@@ -46,8 +50,8 @@ config = {
       },
     }),
   },
+  */
+  },
 };
 
-
-const defaultConfig = getDefaultConfig(projectRoot);
-module.exports = withSentryConfig(mergeConfig(defaultConfig, config));
+module.exports = mergeConfig(getDefaultConfig(projectRoot), config);

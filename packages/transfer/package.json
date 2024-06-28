@@ -41,6 +41,7 @@
   ],
   "scripts": {
     "build": "yarn tsc && yarn lint && yarn test --ci --silent && yarn clean && bob build",
+    "build:dev": "yarn tsc && yarn clean && bob build",
     "build:release": "yarn build && yarn flow",
     "clean": "del-cli lib",
     "dev": "yarn clean && bob build",
@@ -134,6 +135,7 @@
     "@commitlint/config-conventional": "^17.0.2",
     "@react-native-community/eslint-config": "^3.0.2",
     "@release-it/conventional-changelog": "^5.0.0",
+    "@tanstack/react-query": "4.36.1",
     "@testing-library/react-hooks": "^8.0.1",
     "@testing-library/react-native": "^12.3.0",
     "@types/jest": "^29.5.12",
@@ -153,19 +155,18 @@
     "pod-install": "^0.1.0",
     "prettier": "^2.0.5",
     "react": "18.2.0",
-    "react-native": "~0.73.4",
+    "react-native": "0.74.2",
     "react-native-builder-bob": "^0.23.2",
-    "@tanstack/react-query": "4.36.1",
     "react-test-renderer": "^18.2.0",
     "release-it": "^15.0.0",
     "typescript": "^5.3.3"
   },
   "peerDependencies": {
+    "@tanstack/react-query": "4.36.1",
     "@yoroi/portfolio": "1.0.0",
     "@yoroi/resolver": "2.0.5",
     "immer": "^10.0.2",
-    "react": ">= 16.8.0 <= 19.0.0",
-    "@tanstack/react-query": "4.36.1"
+    "react": ">= 16.8.0 <= 19.0.0"
   },
   "packageManager": "yarn@1.22.21",
   "engines": {
