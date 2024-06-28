@@ -1,5 +1,5 @@
-import {QueryClient} from '@tanstack/react-query'
-import {renderHook} from '@testing-library/react-hooks'
+import {QueryClient} from 'react-query'
+import {renderHook, act} from '@testing-library/react-hooks'
 
 import {queryClientFixture} from '../../../fixtures/query-client'
 import {wrapperManagerFixture} from '../../../fixtures/manager-wrapper'
@@ -27,8 +27,11 @@ describe('useResolverSetShowNotice', () => {
       resolverManager: mockResolverManager,
     })
 
-    renderHook(() => useResolverSetShowNotice(), {wrapper})
-    /*
+    const {result, waitFor: waitForHook} = renderHook(
+      () => useResolverSetShowNotice(),
+      {wrapper},
+    )
+
     await act(async () => result.current.setShowNotice(true))
 
     await waitForHook(() => expect(result.current.isLoading).toBe(false))
@@ -36,6 +39,5 @@ describe('useResolverSetShowNotice', () => {
     expect(mockResolverManager.showNotice.save).toHaveBeenCalledTimes(1)
     expect(mockResolverManager.showNotice.save).toHaveBeenCalledWith(true)
     expect(result.current.isError).toBe(false)
-    */
   })
 })

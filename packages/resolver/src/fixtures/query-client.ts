@@ -1,8 +1,7 @@
-import {QueryClient} from '@tanstack/react-query'
+import {QueryClient} from 'react-query'
 
 export const queryClientFixture = () =>
   new QueryClient({
-    logger: {log: console.log, warn: console.warn, error: () => {}},
     defaultOptions: {
       queries: {
         retry: false,
@@ -10,7 +9,6 @@ export const queryClientFixture = () =>
       },
       mutations: {
         retry: false,
-        cacheTime: 0,
       },
     },
   })

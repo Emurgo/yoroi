@@ -1,5 +1,5 @@
 import {Exchange} from '@yoroi/types'
-import {UseQueryOptions, useQuery} from '@tanstack/react-query'
+import {UseQueryOptions, useQuery} from 'react-query'
 
 export const useCreateReferralLink = (
   {

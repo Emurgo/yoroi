@@ -1,4 +1,4 @@
-import {useQuery, UseQueryOptions} from '@tanstack/react-query'
+import {useQuery, UseQueryOptions} from 'react-query'
 
 interface IDAppPortfolioBalance {
   quantity: bigint
