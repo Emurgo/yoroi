@@ -58,7 +58,7 @@ const useSaveCurrency = ({onSuccess, ...options}: UseMutationOptions<void, Error
   const mutation = useMutation({
     mutationFn: (currencySymbol) => storage.join('appSettings/').setItem('currencySymbol', currencySymbol),
     onSuccess: (data, variables, context) => {
-      queryClient.invalidateQueries('currencySymbol')
+      queryClient.invalidateQueries(['currencySymbol'])
       onSuccess?.(data, variables, context)
     },
     ...options,

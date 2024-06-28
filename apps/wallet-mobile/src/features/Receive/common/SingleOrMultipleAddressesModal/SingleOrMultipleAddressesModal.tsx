@@ -48,6 +48,7 @@ export const SingleOrMultipleAddressesModal = ({onConfirm}: Props) => {
 
       <View style={styles.buttonContainer}>
         <Button
+          style={styles.multipleButton}
           outline
           title={strings.selectMultiple}
           textStyles={{
@@ -77,7 +78,7 @@ const useStyles = () => {
     },
     buttonContainer: {
       alignSelf: 'stretch',
-      backgroundColor: color.gray_cmin,
+      backgroundColor: 'transparent',
     },
     details: {
       ...atoms.body_1_lg_regular,
@@ -87,6 +88,10 @@ const useStyles = () => {
 
     button: {
       backgroundColor: color.primary_c500,
+    },
+    multipleButton: {
+      backgroundColor: 'transparent',
+      borderWidth: 0,
     },
   })
 
