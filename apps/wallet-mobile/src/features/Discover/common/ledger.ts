@@ -50,14 +50,25 @@ import cbor from 'cbor'
 
 export async function createLedgerSignTxPayload(request: {
   csl: WasmModuleProxy
-  signRequest: HaskellShelleyTxSignRequest
+  signRequest: {
+    txBody: TransactionBody
+    senderUtxos: Array<CardanoAddressedUtxo>
+    changeAddr: Array<Addressing & {address: string}>
+    ledgerNanoCatalystRegistrationTxSignData?: {
+      votingPublicKey: string
+      stakingKeyPath: Array<number>
+      nonce: number
+      paymentKeyPath: Array<number>
+    }
+    metadata?: AuxiliaryData
+  }
   byronNetworkMagic: number
   networkId: number
   addressingMap: (value: string) => Addressing['addressing']
   cip36: boolean
 }): Promise<SignTransactionRequest> {
   const {csl} = request
-  const txBody: TransactionBody = request.signRequest.unsignedTx.build()
+  const txBody: TransactionBody = request.signRequest.txBody
 
   // Inputs
   const ledgerInputs = _transformToLedgerInputs(request.signRequest.senderUtxos)
