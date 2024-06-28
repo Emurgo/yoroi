@@ -1,13 +1,16 @@
 import {
   AddressType,
   AssetGroup,
+  Certificate as LedgerCertificate,
   CertificateType,
   DatumType,
   DeviceOwnedAddress,
+  RequiredSigner,
   SignTransactionRequest,
   StakeCredentialParamsType,
   Token,
   TransactionSigningMode,
+  TxAuxiliaryData,
   TxAuxiliaryDataType,
   TxInput,
   TxOutput,
@@ -16,16 +19,15 @@ import {
   TxRequiredSignerType,
   Withdrawal,
   Witness,
-  Certificate as LedgerCertificate,
-  TxAuxiliaryData,
-  RequiredSigner,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
+import {Datum, TxOutputDestination} from '@cardano-foundation/ledgerjs-hw-app-cardano/dist/types/public'
 import {
   Address,
   AuxiliaryData,
   Bip32PublicKey,
   BootstrapWitness,
   Certificates,
+  Credential,
   MultiAsset,
   Transaction,
   TransactionBody,
@@ -35,10 +37,8 @@ import {
   Vkeywitness,
   WasmModuleProxy,
   Withdrawals,
-  Credential,
 } from '@emurgo/cross-csl-core'
 import {Bip44DerivationLevels, CardanoAddressedUtxo} from '@emurgo/yoroi-lib'
-import {Datum, TxOutputDestination} from '@cardano-foundation/ledgerjs-hw-app-cardano/dist/types/public'
 import cbor from 'cbor'
 
 export async function createLedgerSignTxPayload(request: {
@@ -88,7 +88,7 @@ export async function createLedgerSignTxPayload(request: {
 
   const ttl = txBody.ttl()
 
-  let auxiliaryData: TxAuxiliaryData | undefined = undefined
+  const auxiliaryData: TxAuxiliaryData | undefined = undefined
 
   return {
     signingMode: TransactionSigningMode.ORDINARY_TRANSACTION,
@@ -915,7 +915,7 @@ export async function buildConnectorSignedTransaction(
   const witSet = await csl.TransactionWitnessSet.new()
   await witSet.setVkeys(vkeyWitWasm)
 
-  return await csl.Transaction.new(txBody, witSet, metadata)
+  return csl.Transaction.new(txBody, witSet, metadata)
 }
 
 function verifyFromDerivationRoot(request: Addressing['addressing']): void {
@@ -943,7 +943,7 @@ async function toHexOrBase58(wasm: WasmModuleProxy, address: Address): Promise<s
   if (asByron === null || !asByron) {
     return Buffer.from(await address.toBytes()).toString('hex')
   }
-  return await asByron.toBase58()
+  return asByron.toBase58()
 }
 
 async function derivePublicByAddressing(request: {

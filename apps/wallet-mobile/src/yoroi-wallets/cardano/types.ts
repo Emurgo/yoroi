@@ -101,6 +101,8 @@ export interface YoroiWallet {
 
   signRawTx(txHex: string, pKeys: CoreTypes.PrivateKey[]): Promise<Uint8Array | undefined>
 
+  getAddressing(address: string): {path: number[]; startLevel: number}
+
   // Sending
   createUnsignedTx(params: {
     entries: YoroiEntry[]

@@ -1,10 +1,14 @@
+import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
 import {connectionStorageMaker, dappConnectorApiMaker, dappConnectorMaker, ResolverWallet} from '@yoroi/dapp-connector'
 import {DappConnector} from '@yoroi/dapp-connector'
 import {App, Wallet} from '@yoroi/types'
 
 import {cip30ExtensionMaker} from '../../../yoroi-wallets/cardano/cip30/cip30'
 import {cip95ExtensionMaker, supportsCIP95} from '../../../yoroi-wallets/cardano/cip95/cip95'
-import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
+import {CardanoTypes, YoroiWallet} from '../../../yoroi-wallets/cardano/types'
+import type {RawUtxo} from '../../../yoroi-wallets/types'
+import {CardanoMobile} from '../../../yoroi-wallets/wallets'
+import {toLedgerSignRequest} from './ledger'
 
 export const validUrl = (url: string) => {
   return /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!&',,=.+]+$/g.test(url)
@@ -103,6 +107,22 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
     },
     signTx: async (cbor: string, partial?: boolean) => {
       const rootKey = await signTx(cbor)
+
+      const tx = await CardanoMobile.Transaction.fromHex(cbor)
+      const txBody = await tx.body()
+
+      const ledgerPayload = await toLedgerSignRequest(
+        CardanoMobile,
+        txBody,
+        wallet.networkManager.chainId,
+        wallet.networkManager.protocolMagic,
+        await getHexAddressingMap(wallet),
+        await getHexAddressingMap(wallet),
+        await getAddressedUtxos(wallet),
+        Buffer.from(cbor),
+        [],
+      )
+      console.log('ledgerPayload', ledgerPayload)
       return cip30.signTx(rootKey, cbor, partial)
     },
     sendReorganisationTx: async () => {
@@ -117,6 +137,43 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
   const storage = connectionStorageMaker({storage: appStorage.join('dapp-connections/')})
   const manager = dappConnectorMaker(storage, handlerWallet, api)
   return manager
+}
+
+const getHexAddressingMap = async (wallet: YoroiWallet) => {
+  const addressedUtxos = wallet.utxos.map(async (utxo: RawUtxo) => {
+    const addressing = wallet.getAddressing(utxo.receiver)
+    const hexAddress = await normalizeToAddress(CardanoMobile, utxo.receiver).then((a) => a?.toHex())
+
+    return {
+      addressing,
+      hexAddress,
+    }
+  })
+
+  const addressing = await Promise.all(addressedUtxos)
+  return addressing.reduce<{[addressHex: string]: Array<number>}>((acc, curr) => {
+    if (!curr.hexAddress) return acc
+    acc[curr.hexAddress] = curr.addressing.path
+    return acc
+  }, {})
+}
+
+const getAddressedUtxos = async (wallet: YoroiWallet) => {
+  const addressedUtxos = wallet.utxos.map((utxo: RawUtxo): CardanoTypes.CardanoAddressedUtxo => {
+    const addressing = wallet.getAddressing(utxo.receiver)
+
+    return {
+      addressing,
+      txIndex: utxo.tx_index,
+      txHash: utxo.tx_hash,
+      amount: utxo.amount,
+      receiver: utxo.receiver,
+      utxoId: utxo.utxo_id,
+      assets: utxo.assets,
+    }
+  })
+
+  return Promise.resolve(addressedUtxos)
 }
 
 export const getDappFallbackLogo = (website: string) => {
