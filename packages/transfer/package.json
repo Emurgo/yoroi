@@ -154,6 +154,7 @@
     "react": "18.2.0",
     "react-native": "~0.71.0",
     "react-native-builder-bob": "^0.23.2",
+    "react-query": "^3.39.3",
     "react-test-renderer": "^18.2.0",
     "release-it": "^15.0.0",
     "typescript": "^5.3.3"
@@ -163,7 +164,8 @@
     "@yoroi/portfolio": "1.0.0",
     "@yoroi/resolver": "2.0.5",
     "immer": "^10.0.2",
-    "react": ">= 16.8.0 <= 19.0.0"
+    "react": ">= 16.8.0 <= 19.0.0",
+    "react-query": "^3.39.3"
   },
   "packageManager": "yarn@1.22.21",
   "engines": {

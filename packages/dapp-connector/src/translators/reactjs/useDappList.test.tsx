@@ -1,7 +1,7 @@
 import {useDappList} from './useDappList'
 import {renderHook, waitFor} from '@testing-library/react-native'
 import * as React from 'react'
-import {QueryClientProvider} from '@tanstack/react-query'
+import {QueryClientProvider} from 'react-query'
 import {queryClientFixture} from '@yoroi/common'
 import {DappConnectorProvider} from './DappConnectorProvider'
 import {managerMock} from '../../manager.mocks'

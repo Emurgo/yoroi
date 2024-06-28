@@ -1,5 +1,5 @@
-import {useMutation, UseMutationOptions} from '@tanstack/react-query'
 import {Wallet} from '@yoroi/types'
+import {useMutation, UseMutationOptions} from 'react-query'
 
 import {useWalletManager} from '../../context/WalletManagerProvider'
 

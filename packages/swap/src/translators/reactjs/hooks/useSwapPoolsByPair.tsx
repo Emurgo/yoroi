@@ -1,5 +1,5 @@
 import {Balance, Swap} from '@yoroi/types'
-import {UseQueryOptions, useQuery} from '@tanstack/react-query'
+import {UseQueryOptions, useQuery} from 'react-query'
 
 import {useSwap} from './useSwap'
 

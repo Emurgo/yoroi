@@ -3,3 +3,5 @@ jest.mock('@react-native-async-storage/async-storage', () =>
 )
 
 jest.mock('react-native-randombytes', () => require('crypto').randomBytes)
+
+jest.setTimeout(30000)

@@ -1,6 +1,6 @@
 import {Resolver} from '@yoroi/types'
 import * as React from 'react'
-import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
+import {QueryClient, QueryClientProvider} from 'react-query'
 
 import {SuspenseBoundary} from './SuspenseBoundary'
 import {ErrorBoundary} from './ErrorBoundary'
