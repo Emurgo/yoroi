@@ -21,11 +21,15 @@ export const useMutationWithInvalidations = <
   return useMutation<TData, TError, TVariables, TContext>({
     ...options,
     onMutate: (variables) => {
-      invalidateQueries?.forEach((key) => queryClient.cancelQueries(key))
+      invalidateQueries?.forEach((queryKey) =>
+        queryClient.cancelQueries({queryKey}),
+      )
       return options?.onMutate?.(variables)
     },
     onSuccess: (data, variables, context) => {
-      invalidateQueries?.forEach((key) => queryClient.invalidateQueries(key))
+      invalidateQueries?.forEach((queryKey) =>
+        queryClient.invalidateQueries({queryKey}),
+      )
       return options?.onSuccess?.(data, variables, context)
     },
   })

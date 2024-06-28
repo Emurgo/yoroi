@@ -7,7 +7,7 @@ const mutationFn = () => Promise.resolve(true)
 
 describe('useMutationWithInvalidations', () => {
   it('should cancel and invalidate queries', async () => {
-    const queries = ['query1', 'query2']
+    const queries = [['query1'], ['query2']]
     const client = getMockedQueryClient()
     const wrapper = (props: PropsWithChildren) => (
       <QueryClientProvider {...props} client={client} />
@@ -25,12 +25,20 @@ describe('useMutationWithInvalidations', () => {
     await waitFor(() => result.current.isSuccess)
 
     expect(client.cancelQueries).toHaveBeenCalledTimes(2)
-    expect(client.cancelQueries).toHaveBeenNthCalledWith(1, queries[0])
-    expect(client.cancelQueries).toHaveBeenNthCalledWith(2, queries[1])
+    expect(client.cancelQueries).toHaveBeenNthCalledWith(1, {
+      queryKey: queries[0],
+    })
+    expect(client.cancelQueries).toHaveBeenNthCalledWith(2, {
+      queryKey: queries[1],
+    })
 
     expect(client.invalidateQueries).toHaveBeenCalledTimes(2)
-    expect(client.invalidateQueries).toHaveBeenNthCalledWith(1, queries[0])
-    expect(client.invalidateQueries).toHaveBeenNthCalledWith(2, queries[1])
+    expect(client.invalidateQueries).toHaveBeenNthCalledWith(1, {
+      queryKey: queries[0],
+    })
+    expect(client.invalidateQueries).toHaveBeenNthCalledWith(2, {
+      queryKey: queries[1],
+    })
   })
 })
 
