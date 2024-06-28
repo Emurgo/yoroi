@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
+import {QueryClient, QueryClientProvider} from 'react-query'
 import {renderHook, act} from '@testing-library/react-hooks'
 import {AppApi} from '@yoroi/api'
 

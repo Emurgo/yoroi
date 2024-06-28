@@ -1,4 +1,3 @@
-import {useQueryErrorResetBoundary} from '@tanstack/react-query'
 import React, {SuspenseProps} from 'react'
 import {
   ErrorBoundary as ReactErrorBoundary,
@@ -7,6 +6,7 @@ import {
 } from 'react-error-boundary'
 import {useIntl} from 'react-intl'
 import {ActivityIndicator, Image, LayoutAnimation, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
+import {useQueryErrorResetBoundary} from 'react-query'
 
 import image from '../../assets/img/error.png'
 import LocalizableError from '../../kernel/i18n/LocalizableError'
