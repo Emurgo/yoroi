@@ -566,11 +566,10 @@ export async function toLedgerSignRequest(
   ownUtxoAddressMap: AddressMap,
   ownStakeAddressMap: AddressMap,
   addressedUtxos: Array<CardanoAddressedUtxo>,
-  rawTxBody: Buffer,
+  rawTxBody: cbor.Decoder.BufferLike,
   additionalRequiredSigners: Array<string> = [],
 ): Promise<SignTransactionRequest> {
-  const decoded = await cbor.decode(rawTxBody)
-  const parsedCbor = Array.isArray(decoded) ? decoded[0] : decoded
+  const parsedCbor = await cbor.decode(rawTxBody)
 
   async function formatInputs(inputs: TransactionInputs): Promise<Array<TxInput>> {
     const formatted = []
@@ -745,7 +744,7 @@ export async function toLedgerSignRequest(
   const nativeOutputs = await txBody.outputs()
   for (let i = 0; i < (await nativeOutputs.len()); i++) {
     const o = await nativeOutputs.get(i)
-    const isPostAlonzoTransactionOutput = parsedCbor.get(16)?.constructor?.name === 'Map'
+    const isPostAlonzoTransactionOutput = parsedCbor.get(1)?.constructor?.name === 'Map'
     outputs.push(await formatOutput(o, isPostAlonzoTransactionOutput))
   }
 

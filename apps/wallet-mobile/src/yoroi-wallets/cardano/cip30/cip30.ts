@@ -191,7 +191,10 @@ export class CIP30Extension {
       const receiver = await originalOutput.address()
       const output = await csl.TransactionOutput.new(receiver, value)
       await this.wallet.submitTransaction(Buffer.from(signedTx.signedTx.encodedTx).toString('base64'))
-      return copyFromCSL(CardanoMobile.TransactionUnspentOutput, await csl.TransactionUnspentOutput.new(input, output))
+      return copyFromCSL(
+        CardanoMobile.TransactionUnspentOutput,
+        await CardanoMobile.TransactionUnspentOutput.new(input, output),
+      )
     } finally {
       release()
     }

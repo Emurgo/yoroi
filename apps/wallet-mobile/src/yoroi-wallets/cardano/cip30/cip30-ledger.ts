@@ -38,7 +38,7 @@ class CIP30LedgerExtension {
         await getHexAddressingMap(csl, this.wallet),
         await getHexAddressingMap(csl, this.wallet),
         await getAddressedUtxos(this.wallet),
-        Buffer.from(cbor, 'hex'),
+        await txBody.toBytes(),
         [],
       )
 
