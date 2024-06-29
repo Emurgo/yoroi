@@ -1,14 +1,15 @@
-import {HW, Swap} from '@yoroi/types'
-import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
-import React, {useCallback, useState} from 'react'
-import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
-import {useStrings} from '../../Swap/common/strings'
-import {withBLE, withUSB} from '../../../yoroi-wallets/hw'
-import {LedgerTransportSwitch} from '../../Swap/useCases/ConfirmTxScreen/LedgerTransportSwitch'
-import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
-import {LedgerConnect} from '../../../legacy/HW'
-import {Text, useModal} from '../../../components'
 import {useTheme} from '@yoroi/theme'
+import {HW} from '@yoroi/types'
+import React, {useCallback, useState} from 'react'
+import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
+
+import {Text, useModal} from '../../../components'
+import {LedgerConnect} from '../../../legacy/HW'
+import {withBLE, withUSB} from '../../../yoroi-wallets/hw'
+import {useStrings} from '../../Swap/common/strings'
+import {LedgerTransportSwitch} from '../../Swap/useCases/ConfirmTxScreen/LedgerTransportSwitch'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
+import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 
 type TransportType = 'USB' | 'BLE'
 type Step = 'select-transport' | 'connect-transport' | 'loading'
@@ -18,14 +19,14 @@ type Props = {
 }
 
 export const useConfirmHWConnection = () => {
-  const {openModal} = useModal()
+  const {openModal, closeModal} = useModal()
   const confirmHWConnection = useCallback(
     ({onConfirm, onClose}: {onConfirm: (transportType: TransportType) => void; onClose: () => void}) => {
       openModal('Confirm on Ledger', <ConfirmRawTxWithHW onConfirm={onConfirm} />, 350, onClose)
     },
     [openModal],
   )
-  return {confirmHWConnection}
+  return {confirmHWConnection, closeModal}
 }
 
 export const ConfirmRawTxWithHW = ({onConfirm}: Props) => {

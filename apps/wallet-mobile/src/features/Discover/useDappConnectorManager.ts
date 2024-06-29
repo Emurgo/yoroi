@@ -1,15 +1,16 @@
+import {TransactionWitnessSet} from '@emurgo/cross-csl-core'
 import {useAsyncStorage} from '@yoroi/common'
-import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
-import {useOpenConfirmConnectionModal} from './common/ConfirmConnectionModal'
-import {useOpenUnverifiedDappModal} from './common/UnverifiedDappModal'
-import {useConfirmRawTx as usePromptRootKey} from './common/hooks'
+import {DappConnector} from '@yoroi/dapp-connector'
 import * as React from 'react'
 import {InteractionManager} from 'react-native'
-import {createDappConnector} from './common/helpers'
-import {DappConnector} from '@yoroi/dapp-connector'
-import {TransactionWitnessSet} from '@emurgo/cross-csl-core'
-import {useConfirmHWConnection} from './common/ConfirmRawTxWithHW'
+
 import {cip30LedgerExtensionMaker} from '../../yoroi-wallets/cardano/cip30/cip30-ledger'
+import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
+import {useOpenConfirmConnectionModal} from './common/ConfirmConnectionModal'
+import {useConfirmHWConnection} from './common/ConfirmRawTxWithHW'
+import {createDappConnector} from './common/helpers'
+import {useConfirmRawTx as usePromptRootKey} from './common/hooks'
+import {useOpenUnverifiedDappModal} from './common/UnverifiedDappModal'
 
 export const useDappConnectorManager = () => {
   const appStorage = useAsyncStorage()
@@ -60,54 +61,47 @@ const useConnectorPromptRootKey = () => {
 }
 
 const useSignTxWithHW = () => {
-  const {confirmHWConnection} = useConfirmHWConnection()
+  const {confirmHWConnection, closeModal} = useConfirmHWConnection()
   const {wallet, meta} = useSelectedWallet()
 
   return React.useCallback(
     (cbor: string, partial?: boolean) => {
       return new Promise<TransactionWitnessSet>((resolve, reject) => {
-        try {
-          confirmHWConnection({
-            onConfirm: async (transportType) => {
-              try {
-                const deviceInfo = meta.hwDeviceInfo
-                if (!deviceInfo) throw new Error('No device info')
-                const cip30 = cip30LedgerExtensionMaker(wallet, meta)
-                const witnessSet = await cip30.signTx(cbor, partial ?? false, deviceInfo, transportType === 'USB')
-                return resolve(witnessSet)
-              } catch (error) {
-                reject(error)
-              }
-            },
-            onClose: () => reject(new Error('User rejected')),
-          })
-        } catch (error) {
-          reject(error)
-        }
+        confirmHWConnection({
+          onConfirm: async (transportType) => {
+            try {
+              const deviceInfo = meta.hwDeviceInfo
+              if (!deviceInfo) throw new Error('No device info')
+              const cip30 = cip30LedgerExtensionMaker(wallet, meta)
+              const witnessSet = await cip30.signTx(cbor, partial ?? false, deviceInfo, transportType === 'USB')
+              return resolve(witnessSet)
+            } catch (error) {
+              reject(error)
+            } finally {
+              closeModal()
+            }
+          },
+          onClose: () => reject(new Error('User rejected')),
+        })
       })
     },
-    [confirmHWConnection, wallet, meta],
+    [confirmHWConnection, wallet, meta, closeModal],
   )
 }
 
 const useSignDataWithHW = () => {
-  const promptRootKey = usePromptRootKey()
+  const {confirmHWConnection} = useConfirmHWConnection()
 
   return React.useCallback(() => {
-    return new Promise<{signature: string; key: string}>((resolve, reject) => {
-      try {
-        promptRootKey({
-          onConfirm: (rootKey) => {
-            resolve(rootKey)
-            return Promise.resolve()
-          },
-          onClose: () => reject(new Error('User rejected')),
-        })
-      } catch (error) {
-        reject(error)
-      }
+    return new Promise<{signature: string; key: string}>((_resolve, reject) => {
+      confirmHWConnection({
+        onConfirm: () => {
+          return reject(new Error('Not implemented'))
+        },
+        onClose: () => reject(new Error('User rejected')),
+      })
     })
-  }, [promptRootKey])
+  }, [confirmHWConnection])
 }
 
 const useConfirmConnection = () => {

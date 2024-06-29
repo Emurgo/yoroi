@@ -1,14 +1,15 @@
 import {TransactionWitnessSet, WasmModuleProxy} from '@emurgo/cross-csl-core'
-import {toLedgerSignRequest} from '../../../features/Discover/common/ledger'
-import {CardanoTypes, YoroiWallet} from '../types'
-import {HW, Wallet} from '@yoroi/types'
-import {wrappedCsl} from '../wrappedCsl'
-import type {RawUtxo} from '../../types'
-import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
-import {signTxWithLedger} from '../hw'
 import {createSignedLedgerTxFromCbor} from '@emurgo/yoroi-lib'
-import {cardanoConfig} from '../constants/cardano-config'
+import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
+import {HW, Wallet} from '@yoroi/types'
+
+import {toLedgerSignRequest} from '../../../features/Discover/common/ledger'
+import type {RawUtxo} from '../../types'
 import {assertHasAllSigners} from '../common/signatureUtils'
+import {cardanoConfig} from '../constants/cardano-config'
+import {signTxWithLedger} from '../hw'
+import {CardanoTypes, YoroiWallet} from '../types'
+import {wrappedCsl} from '../wrappedCsl'
 
 export const cip30LedgerExtensionMaker = (wallet: YoroiWallet, meta: Wallet.Meta) => {
   return new CIP30LedgerExtension(wallet, meta)
