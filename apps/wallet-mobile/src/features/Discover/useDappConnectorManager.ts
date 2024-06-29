@@ -1,4 +1,4 @@
-import {TransactionWitnessSet} from '@emurgo/cross-csl-core'
+import {Transaction} from '@emurgo/cross-csl-core'
 import {useAsyncStorage} from '@yoroi/common'
 import {DappConnector} from '@yoroi/dapp-connector'
 import * as React from 'react'
@@ -66,7 +66,7 @@ const useSignTxWithHW = () => {
 
   return React.useCallback(
     (cbor: string, partial?: boolean) => {
-      return new Promise<TransactionWitnessSet>((resolve, reject) => {
+      return new Promise<Transaction>((resolve, reject) => {
         confirmHWConnection({
           onConfirm: async (transportType) => {
             try {

@@ -15,6 +15,7 @@ import {MultiToken} from './MultiToken'
 import {CardanoHaskellShelleyNetwork} from './networks'
 import {NUMBERS} from './numbers'
 import {CardanoTypes} from './types'
+import {wrappedCsl as getCSL} from './wrappedCsl'
 
 export const deriveRewardAddressHex = async (accountPubKeyHex: string, chainId: number): Promise<string> => {
   const accountPubKeyPtr = await CardanoMobile.Bip32PublicKey.fromBytes(Buffer.from(accountPubKeyHex, 'hex'))
@@ -211,4 +212,33 @@ export const copyMultipleFromCSL = async <T extends {toHex: () => Promise<string
   creator: {fromHex: (hex: string) => Promise<T>},
 ) => {
   return Promise.all(items.map((item) => copyFromCSL(creator, item)))
+}
+
+export const getTransactionUnspentOutput = async ({
+  txId,
+  bytes,
+  index,
+}: {
+  txId: string
+  bytes: Uint8Array
+  index: number
+}) => {
+  const {csl, release} = getCSL()
+  try {
+    const tx = await csl.Transaction.fromBytes(bytes)
+    const body = await tx.body()
+    const originalOutput = await (await body.outputs()).get(index)
+
+    const txHash = txId.split(':')[index]
+    const input = await csl.TransactionInput.new(await csl.TransactionHash.fromHex(txHash), 0)
+    const value = await originalOutput.amount()
+    const receiver = await originalOutput.address()
+    const output = await csl.TransactionOutput.new(receiver, value)
+    return copyFromCSL(
+      CardanoMobile.TransactionUnspentOutput,
+      await CardanoMobile.TransactionUnspentOutput.new(input, output),
+    )
+  } finally {
+    release()
+  }
 }

@@ -1,4 +1,4 @@
-import {TransactionWitnessSet, WasmModuleProxy} from '@emurgo/cross-csl-core'
+import {Transaction, WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {createSignedLedgerTxFromCbor} from '@emurgo/yoroi-lib'
 import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
 import {HW, Wallet} from '@yoroi/types'
@@ -18,12 +18,7 @@ export const cip30LedgerExtensionMaker = (wallet: YoroiWallet, meta: Wallet.Meta
 class CIP30LedgerExtension {
   constructor(private wallet: YoroiWallet, private meta: Wallet.Meta) {}
 
-  async signTx(
-    cbor: string,
-    partial: boolean,
-    hwDeviceInfo: HW.DeviceInfo,
-    useUSB: boolean,
-  ): Promise<TransactionWitnessSet> {
+  async signTx(cbor: string, partial: boolean, hwDeviceInfo: HW.DeviceInfo, useUSB: boolean): Promise<Transaction> {
     const {csl, release} = wrappedCsl()
     try {
       const tx = await csl.Transaction.fromHex(cbor)
@@ -51,8 +46,7 @@ class CIP30LedgerExtension {
         implementationConfig.derivations.base.harden.purpose,
         this.wallet.publicKeyHex,
       )
-      const signedTx = await csl.Transaction.fromBytes(bytes)
-      return await signedTx.witnessSet()
+      return csl.Transaction.fromBytes(bytes)
     } finally {
       release()
     }

@@ -1,4 +1,4 @@
-import {TransactionWitnessSet} from '@emurgo/cross-csl-core'
+import {Transaction} from '@emurgo/cross-csl-core'
 import {connectionStorageMaker, dappConnectorApiMaker, dappConnectorMaker, ResolverWallet} from '@yoroi/dapp-connector'
 import {DappConnector} from '@yoroi/dapp-connector'
 import {App, Wallet} from '@yoroi/types'
@@ -6,6 +6,8 @@ import {App, Wallet} from '@yoroi/types'
 import {cip30ExtensionMaker} from '../../../yoroi-wallets/cardano/cip30/cip30'
 import {cip95ExtensionMaker, supportsCIP95} from '../../../yoroi-wallets/cardano/cip95/cip95'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
+import {getTransactionUnspentOutput} from '../../../yoroi-wallets/cardano/utils'
+import {Cardano} from '../../../yoroi-wallets/wallets'
 
 export const validUrl = (url: string) => {
   return /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!&',,=.+]+$/g.test(url)
@@ -66,7 +68,7 @@ type CreateDappConnectorOptions = {
   confirmConnection: (origin: string, manager: DappConnector) => Promise<boolean>
   signTx: (cbor: string) => Promise<string>
   signData: (address: string, payload: string) => Promise<string>
-  signTxWithHW: (cbor: string, partial?: boolean) => Promise<TransactionWitnessSet>
+  signTxWithHW: (cbor: string, partial?: boolean) => Promise<Transaction>
   signDataWithHW: (address: string, payload: string) => Promise<{signature: string; key: string}>
 }
 
@@ -110,7 +112,8 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
     },
     signTx: async (cbor: string, partial?: boolean) => {
       if (meta.isHW) {
-        return options.signTxWithHW(cbor, partial)
+        const tx = await options.signTxWithHW(cbor, partial)
+        return tx.witnessSet()
       }
 
       const rootKey = await signTx(cbor)
@@ -120,7 +123,14 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
       const unsignedTx = await cip30.buildReorganisationTx()
       const tx = await unsignedTx.unsignedTx.txBuilder.build()
       if (meta.isHW) {
-        return options.signTxWithHW(await tx.toHex(), false)
+        const signedTx = await options.signTxWithHW(await tx.toHex(), false)
+        const base64 = Buffer.from(await signedTx.toBytes()).toString('base64')
+        await wallet.submitTransaction(base64)
+        return getTransactionUnspentOutput({
+          txId: await Cardano.calculateTxId(base64, 'base64'),
+          bytes: await signedTx.toBytes(),
+          index: 0,
+        })
       }
 
       const rootKey = await signTx(await tx.toHex())
