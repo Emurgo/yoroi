@@ -8,7 +8,7 @@ import {cip95ExtensionMaker, supportsCIP95} from '../../../yoroi-wallets/cardano
 import {CardanoTypes, YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import type {RawUtxo} from '../../../yoroi-wallets/types'
 import {CardanoMobile} from '../../../yoroi-wallets/wallets'
-import {toLedgerSignRequest} from './ledger'
+import {TransactionWitnessSet} from '@emurgo/cross-csl-core'
 
 export const validUrl = (url: string) => {
   return /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!&',,=.+]+$/g.test(url)
@@ -69,6 +69,8 @@ type CreateDappConnectorOptions = {
   confirmConnection: (origin: string, manager: DappConnector) => Promise<boolean>
   signTx: (cbor: string) => Promise<string>
   signData: (address: string, payload: string) => Promise<string>
+  signTxWithHW: (cbor: string, partial?: boolean) => Promise<TransactionWitnessSet>
+  signDataWithHW: (address: string, payload: string) => Promise<{signature: string; key: string}>
 }
 
 export const createDappConnector = (options: CreateDappConnectorOptions) => {
@@ -102,27 +104,19 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
     getUtxos: (value, pagination) => cip30.getUtxos(value, pagination),
     confirmConnection: (origin: string) => confirmConnection(origin, manager),
     signData: async (address, payload) => {
+      if (meta.isHW) {
+        return options.signDataWithHW(address, payload)
+      }
+
       const rootKey = await signData(address, payload)
       return cip30.signData(rootKey, address, payload)
     },
     signTx: async (cbor: string, partial?: boolean) => {
+      if (meta.isHW) {
+        return options.signTxWithHW(cbor, partial)
+      }
+
       const rootKey = await signTx(cbor)
-
-      const tx = await CardanoMobile.Transaction.fromHex(cbor)
-      const txBody = await tx.body()
-
-      const ledgerPayload = await toLedgerSignRequest(
-        CardanoMobile,
-        txBody,
-        wallet.networkManager.chainId,
-        wallet.networkManager.protocolMagic,
-        await getHexAddressingMap(wallet),
-        await getHexAddressingMap(wallet),
-        await getAddressedUtxos(wallet),
-        Buffer.from(cbor),
-        [],
-      )
-      console.log('ledgerPayload', ledgerPayload)
       return cip30.signTx(rootKey, cbor, partial)
     },
     sendReorganisationTx: async () => {
@@ -144,10 +138,7 @@ const getHexAddressingMap = async (wallet: YoroiWallet) => {
     const addressing = wallet.getAddressing(utxo.receiver)
     const hexAddress = await normalizeToAddress(CardanoMobile, utxo.receiver).then((a) => a?.toHex())
 
-    return {
-      addressing,
-      hexAddress,
-    }
+    return {addressing, hexAddress}
   })
 
   const addressing = await Promise.all(addressedUtxos)

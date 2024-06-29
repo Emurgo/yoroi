@@ -569,7 +569,8 @@ export async function toLedgerSignRequest(
   rawTxBody: Buffer,
   additionalRequiredSigners: Array<string> = [],
 ): Promise<SignTransactionRequest> {
-  const parsedCbor = cbor.decode(rawTxBody)
+  const decoded = await cbor.decode(rawTxBody)
+  const parsedCbor = Array.isArray(decoded) ? decoded[0] : decoded
 
   async function formatInputs(inputs: TransactionInputs): Promise<Array<TxInput>> {
     const formatted = []
@@ -743,7 +744,9 @@ export async function toLedgerSignRequest(
   const outputs: TxOutput[] = []
   const nativeOutputs = await txBody.outputs()
   for (let i = 0; i < (await nativeOutputs.len()); i++) {
-    outputs.push(await formatOutput(await nativeOutputs.get(i), parsedCbor.get(1)[i].constructor.name === 'Map'))
+    const o = await nativeOutputs.get(i)
+    const isPostAlonzoTransactionOutput = parsedCbor.get(16)?.constructor?.name === 'Map'
+    outputs.push(await formatOutput(o, isPostAlonzoTransactionOutput))
   }
 
   async function getRequiredSignerHashHexes(): Promise<Array<string>> {
@@ -787,6 +790,7 @@ export async function toLedgerSignRequest(
       })
     }
   }
+
   for (const additionalHashHex of additionalRequiredSigners || []) {
     const ownAddressPath = await hashHexToOwnAddressPath(additionalHashHex)
     if (ownAddressPath != null) {
@@ -835,7 +839,7 @@ export async function toLedgerSignRequest(
   let formattedCollateralReturn: TxOutput | null = null
   const collateralReturn = await txBody.collateralReturn()
   if (collateralReturn) {
-    formattedCollateralReturn = await formatOutput(collateralReturn, parsedCbor.get(16).constructor.name === 'Map')
+    formattedCollateralReturn = await formatOutput(collateralReturn, parsedCbor.get(16)?.constructor?.name === 'Map')
   }
 
   let formattedReferenceInputs = null
