@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {useCatalyst} from '@yoroi/staking'
 import {useTheme} from '@yoroi/theme'
 import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -9,10 +10,12 @@ import appstoreBadge from '../../assets/img/app-store-badge.png'
 import playstoreBadge from '../../assets/img/google-play-badge.png'
 import AppDownload from '../../assets/img/pic-catalyst-step1.png'
 import {Button, ProgressStep, Spacer, StandardModal, Text} from '../../components'
+import {Space} from '../../components/Space/Space'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import globalMessages, {confirmationMessages} from '../../kernel/i18n/global-messages'
 import {useStakingInfo} from '../Dashboard/StakePoolInfos'
 import {Actions, Row} from './components'
+import {useCatalystCurrentFund} from './useCatalystCurrentFund'
 
 type Props = {
   onNext: () => void
@@ -23,6 +26,24 @@ export const DownloadCatalyst = ({onNext}: Props) => {
   const {stakingInfo} = useStakingInfo(wallet, {suspense: true})
   const [showModal, setShowModal] = useState<boolean>(stakingInfo?.status === 'not-registered')
   const styles = useStyles()
+  const {fund} = useCatalystCurrentFund()
+  const intl = useIntl()
+
+  const formatDate = React.useCallback(
+    (date: Date) =>
+      intl.formatDate(date, {
+        dateStyle: 'short',
+        timeStyle: 'medium',
+        hour12: false,
+      }),
+    [intl],
+  )
+
+  const fundName = fund.info.fundName
+  const registrationStart = `${formatDate(fund.info.snapshotStart)}: ${strings.registrationStart}`
+  const votingStart = `${formatDate(fund.info.votingStart)}: ${strings.votingStart}`
+  const votingEnd = `${formatDate(fund.info.votingEnd)}: ${strings.votingEnd}`
+  const votingResults = `${formatDate(fund.info.tallyingEnd)}: ${strings.votingResults}`
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
@@ -51,11 +72,23 @@ export const DownloadCatalyst = ({onNext}: Props) => {
 
         <Tip>
           <Text>{strings.tip}</Text>
+
+          <Space height="lg" />
+
+          <Text style={styles.fundName}>{fundName} </Text>
+
+          <Text>{registrationStart}</Text>
+
+          <Text>{votingStart}</Text>
+
+          <Text>{votingEnd}</Text>
+
+          <Text>{votingResults}</Text>
         </Tip>
       </ScrollView>
 
       <Actions>
-        <Button onPress={() => onNext()} title={strings.continueButton} />
+        <Button onPress={onNext} title={strings.continueButton} disabled={fund.status.registration !== 'running'} />
       </Actions>
 
       <StandardModal
@@ -80,8 +113,9 @@ const Tip = (props: ViewProps) => {
 }
 
 const PlayStoreButton = () => {
+  const {config} = useCatalyst()
   const openPlayStore = async () => {
-    await Linking.openURL('https://play.google.com/store/apps/details?id=io.iohk.vitvoting')
+    await Linking.openURL(config.apps.android)
   }
 
   return (
@@ -92,8 +126,9 @@ const PlayStoreButton = () => {
 }
 
 const AppStoreButton = () => {
+  const {config} = useCatalyst()
   const openAppStore = async () => {
-    await Linking.openURL('https://apps.apple.com/kg/app/catalyst-voting/id1517473397')
+    await Linking.openURL(config.apps.ios)
   }
 
   return (
@@ -121,6 +156,22 @@ const messages = defineMessages({
       '!!!Tip: Make sure you know how to take a screenshot with your device, ' +
       'so that you can backup your catalyst QR code.',
   },
+  registrationStart: {
+    id: 'catalyst.registration.start',
+    defaultMessage: '!!!Registration start',
+  },
+  votingStart: {
+    id: 'catalyst.voting.start',
+    defaultMessage: '!!!Voting start',
+  },
+  votingEnd: {
+    id: 'catalyst.voting.end',
+    defaultMessage: '!!!Voting end',
+  },
+  votingResults: {
+    id: 'catalyst.voting.results',
+    defaultMessage: '!!!Results',
+  },
 })
 
 const useStrings = () => {
@@ -133,6 +184,10 @@ const useStrings = () => {
     continueButton: intl.formatMessage(confirmationMessages.commonButtons.continueButton),
     iUnderstandButton: intl.formatMessage(confirmationMessages.commonButtons.iUnderstandButton),
     attention: intl.formatMessage(globalMessages.attention),
+    registrationStart: intl.formatMessage(messages.registrationStart),
+    votingStart: intl.formatMessage(messages.votingStart),
+    votingEnd: intl.formatMessage(messages.votingEnd),
+    votingResults: intl.formatMessage(messages.votingResults),
   }
 }
 
@@ -149,6 +204,9 @@ const useStyles = () => {
     },
     tip: {
       ...atoms.px_xl,
+    },
+    fundName: {
+      ...atoms.body_1_lg_medium,
     },
   })
 
