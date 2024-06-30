@@ -38,7 +38,7 @@ const ConfirmHWConnectionModal = ({onConfirm}: Props) => {
   const [step, setStep] = useState<Step>('select-transport')
   const {meta} = useSelectedWallet()
   const strings = useStrings()
-  const styles = useStyles()
+  const {styles, colors} = useStyles()
 
   const onSelectTransport = (transportType: TransportType) => {
     setTransportType(transportType)
@@ -78,8 +78,7 @@ const ConfirmHWConnectionModal = ({onConfirm}: Props) => {
 
   return (
     <View style={styles.container}>
-      <ActivityIndicator size="large" color="black" />
-
+      <ActivityIndicator size="large" color={colors.spinner} />
       <Text style={styles.text}>{strings.continueOnLedger}</Text>
     </View>
   )
@@ -87,6 +86,11 @@ const ConfirmHWConnectionModal = ({onConfirm}: Props) => {
 
 const useStyles = () => {
   const {color} = useTheme()
+
+  const colors = {
+    spinner: color.gray_cmax,
+  }
+
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -96,10 +100,10 @@ const useStyles = () => {
     },
     text: {
       fontSize: 18,
-      color: color.black_static,
+      color: color.gray_cmax,
       textAlign: 'center',
     },
   })
 
-  return styles
+  return {styles, colors}
 }
