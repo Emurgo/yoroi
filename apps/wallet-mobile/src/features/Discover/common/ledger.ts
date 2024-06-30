@@ -188,10 +188,6 @@ async function formatLedgerCertificates(
 
 type AddressMap = {[addressHex: string]: Array<number>}
 
-// Convert connector sign tx input into request to Ledger.
-// Note this function has some overlaps in functionality with above functions but
-// this function is more generic because above functions deal only with Yoroi
-// extension "send" transactions.
 export async function toLedgerSignRequest(
   csl: WasmModuleProxy,
   txBody: TransactionBody,
