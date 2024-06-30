@@ -58,7 +58,7 @@ describe('catalystGetFundInfo', () => {
       tag: 'left',
       error: {
         status: -3,
-        message: 'Failed to transform fundo info response',
+        message: 'Failed to transform fund info response',
         responseData: invalidFundInfo,
       },
     })
