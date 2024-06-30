@@ -32,7 +32,7 @@ class CIP30LedgerExtension {
         this.wallet.networkManager.protocolMagic,
         await getHexAddressingMap(csl, this.wallet),
         await getHexAddressingMap(csl, this.wallet),
-        await getAddressedUtxos(this.wallet),
+        getAddressedUtxos(this.wallet),
         await txBody.toBytes(),
         [],
       )
@@ -69,8 +69,8 @@ const getHexAddressingMap = async (csl: WasmModuleProxy, wallet: YoroiWallet) =>
   }, {})
 }
 
-const getAddressedUtxos = async (wallet: YoroiWallet) => {
-  const addressedUtxos = wallet.utxos.map((utxo: RawUtxo): CardanoTypes.CardanoAddressedUtxo => {
+const getAddressedUtxos = (wallet: YoroiWallet) => {
+  return wallet.utxos.map((utxo: RawUtxo): CardanoTypes.CardanoAddressedUtxo => {
     const addressing = wallet.getAddressing(utxo.receiver)
 
     return {
@@ -83,6 +83,4 @@ const getAddressedUtxos = async (wallet: YoroiWallet) => {
       assets: utxo.assets,
     }
   })
-
-  return Promise.resolve(addressedUtxos)
 }
