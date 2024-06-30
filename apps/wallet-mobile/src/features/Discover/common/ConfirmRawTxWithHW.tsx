@@ -20,11 +20,12 @@ type Props = {
 
 export const useConfirmHWConnection = () => {
   const {openModal, closeModal} = useModal()
+  const strings = useStrings()
   const confirmHWConnection = useCallback(
     ({onConfirm, onClose}: {onConfirm: (transportType: TransportType) => void; onClose: () => void}) => {
-      openModal('Confirm on Ledger', <ConfirmRawTxWithHW onConfirm={onConfirm} />, 350, onClose)
+      openModal(strings.signTransaction, <ConfirmRawTxWithHW onConfirm={onConfirm} />, 350, onClose)
     },
-    [openModal],
+    [openModal, strings.signTransaction],
   )
   return {confirmHWConnection, closeModal}
 }
