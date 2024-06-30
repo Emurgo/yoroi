@@ -17,7 +17,13 @@ import {toAssetNameHex, toPolicyId} from '../api/utils'
 import * as cip8 from '../cip8/cip8'
 import {getDerivationPathForAddress, getTransactionSigners} from '../common/signatureUtils'
 import {Pagination, YoroiWallet} from '../types'
-import {copyFromCSL, copyMultipleFromCSL, createRawTxSigningKey, identifierToCardanoAsset} from '../utils'
+import {
+  copyFromCSL,
+  copyMultipleFromCSL,
+  createRawTxSigningKey,
+  getTransactionUnspentOutput,
+  identifierToCardanoAsset,
+} from '../utils'
 import {collateralConfig, findCollateralCandidates, utxosMaker} from '../utxoManager/utxos'
 import {wrappedCsl as getCSL} from '../wrappedCsl'
 
@@ -177,24 +183,13 @@ class CIP30Extension {
   }
 
   async sendReorganisationTx(signedTx: YoroiSignedTx): Promise<CSL.TransactionUnspentOutput> {
-    const {csl, release} = getCSL()
-    try {
-      const tx = await csl.Transaction.fromBytes(signedTx.signedTx.encodedTx)
-      const txId = signedTx.signedTx.id
-      const txIndex = 0
-      const body = await tx.body()
-      const originalOutput = await (await body.outputs()).get(txIndex)
-
-      const txHash = txId.split(':')[0]
-      const input = await csl.TransactionInput.new(await csl.TransactionHash.fromHex(txHash), txIndex)
-      const value = await originalOutput.amount()
-      const receiver = await originalOutput.address()
-      const output = await csl.TransactionOutput.new(receiver, value)
-      await this.wallet.submitTransaction(Buffer.from(signedTx.signedTx.encodedTx).toString('base64'))
-      return copyFromCSL(CardanoMobile.TransactionUnspentOutput, await csl.TransactionUnspentOutput.new(input, output))
-    } finally {
-      release()
-    }
+    const txId = signedTx.signedTx.id
+    await this.wallet.submitTransaction(Buffer.from(signedTx.signedTx.encodedTx).toString('base64'))
+    return getTransactionUnspentOutput({
+      txId,
+      bytes: signedTx.signedTx.encodedTx,
+      index: 0,
+    })
   }
 }
 

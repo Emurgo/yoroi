@@ -1065,6 +1065,7 @@
   "discover.unverifiedDappModal.disclaimerModalTitle": "Disclaimer",
   "discover.confirmDisconnectDApp.disconnectDApp": "Disconnect DApp",
   "discover.confirmDisconnectDApp.confirmDisconnectDAppDescription": "Are you sure you want to disconnect this DApp?",
+  "discover.ledger.signDataNotSupported": "The Ledger Cardano app does not support data signing at this moment.",
   "portfolio.portfolioDashboardScreen.totalWalletValue": "Total wallet value",
   "portfolio.portfolioDashboardScreen.tokens": "Tokens ({countTokens})",
   "portfolio.portfolioDashboardScreen.buyADATitle": "Start your crypto journey",

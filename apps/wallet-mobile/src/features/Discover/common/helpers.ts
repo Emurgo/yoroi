@@ -1,3 +1,4 @@
+import {Transaction} from '@emurgo/cross-csl-core'
 import {connectionStorageMaker, dappConnectorApiMaker, dappConnectorMaker, ResolverWallet} from '@yoroi/dapp-connector'
 import {DappConnector} from '@yoroi/dapp-connector'
 import {App, Wallet} from '@yoroi/types'
@@ -5,6 +6,8 @@ import {App, Wallet} from '@yoroi/types'
 import {cip30ExtensionMaker} from '../../../yoroi-wallets/cardano/cip30/cip30'
 import {cip95ExtensionMaker, supportsCIP95} from '../../../yoroi-wallets/cardano/cip95/cip95'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
+import {getTransactionUnspentOutput} from '../../../yoroi-wallets/cardano/utils'
+import {Cardano} from '../../../yoroi-wallets/wallets'
 
 export const validUrl = (url: string) => {
   return /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!&',,=.+]+$/g.test(url)
@@ -65,6 +68,8 @@ type CreateDappConnectorOptions = {
   confirmConnection: (origin: string, manager: DappConnector) => Promise<boolean>
   signTx: (cbor: string) => Promise<string>
   signData: (address: string, payload: string) => Promise<string>
+  signTxWithHW: (cbor: string, partial?: boolean) => Promise<Transaction>
+  signDataWithHW: (address: string, payload: string) => Promise<{signature: string; key: string}>
 }
 
 export const createDappConnector = (options: CreateDappConnectorOptions) => {
@@ -76,6 +81,10 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
   const cip95handler = cip95
     ? {
         signData: async (address: string, payload: string) => {
+          if (meta.isHW) {
+            return options.signDataWithHW(address, payload)
+          }
+
           const rootKey = await signData(address, payload)
           return cip95.signData(rootKey, address, payload)
         },
@@ -98,16 +107,36 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
     getUtxos: (value, pagination) => cip30.getUtxos(value, pagination),
     confirmConnection: (origin: string) => confirmConnection(origin, manager),
     signData: async (address, payload) => {
+      if (meta.isHW) {
+        return options.signDataWithHW(address, payload)
+      }
+
       const rootKey = await signData(address, payload)
       return cip30.signData(rootKey, address, payload)
     },
     signTx: async (cbor: string, partial?: boolean) => {
+      if (meta.isHW) {
+        const tx = await options.signTxWithHW(cbor, partial)
+        return tx.witnessSet()
+      }
+
       const rootKey = await signTx(cbor)
       return cip30.signTx(rootKey, cbor, partial)
     },
     sendReorganisationTx: async () => {
       const unsignedTx = await cip30.buildReorganisationTx()
       const tx = await unsignedTx.unsignedTx.txBuilder.build()
+      if (meta.isHW) {
+        const signedTx = await options.signTxWithHW(await tx.toHex(), false)
+        const base64 = Buffer.from(await signedTx.toBytes()).toString('base64')
+        await wallet.submitTransaction(base64)
+        return getTransactionUnspentOutput({
+          txId: await Cardano.calculateTxId(base64, 'base64'),
+          bytes: await signedTx.toBytes(),
+          index: 0,
+        })
+      }
+
       const rootKey = await signTx(await tx.toHex())
       const signedTx = await wallet.signTx(unsignedTx, rootKey)
       return cip30.sendReorganisationTx(signedTx)

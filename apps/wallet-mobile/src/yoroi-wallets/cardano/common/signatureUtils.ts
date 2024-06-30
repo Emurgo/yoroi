@@ -132,3 +132,11 @@ export const getTransactionSigners = async (cbor: string, wallet: YoroiWallet, m
   const tx = await CardanoMobile.Transaction.fromHex(cbor)
   return getRequiredSigners(tx, wallet, meta, partial)
 }
+
+export const assertHasAllSigners = async (cbor: string, wallet: YoroiWallet, meta: Wallet.Meta) => {
+  try {
+    await getTransactionSigners(cbor, wallet, meta, true)
+  } catch (error) {
+    throwLoggedError('Missing keys to sign transaction')
+  }
+}

@@ -1,6 +1,8 @@
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
+import {ledgerMessages, txLabels} from '../../../kernel/i18n/global-messages'
+
 export const useStrings = () => {
   const intl = useIntl()
 
@@ -32,6 +34,9 @@ export const useStrings = () => {
     confirmDisconnectDAppDescription: intl.formatMessage(messages.confirmDisconnectDAppDescription),
     cancel: intl.formatMessage(messages.cancel),
     confirm: intl.formatMessage(messages.confirm),
+    signTransaction: intl.formatMessage(txLabels.signTransaction),
+    signDataNotSupported: intl.formatMessage(messages.signDataNotSupported),
+    continueOnLedger: intl.formatMessage(ledgerMessages.continueOnLedger),
   }).current
 }
 
@@ -146,6 +151,10 @@ export const messages = Object.freeze(
     confirm: {
       id: 'global.actions.dialogs.commonbuttons.confirmButton',
       defaultMessage: '!!!Confirm',
+    },
+    signDataNotSupported: {
+      id: 'discover.ledger.signDataNotSupported',
+      defaultMessage: '!!!The Ledger Cardano app does not support data signing at this moment.',
     },
   }),
 )

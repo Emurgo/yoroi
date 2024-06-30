@@ -285,7 +285,7 @@ export const makeCardanoWallet = (
       return true
     }
 
-    private getAddressing(address: string) {
+    getAddressing(address: string) {
       const startLevel = cardanoConfig.derivation.keyLevel.purpose
 
       if (this.internalChain.isMyAddress(address)) {

@@ -70,6 +70,9 @@ const {tokenManagers} = buildPortfolioTokenManagers()
 const networkManagers = buildNetworkManagers({tokenManagers})
 
 const wallet: YoroiWallet = {
+  getAddressing(_address: string): {path: number[]; startLevel: number} {
+    throw new Error('Method not implemented.')
+  },
   networkManager: networkManagers.mainnet,
   isEmpty: false,
   hasOnlyPrimary: false,
