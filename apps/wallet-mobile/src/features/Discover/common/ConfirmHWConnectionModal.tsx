@@ -79,6 +79,7 @@ const ConfirmHWConnectionModal = ({onConfirm}: Props) => {
   return (
     <View style={styles.container}>
       <ActivityIndicator size="large" color={colors.spinner} />
+
       <Text style={styles.text}>{strings.continueOnLedger}</Text>
     </View>
   )
