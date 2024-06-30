@@ -6,10 +6,10 @@ import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
 import {Text, useModal} from '../../../components'
 import {LedgerConnect} from '../../../legacy/HW'
 import {withBLE, withUSB} from '../../../yoroi-wallets/hw'
-import {useStrings} from '../../Swap/common/strings'
 import {LedgerTransportSwitch} from '../../Swap/useCases/ConfirmTxScreen/LedgerTransportSwitch'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
+import {useStrings} from './useStrings'
 
 type TransportType = 'USB' | 'BLE'
 type Step = 'select-transport' | 'connect-transport' | 'loading'
@@ -18,19 +18,19 @@ type Props = {
   onConfirm: (options: {transportType: TransportType; deviceInfo: HW.DeviceInfo}) => void
 }
 
-export const useConfirmHWConnection = () => {
+export const useConfirmHWConnectionModal = () => {
   const {openModal, closeModal} = useModal()
   const strings = useStrings()
   const confirmHWConnection = useCallback(
     ({onConfirm, onClose}: {onConfirm: Props['onConfirm']; onClose: () => void}) => {
-      openModal(strings.signTransaction, <ConfirmHWConnection onConfirm={onConfirm} />, 350, onClose)
+      openModal(strings.signTransaction, <ConfirmHWConnectionModal onConfirm={onConfirm} />, 350, onClose)
     },
     [openModal, strings.signTransaction],
   )
   return {confirmHWConnection, closeModal}
 }
 
-const ConfirmHWConnection = ({onConfirm}: Props) => {
+const ConfirmHWConnectionModal = ({onConfirm}: Props) => {
   const {walletManager} = useWalletManager()
   const [transportType, setTransportType] = useState<TransportType>('USB')
   const [step, setStep] = useState<Step>('select-transport')

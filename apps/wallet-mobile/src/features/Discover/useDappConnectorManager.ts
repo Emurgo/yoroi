@@ -7,9 +7,10 @@ import {InteractionManager} from 'react-native'
 import {cip30LedgerExtensionMaker} from '../../yoroi-wallets/cardano/cip30/cip30-ledger'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 import {useOpenConfirmConnectionModal} from './common/ConfirmConnectionModal'
-import {useConfirmHWConnection} from './common/ConfirmHWConnection'
+import {useConfirmHWConnectionModal} from './common/ConfirmHWConnectionModal'
 import {createDappConnector} from './common/helpers'
 import {useConfirmRawTx as usePromptRootKey} from './common/hooks'
+import {useShowHWNotSupportedModal} from './common/HWNotSupportedModal'
 import {useOpenUnverifiedDappModal} from './common/UnverifiedDappModal'
 
 export const useDappConnectorManager = () => {
@@ -45,13 +46,18 @@ const useConnectorPromptRootKey = () => {
 
   return React.useCallback(() => {
     return new Promise<string>((resolve, reject) => {
+      let shouldResolveOnClose = true
+
       try {
         promptRootKey({
           onConfirm: (rootKey) => {
             resolve(rootKey)
+            shouldResolveOnClose = false
             return Promise.resolve()
           },
-          onClose: () => reject(new Error('User rejected')),
+          onClose: () => {
+            if (shouldResolveOnClose) reject(new Error('User rejected'))
+          },
         })
       } catch (error) {
         reject(error)
@@ -61,17 +67,19 @@ const useConnectorPromptRootKey = () => {
 }
 
 const useSignTxWithHW = () => {
-  const {confirmHWConnection, closeModal} = useConfirmHWConnection()
+  const {confirmHWConnection, closeModal} = useConfirmHWConnectionModal()
   const {wallet, meta} = useSelectedWallet()
 
   return React.useCallback(
     (cbor: string, partial?: boolean) => {
       return new Promise<Transaction>((resolve, reject) => {
+        let shouldResolveOnClose = true
         confirmHWConnection({
           onConfirm: async ({transportType, deviceInfo}) => {
             try {
               const cip30 = cip30LedgerExtensionMaker(wallet, meta)
               const witnessSet = await cip30.signTx(cbor, partial ?? false, deviceInfo, transportType === 'USB')
+              shouldResolveOnClose = false
               return resolve(witnessSet)
             } catch (error) {
               reject(error)
@@ -79,7 +87,9 @@ const useSignTxWithHW = () => {
               closeModal()
             }
           },
-          onClose: () => reject(new Error('User rejected')),
+          onClose: () => {
+            if (shouldResolveOnClose) reject(new Error('User rejected'))
+          },
         })
       })
     },
@@ -88,18 +98,23 @@ const useSignTxWithHW = () => {
 }
 
 const useSignDataWithHW = () => {
-  const {confirmHWConnection} = useConfirmHWConnection()
+  const {showHWNotSupportedModal, closeModal} = useShowHWNotSupportedModal()
 
   return React.useCallback(() => {
     return new Promise<{signature: string; key: string}>((_resolve, reject) => {
-      confirmHWConnection({
+      let shouldResolveOnClose = true
+      showHWNotSupportedModal({
         onConfirm: () => {
-          return reject(new Error('Not implemented'))
+          closeModal()
+          shouldResolveOnClose = false
+          return reject(new Error('User rejected'))
         },
-        onClose: () => reject(new Error('User rejected')),
+        onClose: () => {
+          if (shouldResolveOnClose) reject(new Error('User rejected'))
+        },
       })
     })
-  }, [confirmHWConnection])
+  }, [showHWNotSupportedModal, closeModal])
 }
 
 const useConfirmConnection = () => {
