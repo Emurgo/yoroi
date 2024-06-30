@@ -15,22 +15,22 @@ type TransportType = 'USB' | 'BLE'
 type Step = 'select-transport' | 'connect-transport' | 'loading'
 
 type Props = {
-  onConfirm: (transportType: TransportType) => void
+  onConfirm: (options: {transportType: TransportType; deviceInfo: HW.DeviceInfo}) => void
 }
 
 export const useConfirmHWConnection = () => {
   const {openModal, closeModal} = useModal()
   const strings = useStrings()
   const confirmHWConnection = useCallback(
-    ({onConfirm, onClose}: {onConfirm: (transportType: TransportType) => void; onClose: () => void}) => {
-      openModal(strings.signTransaction, <ConfirmRawTxWithHW onConfirm={onConfirm} />, 350, onClose)
+    ({onConfirm, onClose}: {onConfirm: Props['onConfirm']; onClose: () => void}) => {
+      openModal(strings.signTransaction, <ConfirmHWConnection onConfirm={onConfirm} />, 350, onClose)
     },
     [openModal, strings.signTransaction],
   )
   return {confirmHWConnection, closeModal}
 }
 
-export const ConfirmRawTxWithHW = ({onConfirm}: Props) => {
+const ConfirmHWConnection = ({onConfirm}: Props) => {
   const {walletManager} = useWalletManager()
   const [transportType, setTransportType] = useState<TransportType>('USB')
   const [step, setStep] = useState<Step>('select-transport')
@@ -47,14 +47,14 @@ export const ConfirmRawTxWithHW = ({onConfirm}: Props) => {
     setStep('loading')
     const hwDeviceInfo = withBLE(meta, deviceId)
     walletManager.updateWalletHWDeviceInfo(meta.id, hwDeviceInfo)
-    onConfirm?.('BLE')
+    onConfirm({transportType: 'BLE', deviceInfo: hwDeviceInfo})
   }
 
   const onConnectUSB = (deviceObj: HW.DeviceObj) => {
     setStep('loading')
     const hwDeviceInfo = withUSB(meta, deviceObj)
     walletManager.updateWalletHWDeviceInfo(meta.id, hwDeviceInfo)
-    onConfirm?.('USB')
+    onConfirm({transportType: 'USB', deviceInfo: hwDeviceInfo})
   }
 
   if (step === 'select-transport') {

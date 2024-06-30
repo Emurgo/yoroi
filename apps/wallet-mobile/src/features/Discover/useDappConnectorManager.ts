@@ -7,7 +7,7 @@ import {InteractionManager} from 'react-native'
 import {cip30LedgerExtensionMaker} from '../../yoroi-wallets/cardano/cip30/cip30-ledger'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 import {useOpenConfirmConnectionModal} from './common/ConfirmConnectionModal'
-import {useConfirmHWConnection} from './common/ConfirmRawTxWithHW'
+import {useConfirmHWConnection} from './common/ConfirmHWConnection'
 import {createDappConnector} from './common/helpers'
 import {useConfirmRawTx as usePromptRootKey} from './common/hooks'
 import {useOpenUnverifiedDappModal} from './common/UnverifiedDappModal'
@@ -68,10 +68,8 @@ const useSignTxWithHW = () => {
     (cbor: string, partial?: boolean) => {
       return new Promise<Transaction>((resolve, reject) => {
         confirmHWConnection({
-          onConfirm: async (transportType) => {
+          onConfirm: async ({transportType, deviceInfo}) => {
             try {
-              const deviceInfo = meta.hwDeviceInfo
-              if (!deviceInfo) throw new Error('No device info')
               const cip30 = cip30LedgerExtensionMaker(wallet, meta)
               const witnessSet = await cip30.signTx(cbor, partial ?? false, deviceInfo, transportType === 'USB')
               return resolve(witnessSet)
