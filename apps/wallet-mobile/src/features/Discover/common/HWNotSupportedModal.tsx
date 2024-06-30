@@ -9,12 +9,14 @@ type Props = {
   onConfirm(): void
 }
 
+const modalHeight = 350
+
 export const useShowHWNotSupportedModal = () => {
   const {openModal, closeModal} = useModal()
   const strings = useStrings()
   const showHWNotSupportedModal = useCallback(
     ({onConfirm, onClose}: {onConfirm: Props['onConfirm']; onClose: () => void}) => {
-      openModal(strings.continueOnLedger, <HWNotSupportedModal onConfirm={onConfirm} />, 350, onClose)
+      openModal(strings.continueOnLedger, <HWNotSupportedModal onConfirm={onConfirm} />, modalHeight, onClose)
     },
     [openModal, strings.continueOnLedger],
   )

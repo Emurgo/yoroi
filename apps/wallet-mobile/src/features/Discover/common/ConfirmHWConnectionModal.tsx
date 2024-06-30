@@ -18,12 +18,14 @@ type Props = {
   onConfirm: (options: {transportType: TransportType; deviceInfo: HW.DeviceInfo}) => void
 }
 
+const modalHeight = 350
+
 export const useConfirmHWConnectionModal = () => {
   const {openModal, closeModal} = useModal()
   const strings = useStrings()
   const confirmHWConnection = useCallback(
     ({onConfirm, onClose}: {onConfirm: Props['onConfirm']; onClose: () => void}) => {
-      openModal(strings.signTransaction, <ConfirmHWConnectionModal onConfirm={onConfirm} />, 350, onClose)
+      openModal(strings.signTransaction, <ConfirmHWConnectionModal onConfirm={onConfirm} />, modalHeight, onClose)
     },
     [openModal, strings.signTransaction],
   )
