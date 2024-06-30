@@ -37,7 +37,7 @@ const recreateTransactionUnspentOutput = async (utxo: CSL.TransactionUnspentOutp
   return copyFromCSL(CardanoMobile.TransactionUnspentOutput, utxo)
 }
 
-export class CIP30Extension {
+class CIP30Extension {
   constructor(private wallet: YoroiWallet, private meta: Wallet.Meta) {}
 
   async getBalance(tokenId = '*'): Promise<CSL.Value> {
