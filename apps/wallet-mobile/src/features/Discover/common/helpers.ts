@@ -81,6 +81,10 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
   const cip95handler = cip95
     ? {
         signData: async (address: string, payload: string) => {
+          if (meta.isHW) {
+            return options.signDataWithHW(address, payload)
+          }
+
           const rootKey = await signData(address, payload)
           return cip95.signData(rootKey, address, payload)
         },
