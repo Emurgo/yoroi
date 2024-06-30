@@ -27,7 +27,7 @@ export function catalystGetFundInfo({request}: {request: FetchData}) {
             tag: 'left',
             error: {
               status: -3,
-              message: 'Failed to transform fundo info response',
+              message: 'Failed to transform fund info response',
               responseData: response.value.data,
             },
           },
