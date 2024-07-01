@@ -13,11 +13,13 @@ import {toDullahanRequest, toSecondaryTokenInfos} from './transformers'
 import {
   DullahanApiCachedIdsRequest,
   DullahanApiTokenDiscoveryResponse,
+  DullahanApiTokenInfoResponse,
   DullahanApiTokenInfosResponse,
   DullahanApiTokenTraitsResponse,
 } from './types'
 import {parseTokenDiscovery} from '../../validators/token-discovery'
 import {parseTokenTraits} from '../../validators/token-traits'
+import {parseTokenInfo} from '../../validators/token-info'
 
 export const portfolioApiMaker = ({
   network,
@@ -74,6 +76,7 @@ export const portfolioApiMaker = ({
 
         return response
       },
+
       async tokenInfos(idsWithCache) {
         const chunks = []
         for (let i = 0; i < idsWithCache.length; i += maxIdsPerRequest)
@@ -136,6 +139,51 @@ export const portfolioApiMaker = ({
           )
         }
       },
+
+      async tokenInfo(id: Portfolio.Token.Id) {
+        const response = await request<DullahanApiTokenInfoResponse>({
+          method: 'get',
+          url: `${config.tokenInfo}/${id}`,
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+        })
+
+        if (isRight(response)) {
+          const tokenInfo: Portfolio.Token.Info | undefined = parseTokenInfo(
+            response.value.data,
+          )
+
+          if (!tokenInfo) {
+            return freeze(
+              {
+                tag: 'left',
+                error: {
+                  status: -3,
+                  message: 'Failed to transform token info response',
+                  responseData: response.value.data,
+                },
+              },
+              true,
+            )
+          }
+
+          return freeze(
+            {
+              tag: 'right',
+              value: {
+                status: response.value.status,
+                data: tokenInfo,
+              },
+            },
+            true,
+          )
+        }
+
+        return response
+      },
+
       async tokenTraits(id) {
         const response = await request<DullahanApiTokenTraitsResponse>({
           method: 'get',
@@ -187,24 +235,28 @@ export const apiConfig: ApiConfig = freeze(
   {
     mainnet: {
       tokenDiscovery: 'https://zero.yoroiwallet.com/tokens/discovery',
+      tokenInfo: 'https://zero.yoroiwallet.com/tokens/info',
       tokenInfos: 'https://zero.yoroiwallet.com/tokens/info/multi',
       tokenTraits: 'https://zero.yoroiwallet.com/tokens/nft/traits',
     },
     preprod: {
       tokenDiscovery:
-        'https://dev-yoroi-backend-zero-preprod.emurgornd.com/tokens/discovery',
+        'https://yoroi-backend-zero-preprod.emurgornd.com/tokens/discovery',
+      tokenInfo: 'https://yoroi-backend-zero-preprod.emurgornd.com/tokens/info',
       tokenInfos:
-        'https://dev-yoroi-backend-zero-preprod.emurgornd.com/tokens/info/multi',
+        'https://yoroi-backend-zero-preprod.emurgornd.com/tokens/info/multi',
       tokenTraits:
-        'https://dev-yoroi-backend-zero-preprod.emurgornd.com/tokens/nft/traits',
+        'https://yoroi-backend-zero-preprod.emurgornd.com/tokens/nft/traits',
     },
     sancho: {
       tokenDiscovery:
-        'https://dev-yoroi-backend-zero-preprod.emurgornd.com/tokens/discovery',
+        'https://yoroi-backend-zero-sanchonet.emurgornd.com/tokens/discovery',
+      tokenInfo:
+        'https://yoroi-backend-zero-sanchonet.emurgornd.com/tokens/info',
       tokenInfos:
-        'https://dev-yoroi-backend-zero-preprod.emurgornd.com/tokens/info/multi',
+        'https://yoroi-backend-zero-sanchonet.emurgornd.com/tokens/info/multi',
       tokenTraits:
-        'https://dev-yoroi-backend-zero-preprod.emurgornd.com/tokens/nft/traits',
+        'https://yoroi-backend-zero-sanchonet.emurgornd.com/tokens/nft/traits',
     },
   },
   true,
