@@ -454,6 +454,8 @@
   "components.settings.walletsettingscreen.unknownWalletType": "Unbekannter Wallet Typ",
   "components.settings.walletsettingscreen.walletName": "Wallet-Name",
   "components.settings.walletsettingscreen.walletType": "Wallet Typ:",
+  "components.somethingWentWrong.title": "Oops!",
+  "components.somethingWentWrong.description": "Something went wrong.\nTry to reload this page or restart the app.",
   "components.stakingcenter.confirmDelegation.delegateButtonLabel": "Delegiere",
   "components.stakingcenter.confirmDelegation.ofFees": "an Gebühren",
   "components.stakingcenter.confirmDelegation.rewardsExplanation": "Derzeitige Schätzung der Erträge, die Du pro Epoche erhalten wirst:",
