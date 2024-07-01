@@ -7,11 +7,18 @@ import {BigNumber} from 'bignumber.js'
 import {fromPairs} from 'lodash'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, IntlShape, useIntl} from 'react-intl'
-import {LayoutAnimation, Linking, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
+import {
+  LayoutAnimation,
+  Linking,
+  StyleSheet,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+  ViewProps,
+} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {Banner, Boundary, Button, CopyButton, FadeIn, Icon, Text} from '../../../components'
-import AddressModal from '../../../features/Receive/common/AddressModal/AddressModal'
+import {Banner, Boundary, Button, CopyButton, FadeIn, Icon, Text, useModal} from '../../../components'
 import {usePrivacyMode} from '../../../features/Settings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
 import globalMessages from '../../../kernel/i18n/global-messages'
@@ -22,10 +29,14 @@ import {useTipStatus, useTransactionInfos} from '../../../yoroi-wallets/hooks'
 import {TransactionInfo} from '../../../yoroi-wallets/types'
 import {asQuantity} from '../../../yoroi-wallets/utils'
 import {formatDateAndTime, formatTokenWithSymbol} from '../../../yoroi-wallets/utils/format'
+import AddressModal from '../AddressModal/AddressModal'
 import {AssetList} from './AssetList'
 import {useAssetListStyles} from './AssetListTransaction.style'
 
 export const TxDetails = () => {
+  const {openModal} = useModal()
+  const screenHeight = useWindowDimensions().height
+  const modalHeight = Math.min(screenHeight * 0.8, 512)
   const strings = useStrings()
   const {styles, colors} = useStyles()
   const intl = useIntl()
@@ -36,7 +47,6 @@ export const TxDetails = () => {
   const externalAddressIndex = fromPairs(wallet.externalAddresses.map((addr, i) => [addr, i]))
   const [expandedInItemId, setExpandedInItemId] = useState<null | ItemId>(null)
   const [expandedOutItemId, setExpandedOutItemId] = useState<null | ItemId>(null)
-  const [addressDetail, setAddressDetail] = React.useState<null | string>(null)
   const transactions = useTransactionInfos(wallet)
   const transaction = transactions[id]
   const memo = !isEmptyString(transaction.memo) ? transaction.memo : '-'
@@ -63,6 +73,8 @@ export const TxDetails = () => {
     setExpandedOutItemId(expandedOutItemId !== itemId ? itemId : null)
   }
 
+  const openAddressModal = (address: string) => openModal('', <AddressModal address={address} />, modalHeight)
+
   return (
     <FadeIn style={styles.container}>
       <ScrollView contentContainerStyle={styles.contentContainer}>
@@ -86,7 +98,7 @@ export const TxDetails = () => {
 
         {fromFiltered.map((item) => (
           <View key={item.id}>
-            <AddressEntry {...item} showModalForAddress={setAddressDetail} />
+            <AddressEntry {...item} showModalForAddress={openAddressModal} />
 
             {item.assets.length > 0 && (
               <TouchableOpacity
@@ -114,7 +126,7 @@ export const TxDetails = () => {
 
         {toFiltered.map((item) => (
           <View key={item.id}>
-            <AddressEntry {...item} showModalForAddress={setAddressDetail} />
+            <AddressEntry {...item} showModalForAddress={openAddressModal} />
 
             {item.assets.length > 0 && (
               <TouchableOpacity
@@ -164,10 +176,6 @@ export const TxDetails = () => {
           shelleyTheme
         />
       </Actions>
-
-      {!isEmptyString(addressDetail) && (
-        <AddressModal visible onRequestClose={() => setAddressDetail(null)} address={addressDetail} />
-      )}
     </FadeIn>
   )
 }

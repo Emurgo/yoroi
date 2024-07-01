@@ -2,106 +2,106 @@
   {
     "id": "components.receive.addressmodal.walletAddress",
     "defaultMessage": "!!!Your wallet address",
-    "file": "src/features/Receive/common/AddressModal/AddressModal.tsx",
+    "file": "src/legacy/TxHistory/AddressModal/AddressModal.tsx",
     "start": {
       "line": 137,
       "column": 17,
-      "index": 3566
+      "index": 3552
     },
     "end": {
       "line": 140,
       "column": 3,
-      "index": 3674
+      "index": 3660
     }
   },
   {
     "id": "components.receive.addressmodal.BIP32path",
     "defaultMessage": "!!!BIP32 path:",
-    "file": "src/features/Receive/common/AddressModal/AddressModal.tsx",
+    "file": "src/legacy/TxHistory/AddressModal/AddressModal.tsx",
     "start": {
       "line": 141,
       "column": 13,
-      "index": 3689
+      "index": 3675
     },
     "end": {
       "line": 144,
       "column": 3,
-      "index": 3785
+      "index": 3771
     }
   },
   {
     "id": "components.receive.addressmodal.copyLabel",
     "defaultMessage": "!!!Copy address",
-    "file": "src/features/Receive/common/AddressModal/AddressModal.tsx",
+    "file": "src/legacy/TxHistory/AddressModal/AddressModal.tsx",
     "start": {
       "line": 145,
       "column": 13,
-      "index": 3800
+      "index": 3786
     },
     "end": {
       "line": 148,
       "column": 3,
-      "index": 3897
+      "index": 3883
     }
   },
   {
     "id": "components.receive.addressmodal.spendingKeyHash",
     "defaultMessage": "!!!Spending",
-    "file": "src/features/Receive/common/AddressModal/AddressModal.tsx",
+    "file": "src/legacy/TxHistory/AddressModal/AddressModal.tsx",
     "start": {
       "line": 149,
       "column": 12,
-      "index": 3911
+      "index": 3897
     },
     "end": {
       "line": 152,
       "column": 3,
-      "index": 4010
+      "index": 3996
     }
   },
   {
     "id": "components.receive.addressmodal.stakingKeyHash",
     "defaultMessage": "!!!Staking",
-    "file": "src/features/Receive/common/AddressModal/AddressModal.tsx",
+    "file": "src/legacy/TxHistory/AddressModal/AddressModal.tsx",
     "start": {
       "line": 153,
       "column": 11,
-      "index": 4023
+      "index": 4009
     },
     "end": {
       "line": 156,
       "column": 3,
-      "index": 4120
+      "index": 4106
     }
   },
   {
     "id": "components.receive.addressmodal.title",
     "defaultMessage": "!!!Title",
-    "file": "src/features/Receive/common/AddressModal/AddressModal.tsx",
+    "file": "src/legacy/TxHistory/AddressModal/AddressModal.tsx",
     "start": {
       "line": 157,
       "column": 9,
-      "index": 4131
+      "index": 4117
     },
     "end": {
       "line": 160,
       "column": 3,
-      "index": 4217
+      "index": 4203
     }
   },
   {
     "id": "components.receive.addressverifymodal.title",
     "defaultMessage": "!!!Verify Address on Ledger",
-    "file": "src/features/Receive/common/AddressModal/AddressModal.tsx",
+    "file": "src/legacy/TxHistory/AddressModal/AddressModal.tsx",
     "start": {
       "line": 161,
       "column": 15,
-      "index": 4234
+      "index": 4220
     },
     "end": {
       "line": 164,
       "column": 3,
-      "index": 4345
+      "index": 4331
     }
   }
 ]
