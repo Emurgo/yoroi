@@ -1,14 +1,14 @@
 import {fromPairs} from 'lodash'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, View, ViewProps} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
 
-import {CopyButton, Spacer, Text} from '../../../../components'
-import {Modal} from '../../../../components/legacy/Modal/Modal'
-import {derivationPathManagerMaker} from '../../../../yoroi-wallets/cardano/derivation-path-manager/derivation-path-manager'
-import {useKeyHashes} from '../../../../yoroi-wallets/hooks'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {CopyButton, Spacer, Text, useModal} from '../../../components'
+import {ScrollView} from '../../../components/ScrollView/ScrollView'
+import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
+import {derivationPathManagerMaker} from '../../../yoroi-wallets/cardano/derivation-path-manager/derivation-path-manager'
+import {useKeyHashes} from '../../../yoroi-wallets/hooks'
 
 type Path = {
   account: number
@@ -18,17 +18,20 @@ type Path = {
 
 type Props = {
   address: string
-  onRequestClose: () => void
-  visible: boolean
   path?: Path
 }
 
-export const AddressModal = ({address, visible, onRequestClose, path}: Props) => {
+export const AddressModal = ({address, path}: Props) => {
   const strings = useStrings()
   const keyHashes = useKeyHashes({address})
+  const {styles} = useStyles()
+  const {closeModal} = useModal()
+  const {
+    meta: {implementation},
+  } = useSelectedWallet()
 
   return (
-    <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
+    <ScrollView style={styles.scroll}>
       <Text style={styles.title}>{strings.title.toLocaleUpperCase()}</Text>
 
       <Spacer width={8} />
@@ -39,10 +42,10 @@ export const AddressModal = ({address, visible, onRequestClose, path}: Props) =>
 
       <Spacer width={4} />
 
-      <Info>
+      <View style={styles.info}>
         <Text style={styles.subtitle}>{strings.walletAddress}</Text>
 
-        <Row>
+        <View style={styles.row}>
           <Text style={{flex: 1}} secondary monospace numberOfLines={1} ellipsizeMode="middle">
             {address}
           </Text>
@@ -52,16 +55,20 @@ export const AddressModal = ({address, visible, onRequestClose, path}: Props) =>
           <CopyButton
             value={address}
             onCopy={() => {
-              setTimeout(onRequestClose, 1000)
+              setTimeout(closeModal, 1000)
             }}
           />
-        </Row>
+        </View>
 
         <Spacer width={8} />
 
         {path && (
           <>
-            <PathInfo path={path} />
+            <Text style={styles.subtitle}>{strings.BIP32path}</Text>
+
+            <Text secondary monospace>
+              {derivationPathManagerMaker(implementation)(path)}
+            </Text>
 
             <Spacer width={8} />
           </>
@@ -80,20 +87,18 @@ export const AddressModal = ({address, visible, onRequestClose, path}: Props) =>
         <Text secondary monospace>
           {keyHashes?.spending}
         </Text>
-      </Info>
-    </Modal>
+      </View>
+    </ScrollView>
   )
 }
 
 type ExternalProps = {
   address: string
-  onRequestClose: () => void
-  visible: boolean
 }
 
 export default (props: ExternalProps) => {
   const {wallet} = useSelectedWallet()
-  const externalIndex: number | undefined = fromPairs(wallet.internalAddresses.map((addr, i) => [addr, i]))[
+  const externalIndex: number | undefined = fromPairs(wallet.externalAddresses.map((addr, i) => [addr, i]))[
     props.address
   ]
   const internalIndex: number | undefined = fromPairs(wallet.internalAddresses.map((addr, i) => [addr, i]))[
@@ -106,44 +111,27 @@ export default (props: ExternalProps) => {
   return <AddressModal {...props} />
 }
 
-type PathInfoProps = {
-  path: Path
+const useStyles = () => {
+  const styles = StyleSheet.create({
+    scroll: {
+      width: '100%',
+    },
+    info: {
+      alignItems: 'flex-start',
+    },
+    title: {
+      textAlign: 'center',
+      fontWeight: 'bold',
+    },
+    subtitle: {
+      textAlign: 'center',
+    },
+    row: {
+      flexDirection: 'row',
+    },
+  })
+  return {styles}
 }
-const PathInfo = ({path}: PathInfoProps) => {
-  const {account, index, role} = path
-  const strings = useStrings()
-  const {
-    meta: {implementation},
-  } = useSelectedWallet()
-
-  return (
-    <>
-      <Text style={styles.subtitle}>{strings.BIP32path}</Text>
-
-      <Text secondary monospace>
-        {derivationPathManagerMaker(implementation)({account, role, index})}
-      </Text>
-    </>
-  )
-}
-const Info = (props: ViewProps) => <View {...props} style={styles.info} />
-const Row = (props: ViewProps) => <View {...props} style={styles.row} />
-
-const styles = StyleSheet.create({
-  info: {
-    alignItems: 'flex-start',
-  },
-  title: {
-    textAlign: 'center',
-    fontWeight: 'bold',
-  },
-  subtitle: {
-    textAlign: 'center',
-  },
-  row: {
-    flexDirection: 'row',
-  },
-})
 
 const messages = defineMessages({
   walletAddress: {
