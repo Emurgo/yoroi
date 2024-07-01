@@ -48,7 +48,6 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-
       ...theme.atoms.justify_center,
       ...theme.atoms.align_center,
       ...theme.atoms.gap_2xl,
