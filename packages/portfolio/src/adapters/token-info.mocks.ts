@@ -171,6 +171,29 @@ const storage: {
   ],
 }
 
+const apiResponseTokenInfo: Readonly<
+  Record<'success' | 'error', Api.Response<Portfolio.Token.Info>>
+> = freeze(
+  {
+    success: {
+      tag: 'right',
+      value: {
+        status: 200,
+        data: nftCryptoKitty,
+      },
+    },
+    error: {
+      tag: 'left',
+      error: {
+        status: 404,
+        responseData: null,
+        message: 'Not found',
+      },
+    },
+  },
+  true,
+)
+
 export const tokenInfoMocks = freeze({
   primaryETH,
   nftCryptoKitty,
@@ -182,4 +205,7 @@ export const tokenInfoMocks = freeze({
 
   apiResponseResult: apiResponseTokenInfos,
   apiRequestArgs: apiRequestTokenInfos,
+  apiReponse: {
+    nftCryptoKitty: apiResponseTokenInfo,
+  },
 })
