@@ -2,8 +2,10 @@ import {createStackNavigator} from '@react-navigation/stack'
 import {DappConnectorProvider} from '@yoroi/dapp-connector'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
+import {ErrorBoundary} from 'react-error-boundary'
 
 import {LoadingBoundary} from '../../components'
+import {SomethingWentWrong} from '../../components/SomethingWentWrong/SomethingWentWrong'
 import {defaultStackNavigationOptions, DiscoverRoutes} from '../../kernel/navigation'
 import {BrowserNavigator} from './BrowserNavigator'
 import {BrowserProvider} from './common/BrowserProvider'
@@ -33,9 +35,11 @@ export const DiscoverNavigator = () => {
         >
           <Stack.Screen name="discover-select-dapp-from-list" options={{title: strings.discoverTitle}}>
             {() => (
-              <LoadingBoundary fallback={<ListSkeleton />}>
-                <SelectDappFromListScreen />
-              </LoadingBoundary>
+              <ErrorBoundary FallbackComponent={SomethingWentWrong}>
+                <LoadingBoundary fallback={<ListSkeleton />}>
+                  <SelectDappFromListScreen />
+                </LoadingBoundary>
+              </ErrorBoundary>
             )}
           </Stack.Screen>
 
