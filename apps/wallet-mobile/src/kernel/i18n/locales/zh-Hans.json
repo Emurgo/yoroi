@@ -454,6 +454,8 @@
   "components.settings.walletsettingscreen.unknownWalletType": "未知的钱包类型",
   "components.settings.walletsettingscreen.walletName": "钱包名称",
   "components.settings.walletsettingscreen.walletType": "钱包类型：",
+  "components.somethingWentWrong.title": "Oops!",
+  "components.somethingWentWrong.description": "Something went wrong.\nTry to reload this page or restart the app.",
   "components.stakingcenter.confirmDelegation.delegateButtonLabel": "委托",
   "components.stakingcenter.confirmDelegation.ofFees": "手续费",
   "components.stakingcenter.confirmDelegation.rewardsExplanation": "当前每个时代预计可获得奖励：",
