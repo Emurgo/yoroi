@@ -11,8 +11,7 @@ storiesOf('Exchange AmountCard', module)
   .add('with label', () => (
     <AmountCard
       label="ADA amount"
-      amount={{quantity: '1000000', tokenId: ''}}
-      wallet={mocks.wallet}
+      amount={{quantity: 1000000n, info: mocks.wallet.portfolioPrimaryTokenInfo}}
       onChange={(value) => {
         action('Amount with label change')(value)
       }}
@@ -22,8 +21,7 @@ storiesOf('Exchange AmountCard', module)
   .add('with error', () => (
     <AmountCard
       label="ADA amount"
-      amount={{quantity: '1000000', tokenId: ''}}
-      wallet={mocks.wallet}
+      amount={{quantity: 1000000n, info: mocks.wallet.portfolioPrimaryTokenInfo}}
       onChange={(value) => {
         action('Amount with error change')(value)
       }}
