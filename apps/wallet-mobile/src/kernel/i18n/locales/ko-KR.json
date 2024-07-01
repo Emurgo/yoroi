@@ -454,6 +454,8 @@
   "components.settings.walletsettingscreen.unknownWalletType": "Unknown Wallet Type",
   "components.settings.walletsettingscreen.walletName": "지갑명",
   "components.settings.walletsettingscreen.walletType": "Wallet type:",
+  "components.somethingWentWrong.title": "Oops!",
+  "components.somethingWentWrong.description": "Something went wrong.\nTry to reload this page or restart the app.",
   "components.stakingcenter.confirmDelegation.delegateButtonLabel": "위임",
   "components.stakingcenter.confirmDelegation.ofFees": "의 수수료",
   "components.stakingcenter.confirmDelegation.rewardsExplanation": "에포크마다 받을 것으로 예상되는 보상의 양:",
