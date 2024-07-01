@@ -134,7 +134,7 @@ export const getTransactionSigners = async (cbor: string, wallet: YoroiWallet, m
   const signers = await getRequiredSigners(tx, wallet, meta, partial)
   const implementation = meta.implementation
 
-  if (implementation === 'cardano-cip1852' && (await needsToRegisterStakingKey(tx))) {
+  if (implementation === 'cardano-cip1852' && (await needsToSignWithStakingKey(tx))) {
     const implementationConfig = cardanoConfig.implementations[implementation]
     const additionalSigner: number[] = Array.from(implementationConfig.features.staking.addressing)
     return [...signers, additionalSigner]
@@ -151,7 +151,7 @@ export const assertHasAllSigners = async (cbor: string, wallet: YoroiWallet, met
   }
 }
 
-const needsToRegisterStakingKey = async (tx: CSL_TYPES.Transaction) => {
+const needsToSignWithStakingKey = async (tx: CSL_TYPES.Transaction) => {
   const body = await tx.body()
   const [certificates, withdrawals] = await Promise.all([body.certs(), body.withdrawals()])
 
