@@ -454,6 +454,8 @@
   "components.settings.walletsettingscreen.unknownWalletType": "Неизвестный тип кошелька",
   "components.settings.walletsettingscreen.walletName": "Имя кошелька",
   "components.settings.walletsettingscreen.walletType": "Тип кошелька:",
+  "components.somethingWentWrong.title": "Oops!",
+  "components.somethingWentWrong.description": "Something went wrong.\nTry to reload this page or restart the app.",
   "components.stakingcenter.confirmDelegation.delegateButtonLabel": "Делегировать",
   "components.stakingcenter.confirmDelegation.ofFees": "комиссия",
   "components.stakingcenter.confirmDelegation.rewardsExplanation": "Текущая приблизительная сумма награды, которую вы получите за эпоху:",
