@@ -130,13 +130,40 @@ export const getDerivationPathForAddress = (
 
 export const getTransactionSigners = async (cbor: string, wallet: YoroiWallet, meta: Wallet.Meta, partial = true) => {
   const tx = await CardanoMobile.Transaction.fromHex(cbor)
-  return getRequiredSigners(tx, wallet, meta, partial)
+
+  const signers = await getRequiredSigners(tx, wallet, meta, partial)
+  const implementation = meta.implementation
+
+  if (implementation === 'cardano-cip1852' && (await needsToRegisterStakingKey(tx))) {
+    const implementationConfig = cardanoConfig.implementations[implementation]
+    const additionalSigner: number[] = Array.from(implementationConfig.features.staking.addressing)
+    return [...signers, additionalSigner]
+  }
+
+  return signers
 }
 
 export const assertHasAllSigners = async (cbor: string, wallet: YoroiWallet, meta: Wallet.Meta) => {
   try {
-    await getTransactionSigners(cbor, wallet, meta, true)
+    await getTransactionSigners(cbor, wallet, meta, false)
   } catch (error) {
     throwLoggedError('Missing keys to sign transaction')
   }
+}
+
+const needsToRegisterStakingKey = async (tx: CSL_TYPES.Transaction) => {
+  const body = await tx.body()
+  const [certificates, withdrawals] = await Promise.all([body.certs(), body.withdrawals()])
+
+  for (let i = 0; certificates && i < (await certificates.len()); i++) {
+    const certificate = await certificates.get(i)
+    if ((await certificate.asStakeRegistration())?.hasValue()) return true
+    if ((await certificate.asStakeDeregistration())?.hasValue()) return true
+    if ((await certificate.asStakeDelegation())?.hasValue()) return true
+    if ((await certificate.asStakeRegistrationAndDelegation())?.hasValue()) return true
+    if ((await certificate.asStakeAndVoteDelegation())?.hasValue()) return true
+  }
+
+  if (withdrawals && (await withdrawals.len()) > 0) return true
+  return false
 }
