@@ -1,3 +1,4 @@
+import {bigintFormatter} from '@yoroi/common'
 import {useCreateReferralLink, useExchange, useExchangeProvidersByOrderType} from '@yoroi/exchange'
 import {linksYoroiModuleMaker} from '@yoroi/links'
 import {useTheme} from '@yoroi/theme'
@@ -13,8 +14,6 @@ import {Warning} from '../../../../components/Warning'
 import {banxaTestWallet} from '../../../../kernel/env'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../kernel/navigation'
-import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
-import {Quantities} from '../../../../yoroi-wallets/utils'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {ProviderItem} from '../../common/ProviderItem/ProviderItem'
 import {useNavigateTo} from '../../common/useNavigateTo'
@@ -46,10 +45,10 @@ export const CreateExchangeOrderScreen = () => {
 
   const {height: deviceHeight} = useWindowDimensions()
 
-  const amountTokenInfo = useTokenInfo({wallet, tokenId: wallet.primaryTokenInfo.id})
-  const quantity = `${amount.value}` as `${number}`
-  const denomination = amountTokenInfo.decimals ?? 0
-  const orderAmount = +Quantities.denominated(quantity, denomination)
+  const quantity = BigInt(amount.value)
+  const orderAmount = Number(
+    bigintFormatter({value: quantity, decimalPlaces: wallet.portfolioPrimaryTokenInfo.decimals}),
+  )
   const returnUrl = encodeURIComponent(
     linksYoroiModuleMaker('yoroi').exchange.order.showCreateResult({
       provider: providerSelected?.id ?? '',
@@ -66,7 +65,7 @@ export const CreateExchangeOrderScreen = () => {
     orderType: orderType,
     fiatType: 'USD',
     coinType: 'ADA',
-    coinAmount: orderAmount ?? 0,
+    coinAmount: orderAmount,
     blockchain: 'ADA',
     walletAddress,
     returnUrl,
