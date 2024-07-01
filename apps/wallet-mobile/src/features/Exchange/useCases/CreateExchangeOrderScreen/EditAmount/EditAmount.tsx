@@ -21,7 +21,7 @@ export const EditAmount = ({disabled}: {disabled?: boolean}) => {
 
   const onChangeAmountQuantity = React.useCallback(
     (text: string) => {
-      const [input, quantity] = Quantities.parseFromText(text, balance.info.decimals ?? 0, numberLocale)
+      const [input, quantity] = Quantities.parseFromText(text, balance.info.decimals, numberLocale)
       const newValue = +quantity
       const displayValue = text === '' ? '' : input
 
