@@ -1,0 +1,32 @@
+[
+  {
+    "id": "components.somethingWentWrong.title",
+    "defaultMessage": "!!!Oops!",
+    "file": "src/components/SomethingWentWrong/SomethingWentWrong.tsx",
+    "start": {
+      "line": 36,
+      "column": 9,
+      "index": 998
+    },
+    "end": {
+      "line": 39,
+      "column": 3,
+      "index": 1082
+    }
+  },
+  {
+    "id": "components.somethingWentWrong.description",
+    "defaultMessage": "!!!Something went wrong.\nTry to reload this page or restart the app.",
+    "file": "src/components/SomethingWentWrong/SomethingWentWrong.tsx",
+    "start": {
+      "line": 40,
+      "column": 15,
+      "index": 1099
+    },
+    "end": {
+      "line": 43,
+      "column": 3,
+      "index": 1250
+    }
+  }
+]

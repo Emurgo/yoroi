@@ -87,6 +87,7 @@ const getStories = () => {
     "./src/components/NftPreview/NftPreview.stories.tsx": require("../src/components/NftPreview/NftPreview.stories.tsx"),
     "./src/components/PairedBalance/PairedBalance.stories.tsx": require("../src/components/PairedBalance/PairedBalance.stories.tsx"),
     "./src/components/PressableIcon/PressableIcon.stories.tsx": require("../src/components/PressableIcon/PressableIcon.stories.tsx"),
+    "./src/components/SomethingWentWrong/SomethingWentWrong.stories.tsx": require("../src/components/SomethingWentWrong/SomethingWentWrong.stories.tsx"),
     "./src/components/StandardModal/StandardModal.stories.tsx": require("../src/components/StandardModal/StandardModal.stories.tsx"),
     "./src/components/TextInput/TextInput.stories.tsx": require("../src/components/TextInput/TextInput.stories.tsx"),
     "./src/components/TokenIcon/ModeratedNftIcon.stories.tsx": require("../src/components/TokenIcon/ModeratedNftIcon.stories.tsx"),
