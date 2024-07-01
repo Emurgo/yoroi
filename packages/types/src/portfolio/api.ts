@@ -17,6 +17,9 @@ export type PortfolioApiTokenInfosResponse = {
 export type PortfolioApiTokenTraitsResponse = PortfolioTokenTraits
 
 export type PortfolioApi = Readonly<{
+  tokenInfo(
+    id: PortfolioTokenId,
+  ): Promise<Readonly<ApiResponse<PortfolioTokenInfo>>>
   tokenInfos(
     idsWithETag: ReadonlyArray<ApiRequestRecordWithCache<PortfolioTokenId>>,
   ): Promise<Readonly<ApiResponse<PortfolioApiTokenInfosResponse>>>

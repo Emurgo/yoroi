@@ -17,8 +17,6 @@ export const primaryTokenInfoMainnet = createPrimaryTokenInfo({
   website: 'https://www.cardano.org/',
   originalImage: '',
   description: 'Cardano',
-  icon: '',
-  mediaType: '',
 })
 
 export const primaryTokenInfoAnyTestnet = createPrimaryTokenInfo({
@@ -31,8 +29,6 @@ export const primaryTokenInfoAnyTestnet = createPrimaryTokenInfo({
   website: 'https://www.cardano.org/',
   originalImage: '',
   description: 'Cardano',
-  icon: '',
-  mediaType: '',
 })
 
 export const shelleyEraConfig: Readonly<Network.EraConfig> = freeze(

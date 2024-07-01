@@ -6,13 +6,6 @@ import {
   DullahanApiTokenInfosResponse,
 } from './types'
 
-export const toSecondaryTokenInfo = (
-  tokenInfo: Omit<Portfolio.Token.Info, 'nature'>,
-): Portfolio.Token.Info => ({
-  ...tokenInfo,
-  nature: Portfolio.Token.Nature.Secondary,
-})
-
 export const toSecondaryTokenInfos = (
   apiTokenInfosResponse: DullahanApiTokenInfosResponse,
 ) => {
@@ -25,9 +18,7 @@ export const toSecondaryTokenInfos = (
     (acc, [id, tokenInfoWithCache]) => {
       const castedId = id as Portfolio.Token.Id
       const castedTokenInfoWithCache =
-        tokenInfoWithCache as Api.ResponseWithCache<
-          Omit<Portfolio.Token.Info, 'nature'>
-        >
+        tokenInfoWithCache as Api.ResponseWithCache<Portfolio.Token.Info>
 
       if (!parseSecondaryTokenInfoWithCacheRecord(castedTokenInfoWithCache))
         throw new Api.Errors.ResponseMalformed(
@@ -41,9 +32,8 @@ export const toSecondaryTokenInfos = (
       }
 
       const [, tokenInfo, hash, maxAge] = castedTokenInfoWithCache
-      const updatedTokenInfo = toSecondaryTokenInfo(tokenInfo)
 
-      acc[castedId] = [statusCode, updatedTokenInfo, hash, maxAge]
+      acc[castedId] = [statusCode, tokenInfo, hash, maxAge]
 
       return acc
     },

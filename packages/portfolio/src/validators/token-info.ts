@@ -76,16 +76,14 @@ export const parseTokenInfo = (
 export const SecondaryTokenInfoApiResponseWithCacheRecordSchema =
   responseRecordWithCacheSchemaMaker(SecondaryTokenInfoApiResponseSchema)
 
-// NOTE: the difference is the 'nature' field, that is added on fly by the manager
-// everything that comes from the API is secondary, primary is offline and is injected in the manager
 export const isSecondaryTokenInfoWithCacheRecord = (
   data: unknown,
-): data is Api.ResponseWithCache<Omit<Portfolio.Token.Info, 'nature'>> =>
+): data is Api.ResponseWithCache<Portfolio.Token.Info> =>
   SecondaryTokenInfoApiResponseWithCacheRecordSchema.safeParse(data).success
 
 export const parseSecondaryTokenInfoWithCacheRecord = (
   data: unknown,
-): Api.ResponseWithCache<Omit<Portfolio.Token.Info, 'nature'>> | undefined => {
+): Api.ResponseWithCache<Portfolio.Token.Info> | undefined => {
   return isSecondaryTokenInfoWithCacheRecord(data) ? data : undefined
 }
 

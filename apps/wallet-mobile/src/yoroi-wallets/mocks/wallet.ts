@@ -46,8 +46,6 @@ const primaryTokenInfoMainnet = createPrimaryTokenInfo({
   website: 'https://www.cardano.org/',
   originalImage: '',
   description: 'Cardano',
-  icon: '',
-  mediaType: '',
 })
 
 const walletMeta: Wallet.Meta = {

@@ -15,8 +15,6 @@ export function createUnknownTokenInfo(
       fingerprint: '',
       originalImage: '',
       description: '',
-      mediaType: '',
-      icon: '',
       nature: Portfolio.Token.Nature.Secondary,
       type: Portfolio.Token.Type.FT,
       application: Portfolio.Token.Application.General,
