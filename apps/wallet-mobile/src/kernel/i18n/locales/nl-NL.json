@@ -454,6 +454,8 @@
   "components.settings.walletsettingscreen.unknownWalletType": "Onbekend type portemonnee",
   "components.settings.walletsettingscreen.walletName": "Portemonnee naam",
   "components.settings.walletsettingscreen.walletType": "Type portemonnee:",
+  "components.somethingWentWrong.title": "Oops!",
+  "components.somethingWentWrong.description": "Something went wrong.\nTry to reload this page or restart the app.",
   "components.stakingcenter.confirmDelegation.delegateButtonLabel": "Delegeren",
   "components.stakingcenter.confirmDelegation.ofFees": " vergoedingen",
   "components.stakingcenter.confirmDelegation.rewardsExplanation": "\nDe beloningen die u, bij benadering,  per periode,  zult ontvangen:",
