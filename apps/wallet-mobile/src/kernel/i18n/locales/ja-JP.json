@@ -454,6 +454,8 @@
   "components.settings.walletsettingscreen.unknownWalletType": "Unknown Wallet Type",
   "components.settings.walletsettingscreen.walletName": "ウォレット名",
   "components.settings.walletsettingscreen.walletType": "Wallet type:",
+  "components.somethingWentWrong.title": "Oops!",
+  "components.somethingWentWrong.description": "Something went wrong.\nTry to reload this page or restart the app.",
   "components.stakingcenter.confirmDelegation.delegateButtonLabel": "委任",
   "components.stakingcenter.confirmDelegation.ofFees": "手数料",
   "components.stakingcenter.confirmDelegation.rewardsExplanation": "エポックごとの獲得報酬額（現時点での見積額とします）:",

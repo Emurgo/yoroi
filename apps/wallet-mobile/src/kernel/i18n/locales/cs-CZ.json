@@ -454,6 +454,8 @@
   "components.settings.walletsettingscreen.unknownWalletType": "Neznámý typ peněženky",
   "components.settings.walletsettingscreen.walletName": "Název peněženky",
   "components.settings.walletsettingscreen.walletType": "Typ peněženky:",
+  "components.somethingWentWrong.title": "Oops!",
+  "components.somethingWentWrong.description": "Something went wrong.\nTry to reload this page or restart the app.",
   "components.stakingcenter.confirmDelegation.delegateButtonLabel": "Delegovat",
   "components.stakingcenter.confirmDelegation.ofFees": "poplatků",
   "components.stakingcenter.confirmDelegation.rewardsExplanation": "Aktuální odhad odměn za epochu:",

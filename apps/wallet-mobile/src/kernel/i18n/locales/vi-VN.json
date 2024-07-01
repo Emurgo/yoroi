@@ -454,6 +454,8 @@
   "components.settings.walletsettingscreen.unknownWalletType": "Loại ví không xác định",
   "components.settings.walletsettingscreen.walletName": "Tên Ví",
   "components.settings.walletsettingscreen.walletType": "Kiểu Ví",
+  "components.somethingWentWrong.title": "Oops!",
+  "components.somethingWentWrong.description": "Something went wrong.\nTry to reload this page or restart the app.",
   "components.stakingcenter.confirmDelegation.delegateButtonLabel": "Ủy quyền",
   "components.stakingcenter.confirmDelegation.ofFees": "lệ phí",
   "components.stakingcenter.confirmDelegation.rewardsExplanation": "Phần thưởng gần đúng hiện tại mà bạn sẽ nhận được mỗi kỷ nguyên:",
