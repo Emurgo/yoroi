@@ -25,6 +25,16 @@ export const responseTokenInfosMocks = asyncBehavior.maker<
   emptyRepresentation: null,
 })
 
+export const responseTokenInfoMocks = asyncBehavior.maker<
+  Api.Response<Portfolio.Token.Info>
+>({
+  data: {
+    tag: 'right',
+    value: {status: 200, data: tokenMocks.nftCryptoKitty.info},
+  },
+  emptyRepresentation: null,
+})
+
 export const responseTokenTraits = asyncBehavior.maker<
   Api.Response<Portfolio.Api.TokenTraitsResponse>
 >({
@@ -37,24 +47,36 @@ export const responseTokenTraits = asyncBehavior.maker<
 
 const success: Portfolio.Api.Api = {
   tokenDiscovery: responseTokenDiscoveryMocks.success,
+  tokenInfo: responseTokenInfoMocks.success,
   tokenInfos: responseTokenInfosMocks.success,
   tokenTraits: responseTokenTraits.success,
 }
 
 const delayed: Portfolio.Api.Api = {
   tokenDiscovery: responseTokenDiscoveryMocks.delayed,
+  tokenInfo: responseTokenInfoMocks.delayed,
   tokenInfos: responseTokenInfosMocks.delayed,
   tokenTraits: responseTokenTraits.delayed,
 }
 
 const loading: Portfolio.Api.Api = {
   tokenDiscovery: responseTokenDiscoveryMocks.loading,
+  tokenInfo: responseTokenInfoMocks.loading,
   tokenInfos: responseTokenInfosMocks.loading,
   tokenTraits: responseTokenTraits.loading,
 }
 
 const error: Portfolio.Api.Api = {
   tokenDiscovery: () =>
+    Promise.resolve({
+      tag: 'left',
+      error: {
+        status: 400,
+        message: 'Bad Request',
+        responseData: {message: 'Bad Request'},
+      },
+    }),
+  tokenInfo: () =>
     Promise.resolve({
       tag: 'left',
       error: {
@@ -85,6 +107,7 @@ const error: Portfolio.Api.Api = {
 
 const empty: Portfolio.Api.Api = {
   tokenDiscovery: responseTokenDiscoveryMocks.empty,
+  tokenInfo: responseTokenInfoMocks.empty,
   tokenInfos: responseTokenInfosMocks.empty,
   tokenTraits: responseTokenTraits.empty,
 }

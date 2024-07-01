@@ -46,6 +46,7 @@ describe('portfolioBalanceManagerMaker', () => {
     sync: jest.fn().mockResolvedValue(new Map()),
     clear: jest.fn(),
     api: {
+      tokenInfo: jest.fn(),
       tokenInfos: jest.fn(),
       tokenDiscovery: jest.fn(),
       tokenTraits: jest.fn(),
@@ -91,6 +92,7 @@ describe('hydrate', () => {
     sync: jest.fn().mockResolvedValue(new Map()),
     clear: jest.fn(),
     api: {
+      tokenInfo: jest.fn(),
       tokenInfos: jest.fn(),
       tokenDiscovery: jest.fn(),
       tokenTraits: jest.fn(),
@@ -178,6 +180,7 @@ describe('destroy', () => {
     sync: jest.fn().mockResolvedValue(new Map()),
     clear: jest.fn(),
     api: {
+      tokenInfo: jest.fn(),
       tokenInfos: jest.fn(),
       tokenDiscovery: jest.fn(),
       tokenTraits: jest.fn(),
@@ -259,6 +262,7 @@ describe('primary updates', () => {
     sync: jest.fn().mockResolvedValue(new Map()),
     clear: jest.fn(),
     api: {
+      tokenInfo: jest.fn(),
       tokenInfos: jest.fn(),
       tokenDiscovery: jest.fn(),
       tokenTraits: jest.fn(),
@@ -415,6 +419,7 @@ describe('sync & refresh', () => {
     sync: jest.fn().mockResolvedValue(new Map()),
     clear: jest.fn(),
     api: {
+      tokenInfo: jest.fn(),
       tokenInfos: jest.fn(),
       tokenDiscovery: jest.fn(),
       tokenTraits: jest.fn(),
@@ -704,6 +709,7 @@ describe('clear', () => {
     sync: jest.fn().mockResolvedValue(new Map()),
     clear: jest.fn(),
     api: {
+      tokenInfo: jest.fn(),
       tokenInfos: jest.fn(),
       tokenDiscovery: jest.fn(),
       tokenTraits: jest.fn(),

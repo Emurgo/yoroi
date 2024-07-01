@@ -1,10 +1,12 @@
 import {Api, Portfolio} from '@yoroi/types'
 
 export type DullahanApiTokenInfosResponse = Readonly<{
-  [key: Portfolio.Token.Id]: Api.ResponseWithCache<
-    Omit<Portfolio.Token.Info, 'nature'>
-  >
+  [key: Portfolio.Token.Id]: Api.ResponseWithCache<Portfolio.Token.Info>
 }>
+
+export type DullahanApiTokenInfoResponse = Readonly<
+  Api.Response<Portfolio.Token.Info>
+>
 
 export type DullahanApiTokenTraitsResponse = Readonly<
   Portfolio.Token.Traits & {
@@ -13,14 +15,8 @@ export type DullahanApiTokenTraitsResponse = Readonly<
   }
 >
 
-export type DullahanTokenDiscovery = Omit<
-  Portfolio.Token.Discovery,
-  'supply'
-> & {
-  supply: string
-}
-
-export type DullahanApiTokenDiscoveryResponse = Readonly<DullahanTokenDiscovery>
+export type DullahanApiTokenDiscoveryResponse =
+  Readonly<Portfolio.Token.Discovery>
 
 export type DullahanIdWithCache = `${string}.${string}:${string}`
 
