@@ -33,7 +33,7 @@ export const InsufficientFundsModal = () => {
         })}
       </Text>
 
-      <Space />
+      <Space height="md" />
 
       <Button shelleyTheme title={strings.back} onPress={closeModal} textStyles={styles.button} />
     </View>
