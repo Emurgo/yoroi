@@ -25,7 +25,7 @@ export const InsufficientFundsModal = () => {
   const fmtPrimaryBalance = amountFormatter()(primaryBalance)
 
   return (
-    <View>
+    <View style={styles.container}>
       <Text style={styles.text}>
         {strings.insufficientBalance({
           requiredBalance: fmtMinPrimaryBalance,
@@ -57,6 +57,9 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
+    container: {
+      ...atoms.px_lg,
+    },
     text: {
       color: color.gray_cmax,
       ...atoms.body_1_lg_regular,

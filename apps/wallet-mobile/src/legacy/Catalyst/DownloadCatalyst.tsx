@@ -39,7 +39,7 @@ export const DownloadCatalyst = ({onNext}: Props) => {
   )
 
   React.useEffect(() => {
-    if (stakingInfo?.status === 'not-registered') {
+    if (stakingInfo?.status !== 'not-registered') {
       openModal(strings.attention, <WarningModal />, 270)
     }
   }, [openModal, stakingInfo?.status, strings.attention])
@@ -105,7 +105,7 @@ const WarningModal = () => {
   const {closeModal} = useModal()
 
   return (
-    <View>
+    <View style={styles.container}>
       <Text style={styles.text}>{strings.stakingKeyNotRegistered}</Text>
 
       <Space height="md" />
@@ -205,6 +205,9 @@ const useStyles = () => {
     safeAreaView: {
       flex: 1,
       backgroundColor: color.gray_cmin,
+    },
+    container: {
+      ...atoms.px_lg,
     },
     contentContainer: {
       ...atoms.px_lg,
