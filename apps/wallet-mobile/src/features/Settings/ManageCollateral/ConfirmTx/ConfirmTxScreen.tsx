@@ -100,6 +100,8 @@ export const ConfirmTxScreen = () => {
             chooseTransportOnConfirmation
           />
         </Actions>
+
+        <Spacer height={Platform.OS === 'ios' ? 65 : 16} />
       </KeyboardAvoidingView>
     </SafeAreaView>
   )
@@ -124,7 +126,6 @@ const useStyles = () => {
     actions: {
       paddingTop: 16,
       paddingHorizontal: 16,
-      paddingBottom: Platform.OS === 'ios' ? 25 : 16,
     },
   })
   return styles
