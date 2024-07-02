@@ -4,11 +4,12 @@ import {createStackNavigator} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Linking, ScrollView, StyleSheet, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Boundary, Icon, Spacer, Text} from '../../components'
+import {Boundary, Icon, Spacer, Text, useModal} from '../../components'
 import {dappExplorerEnabled} from '../../kernel/config'
+import globalMessages from '../../kernel/i18n/global-messages'
 import {useMetrics} from '../../kernel/metrics/metricsManager'
 import {defaultStackNavigationOptions, useWalletNavigation} from '../../kernel/navigation'
 import {useCanVote} from '../../legacy/Catalyst/hooks'
@@ -165,26 +166,23 @@ const Governance = Item
 const AppSettings = Item
 const KnowledgeBase = Item
 const Catalyst = ({label, left, onPress}: {label: string; left: React.ReactElement; onPress: () => void}) => {
+  const strings = useStrings()
   const {wallet} = useSelectedWallet()
   const {canVote, sufficientFunds} = useCanVote(wallet)
+  const {openModal} = useModal()
+  const screenHeight = useWindowDimensions().height
+  const modalHeight = Math.min(screenHeight * 0.8, 256)
 
-  const [showInsufficientFundsModal, setShowInsufficientFundsModal] = React.useState(false)
+  const handlePress = () => {
+    if (!canVote) return
 
-  return (
-    <>
-      <Item
-        label={label}
-        onPress={() => (sufficientFunds ? onPress() : setShowInsufficientFundsModal(true))}
-        left={left}
-        disabled={!canVote}
-      />
-
-      <InsufficientFundsModal
-        visible={showInsufficientFundsModal}
-        onRequestClose={() => setShowInsufficientFundsModal(false)}
-      />
-    </>
-  )
+    if (sufficientFunds) {
+      onPress()
+    } else {
+      openModal(strings.attention, <InsufficientFundsModal />, modalHeight)
+    }
+  }
+  return <Item label={label} onPress={handlePress} left={left} disabled={!canVote} />
 }
 
 const SUPPORT_TICKET_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/requests/new?ticket_form_id=360013330335'
@@ -218,6 +216,7 @@ const useStrings = () => {
   const intl = useIntl()
 
   return {
+    attention: intl.formatMessage(globalMessages.attention),
     catalystVoting: intl.formatMessage(messages.catalystVoting),
     settings: intl.formatMessage(messages.settings),
     stakingCenter: intl.formatMessage(messages.stakingCenter),
