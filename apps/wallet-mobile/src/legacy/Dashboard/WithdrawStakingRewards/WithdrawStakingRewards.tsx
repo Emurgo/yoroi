@@ -37,7 +37,9 @@ export const WithdrawStakingRewards = ({wallet, onSuccess, onCancel}: Props) => 
 
       {state.step === 'confirm' && (
         <Route active={true}>
-          <ConfirmTx wallet={wallet} unsignedTx={state.withdrawalTx} onSuccess={onSuccess} onCancel={onCancel} />
+          <View style={{flex: 1, paddingHorizontal: 16}}>
+            <ConfirmTx wallet={wallet} unsignedTx={state.withdrawalTx} onSuccess={onSuccess} onCancel={onCancel} />
+          </View>
         </Route>
       )}
     </Boundary>

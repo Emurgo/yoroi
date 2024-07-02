@@ -4,6 +4,7 @@ import {ScrollView, StyleSheet, View} from 'react-native'
 
 import {confirmationMessages} from '../../kernel/i18n/global-messages'
 import {Button} from '../Button'
+import {Spacer} from '../Spacer'
 import {Text} from '../Text'
 
 type Props = {
@@ -27,7 +28,12 @@ export const TwoActionView = ({title, children, primaryButton, secondaryButton}:
   const intl = useIntl()
 
   return (
-    <ScrollView style={styles.scrollView} keyboardShouldPersistTaps="always" testID="twoActionView">
+    <ScrollView
+      style={styles.scrollView}
+      contentContainerStyle={{flex: 1, flexDirection: 'column', justifyContent: 'space-between'}}
+      keyboardShouldPersistTaps="always"
+      testID="twoActionView"
+    >
       <View style={styles.content}>
         <View style={styles.heading}>
           <Text style={styles.titleText}>{title}</Text>
@@ -36,11 +42,13 @@ export const TwoActionView = ({title, children, primaryButton, secondaryButton}:
         {children}
       </View>
 
+      <Spacer fill />
+
       <View style={styles.buttons}>
         {secondaryButton != null && (
           <Button
-            outlineOnLight
             block
+            outlineOnLight
             onPress={secondaryButton.onPress}
             title={secondaryButton.label ?? intl.formatMessage(confirmationMessages.commonButtons.cancelButton)}
             disabled={secondaryButton.disabled}
@@ -64,7 +72,7 @@ export const TwoActionView = ({title, children, primaryButton, secondaryButton}:
 
 const styles = StyleSheet.create({
   scrollView: {
-    paddingRight: 10,
+    flex: 1,
   },
   content: {
     flex: 1,
@@ -83,7 +91,6 @@ const styles = StyleSheet.create({
   },
   buttons: {
     flexDirection: 'row',
-    marginTop: 12,
   },
   primaryButton: {},
   secondaryButton: {
