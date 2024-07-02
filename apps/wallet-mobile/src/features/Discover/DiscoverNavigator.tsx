@@ -1,22 +1,18 @@
 import {createStackNavigator} from '@react-navigation/stack'
-import {useAsyncStorage} from '@yoroi/common'
-import {DappConnector, DappConnectorProvider} from '@yoroi/dapp-connector'
+import {DappConnectorProvider} from '@yoroi/dapp-connector'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {InteractionManager} from 'react-native'
+import {ErrorBoundary} from 'react-error-boundary'
 
 import {LoadingBoundary} from '../../components'
+import {SomethingWentWrong} from '../../components/SomethingWentWrong/SomethingWentWrong'
 import {defaultStackNavigationOptions, DiscoverRoutes} from '../../kernel/navigation'
-import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 import {BrowserNavigator} from './BrowserNavigator'
 import {BrowserProvider} from './common/BrowserProvider'
-import {useOpenConfirmConnectionModal} from './common/ConfirmConnectionModal'
-import {createDappConnector} from './common/helpers'
-import {useConfirmRawTx} from './common/hooks'
-import {useOpenUnverifiedDappModal} from './common/UnverifiedDappModal'
 import {useStrings} from './common/useStrings'
 import {ListSkeleton} from './useCases/SelectDappFromList/ListSkeleton'
 import {SelectDappFromListScreen} from './useCases/SelectDappFromList/SelectDappFromListScreen'
+import {useDappConnectorManager} from './useDappConnectorManager'
 
 const Stack = createStackNavigator<DiscoverRoutes>()
 
@@ -39,9 +35,11 @@ export const DiscoverNavigator = () => {
         >
           <Stack.Screen name="discover-select-dapp-from-list" options={{title: strings.discoverTitle}}>
             {() => (
-              <LoadingBoundary fallback={<ListSkeleton />}>
-                <SelectDappFromListScreen />
-              </LoadingBoundary>
+              <ErrorBoundary FallbackComponent={SomethingWentWrong}>
+                <LoadingBoundary fallback={<ListSkeleton />}>
+                  <SelectDappFromListScreen />
+                </LoadingBoundary>
+              </ErrorBoundary>
             )}
           </Stack.Screen>
 
@@ -49,81 +47,5 @@ export const DiscoverNavigator = () => {
         </Stack.Navigator>
       </BrowserProvider>
     </DappConnectorProvider>
-  )
-}
-
-const useDappConnectorManager = () => {
-  const appStorage = useAsyncStorage()
-  const {wallet, meta} = useSelectedWallet()
-  const {openConfirmConnectionModal} = useOpenConfirmConnectionModal()
-  const {openUnverifiedDappModal, closeModal} = useOpenUnverifiedDappModal()
-  const confirmRawTx = useConfirmRawTx()
-
-  const confirmConnection = React.useCallback(
-    async (origin: string, manager: DappConnector) => {
-      const recommendedDApps = await manager.getDAppList()
-      const selectedDapp = recommendedDApps.dapps.find((dapp) => dapp.origins.includes(origin))
-
-      return new Promise<boolean>((resolve) => {
-        const openMainModal = () => {
-          openConfirmConnectionModal({
-            name: selectedDapp?.name ?? origin,
-            website: origin,
-            logo: selectedDapp?.logo ?? '',
-            onConfirm: () => resolve(true),
-            onClose: () => resolve(false),
-          })
-        }
-
-        if (!selectedDapp) {
-          let shouldResolveOnClose = true
-          openUnverifiedDappModal({
-            onClose: () => {
-              if (shouldResolveOnClose) resolve(false)
-            },
-            onConfirm: () => {
-              shouldResolveOnClose = false
-              closeModal()
-              InteractionManager.runAfterInteractions(() => {
-                openMainModal()
-              })
-            },
-          })
-          return
-        }
-
-        openMainModal()
-      })
-    },
-    [openConfirmConnectionModal, openUnverifiedDappModal, closeModal],
-  )
-
-  const signTx = React.useCallback(() => {
-    return new Promise<string>((resolve, reject) => {
-      confirmRawTx({
-        onConfirm: (rootKey) => {
-          resolve(rootKey)
-          return Promise.resolve()
-        },
-        onClose: () => reject(new Error('User rejected')),
-      })
-    })
-  }, [confirmRawTx])
-
-  const signData = React.useCallback(() => {
-    return new Promise<string>((resolve, reject) => {
-      confirmRawTx({
-        onConfirm: (rootKey) => {
-          resolve(rootKey)
-          return Promise.resolve()
-        },
-        onClose: () => reject(new Error('User rejected')),
-      })
-    })
-  }, [confirmRawTx])
-
-  return React.useMemo(
-    () => createDappConnector({appStorage, wallet, confirmConnection, signTx, signData, meta}),
-    [appStorage, wallet, confirmConnection, signTx, signData, meta],
   )
 }

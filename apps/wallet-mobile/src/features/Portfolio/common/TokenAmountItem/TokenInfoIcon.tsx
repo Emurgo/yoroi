@@ -6,7 +6,6 @@ import React from 'react'
 import {ImageStyle, StyleSheet, View} from 'react-native'
 
 import {Icon} from '../../../../components/Icon'
-import {isEmptyString} from '../../../../kernel/utils'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 
 type TokenInfoIconProps = {
@@ -28,16 +27,6 @@ export const TokenInfoIcon = ({info, size = 'md', imageStyle}: TokenInfoIconProp
         placeholder={blurhash}
       />
     )
-
-  if (!isEmptyString(info.icon)) {
-    return (
-      <Image
-        source={{uri: `data:image/png;base64,${info.icon}`}}
-        style={[size === 'sm' ? styles.iconSmall : styles.iconMedium, imageStyle]}
-        placeholder={blurhash}
-      />
-    )
-  }
 
   const [policy, name] = info.id.split('.')
   const uri = `https://${wallet.networkManager.network}.processed-media.yoroiwallet.com/${policy}/${name}?width=64&height=64&kind=metadata&fit=cover`

@@ -46,8 +46,6 @@ const primaryTokenInfoMainnet = createPrimaryTokenInfo({
   website: 'https://www.cardano.org/',
   originalImage: '',
   description: 'Cardano',
-  icon: '',
-  mediaType: '',
 })
 
 const walletMeta: Wallet.Meta = {
@@ -70,6 +68,9 @@ const {tokenManagers} = buildPortfolioTokenManagers()
 const networkManagers = buildNetworkManagers({tokenManagers})
 
 const wallet: YoroiWallet = {
+  getAddressing(_address: string): {path: number[]; startLevel: number} {
+    throw new Error('Method not implemented.')
+  },
   networkManager: networkManagers.mainnet,
   isEmpty: false,
   hasOnlyPrimary: false,

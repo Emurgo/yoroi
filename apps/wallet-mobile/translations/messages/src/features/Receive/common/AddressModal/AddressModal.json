@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Your wallet address",
     "file": "src/features/Receive/common/AddressModal/AddressModal.tsx",
     "start": {
-      "line": 149,
+      "line": 137,
       "column": 17,
-      "index": 3847
+      "index": 3566
     },
     "end": {
-      "line": 152,
+      "line": 140,
       "column": 3,
-      "index": 3955
+      "index": 3674
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!BIP32 path:",
     "file": "src/features/Receive/common/AddressModal/AddressModal.tsx",
     "start": {
-      "line": 153,
+      "line": 141,
       "column": 13,
-      "index": 3970
+      "index": 3689
     },
     "end": {
-      "line": 156,
+      "line": 144,
       "column": 3,
-      "index": 4066
+      "index": 3785
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Copy address",
     "file": "src/features/Receive/common/AddressModal/AddressModal.tsx",
     "start": {
-      "line": 157,
+      "line": 145,
       "column": 13,
-      "index": 4081
+      "index": 3800
     },
     "end": {
-      "line": 160,
+      "line": 148,
       "column": 3,
-      "index": 4178
+      "index": 3897
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Spending",
     "file": "src/features/Receive/common/AddressModal/AddressModal.tsx",
     "start": {
-      "line": 161,
+      "line": 149,
       "column": 12,
-      "index": 4192
+      "index": 3911
     },
     "end": {
-      "line": 164,
+      "line": 152,
       "column": 3,
-      "index": 4291
+      "index": 4010
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Staking",
     "file": "src/features/Receive/common/AddressModal/AddressModal.tsx",
     "start": {
-      "line": 165,
+      "line": 153,
       "column": 11,
-      "index": 4304
+      "index": 4023
     },
     "end": {
-      "line": 168,
+      "line": 156,
       "column": 3,
-      "index": 4401
+      "index": 4120
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!Title",
     "file": "src/features/Receive/common/AddressModal/AddressModal.tsx",
     "start": {
-      "line": 169,
+      "line": 157,
       "column": 9,
-      "index": 4412
+      "index": 4131
     },
     "end": {
-      "line": 172,
+      "line": 160,
       "column": 3,
-      "index": 4498
+      "index": 4217
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!Verify Address on Ledger",
     "file": "src/features/Receive/common/AddressModal/AddressModal.tsx",
     "start": {
-      "line": 173,
+      "line": 161,
       "column": 15,
-      "index": 4515
+      "index": 4234
     },
     "end": {
-      "line": 176,
+      "line": 164,
       "column": 3,
-      "index": 4626
+      "index": 4345
     }
   }
 ]

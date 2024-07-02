@@ -65,8 +65,9 @@ describe('portfolioApiMaker', () => {
     await api.tokenDiscovery(tokenDiscoveryMocks.nftCryptoKitty.id)
     await api.tokenInfos(mockTokenIdsWithCache)
     await api.tokenTraits(tokenMocks.nftCryptoKitty.info.id)
+    await api.tokenInfo(tokenMocks.nftCryptoKitty.info.id)
 
-    expect(mockRequest).toHaveBeenCalledTimes(3)
+    expect(mockRequest).toHaveBeenCalledTimes(4)
 
     expect(mockRequest).toHaveBeenCalledWith({
       method: 'get',
@@ -92,6 +93,17 @@ describe('portfolioApiMaker', () => {
       method: 'get',
       url:
         apiConfig[Chain.Network.Mainnet].tokenTraits +
+        '/' +
+        tokenMocks.nftCryptoKitty.info.id,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
+    expect(mockRequest).toHaveBeenCalledWith({
+      method: 'get',
+      url:
+        apiConfig[Chain.Network.Mainnet].tokenInfo +
         '/' +
         tokenMocks.nftCryptoKitty.info.id,
       headers: {
@@ -198,6 +210,30 @@ describe('portfolioApiMaker', () => {
         },
       },
     })
+
+    const resultInfo = await api.tokenInfo(tokenMocks.nftCryptoKitty.info.id)
+    expect(mockRequest).toHaveBeenCalledTimes(4)
+    expect(mockRequest).toHaveBeenCalledWith({
+      method: 'get',
+      url:
+        apiConfig[Chain.Network.Mainnet].tokenInfo +
+        '/' +
+        tokenMocks.nftCryptoKitty.info.id,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
+    expect(resultInfo).toEqual({
+      tag: 'left',
+      error: {
+        status: -3,
+        message: 'Failed to transform token info response',
+        responseData: {
+          ['wrong']: 'data',
+        },
+      },
+    })
   })
 
   it('should return the error and not throw', async () => {
@@ -286,9 +322,32 @@ describe('portfolioApiMaker', () => {
         'Content-Type': 'application/json',
       },
     })
+
+    await expect(
+      api.tokenInfo(tokenMocks.nftCryptoKitty.info.id),
+    ).resolves.toEqual({
+      tag: 'left',
+      value: {
+        status: 500,
+        message: 'Internal Server Error',
+        responseData: {},
+      },
+    })
+    expect(mockRequest).toHaveBeenCalledTimes(4)
+    expect(mockRequest).toHaveBeenCalledWith({
+      method: 'get',
+      url:
+        apiConfig[Chain.Network.Mainnet].tokenInfo +
+        '/' +
+        tokenMocks.nftCryptoKitty.info.id,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
   })
 
-  it('should return the data on success', async () => {
+  it('should return the data on success (traits)', async () => {
     mockRequest.mockResolvedValue({
       tag: 'right',
       value: {
@@ -321,6 +380,43 @@ describe('portfolioApiMaker', () => {
       value: {
         status: 200,
         data: tokenMocks.nftCryptoKitty.traits,
+      },
+    })
+  })
+
+  it('should return the data on success (tokenInfo)', async () => {
+    mockRequest.mockResolvedValue({
+      tag: 'right',
+      value: {
+        status: 200,
+        data: tokenMocks.nftCryptoKitty.info,
+      },
+    })
+    const api = portfolioApiMaker({
+      network: mockNetwork,
+      request: mockRequest,
+      maxIdsPerRequest: 10,
+      maxConcurrentRequests: 10,
+    })
+
+    const result = await api.tokenInfo(tokenMocks.nftCryptoKitty.info.id)
+    expect(mockRequest).toHaveBeenCalledTimes(1)
+    expect(mockRequest).toHaveBeenCalledWith({
+      method: 'get',
+      url:
+        apiConfig[Chain.Network.Mainnet].tokenInfo +
+        '/' +
+        tokenMocks.nftCryptoKitty.info.id,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
+    expect(result).toEqual({
+      tag: 'right',
+      value: {
+        status: 200,
+        data: tokenMocks.nftCryptoKitty.info,
       },
     })
   })

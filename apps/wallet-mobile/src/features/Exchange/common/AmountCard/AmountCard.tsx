@@ -1,13 +1,12 @@
+import {amountFormatter} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native'
 
-import {Boundary, Spacer, TokenIcon, TokenIconPlaceholder} from '../../../../components'
+import {Boundary, Spacer, TokenIconPlaceholder} from '../../../../components'
 import {isEmptyString} from '../../../../kernel/utils'
-import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
-import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
-import {formatTokenWithText} from '../../../../yoroi-wallets/utils/format'
+import {TokenInfoIcon} from '../../../Portfolio/common/TokenAmountItem/TokenInfoIcon'
 import {useStrings} from '../useStrings'
 
 type AmountCardProps = {
@@ -18,8 +17,7 @@ type AmountCardProps = {
   value?: string
   inputEditable?: boolean
   touched?: boolean
-  amount: Balance.Amount
-  wallet: YoroiWallet
+  amount: Portfolio.Token.Amount
   testId?: string
 }
 
@@ -32,16 +30,11 @@ export const AmountCard: React.FC<AmountCardProps> = ({
   inputEditable,
   touched,
   amount,
-  wallet,
   testId,
 }: AmountCardProps) => {
   const [isFocused, setIsFocused] = React.useState(false)
 
-  const {quantity, tokenId} = amount
-  const tokenInfo = useTokenInfo({wallet, tokenId})
-
-  const name = tokenInfo.ticker ?? tokenInfo.name
-  const formattedAmount = formatTokenWithText(quantity, tokenInfo, 18)
+  const formattedAmount = amountFormatter()(amount)
 
   const focusInput = () => {
     if (inputRef?.current) {
@@ -87,12 +80,12 @@ export const AmountCard: React.FC<AmountCardProps> = ({
           <View style={styles.rightSection}>
             <View style={styles.sectionContainer}>
               <Boundary loading={{fallback: <TokenIconPlaceholder />}} error={{fallback}}>
-                <TokenIcon wallet={wallet} tokenId={tokenInfo.id} variant="swap" />
+                <TokenInfoIcon info={amount.info} size="sm" />
               </Boundary>
 
               <Spacer width={8} />
 
-              <Text style={styles.coinName}>{name}</Text>
+              <Text style={styles.coinName}>{amount.info.name}</Text>
             </View>
 
             <Spacer width={8} />

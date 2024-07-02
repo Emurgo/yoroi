@@ -24,8 +24,6 @@ type CommonTokenInfo = {
   website: string // Full link with protocol
 
   originalImage: string // Base link
-  icon: string // base64 - 32x32
-  mediaType: string
 }
 
 type PrimaryTokenInfo = {

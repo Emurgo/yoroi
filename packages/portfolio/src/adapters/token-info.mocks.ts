@@ -18,8 +18,6 @@ const primaryETH: Portfolio.Token.Info = {
   nature: Portfolio.Token.Nature.Primary,
   type: Portfolio.Token.Type.FT,
   description: '',
-  icon: '',
-  mediaType: '',
 }
 
 const nftCryptoKitty: Portfolio.Token.Info = {
@@ -38,8 +36,6 @@ const nftCryptoKitty: Portfolio.Token.Info = {
   nature: Portfolio.Token.Nature.Secondary,
   type: Portfolio.Token.Type.NFT,
   description: '',
-  icon: '',
-  mediaType: '',
 }
 
 const rnftWhatever: Portfolio.Token.Info = {
@@ -58,8 +54,6 @@ const rnftWhatever: Portfolio.Token.Info = {
   nature: Portfolio.Token.Nature.Secondary,
   type: Portfolio.Token.Type.NFT,
   description: '',
-  icon: '',
-  mediaType: '',
 }
 
 const ftNoTicker: Portfolio.Token.Info = {
@@ -78,8 +72,6 @@ const ftNoTicker: Portfolio.Token.Info = {
   nature: Portfolio.Token.Nature.Secondary,
   type: Portfolio.Token.Type.FT,
   description: '',
-  icon: '',
-  mediaType: '',
 }
 
 const ftNameless: Portfolio.Token.Info = {
@@ -98,8 +90,6 @@ const ftNameless: Portfolio.Token.Info = {
   nature: Portfolio.Token.Nature.Secondary,
   type: Portfolio.Token.Type.FT,
   description: '',
-  icon: '',
-  mediaType: '',
 }
 
 // NOTE: If you marked a record as not modified 304, remember to add to the intiial state
@@ -181,6 +171,29 @@ const storage: {
   ],
 }
 
+const apiResponseTokenInfo: Readonly<
+  Record<'success' | 'error', Api.Response<Portfolio.Token.Info>>
+> = freeze(
+  {
+    success: {
+      tag: 'right',
+      value: {
+        status: 200,
+        data: nftCryptoKitty,
+      },
+    },
+    error: {
+      tag: 'left',
+      error: {
+        status: 404,
+        responseData: null,
+        message: 'Not found',
+      },
+    },
+  },
+  true,
+)
+
 export const tokenInfoMocks = freeze({
   primaryETH,
   nftCryptoKitty,
@@ -192,4 +205,7 @@ export const tokenInfoMocks = freeze({
 
   apiResponseResult: apiResponseTokenInfos,
   apiRequestArgs: apiRequestTokenInfos,
+  apiReponse: {
+    nftCryptoKitty: apiResponseTokenInfo,
+  },
 })

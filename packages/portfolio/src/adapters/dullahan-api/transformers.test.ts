@@ -1,25 +1,9 @@
-import {
-  toDullahanRequest,
-  toSecondaryTokenInfo,
-  toSecondaryTokenInfos,
-} from './transformers'
+import {toDullahanRequest, toSecondaryTokenInfos} from './transformers'
 import {Portfolio, Api} from '@yoroi/types'
 
 import {tokenMocks} from '../token.mocks'
 
 describe('transformers', () => {
-  describe('toSecondaryTokenInfo', () => {
-    it('should set the nature to Secondary', () => {
-      const tokenInfo: Omit<Portfolio.Token.Info, 'nature'> = {
-        ...tokenMocks.primaryETH.info,
-      }
-
-      const result = toSecondaryTokenInfo(tokenInfo)
-
-      expect(result.nature).toBe(Portfolio.Token.Nature.Secondary)
-    })
-  })
-
   describe('toSecondaryTokenInfos', () => {
     it('should return an empty object if apiTokenInfosResponse is empty', () => {
       const apiTokenInfosResponse: Portfolio.Api.TokenInfosResponse = {}
@@ -80,7 +64,7 @@ describe('transformers', () => {
         ],
         [tokenMocks.nftCryptoKitty.info.id]: [
           200,
-          toSecondaryTokenInfo(tokenMocks.nftCryptoKitty.info),
+          tokenMocks.nftCryptoKitty.info,
           'etag',
           0,
         ],

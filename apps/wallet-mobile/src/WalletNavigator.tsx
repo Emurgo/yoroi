@@ -32,7 +32,7 @@ import {
   WalletStackRoutes,
   WalletTabRoutes,
 } from './kernel/navigation'
-import {VotingRegistration} from './legacy/Catalyst'
+import {CatalystNavigator} from './legacy/Catalyst'
 import {DashboardNavigator} from './legacy/Dashboard'
 import {TxHistoryNavigator} from './legacy/TxHistory'
 
@@ -263,7 +263,11 @@ export const WalletNavigator = () => {
 
           <Stack.Screen name="settings" options={{headerShown: false}} component={SettingsScreenNavigator} />
 
-          <Stack.Screen name="voting-registration" options={{headerShown: false}} component={VotingRegistration} />
+          <Stack.Screen
+            name="voting-registration"
+            options={{headerShown: false}}
+            getComponent={() => CatalystNavigator}
+          />
 
           <Stack.Screen
             name="toggle-analytics-settings"

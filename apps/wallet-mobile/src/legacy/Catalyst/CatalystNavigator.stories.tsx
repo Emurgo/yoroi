@@ -8,12 +8,12 @@ import {Boundary} from '../../components'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {mocks} from '../../yoroi-wallets/mocks'
 import {WalletManagerProviderMock} from '../../yoroi-wallets/mocks/WalletManagerProviderMock'
+import {CatalystNavigator} from './CatalystNavigator'
 import {ConfirmPin} from './ConfirmPin'
 import {ConfirmVotingTx} from './ConfirmVotingTx'
 import {DisplayPin} from './DisplayPin'
 import {DownloadCatalyst} from './DownloadCatalyst'
 import {QrCode} from './QrCode'
-import {VotingRegistration} from './VotingRegistration'
 import {VotingRegistrationBackupCheckModal} from './VotingRegistrationBackupCheckModal'
 
 storiesOf('Catalyst', module)
@@ -121,7 +121,7 @@ storiesOf('Catalyst', module)
           submitTransaction: mocks.submitTransaction.success,
         }}
       >
-        <VotingRegistration />
+        <CatalystNavigator />
       </Providers>
     </NavigationContainer>
   ))
@@ -137,7 +137,7 @@ storiesOf('Catalyst', module)
           submitTransaction: mocks.submitTransaction.success,
         }}
       >
-        <VotingRegistration />
+        <CatalystNavigator />
       </Providers>
     </NavigationContainer>
   ))
