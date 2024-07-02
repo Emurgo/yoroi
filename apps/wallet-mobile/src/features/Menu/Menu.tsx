@@ -174,8 +174,6 @@ const Catalyst = ({label, left, onPress}: {label: string; left: React.ReactEleme
   const modalHeight = Math.min(screenHeight * 0.8, 256)
 
   const handlePress = () => {
-    if (!canVote) return
-
     if (sufficientFunds) {
       onPress()
     } else {
