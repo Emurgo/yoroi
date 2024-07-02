@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Platform, ScrollView, StyleSheet, Text, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -17,9 +18,10 @@ export const AskConfirmation = ({address, url, code, onContinue}: Props) => {
   const strings = useStrings()
   const {closeModal, isLoading} = useModal()
   const domain = getDomain(url)
+  const styles = useStyles()
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={{flex: 1}}>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
       <ScrollView contentContainerStyle={{flex: 1}} bounces={false}>
         <Text style={styles.warning}>{strings.addressSharingWarning}</Text>
 
@@ -67,6 +69,60 @@ const Item = ({label, value}: {label: string; value: string}) => {
       </Text>
     </View>
   )
+}
+
+const useStyles = () => {
+  const {atoms} = useTheme()
+
+  const styles = StyleSheet.create({
+    root: {
+      flex: 1,
+      ...atoms.px_lg,
+    },
+    actions: {
+      flexDirection: 'row',
+      alignItems: 'flex-end',
+      minHeight: 48,
+      maxHeight: 54,
+    },
+    item: {
+      alignSelf: 'stretch',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    warning: {
+      color: '#242838',
+      fontFamily: 'Rubik',
+      fontSize: 16,
+      fontWeight: '400',
+      lineHeight: 24,
+      textAlign: 'center',
+    },
+    rowLabel: {
+      color: '#6B7384',
+      fontFamily: 'Rubik',
+      fontSize: 16,
+      fontWeight: '400',
+      lineHeight: 24,
+      paddingRight: 8,
+    },
+    rowValue: {
+      color: '#000',
+      fontFamily: 'Rubik',
+      fontSize: 16,
+      fontWeight: '400',
+      lineHeight: 24,
+      maxWidth: 240,
+    },
+    monospace: {
+      ...Platform.select({
+        ios: {fontFamily: 'Menlo'},
+        android: {fontFamily: 'monospace'},
+      }),
+    },
+  })
+
+  return styles
 }
 
 const styles = StyleSheet.create({

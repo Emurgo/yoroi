@@ -315,6 +315,7 @@ const useStyles = () => {
     modalContent: {
       justifyContent: 'space-between',
       flex: 1,
+      ...atoms.px_lg,
     },
     modalText: {
       ...atoms.body_1_lg_regular,

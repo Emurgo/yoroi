@@ -75,6 +75,7 @@ const useStyles = () => {
       flex: 1,
       alignItems: 'center',
       justifyContent: 'space-between',
+      ...atoms.px_lg,
     },
     buttonContainer: {
       alignSelf: 'stretch',

@@ -50,7 +50,7 @@ export const ConfirmConnectionModal = ({name, website, onConfirm, logo}: Props) 
   const imageUri = logo.length === 0 ? getDappFallbackLogo(website) : logo
 
   return (
-    <View>
+    <View style={styles.root}>
       <View style={styles.imagesLine}>
         <Icon.YoroiApp size={48} />
 
@@ -123,6 +123,10 @@ const useStyles = () => {
     },
     boxDesAllowConnectDApp: {
       ...theme.atoms.pl_sm,
+    },
+    root: {
+      flex: 1,
+      ...theme.atoms.px_lg,
     },
   })
   return {styles, colors}

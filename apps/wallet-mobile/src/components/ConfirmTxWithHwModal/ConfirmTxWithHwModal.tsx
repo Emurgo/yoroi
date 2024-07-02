@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import {HW} from '@yoroi/types'
 import React, {useState} from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
@@ -41,6 +42,7 @@ const ConfirmTxWithHwModalContent = ({onSuccess, unsignedTx}: Omit<Props, 'onCan
   const [step, setStep] = useState<Step>('select-transport')
   const {wallet, meta} = useSelectedWallet()
   const strings = useStrings()
+  const styles = useStyles()
 
   const {submitTx} = useSubmitTx({wallet}, {useErrorBoundary: true})
 
@@ -100,16 +102,22 @@ const ConfirmTxWithHwModalContent = ({onSuccess, unsignedTx}: Omit<Props, 'onCan
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 35,
-  },
-  text: {
-    fontSize: 18,
-    color: '#000',
-    textAlign: 'center',
-  },
-})
+const useStyles = () => {
+  const {atoms} = useTheme()
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 35,
+      ...atoms.px_lg,
+    },
+    text: {
+      fontSize: 18,
+      color: '#000',
+      textAlign: 'center',
+    },
+  })
+
+  return styles
+}

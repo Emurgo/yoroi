@@ -129,6 +129,7 @@ const useStyles = () => {
       ...atoms.flex_col,
       ...atoms.gap_sm,
       paddingVertical: 14,
+      ...atoms.pl_lg,
     },
     logoSize: {width: 26, height: 26},
     logoFirst: {

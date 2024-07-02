@@ -282,6 +282,7 @@ const useStyles = () => {
     modalContent: {
       flex: 1,
       justifyContent: 'space-between',
+      ...atoms.px_lg,
     },
     change: {color: color.primary_c500, ...atoms.body_2_md_medium, textTransform: 'uppercase'},
     bold: {

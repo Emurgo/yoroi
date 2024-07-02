@@ -164,7 +164,7 @@ const Actions = ({style, ...props}: ViewProps) => {
 }
 
 const useStyles = () => {
-  const {color} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,
@@ -185,6 +185,7 @@ const useStyles = () => {
     modalContent: {
       flex: 1,
       alignSelf: 'stretch',
+      ...atoms.px_lg,
     },
     scroll: {
       paddingHorizontal: 16,

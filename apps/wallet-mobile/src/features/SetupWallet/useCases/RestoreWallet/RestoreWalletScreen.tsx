@@ -362,6 +362,7 @@ const useStyles = () => {
     },
     modal: {
       flex: 1,
+      ...atoms.px_lg,
     },
     suggestions: {
       backgroundColor: color.gray_cmin,
