@@ -52,6 +52,9 @@ const useStyles = () => {
       height: 200,
       resizeMode: 'cover',
     },
+    container: {
+      ...atoms.px_lg,
+    },
   })
 
   return {styles} as const
@@ -63,7 +66,7 @@ const Modal = () => {
   const {closeModal} = useModal()
 
   return (
-    <View>
+    <View style={styles.container}>
       <Image source={IllustrationDAppImage} style={styles.welcomeImage} />
 
       <Text style={styles.welcomeText}>{strings.welcomeToYoroiDAppExplorerDescription}</Text>

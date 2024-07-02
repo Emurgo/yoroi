@@ -110,7 +110,6 @@ const useStyles = () => {
       flex: 1,
       backgroundColor: color.gray_c50,
       alignSelf: 'stretch',
-      paddingHorizontal: 16,
       paddingBottom: 16,
     },
     title: {

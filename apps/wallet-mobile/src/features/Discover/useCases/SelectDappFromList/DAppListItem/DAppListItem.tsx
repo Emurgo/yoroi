@@ -175,6 +175,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     rootDialog: {
       ...atoms.flex_col,
+      ...atoms.px_lg,
     },
     dAppItemContainer: {
       flexDirection: 'row',

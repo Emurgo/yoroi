@@ -85,6 +85,7 @@ const useStyles = () => {
     container: {
       flex: 1,
       justifyContent: 'space-between',
+      ...atoms.px_lg,
     },
     label: {
       fontSize: 16,

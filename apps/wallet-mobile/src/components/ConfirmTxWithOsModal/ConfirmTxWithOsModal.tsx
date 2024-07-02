@@ -61,11 +61,12 @@ export const ConfirmTxWithOsModal = ({onSuccess, unsignedTx, onError}: Props) =>
 }
 
 const useStyles = () => {
-  const {color} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     center: {
       alignItems: 'center',
       justifyContent: 'center',
+      ...atoms.px_lg,
     },
     errorMessage: {
       color: color.sys_magenta_c500,

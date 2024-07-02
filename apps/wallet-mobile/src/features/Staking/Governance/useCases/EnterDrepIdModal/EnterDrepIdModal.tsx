@@ -79,6 +79,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       flex: 1,
+      ...atoms.px_lg,
     },
     text: {
       color: color.gray_c900,

@@ -81,6 +81,7 @@ const useStyles = () => {
     root: {
       flex: 1,
       backgroundColor: color.gray_cmin,
+      ...atoms.px_lg,
     },
     actions: {
       flexDirection: 'row',

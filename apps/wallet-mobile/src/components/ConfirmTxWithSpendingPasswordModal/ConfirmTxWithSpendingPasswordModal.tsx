@@ -47,7 +47,7 @@ export const ConfirmTxWithSpendingPasswordModal = ({onSuccess, unsignedTx, onErr
   const errorMessage = error ? getErrorMessage(error, strings) : null
 
   return (
-    <>
+    <View style={styles.root}>
       <Text style={styles.modalText}>{strings.enterSpendingPassword}</Text>
 
       <TextInput
@@ -82,7 +82,7 @@ export const ConfirmTxWithSpendingPasswordModal = ({onSuccess, unsignedTx, onErr
           <ActivityIndicator size="large" color="black" />
         </View>
       )}
-    </>
+    </View>
   )
 }
 
@@ -115,8 +115,12 @@ const getErrorMessage = (error: unknown, strings: Record<'wrongPasswordMessage' 
 }
 
 const useStyles = () => {
-  const {color} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
+    root: {
+      flex: 1,
+      ...atoms.px_lg,
+    },
     modalText: {
       paddingHorizontal: 70,
       textAlign: 'center',

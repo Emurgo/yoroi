@@ -192,6 +192,7 @@ const useStyles = () => {
     },
     modal: {
       flex: 1,
+      ...atoms.px_lg,
     },
     title: {
       ...atoms.body_1_lg_regular,

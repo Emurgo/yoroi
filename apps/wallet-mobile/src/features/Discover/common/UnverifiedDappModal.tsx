@@ -65,6 +65,7 @@ const useStyles = () => {
       ...atoms.body_1_lg_regular,
     },
     container: {
+      ...atoms.px_lg,
       ...atoms.flex_col,
       ...atoms.flex_1,
     },

@@ -41,6 +41,7 @@ const useStyles = () => {
     },
     sheetContent: {
       ...atoms.body_1_lg_regular,
+      ...atoms.px_lg,
       color: color.gray_c900,
     },
   })

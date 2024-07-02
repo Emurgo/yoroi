@@ -107,6 +107,7 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     root: {
+      ...atoms.pl_lg,
       ...atoms.flex_col,
       ...atoms.gap_sm,
       paddingVertical: 14,
