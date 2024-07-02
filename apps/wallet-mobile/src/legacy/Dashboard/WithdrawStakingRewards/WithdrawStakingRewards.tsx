@@ -1,8 +1,7 @@
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, StyleSheet, View} from 'react-native'
-import Markdown from 'react-native-markdown-display'
+import {ScrollView, StyleSheet, Text, View} from 'react-native'
 
 import {Boundary, Button, Checkbox, PleaseWaitView} from '../../../components'
 import {Space} from '../../../components/Space/Space'
@@ -53,6 +52,7 @@ export const WithdrawalTxForm = ({
   onDone: (withdrawalTx: YoroiUnsignedTx) => void
 }) => {
   const styles = useStyles()
+  const bold = useBold()
   const {meta} = useSelectedWallet()
   const {stakingInfo} = useStakingInfo(wallet, {suspense: true})
   const strings = useWithdrawStakingRewardsStrings()
@@ -75,18 +75,15 @@ export const WithdrawalTxForm = ({
 
         <Space height="lg" />
 
-        {/* @ts-expect-error old react */}
-        <Markdown markdownStyle={styles.paragraph}>{strings.explanation1}</Markdown>
+        <Text style={styles.paragraph}>{strings.explanation1(bold)}</Text>
 
         <Space height="sm" />
 
-        {/* @ts-expect-error old react */}
-        <Markdown markdownStyle={styles.paragraph}>{strings.explanation2}</Markdown>
+        <Text style={styles.paragraph}>{strings.explanation2(bold)}</Text>
 
         <Space height="sm" />
 
-        {/* @ts-expect-error old react */}
-        <Markdown markdownStyle={styles.paragraph}>{strings.explanation3}</Markdown>
+        <Text style={styles.paragraph}>{strings.explanation3(bold)}</Text>
 
         <Space height="lg" />
 
@@ -138,9 +135,12 @@ export const useWithdrawStakingRewardsStrings = () => {
     warning3: intl.formatMessage(messages.warning3),
     keepButton: intl.formatMessage(messages.keepButton),
     deregisterButton: intl.formatMessage(messages.deregisterButton),
-    explanation1: intl.formatMessage(messages.explanation1),
-    explanation2: intl.formatMessage(messages.explanation2),
-    explanation3: intl.formatMessage(messages.explanation3),
+    explanation1: (options: {b: (content: React.ReactNode[]) => React.ReactNode}) =>
+      intl.formatMessage(messages.explanation1, options),
+    explanation2: (options: {b: (content: React.ReactNode[]) => React.ReactNode}) =>
+      intl.formatMessage(messages.explanation2, options),
+    explanation3: (options: {b: (content: React.ReactNode[]) => React.ReactNode}) =>
+      intl.formatMessage(messages.explanation3, options),
     followSteps: intl.formatMessage(ledgerMessages.followSteps),
     pleaseWait: intl.formatMessage(globalMessages.pleaseWait),
     iUnderstand: intl.formatMessage(confirmationMessages.commonButtons.iUnderstandButton),
@@ -154,18 +154,18 @@ const messages = defineMessages({
   },
   explanation1: {
     id: 'components.delegation.withdrawaldialog.explanation1',
-    defaultMessage: '!!!When **withdrawing rewards**, you also have the option to deregister the staking key.',
+    defaultMessage: '!!!When <b>withdrawing rewards</b>, you also have the option to deregister the staking key.',
   },
   explanation2: {
     id: 'components.delegation.withdrawaldialog.explanation2',
     defaultMessage:
-      '!!!**Keeping the staking key** will allow you to withdraw the rewards, ' +
+      '!!!<b>Keeping the staking key</b> will allow you to withdraw the rewards, ' +
       'but continue delegating to the same pool.',
   },
   explanation3: {
     id: 'components.delegation.withdrawaldialog.explanation3',
     defaultMessage:
-      '!!!**Deregistering the staking key** will give you back your deposit and undelegate the key from any pool.',
+      '!!!<b>Deregistering the staking key</b> will give you back your deposit and undelegate the key from any pool.',
   },
   warning1: {
     id: 'components.delegation.withdrawaldialog.warning1',
@@ -196,6 +196,14 @@ const messages = defineMessages({
   },
 })
 
+const useBold = () => {
+  const styles = useStyles()
+
+  return {
+    b: (text: React.ReactNode) => <Text style={styles.bolder}>{text}</Text>,
+  }
+}
+
 const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
@@ -207,7 +215,8 @@ const useStyles = () => {
       ...atoms.px_lg,
     },
     paragraph: {
-      ...atoms.body_1_lg_regular,
+      ...atoms.body_2_md_regular,
+      color: color.gray_cmax,
     },
     checkbox: {
       paddingLeft: 4,
@@ -221,6 +230,10 @@ const useStyles = () => {
       paddingTop: 16,
       borderTopWidth: 1,
       borderTopColor: color.gray_c200,
+    },
+    bolder: {
+      color: color.gray_cmax,
+      ...atoms.body_2_md_medium,
     },
   })
   return styles
