@@ -4,7 +4,7 @@ import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import React, {useEffect} from 'react'
 import {useIntl} from 'react-intl'
-import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {Platform, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {KeyboardAvoidingView, Spacer, ValidatedTextInput} from '../../../../components'
@@ -105,6 +105,7 @@ export const ConfirmTxScreen = () => {
               label={strings.password}
               onChangeText={setPassword}
               testID="spendingPasswordInput"
+              textContentType="oneTimeCode"
             />
           )}
         </ScrollView>
@@ -121,6 +122,8 @@ export const ConfirmTxScreen = () => {
             chooseTransportOnConfirmation
           />
         </Actions>
+
+        <Spacer height={Platform.OS === 'ios' ? 16 : 50} />
       </KeyboardAvoidingView>
     </SafeAreaView>
   )

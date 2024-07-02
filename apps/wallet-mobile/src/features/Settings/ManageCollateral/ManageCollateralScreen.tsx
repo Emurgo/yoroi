@@ -20,6 +20,7 @@ import {useMutation} from 'react-query'
 import {Button, CopyButton, Icon, Spacer, Text} from '../../../components'
 import {AmountItem} from '../../../components/AmountItem/AmountItem'
 import {ErrorPanel} from '../../../components/ErrorPanel/ErrorPanel'
+import {Space} from '../../../components/Space/Space'
 import {SettingsStackRoutes, useUnsafeParams} from '../../../kernel/navigation'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {useCollateralInfo} from '../../../yoroi-wallets/cardano/utxoManager/useCollateralInfo'
@@ -177,6 +178,8 @@ export const ManageCollateralScreen = () => {
       {shouldShowBackButton && params?.backButton && (
         <Button title={params.backButton.content} onPress={params.backButton.onPress} shelleyTheme />
       )}
+
+      <Space height="lg" />
     </SafeAreaView>
   )
 }
@@ -232,7 +235,6 @@ const useStyles = () => {
       backgroundColor: color.gray_cmin,
       flex: 1,
       paddingHorizontal: 16,
-      paddingBottom: 16,
     },
     amountItem: {
       flexDirection: 'row',
