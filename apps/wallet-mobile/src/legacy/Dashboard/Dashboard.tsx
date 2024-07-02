@@ -5,10 +5,17 @@ import {useTheme} from '@yoroi/theme'
 import BigNumber from 'bignumber.js'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {
+  ActivityIndicator,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+  ViewProps,
+} from 'react-native'
 
 import {Banner, Button, useModal} from '../../components'
-import {Modal} from '../../components/legacy/Modal/Modal'
 import {
   useGovernanceStrings,
   useIsParticipatingInGovernance,
@@ -35,7 +42,7 @@ import {EpochProgress} from './EpochProgress'
 import {NotDelegatedInfo} from './NotDelegatedInfo'
 import {StakePoolInfos, useStakingInfo} from './StakePoolInfos'
 import {UserSummary} from './UserSummary'
-import {WithdrawStakingRewards} from './WithdrawStakingRewards'
+import {useWithdrawStakingRewardsStrings, WithdrawStakingRewards} from './WithdrawStakingRewards'
 
 export const Dashboard = () => {
   const {styles} = useStyles()
@@ -47,14 +54,14 @@ export const Dashboard = () => {
   const {wallet, meta} = useSelectedWallet()
   const {isLoading: isSyncing, sync} = useSync(wallet)
   const isOnline = useIsOnline(wallet)
-  const {openModal} = useModal()
+  const {openModal, closeModal} = useModal()
+  const {height: windowHeight} = useWindowDimensions()
+  const strings = useWithdrawStakingRewardsStrings()
 
   const balances = useBalances(wallet)
   const primaryAmount = Amounts.getAmount(balances, '')
   const {stakingInfo, refetch: refetchStakingInfo, error, isLoading} = useStakingInfo(wallet)
   const isGovernanceFeatureEnabled = useIsGovernanceFeatureEnabled(wallet)
-
-  const [showWithdrawalDialog, setShowWithdrawalDialog] = React.useState(false)
 
   const {resetToTxHistory} = useWalletNavigation()
 
@@ -73,7 +80,12 @@ export const Dashboard = () => {
       )
       return
     }
-    setShowWithdrawalDialog(true)
+
+    openModal(
+      strings.warningModalTitle,
+      <WithdrawStakingRewards wallet={wallet} onSuccess={() => resetToTxHistory()} onCancel={() => closeModal()} />,
+      windowHeight - (20 / 100) * windowHeight,
+    )
   }
 
   return (
@@ -146,16 +158,6 @@ export const Dashboard = () => {
           />
         </Actions>
       </View>
-
-      {stakingInfo?.status === 'staked' && (
-        <Modal visible={showWithdrawalDialog} onRequestClose={() => setShowWithdrawalDialog(false)} showCloseIcon>
-          <WithdrawStakingRewards
-            wallet={wallet}
-            onSuccess={() => resetToTxHistory()}
-            onCancel={() => setShowWithdrawalDialog(false)}
-          />
-        </Modal>
-      )}
     </View>
   )
 }

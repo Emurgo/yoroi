@@ -70,6 +70,7 @@ const useStyles = () => {
     container: {
       flex: 1,
       justifyContent: 'space-between',
+      ...atoms.px_lg,
     },
     description: {
       color: color.gray_c900,

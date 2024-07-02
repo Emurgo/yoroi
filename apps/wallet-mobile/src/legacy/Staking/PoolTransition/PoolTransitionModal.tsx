@@ -168,6 +168,7 @@ const useStyles = () => {
       alignItems: 'center',
       flex: 1,
       justifyContent: 'flex-end',
+      ...atoms.px_lg,
     },
     scroll: {
       width: '100%',

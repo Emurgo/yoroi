@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Alert, ScrollView, StyleSheet, View} from 'react-native'
 
@@ -14,6 +15,7 @@ type Props = {
 export const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => {
   const strings = useStrings()
   const isUSBSupported = useIsUsbSupported()
+  const styles = useStyles()
 
   const {request} = useLedgerPermissions({
     onError: () => Alert.alert(strings.error, strings.bluetoothError),
@@ -52,20 +54,26 @@ export const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => 
 
 export const LedgerTransportSwitch = LedgerTransportSwitchView
 
-const styles = StyleSheet.create({
-  paragraph: {
-    marginBottom: 16,
-    fontSize: 14,
-    lineHeight: 22,
-  },
-  content: {
-    flex: 1,
-    marginBottom: 24,
-  },
-  infoText: {
-    paddingTop: 16,
-    flex: 1,
-    width: '100%',
-    color: '#6B7384',
-  },
-})
+const useStyles = () => {
+  const {atoms} = useTheme()
+  const styles = StyleSheet.create({
+    paragraph: {
+      marginBottom: 16,
+      fontSize: 14,
+      lineHeight: 22,
+    },
+    content: {
+      flex: 1,
+      marginBottom: 24,
+      ...atoms.px_lg,
+    },
+    infoText: {
+      paddingTop: 16,
+      flex: 1,
+      width: '100%',
+      color: '#6B7384',
+    },
+  })
+
+  return styles
+}

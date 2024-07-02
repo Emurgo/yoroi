@@ -27,6 +27,7 @@ const useStyles = () => {
     notice: {
       backgroundColor: color.sys_orange_c100,
       padding: 12,
+      borderRadius: 8,
     },
     text: {
       ...atoms.body_2_md_regular,

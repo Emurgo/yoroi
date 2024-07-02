@@ -1,12 +1,14 @@
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet} from 'react-native'
+import {ScrollView, StyleSheet, View} from 'react-native'
 import Markdown from 'react-native-markdown-display'
 
-import {Boundary, DangerousAction, PleaseWaitView, Spacer} from '../../../components'
+import {Boundary, Button, Checkbox, PleaseWaitView} from '../../../components'
+import {Space} from '../../../components/Space/Space'
+import {Warning} from '../../../components/Warning'
 import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
-import globalMessages, {ledgerMessages} from '../../../kernel/i18n/global-messages'
+import globalMessages, {confirmationMessages, ledgerMessages} from '../../../kernel/i18n/global-messages'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {useWithdrawalTx} from '../../../yoroi-wallets/hooks'
 import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
@@ -21,7 +23,7 @@ type Props = {
 }
 
 export const WithdrawStakingRewards = ({wallet, onSuccess, onCancel}: Props) => {
-  const strings = useStrings()
+  const strings = useWithdrawStakingRewardsStrings()
   const [state, setState] = React.useState<
     {step: 'form'; withdrawalTx: undefined} | {step: 'confirm'; withdrawalTx: YoroiUnsignedTx}
   >({step: 'form', withdrawalTx: undefined})
@@ -53,7 +55,8 @@ export const WithdrawalTxForm = ({
   const styles = useStyles()
   const {meta} = useSelectedWallet()
   const {stakingInfo} = useStakingInfo(wallet, {suspense: true})
-  const strings = useStrings()
+  const strings = useWithdrawStakingRewardsStrings()
+  const [isChecked, setIsChecked] = React.useState(false)
   const [deregister, setDeregister] = React.useState<boolean>()
   const {isLoading} = useWithdrawalTx(
     {wallet, deregister, addressMode: meta.addressMode},
@@ -66,51 +69,66 @@ export const WithdrawalTxForm = ({
       : false
 
   return (
-    <DangerousAction
-      title={strings.warningModalTitle}
-      alertBox={{content: [strings.warning1, strings.warning2, strings.warning3]}}
-      primaryButton={{
-        disabled: !hasRewards || isLoading,
-        label: strings.keepButton,
-        onPress: () => setDeregister(false),
-        testID: 'keepRegisteredButton',
-      }}
-      secondaryButton={{
-        disabled: isLoading,
-        label: strings.deregisterButton,
-        onPress: () => setDeregister(true),
-        testID: 'deregisterButton',
-      }}
-    >
-      {/* @ts-expect-error old react */}
-      <Markdown markdownStyle={styles.paragraph}>{strings.explanation1}</Markdown>
+    <View style={styles.root} testID="dangerousActionView">
+      <ScrollView style={styles.scroll} bounces={false}>
+        <Warning content={[strings.warning1, strings.warning2, strings.warning3].join('\r\n')} />
 
-      <Spacer height={8} />
+        <Space height="lg" />
 
-      {/* @ts-expect-error old react */}
-      <Markdown markdownStyle={styles.paragraph}>{strings.explanation2}</Markdown>
+        {/* @ts-expect-error old react */}
+        <Markdown markdownStyle={styles.paragraph}>{strings.explanation1}</Markdown>
 
-      <Spacer height={8} />
+        <Space height="sm" />
 
-      {/* @ts-expect-error old react */}
-      <Markdown markdownStyle={styles.paragraph}>{strings.explanation3}</Markdown>
-    </DangerousAction>
+        {/* @ts-expect-error old react */}
+        <Markdown markdownStyle={styles.paragraph}>{strings.explanation2}</Markdown>
+
+        <Space height="sm" />
+
+        {/* @ts-expect-error old react */}
+        <Markdown markdownStyle={styles.paragraph}>{strings.explanation3}</Markdown>
+
+        <Space height="lg" />
+
+        <Checkbox
+          onChange={() => setIsChecked(!isChecked)}
+          checked={isChecked}
+          text={strings.iUnderstand}
+          style={styles.checkbox}
+          testID="dangerousActionCheckbox"
+        />
+
+        <Space height="lg" />
+
+        <View>
+          <Button
+            disabled={!isChecked}
+            onPress={() => setDeregister(true)}
+            title={strings.deregisterButton}
+            style={styles.secondaryButton}
+            testID="deregisterButton"
+          />
+        </View>
+
+        <Space height="lg" />
+      </ScrollView>
+
+      <View style={styles.actions}>
+        <Button
+          shelleyTheme
+          onPress={() => setDeregister(false)}
+          title={strings.keepButton}
+          disabled={!hasRewards || isLoading}
+          testID="keepRegisteredButton"
+        />
+      </View>
+    </View>
   )
 }
 
 const Route = ({active, children}: {active: boolean; children: React.ReactNode}) => <>{active ? children : null}</>
 
-const useStyles = () => {
-  const {atoms} = useTheme()
-  const styles = StyleSheet.create({
-    paragraph: {
-      ...atoms.body_1_lg_regular,
-    },
-  })
-  return styles
-}
-
-const useStrings = () => {
+export const useWithdrawStakingRewardsStrings = () => {
   const intl = useIntl()
 
   return {
@@ -125,6 +143,7 @@ const useStrings = () => {
     explanation3: intl.formatMessage(messages.explanation3),
     followSteps: intl.formatMessage(ledgerMessages.followSteps),
     pleaseWait: intl.formatMessage(globalMessages.pleaseWait),
+    iUnderstand: intl.formatMessage(confirmationMessages.commonButtons.iUnderstandButton),
   }
 }
 
@@ -176,3 +195,33 @@ const messages = defineMessages({
     defaultMessage: '!!!Deregister',
   },
 })
+
+const useStyles = () => {
+  const {atoms, color} = useTheme()
+  const styles = StyleSheet.create({
+    root: {
+      flex: 1,
+    },
+    scroll: {
+      flex: 1,
+      ...atoms.px_lg,
+    },
+    paragraph: {
+      ...atoms.body_1_lg_regular,
+    },
+    checkbox: {
+      paddingLeft: 4,
+      alignItems: 'center',
+    },
+    secondaryButton: {
+      backgroundColor: color.sys_magenta_c500,
+    },
+    actions: {
+      ...atoms.px_lg,
+      paddingTop: 16,
+      borderTopWidth: 1,
+      borderTopColor: color.gray_c200,
+    },
+  })
+  return styles
+}

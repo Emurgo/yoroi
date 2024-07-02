@@ -12,7 +12,7 @@ import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/sta
 import {Atoms, ThemedPalette, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import React from 'react'
-import {Dimensions, InteractionManager, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
+import {Dimensions, InteractionManager, Platform, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
 import {Icon} from '../components'
 import {ScanFeature} from '../features/Scan/common/types'
@@ -56,7 +56,7 @@ const WIDTH = Dimensions.get('window').width
 
 export const defaultStackNavigationOptions = (atoms: Atoms, color: ThemedPalette): StackNavigationOptions => {
   return {
-    ...TransitionPresets.SlideFromRightIOS,
+    ...(Platform.OS === 'android' && {...TransitionPresets.SlideFromRightIOS}),
     detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
     cardStyle: {
       backgroundColor: 'transparent',

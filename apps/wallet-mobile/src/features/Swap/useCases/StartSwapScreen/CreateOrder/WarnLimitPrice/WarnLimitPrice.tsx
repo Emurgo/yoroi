@@ -104,6 +104,7 @@ const useStyles = () => {
     container: {
       flex: 1,
       justifyContent: 'space-between',
+      ...atoms.px_lg,
     },
     label: {
       color: color.gray_c600,

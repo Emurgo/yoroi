@@ -544,13 +544,14 @@ const ModalContent = ({
   fee: string
 }) => {
   const strings = useStrings()
+  const styles = useStyles()
 
   const handleConfirm = () => {
     onConfirm()
   }
 
   return (
-    <>
+    <View style={styles.modalRoot}>
       <ModalContentHeader
         assetFromIcon={assetFromIcon}
         assetFromLabel={assetFromLabel}
@@ -583,7 +584,7 @@ const ModalContent = ({
       <ModalContentButtons onConfirm={handleConfirm} onBack={onBack} />
 
       <Spacer height={30} />
-    </>
+    </View>
   )
 }
 
@@ -733,6 +734,10 @@ const EmptySearchResult = () => {
 const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
+    modalRoot: {
+      flex: 1,
+      ...atoms.px_lg,
+    },
     container: {
       flex: 1,
       backgroundColor: color.gray_cmin,
