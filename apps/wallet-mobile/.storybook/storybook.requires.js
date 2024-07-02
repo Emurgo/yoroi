@@ -68,7 +68,6 @@ const getStories = () => {
     "./src/components/ConfirmTxWithHwModal/ConfirmTxWithHwModal.stories.tsx": require("../src/components/ConfirmTxWithHwModal/ConfirmTxWithHwModal.stories.tsx"),
     "./src/components/ConfirmTxWithOsModal/ConfirmTxWithOsModal.stories.tsx": require("../src/components/ConfirmTxWithOsModal/ConfirmTxWithOsModal.stories.tsx"),
     "./src/components/ConfirmTxWithSpendingPasswordModal/ConfirmTxWithSpendingPasswordModal.stories.tsx": require("../src/components/ConfirmTxWithSpendingPasswordModal/ConfirmTxWithSpendingPasswordModal.stories.tsx"),
-    "./src/components/DangerousActionModal/DangerousActionModal.stories.tsx": require("../src/components/DangerousActionModal/DangerousActionModal.stories.tsx"),
     "./src/components/ErrorBoundary/ErrorBoundary.stories.tsx": require("../src/components/ErrorBoundary/ErrorBoundary.stories.tsx"),
     "./src/components/ErrorBoundary/ExpandableItem/ExpandableItem.stories.tsx": require("../src/components/ErrorBoundary/ExpandableItem/ExpandableItem.stories.tsx"),
     "./src/components/ErrorModal/ErrorModal.stories.tsx": require("../src/components/ErrorModal/ErrorModal.stories.tsx"),

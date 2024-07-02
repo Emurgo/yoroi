@@ -14,6 +14,7 @@ import {
   View,
   ViewProps,
 } from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Banner, Button, useModal} from '../../components'
 import {
@@ -89,7 +90,7 @@ export const Dashboard = () => {
   }
 
   return (
-    <View style={styles.root}>
+    <SafeAreaView edges={['bottom', 'left', 'right', 'top']} style={styles.root}>
       <View style={styles.container}>
         {isOnline && error && <SyncErrorBanner showRefresh={!(isLoading || isSyncing)} />}
 
@@ -158,7 +159,7 @@ export const Dashboard = () => {
           />
         </Actions>
       </View>
-    </View>
+    </SafeAreaView>
   )
 }
 
@@ -252,6 +253,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       flex: 1,
+      backgroundColor: color.gray_cmin,
     },
     container: {
       flexDirection: 'column',
@@ -259,7 +261,6 @@ const useStyles = () => {
     },
     scrollView: {
       flex: 1,
-      backgroundColor: color.gray_cmin,
     },
     contentContainer: {
       paddingTop: 16,
@@ -270,8 +271,9 @@ const useStyles = () => {
       paddingVertical: 12,
     },
     actions: {
+      borderTopWidth: 1,
+      borderTopColor: color.gray_c200,
       flexDirection: 'row',
-      backgroundColor: color.gray_cmin,
       padding: 16,
       elevation: 1,
       shadowOpacity: 0.06,
