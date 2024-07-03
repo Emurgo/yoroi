@@ -82,7 +82,7 @@ const useStyles = () => {
       flex: 1,
       flexDirection: 'row',
       flexWrap: 'wrap',
-      alignItems: 'flex-start',
+      alignItems: 'center',
     },
     label: {
       color: color.gray_c900,
@@ -96,6 +96,7 @@ const useStyles = () => {
     timeWrapper: {
       flexDirection: 'row',
       flexWrap: 'nowrap',
+      alignItems: 'center',
     },
     timeBlock: {
       ...atoms.body_1_lg_regular,

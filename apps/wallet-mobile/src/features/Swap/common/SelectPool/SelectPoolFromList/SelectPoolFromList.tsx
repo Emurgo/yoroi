@@ -144,7 +144,6 @@ const useStyles = () => {
     container: {
       paddingHorizontal: 16,
       flexDirection: 'column',
-      backgroundColor: color.gray_cmin,
       flex: 1,
       paddingBottom: 30,
     },
