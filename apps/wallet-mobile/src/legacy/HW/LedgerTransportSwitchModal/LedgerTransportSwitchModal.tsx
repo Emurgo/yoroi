@@ -1,10 +1,11 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Alert, Platform, ScrollView, StyleSheet, View} from 'react-native'
+import {Alert, Platform, ScrollView, StyleSheet} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
 import {Button, Text} from '../../../components'
-import {Modal} from '../../../components/legacy/Modal/Modal'
+import {Space} from '../../../components/Space/Space'
 import globalMessages from '../../../kernel/i18n/global-messages'
 import {HARDWARE_WALLETS, useLedgerPermissions} from '../../../yoroi-wallets/hw'
 
@@ -25,6 +26,7 @@ export const useIsUsbSupported = () => {
 }
 
 export const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => {
+  const {styles} = useStyles()
   const strings = useStrings()
   const isUSBSupported = useIsUsbSupported()
 
@@ -44,56 +46,35 @@ export const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => 
   }
 
   return (
-    <ScrollView style={styles.scrollView}>
-      <View style={styles.content}>
-        <View style={styles.heading}>
-          <Text style={styles.title}>{strings.title}</Text>
-        </View>
+    <ScrollView style={styles.container}>
+      <Text style={styles.heading}>{strings.title}</Text>
 
-        <Text style={styles.paragraph}>{strings.usbExplanation}</Text>
+      <Space height="lg" />
 
-        <Button
-          block
-          onPress={onSelectUSB}
-          title={getUsbButtonTitle()}
-          disabled={!isUSBSupported || !HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT}
-          style={styles.button}
-          testID="connectWithUSBButton"
-        />
+      <Text style={styles.paragraph}>{strings.usbExplanation}</Text>
 
-        <Text style={styles.paragraph}>{strings.bluetoothExplanation}</Text>
+      <Space height="md" />
 
-        <Button
-          block
-          onPress={() => request()}
-          title={strings.bluetoothButton}
-          style={styles.button}
-          testID="connectWithBLEButton"
-        />
-      </View>
+      <Button
+        block
+        onPress={onSelectUSB}
+        title={getUsbButtonTitle()}
+        disabled={!isUSBSupported || !HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT}
+        testID="connectWithUSBButton"
+      />
+
+      <Space height="md" />
+
+      <Text style={styles.paragraph}>{strings.bluetoothExplanation}</Text>
+
+      <Space height="md" />
+
+      <Button block onPress={() => request()} title={strings.bluetoothButton} testID="connectWithBLEButton" />
     </ScrollView>
   )
 }
 
 export const LedgerTransportSwitch = LedgerTransportSwitchView
-
-type ModalProps = {
-  visible: boolean
-  onRequestClose: () => void
-  showCloseIcon?: boolean
-} & Props
-
-export const LedgerTransportSwitchModal = ({
-  visible,
-  onSelectUSB,
-  onSelectBLE,
-  onRequestClose,
-  showCloseIcon,
-}: ModalProps) => (
-  <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon={showCloseIcon}>
-    <LedgerTransportSwitch onSelectUSB={onSelectUSB} onSelectBLE={onSelectBLE} />
-  </Modal>
-)
 
 const messages = defineMessages({
   title: {
@@ -148,31 +129,21 @@ const useStrings = () => {
   }
 }
 
-const styles = StyleSheet.create({
-  scrollView: {
-    paddingRight: 10,
-  },
-  paragraph: {
-    marginBottom: 16,
-    fontSize: 14,
-    lineHeight: 22,
-  },
-  content: {
-    flex: 1,
-    marginBottom: 24,
-  },
-  heading: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    lineHeight: 22,
-    fontWeight: 'bold',
-    marginBottom: 16,
-  },
-  button: {
-    marginHorizontal: 10,
-    marginBottom: 16,
-  },
-})
+const useStyles = () => {
+  const {atoms} = useTheme()
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      ...atoms.px_lg,
+    },
+    heading: {
+      ...atoms.heading_3_medium,
+      textAlign: 'center',
+    },
+    paragraph: {
+      ...atoms.body_1_lg_regular,
+    },
+  })
+
+  return {styles} as const
+}

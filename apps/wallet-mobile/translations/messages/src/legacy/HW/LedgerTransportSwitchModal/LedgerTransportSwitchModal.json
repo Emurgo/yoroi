@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Choose Connection Method",
     "file": "src/legacy/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.tsx",
     "start": {
-      "line": 99,
+      "line": 80,
       "column": 9,
-      "index": 2863
+      "index": 2364
     },
     "end": {
-      "line": 102,
+      "line": 83,
       "column": 3,
-      "index": 2981
+      "index": 2482
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Choose this option if you want to connect to a Ledger Nano model X or S using an on-the-go USB cable adaptor:",
     "file": "src/legacy/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.tsx",
     "start": {
-      "line": 103,
+      "line": 84,
       "column": 18,
-      "index": 3001
+      "index": 2502
     },
     "end": {
-      "line": 108,
+      "line": 89,
       "column": 3,
-      "index": 3230
+      "index": 2731
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Connect with USB",
     "file": "src/legacy/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.tsx",
     "start": {
-      "line": 109,
+      "line": 90,
       "column": 13,
-      "index": 3245
+      "index": 2746
     },
     "end": {
-      "line": 112,
+      "line": 93,
       "column": 3,
-      "index": 3359
+      "index": 2860
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Connect with USB\n(Not supported)",
     "file": "src/legacy/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.tsx",
     "start": {
-      "line": 113,
+      "line": 94,
       "column": 25,
-      "index": 3386
+      "index": 2887
     },
     "end": {
-      "line": 116,
+      "line": 97,
       "column": 3,
-      "index": 3529
+      "index": 3030
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Connect with USB\n(Blocked by Apple for iOS)",
     "file": "src/legacy/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.tsx",
     "start": {
-      "line": 117,
+      "line": 98,
       "column": 21,
-      "index": 3552
+      "index": 3053
     },
     "end": {
-      "line": 120,
+      "line": 101,
       "column": 3,
-      "index": 3702
+      "index": 3203
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!Choose this option if you want to connect to a Ledger Nano model X through Bluetooth:",
     "file": "src/legacy/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.tsx",
     "start": {
-      "line": 121,
+      "line": 102,
       "column": 24,
-      "index": 3728
+      "index": 3229
     },
     "end": {
-      "line": 124,
+      "line": 105,
       "column": 3,
-      "index": 3922
+      "index": 3423
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!Connect with Bluetooth",
     "file": "src/legacy/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.tsx",
     "start": {
-      "line": 125,
+      "line": 106,
       "column": 19,
-      "index": 3943
+      "index": 3444
     },
     "end": {
-      "line": 128,
+      "line": 109,
       "column": 3,
-      "index": 4069
+      "index": 3570
     }
   },
   {
@@ -109,14 +109,14 @@
     "defaultMessage": "!!!Connect with Bluetooth",
     "file": "src/legacy/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.tsx",
     "start": {
-      "line": 129,
+      "line": 110,
       "column": 18,
-      "index": 4089
+      "index": 3590
     },
     "end": {
-      "line": 132,
+      "line": 113,
       "column": 3,
-      "index": 4199
+      "index": 3700
     }
   }
 ]
