@@ -285,7 +285,6 @@ const getStories = () => {
     "./src/legacy/TxHistory/AssetList/ChipButton/ChipButton.stories.tsx": require("../src/legacy/TxHistory/AssetList/ChipButton/ChipButton.stories.tsx"),
     "./src/legacy/TxHistory/AssetList/FilterBalancesByType.stories.tsx": require("../src/legacy/TxHistory/AssetList/FilterBalancesByType.stories.tsx"),
     "./src/legacy/TxHistory/BalanceBanner.stories.tsx": require("../src/legacy/TxHistory/BalanceBanner.stories.tsx"),
-    "./src/legacy/TxHistory/ModalInfo/ModalInfo.stories.tsx": require("../src/legacy/TxHistory/ModalInfo/ModalInfo.stories.tsx"),
     "./src/legacy/TxHistory/TxDetails/AssetList.stories.tsx": require("../src/legacy/TxHistory/TxDetails/AssetList.stories.tsx"),
     "./src/legacy/TxHistory/TxDetails/TxDetails.stories.tsx": require("../src/legacy/TxHistory/TxDetails/TxDetails.stories.tsx"),
     "./src/legacy/TxHistory/TxHistory.stories.tsx": require("../src/legacy/TxHistory/TxHistory.stories.tsx"),

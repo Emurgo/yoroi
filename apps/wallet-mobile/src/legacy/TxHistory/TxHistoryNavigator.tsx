@@ -16,7 +16,7 @@ import {ThemedPalette, useTheme} from '@yoroi/theme'
 import {Resolver, Swap} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View, ViewProps} from 'react-native'
+import {StyleSheet, TouchableOpacity, TouchableOpacityProps, View, ViewProps} from 'react-native'
 
 import {Boundary, Icon, Spacer} from '../../components'
 import {claimApiMaker} from '../../features/Claim/module/api'
@@ -60,7 +60,6 @@ import {
   useWalletNavigation,
 } from '../../kernel/navigation'
 import {useFrontendFees, useStakingKey} from '../../yoroi-wallets/hooks'
-import {ModalInfo} from './ModalInfo'
 import {TxDetails} from './TxDetails'
 import {TxHistory} from './TxHistory'
 
@@ -71,12 +70,7 @@ export const TxHistoryNavigator = () => {
   const strings = useStrings()
   const {wallet, meta} = useSelectedWallet()
   const storage = useAsyncStorage()
-  const {styles} = useStyles()
   const {atoms, color} = useTheme()
-
-  // modal
-  const [isModalInfoVisible, setIsModalInfoVisible] = React.useState(false)
-  const hideModalInfo = React.useCallback(() => setIsModalInfoVisible(false), [])
 
   // swap
   const {frontendFees} = useFrontendFees(wallet)
@@ -417,10 +411,6 @@ export const TxHistoryNavigator = () => {
                     options={{title: strings.claimShowSuccess, headerLeft: () => null}}
                   />
                 </Stack.Navigator>
-
-                <ModalInfo hideModalInfo={hideModalInfo} visible={isModalInfoVisible}>
-                  <Text style={styles.receiveInfoText}>{strings.receiveInfoText}</Text>
-                </ModalInfo>
               </ExchangeProvider>
             </ClaimProvider>
           </ResolverProvider>
@@ -590,10 +580,6 @@ const useStyles = () => {
   const {color} = useTheme()
 
   const styles = StyleSheet.create({
-    receiveInfoText: {
-      lineHeight: 24,
-      fontSize: 16,
-    },
     settingIconButton: {
       width: 40,
     },
