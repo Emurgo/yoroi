@@ -10,7 +10,7 @@ import {ShowSlippageInfo} from './ShowSlippageInfo'
 
 export const EditSlippage = () => {
   const navigate = useNavigateTo()
-  const styles = useStyles()
+  const {styles, colors} = useStyles()
   const {orderData} = useSwap()
 
   return (
@@ -23,7 +23,7 @@ export const EditSlippage = () => {
         <Spacer width={4} />
 
         <TouchableOpacity onPress={() => navigate.editSlippage()}>
-          <Icon.Edit size={24} />
+          <Icon.Edit size={24} color={colors.gray} />
         </TouchableOpacity>
       </View>
     </View>
@@ -49,5 +49,9 @@ const useStyles = () => {
       color: color.gray_cmax,
     },
   })
-  return styles
+
+  const colors = {
+    gray: color.gray_cmax,
+  }
+  return {styles, colors}
 }

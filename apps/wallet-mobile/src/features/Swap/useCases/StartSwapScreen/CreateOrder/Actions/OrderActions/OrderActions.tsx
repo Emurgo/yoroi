@@ -112,7 +112,7 @@ const useStyles = () => {
 
   const colors = {
     disabled: color.gray_c500,
-    enabled: color.black_static,
+    enabled: color.gray_cmax,
   }
 
   return {styles, colors}

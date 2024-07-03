@@ -73,13 +73,18 @@ export const HeaderWrapper = ({
   expanded?: boolean
   onPress: () => void
 }) => {
-  const {styles} = useStyles()
+  const {styles, colors} = useStyles()
+
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={styles.flexBetween}>
         {children}
 
-        {expanded ? <Icon.Chevron direction="up" size={24} /> : <Icon.Chevron direction="down" size={24} />}
+        {expanded ? (
+          <Icon.Chevron direction="up" color={colors.gray} size={24} />
+        ) : (
+          <Icon.Chevron color={colors.gray} direction="down" size={24} />
+        )}
       </View>
     </TouchableOpacity>
   )
@@ -115,7 +120,7 @@ export const HiddenInfoWrapper = ({
   value: React.ReactNode
   icon?: React.ReactNode
 }) => {
-  const {styles} = useStyles()
+  const {styles, colors} = useStyles()
   return (
     <View>
       <View style={styles.flexBetween}>
@@ -126,7 +131,7 @@ export const HiddenInfoWrapper = ({
 
           {info !== undefined && (
             <TouchableOpacity onPress={onPress}>
-              <Icon.Info size={24} />
+              <Icon.Info color={colors.gray} size={24} />
             </TouchableOpacity>
           )}
         </View>
@@ -250,6 +255,7 @@ const useStyles = () => {
 
   const colors = {
     skeletonBackground: color.gray_c200,
+    gray: color.gray_cmax,
   }
 
   return {styles, colors}
