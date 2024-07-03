@@ -4,14 +4,14 @@
     "defaultMessage": "!!!I have written down my Catalyst PIN which I obtained in previous steps.",
     "file": "src/legacy/Catalyst/VotingRegistrationBackupCheckModal.tsx",
     "start": {
-      "line": 59,
+      "line": 55,
       "column": 15,
-      "index": 1816
+      "index": 1604
     },
     "end": {
-      "line": 62,
+      "line": 58,
       "column": 3,
-      "index": 1987
+      "index": 1775
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!I have taken a screenshot of my QR code and saved my Catalyst secret code as a fallback.",
     "file": "src/legacy/Catalyst/VotingRegistrationBackupCheckModal.tsx",
     "start": {
-      "line": 63,
+      "line": 59,
       "column": 18,
-      "index": 2007
+      "index": 1795
     },
     "end": {
-      "line": 66,
+      "line": 62,
       "column": 3,
-      "index": 2198
+      "index": 1986
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!I understand that if I did not save my Catalyst PIN and QR code (or secret code) I will not be able to register and vote for Catalystproposals.",
     "file": "src/legacy/Catalyst/VotingRegistrationBackupCheckModal.tsx",
     "start": {
-      "line": 67,
+      "line": 63,
       "column": 24,
-      "index": 2224
+      "index": 2012
     },
     "end": {
-      "line": 73,
+      "line": 69,
       "column": 3,
-      "index": 2504
+      "index": 2292
     }
   }
 ]

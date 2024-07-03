@@ -110,7 +110,9 @@ const WarningModal = () => {
 
       <Space height="md" />
 
-      <Button shelleyTheme title={strings.iUnderstandButton} onPress={closeModal} textStyles={styles.button} />
+      <Space fill />
+
+      <Button title={strings.iUnderstandButton} onPress={closeModal} textStyles={styles.button} />
     </View>
   )
 }
@@ -208,6 +210,7 @@ const useStyles = () => {
     },
     container: {
       ...atoms.px_lg,
+      flex: 1,
     },
     contentContainer: {
       ...atoms.px_lg,
