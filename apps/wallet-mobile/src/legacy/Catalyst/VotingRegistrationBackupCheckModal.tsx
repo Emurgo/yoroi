@@ -1,38 +1,32 @@
+import {useTheme} from '@yoroi/theme'
 import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 
-import {Button, Checkbox, Spacer, Text} from '../../components'
-import {Modal} from '../../components/legacy/Modal/Modal'
+import {Button, Checkbox} from '../../components'
+import {Space} from '../../components/Space/Space'
 import globalMessages, {confirmationMessages} from '../../kernel/i18n/global-messages'
 
 type Props = {
   onConfirm: () => void
-  visible: boolean
-  onRequestClose: () => void
 }
 
-export const VotingRegistrationBackupCheckModal = ({onConfirm, visible, onRequestClose}: Props) => {
+export const VotingRegistrationBackupCheckModal = ({onConfirm}: Props) => {
   const strings = useStrings()
+  const styles = useStyles()
   const [acceptedPin, setAcceptedPin] = useState(false)
   const [acceptedQrCode, setAcceptedQrCode] = useState(false)
   const [acceptedConsequences, setAcceptedConsequences] = useState(false)
 
   return (
-    <Modal visible={visible} onRequestClose={() => onRequestClose()} showCloseIcon>
-      <View style={{alignItems: 'center'}}>
-        <Text style={styles.title}>{strings.pleaseConfirm}</Text>
-      </View>
-
-      <Spacer height={16} />
-
+    <View style={styles.container}>
       <PinCheckbox onChange={setAcceptedPin} checked={acceptedPin} text={strings.pinCheckbox} />
 
-      <Spacer height={16} />
+      <Space height="md" />
 
       <QRCodeCheckbox onChange={setAcceptedQrCode} checked={acceptedQrCode} text={strings.qrCodeCheckbox} />
 
-      <Spacer height={16} />
+      <Space height="md" />
 
       <ConsequencesCheckbox
         onChange={setAcceptedConsequences}
@@ -40,14 +34,16 @@ export const VotingRegistrationBackupCheckModal = ({onConfirm, visible, onReques
         text={strings.consequencesCheckbox}
       />
 
-      <Spacer height={16} />
+      <Space height="md" />
+
+      <Space fill />
 
       <Button
         disabled={!acceptedPin || !acceptedQrCode || !acceptedConsequences}
         onPress={() => onConfirm()}
         title={strings.continueButton}
       />
-    </Modal>
+    </View>
   )
 }
 
@@ -73,13 +69,17 @@ const messages = defineMessages({
   },
 })
 
-const styles = StyleSheet.create({
-  title: {
-    fontSize: 20,
-    lineHeight: 22,
-    fontWeight: 'bold',
-  },
-})
+const useStyles = () => {
+  const {atoms} = useTheme()
+  const styles = StyleSheet.create({
+    container: {
+      ...atoms.px_lg,
+      flex: 1,
+    },
+  })
+
+  return styles
+}
 
 const useStrings = () => {
   const intl = useIntl()

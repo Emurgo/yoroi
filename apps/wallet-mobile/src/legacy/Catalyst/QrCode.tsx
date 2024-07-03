@@ -1,13 +1,14 @@
 import {useTheme} from '@yoroi/theme'
-import React, {useState} from 'react'
+import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import QRCodeSVG from 'react-native-qrcode-svg'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, CopyButton, ProgressStep, Spacer, Text} from '../../components'
+import {Button, CopyButton, ProgressStep, Text, useModal} from '../../components'
+import {Space} from '../../components/Space/Space'
 import {useAllowScreenshot} from '../../hooks/useAllowScreenShot'
-import {confirmationMessages} from '../../kernel/i18n/global-messages'
+import globalMessages, {confirmationMessages} from '../../kernel/i18n/global-messages'
 import {useBlockGoBack} from '../../kernel/navigation'
 import {Actions, Description, Title} from './components'
 import {useCountdown} from './hooks'
@@ -18,9 +19,12 @@ export const QrCode = ({onNext, votingKeyEncrypted}: {onNext: () => void; voting
   useAllowScreenshot()
   const strings = useStrings()
   const styles = useStyles()
+  const {openModal} = useModal()
 
-  const [showBackupWarningModal, setShowBackupWarningModal] = useState(false)
   const countdown = useCountdown()
+  const handleOpenModal = () => {
+    openModal(strings.pleaseConfirm, <VotingRegistrationBackupCheckModal onConfirm={onNext} />, 360)
+  }
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
@@ -29,36 +33,36 @@ export const QrCode = ({onNext, votingKeyEncrypted}: {onNext: () => void; voting
       <ScrollView bounces={false} style={{paddingTop: 16}} contentContainerStyle={styles.contentContainer}>
         <Title>{strings.subTitle}</Title>
 
-        <Spacer height={16} />
+        <Space height="md" />
 
         <AlertBox>
           <Text>{strings.description}</Text>
         </AlertBox>
 
-        <Spacer height={16} />
+        <Space height="md" />
 
         <Description>{strings.description2}</Description>
 
-        <Spacer height={16} />
+        <Space height="md" />
 
         <Description>{strings.description3}</Description>
 
-        <Spacer height={16} />
+        <Space height="md" />
 
         <Text style={styles.note}>{strings.note}</Text>
 
-        <Spacer height={32} />
+        <Space height="xl" />
 
         <QRCode text={votingKeyEncrypted} />
 
-        <Spacer height={32} />
+        <Space height="xl" />
 
         <Text>{strings.secretCode}</Text>
 
         <SecretCodeBox>
           <Text style={{flex: 1}}>{votingKeyEncrypted}</Text>
 
-          <Spacer width={16} />
+          <Space width="md" />
 
           <CopyButton value={votingKeyEncrypted} />
         </SecretCodeBox>
@@ -66,17 +70,11 @@ export const QrCode = ({onNext, votingKeyEncrypted}: {onNext: () => void; voting
 
       <Actions>
         <Button
-          onPress={() => setShowBackupWarningModal(true)}
+          onPress={handleOpenModal}
           title={countdown !== 0 ? countdown.toString() : strings.completeButton}
           disabled={countdown !== 0}
         />
       </Actions>
-
-      <VotingRegistrationBackupCheckModal
-        visible={showBackupWarningModal}
-        onRequestClose={() => setShowBackupWarningModal(false)}
-        onConfirm={() => onNext()}
-      />
     </SafeAreaView>
   )
 }
@@ -169,6 +167,7 @@ const useStrings = () => {
   const intl = useIntl()
 
   return {
+    pleaseConfirm: intl.formatMessage(globalMessages.pleaseConfirm),
     subTitle: intl.formatMessage(messages.subTitle),
     description: intl.formatMessage(messages.description),
     description2: intl.formatMessage(messages.description2),

@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {useCatalyst} from '@yoroi/staking'
 import {useTheme} from '@yoroi/theme'
-import React, {useState} from 'react'
+import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image, Linking, ScrollView, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -9,7 +8,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import appstoreBadge from '../../assets/img/app-store-badge.png'
 import playstoreBadge from '../../assets/img/google-play-badge.png'
 import AppDownload from '../../assets/img/pic-catalyst-step1.png'
-import {Button, ProgressStep, Spacer, StandardModal, Text} from '../../components'
+import {Button, ProgressStep, Spacer, Text, useModal} from '../../components'
 import {Space} from '../../components/Space/Space'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import globalMessages, {confirmationMessages} from '../../kernel/i18n/global-messages'
@@ -24,7 +23,7 @@ export const DownloadCatalyst = ({onNext}: Props) => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
   const {stakingInfo} = useStakingInfo(wallet, {suspense: true})
-  const [showModal, setShowModal] = useState<boolean>(stakingInfo?.status === 'not-registered')
+  const {openModal} = useModal()
   const styles = useStyles()
   const {fund} = useCatalystCurrentFund()
   const intl = useIntl()
@@ -38,6 +37,12 @@ export const DownloadCatalyst = ({onNext}: Props) => {
       }),
     [intl],
   )
+
+  React.useEffect(() => {
+    if (stakingInfo?.status !== 'not-registered') {
+      openModal(strings.attention, <WarningModal />, 270)
+    }
+  }, [openModal, stakingInfo?.status, strings.attention])
 
   const fundName = fund.info.fundName
   const registrationStart = `${formatDate(fund.info.snapshotStart)}: ${strings.registrationStart}`
@@ -90,20 +95,25 @@ export const DownloadCatalyst = ({onNext}: Props) => {
       <Actions>
         <Button onPress={onNext} title={strings.continueButton} disabled={fund.status.registration !== 'running'} />
       </Actions>
-
-      <StandardModal
-        visible={showModal}
-        title={strings.attention}
-        onRequestClose={() => setShowModal(false)}
-        primaryButton={{
-          label: strings.iUnderstandButton,
-          onPress: () => setShowModal(false),
-        }}
-        showCloseIcon
-      >
-        <Text>{strings.stakingKeyNotRegistered}</Text>
-      </StandardModal>
     </SafeAreaView>
+  )
+}
+
+const WarningModal = () => {
+  const strings = useStrings()
+  const styles = useStyles()
+  const {closeModal} = useModal()
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.text}>{strings.stakingKeyNotRegistered}</Text>
+
+      <Space height="md" />
+
+      <Space fill />
+
+      <Button title={strings.iUnderstandButton} onPress={closeModal} textStyles={styles.button} />
+    </View>
   )
 }
 
@@ -198,6 +208,10 @@ const useStyles = () => {
       flex: 1,
       backgroundColor: color.gray_cmin,
     },
+    container: {
+      ...atoms.px_lg,
+      flex: 1,
+    },
     contentContainer: {
       ...atoms.px_lg,
       alignItems: 'center',
@@ -207,6 +221,12 @@ const useStyles = () => {
     },
     fundName: {
       ...atoms.body_1_lg_medium,
+    },
+    text: {
+      ...atoms.body_1_lg_regular,
+    },
+    button: {
+      ...atoms.button_1_lg,
     },
   })
 
