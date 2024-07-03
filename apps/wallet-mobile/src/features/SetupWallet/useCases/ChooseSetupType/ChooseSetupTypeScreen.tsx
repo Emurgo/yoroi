@@ -5,11 +5,12 @@ import * as React from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useModal} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
 import {isProduction} from '../../../../kernel/env'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
-import {LedgerTransportSwitchModal} from '../../../../legacy/HW'
+import {LedgerTransportSwitch} from '../../../../legacy/HW'
 import {ButtonCard} from '../../common/ButtonCard/ButtonCard'
 import {LogoBanner} from '../../common/LogoBanner/LogoBanner'
 import {useStrings} from '../../common/useStrings'
@@ -21,7 +22,7 @@ export const ChooseSetupTypeScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
   const {walletImplementationChanged, setUpTypeChanged, useUSBChanged: USBChanged} = useSetupWallet()
-  const [isModalOpen, setIsModalOpen] = React.useState(false)
+  const {openModal} = useModal()
   const {track} = useMetrics()
 
   useFocusEffect(
@@ -59,11 +60,23 @@ export const ChooseSetupTypeScreen = () => {
   }
 
   const handleHw = () => {
-    setIsModalOpen(true)
+    openModal(
+      '',
+      <LedgerTransportSwitch
+        onSelectUSB={() => {
+          USBChanged(true)
+          navigateHw()
+        }}
+        onSelectBLE={() => {
+          USBChanged(false)
+          navigateHw()
+        }}
+      />,
+      350,
+    )
   }
 
   const navigateHw = () => {
-    setIsModalOpen(false)
     walletImplementationChanged('cardano-cip1852')
     setUpTypeChanged('hw')
 
@@ -114,20 +127,6 @@ export const ChooseSetupTypeScreen = () => {
           <Space height="lg" />
         </View>
       </ScrollView>
-
-      <LedgerTransportSwitchModal
-        visible={isModalOpen}
-        onRequestClose={() => setIsModalOpen(false)}
-        onSelectUSB={() => {
-          USBChanged(true)
-          navigateHw()
-        }}
-        onSelectBLE={() => {
-          USBChanged(false)
-          navigateHw()
-        }}
-        showCloseIcon
-      />
     </SafeAreaView>
   )
 }
