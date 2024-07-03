@@ -176,8 +176,8 @@ const initWallet = ({iconUrl, apiVersion, walletName, supportedExtensions, sessi
    * @returns {Promise<boolean>}
    */
   const isEnabled = async () => {
-    if (localStorage.getItem('yoroi-session-id') !== sessionId) {
-      enabling = true
+    const previousSessionId = localStorage.getItem('yoroi-session-id')
+    if (previousSessionId && previousSessionId !== sessionId) {
       logMessage('Account Change')
       throw new CIP30Error('Account Change', -4)
     }
