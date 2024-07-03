@@ -80,7 +80,7 @@ const useStyles = () => {
     labelWrap: {
       backgroundColor: color.gray_cmin,
       marginLeft: 12,
-      top: 8,
+      top: 2,
       ...atoms.py_xs,
       position: 'absolute',
     },
