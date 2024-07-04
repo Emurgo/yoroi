@@ -18,7 +18,7 @@ describe('CIP8', () => {
     const path = [harden(1852), harden(1815), harden(0), 0, 0]
     const signingKey = await createRawTxSigningKey(rootKey, path)
 
-    const payloadInBytes = Buffer.from(payload, 'utf-8')
+    const payloadInBytes = Buffer.from(payload, 'hex')
     const normalisedAddress = await normalizeToAddress(csl, bech32)
     assert(normalisedAddress != null)
     const coseSign1 = await cip8.sign(Buffer.from(await normalisedAddress.toHex(), 'hex'), signingKey, payloadInBytes)
