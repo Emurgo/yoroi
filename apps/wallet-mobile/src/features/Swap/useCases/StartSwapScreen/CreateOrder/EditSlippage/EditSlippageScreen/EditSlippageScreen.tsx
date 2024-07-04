@@ -208,12 +208,12 @@ const useStyles = () => {
     },
     label: {
       position: 'absolute',
-      top: -7,
+      top: -14,
       left: 10,
       backgroundColor: color.gray_cmin,
       ...atoms.py_xs,
       ...atoms.body_3_sm_regular,
-      color: color.sys_magenta_c500,
+      color: color.gray_cmax,
     },
 
     disabledInputContainer: {
@@ -250,6 +250,7 @@ const useStyles = () => {
 
 const validateSlippage = (text: string, format: NumberLocale) => {
   const slippage = parseNumber(text, format)
+
   return !isNaN(slippage) && slippage >= 0 && slippage <= 75
 }
 
