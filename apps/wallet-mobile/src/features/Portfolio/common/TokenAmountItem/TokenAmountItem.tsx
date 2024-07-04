@@ -81,7 +81,9 @@ export const TokenAmountItem = ({
           </View>
         )}
 
-        {isPrimary && variant !== 'swap' && <PairedBalance amount={amount} ignorePrivacy={ignorePrivacy} />}
+        {isPrimary && variant !== 'swap' && (
+          <PairedBalance textStyle={styles.pairedBalance} amount={amount} ignorePrivacy={ignorePrivacy} />
+        )}
       </Right>
     </View>
   )
@@ -139,6 +141,9 @@ const useStyles = () => {
       backgroundColor: color.gray_c200,
       borderRadius: 8,
       flexGrow: 1,
+    },
+    pairedBalance: {
+      textAlign: 'right',
     },
   })
 
