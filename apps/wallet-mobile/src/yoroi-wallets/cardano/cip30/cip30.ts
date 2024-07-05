@@ -131,7 +131,7 @@ class CIP30Extension {
   async signData(rootKey: string, address: string, payload: string): Promise<{signature: string; key: string}> {
     const {csl, release} = getCSL()
     try {
-      const payloadInBytes = Buffer.from(payload, 'utf-8')
+      const payloadInBytes = Buffer.from(payload, 'hex')
 
       const normalisedAddress = await normalizeToAddress(csl, address)
       const bech32Address = await normalisedAddress?.toBech32(undefined)
