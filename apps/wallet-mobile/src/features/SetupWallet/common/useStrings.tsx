@@ -99,6 +99,7 @@ export const useStrings = () => {
     restoreDuplicatedWalletModalText: intl.formatMessage(messages.restoreDuplicatedWalletModalText),
     restoreDuplicatedWalletModalButton: intl.formatMessage(messages.restoreDuplicatedWalletModalButton),
     preparingWallet: intl.formatMessage(messages.preparingWallet),
+    walletChecksum: intl.formatMessage(messages.walletChecksum),
   }).current
 }
 
@@ -307,7 +308,11 @@ export const messages = Object.freeze(
     walletChecksumModalCardFirstItem: {
       id: 'components.walletinit.walletDetails.walletChecksumModalCardItem.first',
       defaultMessage:
-        '!!!Wallet checksum is a generic Blockie image that is generated to visually distinguish your wallet from others.',
+        '!!!is a generic Blockie image that is generated to visually distinguish your wallet from others.',
+    },
+    walletChecksum: {
+      id: 'components.walletinit.walletDetails.walletChecksumModalCardItem.walletchecksum',
+      defaultMessage: '!!!Wallet checksum',
     },
     walletChecksumModalCardSecondItem: {
       id: 'components.walletinit.walletDetails.walletChecksumModalCardItem.second',

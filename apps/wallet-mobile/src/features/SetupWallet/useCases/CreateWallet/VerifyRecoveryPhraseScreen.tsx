@@ -409,7 +409,7 @@ const useStyles = () => {
     successMessageContainer: {
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'center',
+      justifyContent: 'flex-start',
     },
     successMessage: {
       color: color.gray_cmax,
