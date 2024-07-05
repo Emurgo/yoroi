@@ -1,7 +1,7 @@
 import {Blockies} from '@yoroi/identicon'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Platform, StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import {Icon} from '../../../../components/Icon'
@@ -115,7 +115,7 @@ const useStyles = (padding?: boolean, background?: boolean) => {
       width: 23,
       height: 23,
       position: 'absolute',
-      top: -22,
+      top: Platform.OS === 'ios' ? -22 : -18,
     },
     walletChecksumContainer: {
       position: 'relative',
