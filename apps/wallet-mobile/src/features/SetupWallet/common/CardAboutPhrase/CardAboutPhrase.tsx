@@ -6,6 +6,7 @@ import LinearGradient from 'react-native-linear-gradient'
 
 import {Icon} from '../../../../components/Icon'
 import {Space} from '../../../../components/Space/Space'
+import {useStrings} from '../useStrings'
 
 type CardAboutPhraseProps = {
   linesOfText: string[] | React.ReactNode[]
@@ -27,6 +28,7 @@ export const CardAboutPhrase = ({
   testId,
 }: CardAboutPhraseProps) => {
   const {styles, colors} = useStyles(includeSpacing, showBackgroundColor)
+  const strings = useStrings()
 
   return (
     <View style={styles.container}>
@@ -60,14 +62,16 @@ export const CardAboutPhrase = ({
             <Text style={styles.textLine}>
               {handleShowChecksum && (
                 <>
+                  {strings.walletChecksum}
+
+                  <Space width="sm" />
+
                   <View style={styles.walletChecksumContainer}>
                     <Icon.WalletAvatar
                       image={new Blockies({seed: checksumImage}).asBase64()}
                       style={styles.walletChecksum}
                       size={24}
                     />
-
-                    <Space width="sm" />
                   </View>
                 </>
               )}
@@ -108,10 +112,10 @@ const useStyles = (padding?: boolean, background?: boolean) => {
       color: background ? color.primary_c600 : color.gray_c900,
     },
     walletChecksum: {
-      width: 24,
-      height: 24,
+      width: 23,
+      height: 23,
       position: 'absolute',
-      top: -10,
+      top: -22,
     },
     walletChecksumContainer: {
       position: 'relative',
