@@ -68,7 +68,7 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
           <View key={pool.poolId}>
             <Spacer height={16} />
 
-            <View style={[isDark ? undefined : styles.shadowProp]}>
+            <View style={[isSelectedPool && isDark ? undefined : styles.shadowProp]}>
               <LinearGradient
                 colors={isSelectedPool ? colors.gradientColor : [colors.white, colors.white]}
                 style={styles.linearGradient}
