@@ -85,7 +85,7 @@ export const Dashboard = () => {
     openModal(
       strings.warningModalTitle,
       <WithdrawStakingRewards wallet={wallet} onSuccess={() => resetToTxHistory()} onCancel={() => closeModal()} />,
-      windowHeight * 0.8,
+      Math.min(windowHeight * 0.8, 675),
     )
   }
 

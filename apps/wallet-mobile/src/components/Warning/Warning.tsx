@@ -25,7 +25,7 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     notice: {
-      backgroundColor: color.sys_orange_c100,
+      backgroundColor: color.sys_yellow_c100,
       padding: 12,
       borderRadius: 8,
     },

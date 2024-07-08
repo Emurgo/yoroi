@@ -121,6 +121,8 @@ export const WithdrawalTxForm = ({
           testID="keepRegisteredButton"
         />
       </View>
+
+      <Space height="lg" />
     </View>
   )
 }
