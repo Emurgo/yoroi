@@ -30,6 +30,7 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
   const navigate = useNavigateTo()
   const {track} = useMetrics()
   const {styles, colors} = useStyles()
+  const {isDark} = useTheme()
 
   const sellTokenInfo = useTokenInfo({wallet, tokenId: orderData.amounts.sell.tokenId})
   const buyTokenInfo = useTokenInfo({wallet, tokenId: orderData.amounts.buy.tokenId})
@@ -67,7 +68,7 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
           <View key={pool.poolId}>
             <Spacer height={16} />
 
-            <View style={[isSelectedPool ? undefined : styles.shadowProp]}>
+            <View style={[isSelectedPool && isDark ? undefined : styles.shadowProp]}>
               <LinearGradient
                 colors={isSelectedPool ? colors.gradientColor : [colors.white, colors.white]}
                 style={styles.linearGradient}
