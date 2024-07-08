@@ -106,7 +106,9 @@ export const AmountCard = ({
 
                 <Text style={styles.coinName}>{noTokenSelected ? strings.selectToken : name}</Text>
 
-                <Icon.Chevron direction="right" size={20} color="black" />
+                <Spacer width={8} />
+
+                <Icon.Chevron direction="down" size={24} color={colors.gray} />
               </View>
             </TouchableOpacity>
 
@@ -234,6 +236,7 @@ const useStyles = () => {
     focused: color.gray_c900,
     blur: color.black_static,
     noSelected: color.gray_c400,
+    gray: color.gray_cmax,
   }
   return {styles, colors} as const
 }
