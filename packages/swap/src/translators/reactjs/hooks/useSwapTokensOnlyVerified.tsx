@@ -1,13 +1,13 @@
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import {UseQueryOptions, useQuery} from 'react-query'
 
 import {useSwap} from './useSwap'
 
 export const useSwapTokensOnlyVerified = (
   options?: UseQueryOptions<
-    Balance.TokenInfo[],
+    Array<Portfolio.Token.Info>,
     Error,
-    Balance.TokenInfo[],
+    Array<Portfolio.Token.Info>,
     ['useSwapTokensOnlyVerified']
   >,
 ) => {
@@ -20,8 +20,5 @@ export const useSwapTokensOnlyVerified = (
     queryFn: () => tokens.list.onlyVerified(),
   })
 
-  return {
-    ...query,
-    onlyVerifiedTokens: query.data,
-  }
+  return query.data ?? []
 }

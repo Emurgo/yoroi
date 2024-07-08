@@ -44,11 +44,13 @@ export const TransactionSummary = () => {
   const priceImpactRiskTheme = usePriceImpactRiskTheme(priceImpactRisk)
   const priceImpactRiskTextColor = type === 'market' ? priceImpactRiskTheme.text : styles.text.color
 
+  // const sellTokenInfo1 = usePorfolioTokenInfo({id: amounts.sell.tokenId, network: wallet.network})
   const sellTokenInfo = useTokenInfo({wallet, tokenId: amounts.sell.tokenId})
   const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
   const tokenToSellName = sellTokenInfo.ticker ?? sellTokenInfo.name
   const tokenToBuyName = buyTokenInfo.ticker ?? buyTokenInfo.name
   const isSellPrimary = amounts.sell.tokenId === wallet.primaryTokenInfo.id
+
   // Quantities.zero case would only happen on an API error where the price in Ada of Ada were missing
   const total = isSellPrimary ? calculation.ptTotalValueSpent?.quantity ?? Quantities.zero : amounts.sell.quantity
   const formattedSellText = `${Quantities.format(total, sellTokenInfo.decimals ?? 0)} ${tokenToSellName}`

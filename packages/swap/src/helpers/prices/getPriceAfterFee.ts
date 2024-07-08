@@ -1,6 +1,5 @@
-import {Balance, Swap} from '@yoroi/types'
-import BigNumber from 'bignumber.js'
-import {Quantities} from '../../utils/quantities'
+import {Swap} from '@yoroi/types'
+import {BigNumber} from 'bignumber.js'
 
 /**
  * Calculate the price with batcher fee in a liquidity pool.
@@ -14,15 +13,14 @@ import {Quantities} from '../../utils/quantities'
  */
 export const getPriceAfterFee = (
   pool: Swap.Pool,
-  quantityA: Balance.Quantity,
-  quantityB: Balance.Quantity,
+  quantityA: bigint,
+  quantityB: bigint,
   sellTokenId: string,
 ): BigNumber => {
-  if (Quantities.isZero(quantityA) || Quantities.isZero(quantityB))
-    return new BigNumber(0)
+  if (quantityA === 0n || quantityB === 0n) return new BigNumber(0)
 
-  const A = new BigNumber(quantityA)
-  const B = new BigNumber(quantityB)
+  const A = new BigNumber(quantityA.toString())
+  const B = new BigNumber(quantityB.toString())
 
   const isSellTokenA = sellTokenId === pool.tokenA.tokenId
   const [dividend, divisor] = isSellTokenA ? [A, B] : [B, A]
@@ -32,7 +30,9 @@ export const getPriceAfterFee = (
 
   const feeInSellTerm = sellPriceInPtTerm.isZero()
     ? new BigNumber(0)
-    : new BigNumber(pool.batcherFee.quantity).dividedBy(sellPriceInPtTerm)
+    : new BigNumber(pool.batcherFee.quantity.toString()).dividedBy(
+        sellPriceInPtTerm,
+      )
 
   return dividend.plus(feeInSellTerm).dividedBy(divisor)
 }

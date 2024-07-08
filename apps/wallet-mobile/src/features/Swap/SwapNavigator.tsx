@@ -33,12 +33,17 @@ export const SwapTabNavigator = () => {
   // initialize sell with / and primary token
   React.useEffect(() => {
     const ptInfo = {
-      decimals: wallet.primaryTokenInfo.decimals ?? 0,
-      id: wallet.primaryTokenInfo.id,
+      decimals: wallet.portfolioPrimaryTokenInfo.decimals,
+      id: wallet.portfolioPrimaryTokenInfo.id,
     }
     sellTokenInfoChanged(ptInfo)
     primaryTokenInfoChanged(ptInfo)
-  }, [primaryTokenInfoChanged, sellTokenInfoChanged, wallet.primaryTokenInfo.decimals, wallet.primaryTokenInfo.id])
+  }, [
+    primaryTokenInfoChanged,
+    sellTokenInfoChanged,
+    wallet.portfolioPrimaryTokenInfo.decimals,
+    wallet.portfolioPrimaryTokenInfo.id,
+  ])
 
   // update the fee tiers
   React.useEffect(() => {
@@ -55,11 +60,7 @@ export const SwapTabNavigator = () => {
     })
   }, [aggregatorTokenId, lpTokenHeld, lpTokenHeldChanged])
 
-  // pre load swap tokens
-  const {refetch} = useSwapTokensOnlyVerified({suspense: false, enabled: false})
-  React.useEffect(() => {
-    refetch()
-  }, [refetch])
+  useSwapTokensOnlyVerified({suspense: false})
 
   return (
     <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>

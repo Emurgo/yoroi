@@ -1,5 +1,6 @@
-import {Balance, Swap} from '@yoroi/types'
+import {Portfolio, Swap} from '@yoroi/types'
 import {apiMocks} from './adapters/openswap-api/api.mocks'
+import {tokenInfoMocks} from '@yoroi/portfolio'
 
 const loading = () => new Promise(() => {})
 const unknownError = () => Promise.reject(new Error('Unknown error'))
@@ -26,8 +27,10 @@ const listOrdersByStatusOpenResponse: Swap.OpenOrderResponse =
 const listOrdersByStatusCompletedResponse: Swap.CompletedOrderResponse =
   apiMocks.getCompletedOrders
 const listPoolsByPairResponse: Swap.PoolResponse = apiMocks.getPools
-const listTokensByPairResponse: Balance.Token[] = apiMocks.getTokenPairs
-const listOnlyVerifiedTokensResponse: Balance.TokenInfo[] = apiMocks.getTokens
+const listTokensByPairResponse: Array<Portfolio.Token.Info> =
+  apiMocks.getTokenPairs
+const listOnlyVerifiedTokensResponse: Array<Portfolio.Token.Info> =
+  apiMocks.getTokens
 
 // API FUNCTIONS
 const createOrder = {
@@ -199,11 +202,11 @@ export const mockSwapManager: Swap.Manager = {
   },
   slippage: slippage.success,
   clearStorage: clear.success,
-  primaryTokenId: '',
   stakingKey: '',
   supportedProviders: [] as const,
   aggregator: 'muesliswap',
-  aggregatorTokenId: '',
+  primaryTokenInfo: tokenInfoMocks.primaryETH,
+  aggregatorTokenId: undefined,
   frontendFeeTiers: [] as const,
 } as const
 
@@ -232,10 +235,10 @@ export const mockSwapManagerDefault: Swap.Manager = {
   },
   slippage: slippage.error.unknown,
   clearStorage: clear.error.unknown,
-  primaryTokenId: '',
+  primaryTokenInfo: tokenInfoMocks.primaryETH,
   stakingKey: '',
   supportedProviders: [] as const,
   frontendFeeTiers: [] as const,
-  aggregatorTokenId: '',
+  aggregatorTokenId: undefined,
   aggregator: 'muesliswap',
 } as const

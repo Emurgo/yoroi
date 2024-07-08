@@ -1,19 +1,15 @@
+import {tokenInfoMocks} from '../../../tokenInfo.mocks'
 import {SwapState, defaultSwapState} from './state'
 
 export const mockSwapStateDefault: SwapState = {
   orderData: {
     ...defaultSwapState.orderData,
-    type: 'market',
-    amounts: {
-      sell: {
-        quantity: '0',
-        tokenId: '',
-      },
-      buy: {
-        quantity: '0',
-        tokenId: '',
-      },
+    tokens: {
+      ...defaultSwapState.orderData.tokens,
+      ptInfo: tokenInfoMocks.pt,
     },
+    type: 'market',
+    amounts: {},
     limitPrice: '0',
     slippage: 1,
     selectedPoolId: undefined,

@@ -1,9 +1,7 @@
-import BigNumber from 'bignumber.js'
-import {Balance, Swap} from '@yoroi/types'
+import {BigNumber} from 'bignumber.js'
+import {Portfolio, Swap} from '@yoroi/types'
 
 import {ceilDivision} from '../../../utils/ceilDivision'
-import {Quantities} from '../../../utils/quantities'
-import {asQuantity} from '../../../utils/asQuantity'
 import {getMarketPrice} from '../../prices/getMarketPrice'
 
 /**
@@ -19,29 +17,27 @@ import {getMarketPrice} from '../../prices/getMarketPrice'
  */
 export const getBuyAmount = (
   pool: Swap.Pool,
-  sell: Balance.Amount,
+  sell: Portfolio.Token.Amount,
+  buyInfo: Portfolio.Token.Info,
   isLimit?: boolean,
-  limit: Balance.Quantity = Quantities.zero,
-): Balance.Amount => {
-  const isSellTokenA = sell.tokenId === pool.tokenA.tokenId
+  limit: BigNumber = new BigNumber(0),
+): Portfolio.Token.Amount => {
+  const isSellTokenA = sell.info.id === pool.tokenA.tokenId
 
-  const tokenId = isSellTokenA ? pool.tokenB.tokenId : pool.tokenA.tokenId
-
-  if (Quantities.isZero(sell.quantity))
-    return {tokenId, quantity: Quantities.zero}
+  if (sell.quantity === 0n) return {info: buyInfo, quantity: 0n}
 
   if (isLimit) {
-    const limitPrice = Quantities.isZero(limit)
-      ? getMarketPrice(pool, sell.tokenId)
+    const limitPrice = limit.isZero()
+      ? getMarketPrice(pool, sell.info.id)
       : limit
 
     return {
-      tokenId,
-      quantity: Quantities.isZero(limitPrice)
-        ? Quantities.zero
-        : asQuantity(
-            new BigNumber(sell.quantity)
-              .dividedToIntegerBy(new BigNumber(limitPrice))
+      info: buyInfo,
+      quantity: limitPrice.isZero()
+        ? 0n
+        : BigInt(
+            new BigNumber(sell.quantity.toString())
+              .dividedToIntegerBy(limitPrice)
               .toString(),
           ),
     }
@@ -59,15 +55,12 @@ export const getBuyAmount = (
     BigInt(100 * 1000),
   )
 
-  const quantity = asQuantity(
-    (
-      secondToken -
-      ceilDivision(firstToken * secondToken, firstToken + sellQuantity - fee)
-    ).toString(),
-  )
+  const quantity =
+    secondToken -
+    ceilDivision(firstToken * secondToken, firstToken + sellQuantity - fee)
 
   return {
     quantity,
-    tokenId,
+    info: buyInfo,
   }
 }

@@ -1,4 +1,4 @@
-import {Balance, Swap} from '@yoroi/types'
+import {Portfolio, Swap} from '@yoroi/types'
 import {getQuantityWithSlippage} from '../amounts/getQuantityWithSlippage'
 
 /**
@@ -13,30 +13,29 @@ import {getQuantityWithSlippage} from '../amounts/getQuantityWithSlippage'
  * @returns The created limit order data.
  */
 export const makeLimitOrder = (
-  sell: Balance.Amount,
-  buy: Balance.Amount,
+  sell: Portfolio.Token.Amount,
+  buy: Portfolio.Token.Amount,
   pool: Swap.Pool,
   slippage: number,
   address: string,
 ): Swap.CreateOrderData => {
-  if (slippage < 0 || slippage > 100) {
+  if (slippage < 0 || slippage > 100)
     throw new Error('Invalid slippage percentage')
-  }
 
-  const receiveAmountWithSlippage = getQuantityWithSlippage(
-    buy.quantity,
-    slippage,
-  )
+  const quantity = getQuantityWithSlippage(buy.quantity, slippage)
 
   return {
     selectedPool: pool,
     address,
     slippage,
     amounts: {
-      sell,
+      sell: {
+        tokenId: sell.info.id,
+        quantity: sell.quantity,
+      },
       buy: {
-        tokenId: buy.tokenId,
-        quantity: receiveAmountWithSlippage,
+        tokenId: buy.info.id,
+        quantity,
       },
     },
   }

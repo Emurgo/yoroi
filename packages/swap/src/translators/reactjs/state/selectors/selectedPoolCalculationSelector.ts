@@ -1,4 +1,5 @@
-import {SwapOrderCalculation, SwapState} from '../state'
+import {SwapOrderCalculation} from '../../../../types'
+import {SwapState} from '../state'
 
 export const selectedPoolCalculationSelector = (
   orderData: SwapState['orderData'],

@@ -1,12 +1,13 @@
-import {Balance, Swap} from '@yoroi/types'
+import {Portfolio, Swap} from '@yoroi/types'
 
 import {swapApiMaker} from './api-maker'
 import {openswapMocks} from './openswap-api/openswap.mocks'
 import {apiMocks} from './openswap-api/api.mocks'
 import {OpenSwapApi} from './openswap-api/api'
+import {tokenInfoMocks} from '@yoroi/portfolio'
 
 const stakingKey = 'someStakingKey'
-const primaryTokenId = ''
+const primaryTokenInfo = tokenInfoMocks.primaryETH
 const supportedProviders: ReadonlyArray<Swap.SupportedProvider> = ['minswap']
 
 describe('swapApiMaker', () => {
@@ -37,7 +38,7 @@ describe('swapApiMaker', () => {
       {
         isMainnet: true,
         stakingKey,
-        primaryTokenId,
+        primaryTokenInfo,
         supportedProviders,
       },
       {
@@ -60,7 +61,7 @@ describe('swapApiMaker', () => {
       {
         isMainnet: true,
         stakingKey,
-        primaryTokenId,
+        primaryTokenInfo,
         supportedProviders,
       },
       {
@@ -85,7 +86,7 @@ describe('swapApiMaker', () => {
       {
         isMainnet: true,
         stakingKey,
-        primaryTokenId,
+        primaryTokenInfo,
         supportedProviders,
       },
       {
@@ -113,7 +114,7 @@ describe('swapApiMaker', () => {
     const testnet = swapApiMaker({
       isMainnet: true,
       stakingKey,
-      primaryTokenId,
+      primaryTokenInfo,
       supportedProviders,
     })
     expect(testnet).toBeDefined()
@@ -121,7 +122,7 @@ describe('swapApiMaker', () => {
     const mainnet = swapApiMaker({
       isMainnet: false,
       stakingKey,
-      primaryTokenId,
+      primaryTokenInfo,
       supportedProviders,
     })
     expect(mainnet).toBeDefined()
@@ -142,7 +143,7 @@ describe('swapApiMaker', () => {
         {
           isMainnet: true,
           stakingKey,
-          primaryTokenId,
+          primaryTokenInfo,
           supportedProviders,
         },
         {
@@ -174,7 +175,7 @@ describe('swapApiMaker', () => {
         {
           isMainnet: true,
           stakingKey,
-          primaryTokenId,
+          primaryTokenInfo,
           supportedProviders,
         },
         {
@@ -201,7 +202,7 @@ describe('swapApiMaker', () => {
         {
           isMainnet: true,
           stakingKey,
-          primaryTokenId,
+          primaryTokenInfo,
           supportedProviders,
         },
         {
@@ -227,7 +228,7 @@ describe('swapApiMaker', () => {
         {
           isMainnet: true,
           stakingKey,
-          primaryTokenId,
+          primaryTokenInfo,
           supportedProviders,
         },
         {
@@ -235,10 +236,12 @@ describe('swapApiMaker', () => {
         },
       )
 
-      const result = await api.getTokenPairs('')
+      const result = await api.getTokenPairs('.')
 
       expect(mockOpenSwapApi.getTokenPairs).toHaveBeenCalledTimes(1)
-      expect(result).toEqual<Array<Balance.Token>>(apiMocks.getTokenPairs)
+      expect(result).toEqual<Array<Portfolio.Token.Info>>(
+        apiMocks.getTokenPairs,
+      )
     })
 
     it('preprod (mocked)', async () => {
@@ -250,7 +253,7 @@ describe('swapApiMaker', () => {
         {
           isMainnet: false,
           stakingKey,
-          primaryTokenId,
+          primaryTokenInfo,
           supportedProviders,
         },
         {
@@ -258,7 +261,7 @@ describe('swapApiMaker', () => {
         },
       )
 
-      const result = await api.getTokenPairs('')
+      const result = await api.getTokenPairs('.')
 
       expect(result).toBeDefined()
       expect(mockOpenSwapApi.getTokenPairs).not.toHaveBeenCalled()
@@ -274,7 +277,7 @@ describe('swapApiMaker', () => {
         {
           isMainnet: true,
           stakingKey,
-          primaryTokenId,
+          primaryTokenInfo,
           supportedProviders,
         },
         {
@@ -285,7 +288,7 @@ describe('swapApiMaker', () => {
       const result = await api.getTokens()
 
       expect(mockOpenSwapApi.getTokens).toHaveBeenCalledTimes(1)
-      expect(result).toEqual<Array<Balance.TokenInfo>>(apiMocks.getTokens)
+      expect(result).toEqual<Array<Portfolio.Token.Info>>(apiMocks.getTokens)
     })
 
     it('preprod', async () => {
@@ -297,7 +300,7 @@ describe('swapApiMaker', () => {
         {
           isMainnet: false,
           stakingKey,
-          primaryTokenId,
+          primaryTokenInfo,
           supportedProviders,
         },
         {
@@ -322,7 +325,7 @@ describe('swapApiMaker', () => {
         {
           isMainnet: true,
           stakingKey,
-          primaryTokenId,
+          primaryTokenInfo,
           supportedProviders,
         },
         {
@@ -348,7 +351,7 @@ describe('swapApiMaker', () => {
         {
           isMainnet: false,
           stakingKey,
-          primaryTokenId,
+          primaryTokenInfo,
           supportedProviders,
         },
         {
@@ -376,7 +379,7 @@ describe('swapApiMaker', () => {
         {
           isMainnet: true,
           stakingKey,
-          primaryTokenId,
+          primaryTokenInfo,
           supportedProviders,
         },
         {
@@ -385,7 +388,7 @@ describe('swapApiMaker', () => {
       )
 
       const result = await api.getPrice({
-        baseToken: '',
+        baseToken: '.',
         quoteToken:
           '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6.4d494e',
       })

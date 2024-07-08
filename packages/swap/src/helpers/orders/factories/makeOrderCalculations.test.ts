@@ -1,9 +1,11 @@
-import {Balance, Swap} from '@yoroi/types'
+import {Swap} from '@yoroi/types'
 import {AppApi} from '@yoroi/api'
 
 import {makeOrderCalculations} from './makeOrderCalculations'
 import {mocks} from '../../mocks'
-import {SwapOrderCalculation} from '../../../translators/reactjs/state/state'
+import {SwapOrderCalculation} from '../../../types'
+import {SwapState} from '../../../translators/reactjs/state/state'
+import {tokenInfoMocks} from '../../../tokenInfo.mocks'
 
 describe('makeOrderCalculations', () => {
   const frontendFeeTiers = AppApi.mockGetFrontendFees.withFees.muesliswap!
@@ -11,15 +13,15 @@ describe('makeOrderCalculations', () => {
   it('should calculate all fees and amounts correctly (case 1, sell A)', () => {
     const pool = mocks.mockedPools5[0] as Swap.Pool
     const pools = [pool]
-    const amounts = {
+    const amounts: SwapState['orderData']['amounts'] = {
       sell: {
-        quantity: '10000000000',
-        tokenId: 'tokenA',
-      } as Balance.Amount,
+        quantity: 10000000000n,
+        info: tokenInfoMocks.a,
+      },
       buy: {
-        quantity: '0',
-        tokenId: 'tokenB',
-      } as Balance.Amount,
+        quantity: 0n,
+        info: tokenInfoMocks.b,
+      },
     }
 
     const slippage = 0
@@ -30,18 +32,9 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: {
-          decimals: 6,
-          id: 'tokenA',
-        },
-        buyInfo: {
-          decimals: 6,
-          id: 'tokenB',
-        },
-        ptInfo: {
-          decimals: 6,
-          id: '',
-        },
+        sellInfo: tokenInfoMocks.a,
+        buyInfo: tokenInfoMocks.b,
+        ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
       lpTokenHeld: undefined,
@@ -49,7 +42,9 @@ describe('makeOrderCalculations', () => {
       frontendFeeTiers,
     })
 
-    expect(calculations[0]).toStrictEqual({
+    console.error(JSON.stringify(calculations[0]?.prices))
+
+    expect(calculations[0]).toStrictEqual<SwapOrderCalculation>({
       order: {
         side: 'sell',
         slippage: 0,
@@ -57,34 +52,34 @@ describe('makeOrderCalculations', () => {
         limitPrice: undefined,
         amounts: {
           sell: {
-            quantity: '10000000000',
-            tokenId: 'tokenA',
+            quantity: 10000000000n,
+            info: tokenInfoMocks.a,
           },
           buy: {
-            quantity: '0',
-            tokenId: 'tokenB',
+            quantity: 0n,
+            info: tokenInfoMocks.b,
           },
         },
         lpTokenHeld: undefined,
       },
       sides: {
         sell: {
-          quantity: '10000000000',
-          tokenId: 'tokenA',
+          quantity: 10000000000n,
+          info: tokenInfoMocks.a,
         },
         buy: {
-          quantity: '148894355282',
-          tokenId: 'tokenB',
+          quantity: 148894355282n,
+          info: tokenInfoMocks.b,
         },
       },
       cost: {
         batcherFee: {
-          quantity: '2000000',
-          tokenId: '',
+          quantity: 2000000n,
+          info: tokenInfoMocks.pt,
         },
         deposit: {
-          quantity: '2000000',
-          tokenId: '',
+          quantity: 2000000n,
+          info: tokenInfoMocks.pt,
         },
         frontendFeeInfo: {
           discountTier: {
@@ -94,54 +89,54 @@ describe('makeOrderCalculations', () => {
             variableFeeMultiplier: 0.0005,
           },
           fee: {
-            quantity: '6000000',
-            tokenId: '',
+            quantity: 6000000n,
+            info: tokenInfoMocks.pt,
           },
         },
         liquidityFee: {
-          quantity: '30000000',
-          tokenId: 'tokenA',
+          quantity: 30000000n,
+          info: tokenInfoMocks.a,
         },
 
         ptTotalRequired: {
-          tokenId: '',
-          quantity: '10000000',
+          info: tokenInfoMocks.pt,
+          quantity: 10000000n,
         },
       },
       buyAmountWithSlippage: {
-        quantity: '148894355282',
-        tokenId: 'tokenB',
+        quantity: 148894355282n,
+        info: tokenInfoMocks.b,
       },
       ptTotalValueSpent: {
-        quantity: '10008000000',
-        tokenId: '',
+        quantity: 10008000000n,
+        info: tokenInfoMocks.pt,
       },
       hasSupply: true,
       prices: {
-        base: '0.06693552899045170664',
-        market: '0.06693552899045170664',
         actualPrice: '0.06716171329034198007',
-        withSlippage: '0.06716171329034198007',
+        base: '0.06693552899045170664',
+        difference: '0.418183996965910966',
+        market: '0.06693552899045170664',
+        priceImpact: '0.33791366603308449',
         withFees: '0.06721544266097425366',
         withFeesAndSlippage: '0.06721544266097425366',
-        difference: '0.418183996965910966',
-        priceImpact: '0.33791366603308449',
+        withSlippage: '0.06716171329034198007',
       },
-      pool: pools[0],
-    } as SwapOrderCalculation)
+      pool: pools[0]!,
+    })
   })
   it('should calculate all fees and amounts correctly (case 2, sell B, reversed case 1) ', () => {
     const pool = mocks.mockedPools5[1] as Swap.Pool
     const pools = [pool]
-    const amounts = {
+    const amounts: SwapState['orderData']['amounts'] = {
       sell: {
-        quantity: '10000000000',
-        tokenId: 'tokenB',
-      } as Balance.Amount,
+        quantity: 10000000000n,
+        info: tokenInfoMocks.b,
+      },
       buy: {
-        quantity: '0',
-        tokenId: 'tokenA',
-      } as Balance.Amount,
+        quantity: 0n,
+        info: tokenInfoMocks.a,
+      },
     }
 
     const slippage = 0
@@ -152,26 +147,18 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: {
-          decimals: 6,
-          id: 'tokenB',
-        },
-        buyInfo: {
-          decimals: 6,
-          id: 'tokenA',
-        },
-        ptInfo: {
-          decimals: 6,
-          id: '',
-        },
+        sellInfo: tokenInfoMocks.b,
+        buyInfo: tokenInfoMocks.a,
+        ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
       lpTokenHeld: undefined,
       side: 'sell',
       frontendFeeTiers,
     })
-    const calculation = calculations[0] as SwapOrderCalculation
-    expect(calculation).toStrictEqual({
+    const calculation: SwapOrderCalculation = calculations[0]!
+
+    expect(calculation).toStrictEqual<SwapOrderCalculation>({
       order: {
         side: 'sell',
         slippage: 0,
@@ -179,34 +166,34 @@ describe('makeOrderCalculations', () => {
         limitPrice: undefined,
         amounts: {
           sell: {
-            quantity: '10000000000',
-            tokenId: 'tokenB',
+            quantity: 10000000000n,
+            info: tokenInfoMocks.b,
           },
           buy: {
-            quantity: '0',
-            tokenId: 'tokenA',
+            quantity: 0n,
+            info: tokenInfoMocks.a,
           },
         },
         lpTokenHeld: undefined,
       },
       sides: {
         sell: {
-          quantity: '10000000000',
-          tokenId: 'tokenB',
+          quantity: 10000000000n,
+          info: tokenInfoMocks.b,
         },
         buy: {
-          quantity: '148894355282',
-          tokenId: 'tokenA',
+          quantity: 148894355282n,
+          info: tokenInfoMocks.a,
         },
       },
       cost: {
         batcherFee: {
-          quantity: '2000000',
-          tokenId: '',
+          quantity: 2000000n,
+          info: tokenInfoMocks.pt,
         },
         deposit: {
-          quantity: '2000000',
-          tokenId: '',
+          quantity: 2000000n,
+          info: tokenInfoMocks.pt,
         },
         frontendFeeInfo: {
           discountTier: {
@@ -216,27 +203,27 @@ describe('makeOrderCalculations', () => {
             variableFeeMultiplier: 0.0005,
           },
           fee: {
-            quantity: '6000000',
-            tokenId: '',
+            quantity: 6000000n,
+            info: tokenInfoMocks.pt,
           },
         },
         liquidityFee: {
-          quantity: '30000000',
-          tokenId: 'tokenB',
+          quantity: 30000000n,
+          info: tokenInfoMocks.b,
         },
 
         ptTotalRequired: {
-          tokenId: '',
-          quantity: '10000000',
+          info: tokenInfoMocks.pt,
+          quantity: 10000000n,
         },
       },
       buyAmountWithSlippage: {
-        quantity: '148894355282',
-        tokenId: 'tokenA',
+        quantity: 148894355282n,
+        info: tokenInfoMocks.a,
       },
       ptTotalValueSpent: {
-        quantity: '10008000000',
-        tokenId: '',
+        quantity: 10008000000n,
+        info: tokenInfoMocks.pt,
       },
       hasSupply: true,
       prices: {
@@ -255,15 +242,15 @@ describe('makeOrderCalculations', () => {
   it('should calculate all fees and amounts correctly (case 3, buy B)', () => {
     const pool = mocks.mockedPools5[0] as Swap.Pool
     const pools = [pool]
-    const amounts = {
+    const amounts: SwapState['orderData']['amounts'] = {
       sell: {
-        quantity: '0',
-        tokenId: 'tokenA',
-      } as Balance.Amount,
+        quantity: 0n,
+        info: tokenInfoMocks.a,
+      },
       buy: {
-        quantity: '148894355268',
-        tokenId: 'tokenB',
-      } as Balance.Amount,
+        quantity: 148894355268n,
+        info: tokenInfoMocks.b,
+      },
     }
 
     const slippage = 0
@@ -274,27 +261,18 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: {
-          decimals: 6,
-          id: 'tokenA',
-        },
-        buyInfo: {
-          decimals: 6,
-          id: 'tokenB',
-        },
-        ptInfo: {
-          decimals: 6,
-          id: '',
-        },
+        sellInfo: tokenInfoMocks.a,
+        buyInfo: tokenInfoMocks.b,
+        ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
       lpTokenHeld: undefined,
       side: 'buy',
       frontendFeeTiers,
     })
-    const calculation = calculations[0] as SwapOrderCalculation
+    const calculation: SwapOrderCalculation = calculations[0]!
 
-    expect(calculation).toStrictEqual({
+    expect(calculation).toStrictEqual<SwapOrderCalculation>({
       order: {
         side: 'buy',
         slippage: 0,
@@ -302,34 +280,34 @@ describe('makeOrderCalculations', () => {
         limitPrice: undefined,
         amounts: {
           sell: {
-            quantity: '0',
-            tokenId: 'tokenA',
+            quantity: 0n,
+            info: tokenInfoMocks.a,
           },
           buy: {
-            quantity: '148894355268',
-            tokenId: 'tokenB',
+            quantity: 148894355268n,
+            info: tokenInfoMocks.b,
           },
         },
         lpTokenHeld: undefined,
       },
       sides: {
         sell: {
-          quantity: '10000000000',
-          tokenId: 'tokenA',
+          quantity: 10000000000n,
+          info: tokenInfoMocks.a,
         },
         buy: {
-          quantity: '148894355268',
-          tokenId: 'tokenB',
+          quantity: 148894355268n,
+          info: tokenInfoMocks.b,
         },
       },
       cost: {
         batcherFee: {
-          quantity: '2000000',
-          tokenId: '',
+          quantity: 2000000n,
+          info: tokenInfoMocks.pt,
         },
         deposit: {
-          quantity: '2000000',
-          tokenId: '',
+          quantity: 2000000n,
+          info: tokenInfoMocks.pt,
         },
         frontendFeeInfo: {
           discountTier: {
@@ -339,27 +317,27 @@ describe('makeOrderCalculations', () => {
             variableFeeMultiplier: 0.0005,
           },
           fee: {
-            quantity: '6000000',
-            tokenId: '',
+            quantity: 6000000n,
+            info: tokenInfoMocks.pt,
           },
         },
         liquidityFee: {
-          quantity: '30000000',
-          tokenId: 'tokenA',
+          quantity: 30000000n,
+          info: tokenInfoMocks.a,
         },
 
         ptTotalRequired: {
-          tokenId: '',
-          quantity: '10000000',
+          info: tokenInfoMocks.pt,
+          quantity: 10000000n,
         },
       },
       buyAmountWithSlippage: {
-        quantity: '148894355268',
-        tokenId: 'tokenB',
+        quantity: 148894355268n,
+        info: tokenInfoMocks.b,
       },
       ptTotalValueSpent: {
-        quantity: '10008000000',
-        tokenId: '',
+        quantity: 10008000000n,
+        info: tokenInfoMocks.pt,
       },
       hasSupply: true,
       prices: {
@@ -378,15 +356,15 @@ describe('makeOrderCalculations', () => {
   it('should calculate all fees and amounts correctly (case 4, buy A, reversed case 3) ', () => {
     const pool = mocks.mockedPools5[1] as Swap.Pool
     const pools = [pool]
-    const amounts = {
+    const amounts: SwapState['orderData']['amounts'] = {
       sell: {
-        quantity: '0',
-        tokenId: 'tokenB',
-      } as Balance.Amount,
+        quantity: 0n,
+        info: tokenInfoMocks.b,
+      },
       buy: {
-        quantity: '148894355268',
-        tokenId: 'tokenA',
-      } as Balance.Amount,
+        quantity: 148894355268n,
+        info: tokenInfoMocks.a,
+      },
     }
 
     const slippage = 0
@@ -397,27 +375,18 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: {
-          decimals: 6,
-          id: 'tokenA',
-        },
-        buyInfo: {
-          decimals: 6,
-          id: 'tokenB',
-        },
-        ptInfo: {
-          decimals: 6,
-          id: '',
-        },
+        sellInfo: tokenInfoMocks.a,
+        buyInfo: tokenInfoMocks.b,
+        ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
       lpTokenHeld: undefined,
       side: 'buy',
       frontendFeeTiers,
     })
-    const calculation = calculations[0] as SwapOrderCalculation
+    const calculation: SwapOrderCalculation = calculations[0]!
 
-    expect(calculation).toStrictEqual({
+    expect(calculation).toStrictEqual<SwapOrderCalculation>({
       order: {
         side: 'buy',
         slippage: 0,
@@ -425,34 +394,34 @@ describe('makeOrderCalculations', () => {
         limitPrice: undefined,
         amounts: {
           sell: {
-            quantity: '0',
-            tokenId: 'tokenB',
+            quantity: 0n,
+            info: tokenInfoMocks.b,
           },
           buy: {
-            quantity: '148894355268',
-            tokenId: 'tokenA',
+            quantity: 148894355268n,
+            info: tokenInfoMocks.a,
           },
         },
         lpTokenHeld: undefined,
       },
       sides: {
         sell: {
-          quantity: '10000000000',
-          tokenId: 'tokenB',
+          quantity: 10000000000n,
+          info: tokenInfoMocks.b,
         },
         buy: {
-          quantity: '148894355268',
-          tokenId: 'tokenA',
+          quantity: 148894355268n,
+          info: tokenInfoMocks.a,
         },
       },
       cost: {
         batcherFee: {
-          quantity: '2000000',
-          tokenId: '',
+          quantity: 2000000n,
+          info: tokenInfoMocks.pt,
         },
         deposit: {
-          quantity: '2000000',
-          tokenId: '',
+          quantity: 2000000n,
+          info: tokenInfoMocks.pt,
         },
         frontendFeeInfo: {
           discountTier: {
@@ -462,27 +431,27 @@ describe('makeOrderCalculations', () => {
             variableFeeMultiplier: 0.0005,
           },
           fee: {
-            quantity: '6000000',
-            tokenId: '',
+            quantity: 6000000n,
+            info: tokenInfoMocks.pt,
           },
         },
         liquidityFee: {
-          quantity: '30000000',
-          tokenId: 'tokenB',
+          quantity: 30000000n,
+          info: tokenInfoMocks.b,
         },
 
         ptTotalRequired: {
-          tokenId: '',
-          quantity: '10000000',
+          info: tokenInfoMocks.pt,
+          quantity: 10000000n,
         },
       },
       buyAmountWithSlippage: {
-        quantity: '148894355268',
-        tokenId: 'tokenA',
+        quantity: 148894355268n,
+        info: tokenInfoMocks.a,
       },
       ptTotalValueSpent: {
-        quantity: '10008000000',
-        tokenId: '',
+        quantity: 10008000000n,
+        info: tokenInfoMocks.pt,
       },
       hasSupply: true,
       prices: {
@@ -501,15 +470,15 @@ describe('makeOrderCalculations', () => {
   it('should calculate all fees and amounts correctly (case 5, with slippage)', () => {
     const pool = mocks.mockedPools5[2] as Swap.Pool
     const pools = [pool]
-    const amounts = {
+    const amounts: SwapState['orderData']['amounts'] = {
       sell: {
-        quantity: '100',
-        tokenId: 'tokenA',
-      } as Balance.Amount,
+        quantity: 100n,
+        info: tokenInfoMocks.a,
+      },
       buy: {
-        quantity: '0',
-        tokenId: 'tokenB',
-      } as Balance.Amount,
+        quantity: 0n,
+        info: tokenInfoMocks.b,
+      },
     }
 
     const slippage = 50
@@ -520,18 +489,9 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: {
-          decimals: 6,
-          id: 'tokenA',
-        },
-        buyInfo: {
-          decimals: 6,
-          id: 'tokenB',
-        },
-        ptInfo: {
-          decimals: 6,
-          id: '',
-        },
+        sellInfo: tokenInfoMocks.a,
+        buyInfo: tokenInfoMocks.b,
+        ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
       lpTokenHeld: undefined,
@@ -547,59 +507,59 @@ describe('makeOrderCalculations', () => {
         limitPrice: undefined,
         amounts: {
           sell: {
-            quantity: '100',
-            tokenId: 'tokenA',
+            quantity: 100n,
+            info: tokenInfoMocks.a,
           },
           buy: {
-            quantity: '0',
-            tokenId: 'tokenB',
+            quantity: 0n,
+            info: tokenInfoMocks.b,
           },
         },
         lpTokenHeld: undefined,
       },
       sides: {
         sell: {
-          quantity: '100',
-          tokenId: 'tokenA',
+          quantity: 100n,
+          info: tokenInfoMocks.a,
         },
         buy: {
-          quantity: '100',
-          tokenId: 'tokenB',
+          quantity: 100n,
+          info: tokenInfoMocks.b,
         },
       },
       cost: {
         batcherFee: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         deposit: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         frontendFeeInfo: {
           discountTier: undefined,
           fee: {
-            quantity: '0',
-            tokenId: '',
+            quantity: 0n,
+            info: tokenInfoMocks.pt,
           },
         },
         liquidityFee: {
-          quantity: '0',
-          tokenId: 'tokenA',
+          quantity: 0n,
+          info: tokenInfoMocks.a,
         },
 
         ptTotalRequired: {
-          tokenId: '',
-          quantity: '0',
+          info: tokenInfoMocks.pt,
+          quantity: 0n,
         },
       },
       buyAmountWithSlippage: {
-        quantity: '50',
-        tokenId: 'tokenB',
+        quantity: 50n,
+        info: tokenInfoMocks.b,
       },
       ptTotalValueSpent: {
-        quantity: '100',
-        tokenId: '',
+        quantity: 100n,
+        info: tokenInfoMocks.pt,
       },
 
       hasSupply: true,
@@ -619,15 +579,15 @@ describe('makeOrderCalculations', () => {
   it('should calculate all fees and amounts correctly (case 6, zero supply)', () => {
     const pool = mocks.mockedPools5[3] as Swap.Pool
     const pools = [pool]
-    const amounts = {
+    const amounts: SwapState['orderData']['amounts'] = {
       sell: {
-        quantity: '100',
-        tokenId: 'tokenA',
-      } as Balance.Amount,
+        quantity: 100n,
+        info: tokenInfoMocks.a,
+      },
       buy: {
-        quantity: '0',
-        tokenId: 'tokenB',
-      } as Balance.Amount,
+        quantity: 0n,
+        info: tokenInfoMocks.b,
+      },
     }
 
     const slippage = 50
@@ -638,18 +598,9 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: {
-          decimals: 6,
-          id: 'tokenA',
-        },
-        buyInfo: {
-          decimals: 6,
-          id: 'tokenB',
-        },
-        ptInfo: {
-          decimals: 6,
-          id: '',
-        },
+        sellInfo: tokenInfoMocks.a,
+        buyInfo: tokenInfoMocks.b,
+        ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
       lpTokenHeld: undefined,
@@ -664,59 +615,59 @@ describe('makeOrderCalculations', () => {
         limitPrice: undefined,
         amounts: {
           sell: {
-            quantity: '100',
-            tokenId: 'tokenA',
+            quantity: 100n,
+            info: tokenInfoMocks.a,
           },
           buy: {
-            quantity: '0',
-            tokenId: 'tokenB',
+            quantity: 0n,
+            info: tokenInfoMocks.b,
           },
         },
         lpTokenHeld: undefined,
       },
       sides: {
         sell: {
-          quantity: '100',
-          tokenId: 'tokenA',
+          quantity: 100n,
+          info: tokenInfoMocks.a,
         },
         buy: {
-          quantity: '0',
-          tokenId: 'tokenB',
+          quantity: 0n,
+          info: tokenInfoMocks.b,
         },
       },
       cost: {
         batcherFee: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         deposit: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         frontendFeeInfo: {
           discountTier: undefined,
           fee: {
-            quantity: '0',
-            tokenId: '',
+            quantity: 0n,
+            info: tokenInfoMocks.pt,
           },
         },
         liquidityFee: {
-          quantity: '0',
-          tokenId: 'tokenA',
+          quantity: 0n,
+          info: tokenInfoMocks.a,
         },
 
         ptTotalRequired: {
-          tokenId: '',
-          quantity: '0',
+          info: tokenInfoMocks.pt,
+          quantity: 0n,
         },
       },
       buyAmountWithSlippage: {
-        quantity: '0',
-        tokenId: 'tokenB',
+        quantity: 0n,
+        info: tokenInfoMocks.b,
       },
       ptTotalValueSpent: {
-        quantity: '100',
-        tokenId: '',
+        quantity: 100n,
+        info: tokenInfoMocks.pt,
       },
       hasSupply: false,
       prices: {
@@ -735,15 +686,15 @@ describe('makeOrderCalculations', () => {
   it('should calculate all fees and amounts correctly (case 7, sell A, not enough supply)', () => {
     const pool = mocks.mockedPools5[4] as Swap.Pool
     const pools = [pool]
-    const amounts = {
+    const amounts: SwapState['orderData']['amounts'] = {
       sell: {
-        quantity: '100',
-        tokenId: 'tokenA',
-      } as Balance.Amount,
+        quantity: 100n,
+        info: tokenInfoMocks.a,
+      },
       buy: {
-        quantity: '0',
-        tokenId: 'tokenB',
-      } as Balance.Amount,
+        quantity: 0n,
+        info: tokenInfoMocks.b,
+      },
     }
 
     const slippage = 50
@@ -754,18 +705,9 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: {
-          decimals: 6,
-          id: 'tokenA',
-        },
-        buyInfo: {
-          decimals: 6,
-          id: 'tokenB',
-        },
-        ptInfo: {
-          decimals: 6,
-          id: '',
-        },
+        sellInfo: tokenInfoMocks.a,
+        buyInfo: tokenInfoMocks.b,
+        ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
       lpTokenHeld: undefined,
@@ -781,59 +723,59 @@ describe('makeOrderCalculations', () => {
         limitPrice: undefined,
         amounts: {
           sell: {
-            quantity: '100',
-            tokenId: 'tokenA',
+            quantity: 100n,
+            info: tokenInfoMocks.a,
           },
           buy: {
-            quantity: '0',
-            tokenId: 'tokenB',
+            quantity: 0n,
+            info: tokenInfoMocks.b,
           },
         },
         lpTokenHeld: undefined,
       },
       sides: {
         sell: {
-          quantity: '100',
-          tokenId: 'tokenA',
+          quantity: 100n,
+          info: tokenInfoMocks.a,
         },
         buy: {
-          quantity: '0',
-          tokenId: 'tokenB',
+          quantity: 0n,
+          info: tokenInfoMocks.b,
         },
       },
       cost: {
         batcherFee: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         deposit: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         frontendFeeInfo: {
           discountTier: undefined,
           fee: {
-            quantity: '0',
-            tokenId: '',
+            quantity: 0n,
+            info: tokenInfoMocks.pt,
           },
         },
         liquidityFee: {
-          quantity: '0',
-          tokenId: 'tokenA',
+          quantity: 0n,
+          info: tokenInfoMocks.a,
         },
 
         ptTotalRequired: {
-          tokenId: '',
-          quantity: '0',
+          info: tokenInfoMocks.pt,
+          quantity: 0n,
         },
       },
       buyAmountWithSlippage: {
-        quantity: '0',
-        tokenId: 'tokenB',
+        quantity: 0n,
+        info: tokenInfoMocks.b,
       },
       ptTotalValueSpent: {
-        quantity: '100',
-        tokenId: '',
+        quantity: 100n,
+        info: tokenInfoMocks.pt,
       },
       hasSupply: true,
       prices: {
@@ -852,15 +794,15 @@ describe('makeOrderCalculations', () => {
   it('should calculate all fees and amounts correctly (case 8, buy A, not enough supply)', () => {
     const pool = mocks.mockedPools5[4] as Swap.Pool
     const pools = [pool]
-    const amounts = {
+    const amounts: SwapState['orderData']['amounts'] = {
       sell: {
-        quantity: '0',
-        tokenId: 'tokenB',
-      } as Balance.Amount,
+        quantity: 0n,
+        info: tokenInfoMocks.b,
+      },
       buy: {
-        quantity: '100',
-        tokenId: 'tokenA',
-      } as Balance.Amount,
+        quantity: 100n,
+        info: tokenInfoMocks.a,
+      },
     }
 
     const slippage = 0
@@ -871,18 +813,9 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: {
-          decimals: 6,
-          id: 'tokenB',
-        },
-        buyInfo: {
-          decimals: 6,
-          id: 'tokenA',
-        },
-        ptInfo: {
-          decimals: 6,
-          id: '',
-        },
+        sellInfo: tokenInfoMocks.b,
+        buyInfo: tokenInfoMocks.a,
+        ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
       lpTokenHeld: undefined,
@@ -898,59 +831,59 @@ describe('makeOrderCalculations', () => {
         limitPrice: undefined,
         amounts: {
           sell: {
-            quantity: '0',
-            tokenId: 'tokenB',
+            quantity: 0n,
+            info: tokenInfoMocks.b,
           },
           buy: {
-            quantity: '100',
-            tokenId: 'tokenA',
+            quantity: 100n,
+            info: tokenInfoMocks.a,
           },
         },
         lpTokenHeld: undefined,
       },
       sides: {
         sell: {
-          quantity: '1',
-          tokenId: 'tokenB',
+          quantity: 1n,
+          info: tokenInfoMocks.b,
         },
         buy: {
-          quantity: '100',
-          tokenId: 'tokenA',
+          quantity: 100n,
+          info: tokenInfoMocks.a,
         },
       },
       cost: {
         batcherFee: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         deposit: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         frontendFeeInfo: {
           discountTier: undefined,
           fee: {
-            quantity: '0',
-            tokenId: '',
+            quantity: 0n,
+            info: tokenInfoMocks.pt,
           },
         },
         liquidityFee: {
-          quantity: '0',
-          tokenId: 'tokenB',
+          quantity: 0n,
+          info: tokenInfoMocks.b,
         },
 
         ptTotalRequired: {
-          tokenId: '',
-          quantity: '0',
+          info: tokenInfoMocks.pt,
+          quantity: 0n,
         },
       },
       buyAmountWithSlippage: {
-        quantity: '100',
-        tokenId: 'tokenA',
+        quantity: 100n,
+        info: tokenInfoMocks.a,
       },
       ptTotalValueSpent: {
-        quantity: '1',
-        tokenId: '',
+        quantity: 1n,
+        info: tokenInfoMocks.pt,
       },
       hasSupply: false,
       prices: {
@@ -969,15 +902,15 @@ describe('makeOrderCalculations', () => {
   it('should calculate all fees and amounts correctly (case 9, sell A, A supply is zero)', () => {
     const pool = mocks.mockedPools5[5] as Swap.Pool
     const pools = [pool]
-    const amounts = {
+    const amounts: SwapState['orderData']['amounts'] = {
       sell: {
-        quantity: '100',
-        tokenId: 'tokenA',
-      } as Balance.Amount,
+        quantity: 100n,
+        info: tokenInfoMocks.a,
+      },
       buy: {
-        quantity: '0',
-        tokenId: 'tokenB',
-      } as Balance.Amount,
+        quantity: 0n,
+        info: tokenInfoMocks.b,
+      },
     }
 
     const slippage = 0
@@ -988,18 +921,9 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: {
-          decimals: 6,
-          id: 'tokenA',
-        },
-        buyInfo: {
-          decimals: 6,
-          id: 'tokenB',
-        },
-        ptInfo: {
-          decimals: 6,
-          id: '',
-        },
+        sellInfo: tokenInfoMocks.a,
+        buyInfo: tokenInfoMocks.b,
+        ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
       lpTokenHeld: undefined,
@@ -1015,59 +939,59 @@ describe('makeOrderCalculations', () => {
         limitPrice: undefined,
         amounts: {
           sell: {
-            quantity: '100',
-            tokenId: 'tokenA',
+            quantity: 100n,
+            info: tokenInfoMocks.a,
           },
           buy: {
-            quantity: '0',
-            tokenId: 'tokenB',
+            quantity: 0n,
+            info: tokenInfoMocks.b,
           },
         },
         lpTokenHeld: undefined,
       },
       sides: {
         sell: {
-          quantity: '100',
-          tokenId: 'tokenA',
+          quantity: 100n,
+          info: tokenInfoMocks.a,
         },
         buy: {
-          quantity: '1',
-          tokenId: 'tokenB',
+          quantity: 1n,
+          info: tokenInfoMocks.b,
         },
       },
       cost: {
         batcherFee: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         deposit: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         frontendFeeInfo: {
           discountTier: undefined,
           fee: {
-            quantity: '0',
-            tokenId: '',
+            quantity: 0n,
+            info: tokenInfoMocks.pt,
           },
         },
         liquidityFee: {
-          quantity: '0',
-          tokenId: 'tokenA',
+          quantity: 0n,
+          info: tokenInfoMocks.a,
         },
 
         ptTotalRequired: {
-          tokenId: '',
-          quantity: '0',
+          info: tokenInfoMocks.pt,
+          quantity: 0n,
         },
       },
       buyAmountWithSlippage: {
-        quantity: '1',
-        tokenId: 'tokenB',
+        quantity: 1n,
+        info: tokenInfoMocks.b,
       },
       ptTotalValueSpent: {
-        quantity: '100',
-        tokenId: '',
+        quantity: 100n,
+        info: tokenInfoMocks.pt,
       },
       hasSupply: true,
       prices: {
@@ -1086,15 +1010,15 @@ describe('makeOrderCalculations', () => {
   it('should calculate all fees and amounts correctly (case 10, sell A, B supply is zero)', () => {
     const pool = mocks.mockedPools5[6] as Swap.Pool
     const pools = [pool]
-    const amounts = {
+    const amounts: SwapState['orderData']['amounts'] = {
       sell: {
-        quantity: '100',
-        tokenId: 'tokenA',
-      } as Balance.Amount,
+        quantity: 100n,
+        info: tokenInfoMocks.a,
+      },
       buy: {
-        quantity: '0',
-        tokenId: 'tokenB',
-      } as Balance.Amount,
+        quantity: 0n,
+        info: tokenInfoMocks.b,
+      },
     }
 
     const slippage = 0
@@ -1105,18 +1029,9 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: {
-          decimals: 6,
-          id: 'tokenA',
-        },
-        buyInfo: {
-          decimals: 6,
-          id: 'tokenB',
-        },
-        ptInfo: {
-          decimals: 6,
-          id: '',
-        },
+        sellInfo: tokenInfoMocks.a,
+        buyInfo: tokenInfoMocks.b,
+        ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
       lpTokenHeld: undefined,
@@ -1132,59 +1047,59 @@ describe('makeOrderCalculations', () => {
         limitPrice: undefined,
         amounts: {
           sell: {
-            quantity: '100',
-            tokenId: 'tokenA',
+            quantity: 100n,
+            info: tokenInfoMocks.a,
           },
           buy: {
-            quantity: '0',
-            tokenId: 'tokenB',
+            quantity: 0n,
+            info: tokenInfoMocks.b,
           },
         },
         lpTokenHeld: undefined,
       },
       sides: {
         sell: {
-          quantity: '100',
-          tokenId: 'tokenA',
+          quantity: 100n,
+          info: tokenInfoMocks.a,
         },
         buy: {
-          quantity: '0',
-          tokenId: 'tokenB',
+          quantity: 0n,
+          info: tokenInfoMocks.b,
         },
       },
       cost: {
         batcherFee: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         deposit: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         frontendFeeInfo: {
           discountTier: undefined,
           fee: {
-            quantity: '0',
-            tokenId: '',
+            quantity: 0n,
+            info: tokenInfoMocks.pt,
           },
         },
         liquidityFee: {
-          quantity: '0',
-          tokenId: 'tokenA',
+          quantity: 0n,
+          info: tokenInfoMocks.a,
         },
 
         ptTotalRequired: {
-          tokenId: '',
-          quantity: '0',
+          info: tokenInfoMocks.pt,
+          quantity: 0n,
         },
       },
       buyAmountWithSlippage: {
-        quantity: '0',
-        tokenId: 'tokenB',
+        quantity: 0n,
+        info: tokenInfoMocks.b,
       },
       ptTotalValueSpent: {
-        quantity: '100',
-        tokenId: '',
+        quantity: 100n,
+        info: tokenInfoMocks.pt,
       },
       hasSupply: false,
       prices: {
@@ -1203,15 +1118,15 @@ describe('makeOrderCalculations', () => {
   it('should calculate all fees and amounts correctly (case 11, buy A, A supply is zero)', () => {
     const pool = mocks.mockedPools5[5] as Swap.Pool
     const pools = [pool]
-    const amounts = {
+    const amounts: SwapState['orderData']['amounts'] = {
       sell: {
-        quantity: '0',
-        tokenId: 'tokenB',
-      } as Balance.Amount,
+        quantity: 0n,
+        info: tokenInfoMocks.b,
+      },
       buy: {
-        quantity: '100',
-        tokenId: 'tokenA',
-      } as Balance.Amount,
+        quantity: 100n,
+        info: tokenInfoMocks.a,
+      },
     }
 
     const slippage = 0
@@ -1222,18 +1137,9 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: {
-          decimals: 6,
-          id: 'tokenB',
-        },
-        buyInfo: {
-          decimals: 6,
-          id: 'tokenA',
-        },
-        ptInfo: {
-          decimals: 6,
-          id: '',
-        },
+        sellInfo: tokenInfoMocks.b,
+        buyInfo: tokenInfoMocks.a,
+        ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
       lpTokenHeld: undefined,
@@ -1249,55 +1155,55 @@ describe('makeOrderCalculations', () => {
         limitPrice: undefined,
         amounts: {
           sell: {
-            quantity: '0',
-            tokenId: 'tokenB',
+            quantity: 0n,
+            info: tokenInfoMocks.b,
           },
           buy: {
-            quantity: '100',
-            tokenId: 'tokenA',
+            quantity: 100n,
+            info: tokenInfoMocks.a,
           },
         },
         lpTokenHeld: undefined,
       },
       sides: {
         sell: {
-          quantity: '0',
-          tokenId: 'tokenB',
+          quantity: 0n,
+          info: tokenInfoMocks.b,
         },
         buy: {
-          quantity: '100',
-          tokenId: 'tokenA',
+          quantity: 100n,
+          info: tokenInfoMocks.a,
         },
       },
       cost: {
         batcherFee: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         deposit: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         frontendFeeInfo: {
           discountTier: undefined,
           fee: {
-            quantity: '0',
-            tokenId: '',
+            quantity: 0n,
+            info: tokenInfoMocks.pt,
           },
         },
         liquidityFee: {
-          quantity: '0',
-          tokenId: 'tokenB',
+          quantity: 0n,
+          info: tokenInfoMocks.b,
         },
 
         ptTotalRequired: {
-          tokenId: '',
-          quantity: '0',
+          info: tokenInfoMocks.pt,
+          quantity: 0n,
         },
       },
       buyAmountWithSlippage: {
-        quantity: '100',
-        tokenId: 'tokenA',
+        quantity: 100n,
+        info: tokenInfoMocks.a,
       },
       ptTotalValueSpent: undefined,
       hasSupply: false,
@@ -1317,15 +1223,15 @@ describe('makeOrderCalculations', () => {
   it('should calculate all fees and amounts correctly (case 12, buy A, B supply is zero)', () => {
     const pool = mocks.mockedPools5[6] as Swap.Pool
     const pools = [pool]
-    const amounts = {
+    const amounts: SwapState['orderData']['amounts'] = {
       sell: {
-        quantity: '0',
-        tokenId: 'tokenB',
-      } as Balance.Amount,
+        quantity: 0n,
+        info: tokenInfoMocks.b,
+      },
       buy: {
-        quantity: '100',
-        tokenId: 'tokenA',
-      } as Balance.Amount,
+        quantity: 100n,
+        info: tokenInfoMocks.a,
+      },
     }
 
     const slippage = 0
@@ -1336,18 +1242,9 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: {
-          decimals: 6,
-          id: 'tokenB',
-        },
-        buyInfo: {
-          decimals: 6,
-          id: 'tokenA',
-        },
-        ptInfo: {
-          decimals: 6,
-          id: '',
-        },
+        sellInfo: tokenInfoMocks.b,
+        buyInfo: tokenInfoMocks.a,
+        ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
       lpTokenHeld: undefined,
@@ -1363,59 +1260,59 @@ describe('makeOrderCalculations', () => {
         limitPrice: undefined,
         amounts: {
           sell: {
-            quantity: '0',
-            tokenId: 'tokenB',
+            quantity: 0n,
+            info: tokenInfoMocks.b,
           },
           buy: {
-            quantity: '100',
-            tokenId: 'tokenA',
+            quantity: 100n,
+            info: tokenInfoMocks.a,
           },
         },
         lpTokenHeld: undefined,
       },
       sides: {
         sell: {
-          quantity: '1',
-          tokenId: 'tokenB',
+          quantity: 1n,
+          info: tokenInfoMocks.b,
         },
         buy: {
-          quantity: '100',
-          tokenId: 'tokenA',
+          quantity: 100n,
+          info: tokenInfoMocks.a,
         },
       },
       cost: {
         batcherFee: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         deposit: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         frontendFeeInfo: {
           discountTier: undefined,
           fee: {
-            quantity: '0',
-            tokenId: '',
+            quantity: 0n,
+            info: tokenInfoMocks.pt,
           },
         },
         liquidityFee: {
-          quantity: '0',
-          tokenId: 'tokenB',
+          quantity: 0n,
+          info: tokenInfoMocks.b,
         },
 
         ptTotalRequired: {
-          tokenId: '',
-          quantity: '0',
+          info: tokenInfoMocks.pt,
+          quantity: 0n,
         },
       },
       buyAmountWithSlippage: {
-        quantity: '100',
-        tokenId: 'tokenA',
+        quantity: 100n,
+        info: tokenInfoMocks.a,
       },
       ptTotalValueSpent: {
-        quantity: '1',
-        tokenId: '',
+        quantity: 1n,
+        info: tokenInfoMocks.pt,
       },
       hasSupply: false,
       prices: {
@@ -1434,15 +1331,15 @@ describe('makeOrderCalculations', () => {
   it('should calculate all fees and amounts correctly (case 13, sell B, B supply is zero)', () => {
     const pool = mocks.mockedPools5[6] as Swap.Pool
     const pools = [pool]
-    const amounts = {
+    const amounts: SwapState['orderData']['amounts'] = {
       sell: {
-        quantity: '100',
-        tokenId: 'tokenB',
-      } as Balance.Amount,
+        quantity: 100n,
+        info: tokenInfoMocks.b,
+      },
       buy: {
-        quantity: '0',
-        tokenId: 'tokenA',
-      } as Balance.Amount,
+        quantity: 0n,
+        info: tokenInfoMocks.a,
+      },
     }
 
     const slippage = 0
@@ -1453,18 +1350,9 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: {
-          decimals: 6,
-          id: 'tokenB',
-        },
-        buyInfo: {
-          decimals: 6,
-          id: 'tokenA',
-        },
-        ptInfo: {
-          decimals: 6,
-          id: '',
-        },
+        sellInfo: tokenInfoMocks.b,
+        buyInfo: tokenInfoMocks.a,
+        ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
       lpTokenHeld: undefined,
@@ -1480,59 +1368,59 @@ describe('makeOrderCalculations', () => {
         limitPrice: undefined,
         amounts: {
           sell: {
-            quantity: '100',
-            tokenId: 'tokenB',
+            quantity: 100n,
+            info: tokenInfoMocks.b,
           },
           buy: {
-            quantity: '0',
-            tokenId: 'tokenA',
+            quantity: 0n,
+            info: tokenInfoMocks.a,
           },
         },
         lpTokenHeld: undefined,
       },
       sides: {
         sell: {
-          quantity: '100',
-          tokenId: 'tokenB',
+          quantity: 100n,
+          info: tokenInfoMocks.b,
         },
         buy: {
-          quantity: '1',
-          tokenId: 'tokenA',
+          quantity: 1n,
+          info: tokenInfoMocks.a,
         },
       },
       cost: {
         batcherFee: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         deposit: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         frontendFeeInfo: {
           discountTier: undefined,
           fee: {
-            quantity: '0',
-            tokenId: '',
+            quantity: 0n,
+            info: tokenInfoMocks.pt,
           },
         },
         liquidityFee: {
-          quantity: '0',
-          tokenId: 'tokenB',
+          quantity: 0n,
+          info: tokenInfoMocks.b,
         },
 
         ptTotalRequired: {
-          tokenId: '',
-          quantity: '0',
+          info: tokenInfoMocks.pt,
+          quantity: 0n,
         },
       },
       buyAmountWithSlippage: {
-        quantity: '1',
-        tokenId: 'tokenA',
+        quantity: 1n,
+        info: tokenInfoMocks.a,
       },
       ptTotalValueSpent: {
-        quantity: '100',
-        tokenId: '',
+        quantity: 100n,
+        info: tokenInfoMocks.pt,
       },
       hasSupply: true,
       prices: {
@@ -1551,15 +1439,15 @@ describe('makeOrderCalculations', () => {
   it('should calculate all fees and amounts correctly (case 14, sell B, A supply is zero)', () => {
     const pool = mocks.mockedPools5[5] as Swap.Pool
     const pools = [pool]
-    const amounts = {
+    const amounts: SwapState['orderData']['amounts'] = {
       sell: {
-        quantity: '100',
-        tokenId: 'tokenB',
-      } as Balance.Amount,
+        quantity: 100n,
+        info: tokenInfoMocks.b,
+      },
       buy: {
-        quantity: '0',
-        tokenId: 'tokenA',
-      } as Balance.Amount,
+        quantity: 0n,
+        info: tokenInfoMocks.a,
+      },
     }
 
     const slippage = 0
@@ -1570,18 +1458,9 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: {
-          decimals: 6,
-          id: 'tokenB',
-        },
-        buyInfo: {
-          decimals: 6,
-          id: 'tokenA',
-        },
-        ptInfo: {
-          decimals: 6,
-          id: '',
-        },
+        sellInfo: tokenInfoMocks.b,
+        buyInfo: tokenInfoMocks.a,
+        ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
       lpTokenHeld: undefined,
@@ -1597,59 +1476,59 @@ describe('makeOrderCalculations', () => {
         limitPrice: undefined,
         amounts: {
           sell: {
-            quantity: '100',
-            tokenId: 'tokenB',
+            quantity: 100n,
+            info: tokenInfoMocks.b,
           },
           buy: {
-            quantity: '0',
-            tokenId: 'tokenA',
+            quantity: 0n,
+            info: tokenInfoMocks.a,
           },
         },
         lpTokenHeld: undefined,
       },
       sides: {
         sell: {
-          quantity: '100',
-          tokenId: 'tokenB',
+          quantity: 100n,
+          info: tokenInfoMocks.b,
         },
         buy: {
-          quantity: '0',
-          tokenId: 'tokenA',
+          quantity: 0n,
+          info: tokenInfoMocks.a,
         },
       },
       cost: {
         batcherFee: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         deposit: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         frontendFeeInfo: {
           discountTier: undefined,
           fee: {
-            quantity: '0',
-            tokenId: '',
+            quantity: 0n,
+            info: tokenInfoMocks.pt,
           },
         },
         liquidityFee: {
-          quantity: '0',
-          tokenId: 'tokenB',
+          quantity: 0n,
+          info: tokenInfoMocks.b,
         },
 
         ptTotalRequired: {
-          tokenId: '',
-          quantity: '0',
+          info: tokenInfoMocks.pt,
+          quantity: 0n,
         },
       },
       buyAmountWithSlippage: {
-        quantity: '0',
-        tokenId: 'tokenA',
+        quantity: 0n,
+        info: tokenInfoMocks.a,
       },
       ptTotalValueSpent: {
-        quantity: '100',
-        tokenId: '',
+        quantity: 100n,
+        info: tokenInfoMocks.pt,
       },
       hasSupply: false,
       prices: {
@@ -1668,15 +1547,15 @@ describe('makeOrderCalculations', () => {
   it('should calculate all fees and amounts correctly (case 15, buy B, B supply is zero)', () => {
     const pool = mocks.mockedPools5[6] as Swap.Pool
     const pools = [pool]
-    const amounts = {
+    const amounts: SwapState['orderData']['amounts'] = {
       sell: {
-        quantity: '0',
-        tokenId: 'tokenA',
-      } as Balance.Amount,
+        quantity: 0n,
+        info: tokenInfoMocks.a,
+      },
       buy: {
-        quantity: '100',
-        tokenId: 'tokenB',
-      } as Balance.Amount,
+        quantity: 100n,
+        info: tokenInfoMocks.b,
+      },
     }
 
     const slippage = 0
@@ -1687,18 +1566,9 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: {
-          decimals: 6,
-          id: 'tokenA',
-        },
-        buyInfo: {
-          decimals: 6,
-          id: 'tokenB',
-        },
-        ptInfo: {
-          decimals: 6,
-          id: '',
-        },
+        sellInfo: tokenInfoMocks.a,
+        buyInfo: tokenInfoMocks.b,
+        ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
       lpTokenHeld: undefined,
@@ -1714,55 +1584,55 @@ describe('makeOrderCalculations', () => {
         limitPrice: undefined,
         amounts: {
           sell: {
-            quantity: '0',
-            tokenId: 'tokenA',
+            quantity: 0n,
+            info: tokenInfoMocks.a,
           },
           buy: {
-            quantity: '100',
-            tokenId: 'tokenB',
+            quantity: 100n,
+            info: tokenInfoMocks.b,
           },
         },
         lpTokenHeld: undefined,
       },
       sides: {
         sell: {
-          quantity: '0',
-          tokenId: 'tokenA',
+          quantity: 0n,
+          info: tokenInfoMocks.a,
         },
         buy: {
-          quantity: '100',
-          tokenId: 'tokenB',
+          quantity: 100n,
+          info: tokenInfoMocks.b,
         },
       },
       cost: {
         batcherFee: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         deposit: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         frontendFeeInfo: {
           discountTier: undefined,
           fee: {
-            quantity: '0',
-            tokenId: '',
+            quantity: 0n,
+            info: tokenInfoMocks.pt,
           },
         },
         liquidityFee: {
-          quantity: '0',
-          tokenId: 'tokenA',
+          quantity: 0n,
+          info: tokenInfoMocks.a,
         },
 
         ptTotalRequired: {
-          tokenId: '',
-          quantity: '0',
+          info: tokenInfoMocks.pt,
+          quantity: 0n,
         },
       },
       buyAmountWithSlippage: {
-        quantity: '100',
-        tokenId: 'tokenB',
+        quantity: 100n,
+        info: tokenInfoMocks.b,
       },
       ptTotalValueSpent: undefined,
       hasSupply: false,
@@ -1782,15 +1652,15 @@ describe('makeOrderCalculations', () => {
   it('should calculate all fees and amounts correctly (case 16, buy B, A supply is zero)', () => {
     const pool = mocks.mockedPools5[5] as Swap.Pool
     const pools = [pool]
-    const amounts = {
+    const amounts: SwapState['orderData']['amounts'] = {
       sell: {
-        quantity: '0',
-        tokenId: 'tokenA',
-      } as Balance.Amount,
+        quantity: 0n,
+        info: tokenInfoMocks.a,
+      },
       buy: {
-        quantity: '100',
-        tokenId: 'tokenB',
-      } as Balance.Amount,
+        quantity: 100n,
+        info: tokenInfoMocks.b,
+      },
     }
 
     const slippage = 0
@@ -1801,18 +1671,9 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: {
-          decimals: 6,
-          id: 'tokenA',
-        },
-        buyInfo: {
-          decimals: 6,
-          id: 'tokenB',
-        },
-        ptInfo: {
-          decimals: 6,
-          id: '',
-        },
+        sellInfo: tokenInfoMocks.a,
+        buyInfo: tokenInfoMocks.b,
+        ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
       lpTokenHeld: undefined,
@@ -1828,59 +1689,59 @@ describe('makeOrderCalculations', () => {
         limitPrice: undefined,
         amounts: {
           sell: {
-            quantity: '0',
-            tokenId: 'tokenA',
+            quantity: 0n,
+            info: tokenInfoMocks.a,
           },
           buy: {
-            quantity: '100',
-            tokenId: 'tokenB',
+            quantity: 100n,
+            info: tokenInfoMocks.b,
           },
         },
         lpTokenHeld: undefined,
       },
       sides: {
         sell: {
-          quantity: '1',
-          tokenId: 'tokenA',
+          quantity: 1n,
+          info: tokenInfoMocks.a,
         },
         buy: {
-          quantity: '100',
-          tokenId: 'tokenB',
+          quantity: 100n,
+          info: tokenInfoMocks.b,
         },
       },
       cost: {
         batcherFee: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         deposit: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         frontendFeeInfo: {
           discountTier: undefined,
           fee: {
-            quantity: '0',
-            tokenId: '',
+            quantity: 0n,
+            info: tokenInfoMocks.pt,
           },
         },
         liquidityFee: {
-          quantity: '0',
-          tokenId: 'tokenA',
+          quantity: 0n,
+          info: tokenInfoMocks.a,
         },
 
         ptTotalRequired: {
-          tokenId: '',
-          quantity: '0',
+          info: tokenInfoMocks.pt,
+          quantity: 0n,
         },
       },
       buyAmountWithSlippage: {
-        quantity: '100',
-        tokenId: 'tokenB',
+        quantity: 100n,
+        info: tokenInfoMocks.b,
       },
       ptTotalValueSpent: {
-        quantity: '1',
-        tokenId: '',
+        quantity: 1n,
+        info: tokenInfoMocks.pt,
       },
       hasSupply: false,
       prices: {
@@ -1899,15 +1760,15 @@ describe('makeOrderCalculations', () => {
   it('should calculate all fees and amounts correctly (case 17, buy A, limit price)', () => {
     const pool = mocks.mockedPools5[7] as Swap.Pool
     const pools = [pool]
-    const amounts = {
+    const amounts: SwapState['orderData']['amounts'] = {
       sell: {
-        quantity: '0',
-        tokenId: 'tokenB',
-      } as Balance.Amount,
+        quantity: 0n,
+        info: tokenInfoMocks.b,
+      },
       buy: {
-        quantity: '100',
-        tokenId: 'tokenA',
-      } as Balance.Amount,
+        quantity: 100n,
+        info: tokenInfoMocks.a,
+      },
     }
 
     const slippage = 0
@@ -1918,26 +1779,17 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: {
-          decimals: 6,
-          id: 'tokenB',
-        },
-        buyInfo: {
-          decimals: 6,
-          id: 'tokenA',
-        },
-        ptInfo: {
-          decimals: 6,
-          id: '',
-        },
+        sellInfo: tokenInfoMocks.b,
+        buyInfo: tokenInfoMocks.a,
+        ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
       lpTokenHeld: undefined,
       side: 'buy',
       frontendFeeTiers,
     })
-    const calculation = calculations[0] as SwapOrderCalculation
-    expect(calculation).toStrictEqual({
+    const calculation: SwapOrderCalculation = calculations[0]!
+    expect(calculation).toStrictEqual<SwapOrderCalculation>({
       order: {
         side: 'buy',
         slippage: 0,
@@ -1945,59 +1797,59 @@ describe('makeOrderCalculations', () => {
         limitPrice: '2',
         amounts: {
           sell: {
-            quantity: '0',
-            tokenId: 'tokenB',
+            quantity: 0n,
+            info: tokenInfoMocks.b,
           },
           buy: {
-            quantity: '100',
-            tokenId: 'tokenA',
+            quantity: 100n,
+            info: tokenInfoMocks.a,
           },
         },
         lpTokenHeld: undefined,
       },
       sides: {
         sell: {
-          quantity: '200',
-          tokenId: 'tokenB',
+          quantity: 200n,
+          info: tokenInfoMocks.b,
         },
         buy: {
-          quantity: '100',
-          tokenId: 'tokenA',
+          quantity: 100n,
+          info: tokenInfoMocks.a,
         },
       },
       cost: {
         batcherFee: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         deposit: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         frontendFeeInfo: {
           discountTier: undefined,
           fee: {
-            quantity: '0',
-            tokenId: '',
+            quantity: 0n,
+            info: tokenInfoMocks.pt,
           },
         },
         liquidityFee: {
-          quantity: '0',
-          tokenId: 'tokenB',
+          quantity: 0n,
+          info: tokenInfoMocks.b,
         },
 
         ptTotalRequired: {
-          tokenId: '',
-          quantity: '0',
+          info: tokenInfoMocks.pt,
+          quantity: 0n,
         },
       },
       buyAmountWithSlippage: {
-        quantity: '100',
-        tokenId: 'tokenA',
+        quantity: 100n,
+        info: tokenInfoMocks.a,
       },
       ptTotalValueSpent: {
-        quantity: '200',
-        tokenId: '',
+        quantity: 200n,
+        info: tokenInfoMocks.pt,
       },
       hasSupply: true,
       prices: {
@@ -2016,15 +1868,15 @@ describe('makeOrderCalculations', () => {
   it('should calculate all fees and amounts correctly (case 18, sell A, limit price)', () => {
     const pool = mocks.mockedPools5[7] as Swap.Pool
     const pools = [pool]
-    const amounts = {
+    const amounts: SwapState['orderData']['amounts'] = {
       sell: {
-        quantity: '200',
-        tokenId: 'tokenA',
-      } as Balance.Amount,
+        quantity: 200n,
+        info: tokenInfoMocks.a,
+      },
       buy: {
-        quantity: '0',
-        tokenId: 'tokenB',
-      } as Balance.Amount,
+        quantity: 0n,
+        info: tokenInfoMocks.b,
+      },
     }
 
     const slippage = 0
@@ -2035,26 +1887,17 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: {
-          decimals: 6,
-          id: 'tokenA',
-        },
-        buyInfo: {
-          decimals: 6,
-          id: 'tokenB',
-        },
-        ptInfo: {
-          decimals: 6,
-          id: '',
-        },
+        sellInfo: tokenInfoMocks.a,
+        buyInfo: tokenInfoMocks.b,
+        ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
       lpTokenHeld: undefined,
       side: 'sell',
       frontendFeeTiers,
     })
-    const calculation = calculations[0] as SwapOrderCalculation
-    expect(calculation).toStrictEqual({
+    const calculation: SwapOrderCalculation = calculations[0]!
+    expect(calculation).toStrictEqual<SwapOrderCalculation>({
       order: {
         side: 'sell',
         slippage: 0,
@@ -2062,59 +1905,59 @@ describe('makeOrderCalculations', () => {
         limitPrice: '2',
         amounts: {
           sell: {
-            quantity: '200',
-            tokenId: 'tokenA',
+            quantity: 200n,
+            info: tokenInfoMocks.a,
           },
           buy: {
-            quantity: '0',
-            tokenId: 'tokenB',
+            quantity: 0n,
+            info: tokenInfoMocks.b,
           },
         },
         lpTokenHeld: undefined,
       },
       sides: {
         sell: {
-          quantity: '200',
-          tokenId: 'tokenA',
+          quantity: 200n,
+          info: tokenInfoMocks.a,
         },
         buy: {
-          quantity: '100',
-          tokenId: 'tokenB',
+          quantity: 100n,
+          info: tokenInfoMocks.b,
         },
       },
       cost: {
         batcherFee: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         deposit: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         frontendFeeInfo: {
           discountTier: undefined,
           fee: {
-            quantity: '0',
-            tokenId: '',
+            quantity: 0n,
+            info: tokenInfoMocks.pt,
           },
         },
         liquidityFee: {
-          quantity: '0',
-          tokenId: 'tokenA',
+          quantity: 0n,
+          info: tokenInfoMocks.a,
         },
 
         ptTotalRequired: {
-          tokenId: '',
-          quantity: '0',
+          info: tokenInfoMocks.pt,
+          quantity: 0n,
         },
       },
       buyAmountWithSlippage: {
-        quantity: '100',
-        tokenId: 'tokenB',
+        quantity: 100n,
+        info: tokenInfoMocks.b,
       },
       ptTotalValueSpent: {
-        quantity: '200',
-        tokenId: '',
+        quantity: 200n,
+        info: tokenInfoMocks.pt,
       },
       hasSupply: true,
       prices: {
@@ -2133,15 +1976,15 @@ describe('makeOrderCalculations', () => {
   it('should calculate all fees and amounts correctly (case 19, buy B, limit price)', () => {
     const pool = mocks.mockedPools5[7] as Swap.Pool
     const pools = [pool]
-    const amounts = {
+    const amounts: SwapState['orderData']['amounts'] = {
       sell: {
-        quantity: '0',
-        tokenId: 'tokenA',
-      } as Balance.Amount,
+        quantity: 0n,
+        info: tokenInfoMocks.a,
+      },
       buy: {
-        quantity: '100',
-        tokenId: 'tokenB',
-      } as Balance.Amount,
+        quantity: 100n,
+        info: tokenInfoMocks.b,
+      },
     }
 
     const slippage = 0
@@ -2152,26 +1995,17 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: {
-          decimals: 6,
-          id: 'tokenA',
-        },
-        buyInfo: {
-          decimals: 6,
-          id: 'tokenB',
-        },
-        ptInfo: {
-          decimals: 6,
-          id: '',
-        },
+        sellInfo: tokenInfoMocks.a,
+        buyInfo: tokenInfoMocks.b,
+        ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
       lpTokenHeld: undefined,
       side: 'buy',
       frontendFeeTiers,
     })
-    const calculation = calculations[0] as SwapOrderCalculation
-    expect(calculation).toStrictEqual({
+    const calculation: SwapOrderCalculation = calculations[0]!
+    expect(calculation).toStrictEqual<SwapOrderCalculation>({
       order: {
         side: 'buy',
         slippage: 0,
@@ -2179,59 +2013,59 @@ describe('makeOrderCalculations', () => {
         limitPrice: '2',
         amounts: {
           sell: {
-            quantity: '0',
-            tokenId: 'tokenA',
+            quantity: 0n,
+            info: tokenInfoMocks.a,
           },
           buy: {
-            quantity: '100',
-            tokenId: 'tokenB',
+            quantity: 100n,
+            info: tokenInfoMocks.b,
           },
         },
         lpTokenHeld: undefined,
       },
       sides: {
         sell: {
-          quantity: '200',
-          tokenId: 'tokenA',
+          quantity: 200n,
+          info: tokenInfoMocks.a,
         },
         buy: {
-          quantity: '100',
-          tokenId: 'tokenB',
+          quantity: 100n,
+          info: tokenInfoMocks.b,
         },
       },
       cost: {
         batcherFee: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         deposit: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         frontendFeeInfo: {
           discountTier: undefined,
           fee: {
-            quantity: '0',
-            tokenId: '',
+            quantity: 0n,
+            info: tokenInfoMocks.pt,
           },
         },
         liquidityFee: {
-          quantity: '0',
-          tokenId: 'tokenA',
+          quantity: 0n,
+          info: tokenInfoMocks.a,
         },
 
         ptTotalRequired: {
-          tokenId: '',
-          quantity: '0',
+          info: tokenInfoMocks.pt,
+          quantity: 0n,
         },
       },
       buyAmountWithSlippage: {
-        quantity: '100',
-        tokenId: 'tokenB',
+        quantity: 100n,
+        info: tokenInfoMocks.b,
       },
       ptTotalValueSpent: {
-        quantity: '200',
-        tokenId: '',
+        quantity: 200n,
+        info: tokenInfoMocks.pt,
       },
       hasSupply: true,
       prices: {
@@ -2250,15 +2084,15 @@ describe('makeOrderCalculations', () => {
   it('should calculate all fees and amounts correctly (case 20, sell B, limit price)', () => {
     const pool = mocks.mockedPools5[7] as Swap.Pool
     const pools = [pool]
-    const amounts = {
+    const amounts: SwapState['orderData']['amounts'] = {
       sell: {
-        quantity: '200',
-        tokenId: 'tokenB',
-      } as Balance.Amount,
+        quantity: 200n,
+        info: tokenInfoMocks.b,
+      },
       buy: {
-        quantity: '0',
-        tokenId: 'tokenA',
-      } as Balance.Amount,
+        quantity: 0n,
+        info: tokenInfoMocks.a,
+      },
     }
 
     const slippage = 0
@@ -2269,26 +2103,17 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: {
-          decimals: 6,
-          id: 'tokenB',
-        },
-        buyInfo: {
-          decimals: 6,
-          id: 'tokenA',
-        },
-        ptInfo: {
-          decimals: 6,
-          id: '',
-        },
+        sellInfo: tokenInfoMocks.b,
+        buyInfo: tokenInfoMocks.a,
+        ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
       lpTokenHeld: undefined,
       side: 'sell',
       frontendFeeTiers,
     })
-    const calculation = calculations[0] as SwapOrderCalculation
-    expect(calculation).toStrictEqual({
+    const calculation: SwapOrderCalculation = calculations[0]!
+    expect(calculation).toStrictEqual<SwapOrderCalculation>({
       order: {
         side: 'sell',
         slippage: 0,
@@ -2296,59 +2121,59 @@ describe('makeOrderCalculations', () => {
         limitPrice: '2',
         amounts: {
           sell: {
-            quantity: '200',
-            tokenId: 'tokenB',
+            quantity: 200n,
+            info: tokenInfoMocks.b,
           },
           buy: {
-            quantity: '0',
-            tokenId: 'tokenA',
+            quantity: 0n,
+            info: tokenInfoMocks.a,
           },
         },
         lpTokenHeld: undefined,
       },
       sides: {
         sell: {
-          quantity: '200',
-          tokenId: 'tokenB',
+          quantity: 200n,
+          info: tokenInfoMocks.b,
         },
         buy: {
-          quantity: '100',
-          tokenId: 'tokenA',
+          quantity: 100n,
+          info: tokenInfoMocks.a,
         },
       },
       cost: {
         batcherFee: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         deposit: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         frontendFeeInfo: {
           discountTier: undefined,
           fee: {
-            quantity: '0',
-            tokenId: '',
+            quantity: 0n,
+            info: tokenInfoMocks.pt,
           },
         },
         liquidityFee: {
-          quantity: '0',
-          tokenId: 'tokenB',
+          quantity: 0n,
+          info: tokenInfoMocks.b,
         },
 
         ptTotalRequired: {
-          tokenId: '',
-          quantity: '0',
+          info: tokenInfoMocks.pt,
+          quantity: 0n,
         },
       },
       buyAmountWithSlippage: {
-        quantity: '100',
-        tokenId: 'tokenA',
+        quantity: 100n,
+        info: tokenInfoMocks.a,
       },
       ptTotalValueSpent: {
-        quantity: '200',
-        tokenId: '',
+        quantity: 200n,
+        info: tokenInfoMocks.pt,
       },
       hasSupply: true,
       prices: {
@@ -2367,15 +2192,15 @@ describe('makeOrderCalculations', () => {
   it('should calculate all fees and amounts correctly (case 21, no FEF test)', () => {
     const pool = mocks.mockedPools5[7] as Swap.Pool
     const pools = [pool]
-    const amounts = {
+    const amounts: SwapState['orderData']['amounts'] = {
       sell: {
-        quantity: '99999999',
-        tokenId: 'tokenB',
-      } as Balance.Amount,
+        quantity: 99999999n,
+        info: tokenInfoMocks.b,
+      },
       buy: {
-        quantity: '0',
-        tokenId: 'tokenA',
-      } as Balance.Amount,
+        quantity: 0n,
+        info: tokenInfoMocks.a,
+      },
     }
 
     const slippage = 0
@@ -2386,26 +2211,17 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: {
-          decimals: 6,
-          id: 'tokenB',
-        },
-        buyInfo: {
-          decimals: 6,
-          id: 'tokenA',
-        },
-        ptInfo: {
-          decimals: 6,
-          id: '',
-        },
+        sellInfo: tokenInfoMocks.b,
+        buyInfo: tokenInfoMocks.a,
+        ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
       lpTokenHeld: undefined,
       side: 'sell',
       frontendFeeTiers,
     })
-    const calculation = calculations[0] as SwapOrderCalculation
-    expect(calculation).toStrictEqual({
+    const calculation: SwapOrderCalculation = calculations[0]!
+    expect(calculation).toStrictEqual<SwapOrderCalculation>({
       order: {
         side: 'sell',
         slippage: 0,
@@ -2413,59 +2229,59 @@ describe('makeOrderCalculations', () => {
         limitPrice: '1',
         amounts: {
           sell: {
-            quantity: '99999999',
-            tokenId: 'tokenB',
+            quantity: 99999999n,
+            info: tokenInfoMocks.b,
           },
           buy: {
-            quantity: '0',
-            tokenId: 'tokenA',
+            quantity: 0n,
+            info: tokenInfoMocks.a,
           },
         },
         lpTokenHeld: undefined,
       },
       sides: {
         sell: {
-          quantity: '99999999',
-          tokenId: 'tokenB',
+          quantity: 99999999n,
+          info: tokenInfoMocks.b,
         },
         buy: {
-          quantity: '99999999',
-          tokenId: 'tokenA',
+          quantity: 99999999n,
+          info: tokenInfoMocks.a,
         },
       },
       cost: {
         batcherFee: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         deposit: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         frontendFeeInfo: {
           discountTier: undefined,
           fee: {
-            quantity: '0',
-            tokenId: '',
+            quantity: 0n,
+            info: tokenInfoMocks.pt,
           },
         },
         liquidityFee: {
-          quantity: '0',
-          tokenId: 'tokenB',
+          quantity: 0n,
+          info: tokenInfoMocks.b,
         },
 
         ptTotalRequired: {
-          tokenId: '',
-          quantity: '0',
+          info: tokenInfoMocks.pt,
+          quantity: 0n,
         },
       },
       buyAmountWithSlippage: {
-        quantity: '99999999',
-        tokenId: 'tokenA',
+        quantity: 99999999n,
+        info: tokenInfoMocks.a,
       },
       ptTotalValueSpent: {
-        quantity: '99999999',
-        tokenId: '',
+        quantity: 99999999n,
+        info: tokenInfoMocks.pt,
       },
       hasSupply: true,
       prices: {
@@ -2484,15 +2300,15 @@ describe('makeOrderCalculations', () => {
   it('should calculate all fees and amounts correctly (case 22, full FEF test)', () => {
     const pool = mocks.mockedPools5[7] as Swap.Pool
     const pools = [pool]
-    const amounts = {
+    const amounts: SwapState['orderData']['amounts'] = {
       sell: {
-        quantity: '100000000',
-        tokenId: 'tokenB',
-      } as Balance.Amount,
+        quantity: 100000000n,
+        info: tokenInfoMocks.b,
+      },
       buy: {
-        quantity: '0',
-        tokenId: 'tokenA',
-      } as Balance.Amount,
+        quantity: 0n,
+        info: tokenInfoMocks.a,
+      },
     }
 
     const slippage = 0
@@ -2503,29 +2319,20 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: {
-          decimals: 6,
-          id: 'tokenB',
-        },
-        buyInfo: {
-          decimals: 6,
-          id: 'tokenA',
-        },
-        ptInfo: {
-          decimals: 6,
-          id: '',
-        },
+        sellInfo: tokenInfoMocks.b,
+        buyInfo: tokenInfoMocks.a,
+        ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
       lpTokenHeld: {
-        quantity: '50',
-        tokenId: 'tokenX',
+        quantity: 50n,
+        info: tokenInfoMocks.lp,
       },
       side: 'sell',
       frontendFeeTiers,
     })
-    const calculation = calculations[0] as SwapOrderCalculation
-    expect(calculation).toStrictEqual({
+    const calculation: SwapOrderCalculation = calculations[0]!
+    expect(calculation).toStrictEqual<SwapOrderCalculation>({
       order: {
         side: 'sell',
         slippage: 0,
@@ -2533,37 +2340,37 @@ describe('makeOrderCalculations', () => {
         limitPrice: '1',
         amounts: {
           sell: {
-            quantity: '100000000',
-            tokenId: 'tokenB',
+            quantity: 100000000n,
+            info: tokenInfoMocks.b,
           },
           buy: {
-            quantity: '0',
-            tokenId: 'tokenA',
+            quantity: 0n,
+            info: tokenInfoMocks.a,
           },
         },
         lpTokenHeld: {
-          quantity: '50',
-          tokenId: 'tokenX',
+          quantity: 50n,
+          info: tokenInfoMocks.lp,
         },
       },
       sides: {
         sell: {
-          quantity: '100000000',
-          tokenId: 'tokenB',
+          quantity: 100000000n,
+          info: tokenInfoMocks.b,
         },
         buy: {
-          quantity: '100000000',
-          tokenId: 'tokenA',
+          quantity: 100000000n,
+          info: tokenInfoMocks.a,
         },
       },
       cost: {
         batcherFee: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         deposit: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         frontendFeeInfo: {
           discountTier: {
@@ -2573,27 +2380,27 @@ describe('makeOrderCalculations', () => {
             variableFeeMultiplier: 0.0005,
           },
           fee: {
-            quantity: '1050000',
-            tokenId: '',
+            quantity: 1050000n,
+            info: tokenInfoMocks.pt,
           },
         },
         liquidityFee: {
-          quantity: '0',
-          tokenId: 'tokenB',
+          quantity: 0n,
+          info: tokenInfoMocks.b,
         },
 
         ptTotalRequired: {
-          tokenId: '',
-          quantity: '1050000',
+          info: tokenInfoMocks.pt,
+          quantity: 1050000n,
         },
       },
       buyAmountWithSlippage: {
-        quantity: '100000000',
-        tokenId: 'tokenA',
+        quantity: 100000000n,
+        info: tokenInfoMocks.a,
       },
       ptTotalValueSpent: {
-        quantity: '101050000',
-        tokenId: '',
+        quantity: 101050000n,
+        info: tokenInfoMocks.pt,
       },
       hasSupply: true,
       prices: {
@@ -2612,15 +2419,15 @@ describe('makeOrderCalculations', () => {
   it('should calculate all fees and amounts correctly (case 23, discount 1 FEF test)', () => {
     const pool = mocks.mockedPools5[7] as Swap.Pool
     const pools = [pool]
-    const amounts = {
+    const amounts: SwapState['orderData']['amounts'] = {
       sell: {
-        quantity: '100000000',
-        tokenId: 'tokenB',
-      } as Balance.Amount,
+        quantity: 100000000n,
+        info: tokenInfoMocks.b,
+      },
       buy: {
-        quantity: '0',
-        tokenId: 'tokenA',
-      } as Balance.Amount,
+        quantity: 0n,
+        info: tokenInfoMocks.a,
+      },
     }
 
     const slippage = 0
@@ -2631,29 +2438,20 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: {
-          decimals: 6,
-          id: 'tokenB',
-        },
-        buyInfo: {
-          decimals: 6,
-          id: 'tokenA',
-        },
-        ptInfo: {
-          decimals: 6,
-          id: '',
-        },
+        sellInfo: tokenInfoMocks.b,
+        buyInfo: tokenInfoMocks.a,
+        ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
       lpTokenHeld: {
-        quantity: '100',
-        tokenId: 'tokenX',
+        quantity: 100n,
+        info: tokenInfoMocks.lp,
       },
       side: 'sell',
       frontendFeeTiers,
     })
-    const calculation = calculations[0] as SwapOrderCalculation
-    expect(calculation).toStrictEqual({
+    const calculation: SwapOrderCalculation = calculations[0]!
+    expect(calculation).toStrictEqual<SwapOrderCalculation>({
       order: {
         side: 'sell',
         slippage: 0,
@@ -2661,37 +2459,37 @@ describe('makeOrderCalculations', () => {
         limitPrice: '1',
         amounts: {
           sell: {
-            quantity: '100000000',
-            tokenId: 'tokenB',
+            quantity: 100000000n,
+            info: tokenInfoMocks.b,
           },
           buy: {
-            quantity: '0',
-            tokenId: 'tokenA',
+            quantity: 0n,
+            info: tokenInfoMocks.a,
           },
         },
         lpTokenHeld: {
-          quantity: '100',
-          tokenId: 'tokenX',
+          quantity: 100n,
+          info: tokenInfoMocks.lp,
         },
       },
       sides: {
         sell: {
-          quantity: '100000000',
-          tokenId: 'tokenB',
+          quantity: 100000000n,
+          info: tokenInfoMocks.b,
         },
         buy: {
-          quantity: '100000000',
-          tokenId: 'tokenA',
+          quantity: 100000000n,
+          info: tokenInfoMocks.a,
         },
       },
       cost: {
         batcherFee: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         deposit: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         frontendFeeInfo: {
           discountTier: {
@@ -2701,27 +2499,27 @@ describe('makeOrderCalculations', () => {
             variableFeeMultiplier: 0.00025,
           },
           fee: {
-            quantity: '1025000',
-            tokenId: '',
+            quantity: 1025000n,
+            info: tokenInfoMocks.pt,
           },
         },
         liquidityFee: {
-          quantity: '0',
-          tokenId: 'tokenB',
+          quantity: 0n,
+          info: tokenInfoMocks.b,
         },
 
         ptTotalRequired: {
-          tokenId: '',
-          quantity: '1025000',
+          info: tokenInfoMocks.pt,
+          quantity: 1025000n,
         },
       },
       buyAmountWithSlippage: {
-        quantity: '100000000',
-        tokenId: 'tokenA',
+        quantity: 100000000n,
+        info: tokenInfoMocks.a,
       },
       ptTotalValueSpent: {
-        quantity: '101025000',
-        tokenId: '',
+        quantity: 101025000n,
+        info: tokenInfoMocks.pt,
       },
       hasSupply: true,
       prices: {
@@ -2740,15 +2538,15 @@ describe('makeOrderCalculations', () => {
   it('should calculate all fees and amounts correctly (case 24, discount 2 FEF test)', () => {
     const pool = mocks.mockedPools5[7] as Swap.Pool
     const pools = [pool]
-    const amounts = {
+    const amounts: SwapState['orderData']['amounts'] = {
       sell: {
-        quantity: '100000000',
-        tokenId: 'tokenB',
-      } as Balance.Amount,
+        quantity: 100000000n,
+        info: tokenInfoMocks.b,
+      },
       buy: {
-        quantity: '0',
-        tokenId: 'tokenA',
-      } as Balance.Amount,
+        quantity: 0n,
+        info: tokenInfoMocks.a,
+      },
     }
 
     const slippage = 0
@@ -2759,29 +2557,20 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: {
-          decimals: 6,
-          id: 'tokenB',
-        },
-        buyInfo: {
-          decimals: 6,
-          id: 'tokenA',
-        },
-        ptInfo: {
-          decimals: 6,
-          id: '',
-        },
+        sellInfo: tokenInfoMocks.b,
+        buyInfo: tokenInfoMocks.a,
+        ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
       lpTokenHeld: {
-        quantity: '500',
-        tokenId: 'tokenX',
+        quantity: 500n,
+        info: tokenInfoMocks.lp,
       },
       side: 'sell',
       frontendFeeTiers,
     })
-    const calculation = calculations[0] as SwapOrderCalculation
-    expect(calculation).toStrictEqual({
+    const calculation: SwapOrderCalculation = calculations[0]!
+    expect(calculation).toStrictEqual<SwapOrderCalculation>({
       order: {
         side: 'sell',
         slippage: 0,
@@ -2789,37 +2578,37 @@ describe('makeOrderCalculations', () => {
         limitPrice: '1',
         amounts: {
           sell: {
-            quantity: '100000000',
-            tokenId: 'tokenB',
+            quantity: 100000000n,
+            info: tokenInfoMocks.b,
           },
           buy: {
-            quantity: '0',
-            tokenId: 'tokenA',
+            quantity: 0n,
+            info: tokenInfoMocks.a,
           },
         },
         lpTokenHeld: {
-          quantity: '500',
-          tokenId: 'tokenX',
+          quantity: 500n,
+          info: tokenInfoMocks.lp,
         },
       },
       sides: {
         sell: {
-          quantity: '100000000',
-          tokenId: 'tokenB',
+          quantity: 100000000n,
+          info: tokenInfoMocks.b,
         },
         buy: {
-          quantity: '100000000',
-          tokenId: 'tokenA',
+          quantity: 100000000n,
+          info: tokenInfoMocks.a,
         },
       },
       cost: {
         batcherFee: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         deposit: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         frontendFeeInfo: {
           discountTier: {
@@ -2829,27 +2618,27 @@ describe('makeOrderCalculations', () => {
             variableFeeMultiplier: 0.0002,
           },
           fee: {
-            quantity: '1020000',
-            tokenId: '',
+            quantity: 1020000n,
+            info: tokenInfoMocks.pt,
           },
         },
         liquidityFee: {
-          quantity: '0',
-          tokenId: 'tokenB',
+          quantity: 0n,
+          info: tokenInfoMocks.b,
         },
 
         ptTotalRequired: {
-          tokenId: '',
-          quantity: '1020000',
+          info: tokenInfoMocks.pt,
+          quantity: 1020000n,
         },
       },
       buyAmountWithSlippage: {
-        quantity: '100000000',
-        tokenId: 'tokenA',
+        quantity: 100000000n,
+        info: tokenInfoMocks.a,
       },
       ptTotalValueSpent: {
-        quantity: '101020000',
-        tokenId: '',
+        quantity: 101020000n,
+        info: tokenInfoMocks.pt,
       },
       hasSupply: true,
       prices: {
@@ -2868,15 +2657,15 @@ describe('makeOrderCalculations', () => {
   it('should calculate all fees and amounts correctly (case 25, zero sell)', () => {
     const pool = mocks.mockedPools5[7] as Swap.Pool
     const pools = [pool]
-    const amounts = {
+    const amounts: SwapState['orderData']['amounts'] = {
       sell: {
-        quantity: '0',
-        tokenId: 'tokenB',
-      } as Balance.Amount,
+        quantity: 0n,
+        info: tokenInfoMocks.b,
+      },
       buy: {
-        quantity: '0',
-        tokenId: 'tokenA',
-      } as Balance.Amount,
+        quantity: 0n,
+        info: tokenInfoMocks.a,
+      },
     }
 
     const slippage = 0
@@ -2887,29 +2676,20 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: {
-          decimals: 6,
-          id: 'tokenB',
-        },
-        buyInfo: {
-          decimals: 6,
-          id: 'tokenA',
-        },
-        ptInfo: {
-          decimals: 6,
-          id: '',
-        },
+        sellInfo: tokenInfoMocks.b,
+        buyInfo: tokenInfoMocks.a,
+        ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
       lpTokenHeld: {
-        quantity: '50',
-        tokenId: 'tokenX',
+        quantity: 50n,
+        info: tokenInfoMocks.lp,
       },
       side: 'sell',
       frontendFeeTiers,
     })
-    const calculation = calculations[0] as SwapOrderCalculation
-    expect(calculation).toStrictEqual({
+    const calculation: SwapOrderCalculation = calculations[0]!
+    expect(calculation).toStrictEqual<SwapOrderCalculation>({
       order: {
         side: 'sell',
         slippage: 0,
@@ -2917,58 +2697,58 @@ describe('makeOrderCalculations', () => {
         limitPrice: '1',
         amounts: {
           sell: {
-            quantity: '0',
-            tokenId: 'tokenB',
+            quantity: 0n,
+            info: tokenInfoMocks.b,
           },
           buy: {
-            quantity: '0',
-            tokenId: 'tokenA',
+            quantity: 0n,
+            info: tokenInfoMocks.a,
           },
         },
         lpTokenHeld: {
-          quantity: '50',
-          tokenId: 'tokenX',
+          quantity: 50n,
+          info: tokenInfoMocks.lp,
         },
       },
       sides: {
         sell: {
-          quantity: '0',
-          tokenId: 'tokenB',
+          quantity: 0n,
+          info: tokenInfoMocks.b,
         },
         buy: {
-          quantity: '0',
-          tokenId: 'tokenA',
+          quantity: 0n,
+          info: tokenInfoMocks.a,
         },
       },
       cost: {
         batcherFee: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         deposit: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         frontendFeeInfo: {
           discountTier: undefined,
           fee: {
-            quantity: '0',
-            tokenId: '',
+            quantity: 0n,
+            info: tokenInfoMocks.pt,
           },
         },
         liquidityFee: {
-          quantity: '0',
-          tokenId: 'tokenB',
+          quantity: 0n,
+          info: tokenInfoMocks.b,
         },
 
         ptTotalRequired: {
-          tokenId: '',
-          quantity: '0',
+          info: tokenInfoMocks.pt,
+          quantity: 0n,
         },
       },
       buyAmountWithSlippage: {
-        quantity: '0',
-        tokenId: 'tokenA',
+        quantity: 0n,
+        info: tokenInfoMocks.a,
       },
       ptTotalValueSpent: undefined,
       hasSupply: true,
@@ -2988,15 +2768,15 @@ describe('makeOrderCalculations', () => {
   it('should calculate all fees and amounts correctly (case 26, zero buy)', () => {
     const pool = mocks.mockedPools5[7] as Swap.Pool
     const pools = [pool]
-    const amounts = {
+    const amounts: SwapState['orderData']['amounts'] = {
       sell: {
-        quantity: '0',
-        tokenId: 'tokenB',
-      } as Balance.Amount,
+        quantity: 0n,
+        info: tokenInfoMocks.b,
+      },
       buy: {
-        quantity: '0',
-        tokenId: 'tokenA',
-      } as Balance.Amount,
+        quantity: 0n,
+        info: tokenInfoMocks.a,
+      },
     }
 
     const slippage = 0
@@ -3007,29 +2787,20 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: {
-          decimals: 6,
-          id: 'tokenB',
-        },
-        buyInfo: {
-          decimals: 6,
-          id: 'tokenA',
-        },
-        ptInfo: {
-          decimals: 6,
-          id: '',
-        },
+        sellInfo: tokenInfoMocks.b,
+        buyInfo: tokenInfoMocks.a,
+        ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
       lpTokenHeld: {
-        quantity: '50',
-        tokenId: 'tokenX',
+        quantity: 50n,
+        info: tokenInfoMocks.lp,
       },
       side: 'buy',
       frontendFeeTiers,
     })
-    const calculation = calculations[0] as SwapOrderCalculation
-    expect(calculation).toStrictEqual({
+    const calculation: SwapOrderCalculation = calculations[0]!
+    expect(calculation).toStrictEqual<SwapOrderCalculation>({
       order: {
         side: 'buy',
         slippage: 0,
@@ -3037,58 +2808,58 @@ describe('makeOrderCalculations', () => {
         limitPrice: '1',
         amounts: {
           sell: {
-            quantity: '0',
-            tokenId: 'tokenB',
+            quantity: 0n,
+            info: tokenInfoMocks.b,
           },
           buy: {
-            quantity: '0',
-            tokenId: 'tokenA',
+            quantity: 0n,
+            info: tokenInfoMocks.a,
           },
         },
         lpTokenHeld: {
-          quantity: '50',
-          tokenId: 'tokenX',
+          quantity: 50n,
+          info: tokenInfoMocks.lp,
         },
       },
       sides: {
         sell: {
-          quantity: '0',
-          tokenId: 'tokenB',
+          quantity: 0n,
+          info: tokenInfoMocks.b,
         },
         buy: {
-          quantity: '0',
-          tokenId: 'tokenA',
+          quantity: 0n,
+          info: tokenInfoMocks.a,
         },
       },
       cost: {
         batcherFee: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         deposit: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         frontendFeeInfo: {
           discountTier: undefined,
           fee: {
-            quantity: '0',
-            tokenId: '',
+            quantity: 0n,
+            info: tokenInfoMocks.pt,
           },
         },
         liquidityFee: {
-          quantity: '0',
-          tokenId: 'tokenB',
+          quantity: 0n,
+          info: tokenInfoMocks.b,
         },
 
         ptTotalRequired: {
-          tokenId: '',
-          quantity: '0',
+          info: tokenInfoMocks.pt,
+          quantity: 0n,
         },
       },
       buyAmountWithSlippage: {
-        quantity: '0',
-        tokenId: 'tokenA',
+        quantity: 0n,
+        info: tokenInfoMocks.a,
       },
       ptTotalValueSpent: undefined,
       hasSupply: true,
@@ -3108,15 +2879,15 @@ describe('makeOrderCalculations', () => {
   it('should calculate all fees and amounts correctly (case 27, zero pt sell side)', () => {
     const pool: Swap.Pool = mocks.mockedPools7[1]!
     const pools = [pool]
-    const amounts = {
+    const amounts: SwapState['orderData']['amounts'] = {
       sell: {
-        quantity: '1',
-        tokenId: 'tokenB',
-      } as Balance.Amount,
+        quantity: 1n,
+        info: tokenInfoMocks.b,
+      },
       buy: {
-        quantity: '0',
-        tokenId: 'tokenA',
-      } as Balance.Amount,
+        quantity: 0n,
+        info: tokenInfoMocks.a,
+      },
     }
     const slippage = 0
     const calculations = makeOrderCalculations({
@@ -3126,23 +2897,14 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: {
-          decimals: 6,
-          id: 'tokenB',
-        },
-        buyInfo: {
-          decimals: 6,
-          id: 'tokenA',
-        },
-        ptInfo: {
-          decimals: 6,
-          id: '',
-        },
+        sellInfo: tokenInfoMocks.b,
+        buyInfo: tokenInfoMocks.a,
+        ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
       lpTokenHeld: {
-        quantity: '50',
-        tokenId: 'tokenX',
+        quantity: 50n,
+        info: tokenInfoMocks.lp,
       },
       side: 'buy',
       frontendFeeTiers,
@@ -3155,58 +2917,58 @@ describe('makeOrderCalculations', () => {
         limitPrice: undefined,
         amounts: {
           sell: {
-            quantity: '1',
-            tokenId: 'tokenB',
+            quantity: 1n,
+            info: tokenInfoMocks.b,
           },
           buy: {
-            quantity: '0',
-            tokenId: 'tokenA',
+            quantity: 0n,
+            info: tokenInfoMocks.a,
           },
         },
         lpTokenHeld: {
-          quantity: '50',
-          tokenId: 'tokenX',
+          quantity: 50n,
+          info: tokenInfoMocks.lp,
         },
       },
       sides: {
         sell: {
-          quantity: '0',
-          tokenId: 'tokenB',
+          quantity: 0n,
+          info: tokenInfoMocks.b,
         },
         buy: {
-          quantity: '0',
-          tokenId: 'tokenA',
+          quantity: 0n,
+          info: tokenInfoMocks.a,
         },
       },
       cost: {
         batcherFee: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         deposit: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.pt,
         },
         frontendFeeInfo: {
           discountTier: undefined,
           fee: {
-            quantity: '0',
-            tokenId: '',
+            quantity: 0n,
+            info: tokenInfoMocks.pt,
           },
         },
         liquidityFee: {
-          quantity: '0',
-          tokenId: 'tokenB',
+          quantity: 0n,
+          info: tokenInfoMocks.b,
         },
 
         ptTotalRequired: {
-          tokenId: '',
-          quantity: '0',
+          info: tokenInfoMocks.pt,
+          quantity: 0n,
         },
       },
       buyAmountWithSlippage: {
-        quantity: '0',
-        tokenId: 'tokenA',
+        quantity: 0n,
+        info: tokenInfoMocks.a,
       },
       ptTotalValueSpent: undefined,
       hasSupply: true,
@@ -3227,15 +2989,15 @@ describe('makeOrderCalculations', () => {
   it('should calculate fees and amounts correctly (case 28, pt at buy side)', () => {
     const pool: Swap.Pool = mocks.mockedPools7[1]!
     const pools = [pool]
-    const amounts = {
+    const amounts: SwapState['orderData']['amounts'] = {
       sell: {
-        quantity: '1000000',
-        tokenId: 'tokenB',
-      } as Balance.Amount,
+        quantity: 1000000n,
+        info: tokenInfoMocks.b,
+      },
       buy: {
-        quantity: '0',
-        tokenId: 'tokenA',
-      } as Balance.Amount,
+        quantity: 0n,
+        info: tokenInfoMocks.a,
+      },
     }
     const slippage = 0
     const calculations = makeOrderCalculations({
@@ -3245,23 +3007,14 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: {
-          decimals: 6,
-          id: 'tokenB',
-        },
-        buyInfo: {
-          decimals: 6,
-          id: 'tokenA',
-        },
-        ptInfo: {
-          decimals: 6,
-          id: 'tokenA',
-        },
+        sellInfo: tokenInfoMocks.b,
+        buyInfo: tokenInfoMocks.a,
+        ptInfo: tokenInfoMocks.a,
         priceDenomination: 0,
       },
       lpTokenHeld: {
-        quantity: '50',
-        tokenId: 'tokenX',
+        quantity: 50n,
+        info: tokenInfoMocks.lp,
       },
       side: 'sell',
       frontendFeeTiers,
@@ -3274,58 +3027,58 @@ describe('makeOrderCalculations', () => {
         limitPrice: undefined,
         amounts: {
           sell: {
-            quantity: '1000000',
-            tokenId: 'tokenB',
+            quantity: 1000000n,
+            info: tokenInfoMocks.b,
           },
           buy: {
-            quantity: '0',
-            tokenId: 'tokenA',
+            quantity: 0n,
+            info: tokenInfoMocks.a,
           },
         },
         lpTokenHeld: {
-          quantity: '50',
-          tokenId: 'tokenX',
+          quantity: 50n,
+          info: tokenInfoMocks.lp,
         },
       },
       sides: {
         sell: {
-          quantity: '1000000',
-          tokenId: 'tokenB',
+          quantity: 1000000n,
+          info: tokenInfoMocks.b,
         },
         buy: {
-          quantity: '199',
-          tokenId: 'tokenA',
+          quantity: 199n,
+          info: tokenInfoMocks.a,
         },
       },
       cost: {
         batcherFee: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.a,
         },
         deposit: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.a,
         },
         frontendFeeInfo: {
           discountTier: undefined,
           fee: {
-            quantity: '0',
-            tokenId: 'tokenA',
+            quantity: 0n,
+            info: tokenInfoMocks.a,
           },
         },
         liquidityFee: {
-          quantity: '0',
-          tokenId: 'tokenB',
+          quantity: 0n,
+          info: tokenInfoMocks.b,
         },
 
         ptTotalRequired: {
-          tokenId: 'tokenA',
-          quantity: '0',
+          info: tokenInfoMocks.a,
+          quantity: 0n,
         },
       },
       buyAmountWithSlippage: {
-        quantity: '199',
-        tokenId: 'tokenA',
+        quantity: 199n,
+        info: tokenInfoMocks.a,
       },
       ptTotalValueSpent: undefined,
       hasSupply: true,
@@ -3346,15 +3099,15 @@ describe('makeOrderCalculations', () => {
   it('should calculate fees and amounts correctly (case 29, price impact, zero pool fee, sell)', () => {
     const pool: Swap.Pool = mocks.mockedPools8[0]!
     const pools = [pool]
-    const amounts = {
+    const amounts: SwapState['orderData']['amounts'] = {
       sell: {
-        quantity: '250',
-        tokenId: 'tokenB',
-      } as Balance.Amount,
+        quantity: 250n,
+        info: tokenInfoMocks.b,
+      },
       buy: {
-        quantity: '0',
-        tokenId: 'tokenA',
-      } as Balance.Amount,
+        quantity: 0n,
+        info: tokenInfoMocks.a,
+      },
     }
     const slippage = 0
     const calculations = makeOrderCalculations({
@@ -3364,23 +3117,14 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: {
-          decimals: 6,
-          id: 'tokenB',
-        },
-        buyInfo: {
-          decimals: 6,
-          id: 'tokenA',
-        },
-        ptInfo: {
-          decimals: 6,
-          id: 'tokenA',
-        },
+        sellInfo: tokenInfoMocks.b,
+        buyInfo: tokenInfoMocks.a,
+        ptInfo: tokenInfoMocks.a,
         priceDenomination: 0,
       },
       lpTokenHeld: {
-        quantity: '0',
-        tokenId: 'tokenX',
+        quantity: 0n,
+        info: tokenInfoMocks.lp,
       },
       side: 'sell',
       frontendFeeTiers,
@@ -3393,58 +3137,58 @@ describe('makeOrderCalculations', () => {
         limitPrice: undefined,
         amounts: {
           sell: {
-            quantity: '250',
-            tokenId: 'tokenB',
+            quantity: 250n,
+            info: tokenInfoMocks.b,
           },
           buy: {
-            quantity: '0',
-            tokenId: 'tokenA',
+            quantity: 0n,
+            info: tokenInfoMocks.a,
           },
         },
         lpTokenHeld: {
-          quantity: '0',
-          tokenId: 'tokenX',
+          quantity: 0n,
+          info: tokenInfoMocks.lp,
         },
       },
       sides: {
         sell: {
-          quantity: '250',
-          tokenId: 'tokenB',
+          quantity: 250n,
+          info: tokenInfoMocks.b,
         },
         buy: {
-          quantity: '200',
-          tokenId: 'tokenA',
+          quantity: 200n,
+          info: tokenInfoMocks.a,
         },
       },
       cost: {
         batcherFee: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.a,
         },
         deposit: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.a,
         },
         frontendFeeInfo: {
           discountTier: undefined,
           fee: {
-            quantity: '0',
-            tokenId: 'tokenA',
+            quantity: 0n,
+            info: tokenInfoMocks.a,
           },
         },
         liquidityFee: {
-          quantity: '0',
-          tokenId: 'tokenB',
+          quantity: 0n,
+          info: tokenInfoMocks.b,
         },
 
         ptTotalRequired: {
-          tokenId: 'tokenA',
-          quantity: '0',
+          info: tokenInfoMocks.a,
+          quantity: 0n,
         },
       },
       buyAmountWithSlippage: {
-        quantity: '200',
-        tokenId: 'tokenA',
+        quantity: 200n,
+        info: tokenInfoMocks.a,
       },
       ptTotalValueSpent: undefined,
       hasSupply: true,
@@ -3465,15 +3209,15 @@ describe('makeOrderCalculations', () => {
   it('should calculate fees and amounts correctly (case 30, price impact, with pool fee, sell)', () => {
     const pool: Swap.Pool = mocks.mockedPools8[1]!
     const pools = [pool]
-    const amounts = {
+    const amounts: SwapState['orderData']['amounts'] = {
       sell: {
-        quantity: '500',
-        tokenId: 'tokenB',
-      } as Balance.Amount,
+        quantity: 500n,
+        info: tokenInfoMocks.b,
+      },
       buy: {
-        quantity: '0',
-        tokenId: 'tokenA',
-      } as Balance.Amount,
+        quantity: 0n,
+        info: tokenInfoMocks.a,
+      },
     }
     const slippage = 0
     const calculations = makeOrderCalculations({
@@ -3483,23 +3227,14 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: {
-          decimals: 6,
-          id: 'tokenB',
-        },
-        buyInfo: {
-          decimals: 6,
-          id: 'tokenA',
-        },
-        ptInfo: {
-          decimals: 6,
-          id: 'tokenA',
-        },
+        sellInfo: tokenInfoMocks.b,
+        buyInfo: tokenInfoMocks.a,
+        ptInfo: tokenInfoMocks.a,
         priceDenomination: 0,
       },
       lpTokenHeld: {
-        quantity: '0',
-        tokenId: 'tokenX',
+        quantity: 0n,
+        info: tokenInfoMocks.lp,
       },
       side: 'sell',
       frontendFeeTiers,
@@ -3512,58 +3247,58 @@ describe('makeOrderCalculations', () => {
         limitPrice: undefined,
         amounts: {
           sell: {
-            quantity: '500',
-            tokenId: 'tokenB',
+            quantity: 500n,
+            info: tokenInfoMocks.b,
           },
           buy: {
-            quantity: '0',
-            tokenId: 'tokenA',
+            quantity: 0n,
+            info: tokenInfoMocks.a,
           },
         },
         lpTokenHeld: {
-          quantity: '0',
-          tokenId: 'tokenX',
+          quantity: 0n,
+          info: tokenInfoMocks.lp,
         },
       },
       sides: {
         sell: {
-          quantity: '500',
-          tokenId: 'tokenB',
+          quantity: 500n,
+          info: tokenInfoMocks.b,
         },
         buy: {
-          quantity: '200',
-          tokenId: 'tokenA',
+          quantity: 200n,
+          info: tokenInfoMocks.a,
         },
       },
       cost: {
         batcherFee: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.a,
         },
         deposit: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.a,
         },
         frontendFeeInfo: {
           discountTier: undefined,
           fee: {
-            quantity: '0',
-            tokenId: 'tokenA',
+            quantity: 0n,
+            info: tokenInfoMocks.a,
           },
         },
         liquidityFee: {
-          quantity: '250',
-          tokenId: 'tokenB',
+          quantity: 250n,
+          info: tokenInfoMocks.b,
         },
 
         ptTotalRequired: {
-          tokenId: 'tokenA',
-          quantity: '0',
+          info: tokenInfoMocks.a,
+          quantity: 0n,
         },
       },
       buyAmountWithSlippage: {
-        quantity: '200',
-        tokenId: 'tokenA',
+        quantity: 200n,
+        info: tokenInfoMocks.a,
       },
       ptTotalValueSpent: undefined,
       hasSupply: true,
@@ -3584,15 +3319,15 @@ describe('makeOrderCalculations', () => {
   it('should calculate fees and amounts correctly (case 31, price impact, zero pool fee, buy)', () => {
     const pool: Swap.Pool = mocks.mockedPools8[0]!
     const pools = [pool]
-    const amounts = {
+    const amounts: SwapState['orderData']['amounts'] = {
       sell: {
-        quantity: '0',
-        tokenId: 'tokenB',
-      } as Balance.Amount,
+        quantity: 0n,
+        info: tokenInfoMocks.b,
+      },
       buy: {
-        quantity: '200',
-        tokenId: 'tokenA',
-      } as Balance.Amount,
+        quantity: 200n,
+        info: tokenInfoMocks.a,
+      },
     }
     const slippage = 0
     const calculations = makeOrderCalculations({
@@ -3602,23 +3337,14 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: {
-          decimals: 6,
-          id: 'tokenB',
-        },
-        buyInfo: {
-          decimals: 6,
-          id: 'tokenA',
-        },
-        ptInfo: {
-          decimals: 6,
-          id: 'tokenA',
-        },
+        sellInfo: tokenInfoMocks.b,
+        buyInfo: tokenInfoMocks.a,
+        ptInfo: tokenInfoMocks.a,
         priceDenomination: 0,
       },
       lpTokenHeld: {
-        quantity: '0',
-        tokenId: 'tokenX',
+        quantity: 0n,
+        info: tokenInfoMocks.lp,
       },
       side: 'buy',
       frontendFeeTiers,
@@ -3631,58 +3357,58 @@ describe('makeOrderCalculations', () => {
         limitPrice: undefined,
         amounts: {
           sell: {
-            quantity: '0',
-            tokenId: 'tokenB',
+            quantity: 0n,
+            info: tokenInfoMocks.b,
           },
           buy: {
-            quantity: '200',
-            tokenId: 'tokenA',
+            quantity: 200n,
+            info: tokenInfoMocks.a,
           },
         },
         lpTokenHeld: {
-          quantity: '0',
-          tokenId: 'tokenX',
+          quantity: 0n,
+          info: tokenInfoMocks.lp,
         },
       },
       sides: {
         sell: {
-          quantity: '251',
-          tokenId: 'tokenB',
+          quantity: 251n,
+          info: tokenInfoMocks.b,
         },
         buy: {
-          quantity: '200',
-          tokenId: 'tokenA',
+          quantity: 200n,
+          info: tokenInfoMocks.a,
         },
       },
       cost: {
         batcherFee: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.a,
         },
         deposit: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.a,
         },
         frontendFeeInfo: {
           discountTier: undefined,
           fee: {
-            quantity: '0',
-            tokenId: 'tokenA',
+            quantity: 0n,
+            info: tokenInfoMocks.a,
           },
         },
         liquidityFee: {
-          quantity: '0',
-          tokenId: 'tokenB',
+          quantity: 0n,
+          info: tokenInfoMocks.b,
         },
 
         ptTotalRequired: {
-          tokenId: 'tokenA',
-          quantity: '0',
+          info: tokenInfoMocks.a,
+          quantity: 0n,
         },
       },
       buyAmountWithSlippage: {
-        quantity: '200',
-        tokenId: 'tokenA',
+        quantity: 200n,
+        info: tokenInfoMocks.a,
       },
       ptTotalValueSpent: undefined,
       hasSupply: true,
@@ -3703,15 +3429,15 @@ describe('makeOrderCalculations', () => {
   it('should calculate fees and amounts correctly (case 32, price impact, with pool fee, buy)', () => {
     const pool: Swap.Pool = mocks.mockedPools8[1]!
     const pools = [pool]
-    const amounts = {
+    const amounts: SwapState['orderData']['amounts'] = {
       sell: {
-        quantity: '0',
-        tokenId: 'tokenB',
-      } as Balance.Amount,
+        quantity: 0n,
+        info: tokenInfoMocks.b,
+      },
       buy: {
-        quantity: '200',
-        tokenId: 'tokenA',
-      } as Balance.Amount,
+        quantity: 200n,
+        info: tokenInfoMocks.a,
+      },
     }
     const slippage = 0
     const calculations = makeOrderCalculations({
@@ -3721,23 +3447,14 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: {
-          decimals: 6,
-          id: 'tokenB',
-        },
-        buyInfo: {
-          decimals: 6,
-          id: 'tokenA',
-        },
-        ptInfo: {
-          decimals: 6,
-          id: 'tokenA',
-        },
+        sellInfo: tokenInfoMocks.b,
+        buyInfo: tokenInfoMocks.a,
+        ptInfo: tokenInfoMocks.a,
         priceDenomination: 0,
       },
       lpTokenHeld: {
-        quantity: '0',
-        tokenId: 'tokenX',
+        quantity: 0n,
+        info: tokenInfoMocks.lp,
       },
       side: 'buy',
       frontendFeeTiers,
@@ -3750,58 +3467,58 @@ describe('makeOrderCalculations', () => {
         limitPrice: undefined,
         amounts: {
           sell: {
-            quantity: '0',
-            tokenId: 'tokenB',
+            quantity: 0n,
+            info: tokenInfoMocks.b,
           },
           buy: {
-            quantity: '200',
-            tokenId: 'tokenA',
+            quantity: 200n,
+            info: tokenInfoMocks.a,
           },
         },
         lpTokenHeld: {
-          quantity: '0',
-          tokenId: 'tokenX',
+          quantity: 0n,
+          info: tokenInfoMocks.lp,
         },
       },
       sides: {
         sell: {
-          quantity: '502',
-          tokenId: 'tokenB',
+          quantity: 502n,
+          info: tokenInfoMocks.b,
         },
         buy: {
-          quantity: '200',
-          tokenId: 'tokenA',
+          quantity: 200n,
+          info: tokenInfoMocks.a,
         },
       },
       cost: {
         batcherFee: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.a,
         },
         deposit: {
-          quantity: '0',
-          tokenId: '',
+          quantity: 0n,
+          info: tokenInfoMocks.a,
         },
         frontendFeeInfo: {
           discountTier: undefined,
           fee: {
-            quantity: '0',
-            tokenId: 'tokenA',
+            quantity: 0n,
+            info: tokenInfoMocks.a,
           },
         },
         liquidityFee: {
-          quantity: '251',
-          tokenId: 'tokenB',
+          quantity: 251n,
+          info: tokenInfoMocks.b,
         },
 
         ptTotalRequired: {
-          tokenId: 'tokenA',
-          quantity: '0',
+          info: tokenInfoMocks.a,
+          quantity: 0n,
         },
       },
       buyAmountWithSlippage: {
-        quantity: '200',
-        tokenId: 'tokenA',
+        quantity: 200n,
+        info: tokenInfoMocks.a,
       },
       ptTotalValueSpent: undefined,
       hasSupply: true,

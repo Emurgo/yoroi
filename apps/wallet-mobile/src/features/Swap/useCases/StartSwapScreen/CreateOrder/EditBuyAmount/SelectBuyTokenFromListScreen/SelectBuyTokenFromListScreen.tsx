@@ -1,24 +1,24 @@
 import {FlashList} from '@shopify/flash-list'
+import {sortTokenInfos} from '@yoroi/portfolio'
 import {useSwap, useSwapTokensOnlyVerified} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import React from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Boundary, Icon, Spacer, Text} from '../../../../../../../components'
-import {AmountItem, AmountItemPlaceholder} from '../../../../../../../components/AmountItem/AmountItem'
+import {AmountItemPlaceholder} from '../../../../../../../components/AmountItem/AmountItem'
 import {useMetrics} from '../../../../../../../kernel/metrics/metricsManager'
 import {YoroiWallet} from '../../../../../../../yoroi-wallets/cardano/types'
-import {useBalance, useBalances} from '../../../../../../../yoroi-wallets/hooks'
-import {Amounts} from '../../../../../../../yoroi-wallets/utils'
+import {usePortfolioBalances} from '../../../../../../Portfolio/common/hooks/usePortfolioBalances'
+import {TokenAmountItem} from '../../../../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
 import {useSearch, useSearchOnNavBar} from '../../../../../../Search/SearchContext'
 import {NoAssetFoundImage} from '../../../../../../Send/common/NoAssetFoundImage'
 import {useSelectedWallet} from '../../../../../../WalletManager/common/hooks/useSelectedWallet'
 import {Counter} from '../../../../../common/Counter/Counter'
 import {filterBySearch} from '../../../../../common/filterBySearch'
-import {sortTokensByName} from '../../../../../common/helpers'
 import {useNavigateTo} from '../../../../../common/navigation'
 import {ServiceUnavailable} from '../../../../../common/ServiceUnavailable/ServiceUnavailable'
 import {useStrings} from '../../../../../common/strings'
@@ -68,23 +68,22 @@ const TokenList = () => {
   const strings = useStrings()
   const {styles, colors} = useStyles()
   const {wallet} = useSelectedWallet()
-  const {onlyVerifiedTokens} = useSwapTokensOnlyVerified()
+  const tokenInfos = useSwapTokensOnlyVerified()
   const {search: assetSearchTerm} = useSearch()
-  const balances = useBalances(wallet)
-  const walletTokenIds = Amounts.toArray(balances).map(({tokenId}) => tokenId)
+  const balances = usePortfolioBalances({wallet})
 
-  const tokenInfos: Array<Balance.TokenInfo> = React.useMemo(() => {
-    if (onlyVerifiedTokens === undefined) return []
-    return onlyVerifiedTokens
-  }, [onlyVerifiedTokens])
+  const walletTokenIds = React.useMemo(() => balances.all.map(({info: {id}}) => id), [balances.all])
 
   const [filteredTokenList, someInWallet] = React.useMemo(() => {
-    const list = tokenInfos.filter(filterBySearch(assetSearchTerm)).sort((a, b) => sortTokensByName(a, b, wallet))
+    const list = sortTokenInfos({
+      secondaryTokenInfos: tokenInfos.filter(filterBySearch(assetSearchTerm)),
+      primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
+    })
     const set = new Set(list.map(({id}) => id))
-    set.delete(wallet.primaryTokenInfo.id)
+    set.delete(wallet.portfolioPrimaryTokenInfo.id)
     const someInWallet = walletTokenIds.some((id) => set.has(id))
     return [list, someInWallet]
-  }, [tokenInfos, assetSearchTerm, walletTokenIds, wallet])
+  }, [tokenInfos, assetSearchTerm, wallet.portfolioPrimaryTokenInfo, walletTokenIds])
 
   return (
     <View style={styles.list}>
@@ -104,7 +103,7 @@ const TokenList = () => {
 
       <FlashList
         data={filteredTokenList}
-        renderItem={({item: tokenInfo}: {item: Balance.TokenInfo}) => (
+        renderItem={({item: tokenInfo}: {item: Portfolio.Token.Info}) => (
           <Boundary loading={{fallback: <AmountItemPlaceholder style={styles.item} />}}>
             <SelectableToken tokenInfo={tokenInfo} wallet={wallet} walletTokenIds={walletTokenIds} />
           </Boundary>
@@ -141,12 +140,13 @@ const TokenList = () => {
 type SelectableTokenProps = {
   wallet: YoroiWallet
   walletTokenIds: Array<string>
-  tokenInfo: Balance.TokenInfo
+  tokenInfo: Portfolio.Token.Info
 }
 const SelectableToken = ({wallet, tokenInfo, walletTokenIds}: SelectableTokenProps) => {
   const {styles} = useStyles()
-  const {id, name, ticker, group, decimals} = tokenInfo
-  const balanceAvailable = useBalance({wallet, tokenId: id})
+  const {id, name, ticker, decimals} = tokenInfo
+  // NOTE: no need to subscribe to the balance
+  const balanceAvailable = wallet.balances.records.get(id)?.quantity ?? 0n
   const {closeSearch} = useSearch()
   const {buyTokenInfoChanged, orderData, resetQuantities} = useSwap()
   const {
@@ -163,8 +163,9 @@ const SelectableToken = ({wallet, tokenInfo, walletTokenIds}: SelectableTokenPro
   const shouldSwitchTokens = id === orderData.amounts.sell.tokenId && isSellTouched
 
   const handleOnTokenSelection = () => {
+    const [policyId] = id.split('.')
     track.swapAssetToChanged({
-      to_asset: [{asset_name: name, asset_ticker: ticker, policy_id: group}],
+      to_asset: [{asset_name: name, asset_ticker: ticker, policy_id: policyId}],
     })
 
     // useCase - switch tokens when selecting the same already selected token on the other side
@@ -186,18 +187,12 @@ const SelectableToken = ({wallet, tokenInfo, walletTokenIds}: SelectableTokenPro
 
   return (
     <TouchableOpacity style={styles.item} onPress={handleOnTokenSelection} testID="selectTokenButton">
-      <AmountItem
-        amount={{tokenId: id, quantity: balanceAvailable}}
-        wallet={wallet}
-        status="verified"
-        inWallet={inUserWallet}
-        variant="swap"
-      />
+      <TokenAmountItem amount={{info: tokenInfo, quantity: balanceAvailable}} inWallet={inUserWallet} variant="swap" />
     </TouchableOpacity>
   )
 }
 
-const EmptyList = ({filteredTokensForList}: {filteredTokensForList: Array<Balance.TokenInfo>}) => {
+const EmptyList = ({filteredTokensForList}: {filteredTokensForList: ReadonlyArray<Portfolio.Token.Info>}) => {
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
 
   if (isSearching && assetSearchTerm.length > 0 && filteredTokensForList.length === 0)

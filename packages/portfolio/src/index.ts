@@ -37,6 +37,7 @@ export * from './validators/token-traits'
 
 export * from './translators/reactjs/usePortfolioTokenDiscovery'
 export * from './translators/reactjs/usePortfolioTokenTraits'
+export * from './translators/reactjs/usePortfolioTokenInfo'
 
 export * from './balance-manager'
 export * from './token-manager'

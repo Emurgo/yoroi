@@ -1,5 +1,6 @@
 import {AppFrontendFeeTier} from '../api/app'
-import {BalanceToken} from '../balance/token'
+import {PortfolioTokenInfo} from '../portfolio/info'
+import {PortfolioTokenId} from '../portfolio/token'
 import {SwapAggregator} from './aggregator'
 import {SwapApi} from './api'
 import {SwapPoolProvider} from './pool'
@@ -31,9 +32,9 @@ export type SwapManager = Readonly<{
     }
   }
   stakingKey: string
-  primaryTokenId: BalanceToken['info']['id']
+  primaryTokenInfo: PortfolioTokenInfo
   supportedProviders: ReadonlyArray<SwapPoolProvider>
   aggregator: SwapAggregator
-  aggregatorTokenId?: BalanceToken['info']['id']
+  aggregatorTokenId?: PortfolioTokenId
   frontendFeeTiers: ReadonlyArray<AppFrontendFeeTier>
 }>

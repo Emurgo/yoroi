@@ -1,5 +1,5 @@
-import {Quantities} from '../../utils/quantities'
-import {SwapOrderCalculation} from '../../translators/reactjs/state/state'
+import BigNumber from 'bignumber.js'
+import {SwapOrderCalculation} from '../../types'
 
 export const getBestPoolCalculation = (
   calculations: ReadonlyArray<SwapOrderCalculation>,
@@ -13,9 +13,11 @@ export const getBestPoolCalculation = (
 
       if (best === undefined) return current
 
+      const bestWithFees = new BigNumber(best.prices.withFees)
+
       if (
-        Quantities.isZero(best.prices.withFees) ||
-        Quantities.isGreaterThan(best.prices.withFees, current.prices.withFees)
+        bestWithFees.isZero() ||
+        bestWithFees.isGreaterThan(current.prices.withFees)
       )
         return current
 

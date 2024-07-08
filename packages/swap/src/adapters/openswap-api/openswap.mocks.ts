@@ -98,6 +98,22 @@ const getTokens: ListTokensResponse = [
     },
     categories: [],
   },
+  {
+    supply: {
+      total: '45000000003000000',
+      circulating: null,
+    },
+    status: 'verified',
+    website: 'https://eduladder.com',
+    symbol: 'ELAD',
+    decimalPlaces: 6,
+    description: 'Proof Of Contribution.',
+    address: {
+      policyId: '2d420236ffaada336c21e3f4520b799f6e246d8618f2fc89a4907da6',
+      name: 'FFFFAA',
+    },
+    categories: [],
+  },
 ]
 
 const getTokenPairs: TokenPairsResponse = [

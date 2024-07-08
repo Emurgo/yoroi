@@ -1,6 +1,7 @@
 import {Swap} from '@yoroi/types'
 import {swapManagerMaker} from './manager'
 import {swapManagerMocks} from './manager.mocks'
+import {tokenInfoMocks} from '@yoroi/portfolio'
 
 describe('swapManagerMaker', () => {
   let manager: Readonly<Swap.Manager>
@@ -24,7 +25,7 @@ describe('swapManagerMaker', () => {
     getTokens: jest.fn(),
     getTokenPairs: jest.fn(),
     getCompletedOrders: jest.fn(),
-    primaryTokenId: '',
+    primaryTokenInfo: tokenInfoMocks.primaryETH,
     stakingKey: 'someStakingKey',
     supportedProviders: ['minswap'] as const,
   }
@@ -35,7 +36,7 @@ describe('swapManagerMaker', () => {
       swapStorage: mockedStorage,
       swapApi: mockedApi,
       aggregator: 'muesliswap',
-      aggregatorTokenId: '',
+      aggregatorTokenId: '.',
       frontendFeeTiers: [] as const,
     })
   })

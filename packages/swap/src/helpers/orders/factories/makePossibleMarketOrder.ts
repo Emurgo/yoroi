@@ -1,4 +1,4 @@
-import {Balance, Swap} from '@yoroi/types'
+import {Portfolio, Swap} from '@yoroi/types'
 
 import {getBuyAmount} from '../amounts/getBuyAmount'
 import {getQuantityWithSlippage} from '../amounts/getQuantityWithSlippage'
@@ -15,13 +15,13 @@ import {getQuantityWithSlippage} from '../amounts/getQuantityWithSlippage'
  * @returns The best market order data
  */
 export const makePossibleMarketOrder = (
-  sell: Balance.Amount,
-  buy: Balance.Amount,
+  sell: Portfolio.Token.Amount,
+  buy: Portfolio.Token.Amount,
   bestPool: Readonly<Swap.Pool>,
   slippage: number,
   address: string,
 ): Swap.CreateOrderData | undefined => {
-  const rawBuy = getBuyAmount(bestPool, sell)
+  const rawBuy = getBuyAmount(bestPool, sell, buy.info)
 
   const buyQuantityWithSlippage = getQuantityWithSlippage(
     rawBuy.quantity,
@@ -32,9 +32,12 @@ export const makePossibleMarketOrder = (
     selectedPool: bestPool,
     slippage,
     amounts: {
-      sell,
+      sell: {
+        tokenId: sell.info.id,
+        quantity: sell.quantity,
+      },
       buy: {
-        tokenId: buy.tokenId,
+        tokenId: buy.info.id,
         quantity: buyQuantityWithSlippage,
       },
     },
