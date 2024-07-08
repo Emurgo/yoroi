@@ -1,5 +1,6 @@
 import {NavigationContainer, NavigationContainerRef} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
+import {TransitionPresets} from '@react-navigation/stack'
 import {isString} from '@yoroi/common'
 import {supportedPrefixes} from '@yoroi/links'
 import {useTheme} from '@yoroi/theme'
@@ -179,7 +180,12 @@ export const AppNavigator = () => {
                 )}
               </Stack.Group>
 
-              <Stack.Group screenOptions={{presentation: 'transparentModal'}}>
+              <Stack.Group
+                screenOptions={{
+                  presentation: 'transparentModal',
+                  ...(Platform.OS === 'android' && {...TransitionPresets.DefaultTransition}), // overriding general navigation settings
+                }}
+              >
                 <Stack.Screen name="modal" component={ModalScreen} />
               </Stack.Group>
             </>
