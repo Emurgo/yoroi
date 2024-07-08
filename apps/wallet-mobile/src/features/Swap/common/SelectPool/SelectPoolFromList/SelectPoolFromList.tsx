@@ -30,6 +30,7 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
   const navigate = useNavigateTo()
   const {track} = useMetrics()
   const {styles, colors} = useStyles()
+  const {isDark} = useTheme()
 
   const sellTokenInfo = useTokenInfo({wallet, tokenId: orderData.amounts.sell.tokenId})
   const buyTokenInfo = useTokenInfo({wallet, tokenId: orderData.amounts.buy.tokenId})
@@ -61,14 +62,15 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
         const formattedBatcherFeeInPt = Quantities.format(pool.batcherFee.quantity, decimals, decimals)
         const marketPrice = getMarketPrice(pool, orderData.amounts.sell.tokenId)
         const selectedPoolId = selectedCardIndex ?? orderData?.bestPoolCalculation?.pool?.poolId ?? null
+        const isSelectedPool = pool.poolId === selectedPoolId
 
         return (
           <View key={pool.poolId}>
             <Spacer height={16} />
 
-            <View style={[styles.shadowProp]}>
+            <View style={[isDark ? undefined : styles.shadowProp]}>
               <LinearGradient
-                colors={pool.poolId === selectedPoolId ? colors.gradientColor : [colors.white, colors.white]}
+                colors={isSelectedPool ? colors.gradientColor : [colors.white, colors.white]}
                 style={styles.linearGradient}
               >
                 <TouchableOpacity key={pool.poolId} onPress={() => handleOnPoolSelection(pool)} style={[styles.card]}>
@@ -148,6 +150,8 @@ const useStyles = () => {
       paddingBottom: 30,
     },
     linearGradient: {
+      flex: 1,
+      opacity: 1,
       borderRadius: 8,
     },
     card: {
@@ -177,6 +181,7 @@ const useStyles = () => {
       fontSize: 24,
     },
     label: {
+      color: color.gray_c900,
       ...atoms.body_1_lg_medium,
     },
     infoContainer: {
