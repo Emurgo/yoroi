@@ -2,6 +2,7 @@ import {isString} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, TextInput as RNTextInput, TextInputProps as RNTextInputProps, View, ViewStyle} from 'react-native'
+import LinearGradient from 'react-native-linear-gradient'
 import {HelperText as HelperTextRNP, TextInput as RNPTextInput} from 'react-native-paper'
 
 import {isEmptyString} from '../../../../../../kernel/utils'
@@ -94,18 +95,22 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: React.For
     if (value === '') setIsValidWord(false)
   }, [value])
 
+  const isValid = isDark && isValidPhrase && isValidWord
+
   return (
     <View style={containerStyle}>
       {isValidWord && isEmptyString(errorText) && (
-        <View
+        <LinearGradient
           style={[
             StyleSheet.absoluteFill,
             {
               borderRadius: 8,
               top: 6,
-              backgroundColor: isValidPhrase ? colors.positiveGreen : colors.positiveGray,
             },
           ]}
+          start={{x: 0, y: isValid ? 1 : 0}}
+          end={{x: 0, y: isValid ? 0 : 1}}
+          colors={isValid ? colors.gradientColorSuccess : colors.gradientColor}
         />
       )}
 
@@ -158,11 +163,7 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: React.For
               {...inputProps}
               cursorColor={cursorColor}
               selectionColor={selectionColor}
-              style={[
-                style,
-                renderComponentStyle,
-                {color: isDark && isValidPhrase && isValidWord ? colors.successText : colors.text, flex: 1},
-              ]}
+              style={[style, renderComponentStyle, {color: colors.text, flex: 1}]}
             />
           </InputContainer>
         )}
@@ -244,13 +245,15 @@ const useStyles = () => {
     input: color.primary_c300,
     actionGray: color.gray_c500,
     black: color.gray_cmax,
-    text: color.primary_c600,
+    text: color.gray_cmax,
     textError: color.sys_magenta_c500,
     infoGray: color.gray_c700,
     positiveGreen: color.secondary_c300,
     positiveGray: color.primary_c100,
     none: 'transparent',
     successText: color.black_static,
+    gradientColor: color.bg_gradient_1,
+    gradientColorSuccess: color.bg_gradient_2,
   }
 
   return {styles, colors}
