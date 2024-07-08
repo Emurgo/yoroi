@@ -14,6 +14,7 @@ import {Cardano} from './Cardano'
 import {Catalyst} from './Catalyst'
 import {Categories} from './Categories'
 import {Check} from './Check'
+import {Checkbox} from './Checkbox'
 import {CheckFilled} from './CheckFilled'
 import {CheckFilled2} from './CheckFilled2'
 import {CheckOutlined} from './CheckOutlined'
@@ -39,6 +40,7 @@ import {Discover} from './Discover'
 import {Document} from './Document'
 import {Drag} from './Drag'
 import {Edit} from './Edit'
+import {EmptyCheckbox} from './EmptyCheckbox'
 import {Emurgo} from './Emurgo'
 import {Exchange} from './Exchange'
 import {Export} from './Export'
@@ -142,6 +144,7 @@ export const Icon = {
   Catalyst,
   Categories,
   Check,
+  Checkbox,
   CheckFilled,
   CheckOutlined,
   Chevron,
@@ -158,6 +161,7 @@ export const Icon = {
   Direction,
   Document,
   Drag,
+  EmptyCheckbox,
   Emurgo,
   Export,
   ExternalLink,

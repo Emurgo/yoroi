@@ -1,9 +1,8 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, ViewStyle} from 'react-native'
 
+import {Icon} from '../Icon'
 import {Text} from '../Text'
-import {CheckIcon} from './CheckIcon'
-import {EmptyCheckIcon} from './EmptyCheckIcon'
 
 type Props = {
   checked: boolean
@@ -14,7 +13,7 @@ type Props = {
 }
 export const Checkbox = ({checked, text, onChange, style, testID}: Props) => (
   <TouchableOpacity style={[styles.container, style]} onPress={() => onChange(!checked)} testID={testID}>
-    {checked ? <CheckIcon /> : <EmptyCheckIcon />}
+    {checked ? <Icon.Checkbox /> : <Icon.EmptyCheckbox />}
 
     <Text style={styles.text}>{text}</Text>
   </TouchableOpacity>
