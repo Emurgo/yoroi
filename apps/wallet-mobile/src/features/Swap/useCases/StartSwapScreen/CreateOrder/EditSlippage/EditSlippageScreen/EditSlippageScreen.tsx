@@ -1,11 +1,11 @@
 import {useSwap} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
 import BigNumber from 'bignumber.js'
-import React, {useEffect, useRef, useState} from 'react'
-import {ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
+import * as React from 'react'
+import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, KeyboardAvoidingView} from '../../../../../../../components'
+import {Button, KeyboardAvoidingView, TextInput} from '../../../../../../../components'
 import {useLanguage} from '../../../../../../../kernel/i18n'
 import {NumberLocale} from '../../../../../../../kernel/i18n/languages'
 import {useMetrics} from '../../../../../../../kernel/metrics/metricsManager'
@@ -41,18 +41,16 @@ const MAX_DECIMALS = 1
 
 export const EditSlippageScreen = () => {
   const {numberLocale} = useLanguage()
-  const styles = useStyles()
+  const {styles, colors} = useStyles()
 
   const {slippageChanged, orderData} = useSwap()
   const defaultSelectedChoice = getChoiceBySlippage(orderData.slippage, numberLocale)
   const defaultInputValue =
     defaultSelectedChoice.label === 'Manual' ? new BigNumber(orderData.slippage).toFormat(numberLocale) : ''
 
-  const [selectedChoiceLabel, setSelectedChoiceLabel] = useState<ChoiceKind>(defaultSelectedChoice.label)
-  const [inputValue, setInputValue] = useState(defaultInputValue)
+  const [selectedChoiceLabel, setSelectedChoiceLabel] = React.useState<ChoiceKind>(defaultSelectedChoice.label)
+  const [inputValue, setInputValue] = React.useState(defaultInputValue)
 
-  const [isFocused, setIsFocused] = useState(false)
-  const inputRef = useRef<TextInput | null>(null)
   const navigate = useNavigateTo()
   const strings = useStrings()
   const {track} = useMetrics()
@@ -75,12 +73,6 @@ export const EditSlippageScreen = () => {
     slippageChanged(slippage)
     navigate.startSwap()
   }
-
-  useEffect(() => {
-    if (isSelectedChoiceManual && inputRef.current) {
-      inputRef.current.focus()
-    }
-  }, [isSelectedChoiceManual])
 
   const isInputEnabled = isSelectedChoiceManual
   const hasError = isSelectedChoiceManual && !validateSlippage(inputValue, numberLocale)
@@ -106,32 +98,21 @@ export const EditSlippageScreen = () => {
             ))}
           </View>
 
-          <View
-            style={[
-              styles.inputContainer,
-              !isInputEnabled && styles.disabledInputContainer,
-              hasError && styles.errorInput,
-              isInputEnabled && !hasError && isFocused && styles.inputFocused,
-            ]}
-          >
-            <Text style={[styles.label, hasError && styles.errorText]}>{strings.slippageTolerance}</Text>
+          <View style={{position: 'relative'}}>
+            <Text style={styles.label}>{strings.slippageTolerance}</Text>
 
             <TextInput
-              onFocus={() => setIsFocused(true)}
-              onBlur={() => setIsFocused(false)}
-              ref={inputRef}
               value={isInputEnabled ? inputValue : new BigNumber(selectedChoice.value).toFormat(numberLocale)}
               onChangeText={handleInputChange}
               editable={isInputEnabled}
               key={isInputEnabled ? 'enabled' : 'disabled'}
               selectTextOnFocus={isInputEnabled}
               autoFocus={isInputEnabled}
-              style={styles.input}
+              style={[styles.input, !isSelectedChoiceManual && {backgroundColor: colors.background}]}
               keyboardType="numeric"
               selectionColor="#242838"
+              right={<Text style={styles.percentLabel}>%</Text>}
             />
-
-            <Text style={styles.percentLabel}>%</Text>
           </View>
 
           {isSelectedChoiceManual && !hasError && (
@@ -199,41 +180,13 @@ const useStyles = () => {
     selectedChoiceLabel: {
       color: color.gray_cmax,
     },
-    inputContainer: {
-      borderRadius: 6,
-      borderWidth: 1,
-      borderColor: color.gray_c300,
-      ...atoms.p_lg,
-      position: 'relative',
-    },
-    label: {
-      position: 'absolute',
-      top: -11,
-      left: 10,
-      backgroundColor: color.gray_cmin,
-      ...atoms.px_xs,
-      ...atoms.body_3_sm_regular,
-      color: color.gray_cmax,
-    },
-
-    disabledInputContainer: {
-      backgroundColor: color.gray_c50,
-    },
     errorText: {
       color: color.sys_magenta_c500,
       ...atoms.body_3_sm_regular,
     },
-    errorInput: {
-      borderColor: color.sys_magenta_c500,
-    },
     input: {
-      ...atoms.p_0,
       ...atoms.body_1_lg_regular,
       color: color.gray_c900,
-    },
-    inputFocused: {
-      borderColor: color.gray_c900,
-      borderWidth: 2,
     },
     percentLabel: {
       ...atoms.body_1_lg_regular,
@@ -243,9 +196,23 @@ const useStyles = () => {
       right: 0,
       top: 0,
     },
+    label: {
+      zIndex: 1000,
+      position: 'absolute',
+      top: -3,
+      left: 11,
+      paddingHorizontal: 3,
+      ...atoms.body_3_sm_regular,
+      color: color.gray_cmax,
+      backgroundColor: color.gray_cmin,
+    },
   })
 
-  return styles
+  const colors = {
+    background: color.gray_c100,
+  }
+
+  return {styles, colors}
 }
 
 const validateSlippage = (text: string, format: NumberLocale) => {
