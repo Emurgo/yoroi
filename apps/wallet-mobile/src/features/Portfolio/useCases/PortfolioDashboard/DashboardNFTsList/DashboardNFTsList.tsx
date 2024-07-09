@@ -51,9 +51,12 @@ export const DashboardNFTsList = () => {
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item) => item.info.id}
         renderItem={({item}) => (
-          <View style={[styles.nftItemContainer, {width: cardItemWidth}]}>
+          <TouchableOpacity
+            style={[styles.nftItemContainer, {width: cardItemWidth}]}
+            onPress={() => navigationTo.nftDetails(item.info.id)}
+          >
             <MediaPreview info={item.info} width={cardItemWidth} height={cardItemWidth} style={styles.image} />
-          </View>
+          </TouchableOpacity>
         )}
       />
     </View>
