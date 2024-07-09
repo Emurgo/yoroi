@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Before you begin, make sure to download the Catalyst Voting App.",
     "file": "src/legacy/Catalyst/DownloadCatalyst.tsx",
     "start": {
-      "line": 152,
+      "line": 157,
       "column": 12,
-      "index": 4375
+      "index": 4452
     },
     "end": {
-      "line": 155,
+      "line": 160,
       "column": 3,
-      "index": 4517
+      "index": 4594
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Catalyst voting rewards are sent to delegation accounts and your wallet does not seem to have a registered delegation certificate. If you want to receive voting rewards, you need to delegate your funds first.",
     "file": "src/legacy/Catalyst/DownloadCatalyst.tsx",
     "start": {
-      "line": 156,
+      "line": 161,
       "column": 27,
-      "index": 4546
+      "index": 4623
     },
     "end": {
-      "line": 162,
+      "line": 167,
       "column": 3,
-      "index": 4875
+      "index": 4952
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Tip: Make sure you know how to take a screenshot with your device, so that you can backup your catalyst QR code.",
     "file": "src/legacy/Catalyst/DownloadCatalyst.tsx",
     "start": {
-      "line": 163,
+      "line": 168,
       "column": 7,
-      "index": 4884
+      "index": 4961
     },
     "end": {
-      "line": 168,
+      "line": 173,
       "column": 3,
-      "index": 5086
+      "index": 5163
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Registration start",
     "file": "src/legacy/Catalyst/DownloadCatalyst.tsx",
     "start": {
-      "line": 169,
+      "line": 174,
       "column": 21,
-      "index": 5109
+      "index": 5186
     },
     "end": {
-      "line": 172,
+      "line": 177,
       "column": 3,
-      "index": 5198
+      "index": 5275
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Voting start",
     "file": "src/legacy/Catalyst/DownloadCatalyst.tsx",
     "start": {
-      "line": 173,
+      "line": 178,
       "column": 15,
-      "index": 5215
+      "index": 5292
     },
     "end": {
-      "line": 176,
+      "line": 181,
       "column": 3,
-      "index": 5292
+      "index": 5369
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!Voting end",
     "file": "src/legacy/Catalyst/DownloadCatalyst.tsx",
     "start": {
-      "line": 177,
+      "line": 182,
       "column": 13,
-      "index": 5307
+      "index": 5384
     },
     "end": {
-      "line": 180,
+      "line": 185,
       "column": 3,
-      "index": 5380
+      "index": 5457
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!Results",
     "file": "src/legacy/Catalyst/DownloadCatalyst.tsx",
     "start": {
-      "line": 181,
+      "line": 186,
       "column": 17,
-      "index": 5399
+      "index": 5476
     },
     "end": {
-      "line": 184,
+      "line": 189,
       "column": 3,
-      "index": 5473
+      "index": 5550
     }
   }
 ]

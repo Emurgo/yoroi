@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import {fromPairs} from 'lodash'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -36,7 +37,7 @@ export const AddressModal = ({address, path}: Props) => {
 
       <Spacer width={8} />
 
-      <View style={{alignItems: 'center'}}>
+      <View style={styles.qrCode}>
         <QRCode value={address} size={140} backgroundColor="white" color="black" />
       </View>
 
@@ -112,19 +113,31 @@ export default (props: ExternalProps) => {
 }
 
 const useStyles = () => {
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     scroll: {
       width: '100%',
+      ...atoms.px_lg,
+    },
+    qrCode: {
+      display: 'flex',
+      alignItems: 'center',
+      alignSelf: 'center',
+      backgroundColor: color.white_static,
+      borderRadius: 8,
+      ...atoms.p_lg,
     },
     info: {
       alignItems: 'flex-start',
+      ...atoms.body_1_lg_regular,
     },
     title: {
       textAlign: 'center',
-      fontWeight: 'bold',
+      ...atoms.body_1_lg_regular,
     },
     subtitle: {
       textAlign: 'center',
+      ...atoms.body_1_lg_regular,
     },
     row: {
       flexDirection: 'row',
