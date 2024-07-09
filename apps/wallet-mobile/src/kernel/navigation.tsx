@@ -306,7 +306,7 @@ export type Portfolio2Routes = {
   'dashboard-portfolio': undefined
   'portfolio-tokens-list': undefined
   'portfolio-token-details': {id: Portfolio.Token.Info['id']}
-  nfts: undefined
+  nfts: NavigatorScreenParams<NftRoutes>
   history: NavigatorScreenParams<TxHistoryRoutes>
 }
 

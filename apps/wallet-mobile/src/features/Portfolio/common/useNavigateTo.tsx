@@ -1,4 +1,5 @@
 import {NavigationProp, useNavigation} from '@react-navigation/native'
+import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 
 import {Portfolio2Routes, useParams} from '../../../kernel/navigation'
@@ -11,7 +12,9 @@ export const useNavigateTo = () => {
     tokensList: () => navigation.navigate('portfolio-tokens-list'),
     tokenDetail: (params: PortfolioTokenDetailParams) =>
       navigation.navigate('portfolio-token-details', {id: params.id}),
-    nftsList: () => navigation.navigate('nfts'),
+    nftsList: () => navigation.navigate('nfts', {screen: 'nft-gallery'}),
+    nftDetails: (id: Portfolio.Token.Id) =>
+      navigation.navigate('nfts', {screen: 'nft-details', params: {id}, initial: false}),
     send: () => navigation.navigate('history', {screen: 'send-start-tx'}),
     swap: () => navigation.navigate('history', {screen: 'swap-start-swap', params: {screen: 'token-swap'}}),
     buyAda: () => navigation.navigate('history', {screen: 'exchange-create-order'}),
