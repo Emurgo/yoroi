@@ -338,8 +338,8 @@ export const TxHistoryNavigator = () => {
                   <Stack.Screen //
                     name="send-list-amounts-to-send"
                     options={{
-                      title: strings.listAmountsToSendTitle,
                       ...sendOptions(navigationOptions, color),
+                      title: strings.listAmountsToSendTitle,
                     }}
                   >
                     {() => (
@@ -392,7 +392,7 @@ export const TxHistoryNavigator = () => {
                       headerTransparent: true,
                       title: strings.scanTitle,
                       headerTintColor: color.white_static,
-                      headerLeft: (props) => <BackButton color={color.white_static} {...props} />,
+                      headerLeft: (props) => <BackButton color={color.gray_cmax} {...props} />,
                     }}
                   />
 
@@ -463,7 +463,7 @@ const messages = defineMessages({
   },
   listAmountsToSendTitle: {
     id: 'components.send.listamountstosendscreen.title',
-    defaultMessage: '!!!Selected tokens',
+    defaultMessage: '!!!Assets added',
   },
   editAmountTitle: {
     id: 'components.send.editamountscreen.title',
