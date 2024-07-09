@@ -84,6 +84,7 @@ export const useStakingTx = (
 ) => {
   const query = useQuery({
     ...options,
+    retry: false,
     queryKey: [wallet.id, 'stakingTx'],
     queryFn: async () => {
       if (poolId == null) throw new Error('invalid state')

@@ -70,6 +70,7 @@ export const QrCode = ({onNext, votingKeyEncrypted}: {onNext: () => void; voting
 
       <Actions>
         <Button
+          shelleyTheme
           onPress={handleOpenModal}
           title={countdown !== 0 ? countdown.toString() : strings.completeButton}
           disabled={countdown !== 0}

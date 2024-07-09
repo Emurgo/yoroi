@@ -54,6 +54,7 @@ export const DisplayPin = ({pin: [pin0, pin1, pin2, pin3], onNext}: Props) => {
 
       <Actions>
         <Button
+          shelleyTheme
           onPress={() => onNext()}
           title={countdown !== 0 ? countdown.toString() : strings.continueButton}
           disabled={countdown !== 0}
