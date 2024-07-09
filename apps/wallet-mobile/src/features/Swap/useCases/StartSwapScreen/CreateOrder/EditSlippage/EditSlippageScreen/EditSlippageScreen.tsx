@@ -98,7 +98,7 @@ export const EditSlippageScreen = () => {
             ))}
           </View>
 
-          <View style={{position: 'relative'}}>
+          <View style={styles.inputContainer}>
             <Text style={styles.label}>{strings.slippageTolerance}</Text>
 
             <TextInput
@@ -195,6 +195,9 @@ const useStyles = () => {
       position: 'absolute',
       right: 0,
       top: 0,
+    },
+    inputContainer: {
+      position: 'relative',
     },
     label: {
       zIndex: 1000,
