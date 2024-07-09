@@ -176,6 +176,20 @@ const EditAmountButton = ({onPress, children}: EditAmountButtonProps) => {
   )
 }
 
+const NextButton = Button
+const AmountsList = FlatList
+
+const ListAmountsNavigateBackButton = () => {
+  const navigation = useNavigateTo()
+  const {colors} = useStyles()
+
+  return (
+    <TouchableOpacity onPress={() => navigation.startTx()}>
+      <Icon.Chevron direction="left" color={colors.gray} />
+    </TouchableOpacity>
+  )
+}
+
 export const useStrings = () => {
   const intl = useIntl()
 
@@ -214,21 +228,7 @@ const useStyles = () => {
     },
   })
   const colors = {
-    black: color.black_static,
+    gray: color.gray_cmax,
   }
   return {styles, colors}
-}
-
-const NextButton = Button
-const AmountsList = FlatList
-
-const ListAmountsNavigateBackButton = () => {
-  const navigation = useNavigateTo()
-  const {colors} = useStyles()
-
-  return (
-    <TouchableOpacity onPress={() => navigation.startTx()}>
-      <Icon.Chevron direction="left" color={colors.black} />
-    </TouchableOpacity>
-  )
 }

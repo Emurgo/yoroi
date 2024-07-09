@@ -4,6 +4,7 @@ import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import * as React from 'react'
 import {ScrollView, StyleSheet, Text, TouchableOpacity, View, ViewProps} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, KeyboardAvoidingView, Spacer, TextInput} from '../../../../../components'
 import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
@@ -90,7 +91,7 @@ export const EditAmountScreen = () => {
   }, [amount.info, amountChanged, navigateTo, quantity])
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.container}>
       <KeyboardAvoidingView style={{flex: 1}}>
         <ScrollView style={styles.scrollView} bounces={false}>
           <Spacer height={16} />
@@ -133,7 +134,7 @@ export const EditAmountScreen = () => {
           />
         </Actions>
       </KeyboardAvoidingView>
-    </View>
+    </SafeAreaView>
   )
 }
 
@@ -178,7 +179,6 @@ const AmountInput = ({onChange, value, ticker}: AmountInputProps) => {
 
   return (
     <TextInput
-      returnKeyType="done"
       keyboardType="numeric"
       mode="flat"
       autoComplete="off"
@@ -237,6 +237,7 @@ const useStyles = () => {
       textAlign: 'right',
     },
     ticker: {
+      color: color.gray_cmax,
       ...atoms.heading_2_regular,
     },
   })
