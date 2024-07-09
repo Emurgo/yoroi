@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {walletChecksum} from '@emurgo/cip4-js'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {View} from 'react-native'
@@ -24,6 +25,7 @@ import {PoolDetailScreen} from '../PoolDetails'
 export const StakingCenter = () => {
   const intl = useIntl()
   const navigation = useNavigation<StakingCenterRouteNavigation>()
+  const {isDark} = useTheme()
 
   const {languageCode} = useLanguage()
   const {wallet, meta} = useSelectedWallet()
@@ -71,13 +73,13 @@ export const StakingCenter = () => {
   return (
     <>
       {(isDev || (isNightly && !wallet.isMainnet)) && (
-        <View style={{flex: 1}}>
+        <View style={{height: 256}}>
           <PoolDetailScreen onPressDelegate={setSelectedPoolId} />
         </View>
       )}
 
       {(wallet.isMainnet || features.showProdPoolsInDev) && (
-        <View style={{flex: 1, backgroundColor: '#fff'}}>
+        <View style={{flex: 1}}>
           <Spacer height={8} />
 
           <WebView
@@ -85,6 +87,15 @@ export const StakingCenter = () => {
             androidLayerType="software"
             source={{uri: prepareStakingURL(languageCode, plate.TextPart)}}
             onMessage={(event) => handleOnMessage(event)}
+            {...(isDark && {
+              injectedJavaScript: `
+              document.body.style.backgroundColor = "#222"
+              document.body.style.filter = "invert(0.9) hue-rotate(180deg)"
+              setTimeout(() => 
+                [...document.images].forEach(i => i.style = 'filter:invert(1) hue-rotate(180deg)')
+              , 1000)
+            `,
+            })}
           />
         </View>
       )}

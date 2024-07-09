@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Write Down PIN",
     "file": "src/legacy/Catalyst/DisplayPin.tsx",
     "start": {
-      "line": 67,
+      "line": 68,
       "column": 12,
-      "index": 1759
+      "index": 1782
     },
     "end": {
-      "line": 70,
+      "line": 71,
       "column": 3,
-      "index": 1851
+      "index": 1874
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Please write down this PIN as you will need it every time you want to access the Catalyst Voting app",
     "file": "src/legacy/Catalyst/DisplayPin.tsx",
     "start": {
-      "line": 71,
+      "line": 72,
       "column": 15,
-      "index": 1868
+      "index": 1891
     },
     "end": {
-      "line": 75,
+      "line": 76,
       "column": 3,
-      "index": 2055
+      "index": 2078
     }
   }
 ]

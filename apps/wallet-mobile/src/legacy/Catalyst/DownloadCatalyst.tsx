@@ -93,7 +93,12 @@ export const DownloadCatalyst = ({onNext}: Props) => {
       </ScrollView>
 
       <Actions>
-        <Button onPress={onNext} title={strings.continueButton} disabled={fund.status.registration !== 'running'} />
+        <Button
+          shelleyTheme
+          onPress={onNext}
+          title={strings.continueButton}
+          disabled={fund.status.registration !== 'running'}
+        />
       </Actions>
     </SafeAreaView>
   )
@@ -112,7 +117,7 @@ const WarningModal = () => {
 
       <Space fill />
 
-      <Button title={strings.iUnderstandButton} onPress={closeModal} textStyles={styles.button} />
+      <Button shelleyTheme title={strings.iUnderstandButton} onPress={closeModal} textStyles={styles.button} />
     </View>
   )
 }
