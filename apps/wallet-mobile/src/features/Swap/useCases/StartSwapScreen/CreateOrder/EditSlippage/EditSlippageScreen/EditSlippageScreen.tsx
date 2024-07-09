@@ -98,7 +98,7 @@ export const EditSlippageScreen = () => {
             ))}
           </View>
 
-          <View style={{position: 'relative'}}>
+          <View style={styles.inputContainer}>
             <Text style={styles.label}>{strings.slippageTolerance}</Text>
 
             <TextInput
@@ -112,16 +112,15 @@ export const EditSlippageScreen = () => {
               keyboardType="numeric"
               selectionColor="#242838"
               right={<Text style={styles.percentLabel}>%</Text>}
+              helper={
+                isSelectedChoiceManual && !hasError ? (
+                  <Text style={[styles.textInfo, styles.bottomText]}>{strings.enterSlippage}</Text>
+                ) : isSelectedChoiceManual && hasError ? (
+                  <Text style={[styles.bottomText, styles.errorText]}>{strings.slippageToleranceError}</Text>
+                ) : undefined
+              }
             />
           </View>
-
-          {isSelectedChoiceManual && !hasError && (
-            <Text style={[styles.textInfo, styles.bottomText]}>{strings.enterSlippage}</Text>
-          )}
-
-          {isSelectedChoiceManual && hasError && (
-            <Text style={[styles.bottomText, styles.errorText]}>{strings.slippageToleranceError}</Text>
-          )}
         </ScrollView>
 
         <Button
@@ -159,7 +158,7 @@ const useStyles = () => {
     bottomText: {
       color: color.gray_c700,
       ...atoms.body_3_sm_regular,
-      ...atoms.pt_lg,
+      ...atoms.py_xs,
     },
     choicesContainer: {
       flexDirection: 'row',
@@ -195,6 +194,9 @@ const useStyles = () => {
       position: 'absolute',
       right: 0,
       top: 0,
+    },
+    inputContainer: {
+      position: 'relative',
     },
     label: {
       zIndex: 1000,
