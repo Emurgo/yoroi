@@ -208,10 +208,10 @@ const useStyles = () => {
     },
     label: {
       position: 'absolute',
-      top: -14,
+      top: -11,
       left: 10,
       backgroundColor: color.gray_cmin,
-      ...atoms.py_xs,
+      ...atoms.px_xs,
       ...atoms.body_3_sm_regular,
       color: color.gray_cmax,
     },
