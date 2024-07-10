@@ -65,6 +65,7 @@ export const ErrorView = ({title, errorMessage, errorLogs, onDismiss}: ErrorView
 
       <Button
         block
+        shelleyTheme
         onPress={onDismiss}
         title={intl.formatMessage(globalMessages.close)}
         testID="closeErrorModalButton"

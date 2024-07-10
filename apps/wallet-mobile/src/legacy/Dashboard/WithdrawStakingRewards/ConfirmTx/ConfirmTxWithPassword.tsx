@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {ActivityIndicator, View} from 'react-native'
@@ -19,6 +20,7 @@ type Props = {
 
 export const ConfirmTxWithPassword = ({wallet, onSuccess, onCancel, unsignedTx}: Props) => {
   const strings = useStrings()
+  const {color} = useTheme()
   const [password, setPassword] = React.useState(features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '')
 
   const {signAndSubmitTx, isLoading} = useSignWithPasswordAndSubmitTx(
@@ -66,7 +68,7 @@ export const ConfirmTxWithPassword = ({wallet, onSuccess, onCancel, unsignedTx}:
             justifyContent: 'center',
           }}
         >
-          <ActivityIndicator size="large" color="black" />
+          <ActivityIndicator size="large" color={color.gray_c900} />
         </View>
       )}
     </>
