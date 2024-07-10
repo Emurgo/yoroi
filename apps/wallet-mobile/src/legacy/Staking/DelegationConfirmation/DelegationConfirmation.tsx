@@ -2,11 +2,12 @@ import {useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Platform, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {Platform, ScrollView, StyleSheet, View} from 'react-native'
 import {useQueryClient} from 'react-query'
 
 import {KeyboardSpacer, Text, ValidatedTextInput} from '../../../components'
 import {ConfirmTx} from '../../../components/ConfirmTx'
+import {Space} from '../../../components/Space/Space'
 import {debugWalletInfo, features} from '../../../features'
 import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
 import globalMessages, {txLabels} from '../../../kernel/i18n/global-messages'
@@ -59,18 +60,20 @@ export const DelegationConfirmation = () => {
     <View style={styles.container}>
       <ScrollView style={styles.scrollView}>
         <View style={styles.itemBlock}>
-          <Text style={styles.itemTitle}>{strings.stakePoolName}</Text>
+          <Text style={styles.heading}>{strings.stakePoolName}</Text>
 
           <StakePoolName stakePoolId={poolId} />
         </View>
 
         <View style={styles.itemBlock}>
-          <Text style={styles.itemTitle}>{strings.stakePoolHash}</Text>
+          <Text style={styles.heading}>{strings.stakePoolHash}</Text>
 
-          <Text testID="stakePoolHashText">{poolId}</Text>
+          <Text testID="stakePoolHashText" style={styles.text}>
+            {poolId}
+          </Text>
         </View>
 
-        <View style={styles.input} testID="stakingAmount">
+        <View testID="stakingAmount">
           <Text small style={styles.fees}>
             {`+ ${formatTokenAmount(yoroiUnsignedTx.fee[wallet.primaryToken.identifier], wallet.primaryToken)} ${
               strings.ofFees
@@ -88,13 +91,13 @@ export const DelegationConfirmation = () => {
         </View>
 
         {!meta.isEasyConfirmationEnabled && !meta.isHW && (
-          <View style={styles.input} testID="spendingPassword">
+          <View testID="spendingPassword">
             <ValidatedTextInput secureTextEntry value={password} label={strings.password} onChangeText={setPassword} />
           </View>
         )}
 
         <View style={styles.itemBlock}>
-          <Text style={styles.itemTitle}>{strings.rewardsExplanation}</Text>
+          <Text style={styles.text}>{strings.rewardsExplanation}</Text>
 
           <Text style={styles.rewards}>{formatTokenWithText(reward, wallet.primaryToken)}</Text>
         </View>
@@ -102,21 +105,21 @@ export const DelegationConfirmation = () => {
         {meta.isHW && <HWInstructions useUSB={useUSB} addMargin />}
       </ScrollView>
 
-      <Actions>
-        <ConfirmTx
-          buttonProps={{
-            shelleyTheme: true,
-            title: strings.delegateButtonLabel,
-          }}
-          isProvidingPassword
-          providedPassword={password}
-          onSuccess={onSuccess}
-          setUseUSB={setUseUSB}
-          useUSB={useUSB}
-          yoroiUnsignedTx={yoroiUnsignedTx}
-          chooseTransportOnConfirmation
-        />
-      </Actions>
+      <Space height="lg" />
+
+      <ConfirmTx
+        buttonProps={{
+          shelleyTheme: true,
+          title: strings.delegateButtonLabel,
+        }}
+        isProvidingPassword
+        providedPassword={password}
+        onSuccess={onSuccess}
+        setUseUSB={setUseUSB}
+        useUSB={useUSB}
+        yoroiUnsignedTx={yoroiUnsignedTx}
+        chooseTransportOnConfirmation
+      />
 
       {/* hack to fix weird KeyboardAvoidingView bug in THIS SCREEN */}
       {Platform.OS === 'ios' && <KeyboardSpacer />}
@@ -124,14 +127,51 @@ export const DelegationConfirmation = () => {
   )
 }
 
-const Actions = (props: ViewProps) => <View {...props} style={{padding: 16}} />
-
 const StakePoolName = ({stakePoolId}: {stakePoolId: string}) => {
   const strings = useStrings()
+  const styles = useStyles()
   const {wallet} = useSelectedWallet()
   const {stakePoolInfoAndHistory, isLoading, error} = useStakePoolInfoAndHistory({wallet, stakePoolId})
 
-  return <Text>{isLoading ? '...' : error ? strings.unknownPool : stakePoolInfoAndHistory?.info.name}</Text>
+  return (
+    <Text style={styles.text}>
+      {isLoading ? '...' : error ? strings.unknownPool : stakePoolInfoAndHistory?.info.name}
+    </Text>
+  )
+}
+
+const useStyles = () => {
+  const {atoms, color} = useTheme()
+  const styles = StyleSheet.create({
+    container: {
+      ...atoms.px_lg,
+      ...atoms.pb_2xl,
+      flex: 1,
+    },
+    scrollView: {
+      // flex: 1,
+    },
+    itemBlock: {
+      ...atoms.pt_2xl,
+    },
+    heading: {
+      color: color.gray_c900,
+      ...atoms.body_1_lg_medium,
+    },
+    text: {
+      color: color.gray_c900,
+      ...atoms.body_2_md_regular,
+    },
+    rewards: {
+      ...atoms.body_1_lg_medium,
+      color: color.primary_c600,
+    },
+    fees: {
+      textAlign: 'right',
+      color: color.gray_c900,
+    },
+  })
+  return styles
 }
 
 const useStrings = () => {
@@ -178,39 +218,4 @@ const approximateReward = (stakedQuantity: Balance.Quantity): Balance.Quantity =
     Quantities.product([stakedQuantity, `${NETWORKS.HASKELL_SHELLEY.PER_EPOCH_PERCENTAGE_REWARD}`]),
     NUMBERS.EPOCH_REWARD_DENOMINATOR.toString() as Balance.Quantity,
   )
-}
-
-const useStyles = () => {
-  const {atoms, color} = useTheme()
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: color.gray_cmin,
-    },
-    scrollView: {
-      ...atoms.px_lg,
-      ...atoms.pb_xl,
-      flex: 1,
-    },
-    itemBlock: {
-      marginTop: 24,
-    },
-    itemTitle: {
-      color: color.gray_c900,
-      ...atoms.body_2_md_regular,
-    },
-    input: {
-      marginTop: 16,
-    },
-    rewards: {
-      marginTop: 5,
-      ...atoms.body_1_lg_medium,
-      color: color.primary_c600,
-    },
-    fees: {
-      textAlign: 'right',
-      color: color.gray_c900,
-    },
-  })
-  return styles
 }

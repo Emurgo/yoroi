@@ -48,6 +48,7 @@ export const TwoActionView = ({title, children, primaryButton, secondaryButton}:
         {secondaryButton != null && (
           <Button
             block
+            shelleyTheme
             outlineOnLight
             onPress={secondaryButton.onPress}
             title={secondaryButton.label ?? intl.formatMessage(confirmationMessages.commonButtons.cancelButton)}
@@ -59,6 +60,7 @@ export const TwoActionView = ({title, children, primaryButton, secondaryButton}:
 
         <Button
           block
+          shelleyTheme
           onPress={primaryButton.onPress}
           title={primaryButton.label}
           disabled={primaryButton.disabled}
