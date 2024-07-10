@@ -13,6 +13,8 @@
  * @Property {(...args: any[]) => Promise} submitTx Function to submit transaction.
  * @Property {(...args: any[]) => Promise} getCollateral Function to get collateral.
  * @Property {(...args: any[]) => Promise} getExtensions Function to get extensions.
+ * @Property {Object} experimental
+ * @Property {(...args: any[]) => Promise} experimental.on Function to subscribe to events.
  *
  * @Property {Object} cip95
  * @Property {(...args: any[]) => Promise} cip95.signData Function to sign data.
@@ -113,7 +115,9 @@ const initWallet = ({iconUrl, apiVersion, walletName, supportedExtensions, sessi
   }
 
   window.addEventListener('message', (event) => {
+    if (!event.data || typeof event.data.id !== 'string') return
     logMessage('Received message ' + JSON.stringify(event.data))
+
     const {id, result, error} = event.data
     const promise = promisesMap.get(id)
     if (!promise) return
@@ -153,6 +157,7 @@ const initWallet = ({iconUrl, apiVersion, walletName, supportedExtensions, sessi
       signTx: (...args) => callExternalMethod('api.signTx', args),
       signData: (...args) => callExternalMethod('api.signData', args),
       submitTx: (...args) => callExternalMethod('api.submitTx', args),
+      experimental: {on: () => {}},
       cip95: supportsCIP95
         ? {
             signData: (...args) => callExternalMethod('api.cip95.signData', args),
