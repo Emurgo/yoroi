@@ -162,6 +162,8 @@ const needsToSignWithStakingKey = async (tx: CSL_TYPES.Transaction) => {
     if ((await certificate.asStakeDelegation())?.hasValue()) return true
     if ((await certificate.asStakeRegistrationAndDelegation())?.hasValue()) return true
     if ((await certificate.asStakeAndVoteDelegation())?.hasValue()) return true
+    if ((await certificate.asVoteDelegation())?.hasValue()) return true
+    if ((await certificate.asVoteRegistrationAndDelegation())?.hasValue()) return true
   }
 
   if (withdrawals && (await withdrawals.len()) > 0) return true
