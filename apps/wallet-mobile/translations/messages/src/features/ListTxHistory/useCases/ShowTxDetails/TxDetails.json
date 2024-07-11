@@ -2,241 +2,241 @@
   {
     "id": "components.txhistory.txdetails.txTypeSent",
     "defaultMessage": "!!!Sent funds",
-    "file": "src/legacy/TxHistory/TxDetails/TxDetails.tsx",
+    "file": "src/features/ListTxHistory/useCases/ShowTxDetails/TxDetails.tsx",
     "start": {
       "line": 358,
       "column": 8,
-      "index": 12369
+      "index": 12378
     },
     "end": {
       "line": 361,
       "column": 3,
-      "index": 12464
+      "index": 12473
     }
   },
   {
     "id": "components.txhistory.txdetails.txTypeReceived",
     "defaultMessage": "!!!Received funds",
-    "file": "src/legacy/TxHistory/TxDetails/TxDetails.tsx",
+    "file": "src/features/ListTxHistory/useCases/ShowTxDetails/TxDetails.tsx",
     "start": {
       "line": 362,
       "column": 12,
-      "index": 12478
+      "index": 12487
     },
     "end": {
       "line": 365,
       "column": 3,
-      "index": 12581
+      "index": 12590
     }
   },
   {
     "id": "components.txhistory.txdetails.txTypeSelf",
     "defaultMessage": "!!!Intrawallet transaction",
-    "file": "src/legacy/TxHistory/TxDetails/TxDetails.tsx",
+    "file": "src/features/ListTxHistory/useCases/ShowTxDetails/TxDetails.tsx",
     "start": {
       "line": 366,
       "column": 8,
-      "index": 12591
+      "index": 12600
     },
     "end": {
       "line": 369,
       "column": 3,
-      "index": 12699
+      "index": 12708
     }
   },
   {
     "id": "components.txhistory.txdetails.txTypeMulti",
     "defaultMessage": "!!!Multi-party transaction",
-    "file": "src/legacy/TxHistory/TxDetails/TxDetails.tsx",
+    "file": "src/features/ListTxHistory/useCases/ShowTxDetails/TxDetails.tsx",
     "start": {
       "line": 370,
       "column": 9,
-      "index": 12710
+      "index": 12719
     },
     "end": {
       "line": 373,
       "column": 3,
-      "index": 12819
+      "index": 12828
     }
   },
   {
     "id": "components.txhistory.txdetails.addressPrefixReceive",
     "defaultMessage": "!!!/{idx}",
-    "file": "src/legacy/TxHistory/TxDetails/TxDetails.tsx",
+    "file": "src/features/ListTxHistory/useCases/ShowTxDetails/TxDetails.tsx",
     "start": {
       "line": 377,
       "column": 24,
-      "index": 12883
+      "index": 12892
     },
     "end": {
       "line": 380,
       "column": 3,
-      "index": 12984
+      "index": 12993
     }
   },
   {
     "id": "components.txhistory.txdetails.addressPrefixChange",
     "defaultMessage": "!!!/change",
-    "file": "src/legacy/TxHistory/TxDetails/TxDetails.tsx",
+    "file": "src/features/ListTxHistory/useCases/ShowTxDetails/TxDetails.tsx",
     "start": {
       "line": 381,
       "column": 23,
-      "index": 13009
+      "index": 13018
     },
     "end": {
       "line": 384,
       "column": 3,
-      "index": 13110
+      "index": 13119
     }
   },
   {
     "id": "components.txhistory.txdetails.addressPrefixNotMine",
     "defaultMessage": "!!!not mine",
-    "file": "src/legacy/TxHistory/TxDetails/TxDetails.tsx",
+    "file": "src/features/ListTxHistory/useCases/ShowTxDetails/TxDetails.tsx",
     "start": {
       "line": 385,
       "column": 24,
-      "index": 13136
+      "index": 13145
     },
     "end": {
       "line": 388,
       "column": 3,
-      "index": 13239
+      "index": 13248
     }
   },
   {
     "id": "components.txhistory.txdetails.fee",
     "defaultMessage": "!!!Fee:",
-    "file": "src/legacy/TxHistory/TxDetails/TxDetails.tsx",
+    "file": "src/features/ListTxHistory/useCases/ShowTxDetails/TxDetails.tsx",
     "start": {
       "line": 389,
       "column": 7,
-      "index": 13248
+      "index": 13257
     },
     "end": {
       "line": 392,
       "column": 3,
-      "index": 13331
+      "index": 13340
     }
   },
   {
     "id": "components.txhistory.txdetails.fromAddresses",
     "defaultMessage": "!!!From Addresses",
-    "file": "src/legacy/TxHistory/TxDetails/TxDetails.tsx",
+    "file": "src/features/ListTxHistory/useCases/ShowTxDetails/TxDetails.tsx",
     "start": {
       "line": 393,
       "column": 17,
-      "index": 13350
+      "index": 13359
     },
     "end": {
       "line": 396,
       "column": 3,
-      "index": 13452
+      "index": 13461
     }
   },
   {
     "id": "components.txhistory.txdetails.toAddresses",
     "defaultMessage": "!!!To Addresses",
-    "file": "src/legacy/TxHistory/TxDetails/TxDetails.tsx",
+    "file": "src/features/ListTxHistory/useCases/ShowTxDetails/TxDetails.tsx",
     "start": {
       "line": 397,
       "column": 15,
-      "index": 13469
+      "index": 13478
     },
     "end": {
       "line": 400,
       "column": 3,
-      "index": 13567
+      "index": 13576
     }
   },
   {
     "id": "components.txhistory.txdetails.memo",
     "defaultMessage": "!!!Memo",
-    "file": "src/legacy/TxHistory/TxDetails/TxDetails.tsx",
+    "file": "src/features/ListTxHistory/useCases/ShowTxDetails/TxDetails.tsx",
     "start": {
       "line": 401,
       "column": 8,
-      "index": 13577
+      "index": 13586
     },
     "end": {
       "line": 404,
       "column": 3,
-      "index": 13660
+      "index": 13669
     }
   },
   {
     "id": "components.txhistory.txdetails.transactionId",
     "defaultMessage": "!!!Transaction ID",
-    "file": "src/legacy/TxHistory/TxDetails/TxDetails.tsx",
+    "file": "src/features/ListTxHistory/useCases/ShowTxDetails/TxDetails.tsx",
     "start": {
       "line": 405,
       "column": 17,
-      "index": 13679
+      "index": 13688
     },
     "end": {
       "line": 408,
       "column": 3,
-      "index": 13781
+      "index": 13790
     }
   },
   {
     "id": "components.txhistory.txdetails.txAssuranceLevel",
     "defaultMessage": "!!!Transaction assurance level",
-    "file": "src/legacy/TxHistory/TxDetails/TxDetails.tsx",
+    "file": "src/features/ListTxHistory/useCases/ShowTxDetails/TxDetails.tsx",
     "start": {
       "line": 409,
       "column": 20,
-      "index": 13803
+      "index": 13812
     },
     "end": {
       "line": 412,
       "column": 3,
-      "index": 13921
+      "index": 13930
     }
   },
   {
     "id": "components.txhistory.txdetails.confirmations",
     "defaultMessage": "!!!{cnt} {cnt, plural, one {CONFIRMATION} other {CONFIRMATIONS}}",
-    "file": "src/legacy/TxHistory/TxDetails/TxDetails.tsx",
+    "file": "src/features/ListTxHistory/useCases/ShowTxDetails/TxDetails.tsx",
     "start": {
       "line": 413,
       "column": 17,
-      "index": 13940
+      "index": 13949
     },
     "end": {
       "line": 416,
       "column": 3,
-      "index": 14089
+      "index": 14098
     }
   },
   {
     "id": "components.txhistory.txdetails.omittedCount",
     "defaultMessage": "!!!+ {cnt} omitted {cnt, plural, one {address} other {addresses}}",
-    "file": "src/legacy/TxHistory/TxDetails/TxDetails.tsx",
+    "file": "src/features/ListTxHistory/useCases/ShowTxDetails/TxDetails.tsx",
     "start": {
       "line": 417,
       "column": 16,
-      "index": 14107
+      "index": 14116
     },
     "end": {
       "line": 420,
       "column": 3,
-      "index": 14256
+      "index": 14265
     }
   },
   {
     "id": "global.openInExplorer",
     "defaultMessage": "!!!Open in explorer",
-    "file": "src/legacy/TxHistory/TxDetails/TxDetails.tsx",
+    "file": "src/features/ListTxHistory/useCases/ShowTxDetails/TxDetails.tsx",
     "start": {
       "line": 421,
       "column": 18,
-      "index": 14276
+      "index": 14285
     },
     "end": {
       "line": 424,
       "column": 3,
-      "index": 14357
+      "index": 14366
     }
   }
 ]

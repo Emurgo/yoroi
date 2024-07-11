@@ -1,0 +1,47 @@
+[
+  {
+    "id": "components.txhistory.txhistory.title",
+    "defaultMessage": "!!!Transactions",
+    "file": "src/features/ListTxHistory/useCases/ListTxHistory/TxHistory.tsx",
+    "start": {
+      "line": 102,
+      "column": 9,
+      "index": 3482
+    },
+    "end": {
+      "line": 105,
+      "column": 3,
+      "index": 3574
+    }
+  },
+  {
+    "id": "components.txhistory.txhistory.warningbanner.title",
+    "defaultMessage": "!!!Note:",
+    "file": "src/features/ListTxHistory/useCases/ListTxHistory/TxHistory.tsx",
+    "start": {
+      "line": 106,
+      "column": 16,
+      "index": 3592
+    },
+    "end": {
+      "line": 109,
+      "column": 3,
+      "index": 3691
+    }
+  },
+  {
+    "id": "components.txhistory.txhistory.warningbanner.message",
+    "defaultMessage": "!!!The Shelley protocol upgrade adds a new Shelley wallet type which supports delegation.",
+    "file": "src/features/ListTxHistory/useCases/ListTxHistory/TxHistory.tsx",
+    "start": {
+      "line": 110,
+      "column": 11,
+      "index": 3704
+    },
+    "end": {
+      "line": 113,
+      "column": 3,
+      "index": 3886
+    }
+  }
+]

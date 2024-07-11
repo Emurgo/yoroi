@@ -21,7 +21,7 @@ import LocalizableError from '../../kernel/i18n/LocalizableError'
 import {throwLoggedError} from '../../kernel/logger/helpers/throw-logged-error'
 import {logger} from '../../kernel/logger/logger'
 import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../kernel/storage/EncryptedStorage'
-import {makeMemosManager, MemosManager} from '../../legacy/TxHistory/common/memos/memosManager'
+import {makeMemosManager, MemosManager} from '../../features/ListTxHistory/common/memos/memosManager'
 import type {
   AccountStateResponse,
   DefaultAsset,
