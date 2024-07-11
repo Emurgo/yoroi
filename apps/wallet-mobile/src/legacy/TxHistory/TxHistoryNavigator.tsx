@@ -155,12 +155,8 @@ export const TxHistoryNavigator = () => {
                     component={TxHistory}
                     options={{
                       title: meta.name,
+                      headerTransparent: true,
                       headerRight: headerRightHistory,
-                      headerStyle: {
-                        elevation: 0,
-                        shadowOpacity: 0,
-                        backgroundColor: 'transparent',
-                      },
                     }}
                   />
 
@@ -584,7 +580,6 @@ const useStyles = () => {
       width: 40,
     },
     row: {
-      backgroundColor: color.primary_c100,
       paddingStart: 8,
     },
   })

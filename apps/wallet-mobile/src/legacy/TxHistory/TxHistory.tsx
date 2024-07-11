@@ -1,9 +1,11 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {LayoutAnimation, StyleSheet, Text, View} from 'react-native'
+import {LayoutAnimation, StatusBar, StyleSheet, Text, View} from 'react-native'
+import LinearGradient from 'react-native-linear-gradient'
 
 import infoIcon from '../../assets/img/icon/info-light-green.png'
+import {Spacer} from '../../components'
 import {Space} from '../../components/Space/Space'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {assetMessages, txLabels} from '../../kernel/i18n/global-messages'
@@ -19,7 +21,7 @@ import {WarningBanner} from './WarningBanner'
 
 export const TxHistory = () => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {styles, colors} = useStyles()
   const {wallet, meta} = useSelectedWallet()
   const [showWarning, setShowWarning] = React.useState(meta.implementation === 'cardano-bip44')
 
@@ -36,7 +38,11 @@ export const TxHistory = () => {
   const handleOnRefresh = () => sync()
 
   return (
-    <View style={styles.scrollView}>
+    <LinearGradient start={{x: 0.5, y: 0.5}} end={{x: 0, y: 0}} style={styles.root} colors={colors.gradient}>
+      <Spacer height={100} />
+
+      <StatusBar translucent backgroundColor="transparent" />
+
       <CollapsibleHeader expanded={expanded}>
         <BalanceBanner />
 
@@ -70,7 +76,7 @@ export const TxHistory = () => {
 
         <TxHistoryList onScroll={onScroll} refreshing={isLoading} onRefresh={handleOnRefresh} />
       </View>
-    </View>
+    </LinearGradient>
   )
 }
 
@@ -100,9 +106,8 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
-    scrollView: {
+    root: {
       flex: 1,
-      backgroundColor: 'red',
     },
     warningNoteStyles: {
       position: 'absolute',
@@ -123,5 +128,9 @@ const useStyles = () => {
     },
   })
 
-  return styles
+  const colors = {
+    gradient: color.bg_gradient_1,
+  }
+
+  return {styles, colors}
 }
