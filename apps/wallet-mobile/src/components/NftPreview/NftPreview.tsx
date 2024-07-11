@@ -6,7 +6,7 @@ import {Image, ImageStyle, View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 import placeholderLight from '../../assets/img/nft-placeholder.png'
-import placeholderDark from '../../assets/img/nft-placeholder.png'
+import placeholderDark from '../../assets/img/nft-placeholder-dark.png'
 import {getNftMainImageMediaType} from '../../yoroi-wallets/cardano/nfts'
 import {useNativeAssetImage} from '../../yoroi-wallets/hooks'
 
