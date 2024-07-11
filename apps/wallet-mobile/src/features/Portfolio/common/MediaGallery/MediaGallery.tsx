@@ -129,11 +129,11 @@ const useStyles = () => {
     imageWrapper: {
       position: 'relative',
       overflow: 'hidden',
-      borderRadius: 8,
+      ...atoms.rounded_sm,
     },
     image: {
-      borderRadius: 8,
-      overlayColor: '#FFFFFF',
+      ...atoms.rounded_sm,
+      backgroundColor: color.gray_c100,
     },
     text: {
       ...atoms.body_3_sm_medium,

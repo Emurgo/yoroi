@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, useWindowDimensions, View} from 'react-native'
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -21,6 +22,7 @@ export const NftDetailsImage = () => {
   const {id} = useParams<Params>(isParams)
   const {wallet} = useSelectedWallet()
   const dimensions = useWindowDimensions()
+  const styles = useStyles()
 
   // reading from the getter, there is no need to subscribe to changes
   const [amount] = React.useState(wallet.balances.records.get(id))
@@ -38,23 +40,36 @@ export const NftDetailsImage = () => {
     <FadeIn style={styles.container}>
       <ViewTransformer maxScale={3} minScale={1}>
         <View style={styles.contentContainer}>
-          <MediaPreview info={amount.info} width={dimensions.width} height={dimensions.height} contentFit="contain" />
+          <MediaPreview
+            info={amount.info}
+            width={dimensions.width}
+            height={dimensions.height}
+            contentFit="contain"
+            style={styles.image}
+          />
         </View>
       </ViewTransformer>
     </FadeIn>
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  contentContainer: {
-    flex: 1,
-    display: 'flex',
-    height: '100%',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-})
+const useStyles = () => {
+  const {color} = useTheme()
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+    },
+    contentContainer: {
+      flex: 1,
+      display: 'flex',
+      height: '100%',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    image: {
+      backgroundColor: color.gray_c100,
+    },
+  })
+  return styles
+}
