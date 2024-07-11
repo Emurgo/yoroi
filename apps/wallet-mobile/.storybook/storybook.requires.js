@@ -152,7 +152,6 @@ const getStories = () => {
     "./src/features/ListTxHistory/useCases/ListTxHistory/AddressModal/AddressModal.stories.tsx": require("../src/features/ListTxHistory/useCases/ListTxHistory/AddressModal/AddressModal.stories.tsx"),
     "./src/features/ListTxHistory/useCases/ListTxHistory/BalanceBanner.stories.tsx": require("../src/features/ListTxHistory/useCases/ListTxHistory/BalanceBanner.stories.tsx"),
     "./src/features/ListTxHistory/useCases/ListTxHistory/TxHistory.stories.tsx": require("../src/features/ListTxHistory/useCases/ListTxHistory/TxHistory.stories.tsx"),
-    "./src/features/ListTxHistory/useCases/ListTxHistory/TxHistoryList/ActionsBanner/ActionsBanner.stories.tsx": require("../src/features/ListTxHistory/useCases/ListTxHistory/TxHistoryList/ActionsBanner/ActionsBanner.stories.tsx"),
     "./src/features/ListTxHistory/useCases/ShowTxDetails/AssetList.stories.tsx": require("../src/features/ListTxHistory/useCases/ShowTxDetails/AssetList.stories.tsx"),
     "./src/features/ListTxHistory/useCases/ShowTxDetails/TxDetails.stories.tsx": require("../src/features/ListTxHistory/useCases/ShowTxDetails/TxDetails.stories.tsx"),
     "./src/features/Menu/Menu.stories.tsx": require("../src/features/Menu/Menu.stories.tsx"),
