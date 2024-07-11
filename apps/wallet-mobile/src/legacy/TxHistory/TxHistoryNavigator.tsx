@@ -159,7 +159,7 @@ export const TxHistoryNavigator = () => {
                       headerStyle: {
                         elevation: 0,
                         shadowOpacity: 0,
-                        backgroundColor: color.primary_c100,
+                        backgroundColor: 'transparent',
                       },
                     }}
                   />

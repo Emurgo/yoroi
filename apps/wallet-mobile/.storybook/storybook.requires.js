@@ -282,8 +282,6 @@ const getStories = () => {
     "./src/legacy/Staking/PoolTransition/PoolTransitionModal.stories.tsx": require("../src/legacy/Staking/PoolTransition/PoolTransitionModal.stories.tsx"),
     "./src/legacy/Staking/StakingCenter/StakingCenter.stories.tsx": require("../src/legacy/Staking/StakingCenter/StakingCenter.stories.tsx"),
     "./src/legacy/TxHistory/AddressModal/AddressModal.stories.tsx": require("../src/legacy/TxHistory/AddressModal/AddressModal.stories.tsx"),
-    "./src/legacy/TxHistory/AssetList/ChipButton/ChipButton.stories.tsx": require("../src/legacy/TxHistory/AssetList/ChipButton/ChipButton.stories.tsx"),
-    "./src/legacy/TxHistory/AssetList/FilterBalancesByType.stories.tsx": require("../src/legacy/TxHistory/AssetList/FilterBalancesByType.stories.tsx"),
     "./src/legacy/TxHistory/BalanceBanner.stories.tsx": require("../src/legacy/TxHistory/BalanceBanner.stories.tsx"),
     "./src/legacy/TxHistory/TxDetails/AssetList.stories.tsx": require("../src/legacy/TxHistory/TxDetails/AssetList.stories.tsx"),
     "./src/legacy/TxHistory/TxDetails/TxDetails.stories.tsx": require("../src/legacy/TxHistory/TxDetails/TxDetails.stories.tsx"),

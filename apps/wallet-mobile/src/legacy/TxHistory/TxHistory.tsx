@@ -1,17 +1,15 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {LayoutAnimation, StyleSheet, View} from 'react-native'
+import {LayoutAnimation, StyleSheet, Text, View} from 'react-native'
 
 import infoIcon from '../../assets/img/icon/info-light-green.png'
-import {Boundary, Spacer} from '../../components'
-import {Tab, TabPanel, TabPanels, Tabs} from '../../components/Tabs'
+import {Space} from '../../components/Space/Space'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {assetMessages, txLabels} from '../../kernel/i18n/global-messages'
 import {useSync} from '../../yoroi-wallets/hooks'
 import {usePoolTransitionModal} from '../Staking/PoolTransition/usePoolTransitionModal'
 import {ActionsBanner} from './ActionsBanner'
-import {ListBalances} from './AssetList/ListBalances'
 import {BalanceBanner} from './BalanceBanner'
 import {CollapsibleHeader} from './CollapsibleHeader'
 import {LockedDeposit} from './LockedDeposit'
@@ -19,20 +17,11 @@ import {TxHistoryList} from './TxHistoryList'
 import {useOnScroll} from './useOnScroll'
 import {WarningBanner} from './WarningBanner'
 
-type Tab = 'transactions' | 'assets'
-
 export const TxHistory = () => {
   const strings = useStrings()
   const styles = useStyles()
   const {wallet, meta} = useSelectedWallet()
   const [showWarning, setShowWarning] = React.useState(meta.implementation === 'cardano-bip44')
-
-  const [activeTab, setActiveTab] = React.useState<Tab>('transactions')
-
-  const onSelectTab = (tab: Tab) => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    setActiveTab(tab)
-  }
 
   const {sync, isLoading: isLoadingWallet} = useSync(wallet)
   const {isLoading: isLoadingPoolTransition} = usePoolTransitionModal()
@@ -54,61 +43,33 @@ export const TxHistory = () => {
         <ActionsBanner disabled={isLoading} />
       </CollapsibleHeader>
 
-      <Tabs style={styles.tabs}>
-        <Tab
-          onPress={() => {
-            setExpanded(true)
-            onSelectTab('transactions')
-          }}
-          label={strings.transactions}
-          active={activeTab === 'transactions'}
-          testID="transactionsTabButton"
-          style={styles.tab}
-        />
+      <View style={styles.panel}>
+        <Space height="lg" />
 
-        <Tab //
-          onPress={() => {
-            setExpanded(true)
-            onSelectTab('assets')
-          }}
-          label={strings.assets}
-          active={activeTab === 'assets'}
-          testID="assetsTabButton"
-          style={styles.tab}
-        />
-      </Tabs>
+        <Text style={styles.title}>Transactions</Text>
 
-      <TabPanels>
-        <Spacer height={2} />
+        <Space height="xl" />
 
         <LockedDeposit />
 
-        <Spacer height={8} />
+        <Space height="md" />
 
-        <TabPanel active={activeTab === 'transactions'}>
-          {meta.implementation === 'cardano-bip44' && showWarning && (
-            <WarningBanner
-              title={strings.warningTitle.toUpperCase()}
-              icon={infoIcon}
-              message={strings.warningMessage}
-              showCloseIcon
-              onRequestClose={() => {
-                LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-                setShowWarning(false)
-              }}
-              style={styles.warningNoteStyles}
-            />
-          )}
+        {meta.implementation === 'cardano-bip44' && showWarning && (
+          <WarningBanner
+            title={strings.warningTitle.toUpperCase()}
+            icon={infoIcon}
+            message={strings.warningMessage}
+            showCloseIcon
+            onRequestClose={() => {
+              LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+              setShowWarning(false)
+            }}
+            style={styles.warningNoteStyles}
+          />
+        )}
 
-          <TxHistoryList onScroll={onScroll} refreshing={isLoading} onRefresh={handleOnRefresh} />
-        </TabPanel>
-
-        <TabPanel active={activeTab === 'assets'}>
-          <Boundary loading={{size: 'full'}}>
-            <ListBalances onScroll={onScroll} refreshing={isLoading} onRefresh={handleOnRefresh} />
-          </Boundary>
-        </TabPanel>
-      </TabPanels>
+        <TxHistoryList onScroll={onScroll} refreshing={isLoading} onRefresh={handleOnRefresh} />
+      </View>
     </View>
   )
 }
@@ -141,24 +102,24 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     scrollView: {
       flex: 1,
-      backgroundColor: color.primary_c100,
+      backgroundColor: 'red',
     },
     warningNoteStyles: {
       position: 'absolute',
       zIndex: 2,
       bottom: 0,
     },
-    tabs: {
-      flexDirection: 'row',
+    title: {
+      ...atoms.body_1_lg_medium,
+      color: color.gray_c900,
+      textAlign: 'center',
+    },
+    panel: {
+      flex: 1,
+      paddingTop: 8,
       backgroundColor: color.gray_cmin,
       borderTopLeftRadius: 24,
       borderTopRightRadius: 24,
-    },
-    tab: {
-      alignItems: 'center',
-      justifyContent: 'center',
-      ...atoms.p_lg,
-      flex: 1,
     },
   })
 

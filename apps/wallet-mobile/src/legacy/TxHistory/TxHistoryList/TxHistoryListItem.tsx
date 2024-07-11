@@ -3,20 +3,22 @@ import {useNavigation} from '@react-navigation/native'
 import {isNonNullable} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
 import {BigNumber} from 'bignumber.js'
-import _, {fromPairs} from 'lodash'
 import React from 'react'
 import {defineMessages, MessageDescriptor, useIntl} from 'react-intl'
-import {StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
+import {StyleSheet, Text, TouchableOpacity, View, ViewProps} from 'react-native'
 
-import {Spacer, Text} from '../../../components'
+import {Boundary, ResetError} from '../../../components'
 import {Icon} from '../../../components/Icon'
+import {colorsMap} from '../../../components/Icon/Direction'
+import {BalanceError} from '../../../components/PairedBalance/PairedBalance'
+import {useCurrencyPairing} from '../../../features/Settings/Currency'
 import {usePrivacyMode} from '../../../features/Settings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
 import {TxHistoryRouteNavigation} from '../../../kernel/navigation'
 import {isEmptyString} from '../../../kernel/utils'
 import {MultiToken} from '../../../yoroi-wallets/cardano/MultiToken'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
-import {IOData, TransactionAssurance, TransactionDirection, TransactionInfo} from '../../../yoroi-wallets/types'
+import {TransactionAssurance, TransactionDirection, TransactionInfo} from '../../../yoroi-wallets/types'
 import {asQuantity} from '../../../yoroi-wallets/utils'
 import {
   formatDateRelative,
@@ -33,22 +35,17 @@ export const TxHistoryListItem = ({transaction}: Props) => {
   const strings = useStrings()
   const {styles, colors, isDark} = useStyles()
   const navigation = useNavigation<TxHistoryRouteNavigation>()
+  const {color} = useTheme()
 
   const {wallet} = useSelectedWallet()
   const intl = useIntl()
 
   const showDetails = () => navigation.navigate('history-details', {id: transaction.id})
   const submittedAt = isNonNullable(transaction.submittedAt)
-    ? `${formatDateRelative(transaction.submittedAt, intl) + ' ' + formatTime(transaction.submittedAt, intl)}`
+    ? `${formatDateRelative(transaction.submittedAt, intl) + ', ' + formatTime(transaction.submittedAt, intl)}`
     : ''
 
-  const isPending = transaction.assurance === 'PENDING'
-  const isReceived = transaction.direction === 'RECEIVED'
-
   const rootBgColor = bgColorByAssurance(transaction.assurance, colors)
-
-  const internalAddressIndex = fromPairs(wallet.internalAddresses.map((addr, i) => [addr, i]))
-  const externalAddressIndex = fromPairs(wallet.externalAddresses.map((addr, i) => [addr, i]))
 
   const fee = transaction.fee ? transaction.fee[0] : null
   const amountAsMT = MultiToken.fromArray(transaction.amount)
@@ -61,12 +58,6 @@ export const TxHistoryListItem = ({transaction}: Props) => {
     ? styles.positiveAmount
     : styles.negativeAmount
 
-  const outputsToMyWallet = isReceived
-    ? getTxIOMyWallet(transaction.outputs, externalAddressIndex, internalAddressIndex)
-    : []
-
-  const totalAssets = outputsToMyWallet.reduce((acc, {assets}) => acc + Number(assets.length), 0)
-
   return (
     <TouchableOpacity
       onPress={showDetails}
@@ -75,90 +66,124 @@ export const TxHistoryListItem = ({transaction}: Props) => {
       style={[styles.item, {backgroundColor: isDark ? colors.background : rootBgColor}]}
     >
       <Left>
-        <Icon.Direction transaction={transaction} />
+        <Icon.Direction size={32} transaction={transaction} />
       </Left>
 
       <Middle>
-        <Text small secondary={isPending} testID="transactionDirection">
+        <Text
+          style={[styles.direction, {color: colorsMap(color)[transaction.direction].text}]}
+          testID="transactionDirection"
+        >
           {strings.direction(transaction.direction as any)}
         </Text>
 
-        <Spacer height={4} />
-
-        <Text secondary small testID="submittedAtText">
+        <Text style={styles.date} testID="submittedAtText">
           {submittedAt}
         </Text>
       </Middle>
 
       <Right>
         {transaction.amount.length > 0 ? (
-          <Amount wallet={wallet} transaction={transaction} />
+          <Amount wallet={wallet} amount={amount} />
         ) : (
           <Text style={amountStyle}>- -</Text>
         )}
 
-        {totalAssets !== 0 && (
-          <Row>
-            <Text testID="totalAssetsText">{strings.assets(totalAssets)}</Text>
-          </Row>
-        )}
+        <Row>
+          <Price wallet={wallet} amount={amount} />
+        </Row>
       </Right>
     </TouchableOpacity>
   )
 }
 
-const Row = ({style, ...props}: ViewProps) => <View style={[style, {flexDirection: 'row'}]} {...props} />
+const Row = ({style, ...props}: ViewProps) => (
+  <View style={[style, {flexDirection: 'row', justifyContent: 'flex-end'}]} {...props} />
+)
 const Left = ({style, ...props}: ViewProps) => <View style={[style, {padding: 4}]} {...props} />
 const Middle = ({style, ...props}: ViewProps) => (
   <View style={[style, {flex: 1, justifyContent: 'center', padding: 4}]} {...props} />
 )
 const Right = ({style, ...props}: ViewProps) => <View style={[style, {padding: 4}]} {...props} />
-const Amount = ({wallet, transaction}: {wallet: YoroiWallet; transaction: TransactionInfo}) => {
+const Amount = ({wallet, amount}: {wallet: YoroiWallet; amount: BigNumber}) => {
   const {styles} = useStyles()
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
-  const amountAsMT = MultiToken.fromArray(transaction.amount)
-  const amount: BigNumber = amountAsMT.getDefault()
-  const fee = transaction.fee ? transaction.fee[0] : null
-  const amountToDisplay = isEmptyString(fee?.amount) ? amount : amount.plus(new BigNumber(fee?.amount ?? 0))
-  const style = amountToDisplay.eq(0)
-    ? styles.neutralAmount
-    : amountToDisplay.gte(0)
-    ? styles.positiveAmount
-    : styles.negativeAmount
 
   return (
-    <View style={styles.amount} testID="transactionAmount">
-      <Text style={style} secondary={transaction.assurance === 'PENDING'}>
-        <Text>{!isPrivacyActive && formatTokenInteger(asQuantity(amount), wallet.primaryToken)}</Text>
-
-        <Text small>
-          {!isPrivacyActive ? formatTokenFractional(asQuantity(amount), wallet.primaryToken) : privacyPlaceholder}
-        </Text>
+    <View style={styles.amountContainer} testID="transactionAmount">
+      <Text style={styles.amount}>
+        {!isPrivacyActive && formatTokenInteger(asQuantity(amount), wallet.primaryToken, true)}
       </Text>
 
-      <Text style={style}>{` ${wallet.primaryTokenInfo.symbol}`}</Text>
+      <Text style={styles.amount}>
+        {!isPrivacyActive ? formatTokenFractional(asQuantity(amount), wallet.primaryToken) : privacyPlaceholder}
+      </Text>
+
+      <Text style={styles.amount}>{` ${wallet.primaryTokenInfo.name}`}</Text>
     </View>
+  )
+}
+
+const Price = ({wallet, amount}: {wallet: YoroiWallet; amount: BigNumber}) => {
+  const {styles} = useStyles()
+  const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
+  const {
+    currency,
+    adaPrice: {price: rate},
+  } = useCurrencyPairing()
+
+  const price = React.useMemo(() => {
+    if (rate == null) return `... ${currency}`
+
+    return !isPrivacyActive
+      ? `${formatTokenInteger(asQuantity(amount), wallet.primaryToken, true)} ${currency}`
+      : `${privacyPlaceholder} ${currency}`
+  }, [amount, currency, isPrivacyActive, privacyPlaceholder, rate, wallet.primaryToken])
+
+  return (
+    <Boundary
+      key={currency}
+      loading={{size: 'small'}}
+      error={{
+        fallback: ({resetErrorBoundary}) => (
+          <ResetError resetErrorBoundary={resetErrorBoundary}>
+            <BalanceError textStyle={styles.pair} currency={currency} />
+          </ResetError>
+        ),
+      }}
+    >
+      <Text style={styles.pair} testID="pairedText">
+        {price}
+      </Text>
+    </Boundary>
   )
 }
 
 const useStyles = () => {
   const {color, atoms, isDark} = useTheme()
   const styles = StyleSheet.create({
+    pair: {
+      color: color.gray_c600,
+      ...atoms.body_3_sm_regular,
+    },
+    date: {
+      color: color.gray_c600,
+      ...atoms.body_3_sm_regular,
+    },
+    direction: {
+      ...atoms.body_2_md_medium,
+    },
     item: {
       flex: 1,
       flexDirection: 'row',
-      borderRadius: 10,
-      elevation: 2,
-      shadowOffset: {width: 0, height: -2},
-      shadowRadius: 10,
-      shadowOpacity: 0.08,
-      shadowColor: color.gray_c900,
-      backgroundColor: color.gray_cmin,
-      ...atoms.p_md,
     },
-    amount: {
+    amountContainer: {
       flex: 1,
       flexDirection: 'row',
+    },
+    amount: {
+      color: color.gray_c900,
+      ...atoms.body_2_md_medium,
     },
     positiveAmount: {
       color: color.primary_c600,
@@ -206,29 +231,6 @@ const messages = defineMessages({
     description: 'The number of assets different assets, not the amount',
   },
 })
-
-type AddressIndexRecord = Record<string, number>
-
-const filtersTxIO = (address: string) => {
-  const isMyReceive = (extAddrIdx: AddressIndexRecord) => extAddrIdx[address] != null
-  const isMyChange = (intAddrIdx: AddressIndexRecord) => intAddrIdx[address] != null
-  const isMyAddress = (extAddrIdx: AddressIndexRecord, intAddrIdx: AddressIndexRecord) =>
-    isMyReceive(extAddrIdx) || isMyChange(intAddrIdx)
-  return {
-    isMyReceive,
-    isMyChange,
-    isMyAddress,
-  }
-}
-
-const getTxIOMyWallet = (txIO: Array<IOData>, extAddrIdx: AddressIndexRecord, intAddrIdx: AddressIndexRecord) => {
-  const io = _.uniq(txIO).map(({address, assets}) => ({
-    address,
-    assets,
-  }))
-  const filtered = io.filter(({address}) => filtersTxIO(address).isMyAddress(extAddrIdx, intAddrIdx))
-  return filtered ?? []
-}
 
 const directionMessages: Record<TransactionDirection, MessageDescriptor> = Object.freeze({
   SENT: messages.transactionTypeSent,

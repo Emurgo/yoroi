@@ -5,7 +5,7 @@ import _ from 'lodash'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {Spacer} from '../../../components'
+import {Space} from '../../../components/Space/Space'
 import {ShowBuyBanner} from '../../../features/Exchange/common/ShowBuyBanner/ShowBuyBanner'
 import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
@@ -46,7 +46,7 @@ export const TxHistoryList = (props: Props) => {
         ListHeaderComponent={<ShowBuyBanner />}
         contentContainerStyle={styles.content}
         renderItem={({item}) => <TxHistoryListItem transaction={item} />}
-        ItemSeparatorComponent={() => <Spacer height={16} />}
+        ItemSeparatorComponent={() => <Space height="lg" />}
         keyExtractor={(_, index) => index.toString()}
         nestedScrollEnabled={true}
         testID="txHistoryList"
