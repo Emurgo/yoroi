@@ -1,10 +1,12 @@
 import {isString} from '@yoroi/common'
+import {useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
 import React from 'react'
 import {Image, ImageStyle, View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
-import placeholder from '../../assets/img/nft-placeholder.png'
+import placeholderLight from '../../assets/img/nft-placeholder.png'
+import placeholderDark from '../../assets/img/nft-placeholder-dark.png'
 import {getNftMainImageMediaType} from '../../yoroi-wallets/cardano/nfts'
 import {useNativeAssetImage} from '../../yoroi-wallets/hooks'
 
@@ -29,6 +31,8 @@ export const NftPreview = ({
   blurRadius,
   zoom = 1,
 }: NftPreviewProps) => {
+  const {isDark} = useTheme()
+  const placeholder = isDark ? placeholderDark : placeholderLight
   const [policy, name] = nft.id.split('.')
   const {uri, headers, isLoading, isError, onError, onLoad} = useNativeAssetImage({
     policy,

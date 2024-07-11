@@ -302,6 +302,7 @@ const useStyles = () => {
     },
     image: {
       flexGrow: 1,
+      backgroundColor: color.gray_c100,
     },
     contentContainer: {
       paddingHorizontal: imagePadding,
