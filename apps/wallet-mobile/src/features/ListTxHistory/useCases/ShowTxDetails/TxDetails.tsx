@@ -19,8 +19,6 @@ import {
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {Banner, Boundary, Button, CopyButton, FadeIn, Icon, Text, useModal} from '../../../../components'
-import {usePrivacyMode} from '../../../Settings/PrivacyMode/PrivacyMode'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import globalMessages from '../../../../kernel/i18n/global-messages'
 import {isEmptyString} from '../../../../kernel/utils'
 import {MultiToken} from '../../../../yoroi-wallets/cardano/MultiToken'
@@ -29,6 +27,8 @@ import {useTipStatus, useTransactionInfos} from '../../../../yoroi-wallets/hooks
 import {TransactionInfo} from '../../../../yoroi-wallets/types'
 import {asQuantity} from '../../../../yoroi-wallets/utils'
 import {formatDateAndTime, formatTokenWithSymbol} from '../../../../yoroi-wallets/utils/format'
+import {usePrivacyMode} from '../../../Settings/PrivacyMode/PrivacyMode'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import AddressModal from '../ListTxHistory/AddressModal/AddressModal'
 import {AssetList} from './AssetList'
 import {useAssetListStyles} from './AssetListTransaction.style'
