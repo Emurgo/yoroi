@@ -41,6 +41,7 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     root: {
+      backgroundColor: color.gray_cmin,
       flex: 1,
       padding: 16,
     },
