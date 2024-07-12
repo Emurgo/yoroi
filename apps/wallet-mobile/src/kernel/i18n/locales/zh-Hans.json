@@ -504,6 +504,7 @@
   "components.txhistory.txhistory.warningbanner.buttonText": "升级",
   "components.txhistory.txhistory.warningbanner.message": "Shelley协议升级添加了一个新的Shelley钱包类型，该类型支持委托。要委托您的ADA，您需要升级到Shelley钱包。",
   "components.txhistory.txhistory.warningbanner.title": "注意：",
+  "components.txhistory.txhistory.title": "Transactions",
   "components.txhistory.txhistorylistitem.assuranceLevelFailed": "失败",
   "components.txhistory.txhistorylistitem.assuranceLevelHeader": "担保级别：",
   "components.txhistory.txhistorylistitem.assuranceLevelHigh": "成功",
