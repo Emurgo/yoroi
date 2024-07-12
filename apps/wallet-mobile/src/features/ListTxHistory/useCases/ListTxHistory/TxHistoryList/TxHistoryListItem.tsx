@@ -152,9 +152,11 @@ const Price = ({amount, wallet}: {wallet: YoroiWallet; amount: BigNumber}) => {
     const normalizationFactor = Math.pow(10, wallet.primaryToken.metadata.numberOfDecimals)
 
     const priceBn = amount.dividedBy(normalizationFactor).times(rate)
-    const price = priceBn.abs().toFormat(config.decimals)
+    const isPositive = priceBn.isPositive()
+    const price = priceBn.toFormat(config.decimals)
+    const total = `${isPositive ? `+${price}` : `${price}`} ${currency}`
 
-    return `${!isPrivacyActive ? price : privacyPlaceholder} ${currency}`
+    return !isPrivacyActive ? total : `${privacyPlaceholder} ${currency}`
   }, [
     amount,
     config.decimals,
