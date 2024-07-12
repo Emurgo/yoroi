@@ -2,92 +2,92 @@
   {
     "id": "components.txhistory.txhistorylistitem.fee",
     "defaultMessage": "!!!Fee",
-    "file": "src/legacy/TxHistory/TxHistoryList/TxHistoryListItem.tsx",
+    "file": "src/features/ListTxHistory/useCases/ListTxHistory/TxHistoryList/TxHistoryListItem.tsx",
     "start": {
-      "line": 208,
+      "line": 203,
       "column": 7,
-      "index": 6664
+      "index": 6484
     },
     "end": {
-      "line": 211,
+      "line": 206,
       "column": 3,
-      "index": 6753
-    }
-  },
-  {
-    "id": "components.txhistory.txhistorylistitem.transactionTypeSent",
-    "defaultMessage": "!!!ADA sent",
-    "file": "src/legacy/TxHistory/TxHistoryList/TxHistoryListItem.tsx",
-    "start": {
-      "line": 212,
-      "column": 23,
-      "index": 6778
-    },
-    "end": {
-      "line": 215,
-      "column": 3,
-      "index": 6888
-    }
-  },
-  {
-    "id": "components.txhistory.txhistorylistitem.transactionTypeReceived",
-    "defaultMessage": "!!!ADA received",
-    "file": "src/legacy/TxHistory/TxHistoryList/TxHistoryListItem.tsx",
-    "start": {
-      "line": 216,
-      "column": 27,
-      "index": 6917
-    },
-    "end": {
-      "line": 219,
-      "column": 3,
-      "index": 7035
-    }
-  },
-  {
-    "id": "components.txhistory.txhistorylistitem.transactionTypeSelf",
-    "defaultMessage": "!!!Intrawallet",
-    "file": "src/legacy/TxHistory/TxHistoryList/TxHistoryListItem.tsx",
-    "start": {
-      "line": 220,
-      "column": 23,
-      "index": 7060
-    },
-    "end": {
-      "line": 223,
-      "column": 3,
-      "index": 7173
-    }
-  },
-  {
-    "id": "components.txhistory.txhistorylistitem.transactionTypeMulti",
-    "defaultMessage": "!!!Multiparty",
-    "file": "src/legacy/TxHistory/TxHistoryList/TxHistoryListItem.tsx",
-    "start": {
-      "line": 224,
-      "column": 24,
-      "index": 7199
-    },
-    "end": {
-      "line": 227,
-      "column": 3,
-      "index": 7312
+      "index": 6573
     }
   },
   {
     "id": "global.txLabels.assets",
     "description": "The number of assets different assets, not the amount",
     "defaultMessage": "!!!{cnt} assets",
-    "file": "src/legacy/TxHistory/TxHistoryList/TxHistoryListItem.tsx",
+    "file": "src/features/ListTxHistory/useCases/ListTxHistory/TxHistoryList/TxHistoryListItem.tsx",
     "start": {
-      "line": 228,
+      "line": 207,
       "column": 10,
-      "index": 7324
+      "index": 6585
     },
     "end": {
-      "line": 232,
+      "line": 211,
       "column": 3,
-      "index": 7476
+      "index": 6737
+    }
+  },
+  {
+    "id": "components.txhistory.txhistorylistitem.transactionTypeSent",
+    "defaultMessage": "!!!ADA sent",
+    "file": "src/features/ListTxHistory/useCases/ListTxHistory/TxHistoryList/TxHistoryListItem.tsx",
+    "start": {
+      "line": 212,
+      "column": 23,
+      "index": 6762
+    },
+    "end": {
+      "line": 215,
+      "column": 3,
+      "index": 6872
+    }
+  },
+  {
+    "id": "components.txhistory.txhistorylistitem.transactionTypeReceived",
+    "defaultMessage": "!!!ADA received",
+    "file": "src/features/ListTxHistory/useCases/ListTxHistory/TxHistoryList/TxHistoryListItem.tsx",
+    "start": {
+      "line": 216,
+      "column": 27,
+      "index": 6901
+    },
+    "end": {
+      "line": 219,
+      "column": 3,
+      "index": 7019
+    }
+  },
+  {
+    "id": "components.txhistory.txhistorylistitem.transactionTypeSelf",
+    "defaultMessage": "!!!Intrawallet",
+    "file": "src/features/ListTxHistory/useCases/ListTxHistory/TxHistoryList/TxHistoryListItem.tsx",
+    "start": {
+      "line": 220,
+      "column": 23,
+      "index": 7044
+    },
+    "end": {
+      "line": 223,
+      "column": 3,
+      "index": 7157
+    }
+  },
+  {
+    "id": "components.txhistory.txhistorylistitem.transactionTypeMulti",
+    "defaultMessage": "!!!Multiparty",
+    "file": "src/features/ListTxHistory/useCases/ListTxHistory/TxHistoryList/TxHistoryListItem.tsx",
+    "start": {
+      "line": 224,
+      "column": 24,
+      "index": 7183
+    },
+    "end": {
+      "line": 227,
+      "column": 3,
+      "index": 7296
     }
   }
 ]
