@@ -835,10 +835,10 @@ export const makeCardanoWallet = (
       }
 
       const needsStakingKey =
-        unsignedTx.staking.delegations ||
-        unsignedTx.staking.registrations ||
-        unsignedTx.staking.deregistrations ||
-        unsignedTx.staking.withdrawals ||
+        isNonEmpty(unsignedTx.staking.delegations) ||
+        isNonEmpty(unsignedTx.staking.registrations) ||
+        isNonEmpty(unsignedTx.staking.deregistrations) ||
+        isNonEmpty(unsignedTx.staking.withdrawals) ||
         unsignedTx.governance
 
       if (needsStakingKey && !stakingPrivateKey) {
@@ -1177,3 +1177,7 @@ export const makeCardanoWallet = (
 }
 
 const toHex = (bytes: Uint8Array) => Buffer.from(bytes).toString('hex')
+
+const isNonEmpty = (arr: unknown[] | undefined) => {
+  return arr && arr.length > 0
+}
