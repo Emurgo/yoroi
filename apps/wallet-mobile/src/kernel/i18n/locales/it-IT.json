@@ -504,6 +504,7 @@
   "components.txhistory.txhistory.warningbanner.buttonText": "Aggiornamento",
   "components.txhistory.txhistory.warningbanner.message": "L'aggiornamento del protocollo Shelley aggiunge un nuovo tipo di portafoglio Shelley che supporta la delega. Per delegare i vostri ADA dovrete passarli ad un portafoglio Shelley.",
   "components.txhistory.txhistory.warningbanner.title": "Nota:",
+  "components.txhistory.txhistory.title": "Transactions",
   "components.txhistory.txhistorylistitem.assuranceLevelFailed": "Fallito",
   "components.txhistory.txhistorylistitem.assuranceLevelHeader": "Livello di garanzia:",
   "components.txhistory.txhistorylistitem.assuranceLevelHigh": "Success",
