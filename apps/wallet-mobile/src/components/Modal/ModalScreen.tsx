@@ -84,7 +84,7 @@ const SliderIndicator = () => {
 }
 
 const useStyles = () => {
-  const {color, atoms} = useTheme()
+  const {color, atoms, isDark} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,
@@ -108,7 +108,7 @@ const useStyles = () => {
     },
     sheet: {
       flex: 1,
-      backgroundColor: color.gray_c50,
+      backgroundColor: isDark ? color.gray_c50 : color.white_static,
       alignSelf: 'stretch',
       paddingBottom: 16,
     },
@@ -123,7 +123,7 @@ const useStyles = () => {
     },
     slider: {
       height: 4,
-      backgroundColor: color.gray_c50,
+      backgroundColor: color.black_static,
       width: 32,
       borderRadius: 10,
     },

@@ -1,10 +1,10 @@
 import {useTheme} from '@yoroi/theme'
 import {fromPairs} from 'lodash'
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet, Text, View} from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
 
-import {CopyButton, Spacer, Text, useModal} from '../../../../../components'
+import {CopyButton, Spacer, useModal} from '../../../../../components'
 import {ScrollView} from '../../../../../components/ScrollView/ScrollView'
 import {derivationPathManagerMaker} from '../../../../../yoroi-wallets/cardano/derivation-path-manager/derivation-path-manager'
 import {useKeyHashes} from '../../../../../yoroi-wallets/hooks'
@@ -33,10 +33,6 @@ export const AddressModal = ({address, path}: Props) => {
 
   return (
     <ScrollView style={styles.scroll}>
-      <Text style={styles.title}>{strings.title.toLocaleUpperCase()}</Text>
-
-      <Spacer width={8} />
-
       <View style={styles.qrCode}>
         <QRCode value={address} size={140} backgroundColor="white" color="black" />
       </View>
@@ -47,9 +43,7 @@ export const AddressModal = ({address, path}: Props) => {
         <Text style={styles.subtitle}>{strings.walletAddress}</Text>
 
         <View style={styles.row}>
-          <Text style={{flex: 1}} secondary monospace numberOfLines={1} ellipsizeMode="middle">
-            {address}
-          </Text>
+          <Text style={styles.address}>{address}</Text>
 
           <Spacer width={16} />
 
@@ -67,9 +61,7 @@ export const AddressModal = ({address, path}: Props) => {
           <>
             <Text style={styles.subtitle}>{strings.BIP32path}</Text>
 
-            <Text secondary monospace>
-              {derivationPathManagerMaker(implementation)(path)}
-            </Text>
+            <Text style={styles.address}>{derivationPathManagerMaker(implementation)(path)}</Text>
 
             <Spacer width={8} />
           </>
@@ -77,17 +69,13 @@ export const AddressModal = ({address, path}: Props) => {
 
         <Text style={styles.subtitle}>{strings.staking}</Text>
 
-        <Text secondary monospace>
-          {keyHashes?.staking}
-        </Text>
+        <Text style={styles.address}>{keyHashes?.staking}</Text>
 
         <Spacer width={8} />
 
         <Text style={styles.subtitle}>{strings.spending}</Text>
 
-        <Text secondary monospace>
-          {keyHashes?.spending}
-        </Text>
+        <Text style={styles.address}>{keyHashes?.spending}</Text>
       </View>
     </ScrollView>
   )
@@ -116,11 +104,10 @@ const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     scroll: {
-      width: '100%',
+      flex: 1,
       ...atoms.px_lg,
     },
     qrCode: {
-      display: 'flex',
       alignItems: 'center',
       alignSelf: 'center',
       backgroundColor: color.white_static,
@@ -131,16 +118,18 @@ const useStyles = () => {
       alignItems: 'flex-start',
       ...atoms.body_1_lg_regular,
     },
-    title: {
-      textAlign: 'center',
-      ...atoms.body_1_lg_regular,
-    },
     subtitle: {
       textAlign: 'center',
-      ...atoms.body_1_lg_regular,
+      ...atoms.body_2_md_regular,
+      color: color.gray_c600,
     },
     row: {
       flexDirection: 'row',
+    },
+    address: {
+      flex: 1,
+      ...atoms.body_1_lg_regular,
+      color: color.gray_c900,
     },
   })
   return {styles}

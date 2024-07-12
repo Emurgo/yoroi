@@ -6,7 +6,7 @@ import {useTheme} from '@yoroi/theme'
 import {BigNumber} from 'bignumber.js'
 import {fromPairs} from 'lodash'
 import React, {useEffect, useState} from 'react'
-import {defineMessages, IntlShape, useIntl} from 'react-intl'
+import {IntlShape, useIntl} from 'react-intl'
 import {
   LayoutAnimation,
   Linking,
@@ -19,7 +19,6 @@ import {
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {Banner, Boundary, Button, CopyButton, FadeIn, Icon, Text, useModal} from '../../../../components'
-import globalMessages from '../../../../kernel/i18n/global-messages'
 import {isEmptyString} from '../../../../kernel/utils'
 import {MultiToken} from '../../../../yoroi-wallets/cardano/MultiToken'
 import {CardanoTypes, YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
@@ -29,6 +28,7 @@ import {asQuantity} from '../../../../yoroi-wallets/utils'
 import {formatDateAndTime, formatTokenWithSymbol} from '../../../../yoroi-wallets/utils/format'
 import {usePrivacyMode} from '../../../Settings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {messages, useStrings} from '../../common/strings'
 import AddressModal from '../ListTxHistory/AddressModal/AddressModal'
 import {AssetList} from './AssetList'
 import {useAssetListStyles} from './AssetListTransaction.style'
@@ -73,7 +73,8 @@ export const TxDetails = () => {
     setExpandedOutItemId(expandedOutItemId !== itemId ? itemId : null)
   }
 
-  const openAddressModal = (address: string) => openModal('', <AddressModal address={address} />, modalHeight)
+  const openAddressModal = (address: string) =>
+    openModal(strings.addessModalTitle, <AddressModal address={address} />, modalHeight)
 
   return (
     <FadeIn style={styles.container}>
@@ -219,7 +220,7 @@ const Fee = ({amount}: {amount: BigNumber}) => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
 
-  const text = `${strings.fee} ${formatTokenWithSymbol(asQuantity(amount), wallet.primaryToken)}`
+  const text = `${strings.txDetailsFee} ${formatTokenWithSymbol(asQuantity(amount), wallet.primaryToken)}`
   return <Text small>{text}</Text>
 }
 
@@ -332,97 +333,6 @@ export type Params = {
 }
 
 type ItemId = number
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    fee: intl.formatMessage(messages.fee),
-    fromAddresses: intl.formatMessage(messages.fromAddresses),
-    toAddresses: intl.formatMessage(messages.toAddresses),
-    memo: intl.formatMessage(messages.memo),
-    transactionId: intl.formatMessage(messages.transactionId),
-    txAssuranceLevel: intl.formatMessage(messages.txAssuranceLevel),
-    confirmations: (cnt: number) => intl.formatMessage(messages.confirmations, {cnt}),
-    omittedCount: (cnt: number) => intl.formatMessage(messages.omittedCount, {cnt}),
-    openInExplorer: intl.formatMessage(messages.openInExplorer),
-    SENT: intl.formatMessage(txTypeMessages.SENT),
-    RECEIVED: intl.formatMessage(txTypeMessages.RECEIVED),
-    SELF: intl.formatMessage(txTypeMessages.SELF),
-    MULTI: intl.formatMessage(txTypeMessages.MULTI),
-    assetsLabel: intl.formatMessage(globalMessages.assetsLabel),
-  }
-}
-
-const txTypeMessages = defineMessages({
-  SENT: {
-    id: 'components.txhistory.txdetails.txTypeSent',
-    defaultMessage: '!!!Sent funds',
-  },
-  RECEIVED: {
-    id: 'components.txhistory.txdetails.txTypeReceived',
-    defaultMessage: '!!!Received funds',
-  },
-  SELF: {
-    id: 'components.txhistory.txdetails.txTypeSelf',
-    defaultMessage: '!!!Intrawallet transaction',
-  },
-  MULTI: {
-    id: 'components.txhistory.txdetails.txTypeMulti',
-    defaultMessage: '!!!Multi-party transaction',
-  },
-})
-
-const messages = defineMessages({
-  addressPrefixReceive: {
-    id: 'components.txhistory.txdetails.addressPrefixReceive',
-    defaultMessage: '!!!/{idx}',
-  },
-  addressPrefixChange: {
-    id: 'components.txhistory.txdetails.addressPrefixChange',
-    defaultMessage: '!!!/change',
-  },
-  addressPrefixNotMine: {
-    id: 'components.txhistory.txdetails.addressPrefixNotMine',
-    defaultMessage: '!!!not mine',
-  },
-  fee: {
-    id: 'components.txhistory.txdetails.fee',
-    defaultMessage: '!!!Fee: ',
-  },
-  fromAddresses: {
-    id: 'components.txhistory.txdetails.fromAddresses',
-    defaultMessage: '!!!From Addresses',
-  },
-  toAddresses: {
-    id: 'components.txhistory.txdetails.toAddresses',
-    defaultMessage: '!!!To Addresses',
-  },
-  memo: {
-    id: 'components.txhistory.txdetails.memo',
-    defaultMessage: '!!!Memo',
-  },
-  transactionId: {
-    id: 'components.txhistory.txdetails.transactionId',
-    defaultMessage: '!!!Transaction ID',
-  },
-  txAssuranceLevel: {
-    id: 'components.txhistory.txdetails.txAssuranceLevel',
-    defaultMessage: '!!!Transaction assurance level',
-  },
-  confirmations: {
-    id: 'components.txhistory.txdetails.confirmations',
-    defaultMessage: '!!!{cnt} {cnt, plural, one {CONFIRMATION} other {CONFIRMATIONS}}',
-  },
-  omittedCount: {
-    id: 'components.txhistory.txdetails.omittedCount',
-    defaultMessage: '!!!+ {cnt} omitted {cnt, plural, one {address} other {addresses}}',
-  },
-  openInExplorer: {
-    id: 'global.openInExplorer',
-    defaultMessage: '!!!Open in explorer',
-  },
-})
 
 const useStyles = () => {
   const {atoms, color} = useTheme()
