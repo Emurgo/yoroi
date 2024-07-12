@@ -504,6 +504,7 @@
   "components.txhistory.txhistory.warningbanner.buttonText": "Обновить",
   "components.txhistory.txhistory.warningbanner.message": "Обновление Shelley-протокол добавляет новый кошелек типа Shelley, которые поддерживает делегирование. Чтобы делегировать ваши ADA, вам необходимо перейти на кошелек Shelley.",
   "components.txhistory.txhistory.warningbanner.title": "Примечание:",
+  "components.txhistory.txhistory.title": "Transactions",
   "components.txhistory.txhistorylistitem.assuranceLevelFailed": "Не удалось",
   "components.txhistory.txhistorylistitem.assuranceLevelHeader": "Уровень гарантии:",
   "components.txhistory.txhistorylistitem.assuranceLevelHigh": "Успешно",

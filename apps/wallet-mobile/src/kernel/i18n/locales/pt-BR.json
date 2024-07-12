@@ -504,6 +504,7 @@
   "components.txhistory.txhistory.warningbanner.buttonText": "Upgrade",
   "components.txhistory.txhistory.warningbanner.message": "A atualização do protocolo Shelley adiciona um novo tipo de carteira Shelley que suporta delegação. Para delegar seu ADA, você precisará atualizar para uma carteira Shelley.",
   "components.txhistory.txhistory.warningbanner.title": "Nota:",
+  "components.txhistory.txhistory.title": "Transactions",
   "components.txhistory.txhistorylistitem.assuranceLevelFailed": "Falhou",
   "components.txhistory.txhistorylistitem.assuranceLevelHeader": "Nível de confiabilidade:",
   "components.txhistory.txhistorylistitem.assuranceLevelHigh": "Sucesso",

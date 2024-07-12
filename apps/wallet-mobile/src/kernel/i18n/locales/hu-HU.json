@@ -504,6 +504,7 @@
   "components.txhistory.txhistory.warningbanner.buttonText": "Frissités",
   "components.txhistory.txhistory.warningbanner.message": "A Shelley protokollfrissítés új Shelley pénztárca típust ad hozzá, amely támogatja a delegálást. Az ADA delegáláshoz frissítened kell egy Shelley pénztárcára. ",
   "components.txhistory.txhistory.warningbanner.title": "Megjegyzés:",
+  "components.txhistory.txhistory.title": "Transactions",
   "components.txhistory.txhistorylistitem.assuranceLevelFailed": "Sikertelen",
   "components.txhistory.txhistorylistitem.assuranceLevelHeader": "Jóváhagyási mérték:",
   "components.txhistory.txhistorylistitem.assuranceLevelHigh": "Success",

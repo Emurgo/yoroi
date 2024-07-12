@@ -504,6 +504,7 @@
   "components.txhistory.txhistory.warningbanner.buttonText": "Aktualisieren",
   "components.txhistory.txhistory.warningbanner.message": "Das Shelley-Protokoll-Upgrade fügt einen neuen Shelley-Wallettyp hinzu, der die Delegation unterstützt. Um Deine ADA zu delegieren, musst du auf eine Shelley-Wallet upgraden.",
   "components.txhistory.txhistory.warningbanner.title": "Notiz:",
+  "components.txhistory.txhistory.title": "Transactions",
   "components.txhistory.txhistorylistitem.assuranceLevelFailed": "Fehlgeschlagen",
   "components.txhistory.txhistorylistitem.assuranceLevelHeader": "Bestätigungsebene:",
   "components.txhistory.txhistorylistitem.assuranceLevelHigh": "Erfolg",

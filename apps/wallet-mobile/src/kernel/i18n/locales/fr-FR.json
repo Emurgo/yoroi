@@ -504,6 +504,7 @@
   "components.txhistory.txhistory.warningbanner.buttonText": "Mettre à jour",
   "components.txhistory.txhistory.warningbanner.message": "La mise à jour du protocole Shelley ajoute un nouveau type de portefeuille Shelley qui prend en charge la délégation. Pour déléguer vos ADA, vous devez utiliser un portefeuille Shelley.",
   "components.txhistory.txhistory.warningbanner.title": "Remarque :",
+  "components.txhistory.txhistory.title": "Transactions",
   "components.txhistory.txhistorylistitem.assuranceLevelFailed": "Échec",
   "components.txhistory.txhistorylistitem.assuranceLevelHeader": "Niveau d'assurance :",
   "components.txhistory.txhistorylistitem.assuranceLevelHigh": "Succès ",

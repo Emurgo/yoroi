@@ -504,6 +504,7 @@
   "components.txhistory.txhistory.warningbanner.buttonText": "Upgradovať",
   "components.txhistory.txhistory.warningbanner.message": "Aktualizácia Shelley protokolu pridáva nový typ Shelley peňaženky, ktorá podporuje delegovanie. K používaniu delegovania ADA je nutné aktualizovať na Shelley peňaženku.",
   "components.txhistory.txhistory.warningbanner.title": "Poznámka:",
+  "components.txhistory.txhistory.title": "Transactions",
   "components.txhistory.txhistorylistitem.assuranceLevelFailed": "Zlyhanie",
   "components.txhistory.txhistorylistitem.assuranceLevelHeader": "úroveň záruky",
   "components.txhistory.txhistorylistitem.assuranceLevelHigh": "Success",
