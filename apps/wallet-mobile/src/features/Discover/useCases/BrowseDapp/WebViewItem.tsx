@@ -118,6 +118,7 @@ export const WebViewItem = ({tab, index}: Props) => {
             javaScriptEnabled
             scalesPageToFit
             cacheEnabled
+            setSupportMultipleWindows={false}
             injectedJavaScriptBeforeContentLoaded={initScript}
             onMessage={handleEvent}
             style={[styles.roundedInsideContainer]}
