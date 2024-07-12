@@ -504,6 +504,7 @@
   "components.txhistory.txhistory.warningbanner.buttonText": "Nâng cấp",
   "components.txhistory.txhistory.warningbanner.message": "Bản nâng cấp giao thức Shelley thêm một loại ví Shelley mới hỗ trợ ủy quyền. Để ủy quyền ADA của bạn, bạn sẽ cần nâng cấp lên ví Shelley.",
   "components.txhistory.txhistory.warningbanner.title": "Ghi chú:",
+  "components.txhistory.txhistory.title": "Transactions",
   "components.txhistory.txhistorylistitem.assuranceLevelFailed": "Lỗi",
   "components.txhistory.txhistorylistitem.assuranceLevelHeader": "Mức đảm bảo:",
   "components.txhistory.txhistorylistitem.assuranceLevelHigh": "Thành công",
