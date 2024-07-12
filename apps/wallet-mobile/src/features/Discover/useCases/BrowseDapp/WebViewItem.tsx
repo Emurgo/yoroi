@@ -109,6 +109,7 @@ export const WebViewItem = ({tab, index}: Props) => {
           {!tabsOpen && isTabActive && <BrowserToolbar uri={tab.url} />}
 
           <WebView
+            originWhitelist={['*']}
             ref={webViewRef}
             androidLayerType="software"
             source={{uri: webURL}}
