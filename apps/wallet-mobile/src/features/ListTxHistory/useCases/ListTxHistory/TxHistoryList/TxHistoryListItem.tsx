@@ -82,7 +82,7 @@ export const TxHistoryListItem = ({transaction}: Props) => {
         )}
 
         <Row>
-          <Price wallet={wallet} amount={amount} />
+          <PairedPrice txId={transaction.id} wallet={wallet} amount={amount} />
         </Row>
       </Right>
     </TouchableOpacity>
@@ -116,6 +116,27 @@ const Amount = ({wallet, amount}: {wallet: YoroiWallet; amount: BigNumber}) => {
   )
 }
 
+const PairedPrice = ({amount, wallet, txId}: {wallet: YoroiWallet; amount: BigNumber; txId: string}) => {
+  const {styles} = useStyles()
+  const {currency} = useCurrencyPairing()
+
+  return (
+    <Boundary
+      key={txId}
+      loading={{size: 'small'}}
+      error={{
+        fallback: ({resetErrorBoundary}) => (
+          <ResetError resetErrorBoundary={resetErrorBoundary}>
+            <BalanceError textStyle={styles.pair} currency={currency} />
+          </ResetError>
+        ),
+      }}
+    >
+      <Price amount={amount} wallet={wallet} />
+    </Boundary>
+  )
+}
+
 const Price = ({amount, wallet}: {wallet: YoroiWallet; amount: BigNumber}) => {
   const {styles} = useStyles()
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
@@ -129,6 +150,7 @@ const Price = ({amount, wallet}: {wallet: YoroiWallet; amount: BigNumber}) => {
     if (rate == null) return `... ${currency}`
 
     const normalizationFactor = Math.pow(10, wallet.primaryToken.metadata.numberOfDecimals)
+
     const priceBn = amount.dividedBy(normalizationFactor).times(rate)
     const isPositive = priceBn.isPositive()
     const price = priceBn.toFormat(config.decimals)
@@ -146,21 +168,9 @@ const Price = ({amount, wallet}: {wallet: YoroiWallet; amount: BigNumber}) => {
   ])
 
   return (
-    <Boundary
-      key={currency}
-      loading={{size: 'small'}}
-      error={{
-        fallback: ({resetErrorBoundary}) => (
-          <ResetError resetErrorBoundary={resetErrorBoundary}>
-            <BalanceError textStyle={styles.pair} currency={currency} />
-          </ResetError>
-        ),
-      }}
-    >
-      <Text style={styles.pair} testID="pairedText">
-        {price}
-      </Text>
-    </Boundary>
+    <Text style={styles.pair} testID="pairedText">
+      {price}
+    </Text>
   )
 }
 
