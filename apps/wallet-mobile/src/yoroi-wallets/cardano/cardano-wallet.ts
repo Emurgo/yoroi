@@ -834,15 +834,18 @@ export const makeCardanoWallet = (
           .then((key) => key.toRawKey())
       }
 
-      const stakingKeys =
-        (unsignedTx.staking.delegations ||
-          unsignedTx.staking.registrations ||
-          unsignedTx.staking.deregistrations ||
-          unsignedTx.staking.withdrawals ||
-          unsignedTx.governance) &&
-        stakingPrivateKey
-          ? [stakingPrivateKey]
-          : throwLoggedError('CardanoWallet: signTx required staking key but not supported')
+      const needsStakingKey =
+        isNonEmpty(unsignedTx.staking.delegations) ||
+        isNonEmpty(unsignedTx.staking.registrations) ||
+        isNonEmpty(unsignedTx.staking.deregistrations) ||
+        isNonEmpty(unsignedTx.staking.withdrawals) ||
+        unsignedTx.governance
+
+      if (needsStakingKey && !stakingPrivateKey) {
+        throwLoggedError('CardanoWallet: signTx required staking key but not supported')
+      }
+
+      const stakingKeys = needsStakingKey && stakingPrivateKey ? [stakingPrivateKey] : undefined
 
       const datumDatas = unsignedTx.entries
         .map((entry) => entry.datum)
@@ -1174,3 +1177,7 @@ export const makeCardanoWallet = (
 }
 
 const toHex = (bytes: Uint8Array) => Buffer.from(bytes).toString('hex')
+
+const isNonEmpty = (arr: unknown[] | undefined) => {
+  return arr && arr.length > 0
+}
