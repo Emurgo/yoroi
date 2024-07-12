@@ -161,7 +161,6 @@ import {
   PortfolioTokenAmount,
   PortfolioTokenAmountRecords,
   PortfolioPrimaryBreakdown,
-  PortfolioSimpleAmount,
 } from './portfolio/amount'
 import {PortfolioTokenPrice} from './portfolio/price'
 import {ChainNetwork, ChainSupportedNetworks} from './chain/network'

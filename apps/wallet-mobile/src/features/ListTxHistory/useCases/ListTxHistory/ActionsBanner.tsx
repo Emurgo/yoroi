@@ -10,7 +10,6 @@ import {Icon, Spacer, Text} from '../../../../components'
 import {useCopy} from '../../../../hooks/useCopy'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {TxHistoryRouteNavigation} from '../../../../kernel/navigation'
-import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {useReceive} from '../../../Receive/common/ReceiveProvider'
 import {useMultipleAddressesInfo} from '../../../Receive/common/useMultipleAddressesInfo'
 import {useReceiveAddressesStatus} from '../../../Receive/common/useReceiveAddressesStatus'
@@ -36,15 +35,10 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
 
   const {track} = useMetrics()
 
-  const {meta, wallet} = useSelectedWallet()
-  const sellTokenInfo = useTokenInfo({
-    wallet,
-    tokenId: orderData.amounts.sell.tokenId,
-  })
-  const buyTokenInfo = useTokenInfo({
-    wallet,
-    tokenId: orderData.amounts.buy.tokenId,
-  })
+  const {
+    meta,
+    wallet: {portfolioPrimaryTokenInfo},
+  } = useSelectedWallet()
 
   const handleOnSend = () => {
     navigateTo.send()
@@ -56,9 +50,9 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
 
     track.swapInitiated({
       from_asset: [
-        {asset_name: sellTokenInfo.name, asset_ticker: sellTokenInfo.ticker, policy_id: sellTokenInfo.group},
+        {asset_name: portfolioPrimaryTokenInfo.name, asset_ticker: portfolioPrimaryTokenInfo.ticker, policy_id: ''},
       ],
-      to_asset: [{asset_name: buyTokenInfo.name, asset_ticker: buyTokenInfo.ticker, policy_id: buyTokenInfo.group}],
+      to_asset: [{asset_name: '', asset_ticker: '', policy_id: ''}],
       order_type: orderData.type,
       slippage_tolerance: orderData.slippage,
     })
