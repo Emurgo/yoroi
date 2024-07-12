@@ -504,6 +504,7 @@
   "components.txhistory.txhistory.warningbanner.buttonText": "Actualización",
   "components.txhistory.txhistory.warningbanner.message": "La actualización del protocolo de Shelley añade un nuevo tipo de billetera que soporta la delegación. Para delegar tus ADA deberás actualizar a una billetera de Shelley.",
   "components.txhistory.txhistory.warningbanner.title": "Nota:",
+  "components.txhistory.txhistory.title": "Transactions",
   "components.txhistory.txhistorylistitem.assuranceLevelFailed": "Fallo",
   "components.txhistory.txhistorylistitem.assuranceLevelHeader": "Nivel de fiabilidad:",
   "components.txhistory.txhistorylistitem.assuranceLevelHigh": "Success",
