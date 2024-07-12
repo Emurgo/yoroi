@@ -66,7 +66,7 @@ const Price = ({amount, textStyle, ignorePrivacy, currency}: Props & Required<Pi
   )
 }
 
-const BalanceError = ({textStyle, currency}: {textStyle?: TextStyle; currency: CurrencySymbol}) => {
+export const BalanceError = ({textStyle, currency}: {textStyle?: TextStyle; currency: CurrencySymbol}) => {
   const strings = useStrings()
   const styles = useStyles()
 

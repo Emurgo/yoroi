@@ -112,7 +112,7 @@ export const formatTokenWithText = (
   return `${formatTokenAmount(quantity, token)} ${tickerOrId}`
 }
 
-export const formatTokenInteger = (amount: Balance.Quantity, token: Token | DefaultAsset) => {
+export const formatTokenInteger = (amount: Balance.Quantity, token: Token | DefaultAsset, withPositiveSign = false) => {
   const normalizationFactor = Math.pow(10, token.metadata.numberOfDecimals)
   const bigNumber = new BigNumber(amount)
   const num = bigNumber.dividedToIntegerBy(normalizationFactor)
@@ -121,7 +121,7 @@ export const formatTokenInteger = (amount: Balance.Quantity, token: Token | Defa
     // -0 needs special handling
     return '-0'
   } else {
-    return num.toFormat(0)
+    return withPositiveSign && num.isPositive() ? `+${num.toFormat(0)}` : num.toFormat(0)
   }
 }
 

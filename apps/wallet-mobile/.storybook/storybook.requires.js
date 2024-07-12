@@ -149,6 +149,11 @@ const getStories = () => {
     "./src/features/Links/useCases/AskToRedirect/AskToRedirectScreen.stories.tsx": require("../src/features/Links/useCases/AskToRedirect/AskToRedirectScreen.stories.tsx"),
     "./src/features/Links/useCases/RequestedAdaPaymentWithLinkScreen/RequestedAdaPaymentWithLink.stories.tsx": require("../src/features/Links/useCases/RequestedAdaPaymentWithLinkScreen/RequestedAdaPaymentWithLink.stories.tsx"),
     "./src/features/Links/useCases/RequestedAdaPaymentWithLinkScreen/ShowDisclaimer/ShowDisclaimer.stories.tsx": require("../src/features/Links/useCases/RequestedAdaPaymentWithLinkScreen/ShowDisclaimer/ShowDisclaimer.stories.tsx"),
+    "./src/features/ListTxHistory/useCases/ListTxHistory/AddressModal/AddressModal.stories.tsx": require("../src/features/ListTxHistory/useCases/ListTxHistory/AddressModal/AddressModal.stories.tsx"),
+    "./src/features/ListTxHistory/useCases/ListTxHistory/BalanceBanner.stories.tsx": require("../src/features/ListTxHistory/useCases/ListTxHistory/BalanceBanner.stories.tsx"),
+    "./src/features/ListTxHistory/useCases/ListTxHistory/TxHistory.stories.tsx": require("../src/features/ListTxHistory/useCases/ListTxHistory/TxHistory.stories.tsx"),
+    "./src/features/ListTxHistory/useCases/ShowTxDetails/AssetList.stories.tsx": require("../src/features/ListTxHistory/useCases/ShowTxDetails/AssetList.stories.tsx"),
+    "./src/features/ListTxHistory/useCases/ShowTxDetails/TxDetails.stories.tsx": require("../src/features/ListTxHistory/useCases/ShowTxDetails/TxDetails.stories.tsx"),
     "./src/features/Menu/Menu.stories.tsx": require("../src/features/Menu/Menu.stories.tsx"),
     "./src/features/Nfts/useCases/NftDetails/NftDetails.stories.tsx": require("../src/features/Nfts/useCases/NftDetails/NftDetails.stories.tsx"),
     "./src/features/Nfts/useCases/NftDetails/NftDetailsImage.stories.tsx": require("../src/features/Nfts/useCases/NftDetails/NftDetailsImage.stories.tsx"),
@@ -281,14 +286,6 @@ const getStories = () => {
     "./src/legacy/Staking/PoolDetails/PoolDetailScreen.stories.tsx": require("../src/legacy/Staking/PoolDetails/PoolDetailScreen.stories.tsx"),
     "./src/legacy/Staking/PoolTransition/PoolTransitionModal.stories.tsx": require("../src/legacy/Staking/PoolTransition/PoolTransitionModal.stories.tsx"),
     "./src/legacy/Staking/StakingCenter/StakingCenter.stories.tsx": require("../src/legacy/Staking/StakingCenter/StakingCenter.stories.tsx"),
-    "./src/legacy/TxHistory/AddressModal/AddressModal.stories.tsx": require("../src/legacy/TxHistory/AddressModal/AddressModal.stories.tsx"),
-    "./src/legacy/TxHistory/AssetList/ChipButton/ChipButton.stories.tsx": require("../src/legacy/TxHistory/AssetList/ChipButton/ChipButton.stories.tsx"),
-    "./src/legacy/TxHistory/AssetList/FilterBalancesByType.stories.tsx": require("../src/legacy/TxHistory/AssetList/FilterBalancesByType.stories.tsx"),
-    "./src/legacy/TxHistory/BalanceBanner.stories.tsx": require("../src/legacy/TxHistory/BalanceBanner.stories.tsx"),
-    "./src/legacy/TxHistory/TxDetails/AssetList.stories.tsx": require("../src/legacy/TxHistory/TxDetails/AssetList.stories.tsx"),
-    "./src/legacy/TxHistory/TxDetails/TxDetails.stories.tsx": require("../src/legacy/TxHistory/TxDetails/TxDetails.stories.tsx"),
-    "./src/legacy/TxHistory/TxHistory.stories.tsx": require("../src/legacy/TxHistory/TxHistory.stories.tsx"),
-    "./src/legacy/TxHistory/TxHistoryList/ActionsBanner/ActionsBanner.stories.tsx": require("../src/legacy/TxHistory/TxHistoryList/ActionsBanner/ActionsBanner.stories.tsx"),
   };
 };
 
