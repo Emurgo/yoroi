@@ -111,7 +111,7 @@ export const WebViewItem = ({tab, index}: Props) => {
           <WebView
             originWhitelist={['*']}
             ref={webViewRef}
-            androidLayerType="software"
+            androidLayerType="hardware"
             source={{uri: webURL}}
             onNavigationStateChange={handleNavigationStateChange}
             onLoad={handleEventLoadWebView}
