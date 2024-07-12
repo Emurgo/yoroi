@@ -117,7 +117,6 @@ export const defaultMaterialTopTabNavigationOptions = (
 export type WalletTabRoutes = {
   history: NavigatorScreenParams<TxHistoryRoutes>
   'staking-dashboard': NavigatorScreenParams<DashboardRoutes>
-  nfts: NavigatorScreenParams<NftRoutes>
   portfolio: NavigatorScreenParams<Portfolio2Routes>
   discover: NavigatorScreenParams<DiscoverRoutes>
   menu: NavigatorScreenParams<MenuRoutes>
@@ -306,7 +305,7 @@ export type Portfolio2Routes = {
   'dashboard-portfolio': undefined
   'portfolio-tokens-list': undefined
   'portfolio-token-details': {id: Portfolio.Token.Info['id']}
-  nfts: NavigatorScreenParams<NftRoutes>
+  'portfolio-nfts': NavigatorScreenParams<NftRoutes>
   history: NavigatorScreenParams<TxHistoryRoutes>
 }
 
@@ -572,18 +571,6 @@ export const useWalletNavigation = () => {
           screen: 'history',
           params: {
             screen: 'history-list',
-          },
-        },
-      })
-    },
-
-    navigateToNftGallery: () => {
-      navigation.navigate('manage-wallets', {
-        screen: 'main-wallet-routes',
-        params: {
-          screen: 'nfts',
-          params: {
-            screen: 'nft-gallery',
           },
         },
       })
