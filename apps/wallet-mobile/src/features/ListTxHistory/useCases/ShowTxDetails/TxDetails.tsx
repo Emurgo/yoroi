@@ -36,7 +36,7 @@ import {useAssetListStyles} from './AssetListTransaction.style'
 export const TxDetails = () => {
   const {openModal} = useModal()
   const screenHeight = useWindowDimensions().height
-  const modalHeight = Math.min(screenHeight * 0.8, 512)
+  const modalHeight = Math.min(screenHeight * 0.8, 600)
   const strings = useStrings()
   const {styles, colors} = useStyles()
   const intl = useIntl()
