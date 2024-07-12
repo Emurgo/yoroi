@@ -4,7 +4,6 @@ import {useTransfer} from '@yoroi/transfer'
 import _ from 'lodash'
 import React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, KeyboardAvoidingView, Spacer} from '../../../../components'
 import {ScrollView, useScrollView} from '../../../../components/ScrollView/ScrollView'
@@ -76,7 +75,7 @@ export const StartMultiTokenTxScreen = () => {
   const handleOnChangeMemo = (text: string) => memoChanged(text)
 
   return (
-    <SafeAreaView edges={['bottom', 'right', 'left']} style={styles.container}>
+    <View style={styles.container}>
       <KeyboardAvoidingView style={styles.flex}>
         <ScrollView
           ref={scrollViewRef}
@@ -114,7 +113,7 @@ export const StartMultiTokenTxScreen = () => {
           />
         </Actions>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </View>
   )
 }
 
