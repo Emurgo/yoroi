@@ -14,6 +14,7 @@ import DeviceInfo from 'react-native-device-info'
 import {defaultMemoize} from 'reselect'
 import {Observable} from 'rxjs'
 
+import {makeMemosManager, MemosManager} from '../../features/ListTxHistory/common/memos/memosManager'
 import {buildPortfolioBalanceManager} from '../../features/Portfolio/common/helpers/build-balance-manager'
 import {toBalanceManagerSyncArgs} from '../../features/Portfolio/common/transformers/toBalanceManagerSyncArgs'
 import {protocolParamsPlaceholder} from '../../features/WalletManager/network-manager/network-manager'
@@ -21,7 +22,6 @@ import LocalizableError from '../../kernel/i18n/LocalizableError'
 import {throwLoggedError} from '../../kernel/logger/helpers/throw-logged-error'
 import {logger} from '../../kernel/logger/logger'
 import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../kernel/storage/EncryptedStorage'
-import {makeMemosManager, MemosManager} from '../../legacy/TxHistory/common/memos/memosManager'
 import type {
   AccountStateResponse,
   DefaultAsset,

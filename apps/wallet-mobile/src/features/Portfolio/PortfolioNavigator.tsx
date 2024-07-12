@@ -3,6 +3,8 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 
 import {defaultStackNavigationOptions, Portfolio2Routes} from '../../kernel/navigation'
+import {NftsNavigator} from '../Nfts/NftsNavigator'
+import {SearchProvider} from '../Search/SearchContext'
 import {PortfolioTokenDetailProvider} from './common/PortfolioTokenDetailContext'
 import {useStrings} from './common/useStrings'
 import {PortfolioDashboardScreen} from './useCases/PortfolioDashboard/PortfolioDashboardScreen'
@@ -36,6 +38,14 @@ export const PortfolioNavigator = () => {
           options={{title: strings.tokenDetail, headerRight: () => <ExportTokenTransactions />}}
           component={PortfolioTokenDetailsScreen}
         />
+
+        <Stack.Screen name="portfolio-nfts" options={{headerShown: false}}>
+          {() => (
+            <SearchProvider>
+              <NftsNavigator />
+            </SearchProvider>
+          )}
+        </Stack.Screen>
       </Stack.Navigator>
     </PortfolioTokenDetailProvider>
   )

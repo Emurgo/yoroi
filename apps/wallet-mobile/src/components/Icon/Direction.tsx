@@ -1,5 +1,6 @@
+import {ThemedPalette, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 
 import {TransactionDirection, TransactionInfo} from '../../yoroi-wallets/types'
 import {Received} from '../Icon/Received'
@@ -12,46 +13,62 @@ type Props = {
 }
 
 export const Direction = ({transaction, size = defaultSize}: Props) => {
-  const {direction, assurance, status} = transaction
-  const isPending = assurance === 'PENDING' || status === 'PENDING'
+  const {color} = useTheme()
+  const {direction} = transaction
 
-  const theme: ThemeStatus = isPending ? 'PENDING' : direction === 'RECEIVED' ? 'DIRECT_CREDIT' : 'NORMAL'
-  const color = colorsMap[theme]
-
+  const iconColors = colorsMap(color)[direction]
   const IconComponent = iconMap[direction]
 
   return (
-    <View style={{display: 'flex', borderRadius: size / 2, backgroundColor: color?.background}}>
-      <IconComponent color={color?.icon} width={size} height={size} />
+    <View style={[styles.icon, {backgroundColor: iconColors?.background}]}>
+      <IconComponent color={iconColors?.icon} size={size} />
     </View>
   )
 }
 
 const defaultSize = 36
 
-const iconMap: Record<
-  TransactionDirection,
-  ({width, height, color}: {width: number; height: number; color: string}) => JSX.Element
-> = {
+const iconMap: Record<TransactionDirection, ({size, color}: {size: number; color: string}) => JSX.Element> = {
   SENT: Send,
   RECEIVED: Received,
   SELF: Transaction,
   MULTI: Transaction,
 }
 
-const colorsMap: Record<ThemeStatus, {background: string; icon: string}> = {
-  PENDING: {
-    background: '#DCE0E9',
-    icon: '#6B7384',
+export const colorsMap: (
+  color: ThemedPalette,
+) => Record<ThemeStatus, {background: string; icon: string; text: string}> = (color) => ({
+  SELF: {
+    text: color.gray_c900,
+    background: color.gray_c100,
+    icon: color.gray_c900,
   },
-  NORMAL: {
-    background: '#EDEFF3',
-    icon: '#6B7384',
+  SENT: {
+    text: color.primary_c600,
+    background: color.primary_c100,
+    icon: color.primary_c500,
   },
-  DIRECT_CREDIT: {
-    background: 'rgba(48, 84, 203, 0.1)',
-    icon: '#3154CB',
+  RECEIVED: {
+    text: color.secondary_c600,
+    background: color.secondary_c100,
+    icon: color.secondary_c600,
   },
-}
+  MULTI: {
+    text: color.gray_c900,
+    background: color.gray_c100,
+    icon: color.gray_c900,
+  },
+})
 
-type ThemeStatus = 'PENDING' | 'NORMAL' | 'DIRECT_CREDIT'
+type ThemeStatus = 'SENT' | 'RECEIVED' | 'SELF' | 'MULTI'
+
+const styles = StyleSheet.create({
+  icon: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 40,
+    width: 40,
+    borderRadius: 20,
+  },
+})

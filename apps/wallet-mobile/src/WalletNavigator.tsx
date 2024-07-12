@@ -13,8 +13,8 @@ import {DiscoverNavigator} from './features/Discover'
 import {ShowExchangeResultOrderScreen} from './features/Exchange/useCases/ShowExchangeResultOrderScreen/ShowExchangeResultOrderScreen'
 import {useLinksRequestAction} from './features/Links/common/useLinksRequestAction'
 import {useLinksShowActionResult} from './features/Links/common/useLinksShowActionResult'
+import {TxHistoryNavigator} from './features/ListTxHistory/TxHistoryNavigator'
 import {MenuNavigator} from './features/Menu'
-import {NftsNavigator} from './features/Nfts/NftsNavigator'
 import {PortfolioNavigator} from './features/Portfolio/PortfolioNavigator'
 import {SearchProvider} from './features/Search/SearchContext'
 import {SettingsScreenNavigator} from './features/Settings'
@@ -34,7 +34,6 @@ import {
 } from './kernel/navigation'
 import {CatalystNavigator} from './legacy/Catalyst'
 import {DashboardNavigator} from './legacy/Dashboard'
-import {TxHistoryNavigator} from './legacy/TxHistory'
 
 const Tab = createBottomTabNavigator<WalletTabRoutes>()
 
@@ -84,6 +83,7 @@ const WalletTabNavigator = () => {
           tabBarActiveTintColor: colors.active,
           tabBarInactiveTintColor: colors.inactive,
           tabBarStyle: {
+            borderTopWidth: 2 * StyleSheet.hairlineWidth,
             backgroundColor: colors.background,
             // keyboardWillShow keyboardWillHiden dont work on android
             display: isKeyboardOpen ? 'none' : undefined,
@@ -99,7 +99,6 @@ const WalletTabNavigator = () => {
             tabBarIcon: ({focused}) => <Icon.TabWallet size={24} color={focused ? colors.active : colors.inactive} />,
             tabBarLabel: strings.walletTabBarLabel,
             tabBarTestID: 'walletTabBarButton',
-            tabBarStyle: {backgroundColor: colors.background},
           }}
         >
           {() => (
@@ -117,29 +116,11 @@ const WalletTabNavigator = () => {
             ),
             tabBarLabel: strings.portfolioButton,
             tabBarTestID: 'portfolioTabBarButton',
-            tabBarStyle: {
-              backgroundColor: colors.background,
-            },
           }}
         >
           {() => (
             <SearchProvider>
               <PortfolioNavigator />
-            </SearchProvider>
-          )}
-        </Tab.Screen>
-
-        <Tab.Screen
-          name="nfts"
-          options={{
-            tabBarIcon: ({focused}) => <Icon.Image size={28} color={focused ? colors.active : colors.inactive} />,
-            tabBarLabel: strings.nftsTabBarLabel,
-            tabBarTestID: 'nftsTabBarButton',
-          }}
-        >
-          {() => (
-            <SearchProvider>
-              <NftsNavigator />
             </SearchProvider>
           )}
         </Tab.Screen>
@@ -151,9 +132,6 @@ const WalletTabNavigator = () => {
               tabBarIcon: ({focused}) => <Icon.Discover size={28} color={focused ? colors.active : colors.inactive} />,
               tabBarLabel: strings.discoverTabBarLabel,
               tabBarTestID: 'discoverTabBarButton',
-              tabBarStyle: {
-                backgroundColor: colors.background,
-              },
             }}
           >
             {() => (
@@ -304,7 +282,6 @@ const useStyles = () => {
       ...atoms.font_semibold,
       ...atoms.text_center,
       fontSize: 10,
-      lineHeight: 18,
     },
   })
 
