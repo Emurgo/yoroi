@@ -1,15 +1,7 @@
 import {isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {
-  FlatList,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  TouchableOpacityProps,
-  useWindowDimensions,
-  View,
-} from 'react-native'
+import {FlatList, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 
 import {Icon, Spacer} from '../../../../../components'
 import {makeList} from '../../../../../kernel/utils'
@@ -121,23 +113,13 @@ type HeadingProps = {
   onPress: () => void
 }
 const Heading = ({countTokens, onPress, isFirstUser}: HeadingProps) => {
-  const {styles} = useStyles()
+  const {styles, colors} = useStyles()
   const strings = useStrings()
 
   return (
-    <View style={[styles.container, styles.actionsContainer]}>
+    <TouchableOpacity onPress={onPress} style={[styles.container, styles.actionsContainer]}>
       <Text style={styles.title}>{strings.tokens(isFirstUser ? 0 : countTokens)}</Text>
 
-      <TouchTokensList onPress={onPress} />
-    </View>
-  )
-}
-
-const TouchTokensList = ({onPress}: TouchableOpacityProps) => {
-  const {colors} = useStyles()
-
-  return (
-    <TouchableOpacity onPress={onPress}>
       <Icon.ArrowRight color={colors.gray_800} size={24} />
     </TouchableOpacity>
   )

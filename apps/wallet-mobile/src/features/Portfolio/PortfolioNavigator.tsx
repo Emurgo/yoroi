@@ -24,7 +24,7 @@ export const PortfolioNavigator = () => {
         <Stack.Screen
           name="dashboard-portfolio"
           component={PortfolioDashboardScreen}
-          options={{title: strings.portfolio}}
+          options={{title: strings.portfolio, headerLeft: () => null}}
         />
 
         <Stack.Screen
