@@ -109,7 +109,15 @@ export const EditAmountScreen = () => {
           <AmountInput onChange={handleOnChangeQuantity} value={inputValue} ticker={amount.info.ticker} />
 
           <Center>
-            {isPrimary && <PairedBalance amount={amount} ignorePrivacy />}
+            {isPrimary && (
+              <PairedBalance
+                amount={{
+                  info: amount.info,
+                  quantity,
+                }}
+                ignorePrivacy
+              />
+            )}
 
             <Spacer height={22} />
 
