@@ -30,7 +30,6 @@ export const Nfts = () => {
   useSearchOnNavBar({
     title: strings.title,
     placeholder: strings.search,
-    noBack: true,
   })
   const {search, isSearching} = useSearch()
 

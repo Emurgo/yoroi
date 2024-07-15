@@ -20,7 +20,13 @@ export const PortfolioNavigator = () => {
 
   return (
     <PortfolioTokenDetailProvider>
-      <Stack.Navigator screenOptions={defaultStackNavigationOptions(atoms, color)}>
+      <Stack.Navigator
+        screenOptions={{
+          ...defaultStackNavigationOptions(atoms, color),
+          headerLeft: () => null,
+          gestureEnabled: true,
+        }}
+      >
         <Stack.Screen
           name="dashboard-portfolio"
           component={PortfolioDashboardScreen}
