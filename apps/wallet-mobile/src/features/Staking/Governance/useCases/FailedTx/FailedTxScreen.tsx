@@ -3,6 +3,7 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {Button, Spacer, Text} from '../../../../../components'
+import {SafeArea} from '../../../../../components/SafeArea'
 import {useNavigateTo, useStrings} from '../../common'
 import {BrokenImage} from '../../illustrations'
 
@@ -16,7 +17,7 @@ export const FailedTxScreen = () => {
   }
 
   return (
-    <View style={styles.root}>
+    <SafeArea style={styles.root}>
       <View style={styles.center}>
         <BrokenImage />
 
@@ -32,7 +33,7 @@ export const FailedTxScreen = () => {
 
         <Button title={strings.tryAgain} textStyles={styles.button} shelleyTheme onPress={handleOnTryAgain} />
       </View>
-    </View>
+    </SafeArea>
   )
 }
 
@@ -41,6 +42,7 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     root: {
+      backgroundColor: color.gray_cmin,
       flex: 1,
       padding: 16,
     },
