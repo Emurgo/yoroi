@@ -31,6 +31,8 @@ export const AddressModal = ({address, path}: Props) => {
     meta: {implementation},
   } = useSelectedWallet()
 
+  const derivationPath = path ? derivationPathManagerMaker(implementation)(path) : null
+
   return (
     <ScrollView style={styles.scroll}>
       <View style={styles.qrCode}>
@@ -57,11 +59,13 @@ export const AddressModal = ({address, path}: Props) => {
 
         <Spacer width={8} />
 
-        {path && (
+        {derivationPath !== null && (
           <>
             <Text style={styles.subtitle}>{strings.BIP32path}</Text>
 
-            <Text style={styles.address}>{derivationPathManagerMaker(implementation)(path)}</Text>
+            <View style={styles.row}>
+              <Text style={styles.address}>{derivationPath}</Text>
+            </View>
 
             <Spacer width={8} />
           </>
@@ -69,13 +73,35 @@ export const AddressModal = ({address, path}: Props) => {
 
         <Text style={styles.subtitle}>{strings.staking}</Text>
 
-        <Text style={styles.address}>{keyHashes?.staking}</Text>
+        <View style={styles.row}>
+          <Text style={styles.address}>{keyHashes?.staking}</Text>
+
+          <Spacer width={16} />
+
+          <CopyButton
+            value={keyHashes?.staking ?? ''}
+            onCopy={() => {
+              setTimeout(closeModal, 1000)
+            }}
+          />
+        </View>
 
         <Spacer width={8} />
 
         <Text style={styles.subtitle}>{strings.spending}</Text>
 
-        <Text style={styles.address}>{keyHashes?.spending}</Text>
+        <View style={styles.row}>
+          <Text style={styles.address}>{keyHashes?.spending}</Text>
+
+          <Spacer width={16} />
+
+          <CopyButton
+            value={keyHashes?.spending ?? ''}
+            onCopy={() => {
+              setTimeout(closeModal, 1000)
+            }}
+          />
+        </View>
       </View>
     </ScrollView>
   )

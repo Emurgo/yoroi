@@ -123,7 +123,7 @@ const useStyles = () => {
     },
     slider: {
       height: 4,
-      backgroundColor: color.black_static,
+      backgroundColor: color.gray_cmax,
       width: 32,
       borderRadius: 10,
     },
