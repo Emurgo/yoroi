@@ -1,8 +1,8 @@
 import BigNumber from 'bignumber.js'
 
-import {splitBigInt} from './split-bigint'
+import {atomicBreakdown} from './atomic-breakdown'
 
-describe('splitBigInt', () => {
+describe('atomicBreakdown', () => {
   it('should split a bigint into int dec and bn', () => {
     let bigInt = BigInt(123_456_789)
     let decimalPlaces = 3
@@ -14,7 +14,7 @@ describe('splitBigInt', () => {
       decimalPlaces,
       str: '123456.789',
     }
-    expect(splitBigInt(bigInt, decimalPlaces)).toEqual(expected)
+    expect(atomicBreakdown(bigInt, decimalPlaces)).toEqual(expected)
 
     bigInt = BigInt(987_654_321)
     decimalPlaces = 2
@@ -26,7 +26,7 @@ describe('splitBigInt', () => {
       decimalPlaces,
       str: '9876543.21',
     }
-    expect(splitBigInt(bigInt, decimalPlaces)).toEqual(expected)
+    expect(atomicBreakdown(bigInt, decimalPlaces)).toEqual(expected)
 
     bigInt = BigInt(1_432_116_543)
     decimalPlaces = 5
@@ -38,7 +38,7 @@ describe('splitBigInt', () => {
       decimalPlaces,
       str: '14321.16543',
     }
-    expect(splitBigInt(bigInt, decimalPlaces)).toEqual(expected)
+    expect(atomicBreakdown(bigInt, decimalPlaces)).toEqual(expected)
 
     bigInt = BigInt(123)
     decimalPlaces = 6
@@ -50,7 +50,7 @@ describe('splitBigInt', () => {
       decimalPlaces,
       str: '0.000123',
     }
-    expect(splitBigInt(bigInt, decimalPlaces)).toEqual(expected)
+    expect(atomicBreakdown(bigInt, decimalPlaces)).toEqual(expected)
 
     bigInt = BigInt(123)
     decimalPlaces = 3
@@ -62,7 +62,7 @@ describe('splitBigInt', () => {
       decimalPlaces,
       str: '0.123',
     }
-    expect(splitBigInt(bigInt, decimalPlaces)).toEqual(expected)
+    expect(atomicBreakdown(bigInt, decimalPlaces)).toEqual(expected)
   })
 
   it('should handle negative bigint', () => {
@@ -76,7 +76,7 @@ describe('splitBigInt', () => {
       decimalPlaces,
       str: '-123456.789',
     }
-    expect(splitBigInt(bigInt, decimalPlaces)).toEqual(expected)
+    expect(atomicBreakdown(bigInt, decimalPlaces)).toEqual(expected)
 
     bigInt = BigInt(-987_654_321)
     decimalPlaces = 2
@@ -88,7 +88,7 @@ describe('splitBigInt', () => {
       decimalPlaces,
       str: '-9876543.21',
     }
-    expect(splitBigInt(bigInt, decimalPlaces)).toEqual(expected)
+    expect(atomicBreakdown(bigInt, decimalPlaces)).toEqual(expected)
 
     bigInt = BigInt(-1_000)
     decimalPlaces = 0
@@ -100,6 +100,6 @@ describe('splitBigInt', () => {
       decimalPlaces,
       str: '-1000',
     }
-    expect(splitBigInt(bigInt, decimalPlaces)).toEqual(expected)
+    expect(atomicBreakdown(bigInt, decimalPlaces)).toEqual(expected)
   })
 })
