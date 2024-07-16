@@ -12,6 +12,7 @@ import {QueryClientProvider} from 'react-query'
 import {LoadingBoundary} from './components'
 import {ErrorBoundary} from './components/ErrorBoundary'
 import {AuthProvider} from './features/Auth/AuthProvider'
+import {BrowserProvider} from './features/Discover/common/BrowserProvider'
 import {CurrencyProvider} from './features/Settings/Currency/CurrencyContext'
 import {WalletManagerProvider} from './features/WalletManager/context/WalletManagerProvider'
 import {walletManager} from './features/WalletManager/wallet-manager'
@@ -25,7 +26,6 @@ import {useMigrations} from './kernel/storage/migrations/useMigrations'
 import {rootStorage} from './kernel/storage/rootStorage'
 import {PoolTransitionProvider} from './legacy/Staking/PoolTransition/PoolTransitionProvider'
 import {useThemeStorageMaker} from './yoroi-wallets/hooks'
-import {BrowserProvider} from './features/Discover/common/BrowserProvider'
 
 enableScreens(true)
 enableFreeze(true)
