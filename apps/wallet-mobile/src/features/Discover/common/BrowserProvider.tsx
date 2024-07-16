@@ -62,7 +62,7 @@ export const BrowserProvider = ({
   }, [browserState])
 
   React.useEffect(() => {
-    if (!walletId || browserState.status === 'active') return
+    if (!walletId) return
     const state = memoryStorage.get(walletId)
     if (state) {
       dispatch({type: BrowserActionType.SetState, state})
