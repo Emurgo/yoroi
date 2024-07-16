@@ -1,9 +1,10 @@
-import {bigintFormatter} from '@yoroi/common'
-import {Portfolio} from '@yoroi/types'
+import {atomicFormatter} from '@yoroi/common'
+import {Numbers, Portfolio} from '@yoroi/types'
 
 type AmountFormatterConfig = Readonly<{
   template?: string
   dropTraillingZeros?: boolean
+  format?: Numbers.Locale
 }>
 /**
  * Formats the balance of a token in a portfolio.
@@ -18,14 +19,16 @@ type AmountFormatterConfig = Readonly<{
 export function amountFormatter({
   dropTraillingZeros = false,
   template = '{{value}}',
+  format,
 }: AmountFormatterConfig = {}) {
   return ({
     quantity,
     info: {decimals, ticker, symbol},
   }: Portfolio.Token.Amount) => {
-    const fmtBalance = bigintFormatter({
+    const fmtBalance = atomicFormatter({
       value: quantity,
       decimalPlaces: decimals,
+      format,
     })
 
     let trimmedValue = fmtBalance
