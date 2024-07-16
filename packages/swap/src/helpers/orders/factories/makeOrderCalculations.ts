@@ -19,6 +19,7 @@ export const makeOrderCalculations = ({
   side,
   frontendFeeTiers,
   tokens,
+  priceDecimals = 10,
 }: Readonly<{
   orderType: Swap.OrderType
   amounts: {
@@ -32,6 +33,7 @@ export const makeOrderCalculations = ({
   side?: 'buy' | 'sell'
   frontendFeeTiers: ReadonlyArray<App.FrontendFeeTier>
   tokens: SwapState['orderData']['tokens']
+  priceDecimals?: number
 }>): Array<SwapOrderCalculation> => {
   if (!amounts.sell || !amounts.buy || !tokens.ptInfo) return []
 
@@ -109,7 +111,7 @@ export const makeOrderCalculations = ({
       sellQuantity
         .multipliedBy(ptPriceSell)
         .integerValue(BigNumber.ROUND_DOWN)
-        .toString(),
+        .toFixed(0),
     )
 
     // ffee is based on PT value range + LP holding range
@@ -222,14 +224,23 @@ export const makeOrderCalculations = ({
       hasSupply,
       ptTotalValueSpent,
       prices: {
-        base: priceBase.toString(),
-        market: marketPrice.toString(),
-        actualPrice: actualPriceQuantity.toString(),
-        withSlippage: priceWithSlippage.toString(),
-        withFees: withFees.toString(),
-        withFeesAndSlippage: withFeesAndSlippage.toString(),
-        difference: difference.toString(),
-        priceImpact: priceImpact.toString(),
+        base: priceBase.toFixed(priceDecimals, BigNumber.ROUND_DOWN),
+        market: marketPrice.toFixed(priceDecimals, BigNumber.ROUND_DOWN),
+        actualPrice: actualPriceQuantity.toFixed(
+          priceDecimals,
+          BigNumber.ROUND_DOWN,
+        ),
+        withSlippage: priceWithSlippage.toFixed(
+          priceDecimals,
+          BigNumber.ROUND_DOWN,
+        ),
+        withFees: withFees.toFixed(priceDecimals, BigNumber.ROUND_DOWN),
+        withFeesAndSlippage: withFeesAndSlippage.toFixed(
+          priceDecimals,
+          BigNumber.ROUND_DOWN,
+        ),
+        difference: difference.toFixed(priceDecimals, BigNumber.ROUND_DOWN),
+        priceImpact: priceImpact.toFixed(priceDecimals, BigNumber.ROUND_DOWN),
       },
       pool,
     } as const

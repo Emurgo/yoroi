@@ -130,7 +130,7 @@ describe('State Actions', () => {
       const state = combinedSwapReducers(stateAfterPools, actionLimit)
 
       expect(state.orderData.type).toBe('limit')
-      expect(state.orderData.limitPrice).toBe('0.5')
+      expect(state.orderData.limitPrice).toBe('0.5000000000')
       expect(state.orderData.amounts.buy?.quantity).toBe(200n)
 
       const actionMarket: SwapCreateOrderAction = {
@@ -201,7 +201,7 @@ describe('State Actions', () => {
         })
 
         // change back to market price
-        expect(state.orderData.limitPrice).toBe('2')
+        expect(state.orderData.limitPrice).toBe('2.0000000000')
         expect(state.orderData.selectedPoolId).toBe('1')
       })
     })
@@ -308,7 +308,7 @@ describe('State Actions', () => {
       })
 
       // change back to market price
-      expect(state.orderData.limitPrice).toBe('2')
+      expect(state.orderData.limitPrice).toBe('2.0000000000')
     })
   })
 
@@ -585,7 +585,7 @@ describe('State Actions', () => {
           pools: mocks.mockedPools6,
         })
 
-        expect(state.orderData.limitPrice).toBe('0.5')
+        expect(state.orderData.limitPrice).toBe('0.5000000000')
         expect(state.orderData.selectedPoolId).toBeUndefined()
       })
     })
