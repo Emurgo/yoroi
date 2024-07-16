@@ -32,13 +32,14 @@ export const ThemeProvider = ({
   storage: ThemeStorage
 }) => {
   const colorScheme = useColorScheme()
+  const selectedName = storage.read() ?? 'system'
   const [themeName, setThemeName] = React.useState<
     Exclude<SupportedThemes, 'system'>
-  >(detectTheme(colorScheme, storage.read() ?? 'system'))
+  >(detectTheme(colorScheme, selectedName))
 
   const value = React.useMemo(
     () => ({
-      name: themes[themeName].name,
+      name: selectedName,
       color: themes[themeName].color,
 
       selectThemeName: (newTheme: SupportedThemes) => {
@@ -52,7 +53,7 @@ export const ThemeProvider = ({
       atoms: themes[themeName].atoms,
       data: themesData,
     }),
-    [colorScheme, storage, themeName],
+    [colorScheme, storage, themeName, selectedName],
   )
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
