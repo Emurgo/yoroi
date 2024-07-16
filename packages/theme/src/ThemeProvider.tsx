@@ -32,7 +32,9 @@ export const ThemeProvider = ({
   storage: ThemeStorage
 }) => {
   const colorScheme = useColorScheme()
-  const selectedName = storage.read() ?? 'system'
+  const [selectedName, setSelectedName] = React.useState<SupportedThemes>(
+    storage.read() ?? 'system',
+  )
   const [themeName, setThemeName] = React.useState<
     Exclude<SupportedThemes, 'system'>
   >(detectTheme(colorScheme, selectedName))
@@ -43,8 +45,8 @@ export const ThemeProvider = ({
       color: themes[themeName].color,
 
       selectThemeName: (newTheme: SupportedThemes) => {
-        const detectedTheme = detectTheme(colorScheme, newTheme)
-        setThemeName(detectedTheme)
+        setSelectedName(newTheme)
+        setThemeName(detectTheme(colorScheme, newTheme))
         storage.save(newTheme)
       },
 
