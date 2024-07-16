@@ -1,8 +1,9 @@
-import {invalid, useAsyncStorage} from '@yoroi/common'
+import {invalid} from '@yoroi/common'
 import {produce} from 'immer'
 import * as React from 'react'
 
-import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
+import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
+import {useEffect} from 'react'
 
 export const defaultActions: BrowserActions = {
   addTab: () => invalid('missing init'),
@@ -38,8 +39,7 @@ const BrowserContext = React.createContext<BrowserState & BrowserActions>({
   ...defaultActions,
 })
 
-const storageRootBrowser = 'browser'
-const storageBrowserState = 'browser-state'
+const memoryStorage = new Map<string, BrowserState>()
 
 export const BrowserProvider = ({
   children,
@@ -48,26 +48,28 @@ export const BrowserProvider = ({
   children: React.ReactNode
   initialState?: Partial<BrowserState>
 }) => {
-  const storage = useAsyncStorage()
-  const {wallet} = useSelectedWallet()
-  const browserStorage = storage.join(`wallet/${wallet.id}/${storageRootBrowser}/`)
+  const {
+    selected: {wallet},
+  } = useWalletManager()
+
+  const walletId = wallet?.id
 
   const [browserState, dispatch] = React.useReducer(browserReducer, {...defaultState, ...initialState})
 
-  React.useEffect(() => {
-    if (browserState.status === 'waiting') return
-    browserStorage.setItem(storageBrowserState, JSON.stringify(browserState))
-  }, [browserState, browserStorage])
+  useEffect(() => {
+    if (!walletId) return
+    memoryStorage.set(walletId, browserState)
+  }, [browserState])
 
   React.useEffect(() => {
-    if (browserState.status === 'active') return
-    browserStorage.getItem(storageBrowserState).then((browserStorage) => {
-      if (Boolean(browserStorage) && typeof browserStorage === 'string') {
-        dispatch({type: BrowserActionType.SetState, state: JSON.parse(browserStorage)})
-        dispatch({type: BrowserActionType.SetStatus, status: 'active'})
-      }
-    })
-  }, [browserState.status, browserStorage])
+    if (!walletId || browserState.status === 'active') return
+    const state = memoryStorage.get(walletId)
+    if (state) {
+      dispatch({type: BrowserActionType.SetState, state})
+    } else {
+      dispatch({type: BrowserActionType.SetState, state: {...defaultState, ...initialState}})
+    }
+  }, [walletId])
 
   const actions = React.useRef<BrowserActions>({
     addTab: (url, id) => {

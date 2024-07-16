@@ -25,6 +25,7 @@ import {useMigrations} from './kernel/storage/migrations/useMigrations'
 import {rootStorage} from './kernel/storage/rootStorage'
 import {PoolTransitionProvider} from './legacy/Staking/PoolTransition/PoolTransitionProvider'
 import {useThemeStorageMaker} from './yoroi-wallets/hooks'
+import {BrowserProvider} from './features/Discover/common/BrowserProvider'
 
 enableScreens(true)
 enableFreeze(true)
@@ -57,7 +58,9 @@ const Yoroi = () => {
                         <LinksProvider>
                           <SetupWalletProvider>
                             <PoolTransitionProvider>
-                              <InitApp />
+                              <BrowserProvider>
+                                <InitApp />
+                              </BrowserProvider>
                             </PoolTransitionProvider>
                           </SetupWalletProvider>
                         </LinksProvider>
