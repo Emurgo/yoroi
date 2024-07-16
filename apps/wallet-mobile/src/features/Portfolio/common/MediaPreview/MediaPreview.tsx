@@ -56,6 +56,7 @@ export const MediaPreview = ({
         }}
         onError={() => {
           setError(true)
+          setLoading(false)
         }}
       >
         <SkeletonPlaceholder enabled={loading} borderRadius={blurRadius} highlightColor={color.gray_c200} speed={1000}>
