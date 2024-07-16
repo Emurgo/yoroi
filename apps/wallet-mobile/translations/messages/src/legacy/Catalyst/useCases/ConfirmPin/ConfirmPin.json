@@ -1,32 +1,32 @@
 [
   {
-    "id": "components.catalyst.step3.subTitle",
+    "id": "components.catalyst.step3.title",
     "defaultMessage": "!!!Enter PIN",
-    "file": "src/legacy/Catalyst/ConfirmPin.tsx",
+    "file": "src/legacy/Catalyst/useCases/ConfirmPin/ConfirmPin.tsx",
     "start": {
-      "line": 79,
-      "column": 12,
-      "index": 2299
+      "line": 82,
+      "column": 14,
+      "index": 2394
     },
     "end": {
-      "line": 82,
+      "line": 85,
       "column": 3,
-      "index": 2386
+      "index": 2478
     }
   },
   {
     "id": "components.catalyst.step3.description",
     "defaultMessage": "!!!Please enter the PIN as you will need it every time you want to access the Catalyst Voting app",
-    "file": "src/legacy/Catalyst/ConfirmPin.tsx",
+    "file": "src/legacy/Catalyst/useCases/ConfirmPin/ConfirmPin.tsx",
     "start": {
-      "line": 83,
+      "line": 86,
       "column": 15,
-      "index": 2403
+      "index": 2495
     },
     "end": {
-      "line": 86,
+      "line": 89,
       "column": 3,
-      "index": 2578
+      "index": 2670
     }
   }
 ]

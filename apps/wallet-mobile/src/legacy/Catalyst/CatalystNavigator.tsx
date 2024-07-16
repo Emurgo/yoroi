@@ -16,11 +16,11 @@ import {
   VotingRegistrationRouteNavigation,
   VotingRegistrationRoutes,
 } from '../../kernel/navigation'
-import {ConfirmPin} from './ConfirmPin'
-import {ConfirmVotingTx} from './ConfirmVotingTx'
-import {DisplayPin} from './DisplayPin'
-import {DownloadCatalyst} from './DownloadCatalyst'
-import {QrCode} from './QrCode'
+import {ConfirmPin} from './useCases/ConfirmPin/ConfirmPin'
+import {ConfirmVotingTx} from './useCases/ConfirmVotingTx/ConfirmVotingTx'
+import {DisplayPin} from './useCases/DisplayPin/DisplayPin'
+import {DownloadCatalyst} from './useCases/DownloadCatalyst/DownloadCatalyst'
+import {QrCode} from './useCases/ShowQrCode/ShowQrCode'
 
 const catalystApi = catalystApiMaker()
 const catalystManager = catalystManagerMaker({
@@ -60,16 +60,19 @@ export const CatalystNavigator = () => {
             <Stack.Screen name="download-catalyst">
               {() => (
                 <Boundary loading={{size: 'full'}}>
+                  {/* STEP 1 */}
                   <DownloadCatalyst onNext={navigateTo.displayPin} />
                 </Boundary>
               )}
             </Stack.Screen>
 
             <Stack.Screen name="display-pin">
+              {/* STEP 2 */}
               {() => <DisplayPin onNext={navigateTo.confirmPin} pin={pin} />}
             </Stack.Screen>
 
             <Stack.Screen name="confirm-pin">
+              {/* STEP 3 */}
               {() => <ConfirmPin onNext={navigateTo.confirmTx} pin={pin} />}
             </Stack.Screen>
 
@@ -92,6 +95,9 @@ export const CatalystNavigator = () => {
           <Stack.Screen name="qr-code" options={{...navigationOptions, headerLeft: () => null}}>
             {() => {
               if (votingKeyEncrypted == null) throw new Error('invalid state')
+              {
+                /* STEP 4 */
+              }
               return <QrCode onNext={navigateTo.txHistory} votingKeyEncrypted={votingKeyEncrypted} />
             }}
           </Stack.Screen>

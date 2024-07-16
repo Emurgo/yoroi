@@ -23,6 +23,7 @@ import {ViewProps} from 'react-native-svg/lib/typescript/fabric/utils'
 
 import {Button, Icon, KeyboardAvoidingView, TextInput, useModal} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
+import {StepperProgress} from '../../../../components/StepperProgress/StepperProgress'
 import {showErrorDialog} from '../../../../kernel/dialogs'
 import {errorMessages} from '../../../../kernel/i18n/global-messages'
 import {logger} from '../../../../kernel/logger/logger'
@@ -42,7 +43,6 @@ import {useWalletManager} from '../../../WalletManager/context/WalletManagerProv
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
 import {YoroiZendeskLink} from '../../common/constants'
 import {LearnMoreButton} from '../../common/LearnMoreButton/LearnMoreButton'
-import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
 import {useStrings} from '../../common/useStrings'
 import {Info as InfoIcon} from '../../illustrations/Info'
 

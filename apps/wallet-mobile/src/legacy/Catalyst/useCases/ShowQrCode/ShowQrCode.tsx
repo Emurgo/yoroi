@@ -5,14 +5,14 @@ import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import QRCodeSVG from 'react-native-qrcode-svg'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, CopyButton, ProgressStep, Text, useModal} from '../../components'
-import {Space} from '../../components/Space/Space'
-import {useAllowScreenshot} from '../../hooks/useAllowScreenShot'
-import globalMessages, {confirmationMessages} from '../../kernel/i18n/global-messages'
-import {useBlockGoBack} from '../../kernel/navigation'
-import {Actions, Description, Title} from './components'
-import {useCountdown} from './hooks'
-import {VotingRegistrationBackupCheckModal} from './VotingRegistrationBackupCheckModal'
+import {Button, CopyButton, ProgressStep, Text, useModal} from '../../../../components'
+import {Space} from '../../../../components/Space/Space'
+import {useAllowScreenshot} from '../../../../hooks/useAllowScreenShot'
+import globalMessages, {confirmationMessages} from '../../../../kernel/i18n/global-messages'
+import {useBlockGoBack} from '../../../../kernel/navigation'
+import {Actions, Description, Title} from '../../common/components'
+import {useCountdown} from '../../hooks'
+import {VotingRegistrationBackupCheckModal} from '../../VotingRegistrationBackupCheckModal'
 
 export const QrCode = ({onNext, votingKeyEncrypted}: {onNext: () => void; votingKeyEncrypted: string}) => {
   useBlockGoBack()

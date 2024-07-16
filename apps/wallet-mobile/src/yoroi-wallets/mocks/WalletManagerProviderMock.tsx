@@ -12,7 +12,7 @@ import {mocks} from './wallet'
 // TODO: should be mocked
 const {tokenManagers} = buildPortfolioTokenManagers()
 const networkManagers = buildNetworkManagers({tokenManagers})
-const walletManagerMock = new WalletManager({
+export const walletManagerMock = new WalletManager({
   rootStorage,
   networkManagers,
 })

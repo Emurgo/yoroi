@@ -1,30 +1,44 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {StyleSheet, TouchableOpacity, ViewStyle} from 'react-native'
+import {StyleSheet, Text, TextProps, TouchableOpacity, ViewStyle} from 'react-native'
 
 import {Icon} from '../Icon'
-import {Text} from '../Text'
-
+import {Space} from '../Space/Space'
 type Props = {
   checked: boolean
   text: string
   onChange: (checked: boolean) => void
   style?: ViewStyle
   testID?: string
+  textStyle?: TextProps
 }
-export const Checkbox = ({checked, text, onChange, style, testID}: Props) => (
-  <TouchableOpacity style={[styles.container, style]} onPress={() => onChange(!checked)} testID={testID}>
-    {checked ? <Icon.Checkbox /> : <Icon.EmptyCheckbox />}
+export const Checkbox = ({checked, text, onChange, style, testID, textStyle}: Props) => {
+  const {styles} = useStyles()
 
-    <Text style={styles.text}>{text}</Text>
-  </TouchableOpacity>
-)
+  return (
+    <TouchableOpacity style={[styles.container, style]} onPress={() => onChange(!checked)} testID={testID}>
+      {checked ? <Icon.Checkbox /> : <Icon.EmptyCheckbox />}
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-  },
-  text: {
-    flex: 1,
-    marginLeft: 8,
-  },
-})
+      <Space width="sm" />
+
+      <Text style={[styles.text, textStyle]}>{text}</Text>
+    </TouchableOpacity>
+  )
+}
+
+const useStyles = () => {
+  const {color, atoms} = useTheme()
+
+  const styles = StyleSheet.create({
+    container: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    text: {
+      ...atoms.body_1_lg_regular,
+      color: color.gray_c900,
+    },
+  })
+
+  return {styles}
+}

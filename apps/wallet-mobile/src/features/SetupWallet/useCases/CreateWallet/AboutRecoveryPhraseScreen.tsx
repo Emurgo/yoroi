@@ -7,12 +7,12 @@ import {ViewProps} from 'react-native-svg/lib/typescript/fabric/utils'
 
 import {Button, Spacer} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
+import {StepperProgress} from '../../../../components/StepperProgress/StepperProgress'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
 import {YoroiZendeskLink} from '../../common/constants'
 import {LearnMoreButton} from '../../common/LearnMoreButton/LearnMoreButton'
-import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
 import {useStrings} from '../../common/useStrings'
 
 export const AboutRecoveryPhraseScreen = () => {

@@ -3,16 +3,16 @@ import * as React from 'react'
 import {StyleSheet, ViewStyle} from 'react-native'
 import Animated, {Layout} from 'react-native-reanimated'
 
-import {CheckIllustration} from '../../illustrations/Check'
-import {Number1} from '../../illustrations/Number1'
-import {Number2} from '../../illustrations/Number2'
-import {Number2Empty} from '../../illustrations/Number2Empty'
-import {Number3} from '../../illustrations/Number3'
-import {Number3Empty} from '../../illustrations/Number3Empty'
-import {Number4} from '../../illustrations/Number4'
-import {Number4Empty} from '../../illustrations/Number4Empty'
+import {CheckIllustration} from '../../features/SetupWallet/illustrations/Check'
+import {Number1} from './Number1'
+import {Number2} from './Number2'
+import {Number2Empty} from './Number2Empty'
+import {Number3} from './Number3'
+import {Number3Empty} from './Number3Empty'
+import {Number4} from './Number4'
+import {Number4Empty} from './Number4Empty'
 
-type StepperProgressProps = {
+export type StepperProgressProps = {
   currentStep: number
   currentStepTitle: string
   totalSteps: number

@@ -2,91 +2,91 @@
   {
     "id": "components.catalyst.step6.subTitle",
     "defaultMessage": "!!!Backup Catalyst Code",
-    "file": "src/legacy/Catalyst/QrCode.tsx",
+    "file": "src/legacy/Catalyst/useCases/ShowQrCode/ShowQrCode.tsx",
     "start": {
       "line": 101,
       "column": 12,
-      "index": 3095
+      "index": 3137
     },
     "end": {
       "line": 104,
       "column": 3,
-      "index": 3193
+      "index": 3235
     }
   },
   {
     "id": "components.catalyst.step6.description",
     "defaultMessage": "!!!Please take a screenshot of this QR code.",
-    "file": "src/legacy/Catalyst/QrCode.tsx",
+    "file": "src/legacy/Catalyst/useCases/ShowQrCode/ShowQrCode.tsx",
     "start": {
       "line": 105,
       "column": 15,
-      "index": 3210
+      "index": 3252
     },
     "end": {
       "line": 108,
       "column": 3,
-      "index": 3332
+      "index": 3374
     }
   },
   {
     "id": "components.catalyst.step6.description2",
     "defaultMessage": "!!!We strongly recommend you to save your Catalyst secret code in plain text too, so that you can re-create your QR code if necessary.",
-    "file": "src/legacy/Catalyst/QrCode.tsx",
+    "file": "src/legacy/Catalyst/useCases/ShowQrCode/ShowQrCode.tsx",
     "start": {
       "line": 109,
       "column": 16,
-      "index": 3350
+      "index": 3392
     },
     "end": {
       "line": 114,
       "column": 3,
-      "index": 3580
+      "index": 3622
     }
   },
   {
     "id": "components.catalyst.step6.description3",
     "defaultMessage": "!!!Then, send the QR code to an external device, as you will need toscan it with your phone using the Catalyst mobile app.",
-    "file": "src/legacy/Catalyst/QrCode.tsx",
+    "file": "src/legacy/Catalyst/useCases/ShowQrCode/ShowQrCode.tsx",
     "start": {
       "line": 115,
       "column": 16,
-      "index": 3598
+      "index": 3640
     },
     "end": {
       "line": 120,
       "column": 3,
-      "index": 3816
+      "index": 3858
     }
   },
   {
     "id": "components.catalyst.step6.note",
     "defaultMessage": "!!!Keep it — you won’t be able to access this code after tapping on Complete.",
-    "file": "src/legacy/Catalyst/QrCode.tsx",
+    "file": "src/legacy/Catalyst/useCases/ShowQrCode/ShowQrCode.tsx",
     "start": {
       "line": 121,
       "column": 8,
-      "index": 3826
+      "index": 3868
     },
     "end": {
       "line": 124,
       "column": 3,
-      "index": 3974
+      "index": 4016
     }
   },
   {
     "id": "components.catalyst.step6.secretCode",
     "defaultMessage": "!!!Secret Code",
-    "file": "src/legacy/Catalyst/QrCode.tsx",
+    "file": "src/legacy/Catalyst/useCases/ShowQrCode/ShowQrCode.tsx",
     "start": {
       "line": 125,
       "column": 14,
-      "index": 3990
+      "index": 4032
     },
     "end": {
       "line": 128,
       "column": 3,
-      "index": 4081
+      "index": 4123
     }
   }
 ]

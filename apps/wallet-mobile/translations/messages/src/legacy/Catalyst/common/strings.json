@@ -1,0 +1,197 @@
+[
+  {
+    "id": "components.catalyst.step1.title",
+    "defaultMessage": "!!!Intro",
+    "file": "src/legacy/Catalyst/common/strings.ts",
+    "start": {
+      "line": 29,
+      "column": 9,
+      "index": 1292
+    },
+    "end": {
+      "line": 32,
+      "column": 3,
+      "index": 1372
+    }
+  },
+  {
+    "id": "components.catalyst.step1.subTitle",
+    "defaultMessage": "!!!Before you begin, make sure to\ndownload the Catalyst Voting App",
+    "file": "src/legacy/Catalyst/common/strings.ts",
+    "start": {
+      "line": 33,
+      "column": 12,
+      "index": 1386
+    },
+    "end": {
+      "line": 36,
+      "column": 3,
+      "index": 1528
+    }
+  },
+  {
+    "id": "components.catalyst.step1.stakingKeyNotRegistered",
+    "defaultMessage": "!!!Catalyst voting rewards are sent to delegation accounts and your wallet does not seem to have a registered delegation certificate. If you want to receive voting rewards, you need to delegate your funds first.",
+    "file": "src/legacy/Catalyst/common/strings.ts",
+    "start": {
+      "line": 37,
+      "column": 27,
+      "index": 1557
+    },
+    "end": {
+      "line": 43,
+      "column": 3,
+      "index": 1886
+    }
+  },
+  {
+    "id": "components.catalyst.step1.tip",
+    "defaultMessage": "!!!Make sure you know how to take a screenshot with your device, so that you can backup your catalyst QR code.",
+    "file": "src/legacy/Catalyst/common/strings.ts",
+    "start": {
+      "line": 44,
+      "column": 7,
+      "index": 1895
+    },
+    "end": {
+      "line": 49,
+      "column": 3,
+      "index": 2092
+    }
+  },
+  {
+    "id": "catalyst.registration.start",
+    "defaultMessage": "!!!Registration start",
+    "file": "src/legacy/Catalyst/common/strings.ts",
+    "start": {
+      "line": 50,
+      "column": 21,
+      "index": 2115
+    },
+    "end": {
+      "line": 53,
+      "column": 3,
+      "index": 2204
+    }
+  },
+  {
+    "id": "catalyst.voting.start",
+    "defaultMessage": "!!!Voting start",
+    "file": "src/legacy/Catalyst/common/strings.ts",
+    "start": {
+      "line": 54,
+      "column": 15,
+      "index": 2221
+    },
+    "end": {
+      "line": 57,
+      "column": 3,
+      "index": 2298
+    }
+  },
+  {
+    "id": "catalyst.voting.end",
+    "defaultMessage": "!!!Voting end",
+    "file": "src/legacy/Catalyst/common/strings.ts",
+    "start": {
+      "line": 58,
+      "column": 13,
+      "index": 2313
+    },
+    "end": {
+      "line": 61,
+      "column": 3,
+      "index": 2386
+    }
+  },
+  {
+    "id": "catalyst.voting.results",
+    "defaultMessage": "!!!Results",
+    "file": "src/legacy/Catalyst/common/strings.ts",
+    "start": {
+      "line": 62,
+      "column": 17,
+      "index": 2405
+    },
+    "end": {
+      "line": 65,
+      "column": 3,
+      "index": 2479
+    }
+  },
+  {
+    "id": "components.catalyst.step2.title",
+    "defaultMessage": "!!!Write Down PIN",
+    "file": "src/legacy/Catalyst/common/strings.ts",
+    "start": {
+      "line": 66,
+      "column": 14,
+      "index": 2495
+    },
+    "end": {
+      "line": 69,
+      "column": 3,
+      "index": 2584
+    }
+  },
+  {
+    "id": "components.catalyst.step2.description",
+    "defaultMessage": "!!!Please write down this PIN as you will need it every time you want to access the Catalyst Voting app",
+    "file": "src/legacy/Catalyst/common/strings.ts",
+    "start": {
+      "line": 70,
+      "column": 20,
+      "index": 2606
+    },
+    "end": {
+      "line": 74,
+      "column": 3,
+      "index": 2793
+    }
+  },
+  {
+    "id": "components.catalyst.step2.checkbox",
+    "defaultMessage": "!!!I have written it down",
+    "file": "src/legacy/Catalyst/common/strings.ts",
+    "start": {
+      "line": 75,
+      "column": 12,
+      "index": 2807
+    },
+    "end": {
+      "line": 78,
+      "column": 3,
+      "index": 2907
+    }
+  },
+  {
+    "id": "components.catalyst.step3.title",
+    "defaultMessage": "!!!Enter PIN",
+    "file": "src/legacy/Catalyst/common/strings.ts",
+    "start": {
+      "line": 79,
+      "column": 14,
+      "index": 2923
+    },
+    "end": {
+      "line": 82,
+      "column": 3,
+      "index": 3007
+    }
+  },
+  {
+    "id": "components.catalyst.step3.description",
+    "defaultMessage": "!!!Please enter the PIN as you will need it every time you want to access the Catalyst Voting app",
+    "file": "src/legacy/Catalyst/common/strings.ts",
+    "start": {
+      "line": 83,
+      "column": 20,
+      "index": 3029
+    },
+    "end": {
+      "line": 86,
+      "column": 3,
+      "index": 3204
+    }
+  }
+]
