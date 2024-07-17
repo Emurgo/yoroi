@@ -1,5 +1,6 @@
+import {useTheme} from '@yoroi/theme'
 import React, {Component, ErrorInfo, ReactNode} from 'react'
-import {BackHandler, Image, Platform, ScrollView, StyleSheet, Text, View, ViewProps} from 'react-native'
+import {BackHandler, Image, Platform, ScrollView, StyleSheet, Text, View} from 'react-native'
 
 import errorImage from '../../assets/img/error.png'
 import {logger} from '../../kernel/logger/logger'
@@ -39,78 +40,91 @@ export class ErrorBoundary extends Component<Props, State> {
 
   render() {
     if (this.state.hasError) {
-      return (
-        <View style={styles.root}>
-          <ScrollView>
-            <View style={styles.headerView}>
-              <Text style={styles.title}>Oops!!! Something went wrong.</Text>
-
-              <Spacer height={24} />
-
-              <Image source={errorImage} />
-            </View>
-
-            <Spacer height={16} />
-
-            <Text style={styles.paragraph}>
-              Please consider sending this error to Yoroi mobile support. Unfortunately, we can not recover from this
-              error. You need to relaunch the app.
-            </Text>
-
-            <Spacer height={16} />
-
-            <View style={styles.errorSection}>
-              <View style={styles.errorSectionHeader}>
-                <Text style={styles.paragraph}>{this.state.error}</Text>
-
-                <CopyButton value={`${this.state.error}:${this.state.errorInfo}`} />
-              </View>
-
-              <Spacer height={16} />
-            </View>
-
-            <ExpandableItem label="Show error" content={this.state.errorInfo} />
-          </ScrollView>
-
-          {Platform.OS === 'android' && (
-            <Actions style={{padding: 16}}>
-              <Button onPress={() => BackHandler.exitApp()} title="OK" style={{width: '100%'}} />
-            </Actions>
-          )}
-        </View>
-      )
+      return <ErrorView state={this.state} />
     }
     return this.props.children
   }
 }
 
-const Actions = (props: ViewProps) => {
-  return <View {...props} />
+const ErrorView = ({state}: {state: State}) => {
+  const styles = useStyles()
+
+  return (
+    <View style={styles.root}>
+      <ScrollView style={styles.scroll}>
+        <View style={styles.headerView}>
+          <Text style={styles.title}>Oops!!! Something went wrong.</Text>
+
+          <Spacer height={24} />
+
+          <Image source={errorImage} />
+        </View>
+
+        <Spacer height={16} />
+
+        <Text style={styles.paragraph}>
+          Please consider sending this error to Yoroi mobile support. Unfortunately, we can not recover from this error.
+          You need to relaunch the app.
+        </Text>
+
+        <Spacer height={16} />
+
+        <View style={styles.errorSection}>
+          <View style={styles.errorSectionHeader}>
+            <Text style={styles.paragraph}>{state.error}</Text>
+
+            <CopyButton value={`${state.error}:${state.errorInfo}`} />
+          </View>
+
+          <Spacer height={16} />
+
+          <ExpandableItem label="Show error" content={state.errorInfo} />
+        </View>
+      </ScrollView>
+
+      {Platform.OS === 'android' && (
+        <View style={{padding: 16}}>
+          <Button shelleyTheme onPress={() => BackHandler.exitApp()} title="OK" style={{width: '100%'}} />
+        </View>
+      )}
+    </View>
+  )
 }
 
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingTop: 70,
-  },
-  title: {
-    fontFamily: 'Rubik-Medium',
-  },
-  headerView: {
-    alignItems: 'center',
-  },
-  paragraph: {
-    fontSize: 14,
-    lineHeight: 18,
-  },
-  errorSection: {
-    paddingVertical: 16,
-  },
-  errorSectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-})
+const useStyles = () => {
+  const {color, atoms} = useTheme()
+  const styles = StyleSheet.create({
+    root: {
+      ...atoms.px_lg,
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingTop: 70,
+      backgroundColor: color.bg_color_high,
+    },
+    scroll: {
+      width: '100%',
+    },
+    title: {
+      ...atoms.heading_4_regular,
+      color: color.el_gray_high,
+    },
+    headerView: {
+      alignItems: 'center',
+    },
+    paragraph: {
+      ...atoms.body_2_md_regular,
+      color: color.el_gray_high,
+    },
+    errorSection: {
+      ...atoms.py_lg,
+      color: color.el_gray_high,
+    },
+    errorSectionHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      color: color.el_gray_high,
+    },
+  })
+  return styles
+}
