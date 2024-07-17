@@ -3,7 +3,7 @@ import * as React from 'react'
 import {Platform, StatusBar, StatusBarStyle} from 'react-native'
 
 type StatusBarColor = {
-  bgColorAndroid: HexColor
+  bgColorAndroid: Color
   statusBarStyle: StatusBarStyle | undefined
   translucent: boolean
 }
@@ -77,8 +77,8 @@ const oldBlueRoutes = ['enable-login-with-os', 'auth-with-os']
  * @warning This function will ignore the alpha channel if it was passed along with the color
  * @warning This function ignore named colors, by ignoring, it means returning the same color passed
  */
-export const simulateOpacity = (color: HexColor): HexColor => {
-  if (!/^#([0-9A-Fa-f]{3}([0-9A-Fa-f]{1})?|[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?)$/.test(color)) {
+export const simulateOpacity = (color: Color): Color => {
+  if (!isHex(color)) {
     return color
   }
   const expandedColor = expandColor(color)
@@ -106,8 +106,8 @@ const toRgb = (fullHexColor: string[], value: string, index: number) => {
   return fullHexColor
 }
 
-const expandColor = (color: HexColor) => {
-  if (color.length === 4 || color.length === 5) {
+const expandColor = (color: Color) => {
+  if ((color.length === 4 || color.length === 5) && isHex(color)) {
     return '#'.concat(
       color
         .substring(1)
@@ -119,4 +119,6 @@ const expandColor = (color: HexColor) => {
   return color
 }
 
-type HexColor = `#${string}` | `rgba(${number},${number},${number},${number})`
+const isHex = (color: Color) => /^#([0-9A-Fa-f]{3}([0-9A-Fa-f]{1})?|[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?)$/.test(color)
+
+type Color = `#${string}` | `rgba(${number},${number},${number},${number})`
