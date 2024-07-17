@@ -39,7 +39,7 @@ const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       borderTopWidth: 1,
       borderTopColor: color.gray_c200,
     },

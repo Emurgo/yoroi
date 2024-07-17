@@ -157,7 +157,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       ...atoms.pt_lg,
     },
     content: {
@@ -165,7 +165,7 @@ const useStyles = () => {
       ...atoms.px_lg,
     },
     footer: {
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       borderColor: color.gray_c200,
       ...atoms.p_lg,
     },

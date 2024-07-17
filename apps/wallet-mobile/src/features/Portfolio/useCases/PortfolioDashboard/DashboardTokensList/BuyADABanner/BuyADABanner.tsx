@@ -54,7 +54,7 @@ const useStyles = () => {
       ...atoms.relative,
       ...atoms.rounded_sm,
       ...atoms.overflow_hidden,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
     },
     spaceButtonText: {
       ...atoms.p_0,

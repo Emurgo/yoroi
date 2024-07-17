@@ -60,7 +60,7 @@ const useStyles = () => {
       color: color.sys_magenta_c500,
     },
     bannerError: {
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       ...atoms.py_sm,
     },
     label: {

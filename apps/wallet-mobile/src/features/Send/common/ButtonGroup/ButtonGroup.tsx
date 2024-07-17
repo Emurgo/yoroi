@@ -55,7 +55,7 @@ const useStyles = () => {
       borderRadius: 6,
     },
     selected: {
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
     },
     label: {
       color: color.primary_c600,

@@ -317,7 +317,7 @@ const useStyles = () => {
     root: {
       flex: 1,
       justifyContent: 'space-between',
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
     },
     title: {
       ...atoms.body_1_lg_regular,
@@ -365,7 +365,7 @@ const useStyles = () => {
       ...atoms.px_lg,
     },
     suggestions: {
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       borderColor: color.gray_c200,
       borderTopWidth: 1,
       flexDirection: 'row',
@@ -385,7 +385,7 @@ const useStyles = () => {
       color: color.primary_c500,
     },
     suggestionArea: {
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       borderColor: color.gray_c200,
       borderTopWidth: 1,
       alignItems: 'center',

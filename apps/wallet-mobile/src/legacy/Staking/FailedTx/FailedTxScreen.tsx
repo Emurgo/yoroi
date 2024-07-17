@@ -66,7 +66,7 @@ const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     container: {
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',

@@ -35,7 +35,7 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     banner: {
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       ...atoms.py_lg,
       alignItems: 'center',
       justifyContent: 'center',

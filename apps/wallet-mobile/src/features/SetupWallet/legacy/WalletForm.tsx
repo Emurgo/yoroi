@@ -197,7 +197,7 @@ const useStyles = () => {
     },
     actions: {
       ...atoms.p_lg,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
     },
   })
   return styles

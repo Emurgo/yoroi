@@ -35,7 +35,7 @@ const useStyles = () => {
   const {color} = useTheme()
   const styles = StyleSheet.create({
     banner: {
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       paddingVertical: 16,
       alignItems: 'center',
       justifyContent: 'center',

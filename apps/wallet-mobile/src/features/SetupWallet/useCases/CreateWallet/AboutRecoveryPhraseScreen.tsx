@@ -92,7 +92,7 @@ const useStyles = () => {
       flex: 1,
       ...atoms.px_lg,
       justifyContent: 'space-between',
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
     },
     aboutRecoveryPhraseTitle: {
       ...atoms.body_1_lg_regular,

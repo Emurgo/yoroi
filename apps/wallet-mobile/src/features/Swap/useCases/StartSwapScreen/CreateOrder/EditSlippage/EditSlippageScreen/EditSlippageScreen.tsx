@@ -143,7 +143,7 @@ const useStyles = () => {
     },
     container: {
       flex: 1,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       ...atoms.p_lg,
     },
     textInfo: {
@@ -206,7 +206,7 @@ const useStyles = () => {
       paddingHorizontal: 3,
       ...atoms.body_3_sm_regular,
       color: color.gray_cmax,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
     },
   })
 

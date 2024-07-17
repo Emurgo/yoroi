@@ -61,7 +61,7 @@ const useStyles = () => {
       flex: 1,
     },
     root: {
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       paddingVertical: 12,
       paddingHorizontal: 16,
       flexDirection: 'row',

@@ -317,7 +317,7 @@ const useStyles = () => {
   const {color} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
     },
     actionContainer: {
       justifyContent: 'space-between',

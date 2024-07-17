@@ -163,14 +163,14 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     safeAreaView: {
       flex: 1,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
     },
     contentContainer: {
       padding: 16,
     },
     actions: {
       padding: 16,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
     },
   })
   return styles
