@@ -1,6 +1,6 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {LayoutAnimation, Platform, StatusBar, StyleSheet, Text, View} from 'react-native'
+import {LayoutAnimation, StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import infoIcon from '../../../../assets/img/icon/info-light-green.png'
@@ -44,8 +44,6 @@ export const TxHistory = () => {
       end={{x: isDark ? 0 : 0, y: isDark ? 0.5 : 0}}
       style={styles.root}
     >
-      {Platform.OS === 'android' && <StatusBar translucent backgroundColor="transparent" />}
-
       <Spacer height={100} />
 
       <CollapsibleHeader expanded={expanded}>

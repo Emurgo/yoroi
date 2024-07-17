@@ -4,7 +4,7 @@ import {Platform, StatusBar, StatusBarStyle} from 'react-native'
 
 type StatusBarColor = {
   bgColorAndroid: HexColor
-  statusBarStyle: StatusBarStyle
+  statusBarStyle: StatusBarStyle | undefined
 }
 export const useStatusBar = (currentRouteName: string | undefined) => {
   const {color, isDark} = useTheme()
@@ -19,8 +19,11 @@ export const useStatusBar = (currentRouteName: string | undefined) => {
     } else {
       const style = getStatusBarStyleByRoute({currentRouteName, isDark, color})
       statusBarStyleByRoute.current = style
-      if (Platform.OS === 'android') StatusBar.setBackgroundColor(style.bgColorAndroid, true)
-      StatusBar.setBarStyle(style.statusBarStyle, true)
+      if (Platform.OS === 'android') {
+        StatusBar.setBackgroundColor(style.bgColorAndroid, true)
+        StatusBar.setTranslucent(style.translucent)
+      }
+      style.statusBarStyle !== undefined && StatusBar.setBarStyle(style.statusBarStyle, true)
     }
   }, [currentRouteName, isDark, color])
 }
@@ -33,27 +36,31 @@ const getStatusBarStyleByRoute = ({
   currentRouteName: string | undefined
   isDark?: boolean
   color: ThemedPalette
-}): StatusBarColor => {
+}): StatusBarColor & {translucent: boolean} => {
   if (currentRouteName) {
     if (currentRouteName === 'history-list') {
       return {
-        bgColorAndroid: color.primary_c100,
-        statusBarStyle: isDark ? 'light-content' : 'dark-content',
+        translucent: true,
+        bgColorAndroid: 'rgba(0,0,0,0)', // transparent
+        statusBarStyle: undefined,
       }
     } else if (oldBlueRoutes.includes(currentRouteName)) {
       return {
+        translucent: false,
         // old blue, not present in the current theming
         bgColorAndroid: '#254BC9',
         statusBarStyle: 'light-content',
       }
     } else if (currentRouteName === 'scan-start') {
       return {
+        translucent: false,
         bgColorAndroid: color.white_static,
         statusBarStyle: 'dark-content',
       }
     }
   }
   return {
+    translucent: false,
     bgColorAndroid: isDark ? color.black_static : color.white_static,
     statusBarStyle: isDark ? 'light-content' : 'dark-content',
   }
@@ -111,4 +118,4 @@ const expandColor = (color: HexColor) => {
   return color
 }
 
-type HexColor = `#${string}`
+type HexColor = `#${string}` | `rgba(${string})`
