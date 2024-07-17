@@ -12,6 +12,7 @@ type AmountFormatterConfig = Readonly<{
  * @param config - The configuration options for the balance formatter.
  * @param config.template - The template string to format the balance. Default is '{{value}}'.
  * @param config.dropTraillingZeros - Whether to drop trailing zeros in the formatted balance. Default is false.
+ * @param config.format - The locale to use for formatting the balance.
  * @description The template string can contain the following placeholders: {{symbol}}, {{ticker}}, and {{value}}.
  *
  * @returns A function that takes a token balance and returns the formatted balance string.
@@ -34,10 +35,12 @@ export function amountFormatter({
     let trimmedValue = fmtBalance
 
     if (decimals > 0 && dropTraillingZeros) {
-      // locale dependent, so it grabs the farthest first
+      // it grabs the higher first (locale independent)
       const decimalSeparatorIndex = Math.max(
         fmtBalance.lastIndexOf(','),
         fmtBalance.lastIndexOf('.'),
+        fmtBalance.lastIndexOf(`'`), // Switzerland
+        fmtBalance.lastIndexOf(' '), // Old French
       )
       const nonZeroIndex = fmtBalance
         .substring(decimalSeparatorIndex)

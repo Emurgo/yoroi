@@ -2,7 +2,7 @@ import {isRight} from '@yoroi/common'
 import {Chain, Portfolio} from '@yoroi/types'
 import {UseQueryOptions, useQuery} from 'react-query'
 
-export function usePorfolioTokenTraits(
+export function usePortfolioTokenTraits(
   {
     id,
     getTokenTraits,
@@ -16,11 +16,11 @@ export function usePorfolioTokenTraits(
     Portfolio.Token.Traits,
     Error,
     Portfolio.Token.Traits,
-    [Chain.SupportedNetworks, 'usePorfolioTokenTraits', Portfolio.Token.Id]
+    [Chain.SupportedNetworks, 'usePortfolioTokenTraits', Portfolio.Token.Id]
   >,
 ) {
   const query = useQuery({
-    queryKey: [network, 'usePorfolioTokenTraits', id],
+    queryKey: [network, 'usePortfolioTokenTraits', id],
     ...options,
     queryFn: async () => {
       const response = await getTokenTraits(id)
