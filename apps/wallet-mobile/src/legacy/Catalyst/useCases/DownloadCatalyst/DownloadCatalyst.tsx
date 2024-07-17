@@ -93,7 +93,7 @@ export const DownloadCatalyst = ({onNext}: Props) => {
           shelleyTheme
           onPress={onNext}
           title={strings.continueButton}
-          disabled={fund.status.registration !== 'running'}
+          // disabled={fund.status.registration !== 'running'}
         />
       </Actions>
     </SafeAreaView>

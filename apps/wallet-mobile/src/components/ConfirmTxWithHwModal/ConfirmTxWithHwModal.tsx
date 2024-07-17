@@ -22,21 +22,44 @@ type Props = {
   onSuccess?: (signedTx: YoroiSignedTx) => void
   unsignedTx: YoroiUnsignedTx
   onCancel?: () => void
+  supportsCIP36?: boolean
+  onCIP36SupportChange?: (isSupported: boolean) => void
+  useUSB?: boolean
+  setUseUSB?: (useUSB: boolean) => void
 }
 
-export const ConfirmTxWithHwModal = ({onSuccess, unsignedTx, onCancel}: Props) => {
+export const ConfirmTxWithHwModal = ({
+  onSuccess,
+  unsignedTx,
+  onCancel,
+  supportsCIP36,
+  onCIP36SupportChange,
+  setUseUSB,
+}: Props) => {
   return (
     <ErrorBoundary
       fallbackRender={({error, resetErrorBoundary}) => (
         <ModalError error={error} resetErrorBoundary={resetErrorBoundary} onCancel={onCancel} />
       )}
     >
-      <ConfirmTxWithHwModalContent onSuccess={onSuccess} unsignedTx={unsignedTx} />
+      <ConfirmTxWithHwModalContent
+        onSuccess={onSuccess}
+        unsignedTx={unsignedTx}
+        supportsCIP36={supportsCIP36}
+        onCIP36SupportChange={onCIP36SupportChange}
+        setUseUSB={setUseUSB}
+      />
     </ErrorBoundary>
   )
 }
 
-const ConfirmTxWithHwModalContent = ({onSuccess, unsignedTx}: Omit<Props, 'onCancel'>) => {
+const ConfirmTxWithHwModalContent = ({
+  onSuccess,
+  unsignedTx,
+  supportsCIP36,
+  onCIP36SupportChange,
+  setUseUSB,
+}: Omit<Props, 'onCancel'>) => {
   const {walletManager} = useWalletManager()
   const [transportType, setTransportType] = useState<TransportType>('USB')
   const [step, setStep] = useState<Step>('select-transport')
@@ -59,21 +82,40 @@ const ConfirmTxWithHwModalContent = ({onSuccess, unsignedTx}: Omit<Props, 'onCan
 
   const onSelectTransport = (transportType: TransportType) => {
     setTransportType(transportType)
+    setUseUSB && setUseUSB(transportType === 'USB')
     setStep('connect-transport')
   }
 
-  const onConnectBLE = (deviceId: string) => {
+  const onConnectBLE = async (deviceId: string) => {
     setStep('loading')
+
     const hwDeviceInfo = withBLE(meta, deviceId)
     walletManager.updateWalletHWDeviceInfo(meta.id, hwDeviceInfo)
     signTx({unsignedTx, useUSB: false, hwDeviceInfo})
+
+    if (unsignedTx.unsignedTx.catalystRegistrationData && onCIP36SupportChange) {
+      const isCIP36Supported = await wallet.ledgerSupportsCIP36(false, hwDeviceInfo)
+
+      if (supportsCIP36 !== isCIP36Supported) {
+        onCIP36SupportChange(isCIP36Supported)
+      }
+    }
   }
 
-  const onConnectUSB = (deviceObj: HW.DeviceObj) => {
+  const onConnectUSB = async (deviceObj: HW.DeviceObj) => {
     setStep('loading')
+
     const hwDeviceInfo = withUSB(meta, deviceObj)
     walletManager.updateWalletHWDeviceInfo(meta.id, hwDeviceInfo)
     signTx({unsignedTx, useUSB: true, hwDeviceInfo})
+
+    if (unsignedTx.unsignedTx.catalystRegistrationData && onCIP36SupportChange) {
+      const isCIP36Supported = await wallet.ledgerSupportsCIP36(true, hwDeviceInfo)
+
+      if (supportsCIP36 !== isCIP36Supported) {
+        onCIP36SupportChange(isCIP36Supported)
+      }
+    }
   }
 
   if (step === 'select-transport') {

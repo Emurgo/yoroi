@@ -4,10 +4,11 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {KeyboardAvoidingView, Spacer, TextInput} from '../../../../components'
-import {ConfirmTx} from '../../../../components/ConfirmTx'
+import {Button, KeyboardAvoidingView, Spacer, TextInput, useModal} from '../../../../components'
+import {ConfirmTxWithHwModal} from '../../../../components/ConfirmTxWithHwModal'
+import {ConfirmTxWithOsModal} from '../../../../components/ConfirmTxWithOsModal'
+import {ConfirmTxWithSpendingPasswordModal} from '../../../../components/ConfirmTxWithSpendingPasswordModal'
 import {Space} from '../../../../components/Space/Space'
-import {debugWalletInfo, features} from '../../../../features'
 import {useSelectedWallet} from '../../../../features/WalletManager/common/hooks/useSelectedWallet'
 import {errorMessages, txLabels} from '../../../../kernel/i18n/global-messages'
 import LocalizableError from '../../../../kernel/i18n/LocalizableError'
@@ -29,17 +30,44 @@ export const ConfirmVotingTx = ({
   const [supportsCIP36, setSupportsCIP36] = useState(true)
   const styles = useStyles()
   const strings = useStrings()
+  const {openModal, closeModal} = useModal()
 
   const {wallet, meta} = useSelectedWallet()
   const votingRegTx = useVotingRegTx(
     {wallet, pin, supportsCIP36, addressMode: meta.addressMode},
     {onSuccess: ({votingKeyEncrypted}) => onSuccess(votingKeyEncrypted)},
   )
-  const [password, setPassword] = useState(features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '')
+
   const [useUSB, setUseUSB] = useState(false)
 
   const handleCIP36SupportChange = (supportsCIP36: boolean) => {
     setSupportsCIP36(supportsCIP36)
+  }
+
+  const onSubmit = () => {
+    if (meta.isHW) {
+      openModal(
+        'test',
+        <ConfirmTxWithHwModal
+          onCancel={closeModal}
+          unsignedTx={votingRegTx}
+          setUseUSB={setUseUSB}
+          onCIP36SupportChange={handleCIP36SupportChange}
+          onSuccess={() => onNext()}
+        />,
+      )
+      return
+    }
+
+    if (!meta.isHW && !meta.isEasyConfirmationEnabled) {
+      openModal('test', <ConfirmTxWithSpendingPasswordModal unsignedTx={votingRegTx} onSuccess={() => onNext()} />)
+      return
+    }
+
+    if (!meta.isHW && meta.isEasyConfirmationEnabled) {
+      openModal('test', <ConfirmTxWithOsModal unsignedTx={votingRegTx} onSuccess={() => onNext()} />)
+      return
+    }
   }
 
   return (
@@ -80,35 +108,12 @@ export const ConfirmVotingTx = ({
               autoComplete="off"
             />
           </View>
-
-          {!meta.isEasyConfirmationEnabled && !meta.isHW && (
-            <TextInput
-              secureTextEntry
-              value={password}
-              label={strings.password}
-              onChangeText={setPassword}
-              autoComplete="off"
-              autoFocus
-            />
-          )}
         </ScrollView>
 
         <Spacer fill />
 
         <Actions>
-          <ConfirmTx
-            onSuccess={() => onNext()}
-            isProvidingPassword
-            providedPassword={password}
-            setUseUSB={setUseUSB}
-            useUSB={useUSB}
-            yoroiUnsignedTx={votingRegTx}
-            biometricInstructions={[strings.authOsInstructions]}
-            chooseTransportOnConfirmation
-            onCIP36SupportChange={handleCIP36SupportChange}
-            autoConfirm={!supportsCIP36}
-            supportsCIP36={supportsCIP36}
-          />
+          <Button title="confirm" shelleyTheme onPress={onSubmit} />
         </Actions>
       </KeyboardAvoidingView>
     </SafeAreaView>
