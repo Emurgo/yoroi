@@ -33,24 +33,15 @@ export function amountFormatter({
     })
 
     let trimmedValue = fmtBalance
+    const decimalSeparator =
+      format?.decimalSeparator ?? (1.1).toLocaleString().substring(1, 2)
+    const [integerPart, decimalPart] = fmtBalance.split(decimalSeparator)
 
-    if (decimals > 0 && dropTraillingZeros) {
-      // it grabs the higher first (locale independent)
-      const decimalSeparatorIndex = Math.max(
-        fmtBalance.lastIndexOf(','),
-        fmtBalance.lastIndexOf('.'),
-        fmtBalance.lastIndexOf(`'`), // Switzerland
-        fmtBalance.lastIndexOf(' '), // Old French
-      )
-      const nonZeroIndex = fmtBalance
-        .substring(decimalSeparatorIndex)
-        .search(/[1-9]0*$/)
-      if (nonZeroIndex !== -1) {
-        trimmedValue = fmtBalance.substring(
-          0,
-          decimalSeparatorIndex + nonZeroIndex + 1,
-        )
-      }
+    if (decimals > 0 && dropTraillingZeros && decimalPart) {
+      const trimmedDecimalPart = decimalPart.replace(/0+$/, '')
+      trimmedValue = `${integerPart}${
+        trimmedDecimalPart !== '' ? decimalSeparator : ''
+      }${trimmedDecimalPart}`
     }
 
     return template

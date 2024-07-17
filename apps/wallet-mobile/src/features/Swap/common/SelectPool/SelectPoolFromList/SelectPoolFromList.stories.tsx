@@ -16,33 +16,33 @@ storiesOf('Swap List Pool', module)
     <SelectPoolFromList
       pools={[
         {
-          tokenA: {quantity: '4500000', tokenId: 'tokenA'},
-          tokenB: {quantity: '9000000', tokenId: 'tokenB'},
+          tokenA: {quantity: 4500000n, tokenId: 'token.A'},
+          tokenB: {quantity: 9000000n, tokenId: 'token.B'},
           ptPriceTokenA: '0',
           ptPriceTokenB: '0',
           fee: '0.3', // 0.3%
           provider: 'minswap',
-          batcherFee: {quantity: '1', tokenId: ''},
-          deposit: {quantity: '1', tokenId: ''},
+          batcherFee: {quantity: 1n, tokenId: '.'},
+          deposit: {quantity: 1n, tokenId: '.'},
           poolId: '0',
           lpToken: {
-            quantity: '0',
-            tokenId: '0',
+            quantity: 0n,
+            tokenId: '0.',
           },
         },
         {
-          tokenA: {quantity: '4500000', tokenId: 'tokenA'},
-          tokenB: {quantity: '9000000', tokenId: 'tokenB'},
+          tokenA: {quantity: 4500000n, tokenId: 'token.A'},
+          tokenB: {quantity: 9000000n, tokenId: 'token.B'},
           ptPriceTokenA: '0',
           ptPriceTokenB: '0',
           fee: '0.3', // 0.3%
           provider: 'sundaeswap',
-          batcherFee: {quantity: '122', tokenId: ''},
-          deposit: {quantity: '432', tokenId: ''},
+          batcherFee: {quantity: 122n, tokenId: '.'},
+          deposit: {quantity: 432n, tokenId: '.'},
           poolId: '23455',
           lpToken: {
-            quantity: '13524',
-            tokenId: '1355',
+            quantity: 13524n,
+            tokenId: '135.5',
           },
         },
       ]}

@@ -1,12 +1,11 @@
 import {SwapState} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
-import React from 'react'
+import {BigNumber} from 'bignumber.js'
+import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Button, Spacer, useModal} from '../../../../../../components'
-import {useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
-import {Quantities} from '../../../../../../yoroi-wallets/utils'
-import {useSelectedWallet} from '../../../../../WalletManager/common/hooks/useSelectedWallet'
+import {useLanguage} from '../../../../../../kernel/i18n'
 import {PRICE_PRECISION} from '../../../../common/constants'
 import {useStrings} from '../../../../common/strings'
 
@@ -18,19 +17,17 @@ export interface LimitPriceWarningProps {
 export const WarnLimitPrice = ({onConfirm, orderData}: LimitPriceWarningProps) => {
   const strings = useStrings()
   const styles = useStyles()
-  const limitPrice = Quantities.format(orderData.limitPrice ?? Quantities.zero, orderData.tokens.priceDenomination)
-  const {wallet} = useSelectedWallet()
+  const {numberLocale} = useLanguage()
+  const limitPrice = new BigNumber(orderData.limitPrice ?? 0)
+    .shiftedBy(orderData.tokens.priceDenomination)
+    .toFormat(PRICE_PRECISION, BigNumber.ROUND_DOWN, numberLocale)
   const {closeModal} = useModal()
-  const tokenToSellInfo = useTokenInfo({wallet, tokenId: orderData.amounts.sell.tokenId})
-  const tokenToBuyInfo = useTokenInfo({wallet, tokenId: orderData.amounts.buy.tokenId})
 
-  const tokenToSellName = tokenToSellInfo.ticker ?? tokenToSellInfo.name ?? '-'
-  const tokenToBuyName = tokenToBuyInfo.ticker ?? tokenToBuyInfo.name ?? '-'
-  const marketPrice = Quantities.format(
-    orderData.selectedPoolCalculation?.prices.market ?? Quantities.zero,
-    orderData.tokens.priceDenomination,
-    PRICE_PRECISION,
-  )
+  const tokenToSellName = orderData.amounts.sell?.info.ticker ?? orderData.amounts.sell?.info.name ?? '-'
+  const tokenToBuyName = orderData.amounts.buy?.info.ticker ?? orderData.amounts.buy?.info.name ?? '-'
+  const marketPrice = new BigNumber(orderData.selectedPoolCalculation?.prices.market ?? 0)
+    .shiftedBy(orderData.tokens.priceDenomination)
+    .toFormat(PRICE_PRECISION, BigNumber.ROUND_DOWN, numberLocale)
 
   const name = `${tokenToSellName}/${tokenToBuyName}`
 

@@ -1,21 +1,20 @@
 import {useTheme} from '@yoroi/theme'
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
-import {Boundary, Icon, Spacer, TokenIcon, TokenIconPlaceholder} from '../../../../components'
+import {Icon, Spacer} from '../../../../components'
 import {isEmptyString} from '../../../../kernel/utils'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
-import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
-import {Quantities} from '../../../../yoroi-wallets/utils'
 import {formatTokenWithText} from '../../../../yoroi-wallets/utils/format'
+import {TokenInfoIcon} from '../../../Portfolio/common/TokenAmountItem/TokenInfoIcon'
 
 type Props = {
   label?: string
   wallet: YoroiWallet
-  amount: Balance.Amount
+  amount?: Partial<Portfolio.Token.Amount>
   onChange(value: string): void
   value?: string
   navigateTo?: () => void
@@ -30,7 +29,6 @@ export const AmountCard = ({
   label,
   onChange,
   value,
-  wallet,
   amount,
   navigateTo,
   touched,
@@ -41,15 +39,11 @@ export const AmountCard = ({
 }: Props) => {
   const [isFocused, setIsFocused] = React.useState(false)
   const strings = useStrings()
-  const {quantity, tokenId} = amount
-  const tokenInfo = useTokenInfo({wallet, tokenId})
   const {styles, colors} = useStyles()
 
-  const noTokenSelected = !touched
-
-  const name = tokenInfo.ticker ?? tokenInfo.name
-  const formattedAmount = noTokenSelected ? Quantities.zero : formatTokenWithText(quantity, tokenInfo, 18)
-  const fallback = React.useCallback(() => <TokenIconPlaceholder />, [])
+  const info = amount?.info
+  const name = info?.ticker ?? info?.name ?? ''
+  const formattedAmount = !info ? '0' : formatTokenWithText(amount?.quantity ?? 0n, info, 18)
 
   const focusInput = () => {
     if (inputRef?.current) {
@@ -65,8 +59,8 @@ export const AmountCard = ({
         <View style={styles.content}>
           <Pressable
             style={styles.amountWrapper}
-            onPress={() => (noTokenSelected ? navigateTo?.() : focusInput())}
-            testID={noTokenSelected ? `${testId}-token-input` : ''}
+            onPress={() => (!info ? navigateTo?.() : focusInput())}
+            testID={`${testId}-token-input`}
           >
             <TextInput
               keyboardType="numeric"
@@ -85,7 +79,7 @@ export const AmountCard = ({
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
               testID={`${testId}-amount-input`}
-              {...(noTokenSelected && {onPressIn: navigateTo})}
+              {...(!info && {onPressIn: navigateTo})}
             />
           </Pressable>
 
@@ -94,17 +88,15 @@ export const AmountCard = ({
           <View style={styles.rightSection}>
             <TouchableOpacity onPress={navigateTo}>
               <View style={styles.sectionContainer}>
-                <Boundary loading={{fallback: <TokenIconPlaceholder />}} error={{fallback}}>
-                  {noTokenSelected ? (
-                    <Icon.Coins size={24} color={colors.noSelected} />
-                  ) : (
-                    <TokenIcon wallet={wallet} tokenId={tokenInfo.id} variant="swap" />
-                  )}
-                </Boundary>
+                {!info || (info.nature !== Portfolio.Token.Nature.Primary && info.originalImage === '') ? (
+                  <Icon.Coins size={24} color={colors.noSelected} />
+                ) : (
+                  <TokenInfoIcon info={info} size="sm" />
+                )}
 
                 <Spacer width={8} />
 
-                <Text style={styles.coinName}>{noTokenSelected ? strings.selectToken : name}</Text>
+                <Text style={styles.coinName}>{!info ? strings.selectToken : name}</Text>
 
                 <Spacer width={8} />
 

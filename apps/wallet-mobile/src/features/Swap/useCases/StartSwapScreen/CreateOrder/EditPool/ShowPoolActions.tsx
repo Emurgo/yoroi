@@ -1,3 +1,4 @@
+import {usePortfolioTokenInfo} from '@yoroi/portfolio'
 import {useSwap} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
 import {Swap} from '@yoroi/types'
@@ -6,8 +7,7 @@ import React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {ExpandableInfoCard, HeaderWrapper, HiddenInfoWrapper, Spacer, useModal} from '../../../../../../components'
-import {useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
-import {Quantities} from '../../../../../../yoroi-wallets/utils'
+import {asQuantity, Quantities} from '../../../../../../yoroi-wallets/utils'
 import {useSelectedWallet} from '../../../../../WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from '../../../../common/navigation'
 import {PoolIcon} from '../../../../common/PoolIcon/PoolIcon'
@@ -27,8 +27,8 @@ export const ShowPoolActions = () => {
   const {selectedPoolCalculation: calculation, amounts} = orderData
 
   const {wallet} = useSelectedWallet()
-  const sellTokenInfo = useTokenInfo({wallet, tokenId: amounts.sell.tokenId})
-  const sellTokenName = sellTokenInfo.ticker ?? sellTokenInfo.name
+  const sellTokenInfo = orderData.amounts.sell?.info
+  const sellTokenName = sellTokenInfo?.ticker ?? sellTokenInfo?.name ?? '-'
 
   const {
     buyQuantity: {isTouched: isBuyTouched},
@@ -40,12 +40,12 @@ export const ShowPoolActions = () => {
   const {cost, pool} = calculation
 
   const totalFees = Quantities.format(
-    Quantities.sum([cost.batcherFee.quantity, cost.frontendFeeInfo.fee.quantity]),
+    asQuantity((cost.batcherFee.quantity + cost.frontendFeeInfo.fee.quantity).toString()),
     wallet.primaryTokenInfo.decimals ?? 0,
   )
   const titleTotalFeesFormatted = `${strings.total}: ${Quantities.format(
-    amounts.sell.quantity,
-    sellTokenInfo.decimals ?? 0,
+    asQuantity(amounts.sell?.quantity.toString() ?? '0'),
+    sellTokenInfo?.decimals ?? 0,
   )} ${sellTokenName} + ${totalFees} ${wallet.primaryTokenInfo.ticker}`
   const handleOnExpand = () => setIsExpanded((state) => !state)
   const totalFeesTitle = (
@@ -97,18 +97,28 @@ const ShowLimitOrderFeeBreakdown = ({totalFees}: {totalFees: string}) => {
   const {openModal} = useModal()
 
   const {orderData} = useSwap()
-  const {selectedPoolCalculation: calculation, amounts} = orderData
+  const {selectedPoolCalculation: calculation} = orderData
 
-  const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
-  const buyTokenName = buyTokenInfo.ticker ?? buyTokenInfo.name
+  const {tokenInfo: buyTokenInfo} = usePortfolioTokenInfo({
+    getTokenInfo: wallet.networkManager.tokenManager.api.tokenInfo,
+    id: orderData.amounts.buy?.info.id ?? 'unknown.',
+    network: wallet.networkManager.network,
+  })
+  const buyTokenName = buyTokenInfo?.ticker ?? buyTokenInfo?.name ?? '-'
 
   // should not happen
-  if (!calculation) return <></>
+  if (!calculation) return null
 
   const {pool} = calculation
 
-  const minReceived = Quantities.format(calculation.buyAmountWithSlippage.quantity, buyTokenInfo.decimals ?? 0)
-  const deposit = Quantities.format(pool.deposit.quantity, Number(wallet.primaryTokenInfo.decimals))
+  const minReceived = Quantities.format(
+    asQuantity(calculation.buyAmountWithSlippage.quantity.toString()),
+    buyTokenInfo?.decimals ?? 0,
+  )
+  const deposit = Quantities.format(
+    asQuantity(pool.deposit.quantity.toString()),
+    wallet.portfolioPrimaryTokenInfo.decimals,
+  )
 
   const depositFormatted = `${deposit} ${wallet.primaryTokenInfo.ticker}`
   const totalFeesFormatted = `${totalFees} ${wallet.primaryTokenInfo.ticker}`
@@ -173,21 +183,30 @@ const ShowMarketOrderFeeBreakdown = ({totalFees}: {totalFees: string}) => {
   const bold = useBold()
 
   const {orderData} = useSwap()
-  const {selectedPoolCalculation: calculation, amounts} = orderData
+  const buyTokenInfo = orderData.amounts.buy?.info
+  const sellTokenInfo = orderData.amounts.sell?.info
+  const buyTokenName = buyTokenInfo?.ticker ?? buyTokenInfo?.name ?? '-'
+  const sellTokenName = sellTokenInfo?.ticker ?? sellTokenInfo?.name ?? '-'
 
-  const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
-  const sellTokenInfo = useTokenInfo({wallet, tokenId: amounts.sell.tokenId})
-  const buyTokenName = buyTokenInfo.ticker ?? buyTokenInfo.name
-  const sellTokenName = sellTokenInfo.ticker ?? sellTokenInfo.name
+  const calculation = orderData.selectedPoolCalculation
 
   // should not happen
-  if (!calculation) return <></>
+  if (!calculation) return null
 
   const {pool, cost} = calculation
 
-  const minReceived = Quantities.format(calculation.buyAmountWithSlippage.quantity, buyTokenInfo.decimals ?? 0)
-  const deposit = Quantities.format(pool.deposit.quantity, Number(wallet.primaryTokenInfo.decimals))
-  const liqFeeQuantity = Quantities.format(cost.liquidityFee.quantity, sellTokenInfo.decimals ?? 0)
+  const minReceived = Quantities.format(
+    asQuantity(calculation.buyAmountWithSlippage.quantity.toString()),
+    buyTokenInfo?.decimals ?? 0,
+  )
+  const deposit = Quantities.format(
+    asQuantity(pool.deposit.quantity.toString()),
+    wallet.portfolioPrimaryTokenInfo.decimals,
+  )
+  const liqFeeQuantity = Quantities.format(
+    asQuantity(cost.liquidityFee.quantity.toString()),
+    sellTokenInfo?.decimals ?? 0,
+  )
   const liqFeePerc = pool.fee
 
   const depositFormatted = `${deposit} ${wallet.primaryTokenInfo.ticker}`

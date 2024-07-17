@@ -6,7 +6,7 @@ import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {defaultMaterialTopTabNavigationOptions, SwapTabRoutes} from '../../kernel/navigation'
-import {useBalance} from '../../yoroi-wallets/hooks'
+import {usePortfolioBalances} from '../Portfolio/common/hooks/usePortfolioBalances'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from './common/strings'
 import {CreateOrder} from './useCases/StartSwapScreen/CreateOrder/CreateOrder'
@@ -28,22 +28,14 @@ export const SwapTabNavigator = () => {
     sellTokenInfoChanged,
     primaryTokenInfoChanged,
   } = useSwap()
-  const lpTokenHeld = useBalance({wallet, tokenId: aggregatorTokenId})
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const lpTokenHeld = usePortfolioBalances({wallet}).records.get(aggregatorTokenId!)
 
   // initialize sell with / and primary token
   React.useEffect(() => {
-    const ptInfo = {
-      decimals: wallet.portfolioPrimaryTokenInfo.decimals,
-      id: wallet.portfolioPrimaryTokenInfo.id,
-    }
-    sellTokenInfoChanged(ptInfo)
-    primaryTokenInfoChanged(ptInfo)
-  }, [
-    primaryTokenInfoChanged,
-    sellTokenInfoChanged,
-    wallet.portfolioPrimaryTokenInfo.decimals,
-    wallet.portfolioPrimaryTokenInfo.id,
-  ])
+    sellTokenInfoChanged(wallet.portfolioPrimaryTokenInfo)
+    primaryTokenInfoChanged(wallet.portfolioPrimaryTokenInfo)
+  }, [primaryTokenInfoChanged, sellTokenInfoChanged, wallet.portfolioPrimaryTokenInfo])
 
   // update the fee tiers
   React.useEffect(() => {
@@ -54,10 +46,7 @@ export const SwapTabNavigator = () => {
   React.useEffect(() => {
     if (aggregatorTokenId == null) return
 
-    lpTokenHeldChanged({
-      tokenId: aggregatorTokenId,
-      quantity: lpTokenHeld,
-    })
+    lpTokenHeldChanged(lpTokenHeld)
   }, [aggregatorTokenId, lpTokenHeld, lpTokenHeldChanged])
 
   useSwapTokensOnlyVerified({suspense: false})

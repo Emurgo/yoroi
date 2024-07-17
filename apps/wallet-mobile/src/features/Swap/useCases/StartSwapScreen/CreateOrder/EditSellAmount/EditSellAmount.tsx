@@ -1,7 +1,7 @@
 import {useSwap} from '@yoroi/swap'
 import * as React from 'react'
 
-import {useBalance} from '../../../../../../yoroi-wallets/hooks'
+import {usePortfolioBalances} from '../../../../../Portfolio/common/hooks/usePortfolioBalances'
 import {useSelectedWallet} from '../../../../../WalletManager/common/hooks/useSelectedWallet'
 import {AmountCard} from '../../../../common/AmountCard/AmountCard'
 import {useNavigateTo} from '../../../../common/navigation'
@@ -18,15 +18,15 @@ export const EditSellAmount = () => {
     onChangeSellQuantity,
     sellInputRef,
   } = useSwapForm()
-  const {tokenId} = orderData.amounts.sell
-  const balance = useBalance({wallet, tokenId})
+
+  const amount = usePortfolioBalances({wallet}).records.get(orderData.amounts.sell?.info.id ?? 'unknown.')
 
   return (
     <AmountCard
       label={strings.swapFrom}
       onChange={onChangeSellQuantity}
       value={sellDisplayValue}
-      amount={{tokenId, quantity: balance}}
+      amount={amount}
       wallet={wallet}
       navigateTo={navigate.selectSellToken}
       touched={isSellTouched}

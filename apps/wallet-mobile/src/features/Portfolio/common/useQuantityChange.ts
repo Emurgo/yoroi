@@ -1,4 +1,4 @@
-import {splitBigInt} from '@yoroi/common'
+import {atomicBreakdown} from '@yoroi/common'
 import * as React from 'react'
 
 import {useCurrencyPairing} from '../../Settings/Currency'
@@ -38,7 +38,7 @@ export const useQuantityChange = ({
 
   const pairedBalanceChange = React.useMemo(() => {
     if (quantityChange === undefined || price === undefined) return '0.00'
-    return splitBigInt(quantityChange, decimals).bn.times(price).toFormat(2)
+    return atomicBreakdown(quantityChange, decimals).bn.times(price).toFormat(2)
   }, [decimals, quantityChange, price])
 
   return {

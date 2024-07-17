@@ -16,7 +16,7 @@ import {Numbers} from '@yoroi/types'
  * @example
  * atomicFormatter({ value: 123456789000000000000000001n, decimalPlaces: 18 }) // => '123,456,789.000000000000000001'
  * atomicFormatter({ value: 123456789n, decimalPlaces: 0 }) // => '123,456,789'
- * atomicFormatter({ value: 1_000_000_000_000_000_000n, decimalPlaces: 18 }) // => '1'
+ * atomicFormatter({ value: 1_000_000_000_000_000_000n, decimalPlaces: 18 }) // => '1.000000000000000000'
  * atomicFormatter({ value: 12345n, decimalPlaces: 2 }) // => '123.45'
  * atomicFormatter({ value: 12345678n, decimalPlaces: 5 }) // => '123.45678'
  */

@@ -9,9 +9,9 @@ import {Button, KeyboardAvoidingView, Spacer} from '../../../../components'
 import {LoadingOverlay} from '../../../../components/LoadingOverlay'
 import {useModal} from '../../../../components/Modal/ModalContext'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {useSignAndSubmitTx, useTokenInfo} from '../../../../yoroi-wallets/hooks'
+import {useSignAndSubmitTx} from '../../../../yoroi-wallets/hooks'
 import {YoroiSignedTx} from '../../../../yoroi-wallets/types'
-import {Quantities} from '../../../../yoroi-wallets/utils'
+import {asQuantity, Quantities} from '../../../../yoroi-wallets/utils'
 import {useAuthOsWithEasyConfirmation} from '../../../Auth/common/hooks'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from '../../common/navigation'
@@ -33,18 +33,12 @@ export const ConfirmTxScreen = () => {
   const signedTxRef = React.useRef<YoroiSignedTx | null>(null)
 
   const {unsignedTx, orderData} = useSwap()
-  const sellTokenInfo = useTokenInfo({
-    wallet,
-    tokenId: orderData.amounts.sell.tokenId,
-  })
-  const buyTokenInfo = useTokenInfo({
-    wallet,
-    tokenId: orderData.amounts.buy.tokenId,
-  })
+  const sellTokenInfo = orderData.amounts.sell?.info
+  const buyTokenInfo = orderData.amounts.buy?.info
 
   const minReceived = Quantities.denominated(
-    orderData.selectedPoolCalculation?.buyAmountWithSlippage?.quantity ?? Quantities.zero,
-    buyTokenInfo.decimals ?? 0,
+    asQuantity(orderData.selectedPoolCalculation?.buyAmountWithSlippage?.quantity.toString() ?? 0),
+    buyTokenInfo?.decimals ?? 0,
   )
 
   const couldReceiveNoAssets = Quantities.isZero(minReceived)
@@ -58,13 +52,19 @@ export const ConfirmTxScreen = () => {
     if (orderData.selectedPoolCalculation === undefined) return
     track.swapOrderSubmitted({
       from_asset: [
-        {asset_name: sellTokenInfo.name, asset_ticker: sellTokenInfo.ticker, policy_id: sellTokenInfo.group},
+        {
+          asset_name: sellTokenInfo?.name,
+          asset_ticker: sellTokenInfo?.ticker,
+          policy_id: sellTokenInfo?.id.split('.')[0],
+        },
       ],
-      to_asset: [{asset_name: buyTokenInfo.name, asset_ticker: buyTokenInfo.ticker, policy_id: buyTokenInfo.group}],
+      to_asset: [
+        {asset_name: buyTokenInfo?.name, asset_ticker: buyTokenInfo?.ticker, policy_id: buyTokenInfo?.id.split('.')[0]},
+      ],
       order_type: orderData.type,
       slippage_tolerance: orderData.slippage,
-      from_amount: orderData.amounts.sell.quantity,
-      to_amount: orderData.amounts.buy.quantity,
+      from_amount: orderData.amounts.sell?.quantity.toString() ?? '0',
+      to_amount: orderData.amounts.buy?.quantity.toString() ?? '0',
       pool_source: orderData.selectedPoolCalculation.pool.provider,
       swap_fees: Number(orderData.selectedPoolCalculation.cost.batcherFee),
     })

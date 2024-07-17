@@ -1,11 +1,13 @@
 import {useSwap} from '@yoroi/swap'
+import {BigNumber} from 'bignumber.js'
 import {produce} from 'immer'
 import React from 'react'
 import {Keyboard, TextInput} from 'react-native'
 
 import {useLanguage} from '../../../kernel/i18n'
-import {useBalances, useTokenInfo} from '../../../yoroi-wallets/hooks'
-import {Amounts, Quantities} from '../../../yoroi-wallets/utils'
+import {asQuantity, Quantities} from '../../../yoroi-wallets/utils'
+import {usePortfolioBalances} from '../../Portfolio/common/hooks/usePortfolioBalances'
+import {usePortfolioPrimaryBalance} from '../../Portfolio/common/hooks/usePortfolioPrimaryBalance'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {PRICE_PRECISION} from './constants'
 import {useStrings} from './strings'
@@ -37,27 +39,26 @@ export const SwapFormProvider = ({
   const limitInputRef = React.useRef<TextInput | null>(null)
 
   const pool = orderData.selectedPoolCalculation?.pool
-  const {tokenId: buyTokenId, quantity: buyQuantity} = orderData.amounts.buy
-  const {tokenId: sellTokenId, quantity: sellQuantity} = orderData.amounts.sell
 
-  const buyTokenInfo = useTokenInfo({wallet, tokenId: buyTokenId})
-  const sellTokenInfo = useTokenInfo({wallet, tokenId: sellTokenId})
+  const buyQuantity = orderData.amounts.buy?.quantity ?? 0n
+  const sellQuantity = orderData.amounts.sell?.quantity ?? 0n
 
-  const balances = useBalances(wallet)
-  const sellbalance = Amounts.getAmount(balances, sellTokenId).quantity
-  const primaryTokenBalance = Amounts.getAmount(balances, wallet.primaryTokenInfo.id).quantity
+  const buyTokenInfo = orderData.amounts.buy?.info
+  const sellTokenInfo = orderData.amounts.sell?.info
 
-  const minReceived = orderData.selectedPoolCalculation?.buyAmountWithSlippage.quantity ?? Quantities.zero
-  const poolSupply = buyTokenId === pool?.tokenA.tokenId ? pool?.tokenA.quantity : pool?.tokenB.quantity
-  const hasBuyTokenSupply = !Quantities.isGreaterThan(buyQuantity, poolSupply ?? Quantities.zero)
-  const hasSellBalance = !Quantities.isGreaterThan(sellQuantity, sellbalance)
-  const hasPtBalance = !Quantities.isGreaterThan(
-    Quantities.sum([
-      sellTokenId === wallet.primaryTokenInfo.id ? sellQuantity : Quantities.zero,
-      orderData.selectedPoolCalculation?.cost.ptTotalRequired.quantity ?? Quantities.zero,
-    ]),
-    primaryTokenBalance,
-  )
+  const balances = usePortfolioBalances({wallet})
+  const sellBalance = balances.records.get(orderData.amounts.sell?.info.id ?? 'unknown.')?.quantity ?? 0n
+  const primaryTokenBalance = usePortfolioPrimaryBalance({wallet}).quantity
+
+  const minReceived = orderData.selectedPoolCalculation?.buyAmountWithSlippage.quantity ?? 0n
+  const poolSupply = (buyTokenInfo?.id === pool?.tokenA.tokenId ? pool?.tokenA.quantity : pool?.tokenB.quantity) ?? 0n
+
+  const hasBuyTokenSupply = poolSupply >= buyQuantity
+  const hasSellBalance = sellBalance >= sellQuantity
+
+  const isSellPt = orderData.amounts.sell?.info.id === wallet.primaryTokenInfo.id
+  const ptTotalRequired = orderData.selectedPoolCalculation?.cost.ptTotalRequired.quantity ?? 0n
+  const hasPtBalance = primaryTokenBalance >= (!isSellPt ? 0n : sellQuantity + ptTotalRequired)
 
   const [state, dispatch] = React.useReducer(swapFormReducer, {
     ...defaultState,
@@ -98,25 +99,27 @@ export const SwapFormProvider = ({
 
   const updateSellInput = React.useCallback(() => {
     if (state.sellQuantity.isTouched && !sellInputRef?.current?.isFocused()) {
-      actions.sellInputValueChanged(Quantities.format(sellQuantity, sellTokenInfo.decimals ?? 0))
+      actions.sellInputValueChanged(
+        Quantities.format(asQuantity(sellQuantity.toString()), sellTokenInfo?.decimals ?? 0),
+      )
     }
-  }, [actions, sellQuantity, sellTokenInfo.decimals, state.sellQuantity.isTouched])
+  }, [actions, sellQuantity, sellTokenInfo?.decimals, state.sellQuantity.isTouched])
 
   const updateBuyInput = React.useCallback(() => {
     if (state.buyQuantity.isTouched && !buyInputRef?.current?.isFocused()) {
-      actions.buyInputValueChanged(Quantities.format(buyQuantity, buyTokenInfo.decimals ?? 0))
+      actions.buyInputValueChanged(Quantities.format(asQuantity(buyQuantity.toString()), buyTokenInfo?.decimals ?? 0))
     }
-  }, [actions, buyTokenInfo.decimals, buyQuantity, state.buyQuantity.isTouched])
+  }, [actions, buyTokenInfo?.decimals, buyQuantity, state.buyQuantity.isTouched])
 
   const updateLimitPrice = React.useCallback(() => {
     if (orderData.type === 'limit' && !limitInputRef?.current?.isFocused()) {
       actions.limitPriceInputValueChanged(
-        Quantities.format(orderData.limitPrice ?? Quantities.zero, orderData.tokens.priceDenomination, PRICE_PRECISION),
+        Quantities.format(asQuantity(orderData.limitPrice ?? 0), orderData.tokens.priceDenomination, PRICE_PRECISION),
       )
     } else if (orderData.type === 'market') {
       actions.limitPriceInputValueChanged(
         Quantities.format(
-          orderData.selectedPoolCalculation?.prices.market ?? Quantities.zero,
+          asQuantity(orderData.selectedPoolCalculation?.prices.market ?? 0),
           orderData.tokens.priceDenomination,
           PRICE_PRECISION,
         ),
@@ -137,24 +140,24 @@ export const SwapFormProvider = ({
 
   const onChangeSellQuantity = React.useCallback(
     (text: string) => {
-      const [input, quantity] = Quantities.parseFromText(text, sellTokenInfo.decimals ?? 0, numberLocale)
-      sellQuantityChanged(quantity)
+      const [input, quantity] = Quantities.parseFromText(text, sellTokenInfo?.decimals ?? 0, numberLocale)
+      sellQuantityChanged(BigInt(quantity))
       actions.sellInputValueChanged(text === '' ? '' : input)
 
       clearErrors()
     },
-    [actions, clearErrors, numberLocale, sellQuantityChanged, sellTokenInfo.decimals],
+    [actions, clearErrors, numberLocale, sellQuantityChanged, sellTokenInfo?.decimals],
   )
 
   const onChangeBuyQuantity = React.useCallback(
     (text: string) => {
-      const [input, quantity] = Quantities.parseFromText(text, buyTokenInfo.decimals ?? 0, numberLocale)
-      buyQuantityChanged(quantity)
+      const [input, quantity] = Quantities.parseFromText(text, buyTokenInfo?.decimals ?? 0, numberLocale)
+      buyQuantityChanged(BigInt(quantity))
       actions.buyInputValueChanged(text === '' ? '' : input)
 
       clearErrors()
     },
-    [buyTokenInfo.decimals, numberLocale, buyQuantityChanged, actions, clearErrors],
+    [buyTokenInfo?.decimals, numberLocale, buyQuantityChanged, actions, clearErrors],
   )
 
   const onChangeLimitPrice = React.useCallback(
@@ -195,7 +198,7 @@ export const SwapFormProvider = ({
     if (
       state.sellQuantity.isTouched &&
       state.buyQuantity.isTouched &&
-      (pool === undefined || (!Quantities.isZero(buyQuantity) && !hasBuyTokenSupply))
+      (pool === undefined || (buyQuantity != 0n && !hasBuyTokenSupply))
     ) {
       actions.buyAmountErrorChanged(strings.notEnoughSupply)
       return
@@ -205,7 +208,7 @@ export const SwapFormProvider = ({
       state.sellQuantity.isTouched &&
       state.buyQuantity.isTouched &&
       pool !== undefined &&
-      !Quantities.isZero(buyQuantity) &&
+      buyQuantity !== 0n &&
       hasBuyTokenSupply &&
       state.buyQuantity.error === strings.notEnoughSupply
     ) {
@@ -249,24 +252,19 @@ export const SwapFormProvider = ({
     }
 
     // no enough balance error
-    if (!Quantities.isZero(sellQuantity) && !hasSellBalance) {
+    if (sellQuantity !== 0n && !hasSellBalance) {
       actions.sellAmountErrorChanged(strings.notEnoughBalance)
       return
     }
 
     // no enough fee balance error
-    if (!Quantities.isZero(sellQuantity) && state.buyQuantity.isTouched && !hasPtBalance) {
+    if (sellQuantity !== 0n && state.buyQuantity.isTouched && !hasPtBalance) {
       actions.sellAmountErrorChanged(strings.notEnoughFeeBalance)
       return
     }
 
     // min received 0 error
-    if (
-      state.sellQuantity.isTouched &&
-      state.buyQuantity.isTouched &&
-      !Quantities.isZero(buyQuantity) &&
-      Quantities.isZero(minReceived)
-    ) {
+    if (state.sellQuantity.isTouched && state.buyQuantity.isTouched && buyQuantity !== 0n && minReceived === 0n) {
       actions.sellAmountErrorChanged(strings.slippageWarningChangeAmount)
       return
     }
@@ -274,8 +272,8 @@ export const SwapFormProvider = ({
     if (
       state.sellQuantity.isTouched &&
       state.buyQuantity.isTouched &&
-      !Quantities.isZero(buyQuantity) &&
-      !Quantities.isZero(minReceived) &&
+      buyQuantity !== 0n &&
+      minReceived !== 0n &&
       state.sellQuantity.error === strings.slippageWarningChangeAmount
     ) {
       actions.sellAmountErrorChanged(undefined)
@@ -303,13 +301,15 @@ export const SwapFormProvider = ({
     const canSwap =
       state.buyQuantity.isTouched &&
       state.sellQuantity.isTouched &&
-      !Quantities.isZero(buyQuantity) &&
-      !Quantities.isZero(sellQuantity) &&
+      buyQuantity !== 0n &&
+      sellQuantity !== 0n &&
       state.buyQuantity.error === undefined &&
       state.sellQuantity.error === undefined &&
       orderData.selectedPoolCalculation !== undefined &&
       (orderData.type === 'market' ||
-        (orderData.type === 'limit' && orderData.limitPrice !== undefined && !Quantities.isZero(orderData.limitPrice)))
+        (orderData.type === 'limit' &&
+          orderData.limitPrice !== undefined &&
+          !new BigNumber(orderData.limitPrice).isZero()))
 
     actions.canSwapChanged(canSwap)
   }, [

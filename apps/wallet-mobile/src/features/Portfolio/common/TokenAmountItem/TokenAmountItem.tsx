@@ -41,7 +41,10 @@ export const TokenAmountItem = ({
   const detail = isPrimary ? info.description : info.fingerprint
   const name = infoExtractName(info)
 
-  const formattedQuantity = !isPrivacyActive || ignorePrivacy === true ? amountFormatter()(amount) : privacyPlaceholder
+  const formattedQuantity =
+    !isPrivacyActive || ignorePrivacy === true
+      ? amountFormatter({dropTraillingZeros: true})(amount)
+      : privacyPlaceholder
 
   const showSwapDetails = !isPrimary && variant === 'swap'
   const priceImpactRiskTextColor = orderType === 'market' ? priceImpactRiskTheme.text : colors.text
@@ -53,24 +56,26 @@ export const TokenAmountItem = ({
       </Left>
 
       <Middle>
-        <Text numberOfLines={1} ellipsizeMode="middle" style={styles.name} testID="tokenInfoText">
-          {name}
-        </Text>
+        <View style={styles.row}>
+          <Text numberOfLines={1} ellipsizeMode="middle" style={styles.name} testID="tokenInfoText">
+            {name}
+          </Text>
 
-        {showSwapDetails && (
-          <>
-            <Spacer width={4} />
+          {showSwapDetails && (
+            <>
+              <Spacer width={4} />
 
-            {inWallet && <Icon.Portfolio size={22} color={colors.icon} />}
-          </>
-        )}
+              {inWallet && <Icon.Portfolio size={22} color={colors.icon} />}
+            </>
+          )}
+        </View>
 
         <Text numberOfLines={1} ellipsizeMode="middle" style={styles.detail} testID="tokenFingerprintText">
           {detail}
         </Text>
       </Middle>
 
-      <Right>
+      <Right style={styles.end}>
         {!isNft(info) && variant !== 'swap' && (
           <View testID="tokenAmountText">
             {priceImpactRisk === 'moderate' && <Icon.Info size={24} color={priceImpactRiskTextColor} />}
@@ -144,6 +149,14 @@ const useStyles = () => {
     },
     pairedBalance: {
       textAlign: 'right',
+    },
+    end: {
+      ...atoms.align_end,
+    },
+    row: {
+      ...atoms.flex,
+      ...atoms.flex_row,
+      ...atoms.align_center,
     },
   })
 

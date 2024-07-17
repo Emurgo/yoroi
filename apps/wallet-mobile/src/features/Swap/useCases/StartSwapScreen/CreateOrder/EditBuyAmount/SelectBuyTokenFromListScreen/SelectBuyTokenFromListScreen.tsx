@@ -144,7 +144,7 @@ type SelectableTokenProps = {
 }
 const SelectableToken = ({wallet, tokenInfo, walletTokenIds}: SelectableTokenProps) => {
   const {styles} = useStyles()
-  const {id, name, ticker, decimals} = tokenInfo
+  const {id, name, ticker} = tokenInfo
   // NOTE: no need to subscribe to the balance
   const balanceAvailable = wallet.balances.records.get(id)?.quantity ?? 0n
   const {closeSearch} = useSearch()
@@ -159,8 +159,8 @@ const SelectableToken = ({wallet, tokenInfo, walletTokenIds}: SelectableTokenPro
   const {track} = useMetrics()
 
   const inUserWallet = walletTokenIds.includes(tokenInfo.id)
-  const shouldUpdateToken = id !== orderData.amounts.buy.tokenId || !isBuyTouched
-  const shouldSwitchTokens = id === orderData.amounts.sell.tokenId && isSellTouched
+  const shouldUpdateToken = id !== orderData.amounts.buy?.info.id || !isBuyTouched
+  const shouldSwitchTokens = id === orderData.amounts.sell?.info.id && isSellTouched
 
   const handleOnTokenSelection = () => {
     const [policyId] = id.split('.')
@@ -175,10 +175,7 @@ const SelectableToken = ({wallet, tokenInfo, walletTokenIds}: SelectableTokenPro
     }
 
     if (shouldUpdateToken) {
-      buyTokenInfoChanged({
-        decimals: decimals ?? 0,
-        id: id,
-      })
+      buyTokenInfoChanged(tokenInfo)
       buyTouched()
     }
     navigateTo.startSwap()

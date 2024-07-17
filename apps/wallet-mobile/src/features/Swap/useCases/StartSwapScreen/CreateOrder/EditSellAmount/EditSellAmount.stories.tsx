@@ -1,4 +1,5 @@
 import {storiesOf} from '@storybook/react-native'
+import {tokenInfoMocks} from '@yoroi/portfolio'
 import {mockSwapManager, mockSwapStateDefault, SwapProvider} from '@yoroi/swap'
 import {produce} from 'immer'
 import React from 'react'
@@ -43,15 +44,30 @@ const mockWallet = produce(mocks.wallet, (draft) => {
   ]
 })
 const mockSwapStateSecodaryToken = produce(mockSwapStateDefault, (draft) => {
-  draft.orderData.amounts.sell.tokenId = '2a0879034f23ea48ba28dc1c15b056bd63b8cf0cab9733da92add22f.444444'
+  draft.orderData.amounts.sell = {
+    quantity: 0n,
+    info: {
+      ...tokenInfoMocks.ftNameless,
+      id: '2a0879034f23ea48ba28dc1c15b056bd63b8cf0cab9733da92add22f.444444',
+    },
+  }
 })
 const mockSwapStateUnamedToken = produce(mockSwapStateDefault, (draft) => {
-  draft.orderData.amounts.sell.tokenId = '2a0879034f23ea48ba28dc1c15b056bd63b8cf0cab9733da92add22f.'
+  draft.orderData.amounts.sell = {
+    quantity: 0n,
+    info: {
+      ...tokenInfoMocks.ftNameless,
+      id: '2a0879034f23ea48ba28dc1c15b056bd63b8cf0cab9733da92add22f.',
+    },
+  }
 })
 const mockSwapStateWithIconBigDecimals = produce(mockSwapStateDefault, (draft) => {
   draft.orderData.amounts.sell = {
-    tokenId: '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65e.74484f444c53',
-    quantity: '12301234567',
+    info: {
+      ...tokenInfoMocks.ftNoTicker,
+      id: '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65e.74484f444c53',
+    },
+    quantity: 12301234567n,
   }
 })
 

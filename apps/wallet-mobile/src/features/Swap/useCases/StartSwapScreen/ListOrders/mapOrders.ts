@@ -1,12 +1,9 @@
-import {isString} from '@yoroi/common'
+import {atomicBreakdown, isString} from '@yoroi/common'
 import {getPoolUrlByProvider} from '@yoroi/swap'
-import {Balance, Swap} from '@yoroi/types'
-import BigNumber from 'bignumber.js'
+import {Explorers, Portfolio, Swap} from '@yoroi/types'
 
 import {NumberLocale} from '../../../../../kernel/i18n/languages'
-import {NETWORK_CONFIG} from '../../../../../yoroi-wallets/cardano/constants/mainnet/constants'
 import {TransactionInfo} from '../../../../../yoroi-wallets/types'
-import {Quantities} from '../../../../../yoroi-wallets/utils'
 
 export const MAX_DECIMALS = 10
 
@@ -22,20 +19,27 @@ export type MappedOpenOrder = {
   txId: string
   total: string
   txLink: string
-  toTokenInfo: Balance.TokenInfo | undefined
+  toTokenInfo: Portfolio.Token.Info | undefined
   provider: Swap.PoolProvider | undefined
   poolUrl: string | undefined
-  fromTokenInfo: Balance.TokenInfo | undefined
+  fromTokenInfo: Portfolio.Token.Info | undefined
   fromTokenAmount: string
-  from: Balance.Amount
-  to: Balance.Amount
+  from: {
+    tokenId: Portfolio.Token.Id
+    quantity: bigint
+  }
+  to: {
+    tokenId: Portfolio.Token.Id
+    quantity: bigint
+  }
 }
 
 export const mapOpenOrders = (
   orders: Array<Swap.OpenOrder | Swap.CompletedOrder>,
-  tokenInfos: Balance.TokenInfo[],
+  tokenInfos: Portfolio.Token.Info[],
   numberLocale: NumberLocale,
   transactionInfos: TransactionInfo[],
+  explorerManager: Explorers.Manager,
 ): Array<MappedOpenOrder> => {
   if (orders.length === 0) return []
 
@@ -45,7 +49,7 @@ export const mapOpenOrders = (
     const txIdComplete = 'txHash' in order ? order.txHash : undefined
     const txId = txIdComplete ?? txIdOpen ?? ''
     const id = `${from.tokenId}-${to.tokenId}-${txId}`
-    const txLink = NETWORK_CONFIG.EXPLORER_URL_FOR_TX(txId)
+    const txLink = explorerManager.tx(txId)
 
     const txInfo = transactionInfos.find((tx) => tx.id === txId)
     const submittedAt = txInfo?.submittedAt
@@ -53,25 +57,16 @@ export const mapOpenOrders = (
 
     const fromTokenInfo = tokenInfos.find((tokenInfo) => tokenInfo.id === order.from.tokenId)
     const fromLabel = fromTokenInfo?.ticker ?? fromTokenInfo?.name ?? '-'
-    const total = new BigNumber(Quantities.denominated(from.quantity, fromTokenInfo?.decimals ?? 0)).toFormat(
-      numberLocale,
-    )
+    const fromQuantity = atomicBreakdown(from.quantity, fromTokenInfo?.decimals ?? 0).bn
+    const total = fromQuantity.toFormat(numberLocale)
 
     const toTokenInfo = tokenInfos.find((tokenInfo) => tokenInfo.id === order.to.tokenId)
     const toLabel = toTokenInfo?.ticker ?? toTokenInfo?.name ?? '-'
-    const tokenAmount = new BigNumber(Quantities.denominated(to.quantity, toTokenInfo?.decimals ?? 0))
-      .decimalPlaces(MAX_DECIMALS)
-      .toFormat({
-        ...numberLocale,
-      })
-    const tokenPrice = new BigNumber(
-      Quantities.quotient(
-        Quantities.denominated(from.quantity, fromTokenInfo?.decimals ?? 0),
-        Quantities.denominated(to.quantity, toTokenInfo?.decimals ?? 0),
-      ),
-    )
-      .decimalPlaces(MAX_DECIMALS)
-      .toFormat(numberLocale)
+    const toQuantity = atomicBreakdown(to.quantity, toTokenInfo?.decimals ?? 0).bn
+    const tokenAmount = toQuantity.decimalPlaces(MAX_DECIMALS).toFormat(numberLocale)
+    const tokenPrice = toQuantity.isZero()
+      ? '0'
+      : fromQuantity.dividedBy(toQuantity).decimalPlaces(MAX_DECIMALS).toFormat(numberLocale)
 
     return {
       owner: 'owner' in order ? order.owner : undefined,
@@ -89,9 +84,7 @@ export const mapOpenOrders = (
       toTokenInfo,
       provider: 'provider' in order ? order.provider : undefined,
       poolUrl: 'provider' in order ? getPoolUrlByProvider(order.provider) : undefined,
-      fromTokenAmount: new BigNumber(
-        Quantities.denominated(order.from.quantity, fromTokenInfo?.decimals ?? 0),
-      ).toFormat(numberLocale),
+      fromTokenAmount: total,
       from,
       to,
     }

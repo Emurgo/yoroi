@@ -1,4 +1,5 @@
 import {storiesOf} from '@storybook/react-native'
+import {tokenInfoMocks} from '@yoroi/portfolio'
 import {mockSwapManager, mockSwapStateDefault, SwapProvider} from '@yoroi/swap'
 import {produce} from 'immer'
 import React from 'react'
@@ -51,34 +52,55 @@ const mockWallet = produce(mocks.wallet, (draft) => {
 const mockSwapStateOtherToken = produce(mockSwapStateDefault, (draft) => {
   draft.orderData.amounts = {
     sell: {
-      tokenId: '2a0879034f23ea48ba28dc1c15b056bd63b8cf0cab9733da92add22f.444444',
-      quantity: '500000',
+      quantity: 500000n,
+      info: {
+        ...tokenInfoMocks.ftNameless,
+        id: '2a0879034f23ea48ba28dc1c15b056bd63b8cf0cab9733da92add22f.444444',
+      },
     },
     buy: {
-      tokenId: '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198.7755534443',
-      quantity: '5000000',
+      quantity: 5000000n,
+      info: {
+        ...tokenInfoMocks.ftNameless,
+        id: '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198.7755534443',
+      },
     },
   }
 })
 const mockSwapStateSameToken = produce(mockSwapStateDefault, (draft) => {
   draft.orderData.amounts = {
     sell: {
-      tokenId: '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198.7755534443',
-      quantity: '500000',
+      quantity: 500000n,
+      info: {
+        ...tokenInfoMocks.ftNameless,
+        id: '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198.7755534443',
+      },
     },
     buy: {
-      tokenId: '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198.7755534443',
-      quantity: '400000',
+      quantity: 400000n,
+      info: {
+        ...tokenInfoMocks.ftNameless,
+        id: '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198.7755534443',
+      },
     },
   }
 })
 const mockSwapStateUnamedToken = produce(mockSwapStateDefault, (draft) => {
-  draft.orderData.amounts.sell.tokenId = '2a0879034f23ea48ba28dc1c15b056bd63b8cf0cab9733da92add22f.'
+  draft.orderData.amounts.sell = {
+    quantity: 0n,
+    info: {
+      ...tokenInfoMocks.ftNameless,
+      id: '2a0879034f23ea48ba28dc1c15b056bd63b8cf0cab9733da92add22f.',
+    },
+  }
 })
 const mockSwapStateWithIconBigDecimals = produce(mockSwapStateDefault, (draft) => {
   draft.orderData.amounts.buy = {
-    tokenId: '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65e.74484f444c53',
-    quantity: '12301234567',
+    quantity: 12301234567n,
+    info: {
+      ...tokenInfoMocks.ftNameless,
+      id: '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65e.74484f444c53',
+    },
   }
 })
 

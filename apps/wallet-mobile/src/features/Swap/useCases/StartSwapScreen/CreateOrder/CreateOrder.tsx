@@ -1,4 +1,5 @@
 import {isString} from '@yoroi/common'
+import {usePortfolioTokenInfo} from '@yoroi/portfolio'
 import {makeLimitOrder, makePossibleMarketOrder, useSwap, useSwapCreateOrder, useSwapPoolsByPair} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
 import {Swap} from '@yoroi/types'
@@ -12,9 +13,8 @@ import {frontendFeeAddressMainnet, frontendFeeAddressPreprod} from '../../../../
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../../kernel/navigation'
 import {NotEnoughMoneyToSendError} from '../../../../../yoroi-wallets/cardano/types'
-import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {YoroiEntry} from '../../../../../yoroi-wallets/types'
-import {Quantities} from '../../../../../yoroi-wallets/utils'
+import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils'
 import {useDisableSearchOnBar} from '../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {createOrderEntry, makePossibleFrontendFeeEntry} from '../../../common/entries'
@@ -60,8 +60,8 @@ export const CreateOrder = () => {
 
   useSwapPoolsByPair(
     {
-      tokenA: orderData.amounts.sell.tokenId,
-      tokenB: orderData.amounts.buy.tokenId,
+      tokenA: orderData.amounts.sell?.info.id ?? 'unknown.',
+      tokenB: orderData.amounts.buy?.info.id ?? 'unknown.',
     },
     {
       enabled: isBuyTouched && isSellTouched,
@@ -77,13 +77,15 @@ export const CreateOrder = () => {
     onBack: navigateToTxHistory,
   })
 
-  const sellTokenInfo = useTokenInfo({
-    wallet,
-    tokenId: orderData.amounts.sell.tokenId,
+  const {tokenInfo: sellTokenInfo} = usePortfolioTokenInfo({
+    getTokenInfo: wallet.networkManager.tokenManager.api.tokenInfo,
+    id: orderData.amounts.sell?.info.id ?? 'unknown.',
+    network: wallet.networkManager.network,
   })
-  const buyTokenInfo = useTokenInfo({
-    wallet,
-    tokenId: orderData.amounts.buy.tokenId,
+  const {tokenInfo: buyTokenInfo} = usePortfolioTokenInfo({
+    getTokenInfo: wallet.networkManager.tokenManager.api.tokenInfo,
+    id: orderData.amounts.buy?.info.id ?? 'unknown.',
+    network: wallet.networkManager.network,
   })
 
   React.useEffect(() => {
@@ -107,23 +109,35 @@ export const CreateOrder = () => {
 
   const {createOrderData} = useSwapCreateOrder({
     onSuccess: (orderResponse: Swap.CreateOrderResponse) => {
+      const {amounts, selectedPoolCalculation} = orderData
       if (
         orderResponse?.contractAddress === undefined ||
-        orderData.selectedPoolCalculation?.pool === undefined ||
-        !isString(orderResponse?.datum)
+        selectedPoolCalculation?.pool === undefined ||
+        !isString(orderResponse?.datum) ||
+        amounts?.buy == null ||
+        amounts?.sell == null
       ) {
         Alert.alert(strings.generalErrorTitle, strings.generalTxErrorMessage)
         return
       }
 
-      const {amounts, selectedPoolCalculation} = orderData
       const {contractAddress, datum: datumData} = orderResponse
       const datum: YoroiEntry['datum'] = datumData != null ? {data: datumData} : undefined
+      const orderAmounts = {
+        sell: {
+          tokenId: amounts.sell.info.id,
+          quantity: amounts.sell.quantity,
+        },
+        buy: {
+          tokenId: amounts.buy.info.id,
+          quantity: amounts.buy.quantity,
+        },
+      }
       const orderEntry = createOrderEntry(
-        amounts,
+        orderAmounts,
         selectedPoolCalculation.pool,
         contractAddress,
-        wallet.primaryTokenInfo.id,
+        wallet.portfolioPrimaryTokenInfo.id,
         datum,
       )
 
@@ -148,17 +162,23 @@ export const CreateOrder = () => {
     if (orderData.selectedPoolCalculation === undefined) return
     track.swapOrderSelected({
       from_asset: [
-        {asset_name: sellTokenInfo.name, asset_ticker: sellTokenInfo.ticker, policy_id: sellTokenInfo.group},
+        {
+          asset_name: sellTokenInfo?.name,
+          asset_ticker: sellTokenInfo?.ticker,
+          policy_id: sellTokenInfo?.id.split('.')[0],
+        },
       ],
-      to_asset: [{asset_name: buyTokenInfo.name, asset_ticker: buyTokenInfo.ticker, policy_id: buyTokenInfo.group}],
+      to_asset: [
+        {asset_name: buyTokenInfo?.name, asset_ticker: buyTokenInfo?.ticker, policy_id: buyTokenInfo?.id.split('.')[0]},
+      ],
       order_type: orderData.type,
       slippage_tolerance: orderData.slippage,
-      from_amount: orderData.amounts.sell.quantity,
-      to_amount: orderData.amounts.buy.quantity,
+      from_amount: orderData.amounts.sell?.quantity.toString() ?? '0',
+      to_amount: orderData.amounts.buy?.quantity.toString() ?? '0',
       pool_source: orderData.selectedPoolCalculation.pool.provider,
       swap_fees: Number(
         Quantities.denominated(
-          orderData.selectedPoolCalculation.pool.batcherFee.quantity,
+          asQuantity(orderData.selectedPoolCalculation.pool.batcherFee.quantity.toString()),
           Number(wallet.primaryTokenInfo.decimals),
         ),
       ),
@@ -180,6 +200,11 @@ export const CreateOrder = () => {
   }
 
   const createUnsignedSwapTx = () => {
+    if (orderData.amounts.sell == null || orderData.amounts.buy == null) {
+      Alert.alert(strings.generalErrorTitle, strings.generalTxErrorMessage)
+      return
+    }
+
     const orderDetails = {
       sell: orderData.amounts.sell,
       buy: orderData.amounts.buy,
@@ -241,18 +266,15 @@ export const CreateOrder = () => {
     }
 
     const minReceived = Quantities.denominated(
-      orderData.selectedPoolCalculation.buyAmountWithSlippage.quantity,
-      buyTokenInfo.decimals ?? 0,
+      asQuantity(orderData.selectedPoolCalculation.buyAmountWithSlippage.quantity.toString()),
+      buyTokenInfo?.decimals ?? 0,
     )
+    const buyTokenSwapTicker = buyTokenInfo?.ticker ?? buyTokenInfo?.name ?? ''
 
     if (Quantities.isZero(minReceived)) {
       openModal(
         strings.slippageWarningTitle,
-        <WarnSlippage
-          onConfirm={createUnsignedSwapTx}
-          slippage={orderData.slippage}
-          ticker={buyTokenInfo.ticker ?? buyTokenInfo.name ?? ''}
-        />,
+        <WarnSlippage onConfirm={createUnsignedSwapTx} slippage={orderData.slippage} ticker={buyTokenSwapTicker} />,
         350,
       )
       return
