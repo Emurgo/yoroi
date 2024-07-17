@@ -42,8 +42,10 @@ export const MediaPreview = ({
   return (
     <View style={{width, height, overflow: 'hidden'}}>
       <Image
+        key={JSON.stringify([isDark])}
         source={{uri, headers}}
         contentFit={contentFit}
+        placeholderContentFit={contentFit}
         style={{width, height, ...style}}
         blurRadius={blurRadius}
         cachePolicy="memory-disk"
