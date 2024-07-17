@@ -58,7 +58,7 @@ export const DelegationConfirmation = () => {
 
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.scrollView}>
+      <ScrollView>
         <View style={styles.itemBlock}>
           <Text style={styles.heading}>{strings.stakePoolName}</Text>
 
@@ -144,12 +144,10 @@ const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     container: {
+      backgroundColor: color.bg_color_high,
       ...atoms.px_lg,
       ...atoms.pb_2xl,
       flex: 1,
-    },
-    scrollView: {
-      // flex: 1,
     },
     itemBlock: {
       ...atoms.pt_2xl,
