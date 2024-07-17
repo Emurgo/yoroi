@@ -270,6 +270,7 @@ const getStories = () => {
     "./src/features/WalletManager/useCases/SelectWalletFromListScreen/SelectWalletFromListScreen.stories.tsx": require("../src/features/WalletManager/useCases/SelectWalletFromListScreen/SelectWalletFromListScreen.stories.tsx"),
     "./src/kernel/metrics/metrics.stories.tsx": require("../src/kernel/metrics/metrics.stories.tsx"),
     "./src/legacy/Catalyst/useCases/ConfirmVotingTx/ConfirmVotingTx.stories.tsx": require("../src/legacy/Catalyst/useCases/ConfirmVotingTx/ConfirmVotingTx.stories.tsx"),
+    "./src/legacy/Catalyst/useCases/ShowQrCode/ShowQrCode.stories.tsx": require("../src/legacy/Catalyst/useCases/ShowQrCode/ShowQrCode.stories.tsx"),
     "./src/legacy/Dashboard/Dashboard.stories.tsx": require("../src/legacy/Dashboard/Dashboard.stories.tsx"),
     "./src/legacy/Dashboard/StakePoolInfos.stories.tsx": require("../src/legacy/Dashboard/StakePoolInfos.stories.tsx"),
     "./src/legacy/Dashboard/WithdrawStakingRewards/ConfirmTx/ConfirmTxWithHW.stories.tsx": require("../src/legacy/Dashboard/WithdrawStakingRewards/ConfirmTx/ConfirmTxWithHW.stories.tsx"),

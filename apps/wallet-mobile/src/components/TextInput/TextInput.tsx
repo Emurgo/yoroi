@@ -120,7 +120,7 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: Forwarded
         theme={{
           roundness: 8,
           colors: {
-            background: colors.background,
+            background: faded ? colors.gray_c100 : colors.background,
             placeholder: faded ? colors.gray : colors.textInput,
             primary: faded ? colors.gray : colors.black,
             error: colors.textError,
@@ -133,7 +133,7 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: Forwarded
           <InputContainer>
             <RNTextInput
               {...inputProps}
-              style={[style, renderComponentStyle, {color: faded ? colors.gray : colors.text, flex: 1}]}
+              style={[style, renderComponentStyle, {color: faded ? colors.gray_c900 : colors.text, flex: 1}]}
             />
 
             {right != null ? <AdornmentContainer style={styles.checkmarkContainer}>{right}</AdornmentContainer> : null}
@@ -242,6 +242,7 @@ const useStyles = () => {
   })
 
   const colors = {
+    ...color,
     background: color.gray_cmin,
     gray: color.gray_c400,
     textInput: color.gray_c600,

@@ -5,7 +5,7 @@ import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import QRCodeSVG from 'react-native-qrcode-svg'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, CopyButton, ProgressStep, Text, useModal} from '../../../../components'
+import {Button, CopyButton, Text, useModal} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
 import {useAllowScreenshot} from '../../../../hooks/useAllowScreenShot'
 import globalMessages, {confirmationMessages} from '../../../../kernel/i18n/global-messages'
@@ -28,8 +28,6 @@ export const QrCode = ({onNext, votingKeyEncrypted}: {onNext: () => void; voting
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-      <ProgressStep currentStep={6} totalSteps={6} />
-
       <ScrollView bounces={false} style={{paddingTop: 16}} contentContainerStyle={styles.contentContainer}>
         <Title>{strings.subTitle}</Title>
 

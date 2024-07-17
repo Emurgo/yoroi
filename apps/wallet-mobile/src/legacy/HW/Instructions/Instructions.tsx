@@ -1,8 +1,10 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Platform, StyleSheet, Text, View} from 'react-native'
 
 import {BulletPointItem} from '../../../components'
+import {Space} from '../../../components/Space/Space'
 import {ledgerMessages} from '../../../kernel/i18n/global-messages'
 
 type Props = {
@@ -10,8 +12,10 @@ type Props = {
   addMargin?: boolean
 }
 
-export const Instructions = ({useUSB, addMargin}: Props) => {
+export const Instructions = ({useUSB, addMargin /* legacy */}: Props) => {
   const strings = useStrings()
+  const {styles} = useStyles()
+
   const rows: Array<string> = []
   if (useUSB) {
     rows.push(strings.connectUsb, strings.keepUsbConnected)
@@ -26,6 +30,8 @@ export const Instructions = ({useUSB, addMargin}: Props) => {
   return (
     <View style={[addMargin === true && styles.blockMargin]}>
       <Text style={styles.paragraphText}>{strings.beforeConfirm}</Text>
+
+      <Space height="lg" />
 
       {rows.map((row, i) => (
         <BulletPointItem textRow={row} key={i} style={styles.paragraphText} />
@@ -55,13 +61,18 @@ const messages = defineMessages({
   },
 })
 
-const styles = StyleSheet.create({
-  paragraphText: {
-    fontSize: 14,
-    lineHeight: 22,
-    marginBottom: 12,
-  },
-  blockMargin: {
-    marginVertical: 24,
-  },
-})
+const useStyles = () => {
+  const {color, atoms} = useTheme()
+
+  const styles = StyleSheet.create({
+    paragraphText: {
+      color: color.gray_c900,
+      ...atoms.body_1_lg_regular,
+    },
+    blockMargin: {
+      marginVertical: 24,
+    },
+  })
+
+  return {styles}
+}

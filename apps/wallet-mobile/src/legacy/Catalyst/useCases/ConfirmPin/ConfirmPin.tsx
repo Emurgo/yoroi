@@ -45,8 +45,6 @@ export const ConfirmPin = ({pin, onNext}: Props) => {
 
         <Spacer height={16} />
 
-        <Spacer height={48} />
-
         <Row style={{justifyContent: 'center'}}>
           <PinBox done={done} selected={confirmPin.length === 0}>
             {confirmPin[0]}

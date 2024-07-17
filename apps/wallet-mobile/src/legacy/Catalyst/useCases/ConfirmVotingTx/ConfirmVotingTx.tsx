@@ -1,11 +1,12 @@
 import {useTheme} from '@yoroi/theme'
 import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, StyleSheet} from 'react-native'
+import {ScrollView, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {KeyboardAvoidingView, ProgressStep, Spacer, TextInput} from '../../../../components'
+import {KeyboardAvoidingView, Spacer, TextInput} from '../../../../components'
 import {ConfirmTx} from '../../../../components/ConfirmTx'
+import {Space} from '../../../../components/Space/Space'
 import {debugWalletInfo, features} from '../../../../features'
 import {useSelectedWallet} from '../../../../features/WalletManager/common/hooks/useSelectedWallet'
 import {errorMessages, txLabels} from '../../../../kernel/i18n/global-messages'
@@ -14,7 +15,7 @@ import {useVotingRegTx} from '../../../../yoroi-wallets/hooks'
 import {Amounts} from '../../../../yoroi-wallets/utils'
 import {formatTokenWithSymbol} from '../../../../yoroi-wallets/utils/format'
 import {Instructions as HWInstructions} from '../../../HW'
-import {Actions, Description, Title} from '../../common/components'
+import {Actions, Description} from '../../common/components'
 
 export const ConfirmVotingTx = ({
   onSuccess,
@@ -27,8 +28,8 @@ export const ConfirmVotingTx = ({
 }) => {
   const [supportsCIP36, setSupportsCIP36] = useState(true)
   const styles = useStyles()
-
   const strings = useStrings()
+
   const {wallet, meta} = useSelectedWallet()
   const votingRegTx = useVotingRegTx(
     {wallet, pin, supportsCIP36, addressMode: meta.addressMode},
@@ -44,34 +45,41 @@ export const ConfirmVotingTx = ({
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
       <KeyboardAvoidingView style={{flex: 1}}>
-        <ProgressStep currentStep={5} totalSteps={6} />
+        <ScrollView bounces={false} contentContainerStyle={styles.scroll}>
+          <Space height="lg" />
 
-        <ScrollView contentContainerStyle={styles.contentContainer} bounces={false}>
-          <Spacer height={48} />
+          <Text style={styles.confirmVotingTxTitle}>{strings.confirmationTitle}</Text>
 
-          <Title>{strings.subTitle}</Title>
-
-          <Spacer height={16} />
+          <Space height="lg" />
 
           {meta.isHW ? (
-            <HWInstructions useUSB={useUSB} />
+            <>
+              <HWInstructions useUSB={useUSB} />
+
+              <Space height="lg" />
+            </>
           ) : (
-            <Description>
-              {meta.isEasyConfirmationEnabled ? strings.authOsInstructions : strings.description}
-            </Description>
+            <>
+              <Description>
+                {meta.isEasyConfirmationEnabled ? strings.authOsInstructions : strings.passwordSignDescription}
+              </Description>
+
+              <Space height="lg" />
+            </>
           )}
 
-          <Spacer height={48} />
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>{strings.fees}</Text>
 
-          <TextInput
-            value={formatTokenWithSymbol(
-              Amounts.getAmount(votingRegTx.fee, wallet.primaryToken.identifier).quantity,
-              wallet.primaryToken,
-            )}
-            label={strings.fees}
-            editable={false}
-            autoComplete="off"
-          />
+            <TextInput
+              value={formatTokenWithSymbol(
+                Amounts.getAmount(votingRegTx.fee, wallet.primaryToken.identifier).quantity,
+                wallet.primaryToken,
+              )}
+              editable={false}
+              autoComplete="off"
+            />
+          </View>
 
           {!meta.isEasyConfirmationEnabled && !meta.isHW && (
             <TextInput
@@ -80,6 +88,7 @@ export const ConfirmVotingTx = ({
               label={strings.password}
               onChangeText={setPassword}
               autoComplete="off"
+              autoFocus
             />
           )}
         </ScrollView>
@@ -107,16 +116,14 @@ export const ConfirmVotingTx = ({
 }
 
 const messages = defineMessages({
-  subTitle: {
-    id: 'components.catalyst.step5.subTitle',
+  confirmationTitle: {
+    id: 'components.catalyst.confirmTx.title',
     defaultMessage: '!!!Confirm Registration',
   },
-  description: {
-    id: 'components.catalyst.step5.description',
+  passwordSignDescription: {
+    id: 'components.catalyst.confirmTx.passwordSignDescription',
     defaultMessage:
-      '!!!Please enter your spending password again to confirm your voting ' +
-      'registration and submit the certificate generated in the previous ' +
-      'step.',
+      '!!!Confirm your voting registration and submit the certificate generated in previous step to the blockchain',
   },
   authOsInstructions: {
     id: 'components.catalyst.step4.bioAuthInstructions',
@@ -131,7 +138,24 @@ const useStyles = () => {
       flex: 1,
       backgroundColor: color.gray_cmin,
     },
-    contentContainer: {
+    confirmVotingTxTitle: {
+      ...atoms.body_2_md_regular,
+      color: color.gray_c600,
+    },
+    label: {
+      zIndex: 1000,
+      position: 'absolute',
+      top: -3,
+      left: 11,
+      paddingHorizontal: 3,
+      ...atoms.body_3_sm_regular,
+      color: color.gray_cmax,
+      backgroundColor: color.gray_cmin,
+    },
+    inputContainer: {
+      position: 'relative',
+    },
+    scroll: {
       ...atoms.px_lg,
     },
   })
@@ -147,8 +171,8 @@ const useStrings = () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       intl.formatMessage({id: error.id, defaultMessage: error.defaultMessage}, (error as any).values),
     fees: intl.formatMessage(txLabels.fees),
-    subTitle: intl.formatMessage(messages.subTitle),
-    description: intl.formatMessage(messages.description),
+    confirmationTitle: intl.formatMessage(messages.confirmationTitle),
+    passwordSignDescription: intl.formatMessage(messages.passwordSignDescription),
     authOsInstructions: intl.formatMessage(messages.authOsInstructions),
     password: intl.formatMessage(txLabels.password),
     errorTitle: intl.formatMessage(errorMessages.generalTxError.title),
