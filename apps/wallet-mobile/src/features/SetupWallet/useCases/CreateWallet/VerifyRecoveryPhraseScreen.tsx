@@ -373,7 +373,7 @@ const useStyles = () => {
       flex: 1,
       ...atoms.px_lg,
       justifyContent: 'space-between',
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
     },
     title: {
       ...atoms.body_1_lg_regular,
@@ -389,7 +389,7 @@ const useStyles = () => {
     recoveryPhraseBackground: {
       borderRadius: 6,
       overflow: 'hidden',
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       minHeight: 182,
     },
     recoveryPhraseOutline: {
@@ -455,7 +455,7 @@ const useStyles = () => {
     },
     usedWordBackground: {
       position: 'absolute',
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       borderRadius: 6,
       left: 2,
       right: 2,

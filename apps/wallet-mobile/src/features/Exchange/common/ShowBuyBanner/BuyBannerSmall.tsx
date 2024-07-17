@@ -59,7 +59,7 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
     },
     gradient: {
       flex: 1,

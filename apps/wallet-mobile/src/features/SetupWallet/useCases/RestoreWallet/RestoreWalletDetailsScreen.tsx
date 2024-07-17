@@ -355,7 +355,7 @@ const useStyles = () => {
     root: {
       flex: 1,
       justifyContent: 'space-between',
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
     },
     modal: {
       flex: 1,

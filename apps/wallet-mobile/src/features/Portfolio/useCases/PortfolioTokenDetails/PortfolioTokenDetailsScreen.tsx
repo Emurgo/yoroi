@@ -133,7 +133,7 @@ const useStyles = () => {
     tabs: {
       ...atoms.justify_between,
       ...atoms.px_lg,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
     },
     tab: {
       flex: 0,

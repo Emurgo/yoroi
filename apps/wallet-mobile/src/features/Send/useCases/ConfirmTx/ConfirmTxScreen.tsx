@@ -139,11 +139,11 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       flex: 1,
     },
     container: {
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       flex: 1,
       ...atoms.px_lg,
     },

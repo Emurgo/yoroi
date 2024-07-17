@@ -350,7 +350,6 @@ export const OpenOrders = () => {
                     {strings.listOrdersSheetButtonText.toLocaleUpperCase()}
                   </Footer>
                 }
-                withBoxShadow
               >
                 <MainInfo
                   tokenAmount={`${order.tokenAmount} ${order.assetToLabel}`}
@@ -740,7 +739,7 @@ const useStyles = () => {
     },
     container: {
       flex: 1,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       paddingTop: 10,
     },
     content: {

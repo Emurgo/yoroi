@@ -60,7 +60,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
     },
     heading: {
       ...atoms.body_1_lg_regular,

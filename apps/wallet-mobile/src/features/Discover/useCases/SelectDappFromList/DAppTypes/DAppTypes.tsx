@@ -99,7 +99,7 @@ const useStyles = () => {
       ...atoms.p_2xs,
       height: 40,
       paddingHorizontal: 14,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       flexDirection: 'row',
       alignItems: 'center',
       gap: 8,
