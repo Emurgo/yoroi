@@ -3,8 +3,9 @@ import * as React from 'react'
 import {Platform, StatusBar, StatusBarStyle} from 'react-native'
 
 type StatusBarColor = {
-  bgColorAndroid: HexColor
-  statusBarStyle: StatusBarStyle
+  bgColorAndroid: Color
+  statusBarStyle: StatusBarStyle | undefined
+  translucent: boolean
 }
 export const useStatusBar = (currentRouteName: string | undefined) => {
   const {color, isDark} = useTheme()
@@ -19,8 +20,11 @@ export const useStatusBar = (currentRouteName: string | undefined) => {
     } else {
       const style = getStatusBarStyleByRoute({currentRouteName, isDark, color})
       statusBarStyleByRoute.current = style
-      if (Platform.OS === 'android') StatusBar.setBackgroundColor(style.bgColorAndroid, true)
-      StatusBar.setBarStyle(style.statusBarStyle, true)
+      if (Platform.OS === 'android') {
+        StatusBar.setBackgroundColor(style.bgColorAndroid, true)
+        StatusBar.setTranslucent(style.translucent)
+      }
+      style.statusBarStyle !== undefined && StatusBar.setBarStyle(style.statusBarStyle, true)
     }
   }, [currentRouteName, isDark, color])
 }
@@ -37,23 +41,27 @@ const getStatusBarStyleByRoute = ({
   if (currentRouteName) {
     if (currentRouteName === 'history-list') {
       return {
-        bgColorAndroid: color.primary_c100,
-        statusBarStyle: isDark ? 'light-content' : 'dark-content',
+        translucent: true,
+        bgColorAndroid: 'rgba(0,0,0,0)', // transparent
+        statusBarStyle: undefined,
       }
     } else if (oldBlueRoutes.includes(currentRouteName)) {
       return {
+        translucent: false,
         // old blue, not present in the current theming
         bgColorAndroid: '#254BC9',
         statusBarStyle: 'light-content',
       }
     } else if (currentRouteName === 'scan-start') {
       return {
+        translucent: false,
         bgColorAndroid: color.white_static,
         statusBarStyle: 'dark-content',
       }
     }
   }
   return {
+    translucent: false,
     bgColorAndroid: isDark ? color.black_static : color.white_static,
     statusBarStyle: isDark ? 'light-content' : 'dark-content',
   }
@@ -69,8 +77,8 @@ const oldBlueRoutes = ['enable-login-with-os', 'auth-with-os']
  * @warning This function will ignore the alpha channel if it was passed along with the color
  * @warning This function ignore named colors, by ignoring, it means returning the same color passed
  */
-export const simulateOpacity = (color: HexColor): HexColor => {
-  if (!/^#([0-9A-Fa-f]{3}([0-9A-Fa-f]{1})?|[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?)$/.test(color)) {
+export const simulateOpacity = (color: Color): Color => {
+  if (!isHex(color)) {
     return color
   }
   const expandedColor = expandColor(color)
@@ -98,8 +106,8 @@ const toRgb = (fullHexColor: string[], value: string, index: number) => {
   return fullHexColor
 }
 
-const expandColor = (color: HexColor) => {
-  if (color.length === 4 || color.length === 5) {
+const expandColor = (color: Color) => {
+  if ((color.length === 4 || color.length === 5) && isHex(color)) {
     return '#'.concat(
       color
         .substring(1)
@@ -111,4 +119,6 @@ const expandColor = (color: HexColor) => {
   return color
 }
 
-type HexColor = `#${string}`
+const isHex = (color: Color) => /^#([0-9A-Fa-f]{3}([0-9A-Fa-f]{1})?|[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?)$/.test(color)
+
+type Color = `#${string}` | `rgba(${number},${number},${number},${number})`
