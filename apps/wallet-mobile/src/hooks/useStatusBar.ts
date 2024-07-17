@@ -119,4 +119,4 @@ const expandColor = (color: HexColor) => {
   return color
 }
 
-type HexColor = `#${string}` | `rgba(${string})`
+type HexColor = `#${string}` | `rgba(${number},${number},${number},${number})`
