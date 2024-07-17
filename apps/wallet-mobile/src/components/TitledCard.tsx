@@ -39,7 +39,7 @@ const useStyles = () => {
       shadowRadius: 12,
       shadowOffset: {width: 0, height: 2},
       shadowColor: 'rgba(0, 0, 0, 0.06)',
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
     },
     poolInfoContent: {
       ...atoms.p_0,

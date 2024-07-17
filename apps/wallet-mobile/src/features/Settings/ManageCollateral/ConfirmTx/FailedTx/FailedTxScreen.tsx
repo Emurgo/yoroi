@@ -32,15 +32,16 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
+      backgroundColor: color.bg_color_high,
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
-      padding: 16,
+      ...atoms.p_lg,
     },
     title: {
       color: color.gray_cmax,
       ...atoms.heading_3_medium,
-      padding: 4,
+      ...atoms.p_xs,
       textAlign: 'center',
     },
     text: {

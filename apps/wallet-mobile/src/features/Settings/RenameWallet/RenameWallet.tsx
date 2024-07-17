@@ -82,7 +82,7 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     safeAreaView: {
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       flex: 1,
     },
     scrollContentContainer: {
@@ -90,7 +90,7 @@ const useStyles = () => {
     },
     action: {
       ...atoms.p_lg,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
     },
   })
   return styles

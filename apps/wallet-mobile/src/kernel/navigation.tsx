@@ -65,7 +65,7 @@ export const defaultStackNavigationOptions = (atoms: Atoms, color: ThemedPalette
       <View
         style={{
           flex: 1,
-          backgroundColor: color.gray_cmin,
+          backgroundColor: color.bg_color_high,
         }}
       />
     ),
@@ -73,7 +73,7 @@ export const defaultStackNavigationOptions = (atoms: Atoms, color: ThemedPalette
     headerStyle: {
       elevation: 0,
       shadowOpacity: 0,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
     },
     headerTitleStyle: {
       ...atoms.body_1_lg_medium,
@@ -102,7 +102,7 @@ export const defaultMaterialTopTabNavigationOptions = (
   color: ThemedPalette,
 ): MaterialTopTabNavigationOptions => {
   return {
-    tabBarStyle: {backgroundColor: color.gray_cmin, elevation: 0, shadowOpacity: 0, marginHorizontal: 16},
+    tabBarStyle: {backgroundColor: color.bg_color_high, elevation: 0, shadowOpacity: 0, marginHorizontal: 16},
     tabBarIndicatorStyle: {backgroundColor: color.primary_c600, height: 2},
     tabBarLabelStyle: {
       textTransform: 'none',

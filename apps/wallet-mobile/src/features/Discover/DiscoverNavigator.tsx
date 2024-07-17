@@ -8,7 +8,6 @@ import {LoadingBoundary} from '../../components'
 import {SomethingWentWrong} from '../../components/SomethingWentWrong/SomethingWentWrong'
 import {defaultStackNavigationOptions, DiscoverRoutes} from '../../kernel/navigation'
 import {BrowserNavigator} from './BrowserNavigator'
-import {BrowserProvider} from './common/BrowserProvider'
 import {useStrings} from './common/useStrings'
 import {ListSkeleton} from './useCases/SelectDappFromList/ListSkeleton'
 import {SelectDappFromListScreen} from './useCases/SelectDappFromList/SelectDappFromListScreen'
@@ -24,28 +23,26 @@ export const DiscoverNavigator = () => {
 
   return (
     <DappConnectorProvider manager={manager}>
-      <BrowserProvider>
-        <Stack.Navigator
-          screenOptions={{
-            ...defaultStackNavigationOptions(atoms, color),
-            headerLeft: () => null,
-            gestureEnabled: true,
-          }}
-          initialRouteName="discover-select-dapp-from-list"
-        >
-          <Stack.Screen name="discover-select-dapp-from-list" options={{title: strings.discoverTitle}}>
-            {() => (
-              <ErrorBoundary FallbackComponent={SomethingWentWrong}>
-                <LoadingBoundary fallback={<ListSkeleton />}>
-                  <SelectDappFromListScreen />
-                </LoadingBoundary>
-              </ErrorBoundary>
-            )}
-          </Stack.Screen>
+      <Stack.Navigator
+        screenOptions={{
+          ...defaultStackNavigationOptions(atoms, color),
+          headerLeft: () => null,
+          gestureEnabled: true,
+        }}
+        initialRouteName="discover-select-dapp-from-list"
+      >
+        <Stack.Screen name="discover-select-dapp-from-list" options={{title: strings.discoverTitle}}>
+          {() => (
+            <ErrorBoundary FallbackComponent={SomethingWentWrong}>
+              <LoadingBoundary fallback={<ListSkeleton />}>
+                <SelectDappFromListScreen />
+              </LoadingBoundary>
+            </ErrorBoundary>
+          )}
+        </Stack.Screen>
 
-          <Stack.Screen name="discover-browser" component={BrowserNavigator} options={{headerShown: false}} />
-        </Stack.Navigator>
-      </BrowserProvider>
+        <Stack.Screen name="discover-browser" component={BrowserNavigator} options={{headerShown: false}} />
+      </Stack.Navigator>
     </DappConnectorProvider>
   )
 }

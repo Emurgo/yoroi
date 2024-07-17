@@ -1,8 +1,9 @@
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet} from 'react-native'
 
 import {Button, Spacer, Text} from '../../../../../components'
+import {SafeArea} from '../../../../../components/SafeArea'
 import {useBlockGoBack, useWalletNavigation} from '../../../../../kernel/navigation'
 import {useStrings} from '../../../../Send/common/strings'
 import {SubmittedTxImage} from './SubmittedTxImage'
@@ -14,7 +15,7 @@ export const SubmittedTxScreen = () => {
   const {resetToTxHistory} = useWalletNavigation()
 
   return (
-    <View style={styles.container}>
+    <SafeArea style={styles.container}>
       <SubmittedTxImage />
 
       <Text style={styles.title}>{strings.submittedTxTitle}</Text>
@@ -24,7 +25,7 @@ export const SubmittedTxScreen = () => {
       <Spacer height={22} />
 
       <Button onPress={resetToTxHistory} title={strings.submittedTxButton} style={styles.button} shelleyTheme />
-    </View>
+    </SafeArea>
   )
 }
 
@@ -32,6 +33,7 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
+      backgroundColor: color.bg_color_high,
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',

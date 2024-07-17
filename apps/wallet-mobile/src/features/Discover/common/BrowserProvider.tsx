@@ -1,8 +1,8 @@
-import {invalid, useAsyncStorage} from '@yoroi/common'
+import {invalid} from '@yoroi/common'
 import {produce} from 'immer'
 import * as React from 'react'
 
-import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
+import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 
 export const defaultActions: BrowserActions = {
   addTab: () => invalid('missing init'),
@@ -15,7 +15,6 @@ export const defaultActions: BrowserActions = {
 const defaultState: BrowserState = {
   tabs: [],
   tabActiveIndex: -1,
-  status: 'waiting',
   tabsOpen: false,
 } as const
 
@@ -24,12 +23,9 @@ export type TabItem = {
   url: string
 }
 
-type BrowserStatus = 'waiting' | 'active'
-
 type BrowserState = {
   tabs: TabItem[]
   tabActiveIndex: number
-  status: BrowserStatus
   tabsOpen: boolean
 }
 
@@ -38,8 +34,7 @@ const BrowserContext = React.createContext<BrowserState & BrowserActions>({
   ...defaultActions,
 })
 
-const storageRootBrowser = 'browser'
-const storageBrowserState = 'browser-state'
+const memoryStorage = new Map<string, BrowserState>()
 
 export const BrowserProvider = ({
   children,
@@ -48,26 +43,29 @@ export const BrowserProvider = ({
   children: React.ReactNode
   initialState?: Partial<BrowserState>
 }) => {
-  const storage = useAsyncStorage()
-  const {wallet} = useSelectedWallet()
-  const browserStorage = storage.join(`wallet/${wallet.id}/${storageRootBrowser}/`)
+  const {
+    selected: {wallet},
+  } = useWalletManager()
+
+  const walletId = wallet?.id
 
   const [browserState, dispatch] = React.useReducer(browserReducer, {...defaultState, ...initialState})
 
   React.useEffect(() => {
-    if (browserState.status === 'waiting') return
-    browserStorage.setItem(storageBrowserState, JSON.stringify(browserState))
-  }, [browserState, browserStorage])
+    if (walletId === undefined) return
+    memoryStorage.set(walletId, browserState)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [browserState])
 
   React.useEffect(() => {
-    if (browserState.status === 'active') return
-    browserStorage.getItem(storageBrowserState).then((browserStorage) => {
-      if (Boolean(browserStorage) && typeof browserStorage === 'string') {
-        dispatch({type: BrowserActionType.SetState, state: JSON.parse(browserStorage)})
-        dispatch({type: BrowserActionType.SetStatus, status: 'active'})
-      }
-    })
-  }, [browserState.status, browserStorage])
+    if (walletId === undefined) return
+    const state = memoryStorage.get(walletId)
+    if (state) {
+      dispatch({type: BrowserActionType.SetState, state})
+    } else {
+      dispatch({type: BrowserActionType.SetState, state: {...defaultState, ...initialState}})
+    }
+  }, [walletId, initialState])
 
   const actions = React.useRef<BrowserActions>({
     addTab: (url, id) => {
@@ -104,7 +102,6 @@ enum BrowserActionType {
   SetTabActive = 'setTabActive',
   UpdateTab = 'updateTab',
   RemoveTab = 'removeTab',
-  SetStatus = 'setStatus',
   OpenTabs = 'openTabs',
 }
 
@@ -131,10 +128,6 @@ type BrowserContextAction =
   | {
       type: BrowserActionType.RemoveTab
       index: number
-    }
-  | {
-      type: BrowserActionType.SetStatus
-      status: BrowserStatus
     }
   | {
       type: BrowserActionType.OpenTabs
@@ -173,10 +166,6 @@ export const browserReducer = (state: BrowserState, action: BrowserContextAction
 
       case BrowserActionType.RemoveTab:
         draft.tabs.splice(action.index, 1)
-        break
-
-      case BrowserActionType.SetStatus:
-        draft.status = action.status
         break
 
       case BrowserActionType.OpenTabs:

@@ -1,15 +1,6 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {
-  FlatList,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  TouchableOpacityProps,
-  useWindowDimensions,
-  View,
-} from 'react-native'
+import {FlatList, Image, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 
 import nftPlaceholder from '../../../../../assets/img/nft-placeholder.png'
 import {Icon, Spacer} from '../../../../../components'
@@ -68,22 +59,13 @@ type HeadingProps = {
   onPress: () => void
 }
 const Heading = ({countNfts, onPress}: HeadingProps) => {
-  const {styles} = useStyles()
+  const {styles, colors} = useStyles()
   const strings = useStrings()
 
   return (
-    <View style={[styles.container, styles.actionsContainer]}>
+    <TouchableOpacity onPress={onPress} style={[styles.container, styles.actionsContainer]}>
       <Text style={styles.title}>{strings.nfts(countNfts)}</Text>
 
-      <TouchNFTsList onPress={onPress} />
-    </View>
-  )
-}
-
-const TouchNFTsList = ({onPress}: TouchableOpacityProps) => {
-  const {colors} = useStyles()
-  return (
-    <TouchableOpacity onPress={onPress}>
       <Icon.ArrowRight color={colors.gray_800} size={24} />
     </TouchableOpacity>
   )

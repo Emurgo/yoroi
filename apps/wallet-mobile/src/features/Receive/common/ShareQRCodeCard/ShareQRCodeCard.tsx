@@ -111,7 +111,7 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     qrCode: {
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       padding: 10,
       borderRadius: 8,
     },

@@ -4,14 +4,14 @@
     "defaultMessage": "!!!NFT count",
     "file": "src/features/Nfts/useCases/Nfts.tsx",
     "start": {
-      "line": 163,
+      "line": 162,
       "column": 12,
-      "index": 4331
+      "index": 4317
     },
     "end": {
-      "line": 166,
+      "line": 165,
       "column": 3,
-      "index": 4404
+      "index": 4390
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Oops!",
     "file": "src/features/Nfts/useCases/Nfts.tsx",
     "start": {
-      "line": 167,
+      "line": 166,
       "column": 14,
-      "index": 4420
+      "index": 4406
     },
     "end": {
-      "line": 170,
+      "line": 169,
       "column": 3,
-      "index": 4491
+      "index": 4477
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Something went wrong.",
     "file": "src/features/Nfts/useCases/Nfts.tsx",
     "start": {
-      "line": 171,
+      "line": 170,
       "column": 20,
-      "index": 4513
+      "index": 4499
     },
     "end": {
-      "line": 174,
+      "line": 173,
       "column": 3,
-      "index": 4606
+      "index": 4592
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Try to restart the app.",
     "file": "src/features/Nfts/useCases/Nfts.tsx",
     "start": {
-      "line": 175,
+      "line": 174,
       "column": 13,
-      "index": 4621
+      "index": 4607
     },
     "end": {
-      "line": 178,
+      "line": 177,
       "column": 3,
-      "index": 4709
+      "index": 4695
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!No NFTs found",
     "file": "src/features/Nfts/useCases/Nfts.tsx",
     "start": {
-      "line": 179,
+      "line": 178,
       "column": 15,
-      "index": 4726
+      "index": 4712
     },
     "end": {
-      "line": 182,
+      "line": 181,
       "column": 3,
-      "index": 4806
+      "index": 4792
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!No NFTs added to your wallet yet",
     "file": "src/features/Nfts/useCases/Nfts.tsx",
     "start": {
-      "line": 183,
+      "line": 182,
       "column": 18,
-      "index": 4826
+      "index": 4812
     },
     "end": {
-      "line": 186,
+      "line": 185,
       "column": 3,
-      "index": 4928
+      "index": 4914
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!NFT Gallery",
     "file": "src/features/Nfts/useCases/Nfts.tsx",
     "start": {
-      "line": 187,
+      "line": 186,
       "column": 9,
-      "index": 4939
+      "index": 4925
     },
     "end": {
-      "line": 190,
+      "line": 189,
       "column": 3,
-      "index": 5014
+      "index": 5000
     }
   },
   {
@@ -109,14 +109,14 @@
     "defaultMessage": "!!!Search NFT",
     "file": "src/features/Nfts/useCases/Nfts.tsx",
     "start": {
-      "line": 191,
+      "line": 190,
       "column": 10,
-      "index": 5026
+      "index": 5012
     },
     "end": {
-      "line": 194,
+      "line": 193,
       "column": 3,
-      "index": 5101
+      "index": 5087
     }
   }
 ]

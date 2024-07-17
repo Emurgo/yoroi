@@ -62,7 +62,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     about: {
       flex: 1,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       ...atoms.p_lg,
     },
     row: {

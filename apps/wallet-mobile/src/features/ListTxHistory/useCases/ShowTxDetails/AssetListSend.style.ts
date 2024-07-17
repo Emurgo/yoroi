@@ -26,7 +26,7 @@ export const useSendStyles = () => {
       marginBottom: 10,
       ...atoms.px_lg,
       ...atoms.py_md,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       borderTopWidth: 1,
       borderBottomWidth: 2,
       borderColor: 'rgba(173, 174, 182, 0.3)',

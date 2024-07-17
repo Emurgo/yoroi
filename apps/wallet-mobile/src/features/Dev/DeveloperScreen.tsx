@@ -242,7 +242,7 @@ const useStyles = () => {
     safeAreaView: {
       flex: 1,
       paddingTop: 50,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
     },
     container: {
       flex: 1,

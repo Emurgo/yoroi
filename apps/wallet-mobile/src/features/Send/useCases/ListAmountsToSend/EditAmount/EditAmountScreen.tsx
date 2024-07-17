@@ -109,7 +109,15 @@ export const EditAmountScreen = () => {
           <AmountInput onChange={handleOnChangeQuantity} value={inputValue} ticker={amount.info.ticker} />
 
           <Center>
-            {isPrimary && <PairedBalance amount={amount} ignorePrivacy />}
+            {isPrimary && (
+              <PairedBalance
+                amount={{
+                  info: amount.info,
+                  quantity,
+                }}
+                ignorePrivacy
+              />
+            )}
 
             <Spacer height={22} />
 
@@ -213,7 +221,7 @@ const useStyles = () => {
     },
     container: {
       flex: 1,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
     },
     scrollView: {
       flex: 1,
@@ -232,7 +240,7 @@ const useStyles = () => {
     },
     amount: {
       ...atoms.heading_2_regular,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       borderWidth: 0,
       textAlign: 'right',
     },

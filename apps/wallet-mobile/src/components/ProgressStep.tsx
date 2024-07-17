@@ -42,7 +42,7 @@ const useStyles = () => {
   const {color} = useTheme()
   const styles = StyleSheet.create({
     bar: {
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       height: 10,
       flexDirection: 'row',
     },

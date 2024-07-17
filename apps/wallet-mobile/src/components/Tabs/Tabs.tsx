@@ -75,7 +75,7 @@ const useStyles = () => {
     tabNavigatorRoot: {
       flex: 1,
       paddingTop: 8,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       borderTopLeftRadius: 8,
       borderTopRightRadius: 8,
     },

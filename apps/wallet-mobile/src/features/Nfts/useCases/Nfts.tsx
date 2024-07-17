@@ -30,7 +30,6 @@ export const Nfts = () => {
   useSearchOnNavBar({
     title: strings.title,
     placeholder: strings.search,
-    noBack: true,
   })
   const {search, isSearching} = useSearch()
 
@@ -128,7 +127,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     safeAreaView: {
       flex: 1,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
     },
     container: {
       flexDirection: 'column',

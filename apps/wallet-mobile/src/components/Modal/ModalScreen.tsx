@@ -97,7 +97,7 @@ const useStyles = () => {
     },
     backdrop: {
       ...StyleSheet.absoluteFillObject,
-      backgroundColor: 'rgba(0, 0, 0, 0.64)',
+      backgroundColor: color.mobile_overlay,
     },
     animatedView: {
       alignSelf: 'stretch',
@@ -123,7 +123,7 @@ const useStyles = () => {
     },
     slider: {
       height: 4,
-      backgroundColor: color.black_static,
+      backgroundColor: color.gray_cmax,
       width: 32,
       borderRadius: 10,
     },

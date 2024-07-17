@@ -29,14 +29,14 @@ import {formatDateAndTime, formatTokenWithSymbol} from '../../../../yoroi-wallet
 import {usePrivacyMode} from '../../../Settings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {messages, useStrings} from '../../common/strings'
-import AddressModal from '../ListTxHistory/AddressModal/AddressModal'
+import AddressModal from './AddressModal/AddressModal'
 import {AssetList} from './AssetList'
 import {useAssetListStyles} from './AssetListTransaction.style'
 
 export const TxDetails = () => {
   const {openModal} = useModal()
   const screenHeight = useWindowDimensions().height
-  const modalHeight = Math.min(screenHeight * 0.8, 600)
+  const modalHeight = Math.min(screenHeight * 0.8, 650) // to include derivation path in case it is possible
   const strings = useStrings()
   const {styles, colors} = useStyles()
   const intl = useIntl()
@@ -339,7 +339,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
     },
     contentContainer: {
       ...atoms.px_lg,

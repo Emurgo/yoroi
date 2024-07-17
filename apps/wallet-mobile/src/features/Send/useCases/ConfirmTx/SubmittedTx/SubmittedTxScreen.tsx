@@ -1,9 +1,10 @@
 import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet} from 'react-native'
 
 import {Button, Spacer, Text} from '../../../../../components'
+import {SafeArea} from '../../../../../components/SafeArea'
 import {useBlockGoBack, useWalletNavigation} from '../../../../../kernel/navigation'
 import {useLinksRequestRedirect} from '../../../../Links/common/useLinksRequestRedirect'
 import {useStrings} from '../../../common/strings'
@@ -18,7 +19,7 @@ export const SubmittedTxScreen = () => {
   useLinksRequestRedirect(linkAction?.info.params.redirectTo)
 
   return (
-    <View style={styles.container}>
+    <SafeArea style={styles.container}>
       <SubmittedTxImage />
 
       <Text style={styles.title}>{strings.submittedTxTitle}</Text>
@@ -28,7 +29,7 @@ export const SubmittedTxScreen = () => {
       <Spacer height={22} />
 
       <Button onPress={resetToTxHistory} title={strings.submittedTxButton} style={styles.button} shelleyTheme />
-    </View>
+    </SafeArea>
   )
 }
 
@@ -36,6 +37,7 @@ const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     container: {
+      backgroundColor: color.bg_color_high,
       ...atoms.p_lg,
       flex: 1,
       alignItems: 'center',

@@ -94,14 +94,14 @@ const useStyles = () => {
       alignItems: 'stretch',
       justifyContent: 'center',
       ...atoms.px_xl,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.mobile_overlay,
     },
     noPadding: {
       padding: 0,
       marginTop: 0,
     },
     container: {
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       borderRadius: 4,
       ...atoms.px_xl,
     },

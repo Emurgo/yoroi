@@ -30,7 +30,7 @@ const useStyles = () => {
     root: {
       ...atoms.flex_1,
       ...atoms.flex_col,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
     },
     scrollView: {
       ...atoms.flex_1,

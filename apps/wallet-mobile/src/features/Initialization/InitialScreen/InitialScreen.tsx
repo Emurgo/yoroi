@@ -115,7 +115,7 @@ const useStyles = () => {
     container: {
       flex: 1,
       ...atoms.p_lg,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
     },
     title: {
       ...atoms.heading_3_medium,

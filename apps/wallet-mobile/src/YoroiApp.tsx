@@ -12,6 +12,7 @@ import {QueryClientProvider} from 'react-query'
 import {LoadingBoundary} from './components'
 import {ErrorBoundary} from './components/ErrorBoundary'
 import {AuthProvider} from './features/Auth/AuthProvider'
+import {BrowserProvider} from './features/Discover/common/BrowserProvider'
 import {CurrencyProvider} from './features/Settings/Currency/CurrencyContext'
 import {WalletManagerProvider} from './features/WalletManager/context/WalletManagerProvider'
 import {walletManager} from './features/WalletManager/wallet-manager'
@@ -57,7 +58,9 @@ const Yoroi = () => {
                         <LinksProvider>
                           <SetupWalletProvider>
                             <PoolTransitionProvider>
-                              <InitApp />
+                              <BrowserProvider>
+                                <InitApp />
+                              </BrowserProvider>
                             </PoolTransitionProvider>
                           </SetupWalletProvider>
                         </LinksProvider>

@@ -136,7 +136,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     safeAreaView: {
       flex: 1,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
     },
     confirmVotingTxTitle: {
       ...atoms.body_2_md_regular,

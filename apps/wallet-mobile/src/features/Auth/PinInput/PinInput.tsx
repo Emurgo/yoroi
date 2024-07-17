@@ -95,7 +95,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     pinInput: {
       flex: 1,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
     },
     info: {
       flex: 1,
