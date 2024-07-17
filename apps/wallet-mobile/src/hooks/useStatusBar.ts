@@ -5,6 +5,7 @@ import {Platform, StatusBar, StatusBarStyle} from 'react-native'
 type StatusBarColor = {
   bgColorAndroid: HexColor
   statusBarStyle: StatusBarStyle | undefined
+  translucent: boolean
 }
 export const useStatusBar = (currentRouteName: string | undefined) => {
   const {color, isDark} = useTheme()
@@ -36,7 +37,7 @@ const getStatusBarStyleByRoute = ({
   currentRouteName: string | undefined
   isDark?: boolean
   color: ThemedPalette
-}): StatusBarColor & {translucent: boolean} => {
+}): StatusBarColor => {
   if (currentRouteName) {
     if (currentRouteName === 'history-list') {
       return {
