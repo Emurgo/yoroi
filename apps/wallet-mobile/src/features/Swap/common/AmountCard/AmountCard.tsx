@@ -181,7 +181,7 @@ const useStyles = () => {
       position: 'absolute',
       top: -7,
       left: 10,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       paddingHorizontal: 5,
       fontSize: 12,
       color: color.gray_c900,

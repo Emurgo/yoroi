@@ -97,7 +97,7 @@ const useStyles = () => {
     },
     backdrop: {
       ...StyleSheet.absoluteFillObject,
-      backgroundColor: 'rgba(0, 0, 0, 0.64)',
+      backgroundColor: color.mobile_overlay,
     },
     animatedView: {
       alignSelf: 'stretch',

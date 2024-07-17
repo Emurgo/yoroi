@@ -188,7 +188,7 @@ const useStyles = () => {
       flex: 1,
       ...atoms.px_lg,
       justifyContent: 'space-between',
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
     },
     modal: {
       flex: 1,

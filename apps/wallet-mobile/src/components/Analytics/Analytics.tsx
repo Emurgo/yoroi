@@ -190,7 +190,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
     },
     content: {
       alignItems: 'center',
@@ -242,7 +242,7 @@ const useStyles = () => {
       width: '100%',
       position: 'absolute',
       bottom: 0,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       height: BOTTOM_BUTTON_ROW_HEIGHT,
       padding: 16,
     },

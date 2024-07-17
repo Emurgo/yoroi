@@ -48,7 +48,7 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       paddingVertical: 10,
       paddingHorizontal: 16,
       flexDirection: 'row',

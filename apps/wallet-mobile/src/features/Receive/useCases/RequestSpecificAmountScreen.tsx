@@ -163,7 +163,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       ...atoms.px_lg,
     },
     content: {

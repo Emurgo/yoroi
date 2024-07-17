@@ -112,7 +112,7 @@ const useStyles = () => {
       ...atoms.flex_row,
       ...atoms.justify_between,
       ...atoms.align_center,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
     },
     leftContainer: {
       ...atoms.flex_1,

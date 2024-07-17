@@ -168,19 +168,19 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       paddingTop: 16,
     },
     container: {
       flex: 1,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'space-between',
     },
     actions: {
       padding: 16,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
     },
     modalContent: {
       flex: 1,

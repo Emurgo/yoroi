@@ -195,10 +195,10 @@ const useStyles = () => {
       padding: 16,
       width: '100%',
       height: 'auto',
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
     },
     shadowProp: {
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       shadowColor: color.gray_cmax,
       shadowOffset: {
         width: 0,

@@ -132,7 +132,7 @@ const useStyles = () => {
       shadowRadius: 12,
       shadowOpacity: 0.06,
       shadowColor: color.black_static,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       borderRadius: 8,
     },
     errorSectionContent: {

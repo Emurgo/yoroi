@@ -60,7 +60,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       ...atoms.pb_md,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       flex: 1,
     },
     gradient: {

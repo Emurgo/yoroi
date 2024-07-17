@@ -218,7 +218,7 @@ const useStyles = () => {
     },
     container: {
       flex: 1,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       ...atoms.px_lg,
     },
     amountItem: {

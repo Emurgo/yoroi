@@ -198,7 +198,6 @@ export const ExpandableOrder = ({order, tokenInfos}: {order: MappedRawOrder; tok
         />
       }
       expanded={expanded}
-      withBoxShadow
     >
       <MainInfo
         tokenPrice={marketPrice}
@@ -384,7 +383,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
     },
     flex: {
       flex: 1,

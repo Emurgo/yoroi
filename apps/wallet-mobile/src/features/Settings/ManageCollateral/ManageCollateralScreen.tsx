@@ -232,7 +232,7 @@ const useStyles = () => {
   const {color} = useTheme()
   const styles = StyleSheet.create({
     safeAreaView: {
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       flex: 1,
       paddingHorizontal: 16,
     },

@@ -21,7 +21,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     labelContainer: {
       borderRadius: 20,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       paddingVertical: 1,
       paddingHorizontal: 6,
       height: 24,

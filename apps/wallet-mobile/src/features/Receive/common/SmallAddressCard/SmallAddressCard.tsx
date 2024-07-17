@@ -115,7 +115,7 @@ const useStyles = () => {
     },
     statusUsed: {
       borderRadius: 20,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       paddingVertical: 4,
       paddingHorizontal: 8,
       alignItems: 'center',

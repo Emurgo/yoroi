@@ -221,7 +221,7 @@ const useStyles = () => {
     },
     container: {
       flex: 1,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
     },
     scrollView: {
       flex: 1,
@@ -240,7 +240,7 @@ const useStyles = () => {
     },
     amount: {
       ...atoms.heading_2_regular,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       borderWidth: 0,
       textAlign: 'right',
     },

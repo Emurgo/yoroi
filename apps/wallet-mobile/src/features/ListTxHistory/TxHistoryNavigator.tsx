@@ -595,6 +595,6 @@ const sendOptions = (navigationOptions: StackNavigationOptions, color: ThemedPal
   headerStyle: {
     elevation: 0,
     shadowOpacity: 0,
-    backgroundColor: color.gray_cmin,
+    backgroundColor: color.bg_color_high,
   },
 })
