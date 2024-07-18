@@ -4,39 +4,14 @@
     "defaultMessage": "!!!Intro",
     "file": "src/legacy/Catalyst/DownloadCatalyst.tsx",
     "start": {
-<<<<<<< Updated upstream
-      "line": 149,
-      "column": 9,
-      "index": 4380
-=======
       "line": 157,
       "column": 12,
       "index": 4453
->>>>>>> Stashed changes
     },
     "end": {
       "line": 152,
       "column": 3,
-<<<<<<< Updated upstream
-      "index": 4460
-    }
-  },
-  {
-    "id": "components.catalyst.step1.subTitle",
-    "defaultMessage": "!!!Before you begin, make sure to\ndownload the Catalyst Voting App",
-    "file": "src/legacy/Catalyst/DownloadCatalyst.tsx",
-    "start": {
-      "line": 153,
-      "column": 12,
-      "index": 4474
-    },
-    "end": {
-      "line": 156,
-      "column": 3,
-      "index": 4616
-=======
       "index": 4595
->>>>>>> Stashed changes
     }
   },
   {
@@ -46,20 +21,12 @@
     "start": {
       "line": 157,
       "column": 27,
-<<<<<<< Updated upstream
-      "index": 4645
-=======
       "index": 4624
->>>>>>> Stashed changes
     },
     "end": {
       "line": 163,
       "column": 3,
-<<<<<<< Updated upstream
-      "index": 4974
-=======
       "index": 4953
->>>>>>> Stashed changes
     }
   },
   {
@@ -69,20 +36,12 @@
     "start": {
       "line": 164,
       "column": 7,
-<<<<<<< Updated upstream
-      "index": 4983
-=======
       "index": 4962
->>>>>>> Stashed changes
     },
     "end": {
       "line": 169,
       "column": 3,
-<<<<<<< Updated upstream
-      "index": 5180
-=======
       "index": 5164
->>>>>>> Stashed changes
     }
   },
   {
@@ -92,20 +51,12 @@
     "start": {
       "line": 170,
       "column": 21,
-<<<<<<< Updated upstream
-      "index": 5203
-=======
       "index": 5187
->>>>>>> Stashed changes
     },
     "end": {
       "line": 173,
       "column": 3,
-<<<<<<< Updated upstream
-      "index": 5292
-=======
       "index": 5276
->>>>>>> Stashed changes
     }
   },
   {
@@ -115,20 +66,12 @@
     "start": {
       "line": 174,
       "column": 15,
-<<<<<<< Updated upstream
-      "index": 5309
-=======
       "index": 5293
->>>>>>> Stashed changes
     },
     "end": {
       "line": 177,
       "column": 3,
-<<<<<<< Updated upstream
-      "index": 5386
-=======
       "index": 5370
->>>>>>> Stashed changes
     }
   },
   {
@@ -138,20 +81,12 @@
     "start": {
       "line": 178,
       "column": 13,
-<<<<<<< Updated upstream
-      "index": 5401
-=======
       "index": 5385
->>>>>>> Stashed changes
     },
     "end": {
       "line": 181,
       "column": 3,
-<<<<<<< Updated upstream
-      "index": 5474
-=======
       "index": 5458
->>>>>>> Stashed changes
     }
   },
   {
@@ -161,20 +96,12 @@
     "start": {
       "line": 182,
       "column": 17,
-<<<<<<< Updated upstream
-      "index": 5493
-=======
       "index": 5477
->>>>>>> Stashed changes
     },
     "end": {
       "line": 185,
       "column": 3,
-<<<<<<< Updated upstream
-      "index": 5567
-=======
       "index": 5551
->>>>>>> Stashed changes
     }
   }
 ]
