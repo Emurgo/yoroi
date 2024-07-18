@@ -6,6 +6,7 @@ import {useTheme} from '@yoroi/theme'
 import cryptoRandomString from 'crypto-random-string'
 import React, {useState} from 'react'
 import {useIntl} from 'react-intl'
+import {StyleSheet} from 'react-native'
 
 import {Boundary} from '../../components'
 import globalMessages from '../../kernel/i18n/global-messages'
@@ -33,6 +34,7 @@ export const CatalystNavigator = () => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
   const {track} = useMetrics()
+  const {styles} = useStyles()
 
   // NOTE: not part of navigator, should be moved into the catalyst provider
   const pin = usePin({length: 4, type: 'numeric'})
@@ -78,7 +80,7 @@ export const CatalystNavigator = () => {
 
             <Stack.Screen name="confirm-tx">
               {() => (
-                <Boundary loading={{size: 'full'}} error={{size: 'full'}}>
+                <Boundary loading={{size: 'full', style: styles.loadingBackground}} error={{size: 'full'}}>
                   <ConfirmVotingTx
                     onNext={() => {
                       setComplete(true)
@@ -131,4 +133,15 @@ const useStrings = () => {
 const usePin = (options: cryptoRandomString.Options) => {
   const [pin] = useState(() => cryptoRandomString(options))
   return pin
+}
+
+const useStyles = () => {
+  const {color} = useTheme()
+  const styles = StyleSheet.create({
+    loadingBackground: {
+      backgroundColor: color.bg_color_high,
+    },
+  })
+
+  return {styles}
 }

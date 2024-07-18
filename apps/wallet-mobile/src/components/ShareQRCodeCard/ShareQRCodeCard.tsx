@@ -1,17 +1,15 @@
 import {useTheme} from '@yoroi/theme'
 import _ from 'lodash'
 import * as React from 'react'
-import {StyleSheet, TouchableOpacity, TouchableWithoutFeedback, useWindowDimensions, View} from 'react-native'
+import {StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import QRCode from 'react-native-qrcode-svg'
 import Animated, {FadeInDown, FadeOutDown, Layout} from 'react-native-reanimated'
 import Share from 'react-native-share'
 import ViewShot, {captureRef} from 'react-native-view-shot'
 
-import {Spacer, Text} from '../../../../components'
-import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {CaptureShareQRCodeCard} from '../CaptureShareQRCodeCard/CaptureShareQRCodeCard'
-import {useStrings} from '../useStrings'
+import {Spacer, Text} from '../'
+import {CaptureShareQRCodeCard} from './CaptureShareQRCodeCard/CaptureShareQRCodeCard'
 
 type ShareQRCodeCardProps = {
   content: string
@@ -19,21 +17,31 @@ type ShareQRCodeCardProps = {
   isCopying?: boolean
   onLongPress: () => void
   testId?: string
+  onShare?: () => void
+  shareLabel: string
+  copiedText: string
 }
 
-export const ShareQRCodeCard = ({content, title, isCopying, onLongPress, testId}: ShareQRCodeCardProps) => {
-  const strings = useStrings()
+export const ShareQRCodeCard = ({
+  content,
+  title,
+  isCopying,
+  onLongPress,
+  testId,
+  onShare,
+  shareLabel,
+  copiedText,
+}: ShareQRCodeCardProps) => {
   const {styles, colors, qrSize} = useStyles()
-  const {track} = useMetrics()
 
   const [isSharing, setIsSharing] = React.useState(false)
   const ref: React.RefObject<ViewShot> = React.useRef(null)
 
   const handleOnPressShare = () => {
-    track.receiveShareAddressClicked()
     setIsSharing(true)
+    onShare?.()
   }
-  const message = `${strings.address} ${content}`
+
   React.useEffect(() => {
     if (isSharing) {
       const captureAndShare = async () => {
@@ -42,16 +50,16 @@ export const ShareQRCodeCard = ({content, title, isCopying, onLongPress, testId}
         const uri = await captureRef(ref, {
           format: 'png',
           quality: 1,
-          fileName: strings.shareLabel,
+          fileName: shareLabel,
         })
 
         setIsSharing(false)
-        await Share.open({url: uri, filename: strings.shareLabel, message})
+        await Share.open({url: uri, filename: shareLabel, message: content})
       }
 
       captureAndShare()
     }
-  }, [isSharing, strings.address, strings.shareLabel, content, message])
+  }, [isSharing, shareLabel, content])
 
   if (isSharing)
     return (
@@ -65,15 +73,19 @@ export const ShareQRCodeCard = ({content, title, isCopying, onLongPress, testId}
       <View>
         <View style={styles.card}>
           <LinearGradient
-            style={[StyleSheet.absoluteFill, {opacity: 1}]}
+            style={[StyleSheet.absoluteFill, {opacity: 1, borderRadius: 16}]}
             start={{x: 0, y: 0}}
             end={{x: 0, y: 1}}
             colors={colors.bgCard}
           />
 
+          <Spacer height={16} />
+
           <Text style={styles.title} testID={`${testId}-title`}>
             {title}
           </Text>
+
+          <Spacer height={16} />
 
           <View style={styles.addressContainer}>
             <View style={styles.qrCode} testID={`${testId}-qr`}>
@@ -85,14 +97,18 @@ export const ShareQRCodeCard = ({content, title, isCopying, onLongPress, testId}
             <Text style={styles.textAddress}>{content}</Text>
           </View>
 
+          <Spacer height={16} />
+
           <TouchableOpacity activeOpacity={0.5} onPress={handleOnPressShare} onLongPress={onLongPress}>
-            <Text style={styles.textShareAddress}>{strings.shareLabel}</Text>
+            <Text style={styles.textShareAddress}>{shareLabel}</Text>
           </TouchableOpacity>
+
+          <Spacer height={16} />
         </View>
 
         {isCopying && (
           <Animated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
-            <Text style={styles.copiedText}>{strings.addressCopiedMsg}</Text>
+            <Text style={styles.copiedText}>{copiedText}</Text>
           </Animated.View>
         )}
       </View>
@@ -101,11 +117,7 @@ export const ShareQRCodeCard = ({content, title, isCopying, onLongPress, testId}
 }
 
 const useStyles = () => {
-  const {width: screenWidth, height: screenHeight} = useWindowDimensions()
   const {color, atoms} = useTheme()
-
-  const heightBreakpointLarge = 800
-  const cardSpacing = screenHeight > heightBreakpointLarge ? 32 : 16
 
   const qrSize = 170
 
@@ -119,17 +131,12 @@ const useStyles = () => {
       alignItems: 'center',
     },
     card: {
-      borderRadius: 16,
-      width: screenWidth - 34,
       alignItems: 'center',
-      maxHeight: 458,
       flex: 1,
       minHeight: 394,
       alignSelf: 'center',
-      overflow: 'hidden',
+
       paddingHorizontal: 16,
-      paddingVertical: cardSpacing,
-      gap: cardSpacing,
     },
     title: {
       ...atoms.heading_3_medium,

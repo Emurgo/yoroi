@@ -32,7 +32,7 @@ import {
   WalletStackRoutes,
   WalletTabRoutes,
 } from './kernel/navigation'
-import {CatalystNavigator} from './legacy/Catalyst'
+import {CatalystNavigator} from './features/RegisterCatalyst'
 import {DashboardNavigator} from './legacy/Dashboard'
 
 const Tab = createBottomTabNavigator<WalletTabRoutes>()

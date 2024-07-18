@@ -26,6 +26,7 @@ export const ConfirmTxWithSpendingPasswordModal = ({onSuccess, unsignedTx, onErr
   const {signTx, error: signError, isLoading: signIsLoading} = useSignTxWithPassword({wallet})
   const {submitTx, error: submitError, isLoading: submitIsLoading} = useSubmitTx({wallet}, {onError})
   const strings = useStrings()
+  const {isDark} = useTheme()
 
   const [spendingPassword, setSpendingPassword] = useState(features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '')
   const isPasswordCorrect = useIsPasswordCorrect(spendingPassword)
@@ -79,7 +80,7 @@ export const ConfirmTxWithSpendingPasswordModal = ({onSuccess, unsignedTx, onErr
 
       {isLoading && (
         <View style={styles.loading}>
-          <ActivityIndicator size="large" color="black" />
+          <ActivityIndicator size="large" color={isDark ? 'white' : 'black'} />
         </View>
       )}
     </View>

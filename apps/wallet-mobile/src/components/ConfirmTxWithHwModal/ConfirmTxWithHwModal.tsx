@@ -11,6 +11,7 @@ import {LedgerConnect} from '../../legacy/HW'
 import {useSignTxWithHW, useSubmitTx} from '../../yoroi-wallets/hooks'
 import {withBLE, withUSB} from '../../yoroi-wallets/hw'
 import {YoroiSignedTx, YoroiUnsignedTx} from '../../yoroi-wallets/types'
+import {delay} from '../../yoroi-wallets/utils'
 import {ModalError} from '../ModalError/ModalError'
 import {Text} from '../Text'
 import {useStrings} from './strings'
@@ -66,6 +67,7 @@ const ConfirmTxWithHwModalContent = ({
   const {wallet, meta} = useSelectedWallet()
   const strings = useStrings()
   const styles = useStyles()
+  const {isDark} = useTheme()
 
   const {submitTx} = useSubmitTx({wallet}, {useErrorBoundary: true})
 
@@ -91,15 +93,17 @@ const ConfirmTxWithHwModalContent = ({
 
     const hwDeviceInfo = withBLE(meta, deviceId)
     walletManager.updateWalletHWDeviceInfo(meta.id, hwDeviceInfo)
-    signTx({unsignedTx, useUSB: false, hwDeviceInfo})
 
     if (unsignedTx.unsignedTx.catalystRegistrationData && onCIP36SupportChange) {
       const isCIP36Supported = await wallet.ledgerSupportsCIP36(false, hwDeviceInfo)
 
       if (supportsCIP36 !== isCIP36Supported) {
         onCIP36SupportChange(isCIP36Supported)
+        await delay(1000)
       }
     }
+
+    signTx({unsignedTx, useUSB: false, hwDeviceInfo})
   }
 
   const onConnectUSB = async (deviceObj: HW.DeviceObj) => {
@@ -107,15 +111,17 @@ const ConfirmTxWithHwModalContent = ({
 
     const hwDeviceInfo = withUSB(meta, deviceObj)
     walletManager.updateWalletHWDeviceInfo(meta.id, hwDeviceInfo)
-    signTx({unsignedTx, useUSB: true, hwDeviceInfo})
 
     if (unsignedTx.unsignedTx.catalystRegistrationData && onCIP36SupportChange) {
       const isCIP36Supported = await wallet.ledgerSupportsCIP36(true, hwDeviceInfo)
 
       if (supportsCIP36 !== isCIP36Supported) {
         onCIP36SupportChange(isCIP36Supported)
+        await delay(1000)
       }
     }
+
+    signTx({unsignedTx, useUSB: true, hwDeviceInfo})
   }
 
   if (step === 'select-transport') {
@@ -137,7 +143,7 @@ const ConfirmTxWithHwModalContent = ({
 
   return (
     <View style={styles.container}>
-      <ActivityIndicator size="large" color="black" />
+      <ActivityIndicator size="large" color={isDark ? 'white' : 'black'} />
 
       <Text style={styles.text}>{strings.continueOnLedger}</Text>
     </View>

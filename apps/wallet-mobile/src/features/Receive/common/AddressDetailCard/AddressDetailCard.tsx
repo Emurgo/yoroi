@@ -4,12 +4,14 @@ import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import Animated, {Layout} from 'react-native-reanimated'
 
 import {Spacer} from '../../../../components'
+import {ShareQRCodeCard} from '../../../../components/ShareQRCodeCard/ShareQRCodeCard'
 import {useCopy} from '../../../../hooks/useCopy'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {isEmptyString} from '../../../../kernel/utils'
 import {useKeyHashes} from '../../../../yoroi-wallets/hooks'
 import {useReceive} from '../ReceiveProvider'
 import {ShareDetailsCard} from '../ShareDetailsCard/ShareDetailsCard'
-import {ShareQRCodeCard} from '../ShareQRCodeCard/ShareQRCodeCard'
+import {useStrings} from '../useStrings'
 
 type AddressDetailCardProps = {
   title: string
@@ -33,6 +35,8 @@ type CardItem = {
 export const AddressDetailCard = ({title}: AddressDetailCardProps) => {
   const {styles, colors} = useStyles()
   const [isCopying, copy] = useCopy()
+  const {track} = useMetrics()
+  const strings = useStrings()
 
   const {selectedAddress: address} = useReceive()
   const {spending, staking} = useKeyHashes({address})
@@ -70,10 +74,13 @@ export const AddressDetailCard = ({title}: AddressDetailCardProps) => {
         return (
           <ShareQRCodeCard
             title={item.title}
-            content={item.address}
+            content={`${strings.address} ${item.address}`}
             onLongPress={() => copy(item.address)}
             isCopying={isCopying}
             testId="receive:address-detail-card"
+            onShare={() => track.receiveShareAddressClicked()}
+            shareLabel={strings.shareLabel}
+            copiedText={strings.addressCopiedMsg}
           />
         )
       case 'Details':

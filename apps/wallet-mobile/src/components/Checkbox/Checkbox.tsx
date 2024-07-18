@@ -1,6 +1,6 @@
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {StyleSheet, Text, TextProps, TouchableOpacity, ViewStyle} from 'react-native'
+import {StyleSheet, Text, TextProps, TouchableOpacity, View, ViewStyle} from 'react-native'
 
 import {Icon} from '../Icon'
 import {Space} from '../Space/Space'
@@ -17,7 +17,7 @@ export const Checkbox = ({checked, text, onChange, style, testID, textStyle}: Pr
 
   return (
     <TouchableOpacity style={[styles.container, style]} onPress={() => onChange(!checked)} testID={testID}>
-      {checked ? <Icon.Checkbox /> : <Icon.EmptyCheckbox />}
+      <View style={styles.icon}>{checked ? <Icon.Checkbox /> : <Icon.EmptyCheckbox />}</View>
 
       <Space width="sm" />
 
@@ -31,12 +31,17 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     container: {
+      flex: 1,
       flexDirection: 'row',
       alignItems: 'center',
     },
     text: {
+      flex: 1,
       ...atoms.body_1_lg_regular,
       color: color.gray_c900,
+    },
+    icon: {
+      ...atoms.py_xs,
     },
   })
 

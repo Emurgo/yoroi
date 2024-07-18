@@ -9,12 +9,12 @@ import appstoreBadge from '../../../../assets/img/app-store-badge.png'
 import playstoreBadge from '../../../../assets/img/google-play-badge.png'
 import {Button, useModal} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
-import {useSelectedWallet} from '../../../../features/WalletManager/common/hooks/useSelectedWallet'
-import {useStakingInfo} from '../../../Dashboard/StakePoolInfos'
+import {useStakingInfo} from '../../../../legacy/Dashboard/StakePoolInfos'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {Actions, Row, Stepper} from '../../common/components'
+import {useCatalystCurrentFund} from '../../common/hooks'
 import {useStrings} from '../../common/strings'
 import {CatalystStep1} from '../../illustrations/CatalystStep1'
-import {useCatalystCurrentFund} from '../../useCatalystCurrentFund'
 
 type Props = {
   onNext: () => void
@@ -49,6 +49,8 @@ export const DownloadCatalyst = ({onNext}: Props) => {
   const votingStart = `${formatDate(fund.info.votingStart)}: ${strings.votingStart}`
   const votingEnd = `${formatDate(fund.info.votingEnd)}: ${strings.votingEnd}`
   const votingResults = `${formatDate(fund.info.tallyingEnd)}: ${strings.votingResults}`
+
+  const disabled = wallet.isMainnet && fund.status.registration !== 'running'
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
@@ -89,12 +91,7 @@ export const DownloadCatalyst = ({onNext}: Props) => {
       </ScrollView>
 
       <Actions>
-        <Button
-          shelleyTheme
-          onPress={onNext}
-          title={strings.continueButton}
-          // disabled={fund.status.registration !== 'running'}
-        />
+        <Button shelleyTheme onPress={onNext} title={strings.continueButton} disabled={disabled} />
       </Actions>
     </SafeAreaView>
   )

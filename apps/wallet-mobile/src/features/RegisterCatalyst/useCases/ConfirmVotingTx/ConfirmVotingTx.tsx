@@ -1,6 +1,5 @@
 import {useTheme} from '@yoroi/theme'
 import React, {useState} from 'react'
-import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -9,14 +8,13 @@ import {ConfirmTxWithHwModal} from '../../../../components/ConfirmTxWithHwModal'
 import {ConfirmTxWithOsModal} from '../../../../components/ConfirmTxWithOsModal'
 import {ConfirmTxWithSpendingPasswordModal} from '../../../../components/ConfirmTxWithSpendingPasswordModal'
 import {Space} from '../../../../components/Space/Space'
-import {useSelectedWallet} from '../../../../features/WalletManager/common/hooks/useSelectedWallet'
-import {errorMessages, txLabels} from '../../../../kernel/i18n/global-messages'
-import LocalizableError from '../../../../kernel/i18n/LocalizableError'
+import {Instructions as HWInstructions} from '../../../../legacy/HW'
 import {useVotingRegTx} from '../../../../yoroi-wallets/hooks'
 import {Amounts} from '../../../../yoroi-wallets/utils'
 import {formatTokenWithSymbol} from '../../../../yoroi-wallets/utils/format'
-import {Instructions as HWInstructions} from '../../../HW'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {Actions, Description} from '../../common/components'
+import {useStrings} from '../../common/strings'
 
 export const ConfirmVotingTx = ({
   onSuccess,
@@ -47,7 +45,7 @@ export const ConfirmVotingTx = ({
   const onSubmit = () => {
     if (meta.isHW) {
       openModal(
-        'test',
+        strings.signTransaction,
         <ConfirmTxWithHwModal
           onCancel={closeModal}
           unsignedTx={votingRegTx}
@@ -60,12 +58,15 @@ export const ConfirmVotingTx = ({
     }
 
     if (!meta.isHW && !meta.isEasyConfirmationEnabled) {
-      openModal('test', <ConfirmTxWithSpendingPasswordModal unsignedTx={votingRegTx} onSuccess={() => onNext()} />)
+      openModal(
+        strings.signTransaction,
+        <ConfirmTxWithSpendingPasswordModal unsignedTx={votingRegTx} onSuccess={() => onNext()} />,
+      )
       return
     }
 
     if (!meta.isHW && meta.isEasyConfirmationEnabled) {
-      openModal('test', <ConfirmTxWithOsModal unsignedTx={votingRegTx} onSuccess={() => onNext()} />)
+      openModal(strings.signTransaction, <ConfirmTxWithOsModal unsignedTx={votingRegTx} onSuccess={() => onNext()} />)
       return
     }
   }
@@ -113,28 +114,12 @@ export const ConfirmVotingTx = ({
         <Spacer fill />
 
         <Actions>
-          <Button title="confirm" shelleyTheme onPress={onSubmit} />
+          <Button title={strings.confirm} shelleyTheme onPress={onSubmit} />
         </Actions>
       </KeyboardAvoidingView>
     </SafeAreaView>
   )
 }
-
-const messages = defineMessages({
-  confirmationTitle: {
-    id: 'components.catalyst.confirmTx.title',
-    defaultMessage: '!!!Confirm Registration',
-  },
-  passwordSignDescription: {
-    id: 'components.catalyst.confirmTx.passwordSignDescription',
-    defaultMessage:
-      '!!!Confirm your voting registration and submit the certificate generated in previous step to the blockchain',
-  },
-  authOsInstructions: {
-    id: 'components.catalyst.step4.bioAuthInstructions',
-    defaultMessage: '!!!Please authenticate so that Yoroi can generate the required certificate for voting',
-  },
-})
 
 const useStyles = () => {
   const {color, atoms} = useTheme()
@@ -166,21 +151,4 @@ const useStyles = () => {
   })
 
   return styles
-}
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    errorMessage: (error: LocalizableError) =>
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      intl.formatMessage({id: error.id, defaultMessage: error.defaultMessage}, (error as any).values),
-    fees: intl.formatMessage(txLabels.fees),
-    confirmationTitle: intl.formatMessage(messages.confirmationTitle),
-    passwordSignDescription: intl.formatMessage(messages.passwordSignDescription),
-    authOsInstructions: intl.formatMessage(messages.authOsInstructions),
-    password: intl.formatMessage(txLabels.password),
-    errorTitle: intl.formatMessage(errorMessages.generalTxError.title),
-    generalErrorMessage: intl.formatMessage(errorMessages.generalTxError.message),
-  }
 }

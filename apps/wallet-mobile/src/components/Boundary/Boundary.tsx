@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import React, {SuspenseProps} from 'react'
 import {
   ErrorBoundary as ReactErrorBoundary,
@@ -58,11 +59,15 @@ type LoadingFallbackProps = {
   size?: 'full' | 'large' | 'small'
   debug?: boolean
 }
-export const LoadingFallback = ({size = 'large', style, debug = false}: LoadingFallbackProps) => (
-  <View style={[size === 'full' && styles.stretch, styles.container, style, debug && styles.debug]}>
-    <ActivityIndicator size={size === 'small' ? 'small' : 'large'} color="black" />
-  </View>
-)
+export const LoadingFallback = ({size = 'large', style, debug = false}: LoadingFallbackProps) => {
+  const {isDark} = useTheme()
+
+  return (
+    <View style={[size === 'full' && styles.stretch, styles.container, style, debug && styles.debug]}>
+      <ActivityIndicator size={size === 'small' ? 'small' : 'large'} color={isDark ? 'white' : 'dark'} />
+    </View>
+  )
+}
 
 type ErrorBoundaryProps = {
   fallback?: ReactErrorBoundaryProps['fallbackRender']
