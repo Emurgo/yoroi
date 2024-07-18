@@ -3,7 +3,6 @@ import React from 'react'
 import {StyleSheet, TouchableHighlight, View, ViewProps} from 'react-native'
 
 import {Backspace} from './Icon/Backspace'
-import {Spacer} from './Spacer'
 import {Text} from './Text'
 
 export const BACKSPACE = 'BACKSPACE'
@@ -15,53 +14,31 @@ export const NumericKeyboard = ({onKeyDown}: {onKeyDown: (key: string) => void})
       <Row>
         <Key value="1" onPress={onKeyDown} />
 
-        <Spacer width={5} />
-
         <Key value="2" onPress={onKeyDown} />
-
-        <Spacer width={5} />
 
         <Key value="3" onPress={onKeyDown} />
       </Row>
 
-      <Spacer height={7} />
-
       <Row>
         <Key value="4" onPress={onKeyDown} />
 
-        <Spacer width={5} />
-
         <Key value="5" onPress={onKeyDown} />
-
-        <Spacer width={5} />
 
         <Key value="6" onPress={onKeyDown} />
       </Row>
 
-      <Spacer height={7} />
-
       <Row>
         <Key value="7" onPress={onKeyDown} />
 
-        <Spacer width={5} />
-
         <Key value="8" onPress={onKeyDown} />
-
-        <Spacer width={5} />
 
         <Key value="9" onPress={onKeyDown} />
       </Row>
 
-      <Spacer height={7} />
-
       <Row>
         <EmptyKey />
 
-        <Spacer width={5} />
-
         <Key value="0" onPress={onKeyDown} />
-
-        <Spacer width={5} />
 
         <BackspaceKey onPress={onKeyDown} />
       </Row>
@@ -74,16 +51,13 @@ type KeyboardKeyProps = {
   onPress: (value: string) => void
 }
 const Key = ({value, onPress}: KeyboardKeyProps) => {
-  const {styles} = useStyles()
-  const isEmpty = value === ''
-  const isDigit = !isEmpty
+  const {styles, color} = useStyles()
 
   return (
     <TouchableHighlight
-      style={[styles.keyboardKey, !isDigit && styles.keyboardKeyDisabled]}
+      style={[styles.keyboardKey]}
       onPress={() => onPress(value)}
-      underlayColor="#bbbbbb"
-      disabled={isEmpty}
+      underlayColor={color.el_gray_low}
       testID={`pinKey${value}`}
     >
       <Text style={styles.keyboardKeyText}>{value}</Text>
@@ -93,16 +67,16 @@ const Key = ({value, onPress}: KeyboardKeyProps) => {
 
 const EmptyKey = () => {
   const {styles} = useStyles()
-  return <View style={styles.emptyKey} testID="pinKeyEmpty" />
+  return <View style={[styles.keyboardKey, styles.specialKey]} testID="pinKeyEmpty" />
 }
 
 const BackspaceKey = ({onPress}: {onPress: (value: string) => void}) => {
   const {styles, color} = useStyles()
   return (
     <TouchableHighlight
-      style={styles.backspaceKey}
+      style={[styles.keyboardKey, styles.specialKey]}
       onPress={() => onPress('BACKSPACE')}
-      underlayColor="#bbbbbb"
+      underlayColor={color.el_gray_low}
       testID="pinKeyBACKSPACE"
     >
       <Backspace color={color.gray_cmax} />
@@ -116,17 +90,15 @@ const Row = (props: ViewProps) => {
 }
 
 const useStyles = () => {
-  const {color, isDark} = useTheme()
+  const {color} = useTheme()
 
   const styles = StyleSheet.create({
     keyboard: {
-      height: 290,
-      padding: 5,
-      backgroundColor: isDark ? '#222324' : '#D1D5DB',
+      height: 248.5,
+      backgroundColor: color.bg_color_high,
     },
     keyboardRow: {
       flex: 1,
-      maxHeight: 50,
       flexDirection: 'row',
     },
     keyboardKey: {
@@ -136,30 +108,19 @@ const useStyles = () => {
       borderTopWidth: StyleSheet.hairlineWidth,
       borderLeftWidth: StyleSheet.hairlineWidth,
       borderRightWidth: StyleSheet.hairlineWidth,
-      borderBottomWidth: 3 * StyleSheet.hairlineWidth,
-      borderColor: 'rgba(0, 0, 0, 0.30)',
-      borderRadius: 5,
-      backgroundColor: isDark ? '#6B6B6B' : color.white_static,
+      borderColor: color.el_gray_normal,
+      backgroundColor: color.gray_cmin,
     },
     keyboardKeyText: {
       fontSize: 30,
       lineHeight: 35,
       textAlign: 'center',
     },
-    backspaceKey: {
+    specialKey: {
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
-      borderRadius: 5,
-    },
-    keyboardKeyDisabled: {
-      backgroundColor: color.gray_c100,
-    },
-    emptyKey: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderRadius: 5,
+      backgroundColor: color.gray_c300,
     },
   })
 
