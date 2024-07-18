@@ -84,7 +84,7 @@ const ConfirmTxWithHwModalContent = ({
 
   const onSelectTransport = (transportType: TransportType) => {
     setTransportType(transportType)
-    setUseUSB && setUseUSB(transportType === 'USB')
+    setUseUSB?.(transportType === 'USB')
     setStep('connect-transport')
   }
 
