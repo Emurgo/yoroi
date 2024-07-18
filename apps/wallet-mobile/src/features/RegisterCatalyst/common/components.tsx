@@ -39,7 +39,7 @@ export const PinBox = ({
   children: React.ReactNode
   done?: boolean
   error?: boolean
-  onPress: () => void
+  onPress?: () => void
 }) => {
   const styles = useStyles()
 
