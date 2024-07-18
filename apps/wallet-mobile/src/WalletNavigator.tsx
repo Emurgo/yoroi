@@ -28,7 +28,7 @@ import {dappExplorerEnabled} from './kernel/config'
 import {useMetrics} from './kernel/metrics/metricsManager'
 import {
   defaultStackNavigationOptions,
-  shouldHideTabBarForRoutes,
+  shouldShowTabBarForRoutes,
   WalletStackRoutes,
   WalletTabRoutes,
 } from './kernel/navigation'
@@ -38,8 +38,8 @@ import {DashboardNavigator} from './legacy/Dashboard'
 const Tab = createBottomTabNavigator<WalletTabRoutes>()
 
 const TabBarWithHiddenContent = (props: BottomTabBarProps) => {
-  const shouldHide = shouldHideTabBarForRoutes(props.state)
-  return shouldHide ? null : <BottomTabBar {...props} />
+  const shouldShow = shouldShowTabBarForRoutes(props.state)
+  return shouldShow ? <BottomTabBar {...props} /> : null
 }
 
 const WalletTabNavigator = () => {
