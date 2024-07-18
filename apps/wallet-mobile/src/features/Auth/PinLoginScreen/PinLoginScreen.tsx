@@ -33,7 +33,7 @@ export const PinLoginScreen = () => {
   })
 
   return (
-    <SafeAreaView edges={['left', 'right']} style={styles.container}>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
       <PinInput
         ref={pinInputRef}
         enabled={!isLoading}
