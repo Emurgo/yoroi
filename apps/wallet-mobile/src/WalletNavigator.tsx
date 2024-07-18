@@ -16,6 +16,7 @@ import {useLinksShowActionResult} from './features/Links/common/useLinksShowActi
 import {TxHistoryNavigator} from './features/ListTxHistory/TxHistoryNavigator'
 import {MenuNavigator} from './features/Menu'
 import {PortfolioNavigator} from './features/Portfolio/PortfolioNavigator'
+import {CatalystNavigator} from './features/RegisterCatalyst'
 import {SearchProvider} from './features/Search/SearchContext'
 import {SettingsScreenNavigator} from './features/Settings'
 import {SetupWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
@@ -32,7 +33,6 @@ import {
   WalletStackRoutes,
   WalletTabRoutes,
 } from './kernel/navigation'
-import {CatalystNavigator} from './features/RegisterCatalyst'
 import {DashboardNavigator} from './legacy/Dashboard'
 
 const Tab = createBottomTabNavigator<WalletTabRoutes>()
