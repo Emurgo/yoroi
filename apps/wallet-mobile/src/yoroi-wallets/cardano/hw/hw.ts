@@ -259,7 +259,6 @@ export const doesCardanoAppVersionSupportCIP36 = (majorVersion: number) => {
 //
 
 export const getCardanoAppMajorVersion = async (hwDeviceInfo: HW.DeviceInfo, useUSB: boolean) => {
-  console.log('getCardanoAppMajorVersion-1')
   const appAda = await connectionHandler(hwDeviceInfo.hwFeatures.deviceId, hwDeviceInfo.hwFeatures.deviceObj, useUSB)
   console.log('getCardanoAppMajorVersion-2')
   const {version} = await appAda.getVersion()
