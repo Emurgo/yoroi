@@ -169,7 +169,7 @@ export const ConfirmPin = () => {
   )
 
   return (
-    <SafeAreaView edges={['left', 'right']} style={styles.safeAreaView}>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
       <Stepper title={strings.step3Title} currentStep={3} totalSteps={4} />
 
       <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
