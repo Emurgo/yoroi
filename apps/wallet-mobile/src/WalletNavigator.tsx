@@ -83,6 +83,7 @@ const WalletTabNavigator = () => {
           tabBarActiveTintColor: colors.active,
           tabBarInactiveTintColor: colors.inactive,
           tabBarStyle: {
+            borderTopColor: colors.divider,
             borderTopWidth: 2 * StyleSheet.hairlineWidth,
             backgroundColor: colors.background,
             // keyboardWillShow keyboardWillHiden dont work on android
@@ -289,6 +290,7 @@ const useStyles = () => {
     active: color.text_primary_high,
     inactive: color.text_gray_medium,
     background: color.gray_cmin,
+    divider: color.gray_c200,
   }
 
   return {colors, styles}
