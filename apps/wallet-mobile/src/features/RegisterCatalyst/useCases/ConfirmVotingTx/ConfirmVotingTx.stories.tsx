@@ -1,5 +1,7 @@
 import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
+import {Catalyst, CatalystProvider} from '@yoroi/staking'
+import {catalystConfig} from '@yoroi/staking/src/catalyst/config'
 import {WalletMeta} from '@yoroi/types/lib/typescript/wallet/meta'
 import React from 'react'
 
@@ -20,7 +22,7 @@ storiesOf('Catalyst ConfirmVotingTx', module)
       }}
       meta={{...mocks.walletMeta, isHW: false, isEasyConfirmationEnabled: false}}
     >
-      <ConfirmVotingTx pin="1234" onSuccess={action('onSuccess')} onNext={action('onNext')} />
+      <ConfirmVotingTx />
     </Providers>
   ))
   .add('hw', () => (
@@ -31,7 +33,7 @@ storiesOf('Catalyst ConfirmVotingTx', module)
       }}
       meta={{...mocks.walletMeta, isHW: true, isEasyConfirmationEnabled: false}}
     >
-      <ConfirmVotingTx pin="1234" onSuccess={action('onSuccess')} onNext={action('onNext')} />
+      <ConfirmVotingTx />
     </Providers>
   ))
   .add('os', () => (
@@ -42,16 +44,26 @@ storiesOf('Catalyst ConfirmVotingTx', module)
       }}
       meta={{...mocks.walletMeta, isHW: false, isEasyConfirmationEnabled: true}}
     >
-      <ConfirmVotingTx pin="1234" onSuccess={action('onSuccess')} onNext={action('onNext')} />
+      <ConfirmVotingTx />
     </Providers>
   ))
 
 const Providers = ({wallet, children, meta}: {wallet: YoroiWallet; children: React.ReactNode; meta: WalletMeta}) => {
   walletManagerMock.setSelectedWalletId(wallet.id)
+
+  const manager: Catalyst.Manager = {
+    config: catalystConfig,
+    getFundInfo: action('getFundInfo') as Catalyst.Manager['getFundInfo'],
+    fundStatus: action('fundStatus') as Catalyst.Manager['fundStatus'],
+  }
   return (
     <QueryProvider>
       <WalletManagerProviderMock wallet={wallet} meta={meta} walletManager={walletManagerMock}>
-        <Boundary loading={{size: 'full'}}>{children}</Boundary>
+        <Boundary loading={{size: 'full'}}>
+          <CatalystProvider manager={manager} initialState={{pin: '1234'}}>
+            {children}
+          </CatalystProvider>
+        </Boundary>
       </WalletManagerProviderMock>
     </QueryProvider>
   )
