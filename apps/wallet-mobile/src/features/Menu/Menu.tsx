@@ -189,6 +189,7 @@ const KNOWLEDGE_BASE_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/categor
 const useNavigateTo = () => {
   const {navigation, navigateToSettings, navigateToGovernanceCentre, navigateToStakingDashboard} = useWalletNavigation()
   const {wallet} = useSelectedWallet()
+
   const prefetchStakingInfo = usePrefetchStakingInfo(wallet)
 
   return {

@@ -3,8 +3,7 @@ import {createStackNavigator} from '@react-navigation/stack'
 import {catalystManagerMaker, CatalystProvider} from '@yoroi/staking'
 import {catalystApiMaker} from '@yoroi/staking/src'
 import {useTheme} from '@yoroi/theme'
-import cryptoRandomString from 'crypto-random-string'
-import React, {useState} from 'react'
+import React from 'react'
 import {useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
 
@@ -32,14 +31,8 @@ const Stack = createStackNavigator<VotingRegistrationRoutes>()
 export const CatalystNavigator = () => {
   const {atoms, color} = useTheme()
   const strings = useStrings()
-  const navigateTo = useNavigateTo()
   const {track} = useMetrics()
   const {styles} = useStyles()
-
-  // NOTE: not part of navigator, should be moved into the catalyst provider
-  const pin = usePin({length: 4, type: 'numeric'})
-  const [votingKeyEncrypted, setVotingKeyEncrypted] = React.useState<string | undefined>(undefined)
-  const [complete, setComplete] = React.useState(false)
 
   useFocusEffect(
     React.useCallback(() => {
@@ -57,59 +50,39 @@ export const CatalystNavigator = () => {
           title: strings.title,
         }}
       >
-        {!complete ? (
-          <Stack.Group>
-            <Stack.Screen name="download-catalyst">
-              {() => (
-                <Boundary loading={{size: 'full'}}>
-                  {/* STEP 1 */}
-                  <DownloadCatalyst onNext={navigateTo.displayPin} />
-                </Boundary>
-              )}
-            </Stack.Screen>
-
-            <Stack.Screen name="display-pin">
-              {/* STEP 2 */}
-              {() => <DisplayPin onNext={navigateTo.confirmPin} pin={pin} />}
-            </Stack.Screen>
-
-            <Stack.Screen name="confirm-pin">
-              {/* STEP 3 */}
-              {() => <ConfirmPin onNext={navigateTo.confirmTx} pin={pin} />}
-            </Stack.Screen>
-
-            <Stack.Screen name="confirm-tx">
-              {() => (
-                <Boundary loading={{size: 'full', style: styles.loadingBackground}} error={{size: 'full'}}>
-                  <ConfirmVotingTx
-                    onNext={() => {
-                      setComplete(true)
-                      navigateTo.qrCode()
-                    }}
-                    pin={pin}
-                    onSuccess={setVotingKeyEncrypted}
-                  />
-                </Boundary>
-              )}
-            </Stack.Screen>
-          </Stack.Group>
-        ) : (
-          <Stack.Screen name="qr-code" options={{...navigationOptions, headerLeft: () => null}}>
-            {() => {
-              if (votingKeyEncrypted == null) throw new Error('invalid state')
-              {
-                /* STEP 4 */
-              }
-              return <QrCode onNext={navigateTo.txHistory} votingKeyEncrypted={votingKeyEncrypted} />
-            }}
+        <Stack.Group>
+          {/* STEP 1 */}
+          <Stack.Screen name="download-catalyst">
+            {() => (
+              <Boundary loading={{size: 'full'}}>
+                <DownloadCatalyst />
+              </Boundary>
+            )}
           </Stack.Screen>
-        )}
+
+          {/* STEP 2 */}
+          <Stack.Screen name="display-pin" component={DisplayPin} />
+
+          {/* STEP 3 */}
+          <Stack.Screen name="confirm-pin" component={ConfirmPin} />
+
+          <Stack.Screen name="confirm-tx">
+            {() => (
+              <Boundary loading={{size: 'full', style: styles.loadingBackground}} error={{size: 'full'}}>
+                <ConfirmVotingTx />
+              </Boundary>
+            )}
+          </Stack.Screen>
+
+          {/* STEP 4 */}
+          <Stack.Screen component={QrCode} name="qr-code" options={{...navigationOptions, headerLeft: () => null}} />
+        </Stack.Group>
       </Stack.Navigator>
     </CatalystProvider>
   )
 }
 
-const useNavigateTo = () => {
+export const useNavigateTo = () => {
   const navigation = useNavigation<VotingRegistrationRouteNavigation>()
   const {resetToTxHistory} = useWalletNavigation()
 
@@ -128,11 +101,6 @@ const useStrings = () => {
   return {
     title: intl.formatMessage(globalMessages.votingTitle),
   }
-}
-
-const usePin = (options: cryptoRandomString.Options) => {
-  const [pin] = useState(() => cryptoRandomString(options))
-  return pin
 }
 
 const useStyles = () => {

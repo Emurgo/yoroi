@@ -114,7 +114,7 @@ const messages = defineMessages({
       '!!!Confirm your voting registration and submit the certificate generated in previous step to the blockchain',
   },
   authOsInstructions: {
-    id: 'components.catalyst.step4.bioAuthInstructions',
+    id: 'components.catalyst.confirmTx.bioAuthInstructions',
     defaultMessage: '!!!Please authenticate so that Yoroi can generate the required certificate for voting',
   },
   confirm: {

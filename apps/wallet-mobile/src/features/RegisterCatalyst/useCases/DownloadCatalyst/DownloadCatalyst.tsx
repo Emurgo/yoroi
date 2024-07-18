@@ -1,5 +1,6 @@
 import {useCatalyst} from '@yoroi/staking'
 import {useTheme} from '@yoroi/theme'
+import cryptoRandomString from 'crypto-random-string'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {Image, Linking, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
@@ -11,15 +12,13 @@ import {Button, useModal} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
 import {useStakingInfo} from '../../../../legacy/Dashboard/StakePoolInfos'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {useNavigateTo} from '../../CatalystNavigator'
 import {Actions, Row, Stepper} from '../../common/components'
 import {useCatalystCurrentFund} from '../../common/hooks'
 import {useStrings} from '../../common/strings'
 import {CatalystStep1} from '../../illustrations/CatalystStep1'
 
-type Props = {
-  onNext: () => void
-}
-export const DownloadCatalyst = ({onNext}: Props) => {
+export const DownloadCatalyst = () => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
   const {stakingInfo} = useStakingInfo(wallet, {suspense: true})
@@ -27,6 +26,15 @@ export const DownloadCatalyst = ({onNext}: Props) => {
   const styles = useStyles()
   const {fund} = useCatalystCurrentFund()
   const intl = useIntl()
+  const navigateTo = useNavigateTo()
+  const {pinChanged, reset: resetCatalyst} = useCatalyst()
+
+  const onNext = () => {
+    resetCatalyst()
+    const pin = createPin()
+    pinChanged(pin)
+    navigateTo.displayPin()
+  }
 
   const formatDate = React.useCallback(
     (date: Date) =>
@@ -153,6 +161,8 @@ const AppStoreButton = () => {
     </TouchableOpacity>
   )
 }
+
+const createPin = () => cryptoRandomString({length: 4, type: 'numeric'})
 
 const useStyles = () => {
   const {color, atoms} = useTheme()

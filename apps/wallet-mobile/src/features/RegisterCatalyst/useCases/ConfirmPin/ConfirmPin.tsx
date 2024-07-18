@@ -1,3 +1,4 @@
+import {useCatalyst} from '@yoroi/staking'
 import {useTheme} from '@yoroi/theme'
 import React, {useState} from 'react'
 import {useIntl} from 'react-intl'
@@ -8,21 +9,20 @@ import {Button, Spacer} from '../../../../components'
 import {BACKSPACE, NumericKeyboard} from '../../../../components/NumericKeyboard'
 import {showErrorDialog} from '../../../../kernel/dialogs'
 import {errorMessages} from '../../../../kernel/i18n/global-messages'
+import {useNavigateTo} from '../../CatalystNavigator'
 import {Actions, Description, PinBox, Row, Stepper} from '../../common/components'
 import {useStrings} from '../../common/strings'
 
 const PIN_LENGTH = 4
 
-type Props = {
-  pin: string
-  onNext: () => void
-}
-export const ConfirmPin = ({pin, onNext}: Props) => {
+export const ConfirmPin = () => {
   const intl = useIntl()
   const strings = useStrings()
   const [confirmPin, setConfirmPin] = useState('')
   const styles = useStyles()
   const [done, setDone] = React.useState(false)
+  const {pin} = useCatalyst()
+  const navigateTo = useNavigateTo()
 
   const onKeyDown = (key: string) => {
     const enteredPin = key === BACKSPACE ? confirmPin.slice(0, confirmPin.length - 1) : confirmPin + key
@@ -34,6 +34,10 @@ export const ConfirmPin = ({pin, onNext}: Props) => {
     } else {
       showErrorDialog(errorMessages.incorrectPin, intl)
     }
+  }
+
+  const onNext = () => {
+    navigateTo.confirmTx()
   }
 
   return (

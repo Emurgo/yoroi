@@ -1,3 +1,4 @@
+import {useCatalyst} from '@yoroi/staking'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {ScrollView, StyleSheet} from 'react-native'
@@ -5,17 +6,24 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Checkbox, Spacer} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
+import {useNavigateTo} from '../../CatalystNavigator'
 import {Actions, Description, PinBox, Row, Stepper} from '../../common/components'
 import {useStrings} from '../../common/strings'
 
-type Props = {
-  pin: string
-  onNext: () => void
-}
-export const DisplayPin = ({pin: [pin0, pin1, pin2, pin3], onNext}: Props) => {
+export const DisplayPin = () => {
   const strings = useStrings()
   const styles = useStyles()
   const [checked, setChecked] = React.useState(false)
+  const {pin} = useCatalyst()
+  const navigateTo = useNavigateTo()
+
+  if (pin === null) throw new Error('pin cannot be null')
+
+  const [pin0, pin1, pin2, pin3] = pin
+
+  const onNext = () => {
+    navigateTo.confirmPin()
+  }
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>

@@ -1,3 +1,4 @@
+import {useCatalyst} from '@yoroi/staking'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {ScrollView, StyleSheet} from 'react-native'
@@ -9,18 +10,27 @@ import {Space} from '../../../../components/Space/Space'
 import {useAllowScreenshot} from '../../../../hooks/useAllowScreenShot'
 import {useCopy} from '../../../../hooks/useCopy'
 import {useBlockGoBack} from '../../../../kernel/navigation'
+import {useNavigateTo} from '../../CatalystNavigator'
 import {Actions, Description, Stepper} from '../../common/components'
 import {useStrings} from '../../common/strings'
 
-export const QrCode = ({onNext, votingKeyEncrypted}: {onNext: () => void; votingKeyEncrypted: string}) => {
+export const QrCode = () => {
   useBlockGoBack()
   useAllowScreenshot()
   const strings = useStrings()
   const styles = useStyles()
   const [checked, setChecked] = React.useState(false)
+  const {votingKeyEncrypted} = useCatalyst()
+  const navigateTo = useNavigateTo()
+
+  if (votingKeyEncrypted === null) throw new Error('votingKeyEncrypted cannot be null')
 
   const [isCopying, copy] = useCopy()
   const handOnCopy = () => copy(votingKeyEncrypted)
+
+  const onNext = () => {
+    navigateTo.txHistory()
+  }
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>

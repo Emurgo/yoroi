@@ -1,3 +1,4 @@
+import {useCatalyst} from '@yoroi/staking'
 import {useTheme} from '@yoroi/theme'
 import React, {useState} from 'react'
 import {ScrollView, StyleSheet, Text, View} from 'react-native'
@@ -13,27 +14,28 @@ import {useVotingRegTx} from '../../../../yoroi-wallets/hooks'
 import {Amounts} from '../../../../yoroi-wallets/utils'
 import {formatTokenWithSymbol} from '../../../../yoroi-wallets/utils/format'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {useNavigateTo} from '../../CatalystNavigator'
 import {Actions, Description} from '../../common/components'
 import {useStrings} from '../../common/strings'
 
-export const ConfirmVotingTx = ({
-  onSuccess,
-  onNext,
-  pin,
-}: {
-  onSuccess: (key: string) => void
-  onNext: () => void
-  pin: string
-}) => {
+export const ConfirmVotingTx = () => {
   const [supportsCIP36, setSupportsCIP36] = useState(true)
   const styles = useStyles()
   const strings = useStrings()
   const {openModal, closeModal} = useModal()
+  const {votingKeyEncryptedChanged, pin} = useCatalyst()
+  const navigateTo = useNavigateTo()
+
+  const onNext = () => {
+    navigateTo.qrCode()
+  }
+
+  if (pin === null) throw new Error('pin cannot be null')
 
   const {wallet, meta} = useSelectedWallet()
   const votingRegTx = useVotingRegTx(
     {wallet, pin, supportsCIP36, addressMode: meta.addressMode},
-    {onSuccess: ({votingKeyEncrypted}) => onSuccess(votingKeyEncrypted)},
+    {onSuccess: ({votingKeyEncrypted}) => votingKeyEncryptedChanged(votingKeyEncrypted)},
   )
 
   const [useUSB, setUseUSB] = useState(false)
