@@ -9,6 +9,7 @@ import {
 } from '@react-navigation/native'
 import {TransitionPresets} from '@react-navigation/stack'
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack'
+import {isKeyOf} from '@yoroi/common'
 import {Atoms, ThemedPalette, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import React from 'react'
@@ -618,28 +619,37 @@ export const useWalletNavigation = () => {
   } as const).current
 }
 
-export const shouldHideTabBarForRoutes = (state: NavigationState) => {
-  const routeName = getFocusedRouteName(state)
-  if (routeName === null) return false
-  return (
-    routeName.startsWith('scan') ||
-    routeName.startsWith('swap') ||
-    routeName.startsWith('receive') ||
-    routeName.startsWith('exchange') ||
-    routeName.startsWith('discover-browser') ||
-    (routeName.startsWith('portfolio') && routeName !== 'portfolio')
-  )
+export const shouldShowTabBarForRoutes = (state: NavigationState) => {
+  const routes = getFocusedRouteName(state)
+
+  if (routes.length === 1) {
+    const [route] = routes
+    return Object.keys(routesWithTabBar).includes(route)
+  }
+
+  const [route, subRoute] = routes
+  return isKeyOf(route, routesWithTabBar) && routesWithTabBar[route].includes(subRoute)
 }
 
-const getFocusedRouteName = (
-  state: Partial<NavigationState> | NavigationState['routes'][0]['state'],
-): string | null => {
+const routesWithTabBar: Record<keyof WalletTabRoutes, string[]> = {
+  history: ['history-list'],
+  portfolio: ['dashboard-portfolio'],
+  discover: ['discover-select-dapp-from-list'],
+  menu: ['_menu'],
+  'staking-dashboard': ['staking-dashboard-main'],
+}
+
+const getFocusedRouteName = (state: Partial<NavigationState> | NavigationState['routes'][0]['state']): string[] => {
   const currentRoute = state?.routes?.[state?.index ?? -1]
   const currentState = currentRoute?.state
+  const name = currentRoute?.name ?? null
+  if (name === null) return []
+
   if (currentState) {
-    return getFocusedRouteName(currentState)
+    return [name, ...getFocusedRouteName(currentState)]
   }
-  return currentRoute?.name ?? null
+
+  return [name]
 }
 
 function useKeepRoutesInHistory(routesToKeep: string[]) {
