@@ -28,7 +28,7 @@ export const MediaPreview = ({
   contentFit = 'cover',
   blurRadius,
 }: MediaPreviewProps) => {
-  const {color, isDark} = useTheme()
+  const {color, isDark, colorScheme} = useTheme()
   const {wallet} = useSelectedWallet()
   const [loading, setLoading] = React.useState(false)
   const [error, setError] = React.useState(false)
@@ -42,8 +42,10 @@ export const MediaPreview = ({
   return (
     <View style={{width, height, overflow: 'hidden'}}>
       <Image
+        key={colorScheme}
         source={{uri, headers}}
         contentFit={contentFit}
+        placeholderContentFit={contentFit}
         style={{width, height, ...style}}
         blurRadius={blurRadius}
         cachePolicy="memory-disk"

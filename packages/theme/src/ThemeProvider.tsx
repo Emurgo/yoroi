@@ -54,6 +54,7 @@ export const ThemeProvider = ({
       isDark: themes[themeName].base === 'dark',
       atoms: themes[themeName].atoms,
       data: themesData,
+      colorScheme: themeName,
     }),
     [colorScheme, storage, themeName, selectedName],
   )
@@ -74,6 +75,7 @@ type ThemeContext = {
   isDark: boolean
   atoms: Atoms
   data: ThemeType[]
+  colorScheme: Exclude<SupportedThemes, 'system'>
 }
 
 const themes: Record<Exclude<SupportedThemes, 'system'>, Theme> = {

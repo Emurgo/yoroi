@@ -29,7 +29,7 @@ import {dappExplorerEnabled} from './kernel/config'
 import {useMetrics} from './kernel/metrics/metricsManager'
 import {
   defaultStackNavigationOptions,
-  shouldHideTabBarForRoutes,
+  shouldShowTabBarForRoutes,
   WalletStackRoutes,
   WalletTabRoutes,
 } from './kernel/navigation'
@@ -38,8 +38,8 @@ import {DashboardNavigator} from './legacy/Dashboard'
 const Tab = createBottomTabNavigator<WalletTabRoutes>()
 
 const TabBarWithHiddenContent = (props: BottomTabBarProps) => {
-  const shouldHide = shouldHideTabBarForRoutes(props.state)
-  return shouldHide ? null : <BottomTabBar {...props} />
+  const shouldShow = shouldShowTabBarForRoutes(props.state)
+  return shouldShow ? <BottomTabBar {...props} /> : null
 }
 
 const WalletTabNavigator = () => {
@@ -83,6 +83,7 @@ const WalletTabNavigator = () => {
           tabBarActiveTintColor: colors.active,
           tabBarInactiveTintColor: colors.inactive,
           tabBarStyle: {
+            borderTopColor: colors.divider,
             borderTopWidth: 2 * StyleSheet.hairlineWidth,
             backgroundColor: colors.background,
             // keyboardWillShow keyboardWillHiden dont work on android
@@ -289,6 +290,7 @@ const useStyles = () => {
     active: color.text_primary_high,
     inactive: color.text_gray_medium,
     background: color.gray_cmin,
+    divider: color.gray_c200,
   }
 
   return {colors, styles}

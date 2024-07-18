@@ -2,7 +2,8 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {FlatList, Image, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 
-import nftPlaceholder from '../../../../../assets/img/nft-placeholder.png'
+import placeholderLight from '../../../../../assets/img/nft-placeholder.png'
+import placeholderDark from '../../../../../assets/img/nft-placeholder-dark.png'
 import {Icon, Spacer} from '../../../../../components'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {usePortfolioBalances} from '../../../common/hooks/usePortfolioBalances'
@@ -13,11 +14,14 @@ import {useStrings} from '../../../common/useStrings'
 export const DashboardNFTsList = () => {
   const {styles, cardItemWidth} = useStyles()
   const navigationTo = useNavigateTo()
+  const {isDark} = useTheme()
 
   const {wallet} = useSelectedWallet()
   const balances = usePortfolioBalances({wallet})
   const nftsList = balances.nfts ?? []
   const hasNotNfts = nftsList.length === 0
+
+  const placeholder = isDark ? placeholderDark : placeholderLight
 
   const handleDirectNFTsList = () => {
     navigationTo.nftsList()
@@ -29,7 +33,7 @@ export const DashboardNFTsList = () => {
 
       {hasNotNfts ? (
         <View style={styles.container}>
-          <Image source={nftPlaceholder} style={[styles.placeholderNft, styles.image]} />
+          <Image source={placeholder} style={[styles.placeholderNft, styles.image]} />
         </View>
       ) : null}
 
