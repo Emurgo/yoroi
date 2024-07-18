@@ -1,6 +1,7 @@
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Animated, StyleSheet, Text, TextProps, View, ViewProps} from 'react-native'
+import {TouchableOpacity} from 'react-native-gesture-handler'
 
 import {StepperProgress} from '../../../components/StepperProgress/StepperProgress'
 
@@ -30,24 +31,31 @@ export const Row = ({style, ...props}: ViewProps) => {
 export const PinBox = ({
   selected,
   children,
+  error,
   done = false,
+  onPress,
 }: {
   selected?: boolean
   children: React.ReactNode
   done?: boolean
+  error?: boolean
+  onPress: () => void
 }) => {
   const styles = useStyles()
 
   return (
-    <View style={[styles.pinBox, selected && styles.pinBoxSelected, done && styles.pinDone]}>
-      {!selected ? (
+    <TouchableOpacity
+      style={[styles.pinBox, selected && styles.pinBoxSelected, error && styles.pinBoxError, done && styles.pinDone]}
+      onPress={onPress}
+    >
+      {!selected || done ? (
         <PinDigit style={[children === undefined && styles.pinDigitUnselected, done && styles.pinDigitDone]}>
           {children === undefined ? '—' : children}
         </PinDigit>
       ) : (
         <BlinkingCursor />
       )}
-    </View>
+    </TouchableOpacity>
   )
 }
 export const PinDigit = ({style, ...props}: TextProps) => {
@@ -135,6 +143,10 @@ const useStyles = () => {
     pinBoxSelected: {
       borderWidth: 2,
       borderColor: color.gray_cmax,
+    },
+    pinBoxError: {
+      borderColor: color.sys_magenta_c500,
+      borderWidth: 2,
     },
     pinDigitUnselected: {
       color: color.gray_c600,
