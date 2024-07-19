@@ -512,8 +512,6 @@ describe('SwapProvider', () => {
           },
         },
         tokens: {
-          sellInfo: tokenInfoMocks.a,
-          buyInfo: tokenInfoMocks.b,
           ptInfo: tokenInfoMocks.pt,
           priceDenomination: 0,
         },
@@ -542,9 +540,6 @@ describe('SwapProvider', () => {
       quantity: 20n,
       info: tokenInfoMocks.c,
     })
-    expect(
-      result.current.orderData.tokens.buyInfo,
-    ).toEqual<Portfolio.Token.Info>(tokenInfoMocks.c)
     expect(result.current.orderData.tokens.priceDenomination).toBe(4)
   })
 
@@ -563,8 +558,6 @@ describe('SwapProvider', () => {
           },
         },
         tokens: {
-          sellInfo: tokenInfoMocks.a,
-          buyInfo: tokenInfoMocks.b,
           priceDenomination: 0,
         },
       },
@@ -592,9 +585,6 @@ describe('SwapProvider', () => {
       quantity: 100n,
       info: tokenInfoMocks.c,
     })
-    expect(
-      result.current.orderData.tokens.sellInfo,
-    ).toEqual<Portfolio.Token.Info>(tokenInfoMocks.c)
     expect(result.current.orderData.tokens.priceDenomination).toBe(-4)
   })
 

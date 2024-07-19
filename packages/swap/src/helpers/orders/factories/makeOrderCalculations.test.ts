@@ -32,8 +32,6 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: tokenInfoMocks.a,
-        buyInfo: tokenInfoMocks.b,
         ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
@@ -41,8 +39,6 @@ describe('makeOrderCalculations', () => {
       side: 'sell',
       frontendFeeTiers,
     })
-
-    console.error(JSON.stringify(calculations[0]?.prices))
 
     expect(calculations[0]).toStrictEqual<SwapOrderCalculation>({
       order: {
@@ -147,8 +143,6 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: tokenInfoMocks.b,
-        buyInfo: tokenInfoMocks.a,
         ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
@@ -261,8 +255,6 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: tokenInfoMocks.a,
-        buyInfo: tokenInfoMocks.b,
         ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
@@ -375,8 +367,6 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: tokenInfoMocks.a,
-        buyInfo: tokenInfoMocks.b,
         ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
@@ -489,8 +479,6 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: tokenInfoMocks.a,
-        buyInfo: tokenInfoMocks.b,
         ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
@@ -598,8 +586,6 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: tokenInfoMocks.a,
-        buyInfo: tokenInfoMocks.b,
         ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
@@ -705,8 +691,6 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: tokenInfoMocks.a,
-        buyInfo: tokenInfoMocks.b,
         ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
@@ -813,8 +797,6 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: tokenInfoMocks.b,
-        buyInfo: tokenInfoMocks.a,
         ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
@@ -921,8 +903,6 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: tokenInfoMocks.a,
-        buyInfo: tokenInfoMocks.b,
         ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
@@ -1029,8 +1009,6 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: tokenInfoMocks.a,
-        buyInfo: tokenInfoMocks.b,
         ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
@@ -1137,8 +1115,6 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: tokenInfoMocks.b,
-        buyInfo: tokenInfoMocks.a,
         ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
@@ -1242,8 +1218,6 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: tokenInfoMocks.b,
-        buyInfo: tokenInfoMocks.a,
         ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
@@ -1350,8 +1324,6 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: tokenInfoMocks.b,
-        buyInfo: tokenInfoMocks.a,
         ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
@@ -1458,8 +1430,6 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: tokenInfoMocks.b,
-        buyInfo: tokenInfoMocks.a,
         ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
@@ -1566,8 +1536,6 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: tokenInfoMocks.a,
-        buyInfo: tokenInfoMocks.b,
         ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
@@ -1671,8 +1639,6 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: tokenInfoMocks.a,
-        buyInfo: tokenInfoMocks.b,
         ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
@@ -1779,8 +1745,6 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: tokenInfoMocks.b,
-        buyInfo: tokenInfoMocks.a,
         ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
@@ -1887,8 +1851,6 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: tokenInfoMocks.a,
-        buyInfo: tokenInfoMocks.b,
         ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
@@ -1995,8 +1957,6 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: tokenInfoMocks.a,
-        buyInfo: tokenInfoMocks.b,
         ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
@@ -2103,8 +2063,6 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: tokenInfoMocks.b,
-        buyInfo: tokenInfoMocks.a,
         ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
@@ -2211,8 +2169,6 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: tokenInfoMocks.b,
-        buyInfo: tokenInfoMocks.a,
         ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
@@ -2319,8 +2275,6 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: tokenInfoMocks.b,
-        buyInfo: tokenInfoMocks.a,
         ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
@@ -2438,8 +2392,6 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: tokenInfoMocks.b,
-        buyInfo: tokenInfoMocks.a,
         ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
@@ -2557,8 +2509,6 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: tokenInfoMocks.b,
-        buyInfo: tokenInfoMocks.a,
         ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
@@ -2676,8 +2626,6 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: tokenInfoMocks.b,
-        buyInfo: tokenInfoMocks.a,
         ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
@@ -2787,8 +2735,6 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: tokenInfoMocks.b,
-        buyInfo: tokenInfoMocks.a,
         ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
@@ -2897,8 +2843,6 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: tokenInfoMocks.b,
-        buyInfo: tokenInfoMocks.a,
         ptInfo: tokenInfoMocks.pt,
         priceDenomination: 0,
       },
@@ -3007,8 +2951,6 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: tokenInfoMocks.b,
-        buyInfo: tokenInfoMocks.a,
         ptInfo: tokenInfoMocks.a,
         priceDenomination: 0,
       },
@@ -3117,8 +3059,6 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: tokenInfoMocks.b,
-        buyInfo: tokenInfoMocks.a,
         ptInfo: tokenInfoMocks.a,
         priceDenomination: 0,
       },
@@ -3227,8 +3167,6 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: tokenInfoMocks.b,
-        buyInfo: tokenInfoMocks.a,
         ptInfo: tokenInfoMocks.a,
         priceDenomination: 0,
       },
@@ -3337,8 +3275,6 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: tokenInfoMocks.b,
-        buyInfo: tokenInfoMocks.a,
         ptInfo: tokenInfoMocks.a,
         priceDenomination: 0,
       },
@@ -3447,8 +3383,6 @@ describe('makeOrderCalculations', () => {
       slippage: slippage,
       pools: pools,
       tokens: {
-        sellInfo: tokenInfoMocks.b,
-        buyInfo: tokenInfoMocks.a,
         ptInfo: tokenInfoMocks.a,
         priceDenomination: 0,
       },

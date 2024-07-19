@@ -362,8 +362,6 @@ describe('State Actions', () => {
           quantity: 0n,
         }
         draft.orderData.tokens = {
-          sellInfo: tokenInfoMocks.a,
-          buyInfo: tokenInfoMocks.b,
           ptInfo: tokenInfoMocks.pt,
           priceDenomination: 0,
         }
@@ -420,8 +418,6 @@ describe('State Actions', () => {
           quantity: 0n,
         }
         draft.orderData.tokens = {
-          sellInfo: tokenInfoMocks.a,
-          buyInfo: tokenInfoMocks.b,
           ptInfo: tokenInfoMocks.pt,
           priceDenomination: 0,
         }
