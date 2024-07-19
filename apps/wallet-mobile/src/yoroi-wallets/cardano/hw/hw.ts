@@ -180,8 +180,10 @@ const connectionHandler = async (
 
     const appAda = new AppAda(transport)
     const versionResp: GetVersionResponse = await appAda.getVersion()
+
     logger.debug('connectionHandler: AppAda version', {versionResp})
     checkDeviceVersion(versionResp)
+
     return appAda
   } catch (e) {
     throw mapLedgerError(e)

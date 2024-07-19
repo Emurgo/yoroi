@@ -1,0 +1,47 @@
+[
+  {
+    "id": "components.catalyst.confirmTx.title",
+    "defaultMessage": "!!!Confirm Registration",
+    "file": "src/legacy/Catalyst/useCases/ConfirmVotingTx/ConfirmVotingTx.tsx",
+    "start": {
+      "line": 124,
+      "column": 21,
+      "index": 4123
+    },
+    "end": {
+      "line": 127,
+      "column": 3,
+      "index": 4222
+    }
+  },
+  {
+    "id": "components.catalyst.confirmTx.passwordSignDescription",
+    "defaultMessage": "!!!Confirm your voting registration and submit the certificate generated in previous step to the blockchain",
+    "file": "src/legacy/Catalyst/useCases/ConfirmVotingTx/ConfirmVotingTx.tsx",
+    "start": {
+      "line": 128,
+      "column": 27,
+      "index": 4251
+    },
+    "end": {
+      "line": 132,
+      "column": 3,
+      "index": 4458
+    }
+  },
+  {
+    "id": "components.catalyst.step4.bioAuthInstructions",
+    "defaultMessage": "!!!Please authenticate so that Yoroi can generate the required certificate for voting",
+    "file": "src/legacy/Catalyst/useCases/ConfirmVotingTx/ConfirmVotingTx.tsx",
+    "start": {
+      "line": 133,
+      "column": 22,
+      "index": 4482
+    },
+    "end": {
+      "line": 136,
+      "column": 3,
+      "index": 4653
+    }
+  }
+]

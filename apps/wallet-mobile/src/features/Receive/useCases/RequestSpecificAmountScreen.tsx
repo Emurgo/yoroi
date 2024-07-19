@@ -15,13 +15,13 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, KeyboardAvoidingView, Spacer, TextInput, useModal} from '../../../components'
 import {ScrollView, useScrollView} from '../../../components/ScrollView/ScrollView'
+import {ShareQRCodeCard} from '../../../components/ShareQRCodeCard/ShareQRCodeCard'
 import {useCopy} from '../../../hooks/useCopy'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {isEmptyString} from '../../../kernel/utils'
 import {editedFormatter} from '../../../yoroi-wallets/utils'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useReceive} from '../common/ReceiveProvider'
-import {ShareQRCodeCard} from '../common/ShareQRCodeCard/ShareQRCodeCard'
 import {SkeletonAdressDetail} from '../common/SkeletonAddressDetail/SkeletonAddressDetail'
 import {useStrings} from '../common/useStrings'
 
@@ -105,6 +105,7 @@ export const RequestSpecificAmountScreen = () => {
 const Modal = ({amount, address}: {amount: string; address: string}) => {
   const strings = useStrings()
   const {styles} = useStyles()
+  const {track} = useMetrics()
 
   const cardanoLinks = linksCardanoModuleMaker()
   const requestData = cardanoLinks.create({
@@ -130,7 +131,15 @@ const Modal = ({amount, address}: {amount: string; address: string}) => {
     <View style={styles.root}>
       <RNScrollView>
         {hasAddress ? (
-          <ShareQRCodeCard title={title} content={content} onLongPress={handOnCopy} testId="receive:specific-amount" />
+          <ShareQRCodeCard
+            title={title}
+            content={`${strings.address} ${content}`}
+            onLongPress={handOnCopy}
+            testId="receive:specific-amount"
+            onShare={() => track.receiveShareAddressClicked()}
+            shareLabel={strings.shareLabel}
+            copiedText={strings.addressCopiedMsg}
+          />
         ) : (
           <View style={styles.root}>
             <SkeletonAdressDetail />

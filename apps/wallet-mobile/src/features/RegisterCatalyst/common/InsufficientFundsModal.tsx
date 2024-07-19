@@ -4,12 +4,12 @@ import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Button, useModal} from '../../components'
-import {Space} from '../../components/Space/Space'
-import {usePortfolioPrimaryBalance} from '../../features/Portfolio/common/hooks/usePortfolioPrimaryBalance'
-import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
-import globalMessages, {confirmationMessages} from '../../kernel/i18n/global-messages'
-import {catalystConfig} from '../../yoroi-wallets/cardano/constants/catalyst-config'
+import {Button, useModal} from '../../../components'
+import {Space} from '../../../components/Space/Space'
+import globalMessages, {confirmationMessages} from '../../../kernel/i18n/global-messages'
+import {catalystConfig} from '../../../yoroi-wallets/cardano/constants/catalyst-config'
+import {usePortfolioPrimaryBalance} from '../../Portfolio/common/hooks/usePortfolioPrimaryBalance'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 
 export const InsufficientFundsModal = () => {
   const strings = useStrings()

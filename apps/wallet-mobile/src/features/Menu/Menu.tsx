@@ -12,10 +12,10 @@ import {dappExplorerEnabled} from '../../kernel/config'
 import globalMessages from '../../kernel/i18n/global-messages'
 import {useMetrics} from '../../kernel/metrics/metricsManager'
 import {defaultStackNavigationOptions, useWalletNavigation} from '../../kernel/navigation'
-import {useCanVote} from '../../legacy/Catalyst/hooks'
-import {InsufficientFundsModal} from '../../legacy/Catalyst/InsufficientFundsModal'
 import {usePrefetchStakingInfo} from '../../legacy/Dashboard/StakePoolInfos'
 import {usePoolTransition} from '../../legacy/Staking/PoolTransition/usePoolTransition'
+import {useCanVote} from '../RegisterCatalyst/common/hooks'
+import {InsufficientFundsModal} from '../RegisterCatalyst/common/InsufficientFundsModal'
 import {useIsGovernanceFeatureEnabled} from '../Staking/Governance'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 
@@ -189,6 +189,7 @@ const KNOWLEDGE_BASE_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/categor
 const useNavigateTo = () => {
   const {navigation, navigateToSettings, navigateToGovernanceCentre, navigateToStakingDashboard} = useWalletNavigation()
   const {wallet} = useSelectedWallet()
+
   const prefetchStakingInfo = usePrefetchStakingInfo(wallet)
 
   return {

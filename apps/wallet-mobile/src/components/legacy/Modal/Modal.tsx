@@ -101,6 +101,7 @@ const useStyles = () => {
       marginTop: 0,
     },
     container: {
+      height: 350,
       backgroundColor: color.bg_color_high,
       borderRadius: 4,
       ...atoms.px_xl,
@@ -112,6 +113,7 @@ const useStyles = () => {
       ...atoms.p_lg,
     },
     content: {
+      flex: 1,
       marginTop: 15,
     },
     withTitle: {

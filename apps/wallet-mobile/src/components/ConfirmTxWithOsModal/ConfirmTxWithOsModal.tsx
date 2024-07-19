@@ -16,6 +16,7 @@ type Props = {
 export const ConfirmTxWithOsModal = ({onSuccess, unsignedTx, onError}: Props) => {
   const {wallet, meta} = useSelectedWallet()
   const styles = useStyles()
+  const {isDark} = useTheme()
 
   const {signTx, error: signError} = useSignTx({wallet})
   const {submitTx} = useSubmitTx({wallet}, {onError})
@@ -55,7 +56,7 @@ export const ConfirmTxWithOsModal = ({onSuccess, unsignedTx, onError}: Props) =>
 
   return (
     <View style={styles.center}>
-      <ActivityIndicator size="large" color="black" />
+      <ActivityIndicator size="large" color={isDark ? 'white' : 'black'} />
     </View>
   )
 }

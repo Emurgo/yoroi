@@ -154,7 +154,7 @@ const useStyles = () => {
       opacity: 0.5,
     },
     shelleyTheme: {
-      backgroundColor: color.primary_c600,
+      backgroundColor: color.primary_c500,
     },
     shelleyOutlineOnLight: {
       backgroundColor: 'transparent',

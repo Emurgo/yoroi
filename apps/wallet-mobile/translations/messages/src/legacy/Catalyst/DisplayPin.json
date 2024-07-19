@@ -1,17 +1,17 @@
 [
   {
-    "id": "components.catalyst.step2.subTitle",
+    "id": "components.catalyst.step2.title",
     "defaultMessage": "!!!Write Down PIN",
     "file": "src/legacy/Catalyst/DisplayPin.tsx",
     "start": {
-      "line": 68,
-      "column": 12,
-      "index": 1782
+      "line": 66,
+      "column": 14,
+      "index": 1940
     },
     "end": {
-      "line": 71,
+      "line": 69,
       "column": 3,
-      "index": 1874
+      "index": 2029
     }
   },
   {
@@ -19,14 +19,29 @@
     "defaultMessage": "!!!Please write down this PIN as you will need it every time you want to access the Catalyst Voting app",
     "file": "src/legacy/Catalyst/DisplayPin.tsx",
     "start": {
-      "line": 72,
+      "line": 70,
       "column": 15,
-      "index": 1891
+      "index": 2046
     },
     "end": {
-      "line": 76,
+      "line": 74,
       "column": 3,
-      "index": 2078
+      "index": 2233
+    }
+  },
+  {
+    "id": "components.catalyst.step2.checkbox",
+    "defaultMessage": "!!!I have written it down",
+    "file": "src/legacy/Catalyst/DisplayPin.tsx",
+    "start": {
+      "line": 75,
+      "column": 12,
+      "index": 2247
+    },
+    "end": {
+      "line": 78,
+      "column": 3,
+      "index": 2347
     }
   }
 ]
