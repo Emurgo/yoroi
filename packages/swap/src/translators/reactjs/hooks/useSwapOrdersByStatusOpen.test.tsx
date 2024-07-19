@@ -7,6 +7,7 @@ import {queryClientFixture} from '../../../fixtures/query-client'
 import {mockSwapManager, swapManagerMocks} from '../../../manager.mocks'
 import {wrapperManagerFixture} from '../../../fixtures/manager-wrapper'
 import {useSwapOrdersByStatusOpen} from './useSwapOrdersByStatusOpen'
+import {storageSerializer} from '@yoroi/common'
 
 describe('useSwapOrdersByStatusOpen', () => {
   let queryClient: QueryClient
@@ -25,7 +26,7 @@ describe('useSwapOrdersByStatusOpen', () => {
       const orders = useSwapOrdersByStatusOpen()
       return (
         <View>
-          <Text testID="orders">{JSON.stringify(orders)}</Text>
+          <Text testID="orders">{storageSerializer(orders)}</Text>
         </View>
       )
     }
@@ -43,7 +44,7 @@ describe('useSwapOrdersByStatusOpen', () => {
     })
 
     expect(getByTestId('orders').props.children).toEqual(
-      JSON.stringify(swapManagerMocks.listOrdersByStatusOpenResponse),
+      storageSerializer(swapManagerMocks.listOrdersByStatusOpenResponse),
     )
     expect(mockSwapManager.order.list.byStatusOpen).toHaveBeenCalled()
   })
@@ -53,7 +54,7 @@ describe('useSwapOrdersByStatusOpen', () => {
       const orders = useSwapOrdersByStatusOpen()
       return (
         <View>
-          <Text testID="order">{JSON.stringify(orders)}</Text>
+          <Text testID="order">{storageSerializer(orders)}</Text>
         </View>
       )
     }

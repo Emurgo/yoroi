@@ -5,10 +5,9 @@ import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Icon, Spacer, Text, useModal} from '../../../../components'
-import {AmountItem} from '../../../../components/AmountItem/AmountItem'
 import {PairedBalance} from '../../../../components/PairedBalance/PairedBalance'
-import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
-import {Quantities} from '../../../../yoroi-wallets/utils'
+import {asQuantity, Quantities} from '../../../../yoroi-wallets/utils'
+import {TokenAmountItem} from '../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {PRICE_IMPACT_HIGH_RISK, PRICE_IMPACT_MODERATE_RISK, PRICE_PRECISION} from '../../common/constants'
 import {getPriceImpactRisk, usePriceImpactRiskTheme} from '../../common/helpers'
@@ -20,7 +19,7 @@ import {SwapInfoLink} from '../../common/SwapInfoLink/SwapInfoLink'
 
 export const TransactionSummary = () => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {styles, colors} = useStyles()
   const {wallet} = useSelectedWallet()
   const {orderData} = useSwap()
   const {
@@ -30,12 +29,12 @@ export const TransactionSummary = () => {
   const {openModal} = useModal()
 
   // should never happen
-  if (!calculation) throw new Error('No selected pool calculation')
+  if (!calculation || !amounts.buy || !amounts.sell) throw new Error('No selected pool calculation/amounts found')
   const {pool, cost, prices} = calculation
 
   const priceImpact = prices.priceImpact
   const formattedActualPrice = Quantities.format(
-    prices.actualPrice ?? Quantities.zero,
+    asQuantity(prices.actualPrice),
     orderData.tokens.priceDenomination,
     PRICE_PRECISION,
   )
@@ -44,33 +43,40 @@ export const TransactionSummary = () => {
   const priceImpactRiskTheme = usePriceImpactRiskTheme(priceImpactRisk)
   const priceImpactRiskTextColor = type === 'market' ? priceImpactRiskTheme.text : styles.text.color
 
-  const sellTokenInfo = useTokenInfo({wallet, tokenId: amounts.sell.tokenId})
-  const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
+  const sellTokenInfo = amounts.sell.info
+  const buyTokenInfo = amounts.buy.info
+
   const tokenToSellName = sellTokenInfo.ticker ?? sellTokenInfo.name
   const tokenToBuyName = buyTokenInfo.ticker ?? buyTokenInfo.name
-  const isSellPrimary = amounts.sell.tokenId === wallet.primaryTokenInfo.id
+  const isSellPrimary = amounts.sell.info.id === wallet.portfolioPrimaryTokenInfo.id
+
   // Quantities.zero case would only happen on an API error where the price in Ada of Ada were missing
-  const total = isSellPrimary ? calculation.ptTotalValueSpent?.quantity ?? Quantities.zero : amounts.sell.quantity
-  const formattedSellText = `${Quantities.format(total, sellTokenInfo.decimals ?? 0)} ${tokenToSellName}`
+  const total = isSellPrimary ? calculation.ptTotalValueSpent?.quantity ?? 0n : amounts.sell.quantity
+
+  const formattedSellText = `${Quantities.format(
+    asQuantity(total.toString()),
+    sellTokenInfo.decimals,
+  )} ${tokenToSellName}`
   const formattedFeeText = `${Quantities.format(
-    Quantities.sum([cost.batcherFee.quantity, cost.frontendFeeInfo.fee.quantity]),
+    asQuantity((cost.batcherFee.quantity + cost.frontendFeeInfo.fee.quantity).toString()),
     wallet.primaryTokenInfo.decimals ?? 0,
   )} ${wallet.primaryTokenInfo.ticker}`
   const poolProviderFormatted = capitalize(pool.provider)
   const poolUrl = getPoolUrlByProvider(pool.provider)
 
-  const liqFeeQuantity = Quantities.format(cost.liquidityFee.quantity, sellTokenInfo.decimals ?? 0)
+  const liqFeeQuantity = Quantities.format(asQuantity(cost.liquidityFee.quantity.toString()), sellTokenInfo.decimals)
   const liqFeeQuantityFormatted = `${liqFeeQuantity} ${tokenToSellName}`
 
   const poolIcon = <PoolIcon providerId={pool.provider} size={18} />
 
   const priceInfoValue = `${limitDisplayValue} ${tokenToSellName}/${tokenToBuyName}`
-  const minAdaInfoValue = `${Quantities.format(cost.deposit.quantity, wallet.primaryTokenInfo.decimals ?? 0)} ${
-    wallet.primaryTokenInfo.ticker
-  }`
+  const minAdaInfoValue = `${Quantities.format(
+    asQuantity(cost.deposit.quantity.toString()),
+    wallet.portfolioPrimaryTokenInfo.decimals,
+  )} ${wallet.primaryTokenInfo.ticker}`
   const minReceivedInfoValue = `${Quantities.format(
-    calculation.buyAmountWithSlippage.quantity,
-    buyTokenInfo.decimals ?? 0,
+    asQuantity(calculation.buyAmountWithSlippage.quantity.toString()),
+    buyTokenInfo.decimals,
   )} ${tokenToBuyName}`
 
   const feesInfo = [
@@ -198,7 +204,7 @@ export const TransactionSummary = () => {
                       )
                     }}
                   >
-                    <Icon.Info size={24} />
+                    <Icon.Info size={24} color={colors.icon} />
                   </TouchableOpacity>
                 )}
               </View>
@@ -233,22 +239,13 @@ export const TransactionSummary = () => {
 
       <Text style={styles.amountItemLabel}>{strings.swapFrom}</Text>
 
-      <AmountItem
-        wallet={wallet}
-        amount={{tokenId: amounts.sell.tokenId, quantity: amounts.sell.quantity}}
-        orderType={type}
-      />
+      <TokenAmountItem amount={amounts.sell} orderType={type} />
 
       <Spacer height={16} />
 
       <Text style={styles.amountItemLabel}>{strings.swapTo}</Text>
 
-      <AmountItem
-        wallet={wallet}
-        amount={{tokenId: amounts.buy.tokenId, quantity: amounts.buy.quantity}}
-        priceImpactRisk={priceImpactRisk}
-        orderType={type}
-      />
+      <TokenAmountItem amount={amounts.buy} priceImpactRisk={priceImpactRisk} orderType={type} />
     </View>
   )
 }
@@ -348,5 +345,9 @@ const useStyles = () => {
     },
   })
 
-  return styles
+  const colors = {
+    icon: color.gray_cmax,
+  }
+
+  return {styles, colors} as const
 }

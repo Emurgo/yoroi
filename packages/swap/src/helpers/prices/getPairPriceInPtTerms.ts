@@ -1,51 +1,36 @@
-import {Balance} from '@yoroi/types'
+import {Portfolio, Swap} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
-
-import {Quantities} from '../../utils/quantities'
 
 export const getPairPriceInPtTerms = ({
   sell,
-  amountA,
-  decimalsA,
-  decimalsB,
-  ptPriceTokenA,
-  ptPriceTokenB,
-  precision,
+  buy,
+  pool,
 }: {
-  sell: Balance.Amount
-  amountA: Balance.Amount
-  decimalsA: number
-  decimalsB: number
-  ptPriceTokenA: string
-  ptPriceTokenB: string
-  precision?: number
+  sell: Portfolio.Token.Amount
+  buy: Portfolio.Token.Amount
+  pool: Swap.Pool
 }) => {
-  const calculatePrice = (
-    dividend: BigNumber,
-    divisor: BigNumber,
-    scale: number,
-  ) => {
-    return divisor.isZero()
-      ? Quantities.zero
-      : dividend
-          .dividedBy(divisor)
-          .toFixed(precision ?? scale, BigNumber.ROUND_DOWN)
+  const calculatePrice = (dividend: BigNumber, divisor: BigNumber) => {
+    return divisor.isZero() ? new BigNumber(0) : dividend.dividedBy(divisor)
   }
 
-  const scaleA = new BigNumber(10).pow(decimalsA)
-  const scaleB = new BigNumber(10).pow(decimalsB)
+  const isSellTokenA = pool.tokenA.tokenId === sell.info.id
+  const priceA = new BigNumber(pool.ptPriceTokenA)
+  const priceB = new BigNumber(pool.ptPriceTokenB)
 
-  const isSellTokenA = amountA.tokenId === sell.tokenId
-  const priceA = new BigNumber(ptPriceTokenA).multipliedBy(scaleA)
-  const priceB = new BigNumber(ptPriceTokenB).multipliedBy(scaleB)
+  const scale = sell.info.decimals - buy.info.decimals
+  const scaleMultiplier = new BigNumber(10).pow(scale)
 
-  const ptPriceAB = isSellTokenA
-    ? calculatePrice(priceB, priceA, Math.max(decimalsA, decimalsB))
-    : calculatePrice(priceA, priceB, Math.max(decimalsA, decimalsB))
+  const priceAB = isSellTokenA
+    ? calculatePrice(priceB, priceA).multipliedBy(scaleMultiplier)
+    : calculatePrice(priceA, priceB).dividedBy(scaleMultiplier)
 
-  const ptPriceBA = isSellTokenA
-    ? calculatePrice(priceA, priceB, Math.max(decimalsA, decimalsB))
-    : calculatePrice(priceB, priceA, Math.max(decimalsA, decimalsB))
+  const priceBA = isSellTokenA
+    ? calculatePrice(priceA, priceB).dividedBy(scaleMultiplier)
+    : calculatePrice(priceB, priceA).multipliedBy(scaleMultiplier)
 
-  return {ptPriceAB, ptPriceBA}
+  return {
+    ptPriceAB: priceAB,
+    ptPriceBA: priceBA,
+  }
 }

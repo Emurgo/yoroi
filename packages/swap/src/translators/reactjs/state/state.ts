@@ -1,78 +1,34 @@
-import {App, Balance, Swap} from '@yoroi/types'
-import {produce} from 'immer'
+import {App, Portfolio, Swap} from '@yoroi/types'
+import {freeze, produce} from 'immer'
 
-import {Quantities} from '../../../utils/quantities'
 import {makeOrderCalculations} from '../../../helpers/orders/factories/makeOrderCalculations'
 import {selectedPoolCalculationSelector} from './selectors/selectedPoolCalculationSelector'
 import {getBestPoolCalculation} from '../../../helpers/pools/getBestPoolCalculation'
-
-export type SimpleTokenInfo = {
-  id: Balance.TokenInfo['id']
-  decimals: Exclude<Balance.TokenInfo['decimals'], undefined>
-}
-
-export type SwapOrderCalculation = Readonly<{
-  order: {
-    side?: 'buy' | 'sell'
-    slippage: number
-    orderType: Swap.OrderType
-    limitPrice?: Balance.Quantity
-    amounts: {
-      sell: Balance.Amount
-      buy: Balance.Amount
-    }
-    lpTokenHeld?: Balance.Amount
-  }
-  sides: {
-    sell: Balance.Amount
-    buy: Balance.Amount
-  }
-  pool: Swap.Pool
-  prices: {
-    base: Balance.Quantity
-    market: Balance.Quantity
-    actualPrice: Balance.Quantity
-    withSlippage: Balance.Quantity
-    withFees: Balance.Quantity
-    withFeesAndSlippage: Balance.Quantity
-    difference: Balance.Quantity
-    priceImpact: Balance.Quantity
-  }
-  hasSupply: boolean
-  buyAmountWithSlippage: Balance.Amount
-  ptTotalValueSpent?: Balance.Amount
-  cost: {
-    liquidityFee: Balance.Amount
-    deposit: Balance.Amount
-    batcherFee: Balance.Amount
-    frontendFeeInfo: {
-      discountTier?: App.FrontendFeeTier
-      fee: Balance.Amount
-    }
-    ptTotalRequired: Balance.Amount
-  }
-}>
+import {SwapOrderCalculation} from '../../../types'
 
 export type SwapState = Readonly<{
   orderData: {
     // user inputs
     amounts: {
-      sell: Balance.Amount
-      buy: Balance.Amount
+      sell?: Portfolio.Token.Amount
+      buy?: Portfolio.Token.Amount
     }
+
     type: Swap.OrderType
-    limitPrice?: Balance.Quantity
-    slippage: number
+    limitPrice?: string
+
     // when limit can manually select a pool
     selectedPoolId?: string
     selectedPoolCalculation?: SwapOrderCalculation
 
+    slippage: number
+
     // state from wallet
-    lpTokenHeld?: Balance.Amount
+    lpTokenHeld?: Portfolio.Token.Amount
     tokens: {
-      sellInfo: SimpleTokenInfo
-      buyInfo: SimpleTokenInfo
-      ptInfo: SimpleTokenInfo
+      sellInfo?: Portfolio.Token.Info
+      buyInfo?: Portfolio.Token.Info
+      ptInfo?: Portfolio.Token.Info
       // diff sell - buy decimals
       priceDenomination: number
     }
@@ -94,14 +50,14 @@ export type SwapCreateOrderActions = Readonly<{
   slippageChanged: (slippage: number) => void
   switchTokens: () => void
   resetQuantities: () => void
-  limitPriceChanged: (limitPrice: Balance.Quantity) => void
-  sellQuantityChanged: (quantity: Balance.Quantity) => void
-  buyQuantityChanged: (quantity: Balance.Quantity) => void
-  sellTokenInfoChanged: (tokenInfo: SimpleTokenInfo) => void
-  buyTokenInfoChanged: (tokenInfo: SimpleTokenInfo) => void
+  limitPriceChanged: (limitPrice: string) => void
+  sellQuantityChanged: (quantity: bigint) => void
+  buyQuantityChanged: (quantity: bigint) => void
+  sellTokenInfoChanged: (tokenInfo: Portfolio.Token.Info) => void
+  buyTokenInfoChanged: (tokenInfo: Portfolio.Token.Info) => void
   poolPairsChanged: (pools: ReadonlyArray<Swap.Pool>) => void
-  lpTokenHeldChanged: (amount: Balance.Amount | undefined) => void
-  primaryTokenInfoChanged: (tokenInfo: SimpleTokenInfo) => void
+  lpTokenHeldChanged: (amount: Portfolio.Token.Amount | undefined) => void
+  primaryTokenInfoChanged: (tokenInfo: Portfolio.Token.Info) => void
   frontendFeeTiersChanged: (
     feeTiers: ReadonlyArray<App.FrontendFeeTier>,
   ) => void
@@ -140,25 +96,25 @@ export type SwapCreateOrderAction =
     }
   | {
       type: SwapCreateOrderActionType.LimitPriceChanged
-      limitPrice: Balance.Quantity
+      limitPrice: string
     }
   | {type: SwapCreateOrderActionType.SwitchTokens}
   | {type: SwapCreateOrderActionType.ResetQuantities}
   | {
       type: SwapCreateOrderActionType.SellQuantityChanged
-      quantity: Balance.Quantity
+      quantity: bigint
     }
   | {
       type: SwapCreateOrderActionType.BuyQuantityChanged
-      quantity: Balance.Quantity
+      quantity: bigint
     }
   | {
       type: SwapCreateOrderActionType.SellTokenInfoChanged
-      tokenInfo: SimpleTokenInfo
+      tokenInfo: Portfolio.Token.Info
     }
   | {
       type: SwapCreateOrderActionType.BuyTokenInfoChanged
-      tokenInfo: SimpleTokenInfo
+      tokenInfo: Portfolio.Token.Info
     }
   | {
       type: SwapCreateOrderActionType.PoolPairsChanged
@@ -166,11 +122,11 @@ export type SwapCreateOrderAction =
     }
   | {
       type: SwapCreateOrderActionType.LpTokenHeldChanged
-      amount: Balance.Amount | undefined
+      amount: Portfolio.Token.Amount | undefined
     }
   | {
       type: SwapCreateOrderActionType.PrimaryTokenInfoChanged
-      tokenInfo: SimpleTokenInfo
+      tokenInfo: Portfolio.Token.Info
     }
   | {
       type: SwapCreateOrderActionType.FrontendFeeTiersChanged
@@ -212,20 +168,11 @@ export const combinedSwapReducers = (
   } as const
 }
 
-export const defaultSwapState: SwapState = {
+export const defaultSwapState: SwapState = freeze({
   orderData: {
     // user inputs
     type: 'market',
-    amounts: {
-      sell: {
-        quantity: Quantities.zero,
-        tokenId: '',
-      },
-      buy: {
-        quantity: Quantities.zero,
-        tokenId: '',
-      },
-    },
+    amounts: {},
     slippage: 1,
     limitPrice: undefined,
     // when limit can manually select a pool
@@ -235,31 +182,19 @@ export const defaultSwapState: SwapState = {
     // state from wallet
     lpTokenHeld: undefined,
     tokens: {
-      sellInfo: {
-        decimals: 0,
-        id: '',
-      },
-      buyInfo: {
-        decimals: 0,
-        id: '',
-      },
-      ptInfo: {
-        decimals: 0,
-        id: '',
-      },
       priceDenomination: 0,
     },
-    frontendFeeTiers: [] as const,
+    frontendFeeTiers: [],
 
     // state from api
-    pools: [] as const,
+    pools: [],
 
     // derivaded data
-    calculations: [] as const,
+    calculations: [],
     bestPoolCalculation: undefined,
   },
   unsignedTx: undefined,
-} as const
+})
 
 const defaultSwapCreateOrderActions: SwapCreateOrderActions = {
   orderTypeChanged: missingInit,
@@ -317,10 +252,16 @@ const orderReducer = (
         draft.orderData.selectedPoolCalculation =
           selectedPoolCalculationSelector(draft.orderData)
 
-        if (draft.orderData.selectedPoolCalculation === undefined) break
+        if (
+          !draft.orderData.amounts.buy ||
+          !draft.orderData.selectedPoolCalculation
+        )
+          break
 
-        draft.orderData.amounts.buy =
-          draft.orderData.selectedPoolCalculation.sides.buy
+        draft.orderData.amounts.buy = {
+          ...draft.orderData.amounts.buy,
+          quantity: draft.orderData.selectedPoolCalculation.sides.buy.quantity,
+        }
 
         if (
           draft.orderData.type === 'limit' &&
@@ -328,7 +269,6 @@ const orderReducer = (
         )
           draft.orderData.limitPrice =
             draft.orderData.bestPoolCalculation?.prices.market
-
         break
 
       // when changing pool, the selection comes from the calculations
@@ -343,10 +283,17 @@ const orderReducer = (
         draft.orderData.selectedPoolCalculation =
           selectedPoolCalculationSelector(draft.orderData)
 
-        if (draft.orderData.selectedPoolCalculation === undefined) break
+        if (
+          !draft.orderData.amounts.sell ||
+          !draft.orderData.amounts.buy ||
+          !draft.orderData.selectedPoolCalculation
+        )
+          break
 
-        draft.orderData.amounts.buy =
-          draft.orderData.selectedPoolCalculation.sides.buy
+        draft.orderData.amounts.buy = {
+          ...draft.orderData.amounts.buy,
+          quantity: draft.orderData.selectedPoolCalculation.sides.buy.quantity,
+        }
 
         draft.orderData.limitPrice =
           draft.orderData.selectedPoolCalculation.prices.market
@@ -406,26 +353,35 @@ const orderReducer = (
         draft.orderData.selectedPoolCalculation =
           selectedPoolCalculationSelector(draft.orderData)
 
-        if (draft.orderData.selectedPoolCalculation === undefined) break
+        if (
+          !draft.orderData.amounts.buy ||
+          !draft.orderData.selectedPoolCalculation
+        )
+          break
 
-        draft.orderData.amounts.buy =
-          draft.orderData.selectedPoolCalculation.sides.buy
+        draft.orderData.amounts.buy = {
+          ...draft.orderData.amounts.buy,
+          quantity: draft.orderData.selectedPoolCalculation.sides.buy.quantity,
+        }
         break
 
       // when resetting quantities, when order is limit, limit price is the best market price
       // also resets the selected pool, otherwise users will need to leave the funnel
       // otherwise the limit set back to undefined
       case SwapCreateOrderActionType.ResetQuantities:
-        draft.orderData.amounts = {
-          sell: {
-            quantity: Quantities.zero,
-            tokenId: state.orderData.amounts.sell.tokenId,
-          },
-          buy: {
-            quantity: Quantities.zero,
-            tokenId: state.orderData.amounts.buy.tokenId,
-          },
+        if (state.orderData.amounts.sell) {
+          draft.orderData.amounts.sell = {
+            ...state.orderData.amounts.sell,
+            quantity: 0n,
+          }
         }
+        if (state.orderData.amounts.buy) {
+          draft.orderData.amounts.buy = {
+            ...state.orderData.amounts.buy,
+            quantity: 0n,
+          }
+        }
+
         draft.orderData.selectedPoolId = undefined
         draft.orderData.limitPrice = undefined
 
@@ -478,16 +434,24 @@ const orderReducer = (
         draft.orderData.selectedPoolCalculation =
           selectedPoolCalculationSelector(draft.orderData)
 
-        if (draft.orderData.selectedPoolCalculation === undefined) break
+        if (
+          !draft.orderData.amounts.buy ||
+          !draft.orderData.selectedPoolCalculation
+        )
+          break
 
-        draft.orderData.amounts.buy =
-          draft.orderData.selectedPoolCalculation.sides.buy
+        draft.orderData.amounts.buy = {
+          ...draft.orderData.amounts.buy,
+          quantity: draft.orderData.selectedPoolCalculation.sides.buy.quantity,
+        }
         break
 
       // updating sell side will recalculate buy side
       // the pool will be automatically selected only if
       // there is no selected pool (limit order)
       case SwapCreateOrderActionType.SellQuantityChanged:
+        if (!draft.orderData.amounts.sell) break
+
         draft.orderData.amounts.sell.quantity = action.quantity
 
         draft.orderData.calculations = makeOrderCalculations({
@@ -507,16 +471,23 @@ const orderReducer = (
         draft.orderData.selectedPoolCalculation =
           selectedPoolCalculationSelector(draft.orderData)
 
-        if (draft.orderData.selectedPoolCalculation === undefined) break
+        if (
+          !draft.orderData.selectedPoolCalculation ||
+          !draft.orderData.amounts.buy
+        )
+          break
 
-        draft.orderData.amounts.buy =
-          draft.orderData.selectedPoolCalculation.sides.buy
+        draft.orderData.amounts.buy = {
+          ...draft.orderData.amounts.buy,
+          quantity: draft.orderData.selectedPoolCalculation.sides.buy.quantity,
+        }
         break
 
       // updating buy side will recalculate sell side
       // the pool will be automatically selected only if
       // there is no selected pool (limit order)
       case SwapCreateOrderActionType.BuyQuantityChanged:
+        if (!draft.orderData.amounts.buy) break
         draft.orderData.amounts.buy.quantity = action.quantity
 
         draft.orderData.calculations = makeOrderCalculations({
@@ -536,28 +507,48 @@ const orderReducer = (
         draft.orderData.selectedPoolCalculation =
           selectedPoolCalculationSelector(draft.orderData)
 
-        if (draft.orderData.selectedPoolCalculation === undefined) break
+        if (
+          !draft.orderData.selectedPoolCalculation ||
+          !draft.orderData.amounts.sell
+        )
+          break
 
-        draft.orderData.amounts.sell =
-          draft.orderData.selectedPoolCalculation.sides.sell
+        draft.orderData.amounts.sell = {
+          ...draft.orderData.amounts.sell,
+          quantity: draft.orderData.selectedPoolCalculation.sides.sell.quantity,
+        }
         break
 
       // when changing token info, all the derivaded data is reset
       // and the selected pool is reset
       case SwapCreateOrderActionType.SellTokenInfoChanged:
-        draft.orderData.tokens.sellInfo = action.tokenInfo
-        draft.orderData.amounts.sell.tokenId = action.tokenInfo.id
-        draft.orderData.tokens.priceDenomination =
-          action.tokenInfo.decimals - state.orderData.tokens.buyInfo.decimals
+        const decimalFactor =
+          (state.orderData.tokens.sellInfo?.decimals ?? 0) -
+          action.tokenInfo.decimals
+        const decimalScalingFactor =
+          BigInt(10) ** BigInt(Math.abs(decimalFactor))
 
-        draft.orderData.amounts.sell.quantity = Quantities.decimalPlaces(
-          Quantities.denominated(
-            state.orderData.amounts.sell.quantity,
-            state.orderData.tokens.sellInfo.decimals -
-              action.tokenInfo.decimals,
-          ),
-          0,
-        )
+        draft.orderData.tokens.sellInfo = action.tokenInfo
+        if (draft.orderData.amounts.sell) {
+          const quantity =
+            decimalFactor > 0
+              ? draft.orderData.amounts.sell.quantity / decimalScalingFactor
+              : draft.orderData.amounts.sell.quantity * decimalScalingFactor
+
+          draft.orderData.amounts.sell = {
+            quantity,
+            info: action.tokenInfo,
+          }
+        } else {
+          draft.orderData.amounts.sell = {
+            quantity: 0n,
+            info: action.tokenInfo,
+          }
+        }
+
+        draft.orderData.tokens.priceDenomination =
+          action.tokenInfo.decimals -
+          (state.orderData.tokens.buyInfo?.decimals ?? 0)
 
         draft.orderData.pools = []
 
@@ -571,9 +562,21 @@ const orderReducer = (
       // and the selected pool is reset
       case SwapCreateOrderActionType.BuyTokenInfoChanged:
         draft.orderData.tokens.buyInfo = action.tokenInfo
-        draft.orderData.amounts.buy.tokenId = action.tokenInfo.id
+        if (draft.orderData.amounts.buy) {
+          draft.orderData.amounts.buy = {
+            ...draft.orderData.amounts.buy,
+            info: action.tokenInfo,
+          }
+        } else {
+          draft.orderData.amounts.buy = {
+            quantity: 0n,
+            info: action.tokenInfo,
+          }
+        }
+
         draft.orderData.tokens.priceDenomination =
-          state.orderData.tokens.sellInfo.decimals - action.tokenInfo.decimals
+          (state.orderData.tokens.sellInfo?.decimals ?? 0) -
+          action.tokenInfo.decimals
 
         draft.orderData.pools = []
 
@@ -605,10 +608,14 @@ const orderReducer = (
         draft.orderData.selectedPoolCalculation =
           selectedPoolCalculationSelector(draft.orderData)
 
-        if (draft.orderData.selectedPoolCalculation === undefined) break
+        if (
+          !draft.orderData.selectedPoolCalculation ||
+          !draft.orderData.amounts.buy
+        )
+          break
 
-        draft.orderData.amounts.buy =
-          draft.orderData.selectedPoolCalculation.sides.buy
+        draft.orderData.amounts.buy.quantity =
+          draft.orderData.selectedPoolCalculation.sides.buy.quantity
         break
 
       // when the frontend feee tiers changes, the calculations are updated
@@ -634,10 +641,14 @@ const orderReducer = (
         draft.orderData.selectedPoolCalculation =
           selectedPoolCalculationSelector(draft.orderData)
 
-        if (draft.orderData.selectedPoolCalculation === undefined) break
+        if (
+          !draft.orderData.amounts.buy ||
+          !draft.orderData.selectedPoolCalculation
+        )
+          break
 
-        draft.orderData.amounts.buy =
-          draft.orderData.selectedPoolCalculation.sides.buy
+        draft.orderData.amounts.buy.quantity =
+          draft.orderData.selectedPoolCalculation.sides.buy.quantity
         break
 
       // when the pool pair changes, the calculations are updated
@@ -645,6 +656,7 @@ const orderReducer = (
       // reset limit and selected pool - since it can  be gone
       case SwapCreateOrderActionType.PoolPairsChanged:
         draft.orderData.pools = [...action.pools]
+
         draft.orderData.calculations = makeOrderCalculations({
           orderType: state.orderData.type,
           amounts: state.orderData.amounts,
@@ -665,15 +677,19 @@ const orderReducer = (
         draft.orderData.limitPrice = undefined
         draft.orderData.selectedPoolId = undefined
 
-        if (draft.orderData.selectedPoolCalculation === undefined) break
+        if (
+          !draft.orderData.selectedPoolCalculation ||
+          !draft.orderData.amounts.buy
+        )
+          break
 
         draft.orderData.limitPrice =
           state.orderData.type === 'limit'
             ? draft.orderData.bestPoolCalculation?.prices.market
             : undefined
 
-        draft.orderData.amounts.buy =
-          draft.orderData.selectedPoolCalculation.sides.buy
+        draft.orderData.amounts.buy.quantity =
+          draft.orderData.selectedPoolCalculation.sides.buy.quantity
         break
 
       // NOTE: designed to be loaded once at the initialization

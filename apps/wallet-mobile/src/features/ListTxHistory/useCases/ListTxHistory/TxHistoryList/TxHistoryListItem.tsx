@@ -104,11 +104,13 @@ const Amount = ({wallet, amount}: {wallet: YoroiWallet; amount: BigNumber}) => {
   return (
     <View style={styles.amountContainer} testID="transactionAmount">
       <Text style={styles.amount}>
-        {!isPrivacyActive && formatTokenInteger(asQuantity(amount), wallet.primaryToken, true)}
+        {!isPrivacyActive && formatTokenInteger(asQuantity(amount), wallet.portfolioPrimaryTokenInfo, true)}
       </Text>
 
       <Text style={styles.amount}>
-        {!isPrivacyActive ? formatTokenFractional(asQuantity(amount), wallet.primaryToken) : privacyPlaceholder}
+        {!isPrivacyActive
+          ? formatTokenFractional(asQuantity(amount), wallet.portfolioPrimaryTokenInfo)
+          : privacyPlaceholder}
       </Text>
 
       <Text style={styles.amount}>{` ${wallet.primaryTokenInfo.name}`}</Text>
@@ -149,7 +151,7 @@ const Price = ({amount, wallet}: {wallet: YoroiWallet; amount: BigNumber}) => {
   const price = React.useMemo(() => {
     if (rate == null) return `... ${currency}`
 
-    const normalizationFactor = Math.pow(10, wallet.primaryToken.metadata.numberOfDecimals)
+    const normalizationFactor = Math.pow(10, wallet.portfolioPrimaryTokenInfo.decimals)
 
     const priceBn = amount.dividedBy(normalizationFactor).times(rate)
     const isPositive = priceBn.isPositive()
@@ -164,7 +166,7 @@ const Price = ({amount, wallet}: {wallet: YoroiWallet; amount: BigNumber}) => {
     isPrivacyActive,
     privacyPlaceholder,
     rate,
-    wallet.primaryToken.metadata.numberOfDecimals,
+    wallet.portfolioPrimaryTokenInfo.decimals,
   ])
 
   return (

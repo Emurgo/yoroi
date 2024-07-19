@@ -1,15 +1,15 @@
-import {Balance, Swap} from '@yoroi/types'
+import {Portfolio, Swap} from '@yoroi/types'
 
-import {Quantities} from '../../utils/quantities'
 import {getBuyAmount} from '../orders/amounts/getBuyAmount'
 import {getPriceAfterFee} from '../prices/getPriceAfterFee'
-import BigNumber from 'bignumber.js'
+import {BigNumber} from 'bignumber.js'
 
 /**
  * Find the best pool to buy based on the desired sell amount in a liquidity pool.
  *
  * @param pools - The liquidity pool list.
  * @param sell - The desired sell amount.
+ * @param buyInfo - The token info of the token to buy.
  *
  * @returns The best pool to sell
  * if the balance in the pool is insuficient it wont throw an error
@@ -18,24 +18,25 @@ import BigNumber from 'bignumber.js'
  */
 export const getBestBuyPool = (
   pools: Swap.Pool[],
-  sell: Balance.Amount,
+  sell: Portfolio.Token.Amount,
+  buyInfo: Portfolio.Token.Info,
 ): Swap.Pool | undefined => {
-  if (pools.length === 0 || Quantities.isZero(sell.quantity)) return undefined
+  if (pools.length === 0 || sell.quantity === 0n) return undefined
 
   let bestPool: Swap.Pool | undefined
   let bestPrice = new BigNumber(0)
 
   for (const pool of pools) {
-    const buy = getBuyAmount(pool, sell)
-    if (Quantities.isZero(buy.quantity)) continue
+    const buy = getBuyAmount(pool, sell, buyInfo)
+    if (buy.quantity === 0n) continue
 
-    const isSellTokenA = sell.tokenId === pool.tokenA.tokenId
+    const isSellTokenA = sell.info.id === pool.tokenA.tokenId
     const [amountA, amountB] = isSellTokenA ? [sell, buy] : [buy, sell]
     const price = getPriceAfterFee(
       pool,
       amountA.quantity,
       amountB.quantity,
-      sell.tokenId,
+      sell.info.id,
     )
 
     if (bestPool === undefined) {

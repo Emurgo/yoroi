@@ -8,7 +8,7 @@ import {useStrings} from '../../../../common/strings'
 
 export const ShowSlippageInfo = () => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {styles, colors} = useStyles()
   const {openModal} = useModal()
 
   return (
@@ -22,7 +22,7 @@ export const ShowSlippageInfo = () => {
           openModal(strings.slippageTolerance, <Text style={styles.sheetContent}>{strings.slippageToleranceInfo}</Text>)
         }}
       >
-        <Icon.Info size={24} />
+        <Icon.Info size={24} color={colors.icon} />
       </TouchableOpacity>
     </View>
   )
@@ -46,5 +46,9 @@ const useStyles = () => {
     },
   })
 
-  return styles
+  const colors = {
+    icon: color.gray_cmax,
+  }
+
+  return {styles, colors}
 }

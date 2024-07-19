@@ -1,5 +1,6 @@
+import {tokenInfoMocks} from '../../tokenInfo.mocks'
+import {SwapOrderCalculation} from '../../types'
 import {mocks} from '../mocks'
-import {SwapOrderCalculation} from '../../translators/reactjs/state/state'
 import {getBestPoolCalculation} from './getBestPoolCalculation'
 
 describe('getBestPoolCalculation', () => {
@@ -20,52 +21,52 @@ describe('getBestPoolCalculation', () => {
           orderType: 'market',
           amounts: {
             sell: {
-              quantity: '0',
-              tokenId: 'tokenA',
+              quantity: 0n,
+              info: tokenInfoMocks.a,
             },
             buy: {
-              quantity: '100000001',
-              tokenId: 'tokenB',
+              quantity: 100000001n,
+              info: tokenInfoMocks.b,
             },
           },
         },
         sides: {
           buy: {
-            quantity: '100000001',
-            tokenId: 'tokenB',
+            quantity: 100000001n,
+            info: tokenInfoMocks.b,
           },
           sell: {
-            quantity: '7157210',
-            tokenId: 'tokenA',
+            quantity: 7157210n,
+            info: tokenInfoMocks.a,
           },
         },
         cost: {
           ptTotalRequired: {
-            quantity: '4500000',
-            tokenId: '',
+            quantity: 4500000n,
+            info: tokenInfoMocks.pt,
           },
           batcherFee: {
-            quantity: '2500000',
-            tokenId: '',
+            quantity: 2500000n,
+            info: tokenInfoMocks.pt,
           },
           deposit: {
-            quantity: '2000000',
-            tokenId: '',
+            quantity: 2000000n,
+            info: tokenInfoMocks.pt,
           },
           frontendFeeInfo: {
             fee: {
-              tokenId: '',
-              quantity: '0',
+              info: tokenInfoMocks.pt,
+              quantity: 0n,
             },
           },
           liquidityFee: {
-            tokenId: 'tokenA',
-            quantity: '3579',
+            info: tokenInfoMocks.a,
+            quantity: 3579n,
           },
         },
         buyAmountWithSlippage: {
-          quantity: '90000000',
-          tokenId: 'tokenB',
+          quantity: 90000000n,
+          info: tokenInfoMocks.b,
         },
         hasSupply: false,
         prices: {
@@ -80,29 +81,29 @@ describe('getBestPoolCalculation', () => {
         },
         pool: {
           tokenA: {
-            quantity: '973669994',
-            tokenId: 'tokenA',
+            quantity: 973669994n,
+            tokenId: tokenInfoMocks.a.id,
           },
           tokenB: {
-            quantity: '13710853133',
-            tokenId: 'tokenB',
+            quantity: 13710853133n,
+            tokenId: tokenInfoMocks.b.id,
           },
           ptPriceTokenA: '1',
           ptPriceTokenB: '0.0695404765',
           fee: '0.05',
           provider: 'sundaeswap',
           batcherFee: {
-            quantity: '2500000',
-            tokenId: '',
+            quantity: 2500000n,
+            tokenId: '.',
           },
           deposit: {
-            quantity: '2000000',
-            tokenId: '',
+            quantity: 2000000n,
+            tokenId: '.',
           },
           poolId: '6',
           lpToken: {
-            quantity: '0',
-            tokenId: '0',
+            quantity: 0n,
+            tokenId: '0.',
           },
         },
       },

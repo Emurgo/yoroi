@@ -1,4 +1,5 @@
-import {SwapOrderCalculation, SwapState} from '../state' // adjust the import path
+import {SwapOrderCalculation} from '../../../../types'
+import {SwapState} from '../state' // adjust the import path
 import {mockSwapStateDefault} from '../state.mocks'
 import {selectedPoolCalculationSelector} from './selectedPoolCalculationSelector'
 

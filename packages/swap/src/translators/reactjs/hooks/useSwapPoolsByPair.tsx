@@ -1,12 +1,12 @@
-import {Balance, Swap} from '@yoroi/types'
+import {Portfolio, Swap} from '@yoroi/types'
 import {UseQueryOptions, useQuery} from 'react-query'
 
 import {useSwap} from './useSwap'
 
 export const useSwapPoolsByPair = (
   tokenPair: {
-    tokenA: Balance.Token['info']['id']
-    tokenB: Balance.Token['info']['id']
+    tokenA: Portfolio.Token.Id
+    tokenB: Portfolio.Token.Id
   },
   options?: UseQueryOptions<
     Swap.Pool[],
@@ -15,8 +15,8 @@ export const useSwapPoolsByPair = (
     [
       'usePoolsByPair',
       {
-        tokenA: Balance.Token['info']['id']
-        tokenB: Balance.Token['info']['id']
+        tokenA: Portfolio.Token.Id
+        tokenB: Portfolio.Token.Id
       },
     ]
   >,

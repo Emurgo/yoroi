@@ -6,7 +6,7 @@ import {queryClientFixture} from '@yoroi/common'
 import {Chain} from '@yoroi/types'
 
 import {tokenDiscoveryMocks} from '../../adapters/token-discovery.mocks'
-import {usePorfolioTokenDiscovery} from './usePortfolioTokenDiscovery'
+import {usePortfolioTokenDiscovery} from './usePortfolioTokenDiscovery'
 import {wrapperMaker} from '../../fixtures/wrapperMaker'
 
 describe('usePortfolioTokenDiscovery', () => {
@@ -27,7 +27,7 @@ describe('usePortfolioTokenDiscovery', () => {
       .mockResolvedValue(tokenDiscoveryMocks.apiResponseResult.success)
 
     const TestComponent = () => {
-      const {data} = usePorfolioTokenDiscovery(
+      const {data} = usePortfolioTokenDiscovery(
         {
           id: tokenDiscoveryMocks.nftCryptoKitty.id,
           network: Chain.Network.Mainnet,
@@ -67,7 +67,7 @@ describe('usePortfolioTokenDiscovery', () => {
       .mockResolvedValue(tokenDiscoveryMocks.apiResponseResult.error)
 
     const TestComponent = () => {
-      const {data} = usePorfolioTokenDiscovery(
+      const {data} = usePortfolioTokenDiscovery(
         {
           id: tokenDiscoveryMocks.nftCryptoKitty.id,
           network: Chain.Network.Mainnet,

@@ -1,30 +1,31 @@
-import {Swap} from '@yoroi/types'
+import {Portfolio, Swap} from '@yoroi/types'
 
 import {makePossibleMarketOrder} from './makePossibleMarketOrder'
+import {tokenInfoMocks} from '../../../tokenInfo.mocks'
 
 describe('makePossibleMarketOrder', () => {
   it('should create a possible market order with the best pool', () => {
-    const sell = {
-      quantity: '100' as const,
-      tokenId: 'tokenA',
+    const sell: Portfolio.Token.Amount = {
+      quantity: 100n,
+      info: tokenInfoMocks.a,
     }
-    const buy = {
-      quantity: '177' as const, // the expected buy quantity becsause makePossibleMarketOrder will ignore the buy quantity
-      tokenId: 'tokenB',
+    const buy: Portfolio.Token.Amount = {
+      quantity: 177n,
+      info: tokenInfoMocks.b,
     }
     const bestPool1: Swap.Pool = {
-      tokenA: {quantity: '4500000', tokenId: 'tokenA'},
-      tokenB: {quantity: '9000000', tokenId: 'tokenB'},
+      tokenA: {quantity: 4500000n, tokenId: 'tokenA.'},
+      tokenB: {quantity: 9000000n, tokenId: 'tokenB.'},
       ptPriceTokenA: '0',
       ptPriceTokenB: '0',
       fee: '0.3',
       provider: 'minswap',
-      batcherFee: {quantity: '1', tokenId: ''},
-      deposit: {quantity: '1', tokenId: ''},
+      batcherFee: {quantity: 1n, tokenId: '.'},
+      deposit: {quantity: 1n, tokenId: '.'},
       poolId: '0',
       lpToken: {
-        quantity: '0',
-        tokenId: '0',
+        quantity: 0n,
+        tokenId: '0.',
       },
     }
 

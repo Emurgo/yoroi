@@ -1,4 +1,5 @@
 import {storiesOf} from '@storybook/react-native'
+import {tokenInfoMocks} from '@yoroi/portfolio'
 import {mockSwapManager, mockSwapStateDefault, orderMocks, SwapOrderCalculation, SwapProvider} from '@yoroi/swap'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
@@ -61,52 +62,70 @@ const priceAlertCalculation = {
     orderType: 'market',
     amounts: {
       sell: {
-        quantity: '0',
-        tokenId: 'tokenA',
+        quantity: 0n,
+        info: {
+          ...tokenInfoMocks.ftNameless,
+          id: 'token.A',
+        },
       },
       buy: {
-        quantity: '100000001',
-        tokenId: 'tokenB',
+        quantity: 100000001n,
+        info: {
+          ...tokenInfoMocks.ftNameless,
+          id: 'token.B',
+        },
       },
     },
   },
   sides: {
     buy: {
-      quantity: '100000001',
-      tokenId: 'tokenB',
+      quantity: 100000001n,
+      info: {
+        ...tokenInfoMocks.ftNameless,
+        id: 'token.B',
+      },
     },
     sell: {
-      quantity: '7335973',
-      tokenId: 'tokenA',
+      quantity: 7335973n,
+      info: {
+        ...tokenInfoMocks.ftNameless,
+        id: 'token.A',
+      },
     },
   },
   cost: {
     ptTotalRequired: {
-      quantity: '2950000',
-      tokenId: '',
+      quantity: 2950000n,
+      info: tokenInfoMocks.primaryETH,
     },
     batcherFee: {
-      quantity: '950000',
-      tokenId: '',
+      quantity: 950000n,
+      info: tokenInfoMocks.primaryETH,
     },
     deposit: {
-      quantity: '2000000',
-      tokenId: '',
+      quantity: 2000000n,
+      info: tokenInfoMocks.primaryETH,
     },
     frontendFeeInfo: {
       fee: {
-        tokenId: '',
-        quantity: '0',
+        quantity: 0n,
+        info: tokenInfoMocks.primaryETH,
       },
     },
     liquidityFee: {
-      tokenId: 'tokenA',
-      quantity: '22008',
+      quantity: 22008n,
+      info: {
+        ...tokenInfoMocks.ftNameless,
+        id: 'token.A',
+      },
     },
   },
   buyAmountWithSlippage: {
-    quantity: '90000000',
-    tokenId: 'tokenB',
+    quantity: 90000000n,
+    info: {
+      ...tokenInfoMocks.ftNameless,
+      id: 'token.B',
+    },
   },
   hasSupply: true,
   prices: {
@@ -121,29 +140,29 @@ const priceAlertCalculation = {
   },
   pool: {
     tokenA: {
-      quantity: '529504614',
-      tokenId: 'tokenA',
+      quantity: 529504614n,
+      tokenId: 'token.A',
     },
     tokenB: {
-      quantity: '7339640354',
-      tokenId: 'tokenB',
+      quantity: 7339640354n,
+      tokenId: 'token.B',
     },
     ptPriceTokenA: '1',
     ptPriceTokenB: '0.0695404765',
     fee: '0.3',
     provider: 'muesliswap_v2',
     batcherFee: {
-      quantity: '950000',
-      tokenId: '',
+      quantity: 950000n,
+      tokenId: '.',
     },
     deposit: {
-      quantity: '2000000',
-      tokenId: '',
+      quantity: 2000000n,
+      tokenId: '.',
     },
     poolId: '1',
     lpToken: {
-      quantity: '0',
-      tokenId: '0',
+      quantity: 0n,
+      tokenId: 'unknown.',
     },
   },
 } as const

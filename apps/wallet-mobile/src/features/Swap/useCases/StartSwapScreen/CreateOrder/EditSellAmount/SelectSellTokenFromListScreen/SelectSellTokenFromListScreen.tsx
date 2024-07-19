@@ -110,8 +110,8 @@ const SelectableToken = ({amount}: {amount: Portfolio.Token.Amount}) => {
   const {track} = useMetrics()
   const {policyId} = getTokenIdParts(amount.info.id)
 
-  const shouldUpdateToken = amount.info.id !== orderData.amounts.sell.tokenId || !isSellTouched
-  const shouldSwitchTokens = amount.info.id === orderData.amounts.buy.tokenId && isBuyTouched
+  const shouldUpdateToken = amount.info.id !== orderData.amounts.sell?.info.id || !isSellTouched
+  const shouldSwitchTokens = amount.info.id === orderData.amounts.buy?.info.id && isBuyTouched
 
   const handleOnTokenSelection = () => {
     track.swapAssetFromChanged({
@@ -126,10 +126,7 @@ const SelectableToken = ({amount}: {amount: Portfolio.Token.Amount}) => {
 
     if (shouldUpdateToken) {
       sellTouched()
-      sellTokenInfoChanged({
-        id: amount.info.id,
-        decimals: amount.info.decimals,
-      })
+      sellTokenInfoChanged(amount.info)
     }
 
     navigateTo.startSwap()

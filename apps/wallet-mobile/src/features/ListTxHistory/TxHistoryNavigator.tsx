@@ -81,12 +81,12 @@ export const TxHistoryNavigator = () => {
     const swapApi = swapApiMaker({
       isMainnet: wallet.isMainnet,
       stakingKey,
-      primaryTokenId: wallet.primaryTokenInfo.id,
+      primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
       supportedProviders,
     })
     const frontendFeeTiers = frontendFees?.[aggregator] ?? ([] as const)
     return swapManagerMaker({swapStorage, swapApi, frontendFeeTiers, aggregator, aggregatorTokenId})
-  }, [wallet.isMainnet, wallet.primaryTokenInfo.id, stakingKey, frontendFees])
+  }, [wallet.isMainnet, wallet.portfolioPrimaryTokenInfo, stakingKey, frontendFees])
 
   // resolver
   const resolverManager = React.useMemo(() => {

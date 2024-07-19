@@ -46,7 +46,7 @@ export {useSwap} from './translators/reactjs/hooks/useSwap'
 export {supportedProviders, milkTokenId} from './translators/constants'
 
 // types
-export {type SwapOrderCalculation} from './translators/reactjs/state/state'
+export * from './types'
 
 // factories
 export {swapApiMaker} from './adapters/api-maker'

@@ -1,5 +1,5 @@
 import AssetFingerprint from '@emurgo/cip14-js'
-import {Swap, Balance} from '@yoroi/types'
+import {Swap, Balance, Portfolio} from '@yoroi/types'
 import {isString} from '@yoroi/common'
 import {AssetNameUtils} from '@emurgo/yoroi-lib/dist/internals/utils/assets'
 
@@ -12,11 +12,10 @@ import {
   ListTokensResponse,
   OpenOrder,
   TokenPair,
+  TokenPairsResponse,
 } from '../adapters/openswap-api/types'
 
-export const transformersMaker = (
-  primaryTokenId: Balance.Token['info']['id'],
-) => {
+export const transformersMaker = (primaryTokenInfo: Portfolio.Token.Info) => {
   const asOpenswapTokenId = (yoroiTokenId: string) => {
     const [policyId, assetName = ''] = yoroiTokenId.split('.') as [
       string,
@@ -44,21 +43,24 @@ export const transformersMaker = (
   }: {
     policyId: string
     name: string
-  }): Balance.Token['info']['id'] => {
+  }): Portfolio.Token.Id => {
     const possibleTokenId = `${policyId}.${name}`
     // openswap is inconsistent about ADA
     // sometimes is '.', '' or 'lovelace'
     const isPrimaryToken =
       possibleTokenId === '.' || possibleTokenId === 'lovelace.'
-    if (policyId === '' || isPrimaryToken) return primaryTokenId
+    if (policyId === '' || isPrimaryToken) return primaryTokenInfo.id
     return `${policyId}.${name}`
   }
 
-  const asOpenswapAmount = (yoroiAmount: Balance.Amount) => {
+  const asOpenswapAmount = (yoroiAmount: {
+    tokenId: Portfolio.Token.Id
+    quantity: bigint
+  }) => {
     const {tokenId, quantity: amount} = yoroiAmount
     const {policyId, assetName} = asOpenswapTokenId(tokenId)
     return {
-      amount,
+      amount: amount.toString(),
       assetName,
       policyId,
     } as const
@@ -66,12 +68,15 @@ export const transformersMaker = (
 
   const asYoroiOpenOrder = (openswapOrder: OpenOrder) => {
     const {from, to, deposit, ...rest} = openswapOrder
-    const [policyId, name = ''] = primaryTokenId.split('.') as [string, string?]
+    const [policyId, name = ''] = primaryTokenInfo.id.split('.') as [
+      string,
+      string?,
+    ]
     return {
       ...rest,
-      from: asYoroiAmount(from),
-      to: asYoroiAmount(to),
-      deposit: asYoroiAmount({
+      from: asYoroiTokenIdAndQuantity(from),
+      to: asYoroiTokenIdAndQuantity(to),
+      deposit: asYoroiTokenIdAndQuantity({
         amount: deposit,
         address: {
           policyId,
@@ -95,34 +100,23 @@ export const transformersMaker = (
 
     return {
       txHash,
-      from: asYoroiAmount(from),
-      to: asYoroiAmount(to),
+      from: asYoroiTokenIdAndQuantity(from),
+      to: asYoroiTokenIdAndQuantity(to),
       placedAt: placedAt * 1000,
       provider: dex ?? 'muesliswap',
     } as const
   }
 
-  const asYoroiBalanceToken = (openswapTokenPair: TokenPair): Balance.Token => {
-    const {info, price} = openswapTokenPair
-    const balanceToken: Balance.Token = {
-      info: asYoroiBalanceTokenInfo(info),
-      price: {
-        ...price,
-      },
-      status: info.status,
-      supply: {
-        ...info.supply,
-      },
-    }
-    return balanceToken
-  }
-
-  const asYoroiBalanceTokenInfo = (
+  const asYoroiPortfolioTokenInfo = (
     openswapToken: TokenPair['info'],
-  ): Balance.TokenInfo => {
-    const tokenInfo: Balance.TokenInfo = {
-      id: asYoroiTokenId(openswapToken.address),
-      group: openswapToken.address.policyId,
+  ): Portfolio.Token.Info => {
+    const id = asYoroiTokenId(openswapToken.address)
+
+    const isPrimary = id === primaryTokenInfo.id
+    if (isPrimary) return primaryTokenInfo
+
+    const tokenInfo: Portfolio.Token.Info = {
+      id,
       fingerprint: asTokenFingerprint({
         policyId: openswapToken.address.policyId,
         assetNameHex: openswapToken.address.name,
@@ -130,24 +124,39 @@ export const transformersMaker = (
       name: asTokenName(openswapToken.address.name),
       decimals: openswapToken.decimalPlaces,
       description: openswapToken.description,
-      image: openswapToken.image,
-      kind: 'ft',
-      icon: undefined,
+      originalImage: openswapToken.image ?? '',
+      type: Portfolio.Token.Type.FT,
+      nature: Portfolio.Token.Nature.Secondary,
       ticker: openswapToken.symbol,
-      symbol: openswapToken.sign,
-      metadatas: {},
+      symbol: openswapToken.sign ?? '',
+      status: Portfolio.Token.Status.Valid,
+      application: Portfolio.Token.Application.General,
+      reference: '',
+      tag: '',
+      website: openswapToken.website,
     }
     return tokenInfo
   }
 
-  const asYoroiBalanceTokenInfos = (
+  const asYoroiPortfolioTokenInfos = (
     openswapTokens: ListTokensResponse,
-  ): Balance.TokenInfo[] => {
+  ): Array<Portfolio.Token.Info> => {
     if (openswapTokens.length === 0) return []
     // filters should go into manager, but since we strip out the status is here for now
     return openswapTokens
       .filter((token) => token.status === 'verified')
-      .map(asYoroiBalanceTokenInfo)
+      .map(asYoroiPortfolioTokenInfo)
+  }
+
+  const asYoroiPortfolioTokenInfosFromPairs = (
+    openswapTokens: TokenPairsResponse,
+  ): Array<Portfolio.Token.Info> => {
+    if (openswapTokens.length === 0) return []
+    // filters should go into manager, but since we strip out the status is here for now
+    return openswapTokens
+      .filter((token) => token.info.status === 'verified')
+      .map((token) => token.info)
+      .map(asYoroiPortfolioTokenInfo)
   }
 
   const asYoroiPool = (
@@ -167,13 +176,13 @@ export const transformersMaker = (
     if (provider && !isSupportedProvider(provider)) return null
 
     const pool: Swap.Pool = {
-      tokenA: asYoroiAmount(tokenA),
-      tokenB: asYoroiAmount(tokenB),
+      tokenA: asYoroiTokenIdAndQuantity(tokenA),
+      tokenB: asYoroiTokenIdAndQuantity(tokenB),
       ptPriceTokenA: tokenA.priceAda.toString(),
       ptPriceTokenB: tokenB.priceAda.toString(),
-      deposit: asYoroiAmount({amount: lvlDeposit, address: undefined}),
-      lpToken: asYoroiAmount(lpToken),
-      batcherFee: asYoroiAmount({amount: batcherFee, address: undefined}),
+      deposit: asYoroiTokenIdAndQuantity({amount: lvlDeposit}),
+      lpToken: asYoroiTokenIdAndQuantity(lpToken),
+      batcherFee: asYoroiTokenIdAndQuantity({amount: batcherFee}),
       fee: poolFee,
       poolId,
       provider,
@@ -213,6 +222,41 @@ export const transformersMaker = (
     return yoroiAmount
   }
 
+  const asYoroiTokenIdAndQuantity = (openswapAmount: {
+    address?: {
+      policyId: string
+      name: string
+    }
+    // openswap is inconsistent about ADA
+    // sometimes is '.', '' or 'lovelace'
+    token?: string
+    amount?: string
+  }): {
+    tokenId: Portfolio.Token.Id
+    quantity: bigint
+  } => {
+    const {amount, address, token} = openswapAmount
+
+    let policyId = ''
+    let name = ''
+
+    if (address) {
+      policyId = address.policyId
+      name = address.name
+    } else if (isString(token)) {
+      const tokenParts = token.split('.') as [string, string?]
+      policyId = tokenParts[0]
+      name = tokenParts[1] ?? ''
+    }
+
+    const yoroiAmount = {
+      quantity: BigInt(amount ?? 0),
+      tokenId: asYoroiTokenId({policyId, name}),
+    } as const
+
+    return yoroiAmount
+  }
+
   /**
    *  Filter out pools that are not supported by Yoroi
    *
@@ -230,10 +274,6 @@ export const transformersMaker = (
     return []
   }
 
-  const asYoroiBalanceTokens = (
-    openswapTokenPairs: TokenPair[],
-  ): Balance.Token[] => openswapTokenPairs.map(asYoroiBalanceToken)
-
   return {
     asOpenswapTokenId,
     asOpenswapPriceTokenAddress,
@@ -246,16 +286,15 @@ export const transformersMaker = (
     asYoroiPools,
 
     asYoroiTokenId,
-    asYoroiBalanceToken,
-    asYoroiBalanceTokens,
-    asYoroiBalanceTokenInfo,
-    asYoroiBalanceTokenInfos,
-
     asYoroiAmount,
+    asYoroiTokenIdAndQuantity,
+
+    asYoroiPortfolioTokenInfo,
+    asYoroiPortfolioTokenInfos,
+    asYoroiPortfolioTokenInfosFromPairs,
   }
 }
 
-// TODO: later replace for @yoroi/wallets
 export const asTokenFingerprint = ({
   policyId,
   assetNameHex = '',

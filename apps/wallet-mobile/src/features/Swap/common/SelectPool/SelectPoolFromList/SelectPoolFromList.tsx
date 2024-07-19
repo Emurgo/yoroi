@@ -1,3 +1,4 @@
+import {usePortfolioTokenInfo} from '@yoroi/portfolio'
 import {getMarketPrice, useSwap} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
 import {Swap} from '@yoroi/types'
@@ -8,7 +9,6 @@ import LinearGradient from 'react-native-linear-gradient'
 
 import {Spacer} from '../../../../../components'
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
-import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from '../../navigation'
@@ -32,9 +32,27 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
   const {styles, colors} = useStyles()
   const {isDark} = useTheme()
 
-  const sellTokenInfo = useTokenInfo({wallet, tokenId: orderData.amounts.sell.tokenId})
-  const buyTokenInfo = useTokenInfo({wallet, tokenId: orderData.amounts.buy.tokenId})
-  const denomination = (sellTokenInfo.decimals ?? 0) - (buyTokenInfo.decimals ?? 0)
+  const {tokenInfo: sellTokenInfo} = usePortfolioTokenInfo(
+    {
+      getTokenInfo: wallet.networkManager.tokenManager.api.tokenInfo,
+      id: orderData.amounts.sell?.info.id ?? 'unknown.',
+      network: wallet.networkManager.network,
+    },
+    {suspense: true},
+  )
+  const {tokenInfo: buyTokenInfo} = usePortfolioTokenInfo(
+    {
+      getTokenInfo: wallet.networkManager.tokenManager.api.tokenInfo,
+      id: orderData.amounts.buy?.info.id ?? 'unknown.',
+      network: wallet.networkManager.network,
+    },
+    {suspense: true},
+  )
+
+  // NOTE: suspense + default to unknown
+  if (!sellTokenInfo || !buyTokenInfo) return null
+
+  const denomination = sellTokenInfo.decimals - buyTokenInfo.decimals
   const tokenToSellName = sellTokenInfo.ticker ?? sellTokenInfo.name
   const tokenToBuyName = buyTokenInfo.ticker ?? buyTokenInfo.name
 
@@ -56,11 +74,21 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
       {pools.map((pool) => {
         // TODO: Needs review and move to package
         const tvl = asQuantity(
-          new BigNumber(pool.tokenA.quantity).dividedBy(new BigNumber(pool.ptPriceTokenA)).multipliedBy(2).toString(),
+          new BigNumber(pool.tokenA.quantity.toString())
+            .dividedBy(new BigNumber(pool.ptPriceTokenA))
+            .multipliedBy(2)
+            .toString(),
         )
         const formattedTvl = Quantities.format(tvl, decimals, 0)
-        const formattedBatcherFeeInPt = Quantities.format(pool.batcherFee.quantity, decimals, decimals)
-        const marketPrice = getMarketPrice(pool, orderData.amounts.sell.tokenId)
+        const formattedBatcherFeeInPt = Quantities.format(
+          asQuantity(pool.batcherFee.quantity.toString()),
+          decimals,
+          decimals,
+        )
+        const marketPrice =
+          orderData.amounts.sell?.info.id != null
+            ? getMarketPrice(pool, orderData.amounts.sell.info.id)
+            : new BigNumber(0)
         const selectedPoolId = selectedCardIndex ?? orderData?.bestPoolCalculation?.pool?.poolId ?? null
         const isSelectedPool = pool.poolId === selectedPoolId
 
@@ -91,7 +119,7 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
 
                         <Text style={styles.infoValue}>
                           {`${Quantities.format(
-                            marketPrice ?? Quantities.zero,
+                            asQuantity(marketPrice),
                             denomination,
                             PRECISION,
                           )} ${tokenToSellName}/${tokenToBuyName}`}

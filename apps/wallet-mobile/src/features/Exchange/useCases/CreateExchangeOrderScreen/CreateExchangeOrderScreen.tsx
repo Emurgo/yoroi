@@ -1,4 +1,4 @@
-import {bigintFormatter} from '@yoroi/common'
+import {atomicFormatter} from '@yoroi/common'
 import {useCreateReferralLink, useExchange, useExchangeProvidersByOrderType} from '@yoroi/exchange'
 import {linksYoroiModuleMaker} from '@yoroi/links'
 import {useTheme} from '@yoroi/theme'
@@ -47,7 +47,7 @@ export const CreateExchangeOrderScreen = () => {
 
   const quantity = BigInt(amount.value)
   const orderAmount = Number(
-    bigintFormatter({value: quantity, decimalPlaces: wallet.portfolioPrimaryTokenInfo.decimals}),
+    atomicFormatter({value: quantity, decimalPlaces: wallet.portfolioPrimaryTokenInfo.decimals}),
   )
   const returnUrl = encodeURIComponent(
     linksYoroiModuleMaker('yoroi').exchange.order.showCreateResult({

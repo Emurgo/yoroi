@@ -1,132 +1,153 @@
-import {Swap, Balance} from '@yoroi/types'
+import {Swap, Portfolio} from '@yoroi/types'
+import {BigNumber} from 'bignumber.js'
 
 import {getBuyAmount} from './getBuyAmount'
+import {tokenInfoMocks} from '../../../tokenInfo.mocks'
 
 describe('getBuyAmount', () => {
   it('should calculate the correct buy amount when selling tokenA', () => {
     const pool: Swap.Pool = {
-      tokenA: {quantity: '4500000', tokenId: 'tokenA'},
-      tokenB: {quantity: '9000000', tokenId: 'tokenB'},
+      tokenA: {quantity: 4500000n, tokenId: 'tokenA.'},
+      tokenB: {quantity: 9000000n, tokenId: 'tokenB.'},
       ptPriceTokenA: '0',
       ptPriceTokenB: '0',
       fee: '0.3', // 0.3%
       provider: 'minswap',
-      batcherFee: {quantity: '1', tokenId: ''},
-      deposit: {quantity: '1', tokenId: ''},
+      batcherFee: {quantity: 1n, tokenId: '.'},
+      deposit: {quantity: 1n, tokenId: '.'},
       poolId: '0',
       lpToken: {
-        quantity: '0',
-        tokenId: '0',
+        quantity: 0n,
+        tokenId: '0.',
       },
     }
-    const sell: Balance.Amount = {
-      quantity: '100',
-      tokenId: 'tokenA',
+    const sell: Portfolio.Token.Amount = {
+      quantity: 100n,
+      info: tokenInfoMocks.a,
     }
-    const result = getBuyAmount(pool, sell)
-    expect(result.quantity).toBe('197')
-    expect(result.tokenId).toBe('tokenB')
+    const result = getBuyAmount(pool, sell, tokenInfoMocks.b)
+    expect(result.quantity).toBe(197n)
+    expect(result.info).toEqual(tokenInfoMocks.b)
 
-    const limitedResult = getBuyAmount(pool, sell, true, '2.1')
-    expect(limitedResult.quantity).toBe('47')
-    expect(limitedResult.tokenId).toBe('tokenB')
+    const limitedResult = getBuyAmount(
+      pool,
+      sell,
+      tokenInfoMocks.b,
+      true,
+      new BigNumber(2.1),
+    )
+    expect(limitedResult.quantity).toBe(47n)
+    expect(limitedResult.info).toEqual(tokenInfoMocks.b)
 
     const zeroLimitResult = getBuyAmount(
-      {...pool, tokenA: {quantity: '0', tokenId: 'tokenA'}},
+      {...pool, tokenA: {quantity: 0n, tokenId: 'tokenA.'}},
       sell,
+      tokenInfoMocks.b,
       true,
     )
-    expect(zeroLimitResult.quantity).toBe('0')
-    expect(zeroLimitResult.tokenId).toBe('tokenB')
+    expect(zeroLimitResult.quantity).toBe(0n)
+    expect(zeroLimitResult.info).toEqual(tokenInfoMocks.b)
   })
 
   it('should calculate the correct buy amount when selling tokenA (muesli example)', () => {
     const pool: Swap.Pool = {
-      tokenA: {quantity: '2022328173071', tokenId: ''},
-      tokenB: {quantity: '277153', tokenId: 'tokenB'},
+      tokenA: {quantity: 2022328173071n, tokenId: '.'},
+      tokenB: {quantity: 277153n, tokenId: 'tokenB.'},
       ptPriceTokenA: '0',
       ptPriceTokenB: '0',
       fee: '0.3', // 0.3%
       provider: 'muesliswap',
-      batcherFee: {quantity: '950000', tokenId: ''},
-      deposit: {quantity: '2000000', tokenId: ''},
+      batcherFee: {quantity: 950000n, tokenId: '.'},
+      deposit: {quantity: 2000000n, tokenId: '.'},
       poolId: '0',
       lpToken: {
-        quantity: '0',
-        tokenId: '0',
+        quantity: 0n,
+        tokenId: '0.',
       },
     }
-    const sell: Balance.Amount = {
-      quantity: '1000000000',
-      tokenId: '',
+    const sell: Portfolio.Token.Amount = {
+      quantity: 1000000000n,
+      info: tokenInfoMocks.pt,
     }
-    const result = getBuyAmount(pool, sell)
-    expect(result.quantity).toBe('136')
-    expect(result.tokenId).toBe('tokenB')
+    const result = getBuyAmount(pool, sell, tokenInfoMocks.b)
+    expect(result.quantity).toBe(136n)
+    expect(result.info).toEqual(tokenInfoMocks.b)
 
-    const limitedResult = getBuyAmount(pool, sell, true, '2.1')
-    //expect(limitedResult.quantity).toBe('47')
-    expect(limitedResult.tokenId).toBe('tokenB')
+    const limitedResult = getBuyAmount(
+      pool,
+      sell,
+      tokenInfoMocks.b,
+      true,
+      new BigNumber(2.1),
+    )
+    expect(limitedResult.quantity).toBe(476190476n)
+    expect(limitedResult.info).toEqual(tokenInfoMocks.b)
   })
 
   it('should calculate the correct buy amount when selling tokenB', () => {
     const pool: Swap.Pool = {
-      tokenA: {quantity: '4500000', tokenId: 'tokenA'},
-      tokenB: {quantity: '9000000', tokenId: 'tokenB'},
+      tokenA: {quantity: 4500000n, tokenId: 'tokenA.'},
+      tokenB: {quantity: 9000000n, tokenId: 'tokenB.'},
       ptPriceTokenA: '0',
       ptPriceTokenB: '0',
       fee: '0.3', // 0.3%
       provider: 'minswap',
-      batcherFee: {quantity: '1', tokenId: ''},
-      deposit: {quantity: '1', tokenId: ''},
+      batcherFee: {quantity: 1n, tokenId: '.'},
+      deposit: {quantity: 1n, tokenId: '.'},
       poolId: '0',
       lpToken: {
-        quantity: '0',
-        tokenId: '0',
+        quantity: 0n,
+        tokenId: '0.',
       },
     }
-    const sell: Balance.Amount = {
-      quantity: '100',
-      tokenId: 'tokenB',
+    const sell: Portfolio.Token.Amount = {
+      quantity: 100n,
+      info: tokenInfoMocks.b,
     }
-    const result = getBuyAmount(pool, sell)
-    expect(result.quantity).toBe('49')
-    expect(result.tokenId).toBe('tokenA')
+    const result = getBuyAmount(pool, sell, tokenInfoMocks.a)
+    expect(result.quantity).toBe(49n)
+    expect(result.info).toEqual(tokenInfoMocks.a)
 
-    const limitedResult = getBuyAmount(pool, sell, true, '2.1')
-    expect(limitedResult.quantity).toBe('47')
-    expect(limitedResult.tokenId).toBe('tokenA')
+    const limitedResult = getBuyAmount(
+      pool,
+      sell,
+      tokenInfoMocks.a,
+      true,
+      new BigNumber(2.1),
+    )
+    expect(limitedResult.quantity).toBe(47n)
+    expect(limitedResult.info).toEqual(tokenInfoMocks.a)
   })
 
   it('should calculate buy side as market without fee when initializing limit', () => {
     const pool: Swap.Pool = {
-      tokenA: {quantity: '1000000', tokenId: 'tokenA'},
-      tokenB: {quantity: '10000000', tokenId: 'tokenB'},
+      tokenA: {quantity: 1000000n, tokenId: 'tokenA.'},
+      tokenB: {quantity: 10000000n, tokenId: 'tokenB.'},
       ptPriceTokenA: '0',
       ptPriceTokenB: '0',
       fee: '0.5',
       provider: 'minswap',
-      batcherFee: {quantity: '1', tokenId: ''},
-      deposit: {quantity: '1', tokenId: ''},
+      batcherFee: {quantity: 1n, tokenId: '.'},
+      deposit: {quantity: 1n, tokenId: '.'},
       poolId: '0',
       lpToken: {
-        quantity: '0',
-        tokenId: '0',
+        quantity: 0n,
+        tokenId: '0.',
       },
     }
-    const sell: Balance.Amount = {
-      quantity: '100',
-      tokenId: 'tokenA',
+    const sell: Portfolio.Token.Amount = {
+      quantity: 100n,
+      info: tokenInfoMocks.a,
     }
-    const limitResult = getBuyAmount(pool, sell, true)
-    const marketResult = getBuyAmount(pool, sell)
+    const limitResult = getBuyAmount(pool, sell, tokenInfoMocks.b, true)
+    const marketResult = getBuyAmount(pool, sell, tokenInfoMocks.b)
 
     // buy more (fee not included)
-    expect(limitResult.quantity).toBe('1000')
-    expect(limitResult.tokenId).toBe('tokenB')
+    expect(limitResult.quantity).toBe(1000n)
+    expect(limitResult.info).toEqual(tokenInfoMocks.b)
 
     // buy less (fee included)
-    expect(marketResult.quantity).toBe('989')
-    expect(marketResult.tokenId).toBe('tokenB')
+    expect(marketResult.quantity).toBe(989n)
+    expect(marketResult.info).toEqual(tokenInfoMocks.b)
   })
 })

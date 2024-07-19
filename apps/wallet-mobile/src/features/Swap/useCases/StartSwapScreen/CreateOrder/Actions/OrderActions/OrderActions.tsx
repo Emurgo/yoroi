@@ -23,8 +23,8 @@ export const OrderActions = () => {
 
   const {refetch, isLoading} = useSwapPoolsByPair(
     {
-      tokenA: orderData.amounts.sell.tokenId,
-      tokenB: orderData.amounts.buy.tokenId,
+      tokenA: orderData.amounts.sell?.info.id ?? 'unknown.',
+      tokenB: orderData.amounts.buy?.info.id ?? 'unknown.',
     },
     {
       enabled: false,

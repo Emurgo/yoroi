@@ -1,9 +1,9 @@
 import {RouteProp, useRoute} from '@react-navigation/native'
 import {isString} from '@yoroi/common'
 import {useExplorers} from '@yoroi/explorers'
-import {usePorfolioTokenDiscovery, usePorfolioTokenTraits} from '@yoroi/portfolio'
+import {usePortfolioTokenDiscovery, usePortfolioTokenTraits} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
-import {Chain, Portfolio} from '@yoroi/types'
+import {Chain, Network, Portfolio} from '@yoroi/types'
 import React, {ReactNode, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Linking, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, useWindowDimensions, View} from 'react-native'
@@ -15,7 +15,6 @@ import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {NftRoutes} from '../../../../kernel/navigation'
 import {useNavigateTo} from '../../../Nfts/common/navigation'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
-import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {MediaPreview} from '../MediaPreview/MediaPreview'
 
 export const MediaDetails = () => {
@@ -69,7 +68,7 @@ export const MediaDetails = () => {
           </Tabs>
 
           <Boundary>
-            <Details info={amount.info} activeTab={activeTab} network={networkManager.network} />
+            <Details info={amount.info} activeTab={activeTab} networkManager={networkManager} />
           </Boundary>
         </ScrollView>
       </SafeAreaView>
@@ -80,27 +79,26 @@ export const MediaDetails = () => {
 type DetailsProps = {
   info: Portfolio.Token.Info
   activeTab: ActiveTab
-  network: Chain.SupportedNetworks
+  networkManager: Network.Manager
 }
-const Details = ({activeTab, info, network}: DetailsProps) => {
-  const {walletManager} = useWalletManager()
-  const {api} = walletManager.getTokenManager(network)
+const Details = ({activeTab, info, networkManager}: DetailsProps) => {
+  const {tokenManager, network} = networkManager
 
-  const {tokenDiscovery} = usePorfolioTokenDiscovery(
+  const {tokenDiscovery} = usePortfolioTokenDiscovery(
     {
       id: info.id,
       network,
-      getTokenDiscovery: api.tokenDiscovery,
+      getTokenDiscovery: tokenManager.api.tokenDiscovery,
     },
     {
       staleTime: time.session,
     },
   )
-  const {tokenTraits} = usePorfolioTokenTraits(
+  const {tokenTraits} = usePortfolioTokenTraits(
     {
       id: info.id,
       network,
-      getTokenTraits: api.tokenTraits,
+      getTokenTraits: tokenManager.api.tokenTraits,
     },
     {
       staleTime: time.oneDay,

@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js'
 import {freeze} from 'immer'
 
-export function splitBigInt(bigInt: bigint, decimalPlaces: number) {
+export function atomicBreakdown(bigInt: bigint, decimalPlaces: number) {
   const scale: bigint = BigInt(10) ** BigInt(decimalPlaces)
 
   const isNegative = bigInt < 0

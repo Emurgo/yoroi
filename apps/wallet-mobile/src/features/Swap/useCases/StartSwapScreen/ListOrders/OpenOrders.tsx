@@ -2,8 +2,10 @@ import {useNavigation} from '@react-navigation/core'
 import {NavigationState, useFocusEffect} from '@react-navigation/native'
 import {FlashList} from '@shopify/flash-list'
 import {isString} from '@yoroi/common'
+import {useExplorers} from '@yoroi/explorers'
 import {useSwap, useSwapOrdersByStatusOpen} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
+import {Portfolio} from '@yoroi/types'
 import {Buffer} from 'buffer'
 import _ from 'lodash'
 import React, {useRef} from 'react'
@@ -61,10 +63,12 @@ export const OpenOrders = () => {
   const {numberLocale} = useLanguage()
   const tokenIds = React.useMemo(() => _.uniq(orders?.flatMap((o) => [o.from.tokenId, o.to.tokenId])), [orders])
   const transactionsInfos = useTransactionInfos(wallet)
-  const tokenInfos = useTokenInfos({wallet, tokenIds})
+  const explorers = useExplorers(wallet.networkManager.network)
+  // TODO: revisit
+  const tokenInfos = useTokenInfos({wallet, tokenIds}) as unknown as Portfolio.Token.Info[]
   const normalizedOrders = React.useMemo(
-    () => mapOpenOrders(orders, tokenInfos, numberLocale, Object.values(transactionsInfos)),
-    [orders, tokenInfos, numberLocale, transactionsInfos],
+    () => mapOpenOrders(orders, tokenInfos, numberLocale, Object.values(transactionsInfos), explorers.cardanoscan),
+    [orders, tokenInfos, numberLocale, transactionsInfos, explorers.cardanoscan],
   )
   const navigationRef = useRef<NavigationState | null>(null)
 
@@ -110,14 +114,14 @@ export const OpenOrders = () => {
         {
           asset_name: order.fromTokenInfo?.name ?? '',
           asset_ticker: order.fromTokenInfo?.ticker ?? '',
-          policy_id: order.fromTokenInfo?.group ?? '',
+          policy_id: order.fromTokenInfo?.id.split('.')[0] ?? '',
         },
       ],
       to_asset: [
         {
           asset_name: order.toTokenInfo?.name ?? '',
           asset_ticker: order.toTokenInfo?.ticker ?? '',
-          policy_id: order.toTokenInfo?.group ?? '',
+          policy_id: order.toTokenInfo?.id.split('.')[0] ?? '',
         },
       ],
       pool_source: order.provider ?? '',

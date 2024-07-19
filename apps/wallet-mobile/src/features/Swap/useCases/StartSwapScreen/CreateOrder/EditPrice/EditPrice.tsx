@@ -1,12 +1,9 @@
-/* eslint-disable react/jsx-newline */
 import {useSwap} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, TextInput, View} from 'react-native'
 
-import {useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
-import {Quantities} from '../../../../../../yoroi-wallets/utils/utils'
-import {useSelectedWallet} from '../../../../../WalletManager/common/hooks/useSelectedWallet'
+import {asQuantity, Quantities} from '../../../../../../yoroi-wallets/utils/utils'
 import {PRICE_PRECISION} from '../../../../common/constants'
 import {useStrings} from '../../../../common/strings'
 import {useSwapForm} from '../../../../common/SwapFormProvider'
@@ -16,32 +13,30 @@ const BORDER_SIZE = 1
 
 export const EditPrice = () => {
   const strings = useStrings()
-  const {wallet} = useSelectedWallet()
   const [isFocused, setIsFocused] = React.useState(false)
   const styles = useStyles()
 
   const {orderData} = useSwap()
-  const sellTokenInfo = useTokenInfo({wallet, tokenId: orderData.amounts.sell.tokenId})
-  const buyTokenInfo = useTokenInfo({wallet, tokenId: orderData.amounts.buy.tokenId})
+  const sellTokenInfo = orderData.amounts.sell?.info
+  const buyTokenInfo = orderData.amounts.buy?.info
   const disabled = orderData.type === 'market'
 
   const prices = orderData.selectedPoolCalculation?.prices
   const formattedPrice = Quantities.format(
-    orderData.selectedPoolCalculation?.prices.actualPrice ?? Quantities.zero,
+    asQuantity(orderData.selectedPoolCalculation?.prices.actualPrice ?? Quantities.zero),
     orderData.tokens.priceDenomination,
     PRICE_PRECISION,
   )
 
   const {
-    buyQuantity: {isTouched: isBuyTouched},
-    sellQuantity: {isTouched: isSellTouched},
     limitPrice: {displayValue: limitDisplayValue},
     limitInputRef,
     onChangeLimitPrice,
   } = useSwapForm()
 
-  const tokenToSellName = isSellTouched ? sellTokenInfo.ticker ?? sellTokenInfo.name : '-'
-  const tokenToBuyName = isBuyTouched ? buyTokenInfo.ticker ?? buyTokenInfo.name : '-'
+  const tokenToSellName = sellTokenInfo?.ticker ?? sellTokenInfo?.name ?? '-'
+  const tokenToBuyName = buyTokenInfo?.ticker ?? buyTokenInfo?.name ?? '-'
+  const pair = `${tokenToSellName}/${tokenToBuyName}`
 
   return (
     <>
@@ -66,9 +61,7 @@ export const EditPrice = () => {
           />
 
           <View style={[styles.textWrapper, disabled && styles.disabled]}>
-            <Text style={styles.text}>
-              {tokenToSellName}/{tokenToBuyName}
-            </Text>
+            <Text style={styles.text}>{pair}</Text>
           </View>
         </View>
       </View>

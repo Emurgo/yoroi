@@ -4,14 +4,14 @@
     "defaultMessage": "!!!NFT Details",
     "file": "src/features/Portfolio/common/MediaDetails/MediaDetails.tsx",
     "start": {
-      "line": 342,
+      "line": 340,
       "column": 9,
-      "index": 9661
+      "index": 9568
     },
     "end": {
-      "line": 345,
+      "line": 343,
       "column": 3,
-      "index": 9732
+      "index": 9639
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Overview",
     "file": "src/features/Portfolio/common/MediaDetails/MediaDetails.tsx",
     "start": {
-      "line": 346,
+      "line": 344,
       "column": 12,
-      "index": 9746
+      "index": 9653
     },
     "end": {
-      "line": 349,
+      "line": 347,
       "column": 3,
-      "index": 9817
+      "index": 9724
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Metadata",
     "file": "src/features/Portfolio/common/MediaDetails/MediaDetails.tsx",
     "start": {
-      "line": 350,
+      "line": 348,
       "column": 12,
-      "index": 9831
+      "index": 9738
     },
     "end": {
-      "line": 353,
+      "line": 351,
       "column": 3,
-      "index": 9902
+      "index": 9809
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!NFT Name",
     "file": "src/features/Portfolio/common/MediaDetails/MediaDetails.tsx",
     "start": {
-      "line": 354,
+      "line": 352,
       "column": 11,
-      "index": 9915
+      "index": 9822
     },
     "end": {
-      "line": 357,
+      "line": 355,
       "column": 3,
-      "index": 9985
+      "index": 9892
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Created",
     "file": "src/features/Portfolio/common/MediaDetails/MediaDetails.tsx",
     "start": {
-      "line": 358,
+      "line": 356,
       "column": 13,
-      "index": 10000
+      "index": 9907
     },
     "end": {
-      "line": 361,
+      "line": 359,
       "column": 3,
-      "index": 10071
+      "index": 9978
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!Description",
     "file": "src/features/Portfolio/common/MediaDetails/MediaDetails.tsx",
     "start": {
-      "line": 362,
+      "line": 360,
       "column": 15,
-      "index": 10088
+      "index": 9995
     },
     "end": {
-      "line": 365,
+      "line": 363,
       "column": 3,
-      "index": 10165
+      "index": 10072
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!Author",
     "file": "src/features/Portfolio/common/MediaDetails/MediaDetails.tsx",
     "start": {
-      "line": 366,
+      "line": 364,
       "column": 10,
-      "index": 10177
+      "index": 10084
     },
     "end": {
-      "line": 369,
+      "line": 367,
       "column": 3,
-      "index": 10244
+      "index": 10151
     }
   },
   {
@@ -109,14 +109,14 @@
     "defaultMessage": "!!!Fingerprint",
     "file": "src/features/Portfolio/common/MediaDetails/MediaDetails.tsx",
     "start": {
-      "line": 370,
+      "line": 368,
       "column": 15,
-      "index": 10261
+      "index": 10168
     },
     "end": {
-      "line": 373,
+      "line": 371,
       "column": 3,
-      "index": 10338
+      "index": 10245
     }
   },
   {
@@ -124,14 +124,14 @@
     "defaultMessage": "!!!Policy id",
     "file": "src/features/Portfolio/common/MediaDetails/MediaDetails.tsx",
     "start": {
-      "line": 374,
+      "line": 372,
       "column": 12,
-      "index": 10352
+      "index": 10259
     },
     "end": {
-      "line": 377,
+      "line": 375,
       "column": 3,
-      "index": 10424
+      "index": 10331
     }
   },
   {
@@ -139,14 +139,14 @@
     "defaultMessage": "!!!Details on",
     "file": "src/features/Portfolio/common/MediaDetails/MediaDetails.tsx",
     "start": {
-      "line": 378,
+      "line": 376,
       "column": 16,
-      "index": 10442
+      "index": 10349
     },
     "end": {
-      "line": 381,
+      "line": 379,
       "column": 3,
-      "index": 10519
+      "index": 10426
     }
   },
   {
@@ -154,14 +154,14 @@
     "defaultMessage": "!!!Copy metadata",
     "file": "src/features/Portfolio/common/MediaDetails/MediaDetails.tsx",
     "start": {
-      "line": 382,
+      "line": 380,
       "column": 16,
-      "index": 10537
+      "index": 10444
     },
     "end": {
-      "line": 385,
+      "line": 383,
       "column": 3,
-      "index": 10617
+      "index": 10524
     }
   }
 ]

@@ -8,7 +8,7 @@ import {Chain} from '@yoroi/types'
 import {wrapperMaker} from '../../fixtures/wrapperMaker'
 import {tokenMocks} from '../../adapters/token.mocks'
 import {tokenInfoMocks} from '../../adapters/token-info.mocks'
-import {usePorfolioTokenInfo} from './usePortfolioTokenInfo'
+import {usePortfolioTokenInfo} from './usePortfolioTokenInfo'
 import {createUnknownTokenInfo} from '../../helpers/create-unknown-token-info'
 
 describe('usePortfolioTokenInfo', () => {
@@ -29,7 +29,7 @@ describe('usePortfolioTokenInfo', () => {
       .mockResolvedValue(tokenInfoMocks.apiReponse.nftCryptoKitty.success)
 
     const TestComponent = () => {
-      const {data} = usePorfolioTokenInfo(
+      const {data} = usePortfolioTokenInfo(
         {
           id: tokenMocks.nftCryptoKitty.info.id,
           network: Chain.Network.Mainnet,
@@ -70,7 +70,7 @@ describe('usePortfolioTokenInfo', () => {
     const mockedGetTokenInfo = jest.fn().mockResolvedValue(unknownTokenInfo)
 
     const TestComponent = () => {
-      const {data} = usePorfolioTokenInfo(
+      const {data} = usePortfolioTokenInfo(
         {
           id: tokenMocks.nftCryptoKitty.info.id,
           network: Chain.Network.Mainnet,

@@ -1,9 +1,7 @@
-import BigNumber from 'bignumber.js'
-import {Balance, Swap} from '@yoroi/types'
+import {BigNumber} from 'bignumber.js'
+import {Portfolio, Swap} from '@yoroi/types'
 
 import {ceilDivision} from '../../../utils/ceilDivision'
-import {Quantities} from '../../../utils/quantities'
-import {asQuantity} from '../../../utils/asQuantity'
 import {getMarketPrice} from '../../prices/getMarketPrice'
 
 /**
@@ -19,29 +17,26 @@ import {getMarketPrice} from '../../prices/getMarketPrice'
  */
 export const getSellAmount = (
   pool: Swap.Pool,
-  buy: Balance.Amount,
+  buy: Portfolio.Token.Amount,
+  sellInfo: Portfolio.Token.Info,
   isLimit?: boolean,
-  limit: Balance.Quantity = Quantities.zero,
-): Balance.Amount => {
-  const isBuyTokenA = buy.tokenId === pool.tokenA.tokenId
-
+  limit: BigNumber = new BigNumber(0),
+): Portfolio.Token.Amount => {
+  const isBuyTokenA = buy.info.id === pool.tokenA.tokenId
   const tokenId = isBuyTokenA ? pool.tokenB.tokenId : pool.tokenA.tokenId
 
-  if (Quantities.isZero(buy.quantity))
-    return {tokenId, quantity: Quantities.zero}
+  if (buy.quantity === 0n) return {info: sellInfo, quantity: 0n}
 
   if (isLimit) {
-    const limitPrice = Quantities.isZero(limit)
-      ? getMarketPrice(pool, tokenId)
-      : limit
+    const limitPrice = limit.isZero() ? getMarketPrice(pool, tokenId) : limit
 
     return {
-      tokenId,
-      quantity: Quantities.isZero(limitPrice)
-        ? Quantities.zero
-        : asQuantity(
-            new BigNumber(buy.quantity)
-              .times(new BigNumber(limitPrice))
+      info: sellInfo,
+      quantity: limitPrice.isZero()
+        ? 0n
+        : BigInt(
+            new BigNumber(buy.quantity.toString())
+              .times(limitPrice)
               .integerValue(BigNumber.ROUND_CEIL)
               .toString(),
           ),
@@ -55,23 +50,21 @@ export const getSellAmount = (
 
   const buyQuantity = BigInt(buy.quantity)
 
-  const fee = BigInt(100 * 1000) - BigInt(Number(pool.fee) * 1000)
+  const fee = BigInt(100 * 1_000) - BigInt(Number(pool.fee) * 1_000)
 
   const maxBuyQuantity =
     firstToken -
     (firstToken > buyQuantity ? buyQuantity : firstToken - BigInt(1))
 
-  const quantity = asQuantity(
-    ceilDivision(
-      (ceilDivision(firstToken * secondToken + maxBuyQuantity, maxBuyQuantity) -
-        secondToken) *
-        BigInt(100 * 1000),
-      fee,
-    ).toString(),
+  const quantity = ceilDivision(
+    (ceilDivision(firstToken * secondToken + maxBuyQuantity, maxBuyQuantity) -
+      secondToken) *
+      BigInt(100 * 1_000),
+    fee,
   )
 
   return {
     quantity,
-    tokenId,
+    info: sellInfo,
   }
 }

@@ -2,7 +2,7 @@ import {isRight} from '@yoroi/common'
 import {Chain, Portfolio} from '@yoroi/types'
 import {UseQueryOptions, useQuery} from 'react-query'
 
-export function usePorfolioTokenDiscovery(
+export function usePortfolioTokenDiscovery(
   {
     id,
     getTokenDiscovery,
@@ -16,16 +16,16 @@ export function usePorfolioTokenDiscovery(
     Portfolio.Token.Discovery,
     Error,
     Portfolio.Token.Discovery,
-    [Chain.SupportedNetworks, 'usePorfolioTokenDiscovery', Portfolio.Token.Id]
+    [Chain.SupportedNetworks, 'usePortfolioTokenDiscovery', Portfolio.Token.Id]
   >,
 ) {
   const query = useQuery({
-    queryKey: [network, 'usePorfolioTokenDiscovery', id],
+    queryKey: [network, 'usePortfolioTokenDiscovery', id],
     ...options,
     queryFn: async () => {
       const response = await getTokenDiscovery(id)
       if (isRight(response)) return response.value.data
-      throw new Error('usePorfolioTokenDiscovery')
+      throw new Error('usePortfolioTokenDiscovery')
     },
   })
 

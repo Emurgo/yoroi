@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Today",
     "file": "src/yoroi-wallets/utils/format.ts",
     "start": {
-      "line": 218,
+      "line": 228,
       "column": 9,
-      "index": 6818
+      "index": 7284
     },
     "end": {
-      "line": 221,
+      "line": 231,
       "column": 3,
-      "index": 6885
+      "index": 7351
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Yesterday",
     "file": "src/yoroi-wallets/utils/format.ts",
     "start": {
-      "line": 222,
+      "line": 232,
       "column": 13,
-      "index": 6900
+      "index": 7366
     },
     "end": {
-      "line": 225,
+      "line": 235,
       "column": 3,
-      "index": 6975
+      "index": 7441
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!![Unknown asset name]",
     "file": "src/yoroi-wallets/utils/format.ts",
     "start": {
-      "line": 226,
+      "line": 236,
       "column": 20,
-      "index": 6997
+      "index": 7463
     },
     "end": {
-      "line": 229,
+      "line": 239,
       "column": 3,
-      "index": 7090
+      "index": 7556
     }
   }
 ]

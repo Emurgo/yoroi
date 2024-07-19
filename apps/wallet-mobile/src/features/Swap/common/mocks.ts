@@ -1,7 +1,7 @@
+import {tokenInfoMocks} from '@yoroi/portfolio'
 import {mockSwapStateDefault, SwapState} from '@yoroi/swap'
 
 import {mocks as walletMocks} from '../../../yoroi-wallets/mocks/wallet'
-import {asQuantity} from '../../../yoroi-wallets/utils'
 
 export const mocks = {
   confirmTx: {
@@ -11,27 +11,27 @@ export const mocks = {
       ...mockSwapStateDefault.orderData,
       amounts: {
         buy: {
-          quantity: asQuantity(20467572),
-          tokenId: '208a2ca888886921513cb777bb832a8dc685c04de990480151f12150.53484942414441',
+          quantity: 20467572n,
+          info: tokenInfoMocks.nftCryptoKitty,
         },
-        sell: {quantity: asQuantity(2000000), tokenId: ''},
+        sell: {quantity: 2000000n, info: tokenInfoMocks.primaryETH},
       },
       limitPrice: '0.089',
       selectedPool: '0029cb7c88c7567b63d1a512c0ed626aa169688ec980730c0473b913.702083',
       pools: [
         {
-          batcherFee: {quantity: asQuantity(2500000), tokenId: ''},
-          deposit: {quantity: asQuantity(2000000), tokenId: ''},
+          batcherFee: {quantity: 2500000n, tokenId: '.'},
+          deposit: {quantity: 2000000n, tokenId: '.'},
           fee: '0.05',
           lpToken: {
-            quantity: asQuantity(68917682),
+            quantity: 68917682n,
             tokenId: '0029cb7c88c7567b63d1a512c0ed626aa169688ec980730c0473b913.6c702083',
           },
           poolId: '0029cb7c88c7567b63d1a512c0ed626aa169688ec980730c0473b913.702083',
           provider: 'sundaeswap',
-          tokenA: {quantity: asQuantity(20630071), tokenId: ''},
+          tokenA: {quantity: 20630071n, tokenId: '.'},
           tokenB: {
-            quantity: asQuantity(231696922),
+            quantity: 231696922n,
             tokenId: '208a2ca888886921513cb777bb832a8dc685c04de990480151f12150.53484942414441',
           },
           ptPriceTokenA: '0',

@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js'
 
 /**
  * @description Converts a number to a bigint in atomic units
- * don't use this to format inputs use parseInputToBigInt instead
+ * don't use this to format inputs use parseDecimal instead
  *
  * @param quantity string | number | BigNumber
  * @param decimalPlaces

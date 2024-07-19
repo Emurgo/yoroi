@@ -1,4 +1,4 @@
-import {parseInputToBigInt, splitBigInt} from '@yoroi/common'
+import {atomicBreakdown, parseDecimal} from '@yoroi/common'
 import {isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
@@ -40,14 +40,16 @@ export const EditAmountScreen = () => {
   const isPrimary = isPrimaryToken(amount.info)
 
   const [quantity, setQuantity] = React.useState(initialQuantity)
-  const [inputValue, setInputValue] = React.useState(splitBigInt(initialQuantity, amount.info.decimals).bn.toFormat())
+  const [inputValue, setInputValue] = React.useState(
+    atomicBreakdown(initialQuantity, amount.info.decimals).bn.toFormat(),
+  )
   const spendable = isPrimary ? available - primaryBreakdown.lockedAsStorageCost : available
 
   useOverridePreviousSendTxRoute(initialQuantity === 0n ? 'send-select-token-from-list' : 'send-list-amounts-to-send')
 
   React.useEffect(() => {
     setQuantity(initialQuantity)
-    setInputValue(splitBigInt(initialQuantity, amount.info.decimals).bn.toFormat())
+    setInputValue(atomicBreakdown(initialQuantity, amount.info.decimals).bn.toFormat())
   }, [amount.info.decimals, initialQuantity])
 
   const hasBalance = available >= quantity
@@ -58,8 +60,8 @@ export const EditAmountScreen = () => {
   const handleOnChangeQuantity = React.useCallback(
     (text: string) => {
       try {
-        const [newInputValue, newQuantity] = parseInputToBigInt({
-          input: text,
+        const {text: newInputValue, bi: newQuantity} = parseDecimal({
+          value: text,
           decimalPlaces: amount.info.decimals,
           format: numberLocale,
         })
@@ -73,8 +75,8 @@ export const EditAmountScreen = () => {
   )
 
   const handleOnMaxBalance = React.useCallback(() => {
-    const [newInputValue, newQuantity] = parseInputToBigInt({
-      input: spendable.toString(),
+    const {text: newInputValue, bi: newQuantity} = parseDecimal({
+      value: spendable.toString(),
       decimalPlaces: amount.info.decimals,
       format: numberLocale,
     })

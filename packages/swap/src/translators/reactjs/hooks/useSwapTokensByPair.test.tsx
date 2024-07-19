@@ -22,7 +22,7 @@ describe('useSwapTokensByPair', () => {
 
   it('success', async () => {
     const TestPairListToken = () => {
-      const tokens = useSwapTokensByPair('tokenIdBase')
+      const tokens = useSwapTokensByPair('.')
       return (
         <View>
           <Text testID="tokens">{JSON.stringify(tokens.data)}</Text>
@@ -47,8 +47,6 @@ describe('useSwapTokensByPair', () => {
       JSON.stringify(swapManagerMocks.listTokensByPairResponse),
     )
     expect(mockSwapManager.tokens.list.byPair).toHaveBeenCalled()
-    expect(mockSwapManager.tokens.list.byPair).toHaveBeenCalledWith(
-      'tokenIdBase',
-    )
+    expect(mockSwapManager.tokens.list.byPair).toHaveBeenCalledWith('.')
   })
 })

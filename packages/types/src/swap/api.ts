@@ -1,4 +1,5 @@
-import {BalanceToken} from '../balance/token'
+import {PortfolioTokenInfo} from '../portfolio/info'
+import {PortfolioTokenId} from '../portfolio/token'
 import {
   SwapCancelOrderData,
   SwapCompletedOrder,
@@ -14,19 +15,19 @@ export interface SwapApi {
   getOpenOrders(): Promise<SwapOpenOrder[]>
   getCompletedOrders(): Promise<SwapCompletedOrder[]>
   getPools(args: {
-    tokenA: BalanceToken['info']['id']
-    tokenB: BalanceToken['info']['id']
+    tokenA: PortfolioTokenId
+    tokenB: PortfolioTokenId
     providers?: ReadonlyArray<SwapPoolProvider>
   }): Promise<SwapPool[]>
   getTokenPairs(
-    tokenIdBase: BalanceToken['info']['id'],
-  ): Promise<BalanceToken[]>
-  getTokens(): Promise<BalanceToken['info'][]>
+    tokenIdBase: PortfolioTokenId,
+  ): Promise<Array<PortfolioTokenInfo>>
+  getTokens(): Promise<Array<PortfolioTokenInfo>>
   getPrice(args: {
-    baseToken: BalanceToken['info']['id']
-    quoteToken: BalanceToken['info']['id']
+    baseToken: PortfolioTokenId
+    quoteToken: PortfolioTokenId
   }): Promise<number>
   stakingKey: string
-  primaryTokenId: BalanceToken['info']['id']
+  primaryTokenInfo: Readonly<PortfolioTokenInfo>
   supportedProviders: ReadonlyArray<SwapPoolProvider>
 }

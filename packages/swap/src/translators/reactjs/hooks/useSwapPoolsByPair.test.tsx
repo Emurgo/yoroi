@@ -7,6 +7,7 @@ import {queryClientFixture} from '../../../fixtures/query-client'
 import {mockSwapManager, swapManagerMocks} from '../../../manager.mocks'
 import {wrapperManagerFixture} from '../../../fixtures/manager-wrapper'
 import {useSwapPoolsByPair} from './useSwapPoolsByPair'
+import {storageSerializer} from '@yoroi/common'
 
 describe('useSwapPoolsByPair', () => {
   let queryClient: QueryClient
@@ -28,7 +29,7 @@ describe('useSwapPoolsByPair', () => {
       })
       return (
         <View>
-          <Text testID="pools">{JSON.stringify(pools.data)}</Text>
+          <Text testID="pools">{storageSerializer(pools.data)}</Text>
         </View>
       )
     }
@@ -46,7 +47,7 @@ describe('useSwapPoolsByPair', () => {
     })
 
     expect(getByTestId('pools').props.children).toEqual(
-      JSON.stringify(swapManagerMocks.listPoolsByPairResponse),
+      storageSerializer(swapManagerMocks.listPoolsByPairResponse),
     )
     expect(mockSwapManager.pools.list.byPair).toHaveBeenCalled()
     expect(mockSwapManager.pools.list.byPair).toHaveBeenCalledWith({

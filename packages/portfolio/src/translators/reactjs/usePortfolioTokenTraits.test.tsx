@@ -5,7 +5,7 @@ import {render, waitFor} from '@testing-library/react-native'
 import {queryClientFixture} from '@yoroi/common'
 import {Chain} from '@yoroi/types'
 
-import {usePorfolioTokenTraits} from './usePortfolioTokenTraits'
+import {usePortfolioTokenTraits} from './usePortfolioTokenTraits'
 import {wrapperMaker} from '../../fixtures/wrapperMaker'
 import {tokenMocks} from '../../adapters/token.mocks'
 import {tokenTraitsMocks} from '../../adapters/token-traits.mocks'
@@ -28,7 +28,7 @@ describe('usePortfolioTokenTraits', () => {
       .mockResolvedValue(tokenTraitsMocks.apiResponse.success)
 
     const TestComponent = () => {
-      const {data} = usePorfolioTokenTraits(
+      const {data} = usePortfolioTokenTraits(
         {
           id: tokenMocks.nftCryptoKitty.info.id,
           network: Chain.Network.Mainnet,
@@ -65,7 +65,7 @@ describe('usePortfolioTokenTraits', () => {
       .mockResolvedValue(tokenTraitsMocks.apiResponse.error)
 
     const TestComponent = () => {
-      const {data} = usePorfolioTokenTraits(
+      const {data} = usePortfolioTokenTraits(
         {
           id: tokenMocks.nftCryptoKitty.info.id,
           network: Chain.Network.Mainnet,

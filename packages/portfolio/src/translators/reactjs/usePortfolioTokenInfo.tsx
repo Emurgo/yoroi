@@ -3,7 +3,7 @@ import {Chain, Portfolio} from '@yoroi/types'
 import {UseQueryOptions, useQuery} from 'react-query'
 import {createUnknownTokenInfo} from '../../helpers/create-unknown-token-info'
 
-export function usePorfolioTokenInfo(
+export function usePortfolioTokenInfo(
   {
     id,
     getTokenInfo,
@@ -17,11 +17,11 @@ export function usePorfolioTokenInfo(
     Portfolio.Token.Info,
     Error,
     Portfolio.Token.Info,
-    [Chain.SupportedNetworks, 'usePorfolioTokenInfo', Portfolio.Token.Id]
+    [Chain.SupportedNetworks, 'usePortfolioTokenInfo', Portfolio.Token.Id]
   >,
 ) {
   const query = useQuery({
-    queryKey: [network, 'usePorfolioTokenInfo', id],
+    queryKey: [network, 'usePortfolioTokenInfo', id],
     ...options,
     queryFn: async () => {
       const response = await getTokenInfo(id)
@@ -33,6 +33,6 @@ export function usePorfolioTokenInfo(
 
   return {
     ...query,
-    tokenTraits: query.data,
+    tokenInfo: query.data,
   }
 }
