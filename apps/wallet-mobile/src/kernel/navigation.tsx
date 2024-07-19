@@ -253,6 +253,7 @@ export type SettingsStackRoutes = {
   'change-language': undefined
   'change-currency': undefined
   'change-theme': undefined
+  'change-network': undefined
   'enable-easy-confirmation': undefined
   'disable-easy-confirmation': undefined
   'change-password': undefined

@@ -191,6 +191,7 @@ const getStories = () => {
     "./src/features/Settings/About/About.stories.tsx": require("../src/features/Settings/About/About.stories.tsx"),
     "./src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.stories.tsx": require("../src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.stories.tsx"),
     "./src/features/Settings/ChangeLanguage/ChangeLanguageScreen.stories.tsx": require("../src/features/Settings/ChangeLanguage/ChangeLanguageScreen.stories.tsx"),
+    "./src/features/Settings/ChangeNetwork/ChangeNetworkScreen.stories.tsx": require("../src/features/Settings/ChangeNetwork/ChangeNetworkScreen.stories.tsx"),
     "./src/features/Settings/ChangePassword/ChangePasswordScreen.stories.tsx": require("../src/features/Settings/ChangePassword/ChangePasswordScreen.stories.tsx"),
     "./src/features/Settings/ChangeTheme/ChangeThemeScreen.stories.tsx": require("../src/features/Settings/ChangeTheme/ChangeThemeScreen.stories.tsx"),
     "./src/features/Settings/Currency/ChangeCurrencyScreen.stories.tsx": require("../src/features/Settings/Currency/ChangeCurrencyScreen.stories.tsx"),

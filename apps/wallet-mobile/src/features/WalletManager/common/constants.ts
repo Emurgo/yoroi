@@ -1,4 +1,5 @@
 import {Chain, Wallet} from '@yoroi/types'
+import {Chain, Wallet} from '@yoroi/types'
 import {freeze} from 'immer'
 
 import {buildPortfolioTokenManagers} from '../../Portfolio/common/helpers/build-token-managers'
@@ -15,6 +16,8 @@ export const networkManagers = buildNetworkManagers({tokenManagers})
 
 export const NetworkLabel = {
   [Chain.Network.Mainnet]: 'Mainnet',
-  [Chain.Network.Preprod]: 'Preprod',
   [Chain.Network.Sancho]: 'Sancho',
+  [Chain.Network.Preprod]: 'Preprod',
+  // [Chain.Network.Testnet]: 'Testnet',
+  // [Chain.Network.Preview]: 'Preview',
 }

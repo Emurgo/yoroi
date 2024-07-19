@@ -21,6 +21,7 @@ import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet
 import {About} from './About'
 import {ApplicationSettingsScreen} from './ApplicationSettings'
 import {ChangeLanguageScreen} from './ChangeLanguage'
+import {ChangeNetworkScreen} from './ChangeNetwork/ChangeNetworkScreen'
 import {ChangePasswordScreen} from './ChangePassword'
 import {ChangeThemeScreen} from './ChangeTheme/ChangeThemeScreen'
 import {ChangeCurrencyScreen} from './Currency/ChangeCurrencyScreen'
@@ -74,7 +75,9 @@ export const SettingsScreenNavigator = () => {
         <Stack.Screen //
           name="main-settings"
           component={SettingsTabNavigator}
-          options={{title: strings.settingsTitle}}
+          options={{
+            title: strings.settingsTitle,
+          }}
         />
 
         <Stack.Screen
@@ -126,6 +129,14 @@ export const SettingsScreenNavigator = () => {
           component={ChangeThemeScreen}
           options={{
             title: strings.themeTitle,
+          }}
+        />
+
+        <Stack.Screen //
+          name="change-network"
+          component={ChangeNetworkScreen}
+          options={{
+            title: strings.networkTitle,
           }}
         />
 
@@ -295,6 +306,10 @@ const messages = defineMessages({
     id: 'components.settings.changeThemescreen.title',
     defaultMessage: '!!!Theming',
   },
+  networkTitle: {
+    id: 'components.settings.changeNetworkScreen.title',
+    defaultMessage: '!!!Network',
+  },
   appSettingsTitle: {
     id: 'components.settings.applicationsettingsscreen.appSettingsTitle',
     defaultMessage: '!!!App settings',
@@ -341,5 +356,6 @@ const useStrings = () => {
     termsOfServiceTitle: intl.formatMessage(messages.termsOfServiceTitle),
     themeTitle: intl.formatMessage(messages.themeTitle),
     walletTabTitle: intl.formatMessage(messages.walletTabTitle),
+    networkTitle: intl.formatMessage(messages.networkTitle),
   }
 }

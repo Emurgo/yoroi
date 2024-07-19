@@ -13,6 +13,8 @@ import {defaultLanguage} from '../../../kernel/i18n/languages'
 import {useCrashReports} from '../../../yoroi-wallets/hooks'
 import {useAuthSetting, useAuthWithOs, useIsAuthOsSupported} from '../../Auth/common/hooks'
 import {usePrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
+import {NetworkLabel} from '../../WalletManager/common/constants'
+import {useSelectedNetwork} from '../../WalletManager/common/hooks/useSelectedNetwork'
 import {useNavigateTo} from '../common/navigation'
 import {SettingsSwitch} from '../common/SettingsSwitch'
 import {useCurrencyPairing} from '../Currency'
@@ -34,6 +36,7 @@ export const ApplicationSettingsScreen = () => {
   const isAuthOsSupported = useIsAuthOsSupported()
   const navigateTo = useNavigateTo()
   const {authWithOs} = useAuthWithOs({onSuccess: navigateTo.enableLoginWithPin})
+  const {network} = useSelectedNetwork()
 
   const {data: screenShareEnabled} = useScreenShareSettingEnabled()
   const displayScreenShareSetting = Platform.OS === 'android' && !isProduction
@@ -58,6 +61,13 @@ export const ApplicationSettingsScreen = () => {
         <SettingsSection title={strings.general}>
           <NavigatedSettingsItem
             icon={<Icon.Globe {...iconProps} />}
+            label={strings.network}
+            onNavigate={navigateTo.changeNetwork}
+            selected={NetworkLabel[network]}
+          />
+
+          <NavigatedSettingsItem
+            icon={<Icon.Language {...iconProps} />}
             label={strings.selectLanguage}
             onNavigate={navigateTo.changeLanguage}
             selected={language.label}
@@ -245,6 +255,7 @@ const useStrings = () => {
     screenSharing: intl.formatMessage(messages.screenSharing),
     screenSharingInfo: intl.formatMessage(messages.screenSharingInfo),
     translateThemeName: (theme: SupportedThemes) => intl.formatMessage(themeNames[theme]),
+    network: intl.formatMessage(messages.network),
   }
 }
 
@@ -321,6 +332,10 @@ const messages = defineMessages({
     id: 'components.settings.applicationsettingsscreen.screenSharingInfo',
     defaultMessage:
       '!!!Changes to this option will enable you to make screenshots as well share your screen via third party apps',
+  },
+  network: {
+    id: 'components.settings.applicationsettingsscreen.network',
+    defaultMessage: '!!!Network',
   },
 })
 

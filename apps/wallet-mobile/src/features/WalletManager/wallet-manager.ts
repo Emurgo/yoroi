@@ -317,6 +317,7 @@ export class WalletManager {
    * @returns {Promise<{wallets: YoroiWallet[]; metas: WalletMeta[]}>}
    */
   async hydrate({isForced = false}: {isForced?: boolean} = {}) {
+    console.log('hydrate-1')
     const deletedWalletIds = await this.walletIdsMarkedForDeletion()
     const walletIds = await this.#walletsRootStorage
       .getAllKeys()
