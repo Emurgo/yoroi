@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import {Image} from 'expo-image'
 import React from 'react'
-import {ImageStyle, View} from 'react-native'
+import {ImageStyle, StyleSheet, View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 import placeholderLight from '../../../../assets/img/nft-placeholder.png'
@@ -40,7 +40,7 @@ export const MediaPreview = ({
     : `https://${wallet.networkManager.network}.processed-media.yoroiwallet.com/${policy}/${name}?width=512&height=512&kind=metadata&fit=${contentFit}`
 
   return (
-    <View style={{width, height, overflow: 'hidden'}}>
+    <View style={[{width, height}, styles.wrapper]}>
       <Image
         key={colorScheme}
         source={{uri, headers}}
@@ -60,14 +60,31 @@ export const MediaPreview = ({
           setError(true)
           setLoading(false)
         }}
-      >
-        <SkeletonPlaceholder enabled={loading} borderRadius={blurRadius} highlightColor={color.gray_c200} speed={1000}>
-          <View style={{height, width}} />
-        </SkeletonPlaceholder>
-      </Image>
+      />
+      {loading && (
+        <View style={[styles.skeletonWrapper, {width, height}]}>
+          <SkeletonPlaceholder enabled borderRadius={blurRadius} highlightColor={color.gray_c200} speed={1000}>
+            <View style={{width, height}} />
+          </SkeletonPlaceholder>
+        </View>
+      )}
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  wrapper: {
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  skeletonWrapper: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    zIndex: 1,
+  },
+})
+
 const headers = {
   Accept: 'image/webp',
 } as const

@@ -111,6 +111,8 @@ const useStyles = () => {
     },
     nftItemContainer: {
       aspectRatio: 1 / 1,
+      ...atoms.rounded_sm,
+      overflow: 'hidden',
     },
   })
   const colors = {
