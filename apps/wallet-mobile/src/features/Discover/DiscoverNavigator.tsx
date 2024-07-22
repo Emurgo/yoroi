@@ -12,6 +12,7 @@ import {useStrings} from './common/useStrings'
 import {ListSkeleton} from './useCases/SelectDappFromList/ListSkeleton'
 import {SelectDappFromListScreen} from './useCases/SelectDappFromList/SelectDappFromListScreen'
 import {useDappConnectorManager} from './useDappConnectorManager'
+import {ReviewTransaction} from './ReviewTransaction/ReviewTransaction'
 
 const Stack = createStackNavigator<DiscoverRoutes>()
 
@@ -42,6 +43,7 @@ export const DiscoverNavigator = () => {
         </Stack.Screen>
 
         <Stack.Screen name="discover-browser" component={BrowserNavigator} options={{headerShown: false}} />
+        <Stack.Screen name="discover-review-tx" component={ReviewTransaction} options={{headerShown: false}} />
       </Stack.Navigator>
     </DappConnectorProvider>
   )

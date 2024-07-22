@@ -12,9 +12,11 @@ import {createDappConnector} from './common/helpers'
 import {useConfirmRawTx as usePromptRootKey} from './common/hooks'
 import {useShowHWNotSupportedModal} from './common/HWNotSupportedModal'
 import {useOpenUnverifiedDappModal} from './common/UnverifiedDappModal'
+import {useNavigateTo} from './common/useNavigateTo'
 
 export const useDappConnectorManager = () => {
   const appStorage = useAsyncStorage()
+  const navigateTo = useNavigateTo()
   const {wallet, meta} = useSelectedWallet()
 
   const confirmConnection = useConfirmConnection()
@@ -31,7 +33,25 @@ export const useDappConnectorManager = () => {
         appStorage,
         wallet,
         confirmConnection,
-        signTx,
+        signTx: (cbor) => {
+          return new Promise<string>((resolve, reject) => {
+            let shouldResolve = true
+            navigateTo.reviewTransaction({
+              cbor,
+              onConfirm: (rootKey) => {
+                if (!shouldResolve) return
+                shouldResolve = false
+                resolve(rootKey)
+                navigateTo.browseDapp()
+              },
+              onCancel: () => {
+                if (!shouldResolve) return
+                shouldResolve = false
+                reject(new Error('User rejected'))
+              },
+            })
+          })
+        },
         signData,
         meta,
         signTxWithHW,

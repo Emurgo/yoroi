@@ -285,6 +285,7 @@ export type SendConfirmParams = {
 export type DiscoverRoutes = {
   'discover-select-dapp-from-list': undefined
   'discover-browser': NavigatorScreenParams<BrowserRoutes>
+  'discover-review-tx': {cbor: string}
 }
 
 export type BrowserRoutes = {
