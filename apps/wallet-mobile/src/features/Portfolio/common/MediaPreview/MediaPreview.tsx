@@ -61,6 +61,7 @@ export const MediaPreview = ({
           setLoading(false)
         }}
       />
+
       {loading && (
         <View style={[styles.skeletonWrapper, {width, height}]}>
           <SkeletonPlaceholder enabled borderRadius={blurRadius} highlightColor={color.gray_c200} speed={1000}>
