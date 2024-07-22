@@ -110,6 +110,7 @@ const useStyles = () => {
       position: 'absolute',
       top: 0,
       right: 0,
+      zIndex: 13,
       ...atoms.p_lg,
     },
     content: {
