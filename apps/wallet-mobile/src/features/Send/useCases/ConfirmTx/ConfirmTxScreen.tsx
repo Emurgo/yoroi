@@ -141,14 +141,14 @@ const useStyles = () => {
     root: {
       backgroundColor: color.bg_color_high,
       flex: 1,
+      ...atoms.px_lg,
     },
     container: {
       backgroundColor: color.bg_color_high,
       flex: 1,
-      ...atoms.px_lg,
     },
     actions: {
-      ...atoms.p_lg,
+      ...atoms.pt_lg,
     },
   })
   return styles
