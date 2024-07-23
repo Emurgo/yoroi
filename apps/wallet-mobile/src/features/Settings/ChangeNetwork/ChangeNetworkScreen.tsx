@@ -104,7 +104,7 @@ export const useNetworkNoticeShown = (options?: UseQueryOptions<boolean, Error, 
 
   const query = useQuery({
     suspense: true,
-    queryKey: ['useIsNetworkNoticeShown'],
+    queryKey: ['useNetworkNoticeShown'],
     ...options,
     queryFn: async () => {
       const result = await storage.join('appSettings/').getItem('networkNoticeShown')
