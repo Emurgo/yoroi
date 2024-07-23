@@ -71,7 +71,7 @@
   "components.catalyst.step4.qrCheckbox": "I have take a screenshot of my QR code and saved my Catalyst secret code as a fallback.",
   "components.catalyst.confirmTx.bioAuthInstructions": "Please authenticate so that Yoroi can generate the required certificate for voting.",
   "components.catalyst.confirmTx.title": "Confirm Registration",
-  "components.catalyst.title": "Register to vote",
+  "components.catalyst.title": "Catalyst voting",
   "components.catalyst.confirmTx.passwordSignDescription": "Confirm your voting registration and submit the certificate generated in previous step to the blockchain",
   "components.common.errormodal.hideError": "Hide error message",
   "components.common.errormodal.showError": "Show error message",
