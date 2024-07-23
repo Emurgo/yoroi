@@ -9,7 +9,7 @@ import {StyleSheet, Text, TouchableOpacity, View, ViewProps} from 'react-native'
 
 import {Boundary, ResetError} from '../../../../../components'
 import {Icon} from '../../../../../components/Icon'
-import {colorsMap} from '../../../../../components/Icon/Direction'
+import {styleMap} from '../../../../../components/Icon/Direction'
 import {BalanceError} from '../../../../../components/PairedBalance/PairedBalance'
 import {TxHistoryRouteNavigation} from '../../../../../kernel/navigation'
 import {MultiToken} from '../../../../../yoroi-wallets/cardano/MultiToken'
@@ -63,7 +63,7 @@ export const TxHistoryListItem = ({transaction}: Props) => {
 
       <Middle>
         <Text
-          style={[styles.direction, {color: colorsMap(color)[transaction.direction].text}]}
+          style={[styles.direction, {color: styleMap(color)[transaction.direction].text}]}
           testID="transactionDirection"
         >
           {strings.direction(transaction.direction as any)}
