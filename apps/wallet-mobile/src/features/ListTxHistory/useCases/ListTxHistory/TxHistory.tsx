@@ -84,7 +84,7 @@ export const TxHistory = () => {
 }
 
 const useStyles = () => {
-  const {color, atoms, isDark} = useTheme()
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
     root: {
@@ -103,7 +103,7 @@ const useStyles = () => {
     panel: {
       flex: 1,
       paddingTop: 8,
-      backgroundColor: isDark ? color.gray_c50 : color.white_static,
+      backgroundColor: color.bg_color_high,
       borderTopLeftRadius: 24,
       borderTopRightRadius: 24,
     },
