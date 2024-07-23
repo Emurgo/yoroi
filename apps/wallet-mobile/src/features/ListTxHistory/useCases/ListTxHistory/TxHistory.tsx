@@ -30,11 +30,7 @@ export const TxHistory = () => {
   const {sync, isLoading: isLoadingWallet} = useSync(wallet)
   const {isLoading: isLoadingPoolTransition} = usePoolTransitionModal()
   const syncWalletInfo = useSyncWalletInfo(wallet.id)
-  const isLoading =
-    isLoadingWallet ||
-    isLoadingPoolTransition ||
-    syncWalletInfo?.status === 'syncing' ||
-    syncWalletInfo?.status === 'waiting'
+  const isLoading = isLoadingWallet || isLoadingPoolTransition || syncWalletInfo?.status === 'syncing'
 
   const [expanded, setExpanded] = React.useState(true)
   const onScroll = useOnScroll({
