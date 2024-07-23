@@ -4,9 +4,11 @@ import {useTransfer} from '@yoroi/transfer'
 import _ from 'lodash'
 import React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, KeyboardAvoidingView, Spacer} from '../../../../components'
+import {Button, KeyboardAvoidingView} from '../../../../components'
 import {ScrollView, useScrollView} from '../../../../components/ScrollView/ScrollView'
+import {Space} from '../../../../components/Space/Space'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useHasPendingTx, useIsOnline} from '../../../../yoroi-wallets/hooks'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
@@ -75,14 +77,9 @@ export const StartMultiTokenTxScreen = () => {
   const handleOnChangeMemo = (text: string) => memoChanged(text)
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView edges={['bottom', 'right', 'left']} style={[styles.root, styles.flex]}>
       <KeyboardAvoidingView style={styles.flex}>
-        <ScrollView
-          ref={scrollViewRef}
-          style={[styles.flex, styles.scroll]}
-          bounces={false}
-          onScrollBarChange={setIsScrollBarShown}
-        >
+        <ScrollView ref={scrollViewRef} style={styles.flex} bounces={false} onScrollBarChange={setIsScrollBarShown}>
           <ShowErrors />
 
           <NotifySupportedNameServers />
@@ -98,7 +95,7 @@ export const StartMultiTokenTxScreen = () => {
 
           <SelectNameServer />
 
-          <Spacer height={16} />
+          <Space height="lg" />
 
           <InputMemo value={memo} onChangeText={handleOnChangeMemo} isValid={!hasMemoError} />
         </ScrollView>
@@ -113,7 +110,7 @@ export const StartMultiTokenTxScreen = () => {
           />
         </Actions>
       </KeyboardAvoidingView>
-    </View>
+    </SafeAreaView>
   )
 }
 
@@ -159,19 +156,16 @@ const useReceiverError = ({
 const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
-    container: {
-      flex: 1,
+    root: {
       backgroundColor: color.bg_color_high,
       ...atoms.pt_lg,
+      ...atoms.px_lg,
     },
     flex: {
-      flex: 1,
+      ...atoms.flex_1,
     },
     actions: {
-      ...atoms.p_lg,
-    },
-    scroll: {
-      ...atoms.px_lg,
+      ...atoms.pt_lg,
     },
     actionsScroll: {
       borderTopWidth: 1,

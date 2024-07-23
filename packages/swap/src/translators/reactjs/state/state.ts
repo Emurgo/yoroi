@@ -26,8 +26,6 @@ export type SwapState = Readonly<{
     // state from wallet
     lpTokenHeld?: Portfolio.Token.Amount
     tokens: {
-      sellInfo?: Portfolio.Token.Info
-      buyInfo?: Portfolio.Token.Info
       ptInfo?: Portfolio.Token.Info
       // diff sell - buy decimals
       priceDenomination: number
@@ -329,8 +327,6 @@ const orderReducer = (
           buy: state.orderData.amounts.sell,
         }
         draft.orderData.tokens = {
-          sellInfo: state.orderData.tokens.buyInfo,
-          buyInfo: state.orderData.tokens.sellInfo,
           priceDenomination: -state.orderData.tokens.priceDenomination,
           ptInfo: state.orderData.tokens.ptInfo,
         }
@@ -523,12 +519,11 @@ const orderReducer = (
       // and the selected pool is reset
       case SwapCreateOrderActionType.SellTokenInfoChanged:
         const decimalFactor =
-          (state.orderData.tokens.sellInfo?.decimals ?? 0) -
+          (state.orderData.amounts.sell?.info.decimals ?? 0) -
           action.tokenInfo.decimals
         const decimalScalingFactor =
           BigInt(10) ** BigInt(Math.abs(decimalFactor))
 
-        draft.orderData.tokens.sellInfo = action.tokenInfo
         if (draft.orderData.amounts.sell) {
           const quantity =
             decimalFactor > 0
@@ -548,7 +543,7 @@ const orderReducer = (
 
         draft.orderData.tokens.priceDenomination =
           action.tokenInfo.decimals -
-          (state.orderData.tokens.buyInfo?.decimals ?? 0)
+          (state.orderData.amounts.buy?.info.decimals ?? 0)
 
         draft.orderData.pools = []
 
@@ -561,7 +556,6 @@ const orderReducer = (
       // when changing token info, all the derivaded data is reset
       // and the selected pool is reset
       case SwapCreateOrderActionType.BuyTokenInfoChanged:
-        draft.orderData.tokens.buyInfo = action.tokenInfo
         if (draft.orderData.amounts.buy) {
           draft.orderData.amounts.buy = {
             ...draft.orderData.amounts.buy,
@@ -575,7 +569,7 @@ const orderReducer = (
         }
 
         draft.orderData.tokens.priceDenomination =
-          (state.orderData.tokens.sellInfo?.decimals ?? 0) -
+          (state.orderData.amounts.sell?.info.decimals ?? 0) -
           action.tokenInfo.decimals
 
         draft.orderData.pools = []

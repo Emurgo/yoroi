@@ -93,7 +93,7 @@ export const EditAmountScreen = () => {
   }, [amount.info, amountChanged, navigateTo, quantity])
 
   return (
-    <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.container}>
+    <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
       <KeyboardAvoidingView style={{flex: 1}}>
         <ScrollView style={styles.scrollView} bounces={false}>
           <Spacer height={16} />
@@ -221,9 +221,10 @@ const useStyles = () => {
     center: {
       alignItems: 'center',
     },
-    container: {
-      flex: 1,
+    root: {
       backgroundColor: color.bg_color_high,
+      ...atoms.flex_1,
+      ...atoms.px_lg,
     },
     scrollView: {
       flex: 1,
@@ -234,7 +235,7 @@ const useStyles = () => {
       backgroundColor: color.gray_c200,
     },
     actions: {
-      ...atoms.p_lg,
+      ...atoms.pt_lg,
     },
     maxBalance: {
       color: color.primary_c600,

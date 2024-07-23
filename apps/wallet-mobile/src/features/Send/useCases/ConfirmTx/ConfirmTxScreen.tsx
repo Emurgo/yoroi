@@ -4,7 +4,7 @@ import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import React, {useEffect} from 'react'
 import {useIntl} from 'react-intl'
-import {Platform, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {KeyboardAvoidingView, Spacer, ValidatedTextInput} from '../../../../components'
@@ -122,8 +122,6 @@ export const ConfirmTxScreen = () => {
             chooseTransportOnConfirmation
           />
         </Actions>
-
-        <Spacer height={Platform.OS === 'ios' ? 16 : 50} />
       </KeyboardAvoidingView>
     </SafeAreaView>
   )
@@ -141,14 +139,14 @@ const useStyles = () => {
     root: {
       backgroundColor: color.bg_color_high,
       flex: 1,
+      ...atoms.px_lg,
     },
     container: {
       backgroundColor: color.bg_color_high,
       flex: 1,
-      ...atoms.px_lg,
     },
     actions: {
-      ...atoms.p_lg,
+      ...atoms.pt_lg,
     },
   })
   return styles

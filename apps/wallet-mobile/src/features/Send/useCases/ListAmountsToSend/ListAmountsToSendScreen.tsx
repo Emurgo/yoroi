@@ -8,6 +8,7 @@ import {useLayoutEffect} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 import {FlatList} from 'react-native-gesture-handler'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {useMutation} from 'react-query'
 
 import {Boundary, Button, Icon, Spacer} from '../../../../components'
@@ -93,7 +94,7 @@ export const ListAmountsToSendScreen = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
       <AmountsList
         data={Object.values(amounts)}
         renderItem={({item: amount}) => (
@@ -122,7 +123,7 @@ export const ListAmountsToSendScreen = () => {
           disabled={selectedTokensCounter === 0 || isLoading}
         />
       </Actions>
-    </View>
+    </SafeAreaView>
   )
 }
 
@@ -156,7 +157,7 @@ const Left = ({style, ...props}: ViewProps) => <View style={[style, {flex: 1}]} 
 const Right = ({style, ...props}: ViewProps) => <View style={[style, {paddingLeft: 16}]} {...props} />
 const Actions = ({style, ...props}: ViewProps) => {
   const {styles} = useStyles()
-  return <View style={[style, styles.transparent]} {...props} />
+  return <View style={[style, styles.actions]} {...props} />
 }
 const Row = ({style, ...props}: ViewProps) => {
   const {styles} = useStyles()
@@ -212,11 +213,11 @@ const useStyles = () => {
     row: {
       flexDirection: 'row',
     },
-    transparent: {
+    actions: {
       backgroundColor: 'transparent',
-      ...atoms.py_lg,
+      ...atoms.pt_lg,
     },
-    container: {
+    root: {
       flex: 1,
       backgroundColor: color.bg_color_high,
       ...atoms.px_lg,
