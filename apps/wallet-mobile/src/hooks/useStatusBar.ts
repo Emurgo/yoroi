@@ -62,7 +62,7 @@ const getStatusBarStyleByRoute = ({
   }
   return {
     translucent: false,
-    bgColorAndroid: isDark ? color.black_static : color.white_static,
+    bgColorAndroid: isDark ? color.bg_color_high : color.white_static,
     statusBarStyle: isDark ? 'light-content' : 'dark-content',
   }
 }

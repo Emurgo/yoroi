@@ -1,11 +1,12 @@
 import {useCatalyst} from '@yoroi/staking'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {ScrollView, StyleSheet} from 'react-native'
+import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer} from '../../../../components'
 import {BACKSPACE, NumericKeyboard} from '../../../../components/NumericKeyboard'
+import {Space} from '../../../../components/Space/Space'
 import {useNavigateTo} from '../../CatalystNavigator'
 import {Actions, Description, PinBox, Row, Stepper} from '../../common/components'
 import {useStrings} from '../../common/strings'
@@ -170,19 +171,21 @@ export const ConfirmPin = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-      <Stepper title={strings.step3Title} currentStep={3} totalSteps={4} />
+      <Padding>
+        <Stepper title={strings.step3Title} currentStep={3} totalSteps={4} />
+      </Padding>
 
-      <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
+      <ScrollView bounces={false} contentContainerStyle={styles.padding}>
         <Description>{strings.step3Description}</Description>
 
-        <Spacer height={16} />
+        <Space height="lg" />
 
         <Row style={{justifyContent: 'center'}}>
           <PinBox onPress={() => handleOnPress(1)} done={done} error={pin1Error} selected={currentActivePin === 1}>
             {pin1Value}
           </PinBox>
 
-          <Spacer width={16} />
+          <Space height="lg" />
 
           <PinBox onPress={() => handleOnPress(2)} done={done} error={pin2Error} selected={currentActivePin === 2}>
             {pin2Value}
@@ -204,23 +207,33 @@ export const ConfirmPin = () => {
 
       <Spacer fill />
 
-      <Actions>
-        <Button shelleyTheme onPress={() => onNext()} title={strings.continueButton} disabled={!done} />
-      </Actions>
+      <Padding>
+        <Actions>
+          <Button shelleyTheme onPress={() => onNext()} title={strings.continueButton} disabled={!done} />
+        </Actions>
+      </Padding>
+
+      <Space height="lg" />
 
       <NumericKeyboard onKeyDown={onKeyDown} />
     </SafeAreaView>
   )
 }
 
+// NOTE: keyboard horizontal padding is 0, yet bottom must respect safe-area-view
+export const Padding = ({style, ...props}: ViewProps) => {
+  const styles = useStyles()
+  return <View {...props} style={[styles.padding, style]} />
+}
+
 const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     safeAreaView: {
-      flex: 1,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
+      ...atoms.flex_1,
     },
-    contentContainer: {
+    padding: {
       ...atoms.px_lg,
     },
   })

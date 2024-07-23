@@ -124,7 +124,7 @@ const useStyles = () => {
       flexDirection: 'row',
     },
     actions: {
-      ...atoms.p_lg,
+      ...atoms.pt_lg,
     },
     pinBox: {
       borderWidth: 1,
@@ -156,7 +156,7 @@ const useStyles = () => {
       borderColor: '#66F2D6',
     },
     stepper: {
-      ...atoms.p_lg,
+      ...atoms.py_lg,
     },
     cursor: {
       backgroundColor: color.gray_c600,

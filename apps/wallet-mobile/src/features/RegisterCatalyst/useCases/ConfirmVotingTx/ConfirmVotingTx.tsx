@@ -76,7 +76,7 @@ export const ConfirmVotingTx = () => {
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
       <KeyboardAvoidingView style={{flex: 1}}>
-        <ScrollView bounces={false} contentContainerStyle={styles.scroll}>
+        <ScrollView bounces={false}>
           <Space height="lg" />
 
           <Text style={styles.confirmVotingTxTitle}>{strings.confirmationTitle}</Text>
@@ -129,6 +129,7 @@ const useStyles = () => {
     safeAreaView: {
       flex: 1,
       backgroundColor: color.bg_color_high,
+      ...atoms.px_lg,
     },
     confirmVotingTxTitle: {
       ...atoms.body_2_md_regular,
@@ -146,9 +147,6 @@ const useStyles = () => {
     },
     inputContainer: {
       position: 'relative',
-    },
-    scroll: {
-      ...atoms.px_lg,
     },
   })
 

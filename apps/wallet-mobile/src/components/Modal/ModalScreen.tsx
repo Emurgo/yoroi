@@ -110,7 +110,6 @@ const useStyles = () => {
       flex: 1,
       backgroundColor: isDark ? color.gray_c50 : color.white_static,
       alignSelf: 'stretch',
-      paddingBottom: 16,
     },
     title: {
       ...atoms.heading_3_medium,

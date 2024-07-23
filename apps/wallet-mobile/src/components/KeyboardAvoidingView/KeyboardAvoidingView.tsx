@@ -2,6 +2,7 @@ import React from 'react'
 import {KeyboardAvoidingView as RNKeyboardAvoidingView, KeyboardAvoidingViewProps, Platform} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
+import {useIsKeyboardOpen} from '../../kernel/keyboard/useIsKeyboardOpen'
 import {Space} from '../Space/Space'
 
 export const KeyboardAvoidingView = ({
@@ -12,6 +13,7 @@ export const KeyboardAvoidingView = ({
   ...rest
 }: KeyboardAvoidingViewProps) => {
   const insets = useSafeAreaInsets()
+  const isKeyboardOpen = useIsKeyboardOpen()
   return (
     <RNKeyboardAvoidingView
       behavior={behavior ?? 'padding'}
@@ -21,7 +23,7 @@ export const KeyboardAvoidingView = ({
     >
       {children}
 
-      {Platform.OS === 'android' && !enabled && <Space height="lg" />}
+      {Platform.OS === 'android' && isKeyboardOpen && <Space height="lg" />}
     </RNKeyboardAvoidingView>
   )
 }
