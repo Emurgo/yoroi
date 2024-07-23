@@ -99,12 +99,6 @@ export const WalletDetailsScreen = () => {
     features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '',
   )
   const passwordErrors = validatePassword(password, passwordConfirmation)
-  const passwordErrorText = passwordErrors.passwordIsWeak
-    ? strings.passwordStrengthRequirement({requiredPasswordLength: REQUIRED_PASSWORD_LENGTH})
-    : undefined
-  const passwordConfirmationErrorText = passwordErrors.matchesConfirmation
-    ? strings.repeatPasswordInputError
-    : undefined
 
   const {
     createWallet,
@@ -134,6 +128,13 @@ export const WalletDetailsScreen = () => {
       })
     },
   })
+
+  const passwordErrorText =
+    passwordErrors.passwordIsWeak && !isLoading
+      ? strings.passwordStrengthRequirement({requiredPasswordLength: REQUIRED_PASSWORD_LENGTH})
+      : undefined
+  const passwordConfirmationErrorText =
+    passwordErrors.matchesConfirmation && !isLoading ? strings.repeatPasswordInputError : undefined
 
   const nameErrors = validateWalletName(name, null, !isCreateWalletSuccess ? walletNames : [])
   const walletNameErrorText = getWalletNameError(
@@ -282,13 +283,12 @@ export const WalletDetailsScreen = () => {
             label={strings.walletDetailsNameInput}
             value={name}
             onChangeText={(walletName: string) => setName(walletName)}
-            errorText={!isEmptyString(walletNameErrorText) ? walletNameErrorText : undefined}
+            errorText={!isEmptyString(walletNameErrorText) && !isLoading ? walletNameErrorText : undefined}
             errorDelay={0}
             returnKeyType="next"
             onSubmitEditing={() => passwordRef.current?.focus()}
             testID="walletNameInput"
             autoComplete="off"
-            disabled={isLoading}
             showErrorOnBlur
           />
 
@@ -307,7 +307,6 @@ export const WalletDetailsScreen = () => {
             onSubmitEditing={() => passwordConfirmationRef.current?.focus()}
             testID="walletPasswordInput"
             autoComplete="off"
-            disabled={isLoading}
             showErrorOnBlur
             textContentType="oneTimeCode"
           />
@@ -325,7 +324,6 @@ export const WalletDetailsScreen = () => {
             errorText={passwordConfirmationErrorText}
             testID="walletRepeatPasswordInput"
             autoComplete="off"
-            disabled={isLoading}
             showErrorOnBlur
             textContentType="oneTimeCode"
           />

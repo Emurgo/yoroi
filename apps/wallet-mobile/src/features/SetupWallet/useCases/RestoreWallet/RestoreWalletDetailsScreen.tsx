@@ -85,13 +85,6 @@ export const RestoreWalletDetailsScreen = () => {
   )
   const passwordErrors = validatePassword(password, passwordConfirmation)
 
-  const passwordErrorText = passwordErrors.passwordIsWeak
-    ? strings.passwordStrengthRequirement({requiredPasswordLength: REQUIRED_PASSWORD_LENGTH})
-    : undefined
-  const passwordConfirmationErrorText = passwordErrors.matchesConfirmation
-    ? strings.repeatPasswordInputError
-    : undefined
-
   const intl = useIntl()
   const {
     createWallet,
@@ -122,6 +115,13 @@ export const RestoreWalletDetailsScreen = () => {
     },
   })
 
+  const passwordErrorText =
+    passwordErrors.passwordIsWeak && !isLoading
+      ? strings.passwordStrengthRequirement({requiredPasswordLength: REQUIRED_PASSWORD_LENGTH})
+      : undefined
+  const passwordConfirmationErrorText =
+    passwordErrors.matchesConfirmation && !isLoading ? strings.repeatPasswordInputError : undefined
+
   useFocusEffect(
     React.useCallback(() => {
       track.restoreWalletDetailsStepViewed()
@@ -137,7 +137,7 @@ export const RestoreWalletDetailsScreen = () => {
   const showModalTipsPassword = () => {
     openModal(
       strings.walletDetailsModalTitle,
-      <View style={styles.modal}>
+      <View style={styles.flex}>
         <ScrollView bounces={false}>
           <View>
             <CardAboutPhrase
@@ -175,7 +175,7 @@ export const RestoreWalletDetailsScreen = () => {
   const showModalTipsPlateNumber = () => {
     openModal(
       strings.walletDetailsModalTitle,
-      <View style={styles.modal}>
+      <View style={styles.flex}>
         <ScrollView bounces={false}>
           <View>
             <CardAboutPhrase
@@ -210,14 +210,9 @@ export const RestoreWalletDetailsScreen = () => {
   }
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
-      <KeyboardAvoidingView style={{flex: 1}}>
-        <StepperProgress
-          style={styles.steps}
-          currentStep={2}
-          currentStepTitle={strings.stepWalletDetails}
-          totalSteps={2}
-        />
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={[styles.root, styles.flex]}>
+      <KeyboardAvoidingView style={styles.flex}>
+        <StepperProgress currentStep={2} currentStepTitle={strings.stepWalletDetails} totalSteps={2} />
 
         <View style={styles.info}>
           <Text style={styles.title}>{strings.walletDetailsTitle(bold)}</Text>
@@ -227,20 +222,19 @@ export const RestoreWalletDetailsScreen = () => {
 
         <Space height="xl" />
 
-        <ScrollView style={styles.form}>
+        <ScrollView style={styles.flex}>
           <TextInput
             enablesReturnKeyAutomatically
             autoFocus
             label={strings.walletDetailsNameInput}
             value={name}
             onChangeText={(walletName: string) => setName(walletName)}
-            errorText={!isEmptyString(walletNameErrorText) ? walletNameErrorText : undefined}
+            errorText={!isEmptyString(walletNameErrorText) && !isLoading ? walletNameErrorText : undefined}
             errorDelay={0}
             returnKeyType="next"
             onSubmitEditing={() => passwordRef.current?.focus()}
             testID="walletNameInput"
             autoComplete="off"
-            disabled={isLoading}
             showErrorOnBlur
           />
 
@@ -259,7 +253,6 @@ export const RestoreWalletDetailsScreen = () => {
             onSubmitEditing={() => passwordConfirmationRef.current?.focus()}
             testID="walletPasswordInput"
             autoComplete="off"
-            disabled={isLoading}
             showErrorOnBlur
             textContentType="oneTimeCode"
           />
@@ -277,7 +270,6 @@ export const RestoreWalletDetailsScreen = () => {
             errorText={passwordConfirmationErrorText}
             testID="walletRepeatPasswordInput"
             autoComplete="off"
-            disabled={isLoading}
             textContentType="oneTimeCode"
           />
 
@@ -345,24 +337,15 @@ const useBold = () => {
 const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
-    form: {
-      ...atoms.px_lg,
-      flex: 1,
-    },
-    steps: {
-      ...atoms.px_lg,
+    flex: {
+      ...atoms.flex_1,
     },
     root: {
-      flex: 1,
       justifyContent: 'space-between',
       backgroundColor: color.bg_color_high,
-    },
-    modal: {
-      flex: 1,
       ...atoms.px_lg,
     },
     info: {
-      ...atoms.px_lg,
       flexDirection: 'row',
     },
     title: {
@@ -393,7 +376,7 @@ const useStyles = () => {
       height: 24,
     },
     actions: {
-      ...atoms.p_lg,
+      ...atoms.pt_lg,
     },
   })
 
