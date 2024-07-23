@@ -34,7 +34,7 @@ import {EnterDrepIdModal} from '../EnterDrepIdModal'
 
 export const HomeScreen = () => {
   const {wallet, meta} = useSelectedWallet()
-  const txInfos = useTransactionInfos(wallet)
+  const txInfos = useTransactionInfos()
   const stakingKeyHash = useStakingKey(wallet)
   const [isPendingRefetchAfterTxConfirmation, setIsPendingRefetchAfterTxConfirmation] = React.useState(false)
 

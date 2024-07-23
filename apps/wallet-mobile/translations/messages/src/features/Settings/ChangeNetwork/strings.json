@@ -1,0 +1,77 @@
+[
+  {
+    "id": "components.settings.applicationsettingsscreen.network.notice.title",
+    "defaultMessage": "!!!What are the test networks?",
+    "file": "src/features/Settings/ChangeNetwork/strings.ts",
+    "start": {
+      "line": 19,
+      "column": 22,
+      "index": 690
+    },
+    "end": {
+      "line": 22,
+      "column": 3,
+      "index": 827
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.network.notice.message",
+    "defaultMessage": "!!!The test networks serve as a platform for the community and developers to test products and experiments without risking real funds on the mainnet.",
+    "file": "src/features/Settings/ChangeNetwork/strings.ts",
+    "start": {
+      "line": 23,
+      "column": 24,
+      "index": 853
+    },
+    "end": {
+      "line": 27,
+      "column": 3,
+      "index": 1117
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.network.notice.listTitle",
+    "defaultMessage": "!!!Key features of testnet coins:",
+    "file": "src/features/Settings/ChangeNetwork/strings.ts",
+    "start": {
+      "line": 28,
+      "column": 26,
+      "index": 1145
+    },
+    "end": {
+      "line": 31,
+      "column": 3,
+      "index": 1289
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.network.notice.list",
+    "defaultMessage": "!!!  •  Have no real value.\n  •  Are separate from the mainnet.\n  •  Are separate from the mainnet.\n  •  Cannot be sent to mainnet wallets.\n  •  Are easily obtainable from Cardano faucets.",
+    "file": "src/features/Settings/ChangeNetwork/strings.ts",
+    "start": {
+      "line": 32,
+      "column": 21,
+      "index": 1312
+    },
+    "end": {
+      "line": 36,
+      "column": 3,
+      "index": 1616
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.network.notice.button",
+    "defaultMessage": "!!!I understand",
+    "file": "src/features/Settings/ChangeNetwork/strings.ts",
+    "start": {
+      "line": 37,
+      "column": 23,
+      "index": 1641
+    },
+    "end": {
+      "line": 40,
+      "column": 3,
+      "index": 1764
+    }
+  }
+]

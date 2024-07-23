@@ -140,8 +140,6 @@ export type WalletStackRouteNavigation = StackNavigationProp<WalletStackRoutes>
 export type WalletInitRoutes = {
   'setup-wallet-choose-setup-type': undefined
   'setup-wallet-choose-setup-type-init': undefined
-  'setup-wallet-create-choose-network': undefined
-  'setup-wallet-restore-choose-network': undefined
   'setup-wallet-restore-choose-mnemonic-type': undefined
   'setup-wallet-details-form': undefined
   'setup-wallet-restore-form': undefined

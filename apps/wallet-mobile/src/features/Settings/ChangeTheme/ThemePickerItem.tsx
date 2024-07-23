@@ -60,7 +60,7 @@ const useStyles = () => {
       flexDirection: 'row',
       borderBottomColor: color.gray_c200,
       borderBottomWidth: 1,
-      paddingVertical: 8,
+      ...atoms.py_lg,
     },
     flag: {
       alignItems: 'flex-end',

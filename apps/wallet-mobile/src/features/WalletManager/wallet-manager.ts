@@ -39,7 +39,7 @@ import {getWalletFactory} from './network-manager/helpers/get-wallet-factory'
 export class WalletManager {
   // keep it in sync with storage version
   static readonly version = 3
-  readonly #wallets: Map<YoroiWallet['id'], YoroiWallet> = new Map()
+  readonly #wallets$ = new BehaviorSubject<Map<YoroiWallet['id'], YoroiWallet>>(new Map())
   readonly #walletMetas$ = new BehaviorSubject<Map<YoroiWallet['id'], Wallet.Meta>>(new Map())
   readonly #syncWalletInfos$ = new BehaviorSubject<SyncWalletInfos>(freeze(new Map()))
   readonly #selectedWalletId$ = new BehaviorSubject<YoroiWallet['id'] | null>(null)
@@ -128,6 +128,10 @@ export class WalletManager {
     return this.#walletMetas$.asObservable()
   }
 
+  get wallets$() {
+    return this.#wallets$.asObservable()
+  }
+
   get hasWallets() {
     // always based on metas
     return this.#walletMetas$.value.size > 0
@@ -148,7 +152,7 @@ export class WalletManager {
   getWalletsByNetwork = () => {
     const openedWalletsByNetwork = new Map<Chain.SupportedNetworks, Set<YoroiWallet['id']>>()
 
-    this.#wallets.forEach(({id, networkManager: {network}}) => {
+    this.#wallets$.value.forEach(({id, networkManager: {network}}) => {
       if (!openedWalletsByNetwork.has(network)) openedWalletsByNetwork.set(network, new Set())
 
       openedWalletsByNetwork.get(network)?.add(id)
@@ -158,7 +162,7 @@ export class WalletManager {
   }
 
   getWalletById = (id: YoroiWallet['id']) => {
-    return this.#wallets.get(id)
+    return this.#wallets$.value.get(id)
   }
 
   getWalletMetaById = (id: YoroiWallet['id']) => {
@@ -317,7 +321,6 @@ export class WalletManager {
    * @returns {Promise<{wallets: YoroiWallet[]; metas: WalletMeta[]}>}
    */
   async hydrate({isForced = false}: {isForced?: boolean} = {}) {
-    console.log('hydrate-1')
     const deletedWalletIds = await this.walletIdsMarkedForDeletion()
     const walletIds = await this.#walletsRootStorage
       .getAllKeys()
@@ -340,14 +343,17 @@ export class WalletManager {
           }),
         ),
       )
-      for (const wallet of loadedWallets) this.#wallets.set(wallet.id, wallet)
+
+      const wallets = new Map(this.#wallets$.value)
+      for (const wallet of loadedWallets) wallets.set(wallet.id, wallet)
+      this.#wallets$.next(freeze(wallets))
 
       const metas = new Map(this.#walletMetas$.value)
       for (const meta of metasToLoad) metas.set(meta.id, meta)
       this.#walletMetas$.next(freeze(metas))
     }
 
-    return {wallets: Array.from(this.#wallets.values()), metas: Array.from(this.#walletMetas$.value.values())}
+    return {wallets: Array.from(this.#wallets$.value.values()), metas: Array.from(this.#walletMetas$.value.values())}
   }
 
   async walletIdsMarkedForDeletion() {
@@ -463,7 +469,7 @@ export class WalletManager {
     isForced?: boolean
   }): Promise<YoroiWallet> {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    if (this.#wallets.has(id) && !isForced) return this.#wallets.get(id)!
+    if (this.#wallets$.value.has(id) && !isForced) return this.#wallets$.value.get(id)!
 
     const network = this.selectedNetwork
     const walletFactory = getWalletFactory({network, implementation})
@@ -500,7 +506,10 @@ export class WalletManager {
     await this.#rootStorage.setItem('deletedWalletIds', [...deletedWalletIds, id])
 
     // can't update the walletInfo here cuz it might be in the middle of wallet syncing
-    this.#wallets.delete(id)
+    const wallets = new Map(this.#wallets$.value)
+    wallets.delete(id)
+    this.#wallets$.next(freeze(wallets))
+
     const metas = new Map(this.#walletMetas$.value)
     metas.delete(id)
     this.#walletMetas$.next(freeze(metas))

@@ -17,9 +17,9 @@ import {CurrencyProvider} from './features/Settings/Currency/CurrencyContext'
 import {WalletManagerProvider} from './features/WalletManager/context/WalletManagerProvider'
 import {walletManager} from './features/WalletManager/wallet-manager'
 import {InitApp} from './InitApp'
-import {disableLogbox /* loggerFilter */} from './kernel/env'
+import {disableLogbox, loggerFilter} from './kernel/env'
 import {LanguageProvider} from './kernel/i18n'
-// import {useSetupLogger} from './kernel/logger/hooks/useSetupLogger'
+import {useSetupLogger} from './kernel/logger/hooks/useSetupLogger'
 import {makeMetricsManager, MetricsProvider} from './kernel/metrics/metricsManager'
 import {queryInfo} from './kernel/query-client'
 import {useMigrations} from './kernel/storage/migrations/useMigrations'
@@ -78,9 +78,9 @@ const Yoroi = () => {
 }
 
 export const YoroiApp = () => {
-  /* const isReady = useSetupLogger(loggerFilter)
+  const isReady = useSetupLogger(loggerFilter)
 
-  if (!isReady) return null */
+  if (!isReady) return null
 
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>

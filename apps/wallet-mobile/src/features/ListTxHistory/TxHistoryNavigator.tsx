@@ -59,6 +59,7 @@ import {
 } from '../Swap/useCases'
 import {SelectBuyTokenFromListScreen} from '../Swap/useCases/StartSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
 import {SelectSellTokenFromListScreen} from '../Swap/useCases/StartSwapScreen/CreateOrder/EditSellAmount/SelectSellTokenFromListScreen/SelectSellTokenFromListScreen'
+import {ChangeNetworkLabel} from '../WalletManager/common/ChangeNetworkLabel/ChangeNetworkLabel'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 import {TxHistory} from './useCases/ListTxHistory/TxHistory'
 import {TxDetails} from './useCases/ShowTxDetails'
@@ -157,6 +158,7 @@ export const TxHistoryNavigator = () => {
                       title: meta.name,
                       headerTransparent: true,
                       headerRight: headerRightHistory,
+                      headerTitle: ({children}) => <ChangeNetworkLabel>{children}</ChangeNetworkLabel>,
                     }}
                   />
 

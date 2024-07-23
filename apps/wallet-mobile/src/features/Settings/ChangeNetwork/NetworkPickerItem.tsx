@@ -10,17 +10,15 @@ import {useSelectedNetwork} from '../../WalletManager/common/hooks/useSelectedNe
 type Props = {
   label: string
   itemNetwork: Chain.SupportedNetworks
-  onSelectNetwork: () => void
+  onSelectNetwork: (network: Chain.SupportedNetworks) => void
 }
 
 export const ThemePickerItem = ({label, itemNetwork, onSelectNetwork}: Props) => {
   const {colors} = useStyles()
   const {network: selectedNetwork} = useSelectedNetwork()
 
-  console.log('selectedNetwork', selectedNetwork)
-
   return (
-    <TouchableOpacity activeOpacity={0.5} onPress={onSelectNetwork}>
+    <TouchableOpacity activeOpacity={0.5} onPress={() => onSelectNetwork(itemNetwork)}>
       <Row>
         <Description>
           <Title>{label}</Title>
@@ -56,7 +54,7 @@ const useStyles = () => {
       flexDirection: 'row',
       borderBottomColor: color.gray_c200,
       borderBottomWidth: 1,
-      paddingVertical: 8,
+      ...atoms.py_lg,
     },
     flag: {
       alignItems: 'flex-end',

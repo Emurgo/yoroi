@@ -20,6 +20,7 @@ import {
 } from 'react-query'
 
 import {useSelectedNetwork} from '../../features/WalletManager/common/hooks/useSelectedNetwork'
+import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {isDev, isNightly} from '../../kernel/env'
 import {logger} from '../../kernel/logger/logger'
 import {deriveAddressFromXPub} from '../cardano/account-manager/derive-address-from-xpub'
@@ -464,8 +465,11 @@ export const useSignTxWithHW = (
   }
 }
 
-export const useTransactionInfos = (wallet: YoroiWallet) => {
+export const useTransactionInfos = () => {
+  const {wallet} = useSelectedWallet()
+
   const [transactionInfos, setTransactionInfos] = React.useState(() => wallet.transactions)
+
   React.useEffect(() => {
     const unsubscribe = wallet.subscribe((event) => {
       if (event.type !== 'transactions') return
@@ -475,11 +479,16 @@ export const useTransactionInfos = (wallet: YoroiWallet) => {
     return () => unsubscribe?.()
   }, [wallet])
 
+  React.useEffect(() => {
+    setTransactionInfos(wallet.transactions)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [wallet.networkManager.network])
+
   return transactionInfos
 }
 
-export const useHasPendingTx = (wallet: YoroiWallet) => {
-  const transactionInfos = useTransactionInfos(wallet)
+export const useHasPendingTx = () => {
+  const transactionInfos = useTransactionInfos()
 
   return Object.values(transactionInfos).some(
     (transactionInfo) =>

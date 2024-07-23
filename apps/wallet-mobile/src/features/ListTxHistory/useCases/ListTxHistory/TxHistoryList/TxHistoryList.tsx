@@ -10,13 +10,11 @@ import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
 import {TransactionInfo} from '../../../../../yoroi-wallets/types'
 import {ShowBuyBanner} from '../../../../Exchange/common/ShowBuyBanner/ShowBuyBanner'
-import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {TxHistoryListItem} from './TxHistoryListItem'
 
 type Props = Partial<FlashListProps<TransactionInfo>>
 export const TxHistoryList = (props: Props) => {
   const styles = useStyles()
-  const {wallet} = useSelectedWallet()
   const {track} = useMetrics()
 
   useFocusEffect(
@@ -25,11 +23,17 @@ export const TxHistoryList = (props: Props) => {
     }, [track]),
   )
 
-  const transactionsInfo = useTransactionInfos(wallet)
+  const transactionsInfo = useTransactionInfos()
   const sortedTransactions = React.useMemo(() => getTransactionsByDate(transactionsInfo), [transactionsInfo])
 
   const [loadedTxs, setLoadedTxs] = React.useState(sortedTransactions.slice(0, batchSize))
   const [currentIndex, setCurrentIndex] = React.useState(batchSize)
+
+  React.useEffect(() => {
+    const newTxs = sortedTransactions.slice(0, batchSize)
+    setLoadedTxs(newTxs)
+    setCurrentIndex(batchSize)
+  }, [sortedTransactions])
 
   const handleOnEndReached = React.useCallback(() => {
     if (currentIndex >= sortedTransactions.length) return

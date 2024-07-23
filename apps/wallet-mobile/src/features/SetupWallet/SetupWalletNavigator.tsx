@@ -11,7 +11,6 @@ import {ImportReadOnlyWalletScreen} from './legacy/ImportReadOnlyWallet/ImportRe
 import {SaveNanoXScreen} from './legacy/SaveNanoX/SaveNanoXScreen'
 import {SaveReadOnlyWalletScreen} from './legacy/SaveReadOnlyWallet/SaveReadOnlyWalletScreen'
 import {ChooseMnemonicTypeScreen} from './useCases/ChooseMnemonicType/ChooseMnemonicTypeScreen'
-import {ChooseNetworkScreen} from './useCases/ChooseNetwork/ChooseNetworkScreen'
 import {ChooseSetupTypeScreen} from './useCases/ChooseSetupType/ChooseSetupTypeScreen'
 import {AboutRecoveryPhraseScreen} from './useCases/CreateWallet/AboutRecoveryPhraseScreen'
 import {RecoveryPhraseScreen} from './useCases/CreateWallet/RecoveryPhraseScreen'
@@ -43,18 +42,6 @@ export const SetupWalletNavigator = () => {
         name="setup-wallet-choose-setup-type"
         component={ChooseSetupTypeScreen}
         options={{title: strings.addNewWalletTitle}}
-      />
-
-      <Stack.Screen
-        name="setup-wallet-create-choose-network"
-        component={ChooseNetworkScreen}
-        options={{title: strings.createWalletTitle}}
-      />
-
-      <Stack.Screen
-        name="setup-wallet-restore-choose-network"
-        component={ChooseNetworkScreen}
-        options={{title: strings.restoreWalletTitle}}
       />
 
       <Stack.Screen

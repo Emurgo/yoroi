@@ -1,5 +1,4 @@
 import {Chain, Wallet} from '@yoroi/types'
-import {Chain, Wallet} from '@yoroi/types'
 import {freeze} from 'immer'
 
 import {buildPortfolioTokenManagers} from '../../Portfolio/common/helpers/build-token-managers'

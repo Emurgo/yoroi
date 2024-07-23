@@ -7,10 +7,10 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useModal} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
-import {isProduction} from '../../../../kernel/env'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import {LedgerTransportSwitch} from '../../../../legacy/HW'
+import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {ButtonCard} from '../../common/ButtonCard/ButtonCard'
 import {LogoBanner} from '../../common/LogoBanner/LogoBanner'
 import {useStrings} from '../../common/useStrings'
@@ -24,6 +24,7 @@ export const ChooseSetupTypeScreen = () => {
   const {walletImplementationChanged, setUpTypeChanged, useUSBChanged: USBChanged} = useSetupWallet()
   const {openModal} = useModal()
   const {track} = useMetrics()
+  const {selected, walletManager} = useWalletManager()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -36,27 +37,17 @@ export const ChooseSetupTypeScreen = () => {
   const handleCreate = () => {
     walletImplementationChanged('cardano-cip1852')
     setUpTypeChanged('create')
+    walletManager.setSelectedNetwork(selected.network)
 
-    if (isProduction) {
-      navigation.navigate('setup-wallet-about-recovery-phase')
-      return
-    }
-
-    // On production the step of network is skipped
-    navigation.navigate('setup-wallet-create-choose-network')
+    navigation.navigate('setup-wallet-about-recovery-phase')
   }
 
   const handleRestore = () => {
     walletImplementationChanged('cardano-cip1852')
     setUpTypeChanged('restore')
+    walletManager.setSelectedNetwork(selected.network)
 
-    if (isProduction) {
-      navigation.navigate('setup-wallet-restore-choose-mnemonic-type')
-      return
-    }
-
-    // On production the step of network is skipped
-    navigation.navigate('setup-wallet-restore-choose-network')
+    navigation.navigate('setup-wallet-restore-choose-mnemonic-type')
   }
 
   const handleHw = () => {
@@ -79,14 +70,9 @@ export const ChooseSetupTypeScreen = () => {
   const navigateHw = () => {
     walletImplementationChanged('cardano-cip1852')
     setUpTypeChanged('hw')
+    walletManager.setSelectedNetwork(selected.network)
 
-    if (isProduction) {
-      navigation.navigate('setup-wallet-check-nano-x')
-      return
-    }
-
-    // On production the step of network is skipped
-    navigation.navigate('setup-wallet-restore-choose-network')
+    navigation.navigate('setup-wallet-check-nano-x')
   }
 
   return (

@@ -45,7 +45,7 @@ export const WalletManagerProvider: React.FC<
   }, [walletManager])
 
   React.useEffect(() => {
-    // selected wallet
+    // selected wallet: wallet id changed
     const subSelectedWalletId = walletManager.selectedWalletId$.subscribe((id) => {
       if (id == null) {
         actions.walletSelected({wallet: null, meta: null})
@@ -61,6 +61,26 @@ export const WalletManagerProvider: React.FC<
     })
     return () => subSelectedWalletId.unsubscribe()
   }, [actions, walletManager])
+
+  React.useEffect(() => {
+    // selected wallet: wallet updated
+    const subSelectedWalletId = walletManager.wallets$.subscribe((wallets) => {
+      if (state.selected.wallet === null) return
+
+      const selectedWalletId = state.selected.wallet.id
+      const wallet = wallets.get(selectedWalletId)
+      const meta = walletManager.getWalletMetaById(selectedWalletId)
+
+      if (wallet == null || meta == null) {
+        logger.error('WalletManagerProvider: wallet or meta selected not found', {selectedWalletId})
+        return
+      }
+
+      wallet.sync({isForced: true})
+      actions.walletSelected({wallet, meta})
+    })
+    return () => subSelectedWalletId.unsubscribe()
+  }, [actions, state.selected.wallet, walletManager])
 
   React.useEffect(() => {
     // meta
@@ -92,11 +112,10 @@ export const useWalletManager = () => {
     throw error
   }
 
-  return React.useMemo(
-    () => ({
+  return React.useMemo(() => {
+    return {
       selected,
       walletManager,
-    }),
-    [selected, walletManager],
-  )
+    }
+  }, [selected, walletManager])
 }
