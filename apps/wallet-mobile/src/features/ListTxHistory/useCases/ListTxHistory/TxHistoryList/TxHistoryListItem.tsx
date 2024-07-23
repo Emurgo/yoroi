@@ -14,7 +14,7 @@ import {BalanceError} from '../../../../../components/PairedBalance/PairedBalanc
 import {TxHistoryRouteNavigation} from '../../../../../kernel/navigation'
 import {MultiToken} from '../../../../../yoroi-wallets/cardano/MultiToken'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
-import {TransactionAssurance, TransactionInfo} from '../../../../../yoroi-wallets/types'
+import {TransactionInfo} from '../../../../../yoroi-wallets/types'
 import {asQuantity} from '../../../../../yoroi-wallets/utils'
 import {
   formatDateRelative,
@@ -33,7 +33,7 @@ type Props = {
 
 export const TxHistoryListItem = ({transaction}: Props) => {
   const strings = useStrings()
-  const {styles, colors, isDark} = useStyles()
+  const {styles} = useStyles()
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const {color} = useTheme()
 
@@ -45,18 +45,11 @@ export const TxHistoryListItem = ({transaction}: Props) => {
     ? `${formatDateRelative(transaction.submittedAt, intl) + ', ' + formatTime(transaction.submittedAt, intl)}`
     : ''
 
-  const rootBgColor = bgColorByAssurance(transaction.assurance, colors)
-
   const amountAsMT = MultiToken.fromArray(transaction.amount)
   const amount: BigNumber = amountAsMT.getDefault()
 
   return (
-    <TouchableOpacity
-      onPress={showDetails}
-      activeOpacity={0.5}
-      testID="txHistoryListItem"
-      style={[styles.item, {backgroundColor: isDark ? colors.background : rootBgColor}]}
-    >
+    <TouchableOpacity onPress={showDetails} activeOpacity={0.5} testID="txHistoryListItem" style={styles.item}>
       <Left>
         <Icon.Direction size={32} transaction={transaction} />
       </Left>
@@ -210,15 +203,4 @@ const useStyles = () => {
     background: color.gray_cmin,
   }
   return {styles, colors, isDark}
-}
-
-const bgColorByAssurance = (assurance: TransactionAssurance, colors: {failed: string; default: string}) => {
-  switch (assurance) {
-    case 'PENDING':
-      return 'rgba(207, 217, 224, 0.6)'
-    case 'FAILED':
-      return colors.failed
-    default:
-      return colors.default
-  }
 }
