@@ -2,6 +2,7 @@ import {useCardAnimation} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Animated, GestureResponderEvent, Pressable, StyleSheet, Text, View} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {KeyboardAvoidingView} from '../KeyboardAvoidingView'
 import {LoadingOverlay} from '../LoadingOverlay/LoadingOverlay'
@@ -24,8 +25,12 @@ export const ModalScreen = () => {
     setSwipeLocationY(nativeEvent.locationY)
   }
 
+  React.useEffect(() => {
+    return () => closeModal()
+  }, [closeModal])
+
   return (
-    <View style={styles.backdrop}>
+    <SafeAreaView style={styles.backdrop}>
       <Pressable style={styles.cancellableArea} onPress={closeModal} />
 
       <KeyboardAvoidingView style={styles.root} keyboardVerticalOffset={0}>
@@ -55,7 +60,7 @@ export const ModalScreen = () => {
           </View>
         </Animated.View>
       </KeyboardAvoidingView>
-    </View>
+    </SafeAreaView>
   )
 }
 
