@@ -5,10 +5,10 @@ import {
   AssetGroup,
   Certificate as LedgerCertificate,
   CertificateType,
+  CredentialParamsType,
   DatumType,
   RequiredSigner,
   SignTransactionRequest,
-  StakeCredentialParamsType,
   Token,
   TransactionSigningMode,
   TxAuxiliaryData,
@@ -114,7 +114,7 @@ async function formatLedgerWithdrawals(
     result.push({
       amount: await withdrawalAmount.toStr(),
       stakeCredential: {
-        type: StakeCredentialParamsType.KEY_PATH,
+        type: CredentialParamsType.KEY_PATH,
         keyPath: addressing.path,
       },
     })
@@ -147,7 +147,7 @@ async function formatLedgerCertificates(
         type: CertificateType.STAKE_REGISTRATION,
         params: {
           stakeCredential: {
-            type: StakeCredentialParamsType.KEY_PATH,
+            type: CredentialParamsType.KEY_PATH,
             keyPath: await getPath(await registrationCert.stakeCredential()),
           },
         },
@@ -160,7 +160,7 @@ async function formatLedgerCertificates(
         type: CertificateType.STAKE_DEREGISTRATION,
         params: {
           stakeCredential: {
-            type: StakeCredentialParamsType.KEY_PATH,
+            type: CredentialParamsType.KEY_PATH,
             keyPath: await getPath(await deregistrationCert.stakeCredential()),
           },
         },
@@ -173,7 +173,7 @@ async function formatLedgerCertificates(
         type: CertificateType.STAKE_DELEGATION,
         params: {
           stakeCredential: {
-            type: StakeCredentialParamsType.KEY_PATH,
+            type: CredentialParamsType.KEY_PATH,
             keyPath: await getPath(await delegationCert.stakeCredential()),
           },
           poolKeyHashHex: Buffer.from(await delegationCert.poolKeyhash().then((k) => k.toBytes())).toString('hex'),

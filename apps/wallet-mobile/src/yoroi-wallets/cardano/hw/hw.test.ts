@@ -9,7 +9,7 @@ describe('hw', () => {
       major: 2,
       minor: 0,
       patch: 4,
-      flags: {isDebug: false},
+      flags: {isDebug: false, isAppXS: false},
     }
     const mockResponse: GetVersionResponse = {
       version,
