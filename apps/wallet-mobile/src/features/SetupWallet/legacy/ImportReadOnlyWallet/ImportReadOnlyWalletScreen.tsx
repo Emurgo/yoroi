@@ -57,8 +57,6 @@ export const ImportReadOnlyWalletScreen = () => {
   )
 }
 
-const _CameraOverlay = () => <View style={styles.scannerOverlay} />
-
 const messages = defineMessages({
   paragraph: {
     id: 'components.walletinit.importreadonlywalletscreen.paragraph',
@@ -107,14 +105,6 @@ const styles = StyleSheet.create({
   paragraph: {
     fontSize: 14,
     lineHeight: 22,
-  },
-  scannerOverlay: {
-    height: '75%',
-    width: '75%',
-    borderWidth: 2,
-    borderColor: 'white',
-    borderRadius: 24,
-    marginTop: 100,
   },
 })
 

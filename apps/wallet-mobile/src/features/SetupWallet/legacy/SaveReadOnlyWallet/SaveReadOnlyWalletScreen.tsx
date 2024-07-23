@@ -1,3 +1,5 @@
+import {useNavigation} from '@react-navigation/native'
+import {useAsyncStorage} from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {Api, Wallet} from '@yoroi/types'
@@ -9,13 +11,15 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Boundary, Icon, Line, Text} from '../../../../components'
 import {showErrorDialog} from '../../../../kernel/dialogs'
 import {errorMessages} from '../../../../kernel/i18n/global-messages'
+import {logger} from '../../../../kernel/logger/logger'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {useWalletNavigation} from '../../../../kernel/navigation'
+import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import {isEmptyString} from '../../../../kernel/utils'
 import {NUMBERS} from '../../../../yoroi-wallets/cardano/numbers'
 import {usePlate} from '../../../../yoroi-wallets/hooks'
 import {useCreateWalletXPub} from '../../../WalletManager/common/hooks/useCreateWalletXPub'
 import {useSelectedNetwork} from '../../../WalletManager/common/hooks/useSelectedNetwork'
+import {parseWalletMeta} from '../../../WalletManager/common/validators/wallet-meta'
 import {WalletAddress} from '../WalletAddress/WalletAddress'
 import {WalletNameForm} from '../WalletNameForm/WalletNameForm'
 
@@ -24,10 +28,11 @@ const addressMode: Wallet.AddressMode = 'single'
 export const SaveReadOnlyWalletScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
-  const {resetToWalletSelection} = useWalletNavigation()
+  const storage = useAsyncStorage()
+  const navigation = useNavigation<SetupWalletRouteNavigation>()
   const {track} = useMetrics()
 
-  const {publicKeyHex, path, walletImplementation, accountVisual} = useSetupWallet()
+  const {publicKeyHex, path, walletImplementation, accountVisual, walletIdChanged} = useSetupWallet()
 
   const normalizedPath = path.map((i) => {
     if (i >= NUMBERS.HARD_DERIVATION_START) {
@@ -37,9 +42,20 @@ export const SaveReadOnlyWalletScreen = () => {
   })
 
   const {createWallet, isLoading} = useCreateWalletXPub({
-    onSuccess: () => {
+    onSuccess: async (wallet) => {
+      walletIdChanged(wallet.id)
+      const walletStorage = storage.join('wallet/')
+      const walletMeta = await walletStorage.getItem(wallet.id, parseWalletMeta)
+
+      if (!walletMeta) {
+        const error = new Error('WalletDetailsScreen: wallet meta is invalid, reached an invalid state.')
+        logger.error(error)
+        throw error
+      }
+
       track.restoreWalletDetailsSettled()
-      resetToWalletSelection()
+
+      navigation.navigate('setup-wallet-preparing-wallet')
     },
     onError: (error) => {
       InteractionManager.runAfterInteractions(() => {
