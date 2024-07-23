@@ -43,12 +43,13 @@ const useStyles = () => {
       ...atoms.p_lg,
     },
     title: {
-      textAlign: 'center',
       color: color.gray_c900,
+      ...atoms.text_center,
       ...atoms.heading_4_medium,
     },
     wait: {
-      textAlign: 'center',
+      color: color.gray_c900,
+      ...atoms.text_center,
       ...atoms.body_2_md_regular,
       ...atoms.py_lg,
     },
