@@ -85,7 +85,7 @@ const messages = defineMessages({
   },
   step2Title: {
     id: 'components.catalyst.step2.title',
-    defaultMessage: '!!!Write Down PIN',
+    defaultMessage: '!!!Write down PIN',
   },
   step2Description: {
     id: 'components.catalyst.step2.description',

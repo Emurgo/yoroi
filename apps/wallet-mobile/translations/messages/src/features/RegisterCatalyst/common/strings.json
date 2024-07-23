@@ -121,7 +121,7 @@
   },
   {
     "id": "components.catalyst.step2.title",
-    "defaultMessage": "!!!Write Down PIN",
+    "defaultMessage": "!!!Write down PIN",
     "file": "src/features/RegisterCatalyst/common/strings.ts",
     "start": {
       "line": 86,
