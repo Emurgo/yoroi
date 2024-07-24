@@ -23,7 +23,6 @@ export const useDappConnectorManager = () => {
 
   const signData = useConnectorPromptRootKey()
 
-  const signTxWithHW = useSignTxWithHW()
   const signDataWithHW = useSignDataWithHW()
 
   return React.useMemo(
@@ -77,7 +76,7 @@ export const useDappConnectorManager = () => {
         },
         signDataWithHW,
       }),
-    [appStorage, wallet, confirmConnection, signData, meta, signTxWithHW, signDataWithHW],
+    [appStorage, wallet, confirmConnection, signData, meta, signDataWithHW],
   )
 }
 
