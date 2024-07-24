@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native'
+import {Chain} from '@yoroi/types'
 
 import {SettingsRouteNavigation, useWalletNavigation} from '../../../kernel/navigation'
 
@@ -20,5 +21,7 @@ export const useNavigateTo = () => {
     changeCustomPin: () => navigation.navigate('change-custom-pin'),
     enableEasyConfirmation: () => navigation.navigate('enable-easy-confirmation'),
     disableEasyConfirmation: () => navigation.navigate('disable-easy-confirmation'),
+    preparingNetworks: (selectedNetwork: Chain.SupportedNetworks) =>
+      navigation.navigate('preparing-network', {selectedNetwork}),
   }
 }

@@ -1,4 +1,4 @@
-import {Chain, Wallet} from '@yoroi/types'
+import {Wallet} from '@yoroi/types'
 import {freeze} from 'immer'
 
 import {buildPortfolioTokenManagers} from '../../Portfolio/common/helpers/build-token-managers'
@@ -12,11 +12,3 @@ export const implementations: ReadonlyArray<Wallet.Implementation> = freeze([
 
 export const {tokenManagers, tokenStorages} = buildPortfolioTokenManagers()
 export const networkManagers = buildNetworkManagers({tokenManagers})
-
-export const NetworkLabel = {
-  [Chain.Network.Mainnet]: 'Mainnet',
-  [Chain.Network.Sancho]: 'Sancho',
-  [Chain.Network.Preprod]: 'Preprod',
-  // [Chain.Network.Testnet]: 'Testnet',
-  // [Chain.Network.Preview]: 'Preview',
-}

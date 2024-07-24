@@ -3,69 +3,56 @@ import {Chain} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
-import {Space} from '../../../../components/Space/Space'
-import {useWalletManager} from '../../context/WalletManagerProvider'
-import {NetworkLabel} from '../constants'
+import {Space} from '../../../components/Space/Space'
+import {useWalletNavigation} from '../../../kernel/navigation'
+import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
+import {networkConfigs} from '../../WalletManager/network-manager/network-manager'
 
-export const ChangeNetworkLabel = ({children, disabled = false}: {children: React.ReactNode; disabled?: boolean}) => {
+export const NetworkTag = ({children, disabled = false}: {children: React.ReactNode; disabled?: boolean}) => {
   const {
-    walletManager,
     selected: {network},
   } = useWalletManager()
-
+  const {navigateToChangeNetwork} = useWalletNavigation()
   const {styles} = useStyles()
 
-  const LabelCompoent = Labels[network]
+  const Tag = network === Chain.Network.Sancho ? SanchoTag : network === Chain.Network.Preprod ? PreprodTag : null
+
   return (
     <TouchableOpacity
       style={styles.headerTitleContainerStyle}
       activeOpacity={0.5}
-      onPress={() => {
-        const networks: Array<Chain.SupportedNetworks> = [
-          Chain.Network.Mainnet,
-          Chain.Network.Preprod,
-          Chain.Network.Sancho,
-        ]
-
-        walletManager.setSelectedNetwork(networks[(networks.indexOf(network) + 1) % networks.length])
-      }}
+      onPress={navigateToChangeNetwork}
       disabled={disabled}
     >
       <Text style={styles.headerTitleStyle}>{children}</Text>
 
       <Space width="sm" />
 
-      {LabelCompoent && <LabelCompoent />}
+      {Tag && <Tag />}
     </TouchableOpacity>
   )
 }
 
-const PreprodLabel = () => {
+const PreprodTag = () => {
   const {styles} = useStyles()
-  const label = NetworkLabel[Chain.Network.Preprod]
+  const {name} = networkConfigs[Chain.Network.Preprod]
 
   return (
-    <View style={styles.preprodLabel}>
-      <Text>{label}</Text>
+    <View style={styles.preprodTag}>
+      <Text>{name}</Text>
     </View>
   )
 }
 
-const SanchoLabel = () => {
+const SanchoTag = () => {
   const {styles} = useStyles()
-  const label = NetworkLabel[Chain.Network.Sancho]
+  const {name} = networkConfigs[Chain.Network.Sancho]
 
   return (
     <View style={styles.sanchonetLabel}>
-      <Text>{label}</Text>
+      <Text>{name}</Text>
     </View>
   )
-}
-
-const Labels = {
-  [Chain.Network.Mainnet]: null,
-  [Chain.Network.Preprod]: PreprodLabel,
-  [Chain.Network.Sancho]: SanchoLabel,
 }
 
 const useStyles = () => {
@@ -81,7 +68,7 @@ const useStyles = () => {
       alignItems: 'center',
       justifyContent: 'center',
     },
-    preprodLabel: {
+    preprodTag: {
       borderRadius: 1200,
       backgroundColor: color.sys_yellow_c500,
       ...atoms.px_sm,

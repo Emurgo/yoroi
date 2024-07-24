@@ -13,7 +13,6 @@ import {useStrings} from './strings'
 
 export const ChangeNetworkScreen = () => {
   const styles = useStyles()
-  const strings = useStrings()
   const {networkNoticeShown} = useNetworkNoticeShown()
 
   const {handleOpenModal} = useHandleOpenNetworkNoticeModal()
@@ -31,10 +30,6 @@ export const ChangeNetworkScreen = () => {
       <Boundary>
         <NetworkPickerList />
       </Boundary>
-
-      <View style={{padding: 16}}>
-        <Button shelleyTheme title={strings.apply} />
-      </View>
     </SafeAreaView>
   )
 }
@@ -139,7 +134,7 @@ const useStyles = () => {
       color: color.gray_c900,
     },
     actions: {
-      ...atoms.py_lg,
+      ...atoms.pt_lg,
     },
   })
 

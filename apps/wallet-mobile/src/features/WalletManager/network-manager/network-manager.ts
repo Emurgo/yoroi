@@ -74,7 +74,7 @@ export const protocolParamsPlaceholder = freeze({
   keyDeposit: '2000000',
 })
 
-const networkConfigs: Readonly<Record<Chain.SupportedNetworks, Readonly<Network.Config>>> = freeze({
+export const networkConfigs: Readonly<Record<Chain.SupportedNetworks, Readonly<Network.Config>>> = freeze({
   [Chain.Network.Mainnet]: {
     network: Chain.Network.Mainnet,
     primaryTokenInfo: primaryTokenInfoMainnet,
@@ -103,7 +103,7 @@ const networkConfigs: Readonly<Record<Chain.SupportedNetworks, Readonly<Network.
     chainId: 0,
     protocolMagic: 4,
     eras: [shelleyEraConfig],
-    name: 'Sancho (Conway)',
+    name: 'Sancho',
     isMainnet: false,
 
     legacyApiBaseUrl: 'https://sanchonet-backend.yoroiwallet.com/api',

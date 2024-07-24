@@ -1,27 +1,31 @@
 import {useTheme} from '@yoroi/theme'
-import {Chain} from '@yoroi/types'
+import {Chain, Network} from '@yoroi/types'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Icon} from '../../../components/Icon'
 import {Text} from '../../../components/Text'
-import {useSelectedNetwork} from '../../WalletManager/common/hooks/useSelectedNetwork'
 
 type Props = {
-  label: string
+  name: Readonly<Network.Config['name']>
   itemNetwork: Chain.SupportedNetworks
+  selectedNetwork: Chain.SupportedNetworks
   onSelectNetwork: (network: Chain.SupportedNetworks) => void
 }
 
-export const ThemePickerItem = ({label, itemNetwork, onSelectNetwork}: Props) => {
+export const NetworkPickerItem = ({name, itemNetwork, selectedNetwork, onSelectNetwork}: Props) => {
   const {colors} = useStyles()
-  const {network: selectedNetwork} = useSelectedNetwork()
 
   return (
-    <TouchableOpacity activeOpacity={0.5} onPress={() => onSelectNetwork(itemNetwork)}>
+    <TouchableOpacity
+      activeOpacity={0.5}
+      onPress={() => {
+        onSelectNetwork(itemNetwork)
+      }}
+    >
       <Row>
         <Description>
-          <Title>{label}</Title>
+          <Title>{name}</Title>
         </Description>
 
         <Selected>{itemNetwork === selectedNetwork && <Icon.Check size={24} color={colors.checkIcon} />}</Selected>

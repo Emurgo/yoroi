@@ -10,7 +10,6 @@ import {Space} from '../../../../components/Space/Space'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import {LedgerTransportSwitch} from '../../../../legacy/HW'
-import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {ButtonCard} from '../../common/ButtonCard/ButtonCard'
 import {LogoBanner} from '../../common/LogoBanner/LogoBanner'
 import {useStrings} from '../../common/useStrings'
@@ -24,7 +23,6 @@ export const ChooseSetupTypeScreen = () => {
   const {walletImplementationChanged, setUpTypeChanged, useUSBChanged: USBChanged} = useSetupWallet()
   const {openModal} = useModal()
   const {track} = useMetrics()
-  const {selected, walletManager} = useWalletManager()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -37,7 +35,6 @@ export const ChooseSetupTypeScreen = () => {
   const handleCreate = () => {
     walletImplementationChanged('cardano-cip1852')
     setUpTypeChanged('create')
-    walletManager.setSelectedNetwork(selected.network)
 
     navigation.navigate('setup-wallet-about-recovery-phase')
   }
@@ -45,7 +42,6 @@ export const ChooseSetupTypeScreen = () => {
   const handleRestore = () => {
     walletImplementationChanged('cardano-cip1852')
     setUpTypeChanged('restore')
-    walletManager.setSelectedNetwork(selected.network)
 
     navigation.navigate('setup-wallet-restore-choose-mnemonic-type')
   }
@@ -70,7 +66,6 @@ export const ChooseSetupTypeScreen = () => {
   const navigateHw = () => {
     walletImplementationChanged('cardano-cip1852')
     setUpTypeChanged('hw')
-    walletManager.setSelectedNetwork(selected.network)
 
     navigation.navigate('setup-wallet-check-nano-x')
   }

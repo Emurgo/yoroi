@@ -18,12 +18,13 @@ import {
 } from '../../kernel/navigation'
 import {ChangePinScreen} from '../Auth'
 import {EnableLoginWithPin} from '../Auth/EnableLoginWithPin'
-import {ChangeNetworkLabel} from '../WalletManager/common/ChangeNetworkLabel/ChangeNetworkLabel'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 import {About} from './About'
 import {ApplicationSettingsScreen} from './ApplicationSettings'
 import {ChangeLanguageScreen} from './ChangeLanguage'
 import {ChangeNetworkScreen, useHandleOpenNetworkNoticeModal} from './ChangeNetwork/ChangeNetworkScreen'
+import {NetworkTag} from './ChangeNetwork/NetworkTag'
+import {PreparingNetworkScreen} from './ChangeNetwork/PreparingNetworkScreen'
 import {ChangePasswordScreen} from './ChangePassword'
 import {ChangeThemeScreen} from './ChangeTheme/ChangeThemeScreen'
 import {ChangeCurrencyScreen} from './Currency/ChangeCurrencyScreen'
@@ -140,12 +141,20 @@ export const SettingsScreenNavigator = () => {
           component={ChangeNetworkScreen}
           options={{
             title: strings.networkTitle,
-            headerTitle: ({children}) => <ChangeNetworkLabel disabled>{children}</ChangeNetworkLabel>,
+            headerTitle: ({children}) => <NetworkTag disabled>{children}</NetworkTag>,
             headerRight: () => (
               <TouchableOpacity onPress={handleOpenModal} activeOpacity={0.5}>
                 <Icon.Info size={24} color={color.gray_c900} style={{...atoms.px_lg}} />
               </TouchableOpacity>
             ),
+          }}
+        />
+
+        <Stack.Screen //
+          name="preparing-network"
+          component={PreparingNetworkScreen}
+          options={{
+            headerShown: false,
           }}
         />
 

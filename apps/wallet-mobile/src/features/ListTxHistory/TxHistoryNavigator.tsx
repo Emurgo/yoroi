@@ -48,6 +48,7 @@ import {ListAmountsToSendScreen} from '../Send/useCases/ListAmountsToSend'
 import {SelectTokenFromListScreen} from '../Send/useCases/ListAmountsToSend/AddToken/SelectTokenFromListScreen'
 import {EditAmountScreen} from '../Send/useCases/ListAmountsToSend/EditAmount/EditAmountScreen'
 import {StartMultiTokenTxScreen} from '../Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
+import {NetworkTag} from '../Settings/ChangeNetwork/NetworkTag'
 import {SwapFormProvider} from '../Swap/common/SwapFormProvider'
 import {SwapTabNavigator} from '../Swap/SwapNavigator'
 import {
@@ -59,7 +60,6 @@ import {
 } from '../Swap/useCases'
 import {SelectBuyTokenFromListScreen} from '../Swap/useCases/StartSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
 import {SelectSellTokenFromListScreen} from '../Swap/useCases/StartSwapScreen/CreateOrder/EditSellAmount/SelectSellTokenFromListScreen/SelectSellTokenFromListScreen'
-import {ChangeNetworkLabel} from '../WalletManager/common/ChangeNetworkLabel/ChangeNetworkLabel'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 import {TxHistory} from './useCases/ListTxHistory/TxHistory'
 import {TxDetails} from './useCases/ShowTxDetails'
@@ -158,7 +158,7 @@ export const TxHistoryNavigator = () => {
                       title: meta.name,
                       headerTransparent: true,
                       headerRight: headerRightHistory,
-                      headerTitle: ({children}) => <ChangeNetworkLabel>{children}</ChangeNetworkLabel>,
+                      headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
                     }}
                   />
 

@@ -13,8 +13,8 @@ import {defaultLanguage} from '../../../kernel/i18n/languages'
 import {useCrashReports} from '../../../yoroi-wallets/hooks'
 import {useAuthSetting, useAuthWithOs, useIsAuthOsSupported} from '../../Auth/common/hooks'
 import {usePrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
-import {NetworkLabel} from '../../WalletManager/common/constants'
 import {useSelectedNetwork} from '../../WalletManager/common/hooks/useSelectedNetwork'
+import {networkConfigs} from '../../WalletManager/network-manager/network-manager'
 import {useNavigateTo} from '../common/navigation'
 import {SettingsSwitch} from '../common/SettingsSwitch'
 import {useCurrencyPairing} from '../Currency'
@@ -63,7 +63,7 @@ export const ApplicationSettingsScreen = () => {
             icon={<Icon.Globe {...iconProps} />}
             label={strings.network}
             onNavigate={navigateTo.changeNetwork}
-            selected={NetworkLabel[network]}
+            selected={networkConfigs[network].name}
           />
 
           <NavigatedSettingsItem

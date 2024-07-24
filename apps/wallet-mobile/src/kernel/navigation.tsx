@@ -11,7 +11,7 @@ import {TransitionPresets} from '@react-navigation/stack'
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack'
 import {isKeyOf} from '@yoroi/common'
 import {Atoms, ThemedPalette, useTheme} from '@yoroi/theme'
-import {Portfolio} from '@yoroi/types'
+import {Chain, Portfolio} from '@yoroi/types'
 import React from 'react'
 import {Dimensions, InteractionManager, Platform, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
@@ -252,6 +252,7 @@ export type SettingsStackRoutes = {
   'change-currency': undefined
   'change-theme': undefined
   'change-network': undefined
+  'preparing-network': {selectedNetwork: Chain.SupportedNetworks}
   'enable-easy-confirmation': undefined
   'disable-easy-confirmation': undefined
   'change-password': undefined
@@ -560,6 +561,15 @@ export const useWalletNavigation = () => {
         screen: 'settings',
         params: {
           screen: 'main-settings',
+        },
+      })
+    },
+
+    navigateToChangeNetwork: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'settings',
+        params: {
+          screen: 'change-network',
         },
       })
     },

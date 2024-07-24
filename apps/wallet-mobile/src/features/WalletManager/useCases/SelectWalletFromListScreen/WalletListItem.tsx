@@ -1,3 +1,4 @@
+import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
 import * as React from 'react'
@@ -16,6 +17,7 @@ import {
 } from '../../../SetupWallet/illustrations/ChevronRight'
 import {useSelectedNetwork} from '../../common/hooks/useSelectedNetwork'
 import {useSyncWalletInfo} from '../../common/hooks/useSyncWalletInfo'
+import {useAutomaticWalletOpener} from '../../context/AutomaticWalletOpeningProvider'
 import {useWalletManager} from '../../context/WalletManagerProvider'
 
 type Props = {
@@ -28,16 +30,40 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
 
   const [isButtonPressed, setIsButtonPressed] = React.useState(false)
   const implementationName = React.useMemo(() => getImplementationName(walletMeta), [walletMeta])
+  const {
+    selected: {meta},
+    walletManager,
+  } = useWalletManager()
+  const {active: isAutomaticWalletOpenerActive, setActive: setAutomaticWalletOpenerActive} = useAutomaticWalletOpener()
+  const isFocused = useIsFocused()
+
+  const isSelected = meta?.id === walletMeta.id
 
   const {network} = useSelectedNetwork()
   const syncWalletInfo = useSyncWalletInfo(walletMeta.id)
   const hasSyncedLastSelectedNetwork = network === syncWalletInfo?.network
 
-  const {
-    selected: {meta},
-    walletManager,
-  } = useWalletManager()
-  const isSelected = meta?.id === walletMeta.id
+  useFocusEffect(
+    React.useCallback(() => {
+      if (
+        isFocused /* user may change the screen while the wallets are loading */ &&
+        isAutomaticWalletOpenerActive &&
+        isSelected &&
+        hasSyncedLastSelectedNetwork
+      ) {
+        onPress(walletMeta)
+        setAutomaticWalletOpenerActive(false)
+      }
+    }, [
+      hasSyncedLastSelectedNetwork,
+      isAutomaticWalletOpenerActive,
+      isFocused,
+      isSelected,
+      onPress,
+      setAutomaticWalletOpenerActive,
+      walletMeta,
+    ]),
+  )
 
   // NOTE: dev only - temporary to show Product
   const handleOnDeleteWallet = () => {

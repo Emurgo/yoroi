@@ -11,6 +11,7 @@ export const useStrings = () => {
     networkNoticeListTitle: intl.formatMessage(messages.networkNoticeListTitle),
     networkNoticeList: intl.formatMessage(messages.networkNoticeList),
     networkNoticeButton: intl.formatMessage(messages.networkNoticeButton),
+    preparingNetwork: intl.formatMessage(messages.preparingNetwork),
     apply: intl.formatMessage(globalMessages.apply),
   }
 }
@@ -32,7 +33,11 @@ export const messages = defineMessages({
   networkNoticeList: {
     id: 'components.settings.applicationsettingsscreen.network.notice.list',
     defaultMessage:
-      '!!!  •  Have no real value.\n  •  Are separate from the mainnet.\n  •  Are separate from the mainnet.\n  •  Cannot be sent to mainnet wallets.\n  •  Are easily obtainable from Cardano faucets.',
+      '!!!  •  Have no real value.\n  •  Are separate from the mainnet.\n  •  Cannot be sent to mainnet wallets.\n  •  Are easily obtainable from Cardano faucets.',
+  },
+  preparingNetwork: {
+    id: 'components.settings.applicationsettingsscreen.network.preparingNetworks',
+    defaultMessage: '!!!Preparing network...',
   },
   networkNoticeButton: {
     id: 'components.settings.applicationsettingsscreen.network.notice.button',
