@@ -1,7 +1,7 @@
 import {useTheme} from '@yoroi/theme'
 import _ from 'lodash'
 import * as React from 'react'
-import {StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native'
+import {StyleSheet, TouchableOpacity, TouchableWithoutFeedback, useWindowDimensions, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import QRCode from 'react-native-qrcode-svg'
 import Animated, {FadeInDown, FadeOutDown, Layout} from 'react-native-reanimated'
@@ -118,6 +118,7 @@ export const ShareQRCodeCard = ({
 
 const useStyles = () => {
   const {color, atoms} = useTheme()
+  const screenWidth = useWindowDimensions().width
 
   const qrSize = 170
 
@@ -135,6 +136,7 @@ const useStyles = () => {
       flex: 1,
       minHeight: 394,
       alignSelf: 'center',
+      width: screenWidth - 32,
 
       paddingHorizontal: 16,
     },
