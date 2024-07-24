@@ -10,16 +10,19 @@ import {cip30LedgerExtensionMaker} from '../../../yoroi-wallets/cardano/cip30/ci
 import {useShowHWNotSupportedModal} from '../common/HWNotSupportedModal'
 import {useParams} from '../../../kernel/navigation'
 import {z} from 'zod'
-import {createTypeGuardFromSchema} from '@yoroi/common'
+import {createTypeGuardFromSchema, isNonNullable} from '@yoroi/common'
 import {useEffect} from 'react'
 import {wrappedCsl} from '../../../yoroi-wallets/cardano/wrappedCsl'
 import {useQuery} from 'react-query'
 import {TouchableOpacity} from 'react-native-gesture-handler'
-import {atoms, useTheme} from '@yoroi/theme'
-import {formatAdaWithText} from '../../../yoroi-wallets/utils/format'
+import {useTheme} from '@yoroi/theme'
+import {formatAdaWithText, formatTokenWithSymbol} from '../../../yoroi-wallets/utils/format'
 import {asQuantity} from '../../../yoroi-wallets/utils'
-import {at} from 'lodash'
 import {ScrollView} from '../../../components/ScrollView/ScrollView'
+import {useTokenInfos} from '../../../yoroi-wallets/hooks'
+import {uniq} from 'lodash'
+import {Balance} from '@yoroi/types'
+import Quantity = Balance.Quantity
 
 export type ReviewTransactionParams = {
   cbor: string
@@ -38,7 +41,7 @@ const isParams = createTypeGuardFromSchema(paramsSchema)
 type TxDetails = {
   body: {
     inputs: Array<{transaction_id: string; index: number}>
-    outputs: Array<{address: string; amount: {coin: number}}>
+    outputs: Array<{address: string; amount: {coin: number; multiasset: null | Record<string, Record<string, string>>}}>
     fee: string
     ttl: string
   }
@@ -72,6 +75,37 @@ export const ReviewTransaction = () => {
   const {styles} = useStyles()
   const {data} = useTxDetails(params.cbor)
 
+  const inputs = data?.body.inputs ?? []
+  const outputs = data?.body.outputs ?? []
+
+  const getUtxoByTxIdAndIndex = (txId: string, index: number) => {
+    return wallet.utxos.find((u) => u.tx_hash === txId && u.tx_index === index)
+  }
+
+  const isOwnedAddress = (bech32Address: string) => {
+    return wallet.internalAddresses.includes(bech32Address) || wallet.externalAddresses.includes(bech32Address)
+  }
+
+  const inputTokenIds = inputs.flatMap((i) => {
+    const receiveUTxO = getUtxoByTxIdAndIndex(i.transaction_id, i.index)
+    return receiveUTxO?.assets.map((a) => `${a.policyId}.${a.assetId}`) ?? []
+  })
+
+  const outputTokenIds = outputs.flatMap((o) => {
+    if (!o.amount.multiasset) return []
+    const policyIds = Object.keys(o.amount.multiasset)
+    const tokenIds = policyIds.flatMap((policyId) => {
+      const assetIds = Object.keys(o.amount.multiasset?.[policyId] ?? {})
+      return assetIds.map((assetId) => `${policyId}.${assetId}`)
+    })
+    return tokenIds
+  })
+
+  const tokenIds = uniq([...inputTokenIds, ...outputTokenIds])
+  const tokenInfos = useTokenInfos({wallet, tokenIds: tokenIds})
+
+  // console.log('TX Details', JSON.stringify(data, null, 2))
+
   const signTxWithHW = useSignTxWithHW()
   const signDataWithHW = useSignDataWithHW()
 
@@ -85,17 +119,6 @@ export const ReviewTransaction = () => {
       params.onCancel()
     }
   }, [])
-
-  const inputs = data?.body.inputs ?? []
-  const outputs = data?.body.outputs ?? []
-
-  const getUtxoByTxIdAndIndex = (txId: string, index: number) => {
-    return wallet.utxos.find((u) => u.tx_hash === txId && u.tx_index === index)
-  }
-
-  const isOwnedAddress = (bech32Address: string) => {
-    return wallet.internalAddresses.includes(bech32Address) || wallet.externalAddresses.includes(bech32Address)
-  }
 
   return (
     <SafeAreaView
@@ -113,12 +136,24 @@ export const ReviewTransaction = () => {
             const address = receiveUTxO?.receiver
             const coin = receiveUTxO?.amount ? asQuantity(receiveUTxO.amount) : null
             const coinText = coin ? formatAdaWithText(coin, wallet.primaryToken) : null
-            const assets = coinText ? [coinText] : []
+            const primaryAssets = coinText ? [coinText] : []
+            const multiAssets =
+              receiveUTxO?.assets
+                .map((a) => {
+                  console.log('Assetxxx', a)
+                  const tokenInfo = tokenInfos.find((t) => t.id === a.assetId)
+                  if (!tokenInfo) return null
+                  const quantity = asQuantity(a.amount)
+                  return formatTokenWithSymbol(quantity, tokenInfo)
+                })
+                .filter(Boolean) ?? []
+
+            const assets = [...primaryAssets, ...multiAssets].filter(isNonNullable)
 
             return (
               <InputOutputRow
                 key={index}
-                assets={assets.filter(Boolean)}
+                assets={assets}
                 txIndex={input.index}
                 txHash={input.transaction_id}
                 isOwnAddress={!!receiveUTxO}
@@ -143,15 +178,22 @@ export const ReviewTransaction = () => {
             const address = output.address
             const coin = asQuantity(output.amount.coin)
             const coinText = formatAdaWithText(coin, wallet.primaryToken)
-            const assets = coinText ? [coinText] : []
+            const primaryAssets = coinText ? [coinText] : []
+            const multiAssets = output.amount.multiasset
+              ? Object.entries(output.amount.multiasset).map(([policyId, assets]) => {
+                  return Object.entries(assets).map(([assetId, amount]) => {
+                    const tokenInfo = tokenInfos.find((t) => t.id === `${policyId}.${assetId}`)
+                    if (!tokenInfo) return null
+                    const quantity = asQuantity(amount)
+                    return formatTokenWithSymbol(quantity, tokenInfo)
+                  })
+                })
+              : []
+
+            const assets = [...primaryAssets, ...multiAssets.flat()].filter(isNonNullable)
 
             return (
-              <InputOutputRow
-                key={index}
-                assets={assets.filter(Boolean)}
-                isOwnAddress={isOwnedAddress(address)}
-                address={address}
-              />
+              <InputOutputRow key={index} assets={assets} isOwnAddress={isOwnedAddress(address)} address={address} />
             )
           })}
       </ScrollView>
