@@ -3,12 +3,13 @@ import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import _ from 'lodash'
 import React from 'react'
-import {StyleSheet, View, ViewProps} from 'react-native'
+import {StyleSheet, TextInput, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, KeyboardAvoidingView} from '../../../../components'
 import {ScrollView, useScrollView} from '../../../../components/ScrollView/ScrollView'
 import {Space} from '../../../../components/Space/Space'
+import {useNextTick} from '../../../../hooks/useNextTick'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useHasPendingTx, useIsOnline} from '../../../../yoroi-wallets/hooks'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
@@ -76,10 +77,19 @@ export const StartMultiTokenTxScreen = () => {
   }
   const handleOnChangeMemo = (text: string) => memoChanged(text)
 
+  const inputRef = React.useRef<TextInput>(null)
+  const focusOnReceiver = React.useCallback(() => inputRef.current?.focus(), [])
+  useNextTick(focusOnReceiver)
+
   return (
     <SafeAreaView edges={['bottom', 'right', 'left']} style={[styles.root, styles.flex]}>
-      <KeyboardAvoidingView style={styles.flex}>
-        <ScrollView ref={scrollViewRef} style={styles.flex} bounces={false} onScrollBarChange={setIsScrollBarShown}>
+      <KeyboardAvoidingView style={styles.flex} keyboardVerticalOffset={119}>
+        <ScrollView
+          ref={scrollViewRef}
+          style={[styles.flex, styles.padding]}
+          bounces={false}
+          onScrollBarChange={setIsScrollBarShown}
+        >
           <ShowErrors />
 
           <NotifySupportedNameServers />
@@ -91,6 +101,7 @@ export const StartMultiTokenTxScreen = () => {
             isValid={isValidAddress}
             error={hasReceiverError}
             errorText={receiverErrorMessage}
+            ref={inputRef}
           />
 
           <SelectNameServer />
@@ -100,14 +111,16 @@ export const StartMultiTokenTxScreen = () => {
           <InputMemo value={memo} onChangeText={handleOnChangeMemo} isValid={!hasMemoError} />
         </ScrollView>
 
-        <Actions style={Boolean(isScrollBarShown) && styles.actionsScroll}>
-          <NextButton
-            onPress={handleOnNext}
-            title={strings.next}
-            disabled={!canGoNext}
-            testID="nextButton"
-            shelleyTheme
-          />
+        <Actions style={isScrollBarShown && styles.actionsScroll}>
+          <Padding>
+            <NextButton
+              onPress={handleOnNext}
+              title={strings.next}
+              disabled={!canGoNext}
+              testID="nextButton"
+              shelleyTheme
+            />
+          </Padding>
         </Actions>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -117,6 +130,12 @@ export const StartMultiTokenTxScreen = () => {
 const Actions = ({style, ...props}: ViewProps) => {
   const styles = useStyles()
   return <View style={[styles.actions, style]} {...props} />
+}
+
+// NOTE: just to display the scrollable line on top of action
+const Padding = ({style, ...props}: ViewProps) => {
+  const styles = useStyles()
+  return <View style={[styles.padding, style]} {...props} />
 }
 
 const useReceiverError = ({
@@ -159,13 +178,15 @@ const useStyles = () => {
     root: {
       backgroundColor: color.bg_color_high,
       ...atoms.pt_lg,
-      ...atoms.px_lg,
     },
     flex: {
       ...atoms.flex_1,
     },
     actions: {
       ...atoms.pt_lg,
+    },
+    padding: {
+      ...atoms.px_lg,
     },
     actionsScroll: {
       borderTopWidth: 1,

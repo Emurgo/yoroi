@@ -124,7 +124,7 @@ const WarningModal = () => {
   const {closeModal} = useModal()
 
   return (
-    <View style={styles.container}>
+    <View style={styles.modal}>
       <Text style={styles.text}>{strings.stakingKeyNotRegistered}</Text>
 
       <Space height="md" />
@@ -168,23 +168,24 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     safeAreaView: {
-      flex: 1,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
+      ...atoms.flex_1,
+      ...atoms.px_lg,
     },
-    container: {
-      flex: 1,
+    modal: {
+      ...atoms.flex_1,
+      ...atoms.px_lg,
     },
     contentContainer: {
-      ...atoms.p_lg,
-      alignItems: 'center',
+      ...atoms.align_center,
     },
     tip: {
       color: color.gray_c600,
       ...atoms.body_1_lg_regular,
-      textAlign: 'center',
+      ...atoms.text_center,
     },
     fundInfo: {
-      alignSelf: 'flex-start',
+      ...atoms.self_start,
     },
     fundName: {
       color: color.gray_c900,
@@ -202,8 +203,8 @@ const useStyles = () => {
       ...atoms.button_1_lg,
     },
     subTitle: {
-      textAlign: 'center',
       ...atoms.heading_3_medium,
+      ...atoms.text_center,
       color: color.gray_c900,
     },
   })
