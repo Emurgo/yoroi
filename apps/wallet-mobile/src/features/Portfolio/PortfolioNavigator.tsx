@@ -2,9 +2,11 @@ import {createStackNavigator} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 
+import {Boundary} from '../../components'
 import {defaultStackNavigationOptions, Portfolio2Routes} from '../../kernel/navigation'
 import {NftsNavigator} from '../Nfts/NftsNavigator'
 import {SearchProvider} from '../Search/SearchContext'
+import {TxDetails} from '../Transactions/useCases/TxDetails'
 import {PortfolioTokenDetailProvider} from './common/PortfolioTokenDetailContext'
 import {useStrings} from './common/useStrings'
 import {PortfolioDashboardScreen} from './useCases/PortfolioDashboard/PortfolioDashboardScreen'
@@ -44,6 +46,14 @@ export const PortfolioNavigator = () => {
             <SearchProvider>
               <NftsNavigator />
             </SearchProvider>
+          )}
+        </Stack.Screen>
+
+        <Stack.Screen name="tx-details" options={{title: ''}}>
+          {() => (
+            <Boundary loading={{size: 'full'}}>
+              <TxDetails />
+            </Boundary>
           )}
         </Stack.Screen>
       </Stack.Navigator>

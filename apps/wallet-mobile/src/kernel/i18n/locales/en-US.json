@@ -738,7 +738,7 @@
   "global.auto": "Auto",
   "global.assets.assetLabel": "Asset",
   "global.assets.assetsLabel": "Assets",
-  "global.assets": "{qty, plural, one {asset} other {asset(s)}}",
+  "global.assets": "{qty, plural, one {asset} other {assets}}",
   "global.available": "available",
   "global.availableFunds": "Available funds",
   "global.buy": "Buy",

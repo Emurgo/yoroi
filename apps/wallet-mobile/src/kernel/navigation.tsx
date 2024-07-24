@@ -164,7 +164,7 @@ export type ReceiveRoutes = {
 
 export type TxHistoryRoutes = {
   'history-list': undefined
-  'history-details': {
+  'tx-details': {
     id: string
   }
   'receive-single': undefined
@@ -307,6 +307,9 @@ export type Portfolio2Routes = {
   'portfolio-tokens-list': undefined
   'portfolio-token-details': {id: Portfolio.Token.Info['id']}
   'portfolio-nfts': NavigatorScreenParams<NftRoutes>
+  'tx-details': {
+    id: string
+  }
   history: NavigatorScreenParams<TxHistoryRoutes>
 }
 
