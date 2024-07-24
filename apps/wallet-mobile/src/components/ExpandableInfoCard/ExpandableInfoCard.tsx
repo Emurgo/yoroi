@@ -189,13 +189,13 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
+      ...atoms.p_lg,
+      borderColor: color.gray_c200,
+      backgroundColor: color.bg_color_high,
       borderRadius: 8,
       borderWidth: 1,
-      borderColor: color.gray_c400,
-      padding: 16,
       width: '100%',
       height: 'auto',
-      backgroundColor: color.bg_color_high,
     },
     shadowProp: {
       backgroundColor: color.bg_color_high,
