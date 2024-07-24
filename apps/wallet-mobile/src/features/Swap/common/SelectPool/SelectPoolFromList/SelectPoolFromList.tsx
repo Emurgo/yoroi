@@ -8,6 +8,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import {Spacer} from '../../../../../components'
+import {Space} from '../../../../../components/Space/Space'
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
@@ -101,11 +102,17 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
                 colors={isSelectedPool ? colors.gradientColor : [colors.white, colors.white]}
                 style={styles.linearGradient}
               >
-                <TouchableOpacity key={pool.poolId} onPress={() => handleOnPoolSelection(pool)} style={[styles.card]}>
+                <TouchableOpacity
+                  key={pool.poolId}
+                  onPress={() => handleOnPoolSelection(pool)}
+                  style={[styles.card, !isSelectedPool && {backgroundColor: colors.bg}]}
+                >
                   <View style={styles.cardHeader}>
                     <View style={styles.icon}>
                       <PoolIcon size={40} providerId={pool.provider} />
                     </View>
+
+                    <Space width="md" />
 
                     <Text style={styles.label}>{protocolCapitalize(pool.provider)}</Text>
                   </View>
@@ -183,9 +190,8 @@ const useStyles = () => {
       borderRadius: 8,
     },
     card: {
-      padding: 16,
-      paddingHorizontal: 20,
-      borderRadius: 20,
+      ...atoms.p_lg,
+      borderRadius: 8,
     },
     shadowProp: {
       shadowColor: color.gray_cmax,
@@ -205,11 +211,12 @@ const useStyles = () => {
       paddingBottom: 8,
     },
     icon: {
-      marginRight: 8,
-      fontSize: 24,
+      borderRadius: 8,
+      width: 40,
+      overflow: 'hidden',
     },
     label: {
-      color: color.gray_c900,
+      color: color.text_gray_normal,
       ...atoms.body_1_lg_medium,
     },
     infoContainer: {
@@ -221,14 +228,12 @@ const useStyles = () => {
       paddingBottom: 4,
     },
     infoLabel: {
-      color: color.gray_c600,
-      fontSize: 16,
-      fontFamily: 'Rubik-Regular',
+      color: color.text_gray_medium,
+      ...atoms.body_1_lg_regular,
     },
     infoValue: {
-      fontSize: 16,
+      ...atoms.body_1_lg_regular,
       color: color.gray_cmax,
-      fontFamily: 'Rubik-Regular',
       display: 'flex',
       flexShrink: 1,
       textAlign: 'right',
@@ -237,6 +242,7 @@ const useStyles = () => {
   const colors = {
     gradientColor: color.bg_gradient_1,
     white: color.gray_cmin,
+    bg: color.bg_color_high,
   }
 
   return {styles, colors} as const
