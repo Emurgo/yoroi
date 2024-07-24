@@ -43,7 +43,11 @@ export const DiscoverNavigator = () => {
         </Stack.Screen>
 
         <Stack.Screen name="discover-browser" component={BrowserNavigator} options={{headerShown: false}} />
-        <Stack.Screen name="discover-review-tx" component={ReviewTransaction} options={{headerShown: false}} />
+        <Stack.Screen
+          name="discover-review-tx"
+          component={ReviewTransaction}
+          options={{...defaultStackNavigationOptions(atoms, color), title: 'Transaction review'}}
+        />
       </Stack.Navigator>
     </DappConnectorProvider>
   )
