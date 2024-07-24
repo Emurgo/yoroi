@@ -12,7 +12,7 @@ import {useStrings} from './common/useStrings'
 import {ListSkeleton} from './useCases/SelectDappFromList/ListSkeleton'
 import {SelectDappFromListScreen} from './useCases/SelectDappFromList/SelectDappFromListScreen'
 import {useDappConnectorManager} from './useDappConnectorManager'
-import {ReviewTransaction} from './ReviewTransaction/ReviewTransaction'
+import {ReviewTransaction} from './useCases/ReviewTransaction/ReviewTransaction'
 
 const Stack = createStackNavigator<DiscoverRoutes>()
 
