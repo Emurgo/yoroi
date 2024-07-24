@@ -7,10 +7,11 @@ import {InteractionManager} from 'react-native'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 import {useOpenConfirmConnectionModal} from './common/ConfirmConnectionModal'
 import {createDappConnector} from './common/helpers'
-import {useConfirmRawTx as usePromptRootKey} from './common/hooks'
+import {usePromptRootKey} from './common/hooks'
 import {useShowHWNotSupportedModal} from './common/HWNotSupportedModal'
 import {useOpenUnverifiedDappModal} from './common/UnverifiedDappModal'
 import {useNavigateTo} from './common/useNavigateTo'
+import {useStrings} from './common/useStrings'
 
 export const useDappConnectorManager = () => {
   const appStorage = useAsyncStorage()
@@ -19,8 +20,7 @@ export const useDappConnectorManager = () => {
 
   const confirmConnection = useConfirmConnection()
 
-  const signData = useConnectorPromptRootKey()
-
+  const signData = useSignData()
   const signDataWithHW = useSignDataWithHW()
 
   return React.useMemo(
@@ -78,29 +78,36 @@ export const useDappConnectorManager = () => {
   )
 }
 
-const useConnectorPromptRootKey = () => {
+const useSignData = () => {
   const promptRootKey = usePromptRootKey()
+  const strings = useStrings()
 
-  return React.useCallback(() => {
-    return new Promise<string>((resolve, reject) => {
-      let shouldResolveOnClose = true
-
-      try {
-        promptRootKey({
-          onConfirm: (rootKey) => {
-            resolve(rootKey)
-            shouldResolveOnClose = false
-            return Promise.resolve()
-          },
-          onClose: () => {
-            if (shouldResolveOnClose) reject(new Error('User rejected'))
-          },
-        })
-      } catch (error) {
-        reject(error)
-      }
-    })
-  }, [promptRootKey])
+  return React.useCallback(
+    (_address: string, payload: string) => {
+      return new Promise<string>((resolve, reject) => {
+        let shouldResolveOnClose = true
+        const title = strings.signData
+        const text = `${strings.signMessage}: ${Buffer.from(payload, 'hex').toString('utf-8')}`
+        try {
+          promptRootKey({
+            title,
+            text,
+            onConfirm: (rootKey) => {
+              resolve(rootKey)
+              shouldResolveOnClose = false
+              return Promise.resolve()
+            },
+            onClose: () => {
+              if (shouldResolveOnClose) reject(new Error('User rejected'))
+            },
+          })
+        } catch (error) {
+          reject(error)
+        }
+      })
+    },
+    [promptRootKey, strings.signData, strings.signMessage],
+  )
 }
 
 const useSignDataWithHW = () => {

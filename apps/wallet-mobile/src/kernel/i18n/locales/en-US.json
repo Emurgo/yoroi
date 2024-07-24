@@ -1078,6 +1078,8 @@
   "discover.reviewTransaction.yourAddress": "Your address",
   "discover.reviewTransaction.externalAddress": "Foreign address",
   "discover.reviewTransaction.fee": "Transaction fee",
+  "discover.reviewTransaction.signData": "Sign data",
+  "discover.reviewTransaction.signMessage": "Sign message",
   "portfolio.portfolioDashboardScreen.totalWalletValue": "Total wallet value",
   "portfolio.portfolioDashboardScreen.tokens": "Tokens ({countTokens})",
   "portfolio.portfolioDashboardScreen.buyADATitle": "Start your crypto journey",

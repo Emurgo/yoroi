@@ -57,14 +57,21 @@ const getInitScript = (sessionId: string, dappConnector: DappConnectorManager) =
   })
 }
 
-export const useConfirmRawTx = () => {
+type PromptRootKeyOptions = {
+  onConfirm: (rootKey: string) => Promise<void>
+  onClose: () => void
+  title?: string
+  text?: string
+}
+
+export const usePromptRootKey = () => {
   const {openModal, closeModal} = useModal()
   const {meta} = useSelectedWallet()
   const strings = useStrings()
   const modalHeight = 350
 
   return React.useCallback(
-    ({onConfirm, onClose}: {onConfirm: (rootKey: string) => Promise<void>; onClose: () => void}) => {
+    ({onConfirm, onClose, title, text}: PromptRootKeyOptions) => {
       const handleOnConfirm = async (rootKey: string) => {
         const result = await onConfirm(rootKey)
         closeModal()
@@ -76,11 +83,16 @@ export const useConfirmRawTx = () => {
       }
 
       if (meta.isEasyConfirmationEnabled) {
-        openModal(strings.confirmTx, <ConfirmRawTxWithOs onConfirm={handleOnConfirm} />, modalHeight, onClose)
+        openModal(title ?? strings.confirmTx, <ConfirmRawTxWithOs onConfirm={handleOnConfirm} />, modalHeight, onClose)
         return
       }
 
-      openModal(strings.confirmTx, <ConfirmRawTxWithPassword onConfirm={handleOnConfirm} />, modalHeight, onClose)
+      openModal(
+        title ?? strings.confirmTx,
+        <ConfirmRawTxWithPassword text={text} onConfirm={handleOnConfirm} />,
+        modalHeight,
+        onClose,
+      )
     },
     [meta.isHW, meta.isEasyConfirmationEnabled, openModal, strings.confirmTx, closeModal],
   )

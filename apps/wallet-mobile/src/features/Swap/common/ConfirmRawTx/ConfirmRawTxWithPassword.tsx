@@ -4,7 +4,12 @@ import {Spacer} from '../../../../components'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {ConfirmWithSpendingPassword} from '../ConfirmWithSpendingPassword'
 
-export const ConfirmRawTxWithPassword = ({onConfirm}: {onConfirm?: (rootKey: string) => Promise<void>}) => {
+type Props = {
+  onConfirm?: (rootKey: string) => Promise<void>
+  text?: string
+}
+
+export const ConfirmRawTxWithPassword = ({onConfirm, text}: Props) => {
   const {wallet} = useSelectedWallet()
 
   const handlePasswordConfirm = async (password: string) => {
@@ -12,10 +17,10 @@ export const ConfirmRawTxWithPassword = ({onConfirm}: {onConfirm?: (rootKey: str
     return onConfirm?.(rootKey)
   }
 
-  return <PasswordInput onConfirm={handlePasswordConfirm} />
+  return <PasswordInput onConfirm={handlePasswordConfirm} text={text} />
 }
 
-const PasswordInput = ({onConfirm}: {onConfirm: (password: string) => Promise<void>}) => {
+const PasswordInput = ({onConfirm, text}: {onConfirm: (password: string) => Promise<void>; text?: string}) => {
   const [error, setError] = useState<Error | null>(null)
   const [loading, setLoading] = useState(false)
 
@@ -43,6 +48,7 @@ const PasswordInput = ({onConfirm}: {onConfirm: (password: string) => Promise<vo
         onPasswordChange={handlePasswordChange}
         isLoading={loading}
         error={error ?? undefined}
+        text={text}
       />
 
       <Spacer height={10} />

@@ -45,6 +45,8 @@ export const useStrings = () => {
     yourAddress: intl.formatMessage(messages.yourAddress),
     externalAddress: intl.formatMessage(messages.externalAddress),
     fee: intl.formatMessage(messages.fee),
+    signData: intl.formatMessage(messages.signData),
+    signMessage: intl.formatMessage(messages.signMessage),
   }).current
 }
 
@@ -195,6 +197,14 @@ export const messages = Object.freeze(
     fee: {
       id: 'discover.reviewTransaction.fee',
       defaultMessage: '!!!Transaction fee',
+    },
+    signData: {
+      id: 'discover.reviewTransaction.signData',
+      defaultMessage: '!!!Sign data',
+    },
+    signMessage: {
+      id: 'discover.reviewTransaction.signMessage',
+      defaultMessage: '!!!Sign message',
     },
   }),
 )

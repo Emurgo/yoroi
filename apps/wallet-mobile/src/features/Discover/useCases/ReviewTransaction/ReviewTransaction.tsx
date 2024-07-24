@@ -20,7 +20,7 @@ import {asQuantity} from '../../../../yoroi-wallets/utils'
 import {formatAdaWithText, formatTokenWithSymbol} from '../../../../yoroi-wallets/utils/format'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useConfirmHWConnectionModal} from '../../common/ConfirmHWConnectionModal'
-import {useConfirmRawTx as usePromptRootKey} from '../../common/hooks'
+import {usePromptRootKey} from '../../common/hooks'
 import {useStrings} from '../../common/useStrings'
 
 export type ReviewTransactionParams =
