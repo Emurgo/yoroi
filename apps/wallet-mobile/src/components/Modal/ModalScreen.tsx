@@ -2,6 +2,7 @@ import {useCardAnimation} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Animated, GestureResponderEvent, Pressable, StyleSheet, Text, View} from 'react-native'
+import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {KeyboardAvoidingView} from '../KeyboardAvoidingView'
 import {LoadingOverlay} from '../LoadingOverlay/LoadingOverlay'
@@ -13,6 +14,7 @@ export const ModalScreen = () => {
   const {current} = useCardAnimation()
   const {height, closeModal, content, isOpen, isLoading} = useModal()
   const [swipeLocationY, setSwipeLocationY] = React.useState(height)
+  const {bottom} = useSafeAreaInsets()
 
   const onResponderMove = ({nativeEvent}: GestureResponderEvent) => {
     if (swipeLocationY < nativeEvent.locationY && isOpen) {
@@ -24,8 +26,12 @@ export const ModalScreen = () => {
     setSwipeLocationY(nativeEvent.locationY)
   }
 
+  React.useEffect(() => {
+    return () => closeModal()
+  }, [closeModal])
+
   return (
-    <View style={styles.backdrop}>
+    <SafeAreaView style={styles.backdrop}>
       <Pressable style={styles.cancellableArea} onPress={closeModal} />
 
       <KeyboardAvoidingView style={styles.root} keyboardVerticalOffset={0}>
@@ -55,7 +61,9 @@ export const ModalScreen = () => {
           </View>
         </Animated.View>
       </KeyboardAvoidingView>
-    </View>
+
+      <View style={[styles.fixBottomColor, {height: bottom}]} />
+    </SafeAreaView>
   )
 }
 
@@ -99,6 +107,14 @@ const useStyles = () => {
       ...StyleSheet.absoluteFillObject,
       backgroundColor: color.mobile_overlay,
     },
+    fixBottomColor: {
+      alignSelf: 'stretch',
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      backgroundColor: color.bg_color_high,
+    },
     animatedView: {
       alignSelf: 'stretch',
     },
@@ -110,7 +126,6 @@ const useStyles = () => {
       flex: 1,
       backgroundColor: isDark ? color.gray_c50 : color.white_static,
       alignSelf: 'stretch',
-      paddingBottom: 16,
     },
     title: {
       ...atoms.heading_3_medium,

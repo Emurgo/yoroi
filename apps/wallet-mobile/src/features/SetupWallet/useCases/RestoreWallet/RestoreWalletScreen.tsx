@@ -166,11 +166,9 @@ export const RestoreWalletScreen = () => {
         </View>
 
         <ScrollView style={styles.scroll} bounces={false} keyboardShouldPersistTaps="always">
-          <View>
-            <Text style={styles.title}>{strings.restoreWalletScreenTitle(bold)}</Text>
+          <Text style={styles.title}>{strings.restoreWalletScreenTitle(bold)}</Text>
 
-            <Space height="lg" />
-          </View>
+          <Space height="lg" />
 
           <MnemonicInput
             isValidPhrase={isValidPhrase}
@@ -382,7 +380,7 @@ const useStyles = () => {
     suggestionText: {
       ...atoms.body_1_lg_regular,
       textTransform: 'none',
-      color: color.primary_c500,
+      color: color.text_primary_high,
     },
     suggestionArea: {
       backgroundColor: color.bg_color_high,
@@ -393,8 +391,9 @@ const useStyles = () => {
       paddingBottom: 30,
     },
     suggestionMessage: {
+      color: color.text_error,
       ...atoms.body_1_lg_regular,
-      textAlign: 'center',
+      ...atoms.text_center,
     },
   })
 

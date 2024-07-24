@@ -29,7 +29,7 @@ export const DisplayPin = () => {
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
       <Stepper title={strings.step2Title} currentStep={2} totalSteps={4} />
 
-      <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
+      <ScrollView bounces={false}>
         <Description>{strings.step2Description}</Description>
 
         <Space height="xl" />
@@ -70,11 +70,9 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     safeAreaView: {
-      flex: 1,
-      backgroundColor: color.gray_cmin,
-    },
-    contentContainer: {
-      ...atoms.p_lg,
+      backgroundColor: color.bg_color_high,
+      ...atoms.flex_1,
+      ...atoms.px_lg,
     },
   })
 
