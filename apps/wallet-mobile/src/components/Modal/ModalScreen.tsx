@@ -2,7 +2,7 @@ import {useCardAnimation} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Animated, GestureResponderEvent, Pressable, StyleSheet, Text, View} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
+import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {KeyboardAvoidingView} from '../KeyboardAvoidingView'
 import {LoadingOverlay} from '../LoadingOverlay/LoadingOverlay'
@@ -14,6 +14,7 @@ export const ModalScreen = () => {
   const {current} = useCardAnimation()
   const {height, closeModal, content, isOpen, isLoading} = useModal()
   const [swipeLocationY, setSwipeLocationY] = React.useState(height)
+  const {bottom} = useSafeAreaInsets()
 
   const onResponderMove = ({nativeEvent}: GestureResponderEvent) => {
     if (swipeLocationY < nativeEvent.locationY && isOpen) {
@@ -60,6 +61,8 @@ export const ModalScreen = () => {
           </View>
         </Animated.View>
       </KeyboardAvoidingView>
+
+      <View style={[styles.fixBottomColor, {height: bottom}]} />
     </SafeAreaView>
   )
 }
@@ -103,6 +106,14 @@ const useStyles = () => {
     backdrop: {
       ...StyleSheet.absoluteFillObject,
       backgroundColor: color.mobile_overlay,
+    },
+    fixBottomColor: {
+      alignSelf: 'stretch',
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      backgroundColor: color.bg_color_high,
     },
     animatedView: {
       alignSelf: 'stretch',

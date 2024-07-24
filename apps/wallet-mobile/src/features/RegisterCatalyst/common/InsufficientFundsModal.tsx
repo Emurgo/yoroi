@@ -5,11 +5,12 @@ import {useIntl} from 'react-intl'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Button, useModal} from '../../../components'
-import {Space} from '../../../components/Space/Space'
 import globalMessages, {confirmationMessages} from '../../../kernel/i18n/global-messages'
 import {catalystConfig} from '../../../yoroi-wallets/cardano/constants/catalyst-config'
 import {usePortfolioPrimaryBalance} from '../../Portfolio/common/hooks/usePortfolioPrimaryBalance'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
+
+const formatter = amountFormatter({template: `{{value}} {{ticker}}`, dropTraillingZeros: true})
 
 export const InsufficientFundsModal = () => {
   const strings = useStrings()
@@ -18,11 +19,11 @@ export const InsufficientFundsModal = () => {
   const {closeModal} = useModal()
 
   const primaryBalance = usePortfolioPrimaryBalance({wallet})
-  const fmtMinPrimaryBalance = amountFormatter()({
+  const fmtMinPrimaryBalance = formatter({
     info: wallet.portfolioPrimaryTokenInfo,
     quantity: catalystConfig.displayedMinAda,
   })
-  const fmtPrimaryBalance = amountFormatter()(primaryBalance)
+  const fmtPrimaryBalance = formatter(primaryBalance)
 
   return (
     <View style={styles.container}>
@@ -32,8 +33,6 @@ export const InsufficientFundsModal = () => {
           currentBalance: fmtPrimaryBalance,
         })}
       </Text>
-
-      <Space height="md" />
 
       <Button shelleyTheme title={strings.back} onPress={closeModal} textStyles={styles.button} />
     </View>
@@ -59,6 +58,8 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     container: {
       ...atoms.px_lg,
+      ...atoms.flex_1,
+      ...atoms.justify_between,
     },
     text: {
       color: color.gray_cmax,

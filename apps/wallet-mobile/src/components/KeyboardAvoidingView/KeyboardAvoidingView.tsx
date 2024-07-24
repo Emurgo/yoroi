@@ -2,8 +2,6 @@ import React from 'react'
 import {KeyboardAvoidingView as RNKeyboardAvoidingView, KeyboardAvoidingViewProps, Platform} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
-import {Space} from '../Space/Space'
-
 export const KeyboardAvoidingView = ({
   children,
   keyboardVerticalOffset,
@@ -20,8 +18,6 @@ export const KeyboardAvoidingView = ({
       {...rest}
     >
       {children}
-
-      {Platform.OS === 'android' && enabled && <Space height="lg" />}
     </RNKeyboardAvoidingView>
   )
 }

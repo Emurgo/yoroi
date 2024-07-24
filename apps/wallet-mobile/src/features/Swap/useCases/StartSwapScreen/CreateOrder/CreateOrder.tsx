@@ -9,7 +9,9 @@ import {Alert, StyleSheet, useWindowDimensions, View, ViewProps} from 'react-nat
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {Button, KeyboardAvoidingView, Spacer, useModal} from '../../../../../components'
+import {Space} from '../../../../../components/Space/Space'
 import {frontendFeeAddressMainnet, frontendFeeAddressPreprod} from '../../../../../kernel/env'
+import {useIsKeyboardOpen} from '../../../../../kernel/keyboard/useIsKeyboardOpen'
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../../kernel/navigation'
 import {NotEnoughMoneyToSendError} from '../../../../../yoroi-wallets/cardano/types'
@@ -49,6 +51,7 @@ export const CreateOrder = () => {
   const {openModal} = useModal()
   const {height: deviceHeight} = useWindowDimensions()
   const priceImpactRisk = getPriceImpactRisk(Number(orderData.selectedPoolCalculation?.prices.priceImpact))
+  const isKeyboardOpen = useIsKeyboardOpen()
 
   const {
     sellQuantity: {isTouched: isSellTouched},
@@ -286,11 +289,12 @@ export const CreateOrder = () => {
   const disabled = isLoading || !canSwap
 
   return (
-    <View style={styles.root}>
-      <KeyboardAvoidingView style={styles.flex} keyboardVerticalOffset={140}>
-        <ScrollView style={styles.scroll}>
+    <View style={[styles.root, styles.flex]}>
+      <KeyboardAvoidingView style={styles.flex} keyboardVerticalOffset={166}>
+        <ScrollView style={styles.padding}>
+          <Space height="sm" />
+
           <View
-            style={styles.container}
             onLayout={(event) => {
               const {height} = event.nativeEvent.layout
               setContentHeight(height + BOTTOM_ACTION_SECTION)
@@ -318,18 +322,16 @@ export const CreateOrder = () => {
           </View>
         </ScrollView>
 
-        <Actions
-          style={{
-            ...(deviceHeight < contentHeight && styles.actionBorder),
-          }}
-        >
-          <Button
-            testID="swapButton"
-            shelleyTheme
-            title={strings.swapTitle}
-            onPress={handleOnSwap}
-            disabled={disabled}
-          />
+        <Actions style={[(deviceHeight < contentHeight || isKeyboardOpen) && styles.actionBorder]}>
+          <Padding>
+            <Button
+              testID="swapButton"
+              shelleyTheme
+              title={strings.swapTitle}
+              onPress={handleOnSwap}
+              disabled={disabled}
+            />
+          </Padding>
         </Actions>
       </KeyboardAvoidingView>
     </View>
@@ -341,26 +343,26 @@ const Actions = ({style, ...props}: ViewProps) => {
   return <View style={[styles.actions, style]} {...props} />
 }
 
+// NOTE: just to display the scrollable line on top of action
+const Padding = ({style, ...props}: ViewProps) => {
+  const styles = useStyles()
+  return <View style={[styles.padding, style]} {...props} />
+}
+
 const useStyles = () => {
-  const {color} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      flex: 1,
       backgroundColor: color.bg_color_high,
     },
-    scroll: {
-      paddingHorizontal: 16,
-    },
-    container: {
-      flex: 1,
-      paddingTop: 10,
-    },
     flex: {
-      flex: 1,
+      ...atoms.flex_1,
+    },
+    padding: {
+      ...atoms.px_lg,
     },
     actions: {
-      paddingVertical: 16,
-      paddingHorizontal: 16,
+      ...atoms.pt_lg,
     },
     actionBorder: {
       borderTopWidth: 1,
