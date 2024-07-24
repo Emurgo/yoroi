@@ -1,3 +1,4 @@
+import {useHeaderHeight} from '@react-navigation/elements'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {LayoutAnimation, StyleSheet, Text, View} from 'react-native'
@@ -24,6 +25,7 @@ export const TxHistory = () => {
   const {isDark} = useTheme()
   const {wallet, meta} = useSelectedWallet()
   const [showWarning, setShowWarning] = React.useState(meta.implementation === 'cardano-bip44')
+  const headerHeight = useHeaderHeight()
 
   const {sync, isLoading: isLoadingWallet} = useSync(wallet)
   const {isLoading: isLoadingPoolTransition} = usePoolTransitionModal()
@@ -44,7 +46,7 @@ export const TxHistory = () => {
       end={{x: isDark ? 0 : 0, y: isDark ? 0.5 : 0}}
       style={styles.root}
     >
-      <Spacer height={100} />
+      <Spacer height={headerHeight} />
 
       <CollapsibleHeader expanded={expanded}>
         <BalanceBanner />
