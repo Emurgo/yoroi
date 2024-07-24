@@ -18,6 +18,7 @@ export const SettingsSwitch = ({
       onValueChange={onValueChange}
       disabled={disabled}
       trackColor={{false: color.gray_c300, true: color.primary_c500}}
+      thumbColor={color.white_static}
     />
   )
 }

@@ -84,7 +84,7 @@ export const DescribeSelectedAddressScreen = () => {
       </ScrollView>
 
       <Button
-        outline
+        withoutBackground
         title={strings.requestSpecificAmountButton}
         textStyles={{
           color: colors.requestSpecificAmountTextColor,
@@ -106,8 +106,6 @@ export const DescribeSelectedAddressScreen = () => {
         copiedText={strings.addressCopiedMsg}
         style={styles.button}
       />
-
-      <Spacer height={6} />
     </SafeAreaView>
   )
 }
@@ -117,13 +115,13 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     root: {
-      flex: 1,
       backgroundColor: color.bg_color_high,
-      ...atoms.p_lg,
+      ...atoms.flex_1,
+      ...atoms.px_lg,
     },
     address: {
-      flex: 1,
-      alignItems: 'center',
+      ...atoms.flex_1,
+      ...atoms.align_center,
     },
     button: {
       backgroundColor: color.primary_c500,
