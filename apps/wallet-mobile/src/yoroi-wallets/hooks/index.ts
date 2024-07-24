@@ -479,11 +479,6 @@ export const useTransactionInfos = () => {
     return () => unsubscribe?.()
   }, [wallet])
 
-  React.useEffect(() => {
-    setTransactionInfos(wallet.transactions)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [wallet.networkManager.network])
-
   return transactionInfos
 }
 
