@@ -6,12 +6,12 @@
     "start": {
       "line": 53,
       "column": 15,
-      "index": 2885
+      "index": 3084
     },
     "end": {
       "line": 56,
       "column": 5,
-      "index": 2984
+      "index": 3183
     }
   },
   {
@@ -21,12 +21,12 @@
     "start": {
       "line": 57,
       "column": 19,
-      "index": 3005
+      "index": 3204
     },
     "end": {
       "line": 60,
       "column": 5,
-      "index": 3106
+      "index": 3305
     }
   },
   {
@@ -36,12 +36,12 @@
     "start": {
       "line": 61,
       "column": 17,
-      "index": 3125
+      "index": 3324
     },
     "end": {
       "line": 64,
       "column": 5,
-      "index": 3220
+      "index": 3419
     }
   },
   {
@@ -51,12 +51,12 @@
     "start": {
       "line": 65,
       "column": 32,
-      "index": 3254
+      "index": 3453
     },
     "end": {
       "line": 68,
       "column": 5,
-      "index": 3382
+      "index": 3581
     }
   },
   {
@@ -66,12 +66,12 @@
     "start": {
       "line": 69,
       "column": 43,
-      "index": 3427
+      "index": 3626
     },
     "end": {
       "line": 73,
       "column": 5,
-      "index": 3745
+      "index": 3944
     }
   },
   {
@@ -81,12 +81,12 @@
     "start": {
       "line": 74,
       "column": 10,
-      "index": 3757
+      "index": 3956
     },
     "end": {
       "line": 77,
       "column": 5,
-      "index": 3822
+      "index": 4021
     }
   },
   {
@@ -96,12 +96,12 @@
     "start": {
       "line": 78,
       "column": 24,
-      "index": 3848
+      "index": 4047
     },
     "end": {
       "line": 81,
       "column": 5,
-      "index": 3958
+      "index": 4157
     }
   },
   {
@@ -111,12 +111,12 @@
     "start": {
       "line": 82,
       "column": 19,
-      "index": 3979
+      "index": 4178
     },
     "end": {
       "line": 85,
       "column": 5,
-      "index": 4089
+      "index": 4288
     }
   },
   {
@@ -126,12 +126,12 @@
     "start": {
       "line": 86,
       "column": 15,
-      "index": 4106
+      "index": 4305
     },
     "end": {
       "line": 89,
       "column": 5,
-      "index": 4196
+      "index": 4395
     }
   },
   {
@@ -141,12 +141,12 @@
     "start": {
       "line": 90,
       "column": 17,
-      "index": 4215
+      "index": 4414
     },
     "end": {
       "line": 93,
       "column": 5,
-      "index": 4309
+      "index": 4508
     }
   },
   {
@@ -156,12 +156,12 @@
     "start": {
       "line": 94,
       "column": 10,
-      "index": 4321
+      "index": 4520
     },
     "end": {
       "line": 97,
       "column": 5,
-      "index": 4401
+      "index": 4600
     }
   },
   {
@@ -171,12 +171,12 @@
     "start": {
       "line": 98,
       "column": 14,
-      "index": 4417
+      "index": 4616
     },
     "end": {
       "line": 101,
       "column": 5,
-      "index": 4506
+      "index": 4705
     }
   },
   {
@@ -186,12 +186,12 @@
     "start": {
       "line": 102,
       "column": 30,
-      "index": 4538
+      "index": 4737
     },
     "end": {
       "line": 105,
       "column": 5,
-      "index": 4661
+      "index": 4860
     }
   },
   {
@@ -201,12 +201,12 @@
     "start": {
       "line": 106,
       "column": 17,
-      "index": 4680
+      "index": 4879
     },
     "end": {
       "line": 109,
       "column": 5,
-      "index": 4775
+      "index": 4974
     }
   },
   {
@@ -216,12 +216,12 @@
     "start": {
       "line": 110,
       "column": 33,
-      "index": 4810
+      "index": 5009
     },
     "end": {
       "line": 113,
       "column": 5,
-      "index": 4915
+      "index": 5114
     }
   },
   {
@@ -231,12 +231,12 @@
     "start": {
       "line": 114,
       "column": 37,
-      "index": 4954
+      "index": 5153
     },
     "end": {
       "line": 117,
       "column": 5,
-      "index": 5055
+      "index": 5254
     }
   },
   {
@@ -246,12 +246,12 @@
     "start": {
       "line": 118,
       "column": 35,
-      "index": 5092
+      "index": 5291
     },
     "end": {
       "line": 121,
       "column": 5,
-      "index": 5188
+      "index": 5387
     }
   },
   {
@@ -261,12 +261,12 @@
     "start": {
       "line": 122,
       "column": 43,
-      "index": 5233
+      "index": 5432
     },
     "end": {
       "line": 125,
       "column": 5,
-      "index": 5349
+      "index": 5548
     }
   },
   {
@@ -276,12 +276,12 @@
     "start": {
       "line": 126,
       "column": 39,
-      "index": 5390
+      "index": 5589
     },
     "end": {
       "line": 129,
       "column": 5,
-      "index": 5524
+      "index": 5723
     }
   },
   {
@@ -291,12 +291,12 @@
     "start": {
       "line": 130,
       "column": 39,
-      "index": 5565
+      "index": 5764
     },
     "end": {
       "line": 133,
       "column": 5,
-      "index": 5691
+      "index": 5890
     }
   },
   {
@@ -306,12 +306,12 @@
     "start": {
       "line": 134,
       "column": 16,
-      "index": 5709
+      "index": 5908
     },
     "end": {
       "line": 137,
       "column": 5,
-      "index": 5810
+      "index": 6009
     }
   },
   {
@@ -321,12 +321,12 @@
     "start": {
       "line": 138,
       "column": 25,
-      "index": 5837
+      "index": 6036
     },
     "end": {
       "line": 142,
       "column": 5,
-      "index": 6181
+      "index": 6380
     }
   },
   {
@@ -336,12 +336,12 @@
     "start": {
       "line": 143,
       "column": 26,
-      "index": 6209
+      "index": 6408
     },
     "end": {
       "line": 146,
       "column": 5,
-      "index": 6318
+      "index": 6517
     }
   },
   {
@@ -351,12 +351,12 @@
     "start": {
       "line": 147,
       "column": 20,
-      "index": 6340
+      "index": 6539
     },
     "end": {
       "line": 150,
       "column": 5,
-      "index": 6450
+      "index": 6649
     }
   },
   {
@@ -366,12 +366,12 @@
     "start": {
       "line": 151,
       "column": 38,
-      "index": 6490
+      "index": 6689
     },
     "end": {
       "line": 154,
       "column": 5,
-      "index": 6649
+      "index": 6848
     }
   },
   {
@@ -381,12 +381,12 @@
     "start": {
       "line": 155,
       "column": 12,
-      "index": 6663
+      "index": 6862
     },
     "end": {
       "line": 158,
       "column": 5,
-      "index": 6768
+      "index": 6967
     }
   },
   {
@@ -396,12 +396,12 @@
     "start": {
       "line": 159,
       "column": 13,
-      "index": 6783
+      "index": 6982
     },
     "end": {
       "line": 162,
       "column": 5,
-      "index": 6890
+      "index": 7089
     }
   },
   {
@@ -411,12 +411,132 @@
     "start": {
       "line": 163,
       "column": 26,
-      "index": 6918
+      "index": 7117
     },
     "end": {
       "line": 166,
       "column": 5,
-      "index": 7072
+      "index": 7271
+    }
+  },
+  {
+    "id": "discover.reviewTransaction.transactionReview",
+    "defaultMessage": "!!!Transaction review",
+    "file": "src/features/Discover/common/useStrings.tsx",
+    "start": {
+      "line": 167,
+      "column": 23,
+      "index": 7296
+    },
+    "end": {
+      "line": 170,
+      "column": 5,
+      "index": 7408
+    }
+  },
+  {
+    "id": "discover.reviewTransaction.inputs",
+    "defaultMessage": "!!!Inputs",
+    "file": "src/features/Discover/common/useStrings.tsx",
+    "start": {
+      "line": 171,
+      "column": 12,
+      "index": 7422
+    },
+    "end": {
+      "line": 174,
+      "column": 5,
+      "index": 7511
+    }
+  },
+  {
+    "id": "discover.reviewTransaction.outputs",
+    "defaultMessage": "!!!Outputs",
+    "file": "src/features/Discover/common/useStrings.tsx",
+    "start": {
+      "line": 175,
+      "column": 13,
+      "index": 7526
+    },
+    "end": {
+      "line": 178,
+      "column": 5,
+      "index": 7617
+    }
+  },
+  {
+    "id": "discover.reviewTransaction.transactionIdCopied",
+    "defaultMessage": "!!!Transaction ID copied",
+    "file": "src/features/Discover/common/useStrings.tsx",
+    "start": {
+      "line": 179,
+      "column": 25,
+      "index": 7644
+    },
+    "end": {
+      "line": 182,
+      "column": 5,
+      "index": 7761
+    }
+  },
+  {
+    "id": "discover.reviewTransaction.addressCopied",
+    "defaultMessage": "!!!Address copied",
+    "file": "src/features/Discover/common/useStrings.tsx",
+    "start": {
+      "line": 183,
+      "column": 19,
+      "index": 7782
+    },
+    "end": {
+      "line": 186,
+      "column": 5,
+      "index": 7886
+    }
+  },
+  {
+    "id": "discover.reviewTransaction.yourAddress",
+    "defaultMessage": "!!!Your address",
+    "file": "src/features/Discover/common/useStrings.tsx",
+    "start": {
+      "line": 187,
+      "column": 17,
+      "index": 7905
+    },
+    "end": {
+      "line": 190,
+      "column": 5,
+      "index": 8005
+    }
+  },
+  {
+    "id": "discover.reviewTransaction.externalAddress",
+    "defaultMessage": "!!!Foreign address",
+    "file": "src/features/Discover/common/useStrings.tsx",
+    "start": {
+      "line": 191,
+      "column": 21,
+      "index": 8028
+    },
+    "end": {
+      "line": 194,
+      "column": 5,
+      "index": 8135
+    }
+  },
+  {
+    "id": "discover.reviewTransaction.fee",
+    "defaultMessage": "!!!Transaction fee",
+    "file": "src/features/Discover/common/useStrings.tsx",
+    "start": {
+      "line": 195,
+      "column": 9,
+      "index": 8146
+    },
+    "end": {
+      "line": 198,
+      "column": 5,
+      "index": 8241
     }
   }
 ]
