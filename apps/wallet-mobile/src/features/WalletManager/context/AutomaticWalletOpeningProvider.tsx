@@ -8,9 +8,7 @@ const AutomaticWalletOpenerContext = React.createContext<AutomaticWalletOpenerCo
 export const AutomaticWalletOpenerProvider: React.FC<React.PropsWithChildren> = ({children}) => {
   const [active, setActive] = React.useState(false)
 
-  const context = React.useMemo(() => ({active, setActive}), [active, setActive])
-
-  return <AutomaticWalletOpenerContext.Provider value={context}>{children}</AutomaticWalletOpenerContext.Provider>
+  return <AutomaticWalletOpenerContext.Provider value={{active, setActive}}>{children}</AutomaticWalletOpenerContext.Provider>
 }
 
 type AutomaticWalletOpenerContextType = {
