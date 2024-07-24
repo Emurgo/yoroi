@@ -80,18 +80,9 @@ const useTxDetails = (cbor: string) => {
   return useQuery({queryFn: () => getTxDetails(cbor)})
 }
 
-export const ReviewTransaction = () => {
-  const params = useParams<ReviewTransactionParams>(isParams)
-  const promptRootKey = useConnectorPromptRootKey()
-  const theme = useTheme()
+const useFormattedTransaction = (cbor: string) => {
   const {wallet} = useSelectedWallet()
-  const [inputsOpen, setInputsOpen] = React.useState(true)
-  const [outputsOpen, setOutputsOpen] = React.useState(true)
-  const [scrollbarShown, setScrollbarShown] = React.useState(false)
-  const strings = useStrings()
-
-  const {styles} = useStyles()
-  const {data} = useTxDetails(params.cbor)
+  const {data} = useTxDetails(cbor)
 
   const inputs = data?.body.inputs ?? []
   const outputs = data?.body.outputs ?? []
@@ -122,6 +113,70 @@ export const ReviewTransaction = () => {
   const tokenIds = uniq([...inputTokenIds, ...outputTokenIds])
   const tokenInfos = useTokenInfos({wallet, tokenIds: tokenIds})
 
+  const formattedInputs = inputs.map((input) => {
+    const receiveUTxO = getUtxoByTxIdAndIndex(input.transaction_id, input.index)
+    const address = receiveUTxO?.receiver
+    const coin = receiveUTxO?.amount ? asQuantity(receiveUTxO.amount) : null
+    const coinText = coin ? formatAdaWithText(coin, wallet.primaryToken) : null
+    const primaryAssets = coinText ? [coinText] : []
+    const multiAssets =
+      receiveUTxO?.assets
+        .map((a) => {
+          const tokenInfo = tokenInfos.find((t) => t.id === a.assetId)
+          if (!tokenInfo) return null
+          const quantity = asQuantity(a.amount)
+          return formatTokenWithSymbol(quantity, tokenInfo)
+        })
+        .filter(Boolean) ?? []
+
+    return {
+      assets: [...primaryAssets, ...multiAssets].filter(isNonNullable),
+      address,
+      ownAddress: !!address && isOwnedAddress(address),
+      txIndex: input.index,
+      txHash: input.transaction_id,
+    }
+  })
+
+  const formattedOutputs = outputs.map((output) => {
+    const address = output.address
+    const coin = asQuantity(output.amount.coin)
+    const coinText = formatAdaWithText(coin, wallet.primaryToken)
+    const primaryAssets = coinText ? [coinText] : []
+    const multiAssets = output.amount.multiasset
+      ? Object.entries(output.amount.multiasset).map(([policyId, assets]) => {
+          return Object.entries(assets).map(([assetId, amount]) => {
+            const tokenInfo = tokenInfos.find((t) => t.id === `${policyId}.${assetId}`)
+            if (!tokenInfo) return null
+            const quantity = asQuantity(amount)
+            return formatTokenWithSymbol(quantity, tokenInfo)
+          })
+        })
+      : []
+
+    const assets = [...primaryAssets, ...multiAssets.flat()].filter(isNonNullable)
+    return {assets, address, ownAddress: !!address && isOwnedAddress(address)}
+  })
+
+  const formattedFee = formatAdaWithText(asQuantity(data?.body?.fee ?? '0'), wallet.primaryToken)
+
+  return {inputs: formattedInputs, outputs: formattedOutputs, fee: formattedFee}
+}
+
+export const ReviewTransaction = () => {
+  const params = useParams<ReviewTransactionParams>(isParams)
+  const promptRootKey = useConnectorPromptRootKey()
+  const theme = useTheme()
+  const {wallet} = useSelectedWallet()
+  const [inputsOpen, setInputsOpen] = React.useState(true)
+  const [outputsOpen, setOutputsOpen] = React.useState(true)
+  const [scrollbarShown, setScrollbarShown] = React.useState(false)
+  const strings = useStrings()
+  const formattedTX = useFormattedTransaction(params.cbor)
+
+  const {styles} = useStyles()
+  const {data} = useTxDetails(params.cbor)
+
   const signTxWithHW = useSignTxWithHW()
 
   const handleOnConfirm = async () => {
@@ -148,36 +203,19 @@ export const ReviewTransaction = () => {
     >
       <ScrollView bounces={false} style={{flex: 1, paddingHorizontal: 16}} onScrollBarChange={setScrollbarShown}>
         <Dropdown open={inputsOpen} onPress={() => setInputsOpen((o) => !o)}>
-          <Text style={styles.dropdownText}>{`${strings.inputs} (${inputs.length})`}</Text>
+          <Text style={styles.dropdownText}>{`${strings.inputs} (${formattedTX.inputs.length})`}</Text>
         </Dropdown>
         {inputsOpen && <Spacer height={16} />}
         {inputsOpen &&
-          inputs.map((input, index) => {
-            const receiveUTxO = getUtxoByTxIdAndIndex(input.transaction_id, input.index)
-            const address = receiveUTxO?.receiver
-            const coin = receiveUTxO?.amount ? asQuantity(receiveUTxO.amount) : null
-            const coinText = coin ? formatAdaWithText(coin, wallet.primaryToken) : null
-            const primaryAssets = coinText ? [coinText] : []
-            const multiAssets =
-              receiveUTxO?.assets
-                .map((a) => {
-                  const tokenInfo = tokenInfos.find((t) => t.id === a.assetId)
-                  if (!tokenInfo) return null
-                  const quantity = asQuantity(a.amount)
-                  return formatTokenWithSymbol(quantity, tokenInfo)
-                })
-                .filter(Boolean) ?? []
-
-            const assets = [...primaryAssets, ...multiAssets].filter(isNonNullable)
-
+          formattedTX.inputs.map((input, index) => {
             return (
               <InputOutputRow
                 key={index}
-                assets={assets}
-                txIndex={input.index}
-                txHash={input.transaction_id}
-                isOwnAddress={!!receiveUTxO}
-                address={address}
+                assets={input.assets}
+                txIndex={input.txIndex}
+                txHash={input.txHash}
+                isOwnAddress={input.ownAddress}
+                address={input.address}
               />
             )
           })}
@@ -190,30 +228,18 @@ export const ReviewTransaction = () => {
         </View>
         <Spacer height={16} />
         <Dropdown open={outputsOpen} onPress={() => setOutputsOpen((o) => !o)}>
-          <Text style={styles.dropdownText}>{`${strings.outputs} (${outputs.length})`}</Text>
+          <Text style={styles.dropdownText}>{`${strings.outputs} (${formattedTX.outputs.length})`}</Text>
         </Dropdown>
         {outputsOpen && <Spacer height={16} />}
         {outputsOpen &&
-          outputs.map((output, index) => {
-            const address = output.address
-            const coin = asQuantity(output.amount.coin)
-            const coinText = formatAdaWithText(coin, wallet.primaryToken)
-            const primaryAssets = coinText ? [coinText] : []
-            const multiAssets = output.amount.multiasset
-              ? Object.entries(output.amount.multiasset).map(([policyId, assets]) => {
-                  return Object.entries(assets).map(([assetId, amount]) => {
-                    const tokenInfo = tokenInfos.find((t) => t.id === `${policyId}.${assetId}`)
-                    if (!tokenInfo) return null
-                    const quantity = asQuantity(amount)
-                    return formatTokenWithSymbol(quantity, tokenInfo)
-                  })
-                })
-              : []
-
-            const assets = [...primaryAssets, ...multiAssets.flat()].filter(isNonNullable)
-
+          formattedTX.outputs.map((output, index) => {
             return (
-              <InputOutputRow key={index} assets={assets} isOwnAddress={isOwnedAddress(address)} address={address} />
+              <InputOutputRow
+                key={index}
+                assets={output.assets}
+                isOwnAddress={output.ownAddress}
+                address={output.address}
+              />
             )
           })}
       </ScrollView>
