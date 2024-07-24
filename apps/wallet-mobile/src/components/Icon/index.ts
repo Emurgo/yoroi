@@ -71,6 +71,7 @@ import {Menu} from './Menu'
 import {Message} from './Message'
 import {MinSwap} from './MinSwap'
 import {MuesliSwap} from './MuesliSwap'
+import {MultiParty} from './MultiParty'
 import {MultipleWallets} from './MultipleWallets'
 import {NftAsset} from './NftAsset'
 import {NoNfts} from './NoNfts'
@@ -185,6 +186,7 @@ export const Icon = {
   Megaphone,
   Menu,
   Message,
+  MultiParty,
   MultipleWallets,
   NftAsset,
   NoNfts,

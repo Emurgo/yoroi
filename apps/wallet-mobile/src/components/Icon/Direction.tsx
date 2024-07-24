@@ -6,6 +6,7 @@ import {TransactionDirection, TransactionInfo} from '../../yoroi-wallets/types'
 import {Received} from '../Icon/Received'
 import {Send} from '../Icon/Send'
 import {Transaction} from '../Icon/Transaction'
+import {MultiParty} from './MultiParty'
 
 type Props = {
   transaction: TransactionInfo
@@ -16,12 +17,12 @@ export const Direction = ({transaction, size = defaultSize}: Props) => {
   const {color} = useTheme()
   const {direction} = transaction
 
-  const iconColors = colorsMap(color)[direction]
+  const iconStyles = styleMap(color)[direction]
   const IconComponent = iconMap[direction]
 
   return (
-    <View style={[styles.icon, {backgroundColor: iconColors?.background}]}>
-      <IconComponent color={iconColors?.icon} size={size} />
+    <View style={[styles.icon, {backgroundColor: iconStyles?.background}]}>
+      <IconComponent color={iconStyles?.icon} size={iconStyles.size ?? size} />
     </View>
   )
 }
@@ -32,12 +33,12 @@ const iconMap: Record<TransactionDirection, ({size, color}: {size: number; color
   SENT: Send,
   RECEIVED: Received,
   SELF: Transaction,
-  MULTI: Transaction,
+  MULTI: MultiParty,
 }
 
-export const colorsMap: (
+export const styleMap: (
   color: ThemedPalette,
-) => Record<ThemeStatus, {background: string; icon: string; text: string}> = (color) => ({
+) => Record<ThemeStatus, {background: string; icon: string; text: string; size?: number}> = (color) => ({
   SELF: {
     text: color.gray_c900,
     background: color.gray_c100,
@@ -57,6 +58,7 @@ export const colorsMap: (
     text: color.gray_c900,
     background: color.gray_c100,
     icon: color.gray_c900,
+    size: 50,
   },
 })
 

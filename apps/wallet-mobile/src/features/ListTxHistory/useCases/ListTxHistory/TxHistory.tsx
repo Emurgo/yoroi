@@ -108,7 +108,7 @@ const useStyles = () => {
     panel: {
       flex: 1,
       paddingTop: 8,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.bg_color_high,
       borderTopLeftRadius: 24,
       borderTopRightRadius: 24,
     },
