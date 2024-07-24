@@ -220,7 +220,7 @@ const useFormattedTransaction = (cbor: string) => {
   })
 
   const tokenIds = uniq([...inputTokenIds, ...outputTokenIds])
-  const tokenInfos = useTokenInfos({wallet, tokenIds: tokenIds})
+  const tokenInfos = useTokenInfos({wallet, tokenIds})
 
   const formattedInputs = inputs.map((input) => {
     const receiveUTxO = getUtxoByTxIdAndIndex(input.transaction_id, input.index)
@@ -275,14 +275,20 @@ const useFormattedTransaction = (cbor: string) => {
 const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
-    root: {backgroundColor: color.bg_color_high, flex: 1},
+    root: {
+      backgroundColor: color.bg_color_high,
+      flex: 1,
+    },
     dropdown: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
       height: 24,
     },
-    scrollView: {flex: 1, paddingHorizontal: 16},
+    scrollView: {
+      flex: 1,
+      paddingHorizontal: 16,
+    },
     buttonArea: {
       ...atoms.p_lg,
       borderColor: color.gray_c200,
