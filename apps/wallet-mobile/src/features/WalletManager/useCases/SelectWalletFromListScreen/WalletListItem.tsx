@@ -44,18 +44,13 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      if (
-        isAutomaticWalletOpenerActive &&
-        isSelected &&
-        hasSyncedLastSelectedNetwork
-      ) {
+      if (isAutomaticWalletOpenerActive && isSelected && hasSyncedLastSelectedNetwork) {
         onPress(walletMeta)
         setAutomaticWalletOpenerActive(false)
       }
     }, [
       hasSyncedLastSelectedNetwork,
       isAutomaticWalletOpenerActive,
-      isFocused,
       isSelected,
       onPress,
       setAutomaticWalletOpenerActive,
