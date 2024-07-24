@@ -63,8 +63,8 @@ export const RequestSpecificAmountScreen = () => {
   return (
     <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <KeyboardAvoidingView style={styles.root}>
-          <ScrollView ref={scrollViewRef} style={styles.content} onScrollBarChange={setIsScrollBarShown}>
+        <KeyboardAvoidingView style={styles.flex}>
+          <ScrollView ref={scrollViewRef} style={styles.flex} onScrollBarChange={setIsScrollBarShown}>
             <Spacer height={24} />
 
             <View style={styles.screen}>
@@ -175,9 +175,8 @@ const useStyles = () => {
       backgroundColor: color.bg_color_high,
       ...atoms.px_lg,
     },
-    content: {
-      flex: 1,
-      paddingHorizontal: 16,
+    flex: {
+      ...atoms.flex_1,
     },
     textAddressDetails: {
       ...atoms.body_1_lg_regular,
@@ -195,7 +194,7 @@ const useStyles = () => {
       backgroundColor: color.primary_c500,
     },
     actions: {
-      padding: 16,
+      ...atoms.pt_lg,
     },
   })
 
