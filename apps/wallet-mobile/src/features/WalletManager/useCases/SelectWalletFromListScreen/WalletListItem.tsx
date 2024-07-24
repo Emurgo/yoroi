@@ -1,4 +1,4 @@
-import {useFocusEffect, useIsFocused} from '@react-navigation/native'
+import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
 import * as React from 'react'
@@ -35,7 +35,6 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
     walletManager,
   } = useWalletManager()
   const {active: isAutomaticWalletOpenerActive, setActive: setAutomaticWalletOpenerActive} = useAutomaticWalletOpener()
-  const isFocused = useIsFocused()
 
   const isSelected = meta?.id === walletMeta.id
 
@@ -46,7 +45,6 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
   useFocusEffect(
     React.useCallback(() => {
       if (
-        isFocused /* user may change the screen while the wallets are loading */ &&
         isAutomaticWalletOpenerActive &&
         isSelected &&
         hasSyncedLastSelectedNetwork
