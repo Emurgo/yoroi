@@ -37,6 +37,14 @@ export const useStrings = () => {
     signTransaction: intl.formatMessage(txLabels.signTransaction),
     signDataNotSupported: intl.formatMessage(messages.signDataNotSupported),
     continueOnLedger: intl.formatMessage(ledgerMessages.continueOnLedger),
+    transactionReview: 'Transaction review',
+    inputs: 'Inputs',
+    outputs: 'Outputs',
+    transactionIdCopied: 'Transaction ID Copied',
+    addressCopied: 'Address Copied',
+    yourAddress: 'Your address',
+    externalAddress: 'Foreign address',
+    fee: 'Transaction fee',
   }).current
 }
 

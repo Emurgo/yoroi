@@ -1,6 +1,6 @@
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {View, StyleSheet} from 'react-native'
-import {Button, Icon, Spacer, Text} from '../../../components'
+import {Button, CopyButton, Icon, Spacer, Text} from '../../../components'
 import * as React from 'react'
 import {useConfirmRawTx as usePromptRootKey} from '../common/hooks'
 import {useConfirmHWConnectionModal} from '../common/ConfirmHWConnectionModal'
@@ -21,20 +21,38 @@ import {asQuantity} from '../../../yoroi-wallets/utils'
 import {ScrollView} from '../../../components/ScrollView/ScrollView'
 import {useTokenInfos} from '../../../yoroi-wallets/hooks'
 import {uniq} from 'lodash'
-import {Balance} from '@yoroi/types'
-import Quantity = Balance.Quantity
+import {useStrings} from '../common/useStrings'
 
-export type ReviewTransactionParams = {
-  cbor: string
-  onConfirm: (rootKey: string) => void
-  onCancel: () => void
-}
+export type ReviewTransactionParams =
+  | {
+      isHW: false
+      cbor: string
+      onConfirm: (rootKey: string) => void
+      onCancel: () => void
+    }
+  | {
+      isHW: true
+      cbor: string
+      partial?: boolean
+      onConfirm: (transaction: Transaction) => void
+      onCancel: () => void
+    }
 
-const paramsSchema = z.object({
-  cbor: z.string(),
-  onConfirm: z.function(),
-  onCancel: z.function(),
-})
+const paramsSchema = z.union([
+  z.object({
+    isHW: z.literal(false),
+    cbor: z.string(),
+    onConfirm: z.function(),
+    onCancel: z.function(),
+  }),
+  z.object({
+    isHW: z.literal(true),
+    cbor: z.string(),
+    partial: z.boolean().optional(),
+    onConfirm: z.function(),
+    onCancel: z.function(),
+  }),
+])
 
 const isParams = createTypeGuardFromSchema(paramsSchema)
 
@@ -65,12 +83,12 @@ const useTxDetails = (cbor: string) => {
 export const ReviewTransaction = () => {
   const params = useParams<ReviewTransactionParams>(isParams)
   const promptRootKey = useConnectorPromptRootKey()
-  const signData = useConnectorPromptRootKey()
   const theme = useTheme()
   const {wallet} = useSelectedWallet()
   const [inputsOpen, setInputsOpen] = React.useState(true)
   const [outputsOpen, setOutputsOpen] = React.useState(true)
   const [scrollbarShown, setScrollbarShown] = React.useState(false)
+  const strings = useStrings()
 
   const {styles} = useStyles()
   const {data} = useTxDetails(params.cbor)
@@ -104,14 +122,17 @@ export const ReviewTransaction = () => {
   const tokenIds = uniq([...inputTokenIds, ...outputTokenIds])
   const tokenInfos = useTokenInfos({wallet, tokenIds: tokenIds})
 
-  // console.log('TX Details', JSON.stringify(data, null, 2))
-
   const signTxWithHW = useSignTxWithHW()
-  const signDataWithHW = useSignDataWithHW()
 
   const handleOnConfirm = async () => {
-    const rootKey = await promptRootKey()
-    params.onConfirm(rootKey)
+    if (!params.isHW) {
+      const rootKey = await promptRootKey()
+      params.onConfirm(rootKey)
+      return
+    }
+
+    const signature = await signTxWithHW(params.cbor, params.partial)
+    params.onConfirm(signature)
   }
 
   useEffect(() => {
@@ -123,11 +144,11 @@ export const ReviewTransaction = () => {
   return (
     <SafeAreaView
       edges={['top', 'bottom', 'left', 'right']}
-      style={{backgroundColor: theme.color.bg_color_low, flex: 1}}
+      style={{backgroundColor: theme.color.bg_color_high, flex: 1}}
     >
       <ScrollView bounces={false} style={{flex: 1, paddingHorizontal: 16}} onScrollBarChange={setScrollbarShown}>
         <Dropdown open={inputsOpen} onPress={() => setInputsOpen((o) => !o)}>
-          <Text style={styles.dropdownText}>{`Inputs (${inputs.length})`}</Text>
+          <Text style={styles.dropdownText}>{`${strings.inputs} (${inputs.length})`}</Text>
         </Dropdown>
         {inputsOpen && <Spacer height={16} />}
         {inputsOpen &&
@@ -140,7 +161,6 @@ export const ReviewTransaction = () => {
             const multiAssets =
               receiveUTxO?.assets
                 .map((a) => {
-                  console.log('Assetxxx', a)
                   const tokenInfo = tokenInfos.find((t) => t.id === a.assetId)
                   if (!tokenInfo) return null
                   const quantity = asQuantity(a.amount)
@@ -170,7 +190,7 @@ export const ReviewTransaction = () => {
         </View>
         <Spacer height={16} />
         <Dropdown open={outputsOpen} onPress={() => setOutputsOpen((o) => !o)}>
-          <Text style={styles.dropdownText}>{`Outputs (${outputs.length})`}</Text>
+          <Text style={styles.dropdownText}>{`${strings.outputs} (${outputs.length})`}</Text>
         </Dropdown>
         {outputsOpen && <Spacer height={16} />}
         {outputsOpen &&
@@ -198,7 +218,7 @@ export const ReviewTransaction = () => {
           })}
       </ScrollView>
       <View style={[styles.buttonArea, {borderTopWidth: scrollbarShown ? 1 : 0}]}>
-        <Button title={'Confirm'} shelleyTheme onPress={handleOnConfirm} />
+        <Button title={strings.confirm} shelleyTheme onPress={handleOnConfirm} />
       </View>
     </SafeAreaView>
   )
@@ -241,6 +261,11 @@ const useStyles = () => {
     chip: {
       flexWrap: 'wrap',
     },
+    row: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
     chipText: {
       color: color.gray_cmin,
       paddingRight: 8,
@@ -276,7 +301,8 @@ const InputOutputRow = ({
   isOwnAddress: boolean
   assets: string[]
 }) => {
-  const {styles, colors} = useStyles()
+  const strings = useStrings()
+  const {styles} = useStyles()
   const shortAddress = address ? shorten(address, 30) : null
   const shortTxHash = txHash ? shorten(txHash, 30) : null
   return (
@@ -284,13 +310,15 @@ const InputOutputRow = ({
       <View>{isOwnAddress ? <OwnAddressChip /> : <ForeignAddressChip />}</View>
       <Spacer height={8} />
       {shortAddress !== null && (
-        <View>
+        <View style={styles.row}>
           <Text>{shortAddress}</Text>
+          <CopyButton value={address ?? ''} message={strings.addressCopied} />
         </View>
       )}
       {shortTxHash !== null && (
-        <View>
+        <View style={styles.row}>
           <Text>{`${shortTxHash}#${txIndex}`}</Text>
+          <CopyButton value={`${txHash}#${txIndex}`} message={strings.transactionIdCopied} />
         </View>
       )}
       <Spacer height={4} />
@@ -307,33 +335,33 @@ const InputOutputRow = ({
 
 const OwnAddressChip = () => {
   const {styles, colors} = useStyles()
+  const strings = useStrings()
   const backgroundColor = colors.ownAddress
-  const text = 'Your address'
   return (
     <View style={styles.chip}>
-      <Text style={[styles.chipText, {backgroundColor}]}>{text}</Text>
+      <Text style={[styles.chipText, {backgroundColor}]}>{strings.yourAddress}</Text>
     </View>
   )
 }
 
 const ForeignAddressChip = () => {
   const {styles, colors} = useStyles()
+  const strings = useStrings()
   const backgroundColor = colors.foreignAddress
-  const text = 'External address'
   return (
     <View style={styles.chip}>
-      <Text style={[styles.chipText, {backgroundColor}]}>{text}</Text>
+      <Text style={[styles.chipText, {backgroundColor}]}>{strings.externalAddress}</Text>
     </View>
   )
 }
 
 const FeeChip = () => {
   const {styles, colors} = useStyles()
+  const strings = useStrings()
   const backgroundColor = colors.fee
-  const text = 'Transaction fee'
   return (
     <View style={styles.chip}>
-      <Text style={[styles.chipText, {backgroundColor}]}>{text}</Text>
+      <Text style={[styles.chipText, {backgroundColor}]}>{strings.fee}</Text>
     </View>
   )
 }

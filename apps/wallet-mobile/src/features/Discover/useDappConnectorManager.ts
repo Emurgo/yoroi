@@ -21,7 +21,6 @@ export const useDappConnectorManager = () => {
 
   const confirmConnection = useConfirmConnection()
 
-  const signTx = useConnectorPromptRootKey()
   const signData = useConnectorPromptRootKey()
 
   const signTxWithHW = useSignTxWithHW()
@@ -38,6 +37,7 @@ export const useDappConnectorManager = () => {
             let shouldResolve = true
             navigateTo.reviewTransaction({
               cbor,
+              isHW: false,
               onConfirm: (rootKey) => {
                 if (!shouldResolve) return
                 shouldResolve = false
@@ -54,10 +54,30 @@ export const useDappConnectorManager = () => {
         },
         signData,
         meta,
-        signTxWithHW,
+        signTxWithHW: (cbor, partial) => {
+          return new Promise<Transaction>((resolve, reject) => {
+            let shouldResolve = true
+            navigateTo.reviewTransaction({
+              cbor,
+              partial,
+              isHW: true,
+              onConfirm: (tx) => {
+                if (!shouldResolve) return
+                shouldResolve = false
+                resolve(tx)
+                navigateTo.browseDapp()
+              },
+              onCancel: () => {
+                if (!shouldResolve) return
+                shouldResolve = false
+                reject(new Error('User rejected'))
+              },
+            })
+          })
+        },
         signDataWithHW,
       }),
-    [appStorage, wallet, confirmConnection, signTx, signData, meta, signTxWithHW, signDataWithHW],
+    [appStorage, wallet, confirmConnection, signData, meta, signTxWithHW, signDataWithHW],
   )
 }
 

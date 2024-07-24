@@ -47,7 +47,7 @@ export const DiscoverNavigator = () => {
         <Stack.Screen
           name="discover-review-tx"
           component={ReviewTransaction}
-          options={{...defaultStackNavigationOptions(atoms, color), title: 'Transaction review'}}
+          options={{...defaultStackNavigationOptions(atoms, color), title: strings.transactionReview}}
         />
       </Stack.Navigator>
     </DappConnectorProvider>
