@@ -774,7 +774,7 @@ export default defineMessages({
   },
   votingTitle: {
     id: 'components.catalyst.title',
-    defaultMessage: '!!!Register to vote',
+    defaultMessage: '!!!Catalyst voting',
   },
   insufficientBalance: {
     id: 'components.catalyst.insufficientBalance',

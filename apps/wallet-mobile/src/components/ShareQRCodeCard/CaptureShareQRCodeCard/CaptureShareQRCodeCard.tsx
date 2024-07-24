@@ -25,16 +25,20 @@ export const CaptureShareQRCodeCard = ({content}: ShareProps) => {
 
       <Spacer height={16} />
 
-      <YoroiLogoIllustration height={37} width={35} />
-
-      <View style={styles.addressContainer}>
-        <View style={styles.qrCode}>
-          <QRCode value={content} size={158} color={colors.black} />
-        </View>
+      <View style={styles.wrapper}>
+        <YoroiLogoIllustration height={37} width={35} />
 
         <Spacer height={16} />
 
-        <Text style={[styles.content, {color: colors.transparent}]}>{content}</Text>
+        <View style={styles.addressContainer}>
+          <View style={styles.qrCode}>
+            <QRCode value={content} size={170} color={colors.black} backgroundColor={colors.white} />
+          </View>
+
+          <Spacer height={16} />
+
+          <Text style={[styles.content, {color: colors.transparent}]}>{content}</Text>
+        </View>
       </View>
     </View>
   )
@@ -53,18 +57,21 @@ const useStyles = () => {
     addressContainer: {
       alignItems: 'center',
     },
+    wrapper: {
+      ...atoms.justify_center,
+      ...atoms.align_center,
+    },
     touchableCard: {
       borderRadius: 10,
       width: screenWidth - 34,
       alignItems: 'center',
       maxHeight: 308,
       flex: 1,
-      minHeight: 394,
+      minHeight: 308,
       alignSelf: 'center',
       overflow: 'hidden',
-      paddingVertical: 15,
+      paddingVertical: 16,
       gap: 32,
-      justifyContent: 'center',
     },
     content: {
       textAlign: 'center',
@@ -74,6 +81,7 @@ const useStyles = () => {
   })
 
   const colors = {
+    white: color.gray_cmin,
     black: color.gray_cmax,
     transparent: 'transparent',
     backgroundGradientCard: color.bg_gradient_1,

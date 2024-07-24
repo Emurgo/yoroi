@@ -1,3 +1,5 @@
+import {useNavigation} from '@react-navigation/native'
+import {useAsyncStorage} from '@yoroi/common'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {Api, Wallet} from '@yoroi/types'
 import React from 'react'
@@ -7,24 +9,39 @@ import {InteractionManager} from 'react-native'
 import image from '../../../../assets/img/ledger_2.png'
 import {showErrorDialog} from '../../../../kernel/dialogs'
 import {errorMessages} from '../../../../kernel/i18n/global-messages'
+import {logger} from '../../../../kernel/logger/logger'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {useWalletNavigation} from '../../../../kernel/navigation'
+import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import {useCreateWalletXPub} from '../../../WalletManager/common/hooks/useCreateWalletXPub'
+import {parseWalletMeta} from '../../../WalletManager/common/validators/wallet-meta'
 import {WalletNameForm} from '../WalletNameForm/WalletNameForm'
 
 // when hw, later will be part of the onboarding
 const addressMode: Wallet.AddressMode = 'single'
 export const SaveNanoXScreen = () => {
-  const strings = useStrings()
-  const {resetToWalletSelection} = useWalletNavigation()
-  const {walletImplementation, hwDeviceInfo, accountVisual} = useSetupWallet()
   const intl = useIntl()
+  const strings = useStrings()
+  const storage = useAsyncStorage()
+  const navigation = useNavigation<SetupWalletRouteNavigation>()
   const {track} = useMetrics()
 
+  const {walletImplementation, hwDeviceInfo, accountVisual, walletIdChanged} = useSetupWallet()
+
   const {createWallet, isLoading} = useCreateWalletXPub({
-    onSuccess: () => {
+    onSuccess: async (wallet) => {
+      walletIdChanged(wallet.id)
+      const walletStorage = storage.join('wallet/')
+      const walletMeta = await walletStorage.getItem(wallet.id, parseWalletMeta)
+
+      if (!walletMeta) {
+        const error = new Error('WalletDetailsScreen: wallet meta is invalid, reached an invalid state.')
+        logger.error(error)
+        throw error
+      }
+
       track.restoreWalletDetailsSettled()
-      resetToWalletSelection()
+
+      navigation.navigate('setup-wallet-preparing-wallet')
     },
     onError: (error) => {
       InteractionManager.runAfterInteractions(() => {
