@@ -4,10 +4,8 @@ import {DappConnector} from '@yoroi/dapp-connector'
 import * as React from 'react'
 import {InteractionManager} from 'react-native'
 
-import {cip30LedgerExtensionMaker} from '../../yoroi-wallets/cardano/cip30/cip30-ledger'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 import {useOpenConfirmConnectionModal} from './common/ConfirmConnectionModal'
-import {useConfirmHWConnectionModal} from './common/ConfirmHWConnectionModal'
 import {createDappConnector} from './common/helpers'
 import {useConfirmRawTx as usePromptRootKey} from './common/hooks'
 import {useShowHWNotSupportedModal} from './common/HWNotSupportedModal'
@@ -76,7 +74,7 @@ export const useDappConnectorManager = () => {
         },
         signDataWithHW,
       }),
-    [appStorage, wallet, confirmConnection, signData, meta, signDataWithHW],
+    [appStorage, wallet, confirmConnection, signData, meta, navigateTo, signDataWithHW],
   )
 }
 
@@ -103,37 +101,6 @@ const useConnectorPromptRootKey = () => {
       }
     })
   }, [promptRootKey])
-}
-
-const useSignTxWithHW = () => {
-  const {confirmHWConnection, closeModal} = useConfirmHWConnectionModal()
-  const {wallet, meta} = useSelectedWallet()
-
-  return React.useCallback(
-    (cbor: string, partial?: boolean) => {
-      return new Promise<Transaction>((resolve, reject) => {
-        let shouldResolveOnClose = true
-        confirmHWConnection({
-          onConfirm: async ({transportType, deviceInfo}) => {
-            try {
-              const cip30 = cip30LedgerExtensionMaker(wallet, meta)
-              const tx = await cip30.signTx(cbor, partial ?? false, deviceInfo, transportType === 'USB')
-              shouldResolveOnClose = false
-              return resolve(tx)
-            } catch (error) {
-              reject(error)
-            } finally {
-              closeModal()
-            }
-          },
-          onClose: () => {
-            if (shouldResolveOnClose) reject(new Error('User rejected'))
-          },
-        })
-      })
-    },
-    [confirmHWConnection, wallet, meta, closeModal],
-  )
 }
 
 const useSignDataWithHW = () => {

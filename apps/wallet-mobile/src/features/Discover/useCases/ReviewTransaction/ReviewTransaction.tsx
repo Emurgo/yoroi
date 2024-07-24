@@ -1,26 +1,26 @@
-import {SafeAreaView} from 'react-native-safe-area-context'
-import {View, StyleSheet} from 'react-native'
-import {Button, CopyButton, Icon, Spacer, Text} from '../../../../components'
-import * as React from 'react'
-import {useConfirmRawTx as usePromptRootKey} from '../../common/hooks'
-import {useConfirmHWConnectionModal} from '../../common/ConfirmHWConnectionModal'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {Transaction} from '@emurgo/cross-csl-core'
-import {cip30LedgerExtensionMaker} from '../../../../yoroi-wallets/cardano/cip30/cip30-ledger'
-import {useShowHWNotSupportedModal} from '../../common/HWNotSupportedModal'
-import {useParams} from '../../../../kernel/navigation'
-import {z} from 'zod'
 import {createTypeGuardFromSchema, isNonNullable} from '@yoroi/common'
-import {useEffect} from 'react'
-import {wrappedCsl} from '../../../../yoroi-wallets/cardano/wrappedCsl'
-import {useQuery} from 'react-query'
-import {TouchableOpacity} from 'react-native-gesture-handler'
 import {useTheme} from '@yoroi/theme'
-import {formatAdaWithText, formatTokenWithSymbol} from '../../../../yoroi-wallets/utils/format'
-import {asQuantity} from '../../../../yoroi-wallets/utils'
-import {ScrollView} from '../../../../components/ScrollView/ScrollView'
-import {useTokenInfos} from '../../../../yoroi-wallets/hooks'
 import {uniq} from 'lodash'
+import * as React from 'react'
+import {useEffect} from 'react'
+import {StyleSheet, View} from 'react-native'
+import {TouchableOpacity} from 'react-native-gesture-handler'
+import {SafeAreaView} from 'react-native-safe-area-context'
+import {useQuery} from 'react-query'
+import {z} from 'zod'
+
+import {Button, CopyButton, Icon, Spacer, Text} from '../../../../components'
+import {ScrollView} from '../../../../components/ScrollView/ScrollView'
+import {useParams} from '../../../../kernel/navigation'
+import {cip30LedgerExtensionMaker} from '../../../../yoroi-wallets/cardano/cip30/cip30-ledger'
+import {wrappedCsl} from '../../../../yoroi-wallets/cardano/wrappedCsl'
+import {useTokenInfos} from '../../../../yoroi-wallets/hooks'
+import {asQuantity} from '../../../../yoroi-wallets/utils'
+import {formatAdaWithText, formatTokenWithSymbol} from '../../../../yoroi-wallets/utils/format'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {useConfirmHWConnectionModal} from '../../common/ConfirmHWConnectionModal'
+import {useConfirmRawTx as usePromptRootKey} from '../../common/hooks'
 import {useStrings} from '../../common/useStrings'
 
 export type ReviewTransactionParams =
@@ -37,6 +37,115 @@ export type ReviewTransactionParams =
       onConfirm: (transaction: Transaction) => void
       onCancel: () => void
     }
+
+export const ReviewTransaction = () => {
+  const params = useParams<ReviewTransactionParams>(isParams)
+  const promptRootKey = useConnectorPromptRootKey()
+  const {wallet} = useSelectedWallet()
+  const [inputsOpen, setInputsOpen] = React.useState(true)
+  const [outputsOpen, setOutputsOpen] = React.useState(true)
+  const [scrollbarShown, setScrollbarShown] = React.useState(false)
+  const strings = useStrings()
+  const formattedTX = useFormattedTransaction(params.cbor)
+
+  const {styles} = useStyles()
+  const {data} = useTxDetails(params.cbor)
+
+  const signTxWithHW = useSignTxWithHW()
+
+  const handleOnConfirm = async () => {
+    if (!params.isHW) {
+      const rootKey = await promptRootKey()
+      params.onConfirm(rootKey)
+      return
+    }
+
+    const signature = await signTxWithHW(params.cbor, params.partial)
+    params.onConfirm(signature)
+  }
+
+  useEffect(() => {
+    return () => {
+      params.onCancel()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  return (
+    <SafeAreaView edges={['top', 'bottom', 'left', 'right']} style={styles.root}>
+      <ScrollView bounces={false} style={styles.scrollView} onScrollBarChange={setScrollbarShown}>
+        <Dropdown open={inputsOpen} onPress={() => setInputsOpen((o) => !o)}>
+          <Text style={styles.dropdownText}>{`${strings.inputs} (${formattedTX.inputs.length})`}</Text>
+        </Dropdown>
+
+        {inputsOpen && <Spacer height={16} />}
+
+        {inputsOpen &&
+          formattedTX.inputs.map((input, index) => {
+            return (
+              <InputOutputRow
+                key={index}
+                assets={input.assets}
+                txIndex={input.txIndex}
+                txHash={input.txHash}
+                isOwnAddress={input.ownAddress}
+                address={input.address}
+              />
+            )
+          })}
+
+        <Spacer height={16} />
+
+        <View style={styles.divider} />
+
+        <Spacer height={16} />
+
+        <View style={styles.feeArea}>
+          <FeeChip />
+
+          <Text>{formatAdaWithText(asQuantity(data?.body?.fee ?? '0'), wallet.primaryToken)}</Text>
+        </View>
+
+        <Spacer height={16} />
+
+        <Dropdown open={outputsOpen} onPress={() => setOutputsOpen((o) => !o)}>
+          <Text style={styles.dropdownText}>{`${strings.outputs} (${formattedTX.outputs.length})`}</Text>
+        </Dropdown>
+
+        {outputsOpen && <Spacer height={16} />}
+
+        {outputsOpen &&
+          formattedTX.outputs.map((output, index) => {
+            return (
+              <InputOutputRow
+                key={index}
+                assets={output.assets}
+                isOwnAddress={output.ownAddress}
+                address={output.address}
+              />
+            )
+          })}
+      </ScrollView>
+
+      <View style={[styles.buttonArea, {borderTopWidth: scrollbarShown ? 1 : 0}]}>
+        <Button title={strings.confirm} shelleyTheme onPress={handleOnConfirm} />
+      </View>
+    </SafeAreaView>
+  )
+}
+
+const Dropdown = ({children, open, onPress}: {children: React.ReactNode; open: boolean; onPress?: () => void}) => {
+  const {styles, colors} = useStyles()
+  return (
+    <TouchableOpacity style={styles.dropdown} onPress={onPress}>
+      <View>{children}</View>
+
+      <View>
+        <Icon.Chevron size={24} color={colors.dropdownIcon} direction={open ? 'up' : 'down'} />
+      </View>
+    </TouchableOpacity>
+  )
+}
 
 const paramsSchema = z.union([
   z.object({
@@ -116,9 +225,9 @@ const useFormattedTransaction = (cbor: string) => {
   const formattedInputs = inputs.map((input) => {
     const receiveUTxO = getUtxoByTxIdAndIndex(input.transaction_id, input.index)
     const address = receiveUTxO?.receiver
-    const coin = receiveUTxO?.amount ? asQuantity(receiveUTxO.amount) : null
-    const coinText = coin ? formatAdaWithText(coin, wallet.primaryToken) : null
-    const primaryAssets = coinText ? [coinText] : []
+    const coin = receiveUTxO?.amount != null ? asQuantity(receiveUTxO.amount) : null
+    const coinText = coin != null ? formatAdaWithText(coin, wallet.primaryToken) : null
+    const primaryAssets = coinText != null ? [coinText] : []
     const multiAssets =
       receiveUTxO?.assets
         .map((a) => {
@@ -132,7 +241,7 @@ const useFormattedTransaction = (cbor: string) => {
     return {
       assets: [...primaryAssets, ...multiAssets].filter(isNonNullable),
       address,
-      ownAddress: !!address && isOwnedAddress(address),
+      ownAddress: address != null && isOwnedAddress(address),
       txIndex: input.index,
       txHash: input.transaction_id,
     }
@@ -142,12 +251,12 @@ const useFormattedTransaction = (cbor: string) => {
     const address = output.address
     const coin = asQuantity(output.amount.coin)
     const coinText = formatAdaWithText(coin, wallet.primaryToken)
-    const primaryAssets = coinText ? [coinText] : []
+    const primaryAssets = coinText != null ? [coinText] : []
     const multiAssets = output.amount.multiasset
       ? Object.entries(output.amount.multiasset).map(([policyId, assets]) => {
           return Object.entries(assets).map(([assetId, amount]) => {
             const tokenInfo = tokenInfos.find((t) => t.id === `${policyId}.${assetId}`)
-            if (!tokenInfo) return null
+            if (tokenInfo == null) return null
             const quantity = asQuantity(amount)
             return formatTokenWithSymbol(quantity, tokenInfo)
           })
@@ -155,7 +264,7 @@ const useFormattedTransaction = (cbor: string) => {
       : []
 
     const assets = [...primaryAssets, ...multiAssets.flat()].filter(isNonNullable)
-    return {assets, address, ownAddress: !!address && isOwnedAddress(address)}
+    return {assets, address, ownAddress: address != null && isOwnedAddress(address)}
   })
 
   const formattedFee = formatAdaWithText(asQuantity(data?.body?.fee ?? '0'), wallet.primaryToken)
@@ -163,114 +272,17 @@ const useFormattedTransaction = (cbor: string) => {
   return {inputs: formattedInputs, outputs: formattedOutputs, fee: formattedFee}
 }
 
-export const ReviewTransaction = () => {
-  const params = useParams<ReviewTransactionParams>(isParams)
-  const promptRootKey = useConnectorPromptRootKey()
-  const theme = useTheme()
-  const {wallet} = useSelectedWallet()
-  const [inputsOpen, setInputsOpen] = React.useState(true)
-  const [outputsOpen, setOutputsOpen] = React.useState(true)
-  const [scrollbarShown, setScrollbarShown] = React.useState(false)
-  const strings = useStrings()
-  const formattedTX = useFormattedTransaction(params.cbor)
-
-  const {styles} = useStyles()
-  const {data} = useTxDetails(params.cbor)
-
-  const signTxWithHW = useSignTxWithHW()
-
-  const handleOnConfirm = async () => {
-    if (!params.isHW) {
-      const rootKey = await promptRootKey()
-      params.onConfirm(rootKey)
-      return
-    }
-
-    const signature = await signTxWithHW(params.cbor, params.partial)
-    params.onConfirm(signature)
-  }
-
-  useEffect(() => {
-    return () => {
-      params.onCancel()
-    }
-  }, [])
-
-  return (
-    <SafeAreaView
-      edges={['top', 'bottom', 'left', 'right']}
-      style={{backgroundColor: theme.color.bg_color_high, flex: 1}}
-    >
-      <ScrollView bounces={false} style={{flex: 1, paddingHorizontal: 16}} onScrollBarChange={setScrollbarShown}>
-        <Dropdown open={inputsOpen} onPress={() => setInputsOpen((o) => !o)}>
-          <Text style={styles.dropdownText}>{`${strings.inputs} (${formattedTX.inputs.length})`}</Text>
-        </Dropdown>
-        {inputsOpen && <Spacer height={16} />}
-        {inputsOpen &&
-          formattedTX.inputs.map((input, index) => {
-            return (
-              <InputOutputRow
-                key={index}
-                assets={input.assets}
-                txIndex={input.txIndex}
-                txHash={input.txHash}
-                isOwnAddress={input.ownAddress}
-                address={input.address}
-              />
-            )
-          })}
-        <Spacer height={16} />
-        <View style={styles.divider} />
-        <Spacer height={16} />
-        <View style={styles.feeArea}>
-          <FeeChip />
-          <Text>{formatAdaWithText(asQuantity(data?.body?.fee ?? '0'), wallet.primaryToken)}</Text>
-        </View>
-        <Spacer height={16} />
-        <Dropdown open={outputsOpen} onPress={() => setOutputsOpen((o) => !o)}>
-          <Text style={styles.dropdownText}>{`${strings.outputs} (${formattedTX.outputs.length})`}</Text>
-        </Dropdown>
-        {outputsOpen && <Spacer height={16} />}
-        {outputsOpen &&
-          formattedTX.outputs.map((output, index) => {
-            return (
-              <InputOutputRow
-                key={index}
-                assets={output.assets}
-                isOwnAddress={output.ownAddress}
-                address={output.address}
-              />
-            )
-          })}
-      </ScrollView>
-      <View style={[styles.buttonArea, {borderTopWidth: scrollbarShown ? 1 : 0}]}>
-        <Button title={strings.confirm} shelleyTheme onPress={handleOnConfirm} />
-      </View>
-    </SafeAreaView>
-  )
-}
-
-const Dropdown = ({children, open, onPress}: {children: React.ReactNode; open: boolean; onPress?: () => void}) => {
-  const {styles, colors} = useStyles()
-  return (
-    <TouchableOpacity style={styles.dropdown} onPress={onPress}>
-      <View>{children}</View>
-      <View>
-        <Icon.Chevron size={24} color={colors.dropdownIcon} direction={open ? 'up' : 'down'} />
-      </View>
-    </TouchableOpacity>
-  )
-}
-
 const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
+    root: {backgroundColor: color.bg_color_high, flex: 1},
     dropdown: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
       height: 24,
     },
+    scrollView: {flex: 1, paddingHorizontal: 16},
     buttonArea: {
       ...atoms.p_lg,
       borderColor: color.gray_c200,
@@ -304,6 +316,9 @@ const useStyles = () => {
       flexDirection: 'row',
       justifyContent: 'space-between',
     },
+    asset: {
+      textAlign: 'right',
+    },
   })
   const colors = {
     dropdownIcon: color.gray_c900,
@@ -329,29 +344,36 @@ const InputOutputRow = ({
 }) => {
   const strings = useStrings()
   const {styles} = useStyles()
-  const shortAddress = address ? shorten(address, 30) : null
-  const shortTxHash = txHash ? shorten(txHash, 30) : null
+  const shortAddress = address != null ? shorten(address, 30) : null
+  const shortTxHash = txHash != null ? shorten(txHash, 30) : null
   return (
     <View>
       <View>{isOwnAddress ? <OwnAddressChip /> : <ForeignAddressChip />}</View>
+
       <Spacer height={8} />
+
       {shortAddress !== null && (
         <View style={styles.row}>
           <Text>{shortAddress}</Text>
+
           <CopyButton value={address ?? ''} message={strings.addressCopied} />
         </View>
       )}
+
       {shortTxHash !== null && (
         <View style={styles.row}>
           <Text>{`${shortTxHash}#${txIndex}`}</Text>
+
           <CopyButton value={`${txHash}#${txIndex}`} message={strings.transactionIdCopied} />
         </View>
       )}
+
       <Spacer height={4} />
+
       {assets.map((asset, index) => {
         return (
           <View key={index}>
-            <Text style={{textAlign: 'right'}}>{asset}</Text>
+            <Text style={styles.asset}>{asset}</Text>
           </View>
         )
       })}
@@ -454,24 +476,4 @@ const useSignTxWithHW = () => {
     },
     [confirmHWConnection, wallet, meta, closeModal],
   )
-}
-
-const useSignDataWithHW = () => {
-  const {showHWNotSupportedModal, closeModal} = useShowHWNotSupportedModal()
-
-  return React.useCallback(() => {
-    return new Promise<{signature: string; key: string}>((_resolve, reject) => {
-      let shouldResolveOnClose = true
-      showHWNotSupportedModal({
-        onConfirm: () => {
-          closeModal()
-          shouldResolveOnClose = false
-          return reject(new Error('User rejected'))
-        },
-        onClose: () => {
-          if (shouldResolveOnClose) reject(new Error('User rejected'))
-        },
-      })
-    })
-  }, [showHWNotSupportedModal, closeModal])
 }

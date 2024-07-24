@@ -9,10 +9,10 @@ import {SomethingWentWrong} from '../../components/SomethingWentWrong/SomethingW
 import {defaultStackNavigationOptions, DiscoverRoutes} from '../../kernel/navigation'
 import {BrowserNavigator} from './BrowserNavigator'
 import {useStrings} from './common/useStrings'
+import {ReviewTransaction} from './useCases/ReviewTransaction/ReviewTransaction'
 import {ListSkeleton} from './useCases/SelectDappFromList/ListSkeleton'
 import {SelectDappFromListScreen} from './useCases/SelectDappFromList/SelectDappFromListScreen'
 import {useDappConnectorManager} from './useDappConnectorManager'
-import {ReviewTransaction} from './useCases/ReviewTransaction/ReviewTransaction'
 
 const Stack = createStackNavigator<DiscoverRoutes>()
 
