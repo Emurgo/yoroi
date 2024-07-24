@@ -17,6 +17,8 @@ export const walletManagerMock = new WalletManager({
   networkManagers,
 })
 
+walletManagerMock.setSelectedWalletId(mocks.wallet.id)
+
 // NOTE: for places that are using the selected directly is ok, but for places using manager
 // it needs to be hydrated with the walletManager otherwise it will always return undefined
 export const WalletManagerProviderMock = ({
