@@ -3,7 +3,7 @@ import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import React, {useEffect} from 'react'
 import {useIntl} from 'react-intl'
-import {Platform, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {KeyboardAvoidingView, Spacer, ValidatedTextInput} from '../../../../components'
@@ -13,10 +13,10 @@ import {useSetCollateralId} from '../../../../yoroi-wallets/cardano/utxoManager/
 import {useSaveMemo} from '../../../../yoroi-wallets/hooks'
 import {YoroiSignedTx} from '../../../../yoroi-wallets/types'
 import {debugWalletInfo, features} from '../../..'
+import {CurrentBalance} from '../../../Send/useCases/ConfirmTx/Summary/CurrentBalance'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from '../navigation'
 import {BalanceAfter} from './Summary/BalanceAfter'
-import {CurrentBalance} from './Summary/CurrentBalance'
 import {Fees} from './Summary/Fees'
 import {PrimaryTotal} from './Summary/PrimaryTotal'
 import {SecondaryTotals} from './Summary/SecondaryTotals'
@@ -100,8 +100,6 @@ export const ConfirmTxScreen = () => {
             chooseTransportOnConfirmation
           />
         </Actions>
-
-        <Spacer height={Platform.OS === 'ios' ? 65 : 16} />
       </KeyboardAvoidingView>
     </SafeAreaView>
   )
