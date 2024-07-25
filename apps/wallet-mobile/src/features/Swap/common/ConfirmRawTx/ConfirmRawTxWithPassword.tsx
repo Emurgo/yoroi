@@ -6,10 +6,10 @@ import {ConfirmWithSpendingPassword} from '../ConfirmWithSpendingPassword'
 
 type Props = {
   onConfirm?: (rootKey: string) => Promise<void>
-  text?: string
+  summary?: string
 }
 
-export const ConfirmRawTxWithPassword = ({onConfirm, text}: Props) => {
+export const ConfirmRawTxWithPassword = ({onConfirm, summary}: Props) => {
   const {wallet} = useSelectedWallet()
 
   const handlePasswordConfirm = async (password: string) => {
@@ -17,10 +17,10 @@ export const ConfirmRawTxWithPassword = ({onConfirm, text}: Props) => {
     return onConfirm?.(rootKey)
   }
 
-  return <PasswordInput onConfirm={handlePasswordConfirm} text={text} />
+  return <PasswordInput onConfirm={handlePasswordConfirm} summary={summary} />
 }
 
-const PasswordInput = ({onConfirm, text}: {onConfirm: (password: string) => Promise<void>; text?: string}) => {
+const PasswordInput = ({onConfirm, summary}: {onConfirm: (password: string) => Promise<void>; summary?: string}) => {
   const [error, setError] = useState<Error | null>(null)
   const [loading, setLoading] = useState(false)
 
@@ -48,7 +48,7 @@ const PasswordInput = ({onConfirm, text}: {onConfirm: (password: string) => Prom
         onPasswordChange={handlePasswordChange}
         isLoading={loading}
         error={error ?? undefined}
-        text={text}
+        summary={summary}
       />
 
       <Spacer height={10} />

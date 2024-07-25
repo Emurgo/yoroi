@@ -61,7 +61,7 @@ type PromptRootKeyOptions = {
   onConfirm: (rootKey: string) => Promise<void>
   onClose: () => void
   title?: string
-  text?: string
+  summary?: string
 }
 
 export const usePromptRootKey = () => {
@@ -71,7 +71,7 @@ export const usePromptRootKey = () => {
   const modalHeight = 350
 
   return React.useCallback(
-    ({onConfirm, onClose, title, text}: PromptRootKeyOptions) => {
+    ({onConfirm, onClose, title, summary}: PromptRootKeyOptions) => {
       const handleOnConfirm = async (rootKey: string) => {
         const result = await onConfirm(rootKey)
         closeModal()
@@ -89,7 +89,7 @@ export const usePromptRootKey = () => {
 
       openModal(
         title ?? strings.confirmTx,
-        <ConfirmRawTxWithPassword text={text} onConfirm={handleOnConfirm} />,
+        <ConfirmRawTxWithPassword summary={summary} onConfirm={handleOnConfirm} />,
         modalHeight,
         onClose,
       )

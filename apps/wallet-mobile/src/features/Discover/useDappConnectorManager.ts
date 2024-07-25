@@ -87,11 +87,11 @@ const useSignData = () => {
       return new Promise<string>((resolve, reject) => {
         let shouldResolveOnClose = true
         const title = strings.signData
-        const text = `${strings.signMessage}: ${Buffer.from(payload, 'hex').toString('utf-8')}`
+        const summary = `${strings.signMessage}: ${Buffer.from(payload, 'hex').toString('utf-8')}`
         try {
           promptRootKey({
             title,
-            text,
+            summary,
             onConfirm: (rootKey) => {
               resolve(rootKey)
               shouldResolveOnClose = false

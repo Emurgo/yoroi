@@ -1,5 +1,5 @@
 import {Transaction} from '@emurgo/cross-csl-core'
-import {createTypeGuardFromSchema, isNonNullable} from '@yoroi/common'
+import {createTypeGuardFromSchema, isNonNullable, truncateString} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
 import {uniq} from 'lodash'
 import * as React from 'react'
@@ -287,7 +287,7 @@ const useStyles = () => {
     },
     scrollView: {
       flex: 1,
-      paddingHorizontal: 16,
+      ...atoms.px_lg,
     },
     buttonArea: {
       ...atoms.p_lg,
@@ -299,8 +299,7 @@ const useStyles = () => {
     },
     dropdownText: {
       ...atoms.font_semibold,
-      fontSize: 16,
-      lineHeight: 24,
+      ...atoms.body_1_lg_medium,
     },
     chip: {
       flexWrap: 'wrap',
@@ -350,8 +349,8 @@ const InputOutputRow = ({
 }) => {
   const strings = useStrings()
   const {styles} = useStyles()
-  const shortAddress = address != null ? shorten(address, 30) : null
-  const shortTxHash = txHash != null ? shorten(txHash, 30) : null
+  const shortAddress = address != null ? truncateString({value: address, maxLength: 30}) : null
+  const shortTxHash = txHash != null ? truncateString({value: txHash, maxLength: 30}) : null
   return (
     <View>
       <View>{isOwnAddress ? <OwnAddressChip /> : <ForeignAddressChip />}</View>
@@ -418,14 +417,6 @@ const FeeChip = () => {
       <Text style={[styles.chipText, {backgroundColor}]}>{strings.fee}</Text>
     </View>
   )
-}
-
-const shorten = (s: string, n: number) => {
-  if (s.length > n) {
-    return `${s.substring(0, Math.floor(n / 2))}...${s.substring(s.length - Math.floor(n / 2))}`
-  }
-
-  return s
 }
 
 const useConnectorPromptRootKey = () => {
