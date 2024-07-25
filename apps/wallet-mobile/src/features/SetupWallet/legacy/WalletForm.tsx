@@ -5,6 +5,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, TextInput as RNTextInput, View, ViewProps} from 'react-native'
 
 import {Button, Checkmark, KeyboardAvoidingView, Spacer, TextInput} from '../../../components'
+import {debugWalletInfo, features} from '../../../kernel/features'
 import globalMessages from '../../../kernel/i18n/global-messages'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {isEmptyString} from '../../../kernel/utils'
@@ -14,7 +15,6 @@ import {
   validatePassword,
   validateWalletName,
 } from '../../../yoroi-wallets/utils/validators'
-import {debugWalletInfo, features} from '../..'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 
 type Props = {
