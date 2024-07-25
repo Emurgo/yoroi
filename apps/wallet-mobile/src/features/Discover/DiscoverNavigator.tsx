@@ -9,6 +9,7 @@ import {SomethingWentWrong} from '../../components/SomethingWentWrong/SomethingW
 import {defaultStackNavigationOptions, DiscoverRoutes} from '../../kernel/navigation'
 import {BrowserNavigator} from './BrowserNavigator'
 import {useStrings} from './common/useStrings'
+import {ReviewTransaction} from './useCases/ReviewTransaction/ReviewTransaction'
 import {ListSkeleton} from './useCases/SelectDappFromList/ListSkeleton'
 import {SelectDappFromListScreen} from './useCases/SelectDappFromList/SelectDappFromListScreen'
 import {useDappConnectorManager} from './useDappConnectorManager'
@@ -42,6 +43,12 @@ export const DiscoverNavigator = () => {
         </Stack.Screen>
 
         <Stack.Screen name="discover-browser" component={BrowserNavigator} options={{headerShown: false}} />
+
+        <Stack.Screen
+          name="discover-review-tx"
+          component={ReviewTransaction}
+          options={{...defaultStackNavigationOptions(atoms, color), title: strings.transactionReview}}
+        />
       </Stack.Navigator>
     </DappConnectorProvider>
   )

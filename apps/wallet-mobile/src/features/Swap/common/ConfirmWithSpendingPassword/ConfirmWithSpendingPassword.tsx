@@ -17,9 +17,10 @@ type Props = {
   isLoading?: boolean
   error?: Error
   onPasswordChange?: () => void
+  summary?: string
 }
 
-export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error, onPasswordChange}: Props) => {
+export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error, onPasswordChange, summary}: Props) => {
   const spendingPasswordRef = React.useRef<RNTextInput>(null)
   const [spendingPassword, setSpendingPassword] = React.useState(
     features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '',
@@ -31,7 +32,7 @@ export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error, onPassw
 
   return (
     <View style={styles.root}>
-      <Text style={styles.modalText}>{strings.enterSpendingPassword}</Text>
+      <Text style={styles.modalText}>{summary ?? strings.enterSpendingPassword}</Text>
 
       <TextInput
         secureTextEntry
