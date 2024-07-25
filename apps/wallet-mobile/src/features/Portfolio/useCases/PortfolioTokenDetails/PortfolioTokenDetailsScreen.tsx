@@ -6,6 +6,7 @@ import {Spacer} from '../../../../components'
 import {SafeArea} from '../../../../components/SafeArea'
 import {Tab, Tabs} from '../../../../components/Tabs'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
+import {features} from '../../..'
 import {TxFilter} from '../../../Transactions/useCases/TxList/TxFilterProvider'
 import {TxList} from '../../../Transactions/useCases/TxList/TxList'
 import {usePortfolioTokenDetailContext} from '../../common/PortfolioTokenDetailContext'
@@ -17,7 +18,7 @@ import {PortfolioTokenBalance} from './PortfolioTokenBalance/PortfolioTokenBalan
 import {PortfolioTokenChart} from './PortfolioTokenChart/PortfolioTokenChart'
 import {PortfolioTokenInfo} from './PortfolioTokenInfo/PortfolioTokenInfo'
 
-const HEADER_HEIGHT = 304
+const HEADER_HEIGHT = features.portfolioGraph ? 304 : 85
 
 export type ActiveTab = 'performance' | 'overview' | 'transactions'
 
@@ -47,12 +48,14 @@ export const PortfolioTokenDetailsScreen = () => {
   const renderTabs = React.useMemo(() => {
     return (
       <Tabs style={styles.tabs}>
-        <Tab
-          style={styles.tab}
-          active={activeTab === 'performance'}
-          onPress={() => setActiveTab('performance')}
-          label={strings.performance}
-        />
+        {features.portfolioPerformance && (
+          <Tab
+            style={styles.tab}
+            active={activeTab === 'performance'}
+            onPress={() => setActiveTab('performance')}
+            label={strings.performance}
+          />
+        )}
 
         <Tab
           style={styles.tab}
@@ -80,7 +83,6 @@ export const PortfolioTokenDetailsScreen = () => {
 
         <TxList
           onScroll={onScroll}
-          ListEmptyComponent={<BuyADABanner />}
           ListHeaderComponent={
             <>
               <Animated.View style={styles.header}>
@@ -90,9 +92,13 @@ export const PortfolioTokenDetailsScreen = () => {
 
                 <Spacer height={16} />
 
-                <PortfolioTokenChart />
+                {features.portfolioGraph && (
+                  <>
+                    <PortfolioTokenChart />
 
-                <Spacer height={16} />
+                    <Spacer height={16} />
+                  </>
+                )}
               </Animated.View>
 
               <Animated.View>{renderTabs}</Animated.View>
@@ -101,6 +107,7 @@ export const PortfolioTokenDetailsScreen = () => {
             </>
           }
           {...(activeTab !== 'transactions' && {data: []})}
+          {...(activeTab === 'transactions' && {ListEmptyComponent: <BuyADABanner />})}
         />
 
         <PortfolioTokenAction />
@@ -135,10 +142,11 @@ const useStyles = () => {
     tabs: {
       ...atoms.justify_between,
       ...atoms.px_lg,
+      ...atoms.gap_lg,
       backgroundColor: color.bg_color_high,
     },
     tab: {
-      flex: 0,
+      flex: 1,
     },
   })
 

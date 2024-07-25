@@ -10,6 +10,9 @@ export const features = {
   moderatingNftsEnabled: false,
   walletListFeedback: __DEV__,
   poolTransition: true,
+  portfolioPerformance: false,
+  portfolioGraph: false,
+  portfolioNews: false,
 }
 
 export const debugWalletInfo = {

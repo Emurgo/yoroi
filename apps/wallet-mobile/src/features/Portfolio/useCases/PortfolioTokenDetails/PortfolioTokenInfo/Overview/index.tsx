@@ -6,6 +6,7 @@ import React, {useState} from 'react'
 import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Accordion, CopyButton, Spacer} from '../../../../../../components'
+import {features} from '../../../../..'
 import {useSelectedWallet} from '../../../../../WalletManager/common/hooks/useSelectedWallet'
 import {TokenInfoIcon} from '../../../../common/TokenAmountItem/TokenInfoIcon'
 import {usePortfolioTokenDetailParams} from '../../../../common/useNavigateTo'
@@ -107,9 +108,13 @@ export const Overview = () => {
 
       <Spacer height={16} />
 
-      <TokenNews />
+      {features.portfolioNews && (
+        <>
+          <TokenNews />
 
-      <Spacer height={16} />
+          <Spacer height={16} />
+        </>
+      )}
     </View>
   )
 }
@@ -118,7 +123,6 @@ const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     scrollView: {
-      ...atoms.px_lg,
       ...atoms.flex_1,
     },
     container: {

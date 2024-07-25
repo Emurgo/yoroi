@@ -103,7 +103,6 @@ const useStyles = () => {
     },
     image: {
       ...atoms.rounded_sm,
-      overlayColor: color.gray_c200,
     },
     placeholderNft: {
       width: 164,
