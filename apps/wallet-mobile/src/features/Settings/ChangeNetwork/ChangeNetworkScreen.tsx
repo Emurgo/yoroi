@@ -1,7 +1,7 @@
 import {isBoolean, parseSafe, useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Platform, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {UseMutationOptions, useQuery, UseQueryOptions} from 'react-query'
 
@@ -49,7 +49,7 @@ export const useHandleOpenNetworkNoticeModal = () => {
     if (!networkNoticeShown) setNetworkNoticeShown()
   }, [networkNoticeShown, setNetworkNoticeShown])
 
-  const handleOpenModal = React.useCallback(() => {
+  const handleOpenModal = () => {
     openModal(
       strings.networkNoticeTitle,
       <View style={styles.modal}>
@@ -72,12 +72,13 @@ export const useHandleOpenNetworkNoticeModal = () => {
             }}
           />
         </View>
+
+        {Platform.OS === 'android' && <Space height="lg" />}
       </View>,
       450,
       () => handleOnClose(),
     )
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }
 
   return {handleOpenModal}
 }

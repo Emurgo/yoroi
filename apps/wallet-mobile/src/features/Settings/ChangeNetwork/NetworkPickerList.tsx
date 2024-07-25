@@ -16,7 +16,7 @@ export const NetworkPickerList = () => {
   const {styles} = useStyles()
   const navigateTo = useNavigateTo()
   const {network: selectedNetwork} = useSelectedNetwork()
-  const {setActive: setAutomaticWalletOpenerActive} = useAutomaticWalletOpener()
+  const {setShouldOpen: setShouldAutomaticWalletOpen} = useAutomaticWalletOpener()
 
   // to improve UX
   const [localSelectedNetwork, setLocalSelectedNetwork] = React.useState(selectedNetwork)
@@ -26,7 +26,7 @@ export const NetworkPickerList = () => {
 
   const onSelectNetwork = (network: Chain.SupportedNetworks) => {
     setLocalSelectedNetwork(network)
-    setAutomaticWalletOpenerActive(true)
+    setShouldAutomaticWalletOpen(true)
     walletManager.setSelectedNetwork(network)
     navigateTo.preparingNetworks(network)
   }

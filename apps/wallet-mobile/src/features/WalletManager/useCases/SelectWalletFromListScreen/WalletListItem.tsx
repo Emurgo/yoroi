@@ -34,7 +34,8 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
     selected: {meta},
     walletManager,
   } = useWalletManager()
-  const {active: isAutomaticWalletOpenerActive, setActive: setAutomaticWalletOpenerActive} = useAutomaticWalletOpener()
+  const {shouldOpen: shouldAutomaticWalletOpen, setShouldOpen: setShouldAutomaticWalletOpen} =
+    useAutomaticWalletOpener()
 
   const isSelected = meta?.id === walletMeta.id
 
@@ -44,16 +45,16 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      if (isAutomaticWalletOpenerActive && isSelected && hasSyncedLastSelectedNetwork) {
+      if (shouldAutomaticWalletOpen && isSelected && hasSyncedLastSelectedNetwork) {
         onPress(walletMeta)
-        setAutomaticWalletOpenerActive(false)
+        setShouldAutomaticWalletOpen(false)
       }
     }, [
       hasSyncedLastSelectedNetwork,
-      isAutomaticWalletOpenerActive,
       isSelected,
       onPress,
-      setAutomaticWalletOpenerActive,
+      setShouldAutomaticWalletOpen,
+      shouldAutomaticWalletOpen,
       walletMeta,
     ]),
   )

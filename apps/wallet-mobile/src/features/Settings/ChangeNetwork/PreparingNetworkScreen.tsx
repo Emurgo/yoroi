@@ -10,10 +10,6 @@ import {SettingsStackRoutes, useParams} from '../../../kernel/navigation'
 import {useStrings} from './strings'
 import {useLaunchRouteAfterSyncing} from './useLaunchRouteAfterSyncing'
 
-/**
- * It requests the global syncing to stop on mounting to favor the sync of a specific wallet
- * and resume the global syncing after the wallet is sync and the screen is unmounted.
- */
 export const PreparingNetworkScreen = () => {
   const strings = useStrings()
   const {styles} = useStyles()
