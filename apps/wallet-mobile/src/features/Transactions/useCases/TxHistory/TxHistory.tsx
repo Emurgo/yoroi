@@ -1,4 +1,5 @@
 import {useHeaderHeight} from '@react-navigation/elements'
+import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {LayoutAnimation, StyleSheet, Text, View} from 'react-native'
@@ -7,15 +8,16 @@ import LinearGradient from 'react-native-linear-gradient'
 import infoIcon from '../../../../assets/img/icon/info-light-green.png'
 import {Spacer} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
+import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {usePoolTransitionModal} from '../../../../legacy/Staking/PoolTransition/usePoolTransitionModal'
 import {useSync} from '../../../../yoroi-wallets/hooks'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from '../../common/strings'
+import {TxList} from '../TxList/TxList'
 import {ActionsBanner} from './ActionsBanner'
 import {BalanceBanner} from './BalanceBanner'
 import {CollapsibleHeader} from './CollapsibleHeader'
 import {LockedDeposit} from './LockedDeposit'
-import {TxHistoryList} from './TxHistoryList'
 import {useOnScroll} from './useOnScroll'
 import {WarningBanner} from './WarningBanner'
 
@@ -23,6 +25,15 @@ export const TxHistory = () => {
   const strings = useStrings()
   const {styles, colors} = useStyles()
   const {isDark} = useTheme()
+
+  const {track} = useMetrics()
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.transactionsPageViewed()
+    }, [track]),
+  )
+
   const {wallet, meta} = useSelectedWallet()
   const [showWarning, setShowWarning] = React.useState(meta.implementation === 'cardano-bip44')
   const headerHeight = useHeaderHeight()
@@ -79,7 +90,7 @@ export const TxHistory = () => {
           />
         )}
 
-        <TxHistoryList onScroll={onScroll} refreshing={isLoading} onRefresh={handleOnRefresh} />
+        <TxList onScroll={onScroll} refreshing={isLoading} onRefresh={handleOnRefresh} />
       </View>
     </LinearGradient>
   )
