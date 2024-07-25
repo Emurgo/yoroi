@@ -41,6 +41,7 @@ export const AmountCard = ({
   const strings = useStrings()
   const {styles, colors} = useStyles()
 
+  const noTokenSelected = !touched
   const info = amount?.info
   const name = info?.ticker ?? info?.name ?? ''
   const formattedAmount = !info ? '0' : formatTokenWithText(amount?.quantity ?? 0n, info, 18)
@@ -96,7 +97,7 @@ export const AmountCard = ({
 
                 <Spacer width={8} />
 
-                <Text style={styles.coinName}>{!info ? strings.selectToken : name}</Text>
+                <Text style={styles.coinName}>{noTokenSelected || !info ? strings.selectToken : name}</Text>
 
                 <Spacer width={8} />
 
