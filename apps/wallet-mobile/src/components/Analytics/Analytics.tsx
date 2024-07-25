@@ -1,13 +1,14 @@
 import {useTheme} from '@yoroi/theme'
 import React, {ReactNode} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, Switch, TextStyle, TouchableOpacity, useWindowDimensions, View} from 'react-native'
+import {StyleSheet, TextStyle, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {Button} from '../../components/Button'
 import {Spacer} from '../../components/Spacer'
 import {Text} from '../../components/Text'
 import {YoroiLogo} from '../../components/YoroiLogo'
+import {SettingsSwitch} from '../../features/Settings/common/SettingsSwitch'
 import {useMetrics} from '../../kernel/metrics/metricsManager'
 import {AnalyticsImage} from './AnalyticsImage'
 
@@ -128,7 +129,7 @@ const Settings = ({onReadMore}: {onReadMore?: () => void}) => {
 
             <Spacer fill />
 
-            <Switch
+            <SettingsSwitch
               value={metrics.isEnabled}
               onValueChange={() => (metrics.isEnabled ? metrics.disable() : metrics.enable())}
             />
