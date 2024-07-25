@@ -160,7 +160,7 @@ export const TxHistoryNavigator = () => {
                     }}
                   />
 
-                  <Stack.Screen name="tx-details" options={{title: ''}}>
+                  <Stack.Screen name="tx-details">
                     {() => (
                       <Boundary loading={{size: 'full'}}>
                         <TxDetails />

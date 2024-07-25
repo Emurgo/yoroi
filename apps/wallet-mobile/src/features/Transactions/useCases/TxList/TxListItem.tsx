@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation} from '@react-navigation/native'
 import {isNonNullable} from '@yoroi/common'
-import {infoExtractName} from '@yoroi/portfolio'
+import {infoExtractName, isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
@@ -28,7 +28,7 @@ import {useCurrencyPairing} from '../../../Settings/Currency'
 import {usePrivacyMode} from '../../../Settings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from '../../common/strings'
-import {useTxFilter} from './TxFilter'
+import {useTxFilter} from './TxFilterProvider'
 
 type Props = {
   transaction: TransactionInfo
@@ -44,7 +44,7 @@ export const TxListItem = ({transaction}: Props) => {
   const tokenInfo =
     wallet.balances.records.get(tokenId ?? wallet.portfolioPrimaryTokenInfo.id)?.info ??
     wallet.portfolioPrimaryTokenInfo
-  const isDefault = tokenInfo.id === wallet.portfolioPrimaryTokenInfo.id
+  const isDefault = isPrimaryToken(tokenInfo)
 
   const intl = useIntl()
 

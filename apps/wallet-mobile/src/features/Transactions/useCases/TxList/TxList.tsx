@@ -9,7 +9,7 @@ import {useTransactionInfos} from '../../../../yoroi-wallets/hooks'
 import {TransactionInfo} from '../../../../yoroi-wallets/types'
 import {ShowBuyBanner} from '../../../Exchange/common/ShowBuyBanner/ShowBuyBanner'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
-import {useTxFilter} from './TxFilter'
+import {useTxFilter} from './TxFilterProvider'
 import {TxListItem} from './TxListItem'
 
 type Props = Partial<FlashListProps<TransactionInfo>>

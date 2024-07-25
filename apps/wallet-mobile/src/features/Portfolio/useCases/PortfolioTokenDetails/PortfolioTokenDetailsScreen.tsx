@@ -3,9 +3,10 @@ import * as React from 'react'
 import {Animated, NativeScrollEvent, NativeSyntheticEvent, StyleSheet} from 'react-native'
 
 import {Spacer} from '../../../../components'
+import {SafeArea} from '../../../../components/SafeArea'
 import {Tab, Tabs} from '../../../../components/Tabs'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {TxFilter} from '../../../Transactions/useCases/TxList/TxFilter'
+import {TxFilter} from '../../../Transactions/useCases/TxList/TxFilterProvider'
 import {TxList} from '../../../Transactions/useCases/TxList/TxList'
 import {usePortfolioTokenDetailContext} from '../../common/PortfolioTokenDetailContext'
 import {usePortfolioTokenDetailParams} from '../../common/useNavigateTo'
@@ -71,38 +72,40 @@ export const PortfolioTokenDetailsScreen = () => {
   }, [activeTab, setActiveTab, strings.overview, strings.performance, strings.transactions, styles.tab, styles.tabs])
 
   return (
-    <TxFilter tokenId={tokenId}>
-      <Animated.View style={[styles.tabsSticky, isStickyTab ? styles.tabsStickyActive : styles.tabsStickyInactive]}>
-        {renderTabs}
-      </Animated.View>
+    <SafeArea>
+      <TxFilter tokenId={tokenId}>
+        <Animated.View style={[styles.tabsSticky, isStickyTab ? styles.tabsStickyActive : styles.tabsStickyInactive]}>
+          {renderTabs}
+        </Animated.View>
 
-      <TxList
-        onScroll={onScroll}
-        ListEmptyComponent={<BuyADABanner />}
-        ListHeaderComponent={
-          <>
-            <Animated.View style={styles.header}>
-              <Spacer height={16} />
+        <TxList
+          onScroll={onScroll}
+          ListEmptyComponent={<BuyADABanner />}
+          ListHeaderComponent={
+            <>
+              <Animated.View style={styles.header}>
+                <Spacer height={16} />
 
-              <PortfolioTokenBalance />
+                <PortfolioTokenBalance />
 
-              <Spacer height={16} />
+                <Spacer height={16} />
 
-              <PortfolioTokenChart />
+                <PortfolioTokenChart />
 
-              <Spacer height={16} />
-            </Animated.View>
+                <Spacer height={16} />
+              </Animated.View>
 
-            <Animated.View>{renderTabs}</Animated.View>
+              <Animated.View>{renderTabs}</Animated.View>
 
-            <PortfolioTokenInfo />
-          </>
-        }
-        {...(activeTab !== 'transactions' && {data: []})}
-      />
+              <PortfolioTokenInfo />
+            </>
+          }
+          {...(activeTab !== 'transactions' && {data: []})}
+        />
 
-      <PortfolioTokenAction />
-    </TxFilter>
+        <PortfolioTokenAction />
+      </TxFilter>
+    </SafeArea>
   )
 }
 
