@@ -38,6 +38,11 @@ const getName = (token: Balance.TokenInfo | DefaultAsset | Portfolio.Token.Info)
   if ('kind' in token || 'type' in token) {
     return token.name || token.ticker || token.fingerprint || ''
   }
+
+  if ('metadata' in token && 'ticker' in token.metadata) {
+    return token.metadata.ticker
+  }
+
   return (
     token.metadata.longName ||
     decodeHexAscii(token.metadata.assetName) ||
@@ -108,6 +113,10 @@ export const formatTokenWithText = (
       token.ticker || token.name || token.fingerprint,
       maxLength,
     )}`
+  }
+
+  if ('metadata' in token && 'ticker' in token.metadata) {
+    return `${formatTokenAmount(quantity, token)} ${truncateWithEllipsis(token.metadata.ticker, maxLength)}`
   }
 
   return `${formatTokenAmount(quantity, token)} ${truncateWithEllipsis(getName(token), maxLength)}`
