@@ -110,7 +110,7 @@ export const EditSlippageScreen = () => {
               autoFocus={isInputEnabled}
               style={[styles.input, !isSelectedChoiceManual && {backgroundColor: colors.background}]}
               keyboardType="numeric"
-              selectionColor={colors.text}
+              selectionColor={colors.cursor}
               right={<Text style={styles.percentLabel}>%</Text>}
               helper={
                 isSelectedChoiceManual && !hasError ? (
@@ -212,7 +212,7 @@ const useStyles = () => {
 
   const colors = {
     background: color.gray_c100,
-    text: color.gray_c900,
+    cursor: color.text_gray_normal,
   }
 
   return {styles, colors}
