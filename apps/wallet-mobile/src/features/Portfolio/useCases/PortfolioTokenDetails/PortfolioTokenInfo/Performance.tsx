@@ -142,7 +142,6 @@ const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     scrollView: {
-      ...atoms.px_lg,
       ...atoms.flex_1,
     },
     container: {
