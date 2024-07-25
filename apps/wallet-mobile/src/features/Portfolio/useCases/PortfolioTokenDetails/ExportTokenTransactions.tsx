@@ -3,13 +3,15 @@ import React from 'react'
 import {StyleSheet, TouchableOpacity} from 'react-native'
 
 import {Icon} from '../../../../components/Icon'
+import {features} from '../../..'
 import {usePortfolioTokenDetailContext} from '../../common/PortfolioTokenDetailContext'
 
 const ExportTokenTransactions = () => {
   const {styles, colors} = useStyles()
   const {activeTab} = usePortfolioTokenDetailContext()
 
-  if (activeTab !== 'transactions') return null
+  if (!features.portfolioExport || activeTab !== 'transactions') return null
+
   return (
     <TouchableOpacity style={styles.button}>
       <Icon.Export size={32} color={colors.primary} />
