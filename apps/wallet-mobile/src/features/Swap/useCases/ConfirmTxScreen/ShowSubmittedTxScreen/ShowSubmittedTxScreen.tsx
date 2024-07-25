@@ -34,7 +34,7 @@ export const ShowSubmittedTxScreen = () => {
   }
 
   return (
-    <SafeAreaView style={{flex: 1}} edges={['left', 'right', 'bottom']}>
+    <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
       <View style={styles.container}>
         <SubmittedTxImage />
 
@@ -69,6 +69,10 @@ export const ShowSubmittedTxScreen = () => {
 const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
+    root: {
+      backgroundColor: color.bg_color_high,
+      flex: 1,
+    },
     bottomFixed: {
       position: 'absolute',
       bottom: 0,
