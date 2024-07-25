@@ -3,7 +3,7 @@ import {Chain} from '@yoroi/types'
 import React from 'react'
 import {FlatList, StyleSheet} from 'react-native'
 
-import {isProduction} from '../../../kernel/env'
+import {isDev} from '../../../kernel/env'
 import {useSelectedNetwork} from '../../WalletManager/common/hooks/useSelectedNetwork'
 import {useAutomaticWalletOpener} from '../../WalletManager/context/AutomaticWalletOpeningProvider'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
@@ -31,7 +31,7 @@ export const NetworkPickerList = () => {
     navigateTo.preparingNetworks(network)
   }
 
-  const data = Object.values(networkConfigs).filter(({network}) => !(network === Chain.Network.Sancho && isProduction))
+  const data = Object.values(networkConfigs).filter(({network}) => !(network === Chain.Network.Sancho && !isDev))
 
   return (
     <FlatList
