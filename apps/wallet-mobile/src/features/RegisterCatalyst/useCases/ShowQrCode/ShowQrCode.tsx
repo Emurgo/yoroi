@@ -11,7 +11,7 @@ import {useAllowScreenshot} from '../../../../hooks/useAllowScreenShot'
 import {useCopy} from '../../../../hooks/useCopy'
 import {useBlockGoBack} from '../../../../kernel/navigation'
 import {useNavigateTo} from '../../CatalystNavigator'
-import {Actions, Description, Stepper} from '../../common/components'
+import {Actions, Description} from '../../common/components'
 import {useStrings} from '../../common/strings'
 
 export const QrCode = () => {
@@ -34,9 +34,7 @@ export const QrCode = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-      <Stepper currentStep={4} totalSteps={4} title={strings.step4Title} />
-
-      <ScrollView bounces={false}>
+      <ScrollView bounces={false} contentContainerStyle={styles.scroll}>
         <ShareQRCodeCard
           title={strings.step4QrTitle}
           content={votingKeyEncrypted}
@@ -67,6 +65,8 @@ const useStyles = () => {
     safeAreaView: {
       backgroundColor: color.bg_color_high,
       ...atoms.flex_1,
+    },
+    scroll: {
       ...atoms.px_lg,
     },
     checkbox: {

@@ -256,7 +256,7 @@
   },
   {
     "id": "components.catalyst.step4.description",
-    "defaultMessage": "!!!Screenshot or share this QR code and save it securely. Save the secret code as plain text in case you need to recreate the QR code.",
+    "defaultMessage": "!!!Screenshot and send the QR code to another device, then scan it with the Catalyst app. Alternatively, copy and paste the hash code into the app. Ensure you save both codes securely as they cannot be retrieved later.",
     "file": "src/features/RegisterCatalyst/common/strings.ts",
     "start": {
       "line": 124,
@@ -266,7 +266,7 @@
     "end": {
       "line": 128,
       "column": 3,
-      "index": 5513
+      "index": 5597
     }
   },
   {
@@ -276,12 +276,12 @@
     "start": {
       "line": 129,
       "column": 14,
-      "index": 5529
+      "index": 5613
     },
     "end": {
       "line": 132,
       "column": 3,
-      "index": 5617
+      "index": 5701
     }
   },
   {
@@ -291,12 +291,12 @@
     "start": {
       "line": 133,
       "column": 16,
-      "index": 5635
+      "index": 5719
     },
     "end": {
       "line": 136,
       "column": 3,
-      "index": 5732
+      "index": 5816
     }
   },
   {
@@ -306,12 +306,12 @@
     "start": {
       "line": 137,
       "column": 21,
-      "index": 5755
+      "index": 5839
     },
     "end": {
       "line": 140,
       "column": 3,
-      "index": 5847
+      "index": 5931
     }
   },
   {
@@ -321,12 +321,12 @@
     "start": {
       "line": 141,
       "column": 21,
-      "index": 5870
+      "index": 5954
     },
     "end": {
       "line": 144,
       "column": 3,
-      "index": 5963
+      "index": 6047
     }
   },
   {
@@ -336,12 +336,12 @@
     "start": {
       "line": 145,
       "column": 19,
-      "index": 5984
+      "index": 6068
     },
     "end": {
       "line": 148,
       "column": 3,
-      "index": 6151
+      "index": 6235
     }
   }
 ]

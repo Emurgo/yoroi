@@ -124,7 +124,7 @@ const messages = defineMessages({
   step4Description: {
     id: 'components.catalyst.step4.description',
     defaultMessage:
-      '!!!Screenshot or share this QR code and save it securely. Save the secret code as plain text in case you need to recreate the QR code.',
+      '!!!Screenshot and send the QR code to another device, then scan it with the Catalyst app. Alternatively, copy and paste the hash code into the app. Ensure you save both codes securely as they cannot be retrieved later.',
   },
   step4Title: {
     id: 'components.catalyst.step4.title',
