@@ -1,5 +1,5 @@
 import {useTheme} from '@yoroi/theme'
-import {Chain, Network} from '@yoroi/types'
+import {Chain} from '@yoroi/types'
 import React from 'react'
 import {FlatList, StyleSheet} from 'react-native'
 
@@ -31,9 +31,7 @@ export const NetworkPickerList = () => {
     navigateTo.preparingNetworks(network)
   }
 
-  const data = Object.entries(networkConfigs).filter(([network]) =>
-    filter(network as Chain.SupportedNetworks),
-  ) as Array<[Chain.SupportedNetworks, Readonly<Network.Config>]>
+  const data = entriesFromObject(networkConfigs).filter(([network]) => filter(network as Chain.SupportedNetworks))
 
   return (
     <FlatList
@@ -66,4 +64,12 @@ const useStyles = () => {
   })
 
   return {styles}
+}
+
+type Entries<T> = {
+  [K in keyof T]: [K, T[K]]
+}[keyof T][]
+
+function entriesFromObject<T extends object>(object: T): Entries<T> {
+  return Object.entries(object) as Entries<T>
 }
