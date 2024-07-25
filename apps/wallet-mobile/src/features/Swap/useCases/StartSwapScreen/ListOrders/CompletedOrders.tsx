@@ -110,7 +110,7 @@ export const CompletedOrders = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const transactionsInfos = useTransactionInfos(wallet)
+  const transactionsInfos = useTransactionInfos({wallet})
   const completeOrders = findCompletedOrderTx(Object.values(transactionsInfos))
   const tokenIds = React.useMemo(
     () => _.uniq(completeOrders?.flatMap((o) => [o.metadata.sellTokenId, o.metadata.buyTokenId])),

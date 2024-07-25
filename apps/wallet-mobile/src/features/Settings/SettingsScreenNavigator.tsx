@@ -5,8 +5,9 @@ import {useTheme} from '@yoroi/theme'
 import {TransferProvider} from '@yoroi/transfer'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
+import {TouchableOpacity} from 'react-native'
 
-import {Boundary} from '../../components'
+import {Boundary, Icon} from '../../components'
 import globalMessages from '../../kernel/i18n/global-messages'
 import {useMetrics} from '../../kernel/metrics/metricsManager'
 import {
@@ -21,6 +22,9 @@ import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet
 import {About} from './About'
 import {ApplicationSettingsScreen} from './ApplicationSettings'
 import {ChangeLanguageScreen} from './ChangeLanguage'
+import {ChangeNetworkScreen, useHandleOpenNetworkNoticeModal} from './ChangeNetwork/ChangeNetworkScreen'
+import {NetworkTag} from './ChangeNetwork/NetworkTag'
+import {PreparingNetworkScreen} from './ChangeNetwork/PreparingNetworkScreen'
 import {ChangePasswordScreen} from './ChangePassword'
 import {ChangeThemeScreen} from './ChangeTheme/ChangeThemeScreen'
 import {ChangeCurrencyScreen} from './Currency/ChangeCurrencyScreen'
@@ -43,6 +47,7 @@ export const SettingsScreenNavigator = () => {
   const {wallet} = useSelectedWallet()
   const {track} = useMetrics()
   const {atoms, color} = useTheme()
+  const {handleOpenModal} = useHandleOpenNetworkNoticeModal()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -74,7 +79,9 @@ export const SettingsScreenNavigator = () => {
         <Stack.Screen //
           name="main-settings"
           component={SettingsTabNavigator}
-          options={{title: strings.settingsTitle}}
+          options={{
+            title: strings.settingsTitle,
+          }}
         />
 
         <Stack.Screen
@@ -126,6 +133,28 @@ export const SettingsScreenNavigator = () => {
           component={ChangeThemeScreen}
           options={{
             title: strings.themeTitle,
+          }}
+        />
+
+        <Stack.Screen //
+          name="change-network"
+          component={ChangeNetworkScreen}
+          options={{
+            title: strings.networkTitle,
+            headerTitle: ({children}) => <NetworkTag disabled>{children}</NetworkTag>,
+            headerRight: () => (
+              <TouchableOpacity onPress={handleOpenModal} activeOpacity={0.5}>
+                <Icon.Info size={24} color={color.gray_c900} style={{...atoms.px_lg}} />
+              </TouchableOpacity>
+            ),
+          }}
+        />
+
+        <Stack.Screen //
+          name="preparing-network"
+          component={PreparingNetworkScreen}
+          options={{
+            headerShown: false,
           }}
         />
 
@@ -295,6 +324,10 @@ const messages = defineMessages({
     id: 'components.settings.changeThemescreen.title',
     defaultMessage: '!!!Theming',
   },
+  networkTitle: {
+    id: 'components.settings.changeNetworkScreen.title',
+    defaultMessage: '!!!Network',
+  },
   appSettingsTitle: {
     id: 'components.settings.applicationsettingsscreen.appSettingsTitle',
     defaultMessage: '!!!App settings',
@@ -341,5 +374,6 @@ const useStrings = () => {
     termsOfServiceTitle: intl.formatMessage(messages.termsOfServiceTitle),
     themeTitle: intl.formatMessage(messages.themeTitle),
     walletTabTitle: intl.formatMessage(messages.walletTabTitle),
+    networkTitle: intl.formatMessage(messages.networkTitle),
   }
 }

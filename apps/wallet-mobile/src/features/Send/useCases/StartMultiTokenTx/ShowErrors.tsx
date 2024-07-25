@@ -9,7 +9,7 @@ export const ShowErrors = () => {
   const strings = useStrings()
 
   const {wallet} = useSelectedWallet()
-  const hasPendingTx = useHasPendingTx(wallet)
+  const hasPendingTx = useHasPendingTx({wallet})
   const {isLoading, error, sync} = useSync(wallet)
 
   if (error != null && !isLoading) {

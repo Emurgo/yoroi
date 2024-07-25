@@ -12,7 +12,7 @@ import {
   walletManagerInitialContext,
   walletManagerReducer,
   WalletManagerState,
-} from './state'
+} from './WalletManagerState'
 
 const WalletManagerContext = React.createContext<WalletManagerContextType>(walletManagerInitialContext)
 
@@ -38,6 +38,23 @@ export const WalletManagerProvider: React.FC<
       dispatch({type: WalletManagerActionType.SelectedMetaUpdated, metas}),
   }).current
 
+  const setWalletSelected = React.useCallback(
+    (walletId: YoroiWallet['id'] | null) => {
+      if (walletId == null) {
+        actions.walletSelected({wallet: null, meta: null})
+        return
+      }
+      const wallet = walletManager.getWalletById(walletId)
+      const meta = walletManager.getWalletMetaById(walletId)
+      if (wallet == null || meta == null) {
+        logger.error('WalletManagerProvider: wallet or meta selected not found', {walletId})
+        return
+      }
+      actions.walletSelected({wallet, meta})
+    },
+    [actions, walletManager],
+  )
+
   React.useEffect(() => {
     // sync, it doesn't wait for the login
     walletManager.startSyncing()
@@ -45,22 +62,12 @@ export const WalletManagerProvider: React.FC<
   }, [walletManager])
 
   React.useEffect(() => {
-    // selected wallet
+    // selected wallet: wallet id changed
     const subSelectedWalletId = walletManager.selectedWalletId$.subscribe((id) => {
-      if (id == null) {
-        actions.walletSelected({wallet: null, meta: null})
-        return
-      }
-      const wallet = walletManager.getWalletById(id)
-      const meta = walletManager.getWalletMetaById(id)
-      if (wallet == null || meta == null) {
-        logger.error('WalletManagerProvider: wallet or meta selected not found', {id})
-        return
-      }
-      actions.walletSelected({wallet, meta})
+      setWalletSelected(id)
     })
     return () => subSelectedWalletId.unsubscribe()
-  }, [actions, walletManager])
+  }, [actions, setWalletSelected, walletManager])
 
   React.useEffect(() => {
     // meta
@@ -74,9 +81,13 @@ export const WalletManagerProvider: React.FC<
     // selected network
     const subSelectedNetwork = walletManager.selectedNetwork$.subscribe((network) => {
       actions.networkSelected(network)
+
+      // NOTE: when switching networks the wallets are recreated, therefore is needed to refresh from manager into state again
+      const selectedWalletId = state.selected.wallet?.id ?? null
+      setWalletSelected(selectedWalletId)
     })
     return () => subSelectedNetwork.unsubscribe()
-  }, [actions, walletManager])
+  }, [actions, setWalletSelected, state.selected.wallet?.id, walletManager])
 
   const context = React.useMemo(() => ({...state, walletManager}), [state, walletManager])
 
@@ -92,11 +103,10 @@ export const useWalletManager = () => {
     throw error
   }
 
-  return React.useMemo(
-    () => ({
+  return React.useMemo(() => {
+    return {
       selected,
       walletManager,
-    }),
-    [selected, walletManager],
-  )
+    }
+  }, [selected, walletManager])
 }

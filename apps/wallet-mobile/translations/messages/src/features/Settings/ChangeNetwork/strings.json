@@ -1,0 +1,92 @@
+[
+  {
+    "id": "components.settings.applicationsettingsscreen.network.notice.title",
+    "defaultMessage": "!!!What are the test networks?",
+    "file": "src/features/Settings/ChangeNetwork/strings.ts",
+    "start": {
+      "line": 20,
+      "column": 22,
+      "index": 759
+    },
+    "end": {
+      "line": 23,
+      "column": 3,
+      "index": 896
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.network.notice.message",
+    "defaultMessage": "!!!The test networks serve as a platform for the community and developers to test products and experiments without risking real funds on the mainnet.",
+    "file": "src/features/Settings/ChangeNetwork/strings.ts",
+    "start": {
+      "line": 24,
+      "column": 24,
+      "index": 922
+    },
+    "end": {
+      "line": 28,
+      "column": 3,
+      "index": 1186
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.network.notice.listTitle",
+    "defaultMessage": "!!!Key features of testnet coins:",
+    "file": "src/features/Settings/ChangeNetwork/strings.ts",
+    "start": {
+      "line": 29,
+      "column": 26,
+      "index": 1214
+    },
+    "end": {
+      "line": 32,
+      "column": 3,
+      "index": 1358
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.network.notice.list",
+    "defaultMessage": "!!!  •  Have no real value.\n  •  Are separate from the mainnet.\n  •  Cannot be sent to mainnet wallets.\n  •  Are easily obtainable from Cardano faucets.",
+    "file": "src/features/Settings/ChangeNetwork/strings.ts",
+    "start": {
+      "line": 33,
+      "column": 21,
+      "index": 1381
+    },
+    "end": {
+      "line": 37,
+      "column": 3,
+      "index": 1648
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.network.preparingNetworks",
+    "defaultMessage": "!!!Preparing network...",
+    "file": "src/features/Settings/ChangeNetwork/strings.ts",
+    "start": {
+      "line": 38,
+      "column": 20,
+      "index": 1670
+    },
+    "end": {
+      "line": 41,
+      "column": 3,
+      "index": 1805
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.network.notice.button",
+    "defaultMessage": "!!!I understand",
+    "file": "src/features/Settings/ChangeNetwork/strings.ts",
+    "start": {
+      "line": 42,
+      "column": 23,
+      "index": 1830
+    },
+    "end": {
+      "line": 45,
+      "column": 3,
+      "index": 1953
+    }
+  }
+]

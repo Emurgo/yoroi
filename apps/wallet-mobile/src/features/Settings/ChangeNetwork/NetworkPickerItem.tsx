@@ -1,36 +1,34 @@
-import {SupportedThemes, useTheme} from '@yoroi/theme'
+import {useTheme} from '@yoroi/theme'
+import {Chain, Network} from '@yoroi/types'
 import React from 'react'
-import {useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Icon} from '../../../components/Icon'
 import {Text} from '../../../components/Text'
-import {themeNames} from '../../../kernel/i18n/global-messages'
-import {useThemeStorageMaker} from '../../../yoroi-wallets/hooks'
 
 type Props = {
-  title: SupportedThemes
-  selectTheme: (name: SupportedThemes) => void
-  setLocalTheme: (name: SupportedThemes) => void
+  name: Readonly<Network.Config['name']>
+  itemNetwork: Chain.SupportedNetworks
+  selectedNetwork: Chain.SupportedNetworks
+  onSelectNetwork: (network: Chain.SupportedNetworks) => void
 }
 
-export const ThemePickerItem = ({title, selectTheme, setLocalTheme}: Props) => {
+export const NetworkPickerItem = ({name, itemNetwork, selectedNetwork, onSelectNetwork}: Props) => {
   const {colors} = useStyles()
-  const strings = useStrings()
-  const themeStorage = useThemeStorageMaker()
 
-  const handleSelectTheme = (theme: SupportedThemes) => {
-    setLocalTheme(theme)
-    selectTheme(theme)
-  }
   return (
-    <TouchableOpacity activeOpacity={0.5} onPress={() => handleSelectTheme(title)}>
+    <TouchableOpacity
+      activeOpacity={0.5}
+      onPress={() => {
+        onSelectNetwork(itemNetwork)
+      }}
+    >
       <Row>
         <Description>
-          <Title>{strings.translateThemeName(title)}</Title>
+          <Title>{name}</Title>
         </Description>
 
-        <Selected>{themeStorage.read() === title && <Icon.Check size={24} color={colors.checkIcon} />}</Selected>
+        <Selected>{itemNetwork === selectedNetwork && <Icon.Check size={24} color={colors.checkIcon} />}</Selected>
       </Row>
     </TouchableOpacity>
   )
@@ -80,12 +78,4 @@ const useStyles = () => {
     checkIcon: color.primary_c600,
   }
   return {styles, colors}
-}
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    translateThemeName: (theme: SupportedThemes) => intl.formatMessage(themeNames[theme]),
-  }
 }

@@ -1,3 +1,4 @@
+import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
 import * as React from 'react'
@@ -16,6 +17,7 @@ import {
 } from '../../../SetupWallet/illustrations/ChevronRight'
 import {useSelectedNetwork} from '../../common/hooks/useSelectedNetwork'
 import {useSyncWalletInfo} from '../../common/hooks/useSyncWalletInfo'
+import {useAutomaticWalletOpener} from '../../context/AutomaticWalletOpeningProvider'
 import {useWalletManager} from '../../context/WalletManagerProvider'
 
 type Props = {
@@ -28,16 +30,34 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
 
   const [isButtonPressed, setIsButtonPressed] = React.useState(false)
   const implementationName = React.useMemo(() => getImplementationName(walletMeta), [walletMeta])
+  const {
+    selected: {meta},
+    walletManager,
+  } = useWalletManager()
+  const {shouldOpen: shouldAutomaticWalletOpen, setShouldOpen: setShouldAutomaticWalletOpen} =
+    useAutomaticWalletOpener()
+
+  const isSelected = meta?.id === walletMeta.id
 
   const {network} = useSelectedNetwork()
   const syncWalletInfo = useSyncWalletInfo(walletMeta.id)
   const hasSyncedLastSelectedNetwork = network === syncWalletInfo?.network
 
-  const {
-    selected: {meta},
-    walletManager,
-  } = useWalletManager()
-  const isSelected = meta?.id === walletMeta.id
+  useFocusEffect(
+    React.useCallback(() => {
+      if (shouldAutomaticWalletOpen && isSelected && hasSyncedLastSelectedNetwork) {
+        onPress(walletMeta)
+        setShouldAutomaticWalletOpen(false)
+      }
+    }, [
+      hasSyncedLastSelectedNetwork,
+      isSelected,
+      onPress,
+      setShouldAutomaticWalletOpen,
+      shouldAutomaticWalletOpen,
+      walletMeta,
+    ]),
+  )
 
   // NOTE: dev only - temporary to show Product
   const handleOnDeleteWallet = () => {

@@ -58,6 +58,7 @@ import {HardwareWallet} from './HardwareWallet'
 import {Image} from './Image'
 import {Info} from './Info'
 import {InfoCircle} from './InfoCircle'
+import {Language} from './Language'
 import {Launchpad} from './Launchpad'
 import {Lightning} from './Lightning'
 import {Link} from './Link'
@@ -175,6 +176,7 @@ export const Icon = {
   HardwareWallet,
   Image,
   Info,
+  Language,
   Launchpad,
   Lightning,
   Link,

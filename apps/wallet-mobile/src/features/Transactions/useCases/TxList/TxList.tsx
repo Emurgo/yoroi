@@ -18,7 +18,7 @@ export const TxList = (props: Props) => {
   const {wallet} = useSelectedWallet()
 
   const filter = useTxFilter()
-  const transactions = useTransactionInfos(wallet)
+  const transactions = useTransactionInfos({wallet})
   const filteredTransactions = React.useMemo(() => filterTransactions(transactions, filter), [transactions, filter])
 
   const [loadedTxs, setLoadedTxs] = React.useState(filteredTransactions.slice(0, batchSize))

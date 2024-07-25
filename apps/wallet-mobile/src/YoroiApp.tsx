@@ -14,6 +14,7 @@ import {ErrorBoundary} from './components/ErrorBoundary'
 import {AuthProvider} from './features/Auth/AuthProvider'
 import {BrowserProvider} from './features/Discover/common/BrowserProvider'
 import {CurrencyProvider} from './features/Settings/Currency/CurrencyContext'
+import {AutomaticWalletOpenerProvider} from './features/WalletManager/context/AutomaticWalletOpeningProvider'
 import {WalletManagerProvider} from './features/WalletManager/context/WalletManagerProvider'
 import {walletManager} from './features/WalletManager/wallet-manager'
 import {InitApp} from './InitApp'
@@ -59,7 +60,9 @@ const Yoroi = () => {
                           <SetupWalletProvider>
                             <PoolTransitionProvider>
                               <BrowserProvider>
-                                <InitApp />
+                                <AutomaticWalletOpenerProvider>
+                                  <InitApp />
+                                </AutomaticWalletOpenerProvider>
                               </BrowserProvider>
                             </PoolTransitionProvider>
                           </SetupWalletProvider>

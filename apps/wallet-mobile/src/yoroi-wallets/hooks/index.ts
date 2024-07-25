@@ -464,8 +464,9 @@ export const useSignTxWithHW = (
   }
 }
 
-export const useTransactionInfos = (wallet: YoroiWallet) => {
+export const useTransactionInfos = ({wallet}: {wallet: YoroiWallet}) => {
   const [transactionInfos, setTransactionInfos] = React.useState(() => wallet.transactions)
+
   React.useEffect(() => {
     const unsubscribe = wallet.subscribe((event) => {
       if (event.type !== 'transactions') return
@@ -478,8 +479,8 @@ export const useTransactionInfos = (wallet: YoroiWallet) => {
   return transactionInfos
 }
 
-export const useHasPendingTx = (wallet: YoroiWallet) => {
-  const transactionInfos = useTransactionInfos(wallet)
+export const useHasPendingTx = ({wallet}: {wallet: YoroiWallet}) => {
+  const transactionInfos = useTransactionInfos({wallet})
 
   return Object.values(transactionInfos).some(
     (transactionInfo) =>

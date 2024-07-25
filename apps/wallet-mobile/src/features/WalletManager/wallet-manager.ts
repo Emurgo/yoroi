@@ -112,8 +112,10 @@ export class WalletManager {
 
   setSelectedNetwork(network: Chain.SupportedNetworks) {
     logger.debug('WalletManager: setSelectedNetwork new network selected', {network})
-    this.#selectedNetwork$.next(network)
-    this.hydrate({isForced: true}).then(() => this.restartSyncing())
+    this.hydrate({isForced: true, network}).then(() => {
+      this.#selectedNetwork$.next(network)
+      this.restartSyncing()
+    })
   }
 
   get selectedNetwork() {
@@ -316,7 +318,10 @@ export class WalletManager {
    *
    * @returns {Promise<{wallets: YoroiWallet[]; metas: WalletMeta[]}>}
    */
-  async hydrate({isForced = false}: {isForced?: boolean} = {}) {
+  async hydrate({
+    isForced = false,
+    network = this.selectedNetwork,
+  }: {isForced?: boolean; network?: Chain.SupportedNetworks} = {}) {
     const deletedWalletIds = await this.walletIdsMarkedForDeletion()
     const walletIds = await this.#walletsRootStorage
       .getAllKeys()
@@ -336,6 +341,7 @@ export class WalletManager {
             id,
             implementation,
             isForced,
+            network,
           }),
         ),
       )
@@ -455,16 +461,17 @@ export class WalletManager {
     implementation,
     accountVisual = 0,
     isForced = false,
+    network = this.selectedNetwork,
   }: {
     id: YoroiWallet['id']
     implementation: Wallet.Implementation
     accountVisual?: number
     isForced?: boolean
+    network?: Chain.SupportedNetworks
   }): Promise<YoroiWallet> {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (this.#wallets.has(id) && !isForced) return this.#wallets.get(id)!
 
-    const network = this.selectedNetwork
     const walletFactory = getWalletFactory({network, implementation})
 
     const encryptedStorage = makeWalletEncryptedStorage(id)

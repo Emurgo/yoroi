@@ -281,6 +281,8 @@ storiesOf('Icon', module).add('Gallery', () => {
 
         <Item icon={<Icon.EmptyCheckbox />} title="EmptyCheckbox" />
 
+        <Item icon={<Icon.Language />} title="Language" />
+
         <Item icon={<Icon.MultiParty />} title="MultiParty" />
       </ScrollView>
     </FilterProvider>

@@ -7,7 +7,6 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useModal} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
-import {isProduction} from '../../../../kernel/env'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import {LedgerTransportSwitch} from '../../../../legacy/HW'
@@ -37,26 +36,14 @@ export const ChooseSetupTypeScreen = () => {
     walletImplementationChanged('cardano-cip1852')
     setUpTypeChanged('create')
 
-    if (isProduction) {
-      navigation.navigate('setup-wallet-about-recovery-phase')
-      return
-    }
-
-    // On production the step of network is skipped
-    navigation.navigate('setup-wallet-create-choose-network')
+    navigation.navigate('setup-wallet-about-recovery-phase')
   }
 
   const handleRestore = () => {
     walletImplementationChanged('cardano-cip1852')
     setUpTypeChanged('restore')
 
-    if (isProduction) {
-      navigation.navigate('setup-wallet-restore-choose-mnemonic-type')
-      return
-    }
-
-    // On production the step of network is skipped
-    navigation.navigate('setup-wallet-restore-choose-network')
+    navigation.navigate('setup-wallet-restore-choose-mnemonic-type')
   }
 
   const handleHw = () => {
@@ -80,13 +67,7 @@ export const ChooseSetupTypeScreen = () => {
     walletImplementationChanged('cardano-cip1852')
     setUpTypeChanged('hw')
 
-    if (isProduction) {
-      navigation.navigate('setup-wallet-check-nano-x')
-      return
-    }
-
-    // On production the step of network is skipped
-    navigation.navigate('setup-wallet-restore-choose-network')
+    navigation.navigate('setup-wallet-check-nano-x')
   }
 
   return (

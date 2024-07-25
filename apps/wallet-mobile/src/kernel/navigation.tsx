@@ -11,7 +11,7 @@ import {TransitionPresets} from '@react-navigation/stack'
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack'
 import {isKeyOf} from '@yoroi/common'
 import {Atoms, ThemedPalette, useTheme} from '@yoroi/theme'
-import {Portfolio} from '@yoroi/types'
+import {Chain, Portfolio} from '@yoroi/types'
 import React from 'react'
 import {Dimensions, InteractionManager, Platform, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
@@ -139,8 +139,6 @@ export type WalletStackRouteNavigation = StackNavigationProp<WalletStackRoutes>
 export type WalletInitRoutes = {
   'setup-wallet-choose-setup-type': undefined
   'setup-wallet-choose-setup-type-init': undefined
-  'setup-wallet-create-choose-network': undefined
-  'setup-wallet-restore-choose-network': undefined
   'setup-wallet-restore-choose-mnemonic-type': undefined
   'setup-wallet-details-form': undefined
   'setup-wallet-restore-form': undefined
@@ -252,6 +250,8 @@ export type SettingsStackRoutes = {
   'change-language': undefined
   'change-currency': undefined
   'change-theme': undefined
+  'change-network': undefined
+  'preparing-network': {selectedNetwork: Chain.SupportedNetworks}
   'enable-easy-confirmation': undefined
   'disable-easy-confirmation': undefined
   'change-password': undefined
@@ -551,6 +551,15 @@ export const useWalletNavigation = () => {
         screen: 'settings',
         params: {
           screen: 'main-settings',
+        },
+      })
+    },
+
+    navigateToChangeNetwork: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'settings',
+        params: {
+          screen: 'change-network',
         },
       })
     },
