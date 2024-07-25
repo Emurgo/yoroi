@@ -35,7 +35,6 @@ const getSymbol = (token: Balance.TokenInfo | DefaultAsset) => {
 }
 
 const getName = (token: Balance.TokenInfo | DefaultAsset | Portfolio.Token.Info) => {
-  console.log('token', token)
   if ('kind' in token || 'type' in token) {
     return token.name || token.ticker || token.fingerprint || ''
   }
