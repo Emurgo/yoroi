@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import {useExplorers} from '@yoroi/explorers'
-import {infoExtractName} from '@yoroi/portfolio'
+import {infoExtractName, isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import React, {useState} from 'react'
 import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
@@ -36,18 +35,20 @@ export const Overview = () => {
     }
   }
 
+  if (!tokenInfo) return null
+
   return (
     <View style={styles.scrollView}>
       <Spacer height={8} />
 
       <Accordion label={strings.info} expanded={expanded} onChange={setExpanded} wrapperStyle={styles.container}>
         <View style={styles.tokenInfoContainer}>
-          {tokenInfo?.info ? <TokenInfoIcon info={tokenInfo?.info} imageStyle={styles.tokenLogo} /> : null}
+          <TokenInfoIcon info={tokenInfo.info} imageStyle={styles.tokenLogo} />
 
           <Text style={styles?.tokenName}>{tokenSymbol}</Text>
         </View>
 
-        <Text style={styles.textBody}>{tokenInfo?.info?.description}</Text>
+        <Text style={styles.textBody}>{tokenInfo.info?.description}</Text>
 
         <Spacer height={24} />
 
@@ -56,34 +57,38 @@ export const Overview = () => {
 
           <Spacer height={4} />
 
-          <Text style={styles.textBody}>{tokenInfo?.info?.website ?? '-'}</Text>
+          <Text style={styles.textBody}>{tokenInfo.info?.website ?? '-'}</Text>
         </View>
 
         <Spacer height={24} />
 
-        <View>
-          <Text style={styles.title}>{strings.policyID}</Text>
+        {!isPrimaryToken(tokenInfo.info) && (
+          <>
+            <View>
+              <Text style={styles.title}>{strings.policyID}</Text>
 
-          <Spacer height={4} />
+              <Spacer height={4} />
 
-          <CopyButton value={policyId ?? ''} style={styles.copyButton}>
-            <Text style={styles.copyText}>{policyId || '--'}</Text>
-          </CopyButton>
-        </View>
+              <CopyButton value={policyId ?? ''} style={styles.copyButton}>
+                <Text style={styles.copyText}>{policyId ?? '--'}</Text>
+              </CopyButton>
+            </View>
 
-        <Spacer height={24} />
+            <Spacer height={24} />
 
-        <View>
-          <Text style={styles.title}>{strings.fingerprint}</Text>
+            <View>
+              <Text style={styles.title}>{strings.fingerprint}</Text>
 
-          <Spacer height={4} />
+              <Spacer height={4} />
 
-          <CopyButton value={tokenInfo?.info?.fingerprint ?? ''} style={styles.copyButton}>
-            <Text style={styles.copyText}>{tokenInfo?.info?.fingerprint || '--'}</Text>
-          </CopyButton>
-        </View>
+              <CopyButton value={tokenInfo.info?.fingerprint ?? ''} style={styles.copyButton}>
+                <Text style={styles.copyText}>{tokenInfo.info?.fingerprint ?? '--'}</Text>
+              </CopyButton>
+            </View>
 
-        <Spacer height={24} />
+            <Spacer height={24} />
+          </>
+        )}
 
         <View>
           <Text style={styles.title}>{strings.detailsOn}</Text>
