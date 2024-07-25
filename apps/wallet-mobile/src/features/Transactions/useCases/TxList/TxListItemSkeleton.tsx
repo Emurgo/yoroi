@@ -3,7 +3,7 @@ import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
-export const TransactionItemSkeleton = () => {
+export const TxListItemSkeleton = () => {
   const {color, styles} = useStyles()
   return (
     <View style={styles.root}>

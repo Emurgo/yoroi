@@ -3,16 +3,19 @@ import * as React from 'react'
 import {Animated, NativeScrollEvent, NativeSyntheticEvent, StyleSheet} from 'react-native'
 
 import {Spacer} from '../../../../components'
+import {SafeArea} from '../../../../components/SafeArea'
 import {Tab, Tabs} from '../../../../components/Tabs'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
+import {TxFilter} from '../../../Transactions/useCases/TxList/TxFilterProvider'
+import {TxList} from '../../../Transactions/useCases/TxList/TxList'
 import {usePortfolioTokenDetailContext} from '../../common/PortfolioTokenDetailContext'
+import {usePortfolioTokenDetailParams} from '../../common/useNavigateTo'
 import {useStrings} from '../../common/useStrings'
+import {BuyADABanner} from '../PortfolioDashboard/DashboardTokensList/BuyADABanner/BuyADABanner'
 import {PortfolioTokenAction} from './PortfolioTokenAction'
 import {PortfolioTokenBalance} from './PortfolioTokenBalance/PortfolioTokenBalance'
 import {PortfolioTokenChart} from './PortfolioTokenChart/PortfolioTokenChart'
-import {PortfolioTokenDetailLayout} from './PortfolioTokenDetailLayout'
 import {PortfolioTokenInfo} from './PortfolioTokenInfo/PortfolioTokenInfo'
-import {useTokenDetailTransactions} from './PortfolioTokenInfo/Transactions'
 
 const HEADER_HEIGHT = 304
 
@@ -30,15 +33,12 @@ export const PortfolioTokenDetailsScreen = () => {
   const {activeTab, setActiveTab} = usePortfolioTokenDetailContext()
   const {track} = useMetrics()
   const [isStickyTab, setIsStickyTab] = React.useState(false)
+  const {id: tokenId} = usePortfolioTokenDetailParams()
 
   const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const offsetY = e.nativeEvent.contentOffset.y
     setIsStickyTab(offsetY > HEADER_HEIGHT)
   }
-
-  const {getSectionListProps, loadingView} = useTokenDetailTransactions({
-    active: activeTab === 'transactions',
-  })
 
   React.useEffect(() => {
     track.portfolioTokenDetails({token_details_tab: tabs[activeTab]})
@@ -72,37 +72,40 @@ export const PortfolioTokenDetailsScreen = () => {
   }, [activeTab, setActiveTab, strings.overview, strings.performance, strings.transactions, styles.tab, styles.tabs])
 
   return (
-    <PortfolioTokenDetailLayout
-      topContent={
+    <SafeArea>
+      <TxFilter tokenId={tokenId}>
         <Animated.View style={[styles.tabsSticky, isStickyTab ? styles.tabsStickyActive : styles.tabsStickyInactive]}>
           {renderTabs}
         </Animated.View>
-      }
-      onScroll={onScroll}
-      ListHeaderComponent={
-        <>
-          <Animated.View style={styles.header}>
-            <Spacer height={16} />
 
-            <PortfolioTokenBalance />
+        <TxList
+          onScroll={onScroll}
+          ListEmptyComponent={<BuyADABanner />}
+          ListHeaderComponent={
+            <>
+              <Animated.View style={styles.header}>
+                <Spacer height={16} />
 
-            <Spacer height={16} />
+                <PortfolioTokenBalance />
 
-            <PortfolioTokenChart />
+                <Spacer height={16} />
 
-            <Spacer height={16} />
-          </Animated.View>
+                <PortfolioTokenChart />
 
-          <Animated.View>{renderTabs}</Animated.View>
+                <Spacer height={16} />
+              </Animated.View>
 
-          <PortfolioTokenInfo />
-        </>
-      }
-      ListFooterComponent={loadingView}
-      {...getSectionListProps}
-    >
-      <PortfolioTokenAction />
-    </PortfolioTokenDetailLayout>
+              <Animated.View>{renderTabs}</Animated.View>
+
+              <PortfolioTokenInfo />
+            </>
+          }
+          {...(activeTab !== 'transactions' && {data: []})}
+        />
+
+        <PortfolioTokenAction />
+      </TxFilter>
+    </SafeArea>
   )
 }
 
@@ -112,7 +115,6 @@ const useStyles = () => {
     header: {
       overflow: 'hidden',
       height: HEADER_HEIGHT,
-      ...atoms.px_lg,
     },
     tabsSticky: {
       position: 'absolute',
