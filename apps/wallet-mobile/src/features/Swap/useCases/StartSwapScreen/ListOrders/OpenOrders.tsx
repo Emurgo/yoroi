@@ -62,7 +62,7 @@ export const OpenOrders = () => {
   const orders = useSwapOrdersByStatusOpen()
   const {numberLocale} = useLanguage()
   const tokenIds = React.useMemo(() => _.uniq(orders?.flatMap((o) => [o.from.tokenId, o.to.tokenId])), [orders])
-  const transactionsInfos = useTransactionInfos()
+  const transactionsInfos = useTransactionInfos({wallet})
   const explorers = useExplorers(wallet.networkManager.network)
   // TODO: revisit
   const tokenInfos = useTokenInfos({wallet, tokenIds}) as unknown as Portfolio.Token.Info[]

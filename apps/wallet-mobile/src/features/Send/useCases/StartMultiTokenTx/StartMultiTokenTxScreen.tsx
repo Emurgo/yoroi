@@ -37,7 +37,7 @@ export const StartMultiTokenTxScreen = () => {
     track.sendInitiated()
   }, [track])
 
-  const hasPendingTx = useHasPendingTx()
+  const hasPendingTx = useHasPendingTx({wallet})
   const isOnline = useIsOnline(wallet)
 
   const {targets, selectedTargetIndex, memo, memoChanged, receiverResolveChanged} = useTransfer()

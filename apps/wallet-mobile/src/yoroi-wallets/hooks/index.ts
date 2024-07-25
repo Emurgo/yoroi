@@ -20,7 +20,6 @@ import {
 } from 'react-query'
 
 import {useSelectedNetwork} from '../../features/WalletManager/common/hooks/useSelectedNetwork'
-import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {isDev, isNightly} from '../../kernel/env'
 import {logger} from '../../kernel/logger/logger'
 import {deriveAddressFromXPub} from '../cardano/account-manager/derive-address-from-xpub'
@@ -465,9 +464,7 @@ export const useSignTxWithHW = (
   }
 }
 
-export const useTransactionInfos = () => {
-  const {wallet} = useSelectedWallet()
-
+export const useTransactionInfos = ({wallet}: {wallet: YoroiWallet}) => {
   const [transactionInfos, setTransactionInfos] = React.useState(() => wallet.transactions)
 
   React.useEffect(() => {
@@ -482,8 +479,8 @@ export const useTransactionInfos = () => {
   return transactionInfos
 }
 
-export const useHasPendingTx = () => {
-  const transactionInfos = useTransactionInfos()
+export const useHasPendingTx = ({wallet}: {wallet: YoroiWallet}) => {
+  const transactionInfos = useTransactionInfos({wallet})
 
   return Object.values(transactionInfos).some(
     (transactionInfo) =>

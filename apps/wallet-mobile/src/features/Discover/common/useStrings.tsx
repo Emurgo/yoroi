@@ -37,6 +37,16 @@ export const useStrings = () => {
     signTransaction: intl.formatMessage(txLabels.signTransaction),
     signDataNotSupported: intl.formatMessage(messages.signDataNotSupported),
     continueOnLedger: intl.formatMessage(ledgerMessages.continueOnLedger),
+    transactionReview: intl.formatMessage(messages.transactionReview),
+    inputs: intl.formatMessage(messages.inputs),
+    outputs: intl.formatMessage(messages.outputs),
+    transactionIdCopied: intl.formatMessage(messages.transactionIdCopied),
+    addressCopied: intl.formatMessage(messages.addressCopied),
+    yourAddress: intl.formatMessage(messages.yourAddress),
+    externalAddress: intl.formatMessage(messages.externalAddress),
+    fee: intl.formatMessage(messages.fee),
+    signData: intl.formatMessage(messages.signData),
+    signMessage: intl.formatMessage(messages.signMessage),
   }).current
 }
 
@@ -155,6 +165,46 @@ export const messages = Object.freeze(
     signDataNotSupported: {
       id: 'discover.ledger.signDataNotSupported',
       defaultMessage: '!!!The Ledger Cardano app does not support data signing at this moment.',
+    },
+    transactionReview: {
+      id: 'discover.reviewTransaction.transactionReview',
+      defaultMessage: '!!!Transaction review',
+    },
+    inputs: {
+      id: 'discover.reviewTransaction.inputs',
+      defaultMessage: '!!!Inputs',
+    },
+    outputs: {
+      id: 'discover.reviewTransaction.outputs',
+      defaultMessage: '!!!Outputs',
+    },
+    transactionIdCopied: {
+      id: 'discover.reviewTransaction.transactionIdCopied',
+      defaultMessage: '!!!Transaction ID copied',
+    },
+    addressCopied: {
+      id: 'discover.reviewTransaction.addressCopied',
+      defaultMessage: '!!!Address copied',
+    },
+    yourAddress: {
+      id: 'discover.reviewTransaction.yourAddress',
+      defaultMessage: '!!!Your address',
+    },
+    externalAddress: {
+      id: 'discover.reviewTransaction.externalAddress',
+      defaultMessage: '!!!Foreign address',
+    },
+    fee: {
+      id: 'discover.reviewTransaction.fee',
+      defaultMessage: '!!!Transaction fee',
+    },
+    signData: {
+      id: 'discover.reviewTransaction.signData',
+      defaultMessage: '!!!Sign data',
+    },
+    signMessage: {
+      id: 'discover.reviewTransaction.signMessage',
+      defaultMessage: '!!!Sign message',
     },
   }),
 )

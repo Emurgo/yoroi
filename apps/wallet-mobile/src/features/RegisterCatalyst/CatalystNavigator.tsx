@@ -75,7 +75,7 @@ export const CatalystNavigator = () => {
           </Stack.Screen>
 
           {/* STEP 4 */}
-          <Stack.Screen component={QrCode} name="qr-code" options={{...navigationOptions, headerLeft: () => null}} />
+          <Stack.Screen component={QrCode} name="qr-code" />
         </Stack.Group>
       </Stack.Navigator>
     </CatalystProvider>

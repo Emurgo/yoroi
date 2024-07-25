@@ -12,7 +12,6 @@ import {DiscoverNavigator} from './features/Discover'
 import {ShowExchangeResultOrderScreen} from './features/Exchange/useCases/ShowExchangeResultOrderScreen/ShowExchangeResultOrderScreen'
 import {useLinksRequestAction} from './features/Links/common/useLinksRequestAction'
 import {useLinksShowActionResult} from './features/Links/common/useLinksShowActionResult'
-import {TxHistoryNavigator} from './features/ListTxHistory/TxHistoryNavigator'
 import {MenuNavigator} from './features/Menu'
 import {PortfolioNavigator} from './features/Portfolio/PortfolioNavigator'
 import {CatalystNavigator} from './features/RegisterCatalyst'
@@ -21,8 +20,8 @@ import {SettingsScreenNavigator} from './features/Settings'
 import {SetupWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
 import {GovernanceNavigator} from './features/Staking/Governance'
 import {ToggleAnalyticsSettingsNavigator} from './features/ToggleAnalyticsSettings'
+import {TxHistoryNavigator} from './features/Transactions/TxHistoryNavigator'
 import {SelectWalletFromList} from './features/WalletManager/useCases/SelectWalletFromListScreen/SelectWalletFromListScreen'
-import {dappExplorerEnabled} from './kernel/config'
 import {useMetrics} from './kernel/metrics/metricsManager'
 import {
   defaultStackNavigationOptions,
@@ -123,34 +122,20 @@ const WalletTabNavigator = () => {
           )}
         </Tab.Screen>
 
-        {dappExplorerEnabled ? (
-          <Tab.Screen
-            name="discover"
-            options={{
-              tabBarIcon: ({focused}) => <Icon.Discover size={28} color={focused ? colors.active : colors.inactive} />,
-              tabBarLabel: strings.discoverTabBarLabel,
-              tabBarTestID: 'discoverTabBarButton',
-            }}
-          >
-            {() => (
-              <SearchProvider>
-                <DiscoverNavigator />
-              </SearchProvider>
-            )}
-          </Tab.Screen>
-        ) : (
-          <Tab.Screen
-            name="staking-dashboard"
-            component={DashboardNavigator}
-            options={{
-              tabBarIcon: ({focused}) => (
-                <Icon.TabStaking size={24} color={focused ? colors.active : colors.inactive} />
-              ),
-              tabBarLabel: strings.stakingButton,
-              tabBarTestID: 'stakingTabBarButton',
-            }}
-          />
-        )}
+        <Tab.Screen
+          name="discover"
+          options={{
+            tabBarIcon: ({focused}) => <Icon.Discover size={28} color={focused ? colors.active : colors.inactive} />,
+            tabBarLabel: strings.discoverTabBarLabel,
+            tabBarTestID: 'discoverTabBarButton',
+          }}
+        >
+          {() => (
+            <SearchProvider>
+              <DiscoverNavigator />
+            </SearchProvider>
+          )}
+        </Tab.Screen>
 
         <Tab.Screen
           name="menu"

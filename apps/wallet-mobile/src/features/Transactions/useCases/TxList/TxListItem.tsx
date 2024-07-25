@@ -1,53 +1,62 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation} from '@react-navigation/native'
 import {isNonNullable} from '@yoroi/common'
+import {infoExtractName, isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
+import {Portfolio} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, View, ViewProps} from 'react-native'
 
-import {Boundary, ResetError} from '../../../../../components'
-import {Icon} from '../../../../../components/Icon'
-import {styleMap} from '../../../../../components/Icon/Direction'
-import {BalanceError} from '../../../../../components/PairedBalance/PairedBalance'
-import {TxHistoryRouteNavigation} from '../../../../../kernel/navigation'
-import {MultiToken} from '../../../../../yoroi-wallets/cardano/MultiToken'
-import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
-import {TransactionInfo} from '../../../../../yoroi-wallets/types'
-import {asQuantity} from '../../../../../yoroi-wallets/utils'
+import {Boundary, ResetError} from '../../../../components'
+import {Icon} from '../../../../components/Icon'
+import {styleMap} from '../../../../components/Icon/Direction'
+import {BalanceError} from '../../../../components/PairedBalance/PairedBalance'
+import {TxHistoryRouteNavigation} from '../../../../kernel/navigation'
+import {MultiToken} from '../../../../yoroi-wallets/cardano/MultiToken'
+import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
+import {TransactionInfo} from '../../../../yoroi-wallets/types'
+import {asQuantity} from '../../../../yoroi-wallets/utils'
 import {
   formatDateRelative,
   formatTime,
   formatTokenFractional,
   formatTokenInteger,
-} from '../../../../../yoroi-wallets/utils/format'
-import {useCurrencyPairing} from '../../../../Settings/Currency'
-import {usePrivacyMode} from '../../../../Settings/PrivacyMode/PrivacyMode'
-import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
-import {useStrings} from '../../../common/strings'
+} from '../../../../yoroi-wallets/utils/format'
+import {useCurrencyPairing} from '../../../Settings/Currency'
+import {usePrivacyMode} from '../../../Settings/PrivacyMode/PrivacyMode'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {useStrings} from '../../common/strings'
+import {useTxFilter} from './TxFilterProvider'
 
 type Props = {
   transaction: TransactionInfo
 }
 
-export const TxHistoryListItem = ({transaction}: Props) => {
+export const TxListItem = ({transaction}: Props) => {
   const strings = useStrings()
   const {styles} = useStyles()
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const {color} = useTheme()
-
   const {wallet} = useSelectedWallet()
+  const {tokenId} = useTxFilter()
+  const tokenInfo =
+    wallet.balances.records.get(tokenId ?? wallet.portfolioPrimaryTokenInfo.id)?.info ??
+    wallet.portfolioPrimaryTokenInfo
+  const isDefault = isPrimaryToken(tokenInfo)
+
   const intl = useIntl()
 
-  const showDetails = () => navigation.navigate('history-details', {id: transaction.id})
+  const showDetails = () => navigation.navigate('tx-details', {id: transaction.id})
   const submittedAt = isNonNullable(transaction.submittedAt)
     ? `${formatDateRelative(transaction.submittedAt, intl) + ', ' + formatTime(transaction.submittedAt, intl)}`
     : ''
 
   const amountAsMT = MultiToken.fromArray(transaction.amount)
-  const amount: BigNumber = amountAsMT.getDefault()
+  const amount: BigNumber = isDefault ? amountAsMT.getDefault() : amountAsMT.get(tokenInfo.id) ?? new BigNumber(0)
 
+  const assetLength = transaction.delta.filter(({amount}) => amount !== '0').length
   return (
     <TouchableOpacity onPress={showDetails} activeOpacity={0.5} testID="txHistoryListItem" style={styles.item}>
       <Left>
@@ -69,13 +78,17 @@ export const TxHistoryListItem = ({transaction}: Props) => {
 
       <Right>
         {transaction.amount.length > 0 ? (
-          <Amount wallet={wallet} amount={amount} />
+          <Amount amount={amount} tokenInfo={tokenInfo} />
         ) : (
           <Text style={styles.amount}>- -</Text>
         )}
 
         <Row>
-          <PairedPrice txId={transaction.id} wallet={wallet} amount={amount} />
+          {isDefault ? (
+            <PairedPrice txId={transaction.id} wallet={wallet} amount={amount} />
+          ) : (
+            <Text style={styles.pair}>{`${assetLength} ${strings.assets(assetLength)}`}</Text>
+          )}
         </Row>
       </Right>
     </TouchableOpacity>
@@ -90,23 +103,19 @@ const Middle = ({style, ...props}: ViewProps) => (
   <View style={[style, {flex: 1, justifyContent: 'center', padding: 4}]} {...props} />
 )
 const Right = ({style, ...props}: ViewProps) => <View style={[style, {padding: 4}]} {...props} />
-const Amount = ({wallet, amount}: {wallet: YoroiWallet; amount: BigNumber}) => {
+const Amount = ({amount, tokenInfo}: {amount: BigNumber; tokenInfo: Portfolio.Token.Info}) => {
   const {styles} = useStyles()
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
 
   return (
     <View style={styles.amountContainer} testID="transactionAmount">
-      <Text style={styles.amount}>
-        {!isPrivacyActive && formatTokenInteger(asQuantity(amount), wallet.portfolioPrimaryTokenInfo, true)}
-      </Text>
+      <Text style={styles.amount}>{!isPrivacyActive && formatTokenInteger(asQuantity(amount), tokenInfo, true)}</Text>
 
       <Text style={styles.amount}>
-        {!isPrivacyActive
-          ? formatTokenFractional(asQuantity(amount), wallet.portfolioPrimaryTokenInfo)
-          : privacyPlaceholder}
+        {!isPrivacyActive ? formatTokenFractional(asQuantity(amount), tokenInfo) : privacyPlaceholder}
       </Text>
 
-      <Text style={styles.amount}>{` ${wallet.primaryTokenInfo.name}`}</Text>
+      <Text style={styles.amount}>{` ${infoExtractName(tokenInfo) ?? ''}`}</Text>
     </View>
   )
 }

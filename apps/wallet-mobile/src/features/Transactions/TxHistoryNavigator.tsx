@@ -61,8 +61,8 @@ import {
 import {SelectBuyTokenFromListScreen} from '../Swap/useCases/StartSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
 import {SelectSellTokenFromListScreen} from '../Swap/useCases/StartSwapScreen/CreateOrder/EditSellAmount/SelectSellTokenFromListScreen/SelectSellTokenFromListScreen'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
-import {TxHistory} from './useCases/ListTxHistory/TxHistory'
-import {TxDetails} from './useCases/ShowTxDetails'
+import {TxDetails} from './useCases/TxDetails'
+import {TxHistory} from './useCases/TxHistory/TxHistory'
 
 const aggregator: Swap.Aggregator = 'muesliswap'
 
@@ -162,7 +162,7 @@ export const TxHistoryNavigator = () => {
                     }}
                   />
 
-                  <Stack.Screen name="history-details" options={{title: ''}}>
+                  <Stack.Screen name="tx-details">
                     {() => (
                       <Boundary loading={{size: 'full'}}>
                         <TxDetails />
