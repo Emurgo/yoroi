@@ -391,7 +391,7 @@ const useStyles = () => {
       paddingBottom: 30,
     },
     suggestionMessage: {
-      color: color.text_error,
+      color: color.text_gray_normal,
       ...atoms.body_1_lg_regular,
       ...atoms.text_center,
     },
