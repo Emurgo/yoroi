@@ -6,12 +6,8 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Spacer} from '../../../../../components'
 import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
-import {CurrencySymbol} from '../../../../../yoroi-wallets/types'
-import {useCurrencyPairing} from '../../../../Settings/Currency'
 import {PnlTag} from '../../../common/PnlTag/PnlTag'
-import {usePortfolio} from '../../../common/PortfolioProvider'
 import {TokenInfoIcon} from '../../../common/TokenAmountItem/TokenInfoIcon'
-import {useGetQuantityChange} from '../../../common/useGetQuantityChange'
 import {useNavigateTo} from '../../../common/useNavigateTo'
 import {useQuantityChange} from '../../../common/useQuantityChange'
 
@@ -24,14 +20,10 @@ export const TokenBalanceItem = ({amount}: Props) => {
   const {info, quantity} = amount
   const name = infoExtractName(info)
   const symbol = infoExtractName(info, {mode: 'currency'})
-  const quantityChangeData = useGetQuantityChange({name, quantity})
-  const {previousQuantity} = quantityChangeData ?? {}
+  // TODO
+  const previousQuantity = quantity
   const {variantPnl, quantityChangePercent} = useQuantityChange({decimals: info.decimals, quantity, previousQuantity})
   const balanceFormatted = amountBreakdown(amount).bn.toFormat(2)
-
-  const {isPrimaryTokenActive} = usePortfolio()
-  const {currency} = useCurrencyPairing()
-  const currencyPaired = isPrimaryTokenActive ? 'ADA' : currency
 
   return (
     <TouchableOpacity onPress={() => navigationTo.tokenDetail({id: info.id})} style={styles.root}>
@@ -54,12 +46,7 @@ export const TokenBalanceItem = ({amount}: Props) => {
       <View>
         <Text style={styles.tokenBalance}>{`${balanceFormatted} ${symbol}`}</Text>
 
-        <PairedBalance
-          isHidePairPrimaryToken={false}
-          currency={currencyPaired as CurrencySymbol}
-          amount={amount}
-          textStyle={styles.pairedBalance}
-        />
+        <PairedBalance isHidePairPrimaryToken={false} amount={amount} textStyle={styles.pairedBalance} />
       </View>
     </TouchableOpacity>
   )
