@@ -1,3 +1,4 @@
+// TODO: API pending. Does previousQuantity need and separate call?
 import {useQuery, UseQueryOptions} from 'react-query'
 
 type QuantityChange = {

@@ -32,7 +32,6 @@ export const BalanceCard = () => {
         <LinearGradient style={styles.gradientRoot} colors={colors.gradientColor}>
           <BalanceCardContent
             amount={primaryBalance}
-            name={name}
             headerCard={<BalanceHeaderCard rate={price} name={name} hasDApps={hasDApps} />}
           />
         </LinearGradient>

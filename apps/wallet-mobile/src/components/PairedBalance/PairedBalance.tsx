@@ -1,4 +1,4 @@
-import {amountBreakdown} from '@yoroi/portfolio'
+import {amountBreakdown, isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
@@ -50,9 +50,10 @@ const Price = ({amount, textStyle, ignorePrivacy, currency}: Props & Required<Pi
     config,
     adaPrice: {price: rate},
   } = useCurrencyPairing()
-
   const price = React.useMemo(() => {
     if (rate == null) return `... ${currency}`
+    // Hide pairing when amount is not primary token, until general pricing api is available
+    if (!isPrimaryToken(amount.info)) return ''
 
     return !isPrivacyActive || ignorePrivacy === true
       ? `${amountBreakdown(amount).bn.times(rate).toFormat(config.decimals)} ${currency}`

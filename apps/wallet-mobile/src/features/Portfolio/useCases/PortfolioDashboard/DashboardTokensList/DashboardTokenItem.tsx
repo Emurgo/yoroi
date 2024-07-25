@@ -10,7 +10,6 @@ import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalan
 import {usePrivacyMode} from '../../../../Settings/PrivacyMode/PrivacyMode'
 import {PnlTag} from '../../../common/PnlTag/PnlTag'
 import {TokenInfoIcon} from '../../../common/TokenAmountItem/TokenInfoIcon'
-import {useGetQuantityChange} from '../../../common/useGetQuantityChange'
 import {useNavigateTo} from '../../../common/useNavigateTo'
 import {useQuantityChange} from '../../../common/useQuantityChange'
 
@@ -23,9 +22,8 @@ export const DashboardTokenItem = ({tokenInfo}: Props) => {
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
 
   const {info, quantity} = tokenInfo ?? {}
-  const name = infoExtractName(info, {mode: 'currency'})
-  const quantityChangeData = useGetQuantityChange({name, quantity})
-  const {previousQuantity} = quantityChangeData ?? {}
+  // TODO
+  const previousQuantity = quantity
   const formattedQuantity = isPrivacyActive === false ? amountBreakdown(tokenInfo).bn.toFormat(2) : privacyPlaceholder
   const {quantityChangePercent, variantPnl} = useQuantityChange({previousQuantity, quantity, decimals: info.decimals})
 

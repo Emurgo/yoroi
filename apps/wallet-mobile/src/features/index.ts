@@ -13,6 +13,7 @@ export const features = {
   portfolioPerformance: false,
   portfolioGraph: false,
   portfolioNews: false,
+  portfolioExport: false,
 }
 
 export const debugWalletInfo = {

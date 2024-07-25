@@ -19,13 +19,11 @@ export const ChooseBiometricLoginScreen = () => {
   const {setScreenShown, isLoading: isScreenShownLoading} = useSetScreenShown()
 
   const {enableAuthWithOs, isLoading} = useEnableAuthWithOs({
-    onSuccess: () => {
-      setScreenShown()
-    },
+    onSuccess: () => setScreenShown(),
   })
 
   return (
-    <SafeAreaView edges={['left', 'right', 'top', 'bottom']} style={styles.root}>
+    <SafeAreaView style={styles.root}>
       <View style={styles.content}>
         <View style={styles.illustration}>
           <Biometric />
@@ -39,13 +37,15 @@ export const ChooseBiometricLoginScreen = () => {
       <View>
         <Button
           title={strings.ignoreButton}
-          outline
+          withoutBackground
           textStyles={styles.textOutlineButton}
           onPress={() => {
             setScreenShown()
           }}
           disabled={isLoading}
         />
+
+        <Space height="sm" />
 
         <Button
           title={strings.enableButton}
@@ -63,7 +63,6 @@ export const ChooseBiometricLoginScreen = () => {
                   },
                 ],
               )
-
               return
             }
 
@@ -71,8 +70,6 @@ export const ChooseBiometricLoginScreen = () => {
           }}
           disabled={isLoading || isScreenShownLoading}
         />
-
-        <Space height="sm" />
       </View>
     </SafeAreaView>
   )
@@ -82,25 +79,30 @@ const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      flex: 1,
-      backgroundColor: color.bg_color_high,
+      ...atoms.flex_1,
       ...atoms.px_lg,
+      ...atoms.pb_lg,
+      backgroundColor: color.bg_color_high,
     },
     content: {
-      flex: 1,
-      justifyContent: 'center',
+      ...atoms.flex_1,
+      ...atoms.justify_center,
     },
     illustration: {
-      alignItems: 'center',
+      ...atoms.align_center,
     },
     biometricDescription: {
+      color: color.text_gray_max,
       ...atoms.heading_3_medium,
-      color: color.gray_cmax,
-      textAlign: 'center',
+      ...atoms.text_center,
       ...atoms.px_lg,
     },
-    textOutlineButton: {color: color.gray_c900},
-    enableButton: {backgroundColor: color.primary_c500},
+    textOutlineButton: {
+      color: color.text_gray_max,
+    },
+    enableButton: {
+      backgroundColor: color.primary_c500,
+    },
   })
 
   return {styles} as const
