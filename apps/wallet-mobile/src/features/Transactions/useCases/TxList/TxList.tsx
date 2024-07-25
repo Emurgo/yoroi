@@ -24,12 +24,6 @@ export const TxList = (props: Props) => {
   const [loadedTxs, setLoadedTxs] = React.useState(filteredTransactions.slice(0, batchSize))
   const [currentIndex, setCurrentIndex] = React.useState(batchSize)
 
-  React.useEffect(() => {
-    const newTxs = filteredTransactions.slice(0, batchSize)
-    setLoadedTxs(newTxs)
-    setCurrentIndex(batchSize)
-  }, [filteredTransactions])
-
   const handleOnEndReached = React.useCallback(() => {
     if (currentIndex >= filteredTransactions.length) return
     const nextBatch = filteredTransactions.slice(currentIndex, currentIndex + batchSize)
