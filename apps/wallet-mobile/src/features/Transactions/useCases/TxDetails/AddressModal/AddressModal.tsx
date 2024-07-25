@@ -4,7 +4,7 @@ import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
 
-import {CopyButton, Spacer, useModal} from '../../../../../components'
+import {CopyButton, Spacer} from '../../../../../components'
 import {ScrollView} from '../../../../../components/ScrollView/ScrollView'
 import {derivationPathManagerMaker} from '../../../../../yoroi-wallets/cardano/derivation-path-manager/derivation-path-manager'
 import {useKeyHashes} from '../../../../../yoroi-wallets/hooks'
@@ -26,7 +26,6 @@ export const AddressModal = ({address, path}: Props) => {
   const strings = useStrings()
   const keyHashes = useKeyHashes({address})
   const {styles} = useStyles()
-  const {closeModal} = useModal()
   const {
     meta: {implementation},
   } = useSelectedWallet()
@@ -49,12 +48,7 @@ export const AddressModal = ({address, path}: Props) => {
 
           <Spacer width={16} />
 
-          <CopyButton
-            value={address}
-            onCopy={() => {
-              setTimeout(closeModal, 1000)
-            }}
-          />
+          <CopyButton value={address} />
         </View>
 
         <Spacer width={8} />
@@ -78,12 +72,7 @@ export const AddressModal = ({address, path}: Props) => {
 
           <Spacer width={16} />
 
-          <CopyButton
-            value={keyHashes?.staking ?? ''}
-            onCopy={() => {
-              setTimeout(closeModal, 1000)
-            }}
-          />
+          <CopyButton value={keyHashes?.staking ?? ''} />
         </View>
 
         <Spacer width={8} />
@@ -95,12 +84,7 @@ export const AddressModal = ({address, path}: Props) => {
 
           <Spacer width={16} />
 
-          <CopyButton
-            value={keyHashes?.spending ?? ''}
-            onCopy={() => {
-              setTimeout(closeModal, 1000)
-            }}
-          />
+          <CopyButton value={keyHashes?.spending ?? ''} />
         </View>
       </View>
     </ScrollView>
