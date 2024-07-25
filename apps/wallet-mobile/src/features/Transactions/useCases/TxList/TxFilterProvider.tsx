@@ -14,5 +14,5 @@ export const TxFilter = ({tokenId, children}: Props) => {
 export const useTxFilter = () => React.useContext(TxFilterContext) ?? {}
 
 type TxFilterContext = {
-  tokenId?: Portfolio.Token.Info['id']
+  tokenId?: Portfolio.Token.Id
 }

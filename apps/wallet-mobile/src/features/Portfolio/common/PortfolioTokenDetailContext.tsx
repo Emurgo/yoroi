@@ -1,5 +1,7 @@
 import React from 'react'
 
+import {features} from '../..'
+
 export type ActiveTab = 'performance' | 'overview' | 'transactions'
 interface TokenDetailContext {
   activeTab: ActiveTab
@@ -19,7 +21,9 @@ export const usePortfolioTokenDetailContext = () => {
 }
 
 export const PortfolioTokenDetailProvider = ({children}: {children: React.ReactNode}) => {
-  const [activeTab, setActiveTab] = React.useState<ActiveTab>('performance')
+  const [activeTab, setActiveTab] = React.useState<ActiveTab>(
+    features.portfolioPerformance ? 'performance' : 'overview',
+  )
   const setActiveTabTx = (value: ActiveTab) => {
     React.startTransition(() => {
       setActiveTab(value)
