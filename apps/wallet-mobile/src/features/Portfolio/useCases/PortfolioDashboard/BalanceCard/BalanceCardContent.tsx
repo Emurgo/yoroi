@@ -9,21 +9,19 @@ import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalan
 import {useCurrencyPairing} from '../../../../Settings/Currency'
 import {usePrivacyMode} from '../../../../Settings/PrivacyMode/PrivacyMode'
 import {PnlTag} from '../../../common/PnlTag/PnlTag'
-import {useGetQuantityChange} from '../../../common/useGetQuantityChange'
 import {useQuantityChange} from '../../../common/useQuantityChange'
 
 type Props = {
   amount: Portfolio.Token.Amount
   headerCard: React.ReactNode
-  name: string
 }
 
-export const BalanceCardContent = ({amount, headerCard, name}: Props) => {
+export const BalanceCardContent = ({amount, headerCard}: Props) => {
   const {styles} = useStyles()
   const {isPrivacyActive, setPrivacyModeOff, setPrivacyModeOn} = usePrivacyMode()
 
-  const quantityChangeData = useGetQuantityChange({name, quantity: amount.quantity})
-  const {previousQuantity} = quantityChangeData ?? {}
+  // TODO
+  const previousQuantity = amount.quantity
 
   const {quantityChange, variantPnl, quantityChangePercent, pairedBalanceChange} = useQuantityChange({
     quantity: amount.quantity,

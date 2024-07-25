@@ -1,4 +1,3 @@
-import {infoExtractName} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
@@ -8,7 +7,6 @@ import {Spacer} from '../../../../../components'
 import {useCurrencyPairing} from '../../../../Settings/Currency'
 import {PnlTag} from '../../../common/PnlTag/PnlTag'
 import {usePortfolio} from '../../../common/PortfolioProvider'
-import {useGetQuantityChange} from '../../../common/useGetQuantityChange'
 import {useQuantityChange} from '../../../common/useQuantityChange'
 import {SkeletonQuantityChange} from './SkeletonQuantityChange'
 import {TokenValueBalance} from './TokenValueBalance'
@@ -21,9 +19,9 @@ type Props = {
 
 export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
   const {styles} = useStyles()
-  const name = infoExtractName(amount.info)
-  const quantityChangeData = useGetQuantityChange({name, quantity: amount.quantity})
-  const {previousQuantity} = quantityChangeData ?? {}
+
+  // TODO
+  const previousQuantity = amount.quantity
   const {
     currency,
     adaPrice: {price},
@@ -36,7 +34,7 @@ export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
     decimals: amount.info.decimals,
   })
 
-  const isFetching = quantityChangeData?.previousQuantity === undefined || price === undefined
+  const isFetching = previousQuantity === undefined || price === undefined
 
   return (
     <View>

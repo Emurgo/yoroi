@@ -47,7 +47,6 @@ export const AggregatedBalance = () => {
         <LinearGradient style={styles.gradientRoot} colors={colors.gradient}>
           <BalanceCardContent
             amount={amount}
-            name={name}
             headerCard={<BalanceHeaderCard rate={price} name={name} hasDApps={false} />}
           />
         </LinearGradient>

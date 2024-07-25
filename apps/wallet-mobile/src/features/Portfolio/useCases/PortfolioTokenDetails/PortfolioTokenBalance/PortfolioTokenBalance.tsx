@@ -1,4 +1,4 @@
-import {amountBreakdown, infoExtractName, isPrimaryToken} from '@yoroi/portfolio'
+import {amountBreakdown, infoExtractName} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
@@ -29,9 +29,7 @@ export const PortfolioTokenBalance = () => {
           <Text style={styles.symbol}>{tokenName}</Text>
         </View>
 
-        {isPrimaryToken(tokenInfo.info) && ( // TODO: Prices other than PT
-          <PairedBalance textStyle={styles.usdLabel} ignorePrivacy amount={tokenInfo} />
-        )}
+        <PairedBalance textStyle={styles.usdLabel} ignorePrivacy amount={tokenInfo} />
       </View>
     </LoadingBoundary>
   )

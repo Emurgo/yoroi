@@ -6,8 +6,6 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Tab, TabPanel, Tabs} from '../../../../components/Tabs'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useSearchOnNavBar} from '../../../Search/SearchContext'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
-import {usePortfolioPrimaryBalance} from '../../common/hooks/usePortfolioPrimaryBalance'
 import {PortfolioProvider} from '../../common/PortfolioProvider'
 import {useGetDAppsPortfolioBalance} from '../../common/useGetDAppsPortfolioBalance'
 import {useStrings} from '../../common/useStrings'
@@ -23,10 +21,9 @@ const tabs: Record<ActiveTab, Tabs> = {
 export const PortfolioTokenListScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
-  const {wallet} = useSelectedWallet()
   const {track} = useMetrics()
-  const primaryBalance = usePortfolioPrimaryBalance({wallet})
-  const dAppsBalance = useGetDAppsPortfolioBalance(primaryBalance.quantity)
+  // TODO: missing dAppsBalance
+  const dAppsBalance = useGetDAppsPortfolioBalance(0n)
   const hasDApps = dAppsBalance !== undefined && Number(dAppsBalance.quantity) > 0
 
   const [activeTab, setActiveTab] = React.useState<'wallet' | 'dapps'>('wallet')
@@ -43,13 +40,13 @@ export const PortfolioTokenListScreen = () => {
   return (
     <PortfolioProvider>
       <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
-        {hasDApps ? (
+        {hasDApps && (
           <Tabs>
             <Tab onPress={() => setActiveTab('wallet')} label={strings.walletToken} active={activeTab === 'wallet'} />
 
             <Tab onPress={() => setActiveTab('dapps')} label={strings.dappsToken} active={activeTab === 'dapps'} />
           </Tabs>
-        ) : null}
+        )}
 
         <TabPanel active={activeTab === 'wallet'}>
           <PortfolioWalletTokenList />
