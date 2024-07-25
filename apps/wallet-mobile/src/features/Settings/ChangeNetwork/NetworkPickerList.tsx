@@ -3,7 +3,7 @@ import {Chain} from '@yoroi/types'
 import React from 'react'
 import {FlatList, StyleSheet} from 'react-native'
 
-import {isNightly} from '../../../kernel/env'
+import {isProduction} from '../../../kernel/env'
 import {useSelectedNetwork} from '../../WalletManager/common/hooks/useSelectedNetwork'
 import {useAutomaticWalletOpener} from '../../WalletManager/context/AutomaticWalletOpeningProvider'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
@@ -31,27 +31,23 @@ export const NetworkPickerList = () => {
     navigateTo.preparingNetworks(network)
   }
 
-  const data = entriesFromObject(networkConfigs).filter(([network]) => filter(network as Chain.SupportedNetworks))
+  const data = Object.values(networkConfigs).filter(({network}) => !(network === Chain.Network.Sancho && isProduction))
 
   return (
     <FlatList
       contentContainerStyle={styles.contentContainer}
       data={data}
-      keyExtractor={([networkKey]) => networkKey}
-      renderItem={({item: [networkKey, {name}]}) => (
+      keyExtractor={(item) => item.network}
+      renderItem={({item}) => (
         <NetworkPickerItem
-          name={name}
+          name={item.name}
           selectedNetwork={localSelectedNetwork}
-          itemNetwork={networkKey}
+          itemNetwork={item.network}
           onSelectNetwork={onSelectNetwork}
         />
       )}
     />
   )
-}
-
-const filter = (network: Chain.SupportedNetworks) => {
-  return !(network === Chain.Network.Sancho && !isNightly)
 }
 
 const useStyles = () => {
@@ -64,12 +60,4 @@ const useStyles = () => {
   })
 
   return {styles}
-}
-
-type Entries<T> = {
-  [K in keyof T]: [K, T[K]]
-}[keyof T][]
-
-function entriesFromObject<T extends object>(object: T): Entries<T> {
-  return Object.entries(object) as Entries<T>
 }
