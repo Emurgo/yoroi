@@ -27,7 +27,7 @@ export const DisplayPin = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-      <Stepper title={strings.step2Title} currentStep={2} totalSteps={4} />
+      <Stepper title={strings.step2Title} currentStep={2} totalSteps={3} />
 
       <ScrollView bounces={false}>
         <Description>{strings.step2Description}</Description>

@@ -63,7 +63,7 @@
   "components.catalyst.step2.checkbox": "I have written it down",
   "components.catalyst.step3.description": "Please enter the PIN as you will need it every time you want to access the Catalyst Voting app",
   "components.catalyst.step3.title": "Enter PIN",
-  "components.catalyst.step4.description": "Screenshot or share this QR code and save it securely. Save the secret code as plain text in case you need to recreate the QR code.",
+  "components.catalyst.step4.description": "Screenshot and send the QR code to another device, then scan it with the Catalyst app. Alternatively, copy and paste the hash code into the app. Ensure you save both codes securely as they cannot be retrieved later.",
   "components.catalyst.step4.title": "Catalyst Code",
   "components.catalyst.step4.qrTitle": "Backup Catalyst Code",
   "components.catalyst.step4.qrShareLabel": "Share Code",

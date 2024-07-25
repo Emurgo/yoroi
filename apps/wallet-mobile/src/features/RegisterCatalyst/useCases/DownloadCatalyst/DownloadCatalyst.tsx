@@ -62,7 +62,7 @@ export const DownloadCatalyst = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-      <Stepper title={strings.title} currentStep={1} totalSteps={4} />
+      <Stepper title={strings.title} currentStep={1} totalSteps={3} />
 
       <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
         <CatalystStep1 />

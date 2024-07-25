@@ -46,7 +46,6 @@ export const ConfirmPin = () => {
 
       switch (currentActivePin) {
         case 1:
-          setPin1Touched(true)
           setPin1Value(key)
           setCurrentActivePin(2)
 
@@ -172,7 +171,7 @@ export const ConfirmPin = () => {
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
       <Padding>
-        <Stepper title={strings.step3Title} currentStep={3} totalSteps={4} />
+        <Stepper title={strings.step3Title} currentStep={3} totalSteps={3} />
       </Padding>
 
       <ScrollView bounces={false} contentContainerStyle={styles.padding}>
