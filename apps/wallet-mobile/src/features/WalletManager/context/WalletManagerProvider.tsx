@@ -82,6 +82,7 @@ export const WalletManagerProvider: React.FC<
     const subSelectedNetwork = walletManager.selectedNetwork$.subscribe((network) => {
       actions.networkSelected(network)
 
+      // NOTE: when switching networks the wallets are recreated, therefore is needed to refresh from manager into state again
       const selectedWalletId = state.selected.wallet?.id ?? null
       setWalletSelected(selectedWalletId)
     })
