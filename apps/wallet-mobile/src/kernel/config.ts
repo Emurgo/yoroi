@@ -4,8 +4,6 @@ import {freeze} from 'immer'
 import {isDev} from './env'
 import {LoggerLevel} from './logger/types'
 
-export const dappExplorerEnabled = isDev
-
 export const governaceAfterBlock = freeze({
   [Chain.Network.Sancho]: 0,
 

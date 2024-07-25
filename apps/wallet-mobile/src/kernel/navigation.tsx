@@ -20,7 +20,6 @@ import {ScanFeature} from '../features/Scan/common/types'
 import {Routes as StakingGovernanceRoutes} from '../features/Staking/Governance/common/navigation'
 import {YoroiUnsignedTx} from '../yoroi-wallets/types'
 import {compareArrays} from '../yoroi-wallets/utils/utils'
-import {dappExplorerEnabled} from './config'
 
 // prettier-ignore
 export const useUnsafeParams = <Params, >() => {
@@ -535,23 +534,10 @@ export const useWalletNavigation = () => {
     },
 
     navigateToStakingDashboard: () => {
-      if (dappExplorerEnabled) {
-        navigation.navigate('manage-wallets', {
-          screen: 'staking-dashboard',
-          params: {
-            screen: 'staking-dashboard-main',
-          },
-        })
-        return
-      }
-
       navigation.navigate('manage-wallets', {
-        screen: 'main-wallet-routes',
+        screen: 'staking-dashboard',
         params: {
-          screen: 'staking-dashboard',
-          params: {
-            screen: 'staking-dashboard-main',
-          },
+          screen: 'staking-dashboard-main',
         },
       })
     },

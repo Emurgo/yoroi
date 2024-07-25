@@ -8,7 +8,6 @@ import {Linking, ScrollView, StyleSheet, TouchableOpacity, useWindowDimensions, 
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Boundary, Icon, Spacer, Text, useModal} from '../../components'
-import {dappExplorerEnabled} from '../../kernel/config'
 import globalMessages from '../../kernel/i18n/global-messages'
 import {useMetrics} from '../../kernel/metrics/metricsManager'
 import {defaultStackNavigationOptions, useWalletNavigation} from '../../kernel/navigation'
@@ -62,14 +61,12 @@ export const Menu = () => {
           left={<Icon.Gear size={24} color={color.gray_c600} />}
         />
 
-        {dappExplorerEnabled && (
-          <Staking
-            label={strings.stakingCenter}
-            onPress={navigateTo.stakingCenter}
-            left={<Icon.TabStaking size={24} color={color.gray_c600} />}
-            right={isPoolRetiring ? <Icon.Warning size={24} color={color.sys_magenta_c500} /> : null}
-          />
-        )}
+        <Staking
+          label={strings.stakingCenter}
+          onPress={navigateTo.stakingCenter}
+          left={<Icon.TabStaking size={24} color={color.gray_c600} />}
+          right={isPoolRetiring ? <Icon.Warning size={24} color={color.sys_magenta_c500} /> : null}
+        />
 
         {isGovernanceFeatureEnabled && (
           <Governance

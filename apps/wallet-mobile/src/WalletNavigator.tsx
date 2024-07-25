@@ -25,7 +25,6 @@ import {ToggleAnalyticsSettingsNavigator} from './features/ToggleAnalyticsSettin
 import {useSelectedNetwork} from './features/WalletManager/common/hooks/useSelectedNetwork'
 import {useWalletManager} from './features/WalletManager/context/WalletManagerProvider'
 import {SelectWalletFromList} from './features/WalletManager/useCases/SelectWalletFromListScreen/SelectWalletFromListScreen'
-import {dappExplorerEnabled} from './kernel/config'
 import {useMetrics} from './kernel/metrics/metricsManager'
 import {
   defaultStackNavigationOptions,
@@ -126,34 +125,20 @@ const WalletTabNavigator = () => {
           )}
         </Tab.Screen>
 
-        {dappExplorerEnabled ? (
-          <Tab.Screen
-            name="discover"
-            options={{
-              tabBarIcon: ({focused}) => <Icon.Discover size={28} color={focused ? colors.active : colors.inactive} />,
-              tabBarLabel: strings.discoverTabBarLabel,
-              tabBarTestID: 'discoverTabBarButton',
-            }}
-          >
-            {() => (
-              <SearchProvider>
-                <DiscoverNavigator />
-              </SearchProvider>
-            )}
-          </Tab.Screen>
-        ) : (
-          <Tab.Screen
-            name="staking-dashboard"
-            component={DashboardNavigator}
-            options={{
-              tabBarIcon: ({focused}) => (
-                <Icon.TabStaking size={24} color={focused ? colors.active : colors.inactive} />
-              ),
-              tabBarLabel: strings.stakingButton,
-              tabBarTestID: 'stakingTabBarButton',
-            }}
-          />
-        )}
+        <Tab.Screen
+          name="discover"
+          options={{
+            tabBarIcon: ({focused}) => <Icon.Discover size={28} color={focused ? colors.active : colors.inactive} />,
+            tabBarLabel: strings.discoverTabBarLabel,
+            tabBarTestID: 'discoverTabBarButton',
+          }}
+        >
+          {() => (
+            <SearchProvider>
+              <DiscoverNavigator />
+            </SearchProvider>
+          )}
+        </Tab.Screen>
 
         <Tab.Screen
           name="menu"
