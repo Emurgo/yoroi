@@ -2,25 +2,25 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Image, StyleSheet, Text, View} from 'react-native'
 
-import {Spacer} from '../../../../../components/Spacer'
-import {useStrings} from '../../../common/strings'
-import image from '../../assets/img/no_transactions.png'
+import image from '../../../../assets/img/no_transactions.png'
+import {Space} from '../../../../components/Space/Space'
+import {useStrings} from '../../common/strings'
 
-export const EmptyHistory = () => {
+export const TxListEmpty = () => {
   const strings = useStrings()
   const styles = useStyles()
 
   return (
     <View style={styles.empty} testID="emptyHistoryComponent">
-      <Spacer height={20} />
+      <Space height="lg" />
 
       <Image style={styles.image} source={image} />
 
-      <Spacer height={20} />
+      <Space height="lg" />
 
       <Text style={styles.emptyText}>{strings.noTransactions}</Text>
 
-      <Spacer height={20} />
+      <Space height="lg" />
     </View>
   )
 }

@@ -21,10 +21,6 @@ export const PortfolioTokenInfo = () => {
         <TabPanel active={activeTab === 'overview'}>
           <Overview />
         </TabPanel>
-
-        {/* <TabPanel active={activeTab === 'transactions'}>
-          <Transactions />
-        </TabPanel> */}
       </TabPanels>
     </View>
   )

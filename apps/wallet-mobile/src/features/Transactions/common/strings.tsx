@@ -1,7 +1,7 @@
 import {ReactNode} from 'react'
 import {defineMessages, MessageDescriptor, useIntl} from 'react-intl'
 
-import globalMessages, {actionMessages, assetMessages, txLabels} from '../../../kernel/i18n/global-messages'
+import globalMessages, {actionMessages, txLabels} from '../../../kernel/i18n/global-messages'
 import {TransactionDirection} from '../../../yoroi-wallets/types'
 import {messages as receiveMessages} from '../../Receive/common/useStrings'
 
@@ -13,7 +13,7 @@ export const useStrings = () => {
     warningTitle: intl.formatMessage(messages.warningTitle),
     warningMessage: intl.formatMessage(messages.message),
     transactions: intl.formatMessage(txLabels.transactions),
-    assets: intl.formatMessage(assetMessages.assets),
+    assets: (qty: number) => intl.formatMessage(globalMessages.assets, {qty}),
     sendLabel: intl.formatMessage(actionMessages.send),
     receiveLabel: intl.formatMessage(actionMessages.receive),
     buyLabel: intl.formatMessage(actionMessages.buy),
