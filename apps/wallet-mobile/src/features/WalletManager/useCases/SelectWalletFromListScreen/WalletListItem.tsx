@@ -8,9 +8,8 @@ import {Swipeable} from 'react-native-gesture-handler'
 import {Icon} from '../../../../components'
 import {Loading} from '../../../../components/Loading/Loading'
 import {Space} from '../../../../components/Space/Space'
-import {isDev} from '../../../../kernel/env'
+import {features} from '../../../../kernel/features'
 import {isByron, isShelley} from '../../../../yoroi-wallets/cardano/utils'
-import {features} from '../../..'
 import {
   ChevronRightDarkIllustration,
   ChevronRightGrayIllustration,
@@ -93,7 +92,10 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
   // ____________________________________________________
 
   return (
-    <Swipeable renderRightActions={(progress) => renderRightActions(progress)} enabled={isDev}>
+    <Swipeable
+      renderRightActions={(progress) => renderRightActions(progress)}
+      enabled={features.walletListSwipeableActions}
+    >
       <View style={styles.item}>
         <TouchableOpacity
           activeOpacity={1}

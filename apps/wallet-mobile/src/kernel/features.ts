@@ -1,19 +1,18 @@
+import {isDev} from './env'
+
 export const features = {
-  txHistory: {
-    export: __DEV__,
-    search: __DEV__,
-    nfts: __DEV__,
-  },
   useTestnet: false,
   prefillWalletInfo: false,
-  showProdPoolsInDev: __DEV__,
+  showProdPoolsInDev: isDev,
   moderatingNftsEnabled: false,
-  walletListFeedback: __DEV__,
   poolTransition: true,
   portfolioPerformance: false,
   portfolioGraph: false,
   portfolioNews: false,
   portfolioExport: false,
+  walletListFeedback: false,
+  walletListAggregatedBalance: false,
+  walletListSwipeableActions: false,
 }
 
 export const debugWalletInfo = {

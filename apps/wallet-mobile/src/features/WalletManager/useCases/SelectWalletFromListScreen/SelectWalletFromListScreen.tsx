@@ -3,12 +3,14 @@ import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
 import * as React from 'react'
-import {Linking, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../../components/Button'
 import {ScrollView, useScrollView} from '../../../../components/ScrollView/ScrollView'
 import {Space} from '../../../../components/Space/Space'
+import {isDev} from '../../../../kernel/env'
+import {features} from '../../../../kernel/features'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../kernel/navigation'
 import {useLinksRequestWallet} from '../../../Links/common/useLinksRequestWallet'
@@ -57,7 +59,7 @@ export const SelectWalletFromList = () => {
 
   return (
     <SafeAreaView style={styles.safeAreaView} edges={['left', 'right', 'bottom']}>
-      <AggregatedBalance />
+      {features.walletListAggregatedBalance && <AggregatedBalance />}
 
       <ScrollView
         ref={scrollViewRef}
@@ -86,11 +88,13 @@ export const SelectWalletFromList = () => {
 
         <AddWalletButton />
 
-        <Space height="md" />
+        {isDev && (
+          <>
+            <Space height="md" />
 
-        <OnlyDevButton />
-
-        {Platform.OS === 'android' && <Space height="lg" />}
+            <OnlyDevButton />
+          </>
+        )}
       </View>
     </SafeAreaView>
   )
@@ -136,8 +140,6 @@ const OnlyDevButton = () => {
   const navigation = useNavigation()
   const {styles} = useStyles()
 
-  if (!__DEV__) return null
-
   return (
     <Button
       testID="btnDevOptions"
@@ -152,7 +154,7 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     safeAreaView: {
-      flex: 1,
+      ...atoms.flex_1,
       backgroundColor: color.bg_color_high,
     },
     topButton: {
@@ -166,9 +168,9 @@ const useStyles = () => {
     },
     link: {
       ...atoms.button_2_md,
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
+      ...atoms.flex_row,
+      ...atoms.justify_center,
+      ...atoms.align_center,
     },
     list: {
       ...atoms.p_lg,

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {features} from '../..'
+import {features} from '../../../kernel/features'
 
 export type ActiveTab = 'performance' | 'overview' | 'transactions'
 interface TokenDetailContext {

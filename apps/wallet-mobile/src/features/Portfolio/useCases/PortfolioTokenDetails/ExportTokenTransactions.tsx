@@ -3,7 +3,7 @@ import React from 'react'
 import {StyleSheet, TouchableOpacity} from 'react-native'
 
 import {Icon} from '../../../../components/Icon'
-import {features} from '../../..'
+import {features} from '../../../../kernel/features'
 import {usePortfolioTokenDetailContext} from '../../common/PortfolioTokenDetailContext'
 
 const ExportTokenTransactions = () => {

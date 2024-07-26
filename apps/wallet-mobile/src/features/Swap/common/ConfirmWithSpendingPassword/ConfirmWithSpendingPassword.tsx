@@ -3,7 +3,7 @@ import React from 'react'
 import {ActivityIndicator, StyleSheet, TextInput as RNTextInput, View} from 'react-native'
 
 import {Button, Spacer, Text, TextInput} from '../../../../components'
-import {debugWalletInfo, features} from '../../../../features'
+import {debugWalletInfo, features} from '../../../../kernel/features'
 import {useStrings} from '../../common/strings'
 import {getErrorMessage} from '../errors'
 

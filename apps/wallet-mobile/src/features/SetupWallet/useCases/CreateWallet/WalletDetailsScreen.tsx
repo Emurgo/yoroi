@@ -25,6 +25,7 @@ import {Button, Icon, KeyboardAvoidingView, TextInput, useModal} from '../../../
 import {Space} from '../../../../components/Space/Space'
 import {StepperProgress} from '../../../../components/StepperProgress/StepperProgress'
 import {showErrorDialog} from '../../../../kernel/dialogs'
+import {debugWalletInfo, features} from '../../../../kernel/features'
 import {errorMessages} from '../../../../kernel/i18n/global-messages'
 import {logger} from '../../../../kernel/logger/logger'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
@@ -36,7 +37,6 @@ import {
   validatePassword,
   validateWalletName,
 } from '../../../../yoroi-wallets/utils'
-import {debugWalletInfo, features} from '../../..'
 import {useCreateWalletMnemonic} from '../../../WalletManager/common/hooks/useCreateWalletMnemonic'
 import {parseWalletMeta} from '../../../WalletManager/common/validators/wallet-meta'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'

@@ -6,12 +6,20 @@
     "start": {
       "line": 191,
       "column": 23,
-      "index": 6272
+<<<<<<< Updated upstream
+      "index": 6261
+=======
+      "index": 6268
+>>>>>>> Stashed changes
     },
     "end": {
       "line": 194,
       "column": 3,
-      "index": 6386
+<<<<<<< Updated upstream
+      "index": 6375
+=======
+      "index": 6382
+>>>>>>> Stashed changes
     }
   },
   {
@@ -21,12 +29,20 @@
     "start": {
       "line": 195,
       "column": 10,
-      "index": 6398
+<<<<<<< Updated upstream
+      "index": 6387
+=======
+      "index": 6394
+>>>>>>> Stashed changes
     },
     "end": {
       "line": 198,
       "column": 3,
-      "index": 6498
+<<<<<<< Updated upstream
+      "index": 6487
+=======
+      "index": 6494
+>>>>>>> Stashed changes
     }
   },
   {
@@ -36,12 +52,20 @@
     "start": {
       "line": 199,
       "column": 22,
-      "index": 6522
+<<<<<<< Updated upstream
+      "index": 6511
+=======
+      "index": 6518
+>>>>>>> Stashed changes
     },
     "end": {
       "line": 202,
       "column": 3,
-      "index": 6692
+<<<<<<< Updated upstream
+      "index": 6681
+=======
+      "index": 6688
+>>>>>>> Stashed changes
     }
   },
   {
@@ -51,12 +75,20 @@
     "start": {
       "line": 203,
       "column": 15,
-      "index": 6709
+<<<<<<< Updated upstream
+      "index": 6698
+=======
+      "index": 6705
+>>>>>>> Stashed changes
     },
     "end": {
       "line": 206,
       "column": 3,
-      "index": 6828
+<<<<<<< Updated upstream
+      "index": 6817
+=======
+      "index": 6824
+>>>>>>> Stashed changes
     }
   }
 ]
