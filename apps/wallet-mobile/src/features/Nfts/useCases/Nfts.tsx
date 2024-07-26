@@ -12,6 +12,7 @@ import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {usePortfolioBalances} from '../../Portfolio/common/hooks/usePortfolioBalances'
 import {MediaGallery} from '../../Portfolio/common/MediaGallery/MediaGallery'
 import {useSearch, useSearchOnNavBar} from '../../Search/SearchContext'
+import {NetworkTag} from '../../Settings/ChangeNetwork/NetworkTag'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useTrackNftGallerySearchActivated} from '../common/filterNfts'
 import {useNavigateTo} from '../common/navigation'
@@ -30,6 +31,7 @@ export const Nfts = () => {
   useSearchOnNavBar({
     title: strings.title,
     placeholder: strings.search,
+    extraNavigationOptions: {headerTitle: ({children}) => <NetworkTag disabled>{children}</NetworkTag>},
   })
   const {search, isSearching} = useSearch()
 

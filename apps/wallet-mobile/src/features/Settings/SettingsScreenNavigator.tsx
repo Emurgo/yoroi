@@ -65,7 +65,9 @@ export const SettingsScreenNavigator = () => {
         <Stack.Screen //
           name="app-settings"
           component={ApplicationSettingsScreen}
-          options={{title: strings.appSettingsTitle}}
+          options={{
+            title: strings.appSettingsTitle,
+          }}
         />
 
         <Stack.Screen name="about" component={About} options={{title: strings.aboutTitle}} />
@@ -81,6 +83,7 @@ export const SettingsScreenNavigator = () => {
           component={SettingsTabNavigator}
           options={{
             title: strings.settingsTitle,
+            headerTitle: ({children}) => <NetworkTag disabled>{children}</NetworkTag>,
           }}
         />
 
@@ -141,7 +144,6 @@ export const SettingsScreenNavigator = () => {
           component={ChangeNetworkScreen}
           options={{
             title: strings.networkTitle,
-            headerTitle: ({children}) => <NetworkTag disabled>{children}</NetworkTag>,
             headerRight: () => (
               <TouchableOpacity onPress={handleOpenModal} activeOpacity={0.5}>
                 <Icon.Info size={24} color={color.gray_c900} style={{...atoms.px_lg}} />

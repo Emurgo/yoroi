@@ -7,6 +7,7 @@ import {ErrorBoundary} from 'react-error-boundary'
 import {LoadingBoundary} from '../../components'
 import {SomethingWentWrong} from '../../components/SomethingWentWrong/SomethingWentWrong'
 import {defaultStackNavigationOptions, DiscoverRoutes} from '../../kernel/navigation'
+import {NetworkTag} from '../Settings/ChangeNetwork/NetworkTag'
 import {BrowserNavigator} from './BrowserNavigator'
 import {useStrings} from './common/useStrings'
 import {ReviewTransaction} from './useCases/ReviewTransaction/ReviewTransaction'
@@ -29,6 +30,7 @@ export const DiscoverNavigator = () => {
           ...defaultStackNavigationOptions(atoms, color),
           headerLeft: () => null,
           gestureEnabled: true,
+          headerTitle: ({children}) => <NetworkTag disabled>{children}</NetworkTag>,
         }}
         initialRouteName="discover-select-dapp-from-list"
       >

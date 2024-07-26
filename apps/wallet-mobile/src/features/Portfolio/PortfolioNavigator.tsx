@@ -6,6 +6,7 @@ import {Boundary} from '../../components'
 import {defaultStackNavigationOptions, Portfolio2Routes} from '../../kernel/navigation'
 import {NftsNavigator} from '../Nfts/NftsNavigator'
 import {SearchProvider} from '../Search/SearchContext'
+import {NetworkTag} from '../Settings/ChangeNetwork/NetworkTag'
 import {TxDetails} from '../Transactions/useCases/TxDetails'
 import {PortfolioTokenDetailProvider} from './common/PortfolioTokenDetailContext'
 import {useStrings} from './common/useStrings'
@@ -22,7 +23,12 @@ export const PortfolioNavigator = () => {
 
   return (
     <PortfolioTokenDetailProvider>
-      <Stack.Navigator screenOptions={defaultStackNavigationOptions(atoms, color)}>
+      <Stack.Navigator
+        screenOptions={{
+          ...defaultStackNavigationOptions(atoms, color),
+          headerTitle: ({children}) => <NetworkTag disabled>{children}</NetworkTag>,
+        }}
+      >
         <Stack.Screen
           name="dashboard-portfolio"
           component={PortfolioDashboardScreen}
@@ -31,8 +37,10 @@ export const PortfolioNavigator = () => {
 
         <Stack.Screen
           name="portfolio-tokens-list"
-          options={{title: strings.tokenList}}
           component={PortfolioTokenListScreen}
+          options={{
+            title: strings.tokenList,
+          }}
         />
 
         <Stack.Screen

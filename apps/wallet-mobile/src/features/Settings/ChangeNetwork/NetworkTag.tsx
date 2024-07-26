@@ -4,31 +4,59 @@ import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Space} from '../../../components/Space/Space'
+import {isDev} from '../../../kernel/env'
 import {useWalletNavigation} from '../../../kernel/navigation'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 import {networkConfigs} from '../../WalletManager/network-manager/network-manager'
 
-export const NetworkTag = ({children, disabled = false}: {children: React.ReactNode; disabled?: boolean}) => {
+export const NetworkTag = ({
+  children,
+  disabled = false,
+  directChangeOnDevActive,
+}: {
+  children: React.ReactNode
+  disabled?: boolean
+  directChangeOnDevActive?: boolean
+}) => {
   const {
     selected: {network},
+    walletManager,
   } = useWalletManager()
   const {navigateToChangeNetwork} = useWalletNavigation()
   const {styles} = useStyles()
 
   const Tag = network === Chain.Network.Sancho ? SanchoTag : network === Chain.Network.Preprod ? PreprodTag : null
 
+  const onPress = () => {
+    if (directChangeOnDevActive && isDev) {
+      const networks: Array<Chain.SupportedNetworks> = [
+        Chain.Network.Mainnet,
+        Chain.Network.Preprod,
+        Chain.Network.Sancho,
+      ]
+      walletManager.setSelectedNetwork(networks[(networks.indexOf(network) + 1) % networks.length])
+      return
+    }
+
+    navigateToChangeNetwork()
+  }
+
   return (
     <TouchableOpacity
       style={styles.headerTitleContainerStyle}
       activeOpacity={0.5}
-      onPress={navigateToChangeNetwork}
-      disabled={disabled}
+      onPress={onPress}
+      disabled={disabled && !directChangeOnDevActive}
     >
       <Text style={styles.headerTitleStyle}>{children}</Text>
 
-      <Space width="sm" />
+      {Tag && (
+        <>
+          <Space width="sm" />
 
-      {Tag && <Tag />}
+          <Tag />
+        </>
+      )}
     </TouchableOpacity>
   )
 }

@@ -17,6 +17,7 @@ import {PortfolioNavigator} from './features/Portfolio/PortfolioNavigator'
 import {CatalystNavigator} from './features/RegisterCatalyst'
 import {SearchProvider} from './features/Search/SearchContext'
 import {SettingsScreenNavigator} from './features/Settings'
+import {NetworkTag} from './features/Settings/ChangeNetwork/NetworkTag'
 import {SetupWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
 import {GovernanceNavigator} from './features/Staking/Governance'
 import {ToggleAnalyticsSettingsNavigator} from './features/ToggleAnalyticsSettings'
@@ -144,6 +145,7 @@ const WalletTabNavigator = () => {
             tabBarIcon: ({focused}) => <Icon.Menu size={28} color={focused ? colors.active : colors.inactive} />,
             tabBarLabel: strings.menuTabBarLabel,
             tabBarTestID: 'menuTabBarButton',
+            headerTitle: ({children}) => <NetworkTag disabled>{children}</NetworkTag>,
           }}
         />
       </Tab.Navigator>
@@ -186,7 +188,14 @@ export const WalletNavigator = () => {
         >
           <Stack.Screen
             name="wallet-selection"
-            options={{title: strings.walletSelectionScreenHeader}}
+            options={{
+              title: strings.walletSelectionScreenHeader,
+              headerTitle: ({children}) => (
+                <NetworkTag disabled directChangeOnDevActive>
+                  {children}
+                </NetworkTag>
+              ),
+            }}
             component={SelectWalletFromList}
           />
 

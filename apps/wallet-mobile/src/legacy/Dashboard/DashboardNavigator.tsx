@@ -6,6 +6,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
 import {SettingsButton} from '../../components/Button'
+import {NetworkTag} from '../../features/Settings/ChangeNetwork/NetworkTag'
 import {useGovernanceManagerMaker} from '../../features/Staking/Governance'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {DashboardRoutes, defaultStackNavigationOptions, useWalletNavigation} from '../../kernel/navigation'
@@ -23,7 +24,12 @@ export const DashboardNavigator = () => {
 
   return (
     <GovernanceProvider manager={manager}>
-      <Stack.Navigator screenOptions={defaultStackNavigationOptions(atoms, color)}>
+      <Stack.Navigator
+        screenOptions={{
+          ...defaultStackNavigationOptions(atoms, color),
+          headerTitle: ({children}) => <NetworkTag disabled>{children}</NetworkTag>,
+        }}
+      >
         <Stack.Screen
           name="staking-dashboard-main"
           component={Dashboard}

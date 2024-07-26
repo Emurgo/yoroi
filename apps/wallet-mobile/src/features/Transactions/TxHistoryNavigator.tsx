@@ -149,6 +149,7 @@ export const TxHistoryNavigator = () => {
                   screenOptions={{
                     ...navigationOptions,
                     gestureEnabled: true,
+                    headerTitle: ({children}) => <NetworkTag disabled>{children}</NetworkTag>,
                   }}
                 >
                   <Stack.Screen
@@ -158,7 +159,6 @@ export const TxHistoryNavigator = () => {
                       title: meta.name,
                       headerTransparent: true,
                       headerRight: headerRightHistory,
-                      headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
                     }}
                   />
 
