@@ -16,7 +16,7 @@ export const PortfolioTokenChart = () => {
 
   const [selectedIndex, setSelectedIndex] = useState(0)
 
-  const [timeInterval, setTimeInterval] = useState<TokenChartTimeInterval>(TOKEN_CHART_TIME_INTERVAL.HOUR)
+  const [timeInterval, setTimeInterval] = useState<TokenChartTimeInterval>(TOKEN_CHART_TIME_INTERVAL.DAY)
 
   const {data, isFetching} = useGetPortfolioTokenChart(timeInterval)
 
@@ -39,7 +39,7 @@ export const PortfolioTokenChart = () => {
       ) : (
         <>
           <TokenPerformance
-            changePercent={tokenPerformance?.changePercentage}
+            changePercent={tokenPerformance?.changePercent}
             value={tokenPerformance?.value}
             changeValue={tokenPerformance?.changeValue}
             timeInterval={timeInterval}

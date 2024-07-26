@@ -93,7 +93,7 @@ const TokenChartComponent = ({dataSources = [], onValueSelected}: Props) => {
 
     const minPrice = Math.min(...valueList)
 
-    const ttWidth = 98 // Width of tooltip
+    const ttWidth = 112 // Width of tooltip
     const ttHeight = 34 // Height of tooltip
     const ttRadius = 8 // Radius of tooltip
 
@@ -115,6 +115,12 @@ const TokenChartComponent = ({dataSources = [], onValueSelected}: Props) => {
       adjustedX = -ttWidth
     }
 
+    let adjustedY = centerY + ttHeight / 2
+
+    if (centerY > ttHeight * 2) {
+      adjustedY = centerY - ttHeight * 1.5
+    }
+
     return (
       <G x={xPosition} key="tooltip">
         <G x={x}>
@@ -122,11 +128,11 @@ const TokenChartComponent = ({dataSources = [], onValueSelected}: Props) => {
           <Line y1={centerY} y2={maxY - 5} stroke={colors.stroke} strokeWidth={2} strokeDasharray={[6, 3]} />
 
           {/* Dot Circle or tooltip */}
-          <Circle cy={centerY} r={8} stroke="#fff" strokeWidth={2} fill={colors.stroke} />
+          <Circle cy={centerY} r={8} fill={colors.stroke} />
         </G>
 
         {/* Tooltip content */}
-        <G x={adjustedX} y={y(minPrice + (ttHeight - 5))}>
+        <G x={adjustedX} y={adjustedY}>
           <Rect y={0} rx={ttRadius} ry={ttRadius} width={ttWidth} height={ttHeight} fill={colors.tooltip} />
 
           <SvgText x={6} y={ttHeight / 2 + 4} fontSize={12} fill={colors.tooltipText}>
@@ -174,7 +180,7 @@ const useStyles = () => {
   const colors = {
     stroke: color.primary_c500,
     tooltip: color.primary_c500,
-    tooltipText: color.primary_c200,
+    tooltipText: color.white_static,
   }
 
   return {styles, colors} as const

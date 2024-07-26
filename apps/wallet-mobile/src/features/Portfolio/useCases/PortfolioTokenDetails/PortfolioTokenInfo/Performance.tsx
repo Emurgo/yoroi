@@ -66,7 +66,7 @@ export const Performance = () => {
       <View style={styles.container}>
         <TextGroup
           loading={isFetching}
-          value={`${value?.market?.change ?? '-/-'} %`}
+          value={`${value?.market?.changePercent ?? '-/-'} %`}
           label={strings.tokenPriceChange}
         />
 

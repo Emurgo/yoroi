@@ -1,7 +1,16 @@
+import {isPrimaryToken} from '@yoroi/portfolio'
 import {useQuery, UseQueryOptions} from 'react-query'
 
+import {time} from '../../../kernel/constants'
+import {getCardanoNetworkConfigById} from '../../../yoroi-wallets/cardano/networks'
+import {fetchAdaPrice} from '../../../yoroi-wallets/cardano/useAdaPrice'
+import {useCurrencyPairing} from '../../Settings/Currency'
+import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
+import {priceChange} from './helpers/priceChange'
+import {usePortfolioTokenDetailParams} from './useNavigateTo'
+
 export const TOKEN_CHART_TIME_INTERVAL = {
-  HOUR: '24 H',
+  DAY: '24 H',
   WEEK: '1 W',
   MONTH: '1 M',
   SIX_MONTHS: '6 M',
@@ -11,16 +20,14 @@ export const TOKEN_CHART_TIME_INTERVAL = {
 
 export type TokenChartTimeInterval = (typeof TOKEN_CHART_TIME_INTERVAL)[keyof typeof TOKEN_CHART_TIME_INTERVAL]
 
-export interface ITokenChartData {
+type TokenChartData = {
   label: string
   value: number
-  changePercentage: number
+  changePercent: number
   changeValue: number
 }
 
-function generateMockChartData(
-  timeInterval: TokenChartTimeInterval = TOKEN_CHART_TIME_INTERVAL.HOUR,
-): ITokenChartData[] {
+function generateMockChartData(timeInterval: TokenChartTimeInterval = TOKEN_CHART_TIME_INTERVAL.DAY): TokenChartData[] {
   const dataPoints = 50
   const startValue = 100
   const volatility = 50
@@ -29,7 +36,7 @@ function generateMockChartData(
 
   function getTimeIncrement(interval: TokenChartTimeInterval): number {
     switch (interval) {
-      case TOKEN_CHART_TIME_INTERVAL.HOUR:
+      case TOKEN_CHART_TIME_INTERVAL.DAY:
         return 60 * 60 * 1000 // 1 hour
       case TOKEN_CHART_TIME_INTERVAL.WEEK:
         return 24 * 60 * 60 * 1000 // 1 day
@@ -45,7 +52,7 @@ function generateMockChartData(
   }
 
   const increment = getTimeIncrement(timeInterval)
-  const chartData: ITokenChartData[] = []
+  const chartData: TokenChartData[] = []
 
   let previousValue = startValue
 
@@ -59,12 +66,12 @@ function generateMockChartData(
       .padStart(2, '0')}`
     const value = i === 0 ? startValue : previousValue + (Math.random() - 0.5) * volatility
     const changeValue = i === 0 ? 0 : value - previousValue
-    const changePercentage = i === 0 ? 0 : (changeValue / previousValue) * 100
+    const changePercent = i === 0 ? 0 : (changeValue / previousValue) * 100
 
     chartData.push({
       label,
       value,
-      changePercentage,
+      changePercent,
       changeValue,
     })
 
@@ -75,26 +82,77 @@ function generateMockChartData(
 }
 
 const useGetPortfolioTokenChart = (
-  timeInterval = TOKEN_CHART_TIME_INTERVAL.HOUR as TokenChartTimeInterval,
+  timeInterval = TOKEN_CHART_TIME_INTERVAL.DAY as TokenChartTimeInterval,
   options: UseQueryOptions<
-    ITokenChartData[],
+    TokenChartData[],
     Error,
-    ITokenChartData[],
-    ['useGetPortfolioTokenChart', TokenChartTimeInterval]
+    TokenChartData[],
+    ['useGetPortfolioTokenChart', string, TokenChartTimeInterval]
   > = {},
 ) => {
-  const query = useQuery({
+  const {id: tokenId} = usePortfolioTokenDetailParams()
+  const {
+    wallet: {balances},
+  } = useSelectedWallet()
+  const tokenInfo = balances.records.get(tokenId)
+  const {currency} = useCurrencyPairing()
+  const {
+    BACKEND: {API_ROOT},
+  } = getCardanoNetworkConfigById(1)
+
+  const ptQuery = useQuery({
+    staleTime: time.halfHour,
+    cacheTime: time.oneHour,
+    retryDelay: time.oneSecond,
+    optimisticResults: true,
+    refetchInterval: time.halfHour,
     useErrorBoundary: true,
     refetchOnMount: false,
+    enabled: tokenInfo && isPrimaryToken(tokenInfo.info),
     ...options,
-    queryKey: ['useGetPortfolioTokenChart', timeInterval],
+    queryKey: ['useGetPortfolioTokenChart', tokenInfo?.info.id ?? '', timeInterval],
+    queryFn: async () => {
+      const now = Date.now()
+      const from = {
+        [TOKEN_CHART_TIME_INTERVAL.DAY]: now - time.oneDay,
+        [TOKEN_CHART_TIME_INTERVAL.WEEK]: now - time.oneWeek,
+        [TOKEN_CHART_TIME_INTERVAL.MONTH]: now - time.oneMonth,
+        [TOKEN_CHART_TIME_INTERVAL.SIX_MONTHS]: now - time.sixMonths,
+        [TOKEN_CHART_TIME_INTERVAL.YEAR]: now - time.oneYear,
+        [TOKEN_CHART_TIME_INTERVAL.ALL]: new Date('2018').getTime(),
+      }[timeInterval]
+      const resolution = 50
+      const step = (now - from) / resolution
+      const timestamps = Array.from({length: resolution}, (_, i) => from + Math.round(step * i))
+      const {error, tickers} = await fetchAdaPrice(API_ROOT, timestamps)
+      if (error !== null) throw error
+
+      const previous = tickers[0].prices[currency === 'ADA' ? 'USD' : currency]
+      return tickers
+        .map((ticker) => {
+          const value = ticker.prices[currency === 'ADA' ? 'USD' : currency]
+          if (value === undefined) return undefined
+          const {changePercent, changeValue} = priceChange(previous, value)
+          const label = new Date(ticker.timestamp).toLocaleString('en-us', {dateStyle: 'short', timeStyle: 'short'})
+          return {label, value, changePercent, changeValue}
+        })
+        .filter(Boolean)
+    },
+  })
+
+  const otherQuery = useQuery({
+    useErrorBoundary: true,
+    refetchOnMount: false,
+    enabled: tokenInfo && !isPrimaryToken(tokenInfo.info),
+    ...options,
+    queryKey: ['useGetPortfolioTokenChart', tokenInfo?.info.id ?? '', timeInterval],
     queryFn: async () => {
       await new Promise((resolve) => setTimeout(resolve, 1000))
       return generateMockChartData(timeInterval)
     },
   })
 
-  return query
+  return tokenInfo && isPrimaryToken(tokenInfo.info) ? ptQuery : otherQuery
 }
 
 export default useGetPortfolioTokenChart

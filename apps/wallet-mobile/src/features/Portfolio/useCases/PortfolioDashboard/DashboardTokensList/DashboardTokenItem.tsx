@@ -9,7 +9,7 @@ import {Spacer} from '../../../../../components'
 import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
 import {useCurrencyPairing} from '../../../../Settings/Currency'
 import {usePrivacyMode} from '../../../../Settings/PrivacyMode/PrivacyMode'
-import {priceDifference} from '../../../common/helpers/priceDifference'
+import {formatPriceChange, priceChange} from '../../../common/helpers/priceChange'
 import {PnlTag} from '../../../common/PnlTag/PnlTag'
 import {TokenInfoIcon} from '../../../common/TokenAmountItem/TokenInfoIcon'
 import {useNavigateTo} from '../../../common/useNavigateTo'
@@ -30,7 +30,7 @@ export const DashboardTokenItem = ({tokenInfo}: Props) => {
   // TODO: missing price for non ada
   const {price, previous} = isPrimaryToken(info) ? adaPrice : {price: 0, previous: 0}
 
-  const {change, variantPnl} = priceDifference(previous, price)
+  const {changePercent, variantPnl} = priceChange(previous, price)
 
   return (
     <TouchableOpacity onPress={() => navigationTo.tokenDetail({id: info.id})} style={styles.root}>
@@ -41,7 +41,7 @@ export const DashboardTokenItem = ({tokenInfo}: Props) => {
 
         <View style={styles.quantityContainer}>
           <PnlTag variant={variantPnl} withIcon>
-            <Text>{change}%</Text>
+            <Text>{formatPriceChange(changePercent)}%</Text>
           </PnlTag>
 
           <Text ellipsizeMode="tail" numberOfLines={1} style={styles.tokenValue}>

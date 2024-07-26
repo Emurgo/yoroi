@@ -5,7 +5,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Spacer} from '../../../../../components'
 import {useCurrencyPairing} from '../../../../Settings/Currency'
-import {priceDifference} from '../../../common/helpers/priceDifference'
+import {formatPriceChange, priceChange} from '../../../common/helpers/priceChange'
 import {PnlTag} from '../../../common/PnlTag/PnlTag'
 import {usePortfolio} from '../../../common/PortfolioProvider'
 import {SkeletonQuantityChange} from './SkeletonQuantityChange'
@@ -25,7 +25,7 @@ export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
   } = useCurrencyPairing()
   const {isPrimaryTokenActive, setIsPrimaryTokenActive} = usePortfolio()
 
-  const {change, difference, variantPnl} = priceDifference(previous, price)
+  const {changePercent, changeValue, variantPnl} = priceChange(previous, price)
 
   const isFetching = price === undefined
 
@@ -57,7 +57,7 @@ export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
               <SkeletonQuantityChange />
             ) : (
               <PnlTag variant={variantPnl} withIcon>
-                <Text>{change}%</Text>
+                <Text>{formatPriceChange(changePercent)}%</Text>
               </PnlTag>
             )}
 
@@ -65,7 +65,7 @@ export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
               <SkeletonQuantityChange />
             ) : (
               <PnlTag variant={variantPnl}>
-                <Text>{`${Number(difference) > 0 ? '+' : ''}${difference} ${currency}`}</Text>
+                <Text>{`${changeValue > 0 ? '+' : ''}${formatPriceChange(changeValue)} ${currency}`}</Text>
               </PnlTag>
             )}
           </View>

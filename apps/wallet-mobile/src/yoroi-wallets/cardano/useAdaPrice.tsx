@@ -36,7 +36,7 @@ export const useAdaPrice = ({
     queryKey: [queryInfo.keyToPersist, 'useRate'],
     ...options,
     queryFn: async () => {
-      const {error, tickers} = await fetchPrice(API_ROOT, [Date.now(), Date.now() - time.oneDay])
+      const {error, tickers} = await fetchAdaPrice(API_ROOT, [Date.now(), Date.now() - time.oneDay])
       if (error !== null) throw error
       return tickers
     },
@@ -54,7 +54,7 @@ export const useAdaPrice = ({
   }
 }
 
-const fetchPrice = async (apiBaseUrl: string, timestamps: Array<number>): Promise<PriceMultipleResponse> => {
+export const fetchAdaPrice = async (apiBaseUrl: string, timestamps: Array<number>): Promise<PriceMultipleResponse> => {
   return (await fetchDefault(
     `price/ADA/${timestamps.join()}`,
     null,

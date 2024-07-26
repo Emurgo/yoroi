@@ -65,6 +65,10 @@ export const time = freeze({
   halfHour: 30 * 60 * 1e3,
   oneHour: 60 * 60 * 1e3,
   oneDay: 24 * 60 * 60 * 1e3,
+  oneWeek: 7 * 24 * 60 * 60 * 1e3,
+  oneMonth: 30 * 24 * 60 * 60 * 1e3,
+  sixMonths: 182.5 * 24 * 60 * 60 * 1e3,
+  oneYear: 365 * 24 * 60 * 60 * 1e3,
 
   // helpers
   seconds: (seconds: number) => seconds * 1e3,
