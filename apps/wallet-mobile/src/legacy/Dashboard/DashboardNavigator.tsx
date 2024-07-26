@@ -12,6 +12,8 @@ import {DashboardRoutes, defaultStackNavigationOptions, useWalletNavigation} fro
 import {DelegationConfirmation, FailedTxScreen} from '../Staking'
 import {StakingCenter} from '../Staking/StakingCenter'
 import {Dashboard} from './Dashboard'
+import {NetworkTag} from '../../features/Settings/ChangeNetwork/NetworkTag'
+import {LoadingBoundary} from '../../components'
 
 const Stack = createStackNavigator<DashboardRoutes>()
 export const DashboardNavigator = () => {
@@ -29,23 +31,33 @@ export const DashboardNavigator = () => {
           component={Dashboard}
           options={{
             title: meta.name,
+            headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
             headerRight: () => <HeaderRight />,
           }}
         />
 
         <Stack.Screen //
           name="staking-center"
-          component={StakingCenter}
-          options={{title: strings.title}}
-        />
+          options={{title: strings.title, headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>}}
+        >
+          {() => (
+            <LoadingBoundary>
+              <StakingCenter />
+            </LoadingBoundary>
+          )}
+        </Stack.Screen>
 
         <Stack.Screen
           name="delegation-confirmation"
           component={DelegationConfirmation}
-          options={{title: strings.title}}
+          options={{title: strings.title, headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>}}
         />
 
-        <Stack.Screen name="delegation-failed-tx" component={FailedTxScreen} options={{title: strings.title}} />
+        <Stack.Screen
+          name="delegation-failed-tx"
+          component={FailedTxScreen}
+          options={{title: strings.title, headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>}}
+        />
       </Stack.Navigator>
     </GovernanceProvider>
   )

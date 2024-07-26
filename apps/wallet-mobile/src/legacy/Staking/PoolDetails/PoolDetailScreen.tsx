@@ -3,7 +3,9 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 
-import {Button, TextInput} from '../../../components'
+import {Button, Spacer, TextInput} from '../../../components'
+import {wrappedCsl} from '../../../yoroi-wallets/cardano/wrappedCsl'
+import {useQuery} from 'react-query'
 
 type Props = {
   onPressDelegate: (poolHash: string) => void
@@ -15,36 +17,55 @@ export const PoolDetailScreen = ({onPressDelegate, disabled = false}: Props) => 
   const styles = useStyles()
   const [poolHash, setPoolHash] = React.useState('')
 
+  const {data: isValid} = useIsValidPoolHash(poolHash)
+
   return (
-    <View style={styles.content}>
+    <>
       <TextInput
         label={strings.poolHash}
         value={poolHash}
         onChangeText={setPoolHash}
         autoComplete="off"
         testID="nightlyPoolHashInput"
+        error={!isValid}
+        errorText={!isValid && 'Invalid pool ID. Please retype.'}
       />
 
+      <Spacer fill />
+
       <Button
-        outlineOnLight
-        outline
+        shelleyTheme
         onPress={() => onPressDelegate(poolHash)}
         title={strings.delegate}
         style={styles.button}
         disabled={disabled}
         testID="nightlyDelegateButton"
       />
-    </View>
+    </>
   )
+}
+
+const useIsValidPoolHash = (poolHash: string) => {
+  const queryFn = React.useCallback(() => validatePoolHash(poolHash), [poolHash])
+  return useQuery({queryFn})
+}
+
+const validatePoolHash = async (poolHash: string) => {
+  if (poolHash.length === 0) return false
+
+  const {csl, release} = wrappedCsl()
+  try {
+    await csl.Ed25519KeyHash.fromBytes(Buffer.from(poolHash, 'hex'))
+  } catch {
+    return false
+  } finally {
+    release()
+  }
 }
 
 const useStyles = () => {
   const {atoms} = useTheme()
   const styles = StyleSheet.create({
-    content: {
-      flex: 1,
-      ...atoms.p_xl,
-    },
     button: {
       ...atoms.p_sm,
     },

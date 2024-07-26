@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Delegate",
     "file": "src/legacy/Staking/PoolDetails/PoolDetailScreen.tsx",
     "start": {
-      "line": 65,
+      "line": 86,
       "column": 12,
-      "index": 1428
+      "index": 2047
     },
     "end": {
-      "line": 68,
+      "line": 89,
       "column": 3,
-      "index": 1542
+      "index": 2161
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Stake pool hash",
     "file": "src/legacy/Staking/PoolDetails/PoolDetailScreen.tsx",
     "start": {
-      "line": 69,
+      "line": 90,
       "column": 12,
-      "index": 1556
+      "index": 2175
     },
     "end": {
-      "line": 72,
+      "line": 93,
       "column": 3,
-      "index": 1643
+      "index": 2262
     }
   }
 ]

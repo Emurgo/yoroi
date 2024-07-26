@@ -4,7 +4,7 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet,View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
 import {PleaseWaitModal, Spacer} from '../../../components'
@@ -12,7 +12,6 @@ import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/us
 import {showErrorDialog} from '../../../kernel/dialogs'
 import {isDev} from '../../../kernel/env'
 import {useLanguage} from '../../../kernel/i18n'
-import globalMessages from '../../../kernel/i18n/global-messages'
 import {logger} from '../../../kernel/logger/logger'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {StakingCenterRouteNavigation} from '../../../kernel/navigation'
@@ -20,6 +19,8 @@ import {NETWORKS} from '../../../yoroi-wallets/cardano/networks'
 import {NotEnoughMoneyToSendError} from '../../../yoroi-wallets/cardano/types'
 import {useStakingTx} from '../../Dashboard/StakePoolInfos'
 import {PoolDetailScreen} from '../PoolDetails'
+import {SafeAreaView} from 'react-native-safe-area-context'
+import globalMessages from '../../../kernel/i18n/global-messages'
 
 export const StakingCenter = () => {
   const intl = useIntl()
@@ -37,11 +38,13 @@ export const StakingCenter = () => {
     }, [track]),
   )
 
-  const [selectedPoolId, setSelectedPoolId] = React.useState<string>()
+  const [selectedPoolId, setSelectedPoolId] = React.useState<string | null>(null)
 
   const {isLoading} = useStakingTx(
-    {wallet, poolId: selectedPoolId, meta},
+    {wallet, poolId: selectedPoolId ?? undefined, meta},
     {
+      enabled: selectedPoolId != null,
+      suspense: false,
       onSuccess: (yoroiUnsignedTx) => {
         if (selectedPoolId == null) return
 
@@ -74,12 +77,8 @@ export const StakingCenter = () => {
   const shouldDisplayPoolList = wallet.isMainnet
 
   return (
-    <View style={styles.root}>
-      {shouldDisplayPoolIDInput && (
-        <View style={styles.poolInput}>
-          <PoolDetailScreen onPressDelegate={setSelectedPoolId} />
-        </View>
-      )}
+    <SafeAreaView edges={['top', 'right', 'bottom', 'left']} style={styles.root}>
+      {shouldDisplayPoolIDInput && <PoolDetailScreen onPressDelegate={setSelectedPoolId} />}
 
       {shouldDisplayPoolList && (
         <View style={styles.poolList}>
@@ -104,19 +103,17 @@ export const StakingCenter = () => {
       )}
 
       <PleaseWaitModal title="" spinnerText={intl.formatMessage(globalMessages.pleaseWait)} visible={isLoading} />
-    </View>
+    </SafeAreaView>
   )
 }
 
 const useStyles = () => {
-  const {color} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,
       backgroundColor: color.bg_color_high,
-    },
-    poolInput: {
-      height: 256,
+      ...atoms.px_lg,
     },
     poolList: {
       flex: 1,
