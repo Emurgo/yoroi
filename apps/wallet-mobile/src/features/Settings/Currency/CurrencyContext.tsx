@@ -77,8 +77,9 @@ type CurrencyContext = {
   supportedCurrencies: typeof supportedCurrencies
   configCurrencies: ConfigCurrencies
   adaPrice: {
-    price: number
     time: number
+    price: number
+    previous: number
   }
 }
 
