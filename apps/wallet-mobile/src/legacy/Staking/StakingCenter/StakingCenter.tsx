@@ -4,14 +4,13 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {View} from 'react-native'
+import {StyleSheet,View} from 'react-native'
 import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
 import {PleaseWaitModal, Spacer} from '../../../components'
 import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
 import {showErrorDialog} from '../../../kernel/dialogs'
-import {isDev, isNightly} from '../../../kernel/env'
-import {features} from '../../../kernel/features'
+import {isDev} from '../../../kernel/env'
 import {useLanguage} from '../../../kernel/i18n'
 import globalMessages from '../../../kernel/i18n/global-messages'
 import {logger} from '../../../kernel/logger/logger'
@@ -26,6 +25,7 @@ export const StakingCenter = () => {
   const intl = useIntl()
   const navigation = useNavigation<StakingCenterRouteNavigation>()
   const {isDark} = useTheme()
+  const {styles} = useStyles()
 
   const {languageCode} = useLanguage()
   const {wallet, meta} = useSelectedWallet()
@@ -70,16 +70,19 @@ export const StakingCenter = () => {
     setSelectedPoolId(selectedPoolHashes[0])
   }
 
+  const shouldDisplayPoolIDInput = isDev || !wallet.isMainnet
+  const shouldDisplayPoolList = wallet.isMainnet
+
   return (
-    <>
-      {(isDev || (isNightly && !wallet.isMainnet)) && (
-        <View style={{height: 256}}>
+    <View style={styles.root}>
+      {shouldDisplayPoolIDInput && (
+        <View style={styles.poolInput}>
           <PoolDetailScreen onPressDelegate={setSelectedPoolId} />
         </View>
       )}
 
-      {(wallet.isMainnet || features.showProdPoolsInDev) && (
-        <View style={{flex: 1}}>
+      {shouldDisplayPoolList && (
+        <View style={styles.poolList}>
           <Spacer height={8} />
 
           <WebView
@@ -101,8 +104,25 @@ export const StakingCenter = () => {
       )}
 
       <PleaseWaitModal title="" spinnerText={intl.formatMessage(globalMessages.pleaseWait)} visible={isLoading} />
-    </>
+    </View>
   )
+}
+
+const useStyles = () => {
+  const {color} = useTheme()
+  const styles = StyleSheet.create({
+    root: {
+      flex: 1,
+      backgroundColor: color.bg_color_high,
+    },
+    poolInput: {
+      height: 256,
+    },
+    poolList: {
+      flex: 1,
+    },
+  })
+  return {styles}
 }
 
 const noPoolDataDialog = defineMessages({

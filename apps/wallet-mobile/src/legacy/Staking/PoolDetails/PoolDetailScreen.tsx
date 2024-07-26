@@ -3,7 +3,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 
-import {Button, Text, TextInput} from '../../../components'
+import {Button, TextInput} from '../../../components'
 
 type Props = {
   onPressDelegate: (poolHash: string) => void
@@ -17,10 +17,6 @@ export const PoolDetailScreen = ({onPressDelegate, disabled = false}: Props) => 
 
   return (
     <View style={styles.content}>
-      <View style={styles.heading}>
-        <Text style={styles.title}>{strings.title}</Text>
-      </View>
-
       <TextInput
         label={strings.poolHash}
         value={poolHash}
@@ -43,22 +39,11 @@ export const PoolDetailScreen = ({onPressDelegate, disabled = false}: Props) => 
 }
 
 const useStyles = () => {
-  const {atoms, color} = useTheme()
+  const {atoms} = useTheme()
   const styles = StyleSheet.create({
     content: {
       flex: 1,
-      padding: 24,
-      backgroundColor: color.gray_c100,
-    },
-    heading: {
-      alignItems: 'center',
-      justifyContent: 'center',
-      ...atoms.pb_lg,
-    },
-    title: {
-      color: color.primary_c600,
-      ...atoms.pb_lg,
-      ...atoms.body_1_lg_regular,
+      ...atoms.p_xl,
     },
     button: {
       ...atoms.p_sm,
@@ -71,7 +56,6 @@ const useStrings = () => {
   const intl = useIntl()
 
   return {
-    title: intl.formatMessage(messages.title),
     poolHash: intl.formatMessage(messages.poolHash),
     delegate: intl.formatMessage(messages.delegate),
   }
@@ -81,10 +65,6 @@ const messages = defineMessages({
   delegate: {
     id: 'components.stakingcenter.confirmDelegation.delegateButtonLabel',
     defaultMessage: '!!!Delegate',
-  },
-  title: {
-    id: 'components.stakingcenter.pooldetailscreen.title',
-    defaultMessage: '!!!Nightly delegation',
   },
   poolHash: {
     id: 'global.staking.stakePoolHash',
