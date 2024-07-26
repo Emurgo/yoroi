@@ -46,7 +46,7 @@ export const SingleOrMultipleAddressesModal = ({onConfirm}: Props) => {
 
       <Spacer fill height={16} />
 
-      <View style={styles.buttonContainer}>
+      <View style={styles.actions}>
         <Button
           withoutBackground
           textStyles={styles.multipleButtonTitle}
@@ -70,7 +70,7 @@ const useStyles = () => {
       ...atoms.justify_between,
       ...atoms.px_lg,
     },
-    buttonContainer: {
+    actions: {
       ...atoms.self_stretch,
     },
     details: {

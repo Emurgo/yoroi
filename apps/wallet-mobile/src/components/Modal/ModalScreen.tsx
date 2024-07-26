@@ -14,6 +14,7 @@ export const ModalScreen = () => {
   const {current} = useCardAnimation()
   const {height, closeModal, content, isOpen, isLoading} = useModal()
   const [swipeLocationY, setSwipeLocationY] = React.useState(height)
+  // NOTE: this is to fill the bottom of the screen with the same color as the modal
   const {bottom} = useSafeAreaInsets()
 
   const onResponderMove = ({nativeEvent}: GestureResponderEvent) => {
@@ -95,50 +96,51 @@ const useStyles = () => {
   const {color, atoms, isDark} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'flex-end',
-      alignSelf: 'stretch',
+      ...atoms.flex_1,
+      ...atoms.align_center,
+      ...atoms.justify_end,
+      ...atoms.self_stretch,
+      ...atoms.pb_lg,
     },
     cancellableArea: {
-      flexGrow: 1,
+      ...atoms.flex_grow,
     },
     backdrop: {
       ...StyleSheet.absoluteFillObject,
       backgroundColor: color.mobile_overlay,
     },
     fixBottomColor: {
-      alignSelf: 'stretch',
-      position: 'absolute',
+      backgroundColor: color.bg_color_high,
       bottom: 0,
       left: 0,
       right: 0,
-      backgroundColor: color.bg_color_high,
+      ...atoms.self_stretch,
+      ...atoms.absolute,
     },
     animatedView: {
-      alignSelf: 'stretch',
+      ...atoms.self_stretch,
     },
     rounded: {
       borderTopRightRadius: 20,
       borderTopLeftRadius: 20,
     },
     sheet: {
-      flex: 1,
+      ...atoms.flex_1,
+      ...atoms.self_stretch,
       backgroundColor: isDark ? color.gray_c50 : color.white_static,
-      alignSelf: 'stretch',
     },
     title: {
       ...atoms.heading_3_medium,
-      padding: 14,
-      color: color.gray_cmax,
+      ...atoms.p_lg,
+      color: color.text_gray_max,
     },
     header: {
-      alignItems: 'center',
-      alignSelf: 'stretch',
+      ...atoms.align_center,
+      ...atoms.self_stretch,
     },
     slider: {
-      height: 4,
       backgroundColor: color.gray_cmax,
+      height: 4,
       width: 32,
       borderRadius: 10,
     },

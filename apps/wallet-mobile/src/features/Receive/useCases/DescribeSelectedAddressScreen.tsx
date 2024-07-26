@@ -52,7 +52,6 @@ export const DescribeSelectedAddressScreen = () => {
     },
     [navigateTo],
   )
-
   React.useEffect(() => {
     isShowingMultipleAddressInfo &&
       openModal(

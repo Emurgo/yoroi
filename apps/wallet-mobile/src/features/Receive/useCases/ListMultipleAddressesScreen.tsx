@@ -14,7 +14,7 @@ import Animated, {Layout} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../components'
-import { Space } from '../../../components/Space/Space'
+import {Space} from '../../../components/Space/Space'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {useAddressMode} from '../../WalletManager/common/hooks/useAddressMode'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
