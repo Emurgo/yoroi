@@ -35,6 +35,9 @@ export const useStrings = () => {
     ourTrustedPartners: intl.formatMessage(messages.ourTrustedPartners),
     needMoreCrypto: intl.formatMessage(messages.needMoreCrypto),
     fee: intl.formatMessage(messages.fee),
+    preprodFaucetBannerTitle: intl.formatMessage(messages.preprodFaucetBannerTitle),
+    preprodFaucetBannerText: intl.formatMessage(messages.preprodFaucetBannerText),
+    preprodFaucetBannerButtonText: intl.formatMessage(messages.preprodFaucetBannerButtonText),
     close: intl.formatMessage(globalMessages.close),
     error: intl.formatMessage(globalMessages.error),
   }).current
@@ -155,6 +158,18 @@ export const messages = Object.freeze(
     fee: {
       id: 'rampOnOff.createRampOnOff.fee',
       defaultMessage: '!!!fee',
+    },
+    preprodFaucetBannerTitle: {
+      id: 'rampOnOff.createRampOnOff.preprodfaucetbanner.title',
+      defaultMessage: '!!!Get your first test ADA in Yoroi ⭐️',
+    },
+    preprodFaucetBannerText: {
+      id: 'rampOnOff.createRampOnOff.preprodfaucetbanner.text',
+      defaultMessage: '!!!Top up your wallet from the Cardano testnet faucet and unlock the power of test Cardano.',
+    },
+    preprodFaucetBannerButtonText: {
+      id: 'rampOnOff.createRampOnOff.preprodfaucetbanner.button.text',
+      defaultMessage: '!!!Go to tada faucet',
     },
   }),
 )
