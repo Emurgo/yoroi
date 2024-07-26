@@ -31,7 +31,7 @@ export const MenuNavigator = () => {
       screenOptions={{
         ...defaultStackNavigationOptions(atoms, color),
         headerLeft: () => null,
-        headerTitle: ({children}) => <NetworkTag disabled>{children}</NetworkTag>,
+        headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
       }}
     >
       <MenuStack.Screen name="_menu" component={Menu} options={{title: strings.menu}} />

@@ -21,7 +21,7 @@ export const GovernanceNavigator = () => {
         <Stack.Navigator
           screenOptions={{
             ...screenOptions(atoms, color),
-            headerTitle: ({children}) => <NetworkTag disabled>{children}</NetworkTag>,
+            headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
           }}
         >
           <Stack.Screen

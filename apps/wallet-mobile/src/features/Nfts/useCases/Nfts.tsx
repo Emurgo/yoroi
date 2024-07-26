@@ -31,7 +31,7 @@ export const Nfts = () => {
   useSearchOnNavBar({
     title: strings.title,
     placeholder: strings.search,
-    extraNavigationOptions: {headerTitle: ({children}) => <NetworkTag disabled>{children}</NetworkTag>},
+    extraNavigationOptions: {headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>},
   })
   const {search, isSearching} = useSearch()
 

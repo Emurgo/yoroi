@@ -27,7 +27,7 @@ export const DashboardNavigator = () => {
       <Stack.Navigator
         screenOptions={{
           ...defaultStackNavigationOptions(atoms, color),
-          headerTitle: ({children}) => <NetworkTag disabled>{children}</NetworkTag>,
+          headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
         }}
       >
         <Stack.Screen

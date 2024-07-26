@@ -145,7 +145,7 @@ const WalletTabNavigator = () => {
             tabBarIcon: ({focused}) => <Icon.Menu size={28} color={focused ? colors.active : colors.inactive} />,
             tabBarLabel: strings.menuTabBarLabel,
             tabBarTestID: 'menuTabBarButton',
-            headerTitle: ({children}) => <NetworkTag disabled>{children}</NetworkTag>,
+            headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
           }}
         />
       </Tab.Navigator>
@@ -190,11 +190,7 @@ export const WalletNavigator = () => {
             name="wallet-selection"
             options={{
               title: strings.walletSelectionScreenHeader,
-              headerTitle: ({children}) => (
-                <NetworkTag disabled directChangeOnDevActive>
-                  {children}
-                </NetworkTag>
-              ),
+              headerTitle: ({children}) => <NetworkTag directChangeActive>{children}</NetworkTag>,
             }}
             component={SelectWalletFromList}
           />

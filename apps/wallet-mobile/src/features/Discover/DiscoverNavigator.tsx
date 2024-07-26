@@ -30,7 +30,7 @@ export const DiscoverNavigator = () => {
           ...defaultStackNavigationOptions(atoms, color),
           headerLeft: () => null,
           gestureEnabled: true,
-          headerTitle: ({children}) => <NetworkTag disabled>{children}</NetworkTag>,
+          headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
         }}
         initialRouteName="discover-select-dapp-from-list"
       >

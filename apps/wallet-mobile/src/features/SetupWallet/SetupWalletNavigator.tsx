@@ -31,7 +31,7 @@ export const SetupWalletNavigator = () => {
     <Stack.Navigator
       screenOptions={{
         ...navigationOptions,
-        headerTitle: ({children}) => <NetworkTag disabled>{children}</NetworkTag>,
+        headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
       }}
     >
       <Stack.Screen

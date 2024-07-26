@@ -83,7 +83,7 @@ export const SettingsScreenNavigator = () => {
           component={SettingsTabNavigator}
           options={{
             title: strings.settingsTitle,
-            headerTitle: ({children}) => <NetworkTag disabled>{children}</NetworkTag>,
+            headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
           }}
         />
 

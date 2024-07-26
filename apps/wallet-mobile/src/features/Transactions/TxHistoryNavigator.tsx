@@ -149,7 +149,7 @@ export const TxHistoryNavigator = () => {
                   screenOptions={{
                     ...navigationOptions,
                     gestureEnabled: true,
-                    headerTitle: ({children}) => <NetworkTag disabled>{children}</NetworkTag>,
+                    headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
                   }}
                 >
                   <Stack.Screen

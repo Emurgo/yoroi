@@ -36,7 +36,7 @@ export const PortfolioTokenListScreen = () => {
   useSearchOnNavBar({
     title: strings.tokenList,
     placeholder: strings.searchTokens,
-    extraNavigationOptions: {headerTitle: ({children}) => <NetworkTag disabled>{children}</NetworkTag>},
+    extraNavigationOptions: {headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>},
   })
 
   return (
