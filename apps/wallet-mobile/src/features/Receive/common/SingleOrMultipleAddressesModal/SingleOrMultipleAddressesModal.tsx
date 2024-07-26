@@ -16,7 +16,7 @@ type Props = {
 }
 
 export const SingleOrMultipleAddressesModal = ({onConfirm}: Props) => {
-  const {styles, colors} = useStyles()
+  const {styles} = useStyles()
   const strings = useStrings()
   const {enableMultipleMode, enableSingleMode} = useAddressMode()
 
@@ -42,27 +42,20 @@ export const SingleOrMultipleAddressesModal = ({onConfirm}: Props) => {
     <View style={styles.modal}>
       <QRsIllustration />
 
-      <Text style={[styles.details, {color: colors.details}]}>{strings.singleOrMultipleDetails}</Text>
+      <Text style={styles.details}>{strings.singleOrMultipleDetails}</Text>
 
-      <Spacer fill height={24} />
+      <Spacer fill height={16} />
 
       <View style={styles.buttonContainer}>
         <Button
-          style={styles.multipleButton}
-          outline
+          withoutBackground
+          textStyles={styles.multipleButtonTitle}
           title={strings.selectMultiple}
-          textStyles={{
-            color: colors.selectMultipleInsteadTextColor,
-          }}
           onPress={handleOnMultiple}
         />
 
-        <Spacer height={6} />
-
-        <Button shelleyTheme title={strings.singleAddressWallet} onPress={handleOnSingle} style={styles.button} />
+        <Button shelleyTheme title={strings.singleAddressWallet} onPress={handleOnSingle} />
       </View>
-
-      <Spacer height={24} />
     </View>
   )
 }
@@ -72,34 +65,24 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     modal: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      ...atoms.flex_1,
+      ...atoms.align_center,
+      ...atoms.justify_between,
       ...atoms.px_lg,
     },
     buttonContainer: {
-      alignSelf: 'stretch',
-      backgroundColor: 'transparent',
+      ...atoms.self_stretch,
     },
     details: {
+      color: color.text_gray_normal,
       ...atoms.body_1_lg_regular,
-      justifyContent: 'center',
-      textAlign: 'center',
+      ...atoms.justify_center,
+      ...atoms.text_center,
     },
-
-    button: {
-      backgroundColor: color.primary_c500,
-    },
-    multipleButton: {
-      backgroundColor: 'transparent',
-      borderWidth: 0,
+    multipleButtonTitle: {
+      color: color.text_primary_high,
     },
   })
 
-  const colors = {
-    details: color.gray_c900,
-    selectMultipleInsteadTextColor: color.primary_c500,
-  }
-
-  return {styles, colors} as const
+  return {styles} as const
 }
