@@ -243,7 +243,6 @@
     "@storybook/theming": "<7.0.0",
     "@testing-library/react-hooks": "^8.0.1",
     "@testing-library/react-native": "^9.0.0",
-    "@total-typescript/ts-reset": "^0.5.1",
     "@tsconfig/react-native": "^3.0.3",
     "@types/bs58": "^4.0.4",
     "@types/chai": "^4.3.4",

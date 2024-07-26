@@ -136,7 +136,7 @@ const useGetPortfolioTokenChart = (
           const label = new Date(ticker.timestamp).toLocaleString('en-us', {dateStyle: 'short', timeStyle: 'short'})
           return {label, value, changePercent, changeValue}
         })
-        .filter(Boolean)
+        .filter(Boolean) as TokenChartData[]
     },
   })
 
