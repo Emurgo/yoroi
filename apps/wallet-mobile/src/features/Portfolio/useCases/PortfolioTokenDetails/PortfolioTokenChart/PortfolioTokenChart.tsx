@@ -1,5 +1,5 @@
 import {useTheme} from '@yoroi/theme'
-import React, {useCallback, useMemo, useState} from 'react'
+import React, {useCallback, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import useGetPortfolioTokenChart, {
@@ -26,22 +26,14 @@ export const PortfolioTokenChart = () => {
     setSelectedIndex(index)
   }, [])
 
-  const tokenPerformance = useMemo(() => {
-    if (!data) return undefined
-    if (selectedIndex < 0) return data[0]
-    return data[selectedIndex]
-  }, [selectedIndex, data])
-
   return (
     <View style={styles.root}>
-      {isFetching ? (
+      {isFetching || !data ? (
         <PortfolioTokenChartSkeleton />
       ) : (
         <>
           <TokenPerformance
-            changePercent={tokenPerformance?.changePercent}
-            value={tokenPerformance?.value}
-            changeValue={tokenPerformance?.changeValue}
+            tokenPerformance={data[selectedIndex < 0 ? 0 : selectedIndex]}
             timeInterval={timeInterval}
           />
 

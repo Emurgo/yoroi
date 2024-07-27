@@ -87,7 +87,7 @@ const useGetPortfolioTokenChart = (
     TokenChartData[],
     Error,
     TokenChartData[],
-    ['useGetPortfolioTokenChart', string, TokenChartTimeInterval]
+    ['useGetPortfolioTokenChart', string, TokenChartTimeInterval, string?]
   > = {},
 ) => {
   const {id: tokenId} = usePortfolioTokenDetailParams()
@@ -110,7 +110,7 @@ const useGetPortfolioTokenChart = (
     refetchOnMount: false,
     enabled: tokenInfo && isPrimaryToken(tokenInfo.info),
     ...options,
-    queryKey: ['useGetPortfolioTokenChart', tokenInfo?.info.id ?? '', timeInterval],
+    queryKey: ['useGetPortfolioTokenChart', tokenInfo?.info.id ?? '', timeInterval, currency],
     queryFn: async () => {
       const now = Date.now()
       const from = {

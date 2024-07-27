@@ -10,24 +10,26 @@ import {PnlTag} from '../../../common/PnlTag/PnlTag'
 import {TOKEN_CHART_TIME_INTERVAL, TokenChartTimeInterval} from '../../../common/useGetPortfolioTokenChart'
 import {useStrings} from '../../../common/useStrings'
 
-interface Props {
-  changePercent?: number
-  changeValue?: number
-  value?: number
+type Props = {
+  tokenPerformance: {
+    changePercent: number
+    changeValue: number
+    value: number
+  }
   timeInterval?: TokenChartTimeInterval
 }
 
-export const TokenPerformance = ({changePercent = 0, changeValue = 0, value = 0, timeInterval}: Props) => {
+export const TokenPerformance = ({tokenPerformance, timeInterval}: Props) => {
   const {styles} = useStyles()
   const strings = useStrings()
   const {currency, config} = useCurrencyPairing()
 
   const variant = React.useMemo(() => {
-    if (Number(changePercent) > 0) return 'success'
-    if (Number(changePercent) < 0) return 'danger'
+    if (Number(tokenPerformance.changePercent) > 0) return 'success'
+    if (Number(tokenPerformance.changePercent) < 0) return 'danger'
 
     return 'neutral'
-  }, [changePercent])
+  }, [tokenPerformance.changePercent])
 
   const intervalLabel = React.useMemo(() => {
     switch (timeInterval) {
@@ -52,10 +54,10 @@ export const TokenPerformance = ({changePercent = 0, changeValue = 0, value = 0,
     <View style={styles.root}>
       <View style={styles.tokenChangeWrapper}>
         <PnlTag withIcon={variant !== 'neutral'} variant={variant}>
-          {changePercent.toFixed(2)}%
+          {tokenPerformance.changePercent.toFixed(2)}%
         </PnlTag>
 
-        <PnlTag variant={variant}>{`${changeValue.toFixed(config.decimals)} ${currency}`}</PnlTag>
+        <PnlTag variant={variant}>{`${tokenPerformance.changeValue.toFixed(config.decimals)} ${currency}`}</PnlTag>
 
         <Tooltip numberOfLine={3} title={strings.tokenPriceChangeTooltip(intervalLabel)}>
           <Icon.InfoCircle />
@@ -63,7 +65,7 @@ export const TokenPerformance = ({changePercent = 0, changeValue = 0, value = 0,
       </View>
 
       <View style={styles.tokenWrapper}>
-        <Text style={styles.tokenPrice}>{value.toFixed(config.decimals)}</Text>
+        <Text style={styles.tokenPrice}>{tokenPerformance.value.toFixed(config.decimals)}</Text>
 
         <Text style={styles.tokenPriceSymbol}>{currency}</Text>
       </View>
