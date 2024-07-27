@@ -1,11 +1,11 @@
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet} from 'react-native'
+import {useQuery} from 'react-query'
 
 import {Button, Spacer, TextInput} from '../../../components'
 import {wrappedCsl} from '../../../yoroi-wallets/cardano/wrappedCsl'
-import {useQuery} from 'react-query'
 
 type Props = {
   onPressDelegate: (poolHash: string) => void
@@ -58,7 +58,8 @@ const useIsValidPoolIdOrHash = (poolIdOrHash: string) => {
 }
 
 const isValidPoolIdOrHash = async (poolIdOrHash: string): Promise<boolean> => {
-  return (await isValidPoolId(poolIdOrHash)) || (await isValidPoolHash(poolIdOrHash))
+  const [validPoolId, validPoolHash] = await Promise.all([isValidPoolId(poolIdOrHash), isValidPoolHash(poolIdOrHash)])
+  return validPoolId || validPoolHash
 }
 
 const normalizeToPoolHash = async (poolIdOrHash: string): Promise<string> => {

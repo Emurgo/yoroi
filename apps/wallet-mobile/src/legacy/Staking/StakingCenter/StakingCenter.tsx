@@ -5,6 +5,7 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
 import {PleaseWaitModal, Spacer} from '../../../components'
@@ -12,6 +13,7 @@ import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/us
 import {showErrorDialog} from '../../../kernel/dialogs'
 import {isDev} from '../../../kernel/env'
 import {useLanguage} from '../../../kernel/i18n'
+import globalMessages from '../../../kernel/i18n/global-messages'
 import {logger} from '../../../kernel/logger/logger'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {StakingCenterRouteNavigation} from '../../../kernel/navigation'
@@ -19,8 +21,6 @@ import {NETWORKS} from '../../../yoroi-wallets/cardano/networks'
 import {NotEnoughMoneyToSendError} from '../../../yoroi-wallets/cardano/types'
 import {useStakingTx} from '../../Dashboard/StakePoolInfos'
 import {PoolDetailScreen} from '../PoolDetails'
-import {SafeAreaView} from 'react-native-safe-area-context'
-import globalMessages from '../../../kernel/i18n/global-messages'
 
 export const StakingCenter = () => {
   const intl = useIntl()

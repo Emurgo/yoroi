@@ -5,15 +5,15 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
+import {LoadingBoundary} from '../../components'
 import {SettingsButton} from '../../components/Button'
+import {NetworkTag} from '../../features/Settings/ChangeNetwork/NetworkTag'
 import {useGovernanceManagerMaker} from '../../features/Staking/Governance'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {DashboardRoutes, defaultStackNavigationOptions, useWalletNavigation} from '../../kernel/navigation'
 import {DelegationConfirmation, FailedTxScreen} from '../Staking'
 import {StakingCenter} from '../Staking/StakingCenter'
 import {Dashboard} from './Dashboard'
-import {NetworkTag} from '../../features/Settings/ChangeNetwork/NetworkTag'
-import {LoadingBoundary} from '../../components'
 
 const Stack = createStackNavigator<DashboardRoutes>()
 export const DashboardNavigator = () => {
