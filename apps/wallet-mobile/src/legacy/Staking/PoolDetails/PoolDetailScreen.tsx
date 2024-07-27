@@ -15,27 +15,34 @@ type Props = {
 export const PoolDetailScreen = ({onPressDelegate, disabled = false}: Props) => {
   const strings = useStrings()
   const styles = useStyles()
-  const [poolHash, setPoolHash] = React.useState('')
+  const [poolIdOrHash, setPoolIdOrHash] = React.useState('')
 
-  const {data: isValid} = useIsValidPoolHash(poolHash)
+  const {data: isValid} = useIsValidPoolIdOrHash(poolIdOrHash)
+
+  const hasError = !isValid && poolIdOrHash.length > 0
+
+  const handleOnPress = async () => {
+    const hash = await normalizeToPoolHash(poolIdOrHash)
+    onPressDelegate(hash)
+  }
 
   return (
     <>
       <TextInput
         label={strings.poolHash}
-        value={poolHash}
-        onChangeText={setPoolHash}
+        value={poolIdOrHash}
+        onChangeText={setPoolIdOrHash}
         autoComplete="off"
         testID="nightlyPoolHashInput"
-        error={!isValid}
-        errorText={!isValid && 'Invalid pool ID. Please retype.'}
+        error={hasError}
+        errorText={hasError ? 'Invalid pool ID. Please retype.' : ''}
       />
 
       <Spacer fill />
 
       <Button
         shelleyTheme
-        onPress={() => onPressDelegate(poolHash)}
+        onPress={handleOnPress}
         title={strings.delegate}
         style={styles.button}
         disabled={disabled}
@@ -45,18 +52,49 @@ export const PoolDetailScreen = ({onPressDelegate, disabled = false}: Props) => 
   )
 }
 
-const useIsValidPoolHash = (poolHash: string) => {
-  const queryFn = React.useCallback(() => validatePoolHash(poolHash), [poolHash])
-  return useQuery({queryFn})
+const useIsValidPoolIdOrHash = (poolIdOrHash: string) => {
+  const queryFn = React.useCallback(() => isValidPoolIdOrHash(poolIdOrHash), [poolIdOrHash])
+  return useQuery({queryFn, queryKey: ['isValidPoolIdOrHash', poolIdOrHash]})
 }
 
-const validatePoolHash = async (poolHash: string) => {
+const isValidPoolIdOrHash = async (poolIdOrHash: string): Promise<boolean> => {
+  return (await isValidPoolId(poolIdOrHash)) || (await isValidPoolHash(poolIdOrHash))
+}
+
+const normalizeToPoolHash = async (poolIdOrHash: string): Promise<string> => {
+  if (await isValidPoolHash(poolIdOrHash)) return poolIdOrHash
+  if (await isValidPoolId(poolIdOrHash)) return getPoolHash(poolIdOrHash)
+  throw new Error('Invalid pool ID or hash')
+}
+
+const getPoolHash = async (poolId: string): Promise<string> => {
+  const {csl, release} = wrappedCsl()
+  try {
+    const hash = await csl.Ed25519KeyHash.fromBech32(poolId)
+    return hash.toHex()
+  } finally {
+    release()
+  }
+}
+
+const isValidPoolId = async (poolId: string): Promise<boolean> => {
+  if (poolId.length === 0) return false
+  try {
+    await getPoolHash(poolId)
+    return true
+  } catch (e) {
+    return false
+  }
+}
+
+const isValidPoolHash = async (poolHash: string): Promise<boolean> => {
   if (poolHash.length === 0) return false
 
   const {csl, release} = wrappedCsl()
   try {
     await csl.Ed25519KeyHash.fromBytes(Buffer.from(poolHash, 'hex'))
-  } catch {
+    return true
+  } catch (e) {
     return false
   } finally {
     release()
