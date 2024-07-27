@@ -1,4 +1,3 @@
-import {isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Animated, NativeScrollEvent, NativeSyntheticEvent, StyleSheet} from 'react-native'
@@ -10,7 +9,6 @@ import {features} from '../../../../kernel/features'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {TxFilter} from '../../../Transactions/useCases/TxList/TxFilterProvider'
 import {TxList} from '../../../Transactions/useCases/TxList/TxList'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {usePortfolioTokenDetailContext} from '../../common/PortfolioTokenDetailContext'
 import {usePortfolioTokenDetailParams} from '../../common/useNavigateTo'
 import {useStrings} from '../../common/useStrings'
@@ -37,13 +35,6 @@ export const PortfolioTokenDetailsScreen = () => {
   const {track} = useMetrics()
   const [isStickyTab, setIsStickyTab] = React.useState(false)
   const {id: tokenId} = usePortfolioTokenDetailParams()
-
-  const {
-    wallet: {balances},
-  } = useSelectedWallet()
-  const tokenInfo = balances.records.get(tokenId)
-  // TODO: show graph for non primary token when api is available
-  const showGraph = features.portfolioGraph && tokenInfo && isPrimaryToken(tokenInfo.info)
 
   const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const offsetY = e.nativeEvent.contentOffset.y
@@ -101,7 +92,7 @@ export const PortfolioTokenDetailsScreen = () => {
 
                 <Spacer height={16} />
 
-                {showGraph && (
+                {features.portfolioGraph && (
                   <>
                     <PortfolioTokenChart />
 
