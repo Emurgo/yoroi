@@ -80,8 +80,6 @@ export const WarnLimitPrice = ({onConfirm, orderData}: LimitPriceWarningProps) =
           containerStyle={styles.buttonContainer}
         />
       </View>
-
-      <Spacer height={23} />
     </View>
   )
 }
@@ -90,48 +88,50 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     buttonContainer: {
-      flex: 1,
+      ...atoms.flex_1,
     },
     buttonsWrapper: {
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      flexDirection: 'row',
-      gap: 16,
+      ...atoms.align_center,
+      ...atoms.justify_between,
+      ...atoms.flex_row,
+      ...atoms.gap_lg,
+      ...atoms.pt_lg,
     },
     container: {
-      flex: 1,
-      justifyContent: 'space-between',
+      ...atoms.justify_between,
+      ...atoms.flex_1,
       ...atoms.px_lg,
+      ...atoms.pb_lg,
     },
     label: {
-      color: color.gray_c600,
+      color: color.text_gray_medium,
       ...atoms.body_1_lg_regular,
     },
     value: {
-      color: color.gray_cmax,
+      color: color.text_gray_max,
       ...atoms.body_1_lg_regular,
-      textAlign: 'right',
+      ...atoms.text_right,
     },
     textWrapper: {
-      flexDirection: 'row',
-      justifyContent: 'flex-end',
-      alignItems: 'flex-end',
-      flex: 1,
-      flexWrap: 'wrap',
-      gap: 4,
+      ...atoms.flex_1,
+      ...atoms.flex_row,
+      ...atoms.justify_end,
+      ...atoms.align_end,
+      ...atoms.flex_wrap,
+      ...atoms.gap_xs,
     },
     table: {
-      flexDirection: 'column',
-      gap: 8,
+      ...atoms.flex_col,
+      ...atoms.gap_sm,
     },
     row: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      gap: 10,
+      ...atoms.flex_row,
+      ...atoms.justify_between,
+      ...atoms.gap_md,
     },
     description: {
       ...atoms.body_1_lg_regular,
-      color: color.gray_c900,
+      color: color.text_gray_normal,
     },
   })
 
