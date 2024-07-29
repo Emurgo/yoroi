@@ -125,9 +125,9 @@ const useStyles = () => {
       borderTopLeftRadius: 20,
     },
     sheet: {
+      backgroundColor: isDark ? color.gray_c50 : color.white_static,
       ...atoms.flex_1,
       ...atoms.self_stretch,
-      backgroundColor: isDark ? color.gray_c50 : color.white_static,
     },
     title: {
       ...atoms.heading_3_medium,

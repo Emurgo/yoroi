@@ -67,13 +67,14 @@ export const VerifyRecoveryPhraseScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
-      <StepperProgress currentStep={3} currentStepTitle={strings.stepVerifyRecoveryPhrase} totalSteps={4} />
+      <StepperProgress
+        currentStep={3}
+        currentStepTitle={strings.stepVerifyRecoveryPhrase}
+        totalSteps={4}
+        style={styles.padding}
+      />
 
-      <Space height="lg" />
-
-      <Text style={styles.title}>{strings.verifyRecoveryPhraseTitle(bold)}</Text>
-
-      <Space height="lg" />
+      <Text style={[styles.title, styles.padding]}>{strings.verifyRecoveryPhraseTitle(bold)}</Text>
 
       <MnemonicInput
         onPress={removeLastEntry}
@@ -82,17 +83,9 @@ export const VerifyRecoveryPhraseScreen = () => {
         error={isPhraseComplete && !isValidPhrase}
       />
 
-      {isPhraseComplete && isLastWordValid() && (
-        <>
-          <Space height="lg" />
+      {isPhraseComplete && isLastWordValid() && <SuccessMessage />}
 
-          <SuccessMessage />
-        </>
-      )}
-
-      <Space height="lg" />
-
-      <ScrollView bounces={false}>
+      <ScrollView bounces={false} style={styles.padding}>
         <WordBadges
           defaultMnemonic={mnemonicDefault}
           mnemonicEntries={mnemonicEntries}
@@ -101,21 +94,13 @@ export const VerifyRecoveryPhraseScreen = () => {
           removeLastEntryAndAddNew={removeLastEntryAndAddNew}
         />
 
-        {!isLastWordValid() && userEntries.length > 0 && (
-          <>
-            <Space height="lg" />
-
-            <ErrorMessage />
-          </>
-        )}
+        {!isLastWordValid() && userEntries.length > 0 && <ErrorMessage />}
       </ScrollView>
 
-      <Space height="lg" />
-
-      <View>
+      <View style={[styles.actions, styles.padding]}>
         <Button
-          title="next"
-          style={styles.button}
+          shelleyTheme
+          title={strings.next}
           disabled={disabled}
           onPress={async () => {
             const {csl, release} = wrappedCsl()
@@ -126,8 +111,6 @@ export const VerifyRecoveryPhraseScreen = () => {
           }}
           testId="setup-next-button"
         />
-
-        <Space height="sm" />
       </View>
     </SafeAreaView>
   )
@@ -137,7 +120,7 @@ const ErrorMessage = () => {
   const {styles} = useStyles()
   const strings = useStrings()
   return (
-    <View style={styles.errorMessageContainer}>
+    <View style={[styles.errorMessageContainer, styles.padding]}>
       <AlertIllustration />
 
       <Space width="sm" />
@@ -151,7 +134,7 @@ const SuccessMessage = () => {
   const {styles} = useStyles()
   const strings = useStrings()
   return (
-    <View style={styles.successMessageContainer}>
+    <View style={[styles.successMessageContainer, styles.padding]}>
       <Check2Illustration />
 
       <Space width="sm" />
@@ -186,7 +169,7 @@ const MnemonicInput = ({defaultMnemonic, userEntries, onPress}: MnemonicInputPro
   }
 
   return (
-    <Animated.View layout={Layout} entering={FadeIn} exiting={FadeOut} style={styles.recoveryPhrase}>
+    <Animated.View layout={Layout} entering={FadeIn} exiting={FadeOut} style={[styles.recoveryPhrase, styles.padding]}>
       <View style={[StyleSheet.absoluteFill, {backgroundColor: colors.gradientBlueGreen}]} />
 
       <View style={styles.recoveryPhraseBackground}>
@@ -370,49 +353,54 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      ...atoms.px_lg,
-      justifyContent: 'space-between',
       backgroundColor: color.bg_color_high,
+      ...atoms.flex_1,
+      ...atoms.justify_between,
+      ...atoms.gap_lg,
+    },
+    padding: {
+      ...atoms.px_lg,
+    },
+    actions: {
+      ...atoms.pb_lg,
     },
     title: {
       ...atoms.body_1_lg_regular,
-      color: color.gray_c900,
+      color: color.text_gray_normal,
     },
-    button: {backgroundColor: color.primary_c500},
     recoveryPhrase: {
-      ...atoms.p_2xs,
       minHeight: 182,
       borderRadius: 8,
-      overflow: 'hidden',
+      ...atoms.p_2xs,
+      ...atoms.overflow_hidden,
     },
     recoveryPhraseBackground: {
-      borderRadius: 6,
-      overflow: 'hidden',
       backgroundColor: color.bg_color_high,
+      borderRadius: 6,
       minHeight: 182,
+      ...atoms.overflow_hidden,
     },
     recoveryPhraseOutline: {
-      padding: 6,
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      gap: 8,
+      ...atoms.p_sm,
+      ...atoms.flex_row,
+      ...atoms.flex_wrap,
+      ...atoms.gap_sm,
     },
     errorMessageContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      ...atoms.flex_row,
+      ...atoms.align_center,
     },
     errorMessage: {
       color: color.sys_magenta_c500,
       ...atoms.body_2_md_regular,
     },
     successMessageContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'flex-start',
+      ...atoms.flex_row,
+      ...atoms.align_center,
+      ...atoms.justify_start,
     },
     successMessage: {
-      color: color.gray_cmax,
+      color: color.text_gray_max,
       ...atoms.body_1_lg_medium,
     },
     errorBadge: {
@@ -422,39 +410,39 @@ const useStyles = () => {
       backgroundColor: color.sys_magenta_c100,
     },
     words: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      gap: 8,
+      ...atoms.flex_row,
+      ...atoms.flex_wrap,
+      ...atoms.gap_sm,
     },
     wordBadgeView: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 2,
+      ...atoms.flex_row,
+      ...atoms.align_center,
+      ...atoms.gap_2xs,
     },
     wordBadgeContainerOutline: {
+      borderRadius: 8,
+      ...atoms.overflow_hidden,
       ...atoms.px_xs,
       ...atoms.py_xs,
-      borderRadius: 8,
-      overflow: 'hidden',
     },
     wordBadgeContainer: {
-      ...atoms.py_sm,
       borderRadius: 8,
-      overflow: 'hidden',
+      ...atoms.py_sm,
+      ...atoms.overflow_hidden,
     },
     wordBadge: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
+      ...atoms.flex_row,
+      ...atoms.flex_wrap,
     },
     wordBadgeText: {
+      color: color.text_gray_medium,
       ...atoms.body_1_lg_regular,
-      color: color.primary_c600,
     },
     usedWord: {
       color: color.primary_c400,
     },
     usedWordBackground: {
-      position: 'absolute',
+      ...atoms.absolute,
       backgroundColor: color.bg_color_high,
       borderRadius: 6,
       left: 2,

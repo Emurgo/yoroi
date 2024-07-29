@@ -65,7 +65,6 @@ export const RecoveryPhraseScreen = () => {
 
         <Button
           title={strings.continueButton}
-          style={styles.button}
           onPress={() => {
             closeModal()
             showCreateWalletInfoModalChanged(false)
@@ -89,7 +88,6 @@ export const RecoveryPhraseScreen = () => {
     strings.recoveryPhraseCardThirdItem,
     strings.recoveryPhraseCardTitle,
     strings.recoveryPhraseModalTitle,
-    styles.button,
     styles.modal,
   ])
 
@@ -146,8 +144,8 @@ export const RecoveryPhraseScreen = () => {
       <Spacer fill />
 
       <Button
+        shelleyTheme
         title={strings.next}
-        style={styles.button}
         disabled={isBlur}
         onPress={() => {
           mnemonicChanged(mnemonic)
@@ -185,13 +183,12 @@ const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      flex: 1,
-      ...atoms.px_lg,
-      justifyContent: 'space-between',
       backgroundColor: color.bg_color_high,
+      ...atoms.flex_1,
+      ...atoms.px_lg,
     },
     modal: {
-      flex: 1,
+      ...atoms.flex_1,
       ...atoms.px_lg,
     },
     title: {
@@ -204,18 +201,17 @@ const useStyles = () => {
     content: {
       gap: 16,
     },
-    button: {backgroundColor: color.primary_c500},
     mnemonicWords: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      gap: 8,
+      ...atoms.flex_row,
+      ...atoms.flex_wrap,
       ...atoms.py_sm,
+      ...atoms.gap_sm,
     },
     mnemonicTextContainer: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
       borderRadius: 8,
-      overflow: 'hidden',
+      ...atoms.overflow_hidden,
+      ...atoms.flex_row,
+      ...atoms.flex_wrap,
       ...atoms.px_lg,
       ...atoms.py_sm,
     },
@@ -224,31 +220,31 @@ const useStyles = () => {
       color: color.primary_c600,
     },
     blurView: {
-      position: 'absolute',
-      ...atoms.p_2xl,
       left: -8,
       right: -8,
       bottom: 0,
       top: 0,
-      zIndex: 1,
+      ...atoms.z_10,
+      ...atoms.absolute,
+      ...atoms.p_2xl,
     },
     blurButton: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 8,
+      ...atoms.flex_row,
+      ...atoms.align_center,
+      ...atoms.gap_sm,
     },
     blurTextButton: {
-      ...atoms.button_2_md,
       color: color.primary_c500,
+      ...atoms.button_2_md,
       textTransform: 'none',
     },
     info: {
-      position: 'relative',
+      ...atoms.relative,
     },
     infoIcon: {
-      position: 'absolute',
       top: Platform.OS === 'ios' ? -22 : -18,
       left: 0,
+      ...atoms.absolute,
     },
     buttonBackground: {
       backgroundColor: color.primary_c100,
