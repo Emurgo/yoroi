@@ -6,7 +6,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import {useQuery} from 'react-query'
 
 import {Button, Spacer, Text, TextInput} from '../../../components'
-import {wrappedCsl} from '../../../yoroi-wallets/cardano/wrappedCsl'
+import {isValidPoolIdOrHash, normalizeToPoolHash} from '../../../yoroi-wallets/cardano/delegationUtils'
 
 type Props = {
   onPressDelegate: (poolHash: string) => void
@@ -70,51 +70,6 @@ export const PoolDetailScreen = ({onPressDelegate, disabled = false}: Props) => 
 const useIsValidPoolIdOrHash = (poolIdOrHash: string) => {
   const queryFn = React.useCallback(() => isValidPoolIdOrHash(poolIdOrHash), [poolIdOrHash])
   return useQuery({queryFn, queryKey: ['isValidPoolIdOrHash', poolIdOrHash]})
-}
-
-const isValidPoolIdOrHash = async (poolIdOrHash: string): Promise<boolean> => {
-  const [validPoolId, validPoolHash] = await Promise.all([isValidPoolId(poolIdOrHash), isValidPoolHash(poolIdOrHash)])
-  return validPoolId || validPoolHash
-}
-
-const normalizeToPoolHash = async (poolIdOrHash: string): Promise<string> => {
-  if (await isValidPoolHash(poolIdOrHash)) return poolIdOrHash
-  if (await isValidPoolId(poolIdOrHash)) return getPoolHash(poolIdOrHash)
-  throw new Error('Invalid pool ID or hash')
-}
-
-const getPoolHash = async (poolId: string): Promise<string> => {
-  const {csl, release} = wrappedCsl()
-  try {
-    const hash = await csl.Ed25519KeyHash.fromBech32(poolId)
-    return hash.toHex()
-  } finally {
-    release()
-  }
-}
-
-const isValidPoolId = async (poolId: string): Promise<boolean> => {
-  if (poolId.length === 0) return false
-  try {
-    await getPoolHash(poolId)
-    return true
-  } catch (e) {
-    return false
-  }
-}
-
-const isValidPoolHash = async (poolHash: string): Promise<boolean> => {
-  if (poolHash.length === 0) return false
-
-  const {csl, release} = wrappedCsl()
-  try {
-    await csl.Ed25519KeyHash.fromBytes(Buffer.from(poolHash, 'hex'))
-    return true
-  } catch (e) {
-    return false
-  } finally {
-    release()
-  }
 }
 
 const useStyles = () => {

@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Delegate",
     "file": "src/legacy/Staking/PoolDetails/PoolDetailScreen.tsx",
     "start": {
-      "line": 162,
+      "line": 117,
       "column": 12,
-      "index": 4586
+      "index": 3370
     },
     "end": {
-      "line": 165,
+      "line": 120,
       "column": 3,
-      "index": 4700
+      "index": 3484
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Next",
     "file": "src/legacy/Staking/PoolDetails/PoolDetailScreen.tsx",
     "start": {
-      "line": 166,
+      "line": 121,
       "column": 8,
-      "index": 4710
+      "index": 3494
     },
     "end": {
-      "line": 169,
+      "line": 124,
       "column": 3,
-      "index": 4769
+      "index": 3553
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Stake pool hash",
     "file": "src/legacy/Staking/PoolDetails/PoolDetailScreen.tsx",
     "start": {
-      "line": 170,
+      "line": 125,
       "column": 12,
-      "index": 4783
+      "index": 3567
     },
     "end": {
-      "line": 173,
+      "line": 128,
       "column": 3,
-      "index": 4870
+      "index": 3654
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Enter test stake pool ID",
     "file": "src/legacy/Staking/PoolDetails/PoolDetailScreen.tsx",
     "start": {
-      "line": 174,
+      "line": 129,
       "column": 10,
-      "index": 4882
+      "index": 3666
     },
     "end": {
-      "line": 177,
+      "line": 132,
       "column": 3,
-      "index": 4976
+      "index": 3760
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Invalid pool ID. Please retype.",
     "file": "src/legacy/Staking/PoolDetails/PoolDetailScreen.tsx",
     "start": {
-      "line": 178,
+      "line": 133,
       "column": 17,
-      "index": 4995
+      "index": 3779
     },
     "end": {
-      "line": 181,
+      "line": 136,
       "column": 3,
-      "index": 5098
+      "index": 3882
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!Stake test ADA and support Yoroi 💥",
     "file": "src/legacy/Staking/PoolDetails/PoolDetailScreen.tsx",
     "start": {
-      "line": 182,
+      "line": 137,
       "column": 19,
-      "index": 5119
+      "index": 3903
     },
     "end": {
-      "line": 185,
+      "line": 140,
       "column": 3,
-      "index": 5250
+      "index": 4034
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!Experience the mechanism of staking firsthand and help us improve Yoroi's functionality and user experience.",
     "file": "src/legacy/Staking/PoolDetails/PoolDetailScreen.tsx",
     "start": {
-      "line": 186,
+      "line": 141,
       "column": 18,
-      "index": 5270
+      "index": 4054
     },
     "end": {
-      "line": 190,
+      "line": 145,
       "column": 3,
-      "index": 5479
+      "index": 4263
     }
   }
 ]
