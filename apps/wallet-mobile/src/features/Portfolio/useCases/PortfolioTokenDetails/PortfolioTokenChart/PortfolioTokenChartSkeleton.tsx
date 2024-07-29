@@ -53,8 +53,9 @@ const useStyles = () => {
     },
     chartPlaceholder: {
       height: 112,
+      width: '100%',
       marginVertical: 16,
-      resizeMode: 'cover',
+      resizeMode: 'stretch',
     },
   })
   return {styles, color} as const
