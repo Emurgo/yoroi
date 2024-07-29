@@ -1,11 +1,14 @@
 import {isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
+import {Chain} from '@yoroi/types'
 import * as React from 'react'
 import {FlatList, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 
 import {Icon, Spacer} from '../../../../../components'
 import {makeList} from '../../../../../kernel/utils'
+import {PreprodFaucetBanner} from '../../../../Exchange/common/ShowBuyBanner/PreprodFaucetBanner'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
+import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
 import {usePortfolioBalances} from '../../../common/hooks/usePortfolioBalances'
 import {useGetTokensWithBalance} from '../../../common/useGetTokensWithBalance'
 import {useNavigateTo} from '../../../common/useNavigateTo'
@@ -23,6 +26,9 @@ export const DashboardTokensList = () => {
   const {isLoading} = useGetTokensWithBalance()
   const {wallet} = useSelectedWallet()
   const balances = usePortfolioBalances({wallet})
+  const {
+    selected: {network},
+  } = useWalletManager()
 
   const tokensList = React.useMemo(() => balances.fts ?? [], [balances.fts])
   const isJustADA = React.useMemo(() => {
@@ -61,7 +67,7 @@ export const DashboardTokensList = () => {
     if (isZeroADABalance) {
       return (
         <View style={styles.container}>
-          <BuyADABanner />
+          {network === Chain.Network.Preprod ? <PreprodFaucetBanner /> : <BuyADABanner />}
         </View>
       )
     }
