@@ -5,8 +5,8 @@ import LinearGradient from 'react-native-linear-gradient'
 
 import {Button, Spacer} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
+import {PreprodFaucetBannerLogo} from '../../illustrations/PreprodFaucetBannerLogo'
 import {useStrings} from '../useStrings'
-import {PreprodFaucetBannerLogo} from './PreprodFaucetBannerLogo'
 
 export const PreprodFaucetBanner = () => {
   const strings = useStrings()
