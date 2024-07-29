@@ -38,14 +38,9 @@ export const DashboardNavigator = () => {
 
         <Stack.Screen //
           name="staking-center"
+          component={StakingCenter}
           options={{title: strings.title, headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>}}
-        >
-          {() => (
-            <LoadingBoundary>
-              <StakingCenter />
-            </LoadingBoundary>
-          )}
-        </Stack.Screen>
+        />
 
         <Stack.Screen
           name="delegation-confirmation"
