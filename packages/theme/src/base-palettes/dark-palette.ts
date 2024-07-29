@@ -22,7 +22,7 @@ export const darkPalette: BasePalette = {
   secondary_c400: '#08C29D',
   secondary_c300: '#0B997D',
   secondary_c200: '#12705D',
-  secondary_c100: '#17453C',
+  secondary_c100: '#1B3732',
 
   gray_cmax: '#FFFFFF',
   gray_c900: '#E1E6F5',
@@ -40,8 +40,8 @@ export const darkPalette: BasePalette = {
   black_static: '#000000',
   white_static: '#FFFFFF',
 
-  sys_magenta_c700: '#FF6B92',
-  sys_magenta_c600: '#FD3468',
+  sys_magenta_c700: '#FFC0D0',
+  sys_magenta_c600: '#FB9CB5',
   sys_magenta_c500: '#FF7196',
   sys_magenta_c300: '#572835',
   sys_magenta_c100: '#2F171D',
@@ -60,6 +60,6 @@ export const darkPalette: BasePalette = {
     `#4B6DDE${opacity._10}`,
     `#4B6DDE${opacity._16}`,
   ],
-  bg_gradient_2: [`#0B997D${opacity._8}`, `#08C29D${opacity._48}`],
+  bg_gradient_2: [`#0B997D${opacity._48}`, `#08C29D${opacity._8}`],
   bg_gradient_3: ['#2E4BB0', '#2B3E7D'],
 }

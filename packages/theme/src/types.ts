@@ -81,36 +81,33 @@ export type BasePalette = {
 }
 
 export type ThemedPalette = BasePalette & {
-  text_primary_high: HexColor
+  text_primary_max: HexColor
   text_primary_medium: HexColor
-  text_primary_low: HexColor
-  text_primary_on: HexColor
+  text_primary_min: HexColor
   text_gray_max: HexColor
-  text_gray_min: HexColor
-  text_gray_normal: HexColor
   text_gray_medium: HexColor
   text_gray_low: HexColor
+  text_gray_min: HexColor
   text_error: HexColor
   text_warning: HexColor
   text_success: HexColor
   text_info: HexColor
 
-  bg_color_high: HexColor
-  bg_color_low: HexColor
+  bg_color_max: HexColor
+  bg_color_min: HexColor
 
-  el_primary_high: HexColor
+  el_primary_max: HexColor
   el_primary_medium: HexColor
-  el_primary_low: HexColor
-  el_gray_high: HexColor
-  el_gray_normal: HexColor
+  el_primary_min: HexColor
+  el_gray_max: HexColor
   el_gray_medium: HexColor
   el_gray_low: HexColor
-  el_secondary_medium: HexColor
-  el_static_white: HexColor
+  el_gray_min: HexColor
+  el_secondary: HexColor
 
   web_overlay: HexColor
-  web_sidebar_item_active: HexColor
-  web_sidebar_item_inactive: HexColor
+  web_bg_sidebar_active: HexColor
+  web_bg_sidebar_inactive: HexColor
 
   mobile_overlay: HexColor
   mobile_bg_blur: HexColor
