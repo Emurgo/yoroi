@@ -77,7 +77,7 @@ export const Toggle = () => {
         thumbColor={isLight === true ? color.sys_yellow_c500 : color.el_primary_medium}
       />
 
-      {isDark && <Pressable style={styles.switchCircle} onPress={handleOnValueChange} />}
+      {isDark && Platform.OS === 'android' && <Pressable style={styles.switchCircle} onPress={handleOnValueChange} />}
     </View>
   )
 }
