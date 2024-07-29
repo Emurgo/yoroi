@@ -121,7 +121,14 @@ const useGetPortfolioTokenChart = (
         [TOKEN_CHART_TIME_INTERVAL.YEAR]: now - time.oneYear,
         [TOKEN_CHART_TIME_INTERVAL.ALL]: new Date('2018').getTime(),
       }[timeInterval]
-      const resolution = 50
+      const resolution = {
+        [TOKEN_CHART_TIME_INTERVAL.DAY]: 96,
+        [TOKEN_CHART_TIME_INTERVAL.WEEK]: 168,
+        [TOKEN_CHART_TIME_INTERVAL.MONTH]: 180,
+        [TOKEN_CHART_TIME_INTERVAL.SIX_MONTHS]: 180,
+        [TOKEN_CHART_TIME_INTERVAL.YEAR]: 365,
+        [TOKEN_CHART_TIME_INTERVAL.ALL]: 256,
+      }[timeInterval]
       const step = (now - from) / resolution
       const timestamps = Array.from({length: resolution}, (_, i) => from + Math.round(step * i))
       const {error, tickers} = await fetchAdaPrice(API_ROOT, timestamps)

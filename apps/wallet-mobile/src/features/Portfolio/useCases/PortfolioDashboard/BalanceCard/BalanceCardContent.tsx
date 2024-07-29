@@ -20,7 +20,10 @@ export const BalanceCardContent = ({amount, headerCard}: Props) => {
   const {styles} = useStyles()
   const {isPrivacyActive, setPrivacyModeOff, setPrivacyModeOn} = usePrivacyMode()
 
-  const {price, previous} = useCurrencyPairing().adaPrice
+  const {
+    adaPrice: {price, previous},
+    config,
+  } = useCurrencyPairing()
 
   const {changeValue, changePercent, variantPnl} = priceChange(previous, price)
 
@@ -51,7 +54,7 @@ export const BalanceCardContent = ({amount, headerCard}: Props) => {
           <View style={styles.varyContainer}>
             <PnlPercentChange variantPnl={variantPnl} changePercent={formatPriceChange(changePercent)} />
 
-            <PnlPairedChange variantPnl={variantPnl} changeValue={formatPriceChange(changeValue)} />
+            <PnlPairedChange variantPnl={variantPnl} changeValue={formatPriceChange(changeValue, config.decimals)} />
           </View>
         </View>
       </View>

@@ -33,7 +33,7 @@ export const PortfolioTokenChart = () => {
       ) : (
         <>
           <TokenPerformance
-            tokenPerformance={data[selectedIndex < 0 ? 0 : selectedIndex]}
+            tokenPerformance={data[Math.max(0, Math.min(data.length - 1, selectedIndex))]}
             timeInterval={timeInterval}
           />
 
