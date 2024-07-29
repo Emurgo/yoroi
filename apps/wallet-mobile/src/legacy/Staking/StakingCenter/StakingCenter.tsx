@@ -11,7 +11,6 @@ import {WebView, WebViewMessageEvent} from 'react-native-webview'
 import {PleaseWaitModal, Spacer} from '../../../components'
 import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
 import {showErrorDialog} from '../../../kernel/dialogs'
-import {isDev} from '../../../kernel/env'
 import {useLanguage} from '../../../kernel/i18n'
 import globalMessages from '../../../kernel/i18n/global-messages'
 import {logger} from '../../../kernel/logger/logger'
@@ -73,7 +72,7 @@ export const StakingCenter = () => {
     setSelectedPoolId(selectedPoolHashes[0])
   }
 
-  const shouldDisplayPoolIDInput = isDev || !wallet.isMainnet
+  const shouldDisplayPoolIDInput = !wallet.isMainnet
   const shouldDisplayPoolList = wallet.isMainnet
 
   return (
