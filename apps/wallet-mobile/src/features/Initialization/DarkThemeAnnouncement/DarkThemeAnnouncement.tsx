@@ -2,7 +2,7 @@ import {parseBoolean, useAsyncStorage, useMutationWithInvalidations} from '@yoro
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Platform, StyleSheet, Switch, View} from 'react-native'
+import {Platform, Pressable, StyleSheet, Switch, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useQuery, UseQueryOptions} from 'react-query'
@@ -13,9 +13,8 @@ import {useWalletNavigation} from '../../../kernel/navigation'
 import {ThemeIlustration} from '../illustrations/ThemeIlustration'
 
 export const DarkThemeAnnouncement = () => {
-  const {styles, color} = useStyles()
+  const {styles} = useStyles()
   const strings = useStrings()
-  const {isLight, selectThemeName} = useTheme()
   const {setScreenShown, isLoading: isSetScreenShownLoading} = useSetScreenShown()
 
   const scrollViewRef = React.useRef<ScrollView | null>(null)
@@ -49,15 +48,7 @@ export const DarkThemeAnnouncement = () => {
 
           <Text style={styles.description}>{strings.description}</Text>
 
-          <View style={styles.toggle}>
-            <Switch
-              style={styles.switch}
-              value={isLight === false}
-              onValueChange={() => selectThemeName(isLight === true ? 'default-dark' : 'default-light')}
-              trackColor={{false: color.gray_c100, true: color.gray_c100}}
-              thumbColor={isLight === true ? color.sys_yellow_c500 : color.el_primary_medium}
-            />
-          </View>
+          <Toggle />
 
           <Text style={styles.caption}>{strings.changeTheme}</Text>
         </View>
@@ -67,6 +58,27 @@ export const DarkThemeAnnouncement = () => {
 
       {Platform.OS === 'android' && <Space height="lg" />}
     </SafeAreaView>
+  )
+}
+
+export const Toggle = () => {
+  const {styles, color} = useStyles()
+  const {isLight, isDark, selectThemeName} = useTheme()
+
+  const handleOnValueChange = () => selectThemeName(isLight === true ? 'default-dark' : 'default-light')
+
+  return (
+    <View style={styles.toggle}>
+      <Switch
+        style={styles.switch}
+        value={isLight === false}
+        onValueChange={handleOnValueChange}
+        trackColor={{false: color.gray_c100, true: color.gray_c100}}
+        thumbColor={isLight === true ? color.sys_yellow_c500 : color.el_primary_medium}
+      />
+
+      {isDark && <Pressable style={styles.switchCircle} onPress={handleOnValueChange} />}
+    </View>
   )
 }
 
@@ -134,9 +146,19 @@ const useStyles = () => {
     },
     toggle: {
       ...atoms.pb_2xl,
+      position: 'relative',
     },
     switch: {
       transform: [{scaleX: 1.3}, {scaleY: 1.3}],
+    },
+    switchCircle: {
+      width: 35,
+      height: 35,
+      bottom: '50%',
+      right: -5,
+      backgroundColor: color.gray_c100,
+      position: 'relative',
+      borderRadius: 9999,
     },
   })
 
