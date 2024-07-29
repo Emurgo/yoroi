@@ -21,6 +21,7 @@ export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
   const {styles} = useStyles()
   const {
     currency,
+    config,
     adaPrice: {price, previous},
   } = useCurrencyPairing()
   const {isPrimaryTokenActive, setIsPrimaryTokenActive} = usePortfolio()
@@ -65,7 +66,10 @@ export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
               <SkeletonQuantityChange />
             ) : (
               <PnlTag variant={variantPnl}>
-                <Text>{`${changeValue > 0 ? '+' : ''}${formatPriceChange(changeValue)} ${currency}`}</Text>
+                <Text>{`${changeValue > 0 ? '+' : ''}${formatPriceChange(
+                  changeValue,
+                  config.decimals,
+                )} ${currency}`}</Text>
               </PnlTag>
             )}
           </View>

@@ -6,6 +6,7 @@ import {StyleSheet, View} from 'react-native'
 import {Icon, Text} from '../../../../../components'
 import {Tooltip} from '../../../../../components/Tooltip'
 import {useCurrencyPairing} from '../../../../Settings/Currency'
+import {formatPriceChange} from '../../../common/helpers/priceChange'
 import {PnlTag} from '../../../common/PnlTag/PnlTag'
 import {TOKEN_CHART_TIME_INTERVAL, TokenChartTimeInterval} from '../../../common/useGetPortfolioTokenChart'
 import {useStrings} from '../../../common/useStrings'
@@ -54,10 +55,13 @@ export const TokenPerformance = ({tokenPerformance, timeInterval}: Props) => {
     <View style={styles.root}>
       <View style={styles.tokenChangeWrapper}>
         <PnlTag withIcon={variant !== 'neutral'} variant={variant}>
-          {tokenPerformance.changePercent.toFixed(2)}%
+          {formatPriceChange(tokenPerformance.changePercent)}%
         </PnlTag>
 
-        <PnlTag variant={variant}>{`${tokenPerformance.changeValue.toFixed(config.decimals)} ${currency}`}</PnlTag>
+        <PnlTag variant={variant}>{`${formatPriceChange(
+          tokenPerformance.changeValue,
+          config.decimals,
+        )} ${currency}`}</PnlTag>
 
         <Tooltip numberOfLine={3} title={strings.tokenPriceChangeTooltip(intervalLabel)}>
           <Icon.InfoCircle />
@@ -65,7 +69,7 @@ export const TokenPerformance = ({tokenPerformance, timeInterval}: Props) => {
       </View>
 
       <View style={styles.tokenWrapper}>
-        <Text style={styles.tokenPrice}>{tokenPerformance.value.toFixed(config.decimals)}</Text>
+        <Text style={styles.tokenPrice}>{formatPriceChange(tokenPerformance.value, config.decimals)}</Text>
 
         <Text style={styles.tokenPriceSymbol}>{currency}</Text>
       </View>

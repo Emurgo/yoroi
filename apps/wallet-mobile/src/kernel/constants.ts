@@ -29,7 +29,7 @@ export const configCurrencies = freeze({
     nativeName: 'Real',
   },
   [supportedCurrencies.BTC]: {
-    decimals: 4,
+    decimals: 8,
     nativeName: 'Bitcoin',
   },
   [supportedCurrencies.CNY]: {
@@ -37,7 +37,7 @@ export const configCurrencies = freeze({
     nativeName: '人民币',
   },
   [supportedCurrencies.ETH]: {
-    decimals: 4,
+    decimals: 8,
     nativeName: 'Ethereum',
   },
   [supportedCurrencies.EUR]: {
