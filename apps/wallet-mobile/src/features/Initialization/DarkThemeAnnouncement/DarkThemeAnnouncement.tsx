@@ -157,7 +157,7 @@ const useStyles = () => {
       bottom: '50%',
       right: -5,
       backgroundColor: color.gray_c100,
-      position: 'relative',
+      position: 'absolute',
       borderRadius: 9999,
     },
   })
