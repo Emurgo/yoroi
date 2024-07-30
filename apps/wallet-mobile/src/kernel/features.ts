@@ -7,7 +7,7 @@ export const features = {
   moderatingNftsEnabled: false,
   poolTransition: true,
   portfolioPerformance: false,
-  portfolioGraph: false,
+  portfolioGraph: isDev,
   portfolioNews: false,
   portfolioExport: false,
   walletListFeedback: false,

@@ -7,7 +7,9 @@ import {CurrencyPickerItem} from './CurrencyPickerItem'
 
 export const CurrencyPickerList = () => {
   const {configCurrencies, currency, selectCurrency} = useCurrencyPairing()
-  const currencies = Object.entries(configCurrencies).map(([k, v]) => ({symbol: k as CurrencySymbol, data: v}))
+  const currencies = Object.entries(configCurrencies)
+    .map(([k, v]) => ({symbol: k as CurrencySymbol, data: v}))
+    .filter(({symbol}) => symbol !== 'ADA')
 
   return (
     <FlatList

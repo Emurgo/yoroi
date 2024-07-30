@@ -7,11 +7,12 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Spacer} from '../../../../../components'
 import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
+import {useCurrencyPairing} from '../../../../Settings/Currency'
 import {usePrivacyMode} from '../../../../Settings/PrivacyMode/PrivacyMode'
+import {formatPriceChange, priceChange} from '../../../common/helpers/priceChange'
 import {PnlTag} from '../../../common/PnlTag/PnlTag'
 import {TokenInfoIcon} from '../../../common/TokenAmountItem/TokenInfoIcon'
 import {useNavigateTo} from '../../../common/useNavigateTo'
-import {useQuantityChange} from '../../../common/useQuantityChange'
 
 type Props = {
   tokenInfo: PortfolioTokenAmount
@@ -20,12 +21,16 @@ export const DashboardTokenItem = ({tokenInfo}: Props) => {
   const {styles} = useStyles()
   const navigationTo = useNavigateTo()
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
-
-  const {info, quantity} = tokenInfo ?? {}
-  // TODO
-  const previousQuantity = quantity
   const formattedQuantity = isPrivacyActive === false ? amountBreakdown(tokenInfo).bn.toFormat(2) : privacyPlaceholder
-  const {quantityChangePercent, variantPnl} = useQuantityChange({previousQuantity, quantity, decimals: info.decimals})
+
+  const {info} = tokenInfo ?? {}
+
+  const adaPrice = useCurrencyPairing().adaPrice
+
+  // TODO: missing price for non ada
+  const {price, previous} = isPrimaryToken(info) ? adaPrice : {price: 0, previous: 0}
+
+  const {changePercent, variantPnl} = priceChange(previous, price)
 
   return (
     <TouchableOpacity onPress={() => navigationTo.tokenDetail({id: info.id})} style={styles.root}>
@@ -36,7 +41,7 @@ export const DashboardTokenItem = ({tokenInfo}: Props) => {
 
         <View style={styles.quantityContainer}>
           <PnlTag variant={variantPnl} withIcon>
-            <Text>{quantityChangePercent}%</Text>
+            <Text>{formatPriceChange(changePercent)}%</Text>
           </PnlTag>
 
           <Text ellipsizeMode="tail" numberOfLines={1} style={styles.tokenValue}>

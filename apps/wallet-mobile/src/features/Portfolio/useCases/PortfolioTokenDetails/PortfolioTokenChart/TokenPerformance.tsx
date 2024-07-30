@@ -6,42 +6,45 @@ import {StyleSheet, View} from 'react-native'
 import {Icon, Text} from '../../../../../components'
 import {Tooltip} from '../../../../../components/Tooltip'
 import {useCurrencyPairing} from '../../../../Settings/Currency'
+import {formatPriceChange} from '../../../common/helpers/priceChange'
 import {PnlTag} from '../../../common/PnlTag/PnlTag'
-import {TOKEN_CHART_TIME_INTERVAL, TokenChartTimeInterval} from '../../../common/useGetPortfolioTokenChart'
+import {TOKEN_CHART_INTERVAL, TokenChartInterval} from '../../../common/useGetPortfolioTokenChart'
 import {useStrings} from '../../../common/useStrings'
 
-interface Props {
-  changePercent?: number
-  changeValue?: number
-  value?: number
-  timeInterval?: TokenChartTimeInterval
+type Props = {
+  tokenPerformance: {
+    changePercent: number
+    changeValue: number
+    value: number
+  }
+  timeInterval?: TokenChartInterval
 }
 
-export const TokenPerformance = ({changePercent = 0, changeValue = 0, value = 0, timeInterval}: Props) => {
+export const TokenPerformance = ({tokenPerformance, timeInterval}: Props) => {
   const {styles} = useStyles()
   const strings = useStrings()
-  const {currency} = useCurrencyPairing()
+  const {currency, config} = useCurrencyPairing()
 
   const variant = React.useMemo(() => {
-    if (Number(changePercent) > 0) return 'success'
-    if (Number(changePercent) < 0) return 'danger'
+    if (Number(tokenPerformance.changePercent) > 0) return 'success'
+    if (Number(tokenPerformance.changePercent) < 0) return 'danger'
 
     return 'neutral'
-  }, [changePercent])
+  }, [tokenPerformance.changePercent])
 
   const intervalLabel = React.useMemo(() => {
     switch (timeInterval) {
-      case TOKEN_CHART_TIME_INTERVAL.HOUR:
+      case TOKEN_CHART_INTERVAL.DAY:
         return strings._24_hours
-      case TOKEN_CHART_TIME_INTERVAL.WEEK:
+      case TOKEN_CHART_INTERVAL.WEEK:
         return strings._1_week
-      case TOKEN_CHART_TIME_INTERVAL.MONTH:
+      case TOKEN_CHART_INTERVAL.MONTH:
         return strings._1_month
-      case TOKEN_CHART_TIME_INTERVAL.SIX_MONTHS:
+      case TOKEN_CHART_INTERVAL.SIX_MONTHS:
         return strings._6_months
-      case TOKEN_CHART_TIME_INTERVAL.YEAR:
+      case TOKEN_CHART_INTERVAL.YEAR:
         return strings._1_year
-      case TOKEN_CHART_TIME_INTERVAL.ALL:
+      case TOKEN_CHART_INTERVAL.ALL:
         return strings.all_time
       default:
         return strings._24_hours
@@ -52,10 +55,13 @@ export const TokenPerformance = ({changePercent = 0, changeValue = 0, value = 0,
     <View style={styles.root}>
       <View style={styles.tokenChangeWrapper}>
         <PnlTag withIcon={variant !== 'neutral'} variant={variant}>
-          {changePercent.toFixed(2)}%
+          {formatPriceChange(tokenPerformance.changePercent)}%
         </PnlTag>
 
-        <PnlTag variant={variant}>{`${changeValue.toFixed(1)} ${currency}`}</PnlTag>
+        <PnlTag variant={variant}>{`${formatPriceChange(
+          tokenPerformance.changeValue,
+          config.decimals,
+        )} ${currency}`}</PnlTag>
 
         <Tooltip numberOfLine={3} title={strings.tokenPriceChangeTooltip(intervalLabel)}>
           <Icon.InfoCircle />
@@ -63,7 +69,7 @@ export const TokenPerformance = ({changePercent = 0, changeValue = 0, value = 0,
       </View>
 
       <View style={styles.tokenWrapper}>
-        <Text style={styles.tokenPrice}>{value.toFixed(2)}</Text>
+        <Text style={styles.tokenPrice}>{formatPriceChange(tokenPerformance.value, config.decimals)}</Text>
 
         <Text style={styles.tokenPriceSymbol}>{currency}</Text>
       </View>
