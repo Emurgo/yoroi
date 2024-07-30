@@ -18,11 +18,19 @@ export const TxList = (props: Props) => {
   const {wallet} = useSelectedWallet()
 
   const filter = useTxFilter()
-  const transactions = useTransactionInfos({wallet})
-  const filteredTransactions = React.useMemo(() => filterTransactions(transactions, filter), [transactions, filter])
+  const transactionInfos = useTransactionInfos({wallet})
+  const filteredTransactions = React.useMemo(
+    () => filterTransactions(transactionInfos, filter),
+    [transactionInfos, filter],
+  )
 
   const [loadedTxs, setLoadedTxs] = React.useState(filteredTransactions.slice(0, batchSize))
   const [currentIndex, setCurrentIndex] = React.useState(batchSize)
+
+  React.useEffect(() => {
+    setLoadedTxs(filteredTransactions.slice(0, currentIndex + batchSize))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [transactionInfos]) // must be transactionInfos
 
   const handleOnEndReached = React.useCallback(() => {
     if (currentIndex >= filteredTransactions.length) return

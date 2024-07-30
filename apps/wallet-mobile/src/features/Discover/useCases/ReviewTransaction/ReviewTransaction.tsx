@@ -186,7 +186,7 @@ const getTxDetails = async (cbor: string): Promise<TxDetails> => {
 }
 
 const useTxDetails = (cbor: string) => {
-  return useQuery({queryFn: () => getTxDetails(cbor)})
+  return useQuery({queryFn: () => getTxDetails(cbor), queryKey: ['txDetails', cbor]})
 }
 
 const useFormattedTransaction = (cbor: string) => {

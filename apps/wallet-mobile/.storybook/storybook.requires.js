@@ -133,6 +133,7 @@ const getStories = () => {
     "./src/features/Exchange/common/ProviderItem/ProviderItem.stories.tsx": require("../src/features/Exchange/common/ProviderItem/ProviderItem.stories.tsx"),
     "./src/features/Exchange/common/ShowBuyBanner/BuyBannerBig.stories.tsx": require("../src/features/Exchange/common/ShowBuyBanner/BuyBannerBig.stories.tsx"),
     "./src/features/Exchange/common/ShowBuyBanner/BuyBannerSmall.stories.tsx": require("../src/features/Exchange/common/ShowBuyBanner/BuyBannerSmall.stories.tsx"),
+    "./src/features/Exchange/common/ShowBuyBanner/PreprodFaucetBanner.stories.tsx": require("../src/features/Exchange/common/ShowBuyBanner/PreprodFaucetBanner.stories.tsx"),
     "./src/features/Exchange/common/ShowBuyBanner/ShowBuyBanner.stories.tsx": require("../src/features/Exchange/common/ShowBuyBanner/ShowBuyBanner.stories.tsx"),
     "./src/features/Exchange/useCases/CreateExchangeOrderScreen/CreateExchangeOrderScreen.stories.tsx": require("../src/features/Exchange/useCases/CreateExchangeOrderScreen/CreateExchangeOrderScreen.stories.tsx"),
     "./src/features/Exchange/useCases/CreateExchangeOrderScreen/EditAmount/EditAmount.stories.tsx": require("../src/features/Exchange/useCases/CreateExchangeOrderScreen/EditAmount/EditAmount.stories.tsx"),

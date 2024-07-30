@@ -471,7 +471,7 @@ export const useTransactionInfos = ({wallet}: {wallet: YoroiWallet}) => {
     const unsubscribe = wallet.subscribe((event) => {
       if (event.type !== 'transactions') return
 
-      setTransactionInfos(wallet.transactions)
+      setTransactionInfos(() => wallet.transactions)
     })
     return () => unsubscribe?.()
   }, [wallet])
