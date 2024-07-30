@@ -8,6 +8,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, KeyboardAvoidingView, Spacer, TextInput} from '../../../../../components'
 import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
+import {Space} from '../../../../../components/Space/Space'
 import {useLanguage} from '../../../../../kernel/i18n'
 import {logger} from '../../../../../kernel/logger/logger'
 import {editedFormatter, pastedFormatter} from '../../../../../yoroi-wallets/utils'
@@ -93,11 +94,9 @@ export const EditAmountScreen = () => {
   }, [amount.info, amountChanged, navigateTo, quantity])
 
   return (
-    <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
-      <KeyboardAvoidingView style={{flex: 1}}>
+    <KeyboardAvoidingView style={[styles.flex, styles.root]}>
+      <SafeAreaView edges={['bottom', 'left', 'right']} style={[styles.flex, styles.safeAreaView]}>
         <ScrollView style={styles.scrollView} bounces={false}>
-          <Spacer height={16} />
-
           <TokenAmountItem
             amount={{
               info: amount.info,
@@ -106,7 +105,7 @@ export const EditAmountScreen = () => {
             ignorePrivacy
           />
 
-          <Spacer height={40} />
+          <Spacer height={46} />
 
           <AmountInput onChange={handleOnChangeQuantity} value={inputValue} ticker={amount.info.ticker} />
 
@@ -121,11 +120,11 @@ export const EditAmountScreen = () => {
               />
             )}
 
-            <Spacer height={22} />
+            <Space />
 
             {!isPrimary && <MaxBalanceButton onPress={handleOnMaxBalance} />}
 
-            <Spacer height={22} />
+            <Space />
 
             {!hasBalance && <NoBalance />}
 
@@ -143,8 +142,8 @@ export const EditAmountScreen = () => {
             disabled={isUnableToSpend || !hasBalance || isZero}
           />
         </Actions>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   )
 }
 
@@ -202,6 +201,8 @@ const AmountInput = ({onChange, value, ticker}: AmountInputProps) => {
       style={styles.amount}
       underlineColor="transparent"
       underlineColorAndroid="transparent"
+      activeUnderlineColor="transparent"
+      noHelper
     />
   )
 }
@@ -218,45 +219,48 @@ const HR = () => {
 const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
-    center: {
-      alignItems: 'center',
-    },
     root: {
       backgroundColor: color.bg_color_high,
-      ...atoms.flex_1,
-      ...atoms.px_lg,
+    },
+    safeAreaView: {
+      ...atoms.gap_lg,
+      ...atoms.py_lg,
     },
     scrollView: {
-      flex: 1,
       ...atoms.px_lg,
+    },
+    center: {
+      ...atoms.align_center,
+    },
+    flex: {
+      ...atoms.flex_1,
     },
     hr: {
       height: StyleSheet.hairlineWidth,
       backgroundColor: color.gray_c200,
     },
     actions: {
-      ...atoms.pt_lg,
+      ...atoms.px_lg,
     },
     maxBalance: {
       color: color.primary_c600,
       ...atoms.body_1_lg_medium,
     },
     amount: {
-      ...atoms.heading_2_regular,
       backgroundColor: color.bg_color_high,
-      borderWidth: 0,
-      textAlign: 'right',
+      ...atoms.heading_2_regular,
+      ...atoms.border_0,
+      ...atoms.text_right,
     },
     ticker: {
-      color: color.gray_cmax,
+      color: color.text_gray_max,
       ...atoms.heading_2_regular,
     },
   })
-
   const colors = {
     black: color.gray_cmax,
   }
-  return {styles, colors}
+  return {styles, colors} as const
 }
 
 const ApplyButton = Button

@@ -5,12 +5,13 @@ import React from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {KeyboardAvoidingView} from '../../components'
 import {defaultMaterialTopTabNavigationOptions, SwapTabRoutes} from '../../kernel/navigation'
 import {usePortfolioBalances} from '../Portfolio/common/hooks/usePortfolioBalances'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from './common/strings'
-import {CreateOrder} from './useCases/StartSwapScreen/CreateOrder/CreateOrder'
-import {ListOrders} from './useCases/StartSwapScreen/ListOrders/ListOrders'
+import {StartSwapOrderScreen} from './useCases/StartOrderSwapScreen/CreateOrder/StartSwapOrderScreen'
+import {ListOrders} from './useCases/StartOrderSwapScreen/ListOrders/ListOrders'
 
 const Tab = createMaterialTopTabNavigator<SwapTabRoutes>()
 export const SwapTabNavigator = () => {
@@ -52,28 +53,32 @@ export const SwapTabNavigator = () => {
   useSwapTokensOnlyVerified({suspense: false})
 
   return (
-    <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
-      <Tab.Navigator
-        screenOptions={({route}) => ({
-          ...defaultMaterialTopTabNavigationOptions(atoms, color),
-          tabBarLabel: route.name === 'token-swap' ? strings.tokenSwap : strings.orderSwap,
-        })}
-        style={styles.tab}
-      >
-        <Tab.Screen name="token-swap" component={CreateOrder} />
+    <KeyboardAvoidingView style={[styles.flex, styles.root]}>
+      <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.flex}>
+        <Tab.Navigator
+          screenOptions={({route}) => ({
+            ...defaultMaterialTopTabNavigationOptions(atoms, color),
+            tabBarLabel: route.name === 'token-swap' ? strings.tokenSwap : strings.orderSwap,
+          })}
+          style={styles.tab}
+        >
+          <Tab.Screen name="token-swap" component={StartSwapOrderScreen} />
 
-        <Tab.Screen name="orders" component={ListOrders} />
-      </Tab.Navigator>
-    </SafeAreaView>
+          <Tab.Screen name="orders" getComponent={() => ListOrders} />
+        </Tab.Navigator>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   )
 }
 
 const useStyles = () => {
-  const {color} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      flex: 1,
       backgroundColor: color.bg_color_high,
+    },
+    flex: {
+      ...atoms.flex_1,
     },
     tab: {
       backgroundColor: color.bg_color_high,

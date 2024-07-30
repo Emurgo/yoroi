@@ -137,7 +137,7 @@ export const RestoreWalletDetailsScreen = () => {
   const showModalTipsPassword = () => {
     openModal(
       strings.walletDetailsModalTitle,
-      <View style={styles.flex}>
+      <View style={[styles.flex, styles.modal]}>
         <ScrollView bounces={false}>
           <View>
             <CardAboutPhrase
@@ -164,9 +164,7 @@ export const RestoreWalletDetailsScreen = () => {
 
         <Space height="sm" />
 
-        <Button title={strings.continueButton} style={styles.button} onPress={closeModal} />
-
-        <Space height="lg" />
+        <Button title={strings.continueButton} shelleyTheme onPress={closeModal} />
       </View>,
       HEIGHT_MODAL_NAME_PASSWORD,
     )
@@ -175,7 +173,7 @@ export const RestoreWalletDetailsScreen = () => {
   const showModalTipsPlateNumber = () => {
     openModal(
       strings.walletDetailsModalTitle,
-      <View style={styles.flex}>
+      <View style={[styles.flex, styles.modal]}>
         <ScrollView bounces={false}>
           <View>
             <CardAboutPhrase
@@ -201,17 +199,15 @@ export const RestoreWalletDetailsScreen = () => {
 
         <Space height="sm" />
 
-        <Button title={strings.continueButton} style={styles.button} onPress={closeModal} />
-
-        <Space height="lg" />
+        <Button title={strings.continueButton} shelleyTheme onPress={closeModal} />
       </View>,
       HEIGHT_MODAL_CHECKSUM,
     )
   }
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={[styles.root, styles.flex]}>
-      <KeyboardAvoidingView style={styles.flex}>
+    <KeyboardAvoidingView style={[styles.root, styles.flex]}>
+      <SafeAreaView edges={['left', 'right', 'bottom']} style={[styles.safeAreaView, styles.flex]}>
         <StepperProgress currentStep={2} currentStepTitle={strings.stepWalletDetails} totalSteps={2} />
 
         <View style={styles.info}>
@@ -294,10 +290,10 @@ export const RestoreWalletDetailsScreen = () => {
           </View>
         </ScrollView>
 
-        <View style={styles.actions}>
+        <View>
           <Button
+            shelleyTheme
             title={strings.next}
-            style={styles.button}
             onPress={() =>
               createWallet({
                 name,
@@ -312,8 +308,8 @@ export const RestoreWalletDetailsScreen = () => {
             disabled={isLoading || Object.keys(passwordErrors).length > 0 || Object.keys(nameErrors).length > 0}
           />
         </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   )
 }
 
@@ -340,43 +336,44 @@ const useStyles = () => {
     flex: {
       ...atoms.flex_1,
     },
-    root: {
-      justifyContent: 'space-between',
-      backgroundColor: color.bg_color_high,
+    modal: {
+      ...atoms.pb_lg,
       ...atoms.px_lg,
+    },
+    root: {
+      backgroundColor: color.bg_color_high,
+      ...atoms.justify_between,
+      ...atoms.px_lg,
+    },
+    safeAreaView: {
+      ...atoms.pb_lg,
     },
     info: {
       flexDirection: 'row',
     },
     title: {
+      color: color.text_gray_normal,
       ...atoms.body_1_lg_regular,
-      color: color.gray_c900,
     },
     plateNumber: {
+      color: color.text_gray_normal,
       ...atoms.body_1_lg_regular,
-      color: color.gray_c900,
-      textAlign: 'center',
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    button: {
-      backgroundColor: color.primary_c500,
+      ...atoms.text_center,
+      ...atoms.justify_center,
+      ...atoms.align_center,
     },
     bolder: {
       ...atoms.body_1_lg_medium,
     },
     checksum: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
+      ...atoms.flex_row,
+      ...atoms.align_center,
+      ...atoms.justify_center,
       textAlignVertical: 'center',
     },
     walletChecksum: {
       width: 24,
       height: 24,
-    },
-    actions: {
-      ...atoms.pt_lg,
     },
   })
 

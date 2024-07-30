@@ -6,7 +6,7 @@ import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import Icon from '../../../assets/img/copy.png'
-import {Button, Spacer, useModal} from '../../../components'
+import {Button, useModal} from '../../../components'
 import {useCopy} from '../../../hooks/useCopy'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {isEmptyString} from '../../../kernel/utils'
@@ -52,7 +52,6 @@ export const DescribeSelectedAddressScreen = () => {
     },
     [navigateTo],
   )
-
   React.useEffect(() => {
     isShowingMultipleAddressInfo &&
       openModal(
@@ -76,9 +75,9 @@ export const DescribeSelectedAddressScreen = () => {
   )
 
   return (
-    <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
-      <ScrollView style={{flex: 1}}>
-        <View style={styles.address}>
+    <SafeAreaView style={[styles.root, styles.flex]} edges={['left', 'right', 'bottom']}>
+      <ScrollView style={styles.flex}>
+        <View style={[styles.address, styles.flex]}>
           {hasAddress ? <AddressDetailCard title={strings.addresscardTitle} /> : <SkeletonAdressDetail />}
         </View>
       </ScrollView>
@@ -94,8 +93,6 @@ export const DescribeSelectedAddressScreen = () => {
         testID="receive:request-specific-amount-link"
       />
 
-      <Spacer height={6} />
-
       <Button
         shelleyTheme
         onPress={handleOnPressCopy}
@@ -104,7 +101,6 @@ export const DescribeSelectedAddressScreen = () => {
         iconImage={Icon}
         isCopying={isCopying}
         copiedText={strings.addressCopiedMsg}
-        style={styles.button}
       />
     </SafeAreaView>
   )
@@ -116,15 +112,13 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       backgroundColor: color.bg_color_high,
+      ...atoms.p_lg,
+    },
+    flex: {
       ...atoms.flex_1,
-      ...atoms.px_lg,
     },
     address: {
-      ...atoms.flex_1,
       ...atoms.align_center,
-    },
-    button: {
-      backgroundColor: color.primary_c500,
     },
   })
 

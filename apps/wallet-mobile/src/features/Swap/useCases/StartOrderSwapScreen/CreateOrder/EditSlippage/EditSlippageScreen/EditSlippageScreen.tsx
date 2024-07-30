@@ -79,8 +79,8 @@ export const EditSlippageScreen = () => {
   const isButtonDisabled = hasError || (isSelectedChoiceManual && inputValue.length === 0)
 
   return (
-    <SafeAreaView style={styles.container} edges={['left', 'right', 'bottom']}>
-      <KeyboardAvoidingView style={styles.flex} keyboardVerticalOffset={102}>
+    <KeyboardAvoidingView style={[styles.flex, styles.root]}>
+      <SafeAreaView edges={['bottom', 'left', 'right']} style={[styles.flex, styles.safeAreaView]}>
         <ScrollView bounces={false} style={styles.flex}>
           <Text style={styles.description}>{strings.slippageInfo}</Text>
 
@@ -130,8 +130,8 @@ export const EditSlippageScreen = () => {
           disabled={isButtonDisabled}
           onPress={onSubmit}
         />
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   )
 }
 
@@ -139,16 +139,17 @@ const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     flex: {
-      flex: 1,
+      ...atoms.flex_1,
     },
-    container: {
-      flex: 1,
+    root: {
       backgroundColor: color.bg_color_high,
+    },
+    safeAreaView: {
       ...atoms.p_lg,
     },
     textInfo: {
       ...atoms.body_3_sm_regular,
-      color: color.gray_c600,
+      color: color.text_gray_normal,
     },
     description: {
       ...atoms.py_lg,
@@ -161,52 +162,52 @@ const useStyles = () => {
       ...atoms.py_xs,
     },
     choicesContainer: {
-      flexDirection: 'row',
+      ...atoms.flex_row,
       ...atoms.pb_xl,
-      flexWrap: 'wrap',
+      ...atoms.flex_wrap,
     },
     choiceButton: {
       ...atoms.p_sm,
     },
     selectedChoiceButton: {
-      backgroundColor: color.gray_c200,
+      backgroundColor: color.el_gray_low,
       borderRadius: 8,
     },
     choiceLabel: {
       ...atoms.body_1_lg_medium,
-      color: color.gray_cmax,
+      color: color.text_gray_max,
     },
     selectedChoiceLabel: {
-      color: color.gray_cmax,
+      color: color.text_gray_max,
     },
     errorText: {
       color: color.sys_magenta_c500,
       ...atoms.body_3_sm_regular,
     },
     input: {
+      color: color.text_gray_normal,
       ...atoms.body_1_lg_regular,
-      color: color.gray_c900,
     },
     percentLabel: {
+      color: color.text_gray_normal,
       ...atoms.body_1_lg_regular,
-      color: color.gray_c900,
       ...atoms.p_lg,
-      position: 'absolute',
+      ...atoms.absolute,
       right: 0,
       top: 0,
     },
     inputContainer: {
-      position: 'relative',
+      ...atoms.relative,
     },
     label: {
-      zIndex: 1000,
-      position: 'absolute',
+      color: color.text_gray_max,
+      backgroundColor: color.bg_color_high,
+      ...atoms.z_20,
+      ...atoms.absolute,
+      ...atoms.body_3_sm_regular,
       top: -3,
       left: 11,
       paddingHorizontal: 3,
-      ...atoms.body_3_sm_regular,
-      color: color.gray_cmax,
-      backgroundColor: color.bg_color_high,
     },
   })
 

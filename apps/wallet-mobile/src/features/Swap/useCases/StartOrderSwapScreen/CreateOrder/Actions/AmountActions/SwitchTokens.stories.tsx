@@ -7,7 +7,7 @@ import {mocks} from '../../../../../../../yoroi-wallets/mocks/wallet'
 import {WalletManagerProviderMock} from '../../../../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {SearchProvider} from '../../../../../../Search/SearchContext'
 import {SwapFormProvider} from '../../../../../common/SwapFormProvider'
-import {SwitchTokens} from '../AmountActions/SwitchTokens'
+import {SwitchTokens} from './SwitchTokens'
 
 storiesOf('Swap Switch Tokens', module).add('only enabled', () => {
   return (

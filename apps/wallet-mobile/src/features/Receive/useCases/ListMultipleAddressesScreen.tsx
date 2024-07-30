@@ -13,7 +13,8 @@ import {
 import Animated, {Layout} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Spacer} from '../../../components'
+import {Button} from '../../../components'
+import {Space} from '../../../components/Space/Space'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {useAddressMode} from '../../WalletManager/common/hooks/useAddressMode'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
@@ -30,21 +31,22 @@ type AddressInfo = {
 }
 
 export const ListMultipleAddressesScreen = () => {
-  const inView = React.useRef(Number.MAX_SAFE_INTEGER)
   const strings = useStrings()
   const {styles} = useStyles()
-  const {wallet} = useSelectedWallet()
   const navigate = useNavigateTo()
   const {track} = useMetrics()
+  const {wallet} = useSelectedWallet()
+  const inView = React.useRef(Number.MAX_SAFE_INTEGER)
 
+  const {selectedAddressChanged} = useReceive()
   const {addressMode} = useAddressMode()
   const addresses = useReceiveAddressesStatus(addressMode)
-  const {selectedAddressChanged} = useReceive()
+  const [showAddressLimitInfo, setShowAddressLimitInfo] = React.useState(true)
 
   const addressInfos = toAddressInfos(addresses)
   const hasReachedGapLimit = !addresses.canIncrease
 
-  const onViewableItemsChanged = React.useCallback(({viewableItems}: {viewableItems: ViewToken[]}) => {
+  const handleOnViewableItemsChanged = React.useCallback(({viewableItems}: {viewableItems: ViewToken[]}) => {
     inView.current = viewableItems.length
   }, [])
 
@@ -75,9 +77,7 @@ export const ListMultipleAddressesScreen = () => {
     }, [track]),
   )
 
-  const [showAddressLimitInfo, setShowAddressLimitInfo] = React.useState(true)
-
-  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+  const handleOnScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     if (event.nativeEvent.contentOffset.y <= 0) {
       InteractionManager.runAfterInteractions(() => {
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
@@ -103,19 +103,19 @@ export const ListMultipleAddressesScreen = () => {
           <>
             <ShowAddressLimitInfo />
 
-            <Spacer height={16} />
+            <Space height="lg" />
           </>
         )}
 
         <Animated.FlatList
-          onScroll={handleScroll}
+          onScroll={handleOnScroll}
           scrollEventThrottle={16}
           data={addressInfos}
           keyExtractor={(addressInfo) => addressInfo.address}
           renderItem={renderAddressInfo}
           layout={Layout}
           showsVerticalScrollIndicator={false}
-          onViewableItemsChanged={onViewableItemsChanged}
+          onViewableItemsChanged={handleOnViewableItemsChanged}
         />
       </View>
 
@@ -131,7 +131,6 @@ export const ListMultipleAddressesScreen = () => {
           title={strings.generateButton}
           disabled={hasReachedGapLimit}
           onPress={handleOnGenerateNewReceiveAddress}
-          style={styles.button}
         />
       </Animated.View>
     </SafeAreaView>
@@ -156,29 +155,21 @@ const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      flex: 1,
       backgroundColor: color.bg_color_high,
-      ...atoms.pt_lg,
+      ...atoms.flex_1,
+      ...atoms.py_lg,
     },
     content: {
-      flex: 1,
+      ...atoms.flex_1,
       ...atoms.px_lg,
     },
     footer: {
       backgroundColor: color.bg_color_high,
       borderColor: color.gray_c200,
-      ...atoms.p_lg,
-    },
-    button: {
-      backgroundColor: color.primary_c500,
+      ...atoms.pt_lg,
+      ...atoms.px_lg,
     },
   })
 
-  const colors = {
-    buttonBackgroundBlue: color.primary_c600,
-    learnMore: color.primary_c500,
-    details: color.gray_c900,
-  }
-
-  return {styles, colors} as const
+  return {styles} as const
 }

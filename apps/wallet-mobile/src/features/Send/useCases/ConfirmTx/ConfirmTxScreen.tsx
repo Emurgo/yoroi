@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
@@ -7,8 +6,10 @@ import {useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {KeyboardAvoidingView, Spacer, ValidatedTextInput} from '../../../../components'
+import {KeyboardAvoidingView, ValidatedTextInput} from '../../../../components'
 import {ConfirmTx} from '../../../../components/ConfirmTx'
+import {Space} from '../../../../components/Space/Space'
+import {isDev} from '../../../../kernel/env'
 import {debugWalletInfo, features} from '../../../../kernel/features'
 import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../../../kernel/i18n/global-messages'
 import {assetsToSendProperties} from '../../../../kernel/metrics/helpers'
@@ -40,7 +41,7 @@ export const ConfirmTxScreen = () => {
   const {saveMemo} = useSaveMemo({wallet})
 
   useEffect(() => {
-    if (features.prefillWalletInfo && __DEV__) {
+    if (features.prefillWalletInfo && isDev) {
       setPassword(debugWalletInfo.PASSWORD)
     }
   }, [])
@@ -73,30 +74,32 @@ export const ConfirmTxScreen = () => {
   if (yoroiUnsignedTx === undefined) throw new Error('Missing yoroiUnsignedTx')
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
-      <KeyboardAvoidingView style={{flex: 1}}>
-        <ScrollView style={styles.container} persistentScrollbar ref={scrollViewRef}>
+    <KeyboardAvoidingView style={[styles.root, styles.flex]}>
+      <SafeAreaView edges={['left', 'right', 'bottom']} style={[styles.flex, styles.safeAreaView]}>
+        <ScrollView style={styles.scrollView} persistentScrollbar ref={scrollViewRef}>
           <CurrentBalance />
 
           <Fees yoroiUnsignedTx={yoroiUnsignedTx} />
 
-          <Spacer height={4} />
+          <Space height="xs" />
 
           <BalanceAfter yoroiUnsignedTx={yoroiUnsignedTx} />
 
-          <Spacer height={16} />
+          <Space height="lg" />
 
           {targets.map((target, index) => (
             <ReceiverInfo key={`${target.receiver.resolve}:${index}`} target={target} />
           ))}
 
-          <Spacer height={8} />
+          <Space />
 
           <PrimaryTotal yoroiUnsignedTx={yoroiUnsignedTx} />
 
-          <Spacer height={8} />
+          <Space />
 
           <SecondaryTotals yoroiUnsignedTx={yoroiUnsignedTx} />
+
+          <Space />
 
           {!meta.isEasyConfirmationEnabled && !meta.isHW && (
             <ValidatedTextInput
@@ -106,6 +109,7 @@ export const ConfirmTxScreen = () => {
               onChangeText={setPassword}
               testID="spendingPasswordInput"
               textContentType="oneTimeCode"
+              noHelper
             />
           )}
         </ScrollView>
@@ -122,14 +126,14 @@ export const ConfirmTxScreen = () => {
             chooseTransportOnConfirmation
           />
         </Actions>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   )
 }
 
-const Actions = (props: ViewProps) => {
+const Actions = ({style, ...props}: ViewProps) => {
   const styles = useStyles()
-  return <View {...props} style={styles.actions} />
+  return <View {...props} style={[styles.actions, style]} />
 }
 
 const useStyles = () => {
@@ -138,15 +142,20 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       backgroundColor: color.bg_color_high,
-      flex: 1,
+    },
+    safeAreaView: {
+      ...atoms.gap_lg,
+      ...atoms.pb_lg,
+    },
+    scrollView: {
+      ...atoms.flex_1,
       ...atoms.px_lg,
     },
-    container: {
-      backgroundColor: color.bg_color_high,
-      flex: 1,
+    flex: {
+      ...atoms.flex_1,
     },
     actions: {
-      ...atoms.pt_lg,
+      ...atoms.px_lg,
     },
   })
   return styles

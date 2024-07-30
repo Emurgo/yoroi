@@ -160,42 +160,36 @@ export const WalletDetailsScreen = () => {
       strings.walletDetailsModalTitle,
       <View style={styles.modal}>
         <ScrollView bounces={false}>
-          <View>
+          <View style={styles.modalContent}>
             <CardAboutPhrase
               title={strings.walletNameModalCardTitle}
               linesOfText={[strings.walletNameModalCardFirstItem, strings.walletNameModalCardSecondItem]}
             />
 
-            <Space height="lg" />
-
             <CardAboutPhrase
               title={strings.walletPasswordModalCardTitle}
               linesOfText={[strings.walletPasswordModalCardFirstItem, strings.walletPasswordModalCardSecondItem]}
             />
-
-            <Space height="lg" />
-
-            <LearnMoreButton
-              onPress={() => {
-                Linking.openURL(YoroiZendeskLink)
-              }}
-            />
           </View>
         </ScrollView>
 
-        <Space height="sm" />
+        <View style={styles.modalContent}>
+          <LearnMoreButton
+            onPress={() => {
+              Linking.openURL(YoroiZendeskLink)
+            }}
+          />
 
-        <Button
-          title={strings.continueButton}
-          style={styles.button}
-          onPress={() => {
-            closeModal()
-            showRestoreWalletInfoModalChanged(false)
-          }}
-          testId="setup-modal-continue-button"
-        />
-
-        <Space height="lg" />
+          <Button
+            shelleyTheme
+            title={strings.continueButton}
+            onPress={() => {
+              closeModal()
+              showRestoreWalletInfoModalChanged(false)
+            }}
+            testId="setup-modal-continue-button"
+          />
+        </View>
       </View>,
       HEIGHT_MODAL_NAME_PASSWORD,
     )
@@ -212,8 +206,8 @@ export const WalletDetailsScreen = () => {
     strings.walletPasswordModalCardFirstItem,
     strings.walletPasswordModalCardSecondItem,
     strings.walletPasswordModalCardTitle,
-    styles.button,
     styles.modal,
+    styles.modalContent,
   ])
 
   React.useEffect(() => {
@@ -226,41 +220,35 @@ export const WalletDetailsScreen = () => {
       strings.walletDetailsModalTitle,
       <View style={styles.modal}>
         <ScrollView bounces={false}>
-          <View>
-            <CardAboutPhrase
-              title={strings.walletChecksumModalCardTitle}
-              checksumImage={plate.ImagePart}
-              checksumLine={1}
-              linesOfText={[
-                strings.walletChecksumModalCardFirstItem,
-                strings.walletChecksumModalCardSecondItem(plate.TextPart),
-                strings.walletChecksumModalCardThirdItem,
-              ]}
-            />
-
-            <Space height="lg" />
-
-            <LearnMoreButton
-              onPress={() => {
-                Linking.openURL(YoroiZendeskLink)
-              }}
-            />
-          </View>
+          <CardAboutPhrase
+            title={strings.walletChecksumModalCardTitle}
+            checksumImage={plate.ImagePart}
+            checksumLine={1}
+            linesOfText={[
+              strings.walletChecksumModalCardFirstItem,
+              strings.walletChecksumModalCardSecondItem(plate.TextPart),
+              strings.walletChecksumModalCardThirdItem,
+            ]}
+          />
         </ScrollView>
 
-        <Space height="sm" />
+        <View style={styles.modalContent}>
+          <LearnMoreButton
+            onPress={() => {
+              Linking.openURL(YoroiZendeskLink)
+            }}
+          />
 
-        <Button title={strings.continueButton} style={styles.button} onPress={closeModal} />
-
-        <Space height="lg" />
+          <Button title={strings.continueButton} shelleyTheme onPress={closeModal} />
+        </View>
       </View>,
       HEIGHT_MODAL_CHECKSUM,
     )
   }
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
-      <KeyboardAvoidingView style={styles.container}>
+    <KeyboardAvoidingView style={styles.root}>
+      <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
         <StepperProgress
           style={styles.steps}
           currentStep={4}
@@ -268,15 +256,13 @@ export const WalletDetailsScreen = () => {
           totalSteps={4}
         />
 
-        <View style={styles.infoText}>
+        <View style={styles.infoWrapper}>
           <Text style={styles.title}>{strings.walletDetailsTitle(bold)}</Text>
 
           <Info onPress={showModalTipsPassword} />
         </View>
 
-        <Space height="xl" />
-
-        <ScrollView style={styles.scroll}>
+        <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
           <TextInput
             enablesReturnKeyAutomatically
             autoFocus={!showRestoreWalletInfoModal}
@@ -291,8 +277,6 @@ export const WalletDetailsScreen = () => {
             autoComplete="off"
             showErrorOnBlur
           />
-
-          <Space height="xl" />
 
           <TextInput
             enablesReturnKeyAutomatically
@@ -311,8 +295,6 @@ export const WalletDetailsScreen = () => {
             textContentType="oneTimeCode"
           />
 
-          <Space height="xl" />
-
           <TextInput
             enablesReturnKeyAutomatically
             ref={passwordConfirmationRef}
@@ -327,8 +309,6 @@ export const WalletDetailsScreen = () => {
             showErrorOnBlur
             textContentType="oneTimeCode"
           />
-
-          <Space height="xl" />
 
           <View style={styles.checksum}>
             <Icon.WalletAvatar
@@ -349,17 +329,15 @@ export const WalletDetailsScreen = () => {
 
         <Actions>
           <Button
+            shelleyTheme
             title={strings.next}
-            style={styles.button}
             onPress={() => handleCreateWallet()}
             disabled={isLoading || Object.keys(passwordErrors).length > 0 || Object.keys(nameErrors).length > 0}
             testID="walletFormContinueButton"
           />
-
-          <Space height="sm" />
         </Actions>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   )
 }
 
@@ -388,53 +366,60 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      flex: 1,
-      justifyContent: 'space-between',
       backgroundColor: color.bg_color_high,
+      ...atoms.flex_1,
     },
-    container: {
-      flex: 1,
+    safeAreaView: {
+      ...atoms.flex_1,
+      ...atoms.pb_lg,
     },
-    infoText: {
+    infoWrapper: {
+      height: 24,
       ...atoms.px_lg,
-      flexDirection: 'row',
-      lineHeight: 24,
+      ...atoms.flex_row,
     },
     modal: {
-      flex: 1,
+      ...atoms.flex_1,
       ...atoms.px_lg,
+      ...atoms.pb_lg,
+    },
+    modalContent: {
+      ...atoms.gap_lg,
     },
     title: {
-      alignSelf: 'center',
+      color: color.text_gray_normal,
+      ...atoms.self_center,
       ...atoms.body_1_lg_regular,
-      color: color.gray_c900,
     },
     plateNumber: {
       ...atoms.body_1_lg_regular,
-      color: color.gray_c900,
-      textAlign: 'center',
-      justifyContent: 'center',
-      alignItems: 'center',
+      color: color.text_gray_normal,
+      ...atoms.text_center,
+      ...atoms.justify_center,
+      ...atoms.align_center,
     },
-    button: {backgroundColor: color.primary_c500},
     bolder: {
       ...atoms.body_1_lg_medium,
     },
     checksum: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      textAlignVertical: 'center',
+      ...atoms.flex_row,
+      ...atoms.align_center,
+      ...atoms.justify_center,
+      ...atoms.align_center,
     },
     walletChecksum: {
       width: 24,
       height: 24,
     },
     actions: {
-      ...atoms.p_lg,
+      ...atoms.px_lg,
     },
     scroll: {
       ...atoms.px_lg,
+    },
+    content: {
+      ...atoms.pt_lg,
+      ...atoms.gap_lg,
     },
     steps: {
       ...atoms.px_lg,
