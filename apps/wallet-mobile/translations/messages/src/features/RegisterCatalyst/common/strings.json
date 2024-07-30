@@ -331,7 +331,7 @@
   },
   {
     "id": "components.catalyst.step4.qrCheckbox",
-    "defaultMessage": "!!!I have take a screenshot of my QR code and saved my Catalyst secret code as a fallback.",
+    "defaultMessage": "!!!I confirm that I have saved the QR and hash codes and understand they are irretrievable.",
     "file": "src/features/RegisterCatalyst/common/strings.ts",
     "start": {
       "line": 145,
@@ -341,7 +341,7 @@
     "end": {
       "line": 148,
       "column": 3,
-      "index": 6235
+      "index": 6236
     }
   }
 ]
