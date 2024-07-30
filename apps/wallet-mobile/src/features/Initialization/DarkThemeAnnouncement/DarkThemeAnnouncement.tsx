@@ -154,8 +154,8 @@ const useStyles = () => {
     switchCircle: {
       width: 35,
       height: 35,
-      bottom: '50%',
-      right: -5,
+      top: -2,
+      right: 8,
       backgroundColor: color.gray_c100,
       position: 'absolute',
       borderRadius: 9999,
