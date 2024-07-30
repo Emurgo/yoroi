@@ -15,6 +15,7 @@ import {usePrefetchStakingInfo} from '../../legacy/Dashboard/StakePoolInfos'
 import {usePoolTransition} from '../../legacy/Staking/PoolTransition/usePoolTransition'
 import {useCanVote} from '../RegisterCatalyst/common/hooks'
 import {InsufficientFundsModal} from '../RegisterCatalyst/common/InsufficientFundsModal'
+import {NetworkTag} from '../Settings/ChangeNetwork/NetworkTag'
 import {useIsGovernanceFeatureEnabled} from '../Staking/Governance'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 
@@ -30,6 +31,7 @@ export const MenuNavigator = () => {
       screenOptions={{
         ...defaultStackNavigationOptions(atoms, color),
         headerLeft: () => null,
+        headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
       }}
     >
       <MenuStack.Screen name="_menu" component={Menu} options={{title: strings.menu}} />

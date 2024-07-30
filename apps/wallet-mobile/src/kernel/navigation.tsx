@@ -201,6 +201,7 @@ export type SwapTokenRoutes = {
   'swap-select-pool': undefined
   'swap-submitted-tx': {txId: string}
   'swap-failed-tx': undefined
+  'swap-preprod-notice': undefined
 }
 export type SwapTokenRouteseNavigation = StackNavigationProp<SwapTokenRoutes>
 

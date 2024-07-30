@@ -38,6 +38,9 @@ export const useStrings = () => {
     preprodFaucetBannerTitle: intl.formatMessage(messages.preprodFaucetBannerTitle),
     preprodFaucetBannerText: intl.formatMessage(messages.preprodFaucetBannerText),
     preprodFaucetBannerButtonText: intl.formatMessage(messages.preprodFaucetBannerButtonText),
+    createOrderPreprodFaucetButtonText: intl.formatMessage(messages.createOrderPreprodFaucetButtonText),
+    createOrderPreprodNoticeTitle: intl.formatMessage(messages.createOrderPreprodNoticeTitle),
+    createOrderPreprodNoticeText: intl.formatMessage(messages.createOrderPreprodNoticeText),
     close: intl.formatMessage(globalMessages.close),
     error: intl.formatMessage(globalMessages.error),
   }).current
@@ -170,6 +173,18 @@ export const messages = Object.freeze(
     preprodFaucetBannerButtonText: {
       id: 'rampOnOff.createRampOnOff.preprodfaucetbanner.button.text',
       defaultMessage: '!!!Go to tada faucet',
+    },
+    createOrderPreprodFaucetButtonText: {
+      id: 'rampOnOff.createRampOnOff.createorder.preprodfaucet.button.text',
+      defaultMessage: '!!!Add test ada',
+    },
+    createOrderPreprodNoticeTitle: {
+      id: 'rampOnOff.createRampOnOff.createorder.preprodnotice.title',
+      defaultMessage: '!!!ADA purchases can only be made on the mainnet',
+    },
+    createOrderPreprodNoticeText: {
+      id: 'rampOnOff.createRampOnOff.createorder.preprodnotice.text',
+      defaultMessage: '!!!Switch network or top up your testnet network wallet with the free Cardano faucet',
     },
   }),
 )

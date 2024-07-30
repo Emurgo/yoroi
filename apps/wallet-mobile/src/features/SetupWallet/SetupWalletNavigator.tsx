@@ -4,6 +4,7 @@ import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
 import {defaultStackNavigationOptions, WalletInitRoutes} from '../../kernel/navigation'
+import {NetworkTag} from '../Settings/ChangeNetwork/NetworkTag'
 import {PreparingWalletScreen} from './common/PreparingWalletScreen/PreparingWalletScreen'
 import {CheckNanoXScreen} from './legacy/CheckNanoX/CheckNanoXScreen'
 import {ConnectNanoXScreen} from './legacy/ConnectNanoX/ConnectNanoXScreen'
@@ -30,6 +31,7 @@ export const SetupWalletNavigator = () => {
     <Stack.Navigator
       screenOptions={{
         ...navigationOptions,
+        headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
       }}
     >
       <Stack.Screen

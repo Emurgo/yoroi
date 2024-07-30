@@ -4,14 +4,14 @@
     "defaultMessage": "!!!What are the test networks?",
     "file": "src/features/Settings/ChangeNetwork/strings.ts",
     "start": {
-      "line": 20,
+      "line": 23,
       "column": 22,
-      "index": 759
+      "index": 968
     },
     "end": {
-      "line": 23,
+      "line": 26,
       "column": 3,
-      "index": 896
+      "index": 1105
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!The test networks serve as a platform for the community and developers to test products and experiments without risking real funds on the mainnet.",
     "file": "src/features/Settings/ChangeNetwork/strings.ts",
     "start": {
-      "line": 24,
+      "line": 27,
       "column": 24,
-      "index": 922
+      "index": 1131
     },
     "end": {
-      "line": 28,
+      "line": 31,
       "column": 3,
-      "index": 1186
+      "index": 1395
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Key features of testnet coins:",
     "file": "src/features/Settings/ChangeNetwork/strings.ts",
     "start": {
-      "line": 29,
+      "line": 32,
       "column": 26,
-      "index": 1214
+      "index": 1423
     },
     "end": {
-      "line": 32,
+      "line": 35,
       "column": 3,
-      "index": 1358
+      "index": 1567
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!  •  Have no real value.\n  •  Are separate from the mainnet.\n  •  Cannot be sent to mainnet wallets.\n  •  Are easily obtainable from Cardano faucets.",
     "file": "src/features/Settings/ChangeNetwork/strings.ts",
     "start": {
-      "line": 33,
+      "line": 36,
       "column": 21,
-      "index": 1381
+      "index": 1590
     },
     "end": {
-      "line": 37,
+      "line": 40,
       "column": 3,
-      "index": 1648
+      "index": 1857
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Preparing network...",
     "file": "src/features/Settings/ChangeNetwork/strings.ts",
     "start": {
-      "line": 38,
+      "line": 41,
       "column": 20,
-      "index": 1670
+      "index": 1879
     },
     "end": {
-      "line": 41,
+      "line": 44,
       "column": 3,
-      "index": 1805
+      "index": 2014
     }
   },
   {
@@ -79,14 +79,44 @@
     "defaultMessage": "!!!I understand",
     "file": "src/features/Settings/ChangeNetwork/strings.ts",
     "start": {
-      "line": 42,
+      "line": 45,
       "column": 23,
-      "index": 1830
+      "index": 2039
     },
     "end": {
-      "line": 45,
+      "line": 48,
       "column": 3,
-      "index": 1953
+      "index": 2162
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.network.tag.modal.title",
+    "defaultMessage": "!!!Switch to Mainnet",
+    "file": "src/features/Settings/ChangeNetwork/strings.ts",
+    "start": {
+      "line": 49,
+      "column": 24,
+      "index": 2188
+    },
+    "end": {
+      "line": 52,
+      "column": 3,
+      "index": 2318
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.network.tag.modal.text",
+    "defaultMessage": "!!!Are you sure you want to switch back to the main Cardano Network?",
+    "file": "src/features/Settings/ChangeNetwork/strings.ts",
+    "start": {
+      "line": 53,
+      "column": 23,
+      "index": 2343
+    },
+    "end": {
+      "line": 56,
+      "column": 3,
+      "index": 2520
     }
   }
 ]
