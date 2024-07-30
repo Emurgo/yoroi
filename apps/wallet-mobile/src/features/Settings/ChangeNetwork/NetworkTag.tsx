@@ -5,6 +5,7 @@ import {StyleSheet, Text, TouchableOpacity, View, ViewStyle} from 'react-native'
 
 import {Button, Spacer, useModal} from '../../../components'
 import {Space} from '../../../components/Space/Space'
+import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../kernel/navigation'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 import {networkConfigs} from '../../WalletManager/network-manager/network-manager'
@@ -22,15 +23,17 @@ export const NetworkTag = ({
   style?: ViewStyle
 }) => {
   const {
-    selected: {network},
+    selected: {network: selectedNetwork},
     walletManager,
   } = useWalletManager()
   const {navigateToChangeNetwork} = useWalletNavigation()
   const {styles} = useStyles()
   const {openModal, closeModal} = useModal()
   const strings = useStrings()
+  const {track} = useMetrics()
 
-  const Tag = network === Chain.Network.Sancho ? SanchoTag : network === Chain.Network.Preprod ? PreprodTag : null
+  const Tag =
+    selectedNetwork === Chain.Network.Sancho ? SanchoTag : selectedNetwork === Chain.Network.Preprod ? PreprodTag : null
 
   const onPress = () => {
     if (directChangeActive) {
@@ -40,7 +43,7 @@ export const NetworkTag = ({
         Chain.Network.Sancho,
       ]
 
-      const nextNetwork = networks[(networks.indexOf(network) + 1) % networks.length]
+      const nextNetwork = networks[(networks.indexOf(selectedNetwork) + 1) % networks.length]
 
       if (nextNetwork === Chain.Network.Mainnet) {
         openModal(
@@ -48,6 +51,7 @@ export const NetworkTag = ({
           <MainnetWarningDialog
             onCancel={closeModal}
             onOk={() => {
+              track.networkSelected({to_network: nextNetwork, from_network: selectedNetwork})
               walletManager.setSelectedNetwork(nextNetwork)
               closeModal()
             }}
