@@ -134,6 +134,7 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: Forwarded
             <RNTextInput
               {...inputProps}
               style={[style, renderComponentStyle, {color: faded ? colors.gray_c900 : colors.text, flex: 1}]}
+              editable={editable}
             />
 
             {right != null ? <AdornmentContainer style={styles.checkmarkContainer}>{right}</AdornmentContainer> : null}
