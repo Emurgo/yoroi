@@ -4,6 +4,7 @@ import React from 'react'
 import {FlatList, StyleSheet} from 'react-native'
 
 import {isDev} from '../../../kernel/env'
+import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {useSelectedNetwork} from '../../WalletManager/common/hooks/useSelectedNetwork'
 import {useAutomaticWalletOpener} from '../../WalletManager/context/AutomaticWalletOpeningProvider'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
@@ -17,6 +18,7 @@ export const NetworkPickerList = () => {
   const navigateTo = useNavigateTo()
   const {network: selectedNetwork} = useSelectedNetwork()
   const {setShouldOpen: setShouldAutomaticWalletOpen} = useAutomaticWalletOpener()
+  const {track} = useMetrics()
 
   // to improve UX
   const [localSelectedNetwork, setLocalSelectedNetwork] = React.useState(selectedNetwork)
@@ -25,6 +27,7 @@ export const NetworkPickerList = () => {
   }, [selectedNetwork])
 
   const onSelectNetwork = (network: Chain.SupportedNetworks) => {
+    track.networkSelected({from_network: selectedNetwork, to_network: network})
     setLocalSelectedNetwork(network)
     setShouldAutomaticWalletOpen(true)
     walletManager.setSelectedNetwork(network)

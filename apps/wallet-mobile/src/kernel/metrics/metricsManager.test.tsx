@@ -137,6 +137,8 @@ const mockAmpli = {
   discoverWebViewTabClicked: jest.fn(),
   discoverWebViewToolbarSearchActivated: jest.fn(),
   discoverWebViewViewed: jest.fn(),
+
+  networkSelected: jest.fn(),
 } as unknown as Ampli
 
 const mockMetricsStorage = {
@@ -296,6 +298,8 @@ describe('makeMetricsManager', () => {
     metricsManager.track.discoverWebViewToolbarSearchActivated({search_term: 'random'})
     metricsManager.track.discoverWebViewViewed()
 
+    metricsManager.track.networkSelected({to_network: 'preprod', from_network: 'preview'})
+
     expect(mockAmpli.nftGalleryDetailsTab).toHaveBeenCalledWith({nft_tab: 'Metadata'})
     expect(mockAmpli.nftGalleryPageViewed).toHaveBeenCalledWith({nft_count: 10})
     expect(mockAmpli.nftGallerySearchActivated).toHaveBeenCalledWith({nft_search_term: 'test', nft_count: 10})
@@ -414,6 +418,8 @@ describe('makeMetricsManager', () => {
     expect(mockAmpli.discoverWebViewTabClicked).toHaveBeenCalled()
     expect(mockAmpli.discoverWebViewToolbarSearchActivated).toHaveBeenCalledWith({search_term: 'random'})
     expect(mockAmpli.discoverWebViewViewed).toHaveBeenCalled()
+
+    expect(mockAmpli.networkSelected).toHaveBeenCalledWith({to_network: 'preprod', from_network: 'preview'})
   })
 
   test('enable should set metrics enabled to true', async () => {
