@@ -144,6 +144,6 @@ const messages = defineMessages({
   },
   step4QrCheckbox: {
     id: 'components.catalyst.step4.qrCheckbox',
-    defaultMessage: '!!!I have take a screenshot of my QR code and saved my Catalyst secret code as a fallback.',
+    defaultMessage: '!!!I confirm that I have saved the QR and hash codes and understand they are irretrievable.',
   },
 })

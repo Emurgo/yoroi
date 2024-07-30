@@ -68,7 +68,7 @@
   "components.catalyst.step4.qrTitle": "Backup Catalyst Code",
   "components.catalyst.step4.qrShareLabel": "Share Code",
   "components.catalyst.step4.qrCopiedText": "Code Copied",
-  "components.catalyst.step4.qrCheckbox": "I have take a screenshot of my QR code and saved my Catalyst secret code as a fallback.",
+  "components.catalyst.step4.qrCheckbox": "I confirm that I have saved the QR and hash codes and understand they are irretrievable.",
   "components.catalyst.confirmTx.bioAuthInstructions": "Please authenticate so that Yoroi can generate the required certificate for voting.",
   "components.catalyst.confirmTx.title": "Confirm Registration",
   "components.catalyst.title": "Catalyst voting",
