@@ -74,7 +74,7 @@ export const Toggle = () => {
         value={!isLight}
         onValueChange={handleOnValueChange}
         trackColor={{false: color.gray_c100, true: color.gray_c100}}
-        thumbColor={isLight === true ? color.sys_yellow_c500 : color.el_primary_medium}
+        thumbColor={isLight ? color.sys_yellow_c500 : color.el_primary_medium}
       />
 
       {isDark && Platform.OS === 'ios' && <Pressable style={styles.switchCircle} onPress={handleOnValueChange} />}
