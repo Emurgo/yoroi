@@ -4,14 +4,13 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
 import {PleaseWaitModal, Spacer} from '../../../components'
 import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
 import {showErrorDialog} from '../../../kernel/dialogs'
-import {isDev, isNightly} from '../../../kernel/env'
-import {features} from '../../../kernel/features'
 import {useLanguage} from '../../../kernel/i18n'
 import globalMessages from '../../../kernel/i18n/global-messages'
 import {logger} from '../../../kernel/logger/logger'
@@ -26,6 +25,7 @@ export const StakingCenter = () => {
   const intl = useIntl()
   const navigation = useNavigation<StakingCenterRouteNavigation>()
   const {isDark} = useTheme()
+  const {styles} = useStyles()
 
   const {languageCode} = useLanguage()
   const {wallet, meta} = useSelectedWallet()
@@ -37,11 +37,13 @@ export const StakingCenter = () => {
     }, [track]),
   )
 
-  const [selectedPoolId, setSelectedPoolId] = React.useState<string>()
+  const [selectedPoolId, setSelectedPoolId] = React.useState<string | null>(null)
 
   const {isLoading} = useStakingTx(
-    {wallet, poolId: selectedPoolId, meta},
+    {wallet, poolId: selectedPoolId ?? undefined, meta},
     {
+      enabled: selectedPoolId != null,
+      suspense: false,
       onSuccess: (yoroiUnsignedTx) => {
         if (selectedPoolId == null) return
 
@@ -70,16 +72,15 @@ export const StakingCenter = () => {
     setSelectedPoolId(selectedPoolHashes[0])
   }
 
-  return (
-    <>
-      {(isDev || (isNightly && !wallet.isMainnet)) && (
-        <View style={{height: 256}}>
-          <PoolDetailScreen onPressDelegate={setSelectedPoolId} />
-        </View>
-      )}
+  const shouldDisplayPoolIDInput = !wallet.isMainnet
+  const shouldDisplayPoolList = wallet.isMainnet
 
-      {(wallet.isMainnet || features.showProdPoolsInDev) && (
-        <View style={{flex: 1}}>
+  return (
+    <SafeAreaView edges={['top', 'right', 'bottom', 'left']} style={styles.root}>
+      {shouldDisplayPoolIDInput && <PoolDetailScreen onPressDelegate={setSelectedPoolId} />}
+
+      {shouldDisplayPoolList && (
+        <View style={styles.poolList}>
           <Spacer height={8} />
 
           <WebView
@@ -101,8 +102,23 @@ export const StakingCenter = () => {
       )}
 
       <PleaseWaitModal title="" spinnerText={intl.formatMessage(globalMessages.pleaseWait)} visible={isLoading} />
-    </>
+    </SafeAreaView>
   )
+}
+
+const useStyles = () => {
+  const {color, atoms} = useTheme()
+  const styles = StyleSheet.create({
+    root: {
+      flex: 1,
+      backgroundColor: color.bg_color_high,
+      ...atoms.px_lg,
+    },
+    poolList: {
+      flex: 1,
+    },
+  })
+  return {styles}
 }
 
 const noPoolDataDialog = defineMessages({
