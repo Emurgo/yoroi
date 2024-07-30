@@ -154,8 +154,9 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     safeAreaView: {
-      ...atoms.flex_1,
       backgroundColor: color.bg_color_high,
+      ...atoms.flex_1,
+      ...atoms.py_lg,
     },
     topButton: {
       backgroundColor: color.primary_c500,
@@ -173,7 +174,7 @@ const useStyles = () => {
       ...atoms.align_center,
     },
     list: {
-      ...atoms.p_lg,
+      ...atoms.px_lg,
     },
     actions: {
       ...atoms.px_lg,

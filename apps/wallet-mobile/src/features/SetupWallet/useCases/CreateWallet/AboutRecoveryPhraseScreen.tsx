@@ -59,14 +59,12 @@ export const AboutRecoveryPhraseScreen = () => {
 
       <Spacer fill />
 
-      <LearnMoreButton onPress={handleOnLearMoreButtonPress} />
+      <Actions style={[styles.actions, styles.padding]}>
+        <LearnMoreButton onPress={handleOnLearMoreButtonPress} />
 
-      <Space height="lg" />
-
-      <Actions style={styles.actions}>
         <Button
+          shelleyTheme
           title={strings.next}
-          style={styles.button}
           onPress={() => navigation.navigate('setup-wallet-recovery-phrase-mnemonic')}
           testID="setup-step1-next-button"
         />
@@ -89,21 +87,23 @@ const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      flex: 1,
-      ...atoms.px_lg,
-      justifyContent: 'space-between',
       backgroundColor: color.bg_color_high,
+      ...atoms.flex_1,
+      ...atoms.pb_lg,
+    },
+    padding: {
+      ...atoms.px_lg,
     },
     aboutRecoveryPhraseTitle: {
+      color: color.text_gray_normal,
       ...atoms.body_1_lg_regular,
-      color: color.gray_c900,
     },
-    button: {backgroundColor: color.primary_c500},
     bolder: {
       ...atoms.body_1_lg_medium,
     },
     actions: {
-      ...atoms.p_lg,
+      ...atoms.pt_lg,
+      ...atoms.gap_lg,
     },
     scroll: {
       ...atoms.px_lg,

@@ -186,7 +186,7 @@ const ListAmountsNavigateBackButton = () => {
 
   return (
     <TouchableOpacity onPress={() => navigation.startTx()}>
-      <Icon.Chevron direction="left" color={colors.gray} />
+      <Icon.Chevron direction="left" color={colors.icon} />
     </TouchableOpacity>
   )
 }
@@ -211,25 +211,26 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     row: {
-      flexDirection: 'row',
+      ...atoms.flex_row,
     },
     actions: {
       backgroundColor: 'transparent',
-      ...atoms.pt_lg,
     },
     root: {
-      flex: 1,
       backgroundColor: color.bg_color_high,
+      ...atoms.flex_1,
       ...atoms.px_lg,
+      ...atoms.pb_lg,
+      ...atoms.gap_xl,
     },
     amountItem: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+      ...atoms.flex_row,
+      ...atoms.justify_between,
+      ...atoms.align_center,
     },
   })
   const colors = {
-    gray: color.gray_cmax,
+    icon: color.el_gray_high,
   }
-  return {styles, colors}
+  return {styles, colors} as const
 }

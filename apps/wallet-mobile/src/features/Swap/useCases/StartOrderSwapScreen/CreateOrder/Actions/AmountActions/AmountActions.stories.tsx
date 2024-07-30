@@ -7,7 +7,7 @@ import {mocks} from '../../../../../../../yoroi-wallets/mocks/wallet'
 import {WalletManagerProviderMock} from '../../../../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {SearchProvider} from '../../../../../../Search/SearchContext'
 import {SwapFormProvider} from '../../../../../common/SwapFormProvider'
-import {AmountActions} from '../AmountActions/AmountActions'
+import {AmountActions} from './AmountActions'
 
 storiesOf('Swap Amount Actions', module).add('initial', () => {
   return (

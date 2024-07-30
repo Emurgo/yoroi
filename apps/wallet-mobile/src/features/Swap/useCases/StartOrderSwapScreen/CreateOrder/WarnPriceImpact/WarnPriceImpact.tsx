@@ -20,18 +20,16 @@ export const WarnPriceImpact = ({onContinue, priceImpactRisk}: Props) => {
   if (priceImpactRisk === 'none') return null
 
   return (
-    <View style={styles.container}>
-      <View>
-        <Text style={styles.description}>
-          <Text style={styles.bold}>
-            {strings.priceImpactRiskHigh({
-              riskValue: priceImpactRisk === 'moderate' ? PRICE_IMPACT_MODERATE_RISK : PRICE_IMPACT_HIGH_RISK,
-            })}
-          </Text>
-
-          <Text> {strings.priceImpactDescription(priceImpactRisk)}</Text>
+    <View style={styles.root}>
+      <Text style={styles.description}>
+        <Text style={styles.bold}>
+          {strings.priceImpactRiskHigh({
+            riskValue: priceImpactRisk === 'moderate' ? PRICE_IMPACT_MODERATE_RISK : PRICE_IMPACT_HIGH_RISK,
+          })}
         </Text>
-      </View>
+
+        <Text> {strings.priceImpactDescription(priceImpactRisk)}</Text>
+      </Text>
 
       <Spacer fill />
 
@@ -45,8 +43,6 @@ export const WarnPriceImpact = ({onContinue, priceImpactRisk}: Props) => {
           containerStyle={styles.buttonContainer}
         />
       </View>
-
-      <Spacer height={23} />
     </View>
   )
 }
@@ -55,27 +51,27 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     buttonContainer: {
-      flex: 1,
+      ...atoms.flex_1,
     },
     buttonContinue: {
-      flex: 1,
       backgroundColor: color.sys_magenta_c500,
+      ...atoms.flex_1,
     },
     buttonsWrapper: {
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      flexDirection: 'row',
-      gap: 16,
+      ...atoms.gap_lg,
+      ...atoms.flex_row,
+      ...atoms.align_center,
+      ...atoms.justify_between,
     },
-    container: {
-      flex: 1,
-      justifyContent: 'space-between',
+    root: {
+      ...atoms.justify_between,
+      ...atoms.flex_1,
       ...atoms.px_lg,
+      ...atoms.pb_lg,
     },
     description: {
-      color: color.gray_c900,
+      color: color.text_gray_normal,
       ...atoms.body_1_lg_regular,
-      lineHeight: 21,
     },
     bold: {
       ...atoms.body_1_lg_medium,

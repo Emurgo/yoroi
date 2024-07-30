@@ -8,8 +8,8 @@ import {Spacer} from '../../../../../components'
 import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
 import {useCurrencyPairing} from '../../../../Settings/Currency'
 import {usePrivacyMode} from '../../../../Settings/PrivacyMode/PrivacyMode'
+import {formatPriceChange, priceChange} from '../../../common/helpers/priceChange'
 import {PnlTag} from '../../../common/PnlTag/PnlTag'
-import {useQuantityChange} from '../../../common/useQuantityChange'
 
 type Props = {
   amount: Portfolio.Token.Amount
@@ -20,14 +20,12 @@ export const BalanceCardContent = ({amount, headerCard}: Props) => {
   const {styles} = useStyles()
   const {isPrivacyActive, setPrivacyModeOff, setPrivacyModeOn} = usePrivacyMode()
 
-  // TODO
-  const previousQuantity = amount.quantity
+  const {
+    adaPrice: {price, previous},
+    config,
+  } = useCurrencyPairing()
 
-  const {quantityChange, variantPnl, quantityChangePercent, pairedBalanceChange} = useQuantityChange({
-    quantity: amount.quantity,
-    previousQuantity,
-    decimals: amount.info.decimals,
-  })
+  const {changeValue, changePercent, variantPnl} = priceChange(previous, price)
 
   const togglePrivacyMode = () => {
     if (isPrivacyActive === true) {
@@ -54,13 +52,9 @@ export const BalanceCardContent = ({amount, headerCard}: Props) => {
           </TouchableOpacity>
 
           <View style={styles.varyContainer}>
-            <PnlPercentChange variantPnl={variantPnl} quantityChangePercent={quantityChangePercent} />
+            <PnlPercentChange variantPnl={variantPnl} changePercent={formatPriceChange(changePercent)} />
 
-            <PnlPairedChange
-              variantPnl={variantPnl}
-              quantityChange={quantityChange}
-              pairedBalanceChange={pairedBalanceChange}
-            />
+            <PnlPairedChange variantPnl={variantPnl} changeValue={formatPriceChange(changeValue, config.decimals)} />
           </View>
         </View>
       </View>
@@ -90,26 +84,25 @@ const Balance = ({amount}: BalanceProps) => {
   )
 }
 
-type PnlPercentChangeProps = {variantPnl: 'danger' | 'success' | 'neutral'; quantityChangePercent: string}
-const PnlPercentChange = ({variantPnl, quantityChangePercent}: PnlPercentChangeProps) => {
+type PnlPercentChangeProps = {variantPnl: 'danger' | 'success' | 'neutral'; changePercent: string}
+const PnlPercentChange = ({variantPnl, changePercent}: PnlPercentChangeProps) => {
   return (
     <PnlTag variant={variantPnl} withIcon>
-      <Text>{quantityChangePercent}%</Text>
+      <Text>{changePercent}%</Text>
     </PnlTag>
   )
 }
 
 type PnlPairedChangeProps = {
   variantPnl: 'danger' | 'success' | 'neutral'
-  quantityChange?: bigint
-  pairedBalanceChange: string
+  changeValue: string
 }
-const PnlPairedChange = ({variantPnl, quantityChange, pairedBalanceChange}: PnlPairedChangeProps) => {
+const PnlPairedChange = ({variantPnl, changeValue}: PnlPairedChangeProps) => {
   const {currency} = useCurrencyPairing()
 
   return (
     <PnlTag variant={variantPnl}>
-      <Text>{`${Number(quantityChange) > 0 ? '+' : ''}${pairedBalanceChange} ${currency}`}</Text>
+      <Text>{`${Number(changeValue) > 0 ? '+' : ''}${changeValue} ${currency}`}</Text>
     </PnlTag>
   )
 }

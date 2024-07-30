@@ -93,7 +93,7 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     pairedBalanceText: {
-      color: color.gray_c600,
+      color: color.text_gray_medium,
       ...atoms.body_3_sm_regular,
     },
   })

@@ -82,8 +82,8 @@ export const StartMultiTokenTxScreen = () => {
   useNextTick(focusOnReceiver)
 
   return (
-    <SafeAreaView edges={['bottom', 'right', 'left']} style={[styles.root, styles.flex]}>
-      <KeyboardAvoidingView style={styles.flex} keyboardVerticalOffset={119}>
+    <KeyboardAvoidingView style={[styles.flex, styles.root]}>
+      <SafeAreaView edges={['bottom', 'right', 'left']} style={[styles.safeAreaView, styles.flex]}>
         <ScrollView
           ref={scrollViewRef}
           style={[styles.flex, styles.padding]}
@@ -122,14 +122,13 @@ export const StartMultiTokenTxScreen = () => {
             />
           </Padding>
         </Actions>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   )
 }
 
 const Actions = ({style, ...props}: ViewProps) => {
-  const styles = useStyles()
-  return <View style={[styles.actions, style]} {...props} />
+  return <View style={style} {...props} />
 }
 
 // NOTE: just to display the scrollable line on top of action
@@ -177,19 +176,19 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       backgroundColor: color.bg_color_high,
-      ...atoms.pt_lg,
+    },
+    safeAreaView: {
+      ...atoms.gap_lg,
+      ...atoms.py_lg,
     },
     flex: {
       ...atoms.flex_1,
-    },
-    actions: {
-      ...atoms.pt_lg,
     },
     padding: {
       ...atoms.px_lg,
     },
     actionsScroll: {
-      borderTopWidth: 1,
+      ...atoms.border_t,
       borderTopColor: color.gray_c200,
     },
   })

@@ -1,4 +1,4 @@
-import {amountBreakdown, infoExtractName} from '@yoroi/portfolio'
+import {amountBreakdown, infoExtractName, isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
@@ -6,10 +6,11 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Spacer} from '../../../../../components'
 import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
+import {useCurrencyPairing} from '../../../../Settings/Currency'
+import {formatPriceChange, priceChange} from '../../../common/helpers/priceChange'
 import {PnlTag} from '../../../common/PnlTag/PnlTag'
 import {TokenInfoIcon} from '../../../common/TokenAmountItem/TokenInfoIcon'
 import {useNavigateTo} from '../../../common/useNavigateTo'
-import {useQuantityChange} from '../../../common/useQuantityChange'
 
 type Props = {
   amount: Portfolio.Token.Amount
@@ -17,13 +18,17 @@ type Props = {
 export const TokenBalanceItem = ({amount}: Props) => {
   const {styles} = useStyles()
   const navigationTo = useNavigateTo()
-  const {info, quantity} = amount
+  const {info} = amount
   const name = infoExtractName(info)
   const symbol = infoExtractName(info, {mode: 'currency'})
-  // TODO
-  const previousQuantity = quantity
-  const {variantPnl, quantityChangePercent} = useQuantityChange({decimals: info.decimals, quantity, previousQuantity})
   const balanceFormatted = amountBreakdown(amount).bn.toFormat(2)
+
+  const adaPrice = useCurrencyPairing().adaPrice
+
+  // TODO: missing price for non ada
+  const {price, previous} = isPrimaryToken(info) ? adaPrice : {price: 0, previous: 0}
+
+  const {changePercent, variantPnl} = priceChange(previous, price)
 
   return (
     <TouchableOpacity onPress={() => navigationTo.tokenDetail({id: info.id})} style={styles.root}>
@@ -38,7 +43,7 @@ export const TokenBalanceItem = ({amount}: Props) => {
           </Text>
 
           <PnlTag withIcon variant={variantPnl}>
-            <Text>{quantityChangePercent}%</Text>
+            <Text>{formatPriceChange(changePercent)}%</Text>
           </PnlTag>
         </View>
       </View>

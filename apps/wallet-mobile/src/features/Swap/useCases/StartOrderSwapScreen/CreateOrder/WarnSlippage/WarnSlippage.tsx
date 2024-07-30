@@ -21,33 +21,31 @@ export const WarnSlippage = ({onConfirm, slippage, ticker}: Props) => {
 
   return (
     <View style={styles.container}>
-      <View>
-        <Text style={styles.description}>{strings.slippageWarningText}</Text>
+      <Text style={styles.description}>{strings.slippageWarningText}</Text>
 
-        <Spacer height={16} />
+      <Spacer height={16} />
 
-        <View style={styles.table}>
-          <View style={styles.row}>
-            <Text style={styles.label}>{strings.slippageWarningYourSlippage}</Text>
+      <View style={styles.table}>
+        <View style={styles.row}>
+          <Text style={styles.label}>{strings.slippageWarningYourSlippage}</Text>
 
-            <View style={styles.textWrapper}>
-              <Text style={styles.value}>{slippageTolerance}</Text>
-            </View>
+          <View style={styles.textWrapper}>
+            <Text style={styles.value}>{slippageTolerance}</Text>
           </View>
+        </View>
 
-          <View style={styles.row}>
-            <Text style={styles.label}>{strings.swapMinReceivedTitle}</Text>
+        <View style={styles.row}>
+          <Text style={styles.label}>{strings.swapMinReceivedTitle}</Text>
 
-            <View style={styles.textWrapper}>
-              <Text style={styles.value}>{minReceived}</Text>
-            </View>
+          <View style={styles.textWrapper}>
+            <Text style={styles.value}>{minReceived}</Text>
           </View>
         </View>
       </View>
 
       <Spacer fill />
 
-      <View style={styles.buttonsWrapper}>
+      <View style={styles.actions}>
         <Button
           testID="swapCancelButton"
           outlineShelley
@@ -64,8 +62,6 @@ export const WarnSlippage = ({onConfirm, slippage, ticker}: Props) => {
           containerStyle={styles.buttonContainer}
         />
       </View>
-
-      <Spacer height={23} />
     </View>
   )
 }
@@ -74,52 +70,49 @@ const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     buttonContainer: {
-      flex: 1,
+      ...atoms.flex_1,
     },
-    buttonsWrapper: {
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      flexDirection: 'row',
-      gap: 16,
+    actions: {
+      ...atoms.align_center,
+      ...atoms.justify_between,
+      ...atoms.flex_row,
+      ...atoms.gap_lg,
     },
     container: {
-      flex: 1,
-      justifyContent: 'space-between',
+      ...atoms.flex_1,
+      ...atoms.justify_between,
       ...atoms.px_lg,
+      ...atoms.pb_lg,
     },
     label: {
-      fontSize: 16,
-      color: color.gray_c600,
-      lineHeight: 24,
-      fontFamily: 'Rubik-Regular',
+      color: color.text_gray_medium,
+      ...atoms.body_1_lg_regular,
     },
     value: {
-      fontSize: 16,
-      color: color.gray_cmax,
-      lineHeight: 24,
-      fontFamily: 'Rubik-Regular',
-      textAlign: 'right',
+      color: color.text_gray_max,
+      ...atoms.body_1_lg_regular,
+      ...atoms.text_right,
     },
     textWrapper: {
-      flexDirection: 'row',
-      justifyContent: 'flex-end',
-      alignItems: 'flex-end',
-      flex: 1,
-      flexWrap: 'wrap',
-      gap: 4,
+      ...atoms.flex_row,
+      ...atoms.justify_end,
+      ...atoms.align_end,
+      ...atoms.flex_1,
+      ...atoms.flex_wrap,
+      ...atoms.gap_xs,
     },
     table: {
-      flexDirection: 'column',
-      gap: 8,
+      ...atoms.flex_col,
+      ...atoms.gap_sm,
     },
     row: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      gap: 10,
+      ...atoms.flex_row,
+      ...atoms.justify_between,
+      ...atoms.gap_md,
     },
     description: {
       ...atoms.body_1_lg_regular,
-      color: color.gray_c900,
+      color: color.text_gray_normal,
     },
   })
 

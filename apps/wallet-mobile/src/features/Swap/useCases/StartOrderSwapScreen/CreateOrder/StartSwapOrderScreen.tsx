@@ -8,7 +8,7 @@ import * as React from 'react'
 import {Alert, StyleSheet, useWindowDimensions, View, ViewProps} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {Button, KeyboardAvoidingView, Spacer, useModal} from '../../../../../components'
+import {Button, useModal} from '../../../../../components'
 import {Space} from '../../../../../components/Space/Space'
 import {frontendFeeAddressMainnet, frontendFeeAddressPreprod} from '../../../../../kernel/env'
 import {useIsKeyboardOpen} from '../../../../../kernel/keyboard/useIsKeyboardOpen'
@@ -39,7 +39,7 @@ import {WarnSlippage} from './WarnSlippage/WarnSlippage'
 const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
 const BOTTOM_ACTION_SECTION = 180
 
-export const CreateOrder = () => {
+export const StartSwapOrderScreen = () => {
   const [contentHeight, setContentHeight] = React.useState(0)
   const strings = useStrings()
   const styles = useStyles()
@@ -290,50 +290,40 @@ export const CreateOrder = () => {
 
   return (
     <View style={[styles.root, styles.flex]}>
-      <KeyboardAvoidingView style={styles.flex} keyboardVerticalOffset={166}>
-        <ScrollView style={styles.padding}>
-          <Space height="sm" />
+      <ScrollView style={styles.padding}>
+        <Space height="sm" />
 
-          <View
-            onLayout={(event) => {
-              const {height} = event.nativeEvent.layout
-              setContentHeight(height + BOTTOM_ACTION_SECTION)
-            }}
-          >
-            <OrderActions />
+        <View
+          onLayout={(event) => {
+            const {height} = event.nativeEvent.layout
+            setContentHeight(height + BOTTOM_ACTION_SECTION)
+          }}
+        >
+          <OrderActions />
 
-            <EditSellAmount />
+          <EditSellAmount />
 
-            <Spacer height={16} />
+          <Space height="lg" />
 
-            <AmountActions />
+          <AmountActions />
 
-            <Spacer height={16} />
+          <Space height="lg" />
 
-            <EditBuyAmount />
+          <EditBuyAmount />
 
-            <Spacer height={20} />
+          <Space height="lg" />
 
-            <EditPrice />
+          <EditPrice />
 
-            <EditSlippage />
+          <EditSlippage />
 
-            <ShowPoolActions />
-          </View>
-        </ScrollView>
+          <ShowPoolActions />
+        </View>
+      </ScrollView>
 
-        <Actions style={[(deviceHeight < contentHeight || isKeyboardOpen) && styles.actionBorder]}>
-          <Padding>
-            <Button
-              testID="swapButton"
-              shelleyTheme
-              title={strings.swapTitle}
-              onPress={handleOnSwap}
-              disabled={disabled}
-            />
-          </Padding>
-        </Actions>
-      </KeyboardAvoidingView>
+      <Actions style={[(deviceHeight < contentHeight || isKeyboardOpen) && styles.actionBorder]}>
+        <Button testID="swapButton" shelleyTheme title={strings.swapTitle} onPress={handleOnSwap} disabled={disabled} />
+      </Actions>
     </View>
   )
 }
@@ -343,17 +333,12 @@ const Actions = ({style, ...props}: ViewProps) => {
   return <View style={[styles.actions, style]} {...props} />
 }
 
-// NOTE: just to display the scrollable line on top of action
-const Padding = ({style, ...props}: ViewProps) => {
-  const styles = useStyles()
-  return <View style={[styles.padding, style]} {...props} />
-}
-
 const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
       backgroundColor: color.bg_color_high,
+      ...atoms.pb_lg,
     },
     flex: {
       ...atoms.flex_1,
@@ -363,9 +348,10 @@ const useStyles = () => {
     },
     actions: {
       ...atoms.pt_lg,
+      ...atoms.px_lg,
     },
     actionBorder: {
-      borderTopWidth: 1,
+      ...atoms.border_t,
       borderTopColor: color.gray_c200,
     },
   })

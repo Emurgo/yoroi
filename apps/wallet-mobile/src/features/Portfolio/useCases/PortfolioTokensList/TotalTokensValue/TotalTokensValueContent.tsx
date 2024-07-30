@@ -5,9 +5,9 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Spacer} from '../../../../../components'
 import {useCurrencyPairing} from '../../../../Settings/Currency'
+import {formatPriceChange, priceChange} from '../../../common/helpers/priceChange'
 import {PnlTag} from '../../../common/PnlTag/PnlTag'
 import {usePortfolio} from '../../../common/PortfolioProvider'
-import {useQuantityChange} from '../../../common/useQuantityChange'
 import {SkeletonQuantityChange} from './SkeletonQuantityChange'
 import {TokenValueBalance} from './TokenValueBalance'
 import {TokenValuePairedBalance} from './TokenValuePairedBalance'
@@ -19,22 +19,16 @@ type Props = {
 
 export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
   const {styles} = useStyles()
-
-  // TODO
-  const previousQuantity = amount.quantity
   const {
     currency,
-    adaPrice: {price},
+    config,
+    adaPrice: {price, previous},
   } = useCurrencyPairing()
   const {isPrimaryTokenActive, setIsPrimaryTokenActive} = usePortfolio()
 
-  const {variantPnl, quantityChange, quantityChangePercent, pairedBalanceChange} = useQuantityChange({
-    quantity: amount.quantity,
-    previousQuantity,
-    decimals: amount.info.decimals,
-  })
+  const {changePercent, changeValue, variantPnl} = priceChange(previous, price)
 
-  const isFetching = previousQuantity === undefined || price === undefined
+  const isFetching = price === undefined
 
   return (
     <View>
@@ -64,7 +58,7 @@ export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
               <SkeletonQuantityChange />
             ) : (
               <PnlTag variant={variantPnl} withIcon>
-                <Text>{quantityChangePercent}%</Text>
+                <Text>{formatPriceChange(changePercent)}%</Text>
               </PnlTag>
             )}
 
@@ -72,7 +66,10 @@ export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
               <SkeletonQuantityChange />
             ) : (
               <PnlTag variant={variantPnl}>
-                <Text>{`${Number(quantityChange) > 0 ? '+' : ''}${pairedBalanceChange} ${currency}`}</Text>
+                <Text>{`${changeValue > 0 ? '+' : ''}${formatPriceChange(
+                  changeValue,
+                  config.decimals,
+                )} ${currency}`}</Text>
               </PnlTag>
             )}
           </View>

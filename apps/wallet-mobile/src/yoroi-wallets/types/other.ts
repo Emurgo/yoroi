@@ -168,6 +168,17 @@ export type PriceResponse = {
     prices: Record<CurrencySymbol, number>
   }
 }
+
+export type PriceMultipleResponse = {
+  error: string | null
+  tickers: Array<{
+    from: 'ADA' // we don't support ERG yet
+    timestamp: number
+    signature: string
+    prices: Record<CurrencySymbol, number>
+  }>
+}
+
 export const NETWORK_REGISTRY = {
   BYRON_MAINNET: 0,
   HASKELL_SHELLEY: 1,

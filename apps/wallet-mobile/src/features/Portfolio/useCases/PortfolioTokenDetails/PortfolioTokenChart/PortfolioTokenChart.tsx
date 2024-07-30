@@ -1,10 +1,10 @@
 import {useTheme} from '@yoroi/theme'
-import React, {useCallback, useMemo, useState} from 'react'
+import React, {useCallback, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import useGetPortfolioTokenChart, {
-  type TokenChartTimeInterval,
-  TOKEN_CHART_TIME_INTERVAL,
+  type TokenChartInterval,
+  TOKEN_CHART_INTERVAL,
 } from '../../../common/useGetPortfolioTokenChart'
 import {PortfolioTokenChartSkeleton} from './PortfolioTokenChartSkeleton'
 import {TokenChart} from './TokenChart'
@@ -16,7 +16,7 @@ export const PortfolioTokenChart = () => {
 
   const [selectedIndex, setSelectedIndex] = useState(0)
 
-  const [timeInterval, setTimeInterval] = useState<TokenChartTimeInterval>(TOKEN_CHART_TIME_INTERVAL.HOUR)
+  const [timeInterval, setTimeInterval] = useState<TokenChartInterval>(TOKEN_CHART_INTERVAL.DAY)
 
   const {data, isFetching} = useGetPortfolioTokenChart(timeInterval)
 
@@ -26,22 +26,14 @@ export const PortfolioTokenChart = () => {
     setSelectedIndex(index)
   }, [])
 
-  const tokenPerformance = useMemo(() => {
-    if (!data) return undefined
-    if (selectedIndex < 0) return data[0]
-    return data[selectedIndex]
-  }, [selectedIndex, data])
-
   return (
     <View style={styles.root}>
-      {isFetching ? (
+      {isFetching || !data ? (
         <PortfolioTokenChartSkeleton />
       ) : (
         <>
           <TokenPerformance
-            changePercent={tokenPerformance?.changePercentage}
-            value={tokenPerformance?.value}
-            changeValue={tokenPerformance?.changeValue}
+            tokenPerformance={data[Math.max(0, Math.min(data.length - 1, selectedIndex))]}
             timeInterval={timeInterval}
           />
 
