@@ -28,7 +28,7 @@ export const TxList = (props: Props) => {
   const [currentIndex, setCurrentIndex] = React.useState(batchSize)
 
   React.useEffect(() => {
-    setLoadedTxs(filteredTransactions.slice(0, batchSize))
+    setLoadedTxs(filteredTransactions.slice(0, currentIndex + batchSize))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transactionInfos]) // must be transactionInfos
 
