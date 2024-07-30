@@ -81,6 +81,21 @@ function generateMockChartData(timeInterval: TokenChartInterval = TOKEN_CHART_IN
   return chartData
 }
 
+const getTimestamps = (timeInterval: TokenChartInterval) => {
+  const now = Date.now()
+  const [from, resolution] = {
+    [TOKEN_CHART_INTERVAL.DAY]: [now - time.oneDay, 96],
+    [TOKEN_CHART_INTERVAL.WEEK]: [now - time.oneWeek, 168],
+    [TOKEN_CHART_INTERVAL.MONTH]: [now - time.oneMonth, 180],
+    [TOKEN_CHART_INTERVAL.SIX_MONTHS]: [now - time.sixMonths, 180],
+    [TOKEN_CHART_INTERVAL.YEAR]: [now - time.oneYear, 365],
+    [TOKEN_CHART_INTERVAL.ALL]: [new Date('2018').getTime(), 256],
+  }[timeInterval]
+
+  const step = (now - from) / resolution
+  return Array.from({length: resolution}, (_, i) => from + Math.round(step * i))
+}
+
 const useGetPortfolioTokenChart = (
   timeInterval = TOKEN_CHART_INTERVAL.DAY as TokenChartInterval,
   options: UseQueryOptions<
@@ -112,20 +127,7 @@ const useGetPortfolioTokenChart = (
     ...options,
     queryKey: ['useGetPortfolioTokenChart', tokenInfo?.info.id ?? '', timeInterval, currency],
     queryFn: async () => {
-      const now = Date.now()
-      const [from, resolution] = {
-        [TOKEN_CHART_INTERVAL.DAY]: [now - time.oneDay, 96],
-        [TOKEN_CHART_INTERVAL.WEEK]: [now - time.oneWeek, 168],
-        [TOKEN_CHART_INTERVAL.MONTH]: [now - time.oneMonth, 180],
-        [TOKEN_CHART_INTERVAL.SIX_MONTHS]: [now - time.sixMonths, 180],
-        [TOKEN_CHART_INTERVAL.YEAR]: [now - time.oneYear, 365],
-        [TOKEN_CHART_INTERVAL.ALL]: [new Date('2018').getTime(), 256],
-      }[timeInterval]
-
-      const step = (now - from) / resolution
-      const timestamps = Array.from({length: resolution}, (_, i) => from + Math.round(step * i))
-
-      const {error, tickers} = await fetchAdaPrice(API_ROOT, timestamps)
+      const {error, tickers} = await fetchAdaPrice(API_ROOT, getTimestamps(timeInterval))
       if (error !== null) throw error
 
       const validCurrency = currency === 'ADA' ? 'USD' : currency ?? 'USD'
