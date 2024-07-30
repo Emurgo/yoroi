@@ -71,7 +71,7 @@ export const Toggle = () => {
     <View style={styles.toggle}>
       <Switch
         style={styles.switch}
-        value={isLight === false}
+        value={!isLight}
         onValueChange={handleOnValueChange}
         trackColor={{false: color.gray_c100, true: color.gray_c100}}
         thumbColor={isLight === true ? color.sys_yellow_c500 : color.el_primary_medium}
