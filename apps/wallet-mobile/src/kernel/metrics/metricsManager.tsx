@@ -193,6 +193,8 @@ export const makeMetricsManager = (
     discoverWebViewTabClicked: metricsModule.discoverWebViewTabClicked.bind(metricsModule),
     discoverWebViewToolbarSearchActivated: metricsModule.discoverWebViewToolbarSearchActivated.bind(metricsModule),
     discoverWebViewViewed: metricsModule.discoverWebViewViewed.bind(metricsModule),
+
+    networkSelected: metricsModule.networkSelected.bind(metricsModule),
   } as const
 
   return {
