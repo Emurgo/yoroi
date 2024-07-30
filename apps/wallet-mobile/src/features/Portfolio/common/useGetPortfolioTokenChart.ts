@@ -9,7 +9,7 @@ import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWal
 import {priceChange} from './helpers/priceChange'
 import {usePortfolioTokenDetailParams} from './useNavigateTo'
 
-export const TOKEN_CHART_TIME_INTERVAL = {
+export const TOKEN_CHART_INTERVAL = {
   DAY: '24 H',
   WEEK: '1 W',
   MONTH: '1 M',
@@ -18,7 +18,7 @@ export const TOKEN_CHART_TIME_INTERVAL = {
   ALL: 'ALL',
 } as const
 
-export type TokenChartTimeInterval = (typeof TOKEN_CHART_TIME_INTERVAL)[keyof typeof TOKEN_CHART_TIME_INTERVAL]
+export type TokenChartInterval = (typeof TOKEN_CHART_INTERVAL)[keyof typeof TOKEN_CHART_INTERVAL]
 
 type TokenChartData = {
   label: string
@@ -27,24 +27,24 @@ type TokenChartData = {
   changeValue: number
 }
 
-function generateMockChartData(timeInterval: TokenChartTimeInterval = TOKEN_CHART_TIME_INTERVAL.DAY): TokenChartData[] {
+function generateMockChartData(timeInterval: TokenChartInterval = TOKEN_CHART_INTERVAL.DAY): TokenChartData[] {
   const dataPoints = 50
   const startValue = 100
   const volatility = 50
 
   const startDate = new Date('2024-02-02T15:09:00')
 
-  function getTimeIncrement(interval: TokenChartTimeInterval): number {
+  function getTimeIncrement(interval: TokenChartInterval): number {
     switch (interval) {
-      case TOKEN_CHART_TIME_INTERVAL.DAY:
+      case TOKEN_CHART_INTERVAL.DAY:
         return 60 * 60 * 1000 // 1 hour
-      case TOKEN_CHART_TIME_INTERVAL.WEEK:
+      case TOKEN_CHART_INTERVAL.WEEK:
         return 24 * 60 * 60 * 1000 // 1 day
-      case TOKEN_CHART_TIME_INTERVAL.MONTH:
+      case TOKEN_CHART_INTERVAL.MONTH:
         return 30 * 24 * 60 * 60 * 1000 // 1 month (approximated as 30 days)
-      case TOKEN_CHART_TIME_INTERVAL.SIX_MONTHS:
+      case TOKEN_CHART_INTERVAL.SIX_MONTHS:
         return 6 * 30 * 24 * 60 * 60 * 1000 // 6 months
-      case TOKEN_CHART_TIME_INTERVAL.YEAR:
+      case TOKEN_CHART_INTERVAL.YEAR:
         return 12 * 30 * 24 * 60 * 60 * 1000 // 1 year (approximated as 360 days)
       default:
         return 60 * 1000 // Default to 1 minute
@@ -82,12 +82,12 @@ function generateMockChartData(timeInterval: TokenChartTimeInterval = TOKEN_CHAR
 }
 
 const useGetPortfolioTokenChart = (
-  timeInterval = TOKEN_CHART_TIME_INTERVAL.DAY as TokenChartTimeInterval,
+  timeInterval = TOKEN_CHART_INTERVAL.DAY as TokenChartInterval,
   options: UseQueryOptions<
     TokenChartData[],
     Error,
     TokenChartData[],
-    ['useGetPortfolioTokenChart', string, TokenChartTimeInterval, string?]
+    ['useGetPortfolioTokenChart', string, TokenChartInterval, ReturnType<typeof useCurrencyPairing>['currency']?]
   > = {},
 ) => {
   const {id: tokenId} = usePortfolioTokenDetailParams()
@@ -113,37 +113,35 @@ const useGetPortfolioTokenChart = (
     queryKey: ['useGetPortfolioTokenChart', tokenInfo?.info.id ?? '', timeInterval, currency],
     queryFn: async () => {
       const now = Date.now()
-      const from = {
-        [TOKEN_CHART_TIME_INTERVAL.DAY]: now - time.oneDay,
-        [TOKEN_CHART_TIME_INTERVAL.WEEK]: now - time.oneWeek,
-        [TOKEN_CHART_TIME_INTERVAL.MONTH]: now - time.oneMonth,
-        [TOKEN_CHART_TIME_INTERVAL.SIX_MONTHS]: now - time.sixMonths,
-        [TOKEN_CHART_TIME_INTERVAL.YEAR]: now - time.oneYear,
-        [TOKEN_CHART_TIME_INTERVAL.ALL]: new Date('2018').getTime(),
+      const [from, resolution] = {
+        [TOKEN_CHART_INTERVAL.DAY]: [now - time.oneDay, 96],
+        [TOKEN_CHART_INTERVAL.WEEK]: [now - time.oneWeek, 168],
+        [TOKEN_CHART_INTERVAL.MONTH]: [now - time.oneMonth, 180],
+        [TOKEN_CHART_INTERVAL.SIX_MONTHS]: [now - time.sixMonths, 180],
+        [TOKEN_CHART_INTERVAL.YEAR]: [now - time.oneYear, 365],
+        [TOKEN_CHART_INTERVAL.ALL]: [new Date('2018').getTime(), 256],
       }[timeInterval]
-      const resolution = {
-        [TOKEN_CHART_TIME_INTERVAL.DAY]: 96,
-        [TOKEN_CHART_TIME_INTERVAL.WEEK]: 168,
-        [TOKEN_CHART_TIME_INTERVAL.MONTH]: 180,
-        [TOKEN_CHART_TIME_INTERVAL.SIX_MONTHS]: 180,
-        [TOKEN_CHART_TIME_INTERVAL.YEAR]: 365,
-        [TOKEN_CHART_TIME_INTERVAL.ALL]: 256,
-      }[timeInterval]
+
       const step = (now - from) / resolution
       const timestamps = Array.from({length: resolution}, (_, i) => from + Math.round(step * i))
+
       const {error, tickers} = await fetchAdaPrice(API_ROOT, timestamps)
       if (error !== null) throw error
 
-      const previous = tickers[0].prices[currency === 'ADA' ? 'USD' : currency]
-      return tickers
+      const validCurrency = currency === 'ADA' ? 'USD' : currency ?? 'USD'
+
+      const initialPrice = tickers[0].prices[validCurrency]
+      const records = tickers
         .map((ticker) => {
-          const value = ticker.prices[currency === 'ADA' ? 'USD' : currency]
+          const value = ticker.prices[validCurrency]
           if (value === undefined) return undefined
-          const {changePercent, changeValue} = priceChange(previous, value)
+          const {changePercent, changeValue} = priceChange(initialPrice, value)
           const label = new Date(ticker.timestamp).toLocaleString('en-us', {dateStyle: 'short', timeStyle: 'short'})
           return {label, value, changePercent, changeValue}
         })
         .filter(Boolean) as TokenChartData[]
+
+      return records
     },
   })
 
