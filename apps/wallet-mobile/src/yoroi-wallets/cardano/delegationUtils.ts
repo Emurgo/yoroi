@@ -9,6 +9,7 @@ import {StakingStatus} from '../types'
 import {CardanoMobile} from '../wallets'
 import type {TimestampedCertMeta} from './transactionManager'
 import {CardanoTypes} from './types'
+import {wrappedCsl} from './wrappedCsl'
 
 const addrContainsAccountKey = async (
   address: string,
@@ -78,4 +79,49 @@ export const getDelegationStatus = (
   }
 
   return status
+}
+
+export const isValidPoolIdOrHash = async (poolIdOrHash: string): Promise<boolean> => {
+  const [validPoolId, validPoolHash] = await Promise.all([isValidPoolId(poolIdOrHash), isValidPoolHash(poolIdOrHash)])
+  return validPoolId || validPoolHash
+}
+
+export const normalizeToPoolHash = async (poolIdOrHash: string): Promise<string> => {
+  if (await isValidPoolHash(poolIdOrHash)) return poolIdOrHash
+  if (await isValidPoolId(poolIdOrHash)) return getPoolHash(poolIdOrHash)
+  throw new Error('Invalid pool ID or hash')
+}
+
+export const getPoolHash = async (poolId: string): Promise<string> => {
+  const {csl, release} = wrappedCsl()
+  try {
+    const hash = await csl.Ed25519KeyHash.fromBech32(poolId)
+    return hash.toHex()
+  } finally {
+    release()
+  }
+}
+
+export const isValidPoolId = async (poolId: string): Promise<boolean> => {
+  if (poolId.length === 0) return false
+  try {
+    await getPoolHash(poolId)
+    return true
+  } catch (e) {
+    return false
+  }
+}
+
+export const isValidPoolHash = async (poolHash: string): Promise<boolean> => {
+  if (poolHash.length === 0) return false
+
+  const {csl, release} = wrappedCsl()
+  try {
+    await csl.Ed25519KeyHash.fromBytes(Buffer.from(poolHash, 'hex'))
+    return true
+  } catch (e) {
+    return false
+  } finally {
+    release()
+  }
 }

@@ -1,9 +1,12 @@
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet} from 'react-native'
+import LinearGradient from 'react-native-linear-gradient'
+import {useQuery} from 'react-query'
 
-import {Button, Text, TextInput} from '../../../components'
+import {Button, Spacer, Text, TextInput} from '../../../components'
+import {isValidPoolIdOrHash, normalizeToPoolHash} from '../../../yoroi-wallets/cardano/delegationUtils'
 
 type Props = {
   onPressDelegate: (poolHash: string) => void
@@ -13,55 +16,84 @@ type Props = {
 export const PoolDetailScreen = ({onPressDelegate, disabled = false}: Props) => {
   const strings = useStrings()
   const styles = useStyles()
-  const [poolHash, setPoolHash] = React.useState('')
+  const [poolIdOrHash, setPoolIdOrHash] = React.useState('')
+  const {isDark, color} = useTheme()
+
+  const {data: isValid} = useIsValidPoolIdOrHash(poolIdOrHash)
+
+  const hasError = !isValid && poolIdOrHash.length > 0
+
+  const handleOnPress = async () => {
+    const hash = await normalizeToPoolHash(poolIdOrHash)
+    onPressDelegate(hash)
+  }
 
   return (
-    <View style={styles.content}>
-      <View style={styles.heading}>
-        <Text style={styles.title}>{strings.title}</Text>
-      </View>
+    <>
+      <LinearGradient
+        colors={isDark ? ['rgba(19, 57, 54, 1)', 'rgba(20, 24, 58, 1)', 'rgba(22, 25, 45, 1)'] : color.bg_gradient_1} // it fixes a weird bug
+        start={{x: isDark ? 0.5 : 0.5, y: isDark ? 0 : 0.5}}
+        end={{x: isDark ? 0 : 0, y: isDark ? 0.5 : 0}}
+        style={styles.disclaimer}
+      >
+        <Text style={styles.title}>{strings.disclaimerTitle}</Text>
+
+        <Text style={styles.description}>{strings.disclaimerText}</Text>
+      </LinearGradient>
+
+      <Spacer height={24} />
 
       <TextInput
-        label={strings.poolHash}
-        value={poolHash}
-        onChangeText={setPoolHash}
+        label={strings.poolID}
+        value={poolIdOrHash}
+        onChangeText={setPoolIdOrHash}
         autoComplete="off"
         testID="nightlyPoolHashInput"
+        error={hasError}
+        errorText={hasError ? strings.invalidPoolID : ''}
       />
 
+      <Spacer fill />
+
       <Button
-        outlineOnLight
-        outline
-        onPress={() => onPressDelegate(poolHash)}
-        title={strings.delegate}
+        shelleyTheme
+        onPress={handleOnPress}
+        title={strings.next}
         style={styles.button}
-        disabled={disabled}
+        disabled={disabled || hasError || poolIdOrHash.length === 0}
         testID="nightlyDelegateButton"
       />
-    </View>
+    </>
   )
+}
+
+const useIsValidPoolIdOrHash = (poolIdOrHash: string) => {
+  const queryFn = React.useCallback(() => isValidPoolIdOrHash(poolIdOrHash), [poolIdOrHash])
+  return useQuery({queryFn, queryKey: ['isValidPoolIdOrHash', poolIdOrHash]})
 }
 
 const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
-    content: {
-      flex: 1,
-      padding: 24,
-      backgroundColor: color.gray_c100,
-    },
-    heading: {
-      alignItems: 'center',
-      justifyContent: 'center',
-      ...atoms.pb_lg,
-    },
-    title: {
-      color: color.primary_c600,
-      ...atoms.pb_lg,
-      ...atoms.body_1_lg_regular,
-    },
     button: {
       ...atoms.p_sm,
+    },
+    disclaimer: {
+      ...atoms.px_lg,
+      ...atoms.py_md,
+      ...atoms.gap_sm,
+      overflow: 'hidden',
+      borderRadius: 8,
+    },
+    title: {
+      ...atoms.body_1_lg_medium,
+      ...atoms.font_semibold,
+      color: color.gray_cmax,
+    },
+    description: {
+      ...atoms.body_2_md_regular,
+      ...atoms.font_normal,
+      color: color.gray_c900,
     },
   })
   return styles
@@ -71,9 +103,13 @@ const useStrings = () => {
   const intl = useIntl()
 
   return {
-    title: intl.formatMessage(messages.title),
     poolHash: intl.formatMessage(messages.poolHash),
     delegate: intl.formatMessage(messages.delegate),
+    poolID: intl.formatMessage(messages.poolID),
+    invalidPoolID: intl.formatMessage(messages.invalidPoolID),
+    next: intl.formatMessage(messages.next),
+    disclaimerTitle: intl.formatMessage(messages.disclaimerTitle),
+    disclaimerText: intl.formatMessage(messages.disclaimerText),
   }
 }
 
@@ -82,12 +118,29 @@ const messages = defineMessages({
     id: 'components.stakingcenter.confirmDelegation.delegateButtonLabel',
     defaultMessage: '!!!Delegate',
   },
-  title: {
-    id: 'components.stakingcenter.pooldetailscreen.title',
-    defaultMessage: '!!!Nightly delegation',
+  next: {
+    id: 'global.next',
+    defaultMessage: '!!!Next',
   },
   poolHash: {
     id: 'global.staking.stakePoolHash',
     defaultMessage: '!!!Stake pool hash',
+  },
+  poolID: {
+    id: 'global.staking.stakePoolID',
+    defaultMessage: '!!!Enter test stake pool ID',
+  },
+  invalidPoolID: {
+    id: 'global.staking.invalidPoolID',
+    defaultMessage: '!!!Invalid pool ID. Please retype.',
+  },
+  disclaimerTitle: {
+    id: 'components.stakingcenter.poolDetails.disclaimerTitle',
+    defaultMessage: '!!!Stake test ADA and support Yoroi 💥',
+  },
+  disclaimerText: {
+    id: 'components.stakingcenter.poolDetails.disclaimerText',
+    defaultMessage:
+      "!!!Experience the mechanism of staking firsthand and help us improve Yoroi's functionality and user experience.",
   },
 })
