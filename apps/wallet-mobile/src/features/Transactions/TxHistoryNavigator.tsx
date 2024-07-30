@@ -59,6 +59,7 @@ import {
   ShowSubmittedTxScreen as SubmittedTxSwapScreen,
 } from '../Swap/useCases'
 import {ShowPreprodNoticeScreen} from '../Swap/useCases/ShowPreprodNoticeScreen/ShowPreprodNoticeScreen'
+import {ShowSanchoNoticeScreen} from '../Swap/useCases/ShowSanchoNoticeScreen/ShowSanchoNoticeScreen'
 import {SelectBuyTokenFromListScreen} from '../Swap/useCases/StartOrderSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
 import {SelectSellTokenFromListScreen} from '../Swap/useCases/StartOrderSwapScreen/CreateOrder/EditSellAmount/SelectSellTokenFromListScreen/SelectSellTokenFromListScreen'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
@@ -255,6 +256,15 @@ export const TxHistoryNavigator = () => {
                   <Stack.Screen
                     name="swap-preprod-notice"
                     component={ShowPreprodNoticeScreen}
+                    options={{
+                      ...sendOptions(navigationOptions, color),
+                      title: strings.swapTitle,
+                    }}
+                  />
+
+                  <Stack.Screen
+                    name="swap-sancho-notice"
+                    component={ShowSanchoNoticeScreen}
                     options={{
                       ...sendOptions(navigationOptions, color),
                       title: strings.swapTitle,

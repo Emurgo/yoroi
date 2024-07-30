@@ -38,9 +38,15 @@ export const useStrings = () => {
     preprodFaucetBannerTitle: intl.formatMessage(messages.preprodFaucetBannerTitle),
     preprodFaucetBannerText: intl.formatMessage(messages.preprodFaucetBannerText),
     preprodFaucetBannerButtonText: intl.formatMessage(messages.preprodFaucetBannerButtonText),
+    sanchoFaucetBannerTitle: intl.formatMessage(messages.sanchoFaucetBannerTitle),
+    sanchoFaucetBannerText: intl.formatMessage(messages.sanchoFaucetBannerText),
+    sanchoFaucetBannerButtonText: intl.formatMessage(messages.sanchoFaucetBannerButtonText),
     createOrderPreprodFaucetButtonText: intl.formatMessage(messages.createOrderPreprodFaucetButtonText),
     createOrderPreprodNoticeTitle: intl.formatMessage(messages.createOrderPreprodNoticeTitle),
     createOrderPreprodNoticeText: intl.formatMessage(messages.createOrderPreprodNoticeText),
+    createOrderSanchonetFaucetButtonText: intl.formatMessage(messages.createOrderSanchonetFaucetButtonText),
+    createOrderSanchonetNoticeTitle: intl.formatMessage(messages.createOrderSanchonetNoticeTitle),
+    createOrderSanchonetNoticeText: intl.formatMessage(messages.createOrderSanchonetNoticeText),
     close: intl.formatMessage(globalMessages.close),
     error: intl.formatMessage(globalMessages.error),
   }).current
@@ -174,6 +180,18 @@ export const messages = Object.freeze(
       id: 'rampOnOff.createRampOnOff.preprodfaucetbanner.button.text',
       defaultMessage: '!!!Go to tada faucet',
     },
+    sanchoFaucetBannerTitle: {
+      id: 'rampOnOff.createRampOnOff.sanchofaucetbanner.title',
+      defaultMessage: '!!!Get your first test ADA in Yoroi ⭐️',
+    },
+    sanchoFaucetBannerText: {
+      id: 'rampOnOff.createRampOnOff.sanchofaucetbanner.text',
+      defaultMessage: '!!!Top up your wallet from the Cardano sanchonet faucet and unlock the power of test Cardano.',
+    },
+    sanchoFaucetBannerButtonText: {
+      id: 'rampOnOff.createRampOnOff.sanchofaucetbanner.button.text',
+      defaultMessage: '!!!Go to tada faucet',
+    },
     createOrderPreprodFaucetButtonText: {
       id: 'rampOnOff.createRampOnOff.createorder.preprodfaucet.button.text',
       defaultMessage: '!!!Add test ada',
@@ -184,6 +202,18 @@ export const messages = Object.freeze(
     },
     createOrderPreprodNoticeText: {
       id: 'rampOnOff.createRampOnOff.createorder.preprodnotice.text',
+      defaultMessage: '!!!Switch network or top up your testnet network wallet with the free Cardano faucet',
+    },
+    createOrderSanchonetFaucetButtonText: {
+      id: 'rampOnOff.createRampOnOff.createorder.sanchofaucet.button.text',
+      defaultMessage: '!!!Add test ada',
+    },
+    createOrderSanchonetNoticeTitle: {
+      id: 'rampOnOff.createRampOnOff.createorder.sanchonotice.title',
+      defaultMessage: '!!!ADA purchases can only be made on the mainnet',
+    },
+    createOrderSanchonetNoticeText: {
+      id: 'rampOnOff.createRampOnOff.createorder.sanchonotice.text',
       defaultMessage: '!!!Switch network or top up your testnet network wallet with the free Cardano faucet',
     },
   }),

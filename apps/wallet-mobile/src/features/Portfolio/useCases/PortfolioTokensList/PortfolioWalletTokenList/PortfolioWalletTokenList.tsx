@@ -8,6 +8,7 @@ import {Spacer} from '../../../../../components'
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {makeList} from '../../../../../kernel/utils'
 import {PreprodFaucetBanner} from '../../../../Exchange/common/ShowBuyBanner/PreprodFaucetBanner'
+import {SanchonetFaucetBanner} from '../../../../Exchange/common/ShowBuyBanner/SanchonetFaucetBanner'
 import {useSearch} from '../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
@@ -74,6 +75,9 @@ export const PortfolioWalletTokenList = () => {
     return () => clearTimeout(timeout)
   }, [isSearching, search, track])
 
+  const isPreprod = network === Chain.Network.Preprod
+  const isSancho = network === Chain.Network.Sancho
+
   const renderFooterList = () => {
     if (tokensLoading) return makeList(6).map((_, index) => <SkeletonItem key={index} />)
     if (isSearching) return null
@@ -82,7 +86,7 @@ export const PortfolioWalletTokenList = () => {
         <View>
           <Spacer height={16} />
 
-          {network === Chain.Network.Preprod ? <PreprodFaucetBanner /> : <BuyADABanner />}
+          {isPreprod ? <PreprodFaucetBanner /> : isSancho ? <SanchonetFaucetBanner /> : <BuyADABanner />}
         </View>
       )
     }

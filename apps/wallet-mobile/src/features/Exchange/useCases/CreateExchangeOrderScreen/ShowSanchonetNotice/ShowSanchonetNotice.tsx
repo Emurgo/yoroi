@@ -1,23 +1,27 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
+import {StyleSheet, Text, View} from 'react-native'
 
-import {PreprodNoticeScreenLogo} from '../../common/Illustrations/PreprodNoticeScreenLogo'
-import {useStrings} from '../../common/strings'
+import {Space} from '../../../../../components/Space/Space'
+import {useStrings} from '../../../common/useStrings'
+import {PreprodNoticeIllustration} from '../../../illustrations/PreprodNoticeIllustration'
 
-export const ShowPreprodNoticeScreen = () => {
+export const ShowSanchonetNotice = () => {
   const {styles} = useStyles()
   const strings = useStrings()
 
   return (
-    <SafeAreaView edges={['bottom', 'right', 'left']} style={styles.container}>
-      <PreprodNoticeScreenLogo />
+    <View style={styles.container}>
+      <Space height="_2xl" />
 
-      <Text style={styles.title}>{strings.preprodNoticeTitle}</Text>
+      <PreprodNoticeIllustration />
 
-      <Text style={styles.text}>{strings.preprodNoticeText}</Text>
-    </SafeAreaView>
+      <Space height="lg" />
+
+      <Text style={styles.title}>{strings.createOrderSanchonetNoticeTitle}</Text>
+
+      <Text style={styles.text}>{strings.createOrderSanchonetNoticeText}</Text>
+    </View>
   )
 }
 
@@ -25,7 +29,6 @@ const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     container: {
-      backgroundColor: color.bg_color_high,
       ...atoms.p_lg,
       flex: 1,
       alignItems: 'center',

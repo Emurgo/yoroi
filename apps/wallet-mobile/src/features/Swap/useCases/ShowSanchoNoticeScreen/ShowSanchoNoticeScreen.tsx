@@ -1,23 +1,23 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {SafeArea} from '../../../../components/SafeArea'
 import {PreprodNoticeScreenLogo} from '../../common/Illustrations/PreprodNoticeScreenLogo'
 import {useStrings} from '../../common/strings'
 
-export const ShowPreprodNoticeScreen = () => {
+export const ShowSanchoNoticeScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
 
   return (
-    <SafeAreaView edges={['bottom', 'right', 'left']} style={styles.container}>
+    <SafeArea style={styles.container}>
       <PreprodNoticeScreenLogo />
 
-      <Text style={styles.title}>{strings.preprodNoticeTitle}</Text>
+      <Text style={styles.title}>{strings.sanchoNoticeTitle}</Text>
 
-      <Text style={styles.text}>{strings.preprodNoticeText}</Text>
-    </SafeAreaView>
+      <Text style={styles.text}>{strings.sanchoNoticeText}</Text>
+    </SafeArea>
   )
 }
 

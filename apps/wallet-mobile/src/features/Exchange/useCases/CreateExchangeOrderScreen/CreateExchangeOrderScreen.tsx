@@ -31,6 +31,10 @@ const handleOnPressOnPreprod = () => {
   Linking.openURL('https://docs.cardano.org/cardano-testnets/tools/faucet/')
 }
 
+const handleOnPressOnSanchonet = () => {
+  Linking.openURL('https://sancho.network/faucet/')
+}
+
 export const CreateExchangeOrderScreen = () => {
   const strings = useStrings()
   const styles = useStyles()
@@ -122,6 +126,7 @@ export const CreateExchangeOrderScreen = () => {
   }
 
   const isPreprod = network === Chain.Network.Preprod
+  const isSancho = network === Chain.Network.Sancho
 
   return (
     <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
@@ -136,7 +141,7 @@ export const CreateExchangeOrderScreen = () => {
           >
             <SelectBuyOrSell disabled={isLoading} />
 
-            {isPreprod && orderType === 'buy' ? (
+            {(isPreprod || isSancho) && orderType === 'buy' ? (
               <ShowPreprodNotice />
             ) : (
               <>
@@ -174,9 +179,15 @@ export const CreateExchangeOrderScreen = () => {
           <Button
             testID="rampOnOffButton"
             shelleyTheme
-            title={isPreprod ? strings.createOrderPreprodFaucetButtonText : strings.proceed}
-            onPress={isPreprod ? handleOnPressOnPreprod : handleOnExchange}
-            disabled={!(isPreprod && orderType === 'buy') && exchangeDisabled}
+            title={
+              isPreprod
+                ? strings.createOrderPreprodFaucetButtonText
+                : isSancho
+                ? strings.createOrderSanchonetFaucetButtonText
+                : strings.proceed
+            }
+            onPress={isPreprod ? handleOnPressOnPreprod : isSancho ? handleOnPressOnSanchonet : handleOnExchange}
+            disabled={!(isPreprod || (isSancho && orderType === 'buy')) && exchangeDisabled}
           />
         </View>
       </KeyboardAvoidingView>
