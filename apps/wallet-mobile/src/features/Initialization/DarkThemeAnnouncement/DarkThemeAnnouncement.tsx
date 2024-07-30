@@ -65,7 +65,7 @@ export const Toggle = () => {
   const {styles, color} = useStyles()
   const {isLight, isDark, selectThemeName} = useTheme()
 
-  const handleOnValueChange = () => selectThemeName(isLight === true ? 'default-dark' : 'default-light')
+  const handleOnValueChange = () => selectThemeName(isLight ? 'default-dark' : 'default-light')
 
   return (
     <View style={styles.toggle}>
