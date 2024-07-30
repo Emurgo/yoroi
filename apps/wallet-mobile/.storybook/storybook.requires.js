@@ -243,6 +243,7 @@ const getStories = () => {
     "./src/features/Swap/useCases/ConfirmTxScreen/ShowFailedTxScreen/ShowFailedTxScreen.stories.tsx": require("../src/features/Swap/useCases/ConfirmTxScreen/ShowFailedTxScreen/ShowFailedTxScreen.stories.tsx"),
     "./src/features/Swap/useCases/ConfirmTxScreen/ShowSubmittedTxScreen/ShowSubmittedTxScreen.stories.tsx": require("../src/features/Swap/useCases/ConfirmTxScreen/ShowSubmittedTxScreen/ShowSubmittedTxScreen.stories.tsx"),
     "./src/features/Swap/useCases/ConfirmTxScreen/TransactionSummary.stories.tsx": require("../src/features/Swap/useCases/ConfirmTxScreen/TransactionSummary.stories.tsx"),
+    "./src/features/Swap/useCases/ShowPreprodNoticeScreen/ShowPreprodNoticeScreen.stories.tsx": require("../src/features/Swap/useCases/ShowPreprodNoticeScreen/ShowPreprodNoticeScreen.stories.tsx"),
     "./src/features/Swap/useCases/StartSwapScreen/CreateOrder/Actions/AmountActions/AmountActions.stories.tsx": require("../src/features/Swap/useCases/StartSwapScreen/CreateOrder/Actions/AmountActions/AmountActions.stories.tsx"),
     "./src/features/Swap/useCases/StartSwapScreen/CreateOrder/Actions/AmountActions/ClearQuantities.stories.tsx": require("../src/features/Swap/useCases/StartSwapScreen/CreateOrder/Actions/AmountActions/ClearQuantities.stories.tsx"),
     "./src/features/Swap/useCases/StartSwapScreen/CreateOrder/Actions/AmountActions/SwitchTokens.stories.tsx": require("../src/features/Swap/useCases/StartSwapScreen/CreateOrder/Actions/AmountActions/SwitchTokens.stories.tsx"),
