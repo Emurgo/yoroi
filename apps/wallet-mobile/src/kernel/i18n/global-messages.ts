@@ -659,6 +659,10 @@ export default defineMessages({
     id: 'global.continue',
     defaultMessage: '!!!Continue',
   },
+  switch: {
+    id: 'global.switch',
+    defaultMessage: '!!!Switch',
+  },
   disclaimer: {
     id: 'global.disclaimer',
     defaultMessage: '!!!Disclaimer',

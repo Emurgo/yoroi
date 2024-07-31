@@ -12,7 +12,10 @@ export const useStrings = () => {
     networkNoticeList: intl.formatMessage(messages.networkNoticeList),
     networkNoticeButton: intl.formatMessage(messages.networkNoticeButton),
     preparingNetwork: intl.formatMessage(messages.preparingNetwork),
-    apply: intl.formatMessage(globalMessages.apply),
+    networkTagModalTitle: intl.formatMessage(messages.networkTagModalTitle),
+    networkTagModalText: intl.formatMessage(messages.networkTagModalText),
+    cancel: intl.formatMessage(globalMessages.cancel),
+    switch: intl.formatMessage(globalMessages.switch),
   }
 }
 
@@ -42,5 +45,13 @@ export const messages = defineMessages({
   networkNoticeButton: {
     id: 'components.settings.applicationsettingsscreen.network.notice.button',
     defaultMessage: '!!!I understand',
+  },
+  networkTagModalTitle: {
+    id: 'components.settings.applicationsettingsscreen.network.tag.modal.title',
+    defaultMessage: '!!!Switch to Mainnet',
+  },
+  networkTagModalText: {
+    id: 'components.settings.applicationsettingsscreen.network.tag.modal.text',
+    defaultMessage: '!!!Are you sure you want to switch back to the main Cardano Network?',
   },
 })

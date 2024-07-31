@@ -4,6 +4,7 @@ import React from 'react'
 
 import {SafeArea} from '../../../components/SafeArea'
 import {defaultStackNavigationOptions} from '../../../kernel/navigation'
+import {NetworkTag} from '../../Settings/ChangeNetwork/NetworkTag'
 import {NavigationStack, useGovernanceManagerMaker, useStrings} from './common'
 import {ChangeVoteScreen, ConfirmTxScreen, FailedTxScreen, HomeScreen, SuccessTxScreen} from './useCases'
 
@@ -17,7 +18,12 @@ export const GovernanceNavigator = () => {
   return (
     <GovernanceProvider manager={manager}>
       <SafeArea>
-        <Stack.Navigator screenOptions={screenOptions(atoms, color)}>
+        <Stack.Navigator
+          screenOptions={{
+            ...screenOptions(atoms, color),
+            headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
+          }}
+        >
           <Stack.Screen
             name="staking-gov-home"
             component={HomeScreen}

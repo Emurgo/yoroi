@@ -6,6 +6,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Tab, TabPanel, Tabs} from '../../../../components/Tabs'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useSearchOnNavBar} from '../../../Search/SearchContext'
+import {NetworkTag} from '../../../Settings/ChangeNetwork/NetworkTag'
 import {PortfolioProvider} from '../../common/PortfolioProvider'
 import {useGetDAppsPortfolioBalance} from '../../common/useGetDAppsPortfolioBalance'
 import {useStrings} from '../../common/useStrings'
@@ -35,6 +36,7 @@ export const PortfolioTokenListScreen = () => {
   useSearchOnNavBar({
     title: strings.tokenList,
     placeholder: strings.searchTokens,
+    extraNavigationOptions: {headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>},
   })
 
   return (

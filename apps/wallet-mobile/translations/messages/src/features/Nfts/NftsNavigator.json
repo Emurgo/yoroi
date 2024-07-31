@@ -4,14 +4,14 @@
     "defaultMessage": "!!!NFT Details",
     "file": "src/features/Nfts/NftsNavigator.tsx",
     "start": {
-      "line": 47,
+      "line": 53,
       "column": 9,
-      "index": 1404
+      "index": 1575
     },
     "end": {
-      "line": 50,
+      "line": 56,
       "column": 3,
-      "index": 1475
+      "index": 1646
     }
   }
 ]

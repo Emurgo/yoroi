@@ -1,14 +1,17 @@
 import {infoExtractName, isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
-import {Portfolio} from '@yoroi/types'
+import {Chain, Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {FlatList, StyleSheet, Text, View} from 'react-native'
 
 import {Spacer} from '../../../../../components'
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {makeList} from '../../../../../kernel/utils'
+import {PreprodFaucetBanner} from '../../../../Exchange/common/ShowBuyBanner/PreprodFaucetBanner'
+import {SanchonetFaucetBanner} from '../../../../Exchange/common/ShowBuyBanner/SanchonetFaucetBanner'
 import {useSearch} from '../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
+import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
 import {usePortfolioBalances} from '../../../common/hooks/usePortfolioBalances'
 import {usePortfolioPrimaryBalance} from '../../../common/hooks/usePortfolioPrimaryBalance'
 import {Line} from '../../../common/Line'
@@ -30,6 +33,9 @@ export const PortfolioWalletTokenList = () => {
   const {track} = useMetrics()
   const balances = usePortfolioBalances({wallet})
   const tokensList = React.useMemo(() => balances.fts ?? [], [balances.fts])
+  const {
+    selected: {network},
+  } = useWalletManager()
 
   const isJustADA = React.useMemo(() => {
     if (tokensList.length >= 2) return false
@@ -69,6 +75,9 @@ export const PortfolioWalletTokenList = () => {
     return () => clearTimeout(timeout)
   }, [isSearching, search, track])
 
+  const isPreprod = network === Chain.Network.Preprod
+  const isSancho = network === Chain.Network.Sancho
+
   const renderFooterList = () => {
     if (tokensLoading) return makeList(6).map((_, index) => <SkeletonItem key={index} />)
     if (isSearching) return null
@@ -77,7 +86,7 @@ export const PortfolioWalletTokenList = () => {
         <View>
           <Spacer height={16} />
 
-          <BuyADABanner />
+          {isPreprod ? <PreprodFaucetBanner /> : isSancho ? <SanchonetFaucetBanner /> : <BuyADABanner />}
         </View>
       )
     }

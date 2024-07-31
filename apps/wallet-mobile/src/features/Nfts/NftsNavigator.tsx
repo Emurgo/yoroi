@@ -6,6 +6,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {useMetrics} from '../../kernel/metrics/metricsManager'
 import {defaultStackNavigationOptions, NftRoutes} from '../../kernel/navigation'
 import {MediaDetails} from '../Portfolio/common/MediaDetails/MediaDetails'
+import {NetworkTag} from '../Settings/ChangeNetwork/NetworkTag'
 import {NftDetailsImage} from './useCases/NftDetails/NftDetailsImage'
 import {Nfts} from './useCases/Nfts'
 
@@ -25,7 +26,12 @@ export const NftsNavigator = () => {
   }, [track])
 
   return (
-    <Stack.Navigator screenOptions={defaultStackNavigationOptions(atoms, color)}>
+    <Stack.Navigator
+      screenOptions={{
+        ...defaultStackNavigationOptions(atoms, color),
+        headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
+      }}
+    >
       <Stack.Screen name="nft-gallery" component={Nfts} />
 
       <Stack.Screen

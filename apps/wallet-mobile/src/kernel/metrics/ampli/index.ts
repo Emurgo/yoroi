@@ -130,6 +130,25 @@ export interface GovernanceTransactionSuccessPageViewedProperties {
   governance_selection: 'Delegate' | 'Abstain' | 'No Confidence'
 }
 
+export interface NetworkSelectedProperties {
+  /**
+   * Current network
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Enum Values | preprod, preview, mainnet, sancho |
+   */
+  from_network: 'preprod' | 'preview' | 'mainnet' | 'sancho'
+  /**
+   * Network selected
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Enum Values | preprod, preview, mainnet, sancho |
+   */
+  to_network: 'preprod' | 'preview' | 'mainnet' | 'sancho'
+}
+
 export interface NftGalleryDetailsTabProperties {
   /**
    * | Rule | Value |
@@ -926,6 +945,14 @@ export class GovernanceTransactionSuccessPageViewed implements BaseEvent {
 
 export class MenuPageViewed implements BaseEvent {
   event_type = 'Menu Page Viewed'
+}
+
+export class NetworkSelected implements BaseEvent {
+  event_type = 'Network Selected'
+
+  constructor(public event_properties: NetworkSelectedProperties) {
+    this.event_properties = event_properties
+  }
 }
 
 export class NftGalleryDetailsImageViewed implements BaseEvent {
@@ -1874,6 +1901,23 @@ export class Ampli {
     options?: EventOptions,
   ) {
     return this.track(new MenuPageViewed(), options);
+  }
+
+  /**
+   * Network Selected
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Network%20Selected)
+   *
+   * Event to track when a user selects a network
+   *
+   * @param properties The event's properties (e.g. from_network)
+   * @param options Amplitude event options.
+   */
+  networkSelected(
+    properties: NetworkSelectedProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new NetworkSelected(properties), options);
   }
 
   /**

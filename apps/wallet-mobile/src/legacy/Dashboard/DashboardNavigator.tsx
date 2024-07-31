@@ -24,7 +24,12 @@ export const DashboardNavigator = () => {
 
   return (
     <GovernanceProvider manager={manager}>
-      <Stack.Navigator screenOptions={defaultStackNavigationOptions(atoms, color)}>
+      <Stack.Navigator
+        screenOptions={{
+          ...defaultStackNavigationOptions(atoms, color),
+          headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
+        }}
+      >
         <Stack.Screen
           name="staking-dashboard-main"
           component={Dashboard}

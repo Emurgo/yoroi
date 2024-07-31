@@ -8,12 +8,12 @@ import {Space} from '../../../../components/Space/Space'
 import {useStrings} from '../useStrings'
 import {PreprodFaucetBannerLogo} from './PreprodFaucetBannerLogo'
 
-export const PreprodFaucetBanner = () => {
+export const SanchonetFaucetBanner = () => {
   const strings = useStrings()
   const {styles, colors} = useStyles()
 
   const handleOnPress = () => {
-    Linking.openURL('https://docs.cardano.org/cardano-testnets/tools/faucet/')
+    Linking.openURL('https://sancho.network/faucet/')
   }
 
   return (
@@ -21,7 +21,7 @@ export const PreprodFaucetBanner = () => {
       <View style={styles.root}>
         <LinearGradient style={styles.gradient} start={{x: 1, y: 1}} end={{x: 0, y: 0}} colors={colors.gradientColor}>
           <View style={styles.viewTitle}>
-            <Text style={styles.title}>{strings.preprodFaucetBannerTitle}</Text>
+            <Text style={styles.title}>{strings.sanchoFaucetBannerTitle}</Text>
 
             <Space height="xs" />
           </View>
@@ -30,14 +30,14 @@ export const PreprodFaucetBanner = () => {
             <View style={styles.contentInner}>
               <Spacer height={8} />
 
-              <Text style={styles.text}>{strings.preprodFaucetBannerText}</Text>
+              <Text style={styles.text}>{strings.sanchoFaucetBannerText}</Text>
 
               <Space height="lg" />
 
               <Button
                 testID="rampOnOffButton"
                 shelleyTheme
-                title={strings.preprodFaucetBannerButtonText}
+                title={strings.sanchoFaucetBannerButtonText}
                 onPress={handleOnPress}
                 style={styles.spaceButton}
               />
