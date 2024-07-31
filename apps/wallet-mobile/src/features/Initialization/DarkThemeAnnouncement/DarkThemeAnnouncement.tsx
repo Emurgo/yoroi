@@ -10,11 +10,13 @@ import {useQuery, UseQueryOptions} from 'react-query'
 import {Button, Text} from '../../../components'
 import {Space} from '../../../components/Space/Space'
 import {useWalletNavigation} from '../../../kernel/navigation'
-import {ThemeIlustration} from '../illustrations/ThemeIlustration'
+import {DarkThemeIlustration} from '../illustrations/DarkThemeIlustration'
+import {LightThemeIlustration} from '../illustrations/LightThemeIlustration'
 
 export const DarkThemeAnnouncement = () => {
   const {styles} = useStyles()
   const strings = useStrings()
+  const {isDark} = useTheme()
   const {setScreenShown, isLoading: isSetScreenShownLoading} = useSetScreenShown()
 
   const scrollViewRef = React.useRef<ScrollView | null>(null)
@@ -40,7 +42,7 @@ export const DarkThemeAnnouncement = () => {
         <View style={styles.content}>
           <Space height="_2xl" />
 
-          <ThemeIlustration />
+          {isDark ? <DarkThemeIlustration /> : <LightThemeIlustration />}
 
           <Space height="_2xl" />
 
