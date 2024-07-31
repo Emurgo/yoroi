@@ -25,7 +25,7 @@ export class DappConnector implements DappConnectorManager {
   constructor(private storage: Storage, private wallet: ResolverWallet, private api: Api) {}
 
   async getDAppList() {
-    return this.api.getDApps()
+    return this.api.getDApps({networkId: this.wallet.networkId})
   }
 
   async listAllConnections() {
