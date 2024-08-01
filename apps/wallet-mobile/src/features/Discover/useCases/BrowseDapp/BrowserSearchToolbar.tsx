@@ -63,21 +63,24 @@ const BackButton = (props: TouchableOpacityProps) => {
 }
 
 const useStyles = () => {
-  const {color} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      paddingVertical: 10,
-      paddingHorizontal: 16,
+      ...atoms.px_md,
     },
     boxURI: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      borderRadius: 8,
-      paddingHorizontal: 12,
-      backgroundColor: color.gray_c50,
-      height: 50,
+      minHeight: 64,
+      ...atoms.flex_row,
+      ...atoms.align_center,
+      ...atoms.gap_lg,
     },
-    searchInputStyle: {flex: 1, color: color.black_static},
+    searchInputStyle: {
+      color: color.text_gray_max,
+      minHeight: 36,
+      ...atoms.body_1_lg_regular,
+      ...atoms.flex_1,
+      ...atoms.pb_md,
+    },
   })
 
   return {styles} as const
