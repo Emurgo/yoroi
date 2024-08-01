@@ -33,10 +33,10 @@ const Palette = () => {
 
         <Switch
           trackColor={{
-            false: palette.primary_c500,
-            true: palette.secondary_c500,
+            false: palette.primary_500,
+            true: palette.secondary_500,
           }}
-          ios_backgroundColor={palette.primary_c500}
+          ios_backgroundColor={palette.primary_500}
           value={colorScheme === 'light'}
           onChange={() =>
             setColorScheme(colorScheme === 'light' ? 'dark' : 'light')
@@ -45,83 +45,83 @@ const Palette = () => {
       </View>
 
       <Section title="Grayscale">
-        <Item title="max" color={palette.gray_cmax} />
+        <Item title="max" color={palette.gray_max} />
 
-        <Item title="900" color={palette.gray_c900} />
+        <Item title="900" color={palette.gray_900} />
 
-        <Item title="800" color={palette.gray_c800} />
+        <Item title="800" color={palette.gray_800} />
 
-        <Item title="700" color={palette.gray_c700} />
+        <Item title="700" color={palette.gray_700} />
 
-        <Item title="600" color={palette.gray_c600} />
+        <Item title="600" color={palette.gray_600} />
 
-        <Item title="500" color={palette.gray_c500} />
+        <Item title="500" color={palette.gray_500} />
 
-        <Item title="400" color={palette.gray_c400} />
+        <Item title="400" color={palette.gray_400} />
 
-        <Item title="300" color={palette.gray_c300} />
+        <Item title="300" color={palette.gray_300} />
 
-        <Item title="200" color={palette.gray_c200} />
+        <Item title="200" color={palette.gray_200} />
 
-        <Item title="100" color={palette.gray_c100} />
+        <Item title="100" color={palette.gray_100} />
 
-        <Item title="50" color={palette.gray_c50} />
+        <Item title="50" color={palette.gray_50} />
 
-        <Item title="min" color={palette.gray_cmin} />
+        <Item title="min" color={palette.gray_min} />
       </Section>
 
       <Section title="Primary">
-        <Item title="900" color={palette.primary_c900} />
+        <Item title="900" color={palette.primary_900} />
 
-        <Item title="800" color={palette.primary_c800} />
+        <Item title="800" color={palette.primary_800} />
 
-        <Item title="700" color={palette.primary_c700} />
+        <Item title="700" color={palette.primary_700} />
 
-        <Item title="600" color={palette.primary_c600} />
+        <Item title="600" color={palette.primary_600} />
 
-        <Item title="500" color={palette.primary_c500} />
+        <Item title="500" color={palette.primary_500} />
 
-        <Item title="400" color={palette.primary_c400} />
+        <Item title="400" color={palette.primary_400} />
 
-        <Item title="300" color={palette.primary_c300} />
+        <Item title="300" color={palette.primary_300} />
 
-        <Item title="200" color={palette.primary_c200} />
+        <Item title="200" color={palette.primary_200} />
 
-        <Item title="100" color={palette.primary_c100} />
+        <Item title="100" color={palette.primary_100} />
       </Section>
 
       <Section title="Secondary">
-        <Item title="900" color={palette.secondary_c900} />
+        <Item title="900" color={palette.secondary_900} />
 
-        <Item title="800" color={palette.secondary_c800} />
+        <Item title="800" color={palette.secondary_800} />
 
-        <Item title="700" color={palette.secondary_c700} />
+        <Item title="700" color={palette.secondary_700} />
 
-        <Item title="600" color={palette.secondary_c600} />
+        <Item title="600" color={palette.secondary_600} />
 
-        <Item title="500" color={palette.secondary_c500} />
+        <Item title="500" color={palette.secondary_500} />
 
-        <Item title="400" color={palette.secondary_c400} />
+        <Item title="400" color={palette.secondary_400} />
 
-        <Item title="300" color={palette.secondary_c300} />
+        <Item title="300" color={palette.secondary_300} />
 
-        <Item title="200" color={palette.secondary_c200} />
+        <Item title="200" color={palette.secondary_200} />
 
-        <Item title="100" color={palette.secondary_c100} />
+        <Item title="100" color={palette.secondary_100} />
       </Section>
 
       <Section title="Magenta">
-        <Item title="500" color={palette.sys_magenta_c500} />
+        <Item title="500" color={palette.sys_magenta_500} />
 
-        <Item title="300" color={palette.sys_magenta_c300} />
+        <Item title="300" color={palette.sys_magenta_300} />
 
-        <Item title="100" color={palette.sys_magenta_c100} />
+        <Item title="100" color={palette.sys_magenta_100} />
       </Section>
 
       <Section title="Cyan">
-        <Item title="400" color={palette.sys_cyan_c500} />
+        <Item title="400" color={palette.sys_cyan_500} />
 
-        <Item title="100" color={palette.sys_cyan_c100} />
+        <Item title="100" color={palette.sys_cyan_100} />
       </Section>
 
       <Section title="Gradients">
