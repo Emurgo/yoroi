@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {useNavigation, useRoute} from '@react-navigation/native'
+import {useRoute} from '@react-navigation/native'
 import {isNonNullable} from '@yoroi/common'
 import {useExplorers} from '@yoroi/explorers'
 import {useTheme} from '@yoroi/theme'
 import {BigNumber} from 'bignumber.js'
 import {fromPairs} from 'lodash'
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import {IntlShape, useIntl} from 'react-intl'
 import {
   LayoutAnimation,
@@ -51,7 +51,7 @@ export const TxDetails = () => {
   const transaction = transactions[id]
   const memo = !isEmptyString(transaction.memo) ? transaction.memo : '-'
 
-  useTitle(isNonNullable(transaction.submittedAt) ? formatDateAndTime(transaction.submittedAt, intl) : '')
+  const submittedAt = isNonNullable(transaction.submittedAt) ? formatDateAndTime(transaction.submittedAt, intl) : ''
 
   const {fromFiltered, toFiltered, cntOmittedTo} = getShownAddresses(
     intl,
@@ -94,6 +94,10 @@ export const TxDetails = () => {
         </Text>
 
         <View style={styles.borderTop}>
+          <Text secondary monospace style={styles.center}>
+            {submittedAt}
+          </Text>
+
           <Label>{strings.fromAddresses}</Label>
         </View>
 
@@ -367,6 +371,10 @@ const useStyles = () => {
       ...atoms.body_2_md_regular,
       color: color.gray_c900,
     },
+    center: {
+      ...atoms.pt_lg,
+      ...atoms.self_center,
+    },
     borderTop: {
       borderTopWidth: 1,
       borderColor: 'rgba(173, 174, 182, 0.3)',
@@ -381,10 +389,4 @@ const useStyles = () => {
     iconColor: color.gray_c500,
   }
   return {styles, colors}
-}
-
-const useTitle = (text: string) => {
-  const navigation = useNavigation()
-
-  useEffect(() => navigation.setOptions({title: text}))
 }
