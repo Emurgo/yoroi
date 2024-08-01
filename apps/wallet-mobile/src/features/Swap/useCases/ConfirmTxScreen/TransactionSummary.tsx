@@ -3,6 +3,7 @@ import {useTheme} from '@yoroi/theme'
 import {capitalize} from 'lodash'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import LinearGradient from 'react-native-linear-gradient'
 
 import {Icon, Spacer, Text, useModal} from '../../../../components'
 import {PairedBalance} from '../../../../components/PairedBalance/PairedBalance'
@@ -141,7 +142,7 @@ export const TransactionSummary = () => {
 
   return (
     <View>
-      <View style={styles.card}>
+      <LinearGradient colors={colors.gradientColor} style={styles.card}>
         <Text style={styles.cardText}>{strings.total}</Text>
 
         <View style={styles.total}>
@@ -169,7 +170,7 @@ export const TransactionSummary = () => {
             </>
           )}
         </View>
-      </View>
+      </LinearGradient>
 
       <Spacer height={24} />
 
@@ -269,7 +270,6 @@ const useStyles = () => {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'flex-start',
-      backgroundColor: color.primary_c600,
       padding: 16,
       borderRadius: 8,
     },
@@ -347,6 +347,7 @@ const useStyles = () => {
 
   const colors = {
     icon: color.gray_cmax,
+    gradientColor: color.bg_gradient_3,
   }
 
   return {styles, colors} as const
