@@ -164,7 +164,12 @@ export const TxHistoryNavigator = () => {
                     }}
                   />
 
-                  <Stack.Screen name="tx-details">
+                  <Stack.Screen
+                    name="tx-details"
+                    options={{
+                      title: strings.txDetailsTitle,
+                    }}
+                  >
                     {() => (
                       <Boundary loading={{size: 'full'}}>
                         <TxDetails />
@@ -526,33 +531,38 @@ const messages = defineMessages({
     id: 'rampOnOff.rampOnOffScreen.exchangeSelectProvider.sell',
     defaultMessage: '!!!Sell provider',
   },
+  txDetailsTitle: {
+    id: 'components.txhistory.txdetails.txDetails',
+    defaultMessage: '!!!Tx Details',
+  },
 })
 
 const useStrings = () => {
   const intl = useIntl()
 
   return {
-    receiveTitle: intl.formatMessage(messages.receiveTitle),
-    swapTitle: intl.formatMessage(messages.swapTitle),
-    swapFromTitle: intl.formatMessage(messages.swapFromTitle),
-    swapToTitle: intl.formatMessage(messages.swapToTitle),
-    slippageTolerance: intl.formatMessage(messages.slippageTolerance),
-    selectPool: intl.formatMessage(messages.selectPool),
-    sendTitle: intl.formatMessage(messages.sendTitle),
-    qrScannerTitle: intl.formatMessage(messages.qrScannerTitle),
-    selectAssetTitle: intl.formatMessage(messages.selectAssetTitle),
-    confirmTitle: intl.formatMessage(messages.confirmTitle),
-    receiveInfoText: intl.formatMessage(messages.receiveInfoText),
-    editAmountTitle: intl.formatMessage(messages.editAmountTitle),
-    listAmountsToSendTitle: intl.formatMessage(messages.listAmountsToSendTitle),
-    confirmationTransaction: intl.formatMessage(messages.confirmationTransaction),
-    scanTitle: intl.formatMessage(messages.scanTitle),
     claimShowSuccess: intl.formatMessage(messages.claimShowSuccessTitle),
-    specificAmount: intl.formatMessage(messages.specificAmount),
+    confirmationTransaction: intl.formatMessage(messages.confirmationTransaction),
+    confirmTitle: intl.formatMessage(messages.confirmTitle),
+    describeSelectedAddressTitle: intl.formatMessage(messages.describeSelectedAddressTitle),
+    editAmountTitle: intl.formatMessage(messages.editAmountTitle),
     exchangeCreateOrderTitle: intl.formatMessage(messages.exchangeCreateOrderTitle),
     exchangeSelectBuyProvider: intl.formatMessage(messages.exchangeSelectBuyProvider),
     exchangeSelectSellProvider: intl.formatMessage(messages.exchangeSelectSellProvider),
-    describeSelectedAddressTitle: intl.formatMessage(messages.describeSelectedAddressTitle),
+    listAmountsToSendTitle: intl.formatMessage(messages.listAmountsToSendTitle),
+    qrScannerTitle: intl.formatMessage(messages.qrScannerTitle),
+    receiveInfoText: intl.formatMessage(messages.receiveInfoText),
+    receiveTitle: intl.formatMessage(messages.receiveTitle),
+    scanTitle: intl.formatMessage(messages.scanTitle),
+    selectAssetTitle: intl.formatMessage(messages.selectAssetTitle),
+    selectPool: intl.formatMessage(messages.selectPool),
+    sendTitle: intl.formatMessage(messages.sendTitle),
+    slippageTolerance: intl.formatMessage(messages.slippageTolerance),
+    specificAmount: intl.formatMessage(messages.specificAmount),
+    swapFromTitle: intl.formatMessage(messages.swapFromTitle),
+    swapTitle: intl.formatMessage(messages.swapTitle),
+    swapToTitle: intl.formatMessage(messages.swapToTitle),
+    txDetailsTitle: intl.formatMessage(messages.txDetailsTitle),
   }
 }
 

@@ -494,6 +494,7 @@
   "components.txhistory.txdetails.addressPrefixNotMine": "not mine",
   "components.txhistory.txdetails.addressPrefixReceive": "/{idx}",
   "components.txhistory.txdetails.confirmations": "{cnt} {cnt, plural, one {CONFIRMATION} other {CONFIRMATIONS}}",
+  "components.txhistory.txdetails.txDetails": "Tx Details",
   "components.txhistory.txdetails.fee": "Fee:",
   "components.txhistory.txdetails.fromAddresses": "From Addresses",
   "components.txhistory.txdetails.memo": "Memo",
