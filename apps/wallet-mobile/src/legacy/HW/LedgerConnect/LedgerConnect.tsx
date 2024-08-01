@@ -9,6 +9,7 @@ import * as React from 'react'
 import type {IntlShape} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, Alert, FlatList, Image, RefreshControl, ScrollView, StyleSheet, View} from 'react-native'
+import {Observer} from 'rxjs'
 
 import bleImage from '../../../assets/img/bluetooth.png'
 import usbImage from '../../../assets/img/ledger-nano-usb.png'
@@ -66,10 +67,10 @@ class LedgerConnectInt extends React.Component<Props, State> {
       // as it's just an empty method. Rather, we make sure sate is only
       // modified when component is mounted
       let previousAvailable = false
-      TransportBLE.observeState({
-        next: (e: {available: boolean}) => {
+      const observer: Observer<{available: boolean; type: string}> = {
+        next: (e: {available: boolean; type: string}) => {
           if (this._isMounted) {
-            logger.debug('BLE observeState event', e)
+            logger.debug('BLE observeState event', {event: e})
             if (this._bluetoothEnabled == null && !e.available) {
               this.setState({
                 error: new BluetoothDisabledError(),
@@ -91,7 +92,14 @@ class LedgerConnectInt extends React.Component<Props, State> {
             }
           }
         },
-      })
+        error: (e) => {
+          logger.error(e)
+        },
+        complete: () => {
+          logger.info('BLE observeState done')
+        },
+      }
+      TransportBLE.observeState(observer)
     }
     this.startScan()
   }
