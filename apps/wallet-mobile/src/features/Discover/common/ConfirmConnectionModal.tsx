@@ -54,7 +54,7 @@ export const ConfirmConnectionModal = ({name, website, onConfirm, logo}: Props) 
       <View style={styles.imagesLine}>
         <Icon.YoroiApp size={48} />
 
-        <Icon.Connection size={20} color={colors.connection} />
+        <Icon.Connection size={20} color={colors.icon} />
 
         <Image source={{uri: imageUri}} style={styles.image} key={imageUri} />
       </View>
@@ -91,43 +91,43 @@ export const ConfirmConnectionModal = ({name, website, onConfirm, logo}: Props) 
 }
 
 const useStyles = () => {
-  const theme = useTheme()
-  const colors = {connection: theme.color.black_static, dAppIconColor: theme.color.gray_c600}
+  const {atoms, color} = useTheme()
+  const colors = {icon: color.el_gray_high}
   const styles = StyleSheet.create({
     imagesLine: {
-      ...theme.atoms.flex,
-      ...theme.atoms.flex_row,
-      ...theme.atoms.align_center,
-      ...theme.atoms.justify_center,
-      ...theme.atoms.gap_xl,
+      ...atoms.flex,
+      ...atoms.flex_row,
+      ...atoms.align_center,
+      ...atoms.justify_center,
+      ...atoms.gap_xl,
     },
     image: {
       width: 48,
       height: 48,
     },
     line: {
-      ...theme.atoms.flex,
-      ...theme.atoms.flex_row,
-      ...theme.atoms.align_center,
-      ...theme.atoms.justify_center,
-      ...theme.atoms.gap_xs,
+      ...atoms.flex,
+      ...atoms.flex_row,
+      ...atoms.align_center,
+      ...atoms.justify_center,
+      ...atoms.gap_xs,
     },
     text: {
-      color: theme.color.gray_c900,
-      ...theme.atoms.body_1_lg_regular,
+      color: color.text_gray_normal,
+      ...atoms.body_1_lg_regular,
     },
     bold: {
-      color: theme.color.gray_c900,
-      ...theme.atoms.body_1_lg_medium,
-      ...theme.atoms.font_semibold,
+      color: color.text_gray_normal,
+      ...atoms.body_1_lg_medium,
+      ...atoms.font_semibold,
     },
     boxDesAllowConnectDApp: {
-      ...theme.atoms.pl_sm,
+      ...atoms.pl_sm,
     },
     root: {
-      flex: 1,
-      ...theme.atoms.px_lg,
+      ...atoms.flex_1,
+      ...atoms.px_lg,
     },
   })
-  return {styles, colors}
+  return {styles, colors} as const
 }
