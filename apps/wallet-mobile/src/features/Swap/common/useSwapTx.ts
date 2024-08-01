@@ -28,8 +28,7 @@ export const useSwapTx = (options?: UseMutationOptions<YoroiUnsignedTx, Error, {
 
   const {wallet, meta} = useSelectedWallet()
   const mutation = useMutationWithInvalidations({
-    mutationFn: (data) =>
-      wallet.createUnsignedTx({entries: data.entries, auxiliaryData: metadata, addressMode: meta.addressMode}),
+    mutationFn: (data) => wallet.createUnsignedTx({entries: data.entries, metadata, addressMode: meta.addressMode}),
     invalidateQueries: [['useCreateOrder']],
     ...options,
   })

@@ -106,7 +106,7 @@ export interface YoroiWallet {
   // Sending
   createUnsignedTx(params: {
     entries: YoroiEntry[]
-    auxiliaryData?: Array<CardanoTypes.TxMetadata>
+    metadata?: Array<CardanoTypes.TxMetadata>
     addressMode: Wallet.AddressMode
   }): Promise<YoroiUnsignedTx>
   signTx(signRequest: YoroiUnsignedTx, rootKey: string): Promise<YoroiSignedTx>
