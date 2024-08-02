@@ -179,7 +179,7 @@ export const messages = Object.freeze(
     },
     preprodFaucetBannerText: {
       id: 'rampOnOff.createRampOnOff.preprodfaucetbanner.text',
-      defaultMessage: '!!!Top up your wallet from the Cardano testnet faucet and unlock the power of test Cardano.',
+      defaultMessage: `!!!Get started with Cardano's test currency, TADA. It's your key to testing a new world of possibilities.`,
     },
     preprodFaucetBannerButtonText: {
       id: 'rampOnOff.createRampOnOff.preprodfaucetbanner.button.text',
@@ -191,7 +191,7 @@ export const messages = Object.freeze(
     },
     sanchoFaucetBannerText: {
       id: 'rampOnOff.createRampOnOff.sanchofaucetbanner.text',
-      defaultMessage: '!!!Top up your wallet from the Cardano sanchonet faucet and unlock the power of test Cardano.',
+      defaultMessage: `!!!Get started with Cardano's test currency, TADA. It's your key to testing a new world of possibilities.`,
     },
     sanchoFaucetBannerButtonText: {
       id: 'rampOnOff.createRampOnOff.sanchofaucetbanner.button.text',

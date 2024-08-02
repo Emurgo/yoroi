@@ -451,7 +451,7 @@
   },
   {
     "id": "rampOnOff.createRampOnOff.preprodfaucetbanner.text",
-    "defaultMessage": "!!!Top up your wallet from the Cardano testnet faucet and unlock the power of test Cardano.",
+    "defaultMessage": "!!!Get started with Cardano's test currency, TADA. It's your key to testing a new world of possibilities.",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
       "line": 180,
@@ -461,7 +461,7 @@
     "end": {
       "line": 183,
       "column": 5,
-      "index": 8378
+      "index": 8392
     }
   },
   {
@@ -471,12 +471,12 @@
     "start": {
       "line": 184,
       "column": 35,
-      "index": 8415
+      "index": 8429
     },
     "end": {
       "line": 187,
       "column": 5,
-      "index": 8539
+      "index": 8553
     }
   },
   {
@@ -486,27 +486,27 @@
     "start": {
       "line": 188,
       "column": 29,
-      "index": 8570
+      "index": 8584
     },
     "end": {
       "line": 191,
       "column": 5,
-      "index": 8705
+      "index": 8719
     }
   },
   {
     "id": "rampOnOff.createRampOnOff.sanchofaucetbanner.text",
-    "defaultMessage": "!!!Top up your wallet from the Cardano sanchonet faucet and unlock the power of test Cardano.",
+    "defaultMessage": "!!!Get started with Cardano's test currency, TADA. It's your key to testing a new world of possibilities.",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
       "line": 192,
       "column": 28,
-      "index": 8735
+      "index": 8749
     },
     "end": {
       "line": 195,
       "column": 5,
-      "index": 8924
+      "index": 8950
     }
   },
   {
@@ -516,12 +516,12 @@
     "start": {
       "line": 196,
       "column": 34,
-      "index": 8960
+      "index": 8986
     },
     "end": {
       "line": 199,
       "column": 5,
-      "index": 9083
+      "index": 9109
     }
   },
   {
@@ -531,12 +531,12 @@
     "start": {
       "line": 200,
       "column": 40,
-      "index": 9125
+      "index": 9151
     },
     "end": {
       "line": 203,
       "column": 5,
-      "index": 9250
+      "index": 9276
     }
   },
   {
@@ -546,12 +546,12 @@
     "start": {
       "line": 204,
       "column": 35,
-      "index": 9287
+      "index": 9313
     },
     "end": {
       "line": 207,
       "column": 5,
-      "index": 9439
+      "index": 9465
     }
   },
   {
@@ -561,12 +561,12 @@
     "start": {
       "line": 208,
       "column": 34,
-      "index": 9475
+      "index": 9501
     },
     "end": {
       "line": 211,
       "column": 5,
-      "index": 9662
+      "index": 9688
     }
   },
   {
@@ -576,12 +576,12 @@
     "start": {
       "line": 212,
       "column": 42,
-      "index": 9706
+      "index": 9732
     },
     "end": {
       "line": 215,
       "column": 5,
-      "index": 9830
+      "index": 9856
     }
   },
   {
@@ -591,12 +591,12 @@
     "start": {
       "line": 216,
       "column": 37,
-      "index": 9869
+      "index": 9895
     },
     "end": {
       "line": 219,
       "column": 5,
-      "index": 10020
+      "index": 10046
     }
   },
   {
@@ -606,12 +606,12 @@
     "start": {
       "line": 220,
       "column": 36,
-      "index": 10058
+      "index": 10084
     },
     "end": {
       "line": 223,
       "column": 5,
-      "index": 10244
+      "index": 10270
     }
   }
 ]
