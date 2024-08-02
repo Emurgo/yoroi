@@ -6,7 +6,7 @@ export const useDappList = (
   options?: UseQueryOptions<DappListResponse, Error, DappListResponse, [string, 'dappList', string]>,
 ) => {
   const {manager} = useDappConnector()
-  return useQuery([manager.walletId, 'dappList', String(manager.chainId)], {
+  return useQuery([manager.walletId, 'dappList', String(manager.network)], {
     queryFn: () => manager.getDAppList(),
     refetchOnMount: false,
     refetchInterval: ONE_DAY,

@@ -2,6 +2,7 @@ import {FetchData, fetchData, getApiError, isLeft, createTypeGuardFromSchema} fr
 import {freeze} from 'immer'
 import {AxiosRequestConfig} from 'axios'
 import {z} from 'zod'
+import {Chain} from '@yoroi/types'
 
 const dappListHosts = {
   mainnet: 'https://daehx1qv45z7c.cloudfront.net/data.json',
@@ -12,7 +13,7 @@ const dappListHosts = {
 const initialDeps = freeze({request: fetchData}, true)
 
 type GetDAppsOptions = {
-  chainId: number
+  network: Chain.SupportedNetworks
 }
 
 export type Api = {
@@ -21,7 +22,7 @@ export type Api = {
 
 export const dappConnectorApiMaker = ({request}: {request: FetchData} = initialDeps): Api => {
   const getDApps = async (options: GetDAppsOptions, fetcherConfig?: AxiosRequestConfig): Promise<DappListResponse> => {
-    const url = dappListHosts[getNetworkNameByChainId(options.chainId)]
+    const url = dappListHosts[options.network]
 
     const response = await request<unknown>({url}, fetcherConfig)
 
@@ -80,17 +81,4 @@ interface DappResponse {
   logo: string
   uri: string
   origins: string[]
-}
-
-const getNetworkNameByChainId = (chainId: number): 'mainnet' | 'preprod' | 'sancho' => {
-  switch (chainId) {
-    case 1:
-      return 'mainnet'
-    case 0:
-      return 'preprod'
-    case 450:
-      return 'sancho'
-    default:
-      throw new Error('Invalid chain id')
-  }
 }

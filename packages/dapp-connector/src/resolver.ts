@@ -3,6 +3,7 @@ import {Storage} from './adapters/async-storage'
 import {z} from 'zod'
 import {Address, TransactionUnspentOutput, TransactionWitnessSet, Value} from '@emurgo/cross-csl-core'
 import BigNumber from 'bignumber.js'
+import {Chain} from '@yoroi/types'
 
 type Context = {
   browserOrigin: string
@@ -336,6 +337,7 @@ export const resolverHandleEvent = async (
 export type ResolverWallet = {
   id: string
   networkId: number
+  network: Chain.SupportedNetworks
   confirmConnection: (dappOrigin: string) => Promise<boolean>
   getBalance: (tokenId?: string) => Promise<Value>
   getUnusedAddresses: () => Promise<Address[]>

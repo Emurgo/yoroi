@@ -6,6 +6,7 @@ import {Api, dappConnectorApiMaker} from './adapters/api'
 import {mockedDAppList} from './manager.mocks'
 import {ResolverWallet} from './resolver'
 import {init} from '@emurgo/cross-csl-nodejs'
+import {Chain} from '@yoroi/types'
 
 const getDappConnector = (wallet = mockWallet) => {
   const storage = connectionStorageMaker({storage: storageMock})
@@ -615,6 +616,7 @@ const mockWallet: ResolverWallet = {
   signTx: () => Promise.resolve(CSL.TransactionWitnessSet.new()),
   signData: () => Promise.resolve({key: '', signature: ''}),
   id: walletId,
+  network: Chain.Network.Mainnet,
   networkId: 1,
   confirmConnection: async () => true,
   getBalance: () => CSL.Value.fromHex('1a062ea8a0'),

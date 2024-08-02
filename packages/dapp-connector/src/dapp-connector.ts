@@ -3,6 +3,7 @@ import {resolverHandleEvent, ResolverWallet} from './resolver'
 import {connectWallet} from './connector'
 import {DappConnection, Storage} from './adapters/async-storage'
 import {Api, DappListResponse} from './adapters/api'
+import {Chain} from '@yoroi/types'
 
 export type DappConnectorManager = {
   getDAppList(): Promise<DappListResponse>
@@ -15,7 +16,7 @@ export type DappConnectorManager = {
     trustedUrl: string,
     sendMessage: (id: string, result: unknown, error?: Error) => void,
   ): Promise<void>
-  readonly chainId: number
+  readonly network: Chain.SupportedNetworks
   readonly walletId: string
 }
 
@@ -24,15 +25,15 @@ export const dappConnectorMaker = (storage: Storage, wallet: ResolverWallet, api
 }
 
 export class DappConnector implements DappConnectorManager {
-  chainId: number
+  network: Chain.SupportedNetworks
   walletId: string
   constructor(private storage: Storage, private wallet: ResolverWallet, private api: Api) {
-    this.chainId = wallet.networkId
+    this.network = wallet.network
     this.walletId = wallet.id
   }
 
   async getDAppList() {
-    return this.api.getDApps({chainId: this.wallet.networkId})
+    return this.api.getDApps({network: this.wallet.network})
   }
 
   async listAllConnections() {
