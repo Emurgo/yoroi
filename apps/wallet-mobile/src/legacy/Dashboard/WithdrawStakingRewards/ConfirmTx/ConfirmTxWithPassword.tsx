@@ -31,7 +31,6 @@ export const ConfirmTxWithPassword = ({wallet, onSuccess, onCancel, unsignedTx}:
   return (
     <>
       <TwoActionView
-        title={strings.confirmTx}
         primaryButton={{
           disabled: isLoading,
           label: strings.confirmButton,
