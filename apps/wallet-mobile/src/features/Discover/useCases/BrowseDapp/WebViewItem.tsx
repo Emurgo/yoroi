@@ -7,6 +7,7 @@ import WebView from 'react-native-webview'
 import {WebViewNavigation, WebViewNavigationEvent} from 'react-native-webview/lib/WebViewTypes'
 
 import {Icon, Spacer} from '../../../../components'
+import {isDev} from '../../../../kernel/env'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {TabItem, useBrowser} from '../../common/BrowserProvider'
 import {getDomainFromUrl} from '../../common/helpers'
@@ -109,6 +110,7 @@ export const WebViewItem = ({tab, index}: Props) => {
           {!tabsOpen && isTabActive && <BrowserToolbar uri={tab.url} />}
 
           <WebView
+            webviewDebuggingEnabled={isDev}
             originWhitelist={['*']}
             ref={webViewRef}
             androidLayerType="hardware"
