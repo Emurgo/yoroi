@@ -8,7 +8,7 @@ import {Spacer} from '../Spacer'
 import {Text} from '../Text'
 
 type Props = {
-  title: string
+  title?: string
   children: React.ReactNode
   primaryButton: {
     disabled?: boolean
@@ -35,9 +35,11 @@ export const TwoActionView = ({title, children, primaryButton, secondaryButton}:
       testID="twoActionView"
     >
       <View style={styles.content}>
-        <View style={styles.heading}>
-          <Text style={styles.titleText}>{title}</Text>
-        </View>
+        {title !== undefined && (
+          <View style={styles.heading}>
+            <Text style={styles.titleText}>{title}</Text>
+          </View>
+        )}
 
         {children}
       </View>
