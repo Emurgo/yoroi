@@ -54,7 +54,7 @@ describe('dappConnectorApiMaker', () => {
       })
     })
 
-    it('should throw on unsupported network id', async () => {
+    it('should throw on unsupported chain id', async () => {
       const fakeResult = {tag: 'right' as const, value: {data: await managerMock.getDAppList()}} as const
       const fakeFetchData = () => Promise.resolve(fakeResult)
       await expect(() =>
