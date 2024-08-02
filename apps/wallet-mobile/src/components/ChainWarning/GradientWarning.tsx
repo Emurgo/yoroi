@@ -13,7 +13,7 @@ type Props = {
   onClose?: () => void
 }
 
-export const ChainWarning = ({title, description, onClose}: Props) => {
+export const GradientWarning = ({title, description, onClose}: Props) => {
   const {isDark, color} = useTheme()
   const styles = useStyles()
 

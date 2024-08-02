@@ -3,7 +3,7 @@ import {Chain} from '@yoroi/types'
 import * as React from 'react'
 import {useQuery} from 'react-query'
 
-import {ChainWarning} from '../../../components/ChainWarning/ChainWarning'
+import {GradientWarning} from '../../../components/ChainWarning/GradientWarning'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 import {useStrings} from './useStrings'
@@ -23,7 +23,7 @@ export const ChainDAppsWarning = () => {
 
   if (isMainnet || hasAccepted) return null
   return (
-    <ChainWarning
+    <GradientWarning
       title={strings.testnetWarningTitle}
       onClose={handleOnClose}
       description={strings.testnetWarningDescription}

@@ -5,7 +5,7 @@ import {StyleSheet} from 'react-native'
 import {useQuery} from 'react-query'
 
 import {Button, Spacer, TextInput} from '../../../components'
-import {ChainWarning} from '../../../components/ChainWarning/ChainWarning'
+import {GradientWarning} from '../../../components/ChainWarning/GradientWarning'
 import {isValidPoolIdOrHash, normalizeToPoolHash} from '../../../yoroi-wallets/cardano/delegationUtils'
 
 type Props = {
@@ -29,7 +29,7 @@ export const PoolDetailScreen = ({onPressDelegate, disabled = false}: Props) => 
 
   return (
     <>
-      <ChainWarning title={strings.disclaimerTitle} description={strings.disclaimerText} />
+      <GradientWarning title={strings.disclaimerTitle} description={strings.disclaimerText} />
 
       <Spacer height={24} />
 

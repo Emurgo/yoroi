@@ -62,7 +62,7 @@ const getStories = () => {
     "./src/components/Boundary/Boundary.stories.tsx": require("../src/components/Boundary/Boundary.stories.tsx"),
     "./src/components/Button/Button.stories.tsx": require("../src/components/Button/Button.stories.tsx"),
     "./src/components/CameraCodeScanner/CameraCodeScanner.stories.tsx": require("../src/components/CameraCodeScanner/CameraCodeScanner.stories.tsx"),
-    "./src/components/ChainWarning/ChainWarning.stories.tsx": require("../src/components/ChainWarning/ChainWarning.stories.tsx"),
+    "./src/components/ChainWarning/GradientWarning.stories.tsx": require("../src/components/ChainWarning/GradientWarning.stories.tsx"),
     "./src/components/Checkbox/Checkbox.stories.tsx": require("../src/components/Checkbox/Checkbox.stories.tsx"),
     "./src/components/ConfirmTx/ConfirmTx.stories.tsx": require("../src/components/ConfirmTx/ConfirmTx.stories.tsx"),
     "./src/components/ConfirmTx/Dialog.stories.tsx": require("../src/components/ConfirmTx/Dialog.stories.tsx"),
