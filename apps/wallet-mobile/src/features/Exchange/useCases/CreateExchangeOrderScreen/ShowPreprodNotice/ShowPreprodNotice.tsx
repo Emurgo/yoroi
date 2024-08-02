@@ -1,28 +1,41 @@
+import {useExchange} from '@yoroi/exchange'
 import {useTheme} from '@yoroi/theme'
+import {Chain} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Space} from '../../../../../components/Space/Space'
+import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
 import {useStrings} from '../../../common/useStrings'
 import {PreprodNoticeIllustration} from '../../../illustrations/PreprodNoticeIllustration'
 
 export const ShowPreprodNotice = () => {
   const {styles} = useStyles()
   const strings = useStrings()
+  const {
+    selected: {network},
+  } = useWalletManager()
+  const {orderType} = useExchange()
 
-  return (
-    <View style={styles.container}>
-      <Space height="_2xl" />
+  const isPreprod = network === Chain.Network.Preprod
+  const isSancho = network === Chain.Network.Sancho
 
-      <PreprodNoticeIllustration />
+  if ((isPreprod || isSancho) && orderType === 'buy')
+    return (
+      <View style={styles.container}>
+        <Space height="_2xl" />
 
-      <Space height="lg" />
+        <PreprodNoticeIllustration />
 
-      <Text style={styles.title}>{strings.createOrderPreprodNoticeTitle}</Text>
+        <Space height="lg" />
 
-      <Text style={styles.text}>{strings.createOrderPreprodNoticeText}</Text>
-    </View>
-  )
+        <Text style={styles.title}>{strings.createOrderPreprodNoticeTitle}</Text>
+
+        <Text style={styles.text}>{strings.createOrderPreprodNoticeText}</Text>
+      </View>
+    )
+
+  return null
 }
 
 const useStyles = () => {

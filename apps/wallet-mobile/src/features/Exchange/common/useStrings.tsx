@@ -20,6 +20,7 @@ export const useStrings = () => {
     customerSupport: intl.formatMessage(messages.customerSupport),
     descriptionBuySellADATransaction: intl.formatMessage(messages.descriptionBuySellADATransaction),
     disclaimer: intl.formatMessage(messages.disclaimer),
+    contentDisclaimerPreprod: intl.formatMessage(messages.contentDisclaimerPreprod),
     fiatAmountYouGet: intl.formatMessage(messages.fiatAmountYouGet),
     goToTransactions: intl.formatMessage(messages.goToTransactions),
     notEnoughBalance: intl.formatMessage(messages.notEnoughBalance),
@@ -65,6 +66,10 @@ export const messages = Object.freeze(
     disclaimer: {
       id: 'rampOnOff.createRampOnOff.disclaimer',
       defaultMessage: '!!!Disclaimer',
+    },
+    contentDisclaimerPreprod: {
+      id: 'rampOnOff.createRampOnOff.contentDisclaimer.preprod',
+      defaultMessage: `!!!You can test the off-ramp capabilities with test ADA using a 3rd party provider. No real transactions will take place, but you can interact with the interface. By clicking 'Proceed,' you acknowledge that you will be redirected to our partner's website, where you may need to accept their terms and conditions.`,
     },
     contentDisclaimer: {
       id: 'rampOnOff.createRampOnOff.contentDisclaimer',
@@ -174,7 +179,7 @@ export const messages = Object.freeze(
     },
     preprodFaucetBannerText: {
       id: 'rampOnOff.createRampOnOff.preprodfaucetbanner.text',
-      defaultMessage: '!!!Top up your wallet from the Cardano testnet faucet and unlock the power of test Cardano.',
+      defaultMessage: `!!!Get started with Cardano's test currency, TADA. It's your key to testing a new world of possibilities.`,
     },
     preprodFaucetBannerButtonText: {
       id: 'rampOnOff.createRampOnOff.preprodfaucetbanner.button.text',
@@ -186,7 +191,7 @@ export const messages = Object.freeze(
     },
     sanchoFaucetBannerText: {
       id: 'rampOnOff.createRampOnOff.sanchofaucetbanner.text',
-      defaultMessage: '!!!Top up your wallet from the Cardano sanchonet faucet and unlock the power of test Cardano.',
+      defaultMessage: `!!!Get started with Cardano's test currency, TADA. It's your key to testing a new world of possibilities.`,
     },
     sanchoFaucetBannerButtonText: {
       id: 'rampOnOff.createRampOnOff.sanchofaucetbanner.button.text',
