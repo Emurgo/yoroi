@@ -269,7 +269,10 @@ const hasWalletAcceptedConnection = async (context: Context) => {
   const connections = await context.storage.read()
   const requestedConnection = {walletId: context.wallet.id, dappOrigin: context.trustedOrigin}
   return connections.some(
-    (c) => c.walletId === requestedConnection.walletId && c.dappOrigin === requestedConnection.dappOrigin,
+    (c) =>
+      c.walletId === requestedConnection.walletId &&
+      c.dappOrigin === requestedConnection.dappOrigin &&
+      c.network === context.wallet.network,
   )
 }
 
