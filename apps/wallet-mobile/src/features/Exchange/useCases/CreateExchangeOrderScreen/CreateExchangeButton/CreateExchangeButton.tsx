@@ -50,7 +50,7 @@ export const CreateExchangeButton = ({
     onPress()
   }
 
-  const isButtonDisabled = !(isPreprod || (isSancho && orderType === 'buy')) && disabled
+  const isButtonDisabled = !(isPreprod || (isSancho && isBuy)) && disabled
 
   return (
     <View style={[styles.actions, style]}>
