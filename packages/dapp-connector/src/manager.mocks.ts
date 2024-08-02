@@ -2,6 +2,7 @@ import {DappConnectorManager} from './dapp-connector'
 import {DappListResponse} from './adapters/api'
 
 export const managerMock: DappConnectorManager = {
+  chainId: 1,
   getDAppList(): Promise<DappListResponse> {
     return Promise.resolve(mockedDAppList)
   },

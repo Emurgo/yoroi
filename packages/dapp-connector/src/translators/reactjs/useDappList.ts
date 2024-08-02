@@ -2,12 +2,16 @@ import {useQuery, UseQueryOptions} from 'react-query'
 import {DappListResponse} from '../../adapters/api'
 import {useDappConnector} from './DappConnectorProvider'
 
-export const useDappList = (options?: UseQueryOptions<DappListResponse, Error, DappListResponse, ['dappList']>) => {
+export const useDappList = (
+  options?: UseQueryOptions<DappListResponse, Error, DappListResponse, ['dappList', string]>,
+) => {
   const {manager} = useDappConnector()
-  return useQuery(['dappList'], {
+  return useQuery(['dappList', String(manager.chainId)], {
     queryFn: () => manager.getDAppList(),
-    refetchOnMount: true,
-    suspense: true,
+    refetchOnMount: false,
+    refetchInterval: ONE_DAY,
     ...options,
   })
 }
+
+const ONE_DAY = 1000 * 60 * 60 * 24

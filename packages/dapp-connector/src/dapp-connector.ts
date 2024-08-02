@@ -15,6 +15,7 @@ export type DappConnectorManager = {
     trustedUrl: string,
     sendMessage: (id: string, result: unknown, error?: Error) => void,
   ): Promise<void>
+  readonly chainId: number
 }
 
 export const dappConnectorMaker = (storage: Storage, wallet: ResolverWallet, api: Api): DappConnector => {
@@ -22,7 +23,10 @@ export const dappConnectorMaker = (storage: Storage, wallet: ResolverWallet, api
 }
 
 export class DappConnector implements DappConnectorManager {
-  constructor(private storage: Storage, private wallet: ResolverWallet, private api: Api) {}
+  chainId: number
+  constructor(private storage: Storage, private wallet: ResolverWallet, private api: Api) {
+    this.chainId = wallet.networkId
+  }
 
   async getDAppList() {
     return this.api.getDApps({chainId: this.wallet.networkId})
