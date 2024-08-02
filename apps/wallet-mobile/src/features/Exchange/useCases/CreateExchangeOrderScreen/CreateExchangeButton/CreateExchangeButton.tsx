@@ -65,10 +65,10 @@ const handleOnPressOnSanchonet = () => {
 }
 
 const useStyles = () => {
+  const {atoms} = useTheme()
   const styles = StyleSheet.create({
     actions: {
-      paddingVertical: 16,
-      paddingHorizontal: 16,
+       ...atoms.p_lg,
     },
   })
   return styles
