@@ -18,7 +18,7 @@ export const BACKEND = {
   FILTER_USED_MAX_ADDRESSES: 50,
   TX_HISTORY_RESPONSE_LIMIT: 50,
 } as const
-export const CHAIN_NETWORK_ID = 0
+export const CHAIN_NETWORK_ID = 450
 
 export const IS_MAINNET = false
 

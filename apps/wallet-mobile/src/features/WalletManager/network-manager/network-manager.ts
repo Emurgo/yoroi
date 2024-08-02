@@ -100,7 +100,7 @@ export const networkConfigs: Readonly<Record<Chain.SupportedNetworks, Readonly<N
   [Chain.Network.Sancho]: {
     network: Chain.Network.Sancho,
     primaryTokenInfo: primaryTokenInfoAnyTestnet,
-    chainId: 0,
+    chainId: 450,
     protocolMagic: 4,
     eras: [shelleyEraConfig],
     name: 'Sancho',
