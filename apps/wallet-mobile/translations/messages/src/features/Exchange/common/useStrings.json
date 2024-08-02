@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Current Balance",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 48,
+      "line": 58,
       "column": 20,
-      "index": 2421
+      "index": 3361
     },
     "end": {
-      "line": 51,
+      "line": 61,
       "column": 5,
-      "index": 2516
+      "index": 3456
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!PROCEED",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 52,
+      "line": 62,
       "column": 13,
-      "index": 2531
+      "index": 3471
     },
     "end": {
-      "line": 55,
+      "line": 65,
       "column": 5,
-      "index": 2602
+      "index": 3542
     }
   },
   {
@@ -34,14 +34,29 @@
     "defaultMessage": "!!!Disclaimer",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 56,
+      "line": 66,
       "column": 16,
-      "index": 2620
+      "index": 3560
     },
     "end": {
-      "line": 59,
+      "line": 69,
       "column": 5,
-      "index": 2716
+      "index": 3656
+    }
+  },
+  {
+    "id": "rampOnOff.createRampOnOff.contentDisclaimer.preprod",
+    "defaultMessage": "!!!You can test the off-ramp capabilities with test ADA using a 3rd party provider. No real transactions will take place, but you can interact with the interface. By clicking 'Proceed,' you acknowledge that you will be redirected to our partner's website, where you may need to accept their terms and conditions.",
+    "file": "src/features/Exchange/common/useStrings.tsx",
+    "start": {
+      "line": 70,
+      "column": 30,
+      "index": 3688
+    },
+    "end": {
+      "line": 73,
+      "column": 5,
+      "index": 4098
     }
   },
   {
@@ -49,14 +64,14 @@
     "defaultMessage": "!!!Yoroi uses third party web3 on-and-off ramp solution to provide direct Fiat-ADA exchange. By clicking \"Proceed\", you also acknowledge that you will be redirected to our partner's website, where you may be asked to accept their terms and conditions. The third party web3 on-and-off ramp solution may have a certain limitation that will vary depending on your location and your financial institution.",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 60,
+      "line": 74,
       "column": 23,
-      "index": 2741
+      "index": 4123
     },
     "end": {
-      "line": 64,
+      "line": 78,
       "column": 5,
-      "index": 3241
+      "index": 4623
     }
   },
   {
@@ -64,14 +79,14 @@
     "defaultMessage": "!!!Buy ADA",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 65,
+      "line": 79,
       "column": 15,
-      "index": 3258
+      "index": 4640
     },
     "end": {
-      "line": 68,
+      "line": 82,
       "column": 5,
-      "index": 3350
+      "index": 4732
     }
   },
   {
@@ -79,14 +94,14 @@
     "defaultMessage": "!!!Sell ADA",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 69,
+      "line": 83,
       "column": 16,
-      "index": 3368
+      "index": 4750
     },
     "end": {
-      "line": 72,
+      "line": 86,
       "column": 5,
-      "index": 3462
+      "index": 4844
     }
   },
   {
@@ -94,14 +109,14 @@
     "defaultMessage": "!!!ADA amount",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 73,
+      "line": 87,
       "column": 17,
-      "index": 3481
+      "index": 4863
     },
     "end": {
-      "line": 76,
+      "line": 90,
       "column": 5,
-      "index": 3578
+      "index": 4960
     }
   },
   {
@@ -109,14 +124,14 @@
     "defaultMessage": "!!!Provider Fee",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 77,
+      "line": 91,
       "column": 17,
-      "index": 3597
+      "index": 4979
     },
     "end": {
-      "line": 80,
+      "line": 94,
       "column": 5,
-      "index": 3696
+      "index": 5078
     }
   },
   {
@@ -124,14 +139,14 @@
     "defaultMessage": "!!!Provider",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 81,
+      "line": 95,
       "column": 14,
-      "index": 3712
+      "index": 5094
     },
     "end": {
-      "line": 84,
+      "line": 98,
       "column": 5,
-      "index": 3804
+      "index": 5186
     }
   },
   {
@@ -139,14 +154,14 @@
     "defaultMessage": "!!!Banxa",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 85,
+      "line": 99,
       "column": 11,
-      "index": 3817
+      "index": 5199
     },
     "end": {
-      "line": 88,
+      "line": 102,
       "column": 5,
-      "index": 3903
+      "index": 5285
     }
   },
   {
@@ -154,14 +169,14 @@
     "defaultMessage": "!!!Exchange ADA",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 89,
+      "line": 103,
       "column": 11,
-      "index": 3916
+      "index": 5298
     },
     "end": {
-      "line": 92,
+      "line": 106,
       "column": 5,
-      "index": 3993
+      "index": 5375
     }
   },
   {
@@ -169,14 +184,14 @@
     "defaultMessage": "!!!Not Enough Balannce",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 93,
+      "line": 107,
       "column": 22,
-      "index": 4017
+      "index": 5399
     },
     "end": {
-      "line": 96,
+      "line": 110,
       "column": 5,
-      "index": 4118
+      "index": 5500
     }
   },
   {
@@ -184,14 +199,14 @@
     "defaultMessage": "!!!Minimum required is 100 ADA",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 97,
+      "line": 111,
       "column": 20,
-      "index": 4140
+      "index": 5522
     },
     "end": {
-      "line": 100,
+      "line": 114,
       "column": 5,
-      "index": 4257
+      "index": 5639
     }
   },
   {
@@ -199,14 +214,14 @@
     "defaultMessage": "!!!You can currently sell only to USD using ACH.",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 101,
+      "line": 115,
       "column": 25,
-      "index": 4284
+      "index": 5666
     },
     "end": {
-      "line": 104,
+      "line": 118,
       "column": 5,
-      "index": 4424
+      "index": 5806
     }
   },
   {
@@ -214,14 +229,14 @@
     "defaultMessage": "!!!Congrats🎉 Your ADA will come in a few minutes",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 105,
+      "line": 119,
       "column": 14,
-      "index": 4440
+      "index": 5822
     },
     "end": {
-      "line": 108,
+      "line": 122,
       "column": 5,
-      "index": 4570
+      "index": 5952
     }
   },
   {
@@ -229,14 +244,14 @@
     "defaultMessage": "!!!ADA amount you get",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 109,
+      "line": 123,
       "column": 24,
-      "index": 4596
+      "index": 5978
     },
     "end": {
-      "line": 112,
+      "line": 126,
       "column": 5,
-      "index": 4708
+      "index": 6090
     }
   },
   {
@@ -244,14 +259,14 @@
     "defaultMessage": "!!!Fiat amount you sell",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 113,
+      "line": 127,
       "column": 22,
-      "index": 4732
+      "index": 6114
     },
     "end": {
-      "line": 116,
+      "line": 130,
       "column": 5,
-      "index": 4844
+      "index": 6226
     }
   },
   {
@@ -259,14 +274,14 @@
     "defaultMessage": "!!!GO TO TRANSACTIONS",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 117,
+      "line": 131,
       "column": 22,
-      "index": 4868
+      "index": 6250
     },
     "end": {
-      "line": 120,
+      "line": 134,
       "column": 5,
-      "index": 4978
+      "index": 6360
     }
   },
   {
@@ -274,14 +289,14 @@
     "defaultMessage": "!!!Buy ADA/Sell transaction",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 121,
+      "line": 135,
       "column": 19,
-      "index": 4999
+      "index": 6381
     },
     "end": {
-      "line": 124,
+      "line": 138,
       "column": 5,
-      "index": 5112
+      "index": 6494
     }
   },
   {
@@ -289,14 +304,14 @@
     "defaultMessage": "!!!Normally the Buy ADA/Sell transaction takes 3-5 of minutes for the order to be fulfilled. However, there are instances where the order cannot be fulfilled instantly because the compliance team can be doing a manual verification of the KYC docs or any other issues.",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 125,
+      "line": 139,
       "column": 38,
-      "index": 5152
+      "index": 6534
     },
     "end": {
-      "line": 129,
+      "line": 143,
       "column": 5,
-      "index": 5532
+      "index": 6914
     }
   },
   {
@@ -304,14 +319,14 @@
     "defaultMessage": "!!!Contact",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 130,
+      "line": 144,
       "column": 13,
-      "index": 5547
+      "index": 6929
     },
     "end": {
-      "line": 133,
+      "line": 147,
       "column": 5,
-      "index": 5637
+      "index": 7019
     }
   },
   {
@@ -319,14 +334,14 @@
     "defaultMessage": "!!!and",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 134,
+      "line": 148,
       "column": 9,
-      "index": 5648
+      "index": 7030
     },
     "end": {
-      "line": 137,
+      "line": 151,
       "column": 5,
-      "index": 5730
+      "index": 7112
     }
   },
   {
@@ -334,14 +349,14 @@
     "defaultMessage": "!!!Yoroi Customer Support",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 138,
+      "line": 152,
       "column": 21,
-      "index": 5753
+      "index": 7135
     },
     "end": {
-      "line": 141,
+      "line": 155,
       "column": 5,
-      "index": 5866
+      "index": 7248
     }
   },
   {
@@ -349,14 +364,14 @@
     "defaultMessage": "!!!if you witnessed any significant transaction delays or errors.",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 142,
+      "line": 156,
       "column": 17,
-      "index": 5885
+      "index": 7267
     },
     "end": {
-      "line": 145,
+      "line": 159,
       "column": 5,
-      "index": 6034
+      "index": 7416
     }
   },
   {
@@ -364,14 +379,14 @@
     "defaultMessage": "!!!Welcome to Yoroi 👋️\nGet your first ADA fast & easy",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 146,
+      "line": 160,
       "column": 20,
-      "index": 6056
+      "index": 7438
     },
     "end": {
-      "line": 149,
+      "line": 163,
       "column": 5,
-      "index": 6198
+      "index": 7580
     }
   },
   {
@@ -379,14 +394,14 @@
     "defaultMessage": "!!!Top up your wallet safely using our trusted partners",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 150,
+      "line": 164,
       "column": 24,
-      "index": 6224
+      "index": 7606
     },
     "end": {
-      "line": 153,
+      "line": 167,
       "column": 5,
-      "index": 6370
+      "index": 7752
     }
   },
   {
@@ -394,14 +409,14 @@
     "defaultMessage": "!!!Need more ADA for staking or swap?",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 154,
+      "line": 168,
       "column": 20,
-      "index": 6392
+      "index": 7774
     },
     "end": {
-      "line": 157,
+      "line": 171,
       "column": 5,
-      "index": 6516
+      "index": 7898
     }
   },
   {
@@ -409,14 +424,14 @@
     "defaultMessage": "!!!fee",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 158,
+      "line": 172,
       "column": 9,
-      "index": 6527
+      "index": 7909
     },
     "end": {
-      "line": 161,
+      "line": 175,
       "column": 5,
-      "index": 6609
+      "index": 7991
     }
   },
   {
@@ -424,29 +439,29 @@
     "defaultMessage": "!!!Get your first test ADA in Yoroi ⭐️",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 162,
+      "line": 176,
       "column": 30,
-      "index": 6641
+      "index": 8023
     },
     "end": {
-      "line": 165,
+      "line": 179,
       "column": 5,
-      "index": 6777
+      "index": 8159
     }
   },
   {
     "id": "rampOnOff.createRampOnOff.preprodfaucetbanner.text",
-    "defaultMessage": "!!!Top up your wallet from the Cardano testnet faucet and unlock the power of test Cardano.",
+    "defaultMessage": "!!!Get started with Cardano's test currency, TADA. It's your key to testing a new world of possibilities.",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 166,
+      "line": 180,
       "column": 29,
-      "index": 6808
+      "index": 8190
     },
     "end": {
-      "line": 169,
+      "line": 183,
       "column": 5,
-      "index": 6996
+      "index": 8392
     }
   },
   {
@@ -454,14 +469,149 @@
     "defaultMessage": "!!!Go to tada faucet",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 170,
+      "line": 184,
       "column": 35,
-      "index": 7033
+      "index": 8429
     },
     "end": {
-      "line": 173,
+      "line": 187,
       "column": 5,
-      "index": 7157
+      "index": 8553
+    }
+  },
+  {
+    "id": "rampOnOff.createRampOnOff.sanchofaucetbanner.title",
+    "defaultMessage": "!!!Get your first test ADA in Yoroi ⭐️",
+    "file": "src/features/Exchange/common/useStrings.tsx",
+    "start": {
+      "line": 188,
+      "column": 29,
+      "index": 8584
+    },
+    "end": {
+      "line": 191,
+      "column": 5,
+      "index": 8719
+    }
+  },
+  {
+    "id": "rampOnOff.createRampOnOff.sanchofaucetbanner.text",
+    "defaultMessage": "!!!Get started with Cardano's test currency, TADA. It's your key to testing a new world of possibilities.",
+    "file": "src/features/Exchange/common/useStrings.tsx",
+    "start": {
+      "line": 192,
+      "column": 28,
+      "index": 8749
+    },
+    "end": {
+      "line": 195,
+      "column": 5,
+      "index": 8950
+    }
+  },
+  {
+    "id": "rampOnOff.createRampOnOff.sanchofaucetbanner.button.text",
+    "defaultMessage": "!!!Go to tada faucet",
+    "file": "src/features/Exchange/common/useStrings.tsx",
+    "start": {
+      "line": 196,
+      "column": 34,
+      "index": 8986
+    },
+    "end": {
+      "line": 199,
+      "column": 5,
+      "index": 9109
+    }
+  },
+  {
+    "id": "rampOnOff.createRampOnOff.createorder.preprodfaucet.button.text",
+    "defaultMessage": "!!!Add test ada",
+    "file": "src/features/Exchange/common/useStrings.tsx",
+    "start": {
+      "line": 200,
+      "column": 40,
+      "index": 9151
+    },
+    "end": {
+      "line": 203,
+      "column": 5,
+      "index": 9276
+    }
+  },
+  {
+    "id": "rampOnOff.createRampOnOff.createorder.preprodnotice.title",
+    "defaultMessage": "!!!ADA purchases can only be made on the mainnet",
+    "file": "src/features/Exchange/common/useStrings.tsx",
+    "start": {
+      "line": 204,
+      "column": 35,
+      "index": 9313
+    },
+    "end": {
+      "line": 207,
+      "column": 5,
+      "index": 9465
+    }
+  },
+  {
+    "id": "rampOnOff.createRampOnOff.createorder.preprodnotice.text",
+    "defaultMessage": "!!!Switch network or top up your testnet network wallet with the free Cardano faucet",
+    "file": "src/features/Exchange/common/useStrings.tsx",
+    "start": {
+      "line": 208,
+      "column": 34,
+      "index": 9501
+    },
+    "end": {
+      "line": 211,
+      "column": 5,
+      "index": 9688
+    }
+  },
+  {
+    "id": "rampOnOff.createRampOnOff.createorder.sanchofaucet.button.text",
+    "defaultMessage": "!!!Add test ada",
+    "file": "src/features/Exchange/common/useStrings.tsx",
+    "start": {
+      "line": 212,
+      "column": 42,
+      "index": 9732
+    },
+    "end": {
+      "line": 215,
+      "column": 5,
+      "index": 9856
+    }
+  },
+  {
+    "id": "rampOnOff.createRampOnOff.createorder.sanchonotice.title",
+    "defaultMessage": "!!!ADA purchases can only be made on the mainnet",
+    "file": "src/features/Exchange/common/useStrings.tsx",
+    "start": {
+      "line": 216,
+      "column": 37,
+      "index": 9895
+    },
+    "end": {
+      "line": 219,
+      "column": 5,
+      "index": 10046
+    }
+  },
+  {
+    "id": "rampOnOff.createRampOnOff.createorder.sanchonotice.text",
+    "defaultMessage": "!!!Switch network or top up your testnet network wallet with the free Cardano faucet",
+    "file": "src/features/Exchange/common/useStrings.tsx",
+    "start": {
+      "line": 220,
+      "column": 36,
+      "index": 10084
+    },
+    "end": {
+      "line": 223,
+      "column": 5,
+      "index": 10270
     }
   }
 ]

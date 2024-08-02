@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Try Yoroi dark theme",
     "file": "src/features/Initialization/DarkThemeAnnouncement/DarkThemeAnnouncement.tsx",
     "start": {
-      "line": 179,
+      "line": 181,
       "column": 10,
-      "index": 5060
+      "index": 5218
     },
     "end": {
-      "line": 182,
+      "line": 184,
       "column": 3,
-      "index": 5153
+      "index": 5311
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Press the theme switcher and dive into the new stylish theme crafted to enhance your Cardano wallet experience",
     "file": "src/features/Initialization/DarkThemeAnnouncement/DarkThemeAnnouncement.tsx",
     "start": {
-      "line": 183,
+      "line": 185,
       "column": 15,
-      "index": 5170
+      "index": 5328
     },
     "end": {
-      "line": 187,
+      "line": 189,
       "column": 3,
-      "index": 5358
+      "index": 5516
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Anonymous analytics data",
     "file": "src/features/Initialization/DarkThemeAnnouncement/DarkThemeAnnouncement.tsx",
     "start": {
-      "line": 188,
+      "line": 190,
       "column": 15,
-      "index": 5375
+      "index": 5533
     },
     "end": {
-      "line": 191,
+      "line": 193,
       "column": 3,
-      "index": 5472
+      "index": 5630
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Continue",
     "file": "src/features/Initialization/DarkThemeAnnouncement/DarkThemeAnnouncement.tsx",
     "start": {
-      "line": 192,
+      "line": 194,
       "column": 12,
-      "index": 5486
+      "index": 5644
     },
     "end": {
-      "line": 195,
+      "line": 197,
       "column": 3,
-      "index": 5585
+      "index": 5743
     }
   }
 ]

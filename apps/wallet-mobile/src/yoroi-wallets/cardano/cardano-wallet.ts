@@ -764,11 +764,11 @@ export const makeCardanoWallet = (
     async createUnsignedTx({
       entries,
       addressMode,
-      auxiliaryData,
+      metadata,
     }: {
       entries: YoroiEntry[]
       addressMode: Wallet.AddressMode
-      auxiliaryData?: Array<CardanoTypes.TxMetadata>
+      metadata?: Array<CardanoTypes.TxMetadata>
     }) {
       const time = await this.checkServerStatus()
         .then(({serverTime}) => serverTime || Date.now())
@@ -807,7 +807,7 @@ export const makeCardanoWallet = (
             networkId: this.networkManager.chainId,
           },
           this.primaryToken,
-          {metadata: auxiliaryData},
+          {metadata},
         )
 
         return yoroiUnsignedTx({unsignedTx, networkConfig: NETWORK_CONFIG, addressedUtxos, entries, primaryTokenId})

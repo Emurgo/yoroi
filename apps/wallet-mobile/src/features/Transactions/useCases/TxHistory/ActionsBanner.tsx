@@ -2,6 +2,7 @@ import {useNavigation} from '@react-navigation/native'
 import {useSwap} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
+import {Chain} from '@yoroi/types'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import Animated, {FadeInDown, FadeOutDown, Layout} from 'react-native-reanimated'
@@ -16,6 +17,7 @@ import {useReceiveAddressesStatus} from '../../../Receive/common/useReceiveAddre
 import {useSwapForm} from '../../../Swap/common/SwapFormProvider'
 import {useAddressMode} from '../../../WalletManager/common/hooks/useAddressMode'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {useStrings} from '../../common/strings'
 
 export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
@@ -36,6 +38,10 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   const {track} = useMetrics()
 
   const {
+    selected: {network},
+  } = useWalletManager()
+
+  const {
     meta,
     wallet: {portfolioPrimaryTokenInfo},
   } = useSelectedWallet()
@@ -46,6 +52,16 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   }
 
   const handleOnSwap = () => {
+    if (network === Chain.Network.Preprod) {
+      navigateTo.swapPreprodNotice()
+      return
+    }
+
+    if (network === Chain.Network.Sancho) {
+      navigateTo.swapSanchoNotice()
+      return
+    }
+
     resetSwapForm()
 
     track.swapInitiated({
@@ -237,6 +253,8 @@ const useNavigateTo = () => {
     receiveSingleAddress: () => navigation.navigate('receive-single'),
     receiveMultipleAddresses: () => navigation.navigate('receive-multiple'),
     swap: () => navigation.navigate('swap-start-swap', {screen: 'token-swap'}),
+    swapPreprodNotice: () => navigation.navigate('swap-preprod-notice'),
+    swapSanchoNotice: () => navigation.navigate('swap-sancho-notice'),
     exchange: () => navigation.navigate('exchange-create-order'),
   }
 }

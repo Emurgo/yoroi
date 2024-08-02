@@ -6,6 +6,7 @@ import {FlatList, StyleSheet, View} from 'react-native'
 import {Spacer} from '../../../../components'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useSearch, useSearchOnNavBar} from '../../../Search/SearchContext'
+import {NetworkTag} from '../../../Settings/ChangeNetwork/NetworkTag'
 import {getGoogleSearchItem} from '../../common/helpers'
 import {useDAppsConnected} from '../../common/useDAppsConnected'
 import {useStrings} from '../../common/useStrings'
@@ -40,6 +41,9 @@ export const SelectDappFromListScreen = () => {
     title: strings.discoverTitle,
     placeholder: strings.searchDApps,
     noBack: true,
+    extraNavigationOptions: {
+      headerTitle: ({children}) => <NetworkTag style={styles.networkTag}>{children}</NetworkTag>,
+    },
   })
   const {data: connectedOrigins = []} = useDAppsConnected({refetchOnMount: true, refetchInterval: 500})
 
@@ -118,6 +122,9 @@ const useStyles = () => {
       flexDirection: 'row',
       gap: 8,
       paddingBottom: 16,
+    },
+    networkTag: {
+      width: 200,
     },
   })
 

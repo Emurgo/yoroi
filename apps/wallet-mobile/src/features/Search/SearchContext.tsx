@@ -102,12 +102,14 @@ export const useSearchOnNavBar = ({
   noBack = false,
   onBack,
   isChild = false,
+  extraNavigationOptions,
 }: {
   placeholder: string
   title: string
   noBack?: boolean
   onBack?: () => void
   isChild?: boolean
+  extraNavigationOptions?: StackNavigationOptions
 }) => {
   const navigation = useNavigation()
   const {atoms, color} = useTheme()
@@ -153,13 +155,14 @@ export const useSearchOnNavBar = ({
   const withSearchButton: StackNavigationOptions = React.useMemo(
     () => ({
       ...defaultNavigationOptions,
-      headerTitle: title,
+      title,
+      headerTitle: title, // fixes issues found in some screens
       headerRight: () => <SearchButton onPress={() => showSearch()} />,
-      headerLeft: () => <BackButton onPress={handleGoBack} />,
-      ...(noBack ? {headerLeft: () => null} : {}),
+      headerLeft: () => (noBack ? null : <BackButton onPress={handleGoBack} />),
       headerBackTitleVisible: false,
+      ...extraNavigationOptions,
     }),
-    [defaultNavigationOptions, handleGoBack, noBack, showSearch, title],
+    [defaultNavigationOptions, extraNavigationOptions, handleGoBack, noBack, showSearch, title],
   )
 
   React.useLayoutEffect(() => {

@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Scanning bluetooth devices...",
     "file": "src/HW/LedgerConnect/LedgerConnect.tsx",
     "start": {
-      "line": 317,
+      "line": 323,
       "column": 11,
-      "index": 10086
+      "index": 10191
     },
     "end": {
-      "line": 320,
+      "line": 326,
       "column": 3,
-      "index": 10220
+      "index": 10325
     }
   },
   {

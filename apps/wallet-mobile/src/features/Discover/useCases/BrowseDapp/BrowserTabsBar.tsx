@@ -81,17 +81,17 @@ const useStyles = () => {
       elevation: 14,
     },
     totalTabsText: {
+      color: color.text_gray_medium,
       ...atoms.body_2_md_medium,
-      color: color.black_static,
     },
     doneText: {
-      color: color.gray_c900,
+      color: color.el_gray_normal,
       ...atoms.body_2_md_medium,
     },
   })
 
   const colors = {
-    iconColor: color.gray_c800,
+    iconColor: color.el_gray_normal,
   }
 
   return {styles, colors} as const

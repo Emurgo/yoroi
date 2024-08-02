@@ -331,7 +331,9 @@ export const CompletedOrdersSkeleton = () => {
       <View style={styles.flex}>
         {[0, 1, 2, 3].map((index) => (
           <React.Fragment key={index}>
-            <ExpandableInfoCardSkeleton />
+            <View style={styles.skeletonCard}>
+              <ExpandableInfoCardSkeleton />
+            </View>
 
             <Spacer height={20} />
           </React.Fragment>
@@ -384,6 +386,9 @@ const useStyles = () => {
     container: {
       flex: 1,
       backgroundColor: color.bg_color_high,
+    },
+    skeletonCard: {
+      ...atoms.px_lg,
     },
     flex: {
       flex: 1,

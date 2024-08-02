@@ -101,6 +101,8 @@ export const mockMetricsManager = (): MetricsManager => {
     discoverWebViewTabClicked: e,
     discoverWebViewToolbarSearchActivated: e,
     discoverWebViewViewed: e,
+
+    networkSelected: e,
   } as const
 
   return {
