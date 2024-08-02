@@ -87,7 +87,7 @@ describe('DappConnector', () => {
       )
     })
 
-    it('should throw an error if connection does not have network id', async () => {
+    it('should throw an error if connection does not have wallet id', async () => {
       const dappConnector = getDappConnector()
       await dappConnector.addConnection({walletId: false, dappOrigin: 'fake-url'} as any)
 
