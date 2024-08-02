@@ -1,4 +1,5 @@
 import {useExchange} from '@yoroi/exchange'
+import {useTheme} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
 import * as React from 'react'
 import {Linking, StyleSheet, View, ViewStyle} from 'react-native'
