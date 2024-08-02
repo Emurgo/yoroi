@@ -16,7 +16,7 @@ describe('useDappList', () => {
       </QueryClientProvider>
     )
 
-    const {result} = renderHook(() => useDappList(), {wrapper})
+    const {result} = renderHook(() => useDappList({suspense: false}), {wrapper})
     await waitFor(() => expect(result.current.data?.dapps).toBeDefined())
     await waitFor(() => expect(result.current.data?.filters).toBeDefined())
     client.clear()
