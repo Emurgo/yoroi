@@ -46,34 +46,6 @@ export const dappConnectorApiMaker = ({request}: {request: FetchData} = initialD
       })),
       filters: value.filters,
     }
-
-    // return {
-    //   dapps: [
-    //     {
-    //       id: 'cns',
-    //       name: 'CNS',
-    //       description: 'Decentralized name registry and social graph creation',
-    //       category: 'Identity',
-    //       logo: 'cns.png',
-    //       uri: 'https://cns.space/',
-    //       origins: ['https://develop.cns.space'],
-    //     },
-    //     {
-    //       id: 'djed',
-    //       name: 'Djed',
-    //       description: "Cardano's native overcollateralized stablecoin, developed by IOG and powered by COTI",
-    //       category: 'Stablecoin',
-    //       logo: 'djed.png',
-    //       uri: 'https://djed.xyz/',
-    //       origins: ['https://preprod.djed.xyz'],
-    //     },
-    //   ],
-    //   filters: {
-    //     Investment: ['Stablecoin'],
-    //     Trading: ['Stablecoin'],
-    //     NFT: ['Identity'],
-    //   },
-    // }
   }
   return {getDApps}
 }
