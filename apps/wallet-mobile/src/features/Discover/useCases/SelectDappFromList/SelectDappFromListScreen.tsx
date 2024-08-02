@@ -7,6 +7,7 @@ import {Spacer} from '../../../../components'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useSearch, useSearchOnNavBar} from '../../../Search/SearchContext'
 import {NetworkTag} from '../../../Settings/ChangeNetwork/NetworkTag'
+import {ChainDAppsWarning} from '../../common/ChainDAppsWarning'
 import {getGoogleSearchItem} from '../../common/helpers'
 import {useDAppsConnected} from '../../common/useDAppsConnected'
 import {useStrings} from '../../common/useStrings'
@@ -16,7 +17,6 @@ import {DAppExplorerTabItem} from './DAppExplorerTabItem/DAppExplorerTabItem'
 import {DAppListItem} from './DAppListItem/DAppListItem'
 import {DAppTypes} from './DAppTypes/DAppTypes'
 import {WelcomeDAppModal} from './WelcomeDAppModal'
-import {ChainDAppsWarning} from '../../common/ChainDAppsWarning'
 
 const DAppTabs = {
   connected: 'connected',
@@ -78,6 +78,7 @@ export const SelectDappFromListScreen = () => {
 
       <View style={[styles.root]}>
         <ChainDAppsWarning />
+
         <FlatList
           data={myDapps}
           extraData={connectedOrigins}

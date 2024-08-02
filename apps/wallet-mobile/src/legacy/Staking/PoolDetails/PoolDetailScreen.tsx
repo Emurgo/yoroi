@@ -5,8 +5,8 @@ import {StyleSheet} from 'react-native'
 import {useQuery} from 'react-query'
 
 import {Button, Spacer, TextInput} from '../../../components'
-import {isValidPoolIdOrHash, normalizeToPoolHash} from '../../../yoroi-wallets/cardano/delegationUtils'
 import {ChainWarning} from '../../../components/ChainWarning/ChainWarning'
+import {isValidPoolIdOrHash, normalizeToPoolHash} from '../../../yoroi-wallets/cardano/delegationUtils'
 
 type Props = {
   onPressDelegate: (poolHash: string) => void
