@@ -2,9 +2,9 @@ import {useExplorers} from '@yoroi/explorers'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Linking, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
+import {Linking, StyleSheet, Text, TouchableOpacity} from 'react-native'
 
-import {Text} from '../../../../components'
+import {Space} from '../../../../components/Space/Space'
 import {confirmationMessages, txLabels} from '../../../../kernel/i18n/global-messages'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {YoroiStaking, YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
@@ -21,29 +21,27 @@ export const TransferSummary = ({wallet, unsignedTx}: {wallet: YoroiWallet; unsi
 
   return (
     <>
-      <Item>
-        <Text>{strings.balanceLabel}</Text>
+      <Text style={styles.balanceLabel}>{strings.balanceLabel}</Text>
 
-        <Text style={styles.balanceAmount} testID="recoveredBalanceText">
-          {formatTokenWithText(refundAmount.quantity, wallet.primaryToken)}
-        </Text>
-      </Item>
+      <Text style={styles.balanceAmount} testID="recoveredBalanceText">
+        {formatTokenWithText(refundAmount.quantity, wallet.primaryToken)}
+      </Text>
 
-      <Item>
-        <Text>{strings.fees}</Text>
+      <Space height="lg" />
 
-        <Text style={styles.balanceAmount} testID="feeAmountText">
-          {formatTokenWithText(feeAmount.quantity, wallet.primaryToken)}
-        </Text>
-      </Item>
+      <Text style={styles.balanceLabel}>{strings.fees}</Text>
 
-      <Item>
-        <Text>{strings.finalBalanceLabel}</Text>
+      <Text style={styles.balanceAmount} testID="feeAmountText">
+        {formatTokenWithText(feeAmount.quantity, wallet.primaryToken)}
+      </Text>
 
-        <Text style={styles.balanceAmount} testID="totalAmountText">
-          {formatTokenWithText(totalAmount.quantity, wallet.primaryToken)}
-        </Text>
-      </Item>
+      <Space height="lg" />
+
+      <Text style={styles.balanceLabel}>{strings.finalBalanceLabel}</Text>
+
+      <Text style={styles.balanceAmount} testID="totalAmountText">
+        {formatTokenWithText(totalAmount.quantity, wallet.primaryToken)}
+      </Text>
 
       {withdrawals && <Withdrawals wallet={wallet} withdrawals={withdrawals} />}
 
@@ -79,14 +77,17 @@ const Withdrawals = ({
   withdrawals: NonNullable<YoroiStaking['withdrawals']>
 }) => {
   const strings = useStrings()
+  const styles = useStyles()
   const explorers = useExplorers(wallet.networkManager.network)
 
   const addresses = Entries.toAddresses(withdrawals)
   if (addresses.length < 1) return null
 
   return (
-    <Item>
-      <Text>{strings.withdrawals}</Text>
+    <>
+      <Space height="lg" />
+
+      <Text style={styles.balanceLabel}>{strings.withdrawals}</Text>
 
       {Object.keys(withdrawals).map((address) => (
         <TouchableOpacity
@@ -94,12 +95,14 @@ const Withdrawals = ({
           activeOpacity={0.5}
           onPress={() => Linking.openURL(explorers.cardanoscan.address(address))}
         >
-          <Text numberOfLines={1} ellipsizeMode="middle" secondary>
+          <Text style={styles.balanceAmount} numberOfLines={1} ellipsizeMode="middle">
             {address}
           </Text>
         </TouchableOpacity>
       ))}
-    </Item>
+
+      <Space height="lg" />
+    </>
   )
 }
 
@@ -111,6 +114,7 @@ const Deregistrations = ({
   deregistrations: NonNullable<YoroiStaking['deregistrations']>
 }) => {
   const strings = useStrings()
+  const styles = useStyles()
   const explorers = useExplorers(wallet.networkManager.network)
 
   const refundAmounts = Entries.toAmounts(deregistrations)
@@ -121,36 +125,33 @@ const Deregistrations = ({
 
   return (
     <>
-      <Item>
-        <Text>{strings.stakeDeregistration}</Text>
+      <Space height="lg" />
 
-        {addresses.map((address) => (
-          <TouchableOpacity
-            key={address}
-            activeOpacity={0.5}
-            onPress={() => Linking.openURL(explorers.cardanoscan.address(address))}
-          >
-            <Text numberOfLines={1} ellipsizeMode="middle" secondary>
-              {address}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </Item>
+      <Text style={styles.balanceLabel}>{strings.stakeDeregistration}</Text>
 
-      <Item>
-        <Text>
-          {strings.unregisterExplanation({
-            refundAmount: formatTokenWithText(primaryAmount.quantity, wallet.primaryToken),
-          })}
-        </Text>
-      </Item>
+      {addresses.map((address) => (
+        <TouchableOpacity
+          key={address}
+          activeOpacity={0.5}
+          onPress={() => Linking.openURL(explorers.cardanoscan.address(address))}
+        >
+          <Text style={styles.balanceAmount} numberOfLines={1} ellipsizeMode="middle">
+            {address}
+          </Text>
+        </TouchableOpacity>
+      ))}
+
+      <Space height="lg" />
+
+      <Text style={styles.balanceAmount}>
+        {strings.unregisterExplanation({
+          refundAmount: formatTokenWithText(primaryAmount.quantity, wallet.primaryToken),
+        })}
+      </Text>
+
+      <Space height="lg" />
     </>
   )
-}
-
-const Item = (props: ViewProps) => {
-  const styles = useStyles()
-  return <View {...props} style={styles.item} />
 }
 
 const useStrings = () => {
@@ -195,12 +196,13 @@ const messages = defineMessages({
 const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
-    item: {
-      ...atoms.pb_xs,
-    },
     balanceAmount: {
-      color: color.secondary_c500,
-      ...atoms.body_1_lg_regular,
+      color: color.primary_c500,
+      ...atoms.body_1_lg_medium,
+    },
+    balanceLabel: {
+      color: color.text_gray_medium,
+      ...atoms.body_2_md_regular,
     },
   })
   return styles
