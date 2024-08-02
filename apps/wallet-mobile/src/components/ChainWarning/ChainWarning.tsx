@@ -24,9 +24,11 @@ export const ChainWarning = ({title, description, onClose}: Props) => {
       end={{x: isDark ? 0 : 0, y: isDark ? 0.5 : 0}}
       style={styles.disclaimer}
     >
-      <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-        <Icon.Close size={20} color={color.gray_cmax} />
-      </TouchableOpacity>
+      {onClose != null && (
+        <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+          <Icon.Close size={20} color={color.gray_cmax} />
+        </TouchableOpacity>
+      )}
 
       <Text style={styles.title}>{title}</Text>
 
