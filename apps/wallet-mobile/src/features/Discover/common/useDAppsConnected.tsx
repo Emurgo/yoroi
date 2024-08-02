@@ -13,7 +13,7 @@ export const useDAppsConnected = (
   return useQuery({
     suspense: true,
     ...options,
-    queryKey: [wallet.id, 'dappsConnected', String(wallet.networkManager.network)],
+    queryKey: [wallet.id, 'dappsConnected', wallet.networkManager.network],
     queryFn: () => manager.listAllConnections(),
     select: (connections) => selectWalletConnectedOrigins(connections, wallet.id, wallet.networkManager.network),
   })
