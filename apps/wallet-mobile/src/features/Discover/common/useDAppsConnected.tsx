@@ -19,6 +19,6 @@ export const useDAppsConnected = (
 }
 
 const selectWalletConnectedOrigins = (connections: DappConnection[], walletId: string, chainId: number) => {
-  const currentWalletConnections = connections.filter((c) => c.walletId === walletId && c.networkId === chainId)
+  const currentWalletConnections = connections.filter((c) => c.walletId === walletId && c.chainId === chainId)
   return currentWalletConnections.map((c) => c.dappOrigin)
 }
