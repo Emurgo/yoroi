@@ -12,12 +12,5 @@ export const ChainDAppsWarning = () => {
   const isMainnet = network === Chain.Network.Mainnet
 
   if (isMainnet) return null
-  return (
-    <ChainWarning
-      title={'Testnet DApps 🚧'}
-      description={
-        'This is a list of DApps designed for testnet use. Note that it may be limited, as not all DApps are deployed in the testnet environment.'
-      }
-    />
-  )
+  return <ChainWarning title={strings.testnetWarningTitle} description={strings.testnetWarningDescription} />
 }
