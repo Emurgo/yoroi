@@ -27,14 +27,13 @@ export const CreateExchangeButton = ({
   const isSancho = network === Chain.Network.Sancho
   const isBuy = orderType === 'buy'
 
-  const title =
-    isBuy
-      ? isPreprod
-        ? strings.createOrderPreprodFaucetButtonText
-        : isSancho
-        ? strings.createOrderSanchonetFaucetButtonText
-        : strings.proceed
+  const title = isBuy
+    ? isPreprod
+      ? strings.createOrderPreprodFaucetButtonText
+      : isSancho
+      ? strings.createOrderSanchonetFaucetButtonText
       : strings.proceed
+    : strings.proceed
 
   const handleOnPress = () => {
     if (isPreprod && isBuy) {
@@ -50,7 +49,7 @@ export const CreateExchangeButton = ({
     onPress()
   }
 
-  const isButtonDisabled = !(isPreprod || (isSancho && isBuy)) && disabled
+  const isButtonDisabled = !(isPreprod || (isSancho && isBuy)) || disabled
 
   return (
     <View style={[styles.actions, style]}>
@@ -71,7 +70,7 @@ const useStyles = () => {
   const {atoms} = useTheme()
   const styles = StyleSheet.create({
     actions: {
-       ...atoms.p_lg,
+      ...atoms.p_lg,
     },
   })
   return styles
