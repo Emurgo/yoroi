@@ -42,7 +42,7 @@ export const CreateExchangeButton = ({
       return
     }
 
-    if (isSancho && orderType === 'buy') {
+    if (isSancho && isBuy) {
       handleOnPressOnSanchonet()
       return
     }
