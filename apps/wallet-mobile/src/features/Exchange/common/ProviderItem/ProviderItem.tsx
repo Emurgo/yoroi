@@ -28,8 +28,9 @@ export const ProviderItem = ({onPress, fee, rightAdornment, leftAdornment, disab
   const isPreprod = network === Chain.Network.Preprod
   const isSancho = network === Chain.Network.Sancho
   const isMainnet = network === Chain.Network.Mainnet
+  const isBuy = orderType === 'buy'
 
-  if ((isPreprod || isSancho) && orderType === 'buy') return null
+  if ((isPreprod || isSancho) && isBuy) return null
 
   return (
     <>
