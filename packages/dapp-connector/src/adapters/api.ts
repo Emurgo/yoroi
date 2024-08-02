@@ -12,7 +12,7 @@ const dappListHosts = {
 const initialDeps = freeze({request: fetchData}, true)
 
 type GetDAppsOptions = {
-  networkId: number
+  chainId: number
 }
 
 export type Api = {
@@ -21,7 +21,7 @@ export type Api = {
 
 export const dappConnectorApiMaker = ({request}: {request: FetchData} = initialDeps): Api => {
   const getDApps = async (options: GetDAppsOptions, fetcherConfig?: AxiosRequestConfig): Promise<DappListResponse> => {
-    const url = dappListHosts[getNetworkNameByNetworkId(options.networkId)]
+    const url = dappListHosts[getNetworkNameByChainId(options.chainId)]
 
     const response = await request<unknown>({url}, fetcherConfig)
 
@@ -82,8 +82,8 @@ interface DappResponse {
   origins: string[]
 }
 
-const getNetworkNameByNetworkId = (networkId: number): 'mainnet' | 'preprod' | 'sancho' => {
-  switch (networkId) {
+const getNetworkNameByChainId = (chainId: number): 'mainnet' | 'preprod' | 'sancho' => {
+  switch (chainId) {
     case 1:
       return 'mainnet'
     case 0:
@@ -91,6 +91,6 @@ const getNetworkNameByNetworkId = (networkId: number): 'mainnet' | 'preprod' | '
     case 450:
       return 'sancho'
     default:
-      throw new Error('Invalid network id')
+      throw new Error('Invalid chain id')
   }
 }

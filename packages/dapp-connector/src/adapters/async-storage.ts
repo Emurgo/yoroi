@@ -48,10 +48,10 @@ export const connectionStorageMaker = (deps: {storage: BaseStorage | typeof Asyn
 }
 
 const areConnectionsEqual = (a: DappConnection, b: DappConnection) =>
-  a.walletId === b.walletId && a.dappOrigin === b.dappOrigin && a.networkId === b.networkId
+  a.walletId === b.walletId && a.dappOrigin === b.dappOrigin && a.chainId === b.chainId
 
 const normaliseDappConnection = (connection: Partial<DappConnection>): DappConnection => {
-  const {walletId, dappOrigin, networkId} = connection
+  const {walletId, dappOrigin, chainId} = connection
 
   if (!walletId) {
     throw new Error('connectionStorageMaker.normaliseDappConnection: walletId is required')
@@ -61,15 +61,15 @@ const normaliseDappConnection = (connection: Partial<DappConnection>): DappConne
     throw new Error('connectionStorageMaker.normaliseDappConnection: dappOrigin is required')
   }
 
-  if (!networkId) {
-    return {walletId, dappOrigin, networkId: 1}
+  if (!chainId) {
+    return {walletId, dappOrigin, chainId: 1}
   }
 
-  return {walletId, dappOrigin, networkId}
+  return {walletId, dappOrigin, chainId}
 }
 
 export interface DappConnection {
   walletId: string
   dappOrigin: string
-  networkId: number
+  chainId: number
 }

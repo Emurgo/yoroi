@@ -25,7 +25,7 @@ export class DappConnector implements DappConnectorManager {
   constructor(private storage: Storage, private wallet: ResolverWallet, private api: Api) {}
 
   async getDAppList() {
-    return this.api.getDApps({networkId: this.wallet.networkId})
+    return this.api.getDApps({chainId: this.wallet.networkId})
   }
 
   async listAllConnections() {
@@ -34,13 +34,13 @@ export class DappConnector implements DappConnectorManager {
 
   async removeConnection(options: {walletId?: string; dappOrigin: string}) {
     const walletId = options.walletId ?? this.wallet.id
-    return this.storage.remove({walletId, dappOrigin: options.dappOrigin, networkId: this.wallet.networkId})
+    return this.storage.remove({walletId, dappOrigin: options.dappOrigin, chainId: this.wallet.networkId})
   }
 
-  async addConnection(options: {dappOrigin: string; walletId?: string; networkId?: number}) {
+  async addConnection(options: {dappOrigin: string; walletId?: string; chainId?: number}) {
     const walletId = options.walletId ?? this.wallet.id
-    const networkId = options.networkId ?? this.wallet.networkId
-    return this.storage.save({walletId, dappOrigin: options.dappOrigin, networkId})
+    const chainId = options.chainId ?? this.wallet.networkId
+    return this.storage.save({walletId, dappOrigin: options.dappOrigin, chainId})
   }
 
   getWalletConnectorScript(props: {iconUrl: string; apiVersion: string; walletName: string; sessionId: string}) {

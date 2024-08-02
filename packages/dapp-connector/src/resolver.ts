@@ -54,7 +54,7 @@ export const resolver: Resolver = {
     await context.storage.save({
       walletId: context.wallet.id,
       dappOrigin: context.trustedOrigin,
-      networkId: context.wallet.networkId,
+      chainId: context.wallet.networkId,
     })
     return true
   },
