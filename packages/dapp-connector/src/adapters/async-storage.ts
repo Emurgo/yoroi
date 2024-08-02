@@ -29,7 +29,8 @@ export const connectionStorageMaker = (deps: {storage: BaseStorage | typeof Asyn
 
   const read = async (): Promise<DappConnection[]> => {
     const connections = await storage.getItem(key)
-    return connections ? JSON.parse(connections) : []
+    const parsed: Partial<DappConnection>[] = connections ? JSON.parse(connections) : []
+    return parsed.map(normaliseDappConnection)
   }
 
   const remove = async (connection: DappConnection) => {
@@ -47,9 +48,28 @@ export const connectionStorageMaker = (deps: {storage: BaseStorage | typeof Asyn
 }
 
 const areConnectionsEqual = (a: DappConnection, b: DappConnection) =>
-  a.walletId === b.walletId && a.dappOrigin === b.dappOrigin
+  a.walletId === b.walletId && a.dappOrigin === b.dappOrigin && a.networkId === b.networkId
+
+const normaliseDappConnection = (connection: Partial<DappConnection>): DappConnection => {
+  const {walletId, dappOrigin, networkId} = connection
+
+  if (!walletId) {
+    throw new Error('connectionStorageMaker.normaliseDappConnection: walletId is required')
+  }
+
+  if (!dappOrigin) {
+    throw new Error('connectionStorageMaker.normaliseDappConnection: dappOrigin is required')
+  }
+
+  if (!networkId) {
+    return {walletId, dappOrigin, networkId: 1}
+  }
+
+  return {walletId, dappOrigin, networkId}
+}
 
 export interface DappConnection {
   walletId: string
   dappOrigin: string
+  networkId: number
 }
