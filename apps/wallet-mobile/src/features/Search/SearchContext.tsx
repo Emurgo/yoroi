@@ -239,11 +239,15 @@ const SearchButton = (props: TouchableOpacityProps) => {
   )
 }
 
-const EraseButton = (props: TouchableOpacityProps) => (
-  <TouchableOpacity {...props}>
-    <Icon.Cross size={20} />
-  </TouchableOpacity>
-)
+const EraseButton = (props: TouchableOpacityProps) => {
+  const {color} = useTheme()
+
+  return (
+    <TouchableOpacity {...props}>
+      <Icon.Cross size={20} color={color.gray_cmax} />
+    </TouchableOpacity>
+  )
+}
 
 const BackButton = (props: TouchableOpacityProps) => {
   const {color} = useTheme()

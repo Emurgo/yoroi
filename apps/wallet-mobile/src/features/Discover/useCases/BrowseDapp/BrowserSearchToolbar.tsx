@@ -77,7 +77,7 @@ const useStyles = () => {
       backgroundColor: color.gray_c50,
       height: 50,
     },
-    searchInputStyle: {flex: 1, color: color.black_static},
+    searchInputStyle: {flex: 1, color: color.text_gray_max},
   })
 
   return {styles} as const
