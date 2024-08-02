@@ -13,14 +13,14 @@ import {useStrings} from './strings'
 
 export const NetworkTag = ({
   children,
-  disabled = false,
   directChangeActive,
   style,
+  disabled,
 }: {
   children: React.ReactNode
-  disabled?: boolean
   directChangeActive?: boolean
   style?: ViewStyle
+  disabled?: boolean
 }) => {
   const {
     selected: {network: selectedNetwork},
@@ -36,7 +36,7 @@ export const NetworkTag = ({
     selectedNetwork === Chain.Network.Sancho ? SanchoTag : selectedNetwork === Chain.Network.Preprod ? PreprodTag : null
 
   const onPress = () => {
-    if (directChangeActive) {
+    if (directChangeActive && selectedNetwork !== Chain.Network.Mainnet) {
       const networks: Array<Chain.SupportedNetworks> = [
         Chain.Network.Mainnet,
         Chain.Network.Preprod,
@@ -67,48 +67,46 @@ export const NetworkTag = ({
       return
     }
 
-    navigateToChangeNetwork()
+    if (!directChangeActive) navigateToChangeNetwork()
   }
 
   return (
-    <TouchableOpacity
-      style={[styles.headerTitleContainerStyle, style]}
-      activeOpacity={0.5}
-      onPress={onPress}
-      disabled={disabled && !directChangeActive}
-    >
+    <View style={[styles.headerTitleContainerStyle, style]}>
       <Text style={styles.headerTitleStyle}>{children}</Text>
 
       {Tag && (
         <>
           <Space width="sm" />
 
-          <Tag />
+          <Tag
+            onPress={onPress}
+            disabled={((directChangeActive && selectedNetwork === Chain.Network.Mainnet) || disabled) ?? false}
+          />
         </>
       )}
-    </TouchableOpacity>
+    </View>
   )
 }
 
-const PreprodTag = () => {
+const PreprodTag = ({onPress, disabled}: {onPress: () => void; disabled: boolean}) => {
   const {styles} = useStyles()
   const {name} = networkConfigs[Chain.Network.Preprod]
 
   return (
-    <View style={styles.preprodTag}>
+    <TouchableOpacity onPress={onPress} activeOpacity={0.5} style={styles.preprodTag} disabled={disabled}>
       <Text>{name}</Text>
-    </View>
+    </TouchableOpacity>
   )
 }
 
-const SanchoTag = () => {
+const SanchoTag = ({onPress, disabled}: {onPress: () => void; disabled: boolean}) => {
   const {styles} = useStyles()
   const {name} = networkConfigs[Chain.Network.Sancho]
 
   return (
-    <View style={styles.sanchonetLabel}>
+    <TouchableOpacity onPress={onPress} activeOpacity={0.5} style={styles.sanchonetLabel} disabled={disabled}>
       <Text>{name}</Text>
-    </View>
+    </TouchableOpacity>
   )
 }
 

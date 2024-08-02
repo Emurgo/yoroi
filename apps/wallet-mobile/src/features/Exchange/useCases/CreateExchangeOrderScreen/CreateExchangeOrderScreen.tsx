@@ -8,8 +8,7 @@ import {Alert, Linking, StyleSheet, useWindowDimensions, View} from 'react-nativ
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Icon, KeyboardAvoidingView} from '../../../../components'
-import {Space} from '../../../../components/Space/Space'
+import {Icon, KeyboardAvoidingView} from '../../../../components'
 import {banxaTestWallet} from '../../../../kernel/env'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../kernel/navigation'
@@ -20,20 +19,13 @@ import {useNavigateTo} from '../../common/useNavigateTo'
 import {useStrings} from '../../common/useStrings'
 import {BanxaLogo} from '../../illustrations/BanxaLogo'
 import {EncryptusLogo} from '../../illustrations/EncryptusLogo'
+import {CreateExchangeButton} from './CreateExchangeButton/CreateExchangeButton'
 import {EditAmount} from './EditAmount/EditAmount'
 import {SelectBuyOrSell} from './SelectBuyOrSell/SelectBuyOrSell'
 import {ShowDisclaimer} from './ShowDisclaimer/ShowDisclaimer'
 import {ShowPreprodNotice} from './ShowPreprodNotice/ShowPreprodNotice'
 
 const BOTTOM_ACTION_SECTION = 180
-
-const handleOnPressOnPreprod = () => {
-  Linking.openURL('https://docs.cardano.org/cardano-testnets/tools/faucet/')
-}
-
-const handleOnPressOnSanchonet = () => {
-  Linking.openURL('https://sancho.network/faucet/')
-}
 
 export const CreateExchangeOrderScreen = () => {
   const strings = useStrings()
@@ -141,55 +133,30 @@ export const CreateExchangeOrderScreen = () => {
           >
             <SelectBuyOrSell disabled={isLoading} />
 
-            {(isPreprod || isSancho) && orderType === 'buy' ? (
-              <ShowPreprodNotice />
-            ) : (
-              <>
-                <Space height="xl" />
+            <ShowPreprodNotice />
 
-                <EditAmount disabled={isLoading} />
+            <EditAmount disabled={isLoading} />
 
-                <Space height="_2xs" />
+            <ProviderItem
+              label={providerSelected?.name ?? ''}
+              fee={fee}
+              leftAdornment={<Logo size={40} />}
+              rightAdornment={<Icon.Chevron direction="right" />}
+              onPress={handleOnListProvidersByOrderType}
+              disabled
+            />
 
-                <ProviderItem
-                  label={providerSelected?.name ?? ''}
-                  fee={fee}
-                  leftAdornment={<Logo size={40} />}
-                  rightAdornment={<Icon.Chevron direction="right" />}
-                  onPress={handleOnListProvidersByOrderType}
-                  disabled
-                />
-
-                <Space height="xl" />
-
-                <ShowDisclaimer />
-              </>
-            )}
+            <ShowDisclaimer />
           </View>
         </ScrollView>
 
-        <View
-          style={[
-            styles.actions,
-            {
-              ...(deviceHeight < contentHeight && styles.actionBorder),
-            },
-          ]}
-        >
-          <Button
-            testID="rampOnOffButton"
-            shelleyTheme
-            title={
-              isPreprod
-                ? strings.createOrderPreprodFaucetButtonText
-                : isSancho
-                ? strings.createOrderSanchonetFaucetButtonText
-                : strings.proceed
-            }
-            onPress={isPreprod ? handleOnPressOnPreprod : isSancho ? handleOnPressOnSanchonet : handleOnExchange}
-            disabled={!(isPreprod || (isSancho && orderType === 'buy')) && exchangeDisabled}
-          />
-        </View>
+        <CreateExchangeButton
+          style={{
+            ...(deviceHeight < contentHeight && styles.actionBorder),
+          }}
+          disabled={!(isPreprod || (isSancho && orderType === 'buy')) && exchangeDisabled}
+          onPress={handleOnExchange}
+        />
       </KeyboardAvoidingView>
     </SafeAreaView>
   )
@@ -211,10 +178,6 @@ const useStyles = () => {
     container: {
       flex: 1,
       paddingTop: 20,
-    },
-    actions: {
-      paddingVertical: 16,
-      paddingHorizontal: 16,
     },
     actionBorder: {
       borderTopWidth: 1,

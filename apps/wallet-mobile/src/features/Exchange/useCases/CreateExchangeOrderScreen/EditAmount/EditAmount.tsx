@@ -1,17 +1,26 @@
 import {useExchange, useExchangeProvidersByOrderType} from '@yoroi/exchange'
+import {Chain} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
 
+import {Space} from '../../../../../components/Space/Space'
 import {useLanguage} from '../../../../../kernel/i18n'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
 import {usePortfolioPrimaryBalance} from '../../../../Portfolio/common/hooks/usePortfolioPrimaryBalance'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
+import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
 import {AmountCard} from '../../../common/AmountCard/AmountCard'
 import {useStrings} from '../../../common/useStrings'
 
 export const EditAmount = ({disabled}: {disabled?: boolean}) => {
   const strings = useStrings()
   const {numberLocale} = useLanguage()
+  const {
+    selected: {network},
+  } = useWalletManager()
+
+  const isPreprod = network === Chain.Network.Preprod
+  const isSancho = network === Chain.Network.Sancho
 
   const {wallet} = useSelectedWallet()
   const balance = usePortfolioPrimaryBalance({wallet})
@@ -63,15 +72,21 @@ export const EditAmount = ({disabled}: {disabled?: boolean}) => {
     ],
   )
 
+  if (isPreprod || isSancho) return null
+
   return (
-    <AmountCard
-      label={strings.amountTitle}
-      onChange={onChangeAmountQuantity}
-      value={amount.displayValue}
-      touched={true}
-      amount={balance}
-      error={amount.error ?? ''}
-      inputEditable={!disabled}
-    />
+    <>
+      <Space height="xl" />
+
+      <AmountCard
+        label={strings.amountTitle}
+        onChange={onChangeAmountQuantity}
+        value={amount.displayValue}
+        touched={true}
+        amount={balance}
+        error={amount.error ?? ''}
+        inputEditable={!disabled}
+      />
+    </>
   )
 }

@@ -1,8 +1,11 @@
+import {useExchange} from '@yoroi/exchange'
 import {useTheme} from '@yoroi/theme'
+import {Chain} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Space} from '../../../../components/Space/Space'
+import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {useStrings} from '../useStrings'
 
 type Props = {
@@ -17,21 +20,35 @@ type Props = {
 export const ProviderItem = ({onPress, fee, rightAdornment, leftAdornment, disabled, label}: Props) => {
   const styles = useStyles()
   const strings = useStrings()
+  const {
+    selected: {network},
+  } = useWalletManager()
+  const {orderType} = useExchange()
+
+  const isPreprod = network === Chain.Network.Preprod
+  const isSancho = network === Chain.Network.Sancho
+  const isMainnet = network === Chain.Network.Mainnet
+
+  if ((isPreprod || isSancho) && orderType === 'buy') return null
 
   return (
-    <TouchableOpacity onPress={onPress} style={styles.item} disabled={disabled}>
-      {leftAdornment}
+    <>
+      <Space height={isMainnet ? '_2xs' : 'lg'} />
 
-      <Space width="md" />
+      <TouchableOpacity onPress={onPress} style={styles.item} disabled={disabled}>
+        {leftAdornment}
 
-      <View style={styles.labels}>
-        <Text style={styles.label}>{label}</Text>
+        <Space width="md" />
 
-        <Text style={styles.fee}>{`${fee}% ${strings.fee}`}</Text>
-      </View>
+        <View style={styles.labels}>
+          <Text style={styles.label}>{label}</Text>
 
-      {!disabled && rightAdornment}
-    </TouchableOpacity>
+          <Text style={styles.fee}>{`${fee}% ${strings.fee}`}</Text>
+        </View>
+
+        {!disabled && rightAdornment}
+      </TouchableOpacity>
+    </>
   )
 }
 
