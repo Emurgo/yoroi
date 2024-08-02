@@ -16,6 +16,7 @@ import {DAppExplorerTabItem} from './DAppExplorerTabItem/DAppExplorerTabItem'
 import {DAppListItem} from './DAppListItem/DAppListItem'
 import {DAppTypes} from './DAppTypes/DAppTypes'
 import {WelcomeDAppModal} from './WelcomeDAppModal'
+import {ChainDAppsWarning} from '../../common/ChainDAppsWarning'
 
 const DAppTabs = {
   connected: 'connected',
@@ -76,11 +77,11 @@ export const SelectDappFromListScreen = () => {
       <WelcomeDAppModal />
 
       <View style={[styles.root]}>
+        <ChainDAppsWarning />
         <FlatList
           data={myDapps}
           extraData={connectedOrigins}
           keyExtractor={(item) => item.id.toString()}
-          ListHeaderComponentStyle={styles.boxHeader}
           ListHeaderComponent={
             <HeaderControl
               currentTab={currentTab}
@@ -90,11 +91,7 @@ export const SelectDappFromListScreen = () => {
               onCategoryToggle={handleToggleCategory}
             />
           }
-          renderItem={({item: entry}) => (
-            <View style={styles.dAppItemBox}>
-              <DAppListItem dApp={entry} connected={isDappConnected(entry.origins)} />
-            </View>
-          )}
+          renderItem={({item: entry}) => <DAppListItem dApp={entry} connected={isDappConnected(entry.origins)} />}
           ItemSeparatorComponent={() => <Spacer style={styles.dAppsBox} />}
           ListFooterComponent={() => <Spacer style={styles.dAppsBox} />}
         />
@@ -109,14 +106,11 @@ const useStyles = () => {
     root: {
       flex: 1,
       backgroundColor: color.bg_color_high,
+      ...atoms.px_lg,
+      ...atoms.gap_lg,
     },
-    boxHeader: {},
-    containerHeader: {},
     dAppsBox: {
       height: 16,
-    },
-    dAppItemBox: {
-      ...atoms.px_lg,
     },
     tabsContainer: {
       flexDirection: 'row',
@@ -157,7 +151,7 @@ const HeaderControl = ({
   return (
     <>
       {hasConnectedDapps && (
-        <View style={[styles.dAppItemBox, styles.tabsContainer]}>
+        <View style={styles.tabsContainer}>
           <DAppExplorerTabItem
             name={strings.connected}
             isActive={currentTab === DAppTabs.connected}
@@ -173,7 +167,7 @@ const HeaderControl = ({
       )}
 
       {hasConnectedDapps && currentTab === DAppTabs.connected && (
-        <View style={styles.containerHeader}>
+        <View>
           <CountDAppsConnected total={connectedOrigins.length} />
 
           <Spacer style={styles.dAppsBox} />
@@ -181,7 +175,7 @@ const HeaderControl = ({
       )}
 
       {(!hasConnectedDapps || currentTab === DAppTabs.recommended) && (
-        <View style={styles.containerHeader}>
+        <View>
           <DAppTypes types={filters} onToggle={onCategoryToggle} selectedTypes={selectedCategories} />
 
           <CountDAppsAvailable total={count} />
