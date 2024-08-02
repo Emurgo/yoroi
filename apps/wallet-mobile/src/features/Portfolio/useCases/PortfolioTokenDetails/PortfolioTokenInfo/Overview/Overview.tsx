@@ -147,7 +147,6 @@ const useStyles = () => {
     tokenLogo: {
       width: 32,
       height: 32,
-      resizeMode: 'cover',
       ...atoms.rounded_sm,
     },
     textBody: {
