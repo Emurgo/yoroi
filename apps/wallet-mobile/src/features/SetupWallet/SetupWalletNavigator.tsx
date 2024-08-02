@@ -173,11 +173,11 @@ const messages = defineMessages({
   },
   connectNanoXTitle: {
     id: 'components.walletinit.connectnanox.connectnanoxscreen.title',
-    defaultMessage: '!!!Connect to Ledger Device',
+    defaultMessage: '!!!Connect to Hardware Device',
   },
   checkNanoXTitle: {
     id: 'components.walletinit.connectnanox.checknanoxscreen.title',
-    defaultMessage: '!!!Connect to Ledger Device',
+    defaultMessage: '!!!Connect to Hardware Device',
   },
   saveNanoXTitle: {
     id: 'components.walletinit.connectnanox.savenanoxscreen.title',

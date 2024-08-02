@@ -7,7 +7,8 @@ import {Image, Platform, ScrollView, StyleSheet, View, ViewProps} from 'react-na
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import image from '../../../../assets/img/ledger_1.png'
-import {BulletPointItem, Button, ProgressStep, Spacer, Text} from '../../../../components'
+import {BulletPointItem, Button, Spacer, Text} from '../../../../components'
+import {StepperProgress} from '../../../../components/StepperProgress/StepperProgress'
 import {confirmationMessages, ledgerMessages} from '../../../../kernel/i18n/global-messages'
 import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 
@@ -29,7 +30,7 @@ export const CheckNanoXScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-      <ProgressStep currentStep={1} totalSteps={3} displayStepNumber />
+      <StepperProgress style={styles.stepper} currentStepTitle="Intro" currentStep={1} totalSteps={3} />
 
       <Spacer height={32} />
 
@@ -52,7 +53,7 @@ export const CheckNanoXScreen = () => {
       </ScrollView>
 
       <Actions>
-        <Button onPress={onContinue} title={strings.continueButton} testID="continueButton" />
+        <Button shelleyTheme onPress={onContinue} title={strings.continueButton} testID="continueButton" />
       </Actions>
     </SafeAreaView>
   )
@@ -67,6 +68,10 @@ const messages = defineMessages({
   introline: {
     id: 'components.walletinit.connectnanox.checknanoxscreen.introline',
     defaultMessage: '!!!Before continuing, please make sure that:',
+  },
+  title: {
+    id: 'components.walletinit.connectnanox.checknanoxscreen.steppertitle',
+    defaultMessage: '!!!Intro',
   },
 })
 
@@ -86,7 +91,7 @@ const useStrings = () => {
 }
 
 const useStyles = () => {
-  const {color} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     safeAreaView: {
       flex: 1,
@@ -96,17 +101,20 @@ const useStyles = () => {
       alignSelf: 'center',
     },
     introline: {
-      paddingHorizontal: 16,
+      ...atoms.px_lg,
     },
     contentContainer: {
-      paddingHorizontal: 16,
+      ...atoms.px_lg,
     },
     item: {
       fontSize: 14,
       lineHeight: 22,
     },
     actions: {
-      padding: 16,
+      ...atoms.p_lg,
+    },
+    stepper: {
+      ...atoms.p_lg,
     },
   })
 

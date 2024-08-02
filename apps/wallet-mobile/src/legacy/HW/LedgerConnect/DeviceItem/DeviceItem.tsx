@@ -45,7 +45,7 @@ const useStyles = () => {
       ...atoms.px_2xl,
       marginVertical: 8,
       marginHorizontal: 16,
-      borderColor: color.secondary_c500,
+      borderColor: color.primary_c500,
       borderWidth: 1,
       borderRadius: 8,
       flexDirection: 'row',
@@ -54,7 +54,7 @@ const useStyles = () => {
     },
     deviceName: {
       ...atoms.heading_3_medium,
-      color: color.secondary_c500,
+      color: color.primary_c500,
     },
     disabled: {
       opacity: 0.5,

@@ -136,7 +136,7 @@
   },
   {
     "id": "components.walletinit.connectnanox.connectnanoxscreen.title",
-    "defaultMessage": "!!!Connect to Ledger Device",
+    "defaultMessage": "!!!Connect to Hardware Device",
     "file": "src/features/SetupWallet/SetupWalletNavigator.tsx",
     "start": {
       "line": 174,
@@ -146,22 +146,22 @@
     "end": {
       "line": 177,
       "column": 3,
-      "index": 6255
+      "index": 6257
     }
   },
   {
     "id": "components.walletinit.connectnanox.checknanoxscreen.title",
-    "defaultMessage": "!!!Connect to Ledger Device",
+    "defaultMessage": "!!!Connect to Hardware Device",
     "file": "src/features/SetupWallet/SetupWalletNavigator.tsx",
     "start": {
       "line": 178,
       "column": 19,
-      "index": 6276
+      "index": 6278
     },
     "end": {
       "line": 181,
       "column": 3,
-      "index": 6401
+      "index": 6405
     }
   },
   {
@@ -171,12 +171,12 @@
     "start": {
       "line": 182,
       "column": 18,
-      "index": 6421
+      "index": 6425
     },
     "end": {
       "line": 185,
       "column": 3,
-      "index": 6532
+      "index": 6536
     }
   }
 ]

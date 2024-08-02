@@ -295,6 +295,7 @@ class LedgerConnectInt extends React.Component<Props, State> {
 
         {useUSB === true && (
           <Button
+            shelleyTheme
             onPress={() => {
               if (refreshing || deviceObj == null || waiting) {
                 return Alert.alert(

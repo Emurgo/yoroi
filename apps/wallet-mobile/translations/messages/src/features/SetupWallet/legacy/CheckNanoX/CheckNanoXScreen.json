@@ -4,14 +4,29 @@
     "defaultMessage": "!!!Before continuing, please make sure that:",
     "file": "src/features/SetupWallet/legacy/CheckNanoX/CheckNanoXScreen.tsx",
     "start": {
-      "line": 67,
+      "line": 68,
       "column": 13,
-      "index": 2405
+      "index": 2524
     },
     "end": {
-      "line": 70,
+      "line": 71,
       "column": 3,
-      "index": 2551
+      "index": 2670
+    }
+  },
+  {
+    "id": "components.walletinit.connectnanox.checknanoxscreen.steppertitle",
+    "defaultMessage": "!!!Intro",
+    "file": "src/features/SetupWallet/legacy/CheckNanoX/CheckNanoXScreen.tsx",
+    "start": {
+      "line": 72,
+      "column": 9,
+      "index": 2681
+    },
+    "end": {
+      "line": 75,
+      "column": 3,
+      "index": 2794
     }
   }
 ]
