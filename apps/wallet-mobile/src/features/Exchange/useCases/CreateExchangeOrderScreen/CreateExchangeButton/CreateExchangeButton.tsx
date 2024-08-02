@@ -28,10 +28,12 @@ export const CreateExchangeButton = ({
   const isBuy = orderType === 'buy'
 
   const title =
-    isPreprod && orderType === 'buy'
-      ? strings.createOrderPreprodFaucetButtonText
-      : isSancho && orderType === 'buy'
-      ? strings.createOrderSanchonetFaucetButtonText
+    isBuy
+      ? isPreprod
+        ? strings.createOrderPreprodFaucetButtonText
+        : isSancho
+        ? strings.createOrderSanchonetFaucetButtonText
+        : strings.proceed
       : strings.proceed
 
   const handleOnPress = () => {
