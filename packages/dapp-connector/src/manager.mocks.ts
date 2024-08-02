@@ -3,6 +3,7 @@ import {DappListResponse} from './adapters/api'
 
 export const managerMock: DappConnectorManager = {
   chainId: 1,
+  walletId: 'walletId',
   getDAppList(): Promise<DappListResponse> {
     return Promise.resolve(mockedDAppList)
   },
