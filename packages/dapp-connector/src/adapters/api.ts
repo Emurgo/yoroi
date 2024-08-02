@@ -5,8 +5,9 @@ import {z} from 'zod'
 
 const dappListHosts = {
   mainnet: 'https://daehx1qv45z7c.cloudfront.net/data.json',
-  preprod: 'https://daehx1qv45z7c.cloudfront.net/data.json',
-}
+  preprod: 'https://daehx1qv45z7c.cloudfront.net/preprod.json',
+  sancho: 'https://daehx1qv45z7c.cloudfront.net/sancho.json',
+} as const
 
 const initialDeps = freeze({request: fetchData}, true)
 
@@ -20,7 +21,7 @@ export type Api = {
 
 export const dappConnectorApiMaker = ({request}: {request: FetchData} = initialDeps): Api => {
   const getDApps = async (options: GetDAppsOptions, fetcherConfig?: AxiosRequestConfig): Promise<DappListResponse> => {
-    const url = dappListHosts[options.networkId === 1 ? 'mainnet' : 'preprod']
+    const url = dappListHosts[getNetworkNameByNetworkId(options.networkId)]
 
     const response = await request<unknown>({url}, fetcherConfig)
 
@@ -79,4 +80,17 @@ interface DappResponse {
   logo: string
   uri: string
   origins: string[]
+}
+
+const getNetworkNameByNetworkId = (networkId: number): 'mainnet' | 'preprod' | 'sancho' => {
+  switch (networkId) {
+    case 1:
+      return 'mainnet'
+    case 2:
+      return 'preprod'
+    case 3:
+      return 'sancho'
+    default:
+      throw new Error('Invalid network id')
+  }
 }
