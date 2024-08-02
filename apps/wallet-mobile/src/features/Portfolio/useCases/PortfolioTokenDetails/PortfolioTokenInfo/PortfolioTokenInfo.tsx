@@ -4,7 +4,7 @@ import {StyleSheet, View} from 'react-native'
 
 import {TabPanel, TabPanels} from '../../../../../components/Tabs'
 import {usePortfolioTokenDetailContext} from '../../../common/PortfolioTokenDetailContext'
-import {Overview} from './Overview'
+import {Overview} from './Overview/Overview'
 import {Performance} from './Performance'
 
 export const PortfolioTokenInfo = () => {

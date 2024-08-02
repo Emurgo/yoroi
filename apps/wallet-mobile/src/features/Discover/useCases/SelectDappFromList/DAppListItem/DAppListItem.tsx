@@ -203,7 +203,7 @@ const useStyles = () => {
     dAppLogo: {
       width: 40,
       height: 40,
-      resizeMode: 'contain',
+      contentFit: 'contain',
     },
     dAppLogoDialog: {
       width: 48,
