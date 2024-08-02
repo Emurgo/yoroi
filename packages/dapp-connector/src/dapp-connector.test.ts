@@ -74,8 +74,8 @@ describe('DappConnector', () => {
 
       await dappConnector.removeConnection({dappOrigin: 'fake-url-1'})
       expect(await dappConnector.listAllConnections()).toEqual([
-        {walletId, dappOrigin: 'fake-url-2', chainId: 1},
-        {walletId: 'new-wallet-id', dappOrigin: 'fake-url-1', chainId: 1},
+        {walletId, dappOrigin: 'fake-url-2', network: Chain.Network.Mainnet},
+        {walletId: 'new-wallet-id', dappOrigin: 'fake-url-1', network: Chain.Network.Mainnet},
       ])
     })
 
@@ -83,7 +83,7 @@ describe('DappConnector', () => {
       const dappConnector = getDappConnector()
       await dappConnector.addConnection({dappOrigin: 'fake-url'})
       await expect(dappConnector.addConnection({walletId, dappOrigin: 'fake-url'})).rejects.toThrow(
-        `Connection already exists: {"walletId":"${walletId}","dappOrigin":"fake-url","chainId":1}`,
+        `Connection already exists: {"walletId":"${walletId}","dappOrigin":"fake-url","network":"mainnet"}`,
       )
     })
 
@@ -105,10 +105,12 @@ describe('DappConnector', () => {
       }).rejects.toThrow(`connectionStorageMaker.normaliseDappConnection: dappOrigin is required`)
     })
 
-    it('should assign chainId id 1 if chain id was missing', async () => {
+    it('should assign network mainnet if was missing', async () => {
       const dappConnector = getDappConnector()
-      await dappConnector.addConnection({walletId, dappOrigin: 'fake-url', chainId: false} as any)
-      expect(await dappConnector.listAllConnections()).toEqual([{walletId, dappOrigin: 'fake-url', chainId: 1}])
+      await dappConnector.addConnection({walletId, dappOrigin: 'fake-url', network: false} as any)
+      expect(await dappConnector.listAllConnections()).toEqual([
+        {walletId, dappOrigin: 'fake-url', network: Chain.Network.Mainnet},
+      ])
     })
   })
 
@@ -189,7 +191,7 @@ describe('DappConnector', () => {
       const sendMessage = jest.fn()
       await dappConnector.handleEvent(event, trustedUrl, sendMessage)
       expect(await dappConnector.listAllConnections()).toEqual([
-        {walletId: walletId, dappOrigin: 'https://yoroi-wallet.com', chainId: 1},
+        {walletId: walletId, dappOrigin: 'https://yoroi-wallet.com', network: Chain.Network.Mainnet},
       ])
     })
 

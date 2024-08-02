@@ -1,4 +1,5 @@
 import {DappConnection, useDappConnector} from '@yoroi/dapp-connector'
+import {Chain} from '@yoroi/types'
 import {useQuery, UseQueryOptions} from 'react-query'
 
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
@@ -12,13 +13,13 @@ export const useDAppsConnected = (
   return useQuery({
     suspense: true,
     ...options,
-    queryKey: [wallet.id, 'dappsConnected', String(wallet.networkManager.chainId)],
+    queryKey: [wallet.id, 'dappsConnected', String(wallet.networkManager.network)],
     queryFn: () => manager.listAllConnections(),
-    select: (connections) => selectWalletConnectedOrigins(connections, wallet.id, wallet.networkManager.chainId),
+    select: (connections) => selectWalletConnectedOrigins(connections, wallet.id, wallet.networkManager.network),
   })
 }
 
-const selectWalletConnectedOrigins = (connections: DappConnection[], walletId: string, chainId: number) => {
-  const currentWalletConnections = connections.filter((c) => c.walletId === walletId && c.chainId === chainId)
+const selectWalletConnectedOrigins = (connections: DappConnection[], walletId: string, network: Chain.Network) => {
+  const currentWalletConnections = connections.filter((c) => c.walletId === walletId && c.network === network)
   return currentWalletConnections.map((c) => c.dappOrigin)
 }

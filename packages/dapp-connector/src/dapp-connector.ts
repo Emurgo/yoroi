@@ -42,13 +42,13 @@ export class DappConnector implements DappConnectorManager {
 
   async removeConnection(options: {walletId?: string; dappOrigin: string}) {
     const walletId = options.walletId ?? this.wallet.id
-    return this.storage.remove({walletId, dappOrigin: options.dappOrigin, chainId: this.wallet.networkId})
+    return this.storage.remove({walletId, dappOrigin: options.dappOrigin, network: this.wallet.network})
   }
 
-  async addConnection(options: {dappOrigin: string; walletId?: string; chainId?: number}) {
+  async addConnection(options: {dappOrigin: string; walletId?: string; network?: Chain.Network}) {
     const walletId = options.walletId ?? this.wallet.id
-    const chainId = options.chainId ?? this.wallet.networkId
-    return this.storage.save({walletId, dappOrigin: options.dappOrigin, chainId})
+    const network = options.network ?? this.wallet.network
+    return this.storage.save({walletId, dappOrigin: options.dappOrigin, network})
   }
 
   getWalletConnectorScript(props: {iconUrl: string; apiVersion: string; walletName: string; sessionId: string}) {
