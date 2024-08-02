@@ -25,6 +25,7 @@ export const CreateExchangeButton = ({
 
   const isPreprod = network === Chain.Network.Preprod
   const isSancho = network === Chain.Network.Sancho
+  const isBuy = orderType === 'buy'
 
   const title =
     isPreprod && orderType === 'buy'
