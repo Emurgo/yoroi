@@ -37,7 +37,7 @@ export const CreateExchangeButton = ({
       : strings.proceed
 
   const handleOnPress = () => {
-    if (isPreprod && orderType === 'buy') {
+    if (isPreprod && isBuy) {
       handleOnPressOnPreprod()
       return
     }
