@@ -73,8 +73,8 @@ describe('DappConnector', () => {
 
       await dappConnector.removeConnection({dappOrigin: 'fake-url-1'})
       expect(await dappConnector.listAllConnections()).toEqual([
-        {walletId, dappOrigin: 'fake-url-2'},
-        {walletId: 'new-wallet-id', dappOrigin: 'fake-url-1'},
+        {walletId, dappOrigin: 'fake-url-2', networkId: 1},
+        {walletId: 'new-wallet-id', dappOrigin: 'fake-url-1', networkId: 1},
       ])
     })
 
@@ -82,8 +82,32 @@ describe('DappConnector', () => {
       const dappConnector = getDappConnector()
       await dappConnector.addConnection({dappOrigin: 'fake-url'})
       await expect(dappConnector.addConnection({walletId, dappOrigin: 'fake-url'})).rejects.toThrow(
-        `Connection already exists: {"walletId":"${walletId}","dappOrigin":"fake-url"}`,
+        `Connection already exists: {"walletId":"${walletId}","dappOrigin":"fake-url","networkId":1}`,
       )
+    })
+
+    it('should throw an error if connection does not have network id', async () => {
+      const dappConnector = getDappConnector()
+      await dappConnector.addConnection({walletId: false, dappOrigin: 'fake-url'} as any)
+
+      await expect(async () => {
+        await dappConnector.listAllConnections()
+      }).rejects.toThrow(`connectionStorageMaker.normaliseDappConnection: walletId is required`)
+    })
+
+    it('should throw an error if connection does not have dapp origin', async () => {
+      const dappConnector = getDappConnector()
+      await dappConnector.addConnection({walletId, dappOrigin: false} as any)
+
+      await expect(async () => {
+        await dappConnector.listAllConnections()
+      }).rejects.toThrow(`connectionStorageMaker.normaliseDappConnection: dappOrigin is required`)
+    })
+
+    it('should assign network id 1 if network id was missing', async () => {
+      const dappConnector = getDappConnector()
+      await dappConnector.addConnection({walletId, dappOrigin: 'fake-url', networkId: false} as any)
+      expect(await dappConnector.listAllConnections()).toEqual([{walletId, dappOrigin: 'fake-url', networkId: 1}])
     })
   })
 
@@ -164,7 +188,7 @@ describe('DappConnector', () => {
       const sendMessage = jest.fn()
       await dappConnector.handleEvent(event, trustedUrl, sendMessage)
       expect(await dappConnector.listAllConnections()).toEqual([
-        {walletId: walletId, dappOrigin: 'https://yoroi-wallet.com'},
+        {walletId: walletId, dappOrigin: 'https://yoroi-wallet.com', networkId: 1},
       ])
     })
 

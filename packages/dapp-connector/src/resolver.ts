@@ -51,7 +51,11 @@ export const resolver: Resolver = {
     if (await hasWalletAcceptedConnection(context)) return true
     const manualAccept = await context.wallet.confirmConnection(context.trustedOrigin)
     if (!manualAccept) return false
-    await context.storage.save({walletId: context.wallet.id, dappOrigin: context.trustedOrigin})
+    await context.storage.save({
+      walletId: context.wallet.id,
+      dappOrigin: context.trustedOrigin,
+      networkId: context.wallet.networkId,
+    })
     return true
   },
   isEnabled: async (_params: unknown, context: Context) => {

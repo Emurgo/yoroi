@@ -31,7 +31,7 @@ export const dappConnectorApiMaker = ({request}: {request: FetchData} = initialD
       throw new Error('Invalid dapp list response: ' + JSON.stringify(response.value.data))
     }
 
-    const {hostname} = new URL(url)
+    const {hostname, protocol} = new URL(url)
 
     const value = response.value.data
     return {
@@ -40,12 +40,40 @@ export const dappConnectorApiMaker = ({request}: {request: FetchData} = initialD
         name: dapp.name,
         description: dapp.description,
         category: dapp.category,
-        logo: `${hostname}/${dapp.logo}`,
+        logo: `${protocol}//${hostname}/${dapp.logo}`,
         uri: dapp.uri,
         origins: dapp.origins,
       })),
       filters: value.filters,
     }
+
+    // return {
+    //   dapps: [
+    //     {
+    //       id: 'cns',
+    //       name: 'CNS',
+    //       description: 'Decentralized name registry and social graph creation',
+    //       category: 'Identity',
+    //       logo: 'cns.png',
+    //       uri: 'https://cns.space/',
+    //       origins: ['https://develop.cns.space'],
+    //     },
+    //     {
+    //       id: 'djed',
+    //       name: 'Djed',
+    //       description: "Cardano's native overcollateralized stablecoin, developed by IOG and powered by COTI",
+    //       category: 'Stablecoin',
+    //       logo: 'djed.png',
+    //       uri: 'https://djed.xyz/',
+    //       origins: ['https://preprod.djed.xyz'],
+    //     },
+    //   ],
+    //   filters: {
+    //     Investment: ['Stablecoin'],
+    //     Trading: ['Stablecoin'],
+    //     NFT: ['Identity'],
+    //   },
+    // }
   }
   return {getDApps}
 }
@@ -86,9 +114,9 @@ const getNetworkNameByNetworkId = (networkId: number): 'mainnet' | 'preprod' | '
   switch (networkId) {
     case 1:
       return 'mainnet'
-    case 2:
+    case 0:
       return 'preprod'
-    case 3:
+    case 450:
       return 'sancho'
     default:
       throw new Error('Invalid network id')

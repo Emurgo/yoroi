@@ -7,5 +7,6 @@ export const useDappList = (options?: UseQueryOptions<DappListResponse, Error, D
   return useQuery(['dappList'], {
     ...options,
     queryFn: () => manager.getDAppList(),
+    refetchOnMount: true,
   })
 }
