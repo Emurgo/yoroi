@@ -143,6 +143,7 @@ const useStyles = () => {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
+      minWidth: 250,
     },
     preprodTag: {
       borderRadius: 1200,
