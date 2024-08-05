@@ -161,6 +161,8 @@ export const TxHistoryNavigator = () => {
                       title: meta.name,
                       headerTransparent: true,
                       headerRight: headerRightHistory,
+                      // marginRight override to compensate for the headerRight
+                      headerTitle: ({children}) => <NetworkTag style={{marginRight: 40}}>{children}</NetworkTag>,
                     }}
                   />
 
