@@ -173,6 +173,7 @@ import {
 } from './app/errors'
 import {
   PortfolioApi,
+  PortfolioApiTokenActivityUpdatesResponse,
   PortfolioApiTokenDiscoveryResponse,
   PortfolioApiTokenInfosResponse,
   PortfolioApiTokenTraitsResponse,
@@ -215,6 +216,10 @@ import {
   NetworkEraConfig,
   NetworkManager,
 } from './network/manager'
+import {
+  PortfolioTokenActivityRecord,
+  PortfolioTokenActivityUpdates,
+} from './portfolio/activity'
 
 export namespace App {
   export namespace Errors {
@@ -474,6 +479,7 @@ export namespace Portfolio {
     export type TokenInfosResponse = PortfolioApiTokenInfosResponse
     export type TokenDiscoveryResponse = PortfolioApiTokenDiscoveryResponse
     export type TokenTraitsResponse = PortfolioApiTokenTraitsResponse
+    export type TokenActivityResponse = PortfolioApiTokenActivityUpdatesResponse
     export type Api = PortfolioApi
   }
 
@@ -516,6 +522,9 @@ export namespace Portfolio {
     export type Info = PortfolioTokenInfo
     export type Discovery = PortfolioTokenDiscovery
     export type Price = PortfolioTokenPrice
+
+    export type ActivityUpdates = PortfolioTokenActivityUpdates
+    export type ActivityRecord = PortfolioTokenActivityRecord
   }
 }
 

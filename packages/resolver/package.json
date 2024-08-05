@@ -140,7 +140,7 @@
   "dependencies": {
     "@yoroi/api": "1.5.1",
     "@yoroi/common": "1.5.2",
-    "@yoroi/types": "1.5.4"
+    "@yoroi/types": "1.5.5"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
