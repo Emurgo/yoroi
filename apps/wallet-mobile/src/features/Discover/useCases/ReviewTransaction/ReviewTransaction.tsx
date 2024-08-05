@@ -186,7 +186,7 @@ const getTxDetails = async (cbor: string): Promise<TxDetails> => {
 }
 
 const useTxDetails = (cbor: string) => {
-  return useQuery({queryFn: () => getTxDetails(cbor), useErrorBoundary: true, queryKey: ['txDetails', cbor]})
+  return useQuery({queryFn: () => getTxDetails(cbor), useErrorBoundary: true, queryKey: ['useTxDetails', cbor]})
 }
 
 const useFormattedTransaction = (cbor: string) => {
