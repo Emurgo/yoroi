@@ -52,9 +52,7 @@ export const DisplayPin = () => {
 
         <Space height="xl" />
 
-        <Row>
-          <Checkbox text={strings.checkbox} checked={checked} onChange={setChecked} />
-        </Row>
+        <Checkbox text={strings.checkbox} checked={checked} onChange={setChecked} />
       </ScrollView>
 
       <Spacer fill />
