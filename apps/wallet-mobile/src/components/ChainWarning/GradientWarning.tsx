@@ -45,9 +45,9 @@ const useStyles = () => {
     disclaimer: {
       ...atoms.px_lg,
       ...atoms.py_md,
-      overflow: 'hidden',
+      ...atoms.overflow_hidden,
+      ...atoms.relative,
       borderRadius: 8,
-      position: 'relative',
     },
     title: {
       ...atoms.body_1_lg_medium,
@@ -60,10 +60,10 @@ const useStyles = () => {
       color: color.gray_c900,
     },
     closeButton: {
-      position: 'absolute',
+      ...atoms.absolute,
       top: atoms.py_md.paddingTop,
       right: atoms.px_lg.paddingRight,
-      zIndex: 1,
+      ...atoms.z_10,
     },
   })
   return styles
