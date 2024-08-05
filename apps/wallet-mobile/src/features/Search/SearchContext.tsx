@@ -247,7 +247,7 @@ const EraseButton = (props: TouchableOpacityProps) => {
 
   return (
     <TouchableOpacity {...props}>
-      <Icon.Cross size={20} color={color.gray_cmax} />
+      <Icon.Cross size={20} color={color.el_gray_high} />
     </TouchableOpacity>
   )
 }
@@ -257,7 +257,7 @@ const BackButton = (props: TouchableOpacityProps) => {
 
   return (
     <TouchableOpacity testID="buttonBack" {...props}>
-      <Icon.Chevron direction="left" color={color.gray_cmax} />
+      <Icon.Chevron direction="left" color={color.el_gray_high} />
     </TouchableOpacity>
   )
 }
