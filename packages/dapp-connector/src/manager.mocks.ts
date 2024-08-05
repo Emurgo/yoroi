@@ -1,7 +1,10 @@
 import {DappConnectorManager} from './dapp-connector'
 import {DappListResponse} from './adapters/api'
+import {Chain} from '@yoroi/types'
 
 export const managerMock: DappConnectorManager = {
+  network: Chain.Network.Mainnet,
+  walletId: 'walletId',
   getDAppList(): Promise<DappListResponse> {
     return Promise.resolve(mockedDAppList)
   },

@@ -47,6 +47,8 @@ export const useStrings = () => {
     fee: intl.formatMessage(messages.fee),
     signData: intl.formatMessage(messages.signData),
     signMessage: intl.formatMessage(messages.signMessage),
+    testnetWarningTitle: intl.formatMessage(messages.testnetWarningTitle),
+    testnetWarningDescription: intl.formatMessage(messages.testnetWarningDescription),
   }).current
 }
 
@@ -205,6 +207,15 @@ export const messages = Object.freeze(
     signMessage: {
       id: 'discover.reviewTransaction.signMessage',
       defaultMessage: '!!!Sign message',
+    },
+    testnetWarningTitle: {
+      id: 'discover.testnetWarning.title',
+      defaultMessage: '!!!Testnet DApps 🚧',
+    },
+    testnetWarningDescription: {
+      id: 'discover.testnetWarning.description',
+      defaultMessage:
+        '!!!This is a list of DApps designed for testnet use. Note that it may be limited, as not all DApps are deployed in the testnet environment.',
     },
   }),
 )

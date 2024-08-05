@@ -44,28 +44,28 @@ export const BrowserProvider = ({
   initialState?: Partial<BrowserState>
 }) => {
   const {
-    selected: {wallet},
+    selected: {wallet, network},
   } = useWalletManager()
 
-  const walletId = wallet?.id
+  const storageId = wallet?.id != null ? `${wallet.id}-${network}` : null
 
   const [browserState, dispatch] = React.useReducer(browserReducer, {...defaultState, ...initialState})
 
   React.useEffect(() => {
-    if (walletId === undefined) return
-    memoryStorage.set(walletId, browserState)
+    if (storageId === null) return
+    memoryStorage.set(storageId, browserState)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [browserState])
 
   React.useEffect(() => {
-    if (walletId === undefined) return
-    const state = memoryStorage.get(walletId)
+    if (storageId === null) return
+    const state = memoryStorage.get(storageId)
     if (state) {
       dispatch({type: BrowserActionType.SetState, state})
     } else {
       dispatch({type: BrowserActionType.SetState, state: {...defaultState, ...initialState}})
     }
-  }, [walletId, initialState])
+  }, [storageId, initialState])
 
   const actions = React.useRef<BrowserActions>({
     addTab: (url, id) => {
