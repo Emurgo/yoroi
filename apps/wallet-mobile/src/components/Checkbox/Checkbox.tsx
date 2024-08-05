@@ -32,8 +32,8 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     container: {
       flexDirection: 'row',
-      alignItems: 'flex-start',
-      justifyContent: 'flex-start',
+      ...atoms.align_start,
+      ...atoms.justify_start,
     },
     text: {
       flex: 1,
