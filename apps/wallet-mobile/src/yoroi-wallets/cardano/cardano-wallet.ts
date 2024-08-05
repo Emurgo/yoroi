@@ -129,10 +129,16 @@ export const makeCardanoWallet = (
       accountPubKeyHex: string
       accountVisual: number
     }) => {
-      const {rootStorage: networkRootStorage, primaryTokenInfo, chainId, legacyRootStorage} = networkManager
+      const {
+        rootStorage: networkRootStorage,
+        primaryTokenInfo,
+        chainId,
+        legacyRootStorage,
+        legacyApiBaseUrl,
+        tokenManager,
+      } = networkManager
       const walletRootStorage = legacyRootStorage.join(`${id}/`)
       const accountStorage = walletRootStorage.join(`accounts/${accountVisual}/`)
-      const {legacyApiBaseUrl, tokenManager} = networkManager
 
       // TODO: revisit it should be part of staking manager (when staking is supported/desired)
       const rewardAddressHex = implementationConfig.features.staking

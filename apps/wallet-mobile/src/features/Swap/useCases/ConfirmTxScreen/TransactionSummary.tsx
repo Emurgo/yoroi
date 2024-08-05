@@ -275,7 +275,7 @@ const useStyles = () => {
     },
     cardText: {
       fontSize: 18,
-      color: color.gray_cmin,
+      color: color.white_static,
     },
     cardTextValue: {
       ...atoms.heading_4_medium,
@@ -284,7 +284,7 @@ const useStyles = () => {
     },
     pairedText: {
       fontSize: 14,
-      color: color.gray_cmin,
+      color: color.white_static,
       opacity: 0.75,
     },
     flexBetween: {
