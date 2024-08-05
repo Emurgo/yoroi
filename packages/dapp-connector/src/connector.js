@@ -80,14 +80,14 @@ const initWallet = ({iconUrl, apiVersion, walletName, supportedExtensions, sessi
     const requestId = getRandomId()
 
     if (options?.doNotWaitForResponse) {
-      postMessage({id: requestId, method, params: {args, browserContext: getContext()}})
+      postMessage({id: requestId, method, source: 'dapp-connector', params: {args, browserContext: getContext()}})
       return Promise.resolve()
     }
     const promise = new Promise((resolve, reject) => {
       promisesMap.set(requestId, {resolve, reject})
     })
     const params = {args, browserContext: getContext()}
-    postMessage({id: requestId, method, params})
+    postMessage({id: requestId, method, params, source: 'dapp-connector'})
     return promise
   }
 

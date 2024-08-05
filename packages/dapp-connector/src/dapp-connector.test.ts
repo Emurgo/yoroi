@@ -88,6 +88,21 @@ describe('DappConnector', () => {
   })
 
   describe('handling connection events', () => {
+    it('should ignore the event if it is not a string', async () => {
+      const dappConnector = getDappConnector()
+      const sendMessage = jest.fn()
+      await dappConnector.handleEvent(null as any, trustedUrl, sendMessage)
+      expect(sendMessage).not.toHaveBeenCalled()
+    })
+
+    it('should ignore the event if it is not an event from a dapp-connector', async () => {
+      const dappConnector = getDappConnector()
+      const event = createEvent('unknown', {}, 'unknown')
+      const sendMessage = jest.fn()
+      await dappConnector.handleEvent(event, trustedUrl, sendMessage)
+      expect(sendMessage).not.toHaveBeenCalled()
+    })
+
     it('should throw an error if the event is not known', async () => {
       const dappConnector = getDappConnector()
       const event = createEvent('unknown')
@@ -96,12 +111,37 @@ describe('DappConnector', () => {
       expect(sendMessage).toHaveBeenCalledWith('1', null, new Error(`Unknown method 'unknown'`))
     })
 
-    it('should throw an error if the event malformed', async () => {
+    it('should ignore if the event malformed', async () => {
       const dappConnector = getDappConnector()
-      const event = JSON.stringify({method: 'test'})
+
+      const event1 = JSON.stringify({method: 'test', source: 'dapp-connector'})
+      const sendMessage1 = jest.fn()
+      await dappConnector.handleEvent(event1, trustedUrl, sendMessage1)
+      expect(sendMessage1).not.toHaveBeenCalled()
+
+      const event2 = 'test'
+      const sendMessage2 = jest.fn()
+      await dappConnector.handleEvent(event2, trustedUrl, sendMessage2)
+      expect(sendMessage2).not.toHaveBeenCalled()
+
+      const event3 = JSON.stringify({method: 'test', id: '1', source: 'dapp-connector'})
+      const sendMessage3 = jest.fn()
+      await dappConnector.handleEvent(event3, trustedUrl, sendMessage3)
+      expect(sendMessage3).not.toHaveBeenCalled()
+
+      const event4 = 'null'
+      const sendMessage4 = jest.fn()
+      await dappConnector.handleEvent(event4, trustedUrl, sendMessage4)
+      expect(sendMessage4).not.toHaveBeenCalled()
+    })
+
+    it('should throw an error if the event is not from a trusted origin', async () => {
+      const dappConnector = getDappConnector()
+      const event = JSON.stringify({method: 'cardano_enable', id: '1', source: 'dapp-connector', params: {}})
       const sendMessage = jest.fn()
-      await dappConnector.handleEvent(event, trustedUrl, sendMessage)
-      expect(sendMessage).toHaveBeenCalledWith(undefined, null, new Error(`Unknown method 'test'`))
+      await dappConnector.handleEvent(event, 'https://another-url.com', sendMessage)
+      const errorMessage = 'Origins do not match:  !== https://another-url.com'
+      expect(sendMessage).toHaveBeenCalledWith('1', null, new Error(errorMessage))
     })
 
     it('should throw an error if the origins do not match', async () => {
@@ -576,10 +616,11 @@ const initDappConnectorWithConnection = async (wallet?: ResolverWallet) => {
   return dappConnector
 }
 
-const createEvent = (method: string, params?: object) => {
+const createEvent = (method: string, params?: object, source = 'dapp-connector') => {
   return JSON.stringify({
     id: '1',
     method,
+    source,
     params: {args: [], ...params, browserContext: {origin: 'https://yoroi-wallet.com'}},
   })
 }

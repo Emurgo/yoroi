@@ -312,7 +312,7 @@ const methods = {
 }
 
 export const resolverHandleEvent = async (
-  eventData: string,
+  eventData: unknown,
   trustedUrl: string,
   wallet: ResolverWallet,
   sendMessage: (id: string, result: unknown, error?: Error) => void,
@@ -320,7 +320,21 @@ export const resolverHandleEvent = async (
   supportedExtensions: Array<{cip: number}>,
 ) => {
   const trustedOrigin = new URL(trustedUrl).origin
-  const {id, method, params} = JSON.parse(eventData)
+  if (typeof eventData !== 'string') return
+
+  let parsed: Record<string, unknown> = {}
+  try {
+    const json = JSON.parse(eventData)
+    parsed = isRecord(json) ? json : {}
+  } catch {
+    return
+  }
+
+  const {id, method, params, source} = parsed
+  if (source !== 'dapp-connector') return
+  if (typeof id !== 'string' || typeof method !== 'string') return
+  if (!isRecord(params)) return
+
   try {
     const result = await handleMethod(method, params, {origin: trustedOrigin, wallet, storage, supportedExtensions})
     if (method !== LOG_MESSAGE_EVENT) sendMessage(id, result)
