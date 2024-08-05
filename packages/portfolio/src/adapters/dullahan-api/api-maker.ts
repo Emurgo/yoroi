@@ -9,9 +9,14 @@ import {Api, Chain, Portfolio} from '@yoroi/types'
 import {freeze} from 'immer'
 
 import {ApiConfig} from '../../types'
-import {toDullahanRequest, toSecondaryTokenInfos} from './transformers'
+import {
+  toDullahanRequest,
+  toSecondaryTokenInfos,
+  toTokenActivityUpdates,
+} from './transformers'
 import {
   DullahanApiCachedIdsRequest,
+  DullahanApiTokenActivityUpdatesResponse,
   DullahanApiTokenDiscoveryResponse,
   DullahanApiTokenInfoResponse,
   DullahanApiTokenInfosResponse,
@@ -226,6 +231,68 @@ export const portfolioApiMaker = ({
 
         return response
       },
+
+      async tokenActivityUpdates(requestedIds) {
+        const chunks = []
+        for (let i = 0; i < requestedIds.length; i += maxIdsPerRequest)
+          chunks.push(requestedIds.slice(i, i + maxIdsPerRequest))
+
+        const tasks = chunks.map(
+          (ids) => () =>
+            request<DullahanApiTokenActivityUpdatesResponse>({
+              method: 'post',
+              url: config.tokenActivityUpdates,
+              data: ids,
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+              },
+            }),
+        )
+
+        const responses = await PromiseAllLimited(tasks, maxConcurrentRequests)
+        const activities = responses
+          .filter(isRight)
+          .reduce(
+            (acc, {value: {data}}) => Object.assign(acc, data),
+            {} as DullahanApiTokenActivityUpdatesResponse,
+          )
+
+        // return with the first error only if none of responses were successful
+        const firstError = responses.find(isLeft)
+        if (Object.keys(activities).length === 0 && firstError)
+          return firstError
+
+        try {
+          const transformedResponseData = toTokenActivityUpdates(activities)
+
+          const transformedResponse: Api.Response<Portfolio.Api.TokenActivityResponse> =
+            freeze(
+              {
+                tag: 'right',
+                value: {
+                  status: Api.HttpStatusCode.Ok,
+                  data: transformedResponseData,
+                },
+              },
+              true,
+            )
+
+          return transformedResponse
+        } catch (error) {
+          return freeze(
+            {
+              tag: 'left',
+              error: {
+                status: -3,
+                message: 'Failed to transform token activity updates response',
+                responseData: activities,
+              },
+            },
+            true,
+          )
+        }
+      },
     },
     true,
   )
@@ -238,6 +305,10 @@ export const apiConfig: ApiConfig = freeze(
       tokenInfo: 'https://zero.yoroiwallet.com/tokens/info',
       tokenInfos: 'https://zero.yoroiwallet.com/tokens/info/multi',
       tokenTraits: 'https://zero.yoroiwallet.com/tokens/nft/traits',
+      tokenActivityUpdates:
+        'https://add50d9d-76d7-47b7-b17f-e34021f63a02.mock.pstmn.io/v1/token-activity',
+      tokenPriceHistory:
+        'https://add50d9d-76d7-47b7-b17f-e34021f63a02.mock.pstmn.io/v1/token-price-history',
     },
     preprod: {
       tokenDiscovery:
@@ -247,6 +318,10 @@ export const apiConfig: ApiConfig = freeze(
         'https://yoroi-backend-zero-preprod.emurgornd.com/tokens/info/multi',
       tokenTraits:
         'https://yoroi-backend-zero-preprod.emurgornd.com/tokens/nft/traits',
+      tokenActivityUpdates:
+        'https://add50d9d-76d7-47b7-b17f-e34021f63a02.mock.pstmn.io/v1/token-activity',
+      tokenPriceHistory:
+        'https://add50d9d-76d7-47b7-b17f-e34021f63a02.mock.pstmn.io/v1/token-price-history',
     },
     sancho: {
       tokenDiscovery:
@@ -257,6 +332,10 @@ export const apiConfig: ApiConfig = freeze(
         'https://yoroi-backend-zero-sanchonet.emurgornd.com/tokens/info/multi',
       tokenTraits:
         'https://yoroi-backend-zero-sanchonet.emurgornd.com/tokens/nft/traits',
+      tokenActivityUpdates:
+        'https://add50d9d-76d7-47b7-b17f-e34021f63a02.mock.pstmn.io/v1/token-activity',
+      tokenPriceHistory:
+        'https://add50d9d-76d7-47b7-b17f-e34021f63a02.mock.pstmn.io/v1/token-price-history',
     },
   },
   true,

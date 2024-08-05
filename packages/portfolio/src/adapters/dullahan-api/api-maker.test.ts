@@ -4,6 +4,7 @@ import {apiConfig, portfolioApiMaker} from './api-maker'
 import {DullahanApiCachedIdsRequest} from './types'
 import {tokenDiscoveryMocks} from '../token-discovery.mocks'
 import {tokenMocks} from '../token.mocks'
+import {tokenActivityMocks} from '../token-activity.mocks'
 
 describe('portfolioApiMaker', () => {
   const mockNetwork: Chain.Network = Chain.Network.Mainnet
@@ -26,6 +27,7 @@ describe('portfolioApiMaker', () => {
     expect(api).toHaveProperty('tokenDiscovery')
     expect(api).toHaveProperty('tokenInfos')
     expect(api).toHaveProperty('tokenTraits')
+    expect(api).toHaveProperty('tokenActivityUpdates')
   })
 
   it('should return a PortfolioApi object with default fetchData (coverage)', () => {
@@ -39,6 +41,7 @@ describe('portfolioApiMaker', () => {
     expect(api).toHaveProperty('tokenDiscovery')
     expect(api).toHaveProperty('tokenInfos')
     expect(api).toHaveProperty('tokenTraits')
+    expect(api).toHaveProperty('tokenActivityUpdates')
   })
 
   it('should call the fetchData function with the correct arguments', async () => {
@@ -66,8 +69,9 @@ describe('portfolioApiMaker', () => {
     await api.tokenInfos(mockTokenIdsWithCache)
     await api.tokenTraits(tokenMocks.nftCryptoKitty.info.id)
     await api.tokenInfo(tokenMocks.nftCryptoKitty.info.id)
+    await api.tokenActivityUpdates(tokenActivityMocks.api.request)
 
-    expect(mockRequest).toHaveBeenCalledTimes(4)
+    expect(mockRequest).toHaveBeenCalledTimes(5)
 
     expect(mockRequest).toHaveBeenCalledWith({
       method: 'get',
@@ -106,6 +110,15 @@ describe('portfolioApiMaker', () => {
         apiConfig[Chain.Network.Mainnet].tokenInfo +
         '/' +
         tokenMocks.nftCryptoKitty.info.id,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
+    expect(mockRequest).toHaveBeenCalledWith({
+      method: 'post',
+      url: apiConfig[Chain.Network.Mainnet].tokenActivityUpdates,
+      data: tokenActivityMocks.api.request,
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -234,6 +247,31 @@ describe('portfolioApiMaker', () => {
         },
       },
     })
+
+    const resultTokenActivityUpdates = await api.tokenActivityUpdates(
+      tokenActivityMocks.api.request,
+    )
+    expect(mockRequest).toHaveBeenCalledTimes(5)
+    expect(mockRequest).toHaveBeenCalledWith({
+      method: 'post',
+      url: apiConfig[Chain.Network.Mainnet].tokenActivityUpdates,
+      data: tokenActivityMocks.api.request,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
+
+    expect(resultTokenActivityUpdates).toEqual({
+      tag: 'left',
+      error: {
+        status: -3,
+        message: 'Failed to transform token activity updates response',
+        responseData: {
+          ['wrong']: 'data',
+        },
+      },
+    })
   })
 
   it('should return the error and not throw', async () => {
@@ -340,6 +378,27 @@ describe('portfolioApiMaker', () => {
         apiConfig[Chain.Network.Mainnet].tokenInfo +
         '/' +
         tokenMocks.nftCryptoKitty.info.id,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
+
+    await expect(
+      api.tokenActivityUpdates(tokenActivityMocks.api.request),
+    ).resolves.toEqual({
+      tag: 'left',
+      value: {
+        status: 500,
+        message: 'Internal Server Error',
+        responseData: {},
+      },
+    })
+    expect(mockRequest).toHaveBeenCalledTimes(5)
+    expect(mockRequest).toHaveBeenCalledWith({
+      method: 'post',
+      url: apiConfig[Chain.Network.Mainnet].tokenActivityUpdates,
+      data: tokenActivityMocks.api.request,
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',

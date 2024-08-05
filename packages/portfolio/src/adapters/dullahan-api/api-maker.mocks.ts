@@ -4,6 +4,7 @@ import {Api, Portfolio} from '@yoroi/types'
 
 import {tokenMocks} from '../token.mocks'
 import {tokenTraitsMocks} from '../token-traits.mocks'
+import {tokenActivityMocks} from '../token-activity.mocks'
 
 export const responseTokenDiscoveryMocks = asyncBehavior.maker<
   Api.Response<Portfolio.Api.TokenDiscoveryResponse>
@@ -45,11 +46,25 @@ export const responseTokenTraits = asyncBehavior.maker<
   emptyRepresentation: null,
 })
 
+export const responseTokenActivity = asyncBehavior.maker<
+  Api.Response<Portfolio.Api.TokenActivityResponse>
+>({
+  data: {
+    tag: 'right',
+    value: {
+      status: 200,
+      data: tokenActivityMocks.api.responseDataOnly,
+    },
+  },
+  emptyRepresentation: null,
+})
+
 const success: Portfolio.Api.Api = {
   tokenDiscovery: responseTokenDiscoveryMocks.success,
   tokenInfo: responseTokenInfoMocks.success,
   tokenInfos: responseTokenInfosMocks.success,
   tokenTraits: responseTokenTraits.success,
+  tokenActivityUpdates: responseTokenActivity.success,
 }
 
 const delayed: Portfolio.Api.Api = {
@@ -57,6 +72,7 @@ const delayed: Portfolio.Api.Api = {
   tokenInfo: responseTokenInfoMocks.delayed,
   tokenInfos: responseTokenInfosMocks.delayed,
   tokenTraits: responseTokenTraits.delayed,
+  tokenActivityUpdates: responseTokenActivity.delayed,
 }
 
 const loading: Portfolio.Api.Api = {
@@ -64,6 +80,7 @@ const loading: Portfolio.Api.Api = {
   tokenInfo: responseTokenInfoMocks.loading,
   tokenInfos: responseTokenInfosMocks.loading,
   tokenTraits: responseTokenTraits.loading,
+  tokenActivityUpdates: responseTokenActivity.loading,
 }
 
 const error: Portfolio.Api.Api = {
@@ -103,6 +120,15 @@ const error: Portfolio.Api.Api = {
         responseData: {message: 'Bad Request'},
       },
     }),
+  tokenActivityUpdates: () =>
+    Promise.resolve({
+      tag: 'left',
+      error: {
+        status: 400,
+        message: 'Bad Request',
+        responseData: {message: 'Bad Request'},
+      },
+    }),
 }
 
 const empty: Portfolio.Api.Api = {
@@ -110,6 +136,7 @@ const empty: Portfolio.Api.Api = {
   tokenInfo: responseTokenInfoMocks.empty,
   tokenInfos: responseTokenInfosMocks.empty,
   tokenTraits: responseTokenTraits.empty,
+  tokenActivityUpdates: responseTokenActivity.empty,
 }
 
 export const portfolioApiMock = freeze(

@@ -1,7 +1,14 @@
-import {toDullahanRequest, toSecondaryTokenInfos} from './transformers'
+import {
+  toDullahanRequest,
+  toSecondaryTokenInfos,
+  toTokenActivityUpdates,
+} from './transformers'
 import {Portfolio, Api} from '@yoroi/types'
 
 import {tokenMocks} from '../token.mocks'
+import {DullahanApiTokenActivityUpdatesResponse} from './types'
+import {tokenActivityMocks} from '../token-activity.mocks'
+import {duallahanTokenActivityUpdatesMocks} from './token-activity.mocks'
 
 describe('transformers', () => {
   describe('toSecondaryTokenInfos', () => {
@@ -69,6 +76,26 @@ describe('transformers', () => {
           0,
         ],
       })
+    })
+  })
+
+  describe('toTokenActivityUpdates', () => {
+    it('should return an empty object if apiTokenActivityUpdates is empty', () => {
+      const apiTokenInfosResponse: DullahanApiTokenActivityUpdatesResponse = {}
+
+      const result = toTokenActivityUpdates(apiTokenInfosResponse)
+
+      expect(result).toEqual({})
+    })
+
+    it('should return the data and deal with empty records', () => {
+      const responseWithEmptyRecords = {
+        ...duallahanTokenActivityUpdatesMocks.api.responseSuccessDataOnly,
+        'token.4': undefined,
+      } as any
+      const result = toTokenActivityUpdates(responseWithEmptyRecords)
+
+      expect(result).toEqual(tokenActivityMocks.api.responseDataOnly)
     })
   })
 })
