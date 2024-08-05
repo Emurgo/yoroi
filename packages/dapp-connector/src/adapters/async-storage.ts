@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {BaseStorage} from '@yoroi/types'
+import {BaseStorage, Chain} from '@yoroi/types'
 
 const initialDeps = {storage: AsyncStorage} as const
 
@@ -29,7 +29,8 @@ export const connectionStorageMaker = (deps: {storage: BaseStorage | typeof Asyn
 
   const read = async (): Promise<DappConnection[]> => {
     const connections = await storage.getItem(key)
-    return connections ? JSON.parse(connections) : []
+    const parsed: Partial<DappConnection>[] = connections ? JSON.parse(connections) : []
+    return parsed.map(normaliseDappConnection)
   }
 
   const remove = async (connection: DappConnection) => {
@@ -47,9 +48,28 @@ export const connectionStorageMaker = (deps: {storage: BaseStorage | typeof Asyn
 }
 
 const areConnectionsEqual = (a: DappConnection, b: DappConnection) =>
-  a.walletId === b.walletId && a.dappOrigin === b.dappOrigin
+  a.walletId === b.walletId && a.dappOrigin === b.dappOrigin && a.network === b.network
+
+const normaliseDappConnection = (connection: Partial<DappConnection>): DappConnection => {
+  const {walletId, dappOrigin, network} = connection
+
+  if (!walletId) {
+    throw new Error('connectionStorageMaker.normaliseDappConnection: walletId is required')
+  }
+
+  if (!dappOrigin) {
+    throw new Error('connectionStorageMaker.normaliseDappConnection: dappOrigin is required')
+  }
+
+  if (!network) {
+    return {walletId, dappOrigin, network: Chain.Network.Mainnet}
+  }
+
+  return {walletId, dappOrigin, network}
+}
 
 export interface DappConnection {
   walletId: string
   dappOrigin: string
+  network: Chain.Network
 }

@@ -1113,6 +1113,8 @@
   "discover.reviewTransaction.fee": "Transaction fee",
   "discover.reviewTransaction.signData": "Sign data",
   "discover.reviewTransaction.signMessage": "Sign message",
+  "discover.testnetWarning.title": "Testnet DApps \uD83D\uDEA7",
+  "discover.testnetWarning.description": "This is a list of DApps designed for testnet use. Note that it may be limited, as not all DApps are deployed in the testnet environment.",
   "portfolio.portfolioDashboardScreen.totalWalletValue": "Total wallet value",
   "portfolio.portfolioDashboardScreen.tokens": "Tokens ({countTokens})",
   "portfolio.portfolioDashboardScreen.buyADATitle": "Start your crypto journey",

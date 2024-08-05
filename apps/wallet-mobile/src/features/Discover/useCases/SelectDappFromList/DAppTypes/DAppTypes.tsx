@@ -109,7 +109,6 @@ const useStyles = () => {
       ...atoms.body_1_lg_regular,
     },
     contentContainer: {
-      ...atoms.pl_lg,
       ...atoms.pb_lg,
     },
     boxDisabledStyle: {

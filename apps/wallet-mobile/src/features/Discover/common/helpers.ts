@@ -95,6 +95,7 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
     : undefined
 
   const handlerWallet: ResolverWallet = {
+    network: wallet.networkManager.network,
     id: wallet.id,
     networkId: wallet.networkManager.chainId,
     getUsedAddresses: (params) => cip30.getUsedAddresses(params),

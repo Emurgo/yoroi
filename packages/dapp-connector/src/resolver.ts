@@ -3,6 +3,7 @@ import {Storage} from './adapters/async-storage'
 import {z} from 'zod'
 import {Address, TransactionUnspentOutput, TransactionWitnessSet, Value} from '@emurgo/cross-csl-core'
 import BigNumber from 'bignumber.js'
+import {Chain} from '@yoroi/types'
 
 type Context = {
   browserOrigin: string
@@ -51,7 +52,11 @@ export const resolver: Resolver = {
     if (await hasWalletAcceptedConnection(context)) return true
     const manualAccept = await context.wallet.confirmConnection(context.trustedOrigin)
     if (!manualAccept) return false
-    await context.storage.save({walletId: context.wallet.id, dappOrigin: context.trustedOrigin})
+    await context.storage.save({
+      walletId: context.wallet.id,
+      dappOrigin: context.trustedOrigin,
+      network: context.wallet.network,
+    })
     return true
   },
   isEnabled: async (_params: unknown, context: Context) => {
@@ -264,7 +269,10 @@ const hasWalletAcceptedConnection = async (context: Context) => {
   const connections = await context.storage.read()
   const requestedConnection = {walletId: context.wallet.id, dappOrigin: context.trustedOrigin}
   return connections.some(
-    (c) => c.walletId === requestedConnection.walletId && c.dappOrigin === requestedConnection.dappOrigin,
+    (c) =>
+      c.walletId === requestedConnection.walletId &&
+      c.dappOrigin === requestedConnection.dappOrigin &&
+      c.network === context.wallet.network,
   )
 }
 
@@ -312,7 +320,7 @@ const methods = {
 }
 
 export const resolverHandleEvent = async (
-  eventData: string,
+  eventData: unknown,
   trustedUrl: string,
   wallet: ResolverWallet,
   sendMessage: (id: string, result: unknown, error?: Error) => void,
@@ -320,7 +328,21 @@ export const resolverHandleEvent = async (
   supportedExtensions: Array<{cip: number}>,
 ) => {
   const trustedOrigin = new URL(trustedUrl).origin
-  const {id, method, params} = JSON.parse(eventData)
+  if (typeof eventData !== 'string') return
+
+  let parsed: Record<string, unknown> = {}
+  try {
+    const json = JSON.parse(eventData)
+    parsed = isRecord(json) ? json : {}
+  } catch {
+    return
+  }
+
+  const {id, method, params, source} = parsed
+  if (source !== 'dapp-connector') return
+  if (typeof id !== 'string' || typeof method !== 'string') return
+  if (!isRecord(params)) return
+
   try {
     const result = await handleMethod(method, params, {origin: trustedOrigin, wallet, storage, supportedExtensions})
     if (method !== LOG_MESSAGE_EVENT) sendMessage(id, result)
@@ -332,6 +354,7 @@ export const resolverHandleEvent = async (
 export type ResolverWallet = {
   id: string
   networkId: number
+  network: Chain.SupportedNetworks
   confirmConnection: (dappOrigin: string) => Promise<boolean>
   getBalance: (tokenId?: string) => Promise<Value>
   getUnusedAddresses: () => Promise<Address[]>

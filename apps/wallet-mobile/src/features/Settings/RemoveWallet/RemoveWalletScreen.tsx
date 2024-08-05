@@ -42,7 +42,7 @@ export const RemoveWalletScreen = () => {
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
       <KeyboardAvoidingView style={styles.keyboardAvoider}>
-        <ScrollView contentContainerStyle={styles.contentContainer} bounces={false}>
+        <ScrollView bounces={false}>
           <Description>
             {!meta.isHW && <Text style={styles.description}>{strings.descriptionParagraph1}</Text>}
 
@@ -73,17 +73,15 @@ export const RemoveWalletScreen = () => {
 
         <Spacer fill />
 
+        {!meta.isHW && (
+          <Checkbox
+            checked={hasMnemonicWrittenDown}
+            text={strings.hasWrittenDownMnemonic}
+            onChange={setHasMnemonicWrittenDown}
+          />
+        )}
+
         <Actions>
-          {!meta.isHW && (
-            <Checkbox
-              checked={hasMnemonicWrittenDown}
-              text={strings.hasWrittenDownMnemonic}
-              onChange={setHasMnemonicWrittenDown}
-            />
-          )}
-
-          <Spacer height={30} />
-
           <Button
             onPress={handleOnRemoveWallet}
             title={strings.remove}
@@ -163,9 +161,8 @@ const useStyles = () => {
     container: {
       flex: 1,
       backgroundColor: color.bg_color_high,
-    },
-    contentContainer: {
       ...atoms.px_lg,
+      ...atoms.pt_lg,
     },
     descriptionContainer: {
       backgroundColor: color.bg_color_high,
@@ -181,7 +178,7 @@ const useStyles = () => {
       ...atoms.body_1_lg_regular,
     },
     actions: {
-      ...atoms.p_lg,
+      ...atoms.py_lg,
     },
     keyboardAvoider: {
       flex: 1,

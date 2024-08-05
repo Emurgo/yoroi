@@ -2,10 +2,10 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
 import {useQuery} from 'react-query'
 
-import {Button, Spacer, Text, TextInput} from '../../../components'
+import {Button, Spacer, TextInput} from '../../../components'
+import {GradientWarning} from '../../../components/ChainWarning/GradientWarning'
 import {isValidPoolIdOrHash, normalizeToPoolHash} from '../../../yoroi-wallets/cardano/delegationUtils'
 
 type Props = {
@@ -17,7 +17,6 @@ export const PoolDetailScreen = ({onPressDelegate, disabled = false}: Props) => 
   const strings = useStrings()
   const styles = useStyles()
   const [poolIdOrHash, setPoolIdOrHash] = React.useState('')
-  const {isDark, color} = useTheme()
 
   const {data: isValid} = useIsValidPoolIdOrHash(poolIdOrHash)
 
@@ -30,16 +29,7 @@ export const PoolDetailScreen = ({onPressDelegate, disabled = false}: Props) => 
 
   return (
     <>
-      <LinearGradient
-        colors={isDark ? ['rgba(19, 57, 54, 1)', 'rgba(20, 24, 58, 1)', 'rgba(22, 25, 45, 1)'] : color.bg_gradient_1} // it fixes a weird bug
-        start={{x: isDark ? 0.5 : 0.5, y: isDark ? 0 : 0.5}}
-        end={{x: isDark ? 0 : 0, y: isDark ? 0.5 : 0}}
-        style={styles.disclaimer}
-      >
-        <Text style={styles.title}>{strings.disclaimerTitle}</Text>
-
-        <Text style={styles.description}>{strings.disclaimerText}</Text>
-      </LinearGradient>
+      <GradientWarning title={strings.disclaimerTitle} description={strings.disclaimerText} />
 
       <Spacer height={24} />
 
@@ -73,27 +63,10 @@ const useIsValidPoolIdOrHash = (poolIdOrHash: string) => {
 }
 
 const useStyles = () => {
-  const {atoms, color} = useTheme()
+  const {atoms} = useTheme()
   const styles = StyleSheet.create({
     button: {
       ...atoms.p_sm,
-    },
-    disclaimer: {
-      ...atoms.px_lg,
-      ...atoms.py_md,
-      ...atoms.gap_sm,
-      overflow: 'hidden',
-      borderRadius: 8,
-    },
-    title: {
-      ...atoms.body_1_lg_medium,
-      ...atoms.font_semibold,
-      color: color.gray_cmax,
-    },
-    description: {
-      ...atoms.body_2_md_regular,
-      ...atoms.font_normal,
-      color: color.gray_c900,
     },
   })
   return styles

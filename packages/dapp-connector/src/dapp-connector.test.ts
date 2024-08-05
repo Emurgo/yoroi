@@ -6,6 +6,7 @@ import {Api, dappConnectorApiMaker} from './adapters/api'
 import {mockedDAppList} from './manager.mocks'
 import {ResolverWallet} from './resolver'
 import {init} from '@emurgo/cross-csl-nodejs'
+import {Chain} from '@yoroi/types'
 
 const getDappConnector = (wallet = mockWallet) => {
   const storage = connectionStorageMaker({storage: storageMock})
@@ -73,8 +74,8 @@ describe('DappConnector', () => {
 
       await dappConnector.removeConnection({dappOrigin: 'fake-url-1'})
       expect(await dappConnector.listAllConnections()).toEqual([
-        {walletId, dappOrigin: 'fake-url-2'},
-        {walletId: 'new-wallet-id', dappOrigin: 'fake-url-1'},
+        {walletId, dappOrigin: 'fake-url-2', network: Chain.Network.Mainnet},
+        {walletId: 'new-wallet-id', dappOrigin: 'fake-url-1', network: Chain.Network.Mainnet},
       ])
     })
 
@@ -82,12 +83,53 @@ describe('DappConnector', () => {
       const dappConnector = getDappConnector()
       await dappConnector.addConnection({dappOrigin: 'fake-url'})
       await expect(dappConnector.addConnection({walletId, dappOrigin: 'fake-url'})).rejects.toThrow(
-        `Connection already exists: {"walletId":"${walletId}","dappOrigin":"fake-url"}`,
+        `Connection already exists: {"walletId":"${walletId}","dappOrigin":"fake-url","network":"mainnet"}`,
       )
+    })
+
+    it('should throw an error if connection does not have wallet id', async () => {
+      const dappConnector = getDappConnector()
+      await dappConnector.addConnection({walletId: false, dappOrigin: 'fake-url'} as any)
+
+      await expect(async () => {
+        await dappConnector.listAllConnections()
+      }).rejects.toThrow(`connectionStorageMaker.normaliseDappConnection: walletId is required`)
+    })
+
+    it('should throw an error if connection does not have dapp origin', async () => {
+      const dappConnector = getDappConnector()
+      await dappConnector.addConnection({walletId, dappOrigin: false} as any)
+
+      await expect(async () => {
+        await dappConnector.listAllConnections()
+      }).rejects.toThrow(`connectionStorageMaker.normaliseDappConnection: dappOrigin is required`)
+    })
+
+    it('should assign network mainnet if was missing', async () => {
+      const dappConnector = getDappConnector()
+      await dappConnector.addConnection({walletId, dappOrigin: 'fake-url', network: false} as any)
+      expect(await dappConnector.listAllConnections()).toEqual([
+        {walletId, dappOrigin: 'fake-url', network: Chain.Network.Mainnet},
+      ])
     })
   })
 
   describe('handling connection events', () => {
+    it('should ignore the event if it is not a string', async () => {
+      const dappConnector = getDappConnector()
+      const sendMessage = jest.fn()
+      await dappConnector.handleEvent(null as any, trustedUrl, sendMessage)
+      expect(sendMessage).not.toHaveBeenCalled()
+    })
+
+    it('should ignore the event if it is not an event from a dapp-connector', async () => {
+      const dappConnector = getDappConnector()
+      const event = createEvent('unknown', {}, 'unknown')
+      const sendMessage = jest.fn()
+      await dappConnector.handleEvent(event, trustedUrl, sendMessage)
+      expect(sendMessage).not.toHaveBeenCalled()
+    })
+
     it('should throw an error if the event is not known', async () => {
       const dappConnector = getDappConnector()
       const event = createEvent('unknown')
@@ -96,12 +138,37 @@ describe('DappConnector', () => {
       expect(sendMessage).toHaveBeenCalledWith('1', null, new Error(`Unknown method 'unknown'`))
     })
 
-    it('should throw an error if the event malformed', async () => {
+    it('should ignore if the event malformed', async () => {
       const dappConnector = getDappConnector()
-      const event = JSON.stringify({method: 'test'})
+
+      const event1 = JSON.stringify({method: 'test', source: 'dapp-connector'})
+      const sendMessage1 = jest.fn()
+      await dappConnector.handleEvent(event1, trustedUrl, sendMessage1)
+      expect(sendMessage1).not.toHaveBeenCalled()
+
+      const event2 = 'test'
+      const sendMessage2 = jest.fn()
+      await dappConnector.handleEvent(event2, trustedUrl, sendMessage2)
+      expect(sendMessage2).not.toHaveBeenCalled()
+
+      const event3 = JSON.stringify({method: 'test', id: '1', source: 'dapp-connector'})
+      const sendMessage3 = jest.fn()
+      await dappConnector.handleEvent(event3, trustedUrl, sendMessage3)
+      expect(sendMessage3).not.toHaveBeenCalled()
+
+      const event4 = 'null'
+      const sendMessage4 = jest.fn()
+      await dappConnector.handleEvent(event4, trustedUrl, sendMessage4)
+      expect(sendMessage4).not.toHaveBeenCalled()
+    })
+
+    it('should throw an error if the event is not from a trusted origin', async () => {
+      const dappConnector = getDappConnector()
+      const event = JSON.stringify({method: 'cardano_enable', id: '1', source: 'dapp-connector', params: {}})
       const sendMessage = jest.fn()
-      await dappConnector.handleEvent(event, trustedUrl, sendMessage)
-      expect(sendMessage).toHaveBeenCalledWith(undefined, null, new Error(`Unknown method 'test'`))
+      await dappConnector.handleEvent(event, 'https://another-url.com', sendMessage)
+      const errorMessage = 'Origins do not match:  !== https://another-url.com'
+      expect(sendMessage).toHaveBeenCalledWith('1', null, new Error(errorMessage))
     })
 
     it('should throw an error if the origins do not match', async () => {
@@ -164,7 +231,7 @@ describe('DappConnector', () => {
       const sendMessage = jest.fn()
       await dappConnector.handleEvent(event, trustedUrl, sendMessage)
       expect(await dappConnector.listAllConnections()).toEqual([
-        {walletId: walletId, dappOrigin: 'https://yoroi-wallet.com'},
+        {walletId: walletId, dappOrigin: 'https://yoroi-wallet.com', network: Chain.Network.Mainnet},
       ])
     })
 
@@ -576,10 +643,11 @@ const initDappConnectorWithConnection = async (wallet?: ResolverWallet) => {
   return dappConnector
 }
 
-const createEvent = (method: string, params?: object) => {
+const createEvent = (method: string, params?: object, source = 'dapp-connector') => {
   return JSON.stringify({
     id: '1',
     method,
+    source,
     params: {args: [], ...params, browserContext: {origin: 'https://yoroi-wallet.com'}},
   })
 }
@@ -591,6 +659,7 @@ const mockWallet: ResolverWallet = {
   signTx: () => Promise.resolve(CSL.TransactionWitnessSet.new()),
   signData: () => Promise.resolve({key: '', signature: ''}),
   id: walletId,
+  network: Chain.Network.Mainnet,
   networkId: 1,
   confirmConnection: async () => true,
   getBalance: () => CSL.Value.fromHex('1a062ea8a0'),

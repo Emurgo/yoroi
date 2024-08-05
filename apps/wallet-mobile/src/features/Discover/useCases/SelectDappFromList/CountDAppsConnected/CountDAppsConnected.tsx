@@ -12,7 +12,7 @@ export const CountDAppsConnected = ({total}: Props) => {
   const strings = useStrings()
 
   return (
-    <View style={styles.countAvailableBox}>
+    <View>
       <Text style={styles.availableText}>{`${strings.totalDAppConnected(total)}`}</Text>
     </View>
   )
@@ -25,9 +25,6 @@ const useStyles = () => {
     availableText: {
       ...atoms.body_2_md_regular,
       color: color.gray_c700,
-    },
-    countAvailableBox: {
-      ...atoms.px_lg,
     },
   })
   return {styles} as const

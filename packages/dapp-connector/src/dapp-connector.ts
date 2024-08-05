@@ -3,6 +3,7 @@ import {resolverHandleEvent, ResolverWallet} from './resolver'
 import {connectWallet} from './connector'
 import {DappConnection, Storage} from './adapters/async-storage'
 import {Api, DappListResponse} from './adapters/api'
+import {Chain} from '@yoroi/types'
 
 export type DappConnectorManager = {
   getDAppList(): Promise<DappListResponse>
@@ -15,6 +16,8 @@ export type DappConnectorManager = {
     trustedUrl: string,
     sendMessage: (id: string, result: unknown, error?: Error) => void,
   ): Promise<void>
+  readonly network: Chain.SupportedNetworks
+  readonly walletId: string
 }
 
 export const dappConnectorMaker = (storage: Storage, wallet: ResolverWallet, api: Api): DappConnector => {
@@ -22,10 +25,15 @@ export const dappConnectorMaker = (storage: Storage, wallet: ResolverWallet, api
 }
 
 export class DappConnector implements DappConnectorManager {
-  constructor(private storage: Storage, private wallet: ResolverWallet, private api: Api) {}
+  network: Chain.SupportedNetworks
+  walletId: string
+  constructor(private storage: Storage, private wallet: ResolverWallet, private api: Api) {
+    this.network = wallet.network
+    this.walletId = wallet.id
+  }
 
   async getDAppList() {
-    return this.api.getDApps()
+    return this.api.getDApps({network: this.wallet.network})
   }
 
   async listAllConnections() {
@@ -34,12 +42,13 @@ export class DappConnector implements DappConnectorManager {
 
   async removeConnection(options: {walletId?: string; dappOrigin: string}) {
     const walletId = options.walletId ?? this.wallet.id
-    return this.storage.remove({walletId, dappOrigin: options.dappOrigin})
+    return this.storage.remove({walletId, dappOrigin: options.dappOrigin, network: this.wallet.network})
   }
 
-  async addConnection(options: {dappOrigin: string; walletId?: string}) {
+  async addConnection(options: {dappOrigin: string; walletId?: string; network?: Chain.Network}) {
     const walletId = options.walletId ?? this.wallet.id
-    return this.storage.save({walletId, dappOrigin: options.dappOrigin})
+    const network = options.network ?? this.wallet.network
+    return this.storage.save({walletId, dappOrigin: options.dappOrigin, network})
   }
 
   getWalletConnectorScript(props: {iconUrl: string; apiVersion: string; walletName: string; sessionId: string}) {

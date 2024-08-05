@@ -2,25 +2,37 @@ import {FetchData, fetchData, getApiError, isLeft, createTypeGuardFromSchema} fr
 import {freeze} from 'immer'
 import {AxiosRequestConfig} from 'axios'
 import {z} from 'zod'
+import {Chain} from '@yoroi/types'
 
-const dappListHost = 'https://daehx1qv45z7c.cloudfront.net'
+const dappListHosts = {
+  mainnet: 'https://daehx1qv45z7c.cloudfront.net/data.json',
+  preprod: 'https://daehx1qv45z7c.cloudfront.net/preprod.json',
+  sancho: 'https://daehx1qv45z7c.cloudfront.net/sancho.json',
+} as const
+
 const initialDeps = freeze({request: fetchData}, true)
 
+type GetDAppsOptions = {
+  network: Chain.SupportedNetworks
+}
+
 export type Api = {
-  getDApps: (fetcherConfig?: AxiosRequestConfig) => Promise<DappListResponse>
+  getDApps: (options: GetDAppsOptions, fetcherConfig?: AxiosRequestConfig) => Promise<DappListResponse>
 }
 
 export const dappConnectorApiMaker = ({request}: {request: FetchData} = initialDeps): Api => {
-  const getDApps = async (fetcherConfig?: AxiosRequestConfig): Promise<DappListResponse> => {
-    const config = {url: `${dappListHost}/data.json`} as const
+  const getDApps = async (options: GetDAppsOptions, fetcherConfig?: AxiosRequestConfig): Promise<DappListResponse> => {
+    const url = dappListHosts[options.network]
 
-    const response = await request<unknown>(config, fetcherConfig)
+    const response = await request<unknown>({url}, fetcherConfig)
 
     if (isLeft(response)) throw getApiError(response.error)
 
     if (!isDappListResponse(response.value.data)) {
       throw new Error('Invalid dapp list response: ' + JSON.stringify(response.value.data))
     }
+
+    const {hostname, protocol} = new URL(url)
 
     const value = response.value.data
     return {
@@ -29,7 +41,7 @@ export const dappConnectorApiMaker = ({request}: {request: FetchData} = initialD
         name: dapp.name,
         description: dapp.description,
         category: dapp.category,
-        logo: `${dappListHost}/${dapp.logo}`,
+        logo: `${protocol}//${hostname}/${dapp.logo}`,
         uri: dapp.uri,
         origins: dapp.origins,
       })),

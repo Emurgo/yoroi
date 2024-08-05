@@ -1,7 +1,7 @@
 import {useTheme} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
 import * as React from 'react'
-import {StyleSheet, Text, TouchableOpacity, View, ViewStyle} from 'react-native'
+import {StyleSheet, Text, TouchableOpacity, useWindowDimensions, View, ViewStyle} from 'react-native'
 
 import {Button, Spacer, useModal} from '../../../components'
 import {Space} from '../../../components/Space/Space'
@@ -72,7 +72,15 @@ export const NetworkTag = ({
 
   return (
     <View style={[styles.headerTitleContainerStyle, style]}>
-      <Text style={styles.headerTitleStyle}>{children}</Text>
+      <Text
+        numberOfLines={1}
+        accessibilityRole="header"
+        aria-level="1"
+        ellipsizeMode="tail"
+        style={styles.headerTitleStyle}
+      >
+        {children}
+      </Text>
 
       {Tag && (
         <>
@@ -133,6 +141,7 @@ const MainnetWarningDialog = ({onCancel, onOk}: {onCancel: () => void; onOk: () 
 
 const useStyles = () => {
   const {color, atoms} = useTheme()
+  const width = useWindowDimensions().width - 140
 
   const styles = StyleSheet.create({
     headerTitleStyle: {
@@ -143,6 +152,7 @@ const useStyles = () => {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
+      width,
     },
     preprodTag: {
       borderRadius: 1200,
