@@ -1,7 +1,7 @@
 import {useTheme} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
 import * as React from 'react'
-import {StyleSheet, Text, TouchableOpacity, View, ViewStyle} from 'react-native'
+import {StyleSheet, Text, TextStyle, TouchableOpacity, View, ViewStyle} from 'react-native'
 
 import {Button, Spacer, useModal} from '../../../components'
 import {Space} from '../../../components/Space/Space'
@@ -13,13 +13,15 @@ import {useStrings} from './strings'
 
 export const NetworkTag = ({
   children,
+  textStyle,
   directChangeActive,
   style,
   disabled,
 }: {
-  children: React.ReactNode
+  children: string
   directChangeActive?: boolean
   style?: ViewStyle
+  textStyle?: TextStyle
   disabled?: boolean
 }) => {
   const {
@@ -72,7 +74,7 @@ export const NetworkTag = ({
 
   return (
     <View style={[styles.headerTitleContainerStyle, style]}>
-      <Text style={styles.headerTitleStyle}>{children}</Text>
+      <Text style={[styles.headerTitleStyle, textStyle]}>{addMiddleEllipsis(children, 15)}</Text>
 
       {Tag && (
         <>
@@ -82,6 +84,8 @@ export const NetworkTag = ({
             onPress={onPress}
             disabled={((directChangeActive && selectedNetwork === Chain.Network.Mainnet) || disabled) ?? false}
           />
+
+          <Space width="sm" />
         </>
       )}
     </View>
@@ -131,19 +135,31 @@ const MainnetWarningDialog = ({onCancel, onOk}: {onCancel: () => void; onOk: () 
   )
 }
 
+const addMiddleEllipsis = (text: string, maxLength: number): string => {
+  if (text.length <= maxLength) {
+    return text
+  }
+
+  const charsToShow = maxLength - 3
+  const frontChars = Math.ceil(charsToShow / 2)
+  const backChars = Math.floor(charsToShow / 2)
+
+  return `${text.slice(0, frontChars).trim()}...${text.slice(text.length - backChars).trim()}`
+}
+
 const useStyles = () => {
   const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
-    headerTitleStyle: {
-      ...atoms.body_1_lg_medium,
-      color: color.text_gray_normal,
-    },
     headerTitleContainerStyle: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
       minWidth: 250,
+    },
+    headerTitleStyle: {
+      ...atoms.body_1_lg_medium,
+      color: color.text_gray_normal,
     },
     preprodTag: {
       borderRadius: 1200,
