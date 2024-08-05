@@ -585,6 +585,8 @@ const HeaderRightHistory = React.memo(() => {
     <Row style={styles.row}>
       {!meta.isReadOnly && (
         <>
+          <Spacer width={10} />
+
           <CodeScannerButton
             onPress={() => navigation.navigate('scan-start', {insideFeature: 'scan'})}
             color={colors.gray}

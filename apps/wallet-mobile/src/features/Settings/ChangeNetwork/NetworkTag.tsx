@@ -84,8 +84,6 @@ export const NetworkTag = ({
             onPress={onPress}
             disabled={((directChangeActive && selectedNetwork === Chain.Network.Mainnet) || disabled) ?? false}
           />
-
-          <Space width="sm" />
         </>
       )}
     </View>
