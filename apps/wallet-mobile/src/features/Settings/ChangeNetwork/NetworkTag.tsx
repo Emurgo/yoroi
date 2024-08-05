@@ -11,6 +11,8 @@ import {useWalletManager} from '../../WalletManager/context/WalletManagerProvide
 import {networkConfigs} from '../../WalletManager/network-manager/network-manager'
 import {useStrings} from './strings'
 
+const charLimit = 15
+
 export const NetworkTag = ({
   children,
   textStyle,
@@ -74,7 +76,7 @@ export const NetworkTag = ({
 
   return (
     <View style={[styles.headerTitleContainerStyle, style]}>
-      <Text style={[styles.headerTitleStyle, textStyle]}>{addMiddleEllipsis(children, 15)}</Text>
+      <Text style={[styles.headerTitleStyle, textStyle]}>{addMiddleEllipsis(children, charLimit)}</Text>
 
       {Tag && (
         <>
@@ -84,6 +86,8 @@ export const NetworkTag = ({
             onPress={onPress}
             disabled={((directChangeActive && selectedNetwork === Chain.Network.Mainnet) || disabled) ?? false}
           />
+
+          {children.length >= charLimit && <Space width="sm" />}
         </>
       )}
     </View>
@@ -133,7 +137,7 @@ const MainnetWarningDialog = ({onCancel, onOk}: {onCancel: () => void; onOk: () 
   )
 }
 
-const addMiddleEllipsis = (text: string, maxLength: number): string => {
+const addMiddleEllipsis = (text: string, maxLength: number, type: 'end' | 'middle' = 'end'): string => {
   if (text.length <= maxLength) {
     return text
   }
@@ -141,6 +145,8 @@ const addMiddleEllipsis = (text: string, maxLength: number): string => {
   const charsToShow = maxLength - 3
   const frontChars = Math.ceil(charsToShow / 2)
   const backChars = Math.floor(charsToShow / 2)
+
+  if (type === 'end') return `${text.slice(0, maxLength - 3)}...`
 
   return `${text.slice(0, frontChars).trim()}...${text.slice(text.length - backChars).trim()}`
 }
