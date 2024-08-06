@@ -10,7 +10,7 @@ import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
 import _ from 'lodash'
 
-import {RawUtxo, YoroiSignedTx, YoroiUnsignedTx} from '../../types'
+import {RawUtxo, YoroiUnsignedTx} from '../../types'
 import {asQuantity, Utxos} from '../../utils'
 import {Cardano, CardanoMobile} from '../../wallets'
 import {toAssetNameHex, toPolicyId} from '../api/utils'
