@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {isKeyOf} from '@yoroi/common'
-
 import * as SANCHONET_CONFIG from '../cardano/constants/sanchonet/constants'
 import type {NetworkId} from '../types/other'
 import {NETWORK_REGISTRY} from '../types/other'
@@ -13,24 +11,10 @@ const _DEFAULT_BACKEND_RULES = {
   TX_HISTORY_RESPONSE_LIMIT: 50,
 }
 
-/**
- * note(v-almonacid): this list contains configuration data for current and
- * deprecated networks. Naturally, these are not normalized (some networks
- * require parameters that other networks don't).
- * To keep in mind:
- * - each blockchain protocol can have multiple networks (eg. a mainnet and a
-     testnet)
- * - the app can be built on mainnet or testnet mode. When built on testnet mode,
- *   we'll use testnet configuration if available (see ./config.js).
- * - mainnet and testnet are two separate builds.
- * - as a general rule, all configuration data should be accessed from a single
- *   global object -> ./config.js and not from here.
- */
 export const BYRON_MAINNET = {
   NETWORK_ID: NETWORK_REGISTRY.BYRON_MAINNET,
   MARKETING_NAME: 'Mainnet',
   ENABLED: false,
-  IS_MAINNET: true,
   PROTOCOL_MAGIC: 764824073,
   GENESIS_DATE: '1506203091000',
   START_AT: 0,
@@ -43,7 +27,6 @@ const HASKELL_SHELLEY = {
   MARKETING_NAME: 'Cardano Mainnet',
   ENABLED: true,
   CHAIN_NETWORK_ID: '1',
-  IS_MAINNET: true,
 
   POOL_EXPLORER: 'https://adapools.yoroiwallet.com/?source=mobile',
 
@@ -72,10 +55,6 @@ const HASKELL_SHELLEY = {
   ],
   PER_EPOCH_PERCENTAGE_REWARD: 69344,
   COIN_TYPE: NUMBERS.COIN_TYPES.CARDANO,
-  LINEAR_FEE: {
-    COEFFICIENT: '44',
-    CONSTANT: '155381',
-  },
   // @deprecated
   MINIMUM_UTXO_VAL: '1000000',
   COINS_PER_UTXO_WORD: '34482',
@@ -87,7 +66,6 @@ const HASKELL_SHELLEY_TESTNET = {
   MARKETING_NAME: 'Cardano testnet',
   ENABLED: true,
   CHAIN_NETWORK_ID: '0',
-  IS_MAINNET: false,
 
   POOL_EXPLORER: 'https://adapools.yoroiwallet.com/?source=mobile',
 
@@ -115,10 +93,6 @@ const HASKELL_SHELLEY_TESTNET = {
   ],
   PER_EPOCH_PERCENTAGE_REWARD: 69344,
   COIN_TYPE: NUMBERS.COIN_TYPES.CARDANO,
-  LINEAR_FEE: {
-    COEFFICIENT: '44',
-    CONSTANT: '155381',
-  },
   MINIMUM_UTXO_VAL: '1000000',
   COINS_PER_UTXO_WORD: '34482',
   POOL_DEPOSIT: '500000000',
@@ -132,31 +106,6 @@ export const NETWORKS = {
   HASKELL_SHELLEY,
   HASKELL_SHELLEY_TESTNET,
   SANCHONET: SANCHONET_CONFIG.NETWORK_CONFIG,
-}
-export type NetworkConfig =
-  | typeof NETWORKS.BYRON_MAINNET
-  | typeof NETWORKS.HASKELL_SHELLEY
-  | typeof NETWORKS.HASKELL_SHELLEY_TESTNET
-  | typeof NETWORKS.SANCHONET
-
-/**
- * queries related to blockchain/network parameters
- */
-export const isHaskellShelleyNetwork = (networkId: NetworkId): boolean =>
-  networkId === NETWORK_REGISTRY.HASKELL_SHELLEY ||
-  networkId === NETWORK_REGISTRY.HASKELL_SHELLEY_TESTNET ||
-  networkId === NETWORK_REGISTRY.SANCHONET
-export const getCardanoByronConfig = () => NETWORKS.BYRON_MAINNET
-
-export const getNetworkConfigById = (id: NetworkId): NetworkConfig => {
-  const idx = Object.values(NETWORK_REGISTRY).indexOf(id)
-  const network: string = Object.keys(NETWORK_REGISTRY)[idx]
-
-  if (network != null && network !== 'UNDEFINED' && isKeyOf(network, NETWORKS) && NETWORKS[network] != null) {
-    return NETWORKS[network]
-  }
-
-  throw new Error('invalid networkId')
 }
 export type CardanoHaskellShelleyNetwork =
   | typeof NETWORKS.HASKELL_SHELLEY
