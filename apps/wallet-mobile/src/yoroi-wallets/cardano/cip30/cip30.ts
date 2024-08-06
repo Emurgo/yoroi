@@ -185,7 +185,6 @@ class CIP30Extension {
     try {
       const emptyWitnessSet = await csl.TransactionWitnessSet.new()
       const tx = await csl.Transaction.new(txBody, emptyWitnessSet, undefined)
-      console.log('buildReorganisationTx ok')
       return tx.toHex()
     } finally {
       release()
