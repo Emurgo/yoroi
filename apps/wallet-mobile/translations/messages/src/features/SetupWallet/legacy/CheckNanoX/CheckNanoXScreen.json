@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Before continuing, please make sure that:",
     "file": "src/features/SetupWallet/legacy/CheckNanoX/CheckNanoXScreen.tsx",
     "start": {
-      "line": 68,
+      "line": 75,
       "column": 13,
-      "index": 2524
+      "index": 2604
     },
     "end": {
-      "line": 71,
+      "line": 78,
       "column": 3,
-      "index": 2670
+      "index": 2750
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Intro",
     "file": "src/features/SetupWallet/legacy/CheckNanoX/CheckNanoXScreen.tsx",
     "start": {
-      "line": 72,
+      "line": 79,
       "column": 9,
-      "index": 2681
+      "index": 2761
     },
     "end": {
-      "line": 75,
+      "line": 82,
       "column": 3,
-      "index": 2794
+      "index": 2874
     }
   }
 ]

@@ -223,6 +223,7 @@ const getStories = () => {
     "./src/features/SetupWallet/useCases/CreateWallet/RecoveryPhraseScreen.stories.tsx": require("../src/features/SetupWallet/useCases/CreateWallet/RecoveryPhraseScreen.stories.tsx"),
     "./src/features/SetupWallet/useCases/CreateWallet/VerifyRecoveryPhraseScreen.stories.tsx": require("../src/features/SetupWallet/useCases/CreateWallet/VerifyRecoveryPhraseScreen.stories.tsx"),
     "./src/features/SetupWallet/useCases/CreateWallet/WalletDetailsScreen.stories.tsx": require("../src/features/SetupWallet/useCases/CreateWallet/WalletDetailsScreen.stories.tsx"),
+    "./src/features/SetupWallet/useCases/RestoreHwWallet/SelectHwConnectionModal.stories.tsx": require("../src/features/SetupWallet/useCases/RestoreHwWallet/SelectHwConnectionModal.stories.tsx"),
     "./src/features/SetupWallet/useCases/RestoreWallet/MnemonicInput/MnemonicInput.stories.tsx": require("../src/features/SetupWallet/useCases/RestoreWallet/MnemonicInput/MnemonicInput.stories.tsx"),
     "./src/features/SetupWallet/useCases/RestoreWallet/MnemonicInput/TextInput/TextInput.stories.tsx": require("../src/features/SetupWallet/useCases/RestoreWallet/MnemonicInput/TextInput/TextInput.stories.tsx"),
     "./src/features/SetupWallet/useCases/RestoreWallet/RestoreWalletDetailsScreen.stories.tsx": require("../src/features/SetupWallet/useCases/RestoreWallet/RestoreWalletDetailsScreen.stories.tsx"),

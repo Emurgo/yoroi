@@ -136,7 +136,7 @@
   },
   {
     "id": "components.walletinit.connectnanox.connectnanoxscreen.title",
-    "defaultMessage": "!!!Connect to Hardware Device",
+    "defaultMessage": "!!!Connect hardware wallet",
     "file": "src/features/SetupWallet/SetupWalletNavigator.tsx",
     "start": {
       "line": 174,
@@ -146,37 +146,37 @@
     "end": {
       "line": 177,
       "column": 3,
-      "index": 6257
+      "index": 6254
     }
   },
   {
     "id": "components.walletinit.connectnanox.checknanoxscreen.title",
-    "defaultMessage": "!!!Connect to Hardware Device",
+    "defaultMessage": "!!!Connect hardware wallet",
     "file": "src/features/SetupWallet/SetupWalletNavigator.tsx",
     "start": {
       "line": 178,
       "column": 19,
-      "index": 6278
+      "index": 6275
     },
     "end": {
       "line": 181,
       "column": 3,
-      "index": 6405
+      "index": 6399
     }
   },
   {
     "id": "components.walletinit.connectnanox.savenanoxscreen.title",
-    "defaultMessage": "!!!Save wallet",
+    "defaultMessage": "!!!Connect hardware wallet",
     "file": "src/features/SetupWallet/SetupWalletNavigator.tsx",
     "start": {
       "line": 182,
       "column": 18,
-      "index": 6425
+      "index": 6419
     },
     "end": {
       "line": 185,
       "column": 3,
-      "index": 6536
+      "index": 6542
     }
   }
 ]

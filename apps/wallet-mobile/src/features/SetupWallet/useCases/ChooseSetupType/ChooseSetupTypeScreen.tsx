@@ -9,18 +9,18 @@ import {useModal} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
-import {LedgerTransportSwitch} from '../../../../legacy/HW'
 import {ButtonCard} from '../../common/ButtonCard/ButtonCard'
 import {LogoBanner} from '../../common/LogoBanner/LogoBanner'
 import {useStrings} from '../../common/useStrings'
 import {CreateWallet} from '../../illustrations/CreateWallet'
 import {HardwareWallet} from '../../illustrations/HardwareWallet'
 import {RestoreWallet} from '../../illustrations/RestoreWallet'
+import {SelectHwConnectionModal} from '../RestoreHwWallet/SelectHwConnectionModal'
 
 export const ChooseSetupTypeScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
-  const {walletImplementationChanged, setUpTypeChanged, useUSBChanged: USBChanged} = useSetupWallet()
+  const {walletImplementationChanged, setupTypeChanged} = useSetupWallet()
   const {openModal} = useModal()
   const {track} = useMetrics()
 
@@ -34,40 +34,20 @@ export const ChooseSetupTypeScreen = () => {
 
   const handleCreate = () => {
     walletImplementationChanged('cardano-cip1852')
-    setUpTypeChanged('create')
+    setupTypeChanged('create')
 
     navigation.navigate('setup-wallet-about-recovery-phase')
   }
 
   const handleRestore = () => {
     walletImplementationChanged('cardano-cip1852')
-    setUpTypeChanged('restore')
+    setupTypeChanged('restore')
 
     navigation.navigate('setup-wallet-restore-choose-mnemonic-type')
   }
 
   const handleHw = () => {
-    openModal(
-      '',
-      <LedgerTransportSwitch
-        onSelectUSB={() => {
-          USBChanged(true)
-          navigateHw()
-        }}
-        onSelectBLE={() => {
-          USBChanged(false)
-          navigateHw()
-        }}
-      />,
-      350,
-    )
-  }
-
-  const navigateHw = () => {
-    walletImplementationChanged('cardano-cip1852')
-    setUpTypeChanged('hw')
-
-    navigation.navigate('setup-wallet-check-nano-x')
+    openModal(strings.hwModalTitle, <SelectHwConnectionModal />, 305)
   }
 
   return (

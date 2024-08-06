@@ -4,7 +4,7 @@ import {useTheme} from '@yoroi/theme'
 import {HW, Wallet} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {StepperProgress} from '../../../../components/StepperProgress/StepperProgress'
@@ -62,14 +62,15 @@ export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
       <StepperProgress style={styles.stepper} currentStepTitle="Connect" currentStep={2} totalSteps={3} />
 
-      <LedgerConnect
-        onConnectBLE={onConnectBLE}
-        onConnectUSB={onConnectUSB}
-        useUSB={useUSB}
-        onWaitingMessage={strings.exportKey}
-        defaultDevices={defaultDevices}
-        fillSpace
-      />
+      <View style={styles.content}>
+        <LedgerConnect
+          onConnectBLE={onConnectBLE}
+          onConnectUSB={onConnectUSB}
+          useUSB={useUSB}
+          onWaitingMessage={strings.exportKey}
+          defaultDevices={defaultDevices}
+        />
+      </View>
     </SafeAreaView>
   )
 }
@@ -98,6 +99,9 @@ const useStyles = () => {
     },
     stepper: {
       ...atoms.p_lg,
+    },
+    content: {
+      ...atoms.px_lg,
     },
   })
   return styles

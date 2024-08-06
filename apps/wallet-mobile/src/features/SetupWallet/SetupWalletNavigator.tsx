@@ -173,15 +173,15 @@ const messages = defineMessages({
   },
   connectNanoXTitle: {
     id: 'components.walletinit.connectnanox.connectnanoxscreen.title',
-    defaultMessage: '!!!Connect to Hardware Device',
+    defaultMessage: '!!!Connect hardware wallet',
   },
   checkNanoXTitle: {
     id: 'components.walletinit.connectnanox.checknanoxscreen.title',
-    defaultMessage: '!!!Connect to Hardware Device',
+    defaultMessage: '!!!Connect hardware wallet',
   },
   saveNanoXTitle: {
     id: 'components.walletinit.connectnanox.savenanoxscreen.title',
-    defaultMessage: '!!!Save wallet',
+    defaultMessage: '!!!Connect hardware wallet',
   },
 })
 
