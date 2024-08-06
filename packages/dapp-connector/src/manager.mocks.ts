@@ -14,6 +14,9 @@ export const managerMock: DappConnectorManager = {
   removeConnection(): Promise<void> {
     return Promise.resolve()
   },
+  removeConnections(_options: Array<{walletId?: string; dappOrigin: string}>): Promise<void> {
+    return Promise.resolve()
+  },
   addConnection(): Promise<void> {
     return Promise.resolve()
   },
