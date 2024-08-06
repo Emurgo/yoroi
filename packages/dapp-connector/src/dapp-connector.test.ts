@@ -79,6 +79,18 @@ describe('DappConnector', () => {
       ])
     })
 
+    it('should remove multiple connections', async () => {
+      const dappConnector = getDappConnector()
+      await dappConnector.addConnection({dappOrigin: 'fake-url-1'})
+      await dappConnector.addConnection({dappOrigin: 'fake-url-2'})
+      await dappConnector.addConnection({dappOrigin: 'fake-url-3'})
+
+      await dappConnector.removeConnections([{dappOrigin: 'fake-url-1'}, {dappOrigin: 'fake-url-3'}])
+      expect(await dappConnector.listAllConnections()).toEqual([
+        {walletId, dappOrigin: 'fake-url-2', network: Chain.Network.Mainnet},
+      ])
+    })
+
     it('should throw an error if connection already exists', async () => {
       const dappConnector = getDappConnector()
       await dappConnector.addConnection({dappOrigin: 'fake-url'})
