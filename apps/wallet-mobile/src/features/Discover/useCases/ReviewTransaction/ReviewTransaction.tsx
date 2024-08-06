@@ -17,7 +17,7 @@ import {cip30LedgerExtensionMaker} from '../../../../yoroi-wallets/cardano/cip30
 import {wrappedCsl} from '../../../../yoroi-wallets/cardano/wrappedCsl'
 import {useTokenInfos} from '../../../../yoroi-wallets/hooks'
 import {asQuantity} from '../../../../yoroi-wallets/utils'
-import {formatAdaWithText, formatTokenWithSymbol} from '../../../../yoroi-wallets/utils/format'
+import {formatAdaWithText, formatTokenWithText} from '../../../../yoroi-wallets/utils/format'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useConfirmHWConnectionModal} from '../../common/ConfirmHWConnectionModal'
 import {usePromptRootKey} from '../../common/hooks'
@@ -234,7 +234,7 @@ const useFormattedTransaction = (cbor: string) => {
           const tokenInfo = tokenInfos.find((t) => t.id === a.assetId)
           if (!tokenInfo) return null
           const quantity = asQuantity(a.amount)
-          return formatTokenWithSymbol(quantity, tokenInfo)
+          return formatTokenWithText(quantity, tokenInfo)
         })
         .filter(Boolean) ?? []
 
@@ -258,7 +258,7 @@ const useFormattedTransaction = (cbor: string) => {
             const tokenInfo = tokenInfos.find((t) => t.id === `${policyId}.${assetId}`)
             if (tokenInfo == null) return null
             const quantity = asQuantity(amount)
-            return formatTokenWithSymbol(quantity, tokenInfo)
+            return formatTokenWithText(quantity, tokenInfo)
           })
         })
       : []

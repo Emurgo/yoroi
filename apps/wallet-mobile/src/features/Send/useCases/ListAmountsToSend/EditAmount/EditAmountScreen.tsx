@@ -196,12 +196,12 @@ const AmountInput = ({onChange, value, ticker}: AmountInputProps) => {
       onChangeText={onChangeText}
       selectTextOnAutoFocus
       allowFontScaling
-      selectionColor={colors.black}
       right={<Ticker ticker={ticker} />}
       style={styles.amount}
       underlineColor="transparent"
       underlineColorAndroid="transparent"
       activeUnderlineColor="transparent"
+      selectionColor={colors.selected}
       noHelper
     />
   )
@@ -259,6 +259,7 @@ const useStyles = () => {
   })
   const colors = {
     black: color.gray_cmax,
+    selected: color.gray_c300,
   }
   return {styles, colors} as const
 }

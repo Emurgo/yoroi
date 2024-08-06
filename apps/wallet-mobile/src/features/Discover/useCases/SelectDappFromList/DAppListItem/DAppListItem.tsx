@@ -66,10 +66,8 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
   const handleDisconnectDApp = async (dApp: DAppItem) => {
     track.discoverConnectedBottomSheetDisconnectClicked()
 
-    const promises = dApp.origins.map(async (o) => {
-      await manager.removeConnection({dappOrigin: o})
-    })
-    await Promise.all(promises)
+    const connections = dApp.origins.map((origin) => ({dappOrigin: origin}))
+    await manager.removeConnections(connections)
     closeModal()
   }
 

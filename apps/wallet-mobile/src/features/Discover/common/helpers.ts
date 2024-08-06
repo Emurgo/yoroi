@@ -125,10 +125,9 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
       return cip30.signTx(rootKey, cbor, partial)
     },
     sendReorganisationTx: async () => {
-      const unsignedTx = await cip30.buildReorganisationTx()
-      const tx = await unsignedTx.unsignedTx.txBuilder.build()
+      const cbor = await cip30.buildReorganisationTx()
       if (meta.isHW) {
-        const signedTx = await options.signTxWithHW(await tx.toHex(), false)
+        const signedTx = await options.signTxWithHW(cbor, false)
         const base64 = Buffer.from(await signedTx.toBytes()).toString('base64')
         await wallet.submitTransaction(base64)
         return getTransactionUnspentOutput({
@@ -138,9 +137,9 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
         })
       }
 
-      const rootKey = await signTx(await tx.toHex())
-      const signedTx = await wallet.signTx(unsignedTx, rootKey)
-      return cip30.sendReorganisationTx(signedTx)
+      const rootKey = await signTx(cbor)
+      const witnesses = await cip30.signTx(rootKey, cbor, false)
+      return cip30.sendReorganisationTx(cbor, witnesses)
     },
     cip95: cip95handler,
   }

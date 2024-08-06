@@ -9,6 +9,7 @@ export type DappConnectorManager = {
   getDAppList(): Promise<DappListResponse>
   listAllConnections(): Promise<DappConnection[]>
   removeConnection(options: {walletId?: string; dappOrigin: string}): Promise<void>
+  removeConnections(options: Array<{walletId?: string; dappOrigin: string}>): Promise<void>
   addConnection(options: {dappOrigin: string; walletId?: string}): Promise<void>
   getWalletConnectorScript(props: {iconUrl: string; apiVersion: string; walletName: string; sessionId: string}): string
   handleEvent(
@@ -43,6 +44,12 @@ export class DappConnector implements DappConnectorManager {
   async removeConnection(options: {walletId?: string; dappOrigin: string}) {
     const walletId = options.walletId ?? this.wallet.id
     return this.storage.remove({walletId, dappOrigin: options.dappOrigin, network: this.wallet.network})
+  }
+
+  async removeConnections(options: Array<{walletId?: string; dappOrigin: string}>) {
+    for (const o of options) {
+      await this.removeConnection(o)
+    }
   }
 
   async addConnection(options: {dappOrigin: string; walletId?: string; network?: Chain.Network}) {
