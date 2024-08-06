@@ -17,7 +17,7 @@ import {cip30LedgerExtensionMaker} from '../../../../yoroi-wallets/cardano/cip30
 import {wrappedCsl} from '../../../../yoroi-wallets/cardano/wrappedCsl'
 import {useTokenInfos} from '../../../../yoroi-wallets/hooks'
 import {asQuantity} from '../../../../yoroi-wallets/utils'
-import {formatAdaWithText, formatTokenWithSymbol, formatTokenWithText} from '../../../../yoroi-wallets/utils/format'
+import {formatAdaWithText, formatTokenWithText} from '../../../../yoroi-wallets/utils/format'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useConfirmHWConnectionModal} from '../../common/ConfirmHWConnectionModal'
 import {usePromptRootKey} from '../../common/hooks'
