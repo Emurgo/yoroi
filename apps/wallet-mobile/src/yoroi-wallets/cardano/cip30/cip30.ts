@@ -1,5 +1,5 @@
 import * as CSL from '@emurgo/cross-csl-core'
-import {WasmModuleProxy} from '@emurgo/cross-csl-core'
+import {TransactionWitnessSet, WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {init} from '@emurgo/cross-msl-mobile'
 import {RemoteUnspentOutput, signRawTransaction, UtxoAsset} from '@emurgo/yoroi-lib'
 import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/addresses'
@@ -10,7 +10,7 @@ import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
 import _ from 'lodash'
 
-import {RawUtxo, YoroiSignedTx, YoroiUnsignedTx} from '../../types'
+import {RawUtxo, YoroiUnsignedTx} from '../../types'
 import {asQuantity, Utxos} from '../../utils'
 import {Cardano, CardanoMobile} from '../../wallets'
 import {toAssetNameHex, toPolicyId} from '../api/utils'
@@ -173,23 +173,48 @@ class CIP30Extension {
     }
   }
 
-  async buildReorganisationTx(): Promise<YoroiUnsignedTx> {
+  async buildReorganisationTx(): Promise<string> {
     const bech32Address = this.wallet.externalAddresses[0]
     const amounts = {[this.wallet.primaryTokenInfo.id]: asQuantity(collateralConfig.minLovelace)}
-    return this.wallet.createUnsignedTx({
+    const yoroiUnsignedTx = await this.wallet.createUnsignedTx({
       entries: [{address: bech32Address, amounts}],
       addressMode: this.meta.addressMode,
     })
+    const txBody = await yoroiUnsignedTx.unsignedTx.txBuilder.build()
+    const {csl, release} = getCSL()
+    try {
+      const emptyWitnessSet = await csl.TransactionWitnessSet.new()
+      const tx = await csl.Transaction.new(txBody, emptyWitnessSet, undefined)
+      return tx.toHex()
+    } finally {
+      release()
+    }
   }
 
-  async sendReorganisationTx(signedTx: YoroiSignedTx): Promise<CSL.TransactionUnspentOutput> {
-    const txId = signedTx.signedTx.id
-    await this.wallet.submitTransaction(Buffer.from(signedTx.signedTx.encodedTx).toString('base64'))
-    return getTransactionUnspentOutput({
-      txId,
-      bytes: signedTx.signedTx.encodedTx,
-      index: 0,
-    })
+  async sendReorganisationTx(cbor: string, witnesses: TransactionWitnessSet): Promise<CSL.TransactionUnspentOutput> {
+    const {csl, release} = getCSL()
+
+    try {
+      const tx = await csl.Transaction.fromHex(cbor)
+      const txBody = await tx.body()
+      const signedTx = await csl.Transaction.new(txBody, witnesses, undefined)
+
+      const txId = await signedTx
+        .body()
+        .then((txBody) => csl.hashTransaction(txBody))
+        .then((hash) => hash.toBytes())
+        .then((bytes) => Buffer.from(bytes).toString('hex'))
+
+      const signedTxBytes = await signedTx.toBytes()
+      await this.wallet.submitTransaction(Buffer.from(signedTxBytes).toString('base64'))
+      return getTransactionUnspentOutput({
+        txId,
+        bytes: signedTxBytes,
+        index: 0,
+      })
+    } finally {
+      release()
+    }
   }
 }
 
