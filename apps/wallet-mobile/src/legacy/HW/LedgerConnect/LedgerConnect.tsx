@@ -8,12 +8,12 @@ import {HW} from '@yoroi/types'
 import * as React from 'react'
 import type {IntlShape} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
-import {Alert, FlatList, Image, ScrollView, StyleSheet, Text, View} from 'react-native'
+import {Alert, FlatList, Image, StyleSheet, Text, View} from 'react-native'
 import {Observer} from 'rxjs'
 
 import bleImage from '../../../assets/img/bluetooth.png'
 import usbImage from '../../../assets/img/ledger-nano-usb.png'
-import {BulletPointItem, Button} from '../../../components'
+import {BulletPointItem, Button, Spacer} from '../../../components'
 import {Loading} from '../../../components/Loading/Loading'
 import {Space} from '../../../components/Space/Space'
 import globalMessages, {confirmationMessages, ledgerMessages} from '../../../kernel/i18n/global-messages'
@@ -250,7 +250,7 @@ class LedgerConnectInt extends React.Component<Props, State> {
 
     const rows = [intl.formatMessage(ledgerMessages.enterPin), intl.formatMessage(ledgerMessages.openApp)]
     return (
-      <ScrollView bounces={false}>
+      <>
         <Space height="lg" />
 
         <Text style={styles.paragraphText}>{intl.formatMessage(messages.introline)}</Text>
@@ -273,7 +273,7 @@ class LedgerConnectInt extends React.Component<Props, State> {
 
         <Space height="lg" />
 
-        {(devices.length === 0 || waiting) && (
+        {((!useUSB && devices.length === 0) || waiting) && (
           <View style={styles.loading}>
             <Loading />
           </View>
@@ -293,6 +293,8 @@ class LedgerConnectInt extends React.Component<Props, State> {
           showsVerticalScrollIndicator={false}
         />
 
+        <Spacer fill />
+
         {useUSB === true && (
           <Button
             shelleyTheme
@@ -309,7 +311,7 @@ class LedgerConnectInt extends React.Component<Props, State> {
             style={styles.button}
           />
         )}
-      </ScrollView>
+      </>
     )
   }
 }

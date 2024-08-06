@@ -101,6 +101,7 @@ const useStyles = () => {
       ...atoms.p_lg,
     },
     content: {
+      flex: 1,
       ...atoms.px_lg,
     },
   })
