@@ -5,7 +5,6 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {PairedBalance} from '../../../../../../components/PairedBalance/PairedBalance'
 import {AssetLogo} from '../../../../common/AssetLogo/AssetLogo'
-import {usePortfolio} from '../../../../common/PortfolioProvider'
 import {TokenInfoIcon} from '../../../../common/TokenAmountItem/TokenInfoIcon'
 import {ILiquidityPool} from '../../../../common/useGetLiquidityPool'
 
@@ -22,8 +21,6 @@ export const DAppTokenItem = ({tokenInfo, splitTokenSymbol, onPress}: Props) => 
   const firstTokenBalance = amountBreakdown(firstToken).bn.toFormat(2)
   const firstTokenName = infoExtractName(firstToken.info)
   const secondTokenName = infoExtractName(secondToken.info)
-
-  const {isPrimaryTokenActive} = usePortfolio()
 
   return (
     <TouchableOpacity onPress={onPress} style={styles.root}>
@@ -48,7 +45,7 @@ export const DAppTokenItem = ({tokenInfo, splitTokenSymbol, onPress}: Props) => 
       <View>
         <Text style={styles.sumBalance}>{`${firstTokenBalance} ${firstTokenName}`}</Text>
 
-        <PairedBalance asPrimaryToken={isPrimaryTokenActive} amount={firstToken} textStyle={styles.pairedBalance} />
+        <PairedBalance amount={firstToken} textStyle={styles.pairedBalance} />
       </View>
     </TouchableOpacity>
   )

@@ -5,7 +5,6 @@ import {Image, ImageSourcePropType, ImageStyle, Linking, StyleSheet, Text, Touch
 
 import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
 import {AssetLogo} from '../../../common/AssetLogo/AssetLogo'
-import {usePortfolio} from '../../../common/PortfolioProvider'
 import {TokenInfoIcon} from '../../../common/TokenAmountItem/TokenInfoIcon'
 import {IOpenOrders} from '../../../common/useGetOpenOrders'
 import {useStrings} from '../../../common/useStrings'
@@ -24,8 +23,6 @@ export const OpenOrderModal = ({tokenInfo, splitTokenSymbol}: Props) => {
   const secondTokenBalance = amountBreakdown(secondToken).bn.toFormat(2)
   const firstTokenName = infoExtractName(firstToken.info)
   const secondTokenName = infoExtractName(secondToken.info)
-
-  const {isPrimaryTokenActive} = usePortfolio()
 
   return (
     <View style={styles.root}>
@@ -47,7 +44,7 @@ export const OpenOrderModal = ({tokenInfo, splitTokenSymbol}: Props) => {
         <View>
           <Text style={styles.valueNumber}>{`${firstTokenBalance} ${firstTokenName}`}</Text>
 
-          <PairedBalance asPrimaryToken={isPrimaryTokenActive} amount={firstToken} textStyle={styles.pairedBalance} />
+          <PairedBalance amount={firstToken} textStyle={styles.pairedBalance} />
         </View>
       </InfoGroup>
 
