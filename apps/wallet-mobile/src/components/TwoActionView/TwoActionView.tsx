@@ -94,6 +94,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   buttons: {
+    paddingVertical: 16,
     flexDirection: 'row',
   },
   primaryButton: {},
