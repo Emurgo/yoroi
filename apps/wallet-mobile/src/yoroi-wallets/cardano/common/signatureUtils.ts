@@ -61,7 +61,7 @@ export const getRequiredSigners = async (
 
   const stakingKeyPath =
     implementation === 'cardano-cip1852'
-      ? cardanoConfig.implementations[implementation].features.staking.addressing
+      ? Array.from(cardanoConfig.implementations[implementation].features.staking.addressing)
       : undefined
 
   const startLevel = BIP44_DERIVATION_LEVELS.PURPOSE
@@ -88,7 +88,7 @@ export const getRequiredSigners = async (
     getAddressAddressing,
     utxos: addressedUtxos,
     partial,
-    stakingKeyPath: Array.from(stakingKeyPath ?? []),
+    stakingKeyPath,
   })
 
   return getUniquePaths(signers.map((s) => s.path))
