@@ -22,6 +22,10 @@ import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelected
 import {useConfirmHWConnectionModal} from '../../common/ConfirmHWConnectionModal'
 import {usePromptRootKey} from '../../common/hooks'
 import {useStrings} from '../../common/useStrings'
+import {getRequiredSigners} from '../../../../yoroi-wallets/cardano/common/signatureUtils'
+import {Wallet} from '@yoroi/types'
+import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
+import {WalletMeta} from '@yoroi/types/lib/typescript/wallet/meta'
 
 export type ReviewTransactionParams =
   | {
@@ -49,7 +53,6 @@ export const ReviewTransaction = () => {
   const formattedTX = useFormattedTransaction(params.cbor)
 
   const {styles} = useStyles()
-  const {data} = useTxDetails(params.cbor)
 
   const signTxWithHW = useSignTxWithHW()
 
@@ -103,7 +106,7 @@ export const ReviewTransaction = () => {
         <View style={styles.feeArea}>
           <FeeChip />
 
-          <Text>{formatAdaWithText(asQuantity(data?.body?.fee ?? '0'), wallet.primaryToken)}</Text>
+          <Text>{formattedTX.fee}</Text>
         </View>
 
         <Spacer height={16} />

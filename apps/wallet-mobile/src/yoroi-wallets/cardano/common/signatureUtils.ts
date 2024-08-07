@@ -57,6 +57,13 @@ export const getRequiredSigners = async (
   const stakeVKHash = await wallet.getStakingKey().then((key) => key.hash())
   const body = await tx.body()
 
+  const implementation = meta.implementation
+
+  const stakingKeyPath =
+    implementation === 'cardano-cip1852'
+      ? cardanoConfig.implementations[implementation].features.staking.addressing
+      : undefined
+
   const startLevel = BIP44_DERIVATION_LEVELS.PURPOSE
 
   const addressedUtxos = wallet.allUtxos.map((utxo) => ({
@@ -73,15 +80,16 @@ export const getRequiredSigners = async (
     const path = getDerivationPathForAddress(bech32Address, wallet, meta, partial)
     return {path, startLevel}
   }
-  const signers = await getAllSigners(
-    CardanoMobile,
+  const signers = await getAllSigners({
+    wasm: CardanoMobile,
     body,
-    wallet.networkManager.chainId,
+    networkId: wallet.networkManager.chainId,
     stakeVKHash,
     getAddressAddressing,
-    addressedUtxos,
+    utxos: addressedUtxos,
     partial,
-  )
+    stakingKeyPath: Array.from(stakingKeyPath ?? []),
+  })
 
   return getUniquePaths(signers.map((s) => s.path))
 }
@@ -106,7 +114,7 @@ export const getDerivationPathForAddress = (
   const index = Math.max(internalIndex, externalIndex)
 
   if (internalIndex === -1 && externalIndex === -1) {
-    if (!partial) throwLoggedError('Could not find matching address')
+    if (!partial) throwLoggedError('Could not find matching address ' + address)
     return [
       config.derivations.base.harden.purpose,
       config.derivations.base.harden.coinType,
@@ -133,7 +141,6 @@ export const getTransactionSigners = async (cbor: string, wallet: YoroiWallet, m
 
   const signers = await getRequiredSigners(tx, wallet, meta, partial)
   const implementation = meta.implementation
-
   if (implementation === 'cardano-cip1852' && (await needsToSignWithStakingKey(tx))) {
     const implementationConfig = cardanoConfig.implementations[implementation]
     const additionalSigner: number[] = Array.from(implementationConfig.features.staking.addressing)
