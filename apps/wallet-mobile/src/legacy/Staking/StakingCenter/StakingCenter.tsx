@@ -92,6 +92,7 @@ export const StakingCenter = () => {
               injectedJavaScript: `
               document.body.style.backgroundColor = "#222"
               document.body.style.filter = "invert(0.9) hue-rotate(180deg)"
+              document.body.style.caretColor = "#FFFFFF"
               setTimeout(() => 
                 [...document.images].forEach(i => i.style = 'filter:invert(1) hue-rotate(180deg)')
               , 1000)
