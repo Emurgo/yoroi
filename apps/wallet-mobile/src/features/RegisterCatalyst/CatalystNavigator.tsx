@@ -8,6 +8,7 @@ import {useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
 
 import {Boundary} from '../../components'
+import {NetworkTag} from '../../features/Settings/ChangeNetwork/NetworkTag'
 import globalMessages from '../../kernel/i18n/global-messages'
 import {useMetrics} from '../../kernel/metrics/metricsManager'
 import {
@@ -48,6 +49,7 @@ export const CatalystNavigator = () => {
         screenOptions={{
           ...navigationOptions,
           title: strings.title,
+          headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
         }}
       >
         <Stack.Group>

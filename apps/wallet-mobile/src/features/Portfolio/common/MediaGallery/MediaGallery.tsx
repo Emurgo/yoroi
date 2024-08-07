@@ -89,6 +89,13 @@ function GalleryList({
   const [loadedAmounts, setLoadedAmounts] = React.useState(data.slice(0, batchSize))
   const [currentIndex, setCurrentIndex] = React.useState(batchSize)
 
+  React.useEffect(() => {
+    const loadedAmounts = data.slice(0, currentIndex + batchSize)
+    setLoadedAmounts(loadedAmounts)
+    setCurrentIndex(currentIndex + batchSize)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data])
+
   const handleOnEndReached = React.useCallback(() => {
     if (currentIndex >= data.length) return
     const nextBatch = data.slice(currentIndex, currentIndex + batchSize)
