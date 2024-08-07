@@ -12,11 +12,10 @@ import {SanchonetFaucetBanner} from '../../../../Exchange/common/ShowBuyBanner/S
 import {useSearch} from '../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
-import {usePortfolioBalances} from '../../../common/hooks/usePortfolioBalances'
-import {usePortfolioPrimaryBalance} from '../../../common/hooks/usePortfolioPrimaryBalance'
+import {aggregatePrimaryAmount} from '../../../common/helpers/aggregatePrimaryAmount'
 import {Line} from '../../../common/Line'
+import {usePortfolioTokenActivity} from '../../../common/PortfolioTokenActivityProvider'
 import {TokenEmptyList} from '../../../common/TokenEmptyList'
-import {useGetTokensWithBalance} from '../../../common/useGetTokensWithBalance'
 import {useStrings} from '../../../common/useStrings'
 import {useZeroBalance} from '../../../common/useZeroBalance'
 import {BuyADABanner} from '../../PortfolioDashboard/DashboardTokensList/BuyADABanner/BuyADABanner'
@@ -29,13 +28,29 @@ export const PortfolioWalletTokenList = () => {
   const {styles} = useStyles()
   const {search, isSearching} = useSearch()
   const isZeroADABalance = useZeroBalance()
-  const {wallet} = useSelectedWallet()
   const {track} = useMetrics()
-  const balances = usePortfolioBalances({wallet})
-  const tokensList = React.useMemo(() => balances.fts ?? [], [balances.fts])
   const {
     selected: {network},
   } = useWalletManager()
+
+  const {
+    wallet: {balances, portfolioPrimaryTokenInfo},
+  } = useSelectedWallet()
+  const {tokenActivity} = usePortfolioTokenActivity()
+
+  const amount = React.useMemo(
+    () =>
+      aggregatePrimaryAmount({
+        tokenAmountRecords: Object.fromEntries(balances.records.entries()),
+        primaryTokenInfo: portfolioPrimaryTokenInfo,
+        tokenActivity,
+      }),
+    [balances.records, portfolioPrimaryTokenInfo, tokenActivity],
+  )
+
+  const tokensList = React.useMemo(() => balances.fts ?? [], [balances.fts])
+
+  const tokensLoading = !tokenActivity
 
   const isJustADA = React.useMemo(() => {
     if (tokensList.length >= 2) return false
@@ -44,9 +59,6 @@ export const PortfolioWalletTokenList = () => {
     return isPrimary
   }, [tokensList])
   const isFirstUser = isJustADA && isZeroADABalance
-
-  const primaryBalance = usePortfolioPrimaryBalance({wallet})
-  const {isLoading: tokensLoading} = useGetTokensWithBalance()
 
   const getListTokens = React.useMemo(() => {
     if (isSearching) {
@@ -110,7 +122,7 @@ export const PortfolioWalletTokenList = () => {
           <HeadingList
             isShowBalanceCard={!isSearching}
             countTokensList={getListTokens.length}
-            amount={primaryBalance}
+            amount={amount}
             isFirstUser={isFirstUser}
           />
         }

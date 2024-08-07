@@ -9,6 +9,7 @@ import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalan
 import {useCurrencyPairing} from '../../../../Settings/Currency'
 import {formatPriceChange, priceChange} from '../../../common/helpers/priceChange'
 import {PnlTag} from '../../../common/PnlTag/PnlTag'
+import {usePortfolioTokenActivity} from '../../../common/PortfolioTokenActivityProvider'
 import {TokenInfoIcon} from '../../../common/TokenAmountItem/TokenInfoIcon'
 import {useNavigateTo} from '../../../common/useNavigateTo'
 
@@ -25,8 +26,13 @@ export const TokenBalanceItem = ({amount}: Props) => {
 
   const adaPrice = useCurrencyPairing().adaPrice
 
-  // TODO: missing price for non ada
-  const {price, previous} = isPrimaryToken(info) ? adaPrice : {price: 0, previous: 0}
+  const {tokenActivity} = usePortfolioTokenActivity()
+
+  const nonAdaPrice = tokenActivity?.[info.id]?.price24h
+
+  const {price, previous} = isPrimaryToken(info)
+    ? adaPrice
+    : {price: nonAdaPrice?.close.toNumber() ?? 0, previous: nonAdaPrice?.open.toNumber() ?? 0}
 
   const {changePercent, variantPnl} = priceChange(previous, price)
 
@@ -42,16 +48,18 @@ export const TokenBalanceItem = ({amount}: Props) => {
             {name}
           </Text>
 
-          <PnlTag withIcon variant={variantPnl}>
-            <Text>{formatPriceChange(changePercent)}%</Text>
-          </PnlTag>
+          {price !== 0 && (
+            <PnlTag withIcon variant={variantPnl}>
+              <Text>{formatPriceChange(changePercent)}%</Text>
+            </PnlTag>
+          )}
         </View>
       </View>
 
       <View>
         <Text style={styles.tokenBalance}>{`${balanceFormatted} ${symbol}`}</Text>
 
-        <PairedBalance isHidePairPrimaryToken={false} amount={amount} textStyle={styles.pairedBalance} />
+        <PairedBalance hidePrimaryPair amount={amount} textStyle={styles.pairedBalance} />
       </View>
     </TouchableOpacity>
   )
