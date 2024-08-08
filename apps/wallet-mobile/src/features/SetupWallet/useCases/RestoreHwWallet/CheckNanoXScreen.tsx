@@ -12,7 +12,7 @@ import {Space} from '../../../../components/Space/Space'
 import {StepperProgress} from '../../../../components/StepperProgress/StepperProgress'
 import {confirmationMessages, ledgerMessages} from '../../../../kernel/i18n/global-messages'
 import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
-import {LedgerCHeckIllustration} from '../../illustrations/LedgerCheckIllustration'
+import {LedgerCheckIllustration} from '../../illustrations/LedgerCheckIllustration'
 
 export const CheckNanoXScreen = () => {
   const strings = useStrings()
