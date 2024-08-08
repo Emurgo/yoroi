@@ -176,7 +176,7 @@ export const messages = Object.freeze(
     },
     preprodFaucetBannerTitle: {
       id: 'rampOnOff.createRampOnOff.preprodfaucetbanner.title',
-      defaultMessage: '!!!Get your first test ADA in Yoroi ⭐️',
+      defaultMessage: '!!!Learn Cardano with test ADA ⭐️',
     },
     preprodFaucetBannerText: {
       id: 'rampOnOff.createRampOnOff.preprodfaucetbanner.text',
@@ -188,7 +188,7 @@ export const messages = Object.freeze(
     },
     sanchoFaucetBannerTitle: {
       id: 'rampOnOff.createRampOnOff.sanchofaucetbanner.title',
-      defaultMessage: '!!!Get your first test ADA in Yoroi ⭐️',
+      defaultMessage: '!!!Learn Cardano with test ADA ⭐️',
     },
     sanchoFaucetBannerText: {
       id: 'rampOnOff.createRampOnOff.sanchofaucetbanner.text',

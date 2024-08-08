@@ -2,12 +2,9 @@ import {amountBreakdown, infoExtractName} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
-import {CurrencySymbol} from 'src/yoroi-wallets/types'
 
 import {PairedBalance} from '../../../../../../components/PairedBalance/PairedBalance'
-import {useCurrencyPairing} from '../../../../../Settings/Currency'
 import {AssetLogo} from '../../../../common/AssetLogo/AssetLogo'
-import {usePortfolio} from '../../../../common/PortfolioProvider'
 import {TokenInfoIcon} from '../../../../common/TokenAmountItem/TokenInfoIcon'
 import {ILiquidityPool} from '../../../../common/useGetLiquidityPool'
 
@@ -24,10 +21,6 @@ export const DAppTokenItem = ({tokenInfo, splitTokenSymbol, onPress}: Props) => 
   const firstTokenBalance = amountBreakdown(firstToken).bn.toFormat(2)
   const firstTokenName = infoExtractName(firstToken.info)
   const secondTokenName = infoExtractName(secondToken.info)
-
-  const {isPrimaryTokenActive} = usePortfolio()
-  const {currency} = useCurrencyPairing()
-  const currencyPaired = isPrimaryTokenActive ? 'ADA' : currency
 
   return (
     <TouchableOpacity onPress={onPress} style={styles.root}>
@@ -52,12 +45,7 @@ export const DAppTokenItem = ({tokenInfo, splitTokenSymbol, onPress}: Props) => 
       <View>
         <Text style={styles.sumBalance}>{`${firstTokenBalance} ${firstTokenName}`}</Text>
 
-        <PairedBalance
-          isHidePairPrimaryToken={false}
-          currency={currencyPaired as CurrencySymbol}
-          amount={firstToken}
-          textStyle={styles.pairedBalance}
-        />
+        <PairedBalance amount={firstToken} textStyle={styles.pairedBalance} />
       </View>
     </TouchableOpacity>
   )

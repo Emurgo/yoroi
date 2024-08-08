@@ -5,8 +5,11 @@ import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TextStyle} from 'react-native'
 
+import {usePortfolio} from '../../features/Portfolio/common/PortfolioProvider'
+import {usePortfolioTokenActivity} from '../../features/Portfolio/common/PortfolioTokenActivityProvider'
 import {useCurrencyPairing} from '../../features/Settings/Currency'
 import {usePrivacyMode} from '../../features/Settings/PrivacyMode/PrivacyMode'
+import {useWalletManager} from '../../features/WalletManager/context/WalletManagerProvider'
 import {CurrencySymbol} from '../../yoroi-wallets/types'
 import {Boundary, ResetError, ResetErrorRef} from '..'
 
@@ -14,51 +17,76 @@ type Props = {
   amount: Portfolio.Token.Amount
   ignorePrivacy?: boolean
   textStyle?: TextStyle
-  currency?: CurrencySymbol
-  isHidePairPrimaryToken?: boolean
+  hidePrimaryPair?: boolean
 }
-export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(
-  ({amount, textStyle, ignorePrivacy, currency: customCurrencySymbol, isHidePairPrimaryToken = true}, ref) => {
-    const {currency} = useCurrencyPairing()
-    const getCurrency = customCurrencySymbol ?? currency
+export const PairedBalance = React.forwardRef<ResetErrorRef, Props>((props, ref) => {
+  return (
+    <Boundary
+      key={props.amount.info.id}
+      loading={{size: 'small'}}
+      error={{
+        fallback: ({resetErrorBoundary}) => (
+          <ResetError resetErrorBoundary={resetErrorBoundary} ref={ref}>
+            <BalanceError textStyle={props.textStyle} />
+          </ResetError>
+        ),
+      }}
+    >
+      <Price {...props} />
+    </Boundary>
+  )
+})
 
-    // hide pairing when set to the primary token
-    if (isHidePairPrimaryToken && getCurrency === 'ADA') return null
-
-    return (
-      <Boundary
-        key={currency}
-        loading={{size: 'small'}}
-        error={{
-          fallback: ({resetErrorBoundary}) => (
-            <ResetError resetErrorBoundary={resetErrorBoundary} ref={ref}>
-              <BalanceError textStyle={textStyle} currency={getCurrency} />
-            </ResetError>
-          ),
-        }}
-      >
-        <Price currency={getCurrency} ignorePrivacy={ignorePrivacy} amount={amount} textStyle={textStyle} />
-      </Boundary>
-    )
-  },
-)
-
-const Price = ({amount, textStyle, ignorePrivacy, currency}: Props & Required<Pick<Props, 'currency'>>) => {
+const Price = ({amount, textStyle, ignorePrivacy, hidePrimaryPair}: Props) => {
   const styles = useStyles()
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
+  const {isPrimaryTokenActive} = usePortfolio()
   const {
-    config,
-    adaPrice: {price: rate},
-  } = useCurrencyPairing()
-  const price = React.useMemo(() => {
-    if (rate == null) return `... ${currency}`
-    // Hide pairing when amount is not primary token, until general pricing api is available
-    if (!isPrimaryToken(amount.info)) return ''
+    selected: {networkManager},
+  } = useWalletManager()
+  const portfolioPrimaryTokenInfo = networkManager.primaryTokenInfo
 
-    return !isPrivacyActive || ignorePrivacy === true
-      ? `${amountBreakdown(amount).bn.times(rate).toFormat(config.decimals)} ${currency}`
-      : `${privacyPlaceholder} ${currency}`
-  }, [amount, config.decimals, currency, ignorePrivacy, isPrivacyActive, privacyPlaceholder, rate])
+  const {
+    currency: selectedCurrency,
+    config,
+    adaPrice: {price: adaPrice},
+  } = useCurrencyPairing()
+  const {tokenActivity} = usePortfolioTokenActivity()
+
+  const price = React.useMemo(() => {
+    const tokenPrice = tokenActivity?.[amount.info.id]?.price24h?.close
+
+    const showingAda = isPrimaryTokenActive && amount.info.id !== portfolioPrimaryTokenInfo.id
+    const currency = showingAda ? portfolioPrimaryTokenInfo.ticker : selectedCurrency
+    const decimals = showingAda ? portfolioPrimaryTokenInfo.decimals : config.decimals
+
+    if (adaPrice == null) return `... ${currency}`
+
+    if (isPrivacyActive && !ignorePrivacy) return `${privacyPlaceholder} ${currency}`
+
+    if (!isPrimaryToken(amount.info) && !tokenPrice) return ''
+
+    if (hidePrimaryPair && isPrimaryToken(amount.info) && isPrimaryTokenActive) return ''
+
+    return `${amountBreakdown(amount)
+      .bn.times(tokenPrice ?? 1)
+      .times(showingAda ? 1 : adaPrice)
+      .toFormat(decimals)} ${currency}`
+  }, [
+    tokenActivity,
+    amount,
+    isPrimaryTokenActive,
+    portfolioPrimaryTokenInfo.id,
+    portfolioPrimaryTokenInfo.ticker,
+    portfolioPrimaryTokenInfo.decimals,
+    selectedCurrency,
+    config.decimals,
+    adaPrice,
+    isPrivacyActive,
+    ignorePrivacy,
+    privacyPlaceholder,
+    hidePrimaryPair,
+  ])
 
   return (
     <Text style={[styles.pairedBalanceText, textStyle]} testID="pairedTotalText">
@@ -67,9 +95,10 @@ const Price = ({amount, textStyle, ignorePrivacy, currency}: Props & Required<Pi
   )
 }
 
-export const BalanceError = ({textStyle, currency}: {textStyle?: TextStyle; currency: CurrencySymbol}) => {
+export const BalanceError = ({textStyle}: {textStyle?: TextStyle}) => {
   const strings = useStrings()
   const styles = useStyles()
+  const {currency} = useCurrencyPairing()
 
   return <Text style={[styles.pairedBalanceText, textStyle]}>{strings.pairedBalanceError(currency)}</Text>
 }

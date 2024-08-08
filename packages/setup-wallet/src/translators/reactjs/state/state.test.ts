@@ -100,9 +100,9 @@ describe('State Actions', () => {
     expect(state.hwDeviceInfo).toBe(action.hwDeviceInfo)
   })
 
-  it('SetUpTypeChanged', () => {
+  it('SetupTypeChanged', () => {
     const action: SetupWalletAction = {
-      type: SetupWalletActionType.SetUpTypeChanged,
+      type: SetupWalletActionType.SetupTypeChanged,
       setUpType: 'restore',
     }
 

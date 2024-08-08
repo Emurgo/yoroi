@@ -3,13 +3,16 @@ import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Image, Platform, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {Platform, StyleSheet, View, ViewProps} from 'react-native'
+import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import image from '../../../../assets/img/ledger_1.png'
-import {BulletPointItem, Button, ProgressStep, Spacer, Text} from '../../../../components'
+import {BulletPointItem, Button, Text} from '../../../../components'
+import {Space} from '../../../../components/Space/Space'
+import {StepperProgress} from '../../../../components/StepperProgress/StepperProgress'
 import {confirmationMessages, ledgerMessages} from '../../../../kernel/i18n/global-messages'
 import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
+import {LedgerCheckIllustration} from '../../illustrations/LedgerCheckIllustration'
 
 export const CheckNanoXScreen = () => {
   const strings = useStrings()
@@ -29,32 +32,37 @@ export const CheckNanoXScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-      <ProgressStep currentStep={1} totalSteps={3} displayStepNumber />
+      <StepperProgress style={styles.stepper} currentStepTitle="Intro" currentStep={1} totalSteps={3} />
 
-      <Spacer height={32} />
+      <ScrollView style={styles.scroll} bounces={false}>
+        <Space height="lg" />
 
-      <Image style={styles.image} source={image} />
+        <Text style={styles.introline}>{strings.introline}</Text>
 
-      <View style={styles.introline}>
-        <Text style={styles.item}>{strings.introline}</Text>
-      </View>
+        <Space height="lg" />
 
-      <ScrollView contentContainerStyle={styles.contentContainer}>
-        <Spacer height={16} />
-
-        {(useUSB ? usbRequirements : bleRequirements).map((item, index) => (
-          <React.Fragment key={item}>
-            <BulletPointItem style={styles.item} textRow={item} />
-
-            {index !== usbRequirements.length - 1 && <Spacer height={16} />}
-          </React.Fragment>
+        {(useUSB ? usbRequirements : bleRequirements).map((item) => (
+          <BulletPointItem key={item} style={styles.item} textRow={item} />
         ))}
+
+        <Space height="lg" />
+
+        <Illustration />
       </ScrollView>
 
       <Actions>
-        <Button onPress={onContinue} title={strings.continueButton} testID="continueButton" />
+        <Button shelleyTheme onPress={onContinue} title={strings.continueButton} testID="continueButton" />
       </Actions>
     </SafeAreaView>
+  )
+}
+
+const Illustration = () => {
+  const styles = useStyles()
+  return (
+    <View style={styles.illustration}>
+      <LedgerCheckIllustration />
+    </View>
   )
 }
 
@@ -67,6 +75,10 @@ const messages = defineMessages({
   introline: {
     id: 'components.walletinit.connectnanox.checknanoxscreen.introline',
     defaultMessage: '!!!Before continuing, please make sure that:',
+  },
+  title: {
+    id: 'components.walletinit.connectnanox.checknanoxscreen.steppertitle',
+    defaultMessage: '!!!Intro',
   },
 })
 
@@ -86,27 +98,32 @@ const useStrings = () => {
 }
 
 const useStyles = () => {
-  const {color} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     safeAreaView: {
-      flex: 1,
+      ...atoms.flex_1,
       backgroundColor: color.bg_color_high,
     },
-    image: {
-      alignSelf: 'center',
-    },
     introline: {
-      paddingHorizontal: 16,
+      ...atoms.body_1_lg_medium,
+      color: color.text_gray_normal,
     },
-    contentContainer: {
-      paddingHorizontal: 16,
+    scroll: {
+      ...atoms.px_lg,
+    },
+    illustration: {
+      ...atoms.flex_1,
+      ...atoms.align_center,
     },
     item: {
-      fontSize: 14,
-      lineHeight: 22,
+      ...atoms.body_1_lg_regular,
+      color: color.text_gray_normal,
     },
     actions: {
-      padding: 16,
+      ...atoms.p_lg,
+    },
+    stepper: {
+      ...atoms.px_lg,
     },
   })
 

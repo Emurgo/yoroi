@@ -41,7 +41,6 @@ export type ReviewTransactionParams =
 export const ReviewTransaction = () => {
   const params = useParams<ReviewTransactionParams>(isParams)
   const promptRootKey = useConnectorPromptRootKey()
-  const {wallet} = useSelectedWallet()
   const [inputsOpen, setInputsOpen] = React.useState(true)
   const [outputsOpen, setOutputsOpen] = React.useState(true)
   const [scrollbarShown, setScrollbarShown] = React.useState(false)
@@ -49,7 +48,6 @@ export const ReviewTransaction = () => {
   const formattedTX = useFormattedTransaction(params.cbor)
 
   const {styles} = useStyles()
-  const {data} = useTxDetails(params.cbor)
 
   const signTxWithHW = useSignTxWithHW()
 
@@ -103,7 +101,7 @@ export const ReviewTransaction = () => {
         <View style={styles.feeArea}>
           <FeeChip />
 
-          <Text>{formatAdaWithText(asQuantity(data?.body?.fee ?? '0'), wallet.primaryToken)}</Text>
+          <Text>{formattedTX.fee}</Text>
         </View>
 
         <Spacer height={16} />

@@ -13,6 +13,7 @@ import {LoadingBoundary} from './components'
 import {ErrorBoundary} from './components/ErrorBoundary'
 import {AuthProvider} from './features/Auth/AuthProvider'
 import {BrowserProvider} from './features/Discover/common/BrowserProvider'
+import {PortfolioTokenActivityProvider} from './features/Portfolio/common/PortfolioTokenActivityProvider'
 import {CurrencyProvider} from './features/Settings/Currency/CurrencyContext'
 import {AutomaticWalletOpenerProvider} from './features/WalletManager/context/AutomaticWalletOpeningProvider'
 import {WalletManagerProvider} from './features/WalletManager/context/WalletManagerProvider'
@@ -51,27 +52,29 @@ const Yoroi = () => {
         <ErrorBoundary>
           <MetricsProvider metricsManager={metricsManager}>
             <QueryClientProvider client={queryInfo.queryClient}>
-              <CurrencyProvider>
-                <WalletManagerProvider walletManager={walletManager}>
-                  <LoadingBoundary style={StyleSheet.absoluteFill}>
-                    <LanguageProvider>
-                      <AuthProvider>
-                        <LinksProvider>
-                          <SetupWalletProvider>
-                            <PoolTransitionProvider>
-                              <BrowserProvider>
-                                <AutomaticWalletOpenerProvider>
-                                  <InitApp />
-                                </AutomaticWalletOpenerProvider>
-                              </BrowserProvider>
-                            </PoolTransitionProvider>
-                          </SetupWalletProvider>
-                        </LinksProvider>
-                      </AuthProvider>
-                    </LanguageProvider>
-                  </LoadingBoundary>
-                </WalletManagerProvider>
-              </CurrencyProvider>
+              <WalletManagerProvider walletManager={walletManager}>
+                <CurrencyProvider>
+                  <PortfolioTokenActivityProvider>
+                    <LoadingBoundary style={StyleSheet.absoluteFill}>
+                      <LanguageProvider>
+                        <AuthProvider>
+                          <LinksProvider>
+                            <SetupWalletProvider>
+                              <PoolTransitionProvider>
+                                <BrowserProvider>
+                                  <AutomaticWalletOpenerProvider>
+                                    <InitApp />
+                                  </AutomaticWalletOpenerProvider>
+                                </BrowserProvider>
+                              </PoolTransitionProvider>
+                            </SetupWalletProvider>
+                          </LinksProvider>
+                        </AuthProvider>
+                      </LanguageProvider>
+                    </LoadingBoundary>
+                  </PortfolioTokenActivityProvider>
+                </CurrencyProvider>
+              </WalletManagerProvider>
             </QueryClientProvider>
           </MetricsProvider>
         </ErrorBoundary>

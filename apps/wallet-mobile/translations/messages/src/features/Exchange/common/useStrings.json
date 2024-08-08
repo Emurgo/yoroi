@@ -436,7 +436,7 @@
   },
   {
     "id": "rampOnOff.createRampOnOff.preprodfaucetbanner.title",
-    "defaultMessage": "!!!Get your first test ADA in Yoroi ⭐️",
+    "defaultMessage": "!!!Learn Cardano with test ADA ⭐️",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
       "line": 177,
@@ -446,7 +446,7 @@
     "end": {
       "line": 180,
       "column": 5,
-      "index": 8216
+      "index": 8154
     }
   },
   {
@@ -456,12 +456,12 @@
     "start": {
       "line": 181,
       "column": 29,
-      "index": 8247
+      "index": 8185
     },
     "end": {
       "line": 184,
       "column": 5,
-      "index": 8449
+      "index": 8387
     }
   },
   {
@@ -471,27 +471,27 @@
     "start": {
       "line": 185,
       "column": 35,
-      "index": 8486
+      "index": 8424
     },
     "end": {
       "line": 188,
       "column": 5,
-      "index": 8610
+      "index": 8548
     }
   },
   {
     "id": "rampOnOff.createRampOnOff.sanchofaucetbanner.title",
-    "defaultMessage": "!!!Get your first test ADA in Yoroi ⭐️",
+    "defaultMessage": "!!!Learn Cardano with test ADA ⭐️",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
       "line": 189,
       "column": 29,
-      "index": 8641
+      "index": 8579
     },
     "end": {
       "line": 192,
       "column": 5,
-      "index": 8776
+      "index": 8709
     }
   },
   {
@@ -501,12 +501,12 @@
     "start": {
       "line": 193,
       "column": 28,
-      "index": 8806
+      "index": 8739
     },
     "end": {
       "line": 196,
       "column": 5,
-      "index": 9007
+      "index": 8940
     }
   },
   {
@@ -516,12 +516,12 @@
     "start": {
       "line": 197,
       "column": 34,
-      "index": 9043
+      "index": 8976
     },
     "end": {
       "line": 200,
       "column": 5,
-      "index": 9166
+      "index": 9099
     }
   },
   {
@@ -531,12 +531,12 @@
     "start": {
       "line": 201,
       "column": 40,
-      "index": 9208
+      "index": 9141
     },
     "end": {
       "line": 204,
       "column": 5,
-      "index": 9333
+      "index": 9266
     }
   },
   {
@@ -546,12 +546,12 @@
     "start": {
       "line": 205,
       "column": 35,
-      "index": 9370
+      "index": 9303
     },
     "end": {
       "line": 208,
       "column": 5,
-      "index": 9522
+      "index": 9455
     }
   },
   {
@@ -561,12 +561,12 @@
     "start": {
       "line": 209,
       "column": 34,
-      "index": 9558
+      "index": 9491
     },
     "end": {
       "line": 212,
       "column": 5,
-      "index": 9745
+      "index": 9678
     }
   },
   {
@@ -576,12 +576,12 @@
     "start": {
       "line": 213,
       "column": 42,
-      "index": 9789
+      "index": 9722
     },
     "end": {
       "line": 216,
       "column": 5,
-      "index": 9913
+      "index": 9846
     }
   },
   {
@@ -591,12 +591,12 @@
     "start": {
       "line": 217,
       "column": 37,
-      "index": 9952
+      "index": 9885
     },
     "end": {
       "line": 220,
       "column": 5,
-      "index": 10103
+      "index": 10036
     }
   },
   {
@@ -606,27 +606,12 @@
     "start": {
       "line": 221,
       "column": 36,
-      "index": 10141
-    },
-    "end": {
-      "line": 224,
-      "column": 5,
-      "index": 10327
-    }
-  },
-  {
-    "id": "rampOnOff.createRampOnOff.createorder.playground",
-    "defaultMessage": "!!!Playground",
-    "file": "src/features/Exchange/common/useStrings.tsx",
-    "start": {
-      "line": 225,
-      "column": 16,
-      "index": 10345
+      "index": 10074
     },
     "end": {
       "line": 228,
       "column": 5,
-      "index": 10453
+      "index": 10260
     }
   }
 ]
