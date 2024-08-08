@@ -24,7 +24,7 @@ export const ShowDisclaimer = () => {
   if ((isPreprod || isSancho) && orderType === 'buy') return null
 
   const contentDisclaimer =
-    (isPreprod || isSancho) && orderType === 'sell' ? strings.contentDisclaimerPreprod : strings.disclaimer
+    (isPreprod || isSancho) && orderType === 'sell' ? strings.contentDisclaimerPreprod : strings.contentDisclaimer
 
   return (
     <>
