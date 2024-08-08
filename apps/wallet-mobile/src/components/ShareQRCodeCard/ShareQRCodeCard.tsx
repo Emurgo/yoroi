@@ -106,7 +106,7 @@ export const ShareQRCodeCard = ({
           </Animated.View>
         )}
 
-        <Spacer height={16} />
+        <Space height="lg" />
       </View>
     </TouchableWithoutFeedback>
   )
