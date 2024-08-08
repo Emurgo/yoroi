@@ -22,10 +22,6 @@ import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelected
 import {useConfirmHWConnectionModal} from '../../common/ConfirmHWConnectionModal'
 import {usePromptRootKey} from '../../common/hooks'
 import {useStrings} from '../../common/useStrings'
-import {getRequiredSigners} from '../../../../yoroi-wallets/cardano/common/signatureUtils'
-import {Wallet} from '@yoroi/types'
-import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
-import {WalletMeta} from '@yoroi/types/lib/typescript/wallet/meta'
 
 export type ReviewTransactionParams =
   | {
@@ -45,7 +41,6 @@ export type ReviewTransactionParams =
 export const ReviewTransaction = () => {
   const params = useParams<ReviewTransactionParams>(isParams)
   const promptRootKey = useConnectorPromptRootKey()
-  const {wallet} = useSelectedWallet()
   const [inputsOpen, setInputsOpen] = React.useState(true)
   const [outputsOpen, setOutputsOpen] = React.useState(true)
   const [scrollbarShown, setScrollbarShown] = React.useState(false)
