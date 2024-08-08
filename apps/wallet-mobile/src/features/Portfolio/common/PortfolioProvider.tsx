@@ -7,7 +7,7 @@ export const defaultActions: PortfolioActions = {
 } as const
 
 const defaultState: PortfolioState = {
-  isPrimaryTokenActive: true,
+  isPrimaryTokenActive: false,
 } as const
 
 type PortfolioState = {
@@ -43,7 +43,7 @@ export const PortfolioProvider = ({
 }
 
 export const usePortfolio = () =>
-  React.useContext(PortfolioContext) ?? invalid('usePortfolio: needs to be wrapped in a PortfolioProvider')
+  React.useContext(PortfolioContext) ?? {isPrimaryTokenActive: false, setIsPrimaryTokenActive: () => null}
 
 enum PortfolioActionType {
   SetIsPrimaryTokenActive = 'setIsPrimaryTokenActive',

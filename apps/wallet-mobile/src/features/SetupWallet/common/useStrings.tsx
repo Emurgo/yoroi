@@ -100,6 +100,13 @@ export const useStrings = () => {
     restoreDuplicatedWalletModalButton: intl.formatMessage(messages.restoreDuplicatedWalletModalButton),
     preparingWallet: intl.formatMessage(messages.preparingWallet),
     walletChecksum: intl.formatMessage(messages.walletChecksum),
+    hwModalText: intl.formatMessage(messages.hwModalText),
+    hwModalBtButton: intl.formatMessage(messages.hwModalBtButton),
+    hwModalUsbButton: intl.formatMessage(messages.hwModalUsbButton),
+    hwModalIosWarning: intl.formatMessage(messages.hwModalIosWarning),
+    error: intl.formatMessage(globalMessages.error),
+    bluetoothError: intl.formatMessage(messages.bluetoothError),
+    hwModalTitle: intl.formatMessage(messages.hwModalTitle),
   }).current
 }
 
@@ -410,6 +417,31 @@ export const messages = Object.freeze(
     wordNotFound: {
       id: 'components.walletinit.restorewallet.restorewalletscreen.wordNotFound',
       defaultMessage: '!!!Word not found',
+    },
+    hwModalTitle: {
+      id: 'components.ledger.ledgertransportswitchmodal.title',
+      defaultMessage: '!!!Choose connection method',
+    },
+    hwModalText: {
+      id: 'components.ledger.ledgertransportswitchmodal.text',
+      defaultMessage: '!!!Select the option to connect Ledger Nano X or Ledger Nano S to Yoroi app',
+    },
+    hwModalUsbButton: {
+      id: 'components.ledger.ledgertransportswitchmodal.usbButton',
+      defaultMessage: '!!!Connect with USB',
+    },
+    hwModalBtButton: {
+      id: 'components.ledger.ledgertransportswitchmodal.bluetoothButton',
+      defaultMessage: '!!!Connect with Bluetooth',
+    },
+    hwModalIosWarning: {
+      id: 'components.ledger.ledgertransportswitchmodal.iosWarning',
+      defaultMessage:
+        '!!!USB connection is NOT available on Apple iOS devices. You can always try this connection type on Android platform',
+    },
+    bluetoothError: {
+      id: 'global.ledgerMessages.bluetoothDisabledError',
+      defaultMessage: '!!!Connect with Bluetooth',
     },
   }),
 )

@@ -122,7 +122,6 @@ const Amount = ({amount, tokenInfo}: {amount: BigNumber; tokenInfo: Portfolio.To
 
 const PairedPrice = ({amount, wallet, txId}: {wallet: YoroiWallet; amount: BigNumber; txId: string}) => {
   const {styles} = useStyles()
-  const {currency} = useCurrencyPairing()
 
   return (
     <Boundary
@@ -131,7 +130,7 @@ const PairedPrice = ({amount, wallet, txId}: {wallet: YoroiWallet; amount: BigNu
       error={{
         fallback: ({resetErrorBoundary}) => (
           <ResetError resetErrorBoundary={resetErrorBoundary}>
-            <BalanceError textStyle={styles.pair} currency={currency} />
+            <BalanceError textStyle={styles.pair} />
           </ResetError>
         ),
       }}

@@ -120,6 +120,8 @@ export const CreateExchangeOrderScreen = () => {
   const isBlocked = network === Chain.Network.Sancho && orderType === 'buy'
   const exchangeDisabled = isLoading || (wallet.isMainnet && !canExchange) || isBlocked
 
+  const feeText = (isPreprod || isSancho) && orderType === 'sell' ? 'Playground' : `${fee}% ${strings.fee}`
+
   return (
     <KeyboardAvoidingView style={styles.root}>
       <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.safeAreaView}>
@@ -139,7 +141,7 @@ export const CreateExchangeOrderScreen = () => {
 
             <ProviderItem
               label={providerSelected?.name ?? ''}
-              fee={fee}
+              fee={feeText}
               leftAdornment={<Logo size={40} />}
               rightAdornment={<Icon.Chevron direction="right" />}
               onPress={handleOnListProvidersByOrderType}

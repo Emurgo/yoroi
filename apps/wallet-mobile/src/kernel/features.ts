@@ -11,7 +11,7 @@ export const features = {
   portfolioNews: false,
   portfolioExport: false,
   walletListFeedback: false,
-  walletListAggregatedBalance: false,
+  walletListAggregatedBalance: isDev,
   walletListSwipeableActions: false,
 }
 

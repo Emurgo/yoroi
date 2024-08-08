@@ -1,3 +1,4 @@
+import {isNumber} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
 import React, {type ReactNode} from 'react'
 import {Image, StyleSheet, TextStyle, TouchableOpacity, TouchableOpacityProps, View, ViewStyle} from 'react-native'
@@ -11,7 +12,7 @@ export type ButtonProps = TouchableOpacityProps & {
   outlineOnLight?: boolean
   containerStyle?: ViewStyle
   block?: boolean
-  iconImage?: number
+  iconImage?: number | ReactNode
   withoutBackground?: boolean
   shelleyTheme?: boolean
   mainTheme?: boolean
@@ -77,7 +78,7 @@ export const Button = (props: ButtonProps) => {
           style,
         ]}
       >
-        {iconImage != null && <Image source={iconImage} />}
+        {isNumber(iconImage) ? <Image source={iconImage} /> : React.isValidElement(iconImage) ? iconImage : null}
 
         {startContent != null ? startContent : null}
 
@@ -135,7 +136,7 @@ const useStyles = () => {
     },
     buttonOutlineShelley: {
       ...buttonOutline,
-      borderColor: color.primary_c600,
+      borderColor: color.el_primary_medium,
     },
     text: {
       color: color.white_static,
@@ -148,7 +149,7 @@ const useStyles = () => {
       color: color.secondary_c500,
     },
     textOutlineShelley: {
-      color: color.primary_c600,
+      color: color.text_primary_medium,
     },
     buttonDisabled: {
       opacity: 0.5,

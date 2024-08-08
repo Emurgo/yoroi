@@ -80,11 +80,11 @@ describe('SetupWalletContext :: hooks', () => {
     expect(result.current.path).toEqual([3838388338])
   })
 
-  test('setUpTypeChanged', () => {
+  test('setupTypeChanged', () => {
     const {result} = renderHook(() => useSetupWallet(), {wrapper})
 
     act(() => {
-      result.current.setUpTypeChanged('create')
+      result.current.setupTypeChanged('create')
     })
 
     expect(result.current.setUpType).toBe('create')

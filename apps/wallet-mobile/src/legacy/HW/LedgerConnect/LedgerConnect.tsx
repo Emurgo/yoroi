@@ -8,12 +8,14 @@ import {HW} from '@yoroi/types'
 import * as React from 'react'
 import type {IntlShape} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
-import {ActivityIndicator, Alert, FlatList, Image, RefreshControl, ScrollView, StyleSheet, View} from 'react-native'
+import {Alert, FlatList, Image, StyleSheet, Text, View} from 'react-native'
 import {Observer} from 'rxjs'
 
 import bleImage from '../../../assets/img/bluetooth.png'
 import usbImage from '../../../assets/img/ledger-nano-usb.png'
-import {BulletPointItem, Button, Text} from '../../../components'
+import {BulletPointItem, Button, Spacer} from '../../../components'
+import {Loading} from '../../../components/Loading/Loading'
+import {Space} from '../../../components/Space/Space'
 import globalMessages, {confirmationMessages, ledgerMessages} from '../../../kernel/i18n/global-messages'
 import LocalizableError from '../../../kernel/i18n/LocalizableError'
 import {logger} from '../../../kernel/logger/logger'
@@ -29,7 +31,6 @@ type Props = {
   onConnectBLE: (deviceId: string) => Promise<void> | void
   useUSB?: boolean
   onWaitingMessage?: string
-  fillSpace?: boolean
 }
 
 type State = {
@@ -244,57 +245,59 @@ class LedgerConnectInt extends React.Component<Props, State> {
   }
 
   render() {
-    const {intl, useUSB, fillSpace, styles} = this.props
+    const {intl, useUSB, styles} = this.props
     const {error, devices, refreshing, deviceId, deviceObj, waiting} = this.state
 
     const rows = [intl.formatMessage(ledgerMessages.enterPin), intl.formatMessage(ledgerMessages.openApp)]
     return (
       <>
-        <View style={[styles.container, fillSpace === true && styles.fillSpace]}>
-          <View style={styles.heading}>
-            <Image source={useUSB === true ? usbImage : bleImage} />
+        <Space height="lg" />
 
-            {!useUSB && (
-              <Text secondary style={styles.caption}>
-                {intl.formatMessage(messages.caption)}
-              </Text>
-            )}
-          </View>
+        <Text style={styles.paragraphText}>{intl.formatMessage(messages.introline)}</Text>
 
-          {((!useUSB && devices.length === 0) || (useUSB && deviceObj == null)) && (
-            <View style={styles.instructionsBlock}>
-              <Text style={styles.paragraphText}>{intl.formatMessage(messages.introline)}</Text>
+        <Space height="lg" />
 
-              {rows.map((row, i) => (
-                <BulletPointItem textRow={row} key={i} style={styles.item} />
-              ))}
-            </View>
-          )}
+        {rows.map((row, index) => (
+          <BulletPointItem textRow={row} key={index} style={styles.item} />
+        ))}
 
-          <ScrollView style={styles.scrollView}>
-            <FlatList
-              extraData={[error, deviceId]}
-              style={styles.flatList}
-              contentContainerStyle={styles.flatListContentContainer}
-              data={devices}
-              renderItem={({item}: {item: Device}) => (
-                <DeviceItem disabled={waiting} device={item} onSelect={() => this._onSelectDevice(item)} />
-              )}
-              ListHeaderComponent={this.ListHeader}
-              keyExtractor={(item) => item.id.toString()}
-              refreshControl={
-                <RefreshControl
-                  onRefresh={this.reload}
-                  refreshing={refreshing}
-                  progressViewOffset={74 /* approx. the size of one elem */}
-                />
-              }
-            />
-          </ScrollView>
+        <Space height="lg" />
+
+        <View style={styles.heading}>
+          <Image source={useUSB === true ? usbImage : bleImage} />
+
+          <Space height="lg" />
+
+          {!useUSB && <Text style={styles.caption}>{intl.formatMessage(messages.caption)}</Text>}
         </View>
+
+        <Space height="lg" />
+
+        {((!useUSB && devices.length === 0) || waiting) && (
+          <View style={styles.loading}>
+            <Loading />
+          </View>
+        )}
+
+        <FlatList
+          extraData={[error, deviceId]}
+          style={styles.flatList}
+          data={devices}
+          renderItem={({item}: {item: Device}) => (
+            <DeviceItem disabled={waiting} device={item} onSelect={() => this._onSelectDevice(item)} />
+          )}
+          ListHeaderComponent={this.ListHeader}
+          keyExtractor={(item) => item.id.toString()}
+          horizontal={false}
+          scrollEnabled={false}
+          showsVerticalScrollIndicator={false}
+        />
+
+        <Spacer fill />
 
         {useUSB === true && (
           <Button
+            shelleyTheme
             onPress={() => {
               if (refreshing || deviceObj == null || waiting) {
                 return Alert.alert(
@@ -308,8 +311,6 @@ class LedgerConnectInt extends React.Component<Props, State> {
             style={styles.button}
           />
         )}
-
-        {waiting && <ActivityIndicator color="black" />}
       </>
     )
   }
@@ -350,33 +351,14 @@ const deviceAddition =
   }
 
 const useStyles = () => {
-  const {color} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
-    container: {
-      paddingTop: 30,
-      paddingHorizontal: 20,
-    },
-    fillSpace: {
-      flex: 1,
-    },
-    scrollView: {
-      marginBottom: 22,
-    },
     heading: {
       alignItems: 'center',
       justifyContent: 'center',
-      marginBottom: 16,
-    },
-    caption: {
-      marginTop: 12,
     },
     flatList: {
-      flex: 1,
       flexDirection: 'column',
-      height: 150,
-    },
-    flatListContentContainer: {
-      flexGrow: 1,
     },
     listHeader: {
       alignItems: 'center',
@@ -388,21 +370,26 @@ const useStyles = () => {
     error: {
       color: color.sys_magenta_c500,
     },
-    instructionsBlock: {
-      marginVertical: 24,
-    },
     paragraphText: {
-      fontSize: 14,
-      lineHeight: 22,
+      ...atoms.body_1_lg_medium,
+      color: color.text_gray_normal,
     },
     item: {
-      marginTop: 12,
-      fontSize: 14,
-      lineHeight: 22,
+      ...atoms.body_1_lg_regular,
+      color: color.text_gray_normal,
     },
     button: {
       marginHorizontal: 10,
       marginBottom: 8,
+    },
+    caption: {
+      ...atoms.body_2_md_regular,
+      color: color.text_gray_medium,
+    },
+    loading: {
+      ...atoms.align_center,
+      ...atoms.justify_center,
+      ...atoms.flex_row,
     },
   })
 

@@ -48,6 +48,7 @@ export const useStrings = () => {
     createOrderSanchonetFaucetButtonText: intl.formatMessage(messages.createOrderSanchonetFaucetButtonText),
     createOrderSanchonetNoticeTitle: intl.formatMessage(messages.createOrderSanchonetNoticeTitle),
     createOrderSanchonetNoticeText: intl.formatMessage(messages.createOrderSanchonetNoticeText),
+    playground: intl.formatMessage(messages.playground),
     close: intl.formatMessage(globalMessages.close),
     error: intl.formatMessage(globalMessages.error),
   }).current
@@ -175,7 +176,7 @@ export const messages = Object.freeze(
     },
     preprodFaucetBannerTitle: {
       id: 'rampOnOff.createRampOnOff.preprodfaucetbanner.title',
-      defaultMessage: '!!!Get your first test ADA in Yoroi ⭐️',
+      defaultMessage: '!!!Learn Cardano with test ADA ⭐️',
     },
     preprodFaucetBannerText: {
       id: 'rampOnOff.createRampOnOff.preprodfaucetbanner.text',
@@ -187,7 +188,7 @@ export const messages = Object.freeze(
     },
     sanchoFaucetBannerTitle: {
       id: 'rampOnOff.createRampOnOff.sanchofaucetbanner.title',
-      defaultMessage: '!!!Get your first test ADA in Yoroi ⭐️',
+      defaultMessage: '!!!Learn Cardano with test ADA ⭐️',
     },
     sanchoFaucetBannerText: {
       id: 'rampOnOff.createRampOnOff.sanchofaucetbanner.text',
@@ -220,6 +221,10 @@ export const messages = Object.freeze(
     createOrderSanchonetNoticeText: {
       id: 'rampOnOff.createRampOnOff.createorder.sanchonotice.text',
       defaultMessage: '!!!Switch network or top up your testnet network wallet with the free Cardano faucet',
+    },
+    playground: {
+      id: 'rampOnOff.createRampOnOff.createorder.playground',
+      defaultMessage: '!!!Playground',
     },
   }),
 )
