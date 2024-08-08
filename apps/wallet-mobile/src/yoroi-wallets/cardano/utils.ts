@@ -13,15 +13,17 @@ import {toAssetNameHex, toPolicyId} from './api/utils'
 import {withMinAmounts} from './getMinAmounts'
 import {MultiToken} from './MultiToken'
 import {CardanoHaskellShelleyNetwork} from './networks'
-import {NUMBERS} from './numbers'
 import {CardanoTypes} from './types'
 import {wrappedCsl as getCSL} from './wrappedCsl'
 
-export const deriveRewardAddressHex = async (accountPubKeyHex: string, chainId: number): Promise<string> => {
+export const deriveRewardAddressHex = async (
+  accountPubKeyHex: string,
+  chainId: number,
+  role: number,
+  index: number,
+): Promise<string> => {
   const accountPubKeyPtr = await CardanoMobile.Bip32PublicKey.fromBytes(Buffer.from(accountPubKeyHex, 'hex'))
-  const stakingKey = await (
-    await (await accountPubKeyPtr.derive(NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)).derive(NUMBERS.STAKING_KEY_INDEX)
-  ).toRawKey()
+  const stakingKey = await (await (await accountPubKeyPtr.derive(role)).derive(index)).toRawKey()
   const credential = await CardanoMobile.Credential.fromKeyhash(await stakingKey.hash())
   const rewardAddr = await CardanoMobile.RewardAddress.new(chainId, credential)
   const rewardAddrAsAddr = await rewardAddr.toAddress()

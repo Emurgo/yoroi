@@ -142,7 +142,12 @@ export const makeCardanoWallet = (
 
       // TODO: revisit it should be part of staking manager (when staking is supported/desired)
       const rewardAddressHex = implementationConfig.features.staking
-        ? await deriveRewardAddressHex(accountPubKeyHex, chainId)
+        ? await deriveRewardAddressHex(
+            accountPubKeyHex,
+            chainId,
+            implementationConfig.features.staking.derivation.role,
+            implementationConfig.features.staking.derivation.index,
+          )
         : ''
 
       const utxoManager = await makeUtxoManager({
@@ -164,6 +169,8 @@ export const makeCardanoWallet = (
         implementation,
         baseApiUrl: legacyApiBaseUrl,
       })
+      // TODO: protocolParams needs update when epoch changes, this also should trigger
+      // the calculation of locked deposit, since the cost can change
       const protocolParams = await networkManager.api.protocolParams()
 
       const wallet = new CardanoWallet({

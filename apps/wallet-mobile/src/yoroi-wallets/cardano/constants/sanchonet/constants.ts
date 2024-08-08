@@ -1,7 +1,7 @@
 import {Balance} from '@yoroi/types'
 
 import {DefaultAsset} from '../../../types'
-import {COIN_TYPE, COINS_PER_UTXO_WORD, KEY_DEPOSIT, LINEAR_FEE, MINIMUM_UTXO_VAL, POOL_DEPOSIT} from '../common'
+import {COIN_TYPE, COINS_PER_UTXO_WORD, KEY_DEPOSIT, MINIMUM_UTXO_VAL, POOL_DEPOSIT} from '../common'
 
 export * from '../common'
 
@@ -20,16 +20,7 @@ export const BACKEND = {
 } as const
 export const CHAIN_NETWORK_ID = 0
 
-export const IS_MAINNET = false
-
 export const PROTOCOL_MAGIC = 1097911063
-export const BASE_CONFIG = {
-  GENESIS_DATE: '1686789000000',
-  PROTOCOL_MAGIC,
-  SLOTS_PER_EPOCH: 432000,
-  SLOT_DURATION: 20,
-  START_AT: 0,
-} as const
 export const BYRON_BASE_CONFIG = {
   // byron-era
   PROTOCOL_MAGIC,
@@ -65,9 +56,7 @@ export const NETWORK_CONFIG = {
     fingerprint.length > 0 ? `https://preprod.cexplorer.io/asset/${fingerprint}` : `https://preprod.cexplorer.io/asset`,
   EXPLORER_URL_FOR_TX: (txid: string) => `https://preprod.cardanoscan.io/transaction/${txid}`,
   POOL_EXPLORER: 'https://adapools.yoroiwallet.com/?source=mobile',
-  IS_MAINNET,
   KEY_DEPOSIT,
-  LINEAR_FEE,
   MARKETING_NAME: 'Cardano Sancho Testnet',
   MINIMUM_UTXO_VAL,
   NETWORK_ID,
