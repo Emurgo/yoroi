@@ -39,7 +39,7 @@ export const setupWalletReducer = (
         draft.hwDeviceInfo = action.hwDeviceInfo
         return
 
-      case SetupWalletActionType.SetUpTypeChanged:
+      case SetupWalletActionType.SetupTypeChanged:
         draft.setUpType = action.setUpType
         return
 
@@ -118,7 +118,7 @@ export enum SetupWalletActionType {
   PublicKeyHexChanged = 'publicKeyHexChanged',
   PathChanged = 'pathChanged',
   HwDeviceInfoChanged = 'hwDeviceInfoChanged',
-  SetUpTypeChanged = 'setupTypeChanged',
+  SetupTypeChanged = 'setupTypeChanged',
   MnemonicTypeChanged = 'mnemonicTypeChanged',
   WalletIdChanged = 'walletIdChanged',
   UseUSBChanged = 'useUSBChanged',
@@ -161,7 +161,7 @@ export type SetupWalletAction =
       hwDeviceInfo: SetupWalletState['hwDeviceInfo']
     }
   | {
-      type: SetupWalletActionType.SetUpTypeChanged
+      type: SetupWalletActionType.SetupTypeChanged
       setUpType: SetupWalletState['setUpType']
     }
   | {

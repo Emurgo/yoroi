@@ -57,7 +57,7 @@ export const SetupWalletProvider = ({
     hwDeviceInfoChanged: (hwDeviceInfo: SetupWalletState['hwDeviceInfo']) =>
       dispatch({type: SetupWalletActionType.HwDeviceInfoChanged, hwDeviceInfo}),
     setupTypeChanged: (setUpType: SetupWalletState['setUpType']) =>
-      dispatch({type: SetupWalletActionType.SetUpTypeChanged, setUpType}),
+      dispatch({type: SetupWalletActionType.SetupTypeChanged, setUpType}),
     mnemonicTypeChanged: (mnemonicType: SetupWalletState['mnemonicType']) =>
       dispatch({type: SetupWalletActionType.MnemonicTypeChanged, mnemonicType}),
     useUSBChanged: (useUSB: SetupWalletState['useUSB']) =>
