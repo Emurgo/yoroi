@@ -1,4 +1,4 @@
-import {isNonNullable} from '@yoroi/common'
+import {invalid, isNonNullable} from '@yoroi/common'
 import {Portfolio} from '@yoroi/types'
 import React from 'react'
 import {useQuery, useQueryClient} from 'react-query'
@@ -93,7 +93,9 @@ export const PortfolioTokenActivityProvider = ({children}: Props) => {
   return <PortfolioTokenActivityContext.Provider value={value}>{children}</PortfolioTokenActivityContext.Provider>
 }
 
-export const usePortfolioTokenActivity = () => React.useContext(PortfolioTokenActivityContext) ?? {}
+export const usePortfolioTokenActivity = () =>
+  React.useContext(PortfolioTokenActivityContext) ??
+  invalid('usePortfolioTokenActiviy requires PortfolioTokenActivitiyProvider')
 
 type PortfolioTokenActivityContext = {
   aggregatedBalances?: Portfolio.Token.AmountRecords
