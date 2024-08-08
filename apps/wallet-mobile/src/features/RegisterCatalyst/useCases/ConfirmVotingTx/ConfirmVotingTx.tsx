@@ -74,8 +74,8 @@ export const ConfirmVotingTx = () => {
   }
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-      <KeyboardAvoidingView style={{flex: 1}}>
+    <KeyboardAvoidingView style={{flex: 1}}>
+      <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
         <ScrollView bounces={false}>
           <Space height="lg" />
 
@@ -118,8 +118,8 @@ export const ConfirmVotingTx = () => {
         <Actions>
           <Button title={strings.confirm} shelleyTheme onPress={onSubmit} />
         </Actions>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   )
 }
 
@@ -127,26 +127,27 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     safeAreaView: {
-      flex: 1,
       backgroundColor: color.bg_color_high,
+      ...atoms.flex_1,
       ...atoms.px_lg,
+      ...atoms.pb_lg,
     },
     confirmVotingTxTitle: {
       ...atoms.body_2_md_regular,
-      color: color.gray_c600,
+      color: color.text_gray_medium,
     },
     label: {
-      zIndex: 1000,
-      position: 'absolute',
       top: -3,
       left: 11,
       paddingHorizontal: 3,
-      ...atoms.body_3_sm_regular,
-      color: color.gray_cmax,
+      color: color.text_gray_max,
       backgroundColor: color.gray_cmin,
+      ...atoms.z_50,
+      ...atoms.absolute,
+      ...atoms.body_3_sm_regular,
     },
     inputContainer: {
-      position: 'relative',
+      ...atoms.relative,
     },
   })
 

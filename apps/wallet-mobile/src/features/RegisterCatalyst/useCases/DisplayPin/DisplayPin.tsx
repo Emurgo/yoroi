@@ -71,6 +71,7 @@ const useStyles = () => {
       backgroundColor: color.bg_color_high,
       ...atoms.flex_1,
       ...atoms.px_lg,
+      ...atoms.pb_lg,
     },
   })
 

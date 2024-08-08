@@ -34,7 +34,7 @@ export const QrCode = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-      <ScrollView bounces={false} contentContainerStyle={styles.scroll}>
+      <ScrollView bounces={false} contentContainerStyle={styles.padding}>
         <ShareQRCodeCard
           title={strings.step4QrTitle}
           content={votingKeyEncrypted}
@@ -52,7 +52,7 @@ export const QrCode = () => {
         <Checkbox onChange={setChecked} checked={checked} style={styles.checkbox} text={strings.step4QrCheckbox} />
       </ScrollView>
 
-      <Actions>
+      <Actions style={styles.padding}>
         <Button shelleyTheme onPress={onNext} title={strings.completeButton} disabled={isCopying || !checked} />
       </Actions>
     </SafeAreaView>
@@ -65,8 +65,9 @@ const useStyles = () => {
     safeAreaView: {
       backgroundColor: color.bg_color_high,
       ...atoms.flex_1,
+      ...atoms.pb_lg,
     },
-    scroll: {
+    padding: {
       ...atoms.px_lg,
     },
     checkbox: {

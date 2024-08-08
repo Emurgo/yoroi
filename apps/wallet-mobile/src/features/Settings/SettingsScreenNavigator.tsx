@@ -36,7 +36,7 @@ import {FailedTxScreen} from './ManageCollateral/ConfirmTx/FailedTx/FailedTxScre
 import {SubmittedTxScreen} from './ManageCollateral/ConfirmTx/SubmittedTx/SubmittedTxScreen'
 import {PrivacyPolicyScreen} from './PrivacyPolicy'
 import {RemoveWalletScreen} from './RemoveWallet'
-import {RenameWallet} from './RenameWallet'
+import {RenameWalletScreen} from './RenameWalletScreen/RenameWalletScreen'
 import {SystemLogScreen} from './SystemLogScreen/SystemLogScreen'
 import {TermsOfServiceScreen} from './TermsOfService'
 import {WalletSettingsScreen} from './WalletSettings'
@@ -89,7 +89,7 @@ export const SettingsScreenNavigator = () => {
 
         <Stack.Screen
           name="change-wallet-name"
-          component={RenameWallet}
+          component={RenameWalletScreen}
           options={{title: strings.changeWalletNameTitle}}
         />
 
