@@ -101,7 +101,7 @@
     "@emurgo/csl-mobile-bridge": "6.0.0-alpha.9",
     "@emurgo/msl-mobile-bridge": "^1.0.4",
     "@emurgo/react-native-hid": "^5.15.6",
-    "@emurgo/yoroi-lib": "^0.15.6",
+    "@emurgo/yoroi-lib": "^0.16.0",
     "@formatjs/intl-datetimeformat": "^6.7.0",
     "@formatjs/intl-getcanonicallocales": "^2.1.0",
     "@formatjs/intl-locale": "^3.2.1",
