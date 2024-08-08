@@ -61,7 +61,7 @@ const Illustration = () => {
   const styles = useStyles()
   return (
     <View style={styles.illustration}>
-      <LedgerCHeckIllustration />
+      <LedgerCheckIllustration />
     </View>
   )
 }
