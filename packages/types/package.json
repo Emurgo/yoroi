@@ -117,7 +117,7 @@
     "typescript": "^5.3.3"
   },
   "peerDependencies": {
-    "@emurgo/yoroi-lib": "0.15.6",
+    "@emurgo/yoroi-lib": "0.16.0",
     "axios": "^1.5.0",
     "bignumber.js": "^9.0.1",
     "rxjs": "^7.8.1"
