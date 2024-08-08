@@ -6,8 +6,8 @@ import LinearGradient from 'react-native-linear-gradient'
 
 import {useCurrencyPairing} from '../../../../Settings/Currency'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
-import {usePortfolioPrimaryBalance} from '../../../common/hooks/usePortfolioPrimaryBalance'
-import {useGetDAppsPortfolioBalance} from '../../../common/useGetDAppsPortfolioBalance'
+import {aggregatePrimaryAmount} from '../../../common/helpers/aggregatePrimaryAmount'
+import {usePortfolioTokenActivity} from '../../../common/PortfolioTokenActivityProvider'
 import {BalanceCardContent} from './BalanceCardContent'
 import {BalanceCardSkeleton} from './BalanceCardSkeleton'
 import {BalanceHeaderCard} from './BalanceHeaderCard'
@@ -15,14 +15,26 @@ import {BalanceHeaderCard} from './BalanceHeaderCard'
 export const BalanceCard = () => {
   const {styles, colors} = useStyles()
 
-  const {wallet} = useSelectedWallet()
-  const primaryBalance = usePortfolioPrimaryBalance({wallet})
-  const name = infoExtractName(primaryBalance.info)
-  const price = useCurrencyPairing().adaPrice.price
-  const dAppsBalance = useGetDAppsPortfolioBalance(primaryBalance.quantity)
-  const hasDApps = dAppsBalance !== undefined && Number(dAppsBalance.quantity) > 0
+  const {
+    wallet: {balances, portfolioPrimaryTokenInfo},
+  } = useSelectedWallet()
+  const {tokenActivity} = usePortfolioTokenActivity()
 
-  const isFetching = price === undefined || dAppsBalance === undefined
+  const amount = React.useMemo(
+    () =>
+      aggregatePrimaryAmount({
+        tokenAmountRecords: Object.fromEntries(balances.records.entries()),
+        primaryTokenInfo: portfolioPrimaryTokenInfo,
+        tokenActivity,
+      }),
+    [balances.records, portfolioPrimaryTokenInfo, tokenActivity],
+  )
+
+  const name = infoExtractName(portfolioPrimaryTokenInfo)
+  const price = useCurrencyPairing().adaPrice.price
+  const hasDApps = false
+
+  const isFetching = price === undefined || tokenActivity === undefined
 
   return (
     <View style={styles.root}>
@@ -31,7 +43,7 @@ export const BalanceCard = () => {
       ) : (
         <LinearGradient style={styles.gradientRoot} colors={colors.gradientColor}>
           <BalanceCardContent
-            amount={primaryBalance}
+            amount={amount}
             headerCard={<BalanceHeaderCard rate={price} name={name} hasDApps={hasDApps} />}
           />
         </LinearGradient>

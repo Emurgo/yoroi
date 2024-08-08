@@ -4,10 +4,7 @@ import * as React from 'react'
 import {Image, ImageSourcePropType, ImageStyle, StyleSheet, Text, View} from 'react-native'
 
 import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
-import {CurrencySymbol} from '../../../../../yoroi-wallets/types'
-import {useCurrencyPairing} from '../../../../Settings/Currency'
 import {AssetLogo} from '../../../common/AssetLogo/AssetLogo'
-import {usePortfolio} from '../../../common/PortfolioProvider'
 import {TokenInfoIcon} from '../../../common/TokenAmountItem/TokenInfoIcon'
 import {ILiquidityPool} from '../../../common/useGetLiquidityPool'
 import {useStrings} from '../../../common/useStrings'
@@ -26,10 +23,6 @@ export const LiquidityPoolModal = ({tokenInfo, splitTokenSymbol}: Props) => {
   const secondTokenBalance = amountBreakdown(secondToken).bn.toFormat(2)
   const firstTokenName = infoExtractName(firstToken.info)
   const secondTokenName = infoExtractName(secondToken.info)
-
-  const {isPrimaryTokenActive} = usePortfolio()
-  const {currency} = useCurrencyPairing()
-  const currencyPaired = isPrimaryTokenActive ? 'ADA' : currency
 
   return (
     <View style={styles.root}>
@@ -51,12 +44,7 @@ export const LiquidityPoolModal = ({tokenInfo, splitTokenSymbol}: Props) => {
         <View>
           <Text style={styles.valueNumber}>{`${firstTokenBalance} ${firstTokenName}`}</Text>
 
-          <PairedBalance
-            isHidePairPrimaryToken={false}
-            currency={currencyPaired as CurrencySymbol}
-            amount={firstToken}
-            textStyle={styles.pairedBalance}
-          />
+          <PairedBalance amount={firstToken} textStyle={styles.pairedBalance} />
         </View>
       </InfoGroup>
 
