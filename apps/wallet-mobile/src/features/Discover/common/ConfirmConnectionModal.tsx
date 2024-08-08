@@ -117,6 +117,7 @@ const walletsCompatibilityLink =
 
 const SingleAddressDAppWarning = () => {
   const {styles} = useStyles()
+  const strings = useStrings()
 
   const handleOnPress = () => {
     Linking.openURL(walletsCompatibilityLink)
@@ -126,12 +127,10 @@ const SingleAddressDAppWarning = () => {
     <Warning
       content={
         <>
-          <Text style={styles.warningText}>
-            This DApp supports only single-address wallets. Your wallet balance might be displayed incorrectly.&nbsp;
-          </Text>
+          <Text style={styles.warningText}>{`${strings.singleAddressWarning} `}</Text>
 
           <Text style={[styles.warningText, styles.link]} onPress={handleOnPress}>
-            Learn more
+            {strings.learnMore}
           </Text>
         </>
       }

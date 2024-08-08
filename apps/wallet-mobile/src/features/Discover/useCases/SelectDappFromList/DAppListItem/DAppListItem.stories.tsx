@@ -15,6 +15,7 @@ const mockDApp = {
   logo: 'https://daehx1qv45z7c.cloudfront.net/cardano-spot.png',
   uri: 'https://cardanospot.io/landing',
   origins: [],
+  isSingleAddress: false,
 }
 
 const Initial = () => {
