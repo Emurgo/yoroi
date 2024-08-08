@@ -1,7 +1,7 @@
 import {useTheme} from '@yoroi/theme'
 import {Image} from 'expo-image'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Linking, StyleSheet, Text, View} from 'react-native'
 
 import {Button, Icon, Spacer, useModal} from '../../../components'
 import {Space} from '../../../components/Space/Space'
@@ -112,8 +112,16 @@ export const ConfirmConnectionModal = ({name, website, onConfirm, logo, showSing
   )
 }
 
+const walletsCompatibilityLink =
+  'https://emurgohelpdesk.zendesk.com/hc/en-us/articles/10413017088527-DApps-and-HD-wallets-compatability'
+
 const SingleAddressDAppWarning = () => {
   const {styles} = useStyles()
+
+  const handleOnPress = () => {
+    Linking.openURL(walletsCompatibilityLink)
+  }
+
   return (
     <Warning
       content={
@@ -122,7 +130,9 @@ const SingleAddressDAppWarning = () => {
             This DApp supports only single-address wallets. Your wallet balance might be displayed incorrectly.&nbsp;
           </Text>
 
-          <Text style={[styles.warningText, styles.link]}>Learn more</Text>
+          <Text style={[styles.warningText, styles.link]} onPress={handleOnPress}>
+            Learn more
+          </Text>
         </>
       }
       iconSize={20}
