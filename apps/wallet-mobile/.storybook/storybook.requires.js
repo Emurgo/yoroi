@@ -203,7 +203,7 @@ const getStories = () => {
     "./src/features/Settings/ManageCollateral/ManageCollateralScreen.stories.tsx": require("../src/features/Settings/ManageCollateral/ManageCollateralScreen.stories.tsx"),
     "./src/features/Settings/PrivacyPolicy/PrivacyPolicyScreen.stories.tsx": require("../src/features/Settings/PrivacyPolicy/PrivacyPolicyScreen.stories.tsx"),
     "./src/features/Settings/RemoveWallet/RemoveWalletScreen.stories.tsx": require("../src/features/Settings/RemoveWallet/RemoveWalletScreen.stories.tsx"),
-    "./src/features/Settings/RenameWallet/RenameWallet.stories.tsx": require("../src/features/Settings/RenameWallet/RenameWallet.stories.tsx"),
+    "./src/features/Settings/RenameWalletScreen/RenameWalletScreen.stories.tsx": require("../src/features/Settings/RenameWalletScreen/RenameWalletScreen.stories.tsx"),
     "./src/features/Settings/SystemLogScreen/SystemLogScreen.stories.tsx": require("../src/features/Settings/SystemLogScreen/SystemLogScreen.stories.tsx"),
     "./src/features/Settings/TermsOfService/TermsOfServiceScreen.stories.tsx": require("../src/features/Settings/TermsOfService/TermsOfServiceScreen.stories.tsx"),
     "./src/features/Settings/WalletSettings/WalletSettingsScreen.stories.tsx": require("../src/features/Settings/WalletSettings/WalletSettingsScreen.stories.tsx"),

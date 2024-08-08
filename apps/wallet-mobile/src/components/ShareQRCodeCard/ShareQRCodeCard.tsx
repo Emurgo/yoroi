@@ -9,6 +9,7 @@ import Share from 'react-native-share'
 import ViewShot, {captureRef} from 'react-native-view-shot'
 
 import {Spacer, Text} from '../'
+import {Space} from '../Space/Space'
 import {CaptureShareQRCodeCard} from './CaptureShareQRCodeCard/CaptureShareQRCodeCard'
 
 type ShareQRCodeCardProps = {
@@ -85,8 +86,6 @@ export const ShareQRCodeCard = ({
             {title}
           </Text>
 
-          <Spacer height={16} />
-
           <View style={styles.addressContainer}>
             <View style={styles.qrCode} testID={`${testId}-qr`}>
               <QRCode value={content} size={qrSize} backgroundColor={colors.white} color={colors.black} />
@@ -97,13 +96,9 @@ export const ShareQRCodeCard = ({
             <Text style={styles.textAddress}>{content}</Text>
           </View>
 
-          <Spacer height={16} />
-
           <TouchableOpacity activeOpacity={0.5} onPress={handleOnPressShare} onLongPress={onLongPress}>
             <Text style={styles.textShareAddress}>{shareLabel}</Text>
           </TouchableOpacity>
-
-          <Spacer height={16} />
         </View>
 
         {isCopying && (
@@ -111,6 +106,8 @@ export const ShareQRCodeCard = ({
             <Text style={styles.copiedText}>{copiedText}</Text>
           </Animated.View>
         )}
+
+        <Space height="lg" />
       </View>
     </TouchableWithoutFeedback>
   )
@@ -132,13 +129,12 @@ const useStyles = () => {
       alignItems: 'center',
     },
     card: {
-      alignItems: 'center',
-      flex: 1,
-      minHeight: 394,
-      alignSelf: 'center',
+      ...atoms.gap_lg,
+      minHeight: 432,
       width: screenWidth - 32,
-
-      paddingHorizontal: 16,
+      ...atoms.align_center,
+      ...atoms.flex_1,
+      ...atoms.px_lg,
     },
     title: {
       ...atoms.heading_3_medium,

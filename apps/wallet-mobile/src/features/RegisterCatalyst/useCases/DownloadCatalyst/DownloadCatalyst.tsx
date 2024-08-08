@@ -171,6 +171,7 @@ const useStyles = () => {
       backgroundColor: color.bg_color_high,
       ...atoms.flex_1,
       ...atoms.px_lg,
+      ...atoms.pb_lg,
     },
     modal: {
       ...atoms.flex_1,
@@ -180,7 +181,7 @@ const useStyles = () => {
       ...atoms.align_center,
     },
     tip: {
-      color: color.gray_c600,
+      color: color.text_gray_medium,
       ...atoms.body_1_lg_regular,
       ...atoms.text_center,
     },
@@ -188,15 +189,15 @@ const useStyles = () => {
       ...atoms.self_start,
     },
     fundName: {
-      color: color.gray_c900,
+      color: color.text_gray_normal,
       ...atoms.body_1_lg_medium,
     },
     fundText: {
-      color: color.gray_c600,
+      color: color.text_gray_medium,
       ...atoms.body_1_lg_regular,
     },
     text: {
-      color: color.gray_c600,
+      color: color.text_gray_medium,
       ...atoms.body_1_lg_regular,
     },
     button: {
@@ -205,7 +206,7 @@ const useStyles = () => {
     subTitle: {
       ...atoms.heading_3_medium,
       ...atoms.text_center,
-      color: color.gray_c900,
+      color: color.text_gray_normal,
     },
   })
 

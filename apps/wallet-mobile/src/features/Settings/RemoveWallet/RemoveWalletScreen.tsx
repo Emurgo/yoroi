@@ -40,8 +40,8 @@ export const RemoveWalletScreen = () => {
   const disabled = (!meta.isHW && !hasMnemonicWrittenDown) || meta.name !== typedWalletName
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
-      <KeyboardAvoidingView style={styles.keyboardAvoider}>
+    <KeyboardAvoidingView style={styles.root}>
+      <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
         <ScrollView bounces={false}>
           <Description>
             {!meta.isHW && <Text style={styles.description}>{strings.descriptionParagraph1}</Text>}
@@ -89,8 +89,8 @@ export const RemoveWalletScreen = () => {
             disabled={disabled}
           />
         </Actions>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   )
 }
 
@@ -158,9 +158,9 @@ const useStrings = () => {
 const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
-    container: {
-      flex: 1,
+    root: {
       backgroundColor: color.bg_color_high,
+      ...atoms.flex_1,
       ...atoms.px_lg,
       ...atoms.pt_lg,
     },
@@ -180,8 +180,8 @@ const useStyles = () => {
     actions: {
       ...atoms.py_lg,
     },
-    keyboardAvoider: {
-      flex: 1,
+    safeAreaView: {
+      ...atoms.flex_1,
     },
     removeButton: {
       backgroundColor: color.sys_magenta_c500,

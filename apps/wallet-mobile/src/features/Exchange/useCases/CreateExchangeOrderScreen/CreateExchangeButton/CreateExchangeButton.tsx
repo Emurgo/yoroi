@@ -50,11 +50,9 @@ export const CreateExchangeButton = ({
     onPress()
   }
 
-  const isButtonDisabled = !(isPreprod || (isSancho && isBuy)) || disabled
-
   return (
     <View style={[styles.actions, style]}>
-      <Button testID="rampOnOffButton" shelleyTheme title={title} onPress={handleOnPress} disabled={isButtonDisabled} />
+      <Button testID="rampOnOffButton" shelleyTheme title={title} onPress={handleOnPress} disabled={disabled} />
     </View>
   )
 }
@@ -71,7 +69,8 @@ const useStyles = () => {
   const {atoms} = useTheme()
   const styles = StyleSheet.create({
     actions: {
-      ...atoms.p_lg,
+      ...atoms.px_lg,
+      ...atoms.pt_lg,
     },
   })
   return styles

@@ -6,7 +6,7 @@ import {ScrollView, StyleSheet, TextInput as RNTextInput, View, ViewProps} from 
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {MutationOptions, useMutation} from 'react-query'
 
-import {Button, Checkmark, KeyboardAvoidingView, Spacer, TextInput} from '../../../components'
+import {Button, Checkmark, KeyboardAvoidingView, TextInput} from '../../../components'
 import {errorMessages} from '../../../kernel/i18n/global-messages'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {REQUIRED_PASSWORD_LENGTH, validatePassword} from '../../../yoroi-wallets/utils/validators'
@@ -38,8 +38,8 @@ export const ChangePasswordScreen = () => {
   })
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-      <KeyboardAvoidingView style={{flex: 1}}>
+    <KeyboardAvoidingView style={styles.root}>
+      <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
         <ScrollView bounces={false} keyboardDismissMode="on-drag" contentContainerStyle={styles.contentContainer}>
           <CurrentPasswordInput
             ref={currentPasswordRef}
@@ -56,8 +56,6 @@ export const ChangePasswordScreen = () => {
             autoComplete="off"
           />
 
-          <Spacer />
-
           <PasswordInput
             ref={newPasswordRef}
             enablesReturnKeyAutomatically
@@ -72,8 +70,6 @@ export const ChangePasswordScreen = () => {
             right={!newPasswordErrors.passwordIsWeak ? <Checkmark /> : undefined}
             autoComplete="off"
           />
-
-          <Spacer />
 
           <PasswordConfirmationInput
             ref={newPasswordConfirmationRef}
@@ -101,8 +97,8 @@ export const ChangePasswordScreen = () => {
             shelleyTheme
           />
         </Actions>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   )
 }
 
@@ -158,19 +154,23 @@ const useStrings = () => {
 }
 
 const useStyles = () => {
-  const {color} = useTheme()
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
-    safeAreaView: {
-      flex: 1,
+    root: {
       backgroundColor: color.bg_color_high,
+      ...atoms.flex_1,
+    },
+    safeAreaView: {
+      ...atoms.flex_1,
     },
     contentContainer: {
-      padding: 16,
+      ...atoms.p_lg,
+      ...atoms.gap_lg,
     },
     actions: {
-      padding: 16,
       backgroundColor: color.bg_color_high,
+      ...atoms.p_lg,
     },
   })
   return styles

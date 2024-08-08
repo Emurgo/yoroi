@@ -12,7 +12,7 @@ import {getWalletNameError, validateWalletName} from '../../../yoroi-wallets/uti
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 
-export const RenameWallet = () => {
+export const RenameWalletScreen = () => {
   const strings = useStrings()
   const styles = useStyles()
   const navigation = useNavigation()
@@ -41,15 +41,9 @@ export const RenameWallet = () => {
   }
 
   return (
-    <SafeAreaView style={styles.safeAreaView} edges={['left', 'right', 'bottom']}>
-      <KeyboardAvoidingView style={{flex: 1}}>
-        <Spacer height={40} />
-
-        <ScrollView
-          keyboardDismissMode="on-drag"
-          keyboardShouldPersistTaps="always"
-          contentContainerStyle={styles.scrollContentContainer}
-        >
+    <KeyboardAvoidingView style={styles.root}>
+      <SafeAreaView style={styles.safeAreaView} edges={['left', 'right', 'bottom']}>
+        <ScrollView contentContainerStyle={styles.scrollContentContainer} bounces={false}>
           <WalletNameInput
             returnKeyType="done"
             errorDelay={0}
@@ -65,7 +59,7 @@ export const RenameWallet = () => {
 
         <Spacer fill />
 
-        <View style={styles.action}>
+        <View style={styles.actions}>
           <Button
             onPress={handleOnRename}
             title={strings.changeButton}
@@ -73,24 +67,30 @@ export const RenameWallet = () => {
             shelleyTheme
           />
         </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   )
 }
 
 const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
-    safeAreaView: {
+    root: {
       backgroundColor: color.bg_color_high,
-      flex: 1,
+      ...atoms.flex_1,
+    },
+    safeAreaView: {
+      ...atoms.flex_1,
+      ...atoms.pt_lg,
+      ...atoms.pb_lg,
     },
     scrollContentContainer: {
       ...atoms.px_lg,
     },
-    action: {
-      ...atoms.p_lg,
+    actions: {
       backgroundColor: color.bg_color_high,
+      ...atoms.pt_lg,
+      ...atoms.px_lg,
     },
   })
   return styles

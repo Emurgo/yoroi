@@ -192,8 +192,8 @@ const useStyles = () => {
   })
   const colors = {
     placeholder: color.gray_c600,
-    focused: color.gray_c900,
-    blur: color.black_static,
+    focused: color.gray_c600,
+    blur: color.gray_c900,
   }
   return {styles, colors} as const
 }

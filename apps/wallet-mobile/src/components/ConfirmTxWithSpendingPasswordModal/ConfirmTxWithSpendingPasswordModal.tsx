@@ -70,13 +70,15 @@ export const ConfirmTxWithSpendingPasswordModal = ({onSuccess, unsignedTx, onErr
 
       <Spacer fill />
 
-      <Button
-        testID="confirmButton"
-        shelleyTheme
-        title={strings.sign}
-        onPress={() => onSubmit?.(spendingPassword)}
-        disabled={spendingPassword.length === 0}
-      />
+      <View style={styles.actions}>
+        <Button
+          testID="confirmButton"
+          shelleyTheme
+          title={strings.sign}
+          onPress={() => onSubmit?.(spendingPassword)}
+          disabled={spendingPassword.length === 0}
+        />
+      </View>
 
       {isLoading && (
         <View style={styles.loading}>
@@ -119,8 +121,12 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      flex: 1,
+      ...atoms.flex_1,
       ...atoms.px_lg,
+      ...atoms.pb_lg,
+    },
+    actions: {
+      ...atoms.pt_lg,
     },
     modalText: {
       paddingHorizontal: 70,
