@@ -52,7 +52,7 @@ const useStyles = () => {
       borderRadius: 8,
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'center',
+      ...atoms.justify_center,
     },
     deviceName: {
       ...atoms.heading_3_medium,
