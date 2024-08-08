@@ -284,6 +284,12 @@ storiesOf('Icon', module).add('Gallery', () => {
         <Item icon={<Icon.Language />} title="Language" />
 
         <Item icon={<Icon.MultiParty />} title="MultiParty" />
+
+        <Item icon={<Icon.Ledger />} title="Ledger" />
+
+        <Item icon={<Icon.Bluetooth />} title="Bluetooth" />
+
+        <Item icon={<Icon.Usb />} title="Usb" />
       </ScrollView>
     </FilterProvider>
   )

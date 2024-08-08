@@ -8,6 +8,7 @@ import {Assets} from './Assets'
 import {Backspace} from './Backspace'
 import {Backward} from './Backward'
 import {Bio} from './Bio'
+import {Bluetooth} from './Bluetooth'
 import {Bug} from './Bug'
 import {Burger} from './Burger'
 import {Cardano} from './Cardano'
@@ -60,6 +61,7 @@ import {Info} from './Info'
 import {InfoCircle} from './InfoCircle'
 import {Language} from './Language'
 import {Launchpad} from './Launchpad'
+import {Ledger} from './Ledger'
 import {Lightning} from './Lightning'
 import {Link} from './Link'
 import {Lock} from './Lock'
@@ -121,6 +123,7 @@ import {TotalDelegated} from './TotalDelegated'
 import {TotalReward} from './TotalReward'
 import {Transaction} from './Transaction'
 import {Twitter} from './Twitter'
+import {Usb} from './Usb'
 import {Verify} from './Verify'
 import {VyfiSwap} from './VyfiSwap'
 import {Wallet} from './Wallet'
@@ -141,6 +144,7 @@ export const Icon = {
   Bio,
   Bug,
   Backspace,
+  Bluetooth,
   Burger,
   Cardano,
   Catalyst,
@@ -178,6 +182,7 @@ export const Icon = {
   Info,
   Language,
   Launchpad,
+  Ledger,
   Lightning,
   Link,
   Lock,
@@ -242,6 +247,7 @@ export const Icon = {
   MuesliSwap,
   WingRiders,
   VyfiSwap,
+  Usb,
   SpectrumSwap,
   Danger,
   Share,

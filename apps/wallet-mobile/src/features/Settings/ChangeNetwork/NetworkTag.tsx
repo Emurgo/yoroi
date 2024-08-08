@@ -83,14 +83,12 @@ export const NetworkTag = ({
       </Text>
 
       {Tag && (
-        <>
-          <Space width="sm" />
-
+        <View style={styles.tagContainer}>
           <Tag
             onPress={onPress}
             disabled={((directChangeActive && selectedNetwork === Chain.Network.Mainnet) || disabled) ?? false}
           />
-        </>
+        </View>
       )}
     </View>
   )
@@ -141,18 +139,23 @@ const MainnetWarningDialog = ({onCancel, onOk}: {onCancel: () => void; onOk: () 
 
 const useStyles = () => {
   const {color, atoms} = useTheme()
-  const width = useWindowDimensions().width - 140
+  const width = useWindowDimensions().width - 190
 
   const styles = StyleSheet.create({
     headerTitleStyle: {
       ...atoms.body_1_lg_medium,
       color: color.text_gray_normal,
+      flexShrink: 1,
     },
     headerTitleContainerStyle: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
       width,
+    },
+    tagContainer: {
+      ...atoms.pl_sm,
+      flexShrink: 0,
     },
     preprodTag: {
       borderRadius: 1200,

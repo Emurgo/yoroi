@@ -4,10 +4,10 @@ import {useTheme} from '@yoroi/theme'
 import {HW, Wallet} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {ProgressStep} from '../../../../components'
+import {StepperProgress} from '../../../../components/StepperProgress/StepperProgress'
 import {showErrorDialog} from '../../../../kernel/dialogs'
 import {errorMessages} from '../../../../kernel/i18n/global-messages'
 import LocalizableError from '../../../../kernel/i18n/LocalizableError'
@@ -60,16 +60,17 @@ export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-      <ProgressStep currentStep={2} totalSteps={3} displayStepNumber />
+      <StepperProgress style={styles.stepper} currentStepTitle="Connect" currentStep={2} totalSteps={3} />
 
-      <LedgerConnect
-        onConnectBLE={onConnectBLE}
-        onConnectUSB={onConnectUSB}
-        useUSB={useUSB}
-        onWaitingMessage={strings.exportKey}
-        defaultDevices={defaultDevices}
-        fillSpace
-      />
+      <View style={styles.content}>
+        <LedgerConnect
+          onConnectBLE={onConnectBLE}
+          onConnectUSB={onConnectUSB}
+          useUSB={useUSB}
+          onWaitingMessage={strings.exportKey}
+          defaultDevices={defaultDevices}
+        />
+      </View>
     </SafeAreaView>
   )
 }
@@ -90,11 +91,18 @@ const useStrings = () => {
 }
 
 const useStyles = () => {
-  const {color} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     safeAreaView: {
       flex: 1,
       backgroundColor: color.bg_color_high,
+    },
+    stepper: {
+      ...atoms.p_lg,
+    },
+    content: {
+      flex: 1,
+      ...atoms.px_lg,
     },
   })
   return styles

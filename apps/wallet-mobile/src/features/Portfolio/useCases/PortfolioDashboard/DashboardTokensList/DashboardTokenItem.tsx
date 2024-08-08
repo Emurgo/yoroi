@@ -11,6 +11,7 @@ import {useCurrencyPairing} from '../../../../Settings/Currency'
 import {usePrivacyMode} from '../../../../Settings/PrivacyMode/PrivacyMode'
 import {formatPriceChange, priceChange} from '../../../common/helpers/priceChange'
 import {PnlTag} from '../../../common/PnlTag/PnlTag'
+import {usePortfolioTokenActivity} from '../../../common/PortfolioTokenActivityProvider'
 import {TokenInfoIcon} from '../../../common/TokenAmountItem/TokenInfoIcon'
 import {useNavigateTo} from '../../../common/useNavigateTo'
 
@@ -27,8 +28,13 @@ export const DashboardTokenItem = ({tokenInfo}: Props) => {
 
   const adaPrice = useCurrencyPairing().adaPrice
 
-  // TODO: missing price for non ada
-  const {price, previous} = isPrimaryToken(info) ? adaPrice : {price: 0, previous: 0}
+  const {tokenActivity} = usePortfolioTokenActivity()
+
+  const nonAdaPrice = tokenActivity?.[info.id]?.price24h
+
+  const {price, previous} = isPrimaryToken(info)
+    ? adaPrice
+    : {price: nonAdaPrice?.close.toNumber() ?? 0, previous: nonAdaPrice?.open.toNumber() ?? 0}
 
   const {changePercent, variantPnl} = priceChange(previous, price)
 
@@ -40,9 +46,13 @@ export const DashboardTokenItem = ({tokenInfo}: Props) => {
         <Spacer fill />
 
         <View style={styles.quantityContainer}>
-          <PnlTag variant={variantPnl} withIcon>
-            <Text>{formatPriceChange(changePercent)}%</Text>
-          </PnlTag>
+          {price !== 0 ? (
+            <PnlTag withIcon variant={variantPnl}>
+              <Text>{formatPriceChange(changePercent)}%</Text>
+            </PnlTag>
+          ) : (
+            <Spacer />
+          )}
 
           <Text ellipsizeMode="tail" numberOfLines={1} style={styles.tokenValue}>
             {formattedQuantity}

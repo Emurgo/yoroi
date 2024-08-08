@@ -39,7 +39,7 @@ export const setupWalletReducer = (
         draft.hwDeviceInfo = action.hwDeviceInfo
         return
 
-      case SetupWalletActionType.SetUpTypeChanged:
+      case SetupWalletActionType.SetupTypeChanged:
         draft.setUpType = action.setUpType
         return
 
@@ -118,7 +118,7 @@ export enum SetupWalletActionType {
   PublicKeyHexChanged = 'publicKeyHexChanged',
   PathChanged = 'pathChanged',
   HwDeviceInfoChanged = 'hwDeviceInfoChanged',
-  SetUpTypeChanged = 'setUpTypeChanged',
+  SetupTypeChanged = 'setupTypeChanged',
   MnemonicTypeChanged = 'mnemonicTypeChanged',
   WalletIdChanged = 'walletIdChanged',
   UseUSBChanged = 'useUSBChanged',
@@ -161,7 +161,7 @@ export type SetupWalletAction =
       hwDeviceInfo: SetupWalletState['hwDeviceInfo']
     }
   | {
-      type: SetupWalletActionType.SetUpTypeChanged
+      type: SetupWalletActionType.SetupTypeChanged
       setUpType: SetupWalletState['setUpType']
     }
   | {
@@ -203,7 +203,7 @@ export type SetupWalletActions = {
   publicKeyHexChanged: (publicKeyHex: SetupWalletState['publicKeyHex']) => void
   pathChanged: (path: SetupWalletState['path']) => void
   hwDeviceInfoChanged: (hwDeviceInfo: SetupWalletState['hwDeviceInfo']) => void
-  setUpTypeChanged: (setUpType: SetupWalletState['setUpType']) => void
+  setupTypeChanged: (setUpType: SetupWalletState['setUpType']) => void
   mnemonicTypeChanged: (mnemonicType: SetupWalletState['mnemonicType']) => void
   useUSBChanged: (useUSB: SetupWalletState['useUSB']) => void
   walletIdChanged: (walletId: SetupWalletState['walletId']) => void
@@ -226,7 +226,7 @@ export const setupWalletInitialContext: SetupWalletContext = freeze(
     publicKeyHexChanged: missingInit,
     pathChanged: missingInit,
     hwDeviceInfoChanged: missingInit,
-    setUpTypeChanged: missingInit,
+    setupTypeChanged: missingInit,
     mnemonicTypeChanged: missingInit,
     useUSBChanged: missingInit,
     reset: missingInit,
