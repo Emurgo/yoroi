@@ -4,6 +4,7 @@ import {useIntl} from 'react-intl'
 import {ActivityIndicator, View} from 'react-native'
 
 import {TextInput, TwoActionView} from '../../../../components'
+import {Space} from '../../../../components/Space/Space'
 import {debugWalletInfo, features} from '../../../../kernel/features'
 import {confirmationMessages, txLabels} from '../../../../kernel/i18n/global-messages'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
@@ -55,6 +56,8 @@ export const ConfirmTxWithPassword = ({wallet, onSuccess, onCancel, unsignedTx}:
           disabled={isLoading}
           testID="walletPasswordInput"
         />
+
+        <Space height="lg" />
       </TwoActionView>
 
       {isLoading && (
