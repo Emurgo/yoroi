@@ -2,18 +2,10 @@ import {useFocusEffect} from '@react-navigation/native'
 import {configCardanoLegacyTransfer, linksCardanoModuleMaker} from '@yoroi/links'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {
-  Keyboard,
-  ScrollView as RNScrollView,
-  StyleSheet,
-  Text,
-  TouchableWithoutFeedback,
-  useWindowDimensions,
-  View,
-} from 'react-native'
+import {ScrollView as RNScrollView, StyleSheet, Text, useWindowDimensions, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, KeyboardAvoidingView, Spacer, TextInput, useModal} from '../../../components'
+import {Button, KeyboardAvoidingView, TextInput, useModal} from '../../../components'
 import {ScrollView, useScrollView} from '../../../components/ScrollView/ScrollView'
 import {ShareQRCodeCard} from '../../../components/ShareQRCodeCard/ShareQRCodeCard'
 import {useCopy} from '../../../hooks/useCopy'
@@ -61,44 +53,40 @@ export const RequestSpecificAmountScreen = () => {
   )
 
   return (
-    <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
-      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <KeyboardAvoidingView style={styles.flex}>
-          <ScrollView ref={scrollViewRef} style={styles.flex} onScrollBarChange={setIsScrollBarShown}>
-            <Spacer height={24} />
+    <KeyboardAvoidingView style={[styles.flex, styles.root]}>
+      <SafeAreaView style={[styles.flex, styles.container]} edges={['left', 'right', 'bottom']}>
+        <ScrollView ref={scrollViewRef} style={styles.flex} onScrollBarChange={setIsScrollBarShown}>
+          <View style={styles.request}>
+            <Text style={styles.textAddressDetails}>{strings.specificAmountDescription}</Text>
 
-            <View style={styles.screen}>
-              <Text style={styles.textAddressDetails}>{strings.specificAmountDescription}</Text>
-
-              <TextInput
-                label={strings.ADALabel}
-                keyboardType="numeric"
-                onChangeText={handleOnChangeAmount}
-                value={amount}
-                testID="receive:request-specific-amount-ada-input"
-              />
-
-              <View style={styles.textSection}>
-                <Text style={[styles.textAddressDetails, {color: colors.gray}]}>{strings.address}</Text>
-
-                <Text style={styles.textAddressDetails}>{selectedAddress}</Text>
-              </View>
-            </View>
-          </ScrollView>
-
-          <View style={[styles.actions, isScrollBarShown && {borderTopWidth: 1, borderTopColor: colors.lightGray}]}>
-            <Button
-              shelleyTheme
-              onPress={handleOnGenerateLink}
-              disabled={!hasAmount}
-              title={strings.generateLink}
-              style={styles.button}
-              testID="receive:request-specific-amount:generate-link-button"
+            <TextInput
+              label={strings.ADALabel}
+              keyboardType="numeric"
+              onChangeText={handleOnChangeAmount}
+              value={amount}
+              testID="receive:request-specific-amount-ada-input"
+              noHelper
             />
+
+            <View style={styles.textSection}>
+              <Text style={[styles.textAddressDetails, {color: colors.gray}]}>{strings.address}</Text>
+
+              <Text style={styles.textAddressDetails}>{selectedAddress}</Text>
+            </View>
           </View>
-        </KeyboardAvoidingView>
-      </TouchableWithoutFeedback>
-    </SafeAreaView>
+        </ScrollView>
+
+        <View style={[styles.actions, isScrollBarShown && {borderTopWidth: 1, borderTopColor: colors.lightGray}]}>
+          <Button
+            shelleyTheme
+            onPress={handleOnGenerateLink}
+            disabled={!hasAmount}
+            title={strings.generateLink}
+            testID="receive:request-specific-amount:generate-link-button"
+          />
+        </View>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   )
 }
 
@@ -128,8 +116,8 @@ const Modal = ({amount, address}: {amount: string; address: string}) => {
   const handOnCopy = () => copy(content)
 
   return (
-    <View style={styles.root}>
-      <RNScrollView>
+    <View style={[styles.container, styles.flex]}>
+      <RNScrollView contentContainerStyle={[styles.flex, styles.modalContainer]}>
         {hasAddress ? (
           <ShareQRCodeCard
             title={title}
@@ -145,23 +133,20 @@ const Modal = ({amount, address}: {amount: string; address: string}) => {
             <SkeletonAdressDetail />
           </View>
         )}
-
-        <Spacer height={32} />
       </RNScrollView>
 
-      <Button
-        shelleyTheme
-        onPress={handOnCopy}
-        disabled={!hasAmount}
-        title={strings.copyLinkBtn}
-        iconImage={require('../../../assets/img/copy.png')}
-        isCopying={isCopying}
-        copiedText={strings.copyLinkMsg}
-        style={styles.button}
-        testID="receive:request-specific-amount:copy-link-button"
-      />
-
-      <Spacer height={16} />
+      <View style={styles.actions}>
+        <Button
+          shelleyTheme
+          onPress={handOnCopy}
+          disabled={!hasAmount}
+          title={strings.copyLinkBtn}
+          iconImage={require('../../../assets/img/copy.png')}
+          isCopying={isCopying}
+          copiedText={strings.copyLinkMsg}
+          testID="receive:request-specific-amount:copy-link-button"
+        />
+      </View>
     </View>
   )
 }
@@ -171,27 +156,27 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     root: {
-      flex: 1,
       backgroundColor: color.bg_color_high,
-      ...atoms.px_lg,
+    },
+    container: {
+      ...atoms.p_lg,
+    },
+    modalContainer: {
+      ...atoms.justify_between,
+      ...atoms.gap_lg,
     },
     flex: {
       ...atoms.flex_1,
     },
     textAddressDetails: {
+      color: color.text_gray_normal,
       ...atoms.body_1_lg_regular,
-      color: color.gray_c900,
     },
     textSection: {
-      gap: 4,
-      width: '100%',
+      ...atoms.gap_xs,
     },
-    screen: {
-      gap: 16,
-      flex: 2,
-    },
-    button: {
-      backgroundColor: color.primary_c500,
+    request: {
+      ...atoms.gap_lg,
     },
     actions: {
       ...atoms.pt_lg,
