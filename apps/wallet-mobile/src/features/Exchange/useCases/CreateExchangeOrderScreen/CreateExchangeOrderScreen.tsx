@@ -99,8 +99,6 @@ export const CreateExchangeOrderScreen = () => {
     },
   )
 
-  const exchangeDisabled = isLoading || !canExchange
-
   React.useEffect(() => {
     track.exchangePageViewed()
   }, [track])
@@ -117,12 +115,14 @@ export const CreateExchangeOrderScreen = () => {
     }
   }
 
-  const isPreprod = network === Chain.Network.Preprod
-  const isSancho = network === Chain.Network.Sancho
+  // on Preprod it launches the faucet when buying
+  // selling is enabled for both and launch the sandbox
+  const isBlocked = network === Chain.Network.Sancho && orderType === 'buy'
+  const exchangeDisabled = isLoading || (wallet.isMainnet && !canExchange) || isBlocked
 
   return (
-    <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
-      <KeyboardAvoidingView style={styles.flex}>
+    <KeyboardAvoidingView style={styles.root}>
+      <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.safeAreaView}>
         <ScrollView style={styles.scroll}>
           <View
             style={styles.container}
@@ -154,30 +154,30 @@ export const CreateExchangeOrderScreen = () => {
           style={{
             ...(deviceHeight < contentHeight && styles.actionBorder),
           }}
-          disabled={!(isPreprod || (isSancho && orderType === 'buy')) && exchangeDisabled}
+          disabled={exchangeDisabled}
           onPress={handleOnExchange}
         />
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   )
 }
 
 const useStyles = () => {
-  const {color} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      flex: 1,
       backgroundColor: color.bg_color_high,
+      ...atoms.flex_1,
     },
-    flex: {
-      flex: 1,
+    safeAreaView: {
+      ...atoms.flex_1,
+      ...atoms.py_lg,
     },
     scroll: {
-      paddingHorizontal: 16,
+      ...atoms.px_lg,
     },
     container: {
-      flex: 1,
-      paddingTop: 20,
+      ...atoms.flex_1,
     },
     actionBorder: {
       borderTopWidth: 1,
