@@ -69,6 +69,7 @@ const useStyles = () => {
       ...atoms.align_center,
       ...atoms.justify_between,
       ...atoms.px_lg,
+      ...atoms.py_lg,
     },
     actions: {
       ...atoms.self_stretch,
