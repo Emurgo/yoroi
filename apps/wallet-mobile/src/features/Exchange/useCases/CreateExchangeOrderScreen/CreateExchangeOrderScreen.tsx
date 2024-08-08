@@ -120,6 +120,8 @@ export const CreateExchangeOrderScreen = () => {
   const isPreprod = network === Chain.Network.Preprod
   const isSancho = network === Chain.Network.Sancho
 
+  const feeText = (isPreprod || isSancho) && orderType === 'sell' ? 'Playground' : `${fee}% ${strings.fee}`
+
   return (
     <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
       <KeyboardAvoidingView style={styles.flex}>
@@ -139,7 +141,7 @@ export const CreateExchangeOrderScreen = () => {
 
             <ProviderItem
               label={providerSelected?.name ?? ''}
-              fee={fee}
+              fee={feeText}
               leftAdornment={<Logo size={40} />}
               rightAdornment={<Icon.Chevron direction="right" />}
               onPress={handleOnListProvidersByOrderType}

@@ -6,10 +6,9 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Space} from '../../../../components/Space/Space'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
-import {useStrings} from '../useStrings'
 
 type Props = {
-  fee: number
+  fee: string
   label: string
   rightAdornment: React.ReactNode
   leftAdornment: React.ReactNode
@@ -19,7 +18,6 @@ type Props = {
 
 export const ProviderItem = ({onPress, fee, rightAdornment, leftAdornment, disabled, label}: Props) => {
   const styles = useStyles()
-  const strings = useStrings()
   const {
     selected: {network},
   } = useWalletManager()
@@ -44,7 +42,7 @@ export const ProviderItem = ({onPress, fee, rightAdornment, leftAdornment, disab
         <View style={styles.labels}>
           <Text style={styles.label}>{label}</Text>
 
-          <Text style={styles.fee}>{`${fee}% ${strings.fee}`}</Text>
+          <Text style={styles.fee}>{fee}</Text>
         </View>
 
         {!disabled && rightAdornment}
