@@ -1,7 +1,7 @@
 import {Balance} from '@yoroi/types'
 
 import {DefaultAsset} from '../../../types'
-import {COIN_TYPE, COINS_PER_UTXO_WORD, KEY_DEPOSIT, LINEAR_FEE, MINIMUM_UTXO_VAL, POOL_DEPOSIT} from '../common'
+import {COIN_TYPE, COINS_PER_UTXO_WORD, KEY_DEPOSIT, MINIMUM_UTXO_VAL, POOL_DEPOSIT} from '../common'
 
 export * from '../common'
 
@@ -29,15 +29,6 @@ export const SHELLEY_BASE_CONFIG = {
   SLOT_DURATION: 1,
 } as const
 
-export const BASE_CONFIG = {
-  GENESIS_DATE,
-  PROTOCOL_MAGIC,
-  SLOTS_PER_EPOCH: 432000,
-  SLOT_DURATION: 1,
-  START_AT: 208,
-} as const
-
-export const IS_MAINNET = true
 export const API_ROOT = 'https://api.yoroiwallet.com/api'
 export const TOKEN_INFO_SERVICE = 'https://cdn.yoroiwallet.com'
 export const BACKEND = {
@@ -64,9 +55,7 @@ export const NETWORK_CONFIG = {
     fingerprint.length > 0 ? `https://cexplorer.io/asset/${fingerprint}` : `https://cexplorer.io/asset`,
   EXPLORER_URL_FOR_TX: (txid: string) => `https://cardanoscan.io/transaction/${txid}`,
   POOL_EXPLORER: 'https://adapools.yoroiwallet.com/?source=mobile',
-  IS_MAINNET,
   KEY_DEPOSIT,
-  LINEAR_FEE,
   MARKETING_NAME: 'Cardano Mainnet',
   MINIMUM_UTXO_VAL,
   NETWORK_ID,
