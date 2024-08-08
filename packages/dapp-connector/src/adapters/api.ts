@@ -81,4 +81,5 @@ interface DappResponse {
   logo: string
   uri: string
   origins: string[]
+  isSingleAddress?: boolean
 }
