@@ -1082,6 +1082,7 @@
   "discover.discoverList.dAppAvailable": "{count} DApp(s) available",
   "discover.discoverList.dAppConnected": "{count} DApp(s) connected",
   "discover.discoverList.connected": "Connected",
+  "discover.discoverList.singleAddress": "Single address",
   "discover.discoverList.recommended": "Recommended",
   "discover.discoverList.done": "DONE",
   "discover.discoverList.openDApp": "Open DApp",

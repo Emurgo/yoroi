@@ -49,6 +49,7 @@ export const useStrings = () => {
     signMessage: intl.formatMessage(messages.signMessage),
     testnetWarningTitle: intl.formatMessage(messages.testnetWarningTitle),
     testnetWarningDescription: intl.formatMessage(messages.testnetWarningDescription),
+    singleAddress: intl.formatMessage(messages.singleAddress),
   }).current
 }
 
@@ -90,6 +91,10 @@ export const messages = Object.freeze(
     connected: {
       id: 'discover.discoverList.connected',
       defaultMessage: '!!!Connected',
+    },
+    singleAddress: {
+      id: 'discover.discoverList.singleAddress',
+      defaultMessage: '!!!Single address',
     },
     recommended: {
       id: 'discover.discoverList.recommended',

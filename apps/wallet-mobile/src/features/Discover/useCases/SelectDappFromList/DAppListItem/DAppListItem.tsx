@@ -20,6 +20,7 @@ import {useBrowser} from '../../../common/BrowserProvider'
 import {type DAppItem, getDappFallbackLogo, isGoogleSearchItem} from '../../../common/helpers'
 import {LabelCategoryDApp} from '../../../common/LabelCategoryDApp'
 import {LabelConnected} from '../../../common/LabelConnected'
+import {LabelSingleAddress} from '../../../common/LabelSingleAddress'
 import {useNavigateTo} from '../../../common/useNavigateTo'
 import {useStrings} from '../../../common/useStrings'
 
@@ -142,6 +143,10 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
           <View style={styles.labelBox}>
             {connected && <LabelConnected />}
 
+            {!dApp.isSingleAddress && <LabelSingleAddress />}
+
+            {dApp.isSingleAddress && <LabelSingleAddress />}
+
             {!isGoogleSearchItem(dApp) && <LabelCategoryDApp category={dApp.category} />}
           </View>
         </View>
@@ -197,6 +202,7 @@ const useStyles = () => {
     labelBox: {
       flexDirection: 'row',
       gap: 8,
+      flexWrap: 'wrap',
     },
     dAppLogo: {
       width: 40,
