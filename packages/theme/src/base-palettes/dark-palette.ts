@@ -12,7 +12,7 @@ export const darkPalette: BasePalette = {
   primary_c400: '#2E4BB0',
   primary_c300: '#304489',
   primary_c200: '#142049',
-  primary_c100: '#1F253B',
+  primary_c100: '#171B28',
 
   secondary_c900: '#E4F7F3',
   secondary_c800: '#C6F7ED',
