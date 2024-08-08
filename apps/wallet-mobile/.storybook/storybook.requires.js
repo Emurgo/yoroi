@@ -111,6 +111,7 @@ const getStories = () => {
     "./src/features/Discover/common/ConfirmConnectionModal.stories.tsx": require("../src/features/Discover/common/ConfirmConnectionModal.stories.tsx"),
     "./src/features/Discover/common/LabelCategoryDApp.stories.tsx": require("../src/features/Discover/common/LabelCategoryDApp.stories.tsx"),
     "./src/features/Discover/common/LabelConnected.stories.tsx": require("../src/features/Discover/common/LabelConnected.stories.tsx"),
+    "./src/features/Discover/common/LabelSingleAddress.stories.tsx": require("../src/features/Discover/common/LabelSingleAddress.stories.tsx"),
     "./src/features/Discover/common/UnverifiedDappModal.stories.tsx": require("../src/features/Discover/common/UnverifiedDappModal.stories.tsx"),
     "./src/features/Discover/useCases/BrowseDapp/BrowseDappScreen.stories.tsx": require("../src/features/Discover/useCases/BrowseDapp/BrowseDappScreen.stories.tsx"),
     "./src/features/Discover/useCases/BrowseDapp/BrowserSearchToolbar.stories.tsx": require("../src/features/Discover/useCases/BrowseDapp/BrowserSearchToolbar.stories.tsx"),

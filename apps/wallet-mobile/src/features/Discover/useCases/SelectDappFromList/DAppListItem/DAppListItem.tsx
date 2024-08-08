@@ -143,8 +143,6 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
           <View style={styles.labelBox}>
             {connected && <LabelConnected />}
 
-            {!dApp.isSingleAddress && <LabelSingleAddress />}
-
             {dApp.isSingleAddress && <LabelSingleAddress />}
 
             {!isGoogleSearchItem(dApp) && <LabelCategoryDApp category={dApp.category} />}
