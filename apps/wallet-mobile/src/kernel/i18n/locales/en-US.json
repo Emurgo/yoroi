@@ -196,6 +196,7 @@
   "components.ledger.ledgertransportswitchmodal.text": "Select the option to connect Ledger Nano X or Ledger Nano S to Yoroi app",
   "components.ledger.ledgertransportswitchmodal.usbButton": "Connect with USB",
   "components.ledger.ledgertransportswitchmodal.iosWarning": "USB connection is NOT available on Apple iOS devices. You can always try this connection type on Android platform",
+  "components.ledger.ledgertransportswitchmodal.usbExplanation": "Choose this option if you want to connect to a Ledger Nano model X or S using an on-the-go USB cable adaptor:",
   "components.login.appstartscreen.loginButton": "Login",
   "components.login.custompinlogin.title": "Enter PIN",
   "components.ma.assetSelector.placeHolder": "Select an asset",
