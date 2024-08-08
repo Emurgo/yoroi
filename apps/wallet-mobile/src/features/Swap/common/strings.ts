@@ -107,7 +107,6 @@ export const useStrings = () => {
     limitPriceWarningConfirm: intl.formatMessage(messages.limitPriceWarningConfirm),
     error: intl.formatMessage(globalMessages.error),
     rejectedByUser: intl.formatMessage(ledgerMessages.rejectedByUserError),
-    usbExplanation: intl.formatMessage(messages.usbExplanation),
     usbButton: intl.formatMessage(messages.usbButton),
     usbConnectionIsBlocked: intl.formatMessage(messages.usbConnectionIsBlocked),
     bluetoothExplanation: intl.formatMessage(messages.bluetoothExplanation),
@@ -512,12 +511,6 @@ export const messages = defineMessages({
   chooseConnectionMethod: {
     id: 'components.ledger.ledgertransportswitchmodal.title',
     defaultMessage: '!!!Choose Connection Method',
-  },
-  usbExplanation: {
-    id: 'components.ledger.ledgertransportswitchmodal.usbExplanation',
-    defaultMessage:
-      '!!!Choose this option if you want to connect to a Ledger Nano model X ' +
-      'or S using an on-the-go USB cable adaptor:',
   },
   usbButton: {
     id: 'components.ledger.ledgertransportswitchmodal.usbButton',
