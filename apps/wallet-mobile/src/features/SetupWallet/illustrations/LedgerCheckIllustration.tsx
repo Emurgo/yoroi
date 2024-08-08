@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Svg, {Circle, Defs, LinearGradient, Path, Stop, SvgProps} from 'react-native-svg'
 
-export const LedgerCHeckIllustration = (props: SvgProps) => {
+export const LedgerCheckIllustration = (props: SvgProps) => {
   return (
     <Svg width={361} height={200} viewBox="0 0 361 200" fill="none" {...props}>
       <Path
