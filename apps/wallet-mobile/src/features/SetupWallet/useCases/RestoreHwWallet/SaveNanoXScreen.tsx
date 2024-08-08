@@ -289,7 +289,7 @@ const useStyles = () => {
       ...atoms.pb_lg,
     },
     info: {
-      flexDirection: 'row',
+      ...atoms.flex_row,
     },
     title: {
       color: color.text_gray_normal,
