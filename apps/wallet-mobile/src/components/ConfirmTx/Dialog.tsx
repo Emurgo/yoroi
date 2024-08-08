@@ -1,6 +1,7 @@
 import {HW} from '@yoroi/types'
 import React from 'react'
 import {useIntl} from 'react-intl'
+import {ScrollView} from 'react-native'
 
 import {ErrorView, PleaseWaitView} from '../../components'
 import globalMessages, {ledgerMessages, txLabels} from '../../kernel/i18n/global-messages'
@@ -72,7 +73,11 @@ const DialogWithLedger = ({
           />
         )
       case Step.LedgerConnect:
-        return <LedgerConnect onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} useUSB={useUSB} />
+        return (
+          <ScrollView bounces={false}>
+            <LedgerConnect onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} useUSB={useUSB} />
+          </ScrollView>
+        )
       case Step.WaitingHwResponse:
         return <PleaseWaitView title={strings.continueOnLedger} spinnerText={strings.followSteps} />
       case Step.Signing:

@@ -1,7 +1,9 @@
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {ActivityIndicator, StyleSheet, Text, TouchableOpacity} from 'react-native'
+import {StyleSheet, Text, TouchableOpacity} from 'react-native'
 
+import {Icon} from '../../../../components'
+import {Space} from '../../../../components/Space/Space'
 import {Device} from '../../../../yoroi-wallets/types'
 
 type Props = {
@@ -30,9 +32,11 @@ export const DeviceItem = ({device, onSelect, disabled}: Props) => {
       onPress={onPress}
       disabled={isButtonDisabled}
     >
-      <Text style={styles.deviceName}>{device.name}</Text>
+      <Icon.Ledger />
 
-      {pending && <ActivityIndicator color="black" />}
+      <Space width="sm" />
+
+      <Text style={styles.deviceName}>{device.name}</Text>
     </TouchableOpacity>
   )
 }
@@ -43,18 +47,16 @@ const useStyles = () => {
     deviceItem: {
       ...atoms.py_lg,
       ...atoms.px_2xl,
-      marginVertical: 8,
-      marginHorizontal: 16,
-      borderColor: color.secondary_c500,
+      borderColor: color.primary_c500,
       borderWidth: 1,
       borderRadius: 8,
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'space-between',
+      ...atoms.justify_center,
     },
     deviceName: {
       ...atoms.heading_3_medium,
-      color: color.secondary_c500,
+      color: color.primary_c500,
     },
     disabled: {
       opacity: 0.5,

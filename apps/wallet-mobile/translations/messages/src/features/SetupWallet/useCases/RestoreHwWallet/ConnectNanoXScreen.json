@@ -2,7 +2,7 @@
   {
     "id": "components.walletinit.connectnanox.connectnanoxscreen.exportKey",
     "defaultMessage": "!!!Action needed: Please, export public key from your Ledger device.",
-    "file": "src/features/SetupWallet/legacy/ConnectNanoX/ConnectNanoXScreen.tsx",
+    "file": "src/features/SetupWallet/useCases/RestoreHwWallet/ConnectNanoXScreen.tsx",
     "start": {
       "line": 79,
       "column": 13,
