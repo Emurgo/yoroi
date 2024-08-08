@@ -9,6 +9,7 @@ import Share from 'react-native-share'
 import ViewShot, {captureRef} from 'react-native-view-shot'
 
 import {Spacer, Text} from '../'
+import {Space} from '../Space/Space'
 import {CaptureShareQRCodeCard} from './CaptureShareQRCodeCard/CaptureShareQRCodeCard'
 
 type ShareQRCodeCardProps = {

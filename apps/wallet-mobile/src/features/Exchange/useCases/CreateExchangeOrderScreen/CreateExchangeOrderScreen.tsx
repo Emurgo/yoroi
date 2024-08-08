@@ -117,10 +117,12 @@ export const CreateExchangeOrderScreen = () => {
 
   // on Preprod it launches the faucet when buying
   // selling is enabled for both and launch the sandbox
-  const isBlocked = network === Chain.Network.Sancho && orderType === 'buy'
+  const isSancho = network === Chain.Network.Sancho
+  const isPreprod = network === Chain.Network.Preprod
+  const isBlocked = isSancho && orderType === 'buy'
   const exchangeDisabled = isLoading || (wallet.isMainnet && !canExchange) || isBlocked
 
-  const feeText = (isPreprod || isSancho) && orderType === 'sell' ? 'Playground' : `${fee}% ${strings.fee}`
+  const feeText = (isPreprod || isSancho) && orderType === 'sell' ? strings.playground : `${fee}% ${strings.fee}`
 
   return (
     <KeyboardAvoidingView style={styles.root}>
