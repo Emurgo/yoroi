@@ -48,6 +48,7 @@ export const useStrings = () => {
     createOrderSanchonetFaucetButtonText: intl.formatMessage(messages.createOrderSanchonetFaucetButtonText),
     createOrderSanchonetNoticeTitle: intl.formatMessage(messages.createOrderSanchonetNoticeTitle),
     createOrderSanchonetNoticeText: intl.formatMessage(messages.createOrderSanchonetNoticeText),
+    playground: intl.formatMessage(messages.playground),
     close: intl.formatMessage(globalMessages.close),
     error: intl.formatMessage(globalMessages.error),
   }).current
@@ -220,6 +221,10 @@ export const messages = Object.freeze(
     createOrderSanchonetNoticeText: {
       id: 'rampOnOff.createRampOnOff.createorder.sanchonotice.text',
       defaultMessage: '!!!Switch network or top up your testnet network wallet with the free Cardano faucet',
+    },
+    playground: {
+      id: 'rampOnOff.createRampOnOff.createorder.playground',
+      defaultMessage: '!!!Playground',
     },
   }),
 )
