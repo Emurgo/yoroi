@@ -114,7 +114,7 @@ const useStyles = () => {
       ...atoms.flex_row,
     },
     scroll: {
-      flex: 1,
+      ...atoms.flex_1,
       ...atoms.px_lg,
     },
   })
