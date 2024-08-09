@@ -67,7 +67,7 @@ export const NETWORK_CONFIG = {
 
 export const PRIMARY_TOKEN_INFO: Balance.TokenInfo = {
   kind: 'ft',
-  id: '',
+  id: '.',
   name: 'ADA',
   description: 'Cardano',
   icon: '',
