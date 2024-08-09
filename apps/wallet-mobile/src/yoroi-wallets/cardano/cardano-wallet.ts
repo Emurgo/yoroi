@@ -496,7 +496,7 @@ export const makeCardanoWallet = (
             config,
             txOptions,
             nonce,
-            NETWORK_ID,
+            this.networkManager.chainId,
             paymentAddressCIP36,
             addressingCIP36.path,
             supportsCIP36,
@@ -898,7 +898,7 @@ export const makeCardanoWallet = (
       const payload = await createSwapCancellationLedgerPayload(
         cbor,
         this,
-        NETWORK_ID,
+        this.networkManager.chainId,
         this.networkManager.protocolMagic,
         (address: string) => this.getAddressing(address),
         stakeVkeyHash,
@@ -930,7 +930,7 @@ export const makeCardanoWallet = (
           logger.info('ShelleyWallet: signTxWithLedger ledger app version <= 5, no CIP-36 support', {appAdaVersion})
           const ledgerPayload = await Cardano.buildVotingLedgerPayloadV5(
             unsignedTx.unsignedTx,
-            NETWORK_ID,
+            this.networkManager.chainId,
             this.networkManager.protocolMagic,
             Array.from(implementationConfig.features.staking.addressing),
           )
@@ -959,7 +959,7 @@ export const makeCardanoWallet = (
       }
       const ledgerPayload = await Cardano.buildLedgerPayload(
         unsignedTx.unsignedTx,
-        NETWORK_ID,
+        this.networkManager.chainId,
         this.networkManager.protocolMagic,
         stakingAddressing,
       )
