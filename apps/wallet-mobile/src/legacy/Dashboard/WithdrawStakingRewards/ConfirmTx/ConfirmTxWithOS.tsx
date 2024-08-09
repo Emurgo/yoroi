@@ -1,5 +1,6 @@
 import React from 'react'
 import {useIntl} from 'react-intl'
+import {View} from 'react-native'
 
 import {TwoActionView} from '../../../../components'
 import {LoadingOverlay} from '../../../../components/LoadingOverlay'
@@ -36,7 +37,7 @@ export const ConfirmTxWithOS = ({wallet, unsignedTx, onSuccess, onCancel}: Props
   const isLoading = authenticating || processingTx
 
   return (
-    <>
+    <View style={{flex: 1, paddingHorizontal: 16}}>
       <TwoActionView
         title={strings.confirmTx}
         primaryButton={{
@@ -53,7 +54,7 @@ export const ConfirmTxWithOS = ({wallet, unsignedTx, onSuccess, onCancel}: Props
       </TwoActionView>
 
       <LoadingOverlay loading={isLoading} />
-    </>
+    </View>
   )
 }
 

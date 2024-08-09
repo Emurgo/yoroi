@@ -1,9 +1,10 @@
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {ActivityIndicator, View} from 'react-native'
+import {ActivityIndicator, StyleSheet, View} from 'react-native'
+import {ScrollView} from 'react-native-gesture-handler'
 
-import {TextInput, TwoActionView} from '../../../../components'
+import {Button, TextInput} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
 import {debugWalletInfo, features} from '../../../../kernel/features'
 import {confirmationMessages, txLabels} from '../../../../kernel/i18n/global-messages'
@@ -23,6 +24,8 @@ export const ConfirmTxWithPassword = ({wallet, onSuccess, onCancel, unsignedTx}:
   const strings = useStrings()
   const {color} = useTheme()
   const [password, setPassword] = React.useState(features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '')
+  const intl = useIntl()
+  const {styles} = useStyles()
 
   const {signAndSubmitTx, isLoading} = useSignWithPasswordAndSubmitTx(
     {wallet}, //
@@ -30,20 +33,8 @@ export const ConfirmTxWithPassword = ({wallet, onSuccess, onCancel, unsignedTx}:
   )
 
   return (
-    <>
-      <TwoActionView
-        primaryButton={{
-          disabled: isLoading,
-          label: strings.confirmButton,
-          onPress: () => signAndSubmitTx({unsignedTx, password}),
-          testID: 'confirmTxButton',
-        }}
-        secondaryButton={{
-          disabled: isLoading,
-          onPress: () => onCancel(),
-          testID: 'cancelTxButton',
-        }}
-      >
+    <View style={styles.root}>
+      <ScrollView style={styles.scroll} bounces={false}>
         <TransferSummary wallet={wallet} unsignedTx={unsignedTx} />
 
         <PasswordInput
@@ -56,24 +47,37 @@ export const ConfirmTxWithPassword = ({wallet, onSuccess, onCancel, unsignedTx}:
           disabled={isLoading}
           testID="walletPasswordInput"
         />
+      </ScrollView>
 
-        <Space height="lg" />
-      </TwoActionView>
+      <View style={styles.buttons}>
+        <Button
+          block
+          shelleyTheme
+          outlineOnLight
+          onPress={() => onCancel()}
+          title={intl.formatMessage(confirmationMessages.commonButtons.cancelButton)}
+          disabled={isLoading}
+          testID="cancelTxButton"
+        />
+
+        <Space width="md" />
+
+        <Button
+          block
+          shelleyTheme
+          onPress={() => signAndSubmitTx({unsignedTx, password})}
+          title={strings.confirmButton}
+          disabled={isLoading}
+          testID="confirmTxButton"
+        />
+      </View>
 
       {isLoading && (
-        <View
-          style={{
-            position: 'absolute',
-            height: '100%',
-            width: '100%',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
+        <View style={styles.loading}>
           <ActivityIndicator size="large" color={color.gray_c900} />
         </View>
       )}
-    </>
+    </View>
   )
 }
 
@@ -87,4 +91,33 @@ const useStrings = () => {
     confirmTx: intl.formatMessage(txLabels.confirmTx),
     password: intl.formatMessage(txLabels.password),
   }
+}
+
+const useStyles = () => {
+  const {atoms, color} = useTheme()
+
+  const styles = StyleSheet.create({
+    root: {
+      ...atoms.flex_1,
+      ...atoms.relative,
+    },
+    loading: {
+      ...atoms.absolute,
+      ...atoms.h_full,
+      ...atoms.w_full,
+      ...atoms.align_center,
+      ...atoms.justify_center,
+    },
+    buttons: {
+      backgroundColor: color.bg_color_high,
+      ...atoms.p_lg,
+      ...atoms.flex_row,
+    },
+    scroll: {
+      flex: 1,
+      ...atoms.px_lg,
+    },
+  })
+
+  return {styles} as const
 }
