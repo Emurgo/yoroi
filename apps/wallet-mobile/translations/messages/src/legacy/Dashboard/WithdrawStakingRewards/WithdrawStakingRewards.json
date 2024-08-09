@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Also deregister staking key?",
     "file": "src/legacy/Dashboard/WithdrawStakingRewards/WithdrawStakingRewards.tsx",
     "start": {
-      "line": 155,
+      "line": 159,
       "column": 21,
-      "index": 5494
+      "index": 5657
     },
     "end": {
-      "line": 158,
+      "line": 162,
       "column": 3,
-      "index": 5622
+      "index": 5785
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!When <b>withdrawing rewards</b>, you also have the option to deregister the staking key.",
     "file": "src/legacy/Dashboard/WithdrawStakingRewards/WithdrawStakingRewards.tsx",
     "start": {
-      "line": 159,
+      "line": 163,
       "column": 16,
-      "index": 5640
+      "index": 5803
     },
     "end": {
-      "line": 162,
+      "line": 166,
       "column": 3,
-      "index": 5823
+      "index": 5986
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!<b>Keeping the staking key</b> will allow you to withdraw the rewards, but continue delegating to the same pool.",
     "file": "src/legacy/Dashboard/WithdrawStakingRewards/WithdrawStakingRewards.tsx",
     "start": {
-      "line": 163,
+      "line": 167,
       "column": 16,
-      "index": 5841
+      "index": 6004
     },
     "end": {
-      "line": 168,
+      "line": 172,
       "column": 3,
-      "index": 6065
+      "index": 6228
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!<b>Deregistering the staking key</b> will give you back your deposit and undelegate the key from any pool.",
     "file": "src/legacy/Dashboard/WithdrawStakingRewards/WithdrawStakingRewards.tsx",
     "start": {
-      "line": 169,
+      "line": 173,
       "column": 16,
-      "index": 6083
+      "index": 6246
     },
     "end": {
-      "line": 173,
+      "line": 177,
       "column": 3,
-      "index": 6290
+      "index": 6453
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!You do NOT need to deregister to delegate to a different stake pool. You can change your delegation preference at any time.",
     "file": "src/legacy/Dashboard/WithdrawStakingRewards/WithdrawStakingRewards.tsx",
     "start": {
-      "line": 174,
+      "line": 178,
       "column": 12,
-      "index": 6304
+      "index": 6467
     },
     "end": {
-      "line": 179,
+      "line": 183,
       "column": 3,
-      "index": 6535
+      "index": 6698
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!You should NOT deregister if this staking key is used as a stake pool's reward account, as this will cause all pool operator rewards to be sent back to the reserve.",
     "file": "src/legacy/Dashboard/WithdrawStakingRewards/WithdrawStakingRewards.tsx",
     "start": {
-      "line": 180,
+      "line": 184,
       "column": 12,
-      "index": 6549
+      "index": 6712
     },
     "end": {
-      "line": 186,
+      "line": 190,
       "column": 3,
-      "index": 6832
+      "index": 6995
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!Deregistering means this key will no longer receive rewards until you re-register the staking key (usually by delegating to a pool again)",
     "file": "src/legacy/Dashboard/WithdrawStakingRewards/WithdrawStakingRewards.tsx",
     "start": {
-      "line": 187,
+      "line": 191,
       "column": 12,
-      "index": 6846
+      "index": 7009
     },
     "end": {
-      "line": 192,
+      "line": 196,
       "column": 3,
-      "index": 7091
+      "index": 7254
     }
   },
   {
@@ -109,14 +109,14 @@
     "defaultMessage": "!!!Keep registered",
     "file": "src/legacy/Dashboard/WithdrawStakingRewards/WithdrawStakingRewards.tsx",
     "start": {
-      "line": 193,
+      "line": 197,
       "column": 14,
-      "index": 7107
+      "index": 7270
     },
     "end": {
-      "line": 196,
+      "line": 200,
       "column": 3,
-      "index": 7215
+      "index": 7378
     }
   },
   {
@@ -124,14 +124,14 @@
     "defaultMessage": "!!!Deregister",
     "file": "src/legacy/Dashboard/WithdrawStakingRewards/WithdrawStakingRewards.tsx",
     "start": {
-      "line": 197,
+      "line": 201,
       "column": 20,
-      "index": 7237
+      "index": 7400
     },
     "end": {
-      "line": 200,
+      "line": 204,
       "column": 3,
-      "index": 7346
+      "index": 7509
     }
   }
 ]
