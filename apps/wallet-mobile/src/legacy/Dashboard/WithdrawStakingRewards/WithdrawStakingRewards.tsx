@@ -3,6 +3,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, Text, View} from 'react-native'
 
+import {Spacer} from '../../../../src/components/Spacer'
 import {Boundary, Button, Checkbox, PleaseWaitView} from '../../../components'
 import {Space} from '../../../components/Space/Space'
 import {Warning} from '../../../components/Warning'
@@ -14,7 +15,6 @@ import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {Quantities} from '../../../yoroi-wallets/utils'
 import {useStakingInfo} from '../StakePoolInfos'
 import {ConfirmTx} from './ConfirmTx/ConfirmTx'
-
 type Props = {
   wallet: YoroiWallet
   onCancel: () => void
@@ -70,6 +70,8 @@ export const WithdrawalTxForm = ({
 
   return (
     <View style={styles.root} testID="dangerousActionView">
+      <Header title={strings.warningModalTitle}></Header>
+
       <ScrollView style={styles.scroll} bounces={false}>
         <Warning content={[strings.warning1, strings.warning2, strings.warning3].join('\r\n')} />
 
@@ -124,6 +126,18 @@ export const WithdrawalTxForm = ({
     </View>
   )
 }
+
+const Header = ({title}: {title: string}) => {
+  const styles = useStyles()
+
+  return (
+    <View style={styles.header}>
+      {title !== '' && <Text style={styles.title}>{title}</Text>}
+    </View>
+  )
+}
+
+
 
 const Route = ({active, children}: {active: boolean; children: React.ReactNode}) => <>{active ? children : null}</>
 
@@ -236,6 +250,15 @@ const useStyles = () => {
     bolder: {
       color: color.gray_cmax,
       ...atoms.body_2_md_medium,
+    },
+    title: {
+      ...atoms.heading_3_medium,
+      ...atoms.p_lg,
+      color: color.text_gray_max,
+    },
+    header: {
+      ...atoms.align_center,
+      ...atoms.self_stretch,
     },
   })
   return styles
