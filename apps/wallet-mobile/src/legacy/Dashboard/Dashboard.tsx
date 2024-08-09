@@ -76,7 +76,7 @@ export const Dashboard = () => {
     openModal(
       strings.warningModalTitle,
       <WithdrawStakingRewards wallet={wallet} onSuccess={() => resetToTxHistory()} onCancel={() => closeModal()} />,
-      450,
+      600,
     )
   }
 
