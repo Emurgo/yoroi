@@ -366,7 +366,7 @@ export type ResolverWallet = {
   submitTx: (cbor: string) => Promise<string>
   signTx: (txHex: string, partialSign?: boolean) => Promise<TransactionWitnessSet>
   signData: (address: string, payload: string) => Promise<{signature: string; key: string}>
-  sendReorganisationTx: (value: string) => Promise<TransactionUnspentOutput>
+  sendReorganisationTx: (value?: string) => Promise<TransactionUnspentOutput>
   cip95?: CIP95ResolverWallet
 }
 
