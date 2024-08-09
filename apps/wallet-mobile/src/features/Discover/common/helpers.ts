@@ -124,8 +124,8 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
       const rootKey = await signTx(cbor)
       return cip30.signTx(rootKey, cbor, partial)
     },
-    sendReorganisationTx: async () => {
-      const cbor = await cip30.buildReorganisationTx()
+    sendReorganisationTx: async (value?: string) => {
+      const cbor = await cip30.buildReorganisationTx(value)
       if (meta.isHW) {
         const signedTx = await options.signTxWithHW(cbor, false)
         const base64 = Buffer.from(await signedTx.toBytes()).toString('base64')

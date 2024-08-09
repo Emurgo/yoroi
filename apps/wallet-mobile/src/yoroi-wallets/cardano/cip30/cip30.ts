@@ -173,9 +173,16 @@ class CIP30Extension {
     }
   }
 
-  async buildReorganisationTx(): Promise<string> {
+  async buildReorganisationTx(value?: string): Promise<string> {
+    const valueStr = value?.trim() ?? collateralConfig.minLovelace.toString()
+    const valueNum = new BigNumber(valueStr)
+
+    if (valueNum.gt(new BigNumber(collateralConfig.maxLovelace))) {
+      throw new Error('Collateral value is too high')
+    }
+
     const bech32Address = this.wallet.externalAddresses[0]
-    const amounts = {[this.wallet.primaryTokenInfo.id]: asQuantity(collateralConfig.minLovelace)}
+    const amounts = {[this.wallet.primaryTokenInfo.id]: asQuantity(valueStr)}
     const yoroiUnsignedTx = await this.wallet.createUnsignedTx({
       entries: [{address: bech32Address, amounts}],
       addressMode: this.meta.addressMode,
