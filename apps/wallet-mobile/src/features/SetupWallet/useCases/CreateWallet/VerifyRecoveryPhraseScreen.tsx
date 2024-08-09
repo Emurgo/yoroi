@@ -369,7 +369,7 @@ const useStyles = () => {
       ...atoms.overflow_hidden,
     },
     recoveryPhraseBackground: {
-      borderColor: '#242D4F',
+      borderColor: color.primary_c200,
       borderWidth: 1,
       backgroundColor: color.bg_color_high,
       borderRadius: 6,
@@ -462,7 +462,7 @@ const useStyles = () => {
 
   const colors = {
     error: color.sys_magenta_c500,
-    buttonBg: '#1F253B',
+    buttonBg: color.primary_c100,
     gradientGreen: color.secondary_c300,
     black: color.black_static,
     bg: color.bg_color_high,
