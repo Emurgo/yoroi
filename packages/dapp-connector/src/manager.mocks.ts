@@ -38,6 +38,7 @@ export const mockedDAppList = {
       category: 'example',
       uri: 'https://example.com',
       origins: ['https://example.com'],
+      isSingleAddress: false,
     },
   ],
   filters: {'Category 1': ['Example 1', 'Example 2']},
