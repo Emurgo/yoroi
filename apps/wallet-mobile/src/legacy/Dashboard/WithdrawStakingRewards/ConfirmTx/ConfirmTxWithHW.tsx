@@ -1,6 +1,7 @@
 import {App, HW} from '@yoroi/types'
 import React from 'react'
 import {useIntl} from 'react-intl'
+import {View} from 'react-native'
 
 import {Boundary, TwoActionView} from '../../../../components'
 import {useSelectedWallet} from '../../../../features/WalletManager/common/hooks/useSelectedWallet'
@@ -45,7 +46,7 @@ export const ConfirmTxWithHW = (props: Props) => {
   }
 
   return (
-    <>
+    <View style={{flex: 1, paddingHorizontal: 16}}>
       <Route active={step === 'select-transport'}>
         <LedgerTransportSwitch
           onSelectBLE={() => onSelectTransport('BLE')}
@@ -62,7 +63,7 @@ export const ConfirmTxWithHW = (props: Props) => {
           <Confirm {...props} transport={transportType} />
         </Boundary>
       </Route>
-    </>
+    </View>
   )
 }
 
