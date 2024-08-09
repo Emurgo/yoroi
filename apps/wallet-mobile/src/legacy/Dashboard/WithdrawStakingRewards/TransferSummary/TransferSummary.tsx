@@ -4,7 +4,6 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Linking, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 
-import {Spacer} from '../../../../../src/components/Spacer'
 import {Text} from '../../../../components'
 import {confirmationMessages, txLabels} from '../../../../kernel/i18n/global-messages'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'

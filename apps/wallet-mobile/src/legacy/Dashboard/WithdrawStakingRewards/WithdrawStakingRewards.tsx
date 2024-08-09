@@ -3,7 +3,6 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, Text, View} from 'react-native'
 
-import {Spacer} from '../../../../src/components/Spacer'
 import {Boundary, Button, Checkbox, PleaseWaitView} from '../../../components'
 import {Space} from '../../../components/Space/Space'
 import {Warning} from '../../../components/Warning'
