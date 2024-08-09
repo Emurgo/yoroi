@@ -1079,7 +1079,7 @@ export const makeCardanoWallet = (
     }
 
     fetchTokenInfo(tokenId: string) {
-      return tokenId === '' || tokenId === 'ADA'
+      return tokenId === '' || tokenId === 'ADA' || tokenId === '.'
         ? Promise.resolve(PRIMARY_TOKEN_INFO)
         : legacyApi.getTokenInfo(tokenId, `${TOKEN_INFO_SERVICE}/metadata`, BACKEND)
     }
