@@ -26,16 +26,22 @@ export const SingleOrMultipleAddressesModal = ({onConfirm}: Props) => {
 
   const handleOnMultiple = () => {
     enableMultipleMode()
-    hideMultipleAddressesInfo()
-    closeModal()
-    onConfirm('multiple')
+    hideMultipleAddressesInfo({
+      onSuccess: () => {
+        closeModal()
+        onConfirm('multiple')
+      },
+    })
   }
 
   const handleOnSingle = () => {
     enableSingleMode()
-    hideMultipleAddressesInfo()
-    closeModal()
-    onConfirm('single')
+    hideMultipleAddressesInfo({
+      onSuccess: () => {
+        closeModal()
+        onConfirm('single')
+      },
+    })
   }
 
   return (
