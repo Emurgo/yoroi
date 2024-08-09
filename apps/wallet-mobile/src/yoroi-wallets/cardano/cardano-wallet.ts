@@ -629,7 +629,7 @@ export const makeCardanoWallet = (
             poolDeposit,
             networkId: this.networkManager.chainId,
           },
-          PRIMARY_TOKEN,
+          this.primaryToken,
           {},
           votingCertificates,
         )
