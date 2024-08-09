@@ -260,16 +260,15 @@ export const makeCardanoWallet = (
     }
 
     getChangeAddress(addressMode: Wallet.AddressMode): string {
-      if (addressMode === 'single') {
-        return this.internalChain.addresses[0]
-      } else {
-        const candidateAddresses = this.internalChain.addresses
-        const unseen = candidateAddresses.filter((addr) => !this.isUsedAddress(addr))
-        assert(unseen.length > 0, 'Cannot find change address')
-        const changeAddress = _.first(unseen)
-        if (!changeAddress) throwLoggedError('ByronWallet: getChangeAddress unable to resolve change address')
-        return changeAddress
-      }
+      // SA mode uses only externalChain index 0
+      if (addressMode === 'single') return this.externalChain.addresses[0]
+
+      const candidateAddresses = this.internalChain.addresses
+      const unseen = candidateAddresses.filter((addr) => !this.isUsedAddress(addr))
+      assert(unseen.length > 0, 'Cannot find change address')
+      const changeAddress = _.first(unseen)
+      if (!changeAddress) throwLoggedError('CardanoWallet: getChangeAddress unable to resolve change address')
+      return changeAddress
     }
 
     private getAddressedChangeAddress(addressMode: Wallet.AddressMode): {
