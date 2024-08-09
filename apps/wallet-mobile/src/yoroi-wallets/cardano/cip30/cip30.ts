@@ -88,9 +88,7 @@ class CIP30Extension {
       const valueStr = value?.trim() ?? collateralConfig.minLovelace.toString()
       const valueNum = new BigNumber(valueStr)
 
-      if (valueNum.gt(new BigNumber(collateralConfig.maxLovelace))) {
-        throw new Error('Collateral value is too high')
-      }
+      assertCollateralValue(valueNum)
 
       const currentCollateral = this.wallet.getCollateralInfo()
       const canUseCurrentCollateral = currentCollateral.utxo && valueNum.lte(currentCollateral.utxo.amount)
@@ -177,9 +175,7 @@ class CIP30Extension {
     const valueStr = value?.trim() ?? collateralConfig.minLovelace.toString()
     const valueNum = new BigNumber(valueStr)
 
-    if (valueNum.gt(new BigNumber(collateralConfig.maxLovelace))) {
-      throw new Error('Collateral value is too high')
-    }
+    assertCollateralValue(valueNum)
 
     const bech32Address = this.wallet.externalAddresses[0]
     const amounts = {[this.wallet.primaryTokenInfo.id]: asQuantity(valueStr)}
@@ -449,4 +445,10 @@ const getAmountsFromValue = async (csl: WasmModuleProxy, value: string, primaryT
     }
   }
   return amounts
+}
+
+const assertCollateralValue = (value: BigNumber) => {
+  if (value.gt(new BigNumber(collateralConfig.maxLovelace))) {
+    throw new Error('Collateral value is too high')
+  }
 }
