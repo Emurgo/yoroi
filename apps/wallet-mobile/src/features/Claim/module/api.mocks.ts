@@ -4,7 +4,7 @@ const claimTokensResponse: {[key: string]: ClaimToken} = {
   accepted: {
     status: 'accepted',
     amounts: {
-      '': '2000000',
+      '.': '2000000',
       '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950': '44',
       '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6.4d494e': '410',
       '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65f.74484f444c52': '5',
@@ -18,14 +18,14 @@ const claimTokensResponse: {[key: string]: ClaimToken} = {
   processing: {
     status: 'processing',
     amounts: {
-      '': '2000000',
+      '.': '2000000',
       '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950': '44',
     },
   },
   done: {
     status: 'done',
     amounts: {
-      '': '2000000',
+      '.': '2000000',
       '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950': '44',
       '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6.4d494e': '410',
       '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65f.74484f444c52': '5',
@@ -70,7 +70,7 @@ export const claimApiMockFetchers = {
 const claimApiError: ClaimApi = {
   claimTokens: claimTokensApi.error,
   address: 'address',
-  primaryTokenId: '',
+  primaryTokenId: '.',
 } as const
 
 export const claimApiMockInstances = {

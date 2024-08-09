@@ -133,7 +133,7 @@ const wallet: YoroiWallet = {
 
         assets: [],
       },
-      amount: {quantity: '5449549', tokenId: ''},
+      amount: {quantity: '5449549', tokenId: '.'},
       collateralId: '22d391c7a97559cb4784bd975214919618acce75cde573a7150a176700e76181:2',
       isConfirmed: true,
     }
@@ -657,7 +657,7 @@ const tokenEntries: Array<CardanoTypes.TokenEntry> = [
 ]
 
 const balances: Balance.Amounts = {
-  '': '2727363743849',
+  '.': '2727363743849',
   '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950': '12344',
   '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6.4d494e': '215410',
   '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65f.74484f444c52': '5',
@@ -669,7 +669,7 @@ const balances: Balance.Amounts = {
 }
 
 const tokenInfos: Record<string, Balance.TokenInfo> = {
-  '': HASKELL_SHELLEY_TESTNET.PRIMARY_TOKEN_INFO,
+  '.': HASKELL_SHELLEY_TESTNET.PRIMARY_TOKEN_INFO,
   '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950': toTokenInfo({
     networkId: 300,
     identifier: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950',
@@ -848,12 +848,12 @@ const yoroiUnsignedTx: YoroiUnsignedTx & {mock: true} = {
   entries: [
     {
       address: 'address1',
-      amounts: {'': '99999'},
+      amounts: {'.': '99999'},
     },
   ],
-  fee: {'': '12345'},
+  fee: {'.': '12345'},
   metadata: {},
-  change: [{address: 'change_address', amounts: {'': '1'}}],
+  change: [{address: 'change_address', amounts: {'.': '1'}}],
   staking: {
     registrations: [],
     deregistrations: [],
@@ -868,7 +868,7 @@ const yoroiUnsignedTx: YoroiUnsignedTx & {mock: true} = {
 
 const yoroiSignedTx: YoroiSignedTx & {mock: true} = {
   entries: [],
-  fee: {'': '12345'},
+  fee: {'.': '12345'},
   metadata: {},
   change: [],
   staking: {
