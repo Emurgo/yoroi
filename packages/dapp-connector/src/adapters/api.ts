@@ -44,6 +44,7 @@ export const dappConnectorApiMaker = ({request}: {request: FetchData} = initialD
         logo: `${protocol}//${hostname}/${dapp.logo}`,
         uri: dapp.uri,
         origins: dapp.origins,
+        isSingleAddress: dapp.isSingleAddress ?? false,
       })),
       filters: value.filters,
     }
@@ -59,6 +60,7 @@ const DappResponseSchema = z.object({
   logo: z.string(),
   uri: z.string(),
   origins: z.array(z.string()),
+  isSingleAddress: z.boolean().optional(),
 })
 
 const DappListResponseSchema = z.object({
@@ -81,4 +83,5 @@ interface DappResponse {
   logo: string
   uri: string
   origins: string[]
+  isSingleAddress: boolean
 }

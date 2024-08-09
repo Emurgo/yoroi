@@ -64,6 +64,7 @@ export const RecoveryPhraseScreen = () => {
         <Space height="xl" />
 
         <Button
+          shelleyTheme
           title={strings.continueButton}
           onPress={() => {
             closeModal()

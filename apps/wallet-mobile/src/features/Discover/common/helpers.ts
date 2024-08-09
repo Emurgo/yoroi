@@ -45,6 +45,7 @@ export interface DAppItem {
   logo: string
   uri: string
   origins: string[]
+  isSingleAddress: boolean
 }
 
 const googleDappId = 'google_search'
@@ -57,6 +58,7 @@ export const getGoogleSearchItem = (searchQuery: string): DAppItem => ({
   logo: '',
   uri: `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`,
   origins: ['https://www.google.com'],
+  isSingleAddress: false,
 })
 
 export const isGoogleSearchItem = (dApp: DAppItem) => dApp.id === googleDappId

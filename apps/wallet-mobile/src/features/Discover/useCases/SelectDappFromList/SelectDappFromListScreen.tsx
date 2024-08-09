@@ -230,6 +230,7 @@ const useFilteredDappList = (tab: TDAppTabs, categoriesSelected: string[]) => {
         logo: '',
         uri: origin,
         origins: [origin],
+        isSingleAddress: false,
       }
     })
   }

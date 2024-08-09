@@ -137,15 +137,20 @@ const useConfirmConnection = () => {
     async (origin: string, manager: DappConnector) => {
       const recommendedDApps = await manager.getDAppList()
       const selectedDapp = recommendedDApps.dapps.find((dapp) => dapp.origins.includes(origin))
+      const name = selectedDapp?.name ?? origin
+      const website = origin
+      const logo = selectedDapp?.logo ?? ''
+      const showSingleAddressWarning = selectedDapp?.isSingleAddress ?? false
 
       return new Promise<boolean>((resolve) => {
         const openMainModal = () => {
           openConfirmConnectionModal({
-            name: selectedDapp?.name ?? origin,
-            website: origin,
-            logo: selectedDapp?.logo ?? '',
+            name,
+            website,
+            logo,
             onConfirm: () => resolve(true),
             onClose: () => resolve(false),
+            showSingleAddressWarning,
           })
         }
 

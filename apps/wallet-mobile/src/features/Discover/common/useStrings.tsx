@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {ledgerMessages, txLabels} from '../../../kernel/i18n/global-messages'
+import globalMessages, {ledgerMessages, txLabels} from '../../../kernel/i18n/global-messages'
 
 export const useStrings = () => {
   const intl = useIntl()
@@ -49,6 +49,9 @@ export const useStrings = () => {
     signMessage: intl.formatMessage(messages.signMessage),
     testnetWarningTitle: intl.formatMessage(messages.testnetWarningTitle),
     testnetWarningDescription: intl.formatMessage(messages.testnetWarningDescription),
+    singleAddress: intl.formatMessage(messages.singleAddress),
+    singleAddressWarning: intl.formatMessage(messages.singleAddressWarning),
+    learnMore: intl.formatMessage(globalMessages.learnMore),
   }).current
 }
 
@@ -91,6 +94,10 @@ export const messages = Object.freeze(
       id: 'discover.discoverList.connected',
       defaultMessage: '!!!Connected',
     },
+    singleAddress: {
+      id: 'discover.discoverList.singleAddress',
+      defaultMessage: '!!!Single address',
+    },
     recommended: {
       id: 'discover.discoverList.recommended',
       defaultMessage: '!!!Recommended',
@@ -130,6 +137,11 @@ export const messages = Object.freeze(
     confirmConnectionModalPermission1: {
       id: 'discover.confirmConnectionModal.permission1',
       defaultMessage: '!!!View addresses, account balance, activity',
+    },
+    singleAddressWarning: {
+      id: 'discover.confirmConnectionModal.singleAddressWarning',
+      defaultMessage:
+        '!!!This DApp supports only single-address wallets. Your wallet balance might be displayed incorrectly.',
     },
     confirmConnectionModalPermission2: {
       id: 'discover.confirmConnectionModal.permission2',
