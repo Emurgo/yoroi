@@ -157,7 +157,6 @@ const Item = (props: ViewProps) => {
 
 const Header = ({title}: {title: string}) => {
   const styles = useStyles()
-
   return (
     <View style={styles.header}>
       {title !== '' && <Text style={styles.title}>{title}</Text>}

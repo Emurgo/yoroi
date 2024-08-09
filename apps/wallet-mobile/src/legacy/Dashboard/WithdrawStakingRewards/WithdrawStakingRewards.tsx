@@ -128,15 +128,12 @@ export const WithdrawalTxForm = ({
 
 const Header = ({title}: {title: string}) => {
   const styles = useStyles()
-
   return (
     <View style={styles.header}>
       {title !== '' && <Text style={styles.title}>{title}</Text>}
     </View>
   )
 }
-
-
 
 const Route = ({active, children}: {active: boolean; children: React.ReactNode}) => <>{active ? children : null}</>
 
