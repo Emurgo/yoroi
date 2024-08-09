@@ -399,7 +399,7 @@ export const makeCardanoWallet = (
           ? RegistrationStatus.DelegateOnly
           : RegistrationStatus.RegisterAndDelegate
         const delegatedAmountMT = {
-          values: [{identifier: '', amount: delegatedAmount, networkId: this.networkManager.chainId}],
+          values: [{identifier: '', amount: delegatedAmount, networkId: NETWORK_ID}],
           defaults: PRIMARY_TOKEN,
         }
 
@@ -421,7 +421,7 @@ export const makeCardanoWallet = (
             minimumUtxoVal: cardanoConfig.params.minUtxoValue.toString(),
             coinsPerUtxoByte,
             poolDeposit,
-            networkId: this.networkManager.chainId,
+            networkId: NETWORK_ID,
           },
         )
 
@@ -469,7 +469,7 @@ export const makeCardanoWallet = (
             minimumUtxoVal: cardanoConfig.params.minUtxoValue.toString(),
             coinsPerUtxoByte,
             poolDeposit,
-            networkId: this.networkManager.chainId,
+            networkId: NETWORK_ID,
           }
           const txOptions = {}
           const nonce = absSlotNumber.toNumber()
@@ -496,7 +496,7 @@ export const makeCardanoWallet = (
             config,
             txOptions,
             nonce,
-            this.networkManager.chainId,
+            NETWORK_ID,
             paymentAddressCIP36,
             addressingCIP36.path,
             supportsCIP36,
@@ -582,7 +582,7 @@ export const makeCardanoWallet = (
             coinsPerUtxoByte,
             poolDeposit,
             keyDeposit,
-            networkId: this.networkManager.chainId,
+            networkId: NETWORK_ID,
           },
           {metadata: undefined},
         )
@@ -627,7 +627,7 @@ export const makeCardanoWallet = (
             minimumUtxoVal: cardanoConfig.params.minUtxoValue.toString(),
             coinsPerUtxoByte,
             poolDeposit,
-            networkId: this.networkManager.chainId,
+            networkId: NETWORK_ID,
           },
           PRIMARY_TOKEN,
           {},
@@ -816,7 +816,7 @@ export const makeCardanoWallet = (
             minimumUtxoVal: cardanoConfig.params.minUtxoValue.toString(),
             coinsPerUtxoByte,
             poolDeposit,
-            networkId: this.networkManager.chainId,
+            networkId: NETWORK_ID,
           },
           this.primaryToken,
           {metadata},
@@ -898,7 +898,7 @@ export const makeCardanoWallet = (
       const payload = await createSwapCancellationLedgerPayload(
         cbor,
         this,
-        this.networkManager.chainId,
+        NETWORK_ID,
         this.networkManager.protocolMagic,
         (address: string) => this.getAddressing(address),
         stakeVkeyHash,
@@ -930,7 +930,7 @@ export const makeCardanoWallet = (
           logger.info('ShelleyWallet: signTxWithLedger ledger app version <= 5, no CIP-36 support', {appAdaVersion})
           const ledgerPayload = await Cardano.buildVotingLedgerPayloadV5(
             unsignedTx.unsignedTx,
-            this.networkManager.chainId,
+            NETWORK_ID,
             this.networkManager.protocolMagic,
             Array.from(implementationConfig.features.staking.addressing),
           )
@@ -959,7 +959,7 @@ export const makeCardanoWallet = (
       }
       const ledgerPayload = await Cardano.buildLedgerPayload(
         unsignedTx.unsignedTx,
-        this.networkManager.chainId,
+        NETWORK_ID,
         this.networkManager.protocolMagic,
         stakingAddressing,
       )
