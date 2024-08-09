@@ -4,12 +4,12 @@ import {StyleSheet, Text, View} from 'react-native'
 
 import {useStrings} from './useStrings'
 
-export const LabelConnected = () => {
+export const LabelSingleAddress = () => {
   const {styles} = useStyles()
   const strings = useStrings()
   return (
     <View style={styles.labelContainer}>
-      <Text style={styles.labelText}>{strings.connected}</Text>
+      <Text style={styles.labelText}>{strings.singleAddress}</Text>
     </View>
   )
 }
@@ -19,7 +19,7 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     labelContainer: {
-      backgroundColor: color.secondary_c600,
+      backgroundColor: color.el_gray_low,
       ...atoms.px_sm,
       paddingVertical: 3,
       borderRadius: 999,
@@ -27,7 +27,7 @@ const useStyles = () => {
     labelText: {
       ...atoms.body_3_sm_medium,
       fontWeight: '500',
-      color: color.gray_cmin,
+      color: color.white_static,
     },
   })
 

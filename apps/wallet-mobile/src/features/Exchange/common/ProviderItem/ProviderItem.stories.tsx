@@ -12,7 +12,7 @@ storiesOf('Exchange ProviderItem', module)
   .add('Default', () => (
     <ProviderItem
       label="Banxa"
-      fee="1% fee (very cheap king)"
+      fee="1% fee"
       leftAdornment={<BanxaLogo size={40} />}
       rightAdornment={<Icon.Check color="#7892E8" />}
       onPress={action('Provider Item Pressed')}

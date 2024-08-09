@@ -18,6 +18,7 @@ const Initial = () => {
       onConfirm={action('onConfirm')}
       name="Example DApp"
       website="example.com"
+      showSingleAddressWarning={false}
     />
   )
 }
@@ -25,15 +26,33 @@ const Initial = () => {
 const WithButton = () => {
   const {openConfirmConnectionModal} = useOpenConfirmConnectionModal()
 
-  const handleOnPress = () => {
+  const handleOnPressNoWarning = () => {
     openConfirmConnectionModal({
       onConfirm: action('onConfirm'),
       website: 'example.com',
       name: 'Example DApp',
       logo: 'https://daehx1qv45z7c.cloudfront.net/cardano-spot.png',
       onClose: action('onClose'),
+      showSingleAddressWarning: false,
     })
   }
 
-  return <Button title="Open Modal" shelleyTheme onPress={handleOnPress} />
+  const handleOnPressWarning = () => {
+    openConfirmConnectionModal({
+      onConfirm: action('onConfirm'),
+      website: 'example.com',
+      name: 'Example DApp',
+      logo: 'https://daehx1qv45z7c.cloudfront.net/cardano-spot.png',
+      onClose: action('onClose'),
+      showSingleAddressWarning: true,
+    })
+  }
+
+  return (
+    <View>
+      <Button title="Open modal without warning" shelleyTheme onPress={handleOnPressNoWarning} />
+
+      <Button title="Open modal with warning" shelleyTheme onPress={handleOnPressWarning} />
+    </View>
+  )
 }

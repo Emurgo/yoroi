@@ -122,7 +122,7 @@ export const resolver: Resolver = {
         const coin = BigNumber(await (await balance.coin()).toStr())
         if (coin.isGreaterThan(BigNumber(value))) {
           try {
-            const utxo = await context.wallet.sendReorganisationTx()
+            const utxo = await context.wallet.sendReorganisationTx(value)
             return [await utxo.toHex()]
           } catch {
             return null
@@ -366,7 +366,7 @@ export type ResolverWallet = {
   submitTx: (cbor: string) => Promise<string>
   signTx: (txHex: string, partialSign?: boolean) => Promise<TransactionWitnessSet>
   signData: (address: string, payload: string) => Promise<{signature: string; key: string}>
-  sendReorganisationTx: () => Promise<TransactionUnspentOutput>
+  sendReorganisationTx: (value?: string) => Promise<TransactionUnspentOutput>
   cip95?: CIP95ResolverWallet
 }
 

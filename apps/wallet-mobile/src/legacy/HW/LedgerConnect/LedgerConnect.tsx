@@ -219,7 +219,7 @@ class LedgerConnectInt extends React.Component<Props, State> {
       <View style={styles.listHeader}>
         <Text style={[styles.paragraph, styles.paragraphText]}>{msg}</Text>
 
-        {err != null && <Text style={[styles.error, styles.paragraphText]}>{err}</Text>}
+        {err != null && <Text style={styles.error}>{err}</Text>}
       </View>
     )
     let msg, errMsg
@@ -368,6 +368,7 @@ const useStyles = () => {
       marginBottom: 16,
     },
     error: {
+      ...atoms.body_1_lg_medium,
       color: color.sys_magenta_c500,
     },
     paragraphText: {

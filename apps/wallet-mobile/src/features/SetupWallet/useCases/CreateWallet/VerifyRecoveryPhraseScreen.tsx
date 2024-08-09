@@ -170,7 +170,7 @@ const MnemonicInput = ({defaultMnemonic, userEntries, onPress}: MnemonicInputPro
 
   return (
     <Animated.View layout={Layout} entering={FadeIn} exiting={FadeOut} style={[styles.recoveryPhrase, styles.padding]}>
-      <View style={[StyleSheet.absoluteFill, {backgroundColor: colors.gradientBlueGreen}]} />
+      <View style={[StyleSheet.absoluteFill, {backgroundColor: colors.bg}]} />
 
       <View style={styles.recoveryPhraseBackground}>
         <View style={styles.recoveryPhraseOutline}>
@@ -206,8 +206,7 @@ const MnemonicInput = ({defaultMnemonic, userEntries, onPress}: MnemonicInputPro
                         style={[
                           StyleSheet.absoluteFill,
                           {
-                            backgroundColor:
-                              isPhraseComplete && isValidPhrase ? colors.gradientGreen : colors.gradientBlueGreen,
+                            backgroundColor: isPhraseComplete && isValidPhrase ? colors.gradientGreen : colors.buttonBg,
                           },
                         ]}
                       />
@@ -288,12 +287,7 @@ const WordBadges = ({
             onPress={() => selectWord(entry)}
           >
             <Animated.View layout={Layout} entering={FadeIn} exiting={FadeOut} style={styles.wordBadgeContainer}>
-              <View
-                style={[
-                  StyleSheet.absoluteFill,
-                  {backgroundColor: !usedError ? colors.gradientBlueGreen : colors.error},
-                ]}
-              />
+              <View style={[StyleSheet.absoluteFill, {backgroundColor: !usedError ? colors.buttonBg : colors.error}]} />
 
               {isUsed && <View style={styles.usedWordBackground} />}
 
@@ -375,6 +369,8 @@ const useStyles = () => {
       ...atoms.overflow_hidden,
     },
     recoveryPhraseBackground: {
+      borderColor: color.primary_c200,
+      borderWidth: 1,
       backgroundColor: color.bg_color_high,
       borderRadius: 6,
       minHeight: 182,
@@ -435,7 +431,7 @@ const useStyles = () => {
       ...atoms.flex_wrap,
     },
     wordBadgeText: {
-      color: color.text_gray_medium,
+      color: color.text_primary_medium,
       ...atoms.body_1_lg_regular,
     },
     usedWord: {
@@ -466,9 +462,10 @@ const useStyles = () => {
 
   const colors = {
     error: color.sys_magenta_c500,
-    gradientBlueGreen: color.primary_c100,
+    buttonBg: color.primary_c100,
     gradientGreen: color.secondary_c300,
     black: color.black_static,
+    bg: color.bg_color_high,
   }
 
   return {styles, colors} as const

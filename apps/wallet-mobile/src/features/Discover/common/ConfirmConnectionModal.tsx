@@ -1,9 +1,11 @@
 import {useTheme} from '@yoroi/theme'
 import {Image} from 'expo-image'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Linking, StyleSheet, Text, View} from 'react-native'
 
 import {Button, Icon, Spacer, useModal} from '../../../components'
+import {Space} from '../../../components/Space/Space'
+import {Warning} from '../../../components/Warning'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {getDappFallbackLogo} from './helpers'
 import {useStrings} from './useStrings'
@@ -13,29 +15,41 @@ type Props = {
   website: string
   logo: string
   onConfirm: () => void
+  showSingleAddressWarning: boolean
 }
 
-export const confirmConnectionModalHeight = 400
+type OpenModalProps = {
+  onClose: () => void
+} & Props
+
+const confirmConnectionModalHeight = 400
+const confirmConnectionModalWithWarningHeight = 530
 
 export const useOpenConfirmConnectionModal = () => {
   const {openModal, closeModal} = useModal()
   const strings = useStrings()
   const {track} = useMetrics()
+
   const open = React.useCallback(
-    (props: Props & {onClose: () => void}) => {
+    (props: OpenModalProps) => {
+      const modalHeight = props.showSingleAddressWarning
+        ? confirmConnectionModalWithWarningHeight
+        : confirmConnectionModalHeight
+
       openModal(
         strings.confirmConnectionModalTitle,
         <ConfirmConnectionModal
           name={props.name}
           website={props.website}
           logo={props.logo}
+          showSingleAddressWarning={props.showSingleAddressWarning}
           onConfirm={() => {
             track.discoverWebViewBottomSheetConnectClicked()
             props.onConfirm()
             closeModal()
           }}
         />,
-        confirmConnectionModalHeight,
+        modalHeight,
         props.onClose,
       )
     },
@@ -44,7 +58,7 @@ export const useOpenConfirmConnectionModal = () => {
   return {openConfirmConnectionModal: open, closeModal}
 }
 
-export const ConfirmConnectionModal = ({name, website, onConfirm, logo}: Props) => {
+export const ConfirmConnectionModal = ({name, website, onConfirm, logo, showSingleAddressWarning}: Props) => {
   const {styles, colors} = useStyles()
   const strings = useStrings()
   const imageUri = logo.length === 0 ? getDappFallbackLogo(website) : logo
@@ -59,7 +73,7 @@ export const ConfirmConnectionModal = ({name, website, onConfirm, logo}: Props) 
         <Image source={{uri: imageUri}} style={styles.image} key={imageUri} />
       </View>
 
-      <Spacer height={8} />
+      <Space height="sm" />
 
       <View style={styles.line}>
         <Text style={styles.text}>{strings.confirmConnectionModalConnectTo}</Text>
@@ -67,13 +81,21 @@ export const ConfirmConnectionModal = ({name, website, onConfirm, logo}: Props) 
         <Text style={styles.bold}>{name}</Text>
       </View>
 
-      <Spacer height={8} />
+      <Space height="sm" />
 
       <View style={styles.line}>
         <Text style={styles.text}>{website}</Text>
       </View>
 
-      <Spacer height={16} />
+      {showSingleAddressWarning && (
+        <>
+          <Space height="lg" />
+
+          <SingleAddressDAppWarning />
+        </>
+      )}
+
+      <Space height="lg" />
 
       <Text style={styles.text}>{strings.confirmConnectionModalAllowThisDAppTo}</Text>
 
@@ -87,6 +109,33 @@ export const ConfirmConnectionModal = ({name, website, onConfirm, logo}: Props) 
 
       <Button title={strings.confirmConnectionModalConnect} shelleyTheme onPress={onConfirm} />
     </View>
+  )
+}
+
+const walletsCompatibilityLink =
+  'https://emurgohelpdesk.zendesk.com/hc/en-us/articles/10413017088527-DApps-and-HD-wallets-compatability'
+
+const SingleAddressDAppWarning = () => {
+  const {styles} = useStyles()
+  const strings = useStrings()
+
+  const handleOnPress = () => {
+    Linking.openURL(walletsCompatibilityLink)
+  }
+
+  return (
+    <Warning
+      content={
+        <>
+          <Text style={styles.warningText}>{`${strings.singleAddressWarning} `}</Text>
+
+          <Text style={[styles.warningText, styles.link]} onPress={handleOnPress}>
+            {strings.learnMore}
+          </Text>
+        </>
+      }
+      iconSize={20}
+    />
   )
 }
 
@@ -127,6 +176,13 @@ const useStyles = () => {
     root: {
       ...atoms.flex_1,
       ...atoms.px_lg,
+    },
+    warningText: {
+      ...atoms.body_2_md_regular,
+      color: color.gray_cmax,
+    },
+    link: {
+      color: color.sys_cyan_c500,
     },
   })
   return {styles, colors} as const

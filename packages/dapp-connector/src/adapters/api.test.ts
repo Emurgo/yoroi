@@ -39,6 +39,31 @@ describe('dappConnectorApiMaker', () => {
       })
     })
 
+    it('should assign isSingleAddress to false if was not defined', async () => {
+      const data = await managerMock.getDAppList()
+      const fakeResult = {
+        tag: 'right' as const,
+        value: {
+          data: {
+            ...data,
+            dapps: data.dapps.map((d) => ({...d, isSingleAddress: undefined})),
+          },
+        },
+      } as const
+      const fakeFetchData = () => Promise.resolve(fakeResult)
+      const result = await dappConnectorApiMaker({request: fakeFetchData as any}).getDApps({
+        network: Chain.Network.Mainnet,
+      })
+      expect(result).toEqual({
+        ...fakeResult.value.data,
+        dapps: fakeResult.value.data.dapps.map((d) => ({
+          ...d,
+          logo: 'https://daehx1qv45z7c.cloudfront.net/icon.png',
+          isSingleAddress: false,
+        })),
+      })
+    })
+
     it('should support preprod', async () => {
       const fakeResult = {tag: 'right' as const, value: {data: await managerMock.getDAppList()}} as const
       const fakeFetchData = () => Promise.resolve(fakeResult)
