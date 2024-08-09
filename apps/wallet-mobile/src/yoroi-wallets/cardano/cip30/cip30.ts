@@ -88,7 +88,7 @@ class CIP30Extension {
       const valueStr = value?.trim() ?? collateralConfig.minLovelace.toString()
       const valueNum = new BigNumber(valueStr)
 
-      if (valueNum.gte(new BigNumber(collateralConfig.maxLovelace))) {
+      if (valueNum.gt(new BigNumber(collateralConfig.maxLovelace))) {
         throw new Error('Collateral value is too high')
       }
 
