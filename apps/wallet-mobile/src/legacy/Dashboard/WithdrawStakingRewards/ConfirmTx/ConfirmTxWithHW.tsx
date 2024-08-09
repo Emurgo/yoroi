@@ -1,7 +1,8 @@
+import {useTheme} from '@yoroi/theme'
 import {App, HW} from '@yoroi/types'
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 
 import {Boundary, TwoActionView} from '../../../../components'
 import {useSelectedWallet} from '../../../../features/WalletManager/common/hooks/useSelectedWallet'
@@ -27,6 +28,7 @@ export const ConfirmTxWithHW = (props: Props) => {
   const {walletManager} = useWalletManager()
   const [transportType, setTransportType] = React.useState<TransportType>('USB')
   const [step, setStep] = React.useState<'select-transport' | 'connect-transport' | 'confirm'>('select-transport')
+  const {styles} = useStyles()
 
   const onSelectTransport = (transportType: TransportType) => {
     setTransportType(transportType)
@@ -46,7 +48,7 @@ export const ConfirmTxWithHW = (props: Props) => {
   }
 
   return (
-    <View style={{flex: 1, paddingHorizontal: 16}}>
+    <View style={styles.container}>
       <Route active={step === 'select-transport'}>
         <LedgerTransportSwitch
           onSelectBLE={() => onSelectTransport('BLE')}
@@ -111,4 +113,16 @@ const useStrings = () => {
     confirmTx: intl.formatMessage(txLabels.confirmTx),
     password: intl.formatMessage(txLabels.password),
   }
+}
+
+const useStyles = () => {
+  const {atoms} = useTheme()
+  const styles = StyleSheet.create({
+    container: {
+      ...atoms.flex_1,
+      ...atoms.px_lg,
+    },
+  })
+
+  return {styles} as const
 }
