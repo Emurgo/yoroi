@@ -26,6 +26,8 @@ export type DullahanApiTokenActivityRecord = Readonly<{
   ts: number
   open: string // BN
   close: string // BN
+  low: string // BN
+  high: string // BN
   change: number
 }>
 
