@@ -399,7 +399,7 @@ export const makeCardanoWallet = (
           ? RegistrationStatus.DelegateOnly
           : RegistrationStatus.RegisterAndDelegate
         const delegatedAmountMT = {
-          values: [{identifier: '', amount: delegatedAmount, networkId: this.networkManager.chainId}],
+          values: [{identifier: '.', amount: delegatedAmount, networkId: this.networkManager.chainId}],
           defaults: PRIMARY_TOKEN,
         }
 

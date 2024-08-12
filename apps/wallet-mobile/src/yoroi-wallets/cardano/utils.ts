@@ -79,10 +79,10 @@ type RemoteValue = {
 export const multiTokenFromRemote = (remoteValue: RemoteValue, networkId: number) => {
   const result = new MultiToken([], {
     defaultNetworkId: networkId,
-    defaultIdentifier: '',
+    defaultIdentifier: '.',
   })
   result.add({
-    identifier: '',
+    identifier: '.',
     amount: new BigNumber(remoteValue.amount),
     networkId,
   })

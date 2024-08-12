@@ -46,7 +46,7 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
     ],
     amount: [
       {
-        identifier: '',
+        identifier: '.',
         networkId: 1,
         amount: '1626373838',
         isDefault: true,
@@ -61,7 +61,7 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
     fee: undefined,
     delta: [
       {
-        identifier: '',
+        identifier: '.',
         networkId: 1,
         amount: '1407406',
         isDefault: true,
@@ -143,7 +143,7 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
     ],
     amount: [
       {
-        identifier: '',
+        identifier: '.',
         networkId: 1,
         amount: '2727272727',
         isDefault: true,
@@ -158,7 +158,7 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
     fee: undefined,
     delta: [
       {
-        identifier: '',
+        identifier: '.',
         networkId: 1,
         amount: '1407406',
         isDefault: true,
@@ -240,7 +240,7 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
     ],
     amount: [
       {
-        identifier: '',
+        identifier: '.',
         networkId: 1,
         amount: '1407406',
         isDefault: true,
@@ -255,7 +255,7 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
     fee: undefined,
     delta: [
       {
-        identifier: '',
+        identifier: '.',
         networkId: 1,
         amount: '1407406',
         isDefault: true,
@@ -340,7 +340,7 @@ export const mockTransactionInfo = (transaction?: Partial<TransactionInfo>): Tra
     ],
     amount: [
       {
-        identifier: '',
+        identifier: '.',
         networkId: 1,
         amount: '1407406',
         isDefault: true,
@@ -355,7 +355,7 @@ export const mockTransactionInfo = (transaction?: Partial<TransactionInfo>): Tra
     fee: undefined,
     delta: [
       {
-        identifier: '',
+        identifier: '.',
         networkId: 1,
         amount: '1407406',
         isDefault: true,

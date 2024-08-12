@@ -17,10 +17,7 @@ import {
 
 export const transformersMaker = (primaryTokenInfo: Portfolio.Token.Info) => {
   const asOpenswapTokenId = (yoroiTokenId: string) => {
-    const [policyId, assetName = ''] = yoroiTokenId.split('.') as [
-      string,
-      string?,
-    ]
+    const [policyId, assetName] = yoroiTokenId.split('.') as [string, string]
     // we dont convert to '.' or 'lovelace' only ''
     return {
       policyId,
@@ -29,7 +26,7 @@ export const transformersMaker = (primaryTokenInfo: Portfolio.Token.Info) => {
   }
 
   const asOpenswapPriceTokenAddress = (yoroiTokenId: string) => {
-    const [policyId, name = ''] = yoroiTokenId.split('.') as [string, string?]
+    const [policyId, name] = yoroiTokenId.split('.') as [string, string]
     // we dont convert to '.' or 'lovelace' only ''
     return {
       policyId,
@@ -68,10 +65,7 @@ export const transformersMaker = (primaryTokenInfo: Portfolio.Token.Info) => {
 
   const asYoroiOpenOrder = (openswapOrder: OpenOrder) => {
     const {from, to, deposit, ...rest} = openswapOrder
-    const [policyId, name = ''] = primaryTokenInfo.id.split('.') as [
-      string,
-      string?,
-    ]
+    const [policyId, name] = primaryTokenInfo.id.split('.') as [string, string]
     return {
       ...rest,
       from: asYoroiTokenIdAndQuantity(from),

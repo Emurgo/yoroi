@@ -138,17 +138,17 @@ describe('Quantities', () => {
 describe('Amounts', () => {
   it('sums multiple Balance.Amounts into a single Balance.Amounts', () => {
     const amounts1: Balance.Amounts = {
-      '': '1',
+      '.': '1',
       token123: '2',
       token567: '-2',
     }
     const amounts2: Balance.Amounts = {
-      '': '3',
+      '.': '3',
       token456: '4',
     }
 
     expect(Amounts.sum([amounts1, amounts2])).toEqual({
-      '': '4',
+      '.': '4',
       token123: '2',
       token456: '4',
       token567: '-2',
@@ -157,17 +157,17 @@ describe('Amounts', () => {
 
   it('diffs 2 Balance.Amounts into a single Balance.Amounts', () => {
     const amounts1: Balance.Amounts = {
-      '': '1',
+      '.': '1',
       token123: '2',
       token567: '-2',
     }
     const amounts2: Balance.Amounts = {
-      '': '3',
+      '.': '3',
       token456: '4',
     }
 
     expect(Amounts.diff(amounts1, amounts2)).toEqual({
-      '': '-2',
+      '.': '-2',
       token123: '2',
       token456: '-4',
       token567: '-2',
@@ -176,13 +176,13 @@ describe('Amounts', () => {
 
   it('negate Balance.Amounts', () => {
     const amounts1: Balance.Amounts = {
-      '': '1',
+      '.': '1',
       token123: '2',
       token567: '-2',
     }
 
     expect(Amounts.negated(amounts1)).toEqual({
-      '': '-1',
+      '.': '-1',
       token123: '-2',
       token567: '2',
     } as Balance.Amounts)
@@ -190,7 +190,7 @@ describe('Amounts', () => {
 
   it('getAmount', () => {
     const amounts: Balance.Amounts = {
-      '': '1',
+      '.': '1',
       token123: '2',
       token567: '-2',
     }
@@ -205,7 +205,7 @@ describe('Amounts', () => {
 
   it('includes', () => {
     const amounts: Balance.Amounts = {
-      '': '1',
+      '.': '1',
       token123: '2',
       token567: '-2',
     }
@@ -217,26 +217,26 @@ describe('Amounts', () => {
 
   it('remove', () => {
     const amounts: Balance.Amounts = {
-      '': '123',
+      '.': '123',
       token123: '456',
       token567: '-789',
     }
 
     expect(Amounts.remove(amounts, ['token123'])).toEqual({
-      '': '123',
+      '.': '123',
       token567: '-789',
     } as Balance.Amounts)
   })
 
   it('toArray', () => {
     const amounts: Balance.Amounts = {
-      '': '123',
+      '.': '123',
       token123: '456',
       token567: '-789',
     }
 
     expect(Amounts.toArray(amounts)).toEqual([
-      {tokenId: '', quantity: '123'},
+      {tokenId: '.', quantity: '123'},
       {tokenId: 'token123', quantity: '456'},
       {tokenId: 'token567', quantity: '-789'},
     ] as Array<Balance.Amount>)
@@ -244,13 +244,13 @@ describe('Amounts', () => {
 
   it('from Array', () => {
     const amounts: Array<Balance.Amount> = [
-      {tokenId: '', quantity: '123'},
+      {tokenId: '.', quantity: '123'},
       {tokenId: 'SUN', quantity: '456'},
       {tokenId: 'QWE', quantity: '789'},
     ]
 
     expect(Amounts.fromArray(amounts)).toEqual({
-      '': '123',
+      '.': '123',
       SUN: '456',
       QWE: '789',
     } as Balance.Amounts)
@@ -258,7 +258,7 @@ describe('Amounts', () => {
 
   it('map', () => {
     const amounts: Balance.Amounts = {
-      '': '1',
+      '.': '1',
       SUN: '4',
       QWE: '7',
     }
@@ -269,7 +269,7 @@ describe('Amounts', () => {
         quantity: Quantities.sum([amount.quantity, '1']),
       })),
     ).toEqual({
-      '': '2',
+      '.': '2',
       SUN: '5',
       QWE: '8',
     } as Balance.Amounts)
@@ -309,12 +309,12 @@ describe('Amounts', () => {
 
 describe('Entries', () => {
   it('first gets the first entry from YoroiEnrties', () => {
-    const entries: YoroiEntry[] = [{address: 'address1', amounts: {'': '1', token123: '2', token567: '-2'}}]
+    const entries: YoroiEntry[] = [{address: 'address1', amounts: {'.': '1', token123: '2', token567: '-2'}}]
 
     expect(Entries.first(entries)).toEqual({
       address: 'address1',
       amounts: {
-        '': '1',
+        '.': '1',
         token123: '2',
         token567: '-2',
       },
@@ -323,26 +323,26 @@ describe('Entries', () => {
 
   it('first returns first item multiple entries', () => {
     const entries: YoroiEntry[] = [
-      {address: 'address1', amounts: {'': '1', token123: '2', token567: '-2'}},
-      {address: 'address2', amounts: {'': '1', token123: '2', token567: '-2'}},
+      {address: 'address1', amounts: {'.': '1', token123: '2', token567: '-2'}},
+      {address: 'address2', amounts: {'.': '1', token123: '2', token567: '-2'}},
     ]
 
     expect(Entries.first(entries)).toEqual({
       address: 'address1',
-      amounts: {'': '1', token123: '2', token567: '-2'},
+      amounts: {'.': '1', token123: '2', token567: '-2'},
     })
   })
 
   it('remove', () => {
     const entries: YoroiEntry[] = [
-      {address: 'address1', amounts: {'': '1', token123: '2', token567: '-2'}},
-      {address: 'address2', amounts: {'': '1', token123: '2', token567: '-2'}},
-      {address: 'address3', amounts: {'': '1', token123: '2', token567: '-2'}},
+      {address: 'address1', amounts: {'.': '1', token123: '2', token567: '-2'}},
+      {address: 'address2', amounts: {'.': '1', token123: '2', token567: '-2'}},
+      {address: 'address3', amounts: {'.': '1', token123: '2', token567: '-2'}},
     ]
 
     const expectedEntries: YoroiEntry[] = [
-      {address: 'address1', amounts: {'': '1', token123: '2', token567: '-2'}},
-      {address: 'address3', amounts: {'': '1', token123: '2', token567: '-2'}},
+      {address: 'address1', amounts: {'.': '1', token123: '2', token567: '-2'}},
+      {address: 'address3', amounts: {'.': '1', token123: '2', token567: '-2'}},
     ]
 
     expect(Entries.remove(entries, ['address2'])).toEqual(expectedEntries)
@@ -350,9 +350,9 @@ describe('Entries', () => {
 
   it('toAddresses', () => {
     const entries: YoroiEntry[] = [
-      {address: 'address1', amounts: {'': '1', token123: '2', token567: '-2'}},
-      {address: 'address2', amounts: {'': '1', token123: '2', token567: '-2'}},
-      {address: 'address3', amounts: {'': '1', token123: '2', token567: '-2'}},
+      {address: 'address1', amounts: {'.': '1', token123: '2', token567: '-2'}},
+      {address: 'address2', amounts: {'.': '1', token123: '2', token567: '-2'}},
+      {address: 'address3', amounts: {'.': '1', token123: '2', token567: '-2'}},
     ]
 
     expect(Entries.toAddresses(entries)).toEqual(['address1', 'address2', 'address3'])
@@ -360,13 +360,13 @@ describe('Entries', () => {
 
   it('toAmounts', () => {
     const entries: YoroiEntry[] = [
-      {address: 'address1', amounts: {'': '1', token123: '2', token567: '-2'}},
-      {address: 'address2', amounts: {'': '1', token123: '2', token567: '-2'}},
-      {address: 'address3', amounts: {'': '1', token123: '2', token567: '-2'}},
+      {address: 'address1', amounts: {'.': '1', token123: '2', token567: '-2'}},
+      {address: 'address2', amounts: {'.': '1', token123: '2', token567: '-2'}},
+      {address: 'address3', amounts: {'.': '1', token123: '2', token567: '-2'}},
     ]
 
     expect(Entries.toAmounts(entries)).toEqual({
-      '': '3',
+      '.': '3',
       token123: '6',
       token567: '-6',
     } as Balance.Amounts)

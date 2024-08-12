@@ -8,15 +8,15 @@ import {toAmounts, toDisplayAddress, toEntriesFromOutputs, toMetadata} from './u
 describe('YoroiUnsignedTx', () => {
   it('toAmounts converts TokenEntry[] to Balance.Amounts', () => {
     const tokenEntries: Array<CardanoTypes.TokenEntry> = [
-      {identifier: '', networkId: 1, amount: new BigNumber('1')},
-      {identifier: '', networkId: 1, amount: new BigNumber('3')},
+      {identifier: '.', networkId: 1, amount: new BigNumber('1')},
+      {identifier: '.', networkId: 1, amount: new BigNumber('3')},
       {identifier: 'token123', networkId: 1, amount: new BigNumber('4')},
       {identifier: 'token123', networkId: 1, amount: new BigNumber('-2')},
       {identifier: 'token456', networkId: 1, amount: new BigNumber('2')},
     ]
 
     expect(toAmounts(tokenEntries)).toEqual({
-      '': '4',
+      '.': '4',
       token123: '2',
       token456: '2',
     } as Balance.Amounts)
@@ -37,13 +37,13 @@ describe('YoroiUnsignedTx', () => {
   })
 
   it('toEntries converts change/outputs to YoroiEntry[]', async () => {
-    const defaults = {identifier: '', networkId: 1, isDefault: true}
+    const defaults = {identifier: '.', networkId: 1, isDefault: true}
     const addressedValues = [
       {
         address: 'address1',
         value: {
           values: [
-            {identifier: '', amount: new BigNumber('1'), networkId: 1},
+            {identifier: '.', amount: new BigNumber('1'), networkId: 1},
             {identifier: 'token123', amount: new BigNumber('2'), networkId: 1},
           ],
           defaults,
@@ -53,7 +53,7 @@ describe('YoroiUnsignedTx', () => {
         address: 'address2',
         value: {
           values: [
-            {identifier: '', amount: new BigNumber('1'), networkId: 1},
+            {identifier: '.', amount: new BigNumber('1'), networkId: 1},
             {identifier: 'token123', amount: new BigNumber('2'), networkId: 1},
           ],
           defaults,
@@ -62,8 +62,8 @@ describe('YoroiUnsignedTx', () => {
     ]
 
     const expectedEntries: YoroiEntry[] = [
-      {address: 'address1', amounts: {'': '1', token123: '2'}},
-      {address: 'address2', amounts: {'': '1', token123: '2'}},
+      {address: 'address1', amounts: {'.': '1', token123: '2'}},
+      {address: 'address2', amounts: {'.': '1', token123: '2'}},
     ]
     expect(await toEntriesFromOutputs(addressedValues)).toEqual(expectedEntries)
   })

@@ -62,7 +62,7 @@ const params: StakingCenterRoutes['delegation-confirmation'] = {
     staking: {
       registrations: [],
       deregistrations: [],
-      delegations: [{address: 'rewardAddress', amounts: {'': '123456789'}}],
+      delegations: [{address: 'rewardAddress', amounts: {'.': '123456789'}}],
       withdrawals: [],
     },
   },

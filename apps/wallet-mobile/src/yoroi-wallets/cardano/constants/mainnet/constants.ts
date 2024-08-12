@@ -81,7 +81,7 @@ export const PRIMARY_TOKEN_INFO: Balance.TokenInfo = {
 } as const
 
 export const PRIMARY_TOKEN: DefaultAsset = {
-  identifier: '',
+  identifier: '.',
   networkId: NETWORK_ID,
   isDefault: true,
   metadata: {
