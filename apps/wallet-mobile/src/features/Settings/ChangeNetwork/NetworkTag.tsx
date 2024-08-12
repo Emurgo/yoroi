@@ -139,13 +139,12 @@ const MainnetWarningDialog = ({onCancel, onOk}: {onCancel: () => void; onOk: () 
 
 const useStyles = () => {
   const {color, atoms} = useTheme()
-  const width = useWindowDimensions().width - 190
+  const width = useWindowDimensions().width - 120
 
   const styles = StyleSheet.create({
     headerTitleStyle: {
       ...atoms.body_1_lg_medium,
       color: color.text_gray_normal,
-      flexShrink: 1,
     },
     headerTitleContainerStyle: {
       flexDirection: 'row',
