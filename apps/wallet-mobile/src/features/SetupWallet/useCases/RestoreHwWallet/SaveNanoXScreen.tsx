@@ -196,7 +196,9 @@ export const SaveNanoXScreen = () => {
         <Space height="xl" />
 
         <View style={styles.info}>
-          <Text style={styles.title}>{strings.walletDetailsTitle(bold)}</Text>
+          <Text style={styles.title}>{strings.hwWalletDetailsTitle(bold)}</Text>
+
+          <Space width="xs" />
 
           <Info onPress={showModalTipsPassword} />
         </View>

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import globalMessages from '../../../kernel/i18n/global-messages'
+import globalMessages, {confirmationMessages, ledgerMessages} from '../../../kernel/i18n/global-messages'
 
 export const useStrings = () => {
   const intl = useIntl()
@@ -76,17 +76,14 @@ export const useStrings = () => {
     stepWalletDetails: intl.formatMessage(messages.stepWalletDetails),
     walletDetailsTitle: (options: {b: (content: React.ReactNode[]) => React.ReactNode}) =>
       intl.formatMessage(messages.walletDetailsTitle, {...options}),
+    hwWalletDetailsTitle: (options: {b: (content: React.ReactNode[]) => React.ReactNode}) =>
+      intl.formatMessage(messages.hwWalletDetailsTitle, {...options}),
     walletDetailsPasswordHelper: intl.formatMessage(messages.walletDetailsPasswordHelper),
     walletDetailsNameInput: intl.formatMessage(messages.walletDetailsNameInput),
     walletDetailsPasswordInput: intl.formatMessage(messages.walletDetailsPasswordInput),
     walletDetailsConfirmPasswordInput: intl.formatMessage(messages.walletDetailsConfirmPasswordInput),
-    header: intl.formatMessage(messages.header),
-    addWalletButton: intl.formatMessage(messages.addWalletButton),
-    addWalletOnShelleyButton: intl.formatMessage(messages.addWalletOnShelleyButton),
     deprecated: intl.formatMessage(globalMessages.deprecated),
     pleaseWait: intl.formatMessage(globalMessages.pleaseWait),
-    loadingWallet: intl.formatMessage(messages.loadingWallet),
-    supportTicketLink: intl.formatMessage(messages.supportTicketLink),
     invalidChecksum: intl.formatMessage(messages.invalidChecksum),
     validChecksum: intl.formatMessage(messages.validChecksum),
     stepRestoreWalletScreen: intl.formatMessage(messages.stepRestoreWalletScreen),
@@ -107,6 +104,17 @@ export const useStrings = () => {
     error: intl.formatMessage(globalMessages.error),
     bluetoothError: intl.formatMessage(messages.bluetoothError),
     hwModalTitle: intl.formatMessage(messages.hwModalTitle),
+    hwExportKey: intl.formatMessage(messages.hwExportKey),
+    hwCheckIntroline: intl.formatMessage(messages.hwCheckIntroline),
+    hwCheckTitle: intl.formatMessage(messages.hwCheckTitle),
+    appInstalled: intl.formatMessage(ledgerMessages.appInstalled),
+    appOpened: intl.formatMessage(ledgerMessages.appOpened),
+    haveOTGAdapter: intl.formatMessage(ledgerMessages.haveOTGAdapter),
+    usbAlwaysConnected: intl.formatMessage(ledgerMessages.usbAlwaysConnected),
+    bluetoothEnabled: intl.formatMessage(ledgerMessages.bluetoothEnabled),
+    locationEnabled: intl.formatMessage(ledgerMessages.locationEnabled),
+    hwContinueButton: intl.formatMessage(confirmationMessages.commonButtons.continueButton),
+    ledgerSupportLink: intl.formatMessage(messages.ledgerSupportLink),
   }).current
 }
 
@@ -353,26 +361,6 @@ export const messages = Object.freeze(
       id: 'components.walletinit.walletDetails.walletDetailsConfirmPasswordInput',
       defaultMessage: '!!!Confirm password',
     },
-    header: {
-      id: 'components.walletselection.walletselectionscreen.header',
-      defaultMessage: '!!!My wallets',
-    },
-    addWalletButton: {
-      id: 'components.walletselection.walletselectionscreen.addWalletButton',
-      defaultMessage: '!!!Add wallet',
-    },
-    addWalletOnShelleyButton: {
-      id: 'components.walletselection.walletselectionscreen.addWalletOnShelleyButton',
-      defaultMessage: '!!!Add wallet (Jormungandr ITN)',
-    },
-    loadingWallet: {
-      id: 'components.walletselection.walletselectionscreen.loadingWallet',
-      defaultMessage: '!!!Loading wallet',
-    },
-    supportTicketLink: {
-      id: 'components.walletselection.walletselectionscreen.supportTicketLink',
-      defaultMessage: '!!!Ask our support team',
-    },
     invalidChecksum: {
       id: 'components.walletinit.restorewallet.restorewalletscreen.invalidchecksum',
       defaultMessage: '!!!Please enter valid mnemonic.',
@@ -439,9 +427,29 @@ export const messages = Object.freeze(
       defaultMessage:
         '!!!USB connection is NOT available on Apple iOS devices. You can always try this connection type on Android platform',
     },
+    hwWalletDetailsTitle: {
+      id: 'components.walletinit.restorewallet.hwWalletDetailsTitle',
+      defaultMessage: '!!!<b>Add</b> your <b>wallet name</b>',
+    },
+    hwExportKey: {
+      id: 'components.walletinit.connectnanox.connectnanoxscreen.exportKey',
+      defaultMessage: '!!!Action needed: Please, export public key from your Ledger device.',
+    },
     bluetoothError: {
       id: 'global.ledgerMessages.bluetoothDisabledError',
       defaultMessage: '!!!Connect with Bluetooth',
+    },
+    hwCheckIntroline: {
+      id: 'components.walletinit.connectnanox.checknanoxscreen.introline',
+      defaultMessage: '!!!Before continuing, please make sure that:',
+    },
+    hwCheckTitle: {
+      id: 'components.walletinit.connectnanox.checknanoxscreen.steppertitle',
+      defaultMessage: '!!!Intro',
+    },
+    ledgerSupportLink: {
+      id: 'components.walletinit.restorewallet.ledgerSupportLink',
+      defaultMessage: '!!!Learn more about using Yoroi with Ledger',
     },
   }),
 )
