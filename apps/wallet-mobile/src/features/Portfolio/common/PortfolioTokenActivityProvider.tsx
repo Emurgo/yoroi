@@ -77,7 +77,7 @@ const useTokenActivity = () => {
     },
   })
 
-  const tokenActivity = query.data
+  const tokenActivity = query.isError ? {} : query.data
 
   return {aggregatedBalances, tokenActivity}
 }
