@@ -2,7 +2,6 @@ import {isString} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, TextInput as RNTextInput, TextInputProps as RNTextInputProps, View, ViewStyle} from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
 import {HelperText as HelperTextRNP, TextInput as RNPTextInput} from 'react-native-paper'
 
 import {isEmptyString} from '../../../../../../kernel/utils'
@@ -69,7 +68,6 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: React.For
   const [errorTextEnabled, setErrorTextEnabled] = React.useState(errorOnMount)
   const [isValidWord, setIsValidWord] = React.useState(false)
   const {colors} = useStyles()
-  const {isDark} = useTheme()
 
   useDebounced(
     React.useCallback(() => setErrorTextEnabled(true), []),
@@ -95,25 +93,8 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: React.For
     if (value === '') setIsValidWord(false)
   }, [value])
 
-  const isValid = isDark && isValidPhrase && isValidWord
-
   return (
     <View style={containerStyle}>
-      {isValidWord && isEmptyString(errorText) && (
-        <LinearGradient
-          style={[
-            StyleSheet.absoluteFill,
-            {
-              borderRadius: 8,
-              top: 6,
-            },
-          ]}
-          start={{x: 0, y: isValid ? 1 : 0}}
-          end={{x: 0, y: isValid ? 0 : 1}}
-          colors={isValid ? colors.gradientColorSuccess : colors.gradientColor}
-        />
-      )}
-
       <RNPTextInput
         ref={ref}
         style={{textAlign}}
@@ -145,7 +126,11 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: React.For
         theme={{
           roundness: 8,
           colors: {
-            background: colors.none,
+            background: isValidPhrase
+              ? colors.positiveGreen
+              : isValidWord && isEmptyString(errorText)
+              ? colors.positiveGray
+              : colors.none,
             placeholder: faded
               ? colors.focusInput
               : isValidWord && isEmptyString(errorText)
@@ -163,7 +148,18 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: React.For
               {...inputProps}
               cursorColor={cursorColor}
               selectionColor={selectionColor}
-              style={[style, renderComponentStyle, {color: colors.text, flex: 1}]}
+              style={[
+                style,
+                renderComponentStyle,
+                {
+                  color: isValidPhrase
+                    ? colors.successText
+                    : errorTextEnabled && !isEmptyString(errorText)
+                    ? colors.textError
+                    : colors.text,
+                  flex: 1,
+                },
+              ]}
             />
           </InputContainer>
         )}
@@ -245,15 +241,13 @@ const useStyles = () => {
     input: color.primary_c300,
     actionGray: color.gray_c500,
     black: color.gray_cmax,
-    text: color.gray_cmax,
-    textError: color.sys_magenta_c500,
+    text: color.el_primary_medium,
+    textError: color.text_error,
     infoGray: color.gray_c700,
-    positiveGreen: color.secondary_c300,
+    positiveGreen: color.el_secondary_medium,
     positiveGray: color.primary_c100,
     none: 'transparent',
     successText: color.black_static,
-    gradientColor: color.bg_gradient_1,
-    gradientColorSuccess: color.bg_gradient_2,
   }
 
   return {styles, colors}
