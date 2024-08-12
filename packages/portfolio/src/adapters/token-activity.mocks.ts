@@ -8,6 +8,8 @@ const primaryETH: Portfolio.Token.ActivityUpdates = {
     ts: 1722849529169,
     open: new BigNumber(1_000_000),
     close: new BigNumber(500_000),
+    low: new BigNumber(500_000),
+    high: new BigNumber(1_000_000),
     change: -50,
   },
 }
@@ -16,7 +18,9 @@ const rnftWhatever: Portfolio.Token.ActivityUpdates = {
   price24h: {
     ts: 1722849529169,
     open: new BigNumber(500_000),
+    low: new BigNumber(500_000),
     close: new BigNumber(1_000_000),
+    high: new BigNumber(1_000_000),
     change: 100,
   },
 }
@@ -26,6 +30,8 @@ const ftNoTicker: Portfolio.Token.ActivityUpdates = {
     ts: 1722849529169,
     open: new BigNumber(1_000_000),
     close: new BigNumber(500_000),
+    low: new BigNumber(500_000),
+    high: new BigNumber(1_000_000),
     change: -50,
   },
 }
@@ -34,7 +40,9 @@ const ftNameless: Portfolio.Token.ActivityUpdates = {
   price24h: {
     ts: 1722849529169,
     open: new BigNumber(500_000),
+    low: new BigNumber(500_000),
     close: new BigNumber(1_000_000),
+    high: new BigNumber(1_000_000),
     change: 100,
   },
 }

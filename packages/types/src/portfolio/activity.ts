@@ -4,6 +4,8 @@ export type PortfolioTokenActivityRecord = Readonly<{
   ts: number // timestamp
   open: BigNumber // previous - BigNumber
   close: BigNumber // lastest - BigNumber
+  high: BigNumber // highest - BigNumber
+  low: BigNumber // lowest - BigNumber
   change: number // perc e.g -5% +10%
 }>
 
