@@ -3,6 +3,7 @@ import {useRoute} from '@react-navigation/native'
 import {isNonNullable} from '@yoroi/common'
 import {useExplorers} from '@yoroi/explorers'
 import {useTheme} from '@yoroi/theme'
+import {Chain} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 import {fromPairs} from 'lodash'
 import React, {useState} from 'react'
@@ -28,6 +29,7 @@ import {asQuantity} from '../../../../yoroi-wallets/utils'
 import {formatDateAndTime, formatTokenWithSymbol} from '../../../../yoroi-wallets/utils/format'
 import {usePrivacyMode} from '../../../Settings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {messages, useStrings} from '../../common/strings'
 import AddressModal from './AddressModal/AddressModal'
 import {AssetList} from './AssetList'
@@ -42,6 +44,9 @@ export const TxDetails = () => {
   const intl = useIntl()
   const {id} = useRoute().params as Params
   const {wallet} = useSelectedWallet()
+  const {
+    selected: {network},
+  } = useWalletManager()
   const explorers = useExplorers(wallet.networkManager.network)
   const internalAddressIndex = fromPairs(wallet.internalAddresses.map((addr, i) => [addr, i]))
   const externalAddressIndex = fromPairs(wallet.externalAddresses.map((addr, i) => [addr, i]))
@@ -174,13 +179,15 @@ export const TxDetails = () => {
         </View>
       </ScrollView>
 
-      <Actions>
-        <Button
-          onPress={() => Linking.openURL(explorers.cardanoscan.tx(transaction.id))}
-          title={strings.openInExplorer}
-          shelleyTheme
-        />
-      </Actions>
+      {network !== Chain.Network.Sancho && (
+        <Actions>
+          <Button
+            onPress={() => Linking.openURL(explorers.cardanoscan.tx(transaction.id))}
+            title={strings.openInExplorer}
+            shelleyTheme
+          />
+        </Actions>
+      )}
     </FadeIn>
   )
 }
