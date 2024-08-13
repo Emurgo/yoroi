@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Delegate",
     "file": "src/legacy/Staking/DelegationConfirmation/DelegationConfirmation.tsx",
     "start": {
-      "line": 193,
+      "line": 191,
       "column": 23,
-      "index": 6327
+      "index": 6268
     },
     "end": {
-      "line": 196,
+      "line": 194,
       "column": 3,
-      "index": 6441
+      "index": 6382
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!of fees",
     "file": "src/legacy/Staking/DelegationConfirmation/DelegationConfirmation.tsx",
     "start": {
-      "line": 197,
+      "line": 195,
       "column": 10,
-      "index": 6453
+      "index": 6394
     },
     "end": {
-      "line": 200,
+      "line": 198,
       "column": 3,
-      "index": 6553
+      "index": 6494
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Current approximation of rewards that you will receive per epoch:",
     "file": "src/legacy/Staking/DelegationConfirmation/DelegationConfirmation.tsx",
     "start": {
-      "line": 201,
+      "line": 199,
       "column": 22,
-      "index": 6577
+      "index": 6518
     },
     "end": {
-      "line": 204,
+      "line": 202,
       "column": 3,
-      "index": 6747
+      "index": 6688
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Unknown pool",
     "file": "src/legacy/Staking/DelegationConfirmation/DelegationConfirmation.tsx",
     "start": {
-      "line": 205,
+      "line": 203,
       "column": 15,
-      "index": 6764
+      "index": 6705
     },
     "end": {
-      "line": 208,
+      "line": 206,
       "column": 3,
-      "index": 6883
+      "index": 6824
     }
   }
 ]

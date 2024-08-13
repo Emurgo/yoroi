@@ -83,7 +83,7 @@ export const PRIMARY_TOKEN_INFO: Balance.TokenInfo = {
 
 export const PRIMARY_TOKEN: DefaultAsset = {
   identifier: '.',
-  networkId: NETWORK_ID,
+  networkId: CHAIN_NETWORK_ID,
   isDefault: true,
   metadata: {
     type: 'Cardano',

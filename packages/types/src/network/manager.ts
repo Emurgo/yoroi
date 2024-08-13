@@ -7,7 +7,7 @@ import {PortfolioManagerToken} from '../portfolio/manager'
 export type NetworkConfig = {
   network: ChainSupportedNetworks
   primaryTokenInfo: PortfolioTokenInfo
-  chainId: number
+  chainId: 0 | 1
   eras: ReadonlyArray<NetworkEraConfig>
   name: string
   isMainnet: boolean

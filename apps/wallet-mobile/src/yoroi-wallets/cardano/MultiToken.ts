@@ -3,7 +3,6 @@ import {TokenEntry} from '@emurgo/yoroi-lib'
 import {BigNumber} from 'bignumber.js'
 
 import {DefaultAsset} from '../types'
-import type {NetworkId} from '../types/other'
 
 export type TokenLookupKey = {
   identifier: string
@@ -195,13 +194,13 @@ export const getDefaultNetworkTokenEntry = (defaultAsset: DefaultAsset): Default
     defaultIdentifier: defaultAsset.identifier,
   }
 }
-export const strToDefaultMultiAsset = (amount: string, networkId: NetworkId, defaultAsset: DefaultAsset) => {
+export const strToDefaultMultiAsset = (amount: string, defaultAsset: DefaultAsset) => {
   const defaultTokenEntry = getDefaultNetworkTokenEntry(defaultAsset)
   return new MultiToken(
     [
       {
         identifier: defaultTokenEntry.defaultIdentifier,
-        networkId,
+        networkId: defaultAsset.networkId,
         amount: new BigNumber(amount),
       },
     ],

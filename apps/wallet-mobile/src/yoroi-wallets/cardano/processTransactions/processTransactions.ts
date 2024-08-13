@@ -74,11 +74,10 @@ const _sum = (
     amount: string
     assets: Array<BaseAsset>
   }>,
-  networkId: NetworkId,
   defaultAsset: DefaultAsset,
 ): MultiToken =>
   a.reduce(
-    (acc: MultiToken, x) => acc.joinAddMutable(multiTokenFromRemote(x, networkId)),
+    (acc: MultiToken, x) => acc.joinAddMutable(multiTokenFromRemote(x, defaultAsset.networkId)),
     new MultiToken([], getDefaultNetworkTokenEntry(defaultAsset)),
   )
 
@@ -87,7 +86,6 @@ export const processTxHistoryData = (
   tx: Transaction,
   ownAddresses: Array<string>,
   confirmations: number,
-  networkId: NetworkId,
   memo: string | null,
   defaultAsset: DefaultAsset,
 ): TransactionInfo => {
@@ -106,7 +104,7 @@ export const processTxHistoryData = (
     {},
   )
 
-  const _strToDefaultMultiAsset = (amount: string) => strToDefaultMultiAsset(amount, networkId, defaultAsset)
+  const _strToDefaultMultiAsset = (amount: string) => strToDefaultMultiAsset(amount, defaultAsset)
   // collateral
   const collateral = tx.collateralInputs || []
   const isNonNativeScriptExecution = Number(tx.scriptSize) > 0 || collateral.length > 0
@@ -163,13 +161,13 @@ export const processTxHistoryData = (
   const ownInputs = unifiedInputs.filter(({address}) => ownAddresses.includes(address))
   const ownOutputs = unifiedOutputs.filter(({address}) => ownAddresses.includes(address))
 
-  const totalIn = _sum(unifiedInputs, networkId, defaultAsset)
+  const totalIn = _sum(unifiedInputs, defaultAsset)
 
-  const totalOut = _sum(unifiedOutputs, networkId, defaultAsset)
+  const totalOut = _sum(unifiedOutputs, defaultAsset)
 
-  const ownIn = _sum(ownInputs, networkId, defaultAsset).joinAddMutable(ownImplicitInput)
+  const ownIn = _sum(ownInputs, defaultAsset).joinAddMutable(ownImplicitInput)
 
-  const ownOut = _sum(ownOutputs, networkId, defaultAsset).joinAddMutable(ownImplicitOutput)
+  const ownOut = _sum(ownOutputs, defaultAsset).joinAddMutable(ownImplicitOutput)
 
   const hasOnlyOwnInputs = ownInputs.length === unifiedInputs.length
   const hasOnlyOwnOutputs = ownOutputs.length === unifiedOutputs.length
@@ -216,9 +214,7 @@ export const processTxHistoryData = (
   //    balance = sum(delta)
   // recall: if the tx has withdrawals or refunds to this wallet, they are
   // included in own utxo outputs
-  const delta = _sum(ownUtxoOutputs, networkId, defaultAsset).joinSubtractMutable(
-    _sum(ownUtxoInputs, networkId, defaultAsset),
-  )
+  const delta = _sum(ownUtxoOutputs, defaultAsset).joinSubtractMutable(_sum(ownUtxoInputs, defaultAsset))
 
   let amount
   let fee
@@ -250,12 +246,12 @@ export const processTxHistoryData = (
   }
 
   const assurance = getTransactionAssurance(tx.status, confirmations)
-  const tokens = getTxTokens(tx, networkId)
+  const tokens = getTxTokens(tx, defaultAsset.networkId)
 
   const _remoteAssetAsTokenEntry = (asset: BaseAsset) => ({
     identifier: asset.assetId,
     amount: new BigNumber(asset.amount),
-    networkId,
+    networkId: defaultAsset.networkId,
   })
 
   return {

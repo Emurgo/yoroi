@@ -80,7 +80,7 @@ export const makeCardanoWallet = (
   const appApi = AppApi.appApiMaker({baseUrl: networkManager.legacyApiBaseUrl})
 
   // legacy
-  const {BACKEND, NETWORK_CONFIG, NETWORK_ID, PRIMARY_TOKEN, PRIMARY_TOKEN_INFO, TOKEN_INFO_SERVICE} = constants
+  const {BACKEND, NETWORK_CONFIG, PRIMARY_TOKEN, PRIMARY_TOKEN_INFO, TOKEN_INFO_SERVICE} = constants
 
   return class CardanoWallet implements YoroiWallet {
     readonly version: string
@@ -1133,7 +1133,6 @@ export const makeCardanoWallet = (
             ? [...this.internalAddresses, ...this.externalAddresses, ...[this.rewardAddressHex]]
             : [...this.internalAddresses, ...this.externalAddresses],
           this.confirmationCounts[tx.id] || 0,
-          NETWORK_ID,
           memos[tx.id] ?? null,
           this.primaryToken,
         )
