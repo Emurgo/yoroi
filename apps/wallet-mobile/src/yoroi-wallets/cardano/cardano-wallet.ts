@@ -400,7 +400,7 @@ export const makeCardanoWallet = (
           : RegistrationStatus.RegisterAndDelegate
         const delegatedAmountMT = {
           values: [
-            {identifier: PRIMARY_TOKEN.identifier, amount: delegatedAmount, networkId: NETWORK_CONFIG.NETWORK_ID},
+            {identifier: PRIMARY_TOKEN.identifier, amount: delegatedAmount, networkId: this.networkManager.chainId},
           ],
           defaults: PRIMARY_TOKEN,
         }
@@ -423,7 +423,7 @@ export const makeCardanoWallet = (
             minimumUtxoVal: cardanoConfig.params.minUtxoValue.toString(),
             coinsPerUtxoByte,
             poolDeposit,
-            networkId: NETWORK_CONFIG.NETWORK_ID,
+            networkId: this.networkManager.chainId,
           },
         )
 
@@ -471,7 +471,7 @@ export const makeCardanoWallet = (
             minimumUtxoVal: cardanoConfig.params.minUtxoValue.toString(),
             coinsPerUtxoByte,
             poolDeposit,
-            networkId: NETWORK_CONFIG.NETWORK_ID,
+            networkId: this.networkManager.chainId,
           }
           const txOptions = {}
           const nonce = absSlotNumber.toNumber()
@@ -584,7 +584,7 @@ export const makeCardanoWallet = (
             coinsPerUtxoByte,
             poolDeposit,
             keyDeposit,
-            networkId: NETWORK_CONFIG.NETWORK_ID,
+            networkId: this.networkManager.chainId,
           },
           {metadata: undefined},
         )
@@ -629,7 +629,7 @@ export const makeCardanoWallet = (
             minimumUtxoVal: cardanoConfig.params.minUtxoValue.toString(),
             coinsPerUtxoByte,
             poolDeposit,
-            networkId: NETWORK_CONFIG.NETWORK_ID,
+            networkId: this.networkManager.chainId,
           },
           this.primaryToken,
           {},
@@ -818,7 +818,7 @@ export const makeCardanoWallet = (
             minimumUtxoVal: cardanoConfig.params.minUtxoValue.toString(),
             coinsPerUtxoByte,
             poolDeposit,
-            networkId: NETWORK_CONFIG.NETWORK_ID,
+            networkId: this.networkManager.chainId,
           },
           this.primaryToken,
           {metadata},
