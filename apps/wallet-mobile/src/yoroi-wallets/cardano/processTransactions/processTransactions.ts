@@ -77,7 +77,7 @@ const _sum = (
   defaultAsset: DefaultAsset,
 ): MultiToken =>
   a.reduce(
-    (acc: MultiToken, x) => acc.joinAddMutable(multiTokenFromRemote(x, defaultAsset.networkId)),
+    (acc: MultiToken, x) => acc.joinAddMutable(multiTokenFromRemote(x)),
     new MultiToken([], getDefaultNetworkTokenEntry(defaultAsset)),
   )
 

@@ -498,7 +498,6 @@ export const makeCardanoWallet = (
             config,
             txOptions,
             nonce,
-            this.networkManager.chainId,
             paymentAddressCIP36,
             addressingCIP36.path,
             supportsCIP36,

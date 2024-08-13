@@ -6,14 +6,12 @@ import {DefaultAsset} from '../types'
 
 export type TokenLookupKey = {
   identifier: string
-  networkId: number
 }
 export type TokenEntryPlain = TokenLookupKey & {
   amount: string
   isDefault: boolean
 }
 export type DefaultTokenEntry = {
-  defaultNetworkId: number
   defaultIdentifier: string
 }
 export class MultiToken {
@@ -27,18 +25,9 @@ export class MultiToken {
     this.defaults = defaults
     this.add({
       identifier: defaults.defaultIdentifier,
-      networkId: defaults.defaultNetworkId,
       amount: new BigNumber(0),
     })
     values.forEach((value) => this.add(value))
-  }
-
-  _checkNetworkId: (arg0: number) => void = (networkId) => {
-    const ownNetworkId = this.defaults.defaultNetworkId
-
-    if (ownNetworkId !== networkId) {
-      throw new Error(`MultiToken:: network mismatch ${ownNetworkId} - ${networkId}`)
-    }
   }
 
   get: (arg0: string) => BigNumber | void = (identifier) => {
@@ -46,8 +35,6 @@ export class MultiToken {
   }
 
   add: (arg0: TokenEntry) => MultiToken = (entry) => {
-    this._checkNetworkId(entry.networkId)
-
     const existingEntry = this.values.find((value) => value.identifier === entry.identifier)
 
     if (existingEntry == null) {
@@ -63,7 +50,6 @@ export class MultiToken {
     return this.add({
       identifier: entry.identifier,
       amount: entry.amount.negated(),
-      networkId: entry.networkId,
     })
   }
 
@@ -118,19 +104,13 @@ export class MultiToken {
   }
 
   getDefaultEntry: (arg0: void) => TokenEntry = () => {
-    return this.values.filter(
-      (value) =>
-        value.networkId === this.defaults.defaultNetworkId && value.identifier === this.defaults.defaultIdentifier,
-    )[0]
+    return this.values.filter((value) => value.identifier === this.defaults.defaultIdentifier)[0]
   }
 
   getDefaultId: (arg0: void) => string = () => this.defaults.defaultIdentifier
 
   nonDefaultEntries: (arg0: void) => Array<TokenEntry> = () => {
-    return this.values.filter(
-      (value) =>
-        !(value.networkId === this.defaults.defaultNetworkId && value.identifier === this.defaults.defaultIdentifier),
-    )
+    return this.values.filter((value) => !(value.identifier === this.defaults.defaultIdentifier))
   }
 
   asMap: (arg0: void) => Map<string, BigNumber> = () => {
@@ -161,26 +141,20 @@ export class MultiToken {
   asArray: (arg0: void) => Array<TokenEntryPlain> = () =>
     this.values.map((value) => ({
       identifier: value.identifier,
-      networkId: value.networkId,
       amount: value.amount.toString(),
-      isDefault:
-        value.networkId === this.defaults.defaultNetworkId && value.identifier === this.defaults.defaultIdentifier,
+      isDefault: value.identifier === this.defaults.defaultIdentifier,
     }))
 
   static fromArray(entries: Array<TokenEntryPlain>): MultiToken {
     const _asTokenEntry = (value: TokenEntryPlain) => ({
       identifier: value.identifier,
-      networkId: value.networkId,
       amount: new BigNumber(value.amount),
     })
 
     const values = entries.map(_asTokenEntry)
     const defaults = entries
       .filter((value) => value.isDefault)
-      .map((value) => ({
-        defaultNetworkId: value.networkId,
-        defaultIdentifier: value.identifier,
-      }))[0]
+      .map((value) => ({defaultIdentifier: value.identifier}))[0]
     return new MultiToken(values, defaults)
   }
 }
@@ -190,7 +164,6 @@ export class MultiToken {
  */
 export const getDefaultNetworkTokenEntry = (defaultAsset: DefaultAsset): DefaultTokenEntry => {
   return {
-    defaultNetworkId: defaultAsset.networkId,
     defaultIdentifier: defaultAsset.identifier,
   }
 }
@@ -200,7 +173,6 @@ export const strToDefaultMultiAsset = (amount: string, defaultAsset: DefaultAsse
     [
       {
         identifier: defaultTokenEntry.defaultIdentifier,
-        networkId: defaultAsset.networkId,
         amount: new BigNumber(amount),
       },
     ],

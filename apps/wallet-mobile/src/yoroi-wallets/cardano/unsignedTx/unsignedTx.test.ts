@@ -8,11 +8,11 @@ import {toAmounts, toDisplayAddress, toEntriesFromOutputs, toMetadata} from './u
 describe('YoroiUnsignedTx', () => {
   it('toAmounts converts TokenEntry[] to Balance.Amounts', () => {
     const tokenEntries: Array<CardanoTypes.TokenEntry> = [
-      {identifier: '.', networkId: 1, amount: new BigNumber('1')},
-      {identifier: '.', networkId: 1, amount: new BigNumber('3')},
-      {identifier: 'token123', networkId: 1, amount: new BigNumber('4')},
-      {identifier: 'token123', networkId: 1, amount: new BigNumber('-2')},
-      {identifier: 'token456', networkId: 1, amount: new BigNumber('2')},
+      {identifier: '.', amount: new BigNumber('1')},
+      {identifier: '.', amount: new BigNumber('3')},
+      {identifier: 'token123', amount: new BigNumber('4')},
+      {identifier: 'token123', amount: new BigNumber('-2')},
+      {identifier: 'token456', amount: new BigNumber('2')},
     ]
 
     expect(toAmounts(tokenEntries)).toEqual({

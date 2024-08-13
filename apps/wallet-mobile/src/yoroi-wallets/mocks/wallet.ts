@@ -625,32 +625,26 @@ const fetchTokenInfo = {
 
 const tokenEntries: Array<CardanoTypes.TokenEntry> = [
   {
-    networkId: 123,
     identifier: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950',
     amount: new BigNumber(12344.00234523),
   },
   {
-    networkId: 123,
     identifier: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950',
     amount: new BigNumber(12344.00234523),
   },
   {
-    networkId: 123,
     identifier: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950',
     amount: new BigNumber(12344.00234523),
   },
   {
-    networkId: 123,
     identifier: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950',
     amount: new BigNumber(12344.00234523),
   },
   {
-    networkId: 123,
     identifier: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950',
     amount: new BigNumber(12344.00234523),
   },
   {
-    networkId: 123,
     identifier: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950',
     amount: new BigNumber(12344.00234523),
   },
