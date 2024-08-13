@@ -144,7 +144,7 @@ export const makeCardanoWallet = (
       const rewardAddressHex = implementationConfig.features.staking
         ? await deriveRewardAddressHex(
             accountPubKeyHex,
-            NETWORK_CONFIG.NETWORK_ID,
+            chainId,
             implementationConfig.features.staking.derivation.role,
             implementationConfig.features.staking.derivation.index,
           )
