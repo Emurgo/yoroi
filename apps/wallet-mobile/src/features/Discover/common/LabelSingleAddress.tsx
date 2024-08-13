@@ -26,8 +26,7 @@ const useStyles = () => {
     },
     labelText: {
       ...atoms.body_3_sm_medium,
-      fontWeight: '500',
-      color: color.white_static,
+      color: color.gray_cmin,
     },
   })
 
