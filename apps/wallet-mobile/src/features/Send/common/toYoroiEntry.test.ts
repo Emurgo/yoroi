@@ -12,7 +12,7 @@ describe('toYoroiEntry', () => {
         hash: 'exampleHash',
       },
       amounts: {
-        ['']: '10',
+        ['.']: '10',
         [tokenBalanceMocks.nftCryptoKitty.info.id]: '20',
       },
     }

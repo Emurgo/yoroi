@@ -51,7 +51,7 @@ export const Dashboard = () => {
   const strings = useWithdrawStakingRewardsStrings()
 
   const balances = useBalances(wallet)
-  const primaryAmount = Amounts.getAmount(balances, '')
+  const primaryAmount = Amounts.getAmount(balances, wallet.primaryTokenInfo.id)
   const {stakingInfo, refetch: refetchStakingInfo, error, isLoading} = useStakingInfo(wallet)
   const isGovernanceFeatureEnabled = useIsGovernanceFeatureEnabled(wallet)
 

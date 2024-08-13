@@ -20,7 +20,7 @@ export const makePossibleFrontendFeeEntry = (
 
   return {
     address: addressFeeDeposit,
-    amounts: {['']: asQuantity(quantity.toString())},
+    amounts: {['.']: asQuantity(quantity.toString())},
   } as const
 }
 
@@ -48,11 +48,13 @@ export const createOrderEntry = (
   const isSellPrimaryToken = sellTokenId === primaryTokenId
 
   if (isSellPrimaryToken) {
-    amountEntry[''] = asQuantity(
+    amountEntry[primaryTokenId] = asQuantity(
       (selectedPool.deposit.quantity + selectedPool.batcherFee.quantity + amounts.sell.quantity).toString(),
     )
   } else {
-    amountEntry[''] = asQuantity((selectedPool.deposit.quantity + selectedPool.batcherFee.quantity).toString())
+    amountEntry[primaryTokenId] = asQuantity(
+      (selectedPool.deposit.quantity + selectedPool.batcherFee.quantity).toString(),
+    )
     amountEntry[sellTokenId] = asQuantity(amounts.sell.quantity.toString())
   }
 

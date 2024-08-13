@@ -18,14 +18,14 @@ import {wrappedCsl as getCSL} from './wrappedCsl'
 
 export const deriveRewardAddressHex = async (
   accountPubKeyHex: string,
-  chainId: number,
+  networkId: number,
   role: number,
   index: number,
 ): Promise<string> => {
   const accountPubKeyPtr = await CardanoMobile.Bip32PublicKey.fromBytes(Buffer.from(accountPubKeyHex, 'hex'))
   const stakingKey = await (await (await accountPubKeyPtr.derive(role)).derive(index)).toRawKey()
   const credential = await CardanoMobile.Credential.fromKeyhash(await stakingKey.hash())
-  const rewardAddr = await CardanoMobile.RewardAddress.new(chainId, credential)
+  const rewardAddr = await CardanoMobile.RewardAddress.new(networkId, credential)
   const rewardAddrAsAddr = await rewardAddr.toAddress()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const result = Buffer.from((await rewardAddrAsAddr.toBytes()) as any, 'hex').toString('hex')
