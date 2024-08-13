@@ -384,7 +384,6 @@ export const makeCardanoWallet = (
       delegatedAmount: BigNumber
       addressMode: Wallet.AddressMode
     }) {
-      console.log('createDelegationTx', poolId)
       if (implementationConfig.features.staking) {
         const time = await this.checkServerStatus()
           .then(({serverTime}) => serverTime || Date.now())
@@ -783,7 +782,6 @@ export const makeCardanoWallet = (
       addressMode: Wallet.AddressMode
       metadata?: Array<CardanoTypes.TxMetadata>
     }) {
-      console.log('createUnsignedTx1', entries, addressMode, metadata)
       const time = await this.checkServerStatus()
         .then(({serverTime}) => serverTime || Date.now())
         .catch(() => Date.now())
@@ -802,8 +800,6 @@ export const makeCardanoWallet = (
         linearFee: {coefficient, constant},
         poolDeposit,
       } = this.protocolParams
-
-      console.log('createUnsignedTx', recipients)
 
       try {
         const unsignedTx = await Cardano.createUnsignedTx(

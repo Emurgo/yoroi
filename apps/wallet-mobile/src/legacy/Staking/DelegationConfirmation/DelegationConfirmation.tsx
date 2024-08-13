@@ -56,8 +56,6 @@ export const DelegationConfirmation = () => {
     resetToTxHistory()
   }
 
-  console.log('yoroiUnsignedTx.fee', yoroiUnsignedTx.fee)
-
   return (
     <View style={styles.container}>
       <ScrollView>
