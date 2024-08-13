@@ -649,6 +649,8 @@
   "components.walletinit.restorewallet.choose15WordsMnemonicTitle": "15 word recovery phrase",
   "components.walletinit.restorewallet.choose24WordsMnemonicTitle": "24 word recovery phrase",
   "components.walletinit.restorewallet.walletcredentialsscreen.walletCheckError": "Could not verify wallet funds",
+  "components.walletinit.restorewallet.hwWalletDetailsTitle": "<b>Add</b> your <b>wallet name</b>",
+  "components.walletinit.restorewallet.ledgerSupportLink": "Learn more about using Yoroi with Ledger",
   "components.walletinit.savereadonlywalletscreen.defaultWalletName": "My read-only wallet",
   "components.walletinit.savereadonlywalletscreen.derivationPath": "Derivation path:",
   "components.walletinit.savereadonlywalletscreen.key": "Key:",

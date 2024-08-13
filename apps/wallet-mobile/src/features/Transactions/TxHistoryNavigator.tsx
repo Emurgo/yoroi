@@ -16,16 +16,15 @@ import {ThemedPalette, useTheme} from '@yoroi/theme'
 import {Resolver, Swap} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, TouchableOpacity, TouchableOpacityProps, View, ViewProps} from 'react-native'
+import {StyleSheet, View, ViewProps} from 'react-native'
 
-import {Boundary, Icon, Spacer} from '../../components'
+import {Boundary, Spacer} from '../../components'
 import {unstoppableApiKey} from '../../kernel/env'
 import {
   BackButton,
   defaultStackNavigationOptions,
   TxHistoryRouteNavigation,
   TxHistoryRoutes,
-  useWalletNavigation,
 } from '../../kernel/navigation'
 import {useFrontendFees, useStakingKey} from '../../yoroi-wallets/hooks'
 import {claimApiMaker} from '../Claim/module/api'
@@ -566,18 +565,8 @@ const useStrings = () => {
   }
 }
 
-const SettingsIconButton = (props: TouchableOpacityProps) => {
-  const {color} = useTheme()
-  return (
-    <TouchableOpacity {...props}>
-      <Icon.Settings size={30} color={color.gray_cmax} />
-    </TouchableOpacity>
-  )
-}
-
 const HeaderRightHistory = React.memo(() => {
   const {meta} = useSelectedWallet()
-  const {navigateToSettings} = useWalletNavigation()
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const {styles, colors} = useStyles()
 
@@ -593,8 +582,6 @@ const HeaderRightHistory = React.memo(() => {
           <Spacer width={10} />
         </>
       )}
-
-      <SettingsIconButton style={styles.settingIconButton} onPress={navigateToSettings} />
     </Row>
   )
 })
@@ -608,9 +595,6 @@ const useStyles = () => {
   const {color} = useTheme()
 
   const styles = StyleSheet.create({
-    settingIconButton: {
-      width: 40,
-    },
     row: {
       paddingStart: 8,
     },

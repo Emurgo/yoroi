@@ -139,7 +139,7 @@ const MainnetWarningDialog = ({onCancel, onOk}: {onCancel: () => void; onOk: () 
 
 const useStyles = () => {
   const {color, atoms} = useTheme()
-  const width = useWindowDimensions().width - 190
+  const width = useWindowDimensions().width - 120
 
   const styles = StyleSheet.create({
     headerTitleStyle: {
@@ -165,7 +165,7 @@ const useStyles = () => {
     },
     sanchonetLabel: {
       borderRadius: 1200,
-      backgroundColor: '#66F2D6',
+      backgroundColor: color.el_secondary_medium,
       ...atoms.px_sm,
       ...atoms.py_xs,
     },

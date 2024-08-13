@@ -1,5 +1,7 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {useIntl} from 'react-intl'
+import {StyleSheet, View} from 'react-native'
 
 import {TwoActionView} from '../../../../components'
 import {LoadingOverlay} from '../../../../components/LoadingOverlay'
@@ -19,6 +21,7 @@ type Props = {
 
 export const ConfirmTxWithOS = ({wallet, unsignedTx, onSuccess, onCancel}: Props) => {
   const strings = useStrings()
+  const {styles} = useStyles()
 
   const {authWithOs, isLoading: authenticating} = useAuthOsWithEasyConfirmation(
     {id: wallet.id},
@@ -36,7 +39,7 @@ export const ConfirmTxWithOS = ({wallet, unsignedTx, onSuccess, onCancel}: Props
   const isLoading = authenticating || processingTx
 
   return (
-    <>
+    <View style={styles.container}>
       <TwoActionView
         title={strings.confirmTx}
         primaryButton={{
@@ -53,7 +56,7 @@ export const ConfirmTxWithOS = ({wallet, unsignedTx, onSuccess, onCancel}: Props
       </TwoActionView>
 
       <LoadingOverlay loading={isLoading} />
-    </>
+    </View>
   )
 }
 
@@ -64,4 +67,16 @@ const useStrings = () => {
     confirmButton: intl.formatMessage(confirmationMessages.commonButtons.confirmButton),
     confirmTx: intl.formatMessage(txLabels.confirmTx),
   }
+}
+
+const useStyles = () => {
+  const {atoms} = useTheme()
+  const styles = StyleSheet.create({
+    container: {
+      ...atoms.flex_1,
+      ...atoms.px_lg,
+    },
+  })
+
+  return {styles} as const
 }

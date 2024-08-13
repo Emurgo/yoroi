@@ -35,7 +35,7 @@ import {EpochProgress} from './EpochProgress'
 import {NotDelegatedInfo} from './NotDelegatedInfo'
 import {StakePoolInfos, useStakingInfo} from './StakePoolInfos'
 import {UserSummary} from './UserSummary'
-import {useWithdrawStakingRewardsStrings, WithdrawStakingRewards} from './WithdrawStakingRewards'
+import {WithdrawStakingRewards} from './WithdrawStakingRewards'
 
 export const Dashboard = () => {
   const {styles} = useStyles()
@@ -48,7 +48,6 @@ export const Dashboard = () => {
   const {isLoading: isSyncing, sync} = useSync(wallet)
   const isOnline = useIsOnline(wallet)
   const {openModal, closeModal} = useModal()
-  const strings = useWithdrawStakingRewardsStrings()
 
   const balances = useBalances(wallet)
   const primaryAmount = Amounts.getAmount(balances, wallet.primaryTokenInfo.id)
@@ -74,7 +73,7 @@ export const Dashboard = () => {
     }
 
     openModal(
-      strings.warningModalTitle,
+      '',
       <WithdrawStakingRewards wallet={wallet} onSuccess={() => resetToTxHistory()} onCancel={() => closeModal()} />,
       450,
     )

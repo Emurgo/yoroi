@@ -3,7 +3,7 @@ import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
 import {HW, Wallet} from '@yoroi/types'
 import React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
+import {useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -15,6 +15,7 @@ import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import {LedgerConnect} from '../../../../legacy/HW'
 import {getHWDeviceInfo} from '../../../../yoroi-wallets/cardano/hw'
 import {Device, NetworkId} from '../../../../yoroi-wallets/types'
+import {useStrings} from '../../common/useStrings'
 
 export type Params = {
   useUSB?: boolean
@@ -67,27 +68,12 @@ export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
           onConnectBLE={onConnectBLE}
           onConnectUSB={onConnectUSB}
           useUSB={useUSB}
-          onWaitingMessage={strings.exportKey}
+          onWaitingMessage={strings.hwExportKey}
           defaultDevices={defaultDevices}
         />
       </View>
     </SafeAreaView>
   )
-}
-
-const messages = defineMessages({
-  exportKey: {
-    id: 'components.walletinit.connectnanox.connectnanoxscreen.exportKey',
-    defaultMessage: '!!!Action needed: Please, export public key from your Ledger device.',
-  },
-})
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    exportKey: intl.formatMessage(messages.exportKey),
-  }
 }
 
 const useStyles = () => {

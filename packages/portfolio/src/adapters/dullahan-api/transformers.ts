@@ -63,6 +63,8 @@ export const toTokenActivityUpdates = (
             ts: tokenActivity.price24h.ts,
             open: new BigNumber(tokenActivity.price24h.open),
             close: new BigNumber(tokenActivity.price24h.close),
+            low: new BigNumber(tokenActivity.price24h.low),
+            high: new BigNumber(tokenActivity.price24h.high),
             change: tokenActivity.price24h.change,
           },
         }
