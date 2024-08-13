@@ -32,9 +32,10 @@ export const TokenBalanceItem = ({amount}: Props) => {
 
   const {price, previous} = isPrimaryToken(info)
     ? adaPrice
-    : {price: nonAdaPrice?.close.toNumber() ?? 0, previous: nonAdaPrice?.open.toNumber() ?? 0}
+    : {price: nonAdaPrice?.close.toNumber(), previous: nonAdaPrice?.open.toNumber()}
 
-  const {changePercent, variantPnl} = priceChange(previous, price)
+  const {changePercent, variantPnl} = priceChange(previous ?? 0, price ?? 0)
+  const missingPrices = price === undefined || previous === undefined
 
   return (
     <TouchableOpacity onPress={() => navigationTo.tokenDetail({id: info.id})} style={styles.root}>
@@ -48,11 +49,9 @@ export const TokenBalanceItem = ({amount}: Props) => {
             {name}
           </Text>
 
-          {price !== 0 && (
-            <PnlTag withIcon variant={variantPnl}>
-              <Text>{formatPriceChange(changePercent)}%</Text>
-            </PnlTag>
-          )}
+          <PnlTag withIcon variant={variantPnl}>
+            <Text>{missingPrices ? '—— ' : formatPriceChange(changePercent)}%</Text>
+          </PnlTag>
         </View>
       </View>
 
