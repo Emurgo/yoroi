@@ -7,15 +7,15 @@ import {useCurrencyPairing} from '../../../../Settings/Currency'
 type Props = {rate: number; name: string}
 export const Rate = ({rate, name}: Props) => {
   const {styles} = useStyles()
-  const {currency} = useCurrencyPairing()
+  const {currency, config} = useCurrencyPairing()
 
   return (
     <Text style={[styles.boxExchange]}>
       <Text style={[styles.textWhite, styles.normalText]}>1 {name} = </Text>
 
-      <Text style={[styles.textWhite, styles.normalText, styles.usdExchangeText]}>{rate.toFixed(2)}</Text>
+      <Text style={[styles.textWhite, styles.normalText, styles.usdExchangeText]}>{rate.toFixed(config.decimals)}</Text>
 
-      <Text style={[styles.textWhite, styles.usdExchangeFiat]}>{currency}</Text>
+      <Text style={[styles.textWhite, styles.usdExchangeFiat]}> {currency}</Text>
     </Text>
   )
 }
