@@ -18,6 +18,7 @@ import {
   ViewProps,
 } from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Banner, Boundary, Button, CopyButton, FadeIn, Icon, Text, useModal} from '../../../../components'
 import {isEmptyString} from '../../../../kernel/utils'
@@ -82,113 +83,115 @@ export const TxDetails = () => {
     openModal(strings.addessModalTitle, <AddressModal address={address} />, modalHeight)
 
   return (
-    <FadeIn style={styles.container}>
-      <ScrollView contentContainerStyle={styles.contentContainer}>
-        <Banner label={strings[transaction.direction]}>
-          <Boundary>
-            <AdaAmount amount={amount} />
+    <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.container}>
+      <FadeIn style={styles.fade}>
+        <ScrollView contentContainerStyle={styles.contentContainer}>
+          <Banner label={strings[transaction.direction]}>
+            <Boundary>
+              <AdaAmount amount={amount} />
 
-            {txFee && <Fee amount={txFee} />}
+              {txFee && <Fee amount={txFee} />}
+            </Boundary>
+          </Banner>
+
+          <Label>{strings.memo}</Label>
+
+          <Text secondary monospace>
+            {memo}
+          </Text>
+
+          <View style={styles.borderTop}>
+            <Text secondary monospace style={styles.center}>
+              {submittedAt}
+            </Text>
+
+            <Label>{strings.fromAddresses}</Label>
+          </View>
+
+          {fromFiltered.map((item) => (
+            <View key={item.id}>
+              <AddressEntry {...item} showModalForAddress={openAddressModal} />
+
+              {item.assets.length > 0 && (
+                <TouchableOpacity
+                  style={styles.assetsExpandable}
+                  activeOpacity={0.5}
+                  onPress={() => toggleExpandIn(item.id)}
+                >
+                  <Text style={styles.assetsTitle}>{` -${item.assets.length} ${strings.assetsLabel} `}</Text>
+
+                  <Icon.Chevron
+                    direction={expandedInItemId === item.id ? 'up' : 'down'}
+                    color={colors.iconColor}
+                    size={23}
+                  />
+                </TouchableOpacity>
+              )}
+
+              <ExpandableAssetList expanded={expandedInItemId === item.id} assets={item.assets} />
+            </View>
+          ))}
+
+          <View style={styles.borderTop}>
+            <Label>{strings.toAddresses}</Label>
+          </View>
+
+          {toFiltered.map((item) => (
+            <View key={item.id}>
+              <AddressEntry {...item} showModalForAddress={openAddressModal} />
+
+              {item.assets.length > 0 && (
+                <TouchableOpacity
+                  style={styles.assetsExpandable}
+                  activeOpacity={0.5}
+                  onPress={() => toggleExpandOut(item.id)}
+                >
+                  <Text style={styles.assetsTitle}>{` +${item.assets.length} ${strings.assetsLabel} `}</Text>
+
+                  <Icon.Chevron
+                    direction={expandedOutItemId === item.id ? 'up' : 'down'}
+                    color={colors.iconColor}
+                    size={23}
+                  />
+                </TouchableOpacity>
+              )}
+
+              <ExpandableAssetList expanded={expandedOutItemId === item.id} assets={item.assets} />
+            </View>
+          ))}
+
+          {cntOmittedTo > 0 && <Text>{strings.omittedCount(cntOmittedTo)}</Text>}
+
+          <View style={styles.borderTop}>
+            <Label>{strings.txAssuranceLevel}</Label>
+          </View>
+
+          <Boundary loading={{size: 'small'}}>
+            <Confirmations transaction={transaction} wallet={wallet} />
           </Boundary>
-        </Banner>
 
-        <Label>{strings.memo}</Label>
+          <Label>{strings.transactionId}</Label>
 
-        <Text secondary monospace>
-          {memo}
-        </Text>
+          <View style={styles.dataContainer}>
+            <Text secondary monospace numberOfLines={1} ellipsizeMode="middle">
+              {transaction.id}
+            </Text>
 
-        <View style={styles.borderTop}>
-          <Text secondary monospace style={styles.center}>
-            {submittedAt}
-          </Text>
-
-          <Label>{strings.fromAddresses}</Label>
-        </View>
-
-        {fromFiltered.map((item) => (
-          <View key={item.id}>
-            <AddressEntry {...item} showModalForAddress={openAddressModal} />
-
-            {item.assets.length > 0 && (
-              <TouchableOpacity
-                style={styles.assetsExpandable}
-                activeOpacity={0.5}
-                onPress={() => toggleExpandIn(item.id)}
-              >
-                <Text style={styles.assetsTitle}>{` -${item.assets.length} ${strings.assetsLabel} `}</Text>
-
-                <Icon.Chevron
-                  direction={expandedInItemId === item.id ? 'up' : 'down'}
-                  color={colors.iconColor}
-                  size={23}
-                />
-              </TouchableOpacity>
-            )}
-
-            <ExpandableAssetList expanded={expandedInItemId === item.id} assets={item.assets} />
+            <CopyButton value={transaction.id} />
           </View>
-        ))}
+        </ScrollView>
 
-        <View style={styles.borderTop}>
-          <Label>{strings.toAddresses}</Label>
-        </View>
-
-        {toFiltered.map((item) => (
-          <View key={item.id}>
-            <AddressEntry {...item} showModalForAddress={openAddressModal} />
-
-            {item.assets.length > 0 && (
-              <TouchableOpacity
-                style={styles.assetsExpandable}
-                activeOpacity={0.5}
-                onPress={() => toggleExpandOut(item.id)}
-              >
-                <Text style={styles.assetsTitle}>{` +${item.assets.length} ${strings.assetsLabel} `}</Text>
-
-                <Icon.Chevron
-                  direction={expandedOutItemId === item.id ? 'up' : 'down'}
-                  color={colors.iconColor}
-                  size={23}
-                />
-              </TouchableOpacity>
-            )}
-
-            <ExpandableAssetList expanded={expandedOutItemId === item.id} assets={item.assets} />
-          </View>
-        ))}
-
-        {cntOmittedTo > 0 && <Text>{strings.omittedCount(cntOmittedTo)}</Text>}
-
-        <View style={styles.borderTop}>
-          <Label>{strings.txAssuranceLevel}</Label>
-        </View>
-
-        <Boundary loading={{size: 'small'}}>
-          <Confirmations transaction={transaction} wallet={wallet} />
-        </Boundary>
-
-        <Label>{strings.transactionId}</Label>
-
-        <View style={styles.dataContainer}>
-          <Text secondary monospace numberOfLines={1} ellipsizeMode="middle">
-            {transaction.id}
-          </Text>
-
-          <CopyButton value={transaction.id} />
-        </View>
-      </ScrollView>
-
-      {network !== Chain.Network.Sancho && (
-        <Actions>
-          <Button
-            onPress={() => Linking.openURL(explorers.cardanoscan.tx(transaction.id))}
-            title={strings.openInExplorer}
-            shelleyTheme
-          />
-        </Actions>
-      )}
-    </FadeIn>
+        {network !== Chain.Network.Sancho && (
+          <Actions>
+            <Button
+              onPress={() => Linking.openURL(explorers.cardanoscan.tx(transaction.id))}
+              title={strings.openInExplorer}
+              shelleyTheme
+            />
+          </Actions>
+        )}
+      </FadeIn>
+    </SafeAreaView>
   )
 }
 
@@ -351,6 +354,9 @@ const useStyles = () => {
     container: {
       flex: 1,
       backgroundColor: color.bg_color_high,
+    },
+    fade: {
+      flex: 1,
     },
     contentContainer: {
       ...atoms.px_lg,
