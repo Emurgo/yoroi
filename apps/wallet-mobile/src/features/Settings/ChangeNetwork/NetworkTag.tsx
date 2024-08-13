@@ -145,6 +145,7 @@ const useStyles = () => {
     headerTitleStyle: {
       ...atoms.body_1_lg_medium,
       color: color.text_gray_normal,
+      flexShrink: 1,
     },
     headerTitleContainerStyle: {
       flexDirection: 'row',
@@ -164,7 +165,7 @@ const useStyles = () => {
     },
     sanchonetLabel: {
       borderRadius: 1200,
-      backgroundColor: '#66F2D6',
+      backgroundColor: color.el_secondary_medium,
       ...atoms.px_sm,
       ...atoms.py_xs,
     },
