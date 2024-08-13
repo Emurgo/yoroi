@@ -91,8 +91,18 @@ export const PortfolioWalletTokenList = () => {
   const isSancho = network === Chain.Network.Sancho
 
   const renderFooterList = () => {
-    if (tokensLoading) return makeList(6).map((_, index) => <SkeletonItem key={index} />)
     if (isSearching) return null
+    if (tokensLoading) {
+      return (
+        <View>
+          <Spacer height={16} />
+
+          {makeList(6).map((_, index) => (
+            <SkeletonItem key={index} />
+          ))}
+        </View>
+      )
+    }
     if (isZeroADABalance) {
       return (
         <View>
