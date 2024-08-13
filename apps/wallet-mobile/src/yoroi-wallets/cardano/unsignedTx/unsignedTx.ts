@@ -147,7 +147,7 @@ const Staking = {
 
   toDeregistrations: ({
     deregistrations,
-    networkConfig: {NETWORK_ID, KEY_DEPOSIT},
+    networkConfig: {CHAIN_NETWORK_ID, KEY_DEPOSIT},
     primaryTokenId,
   }: {
     deregistrations: CardanoTypes.UnsignedTx['deregistrations']
@@ -158,7 +158,12 @@ const Staking = {
       deregistrations.map(async (deregistration) => {
         const address = await deregistration
           .stakeCredential()
-          .then((stakeCredential) => CardanoMobile.RewardAddress.new(Number(NETWORK_ID), stakeCredential))
+          .then((stakeCredential) =>
+            CardanoMobile.RewardAddress.new(
+              Number(CHAIN_NETWORK_ID) /* API NETWORK_ID is equivalent to CHAIN_NETWORK_ID here */,
+              stakeCredential,
+            ),
+          )
           .then((rewardAddress) => rewardAddress.toAddress())
           .then((address) => address.toBytes())
           .then((bytes) => Buffer.from(bytes).toString('hex'))
@@ -168,7 +173,7 @@ const Staking = {
 
   toRegistrations: async ({
     registrations,
-    networkConfig: {NETWORK_ID, KEY_DEPOSIT},
+    networkConfig: {CHAIN_NETWORK_ID, KEY_DEPOSIT},
     primaryTokenId,
   }: {
     registrations: CardanoTypes.UnsignedTx['registrations']
@@ -179,7 +184,12 @@ const Staking = {
       registrations.map(async (registration) => {
         const address: string = await registration
           .stakeCredential()
-          .then((stakeCredential) => CardanoMobile.RewardAddress.new(Number(NETWORK_ID), stakeCredential))
+          .then((stakeCredential) =>
+            CardanoMobile.RewardAddress.new(
+              Number(CHAIN_NETWORK_ID) /* API NETWORK_ID is equivalent to CHAIN_NETWORK_ID here */,
+              stakeCredential,
+            ),
+          )
           .then((rewardAddress) => rewardAddress.toAddress())
           .then((address) => address.toBytes())
           .then((bytes) => Buffer.from(bytes).toString('hex'))
