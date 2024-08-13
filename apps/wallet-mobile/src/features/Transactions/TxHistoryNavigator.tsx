@@ -57,6 +57,7 @@ import {
   ShowFailedTxScreen as FailedTxSwapScreen,
   ShowSubmittedTxScreen as SubmittedTxSwapScreen,
 } from '../Swap/useCases'
+import {NavToToken} from '../Swap/useCases/NavToToken/NavToToken'
 import {ShowPreprodNoticeScreen} from '../Swap/useCases/ShowPreprodNoticeScreen/ShowPreprodNoticeScreen'
 import {ShowSanchoNoticeScreen} from '../Swap/useCases/ShowSanchoNoticeScreen/ShowSanchoNoticeScreen'
 import {SelectBuyTokenFromListScreen} from '../Swap/useCases/StartOrderSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
@@ -256,6 +257,8 @@ export const TxHistoryNavigator = () => {
                       title: strings.swapTitle,
                     }}
                   />
+
+                  <Stack.Screen name="swap-nav-token" component={NavToToken} />
 
                   <Stack.Screen
                     name="swap-preprod-notice"

@@ -1,8 +1,6 @@
 import {useNavigation} from '@react-navigation/native'
-import {useSwap} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
-import {Chain} from '@yoroi/types'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import Animated, {FadeInDown, FadeOutDown, Layout} from 'react-native-reanimated'
@@ -14,10 +12,9 @@ import {TxHistoryRouteNavigation} from '../../../../kernel/navigation'
 import {useReceive} from '../../../Receive/common/ReceiveProvider'
 import {useMultipleAddressesInfo} from '../../../Receive/common/useMultipleAddressesInfo'
 import {useReceiveAddressesStatus} from '../../../Receive/common/useReceiveAddressesStatus'
-import {useSwapForm} from '../../../Swap/common/SwapFormProvider'
+import {useNavigateToSwap} from '../../../Swap/common/useNavigateToSwap'
 import {useAddressMode} from '../../../WalletManager/common/hooks/useAddressMode'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
-import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {useStrings} from '../../common/strings'
 
 export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
@@ -32,48 +29,15 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   const {hideMultipleAddressesInfo, isShowingMultipleAddressInfo} = useMultipleAddressesInfo()
 
   const {reset: resetSendState} = useTransfer()
-  const {orderData} = useSwap()
-  const {resetSwapForm} = useSwapForm()
 
   const {track} = useMetrics()
+  const {meta} = useSelectedWallet()
 
-  const {
-    selected: {network},
-  } = useWalletManager()
-
-  const {
-    meta,
-    wallet: {portfolioPrimaryTokenInfo},
-  } = useSelectedWallet()
+  const {handleOnSwap} = useNavigateToSwap()
 
   const handleOnSend = () => {
     navigateTo.send()
     resetSendState()
-  }
-
-  const handleOnSwap = () => {
-    if (network === Chain.Network.Preprod) {
-      navigateTo.swapPreprodNotice()
-      return
-    }
-
-    if (network === Chain.Network.Sancho) {
-      navigateTo.swapSanchoNotice()
-      return
-    }
-
-    resetSwapForm()
-
-    track.swapInitiated({
-      from_asset: [
-        {asset_name: portfolioPrimaryTokenInfo.name, asset_ticker: portfolioPrimaryTokenInfo.ticker, policy_id: ''},
-      ],
-      to_asset: [{asset_name: '', asset_ticker: '', policy_id: ''}],
-      order_type: orderData.type,
-      slippage_tolerance: orderData.slippage,
-    })
-
-    navigateTo.swap()
   }
 
   const handleOnExchange = () => {
@@ -160,7 +124,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
               <View style={styles.centralized}>
                 <TouchableOpacity
                   style={styles.actionIcon}
-                  onPress={handleOnSwap}
+                  onPress={() => handleOnSwap()}
                   testID="swapButton"
                   disabled={disabled}
                 >
@@ -252,9 +216,6 @@ const useNavigateTo = () => {
     send: () => navigation.navigate('send-start-tx'),
     receiveSingleAddress: () => navigation.navigate('receive-single'),
     receiveMultipleAddresses: () => navigation.navigate('receive-multiple'),
-    swap: () => navigation.navigate('swap-start-swap', {screen: 'token-swap'}),
-    swapPreprodNotice: () => navigation.navigate('swap-preprod-notice'),
-    swapSanchoNotice: () => navigation.navigate('swap-sancho-notice'),
     exchange: () => navigation.navigate('exchange-create-order'),
   }
 }

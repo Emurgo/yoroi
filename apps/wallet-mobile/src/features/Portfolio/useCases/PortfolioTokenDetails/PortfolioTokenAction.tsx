@@ -3,12 +3,14 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {Button, Icon} from '../../../../components'
-import {useNavigateTo} from '../../common/useNavigateTo'
+import {useNavigateTo, usePortfolioTokenDetailParams} from '../../common/useNavigateTo'
 import {useStrings} from '../../common/useStrings'
 
 export const PortfolioTokenAction = () => {
   const {styles, colors} = useStyles()
   const strings = useStrings()
+  const {id: tokenId} = usePortfolioTokenDetailParams()
+
   const navigateTo = useNavigateTo()
 
   return (
@@ -28,7 +30,7 @@ export const PortfolioTokenAction = () => {
           shelleyTheme
           title={strings.swap.toLocaleUpperCase()}
           startContent={<Icon.Swap color={colors.white} size={24} />}
-          onPress={() => navigateTo.swap()}
+          onPress={() => navigateTo.swap(tokenId)}
         />
       </View>
     </View>

@@ -194,6 +194,7 @@ export type ClaimRoutes = {
 
 export type SwapTokenRoutes = {
   'swap-start-swap': NavigatorScreenParams<SwapTabRoutes>
+  'swap-nav-token': {tokenId: Portfolio.Token.Id}
   'swap-confirm-tx': undefined
   'swap-select-sell-token': undefined
   'swap-select-buy-token': undefined
