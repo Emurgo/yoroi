@@ -1,5 +1,7 @@
 import {Portfolio} from '@yoroi/types'
+
 import {createPrimaryTokenInfo} from './create-primary-token-info'
+import {primaryTokenId} from '../constants'
 
 describe('createPrimaryTokenInfo', () => {
   it('should create primary token info with additional properties', () => {
@@ -19,7 +21,7 @@ describe('createPrimaryTokenInfo', () => {
     }
 
     const expectedTokenInfo: Readonly<Portfolio.Token.Info> = {
-      id: '.',
+      id: primaryTokenId,
       nature: Portfolio.Token.Nature.Primary,
       type: Portfolio.Token.Type.FT,
       application: Portfolio.Token.Application.Coin,

@@ -3,9 +3,10 @@ import {Api, App, Portfolio} from '@yoroi/types'
 import {freeze} from 'immer'
 
 import {tokenInfoMocks} from './token-info.mocks'
+import {primaryTokenId} from '../constants'
 
 const primaryETH: Portfolio.Token.Discovery = {
-  id: '.',
+  id: primaryTokenId,
   supply: 45_000_000_000_000n.toString(),
   originalMetadata: {
     filteredMintMetadatum: null,
