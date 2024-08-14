@@ -305,8 +305,7 @@ export const apiConfig: ApiConfig = freeze(
       tokenInfo: 'https://zero.yoroiwallet.com/tokens/info',
       tokenInfos: 'https://zero.yoroiwallet.com/tokens/info/multi',
       tokenTraits: 'https://zero.yoroiwallet.com/tokens/nft/traits',
-      tokenActivityUpdates:
-        'https://add50d9d-76d7-47b7-b17f-e34021f63a02.mock.pstmn.io/v1/token-activity',
+      tokenActivityUpdates: 'https://zero.yoroiwallet.com/defi/token-activity',
       tokenPriceHistory:
         'https://add50d9d-76d7-47b7-b17f-e34021f63a02.mock.pstmn.io/v1/token-price-history',
     },
@@ -319,7 +318,7 @@ export const apiConfig: ApiConfig = freeze(
       tokenTraits:
         'https://yoroi-backend-zero-preprod.emurgornd.com/tokens/nft/traits',
       tokenActivityUpdates:
-        'https://add50d9d-76d7-47b7-b17f-e34021f63a02.mock.pstmn.io/v1/token-activity',
+        'https://yoroi-backend-zero-preprod.emurgornd.com/defi/token-activity',
       tokenPriceHistory:
         'https://add50d9d-76d7-47b7-b17f-e34021f63a02.mock.pstmn.io/v1/token-price-history',
     },
@@ -333,7 +332,7 @@ export const apiConfig: ApiConfig = freeze(
       tokenTraits:
         'https://yoroi-backend-zero-sanchonet.emurgornd.com/tokens/nft/traits',
       tokenActivityUpdates:
-        'https://add50d9d-76d7-47b7-b17f-e34021f63a02.mock.pstmn.io/v1/token-activity',
+        'https://yoroi-backend-zero-sanchonet.emurgornd.com/defi/token-activity',
       tokenPriceHistory:
         'https://add50d9d-76d7-47b7-b17f-e34021f63a02.mock.pstmn.io/v1/token-price-history',
     },
