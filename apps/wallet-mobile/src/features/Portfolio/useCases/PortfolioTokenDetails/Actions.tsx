@@ -1,3 +1,4 @@
+import {isPrimaryToken} from '@yoroi/portfolio'
 import {useSwap} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
 import {Chain, Portfolio} from '@yoroi/types'
@@ -7,8 +8,8 @@ import {StyleSheet, View} from 'react-native'
 import {Button, Icon} from '../../../../components'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useSwapForm} from '../../../Swap/common/SwapFormProvider'
+import {useSelectedNetwork} from '../../../WalletManager/common/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
-import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {useNavigateTo} from '../../common/useNavigateTo'
 import {useStrings} from '../../common/useStrings'
 
@@ -22,32 +23,23 @@ export const Actions = ({tokenInfo}: Props) => {
   const swap = useSwap()
   const swapForm = useSwapForm()
   const {track} = useMetrics()
-
-  const {
-    selected: {network},
-  } = useWalletManager()
+  const {network} = useSelectedNetwork()
 
   const {
     wallet: {portfolioPrimaryTokenInfo},
   } = useSelectedWallet()
 
   const handleOnSwap = () => {
-    if (network === Chain.Network.Preprod) {
-      navigateTo.swapPreprodNotice()
-      return
-    }
-
-    if (network === Chain.Network.Sancho) {
-      navigateTo.swapSanchoNotice()
-      return
-    }
+    if (network === Chain.Network.Preprod) return navigateTo.swapPreprodNotice()
+    if (network === Chain.Network.Sancho) return navigateTo.swapSanchoNotice()
 
     swapForm.resetSwapForm()
 
-    if (tokenInfo.id !== portfolioPrimaryTokenInfo.id) {
+    if (!isPrimaryToken(tokenInfo)) {
       swap.buyTokenInfoChanged(tokenInfo)
       swapForm.buyTouched()
     }
+
     track.swapInitiated({
       from_asset: [
         {asset_name: portfolioPrimaryTokenInfo.name, asset_ticker: portfolioPrimaryTokenInfo.ticker, policy_id: ''},
