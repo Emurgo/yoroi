@@ -47,13 +47,9 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
   const HEIGHT_SCREEN = useWindowDimensions().height
 
   // For devices like iPhone SE wuth logical pixel height < 700, we need a bottom sheet with more height
-  const heightDialogByHeightScreen = dApp.isSingleAddress
-    ? HEIGHT_SCREEN < 700
-      ? (HEIGHT_SCREEN * 70) / 100
-      : (HEIGHT_SCREEN * 50) / 100
-    : HEIGHT_SCREEN < 700
-    ? (HEIGHT_SCREEN * 50) / 100
-    : (HEIGHT_SCREEN * 40) / 100
+  const heightDialogByHeightScreen = HEIGHT_SCREEN < 700
+    ? (HEIGHT_SCREEN * (dApp.isSingleAddress ? 70 : 50)) / 100
+    : (HEIGHT_SCREEN * (dApp.isSingleAddress ? 50 : 40)) / 100
 
   const heightDialogByInit = INIT_DIALOG_DAPP_ACTIONS_HEIGHT + insets.bottom
   const dialogHeight = heightDialogByInit < heightDialogByHeightScreen ? heightDialogByHeightScreen : heightDialogByInit
