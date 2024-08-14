@@ -41,7 +41,10 @@ export const DelegationConfirmation = () => {
   const {poolId, yoroiUnsignedTx} = useParams<Params>(isParams)
 
   if (!yoroiUnsignedTx.staking?.delegations) throw new Error('invalid transaction')
-  const stakingAmount = Amounts.getAmount(Entries.toAmounts(yoroiUnsignedTx.staking.delegations), '')
+  const stakingAmount = Amounts.getAmount(
+    Entries.toAmounts(yoroiUnsignedTx.staking.delegations),
+    wallet.primaryTokenInfo.id,
+  )
   const reward = approximateReward(stakingAmount.quantity)
 
   const [password, setPassword] = useState('')
@@ -55,6 +58,8 @@ export const DelegationConfirmation = () => {
     queryClient.resetQueries([wallet.id, 'stakingInfo'])
     resetToTxHistory()
   }
+
+  const fee = formatTokenAmount(yoroiUnsignedTx.fee[wallet.primaryToken.identifier], wallet.primaryToken)
 
   return (
     <View style={styles.container}>
@@ -75,9 +80,7 @@ export const DelegationConfirmation = () => {
 
         <View testID="stakingAmount">
           <Text small style={styles.fees}>
-            {`+ ${formatTokenAmount(yoroiUnsignedTx.fee[wallet.primaryToken.identifier], wallet.primaryToken)} ${
-              strings.ofFees
-            }`}
+            {`+ ${fee} ${strings.ofFees}`}
           </Text>
 
           {/* requires a handler so we pass on a dummy function */}
