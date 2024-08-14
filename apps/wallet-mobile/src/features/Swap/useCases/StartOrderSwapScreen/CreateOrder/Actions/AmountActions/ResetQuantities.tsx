@@ -6,13 +6,13 @@ import {TouchableOpacity} from 'react-native-gesture-handler'
 import {useStrings} from '../../../../../common/strings'
 import {useSwapForm} from '../../../../../common/SwapFormProvider'
 
-export const ClearQuantities = () => {
+export const ResetQuantities = () => {
   const strings = useStrings()
   const styles = useStyles()
-  const {clearSwapForm} = useSwapForm()
+  const {resetQuantities} = useSwapForm()
 
   return (
-    <TouchableOpacity onPress={clearSwapForm}>
+    <TouchableOpacity onPress={resetQuantities}>
       <Text style={styles.text}>{strings.clear}</Text>
     </TouchableOpacity>
   )

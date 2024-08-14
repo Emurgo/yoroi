@@ -7,6 +7,7 @@ import {TokenApplicationSchema} from './token-application'
 import {TokenIdSchema} from './token-id'
 import {TokenTypeSchema} from './token-type'
 import {responseRecordWithCacheSchemaMaker} from './response-record-with-cache-schema-maker'
+import {primaryTokenId} from '../constants'
 
 export const CommonTokenInfoSchema = z.object({
   decimals: z.number().nonnegative(),
@@ -27,7 +28,7 @@ export const CommonTokenInfoSchema = z.object({
 
 export const PrimaryTokenInfoSchema = CommonTokenInfoSchema.merge(
   z.object({
-    id: z.literal<Portfolio.Token.Id>('.'),
+    id: z.literal<Portfolio.Token.Id>(primaryTokenId),
     nature: z.literal(Portfolio.Token.Nature.Primary),
     type: z.literal(Portfolio.Token.Type.FT),
   }),

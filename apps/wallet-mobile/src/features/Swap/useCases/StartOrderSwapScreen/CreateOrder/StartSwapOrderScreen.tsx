@@ -63,11 +63,15 @@ export const StartSwapOrderScreen = () => {
 
   useSwapPoolsByPair(
     {
-      tokenA: orderData.amounts.sell?.info.id ?? 'unknown.',
-      tokenB: orderData.amounts.buy?.info.id ?? 'unknown.',
+      tokenA: orderData.amounts.sell?.info.id ?? '.',
+      tokenB: orderData.amounts.buy?.info.id ?? '.',
     },
     {
-      enabled: isBuyTouched && isSellTouched,
+      enabled:
+        isBuyTouched &&
+        isSellTouched &&
+        orderData.amounts.sell?.info.id != null &&
+        orderData.amounts.buy?.info.id != null,
       onSuccess: (pools) => {
         poolPairsChanged(pools)
       },
@@ -84,11 +88,13 @@ export const StartSwapOrderScreen = () => {
     getTokenInfo: wallet.networkManager.tokenManager.api.tokenInfo,
     id: orderData.amounts.sell?.info.id ?? 'unknown.',
     network: wallet.networkManager.network,
+    primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
   })
   const {tokenInfo: buyTokenInfo} = usePortfolioTokenInfo({
     getTokenInfo: wallet.networkManager.tokenManager.api.tokenInfo,
     id: orderData.amounts.buy?.info.id ?? 'unknown.',
     network: wallet.networkManager.network,
+    primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
   })
 
   React.useEffect(() => {

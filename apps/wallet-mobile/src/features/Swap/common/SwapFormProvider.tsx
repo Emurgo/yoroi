@@ -29,6 +29,8 @@ export const SwapFormProvider = ({
     switchTokens,
     limitPriceChanged,
     resetQuantities,
+    sellTokenInfoChanged,
+    primaryTokenInfo,
   } = useSwap()
   const {wallet} = useSelectedWallet()
   const {numberLocale} = useLanguage()
@@ -75,15 +77,16 @@ export const SwapFormProvider = ({
     },
     poolTouched: () => dispatch({type: SwapFormActionType.PoolTouched}),
     poolDefaulted: () => dispatch({type: SwapFormActionType.PoolDefaulted}),
-    clearSwapForm: () => {
+    resetQuantities: () => {
       resetQuantities()
-      dispatch({type: SwapFormActionType.ClearSwapForm})
+      dispatch({type: SwapFormActionType.ResetQuantities})
 
       // In certain iOS simulators, the focused input's `onChangeText` may be called before dismissal, using the previous input value.
       Keyboard.dismiss()
     },
     resetSwapForm: () => {
       resetState()
+      sellTokenInfoChanged(primaryTokenInfo)
       dispatch({type: SwapFormActionType.ResetSwapForm})
     },
     canSwapChanged: (canSwap: boolean) => dispatch({type: SwapFormActionType.CanSwapChanged, canSwap}),
@@ -395,7 +398,7 @@ const swapFormReducer = (state: SwapFormState, action: SwapFormAction) => {
       case SwapFormActionType.ResetSwapForm:
         return defaultState
 
-      case SwapFormActionType.ClearSwapForm:
+      case SwapFormActionType.ResetQuantities:
         return state
 
       case SwapFormActionType.CanSwapChanged:
@@ -469,7 +472,7 @@ const initialExchangeFormContext: SwapFormContext = {
   poolDefaulted: missingInit,
   switchTouched: missingInit,
   switchTokens: missingInit,
-  clearSwapForm: missingInit,
+  resetQuantities: missingInit,
   resetSwapForm: missingInit,
   buyInputValueChanged: missingInit,
   sellInputValueChanged: missingInit,
@@ -491,7 +494,7 @@ type SwapFormAction =
   | {type: SwapFormActionType.SwitchTouched}
   | {type: SwapFormActionType.PoolTouched}
   | {type: SwapFormActionType.PoolDefaulted}
-  | {type: SwapFormActionType.ClearSwapForm}
+  | {type: SwapFormActionType.ResetQuantities}
   | {type: SwapFormActionType.ResetSwapForm}
   | {type: SwapFormActionType.CanSwapChanged; canSwap: boolean}
   | {type: SwapFormActionType.SellInputValueChanged; value: string}
@@ -528,7 +531,7 @@ type SwapFormActions = {
   switchTokens: () => void
   poolTouched: () => void
   poolDefaulted: () => void
-  clearSwapForm: () => void
+  resetQuantities: () => void
   resetSwapForm: () => void
   canSwapChanged: (canSwap: boolean) => void
   buyInputValueChanged: (value: string) => void
@@ -545,7 +548,7 @@ enum SwapFormActionType {
   SwitchTokens = 'switchTokens',
   PoolTouched = 'poolTouched',
   PoolDefaulted = 'poolDefaulted',
-  ClearSwapForm = 'clearSwapForm',
+  ResetQuantities = 'resetQuantities',
   ResetSwapForm = 'resetSwapForm',
   CanSwapChanged = 'canSwapChanged',
   BuyInputValueChanged = 'buyInputValueChanged',

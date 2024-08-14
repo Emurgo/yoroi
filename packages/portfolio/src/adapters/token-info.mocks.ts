@@ -2,6 +2,8 @@ import {Api, App, Portfolio} from '@yoroi/types'
 import {cacheRecordMaker} from '@yoroi/common'
 import {freeze} from 'immer'
 
+import {primaryTokenId} from '../constants'
+
 const primaryETH: Portfolio.Token.Info = {
   decimals: 18,
   ticker: 'ETH',
@@ -14,7 +16,7 @@ const primaryETH: Portfolio.Token.Info = {
   fingerprint: '0x1234567890abcdef',
   website: 'https://ethereum.org',
   originalImage: 'https://cdn.example.com/eth-original.png',
-  id: '.',
+  id: primaryTokenId,
   nature: Portfolio.Token.Nature.Primary,
   type: Portfolio.Token.Type.FT,
   description: '',

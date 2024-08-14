@@ -10,6 +10,7 @@ import {tokenMocks} from '../../adapters/token.mocks'
 import {tokenInfoMocks} from '../../adapters/token-info.mocks'
 import {usePortfolioTokenInfo} from './usePortfolioTokenInfo'
 import {createUnknownTokenInfo} from '../../helpers/create-unknown-token-info'
+import {primaryTokenId} from '../../constants'
 
 describe('usePortfolioTokenInfo', () => {
   let queryClient: QueryClient
@@ -34,6 +35,7 @@ describe('usePortfolioTokenInfo', () => {
           id: tokenMocks.nftCryptoKitty.info.id,
           network: Chain.Network.Mainnet,
           getTokenInfo: mockedGetTokenInfo,
+          primaryTokenInfo: tokenInfoMocks.primaryETH,
         },
         {
           suspense: true,
@@ -62,6 +64,44 @@ describe('usePortfolioTokenInfo', () => {
     )
   })
 
+  it('success when PT', async () => {
+    const mockedGetTokenInfo = jest
+      .fn()
+      .mockResolvedValue(tokenInfoMocks.primaryETH)
+
+    const TestComponent = () => {
+      const {data} = usePortfolioTokenInfo(
+        {
+          id: primaryTokenId,
+          network: Chain.Network.Mainnet,
+          getTokenInfo: mockedGetTokenInfo,
+          primaryTokenInfo: tokenInfoMocks.primaryETH,
+        },
+        {
+          suspense: true,
+        },
+      )
+      return (
+        <View>
+          <Text testID="data">{JSON.stringify(data)}</Text>
+        </View>
+      )
+    }
+    const wrapper = wrapperMaker({
+      queryClient,
+    })
+    const {getByTestId} = render(<TestComponent />, {wrapper})
+
+    await waitFor(() => {
+      expect(getByTestId('data')).toBeDefined()
+    })
+
+    expect(getByTestId('data').props.children).toEqual(
+      JSON.stringify(tokenInfoMocks.primaryETH),
+    )
+    expect(mockedGetTokenInfo).not.toHaveBeenCalled()
+  })
+
   it('error should return unknonw token', async () => {
     const unknownTokenInfo = createUnknownTokenInfo({
       id: tokenMocks.nftCryptoKitty.info.id,
@@ -75,6 +115,7 @@ describe('usePortfolioTokenInfo', () => {
           id: tokenMocks.nftCryptoKitty.info.id,
           network: Chain.Network.Mainnet,
           getTokenInfo: mockedGetTokenInfo,
+          primaryTokenInfo: tokenInfoMocks.primaryETH,
         },
         {
           suspense: true,

@@ -38,6 +38,7 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
       getTokenInfo: wallet.networkManager.tokenManager.api.tokenInfo,
       id: orderData.amounts.sell?.info.id ?? 'unknown.',
       network: wallet.networkManager.network,
+      primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
     },
     {suspense: true},
   )
@@ -46,6 +47,7 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
       getTokenInfo: wallet.networkManager.tokenManager.api.tokenInfo,
       id: orderData.amounts.buy?.info.id ?? 'unknown.',
       network: wallet.networkManager.network,
+      primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
     },
     {suspense: true},
   )

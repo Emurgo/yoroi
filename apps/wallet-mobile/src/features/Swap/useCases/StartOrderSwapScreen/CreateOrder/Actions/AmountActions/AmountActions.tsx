@@ -1,7 +1,7 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {ClearQuantities} from './ClearQuantities'
+import {ResetQuantities} from './ResetQuantities'
 import {SwitchTokens} from './SwitchTokens'
 
 export const AmountActions = () => {
@@ -9,7 +9,7 @@ export const AmountActions = () => {
     <View style={styles.container}>
       <SwitchTokens />
 
-      <ClearQuantities />
+      <ResetQuantities />
     </View>
   )
 }
