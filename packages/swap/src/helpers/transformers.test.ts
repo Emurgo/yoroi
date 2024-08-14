@@ -68,7 +68,7 @@ describe('asYoroiOpenOrder', () => {
   it('success (pt without .) coverage should not happen', () => {
     const transformer = transformersMaker({
       ...primaryTokenInfo,
-      id: '' as any,
+      id: '.' as any,
     })
     const result = transformer.asYoroiOpenOrder(openswapMocks.getOpenOrders[0]!)
 
@@ -76,11 +76,11 @@ describe('asYoroiOpenOrder', () => {
       ...apiMocks.getOpenOrders[0]!,
       deposit: {
         quantity: 1700000n,
-        tokenId: '' as any,
+        tokenId: '.' as any,
       },
       from: {
         quantity: 1000000n,
-        tokenId: '' as any,
+        tokenId: '.' as any,
       },
     })
   })
@@ -202,7 +202,7 @@ describe('asOpensawpTokenId (TokenAddress)', () => {
     })
   })
   it('success primary token (empty values)', () => {
-    const result = transformers.asOpenswapTokenId('' as any)
+    const result = transformers.asOpenswapTokenId('.' as any)
     expect(result).toEqual<TokenAddress>({
       policyId: '',
       assetName: '',
@@ -221,7 +221,7 @@ describe('asOpensawpPriceTokenAddress (PriceAddress)', () => {
     })
   })
   it('success primary token (empty values)', () => {
-    const result = transformers.asOpenswapPriceTokenAddress('' as any)
+    const result = transformers.asOpenswapPriceTokenAddress('.' as any)
     expect(result).toEqual<PriceAddress>({
       policyId: '',
       name: '',

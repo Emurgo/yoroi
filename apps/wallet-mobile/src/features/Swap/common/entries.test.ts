@@ -46,7 +46,7 @@ describe('makePossibleFrontendFeeEntry', () => {
     const expectedEntry: YoroiEntry = {
       address: wallet,
       amounts: {
-        ['']: asQuantity(fee.quantity.toString()),
+        ['.']: asQuantity(fee.quantity.toString()),
       },
     } as const
 
@@ -110,7 +110,7 @@ describe('createOrderEntry', () => {
     expect(orderEntry).toEqual({
       address: address,
       amounts: {
-        ['']: '4000000',
+        ['.']: '4000000',
       },
       datum: datum,
     })
@@ -135,7 +135,7 @@ describe('createOrderEntry', () => {
     expect(orderEntry).toEqual({
       address: address,
       amounts: {
-        ['']: '3000000',
+        ['.']: '3000000',
         [amounts.sell.tokenId]: asQuantity(amounts.sell.quantity.toString()),
       },
       datum: datum,

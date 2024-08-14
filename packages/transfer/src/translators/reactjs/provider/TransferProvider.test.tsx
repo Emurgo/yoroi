@@ -189,7 +189,7 @@ const yoroiUnsignedTx: Chain.Cardano.UnsignedTx & {mock: true} = {
       },
     },
   ],
-  fee: {'': '12345'},
+  fee: {'.': '12345'},
   metadata: {},
   change: [
     {

@@ -4,7 +4,7 @@ import {filterBySearch} from './filterBySearch'
 
 describe('filterBySearch', () => {
   const fakeToken1: Balance.TokenInfo = {
-    id: '',
+    id: '.',
     kind: 'ft',
     name: 'TADANAME',
     description: 'Cardano',

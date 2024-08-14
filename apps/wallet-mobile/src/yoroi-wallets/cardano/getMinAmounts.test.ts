@@ -14,7 +14,7 @@ describe('withMinAmounts()', () => {
     }
 
     expect(await withMinAmounts(address, amounts, walletMocks.wallet.primaryToken)).toEqual({
-      '': '1301620',
+      '.': '1301620',
       '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950': '12',
       '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6.4d494e': '55',
     })

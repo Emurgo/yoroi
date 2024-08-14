@@ -80,7 +80,7 @@ export const makeCardanoWallet = (
   const appApi = AppApi.appApiMaker({baseUrl: networkManager.legacyApiBaseUrl})
 
   // legacy
-  const {BACKEND, NETWORK_CONFIG, NETWORK_ID, PRIMARY_TOKEN, PRIMARY_TOKEN_INFO, TOKEN_INFO_SERVICE} = constants
+  const {BACKEND, NETWORK_CONFIG, PRIMARY_TOKEN, PRIMARY_TOKEN_INFO, TOKEN_INFO_SERVICE} = constants
 
   return class CardanoWallet implements YoroiWallet {
     readonly version: string
@@ -399,8 +399,10 @@ export const makeCardanoWallet = (
           ? RegistrationStatus.DelegateOnly
           : RegistrationStatus.RegisterAndDelegate
         const delegatedAmountMT = {
-          values: [{identifier: '', amount: delegatedAmount, networkId: this.networkManager.chainId}],
-          defaults: PRIMARY_TOKEN,
+          values: [
+            {identifier: this.primaryTokenInfo.id, amount: delegatedAmount, networkId: this.networkManager.chainId},
+          ],
+          defaults: this.primaryToken,
         }
 
         const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} = this.protocolParams
@@ -413,7 +415,7 @@ export const makeCardanoWallet = (
           poolId || null, // empty pool means deregistration
           changeAddr,
           delegatedAmountMT,
-          PRIMARY_TOKEN,
+          this.primaryToken,
           {},
           {
             keyDeposit,
@@ -496,7 +498,6 @@ export const makeCardanoWallet = (
             config,
             txOptions,
             nonce,
-            this.networkManager.chainId,
             paymentAddressCIP36,
             addressingCIP36.path,
             supportsCIP36,
@@ -629,7 +630,7 @@ export const makeCardanoWallet = (
             poolDeposit,
             networkId: this.networkManager.chainId,
           },
-          PRIMARY_TOKEN,
+          this.primaryToken,
           {},
           votingCertificates,
         )
@@ -1079,7 +1080,7 @@ export const makeCardanoWallet = (
     }
 
     fetchTokenInfo(tokenId: string) {
-      return tokenId === '' || tokenId === 'ADA'
+      return tokenId === '' || tokenId === 'ADA' || tokenId === '.' || tokenId === this.primaryTokenInfo.id
         ? Promise.resolve(PRIMARY_TOKEN_INFO)
         : legacyApi.getTokenInfo(tokenId, `${TOKEN_INFO_SERVICE}/metadata`, BACKEND)
     }
@@ -1131,7 +1132,6 @@ export const makeCardanoWallet = (
             ? [...this.internalAddresses, ...this.externalAddresses, ...[this.rewardAddressHex]]
             : [...this.internalAddresses, ...this.externalAddresses],
           this.confirmationCounts[tx.id] || 0,
-          NETWORK_ID,
           memos[tx.id] ?? null,
           this.primaryToken,
         )

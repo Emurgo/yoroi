@@ -76,15 +76,13 @@ type RemoteValue = {
   readonly assets?: ReadonlyArray<BaseAsset>
 }
 
-export const multiTokenFromRemote = (remoteValue: RemoteValue, networkId: number) => {
+export const multiTokenFromRemote = (remoteValue: RemoteValue) => {
   const result = new MultiToken([], {
-    defaultNetworkId: networkId,
-    defaultIdentifier: '',
+    defaultIdentifier: '.',
   })
   result.add({
-    identifier: '',
+    identifier: '.',
     amount: new BigNumber(remoteValue.amount),
-    networkId,
   })
 
   if (remoteValue.assets != null) {
@@ -92,7 +90,6 @@ export const multiTokenFromRemote = (remoteValue: RemoteValue, networkId: number
       result.add({
         identifier: token.assetId,
         amount: new BigNumber(token.amount),
-        networkId,
       })
     }
   }
@@ -152,7 +149,6 @@ export const toSendToken =
 
     return {
       token: {
-        networkId: primaryToken.networkId,
         identifier: tokenId,
         isDefault: isPrimary,
       },

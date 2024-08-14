@@ -20,7 +20,7 @@ storiesOf('ConfirmWithdrawalTx/Password', module)
       ...mocks.yoroiUnsignedTx,
       staking: {
         ...mocks.yoroiUnsignedTx.staking,
-        withdrawals: [{address: 'withdrawal-address', amounts: {['']: '12356789'}}],
+        withdrawals: [{address: 'withdrawal-address', amounts: {['.']: '12356789'}}],
       },
     }
 
@@ -47,8 +47,8 @@ storiesOf('ConfirmWithdrawalTx/Password', module)
       ...mocks.yoroiUnsignedTx,
       staking: {
         ...mocks.yoroiUnsignedTx.staking,
-        deregistrations: [{address: 'deregistration-address', amounts: {['']: '12356789'}}],
-        withdrawals: [{address: 'withdrawal-address', amounts: {['']: '12356789'}}],
+        deregistrations: [{address: 'deregistration-address', amounts: {['.']: '12356789'}}],
+        withdrawals: [{address: 'withdrawal-address', amounts: {['.']: '12356789'}}],
       },
     }
 

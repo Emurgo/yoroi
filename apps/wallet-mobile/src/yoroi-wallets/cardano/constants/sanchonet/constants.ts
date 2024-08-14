@@ -67,7 +67,7 @@ export const NETWORK_CONFIG = {
 } as const
 
 export const PRIMARY_TOKEN_INFO: Balance.TokenInfo = {
-  id: '',
+  id: '.',
   name: 'TADA',
   description: 'Cardano',
   fingerprint: '',
@@ -82,8 +82,8 @@ export const PRIMARY_TOKEN_INFO: Balance.TokenInfo = {
 } as const
 
 export const PRIMARY_TOKEN: DefaultAsset = {
-  identifier: '',
-  networkId: NETWORK_ID,
+  identifier: '.',
+  networkId: CHAIN_NETWORK_ID,
   isDefault: true,
   metadata: {
     type: 'Cardano',

@@ -13,7 +13,6 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
           {
             identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             amount: new BigNumber('1407406'),
-            networkId: 1,
           },
         ],
       },
@@ -27,7 +26,6 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
           {
             identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             amount: new BigNumber('1407406'),
-            networkId: 1,
           },
         ],
       },
@@ -39,21 +37,20 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
           {
             identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             amount: new BigNumber('172585'),
-            networkId: 1,
           },
         ],
       },
     ],
     amount: [
       {
-        identifier: '',
-        networkId: 1,
+        identifier: '.',
+
         amount: '1626373838',
         isDefault: true,
       },
       {
         identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
-        networkId: 1,
+
         amount: '2',
         isDefault: false,
       },
@@ -61,14 +58,12 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
     fee: undefined,
     delta: [
       {
-        identifier: '',
-        networkId: 1,
+        identifier: '.',
         amount: '1407406',
         isDefault: true,
       },
       {
         identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
-        networkId: 1,
         amount: '2',
         isDefault: false,
       },
@@ -110,7 +105,6 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
           {
             identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             amount: new BigNumber('1654170'),
-            networkId: 1,
           },
         ],
       },
@@ -124,7 +118,6 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
           {
             identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             amount: new BigNumber('1654170'),
-            networkId: 1,
           },
         ],
       },
@@ -136,21 +129,20 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
           {
             identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             amount: new BigNumber('1654170'),
-            networkId: 1,
           },
         ],
       },
     ],
     amount: [
       {
-        identifier: '',
-        networkId: 1,
+        identifier: '.',
+
         amount: '2727272727',
         isDefault: true,
       },
       {
         identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
-        networkId: 1,
+
         amount: '2',
         isDefault: false,
       },
@@ -158,14 +150,14 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
     fee: undefined,
     delta: [
       {
-        identifier: '',
-        networkId: 1,
+        identifier: '.',
+
         amount: '1407406',
         isDefault: true,
       },
       {
         identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
-        networkId: 1,
+
         amount: '2',
         isDefault: false,
       },
@@ -207,7 +199,6 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
           {
             identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             amount: new BigNumber('1407406'),
-            networkId: 1,
           },
         ],
       },
@@ -221,7 +212,6 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
           {
             identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             amount: new BigNumber('1407406'),
-            networkId: 1,
           },
         ],
       },
@@ -233,21 +223,20 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
           {
             identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             amount: new BigNumber('172585'),
-            networkId: 1,
           },
         ],
       },
     ],
     amount: [
       {
-        identifier: '',
-        networkId: 1,
+        identifier: '.',
+
         amount: '1407406',
         isDefault: true,
       },
       {
         identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
-        networkId: 1,
+
         amount: '2',
         isDefault: false,
       },
@@ -255,14 +244,14 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
     fee: undefined,
     delta: [
       {
-        identifier: '',
-        networkId: 1,
+        identifier: '.',
+
         amount: '1407406',
         isDefault: true,
       },
       {
         identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
-        networkId: 1,
+
         amount: '2',
         isDefault: false,
       },
@@ -307,7 +296,6 @@ export const mockTransactionInfo = (transaction?: Partial<TransactionInfo>): Tra
           {
             identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             amount: new BigNumber('1407406'),
-            networkId: 1,
           },
         ],
       },
@@ -321,7 +309,6 @@ export const mockTransactionInfo = (transaction?: Partial<TransactionInfo>): Tra
           {
             identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             amount: new BigNumber('1407406'),
-            networkId: 1,
           },
         ],
       },
@@ -333,21 +320,20 @@ export const mockTransactionInfo = (transaction?: Partial<TransactionInfo>): Tra
           {
             identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
             amount: new BigNumber('172585'),
-            networkId: 1,
           },
         ],
       },
     ],
     amount: [
       {
-        identifier: '',
-        networkId: 1,
+        identifier: '.',
+
         amount: '1407406',
         isDefault: true,
       },
       {
         identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
-        networkId: 1,
+
         amount: '2',
         isDefault: false,
       },
@@ -355,14 +341,14 @@ export const mockTransactionInfo = (transaction?: Partial<TransactionInfo>): Tra
     fee: undefined,
     delta: [
       {
-        identifier: '',
-        networkId: 1,
+        identifier: '.',
+
         amount: '1407406',
         isDefault: true,
       },
       {
         identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
-        networkId: 1,
+
         amount: '2',
         isDefault: false,
       },
