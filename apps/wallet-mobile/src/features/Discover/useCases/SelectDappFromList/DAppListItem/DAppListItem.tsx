@@ -4,6 +4,7 @@ import {Image} from 'expo-image'
 import * as React from 'react'
 import {
   Alert,
+  Linking,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -15,6 +16,8 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import uuid from 'uuid'
 
 import {Icon, Spacer, useModal} from '../../../../../components'
+import {Space} from '../../../../../components/Space/Space'
+import {Warning} from '../../../../../components/Warning'
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {useBrowser} from '../../../common/BrowserProvider'
 import {type DAppItem, getDappFallbackLogo, isGoogleSearchItem} from '../../../common/helpers'
@@ -42,7 +45,13 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
   const {track} = useMetrics()
 
   const HEIGHT_SCREEN = useWindowDimensions().height
-  const heightDialogByHeightScreen = (HEIGHT_SCREEN * 40) / 100
+
+  // For devices like iPhone SE wuth logical pixel height < 700, we need a bottom sheet with more height
+  const heightDialogByHeightScreen =
+    HEIGHT_SCREEN < 700
+      ? (HEIGHT_SCREEN * (dApp.isSingleAddress ? 70 : 50)) / 100
+      : (HEIGHT_SCREEN * (dApp.isSingleAddress ? 50 : 40)) / 100
+
   const heightDialogByInit = INIT_DIALOG_DAPP_ACTIONS_HEIGHT + insets.bottom
   const dialogHeight = heightDialogByInit < heightDialogByHeightScreen ? heightDialogByHeightScreen : heightDialogByInit
 
@@ -103,6 +112,16 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
         </View>
 
         <Spacer height={16} />
+
+        {dApp.isSingleAddress && (
+          <>
+            <Space height="lg" />
+
+            <SingleAddressDAppWarning />
+          </>
+        )}
+
+        <Space height="lg" />
 
         <View>
           <DAppAction onPress={handleOpenDApp} icon={<Icon.DApp color={colors.icon} />} title={strings.openDApp} />
@@ -170,6 +189,33 @@ const DAppAction = ({icon: IconAction, title, onPress}: DAppActionProps) => {
   )
 }
 
+const walletsCompatibilityLink =
+  'https://emurgohelpdesk.zendesk.com/hc/en-us/articles/10413017088527-DApps-and-HD-wallets-compatability'
+
+const SingleAddressDAppWarning = () => {
+  const {styles} = useStyles()
+  const strings = useStrings()
+
+  const handleOnPress = () => {
+    Linking.openURL(walletsCompatibilityLink)
+  }
+
+  return (
+    <Warning
+      content={
+        <>
+          <Text style={styles.warningText}>{`${strings.singleAddressWarning} `}</Text>
+
+          <Text style={[styles.warningText, styles.link]} onPress={handleOnPress}>
+            {strings.learnMore}
+          </Text>
+        </>
+      }
+      iconSize={20}
+    />
+  )
+}
+
 const useStyles = () => {
   const {color, atoms} = useTheme()
 
@@ -227,7 +273,14 @@ const useStyles = () => {
     },
     actionTitle: {
       ...atoms.body_1_lg_medium,
-      color: color.gray_c900,
+      color: color.text_gray_max,
+    },
+    warningText: {
+      ...atoms.body_2_md_regular,
+      color: color.text_gray_max,
+    },
+    link: {
+      color: color.sys_cyan_c500,
     },
   })
 
