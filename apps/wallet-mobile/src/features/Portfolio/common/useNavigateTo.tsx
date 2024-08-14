@@ -16,7 +16,11 @@ export const useNavigateTo = () => {
     nftDetails: (id: Portfolio.Token.Id) =>
       navigation.navigate('portfolio-nfts', {screen: 'nft-details', params: {id}, initial: false}),
     send: () => navigation.navigate('history', {screen: 'send-start-tx'}),
-    swap: () => navigation.navigate('history', {screen: 'swap-start-swap', params: {screen: 'token-swap'}}),
+    swap: () =>
+      navigation.navigate('history', {
+        screen: 'swap-start-swap',
+        params: {screen: 'token-swap'},
+      }),
     buyAda: () => navigation.navigate('history', {screen: 'exchange-create-order'}),
   } as const).current
 }

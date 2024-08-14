@@ -1,4 +1,5 @@
 import {useTheme} from '@yoroi/theme'
+import {App} from '@yoroi/types'
 import * as React from 'react'
 import {Animated, NativeScrollEvent, NativeSyntheticEvent, StyleSheet} from 'react-native'
 
@@ -6,14 +7,16 @@ import {Spacer} from '../../../../components'
 import {SafeArea} from '../../../../components/SafeArea'
 import {Tab, Tabs} from '../../../../components/Tabs'
 import {features} from '../../../../kernel/features'
+import {throwLoggedError} from '../../../../kernel/logger/helpers/throw-logged-error'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {TxFilter} from '../../../Transactions/useCases/TxList/TxFilterProvider'
 import {TxList} from '../../../Transactions/useCases/TxList/TxList'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {usePortfolioTokenDetailContext} from '../../common/PortfolioTokenDetailContext'
 import {usePortfolioTokenDetailParams} from '../../common/useNavigateTo'
 import {useStrings} from '../../common/useStrings'
 import {BuyADABanner} from '../PortfolioDashboard/DashboardTokensList/BuyADABanner/BuyADABanner'
-import {PortfolioTokenAction} from './PortfolioTokenAction'
+import {Actions} from './Actions'
 import {PortfolioTokenBalance} from './PortfolioTokenBalance/PortfolioTokenBalance'
 import {PortfolioTokenChart} from './PortfolioTokenChart/PortfolioTokenChart'
 import {PortfolioTokenInfo} from './PortfolioTokenInfo/PortfolioTokenInfo'
@@ -35,6 +38,10 @@ export const PortfolioTokenDetailsScreen = () => {
   const {track} = useMetrics()
   const [isStickyTab, setIsStickyTab] = React.useState(false)
   const {id: tokenId} = usePortfolioTokenDetailParams()
+  const {wallet} = useSelectedWallet()
+  const tokenInfo = wallet.balances.records.get(tokenId)?.info
+
+  if (!tokenInfo) throwLoggedError(new App.Errors.InvalidState('Token info not found, invalid state'))
 
   const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const offsetY = e.nativeEvent.contentOffset.y
@@ -110,7 +117,7 @@ export const PortfolioTokenDetailsScreen = () => {
           {...(activeTab === 'transactions' && {ListEmptyComponent: <BuyADABanner />})}
         />
 
-        <PortfolioTokenAction />
+        <Actions tokenInfo={tokenInfo} />
       </TxFilter>
     </SafeArea>
   )

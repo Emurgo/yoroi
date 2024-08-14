@@ -1,8 +1,17 @@
 import {BottomTabBar, BottomTabBarProps, createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {useFocusEffect} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
+import {
+  milkTokenId,
+  supportedProviders,
+  swapApiMaker,
+  swapManagerMaker,
+  SwapProvider,
+  swapStorageMaker,
+} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
 import {TransferProvider} from '@yoroi/transfer'
+import {Swap} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Keyboard, Platform, StyleSheet} from 'react-native'
@@ -20,8 +29,10 @@ import {SettingsScreenNavigator} from './features/Settings'
 import {NetworkTag} from './features/Settings/ChangeNetwork/NetworkTag'
 import {SetupWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
 import {GovernanceNavigator} from './features/Staking/Governance'
+import {SwapFormProvider} from './features/Swap/common/SwapFormProvider'
 import {ToggleAnalyticsSettingsNavigator} from './features/ToggleAnalyticsSettings'
 import {TxHistoryNavigator} from './features/Transactions/TxHistoryNavigator'
+import {useSelectedWallet} from './features/WalletManager/common/hooks/useSelectedWallet'
 import {SelectWalletFromList} from './features/WalletManager/useCases/SelectWalletFromListScreen/SelectWalletFromListScreen'
 import {useMetrics} from './kernel/metrics/metricsManager'
 import {
@@ -31,6 +42,7 @@ import {
   WalletTabRoutes,
 } from './kernel/navigation'
 import {DashboardNavigator} from './legacy/Dashboard'
+import {useFrontendFees, useStakingKey} from './yoroi-wallets/hooks'
 
 const Tab = createBottomTabNavigator<WalletTabRoutes>()
 
@@ -38,6 +50,8 @@ const TabBarWithHiddenContent = (props: BottomTabBarProps) => {
   const shouldShow = shouldShowTabBarForRoutes(props.state)
   return shouldShow ? <BottomTabBar {...props} /> : null
 }
+
+const aggregator: Swap.Aggregator = 'muesliswap'
 
 const WalletTabNavigator = () => {
   const strings = useStrings()
@@ -68,88 +82,107 @@ const WalletTabNavigator = () => {
     }, [track]),
   )
 
+  // swap
+  const {wallet} = useSelectedWallet()
+  const {frontendFees} = useFrontendFees(wallet)
+  const stakingKey = useStakingKey(wallet)
+  const swapManager = React.useMemo(() => {
+    const aggregatorTokenId = wallet.isMainnet ? milkTokenId.mainnet : milkTokenId.preprod
+    const swapStorage = swapStorageMaker()
+    const swapApi = swapApiMaker({
+      isMainnet: wallet.isMainnet,
+      stakingKey,
+      primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
+      supportedProviders,
+    })
+    const frontendFeeTiers = frontendFees?.[aggregator] ?? ([] as const)
+    return swapManagerMaker({swapStorage, swapApi, frontendFeeTiers, aggregator, aggregatorTokenId})
+  }, [wallet.isMainnet, wallet.portfolioPrimaryTokenInfo, stakingKey, frontendFees])
+
   return (
-    <>
-      <OfflineBanner />
+    <SwapProvider swapManager={swapManager}>
+      <SwapFormProvider>
+        <OfflineBanner />
 
-      <Tab.Navigator
-        sceneContainerStyle={{backgroundColor: colors.background}}
-        screenOptions={{
-          headerShown: false,
-          tabBarLabelStyle: styles.labelStyle,
-          tabBarActiveTintColor: colors.active,
-          tabBarInactiveTintColor: colors.inactive,
-          tabBarStyle: {
-            borderTopColor: colors.divider,
-            borderTopWidth: 2 * StyleSheet.hairlineWidth,
-            backgroundColor: colors.background,
-            // keyboardWillShow keyboardWillHiden dont work on android
-            display: isKeyboardOpen ? 'none' : undefined,
-          },
-          tabBarHideOnKeyboard: true,
-        }}
-        tabBar={(props) => <TabBarWithHiddenContent {...props} />}
-        backBehavior="initialRoute"
-      >
-        <Tab.Screen
-          name="history"
-          options={{
-            tabBarIcon: ({focused}) => <Icon.TabWallet size={24} color={focused ? colors.active : colors.inactive} />,
-            tabBarLabel: strings.walletTabBarLabel,
-            tabBarTestID: 'walletTabBarButton',
+        <Tab.Navigator
+          sceneContainerStyle={{backgroundColor: colors.background}}
+          screenOptions={{
+            headerShown: false,
+            tabBarLabelStyle: styles.labelStyle,
+            tabBarActiveTintColor: colors.active,
+            tabBarInactiveTintColor: colors.inactive,
+            tabBarStyle: {
+              borderTopColor: colors.divider,
+              borderTopWidth: 2 * StyleSheet.hairlineWidth,
+              backgroundColor: colors.background,
+              // keyboardWillShow keyboardWillHiden dont work on android
+              display: isKeyboardOpen ? 'none' : undefined,
+            },
+            tabBarHideOnKeyboard: true,
           }}
+          tabBar={(props) => <TabBarWithHiddenContent {...props} />}
+          backBehavior="initialRoute"
         >
-          {() => (
-            <SearchProvider>
-              <TxHistoryNavigator />
-            </SearchProvider>
-          )}
-        </Tab.Screen>
+          <Tab.Screen
+            name="history"
+            options={{
+              tabBarIcon: ({focused}) => <Icon.TabWallet size={24} color={focused ? colors.active : colors.inactive} />,
+              tabBarLabel: strings.walletTabBarLabel,
+              tabBarTestID: 'walletTabBarButton',
+            }}
+          >
+            {() => (
+              <SearchProvider>
+                <TxHistoryNavigator />
+              </SearchProvider>
+            )}
+          </Tab.Screen>
 
-        <Tab.Screen
-          name="portfolio"
-          options={{
-            tabBarIcon: ({focused}) => (
-              <Icon.TabPortfolio size={24} color={focused ? colors.active : colors.inactive} />
-            ),
-            tabBarLabel: strings.portfolioButton,
-            tabBarTestID: 'portfolioTabBarButton',
-          }}
-        >
-          {() => (
-            <SearchProvider>
-              <PortfolioNavigator />
-            </SearchProvider>
-          )}
-        </Tab.Screen>
+          <Tab.Screen
+            name="portfolio"
+            options={{
+              tabBarIcon: ({focused}) => (
+                <Icon.TabPortfolio size={24} color={focused ? colors.active : colors.inactive} />
+              ),
+              tabBarLabel: strings.portfolioButton,
+              tabBarTestID: 'portfolioTabBarButton',
+            }}
+          >
+            {() => (
+              <SearchProvider>
+                <PortfolioNavigator />
+              </SearchProvider>
+            )}
+          </Tab.Screen>
 
-        <Tab.Screen
-          name="discover"
-          options={{
-            tabBarIcon: ({focused}) => <Icon.Discover size={28} color={focused ? colors.active : colors.inactive} />,
-            tabBarLabel: strings.discoverTabBarLabel,
-            tabBarTestID: 'discoverTabBarButton',
-          }}
-        >
-          {() => (
-            <SearchProvider>
-              <DiscoverNavigator />
-            </SearchProvider>
-          )}
-        </Tab.Screen>
+          <Tab.Screen
+            name="discover"
+            options={{
+              tabBarIcon: ({focused}) => <Icon.Discover size={28} color={focused ? colors.active : colors.inactive} />,
+              tabBarLabel: strings.discoverTabBarLabel,
+              tabBarTestID: 'discoverTabBarButton',
+            }}
+          >
+            {() => (
+              <SearchProvider>
+                <DiscoverNavigator />
+              </SearchProvider>
+            )}
+          </Tab.Screen>
 
-        <Tab.Screen
-          name="menu"
-          component={MenuNavigator}
-          options={{
-            tabBarIcon: ({focused}) => <Icon.Menu size={28} color={focused ? colors.active : colors.inactive} />,
-            tabBarLabel: strings.menuTabBarLabel,
-            tabBarTestID: 'menuTabBarButton',
-            headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
-          }}
-        />
-      </Tab.Navigator>
-    </>
+          <Tab.Screen
+            name="menu"
+            component={MenuNavigator}
+            options={{
+              tabBarIcon: ({focused}) => <Icon.Menu size={28} color={focused ? colors.active : colors.inactive} />,
+              tabBarLabel: strings.menuTabBarLabel,
+              tabBarTestID: 'menuTabBarButton',
+              headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
+            }}
+          />
+        </Tab.Navigator>
+      </SwapFormProvider>
+    </SwapProvider>
   )
 }
 
