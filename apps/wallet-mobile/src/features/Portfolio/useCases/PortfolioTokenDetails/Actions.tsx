@@ -21,7 +21,6 @@ export const Actions = ({tokenInfo}: Props) => {
 
   const handleOnSwap = () => {
     swapForm.resetSwapForm()
-    swap.resetState()
     swap.buyTokenInfoChanged(tokenInfo)
     swapForm.buyTouched()
     navigateTo.swap()
