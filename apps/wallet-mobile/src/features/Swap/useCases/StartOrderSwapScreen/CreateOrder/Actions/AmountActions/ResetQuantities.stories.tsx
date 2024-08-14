@@ -2,12 +2,12 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {ClearQuantities} from './ClearQuantities'
+import {ResetQuantities} from './ResetQuantities'
 
-storiesOf('Swap Clear Quantities', module).add('only enabled', () => {
+storiesOf('Swap Reset Quantities', module).add('only enabled', () => {
   return (
     <View style={styles.container}>
-      <ClearQuantities />
+      <ResetQuantities />
     </View>
   )
 })

@@ -103,6 +103,7 @@ const ShowLimitOrderFeeBreakdown = ({totalFees}: {totalFees: string}) => {
     getTokenInfo: wallet.networkManager.tokenManager.api.tokenInfo,
     id: orderData.amounts.buy?.info.id ?? 'unknown.',
     network: wallet.networkManager.network,
+    primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
   })
   const buyTokenName = buyTokenInfo?.ticker ?? buyTokenInfo?.name ?? '-'
 
