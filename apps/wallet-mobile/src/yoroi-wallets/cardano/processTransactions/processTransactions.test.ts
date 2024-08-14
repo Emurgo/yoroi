@@ -1,5 +1,5 @@
 import {RawTransaction, TRANSACTION_DIRECTION} from '../../types/other'
-import {NETWORK_ID, PRIMARY_TOKEN} from '../constants/testnet/constants'
+import {PRIMARY_TOKEN} from '../constants/testnet/constants'
 import {MultiToken} from '../MultiToken'
 import {toCachedTx} from '../transactionManager'
 import {processTxHistoryData} from './processTransactions'
@@ -275,7 +275,6 @@ describe('processTxHistoryData', () => {
       toCachedTx(txs[0]),
       myAddresses,
       100, // confirmations
-      NETWORK_ID,
       'fake memo',
       PRIMARY_TOKEN,
     )
@@ -292,7 +291,6 @@ describe('processTxHistoryData', () => {
       toCachedTx(txs[1]),
       myAddresses,
       100, // confirmations
-      NETWORK_ID,
       'fake memo',
       PRIMARY_TOKEN,
     )
@@ -309,7 +307,6 @@ describe('processTxHistoryData', () => {
       toCachedTx(txs[2]),
       myAddresses,
       100, // confirmations
-      NETWORK_ID,
       'fake memo',
       PRIMARY_TOKEN,
     )
@@ -331,7 +328,6 @@ describe('processTxHistoryData', () => {
       toCachedTx(txs[3]),
       myAddresses,
       100, // confirmations
-      NETWORK_ID,
       'fake memo',
       PRIMARY_TOKEN,
     )

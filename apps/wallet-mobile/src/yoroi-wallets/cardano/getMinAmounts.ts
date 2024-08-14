@@ -27,14 +27,13 @@ export const withMinAmounts = async (
 export const getMinAmounts = async (address: Address, amounts: Balance.Amounts, primaryToken: Token) => {
   const multiToken = new MultiToken(
     [
-      {identifier: primaryToken.identifier, networkId: primaryToken.networkId, amount: new BigNumber('0')},
+      {identifier: primaryToken.identifier, amount: new BigNumber('0')},
       ...Amounts.toArray(amounts).map(({tokenId, quantity}) => ({
         identifier: tokenId,
-        networkId: primaryToken.networkId,
         amount: new BigNumber(quantity),
       })),
     ],
-    {defaultNetworkId: primaryToken.networkId, defaultIdentifier: primaryToken.identifier},
+    {defaultIdentifier: primaryToken.identifier},
   )
 
   const [value, coinsPerUtxoByte] = await Promise.all([
