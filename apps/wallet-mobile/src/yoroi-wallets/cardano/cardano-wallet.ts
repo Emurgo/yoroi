@@ -400,9 +400,9 @@ export const makeCardanoWallet = (
           : RegistrationStatus.RegisterAndDelegate
         const delegatedAmountMT = {
           values: [
-            {identifier: PRIMARY_TOKEN.identifier, amount: delegatedAmount, networkId: this.networkManager.chainId},
+            {identifier: this.primaryTokenInfo.id, amount: delegatedAmount, networkId: this.networkManager.chainId},
           ],
-          defaults: PRIMARY_TOKEN,
+          defaults: this.primaryToken,
         }
 
         const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} = this.protocolParams
@@ -415,7 +415,7 @@ export const makeCardanoWallet = (
           poolId || null, // empty pool means deregistration
           changeAddr,
           delegatedAmountMT,
-          PRIMARY_TOKEN,
+          this.primaryToken,
           {},
           {
             keyDeposit,
@@ -1080,7 +1080,7 @@ export const makeCardanoWallet = (
     }
 
     fetchTokenInfo(tokenId: string) {
-      return tokenId === '' || tokenId === 'ADA' || tokenId === '.' || tokenId === PRIMARY_TOKEN_INFO.id
+      return tokenId === '' || tokenId === 'ADA' || tokenId === '.' || tokenId === this.primaryTokenInfo.id
         ? Promise.resolve(PRIMARY_TOKEN_INFO)
         : legacyApi.getTokenInfo(tokenId, `${TOKEN_INFO_SERVICE}/metadata`, BACKEND)
     }
