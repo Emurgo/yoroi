@@ -273,11 +273,11 @@ const useStyles = () => {
     },
     actionTitle: {
       ...atoms.body_1_lg_medium,
-      color: color.gray_c900,
+      color: color.text_gray_max,
     },
     warningText: {
       ...atoms.body_2_md_regular,
-      color: color.gray_cmax,
+      color: color.text_gray_max,
     },
     link: {
       color: color.sys_cyan_c500,
