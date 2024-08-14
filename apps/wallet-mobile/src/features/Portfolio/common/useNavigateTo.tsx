@@ -21,6 +21,14 @@ export const useNavigateTo = () => {
         screen: 'swap-start-swap',
         params: {screen: 'token-swap'},
       }),
+    swapPreprodNotice: () =>
+      navigation.navigate('history', {
+        screen: 'swap-preprod-notice',
+      }),
+    swapSanchoNotice: () =>
+      navigation.navigate('history', {
+        screen: 'swap-sancho-notice',
+      }),
     buyAda: () => navigation.navigate('history', {screen: 'exchange-create-order'}),
   } as const).current
 }
