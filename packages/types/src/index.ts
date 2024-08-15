@@ -145,6 +145,7 @@ import {
   LinksYoroiAction,
   LinksYoroiUriConfig,
   LinksYoroiModule,
+  LinksBrowserLaunchDappUrlParams,
 } from './links/yoroi'
 import {
   PortfolioTokenId,
@@ -324,6 +325,7 @@ export namespace Links {
   export type TransferRequestAdaWithLinkParams =
     LinksTransferRequestAdaWithLinkParams
   export type TransferRequestAdaParams = LinksTransferRequestAdaParams
+  export type BrowserLaunchDappUrlParams = LinksBrowserLaunchDappUrlParams
   export type YoroiActionInfo = LinksYoroiActionInfo
   export type YoroiAction = LinksYoroiAction
 
