@@ -3,11 +3,13 @@ import {freeze} from 'immer'
 
 import {linksYoroiBuilder} from './links-builder'
 import {
+  configYoroiBrowserLaunchDappUrl,
   configYoroiExchangeOrderShowCreateResult,
   configYoroiTransferRequestAda,
   configYoroiTransferRequestAdaWithLink,
 } from './constants'
 import {
+  encodeBrowserLaunchDappUrl,
   encodeExchangeShowCreateResult,
   encodeTransferRequestAda,
   encodeTransferRequestAdaWithLink,
@@ -39,5 +41,14 @@ export const linksYoroiModuleMaker = (
     },
   }
 
-  return freeze({exchange, transfer}, true)
+  const browser = {
+    launch: {
+      dappUrl: linksYoroiBuilder(encodeBrowserLaunchDappUrl, {
+        ...configYoroiBrowserLaunchDappUrl,
+        scheme,
+      }).create,
+    },
+  }
+
+  return freeze({exchange, transfer, browser}, true)
 }

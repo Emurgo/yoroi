@@ -78,6 +78,15 @@ const transferRequestAdaWithLinkResult: Links.TransferRequestAdaWithLinkParams =
     ),
   }
 
+const browserLaunchDappUrlParams: Links.BrowserLaunchDappUrlParams = {
+  dappUrl: 'https://cardanospot.io/landing?ref=yoroiwallet.com',
+}
+const browserLaunchDappUrlResult: Links.BrowserLaunchDappUrlParams = {
+  dappUrl: encodeURIComponent(
+    'https://cardanospot.io/landing?ref=yoroiwallet.com',
+  ),
+}
+
 export const mocks = freeze(
   {
     exchangeShowCreateResult: {
@@ -91,6 +100,10 @@ export const mocks = freeze(
     transferRequestAdaWithLink: {
       params: transferRequestAdaWithLinkParams,
       result: transferRequestAdaWithLinkResult,
+    },
+    browserLaunchDappUrl: {
+      params: browserLaunchDappUrlParams,
+      result: browserLaunchDappUrlResult,
     },
   },
   true,
