@@ -9,6 +9,7 @@ import {useModal} from '../../../components/Modal/ModalContext'
 import {logger} from '../../../kernel/logger/logger'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 import {RequestedAdaPaymentWithLinkScreen} from '../useCases/RequestedAdaPaymentWithLinkScreen/RequestedAdaPaymentWithLinkScreen'
+import {RequestedBrowserLaunchDappUrlScreen} from '../useCases/RequestedBrowserLaunchDappUrlScreen/RequestedBrowserLaunchDappUrlScreen'
 import {useNavigateTo} from './useNavigationTo'
 import {useStrings} from './useStrings'
 
@@ -23,6 +24,7 @@ export const useLinksRequestAction = () => {
   const navigateTo = useNavigateTo()
 
   const {memoChanged, receiverResolveChanged, amountChanged, reset, linkActionChanged} = useTransfer()
+
   const startTransferWithLink = React.useCallback(
     (action: Links.YoroiAction, decimals: number) => {
       logger.debug('useLinksRequestAction: startTransferWithLink', {action, decimals})
@@ -96,14 +98,75 @@ export const useLinksRequestAction = () => {
     [strings.trustedPaymentRequestedTitle, strings.untrustedPaymentRequestedTitle, startTransferWithLink, openModal],
   )
 
+  const launchDappUrl = React.useCallback(
+    (action: Links.YoroiAction) => {
+      logger.debug('useLinksRequestAction: launchDappUrl', {action})
+      if (action.info.useCase === 'launch') {
+        try {
+          const dappUrl = decodeURIComponent(action.info.params.dappUrl)
+          const redirectTo = action.info.params.redirectTo
+          if (redirectTo != null) linkActionChanged(action)
+
+          logger.debug('useLinksRequestAction: launchDappUrl', {dappUrl})
+
+          closeModal()
+          actionFinished()
+          navigateTo.launchDappUrl()
+        } catch (error) {
+          // TODO: revisit it should display an alert
+          closeModal()
+          actionFinished()
+          logger.error('Error parsing Yoroi link', {error})
+        }
+      }
+    },
+    [actionFinished, closeModal, linkActionChanged, navigateTo],
+  )
+
+  const openRequestedBrowserLaunchDappUrl = React.useCallback(
+    ({params, isTrusted}: {params: Links.BrowserLaunchDappUrlParams; isTrusted: boolean}) => {
+      const title = isTrusted ? strings.trustedBrowserLaunchDappUrlTitle : strings.untrustedBrowserLaunchDappUrlTitle
+      const handleOnContinue = () =>
+        launchDappUrl({
+          info: {
+            version: 1,
+            feature: 'browser',
+            useCase: 'launch',
+            params,
+          },
+          isTrusted,
+        })
+
+      const content = (
+        <RequestedBrowserLaunchDappUrlScreen onContinue={handleOnContinue} params={params} isTrusted={isTrusted} />
+      )
+
+      openModal(title, content, heightBreakpoint)
+    },
+    [launchDappUrl, openModal, strings.trustedBrowserLaunchDappUrlTitle, strings.untrustedBrowserLaunchDappUrlTitle],
+  )
+
   React.useEffect(() => {
     InteractionManager.runAfterInteractions(() => {
-      if (action?.info.useCase === 'request/ada-with-link' && wallet != null) {
-        openRequestedPaymentAdaWithLink(
-          {params: action.info.params, isTrusted: action.isTrusted},
-          wallet.primaryTokenInfo.decimals ?? 0,
-        )
+      if (wallet != null && action != null) {
+        switch (action.info.useCase) {
+          case 'request/ada-with-link':
+            openRequestedPaymentAdaWithLink(
+              {params: action.info.params, isTrusted: action.isTrusted},
+              wallet.portfolioPrimaryTokenInfo.decimals,
+            )
+            break
+          case 'launch':
+            openRequestedBrowserLaunchDappUrl({
+              params: action.info.params,
+              isTrusted: action.isTrusted,
+            })
+            break
+          default:
+            logger.error(new Error(`useLinksRequestAction: unknown useCase: ${action?.info.useCase}`))
+            break
+        }
       }
     })
-  }, [action?.info.params, action?.info.useCase, action?.isTrusted, openRequestedPaymentAdaWithLink, wallet])
+  }, [action, openRequestedBrowserLaunchDappUrl, openRequestedPaymentAdaWithLink, wallet])
 }

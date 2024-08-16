@@ -23,8 +23,8 @@ export const useLinksRequestWallet = () => {
 
   React.useEffect(() => {
     InteractionManager.runAfterInteractions(() => {
-      const isWalletRequested = action?.info.useCase === 'request/ada-with-link' && wallet == null
-      if (isWalletRequested) askToOpenAWallet()
+      const isWalletRequested = action?.info.useCase === 'request/ada-with-link' || action?.info.useCase === 'launch'
+      if (isWalletRequested && wallet == null) askToOpenAWallet()
     })
   }, [askToOpenAWallet, action?.info.useCase, wallet])
 }
