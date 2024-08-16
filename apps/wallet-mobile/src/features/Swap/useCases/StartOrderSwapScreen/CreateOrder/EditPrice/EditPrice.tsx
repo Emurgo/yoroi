@@ -14,7 +14,7 @@ const BORDER_SIZE = 1
 export const EditPrice = () => {
   const strings = useStrings()
   const [isFocused, setIsFocused] = React.useState(false)
-  const styles = useStyles()
+  const {styles, colors} = useStyles()
 
   const {orderData} = useSwap()
   const sellTokenInfo = orderData.amounts.sell?.info
@@ -51,7 +51,7 @@ export const EditPrice = () => {
             placeholder="0"
             onChangeText={onChangeLimitPrice}
             allowFontScaling
-            selectionColor="#242838"
+            selectionColor={colors.cursor}
             style={styles.amountInput}
             underlineColorAndroid="transparent"
             editable={!disabled}
@@ -134,5 +134,8 @@ const useStyles = () => {
       justifyContent: 'center',
     },
   })
-  return styles
+  const colors = {
+    cursor: color.text_gray_normal,
+  }
+  return {styles, colors} as const
 }
