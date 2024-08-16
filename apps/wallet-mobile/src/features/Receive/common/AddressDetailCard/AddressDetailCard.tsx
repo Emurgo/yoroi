@@ -74,7 +74,8 @@ export const AddressDetailCard = ({title}: AddressDetailCardProps) => {
         return (
           <ShareQRCodeCard
             title={item.title}
-            content={`${strings.address} ${item.address}`}
+            qrContent={item.address}
+            shareContent={`${strings.address} ${item.address}`}
             onLongPress={() => copy(item.address)}
             isCopying={isCopying}
             testId="receive:address-detail-card"
