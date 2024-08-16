@@ -3,7 +3,7 @@ import {useTheme} from '@yoroi/theme'
 import cryptoRandomString from 'crypto-random-string'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
-import {Image, Linking, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Image, Linking, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import appstoreBadge from '../../../../assets/img/app-store-badge.png'
@@ -48,7 +48,7 @@ export const DownloadCatalyst = () => {
 
   React.useEffect(() => {
     if (stakingInfo?.status !== 'not-registered') {
-      openModal(strings.attention, <WarningModal />, 270)
+      openModal(strings.attention, <WarningModal />, 300)
     }
   }, [openModal, stakingInfo?.status, strings.attention])
 
@@ -132,6 +132,8 @@ const WarningModal = () => {
       <Space fill />
 
       <Button shelleyTheme title={strings.iUnderstandButton} onPress={closeModal} textStyles={styles.button} />
+
+      {Platform.OS === 'android' && <Space height="lg" />}
     </View>
   )
 }
