@@ -34,6 +34,10 @@ export const toSecondaryTokenInfos = (
         return {...acc, [castedId]: castedTokenInfoWithCache}
       }
 
+      if (statusCode === Api.HttpStatusCode.InternalServerError) {
+        return acc
+      }
+
       const [, tokenInfo, hash, maxAge] = castedTokenInfoWithCache
 
       acc[castedId] = [statusCode, tokenInfo, hash, maxAge]

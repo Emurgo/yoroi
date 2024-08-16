@@ -78,6 +78,12 @@ export const cacheManageMultiRequest = async <K extends string, V>({
       return
     }
 
+    // when internal server error, it skips the record
+    if (statusCode === Api.HttpStatusCode.InternalServerError) {
+      toResolveLocally.add(id)
+      return
+    }
+
     const [, record, eTag, maxAge] = recordFromApi
     toSaveNewFromApi.set(id, {
       hash: eTag,

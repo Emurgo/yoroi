@@ -134,8 +134,8 @@
   },
   "dependencies": {
     "@emurgo/cip14-js": "^3.0.1",
-    "@yoroi/common": "1.5.2",
-    "@yoroi/types": "1.5.5"
+    "@yoroi/common": "1.5.3",
+    "@yoroi/types": "1.5.6"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",

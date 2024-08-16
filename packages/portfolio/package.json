@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/portfolio",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "The Portfolio package of Yoroi SDK",
   "keywords": [
     "yoroi",
@@ -145,7 +145,7 @@
     "@types/jest": "^29.5.12",
     "@types/react": "^18.2.55",
     "@types/react-test-renderer": "^18.0.7",
-    "@yoroi/types": "1.5.5",
+    "@yoroi/types": "1.5.6",
     "bignumber.js": "^9.0.1",
     "commitlint": "^17.0.2",
     "del-cli": "^5.0.0",
@@ -171,7 +171,7 @@
   "peerDependencies": {
     "@react-native-async-storage/async-storage": "^1.19.3",
     "@yoroi/api": "1.5.1",
-    "@yoroi/common": "1.5.2",
+    "@yoroi/common": "1.5.3",
     "bignumber.js": "^9.0.1",
     "immer": "^10.0.3",
     "react": ">= 16.8.0 <= 19.0.0",

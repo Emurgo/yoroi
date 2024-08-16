@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/common",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "The Common package of Yoroi SDK",
   "keywords": [
     "yoroi",
@@ -173,7 +173,7 @@
     "zod": "^3.22.1"
   },
   "dependencies": {
-    "@yoroi/types": "1.5.5"
+    "@yoroi/types": "1.5.6"
   },
   "peerDependencies": {
     "@react-native-async-storage/async-storage": ">= 1.19.3 <= 1.20.0",
