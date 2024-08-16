@@ -156,6 +156,8 @@ const getStories = () => {
     "./src/features/Links/useCases/AskToRedirect/AskToRedirectScreen.stories.tsx": require("../src/features/Links/useCases/AskToRedirect/AskToRedirectScreen.stories.tsx"),
     "./src/features/Links/useCases/RequestedAdaPaymentWithLinkScreen/RequestedAdaPaymentWithLink.stories.tsx": require("../src/features/Links/useCases/RequestedAdaPaymentWithLinkScreen/RequestedAdaPaymentWithLink.stories.tsx"),
     "./src/features/Links/useCases/RequestedAdaPaymentWithLinkScreen/ShowDisclaimer/ShowDisclaimer.stories.tsx": require("../src/features/Links/useCases/RequestedAdaPaymentWithLinkScreen/ShowDisclaimer/ShowDisclaimer.stories.tsx"),
+    "./src/features/Links/useCases/RequestedBrowserLaunchDappUrlScreen/RequestedBrowserLaunchDappUrlScreen.stories.tsx": require("../src/features/Links/useCases/RequestedBrowserLaunchDappUrlScreen/RequestedBrowserLaunchDappUrlScreen.stories.tsx"),
+    "./src/features/Links/useCases/RequestedBrowserLaunchDappUrlScreen/ShowDisclaimer/ShowDisclaimer.stories.tsx": require("../src/features/Links/useCases/RequestedBrowserLaunchDappUrlScreen/ShowDisclaimer/ShowDisclaimer.stories.tsx"),
     "./src/features/Menu/Menu.stories.tsx": require("../src/features/Menu/Menu.stories.tsx"),
     "./src/features/Nfts/useCases/NftDetails/NftDetails.stories.tsx": require("../src/features/Nfts/useCases/NftDetails/NftDetails.stories.tsx"),
     "./src/features/Nfts/useCases/NftDetails/NftDetailsImage.stories.tsx": require("../src/features/Nfts/useCases/NftDetails/NftDetailsImage.stories.tsx"),

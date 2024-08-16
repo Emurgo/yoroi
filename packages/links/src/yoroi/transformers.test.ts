@@ -1,7 +1,9 @@
 import {
+  decodeBrowserLaunchDappUrl,
   decodeExchangeShowCreateResult,
   decodeTransferRequestAda,
   decodeTransferRequestAdaWithLink,
+  encodeBrowserLaunchDappUrl,
   encodeExchangeShowCreateResult,
   encodeTransferRequestAda,
   encodeTransferRequestAdaWithLink,
@@ -218,6 +220,89 @@ describe('transformers', () => {
         ...mocks.transferRequestAda.params,
         redirectTo: 'https://example.com',
       })
+    })
+  })
+
+  describe('decodeBrowserLaunchDappUrl', () => {
+    it('should decode link', () => {
+      const result = decodeBrowserLaunchDappUrl.parse(
+        mocks.browserLaunchDappUrl.result,
+      )
+
+      expect(result).toEqual(mocks.browserLaunchDappUrl.params)
+    })
+
+    it('should decode redirectTo and link', () => {
+      const result = decodeBrowserLaunchDappUrl.parse({
+        ...mocks.browserLaunchDappUrl.result,
+        redirectTo: encodeURIComponent('https://example.com'),
+      })
+
+      expect(result).toEqual({
+        ...mocks.browserLaunchDappUrl.params,
+        redirectTo: 'https://example.com',
+      })
+    })
+
+    it('should throw if redirectTo is not a safe URL', () => {
+      expect(() =>
+        decodeBrowserLaunchDappUrl.parse({
+          ...mocks.browserLaunchDappUrl.result,
+          redirectTo: encodeURIComponent(
+            'http://example.com/welcome?message=<script>alert("Malicious Script Executed")</script>',
+          ),
+        }),
+      ).toThrow()
+    })
+
+    it('should throw if link is not a valid cardano link', () => {
+      expect(() =>
+        decodeBrowserLaunchDappUrl.parse({
+          ...mocks.browserLaunchDappUrl.result,
+          dappUrl: 'invalid',
+        }),
+      ).toThrow()
+    })
+  })
+
+  describe('encodeBrowserLaunchDappUrl', () => {
+    it('should encode link', () => {
+      const result = encodeBrowserLaunchDappUrl.parse(
+        mocks.browserLaunchDappUrl.params,
+      )
+
+      expect(result).toEqual(mocks.browserLaunchDappUrl.result)
+    })
+
+    it('should encode redirectTo and link', () => {
+      const result = encodeBrowserLaunchDappUrl.parse({
+        ...mocks.browserLaunchDappUrl.params,
+        redirectTo: 'https://example.com',
+      })
+
+      expect(result).toEqual({
+        ...mocks.browserLaunchDappUrl.result,
+        redirectTo: encodeURIComponent('https://example.com'),
+      })
+    })
+
+    it('should throw if redirectTo is not a safe URL', () => {
+      expect(() =>
+        encodeBrowserLaunchDappUrl.parse({
+          ...mocks.browserLaunchDappUrl.params,
+          redirectTo:
+            "http://example.com/welcome?message=<script>alert('Malicious Script Executed')</script>",
+        }),
+      ).toThrow()
+    })
+
+    it('should throw if link is not a valid cardano link', () => {
+      expect(() =>
+        encodeBrowserLaunchDappUrl.parse({
+          ...mocks.browserLaunchDappUrl.params,
+          dappUrl: 'invalid',
+        }),
+      ).toThrow()
     })
   })
 })

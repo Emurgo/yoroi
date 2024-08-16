@@ -3,7 +3,6 @@ import {useTheme} from '@yoroi/theme'
 import {Links} from '@yoroi/types'
 import * as React from 'react'
 import {ScrollView, StyleSheet, Text, View, ViewProps} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer, useModal} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
@@ -11,12 +10,12 @@ import {isEmptyString} from '../../../../kernel/utils'
 import {useStrings} from '../../common/useStrings'
 import {ShowDisclaimer} from './ShowDisclaimer/ShowDisclaimer'
 
-export const RequestedAdaPaymentWithLinkScreen = ({
+export const RequestedBrowserLaunchDappUrlScreen = ({
   params,
   isTrusted,
   onContinue,
 }: {
-  params: Links.TransferRequestAdaWithLinkParams
+  params: Links.BrowserLaunchDappUrlParams
   isTrusted?: boolean
   onContinue: () => void
 }) => {
@@ -28,22 +27,23 @@ export const RequestedAdaPaymentWithLinkScreen = ({
   // TODO: revisit check with product
   const disclaimerStyle = isTrusted ? styles.text : styles.text
   const description = isTrusted
-    ? strings.trustedPaymentRequestedDescription
-    : strings.untrustedPaymentRequestedDescription
+    ? strings.trustedBrowserLaunchDappUrlDescription
+    : strings.untrustedBrowserLaunchDappUrlDescription
 
   const handleOnCancel = () => {
     actionFinished()
     closeModal()
   }
 
+  // NOTE: modal content therefore no need to use SafeAreaView
   return (
-    <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
+    <View style={styles.root}>
       <ScrollView bounces={false}>
         <ShowDisclaimer title={strings.disclaimer}>
           <Text style={disclaimerStyle}>{description}</Text>
         </ShowDisclaimer>
 
-        <Spacer height={16} />
+        <Space height="lg" />
 
         {/* TODO: revisit SHOW the app name or unknown */}
         {/* TODO: revisit SHOW verified / not verified icon and text */}
@@ -58,11 +58,9 @@ export const RequestedAdaPaymentWithLinkScreen = ({
       <Actions style={styles.actions}>
         <Button block outlineShelley onPress={handleOnCancel} title={strings.cancel} />
 
-        <Spacer width={16} />
-
         <Button block shelleyTheme onPress={onContinue} title={strings.continue} />
       </Actions>
-    </SafeAreaView>
+    </View>
   )
 }
 
@@ -87,10 +85,12 @@ const useStyles = () => {
       backgroundColor: color.bg_color_high,
       ...atoms.flex_1,
       ...atoms.px_lg,
+      ...atoms.pb_lg,
     },
     actions: {
       ...atoms.flex_row,
       ...atoms.justify_between,
+      ...atoms.gap_lg,
     },
     text: {
       color: color.text_gray_max,

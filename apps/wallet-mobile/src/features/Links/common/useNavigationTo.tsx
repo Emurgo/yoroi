@@ -7,5 +7,6 @@ export const useNavigateTo = () => {
 
   return React.useRef({
     startTransfer: () => walletNavigation.navigateToStartTransfer(),
+    launchDappUrl: () => walletNavigation.navigateToDiscoverBrowserDapp(),
   } as const).current
 }

@@ -66,8 +66,9 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
   const handleOpenDApp = () => {
     track.discoverConnectedBottomSheetOpenDAppClicked()
 
-    const id = uuid.v4()
     closeModal()
+
+    const id = uuid.v4()
     addTab(dApp.uri, id)
     setTabActive(tabs.length)
 
