@@ -259,7 +259,7 @@ const useStyles = () => {
   })
   const colors = {
     black: color.gray_cmax,
-    selected: color.gray_c300,
+    selected: color.text_gray_normal,
   }
   return {styles, colors} as const
 }
