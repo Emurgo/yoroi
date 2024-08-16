@@ -1,12 +1,9 @@
 import {freeze} from 'immer'
-import {DehydratedState, QueryClient} from 'react-query'
-import {PersistedClient, Persistor, persistQueryClient} from 'react-query/persistQueryClient-experimental'
-
-import {logger} from './logger/logger'
-import {rootStorage} from './storage/rootStorage'
+import {QueryClient} from 'react-query'
 
 const queryClient = new QueryClient()
 const keyToPersist = 'persist'
+/*
 const queryPersistorStorageKey = 'react-query-persistor'
 const queryPersistorStorage: Persistor = {
   persistClient: async (client: PersistedClient) => {
@@ -41,10 +38,11 @@ const queryPersistorStorage: Persistor = {
     }
   },
 }
+/* Persistor disabled: experimental hitting IO too much
 persistQueryClient({
   queryClient,
   persistor: queryPersistorStorage,
   maxAge: 24 * 60 * 60 * 1000, // Optional, set the maximum age of persisted queries (in milliseconds)
 })
-
+*/
 export const queryInfo = freeze({keyToPersist, queryClient})
