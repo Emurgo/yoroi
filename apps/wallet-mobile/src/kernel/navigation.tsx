@@ -284,8 +284,8 @@ export type SendConfirmParams = {
 }
 
 export type DiscoverRoutes = {
-  'discover-select-dapp-from-list': undefined
   'discover-browser': NavigatorScreenParams<BrowserRoutes>
+  'discover-select-dapp-from-list': undefined
   'discover-review-tx': {cbor: string}
 }
 
@@ -613,6 +613,21 @@ export const useWalletNavigation = () => {
           screen: 'staking-gov-home',
           params: {
             navigateToStakingOnSuccess,
+          },
+        },
+      })
+    },
+
+    navigateToDiscoverBrowserDapp: () => {
+      navigation.navigate('manage-wallets', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'discover',
+          params: {
+            screen: 'discover-browser',
+            params: {
+              screen: 'discover-browse-dapp',
+            },
           },
         },
       })

@@ -4,9 +4,12 @@ import {useTransfer} from '@yoroi/transfer'
 import {Links} from '@yoroi/types'
 import * as React from 'react'
 import {InteractionManager} from 'react-native'
+import uuid from 'uuid'
 
 import {useModal} from '../../../components/Modal/ModalContext'
 import {logger} from '../../../kernel/logger/logger'
+import {useMetrics} from '../../../kernel/metrics/metricsManager'
+import {useBrowser} from '../../Discover/common/BrowserProvider'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 import {RequestedAdaPaymentWithLinkScreen} from '../useCases/RequestedAdaPaymentWithLinkScreen/RequestedAdaPaymentWithLinkScreen'
 import {RequestedBrowserLaunchDappUrlScreen} from '../useCases/RequestedBrowserLaunchDappUrlScreen/RequestedBrowserLaunchDappUrlScreen'
@@ -16,6 +19,7 @@ import {useStrings} from './useStrings'
 const heightBreakpoint = 467
 export const useLinksRequestAction = () => {
   const strings = useStrings()
+  const {track} = useMetrics()
   const {action, actionFinished} = useLinks()
   const {openModal, closeModal} = useModal()
   const {
@@ -23,6 +27,7 @@ export const useLinksRequestAction = () => {
   } = useWalletManager()
   const navigateTo = useNavigateTo()
 
+  const {addTab, setTabActive, tabs} = useBrowser()
   const {memoChanged, receiverResolveChanged, amountChanged, reset, linkActionChanged} = useTransfer()
 
   const startTransferWithLink = React.useCallback(
@@ -108,6 +113,11 @@ export const useLinksRequestAction = () => {
           if (redirectTo != null) linkActionChanged(action)
 
           logger.debug('useLinksRequestAction: launchDappUrl', {dappUrl})
+          track.discoverConnectedBottomSheetOpenDAppClicked()
+
+          const id = uuid.v4()
+          addTab(dappUrl, id)
+          setTabActive(tabs.length)
 
           closeModal()
           actionFinished()
@@ -120,7 +130,7 @@ export const useLinksRequestAction = () => {
         }
       }
     },
-    [actionFinished, closeModal, linkActionChanged, navigateTo],
+    [actionFinished, addTab, closeModal, linkActionChanged, navigateTo, setTabActive, tabs, track],
   )
 
   const openRequestedBrowserLaunchDappUrl = React.useCallback(
