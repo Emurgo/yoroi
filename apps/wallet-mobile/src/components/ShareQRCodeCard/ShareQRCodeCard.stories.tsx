@@ -12,7 +12,8 @@ storiesOf('Receive ShareQRCodeCard', module)
   .addDecorator((story) => <View style={styles.container}>{story()}</View>)
   .add('with content', () => (
     <ShareQRCodeCard
-      content={address}
+      qrContent={address}
+      shareContent={address}
       onLongPress={action('onLongPress')}
       title="Title"
       shareLabel="share label"

@@ -121,7 +121,8 @@ const Modal = ({amount, address}: {amount: string; address: string}) => {
         {hasAddress ? (
           <ShareQRCodeCard
             title={title}
-            content={`${strings.address} ${content}`}
+            shareContent={`${strings.address} ${content}`}
+            qrContent={content}
             onLongPress={handOnCopy}
             testId="receive:specific-amount"
             onShare={() => track.receiveShareAddressClicked()}

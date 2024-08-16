@@ -13,7 +13,8 @@ import {Space} from '../Space/Space'
 import {CaptureShareQRCodeCard} from './CaptureShareQRCodeCard/CaptureShareQRCodeCard'
 
 type ShareQRCodeCardProps = {
-  content: string
+  qrContent: string
+  shareContent: string
   title: string
   isCopying?: boolean
   onLongPress: () => void
@@ -24,7 +25,8 @@ type ShareQRCodeCardProps = {
 }
 
 export const ShareQRCodeCard = ({
-  content,
+  qrContent,
+  shareContent,
   title,
   isCopying,
   onLongPress,
@@ -55,17 +57,17 @@ export const ShareQRCodeCard = ({
         })
 
         setIsSharing(false)
-        await Share.open({url: uri, filename: shareLabel, message: content})
+        await Share.open({url: uri, filename: shareLabel, message: shareContent})
       }
 
       captureAndShare()
     }
-  }, [isSharing, shareLabel, content])
+  }, [isSharing, shareLabel, shareContent])
 
   if (isSharing)
     return (
       <ViewShot ref={ref}>
-        <CaptureShareQRCodeCard content={content} />
+        <CaptureShareQRCodeCard content={qrContent} />
       </ViewShot>
     )
 
@@ -88,12 +90,12 @@ export const ShareQRCodeCard = ({
 
           <View style={styles.addressContainer}>
             <View style={styles.qrCode} testID={`${testId}-qr`}>
-              <QRCode value={content} size={qrSize} backgroundColor={colors.white} color={colors.black} />
+              <QRCode value={qrContent} size={qrSize} backgroundColor={colors.white} color={colors.black} />
             </View>
 
             <Spacer height={16} />
 
-            <Text style={styles.textAddress}>{content}</Text>
+            <Text style={styles.textAddress}>{qrContent}</Text>
           </View>
 
           <TouchableOpacity activeOpacity={0.5} onPress={handleOnPressShare} onLongPress={onLongPress}>

@@ -37,7 +37,8 @@ export const QrCode = () => {
       <ScrollView bounces={false} contentContainerStyle={styles.padding}>
         <ShareQRCodeCard
           title={strings.step4QrTitle}
-          content={votingKeyEncrypted}
+          qrContent={votingKeyEncrypted}
+          shareContent={votingKeyEncrypted}
           onLongPress={handleOnCopy}
           shareLabel={strings.step4QrShareLabel}
           copiedText={strings.step4QrCopiedText}
