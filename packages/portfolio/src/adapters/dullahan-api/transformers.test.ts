@@ -77,6 +77,33 @@ describe('transformers', () => {
         ],
       })
     })
+
+    it('should return drop the record when the status code is HttpStatusCode.InternalServerError', () => {
+      const apiTokenInfosResponse: Portfolio.Api.TokenInfosResponse = {
+        [tokenMocks.rnftWhatever.info.id]: [
+          Api.HttpStatusCode.InternalServerError,
+          'Not found',
+          3600,
+        ],
+        [tokenMocks.nftCryptoKitty.info.id]: [
+          Api.HttpStatusCode.Ok,
+          tokenMocks.nftCryptoKitty.info,
+          'etag',
+          0,
+        ],
+      }
+
+      const result = toSecondaryTokenInfos(apiTokenInfosResponse)
+
+      expect(result).toEqual({
+        [tokenMocks.nftCryptoKitty.info.id]: [
+          200,
+          tokenMocks.nftCryptoKitty.info,
+          'etag',
+          0,
+        ],
+      })
+    })
   })
 
   describe('toTokenActivityUpdates', () => {

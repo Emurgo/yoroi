@@ -32,6 +32,18 @@ describe('responseRecordWithCacheSchemaMaker', () => {
     expect(schema.safeParse(validData).success).toBe(true)
   })
 
+  it('should reutrn true when schema HttpStatusCode.InternalServerError', () => {
+    const schema = responseRecordWithCacheSchemaMaker(z.number())
+
+    const validData = [
+      Api.HttpStatusCode.InternalServerError,
+      'Record not found',
+      1000,
+    ]
+
+    expect(schema.safeParse(validData).success).toBe(true)
+  })
+
   it('should return an error for invalid data', () => {
     const recordSchema = z.object({
       id: z.string(),

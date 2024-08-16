@@ -16,5 +16,10 @@ export const responseRecordWithCacheSchemaMaker = <T>(
       z.literal(Api.HttpStatusCode.NotModified),
       z.number().nonnegative(),
     ]),
+    z.tuple([
+      z.literal(Api.HttpStatusCode.InternalServerError),
+      z.string(),
+      z.number().nonnegative(),
+    ]),
   ])
 }
