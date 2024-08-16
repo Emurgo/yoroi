@@ -12,6 +12,11 @@ export const useStrings = () => {
     untrustedPaymentRequestedTitle: intl.formatMessage(messages.untrustedPaymentRequestedTitle),
     untrustedPaymentRequestedDescription: intl.formatMessage(messages.untrustedPaymentRequestedDescription),
 
+    trustedBrowserLaunchDappUrlTitle: intl.formatMessage(messages.trustedBrowserLaunchDappUrlTitle),
+    trustedBrowserLaunchDappUrlDescription: intl.formatMessage(messages.trustedBrowserLaunchDappUrlDescription),
+    untrustedBrowserLaunchDappUrlTitle: intl.formatMessage(messages.untrustedBrowserLaunchDappUrlTitle),
+    untrustedBrowserLaunchDappUrlDescription: intl.formatMessage(messages.untrustedBrowserLaunchDappUrlDescription),
+
     askToOpenAWalletTitle: intl.formatMessage(messages.askToOpenAWalletTitle),
     askToOpenAWalletDescription: intl.formatMessage(messages.askToOpenAWalletDescription),
     askToRedirectTitle: intl.formatMessage(messages.askToRedirectTitle),
@@ -42,6 +47,23 @@ export const messages = Object.freeze(
     },
     untrustedPaymentRequestedDescription: {
       id: 'links.untrusted.paymentRequested.description',
+      defaultMessage: '!!!A payment has been requested.',
+    },
+
+    trustedBrowserLaunchDappUrlTitle: {
+      id: 'links.trusted.browserLaunchDappUrl.title',
+      defaultMessage: '!!!Launch dApp requested',
+    },
+    trustedBrowserLaunchDappUrlDescription: {
+      id: 'links.trusted.browserLaunchDappUrl.description',
+      defaultMessage: '!!!A payment has been requested.',
+    },
+    untrustedBrowserLaunchDappUrlTitle: {
+      id: 'links.untrusted.browserLaunchDappUrl.title',
+      defaultMessage: '!!!Lauch dApp requested',
+    },
+    untrustedBrowserLaunchDappUrlDescription: {
+      id: 'links.untrusted.browserLaunchDappUrl.description',
       defaultMessage: '!!!A payment has been requested.',
     },
 
