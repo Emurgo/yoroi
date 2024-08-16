@@ -6,6 +6,7 @@ import {ScrollView, StyleSheet, Text, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer, useModal} from '../../../../components'
+import {Space} from '../../../../components/Space/Space'
 import {isEmptyString} from '../../../../kernel/utils'
 import {useStrings} from '../../common/useStrings'
 import {ShowDisclaimer} from './ShowDisclaimer/ShowDisclaimer'
@@ -65,36 +66,40 @@ export const RequestedAdaPaymentWithLinkScreen = ({
   )
 }
 
-const Message = ({message}: {message?: string}) =>
-  !isEmptyString(message) && (
-    <>
-      <Text>{message}</Text>
+const Message = ({message}: {message?: string}) => {
+  const {styles} = useStyles()
+  return (
+    !isEmptyString(message) && (
+      <>
+        <Text style={styles.text}>{message}</Text>
 
-      <Spacer height={16} />
-    </>
+        <Space height="lg" />
+      </>
+    )
   )
+}
 const Actions = (props: ViewProps) => <View {...props} />
 
 const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      flex: 1,
       backgroundColor: color.bg_color_high,
+      ...atoms.flex_1,
       ...atoms.px_lg,
     },
     actions: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+      ...atoms.flex_row,
+      ...atoms.justify_between,
     },
     text: {
+      color: color.text_gray_max,
       ...atoms.body_2_md_regular,
-      color: color.gray_cmax,
     },
   })
   const colors = {
     danger: color.sys_magenta_c500,
     warning: color.sys_orange_c500,
   }
-  return {styles, colors}
+  return {styles, colors} as const
 }
