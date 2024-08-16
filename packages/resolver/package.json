@@ -139,7 +139,7 @@
   },
   "dependencies": {
     "@yoroi/api": "1.5.1",
-    "@yoroi/common": "1.5.2",
+    "@yoroi/common": "1.5.3",
     "@yoroi/types": "1.5.6"
   },
   "devDependencies": {

@@ -21,10 +21,11 @@ describe('cacheManageMultiRequest', () => {
     cachedInfosWithoutRecord = new Map<string, App.CacheInfo>()
   })
 
-  it('should fetch records from API and update cache with unknowns', async () => {
+  it('should fetch records from API and update cache with unknowns when empty or error', async () => {
     const recordsFromApi = {
-      id1: [200, {}, 'etag1', 3600],
-      id2: [200, {}, 'etag2', 3600],
+      id1: [Api.HttpStatusCode.Ok, {}, 'etag1', 3600],
+      id2: [Api.HttpStatusCode.Ok, {}, 'etag2', 3600],
+      id3: [Api.HttpStatusCode.InternalServerError, 'Not found', 3600],
     }
     request.mockResolvedValueOnce({
       tag: 'right',

@@ -168,7 +168,7 @@
     "typescript": "^5.3.3"
   },
   "peerDependencies": {
-    "@yoroi/common": "1.5.2",
+    "@yoroi/common": "1.5.3",
     "immer": "^10.0.3",
     "react": ">= 16.8.0 <= 19.0.0",
     "react-native-mmkv": "^2.11.0",
