@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/links",
-  "version": "1.5.5",
+  "version": "1.5.6",
   "description": "The package for managing links of Yoroi SDK",
   "keywords": [
     "yoroi",
@@ -138,7 +138,7 @@
   },
   "dependencies": {
     "@yoroi/common": "1.5.2",
-    "@yoroi/types": "1.5.5"
+    "@yoroi/types": "1.5.6"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",

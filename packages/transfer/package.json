@@ -138,7 +138,7 @@
     "@types/jest": "^29.5.12",
     "@types/react": "^18.2.55",
     "@types/react-test-renderer": "^18.0.7",
-    "@yoroi/types": "1.5.5",
+    "@yoroi/types": "1.5.6",
     "commitlint": "^17.0.2",
     "del-cli": "^5.0.0",
     "dependency-cruiser": "^13.1.1",
@@ -161,7 +161,7 @@
   },
   "peerDependencies": {
     "@tanstack/react-query": "4.36.1",
-    "@yoroi/portfolio": "1.0.0",
+    "@yoroi/portfolio": "1.0.1",
     "@yoroi/resolver": "2.0.5",
     "immer": "^10.0.2",
     "react": ">= 16.8.0 <= 19.0.0",
