@@ -34,6 +34,7 @@ import {ToggleAnalyticsSettingsNavigator} from './features/ToggleAnalyticsSettin
 import {TxHistoryNavigator} from './features/Transactions/TxHistoryNavigator'
 import {useSelectedWallet} from './features/WalletManager/common/hooks/useSelectedWallet'
 import {SelectWalletFromList} from './features/WalletManager/useCases/SelectWalletFromListScreen/SelectWalletFromListScreen'
+import {isDev} from './kernel/env'
 import {useMetrics} from './kernel/metrics/metricsManager'
 import {
   defaultStackNavigationOptions,
@@ -223,7 +224,7 @@ export const WalletNavigator = () => {
             name="wallet-selection"
             options={{
               title: strings.walletSelectionScreenHeader,
-              headerTitle: ({children}) => <NetworkTag directChangeActive>{children}</NetworkTag>,
+              headerTitle: ({children}) => <NetworkTag directChangeActive={isDev}>{children}</NetworkTag>,
             }}
             component={SelectWalletFromList}
           />
