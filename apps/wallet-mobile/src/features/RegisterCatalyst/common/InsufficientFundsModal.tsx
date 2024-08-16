@@ -2,9 +2,10 @@ import {amountFormatter} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
-import {StyleSheet, Text, View} from 'react-native'
+import {Platform, StyleSheet, Text, View} from 'react-native'
 
 import {Button, useModal} from '../../../components'
+import {Space} from '../../../components/Space/Space'
 import globalMessages, {confirmationMessages} from '../../../kernel/i18n/global-messages'
 import {catalystConfig} from '../../../yoroi-wallets/cardano/constants/catalyst-config'
 import {usePortfolioPrimaryBalance} from '../../Portfolio/common/hooks/usePortfolioPrimaryBalance'
@@ -35,6 +36,8 @@ export const InsufficientFundsModal = () => {
       </Text>
 
       <Button shelleyTheme title={strings.back} onPress={closeModal} textStyles={styles.button} />
+
+      {Platform.OS === 'android' && <Space height="lg" />}
     </View>
   )
 }
