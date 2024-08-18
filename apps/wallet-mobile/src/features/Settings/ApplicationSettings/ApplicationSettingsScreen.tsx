@@ -40,7 +40,6 @@ export const ApplicationSettingsScreen = () => {
 
   const {data: screenShareEnabled} = useScreenShareSettingEnabled()
   const displayScreenShareSetting = Platform.OS === 'android' && !isProduction
-  const displayToggleThemeSetting = !isNightly && !isProduction
 
   const onToggleAuthWithOs = () => {
     if (authSetting === 'os') {
@@ -104,14 +103,12 @@ export const ApplicationSettingsScreen = () => {
             onNavigate={navigateTo.analytics}
           />
 
-          {displayToggleThemeSetting && (
-            <NavigatedSettingsItem
-              icon={<Icon.Theme {...iconProps} />}
-              label={strings.selectTheme}
-              onNavigate={navigateTo.changeTheme}
-              selected={strings.translateThemeName(name)}
-            />
-          )}
+          <NavigatedSettingsItem
+            icon={<Icon.Theme {...iconProps} />}
+            label={strings.selectTheme}
+            onNavigate={navigateTo.changeTheme}
+            selected={strings.translateThemeName(name)}
+          />
         </SettingsSection>
 
         <Spacer height={24} />
