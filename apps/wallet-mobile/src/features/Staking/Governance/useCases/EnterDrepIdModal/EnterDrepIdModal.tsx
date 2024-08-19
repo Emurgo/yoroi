@@ -83,7 +83,7 @@ const useStyles = () => {
     },
     text: {
       color: color.gray_c900,
-      textAlign: 'center',
+      ...atoms.text_center,
       ...atoms.body_1_lg_regular,
     },
     link: {
