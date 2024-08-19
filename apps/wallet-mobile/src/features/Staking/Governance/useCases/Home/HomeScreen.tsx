@@ -350,6 +350,7 @@ const useStyles = () => {
       color: color.gray_c900,
     },
     bold: {
+      ...atoms.font_semibold,
       ...atoms.body_1_lg_medium,
     },
     actions: {
