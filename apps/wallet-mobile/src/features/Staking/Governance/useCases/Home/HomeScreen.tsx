@@ -32,7 +32,7 @@ import {GovernanceVote} from '../../types'
 import {EnterDrepIdModal} from '../EnterDrepIdModal'
 
 export const HomeScreen = () => {
-  const {wallet /* meta */} = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
   const txInfos = useTransactionInfos({wallet})
   const stakingKeyHash = useStakingKey(wallet)
   const [isPendingRefetchAfterTxConfirmation, setIsPendingRefetchAfterTxConfirmation] = React.useState(false)
