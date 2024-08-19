@@ -35,7 +35,7 @@ export const EnableEasyConfirmationScreen = () => {
 
   return (
     <KeyboardAvoidingView style={styles.root}>
-      <SafeAreaView edges={['bottom']} style={styles.safeAreaView}>
+      <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.safeAreaView}>
         <ScrollView keyboardShouldPersistTaps="always" contentContainerStyle={styles.content}>
           <Text style={styles.heading}>{strings.enableHeading}</Text>
 
