@@ -36,11 +36,9 @@ const useStyles = () => {
       ...atoms.px_lg,
     },
     text: {
-      color: color.gray_c900,
-      textAlign: 'center',
-      fontFamily: 'Rubik-Regular',
-      fontSize: 16,
-      lineHeight: 24,
+      color: color.text_gray_normal,
+      ...atoms.body_1_lg_regular,
+      ...atoms.text_center,
       ...atoms.font_normal,
     },
   })

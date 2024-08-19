@@ -179,11 +179,11 @@ const useStyles = () => {
     root: {
       ...atoms.flex_1,
       ...atoms.justify_between,
-      paddingHorizontal: 18,
+      ...atoms.px_lg,
       backgroundColor: color.bg_color_high,
     },
     description: {
-      color: color.gray_c900,
+      color: color.text_gray_normal,
       ...atoms.body_1_lg_regular,
     },
     actions: {

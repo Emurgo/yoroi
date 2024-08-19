@@ -373,58 +373,52 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     supportRoot: {
-      paddingHorizontal: 18,
+      ...atoms.px_lg,
       ...atoms.align_center,
       ...atoms.justify_center,
       ...atoms.flex_1,
       backgroundColor: color.bg_color_high,
     },
     button: {
-      paddingHorizontal: 24,
-      paddingVertical: 15,
+      ...atoms.px_xl,
+      ...atoms.py_lg,
     },
     supportTitle: {
-      fontFamily: 'Rubik-Medium',
-      fontWeight: '500',
-      fontSize: 20,
-      lineHeight: 30,
-      color: color.gray_cmax,
+      ...atoms.heading_3_medium,
+      ...atoms.font_semibold,
+      color: color.text_gray_max,
       ...atoms.text_center,
     },
     supportDescription: {
-      fontFamily: 'Rubik-Regular',
-      fontSize: 14,
-      lineHeight: 22,
-      color: color.gray_c600,
+      color: color.text_gray_medium,
       ...atoms.text_center,
+      ...atoms.body_1_lg_regular,
     },
     root: {
-      paddingHorizontal: 18,
+      ...atoms.px_lg,
       ...atoms.flex_1,
       ...atoms.justify_between,
       backgroundColor: color.bg_color_high,
     },
     description: {
-      fontFamily: 'Rubik-Regular',
-      fontSize: 16,
-      lineHeight: 24,
-      color: color.gray_c900,
+      color: color.text_gray_normal,
+      ...atoms.body_1_lg_regular,
     },
     bold: {
       ...atoms.font_semibold,
-      fontFamily: 'Rubik-Medium',
+      ...atoms.body_1_lg_regular,
     },
     actions: {
       ...atoms.flex_1,
       ...atoms.gap_lg,
     },
     drepInfoTitle: {
-      color: color.gray_c900,
+      color: color.text_gray_normal,
       ...atoms.body_1_lg_medium,
       ...atoms.font_semibold,
     },
     drepInfoDescription: {
-      color: color.gray_c600,
+      color: color.text_gray_low,
       ...atoms.body_3_sm_regular,
     },
   })

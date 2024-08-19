@@ -91,20 +91,16 @@ const useStyles = () => {
       ...atoms.justify_center,
     },
     title: {
-      fontFamily: 'Rubik-Medium',
-      fontSize: 20,
-      lineHeight: 30,
-      color: color.gray_cmax,
+      ...atoms.heading_3_medium,
       ...atoms.font_semibold,
       ...atoms.text_center,
       ...atoms.justify_center,
+      color: color.text_gray_max,
     },
     description: {
-      fontFamily: 'Rubik-Regular',
-      fontSize: 16,
-      lineHeight: 24,
-      color: color.gray_c600,
-      textAlign: 'center',
+      ...atoms.body_1_lg_regular,
+      ...atoms.text_center,
+      color: color.text_gray_medium,
     },
   })
 

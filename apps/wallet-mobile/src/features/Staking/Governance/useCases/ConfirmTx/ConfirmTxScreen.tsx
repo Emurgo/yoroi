@@ -222,21 +222,19 @@ const useStyles = () => {
       ...atoms.align_center,
     },
     root: {
-      paddingHorizontal: 18,
+      ...atoms.px_lg,
       ...atoms.flex_1,
       ...atoms.justify_between,
       backgroundColor: color.bg_color_high,
     },
     primaryText: {
-      color: color.gray_c900,
+      color: color.text_gray_normal,
       ...atoms.font_semibold,
       ...atoms.body_1_lg_medium,
     },
     secondaryText: {
-      fontFamily: 'Rubik-Regular',
-      fontSize: 14,
-      lineHeight: 22,
-      color: color.gray_c600,
+      ...atoms.body_2_md_regular,
+      color: color.text_gray_medium,
     },
     row: {
       ...atoms.flex_row,
@@ -256,11 +254,11 @@ const useStyles = () => {
       color: color.white_static,
     },
     totalValue: {
+      color: color.white_static,
+      ...atoms.font_semibold,
       fontFamily: 'Rubik-Medium',
       fontSize: 18,
       lineHeight: 26,
-      color: color.white_static,
-      fontWeight: '500',
     },
     fiatValue: {
       fontFamily: 'Rubik-Regular',
@@ -270,7 +268,7 @@ const useStyles = () => {
       opacity: 0.5,
     },
     normalText: {
-      color: color.gray_c900,
+      color: color.text_gray_normal,
       ...atoms.font_normal,
       ...atoms.body_1_lg_regular,
     },
