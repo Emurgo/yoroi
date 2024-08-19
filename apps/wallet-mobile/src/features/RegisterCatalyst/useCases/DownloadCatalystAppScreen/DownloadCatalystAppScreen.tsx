@@ -18,7 +18,7 @@ import {useCatalystCurrentFund} from '../../common/hooks'
 import {useStrings} from '../../common/strings'
 import {CatalystStep1} from '../../illustrations/CatalystStep1'
 
-export const DownloadCatalyst = () => {
+export const DownloadCatalystAppScreen = () => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
   const {stakingInfo} = useStakingInfo(wallet, {suspense: true})
@@ -47,9 +47,7 @@ export const DownloadCatalyst = () => {
   )
 
   React.useEffect(() => {
-    if (stakingInfo?.status !== 'not-registered') {
-      openModal(strings.attention, <WarningModal />, 300)
-    }
+    if (stakingInfo?.status === 'not-registered') openModal(strings.attention, <WarningModal />, 300)
   }, [openModal, stakingInfo?.status, strings.attention])
 
   const fundName = fund.info.fundName
