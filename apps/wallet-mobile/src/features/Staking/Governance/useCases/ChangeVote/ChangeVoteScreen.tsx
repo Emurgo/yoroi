@@ -6,6 +6,7 @@ import {
   useStakingKeyState,
   useVotingCertificate,
 } from '@yoroi/staking'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
@@ -27,6 +28,7 @@ export const ChangeVoteScreen = () => {
   const {openModal} = useModal()
   const {manager} = useGovernance()
   const [pendingVote, setPendingVote] = React.useState<GovernanceVote['kind'] | null>(null)
+  const {styles} = useStyles()
 
   const {createCertificate: createDelegationCertificate, isLoading: isCreatingDelegationCertificate} =
     useDelegationCertificate({
@@ -171,20 +173,24 @@ export const ChangeVoteScreen = () => {
   )
 }
 
-const styles = StyleSheet.create({
-  root: {
-    paddingHorizontal: 18,
-    flex: 1,
-    justifyContent: 'space-between',
-  },
-  description: {
-    fontFamily: 'Rubik-Regular',
-    fontSize: 16,
-    lineHeight: 24,
-    color: '#242838',
-  },
-  actions: {
-    flex: 1,
-    gap: 16,
-  },
-})
+const useStyles = () => {
+  const {color, atoms} = useTheme()
+  const styles = StyleSheet.create({
+    root: {
+      ...atoms.flex_1,
+      ...atoms.justify_between,
+      ...atoms.px_lg,
+      backgroundColor: color.bg_color_high,
+    },
+    description: {
+      color: color.text_gray_normal,
+      ...atoms.body_1_lg_regular,
+    },
+    actions: {
+      ...atoms.flex_1,
+      ...atoms.gap_lg,
+    },
+  })
+
+  return {styles}
+}

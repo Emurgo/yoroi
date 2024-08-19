@@ -78,12 +78,12 @@ const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      flex: 1,
+      ...atoms.flex_1,
       ...atoms.px_lg,
     },
     text: {
-      color: color.gray_c900,
-      textAlign: 'center',
+      color: color.text_gray_normal,
+      ...atoms.text_center,
       ...atoms.body_1_lg_regular,
     },
     link: {

@@ -76,32 +76,31 @@ export const SuccessTxScreen = () => {
 }
 
 const useStyles = () => {
-  const {color} = useTheme()
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
     root: {
-      flex: 1,
-      padding: 16,
+      ...atoms.flex_1,
+      ...atoms.py_lg,
+      ...atoms.px_lg,
+      backgroundColor: color.bg_color_high,
     },
     center: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
+      ...atoms.flex_1,
+      ...atoms.align_center,
+      ...atoms.justify_center,
     },
     title: {
-      fontFamily: 'Rubik-Medium',
-      fontSize: 20,
-      lineHeight: 30,
-      color: color.gray_cmax,
-      fontWeight: '500',
-      textAlign: 'center',
+      ...atoms.heading_3_medium,
+      ...atoms.font_semibold,
+      ...atoms.text_center,
+      ...atoms.justify_center,
+      color: color.text_gray_max,
     },
     description: {
-      fontFamily: 'Rubik-Regular',
-      fontSize: 16,
-      lineHeight: 24,
-      color: color.gray_c600,
-      textAlign: 'center',
+      ...atoms.body_1_lg_regular,
+      ...atoms.text_center,
+      color: color.text_gray_medium,
     },
   })
 

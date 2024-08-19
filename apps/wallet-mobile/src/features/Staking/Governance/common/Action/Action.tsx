@@ -16,19 +16,19 @@ type Props = {
 }
 
 export const Action = ({title, description, onPress, pending, children, showRightArrow}: Props) => {
-  const {styles, color} = useStyles()
+  const {styles, colors} = useStyles()
   return (
     <TouchableOpacity onPress={onPress} disabled={pending}>
-      <LinearGradient start={{x: 0, y: 0}} end={{x: 0, y: 1}} colors={color.bg_gradient_1} style={styles.gradient}>
+      <LinearGradient start={{x: 0, y: 0}} end={{x: 0, y: 1}} colors={colors.gradient} style={styles.gradient}>
         {pending && (
           <View style={styles.icon}>
-            <ActivityIndicator color="black" size="small" />
+            <ActivityIndicator color={colors.icon} size="small" />
           </View>
         )}
 
         {showRightArrow && (
           <View style={styles.icon}>
-            <Icon.ArrowRight size={24} />
+            <Icon.ArrowRight size={24} color={colors.icon} />
           </View>
         )}
 
@@ -51,36 +51,38 @@ export const Action = ({title, description, onPress, pending, children, showRigh
 }
 
 const useStyles = () => {
-  const {color} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     icon: {
-      position: 'absolute',
-      right: 16,
-      top: 16,
+      ...atoms.absolute,
+      right: atoms.px_lg.paddingRight,
+      top: atoms.py_lg.paddingTop,
     },
     gradient: {
-      borderRadius: 8,
-      position: 'relative',
+      ...atoms.relative,
+      ...atoms.rounded_sm,
     },
     root: {
-      padding: 16,
+      ...atoms.py_lg,
+      ...atoms.px_lg,
       minHeight: 134,
     },
     title: {
       color: color.gray_cmax,
-      fontFamily: 'Rubik-Medium',
-      fontWeight: '500',
-      fontSize: 18,
-      lineHeight: 26,
+      ...atoms.font_semibold,
+      ...atoms.heading_4_medium,
     },
     description: {
       color: color.gray_cmax,
-      fontFamily: 'Rubik-Regular',
-      fontWeight: '400',
-      fontSize: 16,
-      lineHeight: 24,
+      ...atoms.font_normal,
+      ...atoms.body_1_lg_medium,
     },
   })
 
-  return {styles, color}
+  const colors = {
+    gradient: color.bg_gradient_1,
+    icon: color.gray_cmax,
+  }
+
+  return {styles, colors}
 }
