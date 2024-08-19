@@ -13,9 +13,9 @@ import {useTheme} from '@yoroi/theme'
 import React, {type ReactNode} from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Button, Spacer, useModal} from '../../../../../components'
+import {Spacer, useModal} from '../../../../../components'
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
-import {useUnsafeParams, useWalletNavigation} from '../../../../../kernel/navigation'
+import {useUnsafeParams} from '../../../../../kernel/navigation'
 import {useStakingInfo} from '../../../../../legacy/Dashboard/StakePoolInfos'
 import {
   useCreateGovernanceTx,
@@ -28,12 +28,11 @@ import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelec
 import {Action, LearnMoreLink, useNavigateTo, useStrings} from '../../common'
 import {mapStakingKeyStateToGovernanceAction} from '../../common/helpers'
 import {Routes} from '../../common/navigation'
-import {GovernanceImage} from '../../illustrations'
 import {GovernanceVote} from '../../types'
 import {EnterDrepIdModal} from '../EnterDrepIdModal'
 
 export const HomeScreen = () => {
-  const {wallet, meta} = useSelectedWallet()
+  const {wallet /* meta */} = useSelectedWallet()
   const txInfos = useTransactionInfos({wallet})
   const stakingKeyHash = useStakingKey(wallet)
   const [isPendingRefetchAfterTxConfirmation, setIsPendingRefetchAfterTxConfirmation] = React.useState(false)
@@ -59,10 +58,6 @@ export const HomeScreen = () => {
   }, [isTxPending, submittedTxId, refetchStakingKeyState, setIsPendingRefetchAfterTxConfirmation])
 
   const txPendingDisplayed = isTxPending || isPendingRefetchAfterTxConfirmation
-
-  if (meta.isHW) {
-    return <HardwareWalletSupportComingSoon />
-  }
 
   if (txPendingDisplayed && isNonNullable(lastSubmittedTx)) {
     if (lastSubmittedTx.kind === 'delegate-to-drep') {
@@ -336,34 +331,6 @@ const NeverParticipatedInGovernanceVariant = () => {
   )
 }
 
-const HardwareWalletSupportComingSoon = () => {
-  const strings = useStrings()
-  const styles = useStyles()
-  const walletNavigateTo = useWalletNavigation()
-  const handleOnPress = () => walletNavigateTo.navigateToTxHistory()
-  return (
-    <View style={styles.supportRoot}>
-      <GovernanceImage />
-
-      <View>
-        <Text style={styles.supportTitle}>{strings.hardwareWalletSupportComingSoon}</Text>
-      </View>
-
-      <Spacer height={4} />
-
-      <View>
-        <Text style={styles.supportDescription}>{strings.workingOnHardwareWalletSupport}</Text>
-      </View>
-
-      <Spacer height={16} />
-
-      <View>
-        <Button title={strings.goToWallet} textStyles={styles.button} onPress={handleOnPress} shelleyTheme />
-      </View>
-    </View>
-  )
-}
-
 const isTxConfirmed = (txId: string, txInfos: Record<string, TransactionInfo>) => {
   return Object.values(txInfos).some((tx) => tx.id === txId)
 }
@@ -372,54 +339,30 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
-    supportRoot: {
-      ...atoms.px_lg,
-      ...atoms.align_center,
-      ...atoms.justify_center,
-      ...atoms.flex_1,
-      backgroundColor: color.bg_color_high,
-    },
-    button: {
-      ...atoms.px_xl,
-      ...atoms.py_lg,
-    },
-    supportTitle: {
-      ...atoms.heading_3_medium,
-      ...atoms.font_semibold,
-      color: color.text_gray_max,
-      ...atoms.text_center,
-    },
-    supportDescription: {
-      color: color.text_gray_medium,
-      ...atoms.text_center,
-      ...atoms.body_1_lg_regular,
-    },
     root: {
-      ...atoms.px_lg,
       ...atoms.flex_1,
       ...atoms.justify_between,
+      ...atoms.px_lg,
       backgroundColor: color.bg_color_high,
     },
     description: {
-      color: color.text_gray_normal,
       ...atoms.body_1_lg_regular,
+      color: color.gray_c900,
     },
     bold: {
-      ...atoms.font_semibold,
-      ...atoms.body_1_lg_regular,
+      ...atoms.body_1_lg_medium,
     },
     actions: {
       ...atoms.flex_1,
       ...atoms.gap_lg,
     },
     drepInfoTitle: {
-      color: color.text_gray_normal,
-      ...atoms.body_1_lg_medium,
-      ...atoms.font_semibold,
+      ...atoms.heading_4_regular,
+      color: color.gray_c900,
     },
     drepInfoDescription: {
-      color: color.text_gray_low,
-      ...atoms.body_3_sm_regular,
+      ...atoms.body_1_lg_regular,
+      color: color.gray_c600,
     },
   })
 
