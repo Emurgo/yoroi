@@ -374,7 +374,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     supportRoot: {
       paddingHorizontal: 18,
-      ...atoms.text_center,
+      ...atoms.align_center,
       ...atoms.justify_center,
       ...atoms.flex_1,
       backgroundColor: color.bg_color_high,
