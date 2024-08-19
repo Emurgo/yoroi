@@ -34,12 +34,14 @@ export const NetworkPickerList = () => {
     navigateTo.preparingNetworks(network)
   }
 
-  const data = Object.values(networkConfigs).filter(({network}) => !(network === Chain.Network.Sancho && !isDev))
+  const filteredNetworks = Object.values(networkConfigs).filter(
+    ({network}) => network !== Chain.Network.Sancho || isDev,
+  )
 
   return (
     <FlatList
       contentContainerStyle={styles.contentContainer}
-      data={data}
+      data={filteredNetworks}
       keyExtractor={(item) => item.network}
       renderItem={({item}) => (
         <NetworkPickerItem
