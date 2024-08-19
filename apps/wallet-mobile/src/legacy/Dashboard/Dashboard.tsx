@@ -80,7 +80,7 @@ export const Dashboard = () => {
   }
 
   return (
-    <SafeAreaView edges={['bottom', 'left', 'right', 'top']} style={styles.root}>
+    <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
       <View style={styles.container}>
         {isOnline && error && <SyncErrorBanner showRefresh={!(isLoading || isSyncing)} />}
 

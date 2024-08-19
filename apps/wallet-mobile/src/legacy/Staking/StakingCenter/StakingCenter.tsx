@@ -76,7 +76,7 @@ export const StakingCenter = () => {
   const shouldDisplayPoolList = wallet.isMainnet
 
   return (
-    <SafeAreaView edges={['top', 'right', 'bottom', 'left']} style={styles.root}>
+    <SafeAreaView edges={['right', 'bottom', 'left']} style={styles.root}>
       {shouldDisplayPoolIDInput && <PoolDetailScreen onPressDelegate={setSelectedPoolId} />}
 
       {shouldDisplayPoolList && (
@@ -111,12 +111,12 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      flex: 1,
       backgroundColor: color.bg_color_high,
+      ...atoms.flex_1,
       ...atoms.px_lg,
     },
     poolList: {
-      flex: 1,
+      ...atoms.flex_1,
     },
   })
   return {styles}
