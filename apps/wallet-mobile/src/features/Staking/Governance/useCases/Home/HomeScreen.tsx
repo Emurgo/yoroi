@@ -340,30 +340,31 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     root: {
+      ...atoms.px_lg,
       ...atoms.flex_1,
       ...atoms.justify_between,
-      ...atoms.px_lg,
       backgroundColor: color.bg_color_high,
     },
     description: {
+      color: color.text_gray_normal,
       ...atoms.body_1_lg_regular,
-      color: color.gray_c900,
     },
     bold: {
       ...atoms.font_semibold,
-      ...atoms.body_1_lg_medium,
+      ...atoms.body_1_lg_regular,
     },
     actions: {
       ...atoms.flex_1,
       ...atoms.gap_lg,
     },
     drepInfoTitle: {
-      ...atoms.heading_4_regular,
-      color: color.gray_c900,
+      color: color.text_gray_normal,
+      ...atoms.body_1_lg_medium,
+      ...atoms.font_semibold,
     },
     drepInfoDescription: {
-      ...atoms.body_1_lg_regular,
-      color: color.gray_c600,
+      color: color.text_gray_low,
+      ...atoms.body_3_sm_regular,
     },
   })
 
