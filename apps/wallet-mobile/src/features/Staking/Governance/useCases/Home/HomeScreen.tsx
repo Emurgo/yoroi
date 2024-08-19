@@ -369,14 +369,15 @@ const isTxConfirmed = (txId: string, txInfos: Record<string, TransactionInfo>) =
 }
 
 const useStyles = () => {
-  const {color} = useTheme()
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
     supportRoot: {
       paddingHorizontal: 18,
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
+      ...atoms.text_center,
+      ...atoms.justify_center,
+      ...atoms.flex_1,
+      backgroundColor: color.bg_color_high,
     },
     button: {
       paddingHorizontal: 24,
@@ -388,19 +389,20 @@ const useStyles = () => {
       fontSize: 20,
       lineHeight: 30,
       color: color.gray_cmax,
-      textAlign: 'center',
+      ...atoms.text_center,
     },
     supportDescription: {
       fontFamily: 'Rubik-Regular',
       fontSize: 14,
       lineHeight: 22,
       color: color.gray_c600,
-      textAlign: 'center',
+      ...atoms.text_center,
     },
     root: {
       paddingHorizontal: 18,
-      flex: 1,
-      justifyContent: 'space-between',
+      ...atoms.flex_1,
+      ...atoms.justify_between,
+      backgroundColor: color.bg_color_high,
     },
     description: {
       fontFamily: 'Rubik-Regular',
@@ -409,25 +411,21 @@ const useStyles = () => {
       color: color.gray_c900,
     },
     bold: {
+      ...atoms.font_semibold,
       fontFamily: 'Rubik-Medium',
-      fontWeight: '500',
     },
     actions: {
-      flex: 1,
-      gap: 16,
+      ...atoms.flex_1,
+      ...atoms.gap_lg,
     },
     drepInfoTitle: {
-      fontFamily: 'Rubik-Medium',
-      fontWeight: '500',
-      fontSize: 16,
-      lineHeight: 24,
       color: color.gray_c900,
+      ...atoms.body_1_lg_medium,
+      ...atoms.font_semibold,
     },
     drepInfoDescription: {
-      fontFamily: 'Rubik-Regular',
-      fontSize: 12,
-      lineHeight: 18,
       color: color.gray_c600,
+      ...atoms.body_3_sm_regular,
     },
   })
 

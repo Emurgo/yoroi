@@ -29,19 +29,19 @@ export const WithdrawWarningModal = ({onParticipatePress}: Props) => {
 }
 
 const useStyles = () => {
-  const {atoms} = useTheme()
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      flex: 1,
+      ...atoms.flex_1,
       ...atoms.px_lg,
     },
     text: {
-      color: '#242838',
+      color: color.gray_c900,
       textAlign: 'center',
       fontFamily: 'Rubik-Regular',
       fontSize: 16,
       lineHeight: 24,
-      fontWeight: '400',
+      ...atoms.font_normal,
     },
   })
 

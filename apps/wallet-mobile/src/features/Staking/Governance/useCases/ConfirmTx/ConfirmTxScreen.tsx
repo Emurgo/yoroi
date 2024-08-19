@@ -1,5 +1,6 @@
 import {useFocusEffect} from '@react-navigation/native'
 import {useBech32DRepID, useUpdateLatestGovernanceAction} from '@yoroi/staking'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
@@ -28,6 +29,7 @@ export const ConfirmTxScreen = () => {
   const {openModal, closeModal} = useModal()
   const [operationsOpen, setOperationsOpen] = React.useState(true)
   const {track} = useMetrics()
+  const {styles} = useStyles()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -199,84 +201,84 @@ export const ConfirmTxScreen = () => {
   )
 }
 
-const styles = StyleSheet.create({
-  operationsToggle: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  feeLabel: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    gap: 8,
-  },
-  feesRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  root: {
-    paddingHorizontal: 18,
-    flex: 1,
-    justifyContent: 'space-between',
-  },
-  primaryText: {
-    fontFamily: 'Rubik-Medium',
-    fontSize: 16,
-    lineHeight: 24,
-    color: '#242838',
-    fontWeight: '500',
-  },
-  secondaryText: {
-    fontFamily: 'Rubik-Regular',
-    fontSize: 14,
-    lineHeight: 22,
-    color: '#6B7384',
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  totalsArea: {
-    backgroundColor: '#3154cb',
-    padding: 16,
-    borderRadius: 8,
-  },
-  total: {
-    fontFamily: 'Rubik-Regular',
-    fontSize: 18,
-    lineHeight: 26,
-    color: '#ffffff',
-  },
-  totalValue: {
-    fontFamily: 'Rubik-Medium',
-    fontSize: 18,
-    lineHeight: 26,
-    color: '#ffffff',
-    fontWeight: '500',
-  },
-  fiatValue: {
-    fontFamily: 'Rubik-Regular',
-    fontSize: 14,
-    lineHeight: 22,
-    color: '#ffffff',
-    opacity: 0.5,
-  },
-  normalText: {
-    fontFamily: 'Rubik-Regular',
-    fontSize: 16,
-    lineHeight: 24,
-    color: '#242838',
-    fontWeight: '400',
-  },
-  feeValue: {
-    fontFamily: 'Rubik-Regular',
-    fontSize: 16,
-    lineHeight: 24,
-    color: '#8A92A3',
-    fontWeight: '400',
-  },
-})
+const useStyles = () => {
+  const {color, atoms} = useTheme()
+  const styles = StyleSheet.create({
+    operationsToggle: {
+      ...atoms.flex_row,
+      ...atoms.justify_between,
+      ...atoms.align_center,
+    },
+    feeLabel: {
+      ...atoms.gap_sm,
+      ...atoms.flex_1,
+      ...atoms.justify_start,
+      ...atoms.align_center,
+      ...atoms.flex_row,
+    },
+    feesRow: {
+      ...atoms.flex_row,
+      ...atoms.justify_between,
+      ...atoms.align_center,
+    },
+    root: {
+      paddingHorizontal: 18,
+      ...atoms.flex_1,
+      ...atoms.justify_between,
+      backgroundColor: color.bg_color_high,
+    },
+    primaryText: {
+      color: color.gray_c900,
+      ...atoms.font_semibold,
+      ...atoms.body_1_lg_medium,
+    },
+    secondaryText: {
+      fontFamily: 'Rubik-Regular',
+      fontSize: 14,
+      lineHeight: 22,
+      color: color.gray_c600,
+    },
+    row: {
+      ...atoms.flex_row,
+      ...atoms.justify_between,
+      ...atoms.align_center,
+    },
+    totalsArea: {
+      backgroundColor: '#3154cb',
+      ...atoms.py_lg,
+      ...atoms.px_lg,
+      ...atoms.rounded_sm,
+    },
+    total: {
+      fontFamily: 'Rubik-Regular',
+      fontSize: 18,
+      lineHeight: 26,
+      color: color.white_static,
+    },
+    totalValue: {
+      fontFamily: 'Rubik-Medium',
+      fontSize: 18,
+      lineHeight: 26,
+      color: color.white_static,
+      fontWeight: '500',
+    },
+    fiatValue: {
+      fontFamily: 'Rubik-Regular',
+      fontSize: 14,
+      lineHeight: 22,
+      color: color.white_static,
+      opacity: 0.5,
+    },
+    normalText: {
+      color: color.gray_c900,
+      ...atoms.font_normal,
+      ...atoms.body_1_lg_regular,
+    },
+    feeValue: {
+      color: color.gray_c500,
+      ...atoms.font_normal,
+      ...atoms.body_1_lg_regular,
+    },
+  })
+  return {styles}
+}
