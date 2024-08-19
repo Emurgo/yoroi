@@ -20,7 +20,7 @@ import {
 import {ConfirmPin} from './useCases/ConfirmPin/ConfirmPin'
 import {ConfirmVotingTx} from './useCases/ConfirmVotingTx/ConfirmVotingTx'
 import {DisplayPin} from './useCases/DisplayPin/DisplayPin'
-import {DownloadCatalyst} from './useCases/DownloadCatalyst/DownloadCatalyst'
+import {DownloadCatalystAppScreen} from './useCases/DownloadCatalystAppScreen/DownloadCatalystAppScreen'
 import {QrCode} from './useCases/ShowQrCode/ShowQrCode'
 
 const catalystApi = catalystApiMaker()
@@ -57,7 +57,7 @@ export const CatalystNavigator = () => {
           <Stack.Screen name="download-catalyst">
             {() => (
               <Boundary loading={{size: 'full'}}>
-                <DownloadCatalyst />
+                <DownloadCatalystAppScreen />
               </Boundary>
             )}
           </Stack.Screen>
