@@ -44,8 +44,8 @@ export const OsAuthScreen = ({
 
   return (
     <ScreenBackground style={styles.container}>
-      <SafeAreaView style={{flex: 1}}>
-        <View style={[styles.main, onGoBack ? null : styles.mainPadded]}>
+      <SafeAreaView style={styles.flex}>
+        <View style={[styles.flex, onGoBack ? null : styles.mainPadded]}>
           {onGoBack && (
             <TouchableOpacity onPress={onGoBack}>
               <Icon.Chevron direction="left" size={28} color={colors.icon} />
@@ -108,33 +108,33 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
-      flex: 1,
+      ...atoms.flex_1,
       ...atoms.p_lg,
     },
-    main: {
-      flex: 1,
+    flex: {
+      ...atoms.flex_1,
     },
     mainPadded: {
-      paddingTop: 25,
+      ...atoms.pt_lg,
     },
     heading: {
-      color: color.gray_cmin,
-      textAlign: 'center',
+      color: color.text_gray_max,
+      ...atoms.text_center,
       ...atoms.heading_3_medium,
     },
     subHeadingContainer: {
-      marginVertical: 10,
+      ...atoms.pt_md,
     },
     subHeading: {
-      color: color.gray_cmin,
-      textAlign: 'center',
+      color: color.text_gray_medium,
+      ...atoms.text_center,
     },
     imageContainer: {
-      marginVertical: 20,
+      ...atoms.py_lg,
       width: '100%',
       height: 200,
-      justifyContent: 'center',
-      alignItems: 'center',
+      ...atoms.justify_center,
+      ...atoms.align_center,
       backgroundColor: 'rgba(110, 110, 255, 0.4)',
       borderRadius: 8,
     },
@@ -143,27 +143,27 @@ const useStyles = () => {
       width: 120,
     },
     welcomeMessageContainer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
+      ...atoms.flex_1,
+      ...atoms.justify_center,
+      ...atoms.align_center,
     },
     welcomeMessageText: {
-      color: color.gray_cmin,
-      textAlign: 'center',
+      color: color.text_gray_normal,
+      ...atoms.text_center,
       fontSize: 50,
       lineHeight: 60,
     },
     actions: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+      ...atoms.flex_row,
+      ...atoms.justify_between,
     },
     action: {
-      flexDirection: 'column',
-      alignItems: 'stretch',
+      ...atoms.flex_row,
+      ...atoms.align_stretch,
     },
   })
   const colors = {
-    icon: color.white_static,
+    icon: color.el_gray_high,
   }
-  return {colors, styles}
+  return {colors, styles} as const
 }

@@ -8,11 +8,11 @@ export const ScreenBackground = ({children, style}: ViewProps) => {
 }
 
 const useStyles = () => {
-  const {color} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      backgroundColor: color.primary_c600,
+      backgroundColor: color.bg_color_high,
+      ...atoms.flex_1,
     },
   })
   return styles
