@@ -34,9 +34,9 @@ export const EnableEasyConfirmationScreen = () => {
   })
 
   return (
-    <SafeAreaView edges={['bottom']} style={styles.container}>
-      <KeyboardAvoidingView style={{flex: 1}}>
-        <ScrollView keyboardShouldPersistTaps="always" contentContainerStyle={styles.contentContainer}>
+    <KeyboardAvoidingView style={styles.root}>
+      <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.safeAreaView}>
+        <ScrollView keyboardShouldPersistTaps="always" contentContainerStyle={styles.content}>
           <Text style={styles.heading}>{strings.enableHeading}</Text>
 
           <Text style={styles.warning}>{strings.enableWarning}</Text>
@@ -61,10 +61,10 @@ export const EnableEasyConfirmationScreen = () => {
             shelleyTheme
           />
         </Actions>
-      </KeyboardAvoidingView>
+      </SafeAreaView>
 
       <LoadingOverlay loading={isLoading} />
-    </SafeAreaView>
+    </KeyboardAvoidingView>
   )
 }
 
@@ -115,25 +115,26 @@ const messages = defineMessages({
 const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: color.bg_color_high,
+    root: {
+      ...atoms.flex_1,
     },
-    contentContainer: {
-      padding: 16,
+    safeAreaView: {
+      backgroundColor: color.bg_color_high,
+      ...atoms.flex_1,
+    },
+    content: {
+      ...atoms.p_lg,
+      ...atoms.gap_lg,
     },
     heading: {
       ...atoms.body_1_lg_regular,
-      paddingBottom: 20,
     },
     warning: {
       color: color.sys_magenta_c500,
       ...atoms.body_2_md_regular,
-      paddingBottom: 20,
     },
     actions: {
-      paddingBottom: 16,
-      paddingHorizontal: 16,
+      ...atoms.p_lg,
     },
   })
 

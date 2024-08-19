@@ -22,12 +22,13 @@ export const EnableLoginWithOsScreen = () => {
         <Button
           key="cancel"
           disabled={isLoading}
-          outline
+          outlineShelley
           title={strings.notNowButton}
           onPress={() => navigation.goBack()}
           containerStyle={styles.cancel}
         />,
         <Button
+          shelleyTheme
           disabled={isLoading}
           key="link"
           title={strings.linkButton}
