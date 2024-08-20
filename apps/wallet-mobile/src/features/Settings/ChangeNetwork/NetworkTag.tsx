@@ -7,6 +7,7 @@ import {Button, Spacer, useModal} from '../../../components'
 import {Space} from '../../../components/Space/Space'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../kernel/navigation'
+import {availableNetworks} from '../../WalletManager/common/constants'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 import {networkConfigs} from '../../WalletManager/network-manager/network-manager'
 import {useStrings} from './strings'
@@ -37,13 +38,7 @@ export const NetworkTag = ({
 
   const onPress = () => {
     if (directChangeActive && selectedNetwork !== Chain.Network.Mainnet) {
-      const networks: Array<Chain.SupportedNetworks> = [
-        Chain.Network.Mainnet,
-        Chain.Network.Preprod,
-        Chain.Network.Sancho,
-      ]
-
-      const nextNetwork = networks[(networks.indexOf(selectedNetwork) + 1) % networks.length]
+      const nextNetwork = availableNetworks[(availableNetworks.indexOf(selectedNetwork) + 1) % availableNetworks.length]
 
       if (nextNetwork === Chain.Network.Mainnet) {
         openModal(
@@ -143,29 +138,29 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     headerTitleStyle: {
-      ...atoms.body_1_lg_medium,
       color: color.text_gray_normal,
-      flexShrink: 1,
+      ...atoms.body_1_lg_medium,
+      ...atoms.flex_shrink,
     },
     headerTitleContainerStyle: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
       width,
+      ...atoms.flex_row,
+      ...atoms.align_center,
+      ...atoms.justify_center,
     },
     tagContainer: {
       ...atoms.pl_sm,
       flexShrink: 0,
     },
     preprodTag: {
-      borderRadius: 1200,
       backgroundColor: color.sys_yellow_c500,
+      ...atoms.rounded_full,
       ...atoms.px_sm,
       ...atoms.py_xs,
     },
     sanchonetLabel: {
-      borderRadius: 1200,
       backgroundColor: color.el_secondary_medium,
+      ...atoms.rounded_full,
       ...atoms.px_sm,
       ...atoms.py_xs,
     },
@@ -184,5 +179,5 @@ const useStyles = () => {
     },
   })
 
-  return {styles}
+  return {styles} as const
 }
