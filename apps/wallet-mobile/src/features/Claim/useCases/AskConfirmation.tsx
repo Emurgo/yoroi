@@ -1,7 +1,6 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Platform, ScrollView, StyleSheet, Text, View, ViewProps} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../components/Button/Button'
 import {useModal} from '../../../components/Modal/ModalContext'
@@ -21,7 +20,7 @@ export const AskConfirmation = ({address, url, code, onContinue}: Props) => {
   const styles = useStyles()
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
+    <View style={styles.root}>
       <ScrollView contentContainerStyle={{flex: 1}} bounces={false}>
         <Text style={styles.warning}>{strings.addressSharingWarning}</Text>
 
@@ -54,7 +53,7 @@ export const AskConfirmation = ({address, url, code, onContinue}: Props) => {
 
         <Button title={strings.continue} onPress={onContinue} shelleyTheme block disabled={isLoading} />
       </Actions>
-    </SafeAreaView>
+    </View>
   )
 }
 
@@ -86,6 +85,7 @@ const useStyles = () => {
     actions: {
       ...atoms.flex_row,
       ...atoms.align_end,
+      ...atoms.pb_lg,
       minHeight: 48,
       maxHeight: 54,
     },
