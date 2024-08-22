@@ -300,7 +300,7 @@ export const portfolioApiMaker = ({
 
 export const apiConfig: ApiConfig = freeze(
   {
-    mainnet: {
+    [Chain.Network.Mainnet]: {
       tokenDiscovery: 'https://zero.yoroiwallet.com/tokens/discovery',
       tokenInfo: 'https://zero.yoroiwallet.com/tokens/info',
       tokenInfos: 'https://zero.yoroiwallet.com/tokens/info/multi',
@@ -309,7 +309,7 @@ export const apiConfig: ApiConfig = freeze(
       tokenPriceHistory:
         'https://add50d9d-76d7-47b7-b17f-e34021f63a02.mock.pstmn.io/v1/token-price-history',
     },
-    preprod: {
+    [Chain.Network.Preprod]: {
       tokenDiscovery:
         'https://yoroi-backend-zero-preprod.emurgornd.com/tokens/discovery',
       tokenInfo: 'https://yoroi-backend-zero-preprod.emurgornd.com/tokens/info',
@@ -322,7 +322,7 @@ export const apiConfig: ApiConfig = freeze(
       tokenPriceHistory:
         'https://add50d9d-76d7-47b7-b17f-e34021f63a02.mock.pstmn.io/v1/token-price-history',
     },
-    sancho: {
+    [Chain.Network.Sancho]: {
       tokenDiscovery:
         'https://yoroi-backend-zero-sanchonet.emurgornd.com/tokens/discovery',
       tokenInfo:
@@ -333,6 +333,19 @@ export const apiConfig: ApiConfig = freeze(
         'https://yoroi-backend-zero-sanchonet.emurgornd.com/tokens/nft/traits',
       tokenActivityUpdates:
         'https://yoroi-backend-zero-sanchonet.emurgornd.com/defi/token-activity',
+      tokenPriceHistory:
+        'https://add50d9d-76d7-47b7-b17f-e34021f63a02.mock.pstmn.io/v1/token-price-history',
+    },
+    [Chain.Network.Preview]: {
+      tokenDiscovery:
+        'https://yoroi-backend-zero-preview.emurgornd.com/tokens/discovery',
+      tokenInfo: 'https://yoroi-backend-zero-preview.emurgornd.com/tokens/info',
+      tokenInfos:
+        'https://yoroi-backend-zero-preview.emurgornd.com/tokens/info/multi',
+      tokenTraits:
+        'https://yoroi-backend-zero-preview.emurgornd.com/tokens/nft/traits',
+      tokenActivityUpdates:
+        'https://yoroi-backend-zero-preview.emurgornd.com/defi/token-activity',
       tokenPriceHistory:
         'https://add50d9d-76d7-47b7-b17f-e34021f63a02.mock.pstmn.io/v1/token-price-history',
     },
