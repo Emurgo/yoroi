@@ -38,6 +38,7 @@ export const useStrings = () => {
     transactionDetails: intl.formatMessage(messages.transactionDetails),
     total: intl.formatMessage(messages.total),
     transactionFailed: intl.formatMessage(messages.transactionFailed),
+    noFunds: intl.formatMessage(messages.noFunds),
     transactionFailedDescription: intl.formatMessage(messages.transactionFailedDescription),
     tryAgain: intl.formatMessage(messages.tryAgain),
     withdrawWarningTitle: intl.formatMessage(messages.withdrawWarningTitle),
@@ -192,6 +193,10 @@ const messages = defineMessages({
   transactionFailed: {
     id: 'components.governance.transactionFailed',
     defaultMessage: '!!!Transaction failed',
+  },
+  noFunds: {
+    id: 'components.governance.noFunds',
+    defaultMessage: '!!!To participate in governance you need to have ADA in your wallet',
   },
   transactionFailedDescription: {
     id: 'components.governance.transactionFailedDescription',

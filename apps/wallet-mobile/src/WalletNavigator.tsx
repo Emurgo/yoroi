@@ -14,7 +14,7 @@ import {TransferProvider} from '@yoroi/transfer'
 import {Swap} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Keyboard, Platform, StyleSheet} from 'react-native'
+import {Keyboard, Platform, StyleSheet, View} from 'react-native'
 
 import {Icon, OfflineBanner} from './components'
 import {DiscoverNavigator} from './features/Discover'
@@ -111,10 +111,13 @@ const WalletTabNavigator = () => {
             tabBarLabelStyle: styles.labelStyle,
             tabBarActiveTintColor: colors.active,
             tabBarInactiveTintColor: colors.inactive,
+            tabBarBackground: () => (
+              <View style={{...StyleSheet.absoluteFillObject, backgroundColor: colors.background}} />
+            ),
             tabBarStyle: {
               borderTopColor: colors.divider,
               borderTopWidth: 2 * StyleSheet.hairlineWidth,
-              backgroundColor: colors.background,
+
               // keyboardWillShow keyboardWillHiden dont work on android
               display: isKeyboardOpen ? 'none' : undefined,
             },

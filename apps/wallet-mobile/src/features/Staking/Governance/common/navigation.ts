@@ -18,6 +18,7 @@ export type Routes = {
   }
   'staking-gov-tx-success'?: {navigateToStaking?: boolean; kind: GovernanceVote['kind']}
   'staking-gov-tx-failed': undefined
+  'staking-gov-no-funds': undefined
 }
 
 export const NavigationStack = createStackNavigator<Routes>()
@@ -30,5 +31,6 @@ export const useNavigateTo = () => {
     confirmTx: (params: Routes['staking-gov-confirm-tx']) => navigation.navigate('staking-gov-confirm-tx', params),
     txSuccess: (params?: Routes['staking-gov-tx-success']) => navigation.navigate('staking-gov-tx-success', params),
     txFailed: () => navigation.navigate('staking-gov-tx-failed'),
+    noFunds: () => navigation.navigate('staking-gov-no-funds'),
   }).current
 }

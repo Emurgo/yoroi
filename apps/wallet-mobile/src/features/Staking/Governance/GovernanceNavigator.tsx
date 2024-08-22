@@ -7,6 +7,7 @@ import {defaultStackNavigationOptions} from '../../../kernel/navigation'
 import {NetworkTag} from '../../Settings/ChangeNetwork/NetworkTag'
 import {NavigationStack, useGovernanceManagerMaker, useStrings} from './common'
 import {ChangeVoteScreen, ConfirmTxScreen, FailedTxScreen, HomeScreen, SuccessTxScreen} from './useCases'
+import {NoFundsScreen} from './useCases/NoFunds/NoFundsScreen'
 
 const Stack = NavigationStack
 
@@ -45,6 +46,12 @@ export const GovernanceNavigator = () => {
           <Stack.Screen name="staking-gov-tx-success" component={SuccessTxScreen} options={txStatusOptions} />
 
           <Stack.Screen name="staking-gov-tx-failed" component={FailedTxScreen} options={txStatusOptions} />
+
+          <Stack.Screen
+            name="staking-gov-no-funds"
+            component={NoFundsScreen}
+            options={{title: strings.governanceCentreTitle}}
+          />
         </Stack.Navigator>
       </SafeArea>
     </GovernanceProvider>
