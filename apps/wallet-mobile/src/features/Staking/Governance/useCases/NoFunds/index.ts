@@ -1,1 +1,1 @@
-export {FailedTxScreen} from './NoFundsScreen'
+export {NoFundsScreen} from './NoFundsScreen'
