@@ -92,7 +92,7 @@ describe('dappConnectorApiMaker', () => {
       const fakeResult = {tag: 'right' as const, value: {data: await managerMock.getDAppList()}} as const
       const fakeFetchData = () => Promise.resolve(fakeResult)
       await expect(() =>
-        dappConnectorApiMaker({request: fakeFetchData as any}).getDApps({network: Chain.Network.Preview} as any),
+        dappConnectorApiMaker({request: fakeFetchData as any}).getDApps({network: Chain.Network.Testnet} as any),
       ).rejects.toThrow()
     })
   })
