@@ -1,6 +1,10 @@
 {
   "npmClient": "yarn",
   "version": "independent",
+  "changelogPreset": "angular",
+  "packages": [
+    "packages/explorers"
+  ],
   "command": {
     "run": {
       "ignore": ["e2e/*"]
