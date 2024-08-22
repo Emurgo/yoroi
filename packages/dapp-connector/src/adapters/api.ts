@@ -4,11 +4,12 @@ import {AxiosRequestConfig} from 'axios'
 import {z} from 'zod'
 import {Chain} from '@yoroi/types'
 
-const dappListHosts = {
-  mainnet: 'https://daehx1qv45z7c.cloudfront.net/data.json',
-  preprod: 'https://daehx1qv45z7c.cloudfront.net/preprod.json',
-  sancho: 'https://daehx1qv45z7c.cloudfront.net/sancho.json',
-} as const
+const dappListHosts: Readonly<Record<Chain.SupportedNetworks, string>> = freeze({
+  [Chain.Network.Mainnet]: 'https://daehx1qv45z7c.cloudfront.net/data.json',
+  [Chain.Network.Preprod]: 'https://daehx1qv45z7c.cloudfront.net/preprod.json',
+  [Chain.Network.Sancho]: 'https://daehx1qv45z7c.cloudfront.net/sancho.json',
+  [Chain.Network.Preview]: 'https://daehx1qv45z7c.cloudfront.net/preview.json',
+})
 
 const initialDeps = freeze({request: fetchData}, true)
 

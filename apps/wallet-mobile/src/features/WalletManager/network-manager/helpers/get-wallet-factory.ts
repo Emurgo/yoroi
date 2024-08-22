@@ -12,9 +12,11 @@ import {WalletFactory} from '../../common/types'
 const ShelleyWalletMainnet = makeCardanoWallet(networkManagers[Chain.Network.Mainnet], 'cardano-cip1852', MAINNET)
 const ShelleyWalletTestnet = makeCardanoWallet(networkManagers[Chain.Network.Preprod], 'cardano-cip1852', TESTNET)
 const ShelleySanchonetWallet = makeCardanoWallet(networkManagers[Chain.Network.Sancho], 'cardano-cip1852', SANCHONET)
+const ShelleyPreviewWallet = makeCardanoWallet(networkManagers[Chain.Network.Preview], 'cardano-cip1852', SANCHONET)
 const ByronWallet = makeCardanoWallet(networkManagers[Chain.Network.Mainnet], 'cardano-bip44', MAINNET)
 const ByronWalletTestnet = makeCardanoWallet(networkManagers[Chain.Network.Preprod], 'cardano-bip44', TESTNET)
 const ByronSanchonetWallet = makeCardanoWallet(networkManagers[Chain.Network.Sancho], 'cardano-bip44', SANCHONET)
+const ByronPreviewWallet = makeCardanoWallet(networkManagers[Chain.Network.Preview], 'cardano-bip44', SANCHONET)
 
 /**
  * Retrieves the wallet factory based on the network and implementation ID
@@ -44,6 +46,10 @@ export function getWalletFactory({
     [Chain.Network.Sancho]: /* cardano sanchonet */ {
       'cardano-cip1852': ShelleySanchonetWallet,
       'cardano-bip44': ByronSanchonetWallet,
+    },
+    [Chain.Network.Preview]: /* cardano preview */ {
+      'cardano-cip1852': ShelleyPreviewWallet,
+      'cardano-bip44': ByronPreviewWallet,
     },
   } as const)
 
