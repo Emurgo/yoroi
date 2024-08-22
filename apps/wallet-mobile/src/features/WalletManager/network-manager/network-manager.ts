@@ -109,15 +109,17 @@ export const networkConfigs: Readonly<Record<Chain.SupportedNetworks, Readonly<N
     legacyApiBaseUrl: 'https://sanchonet-backend.yoroiwallet.com/api',
   },
   // NOTE: not supported yet on mobile
-  // [Chain.Network.Preview]: {
-  //   network: Chain.Network.Preview,
-  //   primaryTokenInfo: primaryTokenInfoAnyTestnet,
-  //   chainId: 0,
-  //   protocolMagic: 2,
-  //   eras: [shelleyEraConfig],
-  //   name: 'Preview',
-  //   isMainnet: false,
-  // },
+  [Chain.Network.Preview]: {
+    network: Chain.Network.Preview,
+    primaryTokenInfo: primaryTokenInfoAnyTestnet,
+    chainId: 0,
+    protocolMagic: 2,
+    eras: [shelleyEraConfig],
+    name: 'Preview',
+    isMainnet: false,
+
+    legacyApiBaseUrl: 'https://preview-backend.emurgornd.com/api',
+  },
 })
 
 export function buildNetworkManagers({
