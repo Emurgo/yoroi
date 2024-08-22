@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/exchange",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "The Exchange package of Yoroi SDK",
   "keywords": [
     "yoroi",
@@ -129,8 +129,8 @@
     ]
   },
   "dependencies": {
-    "@yoroi/common": "1.5.3",
-    "@yoroi/types": "1.5.6"
+    "@yoroi/common": "^1.5.4",
+    "@yoroi/types": "^1.5.7"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",

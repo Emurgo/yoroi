@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/swap",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "The Swap package of Yoroi SDK",
   "keywords": [
     "yoroi",
@@ -149,10 +149,10 @@
     "@types/jest": "^29.5.12",
     "@types/react": "^18.2.55",
     "@types/react-test-renderer": "^18.0.7",
-    "@yoroi/api": "1.5.1",
-    "@yoroi/common": "1.5.3",
-    "@yoroi/portfolio": "1.0.1",
-    "@yoroi/types": "1.5.6",
+    "@yoroi/api": "^1.5.2",
+    "@yoroi/common": "^1.5.4",
+    "@yoroi/portfolio": "^1.0.2",
+    "@yoroi/types": "^1.5.7",
     "bignumber.js": "^9.0.1",
     "commitlint": "^17.0.2",
     "del-cli": "^5.0.0",

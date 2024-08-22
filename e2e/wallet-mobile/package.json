@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/e2e-wallet-mobile",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "e2e tests using detox + jest",
   "main": "index.js",
   "author": "Emurgo",

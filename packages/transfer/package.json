@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/transfer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "The Transfer package of Yoroi SDK",
   "keywords": [
     "yoroi",
@@ -138,7 +138,7 @@
     "@types/jest": "^29.5.12",
     "@types/react": "^18.2.55",
     "@types/react-test-renderer": "^18.0.7",
-    "@yoroi/types": "1.5.6",
+    "@yoroi/types": "^1.5.7",
     "commitlint": "^17.0.2",
     "del-cli": "^5.0.0",
     "dependency-cruiser": "^13.1.1",
