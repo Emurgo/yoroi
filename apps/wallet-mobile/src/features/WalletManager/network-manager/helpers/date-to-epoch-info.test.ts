@@ -1,3 +1,5 @@
+import {Chain} from '@yoroi/types'
+
 import {buildPortfolioTokenManagers} from '../../../Portfolio/common/helpers/build-token-managers'
 import {buildNetworkManagers, byronEraConfig, shelleyEraConfig, shelleyPreprodEraConfig} from '../network-manager'
 import {dateToEpochInfo} from './date-to-epoch-info'
@@ -8,7 +10,7 @@ describe('dateToEpochInfo', () => {
     tokenManagers: buildPortfolioTokenManagers().tokenManagers,
   })
   it('should return the correct epoch information', () => {
-    const convertDateToEpoch = dateToEpochInfo(networkManagers['mainnet'].eras)
+    const convertDateToEpoch = dateToEpochInfo(networkManagers[Chain.Network.Mainnet].eras)
 
     const inputDate = new Date('2024-05-14T12:30:00Z')
     const expectedOutput = {
@@ -24,7 +26,7 @@ describe('dateToEpochInfo', () => {
   })
 
   it('should throw an error for a date before the start of the known eras', () => {
-    const convertDateToEpoch = dateToEpochInfo(networkManagers['mainnet'].eras)
+    const convertDateToEpoch = dateToEpochInfo(networkManagers[Chain.Network.Mainnet].eras)
 
     const inputDate = new Date('1998-12-31T23:59:59Z')
 
@@ -32,7 +34,7 @@ describe('dateToEpochInfo', () => {
   })
 
   it('should return the first byron epoch - 0', () => {
-    const convertDateToEpoch = dateToEpochInfo(networkManagers['mainnet'].eras)
+    const convertDateToEpoch = dateToEpochInfo(networkManagers[Chain.Network.Mainnet].eras)
 
     const inputDate = new Date(1506203091000)
     const expectedOutput = {
@@ -48,7 +50,7 @@ describe('dateToEpochInfo', () => {
   })
 
   it('should return the last byron epoch - 207', () => {
-    const convertDateToEpoch = dateToEpochInfo(networkManagers['mainnet'].eras)
+    const convertDateToEpoch = dateToEpochInfo(networkManagers[Chain.Network.Mainnet].eras)
 
     const inputDate = new Date('2020-07-29T21:44:50.000Z')
     const expectedOutput = {
@@ -64,7 +66,7 @@ describe('dateToEpochInfo', () => {
   })
 
   it('should return the first shelley epoch - 208', () => {
-    const convertDateToEpoch = dateToEpochInfo(networkManagers['mainnet'].eras)
+    const convertDateToEpoch = dateToEpochInfo(networkManagers[Chain.Network.Mainnet].eras)
 
     const inputDate = new Date('2020-07-29T21:44:51.000Z')
 

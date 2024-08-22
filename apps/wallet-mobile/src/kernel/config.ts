@@ -10,6 +10,7 @@ export const governaceAfterBlock = freeze({
   // TODO: Add block number once known
   [Chain.Network.Mainnet]: Infinity,
   [Chain.Network.Preprod]: Infinity,
+  [Chain.Network.Preview]: Infinity,
 })
 
 export const agreementDate = 1691967600000
