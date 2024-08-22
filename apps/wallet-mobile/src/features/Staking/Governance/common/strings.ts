@@ -41,6 +41,8 @@ export const useStrings = () => {
     noFunds: intl.formatMessage(messages.noFunds),
     transactionFailedDescription: intl.formatMessage(messages.transactionFailedDescription),
     tryAgain: intl.formatMessage(messages.tryAgain),
+    buyAda: intl.formatMessage(messages.buyAda),
+    goToFaucet: intl.formatMessage(messages.goToFaucet),
     withdrawWarningTitle: intl.formatMessage(messages.withdrawWarningTitle),
     withdrawWarningDescription: intl.formatMessage(messages.withdrawWarningDescription),
     withdrawWarningButton: intl.formatMessage(messages.withdrawWarningButton),
@@ -205,6 +207,14 @@ const messages = defineMessages({
   tryAgain: {
     id: 'components.governance.tryAgain',
     defaultMessage: '!!!Try again',
+  },
+  buyAda: {
+    id: 'components.governance.buyAda',
+    defaultMessage: '!!!Buy ada',
+  },
+  goToFaucet: {
+    id: 'components.governance.goToFaucet',
+    defaultMessage: '!!!Go to tada faucet',
   },
   withdrawWarningTitle: {
     id: 'components.governance.withdrawWarningTitle',

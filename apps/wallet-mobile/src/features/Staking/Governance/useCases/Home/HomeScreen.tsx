@@ -218,7 +218,11 @@ const NeverParticipatedInGovernanceVariant = () => {
 
   const createGovernanceTxMutation = useCreateGovernanceTx(wallet, {
     useErrorBoundary: (error) => !(error instanceof NotEnoughMoneyToSendError),
-    onError: () => navigateTo.noFunds(),
+    onError: (error) => {
+      if (error instanceof NotEnoughMoneyToSendError) {
+        navigateTo.noFunds()
+      }
+    },
   })
 
   const openDRepIdModal = (onSubmit: (drepId: string) => void) => {

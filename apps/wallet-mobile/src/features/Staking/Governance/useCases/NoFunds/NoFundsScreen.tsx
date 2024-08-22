@@ -1,21 +1,40 @@
+import {useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
+import {Chain} from '@yoroi/types'
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {Linking, StyleSheet, View} from 'react-native'
 
 import {Button, Text} from '../../../../../components'
 import {SafeArea} from '../../../../../components/SafeArea'
 import {Space} from '../../../../../components/Space/Space'
-import {useNavigateTo, useStrings} from '../../common'
+import {TxHistoryRouteNavigation} from '../../../../../kernel/navigation'
+import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
+import {useStrings} from '../../common'
 import {NoFunds} from '../../illustrations'
 
 export const NoFundsScreen = () => {
   const strings = useStrings()
-  const navigate = useNavigateTo()
+  const navigation = useNavigation<TxHistoryRouteNavigation>()
   const styles = useStyles()
+  const {
+    selected: {network},
+  } = useWalletManager()
 
   const handleOnTryAgain = () => {
-    navigate.home()
+    if (network === Chain.Network.Sancho) {
+      Linking.openURL('https://sancho.network/faucet/')
+      return
+    }
+
+    if (network === Chain.Network.Preprod) {
+      Linking.openURL('https://sancho.network/faucet/')
+      return
+    }
+
+    navigation.navigate('exchange-create-order')
   }
+
+  const buttonText = network === Chain.Network.Mainnet ? strings.buyAda : strings.goToFaucet
 
   return (
     <SafeArea style={styles.root}>
@@ -28,7 +47,7 @@ export const NoFundsScreen = () => {
 
         <Space height="lg" />
 
-        <Button title={strings.tryAgain} textStyles={styles.button} shelleyTheme onPress={handleOnTryAgain} />
+        <Button title={buttonText} textStyles={styles.button} shelleyTheme onPress={handleOnTryAgain} />
       </View>
     </SafeArea>
   )
@@ -50,11 +69,13 @@ const useStyles = () => {
     },
     title: {
       ...atoms.heading_3_medium,
+      ...atoms.text_center,
+      maxWidth: 320,
       color: color.gray_cmax,
     },
     button: {
-      paddingHorizontal: 24,
-      paddingVertical: 15,
+      ...atoms.px_xl,
+      ...atoms.py_lg,
     },
   })
 
