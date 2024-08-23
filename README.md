@@ -44,6 +44,7 @@ To install the Yoroi wallet on your mobile device:
 8. **Portfolio Overview**: Easily review and manage information about your ADA and other tokens with a comprehensive portfolio dashboard.
 9. **Catalyst Voting**: Participate in Project Catalyst by voting on Cardano governance proposals directly from the Yoroi wallet.
 10. **Stake to Pools**: Delegate your ADA to staking pools directly from Yoroi to earn rewards while supporting the network's security and decentralization.
+11. **DApp Connector**: Securely connect your wallet to decentralized applications with a single click, enabling seamless interactions and transactions across the blockchain ecosystem.
 
 ## Packages
 
