@@ -36,7 +36,7 @@ export const PortfolioWalletTokenList = () => {
   const {
     wallet: {balances, portfolioPrimaryTokenInfo},
   } = useSelectedWallet()
-  const {tokenActivity} = usePortfolioTokenActivity()
+  const {tokenActivity, isLoading} = usePortfolioTokenActivity()
 
   const amount = React.useMemo(
     () =>
@@ -49,16 +49,9 @@ export const PortfolioWalletTokenList = () => {
   )
 
   const tokensList = React.useMemo(() => balances.fts ?? [], [balances.fts])
+  const isJustPt = tokensList.length === 1 && isPrimaryToken(tokensList[0].info)
 
-  const tokensLoading = !tokenActivity
-
-  const isJustADA = React.useMemo(() => {
-    if (tokensList.length >= 2) return false
-    const tokenInfo = tokensList[0].info
-    const isPrimary = isPrimaryToken(tokenInfo)
-    return isPrimary
-  }, [tokensList])
-  const isFirstUser = isJustADA && isZeroADABalance
+  const isFirstUser = isJustPt && isZeroADABalance
 
   const getListTokens = React.useMemo(() => {
     if (isSearching) {
@@ -92,7 +85,7 @@ export const PortfolioWalletTokenList = () => {
 
   const renderFooterList = () => {
     if (isSearching) return null
-    if (tokensLoading) {
+    if (isLoading) {
       return (
         <View>
           <Spacer height={16} />
@@ -112,7 +105,7 @@ export const PortfolioWalletTokenList = () => {
         </View>
       )
     }
-    if (isJustADA)
+    if (isJustPt)
       return (
         <View>
           <Spacer height={16} />
@@ -189,8 +182,8 @@ const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      ...atoms.flex_1,
       backgroundColor: color.bg_color_high,
+      ...atoms.flex_1,
     },
     textAvailable: {
       color: color.gray_c700,

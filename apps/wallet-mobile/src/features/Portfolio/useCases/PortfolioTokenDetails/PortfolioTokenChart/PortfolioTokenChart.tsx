@@ -2,9 +2,10 @@ import {useTheme} from '@yoroi/theme'
 import React, {useCallback, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import useGetPortfolioTokenChart, {
+import {
   type TokenChartInterval,
   TOKEN_CHART_INTERVAL,
+  useGetPortfolioTokenChart,
 } from '../../../common/useGetPortfolioTokenChart'
 import {PortfolioTokenChartSkeleton} from './PortfolioTokenChartSkeleton'
 import {TokenChart} from './TokenChart'

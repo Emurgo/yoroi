@@ -18,7 +18,7 @@ export const BalanceCard = () => {
   const {
     wallet: {balances, portfolioPrimaryTokenInfo},
   } = useSelectedWallet()
-  const {tokenActivity} = usePortfolioTokenActivity()
+  const {tokenActivity, isLoading} = usePortfolioTokenActivity()
 
   const amount = React.useMemo(
     () =>
@@ -31,17 +31,15 @@ export const BalanceCard = () => {
   )
 
   const name = infoExtractName(portfolioPrimaryTokenInfo)
-  const price = useCurrencyPairing().adaPrice.price
+  const price = useCurrencyPairing().ptActivity.close
   const hasDApps = false
-
-  const isFetching = price === undefined || tokenActivity === undefined
 
   return (
     <View style={styles.root}>
-      {isFetching ? (
+      {isLoading ? (
         <BalanceCardSkeleton />
       ) : (
-        <LinearGradient style={styles.gradientRoot} colors={colors.gradientColor}>
+        <LinearGradient style={styles.gradientRoot} colors={colors.gradient}>
           <BalanceCardContent
             amount={amount}
             headerCard={<BalanceHeaderCard rate={price} name={name} hasDApps={hasDApps} />}
@@ -65,8 +63,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    gradientColor: color.bg_gradient_3,
-    white: color.white_static,
+    gradient: color.bg_gradient_3,
   }
 
   return {styles, colors} as const

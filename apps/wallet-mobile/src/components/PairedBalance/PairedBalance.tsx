@@ -49,28 +49,28 @@ const Price = ({amount, textStyle, ignorePrivacy, hidePrimaryPair}: Props) => {
   const {
     currency: selectedCurrency,
     config,
-    adaPrice: {price: adaPrice},
+    ptActivity: {close: ptPrice},
   } = useCurrencyPairing()
   const {tokenActivity} = usePortfolioTokenActivity()
 
   const price = React.useMemo(() => {
-    const tokenPrice = tokenActivity?.[amount.info.id]?.price24h?.close
+    const tokenPrice = tokenActivity[amount.info.id]?.price.close
 
     const showingAda = isPrimaryTokenActive && amount.info.id !== portfolioPrimaryTokenInfo.id
     const currency = showingAda ? portfolioPrimaryTokenInfo.ticker : selectedCurrency
     const decimals = showingAda ? portfolioPrimaryTokenInfo.decimals : config.decimals
 
-    if (adaPrice == null) return `... ${currency}`
+    if (ptPrice == null) return `... ${currency}`
 
     if (isPrivacyActive && !ignorePrivacy) return `${privacyPlaceholder} ${currency}`
 
-    if (!isPrimaryToken(amount.info) && !tokenPrice) return `—— ${currency}`
+    if (!isPrimaryToken(amount.info) && tokenPrice == null) return `—— ${currency}`
 
     if (hidePrimaryPair && isPrimaryToken(amount.info) && isPrimaryTokenActive) return ''
 
     return `${amountBreakdown(amount)
       .bn.times(tokenPrice ?? 1)
-      .times(showingAda ? 1 : adaPrice)
+      .times(showingAda ? 1 : ptPrice)
       .toFormat(decimals)} ${currency}`
   }, [
     tokenActivity,
@@ -81,7 +81,7 @@ const Price = ({amount, textStyle, ignorePrivacy, hidePrimaryPair}: Props) => {
     portfolioPrimaryTokenInfo.decimals,
     selectedCurrency,
     config.decimals,
-    adaPrice,
+    ptPrice,
     isPrivacyActive,
     ignorePrivacy,
     privacyPlaceholder,

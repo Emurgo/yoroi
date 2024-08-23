@@ -3,14 +3,14 @@ import React from 'react'
 import {useMutation, UseMutationOptions, useQuery, useQueryClient} from 'react-query'
 
 import {configCurrencies, supportedCurrencies} from '../../../kernel/constants'
-import {useAdaPrice} from '../../../yoroi-wallets/cardano/useAdaPrice'
+import {usePrimaryTokenActivity} from '../../../yoroi-wallets/cardano/usePrimaryTokenActivity'
 import {ConfigCurrencies, CurrencySymbol} from '../../../yoroi-wallets/types'
 
 const CurrencyContext = React.createContext<undefined | CurrencyContext>(undefined)
 export const CurrencyProvider = ({children}: {children: React.ReactNode}) => {
   const currency = useCurrency()
   const selectCurrency = useSaveCurrency()
-  const adaPrice = useAdaPrice({to: currency})
+  const {ptActivity, isLoading} = usePrimaryTokenActivity({to: currency})
   const value = React.useMemo(
     () => ({
       currency,
@@ -18,9 +18,10 @@ export const CurrencyProvider = ({children}: {children: React.ReactNode}) => {
       supportedCurrencies,
       configCurrencies,
       config: configCurrencies[currency],
-      adaPrice,
+      ptActivity,
+      isLoading,
     }),
-    [adaPrice, currency, selectCurrency],
+    [currency, selectCurrency, ptActivity, isLoading],
   )
 
   return <CurrencyContext.Provider value={value}>{children}</CurrencyContext.Provider>
@@ -67,7 +68,7 @@ const useSaveCurrency = ({onSuccess, ...options}: UseMutationOptions<void, Error
   return mutation.mutate
 }
 
-const defaultCurrency = supportedCurrencies.USD as CurrencySymbol
+const defaultCurrency: CurrencySymbol = supportedCurrencies.USD
 type SaveCurrencySymbol = ReturnType<typeof useSaveCurrency>
 type CurrencyContext = {
   currency: CurrencySymbol
@@ -76,11 +77,12 @@ type CurrencyContext = {
 
   supportedCurrencies: typeof supportedCurrencies
   configCurrencies: ConfigCurrencies
-  adaPrice: {
-    time: number
-    price: number
-    previous: number
+  ptActivity: {
+    ts: number
+    close: number
+    open: number
   }
+  isLoading: boolean
 }
 
 const parseCurrencySymbol = (data: unknown) => {

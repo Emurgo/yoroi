@@ -21,14 +21,14 @@ export const BalanceCardContent = ({amount, headerCard}: Props) => {
   const {isPrivacyActive, setPrivacyModeOff, setPrivacyModeOn} = usePrivacyMode()
 
   const {
-    adaPrice: {price, previous},
+    ptActivity: {close, open},
     config,
   } = useCurrencyPairing()
 
-  const {changeValue, changePercent, variantPnl} = priceChange(previous, price)
+  const {changeValue, changePercent, variantPnl} = priceChange(open, close)
 
   const togglePrivacyMode = () => {
-    if (isPrivacyActive === true) {
+    if (isPrivacyActive) {
       setPrivacyModeOn()
     } else {
       setPrivacyModeOff()

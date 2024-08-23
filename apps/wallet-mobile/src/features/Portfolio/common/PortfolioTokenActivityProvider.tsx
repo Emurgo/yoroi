@@ -1,5 +1,7 @@
 import {invalid, isNonNullable} from '@yoroi/common'
+import {isPrimaryToken} from '@yoroi/portfolio'
 import {Portfolio} from '@yoroi/types'
+import {freeze, produce} from 'immer'
 import React from 'react'
 import {useQuery, useQueryClient} from 'react-query'
 import {merge, switchMap} from 'rxjs'
@@ -10,14 +12,58 @@ import {useSelectedNetwork} from '../../WalletManager/common/hooks/useSelectedNe
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 
 const queryKey = [queryInfo.keyToPersist, 'portfolioTokenActivity']
-const useTokenActivity = () => {
+const defaultPortfolioTokenActivityState: PortfolioTokenActivityState = freeze(
+  {
+    secondaryTokenIds: [],
+    aggregatedBalances: {},
+    tokenActivity: {},
+    activityWindow: Portfolio.Token.ActivityWindow.OneDay,
+    isLoading: false,
+  },
+  true,
+)
+const PortfolioTokenActivityContext = React.createContext<PortfolioTokenActivityState>({
+  ...defaultPortfolioTokenActivityState,
+})
+
+type Props = {
+  children: React.ReactNode
+}
+
+export const PortfolioTokenActivityProvider = ({children}: Props) => {
   const {walletManager} = useWalletManager()
   const {
     networkManager: {tokenManager},
   } = useSelectedNetwork()
-  const [aggregatedBalances, setAggregatedBalances] = React.useState<Portfolio.Token.AmountRecords>()
-  const [tokenIds, setTokenIds] = React.useState<Portfolio.Token.Id[]>()
   const queryClient = useQueryClient()
+  const [state, dispatch] = React.useReducer(portfolioTokenActivityReducer, defaultPortfolioTokenActivityState)
+
+  const actions = React.useRef<PortfolioTokenActivityActions>({
+    aggregatedBalancesChanged: (aggregatedBalances) => {
+      dispatch({
+        type: PortfolioTokenActivityActionType.AggregatedBalancesChanged,
+        aggregatedBalances,
+      })
+    },
+    secondaryTokenIdsChanged: (secondaryTokenIds) => {
+      dispatch({
+        type: PortfolioTokenActivityActionType.SecondaryTokenIdsChanged,
+        secondaryTokenIds,
+      })
+    },
+    tokenActivityChanged: (tokenActivity) => {
+      dispatch({
+        type: PortfolioTokenActivityActionType.TokenActivityChanged,
+        tokenActivity,
+      })
+    },
+    activityWindowChanged: (activityWindow) => {
+      dispatch({
+        type: PortfolioTokenActivityActionType.ActivityWindowChanged,
+        activityWindow,
+      })
+    },
+  }).current
 
   React.useEffect(() => {
     /**
@@ -51,17 +97,17 @@ const useTokenActivity = () => {
           return amounts
         }, {})
 
-      setAggregatedBalances(aggregatedBalances)
-      setTokenIds(Object.keys(aggregatedBalances) as Portfolio.Token.Id[])
+      actions.aggregatedBalancesChanged(aggregatedBalances)
+      actions.secondaryTokenIdsChanged(Object.keys(aggregatedBalances).filter(isPrimaryToken) as Portfolio.Token.Id[])
 
-      queryClient.invalidateQueries({queryKey})
+      queryClient.invalidateQueries([queryKey])
     })
 
     return () => subscription.unsubscribe()
-  }, [queryClient, walletManager])
+  }, [actions, queryClient, walletManager])
 
   const query = useQuery({
-    enabled: tokenIds != null && tokenIds.length > 0,
+    enabled: state.secondaryTokenIds.length > 0,
     staleTime: time.oneMinute,
     cacheTime: time.fiveMinutes,
     retryDelay: time.oneSecond,
@@ -69,27 +115,23 @@ const useTokenActivity = () => {
     refetchInterval: time.oneMinute,
     queryKey,
     queryFn: async () => {
-      if (tokenIds == null || tokenIds.length === 0) return
+      if (state.secondaryTokenIds == null || state.secondaryTokenIds.length === 0) return
 
-      const response = await tokenManager.api.tokenActivityUpdates(tokenIds)
+      const response = await tokenManager.api.tokenActivity(state.secondaryTokenIds, state.activityWindow)
+
       if (response.tag === 'left') throw response.error
       return response.value.data
     },
   })
 
-  const tokenActivity = query.isError ? {} : query.data
+  React.useEffect(() => {
+    if (query.data == null) return
 
-  return {aggregatedBalances, tokenActivity}
-}
+    actions.tokenActivityChanged(query.data)
+  }, [actions, query.data])
 
-const PortfolioTokenActivityContext = React.createContext<undefined | PortfolioTokenActivityContext>(undefined)
+  const value = React.useMemo(() => ({...state, isLoading: query.isLoading}), [query.isLoading, state])
 
-type Props = {
-  children: React.ReactNode
-}
-
-export const PortfolioTokenActivityProvider = ({children}: Props) => {
-  const value = useTokenActivity()
   return <PortfolioTokenActivityContext.Provider value={value}>{children}</PortfolioTokenActivityContext.Provider>
 }
 
@@ -97,7 +139,64 @@ export const usePortfolioTokenActivity = () =>
   React.useContext(PortfolioTokenActivityContext) ??
   invalid('usePortfolioTokenActiviy requires PortfolioTokenActivitiyProvider')
 
-type PortfolioTokenActivityContext = {
-  aggregatedBalances?: Portfolio.Token.AmountRecords
-  tokenActivity?: Portfolio.Api.TokenActivityResponse
+type PortfolioTokenActivityState = Readonly<{
+  secondaryTokenIds: Portfolio.Token.Id[]
+  aggregatedBalances: Portfolio.Token.AmountRecords
+  tokenActivity: Portfolio.Api.TokenActivityResponse
+  activityWindow: Portfolio.Token.ActivityWindow
+  isLoading: boolean
+}>
+
+export enum PortfolioTokenActivityActionType {
+  AggregatedBalancesChanged = 'AggregatedBalancesChanged',
+  SecondaryTokenIdsChanged = 'SecondaryTokenIdsChanged',
+  TokenActivityChanged = 'TokenActivityChanged',
+  ActivityWindowChanged = 'ActivityWindowChanged',
 }
+
+export type PortfolioTokenActivityAction =
+  | {
+      type: PortfolioTokenActivityActionType.AggregatedBalancesChanged
+      aggregatedBalances: Portfolio.Token.AmountRecords
+    }
+  | {
+      type: PortfolioTokenActivityActionType.SecondaryTokenIdsChanged
+      secondaryTokenIds: Portfolio.Token.Id[]
+    }
+  | {
+      type: PortfolioTokenActivityActionType.TokenActivityChanged
+      tokenActivity: Portfolio.Api.TokenActivityResponse
+    }
+  | {
+      type: PortfolioTokenActivityActionType.ActivityWindowChanged
+      activityWindow: Portfolio.Token.ActivityWindow
+    }
+
+export const portfolioTokenActivityReducer = (
+  state: PortfolioTokenActivityState,
+  action: PortfolioTokenActivityAction,
+): PortfolioTokenActivityState => {
+  return produce(state, (draft) => {
+    switch (action.type) {
+      case PortfolioTokenActivityActionType.AggregatedBalancesChanged:
+        draft.aggregatedBalances = action.aggregatedBalances
+        break
+      case PortfolioTokenActivityActionType.SecondaryTokenIdsChanged:
+        draft.secondaryTokenIds = action.secondaryTokenIds
+        break
+      case PortfolioTokenActivityActionType.TokenActivityChanged:
+        draft.tokenActivity = action.tokenActivity
+        break
+      case PortfolioTokenActivityActionType.ActivityWindowChanged:
+        draft.activityWindow = action.activityWindow
+        break
+    }
+  })
+}
+
+export type PortfolioTokenActivityActions = Readonly<{
+  aggregatedBalancesChanged: (aggregatedBalances: Portfolio.Token.AmountRecords) => void
+  secondaryTokenIdsChanged: (secondaryTokenIds: Portfolio.Token.Id[]) => void
+  tokenActivityChanged: (tokenActivity: Portfolio.Api.TokenActivityResponse) => void
+  activityWindowChanged: (activityWindow: Portfolio.Token.ActivityWindow) => void
+}>
