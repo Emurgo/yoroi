@@ -237,6 +237,8 @@ const getStories = () => {
     "./src/features/Staking/Governance/useCases/EnterDrepIdModal/EnterDrepIdModal.stories.tsx": require("../src/features/Staking/Governance/useCases/EnterDrepIdModal/EnterDrepIdModal.stories.tsx"),
     "./src/features/Staking/Governance/useCases/FailedTx/FailedTxScreen.stories.tsx": require("../src/features/Staking/Governance/useCases/FailedTx/FailedTxScreen.stories.tsx"),
     "./src/features/Staking/Governance/useCases/Home/HomeScreen.stories.tsx": require("../src/features/Staking/Governance/useCases/Home/HomeScreen.stories.tsx"),
+    "./src/features/Staking/Governance/useCases/NoFunds/NoFundsScreen.stories.tsx": require("../src/features/Staking/Governance/useCases/NoFunds/NoFundsScreen.stories.tsx"),
+    "./src/features/Staking/Governance/useCases/NotSupportedCardanoAppVersion/NotSupportedCardanoAppVersion.stories.tsx": require("../src/features/Staking/Governance/useCases/NotSupportedCardanoAppVersion/NotSupportedCardanoAppVersion.stories.tsx"),
     "./src/features/Staking/Governance/useCases/SuccessTx/SuccessTxScreen.stories.tsx": require("../src/features/Staking/Governance/useCases/SuccessTx/SuccessTxScreen.stories.tsx"),
     "./src/features/Swap/common/AmountCard/AmountCard.stories.tsx": require("../src/features/Swap/common/AmountCard/AmountCard.stories.tsx"),
     "./src/features/Swap/common/ButtonGroup/ButtonGroup.stories.tsx": require("../src/features/Swap/common/ButtonGroup/ButtonGroup.stories.tsx"),
