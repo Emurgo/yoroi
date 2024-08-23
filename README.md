@@ -6,7 +6,6 @@
 
 - [Features](#features)
 - [Installation](#installation)
-- [Usage](#usage)
 - [Packages](#packages)
 - [Contributing](#contributing)
 - [Development](#development)
