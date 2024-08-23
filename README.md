@@ -19,8 +19,8 @@
 - **Cross-Platform**: Available as a mobile app for iOS and Android.
 - **Hardware Wallet Support**: Compatible with Ledger hardware wallets for added security.
 - **Open Source**: Fully open-source software under the Apache License.
-- **Create a New Wallet**: After installing Yoroi, open the app and select "Create Wallet." Follow the instructions to set up a new wallet.
-- **Restore an Existing Wallet**: If you have an existing wallet, choose "Restore Wallet" and enter your recovery phrase.
+- **Create a New Wallet**: Yoroi allows users to easily set up a new digital wallet for storing and managing their assets.
+- **Restore an Existing Wallet**: Users can recover their existing wallets in Yoroi by entering their unique recovery phrase, regaining access to their funds.
 - **Multiple Wallets**: Manage multiple wallets with ease.
 - **Send and Receive ADA**: Use the "Send" and "Receive" tabs to manage your ADA transactions.
 - **Swap**: Instantly exchange ADA for other cryptocurrencies directly within the Yoroi wallet.
