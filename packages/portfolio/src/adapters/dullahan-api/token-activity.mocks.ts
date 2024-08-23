@@ -1,8 +1,9 @@
+import {Api} from '@yoroi/types'
 import {tokenInfoMocks} from '../token-info.mocks'
-import {DullahanApiTokenActivityUpdatesResponse} from './types'
+import {DullahanApiTokenActivityResponse} from './types'
 
 const primaryETH = {
-  price24h: {
+  price: {
     ts: 1722849529169,
     open: '1000000',
     close: '500000',
@@ -13,7 +14,7 @@ const primaryETH = {
 }
 
 const rnftWhatever = {
-  price24h: {
+  price: {
     ts: 1722849529169,
     open: '500000',
     close: '1000000',
@@ -24,7 +25,7 @@ const rnftWhatever = {
 }
 
 const ftNoTicker = {
-  price24h: {
+  price: {
     ts: 1722849529169,
     open: '1000000',
     close: '500000',
@@ -35,7 +36,7 @@ const ftNoTicker = {
 }
 
 const ftNameless = {
-  price24h: {
+  price: {
     ts: 1722849529169,
     open: '500000',
     close: '1000000',
@@ -45,13 +46,12 @@ const ftNameless = {
   },
 }
 
-const apiResponseSuccessDataOnly: Readonly<DullahanApiTokenActivityUpdatesResponse> =
-  {
-    [tokenInfoMocks.primaryETH.id]: primaryETH,
-    [tokenInfoMocks.rnftWhatever.id]: rnftWhatever,
-    [tokenInfoMocks.ftNoTicker.id]: ftNoTicker,
-    [tokenInfoMocks.ftNameless.id]: ftNameless,
-  }
+const apiResponseSuccessDataOnly: Readonly<DullahanApiTokenActivityResponse> = {
+  [tokenInfoMocks.primaryETH.id]: [Api.HttpStatusCode.Ok, primaryETH],
+  [tokenInfoMocks.rnftWhatever.id]: [Api.HttpStatusCode.Ok, rnftWhatever],
+  [tokenInfoMocks.ftNoTicker.id]: [Api.HttpStatusCode.Ok, ftNoTicker],
+  [tokenInfoMocks.ftNameless.id]: [Api.HttpStatusCode.Ok, ftNameless],
+}
 
 export const duallahanTokenActivityUpdatesMocks = {
   primaryETH,

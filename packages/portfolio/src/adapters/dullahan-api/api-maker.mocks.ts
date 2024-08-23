@@ -64,7 +64,7 @@ const success: Portfolio.Api.Api = {
   tokenInfo: responseTokenInfoMocks.success,
   tokenInfos: responseTokenInfosMocks.success,
   tokenTraits: responseTokenTraits.success,
-  tokenActivityUpdates: responseTokenActivity.success,
+  tokenActivity: responseTokenActivity.success,
 }
 
 const delayed: Portfolio.Api.Api = {
@@ -72,7 +72,7 @@ const delayed: Portfolio.Api.Api = {
   tokenInfo: responseTokenInfoMocks.delayed,
   tokenInfos: responseTokenInfosMocks.delayed,
   tokenTraits: responseTokenTraits.delayed,
-  tokenActivityUpdates: responseTokenActivity.delayed,
+  tokenActivity: responseTokenActivity.delayed,
 }
 
 const loading: Portfolio.Api.Api = {
@@ -80,7 +80,7 @@ const loading: Portfolio.Api.Api = {
   tokenInfo: responseTokenInfoMocks.loading,
   tokenInfos: responseTokenInfosMocks.loading,
   tokenTraits: responseTokenTraits.loading,
-  tokenActivityUpdates: responseTokenActivity.loading,
+  tokenActivity: responseTokenActivity.loading,
 }
 
 const error: Portfolio.Api.Api = {
@@ -120,7 +120,7 @@ const error: Portfolio.Api.Api = {
         responseData: {message: 'Bad Request'},
       },
     }),
-  tokenActivityUpdates: () =>
+  tokenActivity: () =>
     Promise.resolve({
       tag: 'left',
       error: {
@@ -136,7 +136,7 @@ const empty: Portfolio.Api.Api = {
   tokenInfo: responseTokenInfoMocks.empty,
   tokenInfos: responseTokenInfosMocks.empty,
   tokenTraits: responseTokenTraits.empty,
-  tokenActivityUpdates: responseTokenActivity.empty,
+  tokenActivity: responseTokenActivity.empty,
 }
 
 export const portfolioApiMock = freeze(
