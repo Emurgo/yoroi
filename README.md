@@ -19,7 +19,7 @@
 - **Fast Transactions**: Easily send and receive ADA with fast transaction speeds.
 - **Cross-Platform**: Available as a mobile app for iOS and Android.
 - **Multiple Wallets**: Manage multiple wallets with ease.
-- **Hardware Wallet Support**: Compatible with Ledger and Trezor hardware wallets for added security.
+- **Hardware Wallet Support**: Compatible with Ledger hardware wallets for added security.
 - **Open Source**: Fully open-source software under the Apache License.
 
 ## Installation
