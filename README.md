@@ -47,7 +47,7 @@ To install the Yoroi wallet on your mobile device:
 
 ## Packages
 
-Yoroi is a multi-repository project. You can review the packages in the [packages](https://github.com/Emurgo/yoroi/tree/develop/packages) folder.
+Yoroi is a multi-repository project. Review the packages in the [packages](https://github.com/Emurgo/yoroi/tree/develop/packages) folder.
 
 ## Contributing
 
