@@ -6,6 +6,7 @@
 
 - [Features](#features)
 - [Installation](#installation)
+- [Usage](#usage)
 - [Packages](#packages)
 - [Contributing](#contributing)
 - [Development](#development)
@@ -17,9 +18,12 @@
 - **Secure**: Your private keys are encrypted and never shared with our servers or third parties.
 - **Fast Transactions**: Easily send and receive ADA with fast transaction speeds.
 - **Cross-Platform**: Available as a mobile app for iOS and Android.
-- **Multiple Wallets**: Manage multiple wallets with ease.
 - **Hardware Wallet Support**: Compatible with Ledger hardware wallets for added security.
 - **Open Source**: Fully open-source software under the Apache License.
+- **Create a New Wallet**: After installing Yoroi, open the app and select "Create Wallet." Follow the instructions to set up a new wallet.
+- **Restore an Existing Wallet**: If you have an existing wallet, choose "Restore Wallet" and enter your recovery phrase.
+- **Multiple Wallets**: Manage multiple wallets with ease.
+- **Send and Receive ADA**: Use the "Send" and "Receive" tabs to manage your ADA transactions.
 - **Swap**: Instantly exchange ADA for other cryptocurrencies directly within the Yoroi wallet.
 - **Buy/Sell ADA**: Easily purchase or sell ADA directly through the Yoroi wallet using integrated partner services.
 - **Transaction History and Data Review**: View detailed transaction history and data directly in the Yoroi wallet.
