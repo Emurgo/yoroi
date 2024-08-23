@@ -9,7 +9,11 @@ export type PortfolioTokenActivityRecord = Readonly<{
   change: number // perc e.g -5% +10%
 }>
 
-export type PortfolioTokenActivityUpdates = Readonly<{
-  price24h: PortfolioTokenActivityRecord
-  // volume24h: PortfolioActivityRecord
+export type PortfolioTokenActivity = Readonly<{
+  price: PortfolioTokenActivityRecord
+  // volume: PortfolioActivityRecord
 }>
+
+export enum PortfolioTokenActivityWindow {
+  OneDay = '24h',
+}
