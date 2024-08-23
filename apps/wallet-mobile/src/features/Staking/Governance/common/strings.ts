@@ -38,6 +38,8 @@ export const useStrings = () => {
     transactionDetails: intl.formatMessage(messages.transactionDetails),
     total: intl.formatMessage(messages.total),
     transactionFailed: intl.formatMessage(messages.transactionFailed),
+    notSupportedVersionTitle: intl.formatMessage(messages.notSupportedVersionTitle),
+    notSupportedVersionDescription: intl.formatMessage(messages.notSupportedVersionDescription),
     noFunds: intl.formatMessage(messages.noFunds),
     transactionFailedDescription: intl.formatMessage(messages.transactionFailedDescription),
     tryAgain: intl.formatMessage(messages.tryAgain),
@@ -63,6 +65,7 @@ export const useStrings = () => {
     enterDrepIDInfo: intl.formatMessage(messages.enterDrepIDInfo),
     goToStaking: intl.formatMessage(messages.goToStaking),
     readyToCollectRewards: intl.formatMessage(messages.readyToCollectRewards),
+    notSupportedVersionButton: intl.formatMessage(messages.notSupportedVersionButton),
   }
 }
 
@@ -264,5 +267,17 @@ const messages = defineMessages({
   readyToCollectRewards: {
     id: 'components.governance.readyToCollectRewards',
     defaultMessage: '!!!You are now ready to collect your rewards.',
+  },
+  notSupportedVersionTitle: {
+    id: 'components.governance.notSupportedVersionTitle',
+    defaultMessage: '!!!Error',
+  },
+  notSupportedVersionDescription: {
+    id: 'components.governance.notSupportedVersionDescription',
+    defaultMessage: '!!!To be able to vote you need to update your Cardano ADA app to 7.',
+  },
+  notSupportedVersionButton: {
+    id: 'components.governance.notSupportedVersionButton',
+    defaultMessage: '!!!Go to main wallet page',
   },
 })

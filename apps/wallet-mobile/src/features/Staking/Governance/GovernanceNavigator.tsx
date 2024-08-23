@@ -8,6 +8,7 @@ import {NetworkTag} from '../../Settings/ChangeNetwork/NetworkTag'
 import {NavigationStack, useGovernanceManagerMaker, useStrings} from './common'
 import {ChangeVoteScreen, ConfirmTxScreen, FailedTxScreen, HomeScreen, SuccessTxScreen} from './useCases'
 import {NoFundsScreen} from './useCases/NoFunds/NoFundsScreen'
+import {NotSupportedCardanoAppVersion} from './useCases/NotSupportedCardanoAppVersion'
 
 const Stack = NavigationStack
 
@@ -46,6 +47,12 @@ export const GovernanceNavigator = () => {
           <Stack.Screen name="staking-gov-tx-success" component={SuccessTxScreen} options={txStatusOptions} />
 
           <Stack.Screen name="staking-gov-tx-failed" component={FailedTxScreen} options={txStatusOptions} />
+
+          <Stack.Screen
+            name="staking-gov-not-supported-version"
+            component={NotSupportedCardanoAppVersion}
+            options={txStatusOptions}
+          />
 
           <Stack.Screen
             name="staking-gov-no-funds"

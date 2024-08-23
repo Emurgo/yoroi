@@ -93,7 +93,12 @@ export const ConfirmTxScreen = () => {
           onCancel={closeModal}
           unsignedTx={params.unsignedTx}
           onSuccess={(signedTx) => onSuccess(signedTx.signedTx.id)}
+          onNotSupportedCIP1694={() => {
+            closeModal()
+            navigateTo.notSupportedVersion()
+          }}
         />,
+        400,
       )
       return
     }

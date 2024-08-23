@@ -120,6 +120,9 @@ const wallet: YoroiWallet = {
   ledgerSupportsCIP36: async () => {
     return true
   },
+  ledgerSupportsCIP1694: async () => {
+    return true
+  },
 
   getCollateralInfo: () => {
     return {

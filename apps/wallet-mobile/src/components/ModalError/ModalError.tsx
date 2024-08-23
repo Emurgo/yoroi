@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
@@ -10,6 +11,7 @@ import {
 } from '../../yoroi-wallets/hw'
 import {Button} from '../Button'
 import {Icon} from '../Icon'
+import {Space} from '../Space/Space'
 import {Text} from '../Text'
 import {useStrings} from './strings'
 
@@ -22,11 +24,13 @@ type Props = {
 export const ModalError = ({error, resetErrorBoundary, onCancel}: Props) => {
   const strings = useStrings()
   const message = getErrorMessage(error, strings)
+  const {styles, colors} = useStyles()
+
   return (
     <>
       <View style={styles.container}>
         <View>
-          <Icon.Danger color="#FF1351" size={42} />
+          <Icon.Danger color={colors.error} size={42} />
         </View>
 
         <Text style={styles.message}>{message}</Text>
@@ -34,6 +38,8 @@ export const ModalError = ({error, resetErrorBoundary, onCancel}: Props) => {
 
       <View style={styles.buttons}>
         <Button shelleyTheme outlineOnLight block onPress={onCancel} title={strings.cancel} />
+
+        <Space width="lg" />
 
         <Button shelleyTheme block onPress={resetErrorBoundary} title={strings.tryAgain} />
       </View>
@@ -81,24 +87,31 @@ const getErrorMessage = (
   return `${strings.error}: ${error.message}`
 }
 
-const styles = StyleSheet.create({
-  message: {
-    fontSize: 16,
-    fontWeight: '400',
-    fontFamily: 'Rubik-Regular',
-    color: '#FF1351',
-    textAlign: 'center',
-  },
-  container: {
-    flexGrow: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 16,
-  },
-  buttons: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 16,
-  },
-})
+const useStyles = () => {
+  const {atoms, color} = useTheme()
+  const styles = StyleSheet.create({
+    message: {
+      color: color.sys_magenta_c500,
+      ...atoms.body_1_lg_regular,
+      ...atoms.text_center,
+    },
+    container: {
+      ...atoms.px_lg,
+      ...atoms.flex_grow,
+      ...atoms.align_center,
+      ...atoms.justify_center,
+    },
+    buttons: {
+      ...atoms.flex_row,
+      ...atoms.align_center,
+      ...atoms.justify_center,
+      ...atoms.p_lg,
+    },
+  })
+
+  const colors = {
+    error: color.sys_magenta_c500,
+  }
+
+  return {styles, colors} as const
+}
