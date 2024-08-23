@@ -26,4 +26,10 @@ describe('isPrimary', () => {
 
     expect(result).toBe(false)
   })
+
+  it('should return false if the token id is present', () => {
+    const result = isPrimaryToken(null)
+
+    expect(result).toBe(false)
+  })
 })
