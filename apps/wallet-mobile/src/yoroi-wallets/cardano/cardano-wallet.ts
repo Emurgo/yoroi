@@ -49,7 +49,7 @@ import * as SANCHONET from './constants/sanchonet/constants'
 import * as TESTNET from './constants/testnet/constants'
 import {filterAddressesByStakingKey, getDelegationStatus} from './delegationUtils'
 import {getTime} from './getTime'
-import {doesCardanoAppVersionSupportCIP36, getCardanoAppMajorVersion, signTxWithLedger} from './hw'
+import {doesCardanoAppVersionSupportCIP36, doesCardanoAppVersionSupportCIP1694, getCardanoAppMajorVersion, signTxWithLedger} from './hw'
 import {keyManager} from './key-manager/key-manager'
 import {processTxHistoryData} from './processTransactions'
 import {yoroiSignedTx} from './signedTx'
@@ -892,6 +892,11 @@ export const makeCardanoWallet = (
     async ledgerSupportsCIP36(useUSB: boolean, hwDeviceInfo: HW.DeviceInfo): Promise<boolean> {
       if (!hwDeviceInfo) throw new Error('Invalid wallet state')
       return doesCardanoAppVersionSupportCIP36(await getCardanoAppMajorVersion(hwDeviceInfo, useUSB))
+    }
+
+    async ledgerSupportsCIP1694(useUSB: boolean, hwDeviceInfo: HW.DeviceInfo): Promise<boolean> {
+      if (!hwDeviceInfo) throw new Error('Invalid wallet state')
+      return doesCardanoAppVersionSupportCIP1694(await getCardanoAppMajorVersion(hwDeviceInfo, useUSB))
     }
 
     async signSwapCancellationWithLedger(cbor: string, useUSB: boolean, hwDeviceInfo: HW.DeviceInfo): Promise<void> {
