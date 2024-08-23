@@ -1,3 +1,4 @@
+import {NotEnoughMoneyToSendError} from '@emurgo/yoroi-lib/dist/errors'
 import {useFocusEffect} from '@react-navigation/native'
 import {isNonNullable, isString} from '@yoroi/common'
 import {
@@ -216,7 +217,12 @@ const NeverParticipatedInGovernanceVariant = () => {
   })
 
   const createGovernanceTxMutation = useCreateGovernanceTx(wallet, {
-    useErrorBoundary: true,
+    useErrorBoundary: (error) => !(error instanceof NotEnoughMoneyToSendError),
+    onError: (error) => {
+      if (error instanceof NotEnoughMoneyToSendError) {
+        navigateTo.noFunds()
+      }
+    },
   })
 
   const openDRepIdModal = (onSubmit: (drepId: string) => void) => {
