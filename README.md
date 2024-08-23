@@ -32,7 +32,6 @@
 - **Stake to Pools**: Delegate your ADA to staking pools directly from Yoroi to earn rewards while supporting the network's security and decentralization.
 - **DApp Connector**: Securely connect your wallet to decentralized applications with a single click, enabling seamless interactions and transactions across the blockchain ecosystem.
 
-
 ## Installation
 
 ### Mobile App
