@@ -10,6 +10,7 @@ import {CopyButton, Icon} from '../../../components'
 import {AmountItem} from '../../../components/AmountItem/AmountItem'
 import {Button} from '../../../components/Button/Button'
 import {PressableIcon} from '../../../components/PressableIcon/PressableIcon'
+import {Space} from '../../../components/Space/Space'
 import {Spacer} from '../../../components/Spacer/Spacer'
 import {isEmptyString} from '../../../kernel/utils'
 import {useTokenInfos} from '../../../yoroi-wallets/hooks'
@@ -24,6 +25,7 @@ import {useClaim} from '../module/ClaimProvider'
 import {ClaimStatus} from '../module/types'
 
 export const ShowSuccessScreen = () => {
+  const {styles} = useStyles()
   const strings = useStrings()
   const navigateTo = useNavigateTo()
   const {claimToken} = useClaim()
@@ -33,17 +35,15 @@ export const ShowSuccessScreen = () => {
   const {status, txHash, amounts} = claimToken
 
   return (
-    <SafeAreaView edges={['top', 'left', 'right']} style={{flex: 1}}>
-      <View style={{flex: 1}}>
+    <SafeAreaView edges={['top', 'left', 'right']} style={styles.root}>
+      <View style={styles.flex}>
         <Header>
           <ClaimSuccessIllustration zoom={0.65} />
 
           <Status status={status} />
-
-          <Spacer height={16} />
         </Header>
 
-        <Spacer height={16} />
+        <Space height="lg" />
 
         <AmountList amounts={amounts} />
       </View>
@@ -55,7 +55,7 @@ export const ShowSuccessScreen = () => {
           <>
             <TxHash txHash={txHash} />
 
-            <Spacer height={16} />
+            <Space height="lg" />
           </>
         )}
 
@@ -149,44 +149,52 @@ export const AmountList = ({amounts}: {amounts: Balance.Amounts}) => {
 const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
+    flex: {
+      ...atoms.flex_1,
+    },
+    root: {
+      ...atoms.flex_1,
+      color: color.bg_color_high,
+    },
     header: {
-      alignItems: 'center',
+      ...atoms.align_center,
       ...atoms.px_lg,
     },
     title: {
-      color: color.gray_cmax,
+      color: color.text_gray_max,
       ...atoms.heading_3_medium,
       ...atoms.px_sm,
-      textAlign: 'center',
+      ...atoms.align_center,
     },
     message: {
-      color: color.gray_c600,
+      color: color.text_gray_medium,
       ...atoms.body_3_sm_regular,
-      textAlign: 'center',
+      ...atoms.text_center,
       maxWidth: 300,
     },
     txLabel: {
+      color: color.text_gray_medium,
       ...atoms.body_1_lg_regular,
       ...atoms.pr_sm,
     },
     monospace: {
-      ...atoms.body_1_lg_regular,
-      color: color.gray_c600,
+      color: color.text_gray_medium,
       ...Platform.select({
         ios: {fontFamily: 'Menlo'},
         android: {fontFamily: 'monospace'},
       }),
+      ...atoms.body_1_lg_regular,
       ...atoms.pr_sm,
-      flex: 1,
+      ...atoms.flex_1,
     },
     txRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      ...atoms.flex_row,
+      ...atoms.align_center,
     },
   })
 
   const colors = {
-    icon: color.gray_c500,
+    icon: color.el_gray_medium,
   }
 
   return {styles, colors}

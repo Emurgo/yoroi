@@ -10,3 +10,4 @@ export type ChainSupportedNetworks =
   | ChainNetwork.Mainnet
   | ChainNetwork.Preprod
   | ChainNetwork.Sancho
+  | ChainNetwork.Preview

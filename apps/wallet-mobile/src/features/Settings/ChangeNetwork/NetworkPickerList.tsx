@@ -1,10 +1,11 @@
 import {useTheme} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
+import {freeze} from 'immer'
 import React from 'react'
 import {FlatList, StyleSheet} from 'react-native'
 
-import {isDev} from '../../../kernel/env'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
+import {availableNetworks} from '../../WalletManager/common/constants'
 import {useSelectedNetwork} from '../../WalletManager/common/hooks/useSelectedNetwork'
 import {useAutomaticWalletOpener} from '../../WalletManager/context/AutomaticWalletOpeningProvider'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
@@ -34,14 +35,10 @@ export const NetworkPickerList = () => {
     navigateTo.preparingNetworks(network)
   }
 
-  const filteredNetworks = Object.values(networkConfigs).filter(
-    ({network}) => network !== Chain.Network.Sancho || isDev,
-  )
-
   return (
     <FlatList
       contentContainerStyle={styles.contentContainer}
-      data={filteredNetworks}
+      data={networks}
       keyExtractor={(item) => item.network}
       renderItem={({item}) => (
         <NetworkPickerItem
@@ -54,6 +51,8 @@ export const NetworkPickerList = () => {
     />
   )
 }
+
+const networks = freeze(Object.values(networkConfigs).filter(({network}) => availableNetworks.includes(network)))
 
 const useStyles = () => {
   const {atoms} = useTheme()
