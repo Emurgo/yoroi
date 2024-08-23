@@ -51,27 +51,7 @@ Yoroi is a multi-repository project. You can review the packages in the [package
 
 ## Contributing
 
-We welcome contributions from the community! If you'd like to contribute to Yoroi, please follow these steps:
-
-1. **Fork the Repository**: Click the "Fork" button at the top of this page to create a copy of this repository on your GitHub account.
-2. **Clone Your Fork**: Clone your fork of the repository to your local machine.
-   ```bash
-   git clone https://github.com/YOUR_USERNAME/yoroi.git
-   ```
-3. **Create a Branch**: Create a new branch for your feature or bug fix.
-  ```bash
-  git checkout -b my-feature-branch
-  ```
-4. **Make Changes**: Make your changes to the codebase.
-5. **Commit Changes**: Commit your changes with a descriptive commit message.
-  ```bash
-  git commit -m "Add new feature or fix bug"
-  ```
-6. **Push Changes**: Push your changes to your forked repository.
-  ```bash
-  git push origin my-feature-branch
-  ````
-7. **Create a Pull Request**: Open a pull request from your forked repository to the main Yoroi repository.
+See the [contributing guide](https://github.com/Emurgo/yoroi/blob/develop/CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
 
 ## License
 
