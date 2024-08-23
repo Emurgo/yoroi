@@ -49,7 +49,12 @@ import * as SANCHONET from './constants/sanchonet/constants'
 import * as TESTNET from './constants/testnet/constants'
 import {filterAddressesByStakingKey, getDelegationStatus} from './delegationUtils'
 import {getTime} from './getTime'
-import {doesCardanoAppVersionSupportCIP36, doesCardanoAppVersionSupportCIP1694, getCardanoAppMajorVersion, signTxWithLedger} from './hw'
+import {
+  doesCardanoAppVersionSupportCIP36,
+  doesCardanoAppVersionSupportCIP1694,
+  getCardanoAppMajorVersion,
+  signTxWithLedger,
+} from './hw'
 import {keyManager} from './key-manager/key-manager'
 import {processTxHistoryData} from './processTransactions'
 import {yoroiSignedTx} from './signedTx'
