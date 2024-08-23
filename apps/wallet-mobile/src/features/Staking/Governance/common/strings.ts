@@ -40,8 +40,11 @@ export const useStrings = () => {
     transactionFailed: intl.formatMessage(messages.transactionFailed),
     notSupportedVersionTitle: intl.formatMessage(messages.notSupportedVersionTitle),
     notSupportedVersionDescription: intl.formatMessage(messages.notSupportedVersionDescription),
+    noFunds: intl.formatMessage(messages.noFunds),
     transactionFailedDescription: intl.formatMessage(messages.transactionFailedDescription),
     tryAgain: intl.formatMessage(messages.tryAgain),
+    buyAda: intl.formatMessage(messages.buyAda),
+    goToFaucet: intl.formatMessage(messages.goToFaucet),
     withdrawWarningTitle: intl.formatMessage(messages.withdrawWarningTitle),
     withdrawWarningDescription: intl.formatMessage(messages.withdrawWarningDescription),
     withdrawWarningButton: intl.formatMessage(messages.withdrawWarningButton),
@@ -196,6 +199,10 @@ const messages = defineMessages({
     id: 'components.governance.transactionFailed',
     defaultMessage: '!!!Transaction failed',
   },
+  noFunds: {
+    id: 'components.governance.noFunds',
+    defaultMessage: '!!!To participate in governance you need to have ADA in your wallet',
+  },
   transactionFailedDescription: {
     id: 'components.governance.transactionFailedDescription',
     defaultMessage: '!!!Your transaction has not been processed properly due to technical issues',
@@ -203,6 +210,14 @@ const messages = defineMessages({
   tryAgain: {
     id: 'components.governance.tryAgain',
     defaultMessage: '!!!Try again',
+  },
+  buyAda: {
+    id: 'components.governance.buyAda',
+    defaultMessage: '!!!Buy ada',
+  },
+  goToFaucet: {
+    id: 'components.governance.goToFaucet',
+    defaultMessage: '!!!Go to tada faucet',
   },
   withdrawWarningTitle: {
     id: 'components.governance.withdrawWarningTitle',

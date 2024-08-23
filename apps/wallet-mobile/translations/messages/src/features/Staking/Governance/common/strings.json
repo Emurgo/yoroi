@@ -5,10 +5,12 @@
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
       "line": 72,
+      "line": 72,
       "column": 25,
       "index": 4591
     },
     "end": {
+      "line": 75,
       "line": 75,
       "column": 3,
       "index": 4698
@@ -20,10 +22,12 @@
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
       "line": 76,
+      "line": 76,
       "column": 18,
       "index": 4718
     },
     "end": {
+      "line": 79,
       "line": 79,
       "column": 3,
       "index": 4817
@@ -35,10 +39,12 @@
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
       "line": 80,
+      "line": 80,
       "column": 28,
       "index": 4847
     },
     "end": {
+      "line": 83,
       "line": 83,
       "column": 3,
       "index": 4964
@@ -50,10 +56,12 @@
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
       "line": 84,
+      "line": 84,
       "column": 30,
       "index": 4996
     },
     "end": {
+      "line": 87,
       "line": 87,
       "column": 3,
       "index": 5106
@@ -65,10 +73,12 @@
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
       "line": 88,
+      "line": 88,
       "column": 36,
       "index": 5144
     },
     "end": {
+      "line": 92,
       "line": 92,
       "column": 3,
       "index": 5349
@@ -80,10 +90,12 @@
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
       "line": 93,
+      "line": 93,
       "column": 22,
       "index": 5373
     },
     "end": {
+      "line": 96,
       "line": 96,
       "column": 3,
       "index": 5464
@@ -95,10 +107,12 @@
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
       "line": 97,
+      "line": 97,
       "column": 28,
       "index": 5494
     },
     "end": {
+      "line": 100,
       "line": 100,
       "column": 3,
       "index": 5659
@@ -110,10 +124,12 @@
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
       "line": 101,
+      "line": 101,
       "column": 27,
       "index": 5688
     },
     "end": {
+      "line": 104,
       "line": 104,
       "column": 3,
       "index": 5790
@@ -125,10 +141,12 @@
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
       "line": 105,
+      "line": 105,
       "column": 33,
       "index": 5825
     },
     "end": {
+      "line": 108,
       "line": 108,
       "column": 3,
       "index": 5995
@@ -140,10 +158,12 @@
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
       "line": 109,
+      "line": 109,
       "column": 11,
       "index": 6008
     },
     "end": {
+      "line": 112,
       "line": 112,
       "column": 3,
       "index": 6089
@@ -155,10 +175,12 @@
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
       "line": 113,
+      "line": 113,
       "column": 21,
       "index": 6112
     },
     "end": {
+      "line": 116,
       "line": 116,
       "column": 3,
       "index": 6215
@@ -170,10 +192,12 @@
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
       "line": 117,
+      "line": 117,
       "column": 14,
       "index": 6231
     },
     "end": {
+      "line": 120,
       "line": 120,
       "column": 3,
       "index": 6317
@@ -185,10 +209,12 @@
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
       "line": 121,
+      "line": 121,
       "column": 24,
       "index": 6343
     },
     "end": {
+      "line": 124,
       "line": 124,
       "column": 3,
       "index": 6458
@@ -200,10 +226,12 @@
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
       "line": 125,
+      "line": 125,
       "column": 17,
       "index": 6477
     },
     "end": {
+      "line": 128,
       "line": 128,
       "column": 3,
       "index": 6570
@@ -215,10 +243,12 @@
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
       "line": 129,
+      "line": 129,
       "column": 22,
       "index": 6594
     },
     "end": {
+      "line": 132,
       "line": 132,
       "column": 3,
       "index": 6698
@@ -230,10 +260,12 @@
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
       "line": 133,
+      "line": 133,
       "column": 14,
       "index": 6714
     },
     "end": {
+      "line": 136,
       "line": 136,
       "column": 3,
       "index": 6800
@@ -245,10 +277,12 @@
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
       "line": 137,
+      "line": 137,
       "column": 17,
       "index": 6819
     },
     "end": {
+      "line": 140,
       "line": 140,
       "column": 3,
       "index": 6937
@@ -260,10 +294,12 @@
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
       "line": 141,
+      "line": 141,
       "column": 10,
       "index": 6949
     },
     "end": {
+      "line": 144,
       "line": 144,
       "column": 3,
       "index": 7028
@@ -275,10 +311,12 @@
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
       "line": 145,
+      "line": 145,
       "column": 28,
       "index": 7058
     },
     "end": {
+      "line": 148,
       "line": 148,
       "column": 3,
       "index": 7189
@@ -290,10 +328,12 @@
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
       "line": 149,
+      "line": 149,
       "column": 32,
       "index": 7223
     },
     "end": {
+      "line": 152,
       "line": 152,
       "column": 3,
       "index": 7351
@@ -305,10 +345,12 @@
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
       "line": 153,
+      "line": 153,
       "column": 25,
       "index": 7378
     },
     "end": {
+      "line": 157,
       "line": 157,
       "column": 3,
       "index": 7606
@@ -320,10 +362,12 @@
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
       "line": 158,
+      "line": 158,
       "column": 18,
       "index": 7626
     },
     "end": {
+      "line": 161,
       "line": 161,
       "column": 3,
       "index": 7722
@@ -335,10 +379,12 @@
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
       "line": 162,
+      "line": 162,
       "column": 16,
       "index": 7740
     },
     "end": {
+      "line": 165,
       "line": 165,
       "column": 3,
       "index": 7834
@@ -350,10 +396,12 @@
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
       "line": 166,
+      "line": 166,
       "column": 17,
       "index": 7853
     },
     "end": {
+      "line": 169,
       "line": 169,
       "column": 3,
       "index": 8002
@@ -365,10 +413,12 @@
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
       "line": 170,
+      "line": 170,
       "column": 34,
       "index": 8038
     },
     "end": {
+      "line": 173,
       "line": 173,
       "column": 3,
       "index": 8194
@@ -380,10 +430,12 @@
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
       "line": 174,
+      "line": 174,
       "column": 25,
       "index": 8221
     },
     "end": {
+      "line": 178,
       "line": 178,
       "column": 3,
       "index": 8435
@@ -395,10 +447,12 @@
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
       "line": 179,
+      "line": 179,
       "column": 14,
       "index": 8451
     },
     "end": {
+      "line": 182,
       "line": 182,
       "column": 3,
       "index": 8538
@@ -410,10 +464,12 @@
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
       "line": 183,
+      "line": 183,
       "column": 11,
       "index": 8551
     },
     "end": {
+      "line": 186,
       "line": 186,
       "column": 3,
       "index": 8631
@@ -425,10 +481,12 @@
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
       "line": 187,
+      "line": 187,
       "column": 22,
       "index": 8655
     },
     "end": {
+      "line": 190,
       "line": 190,
       "column": 3,
       "index": 8758
@@ -440,10 +498,12 @@
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
       "line": 191,
+      "line": 191,
       "column": 9,
       "index": 8769
     },
     "end": {
+      "line": 194,
       "line": 194,
       "column": 3,
       "index": 8845
@@ -454,6 +514,7 @@
     "defaultMessage": "!!!Transaction failed",
     "file": "src/features/Staking/Governance/common/strings.ts",
     "start": {
+      "line": 195,
       "line": 195,
       "column": 21,
       "index": 8868
@@ -714,6 +775,7 @@
       "index": 11468
     },
     "end": {
+      "line": 267,
       "line": 267,
       "column": 3,
       "index": 11581
