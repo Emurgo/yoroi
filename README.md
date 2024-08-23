@@ -30,6 +30,13 @@
 - **Catalyst Voting**: Participate in Project Catalyst by voting on Cardano governance proposals directly from the Yoroi wallet.
 - **Stake to Pools**: Delegate your ADA to staking pools directly from Yoroi to earn rewards while supporting the network's security and decentralization.
 - **DApp Connector**: Securely connect your wallet to decentralized applications with a single click, enabling seamless interactions and transactions across the blockchain ecosystem.
+- **NFT Gallery**: View and manage your Cardano-based NFTs directly within the Yoroi wallet with an integrated gallery feature.
+- **Governance Participation**: Delegate your voting power to a DRep, abstain, or cast a vote of no confidence on governance proposals directly from the Yoroi wallet.
+- **Request Funds and Share Addresses**: Easily request ADA and share your wallet address using links and QR codes for quick and secure transactions.
+- **Domain Name Support**: Send and receive ADA using user-friendly addresses with integrated support for Cardano Name Service (CNS), ADAHandle, and Unstoppable Domains.
+
+
+
 
 ## Installation
 
