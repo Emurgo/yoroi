@@ -1,6 +1,6 @@
 # Yoroi - Lightweight Cardano Wallet
 
-[Yoroi](https://github.com/Emurgo/yoroi) is a simple, fast, and secure wallet for Cardano (ADA), developed by Emurgo. It is designed to be a lightweight wallet that can be installed as a mobile app, making it easy to manage your ADA on the go.
+[Yoroi](https://github.com/Emurgo/yoroi) is a simple, fast, and secure wallet for Cardano (ADA), developed by Emurgo. It is designed to be a lightweight wallet that can be installed as a mobile app, making it easy to manage your ADA on the go, please check our [wiki](https://github.com/Emurgo/yoroi/wiki).
 
 ## Table of Contents
 
