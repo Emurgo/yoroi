@@ -2,9 +2,10 @@ import {Api, Portfolio} from '@yoroi/types'
 import {freeze} from 'immer'
 import {BigNumber} from 'bignumber.js'
 import {tokenInfoMocks} from './token-info.mocks'
+import {duallahanTokenActivityUpdatesMocks} from './dullahan-api/token-activity.mocks'
 
-const primaryETH: Portfolio.Token.ActivityUpdates = {
-  price24h: {
+const primaryETH: Portfolio.Token.Activity = {
+  price: {
     ts: 1722849529169,
     open: new BigNumber(1_000_000),
     close: new BigNumber(500_000),
@@ -14,8 +15,8 @@ const primaryETH: Portfolio.Token.ActivityUpdates = {
   },
 }
 
-const rnftWhatever: Portfolio.Token.ActivityUpdates = {
-  price24h: {
+const rnftWhatever: Portfolio.Token.Activity = {
+  price: {
     ts: 1722849529169,
     open: new BigNumber(500_000),
     low: new BigNumber(500_000),
@@ -25,8 +26,8 @@ const rnftWhatever: Portfolio.Token.ActivityUpdates = {
   },
 }
 
-const ftNoTicker: Portfolio.Token.ActivityUpdates = {
-  price24h: {
+const ftNoTicker: Portfolio.Token.Activity = {
+  price: {
     ts: 1722849529169,
     open: new BigNumber(1_000_000),
     close: new BigNumber(500_000),
@@ -36,8 +37,8 @@ const ftNoTicker: Portfolio.Token.ActivityUpdates = {
   },
 }
 
-const ftNameless: Portfolio.Token.ActivityUpdates = {
-  price24h: {
+const ftNameless: Portfolio.Token.Activity = {
+  price: {
     ts: 1722849529169,
     open: new BigNumber(500_000),
     low: new BigNumber(500_000),
@@ -47,22 +48,26 @@ const ftNameless: Portfolio.Token.ActivityUpdates = {
   },
 }
 
-const apiResponseSuccessDataOnly: Readonly<Portfolio.Api.TokenActivityResponse> =
-  {
-    [tokenInfoMocks.primaryETH.id]: primaryETH,
-    [tokenInfoMocks.rnftWhatever.id]: rnftWhatever,
-    [tokenInfoMocks.ftNoTicker.id]: ftNoTicker,
-    [tokenInfoMocks.ftNameless.id]: ftNameless,
-  }
+const apiResponseSuccessDataOnly = {
+  [tokenInfoMocks.primaryETH.id]: primaryETH,
+  [tokenInfoMocks.rnftWhatever.id]: rnftWhatever,
+  [tokenInfoMocks.ftNoTicker.id]: ftNoTicker,
+  [tokenInfoMocks.ftNameless.id]: ftNameless,
+}
 
 const apiResponseTokenActivity: Readonly<
-  Record<'success' | 'error', Api.Response<Portfolio.Api.TokenActivityResponse>>
+  Record<
+    'success' | 'error',
+    Api.Response<
+      typeof duallahanTokenActivityUpdatesMocks.api.responseSuccessDataOnly
+    >
+  >
 > = {
   success: {
     tag: 'right',
     value: {
       status: 200,
-      data: apiResponseSuccessDataOnly,
+      data: duallahanTokenActivityUpdatesMocks.api.responseSuccessDataOnly,
     },
   },
   error: {

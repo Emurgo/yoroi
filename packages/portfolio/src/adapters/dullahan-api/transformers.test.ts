@@ -6,7 +6,7 @@ import {
 import {Portfolio, Api} from '@yoroi/types'
 
 import {tokenMocks} from '../token.mocks'
-import {DullahanApiTokenActivityUpdatesResponse} from './types'
+import {DullahanApiTokenActivityResponse} from './types'
 import {tokenActivityMocks} from '../token-activity.mocks'
 import {duallahanTokenActivityUpdatesMocks} from './token-activity.mocks'
 
@@ -107,18 +107,17 @@ describe('transformers', () => {
   })
 
   describe('toTokenActivityUpdates', () => {
-    it('should return an empty object if apiTokenActivityUpdates is empty', () => {
-      const apiTokenInfosResponse: DullahanApiTokenActivityUpdatesResponse = {}
+    it('should return an empty object if apiTokenActivityUpdates response is empty', () => {
+      const apiTokenInfosResponse: DullahanApiTokenActivityResponse = {}
 
-      const result = toTokenActivityUpdates(apiTokenInfosResponse)
-
-      expect(result).toEqual({})
+      expect(toTokenActivityUpdates(apiTokenInfosResponse)).toEqual({})
     })
 
     it('should return the data and deal with empty records', () => {
       const responseWithEmptyRecords = {
         ...duallahanTokenActivityUpdatesMocks.api.responseSuccessDataOnly,
         'token.4': undefined,
+        'token.5': [Api.HttpStatusCode.InternalServerError, 'Not found'],
       } as any
       const result = toTokenActivityUpdates(responseWithEmptyRecords)
 

@@ -19,17 +19,15 @@ export const AggregatedBalance = () => {
   const {
     networkManager: {primaryTokenInfo},
   } = useSelectedNetwork()
-  const {aggregatedBalances, tokenActivity} = usePortfolioTokenActivity()
+  const {aggregatedBalances, tokenActivity, isLoading} = usePortfolioTokenActivity()
 
   const name = infoExtractName(primaryTokenInfo)
-  const price = useCurrencyPairing().adaPrice.price
+  const price = useCurrencyPairing().ptActivity.close
 
   const amount = React.useMemo(
     () => aggregatePrimaryAmount({primaryTokenInfo, tokenActivity, tokenAmountRecords: aggregatedBalances}),
     [aggregatedBalances, primaryTokenInfo, tokenActivity],
   )
-  const isFetching = !aggregatedBalances || !tokenActivity
-
   const tokens = React.useMemo(() => {
     return {
       nfts: Object.values(aggregatedBalances ?? {}).filter(({info}) => isNft(info)),
@@ -39,7 +37,7 @@ export const AggregatedBalance = () => {
 
   return (
     <View style={styles.root}>
-      {isFetching ? (
+      {isLoading ? (
         <BalanceCardSkeleton />
       ) : (
         <LinearGradient style={styles.gradientRoot} colors={colors.gradient}>

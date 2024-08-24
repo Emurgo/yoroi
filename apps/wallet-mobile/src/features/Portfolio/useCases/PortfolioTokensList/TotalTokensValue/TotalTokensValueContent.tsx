@@ -22,13 +22,12 @@ export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
   const {
     currency,
     config,
-    adaPrice: {price, previous},
+    ptActivity: {close, open},
+    isLoading,
   } = useCurrencyPairing()
   const {isPrimaryTokenActive, setIsPrimaryTokenActive} = usePortfolio()
 
-  const {changePercent, changeValue, variantPnl} = priceChange(previous, price)
-
-  const isFetching = price === undefined
+  const {changePercent, changeValue, variantPnl} = priceChange(open, close)
 
   return (
     <View>
@@ -39,22 +38,18 @@ export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
       <View style={styles.balanceContainer}>
         <TouchableOpacity style={styles.balanceBox} onPress={() => setIsPrimaryTokenActive(!isPrimaryTokenActive)}>
           <TokenValueBalance
-            rate={price}
+            rate={close}
             amount={amount}
-            isFetching={isFetching}
+            isFetching={isLoading}
             isPrimaryTokenActive={isPrimaryTokenActive}
           />
         </TouchableOpacity>
 
         <View style={styles.rowBetween}>
-          <TokenValuePairedBalance
-            amount={amount}
-            isFetching={isFetching}
-            isPrimaryTokenActive={isPrimaryTokenActive}
-          />
+          <TokenValuePairedBalance amount={amount} isFetching={isLoading} isPrimaryTokenActive={isPrimaryTokenActive} />
 
           <View style={styles.varyContainer}>
-            {isFetching ? (
+            {isLoading ? (
               <SkeletonQuantityChange />
             ) : (
               <PnlTag variant={variantPnl} withIcon>
@@ -62,7 +57,7 @@ export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
               </PnlTag>
             )}
 
-            {isFetching ? (
+            {isLoading ? (
               <SkeletonQuantityChange />
             ) : (
               <PnlTag variant={variantPnl}>

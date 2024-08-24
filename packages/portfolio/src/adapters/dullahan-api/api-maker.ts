@@ -16,7 +16,7 @@ import {
 } from './transformers'
 import {
   DullahanApiCachedIdsRequest,
-  DullahanApiTokenActivityUpdatesResponse,
+  DullahanApiTokenActivityResponse,
   DullahanApiTokenDiscoveryResponse,
   DullahanApiTokenInfoResponse,
   DullahanApiTokenInfosResponse,
@@ -232,16 +232,16 @@ export const portfolioApiMaker = ({
         return response
       },
 
-      async tokenActivityUpdates(requestedIds) {
+      async tokenActivity(requestedIds, window) {
         const chunks = []
         for (let i = 0; i < requestedIds.length; i += maxIdsPerRequest)
           chunks.push(requestedIds.slice(i, i + maxIdsPerRequest))
 
         const tasks = chunks.map(
           (ids) => () =>
-            request<DullahanApiTokenActivityUpdatesResponse>({
+            request<DullahanApiTokenActivityResponse>({
               method: 'post',
-              url: config.tokenActivityUpdates,
+              url: `${config.tokenActivity}/${window}`,
               data: ids,
               headers: {
                 'Content-Type': 'application/json',
@@ -251,11 +251,12 @@ export const portfolioApiMaker = ({
         )
 
         const responses = await PromiseAllLimited(tasks, maxConcurrentRequests)
+
         const activities = responses
           .filter(isRight)
           .reduce(
             (acc, {value: {data}}) => Object.assign(acc, data),
-            {} as DullahanApiTokenActivityUpdatesResponse,
+            {} as DullahanApiTokenActivityResponse,
           )
 
         // return with the first error only if none of responses were successful
@@ -305,7 +306,7 @@ export const apiConfig: ApiConfig = freeze(
       tokenInfo: 'https://zero.yoroiwallet.com/tokens/info',
       tokenInfos: 'https://zero.yoroiwallet.com/tokens/info/multi',
       tokenTraits: 'https://zero.yoroiwallet.com/tokens/nft/traits',
-      tokenActivityUpdates: 'https://zero.yoroiwallet.com/defi/token-activity',
+      tokenActivity: 'https://zero.yoroiwallet.com/tokens/activity/multi',
       tokenPriceHistory:
         'https://add50d9d-76d7-47b7-b17f-e34021f63a02.mock.pstmn.io/v1/token-price-history',
     },
@@ -317,8 +318,8 @@ export const apiConfig: ApiConfig = freeze(
         'https://yoroi-backend-zero-preprod.emurgornd.com/tokens/info/multi',
       tokenTraits:
         'https://yoroi-backend-zero-preprod.emurgornd.com/tokens/nft/traits',
-      tokenActivityUpdates:
-        'https://yoroi-backend-zero-preprod.emurgornd.com/defi/token-activity',
+      tokenActivity:
+        'https://yoroi-backend-zero-preprod.emurgornd.com/tokens/activity/multi',
       tokenPriceHistory:
         'https://add50d9d-76d7-47b7-b17f-e34021f63a02.mock.pstmn.io/v1/token-price-history',
     },
@@ -331,8 +332,8 @@ export const apiConfig: ApiConfig = freeze(
         'https://yoroi-backend-zero-sanchonet.emurgornd.com/tokens/info/multi',
       tokenTraits:
         'https://yoroi-backend-zero-sanchonet.emurgornd.com/tokens/nft/traits',
-      tokenActivityUpdates:
-        'https://yoroi-backend-zero-sanchonet.emurgornd.com/defi/token-activity',
+      tokenActivity:
+        'https://yoroi-backend-zero-sanchonet.emurgornd.com/tokens/activity/multi',
       tokenPriceHistory:
         'https://add50d9d-76d7-47b7-b17f-e34021f63a02.mock.pstmn.io/v1/token-price-history',
     },
@@ -344,8 +345,8 @@ export const apiConfig: ApiConfig = freeze(
         'https://yoroi-backend-zero-preview.emurgornd.com/tokens/info/multi',
       tokenTraits:
         'https://yoroi-backend-zero-preview.emurgornd.com/tokens/nft/traits',
-      tokenActivityUpdates:
-        'https://yoroi-backend-zero-preview.emurgornd.com/defi/token-activity',
+      tokenActivity:
+        'https://yoroi-backend-zero-preview.emurgornd.com/tokens/activity/multi',
       tokenPriceHistory:
         'https://add50d9d-76d7-47b7-b17f-e34021f63a02.mock.pstmn.io/v1/token-price-history',
     },

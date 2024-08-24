@@ -26,18 +26,18 @@ export const DashboardTokenItem = ({tokenInfo}: Props) => {
 
   const {info} = tokenInfo ?? {}
 
-  const adaPrice = useCurrencyPairing().adaPrice
+  const ptActivity = useCurrencyPairing().ptActivity
 
   const {tokenActivity} = usePortfolioTokenActivity()
 
-  const nonAdaPrice = tokenActivity?.[info.id]?.price24h
+  const secondaryActivity = tokenActivity?.[info.id]?.price
 
-  const {price, previous} = isPrimaryToken(info)
-    ? adaPrice
-    : {price: nonAdaPrice?.close.toNumber(), previous: nonAdaPrice?.open.toNumber()}
+  const {open, close} = isPrimaryToken(info)
+    ? ptActivity
+    : {close: secondaryActivity?.close.toNumber() ?? 0, open: secondaryActivity?.open.toNumber() ?? 0}
 
-  const {changePercent, variantPnl} = priceChange(previous ?? 0, price ?? 0)
-  const missingPrices = price === undefined || previous === undefined
+  const {changePercent, variantPnl} = priceChange(open, close)
+  const isMissingPrices = open == null || close == null
 
   return (
     <TouchableOpacity onPress={() => navigationTo.tokenDetail({id: info.id})} style={styles.root}>
@@ -48,7 +48,7 @@ export const DashboardTokenItem = ({tokenInfo}: Props) => {
 
         <View style={styles.quantityContainer}>
           <PnlTag withIcon variant={variantPnl}>
-            <Text>{missingPrices ? '—— ' : formatPriceChange(changePercent)}%</Text>
+            <Text>{isMissingPrices ? '—— ' : formatPriceChange(changePercent)}%</Text>
           </PnlTag>
 
           <Text ellipsizeMode="tail" numberOfLines={1} style={styles.tokenValue}>

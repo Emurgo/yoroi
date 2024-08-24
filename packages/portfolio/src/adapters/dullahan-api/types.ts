@@ -23,18 +23,21 @@ export type DullahanIdWithCache = `${string}.${string}:${string}`
 export type DullahanApiCachedIdsRequest = ReadonlyArray<DullahanIdWithCache>
 
 export type DullahanApiTokenActivityRecord = Readonly<{
-  ts: number
-  open: string // BN
-  close: string // BN
-  low: string // BN
-  high: string // BN
-  change: number
+  price: {
+    ts: number
+    open: string // BN
+    close: string // BN
+    low: string // BN
+    high: string // BN
+    change: number
+  }
 }>
 
-export type DullahanApiTokenActivityUpdates = Readonly<{
-  price24h: DullahanApiTokenActivityRecord
-}>
+export type DullahanApiTokenActivity = [
+  Api.HttpStatusCode,
+  DullahanApiTokenActivityRecord,
+]
 
-export type DullahanApiTokenActivityUpdatesResponse = Readonly<{
-  [key: Portfolio.Token.Id]: DullahanApiTokenActivityUpdates
+export type DullahanApiTokenActivityResponse = Readonly<{
+  [key: Portfolio.Token.Id]: DullahanApiTokenActivity
 }>

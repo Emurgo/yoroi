@@ -146,7 +146,7 @@ const Price = ({amount, wallet}: {wallet: YoroiWallet; amount: BigNumber}) => {
   const {
     config,
     currency,
-    adaPrice: {price: rate},
+    ptActivity: {close: rate},
   } = useCurrencyPairing()
 
   const price = React.useMemo(() => {

@@ -1,6 +1,6 @@
 import {amountBreakdown} from '@yoroi/portfolio'
 import {PortfolioTokenAmountRecords} from '@yoroi/types/lib/typescript/portfolio/amount'
-import {PortfolioApiTokenActivityUpdatesResponse} from '@yoroi/types/lib/typescript/portfolio/api'
+import {PortfolioApiTokenActivityResponse} from '@yoroi/types/lib/typescript/portfolio/api'
 import {PortfolioTokenInfo} from '@yoroi/types/src/portfolio/info'
 import BigNumber from 'bignumber.js'
 
@@ -11,13 +11,13 @@ export const aggregatePrimaryAmount = ({
 }: {
   primaryTokenInfo: PortfolioTokenInfo
   tokenAmountRecords?: PortfolioTokenAmountRecords
-  tokenActivity?: PortfolioApiTokenActivityUpdatesResponse
+  tokenActivity?: PortfolioApiTokenActivityResponse
 }) => {
   if (!tokenAmountRecords) return {info: primaryTokenInfo, quantity: 0n}
 
   return Object.values(tokenAmountRecords).reduce(
     (totalAmount, tokenAmount) => {
-      const tokenPrimaryPrice = tokenActivity?.[tokenAmount.info.id]?.price24h.close ?? new BigNumber(0)
+      const tokenPrimaryPrice = tokenActivity?.[tokenAmount.info.id]?.price.close ?? new BigNumber(0)
 
       const quantity =
         tokenAmount.info.id === primaryTokenInfo.id

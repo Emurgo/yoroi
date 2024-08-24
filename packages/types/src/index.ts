@@ -174,7 +174,7 @@ import {
 } from './app/errors'
 import {
   PortfolioApi,
-  PortfolioApiTokenActivityUpdatesResponse,
+  PortfolioApiTokenActivityResponse,
   PortfolioApiTokenDiscoveryResponse,
   PortfolioApiTokenInfosResponse,
   PortfolioApiTokenTraitsResponse,
@@ -219,7 +219,8 @@ import {
 } from './network/manager'
 import {
   PortfolioTokenActivityRecord,
-  PortfolioTokenActivityUpdates,
+  PortfolioTokenActivity,
+  PortfolioTokenActivityWindow,
 } from './portfolio/activity'
 
 export namespace App {
@@ -481,7 +482,7 @@ export namespace Portfolio {
     export type TokenInfosResponse = PortfolioApiTokenInfosResponse
     export type TokenDiscoveryResponse = PortfolioApiTokenDiscoveryResponse
     export type TokenTraitsResponse = PortfolioApiTokenTraitsResponse
-    export type TokenActivityResponse = PortfolioApiTokenActivityUpdatesResponse
+    export type TokenActivityResponse = PortfolioApiTokenActivityResponse
     export type Api = PortfolioApi
   }
 
@@ -525,7 +526,9 @@ export namespace Portfolio {
     export type Discovery = PortfolioTokenDiscovery
     export type Price = PortfolioTokenPrice
 
-    export type ActivityUpdates = PortfolioTokenActivityUpdates
+    export type Activity = PortfolioTokenActivity
+    export type ActivityWindow = PortfolioTokenActivityWindow
+    export const ActivityWindow = PortfolioTokenActivityWindow
     export type ActivityRecord = PortfolioTokenActivityRecord
   }
 }

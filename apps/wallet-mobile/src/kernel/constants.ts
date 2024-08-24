@@ -17,7 +17,7 @@ export const supportedCurrencies = freeze({
   JPY: 'JPY',
   KRW: 'KRW',
   USD: 'USD',
-})
+} as const)
 
 export const configCurrencies = freeze({
   [supportedCurrencies.ADA]: {

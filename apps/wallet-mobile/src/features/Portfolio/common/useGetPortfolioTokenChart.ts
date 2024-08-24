@@ -1,11 +1,14 @@
+import {isRight} from '@yoroi/common'
 import {isPrimaryToken} from '@yoroi/portfolio'
+import {Chain} from '@yoroi/types'
 import {useQuery, UseQueryOptions} from 'react-query'
 
-import {time} from '../../../kernel/constants'
-import {getCardanoNetworkConfigById} from '../../../yoroi-wallets/cardano/networks'
-import {fetchAdaPrice} from '../../../yoroi-wallets/cardano/useAdaPrice'
+import {supportedCurrencies, time} from '../../../kernel/constants'
+import {useLanguage} from '../../../kernel/i18n'
+import {fetchPtPriceActivity} from '../../../yoroi-wallets/cardano/usePrimaryTokenActivity'
 import {useCurrencyPairing} from '../../Settings/Currency'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
+import {networkConfigs} from '../../WalletManager/network-manager/network-manager'
 import {priceChange} from './helpers/priceChange'
 import {usePortfolioTokenDetailParams} from './useNavigateTo'
 
@@ -96,7 +99,9 @@ const getTimestamps = (timeInterval: TokenChartInterval) => {
   return Array.from({length: resolution}, (_, i) => from + Math.round(step * i))
 }
 
-const useGetPortfolioTokenChart = (
+const ptTicker = networkConfigs[Chain.Network.Mainnet].primaryTokenInfo.ticker
+
+export const useGetPortfolioTokenChart = (
   timeInterval = TOKEN_CHART_INTERVAL.DAY as TokenChartInterval,
   options: UseQueryOptions<
     TokenChartData[],
@@ -111,9 +116,7 @@ const useGetPortfolioTokenChart = (
   } = useSelectedWallet()
   const tokenInfo = balances.records.get(tokenId)
   const {currency} = useCurrencyPairing()
-  const {
-    BACKEND: {API_ROOT},
-  } = getCardanoNetworkConfigById(1)
+  const {languageCode} = useLanguage()
 
   const ptQuery = useQuery({
     staleTime: time.halfHour,
@@ -127,23 +130,30 @@ const useGetPortfolioTokenChart = (
     ...options,
     queryKey: ['useGetPortfolioTokenChart', tokenInfo?.info.id ?? '', timeInterval, currency],
     queryFn: async () => {
-      const {error, tickers} = await fetchAdaPrice(API_ROOT, getTimestamps(timeInterval))
-      if (error !== null) throw error
+      const response = await fetchPtPriceActivity(getTimestamps(timeInterval))
+      if (isRight(response)) {
+        if (response.value.data.error) throw new Error(response.value.data.error)
 
-      const validCurrency = currency === 'ADA' ? 'USD' : currency ?? 'USD'
+        const tickers = response.value.data.tickers
+        const validCurrency = currency === ptTicker ? supportedCurrencies.USD : currency ?? supportedCurrencies.USD
 
-      const initialPrice = tickers[0].prices[validCurrency]
-      const records = tickers
-        .map((ticker) => {
-          const value = ticker.prices[validCurrency]
-          if (value === undefined) return undefined
-          const {changePercent, changeValue} = priceChange(initialPrice, value)
-          const label = new Date(ticker.timestamp).toLocaleString('en-us', {dateStyle: 'short', timeStyle: 'short'})
-          return {label, value, changePercent, changeValue}
-        })
-        .filter(Boolean) as TokenChartData[]
+        const initialPrice = tickers[0].prices[validCurrency]
+        const records = tickers
+          .map((ticker) => {
+            const value = ticker.prices[validCurrency]
+            if (value === undefined) return undefined
+            const {changePercent, changeValue} = priceChange(initialPrice, value)
+            const label = new Date(ticker.timestamp).toLocaleString(languageCode, {
+              dateStyle: 'short',
+              timeStyle: 'short',
+            })
+            return {label, value, changePercent, changeValue}
+          })
+          .filter(Boolean) as TokenChartData[]
 
-      return records
+        return records
+      }
+      throw new Error('Failed to fetch token chart data')
     },
   })
 
@@ -154,12 +164,10 @@ const useGetPortfolioTokenChart = (
     ...options,
     queryKey: ['useGetPortfolioTokenChart', tokenInfo?.info.id ?? '', timeInterval],
     queryFn: async () => {
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      await new Promise((resolve) => setTimeout(resolve, 1))
       return generateMockChartData(timeInterval)
     },
   })
 
   return tokenInfo && isPrimaryToken(tokenInfo.info) ? ptQuery : otherQuery
 }
-
-export default useGetPortfolioTokenChart

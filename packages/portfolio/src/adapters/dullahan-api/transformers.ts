@@ -5,9 +5,10 @@ import {freeze} from 'immer'
 import {parseSecondaryTokenInfoWithCacheRecord} from '../../validators/token-info'
 import {
   DullahanApiCachedIdsRequest,
-  DullahanApiTokenActivityUpdatesResponse,
+  DullahanApiTokenActivityResponse,
   DullahanApiTokenInfosResponse,
 } from './types'
+import {z} from 'zod'
 
 export const toSecondaryTokenInfos = (
   apiTokenInfosResponse: DullahanApiTokenInfosResponse,
@@ -49,27 +50,32 @@ export const toSecondaryTokenInfos = (
 }
 
 export const toTokenActivityUpdates = (
-  apiTokenActivityUpdatesResponse: Readonly<DullahanApiTokenActivityUpdatesResponse>,
+  apiTokenActivityResponse: Readonly<DullahanApiTokenActivityResponse>,
 ) => {
   const tokenActivityUpdates: Record<
     Portfolio.Token.Id,
-    Portfolio.Token.ActivityUpdates
+    Portfolio.Token.Activity
   > = {}
 
   return freeze(
-    Object.entries(apiTokenActivityUpdatesResponse).reduce(
+    Object.entries(apiTokenActivityResponse).reduce(
       (acc, [id, tokenActivity]) => {
-        if (!tokenActivity) return acc
+        if (!Array.isArray(tokenActivity)) return acc
         const castedId = id as Portfolio.Token.Id
 
-        const parsedTokenActivity: Portfolio.Token.ActivityUpdates = {
-          price24h: {
-            ts: tokenActivity.price24h.ts,
-            open: new BigNumber(tokenActivity.price24h.open),
-            close: new BigNumber(tokenActivity.price24h.close),
-            low: new BigNumber(tokenActivity.price24h.low),
-            high: new BigNumber(tokenActivity.price24h.high),
-            change: tokenActivity.price24h.change,
+        const [statusCode, tokenActivityData] = tokenActivity
+        if (statusCode !== Api.HttpStatusCode.Ok) return acc
+
+        TokenAcvitivyResponseSchema.parse(tokenActivityData)
+
+        const parsedTokenActivity: Portfolio.Token.Activity = {
+          price: {
+            ts: tokenActivityData.price.ts,
+            open: new BigNumber(tokenActivityData.price.open),
+            close: new BigNumber(tokenActivityData.price.close),
+            low: new BigNumber(tokenActivityData.price.low),
+            high: new BigNumber(tokenActivityData.price.high),
+            change: tokenActivityData.price.change,
           },
         }
 
@@ -89,3 +95,14 @@ export const toDullahanRequest = (
   request.map(
     ([tokenId, hash]) => `${tokenId}:${hash}`,
   ) as DullahanApiCachedIdsRequest
+
+const TokenAcvitivyResponseSchema = z.object({
+  price: z.object({
+    ts: z.number(),
+    open: z.string(),
+    close: z.string(),
+    low: z.string(),
+    high: z.string(),
+    change: z.number(),
+  }),
+})
