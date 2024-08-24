@@ -98,7 +98,9 @@ export const PortfolioTokenActivityProvider = ({children}: Props) => {
         }, {})
 
       actions.aggregatedBalancesChanged(aggregatedBalances)
-      actions.secondaryTokenIdsChanged(Object.keys(aggregatedBalances).filter(isPrimaryToken) as Portfolio.Token.Id[])
+      actions.secondaryTokenIdsChanged(
+        Object.keys(aggregatedBalances).filter((id) => !isPrimaryToken(id)) as Portfolio.Token.Id[],
+      )
 
       queryClient.invalidateQueries([queryKey])
     })
