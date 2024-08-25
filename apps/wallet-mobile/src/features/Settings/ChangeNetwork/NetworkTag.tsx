@@ -1,7 +1,7 @@
 import {useTheme} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
 import * as React from 'react'
-import {StyleSheet, Text, TouchableOpacity, useWindowDimensions, View, ViewStyle} from 'react-native'
+import {StyleSheet, Text, TextStyle, TouchableOpacity, useWindowDimensions, View, ViewStyle} from 'react-native'
 
 import {Button, Spacer, useModal} from '../../../components'
 import {Space} from '../../../components/Space/Space'
@@ -17,11 +17,13 @@ export const NetworkTag = ({
   directChangeActive,
   style,
   disabled,
+  textStyle,
 }: {
   children: React.ReactNode
   directChangeActive?: boolean
   style?: ViewStyle
   disabled?: boolean
+  textStyle?: TextStyle
 }) => {
   const {
     selected: {network: selectedNetwork},
@@ -72,7 +74,7 @@ export const NetworkTag = ({
         accessibilityRole="header"
         aria-level="1"
         ellipsizeMode="tail"
-        style={styles.headerTitleStyle}
+        style={[styles.headerTitleStyle, textStyle]}
       >
         {children}
       </Text>
