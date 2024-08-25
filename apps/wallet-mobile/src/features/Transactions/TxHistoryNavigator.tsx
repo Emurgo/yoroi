@@ -384,7 +384,10 @@ export const TxHistoryNavigator = () => {
                   headerTransparent: true,
                   title: strings.scanTitle,
                   headerTintColor: color.white_static,
-                  headerLeft: (props) => <BackButton color={color.gray_cmax} {...props} />,
+                  headerLeft: (props) => <BackButton color={color.white_static} {...props} />,
+                  headerTitle: ({children}) => (
+                    <NetworkTag textStyle={{color: color.white_static}}>{children}</NetworkTag>
+                  ),
                 }}
               />
 
