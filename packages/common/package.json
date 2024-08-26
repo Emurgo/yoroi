@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/common",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "description": "The Common package of Yoroi SDK",
   "keywords": [
     "yoroi",
@@ -146,6 +146,7 @@
     "@types/jest": "^29.5.12",
     "@types/react": "^18.2.55",
     "@types/react-test-renderer": "^18.0.7",
+    "@yoroi/types": "^1.5.7",
     "axios": "^1.5.0",
     "axios-mock-adapter": "^1.21.5",
     "bignumber.js": "^9.0.1",
@@ -171,9 +172,6 @@
     "rxjs": "^7.8.1",
     "typescript": "^5.3.3",
     "zod": "^3.22.1"
-  },
-  "dependencies": {
-    "@yoroi/types": "1.5.6"
   },
   "peerDependencies": {
     "@react-native-async-storage/async-storage": ">= 1.19.3 <= 1.20.0",

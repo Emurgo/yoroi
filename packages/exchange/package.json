@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/exchange",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "The Exchange package of Yoroi SDK",
   "keywords": [
     "yoroi",
@@ -128,10 +128,6 @@
       "<rootDir>/jest.setup.js"
     ]
   },
-  "dependencies": {
-    "@yoroi/common": "1.5.3",
-    "@yoroi/types": "1.5.6"
-  },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
     "@react-native-async-storage/async-storage": "^1.19.3",
@@ -143,6 +139,7 @@
     "@types/jest": "^29.5.12",
     "@types/react": "^18.2.55",
     "@types/react-test-renderer": "^18.0.7",
+    "@yoroi/types": "^1.5.7",
     "axios": "^1.5.0",
     "commitlint": "^17.0.2",
     "del-cli": "^5.0.0",
@@ -167,6 +164,7 @@
   },
   "peerDependencies": {
     "@react-native-async-storage/async-storage": ">= 1.19.3 <= 1.20.0",
+    "@yoroi/common": "^1.5.4",
     "axios": "^1.5.0",
     "immer": "^10.0.2",
     "react": ">= 16.8.0 <= 19.0.0",

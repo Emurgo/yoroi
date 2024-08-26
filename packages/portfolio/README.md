@@ -1,6 +1,6 @@
 # @yoroi/portfolio
 
-The `@yoroi/portfolio` package is an all-in-one solution for managing token portfolios, images, prices, balances, and token information within the Yoroi wallet ecosystem. Designed with modern web and mobile applications in mind, this package not only handles token data but also offers integrated CDN support for images, ensuring smooth and efficient loading, especially on mobile devices. 
+The `@yoroi/portfolio` package is an all-in-one solution for managing token portfolios, images, prices, balances, and token information within the Yoroi wallet ecosystem. Designed with modern web and mobile applications in mind, this package not only handles token data but also offers integrated CDN support for images, ensuring smooth and efficient loading, especially on mobile devices.
 
 By leveraging CDN, it avoids the "lag" associated with directly using IPFS, specially in cases where the images are not pinned to any service.
 
@@ -91,14 +91,15 @@ A frozen object containing methods to `hydrate`, `refresh`, `syncBalances`, `syn
 ## Features
 
 - Caching: Efficiently cache token information and balances for quick access, it leverages the `cache-control` and `eTag` from the backend to avoid hitting the API constantly.
-- Synchronization: Keep token information and balances up-to-date with external sources (`CIP68`, Token Registry the off-chain token record `CIP26`).
+- Synchronization: Keep token information and balances up-to-date with external sources ([`CIP68`](https://cips.cardano.org/cip/CIP-68), Token Registry the off-chain token record [`CIP26`](https://cips.cardano.org/cip/CIP-26)).
 - Event Observation: Allows client to subscribe to handle events related to tokens and balances. (check the `Token.Event` for all options)
 - Primary Token Management: Special handling for primary tokens, including detailed breakdowns of balances (rewards, locked deposit - cost to keep UTxOs).
 - Customization: Extensible with custom observers and task queues (it manages concurrency automatically, therefore many wallets can synchronize at the same time, it ensures the persisted and cached state are atomic).
-- Loose Checking: There are some loose checks to list tokens that were minted with wrong metadata (not following the specs, `CIP25`).
+- Loose Checking: There are some loose checks to list tokens that were minted with wrong metadata (not following the specs, [`CIP25`](https://cips.cardano.org/cip/CIP-25)).
 - DeFi: Support token activity and price history, for now the supported protocols are:
   - Cardano
     - [MinSwap v1 & v2](https://minswap.org)
+    - [SundaeSwap (**comming soon**)](https://sundae.fi)
 
 If you are looking for more information about the APIs, events and types please check [here](https://github.com/Emurgo/yoroi/tree/develop/packages/types/src/portfolio)
 

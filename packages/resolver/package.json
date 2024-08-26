@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/resolver",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "description": "Yoroi domain resolver",
   "keywords": [
     "yoroi",
@@ -137,11 +137,6 @@
       "<rootDir>/jest.setup.js"
     ]
   },
-  "dependencies": {
-    "@yoroi/api": "1.5.1",
-    "@yoroi/common": "1.5.3",
-    "@yoroi/types": "1.5.6"
-  },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
     "@react-native-async-storage/async-storage": "^1.19.3",
@@ -153,6 +148,7 @@
     "@types/jest": "^29.5.12",
     "@types/react": "^18.2.55",
     "@types/react-test-renderer": "^18.0.7",
+    "@yoroi/types": "^1.5.7",
     "axios": "^1.5.0",
     "commitlint": "^17.0.2",
     "del-cli": "^5.0.0",
@@ -176,6 +172,8 @@
   },
   "peerDependencies": {
     "@react-native-async-storage/async-storage": ">= 1.19.3 <= 1.20.0",
+    "@yoroi/api": "^1.5.2",
+    "@yoroi/common": "^1.5.4",
     "axios": "^1.5.0",
     "react": ">= 16.8.0 <= 19.0.0",
     "react-query": "^3.39.3",
