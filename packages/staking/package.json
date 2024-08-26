@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/staking",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "The Staking package of Yoroi SDK",
   "keywords": [
     "yoroi",
@@ -148,7 +148,8 @@
     "@types/jest": "^29.5.12",
     "@types/react": "^18.2.55",
     "@types/react-test-renderer": "^18.0.7",
-    "@yoroi/types": "1.5.6",
+    "@yoroi/common": "1.5.4",
+    "@yoroi/types": "^1.5.7",
     "axios": "^1.5.0",
     "axios-mock-adapter": "^1.21.5",
     "commitlint": "^17.0.2",
@@ -173,7 +174,7 @@
   },
   "peerDependencies": {
     "@react-native-async-storage/async-storage": ">= 1.19.3 <= 1.20.0",
-    "@yoroi/common": "1.5.3",
+    "@yoroi/common": "1.5.4",
     "immer": "^10.0.2",
     "react": ">= 16.8.0 <= 19.0.0",
     "react-query": "^3.39.3",
