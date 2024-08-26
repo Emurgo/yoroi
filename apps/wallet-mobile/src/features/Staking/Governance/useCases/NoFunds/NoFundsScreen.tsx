@@ -4,12 +4,12 @@ import {Chain} from '@yoroi/types'
 import React from 'react'
 import {Linking, StyleSheet, View} from 'react-native'
 
-import {Button, Text} from '../../../../../components'
+import {Button, Spacer, Text} from '../../../../../components'
 import {SafeArea} from '../../../../../components/SafeArea'
 import {Space} from '../../../../../components/Space/Space'
 import {TxHistoryRouteNavigation} from '../../../../../kernel/navigation'
 import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
-import {useStrings} from '../../common'
+import {LearnMoreLink, useStrings} from '../../common'
 import {NoFunds} from '../../illustrations'
 
 export const NoFundsScreen = () => {
@@ -39,6 +39,8 @@ export const NoFundsScreen = () => {
   return (
     <SafeArea style={styles.root}>
       <View style={styles.center}>
+        <Spacer height={120} />
+
         <NoFunds />
 
         <Space height="lg" />
@@ -48,6 +50,10 @@ export const NoFundsScreen = () => {
         <Space height="lg" />
 
         <Button title={buttonText} textStyles={styles.button} shelleyTheme onPress={handleOnTryAgain} />
+
+        <Spacer fill />
+
+        <LearnMoreLink />
       </View>
     </SafeArea>
   )

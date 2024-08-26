@@ -99,8 +99,8 @@ const ConfirmTxWithHwModalContent = ({
     walletManager.updateWalletHWDeviceInfo(meta.id, hwDeviceInfo)
 
     const isCIP1694Supported = await wallet.ledgerSupportsCIP1694(false, hwDeviceInfo)
-    if (!isCIP1694Supported) {
-      onNotSupportedCIP1694?.()
+    if (!isCIP1694Supported && onNotSupportedCIP1694) {
+      onNotSupportedCIP1694()
       return
     }
 
@@ -122,8 +122,8 @@ const ConfirmTxWithHwModalContent = ({
     walletManager.updateWalletHWDeviceInfo(meta.id, hwDeviceInfo)
 
     const isCIP1694Supported = await wallet.ledgerSupportsCIP1694(true, hwDeviceInfo)
-    if (!isCIP1694Supported) {
-      onNotSupportedCIP1694?.()
+    if (!isCIP1694Supported && onNotSupportedCIP1694) {
+      onNotSupportedCIP1694()
       return
     }
 
