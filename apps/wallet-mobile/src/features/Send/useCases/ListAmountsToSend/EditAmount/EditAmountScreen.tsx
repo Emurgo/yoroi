@@ -1,9 +1,19 @@
+import {useNavigation} from '@react-navigation/native'
 import {atomicBreakdown, parseDecimal} from '@yoroi/common'
 import {isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import * as React from 'react'
-import {ScrollView, StyleSheet, Text, TouchableOpacity, View, ViewProps} from 'react-native'
+import {
+  InteractionManager,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  View,
+  ViewProps,
+} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, KeyboardAvoidingView, Spacer, TextInput} from '../../../../../components'
@@ -11,6 +21,7 @@ import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalan
 import {Space} from '../../../../../components/Space/Space'
 import {useLanguage} from '../../../../../kernel/i18n'
 import {logger} from '../../../../../kernel/logger/logger'
+import {BackButton} from '../../../../../kernel/navigation'
 import {editedFormatter, pastedFormatter} from '../../../../../yoroi-wallets/utils'
 import {usePortfolioBalances} from '../../../../Portfolio/common/hooks/usePortfolioBalances'
 import {usePortfolioPrimaryBreakdown} from '../../../../Portfolio/common/hooks/usePortfolioPrimaryBreakdown'
@@ -26,12 +37,13 @@ export const EditAmountScreen = () => {
   const {styles} = useStyles()
   const navigateTo = useNavigateTo()
   const {numberLocale} = useLanguage()
+  const navigation = useNavigation()
 
   const {wallet} = useSelectedWallet()
   const balances = usePortfolioBalances({wallet})
   const primaryBreakdown = usePortfolioPrimaryBreakdown({wallet})
 
-  const {selectedTokenId, amountChanged, allocated, selectedTargetIndex, targets} = useTransfer()
+  const {selectedTokenId, amountRemoved, amountChanged, allocated, selectedTargetIndex, targets} = useTransfer()
 
   const amount = targets[selectedTargetIndex].entry.amounts[selectedTokenId]
   const initialQuantity = amount.quantity
@@ -52,6 +64,25 @@ export const EditAmountScreen = () => {
     setQuantity(initialQuantity)
     setInputValue(atomicBreakdown(initialQuantity, amount.info.decimals).bn.toFormat())
   }, [amount.info.decimals, initialQuantity])
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft: (props: TouchableOpacityProps) => (
+        <BackButton
+          {...props}
+          onPress={() => {
+            navigation.goBack()
+
+            if (quantity === 0n) {
+              InteractionManager.runAfterInteractions(() => {
+                amountRemoved(selectedTokenId)
+              })
+            }
+          }}
+        />
+      ),
+    })
+  }, [amountRemoved, navigation, quantity, selectedTokenId])
 
   const hasBalance = available >= quantity
   // primary can have locked amount
