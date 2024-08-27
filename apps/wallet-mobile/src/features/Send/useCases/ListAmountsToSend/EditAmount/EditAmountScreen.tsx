@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native'
+import {useIsFocused, useNavigation} from '@react-navigation/native'
 import {atomicBreakdown, parseDecimal} from '@yoroi/common'
 import {isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
@@ -65,24 +65,16 @@ export const EditAmountScreen = () => {
     setInputValue(atomicBreakdown(initialQuantity, amount.info.decimals).bn.toFormat())
   }, [amount.info.decimals, initialQuantity])
 
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerLeft: (props: TouchableOpacityProps) => (
-        <BackButton
-          {...props}
-          onPress={() => {
-            navigation.goBack()
-
-            if (quantity === 0n) {
-              InteractionManager.runAfterInteractions(() => {
-                amountRemoved(selectedTokenId)
-              })
-            }
-          }}
-        />
-      ),
-    })
-  }, [amountRemoved, navigation, quantity, selectedTokenId])
+  const isFocused = useIsFocused()
+  React.useEffect(() => {
+    return () => {
+      if (quantity === 0n && !isFocused) {
+        InteractionManager.runAfterInteractions(() => {
+          amountRemoved(selectedTokenId)
+        })
+      }
+    }
+  }, [amountRemoved, isFocused, quantity, selectedTokenId])
 
   const hasBalance = available >= quantity
   // primary can have locked amount
