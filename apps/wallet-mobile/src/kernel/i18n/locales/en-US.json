@@ -1073,6 +1073,8 @@
   "rampOnOff.createRampOnOff.createorder.sanchonotice.title": "ADA purchases can only be made on the mainnet",
   "rampOnOff.createRampOnOff.createorder.sanchonotice.text": "Switch network or top up your testnet network wallet with the free Cardano faucet",
   "rampOnOff.createRampOnOff.createorder.playground": "Playground",
+  "rampOnOff.createRampOnOff.loadingLink": "We are redirecting you outside Yoroi. Please wait",
+  "rampOnOff.createRampOnOff.linkError": "This service is currently unavailable. Please try again later",
   "rampOnOff.rampOnOffScreen.rampOnOffTitle": "Buy/Sell ADA",
   "rampOnOff.resultRampOnOff.congrats": "Congrats! 🎉 Your transaction is now in progress. You should be receiving funds soon.",
   "rampOnOff.resultRampOnOff.cryptoAmountYouGet": "ADA amount you get",
