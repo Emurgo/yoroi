@@ -81,7 +81,7 @@ export const CreateExchangeOrderScreen = () => {
     walletId: wallet.id,
   }
 
-  const {signal, setupSignalTimeout} = useAbortSignal(3000)
+  const {signal, setupSignalTimeout} = useAbortSignal()
 
   const {isLoading, refetch: createReferralLink} = useCreateReferralLink(
     {
@@ -117,7 +117,7 @@ export const CreateExchangeOrderScreen = () => {
 
   const handleOnExchange = () => {
     createReferralLink()
-    setupSignalTimeout()
+    setupSignalTimeout(3000)
     openModal('', <LoadingLinkScreen />, undefined, undefined, true)
   }
 
@@ -180,20 +180,22 @@ export const CreateExchangeOrderScreen = () => {
   )
 }
 
-const useAbortSignal = (timeoutMs: number) => {
+const useAbortSignal = () => {
   const abortController = React.useMemo(() => new AbortController(), [])
-  let timeoutId: ReturnType<typeof setTimeout> | undefined
+  const timeoutIdRef = React.useRef<ReturnType<typeof setTimeout> | undefined>()
 
-  const setupTimeout = () => {
-    timeoutId = setTimeout(() => abortController.abort(), timeoutMs ?? 0)
+  const setupTimeout = (timeoutMs: number) => {
+    timeoutIdRef.current = setTimeout(() => abortController.abort(), timeoutMs ?? 0)
   }
 
   React.useEffect(() => {
     return () => {
-      clearTimeout(timeoutId)
+      if (timeoutIdRef.current) {
+        clearTimeout(timeoutIdRef.current)
+      }
       abortController.abort()
     }
-  }, [abortController, timeoutId])
+  }, [abortController])
 
   return {
     signal: abortController.signal,
