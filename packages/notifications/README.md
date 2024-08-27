@@ -17,4 +17,4 @@ The `@yoroi/notifications` package handles local notifications within the Yoroi 
 
 **Version 1.0**
 
-Initial version includes local notifications ony.
+Initial version includes local notifications only.
