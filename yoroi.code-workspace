@@ -71,6 +71,10 @@
     {
       "name": "@yoroi/e2e-wallet-mobile",
       "path": "./e2e/wallet-mobile"
+    },
+    {
+      "name": "@yoroi/notifications",
+      "path": "./packages/notifications"
     }
   ],
   "settings": {
