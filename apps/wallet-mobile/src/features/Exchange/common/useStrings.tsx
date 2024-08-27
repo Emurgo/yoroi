@@ -51,6 +51,8 @@ export const useStrings = () => {
     playground: intl.formatMessage(messages.playground),
     close: intl.formatMessage(globalMessages.close),
     error: intl.formatMessage(globalMessages.error),
+    loadingLink: intl.formatMessage(messages.loadingLink),
+    linkError: intl.formatMessage(messages.linkError),
   }).current
 }
 
@@ -225,6 +227,14 @@ export const messages = Object.freeze(
     playground: {
       id: 'rampOnOff.createRampOnOff.createorder.playground',
       defaultMessage: '!!!Playground',
+    },
+    loadingLink: {
+      id: 'rampOnOff.createRampOnOff.loadingLink',
+      defaultMessage: '!!!We are redirecting you outside Yoroi. Please wait',
+    },
+    linkError: {
+      id: 'rampOnOff.createRampOnOff.linkError',
+      defaultMessage: '!!!This service is currently unavailable. Please try again later',
     },
   }),
 )

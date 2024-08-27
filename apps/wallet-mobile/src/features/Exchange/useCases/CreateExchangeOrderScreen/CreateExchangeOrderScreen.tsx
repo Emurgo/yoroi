@@ -4,14 +4,15 @@ import {linksYoroiModuleMaker} from '@yoroi/links'
 import {useTheme} from '@yoroi/theme'
 import {Chain, Exchange} from '@yoroi/types'
 import * as React from 'react'
-import {Alert, Linking, StyleSheet, useWindowDimensions, View} from 'react-native'
+import {Linking, StyleSheet, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Icon, KeyboardAvoidingView} from '../../../../components'
+import {Icon, KeyboardAvoidingView, useModal} from '../../../../components'
 import {banxaTestWallet} from '../../../../kernel/env'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../kernel/navigation'
+import {delay} from '../../../../yoroi-wallets/utils'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {ProviderItem} from '../../common/ProviderItem/ProviderItem'
@@ -21,6 +22,8 @@ import {BanxaLogo} from '../../illustrations/BanxaLogo'
 import {EncryptusLogo} from '../../illustrations/EncryptusLogo'
 import {CreateExchangeButton} from './CreateExchangeButton/CreateExchangeButton'
 import {EditAmount} from './EditAmount/EditAmount'
+import {ErrorScreen} from './LoadingLink/ErrorScreen'
+import {LoadingLinkScreen} from './LoadingLink/LoadingScreen'
 import {SelectBuyOrSell} from './SelectBuyOrSell/SelectBuyOrSell'
 import {ShowDisclaimer} from './ShowDisclaimer/ShowDisclaimer'
 import {ShowPreprodNotice} from './ShowPreprodNotice/ShowPreprodNotice'
@@ -37,6 +40,8 @@ export const CreateExchangeOrderScreen = () => {
   const {
     selected: {network},
   } = useWalletManager()
+
+  const {openModal, closeModal} = useModal()
 
   const navigateTo = useNavigateTo()
   const {orderType, canExchange, providerId, provider, amount, referralLink: managerReferralLink} = useExchange()
@@ -81,13 +86,18 @@ export const CreateExchangeOrderScreen = () => {
       queries: urlOptions,
       providerId,
       referralLinkCreate: managerReferralLink.create,
+      fetcherConfig: {signal: AbortSignal.timeout(3000)},
     },
     {
       enabled: false,
       suspense: false,
       useErrorBoundary: false,
-      onError: (error) => {
-        Alert.alert(strings.error, error.message)
+      onError: async () => {
+        closeModal()
+
+        await delay(1000)
+
+        openModal('', <ErrorScreen />, undefined, undefined, true)
       },
       onSuccess: (referralLink) => {
         if (referralLink.toString() !== '') {
@@ -105,6 +115,7 @@ export const CreateExchangeOrderScreen = () => {
 
   const handleOnExchange = () => {
     createReferralLink()
+    openModal('', <LoadingLinkScreen />, undefined, undefined, true)
   }
 
   const handleOnListProvidersByOrderType = () => {
