@@ -190,7 +190,7 @@ const useAbortSignal = () => {
 
   React.useEffect(() => {
     return () => {
-      if (timeoutIdRef.current) {
+      if (timeoutIdRef?.current) {
         clearTimeout(timeoutIdRef.current)
       }
       abortController.abort()
