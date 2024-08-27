@@ -8,6 +8,7 @@ type ModalState = {
   title: string
   content: React.ReactNode
   isLoading: boolean
+  full: boolean
 }
 type ModalActions = {
   openModal: (
@@ -15,6 +16,7 @@ type ModalActions = {
     content: ModalState['content'],
     height?: ModalState['height'],
     onClose?: () => void,
+    full?: boolean,
   ) => void
   closeModal: () => void
   startLoading: () => void
@@ -54,9 +56,10 @@ export const ModalProvider = ({
       content: ModalState['content'],
       height?: ModalState['height'],
       onClose?: () => void,
+      full = false,
     ) => {
       Keyboard.dismiss()
-      dispatch({type: 'open', title, content, height})
+      dispatch({type: 'open', title, content, height, full})
       navigation.navigate('modal')
       onCloseRef.current = onClose
     },
@@ -70,7 +73,13 @@ export const ModalProvider = ({
 }
 
 type ModalAction =
-  | {type: 'open'; height: ModalState['height'] | undefined; content: ModalState['content']; title: ModalState['title']}
+  | {
+      type: 'open'
+      height: ModalState['height'] | undefined
+      content: ModalState['content']
+      title: ModalState['title']
+      full: ModalState['full']
+    }
   | {type: 'close'}
   | {type: 'startLoading'}
   | {type: 'stopLoading'}
@@ -85,6 +94,7 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
         title: action.title,
         isOpen: true,
         isLoading: false,
+        full: action.full,
       }
 
     case 'close':
@@ -107,6 +117,7 @@ const defaultState: ModalState = Object.freeze({
   title: '',
   isOpen: false,
   isLoading: false,
+  full: false,
 })
 
 const getLastRouteName = (navigation: NavigationProp<ReactNavigation.RootParamList>) => {

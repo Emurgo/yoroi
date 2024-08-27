@@ -7,12 +7,13 @@ import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context'
 import {KeyboardAvoidingView} from '../KeyboardAvoidingView'
 import {LoadingOverlay} from '../LoadingOverlay/LoadingOverlay'
 import {Spacer} from '../Spacer'
+import {FullModalScreen} from './FullModalScreen'
 import {useModal} from './ModalContext'
 
 export const ModalScreen = () => {
   const styles = useStyles()
   const {current} = useCardAnimation()
-  const {height, closeModal, content, isOpen, isLoading} = useModal()
+  const {height, closeModal, content, isOpen, isLoading, full} = useModal()
   const [swipeLocationY, setSwipeLocationY] = React.useState(height)
   // NOTE: this is to fill the bottom of the screen with the same color as the modal
   const {bottom} = useSafeAreaInsets()
@@ -30,6 +31,8 @@ export const ModalScreen = () => {
   React.useEffect(() => {
     return () => closeModal()
   }, [closeModal])
+
+  if (full) return <FullModalScreen>{content}</FullModalScreen>
 
   return (
     <SafeAreaView style={styles.backdrop}>
