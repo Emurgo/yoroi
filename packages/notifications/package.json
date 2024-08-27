@@ -129,11 +129,6 @@
       "<rootDir>/jest.setup.js"
     ]
   },
-  "dependencies": {
-    "@emurgo/cip14-js": "^3.0.1",
-    "bech32": "^2.0.0",
-    "bip39": "^3.1.0"
-  },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
     "@react-native-async-storage/async-storage": "^1.19.3",
