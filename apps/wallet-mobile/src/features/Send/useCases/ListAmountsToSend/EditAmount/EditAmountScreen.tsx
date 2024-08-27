@@ -1,9 +1,10 @@
+import {useIsFocused} from '@react-navigation/native'
 import {atomicBreakdown, parseDecimal} from '@yoroi/common'
 import {isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import * as React from 'react'
-import {ScrollView, StyleSheet, Text, TouchableOpacity, View, ViewProps} from 'react-native'
+import {InteractionManager, ScrollView, StyleSheet, Text, TouchableOpacity, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, KeyboardAvoidingView, Spacer, TextInput} from '../../../../../components'
@@ -31,7 +32,7 @@ export const EditAmountScreen = () => {
   const balances = usePortfolioBalances({wallet})
   const primaryBreakdown = usePortfolioPrimaryBreakdown({wallet})
 
-  const {selectedTokenId, amountChanged, allocated, selectedTargetIndex, targets} = useTransfer()
+  const {selectedTokenId, amountRemoved, amountChanged, allocated, selectedTargetIndex, targets} = useTransfer()
 
   const amount = targets[selectedTargetIndex].entry.amounts[selectedTokenId]
   const initialQuantity = amount.quantity
@@ -52,6 +53,17 @@ export const EditAmountScreen = () => {
     setQuantity(initialQuantity)
     setInputValue(atomicBreakdown(initialQuantity, amount.info.decimals).bn.toFormat())
   }, [amount.info.decimals, initialQuantity])
+
+  const isFocused = useIsFocused()
+  React.useEffect(() => {
+    return () => {
+      if (quantity === 0n && !isFocused) {
+        InteractionManager.runAfterInteractions(() => {
+          amountRemoved(selectedTokenId)
+        })
+      }
+    }
+  }, [amountRemoved, isFocused, quantity, selectedTokenId])
 
   const hasBalance = available >= quantity
   // primary can have locked amount
