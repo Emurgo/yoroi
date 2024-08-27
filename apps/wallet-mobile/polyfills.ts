@@ -11,12 +11,4 @@ Buffer.prototype.subarray = function subarray(start, end) {
   return newBuf
 }
 
-AbortSignal.timeout =
-  AbortSignal.timeout ||
-  ((duration) => {
-    const controller = new AbortController()
-    setTimeout(() => controller.abort(), duration)
-    return controller.signal
-  })
-
 export {}

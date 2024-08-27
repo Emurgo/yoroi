@@ -81,12 +81,14 @@ export const CreateExchangeOrderScreen = () => {
     walletId: wallet.id,
   }
 
+  const {signal, setupSignalTimeout} = useAbortSignal(3000)
+
   const {isLoading, refetch: createReferralLink} = useCreateReferralLink(
     {
       queries: urlOptions,
       providerId,
       referralLinkCreate: managerReferralLink.create,
-      fetcherConfig: {signal: AbortSignal.timeout(3000)},
+      fetcherConfig: {signal},
     },
     {
       enabled: false,
@@ -115,6 +117,7 @@ export const CreateExchangeOrderScreen = () => {
 
   const handleOnExchange = () => {
     createReferralLink()
+    setupSignalTimeout()
     openModal('', <LoadingLinkScreen />, undefined, undefined, true)
   }
 
@@ -175,6 +178,27 @@ export const CreateExchangeOrderScreen = () => {
       </SafeAreaView>
     </KeyboardAvoidingView>
   )
+}
+
+const useAbortSignal = (timeoutMs: number) => {
+  const abortController = React.useMemo(() => new AbortController(), [])
+  let timeoutId: ReturnType<typeof setTimeout> | undefined
+
+  const setupTimeout = () => {
+    timeoutId = setTimeout(() => abortController.abort(), timeoutMs ?? 0)
+  }
+
+  React.useEffect(() => {
+    return () => {
+      clearTimeout(timeoutId)
+      abortController.abort()
+    }
+  }, [abortController, timeoutId])
+
+  return {
+    signal: abortController.signal,
+    setupSignalTimeout: setupTimeout,
+  }
 }
 
 const useStyles = () => {
