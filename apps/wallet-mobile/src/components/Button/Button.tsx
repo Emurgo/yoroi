@@ -156,7 +156,7 @@ const useStyles = () => {
       opacity: 0.5,
     },
     buttonDisabledText: {
-      color: color.gray_cmin,
+      color: color.text_gray_min,
     },
     shelleyTheme: {
       backgroundColor: color.primary_c500,

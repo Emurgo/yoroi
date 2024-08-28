@@ -12,9 +12,10 @@ export const black: ThemedPalette = {
   text_primary_low: darkPalette.primary_c300, // disabled, buttons, links
   text_primary_on: darkPalette.white_static, // primary color surfaces
   text_gray_max: darkPalette.gray_cmax, // hover and pressed
+  text_gray_min: darkPalette.gray_cmin, // disabled text
   text_gray_normal: darkPalette.gray_c900, // draws attention
   text_gray_medium: darkPalette.gray_c600, // accent or additional text
-  text_gray_low: darkPalette.gray_c400, // disabled text
+  text_gray_low: darkPalette.gray_c400, // accent or additional text
   text_error: darkPalette.sys_magenta_c500, // error messages
   text_warning: darkPalette.sys_orange_c500, // warning messages
   text_success: darkPalette.secondary_c500, // success messages

@@ -12,9 +12,10 @@ export const light: ThemedPalette = {
   text_primary_low: lightPalette.primary_c300, // disabled, buttons, links
   text_primary_on: lightPalette.white_static, // primary color surfaces
   text_gray_max: lightPalette.gray_cmax, // hover and pressed
+  text_gray_min: lightPalette.gray_cmin, // disabled text
   text_gray_normal: lightPalette.gray_c900, // draws attention
   text_gray_medium: lightPalette.gray_c600, // accent or additional text
-  text_gray_low: lightPalette.gray_c400, // disabled text
+  text_gray_low: lightPalette.gray_c400, // accent or additional text
   text_error: lightPalette.sys_magenta_c500, // error messages
   text_warning: lightPalette.sys_orange_c500, // warning messages
   text_success: lightPalette.secondary_c500, // success messages
