@@ -86,6 +86,7 @@ export type ThemedPalette = BasePalette & {
   text_primary_low: HexColor
   text_primary_on: HexColor
   text_gray_max: HexColor
+  text_gray_min: HexColor
   text_gray_normal: HexColor
   text_gray_medium: HexColor
   text_gray_low: HexColor

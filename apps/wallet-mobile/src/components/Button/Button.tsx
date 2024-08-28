@@ -88,6 +88,7 @@ export const Button = (props: ButtonProps) => {
             outlineOnLight && styles.textOutlineOnLight,
             outlineOnLight && shelleyTheme && styles.textShelleyOutlineOnLight,
             outlineShelley && styles.textOutlineShelley,
+            props.disabled && styles.buttonDisabledText,
             textStyles,
           ]}
         >
@@ -153,6 +154,9 @@ const useStyles = () => {
     },
     buttonDisabled: {
       opacity: 0.5,
+    },
+    buttonDisabledText: {
+      color: color.text_gray_min,
     },
     shelleyTheme: {
       backgroundColor: color.primary_c500,

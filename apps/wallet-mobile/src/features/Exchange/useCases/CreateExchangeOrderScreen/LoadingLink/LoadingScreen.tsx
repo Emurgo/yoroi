@@ -21,7 +21,7 @@ export const LoadingLinkScreen = () => {
 }
 
 const useStyles = () => {
-  const {atoms} = useTheme()
+  const {atoms, color} = useTheme()
 
   const styles = StyleSheet.create({
     root: {
@@ -32,6 +32,7 @@ const useStyles = () => {
     text: {
       ...atoms.heading_3_medium,
       ...atoms.text_center,
+      color: color.text_gray_max,
       maxWidth: 340,
     },
   })
