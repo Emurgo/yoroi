@@ -1,9 +1,9 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {useMemo} from 'react'
 import {ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native'
 
 import {Icon, Spacer} from '../../../../../components'
+import {useMappedStrings} from '../../../common/useStrings'
 
 type Props = {
   types: string[]
@@ -12,7 +12,7 @@ type Props = {
 }
 export const DAppTypes = ({types, onToggle, selectedTypes}: Props) => {
   const {styles} = useStyles()
-  const sorted = useMemo(() => sortTypes(types, selectedTypes), [types, selectedTypes])
+  const sorted = React.useMemo(() => sortTypes(types, selectedTypes), [types, selectedTypes])
 
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.contentContainer}>
@@ -43,8 +43,10 @@ const TypeItem = ({name, isActive = false, onToggle, disabled = false, isLimited
   const {styles} = useStyles()
 
   const [isPressed, setIsPressed] = React.useState(false)
+  const mappedStrings = useMappedStrings()
+  const text = React.useMemo(() => mappedStrings(name) ?? name, [mappedStrings, name])
 
-  const getBoxChipStyle = useMemo(() => {
+  const getBoxChipStyle = React.useMemo(() => {
     if (disabled) return styles.boxDisabledStyle
     if (isLimited) return styles.boxLimitedStyle
 
@@ -56,7 +58,7 @@ const TypeItem = ({name, isActive = false, onToggle, disabled = false, isLimited
     return styles.boxIdleStyle
   }, [styles, disabled, isActive, isLimited, isPressed])
 
-  const getTextChipStyle = useMemo(() => {
+  const getTextChipStyle = React.useMemo(() => {
     if (disabled) return styles.textDisabledStyle
     if (isLimited) return styles.textLimitedStyle
     if (isActive) return styles.textActiveStyle
@@ -80,7 +82,7 @@ const TypeItem = ({name, isActive = false, onToggle, disabled = false, isLimited
         <View style={[styles.chipContentBox, getBoxChipStyle]}>
           {isActive && <Icon.CheckFilled2 color={getTextChipStyle.color} />}
 
-          <Text style={[styles.chipText, getTextChipStyle]}>{name}</Text>
+          <Text style={[styles.chipText, getTextChipStyle]}>{text}</Text>
         </View>
       </TouchableWithoutFeedback>
     </View>
