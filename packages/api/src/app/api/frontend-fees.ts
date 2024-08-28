@@ -2,6 +2,9 @@ import {z} from 'zod'
 import {createTypeGuardFromSchema, fetcher, Fetcher} from '@yoroi/common'
 import {App} from '@yoroi/types'
 
+/**
+ * @deprecated in favour of getSwapConfig
+ */
 export const getFrontendFees =
   (baseUrl: string, request: Fetcher = fetcher) =>
   async (): Promise<App.FrontendFeesResponse> => {

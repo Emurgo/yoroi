@@ -2,6 +2,7 @@
 
 import {App} from '@yoroi/types'
 import {mockGetFrontendFees} from './frontend-fees.mocks'
+import {mockGetSwapConfig} from './swap-config.mocks'
 
 const loading = () => new Promise(() => {})
 const unknownError = () => Promise.reject(new Error('Unknown error'))
@@ -27,6 +28,18 @@ const getFrontendFees = {
   },
 }
 
+const getSwapConfig = {
+  success: () => Promise.resolve(mockGetSwapConfig.withFees),
+  delayed: (timeout?: number) =>
+    delayedResponse({data: mockGetSwapConfig.withFees, timeout}),
+  empty: () => Promise.resolve(mockGetSwapConfig.empty),
+  loading,
+  error: {
+    unknown: unknownError,
+  },
+}
+
 export const mockAppApi: App.Api = {
   getFrontendFees: getFrontendFees.success,
+  getSwapConfig: getSwapConfig.success,
 } as const
