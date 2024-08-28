@@ -35,7 +35,7 @@ export const AddressModal = ({address, path}: Props) => {
   return (
     <ScrollView style={styles.scroll}>
       <View style={styles.qrCode}>
-        <QRCode value={address} size={140} color={colors.white} backgroundColor={colors.black} />
+        <QRCode value={address} size={140} backgroundColor={colors.white} color={colors.black} />
       </View>
 
       <Spacer width={4} />
