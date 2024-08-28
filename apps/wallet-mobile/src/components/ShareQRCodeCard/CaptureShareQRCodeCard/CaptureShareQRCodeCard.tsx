@@ -32,7 +32,7 @@ export const CaptureShareQRCodeCard = ({content}: ShareProps) => {
 
         <View style={styles.addressContainer}>
           <View style={styles.qrCode}>
-            <QRCode value={content} size={170} color={colors.black} backgroundColor={colors.white} />
+            <QRCode value={content} size={170} color={colors.white} backgroundColor={colors.black} />
           </View>
 
           <Spacer height={16} />
@@ -50,7 +50,7 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     qrCode: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.white_static,
       padding: 10,
       borderRadius: 8,
     },

@@ -25,7 +25,7 @@ type Props = {
 export const AddressModal = ({address, path}: Props) => {
   const strings = useStrings()
   const keyHashes = useKeyHashes({address})
-  const {styles} = useStyles()
+  const {styles, colors} = useStyles()
   const {
     meta: {implementation},
   } = useSelectedWallet()
@@ -35,7 +35,7 @@ export const AddressModal = ({address, path}: Props) => {
   return (
     <ScrollView style={styles.scroll}>
       <View style={styles.qrCode}>
-        <QRCode value={address} size={140} backgroundColor="white" color="black" />
+        <QRCode value={address} size={140} color={colors.white} backgroundColor={colors.black} />
       </View>
 
       <Spacer width={4} />
@@ -142,5 +142,13 @@ const useStyles = () => {
       color: color.gray_c900,
     },
   })
-  return {styles}
+
+  const colors = {
+    white: color.gray_cmin,
+    black: color.gray_cmax,
+    transparent: 'transparent',
+    backgroundGradientCard: color.bg_gradient_1,
+  }
+
+  return {styles, colors} as const
 }
