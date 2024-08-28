@@ -154,7 +154,6 @@ const useStyles = () => {
     },
     buttonDisabled: {
       opacity: 0.5,
-      color: color.gray_cmin,
     },
     buttonDisabledText: {
       color: color.gray_cmin,
