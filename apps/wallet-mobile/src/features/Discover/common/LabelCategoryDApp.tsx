@@ -2,15 +2,19 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
+import {useMappedStrings} from './useStrings'
+
 type Props = {
   category: string
 }
 export const LabelCategoryDApp = ({category}: Props) => {
   const {styles} = useStyles()
+  const mappedStrings = useMappedStrings()
+  const text = React.useMemo(() => mappedStrings(category) ?? category, [mappedStrings, category])
 
   return (
     <View style={styles.labelContainer}>
-      <Text style={styles.labelText}>{category}</Text>
+      <Text style={styles.labelText}>{text}</Text>
     </View>
   )
 }
