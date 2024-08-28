@@ -222,6 +222,15 @@ import {
   PortfolioTokenActivity,
   PortfolioTokenActivityWindow,
 } from './portfolio/activity'
+import {
+  AppLoggerLevel,
+  AppLoggerMessage,
+  AppLoggerMetadata,
+  AppLoggerTransporter,
+  AppLoggerTransporterOptions,
+  AppLoggerEntry,
+  AppLoggerManager,
+} from './app/logger'
 
 export namespace App {
   export namespace Errors {
@@ -273,6 +282,17 @@ export namespace App {
 
   export type FrontendFeeTier = AppFrontendFeeTier
   export type FrontendFeesResponse = AppFrontendFeesResponse
+
+  export namespace Logger {
+    export type Level = AppLoggerLevel
+    export const Level = AppLoggerLevel
+    export type Message = AppLoggerMessage
+    export type Metadata = AppLoggerMetadata
+    export type Transporter = AppLoggerTransporter
+    export type TransporterOptions = AppLoggerTransporterOptions
+    export type Entry = AppLoggerEntry
+    export type Manager = AppLoggerManager
+  }
 }
 
 export namespace Swap {

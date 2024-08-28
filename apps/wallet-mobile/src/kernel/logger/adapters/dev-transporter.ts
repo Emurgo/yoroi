@@ -1,21 +1,21 @@
+import {App} from '@yoroi/types'
 import {freeze} from 'immer'
 
 import {replacer} from '../helpers/replacer'
 import {toLoggerMetadata} from '../helpers/to-logger-metadata'
-import {LoggerLevel, LoggerTransporter} from '../types'
 
 /* eslint-disable no-console */
 const devLogger = freeze({
-  [LoggerLevel.Debug]: console.debug, // console.debug is hidden by default in chrome
-  [LoggerLevel.Log]: console.log,
-  [LoggerLevel.Info]: console.info,
-  [LoggerLevel.Warn]: console.warn,
-  [LoggerLevel.Error]: console.error,
+  [App.Logger.Level.Debug]: console.debug, // console.debug is hidden by default in chrome
+  [App.Logger.Level.Log]: console.log,
+  [App.Logger.Level.Info]: console.info,
+  [App.Logger.Level.Warn]: console.warn,
+  [App.Logger.Level.Error]: console.error,
 })
 /* eslint-enable no-console */
 
 export const devAdapter = (transport = devLogger) => {
-  const transporter: LoggerTransporter = ({level, message, metadata, timestamp}) => {
+  const transporter: App.Logger.Transporter = ({level, message, metadata, timestamp}) => {
     const formattedMetadata = Object.keys(metadata).length
       ? ' ' + JSON.stringify(toLoggerMetadata(metadata), replacer, 2)
       : ''

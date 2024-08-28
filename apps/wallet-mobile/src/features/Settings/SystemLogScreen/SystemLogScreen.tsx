@@ -1,11 +1,11 @@
 import {useTheme} from '@yoroi/theme'
+import {App} from '@yoroi/types'
 import React from 'react'
 import {ScrollView, StyleSheet, TextProps, View} from 'react-native'
 
 import {Text} from '../../../components'
 import {Space} from '../../../components/Space/Space'
 import {logger} from '../../../kernel/logger/logger'
-import {LoggerLevel} from '../../../kernel/logger/types'
 
 export const SystemLogScreen = () => {
   const styles = useStyles()
@@ -40,11 +40,11 @@ export const SystemLogScreen = () => {
 }
 
 const LoggerLevelEmoji = {
-  [LoggerLevel.Debug]: '🔍',
-  [LoggerLevel.Log]: '📋',
-  [LoggerLevel.Info]: 'ℹ️',
-  [LoggerLevel.Warn]: '⚠️',
-  [LoggerLevel.Error]: '❌',
+  [App.Logger.Level.Debug]: '🔍',
+  [App.Logger.Level.Log]: '📋',
+  [App.Logger.Level.Info]: 'ℹ️',
+  [App.Logger.Level.Warn]: '⚠️',
+  [App.Logger.Level.Error]: '❌',
 } as const
 
 const LabelText = ({style, children, ...props}: TextProps) => {

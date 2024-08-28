@@ -1,11 +1,11 @@
+import {App} from '@yoroi/types'
 import {freeze} from 'immer'
 
 import {toLoggerMetadata} from '../helpers/to-logger-metadata'
-import {LoggerTransporter} from '../types'
 import {Sentry} from './sentry'
 
 export const sentryAdapter = (sentryRuntime = Sentry) => {
-  const transporter: LoggerTransporter = ({level, message, metadata, timestamp}) => {
+  const transporter: App.Logger.Transporter = ({level, message, metadata, timestamp}) => {
     const {type, ...meta} = metadata
     const formattedMetadata = toLoggerMetadata(meta)
 
