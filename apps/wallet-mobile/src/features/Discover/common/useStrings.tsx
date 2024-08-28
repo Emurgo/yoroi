@@ -51,6 +51,20 @@ export const useStrings = () => {
     testnetWarningDescription: intl.formatMessage(messages.testnetWarningDescription),
     singleAddress: intl.formatMessage(messages.singleAddress),
     singleAddressWarning: intl.formatMessage(messages.singleAddressWarning),
+    filterChildOptionsDAO: intl.formatMessage(messages.filterChildOptionsDAO),
+    filterChildOptionsDEX: intl.formatMessage(messages.filterChildOptionsDEX),
+    filterChildOptionsDeFi: intl.formatMessage(messages.filterChildOptionsDeFi),
+    filterChildOptionsDecentralisedStorage: intl.formatMessage(messages.filterChildOptionsDecentralisedStorage),
+    filterChildOptionsEntertainment: intl.formatMessage(messages.filterChildOptionsEntertainment),
+    filterChildOptionsNFTMarketplace: intl.formatMessage(messages.filterChildOptionsNFTMarketplace),
+    filterChildOptionsNews: intl.formatMessage(messages.filterChildOptionsNews),
+    filterChildOptionsStablecoin: intl.formatMessage(messages.filterChildOptionsStablecoin),
+    filterChildOptionsTradingTools: intl.formatMessage(messages.filterChildOptionsTradingTools),
+    filterParentOptionsCommunity: intl.formatMessage(messages.filterParentOptionsCommunity),
+    filterParentOptionsInvestment: intl.formatMessage(messages.filterParentOptionsInvestment),
+    filterParentOptionsMedia: intl.formatMessage(messages.filterParentOptionsMedia),
+    filterParentOptionsNFT: intl.formatMessage(messages.filterParentOptionsNFT),
+    filterParentOptionsTrading: intl.formatMessage(messages.filterParentOptionsTrading),
     learnMore: intl.formatMessage(globalMessages.learnMore),
   }).current
 }
@@ -229,5 +243,114 @@ export const messages = Object.freeze(
       defaultMessage:
         '!!!This is a list of DApps designed for testnet use. Note that it may be limited, as not all DApps are deployed in the testnet environment.',
     },
+    filterChildOptionsNews: {
+      id: 'discover.filterOptions.child.news',
+      defaultMessage: '!!!News',
+    },
+    filterChildOptionsEntertainment: {
+      id: 'discover.filterOptions.child.entertainment',
+      defaultMessage: '!!!Entertainment',
+    },
+    filterChildOptionsDeFi: {
+      id: 'discover.filterOptions.child.defi',
+      defaultMessage: '!!!DeFi',
+    },
+    filterChildOptionsDEX: {
+      id: 'discover.filterOptions.child.dex',
+      defaultMessage: '!!!DEX',
+    },
+    filterChildOptionsNFTMarketplace: {
+      id: 'discover.filterOptions.child.nftmarketplace',
+      defaultMessage: '!!!NFT Marketplace',
+    },
+    filterChildOptionsStablecoin: {
+      id: 'discover.filterOptions.child.stablecoin',
+      defaultMessage: '!!!Stablecoin',
+    },
+    filterChildOptionsTradingTools: {
+      id: 'discover.filterOptions.child.tradingtools',
+      defaultMessage: '!!!Trading Tools',
+    },
+    filterChildOptionsDAO: {
+      id: 'discover.filterOptions.child.dao',
+      defaultMessage: '!!!DAO',
+    },
+    filterChildOptionsDecentralisedStorage: {
+      id: 'discover.filterOptions.child.decentralisedstorage',
+      defaultMessage: '!!!Decentralised Storage',
+    },
+    filterParentOptionsMedia: {
+      id: 'discover.filterOptions.parent.media',
+      defaultMessage: '!!!Media',
+    },
+    filterParentOptionsInvestment: {
+      id: 'discover.filterOptions.parent.investment',
+      defaultMessage: '!!!Investment',
+    },
+    filterParentOptionsNFT: {
+      id: 'discover.filterOptions.parent.nft',
+      defaultMessage: '!!!NFT',
+    },
+    filterParentOptionsTrading: {
+      id: 'discover.filterOptions.parent.trading',
+      defaultMessage: '!!!Trading',
+    },
+    filterParentOptionsCommunity: {
+      id: 'discover.filterOptions.parent.community',
+      defaultMessage: '!!!Community',
+    },
   }),
 )
+
+export const useMappedStrings = () => {
+  const strings = useStrings()
+
+  return (option: string) => {
+    switch (option) {
+      case 'Media':
+        return strings.filterParentOptionsMedia
+
+      case 'Investment':
+        return strings.filterParentOptionsInvestment
+
+      case 'NFT':
+        return strings.filterParentOptionsNFT
+
+      case 'Trading':
+        return strings.filterParentOptionsTrading
+
+      case 'Community':
+        return strings.filterParentOptionsCommunity
+
+      case 'News':
+        return strings.filterChildOptionsNews
+
+      case 'Entertainment':
+        return strings.filterChildOptionsEntertainment
+
+      case 'DeFi':
+        return strings.filterChildOptionsDeFi
+
+      case 'DEX':
+        return strings.filterChildOptionsDEX
+
+      case 'NFT Marketplace':
+        return strings.filterChildOptionsNFTMarketplace
+
+      case 'Stablecoin':
+        return strings.filterChildOptionsStablecoin
+
+      case 'Trading Tools':
+        return strings.filterChildOptionsTradingTools
+
+      case 'DAO':
+        return strings.filterChildOptionsDAO
+
+      case 'Decentralised Storage':
+        return strings.filterChildOptionsDecentralisedStorage
+
+      default:
+        return null
+    }
+  }
+}

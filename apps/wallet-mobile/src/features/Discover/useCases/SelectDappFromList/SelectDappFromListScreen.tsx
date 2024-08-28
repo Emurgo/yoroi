@@ -23,7 +23,7 @@ const DAppTabs = {
   recommended: 'recommended',
 } as const
 type TDAppTabs = keyof typeof DAppTabs
-type Category = 'Investment' | 'Media' | 'Trading' | 'NFT' | 'Community'
+export type Category = 'Investment' | 'Media' | 'Trading' | 'NFT' | 'Community'
 
 export const SelectDappFromListScreen = () => {
   const strings = useStrings()

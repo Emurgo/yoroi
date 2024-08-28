@@ -1,8 +1,7 @@
-import {Chain} from '@yoroi/types'
+import {App, Chain} from '@yoroi/types'
 import {freeze} from 'immer'
 
 import {isDev} from './env'
-import {LoggerLevel} from './logger/types'
 
 export const governaceAfterBlock = freeze({
   [Chain.Network.Sancho]: 0,
@@ -15,4 +14,4 @@ export const governaceAfterBlock = freeze({
 
 export const agreementDate = 1691967600000
 
-export const loggerLevel: LoggerLevel = isDev ? LoggerLevel.Debug : LoggerLevel.Warn
+export const loggerLevel: App.Logger.Level = isDev ? App.Logger.Level.Debug : App.Logger.Level.Warn
