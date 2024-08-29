@@ -157,7 +157,7 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     container: {
       ...atoms.p_lg,
@@ -170,7 +170,7 @@ const useStyles = () => {
       ...atoms.flex_1,
     },
     textAddressDetails: {
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
       ...atoms.body_1_lg_regular,
     },
     textSection: {
@@ -185,8 +185,8 @@ const useStyles = () => {
   })
 
   const colors = {
-    gray: color.gray_c600,
-    lightGray: color.gray_c200,
+    gray: color.gray_600,
+    lightGray: color.gray_200,
   }
 
   return {styles, colors} as const

@@ -54,7 +54,7 @@ const useStyles = () => {
     },
     textWrapper: {
       ...atoms.heading_4_medium,
-      color: color.gray_c700,
+      color: color.gray_700,
       textAlign: 'center',
     },
     chart: {

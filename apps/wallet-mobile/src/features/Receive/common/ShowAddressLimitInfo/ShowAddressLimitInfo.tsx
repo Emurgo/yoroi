@@ -23,7 +23,7 @@ export const ShowAddressLimitInfo = () => {
             Linking.openURL(YoroiZendeskLink)
           }}
         >
-          <Text style={{color: color.primary_c500, borderWidth: 1}}>{strings.yoroiZendesk}</Text>
+          <Text style={{color: color.primary_500, borderWidth: 1}}>{strings.yoroiZendesk}</Text>
         </TouchableWithoutFeedback>
       </Text>
     </Animated.View>
@@ -41,16 +41,16 @@ const useStyles = () => {
       justifyContent: 'space-between',
       gap: 12,
       padding: 16,
-      backgroundColor: color.sys_cyan_c100,
+      backgroundColor: color.sys_cyan_100,
     },
     text: {
       ...atoms.body_2_md_regular,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
   })
 
   const colors = {
-    icon: color.primary_c500,
+    icon: color.primary_500,
   }
 
   return {styles, colors, color}

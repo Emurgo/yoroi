@@ -225,7 +225,7 @@ const InputSearch = ({placeholder}: Props) => {
       placeholder={placeholder}
       onChangeText={(search) => searchChanged(search)}
       autoCapitalize="none"
-      style={{flex: 1, color: color.el_gray_high}}
+      style={{flex: 1, color: color.el_gray_max}}
       testID="inputSearch"
       placeholderTextColor={color.text_gray_medium}
     />
@@ -237,7 +237,7 @@ const SearchButton = (props: TouchableOpacityProps) => {
 
   return (
     <TouchableOpacity testID="iconSearch" {...props}>
-      <Icon.Magnify size={26} color={color.text_gray_normal} />
+      <Icon.Magnify size={26} color={color.text_gray_medium} />
     </TouchableOpacity>
   )
 }
@@ -247,7 +247,7 @@ const EraseButton = (props: TouchableOpacityProps) => {
 
   return (
     <TouchableOpacity {...props}>
-      <Icon.Cross size={20} color={color.el_gray_high} />
+      <Icon.Cross size={20} color={color.el_gray_max} />
     </TouchableOpacity>
   )
 }
@@ -257,7 +257,7 @@ const BackButton = (props: TouchableOpacityProps) => {
 
   return (
     <TouchableOpacity testID="buttonBack" {...props}>
-      <Icon.Chevron direction="left" color={color.el_gray_high} />
+      <Icon.Chevron direction="left" color={color.el_gray_max} />
     </TouchableOpacity>
   )
 }

@@ -142,22 +142,22 @@ const useStyles = () => {
       ...atoms.flex_1,
     },
     root: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     safeAreaView: {
       ...atoms.p_lg,
     },
     textInfo: {
       ...atoms.body_3_sm_regular,
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
     },
     description: {
       ...atoms.py_lg,
       ...atoms.body_1_lg_regular,
-      color: color.gray_c900,
+      color: color.gray_900,
     },
     bottomText: {
-      color: color.gray_c700,
+      color: color.gray_700,
       ...atoms.body_3_sm_regular,
       ...atoms.py_xs,
     },
@@ -170,7 +170,7 @@ const useStyles = () => {
       ...atoms.p_sm,
     },
     selectedChoiceButton: {
-      backgroundColor: color.el_gray_low,
+      backgroundColor: color.el_gray_min,
       borderRadius: 8,
     },
     choiceLabel: {
@@ -181,15 +181,15 @@ const useStyles = () => {
       color: color.text_gray_max,
     },
     errorText: {
-      color: color.sys_magenta_c500,
+      color: color.sys_magenta_500,
       ...atoms.body_3_sm_regular,
     },
     input: {
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
       ...atoms.body_1_lg_regular,
     },
     percentLabel: {
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
       ...atoms.body_1_lg_regular,
       ...atoms.p_lg,
       ...atoms.absolute,
@@ -201,7 +201,7 @@ const useStyles = () => {
     },
     label: {
       color: color.text_gray_max,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       ...atoms.z_20,
       ...atoms.absolute,
       ...atoms.body_3_sm_regular,
@@ -212,8 +212,8 @@ const useStyles = () => {
   })
 
   const colors = {
-    background: color.gray_c100,
-    cursor: color.text_gray_normal,
+    background: color.gray_100,
+    cursor: color.text_gray_medium,
   }
 
   return {styles, colors}

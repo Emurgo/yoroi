@@ -54,7 +54,7 @@ const useStyles = () => {
       ...atoms.flex_1,
     },
     buttonContinue: {
-      backgroundColor: color.sys_magenta_c500,
+      backgroundColor: color.sys_magenta_500,
       ...atoms.flex_1,
     },
     buttonsWrapper: {
@@ -70,7 +70,7 @@ const useStyles = () => {
       ...atoms.pb_lg,
     },
     description: {
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
       ...atoms.body_1_lg_regular,
     },
     bold: {

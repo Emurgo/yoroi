@@ -57,7 +57,7 @@ const useStyles = () => {
   const {color} = useTheme()
   const styles = StyleSheet.create({
     container: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       flex: 1,
     },
     contentContainer: {
@@ -69,7 +69,7 @@ const useStyles = () => {
       justifyContent: 'center',
     },
     image: {
-      backgroundColor: color.gray_c100,
+      backgroundColor: color.gray_100,
     },
   })
   return styles

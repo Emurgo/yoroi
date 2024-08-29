@@ -75,13 +75,13 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     flex: {
       ...atoms.flex_1,
     },
     tab: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
   })
   return styles

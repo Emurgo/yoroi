@@ -184,7 +184,7 @@ const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       ...atoms.flex_1,
       ...atoms.px_lg,
     },
@@ -194,7 +194,7 @@ const useStyles = () => {
     },
     title: {
       ...atoms.body_1_lg_regular,
-      color: color.gray_c900,
+      color: color.gray_900,
     },
     bolder: {
       ...atoms.body_1_lg_medium,
@@ -218,7 +218,7 @@ const useStyles = () => {
     },
     mnemonicText: {
       ...atoms.body_1_lg_regular,
-      color: color.primary_c600,
+      color: color.primary_600,
     },
     blurView: {
       left: -8,
@@ -235,7 +235,7 @@ const useStyles = () => {
       ...atoms.gap_sm,
     },
     blurTextButton: {
-      color: color.primary_c500,
+      color: color.primary_500,
       ...atoms.button_2_md,
       textTransform: 'none',
     },
@@ -248,7 +248,7 @@ const useStyles = () => {
       ...atoms.absolute,
     },
     buttonBackground: {
-      backgroundColor: color.primary_c100,
+      backgroundColor: color.primary_100,
     },
   })
 

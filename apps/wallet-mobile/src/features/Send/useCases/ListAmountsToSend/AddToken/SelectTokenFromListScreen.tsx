@@ -384,7 +384,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     subheader: {
       ...atoms.px_lg,
@@ -393,7 +393,7 @@ const useStyles = () => {
       ...atoms.py_md,
     },
     borderBottom: {
-      borderBottomColor: color.gray_c200,
+      borderBottomColor: color.gray_200,
       borderBottomWidth: StyleSheet.hairlineWidth,
     },
     panel: {
@@ -406,7 +406,7 @@ const useStyles = () => {
       flex: 1,
     },
     tabContainerActive: {
-      borderBottomColor: color.primary_c600,
+      borderBottomColor: color.primary_600,
       borderBottomWidth: 2,
     },
     tab: {
@@ -435,7 +435,7 @@ const useStyles = () => {
     },
     contentText: {
       ...atoms.heading_3_medium,
-      color: color.gray_cmax,
+      color: color.gray_max,
       flex: 1,
       textAlign: 'center',
     },
@@ -445,18 +445,18 @@ const useStyles = () => {
       flexDirection: 'row',
     },
     counterText: {
-      color: color.primary_c600,
+      color: color.primary_600,
       ...atoms.body_2_md_regular,
     },
     counterTextBold: {
-      color: color.primary_c600,
+      color: color.primary_600,
       ...atoms.body_2_md_medium,
     },
   })
 
   const colors = {
-    active: color.primary_c600,
-    inactive: color.gray_c600,
+    active: color.primary_600,
+    inactive: color.gray_600,
   }
 
   return {styles, colors}

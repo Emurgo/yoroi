@@ -54,7 +54,7 @@ const useStyles = () => {
       ...atoms.justify_between,
       ...atoms.relative,
       ...atoms.overflow_hidden,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     spaceButtonText: {
       ...atoms.p_0,
@@ -66,7 +66,7 @@ const useStyles = () => {
     title: {
       ...atoms.body_1_lg_medium,
       ...atoms.font_semibold,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
     assetBox: {
       ...atoms.absolute,

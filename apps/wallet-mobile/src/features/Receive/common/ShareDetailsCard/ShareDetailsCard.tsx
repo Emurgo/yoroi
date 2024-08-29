@@ -93,7 +93,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     title: {
       ...atoms.heading_3_medium,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
     addressDetails: {
       borderRadius: 16,
@@ -112,11 +112,11 @@ const useStyles = () => {
       lineHeight: 24,
       textAlign: 'left',
       flex: 1,
-      color: color.gray_c900,
+      color: color.gray_900,
     },
     textAddress: {
       ...atoms.body_2_md_regular,
-      color: color.gray_c600,
+      color: color.gray_600,
       textAlign: 'left',
     },
     textSection: {
@@ -129,7 +129,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    grayText: color.gray_c600,
+    grayText: color.gray_600,
     backgroundGradientCard: color.bg_gradient_1,
   }
 

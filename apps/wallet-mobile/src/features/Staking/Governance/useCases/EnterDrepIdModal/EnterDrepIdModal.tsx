@@ -82,12 +82,12 @@ const useStyles = () => {
       ...atoms.px_lg,
     },
     text: {
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
       ...atoms.text_center,
       ...atoms.body_1_lg_regular,
     },
     link: {
-      color: color.primary_c500,
+      color: color.primary_500,
       textDecorationLine: 'underline',
     },
     inputWrapperStyle: {

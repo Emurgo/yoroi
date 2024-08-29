@@ -154,8 +154,8 @@ const useStyles = () => {
     },
   })
   const colors = {
-    active: color.primary_c500,
-    inactive: color.gray_c300,
+    active: color.primary_500,
+    inactive: color.gray_300,
   }
   return {styles, colors} as const
 }

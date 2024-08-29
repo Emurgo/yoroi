@@ -349,10 +349,10 @@ const useStyles = () => {
       ...atoms.px_lg,
       ...atoms.flex_1,
       ...atoms.justify_between,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     description: {
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
       ...atoms.body_1_lg_regular,
     },
     bold: {
@@ -364,7 +364,7 @@ const useStyles = () => {
       ...atoms.gap_lg,
     },
     drepInfoTitle: {
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
       ...atoms.body_1_lg_medium,
       ...atoms.font_semibold,
     },

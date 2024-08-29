@@ -83,28 +83,28 @@ const useStyles = () => {
     container: {
       borderRadius: 8,
       borderWidth: BORDER_SIZE,
-      borderColor: color.gray_c400,
+      borderColor: color.gray_400,
       width: '100%',
       height: 56,
       paddingLeft: 16,
       paddingRight: 8,
     },
     disabled: {
-      backgroundColor: color.gray_c50,
+      backgroundColor: color.gray_50,
     },
     active: {
       borderWidth: 2,
-      borderColor: color.gray_c900,
+      borderColor: color.gray_900,
       zIndex: 2222,
     },
     label: {
       position: 'absolute',
       top: -7,
       left: 10,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       paddingHorizontal: 5,
       fontSize: 12,
-      color: color.gray_c900,
+      color: color.gray_900,
     },
     content: {
       display: 'flex',
@@ -116,11 +116,11 @@ const useStyles = () => {
       fontSize: 16,
       height: 56,
       paddingRight: 16,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
     text: {
       fontSize: 16,
-      color: color.gray_cmax,
+      color: color.gray_max,
       fontFamily: 'Rubik-Regular',
     },
     textWrapper: {
@@ -135,7 +135,7 @@ const useStyles = () => {
     },
   })
   const colors = {
-    cursor: color.text_gray_normal,
+    cursor: color.text_gray_medium,
   }
   return {styles, colors} as const
 }

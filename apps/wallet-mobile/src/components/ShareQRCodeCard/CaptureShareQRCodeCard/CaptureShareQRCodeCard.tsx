@@ -81,8 +81,8 @@ const useStyles = () => {
   })
 
   const colors = {
-    white: color.gray_cmin,
-    black: color.gray_cmax,
+    white: color.gray_min,
+    black: color.gray_max,
     transparent: 'transparent',
     backgroundGradientCard: color.bg_gradient_1,
   }

@@ -109,7 +109,7 @@ const useStyles = () => {
   const {color} = useTheme()
   const styles = StyleSheet.create({
     loadingBackground: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
   })
 

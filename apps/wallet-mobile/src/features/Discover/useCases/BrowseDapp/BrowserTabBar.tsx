@@ -22,9 +22,9 @@ export const BrowserTabBar = ({webViewRef, webViewState}: Props) => {
 
   const totalTabs = Math.min(tabs.length, 99)
 
-  const colorBackward = webViewState.canGoBack ? color.gray_c800 : color.gray_c500
-  const colorForward = webViewState.canGoForward ? color.gray_c800 : color.gray_c500
-  const colorRefresh = !webViewState.loading ? color.gray_c800 : color.gray_c500
+  const colorBackward = webViewState.canGoBack ? color.gray_800 : color.gray_500
+  const colorForward = webViewState.canGoForward ? color.gray_800 : color.gray_500
+  const colorRefresh = !webViewState.loading ? color.gray_800 : color.gray_500
 
   const handleRefresh = () => {
     if (!webViewRef.current) return
@@ -119,7 +119,7 @@ const useStyles = () => {
       gap: 16,
       ...atoms.px_lg,
       ...atoms.pt_md,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     shadow: {
       shadowColor: '#054037',
@@ -147,7 +147,7 @@ const useStyles = () => {
       alignItems: 'center',
     },
     tabNumber: {
-      color: color.gray_c800,
+      color: color.gray_800,
       fontWeight: '500',
       fontSize: 10,
       lineHeight: 18,
@@ -155,7 +155,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    iconNormal: color.gray_c800,
+    iconNormal: color.gray_800,
   }
 
   return {styles, color, colors} as const

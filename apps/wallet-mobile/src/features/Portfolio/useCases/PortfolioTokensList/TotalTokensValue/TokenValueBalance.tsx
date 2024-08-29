@@ -53,12 +53,12 @@ const useStyles = () => {
     balanceText: {
       ...atoms.heading_1_medium,
       ...atoms.font_semibold,
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
     },
     firstSymbol: {
       ...atoms.body_1_lg_medium,
       ...atoms.font_semibold,
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
     },
     secondSymbol: {
       ...atoms.body_1_lg_medium,

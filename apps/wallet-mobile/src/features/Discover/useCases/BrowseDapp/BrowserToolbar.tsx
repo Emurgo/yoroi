@@ -48,7 +48,7 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       paddingVertical: 10,
       paddingHorizontal: 16,
       flexDirection: 'row',
@@ -57,14 +57,14 @@ const useStyles = () => {
     },
     boxURI: {
       borderRadius: 8,
-      backgroundColor: color.gray_c50,
+      backgroundColor: color.gray_50,
       paddingVertical: 13,
       paddingHorizontal: 12,
       flex: 1,
     },
     uriText: {
       ...atoms.body_2_md_regular,
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
     },
     urlContainer: {
       flexDirection: 'row',
@@ -74,7 +74,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    iconColor: color.el_gray_normal,
+    iconColor: color.el_gray_medium,
   }
 
   return {styles, colors} as const

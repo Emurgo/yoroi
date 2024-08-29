@@ -284,23 +284,23 @@ const useStyles = () => {
       flexDirection: 'row',
     },
     linkText: {
-      color: color.primary_c500,
+      color: color.primary_500,
       ...atoms.body_1_lg_regular,
       flex: 1,
       textDecorationLine: 'underline',
     },
     copyText: {
-      color: color.gray_c900,
+      color: color.gray_900,
       ...atoms.body_2_md_medium,
       textTransform: 'uppercase',
     },
     container: {
       flex: 1,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     image: {
       flexGrow: 1,
-      backgroundColor: color.gray_c100,
+      backgroundColor: color.gray_100,
     },
     contentContainer: {
       paddingHorizontal: imagePadding,
@@ -326,10 +326,10 @@ const useStyles = () => {
     },
     title: {
       ...atoms.body_1_lg_medium,
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
     },
     name: {
-      color: color.gray_c600,
+      color: color.gray_600,
       ...atoms.body_2_md_regular,
     },
   })

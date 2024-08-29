@@ -155,7 +155,7 @@ const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       ...atoms.flex_1,
       ...atoms.py_lg,
     },
@@ -164,8 +164,8 @@ const useStyles = () => {
       ...atoms.px_lg,
     },
     footer: {
-      backgroundColor: color.bg_color_high,
-      borderColor: color.gray_c200,
+      backgroundColor: color.bg_color_max,
+      borderColor: color.gray_200,
       ...atoms.pt_lg,
       ...atoms.px_lg,
     },

@@ -81,7 +81,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     safeAreaView: {
       flex: 1,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     stepper: {
       ...atoms.p_lg,

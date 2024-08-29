@@ -60,7 +60,7 @@ const CheckIcon = () => {
   const {color} = useTheme()
   return (
     <View>
-      <Icon.Check size={24} color={color.primary_c600} />
+      <Icon.Check size={24} color={color.primary_600} />
 
       <Space fill />
     </View>

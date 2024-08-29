@@ -114,11 +114,11 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     title: {
       ...atoms.heading_4_medium,
-      color: color.gray_c900,
+      color: color.gray_900,
     },
     description: {
       ...atoms.body_1_lg_regular,
-      color: color.gray_c900,
+      color: color.gray_900,
     },
     row: {
       flexDirection: 'row',
@@ -133,23 +133,23 @@ const useStyles = () => {
       borderRadius: 6,
       alignItems: 'center',
       justifyContent: 'center',
-      borderColor: color.gray_c900,
+      borderColor: color.gray_900,
     },
     pinDigit: {
       fontSize: 20,
       lineHeight: 22,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
     pinBoxSelected: {
       borderWidth: 2,
-      borderColor: color.gray_cmax,
+      borderColor: color.gray_max,
     },
     pinBoxError: {
-      borderColor: color.sys_magenta_c500,
+      borderColor: color.sys_magenta_500,
       borderWidth: 2,
     },
     pinDigitUnselected: {
-      color: color.gray_c600,
+      color: color.gray_600,
     },
     pinDone: {
       backgroundColor: '#66F2D6',
@@ -159,7 +159,7 @@ const useStyles = () => {
       ...atoms.py_lg,
     },
     cursor: {
-      backgroundColor: color.gray_c600,
+      backgroundColor: color.gray_600,
       height: 24,
       width: 2,
     },

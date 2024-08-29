@@ -74,7 +74,7 @@ export const ConfirmTxWithPassword = ({wallet, onSuccess, onCancel, unsignedTx}:
 
       {isLoading && (
         <View style={styles.loading}>
-          <ActivityIndicator size="large" color={color.gray_c900} />
+          <ActivityIndicator size="large" color={color.gray_900} />
         </View>
       )}
     </View>
@@ -109,7 +109,7 @@ const useStyles = () => {
       ...atoms.justify_center,
     },
     buttons: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       ...atoms.p_lg,
       ...atoms.flex_row,
     },

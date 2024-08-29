@@ -102,7 +102,7 @@ const useStyles = () => {
     },
     container: {
       height: 350,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       borderRadius: 4,
       ...atoms.px_xl,
     },
@@ -123,14 +123,14 @@ const useStyles = () => {
     },
     title: {
       ...atoms.heading_3_medium,
-      color: color.gray_c600,
+      color: color.gray_600,
       alignSelf: 'center',
       ...atoms.pt_sm,
     },
   })
 
   const colors = {
-    icon: color.gray_c400,
+    icon: color.gray_400,
   }
   return {styles, colors}
 }

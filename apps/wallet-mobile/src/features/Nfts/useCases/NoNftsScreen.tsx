@@ -35,7 +35,7 @@ const useStyles = () => {
       textAlign: 'center',
 
       ...atoms.heading_3_medium,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
 
     image: {

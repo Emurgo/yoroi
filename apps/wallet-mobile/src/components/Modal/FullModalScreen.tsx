@@ -13,7 +13,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       ...atoms.flex_1,
-      backgroundColor: isDark ? color.gray_c50 : color.white_static,
+      backgroundColor: isDark ? color.gray_50 : color.white_static,
     },
   })
   return {styles} as const

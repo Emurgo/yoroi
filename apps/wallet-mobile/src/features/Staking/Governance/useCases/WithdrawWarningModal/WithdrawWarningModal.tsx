@@ -36,7 +36,7 @@ const useStyles = () => {
       ...atoms.px_lg,
     },
     text: {
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
       ...atoms.body_1_lg_regular,
       ...atoms.text_center,
       ...atoms.font_normal,

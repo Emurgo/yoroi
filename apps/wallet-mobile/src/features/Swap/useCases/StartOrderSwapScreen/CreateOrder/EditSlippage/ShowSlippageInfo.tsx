@@ -37,17 +37,17 @@ const useStyles = () => {
     },
     label: {
       ...atoms.body_1_lg_regular,
-      color: color.gray_c600,
+      color: color.gray_600,
     },
     sheetContent: {
       ...atoms.body_1_lg_regular,
       ...atoms.px_lg,
-      color: color.gray_c900,
+      color: color.gray_900,
     },
   })
 
   const colors = {
-    icon: color.gray_cmax,
+    icon: color.gray_max,
   }
 
   return {styles, colors}

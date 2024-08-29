@@ -95,7 +95,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     pinInput: {
       flex: 1,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     info: {
       flex: 1,
@@ -106,13 +106,13 @@ const useStyles = () => {
       fontFamily: 'Rubik-Medium',
       fontSize: 20,
       lineHeight: 30,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
     subtitle: {
       fontFamily: 'Rubik-Regular',
       fontSize: 14,
       lineHeight: 22,
-      color: color.gray_c600,
+      color: color.gray_600,
       maxWidth: 320,
       textAlign: 'center',
     },
@@ -131,10 +131,10 @@ const useStyles = () => {
     },
     pinCircleInactive: {
       borderWidth: 2,
-      borderColor: color.primary_c600,
+      borderColor: color.primary_600,
     },
     pinCircleActive: {
-      backgroundColor: color.primary_c600,
+      backgroundColor: color.primary_600,
     },
   })
   return styles

@@ -15,7 +15,7 @@ const useStyles = () => {
     },
   })
   const colors = {
-    bgLine: color.gray_c200,
+    bgLine: color.gray_200,
   }
   return {styles, colors} as const
 }

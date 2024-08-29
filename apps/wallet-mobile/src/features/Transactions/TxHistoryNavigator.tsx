@@ -573,7 +573,7 @@ const useStyles = () => {
 
   return {
     styles,
-    colors: {gray: color.gray_cmax},
+    colors: {gray: color.gray_max},
   } as const
 }
 
@@ -582,6 +582,6 @@ const sendOptions = (navigationOptions: StackNavigationOptions, color: ThemedPal
   headerStyle: {
     elevation: 0,
     shadowOpacity: 0,
-    backgroundColor: color.bg_color_high,
+    backgroundColor: color.bg_color_max,
   },
 })

@@ -158,7 +158,7 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       ...atoms.flex_1,
     },
     safeAreaView: {
@@ -169,7 +169,7 @@ const useStyles = () => {
       ...atoms.gap_lg,
     },
     actions: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       ...atoms.p_lg,
     },
   })

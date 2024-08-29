@@ -100,11 +100,11 @@ const useStyles = () => {
     tokenPrice: {
       ...atoms.body_1_lg_medium,
       ...atoms.font_semibold,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
     tokenPriceSymbol: {
       ...atoms.body_3_sm_regular,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
   })
 

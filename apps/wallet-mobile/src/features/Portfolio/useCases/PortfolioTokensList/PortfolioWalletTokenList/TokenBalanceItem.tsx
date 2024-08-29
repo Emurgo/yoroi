@@ -68,7 +68,7 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       ...atoms.flex_row,
       ...atoms.align_center,
       ...atoms.justify_between,
@@ -85,17 +85,17 @@ const useStyles = () => {
     symbol: {
       ...atoms.body_1_lg_medium,
       ...atoms.font_semibold,
-      color: color.gray_c900,
+      color: color.gray_900,
     },
     tokenBalance: {
       ...atoms.body_1_lg_regular,
       ...atoms.text_right,
-      color: color.gray_c900,
+      color: color.gray_900,
     },
     pairedBalance: {
       ...atoms.body_3_sm_regular,
       ...atoms.text_right,
-      color: color.gray_c600,
+      color: color.gray_600,
     },
     nameAndPnlContainer: {
       ...atoms.flex_col,

@@ -126,7 +126,7 @@ const useStyles = () => {
     },
     modalText: {
       ...atoms.body_1_lg_regular,
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
     },
     buttonText: {
       ...atoms.py_lg,

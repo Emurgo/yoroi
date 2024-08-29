@@ -51,7 +51,7 @@ const useStyles = () => {
       ...atoms.px_lg,
     },
     errorMessage: {
-      color: color.sys_magenta_c500,
+      color: color.sys_magenta_500,
       textAlign: 'center',
     },
   })

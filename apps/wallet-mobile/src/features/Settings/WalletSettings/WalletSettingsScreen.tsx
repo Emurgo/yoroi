@@ -330,12 +330,12 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     settings: {
       flex: 1,
       padding: 16,
     },
   })
-  return {styles, colors: {icon: color.gray_c500}} as const
+  return {styles, colors: {icon: color.gray_500}} as const
 }

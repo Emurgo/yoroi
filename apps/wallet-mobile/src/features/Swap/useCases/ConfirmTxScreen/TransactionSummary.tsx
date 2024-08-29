@@ -299,14 +299,14 @@ const useStyles = () => {
     text: {
       textAlign: 'left',
       ...atoms.body_1_lg_regular,
-      color: color.gray_c900,
+      color: color.gray_900,
     },
     gray: {
-      color: color.gray_c700,
+      color: color.gray_700,
     },
     amountItemLabel: {
       fontSize: 12,
-      color: color.gray_c900,
+      color: color.gray_900,
       paddingBottom: 8,
     },
     modalContent: {
@@ -316,7 +316,7 @@ const useStyles = () => {
     },
     modalText: {
       ...atoms.body_1_lg_regular,
-      color: color.gray_c900,
+      color: color.gray_900,
     },
     orderValueContainer: {
       flexDirection: 'row',
@@ -334,7 +334,7 @@ const useStyles = () => {
     bannerText: {
       fontSize: 14,
       lineHeight: 22,
-      color: color.gray_c900,
+      color: color.gray_900,
     },
     bold: {
       ...atoms.body_2_md_medium,
@@ -346,7 +346,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    icon: color.gray_cmax,
+    icon: color.gray_max,
     gradientColor: color.bg_gradient_3,
   }
 

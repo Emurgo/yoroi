@@ -113,7 +113,7 @@ const useStyles = () => {
       backgroundColor: color.mobile_overlay,
     },
     fixBottomColor: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       bottom: 0,
       left: 0,
       right: 0,
@@ -128,7 +128,7 @@ const useStyles = () => {
       borderTopLeftRadius: 20,
     },
     sheet: {
-      backgroundColor: isDark ? color.gray_c50 : color.white_static,
+      backgroundColor: isDark ? color.gray_50 : color.white_static,
       ...atoms.flex_1,
       ...atoms.self_stretch,
     },
@@ -142,7 +142,7 @@ const useStyles = () => {
       ...atoms.self_stretch,
     },
     slider: {
-      backgroundColor: color.gray_cmax,
+      backgroundColor: color.gray_max,
       height: 4,
       width: 32,
       borderRadius: 10,

@@ -34,7 +34,7 @@ const useStyles = () => {
       justifyContent: 'center',
     },
     link: {
-      color: color.primary_c600,
+      color: color.primary_600,
       textDecorationLine: 'underline',
     },
   })

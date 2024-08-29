@@ -142,7 +142,7 @@ const useStyles = () => {
     tokenName: {
       ...atoms.body_1_lg_medium,
       ...atoms.font_semibold,
-      color: color.gray_c900,
+      color: color.gray_900,
     },
     tokenLogo: {
       width: 32,
@@ -151,11 +151,11 @@ const useStyles = () => {
     },
     textBody: {
       ...atoms.body_2_md_regular,
-      color: color.gray_c600,
+      color: color.gray_600,
     },
     link: {
       ...atoms.link_1_lg_underline,
-      color: color.primary_c500,
+      color: color.primary_500,
     },
     linkGroup: {
       ...atoms.flex_1,
@@ -165,12 +165,12 @@ const useStyles = () => {
     title: {
       ...atoms.body_1_lg_medium,
       ...atoms.font_semibold,
-      color: color.gray_c900,
+      color: color.gray_900,
     },
     divider: {
       ...atoms.flex_1,
       height: 1,
-      backgroundColor: color.gray_c200,
+      backgroundColor: color.gray_200,
     },
     copyButton: {
       ...atoms.flex_1,
@@ -181,12 +181,12 @@ const useStyles = () => {
     copyText: {
       ...atoms.flex_1,
       ...atoms.body_2_md_regular,
-      color: color.gray_c600,
+      color: color.gray_600,
     },
   })
 
   const colors = {
-    label: color.gray_c600,
+    label: color.gray_600,
   }
 
   return {styles, colors} as const

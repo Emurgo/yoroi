@@ -65,7 +65,7 @@ const useStyles = () => {
       ...atoms.justify_between,
     },
     text: {
-      color: color.gray_cmax,
+      color: color.gray_max,
       ...atoms.body_1_lg_regular,
     },
     button: {

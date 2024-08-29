@@ -196,7 +196,7 @@ const useStyles = () => {
       borderRadius: 8,
     },
     shadowProp: {
-      shadowColor: color.gray_cmax,
+      shadowColor: color.gray_max,
       shadowOpacity: 0.2,
       shadowOffset: {
         width: 0,
@@ -218,7 +218,7 @@ const useStyles = () => {
       overflow: 'hidden',
     },
     label: {
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
       ...atoms.body_1_lg_medium,
     },
     infoContainer: {
@@ -235,7 +235,7 @@ const useStyles = () => {
     },
     infoValue: {
       ...atoms.body_1_lg_regular,
-      color: color.gray_cmax,
+      color: color.gray_max,
       display: 'flex',
       flexShrink: 1,
       textAlign: 'right',
@@ -243,8 +243,8 @@ const useStyles = () => {
   })
   const colors = {
     gradientColor: color.bg_gradient_1,
-    white: color.gray_cmin,
-    bg: color.bg_color_high,
+    white: color.gray_min,
+    bg: color.bg_color_max,
   }
 
   return {styles, colors} as const

@@ -25,7 +25,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     labelContainer: {
       borderRadius: 20,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       paddingVertical: 1,
       paddingHorizontal: 6,
       height: 24,
@@ -37,7 +37,7 @@ const useStyles = () => {
     },
     labelText: {
       ...atoms.body_3_sm_medium,
-      color: color.primary_c600,
+      color: color.primary_600,
     },
   })
 

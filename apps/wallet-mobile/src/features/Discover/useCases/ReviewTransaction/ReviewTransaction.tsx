@@ -274,7 +274,7 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       flex: 1,
     },
     dropdown: {
@@ -289,11 +289,11 @@ const useStyles = () => {
     },
     buttonArea: {
       ...atoms.p_lg,
-      borderColor: color.gray_c200,
+      borderColor: color.gray_200,
     },
     divider: {
       height: 1,
-      backgroundColor: color.gray_c200,
+      backgroundColor: color.gray_200,
     },
     dropdownText: {
       ...atoms.font_semibold,
@@ -308,7 +308,7 @@ const useStyles = () => {
       alignItems: 'center',
     },
     chipText: {
-      color: color.gray_cmin,
+      color: color.gray_min,
       paddingRight: 8,
       paddingLeft: 8,
       borderRadius: 12,
@@ -324,10 +324,10 @@ const useStyles = () => {
     },
   })
   const colors = {
-    dropdownIcon: color.gray_c900,
-    ownAddress: color.primary_c500,
-    foreignAddress: color.gray_c900,
-    fee: color.sys_magenta_c500,
+    dropdownIcon: color.gray_900,
+    ownAddress: color.primary_500,
+    foreignAddress: color.gray_900,
+    fee: color.sys_magenta_500,
   }
   return {styles, colors}
 }

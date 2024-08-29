@@ -5,12 +5,12 @@ export const useSendStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     assetHeading: {
-      color: color.gray_cmax,
+      color: color.gray_max,
       opacity: 0.5,
       ...atoms.body_3_sm_regular,
     },
     assetMeta: {
-      color: color.gray_c500,
+      color: color.gray_500,
       opacity: 1,
       ...atoms.body_2_md_regular,
     },
@@ -26,14 +26,14 @@ export const useSendStyles = () => {
       marginBottom: 10,
       ...atoms.px_lg,
       ...atoms.py_md,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       borderTopWidth: 1,
       borderBottomWidth: 2,
       borderColor: 'rgba(173, 174, 182, 0.3)',
     },
     assetName: {
       ...atoms.body_2_md_regular,
-      color: color.gray_c900,
+      color: color.gray_900,
       marginBottom: 2,
     },
     assetBalanceView: {
@@ -43,7 +43,7 @@ export const useSendStyles = () => {
     },
     assetBalance: {
       ...atoms.body_2_md_regular,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
     py5: {
       ...atoms.py_sm,
@@ -55,7 +55,7 @@ export const useSendStyles = () => {
       backgroundColor: 'transparent',
     },
     rowColor2: {
-      backgroundColor: color.primary_c100,
+      backgroundColor: color.primary_100,
     },
     tokenMetaView: {
       flex: 2,

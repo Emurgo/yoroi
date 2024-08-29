@@ -178,8 +178,8 @@ const useStyles = () => {
   })
 
   const colors = {
-    stroke: color.primary_c500,
-    tooltip: color.primary_c500,
+    stroke: color.primary_500,
+    tooltip: color.primary_500,
     tooltipText: color.white_static,
   }
 

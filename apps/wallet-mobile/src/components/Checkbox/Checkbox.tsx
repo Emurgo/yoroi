@@ -38,7 +38,7 @@ const useStyles = () => {
     text: {
       flex: 1,
       ...atoms.body_1_lg_regular,
-      color: color.gray_c900,
+      color: color.gray_900,
     },
     icon: {
       ...atoms.py_xs,

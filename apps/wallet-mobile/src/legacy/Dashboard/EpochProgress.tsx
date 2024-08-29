@@ -85,13 +85,13 @@ const useStyles = () => {
       alignItems: 'center',
     },
     label: {
-      color: color.gray_c900,
+      color: color.gray_900,
       ...atoms.pr_md,
       ...atoms.body_2_md_regular,
     },
     value: {
       ...atoms.body_1_lg_regular,
-      color: color.gray_c700,
+      color: color.gray_700,
     },
     timeWrapper: {
       flexDirection: 'row',
@@ -101,8 +101,8 @@ const useStyles = () => {
     timeBlock: {
       ...atoms.body_1_lg_regular,
       ...atoms.py_xs,
-      backgroundColor: color.bg_color_high,
-      color: color.gray_c900,
+      backgroundColor: color.bg_color_max,
+      color: color.gray_900,
       marginHorizontal: 4,
       borderRadius: 2,
       textAlign: 'center',

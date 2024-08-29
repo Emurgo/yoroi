@@ -63,11 +63,11 @@ const useStyles = () => {
     },
     label: {
       ...atoms.body_1_lg_medium,
-      color: color.gray_c900,
+      color: color.gray_900,
     },
     fee: {
       ...atoms.body_3_sm_regular,
-      color: color.gray_c600,
+      color: color.gray_600,
     },
   })
 

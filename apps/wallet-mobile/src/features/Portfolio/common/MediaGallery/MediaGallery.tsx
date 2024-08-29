@@ -140,11 +140,11 @@ const useStyles = () => {
     },
     image: {
       ...atoms.rounded_sm,
-      backgroundColor: color.gray_c100,
+      backgroundColor: color.gray_100,
     },
     text: {
       ...atoms.body_3_sm_medium,
-      color: color.gray_c600,
+      color: color.gray_600,
       lineHeight: textHeight,
     },
   })

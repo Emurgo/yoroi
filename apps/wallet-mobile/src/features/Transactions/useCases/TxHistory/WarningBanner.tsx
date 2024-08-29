@@ -61,7 +61,7 @@ const useStyles = () => {
       flexDirection: 'row',
     },
     titleText: {
-      color: color.gray_c500,
+      color: color.gray_500,
       ...atoms.body_1_lg_regular,
     },
     icon: {
@@ -69,7 +69,7 @@ const useStyles = () => {
       width: 18,
     },
     messageText: {
-      color: color.gray_c900,
+      color: color.gray_900,
       ...atoms.body_2_md_regular,
     },
     wrapper: {
@@ -80,7 +80,7 @@ const useStyles = () => {
       shadowRadius: 12,
       shadowOpacity: 0.06,
       shadowColor: color.black_static,
-      backgroundColor: color.primary_c100,
+      backgroundColor: color.primary_100,
       borderRadius: 8,
     },
     close: {
@@ -98,5 +98,5 @@ const useStyles = () => {
       marginVertical: 16,
     },
   })
-  return {styles, colors: {icon: color.gray_c600}} as const
+  return {styles, colors: {icon: color.gray_600}} as const
 }

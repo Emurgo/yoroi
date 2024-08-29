@@ -65,7 +65,7 @@ const useStyles = () => {
       alignItems: 'center',
     },
     label: {
-      color: color.gray_c600,
+      color: color.gray_600,
       ...atoms.body_2_md_regular,
     },
   })

@@ -24,7 +24,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     availableText: {
       ...atoms.body_2_md_regular,
-      color: color.gray_c700,
+      color: color.gray_700,
     },
   })
   return {styles} as const

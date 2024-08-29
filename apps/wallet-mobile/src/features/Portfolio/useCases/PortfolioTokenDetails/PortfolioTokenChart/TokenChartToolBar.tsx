@@ -52,14 +52,14 @@ const useStyles = () => {
     chartToolbarItemText: {
       ...atoms.body_3_sm_medium,
       ...atoms.font_semibold,
-      color: color.gray_c600,
+      color: color.gray_600,
       textTransform: 'uppercase',
     },
     chartToolbarItemActive: {
-      backgroundColor: color.primary_c500,
+      backgroundColor: color.primary_500,
     },
     chartToolbarItemTextActive: {
-      color: color.gray_cmin,
+      color: color.gray_min,
     },
   })
 

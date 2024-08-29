@@ -127,7 +127,7 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     safeAreaView: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       ...atoms.flex_1,
       ...atoms.px_lg,
       ...atoms.pb_lg,
@@ -141,7 +141,7 @@ const useStyles = () => {
       left: 11,
       paddingHorizontal: 3,
       color: color.text_gray_max,
-      backgroundColor: color.gray_cmin,
+      backgroundColor: color.gray_min,
       ...atoms.z_50,
       ...atoms.absolute,
       ...atoms.body_3_sm_regular,

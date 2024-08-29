@@ -57,7 +57,7 @@ const Key = ({value, onPress}: KeyboardKeyProps) => {
     <TouchableHighlight
       style={[styles.keyboardKey]}
       onPress={() => onPress(value)}
-      underlayColor={color.el_gray_low}
+      underlayColor={color.el_gray_min}
       testID={`pinKey${value}`}
     >
       <Text style={styles.keyboardKeyText}>{value}</Text>
@@ -76,10 +76,10 @@ const BackspaceKey = ({onPress}: {onPress: (value: string) => void}) => {
     <TouchableHighlight
       style={[styles.keyboardKey, styles.specialKey]}
       onPress={() => onPress('BACKSPACE')}
-      underlayColor={color.el_gray_low}
+      underlayColor={color.el_gray_min}
       testID="pinKeyBACKSPACE"
     >
-      <Backspace color={color.gray_cmax} />
+      <Backspace color={color.gray_max} />
     </TouchableHighlight>
   )
 }
@@ -95,7 +95,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     keyboard: {
       height: 248.5,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     keyboardRow: {
       flex: 1,
@@ -108,8 +108,8 @@ const useStyles = () => {
       borderTopWidth: StyleSheet.hairlineWidth,
       borderLeftWidth: StyleSheet.hairlineWidth,
       borderRightWidth: StyleSheet.hairlineWidth,
-      borderColor: color.el_gray_normal,
-      backgroundColor: color.gray_cmin,
+      borderColor: color.el_gray_medium,
+      backgroundColor: color.gray_min,
     },
     keyboardKeyText: {
       fontSize: 30,
@@ -120,7 +120,7 @@ const useStyles = () => {
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: color.gray_c300,
+      backgroundColor: color.gray_300,
     },
   })
 

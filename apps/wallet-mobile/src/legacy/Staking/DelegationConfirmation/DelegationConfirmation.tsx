@@ -147,7 +147,7 @@ const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     container: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       ...atoms.px_lg,
       ...atoms.pb_2xl,
       flex: 1,
@@ -156,20 +156,20 @@ const useStyles = () => {
       ...atoms.pt_2xl,
     },
     heading: {
-      color: color.gray_c900,
+      color: color.gray_900,
       ...atoms.body_1_lg_medium,
     },
     text: {
-      color: color.gray_c900,
+      color: color.gray_900,
       ...atoms.body_2_md_regular,
     },
     rewards: {
       ...atoms.body_1_lg_medium,
-      color: color.primary_c600,
+      color: color.primary_600,
     },
     fees: {
       textAlign: 'right',
-      color: color.gray_c900,
+      color: color.gray_900,
     },
   })
   return styles

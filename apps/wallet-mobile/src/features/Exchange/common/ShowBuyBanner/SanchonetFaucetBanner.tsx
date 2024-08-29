@@ -59,7 +59,7 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     gradient: {
       ...atoms.flex_1,
@@ -76,7 +76,7 @@ const useStyles = () => {
     },
     title: {
       ...atoms.body_1_lg_medium,
-      color: color.gray_cmax,
+      color: color.gray_max,
       ...atoms.flex_wrap,
       ...atoms.flex_shrink,
     },
@@ -96,7 +96,7 @@ const useStyles = () => {
     },
     text: {
       ...atoms.body_2_md_regular,
-      color: color.gray_cmax,
+      color: color.gray_max,
       maxWidth: 270,
     },
     spaceButton: {
@@ -105,7 +105,7 @@ const useStyles = () => {
   })
   const colors = {
     gradientColor: color.bg_gradient_1,
-    gray: color.gray_cmax,
+    gray: color.gray_max,
   }
   return {styles, colors} as const
 }

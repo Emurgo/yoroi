@@ -230,10 +230,10 @@ const useStyles = () => {
       ...atoms.px_lg,
       ...atoms.flex_1,
       ...atoms.justify_between,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     primaryText: {
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
       ...atoms.font_semibold,
       ...atoms.body_1_lg_medium,
     },
@@ -273,12 +273,12 @@ const useStyles = () => {
       opacity: 0.5,
     },
     normalText: {
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
       ...atoms.font_normal,
       ...atoms.body_1_lg_regular,
     },
     feeValue: {
-      color: color.gray_c500,
+      color: color.gray_500,
       ...atoms.font_normal,
       ...atoms.body_1_lg_regular,
     },

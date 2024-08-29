@@ -160,12 +160,12 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     switchTabRoot: {
       borderWidth: 2,
-      borderColor: color.gray_c200,
+      borderColor: color.gray_200,
       height: 160,
       overflow: 'hidden',
     },
     switchTabRootActive: {
-      borderColor: color.primary_c500,
+      borderColor: color.primary_500,
     },
     roundedContainer: {
       borderRadius: 8,
@@ -178,7 +178,7 @@ const useStyles = () => {
     },
     domainText: {
       ...atoms.body_2_md_regular,
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
     },
     closeTabPosition: {
       position: 'absolute',

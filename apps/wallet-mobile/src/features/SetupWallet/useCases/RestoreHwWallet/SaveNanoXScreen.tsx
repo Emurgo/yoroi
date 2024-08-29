@@ -283,7 +283,7 @@ const useStyles = () => {
       ...atoms.px_lg,
     },
     root: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       ...atoms.justify_between,
       ...atoms.px_lg,
     },
@@ -294,11 +294,11 @@ const useStyles = () => {
       ...atoms.flex_row,
     },
     title: {
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
       ...atoms.body_1_lg_regular,
     },
     plateNumber: {
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
       ...atoms.body_1_lg_regular,
       ...atoms.text_center,
       ...atoms.justify_center,

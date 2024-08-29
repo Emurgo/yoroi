@@ -98,27 +98,27 @@ const useStyles = () => {
       ...atoms.align_start,
       ...atoms.border,
       ...atoms.flex_1,
-      borderColor: color.gray_c300,
+      borderColor: color.gray_300,
       ...atoms.h_full,
     },
     symbol: {
       ...atoms.body_2_md_medium,
       ...atoms.font_semibold,
-      color: color.gray_cmax,
+      color: color.gray_max,
       textTransform: 'uppercase',
     },
     name: {
       ...atoms.body_3_sm_regular,
-      color: color.gray_c600,
+      color: color.gray_600,
     },
     tokenValue: {
       ...atoms.heading_4_medium,
       ...atoms.font_semibold,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
     pairedTokenValue: {
       ...atoms.body_3_sm_regular,
-      color: color.gray_c600,
+      color: color.gray_600,
     },
     tokenInfoContainer: {
       ...atoms.flex_1,

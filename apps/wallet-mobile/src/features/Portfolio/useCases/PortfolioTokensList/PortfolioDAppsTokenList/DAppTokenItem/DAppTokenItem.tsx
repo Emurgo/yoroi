@@ -59,7 +59,7 @@ const useStyles = () => {
       ...atoms.justify_between,
     },
     symbol: {
-      color: color.gray_c900,
+      color: color.gray_900,
       ...atoms.body_1_lg_medium,
     },
     logoSize: {width: 26, height: 26},
@@ -90,15 +90,15 @@ const useStyles = () => {
     },
     dexName: {
       ...atoms.body_3_sm_regular,
-      color: color.gray_c600,
+      color: color.gray_600,
     },
     sumBalance: {
-      color: color.gray_cmax,
+      color: color.gray_max,
       ...atoms.body_1_lg_regular,
       ...atoms.text_right,
     },
     pairedBalance: {
-      color: color.gray_c600,
+      color: color.gray_600,
       ...atoms.body_3_sm_regular,
       ...atoms.text_right,
     },

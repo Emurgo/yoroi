@@ -146,7 +146,7 @@ export const SettingsScreenNavigator = () => {
             title: strings.networkTitle,
             headerRight: () => (
               <TouchableOpacity onPress={handleOpenModal} activeOpacity={0.5}>
-                <Icon.Info size={24} color={color.gray_c900} style={{...atoms.px_lg}} />
+                <Icon.Info size={24} color={color.gray_900} style={{...atoms.px_lg}} />
               </TouchableOpacity>
             ),
           }}
@@ -236,7 +236,7 @@ const SettingsTabNavigator = () => {
 
   return (
     <Tab.Navigator
-      style={{backgroundColor: color.bg_color_high}}
+      style={{backgroundColor: color.bg_color_max}}
       screenOptions={({route}) => ({
         ...defaultMaterialTopTabNavigationOptions(atoms, color),
         tabBarLabel: route.name === 'wallet-settings' ? strings.walletTabTitle : strings.appTabTitle,

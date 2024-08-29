@@ -7,7 +7,7 @@ export const PortfolioTokenDetailBalanceSkeleton = () => {
   const {color} = useStyles()
   return (
     <View>
-      <SkeletonPlaceholder borderRadius={9} backgroundColor={color.gray_c100}>
+      <SkeletonPlaceholder borderRadius={9} backgroundColor={color.gray_100}>
         <SkeletonPlaceholder.Item>
           <SkeletonPlaceholder.Item width={140} height={36} />
 

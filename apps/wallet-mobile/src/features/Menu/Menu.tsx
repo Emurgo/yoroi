@@ -60,21 +60,21 @@ export const Menu = () => {
         <AppSettings //
           label={strings.settings}
           onPress={navigateTo.settings}
-          left={<Icon.Gear size={24} color={color.gray_c600} />}
+          left={<Icon.Gear size={24} color={color.gray_600} />}
         />
 
         <Staking
           label={strings.stakingCenter}
           onPress={navigateTo.stakingCenter}
-          left={<Icon.TabStaking size={24} color={color.gray_c600} />}
-          right={isPoolRetiring ? <Icon.Warning size={24} color={color.sys_magenta_c500} /> : null}
+          left={<Icon.TabStaking size={24} color={color.gray_600} />}
+          right={isPoolRetiring ? <Icon.Warning size={24} color={color.sys_magenta_500} /> : null}
         />
 
         {isGovernanceFeatureEnabled && (
           <Governance
             label={strings.governanceCentre}
             onPress={navigateTo.governanceCentre}
-            left={<Icon.Governance size={24} color={color.gray_c600} />}
+            left={<Icon.Governance size={24} color={color.gray_600} />}
           />
         )}
 
@@ -82,14 +82,14 @@ export const Menu = () => {
           <Catalyst //
             label={strings.catalystVoting}
             onPress={navigateTo.catalystVoting}
-            left={<Icon.Catalyst size={24} color={color.gray_c600} />}
+            left={<Icon.Catalyst size={24} color={color.gray_600} />}
           />
         </Boundary>
 
         <KnowledgeBase //
           label={strings.knowledgeBase}
           onPress={navigateTo.knowledgeBase}
-          left={<Icon.Info size={24} color={color.gray_c600} />}
+          left={<Icon.Info size={24} color={color.gray_600} />}
         />
 
         <Spacer fill />
@@ -147,7 +147,7 @@ const Item = ({
 
       <Spacer width={12} />
 
-      <Text style={{fontFamily: 'Rubik-Medium', fontSize: 16, lineHeight: 24, color: color.gray_c900}}>{label}</Text>
+      <Text style={{fontFamily: 'Rubik-Medium', fontSize: 16, lineHeight: 24, color: color.gray_900}}>{label}</Text>
 
       <Spacer fill />
 
@@ -155,7 +155,7 @@ const Item = ({
 
       <Spacer width={8} />
 
-      <Icon.Chevron direction="right" size={28} color={color.gray_c600} />
+      <Icon.Chevron direction="right" size={28} color={color.gray_600} />
     </TouchableOpacity>
   )
 }
@@ -276,7 +276,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     item: {
       ...atoms.py_lg,
@@ -284,7 +284,7 @@ const useStyles = () => {
       alignItems: 'center',
       justifyContent: 'center',
       borderBottomWidth: StyleSheet.hairlineWidth,
-      borderBottomColor: color.gray_c200,
+      borderBottomColor: color.gray_200,
     },
     scrollViewContent: {
       flex: 1,
@@ -297,7 +297,7 @@ const useStyles = () => {
       justifyContent: 'center',
     },
     supportTitleText: {
-      color: color.gray_c600,
+      color: color.gray_600,
     },
     supportLink: {
       justifyContent: 'space-between',
@@ -305,7 +305,7 @@ const useStyles = () => {
       flexDirection: 'row',
     },
     supportLinkText: {
-      color: color.primary_c500,
+      color: color.primary_500,
     },
   })
 

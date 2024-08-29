@@ -35,7 +35,7 @@ const useStyles = () => {
     },
   })
   const colors = {
-    icon: color.sys_magenta_c500,
+    icon: color.sys_magenta_500,
   }
   return {styles, colors}
 }

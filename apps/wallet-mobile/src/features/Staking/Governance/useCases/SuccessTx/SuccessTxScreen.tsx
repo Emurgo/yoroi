@@ -83,7 +83,7 @@ const useStyles = () => {
       ...atoms.flex_1,
       ...atoms.py_lg,
       ...atoms.px_lg,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     center: {
       ...atoms.flex_1,

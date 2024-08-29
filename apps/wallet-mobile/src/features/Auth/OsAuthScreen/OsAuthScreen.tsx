@@ -148,7 +148,7 @@ const useStyles = () => {
       ...atoms.align_center,
     },
     welcomeMessageText: {
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
       ...atoms.text_center,
       fontSize: 50,
       lineHeight: 60,
@@ -163,7 +163,7 @@ const useStyles = () => {
     },
   })
   const colors = {
-    icon: color.el_gray_high,
+    icon: color.el_gray_max,
   }
   return {colors, styles} as const
 }

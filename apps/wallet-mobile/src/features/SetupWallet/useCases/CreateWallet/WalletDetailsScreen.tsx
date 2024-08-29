@@ -366,7 +366,7 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       ...atoms.flex_1,
     },
     safeAreaView: {
@@ -387,13 +387,13 @@ const useStyles = () => {
       ...atoms.gap_lg,
     },
     title: {
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
       ...atoms.self_center,
       ...atoms.body_1_lg_regular,
     },
     plateNumber: {
       ...atoms.body_1_lg_regular,
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
       ...atoms.text_center,
       ...atoms.justify_center,
       ...atoms.align_center,

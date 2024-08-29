@@ -19,7 +19,7 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     labelContainer: {
-      backgroundColor: color.secondary_c600,
+      backgroundColor: color.secondary_600,
       ...atoms.px_sm,
       paddingVertical: 3,
       borderRadius: 999,
@@ -27,7 +27,7 @@ const useStyles = () => {
     labelText: {
       ...atoms.body_3_sm_medium,
       fontWeight: '500',
-      color: color.gray_cmin,
+      color: color.gray_min,
     },
   })
 

@@ -47,7 +47,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       ...atoms.px_lg,
     },
     scroll: {
@@ -56,13 +56,13 @@ const useStyles = () => {
       justifyContent: 'center',
     },
     title: {
-      color: color.gray_cmax,
+      color: color.gray_max,
       ...atoms.heading_3_medium,
       ...atoms.px_sm,
       textAlign: 'center',
     },
     help: {
-      color: color.gray_c600,
+      color: color.gray_600,
       ...atoms.body_2_md_regular,
       textAlign: 'center',
       maxWidth: 330,

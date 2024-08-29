@@ -71,7 +71,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       ...atoms.flex_1,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     header: {
       ...atoms.flex_row,
@@ -85,7 +85,7 @@ const useStyles = () => {
     headerLabel: {
       ...atoms.body_1_lg_medium,
       ...atoms.font_semibold,
-      color: color.gray_c800,
+      color: color.gray_800,
     },
     content: {
       ...atoms.flex_1,
@@ -99,7 +99,7 @@ const useStyles = () => {
     },
   })
   const colors = {
-    gray: color.gray_c800,
+    gray: color.gray_800,
   }
   return {styles, colors} as const
 }

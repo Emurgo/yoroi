@@ -308,8 +308,8 @@ const MnemonicWordInput = React.forwardRef<MnemonicWordInputRef, MnemonicWordInp
           }
         }}
         onBlur={handleOnBlur}
-        cursorColor={colors.primary_c600} // only works for android
-        selectionColor={Platform.OS === 'android' ? colors.gray_c100 : undefined} // on ios, selectionColor changes cursor and selection
+        cursorColor={colors.primary_600} // only works for android
+        selectionColor={Platform.OS === 'android' ? colors.gray_100 : undefined} // on ios, selectionColor changes cursor and selection
         keyboardType={Platform.OS === 'android' ? 'visible-password' : undefined} // to hide keyboard suggestions on android
       />
     )
@@ -354,7 +354,7 @@ const useStyles = () => {
       textAlign: 'center',
     },
     mnemonicIndex: {
-      color: color.primary_c400,
+      color: color.primary_400,
       ...atoms.body_1_lg_regular,
     },
     textView: {
@@ -364,16 +364,16 @@ const useStyles = () => {
     },
     errorText: {
       ...atoms.body_1_lg_regular,
-      color: color.sys_magenta_c500,
+      color: color.sys_magenta_500,
     },
     successText: {
       ...atoms.body_1_lg_medium,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
     clearAll: {
       ...atoms.button_2_md,
       ...atoms.pl_sm,
-      color: color.primary_c500,
+      color: color.primary_500,
       textTransform: 'uppercase',
     },
   })

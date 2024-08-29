@@ -106,7 +106,7 @@ const useStyles = () => {
 
   const buttonOutline = {
     borderWidth: 2,
-    borderColor: color.gray_cmin,
+    borderColor: color.gray_min,
     backgroundColor: 'transparent',
   }
   const styles = StyleSheet.create({
@@ -114,7 +114,7 @@ const useStyles = () => {
       flex: 1,
     },
     button: {
-      backgroundColor: color.secondary_c500,
+      backgroundColor: color.secondary_500,
       minHeight: 48,
       maxHeight: 54,
       borderRadius: 8,
@@ -129,11 +129,11 @@ const useStyles = () => {
       ...buttonOutline,
     },
     mainTheme: {
-      backgroundColor: color.primary_c500,
+      backgroundColor: color.primary_500,
     },
     buttonOutlineOnLight: {
       ...buttonOutline,
-      borderColor: color.secondary_c500,
+      borderColor: color.secondary_500,
     },
     buttonOutlineShelley: {
       ...buttonOutline,
@@ -147,7 +147,7 @@ const useStyles = () => {
       textTransform: 'uppercase',
     },
     textOutlineOnLight: {
-      color: color.secondary_c500,
+      color: color.secondary_500,
     },
     textOutlineShelley: {
       color: color.text_primary_medium,
@@ -159,20 +159,20 @@ const useStyles = () => {
       color: color.text_gray_min,
     },
     shelleyTheme: {
-      backgroundColor: color.primary_c500,
+      backgroundColor: color.primary_500,
     },
     shelleyOutlineOnLight: {
       backgroundColor: 'transparent',
-      borderColor: color.primary_c600,
+      borderColor: color.primary_600,
       borderWidth: 2,
     },
     textShelleyOutlineOnLight: {
-      color: color.primary_c600,
+      color: color.primary_600,
       fontWeight: '600',
     },
     isCopying: {
       position: 'absolute',
-      backgroundColor: color.gray_cmax,
+      backgroundColor: color.gray_max,
       alignItems: 'center',
       justifyContent: 'center',
       top: -50,
@@ -181,7 +181,7 @@ const useStyles = () => {
       zIndex: 10,
     },
     copiedText: {
-      color: color.gray_cmin,
+      color: color.gray_min,
       textAlign: 'center',
       ...atoms.p_sm,
       ...atoms.body_2_md_medium,

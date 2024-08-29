@@ -36,7 +36,7 @@ const useStyles = () => {
       justifyContent: 'center',
     },
     liquidityPoolText: {
-      color: color.primary_c500,
+      color: color.primary_500,
       ...atoms.body_1_lg_medium,
     },
     liquidityPool: {
