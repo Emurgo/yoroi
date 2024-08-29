@@ -5,6 +5,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 
 import {Button, Icon, Text, TitledCard} from '../../components'
+import {Space} from '../../components/Space/Space'
 import {usePrivacyMode} from '../../features/Settings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import globalMessages from '../../kernel/i18n/global-messages'
@@ -23,125 +24,137 @@ type Props = {
 
 export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdraw, disableWithdraw}: Props) => {
   const styles = useStyles()
+  const {color} = useTheme()
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
   const {isPrivacyActive} = usePrivacyMode()
 
   return (
-    <View style={styles.wrapper}>
-      <TitledCard title={strings.title} testID="userSummaryTitleCard">
-        <View style={styles.stats}>
-          <View style={styles.row}>
-            <View style={styles.icon}>
-              <Icon.TotalAda width={ICON_DIM} height={ICON_DIM} />
-            </View>
-
-            <View style={styles.amountBlock}>
-              <Text style={styles.label}>{strings.availableFunds}:</Text>
-
-              <Text bold style={styles.value} testID="userSummaryAvailableFundsText">
-                {!isPrivacyActive
-                  ? totalAdaSum != null
-                    ? formatAdaWithText(asQuantity(totalAdaSum), wallet.primaryToken)
-                    : '-'
-                  : '**.******'}
-              </Text>
-            </View>
+    <TitledCard title={strings.title} testID="userSummaryTitleCard">
+      <View style={styles.stats}>
+        <View style={styles.row}>
+          <View style={styles.icon}>
+            <Icon.TotalAda
+              color={color.el_primary_medium}
+              backgroundColor={color.gray_c300}
+              width={ICON_DIM}
+              height={ICON_DIM}
+            />
           </View>
 
-          <View style={styles.row}>
-            <View style={styles.icon}>
-              <Icon.TotalReward width={ICON_DIM} height={ICON_DIM} />
-            </View>
+          <Space width="lg" />
 
-            <View style={styles.amountBlock}>
-              <Text style={styles.label}>{strings.rewardsLabel}:</Text>
+          <View style={styles.amountBlock}>
+            <Text style={styles.label}>{strings.availableFunds}:</Text>
 
-              <Text bold style={styles.value} testID="userSummaryRewardsText">
-                {!isPrivacyActive
-                  ? totalRewards != null
-                    ? formatAdaWithText(asQuantity(totalRewards), wallet.primaryToken)
-                    : '-'
-                  : '**.******'}
-              </Text>
-            </View>
-
-            <View style={styles.withdrawBlock}>
-              <Button
-                disabled={disableWithdraw}
-                outlineOnLight
-                shelleyTheme
-                onPress={onWithdraw}
-                title={strings.withdrawButtonTitle}
-                style={styles.withdrawButton}
-                testID="userSummaryWithdrawButton"
-              />
-            </View>
-          </View>
-
-          <View style={styles.row}>
-            <View style={styles.icon}>
-              <Icon.TotalDelegated width={ICON_DIM} height={ICON_DIM} />
-            </View>
-
-            <View style={styles.amountBlock}>
-              <Text style={styles.label}>{strings.delegatedLabel}:</Text>
-
-              <Text bold style={styles.value} testID="userSummaryDelegatedText">
-                {!isPrivacyActive
-                  ? totalDelegated != null
-                    ? formatAdaWithText(asQuantity(totalDelegated), wallet.primaryToken)
-                    : '-'
-                  : '**.******'}
-              </Text>
-            </View>
+            <Text bold style={styles.value} testID="userSummaryAvailableFundsText">
+              {!isPrivacyActive
+                ? totalAdaSum != null
+                  ? formatAdaWithText(asQuantity(totalAdaSum), wallet.primaryToken)
+                  : '-'
+                : '**.******'}
+            </Text>
           </View>
         </View>
-      </TitledCard>
-    </View>
+
+        <Space height="lg" />
+
+        <View style={styles.row}>
+          <View style={styles.icon}>
+            <Icon.TotalReward
+              color={color.el_primary_medium}
+              backgroundColor={color.gray_c300}
+              width={ICON_DIM}
+              height={ICON_DIM}
+            />
+          </View>
+
+          <Space width="lg" />
+
+          <View style={styles.amountBlock}>
+            <Text style={styles.label}>{strings.rewardsLabel}:</Text>
+
+            <Text bold style={styles.value} testID="userSummaryRewardsText">
+              {!isPrivacyActive
+                ? totalRewards != null
+                  ? formatAdaWithText(asQuantity(totalRewards), wallet.primaryToken)
+                  : '-'
+                : '**.******'}
+            </Text>
+          </View>
+        </View>
+
+        <Space height="lg" />
+
+        <View style={styles.row}>
+          <View style={styles.icon}>
+            <Icon.TotalDelegated
+              color={color.el_primary_medium}
+              backgroundColor={color.gray_c300}
+              width={ICON_DIM}
+              height={ICON_DIM}
+            />
+          </View>
+
+          <Space width="lg" />
+
+          <View style={styles.amountBlock}>
+            <Text style={styles.label}>{strings.delegatedLabel}:</Text>
+
+            <Text bold style={styles.value} testID="userSummaryDelegatedText">
+              {!isPrivacyActive
+                ? totalDelegated != null
+                  ? formatAdaWithText(asQuantity(totalDelegated), wallet.primaryToken)
+                  : '-'
+                : '**.******'}
+            </Text>
+          </View>
+        </View>
+
+        <Space height="lg" />
+
+        <View style={styles.row}>
+          <Button
+            disabled={disableWithdraw}
+            outlineOnLight
+            shelleyTheme
+            onPress={onWithdraw}
+            title={strings.withdrawButtonTitle}
+            style={styles.withdrawButton}
+            testID="userSummaryWithdrawButton"
+          />
+        </View>
+      </View>
+    </TitledCard>
   )
 }
 
 const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
-    wrapper: {
-      flex: 1,
-    },
     stats: {
-      flex: 1,
-      flexDirection: 'column',
-      justifyContent: 'space-around',
+      ...atoms.flex_1,
+      ...atoms.flex_col,
     },
     row: {
-      flex: 1,
-      ...atoms.py_sm,
-      flexDirection: 'row',
+      ...atoms.flex_1,
+      ...atoms.flex_row,
+      ...atoms.align_center,
     },
-    icon: {
-      paddingLeft: 8,
-      ...atoms.p_sm,
-      ...atoms.pr_lg,
-    },
+    icon: {},
     amountBlock: {
-      flexDirection: 'column',
+      ...atoms.flex_col,
     },
     label: {
-      color: color.gray_c900,
-      ...atoms.body_2_md_regular,
+      color: color.text_gray_medium,
+      ...atoms.body_3_sm_regular,
     },
     value: {
-      color: color.gray_c800,
-      ...atoms.body_1_lg_regular,
-    },
-    withdrawBlock: {
-      flex: 1,
-      ...atoms.p_xs,
-      justifyContent: 'flex-end',
-      flexDirection: 'row',
+      color: color.text_gray_normal,
+      ...atoms.body_1_lg_medium,
     },
     withdrawButton: {
-      minHeight: 18,
+      ...atoms.px_lg,
     },
   })
 

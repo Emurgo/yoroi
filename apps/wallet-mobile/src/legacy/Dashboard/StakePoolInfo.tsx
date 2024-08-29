@@ -5,6 +5,7 @@ import {ActivityIndicator, Linking, StyleSheet, View} from 'react-native'
 import {useQuery, UseQueryOptions} from 'react-query'
 
 import {Button, CopyButton, Text, TitledCard} from '../../components'
+import {Space} from '../../components/Space/Space'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {isEmptyString} from '../../kernel/utils'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
@@ -17,11 +18,10 @@ export const StakePoolInfo = ({stakePoolId}: {stakePoolId: string}) => {
   const {stakePoolInfoAndHistory, isLoading} = useStakePoolInfoAndHistory({wallet, stakePoolId})
   const homepage = stakePoolInfoAndHistory?.info?.homepage
 
-  if (isLoading) {
-    return <ActivityIndicator size="large" color="black" />
-  }
+  if (isLoading) return <ActivityIndicator size="large" color="black" />
+  if (!stakePoolInfoAndHistory?.info) return null
 
-  return stakePoolInfoAndHistory?.info ? (
+  return (
     <View>
       <TitledCard title={strings.title} variant="poolInfo" testID="stakePoolInfoTitleCard">
         <View style={styles.topBlock}>
@@ -29,6 +29,8 @@ export const StakePoolInfo = ({stakePoolId}: {stakePoolId: string}) => {
             {formatStakepoolNameWithTicker(stakePoolInfoAndHistory.info.ticker, stakePoolInfoAndHistory.info.name) ??
               strings.unknownPool}
           </Text>
+
+          <Space height="xs" />
 
           <View style={styles.poolIdBlock}>
             <Text
@@ -46,14 +48,18 @@ export const StakePoolInfo = ({stakePoolId}: {stakePoolId: string}) => {
         </View>
 
         {!isEmptyString(homepage) && (
-          <View style={styles.bottomBlock}>
-            <Button
-              outlineOnLight
-              shelleyTheme
-              onPress={() => Linking.openURL(homepage)}
-              title={strings.goToWebsiteButtonLabel}
-            />
-          </View>
+          <>
+            <Space height="lg" />
+
+            <View style={styles.bottomBlock}>
+              <Button
+                outlineOnLight
+                shelleyTheme
+                onPress={() => Linking.openURL(homepage)}
+                title={strings.goToWebsiteButtonLabel}
+              />
+            </View>
+          </>
         )}
       </TitledCard>
 
@@ -63,7 +69,7 @@ export const StakePoolInfo = ({stakePoolId}: {stakePoolId: string}) => {
         </Text>
       </View>
     </View>
-  ) : null
+  )
 }
 
 export const useStakePoolInfoAndHistory = (
@@ -94,30 +100,26 @@ export const useStakePoolInfoAndHistory = (
 const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
-    topBlock: {
-      ...atoms.py_sm,
-      ...atoms.py_lg,
-    },
+    topBlock: {},
     poolName: {
-      ...atoms.body_1_lg_regular,
+      ...atoms.body_1_lg_medium,
+      color: color.text_gray_normal,
     },
     poolIdBlock: {
-      flexDirection: 'row',
+      ...atoms.flex_row,
     },
     poolId: {
-      color: color.gray_c700,
+      color: color.text_gray_medium,
       ...atoms.body_2_md_regular,
-      flex: 1,
+      ...atoms.flex_1,
     },
-    bottomBlock: {
-      ...atoms.px_lg,
-      ...atoms.py_xl,
-    },
+    bottomBlock: {},
     warning: {
       ...atoms.p_sm,
     },
     warningText: {
-      fontStyle: 'italic',
+      color: color.gray_c500,
+      ...atoms.italic,
       ...atoms.body_3_sm_regular,
     },
   })

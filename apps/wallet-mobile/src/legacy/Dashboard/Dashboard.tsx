@@ -9,6 +9,7 @@ import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View, ViewPro
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Banner, Button, useModal} from '../../components'
+import {Space} from '../../components/Space/Space'
 import {
   useGovernanceStrings,
   useIsParticipatingInGovernance,
@@ -97,16 +98,26 @@ export const Dashboard = () => {
             />
           }
         >
-          {stakingInfo?.status !== 'staked' && <NotDelegatedInfo />}
+          {stakingInfo?.status !== 'staked' && (
+            <>
+              <NotDelegatedInfo />
+
+              <Space height="xl" />
+            </>
+          )}
 
           {isPoolRetiring && (
             <Row>
               <PoolTransitionNotice />
+
+              <Space height="xl" />
             </Row>
           )}
 
           <Row>
             <EpochInfo />
+
+            <Space height="xl" />
           </Row>
 
           <Row>
@@ -129,11 +140,15 @@ export const Dashboard = () => {
                 disableWithdraw
               />
             )}
+
+            <Space height="xl" />
           </Row>
 
           {stakingInfo?.status === 'staked' && (
             <Row>
               <StakePoolInfos />
+
+              <Space height="xl" />
             </Row>
           )}
         </ScrollView>
@@ -238,38 +253,32 @@ const messages = defineMessages({
 })
 
 const useStyles = () => {
-  const {color} = useTheme()
+  const {color, atoms} = useTheme()
 
   const styles = StyleSheet.create({
     root: {
-      flex: 1,
+      ...atoms.flex_1,
       backgroundColor: color.bg_color_high,
     },
     container: {
-      flexDirection: 'column',
-      flex: 1,
+      ...atoms.flex_1,
+      ...atoms.flex_col,
     },
     scrollView: {
-      flex: 1,
+      ...atoms.flex_1,
     },
     contentContainer: {
-      paddingTop: 16,
-      paddingHorizontal: 16,
+      ...atoms.pt_lg,
+      ...atoms.px_lg,
     },
     row: {
-      flex: 1,
-      paddingVertical: 12,
+      ...atoms.flex_1,
     },
     actions: {
+      ...atoms.flex_row,
+      ...atoms.p_lg,
       borderTopWidth: 1,
       borderTopColor: color.gray_c200,
-      flexDirection: 'row',
-      padding: 16,
-      elevation: 1,
-      shadowOpacity: 0.06,
-      shadowColor: color.black_static,
-      shadowRadius: 6,
-      shadowOffset: {width: 0, height: -8},
     },
   })
 
