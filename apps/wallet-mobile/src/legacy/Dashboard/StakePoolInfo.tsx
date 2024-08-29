@@ -113,7 +113,6 @@ const useStyles = () => {
       ...atoms.body_2_md_regular,
       ...atoms.flex_1,
     },
-    bottomBlock: {},
     warning: {
       ...atoms.p_sm,
     },
