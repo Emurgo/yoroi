@@ -8,7 +8,13 @@
     "resolver",
     "browser",
     "react",
-    "react-native"
+    "react-native",
+    "ada-handle",
+    "ada handle",
+    "cns",
+    "unstoppable domains",
+    "unstoppable-domains",
+    "domain"
   ],
   "homepage": "https://github.com/Emurgo/yoroi/packages/resolver#readme",
   "bugs": {

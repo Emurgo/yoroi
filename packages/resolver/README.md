@@ -20,13 +20,8 @@ or
 
 There are two strategies supported to get a crypto address:
 
-- **all**: Will attempt to resolve on all services.
-
-Response: `[{nameServer: 'cns', address: string | null, error: Error instance | null}, {nameServer: 'unstoppable', address: string | null, error: Error instance | null}, {nameServer: 'handle', address: string | null, error: Error instance | null}]`
-
+- **all**: Will attempt to resolve for all services.
 - **first**: Will return the service that resolves first.
-
-Response: `[{nameServer: 'cns' | 'unstoppable' | 'handle', address: string | null, error: Error instance | null}]`
 
 ## API Reference
 
@@ -34,25 +29,34 @@ Response: `[{nameServer: 'cns' | 'unstoppable' | 'handle', address: string | nul
 
 Accepted arguments:
 
-  1. apiConfig: `{unstoppable: '<unstoppable api key>'}`
-  2. cslFactory: Cardano Serialization Library initiator
+1. apiConfig: `{unstoppable: '<unstoppable api key>'}`
+2. cslFactory: Cardano Serialization Library initiator
 
 Returns: `getCardanoAddresses`
 
-
- - **`getCardanoAddresses`**
+- **`getCardanoAddresses`**
 
 Accepted arguments:
 
-  1. resolve: `string`. Domain or handle to look for.
-  2. strategy: `all` | `first`
+1. resolve: `string`. Domain or handle to look for.
+2. strategy: `all` | `first`
 
 Returns depending on the strategy selected:
 
 All:
 
-`[{nameServer: 'cns', address: string | null, error: Error instance | null}, {nameServer: 'unstoppable', address: string | null, error: Error instance | null}, {nameServer: 'handle', address: string | null, error: Error instance | null}]`
+```typescript
+[
+  {nameServer: 'cns', address: string | null, error: Error instance | null},
+  {nameServer: 'unstoppable', address: string | null, error: Error instance | null},
+  {nameServer: 'handle', address: string | null, error: Error instance | null}
+]
+```
 
 First:
 
-`[{nameServer: 'cns' | 'unstoppable' | 'handle', address: string | null, error: Error instance | null}]`
+```typescript
+[
+  {nameServer: 'cns' | 'unstoppable' | 'handle', address: string | null, error: Error instance | null}
+]
+```
