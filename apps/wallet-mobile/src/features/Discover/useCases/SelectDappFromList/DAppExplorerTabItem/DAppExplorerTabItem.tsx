@@ -27,10 +27,10 @@ const useStyles = () => {
     },
     text: {
       ...atoms.body_1_lg_medium,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
     containerActive: {
-      backgroundColor: color.gray_c200,
+      backgroundColor: color.gray_200,
     },
   })
 

@@ -71,7 +71,7 @@ const useStyles = () => {
   const {color} = useTheme()
   const styles = StyleSheet.create({
     primary: {
-      backgroundColor: color.primary_c600,
+      backgroundColor: color.primary_600,
     },
     iconMedium: {
       backgroundColor: 'transparent',
@@ -92,7 +92,7 @@ const useStyles = () => {
       overflow: 'hidden',
     },
     placeholder: {
-      backgroundColor: color.gray_c100,
+      backgroundColor: color.gray_100,
     },
     placeholderSmall: {
       width: 24,
@@ -101,7 +101,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    icon: color.gray_c600,
+    icon: color.gray_600,
   }
 
   return {styles, colors}

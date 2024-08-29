@@ -140,7 +140,7 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     headerTitleStyle: {
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
       ...atoms.body_1_lg_medium,
       ...atoms.flex_shrink,
     },
@@ -155,13 +155,13 @@ const useStyles = () => {
       flexShrink: 0,
     },
     preprodTag: {
-      backgroundColor: color.sys_yellow_c500,
+      backgroundColor: color.sys_yellow_500,
       ...atoms.rounded_full,
       ...atoms.px_sm,
       ...atoms.py_xs,
     },
     sanchonetLabel: {
-      backgroundColor: color.el_secondary_medium,
+      backgroundColor: color.el_secondary,
       ...atoms.rounded_full,
       ...atoms.px_sm,
       ...atoms.py_xs,
@@ -172,7 +172,7 @@ const useStyles = () => {
     },
     warningModalText: {
       ...atoms.body_1_lg_regular,
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
     },
     warningModalActions: {
       ...atoms.pb_lg,

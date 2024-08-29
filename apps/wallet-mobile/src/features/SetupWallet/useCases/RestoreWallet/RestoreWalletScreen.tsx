@@ -315,13 +315,13 @@ const useStyles = () => {
     root: {
       flex: 1,
       justifyContent: 'space-between',
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     title: {
       ...atoms.body_1_lg_regular,
-      color: color.gray_c900,
+      color: color.gray_900,
     },
-    button: {backgroundColor: color.primary_c500},
+    button: {backgroundColor: color.primary_500},
     bolder: {
       ...atoms.body_1_lg_medium,
     },
@@ -346,25 +346,25 @@ const useStyles = () => {
     },
     modalText: {
       ...atoms.body_1_lg_regular,
-      color: color.gray_c900,
+      color: color.gray_900,
     },
     plateText: {
       ...atoms.body_3_sm_regular,
-      color: color.gray_c600,
+      color: color.gray_600,
       textAlign: 'center',
       justifyContent: 'center',
     },
     plateName: {
       ...atoms.body_2_md_medium,
-      color: color.gray_c900,
+      color: color.gray_900,
     },
     modal: {
       flex: 1,
       ...atoms.px_lg,
     },
     suggestions: {
-      backgroundColor: color.bg_color_high,
-      borderColor: color.gray_c200,
+      backgroundColor: color.bg_color_max,
+      borderColor: color.gray_200,
       borderTopWidth: 1,
       flexDirection: 'row',
       alignItems: 'center',
@@ -372,7 +372,7 @@ const useStyles = () => {
       paddingBottom: 19,
     },
     suggestion: {
-      borderColor: color.primary_c500,
+      borderColor: color.primary_500,
       borderWidth: 2,
       borderRadius: 8,
       backgroundColor: 'transparent',
@@ -380,25 +380,25 @@ const useStyles = () => {
     suggestionText: {
       ...atoms.body_1_lg_regular,
       textTransform: 'none',
-      color: color.text_primary_high,
+      color: color.text_primary_max,
     },
     suggestionArea: {
-      backgroundColor: color.bg_color_high,
-      borderColor: color.gray_c200,
+      backgroundColor: color.bg_color_max,
+      borderColor: color.gray_200,
       borderTopWidth: 1,
       alignItems: 'center',
       paddingTop: 30,
       paddingBottom: 30,
     },
     suggestionMessage: {
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
       ...atoms.body_1_lg_regular,
       ...atoms.text_center,
     },
   })
 
   const colors = {
-    gray900: color.gray_c900,
+    gray900: color.gray_900,
     gradientBlueGreen: color.bg_gradient_1,
   }
 

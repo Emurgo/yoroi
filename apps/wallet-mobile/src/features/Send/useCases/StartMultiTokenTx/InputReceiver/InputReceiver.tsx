@@ -54,8 +54,8 @@ const useStyles = () => {
     },
   })
   const colors = {
-    indicatorColor: color.primary_c600,
-    iconColor: color.secondary_c500,
+    indicatorColor: color.primary_600,
+    iconColor: color.secondary_500,
   }
   return {styles, colors}
 }

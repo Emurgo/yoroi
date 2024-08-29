@@ -20,7 +20,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     text: {
       ...atoms.link_1_lg_underline,
-      color: color.primary_c500,
+      color: color.primary_500,
       alignSelf: 'center',
     },
   })

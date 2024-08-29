@@ -28,15 +28,15 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       alignItems: 'center',
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     title: {
-      color: color.primary_c500,
+      color: color.primary_500,
       textAlign: 'center',
       ...atoms.heading_1_medium,
     },
     subtitle: {
-      color: color.gray_c900,
+      color: color.gray_900,
       textAlign: 'center',
       ...atoms.body_2_md_regular,
     },

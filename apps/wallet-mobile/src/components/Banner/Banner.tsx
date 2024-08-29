@@ -51,16 +51,16 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     banner: {
-      backgroundColor: color.gray_c100,
+      backgroundColor: color.gray_100,
       ...atoms.p_lg,
       alignItems: 'center',
       justifyContent: 'center',
     },
     textError: {
-      color: color.sys_magenta_c500,
+      color: color.sys_magenta_500,
     },
     bannerError: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       ...atoms.py_sm,
     },
     label: {

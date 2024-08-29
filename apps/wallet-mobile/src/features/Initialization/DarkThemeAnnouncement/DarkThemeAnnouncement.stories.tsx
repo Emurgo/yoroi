@@ -18,7 +18,7 @@ const useStyles = () => {
     container: {
       flex: 1,
       padding: 16,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
   })
 

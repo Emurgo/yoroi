@@ -41,10 +41,10 @@ const useStyles = () => {
       ...atoms.flex_1,
       ...atoms.align_center,
       ...atoms.justify_center,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     title: {
-      color: color.primary_c500,
+      color: color.primary_500,
       ...atoms.text_center,
       ...atoms.heading_2_medium,
     },

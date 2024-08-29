@@ -23,7 +23,7 @@ const useStyles = () => {
   const {color} = useTheme()
   const styles = StyleSheet.create({
     defaultStyle: {
-      borderColor: color.gray_cmax,
+      borderColor: color.gray_max,
       borderRadius: 6,
       borderWidth: 0.5,
       alignItems: 'center',

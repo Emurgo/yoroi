@@ -232,7 +232,7 @@ const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     safeAreaView: {
       ...atoms.gap_lg,
@@ -249,17 +249,17 @@ const useStyles = () => {
     },
     hr: {
       height: StyleSheet.hairlineWidth,
-      backgroundColor: color.gray_c200,
+      backgroundColor: color.gray_200,
     },
     actions: {
       ...atoms.px_lg,
     },
     maxBalance: {
-      color: color.primary_c600,
+      color: color.primary_600,
       ...atoms.body_1_lg_medium,
     },
     amount: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       ...atoms.heading_2_regular,
       ...atoms.border_0,
       ...atoms.text_right,
@@ -270,8 +270,8 @@ const useStyles = () => {
     },
   })
   const colors = {
-    black: color.gray_cmax,
-    selected: color.text_gray_normal,
+    black: color.gray_max,
+    selected: color.text_gray_medium,
   }
   return {styles, colors} as const
 }

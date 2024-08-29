@@ -48,25 +48,25 @@ const useStyles = () => {
       paddingVertical: 3,
     },
     pnlSuccess: {
-      backgroundColor: color.secondary_c100,
+      backgroundColor: color.secondary_100,
     },
     pnlDanger: {
-      backgroundColor: color.sys_magenta_c100,
+      backgroundColor: color.sys_magenta_100,
     },
     pnlNeutral: {
-      backgroundColor: color.gray_c100,
+      backgroundColor: color.gray_100,
     },
     label: {
       ...atoms.body_3_sm_medium,
     },
     labelSuccess: {
-      color: color.secondary_c700,
+      color: color.secondary_700,
     },
     labelDanger: {
-      color: color.sys_magenta_c700,
+      color: color.sys_magenta_700,
     },
     labelNeutral: {
-      color: color.gray_c600,
+      color: color.gray_600,
     },
   })
 

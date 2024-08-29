@@ -131,7 +131,7 @@ const useStyles = () => {
     },
     description: {
       ...atoms.body_1_lg_regular,
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
     },
   })
 

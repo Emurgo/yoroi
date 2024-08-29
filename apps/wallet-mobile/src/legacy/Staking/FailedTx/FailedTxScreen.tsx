@@ -66,26 +66,26 @@ const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     container: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
       ...atoms.p_lg,
     },
     title: {
-      color: color.gray_cmax,
+      color: color.gray_max,
       ...atoms.heading_3_medium,
       ...atoms.px_xs,
       textAlign: 'center',
     },
     text: {
-      color: color.gray_c600,
+      color: color.gray_600,
       ...atoms.body_2_md_regular,
       textAlign: 'center',
       maxWidth: 330,
     },
     outlineText: {
-      color: color.primary_c500,
+      color: color.primary_500,
     },
   })
   return styles

@@ -258,7 +258,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       ...atoms.flex_1,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     container: {
       ...atoms.flex_1,
@@ -278,7 +278,7 @@ const useStyles = () => {
       ...atoms.flex_row,
       ...atoms.p_lg,
       borderTopWidth: 1,
-      borderTopColor: color.gray_c200,
+      borderTopColor: color.gray_200,
     },
   })
 

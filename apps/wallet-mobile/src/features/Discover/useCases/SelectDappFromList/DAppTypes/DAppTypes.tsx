@@ -101,13 +101,13 @@ const useStyles = () => {
       ...atoms.p_2xs,
       height: 40,
       paddingHorizontal: 14,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       flexDirection: 'row',
       alignItems: 'center',
       gap: 8,
     },
     chipText: {
-      color: color.primary_c600,
+      color: color.primary_600,
       ...atoms.body_1_lg_regular,
     },
     contentContainer: {
@@ -116,10 +116,10 @@ const useStyles = () => {
     boxDisabledStyle: {
       borderWidth: 2,
       ...atoms.rounded_sm,
-      borderColor: color.el_primary_low,
+      borderColor: color.el_primary_min,
     },
     textDisabledStyle: {
-      color: color.primary_c300,
+      color: color.primary_300,
     },
     boxIdleStyle: {
       borderWidth: 2,
@@ -129,27 +129,27 @@ const useStyles = () => {
       color: color.text_primary_medium,
     },
     boxLimitedStyle: {
-      backgroundColor: color.el_secondary_medium,
+      backgroundColor: color.el_secondary,
     },
     textLimitedStyle: {
       color: color.black_static,
     },
     boxActivePressedStyle: {
-      backgroundColor: color.primary_c600,
+      backgroundColor: color.primary_600,
     },
     boxActiveNonPressedStyle: {
-      backgroundColor: color.primary_c500,
+      backgroundColor: color.primary_500,
     },
     textActiveStyle: {
       color: color.white_static,
     },
     boxPressedStyle: {
       borderWidth: 2,
-      borderColor: color.el_primary_high,
-      backgroundColor: color.primary_c100,
+      borderColor: color.el_primary_max,
+      backgroundColor: color.primary_100,
     },
     textPressedStyle: {
-      color: color.text_primary_high,
+      color: color.text_primary_max,
     },
   })
 

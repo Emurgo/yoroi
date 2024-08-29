@@ -190,16 +190,16 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     container: {
       ...atoms.p_lg,
-      borderColor: color.gray_c200,
-      backgroundColor: color.bg_color_high,
+      borderColor: color.gray_200,
+      backgroundColor: color.bg_color_max,
       borderRadius: 8,
       borderWidth: 1,
       width: '100%',
       height: 'auto',
     },
     shadowProp: {
-      backgroundColor: color.bg_color_high,
-      shadowColor: color.gray_cmax,
+      backgroundColor: color.bg_color_max,
+      shadowColor: color.gray_max,
       shadowOffset: {
         width: 0,
         height: 1,
@@ -222,15 +222,15 @@ const useStyles = () => {
     text: {
       textAlign: 'left',
       ...atoms.body_1_lg_regular,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
     gray: {
-      color: color.gray_c600,
+      color: color.gray_600,
       ...atoms.body_1_lg_regular,
     },
     buttonLabel: {
       paddingTop: 13,
-      color: color.gray_cmax,
+      color: color.gray_max,
       ...atoms.body_2_md_medium,
     },
     info: {
@@ -241,10 +241,10 @@ const useStyles = () => {
       textAlign: 'right',
       flexShrink: 1,
       ...atoms.body_1_lg_regular,
-      color: color.gray_c900,
+      color: color.gray_900,
     },
     label: {
-      color: color.gray_c600,
+      color: color.gray_600,
       paddingRight: 8,
       ...atoms.body_1_lg_regular,
     },
@@ -254,8 +254,8 @@ const useStyles = () => {
   })
 
   const colors = {
-    skeletonBackground: color.gray_c200,
-    gray: color.gray_cmax,
+    skeletonBackground: color.gray_200,
+    gray: color.gray_max,
   }
 
   return {styles, colors}

@@ -76,7 +76,7 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       ...atoms.flex_1,
     },
     safeAreaView: {
@@ -88,7 +88,7 @@ const useStyles = () => {
       ...atoms.px_lg,
     },
     actions: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       ...atoms.pt_lg,
       ...atoms.px_lg,
     },

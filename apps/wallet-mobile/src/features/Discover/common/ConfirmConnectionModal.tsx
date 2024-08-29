@@ -141,7 +141,7 @@ const SingleAddressDAppWarning = () => {
 
 const useStyles = () => {
   const {atoms, color} = useTheme()
-  const colors = {icon: color.el_gray_high}
+  const colors = {icon: color.el_gray_max}
   const styles = StyleSheet.create({
     imagesLine: {
       ...atoms.flex,
@@ -162,11 +162,11 @@ const useStyles = () => {
       ...atoms.gap_xs,
     },
     text: {
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
       ...atoms.body_1_lg_regular,
     },
     bold: {
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
       ...atoms.body_1_lg_medium,
       ...atoms.font_semibold,
     },
@@ -179,10 +179,10 @@ const useStyles = () => {
     },
     warningText: {
       ...atoms.body_2_md_regular,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
     link: {
-      color: color.sys_cyan_c500,
+      color: color.sys_cyan_500,
     },
   })
   return {styles, colors} as const

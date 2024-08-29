@@ -131,7 +131,7 @@ const useStyles = () => {
     subtitle: {
       textAlign: 'center',
       ...atoms.body_2_md_regular,
-      color: color.gray_c600,
+      color: color.gray_600,
     },
     row: {
       flexDirection: 'row',
@@ -139,7 +139,7 @@ const useStyles = () => {
     address: {
       flex: 1,
       ...atoms.body_1_lg_regular,
-      color: color.gray_c900,
+      color: color.gray_900,
     },
   })
 

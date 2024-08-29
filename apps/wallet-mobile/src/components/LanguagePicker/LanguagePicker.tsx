@@ -71,7 +71,7 @@ const useStyles = () => {
     },
     hr: {
       height: 1,
-      backgroundColor: color.gray_c200,
+      backgroundColor: color.gray_200,
     },
     item: {
       flexDirection: 'row',
@@ -81,11 +81,11 @@ const useStyles = () => {
     },
     itemText: {
       ...atoms.body_1_lg_medium,
-      color: color.gray_c900,
+      color: color.gray_900,
     },
   })
   const colors = {
-    icon: color.primary_c600,
+    icon: color.primary_600,
   }
   return {styles, colors}
 }

@@ -52,12 +52,12 @@ const useStyles = () => {
       ...atoms.p_md,
     },
     disabled: {
-      color: color.gray_c600,
+      color: color.gray_600,
     },
     contentWrapper: {
       ...atoms.p_lg,
     },
   })
 
-  return {styles, colors: {icon: color.gray_cmax}} as const
+  return {styles, colors: {icon: color.gray_max}} as const
 }

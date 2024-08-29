@@ -46,16 +46,16 @@ const useStyles = () => {
     tokenBalance: {
       ...atoms.heading_1_medium,
       ...atoms.font_semibold,
-      color: color.gray_c900,
+      color: color.gray_900,
     },
     symbol: {
       ...atoms.body_1_lg_medium,
       ...atoms.font_semibold,
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
     },
     usdLabel: {
       ...atoms.body_2_md_regular,
-      color: color.gray_c600,
+      color: color.gray_600,
     },
   })
 

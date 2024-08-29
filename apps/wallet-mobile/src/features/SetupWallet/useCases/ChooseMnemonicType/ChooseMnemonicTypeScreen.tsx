@@ -75,7 +75,7 @@ const useStyles = () => {
     container: {
       flex: 1,
       ...atoms.px_lg,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     icon: {
       position: 'absolute',

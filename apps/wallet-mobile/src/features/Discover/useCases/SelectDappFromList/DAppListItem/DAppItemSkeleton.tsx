@@ -6,7 +6,7 @@ export const DAppItemSkeleton = () => {
   const {color} = useTheme()
 
   return (
-    <SkeletonPlaceholder backgroundColor={color.gray_c100}>
+    <SkeletonPlaceholder backgroundColor={color.gray_100}>
       <SkeletonPlaceholder.Item flexDirection="row" width="100%" gap={12} alignItems="flex-start">
         <SkeletonPlaceholder.Item width={48} height={48} borderRadius={8} />
 
@@ -26,7 +26,7 @@ export const DAppTabSkeleton = () => {
   const {color} = useTheme()
 
   return (
-    <SkeletonPlaceholder backgroundColor={color.gray_c100}>
+    <SkeletonPlaceholder backgroundColor={color.gray_100}>
       <SkeletonPlaceholder.Item width="100%" maxWidth={343} height={40} borderRadius={8} />
     </SkeletonPlaceholder>
   )
@@ -36,7 +36,7 @@ export const DAppCountConnectedSkeleton = () => {
   const {color} = useTheme()
 
   return (
-    <SkeletonPlaceholder backgroundColor={color.gray_c100}>
+    <SkeletonPlaceholder backgroundColor={color.gray_100}>
       <SkeletonPlaceholder.Item width={125} height={22} borderRadius={8} />
     </SkeletonPlaceholder>
   )

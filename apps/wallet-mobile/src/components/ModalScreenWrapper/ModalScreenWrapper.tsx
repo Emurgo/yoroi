@@ -109,7 +109,7 @@ const useStyles = () => {
     },
     sheet: {
       flex: 1,
-      backgroundColor: color.gray_c200,
+      backgroundColor: color.gray_200,
       borderTopRightRadius: 20,
       borderTopLeftRadius: 20,
       alignSelf: 'stretch',
@@ -121,7 +121,7 @@ const useStyles = () => {
       fontFamily: 'Rubik-Medium',
       fontSize: 20,
       padding: 16,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
     header: {
       alignItems: 'center',
@@ -129,7 +129,7 @@ const useStyles = () => {
     },
     slider: {
       height: 4,
-      backgroundColor: color.gray_cmax,
+      backgroundColor: color.gray_max,
       width: 32,
       borderRadius: 10,
     },

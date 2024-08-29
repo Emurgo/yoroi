@@ -39,7 +39,7 @@ const useStyles = () => {
       ...atoms.p_lg,
     },
     dialogSquare: {
-      backgroundColor: color.bg_color_low,
+      backgroundColor: color.bg_color_min,
       borderRadius: 8,
       ...atoms.p_lg,
     },
@@ -50,12 +50,12 @@ const useStyles = () => {
     },
     markdownText: {
       ...atoms.body_1_lg_regular,
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
     },
   })
 
   const colors = {
-    icon: color.el_gray_high,
+    icon: color.el_gray_max,
   }
 
   return {styles, colors} as const

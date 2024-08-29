@@ -7,7 +7,7 @@ export const TxListItemSkeleton = () => {
   const {color, styles} = useStyles()
   return (
     <View style={styles.root}>
-      <SkeletonPlaceholder borderRadius={8} backgroundColor={color.gray_c100}>
+      <SkeletonPlaceholder borderRadius={8} backgroundColor={color.gray_100}>
         <SkeletonPlaceholder.Item flexDirection="row" justifyContent="space-between" alignItems="center" gap={16}>
           <SkeletonPlaceholder.Item flexDirection="row" alignItems="center" gap={16}>
             <SkeletonPlaceholder.Item borderRadius={40} width={48} height={48} />

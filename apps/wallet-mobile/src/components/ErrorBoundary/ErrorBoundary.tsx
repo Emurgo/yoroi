@@ -100,30 +100,30 @@ const useStyles = () => {
       justifyContent: 'center',
       alignItems: 'center',
       paddingTop: 70,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     scroll: {
       width: '100%',
     },
     title: {
       ...atoms.heading_4_regular,
-      color: color.el_gray_high,
+      color: color.el_gray_max,
     },
     headerView: {
       alignItems: 'center',
     },
     paragraph: {
       ...atoms.body_2_md_regular,
-      color: color.el_gray_high,
+      color: color.el_gray_max,
     },
     errorSection: {
       ...atoms.py_lg,
-      color: color.el_gray_high,
+      color: color.el_gray_max,
     },
     errorSectionHeader: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      color: color.el_gray_high,
+      color: color.el_gray_max,
     },
   })
   return styles

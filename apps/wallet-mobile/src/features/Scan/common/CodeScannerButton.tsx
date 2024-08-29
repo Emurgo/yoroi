@@ -19,7 +19,7 @@ export const CodeScannerButton = ({size = fallbackSize, color, ...props}: CodeSc
 const useStyles = () => {
   const {color} = useTheme()
   const colors = {
-    iconFallback: color.gray_cmax,
+    iconFallback: color.gray_max,
   }
   return {colors}
 }

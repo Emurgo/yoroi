@@ -61,12 +61,12 @@ const useStyles = () => {
       alignItems: 'center',
     },
     yoroiLogoTitle: {
-      color: color.primary_c600,
+      color: color.primary_600,
       ...atoms.heading_1_medium,
     },
     yoroiLogoText: {
       ...atoms.body_2_md_regular,
-      color: color.gray_c900,
+      color: color.gray_900,
     },
   })
   return styles

@@ -55,11 +55,11 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     label: {
       ...atoms.body_2_md_regular,
-      color: color.gray_c900,
+      color: color.gray_900,
     },
     value: {
       ...atoms.body_1_lg_regular,
-      color: color.gray_c900,
+      color: color.gray_900,
     },
   })
 

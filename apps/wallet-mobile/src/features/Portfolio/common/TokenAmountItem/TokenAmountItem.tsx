@@ -119,16 +119,16 @@ const useStyles = () => {
       alignItems: 'center',
     },
     name: {
-      color: color.gray_c900,
+      color: color.gray_900,
       ...atoms.body_1_lg_medium,
     },
     detail: {
-      color: color.gray_c600,
+      color: color.gray_600,
       maxWidth: 140,
       ...atoms.body_3_sm_regular,
     },
     quantity: {
-      color: color.gray_c900,
+      color: color.gray_900,
       ...atoms.body_1_lg_regular,
     },
     skeletonLogo: {
@@ -138,12 +138,12 @@ const useStyles = () => {
       height: 56,
     },
     skeletonTitle: {
-      backgroundColor: color.gray_c200,
+      backgroundColor: color.gray_200,
       borderRadius: 8,
       flexGrow: 3,
     },
     skeletonBorder: {
-      backgroundColor: color.gray_c200,
+      backgroundColor: color.gray_200,
       borderRadius: 8,
       flexGrow: 1,
     },
@@ -161,8 +161,8 @@ const useStyles = () => {
   })
 
   const colors = {
-    text: color.gray_c900,
-    icon: color.secondary_c600,
+    text: color.gray_900,
+    icon: color.secondary_600,
   }
 
   return {styles, colors}

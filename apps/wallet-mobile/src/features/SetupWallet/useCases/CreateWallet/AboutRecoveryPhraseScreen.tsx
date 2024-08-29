@@ -87,7 +87,7 @@ const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       ...atoms.flex_1,
       ...atoms.pb_lg,
     },
@@ -95,7 +95,7 @@ const useStyles = () => {
       ...atoms.px_lg,
     },
     aboutRecoveryPhraseTitle: {
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
       ...atoms.body_1_lg_regular,
     },
     bolder: {

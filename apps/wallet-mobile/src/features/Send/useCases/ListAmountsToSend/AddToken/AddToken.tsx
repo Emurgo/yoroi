@@ -29,12 +29,12 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     label: {
-      color: color.primary_c600,
+      color: color.primary_600,
       ...atoms.button_2_md,
       textTransform: 'none',
     },
     button: {
-      borderColor: color.primary_c600,
+      borderColor: color.primary_600,
       borderRadius: 8,
       flexDirection: 'row',
       ...atoms.px_lg,
@@ -45,7 +45,7 @@ const useStyles = () => {
     },
   })
   const colors = {
-    iconColor: color.primary_c600,
+    iconColor: color.primary_600,
   }
   return {styles, colors}
 }

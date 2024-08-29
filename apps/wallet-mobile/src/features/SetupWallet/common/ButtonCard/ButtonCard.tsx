@@ -62,16 +62,16 @@ const useStyles = () => {
     },
     title: {
       ...atoms.heading_4_medium,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
     titleCentre: {
       ...atoms.heading_4_medium,
-      color: color.gray_cmax,
+      color: color.gray_max,
       textAlign: 'center',
     },
     subTitle: {
       ...atoms.body_1_lg_regular,
-      color: color.gray_c900,
+      color: color.gray_900,
     },
     textContainer: {
       alignItems: 'center',

@@ -217,7 +217,7 @@ const useStyles = () => {
       backgroundColor: 'transparent',
     },
     root: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       ...atoms.flex_1,
       ...atoms.px_lg,
       ...atoms.pb_lg,
@@ -230,7 +230,7 @@ const useStyles = () => {
     },
   })
   const colors = {
-    icon: color.el_gray_high,
+    icon: color.el_gray_max,
   }
   return {styles, colors} as const
 }

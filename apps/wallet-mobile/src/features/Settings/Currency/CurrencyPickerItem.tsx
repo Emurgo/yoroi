@@ -67,7 +67,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     row: {
       flexDirection: 'row',
-      borderBottomColor: color.gray_c200,
+      borderBottomColor: color.gray_200,
       borderBottomWidth: 1,
       paddingVertical: 8,
     },
@@ -81,16 +81,16 @@ const useStyles = () => {
       flexDirection: 'column',
     },
     bodyMedium: {
-      color: color.gray_c900,
+      color: color.gray_900,
       ...atoms.body_1_lg_medium,
     },
     bodyRegular: {
-      color: color.gray_c900,
+      color: color.gray_900,
       ...atoms.body_3_sm_regular,
     },
   })
   const colors = {
-    checkIcon: color.primary_c600,
+    checkIcon: color.primary_600,
   }
   return {styles, colors}
 }

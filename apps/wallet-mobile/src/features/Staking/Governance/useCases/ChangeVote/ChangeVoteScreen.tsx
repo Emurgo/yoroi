@@ -180,10 +180,10 @@ const useStyles = () => {
       ...atoms.flex_1,
       ...atoms.justify_between,
       ...atoms.px_lg,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     description: {
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
       ...atoms.body_1_lg_regular,
     },
     actions: {

@@ -162,7 +162,7 @@ const useStyles = () => {
     },
     title: {
       ...atoms.body_1_lg_medium,
-      color: color.gray_c900,
+      color: color.gray_900,
     },
     containerLoading: {
       ...atoms.flex_row,
@@ -183,7 +183,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    gray_800: color.gray_c800,
+    gray_800: color.gray_800,
   }
 
   return {styles, colors, cardItemWidth, cardItemWidthForJustAda} as const

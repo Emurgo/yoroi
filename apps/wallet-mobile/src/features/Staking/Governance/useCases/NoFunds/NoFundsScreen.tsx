@@ -64,7 +64,7 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       ...atoms.flex_1,
       ...atoms.p_xl,
     },
@@ -77,7 +77,7 @@ const useStyles = () => {
       ...atoms.heading_3_medium,
       ...atoms.text_center,
       maxWidth: 320,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
     button: {
       ...atoms.px_xl,

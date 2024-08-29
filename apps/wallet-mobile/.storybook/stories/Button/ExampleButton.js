@@ -18,10 +18,10 @@ const useStyles = () => {
     container: {
       ...atoms.px_lg,
       ...atoms.py_sm,
-      backgroundColor: color.primary_c500,
+      backgroundColor: color.primary_500,
       borderRadius: 8,
     },
-    text: {color: color.gray_cmin},
+    text: {color: color.gray_min},
   })
 
   return styles

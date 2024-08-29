@@ -61,7 +61,7 @@ const useStyles = () => {
       flex: 1,
     },
     root: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       paddingVertical: 12,
       paddingHorizontal: 16,
       flexDirection: 'row',
@@ -85,13 +85,13 @@ const useStyles = () => {
       ...atoms.body_2_md_medium,
     },
     doneText: {
-      color: color.el_gray_normal,
+      color: color.el_gray_medium,
       ...atoms.body_2_md_medium,
     },
   })
 
   const colors = {
-    iconColor: color.el_gray_normal,
+    iconColor: color.el_gray_medium,
   }
 
   return {styles, colors} as const

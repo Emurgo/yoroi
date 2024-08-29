@@ -25,18 +25,18 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     notice: {
-      backgroundColor: color.sys_yellow_c100,
+      backgroundColor: color.sys_yellow_100,
       padding: 12,
       borderRadius: 8,
     },
     text: {
       ...atoms.body_2_md_regular,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
   })
 
   const colors = {
-    yellow: color.sys_orange_c500,
+    yellow: color.sys_orange_500,
   }
 
   return {colors, styles}

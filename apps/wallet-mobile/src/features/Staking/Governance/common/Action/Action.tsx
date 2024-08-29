@@ -68,12 +68,12 @@ const useStyles = () => {
       minHeight: 134,
     },
     title: {
-      color: color.gray_cmax,
+      color: color.gray_max,
       ...atoms.font_semibold,
       ...atoms.heading_4_medium,
     },
     description: {
-      color: color.gray_cmax,
+      color: color.gray_max,
       ...atoms.font_normal,
       ...atoms.body_1_lg_medium,
     },
@@ -81,7 +81,7 @@ const useStyles = () => {
 
   const colors = {
     gradient: color.bg_gradient_1,
-    icon: color.gray_cmax,
+    icon: color.gray_max,
   }
 
   return {styles, colors}

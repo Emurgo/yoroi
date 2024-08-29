@@ -75,8 +75,8 @@ export const Toggle = () => {
         style={styles.switch}
         value={!isLight}
         onValueChange={handleOnValueChange}
-        trackColor={{false: color.gray_c100, true: color.gray_c100}}
-        thumbColor={isLight ? color.sys_yellow_c500 : color.el_primary_medium}
+        trackColor={{false: color.gray_100, true: color.gray_100}}
+        thumbColor={isLight ? color.sys_yellow_500 : color.el_primary_medium}
       />
 
       {isDark && Platform.OS === 'ios' && <Pressable style={styles.switchCircle} onPress={handleOnValueChange} />}
@@ -123,7 +123,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       ...atoms.px_lg,
     },
     content: {
@@ -158,7 +158,7 @@ const useStyles = () => {
       height: 35,
       top: -2,
       right: 8,
-      backgroundColor: color.gray_c100,
+      backgroundColor: color.gray_100,
       position: 'absolute',
       borderRadius: 9999,
     },

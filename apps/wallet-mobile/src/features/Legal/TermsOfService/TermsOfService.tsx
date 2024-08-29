@@ -39,18 +39,18 @@ const useStyles = () => {
     body: {
       ...atoms.body_1_lg_regular,
       ...atoms.py_sm,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
     heading2: {
       ...atoms.body_1_lg_medium,
       ...atoms.py_sm,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
     heading1: {
       fontFamily: 'Rubik-Bold',
       fontSize: 20,
       lineHeight: 30,
-      color: color.gray_cmax,
+      color: color.gray_max,
       paddingVertical: 10,
     },
   })

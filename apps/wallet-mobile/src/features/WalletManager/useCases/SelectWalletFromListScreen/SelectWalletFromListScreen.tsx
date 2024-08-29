@@ -154,18 +154,18 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     safeAreaView: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       ...atoms.flex_1,
       ...atoms.py_lg,
     },
     topButton: {
-      backgroundColor: color.primary_c500,
+      backgroundColor: color.primary_500,
     },
     button: {
-      backgroundColor: color.primary_c500,
+      backgroundColor: color.primary_500,
     },
     linkText: {
-      color: color.primary_c500,
+      color: color.primary_500,
     },
     link: {
       ...atoms.button_2_md,
@@ -182,8 +182,8 @@ const useStyles = () => {
   })
 
   const colors = {
-    gray: color.gray_c600,
-    lightGray: color.gray_c200,
+    gray: color.gray_600,
+    lightGray: color.gray_200,
   }
 
   return {styles, colors} as const

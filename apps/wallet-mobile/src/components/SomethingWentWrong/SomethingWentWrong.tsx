@@ -51,7 +51,7 @@ const useStyles = () => {
       ...theme.atoms.justify_center,
       ...theme.atoms.align_center,
       ...theme.atoms.gap_2xl,
-      backgroundColor: theme.color.gray_cmin,
+      backgroundColor: theme.color.gray_min,
     },
     content: {
       ...theme.atoms.justify_center,
@@ -59,14 +59,14 @@ const useStyles = () => {
       ...theme.atoms.gap_xs,
     },
     title: {
-      color: theme.color.gray_c900,
+      color: theme.color.gray_900,
       ...theme.atoms.font_semibold,
       ...theme.atoms.text_center,
       fontSize: 20,
       lineHeight: 30,
     },
     description: {
-      color: theme.color.gray_c600,
+      color: theme.color.gray_600,
       ...theme.atoms.font_normal,
       ...theme.atoms.text_center,
       fontSize: 16,

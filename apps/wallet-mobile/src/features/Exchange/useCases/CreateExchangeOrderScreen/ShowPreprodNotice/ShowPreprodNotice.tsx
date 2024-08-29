@@ -48,7 +48,7 @@ const useStyles = () => {
       justifyContent: 'center',
     },
     title: {
-      color: color.gray_c900,
+      color: color.gray_900,
       ...atoms.heading_3_medium,
       ...atoms.px_sm,
       textAlign: 'center',

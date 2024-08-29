@@ -33,11 +33,11 @@ const useStyles = () => {
     title: {
       ...atoms.body_1_lg_regular,
       ...atoms.justify_center,
-      color: color.text_gray_medium,
+      color: color.text_gray_low,
     },
     content: {
       ...atoms.p_lg,
-      borderColor: color.gray_c200,
+      borderColor: color.gray_200,
       borderWidth: 1,
       borderRadius: 8,
     },

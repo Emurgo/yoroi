@@ -36,7 +36,7 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
           <View style={styles.icon}>
             <Icon.TotalAda
               color={color.el_primary_medium}
-              backgroundColor={color.gray_c300}
+              backgroundColor={color.gray_200}
               width={ICON_DIM}
               height={ICON_DIM}
             />
@@ -63,7 +63,7 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
           <View style={styles.icon}>
             <Icon.TotalReward
               color={color.el_primary_medium}
-              backgroundColor={color.gray_c300}
+              backgroundColor={color.gray_200}
               width={ICON_DIM}
               height={ICON_DIM}
             />
@@ -90,7 +90,7 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
           <View style={styles.icon}>
             <Icon.TotalDelegated
               color={color.el_primary_medium}
-              backgroundColor={color.gray_c300}
+              backgroundColor={color.gray_200}
               width={ICON_DIM}
               height={ICON_DIM}
             />
@@ -146,11 +146,11 @@ const useStyles = () => {
       ...atoms.flex_col,
     },
     label: {
-      color: color.text_gray_medium,
+      color: color.text_gray_low,
       ...atoms.body_3_sm_regular,
     },
     value: {
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
       ...atoms.body_1_lg_medium,
     },
     withdrawButton: {

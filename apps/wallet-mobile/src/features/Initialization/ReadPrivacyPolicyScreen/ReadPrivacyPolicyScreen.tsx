@@ -24,7 +24,7 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     safeAreaView: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       flex: 1,
     },
     contentContainer: {

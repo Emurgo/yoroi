@@ -80,7 +80,7 @@ const useStyles = () => {
       paddingHorizontal: 70,
       textAlign: 'center',
       paddingBottom: 8,
-      color: color.gray_c900,
+      color: color.gray_900,
     },
     loading: {
       position: 'absolute',

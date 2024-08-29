@@ -19,14 +19,14 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     labelContainer: {
-      backgroundColor: color.el_gray_low,
+      backgroundColor: color.el_gray_min,
       ...atoms.px_sm,
       paddingVertical: 3,
       borderRadius: 999,
     },
     labelText: {
       ...atoms.body_3_sm_medium,
-      color: color.gray_cmin,
+      color: color.gray_min,
     },
   })
 

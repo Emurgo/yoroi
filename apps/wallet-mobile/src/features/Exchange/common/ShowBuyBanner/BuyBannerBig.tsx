@@ -60,7 +60,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       ...atoms.pb_md,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       flex: 1,
     },
     gradient: {
@@ -75,13 +75,13 @@ const useStyles = () => {
     },
     label: {
       ...atoms.heading_3_medium,
-      color: color.gray_cmax,
+      color: color.gray_max,
       textAlign: 'center',
     },
     text: {
       ...atoms.body_1_lg_regular,
       ...atoms.px_2xl,
-      color: color.gray_cmax,
+      color: color.gray_max,
       textAlign: 'center',
     },
     spaceButton: {

@@ -81,7 +81,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    label: color.gray_c600,
+    label: color.gray_600,
   }
 
   return {styles, colors} as const

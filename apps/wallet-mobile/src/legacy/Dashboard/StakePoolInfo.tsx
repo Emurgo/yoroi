@@ -24,7 +24,7 @@ export const StakePoolInfo = ({stakePoolId}: {stakePoolId: string}) => {
   return (
     <View>
       <TitledCard title={strings.title} variant="poolInfo" testID="stakePoolInfoTitleCard">
-        <View style={styles.topBlock}>
+        <View>
           <Text bold style={styles.poolName}>
             {formatStakepoolNameWithTicker(stakePoolInfoAndHistory.info.ticker, stakePoolInfoAndHistory.info.name) ??
               strings.unknownPool}
@@ -51,7 +51,7 @@ export const StakePoolInfo = ({stakePoolId}: {stakePoolId: string}) => {
           <>
             <Space height="lg" />
 
-            <View style={styles.bottomBlock}>
+            <View>
               <Button
                 outlineOnLight
                 shelleyTheme
@@ -102,7 +102,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     poolName: {
       ...atoms.body_1_lg_medium,
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
     },
     poolIdBlock: {
       ...atoms.flex_row,
@@ -116,7 +116,7 @@ const useStyles = () => {
       ...atoms.p_sm,
     },
     warningText: {
-      color: color.gray_c500,
+      color: color.gray_500,
       ...atoms.italic,
       ...atoms.body_3_sm_regular,
     },

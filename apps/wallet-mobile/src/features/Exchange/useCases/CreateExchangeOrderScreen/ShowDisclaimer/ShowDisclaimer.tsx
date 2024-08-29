@@ -54,13 +54,13 @@ const useStyles = () => {
     },
     title: {
       ...atoms.body_1_lg_regular,
-      color: color.gray_cmax,
+      color: color.gray_max,
       fontWeight: '500',
     },
     text: {
       ...atoms.body_2_md_regular,
       marginTop: 8,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
   })
 

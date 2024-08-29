@@ -43,7 +43,7 @@ const useStyles = () => {
   const {color} = useTheme()
   const styles = StyleSheet.create({
     amount: {
-      color: color.secondary_c500,
+      color: color.secondary_500,
     },
   })
   return styles

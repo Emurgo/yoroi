@@ -47,7 +47,7 @@ const useStyles = () => {
     deviceItem: {
       ...atoms.py_lg,
       ...atoms.px_2xl,
-      borderColor: color.primary_c500,
+      borderColor: color.primary_500,
       borderWidth: 1,
       borderRadius: 8,
       flexDirection: 'row',
@@ -56,7 +56,7 @@ const useStyles = () => {
     },
     deviceName: {
       ...atoms.heading_3_medium,
-      color: color.primary_c500,
+      color: color.primary_500,
     },
     disabled: {
       opacity: 0.5,

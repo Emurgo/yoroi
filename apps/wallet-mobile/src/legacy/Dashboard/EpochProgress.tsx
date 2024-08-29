@@ -103,13 +103,13 @@ const useStyles = () => {
       alignItems: 'center',
     },
     label: {
-      color: color.text_gray_medium,
+      color: color.text_gray_low,
       ...atoms.pr_sm,
       ...atoms.body_2_md_regular,
     },
     value: {
       ...atoms.body_2_md_regular,
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
     },
     timeWrapper: {
       flexDirection: 'row',
@@ -120,8 +120,8 @@ const useStyles = () => {
       ...atoms.body_1_lg_regular,
       ...atoms.px_2xs,
       ...atoms.text_center,
-      backgroundColor: color.gray_c50,
-      color: color.text_gray_normal,
+      backgroundColor: color.gray_50,
+      color: color.text_gray_medium,
     },
   })
 

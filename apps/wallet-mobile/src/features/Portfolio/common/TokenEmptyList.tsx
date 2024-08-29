@@ -42,7 +42,7 @@ const useStyles = () => {
       ...atoms.flex_1,
     },
     textEmpty: {
-      color: color.gray_cmax,
+      color: color.gray_max,
       ...atoms.heading_3_medium,
       ...atoms.font_semibold,
     },

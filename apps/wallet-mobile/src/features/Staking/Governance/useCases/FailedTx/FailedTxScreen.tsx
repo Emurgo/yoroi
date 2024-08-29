@@ -42,7 +42,7 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       flex: 1,
       padding: 16,
     },
@@ -55,7 +55,7 @@ const useStyles = () => {
       fontFamily: 'Rubik-Medium',
       fontSize: 20,
       lineHeight: 30,
-      color: color.gray_cmax,
+      color: color.gray_max,
       fontWeight: '500',
       textAlign: 'center',
     },
@@ -63,7 +63,7 @@ const useStyles = () => {
       fontFamily: 'Rubik-Regular',
       fontSize: 16,
       lineHeight: 24,
-      color: color.gray_c600,
+      color: color.gray_600,
       textAlign: 'center',
     },
     button: {

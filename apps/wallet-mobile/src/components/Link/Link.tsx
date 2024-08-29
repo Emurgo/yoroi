@@ -23,7 +23,7 @@ const useStyles = () => {
   const {color} = useTheme()
   const styles = StyleSheet.create({
     text: {
-      color: color.primary_c600,
+      color: color.primary_600,
       textDecorationLine: 'underline',
     },
   })

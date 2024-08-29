@@ -131,12 +131,12 @@ const useStyles = () => {
       height: 56,
     },
     placeholderElement1: {
-      backgroundColor: color.gray_c200,
+      backgroundColor: color.gray_200,
       borderRadius: 8,
       flexGrow: 3,
     },
     placeholderElement2: {
-      backgroundColor: color.gray_c200,
+      backgroundColor: color.gray_200,
       borderRadius: 8,
       flexGrow: 1,
     },
@@ -150,20 +150,20 @@ const useStyles = () => {
       alignItems: 'flex-end',
     },
     name: {
-      color: color.gray_c900,
+      color: color.gray_900,
       fontSize: 16,
       lineHeight: 22,
       fontWeight: '500',
       fontFamily: 'Rubik-Medium',
     },
     detail: {
-      color: color.gray_c600,
+      color: color.gray_600,
       fontSize: 12,
       lineHeight: 18,
       maxWidth: 140,
     },
     quantity: {
-      color: color.gray_c900,
+      color: color.gray_900,
       ...atoms.body_1_lg_regular,
       textAlign: 'right',
       flexGrow: 1,
@@ -176,8 +176,8 @@ const useStyles = () => {
   })
 
   const colors = {
-    text: color.gray_c900,
-    icon: color.secondary_c600,
+    text: color.gray_900,
+    icon: color.secondary_600,
   }
 
   return {styles, colors}

@@ -221,7 +221,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     ph: {
       paddingHorizontal: 16,
@@ -242,14 +242,14 @@ const useStyles = () => {
     },
     line: {
       height: 1,
-      backgroundColor: color.gray_c200,
+      backgroundColor: color.gray_200,
     },
     row: {
       flexDirection: 'row',
       alignSelf: 'center',
     },
     legend: {
-      color: color.gray_c900,
+      color: color.gray_900,
       ...atoms.body_2_md_regular,
     },
     image: {
@@ -266,7 +266,7 @@ const useStyles = () => {
       flex: 1,
       ...atoms.heading_3_medium,
       fontSize: 20,
-      color: color.gray_cmax,
+      color: color.gray_max,
       paddingTop: 4,
       textAlign: 'center',
     },
@@ -276,7 +276,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    lightGreen: color.secondary_c600,
+    lightGreen: color.secondary_600,
   }
 
   return {styles, colors}

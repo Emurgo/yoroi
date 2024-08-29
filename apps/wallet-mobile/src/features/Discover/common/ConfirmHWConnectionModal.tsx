@@ -89,7 +89,7 @@ const useStyles = () => {
   const {color} = useTheme()
 
   const colors = {
-    spinner: color.gray_cmax,
+    spinner: color.gray_max,
   }
 
   const styles = StyleSheet.create({
@@ -101,7 +101,7 @@ const useStyles = () => {
     },
     text: {
       fontSize: 18,
-      color: color.gray_cmax,
+      color: color.gray_max,
       textAlign: 'center',
     },
   })

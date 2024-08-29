@@ -89,7 +89,7 @@ export const NavigatedSettingsItem = ({label, onNavigate, icon, disabled, select
 
           <Spacer width={16} />
 
-          <Icon.Chevron direction="right" size={28} color={color.gray_c600} />
+          <Icon.Chevron direction="right" size={28} color={color.gray_600} />
         </View>
       </SettingsItem>
     </Touchable>
@@ -143,33 +143,33 @@ const useStyles = () => {
       flex: 1,
     },
     disabled: {
-      color: color.gray_c500,
+      color: color.gray_500,
     },
     sectionText: {
-      color: color.gray_c900,
+      color: color.gray_900,
       ...atoms.body_2_md_regular,
     },
     itemText: {
-      color: color.gray_c900,
+      color: color.gray_900,
       ...atoms.body_1_lg_medium,
     },
     itemTextIsNil: {
-      color: color.gray_c600,
+      color: color.gray_600,
       ...atoms.body_3_sm_regular,
     },
     navigationItem: {
-      color: color.gray_c500,
+      color: color.gray_500,
       ...atoms.body_1_lg_regular,
     },
     separator: {
-      backgroundColor: color.gray_c200,
+      backgroundColor: color.gray_200,
       height: 1,
     },
     row: {flexDirection: 'row', alignItems: 'center'},
   })
 
   const colors = {
-    iconColor: color.gray_c600,
+    iconColor: color.gray_600,
   }
   return {styles, colors, color}
 }

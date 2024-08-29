@@ -224,23 +224,23 @@ const useStyles = () => {
     },
     paragraph: {
       ...atoms.body_2_md_regular,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
     checkbox: {
       paddingLeft: 4,
       alignItems: 'center',
     },
     secondaryButton: {
-      backgroundColor: color.sys_magenta_c500,
+      backgroundColor: color.sys_magenta_500,
     },
     actions: {
       ...atoms.px_lg,
       paddingTop: 16,
       borderTopWidth: 1,
-      borderTopColor: color.gray_c200,
+      borderTopColor: color.gray_200,
     },
     bolder: {
-      color: color.gray_cmax,
+      color: color.gray_max,
       ...atoms.body_2_md_medium,
     },
     title: {

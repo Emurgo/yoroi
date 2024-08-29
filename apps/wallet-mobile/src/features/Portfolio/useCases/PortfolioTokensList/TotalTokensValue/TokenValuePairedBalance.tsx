@@ -26,7 +26,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     pairedBalance: {
       ...atoms.body_2_md_regular,
-      color: color.gray_c600,
+      color: color.gray_600,
     },
   })
 

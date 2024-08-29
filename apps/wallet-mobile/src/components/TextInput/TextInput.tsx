@@ -120,7 +120,7 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: Forwarded
         theme={{
           roundness: 8,
           colors: {
-            background: faded ? colors.gray_c100 : colors.background,
+            background: faded ? colors.gray_100 : colors.background,
             placeholder: faded ? colors.gray : colors.textInput,
             primary: faded ? colors.gray : colors.black,
             error: colors.textError,
@@ -133,7 +133,7 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: Forwarded
           <InputContainer>
             <RNTextInput
               {...inputProps}
-              style={[style, renderComponentStyle, {color: faded ? colors.gray_c900 : colors.text, flex: 1}]}
+              style={[style, renderComponentStyle, {color: faded ? colors.gray_900 : colors.text, flex: 1}]}
               editable={editable}
             />
 
@@ -244,15 +244,15 @@ const useStyles = () => {
 
   const colors = {
     ...color,
-    background: color.gray_cmin,
-    gray: color.gray_c400,
-    textInput: color.gray_c600,
-    actionGray: color.gray_c500,
-    black: color.gray_cmax,
-    text: color.gray_c900,
-    textError: color.sys_magenta_c500,
-    infoGray: color.gray_c700,
-    positiveGreen: color.secondary_c500,
+    background: color.gray_min,
+    gray: color.gray_400,
+    textInput: color.gray_600,
+    actionGray: color.gray_500,
+    black: color.gray_max,
+    text: color.gray_900,
+    textError: color.sys_magenta_500,
+    infoGray: color.gray_700,
+    positiveGreen: color.secondary_500,
   }
 
   return {styles, colors}

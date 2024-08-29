@@ -89,24 +89,24 @@ const useStyles = () => {
     container: {
       flex: 1,
       ...atoms.p_lg,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     title: {
       ...atoms.heading_3_medium,
-      color: color.gray_c900,
+      color: color.gray_900,
       textAlign: 'center',
     },
     description: {
       ...atoms.body_1_lg_regular,
-      color: color.gray_c800,
+      color: color.gray_800,
       textAlign: 'center',
     },
     checkboxText: {
       ...atoms.body_1_lg_regular,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
     checkboxLink: {
-      color: color.gray_c800,
+      color: color.gray_800,
       textDecorationLine: 'underline',
     },
   })

@@ -743,7 +743,7 @@ const useStyles = () => {
     },
     container: {
       flex: 1,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       paddingTop: 10,
     },
     content: {
@@ -763,20 +763,20 @@ const useStyles = () => {
       textAlign: 'center',
     },
     modalContentTitleText: {
-      color: color.gray_c900,
+      color: color.gray_900,
       ...atoms.body_1_lg_medium,
       textAlign: 'center',
     },
     contentLabel: {
-      color: color.gray_c600,
+      color: color.gray_600,
       ...atoms.body_1_lg_regular,
     },
     headerLabel: {
-      color: color.gray_cmax,
+      color: color.gray_max,
       ...atoms.body_2_md_medium,
     },
     contentValue: {
-      color: color.gray_cmax,
+      color: color.gray_max,
       ...atoms.body_1_lg_regular,
     },
     modalContentTitle: {
@@ -792,7 +792,7 @@ const useStyles = () => {
       justifyContent: 'center',
     },
     txLinkText: {
-      color: color.primary_c500,
+      color: color.primary_500,
       ...atoms.body_1_lg_regular,
       textDecorationLine: 'underline',
     },
@@ -817,16 +817,16 @@ const useStyles = () => {
     contentText: {
       flex: 1,
       textAlign: 'center',
-      color: color.gray_cmax,
+      color: color.gray_max,
       ...atoms.heading_3_medium,
     },
     contentSubText: {
       flex: 1,
       textAlign: 'center',
-      color: color.gray_c600,
+      color: color.gray_600,
       ...atoms.body_1_lg_medium,
     },
-    modalButton: {backgroundColor: color.sys_magenta_c500},
+    modalButton: {backgroundColor: color.sys_magenta_500},
   })
 
   return styles

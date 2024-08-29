@@ -91,17 +91,17 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     safeAreaView: {
       ...atoms.flex_1,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     introline: {
       ...atoms.body_1_lg_medium,
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
     },
     scroll: {
       ...atoms.px_lg,
     },
     linkText: {
-      color: color.primary_c500,
+      color: color.primary_500,
     },
     link: {
       ...atoms.link_1_lg,
@@ -115,7 +115,7 @@ const useStyles = () => {
     },
     item: {
       ...atoms.body_1_lg_regular,
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
     },
     actions: {
       ...atoms.p_lg,

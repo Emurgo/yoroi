@@ -82,7 +82,7 @@ const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      borderTopColor: color.gray_c200,
+      borderTopColor: color.gray_200,
       ...atoms.border_t,
     },
     container: {
@@ -94,7 +94,7 @@ const useStyles = () => {
 
   const colors = {
     white: color.white_static,
-    primary: color.primary_c500,
+    primary: color.primary_500,
   } as const
 
   return {styles, colors} as const
