@@ -27,7 +27,6 @@ export const light: ThemedPalette = {
   el_primary_min: lightPalette.primary_300, // disabled elements, icons
   el_gray_max: lightPalette.gray_max, // hover and pressed, icons, shapes, lines in buttons, icons in banners
   el_gray_medium: lightPalette.gray_900, // icons, shapes, inputs, bottom navigation bar
-  el_gray_low: lightPalette.gray_600, // input stroke, disabled state for most components
   el_gray_min: lightPalette.gray_400, // icons, shapes, lines in buttons, chips, tabs, checkboxes, readio, switch
   el_secondary: lightPalette.secondary_400, // success state
 

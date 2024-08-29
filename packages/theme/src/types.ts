@@ -101,7 +101,6 @@ export type ThemedPalette = BasePalette & {
   el_primary_min: HexColor
   el_gray_max: HexColor
   el_gray_medium: HexColor
-  el_gray_low: HexColor
   el_gray_min: HexColor
   el_secondary: HexColor
 

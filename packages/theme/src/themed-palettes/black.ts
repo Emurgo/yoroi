@@ -27,7 +27,6 @@ export const black: ThemedPalette = {
   el_primary_min: darkPalette.primary_300, // disabled elements, icons
   el_gray_max: darkPalette.gray_max, // hover and pressed, icons, shapes, lines in buttons, icons in banners
   el_gray_medium: darkPalette.gray_900, // icons, shapes, lines in buttons, chips, tabs, checkboxes, readio, switch
-  el_gray_low: darkPalette.gray_600, // icons, shapes, inputs, bottom navigation bar
   el_gray_min: darkPalette.gray_400, // input stroke, disabled state for most components
   el_secondary: darkPalette.secondary_600, // success state
 
