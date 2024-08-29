@@ -100,7 +100,6 @@ export const useStakePoolInfoAndHistory = (
 const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
-    topBlock: {},
     poolName: {
       ...atoms.body_1_lg_medium,
       color: color.text_gray_normal,
