@@ -182,11 +182,11 @@ const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       ...atoms.flex_1,
     },
     textAvailable: {
-      color: color.gray_c700,
+      color: color.gray_700,
       ...atoms.body_2_md_regular,
     },
     container: {

@@ -369,15 +369,15 @@ const useStyles = () => {
     },
     error: {
       ...atoms.body_1_lg_medium,
-      color: color.sys_magenta_c500,
+      color: color.sys_magenta_500,
     },
     paragraphText: {
       ...atoms.body_1_lg_medium,
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
     },
     item: {
       ...atoms.body_1_lg_regular,
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
     },
     button: {
       marginHorizontal: 10,

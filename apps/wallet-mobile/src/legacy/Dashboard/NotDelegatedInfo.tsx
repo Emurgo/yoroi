@@ -38,7 +38,7 @@ const useStyles = () => {
     },
     text: {
       textAlign: 'center',
-      color: color.gray_c900,
+      color: color.gray_900,
       lineHeight: 22,
     },
     textFirstLine: {

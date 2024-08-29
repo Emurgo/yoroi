@@ -5,12 +5,12 @@ export const useAssetListStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     assetHeading: {
-      color: color.gray_cmax,
+      color: color.gray_max,
       opacity: 0.5,
       ...atoms.body_3_sm_regular,
     },
     assetMeta: {
-      color: color.gray_c500,
+      color: color.gray_500,
       opacity: 0.5,
       ...atoms.body_2_md_regular,
     },
@@ -25,7 +25,7 @@ export const useAssetListStyles = () => {
     },
     assetName: {
       ...atoms.body_2_md_regular,
-      color: color.gray_c900,
+      color: color.gray_900,
       marginBottom: 2,
     },
     assetBalanceView: {
@@ -35,7 +35,7 @@ export const useAssetListStyles = () => {
     },
     assetBalance: {
       ...atoms.body_2_md_regular,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
     py5: {
       paddingVertical: 10,

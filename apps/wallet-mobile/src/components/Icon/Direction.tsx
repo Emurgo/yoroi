@@ -40,24 +40,24 @@ export const styleMap: (
   color: ThemedPalette,
 ) => Record<ThemeStatus, {background: string; icon: string; text: string; size?: number}> = (color) => ({
   SELF: {
-    text: color.gray_c900,
-    background: color.gray_c100,
-    icon: color.gray_c900,
+    text: color.gray_900,
+    background: color.gray_100,
+    icon: color.gray_900,
   },
   SENT: {
-    text: color.primary_c600,
-    background: color.primary_c100,
-    icon: color.primary_c500,
+    text: color.primary_600,
+    background: color.primary_100,
+    icon: color.primary_500,
   },
   RECEIVED: {
-    text: color.secondary_c600,
-    background: color.secondary_c100,
-    icon: color.secondary_c600,
+    text: color.secondary_600,
+    background: color.secondary_100,
+    icon: color.secondary_600,
   },
   MULTI: {
-    text: color.gray_c900,
-    background: color.gray_c100,
-    icon: color.gray_c900,
+    text: color.gray_900,
+    background: color.gray_100,
+    icon: color.gray_900,
     size: 50,
   },
 })

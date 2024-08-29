@@ -23,7 +23,7 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     text: {
-      color: color.primary_c500,
+      color: color.primary_500,
       ...atoms.body_2_md_medium,
       textTransform: 'uppercase',
     },

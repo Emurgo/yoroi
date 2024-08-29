@@ -172,7 +172,7 @@ const useStyles = () => {
     },
     container: {
       flex: 1,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       display: 'flex',
       justifyContent: 'flex-start',
     },
@@ -185,7 +185,7 @@ const useStyles = () => {
     },
     line: {
       height: 1,
-      backgroundColor: color.gray_c200,
+      backgroundColor: color.gray_200,
     },
     list: {
       paddingTop: 16,
@@ -204,7 +204,7 @@ const useStyles = () => {
     contentText: {
       flex: 1,
       ...atoms.heading_4_medium,
-      color: color.gray_cmax,
+      color: color.gray_max,
       paddingTop: 4,
       textAlign: 'center',
     },

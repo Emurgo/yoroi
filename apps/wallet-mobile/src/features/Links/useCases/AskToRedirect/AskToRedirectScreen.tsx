@@ -43,7 +43,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       ...atoms.px_lg,
     },
     actions: {
@@ -52,12 +52,12 @@ const useStyles = () => {
     },
     text: {
       ...atoms.body_2_md_regular,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
   })
   const colors = {
-    danger: color.sys_magenta_c500,
-    warning: color.sys_orange_c500,
+    danger: color.sys_magenta_500,
+    warning: color.sys_orange_500,
   }
   return {styles, colors}
 }

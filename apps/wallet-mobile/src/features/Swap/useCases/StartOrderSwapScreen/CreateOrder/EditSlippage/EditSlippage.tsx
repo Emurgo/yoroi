@@ -46,12 +46,12 @@ const useStyles = () => {
     text: {
       fontSize: 16,
       fontFamily: 'Rubik',
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
   })
 
   const colors = {
-    gray: color.gray_cmax,
+    gray: color.gray_max,
   }
   return {styles, colors}
 }

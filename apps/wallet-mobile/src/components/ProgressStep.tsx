@@ -42,12 +42,12 @@ const useStyles = () => {
   const {color} = useTheme()
   const styles = StyleSheet.create({
     bar: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       height: 10,
       flexDirection: 'row',
     },
     step: {
-      backgroundColor: color.secondary_c400,
+      backgroundColor: color.secondary_400,
       alignItems: 'center',
       justifyContent: 'center',
       flexGrow: 1,
@@ -56,12 +56,12 @@ const useStyles = () => {
       marginHorizontal: 0.5,
     },
     todoStep: {
-      backgroundColor: color.secondary_c200,
+      backgroundColor: color.secondary_200,
     },
     stepNumber: {
       fontSize: 7,
       lineHeight: 10,
-      color: color.gray_cmin,
+      color: color.gray_min,
     },
   })
   return styles

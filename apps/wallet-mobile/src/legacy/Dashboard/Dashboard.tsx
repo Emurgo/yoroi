@@ -243,7 +243,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     container: {
       flexDirection: 'column',
@@ -262,7 +262,7 @@ const useStyles = () => {
     },
     actions: {
       borderTopWidth: 1,
-      borderTopColor: color.gray_c200,
+      borderTopColor: color.gray_200,
       flexDirection: 'row',
       padding: 16,
       elevation: 1,

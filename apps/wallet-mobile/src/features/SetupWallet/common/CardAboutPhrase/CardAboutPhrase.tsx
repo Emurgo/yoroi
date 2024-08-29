@@ -96,7 +96,7 @@ const useStyles = (padding?: boolean, background?: boolean) => {
     },
     title: {
       ...atoms.body_1_lg_medium,
-      color: background ? color.primary_c600 : color.gray_c900,
+      color: background ? color.primary_600 : color.gray_900,
       textAlign: 'center',
     },
     itemContainer: {
@@ -104,12 +104,12 @@ const useStyles = (padding?: boolean, background?: boolean) => {
     },
     bullet: {
       ...atoms.body_1_lg_regular,
-      color: background ? color.primary_c600 : color.gray_c900,
+      color: background ? color.primary_600 : color.gray_900,
     },
     textLine: {
       flex: 1,
       ...atoms.body_1_lg_regular,
-      color: background ? color.primary_c600 : color.gray_c900,
+      color: background ? color.primary_600 : color.gray_900,
     },
     walletChecksum: {
       width: 23,

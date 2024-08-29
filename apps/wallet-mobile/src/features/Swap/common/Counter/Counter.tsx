@@ -42,15 +42,15 @@ const useStyles = () => {
       paddingTop: 16,
       justifyContent: 'center',
       flexDirection: 'row',
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     counterText: {
       ...atoms.body_2_md_medium,
-      color: color.primary_c600,
+      color: color.primary_600,
     },
     counterTextBold: {
       ...atoms.body_2_md_regular,
-      color: color.primary_c600,
+      color: color.primary_600,
     },
   })
 

@@ -129,7 +129,7 @@ const useStyles = () => {
     },
     symbol: {
       ...atoms.body_1_lg_medium,
-      color: color.gray_c900,
+      color: color.gray_900,
     },
     rowBetween: {
       ...atoms.flex_row,
@@ -138,17 +138,17 @@ const useStyles = () => {
     },
     label: {
       ...atoms.body_1_lg_regular,
-      color: color.gray_c600,
+      color: color.gray_600,
     },
     valueNumber: {
       ...atoms.body_1_lg_regular,
       ...atoms.text_right,
-      color: color.gray_c900,
+      color: color.gray_900,
     },
     pairedBalance: {
       ...atoms.body_3_sm_regular,
       ...atoms.text_right,
-      color: color.gray_c600,
+      color: color.gray_600,
     },
     dexLogo: {
       width: 32,
@@ -157,7 +157,7 @@ const useStyles = () => {
     dexName: {
       ...atoms.body_1_lg_medium,
       ...atoms.font_semibold,
-      color: color.primary_c500,
+      color: color.primary_500,
     },
     dexContainer: {
       ...atoms.flex_row,

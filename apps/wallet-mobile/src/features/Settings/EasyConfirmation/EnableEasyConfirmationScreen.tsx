@@ -119,7 +119,7 @@ const useStyles = () => {
       ...atoms.flex_1,
     },
     safeAreaView: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       ...atoms.flex_1,
     },
     content: {
@@ -130,7 +130,7 @@ const useStyles = () => {
       ...atoms.body_1_lg_regular,
     },
     warning: {
-      color: color.sys_magenta_c500,
+      color: color.sys_magenta_500,
       ...atoms.body_2_md_regular,
     },
     actions: {

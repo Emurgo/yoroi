@@ -385,7 +385,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     skeletonCard: {
       ...atoms.px_lg,
@@ -398,7 +398,7 @@ const useStyles = () => {
       justifyContent: 'center',
     },
     txLinkText: {
-      color: color.primary_c400,
+      color: color.primary_400,
       ...atoms.body_1_lg_regular,
       textDecorationLine: 'underline',
     },
@@ -407,7 +407,7 @@ const useStyles = () => {
       alignItems: 'center',
     },
     headerLabel: {
-      color: color.gray_cmax,
+      color: color.gray_max,
       ...atoms.body_2_md_medium,
     },
     counter: {
@@ -427,7 +427,7 @@ const useStyles = () => {
       flex: 1,
       textAlign: 'center',
       ...atoms.body_2_md_medium,
-      color: color.gray_cmax,
+      color: color.gray_max,
       fontSize: 20,
     },
   })

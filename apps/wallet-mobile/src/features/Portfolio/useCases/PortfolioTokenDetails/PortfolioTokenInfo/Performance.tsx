@@ -163,22 +163,22 @@ const useStyles = () => {
     // },
     label: {
       ...atoms.body_1_lg_regular,
-      color: color.gray_c600,
+      color: color.gray_600,
     },
     textValue: {
       ...atoms.body_1_lg_regular,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
     title: {
       ...atoms.body_1_lg_medium,
       ...atoms.font_semibold,
-      color: color.gray_c800,
+      color: color.gray_800,
     },
   })
 
   const colors = {
-    label: color.gray_c600,
-    skeleton: color.gray_c100,
+    label: color.gray_600,
+    skeleton: color.gray_100,
   }
 
   return {styles, colors} as const

@@ -73,7 +73,7 @@ const useStyles = () => {
     },
     currentStepTitle: {
       ...atoms.body_1_lg_medium,
-      color: color.primary_c600,
+      color: color.primary_600,
     },
   })
   return {styles} as const

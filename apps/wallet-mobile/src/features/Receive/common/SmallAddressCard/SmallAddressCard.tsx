@@ -93,7 +93,7 @@ const useStyles = () => {
     },
     textAddress: {
       ...atoms.body_1_lg_regular,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
     footer: {
       width: '100%',
@@ -102,20 +102,20 @@ const useStyles = () => {
     },
     statusUnused: {
       borderRadius: 20,
-      backgroundColor: color.secondary_c600,
+      backgroundColor: color.secondary_600,
       paddingVertical: 4,
       paddingHorizontal: 8,
       alignItems: 'center',
       justifyContent: 'center',
     },
     statusUnusedText: {
-      color: color.gray_cmin,
+      color: color.gray_min,
       ...atoms.body_3_sm_medium,
       letterSpacing: 0.2,
     },
     statusUsed: {
       borderRadius: 20,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       paddingVertical: 4,
       paddingHorizontal: 8,
       alignItems: 'center',
@@ -125,21 +125,21 @@ const useStyles = () => {
       ...atoms.body_3_sm_medium,
       lineHeight: 16,
       letterSpacing: 0.2,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
     date: {
       ...atoms.body_2_md_regular,
-      color: color.gray_c700,
+      color: color.gray_700,
     },
     copiedText: {
-      color: color.gray_cmin,
+      color: color.gray_min,
       textAlign: 'center',
       padding: 8,
       ...atoms.body_2_md_medium,
     },
     isCopying: {
       position: 'absolute',
-      backgroundColor: color.gray_cmax,
+      backgroundColor: color.gray_max,
       alignItems: 'center',
       justifyContent: 'center',
       top: 0,

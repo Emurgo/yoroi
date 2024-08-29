@@ -182,11 +182,11 @@ const useStyles = () => {
     },
     border: {
       borderWidth: 1,
-      borderColor: color.gray_c300,
+      borderColor: color.gray_300,
     },
     warningBorder: {
       borderWidth: 2,
-      borderColor: color.sys_magenta_c500,
+      borderColor: color.sys_magenta_500,
     },
     poolTicker: {
       alignItems: 'center',
@@ -195,7 +195,7 @@ const useStyles = () => {
     },
     poolTickerText: {
       ...atoms.body_1_lg_regular,
-      color: color.primary_c600,
+      color: color.primary_600,
     },
     pic: {
       width: 24,
@@ -204,18 +204,18 @@ const useStyles = () => {
     },
     label: {
       ...atoms.body_1_lg_regular,
-      color: color.gray_c600,
+      color: color.gray_600,
     },
     currentValue: {
       ...atoms.body_1_lg_regular,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
     suggestedValue: {
       ...atoms.body_1_lg_medium,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
     warning: {
-      color: color.sys_magenta_c500,
+      color: color.sys_magenta_500,
     },
     warningText: {
       ...atoms.body_1_lg_regular,
@@ -233,7 +233,7 @@ const useStyles = () => {
     line: {
       width: '120%',
       height: StyleSheet.hairlineWidth,
-      backgroundColor: color.gray_c200,
+      backgroundColor: color.gray_200,
     },
     actions: {
       alignSelf: 'stretch',
@@ -241,11 +241,11 @@ const useStyles = () => {
     },
     details: {
       ...atoms.body_1_lg_regular,
-      color: color.gray_c900,
+      color: color.gray_900,
       width: '100%',
     },
     outlineButton: {
-      color: color.gray_c900,
+      color: color.gray_900,
       ...atoms.button_2_md,
       textTransform: 'uppercase',
     },

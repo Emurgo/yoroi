@@ -62,17 +62,17 @@ const useStyles = () => {
       ...atoms.justify_center,
       ...atoms.flex_col,
       ...atoms.flex_1,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     title: {
       ...atoms.heading_3_medium,
       ...atoms.text_center,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
     description: {
       ...atoms.body_2_md_regular,
       ...atoms.text_center,
-      color: color.gray_c600,
+      color: color.gray_600,
     },
     actions: {
       ...atoms.p_lg,

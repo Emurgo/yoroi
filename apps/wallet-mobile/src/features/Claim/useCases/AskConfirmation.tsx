@@ -95,7 +95,7 @@ const useStyles = () => {
       ...atoms.justify_between,
     },
     warning: {
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
       ...atoms.font_normal,
       ...atoms.text_center,
       ...atoms.body_1_lg_regular,

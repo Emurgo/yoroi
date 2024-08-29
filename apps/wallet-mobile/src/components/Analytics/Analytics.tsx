@@ -191,7 +191,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     content: {
       alignItems: 'center',
@@ -211,7 +211,7 @@ const useStyles = () => {
       alignItems: 'baseline',
     },
     link: {
-      color: color.primary_c600,
+      color: color.primary_600,
       textAlign: 'center',
     },
     title: {
@@ -222,15 +222,15 @@ const useStyles = () => {
       borderWidth: 0,
     },
     skipText: {
-      color: color.primary_c900,
+      color: color.primary_900,
     },
     tick: {
-      color: color.primary_c700,
+      color: color.primary_700,
       paddingRight: 8,
       fontSize: 16,
     },
     cross: {
-      color: color.sys_magenta_c500,
+      color: color.sys_magenta_500,
       paddingRight: 8,
       fontSize: 16,
     },
@@ -243,13 +243,13 @@ const useStyles = () => {
       width: '100%',
       position: 'absolute',
       bottom: 0,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       height: BOTTOM_BUTTON_ROW_HEIGHT,
       padding: 16,
     },
     borderTop: {
       borderTopWidth: 1,
-      borderTopColor: color.gray_c500,
+      borderTopColor: color.gray_500,
     },
   })
 

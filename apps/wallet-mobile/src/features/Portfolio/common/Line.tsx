@@ -13,7 +13,7 @@ const useStyles = () => {
     line: {
       height: 1,
       ...atoms.w_full,
-      backgroundColor: color.gray_c200,
+      backgroundColor: color.gray_200,
     },
   })
 

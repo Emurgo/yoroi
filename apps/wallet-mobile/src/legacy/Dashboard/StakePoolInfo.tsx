@@ -105,7 +105,7 @@ const useStyles = () => {
       flexDirection: 'row',
     },
     poolId: {
-      color: color.gray_c700,
+      color: color.gray_700,
       ...atoms.body_2_md_regular,
       flex: 1,
     },

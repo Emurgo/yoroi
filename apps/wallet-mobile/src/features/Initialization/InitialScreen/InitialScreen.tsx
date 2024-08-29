@@ -115,19 +115,19 @@ const useStyles = () => {
     container: {
       flex: 1,
       ...atoms.p_lg,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     title: {
       ...atoms.heading_3_medium,
       textAlign: 'center',
-      color: color.gray_c900,
+      color: color.gray_900,
     },
     input: {
-      color: color.gray_c600,
+      color: color.gray_600,
       ...atoms.pl_lg,
       ...atoms.body_1_lg_regular,
       justifyContent: 'center',
-      borderColor: color.gray_c400,
+      borderColor: color.gray_400,
       borderWidth: 1,
       borderRadius: 8,
       height: 56,
@@ -140,10 +140,10 @@ const useStyles = () => {
     },
     checkboxText: {
       ...atoms.body_1_lg_regular,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
     checkboxLink: {
-      color: color.primary_c800,
+      color: color.primary_800,
       textDecorationLine: 'underline',
     },
     checkbox: {

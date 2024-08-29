@@ -62,7 +62,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     about: {
       flex: 1,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       ...atoms.p_lg,
     },
     row: {
@@ -71,11 +71,11 @@ const useStyles = () => {
       ...atoms.py_lg,
     },
     labelText: {
-      color: color.gray_c900,
+      color: color.gray_900,
       ...atoms.body_1_lg_medium,
     },
     valueText: {
-      color: color.gray_c500,
+      color: color.gray_500,
       ...atoms.body_1_lg_regular,
     },
   })

@@ -126,18 +126,18 @@ export const usePriceImpactRiskTheme = (risk: SwapPriceImpactRisk) => {
 
   if (risk === 'high') {
     return {
-      text: color.sys_magenta_c500,
-      background: color.sys_magenta_c100,
+      text: color.sys_magenta_500,
+      background: color.sys_magenta_100,
     }
   } else if (risk === 'moderate') {
     return {
-      text: color.sys_orange_c500,
-      background: color.sys_orange_c100,
+      text: color.sys_orange_500,
+      background: color.sys_orange_100,
     }
   }
 
   return {
-    text: color.gray_cmax,
-    background: color.gray_cmin,
+    text: color.gray_max,
+    background: color.gray_min,
   }
 }

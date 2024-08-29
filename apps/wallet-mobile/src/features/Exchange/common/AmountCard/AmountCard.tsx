@@ -119,7 +119,7 @@ const useStyles = () => {
     container: {
       borderRadius: 8,
       borderWidth: 1,
-      borderColor: color.gray_c400,
+      borderColor: color.gray_400,
       paddingTop: 16,
       paddingBottom: 16,
       paddingLeft: 16,
@@ -129,23 +129,23 @@ const useStyles = () => {
     },
     active: {
       borderWidth: 2,
-      borderColor: color.gray_c900,
+      borderColor: color.gray_900,
     },
     borderError: {
-      borderColor: color.sys_magenta_c500,
+      borderColor: color.sys_magenta_500,
       borderWidth: 2,
     },
     label: {
       position: 'absolute',
       top: -7,
       left: 10,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       paddingHorizontal: 5,
       fontSize: 12,
-      color: color.gray_c900,
+      color: color.gray_900,
     },
     labelError: {
-      color: color.sys_magenta_c500,
+      color: color.sys_magenta_500,
     },
     content: {
       display: 'flex',
@@ -162,10 +162,10 @@ const useStyles = () => {
       maxWidth: 200,
       height: 34,
       fontSize: 16,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
     grayText: {
-      color: color.gray_c600,
+      color: color.gray_600,
     },
     rightSection: {
       flexDirection: 'column',
@@ -179,21 +179,21 @@ const useStyles = () => {
     coinName: {
       ...atoms.body_1_lg_regular,
       fontWeight: '400',
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
     balanceText: {
       ...atoms.body_3_sm_regular,
-      color: color.gray_c600,
+      color: color.gray_600,
     },
     errorText: {
-      color: color.sys_magenta_c500,
+      color: color.sys_magenta_500,
       ...atoms.body_3_sm_regular,
     },
   })
   const colors = {
-    placeholder: color.gray_c600,
-    focused: color.gray_c600,
-    blur: color.gray_c900,
+    placeholder: color.gray_600,
+    focused: color.gray_600,
+    blur: color.gray_900,
   }
   return {styles, colors} as const
 }

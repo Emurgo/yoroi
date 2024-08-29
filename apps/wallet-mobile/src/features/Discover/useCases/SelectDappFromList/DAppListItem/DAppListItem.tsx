@@ -230,16 +230,16 @@ const useStyles = () => {
       gap: 12,
     },
     nameText: {
-      color: color.gray_c900,
+      color: color.gray_900,
       fontWeight: '500',
       ...atoms.body_1_lg_medium,
     },
     descriptionText: {
-      color: color.gray_c600,
+      color: color.gray_600,
       ...atoms.body_3_sm_regular,
     },
     descriptionTextActive: {
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
     flexFull: {
       flex: 1,
@@ -260,7 +260,7 @@ const useStyles = () => {
     },
     dAppName: {
       ...atoms.body_1_lg_medium,
-      color: color.gray_c900,
+      color: color.gray_900,
     },
     dAppInfo: {
       alignItems: 'center',
@@ -281,13 +281,13 @@ const useStyles = () => {
       color: color.text_gray_max,
     },
     link: {
-      color: color.sys_cyan_c500,
+      color: color.sys_cyan_500,
     },
   })
 
   const colors = {
-    icon: color.primary_c900,
-    dappIcon: color.gray_c600,
+    icon: color.primary_900,
+    dappIcon: color.gray_600,
   }
 
   return {styles, colors} as const

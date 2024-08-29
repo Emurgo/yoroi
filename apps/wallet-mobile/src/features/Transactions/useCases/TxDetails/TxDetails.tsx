@@ -353,7 +353,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     fade: {
       flex: 1,
@@ -362,11 +362,11 @@ const useStyles = () => {
       ...atoms.px_lg,
     },
     positiveAmount: {
-      color: color.primary_c600,
+      color: color.primary_600,
       fontWeight: '500',
     },
     negativeAmount: {
-      color: color.sys_magenta_c500,
+      color: color.sys_magenta_500,
       fontWeight: '500',
     },
     label: {
@@ -382,7 +382,7 @@ const useStyles = () => {
     },
     assetsTitle: {
       ...atoms.body_2_md_regular,
-      color: color.gray_c900,
+      color: color.gray_900,
     },
     center: {
       ...atoms.pt_lg,
@@ -399,7 +399,7 @@ const useStyles = () => {
     },
   })
   const colors = {
-    iconColor: color.gray_c500,
+    iconColor: color.gray_500,
   }
   return {styles, colors}
 }

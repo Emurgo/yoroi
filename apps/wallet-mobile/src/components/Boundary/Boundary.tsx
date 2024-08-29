@@ -249,7 +249,7 @@ const useStyles = () => {
     },
     container: {
       ...atoms.flex_1,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       ...atoms.align_center,
       ...atoms.p_lg,
     },

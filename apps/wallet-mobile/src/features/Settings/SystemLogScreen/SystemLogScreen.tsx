@@ -71,15 +71,15 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       ...atoms.px_lg,
     },
     labelText: {
-      color: color.gray_c900,
+      color: color.gray_900,
       ...atoms.body_1_lg_medium,
     },
     valueText: {
-      color: color.gray_c500,
+      color: color.gray_500,
       ...atoms.body_1_lg_regular,
     },
   })

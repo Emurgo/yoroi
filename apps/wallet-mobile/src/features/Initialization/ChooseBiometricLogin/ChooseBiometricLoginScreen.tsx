@@ -82,7 +82,7 @@ const useStyles = () => {
       ...atoms.flex_1,
       ...atoms.px_lg,
       ...atoms.pb_lg,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     content: {
       ...atoms.flex_1,
@@ -101,7 +101,7 @@ const useStyles = () => {
       color: color.text_gray_max,
     },
     enableButton: {
-      backgroundColor: color.primary_c500,
+      backgroundColor: color.primary_500,
     },
   })
 

@@ -289,12 +289,12 @@ const useStyles = () => {
     modalText: {
       textAlign: 'left',
       ...atoms.body_1_lg_regular,
-      color: color.gray_c900,
+      color: color.gray_900,
     },
     text: {
       textAlign: 'right',
       ...atoms.body_1_lg_regular,
-      color: color.gray_c900,
+      color: color.gray_900,
       flexWrap: 'wrap',
       flex: 1,
     },
@@ -304,13 +304,13 @@ const useStyles = () => {
       justifyContent: 'space-between',
       ...atoms.px_lg,
     },
-    change: {color: color.primary_c500, ...atoms.body_2_md_medium, textTransform: 'uppercase'},
+    change: {color: color.primary_500, ...atoms.body_2_md_medium, textTransform: 'uppercase'},
     bold: {
-      color: color.gray_cmax,
+      color: color.gray_max,
       ...atoms.body_1_lg_regular,
     },
     bolder: {
-      color: color.gray_cmax,
+      color: color.gray_max,
       ...atoms.body_1_lg_medium,
     },
   })

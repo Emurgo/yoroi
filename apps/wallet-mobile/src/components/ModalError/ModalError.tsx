@@ -91,7 +91,7 @@ const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     message: {
-      color: color.sys_magenta_c500,
+      color: color.sys_magenta_500,
       ...atoms.body_1_lg_regular,
       ...atoms.text_center,
     },
@@ -110,7 +110,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    error: color.sys_magenta_c500,
+    error: color.sys_magenta_500,
   }
 
   return {styles, colors} as const

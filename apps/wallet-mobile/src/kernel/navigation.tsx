@@ -46,7 +46,7 @@ export const BackButton = (props: TouchableOpacityProps & {color?: string}) => {
 
   return (
     <TouchableOpacity {...props} testID="buttonBack2">
-      <Icon.Chevron direction="left" color={props.color ?? color.gray_cmax} />
+      <Icon.Chevron direction="left" color={props.color ?? color.gray_max} />
     </TouchableOpacity>
   )
 }
@@ -65,15 +65,15 @@ export const defaultStackNavigationOptions = (atoms: Atoms, color: ThemedPalette
       <View
         style={{
           flex: 1,
-          backgroundColor: color.bg_color_high,
+          backgroundColor: color.bg_color_max,
         }}
       />
     ),
-    headerTintColor: color.gray_cmax,
+    headerTintColor: color.gray_max,
     headerStyle: {
       elevation: 0,
       shadowOpacity: 0,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     headerTitleStyle: {
       ...atoms.body_1_lg_medium,
@@ -102,14 +102,14 @@ export const defaultMaterialTopTabNavigationOptions = (
   color: ThemedPalette,
 ): MaterialTopTabNavigationOptions => {
   return {
-    tabBarStyle: {backgroundColor: color.bg_color_high, elevation: 0, shadowOpacity: 0, marginHorizontal: 16},
-    tabBarIndicatorStyle: {backgroundColor: color.primary_c600, height: 2},
+    tabBarStyle: {backgroundColor: color.bg_color_max, elevation: 0, shadowOpacity: 0, marginHorizontal: 16},
+    tabBarIndicatorStyle: {backgroundColor: color.primary_600, height: 2},
     tabBarLabelStyle: {
       textTransform: 'none',
       ...atoms.body_1_lg_medium,
     },
-    tabBarActiveTintColor: color.primary_c600,
-    tabBarInactiveTintColor: color.gray_c600,
+    tabBarActiveTintColor: color.primary_600,
+    tabBarInactiveTintColor: color.gray_600,
   }
 }
 

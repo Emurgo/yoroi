@@ -6,9 +6,9 @@ export const ThemeIlustration = (props: SvgProps) => {
   const {color} = useTheme()
   return (
     <Svg width="311" height="281" viewBox="0 0 311 281" fill="none" {...props}>
-      <Path d="M311 183.04L140.117 280.6L0 200.034L170.214 101.933L311 183.04Z" fill={color.gray_c200} />
+      <Path d="M311 183.04L140.117 280.6L0 200.034L170.214 101.933L311 183.04Z" fill={color.gray_200} />
 
-      <Path d="M311 162.667L140.117 260.768L0 180.202L170.214 82.1008L311 162.667Z" fill={color.gray_c100} />
+      <Path d="M311 162.667L140.117 260.768L0 180.202L170.214 82.1008L311 162.667Z" fill={color.gray_100} />
 
       <Path d="M33.0635 76.8413L28.1599 79.1562L89.0673 114.188L93.9891 111.882L33.0635 76.8413Z" fill="#08C29D" />
 

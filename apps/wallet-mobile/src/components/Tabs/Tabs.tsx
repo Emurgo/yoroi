@@ -58,10 +58,10 @@ const useStyles = () => {
       ...atoms.body_1_lg_medium,
     },
     tabTextActive: {
-      color: color.primary_c600,
+      color: color.primary_600,
     },
     tabTextInactive: {
-      color: color.gray_c600,
+      color: color.gray_600,
     },
     indicator: {
       position: 'absolute',
@@ -70,12 +70,12 @@ const useStyles = () => {
       width: '100%',
       borderTopLeftRadius: 2,
       borderTopRightRadius: 2,
-      backgroundColor: color.primary_c600,
+      backgroundColor: color.primary_600,
     },
     tabNavigatorRoot: {
       flex: 1,
       paddingTop: 8,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       borderTopLeftRadius: 8,
       borderTopRightRadius: 8,
     },

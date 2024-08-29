@@ -55,11 +55,11 @@ const useStyles = () => {
     },
     serverName: {
       ...atoms.body_3_sm_regular,
-      color: color.gray_c700,
+      color: color.gray_700,
     },
     address: {
       ...atoms.body_3_sm_regular,
-      color: color.gray_c500,
+      color: color.gray_500,
     },
   })
 

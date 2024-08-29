@@ -27,7 +27,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     title: {
       ...atoms.body_1_lg_regular,
-      color: color.gray_c900,
+      color: color.gray_900,
       justifyContent: 'center',
     },
     content: {
@@ -39,7 +39,7 @@ const useStyles = () => {
       shadowRadius: 12,
       shadowOffset: {width: 0, height: 2},
       shadowColor: 'rgba(0, 0, 0, 0.06)',
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     poolInfoContent: {
       ...atoms.p_0,

@@ -19,7 +19,7 @@ export const PoolTransitionNotice = () => {
   return (
     <View style={styles.notice}>
       <Row>
-        <Icon.Warning size={20} color={color.sys_magenta_c500} />
+        <Icon.Warning size={20} color={color.sys_magenta_500} />
       </Row>
 
       <Text style={styles.text}>
@@ -51,11 +51,11 @@ const useStyles = () => {
       flex: 1,
       padding: 16,
       gap: 12,
-      backgroundColor: color.sys_magenta_c100,
+      backgroundColor: color.sys_magenta_100,
       borderRadius: 8,
     },
     text: {
-      color: color.gray_cmax,
+      color: color.gray_max,
       ...atoms.body_2_md_regular,
     },
     bold: {
@@ -63,7 +63,7 @@ const useStyles = () => {
     },
     noticeButton: {
       flexGrow: 0,
-      backgroundColor: color.sys_magenta_c500,
+      backgroundColor: color.sys_magenta_500,
       ...atoms.button_2_md,
     },
     actions: {

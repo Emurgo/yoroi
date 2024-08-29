@@ -40,20 +40,20 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       ...atoms.flex_1,
       ...atoms.align_center,
       ...atoms.justify_center,
       ...atoms.p_lg,
     },
     title: {
-      color: color.gray_cmax,
+      color: color.gray_max,
       ...atoms.heading_3_medium,
       ...atoms.px_xs,
       ...atoms.text_center,
     },
     text: {
-      color: color.gray_c600,
+      color: color.gray_600,
       ...atoms.body_2_md_regular,
       ...atoms.text_center,
       maxWidth: 330,

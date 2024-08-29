@@ -54,7 +54,7 @@ const useStyles = () => {
       ...atoms.relative,
       ...atoms.rounded_sm,
       ...atoms.overflow_hidden,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     spaceButtonText: {
       ...atoms.p_0,
@@ -66,11 +66,11 @@ const useStyles = () => {
     title: {
       ...atoms.body_1_lg_medium,
       ...atoms.font_semibold,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
     description: {
       ...atoms.body_2_md_regular,
-      color: color.gray_cmax,
+      color: color.gray_max,
       maxWidth: 220,
     },
     assetImageBox: {

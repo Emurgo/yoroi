@@ -63,11 +63,11 @@ const useStyles = () => {
       ...atoms.rounded_sm,
     },
     tabActive: {
-      color: color.gray_cmax,
-      backgroundColor: color.gray_c200,
+      color: color.gray_max,
+      backgroundColor: color.gray_200,
     },
     tabText: {
-      color: color.el_gray_normal,
+      color: color.el_gray_medium,
       ...atoms.body_1_lg_medium,
       ...atoms.font_semibold,
     },

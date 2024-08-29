@@ -27,7 +27,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    background: color.gray_c700,
+    background: color.gray_700,
   }
 
   return {styles, colors}

@@ -84,7 +84,7 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       ...atoms.flex_1,
       ...atoms.px_lg,
     },
@@ -98,8 +98,8 @@ const useStyles = () => {
     },
   })
   const colors = {
-    danger: color.sys_magenta_c500,
-    warning: color.sys_orange_c500,
+    danger: color.sys_magenta_500,
+    warning: color.sys_orange_500,
   }
   return {styles, colors} as const
 }

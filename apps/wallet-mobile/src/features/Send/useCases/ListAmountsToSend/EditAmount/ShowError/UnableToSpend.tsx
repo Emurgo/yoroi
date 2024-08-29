@@ -19,7 +19,7 @@ const useStyles = () => {
   const {color} = useTheme()
   const styles = StyleSheet.create({
     overSpendable: {
-      color: color.gray_c600,
+      color: color.gray_600,
       textAlign: 'center',
     },
   })

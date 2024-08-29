@@ -26,7 +26,7 @@ export const GradientWarning = ({title, description, onClose}: Props) => {
     >
       {onClose != null && (
         <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-          <Icon.Close size={20} color={color.gray_cmax} />
+          <Icon.Close size={20} color={color.gray_max} />
         </TouchableOpacity>
       )}
 
@@ -52,12 +52,12 @@ const useStyles = () => {
     title: {
       ...atoms.body_1_lg_medium,
       ...atoms.font_semibold,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
     description: {
       ...atoms.body_2_md_regular,
       ...atoms.font_normal,
-      color: color.gray_c900,
+      color: color.gray_900,
     },
     closeButton: {
       ...atoms.absolute,

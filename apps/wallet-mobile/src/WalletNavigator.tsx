@@ -274,10 +274,10 @@ const useStyles = () => {
   })
 
   const colors = {
-    active: color.text_primary_high,
+    active: color.text_primary_max,
     inactive: color.text_gray_medium,
-    background: color.gray_cmin,
-    divider: color.gray_c200,
+    background: color.gray_min,
+    divider: color.gray_200,
   }
 
   return {colors, styles}

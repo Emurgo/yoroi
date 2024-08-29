@@ -121,7 +121,7 @@ const useStyles = () => {
     root: {
       ...atoms.flex_1,
       ...atoms.px_lg,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     container: {
       ...atoms.flex_grow,

@@ -129,7 +129,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     safeAreaView: {
       flex: 1,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     container: {
       flexDirection: 'column',
@@ -148,7 +148,7 @@ const useStyles = () => {
     count: {
       flex: 1,
       textAlign: 'center',
-      color: color.gray_c600,
+      color: color.gray_600,
     },
 
     galleryContainer: {

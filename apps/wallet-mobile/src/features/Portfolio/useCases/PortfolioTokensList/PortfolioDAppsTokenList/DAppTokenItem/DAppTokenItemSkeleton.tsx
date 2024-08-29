@@ -5,7 +5,7 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 export const DAppTokenItemSkeleton = () => {
   const {color} = useTheme()
   return (
-    <SkeletonPlaceholder backgroundColor={color.gray_c100}>
+    <SkeletonPlaceholder backgroundColor={color.gray_100}>
       <SkeletonPlaceholder.Item flexDirection="row" alignItems="center" justifyContent="space-between">
         <SkeletonPlaceholder.Item flexDirection="row" gap={12} alignItems="center">
           <SkeletonPlaceholder.Item width={40} height={40} position="relative">

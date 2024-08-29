@@ -73,19 +73,19 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     text: {
       ...atoms.body_2_md_regular,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
     secondary: {
-      color: color.gray_c700,
+      color: color.gray_700,
     },
     small: {
       ...atoms.body_3_sm_regular,
     },
     light: {
-      color: color.gray_cmin,
+      color: color.gray_min,
     },
     error: {
-      color: color.sys_magenta_c500,
+      color: color.sys_magenta_500,
     },
     bold: {
       fontFamily: 'Rubik-Medium',

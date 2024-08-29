@@ -211,19 +211,19 @@ const useStyles = () => {
       height: 56,
       width: 56,
       borderRadius: 28,
-      backgroundColor: color.primary_c500,
+      backgroundColor: color.primary_500,
     },
     actionLabel: {
       ...atoms.pt_sm,
       ...atoms.body_3_sm_medium,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
     disabled: {
       opacity: 0.5,
     },
     isCopying: {
       position: 'absolute',
-      backgroundColor: color.gray_cmax,
+      backgroundColor: color.gray_max,
       alignItems: 'center',
       justifyContent: 'center',
       top: -40,
@@ -235,7 +235,7 @@ const useStyles = () => {
       textAlign: 'center',
       ...atoms.p_sm,
       ...atoms.body_2_md_medium,
-      color: color.gray_cmin,
+      color: color.gray_min,
     },
   })
 

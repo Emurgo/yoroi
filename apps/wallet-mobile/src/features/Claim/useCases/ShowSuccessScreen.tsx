@@ -154,7 +154,7 @@ const useStyles = () => {
     },
     root: {
       ...atoms.flex_1,
-      color: color.bg_color_high,
+      color: color.bg_color_max,
     },
     header: {
       ...atoms.align_center,

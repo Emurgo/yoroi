@@ -30,8 +30,8 @@ const useStyles = () => {
     },
   })
   const colors = {
-    gray: color.gray_c800,
-    primary: color.primary_c500,
+    gray: color.gray_800,
+    primary: color.primary_500,
   }
   return {styles, colors} as const
 }

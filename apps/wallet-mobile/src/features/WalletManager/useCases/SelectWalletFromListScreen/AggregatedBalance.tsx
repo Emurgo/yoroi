@@ -78,7 +78,7 @@ const useStyles = () => {
       ...atoms.justify_center,
     },
     tokensText: {
-      backgroundColor: color.bg_color_low,
+      backgroundColor: color.bg_color_min,
       color: color.text_gray_max,
       ...atoms.monospace,
       ...atoms.p_xs,

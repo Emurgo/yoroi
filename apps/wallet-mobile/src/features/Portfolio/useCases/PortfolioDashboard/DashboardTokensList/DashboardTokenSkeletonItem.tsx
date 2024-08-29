@@ -11,7 +11,7 @@ export const DashboardTokenSkeletonItem = () => {
   return (
     <View style={styles.fullSize}>
       <View style={styles.root}>
-        <SkeletonPlaceholder backgroundColor={color.gray_c100}>
+        <SkeletonPlaceholder backgroundColor={color.gray_100}>
           <SkeletonPlaceholder.Item flexDirection="row" gap={12} alignItems="center">
             <SkeletonPlaceholder.Item width={40} height={40} borderRadius={8} />
 
@@ -25,7 +25,7 @@ export const DashboardTokenSkeletonItem = () => {
 
         <Spacer fill />
 
-        <SkeletonPlaceholder backgroundColor={color.gray_c100}>
+        <SkeletonPlaceholder backgroundColor={color.gray_100}>
           <SkeletonPlaceholder.Item>
             <SkeletonPlaceholder.Item width={64} height={20} borderRadius={8} marginBottom={7} />
 
@@ -49,7 +49,7 @@ const useStyles = () => {
       ...atoms.border,
       ...atoms.w_full,
       ...atoms.h_full,
-      borderColor: color.gray_c300,
+      borderColor: color.gray_300,
     },
     fullSize: {
       ...atoms.w_full,

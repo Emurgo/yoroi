@@ -181,11 +181,11 @@ const useStyles = () => {
   const {color, atoms, isDark} = useTheme()
   const styles = StyleSheet.create({
     pair: {
-      color: color.gray_c600,
+      color: color.gray_600,
       ...atoms.body_3_sm_regular,
     },
     date: {
-      color: color.gray_c600,
+      color: color.gray_600,
       ...atoms.body_3_sm_regular,
     },
     direction: {
@@ -200,15 +200,15 @@ const useStyles = () => {
       flexDirection: 'row',
     },
     amount: {
-      color: color.gray_c900,
+      color: color.gray_900,
       ...atoms.body_2_md_medium,
     },
   })
 
   const colors = {
     default: color.white_static,
-    failed: color.primary_c200,
-    background: color.gray_cmin,
+    failed: color.primary_200,
+    background: color.gray_min,
   }
   return {styles, colors, isDark}
 }

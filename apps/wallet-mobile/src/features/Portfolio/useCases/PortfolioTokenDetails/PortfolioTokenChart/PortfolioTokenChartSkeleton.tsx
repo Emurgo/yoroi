@@ -12,7 +12,7 @@ export const PortfolioTokenChartSkeleton = () => {
     <View style={styles.root}>
       <View style={styles.container}>
         <View style={styles.group}>
-          <SkeletonPlaceholder borderRadius={20} backgroundColor={color.gray_c100}>
+          <SkeletonPlaceholder borderRadius={20} backgroundColor={color.gray_100}>
             <SkeletonPlaceholder.Item flexDirection="row" alignItems="center" gap={2}>
               <SkeletonPlaceholder.Item width={48} height={24} />
 
@@ -23,7 +23,7 @@ export const PortfolioTokenChartSkeleton = () => {
           <Icon.InfoCircle />
         </View>
 
-        <SkeletonPlaceholder borderRadius={20} backgroundColor={color.gray_c100}>
+        <SkeletonPlaceholder borderRadius={20} backgroundColor={color.gray_100}>
           <SkeletonPlaceholder.Item width={64} height={16} />
         </SkeletonPlaceholder>
       </View>

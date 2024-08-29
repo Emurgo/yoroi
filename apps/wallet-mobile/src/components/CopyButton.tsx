@@ -70,13 +70,13 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
 
   const colors = {
-    gray: color.gray_c900,
+    gray: color.gray_900,
   }
 
   const styles = StyleSheet.create({
     isCopying: {
       position: 'absolute',
-      backgroundColor: color.gray_cmax,
+      backgroundColor: color.gray_max,
       alignItems: 'center',
       justifyContent: 'center',
       bottom: 20,
@@ -86,7 +86,7 @@ const useStyles = () => {
       zIndex: 10,
     },
     copiedText: {
-      color: color.gray_cmin,
+      color: color.gray_min,
       textAlign: 'center',
       padding: 8,
       flex: 1,

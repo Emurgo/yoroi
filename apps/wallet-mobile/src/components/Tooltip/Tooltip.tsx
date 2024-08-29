@@ -205,7 +205,7 @@ const useStyles = () => {
       justifyContent: 'center',
       paddingVertical: 5,
       paddingHorizontal: 12,
-      backgroundColor: color.gray_cmax,
+      backgroundColor: color.gray_max,
       borderRadius: 4,
       position: 'absolute',
     },
@@ -217,7 +217,7 @@ const useStyles = () => {
     },
     content: {
       ...atoms.body_2_md_regular,
-      color: color.gray_cmin,
+      color: color.gray_min,
     },
     pressContainer: {} as ViewStyle,
   })

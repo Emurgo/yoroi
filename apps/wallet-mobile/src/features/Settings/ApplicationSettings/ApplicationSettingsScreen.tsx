@@ -341,7 +341,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     settings: {
       flex: 1,
@@ -349,5 +349,5 @@ const useStyles = () => {
     },
   })
 
-  return {styles, colors: {icon: color.gray_c600}} as const
+  return {styles, colors: {icon: color.gray_600}} as const
 }

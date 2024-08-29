@@ -127,11 +127,11 @@ const useStyles = () => {
       flexDirection: 'column',
     },
     label: {
-      color: color.gray_c900,
+      color: color.gray_900,
       ...atoms.body_2_md_regular,
     },
     value: {
-      color: color.gray_c800,
+      color: color.gray_800,
       ...atoms.body_1_lg_regular,
     },
     withdrawBlock: {

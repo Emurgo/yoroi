@@ -120,7 +120,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     safeAreaView: {
       flex: 1,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     modal: {
       flex: 1,
@@ -128,11 +128,11 @@ const useStyles = () => {
     },
     modalText: {
       ...atoms.body_1_lg_regular,
-      color: color.gray_c900,
+      color: color.gray_900,
     },
     modalTextTitle: {
       ...atoms.body_1_lg_medium,
-      color: color.gray_c900,
+      color: color.gray_900,
     },
     actions: {
       ...atoms.pt_lg,

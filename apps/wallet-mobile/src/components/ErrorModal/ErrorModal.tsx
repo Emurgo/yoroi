@@ -91,7 +91,7 @@ export const ErrorModal = ({visible, title, errorMessage, errorLogs, onRequestCl
 const useStyles = () => {
   const {color, atoms} = useTheme()
   const text = {
-    color: color.gray_cmax,
+    color: color.gray_max,
     ...atoms.body_2_md_regular,
   }
   const styles = StyleSheet.create({
@@ -124,7 +124,7 @@ const useStyles = () => {
     showErrorTrigger: {
       flex: 1,
       ...text,
-      color: color.gray_c700,
+      color: color.gray_700,
     },
     errorSectionView: {
       elevation: 1,
@@ -132,7 +132,7 @@ const useStyles = () => {
       shadowRadius: 12,
       shadowOpacity: 0.06,
       shadowColor: color.black_static,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       borderRadius: 8,
     },
     errorSectionContent: {
@@ -143,7 +143,7 @@ const useStyles = () => {
     },
   })
   const colors = {
-    icon: color.gray_c400,
+    icon: color.gray_400,
   }
   return {styles, colors}
 }

@@ -114,7 +114,7 @@ const useStyles = () => {
   const {color} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       flex: 1,
     },
     container: {

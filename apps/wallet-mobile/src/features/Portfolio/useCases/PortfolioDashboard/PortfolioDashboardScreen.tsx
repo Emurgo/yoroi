@@ -42,7 +42,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       ...atoms.flex_1,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
   })
 

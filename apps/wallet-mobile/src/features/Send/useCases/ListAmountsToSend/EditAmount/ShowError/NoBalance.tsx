@@ -19,7 +19,7 @@ const useStyles = () => {
   const {color} = useTheme()
   const styles = StyleSheet.create({
     noBalance: {
-      color: color.sys_magenta_c500,
+      color: color.sys_magenta_500,
       textAlign: 'center',
     },
   })

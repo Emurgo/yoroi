@@ -55,10 +55,10 @@ const useStyles = () => {
       borderRadius: 6,
     },
     selected: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     label: {
-      color: color.primary_c600,
+      color: color.primary_600,
       ...atoms.body_1_lg_medium,
     },
     gradient: {borderRadius: 8, padding: 3},

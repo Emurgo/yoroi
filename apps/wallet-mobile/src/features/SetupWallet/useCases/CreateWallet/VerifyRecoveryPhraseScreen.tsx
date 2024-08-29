@@ -347,7 +347,7 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       ...atoms.flex_1,
       ...atoms.justify_between,
       ...atoms.gap_lg,
@@ -360,7 +360,7 @@ const useStyles = () => {
     },
     title: {
       ...atoms.body_1_lg_regular,
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
     },
     recoveryPhrase: {
       minHeight: 182,
@@ -369,9 +369,9 @@ const useStyles = () => {
       ...atoms.overflow_hidden,
     },
     recoveryPhraseBackground: {
-      borderColor: color.primary_c200,
+      borderColor: color.primary_200,
       borderWidth: 1,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       borderRadius: 6,
       minHeight: 182,
       ...atoms.overflow_hidden,
@@ -387,7 +387,7 @@ const useStyles = () => {
       ...atoms.align_center,
     },
     errorMessage: {
-      color: color.sys_magenta_c500,
+      color: color.sys_magenta_500,
       ...atoms.body_2_md_regular,
     },
     successMessageContainer: {
@@ -400,10 +400,10 @@ const useStyles = () => {
       ...atoms.body_1_lg_medium,
     },
     errorBadge: {
-      color: color.sys_magenta_c500,
+      color: color.sys_magenta_500,
     },
     errorBadgeBackground: {
-      backgroundColor: color.sys_magenta_c100,
+      backgroundColor: color.sys_magenta_100,
     },
     words: {
       ...atoms.flex_row,
@@ -435,11 +435,11 @@ const useStyles = () => {
       ...atoms.body_1_lg_regular,
     },
     usedWord: {
-      color: color.primary_c400,
+      color: color.primary_400,
     },
     usedWordBackground: {
       ...atoms.absolute,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       borderRadius: 6,
       left: 2,
       right: 2,
@@ -461,11 +461,11 @@ const useStyles = () => {
   })
 
   const colors = {
-    error: color.sys_magenta_c500,
-    buttonBg: color.primary_c100,
-    gradientGreen: color.secondary_c300,
+    error: color.sys_magenta_500,
+    buttonBg: color.primary_100,
+    gradientGreen: color.secondary_300,
     black: color.black_static,
-    bg: color.bg_color_high,
+    bg: color.bg_color_max,
   }
 
   return {styles, colors} as const

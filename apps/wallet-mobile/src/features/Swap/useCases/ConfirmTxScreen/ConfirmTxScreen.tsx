@@ -168,19 +168,19 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       paddingTop: 16,
     },
     container: {
       flex: 1,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'space-between',
     },
     actions: {
       padding: 16,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     modalContent: {
       flex: 1,
@@ -192,7 +192,7 @@ const useStyles = () => {
     },
     actionBorder: {
       borderTopWidth: 1,
-      borderTopColor: color.gray_c200,
+      borderTopColor: color.gray_200,
     },
   })
   return styles

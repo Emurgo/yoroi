@@ -52,6 +52,7 @@ export const opacity = {
   _26: '42',
   _40: '66',
   _48: '7A',
+  _64: 'A3',
   _70: 'B3',
   _80: 'CC',
 } as const

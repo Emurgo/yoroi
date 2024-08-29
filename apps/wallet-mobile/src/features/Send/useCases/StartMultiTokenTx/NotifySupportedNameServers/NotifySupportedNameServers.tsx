@@ -83,26 +83,26 @@ const useStyles = () => {
       flexDirection: 'row',
       alignItems: 'center',
       lineHeight: 22,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
     nameServerText: {
       ...atoms.body_2_md_medium,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
     title: {
       ...atoms.body_1_lg_medium,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
     text: {
       ...atoms.body_2_md_regular,
-      color: color.gray_cmax,
+      color: color.gray_max,
     },
   })
 
   const colors = {
-    lightGreen: color.secondary_c200,
-    lightBlue: color.primary_c100,
-    iconColor: color.gray_cmax,
+    lightGreen: color.secondary_200,
+    lightBlue: color.primary_100,
+    iconColor: color.gray_max,
   }
 
   return {styles, colors}

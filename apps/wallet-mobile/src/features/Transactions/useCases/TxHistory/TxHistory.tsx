@@ -110,13 +110,13 @@ const useStyles = () => {
     },
     title: {
       ...atoms.body_1_lg_medium,
-      color: color.gray_c900,
+      color: color.gray_900,
       textAlign: 'center',
     },
     panel: {
       flex: 1,
       paddingTop: 8,
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       borderTopLeftRadius: 24,
       borderTopRightRadius: 24,
     },

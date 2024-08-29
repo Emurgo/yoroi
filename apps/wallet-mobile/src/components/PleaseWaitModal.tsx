@@ -16,7 +16,7 @@ export const PleaseWaitView = ({title, spinnerText}: PleaseWaitViewProps) => {
     <View style={styles.container}>
       <Text style={styles.title}>{title}</Text>
 
-      <ActivityIndicator size="large" color={color.gray_c900} />
+      <ActivityIndicator size="large" color={color.gray_900} />
 
       <Spacer height={12} />
 
@@ -43,12 +43,12 @@ const useStyles = () => {
       ...atoms.p_lg,
     },
     title: {
-      color: color.gray_c900,
+      color: color.gray_900,
       ...atoms.text_center,
       ...atoms.heading_4_medium,
     },
     wait: {
-      color: color.gray_c900,
+      color: color.gray_900,
       ...atoms.text_center,
       ...atoms.body_2_md_regular,
       ...atoms.py_lg,

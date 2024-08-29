@@ -6,12 +6,12 @@ export const useBaseStyles = () => {
 
   const styles = StyleSheet.create({
     assetHeading: {
-      color: color.gray_cmin,
+      color: color.gray_min,
       ...atoms.body_3_sm_regular,
       opacity: 0.5,
     },
     assetMeta: {
-      color: color.gray_cmin,
+      color: color.gray_min,
       ...atoms.body_2_md_regular,
       opacity: 0.5,
     },
@@ -31,12 +31,12 @@ export const useBaseStyles = () => {
     },
     assetName: {
       ...atoms.body_2_md_regular,
-      color: color.gray_cmin,
+      color: color.gray_min,
       marginBottom: 2,
     },
     assetBalance: {
       ...atoms.body_2_md_regular,
-      color: color.gray_cmin,
+      color: color.gray_min,
     },
     py5: {
       paddingVertical: 10,

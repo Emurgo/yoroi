@@ -46,10 +46,10 @@ const useStyles = () => {
       borderRadius: 8,
     },
     selected: {
-      backgroundColor: color.gray_c200,
+      backgroundColor: color.gray_200,
     },
     label: {
-      color: color.gray_cmax,
+      color: color.gray_max,
       ...atoms.body_1_lg_medium,
     },
   })

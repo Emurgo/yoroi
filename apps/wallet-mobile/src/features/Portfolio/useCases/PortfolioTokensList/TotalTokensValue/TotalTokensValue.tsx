@@ -44,7 +44,7 @@ const useStyles = () => {
     },
     normalText: {
       ...atoms.body_3_sm_regular,
-      color: color.gray_c600,
+      color: color.gray_600,
     },
     labelContainer: {
       ...atoms.flex_row,

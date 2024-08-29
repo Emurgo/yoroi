@@ -163,15 +163,15 @@ const useStyles = () => {
     },
     walletName: {
       ...atoms.body_1_lg_medium,
-      color: color.gray_cmax,
+      color: color.gray_max,
       flex: 1,
     },
     walletMeta: {
-      color: color.gray_c600,
+      color: color.gray_600,
       opacity: 0.5,
     },
     walletMetaPressed: {
-      color: color.gray_cmax,
+      color: color.gray_max,
       opacity: 1,
     },
     disabled: {
@@ -188,17 +188,17 @@ const useStyles = () => {
       ...atoms.px_md,
     },
     actionDangerousText: {
-      color: color.sys_magenta_c500,
+      color: color.sys_magenta_500,
       ...atoms.body_2_md_medium,
       ...atoms.p_sm,
-      backgroundColor: color.sys_magenta_c100,
+      backgroundColor: color.sys_magenta_100,
     },
   })
 
   const colors = {
     white: color.white_static,
-    selected: color.primary_c600,
-    icon: color.gray_c600,
+    selected: color.primary_600,
+    icon: color.gray_600,
   }
 
   return {styles, colors} as const

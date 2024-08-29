@@ -111,7 +111,7 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       ...atoms.p_lg,
     },
     flex: {
@@ -123,7 +123,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    requestSpecificAmountTextColor: color.primary_c500,
+    requestSpecificAmountTextColor: color.primary_500,
   }
 
   return {styles, colors} as const

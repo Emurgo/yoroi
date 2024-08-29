@@ -236,16 +236,16 @@ const useStyles = () => {
   })
 
   const colors = {
-    background: color.gray_cmin,
-    focusInput: color.primary_c500,
-    input: color.primary_c300,
-    actionGray: color.gray_c500,
-    black: color.gray_cmax,
+    background: color.gray_min,
+    focusInput: color.primary_500,
+    input: color.primary_300,
+    actionGray: color.gray_500,
+    black: color.gray_max,
     text: color.el_primary_medium,
     textError: color.text_error,
-    infoGray: color.gray_c700,
-    positiveGreen: color.el_secondary_medium,
-    positiveGray: color.primary_c100,
+    infoGray: color.gray_700,
+    positiveGreen: color.el_secondary,
+    positiveGray: color.primary_100,
     none: 'transparent',
     successText: color.black_static,
   }

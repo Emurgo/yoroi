@@ -35,7 +35,7 @@ const useStyles = () => {
     },
     title: {
       ...atoms.body_1_lg_regular,
-      color: color.gray_cmax,
+      color: color.gray_max,
       fontWeight: '500',
     },
   })

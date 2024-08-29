@@ -81,13 +81,13 @@ const useStyles = () => {
       ...atoms.self_stretch,
     },
     details: {
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
       ...atoms.body_1_lg_regular,
       ...atoms.justify_center,
       ...atoms.text_center,
     },
     multipleButtonTitle: {
-      color: color.text_primary_high,
+      color: color.text_primary_max,
     },
   })
 

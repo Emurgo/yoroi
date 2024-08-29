@@ -159,13 +159,13 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       ...atoms.flex_1,
       ...atoms.px_lg,
       ...atoms.pt_lg,
     },
     descriptionContainer: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
     },
     description: {
       ...atoms.body_1_lg_regular,
@@ -184,7 +184,7 @@ const useStyles = () => {
       ...atoms.flex_1,
     },
     removeButton: {
-      backgroundColor: color.sys_magenta_c500,
+      backgroundColor: color.sys_magenta_500,
     },
   })
   return styles

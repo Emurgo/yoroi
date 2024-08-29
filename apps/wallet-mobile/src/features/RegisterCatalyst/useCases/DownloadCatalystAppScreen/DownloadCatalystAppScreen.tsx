@@ -168,7 +168,7 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     safeAreaView: {
-      backgroundColor: color.bg_color_high,
+      backgroundColor: color.bg_color_max,
       ...atoms.flex_1,
       ...atoms.px_lg,
       ...atoms.pb_lg,
@@ -189,7 +189,7 @@ const useStyles = () => {
       ...atoms.self_start,
     },
     fundName: {
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
       ...atoms.body_1_lg_medium,
     },
     fundText: {
@@ -206,7 +206,7 @@ const useStyles = () => {
     subTitle: {
       ...atoms.heading_3_medium,
       ...atoms.text_center,
-      color: color.text_gray_normal,
+      color: color.text_gray_medium,
     },
   })
 

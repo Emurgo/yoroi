@@ -6,7 +6,7 @@ type Props = {size: number; color?: string}
 
 export const Switch = (props: Props) => {
   const {color: colors} = useTheme()
-  const {size, color = colors.primary_c500} = props
+  const {size, color = colors.primary_500} = props
   return (
     <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <Path

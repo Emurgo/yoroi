@@ -20,7 +20,7 @@ export const RemoveAmountButton = ({onPress}: RemoveAmountButtonProps) => {
 const useStyles = () => {
   const {color} = useTheme()
   const colors = {
-    gray: color.gray_cmax,
+    gray: color.gray_max,
   }
   return {colors}
 }
