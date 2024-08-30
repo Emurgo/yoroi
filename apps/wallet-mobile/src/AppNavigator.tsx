@@ -184,6 +184,7 @@ export const AppNavigator = () => {
                 screenOptions={{
                   presentation: 'transparentModal',
                   ...(Platform.OS === 'android' && {...TransitionPresets.DefaultTransition}), // overriding general navigation settings
+                  cardStyle: {backgroundColor: 'transparent'}, // this is needed for the modal to be transparent
                 }}
               >
                 <Stack.Screen name="modal" component={ModalScreen} />
