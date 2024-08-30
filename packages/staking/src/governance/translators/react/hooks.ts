@@ -42,7 +42,7 @@ export const useLatestGovernanceAction = (
   const {manager} = useGovernance()
 
   return useQuery({
-    queryKey: [walletId, 'governanceLatestGovernanceAction'],
+    queryKey: [walletId, manager.network, 'governanceLatestGovernanceAction'],
     queryFn: () => manager.getLatestGovernanceAction(),
     ...options,
   })
@@ -57,7 +57,9 @@ export const useUpdateLatestGovernanceAction = (
     ...options,
     mutationFn: async (action: GovernanceAction) =>
       await manager.setLatestGovernanceAction(action),
-    invalidateQueries: [[walletId, 'governanceLatestGovernanceAction']],
+    invalidateQueries: [
+      [walletId, manager.network, 'governanceLatestGovernanceAction'],
+    ],
   })
   return {
     ...mutation,
