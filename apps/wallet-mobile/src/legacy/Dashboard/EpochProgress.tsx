@@ -3,8 +3,8 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 
-import {ProgressCircle, Text, TitledCard} from '../../components'
-import globalMessages from '../../kernel/i18n/global-messages'
+import {ProgressCircle, Spacer, Text, TitledCard} from '../../components'
+import {Space} from '../../components/Space/Space'
 
 type Props = {
   percentage: number
@@ -22,16 +22,20 @@ export const EpochProgress = ({percentage, currentEpoch, endTime}: Props) => {
   const styles = useStyles()
 
   return (
-    <View style={styles.wrapper}>
-      <TitledCard title={intl.formatMessage(messages.epochProgressTitle)} testID="epochProgressTitleCard">
+    <TitledCard title={intl.formatMessage(messages.epochProgressTitle)} testID="epochProgressTitleCard">
+      <View style={styles.wrapper}>
         <ProgressCircle percentage={percentage} />
+
+        <Spacer width={40} />
 
         <View style={styles.stats}>
           <View style={styles.row}>
-            <Text style={styles.label}>{intl.formatMessage(globalMessages.epochLabel)}:</Text>
+            <Text style={styles.label}>{intl.formatMessage(messages.epochProgressTitle)}:</Text>
 
             <Text style={styles.value}>{currentEpoch}</Text>
           </View>
+
+          <Space height="sm" />
 
           <View style={styles.row}>
             <Text style={styles.label}>{intl.formatMessage(messages.endsInLabel)}:</Text>
@@ -39,20 +43,32 @@ export const EpochProgress = ({percentage, currentEpoch, endTime}: Props) => {
             <View style={styles.timeWrapper}>
               {endTime.d != null && <Text style={styles.timeBlock}>{endTime.d}</Text>}
 
+              <Space width="xs" />
+
               <Text style={styles.timeBlock}>{endTime.h}</Text>
 
+              <Space width="xs" />
+
               <Text>:</Text>
+
+              <Space width="xs" />
 
               <Text style={styles.timeBlock}>{endTime.m}</Text>
 
+              <Space width="xs" />
+
               <Text>:</Text>
 
+              <Space width="xs" />
+
               <Text style={styles.timeBlock}>{endTime.s}</Text>
+
+              <Space width="xs" />
             </View>
           </View>
         </View>
-      </TitledCard>
-    </View>
+      </View>
+    </TitledCard>
   )
 }
 
@@ -70,12 +86,14 @@ const messages = defineMessages({
 const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
-    wrapper: {},
+    wrapper: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
     stats: {
       flex: 1,
       flexDirection: 'column',
-      ...atoms.pl_lg,
-      ...atoms.pb_sm,
+
       flexWrap: 'wrap',
     },
     row: {
@@ -85,13 +103,13 @@ const useStyles = () => {
       alignItems: 'center',
     },
     label: {
-      color: color.gray_900,
-      ...atoms.pr_md,
+      color: color.text_gray_low,
+      ...atoms.pr_sm,
       ...atoms.body_2_md_regular,
     },
     value: {
-      ...atoms.body_1_lg_regular,
-      color: color.gray_700,
+      ...atoms.body_2_md_regular,
+      color: color.text_gray_medium,
     },
     timeWrapper: {
       flexDirection: 'row',
@@ -100,12 +118,10 @@ const useStyles = () => {
     },
     timeBlock: {
       ...atoms.body_1_lg_regular,
-      ...atoms.py_xs,
-      backgroundColor: color.bg_color_max,
-      color: color.gray_900,
-      marginHorizontal: 4,
-      borderRadius: 2,
-      textAlign: 'center',
+      ...atoms.px_2xs,
+      ...atoms.text_center,
+      backgroundColor: color.gray_50,
+      color: color.text_gray_medium,
     },
   })
 
