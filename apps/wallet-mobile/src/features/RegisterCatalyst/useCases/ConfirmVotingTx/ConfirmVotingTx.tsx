@@ -23,7 +23,7 @@ export const ConfirmVotingTx = () => {
   const styles = useStyles()
   const strings = useStrings()
   const {openModal, closeModal} = useModal()
-  const {votingKeyEncryptedChanged, pin} = useCatalyst()
+  const {catalystKeyHex, pin} = useCatalyst()
   const navigateTo = useNavigateTo()
 
   const onNext = () => {
@@ -31,12 +31,10 @@ export const ConfirmVotingTx = () => {
   }
 
   if (pin === null) throw new Error('pin cannot be null')
+  if (catalystKeyHex === null) throw new Error('catalystKeyHex cannot be null')
 
   const {wallet, meta} = useSelectedWallet()
-  const votingRegTx = useVotingRegTx(
-    {wallet, pin, supportsCIP36, addressMode: meta.addressMode},
-    {onSuccess: ({votingKeyEncrypted}) => votingKeyEncryptedChanged(votingKeyEncrypted)},
-  )
+  const votingRegTx = useVotingRegTx({wallet, supportsCIP36, catalystKeyHex, addressMode: meta.addressMode})
 
   const [useUSB, setUseUSB] = useState(false)
 

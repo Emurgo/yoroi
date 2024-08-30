@@ -53,6 +53,11 @@ export function CatalystProvider({
         type: CatalystActionType.VotingKeyEncryptedChanged,
         votingKeyEncrypted,
       }),
+    catalystKeyHexChanged: (catalystKeyHex: CatalystState['catalystKeyHex']) =>
+      dispatch({
+        type: CatalystActionType.CatalystKeyHexChanged,
+        catalystKeyHex,
+      }),
     reset: () =>
       dispatch({
         type: CatalystActionType.Reset,

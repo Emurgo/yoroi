@@ -40,8 +40,6 @@ import {Cardano, CardanoMobile} from '../wallets'
 import {AccountManager, accountManagerMaker, Addresses} from './account-manager/account-manager'
 import * as legacyApi from './api/api'
 import {calcLockedDeposit} from './assetUtils'
-import {encryptWithPassword} from './catalyst/catalystCipher'
-import {generatePrivateKeyForCatalyst} from './catalyst/catalystUtils'
 import {createSwapCancellationLedgerPayload} from './common/signatureUtils'
 import {cardanoConfig} from './constants/cardano-config'
 import * as MAINNET from './constants/mainnet/constants'
@@ -439,22 +437,17 @@ export const makeCardanoWallet = (
     }
 
     async createVotingRegTx({
-      pin,
       supportsCIP36,
       addressMode,
+      catalystKeyHex,
     }: {
       pin: string
       supportsCIP36: boolean
       addressMode: Wallet.AddressMode
+      catalystKeyHex: string
     }) {
       if (implementationConfig.features.staking) {
-        const bytes = await generatePrivateKeyForCatalyst()
-          .then((key) => key.toRawKey())
-          .then((key) => key.asBytes())
-
         const primaryTokenId = this.primaryTokenInfo.id
-
-        const catalystKeyHex = Buffer.from(bytes).toString('hex')
 
         try {
           const time = await this.checkServerStatus()
@@ -521,11 +514,7 @@ export const makeCardanoWallet = (
             nonce,
           }
 
-          const password = Buffer.from(pin.split('').map(Number))
-          const catalystKeyEncrypted = await encryptWithPassword(password, bytes)
-
           return {
-            votingKeyEncrypted: catalystKeyEncrypted,
             votingRegTx: await yoroiUnsignedTx({
               unsignedTx,
               networkConfig: NETWORK_CONFIG,

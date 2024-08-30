@@ -120,10 +120,10 @@ export interface YoroiWallet {
 
   // Voting
   createVotingRegTx(params: {
-    pin: string
     supportsCIP36: boolean
     addressMode: Wallet.AddressMode
-  }): Promise<{votingRegTx: YoroiUnsignedTx; votingKeyEncrypted: string}>
+    catalystKeyHex: string
+  }): Promise<{votingRegTx: YoroiUnsignedTx}>
   fetchFundInfo(): Promise<FundInfoResponse>
 
   // Staking

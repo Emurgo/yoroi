@@ -1,22 +1,35 @@
 import {useCatalyst} from '@yoroi/staking'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {ActivityIndicator, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
+import {useMutation, UseMutationOptions} from 'react-query'
 
 import {Button, Spacer} from '../../../../components'
 import {BACKSPACE, NumericKeyboard} from '../../../../components/NumericKeyboard'
 import {Space} from '../../../../components/Space/Space'
+import {generatePrivateKeyForCatalyst} from '../../../../yoroi-wallets/cardano/catalyst'
+import {encryptWithPassword} from '../../../../yoroi-wallets/cardano/catalyst/catalystCipher'
 import {useNavigateTo} from '../../CatalystNavigator'
 import {Actions, Description, PinBox, Row, Stepper} from '../../common/components'
 import {useStrings} from '../../common/strings'
 
 export const ConfirmPin = () => {
   const strings = useStrings()
+  const {isDark} = useTheme()
   const styles = useStyles()
-  const {pin} = useCatalyst()
+  const {pin, votingKeyEncryptedChanged, catalystKeyHexChanged} = useCatalyst()
   const navigateTo = useNavigateTo()
   const [currentActivePin, setCurrentActivePin] = React.useState(1)
+
+  const {generateVotingKeys, isLoading} = useGenerateVotingKeys({
+    onSuccess: ({catalystKeyHex, votingKeyEncrypted}) => {
+      votingKeyEncryptedChanged(votingKeyEncrypted)
+      catalystKeyHexChanged(catalystKeyHex)
+
+      navigateTo.confirmTx()
+    },
+  })
 
   const [pin1Value, setPin1Value] = React.useState<null | string>(null)
   const [pin2Value, setPin2Value] = React.useState<null | string>(null)
@@ -140,7 +153,7 @@ export const ConfirmPin = () => {
   )
 
   const onNext = () => {
-    navigateTo.confirmTx()
+    generateVotingKeys(pin)
   }
 
   const handleOnPress = React.useCallback(
@@ -208,15 +221,55 @@ export const ConfirmPin = () => {
 
       <Padding>
         <Actions>
-          <Button shelleyTheme onPress={() => onNext()} title={strings.continueButton} disabled={!done} />
+          <Button shelleyTheme onPress={() => onNext()} title={strings.continueButton} disabled={!done || isLoading} />
         </Actions>
       </Padding>
 
       <Space height="lg" />
 
       <NumericKeyboard onKeyDown={onKeyDown} />
+
+      {isLoading && (
+        <View style={styles.loading}>
+          <ActivityIndicator size="large" color={isDark ? 'white' : 'black'} />
+        </View>
+      )}
     </SafeAreaView>
   )
+}
+
+type GenerateKeysInput = string
+
+interface GenerateKeysOutput {
+  catalystKeyHex: string
+  votingKeyEncrypted: string
+}
+
+type GenerateKeysError = Error
+
+const useGenerateVotingKeys = (
+  options?: UseMutationOptions<GenerateKeysOutput, GenerateKeysError, GenerateKeysInput>,
+) => {
+  const mutation = useMutation(async (pin: string) => {
+    const catalystKey = await generatePrivateKeyForCatalyst()
+      .then((key) => key.toRawKey())
+      .then((key) => key.asBytes())
+
+    const catalystKeyHex = Buffer.from(catalystKey).toString('hex')
+
+    const password = Buffer.from(pin.split('').map(Number))
+    const votingKeyEncrypted = await encryptWithPassword(password, catalystKey)
+
+    return {
+      catalystKeyHex,
+      votingKeyEncrypted,
+    }
+  }, options)
+
+  return {
+    ...mutation,
+    generateVotingKeys: mutation.mutate,
+  }
 }
 
 // NOTE: keyboard horizontal padding is 0, yet bottom must respect safe-area-view
@@ -234,6 +287,14 @@ const useStyles = () => {
     },
     padding: {
       ...atoms.px_lg,
+    },
+    loading: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: color.bg_color_max,
+      left: 0,
+      right: 0,
+      ...atoms.align_center,
+      ...atoms.justify_center,
     },
   })
 
