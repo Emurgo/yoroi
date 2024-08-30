@@ -57,7 +57,9 @@ storiesOf('Icon', module).add('Gallery', () => {
 
         <Item icon={<Icon.Info size={40} />} title="Info" />
 
-        <Item icon={<Icon.Menu size={40} />} title="Menu" />
+        <Item icon={<Icon.TabMenu size={40} />} title="Tab Menu" />
+
+        <Item icon={<Icon.TabMenuActive size={40} />} title="Tab Menu Active" />
 
         <Item
           icon={<Icon.Direction transaction={mockTransactionInfo({direction: 'SENT', status: 'SUCCESSFUL'})} />}
@@ -91,7 +93,15 @@ storiesOf('Icon', module).add('Gallery', () => {
 
         <Item icon={<Icon.Settings size={40} />} title="Settings" />
 
+        <Item icon={<Icon.TabDiscoverActive size={40} />} title="Tab Discover Active" />
+
         <Item icon={<Icon.TabWallet size={40} />} title="Tab Wallet" />
+
+        <Item icon={<Icon.TabWalletActive size={40} />} title="Tab Wallet Active " />
+
+        <Item icon={<Icon.TabPortfolio size={40} />} title="Tab Portfolio" />
+
+        <Item icon={<Icon.TabPortfolioActive size={40} />} title="Tab Portfolio Active " />
 
         <Item icon={<Icon.TabStaking size={40} />} title="Tab Stake" />
 
@@ -251,7 +261,7 @@ storiesOf('Icon', module).add('Gallery', () => {
 
         <Item icon={<Icon.Collateral />} title="Collateral" />
 
-        <Item icon={<Icon.Discover />} title="Discover" />
+        <Item icon={<Icon.TabDiscover />} title="Tab Discover" />
 
         <Item icon={<Icon.CheckFilled2 />} title="CheckFilled2" />
 

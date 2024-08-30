@@ -37,7 +37,6 @@ import {Device} from './Device'
 import {DigitalAsset} from './DigitalAsset'
 import {Direction} from './Direction'
 import {Disconnect} from './Disconnect'
-import {Discover} from './Discover'
 import {Document} from './Document'
 import {Drag} from './Drag'
 import {Edit} from './Edit'
@@ -69,7 +68,6 @@ import {LockFilled} from './LockFilled'
 import {Logout} from './Logout'
 import {Magnify} from './Magnify'
 import {Megaphone} from './Megaphone'
-import {Menu} from './Menu'
 import {Message} from './Message'
 import {MinSwap} from './MinSwap'
 import {MuesliSwap} from './MuesliSwap'
@@ -109,10 +107,16 @@ import {SundaeSwap} from './SundaeSwap'
 import {Support} from './Support'
 import {Swap} from './Swap'
 import {Switch} from './Switch'
+import {TabDiscover} from './TabDiscover'
+import {TabDiscoverActive} from './TabDiscoverActive'
 import {Table} from './Table'
+import {TabMenu} from './TabMenu'
+import {TabMenuActive} from './TabMenuActive'
 import {TabPortfolio} from './TabPortfolio'
+import {TabPortfolioActive} from './TabPortfolioActive'
 import {TabStaking} from './TabStaking'
 import {TabWallet} from './TabWallet'
+import {TabWalletActive} from './TabWalletActive'
 import {Telegram} from './Telegram'
 import {TermsOfUse} from './TermsOfUse'
 import {Theme} from './Theme'
@@ -189,7 +193,8 @@ export const Icon = {
   Logout,
   Magnify,
   Megaphone,
-  Menu,
+  TabMenu,
+  TabMenuActive,
   Message,
   MultiParty,
   MultipleWallets,
@@ -217,8 +222,11 @@ export const Icon = {
   StarFilled,
   StarOutlined,
   Support,
+  TabDiscoverActive,
   TabStaking,
   TabWallet,
+  TabWalletActive,
+  TabPortfolioActive,
   Table,
   Theme,
   Telegram,
@@ -257,7 +265,7 @@ export const Icon = {
   Close,
   Warning,
   Collateral,
-  Discover,
+  TabDiscover,
   CheckFilled2,
   DApp,
   Disconnect,

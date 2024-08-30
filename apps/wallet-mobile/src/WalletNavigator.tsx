@@ -129,7 +129,12 @@ const WalletTabNavigator = () => {
           <Tab.Screen
             name="history"
             options={{
-              tabBarIcon: ({focused}) => <Icon.TabWallet size={24} color={focused ? colors.active : colors.inactive} />,
+              tabBarIcon: ({focused}) =>
+                focused ? (
+                  <Icon.TabWalletActive size={24} color={colors.active} />
+                ) : (
+                  <Icon.TabWallet size={24} color={colors.inactive} />
+                ),
               tabBarLabel: strings.walletTabBarLabel,
               tabBarTestID: 'walletTabBarButton',
             }}
@@ -144,9 +149,12 @@ const WalletTabNavigator = () => {
           <Tab.Screen
             name="portfolio"
             options={{
-              tabBarIcon: ({focused}) => (
-                <Icon.TabPortfolio size={24} color={focused ? colors.active : colors.inactive} />
-              ),
+              tabBarIcon: ({focused}) =>
+                focused ? (
+                  <Icon.TabPortfolioActive size={24} color={colors.active} />
+                ) : (
+                  <Icon.TabPortfolio size={24} color={colors.inactive} />
+                ),
               tabBarLabel: strings.portfolioButton,
               tabBarTestID: 'portfolioTabBarButton',
             }}
@@ -161,7 +169,12 @@ const WalletTabNavigator = () => {
           <Tab.Screen
             name="discover"
             options={{
-              tabBarIcon: ({focused}) => <Icon.Discover size={28} color={focused ? colors.active : colors.inactive} />,
+              tabBarIcon: ({focused}) =>
+                focused ? (
+                  <Icon.TabDiscoverActive size={28} color={colors.active} />
+                ) : (
+                  <Icon.TabDiscover size={28} color={colors.inactive} />
+                ),
               tabBarLabel: strings.discoverTabBarLabel,
               tabBarTestID: 'discoverTabBarButton',
             }}
@@ -177,7 +190,12 @@ const WalletTabNavigator = () => {
             name="menu"
             component={MenuNavigator}
             options={{
-              tabBarIcon: ({focused}) => <Icon.Menu size={28} color={focused ? colors.active : colors.inactive} />,
+              tabBarIcon: ({focused}) =>
+                focused ? (
+                  <Icon.TabMenuActive size={28} color={colors.active} />
+                ) : (
+                  <Icon.TabMenu size={28} color={colors.inactive} />
+                ),
               tabBarLabel: strings.menuTabBarLabel,
               tabBarTestID: 'menuTabBarButton',
               headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
