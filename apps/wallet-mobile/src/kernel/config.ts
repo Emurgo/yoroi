@@ -8,7 +8,7 @@ export const governaceAfterBlock = freeze({
 
   // TODO: Add block number once known
   [Chain.Network.Mainnet]: Infinity,
-  [Chain.Network.Preprod]: Infinity,
+  [Chain.Network.Preprod]: 2639667,
   [Chain.Network.Preview]: Infinity,
 })
 
