@@ -1,7 +1,7 @@
 import {useCatalyst} from '@yoroi/staking'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {ScrollView, StyleSheet} from 'react-native'
+import {InteractionManager, ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Checkbox} from '../../../../components'
@@ -20,7 +20,7 @@ export const QrCode = () => {
   const strings = useStrings()
   const styles = useStyles()
   const [checked, setChecked] = React.useState(false)
-  const {votingKeyEncrypted} = useCatalyst()
+  const {votingKeyEncrypted, reset} = useCatalyst()
   const navigateTo = useNavigateTo()
 
   if (votingKeyEncrypted === null) throw new Error('votingKeyEncrypted cannot be null')
@@ -30,6 +30,10 @@ export const QrCode = () => {
 
   const onNext = () => {
     navigateTo.txHistory()
+
+    InteractionManager.runAfterInteractions(() => {
+      reset()
+    })
   }
 
   return (
