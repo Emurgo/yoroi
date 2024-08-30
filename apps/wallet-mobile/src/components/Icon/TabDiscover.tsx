@@ -6,7 +6,7 @@ type Props = {
   color?: string
 }
 
-export const Discover = ({size = 36, color = 'black'}: Props) => (
+export const TabDiscover = ({size = 36, color = 'black'}: Props) => (
   <Svg width={size} height={size} viewBox="0 0 25 24" fill="none">
     <Path
       fillRule="evenodd"
