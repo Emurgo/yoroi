@@ -10,7 +10,6 @@ import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
 import _ from 'lodash'
-import DeviceInfo from 'react-native-device-info'
 import {defaultMemoize} from 'reselect'
 import {Observable} from 'rxjs'
 
@@ -86,7 +85,6 @@ export const makeCardanoWallet = (
   const {BACKEND, NETWORK_CONFIG, PRIMARY_TOKEN, PRIMARY_TOKEN_INFO, TOKEN_INFO_SERVICE} = constants
 
   return class CardanoWallet implements YoroiWallet {
-    readonly version: string
     readonly id: string
 
     readonly encryptedStorage: WalletEncryptedStorage
@@ -123,7 +121,7 @@ export const makeCardanoWallet = (
     readonly primaryTokenInfo: Balance.TokenInfo = PRIMARY_TOKEN_INFO
 
     // =================== create =================== //
-    static build = async ({
+    static readonly build = async ({
       id,
       accountPubKeyHex,
       accountVisual,
@@ -245,7 +243,6 @@ export const makeCardanoWallet = (
 
       this.encryptedStorage = makeWalletEncryptedStorage(id)
 
-      this.version = DeviceInfo.getVersion()
       this.setupSubscriptions()
     }
 
