@@ -8,7 +8,6 @@
 - [Installation](#installation)
 - [Packages](#packages)
 - [Contributing](#contributing)
-- [Development](#development)
 - [License](#license)
 
 ## Features
