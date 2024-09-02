@@ -7,7 +7,7 @@ export const governaceAfterBlock = freeze({
   [Chain.Network.Sancho]: 0,
 
   // TODO: Add block number once known
-  [Chain.Network.Mainnet]: Infinity,
+  [Chain.Network.Mainnet]: 10782931,
   [Chain.Network.Preprod]: 2639667,
   [Chain.Network.Preview]: Infinity,
 })
