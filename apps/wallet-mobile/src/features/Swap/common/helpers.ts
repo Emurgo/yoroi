@@ -1,4 +1,5 @@
 import {createTypeGuardFromSchema, parseSafe} from '@yoroi/common'
+import {isPrimaryToken, primaryTokenId as ptId} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Balance, HW} from '@yoroi/types'
 import {SwapApi} from '@yoroi/types/src/swap/api'
@@ -6,7 +7,6 @@ import {useMutation, UseMutationOptions} from 'react-query'
 import {z} from 'zod'
 
 import {convertBech32ToHex} from '../../../yoroi-wallets/cardano/common/signatureUtils'
-import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {generateCIP30UtxoCbor} from '../../../yoroi-wallets/cardano/utils'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {PRICE_IMPACT_HIGH_RISK, PRICE_IMPACT_MODERATE_RISK} from './constants'
@@ -80,7 +80,7 @@ export const parseOrderTxMetadata = (metadataJson: string, primaryTokenId: strin
 }
 
 const normalisePrimaryTokenId = (tokenId: string, primaryTokenId: string) => {
-  return tokenId === '.' || tokenId === '' ? primaryTokenId : tokenId
+  return tokenId === ptId || tokenId === '' ? primaryTokenId : tokenId
 }
 
 function containsOnlyValidChars(str?: string): boolean {
@@ -88,7 +88,7 @@ function containsOnlyValidChars(str?: string): boolean {
   return typeof str === 'string' && validCharsRegex.test(str)
 }
 
-export const sortTokensByName = (a: Balance.TokenInfo, b: Balance.TokenInfo, wallet: YoroiWallet) => {
+export const sortTokensByName = (a: Balance.TokenInfo, b: Balance.TokenInfo) => {
   const isValidNameA = containsOnlyValidChars(a.name)
   const isValidNameB = containsOnlyValidChars(b.name)
   const isValidTickerA = containsOnlyValidChars(a.ticker)
@@ -100,10 +100,10 @@ export const sortTokensByName = (a: Balance.TokenInfo, b: Balance.TokenInfo, wal
   const nameB =
     b.ticker?.toLocaleLowerCase() && isValidTickerB ? b.ticker?.toLocaleLowerCase() : b.name.toLocaleLowerCase()
 
-  const isBPrimary = b.ticker === wallet.primaryTokenInfo.ticker
+  const isBPrimary = isPrimaryToken(b.id)
   if (isBPrimary) return 1
 
-  const isAPrimary = a.ticker === wallet.primaryTokenInfo.ticker
+  const isAPrimary = isPrimaryToken(a.id)
   if (isAPrimary) return -1
 
   if (!isValidNameA && isValidNameB) {
@@ -129,7 +129,9 @@ export const usePriceImpactRiskTheme = (risk: SwapPriceImpactRisk) => {
       text: color.sys_magenta_500,
       background: color.sys_magenta_100,
     }
-  } else if (risk === 'moderate') {
+  }
+
+  if (risk === 'moderate') {
     return {
       text: color.sys_orange_500,
       background: color.sys_orange_100,

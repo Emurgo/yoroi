@@ -18,7 +18,7 @@ export const ShowBuyBanner = () => {
     selected: {network},
   } = useWalletManager()
   const balances = useBalances(wallet)
-  const primaryAmount = Amounts.getAmount(balances, wallet.primaryTokenInfo.id)
+  const primaryAmount = Amounts.getAmount(balances, wallet.portfolioPrimaryTokenInfo.id)
   const hasZeroPt = Quantities.isZero(primaryAmount.quantity)
 
   const showSmallBanner = useShowBuyBannerSmall()

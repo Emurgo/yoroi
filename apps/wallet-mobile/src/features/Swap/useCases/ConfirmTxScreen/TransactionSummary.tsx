@@ -60,8 +60,8 @@ export const TransactionSummary = () => {
   )} ${tokenToSellName}`
   const formattedFeeText = `${Quantities.format(
     asQuantity((cost.batcherFee.quantity + cost.frontendFeeInfo.fee.quantity).toString()),
-    wallet.primaryTokenInfo.decimals ?? 0,
-  )} ${wallet.primaryTokenInfo.ticker}`
+    wallet.portfolioPrimaryTokenInfo.decimals,
+  )} ${wallet.portfolioPrimaryTokenInfo.ticker}`
   const poolProviderFormatted = capitalize(pool.provider)
   const poolUrl = getPoolUrlByProvider(pool.provider)
 
@@ -74,7 +74,7 @@ export const TransactionSummary = () => {
   const minAdaInfoValue = `${Quantities.format(
     asQuantity(cost.deposit.quantity.toString()),
     wallet.portfolioPrimaryTokenInfo.decimals,
-  )} ${wallet.primaryTokenInfo.ticker}`
+  )} ${wallet.portfolioPrimaryTokenInfo.ticker}`
   const minReceivedInfoValue = `${Quantities.format(
     asQuantity(calculation.buyAmountWithSlippage.quantity.toString()),
     buyTokenInfo.decimals,

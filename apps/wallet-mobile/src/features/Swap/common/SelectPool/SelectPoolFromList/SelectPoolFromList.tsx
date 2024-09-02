@@ -67,8 +67,7 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
     navigate.startSwap()
   }
 
-  const decimals = wallet.primaryTokenInfo.decimals ?? 0
-  const ticker = wallet.primaryTokenInfo.ticker
+  const {decimals, ticker} = wallet.portfolioPrimaryTokenInfo
 
   const protocolCapitalize = (protocol: string): string => protocol[0].toUpperCase() + protocol.substring(1)
 

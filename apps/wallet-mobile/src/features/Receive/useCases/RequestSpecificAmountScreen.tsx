@@ -41,7 +41,7 @@ export const RequestSpecificAmountScreen = () => {
   const handleOnChangeAmount = (amount: string) => {
     const edited = editedFormatter(amount)
     const numberOfDecimals = (edited.split('.')[1] ?? []).length
-    if (Number(edited) <= Number.MAX_SAFE_INTEGER && numberOfDecimals <= (wallet.primaryTokenInfo.decimals ?? 0)) {
+    if (Number(edited) <= Number.MAX_SAFE_INTEGER && numberOfDecimals <= wallet.portfolioPrimaryTokenInfo.decimals) {
       setAmount(edited)
     }
   }

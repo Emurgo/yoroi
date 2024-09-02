@@ -118,7 +118,7 @@ export const makeCardanoWallet = (
 
     // legacy
     readonly primaryToken: DefaultAsset = PRIMARY_TOKEN
-    readonly primaryTokenInfo: Balance.TokenInfo = PRIMARY_TOKEN_INFO
+    // readonly primaryTokenInfo: Balance.TokenInfo = PRIMARY_TOKEN_INFO
 
     // =================== create =================== //
     static readonly build = async ({
@@ -388,7 +388,7 @@ export const makeCardanoWallet = (
         const time = await this.checkServerStatus()
           .then(({serverTime}) => serverTime || Date.now())
           .catch(() => Date.now())
-        const primaryTokenId = this.primaryTokenInfo.id
+        const primaryTokenId = this.portfolioPrimaryTokenInfo.id
 
         const absSlotNumber = new BigNumber(getTime(time).absoluteSlot)
         const changeAddr = this.getAddressedChangeAddress(addressMode)
@@ -400,7 +400,11 @@ export const makeCardanoWallet = (
           : RegistrationStatus.RegisterAndDelegate
         const delegatedAmountMT = {
           values: [
-            {identifier: this.primaryTokenInfo.id, amount: delegatedAmount, networkId: this.networkManager.chainId},
+            {
+              identifier: this.portfolioPrimaryTokenInfo.id,
+              amount: delegatedAmount,
+              networkId: this.networkManager.chainId,
+            },
           ],
           defaults: this.primaryToken,
         }
@@ -444,7 +448,7 @@ export const makeCardanoWallet = (
       catalystKeyHex: string
     }) {
       if (implementationConfig.features.staking) {
-        const primaryTokenId = this.primaryTokenInfo.id
+        const primaryTokenId = this.portfolioPrimaryTokenInfo.id
 
         try {
           const time = await this.checkServerStatus()
@@ -540,7 +544,7 @@ export const makeCardanoWallet = (
         const time = await this.checkServerStatus()
           .then(({serverTime}) => serverTime || Date.now())
           .catch(() => Date.now())
-        const primaryTokenId = this.primaryTokenInfo.id
+        const primaryTokenId = this.portfolioPrimaryTokenInfo.id
 
         const absSlotNumber = new BigNumber(getTime(time).absoluteSlot)
         const changeAddr = this.getAddressedChangeAddress(addressMode)
@@ -600,7 +604,7 @@ export const makeCardanoWallet = (
       const time = await this.checkServerStatus()
         .then(({serverTime}) => serverTime || Date.now())
         .catch(() => Date.now())
-      const primaryTokenId = this.primaryTokenInfo.id
+      const primaryTokenId = this.portfolioPrimaryTokenInfo.id
       const absSlotNumber = new BigNumber(getTime(time).absoluteSlot)
       const changeAddr = this.getAddressedChangeAddress(addressMode)
       const addressedUtxos = await this.getAddressedUtxos()
@@ -777,7 +781,7 @@ export const makeCardanoWallet = (
       const time = await this.checkServerStatus()
         .then(({serverTime}) => serverTime || Date.now())
         .catch(() => Date.now())
-      const primaryTokenId = this.primaryTokenInfo.id
+      const primaryTokenId = this.portfolioPrimaryTokenInfo.id
       const absSlotNumber = new BigNumber(getTime(time).absoluteSlot)
       const changeAddr = this.getAddressedChangeAddress(addressMode)
       const addressedUtxos = await this.getAddressedUtxos()
@@ -1039,7 +1043,7 @@ export const makeCardanoWallet = (
 
       return {
         utxo: collateralUtxo,
-        amount: {quantity, tokenId: this.primaryTokenInfo.id},
+        amount: {quantity, tokenId: this.portfolioPrimaryTokenInfo.id},
         collateralId,
         isConfirmed,
       }
@@ -1076,7 +1080,7 @@ export const makeCardanoWallet = (
     }
 
     fetchTokenInfo(tokenId: string) {
-      return tokenId === '' || tokenId === 'ADA' || tokenId === '.' || tokenId === this.primaryTokenInfo.id
+      return tokenId === '' || tokenId === 'ADA' || tokenId === '.' || tokenId === this.portfolioPrimaryTokenInfo.id
         ? Promise.resolve(PRIMARY_TOKEN_INFO)
         : legacyApi.getTokenInfo(tokenId, `${TOKEN_INFO_SERVICE}/metadata`, BACKEND)
     }
