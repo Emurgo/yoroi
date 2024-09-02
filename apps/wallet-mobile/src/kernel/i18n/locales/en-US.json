@@ -187,6 +187,7 @@
   "components.governance.notSupportedVersionTitle": "Error",
   "components.governance.notSupportedVersionDescription": "To be able to vote you need to update your Cardano ADA app to 7.",
   "components.governance.notSupportedVersionButton": "Go to main wallet page",
+  "components.governance.scriptNotSupported": "Script DReps ids will be supported soon",
   "components.initialization.acepttermsofservicescreen.aggreeClause": "I agree with the Terms of Service",
   "components.initialization.acepttermsofservicescreen.continueButton": "Accept",
   "components.initialization.acepttermsofservicescreen.savingConsentModalTitle": "Initializing",

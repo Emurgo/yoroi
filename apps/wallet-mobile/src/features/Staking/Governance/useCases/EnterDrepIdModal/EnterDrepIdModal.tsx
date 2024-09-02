@@ -2,7 +2,7 @@ import {isNonNullable} from '@yoroi/common'
 import {parseDrepId, useIsValidDRepID} from '@yoroi/staking'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {Linking, StyleSheet, View} from 'react-native'
+import {Alert, Linking, StyleSheet, View} from 'react-native'
 
 import {Button, Spacer, Text, TextInput} from '../../../../../components'
 import {CardanoMobile} from '../../../../../yoroi-wallets/wallets'
@@ -22,7 +22,14 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
   const {error, isFetched, isFetching} = useIsValidDRepID(drepId, {retry: false, enabled: drepId.length > 0})
 
   const handleOnPress = () => {
-    parseDrepId(drepId, CardanoMobile).then((parsedId) => onSubmit?.(parsedId))
+    parseDrepId(drepId, CardanoMobile).then(({type, hash}) => {
+      if (type === 'key') {
+        onSubmit?.(hash)
+        return
+      }
+
+      Alert.alert(strings.error, strings.scriptNotSupported)
+    })
   }
 
   const handleOnLinkPress = () => {
