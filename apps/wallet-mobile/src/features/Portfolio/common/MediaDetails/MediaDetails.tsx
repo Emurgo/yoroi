@@ -6,7 +6,16 @@ import {useTheme} from '@yoroi/theme'
 import {Chain, Network, Portfolio} from '@yoroi/types'
 import React, {ReactNode, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Linking, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, useWindowDimensions, View} from 'react-native'
+import {
+  Linking,
+  RefreshControl,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+} from 'react-native'
 
 import {Boundary, CopyButton, FadeIn, Spacer, Text} from '../../../../components'
 import {Tab, TabPanel, TabPanels, Tabs} from '../../../../components/Tabs'
@@ -15,12 +24,14 @@ import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {NftRoutes} from '../../../../kernel/navigation'
 import {useNavigateTo} from '../../../Nfts/common/navigation'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {usePortfolioImageInvalidate} from '../hooks/usePortfolioImage'
 import {MediaPreview} from '../MediaPreview/MediaPreview'
 
 export const MediaDetails = () => {
   const styles = useStyles()
   const strings = useStrings()
   const {track} = useMetrics()
+  const {invalidate, isLoading} = usePortfolioImageInvalidate()
 
   const [activeTab, setActiveTab] = useState<ActiveTab>('overview')
 
@@ -35,10 +46,15 @@ export const MediaDetails = () => {
   // TODO: revisit + product definition (missing is gone state)
   if (!amount) return null
 
+  const onRefresh = () => invalidate([amount.info.id])
+
   return (
     <FadeIn style={styles.container}>
       <SafeAreaView>
-        <ScrollView contentContainerStyle={styles.contentContainer}>
+        <ScrollView
+          contentContainerStyle={styles.contentContainer}
+          refreshControl={<RefreshControl onRefresh={onRefresh} refreshing={isLoading} />}
+        >
           <SelectableMedia info={amount.info} />
 
           <Tabs>
