@@ -5,6 +5,7 @@ import {DullahanApiCachedIdsRequest} from './types'
 import {tokenDiscoveryMocks} from '../token-discovery.mocks'
 import {tokenMocks} from '../token.mocks'
 import {tokenActivityMocks} from '../token-activity.mocks'
+import {tokenImageInvalidateMocks} from '../token-image-invalidate.mocks'
 
 describe('portfolioApiMaker', () => {
   const mockNetwork: Chain.Network = Chain.Network.Mainnet
@@ -28,6 +29,7 @@ describe('portfolioApiMaker', () => {
     expect(api).toHaveProperty('tokenInfos')
     expect(api).toHaveProperty('tokenTraits')
     expect(api).toHaveProperty('tokenActivity')
+    expect(api).toHaveProperty('tokenImageInvalidate')
   })
 
   it('should return a PortfolioApi object with default fetchData (coverage)', () => {
@@ -42,6 +44,7 @@ describe('portfolioApiMaker', () => {
     expect(api).toHaveProperty('tokenInfos')
     expect(api).toHaveProperty('tokenTraits')
     expect(api).toHaveProperty('tokenActivity')
+    expect(api).toHaveProperty('tokenImageInvalidate')
   })
 
   it('should call the fetchData function with the correct arguments', async () => {
@@ -617,5 +620,25 @@ describe('portfolioApiMaker', () => {
         data: tokenDiscoveryMocks.nftCryptoKitty,
       },
     })
+  })
+
+  it('should return nothing when invalidating image', async () => {
+    mockRequest.mockResolvedValue({
+      tag: 'right',
+      value: {
+        status: 200,
+        data: {},
+      },
+    })
+    const api = portfolioApiMaker({
+      network: mockNetwork,
+      request: mockRequest,
+      maxIdsPerRequest: 10,
+      maxConcurrentRequests: 10,
+    })
+
+    await api.tokenImageInvalidate(tokenImageInvalidateMocks.api.request)
+
+    expect(mockRequest).toHaveBeenCalledTimes(1)
   })
 })

@@ -1,3 +1,4 @@
+import {isPrimaryTokenInfo} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {App} from '@yoroi/types'
 import * as React from 'react'
@@ -21,8 +22,6 @@ import {PortfolioTokenBalance} from './PortfolioTokenBalance/PortfolioTokenBalan
 import {PortfolioTokenChart} from './PortfolioTokenChart/PortfolioTokenChart'
 import {PortfolioTokenInfo} from './PortfolioTokenInfo/PortfolioTokenInfo'
 
-const HEADER_HEIGHT = features.portfolioGraph ? 304 : 85
-
 export type ActiveTab = 'performance' | 'overview' | 'transactions'
 
 type Tabs = 'Performance' | 'Overview' | 'Transactions'
@@ -32,7 +31,6 @@ const tabs: Record<ActiveTab, Tabs> = {
   transactions: 'Transactions',
 }
 export const PortfolioTokenDetailsScreen = () => {
-  const {styles} = useStyles()
   const strings = useStrings()
   const {activeTab, setActiveTab} = usePortfolioTokenDetailContext()
   const {track} = useMetrics()
@@ -40,6 +38,9 @@ export const PortfolioTokenDetailsScreen = () => {
   const {id: tokenId} = usePortfolioTokenDetailParams()
   const {wallet} = useSelectedWallet()
   const tokenInfo = wallet.balances.records.get(tokenId)?.info
+  const isPrimaryToken = isPrimaryTokenInfo(tokenInfo)
+  const HEADER_HEIGHT = isPrimaryToken ? 304 : 85 // Graph only in PT
+  const {styles} = useStyles(HEADER_HEIGHT)
 
   if (!tokenInfo) throwLoggedError(new App.Errors.InvalidState('Token info not found, invalid state'))
 
@@ -99,7 +100,7 @@ export const PortfolioTokenDetailsScreen = () => {
 
                 <Spacer height={16} />
 
-                {features.portfolioGraph && (
+                {isPrimaryToken && (
                   <>
                     <PortfolioTokenChart />
 
@@ -123,12 +124,12 @@ export const PortfolioTokenDetailsScreen = () => {
   )
 }
 
-const useStyles = () => {
+const useStyles = (height: number) => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     header: {
       overflow: 'hidden',
-      height: HEADER_HEIGHT,
+      height,
     },
     tabsSticky: {
       position: 'absolute',
