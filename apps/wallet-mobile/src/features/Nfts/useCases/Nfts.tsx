@@ -10,7 +10,6 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Spacer} from '../../../components'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {usePortfolioBalances} from '../../Portfolio/common/hooks/usePortfolioBalances'
-import {usePortfolioImageInvalidate} from '../../Portfolio/common/hooks/usePortfolioImage'
 import {MediaGallery} from '../../Portfolio/common/MediaGallery/MediaGallery'
 import {useSearch, useSearchOnNavBar} from '../../Search/SearchContext'
 import {NetworkTag} from '../../Settings/ChangeNetwork/NetworkTag'
@@ -40,12 +39,6 @@ export const Nfts = () => {
     const byName = infoFilterByName(search)
     return isSearching ? balances.nfts.filter(({info}) => byName(info)) : balances.nfts
   }, [balances.nfts, isSearching, search])
-
-  const {invalidate, isLoading} = usePortfolioImageInvalidate()
-  const onRefresh = React.useMemo(
-    () => () => invalidate(filteredAmounts.map((amount) => amount.info.id)),
-    [filteredAmounts, invalidate],
-  )
 
   useFocusEffect(
     React.useCallback(() => {
@@ -101,8 +94,6 @@ export const Nfts = () => {
         <MediaGallery
           amounts={filteredAmounts}
           onSelect={(amount: Portfolio.Token.Amount) => navigateTo.nftDetails(amount.info.id)}
-          onRefresh={onRefresh}
-          isRefreshing={isLoading}
         />
       </View>
     </Wrapper>
