@@ -144,7 +144,7 @@ const messages = defineMessages({
   },
   drepID: {
     id: 'components.governance.drepID',
-    defaultMessage: '!!!Drep ID',
+    defaultMessage: '!!!Drep ID (fingerprint)',
   },
   thankYouForParticipating: {
     id: 'components.governance.thankYouForParticipating',

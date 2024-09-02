@@ -149,7 +149,7 @@
   "components.governance.confirmTxTitle": "Confirm transaction",
   "components.governance.delegateVotingToDRep": "Delegate voting to\n{drepID}",
   "components.governance.delegatingToADRep": "Delegating to a DRep",
-  "components.governance.drepID": "Drep ID",
+  "components.governance.drepID": "Drep ID (fingerprint)",
   "components.governance.drepKey": "DRep Key",
   "components.governance.enterADrepIDAndPassword": "Enter a Drep ID and password to sign this transaction",
   "components.governance.enterDRepID": "Choose your Drep",
