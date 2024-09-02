@@ -38,7 +38,5 @@ export type PortfolioApi = Readonly<{
     ids: ReadonlyArray<PortfolioTokenId>,
     window: PortfolioTokenActivityWindow,
   ): Promise<Readonly<ApiResponse<PortfolioApiTokenActivityResponse>>>
-  tokenImageInvalidate(
-    ids: ReadonlyArray<PortfolioTokenId>,
-  ): Promise<Array<{code: string; message: string}>>
+  tokenImageInvalidate(ids: ReadonlyArray<PortfolioTokenId>): Promise<undefined>
 }>

@@ -310,15 +310,7 @@ export const portfolioApiMaker = ({
             }),
         )
 
-        const responses = await PromiseAllLimited(tasks, maxConcurrentRequests)
-
-        const errors = responses
-          .filter(isLeft)
-          .map(
-            ({error}) => error.responseData as {code: string; message: string},
-          )
-
-        return errors
+        await PromiseAllLimited(tasks, maxConcurrentRequests)
       },
     },
     true,
