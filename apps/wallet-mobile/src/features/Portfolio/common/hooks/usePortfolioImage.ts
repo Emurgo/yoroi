@@ -10,10 +10,9 @@ export const usePortfolioImageInvalidate = () => {
   } = useSelectedNetwork()
   const mutation = useMutation({
     mutationFn: async (ids: Array<Portfolio.Token.Id>) => {
-      const errors = await tokenManager.api.tokenImageInvalidate(ids)
+      await tokenManager.api.tokenImageInvalidate(ids)
       await Image.clearDiskCache()
       await Image.clearMemoryCache()
-      console.log(errors)
     },
   })
 
