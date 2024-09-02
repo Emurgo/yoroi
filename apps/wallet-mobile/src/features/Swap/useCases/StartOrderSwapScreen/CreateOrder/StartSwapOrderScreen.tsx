@@ -188,7 +188,7 @@ export const StartSwapOrderScreen = () => {
       swap_fees: Number(
         Quantities.denominated(
           asQuantity(orderData.selectedPoolCalculation.pool.batcherFee.quantity.toString()),
-          Number(wallet.primaryTokenInfo.decimals),
+          Number(wallet.portfolioPrimaryTokenInfo.decimals),
         ),
       ),
     })

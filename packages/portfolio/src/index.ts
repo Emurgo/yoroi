@@ -44,3 +44,4 @@ export * from './balance-manager'
 export * from './token-manager'
 
 export * from './types'
+export * from './constants'

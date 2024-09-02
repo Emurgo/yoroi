@@ -163,7 +163,7 @@ export const OpenOrders = () => {
 
   const hasCollateral = () => {
     const info = wallet.getCollateralInfo()
-    const primaryTokenDecimals = wallet.primaryTokenInfo.decimals ?? 0
+    const primaryTokenDecimals = wallet.portfolioPrimaryTokenInfo.decimals
     return (
       !!info.utxo &&
       Quantities.integer(info.amount.quantity, primaryTokenDecimals) >=

@@ -63,7 +63,6 @@ export interface YoroiWallet {
   id: string
   publicKeyHex: string
   primaryToken: Readonly<DefaultAsset>
-  primaryTokenInfo: Readonly<Balance.TokenInfo>
   readonly portfolioPrimaryTokenInfo: Readonly<Portfolio.Token.Info>
 
   // ---------------------------------------------------------------------------------------
@@ -193,7 +192,6 @@ const yoroiWalletKeys: Array<keyof YoroiWallet> = [
   'id',
   'publicKeyHex',
   'primaryToken',
-  'primaryTokenInfo',
 
   // Portfolio
   'balance$',

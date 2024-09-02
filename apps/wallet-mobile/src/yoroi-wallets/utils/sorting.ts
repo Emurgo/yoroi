@@ -1,14 +1,7 @@
+import {isPrimaryToken} from '@yoroi/portfolio'
 import {Balance} from '@yoroi/types'
 
-import {YoroiWallet} from '../cardano/types'
-
-export const sortTokenInfos = ({
-  wallet,
-  tokenInfos,
-}: {
-  wallet: YoroiWallet
-  tokenInfos: Balance.TokenInfo[]
-}): Balance.TokenInfo[] =>
+export const sortTokenInfos = ({tokenInfos}: {tokenInfos: Balance.TokenInfo[]}): Balance.TokenInfo[] =>
   tokenInfos
     .sort(
       alpha((tokenInfo) => {
@@ -30,7 +23,7 @@ export const sortTokenInfos = ({
         }
       }),
     )
-    .sort(toStart((tokenInfo) => tokenInfo.id === wallet.primaryTokenInfo.id))
+    .sort(toStart((tokenInfo) => isPrimaryToken(tokenInfo.id)))
 
 // prettier-ignore
 export const alpha = <T>(transform: Transform<T>)=>(a: T, b: T) => transform(a).localeCompare(transform(b))
