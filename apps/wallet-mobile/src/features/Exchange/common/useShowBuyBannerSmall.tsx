@@ -10,7 +10,7 @@ export const useShowBuyBannerSmall = (options?: UseQueryOptions<boolean, Error, 
   const {wallet} = useSelectedWallet()
 
   const balances = useBalances(wallet)
-  const primaryAmount = Amounts.getAmount(balances, wallet.primaryTokenInfo.id)
+  const primaryAmount = Amounts.getAmount(balances, wallet.portfolioPrimaryTokenInfo.id)
   const isInThresholdToBuy = Quantities.isGreaterThan(minAdaThreshold, primaryAmount.quantity)
 
   const storage = useAsyncStorage()

@@ -1,3 +1,4 @@
+import {isPrimaryToken} from '@yoroi/portfolio'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {FlatList, Text, TouchableOpacity, View} from 'react-native'
@@ -58,8 +59,8 @@ const AssetRow = ({styles, entry, backColor, onSelect}: AssetRowProps) => {
   const {wallet} = useSelectedWallet()
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
   const tokenInfo = useTokenInfo({wallet, tokenId: entry.identifier})
-  const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
-  const primaryTicker = wallet.primaryTokenInfo.ticker
+  const isPrimary = isPrimaryToken(tokenInfo.id)
+  const primaryTicker = wallet.portfolioPrimaryTokenInfo.ticker
   const strings = useStrings()
 
   const name = isEmptyString(tokenInfo.name) ? strings.unknownAssetName : tokenInfo.name

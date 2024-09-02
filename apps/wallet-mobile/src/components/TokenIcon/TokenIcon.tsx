@@ -12,7 +12,7 @@ import {ModeratedNftIcon} from './ModeratedNftIcon'
 export const TokenIcon = ({wallet, tokenId, variant}: {wallet: YoroiWallet; tokenId: string; variant?: 'swap'}) => {
   const {styles} = useStyles()
   const tokenInfo = useTokenInfo({wallet, tokenId})
-  const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
+  const isPrimary = tokenInfo.id === wallet.portfolioPrimaryTokenInfo.id
 
   if (isPrimary) return <PrimaryIcon variant={variant} />
   if (tokenInfo.kind === 'ft') {

@@ -58,7 +58,7 @@ export const SwapFormProvider = ({
   const hasBuyTokenSupply = poolSupply >= buyQuantity
   const hasSellBalance = sellBalance >= sellQuantity
 
-  const isSellPt = orderData.amounts.sell?.info.id === wallet.primaryTokenInfo.id
+  const isSellPt = orderData.amounts.sell?.info.id === wallet.portfolioPrimaryTokenInfo.id
   const ptTotalRequired = orderData.selectedPoolCalculation?.cost.ptTotalRequired.quantity ?? 0n
   const hasPtBalance = primaryTokenBalance >= (!isSellPt ? 0n : sellQuantity + ptTotalRequired)
 

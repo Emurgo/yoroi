@@ -10,6 +10,7 @@ import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
 import _ from 'lodash'
 
+import {logger} from '../../../kernel/logger/logger'
 import {RawUtxo, YoroiUnsignedTx} from '../../types'
 import {asQuantity, Utxos} from '../../utils'
 import {Cardano, CardanoMobile} from '../../wallets'
@@ -43,7 +44,7 @@ class CIP30Extension {
   async getBalance(tokenId = '*'): Promise<CSL.Value> {
     const {csl, release} = getCSL()
     try {
-      const value = await _getBalance(csl, tokenId, this.wallet.utxos, this.wallet.primaryTokenInfo.id)
+      const value = await _getBalance(csl, tokenId, this.wallet.utxos, this.wallet.portfolioPrimaryTokenInfo.id)
       return copyFromCSL(CardanoMobile.Value, value)
     } finally {
       release()
@@ -178,7 +179,7 @@ class CIP30Extension {
     assertCollateralValue(valueNum)
 
     const bech32Address = this.wallet.externalAddresses[0]
-    const amounts = {[this.wallet.primaryTokenInfo.id]: asQuantity(valueStr)}
+    const amounts = {[this.wallet.portfolioPrimaryTokenInfo.id]: asQuantity(valueStr)}
     const yoroiUnsignedTx = await this.wallet.createUnsignedTx({
       entries: [{address: bech32Address, amounts}],
       addressMode: this.meta.addressMode,
@@ -317,12 +318,12 @@ export const _getUtxos = async (
   const isValueNumber = !isNaN(Number(valueStr))
 
   if (isValueNumber) {
-    amounts[wallet.primaryTokenInfo.id] = asQuantity(valueStr)
+    amounts[wallet.portfolioPrimaryTokenInfo.id] = asQuantity(valueStr)
   } else {
     try {
-      Object.assign(amounts, getAmountsFromValue(csl, valueStr, wallet.primaryTokenInfo.id))
-    } catch (e) {
-      //
+      Object.assign(amounts, getAmountsFromValue(csl, valueStr, wallet.portfolioPrimaryTokenInfo.id))
+    } catch (error) {
+      logger.error('cip30 Failed to parse value _getUtxos', {error})
     }
   }
 
@@ -419,7 +420,7 @@ const _drawCollateralInMultipleUtxos = async (
   const utxos = await _getRequiredUtxos(
     csl,
     wallet,
-    {[wallet.primaryTokenInfo.id]: quantity},
+    {[wallet.portfolioPrimaryTokenInfo.id]: quantity},
     utxosWithLimitAccounted,
     meta,
   )

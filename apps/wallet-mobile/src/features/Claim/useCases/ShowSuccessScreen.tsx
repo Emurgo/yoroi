@@ -135,7 +135,7 @@ export const AmountList = ({amounts}: {amounts: Balance.Amounts}) => {
 
   return (
     <FlatList
-      data={sortTokenInfos({wallet, tokenInfos})}
+      data={sortTokenInfos({tokenInfos})}
       renderItem={({item: tokenInfo}) => (
         <AmountItem wallet={wallet} amount={Amounts.getAmount(amounts, tokenInfo.id)} />
       )}

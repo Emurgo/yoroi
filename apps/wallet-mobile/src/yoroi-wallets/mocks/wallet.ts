@@ -13,12 +13,7 @@ import {buildPortfolioTokenManagers} from '../../features/Portfolio/common/helpe
 import {buildNetworkManagers} from '../../features/WalletManager/network-manager/network-manager'
 import {fallbackTokenInfo, toTokenInfo, utf8ToHex} from '../cardano/api/utils'
 import * as HASKELL_SHELLEY_TESTNET from '../cardano/constants/testnet/constants'
-import {
-  CHIMERIC_ACCOUNT,
-  PRIMARY_TOKEN,
-  PRIMARY_TOKEN_INFO,
-  STAKING_KEY_INDEX,
-} from '../cardano/constants/testnet/constants'
+import {CHIMERIC_ACCOUNT, PRIMARY_TOKEN, STAKING_KEY_INDEX} from '../cardano/constants/testnet/constants'
 import {CardanoTypes, YoroiWallet} from '../cardano/types'
 import {
   RemotePoolMetaSuccess,
@@ -77,7 +72,6 @@ const wallet: YoroiWallet = {
   id: 'wallet-id',
   api: AppApi.mockAppApi,
   primaryToken: PRIMARY_TOKEN,
-  primaryTokenInfo: PRIMARY_TOKEN_INFO,
   rewardAddressHex: 'reward-address-hex',
   publicKeyHex: 'publicKeyHex',
   utxos,

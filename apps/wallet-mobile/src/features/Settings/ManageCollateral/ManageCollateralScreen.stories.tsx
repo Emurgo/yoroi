@@ -21,7 +21,7 @@ const goneCollateral: YoroiWallet = {
     return {
       amount: {
         quantity: '0',
-        tokenId: mocks.wallet.primaryTokenInfo.id,
+        tokenId: mocks.wallet.portfolioPrimaryTokenInfo.id,
       },
       collateralId: mocks.wallet.collateralId,
       utxo: undefined,
@@ -37,7 +37,7 @@ const noCollateral: YoroiWallet = {
     return {
       amount: {
         quantity: '0',
-        tokenId: mocks.wallet.primaryTokenInfo.id,
+        tokenId: mocks.wallet.portfolioPrimaryTokenInfo.id,
       },
       collateralId: '',
       utxo: undefined,
@@ -54,7 +54,7 @@ const noFundsWallet: YoroiWallet = {
     return {
       amount: {
         quantity: '0',
-        tokenId: mocks.wallet.primaryTokenInfo.id,
+        tokenId: mocks.wallet.portfolioPrimaryTokenInfo.id,
       },
       collateralId: '',
       utxo: undefined,

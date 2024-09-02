@@ -630,7 +630,7 @@ export const useTipStatus = ({
 export const useBalances = (wallet: YoroiWallet): Balance.Amounts => {
   const utxos = useUtxos(wallet)
 
-  return Utxos.toAmounts(utxos, wallet.primaryTokenInfo.id)
+  return Utxos.toAmounts(utxos, wallet.portfolioPrimaryTokenInfo.id)
 }
 
 export const useBalance = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string | undefined}) => {

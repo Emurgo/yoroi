@@ -7,7 +7,7 @@ import {TokenIcon} from './TokenIcon'
 storiesOf('TokenIcon', module)
   .add('PrimaryToken', () => {
     const wallet = mocks.wallet
-    return <TokenIcon wallet={wallet} tokenId={mocks.wallet.primaryTokenInfo.id} />
+    return <TokenIcon wallet={wallet} tokenId={mocks.wallet.portfolioPrimaryTokenInfo.id} />
   })
   .add('Nft', () => {
     const wallet = {
