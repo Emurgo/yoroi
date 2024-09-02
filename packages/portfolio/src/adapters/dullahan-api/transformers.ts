@@ -106,3 +106,8 @@ const TokenAcvitivyResponseSchema = z.object({
     change: z.number(),
   }),
 })
+
+export const toProcessedMediaRequest = (request: Portfolio.Token.Id) => {
+  const [policy, name] = request.split('.') as [string, string]
+  return {policy, name}
+}

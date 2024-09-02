@@ -59,12 +59,20 @@ export const responseTokenActivity = asyncBehavior.maker<
   emptyRepresentation: null,
 })
 
+export const responseTokenImageInvalidate = asyncBehavior.maker<
+  Array<{code: string; message: string}>
+>({
+  data: [],
+  emptyRepresentation: null,
+})
+
 const success: Portfolio.Api.Api = {
   tokenDiscovery: responseTokenDiscoveryMocks.success,
   tokenInfo: responseTokenInfoMocks.success,
   tokenInfos: responseTokenInfosMocks.success,
   tokenTraits: responseTokenTraits.success,
   tokenActivity: responseTokenActivity.success,
+  tokenImageInvalidate: responseTokenImageInvalidate.success,
 }
 
 const delayed: Portfolio.Api.Api = {
@@ -73,6 +81,7 @@ const delayed: Portfolio.Api.Api = {
   tokenInfos: responseTokenInfosMocks.delayed,
   tokenTraits: responseTokenTraits.delayed,
   tokenActivity: responseTokenActivity.delayed,
+  tokenImageInvalidate: responseTokenImageInvalidate.delayed,
 }
 
 const loading: Portfolio.Api.Api = {
@@ -81,6 +90,7 @@ const loading: Portfolio.Api.Api = {
   tokenInfos: responseTokenInfosMocks.loading,
   tokenTraits: responseTokenTraits.loading,
   tokenActivity: responseTokenActivity.loading,
+  tokenImageInvalidate: responseTokenImageInvalidate.loading,
 }
 
 const error: Portfolio.Api.Api = {
@@ -129,6 +139,8 @@ const error: Portfolio.Api.Api = {
         responseData: {message: 'Bad Request'},
       },
     }),
+  tokenImageInvalidate: () =>
+    Promise.resolve([{code: 'bad-request', message: 'Bad Request'}]),
 }
 
 const empty: Portfolio.Api.Api = {
@@ -137,6 +149,7 @@ const empty: Portfolio.Api.Api = {
   tokenInfos: responseTokenInfosMocks.empty,
   tokenTraits: responseTokenTraits.empty,
   tokenActivity: responseTokenActivity.empty,
+  tokenImageInvalidate: responseTokenImageInvalidate.empty,
 }
 
 export const portfolioApiMock = freeze(

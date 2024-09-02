@@ -51,6 +51,7 @@ describe('portfolioBalanceManagerMaker', () => {
       tokenDiscovery: jest.fn(),
       tokenTraits: jest.fn(),
       tokenActivity: jest.fn(),
+      tokenImageInvalidate: jest.fn(),
     },
   }
 
@@ -98,6 +99,7 @@ describe('hydrate', () => {
       tokenDiscovery: jest.fn(),
       tokenTraits: jest.fn(),
       tokenActivity: jest.fn(),
+      tokenImageInvalidate: jest.fn(),
     },
   }
 
@@ -187,6 +189,7 @@ describe('destroy', () => {
       tokenDiscovery: jest.fn(),
       tokenTraits: jest.fn(),
       tokenActivity: jest.fn(),
+      tokenImageInvalidate: jest.fn(),
     },
   }
   const queueDestroy = jest.fn()
@@ -270,6 +273,7 @@ describe('primary updates', () => {
       tokenDiscovery: jest.fn(),
       tokenTraits: jest.fn(),
       tokenActivity: jest.fn(),
+      tokenImageInvalidate: jest.fn(),
     },
   }
 
@@ -428,6 +432,7 @@ describe('sync & refresh', () => {
       tokenDiscovery: jest.fn(),
       tokenTraits: jest.fn(),
       tokenActivity: jest.fn(),
+      tokenImageInvalidate: jest.fn(),
     },
   }
 
@@ -719,6 +724,7 @@ describe('clear', () => {
       tokenDiscovery: jest.fn(),
       tokenTraits: jest.fn(),
       tokenActivity: jest.fn(),
+      tokenImageInvalidate: jest.fn(),
     },
   }
 

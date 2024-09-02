@@ -11,6 +11,7 @@ import {freeze} from 'immer'
 import {ApiConfig} from '../../types'
 import {
   toDullahanRequest,
+  toProcessedMediaRequest,
   toSecondaryTokenInfos,
   toTokenActivityUpdates,
 } from './transformers'
@@ -21,6 +22,7 @@ import {
   DullahanApiTokenInfoResponse,
   DullahanApiTokenInfosResponse,
   DullahanApiTokenTraitsResponse,
+  ProcessedMediaApiTokenImageInvalidateRequest,
 } from './types'
 import {parseTokenDiscovery} from '../../validators/token-discovery'
 import {parseTokenTraits} from '../../validators/token-traits'
@@ -294,6 +296,30 @@ export const portfolioApiMaker = ({
           )
         }
       },
+
+      async tokenImageInvalidate(ids) {
+        const tasks = ids.map(
+          (id) => () =>
+            request<{}, ProcessedMediaApiTokenImageInvalidateRequest>({
+              method: 'post',
+              url: config.tokenImageInvalidate,
+              data: toProcessedMediaRequest(id),
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }),
+        )
+
+        const responses = await PromiseAllLimited(tasks, maxConcurrentRequests)
+
+        const errors = responses
+          .filter(isLeft)
+          .map(
+            ({error}) => error.responseData as {code: string; message: string},
+          )
+
+        return errors
+      },
     },
     true,
   )
@@ -309,6 +335,8 @@ export const apiConfig: ApiConfig = freeze(
       tokenActivity: 'https://zero.yoroiwallet.com/tokens/activity/multi',
       tokenPriceHistory:
         'https://add50d9d-76d7-47b7-b17f-e34021f63a02.mock.pstmn.io/v1/token-price-history',
+      tokenImageInvalidate:
+        'https://mainnet.processed-media.yoroiwallet.com/invalidate',
     },
     [Chain.Network.Preprod]: {
       tokenDiscovery:
@@ -322,6 +350,8 @@ export const apiConfig: ApiConfig = freeze(
         'https://yoroi-backend-zero-preprod.emurgornd.com/tokens/activity/multi',
       tokenPriceHistory:
         'https://add50d9d-76d7-47b7-b17f-e34021f63a02.mock.pstmn.io/v1/token-price-history',
+      tokenImageInvalidate:
+        'https://preprod.processed-media.yoroiwallet.com/invalidate',
     },
     [Chain.Network.Sancho]: {
       tokenDiscovery:
@@ -336,6 +366,8 @@ export const apiConfig: ApiConfig = freeze(
         'https://yoroi-backend-zero-sanchonet.emurgornd.com/tokens/activity/multi',
       tokenPriceHistory:
         'https://add50d9d-76d7-47b7-b17f-e34021f63a02.mock.pstmn.io/v1/token-price-history',
+      tokenImageInvalidate:
+        'https://preprod.processed-media.yoroiwallet.com/invalidate',
     },
     [Chain.Network.Preview]: {
       tokenDiscovery:
@@ -349,6 +381,8 @@ export const apiConfig: ApiConfig = freeze(
         'https://yoroi-backend-zero-preview.emurgornd.com/tokens/activity/multi',
       tokenPriceHistory:
         'https://add50d9d-76d7-47b7-b17f-e34021f63a02.mock.pstmn.io/v1/token-price-history',
+      tokenImageInvalidate:
+        'https://preview.processed-media.yoroiwallet.com/invalidate',
     },
   },
   true,
