@@ -59,7 +59,10 @@ export const responseTokenActivity = asyncBehavior.maker<
   emptyRepresentation: null,
 })
 
-export const responseTokenImageInvalidate = asyncBehavior.maker<undefined>({})
+export const responseTokenImageInvalidate = asyncBehavior.maker<undefined>({
+  data: undefined,
+  emptyRepresentation: null,
+})
 
 const success: Portfolio.Api.Api = {
   tokenDiscovery: responseTokenDiscoveryMocks.success,
