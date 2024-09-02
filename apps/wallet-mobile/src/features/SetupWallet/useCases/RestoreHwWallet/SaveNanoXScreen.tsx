@@ -68,8 +68,11 @@ export const SaveNanoXScreen = () => {
   const {HEIGHT_MODAL_NAME_PASSWORD, HEIGHT_MODAL_CHECKSUM} = useSizeModal()
   const [name, setName] = React.useState(features.prefillWalletInfo ? debugWalletInfo.WALLET_NAME : '')
 
-  const {walletImplementation, hwDeviceInfo, accountVisual, walletIdChanged, publicKeyHex} = useSetupWallet()
-  const plate = walletChecksum(publicKeyHex)
+  const {walletImplementation, hwDeviceInfo, accountVisual, walletIdChanged} = useSetupWallet()
+
+  if (!hwDeviceInfo) throw new Error('no hwDeviceInfo')
+  const plate = walletChecksum(hwDeviceInfo.bip44AccountPublic)
+
   const walletNames = Array.from(walletManager.walletMetas.values()).map(({name}) => name)
 
   const {createWallet, isLoading} = useCreateWalletXPub({
@@ -96,8 +99,6 @@ export const SaveNanoXScreen = () => {
       })
     },
   })
-
-  if (!hwDeviceInfo) throw new Error('no hwDeviceInfo')
 
   const nameErrors = validateWalletName(name, null, !isLoading ? walletNames : [])
   const walletNameErrorText = getWalletNameError(
