@@ -59,12 +59,7 @@ export const responseTokenActivity = asyncBehavior.maker<
   emptyRepresentation: null,
 })
 
-export const responseTokenImageInvalidate = asyncBehavior.maker<
-  Array<{code: string; message: string}>
->({
-  data: [],
-  emptyRepresentation: null,
-})
+export const responseTokenImageInvalidate = asyncBehavior.maker<undefined>({})
 
 const success: Portfolio.Api.Api = {
   tokenDiscovery: responseTokenDiscoveryMocks.success,
@@ -139,8 +134,7 @@ const error: Portfolio.Api.Api = {
         responseData: {message: 'Bad Request'},
       },
     }),
-  tokenImageInvalidate: () =>
-    Promise.resolve([{code: 'bad-request', message: 'Bad Request'}]),
+  tokenImageInvalidate: () => Promise.resolve(undefined),
 }
 
 const empty: Portfolio.Api.Api = {
