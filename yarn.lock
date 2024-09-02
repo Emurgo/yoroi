@@ -2064,15 +2064,10 @@
   resolved "https://registry.yarnpkg.com/@emurgo/cardano-message-signing-nodejs/-/cardano-message-signing-nodejs-1.0.1.tgz#b2fa1f7541055a6c4b8e805492b1a9362bea5835"
   integrity sha512-PoKh1tQnJX18f8iEr8Jk1KXxKCn9eqaSslMI1pyOJvYRJhQVDLCh0+9YReufjp0oFJIY1ShcrR+4/WnECVZUKQ==
 
-"@emurgo/cardano-serialization-lib-nodejs@12.0.0-alpha.26":
-  version "12.0.0-alpha.26"
-  resolved "https://registry.yarnpkg.com/@emurgo/cardano-serialization-lib-nodejs/-/cardano-serialization-lib-nodejs-12.0.0-alpha.26.tgz#4e5fea7ba6d72888e21c5a9bea6bcff367834a4b"
-  integrity sha512-QheEm7wVZ4Tc0gOIYMUyf2VUb8a1ZjnDy4zNcGSRmuO1zlbJfjLDGv+uXG+pKqZN4fzMAzOtUwolTtbxzTzYbA==
-
-"@emurgo/cardano-serialization-lib-nodejs@12.0.0-alpha.28":
-  version "12.0.0-alpha.28"
-  resolved "https://registry.yarnpkg.com/@emurgo/cardano-serialization-lib-nodejs/-/cardano-serialization-lib-nodejs-12.0.0-alpha.28.tgz#1051d8b7975c555c1df6e7bd68fb5bf5e0ca0811"
-  integrity sha512-J8xtulw0ZMYws0aFIIigg7Ss4aQAV4z7cx1QhUaHYoI8JuABIDhczBEV+Wl6mZP6EQnkQYExmO1/NdvO5PzT3g==
+"@emurgo/cardano-serialization-lib-nodejs@12.0.1":
+  version "12.0.1"
+  resolved "https://registry.yarnpkg.com/@emurgo/cardano-serialization-lib-nodejs/-/cardano-serialization-lib-nodejs-12.0.1.tgz#db2344510a8cc0961d0543e16fc7de3d4a9c015a"
+  integrity sha512-QWvMgBHgoSAGbfAtKIeNV1wpRBzivbboeUjF8cBOGl/TS9OSYmLEVhNacbPoFqT1iqMhVRlAYoyXXTW/RmNC0w==
 
 "@emurgo/cip14-js@^3.0.1":
   version "3.0.1"
@@ -2091,10 +2086,10 @@
     buffer-crc32 "0.2.13"
     fnv-plus "1.3.1"
 
-"@emurgo/cross-csl-core@4.4.0":
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-core/-/cross-csl-core-4.4.0.tgz#b808b562f2c2442784a46384aea750718f6e5a59"
-  integrity sha512-R12cAHmkjeLb7g0+Og5zoi8is7jh5uONICaKLCvebqV6kHhCShSSHSdCbvqmCH3H8szPodkOkLp5qXNmxqfNxA==
+"@emurgo/cross-csl-core@5.0.1", "@emurgo/cross-csl-core@^5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-core/-/cross-csl-core-5.0.1.tgz#e2288d2e23e2feb6f0bc9dfc814c6e6f3d5ec826"
+  integrity sha512-PlNsW3GjqlJ7mTrHqY+M6mGkLnWh++6PAok1rdJwUP7bYS24PE2Fm4JeO1uK0dtv9mbpVLlXyjybH+HSRV7a0Q==
   dependencies:
     "@cardano-foundation/ledgerjs-hw-app-cardano" "^5.0.0"
     "@types/mocha" "^9.1.1"
@@ -2105,21 +2100,21 @@
     hash-wasm "^4.9.0"
     mocha "^10.0.0"
 
-"@emurgo/cross-csl-mobile@4.4.0":
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-mobile/-/cross-csl-mobile-4.4.0.tgz#9109897e4da4c396e123894c131533a4812a499c"
-  integrity sha512-ZxdGxYiImSC6ldIAmClRsQzPN6dDa0ONpEuITcp2NNo9TvZmA0rScG/tYaEB/iQ3PIktGfotptASwImC4F+lLA==
+"@emurgo/cross-csl-mobile@^5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-mobile/-/cross-csl-mobile-5.0.1.tgz#9c9da906dbefc915342ea073c8e4c58042cc1479"
+  integrity sha512-hselvq4fHUVxV5nbGGbd5ItPWf6pN+GnBVNfR0pUYGbArEu0aoAnbe4vDHcQ/9MK2SU1fn5/d7A69rHFCBTMrQ==
   dependencies:
-    "@emurgo/cross-csl-core" "4.4.0"
-    "@emurgo/csl-mobile-bridge" "6.0.0-alpha.7"
+    "@emurgo/cross-csl-core" "5.0.1"
+    "@emurgo/csl-mobile-bridge" "6.0.0"
 
-"@emurgo/cross-csl-nodejs@4.4.0":
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-nodejs/-/cross-csl-nodejs-4.4.0.tgz#7a8c8b7078018080283a9dc5340326e0e9a8d59c"
-  integrity sha512-yDtNFCYobYL7hILvico3Q85DIvDhc5H24UjDd8gdYApu6YGyR5C+Roz34VALxHlR8y2RA9cUM2GUt+a8Ev/Kxg==
+"@emurgo/cross-csl-nodejs@^5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-nodejs/-/cross-csl-nodejs-5.0.1.tgz#5756a208a0ef2351c1a03d3d0e6d7799071651d7"
+  integrity sha512-fu4Cif9xWfjFS7ue391KgPK4OdOaeRkiMtlTNrqiOReFicXAyJirpCgH3DZ+Mb2qJkffW9NJX75TXDqpewjoGw==
   dependencies:
-    "@emurgo/cardano-serialization-lib-nodejs" "12.0.0-alpha.26"
-    "@emurgo/cross-csl-core" "4.4.0"
+    "@emurgo/cardano-serialization-lib-nodejs" "12.0.1"
+    "@emurgo/cross-csl-core" "5.0.1"
 
 "@emurgo/cross-msl-core@1.0.0":
   version "1.0.0"
@@ -2150,17 +2145,17 @@
     "@emurgo/cardano-message-signing-nodejs" "1.0.1"
     "@emurgo/cross-msl-core" "1.0.0"
 
-"@emurgo/csl-mobile-bridge@6.0.0-alpha.7":
-  version "6.0.0-alpha.7"
-  resolved "https://registry.yarnpkg.com/@emurgo/csl-mobile-bridge/-/csl-mobile-bridge-6.0.0-alpha.7.tgz#63349d0f2e70d568ce628849c8d8b085892531aa"
-  integrity sha512-oOdiUCbbljHUOS8J0HHK6nHRVXIPeQWm4VfizZKfSLN9KgcRJFRlUAE0UxESdk4QlV/xtlb5qZ9FjjT2RmEvwg==
+"@emurgo/csl-mobile-bridge@6.0.0":
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/csl-mobile-bridge/-/csl-mobile-bridge-6.0.0.tgz#c3dd0f3e85a08dcbb91195b125a5d64a981c4b47"
+  integrity sha512-tW+Sb2UYEIG1MChdandhVStGkFTZ/A/IOds4hToBu9F4rGb36XCMFlBiOr7IGtR27Qrug6TMDnRWBqDVP6dxSQ==
   dependencies:
     base-64 "0.1.0"
 
-"@emurgo/csl-mobile-bridge@6.0.0-alpha.9":
-  version "6.0.0-alpha.9"
-  resolved "https://registry.yarnpkg.com/@emurgo/csl-mobile-bridge/-/csl-mobile-bridge-6.0.0-alpha.9.tgz#b4a8be282518bc94c37e2c92aa340dc3d51743a7"
-  integrity sha512-ys8IyzVMk0yC6qRiqtMamb47NpNZZ0blITUcYv/8uJ7HNhm8swyq9tRwUwbl8GtrzbdkFeBzUX1/cXunvGXETw==
+"@emurgo/csl-mobile-bridge@6.0.1":
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/@emurgo/csl-mobile-bridge/-/csl-mobile-bridge-6.0.1.tgz#c38afb366247e6e82d37bd638b163bc12163505f"
+  integrity sha512-db0IdIr+UsDxUZrRZxcD5hZFIyEMxoKNncp+C8FuqU1iHZ/+UbnYX42ZJ2fjHcv7I/V888qmMgd8YNS62SJ7pw==
   dependencies:
     base-64 "0.1.0"
 
@@ -2182,15 +2177,16 @@
     "@ledgerhq/logs" "^5.15.0"
     rxjs "^6.5.5"
 
-"@emurgo/yoroi-lib@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib/-/yoroi-lib-1.0.1.tgz#640060ef2454adc13edad4d103ed815630ab698b"
-  integrity sha512-22REGoltmmrxWnTNct4XMofuGm18cA57OzeduZZKGzNUC8F/37T72G+ugX2VI5UBfAnS+NT5rmq1Fq5mdTpxRQ==
+"@emurgo/yoroi-lib@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib/-/yoroi-lib-1.2.0.tgz#964ae7e62153042095e1f717fedc4b63bc7ebb8b"
+  integrity sha512-GHmj3StVEA9FBhbnqeOYh5iRtOhc95NKQ2y0gaVoCc3v88d7pJlybMZi7ajrFjo0VAg6X8yF+OAIITKo9NK1qQ==
   dependencies:
     "@cardano-foundation/ledgerjs-hw-app-cardano" "^7.1.3"
-    "@emurgo/cross-csl-core" "4.4.0"
+    "@emurgo/cross-csl-core" "5.0.1"
     "@noble/hashes" "^1.3.2"
-    axios "^0.24.0"
+    axios "^1.7.5"
+    axios-cache-interceptor "^1.5.3"
     bech32 "^2.0.0"
     bignumber.js "^9.0.1"
     easy-crc "1.1.0"
@@ -7148,6 +7144,15 @@ available-typed-arrays@^1.0.5:
   resolved "https://registry.yarnpkg.com/available-typed-arrays/-/available-typed-arrays-1.0.5.tgz#92f95616501069d07d10edb2fc37d3e1c65123b7"
   integrity sha512-DMD0KiN46eipeziST1LPP/STfDU0sufISXmjSgvVsoU2tqxctQeASejWcfNtxYKqETM1UxQ8sp2OrSBWpHY6sw==
 
+axios-cache-interceptor@^1.5.3:
+  version "1.5.3"
+  resolved "https://registry.yarnpkg.com/axios-cache-interceptor/-/axios-cache-interceptor-1.5.3.tgz#2083fc68aacb915240e37edcb792b4fed63540be"
+  integrity sha512-kPgGId9XW7tR+VF7hgSkqF4f6FrV4ecCyKxjkD9v1hNJ4sXSAskocr7SMKaVHVvrbzVeruwB6yL6Y9/lY1ApKg==
+  dependencies:
+    cache-parser "1.2.5"
+    fast-defer "1.1.8"
+    object-code "1.3.3"
+
 axios-mock-adapter@^1.21.5:
   version "1.22.0"
   resolved "https://registry.yarnpkg.com/axios-mock-adapter/-/axios-mock-adapter-1.22.0.tgz#0f3e6be0fc9b55baab06f2d49c0b71157e7c053d"
@@ -7178,6 +7183,15 @@ axios@^1.5.0:
   integrity sha512-D4DdjDo5CY50Qms0qGQTTw6Q44jl7zRwY7bthds06pUGfChBCTcQs+N743eFWGEd6pRTMd6A+I87aWyFV5wiZQ==
   dependencies:
     follow-redirects "^1.15.0"
+    form-data "^4.0.0"
+    proxy-from-env "^1.1.0"
+
+axios@^1.7.5:
+  version "1.7.7"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.7.7.tgz#2f554296f9892a72ac8d8e4c5b79c14a91d0a47f"
+  integrity sha512-S4kL7XrjgBmvdGut0sN3yJxqYzrDOnivkBiN0OFs6hLiUam3UPvswUo0kqGyhqUZGEOytHyumEdXsAkgCOUf3Q==
+  dependencies:
+    follow-redirects "^1.15.6"
     form-data "^4.0.0"
     proxy-from-env "^1.1.0"
 
@@ -8246,6 +8260,11 @@ cache-base@^1.0.1:
     to-object-path "^0.3.0"
     union-value "^1.0.0"
     unset-value "^1.0.0"
+
+cache-parser@1.2.5:
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/cache-parser/-/cache-parser-1.2.5.tgz#f19102a788b03055389730eb0493e463e1b379ac"
+  integrity sha512-Md/4VhAHByQ9frQ15WD6LrMNiVw9AEl/J7vWIXw+sxT6fSOpbtt6LHTp76vy8+bOESPBO94117Hm2bIjlI7XjA==
 
 cacheable-lookup@^7.0.0:
   version "7.0.0"
@@ -11637,6 +11656,11 @@ fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
   resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-3.1.3.tgz#3a7d56b559d6cbc3eb512325244e619a65c6c525"
   integrity sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==
 
+fast-defer@1.1.8:
+  version "1.1.8"
+  resolved "https://registry.yarnpkg.com/fast-defer/-/fast-defer-1.1.8.tgz#940ef9597b2ea51c4cd08e99d0f2a8978fa49ba2"
+  integrity sha512-lEJeOH5VL5R09j6AA0D4Uvq7AgsHw0dAImQQ+F3iSyHZuAxyQfWobsagGpTcOPvJr3urmKRHrs+Gs9hV+/Qm/Q==
+
 fast-diff@^1.1.1, fast-diff@^1.1.2:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/fast-diff/-/fast-diff-1.3.0.tgz#ece407fa550a64d638536cd727e129c61616e0f0"
@@ -11980,6 +12004,11 @@ follow-redirects@^1.14.4, follow-redirects@^1.15.0:
   version "1.15.2"
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.2.tgz#b460864144ba63f2681096f274c4e57026da2c13"
   integrity sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==
+
+follow-redirects@^1.15.6:
+  version "1.15.6"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.6.tgz#7f815c0cda4249c74ff09e95ef97c23b5fd0399b"
+  integrity sha512-wWN62YITEaOpSK584EZXJafH1AGpO8RVgElfkuXbTOrPX4fIfOyEpW/CsiNd8JdYrAoOvafRTOEnvsO++qCqFA==
 
 fontfaceobserver@^2.1.0:
   version "2.3.0"
@@ -17681,6 +17710,11 @@ object-assign@^4.0.1, object-assign@^4.1.0, object-assign@^4.1.1:
   resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-4.1.1.tgz#2109adc7965887cfc05cbbd442cac8bfbb360863"
   integrity sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==
 
+object-code@1.3.3:
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/object-code/-/object-code-1.3.3.tgz#cf21843ddfecce3ec73fd141f66a7f16ba0cb93e"
+  integrity sha512-/Ds4Xd5xzrtUOJ+xJQ57iAy0BZsZltOHssnDgcZ8DOhgh41q1YJCnTPnWdWSLkNGNnxYzhYChjc5dgC9mEERCA==
+
 object-copy@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/object-copy/-/object-copy-0.1.0.tgz#7e7d858b781bd7c991a41ba975ed3812754e998c"
@@ -21258,7 +21292,16 @@ string-natural-compare@^3.0.1:
   resolved "https://registry.yarnpkg.com/string-natural-compare/-/string-natural-compare-3.0.1.tgz#7a42d58474454963759e8e8b7ae63d71c1e7fdf4"
   integrity sha512-n3sPwynL1nwKi3WJ6AIsClwBMa0zTi54fn2oLU6ndfTSIO05xaznjSf15PcBZU6FNWbmN5Q6cxT4V5hGvB4taw==
 
-"string-width-cjs@npm:string-width@^4.2.0", "string-width@^1.0.2 || 2 || 3 || 4", string-width@^4.0.0, string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.3:
+"string-width-cjs@npm:string-width@^4.2.0":
+  version "4.2.3"
+  resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
+  integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
+  dependencies:
+    emoji-regex "^8.0.0"
+    is-fullwidth-code-point "^3.0.0"
+    strip-ansi "^6.0.1"
+
+"string-width@^1.0.2 || 2 || 3 || 4", string-width@^4.0.0, string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.3:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
   integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
@@ -21371,7 +21414,7 @@ string_decoder@~1.1.1:
   dependencies:
     safe-buffer "~5.1.0"
 
-"strip-ansi-cjs@npm:strip-ansi@^6.0.1", strip-ansi@^6.0.0, strip-ansi@^6.0.1:
+"strip-ansi-cjs@npm:strip-ansi@^6.0.1":
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
   integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
@@ -21398,6 +21441,13 @@ strip-ansi@^5.0.0, strip-ansi@^5.1.0, strip-ansi@^5.2.0:
   integrity sha512-DuRs1gKbBqsMKIZlrffwlug8MHkcnpjs5VPmL1PAh+mA30U0DTotfDZ0d2UUsXpPmPmMMJ6W773MaA3J+lbiWA==
   dependencies:
     ansi-regex "^4.1.0"
+
+strip-ansi@^6.0.0, strip-ansi@^6.0.1:
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
+  integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
+  dependencies:
+    ansi-regex "^5.0.1"
 
 strip-ansi@^7.0.1:
   version "7.1.0"
@@ -23016,7 +23066,7 @@ workerpool@6.2.1:
   resolved "https://registry.yarnpkg.com/workerpool/-/workerpool-6.2.1.tgz#46fc150c17d826b86a008e5a4508656777e9c343"
   integrity sha512-ILEIE97kDZvF9Wb9f6h5aXK4swSlKGUcOEGiIYb2OOu/IrDU9iwj0fD//SsA6E5ibwJxpEvhullJY4Sl4GcpAw==
 
-"wrap-ansi-cjs@npm:wrap-ansi@^7.0.0", wrap-ansi@^7.0.0:
+"wrap-ansi-cjs@npm:wrap-ansi@^7.0.0":
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
   integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==
@@ -23047,6 +23097,15 @@ wrap-ansi@^6.0.1, wrap-ansi@^6.2.0:
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-6.2.0.tgz#e9393ba07102e6c91a3b221478f0257cd2856e53"
   integrity sha512-r6lPcBGxZXlIcymEu7InxDMhdW0KDxpLgoFLcguasxCaJ/SOIZwINatK9KY/tf+ZrlywOKU0UDj3ATXUBfxJXA==
+  dependencies:
+    ansi-styles "^4.0.0"
+    string-width "^4.1.0"
+    strip-ansi "^6.0.0"
+
+wrap-ansi@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
+  integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==
   dependencies:
     ansi-styles "^4.0.0"
     string-width "^4.1.0"
