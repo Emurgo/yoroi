@@ -1,12 +1,13 @@
+import {amountFormatter} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
-import _ from 'lodash'
 import React, {ReactElement} from 'react'
 import {StyleSheet, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
 import {Hr, Icon, Spacer, Text} from '../../components'
+import {isEmptyString} from '../../kernel/utils'
 import {useCollateralInfo} from '../../yoroi-wallets/cardano/utxoManager/useCollateralInfo'
-import {formatTokenWithSymbol} from '../../yoroi-wallets/utils/format'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
+import {usePrivacyMode} from './PrivacyMode/PrivacyMode'
 
 const Touchable = (props: TouchableOpacityProps) => <TouchableOpacity {...props} activeOpacity={0.5} />
 
@@ -58,7 +59,7 @@ export const SettingsItem = ({label, children, disabled, icon, info}: SettingsIt
           <View>{children}</View>
         </View>
 
-        {!_.isNil(info) && (
+        {!isEmptyString(info) && (
           <>
             <Spacer height={12} />
 
@@ -85,7 +86,7 @@ export const NavigatedSettingsItem = ({label, onNavigate, icon, disabled, select
     <Touchable onPress={onNavigate} disabled={disabled}>
       <SettingsItem icon={icon} label={label} disabled={disabled}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          {!_.isNil(selected) && <Text style={styles.navigationItem}>{selected}</Text>}
+          {!isEmptyString(selected) && <Text style={styles.navigationItem}>{selected}</Text>}
 
           <Spacer width={16} />
 
@@ -111,16 +112,26 @@ export const SettingsCollateralItem = ({label, onNavigate, icon, disabled}: Navi
   const {styles, colors} = useStyles()
   const {wallet} = useSelectedWallet()
   const {amount} = useCollateralInfo(wallet)
+  const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
 
-  const formattedAmount = formatTokenWithSymbol(amount.quantity, wallet.primaryTokenInfo)
+  const formattedCollateral = React.useMemo(() => {
+    const amountCollateral = {
+      info: wallet.portfolioPrimaryTokenInfo,
+      quantity: BigInt(amount.quantity),
+    }
+
+    return !isPrivacyActive
+      ? amountFormatter({template: '{{value}} {{ticker}}'})(amountCollateral)
+      : amountFormatter({template: `${privacyPlaceholder} {{ticker}}`})(amountCollateral)
+  }, [amount.quantity, isPrivacyActive, privacyPlaceholder, wallet.portfolioPrimaryTokenInfo])
 
   return (
     <Touchable onPress={onNavigate} disabled={disabled}>
       <SettingsItem label={label} icon={icon}>
         <View style={styles.row}>
-          <Text secondary>{formattedAmount}</Text>
+          <Text secondary>{formattedCollateral}</Text>
 
-          <Icon.Chevron direction="right" size={28} color={colors.iconColor} />
+          <Icon.Chevron direction="right" size={28} color={colors.icon} />
         </View>
       </SettingsItem>
     </Touchable>
@@ -169,7 +180,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    iconColor: color.gray_600,
+    icon: color.el_gray_medium,
   }
   return {styles, colors, color}
 }

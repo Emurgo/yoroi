@@ -1,6 +1,6 @@
+import {isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
-import {Balance} from '@yoroi/types'
-import {Swap} from '@yoroi/types'
+import {Balance, Swap} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
@@ -17,7 +17,6 @@ export type AmountItemProps = {
   amount: Balance.Amount
   style?: ViewProps['style']
   isPrivacyActive?: boolean
-  status?: string
   inWallet?: boolean
   variant?: 'swap'
   priceImpactRisk?: SwapPriceImpactRisk
@@ -38,7 +37,7 @@ export const AmountItem = ({
   const {quantity, tokenId} = amount
   const tokenInfo = useTokenInfo({wallet, tokenId})
 
-  const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
+  const isPrimary = isPrimaryToken(tokenInfo.id)
   const name = tokenInfo.ticker ?? tokenInfo.name
   const nameLabel = isEmptyString(name) ? '-' : name
   const detail = isPrimary ? tokenInfo.description : tokenInfo.fingerprint

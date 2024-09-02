@@ -15,7 +15,7 @@ import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelec
 export const SecondaryTotals = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => {
   const {wallet} = useSelectedWallet()
   const secondaryAmounts = Amounts.remove(Amounts.getAmountsFromEntries(yoroiUnsignedTx.entries), [
-    wallet.primaryTokenInfo.id,
+    wallet.portfolioPrimaryTokenInfo.id,
   ])
   const sortedAmounts = Amounts.toArray(secondaryAmounts).sort((a, b) =>
     Quantities.isGreaterThan(a.quantity, b.quantity) ? -1 : 1,

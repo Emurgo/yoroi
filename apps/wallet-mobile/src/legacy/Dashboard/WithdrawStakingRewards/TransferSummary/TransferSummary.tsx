@@ -116,7 +116,7 @@ const Deregistrations = ({
   const explorers = useExplorers(wallet.networkManager.network)
 
   const refundAmounts = Entries.toAmounts(deregistrations)
-  const primaryAmount = Amounts.getAmount(refundAmounts, wallet.primaryTokenInfo.id)
+  const primaryAmount = Amounts.getAmount(refundAmounts, wallet.portfolioPrimaryTokenInfo.id)
 
   const addresses = Entries.toAddresses(deregistrations)
   if (addresses.length < 1) return null
