@@ -8,7 +8,6 @@
 - [Installation](#installation)
 - [Packages](#packages)
 - [Contributing](#contributing)
-- [Development](#development)
 - [License](#license)
 
 ## Features
@@ -34,7 +33,7 @@
 - **Governance Participation**: Delegate your voting power to a DRep, abstain, or cast a vote of no confidence on governance proposals directly from the Yoroi wallet.
 - **Request Funds and Share Addresses**: Easily request ADA and share your wallet address using links and QR codes for quick and secure transactions.
 - **Domain Name Support**: Send and receive ADA using user-friendly addresses with integrated support for Cardano Name Service (CNS), ADAHandle, and Unstoppable Domains.
-
+- **Network Switching**: Easily toggle between Cardano networks (Mainnet, Preprod, Preview) for seamless testing.
 
 
 
