@@ -3,6 +3,7 @@ import {isPrimaryToken, primaryTokenId as ptId} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Balance, HW} from '@yoroi/types'
 import {SwapApi} from '@yoroi/types/src/swap/api'
+import {freeze} from 'immer'
 import {useMutation, UseMutationOptions} from 'react-query'
 import {z} from 'zod'
 
@@ -79,8 +80,9 @@ export const parseOrderTxMetadata = (metadataJson: string, primaryTokenId: strin
   }
 }
 
+const swapPtTokenIds = freeze([ptId, '', '.'])
 const normalisePrimaryTokenId = (tokenId: string, primaryTokenId: string) => {
-  return tokenId === ptId || tokenId === '' ? primaryTokenId : tokenId
+  return swapPtTokenIds.includes(tokenId) ? primaryTokenId : tokenId
 }
 
 function containsOnlyValidChars(str?: string): boolean {

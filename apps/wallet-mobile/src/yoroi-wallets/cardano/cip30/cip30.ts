@@ -10,6 +10,7 @@ import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
 import _ from 'lodash'
 
+import {logger} from '../../../kernel/logger/logger'
 import {RawUtxo, YoroiUnsignedTx} from '../../types'
 import {asQuantity, Utxos} from '../../utils'
 import {Cardano, CardanoMobile} from '../../wallets'
@@ -26,7 +27,6 @@ import {
 } from '../utils'
 import {collateralConfig, findCollateralCandidates, utxosMaker} from '../utxoManager/utxos'
 import {wrappedCsl as getCSL} from '../wrappedCsl'
-import {logger} from '../../../kernel/logger/logger'
 
 const MSL = init('msl')
 
