@@ -83,8 +83,8 @@ const convertBech32ToScriptHash = async (
   drepId: string,
   cardano: CardanoTypes.Wasm,
 ): Promise<string> => {
-  const sacriptHash = await cardano.ScriptHash.fromBech32(drepId)
-  return await sacriptHash.toHex()
+  const scriptHash = await cardano.ScriptHash.fromBech32(drepId)
+  return await scriptHash.toHex()
 }
 
 export const convertHexKeyHashToBech32Format = async (
