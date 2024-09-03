@@ -11,7 +11,7 @@ import {useNavigateTo, useStrings} from '../common'
 
 export const InitialScreen = () => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {styles} = useStyles()
   const navigateTo = useNavigateTo()
   const [tosAccepted, setTosAccepted] = React.useState(false)
 
@@ -91,7 +91,7 @@ export const InitialScreen = () => {
 }
 
 const LanguagePickRow = ({onPress}: {onPress: () => void}) => {
-  const styles = useStyles()
+  const {styles, color} = useStyles()
   const {languageCode, supportedLanguages} = useLanguage()
   const language = supportedLanguages.find((lang) => lang.code === languageCode) ?? defaultLanguage
 
@@ -100,7 +100,7 @@ const LanguagePickRow = ({onPress}: {onPress: () => void}) => {
       <TextInput style={styles.input} value={language.label} pointerEvents="none" editable={false} />
 
       <View style={styles.inputIcon}>
-        <Icon.Chevron size={34} direction="down" />
+        <Icon.Chevron size={34} direction="down" color={color.el_gray_medium} />
       </View>
     </TouchableOpacity>
   )
@@ -156,5 +156,5 @@ const useStyles = () => {
     },
   })
 
-  return styles
+  return {styles, color}
 }
