@@ -1,4 +1,3 @@
-import {walletChecksum} from '@emurgo/cip4-js'
 import {useNavigation} from '@react-navigation/native'
 import {useAsyncStorage} from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
@@ -29,7 +28,7 @@ import {logger} from '../../../../kernel/logger/logger'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import {isEmptyString} from '../../../../kernel/utils'
-import {getWalletNameError, validateWalletName} from '../../../../yoroi-wallets/utils'
+import {getWalletNameError} from '../../../../yoroi-wallets/utils'
 import {useCreateWalletXPub} from '../../../WalletManager/common/hooks/useCreateWalletXPub'
 import {parseWalletMeta} from '../../../WalletManager/common/validators/wallet-meta'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
@@ -71,9 +70,7 @@ export const SaveNanoXScreen = () => {
   const {walletImplementation, hwDeviceInfo, accountVisual, walletIdChanged} = useSetupWallet()
 
   if (!hwDeviceInfo) throw new Error('no hwDeviceInfo')
-  const plate = walletChecksum(hwDeviceInfo.bip44AccountPublic)
-
-  const walletNames = Array.from(walletManager.walletMetas.values()).map(({name}) => name)
+  const plate = walletManager.getWalletPlate(hwDeviceInfo.bip44AccountPublic)
 
   const {createWallet, isLoading} = useCreateWalletXPub({
     onSuccess: async (wallet) => {
@@ -100,11 +97,13 @@ export const SaveNanoXScreen = () => {
     },
   })
 
-  const nameErrors = validateWalletName(name, null, !isLoading ? walletNames : [])
+  const nameErrors = !isLoading ? walletManager.validateWalletName(name) : null
   const walletNameErrorText = getWalletNameError(
     {tooLong: strings.tooLong, nameAlreadyTaken: strings.nameAlreadyTaken, mustBeFilled: strings.mustBeFilled},
     nameErrors,
   )
+
+  const disabled = isLoading || Object.keys(nameErrors ?? {}).length > 0
 
   const handleOnSubmit = React.useCallback(() => {
     createWallet({
@@ -248,7 +247,7 @@ export const SaveNanoXScreen = () => {
             title={strings.next}
             onPress={handleOnSubmit}
             testId="setup-restore-step2-next-button"
-            disabled={isLoading || Object.keys(nameErrors).length > 0}
+            disabled={disabled}
           />
         </View>
       </SafeAreaView>

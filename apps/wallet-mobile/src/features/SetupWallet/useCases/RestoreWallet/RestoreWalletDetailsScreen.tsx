@@ -30,12 +30,7 @@ import {logger} from '../../../../kernel/logger/logger'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import {isEmptyString} from '../../../../kernel/utils'
-import {
-  getWalletNameError,
-  REQUIRED_PASSWORD_LENGTH,
-  validatePassword,
-  validateWalletName,
-} from '../../../../yoroi-wallets/utils'
+import {getWalletNameError, REQUIRED_PASSWORD_LENGTH, validatePassword} from '../../../../yoroi-wallets/utils'
 import {useCreateWalletMnemonic} from '../../../WalletManager/common/hooks/useCreateWalletMnemonic'
 import {parseWalletMeta} from '../../../WalletManager/common/validators/wallet-meta'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
@@ -70,7 +65,6 @@ export const RestoreWalletDetailsScreen = () => {
   const {HEIGHT_MODAL_NAME_PASSWORD, HEIGHT_MODAL_CHECKSUM} = useSizeModal()
   const {openModal, closeModal} = useModal()
   const {walletManager} = useWalletManager()
-  const walletNames = Array.from(walletManager.walletMetas.values()).map(({name}) => name)
   const [name, setName] = React.useState(features.prefillWalletInfo ? debugWalletInfo.WALLET_NAME : '')
   const storage = useAsyncStorage()
   const {mnemonic, publicKeyHex, walletImplementation, walletIdChanged, accountVisual} = useSetupWallet()
@@ -128,11 +122,13 @@ export const RestoreWalletDetailsScreen = () => {
     }, [track]),
   )
 
-  const nameErrors = validateWalletName(name, null, !isCreateWalletSuccess ? walletNames : [])
+  const nameErrors = !isCreateWalletSuccess ? walletManager.validateWalletName(name) : null
   const walletNameErrorText = getWalletNameError(
     {tooLong: strings.tooLong, nameAlreadyTaken: strings.nameAlreadyTaken, mustBeFilled: strings.mustBeFilled},
     nameErrors,
   )
+
+  const disabled = isLoading || Object.keys(nameErrors ?? {}).length > 0 || Object.keys(passwordErrors).length > 0
 
   const showModalTipsPassword = () => {
     openModal(
@@ -305,7 +301,7 @@ export const RestoreWalletDetailsScreen = () => {
               })
             }
             testId="setup-restore-step2-next-button"
-            disabled={isLoading || Object.keys(passwordErrors).length > 0 || Object.keys(nameErrors).length > 0}
+            disabled={disabled}
           />
         </View>
       </SafeAreaView>

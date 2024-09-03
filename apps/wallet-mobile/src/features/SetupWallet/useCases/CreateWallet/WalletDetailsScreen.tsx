@@ -1,4 +1,3 @@
-import {walletChecksum} from '@emurgo/cip4-js'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useAsyncStorage} from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
@@ -83,7 +82,7 @@ export const WalletDetailsScreen = () => {
     walletIdChanged,
     accountVisual,
   } = useSetupWallet()
-  const plate = walletChecksum(publicKeyHex)
+  const plate = walletManager.getWalletPlate(publicKeyHex)
   const [name, setName] = React.useState(features.prefillWalletInfo ? debugWalletInfo.WALLET_NAME : '')
   const passwordRef = React.useRef<RNTextInput>(null)
   const [password, setPassword] = React.useState(features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '')

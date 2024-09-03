@@ -8,7 +8,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button, KeyboardAvoidingView, Spacer, TextInput} from '../../../components'
 import globalMessages from '../../../kernel/i18n/global-messages'
 import {isEmptyString} from '../../../kernel/utils'
-import {getWalletNameError, validateWalletName} from '../../../yoroi-wallets/utils/validators'
+import {getWalletNameError} from '../../../yoroi-wallets/utils/validators'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 
@@ -23,9 +23,8 @@ export const RenameWalletScreen = () => {
   } = useSelectedWallet()
 
   const {walletManager} = useWalletManager()
-  const walletNames = Array.from(walletManager.walletMetas.values()).map(({name}) => name)
   const [newWalletName, setNewWalletName] = React.useState(walletName)
-  const validationErrors = validateWalletName(newWalletName, walletName, walletNames)
+  const validationErrors = walletManager.validateWalletName(newWalletName, walletName)
   const hasErrors = Object.keys(validationErrors).length > 0
   const errorText = getWalletNameError(
     {

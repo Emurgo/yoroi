@@ -59,15 +59,15 @@ export const getWalletNameError = (
     nameAlreadyTaken: string
     mustBeFilled?: string
   },
-  validationErrors: WalletNameValidationErrors,
+  validationErrors?: WalletNameValidationErrors | null,
 ) => {
   const {tooLong, nameAlreadyTaken, mustBeFilled} = translations
 
-  if (validationErrors.tooLong != null) {
+  if (validationErrors?.tooLong != null) {
     return tooLong
-  } else if (validationErrors.nameAlreadyTaken != null) {
+  } else if (validationErrors?.nameAlreadyTaken != null) {
     return nameAlreadyTaken
-  } else if (validationErrors.mustBeFilled != null) {
+  } else if (validationErrors?.mustBeFilled != null) {
     return mustBeFilled
   } else {
     return null
