@@ -400,6 +400,12 @@ export class WalletManager {
     return Array.from(this.walletMetas.values()).some((walletMeta) => walletMeta.plate === plate)
   }
 
+  findWalletMetadataByPublicKeyHex(publicKeyHex: string) {
+    const {plate} = this.checksum(publicKeyHex)
+
+    return Array.from(this.walletMetas.values()).find((walletMeta) => walletMeta.plate === plate)
+  }
+
   validateWalletName(newName: string, oldName: string | null = null) {
     const walletNames = Array.from(this.walletMetas.values()).map(({name}) => name)
     const nameErrors = validateWalletName(newName, oldName, walletNames)
