@@ -8,6 +8,10 @@ logger.disable()
 
 global.fetch = fetch
 
+jest.mock('expo-system-ui', () => ({
+  setBackgroundColorAsync: async () => undefined,
+  getBackgroundColorAsync: async () => 'black',
+}))
 jest.mock('react-native-device-info', () => ({getVersion: () => '1.5.1'}))
 jest.mock('react-native-randombytes', () => require('crypto').randomBytes)
 jest.mock('react-native-background-timer', () => {})
