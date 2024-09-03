@@ -1,5 +1,5 @@
 import {ThemedPalette, useTheme} from '@yoroi/theme'
-import * as SystemUI from 'expo-system-ui'
+import {setBackgroundColorAsync} from 'expo-system-ui'
 import * as React from 'react'
 import {Platform, StatusBar, StatusBarStyle} from 'react-native'
 
@@ -32,9 +32,9 @@ export const useStatusBar = (currentRouteName: string | undefined) => {
         currentRouteName ?? '',
       )
     ) {
-      SystemUI.setBackgroundColorAsync(color.gray_min)
+      setBackgroundColorAsync(color.gray_min)
     } else {
-      SystemUI.setBackgroundColorAsync(color.bg_color_max)
+      setBackgroundColorAsync(color.bg_color_max)
     }
   }, [currentRouteName, isDark, color])
 }
