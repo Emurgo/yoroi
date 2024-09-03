@@ -44,12 +44,24 @@ export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
   const onSuccess = (hwDeviceInfo: HW.DeviceInfo) => {
     hwDeviceInfoChanged(hwDeviceInfo)
 
-    const isWalletDuplicated = walletManager.isWalletAccountDuplicated(hwDeviceInfo.bip44AccountPublic)
+    const isWalletAccountDuplicated = walletManager.isWalletAccountDuplicated(hwDeviceInfo.bip44AccountPublic)
 
-    if (isWalletDuplicated) {
+    if (isWalletAccountDuplicated) {
+      const {plate, seed} = walletManager.checksum(hwDeviceInfo.bip44AccountPublic)
+      const duplicatedAccountWalletMeta = Array.from(walletManager.walletMetas.values()).find(
+        (walletMeta) => walletMeta.plate === plate,
+      )
+
+      if (duplicatedAccountWalletMeta === undefined) throw new Error('Restore Duplicated Wallet Error: invalid state')
+
       openModal(
         strings.restoreDuplicatedWalletModalTitle,
-        <WalletDuplicatedModal publicKeyHex={hwDeviceInfo.bip44AccountPublic} />,
+        <WalletDuplicatedModal
+          plate={plate}
+          seed={seed}
+          duplicatedAccountWalletMetaId={duplicatedAccountWalletMeta.id}
+          duplicatedAccountWalletMetaName={duplicatedAccountWalletMeta.name}
+        />,
       )
       return
     }

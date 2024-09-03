@@ -108,10 +108,25 @@ export const RestoreWalletScreen = () => {
   const handleOnNext = React.useCallback(async () => {
     const {accountPubKeyHex} = await walletManager.generateWalletKeys(walletImplementation, mnemonic, accountVisual)
 
-    const iswalletDuplicated = walletManager.isWalletAccountDuplicated(accountPubKeyHex)
+    const isWalletAccountDuplicated = walletManager.isWalletAccountDuplicated(accountPubKeyHex)
 
-    if (iswalletDuplicated) {
-      openModal(strings.restoreDuplicatedWalletModalTitle, <WalletDuplicatedModal publicKeyHex={accountPubKeyHex} />)
+    if (isWalletAccountDuplicated) {
+      const {plate, seed} = walletManager.checksum(accountPubKeyHex)
+      const duplicatedAccountWalletMeta = Array.from(walletManager.walletMetas.values()).find(
+        (walletMeta) => walletMeta.plate === plate,
+      )
+
+      if (duplicatedAccountWalletMeta === undefined) throw new Error('Restore Duplicated Wallet Error: invalid state')
+
+      openModal(
+        strings.restoreDuplicatedWalletModalTitle,
+        <WalletDuplicatedModal
+          plate={plate}
+          seed={seed}
+          duplicatedAccountWalletMetaId={duplicatedAccountWalletMeta.id}
+          duplicatedAccountWalletMetaName={duplicatedAccountWalletMeta.name}
+        />,
+      )
 
       return
     }

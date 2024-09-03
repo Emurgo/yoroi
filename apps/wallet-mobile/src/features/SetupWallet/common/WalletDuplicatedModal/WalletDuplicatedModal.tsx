@@ -9,23 +9,27 @@ import {useWalletNavigation} from '../../../../kernel/navigation'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {useStrings} from '../useStrings'
 
-export const WalletDuplicatedModal = ({publicKeyHex}: {publicKeyHex: string}) => {
+export const WalletDuplicatedModal = ({
+  plate,
+  seed,
+  duplicatedAccountWalletMetaId,
+  duplicatedAccountWalletMetaName,
+}: {
+  plate: string
+  seed: string
+  duplicatedAccountWalletMetaId: string
+  duplicatedAccountWalletMetaName: string
+}) => {
   const {styles} = useStyles()
   const strings = useStrings()
 
   const {resetToTxHistory} = useWalletNavigation()
   const {walletManager} = useWalletManager()
-  const {plate, seed} = walletManager.checksum(publicKeyHex)
-  const walletDuplicatedMeta = Array.from(walletManager.walletMetas.values()).find(
-    (walletMeta) => walletMeta.plate === plate,
-  )
-
-  if (!walletDuplicatedMeta) throw new Error('Wallet Duplicated Modal: invalid state')
 
   const handleOpenWalletWithDuplicatedName = React.useCallback(() => {
-    walletManager.setSelectedWalletId(walletDuplicatedMeta.id)
+    walletManager.setSelectedWalletId(duplicatedAccountWalletMetaId)
     resetToTxHistory()
-  }, [walletManager, walletDuplicatedMeta.id, resetToTxHistory])
+  }, [walletManager, duplicatedAccountWalletMetaId, resetToTxHistory])
 
   return (
     <View style={styles.modal}>
@@ -39,7 +43,7 @@ export const WalletDuplicatedModal = ({publicKeyHex}: {publicKeyHex: string}) =>
         <Space width="sm" />
 
         <View>
-          <Text style={styles.plateName}>{walletDuplicatedMeta.name}</Text>
+          <Text style={styles.plateName}>{duplicatedAccountWalletMetaName}</Text>
 
           <Text style={styles.plateText}>{plate}</Text>
         </View>
