@@ -324,7 +324,8 @@ export const apiConfig: ApiConfig = freeze(
       tokenInfo: 'https://zero.yoroiwallet.com/tokens/info',
       tokenInfos: 'https://zero.yoroiwallet.com/tokens/info/multi',
       tokenTraits: 'https://zero.yoroiwallet.com/tokens/nft/traits',
-      tokenActivity: 'https://zero.yoroiwallet.com/tokens/activity/multi',
+      tokenActivity:
+        'https://dev-yoroi-backend-zero-mainnet.emurgornd.com/tokens/activity/multi',
       tokenPriceHistory:
         'https://add50d9d-76d7-47b7-b17f-e34021f63a02.mock.pstmn.io/v1/token-price-history',
       tokenImageInvalidate:
