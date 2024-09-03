@@ -135,8 +135,8 @@ class Manager implements GovernanceManager {
   }
 
   async validateDRepID(drepId: string): Promise<void> {
-    const drepKeyHash = await parseDrepId(drepId, this.config.cardano)
-    const drepStatus = await this.config.api.getDRepById(drepKeyHash)
+    const {hash} = await parseDrepId(drepId, this.config.cardano)
+    const drepStatus = await this.config.api.getDRepById(hash)
 
     if (!drepStatus || !drepStatus.epoch) {
       throw new Error('DRep ID not registered')

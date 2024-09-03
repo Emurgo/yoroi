@@ -66,6 +66,7 @@ export const useStrings = () => {
     goToStaking: intl.formatMessage(messages.goToStaking),
     readyToCollectRewards: intl.formatMessage(messages.readyToCollectRewards),
     notSupportedVersionButton: intl.formatMessage(messages.notSupportedVersionButton),
+    scriptNotSupported: intl.formatMessage(messages.scriptNotSupported),
   }
 }
 
@@ -143,7 +144,7 @@ const messages = defineMessages({
   },
   drepID: {
     id: 'components.governance.drepID',
-    defaultMessage: '!!!Drep ID',
+    defaultMessage: '!!!Drep ID (fingerprint)',
   },
   thankYouForParticipating: {
     id: 'components.governance.thankYouForParticipating',
@@ -279,5 +280,9 @@ const messages = defineMessages({
   notSupportedVersionButton: {
     id: 'components.governance.notSupportedVersionButton',
     defaultMessage: '!!!Go to main wallet page',
+  },
+  scriptNotSupported: {
+    id: 'components.governance.scriptNotSupported',
+    defaultMessage: '!!!Script DReps ids will be supported soon.',
   },
 })
