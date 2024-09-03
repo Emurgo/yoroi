@@ -67,7 +67,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     plateName: {
       ...atoms.body_2_md_medium,
-      color: color.gray_900,
+      color: color.text_gray_medium,
     },
     modal: {
       ...atoms.flex_1,
@@ -94,7 +94,7 @@ const useStyles = () => {
     },
     modalText: {
       ...atoms.body_1_lg_regular,
-      color: color.gray_900,
+      color: color.text_gray_low,
     },
   })
   return {styles} as const
