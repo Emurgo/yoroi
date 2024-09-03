@@ -397,11 +397,7 @@ export class WalletManager {
   isWalletAccountDuplicated(publicKeyHex: string) {
     const {plate} = this.checksum(publicKeyHex)
 
-    const walletDuplicatedMeta = Array.from(this.walletMetas.values()).find((walletMeta) => walletMeta.plate === plate)
-
-    const isWalletDuplicated = walletDuplicatedMeta !== undefined
-
-    return isWalletDuplicated
+    return Array.from(this.walletMetas.values()).some((walletMeta) => walletMeta.plate === plate)
   }
 
   validateWalletName(newName: string, oldName: string | null = null) {
