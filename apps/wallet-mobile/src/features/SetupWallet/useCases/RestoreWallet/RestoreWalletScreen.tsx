@@ -108,7 +108,7 @@ export const RestoreWalletScreen = () => {
   const handleOnNext = React.useCallback(async () => {
     const {accountPubKeyHex} = await walletManager.generateWalletKeys(walletImplementation, mnemonic, accountVisual)
 
-    const iswalletDuplicated = walletManager.getIsWalletDuplicated(accountPubKeyHex)
+    const iswalletDuplicated = walletManager.isWalletAccountDuplicated(accountPubKeyHex)
 
     if (iswalletDuplicated) {
       openModal(strings.restoreDuplicatedWalletModalTitle, <WalletDuplicatedModal publicKeyHex={accountPubKeyHex} />)

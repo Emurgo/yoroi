@@ -15,9 +15,9 @@ export const WalletDuplicatedModal = ({publicKeyHex}: {publicKeyHex: string}) =>
 
   const {resetToTxHistory} = useWalletNavigation()
   const {walletManager} = useWalletManager()
-  const plate = walletManager.getWalletPlate(publicKeyHex)
+  const {plate, seed} = walletManager.checksum(publicKeyHex)
   const walletDuplicatedMeta = Array.from(walletManager.walletMetas.values()).find(
-    (walletMeta) => walletMeta.plate === plate.TextPart,
+    (walletMeta) => walletMeta.plate === plate,
   )
 
   if (!walletDuplicatedMeta) throw new Error('Wallet Duplicated Modal: invalid state')
@@ -34,18 +34,14 @@ export const WalletDuplicatedModal = ({publicKeyHex}: {publicKeyHex: string}) =>
       <Space height="lg" />
 
       <View style={styles.checksum}>
-        <Icon.WalletAvatar
-          image={new Blockies({seed: plate.ImagePart}).asBase64()}
-          style={styles.walletChecksum}
-          size={38}
-        />
+        <Icon.WalletAvatar image={new Blockies({seed}).asBase64()} style={styles.walletChecksum} size={38} />
 
         <Space width="sm" />
 
         <View>
           <Text style={styles.plateName}>{walletDuplicatedMeta.name}</Text>
 
-          <Text style={styles.plateText}>{plate.TextPart}</Text>
+          <Text style={styles.plateText}>{plate}</Text>
         </View>
       </View>
 

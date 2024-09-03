@@ -70,7 +70,7 @@ export const SaveNanoXScreen = () => {
   const {walletImplementation, hwDeviceInfo, accountVisual, walletIdChanged} = useSetupWallet()
 
   if (!hwDeviceInfo) throw new Error('no hwDeviceInfo')
-  const plate = walletManager.getWalletPlate(hwDeviceInfo.bip44AccountPublic)
+  const {plate, seed} = walletManager.checksum(hwDeviceInfo.bip44AccountPublic)
 
   const {createWallet, isLoading} = useCreateWalletXPub({
     onSuccess: async (wallet) => {
@@ -161,11 +161,11 @@ export const SaveNanoXScreen = () => {
           <View>
             <CardAboutPhrase
               title={strings.walletChecksumModalCardTitle}
-              checksumImage={plate.ImagePart}
+              checksumImage={seed}
               checksumLine={1}
               linesOfText={[
                 strings.walletChecksumModalCardFirstItem,
-                strings.walletChecksumModalCardSecondItem(plate.TextPart),
+                strings.walletChecksumModalCardSecondItem(plate),
                 strings.walletChecksumModalCardThirdItem,
               ]}
             />
@@ -223,16 +223,12 @@ export const SaveNanoXScreen = () => {
           <Space height="lg" />
 
           <View style={styles.checksum}>
-            <Icon.WalletAvatar
-              image={new Blockies({seed: plate.ImagePart}).asBase64()}
-              style={styles.walletChecksum}
-              size={24}
-            />
+            <Icon.WalletAvatar image={new Blockies({seed}).asBase64()} style={styles.walletChecksum} size={24} />
 
             <Space width="sm" />
 
             <Text style={styles.plateNumber} testID="wallet-plate-number">
-              {plate.TextPart}
+              {plate}
             </Text>
 
             <Space width="sm" />

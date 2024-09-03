@@ -82,7 +82,7 @@ export const WalletDetailsScreen = () => {
     walletIdChanged,
     accountVisual,
   } = useSetupWallet()
-  const plate = walletManager.getWalletPlate(publicKeyHex)
+  const {plate, seed} = walletManager.checksum(publicKeyHex)
   const [name, setName] = React.useState(features.prefillWalletInfo ? debugWalletInfo.WALLET_NAME : '')
   const passwordRef = React.useRef<RNTextInput>(null)
   const [password, setPassword] = React.useState(features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '')
@@ -221,11 +221,11 @@ export const WalletDetailsScreen = () => {
         <ScrollView bounces={false}>
           <CardAboutPhrase
             title={strings.walletChecksumModalCardTitle}
-            checksumImage={plate.ImagePart}
+            checksumImage={seed}
             checksumLine={1}
             linesOfText={[
               strings.walletChecksumModalCardFirstItem,
-              strings.walletChecksumModalCardSecondItem(plate.TextPart),
+              strings.walletChecksumModalCardSecondItem(plate),
               strings.walletChecksumModalCardThirdItem,
             ]}
           />
@@ -310,15 +310,11 @@ export const WalletDetailsScreen = () => {
           />
 
           <View style={styles.checksum}>
-            <Icon.WalletAvatar
-              image={new Blockies({seed: plate.ImagePart}).asBase64()}
-              style={styles.walletChecksum}
-              size={24}
-            />
+            <Icon.WalletAvatar image={new Blockies({seed}).asBase64()} style={styles.walletChecksum} size={24} />
 
             <Space width="sm" />
 
-            <Text style={styles.plateNumber}>{plate.TextPart}</Text>
+            <Text style={styles.plateNumber}>{plate}</Text>
 
             <Space width="sm" />
 

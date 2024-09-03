@@ -44,7 +44,7 @@ export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
   const onSuccess = (hwDeviceInfo: HW.DeviceInfo) => {
     hwDeviceInfoChanged(hwDeviceInfo)
 
-    const isWalletDuplicated = walletManager.getIsWalletDuplicated(hwDeviceInfo.bip44AccountPublic)
+    const isWalletDuplicated = walletManager.isWalletAccountDuplicated(hwDeviceInfo.bip44AccountPublic)
 
     if (isWalletDuplicated) {
       openModal(

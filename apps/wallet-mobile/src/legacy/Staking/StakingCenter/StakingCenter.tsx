@@ -30,7 +30,7 @@ export const StakingCenter = () => {
   const {wallet, meta} = useSelectedWallet()
   const {walletManager} = useWalletManager()
   const {track} = useMetrics()
-  const plate = walletManager.getWalletPlate(wallet.publicKeyHex)
+  const {plate} = walletManager.checksum(wallet.publicKeyHex)
 
   useFocusEffect(
     React.useCallback(() => {
@@ -87,7 +87,7 @@ export const StakingCenter = () => {
           <WebView
             originWhitelist={['*']}
             androidLayerType="software"
-            source={{uri: prepareStakingURL(languageCode, plate.TextPart)}}
+            source={{uri: prepareStakingURL(languageCode, plate)}}
             onMessage={(event) => handleOnMessage(event)}
             {...(isDark && {
               injectedJavaScript: `

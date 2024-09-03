@@ -1,4 +1,4 @@
-import {WalletChecksum, walletChecksum} from '@emurgo/cip4-js'
+import {walletChecksum} from '@emurgo/cip4-js'
 import {difference, parseSafe} from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
 import {App, Chain, HW, Network, Wallet} from '@yoroi/types'
@@ -385,17 +385,19 @@ export class WalletManager {
     await this.#rootStorage.setItem('deletedWalletIds', [])
   }
 
-  getWalletPlate(publicKeyHex: string): WalletChecksum {
-    const plate = walletChecksum(publicKeyHex)
-    return plate
+  checksum(publicKeyHex: string) {
+    const {TextPart, ImagePart} = walletChecksum(publicKeyHex)
+
+    return {
+      plate: TextPart,
+      seed: ImagePart,
+    }
   }
 
-  getIsWalletDuplicated(publicKeyHex: string): boolean {
-    const plate = this.getWalletPlate(publicKeyHex)
+  isWalletAccountDuplicated(publicKeyHex: string) {
+    const {plate} = this.checksum(publicKeyHex)
 
-    const walletDuplicatedMeta = Array.from(this.walletMetas.values()).find(
-      (walletMeta) => walletMeta.plate === plate.TextPart,
-    )
+    const walletDuplicatedMeta = Array.from(this.walletMetas.values()).find((walletMeta) => walletMeta.plate === plate)
 
     const isWalletDuplicated = walletDuplicatedMeta !== undefined
 
