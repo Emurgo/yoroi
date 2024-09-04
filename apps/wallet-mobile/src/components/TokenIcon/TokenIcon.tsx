@@ -86,7 +86,7 @@ const useStyles = () => {
   const {color} = useTheme()
   const styles = StyleSheet.create({
     primary: {
-      backgroundColor: color.primary_600,
+      backgroundColor: color.primary_500,
     },
     icon: {
       backgroundColor: 'transparent',
