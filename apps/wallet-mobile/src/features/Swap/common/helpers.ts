@@ -2,6 +2,7 @@ import {createTypeGuardFromSchema, parseSafe} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
 import {SwapApi} from '@yoroi/types/src/swap/api'
+import {freeze} from 'immer'
 import {useMutation, UseMutationOptions} from 'react-query'
 import {z} from 'zod'
 
@@ -11,7 +12,6 @@ import {generateCIP30UtxoCbor} from '../../../yoroi-wallets/cardano/utils'
 import {useSelectedWallet} from '../../WalletManager/Context/SelectedWalletContext'
 import {PRICE_IMPACT_HIGH_RISK, PRICE_IMPACT_MODERATE_RISK} from './constants'
 import {SwapPriceImpactRisk} from './types'
-import {freeze} from 'immer'
 
 export const useCancelOrderWithHw = (
   {cancelOrder}: {cancelOrder: SwapApi['cancelOrder']},
