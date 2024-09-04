@@ -41,6 +41,8 @@ PODS:
     - React-Core
     - React-RCTAppDelegate
     - ReactCommon/turbomodule/core
+  - ExpoSystemUI (2.2.1):
+    - ExpoModulesCore
   - FBLazyVector (0.71.14)
   - FBReactNativeSpec (0.71.14):
     - RCT-Folly (= 2021.07.22.00)
@@ -560,6 +562,7 @@ DEPENDENCIES:
   - ExpoImage (from `../../../node_modules/expo-image/ios`)
   - ExpoKeepAwake (from `../../../node_modules/expo-keep-awake/ios`)
   - ExpoModulesCore (from `../../../node_modules/expo-modules-core`)
+  - ExpoSystemUI (from `../../../node_modules/expo-system-ui/ios`)
   - FBLazyVector (from `../../../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../../../node_modules/react-native/React/FBReactNativeSpec`)
   - glog (from `../../../node_modules/react-native/third-party-podspecs/glog.podspec`)
@@ -685,6 +688,8 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/expo-keep-awake/ios"
   ExpoModulesCore:
     :path: "../../../node_modules/expo-modules-core"
+  ExpoSystemUI:
+    :path: "../../../node_modules/expo-system-ui/ios"
   FBLazyVector:
     :path: "../../../node_modules/react-native/Libraries/FBLazyVector"
   FBReactNativeSpec:
@@ -840,6 +845,7 @@ SPEC CHECKSUMS:
   ExpoImage: bf714e0101812ccbbd1a4fdbfd34905feeefd9f5
   ExpoKeepAwake: 69f5f627670d62318410392d03e0b5db0f85759a
   ExpoModulesCore: 653958063a301098b541ae4dfed1ac0b98db607b
+  ExpoSystemUI: 0be5173ee2a7c01e9abc44f56d879a1eaaa16527
   FBLazyVector: 12ea01e587c9594e7b144e1bfc86ac4d9ac28fde
   FBReactNativeSpec: faca7d16c37626ca5780a87adef703817722fe61
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
