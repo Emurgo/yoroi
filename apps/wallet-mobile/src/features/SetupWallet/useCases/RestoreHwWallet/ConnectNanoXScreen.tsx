@@ -7,6 +7,7 @@ import {useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useModal} from '../../../../components'
 import {StepperProgress} from '../../../../components/StepperProgress/StepperProgress'
 import {showErrorDialog} from '../../../../kernel/dialogs'
 import {errorMessages} from '../../../../kernel/i18n/global-messages'
@@ -15,7 +16,9 @@ import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import {LedgerConnect} from '../../../../legacy/HW'
 import {getHWDeviceInfo} from '../../../../yoroi-wallets/cardano/hw'
 import {Device, NetworkId} from '../../../../yoroi-wallets/types'
+import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {useStrings} from '../../common/useStrings'
+import {WalletDuplicatedModal} from '../../common/WalletDuplicatedModal/WalletDuplicatedModal'
 
 export type Params = {
   useUSB?: boolean
@@ -30,13 +33,34 @@ type Props = {
 export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
   const intl = useIntl()
   const strings = useStrings()
-  const styles = useStyles()
+  const {styles} = useStyles()
+  const {walletManager} = useWalletManager()
+  const {openModal} = useModal()
+
   const navigation = useNavigation<SetupWalletRouteNavigation>()
 
   const {hwDeviceInfoChanged, walletImplementation, useUSB} = useSetupWallet()
 
   const onSuccess = (hwDeviceInfo: HW.DeviceInfo) => {
     hwDeviceInfoChanged(hwDeviceInfo)
+
+    const duplicatedAccountWalletMeta = walletManager.findWalletMetadataByPublicKeyHex(hwDeviceInfo.bip44AccountPublic)
+
+    if (duplicatedAccountWalletMeta) {
+      const {plate, seed} = walletManager.checksum(hwDeviceInfo.bip44AccountPublic)
+
+      openModal(
+        strings.restoreDuplicatedWalletModalTitle,
+        <WalletDuplicatedModal
+          plate={plate}
+          seed={seed}
+          duplicatedAccountWalletMetaId={duplicatedAccountWalletMeta.id}
+          duplicatedAccountWalletMetaName={duplicatedAccountWalletMeta.name}
+        />,
+      )
+      return
+    }
+
     navigation.navigate('setup-wallet-save-nano-x')
   }
 
@@ -80,16 +104,16 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     safeAreaView: {
-      flex: 1,
+      ...atoms.flex_1,
       backgroundColor: color.bg_color_max,
     },
     stepper: {
       ...atoms.p_lg,
     },
     content: {
-      flex: 1,
+      ...atoms.flex_1,
       ...atoms.px_lg,
     },
   })
-  return styles
+  return {styles} as const
 }

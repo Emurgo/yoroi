@@ -1,3 +1,4 @@
+import {walletChecksum} from '@emurgo/cip4-js'
 import {difference, parseSafe} from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
 import {App, Chain, HW, Network, Wallet} from '@yoroi/types'
@@ -22,9 +23,10 @@ import {logger} from '../../kernel/logger/logger'
 import {makeWalletEncryptedStorage} from '../../kernel/storage/EncryptedStorage'
 import {Keychain, KeychainManager} from '../../kernel/storage/Keychain'
 import {rootStorage} from '../../kernel/storage/rootStorage'
+import {keyManager} from '../../yoroi-wallets/cardano/key-manager/key-manager'
 import {WalletEvent, YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {wrappedCsl} from '../../yoroi-wallets/cardano/wrappedCsl'
-import {validatePassword} from '../../yoroi-wallets/utils/validators'
+import {validatePassword, validateWalletName} from '../../yoroi-wallets/utils/validators'
 import {networkManagers} from './common/constants'
 import {
   SyncWalletInfo,
@@ -381,6 +383,42 @@ export class WalletManager {
     )
 
     await this.#rootStorage.setItem('deletedWalletIds', [])
+  }
+
+  checksum(publicKeyHex: string) {
+    const {TextPart, ImagePart} = walletChecksum(publicKeyHex)
+
+    return {
+      plate: TextPart,
+      seed: ImagePart,
+    }
+  }
+
+  isWalletAccountDuplicated(publicKeyHex: string) {
+    const {plate} = this.checksum(publicKeyHex)
+
+    return Array.from(this.walletMetas.values()).some((walletMeta) => walletMeta.plate === plate)
+  }
+
+  findWalletMetadataByPublicKeyHex(publicKeyHex: string) {
+    const {plate} = this.checksum(publicKeyHex)
+
+    return Array.from(this.walletMetas.values()).find((walletMeta) => walletMeta.plate === plate)
+  }
+
+  validateWalletName(newName: string, oldName: string | null = null) {
+    const walletNames = Array.from(this.walletMetas.values()).map(({name}) => name)
+    const nameErrors = validateWalletName(newName, oldName, walletNames)
+
+    return nameErrors
+  }
+
+  async generateWalletKeys(walletImplementation: Wallet.Implementation, mnemonic: string, accountVisual?: number) {
+    const {csl, release} = wrappedCsl()
+    const keys = await keyManager(walletImplementation)({mnemonic, csl, accountVisual})
+    release()
+
+    return keys
   }
 
   _notify = (event: WalletManagerEvent | WalletEvent) => {

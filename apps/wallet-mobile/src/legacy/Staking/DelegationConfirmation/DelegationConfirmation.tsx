@@ -43,7 +43,7 @@ export const DelegationConfirmation = () => {
   if (!yoroiUnsignedTx.staking?.delegations) throw new Error('invalid transaction')
   const stakingAmount = Amounts.getAmount(
     Entries.toAmounts(yoroiUnsignedTx.staking.delegations),
-    wallet.primaryTokenInfo.id,
+    wallet.portfolioPrimaryTokenInfo.id,
   )
   const reward = approximateReward(stakingAmount.quantity)
 

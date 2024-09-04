@@ -1,5 +1,6 @@
 import {
   toDullahanRequest,
+  toProcessedMediaRequest,
   toSecondaryTokenInfos,
   toTokenActivityUpdates,
 } from './transformers'
@@ -137,5 +138,15 @@ describe('toDullahanRequest', () => {
     const result = toDullahanRequest(request)
 
     expect(result).toEqual(['token.1:hash1', 'token.2:hash2', 'token.3:hash3'])
+  })
+})
+
+describe('toProcessedMediaRequest', () => {
+  it('success', () => {
+    const request: Portfolio.Token.Id = 'token.1'
+
+    const result = toProcessedMediaRequest(request)
+
+    expect(result).toEqual({policy: 'token', name: '1'})
   })
 })

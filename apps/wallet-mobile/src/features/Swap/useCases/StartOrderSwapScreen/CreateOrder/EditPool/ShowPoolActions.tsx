@@ -38,15 +38,16 @@ export const ShowPoolActions = () => {
   if (!isBuyTouched || !isSellTouched || calculation === undefined) return null
 
   const {cost, pool} = calculation
+  const {decimals, ticker} = wallet.portfolioPrimaryTokenInfo
 
   const totalFees = Quantities.format(
     asQuantity((cost.batcherFee.quantity + cost.frontendFeeInfo.fee.quantity).toString()),
-    wallet.primaryTokenInfo.decimals ?? 0,
+    decimals,
   )
   const titleTotalFeesFormatted = `${strings.total}: ${Quantities.format(
     asQuantity(amounts.sell?.quantity.toString() ?? '0'),
     sellTokenInfo?.decimals ?? 0,
-  )} ${sellTokenName} + ${totalFees} ${wallet.primaryTokenInfo.ticker}`
+  )} ${sellTokenName} + ${totalFees} ${ticker}`
   const handleOnExpand = () => setIsExpanded((state) => !state)
   const totalFeesTitle = (
     <HeaderWrapper expanded={isExpanded} onPress={handleOnExpand}>
@@ -121,8 +122,9 @@ const ShowLimitOrderFeeBreakdown = ({totalFees}: {totalFees: string}) => {
     wallet.portfolioPrimaryTokenInfo.decimals,
   )
 
-  const depositFormatted = `${deposit} ${wallet.primaryTokenInfo.ticker}`
-  const totalFeesFormatted = `${totalFees} ${wallet.primaryTokenInfo.ticker}`
+  const ticker = wallet.portfolioPrimaryTokenInfo.ticker
+  const depositFormatted = `${deposit} ${ticker}`
+  const totalFeesFormatted = `${totalFees} ${ticker}`
   const minReceivedFormatted = `${minReceived} ${buyTokenName}`
 
   const feeStructure = [
@@ -210,8 +212,9 @@ const ShowMarketOrderFeeBreakdown = ({totalFees}: {totalFees: string}) => {
   )
   const liqFeePerc = pool.fee
 
-  const depositFormatted = `${deposit} ${wallet.primaryTokenInfo.ticker}`
-  const totalFeesFormatted = `${totalFees} ${wallet.primaryTokenInfo.ticker}`
+  const ticker = wallet.portfolioPrimaryTokenInfo.ticker
+  const depositFormatted = `${deposit} ${ticker}`
+  const totalFeesFormatted = `${totalFees} ${ticker}`
   const minReceivedFormatted = `${minReceived} ${buyTokenName}`
   const liqFeeQuantityFormatted = `${liqFeeQuantity} ${sellTokenName}`
   const liqFeePercFormatted = strings.swapLiquidityFeeInfo(liqFeePerc, bold)

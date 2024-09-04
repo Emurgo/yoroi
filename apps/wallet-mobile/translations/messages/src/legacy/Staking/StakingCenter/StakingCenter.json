@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Invalid Pool Data",
     "file": "src/legacy/Staking/StakingCenter/StakingCenter.tsx",
     "start": {
-      "line": 126,
+      "line": 127,
       "column": 9,
-      "index": 4416
+      "index": 4454
     },
     "end": {
-      "line": 129,
+      "line": 130,
       "column": 3,
-      "index": 4524
+      "index": 4562
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!The data from the stake pool(s) you selected is invalid. Please try again",
     "file": "src/legacy/Staking/StakingCenter/StakingCenter.tsx",
     "start": {
-      "line": 130,
+      "line": 131,
       "column": 11,
-      "index": 4537
+      "index": 4575
     },
     "end": {
-      "line": 133,
+      "line": 134,
       "column": 3,
-      "index": 4703
+      "index": 4741
     }
   }
 ]
