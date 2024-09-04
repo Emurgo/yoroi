@@ -1,24 +1,25 @@
 import {invalid} from '@yoroi/common'
-import {produce} from 'immer'
+import {castDraft, produce} from 'immer'
 
 import {ScanActionClaim} from '../../Scan/common/types'
-import {ClaimState, ClaimToken} from './types'
+import {ClaimInfo, ClaimState} from './types'
+
 export type ClaimActions = Readonly<{
-  claimTokenChanged: (claimToken: ClaimToken) => void
+  claimInfoChanged: (claimInfo: ClaimInfo) => void
   scanActionClaimChanged: (scanActionClaim: ScanActionClaim) => void
   reset: () => void
 }>
 
 export enum ClaimActionType {
-  ClaimTokenChanged = 'claimTokenChanged',
+  ClaimInfoChanged = 'claimInfoChanged',
   ScanActionClaimChanged = 'scanActionClaimChanged',
   Reset = 'reset',
 }
 
 export type ClaimAction =
   | {
-      type: ClaimActionType.ClaimTokenChanged
-      claimToken: ClaimToken
+      type: ClaimActionType.ClaimInfoChanged
+      claimInfo: ClaimInfo
     }
   | {
       type: ClaimActionType.ScanActionClaimChanged
@@ -29,12 +30,12 @@ export type ClaimAction =
     }
 
 export const defaultClaimState: ClaimState = {
-  claimToken: undefined,
+  claimInfo: undefined,
   scanActionClaim: undefined,
 } as const
 
 export const defaultClaimActions: ClaimActions = {
-  claimTokenChanged: () => invalid('missing init'),
+  claimInfoChanged: () => invalid('missing init'),
   scanActionClaimChanged: () => invalid('missing init'),
   reset: () => invalid('missing init'),
 } as const
@@ -42,14 +43,14 @@ export const defaultClaimActions: ClaimActions = {
 export const claimReducer = (state: ClaimState, action: ClaimAction): ClaimState => {
   return produce(state, (draft) => {
     switch (action.type) {
-      case ClaimActionType.ClaimTokenChanged:
-        draft.claimToken = action.claimToken
+      case ClaimActionType.ClaimInfoChanged:
+        draft.claimInfo = castDraft(action.claimInfo)
         break
       case ClaimActionType.ScanActionClaimChanged:
         draft.scanActionClaim = action.scanActionClaim
         break
       case ClaimActionType.Reset:
-        draft.claimToken = undefined
+        draft.claimInfo = undefined
         draft.scanActionClaim = undefined
         break
     }

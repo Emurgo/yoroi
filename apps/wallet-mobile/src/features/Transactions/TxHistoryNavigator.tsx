@@ -82,9 +82,10 @@ export const TxHistoryNavigator = () => {
   const claimApi = React.useMemo(() => {
     return claimApiMaker({
       address: wallet.externalAddresses[0],
-      primaryTokenId: wallet.portfolioPrimaryTokenInfo.id,
+      primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
+      tokenManager: wallet.networkManager.tokenManager,
     })
-  }, [wallet.externalAddresses, wallet.portfolioPrimaryTokenInfo.id])
+  }, [wallet.externalAddresses, wallet.networkManager.tokenManager, wallet.portfolioPrimaryTokenInfo])
 
   // navigator components
   const headerRightHistory = React.useCallback(() => <HeaderRightHistory />, [])

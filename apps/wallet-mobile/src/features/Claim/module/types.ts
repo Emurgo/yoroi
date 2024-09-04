@@ -1,4 +1,4 @@
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 
 import {ScanActionClaim} from '../../Scan/common/types'
 
@@ -33,20 +33,20 @@ export type ClaimApiClaimTokensResponse = {
 
 export type ClaimStatus = 'accepted' | 'processing' | 'done'
 
-export type ClaimToken = Readonly<{
+export type ClaimInfo = Readonly<{
   // api
   status: ClaimStatus
-  amounts: Balance.Amounts
+  amounts: ReadonlyArray<Portfolio.Token.Amount>
   txHash?: string
 }>
 
 export type ClaimApi = Readonly<{
-  claimTokens: (action: ScanActionClaim) => Promise<ClaimToken>
+  claimTokens: (action: ScanActionClaim) => Promise<ClaimInfo>
   address: string
-  primaryTokenId: Balance.TokenInfo['id']
+  primaryTokenInfo: Portfolio.Token.Info
 }>
 
 export type ClaimState = Readonly<{
-  claimToken: ClaimToken | undefined
+  claimInfo: ClaimInfo | undefined
   scanActionClaim: ScanActionClaim | undefined
 }>

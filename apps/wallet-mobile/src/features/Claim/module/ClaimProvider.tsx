@@ -4,7 +4,7 @@ import * as React from 'react'
 import {ScanActionClaim} from '../../Scan/common/types'
 import {claimApiMockInstances} from './api.mocks'
 import {ClaimActions, ClaimActionType, claimReducer, defaultClaimActions, defaultClaimState} from './state'
-import {ClaimApi, ClaimState, ClaimToken} from './types'
+import {ClaimApi, ClaimInfo, ClaimState} from './types'
 
 export type ClaimProviderContext = React.PropsWithChildren<ClaimApi & ClaimState & ClaimActions>
 
@@ -26,8 +26,8 @@ export const ClaimProvider = ({children, claimApi, initialState}: ClaimProviderP
   })
 
   const actions = React.useRef<ClaimActions>({
-    claimTokenChanged: (claimToken: ClaimToken) => {
-      dispatch({type: ClaimActionType.ClaimTokenChanged, claimToken})
+    claimInfoChanged: (claimInfo: ClaimInfo) => {
+      dispatch({type: ClaimActionType.ClaimInfoChanged, claimInfo})
     },
     scanActionClaimChanged: (scanActionClaim: ScanActionClaim) => {
       dispatch({type: ClaimActionType.ScanActionClaimChanged, scanActionClaim})

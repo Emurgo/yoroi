@@ -9,11 +9,13 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Boundary, Icon, Spacer, Text} from '../../../../../../../components'
-import {AmountItemPlaceholder} from '../../../../../../../components/AmountItem/AmountItem'
 import {useMetrics} from '../../../../../../../kernel/metrics/metricsManager'
 import {YoroiWallet} from '../../../../../../../yoroi-wallets/cardano/types'
 import {usePortfolioBalances} from '../../../../../../Portfolio/common/hooks/usePortfolioBalances'
-import {TokenAmountItem} from '../../../../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
+import {
+  AmountItemPlaceholder,
+  TokenAmountItem,
+} from '../../../../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
 import {useSearch, useSearchOnNavBar} from '../../../../../../Search/SearchContext'
 import {NoAssetFoundImage} from '../../../../../../Send/common/NoAssetFoundImage'
 import {useSelectedWallet} from '../../../../../../WalletManager/common/hooks/useSelectedWallet'

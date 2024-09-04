@@ -1,3 +1,5 @@
+import {tokenMocks} from '@yoroi/portfolio'
+
 import {ClaimApiClaimTokensResponse} from './types'
 
 const claimTokens: Record<string, {[key: string]: ClaimApiClaimTokensResponse}> = {
@@ -6,14 +8,16 @@ const claimTokens: Record<string, {[key: string]: ClaimApiClaimTokensResponse}> 
       status: 'accepted',
       lovelaces: '2000000',
       tokens: {
-        '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65f.74484f444c52': '1000000',
+        [tokenMocks.nftCryptoKitty.info.id]: '44',
+        [tokenMocks.rnftWhatever.info.id]: '410',
       },
       queue_position: 100,
     },
     queued: {
       lovelaces: '2000000',
       tokens: {
-        '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65f.74484f444c52': '1000000',
+        [tokenMocks.nftCryptoKitty.info.id]: '44',
+        [tokenMocks.rnftWhatever.info.id]: '410',
       },
       status: 'queued',
       queue_position: 1,
@@ -21,8 +25,10 @@ const claimTokens: Record<string, {[key: string]: ClaimApiClaimTokensResponse}> 
     claimed: {
       lovelaces: '2000000',
       tokens: {
-        '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65f.74484f444c52': '1000000',
+        [tokenMocks.nftCryptoKitty.info.id]: '44',
+        [tokenMocks.rnftWhatever.info.id]: '410',
       },
+
       status: 'claimed',
       tx_hash: 'tx_hash',
     },

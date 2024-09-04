@@ -1,48 +1,53 @@
 import {FetchData, fetchData, isLeft} from '@yoroi/common'
-import {Api, Balance} from '@yoroi/types'
+import {Api, Portfolio} from '@yoroi/types'
 
 import {ScanActionClaim} from '../../Scan/common/types'
 import {asClaimApiError, asClaimToken} from './transformers'
 import {ClaimApi, ClaimApiClaimTokensResponse} from './types'
 import {ClaimTokensApiResponseSchema} from './validators'
 
-type ClaimApiMaker = Readonly<{
+type ClaimApiMakerOptions = Readonly<{
   address: string
-  primaryTokenId: Balance.TokenInfo['id']
+  primaryTokenInfo: Portfolio.Token.Info
+  tokenManager: Portfolio.Manager.Token
 }>
 
 export const claimApiMaker = (
-  {address, primaryTokenId}: ClaimApiMaker,
+  {address, primaryTokenInfo, tokenManager}: ClaimApiMakerOptions,
   deps: Readonly<{request: FetchData}> = {request: fetchData} as const,
 ): Readonly<ClaimApi> => {
-  const claimTokens = postClaimTokens({address, primaryTokenId}, deps)
+  const claimTokens = postClaimTokens({address, primaryTokenInfo, tokenManager}, deps)
 
   return {
     claimTokens,
     address,
-    primaryTokenId,
+    primaryTokenInfo,
   } as const
 }
 
 const postClaimTokens =
-  ({address, primaryTokenId}: ClaimApiMaker, {request} = {request: fetchData}) =>
+  ({address, primaryTokenInfo, tokenManager}: ClaimApiMakerOptions, {request} = {request: fetchData}) =>
   async (claimAction: ScanActionClaim) => {
     // builds the request from the action, overides address and code
     const {code, params, url} = claimAction
     const payload = {...params, address, code}
 
-    const response = await request<ClaimApiClaimTokensResponse>({
-      url,
-      method: 'post',
-      data: payload,
-    })
+    try {
+      const response = await request<ClaimApiClaimTokensResponse>({
+        url,
+        method: 'post',
+        data: payload,
+      })
 
-    if (isLeft(response)) {
-      return asClaimApiError(response.error)
-    } else {
-      const claimToken = response.value.data
-      if (!ClaimTokensApiResponseSchema.safeParse(claimToken).success) throw new Api.Errors.ResponseMalformed()
+      if (isLeft(response)) {
+        return asClaimApiError(response.error)
+      } else {
+        const claimInfo = response.value.data
+        if (!ClaimTokensApiResponseSchema.safeParse(claimInfo).success) throw new Api.Errors.ResponseMalformed()
 
-      return asClaimToken(claimToken, primaryTokenId)
+        return asClaimToken(claimInfo, primaryTokenInfo, tokenManager)
+      }
+    } catch (error) {
+      throw new Api.Errors.Unknown((error as Error)?.message)
     }
   }

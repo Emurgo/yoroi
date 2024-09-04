@@ -15,17 +15,17 @@ const withScanActionClaim: ClaimState = {
 
 const withClaimTokenAccepted: ClaimState = {
   ...withScanActionClaim,
-  claimToken: claimApiMockResponses.claimTokens['accepted'],
+  claimInfo: claimApiMockResponses.claimTokens['accepted'],
 } as const
 
 const withClaimTokenProcessing: ClaimState = {
   ...withScanActionClaim,
-  claimToken: claimApiMockResponses.claimTokens['processing'],
+  claimInfo: claimApiMockResponses.claimTokens['processing'],
 } as const
 
 const withClaimTokenDone: ClaimState = {
   ...withScanActionClaim,
-  claimToken: claimApiMockResponses.claimTokens['done'],
+  claimInfo: claimApiMockResponses.claimTokens['done'],
 } as const
 
 export const mocks = {

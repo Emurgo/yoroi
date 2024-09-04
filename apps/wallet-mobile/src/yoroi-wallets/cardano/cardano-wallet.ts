@@ -9,6 +9,7 @@ import {Api, App, Balance, HW, Network, Portfolio, Wallet} from '@yoroi/types'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
+import {freeze} from 'immer'
 import _ from 'lodash'
 import {defaultMemoize} from 'reselect'
 import {Observable} from 'rxjs'
@@ -21,6 +22,7 @@ import LocalizableError from '../../kernel/i18n/LocalizableError'
 import {throwLoggedError} from '../../kernel/logger/helpers/throw-logged-error'
 import {logger} from '../../kernel/logger/logger'
 import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../kernel/storage/EncryptedStorage'
+import {isEmptyString} from '../../kernel/utils'
 import type {
   AccountStateResponse,
   DefaultAsset,
@@ -34,7 +36,7 @@ import type {
   YoroiEntry,
 } from '../types'
 import {StakingInfo, YoroiSignedTx, YoroiUnsignedTx} from '../types'
-import {asQuantity, Quantities} from '../utils'
+import {Quantities} from '../utils'
 import {Cardano, CardanoMobile} from '../wallets'
 import {AccountManager, accountManagerMaker, Addresses} from './account-manager/account-manager'
 import * as legacyApi from './api/api'
@@ -1036,17 +1038,19 @@ export const makeCardanoWallet = (
       const utxos = utxosMaker(this._utxos)
       const collateralId = this.collateralId
       const collateralUtxo = utxos.findById(collateralId)
-      const quantity = collateralUtxo?.amount !== undefined ? asQuantity(collateralUtxo.amount) : Quantities.zero
-      const txInfos = this.transactions
+      const quantity =
+        collateralUtxo?.amount !== undefined && !isEmptyString(collateralUtxo.amount)
+          ? BigInt(collateralUtxo?.amount)
+          : 0n
       const collateralTxId = collateralId ? collateralId.split(':')[0] : null
-      const isConfirmed = !!collateralTxId && Object.values(txInfos).some((tx) => tx.id === collateralTxId)
+      const isConfirmed = !!collateralTxId && Object.values(this.transactions).some((tx) => tx.id === collateralTxId)
 
-      return {
+      return freeze({
         utxo: collateralUtxo,
-        amount: {quantity, tokenId: this.portfolioPrimaryTokenInfo.id},
+        amount: {quantity, info: this.portfolioPrimaryTokenInfo},
         collateralId,
         isConfirmed,
-      }
+      })
     }
 
     async setCollateralId(id: RawUtxo['utxo_id']): Promise<void> {

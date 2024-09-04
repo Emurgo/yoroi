@@ -29,11 +29,11 @@ export const useTriggerScanAction = ({insideFeature}: {insideFeature: ScanFeatur
     memoChanged,
   } = useTransfer()
 
-  const {reset: resetClaimState, scanActionClaimChanged, address, claimTokenChanged} = useClaim()
+  const {reset: resetClaimState, scanActionClaimChanged, address, claimInfoChanged} = useClaim()
   const claimErrorResolver = useClaimErrorResolver()
   const {claimTokens} = useClaimTokens({
-    onSuccess: (claimToken) => {
-      claimTokenChanged(claimToken)
+    onSuccess: (claimInfo) => {
+      claimInfoChanged(claimInfo)
       closeModal()
       navigateTo.claimShowSuccess()
     },

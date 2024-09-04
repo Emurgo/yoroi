@@ -1,21 +1,18 @@
-import {invalid} from '@yoroi/common'
 import {useExplorers} from '@yoroi/explorers'
+import {sortTokenAmountsByInfo} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
-import {Balance} from '@yoroi/types'
+import {App, Portfolio} from '@yoroi/types'
 import React from 'react'
 import {FlatList, Linking, Platform, StyleSheet, Text, TextProps, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {CopyButton, Icon} from '../../../components'
-import {AmountItem} from '../../../components/AmountItem/AmountItem'
 import {Button} from '../../../components/Button/Button'
 import {PressableIcon} from '../../../components/PressableIcon/PressableIcon'
 import {Space} from '../../../components/Space/Space'
 import {Spacer} from '../../../components/Spacer/Spacer'
 import {isEmptyString} from '../../../kernel/utils'
-import {useTokenInfos} from '../../../yoroi-wallets/hooks'
-import {sortTokenInfos} from '../../../yoroi-wallets/utils/sorting'
-import {Amounts} from '../../../yoroi-wallets/utils/utils'
+import {TokenAmountItem} from '../../Portfolio/common/TokenAmountItem/TokenAmountItem'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useDialogs} from '../common/useDialogs'
 import {useNavigateTo} from '../common/useNavigateTo'
@@ -28,11 +25,11 @@ export const ShowSuccessScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
   const navigateTo = useNavigateTo()
-  const {claimToken} = useClaim()
+  const {claimInfo} = useClaim()
 
-  if (!claimToken) invalid('Should never happen')
+  if (!claimInfo) throw new App.Errors.InvalidState('ClaimInfo is not set, reached an invalid state')
 
-  const {status, txHash, amounts} = claimToken
+  const {status, txHash, amounts} = claimInfo
 
   return (
     <SafeAreaView edges={['top', 'left', 'right']} style={styles.root}>
@@ -125,23 +122,17 @@ const TxHash = ({txHash}: {txHash: string}) => {
   )
 }
 
-export const AmountList = ({amounts}: {amounts: Balance.Amounts}) => {
+export const AmountList = ({amounts}: {amounts: ReadonlyArray<Portfolio.Token.Amount>}) => {
   const {wallet} = useSelectedWallet()
-
-  const tokenInfos = useTokenInfos({
-    wallet,
-    tokenIds: Amounts.toArray(amounts).map(({tokenId}) => tokenId),
-  })
+  const {styles} = useStyles()
 
   return (
     <FlatList
-      data={sortTokenInfos({tokenInfos})}
-      renderItem={({item: tokenInfo}) => (
-        <AmountItem wallet={wallet} amount={Amounts.getAmount(amounts, tokenInfo.id)} />
-      )}
-      ItemSeparatorComponent={() => <Spacer height={16} />}
-      style={{paddingHorizontal: 16}}
-      keyExtractor={({id}) => id}
+      data={sortTokenAmountsByInfo({amounts, primaryTokenInfo: wallet.portfolioPrimaryTokenInfo})}
+      renderItem={({item: amount}) => <TokenAmountItem amount={amount} />}
+      ItemSeparatorComponent={() => <Space height="lg" />}
+      style={styles.list}
+      keyExtractor={({info}) => info.id}
     />
   )
 }
@@ -151,6 +142,9 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     flex: {
       ...atoms.flex_1,
+    },
+    list: {
+      ...atoms.px_lg,
     },
     root: {
       ...atoms.flex_1,
@@ -197,5 +191,5 @@ const useStyles = () => {
     icon: color.el_gray_medium,
   }
 
-  return {styles, colors}
+  return {styles, colors} as const
 }
