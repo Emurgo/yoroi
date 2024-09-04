@@ -9,7 +9,6 @@ import Share from 'react-native-share'
 import ViewShot, {captureRef} from 'react-native-view-shot'
 
 import {Spacer, Text} from '../'
-import {Space} from '../Space/Space'
 import {CaptureShareQRCodeCard} from './CaptureShareQRCodeCard/CaptureShareQRCodeCard'
 
 type ShareQRCodeCardProps = {
@@ -73,7 +72,7 @@ export const ShareQRCodeCard = ({
 
   return (
     <TouchableWithoutFeedback onLongPress={onLongPress}>
-      <View>
+      <>
         <View style={styles.card}>
           <LinearGradient
             style={[StyleSheet.absoluteFill, {opacity: 1, borderRadius: 16}]}
@@ -108,9 +107,7 @@ export const ShareQRCodeCard = ({
             <Text style={styles.copiedText}>{copiedText}</Text>
           </Animated.View>
         )}
-
-        <Space height="lg" />
-      </View>
+      </>
     </TouchableWithoutFeedback>
   )
 }
