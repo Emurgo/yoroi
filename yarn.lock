@@ -2730,38 +2730,10 @@
     "@emurgo/cardano-serialization-lib-nodejs" "12.1.0-beta.1"
     "@emurgo/cross-csl-core" "5.1.0-beta.1"
 
-"@emurgo/cross-msl-core@1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@emurgo/cross-msl-core/-/cross-msl-core-1.0.0.tgz#f66ec9491362e9d60c7c6142875af849ca788c98"
-  integrity sha512-X98tmVLYSpcLggky3R7iuvb9no/LdoPCR8YXH/CjVj4U5YoR9/6Xf2PQOxSQCBCeExHZ7fDo+gefwoSX6yRjow==
-  dependencies:
-    "@cardano-foundation/ledgerjs-hw-app-cardano" "^5.0.0"
-    "@types/mocha" "^9.1.1"
-    axios "^0.24.0"
-    bech32 "^2.0.0"
-    bignumber.js "^9.0.1"
-    blake2b "^2.1.4"
-    hash-wasm "^4.9.0"
-    mocha "^10.0.0"
-
-"@emurgo/cross-msl-mobile@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@emurgo/cross-msl-mobile/-/cross-msl-mobile-1.0.1.tgz#ee49be7c6e887538a59f9c02a1ac1bbc9abe4e2f"
-  integrity sha512-/I9UJ/5+2R3UwadcY3cdO9UL2ONFkdDQW2FkICAooDubpmN+8mkwrwyK50Jp08KJv67XPNcMRpE1ffVpj0KZEw==
-  dependencies:
-    "@emurgo/cross-msl-core" "1.0.0"
-
 "@emurgo/csl-mobile-bridge@6.1.0-beta.1":
   version "6.1.0-beta.1"
   resolved "https://registry.yarnpkg.com/@emurgo/csl-mobile-bridge/-/csl-mobile-bridge-6.1.0-beta.1.tgz#96b1c05da987aa0715409eaec97572c424614b36"
   integrity sha512-CF+yaCcc0+v5yuKJr6hV3FOJx0OpeAa1AaqCmhsvtbDv0Q6w0KF7GGbdAmjJrd4kDQ956LJL/15jqUo1y4i1yw==
-  dependencies:
-    base-64 "0.1.0"
-
-"@emurgo/msl-mobile-bridge@^1.0.4":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@emurgo/msl-mobile-bridge/-/msl-mobile-bridge-1.0.4.tgz#a18565dddcc00756db1b31011afd7bbabe6600ae"
-  integrity sha512-nLUBtcUM8OMJpI1O/YpV7BU1i/gCEC6urPwsBiEsfzpNOXRdbCpGRxk7YMT6GN8luMLYdPxDcZagHDSolGvkBw==
   dependencies:
     base-64 "0.1.0"
 
