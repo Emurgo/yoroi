@@ -79,7 +79,7 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
     assurance: 'HIGH',
     tokens: {
       '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7': {
-        networkId: 0,
+        networkId: 1,
         isDefault: false,
         identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
         metadata: {
@@ -173,7 +173,7 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
     assurance: 'HIGH',
     tokens: {
       '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7': {
-        networkId: 0,
+        networkId: 1,
         isDefault: false,
         identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
         metadata: {
@@ -267,7 +267,7 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
     assurance: 'HIGH',
     tokens: {
       '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7': {
-        networkId: 0,
+        networkId: 1,
         isDefault: false,
         identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
         metadata: {
@@ -364,7 +364,7 @@ export const mockTransactionInfo = (transaction?: Partial<TransactionInfo>): Tra
     assurance: 'HIGH',
     tokens: {
       '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7': {
-        networkId: 0,
+        networkId: 1,
         isDefault: false,
         identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
         metadata: {

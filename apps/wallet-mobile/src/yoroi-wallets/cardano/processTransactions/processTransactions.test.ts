@@ -1,5 +1,5 @@
 import {RawTransaction, TRANSACTION_DIRECTION} from '../../types/other'
-import {NETWORK_ID, PRIMARY_TOKEN} from '../constants/testnet/constants'
+import {PRIMARY_TOKEN} from '../constants/testnet/constants'
 import {MultiToken} from '../MultiToken'
 import {toCachedTx} from '../transactionManager'
 import {processTxHistoryData} from './processTransactions'
