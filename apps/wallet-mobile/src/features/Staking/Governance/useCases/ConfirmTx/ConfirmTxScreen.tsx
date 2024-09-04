@@ -11,6 +11,7 @@ import {ConfirmTxWithHwModal} from '../../../../../components/ConfirmTxWithHwMod
 import {ConfirmTxWithOsModal} from '../../../../../components/ConfirmTxWithOsModal'
 import {ConfirmTxWithSpendingPasswordModal} from '../../../../../components/ConfirmTxWithSpendingPasswordModal'
 import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
+import {Space} from '../../../../../components/Space/Space'
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {useUnsafeParams} from '../../../../../kernel/navigation'
 import {Amounts} from '../../../../../yoroi-wallets/utils'
@@ -130,6 +131,8 @@ export const ConfirmTxScreen = () => {
 
   return (
     <View style={styles.root}>
+      <Space height="lg" />
+
       <Text style={styles.secondaryText}>{title}</Text>
 
       <Spacer height={4} />
@@ -239,7 +242,7 @@ const useStyles = () => {
     },
     secondaryText: {
       ...atoms.body_2_md_regular,
-      color: color.text_gray_medium,
+      color: color.text_gray_low,
     },
     row: {
       ...atoms.flex_row,

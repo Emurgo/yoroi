@@ -73,6 +73,7 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: Forwarded
   const [showPassword, setShowPassword] = React.useState(false)
   const [errorTextEnabled, setErrorTextEnabled] = React.useState(errorOnMount)
   const {styles, colors} = useStyles()
+  const {isDark} = useTheme()
   useDebounced(
     React.useCallback(() => setErrorTextEnabled(true), []),
     value,
@@ -103,6 +104,7 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: Forwarded
         autoCorrect={false}
         autoComplete={autoComplete}
         autoCapitalize="none"
+        keyboardAppearance={isDark ? 'dark' : 'light'} // ios feature
         autoFocus={selectTextOnAutoFocus || autoFocus}
         onFocus={(event) => {
           // selectTextOnFocus + autoFocus doesn't work as expected
@@ -244,7 +246,7 @@ const useStyles = () => {
 
   const colors = {
     ...color,
-    background: color.gray_min,
+    background: color.bg_color_max,
     gray: color.gray_400,
     textInput: color.gray_600,
     actionGray: color.gray_500,

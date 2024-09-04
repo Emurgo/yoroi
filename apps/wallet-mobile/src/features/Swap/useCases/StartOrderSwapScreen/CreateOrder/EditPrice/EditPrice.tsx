@@ -15,6 +15,7 @@ export const EditPrice = () => {
   const strings = useStrings()
   const [isFocused, setIsFocused] = React.useState(false)
   const {styles, colors} = useStyles()
+  const {isDark} = useTheme()
 
   const {orderData} = useSwap()
   const sellTokenInfo = orderData.amounts.sell?.info
@@ -58,6 +59,7 @@ export const EditPrice = () => {
             ref={limitInputRef}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
+            keyboardAppearance={isDark ? 'dark' : 'light'} // ios feature
           />
 
           <View style={[styles.textWrapper, disabled && styles.disabled]}>

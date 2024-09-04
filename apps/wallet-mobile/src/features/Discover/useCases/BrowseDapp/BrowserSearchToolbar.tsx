@@ -14,6 +14,7 @@ type Props = {
 export const BrowserSearchToolbar = ({onBack, onSearchChange, onSearchSubmit, searchValue}: Props) => {
   const {styles} = useStyles()
   const {track} = useMetrics()
+  const {isDark} = useTheme()
 
   React.useEffect(() => {
     let timeout: ReturnType<typeof setTimeout> | undefined
@@ -46,6 +47,7 @@ export const BrowserSearchToolbar = ({onBack, onSearchChange, onSearchSubmit, se
           style={styles.searchInputStyle}
           onSubmitEditing={onSearchSubmit}
           enablesReturnKeyAutomatically={searchValue.length === 0}
+          keyboardAppearance={isDark ? 'dark' : 'light'}
         />
       </View>
     </View>

@@ -88,7 +88,7 @@ export const Button = (props: ButtonProps) => {
             outlineOnLight && styles.textOutlineOnLight,
             outlineOnLight && shelleyTheme && styles.textShelleyOutlineOnLight,
             outlineShelley && styles.textOutlineShelley,
-            props.disabled && styles.buttonDisabledText,
+            props.disabled && !outlineOnLight && styles.buttonDisabledText,
             textStyles,
           ]}
         >

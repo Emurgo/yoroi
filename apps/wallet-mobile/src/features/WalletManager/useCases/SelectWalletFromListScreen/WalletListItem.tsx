@@ -126,15 +126,29 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
               <Space width="md" />
 
               {isSelected && <Icon.Check size={20} color={colors.selected} />}
-
-              <Space width="md" />
             </>
           )}
 
-          {isButtonPressed ? <ChevronRightDarkIllustration /> : <ChevronRightGrayIllustration />}
+          <Space width="xl" />
+
+          <Chevron pressed={isButtonPressed} />
         </TouchableOpacity>
       </View>
     </Swipeable>
+  )
+}
+
+const Chevron = ({pressed}: {pressed: boolean}) => {
+  const {styles} = useStyles()
+
+  return (
+    <View style={styles.chevron}>
+      <Space height="sm" />
+
+      {pressed ? <ChevronRightDarkIllustration /> : <ChevronRightGrayIllustration />}
+
+      <Space fill />
+    </View>
   )
 }
 
@@ -148,26 +162,26 @@ const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     item: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      flexWrap: 'wrap',
+      ...atoms.flex_row,
+      ...atoms.justify_between,
+      ...atoms.align_center,
+      ...atoms.flex_wrap,
     },
     leftSide: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      ...atoms.flex_row,
+      ...atoms.align_center,
     },
     walletDetails: {
-      justifyContent: 'space-between',
-      flex: 1,
+      ...atoms.justify_between,
+      ...atoms.flex_1,
     },
     walletName: {
+      ...atoms.flex_1,
       ...atoms.body_1_lg_medium,
-      color: color.gray_max,
-      flex: 1,
+      color: color.text_gray_medium,
     },
     walletMeta: {
-      color: color.gray_600,
+      color: color.text_gray_low,
       opacity: 0.5,
     },
     walletMetaPressed: {
@@ -178,13 +192,13 @@ const useStyles = () => {
       opacity: 0.5,
     },
     rightContainer: {
-      justifyContent: 'center',
-      alignItems: 'center',
+      ...atoms.justify_center,
+      ...atoms.align_center,
       width: 100,
     },
     rigthActionsContainer: {
-      justifyContent: 'center',
-      alignItems: 'center',
+      ...atoms.justify_center,
+      ...atoms.align_center,
       ...atoms.px_md,
     },
     actionDangerousText: {
@@ -192,6 +206,10 @@ const useStyles = () => {
       ...atoms.body_2_md_medium,
       ...atoms.p_sm,
       backgroundColor: color.sys_magenta_100,
+    },
+    chevron: {
+      ...atoms.flex_col,
+      ...atoms.align_start,
     },
   })
 
