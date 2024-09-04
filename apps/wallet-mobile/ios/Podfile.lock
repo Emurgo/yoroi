@@ -29,20 +29,12 @@ PODS:
     - ExpoModulesCore
   - ExpoDevice (5.4.0):
     - ExpoModulesCore
-  - ExpoImage (1.3.0):
-    - ExpoModulesCore
-    - SDWebImage (~> 5.15.8)
-    - SDWebImageAVIFCoder (~> 0.10.0)
-    - SDWebImageSVGCoder (~> 1.7.0)
-    - SDWebImageWebPCoder (~> 0.11.0)
   - ExpoKeepAwake (12.0.1):
     - ExpoModulesCore
   - ExpoModulesCore (1.2.7):
     - React-Core
     - React-RCTAppDelegate
     - ReactCommon/turbomodule/core
-  - ExpoSystemUI (2.2.1):
-    - ExpoModulesCore
   - FBLazyVector (0.71.14)
   - FBReactNativeSpec (0.71.14):
     - RCT-Folly (= 2021.07.22.00)
@@ -56,28 +48,7 @@ PODS:
   - hermes-engine (0.71.14):
     - hermes-engine/Pre-built (= 0.71.14)
   - hermes-engine/Pre-built (0.71.14)
-  - libaom (3.0.0):
-    - libvmaf (>= 2.2.0)
-  - libavif (0.11.1):
-    - libavif/libaom (= 0.11.1)
-  - libavif/core (0.11.1)
-  - libavif/libaom (0.11.1):
-    - libaom (>= 2.0.0)
-    - libavif/core
   - libevent (2.1.12)
-  - libvmaf (2.3.1)
-  - libwebp (1.3.2):
-    - libwebp/demux (= 1.3.2)
-    - libwebp/mux (= 1.3.2)
-    - libwebp/sharpyuv (= 1.3.2)
-    - libwebp/webp (= 1.3.2)
-  - libwebp/demux (1.3.2):
-    - libwebp/webp
-  - libwebp/mux (1.3.2):
-    - libwebp/demux
-  - libwebp/sharpyuv (1.3.2)
-  - libwebp/webp (1.3.2):
-    - libwebp/sharpyuv
   - MMKV (1.3.3):
     - MMKVCore (~> 1.3.3)
   - MMKVCore (1.3.3)
@@ -375,8 +346,7 @@ PODS:
     - React-Core
   - react-native-view-shot (3.8.0):
     - React-Core
-  - react-native-webview (13.8.1):
-    - RCT-Folly (= 2021.07.22.00)
+  - react-native-webview (11.26.1):
     - React-Core
   - React-perflogger (0.71.14)
   - React-RCTActionSheet (0.71.14):
@@ -523,17 +493,6 @@ PODS:
     - React-Core
   - RNSVG (13.8.0):
     - React-Core
-  - SDWebImage (5.15.8):
-    - SDWebImage/Core (= 5.15.8)
-  - SDWebImage/Core (5.15.8)
-  - SDWebImageAVIFCoder (0.10.1):
-    - libavif (>= 0.11.0)
-    - SDWebImage (~> 5.10)
-  - SDWebImageSVGCoder (1.7.0):
-    - SDWebImage/Core (~> 5.6)
-  - SDWebImageWebPCoder (0.11.0):
-    - libwebp (~> 1.0)
-    - SDWebImage/Core (~> 5.15)
   - Sentry/HybridSDK (8.9.3):
     - SentryPrivate (= 8.9.3)
   - SentryPrivate (8.9.3)
@@ -559,10 +518,8 @@ DEPENDENCIES:
   - Expo (from `../../../node_modules/expo`)
   - ExpoBlur (from `../../../node_modules/expo-blur/ios`)
   - ExpoDevice (from `../../../node_modules/expo-device/ios`)
-  - ExpoImage (from `../../../node_modules/expo-image/ios`)
   - ExpoKeepAwake (from `../../../node_modules/expo-keep-awake/ios`)
   - ExpoModulesCore (from `../../../node_modules/expo-modules-core`)
-  - ExpoSystemUI (from `../../../node_modules/expo-system-ui/ios`)
   - FBLazyVector (from `../../../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../../../node_modules/react-native/React/FBReactNativeSpec`)
   - glog (from `../../../node_modules/react-native/third-party-podspecs/glog.podspec`)
@@ -637,18 +594,10 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - fmt
-    - libaom
-    - libavif
     - libevent
-    - libvmaf
-    - libwebp
     - MMKV
     - MMKVCore
     - MultiplatformBleAdapter
-    - SDWebImage
-    - SDWebImageAVIFCoder
-    - SDWebImageSVGCoder
-    - SDWebImageWebPCoder
     - Sentry
     - SentryPrivate
     - ZXingObjC
@@ -682,14 +631,10 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/expo-blur/ios"
   ExpoDevice:
     :path: "../../../node_modules/expo-device/ios"
-  ExpoImage:
-    :path: "../../../node_modules/expo-image/ios"
   ExpoKeepAwake:
     :path: "../../../node_modules/expo-keep-awake/ios"
   ExpoModulesCore:
     :path: "../../../node_modules/expo-modules-core"
-  ExpoSystemUI:
-    :path: "../../../node_modules/expo-system-ui/ios"
   FBLazyVector:
     :path: "../../../node_modules/react-native/Libraries/FBLazyVector"
   FBReactNativeSpec:
@@ -842,20 +787,14 @@ SPEC CHECKSUMS:
   Expo: b7d2843b0a0027d0ce76121a63085764355a16ed
   ExpoBlur: e832d874bd94afc0645daddbd3162ec1ce172080
   ExpoDevice: 1c1b0c9cad96c292c1de73948649cfd654b2b3c0
-  ExpoImage: bf714e0101812ccbbd1a4fdbfd34905feeefd9f5
   ExpoKeepAwake: 69f5f627670d62318410392d03e0b5db0f85759a
   ExpoModulesCore: 653958063a301098b541ae4dfed1ac0b98db607b
-  ExpoSystemUI: 0be5173ee2a7c01e9abc44f56d879a1eaaa16527
   FBLazyVector: 12ea01e587c9594e7b144e1bfc86ac4d9ac28fde
   FBReactNativeSpec: faca7d16c37626ca5780a87adef703817722fe61
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
   hermes-engine: d7cc127932c89c53374452d6f93473f1970d8e88
-  libaom: 144606b1da4b5915a1054383c3a4459ccdb3c661
-  libavif: 84bbb62fb232c3018d6f1bab79beea87e35de7b7
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
-  libvmaf: 27f523f1e63c694d14d534cd0fddd2fab0ae8711
-  libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
   MMKV: f902fb6719da13c2ab0965233d8963a59416f911
   MMKVCore: d26e4d3edd5cb8588c2569222cbd8be4231374e9
   MultiplatformBleAdapter: 5a6a897b006764392f9cef785e4360f54fb9477d
@@ -892,7 +831,7 @@ SPEC CHECKSUMS:
   react-native-slider: 33b8d190b59d4f67a541061bb91775d53d617d9d
   react-native-timezone: 92fa6c0a7c041efd632a372a515c957cd8ee9e72
   react-native-view-shot: 6b7ed61d77d88580fed10954d45fad0eb2d47688
-  react-native-webview: bdc091de8cf7f8397653e30182efcd9f772e03b3
+  react-native-webview: 9f111dfbcfc826084d6c507f569e5e03342ee1c1
   React-perflogger: 4987ad83731c23d11813c84263963b0d3028c966
   React-RCTActionSheet: 5ad952b2a9740d87a5bd77280c4bc23f6f89ea0c
   React-RCTAnimation: d2de22af3f536cc80bb5b3918e1a455114d1b985
@@ -922,10 +861,6 @@ SPEC CHECKSUMS:
   RNSentry: f9e637773502a61c7b455c4ce65bc7008ce22a6e
   RNShare: 859ff710211285676b0bcedd156c12437ea1d564
   RNSVG: c1e76b81c76cdcd34b4e1188852892dc280eb902
-  SDWebImage: cb032eba469c54e0000e78bcb0a13cdde0a52798
-  SDWebImageAVIFCoder: 8348fef6d0ec69e129c66c9fe4d74fbfbf366112
-  SDWebImageSVGCoder: 15a300a97ec1c8ac958f009c02220ac0402e936c
-  SDWebImageWebPCoder: 295a6573c512f54ad2dd58098e64e17dcf008499
   Sentry: 97161cac725da1ecbe77d1445bf8a61c1e5667f1
   SentryPrivate: 9a76def09fb08f9501997b8df946e8097947b94f
   Yoga: e71803b4c1fff832ccf9b92541e00f9b873119b9
