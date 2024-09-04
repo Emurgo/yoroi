@@ -52,7 +52,7 @@ const compareByDate = (a: MappedRawOrder, b: MappedRawOrder) => {
   return new Date(b.date).getTime() - new Date(a.date).getTime()
 }
 
-const findCompletedOrderTx = (transactions: TransactionInfo[]): MappedRawOrder[] => {
+const findCompletedOrderTx = (transactions: TransactionInfo[], primaryTokenId: string): MappedRawOrder[] => {
   const sentTransactions = transactions.filter((tx) => tx.direction === 'SENT')
   const receivedTransactions = transactions.filter((tx) => tx.direction === 'RECEIVED')
 
@@ -67,7 +67,7 @@ const findCompletedOrderTx = (transactions: TransactionInfo[]): MappedRawOrder[]
           if (Boolean(input.id) && input?.id?.slice(0, -1) === sentTx?.id && receivedTx.inputs.length > 1) {
             result['id'] = sentTx?.id
             result['date'] = receivedTx?.lastUpdatedAt
-            const metadata = parseOrderTxMetadata(sentTx?.metadata?.['674'])
+            const metadata = parseOrderTxMetadata(sentTx?.metadata?.['674'], primaryTokenId)
             if (metadata) {
               result['metadata'] = metadata
               return acc.push(result as MappedRawOrder)
@@ -114,7 +114,7 @@ export const CompletedOrders = () => {
   }, [])
 
   const transactionsInfos = useTransactionInfos(wallet)
-  const completeOrders = findCompletedOrderTx(Object.values(transactionsInfos))
+  const completeOrders = findCompletedOrderTx(Object.values(transactionsInfos), wallet.primaryTokenInfo.id)
   const tokenIds = React.useMemo(
     () => _.uniq(completeOrders?.flatMap((o) => [o.metadata.sellTokenId, o.metadata.buyTokenId])),
     [completeOrders],

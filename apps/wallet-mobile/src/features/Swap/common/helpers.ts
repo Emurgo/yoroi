@@ -11,6 +11,7 @@ import {generateCIP30UtxoCbor} from '../../../yoroi-wallets/cardano/utils'
 import {useSelectedWallet} from '../../WalletManager/Context/SelectedWalletContext'
 import {PRICE_IMPACT_HIGH_RISK, PRICE_IMPACT_MODERATE_RISK} from './constants'
 import {SwapPriceImpactRisk} from './types'
+import {freeze} from 'immer'
 
 export const useCancelOrderWithHw = (
   {cancelOrder}: {cancelOrder: SwapApi['cancelOrder']},
@@ -60,11 +61,23 @@ const isOrderTxMetadata = createTypeGuardFromSchema(OrderTxMetadataSchema)
  * Parses and validates a JSON metadata string, transforming it into a structure compliant with MappedRawOrder['metadata'].
  *
  * @param metadataJson - The JSON string representation of metadata.
+ * @param primaryTokenId - The primary token ID to use when the metadata specifies a '.' or empty string.
  * @returns The parsed metadata object or null if parsing fails or validation fails.
  */
-export const parseOrderTxMetadata = (metadataJson: string): OrderTxMetadata | null => {
+export const parseOrderTxMetadata = (metadataJson: string, primaryTokenId: string): OrderTxMetadata | null => {
   const parsedMetadata = parseSafe(metadataJson)
-  return isOrderTxMetadata(parsedMetadata) ? parsedMetadata : null
+  if (!isOrderTxMetadata(parsedMetadata)) return null
+
+  return {
+    ...parsedMetadata,
+    buyTokenId: normalisePrimaryTokenId(parsedMetadata.buyTokenId, primaryTokenId),
+    sellTokenId: normalisePrimaryTokenId(parsedMetadata.sellTokenId, primaryTokenId),
+  }
+}
+
+const swapPtTokenIds = freeze(['', '.'])
+const normalisePrimaryTokenId = (tokenId: string, primaryTokenId: string) => {
+  return swapPtTokenIds.includes(tokenId) ? primaryTokenId : tokenId
 }
 
 function containsOnlyValidChars(str?: string): boolean {
