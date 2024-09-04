@@ -40,6 +40,7 @@ export const AmountCard = ({
   const [isFocused, setIsFocused] = React.useState(false)
   const strings = useStrings()
   const {styles, colors} = useStyles()
+  const {isDark} = useTheme()
 
   const noTokenSelected = !touched
   const info = amount?.info
@@ -80,6 +81,7 @@ export const AmountCard = ({
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
               testID={`${testId}-amount-input`}
+              keyboardAppearance={isDark ? 'dark' : 'light'} // ios feature
               {...(!info && {onPressIn: navigateTo})}
             />
           </Pressable>

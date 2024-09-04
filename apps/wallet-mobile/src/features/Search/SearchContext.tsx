@@ -216,7 +216,7 @@ type Props = {
 }
 const InputSearch = ({placeholder}: Props) => {
   const {search, searchChanged} = useSearch()
-  const {color} = useTheme()
+  const {color, isDark} = useTheme()
 
   return (
     <TextInput
@@ -228,6 +228,7 @@ const InputSearch = ({placeholder}: Props) => {
       style={{flex: 1, color: color.el_gray_max}}
       testID="inputSearch"
       placeholderTextColor={color.text_gray_medium}
+      keyboardAppearance={isDark ? 'dark' : 'light'}
     />
   )
 }

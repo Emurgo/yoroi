@@ -92,12 +92,19 @@ export const InitialScreen = () => {
 
 const LanguagePickRow = ({onPress}: {onPress: () => void}) => {
   const {styles, color} = useStyles()
+  const {isDark} = useTheme()
   const {languageCode, supportedLanguages} = useLanguage()
   const language = supportedLanguages.find((lang) => lang.code === languageCode) ?? defaultLanguage
 
   return (
     <TouchableOpacity onPress={onPress} testID="dropDownLanguagePicker">
-      <TextInput style={styles.input} value={language.label} pointerEvents="none" editable={false} />
+      <TextInput
+        style={styles.input}
+        value={language.label}
+        pointerEvents="none"
+        editable={false}
+        keyboardAppearance={isDark ? 'dark' : 'light'}
+      />
 
       <View style={styles.inputIcon}>
         <Icon.Chevron size={34} direction="down" color={color.el_gray_medium} />

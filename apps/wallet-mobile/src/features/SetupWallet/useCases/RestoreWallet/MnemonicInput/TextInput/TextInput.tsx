@@ -68,6 +68,7 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: React.For
   const [errorTextEnabled, setErrorTextEnabled] = React.useState(errorOnMount)
   const [isValidWord, setIsValidWord] = React.useState(false)
   const {colors} = useStyles()
+  const {isDark} = useTheme()
 
   useDebounced(
     React.useCallback(() => setErrorTextEnabled(true), []),
@@ -148,6 +149,7 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: React.For
               {...inputProps}
               cursorColor={cursorColor}
               selectionColor={selectionColor}
+              keyboardAppearance={isDark ? 'dark' : 'light'} // ios feature
               style={[
                 style,
                 renderComponentStyle,

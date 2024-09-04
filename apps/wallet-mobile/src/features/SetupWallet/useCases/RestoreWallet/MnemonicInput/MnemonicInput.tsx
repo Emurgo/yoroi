@@ -223,6 +223,7 @@ const MnemonicWordInput = React.forwardRef<MnemonicWordInputRef, MnemonicWordInp
     const inputRef = React.useRef<RNTextInput>(null)
     const {styles, colors} = useStyles()
     const [word, setWord] = React.useState(selectedWord)
+    const {isDark} = useTheme()
 
     React.useImperativeHandle(
       ref,
@@ -311,6 +312,7 @@ const MnemonicWordInput = React.forwardRef<MnemonicWordInputRef, MnemonicWordInp
         cursorColor={colors.primary_600} // only works for android
         selectionColor={Platform.OS === 'android' ? colors.gray_100 : undefined} // on ios, selectionColor changes cursor and selection
         keyboardType={Platform.OS === 'android' ? 'visible-password' : undefined} // to hide keyboard suggestions on android
+        keyboardAppearance={isDark ? 'dark' : 'light'} // ios feature
       />
     )
   },
