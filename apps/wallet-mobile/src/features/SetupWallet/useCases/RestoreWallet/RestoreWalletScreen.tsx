@@ -1,25 +1,21 @@
-import {walletChecksum} from '@emurgo/cip4-js'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
-import {Blockies} from '@yoroi/identicon'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
-import {Wallet} from '@yoroi/types'
 import {validateMnemonic} from 'bip39'
 import * as React from 'react'
 import {Keyboard, StyleSheet, Text, View} from 'react-native'
 import {FlatList, ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Icon, KeyboardAvoidingView, useModal} from '../../../../components'
+import {Button, KeyboardAvoidingView, useModal} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
 import {StepperProgress} from '../../../../components/StepperProgress/StepperProgress'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {SetupWalletRouteNavigation, useWalletNavigation} from '../../../../kernel/navigation'
+import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import {isEmptyString} from '../../../../kernel/utils'
-import {keyManager} from '../../../../yoroi-wallets/cardano/key-manager/key-manager'
-import {wrappedCsl} from '../../../../yoroi-wallets/cardano/wrappedCsl'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {useStrings} from '../../common/useStrings'
+import {WalletDuplicatedModal} from '../../common/WalletDuplicatedModal/WalletDuplicatedModal'
 import {MnemonicInput} from './MnemonicInput/MnemonicInput'
 
 export type MnemonicWordInputRef = {
@@ -37,7 +33,6 @@ export const RestoreWalletScreen = () => {
   const {track} = useMetrics()
   const {walletManager} = useWalletManager()
   const {openModal} = useModal()
-  const {resetToTxHistory} = useWalletNavigation()
   const [focusedIndex, setFocusedIndex] = React.useState<number>(0)
   const [isValidPhrase, setIsValidPhrase] = React.useState(false)
 
@@ -110,32 +105,21 @@ export const RestoreWalletScreen = () => {
     }, [mnemonicType, track]),
   )
 
-  const handleOpenWalletWithDuplicatedName = React.useCallback(
-    (walletMeta: Wallet.Meta) => {
-      walletManager.setSelectedWalletId(walletMeta.id)
-      resetToTxHistory()
-    },
-    [walletManager, resetToTxHistory],
-  )
-
   const handleOnNext = React.useCallback(async () => {
-    const {csl, release} = wrappedCsl()
+    const {accountPubKeyHex} = await walletManager.generateWalletKeys(walletImplementation, mnemonic, accountVisual)
 
-    const {accountPubKeyHex} = await keyManager(walletImplementation)({mnemonic, csl, accountVisual})
-    const checksum = walletChecksum(accountPubKeyHex)
-    release()
+    const duplicatedAccountWalletMeta = walletManager.findWalletMetadataByPublicKeyHex(accountPubKeyHex)
 
-    const duplicatedWalletMeta = Array.from(walletManager.walletMetas.values()).find(
-      (walletMeta) => walletMeta.plate === checksum.TextPart,
-    )
+    if (duplicatedAccountWalletMeta) {
+      const {plate, seed} = walletManager.checksum(accountPubKeyHex)
 
-    if (duplicatedWalletMeta) {
       openModal(
         strings.restoreDuplicatedWalletModalTitle,
-        <Modal
-          walletName={duplicatedWalletMeta.name}
-          publicKeyHex={accountPubKeyHex}
-          onPress={() => handleOpenWalletWithDuplicatedName(duplicatedWalletMeta)}
+        <WalletDuplicatedModal
+          plate={plate}
+          seed={seed}
+          duplicatedAccountWalletMetaId={duplicatedAccountWalletMeta.id}
+          duplicatedAccountWalletMetaName={duplicatedAccountWalletMeta.name}
         />,
       )
 
@@ -147,7 +131,6 @@ export const RestoreWalletScreen = () => {
     navigation.navigate('setup-wallet-restore-details')
   }, [
     accountVisual,
-    handleOpenWalletWithDuplicatedName,
     mnemonic,
     mnemonicChanged,
     navigation,
@@ -155,7 +138,7 @@ export const RestoreWalletScreen = () => {
     publicKeyHexChanged,
     strings.restoreDuplicatedWalletModalTitle,
     walletImplementation,
-    walletManager.walletMetas,
+    walletManager,
   ])
 
   return (
@@ -211,50 +194,6 @@ const NextButton = ({onPress}: {onPress: () => void}) => {
   return (
     <View style={styles.padding}>
       <Button title={strings.next} style={styles.button} onPress={onPress} testID="setup-restore-step1-next-button" />
-    </View>
-  )
-}
-
-const Modal = ({
-  onPress,
-  publicKeyHex,
-  walletName,
-}: {
-  onPress: () => void
-  publicKeyHex: string
-  walletName: string
-}) => {
-  const {styles} = useStyles()
-  const strings = useStrings()
-  const plate = walletChecksum(publicKeyHex)
-
-  return (
-    <View style={styles.modal}>
-      <Text style={styles.modalText}>{strings.restoreDuplicatedWalletModalText}</Text>
-
-      <Space height="lg" />
-
-      <View style={styles.checksum}>
-        <Icon.WalletAvatar
-          image={new Blockies({seed: plate.ImagePart}).asBase64()}
-          style={styles.walletChecksum}
-          size={38}
-        />
-
-        <Space width="sm" />
-
-        <View>
-          <Text style={styles.plateName}>{walletName}</Text>
-
-          <Text style={styles.plateText}>{plate.TextPart}</Text>
-        </View>
-      </View>
-
-      <Space fill />
-
-      <Button title={strings.restoreDuplicatedWalletModalButton} style={styles.button} onPress={onPress} />
-
-      <Space height="xl" />
     </View>
   )
 }
@@ -333,34 +272,6 @@ const useStyles = () => {
     },
     padding: {
       ...atoms.p_lg,
-    },
-    checksum: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      textAlignVertical: 'center',
-    },
-    walletChecksum: {
-      width: 38,
-      height: 38,
-      borderRadius: 8,
-    },
-    modalText: {
-      ...atoms.body_1_lg_regular,
-      color: color.gray_900,
-    },
-    plateText: {
-      ...atoms.body_3_sm_regular,
-      color: color.gray_600,
-      textAlign: 'center',
-      justifyContent: 'center',
-    },
-    plateName: {
-      ...atoms.body_2_md_medium,
-      color: color.gray_900,
-    },
-    modal: {
-      flex: 1,
-      ...atoms.px_lg,
     },
     suggestions: {
       backgroundColor: color.bg_color_max,

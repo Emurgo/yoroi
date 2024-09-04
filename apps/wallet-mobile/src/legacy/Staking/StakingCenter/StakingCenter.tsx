@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import {walletChecksum} from '@emurgo/cip4-js'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
@@ -10,6 +8,7 @@ import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
 import {PleaseWaitModal, Spacer} from '../../../components'
 import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
+import {useWalletManager} from '../../../features/WalletManager/context/WalletManagerProvider'
 import {showErrorDialog} from '../../../kernel/dialogs'
 import {useLanguage} from '../../../kernel/i18n'
 import globalMessages from '../../../kernel/i18n/global-messages'
@@ -29,8 +28,10 @@ export const StakingCenter = () => {
 
   const {languageCode} = useLanguage()
   const {wallet, meta} = useSelectedWallet()
+  const {walletManager} = useWalletManager()
   const {track} = useMetrics()
-  const plate = walletChecksum(wallet.publicKeyHex)
+  const {plate} = walletManager.checksum(wallet.publicKeyHex)
+
   useFocusEffect(
     React.useCallback(() => {
       track.stakingCenterPageViewed()
@@ -86,14 +87,14 @@ export const StakingCenter = () => {
           <WebView
             originWhitelist={['*']}
             androidLayerType="software"
-            source={{uri: prepareStakingURL(languageCode, plate.TextPart)}}
+            source={{uri: prepareStakingURL(languageCode, plate)}}
             onMessage={(event) => handleOnMessage(event)}
             {...(isDark && {
               injectedJavaScript: `
               document.body.style.backgroundColor = "#222"
               document.body.style.filter = "invert(0.9) hue-rotate(180deg)"
               document.body.style.caretColor = "#FFFFFF"
-              setTimeout(() => 
+              setTimeout(() =>
                 [...document.images].forEach(i => i.style = 'filter:invert(1) hue-rotate(180deg)')
               , 1000)
             `,

@@ -1,4 +1,3 @@
-import {walletChecksum} from '@emurgo/cip4-js'
 import {useNavigation} from '@react-navigation/native'
 import {useAsyncStorage} from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
@@ -29,7 +28,7 @@ import {logger} from '../../../../kernel/logger/logger'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import {isEmptyString} from '../../../../kernel/utils'
-import {getWalletNameError, validateWalletName} from '../../../../yoroi-wallets/utils'
+import {getWalletNameError} from '../../../../yoroi-wallets/utils'
 import {useCreateWalletXPub} from '../../../WalletManager/common/hooks/useCreateWalletXPub'
 import {parseWalletMeta} from '../../../WalletManager/common/validators/wallet-meta'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
@@ -68,9 +67,10 @@ export const SaveNanoXScreen = () => {
   const {HEIGHT_MODAL_NAME_PASSWORD, HEIGHT_MODAL_CHECKSUM} = useSizeModal()
   const [name, setName] = React.useState(features.prefillWalletInfo ? debugWalletInfo.WALLET_NAME : '')
 
-  const {walletImplementation, hwDeviceInfo, accountVisual, walletIdChanged, publicKeyHex} = useSetupWallet()
-  const plate = walletChecksum(publicKeyHex)
-  const walletNames = Array.from(walletManager.walletMetas.values()).map(({name}) => name)
+  const {walletImplementation, hwDeviceInfo, accountVisual, walletIdChanged} = useSetupWallet()
+
+  if (!hwDeviceInfo) throw new Error('no hwDeviceInfo')
+  const {plate, seed} = walletManager.checksum(hwDeviceInfo.bip44AccountPublic)
 
   const {createWallet, isLoading} = useCreateWalletXPub({
     onSuccess: async (wallet) => {
@@ -97,13 +97,13 @@ export const SaveNanoXScreen = () => {
     },
   })
 
-  if (!hwDeviceInfo) throw new Error('no hwDeviceInfo')
-
-  const nameErrors = validateWalletName(name, null, !isLoading ? walletNames : [])
+  const nameErrors = !isLoading ? walletManager.validateWalletName(name) : null
   const walletNameErrorText = getWalletNameError(
     {tooLong: strings.tooLong, nameAlreadyTaken: strings.nameAlreadyTaken, mustBeFilled: strings.mustBeFilled},
     nameErrors,
   )
+
+  const disabled = isLoading || Object.keys(nameErrors ?? {}).length > 0
 
   const handleOnSubmit = React.useCallback(() => {
     createWallet({
@@ -161,11 +161,11 @@ export const SaveNanoXScreen = () => {
           <View>
             <CardAboutPhrase
               title={strings.walletChecksumModalCardTitle}
-              checksumImage={plate.ImagePart}
+              checksumImage={seed}
               checksumLine={1}
               linesOfText={[
                 strings.walletChecksumModalCardFirstItem,
-                strings.walletChecksumModalCardSecondItem(plate.TextPart),
+                strings.walletChecksumModalCardSecondItem(plate),
                 strings.walletChecksumModalCardThirdItem,
               ]}
             />
@@ -223,16 +223,12 @@ export const SaveNanoXScreen = () => {
           <Space height="lg" />
 
           <View style={styles.checksum}>
-            <Icon.WalletAvatar
-              image={new Blockies({seed: plate.ImagePart}).asBase64()}
-              style={styles.walletChecksum}
-              size={24}
-            />
+            <Icon.WalletAvatar image={new Blockies({seed}).asBase64()} style={styles.walletChecksum} size={24} />
 
             <Space width="sm" />
 
             <Text style={styles.plateNumber} testID="wallet-plate-number">
-              {plate.TextPart}
+              {plate}
             </Text>
 
             <Space width="sm" />
@@ -247,7 +243,7 @@ export const SaveNanoXScreen = () => {
             title={strings.next}
             onPress={handleOnSubmit}
             testId="setup-restore-step2-next-button"
-            disabled={isLoading || Object.keys(nameErrors).length > 0}
+            disabled={disabled}
           />
         </View>
       </SafeAreaView>

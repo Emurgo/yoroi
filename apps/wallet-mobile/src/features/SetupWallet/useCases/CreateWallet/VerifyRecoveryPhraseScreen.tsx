@@ -12,8 +12,7 @@ import {Space} from '../../../../components/Space/Space'
 import {StepperProgress} from '../../../../components/StepperProgress/StepperProgress'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
-import {keyManager} from '../../../../yoroi-wallets/cardano/key-manager/key-manager'
-import {wrappedCsl} from '../../../../yoroi-wallets/cardano/wrappedCsl'
+import {walletManager} from '../../../WalletManager/wallet-manager'
 import {useStrings} from '../../common/useStrings'
 import {Alert as AlertIllustration} from '../../illustrations/Alert'
 import {Check2 as Check2Illustration} from '../../illustrations/Check2'
@@ -103,10 +102,13 @@ export const VerifyRecoveryPhraseScreen = () => {
           title={strings.next}
           disabled={disabled}
           onPress={async () => {
-            const {csl, release} = wrappedCsl()
-            const {accountPubKeyHex} = await keyManager(walletImplementation)({mnemonic, csl, accountVisual})
+            const {accountPubKeyHex} = await walletManager.generateWalletKeys(
+              walletImplementation,
+              mnemonic,
+              accountVisual,
+            )
             publicKeyHexChanged(accountPubKeyHex)
-            release()
+
             navigation.navigate('setup-wallet-details-form')
           }}
           testId="setup-next-button"
