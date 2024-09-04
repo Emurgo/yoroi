@@ -2100,20 +2100,6 @@
     hash-wasm "^4.9.0"
     mocha "^10.0.0"
 
-"@emurgo/cross-csl-core@^5.0.1":
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-core/-/cross-csl-core-5.0.1.tgz#e2288d2e23e2feb6f0bc9dfc814c6e6f3d5ec826"
-  integrity sha512-PlNsW3GjqlJ7mTrHqY+M6mGkLnWh++6PAok1rdJwUP7bYS24PE2Fm4JeO1uK0dtv9mbpVLlXyjybH+HSRV7a0Q==
-  dependencies:
-    "@cardano-foundation/ledgerjs-hw-app-cardano" "^5.0.0"
-    "@types/mocha" "^9.1.1"
-    axios "^0.24.0"
-    bech32 "^2.0.0"
-    bignumber.js "^9.0.1"
-    blake2b "^2.1.4"
-    hash-wasm "^4.9.0"
-    mocha "^10.0.0"
-
 "@emurgo/cross-csl-mobile@^5.1.0-beta.1":
   version "5.1.0-beta.1"
   resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-mobile/-/cross-csl-mobile-5.1.0-beta.1.tgz#ef7f318687a89c7fca56387c9a01e13a340c0ee4"
