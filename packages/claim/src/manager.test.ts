@@ -2,9 +2,9 @@ import {fetchData} from '@yoroi/common'
 import {tokenInfoMocks} from '@yoroi/portfolio'
 import {Portfolio} from '@yoroi/types'
 
-import {claimApiMaker} from './api'
+import {claimManagerMaker} from './manager'
 
-describe('claimApiMaker', () => {
+describe('claimManagerMaker', () => {
   const options = {
     address: 'addr_test',
     primaryTokenInfo: tokenInfoMocks.primaryETH,
@@ -12,10 +12,10 @@ describe('claimApiMaker', () => {
   }
 
   it('success', () => {
-    const appApi = claimApiMaker(options)
-    expect(appApi).toBeDefined()
+    const manager = claimManagerMaker(options)
+    expect(manager).toBeDefined()
 
-    const appApiWithFetcher = claimApiMaker(options, {request: fetchData})
-    expect(appApiWithFetcher).toBeDefined()
+    const managerWithFetcher = claimManagerMaker(options, {request: fetchData})
+    expect(managerWithFetcher).toBeDefined()
   })
 })

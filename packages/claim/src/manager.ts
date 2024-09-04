@@ -1,22 +1,23 @@
 import {FetchData, fetchData, isLeft} from '@yoroi/common'
-import {Api, Portfolio} from '@yoroi/types'
+import {Api, Claim, Portfolio, Scan} from '@yoroi/types'
 
-import {ScanActionClaim} from '../../Scan/common/types'
 import {asClaimApiError, asClaimToken} from './transformers'
-import {ClaimApi, ClaimApiClaimTokensResponse} from './types'
 import {ClaimTokensApiResponseSchema} from './validators'
 
-type ClaimApiMakerOptions = Readonly<{
+type ClaimManagerMakerOptions = Readonly<{
   address: string
   primaryTokenInfo: Portfolio.Token.Info
   tokenManager: Portfolio.Manager.Token
 }>
 
-export const claimApiMaker = (
-  {address, primaryTokenInfo, tokenManager}: ClaimApiMakerOptions,
+export const claimManagerMaker = (
+  {address, primaryTokenInfo, tokenManager}: ClaimManagerMakerOptions,
   deps: Readonly<{request: FetchData}> = {request: fetchData} as const,
-): Readonly<ClaimApi> => {
-  const claimTokens = postClaimTokens({address, primaryTokenInfo, tokenManager}, deps)
+): Readonly<Claim.Manager> => {
+  const claimTokens = postClaimTokens(
+    {address, primaryTokenInfo, tokenManager},
+    deps,
+  )
 
   return {
     claimTokens,
@@ -26,14 +27,17 @@ export const claimApiMaker = (
 }
 
 const postClaimTokens =
-  ({address, primaryTokenInfo, tokenManager}: ClaimApiMakerOptions, {request} = {request: fetchData}) =>
-  async (claimAction: ScanActionClaim) => {
+  (
+    {address, primaryTokenInfo, tokenManager}: ClaimManagerMakerOptions,
+    {request} = {request: fetchData},
+  ) =>
+  async (claimAction: Scan.ActionClaim) => {
     // builds the request from the action, overides address and code
     const {code, params, url} = claimAction
     const payload = {...params, address, code}
 
     try {
-      const response = await request<ClaimApiClaimTokensResponse>({
+      const response = await request<Claim.Api.ClaimTokensResponse>({
         url,
         method: 'post',
         data: payload,
@@ -43,7 +47,8 @@ const postClaimTokens =
         return asClaimApiError(response.error)
       } else {
         const claimInfo = response.value.data
-        if (!ClaimTokensApiResponseSchema.safeParse(claimInfo).success) throw new Api.Errors.ResponseMalformed()
+        if (!ClaimTokensApiResponseSchema.safeParse(claimInfo).success)
+          throw new Api.Errors.ResponseMalformed()
 
         return asClaimToken(claimInfo, primaryTokenInfo, tokenManager)
       }

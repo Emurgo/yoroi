@@ -18,8 +18,8 @@ import {
   TxHistoryRouteNavigation,
   TxHistoryRoutes,
 } from '../../kernel/navigation'
-import {claimApiMaker} from '../Claim/module/api'
-import {ClaimProvider} from '../Claim/module/ClaimProvider'
+import {claimApiMaker} from '../../../../../packages/claim/src/manager'
+import {ClaimProvider} from '../../../../../packages/claim/src/translators/reactjs/ClaimProvider'
 import {ShowSuccessScreen} from '../Claim/useCases/ShowSuccessScreen'
 import {CreateExchangeOrderScreen} from '../Exchange/useCases/CreateExchangeOrderScreen/CreateExchangeOrderScreen'
 import {SelectProviderFromListScreen} from '../Exchange/useCases/SelectProviderFromListScreen/SelectProviderFromListScreen'

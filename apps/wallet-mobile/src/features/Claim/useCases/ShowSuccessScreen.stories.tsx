@@ -6,9 +6,9 @@ import {QueryClientProvider} from 'react-query'
 import {queryClientFixture} from '../../../kernel/fixtures/fixtures'
 import {mocks as walletMocks} from '../../../yoroi-wallets/mocks/wallet'
 import {WalletManagerProviderMock} from '../../../yoroi-wallets/mocks/WalletManagerProviderMock'
-import {claimApiMockInstances} from '../module/api.mocks'
-import {ClaimProvider} from '../module/ClaimProvider'
-import {mocks as claimMocks} from '../module/state.mocks'
+import {claimApiMockInstances} from '../../../../../../packages/claim/src/manager.mocks'
+import {ClaimProvider} from '../../../../../../packages/claim/src/translators/reactjs/ClaimProvider'
+import {mocks as claimMocks} from '../../../../../../packages/claim/src/translators/reactjs/state.mocks'
 import {ShowSuccessScreen} from './ShowSuccessScreen'
 
 const AppDecorator: DecoratorFunction<React.ReactNode> = (story) => {

@@ -6,7 +6,7 @@ import {
   ClaimApiErrorsNotFound,
   ClaimApiErrorsRateLimited,
   ClaimApiErrorsTooEarly,
-} from '../module/errors'
+} from '../../../../../../packages/claim/src/errors'
 import {useDialogs} from './useDialogs'
 
 export const useClaimErrorResolver = () => {

@@ -13,5 +13,5 @@
       "*.md": ["text-loader"]
     }
   },
-  "include": ["./.d.ts", "react-native-svg-charts.d.ts", "./src", ".storybook/decorators"]
+  "include": ["./.d.ts", "react-native-svg-charts.d.ts", "./src", ".storybook/decorators", "../../packages/claim/src/api-faucet.mocks.ts", "../../packages/claim/src/manager.mocks.ts", "../../packages/claim/src/manager.tests.ts", "../../packages/claim/src/manager.ts", "../../packages/claim/src/translators/reactjs/ClaimProvider.tsx", "../../packages/claim/src/errors.ts", "../../packages/claim/src/translators/reactjs/state.mocks.ts", "../../packages/claim/src/translators/reactjs/state.ts", "../../packages/claim/src/transformers.ts", "../../packages/claim/src/types.ts", "../../packages/claim/src/translators/reactjs/useClaimTokens.tsx", "../../packages/claim/src/validators.ts"]
 }

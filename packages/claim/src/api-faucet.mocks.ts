@@ -1,8 +1,10 @@
 import {tokenMocks} from '@yoroi/portfolio'
+import {Claim} from '@yoroi/types'
 
-import {ClaimApiClaimTokensResponse} from './types'
-
-const claimTokens: Record<string, {[key: string]: ClaimApiClaimTokensResponse}> = {
+const claimTokens: Record<
+  string,
+  {[key: string]: Claim.Api.ClaimTokensResponse}
+> = {
   success: {
     accepted: {
       status: 'accepted',

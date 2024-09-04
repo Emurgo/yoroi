@@ -1,12 +1,10 @@
 import {invalid} from '@yoroi/common'
+import {Claim, Scan} from '@yoroi/types'
 import {castDraft, produce} from 'immer'
 
-import {ScanActionClaim} from '../../Scan/common/types'
-import {ClaimInfo, ClaimState} from './types'
-
 export type ClaimActions = Readonly<{
-  claimInfoChanged: (claimInfo: ClaimInfo) => void
-  scanActionClaimChanged: (scanActionClaim: ScanActionClaim) => void
+  claimInfoChanged: (claimInfo: Claim.Info) => void
+  scanActionClaimChanged: (scanActionClaim: Scan.ActionClaim) => void
   reset: () => void
 }>
 
@@ -15,19 +13,6 @@ export enum ClaimActionType {
   ScanActionClaimChanged = 'scanActionClaimChanged',
   Reset = 'reset',
 }
-
-export type ClaimAction =
-  | {
-      type: ClaimActionType.ClaimInfoChanged
-      claimInfo: ClaimInfo
-    }
-  | {
-      type: ClaimActionType.ScanActionClaimChanged
-      scanActionClaim: ScanActionClaim
-    }
-  | {
-      type: ClaimActionType.Reset
-    }
 
 export const defaultClaimState: ClaimState = {
   claimInfo: undefined,
@@ -40,7 +25,10 @@ export const defaultClaimActions: ClaimActions = {
   reset: () => invalid('missing init'),
 } as const
 
-export const claimReducer = (state: ClaimState, action: ClaimAction): ClaimState => {
+export const claimReducer = (
+  state: ClaimState,
+  action: ClaimAction,
+): ClaimState => {
   return produce(state, (draft) => {
     switch (action.type) {
       case ClaimActionType.ClaimInfoChanged:
@@ -56,3 +44,21 @@ export const claimReducer = (state: ClaimState, action: ClaimAction): ClaimState
     }
   })
 }
+
+export type ClaimState = Readonly<{
+  claimInfo: Claim.Info | undefined
+  scanActionClaim: Scan.ActionClaim | undefined
+}>
+
+export type ClaimAction =
+  | {
+      type: ClaimActionType.ClaimInfoChanged
+      claimInfo: Claim.Info
+    }
+  | {
+      type: ClaimActionType.ScanActionClaimChanged
+      scanActionClaim: Scan.ActionClaim
+    }
+  | {
+      type: ClaimActionType.Reset
+    }

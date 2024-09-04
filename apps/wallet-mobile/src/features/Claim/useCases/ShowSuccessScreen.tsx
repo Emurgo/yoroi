@@ -18,8 +18,8 @@ import {useDialogs} from '../common/useDialogs'
 import {useNavigateTo} from '../common/useNavigateTo'
 import {useStrings} from '../common/useStrings'
 import {ClaimSuccessIllustration} from '../illustrations/ClaimSuccessIllustration'
-import {useClaim} from '../module/ClaimProvider'
-import {ClaimStatus} from '../module/types'
+import {useClaim} from '../../../../../../packages/claim/src/translators/reactjs/ClaimProvider'
+import {ClaimStatus} from '../../../../../../packages/claim/src/types'
 
 export const ShowSuccessScreen = () => {
   const {styles} = useStyles()

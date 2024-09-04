@@ -1,8 +1,7 @@
 import {tokenMocks} from '@yoroi/portfolio'
+import {Claim} from '@yoroi/types'
 
-import {ClaimApi, ClaimInfo} from './types'
-
-const claimTokensResponse: {[key: string]: ClaimInfo} = {
+const claimTokensResponse: {[key: string]: Claim.Info} = {
   accepted: {
     status: 'accepted',
     amounts: [
@@ -77,7 +76,7 @@ const claimTokensApi = {
     return Promise.reject(new Error('Something went wrong'))
   },
   loading: () => {
-    return new Promise(() => null) as unknown as ClaimInfo
+    return new Promise(() => null) as unknown as Claim.Info
   },
 } as const
 
@@ -85,12 +84,19 @@ export const claimApiMockFetchers = {
   claimTokens: claimTokensApi,
 } as const
 
-const claimApiError: ClaimApi = {
+const claimManagerError: Claim.Manager = {
   claimTokens: claimTokensApi.error,
   address: 'address',
   primaryTokenInfo: tokenMocks.primaryETH.info,
 } as const
 
-export const claimApiMockInstances = {
-  error: claimApiError,
+const claimManagerSuccessProcessing: Claim.Manager = {
+  claimTokens: claimTokensApi.success.processing as () => Promise<Claim.Info>,
+  address: 'address',
+  primaryTokenInfo: tokenMocks.primaryETH.info,
+} as const
+
+export const claimManagerMockInstances = {
+  error: claimManagerError,
+  processing: claimManagerSuccessProcessing,
 } as const
