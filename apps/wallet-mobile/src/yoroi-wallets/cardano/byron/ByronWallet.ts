@@ -931,7 +931,6 @@ export class ByronWallet implements YoroiWallet {
       }
       const txOptions = {}
       const nonce = absSlotNumber.toNumber()
-      const chainNetworkConfig = Number.parseInt(this.getChainNetworkId(), 10)
 
       const addressedUtxos = await this.getAddressedUtxos()
 
@@ -954,7 +953,6 @@ export class ByronWallet implements YoroiWallet {
         config,
         txOptions,
         nonce,
-        chainNetworkConfig,
         paymentAddressCIP36,
         addressingCIP36.path,
         supportsCIP36,
@@ -1274,7 +1272,6 @@ export class ByronWallet implements YoroiWallet {
           ? [...this.internalAddresses, ...this.externalAddresses, ...[this.rewardAddressHex]]
           : [...this.internalAddresses, ...this.externalAddresses],
         this.confirmationCounts[tx.id] || 0,
-        this.networkId,
         memos[tx.id] ?? null,
         this.primaryToken,
       )

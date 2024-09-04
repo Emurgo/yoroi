@@ -275,7 +275,6 @@ describe('processTxHistoryData', () => {
       toCachedTx(txs[0]),
       myAddresses,
       100, // confirmations
-      NETWORK_ID,
       'fake memo',
       PRIMARY_TOKEN,
     )
@@ -292,7 +291,6 @@ describe('processTxHistoryData', () => {
       toCachedTx(txs[1]),
       myAddresses,
       100, // confirmations
-      NETWORK_ID,
       'fake memo',
       PRIMARY_TOKEN,
     )
@@ -309,7 +307,6 @@ describe('processTxHistoryData', () => {
       toCachedTx(txs[2]),
       myAddresses,
       100, // confirmations
-      NETWORK_ID,
       'fake memo',
       PRIMARY_TOKEN,
     )
@@ -331,7 +328,6 @@ describe('processTxHistoryData', () => {
       toCachedTx(txs[3]),
       myAddresses,
       100, // confirmations
-      NETWORK_ID,
       'fake memo',
       PRIMARY_TOKEN,
     )

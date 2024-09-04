@@ -26,7 +26,7 @@ import {
 } from './constants/mainnet/constants'
 import {withMinAmounts} from './getMinAmounts'
 import {MultiToken} from './MultiToken'
-import {CardanoHaskellShelleyNetwork, PRIMARY_ASSET_CONSTANTS} from './networks'
+import {CardanoHaskellShelleyNetwork} from './networks'
 import {NUMBERS} from './numbers'
 import {CardanoTypes, WalletImplementation} from './types'
 
@@ -63,7 +63,7 @@ export const deriveRewardAddressHex = async (accountPubKeyHex: string, networkId
 /**
  * Multi-asset related
  */
-const identifierToCardanoAsset = async (
+export const identifierToCardanoAsset = async (
   tokenId: string,
 ): Promise<{
   policyId: CardanoTypes.ScriptHash
@@ -129,15 +129,13 @@ type RemoteValue = {
   readonly assets?: ReadonlyArray<BaseAsset>
 }
 
-export const multiTokenFromRemote = (remoteValue: RemoteValue, networkId: number) => {
+export const multiTokenFromRemote = (remoteValue: RemoteValue) => {
   const result = new MultiToken([], {
-    defaultNetworkId: networkId,
-    defaultIdentifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
+    defaultIdentifier: '',
   })
   result.add({
-    identifier: PRIMARY_ASSET_CONSTANTS.CARDANO,
+    identifier: '',
     amount: new BigNumber(remoteValue.amount),
-    networkId,
   })
 
   if (remoteValue.assets != null) {
@@ -145,7 +143,6 @@ export const multiTokenFromRemote = (remoteValue: RemoteValue, networkId: number
       result.add({
         identifier: token.assetId,
         amount: new BigNumber(token.amount),
-        networkId,
       })
     }
   }
@@ -275,7 +272,6 @@ export const toSendToken =
 
     return {
       token: {
-        networkId: primaryToken.networkId,
         identifier: tokenId,
         isDefault: isPrimary,
       },
