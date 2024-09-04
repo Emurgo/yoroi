@@ -123,7 +123,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    requestSpecificAmountTextColor: color.primary_500,
+    requestSpecificAmountTextColor: color.text_primary_medium,
   }
 
   return {styles, colors} as const
