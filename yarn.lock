@@ -2730,7 +2730,7 @@
     "@emurgo/cardano-serialization-lib-nodejs" "12.1.0-beta.1"
     "@emurgo/cross-csl-core" "5.1.0-beta.1"
 
-"@emurgo/csl-mobile-bridge@6.1.0-beta.1":
+"@emurgo/csl-mobile-bridge@6.1.0-beta.1", "@emurgo/csl-mobile-bridge@^6.1.0-beta.1":
   version "6.1.0-beta.1"
   resolved "https://registry.yarnpkg.com/@emurgo/csl-mobile-bridge/-/csl-mobile-bridge-6.1.0-beta.1.tgz#96b1c05da987aa0715409eaec97572c424614b36"
   integrity sha512-CF+yaCcc0+v5yuKJr6hV3FOJx0OpeAa1AaqCmhsvtbDv0Q6w0KF7GGbdAmjJrd4kDQ956LJL/15jqUo1y4i1yw==
