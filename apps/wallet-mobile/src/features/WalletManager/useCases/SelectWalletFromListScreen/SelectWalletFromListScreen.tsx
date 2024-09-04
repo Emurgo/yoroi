@@ -105,11 +105,11 @@ const linkToSupportOpenTicket = 'https://emurgohelpdesk.zendesk.com/hc/en-us/req
 const SupportTicketLink = () => {
   const onPress = () => Linking.openURL(linkToSupportOpenTicket)
   const strings = useStrings()
-  const {styles} = useStyles()
+  const {styles, colors} = useStyles()
 
   return (
     <TouchableOpacity style={styles.link} onPress={onPress}>
-      <SupportIllustration />
+      <SupportIllustration color={colors.blue} />
 
       <Space width="sm" />
 
@@ -165,7 +165,8 @@ const useStyles = () => {
       backgroundColor: color.primary_500,
     },
     linkText: {
-      color: color.primary_500,
+      ...atoms.button_2_md,
+      color: color.text_primary_medium,
     },
     link: {
       ...atoms.button_2_md,
@@ -182,6 +183,7 @@ const useStyles = () => {
   })
 
   const colors = {
+    blue: color.text_primary_medium,
     gray: color.gray_600,
     lightGray: color.gray_200,
   }
