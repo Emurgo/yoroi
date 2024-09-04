@@ -244,7 +244,7 @@ const useStyles = () => {
 
   const colors = {
     ...color,
-    background: color.gray_min,
+    background: color.bg_color_max,
     gray: color.gray_400,
     textInput: color.gray_600,
     actionGray: color.gray_500,
