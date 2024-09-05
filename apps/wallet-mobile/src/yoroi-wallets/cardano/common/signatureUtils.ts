@@ -67,14 +67,14 @@ export const getRequiredSigners = async (tx: CSL_TYPES.Transaction, wallet: Yoro
     const path = getDerivationPathForAddress(bech32Address, wallet)
     return {path, startLevel}
   }
-  const signers = await getAllSigners(
-    CardanoMobile,
+  const signers = await getAllSigners({
+    wasm: CardanoMobile,
     body,
-    wallet.networkId,
+    networkId: wallet.networkId,
     stakeVKHash,
     getAddressAddressing,
-    addressedUtxos,
-  )
+    utxos: addressedUtxos,
+  })
 
   return getUniquePaths(signers.map((s) => s.path))
 }

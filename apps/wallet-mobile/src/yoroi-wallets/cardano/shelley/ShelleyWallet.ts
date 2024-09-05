@@ -842,7 +842,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
           config,
           txOptions,
           nonce,
-          CHAIN_NETWORK_ID,
           paymentAddressCIP36,
           addressingCIP36.path,
           supportsCIP36,
@@ -1168,7 +1167,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
             ? [...this.internalAddresses, ...this.externalAddresses, ...[this.rewardAddressHex]]
             : [...this.internalAddresses, ...this.externalAddresses],
           this.confirmationCounts[tx.id] || 0,
-          NETWORK_ID,
           memos[tx.id] ?? null,
           this.primaryToken,
         )
