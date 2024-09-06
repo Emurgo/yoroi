@@ -237,7 +237,7 @@ const useStyles = () => {
     },
     actions: {
       ...atoms.px_lg,
-      ...atoms.align_stretch,
+      alignSelf: 'stretch',
       gap: 4,
     },
     details: {
