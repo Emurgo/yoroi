@@ -59,16 +59,16 @@ export const ListOrders = () => {
 }
 
 const useStyles = () => {
-  const {color} = useTheme()
+  const {color, atoms} = useTheme()
+
   const styles = StyleSheet.create({
     buttonsGroup: {
-      paddingVertical: 24,
-      flexDirection: 'row',
-      justifyContent: 'center',
+      ...atoms.p_lg,
+      ...atoms.flex_row,
     },
     root: {
-      flex: 1,
-      justifyContent: 'space-between',
+      ...atoms.flex_1,
+      ...atoms.justify_between,
       backgroundColor: color.bg_color_max,
     },
   })

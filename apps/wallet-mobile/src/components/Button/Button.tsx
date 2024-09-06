@@ -16,6 +16,7 @@ export type ButtonProps = TouchableOpacityProps & {
   withoutBackground?: boolean
   shelleyTheme?: boolean
   mainTheme?: boolean
+  warningTheme?: boolean
   outlineShelley?: boolean
   textStyles?: TextStyle
   isCopying?: boolean
@@ -45,10 +46,12 @@ export const Button = (props: ButtonProps) => {
     testId,
     startContent,
     endContent,
+    warningTheme,
     ...rest
   } = props
 
   const {styles} = useStyles()
+  const {isDark} = useTheme()
 
   return (
     <TouchableOpacity
@@ -74,6 +77,7 @@ export const Button = (props: ButtonProps) => {
           outlineShelley && styles.buttonOutlineShelley,
           shelleyTheme && styles.shelleyTheme,
           mainTheme && styles.mainTheme,
+          warningTheme && styles.warningTheme,
           outlineOnLight && shelleyTheme && styles.shelleyOutlineOnLight,
           style,
         ]}
@@ -89,6 +93,7 @@ export const Button = (props: ButtonProps) => {
             outlineOnLight && shelleyTheme && styles.textShelleyOutlineOnLight,
             outlineShelley && styles.textOutlineShelley,
             props.disabled && !outlineOnLight && styles.buttonDisabledText,
+            warningTheme && isDark && styles.warningThemeText,
             textStyles,
           ]}
         >
@@ -185,6 +190,12 @@ const useStyles = () => {
       textAlign: 'center',
       ...atoms.p_sm,
       ...atoms.body_2_md_medium,
+    },
+    warningTheme: {
+      backgroundColor: color.sys_magenta_500,
+    },
+    warningThemeText: {
+      color: color.gray_min,
     },
   })
 

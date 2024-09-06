@@ -228,7 +228,7 @@ const InputContainer = ({children}: {children: React.ReactNode}) => {
 }
 
 const useStyles = () => {
-  const {color} = useTheme()
+  const {color, isDark} = useTheme()
   const styles = StyleSheet.create({
     inputContainer: {
       flexDirection: 'row',
@@ -239,11 +239,11 @@ const useStyles = () => {
 
   const colors = {
     background: color.gray_min,
-    focusInput: color.primary_500,
+    focusInput: isDark ? color.primary_700 : color.primary_500,
     input: color.primary_300,
     actionGray: color.gray_500,
     black: color.gray_max,
-    text: color.el_primary_medium,
+    text: color.text_primary_medium,
     textError: color.text_error,
     infoGray: color.gray_700,
     positiveGreen: color.el_secondary,

@@ -16,6 +16,9 @@ type TokenInfoIconProps = {
 export const TokenInfoIcon = ({info, size = 'md', imageStyle}: TokenInfoIconProps) => {
   const {styles} = useStyles()
   const {wallet} = useSelectedWallet()
+  const [error, setError] = React.useState(false)
+
+  if (error) return <TokenIconPlaceholder />
 
   if (isPrimaryToken(info)) return <PrimaryIcon size={size} imageStyle={imageStyle} />
 
@@ -25,6 +28,7 @@ export const TokenInfoIcon = ({info, size = 'md', imageStyle}: TokenInfoIconProp
         source={{uri: info.originalImage}}
         style={[size === 'sm' ? styles.iconSmall : styles.iconMedium, imageStyle]}
         placeholder={blurhash}
+        onError={() => setError(true)}
       />
     )
 
@@ -38,6 +42,7 @@ export const TokenInfoIcon = ({info, size = 'md', imageStyle}: TokenInfoIconProp
       style={[size === 'sm' ? styles.iconSmall : styles.iconMedium, imageStyle]}
       placeholder={blurhash}
       cachePolicy="memory-disk"
+      onError={() => setError(true)}
     />
   )
 }
@@ -55,7 +60,7 @@ export const TokenIconPlaceholder = ({size = 'md'}: {size?: 'sm' | 'md'}) => {
   const {styles, colors} = useStyles()
   return (
     <View style={[styles.iconMedium, styles.placeholder, size === 'sm' && styles.placeholderSmall]}>
-      <Icon.Tokens color={colors.icon} size={35} />
+      <Icon.Coins2 color={colors.icon} size={24} />
     </View>
   )
 }

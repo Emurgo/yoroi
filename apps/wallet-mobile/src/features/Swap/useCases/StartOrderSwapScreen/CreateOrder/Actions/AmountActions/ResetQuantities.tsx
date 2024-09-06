@@ -8,7 +8,7 @@ import {useSwapForm} from '../../../../../common/SwapFormProvider'
 
 export const ResetQuantities = () => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {styles} = useStyles()
   const {resetQuantities} = useSwapForm()
 
   return (
@@ -23,10 +23,11 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     text: {
-      color: color.primary_500,
+      color: color.text_primary_medium,
       ...atoms.body_2_md_medium,
       textTransform: 'uppercase',
     },
   })
-  return styles
+
+  return {styles} as const
 }

@@ -12,6 +12,7 @@ import {
   LayoutAnimation,
   Linking,
   StyleSheet,
+  Text as RNText,
   TouchableOpacity,
   useWindowDimensions,
   View,
@@ -182,7 +183,7 @@ export const TxDetails = () => {
         </ScrollView>
 
         {network !== Chain.Network.Sancho && (
-          <Actions>
+          <Actions style={styles.borderTop}>
             <Button
               onPress={() => Linking.openURL(explorers.cardanoscan.tx(transaction.id))}
               title={strings.openInExplorer}
@@ -257,13 +258,16 @@ type AddressEntryProps = {
   showModalForAddress: (text: string) => void
 }
 const AddressEntry = ({address, path, isHighlighted, showModalForAddress}: AddressEntryProps) => {
-  const text = `(${path}) ${address}`
+  const {styles} = useStyles()
+  const pathText = `(${path})`
   return (
-    <TouchableOpacity activeOpacity={0.5} onPress={() => showModalForAddress(address)}>
-      <Text secondary bold={isHighlighted}>
-        {text}
-      </Text>
-    </TouchableOpacity>
+    <>
+      <RNText style={styles.path}>{pathText}</RNText>
+
+      <TouchableOpacity activeOpacity={0.5} onPress={() => showModalForAddress(address)}>
+        <RNText style={[styles.address, isHighlighted && styles.addressBold]}>{address}</RNText>
+      </TouchableOpacity>
+    </>
   )
 }
 
@@ -352,11 +356,11 @@ const useStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     container: {
-      flex: 1,
+      ...atoms.flex_1,
       backgroundColor: color.bg_color_max,
     },
     fade: {
-      flex: 1,
+      ...atoms.flex_1,
     },
     contentContainer: {
       ...atoms.px_lg,
@@ -371,14 +375,16 @@ const useStyles = () => {
     },
     label: {
       ...atoms.pt_lg,
+      ...atoms.body_2_md_regular,
+      color: color.text_gray_medium,
       marginBottom: 8,
     },
     assetsExpandable: {
       ...atoms.pt_md,
       ...atoms.pb_xl,
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignContent: 'center',
+      ...atoms.flex_row,
+      ...atoms.justify_between,
+      ...atoms.align_center,
     },
     assetsTitle: {
       ...atoms.body_2_md_regular,
@@ -390,16 +396,29 @@ const useStyles = () => {
     },
     borderTop: {
       borderTopWidth: 1,
-      borderColor: 'rgba(173, 174, 182, 0.3)',
+      borderColor: color.gray_200,
     },
     dataContainer: {
-      flexDirection: 'row',
+      ...atoms.flex_row,
       paddingRight: 70,
       marginBottom: 20,
     },
+    address: {
+      color: color.text_gray_medium,
+      ...atoms.body_2_md_regular,
+    },
+    addressBold: {
+      ...atoms.body_2_md_medium,
+    },
+    path: {
+      ...atoms.body_2_md_regular,
+      color: color.text_gray_low,
+    },
   })
+
   const colors = {
     iconColor: color.gray_500,
   }
-  return {styles, colors}
+
+  return {styles, colors} as const
 }

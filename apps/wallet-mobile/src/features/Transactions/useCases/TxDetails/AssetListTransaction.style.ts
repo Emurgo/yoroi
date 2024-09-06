@@ -5,22 +5,20 @@ export const useAssetListStyles = () => {
   const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     assetHeading: {
-      color: color.gray_max,
-      opacity: 0.5,
-      ...atoms.body_3_sm_regular,
-    },
-    assetMeta: {
-      color: color.gray_500,
-      opacity: 0.5,
+      color: color.text_gray_medium,
       ...atoms.body_2_md_regular,
     },
+    assetMeta: {
+      color: color.text_primary_medium,
+      ...atoms.link_1_lg,
+    },
     assetRow: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+      ...atoms.flex_row,
+      ...atoms.justify_between,
     },
     assetTitle: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+      ...atoms.flex_row,
+      ...atoms.justify_between,
       marginBottom: 10,
     },
     assetName: {
@@ -29,9 +27,9 @@ export const useAssetListStyles = () => {
       marginBottom: 2,
     },
     assetBalanceView: {
-      flex: 1,
-      alignItems: 'flex-end',
-      justifyContent: 'flex-start',
+      ...atoms.flex_1,
+      ...atoms.align_end,
+      ...atoms.justify_start,
     },
     assetBalance: {
       ...atoms.body_2_md_regular,
@@ -41,7 +39,7 @@ export const useAssetListStyles = () => {
       paddingVertical: 10,
     },
     px5: {
-      paddingHorizontal: 0,
+      ...atoms.px_0,
     },
     rowColor1: {
       backgroundColor: 'transparent',

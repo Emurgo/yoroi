@@ -23,6 +23,7 @@ import {Chevron} from './Chevron'
 import {Clock} from './Clock'
 import {Close} from './Close'
 import {Coins} from './Coins'
+import {Coins2} from './Coins2'
 import {Collateral} from './Collateral'
 import {Connection} from './Connection'
 import {Copy} from './Copy'
@@ -160,6 +161,7 @@ export const Icon = {
   Chevron,
   Clock,
   Coins,
+  Coins2,
   Copy,
   CopySuccess,
   Cross,
