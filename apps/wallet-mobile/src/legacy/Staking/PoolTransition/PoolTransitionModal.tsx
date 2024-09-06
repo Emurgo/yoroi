@@ -39,7 +39,7 @@ export const PoolTransitionModal = ({
   }
 
   const timeSpan = poolTransition.deadlineMilliseconds - Date.now()
-  const isActive = false
+  const isActive = timeSpan > 0
 
   return (
     <View style={styles.modal}>
