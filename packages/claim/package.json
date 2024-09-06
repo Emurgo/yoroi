@@ -143,7 +143,6 @@
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
-    "@emurgo/yoroi-lib": "^1.0.1",
     "@react-native-async-storage/async-storage": "^1.19.3",
     "@react-native-community/eslint-config": "^3.0.2",
     "@release-it/conventional-changelog": "^5.0.0",
