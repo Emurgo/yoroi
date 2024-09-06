@@ -1,7 +1,8 @@
+import {useClaim} from '@yoroi/claim'
 import {useExplorers} from '@yoroi/explorers'
 import {sortTokenAmountsByInfo} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
-import {App, Portfolio} from '@yoroi/types'
+import {App, Claim, Portfolio} from '@yoroi/types'
 import React from 'react'
 import {FlatList, Linking, Platform, StyleSheet, Text, TextProps, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -18,8 +19,6 @@ import {useDialogs} from '../common/useDialogs'
 import {useNavigateTo} from '../common/useNavigateTo'
 import {useStrings} from '../common/useStrings'
 import {ClaimSuccessIllustration} from '../illustrations/ClaimSuccessIllustration'
-import {useClaim} from '../../../../../../packages/claim/src/translators/reactjs/ClaimProvider'
-import {ClaimStatus} from '../../../../../../packages/claim/src/types'
 
 export const ShowSuccessScreen = () => {
   const {styles} = useStyles()
@@ -69,10 +68,10 @@ const Header = ({style, ...props}: ViewProps) => {
   const {styles} = useStyles()
   return <View style={[styles.header, style]} {...props} />
 }
-const Status = ({status, style, ...props}: TextProps & {status: ClaimStatus}) => {
+const Status = ({status, style, ...props}: TextProps & {status: Claim.Status}) => {
   const {styles} = useStyles()
   const dialogs = useDialogs()
-  const dialog: Record<ClaimStatus, {message: string; title: string}> = {
+  const dialog: Record<Claim.Status, {message: string; title: string}> = {
     ['processing']: dialogs.processing,
     ['accepted']: dialogs.accepted,
     ['done']: dialogs.done,

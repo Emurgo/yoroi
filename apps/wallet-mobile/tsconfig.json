@@ -3,15 +3,31 @@
   "compilerOptions": {
     "jsx": "react",
     "allowJs": false,
-    "lib": ["es2019", "dom"],
+    "lib": [
+      "es2019",
+      "dom"
+    ],
     "moduleResolution": "node",
     "strict": true,
     "noImplicitAny": true,
-    "types": ["react", "react-native", "jest", "node", "chai"],
+    "types": [
+      "react",
+      "react-native",
+      "jest",
+      "node",
+      "chai"
+    ],
     "baseUrl": ".",
     "paths": {
-      "*.md": ["text-loader"]
+      "*.md": [
+        "text-loader"
+      ]
     }
   },
-  "include": ["./.d.ts", "react-native-svg-charts.d.ts", "./src", ".storybook/decorators", "../../packages/claim/src/api-faucet.mocks.ts", "../../packages/claim/src/manager.mocks.ts", "../../packages/claim/src/manager.tests.ts", "../../packages/claim/src/manager.ts", "../../packages/claim/src/translators/reactjs/ClaimProvider.tsx", "../../packages/claim/src/errors.ts", "../../packages/claim/src/translators/reactjs/state.mocks.ts", "../../packages/claim/src/translators/reactjs/state.ts", "../../packages/claim/src/transformers.ts", "../../packages/claim/src/types.ts", "../../packages/claim/src/translators/reactjs/useClaimTokens.tsx", "../../packages/claim/src/validators.ts"]
+  "include": [
+    "./.d.ts",
+    "react-native-svg-charts.d.ts",
+    "./src",
+    ".storybook/decorators"
+  ]
 }
