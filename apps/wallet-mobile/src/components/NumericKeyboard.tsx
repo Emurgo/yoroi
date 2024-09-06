@@ -57,7 +57,7 @@ const Key = ({value, onPress}: KeyboardKeyProps) => {
     <TouchableHighlight
       style={[styles.keyboardKey]}
       onPress={() => onPress(value)}
-      underlayColor={color.el_gray_min}
+      underlayColor={color.bg_color_min}
       testID={`pinKey${value}`}
     >
       <Text style={styles.keyboardKeyText}>{value}</Text>
@@ -76,7 +76,7 @@ const BackspaceKey = ({onPress}: {onPress: (value: string) => void}) => {
     <TouchableHighlight
       style={[styles.keyboardKey, styles.specialKey]}
       onPress={() => onPress('BACKSPACE')}
-      underlayColor={color.el_gray_min}
+      underlayColor={color.bg_color_min}
       testID="pinKeyBACKSPACE"
     >
       <Backspace color={color.gray_max} />
@@ -109,7 +109,7 @@ const useStyles = () => {
       borderLeftWidth: StyleSheet.hairlineWidth,
       borderRightWidth: StyleSheet.hairlineWidth,
       borderColor: color.el_gray_medium,
-      backgroundColor: color.gray_min,
+      backgroundColor: color.bg_color_max,
     },
     keyboardKeyText: {
       fontSize: 30,
