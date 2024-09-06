@@ -5,11 +5,10 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {SettingsButton} from '../../components/Button'
 import {NetworkTag} from '../../features/Settings/ChangeNetwork/NetworkTag'
 import {useGovernanceManagerMaker} from '../../features/Staking/Governance'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
-import {DashboardRoutes, defaultStackNavigationOptions, useWalletNavigation} from '../../kernel/navigation'
+import {DashboardRoutes, defaultStackNavigationOptions} from '../../kernel/navigation'
 import {DelegationConfirmation, FailedTxScreen} from '../Staking'
 import {StakingCenter} from '../Staking/StakingCenter'
 import {Dashboard} from './Dashboard'
@@ -36,7 +35,6 @@ export const DashboardNavigator = () => {
           options={{
             title: meta.name,
             headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
-            headerRight: () => <HeaderRight />,
           }}
         />
 
@@ -76,9 +74,3 @@ const messages = defineMessages({
     defaultMessage: '!!!Staking Center',
   },
 })
-
-const HeaderRight = () => {
-  const {navigateToSettings} = useWalletNavigation()
-
-  return <SettingsButton style={{paddingRight: 16}} onPress={() => navigateToSettings()} />
-}
