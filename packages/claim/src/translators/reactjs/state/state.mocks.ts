@@ -27,7 +27,7 @@ const withClaimTokenDone: ClaimState = {
   claimInfo: claimApiMockResponses.claimTokens.done,
 } as const
 
-export const mocks = {
+export const mocksState = {
   empty,
   withScanActionClaim,
   withClaimTokenAccepted,

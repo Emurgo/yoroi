@@ -1,7 +1,7 @@
 import {tokenMocks} from '@yoroi/portfolio'
 import {Claim} from '@yoroi/types'
 
-const claimTokensResponse: {[key: string]: Claim.Info} = {
+const claimTokensResponse = {
   accepted: {
     status: 'accepted',
     amounts: [

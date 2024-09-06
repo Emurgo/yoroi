@@ -32,6 +32,13 @@ export const asClaimToken = async (
   })
   const amounts: Array<Portfolio.Token.Amount> = []
 
+  if (ptQuantity > 0n) {
+    amounts.push({
+      info: primaryTokenInfo,
+      quantity: ptQuantity,
+    })
+  }
+
   for (const [tokenId, cachedInfo] of infos.entries()) {
     if (!cachedInfo?.record || !ids.has(tokenId)) continue
     const quantity = tokens[tokenId]
@@ -40,12 +47,6 @@ export const asClaimToken = async (
         info: cachedInfo.record,
         quantity: toBigInt(quantity, 0, true),
       })
-  }
-  if (ptQuantity > 0n) {
-    amounts.push({
-      info: primaryTokenInfo,
-      quantity: ptQuantity,
-    })
   }
 
   if (status === 'claimed') {

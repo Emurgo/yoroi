@@ -2,10 +2,10 @@ import {act, renderHook} from '@testing-library/react-hooks'
 import {queryClientFixture} from '@yoroi/common'
 import {QueryClient} from 'react-query'
 
-import {useClaim} from './ClaimProvider'
 import {wrapperMaker} from '../../../fixtures/wrapperMaker'
 import {claimManagerMockInstances} from '../../../manager.mocks'
 import {defaultClaimState} from '../state/state'
+import {useClaim} from '../hooks/useClaim'
 
 describe('ClaimProvider', () => {
   let queryClient: QueryClient

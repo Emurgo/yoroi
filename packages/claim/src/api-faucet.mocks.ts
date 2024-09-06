@@ -1,10 +1,6 @@
 import {tokenMocks} from '@yoroi/portfolio'
-import {Claim} from '@yoroi/types'
 
-const claimTokens: Record<
-  string,
-  {[key: string]: Claim.Api.ClaimTokensResponse}
-> = {
+const claimTokens = {
   success: {
     accepted: {
       status: 'accepted',
@@ -30,7 +26,6 @@ const claimTokens: Record<
         [tokenMocks.nftCryptoKitty.info.id]: '44',
         [tokenMocks.rnftWhatever.info.id]: '410',
       },
-
       status: 'claimed',
       tx_hash: 'tx_hash',
     },

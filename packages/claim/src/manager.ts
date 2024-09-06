@@ -1,5 +1,6 @@
 import {FetchData, fetchData, isLeft} from '@yoroi/common'
 import {Api, Claim, Portfolio, Scan} from '@yoroi/types'
+import {freeze} from 'immer'
 
 import {asClaimApiError, asClaimToken} from './transformers'
 import {ClaimTokensApiResponseSchema} from './validators'
@@ -19,40 +20,36 @@ export const claimManagerMaker = (
     deps,
   )
 
-  return {
+  return freeze({
     claimTokens,
     address,
     primaryTokenInfo,
-  } as const
+  })
 }
 
 const postClaimTokens =
   (
     {address, primaryTokenInfo, tokenManager}: ClaimManagerMakerOptions,
-    {request} = {request: fetchData},
+    {request}: {request: FetchData},
   ) =>
   async (claimAction: Scan.ActionClaim) => {
     // builds the request from the action, overides address and code
     const {code, params, url} = claimAction
     const payload = {...params, address, code}
 
-    try {
-      const response = await request<Claim.Api.ClaimTokensResponse>({
-        url,
-        method: 'post',
-        data: payload,
-      })
+    const response = await request<Claim.Api.ClaimTokensResponse>({
+      url,
+      method: 'post',
+      data: payload,
+    })
 
-      if (isLeft(response)) {
-        return asClaimApiError(response.error)
-      } else {
-        const claimInfo = response.value.data
-        if (!ClaimTokensApiResponseSchema.safeParse(claimInfo).success)
-          throw new Api.Errors.ResponseMalformed()
+    if (isLeft(response)) {
+      return asClaimApiError(response.error)
+    } else {
+      const claimInfo = response.value.data
+      if (!ClaimTokensApiResponseSchema.safeParse(claimInfo).success)
+        throw new Api.Errors.ResponseMalformed()
 
-        return asClaimToken(claimInfo, primaryTokenInfo, tokenManager)
-      }
-    } catch (error) {
-      throw new Api.Errors.Unknown((error as Error)?.message)
+      return asClaimToken(claimInfo, primaryTokenInfo, tokenManager)
     }
   }

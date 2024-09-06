@@ -1,4 +1,3 @@
-import {invalid} from '@yoroi/common'
 import {Claim, Scan} from '@yoroi/types'
 import * as React from 'react'
 
@@ -21,7 +20,7 @@ const initialClaimProvider: ClaimProviderContext = {
   ...defaultClaimActions,
   ...claimManagerMockInstances.error,
 }
-const ClaimContext =
+export const ClaimContext =
   React.createContext<ClaimProviderContext>(initialClaimProvider)
 
 type ClaimProviderProps = React.PropsWithChildren<{
@@ -63,6 +62,3 @@ export const ClaimProvider = ({
     <ClaimContext.Provider value={context}>{children}</ClaimContext.Provider>
   )
 }
-export const useClaim = () =>
-  React.useContext(ClaimContext) ??
-  invalid('useClaim: needs to be wrapped in a ClaimManagerProvider')

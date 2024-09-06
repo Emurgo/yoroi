@@ -2,7 +2,7 @@ import {Claim, Scan} from '@yoroi/types'
 import {useMutationWithInvalidations} from '@yoroi/common'
 import {UseMutationOptions} from 'react-query'
 
-import {useClaim} from '../provider/ClaimProvider'
+import {useClaim} from './useClaim'
 
 export const useClaimTokens = (
   options: UseMutationOptions<Claim.Info, Error, Scan.ActionClaim> = {},

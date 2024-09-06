@@ -19,12 +19,6 @@ export const defaultClaimState: ClaimState = {
   scanActionClaim: undefined,
 } as const
 
-export const defaultClaimActions: ClaimActions = {
-  claimInfoChanged: () => invalid('missing init'),
-  scanActionClaimChanged: () => invalid('missing init'),
-  reset: () => invalid('missing init'),
-} as const
-
 export const claimReducer = (
   state: ClaimState,
   action: ClaimAction,
@@ -50,15 +44,28 @@ export type ClaimState = Readonly<{
   scanActionClaim: Scan.ActionClaim | undefined
 }>
 
+export type ClaimActionInfoChanged = {
+  type: ClaimActionType.ClaimInfoChanged
+  claimInfo: Claim.Info
+}
+
+export type ClaimActionScanActionClaimChanged = {
+  type: ClaimActionType.ScanActionClaimChanged
+  scanActionClaim: Scan.ActionClaim
+}
+
+export type ClaimActionReset = {
+  type: ClaimActionType.Reset
+}
+
 export type ClaimAction =
-  | {
-      type: ClaimActionType.ClaimInfoChanged
-      claimInfo: Claim.Info
-    }
-  | {
-      type: ClaimActionType.ScanActionClaimChanged
-      scanActionClaim: Scan.ActionClaim
-    }
-  | {
-      type: ClaimActionType.Reset
-    }
+  | ClaimActionInfoChanged
+  | ClaimActionScanActionClaimChanged
+  | ClaimActionReset
+
+/* istanbul ignore next */
+export const defaultClaimActions: ClaimActions = {
+  claimInfoChanged: () => invalid('missing init'),
+  scanActionClaimChanged: () => invalid('missing init'),
+  reset: () => invalid('missing init'),
+} as const
