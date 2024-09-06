@@ -68,7 +68,7 @@ export const SwapTabNavigator = () => {
             listeners={{
               tabPress: (e) => {
                 // if the keyboard is open, the user needs to close first the keyboard
-                // then, press again the tab change screen
+                // then, press again the tab to change screen
                 // to avoid screen freezing
                 if (isKeyboardOpen) {
                   Keyboard.dismiss()
@@ -84,7 +84,7 @@ export const SwapTabNavigator = () => {
             listeners={{
               tabPress: (e) => {
                 // if the keyboard is open, the user needs to close first the keyboard
-                // then, press again the tab change screen
+                // then, press again the tab to change screen
                 // to avoid screen freezing
                 if (isKeyboardOpen) {
                   Keyboard.dismiss()
