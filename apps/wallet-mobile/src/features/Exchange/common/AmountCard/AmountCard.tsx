@@ -46,6 +46,8 @@ export const AmountCard: React.FC<AmountCardProps> = ({
 
   const {styles, colors} = useStyles()
 
+  const {isDark} = useTheme()
+
   const strings = useStrings()
 
   return (
@@ -71,6 +73,7 @@ export const AmountCard: React.FC<AmountCardProps> = ({
               selectTextOnFocus
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
+              keyboardAppearance={isDark ? 'dark' : 'light'}
               testID={testId}
             />
           </Pressable>
