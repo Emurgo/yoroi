@@ -80,7 +80,7 @@ export const PortfolioScreen = () => {
                     ListHeaderComponent={() => {
                       return (
                         <View>
-                          <Text>walelt: {walletId}</Text>
+                          <Text>wallet: {walletId}</Text>
 
                           <Text>balance: {wallet.primaryBalance.quantity.toString()}</Text>
 

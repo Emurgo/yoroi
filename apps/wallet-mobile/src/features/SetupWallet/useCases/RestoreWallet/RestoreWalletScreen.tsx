@@ -283,7 +283,7 @@ const useStyles = () => {
       paddingBottom: 19,
     },
     suggestion: {
-      borderColor: color.primary_500,
+      borderColor: color.primary_300,
       borderWidth: 2,
       borderRadius: 8,
       backgroundColor: 'transparent',
@@ -291,7 +291,7 @@ const useStyles = () => {
     suggestionText: {
       ...atoms.body_1_lg_regular,
       textTransform: 'none',
-      color: color.text_primary_max,
+      color: color.text_primary_medium,
     },
     suggestionArea: {
       backgroundColor: color.bg_color_max,

@@ -297,7 +297,7 @@ export const StartSwapOrderScreen = () => {
   return (
     <View style={[styles.root, styles.flex]}>
       <ScrollView style={styles.padding}>
-        <Space height="sm" />
+        <Space height="lg" />
 
         <View
           onLayout={(event) => {

@@ -43,7 +43,7 @@ export const Overview = () => {
 
       <Accordion label={strings.info} expanded={expanded} onChange={setExpanded} wrapperStyle={styles.container}>
         <View style={styles.tokenInfoContainer}>
-          <TokenInfoIcon info={tokenInfo.info} imageStyle={styles.tokenLogo} />
+          <TokenInfoIcon size="sm" info={tokenInfo.info} imageStyle={styles.tokenLogo} />
 
           <Text style={styles?.tokenName}>{tokenSymbol}</Text>
         </View>
@@ -154,8 +154,8 @@ const useStyles = () => {
       color: color.gray_600,
     },
     link: {
-      ...atoms.link_1_lg_underline,
-      color: color.primary_500,
+      ...atoms.link_1_lg,
+      color: color.text_primary_medium,
     },
     linkGroup: {
       ...atoms.flex_1,

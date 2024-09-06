@@ -10,7 +10,7 @@ import {Buffer} from 'buffer'
 import _ from 'lodash'
 import React, {useRef} from 'react'
 import {useIntl} from 'react-intl'
-import {Alert, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {ActivityIndicator, Alert, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {
   Button,
@@ -25,7 +25,6 @@ import {
   TokenIcon,
   useModal,
 } from '../../../../../components'
-import {LoadingOverlay} from '../../../../../components/LoadingOverlay'
 import {useLanguage} from '../../../../../kernel/i18n'
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../../kernel/navigation'
@@ -52,7 +51,7 @@ import {mapOpenOrders, MappedOpenOrder} from './mapOrders'
 export const OpenOrders = () => {
   const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
   const strings = useStrings()
-  const styles = useStyles()
+  const {styles} = useStyles()
   const intl = useIntl()
   const {wallet, meta} = useSelectedWallet()
   const {order: swapApiOrder} = useSwap()
@@ -386,8 +385,21 @@ export const OpenOrders = () => {
         closingText={strings.listOpenOrders}
       />
 
-      <LoadingOverlay loading={isLoading} />
+      <LoadingOverlay animating={isLoading} />
     </>
+  )
+}
+
+const LoadingOverlay = ({animating}: {animating: boolean}) => {
+  const {styles} = useStyles()
+  const {isDark} = useTheme()
+
+  if (!animating) return null
+
+  return (
+    <View style={[StyleSheet.absoluteFill, styles.loading]}>
+      <ActivityIndicator animating={animating} size="large" color={isDark ? 'white' : 'black'} />
+    </View>
   )
 }
 
@@ -406,7 +418,7 @@ const Header = ({
   expanded?: boolean
   onPress: () => void
 }) => {
-  const styles = useStyles()
+  const {styles} = useStyles()
   return (
     <HeaderWrapper expanded={expanded} onPress={onPress}>
       <View style={styles.label}>
@@ -498,7 +510,7 @@ const MainInfo = ({tokenPrice, tokenAmount, date}: {tokenPrice: string; tokenAmo
 }
 
 const TxLink = ({txLink, txId}: {txLink: string; txId: string}) => {
-  const styles = useStyles()
+  const {styles} = useStyles()
   return (
     <TouchableOpacity onPress={() => Linking.openURL(txLink)} style={styles.txLink}>
       <Text style={styles.txLinkText}>{txId}</Text>
@@ -507,7 +519,7 @@ const TxLink = ({txLink, txId}: {txLink: string; txId: string}) => {
 }
 
 export const OpenOrdersSkeleton = () => {
-  const styles = useStyles()
+  const {styles} = useStyles()
   return (
     <View style={styles.container}>
       <View style={styles.content}>
@@ -547,7 +559,7 @@ const ModalContent = ({
   fee: string
 }) => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {styles} = useStyles()
 
   const handleConfirm = () => {
     onConfirm()
@@ -603,7 +615,7 @@ const ModalContentHeader = ({
   assetToLabel: string
 }) => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {styles} = useStyles()
   return (
     <>
       <Text style={styles.contentTitle}>{strings.listOrdersSheetContentTitle}</Text>
@@ -638,7 +650,7 @@ const ModalContentHeader = ({
 }
 
 const ModalContentRow = ({label, value}: {label: string; value: string}) => {
-  const styles = useStyles()
+  const {styles} = useStyles()
   return (
     <View style={styles.contentRow}>
       <Text style={styles.contentLabel}>{label}</Text>
@@ -650,7 +662,7 @@ const ModalContentRow = ({label, value}: {label: string; value: string}) => {
 
 const ModalContentButtons = ({onBack, onConfirm}: {onBack: () => void; onConfirm: () => void}) => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {styles} = useStyles()
   return (
     <View style={styles.buttons}>
       <Button
@@ -665,7 +677,7 @@ const ModalContentButtons = ({onBack, onConfirm}: {onBack: () => void; onConfirm
 
       <Spacer width={20} />
 
-      <Button title={strings.listOrdersSheetConfirm} onPress={onConfirm} style={styles.modalButton} block />
+      <Button title={strings.listOrdersSheetConfirm} onPress={onConfirm} warningTheme block />
     </View>
   )
 }
@@ -680,7 +692,7 @@ const ListEmptyComponent = ({openOrders}: {openOrders: Array<MappedOpenOrder>}) 
 
 const NoOrdersYet = () => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {styles} = useStyles()
   return (
     <View style={styles.notOrdersYetContainer}>
       <Spacer height={80} />
@@ -738,34 +750,33 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     modalRoot: {
-      flex: 1,
+      ...atoms.flex_1,
       ...atoms.px_lg,
     },
     container: {
-      flex: 1,
+      ...atoms.flex_1,
       backgroundColor: color.bg_color_max,
-      paddingTop: 10,
     },
     content: {
-      flex: 1,
-      paddingHorizontal: 16,
+      ...atoms.flex_1,
+      ...atoms.px_lg,
     },
     list: {
-      paddingHorizontal: 16,
+      ...atoms.px_lg,
     },
     contentRow: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+      ...atoms.flex_row,
+      ...atoms.justify_between,
     },
     contentTitle: {
-      color: 'red',
+      color: color.text_gray_medium,
       ...atoms.body_1_lg_regular,
-      textAlign: 'center',
+      ...atoms.text_center,
     },
     modalContentTitleText: {
       color: color.gray_900,
       ...atoms.body_1_lg_medium,
-      textAlign: 'center',
+      ...atoms.text_center,
     },
     contentLabel: {
       color: color.gray_600,
@@ -780,54 +791,56 @@ const useStyles = () => {
       ...atoms.body_1_lg_regular,
     },
     modalContentTitle: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      ...atoms.flex_row,
+      ...atoms.align_center,
     },
     buttons: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+      ...atoms.flex_row,
+      ...atoms.justify_between,
     },
     txLink: {
-      alignItems: 'center',
-      justifyContent: 'center',
+      ...atoms.align_center,
+      ...atoms.justify_center,
     },
     txLinkText: {
-      color: color.primary_500,
-      ...atoms.body_1_lg_regular,
-      textDecorationLine: 'underline',
+      color: color.text_primary_medium,
+      ...atoms.link_1_lg,
     },
 
     label: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      ...atoms.flex_row,
+      ...atoms.align_center,
     },
     counter: {
-      paddingVertical: 16,
+      ...atoms.py_lg,
     },
     illustration: {
-      flex: 1,
+      ...atoms.flex_1,
       alignSelf: 'center',
       width: 280,
       height: 224,
     },
     notOrdersYetContainer: {
-      flex: 1,
-      textAlign: 'center',
+      ...atoms.flex_1,
+      ...atoms.text_center,
     },
     contentText: {
-      flex: 1,
-      textAlign: 'center',
+      ...atoms.flex_1,
+      ...atoms.text_center,
       color: color.gray_max,
       ...atoms.heading_3_medium,
     },
     contentSubText: {
-      flex: 1,
-      textAlign: 'center',
-      color: color.gray_600,
-      ...atoms.body_1_lg_medium,
+      ...atoms.flex_1,
+      ...atoms.text_center,
+      color: color.text_gray_low,
+      ...atoms.body_1_lg_regular,
     },
-    modalButton: {backgroundColor: color.sys_magenta_500},
+    loading: {
+      ...atoms.align_center,
+      ...atoms.justify_center,
+    },
   })
 
-  return styles
+  return {styles} as const
 }

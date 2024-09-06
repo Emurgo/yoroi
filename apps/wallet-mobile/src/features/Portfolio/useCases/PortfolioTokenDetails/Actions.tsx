@@ -94,7 +94,7 @@ const useStyles = () => {
 
   const colors = {
     white: color.white_static,
-    primary: color.primary_500,
+    primary: color.el_primary_medium,
   } as const
 
   return {styles, colors} as const

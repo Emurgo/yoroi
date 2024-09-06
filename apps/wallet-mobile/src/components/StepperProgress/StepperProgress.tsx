@@ -23,15 +23,17 @@ export const StepperProgress = ({currentStep, currentStepTitle, totalSteps, styl
   const {styles} = useStyles()
 
   if (currentStep > totalSteps) throw new Error("StepperProgress: currentStep can't be greater that totalSteps")
-  if (nonEmptyIcons.length < totalSteps || emptyIcons.length < totalSteps)
-    throw new Error('StepperProgress: total steps greater that number of icons')
+
+  // 4 non empty icons
+  // 3 empty icons
+  if (4 < totalSteps || 3 < totalSteps) throw new Error('StepperProgress: total steps greater that number of icons')
 
   const stepIndicatorFirstPart: Array<React.ReactNode> = Array.from({length: currentStep}).map((_, index) => {
     if (index <= currentStep - 2) return <CheckIllustration key={index} />
 
     return (
       <Animated.View key={index} style={styles.root}>
-        {getStepperLogo(currentStep, false)}
+        <Logo step={currentStep} />
 
         <Animated.Text layout={Layout} style={styles.currentStepTitle}>
           {currentStepTitle}
@@ -41,7 +43,7 @@ export const StepperProgress = ({currentStep, currentStepTitle, totalSteps, styl
   })
 
   const stepIndicatorSecondPart: Array<React.ReactNode> = Array.from({length: totalSteps - currentStep}).map(
-    (_, index) => getStepperLogo(index + currentStep + 1, true),
+    (_, index) => <Logo key={index + currentStep + 1} step={index + currentStep + 1} empty />,
   )
 
   const stepIndicator = [...stepIndicatorFirstPart, ...stepIndicatorSecondPart]
@@ -53,10 +55,19 @@ export const StepperProgress = ({currentStep, currentStepTitle, totalSteps, styl
   )
 }
 
-const nonEmptyIcons = [<Number1 key="1" />, <Number2 key="2" />, <Number3 key="3" />, <Number4 key="4" />]
-const emptyIcons = [null, <Number2Empty key="5" />, <Number3Empty key="6" />, <Number4Empty key="7" />]
-const getStepperLogo = (step: number, empty: boolean) => {
-  return empty ? emptyIcons[step - 1] : nonEmptyIcons[step - 1]
+const Logo = ({empty = false, step}: {empty?: boolean; step: number}) => {
+  const {colors} = useStyles()
+
+  if (empty && step === 2) return <Number2Empty color={colors.blue} />
+  if (empty && step === 3) return <Number3Empty color={colors.blue} />
+  if (empty && step === 4) return <Number4Empty color={colors.blue} />
+
+  if (step === 1) return <Number1 color={colors.blue} />
+  if (step === 2) return <Number2 color={colors.blue} />
+  if (step === 3) return <Number3 color={colors.blue} />
+  if (step === 4) return <Number4 color={colors.blue} />
+
+  return null
 }
 
 const useStyles = () => {
@@ -73,8 +84,13 @@ const useStyles = () => {
     },
     currentStepTitle: {
       ...atoms.body_1_lg_medium,
-      color: color.primary_600,
+      color: color.text_primary_medium,
     },
   })
-  return {styles} as const
+
+  const colors = {
+    blue: color.el_primary_medium,
+  }
+
+  return {styles, colors} as const
 }

@@ -93,7 +93,7 @@ const hasFrontendFeeReturn = (tx: TransactionInfo): boolean => {
 
 export const CompletedOrders = () => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {styles} = useStyles()
   const {wallet} = useSelectedWallet()
   const {sync} = useSync(wallet)
 
@@ -137,7 +137,7 @@ export const CompletedOrders = () => {
     <>
       <View style={styles.container}>
         <FlatList
-          contentContainerStyle={{paddingTop: 10, paddingHorizontal: 16}}
+          contentContainerStyle={styles.list}
           data={filteredOrders}
           renderItem={({item}: {item: MappedRawOrder}) => <ExpandableOrder tokenInfos={tokenInfos} order={item} />}
           keyExtractor={(item) => item.id}
@@ -229,7 +229,7 @@ const Header = ({
   expanded?: boolean
   onPress: () => void
 }) => {
-  const styles = useStyles()
+  const {styles} = useStyles()
   return (
     <HeaderWrapper expanded={expanded} onPress={onPress}>
       <View style={styles.label}>
@@ -325,7 +325,7 @@ const MainInfo = ({
 }
 
 export const CompletedOrdersSkeleton = () => {
-  const styles = useStyles()
+  const {styles} = useStyles()
   return (
     <View style={styles.container}>
       <View style={styles.flex}>
@@ -344,7 +344,7 @@ export const CompletedOrdersSkeleton = () => {
 }
 
 const TxLink = ({onTxPress, txId}: {onTxPress: () => void; txId: string}) => {
-  const styles = useStyles()
+  const {styles} = useStyles()
   return (
     <TouchableOpacity onPress={onTxPress} style={styles.txLink}>
       <Text style={styles.txLinkText}>{txId}</Text>
@@ -362,7 +362,7 @@ const ListEmptyComponent = ({completedOrders}: {completedOrders: Array<MappedRaw
 
 const NoOrdersYet = () => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {styles} = useStyles()
   return (
     <View style={styles.notOrdersYetContainer}>
       <Spacer height={80} />
@@ -384,52 +384,53 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
-      flex: 1,
+      ...atoms.flex_1,
       backgroundColor: color.bg_color_max,
     },
     skeletonCard: {
       ...atoms.px_lg,
     },
+    list: {
+      ...atoms.px_lg,
+    },
     flex: {
-      flex: 1,
+      ...atoms.flex_1,
     },
     txLink: {
-      alignItems: 'center',
-      justifyContent: 'center',
+      ...atoms.align_center,
+      ...atoms.justify_center,
     },
     txLinkText: {
-      color: color.primary_400,
-      ...atoms.body_1_lg_regular,
-      textDecorationLine: 'underline',
+      color: color.text_primary_medium,
+      ...atoms.link_1_lg,
     },
     label: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      ...atoms.flex_row,
+      ...atoms.align_center,
     },
     headerLabel: {
       color: color.gray_max,
       ...atoms.body_2_md_medium,
     },
     counter: {
-      paddingVertical: 16,
+      ...atoms.py_lg,
     },
     illustration: {
-      flex: 1,
+      ...atoms.flex_1,
       alignSelf: 'center',
       width: 280,
       height: 224,
     },
     notOrdersYetContainer: {
-      flex: 1,
-      textAlign: 'center',
+      ...atoms.flex_1,
+      ...atoms.text_center,
     },
     contentText: {
-      flex: 1,
-      textAlign: 'center',
+      ...atoms.flex_1,
+      ...atoms.text_center,
       ...atoms.body_2_md_medium,
       color: color.gray_max,
-      fontSize: 20,
     },
   })
-  return styles
+  return {styles} as const
 }

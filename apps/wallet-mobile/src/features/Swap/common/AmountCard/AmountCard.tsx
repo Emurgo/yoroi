@@ -88,11 +88,13 @@ export const AmountCard = ({
 
           <Spacer width={7} />
 
-          <View style={styles.rightSection}>
+          <View>
             <TouchableOpacity onPress={navigateTo}>
               <View style={styles.sectionContainer}>
                 {!info || (info.nature !== Portfolio.Token.Nature.Primary && info.originalImage === '') ? (
-                  <Icon.Coins size={24} color={colors.noSelected} />
+                  <View style={styles.notSelected}>
+                    <Icon.Coins size={20} color={colors.noSelected} />
+                  </View>
                 ) : (
                   <TokenInfoIcon info={info} size="sm" />
                 )}
@@ -156,11 +158,7 @@ const useStyles = () => {
       borderRadius: 8,
       borderWidth: 1,
       borderColor: color.gray_400,
-      paddingTop: 16,
-      paddingBottom: 16,
-      paddingLeft: 16,
-      paddingRight: 16,
-      padding: 10,
+      ...atoms.p_lg,
       height: 86,
     },
     borderError: {
@@ -171,9 +169,8 @@ const useStyles = () => {
       borderWidth: 2,
       borderColor: color.gray_900,
     },
-
     label: {
-      position: 'absolute',
+      ...atoms.absolute,
       top: -7,
       left: 10,
       backgroundColor: color.bg_color_max,
@@ -185,13 +182,12 @@ const useStyles = () => {
       color: color.sys_magenta_500,
     },
     content: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+      ...atoms.flex_row,
+      ...atoms.justify_between,
       height: 64,
     },
     amountInput: {
-      paddingVertical: 0,
+      ...atoms.py_0,
       minWidth: 120,
       maxWidth: 200,
       height: 34,
@@ -199,16 +195,12 @@ const useStyles = () => {
       color: color.gray_max,
     },
     amountWrapper: {
-      flex: 1,
-    },
-    rightSection: {
-      flexDirection: 'column',
-      justifyContent: 'flex-start',
+      ...atoms.flex_1,
     },
     sectionContainer: {
-      flexDirection: 'row',
+      ...atoms.flex_row,
+      ...atoms.align_center,
       alignSelf: 'flex-end',
-      alignItems: 'center',
     },
     coinName: {
       ...atoms.body_1_lg_regular,
@@ -225,7 +217,13 @@ const useStyles = () => {
     grayText: {
       color: color.gray_600,
     },
+    notSelected: {
+      backgroundColor: color.gray_100,
+      borderRadius: 4,
+      ...atoms.p_xs,
+    },
   })
+
   const colors = {
     placeholder: color.gray_600,
     focused: color.gray_900,

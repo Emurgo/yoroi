@@ -121,6 +121,8 @@ storiesOf('Icon', module).add('Gallery', () => {
 
         <Item icon={<Icon.Coins size={40} />} title="Coins" />
 
+        <Item icon={<Icon.Coins2 size={40} />} title="Coins2" />
+
         <Item icon={<Icon.CopySuccess size={40} />} title="Copy Success" />
 
         <Item icon={<Icon.Copy size={40} />} title="Copy" />

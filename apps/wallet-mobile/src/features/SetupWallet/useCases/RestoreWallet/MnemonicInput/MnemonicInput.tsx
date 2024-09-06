@@ -44,7 +44,7 @@ export const MnemonicInput = ({
   onClearError: (index: number) => void
 }) => {
   const strings = useStrings()
-  const {styles} = useStyles()
+  const {styles, colors} = useStyles()
 
   const isMnemonicCompleted = !isEmptyString(mnemonic)
   const error = !isValidPhrase && isMnemonicCompleted ? strings.invalidChecksum : ''
@@ -76,7 +76,7 @@ export const MnemonicInput = ({
 
       {isValidPhrase && (
         <View style={[styles.textView]}>
-          <Check2 />
+          <Check2 color={colors.secondary_600} />
 
           <Text style={styles.successText}>{strings.validChecksum}</Text>
         </View>
@@ -356,7 +356,7 @@ const useStyles = () => {
       textAlign: 'center',
     },
     mnemonicIndex: {
-      color: color.primary_400,
+      color: color.text_primary_medium,
       ...atoms.body_1_lg_regular,
     },
     textView: {
@@ -375,7 +375,7 @@ const useStyles = () => {
     clearAll: {
       ...atoms.button_2_md,
       ...atoms.pl_sm,
-      color: color.primary_500,
+      color: color.text_primary_medium,
       textTransform: 'uppercase',
     },
   })

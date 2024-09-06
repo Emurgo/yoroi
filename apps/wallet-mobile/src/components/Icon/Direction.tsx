@@ -45,9 +45,9 @@ export const styleMap: (
     icon: color.gray_900,
   },
   SENT: {
-    text: color.primary_600,
+    text: color.el_primary_medium,
     background: color.primary_100,
-    icon: color.primary_500,
+    icon: color.el_primary_medium,
   },
   RECEIVED: {
     text: color.secondary_600,

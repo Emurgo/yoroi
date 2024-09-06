@@ -287,27 +287,36 @@ const useBold = () => {
 const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
-    flex: {flexDirection: 'row', alignItems: 'center'},
-    between: {justifyContent: 'space-between'},
+    flex: {
+      ...atoms.flex_row,
+      ...atoms.align_center,
+    },
+    between: {
+      ...atoms.justify_between,
+    },
     modalText: {
-      textAlign: 'left',
+      ...atoms.text_left,
       ...atoms.body_1_lg_regular,
       color: color.gray_900,
     },
     text: {
-      textAlign: 'right',
+      ...atoms.text_right,
       ...atoms.body_1_lg_regular,
       color: color.gray_900,
-      flexWrap: 'wrap',
-      flex: 1,
+      ...atoms.flex_wrap,
+      ...atoms.flex_1,
     },
 
     modalContent: {
-      flex: 1,
-      justifyContent: 'space-between',
+      ...atoms.flex_1,
+      ...atoms.justify_between,
       ...atoms.px_lg,
     },
-    change: {color: color.primary_500, ...atoms.body_2_md_medium, textTransform: 'uppercase'},
+    change: {
+      color: color.text_primary_medium,
+      ...atoms.body_2_md_medium,
+      textTransform: 'uppercase',
+    },
     bold: {
       color: color.gray_max,
       ...atoms.body_1_lg_regular,

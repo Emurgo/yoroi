@@ -6,6 +6,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 import {Icon} from '../Icon'
+import {Space} from '../Space/Space'
 import {Spacer} from '../Spacer'
 
 export type ExpandableInfoCardProps = {
@@ -29,14 +30,12 @@ export const ExpandableInfoCard = ({
 
   return (
     <View>
-      <Spacer height={8} />
-
       <View style={[styles.container, withBoxShadow && styles.shadowProp]}>
         {header}
 
         {children !== undefined && (
           <>
-            <Spacer height={8} />
+            <Space height="sm" />
 
             {children}
           </>
@@ -44,7 +43,7 @@ export const ExpandableInfoCard = ({
 
         {expanded && (
           <>
-            <Spacer height={8} />
+            <Space height="sm" />
 
             {info}
           </>
@@ -52,14 +51,14 @@ export const ExpandableInfoCard = ({
 
         {footer !== undefined && (
           <>
-            <Spacer height={8} />
+            <Space height="sm" />
 
             {footer}
           </>
         )}
       </View>
 
-      <Spacer height={8} />
+      <Space height="lg" />
     </View>
   )
 }
@@ -258,5 +257,5 @@ const useStyles = () => {
     gray: color.gray_max,
   }
 
-  return {styles, colors}
+  return {styles, colors} as const
 }
