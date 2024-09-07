@@ -1,9 +1,8 @@
 import {useTheme} from '@yoroi/theme'
 import _ from 'lodash'
-import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import React, {useEffect, useRef} from 'react'
+import {StyleSheet, TextInput, View} from 'react-native'
 
-import {BACKSPACE, NumericKeyboard} from '../../../components/NumericKeyboard'
 import {Spacer} from '../../../components/Spacer'
 import {Text} from '../../../components/Text'
 
@@ -21,32 +20,43 @@ export type PinInputRef = {
 }
 
 export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
-  const {enabled = true, pinMaxLength, title, subtitles = [], onDone, onGoBack} = props
+  const {enabled = true, pinMaxLength, title, subtitles = [], onDone} = props
   const styles = useStyles()
 
   const [pin, setPin] = React.useState('')
+  const inputRef = useRef<TextInput>(null)
+  const {isDark} = useTheme()
 
+  // Auto-focus the hidden TextInput to trigger native keyboard
+  useEffect(() => {
+    if (enabled) {
+      inputRef.current?.focus()
+    }
+  }, [enabled])
+
+  // Expose the clear function via ref
   React.useImperativeHandle(ref, () => ({
     clear: () => {
       setPin('')
+      inputRef.current?.clear()
+      inputRef.current?.focus()
     },
   }))
 
-  const onKeyDown = (value: string) => {
+  const handleTextChange = (value: string) => {
     if (!enabled) return
-    if (value === BACKSPACE) {
-      if (pin.length === 0) onGoBack?.()
-      setPin(pin.substring(0, pin.length - 1))
-      return
+
+    // Limit pin input to pinMaxLength
+    if (value.length > pinMaxLength) {
+      value = value.substring(0, pinMaxLength)
     }
 
-    if (pin.length === pinMaxLength) {
-      return
-    }
+    setPin(value)
 
-    const newPin = pin.concat(value)
-    setPin(newPin)
-    if (newPin.length === pinMaxLength) onDone(newPin)
+    // Call onDone when pin is complete
+    if (value.length === pinMaxLength) {
+      onDone(value)
+    }
   }
 
   return (
@@ -65,13 +75,26 @@ export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
         <Spacer height={24} />
 
         <View style={styles.pinContainer}>
+          {/* Pin Placeholder Circles */}
           {_.range(0, pinMaxLength).map((index) => (
             <PinPlaceholder key={index} isActive={index < pin.length} />
           ))}
         </View>
       </View>
 
-      <NumericKeyboard onKeyDown={onKeyDown} />
+      {/* Hidden TextInput for triggering the native keyboard */}
+      <TextInput
+        ref={inputRef}
+        style={styles.hiddenInput}
+        keyboardType="numeric"
+        value={pin}
+        onChangeText={handleTextChange}
+        maxLength={pinMaxLength}
+        autoFocus={true}
+        caretHidden={true}
+        importantForAccessibility="no"
+        keyboardAppearance={isDark ? 'dark' : 'light'}
+      />
     </View>
   )
 })
@@ -135,6 +158,12 @@ const useStyles = () => {
     },
     pinCircleActive: {
       backgroundColor: color.primary_600,
+    },
+    hiddenInput: {
+      position: 'absolute',
+      opacity: 0,
+      height: 0,
+      width: 0,
     },
   })
   return styles
