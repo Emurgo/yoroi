@@ -43,7 +43,7 @@ export const StakePoolInfo = ({stakePoolId}: {stakePoolId: string}) => {
               {stakePoolId}
             </Text>
 
-            <CopyButton value={stakePoolId} />
+            <CopyButton value={stakePoolId} message={strings.copied} />
           </View>
         </View>
 
