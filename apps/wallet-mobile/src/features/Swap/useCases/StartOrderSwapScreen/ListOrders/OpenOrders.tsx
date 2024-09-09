@@ -25,6 +25,7 @@ import {
   TokenIcon,
   useModal,
 } from '../../../../../components'
+import {Space} from '../../../../../components/Space/Space'
 import {useLanguage} from '../../../../../kernel/i18n'
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../../kernel/navigation'
@@ -695,7 +696,7 @@ const NoOrdersYet = () => {
 
       <EmptyOpenOrdersIllustration style={styles.illustration} />
 
-      <Spacer height={15} />
+      <Space height="lg" />
 
       <Text style={styles.contentText}>{strings.emptyOpenOrders}</Text>
 
@@ -749,7 +750,7 @@ const EmptySearchResult = () => {
 
       <EmptyOpenOrdersIllustration style={styles.illustration} />
 
-      <Spacer height={15} />
+      <Space height="lg" />
 
       <Text style={styles.contentText}>{`${strings.emptySearchOpenOrders} "${assetSearchTerm}"`}</Text>
     </View>

@@ -21,6 +21,7 @@ import {
   Text,
   TokenIcon,
 } from '../../../../../components'
+import {Space} from '../../../../../components/Space/Space'
 import {frontendFeeAddressMainnet, frontendFeeAddressPreprod} from '../../../../../kernel/env'
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {useSync, useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
@@ -376,7 +377,7 @@ const NoOrdersYet = () => {
 
       <EmptyCompletedOrdersIllustration style={styles.illustration} />
 
-      <Spacer height={15} />
+      <Space height="lg" />
 
       <Text style={styles.contentText}>{strings.emptyCompletedOrders}</Text>
     </View>
@@ -394,7 +395,7 @@ const EmptySearchResult = () => {
 
       <EmptyCompletedOrdersIllustration style={styles.illustration} />
 
-      <Spacer height={15} />
+      <Space height="lg" />
 
       <Text style={styles.contentText}>{`${strings.emptySearchCompletedOrders} "${assetSearchTerm}"`}</Text>
     </View>
