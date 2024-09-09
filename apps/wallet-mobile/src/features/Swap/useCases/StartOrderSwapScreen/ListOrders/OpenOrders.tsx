@@ -75,7 +75,7 @@ export const OpenOrders = () => {
   const modalOpenRef = useRef(isModalOpen)
   modalOpenRef.current = isModalOpen
 
-  const {search} = useSearch()
+  const {search, visible: isSearchBarVisible} = useSearch()
 
   const filteredOrders = React.useMemo(
     () =>
@@ -378,12 +378,14 @@ export const OpenOrders = () => {
         />
       </View>
 
-      <Counter
-        style={styles.counter}
-        openingText={strings.youHave}
-        counter={filteredOrders?.length ?? 0}
-        closingText={strings.listOpenOrders}
-      />
+      {!isSearchBarVisible && (
+        <Counter
+          style={styles.counter}
+          openingText={strings.youHave}
+          counter={filteredOrders?.length ?? 0}
+          closingText={strings.listOpenOrders}
+        />
+      )}
 
       <LoadingOverlay animating={isLoading} />
     </>
@@ -743,7 +745,21 @@ const useShowCollateralNotFoundAlert = (wallet: YoroiWallet) => {
 }
 
 const EmptySearchResult = () => {
-  return null
+  const strings = useStrings()
+  const {styles} = useStyles()
+  const {search: assetSearchTerm} = useSearch()
+
+  return (
+    <View style={styles.notOrdersYetContainer}>
+      <Spacer height={80} />
+
+      <EmptyOpenOrdersIllustration style={styles.illustration} />
+
+      <Spacer height={15} />
+
+      <Text style={styles.contentText}>{`${strings.emptySearchOpenOrders} "${assetSearchTerm}"`}</Text>
+    </View>
+  )
 }
 
 const useStyles = () => {

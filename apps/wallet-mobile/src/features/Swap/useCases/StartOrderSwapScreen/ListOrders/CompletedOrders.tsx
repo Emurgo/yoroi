@@ -96,6 +96,7 @@ export const CompletedOrders = () => {
   const {styles} = useStyles()
   const {wallet} = useSelectedWallet()
   const {sync} = useSync(wallet)
+  const {visible: isSearchBarVisible} = useSearch()
 
   const {track} = useMetrics()
 
@@ -145,12 +146,14 @@ export const CompletedOrders = () => {
         />
       </View>
 
-      <Counter
-        style={styles.counter}
-        openingText={strings.youHave}
-        counter={filteredOrders?.length ?? 0}
-        closingText={strings.listCompletedOrders}
-      />
+      {!isSearchBarVisible && (
+        <Counter
+          style={styles.counter}
+          openingText={strings.youHave}
+          counter={filteredOrders?.length ?? 0}
+          closingText={strings.listCompletedOrders}
+        />
+      )}
     </>
   )
 }
@@ -355,6 +358,10 @@ const TxLink = ({onTxPress, txId}: {onTxPress: () => void; txId: string}) => {
 const ListEmptyComponent = ({completedOrders}: {completedOrders: Array<MappedRawOrder>}) => {
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
 
+  console.log('assetSearchTerm', assetSearchTerm)
+  console.log('isSearching', isSearching)
+  console.log('completedOrders.length', completedOrders.length)
+
   if (isSearching && assetSearchTerm.length > 0 && completedOrders.length === 0) return <EmptySearchResult />
 
   return <NoOrdersYet />
@@ -377,7 +384,21 @@ const NoOrdersYet = () => {
 }
 
 const EmptySearchResult = () => {
-  return null
+  const strings = useStrings()
+  const {styles} = useStyles()
+  const {search: assetSearchTerm} = useSearch()
+
+  return (
+    <View style={styles.notOrdersYetContainer}>
+      <Spacer height={80} />
+
+      <EmptyCompletedOrdersIllustration style={styles.illustration} />
+
+      <Spacer height={15} />
+
+      <Text style={styles.contentText}>{`${strings.emptySearchCompletedOrders} "${assetSearchTerm}"`}</Text>
+    </View>
+  )
 }
 
 const useStyles = () => {
@@ -428,7 +449,7 @@ const useStyles = () => {
     contentText: {
       ...atoms.flex_1,
       ...atoms.text_center,
-      ...atoms.body_2_md_medium,
+      ...atoms.heading_3_medium,
       color: color.gray_max,
     },
   })

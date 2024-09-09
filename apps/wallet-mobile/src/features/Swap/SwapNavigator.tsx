@@ -9,6 +9,7 @@ import {KeyboardAvoidingView} from '../../components'
 import {useIsKeyboardOpen} from '../../kernel/keyboard/useIsKeyboardOpen'
 import {defaultMaterialTopTabNavigationOptions, SwapTabRoutes} from '../../kernel/navigation'
 import {usePortfolioBalances} from '../Portfolio/common/hooks/usePortfolioBalances'
+import {useSearch} from '../Search/SearchContext'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from './common/strings'
 import {StartSwapOrderScreen} from './useCases/StartOrderSwapScreen/CreateOrder/StartSwapOrderScreen'
@@ -54,12 +55,15 @@ export const SwapTabNavigator = () => {
 
   useSwapTokensOnlyVerified({suspense: false})
 
+  const {visible: isSearchBarVisible} = useSearch()
+
   return (
     <KeyboardAvoidingView style={[styles.flex, styles.root]}>
       <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.flex}>
         <Tab.Navigator
           screenOptions={({route}) => ({
             ...defaultMaterialTopTabNavigationOptions(atoms, color),
+            ...(isSearchBarVisible && {tabBarStyle: {height: 0}}),
             tabBarLabel: route.name === 'token-swap' ? strings.tokenSwap : strings.orderSwap,
           })}
           style={styles.tab}
