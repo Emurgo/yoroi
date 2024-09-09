@@ -25,6 +25,7 @@ import {
   TokenIcon,
   useModal,
 } from '../../../../../components'
+import {Space} from '../../../../../components/Space/Space'
 import {useLanguage} from '../../../../../kernel/i18n'
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../../kernel/navigation'
@@ -74,7 +75,7 @@ export const OpenOrders = () => {
   const modalOpenRef = useRef(isModalOpen)
   modalOpenRef.current = isModalOpen
 
-  const {search} = useSearch()
+  const {search, visible: isSearchBarVisible} = useSearch()
 
   const filteredOrders = React.useMemo(
     () =>
@@ -372,12 +373,14 @@ export const OpenOrders = () => {
         />
       </View>
 
-      <Counter
-        style={styles.counter}
-        openingText={strings.youHave}
-        counter={filteredOrders?.length ?? 0}
-        closingText={strings.listOpenOrders}
-      />
+      {!isSearchBarVisible && (
+        <Counter
+          style={styles.counter}
+          openingText={strings.youHave}
+          counter={filteredOrders?.length ?? 0}
+          closingText={strings.listOpenOrders}
+        />
+      )}
 
       <LoadingOverlay animating={isLoading} />
     </>
@@ -693,7 +696,7 @@ const NoOrdersYet = () => {
 
       <EmptyOpenOrdersIllustration style={styles.illustration} />
 
-      <Spacer height={15} />
+      <Space height="lg" />
 
       <Text style={styles.contentText}>{strings.emptyOpenOrders}</Text>
 
@@ -737,7 +740,21 @@ const useShowCollateralNotFoundAlert = (wallet: YoroiWallet) => {
 }
 
 const EmptySearchResult = () => {
-  return null
+  const strings = useStrings()
+  const {styles} = useStyles()
+  const {search: assetSearchTerm} = useSearch()
+
+  return (
+    <View style={styles.notOrdersYetContainer}>
+      <Spacer height={80} />
+
+      <EmptyOpenOrdersIllustration style={styles.illustration} />
+
+      <Space height="lg" />
+
+      <Text style={styles.contentText}>{`${strings.emptySearchOpenOrders} "${assetSearchTerm}"`}</Text>
+    </View>
+  )
 }
 
 const useStyles = () => {
