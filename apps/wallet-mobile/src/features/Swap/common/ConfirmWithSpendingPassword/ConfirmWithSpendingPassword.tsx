@@ -74,22 +74,21 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     root: {
-      flex: 1,
-      ...atoms.px_lg,
+      ...atoms.flex_1,
     },
     modalText: {
       paddingHorizontal: 70,
-      textAlign: 'center',
+      ...atoms.text_center,
       paddingBottom: 8,
       color: color.gray_900,
     },
     loading: {
-      position: 'absolute',
+      ...atoms.absolute,
       height: '100%',
       left: 0,
       right: 0,
-      alignItems: 'center',
-      justifyContent: 'center',
+      ...atoms.align_center,
+      ...atoms.justify_center,
     },
   })
 
