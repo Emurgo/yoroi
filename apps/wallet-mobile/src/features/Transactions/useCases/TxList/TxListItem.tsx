@@ -60,7 +60,7 @@ export const TxListItem = ({transaction}: Props) => {
   return (
     <TouchableOpacity onPress={showDetails} activeOpacity={0.5} testID="txHistoryListItem" style={styles.item}>
       <Left>
-        <Icon.Direction size={32} transaction={transaction} />
+        <Icon.Direction size={25} transaction={transaction} />
       </Left>
 
       <Middle>

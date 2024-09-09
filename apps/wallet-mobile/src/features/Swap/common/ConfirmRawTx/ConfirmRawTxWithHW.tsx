@@ -1,7 +1,7 @@
 import {useTheme} from '@yoroi/theme'
 import {HW, Swap} from '@yoroi/types'
 import React, {useState} from 'react'
-import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
+import {ScrollView, StyleSheet, View} from 'react-native'
 
 import {Text} from '../../../../components'
 import {LedgerConnect} from '../../../../legacy/HW'
@@ -11,6 +11,7 @@ import {useWalletManager} from '../../../WalletManager/context/WalletManagerProv
 import {LedgerTransportSwitch} from '../../useCases/ConfirmTxScreen/LedgerTransportSwitch'
 import {useCancelOrderWithHw} from '../helpers'
 import {useStrings} from '../strings'
+import {ActivityIndicator} from './ActivityIndicator'
 
 type TransportType = 'USB' | 'BLE'
 type Step = 'select-transport' | 'connect-transport' | 'loading'
@@ -69,7 +70,7 @@ export const ConfirmRawTxWithHW = ({onConfirm, utxo, bech32Address, cancelOrder}
 
   return (
     <View style={styles.container}>
-      <ActivityIndicator size="large" color="black" />
+      <ActivityIndicator />
 
       <Text style={styles.text}>{strings.continueOnLedger}</Text>
     </View>

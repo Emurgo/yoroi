@@ -1,10 +1,11 @@
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {ActivityIndicator, StyleSheet, TextInput as RNTextInput, View} from 'react-native'
+import {StyleSheet, TextInput as RNTextInput, View} from 'react-native'
 
 import {Button, Spacer, Text, TextInput} from '../../../../components'
 import {debugWalletInfo, features} from '../../../../kernel/features'
 import {useStrings} from '../../common/strings'
+import {ActivityIndicator} from '../ConfirmRawTx/ActivityIndicator'
 import {getErrorMessage} from '../errors'
 
 export type ErrorData = {
@@ -61,7 +62,7 @@ export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error, onPassw
 
       {isLoading && (
         <View style={styles.loading}>
-          <ActivityIndicator size="large" color="black" />
+          <ActivityIndicator />
         </View>
       )}
     </View>
