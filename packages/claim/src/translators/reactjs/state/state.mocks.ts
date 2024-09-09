@@ -1,6 +1,5 @@
-import {claimApiMockResponses} from './api.mocks'
-import {defaultClaimState} from './state'
-import {ClaimState} from './types'
+import {claimApiMockResponses} from '../../../manager.mocks'
+import {ClaimState, defaultClaimState} from './state'
 
 const empty: ClaimState = {...defaultClaimState} as const
 const withScanActionClaim: ClaimState = {
@@ -15,20 +14,20 @@ const withScanActionClaim: ClaimState = {
 
 const withClaimTokenAccepted: ClaimState = {
   ...withScanActionClaim,
-  claimToken: claimApiMockResponses.claimTokens['accepted'],
+  claimInfo: claimApiMockResponses.claimTokens.accepted,
 } as const
 
 const withClaimTokenProcessing: ClaimState = {
   ...withScanActionClaim,
-  claimToken: claimApiMockResponses.claimTokens['processing'],
+  claimInfo: claimApiMockResponses.claimTokens.processing,
 } as const
 
 const withClaimTokenDone: ClaimState = {
   ...withScanActionClaim,
-  claimToken: claimApiMockResponses.claimTokens['done'],
+  claimInfo: claimApiMockResponses.claimTokens.done,
 } as const
 
-export const mocks = {
+export const mocksState = {
   empty,
   withScanActionClaim,
   withClaimTokenAccepted,

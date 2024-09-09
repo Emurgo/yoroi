@@ -56,7 +56,6 @@ const getStories = () => {
   return {
     "./.storybook/stories/Button/ExampleButton.stories.js": require("./stories/Button/ExampleButton.stories.js"),
     "./src/components/Accordion/Accordion.stories.tsx": require("../src/components/Accordion/Accordion.stories.tsx"),
-    "./src/components/AmountItem/AmountItem.stories.tsx": require("../src/components/AmountItem/AmountItem.stories.tsx"),
     "./src/components/Analytics/Analytics.stories.tsx": require("../src/components/Analytics/Analytics.stories.tsx"),
     "./src/components/BlueCheckbox/BlueCheckbox.stories.tsx": require("../src/components/BlueCheckbox/BlueCheckbox.stories.tsx"),
     "./src/components/Boundary/Boundary.stories.tsx": require("../src/components/Boundary/Boundary.stories.tsx"),

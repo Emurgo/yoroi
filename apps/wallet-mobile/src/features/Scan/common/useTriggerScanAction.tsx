@@ -1,20 +1,19 @@
+import {useClaim, useClaimTokens} from '@yoroi/claim'
 import {toBigInt} from '@yoroi/common'
 import {useTransfer} from '@yoroi/transfer'
+import {Scan} from '@yoroi/types'
 import * as React from 'react'
 import {Alert} from 'react-native'
 
 import {useModal} from '../../../components/Modal/ModalContext'
 import {useClaimErrorResolver} from '../../../features/Claim/common/useClaimErrorResolver'
 import {useStrings as useStringsClaim} from '../../../features/Claim/common/useStrings'
-import {useClaim} from '../../../features/Claim/module/ClaimProvider'
-import {useClaimTokens} from '../../../features/Claim/module/useClaimTokens'
 import {AskConfirmation} from '../../../features/Claim/useCases/AskConfirmation'
 import {pastedFormatter} from '../../../yoroi-wallets/utils/amountUtils'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
-import {ScanAction, ScanFeature} from './types'
 import {useNavigateTo} from './useNavigateTo'
 
-export const useTriggerScanAction = ({insideFeature}: {insideFeature: ScanFeature}) => {
+export const useTriggerScanAction = ({insideFeature}: {insideFeature: Scan.Feature}) => {
   const {
     wallet: {portfolioPrimaryTokenInfo},
   } = useSelectedWallet()
@@ -29,11 +28,11 @@ export const useTriggerScanAction = ({insideFeature}: {insideFeature: ScanFeatur
     memoChanged,
   } = useTransfer()
 
-  const {reset: resetClaimState, scanActionClaimChanged, address, claimTokenChanged} = useClaim()
+  const {reset: resetClaimState, scanActionClaimChanged, address, claimInfoChanged} = useClaim()
   const claimErrorResolver = useClaimErrorResolver()
   const {claimTokens} = useClaimTokens({
-    onSuccess: (claimToken) => {
-      claimTokenChanged(claimToken)
+    onSuccess: (claimInfo) => {
+      claimInfoChanged(claimInfo)
       closeModal()
       navigateTo.claimShowSuccess()
     },
@@ -45,7 +44,7 @@ export const useTriggerScanAction = ({insideFeature}: {insideFeature: ScanFeatur
   })
   const stringsClaim = useStringsClaim()
 
-  const trigger = (scanAction: ScanAction) => {
+  const trigger = (scanAction: Scan.Action) => {
     switch (scanAction.action) {
       case 'send-single-pt': {
         if (insideFeature !== 'send') resetTransferState()

@@ -1,8 +1,7 @@
-import {Links} from '@yoroi/types'
+import {Links, Scan} from '@yoroi/types'
 
 import {codeContent} from './mocks'
 import {parseScanAction} from './parsers'
-import {ScanErrorUnknownContent} from './types'
 
 describe('parseScanAction', () => {
   it('should correctly parse a non-link address', () => {
@@ -14,7 +13,7 @@ describe('parseScanAction', () => {
   })
 
   it('should throw ScanErrorUnknownContent for invalid non-link content', () => {
-    expect(() => parseScanAction(codeContent.noLink.error.invalid)).toThrow(ScanErrorUnknownContent)
+    expect(() => parseScanAction(codeContent.noLink.error.invalid)).toThrow(Scan.Errors.UnknownContent)
   })
 
   it('should throw SchemeNotImplemented for links not supporte like bitcoin', () => {
