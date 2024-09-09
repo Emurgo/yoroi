@@ -152,5 +152,5 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
 
 export const getDappFallbackLogo = (website: string) => {
   const withoutProtocol = website.replace(/(^\w+:|^)\/\//, '')
-  return `https://api.faviconkit.com/${withoutProtocol}/144`
+  return `https://api.faviconkit.com/${withoutProtocol}/32`
 }
