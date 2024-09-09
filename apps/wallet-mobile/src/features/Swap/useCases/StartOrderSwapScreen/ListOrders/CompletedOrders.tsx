@@ -359,9 +359,6 @@ const TxLink = ({onTxPress, txId}: {onTxPress: () => void; txId: string}) => {
 const ListEmptyComponent = ({completedOrders}: {completedOrders: Array<MappedRawOrder>}) => {
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
 
-  console.log('assetSearchTerm', assetSearchTerm)
-  console.log('isSearching', isSearching)
-  console.log('completedOrders.length', completedOrders.length)
 
   if (isSearching && assetSearchTerm.length > 0 && completedOrders.length === 0) return <EmptySearchResult />
 
