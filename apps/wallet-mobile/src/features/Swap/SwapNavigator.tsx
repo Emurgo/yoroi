@@ -2,10 +2,11 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import {useSwap, useSwapTokensOnlyVerified} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {StyleSheet} from 'react-native'
+import {Keyboard, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {KeyboardAvoidingView} from '../../components'
+import {useIsKeyboardOpen} from '../../kernel/keyboard/useIsKeyboardOpen'
 import {defaultMaterialTopTabNavigationOptions, SwapTabRoutes} from '../../kernel/navigation'
 import {usePortfolioBalances} from '../Portfolio/common/hooks/usePortfolioBalances'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
@@ -18,6 +19,7 @@ export const SwapTabNavigator = () => {
   const strings = useStrings()
   const styles = useStyles()
   const {atoms, color} = useTheme()
+  const isKeyboardOpen = useIsKeyboardOpen()
 
   // state data
   const {wallet} = useSelectedWallet()
@@ -62,9 +64,37 @@ export const SwapTabNavigator = () => {
           })}
           style={styles.tab}
         >
-          <Tab.Screen name="token-swap" component={StartSwapOrderScreen} />
+          <Tab.Screen
+            listeners={{
+              tabPress: (e) => {
+                // if the keyboard is open, the user needs to close first the keyboard
+                // then, press again the tab to change screen
+                // to avoid screen freezing
+                if (isKeyboardOpen) {
+                  Keyboard.dismiss()
+                  e.preventDefault()
+                }
+              },
+            }}
+            name="token-swap"
+            component={StartSwapOrderScreen}
+          />
 
-          <Tab.Screen name="orders" getComponent={() => ListOrders} />
+          <Tab.Screen
+            listeners={{
+              tabPress: (e) => {
+                // if the keyboard is open, the user needs to close first the keyboard
+                // then, press again the tab to change screen
+                // to avoid screen freezing
+                if (isKeyboardOpen) {
+                  Keyboard.dismiss()
+                  e.preventDefault()
+                }
+              },
+            }}
+            name="orders"
+            getComponent={() => ListOrders}
+          />
         </Tab.Navigator>
       </SafeAreaView>
     </KeyboardAvoidingView>
