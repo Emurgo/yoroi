@@ -1,11 +1,12 @@
 import {useTheme} from '@yoroi/theme'
 import React, {useEffect} from 'react'
-import {ActivityIndicator, StyleSheet, Text, View} from 'react-native'
+import {StyleSheet, Text, View} from 'react-native'
 
 import {useAuthOsWithEasyConfirmation} from '../../../Auth/common/hooks'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {getErrorMessage} from '../errors'
 import {useStrings} from '../strings'
+import {ActivityIndicator} from './ActivityIndicator'
 
 export const ConfirmRawTxWithOs = ({onConfirm}: {onConfirm?: (rootKey: string) => Promise<void>}) => {
   const {wallet, meta} = useSelectedWallet()
@@ -36,7 +37,7 @@ export const ConfirmRawTxWithOs = ({onConfirm}: {onConfirm?: (rootKey: string) =
 
   return (
     <View style={styles.center}>
-      <ActivityIndicator size="large" color="black" />
+      <ActivityIndicator />
     </View>
   )
 }
