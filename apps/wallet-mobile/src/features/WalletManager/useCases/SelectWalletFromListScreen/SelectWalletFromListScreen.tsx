@@ -67,7 +67,7 @@ export const SelectWalletFromList = () => {
         onScrollBarChange={setIsScrollBarShown}
         onScrollBeginDrag={() => setShowLine(true)}
         onScrollEndDrag={() => setShowLine(false)}
-        bounces={false}
+        bounces={true}
       >
         {data}
 
