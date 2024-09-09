@@ -125,7 +125,7 @@ const Settings = ({onReadMore}: {onReadMore?: () => void}) => {
           <CommonContent onReadMore={onReadMore} />
 
           <View style={styles.toggle}>
-            <Text bold>{strings.toggle}</Text>
+            <Text style={styles.toggle_text}>{strings.toggle}</Text>
 
             <Spacer fill />
 
@@ -213,6 +213,7 @@ const useStyles = () => {
     link: {
       color: color.primary_600,
       textAlign: 'center',
+      ...atoms.link_1_lg,
     },
     title: {
       ...atoms.heading_3_medium,
@@ -235,9 +236,13 @@ const useStyles = () => {
       fontSize: 16,
     },
     toggle: {
-      padding: 16,
       flexDirection: 'row',
       alignItems: 'center',
+      fontSize: 24,
+    },
+    toggle_text: {
+      ...atoms.body_1_lg_medium,
+      fontWeight: '500',
     },
     buttonRow: {
       width: '100%',
