@@ -25,6 +25,7 @@ import {
   TokenIcon,
   useModal,
 } from '../../../../../components'
+import {Space} from '../../../../../components/Space/Space'
 import {useLanguage} from '../../../../../kernel/i18n'
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../../kernel/navigation'
@@ -33,7 +34,6 @@ import {convertBech32ToHex, getTransactionSigners} from '../../../../../yoroi-wa
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {createRawTxSigningKey, generateCIP30UtxoCbor} from '../../../../../yoroi-wallets/cardano/utils'
 import {useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
-import {Quantities} from '../../../../../yoroi-wallets/utils'
 import {useSearch} from '../../../../Search/SearchContext'
 import {getCollateralAmountInLovelace} from '../../../../Settings/ManageCollateral/helpers'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
@@ -75,7 +75,7 @@ export const OpenOrders = () => {
   const modalOpenRef = useRef(isModalOpen)
   modalOpenRef.current = isModalOpen
 
-  const {search} = useSearch()
+  const {search, visible: isSearchBarVisible} = useSearch()
 
   const filteredOrders = React.useMemo(
     () =>
@@ -161,13 +161,8 @@ export const OpenOrders = () => {
   const showCollateralNotFoundAlert = useShowCollateralNotFoundAlert(wallet)
 
   const hasCollateral = () => {
-    const info = wallet.getCollateralInfo()
-    const primaryTokenDecimals = wallet.portfolioPrimaryTokenInfo.decimals
-    return (
-      !!info.utxo &&
-      Quantities.integer(info.amount.quantity, primaryTokenDecimals) >=
-        Quantities.integer(getCollateralAmountInLovelace(), primaryTokenDecimals)
-    )
+    const collateral = wallet.getCollateralInfo()
+    return !!collateral.utxo && collateral.amount.quantity >= BigInt(getCollateralAmountInLovelace())
   }
 
   const onOrderCancelConfirm = (order: MappedOpenOrder) => {
@@ -378,12 +373,14 @@ export const OpenOrders = () => {
         />
       </View>
 
-      <Counter
-        style={styles.counter}
-        openingText={strings.youHave}
-        counter={filteredOrders?.length ?? 0}
-        closingText={strings.listOpenOrders}
-      />
+      {!isSearchBarVisible && (
+        <Counter
+          style={styles.counter}
+          openingText={strings.youHave}
+          counter={filteredOrders?.length ?? 0}
+          closingText={strings.listOpenOrders}
+        />
+      )}
 
       <LoadingOverlay animating={isLoading} />
     </>
@@ -699,7 +696,7 @@ const NoOrdersYet = () => {
 
       <EmptyOpenOrdersIllustration style={styles.illustration} />
 
-      <Spacer height={15} />
+      <Space height="lg" />
 
       <Text style={styles.contentText}>{strings.emptyOpenOrders}</Text>
 
@@ -716,8 +713,8 @@ const useShowCollateralNotFoundAlert = (wallet: YoroiWallet) => {
   const swapNavigateTo = useNavigateTo()
 
   return () => {
-    const info = wallet.getCollateralInfo()
-    const isCollateralUtxoPending = !info.isConfirmed && info.collateralId.length > 0
+    const collateral = wallet.getCollateralInfo()
+    const isCollateralUtxoPending = !collateral.isConfirmed && collateral.collateralId.length > 0
 
     if (isCollateralUtxoPending) {
       Alert.alert(strings.collateralTxPendingTitle, strings.collateralTxPending)
@@ -743,7 +740,21 @@ const useShowCollateralNotFoundAlert = (wallet: YoroiWallet) => {
 }
 
 const EmptySearchResult = () => {
-  return null
+  const strings = useStrings()
+  const {styles} = useStyles()
+  const {search: assetSearchTerm} = useSearch()
+
+  return (
+    <View style={styles.notOrdersYetContainer}>
+      <Spacer height={80} />
+
+      <EmptyOpenOrdersIllustration style={styles.illustration} />
+
+      <Space height="lg" />
+
+      <Text style={styles.contentText}>{`${strings.emptySearchOpenOrders} "${assetSearchTerm}"`}</Text>
+    </View>
+  )
 }
 
 const useStyles = () => {

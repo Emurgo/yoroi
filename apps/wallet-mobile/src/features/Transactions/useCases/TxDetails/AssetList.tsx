@@ -55,6 +55,7 @@ type AssetRowProps = {
   backColor: {backgroundColor: string}
   onSelect?: (tokenEntry: CardanoTypes.TokenEntry) => void
 }
+
 const AssetRow = ({styles, entry, backColor, onSelect}: AssetRowProps) => {
   const {wallet} = useSelectedWallet()
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()

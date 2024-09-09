@@ -949,6 +949,8 @@
   "swap.listOrders.card.buttonText": "Cancel order",
   "swap.listOrders.completed": "completed orders",
   "swap.listOrders.emptyCompletedOrders": "No orders completed yet",
+  "swap.listOrders.emptySearchCompletedOrders": "No orders found for",
+  "swap.listOrders.emptySearchOpenOrders": "No orders found for",
   "swap.listOrders.emptyOpenOrders": "No orders available yet",
   "swap.listOrders.emptyOpenOrdersSub": "Start doing SWAP to see your open orders here",
   "swap.listOrders.liquidityPool": "Liquidity Pool",

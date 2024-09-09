@@ -39,6 +39,7 @@ export const StakingCenter = () => {
   )
 
   const [selectedPoolId, setSelectedPoolId] = React.useState<string | null>(null)
+  const [isContentLoaded, setIsContentLoaded] = React.useState(false)
 
   const {isLoading} = useStakingTx(
     {wallet, poolId: selectedPoolId ?? undefined, meta},
@@ -85,12 +86,15 @@ export const StakingCenter = () => {
           <Spacer height={8} />
 
           <WebView
+            style={{opacity: isContentLoaded ? 1 : 0}}
             originWhitelist={['*']}
             androidLayerType="software"
             source={{uri: prepareStakingURL(languageCode, plate)}}
             onMessage={(event) => handleOnMessage(event)}
+            onLoadEnd={() => setTimeout(() => setIsContentLoaded(true), 250)}
             {...(isDark && {
               injectedJavaScript: `
+              document.documentElement.style.overscrollBehavior = 'none'
               document.body.style.backgroundColor = "#222"
               document.body.style.filter = "invert(0.9) hue-rotate(180deg)"
               document.body.style.caretColor = "#FFFFFF"

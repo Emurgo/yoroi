@@ -11,12 +11,11 @@ import {TransitionPresets} from '@react-navigation/stack'
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack'
 import {isKeyOf} from '@yoroi/common'
 import {Atoms, ThemedPalette, useTheme} from '@yoroi/theme'
-import {Chain, Portfolio} from '@yoroi/types'
+import {Chain, Portfolio, Scan} from '@yoroi/types'
 import React from 'react'
 import {Dimensions, InteractionManager, Platform, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
 import {Icon} from '../components'
-import {ScanFeature} from '../features/Scan/common/types'
 import {Routes as StakingGovernanceRoutes} from '../features/Staking/Governance/common/navigation'
 import {YoroiUnsignedTx} from '../yoroi-wallets/types'
 import {compareArrays} from '../yoroi-wallets/utils/utils'
@@ -181,7 +180,7 @@ export type TxHistoryRoutes = {
 export type TxHistoryRouteNavigation = StackNavigationProp<TxHistoryRoutes>
 
 type ScanStartParams = Readonly<{
-  insideFeature: ScanFeature
+  insideFeature: Scan.Feature
 }>
 export type ScanRoutes = {
   'scan-start': ScanStartParams
