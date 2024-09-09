@@ -1,6 +1,7 @@
 import {init} from '@emurgo/cross-csl-mobile'
 import {useNavigation} from '@react-navigation/native'
 import {createStackNavigator, StackNavigationOptions} from '@react-navigation/stack'
+import {claimManagerMaker, ClaimProvider} from '@yoroi/claim'
 import {useAsyncStorage} from '@yoroi/common'
 import {exchangeApiMaker, exchangeManagerMaker, ExchangeProvider} from '@yoroi/exchange'
 import {resolverApiMaker, resolverManagerMaker, ResolverProvider, resolverStorageMaker} from '@yoroi/resolver'
@@ -18,8 +19,6 @@ import {
   TxHistoryRouteNavigation,
   TxHistoryRoutes,
 } from '../../kernel/navigation'
-import {claimApiMaker} from '../Claim/module/api'
-import {ClaimProvider} from '../Claim/module/ClaimProvider'
 import {ShowSuccessScreen} from '../Claim/useCases/ShowSuccessScreen'
 import {CreateExchangeOrderScreen} from '../Exchange/useCases/CreateExchangeOrderScreen/CreateExchangeOrderScreen'
 import {SelectProviderFromListScreen} from '../Exchange/useCases/SelectProviderFromListScreen/SelectProviderFromListScreen'
@@ -79,12 +78,13 @@ export const TxHistoryNavigator = () => {
   }, [storage, wallet.id, wallet.isMainnet])
 
   // claim
-  const claimApi = React.useMemo(() => {
-    return claimApiMaker({
+  const claimManager = React.useMemo(() => {
+    return claimManagerMaker({
       address: wallet.externalAddresses[0],
-      primaryTokenId: wallet.portfolioPrimaryTokenInfo.id,
+      primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
+      tokenManager: wallet.networkManager.tokenManager,
     })
-  }, [wallet.externalAddresses, wallet.portfolioPrimaryTokenInfo.id])
+  }, [wallet.externalAddresses, wallet.networkManager.tokenManager, wallet.portfolioPrimaryTokenInfo])
 
   // navigator components
   const headerRightHistory = React.useCallback(() => <HeaderRightHistory />, [])
@@ -106,7 +106,7 @@ export const TxHistoryNavigator = () => {
   return (
     <ReceiveProvider key={wallet.id}>
       <ResolverProvider resolverManager={resolverManager}>
-        <ClaimProvider key={wallet.id} claimApi={claimApi}>
+        <ClaimProvider key={wallet.id} manager={claimManager}>
           <ExchangeProvider
             key={wallet.id}
             manager={exchangeManager}

@@ -169,7 +169,7 @@ export interface YoroiWallet {
   get collateralId(): string
   getCollateralInfo(): {
     utxo: RawUtxo | undefined
-    amount: Balance.Amount
+    amount: Portfolio.Token.Amount
     collateralId: RawUtxo['utxo_id']
     isConfirmed: boolean
   }
