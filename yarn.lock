@@ -2744,10 +2744,10 @@
   dependencies:
     react-native-svg "13.8.0"
 
-"@emurgo/react-native-hid@^5.15.6":
-  version "5.15.6"
-  resolved "https://registry.yarnpkg.com/@emurgo/react-native-hid/-/react-native-hid-5.15.6.tgz#bade99f9434a1d4080b777e9f724f4634a73330f"
-  integrity sha512-jtWsp0QfkWRWAGgNVp9ThTtAEqNmddSRk/yABQTK1vrVhZKxwc66l9ejl9YZw1crIr7W4FTqDThQ0KWuj9TlPw==
+"@emurgo/react-native-hid@5.15.7":
+  version "5.15.7"
+  resolved "https://registry.yarnpkg.com/@emurgo/react-native-hid/-/react-native-hid-5.15.7.tgz#d481f5268be96945f9b6a91c5e0d98c6ac4e3e20"
+  integrity sha512-/5dalbT+L8WajKWBUZCiXHIfcgDECTmx0KJAStAj3k3RKqHziCTAz9s2q24/7pUocj9+w5cWueDzCno64tOuMA==
   dependencies:
     "@ledgerhq/devices" "^5.15.0"
     "@ledgerhq/errors" "^5.15.0"
