@@ -179,7 +179,7 @@ const connectionHandler = async (
       transport = await TransportBLE.open(deviceId)
     }
 
-    const appAda = new AppAda(transport)
+    const appAda = new AppAda(transport as unknown as any) // WARNING: incompatibility between "@ledgerhq/react-native-hid": "6.32.2" and "@cardano-foundation/ledgerjs-hw-app-cardano": "^7.1.3"
     const versionResp: GetVersionResponse = await appAda.getVersion()
 
     logger.debug('connectionHandler: AppAda version', {versionResp})
