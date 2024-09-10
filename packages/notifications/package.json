@@ -216,5 +216,8 @@
         "preset": "angular"
       }
     }
+  },
+  "dependencies": {
+    "rxjs": "^7.8.1"
   }
 }

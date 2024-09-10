@@ -1,7 +1,19 @@
-import {NotificationManager} from './index'
+import {notificationManagerMaker} from './notification-manager'
 
 describe('NotificationManager', () => {
   it('should be defined', () => {
-    expect(NotificationManager).toBeDefined()
+    expect(notificationManagerMaker()).toBeDefined()
+  })
+
+  it('should return default config if not set', async () => {
+    const manager = notificationManagerMaker()
+    const config = await manager.config.read()
+    expect(config).toEqual({
+      PrimaryTokenPriceChanged: {
+        interval: '24h',
+        notify: true,
+        threshold: 10,
+      },
+    })
   })
 })
