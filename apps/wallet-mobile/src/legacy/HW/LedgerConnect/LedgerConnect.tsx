@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import TransportHID from '@emurgo/react-native-hid'
+import TransportHID from '@ledgerhq/react-native-hid'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
 import {useTheme} from '@yoroi/theme'
 import {HW} from '@yoroi/types'
@@ -55,7 +55,7 @@ class LedgerConnectInt extends React.Component<Props, State> {
 
   _subscriptions: null | {unsubscribe: () => void} = null
   _bluetoothEnabled: null | boolean = null
-  _transportLib: TransportHID | TransportBLE | null = null
+  _transportLib: typeof TransportHID | typeof TransportBLE | null = null
   _isMounted = false
 
   componentDidMount() {
@@ -138,7 +138,7 @@ class LedgerConnectInt extends React.Component<Props, State> {
       }
     }
 
-    this._subscriptions = this._transportLib.listen({
+    this._subscriptions = this._transportLib?.listen({
       complete: onComplete,
       next: useUSB ? onHWNext : onBLENext,
       error: onError,
