@@ -36,7 +36,7 @@ export type MappedOpenOrder = {
 
 export const mapOpenOrders = (
   orders: Array<Swap.OpenOrder | Swap.CompletedOrder>,
-  tokenInfos: Portfolio.Token.Info[],
+  tokenInfos: Readonly<Map<Portfolio.Token.Id, Portfolio.Token.Info>>,
   numberLocale: NumberLocale,
   transactionInfos: TransactionInfo[],
   explorerManager: Explorers.Manager,
@@ -55,12 +55,12 @@ export const mapOpenOrders = (
     const submittedAt = txInfo?.submittedAt
     const date = isString(submittedAt) ? new Date(submittedAt).toISOString() : ''
 
-    const fromTokenInfo = tokenInfos.find((tokenInfo) => tokenInfo.id === order.from.tokenId)
+    const fromTokenInfo = tokenInfos.get(order.from.tokenId)
     const fromLabel = fromTokenInfo?.ticker ?? fromTokenInfo?.name ?? '-'
     const fromQuantity = atomicBreakdown(from.quantity, fromTokenInfo?.decimals ?? 0).bn
     const total = fromQuantity.toFormat(numberLocale)
 
-    const toTokenInfo = tokenInfos.find((tokenInfo) => tokenInfo.id === order.to.tokenId)
+    const toTokenInfo = tokenInfos.get(order.to.tokenId)
     const toLabel = toTokenInfo?.ticker ?? toTokenInfo?.name ?? '-'
     const toQuantity = atomicBreakdown(to.quantity, toTokenInfo?.decimals ?? 0).bn
     const tokenAmount = toQuantity.decimalPlaces(MAX_DECIMALS).toFormat(numberLocale)

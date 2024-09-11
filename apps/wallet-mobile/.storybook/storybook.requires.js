@@ -90,8 +90,6 @@ const getStories = () => {
     "./src/components/SomethingWentWrong/SomethingWentWrong.stories.tsx": require("../src/components/SomethingWentWrong/SomethingWentWrong.stories.tsx"),
     "./src/components/StepperProgress/StepperProgress.stories.tsx": require("../src/components/StepperProgress/StepperProgress.stories.tsx"),
     "./src/components/TextInput/TextInput.stories.tsx": require("../src/components/TextInput/TextInput.stories.tsx"),
-    "./src/components/TokenIcon/ModeratedNftIcon.stories.tsx": require("../src/components/TokenIcon/ModeratedNftIcon.stories.tsx"),
-    "./src/components/TokenIcon/TokenIcon.stories.tsx": require("../src/components/TokenIcon/TokenIcon.stories.tsx"),
     "./src/components/Tooltip/Tooltip.stories.tsx": require("../src/components/Tooltip/Tooltip.stories.tsx"),
     "./src/components/YoroiLogo/YoroiLogo.stories.tsx": require("../src/components/YoroiLogo/YoroiLogo.stories.tsx"),
     "./src/features/Auth/backgroundTimeout.stories.tsx": require("../src/features/Auth/backgroundTimeout.stories.tsx"),
