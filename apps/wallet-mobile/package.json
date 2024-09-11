@@ -98,7 +98,7 @@
     "@emurgo/cross-csl-mobile": "^5.1.0-beta.1",
     "@emurgo/csl-mobile-bridge": "^6.1.0-beta.1",
     "@emurgo/react-native-blockies-svg": "^0.0.2",
-    "@emurgo/react-native-hid": "5.15.7",
+    "@emurgo/react-native-hid": "5.15.8",
     "@emurgo/yoroi-lib": "^1.2.1",
     "@formatjs/intl-datetimeformat": "^6.7.0",
     "@formatjs/intl-getcanonicallocales": "^2.1.0",
