@@ -7,6 +7,7 @@ import {useQuery, useQueryClient} from 'react-query'
 import {merge, switchMap} from 'rxjs'
 
 import {time} from '../../../kernel/constants'
+import {logger} from '../../../kernel/logger/logger'
 import {queryInfo} from '../../../kernel/query-client'
 import {useSelectedNetwork} from '../../WalletManager/common/hooks/useSelectedNetwork'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
@@ -121,7 +122,10 @@ export const PortfolioTokenActivityProvider = ({children}: Props) => {
 
       const response = await tokenManager.api.tokenActivity(state.secondaryTokenIds, state.activityWindow)
 
-      if (response.tag === 'left') throw response.error
+      if (response.tag === 'left') {
+        logger.error(JSON.stringify({endpoint: 'tokenActivity', ...response.error}))
+        return null
+      }
       return response.value.data
     },
   })
