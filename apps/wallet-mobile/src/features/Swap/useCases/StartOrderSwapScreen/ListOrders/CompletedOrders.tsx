@@ -187,8 +187,8 @@ export const ExpandableOrder = ({order}: {order: MappedRawOrder}) => {
   })
 
   if (!buyTokenInfo || !sellTokenInfo) return null
-  const sellIcon = <TokenInfoIcon info={sellTokenInfo} />
-  const buyIcon = <TokenInfoIcon info={buyTokenInfo} />
+  const sellIcon = <TokenInfoIcon info={sellTokenInfo} size="sm" />
+  const buyIcon = <TokenInfoIcon info={buyTokenInfo} size="sm" />
 
   const buyQuantity = Quantities.format(metadata.buyQuantity as Balance.Quantity, buyTokenInfo?.decimals ?? 0)
   const sellQuantity = Quantities.format(metadata.sellQuantity as Balance.Quantity, sellTokenInfo?.decimals ?? 0)

@@ -276,8 +276,8 @@ export const OpenOrders = () => {
       openModal(
         strings.listOrdersSheetTitle,
         <ModalContent
-          assetFromIcon={<TokenInfoIcon info={fromTokenInfo} />}
-          assetToIcon={<TokenInfoIcon info={toTokenInfo} />}
+          assetFromIcon={<TokenInfoIcon info={fromTokenInfo} size="sm" />}
+          assetToIcon={<TokenInfoIcon info={toTokenInfo} size="sm" />}
           onConfirm={() => onOrderCancelConfirm(order)}
           onBack={closeModal}
           assetFromLabel={assetFromLabel}
@@ -310,8 +310,8 @@ export const OpenOrders = () => {
           data={filteredOrders}
           contentContainerStyle={styles.list}
           renderItem={({item: order}) => {
-            const fromIcon = <TokenInfoIcon info={order.fromTokenInfo} />
-            const toIcon = <TokenInfoIcon info={order.toTokenInfo} />
+            const fromIcon = <TokenInfoIcon info={order.fromTokenInfo} size='sm' />
+            const toIcon = <TokenInfoIcon info={order.toTokenInfo} size='sm' />
             const liquidityPoolIcon =
               order.provider !== undefined ? <PoolIcon size={28} providerId={order.provider} /> : null
             const expanded = order.id === hiddenInfoOpenId
