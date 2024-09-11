@@ -3,7 +3,7 @@ import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
 import {validateMnemonic} from 'bip39'
 import * as React from 'react'
-import {Keyboard, Platform, StyleSheet, Text, View} from 'react-native'
+import {Dimensions, Keyboard, Platform, StyleSheet, Text, View} from 'react-native'
 import {FlatList, ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -249,6 +249,15 @@ const useBold = () => {
 }
 
 const useStyles = () => {
+  const {height: screenHeight} = Dimensions.get('window')
+
+  const isSmallScreen = screenHeight < 700
+  const dynamicPaddingBottom =
+    Platform.OS === 'ios'
+      ? isSmallScreen
+        ? screenHeight * 0.01 // Smaller padding for small screens
+        : screenHeight * 0.05 // Regular padding for larger screens
+      : 16 // Default padding for Android
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
@@ -280,7 +289,7 @@ const useStyles = () => {
       flexDirection: 'row',
       alignItems: 'center',
       paddingTop: 16,
-      paddingBottom: Platform.OS === 'ios' ? 48 : 16,
+      paddingBottom: Platform.OS === 'ios' ? dynamicPaddingBottom : 16,
     },
     suggestion: {
       borderColor: color.primary_300,
