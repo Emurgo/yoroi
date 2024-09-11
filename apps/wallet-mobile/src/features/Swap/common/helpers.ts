@@ -1,12 +1,12 @@
 import {createTypeGuardFromSchema, parseSafe} from '@yoroi/common'
-import {isPrimaryToken, primaryTokenId as ptId} from '@yoroi/portfolio'
+import {isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Balance, HW} from '@yoroi/types'
 import {SwapApi} from '@yoroi/types/src/swap/api'
-import {freeze} from 'immer'
 import {useMutation, UseMutationOptions} from 'react-query'
 import {z} from 'zod'
 
+import {normalisePtId} from '../../../kernel/helpers/normalisePtId'
 import {convertBech32ToHex} from '../../../yoroi-wallets/cardano/common/signatureUtils'
 import {generateCIP30UtxoCbor} from '../../../yoroi-wallets/cardano/utils'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
@@ -66,23 +66,17 @@ const isOrderTxMetadata = createTypeGuardFromSchema(OrderTxMetadataSchema)
  * Parses and validates a JSON metadata string, transforming it into a structure compliant with MappedRawOrder['metadata'].
  *
  * @param metadataJson - The JSON string representation of metadata.
- * @param primaryTokenId - The primary token ID to use when the metadata specifies a '.' or empty string.
  * @returns The parsed metadata object or null if parsing fails or validation fails.
  */
-export const parseOrderTxMetadata = (metadataJson: string, primaryTokenId: string): OrderTxMetadata | null => {
+export const parseOrderTxMetadata = (metadataJson: string): OrderTxMetadata | null => {
   const parsedMetadata = parseSafe(metadataJson)
   if (!isOrderTxMetadata(parsedMetadata)) return null
 
   return {
     ...parsedMetadata,
-    buyTokenId: normalisePrimaryTokenId(parsedMetadata.buyTokenId, primaryTokenId),
-    sellTokenId: normalisePrimaryTokenId(parsedMetadata.sellTokenId, primaryTokenId),
+    buyTokenId: normalisePtId(parsedMetadata.buyTokenId),
+    sellTokenId: normalisePtId(parsedMetadata.sellTokenId),
   }
-}
-
-const swapPtTokenIds = freeze([ptId, '', '.'])
-const normalisePrimaryTokenId = (tokenId: string, primaryTokenId: string) => {
-  return swapPtTokenIds.includes(tokenId) ? primaryTokenId : tokenId
 }
 
 function containsOnlyValidChars(str?: string): boolean {

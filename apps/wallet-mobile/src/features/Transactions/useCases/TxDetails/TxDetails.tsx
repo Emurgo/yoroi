@@ -35,7 +35,6 @@ import {useWalletManager} from '../../../WalletManager/context/WalletManagerProv
 import {messages, useStrings} from '../../common/strings'
 import AddressModal from './AddressModal/AddressModal'
 import {AssetList} from './AssetList'
-import {useAssetListStyles} from './AssetListTransaction.style'
 
 export const TxDetails = () => {
   const {openModal} = useModal()
@@ -243,12 +242,7 @@ const ExpandableAssetList: React.VFC<{
   expanded: boolean
   assets: CardanoTypes.TokenEntry[]
 }> = ({expanded, assets}) => {
-  const assetListStyle = useAssetListStyles()
-  return (
-    <View style={{borderWidth: 1, borderColor: 'transparent'}}>
-      {expanded && <AssetList styles={assetListStyle} assets={assets} />}
-    </View>
-  )
+  return <View style={{borderWidth: 1, borderColor: 'transparent'}}>{expanded && <AssetList assets={assets} />}</View>
 }
 
 type AddressEntryProps = {

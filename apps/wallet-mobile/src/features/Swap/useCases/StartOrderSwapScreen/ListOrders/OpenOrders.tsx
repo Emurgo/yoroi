@@ -310,8 +310,8 @@ export const OpenOrders = () => {
           data={filteredOrders}
           contentContainerStyle={styles.list}
           renderItem={({item: order}) => {
-            const fromIcon = <TokenInfoIcon info={order.fromTokenInfo} size='sm' />
-            const toIcon = <TokenInfoIcon info={order.toTokenInfo} size='sm' />
+            const fromIcon = <TokenInfoIcon info={order.fromTokenInfo} size="sm" />
+            const toIcon = <TokenInfoIcon info={order.toTokenInfo} size="sm" />
             const liquidityPoolIcon =
               order.provider !== undefined ? <PoolIcon size={28} providerId={order.provider} /> : null
             const expanded = order.id === hiddenInfoOpenId
