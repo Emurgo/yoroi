@@ -289,7 +289,7 @@ const useStyles = () => {
       flexDirection: 'row',
       alignItems: 'center',
       paddingTop: 16,
-      paddingBottom: Platform.OS === 'ios' ? dynamicPaddingBottom : 16,
+      paddingBottom: dynamicPaddingBottom,
     },
     suggestion: {
       borderColor: color.primary_300,
