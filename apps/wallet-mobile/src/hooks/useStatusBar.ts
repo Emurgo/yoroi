@@ -27,15 +27,8 @@ export const useStatusBar = (currentRouteName: string | undefined) => {
       }
       style.statusBarStyle !== undefined && StatusBar.setBarStyle(style.statusBarStyle, true)
     }
-    if (
-      ['history-list', 'dashboard-portfolio', 'discover-select-dapp-from-list', '_menu'].includes(
-        currentRouteName ?? '',
-      )
-    ) {
-      setBackgroundColorAsync(color.gray_min)
-    } else {
-      setBackgroundColorAsync(color.bg_color_max)
-    }
+
+    setBackgroundColorAsync(color.bg_color_max)
   }, [currentRouteName, isDark, color])
 }
 
