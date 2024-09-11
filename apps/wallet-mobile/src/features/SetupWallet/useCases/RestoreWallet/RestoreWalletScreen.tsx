@@ -3,7 +3,7 @@ import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
 import {validateMnemonic} from 'bip39'
 import * as React from 'react'
-import {Keyboard, StyleSheet, Text, View} from 'react-native'
+import {Keyboard, Platform, StyleSheet, Text, View} from 'react-native'
 import {FlatList, ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -280,7 +280,7 @@ const useStyles = () => {
       flexDirection: 'row',
       alignItems: 'center',
       paddingTop: 16,
-      paddingBottom: 19,
+      paddingBottom: Platform.OS === 'ios' ? 48 : 16,
     },
     suggestion: {
       borderColor: color.primary_300,
