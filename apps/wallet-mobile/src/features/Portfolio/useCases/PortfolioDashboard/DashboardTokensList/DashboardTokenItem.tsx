@@ -34,10 +34,10 @@ export const DashboardTokenItem = ({tokenInfo}: Props) => {
 
   const {open, close} = isPrimaryToken(info)
     ? ptActivity
-    : {close: secondaryActivity?.close.toNumber() ?? 0, open: secondaryActivity?.open.toNumber() ?? 0}
+    : {close: secondaryActivity?.close.toNumber(), open: secondaryActivity?.open.toNumber()}
 
-  const {changePercent, variantPnl} = priceChange(open, close)
-  const isMissingPrices = open == null || close == null
+  const {changePercent, variantPnl} = priceChange(open ?? 0, close ?? 0)
+  const isMissingPrices = open === undefined || close === undefined
 
   return (
     <TouchableOpacity onPress={() => navigationTo.tokenDetail({id: info.id})} style={styles.root}>
