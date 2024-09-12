@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/wallet-mobile",
-  "version": "4.28.1",
+  "version": "4.28.3",
   "private": true,
   "scripts": {
     "android-bundle": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
@@ -98,7 +98,7 @@
     "@emurgo/cross-csl-mobile": "^5.1.0-beta.1",
     "@emurgo/csl-mobile-bridge": "^6.1.0-beta.1",
     "@emurgo/react-native-blockies-svg": "^0.0.2",
-    "@emurgo/react-native-hid": "^5.15.6",
+    "@emurgo/react-native-hid": "5.15.8",
     "@emurgo/yoroi-lib": "^1.2.1",
     "@formatjs/intl-datetimeformat": "^6.7.0",
     "@formatjs/intl-getcanonicallocales": "^2.1.0",
