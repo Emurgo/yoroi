@@ -6,7 +6,7 @@ import {QueryProvider, RouteProvider} from '../../../../../../../.storybook'
 import {YoroiWallet} from '../../../../../../yoroi-wallets/cardano/types'
 import {mocks} from '../../../../../../yoroi-wallets/mocks'
 import {WalletManagerProviderMock} from '../../../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
-import {ZoomMediaImage} from './ZoomMediaImage'
+import {ZoomMediaImageScreen} from './ZoomMediaImageScreen'
 
 storiesOf('NFT/Details Image', module).add('Default', () => {
   const wallet: YoroiWallet = {
@@ -25,7 +25,7 @@ storiesOf('NFT/Details Image', module).add('Default', () => {
     <RouteProvider params={{id: tokenBalanceMocks.nftCryptoKitty.info.id}}>
       <QueryProvider>
         <WalletManagerProviderMock wallet={wallet}>
-          <ZoomMediaImage />
+          <ZoomMediaImageScreen />
         </WalletManagerProviderMock>
       </QueryProvider>
     </RouteProvider>

@@ -31,13 +31,13 @@ export const PortfolioNavigator = () => {
       >
         <Stack.Screen
           name="dashboard-portfolio"
-          component={PortfolioDashboardScreen}
+          getComponent={() => PortfolioDashboardScreen}
           options={{title: strings.portfolio, headerLeft: () => null}}
         />
 
         <Stack.Screen
           name="portfolio-tokens-list"
-          component={PortfolioTokenListScreen}
+          getComponent={() => PortfolioTokenListScreen}
           options={{
             title: strings.tokenList,
           }}
@@ -46,7 +46,7 @@ export const PortfolioNavigator = () => {
         <Stack.Screen
           name="portfolio-token-details"
           options={{title: strings.tokenDetail, headerRight: () => <ExportTokenTransactions />}}
-          component={PortfolioTokenDetailsScreen}
+          getComponent={() => PortfolioTokenDetailsScreen}
         />
 
         <Stack.Screen name="portfolio-nfts" options={{headerShown: false}}>

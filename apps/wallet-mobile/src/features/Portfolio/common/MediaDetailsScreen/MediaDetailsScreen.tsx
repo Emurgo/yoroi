@@ -27,7 +27,7 @@ import {usePortfolioImageInvalidate} from '../hooks/usePortfolioImage'
 import {MediaPreview} from '../MediaPreview/MediaPreview'
 import {useNavigateTo} from '../navigation'
 
-export const MediaDetails = () => {
+export const MediaDetailsScreen = () => {
   const styles = useStyles()
   const strings = useStrings()
   const {track} = useMetrics()

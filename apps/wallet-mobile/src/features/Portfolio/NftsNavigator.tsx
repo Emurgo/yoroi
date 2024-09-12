@@ -6,9 +6,9 @@ import {useMetrics} from '../../kernel/metrics/metricsManager'
 import {defaultStackNavigationOptions, NftRoutes} from '../../kernel/navigation'
 import {NetworkTag} from '../Settings/ChangeNetwork/NetworkTag'
 import {useStrings} from './common/hooks/useStrings'
-import {MediaDetails} from './common/MediaDetails/MediaDetails'
+import {MediaDetailsScreen} from './common/MediaDetailsScreen/MediaDetailsScreen'
 import {ListMediaGalleryScreen} from './useCases/PortfolioTokensList/PortfolioWalletTokenList/ListMediaGalleryScreen/ListMediaGalleryScreen'
-import {ZoomMediaImage} from './useCases/PortfolioTokensList/PortfolioWalletTokenList/ListMediaGalleryScreen/ZoomMediaImage'
+import {ZoomMediaImageScreen} from './useCases/PortfolioTokensList/PortfolioWalletTokenList/ListMediaGalleryScreen/ZoomMediaImageScreen'
 
 const Stack = createStackNavigator<NftRoutes>()
 
@@ -32,7 +32,7 @@ export const NftsNavigator = () => {
         headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
       }}
     >
-      <Stack.Screen name="nft-gallery" component={ListMediaGalleryScreen} />
+      <Stack.Screen name="nft-gallery" getComponent={() => ListMediaGalleryScreen} />
 
       <Stack.Screen
         name="nft-details"
@@ -41,10 +41,14 @@ export const NftsNavigator = () => {
           headerTitleAlign: 'center',
         }}
         listeners={trackDetails}
-        component={MediaDetails}
+        getComponent={() => MediaDetailsScreen}
       />
 
-      <Stack.Screen name="nft-image-zoom" options={{headerTitle: () => null}} component={ZoomMediaImage} />
+      <Stack.Screen
+        name="nft-image-zoom"
+        options={{headerTitle: () => null}}
+        getComponent={() => ZoomMediaImageScreen}
+      />
     </Stack.Navigator>
   )
 }

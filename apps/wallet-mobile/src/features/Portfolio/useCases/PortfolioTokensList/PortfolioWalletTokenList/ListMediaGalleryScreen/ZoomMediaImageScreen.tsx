@@ -18,7 +18,7 @@ const isParams = (params?: Params | object | undefined): params is Params => {
   return !!params && 'id' in params && !isEmptyString(params.id)
 }
 
-export const ZoomMediaImage = () => {
+export const ZoomMediaImageScreen = () => {
   const {id} = useParams<Params>(isParams)
   const {wallet} = useSelectedWallet()
   const dimensions = useWindowDimensions()
