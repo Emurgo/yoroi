@@ -84,7 +84,7 @@ export const makeCardanoWallet = (
   const appApi = AppApi.appApiMaker({baseUrl: networkManager.legacyApiBaseUrl})
 
   // legacy
-  const {BACKEND, NETWORK_CONFIG, PRIMARY_TOKEN, PRIMARY_TOKEN_INFO, TOKEN_INFO_SERVICE} = constants
+  const {NETWORK_CONFIG, PRIMARY_TOKEN} = constants
 
   return class CardanoWallet implements YoroiWallet {
     readonly id: string
@@ -1081,12 +1081,6 @@ export const makeCardanoWallet = (
 
     async fetchPoolInfo(request: PoolInfoRequest) {
       return legacyApi.getPoolInfo(request, networkManager.legacyApiBaseUrl)
-    }
-
-    fetchTokenInfo(tokenId: string) {
-      return tokenId === '' || tokenId === 'ADA' || tokenId === '.' || tokenId === this.portfolioPrimaryTokenInfo.id
-        ? Promise.resolve(PRIMARY_TOKEN_INFO)
-        : legacyApi.getTokenInfo(tokenId, `${TOKEN_INFO_SERVICE}/metadata`, BACKEND)
     }
 
     async fetchFundInfo(): Promise<FundInfoResponse> {

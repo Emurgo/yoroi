@@ -8,34 +8,16 @@ import {SearchProvider} from '../../../../../../Search/SearchContext'
 import {SwapFormProvider} from '../../../../../common/SwapFormProvider'
 import {SelectSellTokenFromListScreen} from './SelectSellTokenFromListScreen'
 
-storiesOf('Swap Select Token To Sell', module)
-  .add('initial', () => {
-    return (
-      <WalletManagerProviderMock wallet={mocks.wallet}>
-        <SearchProvider>
-          <SwapProvider swapManager={mockSwapManager}>
-            <SwapFormProvider>
-              <SelectSellTokenFromListScreen />
-            </SwapFormProvider>
-          </SwapProvider>
-        </SearchProvider>
-      </WalletManagerProviderMock>
-    )
-  })
-  .add('loading tokenInfo', () => {
-    const loading = {
-      ...mocks.wallet,
-      fetchTokenInfo: mocks.fetchTokenInfo.loading,
-    }
-    return (
-      <WalletManagerProviderMock wallet={loading}>
-        <SearchProvider>
-          <SwapProvider swapManager={mockSwapManager}>
-            <SwapFormProvider>
-              <SelectSellTokenFromListScreen />
-            </SwapFormProvider>
-          </SwapProvider>
-        </SearchProvider>
-      </WalletManagerProviderMock>
-    )
-  })
+storiesOf('Swap Select Token To Sell', module).add('initial', () => {
+  return (
+    <WalletManagerProviderMock wallet={mocks.wallet}>
+      <SearchProvider>
+        <SwapProvider swapManager={mockSwapManager}>
+          <SwapFormProvider>
+            <SelectSellTokenFromListScreen />
+          </SwapFormProvider>
+        </SwapProvider>
+      </SearchProvider>
+    </WalletManagerProviderMock>
+  )
+})
