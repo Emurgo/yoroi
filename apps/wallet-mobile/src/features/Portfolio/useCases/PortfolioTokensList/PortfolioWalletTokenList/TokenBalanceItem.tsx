@@ -32,10 +32,10 @@ export const TokenBalanceItem = ({amount}: Props) => {
 
   const {close, open} = isPrimaryToken(info)
     ? ptActivity
-    : {close: secondaryActivity?.close.toNumber() ?? 0, open: secondaryActivity?.open.toNumber() ?? 0}
+    : {close: secondaryActivity?.close.toNumber(), open: secondaryActivity?.open.toNumber()}
 
-  const {changePercent, variantPnl} = priceChange(open, close)
-  const isMissingPrices = close == null || open == null
+  const {changePercent, variantPnl} = priceChange(open ?? 0, close ?? 0)
+  const isMissingPrices = close === undefined || open === undefined
 
   return (
     <TouchableOpacity onPress={() => navigationTo.tokenDetail({id: info.id})} style={styles.root}>
