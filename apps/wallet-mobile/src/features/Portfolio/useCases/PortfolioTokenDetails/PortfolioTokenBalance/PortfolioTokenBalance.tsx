@@ -6,7 +6,7 @@ import {StyleSheet, Text, View} from 'react-native'
 import {LoadingBoundary} from '../../../../../components'
 import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
-import {usePortfolioTokenDetailParams} from '../../../common/useNavigateTo'
+import {usePortfolioTokenDetailParams} from '../../../common/hooks/useNavigateTo'
 import {PortfolioTokenDetailBalanceSkeleton} from './PortfolioTokenDetailBalanceSkeleton'
 
 export const PortfolioTokenBalance = () => {

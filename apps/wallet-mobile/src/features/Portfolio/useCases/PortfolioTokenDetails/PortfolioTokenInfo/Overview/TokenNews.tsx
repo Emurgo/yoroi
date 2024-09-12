@@ -5,7 +5,7 @@ import LinearGradient from 'react-native-linear-gradient'
 
 import NewsPlaceHolder from '../../../../../../assets/img/token-news-place-holder.png'
 import {Accordion, Spacer} from '../../../../../../components'
-import {useStrings} from '../../../../common/useStrings'
+import {useStrings} from '../../../../common/hooks/useStrings'
 export const TokenNews = () => {
   const {styles} = useStyles()
   const strings = useStrings()

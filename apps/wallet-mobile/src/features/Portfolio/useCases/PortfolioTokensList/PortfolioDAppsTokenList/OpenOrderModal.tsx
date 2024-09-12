@@ -5,9 +5,9 @@ import {Image, ImageSourcePropType, ImageStyle, Linking, StyleSheet, Text, Touch
 
 import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
 import {AssetLogo} from '../../../common/AssetLogo/AssetLogo'
+import {IOpenOrders} from '../../../common/hooks/useGetOpenOrders'
+import {useStrings} from '../../../common/hooks/useStrings'
 import {TokenInfoIcon} from '../../../common/TokenAmountItem/TokenInfoIcon'
-import {IOpenOrders} from '../../../common/useGetOpenOrders'
-import {useStrings} from '../../../common/useStrings'
 
 type Props = {
   tokenInfo: IOpenOrders

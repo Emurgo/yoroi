@@ -2,7 +2,7 @@ import {type Portfolio} from '@yoroi/types'
 import {ImageSourcePropType} from 'react-native'
 import {useQuery, UseQueryOptions} from 'react-query'
 
-import AdaLogo from '../../../assets/img/ada.png'
+import AdaLogo from '../../../../assets/img/ada.png'
 
 interface IPortfolioTokenInfo {
   logo: ImageSourcePropType | string

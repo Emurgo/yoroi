@@ -6,7 +6,7 @@ import {
   type TokenChartInterval,
   TOKEN_CHART_INTERVAL,
   useGetPortfolioTokenChart,
-} from '../../../common/useGetPortfolioTokenChart'
+} from '../../../common/hooks/useGetPortfolioTokenChart'
 import {PortfolioTokenChartSkeleton} from './PortfolioTokenChartSkeleton'
 import {TokenChart} from './TokenChart'
 import {TokenChartToolbar} from './TokenChartToolBar'

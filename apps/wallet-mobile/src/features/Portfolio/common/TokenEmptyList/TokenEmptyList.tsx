@@ -2,8 +2,8 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {AssetTokenImage} from './AssetTokenImage'
-import {useStrings} from './useStrings'
+import {AssetTokenImage} from '../AssetTokenImage/AssetTokenImage'
+import {useStrings} from '../hooks/useStrings'
 
 type Props = {
   emptyText?: string

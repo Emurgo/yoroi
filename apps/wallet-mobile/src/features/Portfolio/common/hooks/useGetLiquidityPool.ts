@@ -2,7 +2,7 @@ import {Portfolio} from '@yoroi/types'
 import {ImageSourcePropType} from 'react-native'
 import {useQuery, UseQueryOptions} from 'react-query'
 
-import {getDappFallbackLogo} from '../../Discover/common/helpers'
+import {getDappFallbackLogo} from '../../../Discover/common/helpers'
 
 export type IAsset = Portfolio.Token.Amount
 export interface ILiquidityPool {

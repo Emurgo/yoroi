@@ -2,10 +2,11 @@ import {useTheme} from '@yoroi/theme'
 import React, {ReactNode} from 'react'
 import {Image, StyleSheet, Text, View} from 'react-native'
 
-import noNftsImage from '../../../assets/img/no-nft.png'
-import {Spacer} from '../../../components'
+import noNftsImage from '../../../../../../assets/img/no-nft.png'
+import {Spacer} from '../../../../../../components'
 
-export function NoNftsScreen({heading, message}: {heading?: ReactNode; message: ReactNode}) {
+type Props = {heading?: ReactNode; message: ReactNode}
+export function EmptyGallery({heading, message}: Props) {
   const styles = useStyles()
   return (
     <View style={styles.root}>
@@ -28,25 +29,23 @@ const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
-      flex: 1,
+      ...atoms.flex_1,
     },
     contentText: {
-      flex: 1,
-      textAlign: 'center',
-
+      color: color.text_gray_max,
+      ...atoms.flex_1,
+      ...atoms.text_center,
       ...atoms.heading_3_medium,
-      color: color.gray_max,
     },
-
     image: {
-      flex: 1,
-      alignSelf: 'center',
       width: 200,
       height: 228,
+      ...atoms.flex_1,
+      ...atoms.self_center,
     },
     imageContainer: {
-      flex: 1,
-      textAlign: 'center',
+      ...atoms.flex_1,
+      ...atoms.text_center,
     },
   })
   return styles

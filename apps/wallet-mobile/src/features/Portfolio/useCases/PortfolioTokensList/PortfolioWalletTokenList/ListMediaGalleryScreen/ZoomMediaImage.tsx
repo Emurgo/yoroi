@@ -5,12 +5,12 @@ import {StyleSheet, useWindowDimensions, View} from 'react-native'
 // @ts-ignore
 import ViewTransformer from 'react-native-easy-view-transformer'
 
-import {FadeIn} from '../../../../components'
-import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {NftRoutes, useParams} from '../../../../kernel/navigation'
-import {isEmptyString} from '../../../../kernel/utils'
-import {MediaPreview} from '../../../Portfolio/common/MediaPreview/MediaPreview'
-import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {FadeIn} from '../../../../../../components'
+import {useMetrics} from '../../../../../../kernel/metrics/metricsManager'
+import {NftRoutes, useParams} from '../../../../../../kernel/navigation'
+import {isEmptyString} from '../../../../../../kernel/utils'
+import {useSelectedWallet} from '../../../../../WalletManager/common/hooks/useSelectedWallet'
+import {MediaPreview} from '../../../../common/MediaPreview/MediaPreview'
 
 type Params = NftRoutes['nft-details']
 
@@ -18,7 +18,7 @@ const isParams = (params?: Params | object | undefined): params is Params => {
   return !!params && 'id' in params && !isEmptyString(params.id)
 }
 
-export const NftDetailsImage = () => {
+export const ZoomMediaImage = () => {
   const {id} = useParams<Params>(isParams)
   const {wallet} = useSelectedWallet()
   const dimensions = useWindowDimensions()
@@ -54,19 +54,19 @@ export const NftDetailsImage = () => {
 }
 
 const useStyles = () => {
-  const {color} = useTheme()
+  const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     container: {
       backgroundColor: color.bg_color_max,
-      flex: 1,
+      ...atoms.flex_1,
     },
     contentContainer: {
-      flex: 1,
-      display: 'flex',
-      height: '100%',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
+      ...atoms.flex,
+      ...atoms.flex_1,
+      ...atoms.h_full,
+      ...atoms.flex_col,
+      ...atoms.align_center,
+      ...atoms.justify_center,
     },
     image: {
       backgroundColor: color.gray_100,
