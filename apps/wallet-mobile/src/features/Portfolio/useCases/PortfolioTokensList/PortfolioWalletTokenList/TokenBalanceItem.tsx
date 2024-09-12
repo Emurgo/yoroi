@@ -8,10 +8,10 @@ import {Spacer} from '../../../../../components'
 import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
 import {useCurrencyPairing} from '../../../../Settings/Currency'
 import {formatPriceChange, priceChange} from '../../../common/helpers/priceChange'
+import {useNavigateTo} from '../../../common/hooks/useNavigateTo'
 import {PnlTag} from '../../../common/PnlTag/PnlTag'
 import {usePortfolioTokenActivity} from '../../../common/PortfolioTokenActivityProvider'
 import {TokenInfoIcon} from '../../../common/TokenAmountItem/TokenInfoIcon'
-import {useNavigateTo} from '../../../common/useNavigateTo'
 
 type Props = {
   amount: Portfolio.Token.Amount

@@ -22,12 +22,12 @@ import {Tab, TabPanel, TabPanels, Tabs} from '../../../../components/Tabs'
 import {time} from '../../../../kernel/constants'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {NftRoutes} from '../../../../kernel/navigation'
-import {useNavigateTo} from '../../../Nfts/common/navigation'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {usePortfolioImageInvalidate} from '../hooks/usePortfolioImage'
 import {MediaPreview} from '../MediaPreview/MediaPreview'
+import {useNavigateTo} from '../navigation'
 
-export const MediaDetails = () => {
+export const MediaDetailsScreen = () => {
   const styles = useStyles()
   const strings = useStrings()
   const {track} = useMetrics()

@@ -4,7 +4,7 @@ import * as React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Text} from '../../../../../components'
-import {type TokenChartInterval, TOKEN_CHART_INTERVAL} from '../../../common/useGetPortfolioTokenChart'
+import {type TokenChartInterval, TOKEN_CHART_INTERVAL} from '../../../common/hooks/useGetPortfolioTokenChart'
 
 interface Props {
   timeInterval: TokenChartInterval

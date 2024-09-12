@@ -82,6 +82,15 @@ export const useStrings = () => {
     portfolioSwapTokensTitle: intl.formatMessage(messages.portfolioSwapTokensTitle),
     portfolioSwapTokensDescription: intl.formatMessage(messages.portfolioSwapTokensDescription),
     startSwapping: intl.formatMessage(messages.startSwapping),
+    titleMediaDetails: intl.formatMessage(messages.titleMediaDetails),
+    title: intl.formatMessage(messages.title),
+    search: intl.formatMessage(messages.search),
+    nftCount: intl.formatMessage(messages.nftCount),
+    errorTitle: intl.formatMessage(messages.errorTitle),
+    errorDescription: intl.formatMessage(messages.errorDescription),
+    reloadApp: intl.formatMessage(messages.reloadApp),
+    noNftsFound: intl.formatMessage(messages.noNftsFound),
+    noNftsInWallet: intl.formatMessage(messages.noNftsInWallet),
   }
 }
 
@@ -390,5 +399,41 @@ export const messages = defineMessages({
   startSwapping: {
     id: 'portfolio.portfolioDashboardScreen.startSwapping',
     defaultMessage: '!!!Start Swapping',
+  },
+  titleMediaDetails: {
+    id: 'nft.detail.title',
+    defaultMessage: '!!!NFT Details',
+  },
+  nftCount: {
+    id: 'nft.gallery.nftCount',
+    defaultMessage: '!!!NFT count',
+  },
+  errorTitle: {
+    id: 'nft.gallery.errorTitle',
+    defaultMessage: '!!!Oops!',
+  },
+  errorDescription: {
+    id: 'nft.gallery.errorDescription',
+    defaultMessage: '!!!Something went wrong.',
+  },
+  reloadApp: {
+    id: 'nft.gallery.reloadApp',
+    defaultMessage: '!!!Try to restart the app.',
+  },
+  noNftsFound: {
+    id: 'nft.gallery.noNftsFound',
+    defaultMessage: '!!!No NFTs found',
+  },
+  noNftsInWallet: {
+    id: 'nft.gallery.noNftsInWallet',
+    defaultMessage: '!!!No NFTs added to your wallet yet',
+  },
+  title: {
+    id: 'nft.navigation.title',
+    defaultMessage: '!!!NFT Gallery',
+  },
+  search: {
+    id: 'nft.navigation.search',
+    defaultMessage: '!!!Search NFT',
   },
 })

@@ -1,5 +1,5 @@
-import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
-import {usePortfolioPrimaryBalance} from './hooks/usePortfolioPrimaryBalance'
+import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {usePortfolioPrimaryBalance} from './usePortfolioPrimaryBalance'
 
 export const useZeroBalance = () => {
   const {wallet} = useSelectedWallet()

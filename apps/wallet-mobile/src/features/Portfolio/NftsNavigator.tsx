@@ -1,14 +1,14 @@
 import {createStackNavigator} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
 
 import {useMetrics} from '../../kernel/metrics/metricsManager'
 import {defaultStackNavigationOptions, NftRoutes} from '../../kernel/navigation'
-import {MediaDetails} from '../Portfolio/common/MediaDetails/MediaDetails'
 import {NetworkTag} from '../Settings/ChangeNetwork/NetworkTag'
-import {NftDetailsImage} from './useCases/NftDetails/NftDetailsImage'
-import {Nfts} from './useCases/Nfts'
+import {useStrings} from './common/hooks/useStrings'
+import {MediaDetailsScreen} from './common/MediaDetailsScreen/MediaDetailsScreen'
+import {ListMediaGalleryScreen} from './useCases/PortfolioTokensList/PortfolioWalletTokenList/ListMediaGalleryScreen/ListMediaGalleryScreen'
+import {ZoomMediaImageScreen} from './useCases/PortfolioTokensList/PortfolioWalletTokenList/ListMediaGalleryScreen/ZoomMediaImageScreen'
 
 const Stack = createStackNavigator<NftRoutes>()
 
@@ -32,34 +32,23 @@ export const NftsNavigator = () => {
         headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
       }}
     >
-      <Stack.Screen name="nft-gallery" component={Nfts} />
+      <Stack.Screen name="nft-gallery" getComponent={() => ListMediaGalleryScreen} />
 
       <Stack.Screen
         name="nft-details"
         options={{
-          title: strings.title,
+          title: strings.titleMediaDetails,
           headerTitleAlign: 'center',
         }}
         listeners={trackDetails}
-        component={MediaDetails}
+        getComponent={() => MediaDetailsScreen}
       />
 
-      <Stack.Screen name="nft-image-zoom" options={{headerTitle: () => null}} component={NftDetailsImage} />
+      <Stack.Screen
+        name="nft-image-zoom"
+        options={{headerTitle: () => null}}
+        getComponent={() => ZoomMediaImageScreen}
+      />
     </Stack.Navigator>
   )
-}
-
-const messages = defineMessages({
-  title: {
-    id: 'nft.detail.title',
-    defaultMessage: '!!!NFT Details',
-  },
-})
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    title: intl.formatMessage(messages.title),
-  }
 }

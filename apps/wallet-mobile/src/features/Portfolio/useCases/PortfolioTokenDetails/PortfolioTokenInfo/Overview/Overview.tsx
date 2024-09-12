@@ -7,9 +7,9 @@ import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {Accordion, CopyButton, Spacer} from '../../../../../../components'
 import {features} from '../../../../../../kernel/features'
 import {useSelectedWallet} from '../../../../../WalletManager/common/hooks/useSelectedWallet'
+import {usePortfolioTokenDetailParams} from '../../../../common/hooks/useNavigateTo'
+import {useStrings} from '../../../../common/hooks/useStrings'
 import {TokenInfoIcon} from '../../../../common/TokenAmountItem/TokenInfoIcon'
-import {usePortfolioTokenDetailParams} from '../../../../common/useNavigateTo'
-import {useStrings} from '../../../../common/useStrings'
 import {TokenNews} from './TokenNews'
 
 export const Overview = () => {

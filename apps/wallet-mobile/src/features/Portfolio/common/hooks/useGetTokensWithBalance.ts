@@ -1,7 +1,7 @@
 import {ImageSourcePropType} from 'react-native'
 import {useQuery, UseQueryOptions} from 'react-query'
 
-import AdaLogo from '../../../assets/img/ada.png'
+import AdaLogo from '../../../../assets/img/ada.png'
 
 export interface IPortfolioBalance {
   logo: ImageSourcePropType | string
