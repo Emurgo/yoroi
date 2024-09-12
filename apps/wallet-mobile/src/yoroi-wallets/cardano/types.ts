@@ -10,7 +10,7 @@ import {
   TxMetadata as TxMetadataType,
   UnsignedTx as UnsignedTxType,
 } from '@emurgo/yoroi-lib'
-import {App, Balance, HW, Network, Portfolio, Wallet} from '@yoroi/types'
+import {App, HW, Network, Portfolio, Wallet} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 
 import {WalletEncryptedStorage} from '../../kernel/storage/EncryptedStorage'
@@ -161,7 +161,6 @@ export interface YoroiWallet {
   get confirmationCounts(): Record<string, null | number>
   fetchTipStatus(): Promise<TipStatusResponse>
   fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse>
-  fetchTokenInfo(tokenId: string): Promise<Balance.TokenInfo>
 
   // Utxos
   utxos: Array<RawUtxo>
@@ -240,7 +239,6 @@ const yoroiWalletKeys: Array<keyof YoroiWallet> = [
   'confirmationCounts',
   'fetchTipStatus',
   'fetchTxStatus',
-  'fetchTokenInfo',
 
   // Other
   'subscribe',

@@ -26,12 +26,3 @@ storiesOf('AssetList', module)
       </QueryClientProvider>
     )
   })
-  .add('loading', () => {
-    return (
-      <QueryClientProvider client={new QueryClient()}>
-        <WalletManagerProviderMock wallet={{...mocks.wallet, fetchTokenInfo: () => new Promise(() => undefined)}}>
-          <AssetList assets={mocks.tokenEntries} onSelect={action('onSelect')} />
-        </WalletManagerProviderMock>
-      </QueryClientProvider>
-    )
-  })
