@@ -154,7 +154,7 @@
     "@types/react-test-renderer": "^18.0.7",
     "@yoroi/common": "^1.5.4",
     "@yoroi/portfolio": "1.0.3",
-    "@yoroi/types": "^1.5.7",
+    "@yoroi/types": "1.5.8",
     "bignumber.js": "^9.0.1",
     "commitlint": "^17.0.2",
     "del-cli": "^5.0.0",
