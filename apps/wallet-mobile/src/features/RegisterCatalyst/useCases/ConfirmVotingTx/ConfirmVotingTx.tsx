@@ -102,8 +102,8 @@ export const ConfirmVotingTx = () => {
 
             <TextInput
               value={formatTokenWithSymbol(
-                Amounts.getAmount(votingRegTx.fee, wallet.primaryToken.identifier).quantity,
-                wallet.primaryToken,
+                Amounts.getAmount(votingRegTx.fee, wallet.portfolioPrimaryTokenInfo.id).quantity,
+                wallet.portfolioPrimaryTokenInfo,
               )}
               editable={false}
               autoComplete="off"

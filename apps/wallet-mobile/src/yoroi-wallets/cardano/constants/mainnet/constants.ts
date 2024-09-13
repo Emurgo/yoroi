@@ -65,10 +65,8 @@ export const NETWORK_CONFIG = {
 
 export const PRIMARY_TOKEN: DefaultAsset = {
   identifier: '.',
-  networkId: CHAIN_NETWORK_ID,
   isDefault: true,
   metadata: {
-    type: 'Cardano',
     policyId: '',
     assetName: '',
     numberOfDecimals: 6,

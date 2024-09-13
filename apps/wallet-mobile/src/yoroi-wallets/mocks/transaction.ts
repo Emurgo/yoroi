@@ -77,13 +77,11 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
     assurance: 'HIGH',
     tokens: {
       '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7': {
-        networkId: 1,
         isDefault: false,
         identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
         metadata: {
           policyId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
           assetName: '',
-          type: 'Cardano',
           numberOfDecimals: 0,
           ticker: null,
           longName: null,
@@ -171,13 +169,11 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
     assurance: 'HIGH',
     tokens: {
       '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7': {
-        networkId: 1,
         isDefault: false,
         identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
         metadata: {
           policyId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
           assetName: '',
-          type: 'Cardano',
           numberOfDecimals: 0,
           ticker: null,
           longName: null,
@@ -265,13 +261,11 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
     assurance: 'HIGH',
     tokens: {
       '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7': {
-        networkId: 1,
         isDefault: false,
         identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
         metadata: {
           policyId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
           assetName: '',
-          type: 'Cardano',
           numberOfDecimals: 0,
           ticker: null,
           longName: null,
@@ -362,13 +356,11 @@ export const mockTransactionInfo = (transaction?: Partial<TransactionInfo>): Tra
     assurance: 'HIGH',
     tokens: {
       '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7': {
-        networkId: 1,
         isDefault: false,
         identifier: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
         metadata: {
           policyId: '6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7',
           assetName: '',
-          type: 'Cardano',
           numberOfDecimals: 0,
           ticker: null,
           longName: null,

@@ -67,8 +67,8 @@ export const ConfirmTxScreen = () => {
   const operation = operations[params.vote.kind]
 
   const fee = params.unsignedTx.fee
-  const feeAmount = Amounts.getAmount(fee, wallet.primaryToken.identifier)
-  const feeText = formatTokenWithText(feeAmount.quantity, wallet.primaryToken)
+  const feeAmount = Amounts.getAmount(fee, wallet.portfolioPrimaryTokenInfo.id)
+  const feeText = formatTokenWithText(feeAmount.quantity, wallet.portfolioPrimaryTokenInfo)
 
   const onSuccess = (txID: string) => {
     if (params.vote.kind === 'delegate') {

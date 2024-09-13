@@ -59,7 +59,10 @@ export const DelegationConfirmation = () => {
     resetToTxHistory()
   }
 
-  const fee = formatTokenAmount(yoroiUnsignedTx.fee[wallet.primaryToken.identifier], wallet.primaryToken)
+  const fee = formatTokenAmount(
+    yoroiUnsignedTx.fee[wallet.portfolioPrimaryTokenInfo.id],
+    wallet.portfolioPrimaryTokenInfo,
+  )
 
   return (
     <View style={styles.container}>
@@ -88,7 +91,7 @@ export const DelegationConfirmation = () => {
           <ValidatedTextInput
             onChangeText={() => undefined}
             editable={false}
-            value={formatTokenAmount(stakingAmount.quantity, wallet.primaryToken)}
+            value={formatTokenAmount(stakingAmount.quantity, wallet.portfolioPrimaryTokenInfo)}
             label={strings.amount}
           />
         </View>
@@ -102,7 +105,7 @@ export const DelegationConfirmation = () => {
         <View style={styles.itemBlock}>
           <Text style={styles.text}>{strings.rewardsExplanation}</Text>
 
-          <Text style={styles.rewards}>{formatTokenWithText(reward, wallet.primaryToken)}</Text>
+          <Text style={styles.rewards}>{formatTokenWithText(reward, wallet.portfolioPrimaryTokenInfo)}</Text>
         </View>
 
         {meta.isHW && <HWInstructions useUSB={useUSB} addMargin />}

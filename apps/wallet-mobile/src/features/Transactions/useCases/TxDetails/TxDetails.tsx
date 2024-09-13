@@ -226,14 +226,14 @@ const AdaAmount = ({amount}: {amount: BigNumber}) => {
     return <Text style={amountStyle}>{privacyPlaceholder}</Text>
   }
 
-  return <Text style={amountStyle}>{formatTokenWithSymbol(asQuantity(amount), wallet.primaryToken)}</Text>
+  return <Text style={amountStyle}>{formatTokenWithSymbol(asQuantity(amount), wallet.portfolioPrimaryTokenInfo)}</Text>
 }
 
 const Fee = ({amount}: {amount: BigNumber}) => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
 
-  const text = `${strings.txDetailsFee} ${formatTokenWithSymbol(asQuantity(amount), wallet.primaryToken)}`
+  const text = `${strings.txDetailsFee} ${formatTokenWithSymbol(asQuantity(amount), wallet.portfolioPrimaryTokenInfo)}`
   return <Text small>{text}</Text>
 }
 

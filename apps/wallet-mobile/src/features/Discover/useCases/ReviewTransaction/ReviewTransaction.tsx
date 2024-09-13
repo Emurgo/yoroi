@@ -225,7 +225,7 @@ const useFormattedTransaction = (cbor: string) => {
     const receiveUTxO = getUtxoByTxIdAndIndex(input.transaction_id, input.index)
     const address = receiveUTxO?.receiver
     const coin = receiveUTxO?.amount != null ? asQuantity(receiveUTxO.amount) : null
-    const coinText = coin != null ? formatAdaWithText(coin, wallet.primaryToken) : null
+    const coinText = coin != null ? formatAdaWithText(coin, wallet.portfolioPrimaryTokenInfo) : null
     const primaryAssets = coinText != null ? [coinText] : []
     const multiAssets =
       receiveUTxO?.assets
@@ -249,7 +249,7 @@ const useFormattedTransaction = (cbor: string) => {
   const formattedOutputs = outputs.map((output) => {
     const address = output.address
     const coin = asQuantity(output.amount.coin)
-    const coinText = formatAdaWithText(coin, wallet.primaryToken)
+    const coinText = formatAdaWithText(coin, wallet.portfolioPrimaryTokenInfo)
     const primaryAssets = coinText != null ? [coinText] : []
     const multiAssets = output.amount.multiasset
       ? Object.entries(output.amount.multiasset).map(([policyId, assets]) => {
@@ -266,7 +266,7 @@ const useFormattedTransaction = (cbor: string) => {
     return {assets, address, ownAddress: address != null && isOwnedAddress(address)}
   })
 
-  const formattedFee = formatAdaWithText(asQuantity(data?.body?.fee ?? '0'), wallet.primaryToken)
+  const formattedFee = formatAdaWithText(asQuantity(data?.body?.fee ?? '0'), wallet.portfolioPrimaryTokenInfo)
 
   return {inputs: formattedInputs, outputs: formattedOutputs, fee: formattedFee}
 }
