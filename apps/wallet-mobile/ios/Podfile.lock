@@ -361,6 +361,8 @@ PODS:
   - react-native-mmkv (2.11.0):
     - MMKV (>= 1.2.13)
     - React-Core
+  - react-native-notifications (5.1.0):
+    - React-Core
   - react-native-pager-view (6.2.0):
     - React-Core
   - react-native-quick-base64 (2.0.6):
@@ -595,6 +597,7 @@ DEPENDENCIES:
   - "react-native-haskell-shelley (from `../../../node_modules/@emurgo/csl-mobile-bridge`)"
   - "react-native-message_signing-library (from `../../../node_modules/@emurgo/msl-mobile-bridge`)"
   - react-native-mmkv (from `../../../node_modules/react-native-mmkv`)
+  - react-native-notifications (from `../../../node_modules/react-native-notifications`)
   - react-native-pager-view (from `../../../node_modules/react-native-pager-view`)
   - react-native-quick-base64 (from `../../../node_modules/react-native-quick-base64`)
   - react-native-randombytes (from `../../../node_modules/react-native-randombytes`)
@@ -750,6 +753,8 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/@emurgo/msl-mobile-bridge"
   react-native-mmkv:
     :path: "../../../node_modules/react-native-mmkv"
+  react-native-notifications:
+    :path: "../../../node_modules/react-native-notifications"
   react-native-pager-view:
     :path: "../../../node_modules/react-native-pager-view"
   react-native-quick-base64:
@@ -831,7 +836,7 @@ SPEC CHECKSUMS:
   amplitude-react-native: 1ea3d5e1f80ccc357dd178c55c29e51c89f1cd11
   boost: 57d2868c099736d80fcd648bf211b4431e51a558
   BVLinearGradient: e3aad03778a456d77928f594a649e96995f1c872
-  DoubleConversion: fea03f2699887d960129cc54bba7e52542b6f953
+  DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   EXApplication: d8f53a7eee90a870a75656280e8d4b85726ea903
   EXBarCodeScanner: 8e23fae8d267dbef9f04817833a494200f1fce35
   EXCamera: 0fbfa338a3776af2722d626a3437abe33f708aad
@@ -849,7 +854,7 @@ SPEC CHECKSUMS:
   FBLazyVector: 12ea01e587c9594e7b144e1bfc86ac4d9ac28fde
   FBReactNativeSpec: faca7d16c37626ca5780a87adef703817722fe61
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
-  glog: c5d68082e772fa1c511173d6b30a9de2c05a69a2
+  glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
   hermes-engine: d7cc127932c89c53374452d6f93473f1970d8e88
   libaom: 144606b1da4b5915a1054383c3a4459ccdb3c661
   libavif: 84bbb62fb232c3018d6f1bab79beea87e35de7b7
@@ -885,6 +890,7 @@ SPEC CHECKSUMS:
   react-native-haskell-shelley: f3eaa102ff7b60063a4aff8bd36d23cb4de49c2e
   react-native-message_signing-library: 040317fed382be05d79e2ecbe5852d1a20ce68df
   react-native-mmkv: e97c0c79403fb94577e5d902ab1ebd42b0715b43
+  react-native-notifications: 4601a5a8db4ced6ae7cfc43b44d35fe437ac50c4
   react-native-pager-view: 0ccb8bf60e2ebd38b1f3669fa3650ecce81db2df
   react-native-quick-base64: 62290829c619fbabca4c41cfec75ae759d08fc1c
   react-native-randombytes: b6677f7d495c27e9ee0dbd77ebc97b3c59173729

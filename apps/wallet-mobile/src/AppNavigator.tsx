@@ -38,6 +38,7 @@ import {useStatusBar} from './hooks/useStatusBar'
 import {agreementDate} from './kernel/config'
 import {AppRoutes, defaultStackNavigationOptions} from './kernel/navigation'
 import {WalletNavigator} from './WalletNavigator'
+import {NotificationsDevScreen} from './features/Notifications/useCases/NotificationsDevScreen'
 
 const Stack = createStackNavigator<AppRoutes>()
 const navRef = React.createRef<NavigationContainerRef<ReactNavigation.RootParamList>>()
@@ -203,6 +204,8 @@ export const AppNavigator = () => {
               <Stack.Screen name="playground" component={Playground} />
 
               <Stack.Screen name="portfolio-dashboard" component={PortfolioScreen} />
+
+              <Stack.Screen name="notifications" component={NotificationsDevScreen} />
             </Stack.Group>
           )}
         </Stack.Navigator>

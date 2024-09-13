@@ -180,6 +180,7 @@
     "react-native-localize": "^3.0.2",
     "react-native-markdown-display": "^7.0.0-alpha.2",
     "react-native-mmkv": "^2.11.0",
+    "react-native-notifications": "^5.1.0",
     "react-native-pager-view": "^6.2.0",
     "react-native-paper": "4.12.8",
     "react-native-permissions": "^3.8.0",
