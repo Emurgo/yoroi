@@ -1,49 +1,88 @@
-import {
-  Group,
-  NotificationConfig,
-  NotificationEvent,
-  NotificationManager,
-  NotificationTrigger,
-} from './index'
 import {BehaviorSubject} from 'rxjs'
-import {App} from '@yoroi/types'
+import {App, Notifications} from '@yoroi/types'
 
-type NotificationManagerMakerProps = {
-  eventsStorage: App.Storage<true, string>
-  configStorage: App.Storage<true, string>
-}
+type EventsStorageData = ReadonlyArray<Notifications.Event>
+type ConfigStorageData = Notifications.Config
 
-type EventsStorageData = ReadonlyArray<NotificationEvent>
-type ConfigStorageData = NotificationConfig
+const getAllTriggers = (): Array<Notifications.Trigger> =>
+  Object.values(Notifications.Trigger)
 
+// TODO: Add trackers - these are only pointers to last notification event
 export const notificationManagerMaker = ({
   eventsStorage,
   configStorage,
-}: NotificationManagerMakerProps): NotificationManager => {
-  const hydrate = () => {}
+  subscriptions,
+}: Notifications.ManagerMakerProps): Notifications.Manager => {
+  const hydrate = () => {
+    const triggers = getAllTriggers()
+    triggers.forEach((trigger) => {
+      subscriptions?.[trigger]?.subscribe((event: Notifications.Event) =>
+        events.save(event),
+      )
+    })
+  }
 
-  const events = eventsManagerMaker({storage: eventsStorage})
   const config = configManagerMaker({storage: configStorage})
-
-  const destroy = () => {}
+  const {events, unreadCounterByGroup$} = eventsManagerMaker({
+    storage: eventsStorage,
+    config,
+  })
 
   const clear = async () => {
     await config.reset()
     await events.clear()
   }
 
-  const unreadCounterByGroup$ = new BehaviorSubject<Map<Group, number>>(
-    new Map<Group, number>(),
-  )
+  const destroy = async () => {
+    unreadCounterByGroup$.complete()
+  }
 
   return {hydrate, clear, destroy, events, config, unreadCounterByGroup$}
 }
 
+const getNotificationGroup = (
+  trigger: Notifications.Trigger,
+): Notifications.Group => {
+  return notificationTriggerGroups[trigger]
+}
+
+const notificationTriggerGroups: Record<
+  Notifications.Trigger,
+  Notifications.Group
+> = {
+  [Notifications.Trigger.TransactionReceived]: 'transaction-history',
+  [Notifications.Trigger.RewardsUpdated]: 'portfolio',
+  [Notifications.Trigger.PrimaryTokenPriceChanged]: 'portfolio',
+}
+
 const eventsManagerMaker = ({
   storage,
+  config,
 }: {
   storage: App.Storage<true, string>
-}): NotificationManager['events'] => {
+  config: Notifications.Manager['config']
+}): {
+  events: Notifications.Manager['events']
+  unreadCounterByGroup$: BehaviorSubject<
+    Readonly<Map<Notifications.Group, number>>
+  >
+} => {
+  const unreadCounterByGroup$ = new BehaviorSubject<
+    Map<Notifications.Group, number>
+  >(buildUnreadCounterDefaultValue())
+
+  const updateUnreadCounter = async () => {
+    const allEvents = await events.read()
+    const unreadCounterByGroup = buildUnreadCounterDefaultValue()
+    const unreadEvents = allEvents.filter((event) => !event.isRead)
+    unreadEvents.forEach((event) => {
+      const group = getNotificationGroup(event.trigger)
+      const previousCount = unreadCounterByGroup.get(group) || 0
+      unreadCounterByGroup.set(group, previousCount + 1)
+    })
+    unreadCounterByGroup$.next(unreadCounterByGroup)
+  }
+
   const events = {
     markAllAsRead: async () => {
       const allEvents = await events.read()
@@ -52,6 +91,7 @@ const eventsManagerMaker = ({
         isRead: true,
       }))
       await storage.setItem<EventsStorageData>('events', modifiedEvents)
+      unreadCounterByGroup$.next(buildUnreadCounterDefaultValue())
     },
     markAsRead: async (id: string) => {
       const allEvents = await events.read()
@@ -59,33 +99,42 @@ const eventsManagerMaker = ({
         event.id === id ? {...event, isRead: true} : event,
       )
       await storage.setItem<EventsStorageData>('events', modifiedEvents)
+      await updateUnreadCounter()
     },
     read: async (): Promise<EventsStorageData> => {
       return (await storage.getItem<EventsStorageData>('events')) ?? []
     },
-    save: async (event: Readonly<NotificationEvent>) => {
+    save: async (event: Readonly<Notifications.Event>) => {
+      // TODO: Maybe rename to notify
+      if (!shouldNotify(event, await config.read())) {
+        return
+      }
       const allEvents = await events.read()
       await storage.setItem('events', [...allEvents, event])
+      if (!event.isRead) {
+        await updateUnreadCounter()
+      }
     },
-    clear: (): Promise<void> => {
-      return storage.removeItem('events')
+    clear: async (): Promise<void> => {
+      await storage.removeItem('events')
+      unreadCounterByGroup$.next(buildUnreadCounterDefaultValue())
     },
   }
-  return events
+  return {events, unreadCounterByGroup$}
 }
 
 const configManagerMaker = ({
   storage,
 }: {
   storage: App.Storage<true, string>
-}): NotificationManager['config'] => {
+}): Notifications.Manager['config'] => {
   return {
-    read: async (): Promise<NotificationConfig> => {
+    read: async (): Promise<Notifications.Config> => {
       return (
         (await storage.getItem<ConfigStorageData>('config')) ?? defaultConfig
       )
     },
-    save: async (config: NotificationConfig): Promise<void> => {
+    save: async (config: Notifications.Config): Promise<void> => {
       await storage.setItem('config', config)
     },
     reset: async (): Promise<void> => {
@@ -94,16 +143,29 @@ const configManagerMaker = ({
   }
 }
 
-const defaultConfig: NotificationConfig = {
-  [NotificationTrigger.PrimaryTokenPriceChanged]: {
+const shouldNotify = (
+  event: Notifications.Event,
+  config: Notifications.Config,
+): boolean => {
+  return config[event.trigger].notify
+}
+
+const buildUnreadCounterDefaultValue = (): Map<Notifications.Group, number> => {
+  return new Map<Notifications.Group, number>(
+    Object.values(notificationTriggerGroups).map((group) => [group, 0]),
+  )
+}
+
+const defaultConfig: Notifications.Config = {
+  [Notifications.Trigger.PrimaryTokenPriceChanged]: {
     notify: true,
-    threshold: 10,
+    thresholdInPercent: 10,
     interval: '24h',
   },
-  [NotificationTrigger.TransactionReceived]: {
+  [Notifications.Trigger.TransactionReceived]: {
     notify: true,
   },
-  [NotificationTrigger.RewardsUpdated]: {
+  [Notifications.Trigger.RewardsUpdated]: {
     notify: true,
   },
 }

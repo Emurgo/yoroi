@@ -23,8 +23,8 @@ import {AppMultiStorage, AppMultiStorageOptions} from './app/multi-storage'
 import {NumberLocale} from './intl/numbers'
 import {SwapAggregator} from './swap/aggregator'
 import {
-  ResolverAddressResponse,
   ResolverAddressesResponse,
+  ResolverAddressResponse,
   ResolverApi,
   ResolverStrategy,
 } from './resolver/api'
@@ -55,28 +55,28 @@ import {ApiHttpStatusCode} from './api/status-code'
 import {ApiResponse, ApiResponseError, ApiResponseSuccess} from './api/response'
 import {
   ApiErrorBadRequest,
-  ApiErrorNotFound,
   ApiErrorConflict,
   ApiErrorForbidden,
   ApiErrorGone,
+  ApiErrorInvalidState,
+  ApiErrorNetwork,
+  ApiErrorNotFound,
+  ApiErrorResponseMalformed,
+  ApiErrorServerSide,
   ApiErrorTooEarly,
   ApiErrorTooManyRequests,
   ApiErrorUnauthorized,
-  ApiErrorNetwork,
   ApiErrorUnknown,
-  ApiErrorServerSide,
-  ApiErrorInvalidState,
-  ApiErrorResponseMalformed,
 } from './api/errors'
 import {ResolverNameServer} from './resolver/name-server'
 import {
-  ResolverErrorWrongBlockchain,
   ResolverErrorInvalidDomain,
   ResolverErrorInvalidResponse,
   ResolverErrorNotFound,
   ResolverErrorUnsupportedTld,
+  ResolverErrorWrongBlockchain,
 } from './resolver/errors'
-import {AppApi, AppFrontendFeeTier, AppFrontendFeesResponse} from './api/app'
+import {AppApi, AppFrontendFeesResponse, AppFrontendFeeTier} from './api/app'
 import {
   ApiFtMetadata,
   ApiFtMetadataRecord,
@@ -137,31 +137,31 @@ import {ExchangeProvider} from './exchange/provider'
 import {ExchangeApi} from './exchange/api'
 import {ExchangeManager} from './exchange/manager'
 import {
-  LinksPartnerInfoParams,
-  LinksExchangeShowCreateResultParams,
-  LinksTransferRequestAdaWithLinkParams,
-  LinksTransferRequestAdaParams,
-  LinksYoroiActionInfo,
-  LinksYoroiAction,
-  LinksYoroiUriConfig,
-  LinksYoroiModule,
   LinksBrowserLaunchDappUrlParams,
+  LinksExchangeShowCreateResultParams,
+  LinksPartnerInfoParams,
+  LinksTransferRequestAdaParams,
+  LinksTransferRequestAdaWithLinkParams,
+  LinksYoroiAction,
+  LinksYoroiActionInfo,
+  LinksYoroiModule,
+  LinksYoroiUriConfig,
 } from './links/yoroi'
 import {
-  PortfolioTokenId,
-  PortfolioTokenType,
-  PortfolioTokenPropertyType,
   PortfolioTokenApplication,
-  PortfolioTokenSource,
+  PortfolioTokenId,
   PortfolioTokenNature,
+  PortfolioTokenPropertyType,
+  PortfolioTokenSource,
   PortfolioTokenStatus,
+  PortfolioTokenType,
 } from './portfolio/token'
 import {PortfolioTokenDiscovery} from './portfolio/discovery'
 import {PortfolioTokenInfo} from './portfolio/info'
 import {
+  PortfolioPrimaryBreakdown,
   PortfolioTokenAmount,
   PortfolioTokenAmountRecords,
-  PortfolioPrimaryBreakdown,
 } from './portfolio/amount'
 import {PortfolioTokenPrice} from './portfolio/price'
 import {ChainNetwork, ChainSupportedNetworks} from './chain/network'
@@ -169,8 +169,8 @@ import {NumbersErrorInvalidAtomicValue} from './numbers/errors'
 import {NumbersAtomicValue} from './numbers/atomic-value'
 import {
   AppErrorInvalidState,
-  AppErrorWrongPassword,
   AppErrorLibraryFailed,
+  AppErrorWrongPassword,
 } from './app/errors'
 import {
   PortfolioApi,
@@ -181,14 +181,14 @@ import {
 } from './portfolio/api'
 import {
   PortfolioEventBalanceManager,
-  PortfolioEventSourceId,
-  PortfolioEventManagerOn,
-  PortfolioEventTokenManager,
-  PortfolioEventTokenManagerSync,
-  PortfolioEventTokenManagerHydrate,
   PortfolioEventBalanceManagerHydrate,
   PortfolioEventBalanceManagerRefresh,
   PortfolioEventBalanceManagerSync,
+  PortfolioEventManagerOn,
+  PortfolioEventSourceId,
+  PortfolioEventTokenManager,
+  PortfolioEventTokenManagerHydrate,
+  PortfolioEventTokenManagerSync,
 } from './portfolio/event'
 import {
   PortfolioStorageBalance,
@@ -218,18 +218,18 @@ import {
   NetworkManager,
 } from './network/manager'
 import {
-  PortfolioTokenActivityRecord,
   PortfolioTokenActivity,
+  PortfolioTokenActivityRecord,
   PortfolioTokenActivityWindow,
 } from './portfolio/activity'
 import {
+  AppLoggerEntry,
   AppLoggerLevel,
+  AppLoggerManager,
   AppLoggerMessage,
   AppLoggerMetadata,
   AppLoggerTransporter,
   AppLoggerTransporterOptions,
-  AppLoggerEntry,
-  AppLoggerManager,
 } from './app/logger'
 import {ScanErrorUnknown, ScanErrorUnknownContent} from './scan/errors'
 import {
@@ -252,6 +252,15 @@ import {
   ClaimApiClaimTokensRequestPayload,
   ClaimApiClaimTokensResponse,
 } from './claim/api'
+import {
+  NotificationConfig,
+  NotificationEvent,
+  NotificationGroup,
+  NotificationManager,
+  NotificationManagerMakerProps,
+  NotificationTransactionReceivedEvent,
+  NotificationTrigger,
+} from './notifications/manager'
 
 export namespace App {
   export namespace Errors {
@@ -628,6 +637,17 @@ export namespace Network {
   export type EraConfig = NetworkEraConfig
   export type EpochInfo = NetworkEpochInfo
   export type EpochProgress = NetworkEpochProgress
+}
+
+export namespace Notifications {
+  export type Config = NotificationConfig
+  export type Event = NotificationEvent
+  export type Group = NotificationGroup
+  export type Manager = NotificationManager
+  export type ManagerMakerProps = NotificationManagerMakerProps
+  export type TransactionReceivedEvent = NotificationTransactionReceivedEvent
+  export const Trigger = NotificationTrigger
+  export type Trigger = NotificationTrigger
 }
 
 export namespace Scan {
