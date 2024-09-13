@@ -269,6 +269,16 @@ describe('NotificationManager', () => {
     expect(savedEventsAfter).toEqual([event])
     await manager.destroy()
   })
+
+  it('should not crash when hydrating with no subscriptions', async () => {
+    const manager = notificationManagerMaker({
+      eventsStorage,
+      configStorage,
+    })
+
+    manager.hydrate()
+    await manager.destroy()
+  })
 })
 
 const createTransactionReceivedEvent = (
