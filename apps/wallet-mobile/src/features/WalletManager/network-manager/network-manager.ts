@@ -1,5 +1,6 @@
 import {CardanoApi} from '@yoroi/api'
 import {mountAsyncStorage, mountMMKVStorage, observableStorageMaker} from '@yoroi/common'
+import {explorerManager} from '@yoroi/explorers'
 import {createPrimaryTokenInfo} from '@yoroi/portfolio'
 import {Chain, Network} from '@yoroi/types'
 import {freeze} from 'immer'
@@ -148,9 +149,10 @@ export function buildNetworkManagers({
         ...config,
         tokenManager,
         rootStorage,
-        // NOTE: we can't use the new rootStorage cuz all modules are async now 🥹
+        // NOTE: it can't use the new rootStorage cuz all modules are async now 🥹
         legacyRootStorage,
         api,
+        explorers: explorerManager[network as Chain.SupportedNetworks],
       }
       networkManagers[network as Chain.SupportedNetworks] = networkManager
 

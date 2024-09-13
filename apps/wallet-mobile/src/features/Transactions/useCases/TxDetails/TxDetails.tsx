@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useRoute} from '@react-navigation/native'
 import {isNonNullable} from '@yoroi/common'
-import {useExplorers} from '@yoroi/explorers'
 import {useTheme} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
@@ -48,7 +47,7 @@ export const TxDetails = () => {
   const {
     selected: {network},
   } = useWalletManager()
-  const explorers = useExplorers(wallet.networkManager.network)
+  const explorers = wallet.networkManager.explorers
   const internalAddressIndex = fromPairs(wallet.internalAddresses.map((addr, i) => [addr, i]))
   const externalAddressIndex = fromPairs(wallet.externalAddresses.map((addr, i) => [addr, i]))
   const [expandedInItemId, setExpandedInItemId] = useState<null | ItemId>(null)
