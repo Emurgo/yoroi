@@ -2,7 +2,6 @@ import {useNavigation} from '@react-navigation/core'
 import {NavigationState, useFocusEffect} from '@react-navigation/native'
 import {FlashList} from '@shopify/flash-list'
 import {isString} from '@yoroi/common'
-import {useExplorers} from '@yoroi/explorers'
 import {useSwap, useSwapOrdersByStatusOpen} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
 import {Buffer} from 'buffer'
@@ -62,7 +61,7 @@ export const OpenOrders = () => {
   const {numberLocale} = useLanguage()
   const tokenIds = React.useMemo(() => _.uniq(orders?.flatMap((o) => [o.from.tokenId, o.to.tokenId])), [orders])
   const transactionsInfos = useTransactionInfos({wallet})
-  const explorers = useExplorers(wallet.networkManager.network)
+  const explorers = wallet.networkManager.explorers
   const {tokenInfos} = usePortfolioTokenInfos({wallet, tokenIds}, {suspense: true})
 
   const normalizedOrders = React.useMemo(() => {

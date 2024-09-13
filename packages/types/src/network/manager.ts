@@ -1,6 +1,8 @@
 import {ApiProtocolParams} from '../api/cardano'
 import {AppObservableStorage} from '../app/observable-storage'
 import {ChainSupportedNetworks} from '../chain/network'
+import {ExplorersExplorer} from '../explorers/explorer'
+import {ExplorersManager} from '../explorers/manager'
 import {PortfolioTokenInfo} from '../portfolio/info'
 import {PortfolioManagerToken} from '../portfolio/manager'
 
@@ -25,6 +27,7 @@ export type NetworkManager = {
   rootStorage: AppObservableStorage<false>
   legacyRootStorage: AppObservableStorage
   api: NetworkApi
+  explorers: Record<ExplorersExplorer, ExplorersManager>
 } & NetworkConfig
 
 export type NetworkEraConfig = {

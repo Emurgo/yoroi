@@ -1,6 +1,5 @@
-import {useExplorers} from '@yoroi/explorers'
 import {useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Linking, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 
@@ -81,7 +80,7 @@ const Withdrawals = ({
   withdrawals: NonNullable<YoroiStaking['withdrawals']>
 }) => {
   const strings = useStrings()
-  const explorers = useExplorers(wallet.networkManager.network)
+  const explorers = wallet.networkManager.explorers
 
   const addresses = Entries.toAddresses(withdrawals)
   if (addresses.length < 1) return null
@@ -113,7 +112,7 @@ const Deregistrations = ({
   deregistrations: NonNullable<YoroiStaking['deregistrations']>
 }) => {
   const strings = useStrings()
-  const explorers = useExplorers(wallet.networkManager.network)
+  const explorers = wallet.networkManager.explorers
 
   const refundAmounts = Entries.toAmounts(deregistrations)
   const primaryAmount = Amounts.getAmount(refundAmounts, wallet.portfolioPrimaryTokenInfo.id)

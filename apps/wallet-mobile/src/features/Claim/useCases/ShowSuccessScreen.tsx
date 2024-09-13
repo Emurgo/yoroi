@@ -1,5 +1,4 @@
 import {useClaim} from '@yoroi/claim'
-import {useExplorers} from '@yoroi/explorers'
 import {sortTokenAmountsByInfo} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {App, Claim, Portfolio} from '@yoroi/types'
@@ -93,7 +92,7 @@ const TxHash = ({txHash}: {txHash: string}) => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
   const {styles, colors} = useStyles()
-  const explorers = useExplorers(wallet.networkManager.network)
+  const explorers = wallet.networkManager.explorers
 
   return (
     <>

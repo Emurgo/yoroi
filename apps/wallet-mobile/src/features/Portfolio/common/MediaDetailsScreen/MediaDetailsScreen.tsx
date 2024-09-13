@@ -1,9 +1,8 @@
 import {RouteProp, useRoute} from '@react-navigation/native'
 import {isString} from '@yoroi/common'
-import {useExplorers} from '@yoroi/explorers'
 import {usePortfolioTokenDiscovery, usePortfolioTokenTraits} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
-import {Chain, Network, Portfolio} from '@yoroi/types'
+import {Explorers, Network, Portfolio} from '@yoroi/types'
 import React, {ReactNode, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {
@@ -98,7 +97,7 @@ type DetailsProps = {
   networkManager: Network.Manager
 }
 const Details = ({activeTab, info, networkManager}: DetailsProps) => {
-  const {tokenManager, network} = networkManager
+  const {tokenManager, network, explorers} = networkManager
 
   const {tokenDiscovery} = usePortfolioTokenDiscovery(
     {
@@ -127,7 +126,7 @@ const Details = ({activeTab, info, networkManager}: DetailsProps) => {
   return (
     <TabPanels>
       <TabPanel active={activeTab === 'overview'}>
-        <NftOverview info={info} network={network} traits={tokenTraits} />
+        <NftOverview info={info} explorers={explorers} traits={tokenTraits} />
       </TabPanel>
 
       <TabPanel active={activeTab === 'metadata'}>
@@ -174,12 +173,11 @@ const MetadataRow = ({title, copyText, children}: {title: string; children: Reac
 type NftOverviewProps = {
   info: Portfolio.Token.Info
   traits: Portfolio.Token.Traits | undefined
-  network: Chain.SupportedNetworks
+  explorers: Record<Explorers.Explorer, Explorers.Manager>
 }
-const NftOverview = ({info, network, traits}: NftOverviewProps) => {
+const NftOverview = ({info, explorers, traits}: NftOverviewProps) => {
   const styles = useStyles()
   const strings = useStrings()
-  const explorers = useExplorers(network)
 
   const [policyId] = info.id.split('.')
 

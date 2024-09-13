@@ -1,5 +1,4 @@
 import {useFocusEffect} from '@react-navigation/native'
-import {useExplorers} from '@yoroi/explorers'
 import {usePortfolioTokenInfo} from '@yoroi/portfolio'
 import {getPoolUrlByProvider} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
@@ -166,7 +165,7 @@ export const ExpandableOrder = ({order}: {order: MappedRawOrder}) => {
   const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
   const {wallet} = useSelectedWallet()
   const intl = useIntl()
-  const explorers = useExplorers(wallet.networkManager.network)
+  const explorers = wallet.networkManager.explorers
   const metadata = order.metadata
   const id = order.id
   const expanded = id === hiddenInfoOpenId
