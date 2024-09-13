@@ -72,6 +72,7 @@ export const protocolParamsPlaceholder = freeze({
   coinsPerUtxoByte: '4310',
   poolDeposit: '500000000',
   keyDeposit: '2000000',
+  epoch: 509,
 })
 
 export const networkConfigs: Readonly<Record<Chain.SupportedNetworks, Readonly<Network.Config>>> = freeze({
