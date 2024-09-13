@@ -132,7 +132,7 @@ const useStyles = () => {
       ...atoms.py_lg,
     },
     iosWarning: {
-      color: color.text_gray_medium,
+      color: color.text_gray_low,
       ...atoms.body_2_md_regular,
     },
   })

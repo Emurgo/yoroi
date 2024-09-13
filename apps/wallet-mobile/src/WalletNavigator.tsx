@@ -294,7 +294,7 @@ const useStyles = () => {
   const colors = {
     active: color.text_primary_max,
     inactive: color.text_gray_medium,
-    background: color.gray_min,
+    background: color.bg_color_max,
     divider: color.gray_200,
   }
 

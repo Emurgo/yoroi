@@ -4,8 +4,8 @@ import {StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import {Button, Spacer} from '../../../../../../components'
-import {useNavigateTo} from '../../../../common/useNavigateTo'
-import {useStrings} from '../../../../common/useStrings'
+import {useNavigateTo} from '../../../../common/hooks/useNavigateTo'
+import {useStrings} from '../../../../common/hooks/useStrings'
 import {AssetImage} from './AssetImage'
 
 export const BuyADABanner = () => {

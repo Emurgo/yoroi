@@ -1,5 +1,3 @@
-import {Balance} from '@yoroi/types'
-
 import {DefaultAsset} from '../../../types'
 import {COIN_TYPE, COINS_PER_UTXO_WORD, KEY_DEPOSIT, MINIMUM_UTXO_VAL, POOL_DEPOSIT} from '../common'
 
@@ -62,21 +60,6 @@ export const NETWORK_CONFIG = {
   POOL_DEPOSIT,
   PROVIDER_ID: 300,
   COINS_PER_UTXO_WORD,
-} as const
-
-export const PRIMARY_TOKEN_INFO: Balance.TokenInfo = {
-  id: '.',
-  name: 'TADA',
-  description: 'Cardano',
-  fingerprint: '',
-  kind: 'ft',
-  group: '',
-  icon: '',
-  ticker: 'TADA',
-  image: '',
-  decimals: 6,
-  symbol: '₳',
-  metadatas: {},
 } as const
 
 export const PRIMARY_TOKEN: DefaultAsset = {

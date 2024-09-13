@@ -84,7 +84,7 @@ export const makeCardanoWallet = (
   const appApi = AppApi.appApiMaker({baseUrl: networkManager.legacyApiBaseUrl})
 
   // legacy
-  const {BACKEND, NETWORK_CONFIG, PRIMARY_TOKEN, PRIMARY_TOKEN_INFO, TOKEN_INFO_SERVICE} = constants
+  const {PRIMARY_TOKEN} = constants
 
   return class CardanoWallet implements YoroiWallet {
     readonly id: string
@@ -433,7 +433,7 @@ export const makeCardanoWallet = (
           },
         )
 
-        return yoroiUnsignedTx({unsignedTx, networkConfig: NETWORK_CONFIG, addressedUtxos, primaryTokenId})
+        return yoroiUnsignedTx({unsignedTx, networkManager, addressedUtxos, primaryTokenId, keyDeposit})
       }
 
       throwLoggedError('createDelegationTx staking not supported')
@@ -520,10 +520,11 @@ export const makeCardanoWallet = (
           return {
             votingRegTx: await yoroiUnsignedTx({
               unsignedTx,
-              networkConfig: NETWORK_CONFIG,
+              networkManager: this.networkManager,
               votingRegistration,
               addressedUtxos,
               primaryTokenId,
+              keyDeposit,
             }),
           }
         } catch (e) {
@@ -587,9 +588,10 @@ export const makeCardanoWallet = (
 
         return yoroiUnsignedTx({
           unsignedTx: withdrawalTx,
-          networkConfig: NETWORK_CONFIG,
+          networkManager: this.networkManager,
           addressedUtxos,
           primaryTokenId,
+          keyDeposit,
         })
       }
 
@@ -634,11 +636,12 @@ export const makeCardanoWallet = (
 
         return yoroiUnsignedTx({
           unsignedTx,
-          networkConfig: NETWORK_CONFIG,
+          networkManager: this.networkManager,
           addressedUtxos,
           entries: [],
           governance: true,
           primaryTokenId,
+          keyDeposit,
         })
       } catch (e) {
         if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError) throw e
@@ -820,7 +823,14 @@ export const makeCardanoWallet = (
           {metadata},
         )
 
-        return yoroiUnsignedTx({unsignedTx, networkConfig: NETWORK_CONFIG, addressedUtxos, entries, primaryTokenId})
+        return yoroiUnsignedTx({
+          unsignedTx,
+          networkManager: this.networkManager,
+          addressedUtxos,
+          entries,
+          primaryTokenId,
+          keyDeposit,
+        })
       } catch (e) {
         if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError) throw e
         throwLoggedError(new App.Errors.LibraryError((e as Error).message))
@@ -1081,12 +1091,6 @@ export const makeCardanoWallet = (
 
     async fetchPoolInfo(request: PoolInfoRequest) {
       return legacyApi.getPoolInfo(request, networkManager.legacyApiBaseUrl)
-    }
-
-    fetchTokenInfo(tokenId: string) {
-      return tokenId === '' || tokenId === 'ADA' || tokenId === '.' || tokenId === this.portfolioPrimaryTokenInfo.id
-        ? Promise.resolve(PRIMARY_TOKEN_INFO)
-        : legacyApi.getTokenInfo(tokenId, `${TOKEN_INFO_SERVICE}/metadata`, BACKEND)
     }
 
     async fetchFundInfo(): Promise<FundInfoResponse> {

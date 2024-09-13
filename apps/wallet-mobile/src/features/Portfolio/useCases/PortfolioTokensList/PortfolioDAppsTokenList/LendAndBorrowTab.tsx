@@ -3,8 +3,8 @@ import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {Spacer} from '../../../../../components'
-import {TokenEmptyList} from '../../../common/TokenEmptyList'
-import {useStrings} from '../../../common/useStrings'
+import {useStrings} from '../../../common/hooks/useStrings'
+import {TokenEmptyList} from '../../../common/TokenEmptyList/TokenEmptyList'
 
 export const LendAndBorrowTab = () => {
   const {styles} = useStyles()

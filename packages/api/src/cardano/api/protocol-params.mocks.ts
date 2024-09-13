@@ -5,4 +5,5 @@ export const paramsMockResponse: Api.Cardano.ProtocolParams = {
   keyDeposit: '2000000',
   linearFee: {coefficient: '44', constant: '155381'},
   poolDeposit: '500000000',
+  epoch: 509,
 }

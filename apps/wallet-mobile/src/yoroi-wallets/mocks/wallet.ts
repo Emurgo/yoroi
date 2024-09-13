@@ -11,8 +11,7 @@ import {Observable} from 'rxjs'
 
 import {buildPortfolioTokenManagers} from '../../features/Portfolio/common/helpers/build-token-managers'
 import {buildNetworkManagers} from '../../features/WalletManager/network-manager/network-manager'
-import {fallbackTokenInfo, toTokenInfo, utf8ToHex} from '../cardano/api/utils'
-import * as HASKELL_SHELLEY_TESTNET from '../cardano/constants/testnet/constants'
+import {toTokenInfo, utf8ToHex} from '../cardano/api/utils'
 import {CHIMERIC_ACCOUNT, PRIMARY_TOKEN, STAKING_KEY_INDEX} from '../cardano/constants/testnet/constants'
 import {CardanoTypes, YoroiWallet} from '../cardano/types'
 import {
@@ -163,10 +162,6 @@ const wallet: YoroiWallet = {
     throw new Error('not implemented: signRawTx')
   },
   getAllUtxosForKey: () => Promise.resolve([]),
-  fetchTokenInfo: (tokenId: string) => {
-    action('fetchTokenInfo')(tokenId)
-    return Promise.resolve(tokenInfos[tokenId] ?? fallbackTokenInfo(tokenId))
-  },
   fetchPoolInfo: (...args: unknown[]) => {
     action('fetchPoolInfo')(...args)
     return Promise.resolve({[stakePoolId]: poolInfoAndHistory} as StakePoolInfosAndHistories)
@@ -546,80 +541,6 @@ const submitTransaction = {
   },
 }
 
-const fetchTokenInfo = {
-  success: {
-    nft: async (...args: unknown[]): Promise<Balance.TokenInfo> => {
-      action('fetchTokenInfo')(...args)
-      return nft
-    },
-    randomNft: async (...args: unknown[]): Promise<Balance.TokenInfo> => {
-      action('fetchTokenInfo')(...args)
-      const allNfts = generateManyNfts()
-      return allNfts[Math.floor(Math.random() * allNfts.length)]
-    },
-    ft: async (...args: unknown[]): Promise<Balance.TokenInfo> => {
-      action('fetchTokenInfo')(...args)
-      return {
-        kind: 'ft',
-        description: 'WingRiders testnet wUSDC token.',
-        id: '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198.7755534443',
-        name: 'wUSDC',
-        fingerprint: 'asset1n3weea8202dpev06tshdvhe9xd6f9jcqldpc2q',
-        image: 'https://picsum.photos/40',
-        icon: 'https://picsum.photos/40',
-        group: '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198',
-        ticker: 'WUSDC',
-        decimals: 3,
-        symbol: undefined,
-        metadatas: {
-          mintFt: {
-            decimals: 3,
-            icon: '',
-            url: 'https://wallet-testnet.nu.fi',
-            description: 'WingRiders testnet wUSDC token.',
-            ticker: 'WUSDC',
-            version: '1',
-          },
-        },
-      }
-    },
-    ftNoImage: async (...args: unknown[]): Promise<Balance.TokenInfo> => {
-      action('fetchTokenInfo')(...args)
-      return {
-        kind: 'ft',
-        description: 'WingRiders testnet wUSDC token.',
-        id: '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198.7755534443',
-        name: 'wUSDC',
-        fingerprint: 'asset1n3weea8202dpev06tshdvhe9xd6f9jcqldpc2q',
-        image: '',
-        icon: '',
-        group: '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198',
-        ticker: 'WUSDC',
-        decimals: 3,
-        symbol: undefined,
-        metadatas: {
-          mintFt: {
-            decimals: 3,
-            icon: '',
-            url: 'https://wallet-testnet.nu.fi',
-            description: 'WingRiders testnet wUSDC token.',
-            ticker: 'WUSDC',
-            version: '1',
-          },
-        },
-      }
-    },
-  },
-  loading: async (...args: unknown[]) => {
-    action('fetchTokenInfo')(...args)
-    return new Promise(() => null) as unknown as Balance.TokenInfo
-  },
-  error: async (...args: unknown[]) => {
-    action('fetchTokenInfo')(...args)
-    return Promise.reject(new Error('storybook error message'))
-  },
-}
-
 const tokenEntries: Array<CardanoTypes.TokenEntry> = [
   {
     identifier: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950',
@@ -660,7 +581,6 @@ const balances: Balance.Amounts = {
 }
 
 const tokenInfos: Record<string, Balance.TokenInfo> = {
-  '.': HASKELL_SHELLEY_TESTNET.PRIMARY_TOKEN_INFO,
   '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950': toTokenInfo({
     networkId: 300,
     identifier: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950',
@@ -922,7 +842,6 @@ export const mocks = {
   txid,
   getTransactions,
   fetchPoolInfo,
-  fetchTokenInfo,
   createUnsignedTx,
   createDelegationTx,
   createWithdrawalTx,

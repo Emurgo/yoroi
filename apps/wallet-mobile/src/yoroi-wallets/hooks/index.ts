@@ -157,62 +157,6 @@ export const useSync = (wallet: YoroiWallet, options?: UseMutationOptions<void, 
   }
 }
 
-export const useTokenInfo = <T extends Balance.TokenInfo>(
-  {wallet, tokenId}: {wallet: YoroiWallet; tokenId: string},
-  options?: UseQueryOptions<Balance.TokenInfo, Error, T, [string, 'tokenInfo', string]>,
-) => {
-  const query = useQuery({
-    ...options,
-    suspense: true,
-    queryKey: [wallet.id, 'tokenInfo', tokenId],
-    queryFn: () => wallet.fetchTokenInfo(tokenId),
-    staleTime: 600_000,
-  })
-
-  if (!query.data) throw new Error('Invalid token id')
-
-  return query.data
-}
-
-export const useToken = (
-  {wallet, tokenId}: {wallet: YoroiWallet; tokenId: string},
-  options?: UseQueryOptions<Balance.TokenInfo, Error, Balance.TokenInfo, [string, 'tokenInfo', string]>,
-) => {
-  const query = useQuery({
-    ...options,
-    suspense: true,
-    queryKey: [wallet.id, 'tokenInfo', tokenId],
-    queryFn: () => wallet.fetchTokenInfo(tokenId),
-    staleTime: 600_000,
-  })
-
-  if (!query.data) throw new Error('Invalid token id')
-
-  return useTokenInfos({wallet, tokenIds: [tokenId]}, options)[0]
-}
-
-export const useTokenInfosDetailed = (
-  {wallet, tokenIds}: {wallet: YoroiWallet; tokenIds: Array<string>},
-  options?: UseQueryOptions<Balance.TokenInfo, Error, Balance.TokenInfo, any>,
-) => {
-  const queries = tokenIds.map((tokenId) => ({
-    ...options,
-    suspense: true,
-    queryKey: [wallet.id, 'tokenInfo', tokenId],
-    queryFn: () => wallet.fetchTokenInfo(tokenId),
-    staleTime: 600_000,
-  }))
-  return useQueries(queries)
-}
-
-export const useTokenInfos = (
-  {wallet, tokenIds}: {wallet: YoroiWallet; tokenIds: Array<string>},
-  options?: UseQueryOptions<Balance.TokenInfo, Error, Balance.TokenInfo, any>,
-) => {
-  const results = useTokenInfosDetailed({wallet, tokenIds}, options)
-  return results.reduce((result, {data}) => (data ? [...result, data] : result), [] as Array<Balance.TokenInfo>)
-}
-
 export const usePlate = ({
   chainId,
   publicKeyHex,
@@ -665,15 +609,6 @@ export const useSaveMemo = (
     saveMemo: mutation.mutate,
     ...mutation,
   }
-}
-
-export const useNft = (wallet: YoroiWallet, {id}: {id: string}): Balance.TokenInfo => {
-  const tokenInfo = useTokenInfo({wallet, tokenId: id}, {suspense: true})
-
-  if (tokenInfo.kind !== 'nft') {
-    throw new Error(`Invalid id used "${id}" to get NFT`)
-  }
-  return tokenInfo
 }
 
 const supportedTypes = [

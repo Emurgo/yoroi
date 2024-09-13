@@ -9,7 +9,7 @@ import {Icon} from '../../../../components/Icon'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 
 type TokenInfoIconProps = {
-  info: Portfolio.Token.Info
+  info: Portfolio.Token.Info | undefined | null
   size?: 'sm' | 'md'
   imageStyle?: ImageStyle
 }
@@ -18,7 +18,7 @@ export const TokenInfoIcon = ({info, size = 'md', imageStyle}: TokenInfoIconProp
   const {wallet} = useSelectedWallet()
   const [error, setError] = React.useState(false)
 
-  if (error) return <TokenIconPlaceholder size={size} />
+  if (error || !info) return <TokenIconPlaceholder size={size} />
 
   if (isPrimaryToken(info)) return <PrimaryIcon size={size} imageStyle={imageStyle} />
 

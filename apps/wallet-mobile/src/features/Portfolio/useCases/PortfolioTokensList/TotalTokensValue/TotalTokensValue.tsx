@@ -4,7 +4,7 @@ import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Icon, Tooltip} from '../../../../../components'
-import {useStrings} from '../../../common/useStrings'
+import {useStrings} from '../../../common/hooks/useStrings'
 import {TotalTokensValueContent} from './TotalTokensValueContent'
 
 type Props = {

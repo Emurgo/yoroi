@@ -1,26 +1,27 @@
-import {isPrimaryToken} from '@yoroi/portfolio'
+import {isPrimaryToken, usePortfolioTokenInfo} from '@yoroi/portfolio'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {FlatList, Text, TouchableOpacity, View} from 'react-native'
 
 import {Boundary} from '../../../../components'
+import {normalisePtId} from '../../../../kernel/helpers/normalisePtId'
 import globalMessages, {txLabels} from '../../../../kernel/i18n/global-messages'
 import {isEmptyString} from '../../../../kernel/utils'
 import {CardanoTypes} from '../../../../yoroi-wallets/cardano/types'
-import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {asQuantity} from '../../../../yoroi-wallets/utils'
 import {formatTokenAmount} from '../../../../yoroi-wallets/utils/format'
 import {usePrivacyMode} from '../../../Settings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from '../../common/strings'
+import {useAssetListStyles} from './AssetListTransaction.style'
 
 type AssetListProps = {
   assets: Array<CardanoTypes.TokenEntry>
-  styles: NodeStyle
   onSelect?: (tokenEntry: CardanoTypes.TokenEntry) => void
 }
-export const AssetList = ({assets, styles, onSelect}: AssetListProps) => {
+export const AssetList = ({assets, onSelect}: AssetListProps) => {
   const intl = useIntl()
+  const styles = useAssetListStyles()
   const colors = [styles.rowColor1, styles.rowColor2]
 
   return (
@@ -33,11 +34,11 @@ export const AssetList = ({assets, styles, onSelect}: AssetListProps) => {
 
       <View>
         <FlatList
-          data={assets.sort((asset) => (asset.identifier === '' ? -1 : 1))}
+          data={assets.sort((asset) => (isPrimaryToken(normalisePtId(asset.identifier)) ? -1 : 1))}
           keyExtractor={(item) => item.identifier}
           renderItem={({item: entry, index}) => (
             <Boundary loading={{size: 'small', style: {padding: 16}}}>
-              <AssetRow entry={entry} styles={styles} backColor={colors[index % colors.length]} onSelect={onSelect} />
+              <AssetRow entry={entry} backColor={colors[index % colors.length]} onSelect={onSelect} />
             </Boundary>
           )}
         />
@@ -47,24 +48,31 @@ export const AssetList = ({assets, styles, onSelect}: AssetListProps) => {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type NodeStyle = any
 
 type AssetRowProps = {
-  styles: NodeStyle
   entry: CardanoTypes.TokenEntry
   backColor: {backgroundColor: string}
   onSelect?: (tokenEntry: CardanoTypes.TokenEntry) => void
 }
 
-const AssetRow = ({styles, entry, backColor, onSelect}: AssetRowProps) => {
+const AssetRow = ({entry, backColor, onSelect}: AssetRowProps) => {
   const {wallet} = useSelectedWallet()
   const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
-  const tokenInfo = useTokenInfo({wallet, tokenId: entry.identifier})
-  const isPrimary = isPrimaryToken(tokenInfo.id)
+  const {tokenInfo} = usePortfolioTokenInfo({
+    id: normalisePtId(entry.identifier),
+    network: wallet.networkManager.network,
+    getTokenInfo: wallet.networkManager.tokenManager.api.tokenInfo,
+    primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
+  })
+  const isPrimary = isPrimaryToken(tokenInfo?.id)
   const primaryTicker = wallet.portfolioPrimaryTokenInfo.ticker
   const strings = useStrings()
+  const styles = useAssetListStyles()
 
-  const name = isEmptyString(tokenInfo.name) ? strings.unknownAssetName : tokenInfo.name
+  const name = isEmptyString(tokenInfo?.name) ? strings.unknownAssetName : tokenInfo?.name
+
+  const quantity = tokenInfo ? formatTokenAmount(asQuantity(entry.amount), tokenInfo) : entry.amount.toFormat()
+  const protectedQuantity = isPrivacyActive ? privacyPlaceholder : quantity
 
   const item = (
     <>
@@ -72,14 +80,12 @@ const AssetRow = ({styles, entry, backColor, onSelect}: AssetRowProps) => {
         <Text style={styles.assetName}>{isPrimary ? primaryTicker : name}</Text>
 
         <Text style={styles.assetMeta} ellipsizeMode="middle" numberOfLines={1}>
-          {isPrimary ? '' : tokenInfo.fingerprint}
+          {isPrimary ? '' : tokenInfo?.fingerprint}
         </Text>
       </View>
 
       <View style={styles.assetBalanceView}>
-        <Text style={styles.assetBalance}>
-          {isPrivacyActive ? privacyPlaceholder : formatTokenAmount(asQuantity(entry.amount), tokenInfo)}
-        </Text>
+        <Text style={styles.assetBalance}>{protectedQuantity}</Text>
       </View>
     </>
   )

@@ -2159,10 +2159,10 @@
   dependencies:
     base-64 "0.1.0"
 
-"@emurgo/react-native-hid@^5.15.6":
-  version "5.15.6"
-  resolved "https://registry.yarnpkg.com/@emurgo/react-native-hid/-/react-native-hid-5.15.6.tgz#bade99f9434a1d4080b777e9f724f4634a73330f"
-  integrity sha512-jtWsp0QfkWRWAGgNVp9ThTtAEqNmddSRk/yABQTK1vrVhZKxwc66l9ejl9YZw1crIr7W4FTqDThQ0KWuj9TlPw==
+"@emurgo/react-native-hid@5.15.8":
+  version "5.15.8"
+  resolved "https://registry.yarnpkg.com/@emurgo/react-native-hid/-/react-native-hid-5.15.8.tgz#10db96befce4b7f621ab8f477a63c28e1aa082d0"
+  integrity sha512-wqW/alaHBMUXAbqkaNAe1q/qc4RG4X0vEfSRwp7ZwCP9NyJ6+1DJj7TesWTPtbkSr9U2iDbvGSpWR9Fe8vdDPA==
   dependencies:
     "@ledgerhq/devices" "^5.15.0"
     "@ledgerhq/errors" "^5.15.0"

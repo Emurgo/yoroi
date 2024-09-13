@@ -33,6 +33,7 @@ const AppProtocolParamsSchema = z.object({
     constant: z.string(),
   }),
   poolDeposit: z.string(),
+  epoch: z.number().nonnegative(),
 })
 
 export const isProtocolParamsResponse = createTypeGuardFromSchema(

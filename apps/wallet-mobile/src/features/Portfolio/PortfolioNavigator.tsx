@@ -4,12 +4,12 @@ import * as React from 'react'
 
 import {Boundary} from '../../components'
 import {defaultStackNavigationOptions, Portfolio2Routes} from '../../kernel/navigation'
-import {NftsNavigator} from '../Nfts/NftsNavigator'
 import {SearchProvider} from '../Search/SearchContext'
 import {NetworkTag} from '../Settings/ChangeNetwork/NetworkTag'
 import {TxDetails} from '../Transactions/useCases/TxDetails'
+import {useStrings} from './common/hooks/useStrings'
 import {PortfolioTokenDetailProvider} from './common/PortfolioTokenDetailContext'
-import {useStrings} from './common/useStrings'
+import {NftsNavigator} from './NftsNavigator'
 import {PortfolioDashboardScreen} from './useCases/PortfolioDashboard/PortfolioDashboardScreen'
 import ExportTokenTransactions from './useCases/PortfolioTokenDetails/ExportTokenTransactions'
 import {PortfolioTokenDetailsScreen} from './useCases/PortfolioTokenDetails/PortfolioTokenDetailsScreen'
@@ -31,13 +31,13 @@ export const PortfolioNavigator = () => {
       >
         <Stack.Screen
           name="dashboard-portfolio"
-          component={PortfolioDashboardScreen}
+          getComponent={() => PortfolioDashboardScreen}
           options={{title: strings.portfolio, headerLeft: () => null}}
         />
 
         <Stack.Screen
           name="portfolio-tokens-list"
-          component={PortfolioTokenListScreen}
+          getComponent={() => PortfolioTokenListScreen}
           options={{
             title: strings.tokenList,
           }}
@@ -46,7 +46,7 @@ export const PortfolioNavigator = () => {
         <Stack.Screen
           name="portfolio-token-details"
           options={{title: strings.tokenDetail, headerRight: () => <ExportTokenTransactions />}}
-          component={PortfolioTokenDetailsScreen}
+          getComponent={() => PortfolioTokenDetailsScreen}
         />
 
         <Stack.Screen name="portfolio-nfts" options={{headerShown: false}}>

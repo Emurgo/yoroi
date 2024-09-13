@@ -6,7 +6,7 @@ import LinearGradient from 'react-native-linear-gradient'
 
 import {Button, Spacer} from '../../../../../components'
 import {TxHistoryRouteNavigation} from '../../../../../kernel/navigation'
-import {useStrings} from '../../../common/useStrings'
+import {useStrings} from '../../../common/hooks/useStrings'
 import {TradeTokensAsset} from '../../PortfolioDashboard/DashboardTokensList/TradeTokensAsset'
 
 export const TradeTokensBannerBig = () => {

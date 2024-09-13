@@ -6,9 +6,9 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 import {Spacer} from '../../../../../components'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
-import {useGetPortfolioTokenInfo} from '../../../common/useGetPortfolioTokenInfo'
-import {usePortfolioTokenDetailParams} from '../../../common/useNavigateTo'
-import {useStrings} from '../../../common/useStrings'
+import {useGetPortfolioTokenInfo} from '../../../common/hooks/useGetPortfolioTokenInfo'
+import {usePortfolioTokenDetailParams} from '../../../common/hooks/useNavigateTo'
+import {useStrings} from '../../../common/hooks/useStrings'
 
 export const Performance = () => {
   const {styles} = useStyles()
