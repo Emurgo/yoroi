@@ -1,9 +1,10 @@
-import {Text, View} from 'react-native'
 import * as React from 'react'
-import {SafeAreaView} from 'react-native-safe-area-context'
-import {Button} from '../../../components'
 import {useEffect} from 'react'
-import {Notifications, Notification} from 'react-native-notifications'
+import {Text, View} from 'react-native'
+import {Notification, Notifications} from 'react-native-notifications'
+import {SafeAreaView} from 'react-native-safe-area-context'
+
+import {Button} from '../../../components'
 
 export const NotificationsDevScreen = () => {
   useEffect(() => {
@@ -34,6 +35,7 @@ export const NotificationsDevScreen = () => {
     <SafeAreaView edges={['bottom', 'top', 'left', 'right']}>
       <View style={{padding: 16}}>
         <Text style={{fontSize: 24}}>Notifications Playground</Text>
+
         <Button title="Show random notification" shelleyTheme onPress={handleOnPress} />
       </View>
     </SafeAreaView>

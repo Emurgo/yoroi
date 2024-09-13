@@ -30,6 +30,7 @@ import {
   useShowDarkThemeAnnouncementScreen,
 } from './features/Initialization/DarkThemeAnnouncement/DarkThemeAnnouncement'
 import {useDeepLinkWatcher} from './features/Links/common/useDeepLinkWatcher'
+import {NotificationsDevScreen} from './features/Notifications/useCases/NotificationsDevScreen'
 import {PortfolioScreen} from './features/Portfolio/useCases/PortfolioScreen'
 import {SearchProvider} from './features/Search/SearchContext'
 import {SetupWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
@@ -38,7 +39,6 @@ import {useStatusBar} from './hooks/useStatusBar'
 import {agreementDate} from './kernel/config'
 import {AppRoutes, defaultStackNavigationOptions} from './kernel/navigation'
 import {WalletNavigator} from './WalletNavigator'
-import {NotificationsDevScreen} from './features/Notifications/useCases/NotificationsDevScreen'
 
 const Stack = createStackNavigator<AppRoutes>()
 const navRef = React.createRef<NavigationContainerRef<ReactNavigation.RootParamList>>()
