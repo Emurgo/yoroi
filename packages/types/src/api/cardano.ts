@@ -155,4 +155,5 @@ export type ApiProtocolParams = Readonly<{
     constant: string
   }
   poolDeposit: string
+  epoch: number
 }>

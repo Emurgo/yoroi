@@ -65,7 +65,7 @@ describe('isProtocolParamsResponse', () => {
 
   it('returns false for an invalid protocol parameters response', () => {
     const invalidResponse = {...paramsMockResponse, epoch: 'invalid'}
-    expect(isProtocolParamsResponse(invalidResponse)).toBe(true)
+    expect(isProtocolParamsResponse(invalidResponse)).toBe(false)
   })
 
   it('returns false for an incomplete protocol parameters response', () => {
