@@ -13,7 +13,7 @@ export const NotificationsDevScreen = () => {
     const s = Notifications.events().registerNotificationReceivedForeground(
       (notification: Notification, completion) => {
         console.log(`Notification received in foreground: ${notification.title} : ${notification.body}`)
-        completion({alert: true, sound: false, badge: false})
+        completion({alert: true, sound: true, badge: true})
       },
     )
 
@@ -23,12 +23,24 @@ export const NotificationsDevScreen = () => {
   }, [])
 
   const handleOnPress = () => {
-    const notification = new Notification({
-      title: 'Test',
-      body: 'Test',
-      sound: 'default',
-    })
-    Notifications.postLocalNotification(notification.payload)
+    // const notification = new Notification({
+    //   title: 'Test',
+    //   body: 'Test',
+    //   sound: 'default',
+    // })
+    // Notifications.postLocalNotification(notification.payload)
+
+    let localNotification = Notifications.postLocalNotification({
+      body: 'Local notification!',
+      title: 'Local Notification Title',
+      sound: 'chime.aiff',
+      silent: false,
+      category: 'SOME_CATEGORY',
+      userInfo: {},
+      fireDate: new Date(),
+    } as any)
+
+    console.log('Notification posted')
   }
 
   return (
