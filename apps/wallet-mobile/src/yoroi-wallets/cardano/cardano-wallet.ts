@@ -25,7 +25,6 @@ import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../kernel/s
 import {isEmptyString} from '../../kernel/utils'
 import type {
   AccountStateResponse,
-  DefaultAsset,
   FundInfoResponse,
   PoolInfoRequest,
   RawUtxo,
@@ -58,6 +57,7 @@ import {keyManager} from './key-manager/key-manager'
 import {processTxHistoryData} from './processTransactions'
 import {yoroiSignedTx} from './signedTx'
 import {TransactionManager} from './transactionManager'
+import {toLibToken} from './transformers/to-lib-token'
 import {
   CardanoTypes,
   isYoroiWallet,
@@ -117,10 +117,6 @@ export const makeCardanoWallet = (
     static readonly calcChecksum = walletChecksum
     static readonly implementation: Wallet.Implementation = implementation
     static readonly makeKeys = keyManager(implementation)
-
-    // legacy
-    readonly primaryToken: DefaultAsset = PRIMARY_TOKEN
-    // readonly primaryTokenInfo: Balance.TokenInfo = PRIMARY_TOKEN_INFO
 
     // =================== create =================== //
     static readonly build = async ({
@@ -408,7 +404,7 @@ export const makeCardanoWallet = (
               networkId: this.networkManager.chainId,
             },
           ],
-          defaults: this.primaryToken,
+          defaults: toLibToken(this.portfolioPrimaryTokenInfo),
         }
 
         const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} = this.protocolParams
@@ -421,7 +417,7 @@ export const makeCardanoWallet = (
           poolId || null, // empty pool means deregistration
           changeAddr,
           delegatedAmountMT,
-          this.primaryToken,
+          toLibToken(this.portfolioPrimaryTokenInfo),
           {},
           {
             keyDeposit,
@@ -629,7 +625,7 @@ export const makeCardanoWallet = (
             poolDeposit,
             networkId: this.networkManager.chainId,
           },
-          this.primaryToken,
+          toLibToken(this.portfolioPrimaryTokenInfo),
           {},
           votingCertificates,
         )
@@ -791,7 +787,7 @@ export const makeCardanoWallet = (
       const changeAddr = this.getAddressedChangeAddress(addressMode)
       const addressedUtxos = await this.getAddressedUtxos()
 
-      const recipients = await toRecipients(entries, this.primaryToken)
+      const recipients = await toRecipients(entries, this.portfolioPrimaryTokenInfo)
 
       const containsDatum = recipients.some((recipient) => recipient.datum)
 
@@ -819,7 +815,7 @@ export const makeCardanoWallet = (
             poolDeposit,
             networkId: this.networkManager.chainId,
           },
-          this.primaryToken,
+          toLibToken(this.portfolioPrimaryTokenInfo),
           {metadata},
         )
 
@@ -1141,7 +1137,7 @@ export const makeCardanoWallet = (
             : [...this.internalAddresses, ...this.externalAddresses],
           this.confirmationCounts[tx.id] || 0,
           memos[tx.id] ?? null,
-          this.primaryToken,
+          this.portfolioPrimaryTokenInfo,
         )
       })
     }

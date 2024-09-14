@@ -1,12 +1,12 @@
 /* eslint-disable no-empty */
 import {SendToken} from '@emurgo/yoroi-lib'
-import {Balance, Wallet} from '@yoroi/types'
+import {Balance, Portfolio, Wallet} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
 
 import {YoroiEntry} from '../types'
 import {BaseAsset, RawUtxo} from '../types/other'
-import {DefaultAsset, Token} from '../types/tokens'
+import {DefaultAsset} from '../types/tokens'
 import {Amounts} from '../utils'
 import {CardanoMobile} from '../wallets'
 import {toAssetNameHex, toPolicyId} from './api/utils'
@@ -124,17 +124,17 @@ export const getCardanoBaseConfig = (
   },
 ]
 
-export const toSendTokenList = (amounts: Balance.Amounts, primaryToken: Token): Array<SendToken> => {
-  return Amounts.toArray(amounts).map(toSendToken(primaryToken))
+export const toSendTokenList = (amounts: Balance.Amounts, primaryTokenInfo: Portfolio.Token.Info): Array<SendToken> => {
+  return Amounts.toArray(amounts).map(toSendToken(primaryTokenInfo))
 }
 
-export const toRecipients = async (entries: YoroiEntry[], primaryToken: DefaultAsset) => {
+export const toRecipients = async (entries: YoroiEntry[], primaryTokenInfo: Portfolio.Token.Info) => {
   return Promise.all(
     entries.map(async (entry) => {
-      const amounts = await withMinAmounts(entry.address, entry.amounts, primaryToken)
+      const amounts = await withMinAmounts(entry.address, entry.amounts, primaryTokenInfo)
       return {
         receiver: entry.address,
-        tokens: toSendTokenList(amounts, primaryToken),
+        tokens: toSendTokenList(amounts, primaryTokenInfo),
         datum: entry.datum,
       }
     }),
@@ -142,10 +142,19 @@ export const toRecipients = async (entries: YoroiEntry[], primaryToken: DefaultA
 }
 
 export const toSendToken =
-  (primaryToken: Token) =>
-  (amount: Balance.Amount): SendToken => {
-    const {tokenId, quantity} = amount
-    const isPrimary = tokenId === primaryToken.identifier
+  (primaryTokenInfo: Portfolio.Token.Info) =>
+  (amount: Balance.Amount | Portfolio.Token.Amount): SendToken => {
+    let tokenId = ''
+    let quantity = ''
+    if ('info' in amount) {
+      tokenId = amount.info.id
+      quantity = amount.quantity.toString()
+    } else {
+      tokenId = amount.tokenId
+      quantity = amount.quantity
+    }
+
+    const isPrimary = tokenId === primaryTokenInfo.id
 
     return {
       token: {

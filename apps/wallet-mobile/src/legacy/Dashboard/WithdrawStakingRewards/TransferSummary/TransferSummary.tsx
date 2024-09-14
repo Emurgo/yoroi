@@ -15,7 +15,7 @@ export const TransferSummary = ({wallet, unsignedTx}: {wallet: YoroiWallet; unsi
   const styles = useStyles()
   const {deregistrations, withdrawals, refundAmount, feeAmount, totalAmount} = withdrawalInfo(
     unsignedTx,
-    wallet.primaryToken.identifier,
+    wallet.portfolioPrimaryTokenInfo.id,
   )
 
   return (
@@ -26,7 +26,7 @@ export const TransferSummary = ({wallet, unsignedTx}: {wallet: YoroiWallet; unsi
         <Text>{strings.balanceLabel}</Text>
 
         <Text style={styles.balanceAmount} testID="recoveredBalanceText">
-          {formatTokenWithText(refundAmount.quantity, wallet.primaryToken)}
+          {formatTokenWithText(refundAmount.quantity, wallet.portfolioPrimaryTokenInfo)}
         </Text>
       </Item>
 
@@ -34,7 +34,7 @@ export const TransferSummary = ({wallet, unsignedTx}: {wallet: YoroiWallet; unsi
         <Text>{strings.fees}</Text>
 
         <Text style={styles.balanceAmount} testID="feeAmountText">
-          {formatTokenWithText(feeAmount.quantity, wallet.primaryToken)}
+          {formatTokenWithText(feeAmount.quantity, wallet.portfolioPrimaryTokenInfo)}
         </Text>
       </Item>
 
@@ -42,7 +42,7 @@ export const TransferSummary = ({wallet, unsignedTx}: {wallet: YoroiWallet; unsi
         <Text>{strings.finalBalanceLabel}</Text>
 
         <Text style={styles.balanceAmount} testID="totalAmountText">
-          {formatTokenWithText(totalAmount.quantity, wallet.primaryToken)}
+          {formatTokenWithText(totalAmount.quantity, wallet.portfolioPrimaryTokenInfo)}
         </Text>
       </Item>
 
@@ -141,7 +141,7 @@ const Deregistrations = ({
       <Item>
         <Text>
           {strings.unregisterExplanation({
-            refundAmount: formatTokenWithText(primaryAmount.quantity, wallet.primaryToken),
+            refundAmount: formatTokenWithText(primaryAmount.quantity, wallet.portfolioPrimaryTokenInfo),
           })}
         </Text>
       </Item>

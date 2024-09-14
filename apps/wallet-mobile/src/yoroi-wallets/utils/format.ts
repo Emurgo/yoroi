@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AssetFingerprint from '@emurgo/cip14-js'
+import {isTokenInfo as isPortfolioTokenInfo} from '@yoroi/portfolio'
 import {Balance, Portfolio} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 import type {FormatDateOptions, IntlShape} from 'react-intl'
@@ -92,7 +93,13 @@ const getTokenV2Fingerprint = (token: Balance.TokenInfo | DefaultAsset): string 
   })
 }
 
-export const formatTokenWithSymbol = (quantity: Balance.Quantity, token: Balance.TokenInfo | DefaultAsset): string => {
+export const formatTokenWithSymbol = (
+  quantity: Balance.Quantity,
+  token: Balance.TokenInfo | DefaultAsset | Portfolio.Token.Info,
+): string => {
+  if (isPortfolioTokenInfo(token)) {
+    return `${formatTokenAmount(quantity, token)} ${token.ticker || token.fingerprint}`
+  }
   const denomination = getSymbol(token) ?? getTokenV2Fingerprint(token)
   return `${formatTokenAmount(quantity, token)} ${denomination}`
 }
@@ -161,16 +168,14 @@ export const truncateWithEllipsis = (s: string, n: number) => {
 
 // TODO(multi-asset): consider removing these
 
-const formatAda = (quantity: Balance.Quantity, defaultAsset: DefaultAsset) => {
-  const defaultAssetMeta = defaultAsset.metadata
-  const normalizationFactor = Math.pow(10, defaultAssetMeta.numberOfDecimals)
+const formatAda = (quantity: Balance.Quantity, primaryTokenInfo: Portfolio.Token.Info) => {
+  const normalizationFactor = Math.pow(10, primaryTokenInfo.decimals)
   const num = new BigNumber(quantity).dividedBy(normalizationFactor)
-  return num.toFormat(6)
+  return num.toFormat(primaryTokenInfo.decimals)
 }
 
-export const formatAdaWithText = (quantity: Balance.Quantity, defaultAsset: DefaultAsset) => {
-  const defaultAssetMeta = defaultAsset.metadata
-  return `${formatAda(quantity, defaultAsset)} ${defaultAssetMeta.ticker}`
+export const formatAdaWithText = (quantity: Balance.Quantity, primaryTokenInfo: Portfolio.Token.Info) => {
+  return `${formatAda(quantity, primaryTokenInfo)} ${primaryTokenInfo.ticker}`
 }
 
 export const formatTime = (timestamp: string, intl: IntlShape) => {
