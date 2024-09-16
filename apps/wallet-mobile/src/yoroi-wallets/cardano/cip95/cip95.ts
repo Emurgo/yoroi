@@ -2,8 +2,8 @@ import {Wallet} from '@yoroi/types'
 import {WalletImplementation} from '@yoroi/types/lib/typescript/wallet/wallet'
 import {Buffer} from 'buffer'
 
+import {cardanoConfig} from '../../../features/WalletManager/common/adapters/cardano/cardano-config'
 import {cip30ExtensionMaker} from '../cip30/cip30'
-import {cardanoConfig} from '../constants/cardano-config'
 import {YoroiWallet} from '../types'
 import {wrappedCsl} from '../wrappedCsl'
 

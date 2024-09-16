@@ -1,6 +1,6 @@
 /* eslint-disable no-empty */
 import {SendToken} from '@emurgo/yoroi-lib'
-import {Balance, Portfolio, Wallet} from '@yoroi/types'
+import {Balance, Chain, Portfolio, Wallet} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
 
@@ -12,7 +12,6 @@ import {CardanoMobile} from '../wallets'
 import {toAssetNameHex, toPolicyId} from './api/utils'
 import {withMinAmounts} from './getMinAmounts'
 import {MultiToken} from './MultiToken'
-import {CardanoHaskellShelleyNetwork} from './networks'
 import {CardanoTypes} from './types'
 import {wrappedCsl as getCSL} from './wrappedCsl'
 
@@ -101,37 +100,18 @@ export const isByron = (implementation: Wallet.Implementation) => implementation
 
 export const isShelley = (implementation: Wallet.Implementation) => implementation === 'cardano-cip1852'
 
-// need to accomodate base config parameters as required by certain API shared
-// by yoroi extension and yoroi mobile
-export const getCardanoBaseConfig = (
-  networkConfig: CardanoHaskellShelleyNetwork,
-): Array<{
-  StartAt?: number
-  GenesisDate?: string
-  SlotsPerEpoch?: number
-  SlotDuration?: number
-}> => [
-  {
-    StartAt: networkConfig.BASE_CONFIG[0].START_AT,
-    GenesisDate: networkConfig.BASE_CONFIG[0].GENESIS_DATE,
-    SlotsPerEpoch: networkConfig.BASE_CONFIG[0].SLOTS_PER_EPOCH,
-    SlotDuration: networkConfig.BASE_CONFIG[0].SLOT_DURATION,
-  },
-  {
-    StartAt: networkConfig.BASE_CONFIG[1].START_AT,
-    SlotsPerEpoch: networkConfig.BASE_CONFIG[1].SLOTS_PER_EPOCH,
-    SlotDuration: networkConfig.BASE_CONFIG[1].SLOT_DURATION,
-  },
-]
-
 export const toSendTokenList = (amounts: Balance.Amounts, primaryTokenInfo: Portfolio.Token.Info): Array<SendToken> => {
   return Amounts.toArray(amounts).map(toSendToken(primaryTokenInfo))
 }
 
-export const toRecipients = async (entries: YoroiEntry[], primaryTokenInfo: Portfolio.Token.Info) => {
+export const toRecipients = async (
+  entries: YoroiEntry[],
+  primaryTokenInfo: Portfolio.Token.Info,
+  protocolParams: Chain.Cardano.ProtocolParams,
+) => {
   return Promise.all(
     entries.map(async (entry) => {
-      const amounts = await withMinAmounts(entry.address, entry.amounts, primaryTokenInfo)
+      const amounts = await withMinAmounts(entry.address, entry.amounts, primaryTokenInfo, protocolParams)
       return {
         receiver: entry.address,
         tokens: toSendTokenList(amounts, primaryTokenInfo),

@@ -1,5 +1,6 @@
 import {Balance} from '@yoroi/types'
 
+import {protocolParamsPlaceholder} from '../../features/WalletManager/network-manager/network-manager'
 import {mocks as walletMocks} from '../mocks'
 import {getMinAmounts, withMinAmounts, withPrimaryToken} from './getMinAmounts'
 
@@ -13,7 +14,9 @@ describe('withMinAmounts()', () => {
       '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6.4d494e': '55',
     }
 
-    expect(await withMinAmounts(address, amounts, walletMocks.wallet.portfolioPrimaryTokenInfo)).toEqual({
+    expect(
+      await withMinAmounts(address, amounts, walletMocks.wallet.portfolioPrimaryTokenInfo, protocolParamsPlaceholder),
+    ).toEqual({
       '.': '1301620',
       '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950': '12',
       '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6.4d494e': '55',
@@ -29,7 +32,9 @@ describe('withMinAmounts()', () => {
       '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6.4d494e': '55',
     }
 
-    expect(await withMinAmounts(address, amounts, walletMocks.wallet.portfolioPrimaryTokenInfo)).toEqual(amounts)
+    expect(
+      await withMinAmounts(address, amounts, walletMocks.wallet.portfolioPrimaryTokenInfo, protocolParamsPlaceholder),
+    ).toEqual(amounts)
   })
 })
 
@@ -68,7 +73,9 @@ describe('getMinAmounts()', () => {
     const address =
       'addr_test1qrrdv3uxj8shu27ea9djvnn3rl4w3lvh3cyck6yc36mvf6ctlqxj9g0azvpycncr9u600p6t556qhc3psk06uzzw6saq4kvdpq'
 
-    expect(await getMinAmounts(address, amounts, walletMocks.wallet.portfolioPrimaryTokenInfo)).toEqual({
+    expect(
+      await getMinAmounts(address, amounts, walletMocks.wallet.portfolioPrimaryTokenInfo, protocolParamsPlaceholder),
+    ).toEqual({
       [walletMocks.wallet.portfolioPrimaryTokenInfo.id]: '1301620',
     })
   })
@@ -84,7 +91,7 @@ describe('getMinAmounts()', () => {
 
     const primaryToken = walletMocks.wallet.portfolioPrimaryTokenInfo
 
-    await expect(getMinAmounts(address, amounts, primaryToken)).rejects.toEqual(
+    await expect(getMinAmounts(address, amounts, primaryToken, protocolParamsPlaceholder)).rejects.toEqual(
       new Error('getMinAmounts::Error not a valid address'),
     )
   })

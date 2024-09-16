@@ -1,8 +1,8 @@
 import {NavigationRouteContext} from '@react-navigation/native'
 import {storiesOf} from '@storybook/react-native'
-import React from 'react'
+import * as React from 'react'
 
-import {NETWORK_ID, WALLET_IMPLEMENTATION_ID} from '../../../../yoroi-wallets/cardano/constants/testnet/constants'
+import {networkConfigs} from '../../../WalletManager/network-manager/network-manager'
 import {ConnectNanoXScreen} from './ConnectNanoXScreen'
 
 const devices = [
@@ -18,8 +18,8 @@ const bleRoute = {
   name: 'name',
   params: {
     useUSB: false,
-    networkId: NETWORK_ID,
-    walletImplementationId: WALLET_IMPLEMENTATION_ID,
+    networkId: networkConfigs['mainnet'].chainId,
+    walletImplementationId: 'cardano-bip44',
   },
 }
 
@@ -28,8 +28,8 @@ const usbRoute = {
   name: 'name',
   params: {
     useUSB: true,
-    networkId: NETWORK_ID,
-    walletImplementationId: WALLET_IMPLEMENTATION_ID,
+    networkId: networkConfigs['mainnet'].chainId,
+    walletImplementationId: 'cardano-bip44',
   },
 }
 

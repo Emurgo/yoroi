@@ -1,5 +1,4 @@
 import {useTheme} from '@yoroi/theme'
-import {Balance} from '@yoroi/types'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Platform, ScrollView, StyleSheet, View} from 'react-native'
@@ -12,10 +11,8 @@ import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/us
 import {debugWalletInfo, features} from '../../../kernel/features'
 import globalMessages, {txLabels} from '../../../kernel/i18n/global-messages'
 import {StakingCenterRoutes, useParams, useWalletNavigation} from '../../../kernel/navigation'
-import {NETWORKS} from '../../../yoroi-wallets/cardano/networks'
-import {NUMBERS} from '../../../yoroi-wallets/cardano/numbers'
-import {Amounts, Entries, Quantities} from '../../../yoroi-wallets/utils'
-import {formatTokenAmount, formatTokenWithText} from '../../../yoroi-wallets/utils/format'
+import {Amounts, Entries} from '../../../yoroi-wallets/utils'
+import {formatTokenAmount} from '../../../yoroi-wallets/utils/format'
 import {useStakePoolInfoAndHistory} from '../../Dashboard/StakePoolInfo'
 import {Instructions as HWInstructions} from '../../HW'
 
@@ -45,8 +42,6 @@ export const DelegationConfirmation = () => {
     Entries.toAmounts(yoroiUnsignedTx.staking.delegations),
     wallet.portfolioPrimaryTokenInfo.id,
   )
-  const reward = approximateReward(stakingAmount.quantity)
-
   const [password, setPassword] = useState('')
   const [useUSB, setUseUSB] = useState(false)
 
@@ -104,8 +99,6 @@ export const DelegationConfirmation = () => {
 
         <View style={styles.itemBlock}>
           <Text style={styles.text}>{strings.rewardsExplanation}</Text>
-
-          <Text style={styles.rewards}>{formatTokenWithText(reward, wallet.portfolioPrimaryTokenInfo)}</Text>
         </View>
 
         {meta.isHW && <HWInstructions useUSB={useUSB} addMargin />}
@@ -166,10 +159,6 @@ const useStyles = () => {
       color: color.gray_900,
       ...atoms.body_2_md_regular,
     },
-    rewards: {
-      ...atoms.body_1_lg_medium,
-      color: color.primary_600,
-    },
     fees: {
       textAlign: 'right',
       color: color.gray_900,
@@ -211,15 +200,3 @@ const messages = defineMessages({
     defaultMessage: '!!!Unknown pool',
   },
 })
-
-/**
- * returns approximate rewards per epoch in lovelaces
- * TODO: based on https://staking.cardano.org/en/calculator/
- *  needs to be update per-network
- */
-const approximateReward = (stakedQuantity: Balance.Quantity): Balance.Quantity => {
-  return Quantities.quotient(
-    Quantities.product([stakedQuantity, `${NETWORKS.HASKELL_SHELLEY.PER_EPOCH_PERCENTAGE_REWARD}`]),
-    NUMBERS.EPOCH_REWARD_DENOMINATOR.toString() as Balance.Quantity,
-  )
-}

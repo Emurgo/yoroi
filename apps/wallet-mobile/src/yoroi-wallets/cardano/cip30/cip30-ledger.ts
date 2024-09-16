@@ -4,9 +4,9 @@ import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/address
 import {HW, Wallet} from '@yoroi/types'
 
 import {toLedgerSignRequest} from '../../../features/Discover/common/ledger'
+import {cardanoConfig} from '../../../features/WalletManager/common/adapters/cardano/cardano-config'
 import type {RawUtxo} from '../../types'
 import {assertHasAllSigners} from '../common/signatureUtils'
-import {cardanoConfig} from '../constants/cardano-config'
 import {signTxWithLedger} from '../hw'
 import {CardanoTypes, YoroiWallet} from '../types'
 import {wrappedCsl} from '../wrappedCsl'

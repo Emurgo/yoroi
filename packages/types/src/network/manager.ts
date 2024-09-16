@@ -1,5 +1,5 @@
-import {ApiProtocolParams} from '../api/cardano'
 import {AppObservableStorage} from '../app/observable-storage'
+import {ChainCardanoProtocolParams} from '../chain/cardano'
 import {ChainSupportedNetworks} from '../chain/network'
 import {ExplorersExplorer} from '../explorers/explorer'
 import {ExplorersManager} from '../explorers/manager'
@@ -20,15 +20,21 @@ export type NetworkConfig = {
 
 // NOTE: NetworkConfig will be a generic type in the future
 export type NetworkApi = {
-  protocolParams: () => Promise<Readonly<ApiProtocolParams>>
+  protocolParams: () => Promise<Readonly<ChainCardanoProtocolParams>>
 }
-export type NetworkManager = {
-  tokenManager: PortfolioManagerToken
-  rootStorage: AppObservableStorage<false>
-  legacyRootStorage: AppObservableStorage
-  api: NetworkApi
-  explorers: Record<ExplorersExplorer, ExplorersManager>
-} & NetworkConfig
+export type NetworkManager = Readonly<
+  {
+    tokenManager: PortfolioManagerToken
+    rootStorage: AppObservableStorage<false>
+    legacyRootStorage: AppObservableStorage
+    api: Readonly<NetworkApi>
+    explorers: Readonly<Record<ExplorersExplorer, ExplorersManager>>
+    epoch: Readonly<{
+      info: (date: Date) => Readonly<NetworkEpochInfo>
+      progress: (date: Date) => Readonly<NetworkEpochProgress>
+    }>
+  } & Readonly<NetworkConfig>
+>
 
 export type NetworkEraConfig = {
   name: 'byron' | 'shelley'
