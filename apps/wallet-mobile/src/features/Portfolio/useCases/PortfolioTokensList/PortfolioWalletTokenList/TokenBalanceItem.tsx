@@ -7,6 +7,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {Spacer} from '../../../../../components'
 import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
 import {useCurrencyPairing} from '../../../../Settings/Currency'
+import {usePrivacyMode} from '../../../../Settings/PrivacyMode/PrivacyMode'
 import {formatPriceChange, priceChange} from '../../../common/helpers/priceChange'
 import {useNavigateTo} from '../../../common/hooks/useNavigateTo'
 import {PnlTag} from '../../../common/PnlTag/PnlTag'
@@ -19,10 +20,12 @@ type Props = {
 export const TokenBalanceItem = ({amount}: Props) => {
   const {styles} = useStyles()
   const navigationTo = useNavigateTo()
+  const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
+
   const {info} = amount
   const name = infoExtractName(info)
   const symbol = infoExtractName(info, {mode: 'currency'})
-  const balanceFormatted = amountBreakdown(amount).bn.toFormat(2)
+  const balanceFormatted = isPrivacyActive ? privacyPlaceholder : amountBreakdown(amount).bn.toFormat(2)
 
   const ptActivity = useCurrencyPairing().ptActivity
 

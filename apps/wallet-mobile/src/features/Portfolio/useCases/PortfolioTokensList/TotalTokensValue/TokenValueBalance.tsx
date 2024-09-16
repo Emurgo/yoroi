@@ -5,6 +5,7 @@ import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {useCurrencyPairing} from '../../../../Settings/Currency'
+import {usePrivacyMode} from '../../../../Settings/PrivacyMode/PrivacyMode'
 import {SkeletonPrimaryToken} from './SkeletonPrimaryToken'
 
 type Props = {
@@ -14,30 +15,26 @@ type Props = {
   rate?: number
 }
 export const TokenValueBalance = ({amount, isFetching, isPrimaryTokenActive, rate}: Props) => {
-  const {currency} = useCurrencyPairing()
+  const {currency, config} = useCurrencyPairing()
+  const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
   const {styles} = useStyles()
   const name = infoExtractName(amount.info)
 
-  const renderBalance = () => {
-    if (isFetching || rate === undefined) return <SkeletonPrimaryToken />
-    if (!isPrimaryTokenActive)
-      return <Text style={[styles.balanceText]}>{amountBreakdown(amount).bn.times(rate).toFormat(2)}</Text>
-
-    return <Text style={[styles.balanceText]}>{amountBreakdown(amount).bn.toFormat(2)}</Text>
-  }
-
-  const firstSymbol = isPrimaryTokenActive ? name : currency
-  const secondSymbol = isPrimaryTokenActive ? currency : name
-
   return (
     <View style={styles.balanceBox}>
-      {renderBalance()}
+      {isFetching || rate === undefined ? (
+        <SkeletonPrimaryToken />
+      ) : (
+        <Text style={[styles.balanceText]}>
+          {isPrivacyActive
+            ? privacyPlaceholder
+            : isPrimaryTokenActive
+            ? amountBreakdown(amount).bn.toFormat(2)
+            : amountBreakdown(amount).bn.times(rate).toFormat(config.decimals)}
+        </Text>
+      )}
 
-      <Text>
-        <Text style={styles.firstSymbol}>{firstSymbol}</Text>
-
-        <Text style={[styles.secondSymbol]}>/{secondSymbol}</Text>
-      </Text>
+      <Text style={styles.symbol}>{isPrimaryTokenActive ? name : currency}</Text>
     </View>
   )
 }
@@ -55,15 +52,10 @@ const useStyles = () => {
       ...atoms.font_semibold,
       color: color.text_gray_medium,
     },
-    firstSymbol: {
+    symbol: {
       ...atoms.body_1_lg_medium,
       ...atoms.font_semibold,
       color: color.text_gray_medium,
-    },
-    secondSymbol: {
-      ...atoms.body_1_lg_medium,
-      ...atoms.font_semibold,
-      color: color.text_gray_low,
     },
   })
 
