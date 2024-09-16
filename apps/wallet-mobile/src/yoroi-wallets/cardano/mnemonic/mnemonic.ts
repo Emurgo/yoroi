@@ -5,9 +5,10 @@ import {generateMnemonic, mnemonicToEntropy} from 'bip39'
 // @ts-ignore
 import {randomBytes} from 'react-native-randombytes'
 
+import {cardanoConfig} from '../../../features/WalletManager/common/adapters/cardano/cardano-config'
+import {derivationConfig} from '../../../features/WalletManager/common/derivation-config'
 import {CardanoMobile} from '../../wallets'
 import {AddressGenerator} from '../account-manager/account-manager'
-import {cardanoConfig} from '../constants/cardano-config'
 import {wrappedCsl} from '../wrappedCsl'
 
 const mnemonicStrengh = 160
@@ -52,7 +53,7 @@ export const deriveAddressFromMnemonics = async ({
   const accountPubKey = await CardanoMobile.Bip32PrivateKey.fromBytes(Buffer.from(rootKey, 'hex'))
     .then((root) => root.derive(purpose))
     .then((withPurpose) => withPurpose.derive(coinType))
-    .then((withCoinType) => withCoinType.derive(accountVisual + cardanoConfig.derivation.hardStart))
+    .then((withCoinType) => withCoinType.derive(accountVisual + derivationConfig.hardStart))
     .then((withAccount) => withAccount.toPublic())
 
   const accountPubKeyHex = Buffer.from(await accountPubKey.asBytes()).toString('hex')

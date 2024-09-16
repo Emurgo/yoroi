@@ -10,9 +10,9 @@ import {noop} from 'lodash'
 import {Observable} from 'rxjs'
 
 import {buildPortfolioTokenManagers} from '../../features/Portfolio/common/helpers/build-token-managers'
+import {cardanoConfig} from '../../features/WalletManager/common/adapters/cardano/cardano-config'
 import {buildNetworkManagers} from '../../features/WalletManager/network-manager/network-manager'
 import {toTokenInfo, utf8ToHex} from '../cardano/api/utils'
-import {CHIMERIC_ACCOUNT, STAKING_KEY_INDEX} from '../cardano/constants/testnet/constants'
 import {CardanoTypes, YoroiWallet} from '../cardano/types'
 import {
   RemotePoolMetaSuccess,
@@ -153,8 +153,8 @@ const wallet: YoroiWallet = {
       '8e4e2f11b6ac2a269913286e26339779ab8767579d18d173cdd324929d94e2c43e3ec212cc8a36ed9860579dfe1e3ef4d6de778c5dbdd981623b48727cd96247'
     const accountPubKey = await CardanoMobile.Bip32PublicKey.fromBytes(Buffer.from(pubKeyHex, 'hex'))
     return accountPubKey
-      .derive(CHIMERIC_ACCOUNT)
-      .then((key) => key.derive(STAKING_KEY_INDEX))
+      .derive(cardanoConfig.implementations['cardano-cip1852'].features.staking.derivation.role)
+      .then((key) => key.derive(cardanoConfig.implementations['cardano-cip1852'].features.staking.derivation.index))
       .then((key) => key.toRawKey())
   },
   signRawTx(): Promise<Uint8Array | undefined> {

@@ -1,6 +1,6 @@
 import {Wallet} from '@yoroi/types'
 
-import {cardanoConfig} from '../constants/cardano-config'
+import {cardanoConfig} from '../../../features/WalletManager/common/adapters/cardano/cardano-config'
 
 export const derivationPathManagerMaker =
   (implementation: Wallet.Implementation) =>
