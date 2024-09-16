@@ -115,6 +115,8 @@ storiesOf('Icon', module).add('Gallery', () => {
 
         <Item icon={<Icon.PlusCircle size={40} />} title="Plus Circle" />
 
+        <Item icon={<Icon.Change />} title="Change" />
+
         <Item icon={<Icon.CheckFilled size={40} />} title="Check Filled" />
 
         <Item icon={<Icon.CheckOutlined size={40} />} title="Check Outlined" />

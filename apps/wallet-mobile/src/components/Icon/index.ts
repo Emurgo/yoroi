@@ -14,6 +14,7 @@ import {Burger} from './Burger'
 import {Cardano} from './Cardano'
 import {Catalyst} from './Catalyst'
 import {Categories} from './Categories'
+import {Change} from './Change'
 import {Check} from './Check'
 import {Checkbox} from './Checkbox'
 import {CheckFilled} from './CheckFilled'
@@ -154,6 +155,7 @@ export const Icon = {
   Cardano,
   Catalyst,
   Categories,
+  Change,
   Check,
   Checkbox,
   CheckFilled,
