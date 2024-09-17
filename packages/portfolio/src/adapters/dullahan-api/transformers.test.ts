@@ -3,13 +3,18 @@ import {
   toProcessedMediaRequest,
   toSecondaryTokenInfos,
   toTokenActivityUpdates,
+  toTokenHistoryUpdates,
 } from './transformers'
 import {Portfolio, Api} from '@yoroi/types'
 
 import {tokenMocks} from '../token.mocks'
-import {DullahanApiTokenActivityResponse} from './types'
+import {
+  DullahanApiTokenActivityResponse,
+  DullahanApiTokenHistoryResponse,
+} from './types'
 import {tokenActivityMocks} from '../token-activity.mocks'
 import {duallahanTokenActivityUpdatesMocks} from './token-activity.mocks'
+import {tokenHistoryMocks} from '../token-history.mocks'
 
 describe('transformers', () => {
   describe('toSecondaryTokenInfos', () => {
@@ -123,6 +128,24 @@ describe('transformers', () => {
       const result = toTokenActivityUpdates(responseWithEmptyRecords)
 
       expect(result).toEqual(tokenActivityMocks.api.responseDataOnly)
+    })
+  })
+
+  describe('toTokenHistoryUpdates', () => {
+    it('should return undefined if apiTokenHistory response is malformed', () => {
+      expect(
+        toTokenHistoryUpdates({
+          whatever: false,
+        } as unknown as DullahanApiTokenHistoryResponse),
+      ).toEqual(undefined)
+    })
+
+    it('should return the data', () => {
+      const result = toTokenHistoryUpdates(
+        tokenHistoryMocks.ftNamelessRaw as unknown as DullahanApiTokenHistoryResponse,
+      )
+
+      expect(result).toEqual(tokenHistoryMocks.api.responseDataOnly)
     })
   })
 })

@@ -14,11 +14,13 @@ import {
   toProcessedMediaRequest,
   toSecondaryTokenInfos,
   toTokenActivityUpdates,
+  toTokenHistoryUpdates,
 } from './transformers'
 import {
   DullahanApiCachedIdsRequest,
   DullahanApiTokenActivityResponse,
   DullahanApiTokenDiscoveryResponse,
+  DullahanApiTokenHistoryResponse,
   DullahanApiTokenInfoResponse,
   DullahanApiTokenInfosResponse,
   DullahanApiTokenTraitsResponse,
@@ -297,6 +299,50 @@ export const portfolioApiMaker = ({
         }
       },
 
+      async tokenHistory(tokenId, period) {
+        const response = await request<DullahanApiTokenHistoryResponse>({
+          method: 'post',
+          url: config.tokenHistory,
+          data: {tokenId, period},
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+        })
+
+        if (isRight(response)) {
+          const history: Portfolio.Token.History | undefined =
+            toTokenHistoryUpdates(response.value.data)
+
+          if (!history) {
+            return freeze(
+              {
+                tag: 'left',
+                error: {
+                  status: -3,
+                  message: 'Failed to transform token history response',
+                  responseData: response.value.data,
+                },
+              },
+              true,
+            )
+          }
+
+          return freeze(
+            {
+              tag: 'right',
+              value: {
+                status: response.value.status,
+                data: history,
+              },
+            },
+            true,
+          )
+        }
+
+        return response
+      },
+
       async tokenImageInvalidate(ids) {
         const tasks = ids.map(
           (id) => () =>
@@ -325,8 +371,7 @@ export const apiConfig: ApiConfig = freeze(
       tokenInfos: 'https://zero.yoroiwallet.com/tokens/info/multi',
       tokenTraits: 'https://zero.yoroiwallet.com/tokens/nft/traits',
       tokenActivity: 'https://zero.yoroiwallet.com/tokens/activity/multi',
-      tokenPriceHistory:
-        'https://add50d9d-76d7-47b7-b17f-e34021f63a02.mock.pstmn.io/v1/token-price-history',
+      tokenHistory: 'https://zero.yoroiwallet.com/tokens/history/price',
       tokenImageInvalidate:
         'https://mainnet.processed-media.yoroiwallet.com/invalidate',
     },
@@ -340,8 +385,8 @@ export const apiConfig: ApiConfig = freeze(
         'https://yoroi-backend-zero-preprod.emurgornd.com/tokens/nft/traits',
       tokenActivity:
         'https://yoroi-backend-zero-preprod.emurgornd.com/tokens/activity/multi',
-      tokenPriceHistory:
-        'https://add50d9d-76d7-47b7-b17f-e34021f63a02.mock.pstmn.io/v1/token-price-history',
+      tokenHistory:
+        'https://yoroi-backend-zero-preprod.emurgornd.com/tokens/history/price',
       tokenImageInvalidate:
         'https://preprod.processed-media.yoroiwallet.com/invalidate',
     },
@@ -356,8 +401,8 @@ export const apiConfig: ApiConfig = freeze(
         'https://yoroi-backend-zero-sanchonet.emurgornd.com/tokens/nft/traits',
       tokenActivity:
         'https://yoroi-backend-zero-sanchonet.emurgornd.com/tokens/activity/multi',
-      tokenPriceHistory:
-        'https://add50d9d-76d7-47b7-b17f-e34021f63a02.mock.pstmn.io/v1/token-price-history',
+      tokenHistory:
+        'https://yoroi-backend-zero-sanchonet.emurgornd.com/tokens/history/price',
       tokenImageInvalidate:
         'https://preprod.processed-media.yoroiwallet.com/invalidate',
     },
@@ -371,8 +416,8 @@ export const apiConfig: ApiConfig = freeze(
         'https://yoroi-backend-zero-preview.emurgornd.com/tokens/nft/traits',
       tokenActivity:
         'https://yoroi-backend-zero-preview.emurgornd.com/tokens/activity/multi',
-      tokenPriceHistory:
-        'https://add50d9d-76d7-47b7-b17f-e34021f63a02.mock.pstmn.io/v1/token-price-history',
+      tokenHistory:
+        'https://yoroi-backend-zero-preview.emurgornd.com/tokens/history/price',
       tokenImageInvalidate:
         'https://preview.processed-media.yoroiwallet.com/invalidate',
     },

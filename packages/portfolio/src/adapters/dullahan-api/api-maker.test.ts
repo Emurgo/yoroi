@@ -6,6 +6,7 @@ import {tokenDiscoveryMocks} from '../token-discovery.mocks'
 import {tokenMocks} from '../token.mocks'
 import {tokenActivityMocks} from '../token-activity.mocks'
 import {tokenImageInvalidateMocks} from '../token-image-invalidate.mocks'
+import {tokenHistoryMocks} from '../token-history.mocks'
 
 describe('portfolioApiMaker', () => {
   const mockNetwork: Chain.Network = Chain.Network.Mainnet
@@ -29,6 +30,7 @@ describe('portfolioApiMaker', () => {
     expect(api).toHaveProperty('tokenInfos')
     expect(api).toHaveProperty('tokenTraits')
     expect(api).toHaveProperty('tokenActivity')
+    expect(api).toHaveProperty('tokenHistory')
     expect(api).toHaveProperty('tokenImageInvalidate')
   })
 
@@ -44,6 +46,7 @@ describe('portfolioApiMaker', () => {
     expect(api).toHaveProperty('tokenInfos')
     expect(api).toHaveProperty('tokenTraits')
     expect(api).toHaveProperty('tokenActivity')
+    expect(api).toHaveProperty('tokenHistory')
     expect(api).toHaveProperty('tokenImageInvalidate')
   })
 
@@ -76,8 +79,12 @@ describe('portfolioApiMaker', () => {
       tokenActivityMocks.api.request,
       Portfolio.Token.ActivityWindow.OneDay,
     )
+    await api.tokenHistory(
+      tokenHistoryMocks.api.request.tokenId,
+      tokenHistoryMocks.api.request.period,
+    )
 
-    expect(mockRequest).toHaveBeenCalledTimes(5)
+    expect(mockRequest).toHaveBeenCalledTimes(6)
 
     expect(mockRequest).toHaveBeenCalledWith({
       method: 'get',
@@ -127,6 +134,15 @@ describe('portfolioApiMaker', () => {
         Portfolio.Token.ActivityWindow.OneDay
       }`,
       data: tokenActivityMocks.api.request,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
+    expect(mockRequest).toHaveBeenCalledWith({
+      method: 'post',
+      url: apiConfig[Chain.Network.Mainnet].tokenHistory,
+      data: tokenHistoryMocks.api.request,
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -283,6 +299,32 @@ describe('portfolioApiMaker', () => {
         },
       },
     })
+
+    const resultTokenHistory = await api.tokenHistory(
+      tokenHistoryMocks.api.request.tokenId,
+      tokenHistoryMocks.api.request.period,
+    )
+    expect(mockRequest).toHaveBeenCalledTimes(6)
+    expect(mockRequest).toHaveBeenCalledWith({
+      method: 'post',
+      url: apiConfig[Chain.Network.Mainnet].tokenHistory,
+      data: tokenHistoryMocks.api.request,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
+
+    expect(resultTokenHistory).toEqual({
+      tag: 'left',
+      error: {
+        status: -3,
+        message: 'Failed to transform token history response',
+        responseData: {
+          ['wrong']: [200, 'data'],
+        },
+      },
+    })
   })
 
   it('should return the error and not throw', async () => {
@@ -420,6 +462,30 @@ describe('portfolioApiMaker', () => {
         'Content-Type': 'application/json',
       },
     })
+
+    await expect(
+      api.tokenHistory(
+        tokenHistoryMocks.api.request.tokenId,
+        tokenHistoryMocks.api.request.period,
+      ),
+    ).resolves.toEqual({
+      tag: 'left',
+      value: {
+        status: 500,
+        message: 'Internal Server Error',
+        responseData: {},
+      },
+    })
+    expect(mockRequest).toHaveBeenCalledTimes(6)
+    expect(mockRequest).toHaveBeenCalledWith({
+      method: 'post',
+      url: apiConfig[Chain.Network.Mainnet].tokenHistory,
+      data: tokenHistoryMocks.api.request,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
   })
 
   it('should return the data on success (traits)', async () => {
@@ -529,6 +595,41 @@ describe('portfolioApiMaker', () => {
       value: {
         status: 200,
         data: tokenActivityMocks.api.responseDataOnly,
+      },
+    })
+  })
+
+  it('should return the data on success (tokenHistory)', async () => {
+    mockRequest.mockResolvedValue(tokenHistoryMocks.api.responses.success)
+
+    const api = portfolioApiMaker({
+      network: mockNetwork,
+      request: mockRequest,
+      maxIdsPerRequest: 10,
+      maxConcurrentRequests: 10,
+    })
+
+    const result = await api.tokenHistory(
+      tokenHistoryMocks.api.request.tokenId,
+      tokenHistoryMocks.api.request.period,
+    )
+
+    expect(mockRequest).toHaveBeenCalledTimes(1)
+    expect(mockRequest).toHaveBeenCalledWith({
+      method: 'post',
+      url: apiConfig[Chain.Network.Mainnet].tokenHistory,
+      data: tokenHistoryMocks.api.request,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
+
+    expect(result).toEqual({
+      tag: 'right',
+      value: {
+        status: 200,
+        data: tokenHistoryMocks.api.responseDataOnly,
       },
     })
   })

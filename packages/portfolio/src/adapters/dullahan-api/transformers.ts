@@ -6,6 +6,7 @@ import {parseSecondaryTokenInfoWithCacheRecord} from '../../validators/token-inf
 import {
   DullahanApiCachedIdsRequest,
   DullahanApiTokenActivityResponse,
+  DullahanApiTokenHistoryResponse,
   DullahanApiTokenInfosResponse,
 } from './types'
 import {z} from 'zod'
@@ -66,7 +67,7 @@ export const toTokenActivityUpdates = (
         const [statusCode, tokenActivityData] = tokenActivity
         if (statusCode !== Api.HttpStatusCode.Ok) return acc
 
-        TokenAcvitivyResponseSchema.parse(tokenActivityData)
+        TokenActivityResponseSchema.parse(tokenActivityData)
 
         const parsedTokenActivity: Portfolio.Token.Activity = {
           price: {
@@ -89,6 +90,24 @@ export const toTokenActivityUpdates = (
   )
 }
 
+export const toTokenHistoryUpdates = (
+  apiTokenHistoryResponse: Readonly<DullahanApiTokenHistoryResponse>,
+) => {
+  if (!TokenHistoryResponseSchema.safeParse(apiTokenHistoryResponse).success)
+    return undefined
+
+  return freeze({
+    prices: apiTokenHistoryResponse.prices.map((tokenHistoryRecord) => ({
+      ts: tokenHistoryRecord.ts,
+      open: new BigNumber(tokenHistoryRecord.open),
+      close: new BigNumber(tokenHistoryRecord.close),
+      low: new BigNumber(tokenHistoryRecord.low),
+      high: new BigNumber(tokenHistoryRecord.high),
+      change: tokenHistoryRecord.change,
+    })),
+  })
+}
+
 export const toDullahanRequest = (
   request: ReadonlyArray<Api.RequestWithCache<Portfolio.Token.Id>>,
 ) =>
@@ -96,7 +115,7 @@ export const toDullahanRequest = (
     ([tokenId, hash]) => `${tokenId}:${hash}`,
   ) as DullahanApiCachedIdsRequest
 
-const TokenAcvitivyResponseSchema = z.object({
+const TokenActivityResponseSchema = z.object({
   price: z.object({
     ts: z.number(),
     open: z.string(),
@@ -105,6 +124,19 @@ const TokenAcvitivyResponseSchema = z.object({
     high: z.string(),
     change: z.number(),
   }),
+})
+
+const TokenHistoryResponseSchema = z.object({
+  prices: z.array(
+    z.object({
+      ts: z.number(),
+      open: z.string(),
+      close: z.string(),
+      low: z.string(),
+      high: z.string(),
+      change: z.number(),
+    }),
+  ),
 })
 
 export const toProcessedMediaRequest = (request: Portfolio.Token.Id) => {

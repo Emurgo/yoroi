@@ -42,6 +42,8 @@ export type DullahanApiTokenActivityResponse = Readonly<{
   [key: Portfolio.Token.Id]: DullahanApiTokenActivity
 }>
 
+export type DullahanApiTokenHistoryResponse = Readonly<Portfolio.Token.History>
+
 export type ProcessedMediaApiTokenImageInvalidateRequest = {
   name: string
   policy: string
