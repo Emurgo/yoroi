@@ -1,7 +1,7 @@
+import {Notification, Notifications} from '@jamsinclair/react-native-notifications'
 import * as React from 'react'
 import {useEffect} from 'react'
 import {Text, View} from 'react-native'
-import {Notification, Notifications} from 'react-native-notifications'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../components'
@@ -25,24 +25,16 @@ const useSendNotification = () => {
     }
   }, [])
 
-  const send = (title: string, body: string) => {
-    Notifications.postLocalNotification({
-      body,
+  const sendNotification = (title: string, body: string) => {
+    const notification = new Notification({
       title,
-      silent: false,
-      category: 'SOME_CATEGORY',
-      userInfo: {},
-      fireDate: new Date(),
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } as any)
-    // const notification = new Notification({
-    //   title,
-    //   body,
-    //   sound: 'default',
-    // })
-    // Notifications.postLocalNotification(notification.payload)
+      body,
+      sound: 'default',
+    })
+    Notifications.postLocalNotification(notification.payload)
   }
-  return {send}
+
+  return {send: sendNotification}
 }
 
 export const NotificationsDevScreen = () => {

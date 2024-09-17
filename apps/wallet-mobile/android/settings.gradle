@@ -7,4 +7,4 @@ apply from: new File(["node", "--print", "require.resolve('expo/package.json')"]
 useExpoModules()
 
 include ':react-native-notifications'
-project(':react-native-notifications').projectDir = new File(rootProject.projectDir, '../../../node_modules/react-native-notifications/lib/android/app')
+project(':react-native-notifications').projectDir = new File(rootProject.projectDir, '../../../node_modules/@jamsinclair/react-native-notifications/lib/android/app')
