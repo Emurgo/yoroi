@@ -15,11 +15,14 @@ export const BalanceAfter = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedT
   const balances = useBalances(wallet)
 
   const balancesAfter = Amounts.diff(balances, yoroiUnsignedTx.fee)
-  const primaryAmountAfter = Amounts.getAmount(balancesAfter, wallet.primaryToken.identifier)
+  const primaryAmountAfter = Amounts.getAmount(balancesAfter, wallet.portfolioPrimaryTokenInfo.id)
 
   return (
     <Text small testID="balanceAfterTxText">
-      {`${strings.balanceAfterTx}: ${formatTokenWithSymbol(primaryAmountAfter.quantity, wallet.primaryToken)}`}
+      {`${strings.balanceAfterTx}: ${formatTokenWithSymbol(
+        primaryAmountAfter.quantity,
+        wallet.portfolioPrimaryTokenInfo,
+      )}`}
     </Text>
   )
 }

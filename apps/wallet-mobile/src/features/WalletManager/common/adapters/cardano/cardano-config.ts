@@ -8,19 +8,9 @@ export const cardanoConfig = freeze(
     params: {
       minUtxoValue: 1_000_000n,
     },
-    derivation: {
-      gapLimit: 20,
-      hardStart: 2_147_483_648,
-      keyLevel: {
-        root: 0,
-        purpose: 1,
-        coinType: 2,
-        account: 3,
-        role: 4,
-        index: 5,
-      },
-    },
     implementations: {
+      // after shelley
+      // https://cips.cardano.org/cip/CIP-1852
       'cardano-cip1852': {
         features: {
           staking: {
@@ -52,6 +42,8 @@ export const cardanoConfig = freeze(
           },
         },
       },
+      // byron
+      // https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki
       'cardano-bip44': {
         features: {
           staking: false,

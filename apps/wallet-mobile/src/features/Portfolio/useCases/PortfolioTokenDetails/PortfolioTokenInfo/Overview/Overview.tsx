@@ -1,4 +1,3 @@
-import {useExplorers} from '@yoroi/explorers'
 import {infoExtractName, isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import React, {useState} from 'react'
@@ -19,7 +18,7 @@ export const Overview = () => {
   const {
     wallet: {balances, networkManager},
   } = useSelectedWallet()
-  const explorers = useExplorers(networkManager.network)
+  const explorers = networkManager.explorers
   const tokenInfo = balances.records.get(tokenId)
   const tokenSymbol = tokenInfo ? infoExtractName(tokenInfo.info, {mode: 'currency'}) : ''
   const [policyId] = tokenInfo?.info.id.split('.') ?? []

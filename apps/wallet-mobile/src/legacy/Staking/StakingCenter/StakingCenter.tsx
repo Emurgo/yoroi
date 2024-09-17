@@ -15,7 +15,6 @@ import globalMessages from '../../../kernel/i18n/global-messages'
 import {logger} from '../../../kernel/logger/logger'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {StakingCenterRouteNavigation} from '../../../kernel/navigation'
-import {NETWORKS} from '../../../yoroi-wallets/cardano/networks'
 import {NotEnoughMoneyToSendError} from '../../../yoroi-wallets/cardano/types'
 import {useStakingTx} from '../../Dashboard/StakePoolInfos'
 import {PoolDetailScreen} from '../PoolDetails'
@@ -138,13 +137,9 @@ const noPoolDataDialog = defineMessages({
   },
 })
 
-/**
- * Prepares WebView's target staking URI
- * @param {*} poolList : Array of delegated pool hash
- */
 const prepareStakingURL = (locale: string, plate: string): string => {
   // source=mobile is constant and already included
-  let finalURL = NETWORKS.HASKELL_SHELLEY.POOL_EXPLORER
+  let finalURL = 'https://adapools.yoroiwallet.com/?source=mobile'
 
   const lang = locale.slice(0, 2)
   finalURL += `&lang=${lang}`

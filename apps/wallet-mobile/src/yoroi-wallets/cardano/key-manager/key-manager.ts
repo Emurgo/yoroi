@@ -2,7 +2,8 @@ import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {Wallet} from '@yoroi/types'
 import {freeze} from 'immer'
 
-import {cardanoConfig} from '../constants/cardano-config'
+import {cardanoConfig} from '../../../features/WalletManager/common/adapters/cardano/cardano-config'
+import {derivationConfig} from '../../../features/WalletManager/common/derivation-config'
 import {generateWalletRootKey} from '../mnemonic/mnemonic'
 
 export const keyManager =
@@ -16,7 +17,7 @@ export const keyManager =
     const accountPubKeyHex = await rootKeyPtr
       .derive(config.derivations.base.harden.purpose)
       .then((withPurpose) => withPurpose.derive(config.derivations.base.harden.coinType))
-      .then((withCoinType) => withCoinType.derive(cardanoConfig.derivation.hardStart + accountVisual))
+      .then((withCoinType) => withCoinType.derive(derivationConfig.hardStart + accountVisual))
       .then((withAccount) => withAccount.toPublic())
       .then((accountPubRaw) => accountPubRaw.asBytes())
       .then((accountPubBytes) => Buffer.from(accountPubBytes).toString('hex'))

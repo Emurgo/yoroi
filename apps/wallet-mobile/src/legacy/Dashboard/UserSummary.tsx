@@ -50,7 +50,7 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
             <Text bold style={styles.value} testID="userSummaryAvailableFundsText">
               {!isPrivacyActive
                 ? totalAdaSum != null
-                  ? formatAdaWithText(asQuantity(totalAdaSum), wallet.primaryToken)
+                  ? formatAdaWithText(asQuantity(totalAdaSum), wallet.portfolioPrimaryTokenInfo)
                   : '-'
                 : '**.******'}
             </Text>
@@ -77,7 +77,7 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
             <Text bold style={styles.value} testID="userSummaryRewardsText">
               {!isPrivacyActive
                 ? totalRewards != null
-                  ? formatAdaWithText(asQuantity(totalRewards), wallet.primaryToken)
+                  ? formatAdaWithText(asQuantity(totalRewards), wallet.portfolioPrimaryTokenInfo)
                   : '-'
                 : '**.******'}
             </Text>
@@ -104,7 +104,7 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
             <Text bold style={styles.value} testID="userSummaryDelegatedText">
               {!isPrivacyActive
                 ? totalDelegated != null
-                  ? formatAdaWithText(asQuantity(totalDelegated), wallet.primaryToken)
+                  ? formatAdaWithText(asQuantity(totalDelegated), wallet.portfolioPrimaryTokenInfo)
                   : '-'
                 : '**.******'}
             </Text>

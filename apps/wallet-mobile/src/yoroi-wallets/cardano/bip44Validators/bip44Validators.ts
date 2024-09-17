@@ -1,7 +1,7 @@
 import assert from 'assert'
 
+import {cardanoConfig} from '../../../features/WalletManager/common/adapters/cardano/cardano-config'
 import {CardanoMobile} from '../../wallets'
-import {NUMBERS} from '../numbers'
 
 const isString = (s: unknown) => typeof s === 'string' || s instanceof String
 
@@ -24,8 +24,9 @@ export const isCIP1852AccountPath = (path: Array<number>): boolean => {
   // note: allows non-zero accounts
   return (
     path.length === 3 &&
-    (path[0] === NUMBERS.WALLET_TYPE_PURPOSE.CIP1852 || path[0] === 1852) &&
-    (path[1] === NUMBERS.COIN_TYPES.CARDANO || path[1] === 1815)
+    (path[0] === cardanoConfig.implementations['cardano-cip1852'].derivations.base.harden.purpose ||
+      path[0] === 1852) &&
+    (path[1] === cardanoConfig.implementations['cardano-cip1852'].derivations.base.harden.coinType || path[1] === 1815)
   )
 }
 

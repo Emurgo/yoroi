@@ -17,6 +17,8 @@ import {Observable} from 'rxjs'
 import {buildPortfolioBalanceManager} from '../../features/Portfolio/common/helpers/build-balance-manager'
 import {toBalanceManagerSyncArgs} from '../../features/Portfolio/common/transformers/toBalanceManagerSyncArgs'
 import {makeMemosManager, MemosManager} from '../../features/Transactions/common/memos/memosManager'
+import {cardanoConfig} from '../../features/WalletManager/common/adapters/cardano/cardano-config'
+import {derivationConfig} from '../../features/WalletManager/common/derivation-config'
 import {protocolParamsPlaceholder} from '../../features/WalletManager/network-manager/network-manager'
 import LocalizableError from '../../kernel/i18n/LocalizableError'
 import {throwLoggedError} from '../../kernel/logger/helpers/throw-logged-error'
@@ -25,7 +27,6 @@ import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../kernel/s
 import {isEmptyString} from '../../kernel/utils'
 import type {
   AccountStateResponse,
-  DefaultAsset,
   FundInfoResponse,
   PoolInfoRequest,
   RawUtxo,
@@ -42,12 +43,7 @@ import {AccountManager, accountManagerMaker, Addresses} from './account-manager/
 import * as legacyApi from './api/api'
 import {calcLockedDeposit} from './assetUtils'
 import {createSwapCancellationLedgerPayload} from './common/signatureUtils'
-import {cardanoConfig} from './constants/cardano-config'
-import * as MAINNET from './constants/mainnet/constants'
-import * as SANCHONET from './constants/sanchonet/constants'
-import * as TESTNET from './constants/testnet/constants'
 import {filterAddressesByStakingKey, getDelegationStatus} from './delegationUtils'
-import {getTime} from './getTime'
 import {
   doesCardanoAppVersionSupportCIP36,
   doesCardanoAppVersionSupportCIP1694,
@@ -58,6 +54,7 @@ import {keyManager} from './key-manager/key-manager'
 import {processTxHistoryData} from './processTransactions'
 import {yoroiSignedTx} from './signedTx'
 import {TransactionManager} from './transactionManager'
+import {toLibToken} from './transformers/to-lib-token'
 import {
   CardanoTypes,
   isYoroiWallet,
@@ -73,18 +70,10 @@ import {deriveRewardAddressHex, toRecipients} from './utils'
 import {makeUtxoManager, UtxoManager} from './utxoManager'
 import {utxosMaker} from './utxoManager/utxos'
 
-export const makeCardanoWallet = (
-  networkManager: Network.Manager,
-  implementation: Wallet.Implementation,
-  // legacy
-  constants: typeof MAINNET | typeof TESTNET | typeof SANCHONET,
-) => {
+export const makeCardanoWallet = (networkManager: Network.Manager, implementation: Wallet.Implementation) => {
   const implementationConfig = cardanoConfig.implementations[implementation]
 
   const appApi = AppApi.appApiMaker({baseUrl: networkManager.legacyApiBaseUrl})
-
-  // legacy
-  const {PRIMARY_TOKEN} = constants
 
   return class CardanoWallet implements YoroiWallet {
     readonly id: string
@@ -117,10 +106,6 @@ export const makeCardanoWallet = (
     static readonly calcChecksum = walletChecksum
     static readonly implementation: Wallet.Implementation = implementation
     static readonly makeKeys = keyManager(implementation)
-
-    // legacy
-    readonly primaryToken: DefaultAsset = PRIMARY_TOKEN
-    // readonly primaryTokenInfo: Balance.TokenInfo = PRIMARY_TOKEN_INFO
 
     // =================== create =================== //
     static readonly build = async ({
@@ -300,13 +285,13 @@ export const makeCardanoWallet = (
     }
 
     getAddressing(address: string) {
-      const startLevel = cardanoConfig.derivation.keyLevel.purpose
+      const startLevel = derivationConfig.keyLevel.purpose
 
       if (this.internalChain.isMyAddress(address)) {
         const path = [
           implementationConfig.derivations.base.harden.purpose,
           implementationConfig.derivations.base.harden.coinType,
-          this.accountVisual + cardanoConfig.derivation.hardStart,
+          this.accountVisual + derivationConfig.hardStart,
           implementationConfig.derivations.base.roles.internal,
           this.internalChain.getIndexOfAddress(address),
         ]
@@ -320,7 +305,7 @@ export const makeCardanoWallet = (
         const path = [
           implementationConfig.derivations.base.harden.purpose,
           implementationConfig.derivations.base.harden.coinType,
-          this.accountVisual + cardanoConfig.derivation.hardStart,
+          this.accountVisual + derivationConfig.hardStart,
           implementationConfig.derivations.base.roles.external,
           this.externalChain.getIndexOfAddress(address),
         ]
@@ -392,7 +377,7 @@ export const makeCardanoWallet = (
           .catch(() => Date.now())
         const primaryTokenId = this.portfolioPrimaryTokenInfo.id
 
-        const absSlotNumber = new BigNumber(getTime(time).absoluteSlot)
+        const absSlotNumber = new BigNumber(this.networkManager.epoch.progress(new Date(time)).currentSlot)
         const changeAddr = this.getAddressedChangeAddress(addressMode)
         const addressedUtxos = await this.getAddressedUtxos()
         const registrationStatus = this.getDelegationStatus().isRegistered
@@ -408,7 +393,7 @@ export const makeCardanoWallet = (
               networkId: this.networkManager.chainId,
             },
           ],
-          defaults: this.primaryToken,
+          defaults: toLibToken(this.portfolioPrimaryTokenInfo),
         }
 
         const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} = this.protocolParams
@@ -421,7 +406,7 @@ export const makeCardanoWallet = (
           poolId || null, // empty pool means deregistration
           changeAddr,
           delegatedAmountMT,
-          this.primaryToken,
+          toLibToken(this.portfolioPrimaryTokenInfo),
           {},
           {
             keyDeposit,
@@ -457,7 +442,7 @@ export const makeCardanoWallet = (
             .then(({serverTime}) => serverTime || Date.now())
             .catch(() => Date.now())
 
-          const absSlotNumber = new BigNumber(getTime(time).absoluteSlot)
+          const absSlotNumber = new BigNumber(this.networkManager.epoch.progress(new Date(time)).currentSlot)
           const votingPublicKey = await Promise.resolve(Buffer.from(catalystKeyHex, 'hex'))
             .then((bytes) => CardanoMobile.PrivateKey.fromExtendedBytes(bytes))
             .then((key) => key.toPublic())
@@ -490,7 +475,7 @@ export const makeCardanoWallet = (
 
           const unsignedTx = await Cardano.createUnsignedVotingTx(
             absSlotNumber,
-            PRIMARY_TOKEN,
+            toLibToken(this.portfolioPrimaryTokenInfo),
             votingPublicKey,
             Array.from(implementationConfig.features.staking.addressing),
             stakingPublicKey,
@@ -549,7 +534,7 @@ export const makeCardanoWallet = (
           .catch(() => Date.now())
         const primaryTokenId = this.portfolioPrimaryTokenInfo.id
 
-        const absSlotNumber = new BigNumber(getTime(time).absoluteSlot)
+        const absSlotNumber = new BigNumber(this.networkManager.epoch.progress(new Date(time)).currentSlot)
         const changeAddr = this.getAddressedChangeAddress(addressMode)
         const addressedUtxos = await this.getAddressedUtxos()
         const accountState = await legacyApi.getAccountState(
@@ -561,14 +546,14 @@ export const makeCardanoWallet = (
 
         const withdrawalTx = await Cardano.createUnsignedWithdrawalTx(
           accountState,
-          PRIMARY_TOKEN,
+          toLibToken(this.portfolioPrimaryTokenInfo),
           absSlotNumber,
           addressedUtxos,
           [
             {
               addressing: {
                 path: Array.from(implementationConfig.features.staking.addressing),
-                startLevel: cardanoConfig.derivation.keyLevel.purpose,
+                startLevel: derivationConfig.keyLevel.purpose,
               },
               rewardAddress: this.rewardAddressHex,
               shouldDeregister,
@@ -609,7 +594,7 @@ export const makeCardanoWallet = (
         .then(({serverTime}) => serverTime || Date.now())
         .catch(() => Date.now())
       const primaryTokenId = this.portfolioPrimaryTokenInfo.id
-      const absSlotNumber = new BigNumber(getTime(time).absoluteSlot)
+      const absSlotNumber = new BigNumber(this.networkManager.epoch.progress(new Date(time)).currentSlot)
       const changeAddr = this.getAddressedChangeAddress(addressMode)
       const addressedUtxos = await this.getAddressedUtxos()
 
@@ -629,7 +614,7 @@ export const makeCardanoWallet = (
             poolDeposit,
             networkId: this.networkManager.chainId,
           },
-          this.primaryToken,
+          toLibToken(this.portfolioPrimaryTokenInfo),
           {},
           votingCertificates,
         )
@@ -787,11 +772,11 @@ export const makeCardanoWallet = (
         .then(({serverTime}) => serverTime || Date.now())
         .catch(() => Date.now())
       const primaryTokenId = this.portfolioPrimaryTokenInfo.id
-      const absSlotNumber = new BigNumber(getTime(time).absoluteSlot)
+      const absSlotNumber = new BigNumber(this.networkManager.epoch.progress(new Date(time)).currentSlot)
       const changeAddr = this.getAddressedChangeAddress(addressMode)
       const addressedUtxos = await this.getAddressedUtxos()
 
-      const recipients = await toRecipients(entries, this.primaryToken)
+      const recipients = await toRecipients(entries, this.portfolioPrimaryTokenInfo, this.protocolParams)
 
       const containsDatum = recipients.some((recipient) => recipient.datum)
 
@@ -819,7 +804,7 @@ export const makeCardanoWallet = (
             poolDeposit,
             networkId: this.networkManager.chainId,
           },
-          this.primaryToken,
+          toLibToken(this.portfolioPrimaryTokenInfo),
           {metadata},
         )
 
@@ -842,7 +827,7 @@ export const makeCardanoWallet = (
       const accountPrivateKey = await masterKey
         .derive(implementationConfig.derivations.base.harden.purpose)
         .then((key) => key.derive(implementationConfig.derivations.base.harden.coinType))
-        .then((key) => key.derive(this.accountVisual + cardanoConfig.derivation.hardStart))
+        .then((key) => key.derive(this.accountVisual + derivationConfig.hardStart))
       const accountPrivateKeyHex = await accountPrivateKey.asBytes().then(toHex)
 
       let stakingPrivateKey
@@ -874,7 +859,7 @@ export const makeCardanoWallet = (
 
       if (datumDatas.length > 0) {
         const signedTx = await unsignedTx.unsignedTx.sign(
-          cardanoConfig.derivation.keyLevel.account,
+          derivationConfig.keyLevel.account,
           accountPrivateKeyHex,
           new Set<string>(),
           [],
@@ -886,7 +871,7 @@ export const makeCardanoWallet = (
       }
 
       const signedTx = await unsignedTx.unsignedTx.sign(
-        cardanoConfig.derivation.keyLevel.account,
+        derivationConfig.keyLevel.account,
         accountPrivateKeyHex,
         new Set<string>(),
         stakingKeys,
@@ -1141,7 +1126,7 @@ export const makeCardanoWallet = (
             : [...this.internalAddresses, ...this.externalAddresses],
           this.confirmationCounts[tx.id] || 0,
           memos[tx.id] ?? null,
-          this.primaryToken,
+          this.portfolioPrimaryTokenInfo,
         )
       })
     }

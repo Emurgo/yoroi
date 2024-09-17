@@ -33,7 +33,6 @@ import type {
   TxStatusResponse,
   WalletState,
 } from '../types/other'
-import {DefaultAsset} from '../types/tokens'
 import type {Addresses} from './account-manager/account-manager'
 
 export type WalletEvent =
@@ -62,7 +61,6 @@ export type Pagination = {
 export interface YoroiWallet {
   id: string
   publicKeyHex: string
-  primaryToken: Readonly<DefaultAsset>
   readonly portfolioPrimaryTokenInfo: Readonly<Portfolio.Token.Info>
 
   // ---------------------------------------------------------------------------------------
@@ -190,7 +188,6 @@ export const isYoroiWallet = (wallet: unknown): wallet is YoroiWallet => {
 const yoroiWalletKeys: Array<keyof YoroiWallet> = [
   'id',
   'publicKeyHex',
-  'primaryToken',
 
   // Portfolio
   'balance$',

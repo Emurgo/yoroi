@@ -93,7 +93,6 @@ import {
   ApiOnChainMetadataRecord,
   ApiOnChainMetadataRequest,
   ApiOnChainMetadataResponse,
-  ApiProtocolParams,
   ApiTokenId,
   ApiTokenIdentity,
   ApiTokenRegistryEntry,
@@ -121,6 +120,7 @@ import {
   CardanoTxInfo,
   CardanoUnsignedTx,
   CardanoVoting,
+  ChainCardanoProtocolParams,
 } from './chain/cardano'
 import {ExchangeBlockchainCode} from './exchange/blockchain'
 import {ExchangeManagerOptions} from './exchange/build'
@@ -454,9 +454,9 @@ export namespace Api {
     export type MetadataFile = ApiMetadataFile
     export type TokenId = ApiTokenId
 
-    export type ProtocolParams = ApiProtocolParams
+    export type ProtocolParams = ChainCardanoProtocolParams
 
-    export interface Actions {
+    export interface Api {
       getProtocolParams: () => Promise<ProtocolParams>
     }
   }
@@ -597,6 +597,7 @@ export namespace Chain {
     export type Voting = CardanoVoting
     export type Address = CardanoAddress
     export type TokenId = CardanoTokenId
+    export type ProtocolParams = ChainCardanoProtocolParams
   }
 }
 

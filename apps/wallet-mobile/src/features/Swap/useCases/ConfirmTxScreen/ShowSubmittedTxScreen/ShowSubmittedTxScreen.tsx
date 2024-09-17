@@ -1,5 +1,4 @@
 import {createTypeGuardFromSchema, isString} from '@yoroi/common'
-import {useExplorers} from '@yoroi/explorers'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Linking, StyleSheet, View} from 'react-native'
@@ -20,7 +19,7 @@ export const ShowSubmittedTxScreen = () => {
   const strings = useStrings()
   const styles = useStyles()
   const {wallet} = useSelectedWallet()
-  const explorers = useExplorers(wallet.networkManager.network)
+  const explorers = wallet.networkManager.explorers
   const walletNavigate = useWalletNavigation()
 
   const unsafeParams = useUnsafeParams()

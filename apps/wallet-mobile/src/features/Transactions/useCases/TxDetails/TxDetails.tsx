@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useRoute} from '@react-navigation/native'
 import {isNonNullable} from '@yoroi/common'
-import {useExplorers} from '@yoroi/explorers'
 import {useTheme} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
@@ -48,7 +47,7 @@ export const TxDetails = () => {
   const {
     selected: {network},
   } = useWalletManager()
-  const explorers = useExplorers(wallet.networkManager.network)
+  const explorers = wallet.networkManager.explorers
   const internalAddressIndex = fromPairs(wallet.internalAddresses.map((addr, i) => [addr, i]))
   const externalAddressIndex = fromPairs(wallet.externalAddresses.map((addr, i) => [addr, i]))
   const [expandedInItemId, setExpandedInItemId] = useState<null | ItemId>(null)
@@ -227,14 +226,14 @@ const AdaAmount = ({amount}: {amount: BigNumber}) => {
     return <Text style={amountStyle}>{privacyPlaceholder}</Text>
   }
 
-  return <Text style={amountStyle}>{formatTokenWithSymbol(asQuantity(amount), wallet.primaryToken)}</Text>
+  return <Text style={amountStyle}>{formatTokenWithSymbol(asQuantity(amount), wallet.portfolioPrimaryTokenInfo)}</Text>
 }
 
 const Fee = ({amount}: {amount: BigNumber}) => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
 
-  const text = `${strings.txDetailsFee} ${formatTokenWithSymbol(asQuantity(amount), wallet.primaryToken)}`
+  const text = `${strings.txDetailsFee} ${formatTokenWithSymbol(asQuantity(amount), wallet.portfolioPrimaryTokenInfo)}`
   return <Text small>{text}</Text>
 }
 

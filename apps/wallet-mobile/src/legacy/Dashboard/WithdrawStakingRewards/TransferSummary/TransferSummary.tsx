@@ -1,6 +1,5 @@
-import {useExplorers} from '@yoroi/explorers'
 import {useTheme} from '@yoroi/theme'
-import React from 'react'
+import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Linking, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 
@@ -16,7 +15,7 @@ export const TransferSummary = ({wallet, unsignedTx}: {wallet: YoroiWallet; unsi
   const styles = useStyles()
   const {deregistrations, withdrawals, refundAmount, feeAmount, totalAmount} = withdrawalInfo(
     unsignedTx,
-    wallet.primaryToken.identifier,
+    wallet.portfolioPrimaryTokenInfo.id,
   )
 
   return (
@@ -27,7 +26,7 @@ export const TransferSummary = ({wallet, unsignedTx}: {wallet: YoroiWallet; unsi
         <Text>{strings.balanceLabel}</Text>
 
         <Text style={styles.balanceAmount} testID="recoveredBalanceText">
-          {formatTokenWithText(refundAmount.quantity, wallet.primaryToken)}
+          {formatTokenWithText(refundAmount.quantity, wallet.portfolioPrimaryTokenInfo)}
         </Text>
       </Item>
 
@@ -35,7 +34,7 @@ export const TransferSummary = ({wallet, unsignedTx}: {wallet: YoroiWallet; unsi
         <Text>{strings.fees}</Text>
 
         <Text style={styles.balanceAmount} testID="feeAmountText">
-          {formatTokenWithText(feeAmount.quantity, wallet.primaryToken)}
+          {formatTokenWithText(feeAmount.quantity, wallet.portfolioPrimaryTokenInfo)}
         </Text>
       </Item>
 
@@ -43,7 +42,7 @@ export const TransferSummary = ({wallet, unsignedTx}: {wallet: YoroiWallet; unsi
         <Text>{strings.finalBalanceLabel}</Text>
 
         <Text style={styles.balanceAmount} testID="totalAmountText">
-          {formatTokenWithText(totalAmount.quantity, wallet.primaryToken)}
+          {formatTokenWithText(totalAmount.quantity, wallet.portfolioPrimaryTokenInfo)}
         </Text>
       </Item>
 
@@ -81,7 +80,7 @@ const Withdrawals = ({
   withdrawals: NonNullable<YoroiStaking['withdrawals']>
 }) => {
   const strings = useStrings()
-  const explorers = useExplorers(wallet.networkManager.network)
+  const explorers = wallet.networkManager.explorers
 
   const addresses = Entries.toAddresses(withdrawals)
   if (addresses.length < 1) return null
@@ -113,7 +112,7 @@ const Deregistrations = ({
   deregistrations: NonNullable<YoroiStaking['deregistrations']>
 }) => {
   const strings = useStrings()
-  const explorers = useExplorers(wallet.networkManager.network)
+  const explorers = wallet.networkManager.explorers
 
   const refundAmounts = Entries.toAmounts(deregistrations)
   const primaryAmount = Amounts.getAmount(refundAmounts, wallet.portfolioPrimaryTokenInfo.id)
@@ -142,7 +141,7 @@ const Deregistrations = ({
       <Item>
         <Text>
           {strings.unregisterExplanation({
-            refundAmount: formatTokenWithText(primaryAmount.quantity, wallet.primaryToken),
+            refundAmount: formatTokenWithText(primaryAmount.quantity, wallet.portfolioPrimaryTokenInfo),
           })}
         </Text>
       </Item>

@@ -19,12 +19,12 @@ import {
   UseQueryOptions,
 } from 'react-query'
 
+import {cardanoConfig} from '../../features/WalletManager/common/adapters/cardano/cardano-config'
 import {useSelectedNetwork} from '../../features/WalletManager/common/hooks/useSelectedNetwork'
 import {isDev, isNightly} from '../../kernel/env'
 import {logger} from '../../kernel/logger/logger'
 import {deriveAddressFromXPub} from '../cardano/account-manager/derive-address-from-xpub'
 import {getSpendingKey, getStakingKey} from '../cardano/addressInfo/addressInfo'
-import {cardanoConfig} from '../cardano/constants/cardano-config'
 import {WalletEvent, YoroiWallet} from '../cardano/types'
 import {TRANSACTION_DIRECTION, TRANSACTION_STATUS, YoroiSignedTx, YoroiUnsignedTx} from '../types'
 import {TipStatusResponse, TxSubmissionStatus} from '../types/other'

@@ -27,8 +27,5 @@ export const getCancellationOrderFee = async (
   if (!cbor) throw new Error(`Failed to get CBOR from REST API for address ${options.bech32Address}`)
   const tx = await CardanoMobile.Transaction.fromBytes(Buffer.from(cbor, 'hex'))
   const feeNumber = await tx.body().then((b) => b.fee())
-  return Quantities.denominated(
-    (await feeNumber.toStr()) as BalanceQuantity,
-    wallet.primaryToken.metadata.numberOfDecimals,
-  )
+  return Quantities.denominated((await feeNumber.toStr()) as BalanceQuantity, wallet.portfolioPrimaryTokenInfo.decimals)
 }

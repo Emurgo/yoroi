@@ -15,8 +15,8 @@ import {logger} from '../../../../kernel/logger/logger'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import {isEmptyString} from '../../../../kernel/utils'
-import {NUMBERS} from '../../../../yoroi-wallets/cardano/numbers'
 import {usePlate} from '../../../../yoroi-wallets/hooks'
+import {derivationConfig} from '../../../WalletManager/common/derivation-config'
 import {useCreateWalletXPub} from '../../../WalletManager/common/hooks/useCreateWalletXPub'
 import {useSelectedNetwork} from '../../../WalletManager/common/hooks/useSelectedNetwork'
 import {parseWalletMeta} from '../../../WalletManager/common/validators/wallet-meta'
@@ -35,9 +35,7 @@ export const SaveReadOnlyWalletScreen = () => {
   const {publicKeyHex, path, walletImplementation, accountVisual, walletIdChanged} = useSetupWallet()
 
   const normalizedPath = path.map((i) => {
-    if (i >= NUMBERS.HARD_DERIVATION_START) {
-      return i - NUMBERS.HARD_DERIVATION_START
-    }
+    if (i >= derivationConfig.hardStart) return i - derivationConfig.hardStart
     return i
   })
 

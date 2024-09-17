@@ -14,14 +14,14 @@ export const PrimaryTotal = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedT
   const strings = useStrings()
   const styles = useStyles()
   const {wallet} = useSelectedWallet()
-  const primaryAmount = Amounts.getAmountFromEntries(yoroiUnsignedTx.entries, wallet.primaryToken.identifier)
+  const primaryAmount = Amounts.getAmountFromEntries(yoroiUnsignedTx.entries, wallet.portfolioPrimaryTokenInfo.id)
 
   return (
     <>
       <Text>{strings.total}</Text>
 
       <Text style={styles.amount} testID="totalAmountText">
-        {formatTokenWithSymbol(primaryAmount.quantity, wallet.primaryToken)}
+        {formatTokenWithSymbol(primaryAmount.quantity, wallet.portfolioPrimaryTokenInfo)}
       </Text>
     </>
   )
