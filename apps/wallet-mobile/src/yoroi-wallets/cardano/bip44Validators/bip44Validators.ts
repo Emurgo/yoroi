@@ -30,7 +30,7 @@ export const isCIP1852AccountPath = (path: Array<number>): boolean => {
   )
 }
 
-export const canParsePublicKey = async (publicKeyHex: string): Promise<boolean> => {
+const canParsePublicKey = async (publicKeyHex: string): Promise<boolean> => {
   try {
     await CardanoMobile.Bip32PublicKey.fromBytes(Buffer.from(publicKeyHex, 'hex'))
     return true

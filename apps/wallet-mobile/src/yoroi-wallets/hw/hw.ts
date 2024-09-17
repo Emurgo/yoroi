@@ -2,9 +2,9 @@ import {Permission, PermissionsAndroid, Platform} from 'react-native'
 import {useMutation, UseMutationOptions} from 'react-query'
 
 import {ledgerMessages} from '../../kernel/i18n/global-messages'
-import LocalizableError from '../../kernel/i18n/LocalizableError'
+import {LocalizableError} from '../../kernel/i18n/LocalizableError'
 
-export const requestLedgerPermissions = async () => {
+const requestLedgerPermissions = async () => {
   if (Platform.OS !== 'android') return Promise.resolve()
 
   const permissions = getLedgerPermissions()
@@ -29,7 +29,7 @@ export const useLedgerPermissions = (options?: UseMutationOptions<void, Error>) 
 // not bumping react-native right now (couple to ledger)
 const BLUETOOTH_SCAN = 'android.permission.BLUETOOTH_SCAN'
 const BLUETOOTH_CONNECT = 'android.permission.BLUETOOTH_CONNECT'
-export const getLedgerPermissions = () => {
+const getLedgerPermissions = () => {
   const permissions: Array<Permission> = [PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION]
   if (Number(Platform.Version) >= 31) {
     permissions.push(BLUETOOTH_CONNECT as Permission)

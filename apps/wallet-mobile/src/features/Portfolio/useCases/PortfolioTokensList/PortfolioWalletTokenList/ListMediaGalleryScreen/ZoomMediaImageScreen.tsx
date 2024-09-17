@@ -5,7 +5,7 @@ import {StyleSheet, useWindowDimensions, View} from 'react-native'
 // @ts-ignore
 import ViewTransformer from 'react-native-easy-view-transformer'
 
-import {FadeIn} from '../../../../../../components'
+import {FadeIn} from '../../../../../../components/FadeIn'
 import {useMetrics} from '../../../../../../kernel/metrics/metricsManager'
 import {NftRoutes, useParams} from '../../../../../../kernel/navigation'
 import {isEmptyString} from '../../../../../../kernel/utils'

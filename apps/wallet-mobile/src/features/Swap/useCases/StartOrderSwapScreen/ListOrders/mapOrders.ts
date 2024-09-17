@@ -3,9 +3,9 @@ import {getPoolUrlByProvider} from '@yoroi/swap'
 import {Explorers, Portfolio, Swap} from '@yoroi/types'
 
 import {NumberLocale} from '../../../../../kernel/i18n/languages'
-import {TransactionInfo} from '../../../../../yoroi-wallets/types'
+import {TransactionInfo} from '../../../../../yoroi-wallets/types/other'
 
-export const MAX_DECIMALS = 10
+const MAX_DECIMALS = 10
 
 export type MappedOpenOrder = {
   owner: string | undefined

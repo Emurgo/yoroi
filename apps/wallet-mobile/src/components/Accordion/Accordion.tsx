@@ -5,7 +5,7 @@ import {type ViewProps, StyleSheet, Text, TouchableOpacity, View} from 'react-na
 
 import {Icon} from '../Icon'
 
-export interface AccordionProps extends ViewProps {
+interface AccordionProps extends ViewProps {
   /** Label for header of the accordion */
   label: ReactNode
   /** State of the accordion: true === show content */

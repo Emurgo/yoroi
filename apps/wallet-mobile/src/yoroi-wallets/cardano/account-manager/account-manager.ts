@@ -282,7 +282,7 @@ export class AddressChain {
   }
 }
 
-export const getBIP44Addresses = async (
+const getBIP44Addresses = async (
   accountPubKeyHex: string,
   role: number,
   indexes: Array<number>,
@@ -403,7 +403,7 @@ type AccountJSON = {
   externalChain: AddressChainJSON
 }
 
-export type AddressChainJSON = {
+type AddressChainJSON = {
   gapLimit: number
   blockSize: number
   lastUsedIndex: number
@@ -412,7 +412,7 @@ export type AddressChainJSON = {
   addressGenerator: AddressGeneratorJSON
 }
 
-export type AddressGeneratorJSON = {
+type AddressGeneratorJSON = {
   accountPubKeyHex: string
   implementation: Wallet.Implementation
   role: number

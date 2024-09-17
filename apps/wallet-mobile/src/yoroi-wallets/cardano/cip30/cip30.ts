@@ -11,8 +11,9 @@ import {Buffer} from 'buffer'
 import _ from 'lodash'
 
 import {logger} from '../../../kernel/logger/logger'
-import {RawUtxo, YoroiUnsignedTx} from '../../types'
-import {asQuantity, Utxos} from '../../utils'
+import {RawUtxo} from '../../types/other'
+import {YoroiUnsignedTx} from '../../types/yoroi'
+import {asQuantity, Utxos} from '../../utils/utils'
 import {Cardano, CardanoMobile} from '../../wallets'
 import {toAssetNameHex, toPolicyId} from '../api/utils'
 import * as cip8 from '../cip8/cip8'
@@ -297,7 +298,7 @@ const _getBalance = async (csl: WasmModuleProxy, tokenId = '*', utxos: RawUtxo[]
   return value
 }
 
-export const _getUtxos = async (
+const _getUtxos = async (
   csl: WasmModuleProxy,
   wallet: YoroiWallet,
   meta: Wallet.Meta,

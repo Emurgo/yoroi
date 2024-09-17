@@ -11,7 +11,8 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
-import {Boundary, Spacer} from '../../components'
+import {Boundary} from '../../components/Boundary/Boundary'
+import {Spacer} from '../../components/Spacer/Spacer'
 import {unstoppableApiKey} from '../../kernel/env'
 import {
   BackButton,
@@ -33,9 +34,9 @@ import {ShowCameraPermissionDeniedScreen} from '../Scan/useCases/ShowCameraPermi
 import {ConfirmTxScreen} from '../Send/useCases/ConfirmTx/ConfirmTxScreen'
 import {FailedTxScreen} from '../Send/useCases/ConfirmTx/FailedTx/FailedTxScreen'
 import {SubmittedTxScreen} from '../Send/useCases/ConfirmTx/SubmittedTx/SubmittedTxScreen'
-import {ListAmountsToSendScreen} from '../Send/useCases/ListAmountsToSend'
 import {SelectTokenFromListScreen} from '../Send/useCases/ListAmountsToSend/AddToken/SelectTokenFromListScreen'
 import {EditAmountScreen} from '../Send/useCases/ListAmountsToSend/EditAmount/EditAmountScreen'
+import {ListAmountsToSendScreen} from '../Send/useCases/ListAmountsToSend/ListAmountsToSendScreen'
 import {StartMultiTokenTxScreen} from '../Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
 import {NetworkTag} from '../Settings/ChangeNetwork/NetworkTag'
 import {SwapTabNavigator} from '../Swap/SwapNavigator'
@@ -51,7 +52,7 @@ import {ShowSanchoNoticeScreen} from '../Swap/useCases/ShowSanchoNoticeScreen/Sh
 import {SelectBuyTokenFromListScreen} from '../Swap/useCases/StartOrderSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
 import {SelectSellTokenFromListScreen} from '../Swap/useCases/StartOrderSwapScreen/CreateOrder/EditSellAmount/SelectSellTokenFromListScreen/SelectSellTokenFromListScreen'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
-import {TxDetails} from './useCases/TxDetails'
+import {TxDetails} from './useCases/TxDetails/TxDetails'
 import {TxHistory} from './useCases/TxHistory/TxHistory'
 
 const Stack = createStackNavigator<TxHistoryRoutes>()

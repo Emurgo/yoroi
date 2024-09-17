@@ -1,9 +1,8 @@
-export type FungibilityFilter = 'all' | 'ft' | 'nft'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
-import {Text} from '../../../../components'
+import {Text} from '../../../../components/Text'
 
 type CounterTypes = {
   openingText?: string

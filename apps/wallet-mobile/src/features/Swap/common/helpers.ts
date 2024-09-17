@@ -1,7 +1,6 @@
 import {createTypeGuardFromSchema, parseSafe} from '@yoroi/common'
-import {isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
-import {Balance, HW} from '@yoroi/types'
+import {HW} from '@yoroi/types'
 import {SwapApi} from '@yoroi/types/src/swap/api'
 import {useMutation, UseMutationOptions} from 'react-query'
 import {z} from 'zod'
@@ -44,7 +43,7 @@ export const useCancelOrderWithHw = (
   }
 }
 
-export type OrderTxMetadata = {
+type OrderTxMetadata = {
   sellTokenId: string
   buyTokenId: string
   sellQuantity: string
@@ -77,38 +76,6 @@ export const parseOrderTxMetadata = (metadataJson: string): OrderTxMetadata | nu
     buyTokenId: normalisePtId(parsedMetadata.buyTokenId),
     sellTokenId: normalisePtId(parsedMetadata.sellTokenId),
   }
-}
-
-function containsOnlyValidChars(str?: string): boolean {
-  const validCharsRegex = /^[a-zA-Z0 ]*$/
-  return typeof str === 'string' && validCharsRegex.test(str)
-}
-
-export const sortTokensByName = (a: Balance.TokenInfo, b: Balance.TokenInfo) => {
-  const isValidNameA = containsOnlyValidChars(a.name)
-  const isValidNameB = containsOnlyValidChars(b.name)
-  const isValidTickerA = containsOnlyValidChars(a.ticker)
-  const isValidTickerB = containsOnlyValidChars(b.ticker)
-
-  const nameA =
-    a.ticker?.toLocaleLowerCase() && isValidTickerA ? a.ticker?.toLocaleLowerCase() : a.name.toLocaleLowerCase()
-
-  const nameB =
-    b.ticker?.toLocaleLowerCase() && isValidTickerB ? b.ticker?.toLocaleLowerCase() : b.name.toLocaleLowerCase()
-
-  const isBPrimary = isPrimaryToken(b.id)
-  if (isBPrimary) return 1
-
-  const isAPrimary = isPrimaryToken(a.id)
-  if (isAPrimary) return -1
-
-  if (!isValidNameA && isValidNameB) {
-    return 1
-  } else if (isValidNameA && !isValidNameB) {
-    return -1
-  }
-
-  return nameA.localeCompare(nameB, undefined, {sensitivity: 'base'})
 }
 
 export const getPriceImpactRisk = (priceImpact: number) => {

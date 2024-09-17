@@ -2,9 +2,9 @@ import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {mocks} from '../../yoroi-wallets/mocks'
+import {mocks} from '../../yoroi-wallets/mocks/wallet'
 import {WalletManagerProviderMock} from '../../yoroi-wallets/mocks/WalletManagerProviderMock'
-import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
+import {YoroiUnsignedTx} from '../../yoroi-wallets/types/yoroi'
 import {ConfirmTx} from './ConfirmTx'
 
 storiesOf('ConfirmTx', module)

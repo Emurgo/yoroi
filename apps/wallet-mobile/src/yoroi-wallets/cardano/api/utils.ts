@@ -3,7 +3,7 @@ import {AssetNameUtils} from '@emurgo/yoroi-lib/dist/internals/utils/assets'
 import {Balance} from '@yoroi/types'
 import {Buffer} from 'memfs/lib/internal/buffer'
 
-import {LegacyToken} from '../../types'
+import {LegacyToken} from '../../types/tokens'
 import {TokenRegistryEntry} from './tokenRegistry'
 
 export const tokenInfo = (entry: TokenRegistryEntry): Balance.TokenInfo => {

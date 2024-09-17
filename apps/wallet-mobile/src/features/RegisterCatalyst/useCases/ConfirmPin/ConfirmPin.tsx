@@ -5,9 +5,10 @@ import {ActivityIndicator, ScrollView, StyleSheet, View, ViewProps} from 'react-
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useMutation, UseMutationOptions} from 'react-query'
 
-import {Button, Spacer} from '../../../../components'
+import {Button} from '../../../../components/Button/Button'
 import {BACKSPACE, NumericKeyboard} from '../../../../components/NumericKeyboard'
 import {Space} from '../../../../components/Space/Space'
+import {Spacer} from '../../../../components/Spacer/Spacer'
 import {generatePrivateKeyForCatalyst} from '../../../../yoroi-wallets/cardano/catalyst'
 import {encryptWithPassword} from '../../../../yoroi-wallets/cardano/catalyst/catalystCipher'
 import {useNavigateTo} from '../../CatalystNavigator'
@@ -273,7 +274,7 @@ const useGenerateVotingKeys = (
 }
 
 // NOTE: keyboard horizontal padding is 0, yet bottom must respect safe-area-view
-export const Padding = ({style, ...props}: ViewProps) => {
+const Padding = ({style, ...props}: ViewProps) => {
   const styles = useStyles()
   return <View {...props} style={[styles.padding, style]} />
 }

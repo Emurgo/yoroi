@@ -1,9 +1,7 @@
 import {Chain} from '@yoroi/types'
 
-import {NetworkId} from '../../../../yoroi-wallets/types'
-
-export function toChainSupportedNetwork(networkId: NetworkId): Chain.SupportedNetworks {
-  switch (networkId) {
+export function toChainSupportedNetwork(legacyNetworkId: number): Chain.SupportedNetworks {
+  switch (legacyNetworkId) {
     case 0:
     case 1:
       return Chain.Network.Mainnet

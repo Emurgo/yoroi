@@ -118,7 +118,7 @@ export const useStrings = () => {
   }).current
 }
 
-export const messages = Object.freeze(
+const messages = Object.freeze(
   defineMessages({
     notFound: {
       id: 'components.walletinit.createwallet.createwalletscreen.notFound',

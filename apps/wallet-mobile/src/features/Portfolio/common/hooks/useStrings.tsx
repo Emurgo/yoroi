@@ -94,7 +94,7 @@ export const useStrings = () => {
   }
 }
 
-export const messages = defineMessages({
+const messages = defineMessages({
   portfolio: {
     id: 'global.portfolio',
     defaultMessage: '!!!Portfolio',

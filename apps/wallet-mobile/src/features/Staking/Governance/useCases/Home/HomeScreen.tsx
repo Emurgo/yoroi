@@ -14,7 +14,8 @@ import {useTheme} from '@yoroi/theme'
 import React, {type ReactNode} from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Spacer, useModal} from '../../../../../components'
+import {useModal} from '../../../../../components/Modal/ModalContext'
+import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {useUnsafeParams} from '../../../../../kernel/navigation'
 import {useStakingInfo} from '../../../../../legacy/Dashboard/StakePoolInfos'
@@ -24,13 +25,15 @@ import {
   useTransactionInfos,
   useWalletEvent,
 } from '../../../../../yoroi-wallets/hooks'
-import {TransactionInfo} from '../../../../../yoroi-wallets/types'
+import {TransactionInfo} from '../../../../../yoroi-wallets/types/other'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
-import {Action, LearnMoreLink, useNavigateTo, useStrings} from '../../common'
+import {Action} from '../../common/Action/Action'
 import {mapStakingKeyStateToGovernanceAction} from '../../common/helpers'
-import {Routes} from '../../common/navigation'
+import {LearnMoreLink} from '../../common/LearnMoreLink/LearnMoreLink'
+import {Routes, useNavigateTo} from '../../common/navigation'
+import {useStrings} from '../../common/strings'
 import {GovernanceVote} from '../../types'
-import {EnterDrepIdModal} from '../EnterDrepIdModal'
+import {EnterDrepIdModal} from '../EnterDrepIdModal/EnterDrepIdModal'
 
 export const HomeScreen = () => {
   const {wallet} = useSelectedWallet()

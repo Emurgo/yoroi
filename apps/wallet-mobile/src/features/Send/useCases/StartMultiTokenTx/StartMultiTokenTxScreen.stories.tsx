@@ -3,7 +3,7 @@ import {TransferProvider} from '@yoroi/transfer'
 import * as React from 'react'
 
 import {QueryProvider} from '../../../../../.storybook/decorators'
-import {Boundary} from '../../../../components'
+import {Boundary} from '../../../../components/Boundary/Boundary'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks/wallet'
 import {WalletManagerProviderMock} from '../../../../yoroi-wallets/mocks/WalletManagerProviderMock'

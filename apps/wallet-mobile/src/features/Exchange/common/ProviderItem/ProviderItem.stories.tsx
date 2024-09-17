@@ -3,7 +3,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {Icon} from '../../../../components'
+import {Icon} from '../../../../components/Icon'
 import {BanxaLogo} from '../../illustrations/BanxaLogo'
 import {ProviderItem} from './ProviderItem'
 

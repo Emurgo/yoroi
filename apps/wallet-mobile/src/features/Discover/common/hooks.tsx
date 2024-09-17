@@ -2,7 +2,7 @@ import {DappConnectorManager, useDappConnector} from '@yoroi/dapp-connector'
 import * as React from 'react'
 import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
-import {useModal} from '../../../components'
+import {useModal} from '../../../components/Modal/ModalContext'
 import {logger} from '../../../kernel/logger/logger'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {ConfirmRawTxWithOs} from '../../Swap/common/ConfirmRawTx/ConfirmRawTxWithOs'

@@ -165,9 +165,7 @@ export const useStrings = () => {
   }
 }
 
-export const amountInputErrorMessages = defineMessages({})
-
-export const messages = defineMessages({
+const messages = defineMessages({
   swapFees: {
     id: 'swap.swapScreen.swapFees',
     defaultMessage: `!!!Swap fees include the following:\n • Matchmaker Fee\n • Frontend Fee\n • Liquidity Provider Fee`,

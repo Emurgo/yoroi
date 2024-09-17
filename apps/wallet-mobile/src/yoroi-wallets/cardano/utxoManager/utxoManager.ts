@@ -4,7 +4,7 @@ import {isString, parseSafe} from '@yoroi/common'
 import {App} from '@yoroi/types'
 import {parseInt} from 'lodash'
 
-import {RawUtxo} from '../../types'
+import {RawUtxo} from '../../types/other'
 
 export const makeUtxoManager = async ({storage, apiUrl}: {storage: App.Storage; apiUrl: string}) => {
   const managerStorage = makeUtxoManagerStorage(storage)

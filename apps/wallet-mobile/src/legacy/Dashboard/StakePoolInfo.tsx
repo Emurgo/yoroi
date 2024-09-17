@@ -4,12 +4,15 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, Linking, StyleSheet, View} from 'react-native'
 import {useQuery, UseQueryOptions} from 'react-query'
 
-import {Button, CopyButton, Text, TitledCard} from '../../components'
+import {Button} from '../../components/Button/Button'
+import {CopyButton} from '../../components/CopyButton'
 import {Space} from '../../components/Space/Space'
+import {Text} from '../../components/Text'
+import {TitledCard} from '../../components/TitledCard'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {isEmptyString} from '../../kernel/utils'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
-import {StakePoolInfoAndHistory} from '../../yoroi-wallets/types'
+import {StakePoolInfoAndHistory} from '../../yoroi-wallets/types/staking'
 
 export const StakePoolInfo = ({stakePoolId}: {stakePoolId: string}) => {
   const strings = useStrings()

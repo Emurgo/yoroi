@@ -48,7 +48,7 @@ export const convertBech32ToHex = async (bech32Address: string) => {
 
 export const harden = (num: number) => derivationConfig.hardStart + num
 
-export const getRequiredSigners = async (
+const getRequiredSigners = async (
   tx: CSL_TYPES.Transaction,
   wallet: YoroiWallet,
   meta: Wallet.Meta,

@@ -16,15 +16,15 @@ import {
   HeaderWrapper,
   HiddenInfoWrapper,
   MainInfoWrapper,
-  Spacer,
-  Text,
-} from '../../../../../components'
+} from '../../../../../components/ExpandableInfoCard/ExpandableInfoCard'
 import {Space} from '../../../../../components/Space/Space'
+import {Spacer} from '../../../../../components/Spacer/Spacer'
+import {Text} from '../../../../../components/Text'
 import {frontendFeeAddressMainnet, frontendFeeAddressPreprod} from '../../../../../kernel/env'
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {useSync, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
-import {TransactionInfo, TxMetadataInfo} from '../../../../../yoroi-wallets/types'
-import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils'
+import {TransactionInfo, TxMetadataInfo} from '../../../../../yoroi-wallets/types/other'
+import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils/utils'
 import {usePortfolioTokenInfos} from '../../../../Portfolio/common/hooks/usePortfolioTokenInfos'
 import {TokenInfoIcon} from '../../../../Portfolio/common/TokenAmountItem/TokenInfoIcon'
 import {useSearch} from '../../../../Search/SearchContext'
@@ -37,7 +37,7 @@ import {LiquidityPool} from '../../../common/LiquidityPool/LiquidityPool'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
 
-export type MappedRawOrder = {
+type MappedRawOrder = {
   id: string
   metadata: {
     // NOTE: it will require transformation until it start using our own API for orders
@@ -161,7 +161,7 @@ export const CompletedOrders = () => {
   )
 }
 
-export const ExpandableOrder = ({order}: {order: MappedRawOrder}) => {
+const ExpandableOrder = ({order}: {order: MappedRawOrder}) => {
   const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
   const {wallet} = useSelectedWallet()
   const intl = useIntl()

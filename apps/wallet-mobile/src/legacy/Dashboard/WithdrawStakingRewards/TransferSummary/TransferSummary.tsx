@@ -3,12 +3,12 @@ import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Linking, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 
-import {Text} from '../../../../components'
+import {Text} from '../../../../components/Text'
 import {confirmationMessages, txLabels} from '../../../../kernel/i18n/global-messages'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
-import {YoroiStaking, YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
-import {Amounts, Entries} from '../../../../yoroi-wallets/utils'
+import {YoroiStaking, YoroiUnsignedTx} from '../../../../yoroi-wallets/types/yoroi'
 import {formatTokenWithText} from '../../../../yoroi-wallets/utils/format'
+import {Amounts, Entries} from '../../../../yoroi-wallets/utils/utils'
 
 export const TransferSummary = ({wallet, unsignedTx}: {wallet: YoroiWallet; unsignedTx: YoroiUnsignedTx}) => {
   const strings = useStrings()

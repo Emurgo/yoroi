@@ -8,7 +8,7 @@ import {Icon} from '../components/Icon'
 import {useCopy} from '../hooks/useCopy'
 import {isEmptyString} from '../kernel/utils'
 
-export type CopyButtonProps = {
+type CopyButtonProps = {
   value: string
   onCopy?: () => void
   children?: React.ReactNode

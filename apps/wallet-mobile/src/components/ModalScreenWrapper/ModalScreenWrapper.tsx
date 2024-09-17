@@ -3,7 +3,8 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Animated, GestureResponderEvent, Pressable, StyleSheet, Text, View} from 'react-native'
 
-import {KeyboardAvoidingView, Spacer} from '..'
+import {KeyboardAvoidingView} from '../KeyboardAvoidingView/KeyboardAvoidingView'
+import {Spacer} from '../Spacer/Spacer'
 
 // This is another option for modals that will keep the context tree, it requires navigation and if you need to wrap it a fragment is a must
 // Tested and working but it will require a big refactor on the navigator to work with it

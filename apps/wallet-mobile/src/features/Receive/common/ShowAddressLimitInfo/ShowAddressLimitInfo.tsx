@@ -3,7 +3,7 @@ import React from 'react'
 import {Linking, StyleSheet, Text, TouchableWithoutFeedback} from 'react-native'
 import Animated, {FadeInUp, FadeOut, Layout} from 'react-native-reanimated'
 
-import {Icon} from '../../../../components'
+import {Icon} from '../../../../components/Icon'
 import {YoroiZendeskLink} from '../contants'
 import {useStrings} from '../useStrings'
 

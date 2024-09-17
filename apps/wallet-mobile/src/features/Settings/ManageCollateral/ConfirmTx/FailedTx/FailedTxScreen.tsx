@@ -3,8 +3,10 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet} from 'react-native'
 
-import {Button, Spacer, Text} from '../../../../../components'
+import {Button} from '../../../../../components/Button/Button'
 import {SafeArea} from '../../../../../components/SafeArea'
+import {Spacer} from '../../../../../components/Spacer/Spacer'
+import {Text} from '../../../../../components/Text'
 import {useStrings} from '../../../../Send/common/strings'
 import {FailedTxImage} from './FailedTxImage'
 

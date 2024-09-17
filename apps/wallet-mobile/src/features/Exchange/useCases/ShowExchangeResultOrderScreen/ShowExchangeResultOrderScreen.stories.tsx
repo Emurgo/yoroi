@@ -3,8 +3,8 @@ import {exchangeDefaultState, ExchangeProvider, successManagerMock} from '@yoroi
 import {LinksProvider} from '@yoroi/links'
 import React from 'react'
 
-import {ModalProvider} from '../../../../components'
-import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks'
+import {ModalProvider} from '../../../../components/Modal/ModalContext'
+import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks/wallet'
 import {WalletManagerProviderMock} from '../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {ShowExchangeResultOrderScreen} from './ShowExchangeResultOrderScreen'
 

@@ -13,5 +13,3 @@ export const Exchange = ({size = 36, color = 'black'}: Props) => {
     </Svg>
   )
 }
-
-export default Exchange

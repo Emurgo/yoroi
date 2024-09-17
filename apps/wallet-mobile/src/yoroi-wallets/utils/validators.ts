@@ -1,19 +1,19 @@
 import _ from 'lodash'
 
-export type PasswordValidationErrors = {
+type PasswordValidationErrors = {
   passwordReq?: boolean
   passwordConfirmationReq?: boolean
   matchesConfirmation?: boolean
   passwordIsWeak?: boolean
 }
 
-export type WalletNameValidationErrors = {
+type WalletNameValidationErrors = {
   tooLong?: boolean
   nameAlreadyTaken?: boolean
   mustBeFilled?: boolean
 }
 
-export type PasswordStrength = {
+type PasswordStrength = {
   isStrong: boolean
   satisfiesPasswordRequirement?: boolean
 }
@@ -22,7 +22,7 @@ const pickOnlyFailingValidations = (validation: Record<string, unknown>) => _.pi
 
 export const REQUIRED_PASSWORD_LENGTH = 10
 
-export const getPasswordStrength = (password: string): PasswordStrength => {
+const getPasswordStrength = (password: string): PasswordStrength => {
   if (!password) {
     return {isStrong: false}
   }

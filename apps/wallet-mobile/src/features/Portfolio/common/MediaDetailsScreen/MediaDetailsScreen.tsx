@@ -16,8 +16,12 @@ import {
   View,
 } from 'react-native'
 
-import {Boundary, CopyButton, FadeIn, Spacer, Text} from '../../../../components'
-import {Tab, TabPanel, TabPanels, Tabs} from '../../../../components/Tabs'
+import {Boundary} from '../../../../components/Boundary/Boundary'
+import {CopyButton} from '../../../../components/CopyButton'
+import {FadeIn} from '../../../../components/FadeIn'
+import {Spacer} from '../../../../components/Spacer/Spacer'
+import {Tab, TabPanel, TabPanels, Tabs} from '../../../../components/Tabs/Tabs'
+import {Text} from '../../../../components/Text'
 import {time} from '../../../../kernel/constants'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {NftRoutes} from '../../../../kernel/navigation'

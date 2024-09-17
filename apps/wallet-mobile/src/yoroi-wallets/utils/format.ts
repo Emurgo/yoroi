@@ -7,7 +7,7 @@ import type {FormatDateOptions, IntlShape} from 'react-intl'
 import {defineMessages} from 'react-intl'
 
 import {isTokenInfo} from '../cardano/utils'
-import {DefaultAsset, Token} from '../types'
+import {DefaultAsset, Token} from '../types/tokens'
 
 export const getTokenFingerprint = ({policyId, assetNameHex}: {policyId: string; assetNameHex: string}) => {
   const assetFingerprint = AssetFingerprint.fromParts(Buffer.from(policyId, 'hex'), Buffer.from(assetNameHex, 'hex'))
@@ -18,7 +18,7 @@ export const getAssetFingerprint = (policyId: string, assetNameHex: string) => {
   return getTokenFingerprint({policyId, assetNameHex})
 }
 
-export const decodeHexAscii = (text: string) => {
+const decodeHexAscii = (text: string) => {
   const bytes = [...Buffer.from(text, 'hex')]
   const isAscii = bytes.every((byte) => byte > 32 && byte < 127)
   return isAscii ? String.fromCharCode(...bytes) : undefined
@@ -55,7 +55,7 @@ const getName = (token: Balance.TokenInfo | DefaultAsset | Portfolio.Token.Info)
   )
 }
 
-export const getDecimals = (token: Balance.TokenInfo | DefaultAsset | Portfolio.Token.Info) => {
+const getDecimals = (token: Balance.TokenInfo | DefaultAsset | Portfolio.Token.Info) => {
   if ('kind' in token && token.kind === 'nft') return token.kind === 'nft' ? 0 : token.decimals
 
   if ('type' in token && 'decimals' in token) return token.decimals
@@ -65,7 +65,7 @@ export const getDecimals = (token: Balance.TokenInfo | DefaultAsset | Portfolio.
   return 0
 }
 
-export const normalizeTokenAmount = (
+const normalizeTokenAmount = (
   quantity: Balance.Quantity | bigint,
   token: Balance.TokenInfo | DefaultAsset | Portfolio.Token.Info,
 ): BigNumber => {
@@ -158,7 +158,7 @@ export const formatTokenFractional = (
   return fractional.toFormat(decimals).substring(1)
 }
 
-export const truncateWithEllipsis = (s: string, n: number) => {
+const truncateWithEllipsis = (s: string, n: number) => {
   if (s.length > n) {
     return `${s.substr(0, Math.floor(n / 2))}...${s.substr(s.length - Math.floor(n / 2))}`
   }

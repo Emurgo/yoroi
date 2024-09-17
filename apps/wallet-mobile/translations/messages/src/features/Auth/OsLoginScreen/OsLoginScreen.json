@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Login",
     "file": "src/features/Auth/OsLoginScreen/OsLoginScreen.tsx",
     "start": {
-      "line": 65,
+      "line": 64,
       "column": 9,
-      "index": 1692
+      "index": 1678
     },
     "end": {
-      "line": 68,
+      "line": 67,
       "column": 3,
-      "index": 1785
+      "index": 1771
     }
   }
 ]

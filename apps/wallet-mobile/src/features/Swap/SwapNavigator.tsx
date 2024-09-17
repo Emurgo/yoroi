@@ -5,7 +5,7 @@ import React from 'react'
 import {Keyboard, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {KeyboardAvoidingView} from '../../components'
+import {KeyboardAvoidingView} from '../../components/KeyboardAvoidingView/KeyboardAvoidingView'
 import {useIsKeyboardOpen} from '../../kernel/keyboard/useIsKeyboardOpen'
 import {defaultMaterialTopTabNavigationOptions, SwapTabRoutes} from '../../kernel/navigation'
 import {usePortfolioBalances} from '../Portfolio/common/hooks/usePortfolioBalances'

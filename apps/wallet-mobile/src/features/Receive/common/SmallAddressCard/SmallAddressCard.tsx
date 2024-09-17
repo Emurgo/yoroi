@@ -4,12 +4,12 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import Animated, {FadeInDown, FadeInUp, FadeOut, FadeOutDown, Layout} from 'react-native-reanimated'
 
-import {Spacer} from '../../../../components'
+import {Spacer} from '../../../../components/Spacer/Spacer'
 import {useCopy} from '../../../../hooks/useCopy'
 import {SkeletonSmallCardAddress} from '../SkeletonAddressDetail/SkeletonAddressDetail'
 import {useStrings} from '../useStrings'
 
-export type SmallAddressCardProps = {
+type SmallAddressCardProps = {
   address: string
   isUsed?: boolean
   loading?: boolean

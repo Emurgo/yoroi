@@ -232,7 +232,7 @@ export type AuthSetting = 'pin' | 'os' | null
 export const AUTH_WITH_OS: AuthSetting = 'os'
 export const AUTH_WITH_PIN: AuthSetting = 'pin'
 
-export const isAuthOsSupported = () => {
+const isAuthOsSupported = () => {
   return Platform.select({
     android: async () =>
       canAuthWithOS({

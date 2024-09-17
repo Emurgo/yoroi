@@ -9,8 +9,8 @@ import {initialWindowMetrics, SafeAreaProvider} from 'react-native-safe-area-con
 import {enableFreeze, enableScreens} from 'react-native-screens'
 import {QueryClientProvider} from 'react-query'
 
-import {LoadingBoundary} from './components'
-import {ErrorBoundary} from './components/ErrorBoundary'
+import {LoadingBoundary} from './components/Boundary/Boundary'
+import {ErrorBoundary} from './components/ErrorBoundary/ErrorBoundary'
 import {AuthProvider} from './features/Auth/AuthProvider'
 import {BrowserProvider} from './features/Discover/common/BrowserProvider'
 import {PortfolioTokenActivityProvider} from './features/Portfolio/common/PortfolioTokenActivityProvider'

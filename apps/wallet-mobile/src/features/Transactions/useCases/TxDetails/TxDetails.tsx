@@ -20,14 +20,21 @@ import {
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Banner, Boundary, Button, CopyButton, FadeIn, Icon, Text, useModal} from '../../../../components'
+import {Banner} from '../../../../components/Banner/Banner'
+import {Boundary} from '../../../../components/Boundary/Boundary'
+import {Button} from '../../../../components/Button/Button'
+import {CopyButton} from '../../../../components/CopyButton'
+import {FadeIn} from '../../../../components/FadeIn'
+import {Icon} from '../../../../components/Icon'
+import {useModal} from '../../../../components/Modal/ModalContext'
+import {Text} from '../../../../components/Text'
 import {isEmptyString} from '../../../../kernel/utils'
 import {MultiToken} from '../../../../yoroi-wallets/cardano/MultiToken'
 import {CardanoTypes, YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useTipStatus, useTransactionInfos} from '../../../../yoroi-wallets/hooks'
-import {TransactionInfo} from '../../../../yoroi-wallets/types'
-import {asQuantity} from '../../../../yoroi-wallets/utils'
+import {TransactionInfo} from '../../../../yoroi-wallets/types/other'
 import {formatDateAndTime, formatTokenWithSymbol} from '../../../../yoroi-wallets/utils/format'
+import {asQuantity} from '../../../../yoroi-wallets/utils/utils'
 import {usePrivacyMode} from '../../../Settings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
@@ -339,7 +346,7 @@ const getShownAddresses = (
   }
 }
 
-export type Params = {
+type Params = {
   id: string
 }
 

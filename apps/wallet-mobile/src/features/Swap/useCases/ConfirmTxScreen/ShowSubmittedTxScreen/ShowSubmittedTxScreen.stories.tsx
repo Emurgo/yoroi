@@ -3,7 +3,7 @@ import {mockSwapManager, SwapProvider} from '@yoroi/swap'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {mocks as walletMocks} from '../../../../../yoroi-wallets/mocks'
+import {mocks as walletMocks} from '../../../../../yoroi-wallets/mocks/wallet'
 import {WalletManagerProviderMock} from '../../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {ShowSubmittedTxScreen} from './ShowSubmittedTxScreen'
 

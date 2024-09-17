@@ -20,9 +20,13 @@ import {
 import {TouchableOpacity} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Icon, KeyboardAvoidingView, TextInput, useModal} from '../../../../components'
+import {Button} from '../../../../components/Button/Button'
+import {Icon} from '../../../../components/Icon'
+import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
+import {useModal} from '../../../../components/Modal/ModalContext'
 import {Space} from '../../../../components/Space/Space'
 import {StepperProgress} from '../../../../components/StepperProgress/StepperProgress'
+import {TextInput} from '../../../../components/TextInput/TextInput'
 import {showErrorDialog} from '../../../../kernel/dialogs'
 import {debugWalletInfo, features} from '../../../../kernel/features'
 import {errorMessages} from '../../../../kernel/i18n/global-messages'
@@ -30,7 +34,11 @@ import {logger} from '../../../../kernel/logger/logger'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import {isEmptyString} from '../../../../kernel/utils'
-import {getWalletNameError, REQUIRED_PASSWORD_LENGTH, validatePassword} from '../../../../yoroi-wallets/utils'
+import {
+  getWalletNameError,
+  REQUIRED_PASSWORD_LENGTH,
+  validatePassword,
+} from '../../../../yoroi-wallets/utils/validators'
 import {useCreateWalletMnemonic} from '../../../WalletManager/common/hooks/useCreateWalletMnemonic'
 import {parseWalletMeta} from '../../../WalletManager/common/validators/wallet-meta'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'

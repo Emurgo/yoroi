@@ -4,9 +4,9 @@ import {App} from '@yoroi/types'
 import * as React from 'react'
 import {Animated, NativeScrollEvent, NativeSyntheticEvent, StyleSheet} from 'react-native'
 
-import {Spacer} from '../../../../components'
 import {SafeArea} from '../../../../components/SafeArea'
-import {Tab, Tabs} from '../../../../components/Tabs'
+import {Spacer} from '../../../../components/Spacer/Spacer'
+import {Tab, Tabs} from '../../../../components/Tabs/Tabs'
 import {features} from '../../../../kernel/features'
 import {throwLoggedError} from '../../../../kernel/logger/helpers/throw-logged-error'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
@@ -22,7 +22,7 @@ import {PortfolioTokenBalance} from './PortfolioTokenBalance/PortfolioTokenBalan
 import {PortfolioTokenChart} from './PortfolioTokenChart/PortfolioTokenChart'
 import {PortfolioTokenInfo} from './PortfolioTokenInfo/PortfolioTokenInfo'
 
-export type ActiveTab = 'performance' | 'overview' | 'transactions'
+type ActiveTab = 'performance' | 'overview' | 'transactions'
 
 type Tabs = 'Performance' | 'Overview' | 'Transactions'
 const tabs: Record<ActiveTab, Tabs> = {

@@ -5,9 +5,9 @@ import {normalizeToAddress} from '@emurgo/yoroi-lib/dist/internals/utils/address
 import assert from 'assert'
 import {sortBy} from 'lodash'
 
-import {StakingStatus} from '../types'
+import {StakingStatus} from '../types/staking'
 import {CardanoMobile} from '../wallets'
-import type {TimestampedCertMeta} from './transactionManager'
+import type {TimestampedCertMeta} from './transactionManager/transactionManager'
 import {CardanoTypes} from './types'
 import {wrappedCsl} from './wrappedCsl'
 
@@ -92,7 +92,7 @@ export const normalizeToPoolHash = async (poolIdOrHash: string): Promise<string>
   throw new Error('Invalid pool ID or hash')
 }
 
-export const getPoolHash = async (poolId: string): Promise<string> => {
+const getPoolHash = async (poolId: string): Promise<string> => {
   const {csl, release} = wrappedCsl()
   try {
     const hash = await csl.Ed25519KeyHash.fromBech32(poolId)
@@ -102,7 +102,7 @@ export const getPoolHash = async (poolId: string): Promise<string> => {
   }
 }
 
-export const isValidPoolId = async (poolId: string): Promise<boolean> => {
+const isValidPoolId = async (poolId: string): Promise<boolean> => {
   if (poolId.length === 0) return false
   try {
     await getPoolHash(poolId)
@@ -112,7 +112,7 @@ export const isValidPoolId = async (poolId: string): Promise<boolean> => {
   }
 }
 
-export const isValidPoolHash = async (poolHash: string): Promise<boolean> => {
+const isValidPoolHash = async (poolHash: string): Promise<boolean> => {
   if (poolHash.length === 0) return false
 
   const {csl, release} = wrappedCsl()

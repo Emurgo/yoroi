@@ -4,10 +4,12 @@ import * as React from 'react'
 import {Image, StyleSheet, Text, View, ViewProps} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Button, Icon, useModal} from '../../../components'
+import {Button} from '../../../components/Button/Button'
+import {Icon} from '../../../components/Icon'
+import {useModal} from '../../../components/Modal/ModalContext'
 import {ScrollView, useScrollView} from '../../../components/ScrollView/ScrollView'
 import {Space} from '../../../components/Space/Space'
-import {formatTimeSpan} from '../../../yoroi-wallets/utils'
+import {formatTimeSpan} from '../../../yoroi-wallets/utils/timeUtils'
 import {useStrings} from './usePoolTransition'
 
 export const PoolTransitionModal = ({

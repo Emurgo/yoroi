@@ -12,15 +12,11 @@ import {Token} from './tokens'
 export type WalletState = {
   lastGeneratedAddressIndex: number
 }
-export type PlateResponse = {
-  addresses: Array<string>
-  accountPlate: CardanoTypes.WalletChecksum
-}
 
 /**
  * API-related types
  */
-export type RemoteAsset = {
+type RemoteAsset = {
   readonly amount: string
   readonly assetId: string
   readonly policyId: string
@@ -54,7 +50,7 @@ export type PoolInfoRequest = {
 }
 
 // bestblock
-export type BestblockResponse = {
+type BestblockResponse = {
   height: number
   epoch: number | null | undefined
   slot: number | null | undefined
@@ -75,20 +71,20 @@ export type TxHistoryRequest = {
     tx: string
   }
 }
-export type RemoteTransactionInputBase = {
+type RemoteTransactionInputBase = {
   readonly address: string
   readonly amount: string
   readonly assets: Array<RemoteAsset>
 }
-export type RemoteTransactionUtxoInput = {
+type RemoteTransactionUtxoInput = {
   readonly id: string
   // concatenation of txHash || index
   readonly index: number
   readonly txHash: string
 }
 // not considering account txs for now
-export type RemoteTransactionInput = RemoteTransactionInputBase & RemoteTransactionUtxoInput
-export type RemoteTransactionOutput = {
+type RemoteTransactionInput = RemoteTransactionInputBase & RemoteTransactionUtxoInput
+type RemoteTransactionOutput = {
   readonly address: string
   readonly amount: string
   readonly assets: Array<RemoteAsset>
@@ -97,7 +93,7 @@ export type RemoteTransactionOutput = {
 /**
  * only present if TX is in a block
  */
-export type RemoteTxBlockMeta = {
+type RemoteTxBlockMeta = {
   readonly block_num: number
   readonly block_hash: string
   readonly tx_ordinal: number
@@ -107,7 +103,7 @@ export type RemoteTxBlockMeta = {
   readonly slot: number
 }
 
-export type RemoteTxInfo = {
+type RemoteTxInfo = {
   readonly type: 'byron' | 'shelley'
   readonly fee?: string
   // only in shelley txs
@@ -159,16 +155,6 @@ export type TxStatusResponse = {
 export type CurrencySymbol = keyof typeof supportedCurrencies
 export type ConfigCurrencies = typeof configCurrencies
 
-export type PriceResponse = {
-  error: string | null
-  ticker: {
-    from: 'ADA' // we don't support ERG yet
-    timestamp: number
-    signature: string
-    prices: Record<CurrencySymbol, number>
-  }
-}
-
 export type PriceMultipleResponse = {
   error: string | null
   tickers: Array<{
@@ -178,20 +164,6 @@ export type PriceMultipleResponse = {
     prices: Record<CurrencySymbol, number>
   }>
 }
-
-export const NETWORK_REGISTRY = {
-  BYRON_MAINNET: 0,
-  HASKELL_SHELLEY: 1,
-  HASKELL_SHELLEY_TESTNET: 300,
-  UNDEFINED: -1,
-  SANCHONET: 450,
-} as const
-export type NetworkId = (typeof NETWORK_REGISTRY)[keyof typeof NETWORK_REGISTRY]
-
-export const DERIVATION_TYPES = {
-  BIP44: 'bip44',
-  CIP1852: 'cip1852',
-} as const
 
 export type BackendConfig = {
   API_ROOT: string
@@ -208,9 +180,9 @@ export const TRANSACTION_STATUS = {
   PENDING: 'Pending',
   FAILED: 'Failed',
 }
-export type TransactionStatus = (typeof TRANSACTION_STATUS)[keyof typeof TRANSACTION_STATUS]
+type TransactionStatus = (typeof TRANSACTION_STATUS)[keyof typeof TRANSACTION_STATUS]
 
-export type TxMetadata = Array<{label: string; map_json?: any; text_scalar?: string | null}>
+type TxMetadata = Array<{label: string; map_json?: any; text_scalar?: string | null}>
 export type TxMetadataInfo = Record<string, any>
 
 export type TransactionInfo = {
@@ -232,14 +204,14 @@ export type TransactionInfo = {
   metadata: TxMetadataInfo | undefined
 }
 
-export type IOData = {
+type IOData = {
   address: string
   assets: Array<CardanoTypes.TokenEntry>
   amount: string
   id?: string
 }
 
-export type TransactionAssurance = 'PENDING' | 'FAILED' | 'LOW' | 'MEDIUM' | 'HIGH'
+type TransactionAssurance = 'PENDING' | 'FAILED' | 'LOW' | 'MEDIUM' | 'HIGH'
 
 export const TRANSACTION_DIRECTION = {
   SENT: 'SENT',
@@ -254,7 +226,7 @@ export const TRANSACTION_TYPE = {
   BYRON: 'byron',
   SHELLEY: 'shelley',
 }
-export type TransactionType = (typeof TRANSACTION_TYPE)[keyof typeof TRANSACTION_TYPE]
+type TransactionType = (typeof TRANSACTION_TYPE)[keyof typeof TRANSACTION_TYPE]
 export type BaseAsset = RemoteAsset
 export type Transactions = {[txid: string]: Transaction}
 export type Transaction = {

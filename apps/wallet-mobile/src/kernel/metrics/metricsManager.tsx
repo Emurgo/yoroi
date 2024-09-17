@@ -35,7 +35,7 @@ const infoPlugin: EnrichmentPlugin = {
   },
 }
 
-export const makeMetricsStorage = (yoroiStorage: App.Storage = rootStorage) => {
+const makeMetricsStorage = (yoroiStorage: App.Storage = rootStorage) => {
   const enabledKey = 'metrics-enabled'
   const consentRequestedKey = 'metrics-consentRequested'
   const settingsStorage = yoroiStorage.join('appSettings/')
@@ -55,7 +55,7 @@ export const makeMetricsStorage = (yoroiStorage: App.Storage = rootStorage) => {
     consentRequested,
   } as const
 }
-export type MetricsStorage = ReturnType<typeof makeMetricsStorage>
+type MetricsStorage = ReturnType<typeof makeMetricsStorage>
 
 export const makeMetricsManager = (
   metricsStorage: MetricsStorage = makeMetricsStorage(rootStorage),
@@ -210,24 +210,24 @@ export const makeMetricsManager = (
 }
 
 export type MetricsManager = ReturnType<typeof makeMetricsManager>
-export type MetricsManagerContext = Omit<MetricsManager, 'enable' | 'disable' | 'requestConsent' | 'resetConsent'> &
+type MetricsManagerContext = Omit<MetricsManager, 'enable' | 'disable' | 'requestConsent' | 'resetConsent'> &
   Readonly<{
     enable: () => void
     disable: () => void
     requestConsent: () => void
     resetConsent: () => void
   }>
-export type MetricsState = Readonly<{
+type MetricsState = Readonly<{
   isLoaded: boolean
   isEnabled: boolean
   isConsentRequested: boolean
 }>
-export type MetricsActions = Readonly<{
+type MetricsActions = Readonly<{
   isLoadedChanged: (loaded: boolean) => void
   isEnabledChanged: (enabled: boolean) => void
   isConsentRequestedChanged: (enabled: boolean) => void
 }>
-export type MetricsAction =
+type MetricsAction =
   | {type: 'isLoadedChanged'; isLoaded: boolean}
   | {type: 'isEnabledChanged'; isEnabled: boolean}
   | {type: 'isConsentRequestedChanged'; isConsentRequested: boolean}

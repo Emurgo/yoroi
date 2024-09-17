@@ -493,13 +493,6 @@ export const errorMessages = {
   }),
 }
 
-export const assetMessages = defineMessages({
-  assets: {
-    id: 'global.assets.assetsLabel',
-    defaultMessage: '!!!Assets',
-  },
-})
-
 export const apiErrors = defineMessages({
   title: {
     id: 'api.error.title',

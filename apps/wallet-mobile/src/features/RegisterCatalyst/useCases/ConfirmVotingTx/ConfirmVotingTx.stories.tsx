@@ -6,9 +6,9 @@ import {WalletMeta} from '@yoroi/types/lib/typescript/wallet/meta'
 import React from 'react'
 
 import {QueryProvider} from '../../../../../.storybook/decorators'
-import {Boundary} from '../../../../components'
+import {Boundary} from '../../../../components/Boundary/Boundary'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
-import {mocks} from '../../../../yoroi-wallets/mocks'
+import {mocks} from '../../../../yoroi-wallets/mocks/wallet'
 import {walletManagerMock, WalletManagerProviderMock} from '../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {ConfirmVotingTx} from './ConfirmVotingTx'
 

@@ -40,8 +40,6 @@ export type YoroiVoting = {
 export type Address = string
 export type TokenId = string
 
-export type YoroiTokenId = `${string}.${string}`
-
 export type YoroiEntry = {
   address: Address
   amounts: Balance.Amounts
@@ -50,11 +48,6 @@ export type YoroiEntry = {
 
 export type YoroiMetadata = {
   [label: string]: string
-}
-
-export type YoroiTarget = {
-  receiver: Resolver.Receiver
-  entry: YoroiEntry
 }
 
 export type YoroiNftModerationStatus = 'consent' | 'blocked' | 'approved' | 'pending' | 'manual_review'

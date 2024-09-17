@@ -4,8 +4,8 @@ import React from 'react'
 import {Text, View} from 'react-native'
 
 import {QueryProvider} from '../../../../../.storybook/decorators'
-import {Spacer} from '../../../../components'
-import {mocks} from '../../../../yoroi-wallets/mocks'
+import {Spacer} from '../../../../components/Spacer/Spacer'
+import {mocks} from '../../../../yoroi-wallets/mocks/wallet'
 import {WalletManagerProviderMock} from '../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {TokenAmountItem} from './TokenAmountItem'
 

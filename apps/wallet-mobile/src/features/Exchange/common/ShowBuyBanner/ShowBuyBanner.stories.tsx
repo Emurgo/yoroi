@@ -5,7 +5,7 @@ import mockdate from 'mockdate'
 import * as React from 'react'
 import {Text} from 'react-native'
 
-import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks'
+import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks/wallet'
 import {WalletManagerProviderMock} from '../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {ShowBuyBanner} from './ShowBuyBanner'
 

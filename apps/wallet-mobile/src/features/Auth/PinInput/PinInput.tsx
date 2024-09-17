@@ -4,7 +4,7 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {BACKSPACE, NumericKeyboard} from '../../../components/NumericKeyboard'
-import {Spacer} from '../../../components/Spacer'
+import {Spacer} from '../../../components/Spacer/Spacer'
 import {Text} from '../../../components/Text'
 
 type Props = {

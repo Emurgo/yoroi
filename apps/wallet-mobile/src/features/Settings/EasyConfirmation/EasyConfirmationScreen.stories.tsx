@@ -3,7 +3,7 @@ import {Chain} from '@yoroi/types'
 import React from 'react'
 
 import {rootStorage} from '../../../kernel/storage/rootStorage'
-import {mocks} from '../../../yoroi-wallets/mocks'
+import {mocks} from '../../../yoroi-wallets/mocks/wallet'
 import {buildPortfolioTokenManagers} from '../../Portfolio/common/helpers/build-token-managers'
 import {WalletManagerProvider} from '../../WalletManager/context/WalletManagerProvider'
 import {buildNetworkManagers} from '../../WalletManager/network-manager/network-manager'

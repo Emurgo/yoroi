@@ -10,10 +10,10 @@ import {ActivityIndicator, Image, LayoutAnimation, StyleSheet, TouchableOpacity,
 import {useQueryErrorResetBoundary} from 'react-query'
 
 import image from '../../assets/img/error.png'
-import LocalizableError from '../../kernel/i18n/LocalizableError'
-import {Button} from '../Button'
+import {LocalizableError} from '../../kernel/i18n/LocalizableError'
+import {Button} from '../Button/Button'
 import {Space} from '../Space/Space'
-import {Spacer} from '../Spacer'
+import {Spacer} from '../Spacer/Spacer'
 import {Text} from '../Text'
 
 type BoundaryProps = {
@@ -60,7 +60,7 @@ type LoadingFallbackProps = {
   size?: 'full' | 'large' | 'small'
   debug?: boolean
 }
-export const LoadingFallback = ({size = 'large', style, debug = false}: LoadingFallbackProps) => {
+const LoadingFallback = ({size = 'large', style, debug = false}: LoadingFallbackProps) => {
   const {isDark} = useTheme()
   const {styles} = useStyles()
 
@@ -114,7 +114,7 @@ type ErrorFallbackProps = {
   debug?: boolean
 }
 
-export const FullErrorFallback = ({error, resetErrorBoundary, reset = true, debug}: ErrorFallbackProps) => {
+const FullErrorFallback = ({error, resetErrorBoundary, reset = true, debug}: ErrorFallbackProps) => {
   const intl = useIntl()
   const {styles} = useStyles()
 
@@ -144,7 +144,7 @@ export const FullErrorFallback = ({error, resetErrorBoundary, reset = true, debu
   )
 }
 
-export const LargeErrorFallback = ({error, resetErrorBoundary, reset = true, debug}: ErrorFallbackProps) => {
+const LargeErrorFallback = ({error, resetErrorBoundary, reset = true, debug}: ErrorFallbackProps) => {
   const intl = useIntl()
   const {styles} = useStyles()
 
@@ -176,7 +176,7 @@ export const LargeErrorFallback = ({error, resetErrorBoundary, reset = true, deb
   )
 }
 
-export const SmallErrorFallback = ({error, resetErrorBoundary, reset = true, debug}: ErrorFallbackProps) => {
+const SmallErrorFallback = ({error, resetErrorBoundary, reset = true, debug}: ErrorFallbackProps) => {
   const intl = useIntl()
   const {styles} = useStyles()
 
@@ -202,7 +202,7 @@ export const SmallErrorFallback = ({error, resetErrorBoundary, reset = true, deb
   )
 }
 
-export const InlineErrorFallback = ({error, resetErrorBoundary, reset, debug}: ErrorFallbackProps) => {
+const InlineErrorFallback = ({error, resetErrorBoundary, reset, debug}: ErrorFallbackProps) => {
   const intl = useIntl()
   const {styles} = useStyles()
 

@@ -3,7 +3,9 @@ import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
-import {Icon, Spacer, useModal} from '../../../../../../components'
+import {Icon} from '../../../../../../components/Icon'
+import {useModal} from '../../../../../../components/Modal/ModalContext'
+import {Spacer} from '../../../../../../components/Spacer/Spacer'
 import {useStrings} from '../../../../common/strings'
 
 export const ShowSlippageInfo = () => {

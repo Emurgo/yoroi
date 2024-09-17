@@ -2,7 +2,7 @@ import React from 'react'
 import {TextProps} from 'react-native'
 
 import {usePrivacyMode} from '../../features/Settings/PrivacyMode/PrivacyMode'
-import {Text} from '..'
+import {Text} from '../Text'
 
 type Props = TextProps & {
   text: string

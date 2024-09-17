@@ -2,7 +2,6 @@ import {freeze} from 'immer'
 
 import {anzensLogo, banxaLogo, cardanoSpotLogo, encryptusLogo} from './logos'
 
-// TODO: move to yoroi configuration manager
 export const trustedApps: Readonly<
   Map<string, {name: string; vkey: string | undefined; logo: string; provider: string}>
 > = freeze(

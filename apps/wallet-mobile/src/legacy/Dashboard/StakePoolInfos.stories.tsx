@@ -3,7 +3,7 @@ import React from 'react'
 import {QueryClient, QueryClientProvider} from 'react-query'
 
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
-import {mocks} from '../../yoroi-wallets/mocks'
+import {mocks} from '../../yoroi-wallets/mocks/wallet'
 import {WalletManagerProviderMock} from '../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {StakePoolInfos} from './StakePoolInfos'
 

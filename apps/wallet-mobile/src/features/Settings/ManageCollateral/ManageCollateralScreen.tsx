@@ -17,16 +17,21 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useMutation} from 'react-query'
 
-import {Button, CopyButton, Icon, Spacer, Text} from '../../../components'
+import {Button} from '../../../components/Button/Button'
+import {CopyButton} from '../../../components/CopyButton'
 import {ErrorPanel} from '../../../components/ErrorPanel/ErrorPanel'
+import {Icon} from '../../../components/Icon'
 import {Space} from '../../../components/Space/Space'
+import {Spacer} from '../../../components/Spacer/Spacer'
+import {Text} from '../../../components/Text'
 import {SettingsStackRoutes, useUnsafeParams} from '../../../kernel/navigation'
 import {useCollateralInfo} from '../../../yoroi-wallets/cardano/utxoManager/useCollateralInfo'
 import {useSetCollateralId} from '../../../yoroi-wallets/cardano/utxoManager/useSetCollateralId'
 import {collateralConfig, utxosMaker} from '../../../yoroi-wallets/cardano/utxoManager/utxos'
 import {useBalances} from '../../../yoroi-wallets/hooks'
-import {RawUtxo, YoroiEntry} from '../../../yoroi-wallets/types'
-import {Amounts, asQuantity, Quantities} from '../../../yoroi-wallets/utils'
+import {RawUtxo} from '../../../yoroi-wallets/types/other'
+import {YoroiEntry} from '../../../yoroi-wallets/types/yoroi'
+import {Amounts, asQuantity, Quantities} from '../../../yoroi-wallets/utils/utils'
 import {TokenAmountItem} from '../../Portfolio/common/TokenAmountItem/TokenAmountItem'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {createCollateralEntry} from './helpers'
@@ -213,7 +218,7 @@ const Row = ({style, ...props}: ViewProps) => (
   <View style={[style, {flexDirection: 'row', alignItems: 'center'}]} {...props} />
 )
 
-export const RemoveAmountButton = ({disabled, ...props}: TouchableOpacityProps) => {
+const RemoveAmountButton = ({disabled, ...props}: TouchableOpacityProps) => {
   const {colors} = useStyles()
 
   return (
