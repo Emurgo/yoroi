@@ -2,7 +2,8 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native'
 
-import {Icon, Spacer} from '../../../../../components'
+import {Icon} from '../../../../../components/Icon'
+import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {useMappedStrings} from '../../../common/useStrings'
 
 type Props = {
@@ -12,13 +13,32 @@ type Props = {
 }
 export const DAppTypes = ({types, onToggle, selectedTypes}: Props) => {
   const {styles} = useStyles()
+  const scrollViewRef = React.useRef<ScrollView | null>(null)
   const sorted = React.useMemo(() => sortTypes(types, selectedTypes), [types, selectedTypes])
 
   return (
-    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.contentContainer}>
+    <ScrollView
+      ref={scrollViewRef}
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={styles.contentContainer}
+    >
       {sorted.map((type) => {
         const isSelected = selectedTypes.includes(type)
-        return <TypeItem key={type} isActive={isSelected} name={type} onToggle={() => onToggle(type)} />
+        return (
+          <TypeItem
+            key={type}
+            isActive={isSelected}
+            name={type}
+            onToggle={() => {
+              scrollViewRef.current?.scrollTo({
+                x: 0,
+                animated: true,
+              })
+              onToggle(type)
+            }}
+          />
+        )
       })}
 
       <Spacer width={8} />

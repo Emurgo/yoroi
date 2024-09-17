@@ -2,9 +2,9 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 
+import {useStrings} from '../../../common/hooks/useStrings'
 import {TabsGradient} from '../../../common/TabsGradient/Tabs'
 import {portfolioDAppsTabs, TPortfolioDAppsTabs} from '../../../common/types'
-import {useStrings} from '../../../common/useStrings'
 
 type DAppTabsProps = {
   activeTab: TPortfolioDAppsTabs

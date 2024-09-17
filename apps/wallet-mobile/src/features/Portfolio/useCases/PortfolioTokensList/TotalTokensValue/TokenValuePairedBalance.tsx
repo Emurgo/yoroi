@@ -5,6 +5,7 @@ import * as React from 'react'
 import {StyleSheet, Text} from 'react-native'
 
 import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
+import {usePrivacyMode} from '../../../../Settings/PrivacyMode/PrivacyMode'
 import {SkeletonPairedToken} from './SkeletonPairedToken'
 
 type Props = {
@@ -14,11 +15,17 @@ type Props = {
 }
 export const TokenValuePairedBalance = ({amount, isFetching, isPrimaryTokenActive}: Props) => {
   const {styles} = useStyles()
+  const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
+
   const name = infoExtractName(amount.info)
 
   if (isFetching) return <SkeletonPairedToken />
   if (isPrimaryTokenActive) return <PairedBalance amount={amount} textStyle={styles.pairedBalance} />
-  return <Text style={[styles.pairedBalance]}>{`${amountBreakdown(amount).bn.toFormat(2)} ${name}`}</Text>
+  return (
+    <Text style={[styles.pairedBalance]}>{`${
+      isPrivacyActive ? privacyPlaceholder : amountBreakdown(amount).bn.toFormat(2)
+    } ${name}`}</Text>
+  )
 }
 
 const useStyles = () => {

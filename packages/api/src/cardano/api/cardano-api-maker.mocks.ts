@@ -26,6 +26,6 @@ const getProtocolParams = {
   },
 }
 
-export const mockCardanoApi: Api.Cardano.Actions = {
+export const mockCardanoApi: Api.Cardano.Api = {
   getProtocolParams: getProtocolParams.success,
 } as const

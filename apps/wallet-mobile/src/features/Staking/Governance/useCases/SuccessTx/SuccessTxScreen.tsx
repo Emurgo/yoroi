@@ -3,12 +3,14 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {Button, Spacer, Text} from '../../../../../components'
+import {Button} from '../../../../../components/Button/Button'
+import {Spacer} from '../../../../../components/Spacer/Spacer'
+import {Text} from '../../../../../components/Text'
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {useUnsafeParams, useWalletNavigation} from '../../../../../kernel/navigation'
-import {useNavigateTo, useStrings} from '../../common'
-import {Routes} from '../../common/navigation'
-import {SuccessTxImage} from '../../illustrations'
+import {Routes, useNavigateTo} from '../../common/navigation'
+import {useStrings} from '../../common/strings'
+import {SuccessTxImage} from '../../illustrations/SuccessTxImage'
 import {GovernanceKindMap} from '../../types'
 
 export const SuccessTxScreen = () => {

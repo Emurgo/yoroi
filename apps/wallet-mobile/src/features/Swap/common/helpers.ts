@@ -1,12 +1,11 @@
 import {createTypeGuardFromSchema, parseSafe} from '@yoroi/common'
-import {isPrimaryToken, primaryTokenId as ptId} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
-import {Balance, HW} from '@yoroi/types'
+import {HW} from '@yoroi/types'
 import {SwapApi} from '@yoroi/types/src/swap/api'
-import {freeze} from 'immer'
 import {useMutation, UseMutationOptions} from 'react-query'
 import {z} from 'zod'
 
+import {normalisePtId} from '../../../kernel/helpers/normalisePtId'
 import {convertBech32ToHex} from '../../../yoroi-wallets/cardano/common/signatureUtils'
 import {generateCIP30UtxoCbor} from '../../../yoroi-wallets/cardano/utils'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
@@ -44,7 +43,7 @@ export const useCancelOrderWithHw = (
   }
 }
 
-export type OrderTxMetadata = {
+type OrderTxMetadata = {
   sellTokenId: string
   buyTokenId: string
   sellQuantity: string
@@ -66,55 +65,17 @@ const isOrderTxMetadata = createTypeGuardFromSchema(OrderTxMetadataSchema)
  * Parses and validates a JSON metadata string, transforming it into a structure compliant with MappedRawOrder['metadata'].
  *
  * @param metadataJson - The JSON string representation of metadata.
- * @param primaryTokenId - The primary token ID to use when the metadata specifies a '.' or empty string.
  * @returns The parsed metadata object or null if parsing fails or validation fails.
  */
-export const parseOrderTxMetadata = (metadataJson: string, primaryTokenId: string): OrderTxMetadata | null => {
+export const parseOrderTxMetadata = (metadataJson: string): OrderTxMetadata | null => {
   const parsedMetadata = parseSafe(metadataJson)
   if (!isOrderTxMetadata(parsedMetadata)) return null
 
   return {
     ...parsedMetadata,
-    buyTokenId: normalisePrimaryTokenId(parsedMetadata.buyTokenId, primaryTokenId),
-    sellTokenId: normalisePrimaryTokenId(parsedMetadata.sellTokenId, primaryTokenId),
+    buyTokenId: normalisePtId(parsedMetadata.buyTokenId),
+    sellTokenId: normalisePtId(parsedMetadata.sellTokenId),
   }
-}
-
-const swapPtTokenIds = freeze([ptId, '', '.'])
-const normalisePrimaryTokenId = (tokenId: string, primaryTokenId: string) => {
-  return swapPtTokenIds.includes(tokenId) ? primaryTokenId : tokenId
-}
-
-function containsOnlyValidChars(str?: string): boolean {
-  const validCharsRegex = /^[a-zA-Z0 ]*$/
-  return typeof str === 'string' && validCharsRegex.test(str)
-}
-
-export const sortTokensByName = (a: Balance.TokenInfo, b: Balance.TokenInfo) => {
-  const isValidNameA = containsOnlyValidChars(a.name)
-  const isValidNameB = containsOnlyValidChars(b.name)
-  const isValidTickerA = containsOnlyValidChars(a.ticker)
-  const isValidTickerB = containsOnlyValidChars(b.ticker)
-
-  const nameA =
-    a.ticker?.toLocaleLowerCase() && isValidTickerA ? a.ticker?.toLocaleLowerCase() : a.name.toLocaleLowerCase()
-
-  const nameB =
-    b.ticker?.toLocaleLowerCase() && isValidTickerB ? b.ticker?.toLocaleLowerCase() : b.name.toLocaleLowerCase()
-
-  const isBPrimary = isPrimaryToken(b.id)
-  if (isBPrimary) return 1
-
-  const isAPrimary = isPrimaryToken(a.id)
-  if (isAPrimary) return -1
-
-  if (!isValidNameA && isValidNameB) {
-    return 1
-  } else if (isValidNameA && !isValidNameB) {
-    return -1
-  }
-
-  return nameA.localeCompare(nameB, undefined, {sensitivity: 'base'})
 }
 
 export const getPriceImpactRisk = (priceImpact: number) => {

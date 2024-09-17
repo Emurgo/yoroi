@@ -5,20 +5,23 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
-import {Button, Icon, Spacer, useModal} from '../../../../../components'
-import {Text} from '../../../../../components'
-import {ConfirmTxWithHwModal} from '../../../../../components/ConfirmTxWithHwModal'
-import {ConfirmTxWithOsModal} from '../../../../../components/ConfirmTxWithOsModal'
-import {ConfirmTxWithSpendingPasswordModal} from '../../../../../components/ConfirmTxWithSpendingPasswordModal'
+import {Button} from '../../../../../components/Button/Button'
+import {ConfirmTxWithHwModal} from '../../../../../components/ConfirmTxWithHwModal/ConfirmTxWithHwModal'
+import {ConfirmTxWithOsModal} from '../../../../../components/ConfirmTxWithOsModal/ConfirmTxWithOsModal'
+import {ConfirmTxWithSpendingPasswordModal} from '../../../../../components/ConfirmTxWithSpendingPasswordModal/ConfirmTxWithSpendingPasswordModal'
+import {Icon} from '../../../../../components/Icon'
+import {useModal} from '../../../../../components/Modal/ModalContext'
 import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
 import {Space} from '../../../../../components/Space/Space'
+import {Spacer} from '../../../../../components/Spacer/Spacer'
+import {Text} from '../../../../../components/Text'
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {useUnsafeParams} from '../../../../../kernel/navigation'
-import {Amounts} from '../../../../../yoroi-wallets/utils'
 import {formatTokenWithText} from '../../../../../yoroi-wallets/utils/format'
+import {Amounts} from '../../../../../yoroi-wallets/utils/utils'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
-import {useNavigateTo, useStrings} from '../../common'
-import {Routes} from '../../common/navigation'
+import {Routes, useNavigateTo} from '../../common/navigation'
+import {useStrings} from '../../common/strings'
 import {GovernanceKindMap} from '../../types'
 
 export const ConfirmTxScreen = () => {
@@ -67,8 +70,8 @@ export const ConfirmTxScreen = () => {
   const operation = operations[params.vote.kind]
 
   const fee = params.unsignedTx.fee
-  const feeAmount = Amounts.getAmount(fee, wallet.primaryToken.identifier)
-  const feeText = formatTokenWithText(feeAmount.quantity, wallet.primaryToken)
+  const feeAmount = Amounts.getAmount(fee, wallet.portfolioPrimaryTokenInfo.id)
+  const feeText = formatTokenWithText(feeAmount.quantity, wallet.portfolioPrimaryTokenInfo)
 
   const onSuccess = (txID: string) => {
     if (params.vote.kind === 'delegate') {

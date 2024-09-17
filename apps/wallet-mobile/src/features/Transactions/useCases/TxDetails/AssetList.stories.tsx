@@ -3,39 +3,25 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {QueryClient, QueryClientProvider} from 'react-query'
 
-import {mocks} from '../../../../yoroi-wallets/mocks'
+import {mocks} from '../../../../yoroi-wallets/mocks/wallet'
 import {WalletManagerProviderMock} from '../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {AssetList} from './AssetList'
-import {useSendStyles} from './AssetListSend.style'
-import {useBaseStyles} from './Base.style'
 
 storiesOf('AssetList', module)
   .add('baseStyle', () => {
-    const styles = useBaseStyles()
     return (
       <QueryClientProvider client={new QueryClient()}>
         <WalletManagerProviderMock wallet={mocks.wallet}>
-          <AssetList assets={mocks.tokenEntries} styles={styles} onSelect={action('onSelect')} />
+          <AssetList assets={mocks.tokenEntries} onSelect={action('onSelect')} />
         </WalletManagerProviderMock>
       </QueryClientProvider>
     )
   })
   .add('sendStyle', () => {
-    const styles = useSendStyles()
     return (
       <QueryClientProvider client={new QueryClient()}>
         <WalletManagerProviderMock wallet={mocks.wallet}>
-          <AssetList assets={mocks.tokenEntries} styles={styles} onSelect={action('onSelect')} />
-        </WalletManagerProviderMock>
-      </QueryClientProvider>
-    )
-  })
-  .add('loading', () => {
-    const styles = useSendStyles()
-    return (
-      <QueryClientProvider client={new QueryClient()}>
-        <WalletManagerProviderMock wallet={{...mocks.wallet, fetchTokenInfo: () => new Promise(() => undefined)}}>
-          <AssetList assets={mocks.tokenEntries} styles={styles} onSelect={action('onSelect')} />
+          <AssetList assets={mocks.tokenEntries} onSelect={action('onSelect')} />
         </WalletManagerProviderMock>
       </QueryClientProvider>
     )

@@ -4,7 +4,7 @@ import * as React from 'react'
 import {ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Spacer} from '../../../../components'
+import {Spacer} from '../../../../components/Spacer/Spacer'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {BalanceCard} from './BalanceCard/BalanceCard'
 import {DashboardNFTsList} from './DashboardNFTsList/DashboardNFTsList'

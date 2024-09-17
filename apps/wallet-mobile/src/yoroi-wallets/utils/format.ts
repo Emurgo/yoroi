@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AssetFingerprint from '@emurgo/cip14-js'
+import {isTokenInfo as isPortfolioTokenInfo} from '@yoroi/portfolio'
 import {Balance, Portfolio} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 import type {FormatDateOptions, IntlShape} from 'react-intl'
 import {defineMessages} from 'react-intl'
 
 import {isTokenInfo} from '../cardano/utils'
-import {DefaultAsset, Token} from '../types'
+import {DefaultAsset, Token} from '../types/tokens'
 
 export const getTokenFingerprint = ({policyId, assetNameHex}: {policyId: string; assetNameHex: string}) => {
   const assetFingerprint = AssetFingerprint.fromParts(Buffer.from(policyId, 'hex'), Buffer.from(assetNameHex, 'hex'))
@@ -17,7 +18,7 @@ export const getAssetFingerprint = (policyId: string, assetNameHex: string) => {
   return getTokenFingerprint({policyId, assetNameHex})
 }
 
-export const decodeHexAscii = (text: string) => {
+const decodeHexAscii = (text: string) => {
   const bytes = [...Buffer.from(text, 'hex')]
   const isAscii = bytes.every((byte) => byte > 32 && byte < 127)
   return isAscii ? String.fromCharCode(...bytes) : undefined
@@ -54,7 +55,7 @@ const getName = (token: Balance.TokenInfo | DefaultAsset | Portfolio.Token.Info)
   )
 }
 
-export const getDecimals = (token: Balance.TokenInfo | DefaultAsset | Portfolio.Token.Info) => {
+const getDecimals = (token: Balance.TokenInfo | DefaultAsset | Portfolio.Token.Info) => {
   if ('kind' in token && token.kind === 'nft') return token.kind === 'nft' ? 0 : token.decimals
 
   if ('type' in token && 'decimals' in token) return token.decimals
@@ -64,7 +65,7 @@ export const getDecimals = (token: Balance.TokenInfo | DefaultAsset | Portfolio.
   return 0
 }
 
-export const normalizeTokenAmount = (
+const normalizeTokenAmount = (
   quantity: Balance.Quantity | bigint,
   token: Balance.TokenInfo | DefaultAsset | Portfolio.Token.Info,
 ): BigNumber => {
@@ -92,7 +93,13 @@ const getTokenV2Fingerprint = (token: Balance.TokenInfo | DefaultAsset): string 
   })
 }
 
-export const formatTokenWithSymbol = (quantity: Balance.Quantity, token: Balance.TokenInfo | DefaultAsset): string => {
+export const formatTokenWithSymbol = (
+  quantity: Balance.Quantity,
+  token: Balance.TokenInfo | DefaultAsset | Portfolio.Token.Info,
+): string => {
+  if (isPortfolioTokenInfo(token)) {
+    return `${formatTokenAmount(quantity, token)} ${token.ticker || token.fingerprint}`
+  }
   const denomination = getSymbol(token) ?? getTokenV2Fingerprint(token)
   return `${formatTokenAmount(quantity, token)} ${denomination}`
 }
@@ -151,7 +158,7 @@ export const formatTokenFractional = (
   return fractional.toFormat(decimals).substring(1)
 }
 
-export const truncateWithEllipsis = (s: string, n: number) => {
+const truncateWithEllipsis = (s: string, n: number) => {
   if (s.length > n) {
     return `${s.substr(0, Math.floor(n / 2))}...${s.substr(s.length - Math.floor(n / 2))}`
   }
@@ -161,16 +168,14 @@ export const truncateWithEllipsis = (s: string, n: number) => {
 
 // TODO(multi-asset): consider removing these
 
-const formatAda = (quantity: Balance.Quantity, defaultAsset: DefaultAsset) => {
-  const defaultAssetMeta = defaultAsset.metadata
-  const normalizationFactor = Math.pow(10, defaultAssetMeta.numberOfDecimals)
+const formatAda = (quantity: Balance.Quantity, primaryTokenInfo: Portfolio.Token.Info) => {
+  const normalizationFactor = Math.pow(10, primaryTokenInfo.decimals)
   const num = new BigNumber(quantity).dividedBy(normalizationFactor)
-  return num.toFormat(6)
+  return num.toFormat(primaryTokenInfo.decimals)
 }
 
-export const formatAdaWithText = (quantity: Balance.Quantity, defaultAsset: DefaultAsset) => {
-  const defaultAssetMeta = defaultAsset.metadata
-  return `${formatAda(quantity, defaultAsset)} ${defaultAssetMeta.ticker}`
+export const formatAdaWithText = (quantity: Balance.Quantity, primaryTokenInfo: Portfolio.Token.Info) => {
+  return `${formatAda(quantity, primaryTokenInfo)} ${primaryTokenInfo.ticker}`
 }
 
 export const formatTime = (timestamp: string, intl: IntlShape) => {

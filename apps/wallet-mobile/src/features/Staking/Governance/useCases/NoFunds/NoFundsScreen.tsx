@@ -4,13 +4,16 @@ import {Chain} from '@yoroi/types'
 import React from 'react'
 import {Linking, StyleSheet, View} from 'react-native'
 
-import {Button, Spacer, Text} from '../../../../../components'
+import {Button} from '../../../../../components/Button/Button'
 import {SafeArea} from '../../../../../components/SafeArea'
 import {Space} from '../../../../../components/Space/Space'
+import {Spacer} from '../../../../../components/Spacer/Spacer'
+import {Text} from '../../../../../components/Text'
 import {TxHistoryRouteNavigation} from '../../../../../kernel/navigation'
 import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
-import {LearnMoreLink, useStrings} from '../../common'
-import {NoFunds} from '../../illustrations'
+import {LearnMoreLink} from '../../common/LearnMoreLink/LearnMoreLink'
+import {useStrings} from '../../common/strings'
+import {NoFunds} from '../../illustrations/NoFunds'
 
 export const NoFundsScreen = () => {
   const strings = useStrings()

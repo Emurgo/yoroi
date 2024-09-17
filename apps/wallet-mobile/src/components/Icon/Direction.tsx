@@ -2,7 +2,7 @@ import {ThemedPalette, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, View, ViewStyle} from 'react-native'
 
-import {TransactionDirection, TransactionInfo} from '../../yoroi-wallets/types'
+import {TransactionDirection, TransactionInfo} from '../../yoroi-wallets/types/other'
 import {Received} from '../Icon/Received'
 import {Send} from '../Icon/Send'
 import {Transaction} from '../Icon/Transaction'

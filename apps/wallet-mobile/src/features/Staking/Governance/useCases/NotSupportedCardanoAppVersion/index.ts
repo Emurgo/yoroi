@@ -1,1 +1,0 @@
-export {NotSupportedCardanoAppVersion} from './NotSupportedCardanoAppVersion'

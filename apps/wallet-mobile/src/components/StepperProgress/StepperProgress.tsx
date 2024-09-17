@@ -12,7 +12,7 @@ import {Number3Empty} from './Number3Empty'
 import {Number4} from './Number4'
 import {Number4Empty} from './Number4Empty'
 
-export type StepperProgressProps = {
+type StepperProgressProps = {
   currentStep: number
   currentStepTitle: string
   totalSteps: number

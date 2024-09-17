@@ -8,15 +8,18 @@ import {defineMessages, useIntl} from 'react-intl'
 import {FlatList, InteractionManager, ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Boundary, Icon, Line, Text} from '../../../../components'
+import {Boundary} from '../../../../components/Boundary/Boundary'
+import {Icon} from '../../../../components/Icon'
+import {Line} from '../../../../components/Line'
+import {Text} from '../../../../components/Text'
 import {showErrorDialog} from '../../../../kernel/dialogs'
 import {errorMessages} from '../../../../kernel/i18n/global-messages'
 import {logger} from '../../../../kernel/logger/logger'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import {isEmptyString} from '../../../../kernel/utils'
-import {NUMBERS} from '../../../../yoroi-wallets/cardano/numbers'
 import {usePlate} from '../../../../yoroi-wallets/hooks'
+import {derivationConfig} from '../../../WalletManager/common/derivation-config'
 import {useCreateWalletXPub} from '../../../WalletManager/common/hooks/useCreateWalletXPub'
 import {useSelectedNetwork} from '../../../WalletManager/common/hooks/useSelectedNetwork'
 import {parseWalletMeta} from '../../../WalletManager/common/validators/wallet-meta'
@@ -35,9 +38,7 @@ export const SaveReadOnlyWalletScreen = () => {
   const {publicKeyHex, path, walletImplementation, accountVisual, walletIdChanged} = useSetupWallet()
 
   const normalizedPath = path.map((i) => {
-    if (i >= NUMBERS.HARD_DERIVATION_START) {
-      return i - NUMBERS.HARD_DERIVATION_START
-    }
+    if (i >= derivationConfig.hardStart) return i - derivationConfig.hardStart
     return i
   })
 

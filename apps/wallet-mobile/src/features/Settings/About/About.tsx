@@ -4,7 +4,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Pressable, StyleSheet, TextProps, View, ViewProps} from 'react-native'
 
-import {Text} from '../../../components'
+import {Text} from '../../../components/Text'
 import {appInfo} from '../../../kernel/appInfo'
 import {commit} from '../../../kernel/env'
 import {SettingsRouteNavigation} from '../../../kernel/navigation'

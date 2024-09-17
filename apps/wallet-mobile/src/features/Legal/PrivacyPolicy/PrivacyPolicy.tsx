@@ -4,11 +4,11 @@ import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import Markdown from 'react-native-markdown-display'
 import {useQuery} from 'react-query'
 
-import {Spacer} from '../../../components'
+import {Spacer} from '../../../components/Spacer/Spacer'
 import {LanguageCode} from '../../../kernel/i18n/languages'
 import {loadPrivacyPolicy} from './loadPrivacyPolicy'
 
-export const usePrivacyPolicy = ({languageCode}: {languageCode: LanguageCode}) => {
+const usePrivacyPolicy = ({languageCode}: {languageCode: LanguageCode}) => {
   const query = useQuery({
     queryKey: ['privacyPolicy', languageCode],
     queryFn: () => loadPrivacyPolicy(languageCode),

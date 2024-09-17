@@ -2,7 +2,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {mocks} from '../../yoroi-wallets/mocks'
+import {mocks} from '../../yoroi-wallets/mocks/wallet'
 import {ConfirmTxWithOsModal} from './ConfirmTxWithOsModal'
 
 storiesOf('ConfirmTxWithOsModal', module)

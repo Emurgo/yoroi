@@ -4,14 +4,15 @@ import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
-import {Spacer} from '../../../../../components'
 import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
-import {useCurrencyPairing} from '../../../../Settings/Currency'
+import {Spacer} from '../../../../../components/Spacer/Spacer'
+import {useCurrencyPairing} from '../../../../Settings/Currency/CurrencyContext'
+import {usePrivacyMode} from '../../../../Settings/PrivacyMode/PrivacyMode'
 import {formatPriceChange, priceChange} from '../../../common/helpers/priceChange'
+import {useNavigateTo} from '../../../common/hooks/useNavigateTo'
 import {PnlTag} from '../../../common/PnlTag/PnlTag'
 import {usePortfolioTokenActivity} from '../../../common/PortfolioTokenActivityProvider'
 import {TokenInfoIcon} from '../../../common/TokenAmountItem/TokenInfoIcon'
-import {useNavigateTo} from '../../../common/useNavigateTo'
 
 type Props = {
   amount: Portfolio.Token.Amount
@@ -19,10 +20,12 @@ type Props = {
 export const TokenBalanceItem = ({amount}: Props) => {
   const {styles} = useStyles()
   const navigationTo = useNavigateTo()
+  const {isPrivacyActive, privacyPlaceholder} = usePrivacyMode()
+
   const {info} = amount
   const name = infoExtractName(info)
   const symbol = infoExtractName(info, {mode: 'currency'})
-  const balanceFormatted = amountBreakdown(amount).bn.toFormat(2)
+  const balanceFormatted = isPrivacyActive ? privacyPlaceholder : amountBreakdown(amount).bn.toFormat(2)
 
   const ptActivity = useCurrencyPairing().ptActivity
 
@@ -32,10 +35,10 @@ export const TokenBalanceItem = ({amount}: Props) => {
 
   const {close, open} = isPrimaryToken(info)
     ? ptActivity
-    : {close: secondaryActivity?.close.toNumber() ?? 0, open: secondaryActivity?.open.toNumber() ?? 0}
+    : {close: secondaryActivity?.close.toNumber(), open: secondaryActivity?.open.toNumber()}
 
-  const {changePercent, variantPnl} = priceChange(open, close)
-  const isMissingPrices = close == null || open == null
+  const {changePercent, variantPnl} = priceChange(open ?? 0, close ?? 0)
+  const isMissingPrices = close === undefined || open === undefined
 
   return (
     <TouchableOpacity onPress={() => navigationTo.tokenDetail({id: info.id})} style={styles.root}>

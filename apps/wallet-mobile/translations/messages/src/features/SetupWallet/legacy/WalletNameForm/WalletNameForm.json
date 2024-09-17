@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Wallet name",
     "file": "src/features/SetupWallet/legacy/WalletNameForm/WalletNameForm.tsx",
     "start": {
-      "line": 138,
+      "line": 141,
       "column": 24,
-      "index": 4099
+      "index": 4302
     },
     "end": {
-      "line": 141,
+      "line": 144,
       "column": 3,
-      "index": 4207
+      "index": 4410
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Save",
     "file": "src/features/SetupWallet/legacy/WalletNameForm/WalletNameForm.tsx",
     "start": {
-      "line": 142,
+      "line": 145,
       "column": 8,
-      "index": 4217
+      "index": 4420
     },
     "end": {
-      "line": 145,
+      "line": 148,
       "column": 3,
-      "index": 4320
+      "index": 4523
     }
   }
 ]

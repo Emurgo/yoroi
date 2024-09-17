@@ -3,10 +3,10 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
 import {WithModal} from '../../../../../.storybook/decorators'
-import {Boundary} from '../../../../components'
+import {Boundary} from '../../../../components/Boundary/Boundary'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
-import {mocks} from '../../../../yoroi-wallets/mocks'
-import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
+import {mocks} from '../../../../yoroi-wallets/mocks/wallet'
+import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types/yoroi'
 import {ConfirmTxWithPassword} from './ConfirmTxWithPassword'
 
 storiesOf('ConfirmWithdrawalTx/Password', module)

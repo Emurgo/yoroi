@@ -3,8 +3,10 @@ import * as React from 'react'
 import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Spacer, YoroiLogo} from '../../../components'
-import {BlueCheckbox} from '../../../components/BlueCheckbox'
+import {BlueCheckbox} from '../../../components/BlueCheckbox/BlueCheckbox'
+import {Button} from '../../../components/Button/Button'
+import {Spacer} from '../../../components/Spacer/Spacer'
+import {YoroiLogo} from '../../../components/YoroiLogo/YoroiLogo'
 import {useNavigateTo, useStrings} from '../common'
 
 export const TermsOfServiceChangedScreen = () => {

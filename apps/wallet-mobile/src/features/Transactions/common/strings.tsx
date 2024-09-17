@@ -2,7 +2,7 @@ import {ReactNode} from 'react'
 import {defineMessages, MessageDescriptor, useIntl} from 'react-intl'
 
 import globalMessages, {actionMessages, txLabels} from '../../../kernel/i18n/global-messages'
-import {TransactionDirection} from '../../../yoroi-wallets/types'
+import {TransactionDirection} from '../../../yoroi-wallets/types/other'
 import {messages as receiveMessages} from '../../Receive/common/useStrings'
 
 export const useStrings = () => {
@@ -54,7 +54,7 @@ export const useStrings = () => {
   }
 }
 
-export const txTypeMessages = defineMessages({
+const txTypeMessages = defineMessages({
   SENT: {
     id: 'components.txhistory.txdetails.txTypeSent',
     defaultMessage: '!!!Sent funds',

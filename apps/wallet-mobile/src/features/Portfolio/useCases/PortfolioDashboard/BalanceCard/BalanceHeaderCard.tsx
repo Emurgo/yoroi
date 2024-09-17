@@ -2,8 +2,9 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Icon, Tooltip} from '../../../../../components'
-import {useStrings} from '../../../common/useStrings'
+import {Icon} from '../../../../../components/Icon'
+import {Tooltip} from '../../../../../components/Tooltip/Tooltip'
+import {useStrings} from '../../../common/hooks/useStrings'
 import {Rate} from './Rate'
 
 type Props = {

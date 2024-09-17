@@ -11,7 +11,7 @@ export const implementations: ReadonlyArray<Wallet.Implementation> = freeze([
   'cardano-bip44',
 ] as const)
 
-export const {tokenManagers, tokenStorages} = buildPortfolioTokenManagers()
+const {tokenManagers} = buildPortfolioTokenManagers()
 export const networkManagers = buildNetworkManagers({tokenManagers})
 
 const supportedNetworksDev: Array<Chain.SupportedNetworks> = freeze([

@@ -4,12 +4,15 @@ import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StatusBar, StyleSheet, View} from 'react-native'
 
-import {BulletPointItem, CameraCodeScanner, Spacer, Text} from '../../../../components'
+import {BulletPointItem} from '../../../../components/BulletPointItem'
+import {CameraCodeScanner} from '../../../../components/CameraCodeScanner/CameraCodeScanner'
+import {Spacer} from '../../../../components/Spacer/Spacer'
+import {Text} from '../../../../components/Text'
 import {showErrorDialog} from '../../../../kernel/dialogs'
 import {errorMessages} from '../../../../kernel/i18n/global-messages'
 import {logger} from '../../../../kernel/logger/logger'
 import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
-import {isCIP1852AccountPath, isValidPublicKey} from '../../../../yoroi-wallets/cardano/bip44Validators'
+import {isCIP1852AccountPath, isValidPublicKey} from '../../../../yoroi-wallets/cardano/bip44Validators/bip44Validators'
 
 export const ImportReadOnlyWalletScreen = () => {
   const intl = useIntl()

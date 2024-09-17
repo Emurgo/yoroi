@@ -1,7 +1,7 @@
 import {parseSafe, useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
 import {UseMutationOptions, useQuery} from 'react-query'
 
-export const useReadPrivacyMode = () => {
+const useReadPrivacyMode = () => {
   const storage = useAsyncStorage()
   const query = useQuery<PrivacyMode, Error>({
     queryKey: ['privacyMode'],
@@ -19,7 +19,7 @@ export const useReadPrivacyMode = () => {
   return query.data
 }
 
-export const useWritePrivacyMode = ({...options}: UseMutationOptions<void, Error, PrivacyMode> = {}) => {
+const useWritePrivacyMode = ({...options}: UseMutationOptions<void, Error, PrivacyMode> = {}) => {
   const storage = useAsyncStorage()
   const mutation = useMutationWithInvalidations({
     mutationFn: (privacyMode) => storage.join('appSettings/').setItem('privacyMode', privacyMode),
@@ -30,7 +30,7 @@ export const useWritePrivacyMode = ({...options}: UseMutationOptions<void, Error
   return mutation.mutate
 }
 
-export const useTooglePrivacyMode = ({...options}: UseMutationOptions<void, Error, void> = {}) => {
+const useTooglePrivacyMode = ({...options}: UseMutationOptions<void, Error, void> = {}) => {
   const storage = useAsyncStorage()
   const privacyMode = useReadPrivacyMode()
 
@@ -46,7 +46,7 @@ export const useTooglePrivacyMode = ({...options}: UseMutationOptions<void, Erro
   }
 }
 
-export type PrivacyMode = 'SHOWN' | 'HIDDEN'
+type PrivacyMode = 'SHOWN' | 'HIDDEN'
 const defaultPrivacyMode: PrivacyMode = 'SHOWN'
 
 const parsePrivacyMode = (data: unknown) => {

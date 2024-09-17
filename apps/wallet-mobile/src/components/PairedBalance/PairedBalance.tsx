@@ -7,11 +7,11 @@ import {StyleSheet, Text, TextStyle} from 'react-native'
 
 import {usePortfolio} from '../../features/Portfolio/common/PortfolioProvider'
 import {usePortfolioTokenActivity} from '../../features/Portfolio/common/PortfolioTokenActivityProvider'
-import {useCurrencyPairing} from '../../features/Settings/Currency'
+import {useCurrencyPairing} from '../../features/Settings/Currency/CurrencyContext'
 import {usePrivacyMode} from '../../features/Settings/PrivacyMode/PrivacyMode'
 import {useWalletManager} from '../../features/WalletManager/context/WalletManagerProvider'
-import {CurrencySymbol} from '../../yoroi-wallets/types'
-import {Boundary, ResetError, ResetErrorRef} from '..'
+import {CurrencySymbol} from '../../yoroi-wallets/types/other'
+import {Boundary, ResetError, ResetErrorRef} from '../Boundary/Boundary'
 
 type Props = {
   amount: Portfolio.Token.Amount

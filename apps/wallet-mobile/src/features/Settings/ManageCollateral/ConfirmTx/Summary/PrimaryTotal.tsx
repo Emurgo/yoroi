@@ -16,7 +16,7 @@ export const PrimaryTotal = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedT
   const {wallet} = useSelectedWallet()
   const primaryAmount = Amounts.getAmount(
     Amounts.getAmountsFromEntries(yoroiUnsignedTx.entries),
-    wallet.primaryToken.identifier,
+    wallet.portfolioPrimaryTokenInfo.id,
   )
 
   return (
@@ -24,7 +24,7 @@ export const PrimaryTotal = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedT
       <Text>{strings.total}</Text>
 
       <Text style={styles.amount} testID="totalAmountText">
-        {formatTokenWithSymbol(primaryAmount.quantity, wallet.primaryToken)}
+        {formatTokenWithSymbol(primaryAmount.quantity, wallet.portfolioPrimaryTokenInfo)}
       </Text>
     </View>
   )

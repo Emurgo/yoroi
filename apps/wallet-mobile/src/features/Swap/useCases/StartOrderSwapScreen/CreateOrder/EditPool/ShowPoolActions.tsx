@@ -6,8 +6,14 @@ import {capitalize} from 'lodash'
 import React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
-import {ExpandableInfoCard, HeaderWrapper, HiddenInfoWrapper, Spacer, useModal} from '../../../../../../components'
-import {asQuantity, Quantities} from '../../../../../../yoroi-wallets/utils'
+import {
+  ExpandableInfoCard,
+  HeaderWrapper,
+  HiddenInfoWrapper,
+} from '../../../../../../components/ExpandableInfoCard/ExpandableInfoCard'
+import {useModal} from '../../../../../../components/Modal/ModalContext'
+import {Spacer} from '../../../../../../components/Spacer/Spacer'
+import {asQuantity, Quantities} from '../../../../../../yoroi-wallets/utils/utils'
 import {useSelectedWallet} from '../../../../../WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from '../../../../common/navigation'
 import {PoolIcon} from '../../../../common/PoolIcon/PoolIcon'

@@ -6,7 +6,7 @@ import {Portal} from 'react-native-paper'
 
 import {addEventListener, getTooltipPosition, Measurement} from './utils'
 
-export type TooltipProps = {
+type TooltipProps = {
   /**
    * Tooltip reference element. Needs to be able to hold a ref.
    */
@@ -42,7 +42,7 @@ export type TooltipProps = {
  * Plain tooltips, when activated, display a text label identifying an element, such as a description of its function. Tooltips should include only short, descriptive text and avoid restating visible UI text.
  *
  */
-const Tooltip = ({
+export const Tooltip = ({
   children,
   enterTouchDelay = 500,
   leaveTouchDelay = 1500,
@@ -194,8 +194,6 @@ const Tooltip = ({
 }
 
 Tooltip.displayName = 'Tooltip'
-
-export default Tooltip
 
 const useStyles = () => {
   const {atoms, color} = useTheme()

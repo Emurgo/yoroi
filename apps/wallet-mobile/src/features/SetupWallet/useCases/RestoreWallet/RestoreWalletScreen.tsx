@@ -3,11 +3,13 @@ import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
 import {validateMnemonic} from 'bip39'
 import * as React from 'react'
-import {Keyboard, StyleSheet, Text, View} from 'react-native'
+import {Dimensions, Keyboard, Platform, StyleSheet, Text, View} from 'react-native'
 import {FlatList, ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, KeyboardAvoidingView, useModal} from '../../../../components'
+import {Button} from '../../../../components/Button/Button'
+import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
+import {useModal} from '../../../../components/Modal/ModalContext'
 import {Space} from '../../../../components/Space/Space'
 import {StepperProgress} from '../../../../components/StepperProgress/StepperProgress'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
@@ -249,6 +251,15 @@ const useBold = () => {
 }
 
 const useStyles = () => {
+  const {height: screenHeight} = Dimensions.get('window')
+
+  const isSmallScreen = screenHeight < 700
+  const dynamicPaddingBottom =
+    Platform.OS === 'ios'
+      ? isSmallScreen
+        ? screenHeight * 0.01 // Smaller padding for small screens
+        : screenHeight * 0.05 // Regular padding for larger screens
+      : 16 // Default padding for Android
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
     root: {
@@ -280,7 +291,7 @@ const useStyles = () => {
       flexDirection: 'row',
       alignItems: 'center',
       paddingTop: 16,
-      paddingBottom: 19,
+      paddingBottom: dynamicPaddingBottom,
     },
     suggestion: {
       borderColor: color.primary_300,

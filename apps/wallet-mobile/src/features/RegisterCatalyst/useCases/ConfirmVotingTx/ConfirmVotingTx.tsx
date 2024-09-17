@@ -4,15 +4,19 @@ import React, {useState} from 'react'
 import {ScrollView, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, KeyboardAvoidingView, Spacer, TextInput, useModal} from '../../../../components'
-import {ConfirmTxWithHwModal} from '../../../../components/ConfirmTxWithHwModal'
-import {ConfirmTxWithOsModal} from '../../../../components/ConfirmTxWithOsModal'
-import {ConfirmTxWithSpendingPasswordModal} from '../../../../components/ConfirmTxWithSpendingPasswordModal'
+import {Button} from '../../../../components/Button/Button'
+import {ConfirmTxWithHwModal} from '../../../../components/ConfirmTxWithHwModal/ConfirmTxWithHwModal'
+import {ConfirmTxWithOsModal} from '../../../../components/ConfirmTxWithOsModal/ConfirmTxWithOsModal'
+import {ConfirmTxWithSpendingPasswordModal} from '../../../../components/ConfirmTxWithSpendingPasswordModal/ConfirmTxWithSpendingPasswordModal'
+import {KeyboardAvoidingView} from '../../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
+import {useModal} from '../../../../components/Modal/ModalContext'
 import {Space} from '../../../../components/Space/Space'
+import {Spacer} from '../../../../components/Spacer/Spacer'
+import {TextInput} from '../../../../components/TextInput/TextInput'
 import {Instructions as HWInstructions} from '../../../../legacy/HW'
 import {useVotingRegTx} from '../../../../yoroi-wallets/hooks'
-import {Amounts} from '../../../../yoroi-wallets/utils'
 import {formatTokenWithSymbol} from '../../../../yoroi-wallets/utils/format'
+import {Amounts} from '../../../../yoroi-wallets/utils/utils'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from '../../CatalystNavigator'
 import {Actions, Description} from '../../common/components'
@@ -102,8 +106,8 @@ export const ConfirmVotingTx = () => {
 
             <TextInput
               value={formatTokenWithSymbol(
-                Amounts.getAmount(votingRegTx.fee, wallet.primaryToken.identifier).quantity,
-                wallet.primaryToken,
+                Amounts.getAmount(votingRegTx.fee, wallet.portfolioPrimaryTokenInfo.id).quantity,
+                wallet.portfolioPrimaryTokenInfo,
               )}
               editable={false}
               autoComplete="off"

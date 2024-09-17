@@ -4,7 +4,7 @@ import {Chain} from '@yoroi/types'
 import * as React from 'react'
 import {Linking, StyleSheet, View, ViewStyle} from 'react-native'
 
-import {Button} from '../../../../../components'
+import {Button} from '../../../../../components/Button/Button'
 import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
 import {useStrings} from '../../../common/useStrings'
 

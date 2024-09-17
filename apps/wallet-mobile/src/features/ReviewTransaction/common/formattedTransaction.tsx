@@ -1,4 +1,5 @@
 import {isNonNullable} from '@yoroi/common'
+import {infoExtractName} from '@yoroi/portfolio'
 import * as _ from 'lodash'
 
 import {useTokenInfos} from '../../../yoroi-wallets/hooks'
@@ -102,7 +103,7 @@ export const useFormattedTransaction = (data: TransactionBody) => {
             if (tokenInfo == null) return null
             const quantity = asQuantity(amount)
             return {
-              label: formatTokenWithText(quantity, tokenInfo),
+              name: infoExtractName(tokenInfo),
               quantity,
               isPrimary: false,
             }

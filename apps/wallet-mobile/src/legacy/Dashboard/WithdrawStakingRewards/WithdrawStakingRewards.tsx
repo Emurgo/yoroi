@@ -3,15 +3,18 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, Text, View} from 'react-native'
 
-import {Boundary, Button, Checkbox, PleaseWaitView} from '../../../components'
+import {Boundary} from '../../../components/Boundary/Boundary'
+import {Button} from '../../../components/Button/Button'
+import {Checkbox} from '../../../components/Checkbox/Checkbox'
+import {PleaseWaitView} from '../../../components/PleaseWaitModal'
 import {Space} from '../../../components/Space/Space'
-import {Warning} from '../../../components/Warning'
+import {Warning} from '../../../components/Warning/Warning'
 import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
 import globalMessages, {confirmationMessages, ledgerMessages} from '../../../kernel/i18n/global-messages'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {useWithdrawalTx} from '../../../yoroi-wallets/hooks'
-import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
-import {Quantities} from '../../../yoroi-wallets/utils'
+import {YoroiUnsignedTx} from '../../../yoroi-wallets/types/yoroi'
+import {Quantities} from '../../../yoroi-wallets/utils/utils'
 import {useStakingInfo} from '../StakePoolInfos'
 import {ConfirmTx} from './ConfirmTx/ConfirmTx'
 type Props = {
@@ -43,13 +46,7 @@ export const WithdrawStakingRewards = ({wallet, onSuccess, onCancel}: Props) => 
   )
 }
 
-export const WithdrawalTxForm = ({
-  wallet,
-  onDone,
-}: {
-  wallet: YoroiWallet
-  onDone: (withdrawalTx: YoroiUnsignedTx) => void
-}) => {
+const WithdrawalTxForm = ({wallet, onDone}: {wallet: YoroiWallet; onDone: (withdrawalTx: YoroiUnsignedTx) => void}) => {
   const styles = useStyles()
   const bold = useBold()
   const {meta} = useSelectedWallet()
@@ -133,7 +130,7 @@ const Header = ({title}: {title: string}) => {
 
 const Route = ({active, children}: {active: boolean; children: React.ReactNode}) => <>{active ? children : null}</>
 
-export const useWithdrawStakingRewardsStrings = () => {
+const useWithdrawStakingRewardsStrings = () => {
   const intl = useIntl()
 
   return {

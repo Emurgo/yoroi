@@ -4,16 +4,12 @@ import {defineMessages, useIntl} from 'react-intl'
 import {InteractionManager, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {
-  Button,
-  Checkbox,
-  Checkmark,
-  KeyboardAvoidingView,
-  Spacer,
-  Text,
-  TextInput,
-  TextInputProps,
-} from '../../../components'
+import {Button} from '../../../components/Button/Button'
+import {Checkbox} from '../../../components/Checkbox/Checkbox'
+import {KeyboardAvoidingView} from '../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
+import {Spacer} from '../../../components/Spacer/Spacer'
+import {Text} from '../../../components/Text'
+import {Checkmark, TextInput, TextInputProps} from '../../../components/TextInput/TextInput'
 import {useWalletNavigation} from '../../../kernel/navigation'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'

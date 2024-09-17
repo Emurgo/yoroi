@@ -4,11 +4,12 @@ import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {Platform, StyleSheet, Text, View} from 'react-native'
 
-import {Button, useModal} from '../../../components'
+import {Button} from '../../../components/Button/Button'
+import {useModal} from '../../../components/Modal/ModalContext'
 import {Space} from '../../../components/Space/Space'
 import globalMessages, {confirmationMessages} from '../../../kernel/i18n/global-messages'
-import {catalystConfig} from '../../../yoroi-wallets/cardano/constants/catalyst-config'
 import {usePortfolioPrimaryBalance} from '../../Portfolio/common/hooks/usePortfolioPrimaryBalance'
+import {catalystConfig} from '../../WalletManager/common/adapters/cardano/catalyst-config'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 
 const formatter = amountFormatter({template: `{{value}} {{ticker}}`, dropTraillingZeros: true})

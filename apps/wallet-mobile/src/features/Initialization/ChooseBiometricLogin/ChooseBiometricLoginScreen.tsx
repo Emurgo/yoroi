@@ -6,7 +6,7 @@ import DeviceInfo from 'react-native-device-info'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useQuery, UseQueryOptions} from 'react-query'
 
-import {Button} from '../../../components'
+import {Button} from '../../../components/Button/Button'
 import {Space} from '../../../components/Space/Space'
 import {useEnableAuthWithOs} from '../../Auth/common/hooks'
 import {useStrings} from '../common'
@@ -108,7 +108,7 @@ const useStyles = () => {
   return {styles} as const
 }
 
-export const chooseBiometricLoginScreenShownKey = 'choose-biometric-login-screen-shown'
+const chooseBiometricLoginScreenShownKey = 'choose-biometric-login-screen-shown'
 export const useShowBiometricsScreen = (
   options: UseQueryOptions<boolean, Error, boolean, ['useShowBiometricsScreen']> = {},
 ) => {

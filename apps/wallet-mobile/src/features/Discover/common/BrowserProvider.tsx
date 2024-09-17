@@ -4,7 +4,7 @@ import * as React from 'react'
 
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
 
-export const defaultActions: BrowserActions = {
+const defaultActions: BrowserActions = {
   addTab: () => invalid('missing init'),
   setTabActive: () => invalid('missing init'),
   updateTab: () => invalid('missing init'),
@@ -142,7 +142,7 @@ type BrowserActions = Readonly<{
   openTabs: (isOpen: boolean) => void
 }>
 
-export const browserReducer = (state: BrowserState, action: BrowserContextAction): BrowserState => {
+const browserReducer = (state: BrowserState, action: BrowserContextAction): BrowserState => {
   return produce(state, (draft) => {
     switch (action.type) {
       case BrowserActionType.AddTab:

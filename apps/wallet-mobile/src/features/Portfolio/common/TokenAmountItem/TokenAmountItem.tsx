@@ -1,18 +1,19 @@
 import {amountFormatter, infoExtractName, isNft, isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
-import {Portfolio} from '@yoroi/types'
-import {Swap} from '@yoroi/types'
+import {Portfolio, Swap} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
-import {Icon, Spacer, Text} from '../../../../components'
+import {Icon} from '../../../../components/Icon'
 import {PairedBalance} from '../../../../components/PairedBalance/PairedBalance'
+import {Spacer} from '../../../../components/Spacer/Spacer'
+import {Text} from '../../../../components/Text'
 import {usePrivacyMode} from '../../../Settings/PrivacyMode/PrivacyMode'
 import {usePriceImpactRiskTheme} from '../../../Swap/common/helpers'
 import {SwapPriceImpactRisk} from '../../../Swap/common/types'
 import {TokenInfoIcon} from './TokenInfoIcon'
 
-export type TokenAmountItemProps = {
+type TokenAmountItemProps = {
   amount: Portfolio.Token.Amount
   ignorePrivacy?: boolean
 

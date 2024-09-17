@@ -3,14 +3,14 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 
-import {TwoActionView} from '../../../../components'
-import {LoadingOverlay} from '../../../../components/LoadingOverlay'
+import {LoadingOverlay} from '../../../../components/LoadingOverlay/LoadingOverlay'
+import {TwoActionView} from '../../../../components/TwoActionView/TwoActionView'
 import {useAuthOsWithEasyConfirmation} from '../../../../features/Auth/common/hooks'
 import {confirmationMessages, txLabels} from '../../../../kernel/i18n/global-messages'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useSignAndSubmitTx} from '../../../../yoroi-wallets/hooks'
-import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
-import {TransferSummary} from '../TransferSummary'
+import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types/yoroi'
+import {TransferSummary} from '../TransferSummary/TransferSummary'
 
 type Props = {
   wallet: YoroiWallet

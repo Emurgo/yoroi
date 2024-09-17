@@ -42,7 +42,7 @@ type FetchRequest<T> = {
   checkResponse?: ResponseChecker<T>
   headers?: Record<string, string>
 }
-export const checkedFetch = (request: FetchRequest<any>) => {
+const checkedFetch = (request: FetchRequest<any>) => {
   const {endpoint, payload, method, headers} = request
   const checkResponse = request.checkResponse || _checkResponse
   const args = [
@@ -70,6 +70,7 @@ export const checkedFetch = (request: FetchRequest<any>) => {
       return response
     })
 }
+
 export const fetchDefault = <T = Record<string, any>>(
   path: string,
   payload: any,
@@ -95,4 +96,3 @@ export const fetchDefault = <T = Record<string, any>>(
   // logger.debug(`fetchDefault: API call ${fullPath}`, {request})
   return checkedFetch(request)
 }
-export default fetchDefault

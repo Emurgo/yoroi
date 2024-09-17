@@ -1,7 +1,7 @@
 import {Balance, Portfolio, Swap} from '@yoroi/types'
 
-import {YoroiEntry} from '../../../yoroi-wallets/types'
-import {asQuantity} from '../../../yoroi-wallets/utils'
+import {YoroiEntry} from '../../../yoroi-wallets/types/yoroi'
+import {asQuantity} from '../../../yoroi-wallets/utils/utils'
 
 /**
  * Build the YoroiEntry to add the extra output for the swap transaciton with the frontend fee.

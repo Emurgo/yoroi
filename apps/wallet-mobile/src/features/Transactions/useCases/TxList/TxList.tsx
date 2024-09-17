@@ -6,7 +6,7 @@ import {StyleSheet, View} from 'react-native'
 
 import {Space} from '../../../../components/Space/Space'
 import {useTransactionInfos} from '../../../../yoroi-wallets/hooks'
-import {TransactionInfo} from '../../../../yoroi-wallets/types'
+import {TransactionInfo} from '../../../../yoroi-wallets/types/other'
 import {ShowBuyBanner} from '../../../Exchange/common/ShowBuyBanner/ShowBuyBanner'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useTxFilter} from './TxFilterProvider'

@@ -2,7 +2,8 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {LayoutAnimation, StyleSheet, TouchableOpacity, View} from 'react-native'
 
-import {Icon, Text} from '../..'
+import {Icon} from '../../Icon'
+import {Text} from '../../Text'
 
 type Props = {
   label: string

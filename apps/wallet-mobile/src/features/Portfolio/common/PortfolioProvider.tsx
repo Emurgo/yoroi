@@ -2,7 +2,7 @@ import {invalid} from '@yoroi/common'
 import {produce} from 'immer'
 import * as React from 'react'
 
-export const defaultActions: PortfolioActions = {
+const defaultActions: PortfolioActions = {
   setIsPrimaryTokenActive: () => invalid('missing init'),
 } as const
 
@@ -58,7 +58,7 @@ type PortfolioActions = Readonly<{
   setIsPrimaryTokenActive: (isActive: boolean) => void
 }>
 
-export const portfolioReducer = (state: PortfolioState, action: PortfolioContextAction): PortfolioState => {
+const portfolioReducer = (state: PortfolioState, action: PortfolioContextAction): PortfolioState => {
   return produce(state, (draft) => {
     switch (action.type) {
       case PortfolioActionType.SetIsPrimaryTokenActive:

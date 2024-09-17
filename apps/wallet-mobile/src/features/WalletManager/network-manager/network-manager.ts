@@ -1,11 +1,14 @@
 import {CardanoApi} from '@yoroi/api'
 import {mountAsyncStorage, mountMMKVStorage, observableStorageMaker} from '@yoroi/common'
+import {explorerManager} from '@yoroi/explorers'
 import {createPrimaryTokenInfo} from '@yoroi/portfolio'
 import {Chain, Network} from '@yoroi/types'
 import {freeze} from 'immer'
 
 import {logger} from '../../../kernel/logger/logger'
 import {NetworkTokenManagers} from '../common/types'
+import {dateToEpochInfo} from './helpers/date-to-epoch-info'
+import {epochProgress} from './helpers/epoch-progress'
 
 export const primaryTokenInfoMainnet = createPrimaryTokenInfo({
   decimals: 6,
@@ -19,7 +22,7 @@ export const primaryTokenInfoMainnet = createPrimaryTokenInfo({
   description: 'Cardano',
 })
 
-export const primaryTokenInfoAnyTestnet = createPrimaryTokenInfo({
+const primaryTokenInfoAnyTestnet = createPrimaryTokenInfo({
   decimals: 6,
   name: 'TADA',
   ticker: 'TADA',
@@ -64,7 +67,7 @@ export const shelleyPreprodEraConfig: Readonly<Network.EraConfig> = freeze(
   true,
 )
 
-export const protocolParamsPlaceholder = freeze({
+export const protocolParamsPlaceholder: Chain.Cardano.ProtocolParams = freeze({
   linearFee: {
     constant: '155381',
     coefficient: '44',
@@ -72,6 +75,7 @@ export const protocolParamsPlaceholder = freeze({
   coinsPerUtxoByte: '4310',
   poolDeposit: '500000000',
   keyDeposit: '2000000',
+  epoch: 509,
 })
 
 export const networkConfigs: Readonly<Record<Chain.SupportedNetworks, Readonly<Network.Config>>> = freeze({
@@ -127,7 +131,6 @@ export function buildNetworkManagers({
 }: {
   tokenManagers: NetworkTokenManagers
 }): Readonly<Record<Chain.SupportedNetworks, Network.Manager>> {
-  // TODO: receive and attach the explorers here as well
   const managers = Object.entries(networkConfigs).reduce<Record<Chain.SupportedNetworks, Network.Manager>>(
     (networkManagers, [network, config]) => {
       const tokenManager = tokenManagers[network as Chain.SupportedNetworks]
@@ -138,18 +141,29 @@ export function buildNetworkManagers({
       const api = {
         protocolParams: () =>
           getProtocolParams().catch((error) => {
-            logger.error(`networkManager: ${network} protocolParams has failed`, {error})
-            return protocolParamsPlaceholder
+            logger.error(`networkManager: ${network} protocolParams has failed, using hardcoded`, {error})
+            return Promise.resolve(protocolParamsPlaceholder)
           }),
+      }
+
+      const info = dateToEpochInfo(config.eras)
+      const epoch = {
+        info,
+        progress: (date: Date) => {
+          const currentInfo = info(date)
+          return epochProgress(currentInfo)(date)
+        },
       }
 
       const networkManager: Network.Manager = {
         ...config,
         tokenManager,
         rootStorage,
-        // NOTE: we can't use the new rootStorage cuz all modules are async now 🥹
+        // NOTE: it can't use the new rootStorage cuz all modules are async now 🥹
         legacyRootStorage,
         api,
+        explorers: explorerManager[network as Chain.SupportedNetworks],
+        epoch,
       }
       networkManagers[network as Chain.SupportedNetworks] = networkManager
 

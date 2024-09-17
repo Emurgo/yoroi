@@ -2,30 +2,27 @@ import {useNavigation} from '@react-navigation/core'
 import {NavigationState, useFocusEffect} from '@react-navigation/native'
 import {FlashList} from '@shopify/flash-list'
 import {isString} from '@yoroi/common'
-import {useExplorers} from '@yoroi/explorers'
 import {useSwap, useSwapOrdersByStatusOpen} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
-import {Portfolio} from '@yoroi/types'
 import {Buffer} from 'buffer'
 import _ from 'lodash'
 import React, {useRef} from 'react'
 import {useIntl} from 'react-intl'
 import {ActivityIndicator, Alert, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 
+import {Button} from '../../../../../components/Button/Button'
 import {
-  Button,
   ExpandableInfoCard,
   ExpandableInfoCardSkeleton,
   Footer,
   HeaderWrapper,
   HiddenInfoWrapper,
   MainInfoWrapper,
-  Spacer,
-  Text,
-  TokenIcon,
-  useModal,
-} from '../../../../../components'
+} from '../../../../../components/ExpandableInfoCard/ExpandableInfoCard'
+import {useModal} from '../../../../../components/Modal/ModalContext'
 import {Space} from '../../../../../components/Space/Space'
+import {Spacer} from '../../../../../components/Spacer/Spacer'
+import {Text} from '../../../../../components/Text'
 import {useLanguage} from '../../../../../kernel/i18n'
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../../kernel/navigation'
@@ -33,7 +30,9 @@ import {SubmitTxInsufficientCollateralError} from '../../../../../yoroi-wallets/
 import {convertBech32ToHex, getTransactionSigners} from '../../../../../yoroi-wallets/cardano/common/signatureUtils'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {createRawTxSigningKey, generateCIP30UtxoCbor} from '../../../../../yoroi-wallets/cardano/utils'
-import {useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
+import {useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
+import {usePortfolioTokenInfos} from '../../../../Portfolio/common/hooks/usePortfolioTokenInfos'
+import {TokenInfoIcon} from '../../../../Portfolio/common/TokenAmountItem/TokenInfoIcon'
 import {useSearch} from '../../../../Search/SearchContext'
 import {getCollateralAmountInLovelace} from '../../../../Settings/ManageCollateral/helpers'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
@@ -62,13 +61,13 @@ export const OpenOrders = () => {
   const {numberLocale} = useLanguage()
   const tokenIds = React.useMemo(() => _.uniq(orders?.flatMap((o) => [o.from.tokenId, o.to.tokenId])), [orders])
   const transactionsInfos = useTransactionInfos({wallet})
-  const explorers = useExplorers(wallet.networkManager.network)
-  // TODO: revisit
-  const tokenInfos = useTokenInfos({wallet, tokenIds}) as unknown as Portfolio.Token.Info[]
-  const normalizedOrders = React.useMemo(
-    () => mapOpenOrders(orders, tokenInfos, numberLocale, Object.values(transactionsInfos), explorers.cardanoscan),
-    [orders, tokenInfos, numberLocale, transactionsInfos, explorers.cardanoscan],
-  )
+  const explorers = wallet.networkManager.explorers
+  const {tokenInfos} = usePortfolioTokenInfos({wallet, tokenIds}, {suspense: true})
+
+  const normalizedOrders = React.useMemo(() => {
+    if (!tokenInfos) return []
+    return mapOpenOrders(orders, tokenInfos, numberLocale, Object.values(transactionsInfos), explorers.cardanoscan)
+  }, [orders, tokenInfos, numberLocale, transactionsInfos, explorers.cardanoscan])
   const navigationRef = useRef<NavigationState | null>(null)
 
   const {closeModal, openModal, isOpen: isModalOpen} = useModal()
@@ -107,8 +106,8 @@ export const OpenOrders = () => {
 
   const trackCancellationSubmitted = (order: MappedOpenOrder) => {
     track.swapCancelationSubmitted({
-      from_amount: Number(order.from.quantity) ?? 0,
-      to_amount: Number(order.to.quantity) ?? 0,
+      from_amount: Number(order.from.quantity ?? 0),
+      to_amount: Number(order.to.quantity ?? 0),
       from_asset: [
         {
           asset_name: order.fromTokenInfo?.name ?? '',
@@ -276,8 +275,8 @@ export const OpenOrders = () => {
       openModal(
         strings.listOrdersSheetTitle,
         <ModalContent
-          assetFromIcon={<TokenIcon wallet={wallet} tokenId={fromTokenInfo?.id ?? ''} variant="swap" />}
-          assetToIcon={<TokenIcon wallet={wallet} tokenId={toTokenInfo?.id ?? ''} variant="swap" />}
+          assetFromIcon={<TokenInfoIcon info={fromTokenInfo} size="sm" />}
+          assetToIcon={<TokenInfoIcon info={toTokenInfo} size="sm" />}
           onConfirm={() => onOrderCancelConfirm(order)}
           onBack={closeModal}
           assetFromLabel={assetFromLabel}
@@ -309,9 +308,9 @@ export const OpenOrders = () => {
         <FlashList
           data={filteredOrders}
           contentContainerStyle={styles.list}
-          renderItem={({item: order}: {item: MappedOpenOrder}) => {
-            const fromIcon = <TokenIcon wallet={wallet} tokenId={order.fromTokenInfo?.id ?? ''} variant="swap" />
-            const toIcon = <TokenIcon wallet={wallet} tokenId={order.toTokenInfo?.id ?? ''} variant="swap" />
+          renderItem={({item: order}) => {
+            const fromIcon = <TokenInfoIcon info={order.fromTokenInfo} size="sm" />
+            const toIcon = <TokenInfoIcon info={order.toTokenInfo} size="sm" />
             const liquidityPoolIcon =
               order.provider !== undefined ? <PoolIcon size={28} providerId={order.provider} /> : null
             const expanded = order.id === hiddenInfoOpenId

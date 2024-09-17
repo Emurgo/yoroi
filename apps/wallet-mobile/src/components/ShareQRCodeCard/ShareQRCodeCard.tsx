@@ -8,7 +8,8 @@ import Animated, {FadeInDown, FadeOutDown, Layout} from 'react-native-reanimated
 import Share from 'react-native-share'
 import ViewShot, {captureRef} from 'react-native-view-shot'
 
-import {Spacer, Text} from '../'
+import {Spacer} from '../Spacer/Spacer'
+import {Text} from '../Text'
 import {CaptureShareQRCodeCard} from './CaptureShareQRCodeCard/CaptureShareQRCodeCard'
 
 type ShareQRCodeCardProps = {

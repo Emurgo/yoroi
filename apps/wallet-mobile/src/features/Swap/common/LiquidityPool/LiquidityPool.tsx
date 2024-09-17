@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
-import {Spacer} from '../../../../components'
+import {Spacer} from '../../../../components/Spacer/Spacer'
 
 export const LiquidityPool = ({
   liquidityPoolIcon,

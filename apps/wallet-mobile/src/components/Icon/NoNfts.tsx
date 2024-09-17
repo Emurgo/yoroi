@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Svg, {Defs, G, LinearGradient, Path, Stop} from 'react-native-svg'
 
-export interface Props {
+interface Props {
   size?: number
 }
 

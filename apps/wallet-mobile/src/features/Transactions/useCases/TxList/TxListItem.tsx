@@ -9,22 +9,22 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, View, ViewProps} from 'react-native'
 
-import {Boundary, ResetError} from '../../../../components'
+import {Boundary, ResetError} from '../../../../components/Boundary/Boundary'
 import {Icon} from '../../../../components/Icon'
 import {styleMap} from '../../../../components/Icon/Direction'
 import {BalanceError} from '../../../../components/PairedBalance/PairedBalance'
 import {TxHistoryRouteNavigation} from '../../../../kernel/navigation'
 import {MultiToken} from '../../../../yoroi-wallets/cardano/MultiToken'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
-import {TransactionInfo} from '../../../../yoroi-wallets/types'
-import {asQuantity} from '../../../../yoroi-wallets/utils'
+import {TransactionInfo} from '../../../../yoroi-wallets/types/other'
 import {
   formatDateRelative,
   formatTime,
   formatTokenFractional,
   formatTokenInteger,
 } from '../../../../yoroi-wallets/utils/format'
-import {useCurrencyPairing} from '../../../Settings/Currency'
+import {asQuantity} from '../../../../yoroi-wallets/utils/utils'
+import {useCurrencyPairing} from '../../../Settings/Currency/CurrencyContext'
 import {usePrivacyMode} from '../../../Settings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from '../../common/strings'

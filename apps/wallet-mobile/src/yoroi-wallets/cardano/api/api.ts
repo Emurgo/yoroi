@@ -7,20 +7,17 @@ import type {
   FundInfoResponse,
   PoolInfoRequest,
   RawTransaction,
-  StakePoolInfosAndHistories,
   TipStatusResponse,
   TxHistoryRequest,
   TxStatusRequest,
   TxStatusResponse,
-} from '../../types'
+} from '../../types/other'
+import {StakePoolInfosAndHistories} from '../../types/staking'
 import {ServerStatus} from '../types'
 import {handleError} from './errors'
-import fetchDefault from './fetch'
+import {fetchDefault} from './fetch'
 
 type Addresses = Array<string>
-
-export {getNFT} from './metadata'
-export {getTokenInfo} from './tokenRegistry'
 
 const limitApiRecords = 50
 export const checkServerStatus = (baseApiUrl: string): Promise<ServerStatus> =>

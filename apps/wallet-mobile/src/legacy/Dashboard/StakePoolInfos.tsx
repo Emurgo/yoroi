@@ -6,8 +6,9 @@ import {useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
-import {StakingInfo, YoroiUnsignedTx} from '../../yoroi-wallets/types'
-import {Quantities} from '../../yoroi-wallets/utils'
+import {StakingInfo} from '../../yoroi-wallets/types/staking'
+import {YoroiUnsignedTx} from '../../yoroi-wallets/types/yoroi'
+import {Quantities} from '../../yoroi-wallets/utils/utils'
 import {StakePoolInfo} from './StakePoolInfo'
 
 export const StakePoolInfos = () => {
@@ -66,7 +67,7 @@ export const useStakingInfo = (
   }
 }
 
-export const useStakePoolIds = (
+const useStakePoolIds = (
   wallet: YoroiWallet,
   options?: UseQueryOptions<StakingInfo, Error, StakingInfo, [string, 'stakingInfo']>,
 ) => {

@@ -109,7 +109,6 @@ const CreatedByInfoItem = () => {
 }
 
 const SenderTokensSection = ({tx}: {tx: formattedTx}) => {
-  console.log(tx)
   const {wallet} = useSelectedWallet()
   const rewardAddress = useRewardAddress(wallet)
 
@@ -121,7 +120,7 @@ const SenderTokensSection = ({tx}: {tx: formattedTx}) => {
 
       <Space height="sm" />
 
-      <SenderTokensItems />
+      <SenderTokensItems tx={tx} />
     </CollapsibleSection>
   )
 }
@@ -143,7 +142,7 @@ const Address = ({address}: {address: string}) => {
   )
 }
 
-const SenderTokensItems = () => {
+const SenderTokensItems = ({tx}: {tx: formattedTx}) => {
   const {styles} = useStyles()
 
   return (

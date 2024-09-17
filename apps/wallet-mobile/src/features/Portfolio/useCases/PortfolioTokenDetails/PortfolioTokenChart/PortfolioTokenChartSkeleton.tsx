@@ -4,7 +4,7 @@ import {Image, StyleSheet, View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 import ChartPlaceholder from '../../../../../assets/img/chart-placeholder.png'
-import {Icon} from '../../../../../components'
+import {Icon} from '../../../../../components/Icon'
 
 export const PortfolioTokenChartSkeleton = () => {
   const {color, styles} = useStyles()

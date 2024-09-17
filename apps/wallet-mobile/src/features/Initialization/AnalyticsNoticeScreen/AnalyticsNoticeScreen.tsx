@@ -3,7 +3,7 @@ import * as React from 'react'
 import {Linking, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Analytics} from '../../../components'
+import {Analytics} from '../../../components/Analytics/Analytics'
 import {useAgreeWithLegal, useNavigateTo} from '../common'
 
 export const AnalyticsNoticeScreen = () => {

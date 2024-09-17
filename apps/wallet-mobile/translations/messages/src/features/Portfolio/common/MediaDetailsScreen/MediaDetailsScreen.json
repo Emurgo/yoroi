@@ -1,0 +1,167 @@
+[
+  {
+    "id": "nft.detail.title",
+    "defaultMessage": "!!!NFT Details",
+    "file": "src/features/Portfolio/common/MediaDetailsScreen/MediaDetailsScreen.tsx",
+    "start": {
+      "line": 358,
+      "column": 9,
+      "index": 10056
+    },
+    "end": {
+      "line": 361,
+      "column": 3,
+      "index": 10127
+    }
+  },
+  {
+    "id": "nft.detail.overview",
+    "defaultMessage": "!!!Overview",
+    "file": "src/features/Portfolio/common/MediaDetailsScreen/MediaDetailsScreen.tsx",
+    "start": {
+      "line": 362,
+      "column": 12,
+      "index": 10141
+    },
+    "end": {
+      "line": 365,
+      "column": 3,
+      "index": 10212
+    }
+  },
+  {
+    "id": "nft.detail.metadata",
+    "defaultMessage": "!!!Metadata",
+    "file": "src/features/Portfolio/common/MediaDetailsScreen/MediaDetailsScreen.tsx",
+    "start": {
+      "line": 366,
+      "column": 12,
+      "index": 10226
+    },
+    "end": {
+      "line": 369,
+      "column": 3,
+      "index": 10297
+    }
+  },
+  {
+    "id": "nft.detail.nftName",
+    "defaultMessage": "!!!NFT Name",
+    "file": "src/features/Portfolio/common/MediaDetailsScreen/MediaDetailsScreen.tsx",
+    "start": {
+      "line": 370,
+      "column": 11,
+      "index": 10310
+    },
+    "end": {
+      "line": 373,
+      "column": 3,
+      "index": 10380
+    }
+  },
+  {
+    "id": "nft.detail.createdAt",
+    "defaultMessage": "!!!Created",
+    "file": "src/features/Portfolio/common/MediaDetailsScreen/MediaDetailsScreen.tsx",
+    "start": {
+      "line": 374,
+      "column": 13,
+      "index": 10395
+    },
+    "end": {
+      "line": 377,
+      "column": 3,
+      "index": 10466
+    }
+  },
+  {
+    "id": "nft.detail.description",
+    "defaultMessage": "!!!Description",
+    "file": "src/features/Portfolio/common/MediaDetailsScreen/MediaDetailsScreen.tsx",
+    "start": {
+      "line": 378,
+      "column": 15,
+      "index": 10483
+    },
+    "end": {
+      "line": 381,
+      "column": 3,
+      "index": 10560
+    }
+  },
+  {
+    "id": "nft.detail.author",
+    "defaultMessage": "!!!Author",
+    "file": "src/features/Portfolio/common/MediaDetailsScreen/MediaDetailsScreen.tsx",
+    "start": {
+      "line": 382,
+      "column": 10,
+      "index": 10572
+    },
+    "end": {
+      "line": 385,
+      "column": 3,
+      "index": 10639
+    }
+  },
+  {
+    "id": "nft.detail.fingerprint",
+    "defaultMessage": "!!!Fingerprint",
+    "file": "src/features/Portfolio/common/MediaDetailsScreen/MediaDetailsScreen.tsx",
+    "start": {
+      "line": 386,
+      "column": 15,
+      "index": 10656
+    },
+    "end": {
+      "line": 389,
+      "column": 3,
+      "index": 10733
+    }
+  },
+  {
+    "id": "nft.detail.policyId",
+    "defaultMessage": "!!!Policy id",
+    "file": "src/features/Portfolio/common/MediaDetailsScreen/MediaDetailsScreen.tsx",
+    "start": {
+      "line": 390,
+      "column": 12,
+      "index": 10747
+    },
+    "end": {
+      "line": 393,
+      "column": 3,
+      "index": 10819
+    }
+  },
+  {
+    "id": "nft.detail.detailsLinks",
+    "defaultMessage": "!!!Details on",
+    "file": "src/features/Portfolio/common/MediaDetailsScreen/MediaDetailsScreen.tsx",
+    "start": {
+      "line": 394,
+      "column": 16,
+      "index": 10837
+    },
+    "end": {
+      "line": 397,
+      "column": 3,
+      "index": 10914
+    }
+  },
+  {
+    "id": "nft.detail.copyMetadata",
+    "defaultMessage": "!!!Copy metadata",
+    "file": "src/features/Portfolio/common/MediaDetailsScreen/MediaDetailsScreen.tsx",
+    "start": {
+      "line": 398,
+      "column": 16,
+      "index": 10932
+    },
+    "end": {
+      "line": 401,
+      "column": 3,
+      "index": 11012
+    }
+  }
+]

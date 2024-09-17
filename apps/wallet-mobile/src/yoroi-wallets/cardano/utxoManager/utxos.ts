@@ -1,8 +1,8 @@
 import {first} from '@yoroi/common'
 import BigNumber from 'bignumber.js'
 
-import {RawUtxo} from '../../types'
-import {asQuantity} from '../../utils'
+import {RawUtxo} from '../../types/other'
+import {asQuantity} from '../../utils/utils'
 import {CollateralConfig} from './types'
 
 export const collateralConfig: CollateralConfig = {
@@ -15,7 +15,7 @@ export function isPureUtxo(utxo: RawUtxo) {
   return utxo.assets.length === 0
 }
 
-export const hasValue = (utxo: RawUtxo) => {
+const hasValue = (utxo: RawUtxo) => {
   return new BigNumber(asQuantity(utxo.amount)).gte(0)
 }
 

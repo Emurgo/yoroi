@@ -3,7 +3,7 @@ import React from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {LanguagePicker} from '../../../components'
+import {LanguagePicker} from '../../../components/LanguagePicker/LanguagePicker'
 
 export const ChangeLanguageScreen = () => {
   const styles = useStyles()

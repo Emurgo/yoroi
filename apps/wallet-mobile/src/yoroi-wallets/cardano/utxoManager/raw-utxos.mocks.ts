@@ -1,4 +1,4 @@
-import {RawUtxo} from '../../types'
+import {RawUtxo} from '../../types/other'
 
 export const mockRawUtxos: ReadonlyArray<RawUtxo> = [
   {

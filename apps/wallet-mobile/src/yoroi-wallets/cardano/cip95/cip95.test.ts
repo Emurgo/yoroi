@@ -1,4 +1,4 @@
-import {mocks} from '../../mocks'
+import {mocks} from '../../mocks/wallet'
 import {getMasterKeyFromMnemonic} from '../mnemonic/mnemonic'
 import {cip95ExtensionMaker} from './cip95'
 

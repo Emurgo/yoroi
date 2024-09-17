@@ -4,9 +4,10 @@ import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Button, Spacer} from '../../../../../components'
+import {Button} from '../../../../../components/Button/Button'
+import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {TxHistoryRouteNavigation} from '../../../../../kernel/navigation'
-import {useStrings} from '../../../common/useStrings'
+import {useStrings} from '../../../common/hooks/useStrings'
 import {TradeTokensAsset} from '../../PortfolioDashboard/DashboardTokensList/TradeTokensAsset'
 
 export const TradeTokensBannerBig = () => {

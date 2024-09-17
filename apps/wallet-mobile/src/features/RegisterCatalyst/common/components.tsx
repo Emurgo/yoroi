@@ -5,11 +5,6 @@ import {TouchableOpacity} from 'react-native-gesture-handler'
 
 import {StepperProgress} from '../../../components/StepperProgress/StepperProgress'
 
-export const Title = ({style, ...props}: TextProps) => {
-  const styles = useStyles()
-
-  return <Text {...props} style={[styles.title, style]} />
-}
 export const Description = ({style, ...props}: TextProps) => {
   const styles = useStyles()
 
@@ -21,7 +16,6 @@ export const Actions = ({style, ...props}: ViewProps) => {
 
   return <View {...props} style={[styles.actions, style]} />
 }
-export const Instructions = (props: ViewProps) => <View {...props} />
 export const Row = ({style, ...props}: ViewProps) => {
   const styles = useStyles()
 
@@ -58,7 +52,7 @@ export const PinBox = ({
     </TouchableOpacity>
   )
 }
-export const PinDigit = ({style, ...props}: TextProps) => {
+const PinDigit = ({style, ...props}: TextProps) => {
   const styles = useStyles()
   return <Text {...props} style={[styles.pinDigit, style]} />
 }
@@ -112,10 +106,6 @@ const BlinkingCursor = () => {
 const useStyles = () => {
   const {color, atoms} = useTheme()
   const styles = StyleSheet.create({
-    title: {
-      ...atoms.heading_4_medium,
-      color: color.gray_900,
-    },
     description: {
       ...atoms.body_1_lg_regular,
       color: color.gray_900,

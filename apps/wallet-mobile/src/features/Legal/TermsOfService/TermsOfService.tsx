@@ -4,11 +4,11 @@ import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import Markdown from 'react-native-markdown-display'
 import {useQuery} from 'react-query'
 
-import {Spacer} from '../../../components'
+import {Spacer} from '../../../components/Spacer/Spacer'
 import {LanguageCode} from '../../../kernel/i18n/languages'
 import {loadTOS} from './loadTos'
 
-export const useTos = ({languageCode}: {languageCode: LanguageCode}) => {
+const useTos = ({languageCode}: {languageCode: LanguageCode}) => {
   const query = useQuery({
     queryKey: ['tos', languageCode],
     queryFn: () => loadTOS(languageCode),

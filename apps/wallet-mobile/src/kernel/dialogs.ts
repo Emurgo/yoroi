@@ -4,7 +4,7 @@ import 'react-intl'
 import type {IntlShape} from 'react-intl'
 import {Alert} from 'react-native'
 
-import globalMessages, {errorMessages} from './i18n/global-messages'
+import globalMessages from './i18n/global-messages'
 
 type DialogOptions = {
   title: string
@@ -84,7 +84,3 @@ export const showConfirmationDialog = (dialog: any | DialogOptions, intl: IntlSh
     yesButton: intl.formatMessage(dialog.yesButton),
     noButton: intl.formatMessage(dialog.noButton),
   })
-
-export const handleGeneralError = async (message: string, intl: IntlShape) => {
-  await showErrorDialog(errorMessages.generalError, intl, {message})
-}

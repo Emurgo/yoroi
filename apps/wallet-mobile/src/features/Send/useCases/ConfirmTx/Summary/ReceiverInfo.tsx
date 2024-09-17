@@ -4,7 +4,7 @@ import {Transfer} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {Spacer} from '../../../../../components/Spacer'
+import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {Text} from '../../../../../components/Text'
 import {useStrings} from '../../../common/strings'
 

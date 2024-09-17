@@ -5,7 +5,7 @@ import React from 'react'
 import {Keyboard, TextInput} from 'react-native'
 
 import {useLanguage} from '../../../kernel/i18n'
-import {asQuantity, Quantities} from '../../../yoroi-wallets/utils'
+import {asQuantity, Quantities} from '../../../yoroi-wallets/utils/utils'
 import {usePortfolioBalances} from '../../Portfolio/common/hooks/usePortfolioBalances'
 import {usePortfolioPrimaryBalance} from '../../Portfolio/common/hooks/usePortfolioPrimaryBalance'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'

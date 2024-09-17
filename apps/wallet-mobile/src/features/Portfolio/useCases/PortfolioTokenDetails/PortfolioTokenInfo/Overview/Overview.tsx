@@ -1,15 +1,16 @@
-import {useExplorers} from '@yoroi/explorers'
 import {infoExtractName, isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import React, {useState} from 'react'
 import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
-import {Accordion, CopyButton, Spacer} from '../../../../../../components'
+import {Accordion} from '../../../../../../components/Accordion/Accordion'
+import {CopyButton} from '../../../../../../components/CopyButton'
+import {Spacer} from '../../../../../../components/Spacer/Spacer'
 import {features} from '../../../../../../kernel/features'
 import {useSelectedWallet} from '../../../../../WalletManager/common/hooks/useSelectedWallet'
+import {usePortfolioTokenDetailParams} from '../../../../common/hooks/useNavigateTo'
+import {useStrings} from '../../../../common/hooks/useStrings'
 import {TokenInfoIcon} from '../../../../common/TokenAmountItem/TokenInfoIcon'
-import {usePortfolioTokenDetailParams} from '../../../../common/useNavigateTo'
-import {useStrings} from '../../../../common/useStrings'
 import {TokenNews} from './TokenNews'
 
 export const Overview = () => {
@@ -19,7 +20,7 @@ export const Overview = () => {
   const {
     wallet: {balances, networkManager},
   } = useSelectedWallet()
-  const explorers = useExplorers(networkManager.network)
+  const explorers = networkManager.explorers
   const tokenInfo = balances.records.get(tokenId)
   const tokenSymbol = tokenInfo ? infoExtractName(tokenInfo.info, {mode: 'currency'}) : ''
   const [policyId] = tokenInfo?.info.id.split('.') ?? []

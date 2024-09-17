@@ -7,8 +7,9 @@ import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useQuery, UseQueryOptions} from 'react-query'
 
-import {Button, Text} from '../../../components'
+import {Button} from '../../../components/Button/Button'
 import {Space} from '../../../components/Space/Space'
+import {Text} from '../../../components/Text'
 import {useWalletNavigation} from '../../../kernel/navigation'
 import {DarkThemeIlustration} from '../illustrations/DarkThemeIlustration'
 import {LightThemeIlustration} from '../illustrations/LightThemeIlustration'
@@ -63,7 +64,7 @@ export const DarkThemeAnnouncement = () => {
   )
 }
 
-export const Toggle = () => {
+const Toggle = () => {
   const {styles, color} = useStyles()
   const {isLight, isDark, selectThemeName} = useTheme()
 
@@ -84,7 +85,7 @@ export const Toggle = () => {
   )
 }
 
-export const darkThemeAnnouncementShownKey = 'dark-theme-announcement-shown-key'
+const darkThemeAnnouncementShownKey = 'dark-theme-announcement-shown-key'
 export const useShowDarkThemeAnnouncementScreen = (
   options: UseQueryOptions<boolean, Error, boolean, ['useShowDarkThemeAnnouncementScreen']> = {},
 ) => {

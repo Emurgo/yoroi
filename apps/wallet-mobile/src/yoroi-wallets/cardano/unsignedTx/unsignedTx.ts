@@ -1,28 +1,29 @@
 import {Change, Datum, MultiTokenValue} from '@emurgo/yoroi-lib/dist/internals/models'
-import {Balance} from '@yoroi/types'
+import {Balance, Network} from '@yoroi/types'
 
-import {YoroiEntry, YoroiMetadata, YoroiUnsignedTx, YoroiVoting} from '../../types'
-import {Amounts, asQuantity, Entries, Quantities} from '../../utils'
+import {YoroiEntry, YoroiMetadata, YoroiUnsignedTx, YoroiVoting} from '../../types/yoroi'
+import {Amounts, asQuantity, Entries, Quantities} from '../../utils/utils'
 import {Cardano, CardanoMobile} from '../../wallets'
-import {CardanoHaskellShelleyNetwork} from '../networks'
 import {CardanoTypes} from '../types'
 
 export const yoroiUnsignedTx = async ({
   unsignedTx,
-  networkConfig,
+  networkManager,
   votingRegistration,
   addressedUtxos,
   entries,
   primaryTokenId,
   governance,
+  keyDeposit,
 }: {
   unsignedTx: CardanoTypes.UnsignedTx
-  networkConfig: CardanoHaskellShelleyNetwork
+  networkManager: Network.Manager
   votingRegistration?: VotingRegistration
   addressedUtxos: CardanoTypes.CardanoAddressedUtxo[]
   entries?: YoroiEntry[]
   primaryTokenId: string
   governance?: boolean
+  keyDeposit: string
 }) => {
   const fee = toAmounts(unsignedTx.fee.values)
   const change = await toEntriesFromChange(unsignedTx.change)
@@ -43,14 +44,20 @@ export const yoroiUnsignedTx = async ({
           : undefined,
       registrations:
         unsignedTx.registrations.length > 0
-          ? await Staking.toRegistrations({registrations: unsignedTx.registrations, networkConfig, primaryTokenId})
+          ? await Staking.toRegistrations({
+              registrations: unsignedTx.registrations,
+              networkManager,
+              primaryTokenId,
+              keyDeposit,
+            })
           : undefined,
       deregistrations:
         unsignedTx.deregistrations.length > 0
           ? await Staking.toDeregistrations({
               deregistrations: unsignedTx.deregistrations,
-              networkConfig,
+              networkManager,
               primaryTokenId,
+              keyDeposit,
             })
           : undefined,
       delegations:
@@ -90,7 +97,7 @@ export const toMetadata = (metadata: ReadonlyArray<CardanoTypes.TxMetadata>) =>
     {} as YoroiMetadata,
   )
 
-export const toEntriesFromChange = (changes: ReadonlyArray<Change>): Promise<YoroiEntry[]> => {
+const toEntriesFromChange = (changes: ReadonlyArray<Change>): Promise<YoroiEntry[]> => {
   return Promise.all(
     changes.map(async (change) => ({
       address: await toDisplayAddress(change.address),
@@ -145,56 +152,50 @@ const Staking = {
     return result
   },
 
-  toDeregistrations: ({
+  toDeregistrations: async ({
     deregistrations,
-    networkConfig: {CHAIN_NETWORK_ID, KEY_DEPOSIT},
+    networkManager,
     primaryTokenId,
+    keyDeposit,
   }: {
     deregistrations: CardanoTypes.UnsignedTx['deregistrations']
-    networkConfig: CardanoHaskellShelleyNetwork
+    networkManager: Network.Manager
     primaryTokenId: string
+    keyDeposit: string
   }): Promise<YoroiEntry[]> =>
     Promise.all(
       deregistrations.map(async (deregistration) => {
         const address = await deregistration
           .stakeCredential()
-          .then((stakeCredential) =>
-            CardanoMobile.RewardAddress.new(
-              Number(CHAIN_NETWORK_ID) /* API NETWORK_ID is equivalent to CHAIN_NETWORK_ID here */,
-              stakeCredential,
-            ),
-          )
+          .then((stakeCredential) => CardanoMobile.RewardAddress.new(networkManager.chainId, stakeCredential))
           .then((rewardAddress) => rewardAddress.toAddress())
           .then((address) => address.toBytes())
           .then((bytes) => Buffer.from(bytes).toString('hex'))
-        return {address, amounts: {[primaryTokenId]: asQuantity(KEY_DEPOSIT)}}
+        return {address, amounts: {[primaryTokenId]: asQuantity(keyDeposit)}}
       }),
     ),
 
   toRegistrations: async ({
     registrations,
-    networkConfig: {CHAIN_NETWORK_ID, KEY_DEPOSIT},
+    networkManager,
     primaryTokenId,
+    keyDeposit,
   }: {
     registrations: CardanoTypes.UnsignedTx['registrations']
-    networkConfig: CardanoHaskellShelleyNetwork
+    networkManager: Network.Manager
     primaryTokenId: string
+    keyDeposit: string
   }): Promise<YoroiEntry[]> => {
     return Promise.all(
       registrations.map(async (registration) => {
         const address: string = await registration
           .stakeCredential()
-          .then((stakeCredential) =>
-            CardanoMobile.RewardAddress.new(
-              Number(CHAIN_NETWORK_ID) /* API NETWORK_ID is equivalent to CHAIN_NETWORK_ID here */,
-              stakeCredential,
-            ),
-          )
+          .then((stakeCredential) => CardanoMobile.RewardAddress.new(networkManager.chainId, stakeCredential))
           .then((rewardAddress) => rewardAddress.toAddress())
           .then((address) => address.toBytes())
           .then((bytes) => Buffer.from(bytes).toString('hex'))
 
-        return {address, amounts: {[primaryTokenId]: asQuantity(KEY_DEPOSIT)}}
+        return {address, amounts: {[primaryTokenId]: asQuantity(keyDeposit)}}
       }),
     )
   },

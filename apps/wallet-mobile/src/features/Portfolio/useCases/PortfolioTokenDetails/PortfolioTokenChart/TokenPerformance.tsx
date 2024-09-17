@@ -3,13 +3,14 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {Icon, Text} from '../../../../../components'
-import {Tooltip} from '../../../../../components/Tooltip'
-import {useCurrencyPairing} from '../../../../Settings/Currency'
+import {Icon} from '../../../../../components/Icon'
+import {Text} from '../../../../../components/Text'
+import {Tooltip} from '../../../../../components/Tooltip/Tooltip'
+import {useCurrencyPairing} from '../../../../Settings/Currency/CurrencyContext'
 import {formatPriceChange} from '../../../common/helpers/priceChange'
+import {TOKEN_CHART_INTERVAL, TokenChartInterval} from '../../../common/hooks/useGetPortfolioTokenChart'
+import {useStrings} from '../../../common/hooks/useStrings'
 import {PnlTag} from '../../../common/PnlTag/PnlTag'
-import {TOKEN_CHART_INTERVAL, TokenChartInterval} from '../../../common/useGetPortfolioTokenChart'
-import {useStrings} from '../../../common/useStrings'
 
 type Props = {
   tokenPerformance: {

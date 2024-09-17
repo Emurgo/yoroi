@@ -1,7 +1,7 @@
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Icon} from '../../../../../../components'
+import {Icon} from '../../../../../../components/Icon'
 import {getPriceImpactRisk, usePriceImpactRiskTheme} from '../../../../common/helpers'
 import {useStrings} from '../../../../common/strings'
 

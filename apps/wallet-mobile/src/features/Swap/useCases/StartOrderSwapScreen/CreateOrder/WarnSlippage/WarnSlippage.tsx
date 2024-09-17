@@ -2,10 +2,12 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Button, Spacer, useModal} from '../../../../../../components'
+import {Button} from '../../../../../../components/Button/Button'
+import {useModal} from '../../../../../../components/Modal/ModalContext'
+import {Spacer} from '../../../../../../components/Spacer/Spacer'
 import {useStrings} from '../../../../common/strings'
 
-export interface Props {
+interface Props {
   onConfirm: () => void
   slippage: number
   ticker: string

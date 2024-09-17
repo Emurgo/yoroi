@@ -3,8 +3,10 @@ import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
-import {Spacer} from '../../../../../components'
-import {useCurrencyPairing} from '../../../../Settings/Currency'
+import {Icon} from '../../../../../components/Icon'
+import {Spacer} from '../../../../../components/Spacer/Spacer'
+import {useCurrencyPairing} from '../../../../Settings/Currency/CurrencyContext'
+import {usePrivacyMode} from '../../../../Settings/PrivacyMode/PrivacyMode'
 import {formatPriceChange, priceChange} from '../../../common/helpers/priceChange'
 import {PnlTag} from '../../../common/PnlTag/PnlTag'
 import {usePortfolio} from '../../../common/PortfolioProvider'
@@ -18,7 +20,7 @@ type Props = {
 }
 
 export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
-  const {styles} = useStyles()
+  const {styles, color} = useStyles()
   const {
     currency,
     config,
@@ -26,6 +28,7 @@ export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
     isLoading,
   } = useCurrencyPairing()
   const {isPrimaryTokenActive, setIsPrimaryTokenActive} = usePortfolio()
+  const {togglePrivacyMode} = usePrivacyMode()
 
   const {changePercent, changeValue, variantPnl} = priceChange(open, close)
 
@@ -36,14 +39,20 @@ export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
       <Spacer height={6} />
 
       <View style={styles.balanceContainer}>
-        <TouchableOpacity style={styles.balanceBox} onPress={() => setIsPrimaryTokenActive(!isPrimaryTokenActive)}>
-          <TokenValueBalance
-            rate={close}
-            amount={amount}
-            isFetching={isLoading}
-            isPrimaryTokenActive={isPrimaryTokenActive}
-          />
-        </TouchableOpacity>
+        <View style={styles.balanceBox}>
+          <TouchableOpacity style={styles.balanceBox} onPress={() => togglePrivacyMode()}>
+            <TokenValueBalance
+              rate={close}
+              amount={amount}
+              isFetching={isLoading}
+              isPrimaryTokenActive={isPrimaryTokenActive}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.button} onPress={() => setIsPrimaryTokenActive(!isPrimaryTokenActive)}>
+            <Icon.Change color={color.el_gray_max} />
+          </TouchableOpacity>
+        </View>
 
         <View style={styles.rowBetween}>
           <TokenValuePairedBalance amount={amount} isFetching={isLoading} isPrimaryTokenActive={isPrimaryTokenActive} />
@@ -75,7 +84,7 @@ export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
 }
 
 const useStyles = () => {
-  const {atoms} = useTheme()
+  const {atoms, color} = useTheme()
   const styles = StyleSheet.create({
     rowBetween: {
       ...atoms.flex_row,
@@ -85,10 +94,13 @@ const useStyles = () => {
     balanceBox: {
       ...atoms.flex_row,
       ...atoms.gap_2xs,
-      ...atoms.align_center,
+      ...atoms.align_end,
     },
     balanceContainer: {
       ...atoms.gap_2xs,
+    },
+    button: {
+      ...atoms.p_sm,
     },
     varyContainer: {
       ...atoms.flex_row,
@@ -97,5 +109,5 @@ const useStyles = () => {
     },
   })
 
-  return {styles} as const
+  return {styles, color} as const
 }

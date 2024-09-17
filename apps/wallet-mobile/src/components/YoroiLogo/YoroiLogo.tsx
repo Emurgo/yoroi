@@ -4,7 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, View} from 'react-native'
 import {Defs, LinearGradient, Path, Stop, Svg, SvgProps} from 'react-native-svg'
 
-import {Spacer} from '../Spacer'
+import {Spacer} from '../Spacer/Spacer'
 
 const YOROI_COMPANY_NAME = 'Yoroi'
 
