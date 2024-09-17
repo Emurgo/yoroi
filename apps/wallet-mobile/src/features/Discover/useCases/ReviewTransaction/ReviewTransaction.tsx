@@ -22,6 +22,7 @@ import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelected
 import {useConfirmHWConnectionModal} from '../../common/ConfirmHWConnectionModal'
 import {usePromptRootKey} from '../../common/hooks'
 import {useStrings} from '../../common/useStrings'
+import {TransactionBodyJSON, TransactionJSON} from './types'
 
 export type ReviewTransactionParams =
   | {
@@ -45,7 +46,10 @@ export const ReviewTransaction = () => {
   const [outputsOpen, setOutputsOpen] = React.useState(true)
   const [scrollbarShown, setScrollbarShown] = React.useState(false)
   const strings = useStrings()
-  const formattedTX = useFormattedTransaction(params.cbor)
+  const {data} = useTxDetails(params.cbor)
+
+  if (!data) throw new Error('')
+  const formattedTX = useFormattedTransaction(data.body)
 
   const {styles} = useStyles()
 
@@ -163,16 +167,7 @@ const paramsSchema = z.union([
 
 const isParams = createTypeGuardFromSchema(paramsSchema)
 
-type TxDetails = {
-  body: {
-    inputs: Array<{transaction_id: string; index: number}>
-    outputs: Array<{address: string; amount: {coin: number; multiasset: null | Record<string, Record<string, string>>}}>
-    fee: string
-    ttl: string
-  }
-}
-
-const getTxDetails = async (cbor: string): Promise<TxDetails> => {
+const getTxDetails = async (cbor: string): Promise<TransactionJSON> => {
   const {csl, release} = wrappedCsl()
   try {
     const tx = await csl.Transaction.fromHex(cbor)
@@ -187,12 +182,11 @@ const useTxDetails = (cbor: string) => {
   return useQuery({queryFn: () => getTxDetails(cbor), useErrorBoundary: true, queryKey: ['useTxDetails', cbor]})
 }
 
-const useFormattedTransaction = (cbor: string) => {
+export const useFormattedTransaction = (data: TransactionBodyJSON) => {
   const {wallet} = useSelectedWallet()
-  const {data} = useTxDetails(cbor)
 
-  const inputs = data?.body.inputs ?? []
-  const outputs = data?.body.outputs ?? []
+  const inputs = data?.inputs ?? []
+  const outputs = data?.outputs ?? []
 
   const getUtxoByTxIdAndIndex = (txId: string, index: number) => {
     return wallet.utxos.find((u) => u.tx_hash === txId && u.tx_index === index)
@@ -265,7 +259,7 @@ const useFormattedTransaction = (cbor: string) => {
     return {assets, address, ownAddress: address != null && isOwnedAddress(address)}
   })
 
-  const formattedFee = formatAdaWithText(asQuantity(data?.body?.fee ?? '0'), wallet.primaryToken)
+  const formattedFee = formatAdaWithText(asQuantity(data?.fee ?? '0'), wallet.primaryToken)
 
   return {inputs: formattedInputs, outputs: formattedOutputs, fee: formattedFee}
 }

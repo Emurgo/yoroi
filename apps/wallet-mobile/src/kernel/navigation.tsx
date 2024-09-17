@@ -126,6 +126,7 @@ export type WalletStackRoutes = {
   'wallet-selection': undefined
   'exchange-result': undefined
   'main-wallet-routes': NavigatorScreenParams<WalletTabRoutes>
+  'review-transaction-routes': NavigatorScreenParams<ReviewTransactionRoutes>
   'nft-details-routes': NavigatorScreenParams<NftRoutes>
   settings: NavigatorScreenParams<SettingsStackRoutes>
   'voting-registration': NavigatorScreenParams<VotingRegistrationRoutes>
@@ -312,6 +313,15 @@ export type Portfolio2Routes = {
     id: string
   }
   history: NavigatorScreenParams<TxHistoryRoutes>
+}
+
+export type ReviewTransactionRoutes = {
+  'review-transaction': NavigatorScreenParams<ReviewTransactionTabRoutes>
+}
+
+export type ReviewTransactionTabRoutes = {
+  overview: undefined
+  utxos: undefined
 }
 
 export type PortfolioTokenListTabRoutes = {

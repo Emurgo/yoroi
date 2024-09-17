@@ -73,6 +73,14 @@ export const ConfirmTxScreen = () => {
 
   if (yoroiUnsignedTx === undefined) throw new Error('Missing yoroiUnsignedTx')
 
+  React.useEffect(() => {
+    const test = async () => {
+      console.log('txBody', await yoroiUnsignedTx.unsignedTx.txBody.toJson())
+    }
+
+    test()
+  }, [yoroiUnsignedTx.unsignedTx.txBody])
+
   return (
     <KeyboardAvoidingView style={[styles.root, styles.flex]}>
       <SafeAreaView edges={['left', 'right', 'bottom']} style={[styles.flex, styles.safeAreaView]}>
