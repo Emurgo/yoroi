@@ -2,7 +2,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {ModalProvider} from '../../../../components'
+import {ModalProvider} from '../../../../components/Modal/ModalContext'
 import {AskToOpenWalletScreen} from './AskToOpenAWalletScreen'
 
 storiesOf('Links AskToOpenAWallet', module)

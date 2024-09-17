@@ -10,19 +10,19 @@ import React, {useRef} from 'react'
 import {useIntl} from 'react-intl'
 import {ActivityIndicator, Alert, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 
+import {Button} from '../../../../../components/Button/Button'
 import {
-  Button,
   ExpandableInfoCard,
   ExpandableInfoCardSkeleton,
   Footer,
   HeaderWrapper,
   HiddenInfoWrapper,
   MainInfoWrapper,
-  Spacer,
-  Text,
-  useModal,
-} from '../../../../../components'
+} from '../../../../../components/ExpandableInfoCard/ExpandableInfoCard'
+import {useModal} from '../../../../../components/Modal/ModalContext'
 import {Space} from '../../../../../components/Space/Space'
+import {Spacer} from '../../../../../components/Spacer/Spacer'
+import {Text} from '../../../../../components/Text'
 import {useLanguage} from '../../../../../kernel/i18n'
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {useWalletNavigation} from '../../../../../kernel/navigation'

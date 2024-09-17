@@ -2,7 +2,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {Button, StyleSheet, View} from 'react-native'
 
-import {useModal} from '../../../../components'
+import {useModal} from '../../../../components/Modal/ModalContext'
 import {SelectHwConnectionModal} from './SelectHwConnectionModal'
 
 storiesOf('AddWallet Select Hw Connection Modal', module).add('initial', () => <Wrapper />)

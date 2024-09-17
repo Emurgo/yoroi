@@ -3,13 +3,13 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 import {FlatList, Text, TouchableOpacity, View} from 'react-native'
 
-import {Boundary} from '../../../../components'
+import {Boundary} from '../../../../components/Boundary/Boundary'
 import {normalisePtId} from '../../../../kernel/helpers/normalisePtId'
 import globalMessages, {txLabels} from '../../../../kernel/i18n/global-messages'
 import {isEmptyString} from '../../../../kernel/utils'
 import {CardanoTypes} from '../../../../yoroi-wallets/cardano/types'
-import {asQuantity} from '../../../../yoroi-wallets/utils'
 import {formatTokenAmount} from '../../../../yoroi-wallets/utils/format'
+import {asQuantity} from '../../../../yoroi-wallets/utils/utils'
 import {usePrivacyMode} from '../../../Settings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from '../../common/strings'
@@ -46,8 +46,6 @@ export const AssetList = ({assets, onSelect}: AssetListProps) => {
     </View>
   )
 }
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 
 type AssetRowProps = {
   entry: CardanoTypes.TokenEntry

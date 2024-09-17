@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {FlatList, StyleSheet, Text, View} from 'react-native'
 
-import {Spacer} from '../../../../../components'
+import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {makeList} from '../../../../../kernel/utils'
 import {ILiquidityPool} from '../../../common/hooks/useGetLiquidityPool'
 import {useShowLiquidityPoolModal} from '../../../common/hooks/useShowLiquidityPoolModal'

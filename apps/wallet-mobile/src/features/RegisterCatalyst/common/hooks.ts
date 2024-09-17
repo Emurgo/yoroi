@@ -1,6 +1,5 @@
 import {Catalyst, useCatalyst} from '@yoroi/staking'
 import {App} from '@yoroi/types'
-import {useEffect, useState} from 'react'
 import {useQuery, UseQueryOptions} from 'react-query'
 
 import {time} from '../../../kernel/constants'
@@ -21,21 +20,6 @@ export const useCanVote = (wallet: YoroiWallet) => {
     canVote: !meta.isReadOnly && isShelley(meta.implementation),
     sufficientFunds,
   }
-}
-
-export const useCountdown = () => {
-  const [countdown, setCountdown] = useState(5)
-
-  useEffect(() => {
-    let timeout: ReturnType<typeof setTimeout>
-    if (countdown > 0) {
-      timeout = setTimeout(() => setCountdown(countdown - 1), time.oneSecond)
-    }
-
-    return () => clearTimeout(timeout)
-  }, [countdown])
-
-  return countdown
 }
 
 export function useCatalystCurrentFund(

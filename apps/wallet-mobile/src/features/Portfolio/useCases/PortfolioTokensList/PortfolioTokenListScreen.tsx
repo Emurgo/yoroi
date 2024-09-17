@@ -3,7 +3,7 @@ import * as React from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Tab, TabPanel, Tabs} from '../../../../components/Tabs'
+import {Tab, TabPanel, Tabs} from '../../../../components/Tabs/Tabs'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useSearchOnNavBar} from '../../../Search/SearchContext'
 import {NetworkTag} from '../../../Settings/ChangeNetwork/NetworkTag'

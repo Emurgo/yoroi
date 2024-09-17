@@ -2,9 +2,9 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, Text, TouchableOpacity} from 'react-native'
 
-import {Icon} from '../../../../components'
+import {Icon} from '../../../../components/Icon'
 import {Space} from '../../../../components/Space/Space'
-import {Device} from '../../../../yoroi-wallets/types'
+import {Device} from '../../../../yoroi-wallets/types/hw'
 
 type Props = {
   device: Device

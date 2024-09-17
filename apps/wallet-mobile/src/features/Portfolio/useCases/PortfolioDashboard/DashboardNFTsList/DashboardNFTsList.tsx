@@ -4,7 +4,8 @@ import {FlatList, Image, StyleSheet, Text, TouchableOpacity, useWindowDimensions
 
 import placeholderLight from '../../../../../assets/img/nft-placeholder.png'
 import placeholderDark from '../../../../../assets/img/nft-placeholder-dark.png'
-import {Icon, Spacer} from '../../../../../components'
+import {Icon} from '../../../../../components/Icon'
+import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {useNavigateTo} from '../../../common/hooks/useNavigateTo'
 import {usePortfolioBalances} from '../../../common/hooks/usePortfolioBalances'

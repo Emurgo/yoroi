@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, TextInput, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
-import {Icon} from '../../../../components'
+import {Icon} from '../../../../components/Icon'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 
 type Props = {

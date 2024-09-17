@@ -21,7 +21,7 @@ import {Version, versionCompare} from '../../utils/versioning'
 import * as yoroiApi from '../api/api'
 import {ApiHistoryError} from '../errors'
 
-export type TransactionManagerState = {
+type TransactionManagerState = {
   transactions: Transactions
   // @deprecated
   perAddressSyncMetadata: Record<string, SyncMetadata>
@@ -490,7 +490,7 @@ type SyncMetadata = {
   bestTxHash: string | null | undefined
 }
 
-export type TxManagerStorage = {
+type TxManagerStorage = {
   loadTxs: () => Promise<Record<string, Transaction>>
   saveTxs: (txs: Record<string, Transaction>) => Promise<void>
   clear: () => Promise<void>

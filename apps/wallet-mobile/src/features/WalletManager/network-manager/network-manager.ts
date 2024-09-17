@@ -22,7 +22,7 @@ export const primaryTokenInfoMainnet = createPrimaryTokenInfo({
   description: 'Cardano',
 })
 
-export const primaryTokenInfoAnyTestnet = createPrimaryTokenInfo({
+const primaryTokenInfoAnyTestnet = createPrimaryTokenInfo({
   decimals: 6,
   name: 'TADA',
   ticker: 'TADA',

@@ -1,7 +1,7 @@
 import {Swap} from '@yoroi/types'
 import React, {FunctionComponent} from 'react'
 
-import {Icon} from '../../../../components'
+import {Icon} from '../../../../components/Icon'
 
 type Props = {
   providerId: Swap.PoolProvider

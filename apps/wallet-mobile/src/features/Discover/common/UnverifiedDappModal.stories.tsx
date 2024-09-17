@@ -3,7 +3,7 @@ import {storiesOf} from '@storybook/react-native'
 import * as React from 'react'
 import {View} from 'react-native'
 
-import {Button} from '../../../components'
+import {Button} from '../../../components/Button/Button'
 import {UnverifiedDappModal, useOpenUnverifiedDappModal} from './UnverifiedDappModal'
 
 storiesOf('Discover UnverifiedDappModal', module)

@@ -6,7 +6,7 @@ import {HelperText as HelperTextRNP, TextInput as RNPTextInput} from 'react-nati
 
 import {isEmptyString} from '../../../../../../kernel/utils'
 
-export type TextInputProps = RNTextInputProps &
+type TextInputProps = RNTextInputProps &
   Omit<React.ComponentProps<typeof RNPTextInput>, 'theme'> & {
     containerStyle?: ViewStyle
     renderComponentStyle?: ViewStyle
@@ -186,12 +186,11 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: React.For
   )
 })
 
-export const HelperText = ({
+const HelperText = ({
   children,
   type = 'info',
   faded = false,
   visible = true,
-  ...props
 }: {
   children: React.ReactNode
   type?: 'info' | 'error'
@@ -214,7 +213,6 @@ export const HelperText = ({
       }}
       type={type}
       visible={visible}
-      {...props}
     >
       {children}
     </HelperTextRNP>

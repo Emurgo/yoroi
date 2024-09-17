@@ -4,7 +4,7 @@ import * as React from 'react'
 
 import {QueryProvider} from '../../../../../../../.storybook/decorators'
 import {YoroiWallet} from '../../../../../../yoroi-wallets/cardano/types'
-import {mocks} from '../../../../../../yoroi-wallets/mocks'
+import {mocks} from '../../../../../../yoroi-wallets/mocks/wallet'
 import {WalletManagerProviderMock} from '../../../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {SearchProvider} from '../../../../../Search/SearchContext'
 import {ListMediaGalleryScreen} from './ListMediaGalleryScreen'

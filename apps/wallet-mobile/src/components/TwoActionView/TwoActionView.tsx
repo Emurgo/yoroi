@@ -4,9 +4,9 @@ import {useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View} from 'react-native'
 
 import {confirmationMessages} from '../../kernel/i18n/global-messages'
-import {Button} from '../Button'
+import {Button} from '../Button/Button'
 import {Space} from '../Space/Space'
-import {Spacer} from '../Spacer'
+import {Spacer} from '../Spacer/Spacer'
 import {Text} from '../Text'
 
 type Props = {

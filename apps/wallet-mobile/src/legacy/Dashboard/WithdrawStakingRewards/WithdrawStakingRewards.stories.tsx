@@ -3,7 +3,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
 import {WithModal} from '../../../../.storybook/decorators'
-import {mocks} from '../../../yoroi-wallets/mocks'
+import {mocks} from '../../../yoroi-wallets/mocks/wallet'
 import {WithdrawStakingRewards} from './WithdrawStakingRewards'
 
 storiesOf('WithdrawStakingRewards', module)

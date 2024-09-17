@@ -2,7 +2,8 @@ import {useExplorers} from '@yoroi/explorers'
 import React from 'react'
 import {Linking, StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native'
 
-import {CopyButton, Text} from '../../../../components'
+import {CopyButton} from '../../../../components/CopyButton'
+import {Text} from '../../../../components/Text'
 import {useSelectedNetwork} from '../../../WalletManager/common/hooks/useSelectedNetwork'
 
 export const WalletAddress = ({addressHash, style}: {addressHash: string; style?: ViewStyle}) => {

@@ -1,7 +1,7 @@
 import {defineMessages, useIntl} from 'react-intl'
 
 import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../../kernel/i18n/global-messages'
-import LocalizableError from '../../../kernel/i18n/LocalizableError'
+import {LocalizableError} from '../../../kernel/i18n/LocalizableError'
 
 export const useStrings = () => {
   const intl = useIntl()

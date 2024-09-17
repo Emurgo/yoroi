@@ -4,8 +4,10 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
 import {useQuery} from 'react-query'
 
-import {Button, Spacer, TextInput} from '../../../components'
+import {Button} from '../../../components/Button/Button'
 import {GradientWarning} from '../../../components/ChainWarning/GradientWarning'
+import {Spacer} from '../../../components/Spacer/Spacer'
+import {TextInput} from '../../../components/TextInput/TextInput'
 import {isValidPoolIdOrHash, normalizeToPoolHash} from '../../../yoroi-wallets/cardano/delegationUtils'
 
 type Props = {

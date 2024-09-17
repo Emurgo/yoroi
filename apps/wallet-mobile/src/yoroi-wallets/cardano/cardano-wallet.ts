@@ -20,7 +20,7 @@ import {makeMemosManager, MemosManager} from '../../features/Transactions/common
 import {cardanoConfig} from '../../features/WalletManager/common/adapters/cardano/cardano-config'
 import {derivationConfig} from '../../features/WalletManager/common/derivation-config'
 import {protocolParamsPlaceholder} from '../../features/WalletManager/network-manager/network-manager'
-import LocalizableError from '../../kernel/i18n/LocalizableError'
+import {LocalizableError} from '../../kernel/i18n/LocalizableError'
 import {throwLoggedError} from '../../kernel/logger/helpers/throw-logged-error'
 import {logger} from '../../kernel/logger/logger'
 import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../kernel/storage/EncryptedStorage'
@@ -34,10 +34,10 @@ import type {
   Transaction,
   TxStatusRequest,
   TxStatusResponse,
-  YoroiEntry,
-} from '../types'
-import {StakingInfo, YoroiSignedTx, YoroiUnsignedTx} from '../types'
-import {Quantities} from '../utils'
+} from '../types/other'
+import {StakingInfo} from '../types/staking'
+import {YoroiEntry, YoroiSignedTx, YoroiUnsignedTx} from '../types/yoroi'
+import {Quantities} from '../utils/utils'
 import {Cardano, CardanoMobile} from '../wallets'
 import {AccountManager, accountManagerMaker, Addresses} from './account-manager/account-manager'
 import * as legacyApi from './api/api'
@@ -49,11 +49,11 @@ import {
   doesCardanoAppVersionSupportCIP1694,
   getCardanoAppMajorVersion,
   signTxWithLedger,
-} from './hw'
+} from './hw/hw'
 import {keyManager} from './key-manager/key-manager'
-import {processTxHistoryData} from './processTransactions'
+import {processTxHistoryData} from './processTransactions/processTransactions'
 import {yoroiSignedTx} from './signedTx'
-import {TransactionManager} from './transactionManager'
+import {TransactionManager} from './transactionManager/transactionManager'
 import {toLibToken} from './transformers/to-lib-token'
 import {
   CardanoTypes,
@@ -65,9 +65,9 @@ import {
   WalletSubscription,
   YoroiWallet,
 } from './types'
-import {yoroiUnsignedTx} from './unsignedTx'
+import {yoroiUnsignedTx} from './unsignedTx/unsignedTx'
 import {deriveRewardAddressHex, toRecipients} from './utils'
-import {makeUtxoManager, UtxoManager} from './utxoManager'
+import {makeUtxoManager, UtxoManager} from './utxoManager/utxoManager'
 import {utxosMaker} from './utxoManager/utxos'
 
 export const makeCardanoWallet = (networkManager: Network.Manager, implementation: Wallet.Implementation) => {

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
-import {useModal} from '../../../../components'
+import {useModal} from '../../../../components/Modal/ModalContext'
 import {OpenOrderModal} from '../../useCases/PortfolioTokensList/PortfolioDAppsTokenList/OpenOrderModal'
 import {IOpenOrders} from './useGetOpenOrders'
 

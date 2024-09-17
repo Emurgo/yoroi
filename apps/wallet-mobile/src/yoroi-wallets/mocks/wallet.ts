@@ -14,16 +14,9 @@ import {cardanoConfig} from '../../features/WalletManager/common/adapters/cardan
 import {buildNetworkManagers} from '../../features/WalletManager/network-manager/network-manager'
 import {toTokenInfo, utf8ToHex} from '../cardano/api/utils'
 import {CardanoTypes, YoroiWallet} from '../cardano/types'
-import {
-  RemotePoolMetaSuccess,
-  StakePoolInfosAndHistories,
-  StakingInfo,
-  StakingStatus,
-  TransactionInfo,
-  YoroiNftModerationStatus,
-  YoroiSignedTx,
-  YoroiUnsignedTx,
-} from '../types'
+import {TransactionInfo} from '../types/other'
+import {RemotePoolMetaSuccess, StakePoolInfosAndHistories, StakingInfo, StakingStatus} from '../types/staking'
+import {YoroiNftModerationStatus, YoroiSignedTx, YoroiUnsignedTx} from '../types/yoroi'
 import {getTokenFingerprint} from '../utils/format'
 import {CardanoMobile} from '../wallets'
 import {mockEncryptedStorage} from './storage'
@@ -267,7 +260,7 @@ const wallet: YoroiWallet = {
   },
 }
 
-export const metaHw: Wallet.Meta = {
+const metaHw: Wallet.Meta = {
   ...walletMeta,
   isHW: true,
   hwDeviceInfo: {
@@ -322,17 +315,6 @@ const fetchPoolInfo = {
     action('fetchPoolInfo')(...args)
     return new Promise(() => null) as unknown as StakePoolInfosAndHistories
   },
-}
-
-export const generateManyNfts = (): Balance.TokenInfo[] => {
-  return Array(30)
-    .fill(undefined)
-    .map((_, index) => ({
-      ...nft,
-      name: 'NFT ' + index,
-      id: index + '',
-      fingerprint: getTokenFingerprint({policyId: nft.group, assetNameHex: utf8ToHex('NFT ' + index)}),
-    }))
 }
 
 const fetchNftModerationStatus = {

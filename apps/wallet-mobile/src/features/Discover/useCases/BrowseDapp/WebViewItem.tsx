@@ -6,7 +6,8 @@ import Animated, {Easing, useAnimatedStyle, useSharedValue, withTiming} from 're
 import WebView from 'react-native-webview'
 import {WebViewNavigation, WebViewNavigationEvent} from 'react-native-webview/lib/WebViewTypes'
 
-import {Icon, Spacer} from '../../../../components'
+import {Icon} from '../../../../components/Icon'
+import {Spacer} from '../../../../components/Spacer/Spacer'
 import {isDev} from '../../../../kernel/env'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {TabItem, useBrowser} from '../../common/BrowserProvider'

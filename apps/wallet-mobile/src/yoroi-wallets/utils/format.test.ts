@@ -1,6 +1,6 @@
 import {primaryTokenInfoMainnet} from '../../features/WalletManager/network-manager/network-manager'
-import {asQuantity} from '.'
 import {formatTokenAmount, formatTokenFractional, formatTokenInteger} from './format'
+import {asQuantity} from './utils'
 
 describe('formatAda', () => {
   it('formats zero', () => {

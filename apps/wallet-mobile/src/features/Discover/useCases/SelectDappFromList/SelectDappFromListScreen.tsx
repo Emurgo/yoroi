@@ -3,7 +3,7 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {FlatList, StyleSheet, View} from 'react-native'
 
-import {Spacer} from '../../../../components'
+import {Spacer} from '../../../../components/Spacer/Spacer'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
 import {useSearch, useSearchOnNavBar} from '../../../Search/SearchContext'
 import {NetworkTag} from '../../../Settings/ChangeNetwork/NetworkTag'
@@ -23,7 +23,7 @@ const DAppTabs = {
   recommended: 'recommended',
 } as const
 type TDAppTabs = keyof typeof DAppTabs
-export type Category = 'Investment' | 'Media' | 'Trading' | 'NFT' | 'Community'
+type Category = 'Investment' | 'Media' | 'Trading' | 'NFT' | 'Community'
 
 export const SelectDappFromListScreen = () => {
   const strings = useStrings()

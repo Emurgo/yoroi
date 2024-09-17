@@ -4,7 +4,9 @@ import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {usePrivacyMode} from '../../features/Settings/PrivacyMode/PrivacyMode'
-import {Button, Spacer, Text} from '..'
+import {Button} from '../Button/Button'
+import {Spacer} from '../Spacer/Spacer'
+import {Text} from '../Text'
 import {HideableText} from './HideableText'
 
 storiesOf('HideableText', module).add('Default', () => <HideableTextTest />)

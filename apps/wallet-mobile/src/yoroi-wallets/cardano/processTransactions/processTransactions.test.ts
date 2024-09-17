@@ -1,7 +1,7 @@
 import {primaryTokenInfoMainnet} from '../../../features/WalletManager/network-manager/network-manager'
 import {RawTransaction, TRANSACTION_DIRECTION} from '../../types/other'
 import {MultiToken} from '../MultiToken'
-import {toCachedTx} from '../transactionManager'
+import {toCachedTx} from '../transactionManager/transactionManager'
 import {processTxHistoryData} from './processTransactions'
 
 //

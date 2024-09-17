@@ -3,7 +3,7 @@ import React from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
 import {StyleSheet, View} from 'react-native'
 
-import {Boundary} from '../../../../../components'
+import {Boundary} from '../../../../../components/Boundary/Boundary'
 import {useWalletNavigation} from '../../../../../kernel/navigation'
 import {useSearchOnNavBar} from '../../../../Search/SearchContext'
 import {ButtonGroup} from '../../../common/ButtonGroup/ButtonGroup'

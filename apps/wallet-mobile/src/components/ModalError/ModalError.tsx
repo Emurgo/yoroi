@@ -8,8 +8,8 @@ import {
   GeneralConnectionError,
   LedgerUserError,
   RejectedByUserError,
-} from '../../yoroi-wallets/hw'
-import {Button} from '../Button'
+} from '../../yoroi-wallets/hw/hw'
+import {Button} from '../Button/Button'
 import {Icon} from '../Icon'
 import {Space} from '../Space/Space'
 import {Text} from '../Text'

@@ -2,7 +2,7 @@ import React from 'react'
 
 import {features} from '../../../kernel/features'
 
-export type ActiveTab = 'performance' | 'overview' | 'transactions'
+type ActiveTab = 'performance' | 'overview' | 'transactions'
 interface TokenDetailContext {
   activeTab: ActiveTab
   setActiveTab: (value: ActiveTab) => void

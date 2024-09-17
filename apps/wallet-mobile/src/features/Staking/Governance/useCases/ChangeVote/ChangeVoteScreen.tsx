@@ -10,13 +10,17 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Spacer, useModal} from '../../../../../components'
+import {useModal} from '../../../../../components/Modal/ModalContext'
+import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {useCreateGovernanceTx, useStakingKey} from '../../../../../yoroi-wallets/hooks'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
-import {Action, LearnMoreLink, useNavigateTo, useStrings} from '../../common'
+import {Action} from '../../common/Action/Action'
 import {mapStakingKeyStateToGovernanceAction} from '../../common/helpers'
+import {LearnMoreLink} from '../../common/LearnMoreLink/LearnMoreLink'
+import {useNavigateTo} from '../../common/navigation'
+import {useStrings} from '../../common/strings'
 import {GovernanceVote} from '../../types'
-import {EnterDrepIdModal} from '../EnterDrepIdModal'
+import {EnterDrepIdModal} from '../EnterDrepIdModal/EnterDrepIdModal'
 
 export const ChangeVoteScreen = () => {
   const strings = useStrings()

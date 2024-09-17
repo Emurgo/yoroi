@@ -56,7 +56,7 @@ export const useStrings = () => {
   }).current
 }
 
-export const messages = Object.freeze(
+const messages = Object.freeze(
   defineMessages({
     currentBalance: {
       id: 'swap.swapScreen.currentBalance',

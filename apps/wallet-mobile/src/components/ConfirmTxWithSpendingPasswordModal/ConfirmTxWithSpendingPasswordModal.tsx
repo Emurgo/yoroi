@@ -6,11 +6,11 @@ import {ActivityIndicator, StyleSheet, TextInput as RNTextInput, View} from 'rea
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {debugWalletInfo, features} from '../../kernel/features'
 import {useSignTxWithPassword, useSubmitTx} from '../../yoroi-wallets/hooks'
-import {YoroiSignedTx, YoroiUnsignedTx} from '../../yoroi-wallets/types'
-import {Button} from '../Button'
-import {Spacer} from '../Spacer'
+import {YoroiSignedTx, YoroiUnsignedTx} from '../../yoroi-wallets/types/yoroi'
+import {Button} from '../Button/Button'
+import {Spacer} from '../Spacer/Spacer'
 import {Text} from '../Text'
-import {Checkmark, TextInput} from '../TextInput'
+import {Checkmark, TextInput} from '../TextInput/TextInput'
 import {useStrings} from './strings'
 
 type Props = {

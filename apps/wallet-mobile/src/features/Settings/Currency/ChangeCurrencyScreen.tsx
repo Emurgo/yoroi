@@ -3,7 +3,7 @@ import React from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Boundary} from '../../../components'
+import {Boundary} from '../../../components/Boundary/Boundary'
 import {CurrencyPickerList} from './CurrencyPickerList'
 
 export const ChangeCurrencyScreen = () => {

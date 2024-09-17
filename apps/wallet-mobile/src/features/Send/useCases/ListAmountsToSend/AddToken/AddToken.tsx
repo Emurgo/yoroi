@@ -3,7 +3,8 @@ import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleProp, StyleSheet, Text, TouchableOpacity, ViewStyle} from 'react-native'
 
-import {Icon, Spacer} from '../../../../../components'
+import {Icon} from '../../../../../components/Icon'
+import {Spacer} from '../../../../../components/Spacer/Spacer'
 
 type AddTokenButtonProps = {
   onPress(): void

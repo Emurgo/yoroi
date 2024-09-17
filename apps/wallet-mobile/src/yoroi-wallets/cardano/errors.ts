@@ -1,5 +1,5 @@
 import {errorMessages} from '../../kernel/i18n/global-messages'
-import LocalizableError from '../../kernel/i18n/LocalizableError'
+import {LocalizableError} from '../../kernel/i18n/LocalizableError'
 
 // thrown when the request did go through but
 // backend returned an unexpected result

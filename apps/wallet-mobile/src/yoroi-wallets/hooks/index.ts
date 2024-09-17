@@ -26,10 +26,10 @@ import {logger} from '../../kernel/logger/logger'
 import {deriveAddressFromXPub} from '../cardano/account-manager/derive-address-from-xpub'
 import {getSpendingKey, getStakingKey} from '../cardano/addressInfo/addressInfo'
 import {WalletEvent, YoroiWallet} from '../cardano/types'
-import {TRANSACTION_DIRECTION, TRANSACTION_STATUS, YoroiSignedTx, YoroiUnsignedTx} from '../types'
-import {TipStatusResponse, TxSubmissionStatus} from '../types/other'
+import {TipStatusResponse, TRANSACTION_DIRECTION, TRANSACTION_STATUS, TxSubmissionStatus} from '../types/other'
+import {YoroiSignedTx, YoroiUnsignedTx} from '../types/yoroi'
 import {delay} from '../utils/timeUtils'
-import {Amounts, Quantities, Utxos} from '../utils/utils'
+import {Utxos} from '../utils/utils'
 
 const crashReportsStorageKey = 'sendCrashReports'
 
@@ -39,7 +39,7 @@ export const getCrashReportsEnabled = async (storage: AsyncStorageStatic = Async
   return parseBoolean(data) ?? false
 }
 
-export const useCrashReportsEnabled = (storage: AsyncStorageStatic = AsyncStorage) => {
+const useCrashReportsEnabled = (storage: AsyncStorageStatic = AsyncStorage) => {
   const query = useQuery({
     suspense: true,
     queryKey: [crashReportsStorageKey],
@@ -51,7 +51,7 @@ export const useCrashReportsEnabled = (storage: AsyncStorageStatic = AsyncStorag
   return query.data
 }
 
-export const useSetCrashReportsEnabled = (storage: AsyncStorageStatic = AsyncStorage) => {
+const useSetCrashReportsEnabled = (storage: AsyncStorageStatic = AsyncStorage) => {
   const mutation = useMutationWithInvalidations<void, Error, boolean>({
     useErrorBoundary: true,
     mutationFn: async (enabled) => {
@@ -105,7 +105,7 @@ export const useReceiveAddresses = (wallet: YoroiWallet) => {
   return wallet.receiveAddresses
 }
 
-export const useUtxos = (wallet: YoroiWallet) => {
+const useUtxos = (wallet: YoroiWallet) => {
   useWallet(wallet, 'utxos')
 
   return wallet.utxos
@@ -219,7 +219,7 @@ export const useWithdrawalTx = (
   }
 }
 
-export type VotingRegTxAndEncryptedKey = {
+type VotingRegTxAndEncryptedKey = {
   votingRegTx: YoroiUnsignedTx
 }
 
@@ -575,13 +575,6 @@ export const useBalances = (wallet: YoroiWallet): Balance.Amounts => {
   const utxos = useUtxos(wallet)
 
   return Utxos.toAmounts(utxos, wallet.portfolioPrimaryTokenInfo.id)
-}
-
-export const useBalance = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string | undefined}) => {
-  const balances = useBalances(wallet)
-
-  if (tokenId == null) return Quantities.zero
-  return Amounts.getAmount(balances, tokenId).quantity
 }
 
 export const useResync = (wallet: YoroiWallet, options?: UseMutationOptions<void, Error>) => {

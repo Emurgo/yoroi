@@ -1,7 +1,7 @@
 import {tokenBalanceMocks} from '@yoroi/portfolio'
 import {Transfer} from '@yoroi/types'
 
-import {YoroiEntry} from '../../../yoroi-wallets/types'
+import {YoroiEntry} from '../../../yoroi-wallets/types/yoroi'
 import {toYoroiEntry} from './toYoroiEntry'
 
 describe('toYoroiEntry', () => {

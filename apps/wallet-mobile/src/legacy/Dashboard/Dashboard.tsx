@@ -8,34 +8,36 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Banner, Button, useModal} from '../../components'
+import {Banner} from '../../components/Banner/Banner'
+import {Button} from '../../components/Button/Button'
+import {useModal} from '../../components/Modal/ModalContext'
 import {Space} from '../../components/Space/Space'
 import {
-  useGovernanceStrings,
   useIsGovernanceFeatureEnabled,
   useIsParticipatingInGovernance,
-  WithdrawWarningModal,
-} from '../../features/Staking/Governance'
+} from '../../features/Staking/Governance/common/helpers'
+import {useStrings} from '../../features/Staking/Governance/common/strings'
+import {WithdrawWarningModal} from '../../features/Staking/Governance/useCases/WithdrawWarningModal/WithdrawWarningModal'
 import {useSelectedNetwork} from '../../features/WalletManager/common/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import globalMessages from '../../kernel/i18n/global-messages'
 import {DashboardRoutes, useWalletNavigation} from '../../kernel/navigation'
 import {isEmptyString} from '../../kernel/utils'
 import {useBalances, useIsOnline, useSync} from '../../yoroi-wallets/hooks'
-import {Amounts} from '../../yoroi-wallets/utils'
+import {Amounts} from '../../yoroi-wallets/utils/utils'
 import {PoolTransitionNotice} from '../Staking/PoolTransition/PoolTransitionNotice'
 import {usePoolTransition} from '../Staking/PoolTransition/usePoolTransition'
 import {EpochProgress} from './EpochProgress'
 import {NotDelegatedInfo} from './NotDelegatedInfo'
 import {StakePoolInfos, useStakingInfo} from './StakePoolInfos'
 import {UserSummary} from './UserSummary'
-import {WithdrawStakingRewards} from './WithdrawStakingRewards'
+import {WithdrawStakingRewards} from './WithdrawStakingRewards/WithdrawStakingRewards'
 
 export const Dashboard = () => {
   const {styles} = useStyles()
   const intl = useIntl()
   const navigateTo = useNavigateTo()
-  const governanceStrings = useGovernanceStrings()
+  const governanceStrings = useStrings()
   const {isPoolRetiring} = usePoolTransition()
 
   const {wallet, meta} = useSelectedWallet()

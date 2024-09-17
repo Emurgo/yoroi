@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/native'
 import {createStackNavigator, StackNavigationProp} from '@react-navigation/stack'
 import {useRef} from 'react'
 
-import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
+import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types/yoroi'
 import {GovernanceVote} from '../types'
 
 export type Routes = {

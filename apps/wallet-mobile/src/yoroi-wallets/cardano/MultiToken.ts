@@ -2,14 +2,14 @@ import {TokenEntry} from '@emurgo/yoroi-lib'
 import {Portfolio} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 
-export type TokenLookupKey = {
+type TokenLookupKey = {
   identifier: string
 }
 export type TokenEntryPlain = TokenLookupKey & {
   amount: string
   isDefault: boolean
 }
-export type DefaultTokenEntry = {
+type DefaultTokenEntry = {
   defaultIdentifier: string
 }
 export class MultiToken {

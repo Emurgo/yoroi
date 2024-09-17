@@ -3,8 +3,8 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
 import {WithModal} from '../../../../../.storybook/decorators'
-import {Boundary} from '../../../../components'
-import {mocks} from '../../../../yoroi-wallets/mocks'
+import {Boundary} from '../../../../components/Boundary/Boundary'
+import {mocks} from '../../../../yoroi-wallets/mocks/wallet'
 import {ConfirmTxWithOS} from './ConfirmTxWithOS'
 
 storiesOf('ConfirmWithdrawalTx/OS', module)

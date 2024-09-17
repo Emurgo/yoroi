@@ -4,14 +4,14 @@
     "defaultMessage": "!!!To import a read-only wallet from the Yoroi extension, you will need to:",
     "file": "src/features/SetupWallet/legacy/ImportReadOnlyWallet/ImportReadOnlyWalletScreen.tsx",
     "start": {
-      "line": 61,
+      "line": 64,
       "column": 13,
-      "index": 2090
+      "index": 2291
     },
     "end": {
-      "line": 64,
+      "line": 67,
       "column": 3,
-      "index": 2264
+      "index": 2465
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Open \"My wallets\" page in the Yoroi extension.",
     "file": "src/features/SetupWallet/legacy/ImportReadOnlyWallet/ImportReadOnlyWalletScreen.tsx",
     "start": {
-      "line": 65,
+      "line": 68,
       "column": 9,
-      "index": 2275
+      "index": 2476
     },
     "end": {
-      "line": 68,
+      "line": 71,
       "column": 3,
-      "index": 2419
+      "index": 2620
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Look for the {buttonType} for the wallet you want to import in the mobile app.",
     "file": "src/features/SetupWallet/legacy/ImportReadOnlyWallet/ImportReadOnlyWalletScreen.tsx",
     "start": {
-      "line": 69,
+      "line": 72,
       "column": 9,
-      "index": 2430
+      "index": 2631
     },
     "end": {
-      "line": 72,
+      "line": 75,
       "column": 3,
-      "index": 2606
+      "index": 2807
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!export read-only wallet button",
     "file": "src/features/SetupWallet/legacy/ImportReadOnlyWallet/ImportReadOnlyWalletScreen.tsx",
     "start": {
-      "line": 73,
+      "line": 76,
       "column": 14,
-      "index": 2622
+      "index": 2823
     },
     "end": {
-      "line": 76,
+      "line": 79,
       "column": 3,
-      "index": 2755
+      "index": 2956
     }
   }
 ]

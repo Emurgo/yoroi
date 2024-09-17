@@ -47,5 +47,5 @@ const ScanStartParamsSchema = z.object({
   selectedNetwork: z.custom<Chain.SupportedNetworks>(),
 })
 
-export const isPreparingNetworkParams = createTypeGuardFromSchema<Params>(ScanStartParamsSchema)
-export const isParams = (params?: unknown): params is Params => isPreparingNetworkParams(params)
+const isPreparingNetworkParams = createTypeGuardFromSchema<Params>(ScanStartParamsSchema)
+const isParams = (params?: unknown): params is Params => isPreparingNetworkParams(params)

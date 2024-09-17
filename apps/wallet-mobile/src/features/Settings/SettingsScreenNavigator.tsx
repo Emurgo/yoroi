@@ -7,7 +7,8 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {TouchableOpacity} from 'react-native'
 
-import {Boundary, Icon} from '../../components'
+import {Boundary} from '../../components/Boundary/Boundary'
+import {Icon} from '../../components/Icon'
 import globalMessages from '../../kernel/i18n/global-messages'
 import {useMetrics} from '../../kernel/metrics/metricsManager'
 import {
@@ -16,7 +17,7 @@ import {
   SettingsStackRoutes,
   SettingsTabRoutes,
 } from '../../kernel/navigation'
-import {ChangePinScreen} from '../Auth'
+import {ChangePinScreen} from '../Auth/ChangePinScreen'
 import {EnableLoginWithPin} from '../Auth/EnableLoginWithPin'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 import {About} from './About'

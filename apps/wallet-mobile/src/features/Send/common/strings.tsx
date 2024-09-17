@@ -77,7 +77,7 @@ export const useStrings = () => {
   }
 }
 
-export const amountInputErrorMessages = defineMessages({
+const amountInputErrorMessages = defineMessages({
   INVALID_AMOUNT: {
     id: 'components.send.sendscreen.amountInput.error.INVALID_AMOUNT',
     defaultMessage: '!!!Please enter valid amount',
@@ -116,7 +116,7 @@ export const amountInputErrorMessages = defineMessages({
   },
 })
 
-export const messages = defineMessages({
+const messages = defineMessages({
   walletAddress: {
     id: 'components.send.sendscreen.walletAddress',
     defaultMessage: '!!!Wallet Address',

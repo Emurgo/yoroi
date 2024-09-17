@@ -3,7 +3,7 @@ import React from 'react'
 
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useSignWithPasswordAndSubmitTx} from '../../../../yoroi-wallets/hooks'
-import {YoroiSignedTx, YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
+import {YoroiSignedTx, YoroiUnsignedTx} from '../../../../yoroi-wallets/types/yoroi'
 import {ConfirmWithSpendingPassword} from '../../common/ConfirmWithSpendingPassword'
 import {ErrorData} from '../../common/ConfirmWithSpendingPassword/ConfirmWithSpendingPassword'
 import {useStrings} from '../../common/strings'

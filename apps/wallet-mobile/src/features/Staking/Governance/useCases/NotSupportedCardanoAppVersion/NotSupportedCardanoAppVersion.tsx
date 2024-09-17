@@ -2,12 +2,14 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {Button, Spacer, Text} from '../../../../../components'
+import {Button} from '../../../../../components/Button/Button'
 import {SafeArea} from '../../../../../components/SafeArea'
 import {Space} from '../../../../../components/Space/Space'
+import {Spacer} from '../../../../../components/Spacer/Spacer'
+import {Text} from '../../../../../components/Text'
 import {useWalletNavigation} from '../../../../../kernel/navigation'
-import {useStrings} from '../../common'
-import {BrokenImage} from '../../illustrations'
+import {useStrings} from '../../common/strings'
+import {BrokenImage} from '../../illustrations/BrokenImage'
 
 export const NotSupportedCardanoAppVersion = () => {
   const strings = useStrings()

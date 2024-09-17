@@ -4,7 +4,7 @@ import {init} from '@emurgo/cross-csl-mobile'
 
 const cardano = init('wrappedCSL')
 
-export type CslPointer = {ptr: number; free: () => void}
+type CslPointer = {ptr: number; free: () => void}
 
 export const wrappedCsl = (): {csl: WasmModuleProxy; release: VoidFunction} => {
   let pointers: CslPointer[] = []

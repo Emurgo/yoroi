@@ -1,11 +1,11 @@
-export type TokenCommonMetadata = {
+type TokenCommonMetadata = {
   numberOfDecimals: number
   ticker: null | string
   longName: null | string
   maxSupply: null | string
 }
 
-export type TokenMetadata = TokenCommonMetadata & {
+type TokenMetadata = TokenCommonMetadata & {
   policyId: string // empty string for ADA
   assetName: string // empty string for ADA
 }
@@ -16,7 +16,7 @@ export type Token = {
   metadata: TokenMetadata
 }
 
-export type DefaultAssetMetadata = TokenCommonMetadata & {
+type DefaultAssetMetadata = TokenCommonMetadata & {
   policyId: string
   assetName: string
   ticker: string
@@ -30,9 +30,4 @@ export type LegacyToken = {
   isDefault: boolean
   identifier: string
   metadata: TokenMetadata
-}
-
-export type NFTAsset = {
-  key: '721'
-  metadata?: unknown
 }

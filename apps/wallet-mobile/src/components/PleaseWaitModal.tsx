@@ -3,7 +3,7 @@ import React from 'react'
 import {ActivityIndicator, StyleSheet, Text, View} from 'react-native'
 
 import {Modal} from './legacy/Modal/Modal'
-import {Spacer} from './Spacer'
+import {Spacer} from './Spacer/Spacer'
 
 type PleaseWaitViewProps = {
   title: string

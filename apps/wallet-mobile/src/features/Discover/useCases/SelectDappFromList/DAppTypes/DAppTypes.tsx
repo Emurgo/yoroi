@@ -2,7 +2,8 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native'
 
-import {Icon, Spacer} from '../../../../../components'
+import {Icon} from '../../../../../components/Icon'
+import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {useMappedStrings} from '../../../common/useStrings'
 
 type Props = {
