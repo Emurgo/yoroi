@@ -1,5 +1,5 @@
 import {Datum} from '@emurgo/yoroi-lib'
-import {Balance, Resolver} from '@yoroi/types'
+import {Balance} from '@yoroi/types'
 
 import {CardanoTypes} from '../cardano/types'
 
