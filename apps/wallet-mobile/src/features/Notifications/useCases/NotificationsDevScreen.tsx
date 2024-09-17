@@ -1,7 +1,7 @@
-import {Notification, Notifications} from '@jamsinclair/react-native-notifications'
 import * as React from 'react'
 import {useEffect} from 'react'
 import {Text, View} from 'react-native'
+import {Notification, Notifications} from 'react-native-notifications'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../components'
