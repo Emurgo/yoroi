@@ -53,37 +53,33 @@ export const toSecondaryTokenInfos = (
 export const toTokenActivity = (
   apiTokenActivityResponse: Readonly<DullahanApiTokenActivityResponse>,
 ) => {
-  const toTokenActivity: Record<Portfolio.Token.Id, Portfolio.Token.Activity> =
-    {}
+  const tokenActivity: Record<Portfolio.Token.Id, Portfolio.Token.Activity> = {}
 
   return freeze(
-    Object.entries(apiTokenActivityResponse).reduce(
-      (acc, [id, tokenActivity]) => {
-        if (!Array.isArray(tokenActivity)) return acc
-        const castedId = id as Portfolio.Token.Id
+    Object.entries(apiTokenActivityResponse).reduce((acc, [id, response]) => {
+      if (!Array.isArray(response)) return acc
+      const castedId = id as Portfolio.Token.Id
 
-        const [statusCode, tokenActivityData] = tokenActivity
-        if (statusCode !== Api.HttpStatusCode.Ok) return acc
+      const [statusCode, tokenActivityData] = response
+      if (statusCode !== Api.HttpStatusCode.Ok) return acc
 
-        TokenActivityResponseSchema.parse(tokenActivityData)
+      TokenActivityResponseSchema.parse(tokenActivityData)
 
-        const parsedTokenActivity: Portfolio.Token.Activity = {
-          price: {
-            ts: tokenActivityData.price.ts,
-            open: new BigNumber(tokenActivityData.price.open),
-            close: new BigNumber(tokenActivityData.price.close),
-            low: new BigNumber(tokenActivityData.price.low),
-            high: new BigNumber(tokenActivityData.price.high),
-            change: tokenActivityData.price.change,
-          },
-        }
+      const parsedTokenActivity: Portfolio.Token.Activity = {
+        price: {
+          ts: tokenActivityData.price.ts,
+          open: new BigNumber(tokenActivityData.price.open),
+          close: new BigNumber(tokenActivityData.price.close),
+          low: new BigNumber(tokenActivityData.price.low),
+          high: new BigNumber(tokenActivityData.price.high),
+          change: tokenActivityData.price.change,
+        },
+      }
 
-        acc[castedId] = parsedTokenActivity
+      acc[castedId] = parsedTokenActivity
 
-        return acc
-      },
-      toTokenActivity,
-    ),
+      return acc
+    }, tokenActivity),
     true,
   )
 }
