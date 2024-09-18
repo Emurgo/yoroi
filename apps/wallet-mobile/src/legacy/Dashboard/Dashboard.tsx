@@ -5,7 +5,15 @@ import {useTheme} from '@yoroi/theme'
 import BigNumber from 'bignumber.js'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {
+  ActivityIndicator,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+  ViewProps,
+} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Banner} from '../../components/Banner/Banner'
@@ -44,6 +52,7 @@ export const Dashboard = () => {
   const {isLoading: isSyncing, sync} = useSync(wallet)
   const isOnline = useIsOnline(wallet)
   const {openModal, closeModal} = useModal()
+  const {height: windowHeight} = useWindowDimensions()
 
   const balances = useBalances(wallet)
   const primaryAmount = Amounts.getAmount(balances, wallet.portfolioPrimaryTokenInfo.id)
@@ -71,7 +80,7 @@ export const Dashboard = () => {
     openModal(
       '',
       <WithdrawStakingRewards wallet={wallet} onSuccess={() => resetToTxHistory()} onCancel={() => closeModal()} />,
-      450,
+      windowHeight * 0.8,
     )
   }
 
