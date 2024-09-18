@@ -28,7 +28,7 @@ import {ReceiveProvider} from '../Receive/common/ReceiveProvider'
 import {DescribeSelectedAddressScreen} from '../Receive/useCases/DescribeSelectedAddressScreen'
 import {ListMultipleAddressesScreen} from '../Receive/useCases/ListMultipleAddressesScreen'
 import {RequestSpecificAmountScreen} from '../Receive/useCases/RequestSpecificAmountScreen'
-import {ReviewTransactionNavigator} from '../ReviewTransaction/ReviewTransactionNavigator'
+import {ReviewTransactionScreen} from '../ReviewTransaction/useCases/ReviewTransactionScreen/ReviewTransactionScreen'
 import {CodeScannerButton} from '../Scan/common/CodeScannerButton'
 import {ScanCodeScreen} from '../Scan/useCases/ScanCodeScreen'
 import {ShowCameraPermissionDeniedScreen} from '../Scan/useCases/ShowCameraPermissionDeniedScreen/ShowCameraPermissionDeniedScreen'
@@ -222,7 +222,7 @@ export const TxHistoryNavigator = () => {
 
               <Stack.Screen
                 name="swap-start-swap"
-                component={ReviewTransactionNavigator}
+                component={ReviewTransactionScreen}
                 options={{
                   ...sendOptions(navigationOptions, color),
                   title: strings.swapTitle,

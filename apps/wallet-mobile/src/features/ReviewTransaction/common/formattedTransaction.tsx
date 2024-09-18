@@ -1,10 +1,10 @@
 import {isNonNullable} from '@yoroi/common'
 import {infoExtractName} from '@yoroi/portfolio'
+import {Portfolio} from '@yoroi/types'
 import * as _ from 'lodash'
 
-import {useTokenInfos} from '../../../yoroi-wallets/hooks'
-import {asQuantity} from '../../../yoroi-wallets/utils'
-import {formatAdaWithText, formatTokenWithText} from '../../../yoroi-wallets/utils/format'
+import {asQuantity} from '../../../yoroi-wallets/utils/utils'
+import {usePortfolioTokenInfos} from '../../Portfolio/common/hooks/usePortfolioTokenInfos'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
 import {TransactionBody} from './types'
 
@@ -24,7 +24,7 @@ export const useFormattedTransaction = (data: TransactionBody) => {
 
   const inputTokenIds = inputs.flatMap((i) => {
     const receiveUTxO = getUtxoByTxIdAndIndex(i.transaction_id, i.index)
-    return receiveUTxO?.assets.map((a) => `${a.policyId}.${a.assetId}`) ?? []
+    return receiveUTxO?.assets.map((a) => `${a.policyId}.${a.assetId}` as Portfolio.Token.Id) ?? []
   })
 
   const outputTokenIds = outputs.flatMap((o) => {
@@ -32,25 +32,25 @@ export const useFormattedTransaction = (data: TransactionBody) => {
     const policyIds = Object.keys(o.amount.multiasset)
     const tokenIds = policyIds.flatMap((policyId) => {
       const assetIds = Object.keys(o.amount.multiasset?.[policyId] ?? {})
-      return assetIds.map((assetId) => `${policyId}.${assetId}`)
+      return assetIds.map((assetId) => `${policyId}.${assetId}` as Portfolio.Token.Id)
     })
     return tokenIds
   })
 
-  const tokenIds = _.uniq([...inputTokenIds, ...outputTokenIds])
-  const tokenInfos = useTokenInfos({wallet, tokenIds})
+  const tokenIds = _.uniq<Portfolio.Token.Id>([...inputTokenIds, ...outputTokenIds])
+  const {tokenInfos} = usePortfolioTokenInfos({wallet, tokenIds}, {suspense: true})
 
   const formattedInputs = inputs.map((input) => {
     const receiveUTxO = getUtxoByTxIdAndIndex(input.transaction_id, input.index)
     const address = receiveUTxO?.receiver
     const coin = receiveUTxO?.amount != null ? asQuantity(receiveUTxO.amount) : null
-    const coinText = coin != null ? formatAdaWithText(coin, wallet.primaryToken) : null
 
     const primaryAssets =
-      coinText != null
+      coin != null
         ? [
             {
-              label: coinText,
+              name: wallet.portfolioPrimaryTokenInfo.name,
+              label: `${coin} ${wallet.portfolioPrimaryTokenInfo.name}`,
               quantity: coin,
               isPrimary: true,
             },
@@ -60,11 +60,12 @@ export const useFormattedTransaction = (data: TransactionBody) => {
     const multiAssets =
       receiveUTxO?.assets
         .map((a) => {
-          const tokenInfo = tokenInfos.find((t) => t.id === a.assetId)
+          const tokenInfo = tokenInfos?.get(a.assetId as Portfolio.Token.Id)
           if (!tokenInfo) return null
           const quantity = asQuantity(a.amount)
           return {
-            label: formatTokenWithText(quantity, tokenInfo),
+            name: infoExtractName(tokenInfo),
+            label: `${quantity} ${infoExtractName(tokenInfo)}`,
             quantity,
             isPrimary: false,
           }
@@ -83,27 +84,25 @@ export const useFormattedTransaction = (data: TransactionBody) => {
   const formattedOutputs = outputs.map((output) => {
     const address = output.address
     const coin = asQuantity(output.amount.coin)
-    const coinText = formatAdaWithText(coin, wallet.primaryToken)
 
-    const primaryAssets =
-      coinText != null
-        ? [
-            {
-              label: coinText,
-              quantity: coin,
-              isPrimary: true,
-            },
-          ]
-        : []
+    const primaryAssets = [
+      {
+        name: wallet.portfolioPrimaryTokenInfo.name,
+        label: `${coin} ${wallet.portfolioPrimaryTokenInfo.name}`,
+        quantity: coin,
+        isPrimary: true,
+      },
+    ]
 
     const multiAssets = output.amount.multiasset
       ? Object.entries(output.amount.multiasset).map(([policyId, assets]) => {
           return Object.entries(assets).map(([assetId, amount]) => {
-            const tokenInfo = tokenInfos.find((t) => t.id === `${policyId}.${assetId}`)
+            const tokenInfo = tokenInfos?.get(`${policyId}.${assetId}`)
             if (tokenInfo == null) return null
             const quantity = asQuantity(amount)
             return {
               name: infoExtractName(tokenInfo),
+              label: `${quantity} ${infoExtractName(tokenInfo)}`,
               quantity,
               isPrimary: false,
             }
@@ -115,9 +114,16 @@ export const useFormattedTransaction = (data: TransactionBody) => {
     return {assets, address, ownAddress: address != null && isOwnedAddress(address)}
   })
 
-  const formattedFee = formatAdaWithText(asQuantity(data?.fee ?? '0'), wallet.primaryToken)
+  const fee = asQuantity(data?.fee ?? '0')
+
+  const formattedFee = {
+    name: wallet.portfolioPrimaryTokenInfo.name,
+    label: `${fee} ${wallet.portfolioPrimaryTokenInfo.name}`,
+    quantity: fee,
+    isPrimary: true,
+  }
 
   return {inputs: formattedInputs, outputs: formattedOutputs, fee: formattedFee}
 }
 
-export type formattedTx = ReturnType<typeof useFormattedTransaction>
+export type FormattedTx = ReturnType<typeof useFormattedTransaction>

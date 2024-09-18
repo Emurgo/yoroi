@@ -73,7 +73,7 @@ export const multiAssetsOneReceiver: TransactionBody = {
         coin: '10000000',
         multiasset: {
           cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a: {
-            '43415354': '10',
+            '43415354': '5',
           },
           f0ff48bbb7bbe9d59a40f1ce90e9e9d0ff5002ec48f232b49ca0fb9a: {
             '000de1406a6176696275656e6f': '1',
@@ -102,7 +102,7 @@ export const multiAssetsOneReceiver: TransactionBody = {
             '484f534b59': '115930085',
           },
           cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a: {
-            '43415354': '4498',
+            '43415354': '4503',
           },
           e0c4c2d7c4a0ed2cf786753fd845dee82c45512cee03e92adfd3fb8d: {
             '6a6176696275656e6f2e616461': '1',
@@ -127,7 +127,7 @@ export const multiAssetsOneReceiver: TransactionBody = {
     },
   ],
   fee: '189349',
-  ttl: '220396208',
+  ttl: '93045',
   certs: null,
   withdrawals: null,
   update: null,

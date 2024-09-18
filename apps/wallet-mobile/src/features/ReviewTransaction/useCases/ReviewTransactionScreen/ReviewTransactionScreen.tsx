@@ -3,7 +3,7 @@ import * as React from 'react'
 import {StyleSheet} from 'react-native'
 
 import {SafeArea} from '../../../../components/SafeArea'
-import {Tab, Tabs} from '../../../../components/Tabs'
+import {Tab, Tabs} from '../../../../components/Tabs/Tabs'
 import {Divider} from '../../common/Divider'
 import {useFormattedTransaction} from '../../common/formattedTransaction'
 import {multiAssetsOneReceiver} from '../../common/mocks'

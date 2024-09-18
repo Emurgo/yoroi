@@ -29,12 +29,8 @@ import {WalletEvent, YoroiWallet} from '../cardano/types'
 import {TipStatusResponse, TRANSACTION_DIRECTION, TRANSACTION_STATUS, TxSubmissionStatus} from '../types/other'
 import {YoroiSignedTx, YoroiUnsignedTx} from '../types/yoroi'
 import {delay} from '../utils/timeUtils'
-<<<<<<< HEAD
-import {Amounts, Quantities, Utxos} from '../utils/utils'
-import {CardanoMobile} from '../wallets'
-=======
 import {Utxos} from '../utils/utils'
->>>>>>> origin/develop
+import {CardanoMobile} from '../wallets'
 
 const crashReportsStorageKey = 'sendCrashReports'
 

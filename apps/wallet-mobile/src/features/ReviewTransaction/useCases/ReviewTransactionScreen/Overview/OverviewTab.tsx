@@ -4,17 +4,18 @@ import * as React from 'react'
 import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import Svg, {Defs, Image, Pattern, Rect, SvgProps, Use} from 'react-native-svg'
 
-import {Icon} from '../../../../../components'
+import {Icon} from '../../../../../components/Icon'
 import {Space} from '../../../../../components/Space/Space'
-import {Warning} from '../../../../../components/Warning'
+import {Warning} from '../../../../../components/Warning/Warning'
 import {useCopy} from '../../../../../hooks/useCopy'
 import {useRewardAddress} from '../../../../../yoroi-wallets/hooks'
+import {Quantities} from '../../../../../yoroi-wallets/utils/utils'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../../../WalletManager/context/WalletManagerProvider'
 import {Divider} from '../../../common/Divider'
-import {formattedTx} from '../../../common/formattedTransaction'
+import {FormattedTx} from '../../../common/formattedTransaction'
 
-export const OverviewTab = ({tx, createdBy}: {tx: formattedTx; createdBy?: React.ReactNode}) => {
+export const OverviewTab = ({tx, createdBy}: {tx: FormattedTx; createdBy?: React.ReactNode}) => {
   const {styles} = useStyles()
 
   return (
@@ -33,7 +34,7 @@ export const OverviewTab = ({tx, createdBy}: {tx: formattedTx; createdBy?: React
         </>
       )}
 
-      <FeeInfoItem fee={tx.fee} />
+      <FeeInfoItem fee={`${tx.fee.quantity} ${tx.fee.name}`} />
 
       <Space height="lg" />
 
@@ -59,13 +60,14 @@ const WalletInfoItem = () => {
   const {wallet, meta} = useSelectedWallet()
   const {walletManager} = useWalletManager()
   const {plate, seed} = walletManager.checksum(wallet.publicKeyHex)
+  const seedImage = new Blockies({seed}).asBase64()
 
   return (
     <View style={styles.infoItem}>
       <Text style={styles.infoLabel}>Wallet</Text>
 
       <View style={styles.plate}>
-        <Icon.WalletAvatar image={new Blockies({seed}).asBase64()} style={styles.walletChecksum} size={24} />
+        <Icon.WalletAvatar image={seedImage} style={styles.walletChecksum} size={24} />
 
         <Space width="xs" />
 
@@ -108,7 +110,7 @@ const CreatedByInfoItem = () => {
   )
 }
 
-const SenderTokensSection = ({tx}: {tx: formattedTx}) => {
+const SenderTokensSection = ({tx}: {tx: FormattedTx}) => {
   const {wallet} = useSelectedWallet()
   const rewardAddress = useRewardAddress(wallet)
 
@@ -142,8 +144,31 @@ const Address = ({address}: {address: string}) => {
   )
 }
 
-const SenderTokensItems = ({tx}: {tx: formattedTx}) => {
+const SenderTokensItems = ({tx}: {tx: FormattedTx}) => {
   const {styles} = useStyles()
+  const {wallet} = useSelectedWallet()
+
+  const totalPrimaryTokenSent = React.useMemo(
+    () =>
+      tx.outputs
+        .filter((output) => !output.ownAddress)
+        .flatMap((output) => output.assets.filter((asset) => asset.isPrimary))
+        .reduce((previous, current) => Quantities.sum([previous, current.quantity]), Quantities.zero),
+    [tx.outputs],
+  )
+  const totalPrimaryTokenSpent = React.useMemo(
+    () => Quantities.sum([totalPrimaryTokenSent, tx.fee.quantity]),
+    [totalPrimaryTokenSent, tx.fee.quantity],
+  )
+  const totalPrimaryTokenSpentLabel = `${totalPrimaryTokenSpent} ${wallet.portfolioPrimaryTokenInfo.name}`
+
+  const notPrimaryTokenSent = React.useMemo(
+    () =>
+      tx.outputs
+        .filter((output) => !output.ownAddress)
+        .flatMap((output) => output.assets.filter((asset) => !asset.isPrimary)),
+    [tx.outputs],
+  )
 
   return (
     <View style={styles.tokensSection}>
@@ -152,25 +177,11 @@ const SenderTokensItems = ({tx}: {tx: formattedTx}) => {
 
         <Space fill />
 
-        <TokenItem value="-20,204617 ADA" />
+        <TokenItem value={totalPrimaryTokenSpentLabel} />
 
-        <TokenItem value="-10 Token 1" isPrimaryToken={false} />
-
-        <TokenItem value="-100 Token 2" isPrimaryToken={false} />
-
-        <TokenItem value="-1 Token 3" isPrimaryToken={false} />
-
-        <TokenItem value="100000000000000000 Token 4" isPrimaryToken={false} />
-
-        <TokenItem value="1000000 Token 5" isPrimaryToken={false} />
-
-        <TokenItem value="100 Token 6" isPrimaryToken={false} />
-
-        <TokenItem value="100000000000 Token 7" isPrimaryToken={false} />
-
-        <TokenItem value="1 Token 8" isPrimaryToken={false} />
-
-        <TokenItem value="1000 Token 9" isPrimaryToken={false} />
+        {notPrimaryTokenSent.map((token) => (
+          <TokenItem key={token.name} value={token.label} isPrimaryToken={false} />
+        ))}
       </View>
     </View>
   )
