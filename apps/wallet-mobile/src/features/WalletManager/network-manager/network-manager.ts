@@ -2,7 +2,7 @@ import {CardanoApi} from '@yoroi/api'
 import {mountAsyncStorage, mountMMKVStorage, observableStorageMaker} from '@yoroi/common'
 import {explorerManager} from '@yoroi/explorers'
 import {createPrimaryTokenInfo} from '@yoroi/portfolio'
-import {Chain, Network} from '@yoroi/types'
+import {Api, Chain, Network} from '@yoroi/types'
 import {freeze} from 'immer'
 
 import {logger} from '../../../kernel/logger/logger'
@@ -128,8 +128,10 @@ export const networkConfigs: Readonly<Record<Chain.SupportedNetworks, Readonly<N
 
 export function buildNetworkManagers({
   tokenManagers,
+  apiMaker = CardanoApi.cardanoApiMaker,
 }: {
   tokenManagers: NetworkTokenManagers
+  apiMaker?: ({network}: {network: Chain.SupportedNetworks}) => Api.Cardano.Api
 }): Readonly<Record<Chain.SupportedNetworks, Network.Manager>> {
   const managers = Object.entries(networkConfigs).reduce<Record<Chain.SupportedNetworks, Network.Manager>>(
     (networkManagers, [network, config]) => {
@@ -137,13 +139,14 @@ export function buildNetworkManagers({
       const networkRootStorage = mountMMKVStorage({path: `/`, id: `${network}.manager.v1`})
       const rootStorage = observableStorageMaker(networkRootStorage)
       const legacyRootStorage = observableStorageMaker(mountAsyncStorage({path: `/legacy/${network}/v1/`}))
-      const {getProtocolParams} = CardanoApi.cardanoApiMaker({network: config.network})
+      const {getProtocolParams, getBestBlock} = apiMaker({network: config.network})
       const api = {
         protocolParams: () =>
           getProtocolParams().catch((error) => {
             logger.error(`networkManager: ${network} protocolParams has failed, using hardcoded`, {error})
             return Promise.resolve(protocolParamsPlaceholder)
           }),
+        bestBlock: getBestBlock,
       }
 
       const info = dateToEpochInfo(config.eras)

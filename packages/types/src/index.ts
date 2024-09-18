@@ -121,6 +121,7 @@ import {
   CardanoUnsignedTx,
   CardanoVoting,
   ChainCardanoProtocolParams,
+  ChainCardanoBestBlock,
 } from './chain/cardano'
 import {ExchangeBlockchainCode} from './exchange/blockchain'
 import {ExchangeManagerOptions} from './exchange/build'
@@ -451,9 +452,11 @@ export namespace Api {
     export type TokenId = ApiTokenId
 
     export type ProtocolParams = ChainCardanoProtocolParams
+    export type TipStatus = ChainCardanoBestBlock
 
     export interface Api {
-      getProtocolParams: () => Promise<ProtocolParams>
+      getProtocolParams: () => Promise<ChainCardanoProtocolParams>
+      getBestBlock: () => Promise<ChainCardanoBestBlock>
     }
   }
 }
@@ -599,6 +602,7 @@ export namespace Chain {
     export type Address = CardanoAddress
     export type TokenId = CardanoTokenId
     export type ProtocolParams = ChainCardanoProtocolParams
+    export type BestBlock = ChainCardanoBestBlock
   }
 }
 

@@ -30,7 +30,6 @@ import type {
   FundInfoResponse,
   PoolInfoRequest,
   RawUtxo,
-  TipStatusResponse,
   Transaction,
   TxStatusRequest,
   TxStatusResponse,
@@ -1084,10 +1083,6 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
 
     async fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse> {
       return legacyApi.fetchTxStatus(request, networkManager.legacyApiBaseUrl)
-    }
-
-    async fetchTipStatus(): Promise<TipStatusResponse> {
-      return legacyApi.getTipStatus(networkManager.legacyApiBaseUrl)
     }
 
     private isInitialized = false
