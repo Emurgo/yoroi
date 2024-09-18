@@ -1,27 +1,12 @@
 import {Api, Claim, Portfolio} from '@yoroi/types'
-import {tokenMocks} from '@yoroi/portfolio'
+import {tokenMocks, createTokenManagerMock} from '@yoroi/portfolio'
 
 import {asClaimApiError, asClaimToken} from './transformers'
 import {claimFaucetResponses} from './api-faucet.mocks'
 import {claimApiMockResponses} from './manager.mocks'
+import {cacheRecordMaker} from '@yoroi/common'
 
-const tokenManagerMock = {
-  sync: jest.fn(),
-  api: {
-    tokenActivity: jest.fn(),
-    tokenDiscovery: jest.fn(),
-    tokenImageInvalidate: jest.fn(),
-    tokenInfo: jest.fn(),
-    tokenInfos: jest.fn(),
-    tokenTraits: jest.fn(),
-  },
-  clear: jest.fn(),
-  destroy: jest.fn(),
-  hydrate: jest.fn(),
-  subscribe: jest.fn(),
-  unsubscribe: jest.fn(),
-  observable$: {} as any,
-}
+const tokenManagerMock = createTokenManagerMock()
 
 describe('asClaimApiError', () => {
   afterEach(() => {
@@ -65,11 +50,17 @@ describe('asClaimToken', () => {
       new Map([
         [
           tokenMocks.nftCryptoKitty.info.id,
-          {record: tokenMocks.nftCryptoKitty.info},
+          cacheRecordMaker(
+            {expires: Date.now() + 3_600_000, hash: 'hash3'},
+            tokenMocks.nftCryptoKitty.info,
+          ),
         ],
         [
           tokenMocks.rnftWhatever.info.id,
-          {record: tokenMocks.rnftWhatever.info},
+          cacheRecordMaker(
+            {expires: Date.now() + 3_600_000, hash: 'hash3'},
+            tokenMocks.rnftWhatever.info,
+          ),
         ],
       ]),
     )
@@ -98,11 +89,17 @@ describe('asClaimToken', () => {
       new Map([
         [
           tokenMocks.nftCryptoKitty.info.id,
-          {record: tokenMocks.nftCryptoKitty.info},
+          cacheRecordMaker(
+            {expires: Date.now() + 3_600_000, hash: 'hash3'},
+            tokenMocks.nftCryptoKitty.info,
+          ),
         ],
         [
           tokenMocks.rnftWhatever.info.id,
-          {record: tokenMocks.rnftWhatever.info},
+          cacheRecordMaker(
+            {expires: Date.now() + 3_600_000, hash: 'hash3'},
+            tokenMocks.rnftWhatever.info,
+          ),
         ],
       ]),
     )
@@ -123,11 +120,17 @@ describe('asClaimToken', () => {
       new Map([
         [
           tokenMocks.nftCryptoKitty.info.id,
-          {record: tokenMocks.nftCryptoKitty.info},
+          cacheRecordMaker(
+            {expires: Date.now() + 3_600_000, hash: 'hash3'},
+            tokenMocks.nftCryptoKitty.info,
+          ),
         ],
         [
           tokenMocks.rnftWhatever.info.id,
-          {record: tokenMocks.rnftWhatever.info},
+          cacheRecordMaker(
+            {expires: Date.now() + 3_600_000, hash: 'hash3'},
+            tokenMocks.rnftWhatever.info,
+          ),
         ],
       ]),
     )
@@ -156,13 +159,19 @@ describe('asClaimToken', () => {
       new Map([
         [
           tokenMocks.nftCryptoKitty.info.id,
-          {record: tokenMocks.nftCryptoKitty.info},
+          cacheRecordMaker(
+            {expires: Date.now() + 3_600_000, hash: 'hash3'},
+            tokenMocks.nftCryptoKitty.info,
+          ),
         ],
         [
           tokenMocks.rnftWhatever.info.id,
-          {record: tokenMocks.rnftWhatever.info},
+          cacheRecordMaker(
+            {expires: Date.now() + 3_600_000, hash: 'hash3'},
+            tokenMocks.rnftWhatever.info,
+          ),
         ],
-        ['invalid.', undefined],
+        ['invalid.', undefined] as any,
         ['dead.', {record: tokenMocks.rnftWhatever.info}],
       ]),
     )

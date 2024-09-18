@@ -2,7 +2,7 @@ import {Api, Portfolio} from '@yoroi/types'
 import {freeze} from 'immer'
 import {BigNumber} from 'bignumber.js'
 import {tokenInfoMocks} from './token-info.mocks'
-import {duallahanTokenActivityUpdatesMocks} from './dullahan-api/token-activity.mocks'
+import {duallahanTokenActivityMocks} from './dullahan-api/token-activity.mocks'
 
 const primaryETH: Portfolio.Token.Activity = {
   price: {
@@ -58,16 +58,14 @@ const apiResponseSuccessDataOnly = {
 const apiResponseTokenActivity: Readonly<
   Record<
     'success' | 'error',
-    Api.Response<
-      typeof duallahanTokenActivityUpdatesMocks.api.responseSuccessDataOnly
-    >
+    Api.Response<typeof duallahanTokenActivityMocks.api.responseSuccessDataOnly>
   >
 > = {
   success: {
     tag: 'right',
     value: {
       status: 200,
-      data: duallahanTokenActivityUpdatesMocks.api.responseSuccessDataOnly,
+      data: duallahanTokenActivityMocks.api.responseSuccessDataOnly,
     },
   },
   error: {

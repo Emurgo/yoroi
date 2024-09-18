@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 import {Api} from '@yoroi/types'
 import {paramsMockResponse} from './protocol-params.mocks'
+import {bestBlockMockResponse} from './best-block.mocks'
 
 const loading = () => new Promise(() => {})
 const unknownError = () => Promise.reject(new Error('Unknown error'))
@@ -26,6 +27,18 @@ const getProtocolParams = {
   },
 }
 
+const getBestBlock = {
+  success: () => Promise.resolve(bestBlockMockResponse),
+  delayed: (timeout?: number) =>
+    delayedResponse({data: bestBlockMockResponse, timeout}),
+  empty: () => Promise.resolve({}),
+  loading,
+  error: {
+    unknown: unknownError,
+  },
+}
+
 export const mockCardanoApi: Api.Cardano.Api = {
   getProtocolParams: getProtocolParams.success,
+  getBestBlock: getBestBlock.success,
 } as const

@@ -5,6 +5,7 @@ import {
 import {ApiResponse} from '../api/response'
 import {PortfolioTokenActivity, PortfolioTokenActivityWindow} from './activity'
 import {PortfolioTokenDiscovery} from './discovery'
+import {PortfolioTokenHistory, PortfolioTokenHistoryPeriod} from './history'
 import {PortfolioTokenInfo} from './info'
 import {PortfolioTokenId} from './token'
 import {PortfolioTokenTraits} from './traits'
@@ -20,6 +21,8 @@ export type PortfolioApiTokenActivityResponse = {
 }
 
 export type PortfolioApiTokenTraitsResponse = PortfolioTokenTraits
+
+export type PortfolioApiTokenHistoryResponse = PortfolioTokenHistory
 
 export type PortfolioApi = Readonly<{
   tokenInfo(
@@ -38,5 +41,9 @@ export type PortfolioApi = Readonly<{
     ids: ReadonlyArray<PortfolioTokenId>,
     window: PortfolioTokenActivityWindow,
   ): Promise<Readonly<ApiResponse<PortfolioApiTokenActivityResponse>>>
+  tokenHistory(
+    id: PortfolioTokenId,
+    period: PortfolioTokenHistoryPeriod,
+  ): Promise<Readonly<ApiResponse<PortfolioApiTokenHistoryResponse>>>
   tokenImageInvalidate(ids: ReadonlyArray<PortfolioTokenId>): Promise<undefined>
 }>

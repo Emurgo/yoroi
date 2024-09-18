@@ -17,6 +17,14 @@ export type ChainCardanoProtocolParams = Readonly<{
   epoch: number
 }>
 
+export type ChainCardanoBestBlock = Readonly<{
+  epoch: number
+  slot: number
+  globalSlot: number
+  hash: string
+  height: number
+}>
+
 // START legacy
 export type CardanoUnsignedTx = CardanoTxInfo & {
   unsignedTx: UnsignedTxType
