@@ -4,9 +4,10 @@ import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native'
 
-import {Boundary, Spacer, TokenIconPlaceholder} from '../../../../components'
+import {Boundary} from '../../../../components/Boundary/Boundary'
+import {Spacer} from '../../../../components/Spacer/Spacer'
 import {isEmptyString} from '../../../../kernel/utils'
-import {TokenInfoIcon} from '../../../Portfolio/common/TokenAmountItem/TokenInfoIcon'
+import {TokenIconPlaceholder, TokenInfoIcon} from '../../../Portfolio/common/TokenAmountItem/TokenInfoIcon'
 import {useStrings} from '../useStrings'
 
 type AmountCardProps = {

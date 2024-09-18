@@ -1,6 +1,7 @@
 import {Transaction} from '@emurgo/cross-csl-core'
 import {createTypeGuardFromSchema, isNonNullable, truncateString} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
+import {Portfolio} from '@yoroi/types'
 import {uniq} from 'lodash'
 import * as React from 'react'
 import {useEffect} from 'react'
@@ -10,14 +11,18 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useQuery} from 'react-query'
 import {z} from 'zod'
 
-import {Button, CopyButton, Icon, Spacer, Text} from '../../../../components'
+import {Button} from '../../../../components/Button/Button'
+import {CopyButton} from '../../../../components/CopyButton'
+import {Icon} from '../../../../components/Icon'
 import {ScrollView} from '../../../../components/ScrollView/ScrollView'
+import {Spacer} from '../../../../components/Spacer/Spacer'
+import {Text} from '../../../../components/Text'
 import {useParams} from '../../../../kernel/navigation'
 import {cip30LedgerExtensionMaker} from '../../../../yoroi-wallets/cardano/cip30/cip30-ledger'
 import {wrappedCsl} from '../../../../yoroi-wallets/cardano/wrappedCsl'
-import {useTokenInfos} from '../../../../yoroi-wallets/hooks'
-import {asQuantity} from '../../../../yoroi-wallets/utils'
 import {formatAdaWithText, formatTokenWithText} from '../../../../yoroi-wallets/utils/format'
+import {asQuantity} from '../../../../yoroi-wallets/utils/utils'
+import {usePortfolioTokenInfos} from '../../../Portfolio/common/hooks/usePortfolioTokenInfos'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useConfirmHWConnectionModal} from '../../common/ConfirmHWConnectionModal'
 import {usePromptRootKey} from '../../common/hooks'
@@ -204,7 +209,7 @@ const useFormattedTransaction = (cbor: string) => {
 
   const inputTokenIds = inputs.flatMap((i) => {
     const receiveUTxO = getUtxoByTxIdAndIndex(i.transaction_id, i.index)
-    return receiveUTxO?.assets.map((a) => `${a.policyId}.${a.assetId}`) ?? []
+    return receiveUTxO?.assets.map((a) => `${a.policyId}.${a.assetId}` as Portfolio.Token.Id) ?? []
   })
 
   const outputTokenIds = outputs.flatMap((o) => {
@@ -212,24 +217,24 @@ const useFormattedTransaction = (cbor: string) => {
     const policyIds = Object.keys(o.amount.multiasset)
     const tokenIds = policyIds.flatMap((policyId) => {
       const assetIds = Object.keys(o.amount.multiasset?.[policyId] ?? {})
-      return assetIds.map((assetId) => `${policyId}.${assetId}`)
+      return assetIds.map((assetId) => `${policyId}.${assetId}` as Portfolio.Token.Id)
     })
     return tokenIds
   })
 
-  const tokenIds = uniq([...inputTokenIds, ...outputTokenIds])
-  const tokenInfos = useTokenInfos({wallet, tokenIds})
+  const tokenIds = uniq<Portfolio.Token.Id>([...inputTokenIds, ...outputTokenIds])
+  const {tokenInfos} = usePortfolioTokenInfos({wallet, tokenIds}, {suspense: true})
 
   const formattedInputs = inputs.map((input) => {
     const receiveUTxO = getUtxoByTxIdAndIndex(input.transaction_id, input.index)
     const address = receiveUTxO?.receiver
     const coin = receiveUTxO?.amount != null ? asQuantity(receiveUTxO.amount) : null
-    const coinText = coin != null ? formatAdaWithText(coin, wallet.primaryToken) : null
+    const coinText = coin != null ? formatAdaWithText(coin, wallet.portfolioPrimaryTokenInfo) : null
     const primaryAssets = coinText != null ? [coinText] : []
     const multiAssets =
       receiveUTxO?.assets
         .map((a) => {
-          const tokenInfo = tokenInfos.find((t) => t.id === a.assetId)
+          const tokenInfo = tokenInfos?.get(a.assetId as Portfolio.Token.Id)
           if (!tokenInfo) return null
           const quantity = asQuantity(a.amount)
           return formatTokenWithText(quantity, tokenInfo)
@@ -248,12 +253,12 @@ const useFormattedTransaction = (cbor: string) => {
   const formattedOutputs = outputs.map((output) => {
     const address = output.address
     const coin = asQuantity(output.amount.coin)
-    const coinText = formatAdaWithText(coin, wallet.primaryToken)
+    const coinText = formatAdaWithText(coin, wallet.portfolioPrimaryTokenInfo)
     const primaryAssets = coinText != null ? [coinText] : []
     const multiAssets = output.amount.multiasset
       ? Object.entries(output.amount.multiasset).map(([policyId, assets]) => {
           return Object.entries(assets).map(([assetId, amount]) => {
-            const tokenInfo = tokenInfos.find((t) => t.id === `${policyId}.${assetId}`)
+            const tokenInfo = tokenInfos?.get(`${policyId}.${assetId}`)
             if (tokenInfo == null) return null
             const quantity = asQuantity(amount)
             return formatTokenWithText(quantity, tokenInfo)
@@ -265,7 +270,7 @@ const useFormattedTransaction = (cbor: string) => {
     return {assets, address, ownAddress: address != null && isOwnedAddress(address)}
   })
 
-  const formattedFee = formatAdaWithText(asQuantity(data?.body?.fee ?? '0'), wallet.primaryToken)
+  const formattedFee = formatAdaWithText(asQuantity(data?.body?.fee ?? '0'), wallet.portfolioPrimaryTokenInfo)
 
   return {inputs: formattedInputs, outputs: formattedOutputs, fee: formattedFee}
 }

@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Select token",
     "file": "src/features/Swap/common/AmountCard/AmountCard.tsx",
     "start": {
-      "line": 136,
+      "line": 137,
       "column": 15,
-      "index": 4321
+      "index": 4378
     },
     "end": {
-      "line": 139,
+      "line": 140,
       "column": 3,
-      "index": 4404
+      "index": 4461
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Current Balance",
     "file": "src/features/Swap/common/AmountCard/AmountCard.tsx",
     "start": {
-      "line": 140,
+      "line": 141,
       "column": 18,
-      "index": 4424
+      "index": 4481
     },
     "end": {
-      "line": 143,
+      "line": 144,
       "column": 3,
-      "index": 4513
+      "index": 4570
     }
   }
 ]

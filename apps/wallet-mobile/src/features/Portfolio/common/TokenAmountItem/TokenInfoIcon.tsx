@@ -9,7 +9,7 @@ import {Icon} from '../../../../components/Icon'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 
 type TokenInfoIconProps = {
-  info: Portfolio.Token.Info
+  info: Portfolio.Token.Info | undefined | null
   size?: 'sm' | 'md'
   imageStyle?: ImageStyle
 }
@@ -18,7 +18,7 @@ export const TokenInfoIcon = ({info, size = 'md', imageStyle}: TokenInfoIconProp
   const {wallet} = useSelectedWallet()
   const [error, setError] = React.useState(false)
 
-  if (error) return <TokenIconPlaceholder />
+  if (error || !info) return <TokenIconPlaceholder size={size} />
 
   if (isPrimaryToken(info)) return <PrimaryIcon size={size} imageStyle={imageStyle} />
 
@@ -60,7 +60,7 @@ export const TokenIconPlaceholder = ({size = 'md'}: {size?: 'sm' | 'md'}) => {
   const {styles, colors} = useStyles()
   return (
     <View style={[styles.iconMedium, styles.placeholder, size === 'sm' && styles.placeholderSmall]}>
-      <Icon.Coins2 color={colors.icon} size={24} />
+      <Icon.Coins2 color={colors.icon} size={size === 'sm' ? 18 : 24} />
     </View>
   )
 }
@@ -100,8 +100,8 @@ const useStyles = () => {
       backgroundColor: color.gray_100,
     },
     placeholderSmall: {
-      width: 24,
-      height: 24,
+      width: 26,
+      height: 26,
     },
   })
 

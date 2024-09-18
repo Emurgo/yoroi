@@ -5,10 +5,10 @@ import {Wallet} from '@yoroi/types'
 import {Buffer} from 'buffer'
 import _ from 'lodash'
 
+import {cardanoConfig} from '../../../features/WalletManager/common/adapters/cardano/cardano-config'
+import {derivationConfig} from '../../../features/WalletManager/common/derivation-config'
 import {throwLoggedError} from '../../../kernel/logger/helpers/throw-logged-error'
 import {CardanoMobile} from '../../wallets'
-import {cardanoConfig} from '../constants/cardano-config'
-import {BIP44_DERIVATION_LEVELS, HARD_DERIVATION_START} from '../constants/common'
 import {YoroiWallet} from '../types'
 
 export const createSwapCancellationLedgerPayload = async (
@@ -46,9 +46,9 @@ export const convertBech32ToHex = async (bech32Address: string) => {
   return Buffer.from(bytes).toString('hex')
 }
 
-export const harden = (num: number) => HARD_DERIVATION_START + num
+export const harden = (num: number) => derivationConfig.hardStart + num
 
-export const getRequiredSigners = async (
+const getRequiredSigners = async (
   tx: CSL_TYPES.Transaction,
   wallet: YoroiWallet,
   meta: Wallet.Meta,
@@ -64,7 +64,7 @@ export const getRequiredSigners = async (
       ? Array.from(cardanoConfig.implementations[implementation].features.staking.addressing)
       : undefined
 
-  const startLevel = BIP44_DERIVATION_LEVELS.PURPOSE
+  const startLevel = derivationConfig.keyLevel.purpose
 
   const addressedUtxos = wallet.allUtxos.map((utxo) => ({
     txHash: utxo.tx_hash,
@@ -118,7 +118,7 @@ export const getDerivationPathForAddress = (
     return [
       config.derivations.base.harden.purpose,
       config.derivations.base.harden.coinType,
-      cardanoConfig.derivation.hardStart + wallet.accountVisual,
+      derivationConfig.hardStart + wallet.accountVisual,
       config.derivations.base.roles.external,
       0,
     ]
@@ -130,7 +130,7 @@ export const getDerivationPathForAddress = (
   return [
     config.derivations.base.harden.purpose,
     config.derivations.base.harden.coinType,
-    cardanoConfig.derivation.hardStart + wallet.accountVisual,
+    derivationConfig.hardStart + wallet.accountVisual,
     role,
     index,
   ]

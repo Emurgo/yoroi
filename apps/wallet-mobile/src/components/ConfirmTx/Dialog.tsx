@@ -3,10 +3,11 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 import {ScrollView} from 'react-native'
 
-import {ErrorView, PleaseWaitView} from '../../components'
 import globalMessages, {ledgerMessages, txLabels} from '../../kernel/i18n/global-messages'
 import {LedgerConnect, LedgerTransportSwitchView} from '../../legacy/HW'
+import {ErrorView} from '../ErrorModal/ErrorModal'
 import {Modal} from '../legacy/Modal/Modal'
+import {PleaseWaitView} from '../PleaseWaitModal'
 
 type ErrorData = {
   errorMessage: string
@@ -104,7 +105,7 @@ const DialogWithLedger = ({
   )
 }
 
-export const DialogSimple = ({step, onRequestClose, errorData}: DialogSimpleProps) => {
+const DialogSimple = ({step, onRequestClose, errorData}: DialogSimpleProps) => {
   const strings = useStrings()
 
   const getBody = () => {

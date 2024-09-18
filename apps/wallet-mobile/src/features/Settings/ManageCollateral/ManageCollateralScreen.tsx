@@ -1,7 +1,7 @@
 import {toBigInt} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
-import {Balance, Portfolio} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {
@@ -17,20 +17,23 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useMutation} from 'react-query'
 
-import {Button, CopyButton, Icon, Spacer, Text} from '../../../components'
-import {AmountItem} from '../../../components/AmountItem/AmountItem'
+import {Button} from '../../../components/Button/Button'
+import {CopyButton} from '../../../components/CopyButton'
 import {ErrorPanel} from '../../../components/ErrorPanel/ErrorPanel'
+import {Icon} from '../../../components/Icon'
 import {Space} from '../../../components/Space/Space'
+import {Spacer} from '../../../components/Spacer/Spacer'
+import {Text} from '../../../components/Text'
 import {SettingsStackRoutes, useUnsafeParams} from '../../../kernel/navigation'
-import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {useCollateralInfo} from '../../../yoroi-wallets/cardano/utxoManager/useCollateralInfo'
 import {useSetCollateralId} from '../../../yoroi-wallets/cardano/utxoManager/useSetCollateralId'
 import {collateralConfig, utxosMaker} from '../../../yoroi-wallets/cardano/utxoManager/utxos'
 import {useBalances} from '../../../yoroi-wallets/hooks'
-import {RawUtxo, YoroiEntry} from '../../../yoroi-wallets/types'
-import {Amounts, asQuantity, Quantities} from '../../../yoroi-wallets/utils'
+import {RawUtxo} from '../../../yoroi-wallets/types/other'
+import {YoroiEntry} from '../../../yoroi-wallets/types/yoroi'
+import {Amounts, asQuantity, Quantities} from '../../../yoroi-wallets/utils/utils'
+import {TokenAmountItem} from '../../Portfolio/common/TokenAmountItem/TokenAmountItem'
 import {useSelectedWallet} from '../../WalletManager/common/hooks/useSelectedWallet'
-import {usePrivacyMode} from '../PrivacyMode/PrivacyMode'
 import {createCollateralEntry} from './helpers'
 import {useNavigateTo} from './navigation'
 import {useStrings} from './strings'
@@ -107,7 +110,7 @@ export const ManageCollateralScreen = () => {
       return
     }
 
-    const primaryTokenBalance = new BigNumber(Amounts.getAmount(balances, wallet.primaryToken.identifier).quantity)
+    const primaryTokenBalance = new BigNumber(Amounts.getAmount(balances, wallet.portfolioPrimaryTokenInfo.id).quantity)
     const lockedBalance = Quantities.isZero(lockedAmount) ? new BigNumber(0) : new BigNumber(lockedAmount)
 
     if (primaryTokenBalance.minus(lockedBalance).isLessThan(collateralConfig.minLovelace)) {
@@ -135,7 +138,6 @@ export const ManageCollateralScreen = () => {
 
         <ActionableAmount
           amount={amount}
-          wallet={wallet}
           onRemove={handleRemoveCollateral}
           collateralId={collateralId}
           disabled={isLoading}
@@ -186,21 +188,19 @@ export const ManageCollateralScreen = () => {
 
 type ActionableAmountProps = {
   collateralId: RawUtxo['utxo_id']
-  wallet: YoroiWallet
-  amount: Balance.Amount
+  amount: Portfolio.Token.Amount
   onRemove(): void
   disabled?: boolean
 }
-const ActionableAmount = ({amount, onRemove, wallet, collateralId, disabled}: ActionableAmountProps) => {
+const ActionableAmount = ({amount, onRemove, collateralId, disabled}: ActionableAmountProps) => {
   const {styles} = useStyles()
-  const {isPrivacyActive} = usePrivacyMode()
 
   const handleRemove = () => onRemove()
 
   return (
     <View style={styles.amountItem} testID="amountItem">
       <Left>
-        <AmountItem amount={amount} wallet={wallet} isPrivacyActive={isPrivacyActive} />
+        <TokenAmountItem amount={amount} />
       </Left>
 
       {collateralId !== '' && (
@@ -218,7 +218,7 @@ const Row = ({style, ...props}: ViewProps) => (
   <View style={[style, {flexDirection: 'row', alignItems: 'center'}]} {...props} />
 )
 
-export const RemoveAmountButton = ({disabled, ...props}: TouchableOpacityProps) => {
+const RemoveAmountButton = ({disabled, ...props}: TouchableOpacityProps) => {
   const {colors} = useStyles()
 
   return (

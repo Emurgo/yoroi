@@ -4,9 +4,9 @@ import React from 'react'
 import {Animated, GestureResponderEvent, Pressable, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context'
 
-import {KeyboardAvoidingView} from '../KeyboardAvoidingView'
+import {KeyboardAvoidingView} from '../KeyboardAvoidingView/KeyboardAvoidingView'
 import {LoadingOverlay} from '../LoadingOverlay/LoadingOverlay'
-import {Spacer} from '../Spacer'
+import {Spacer} from '../Spacer/Spacer'
 import {FullModalScreen} from './FullModalScreen'
 import {useModal} from './ModalContext'
 

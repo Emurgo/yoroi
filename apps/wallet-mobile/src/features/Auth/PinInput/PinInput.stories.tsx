@@ -4,7 +4,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 
-import {Button} from '../../../components'
+import {Button} from '../../../components/Button/Button'
 import {PIN_LENGTH} from '../common/constants'
 import {PinInput, PinInputRef} from './PinInput'
 

@@ -8,41 +8,36 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Banner, Button, useModal} from '../../components'
+import {Banner} from '../../components/Banner/Banner'
+import {Button} from '../../components/Button/Button'
+import {useModal} from '../../components/Modal/ModalContext'
 import {Space} from '../../components/Space/Space'
 import {
-  useGovernanceStrings,
+  useIsGovernanceFeatureEnabled,
   useIsParticipatingInGovernance,
-  WithdrawWarningModal,
-} from '../../features/Staking/Governance'
-import {useIsGovernanceFeatureEnabled} from '../../features/Staking/Governance'
+} from '../../features/Staking/Governance/common/helpers'
+import {useStrings} from '../../features/Staking/Governance/common/strings'
+import {WithdrawWarningModal} from '../../features/Staking/Governance/useCases/WithdrawWarningModal/WithdrawWarningModal'
+import {useSelectedNetwork} from '../../features/WalletManager/common/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import globalMessages from '../../kernel/i18n/global-messages'
 import {DashboardRoutes, useWalletNavigation} from '../../kernel/navigation'
 import {isEmptyString} from '../../kernel/utils'
-import {getCardanoNetworkConfigById} from '../../yoroi-wallets/cardano/networks'
-import {getCardanoBaseConfig} from '../../yoroi-wallets/cardano/utils'
 import {useBalances, useIsOnline, useSync} from '../../yoroi-wallets/hooks'
-import {Amounts} from '../../yoroi-wallets/utils'
-import {
-  genCurrentEpochLength,
-  genCurrentSlotLength,
-  genTimeToSlot,
-  genToRelativeSlotNumber,
-} from '../../yoroi-wallets/utils/timeUtils'
+import {Amounts} from '../../yoroi-wallets/utils/utils'
 import {PoolTransitionNotice} from '../Staking/PoolTransition/PoolTransitionNotice'
 import {usePoolTransition} from '../Staking/PoolTransition/usePoolTransition'
 import {EpochProgress} from './EpochProgress'
 import {NotDelegatedInfo} from './NotDelegatedInfo'
 import {StakePoolInfos, useStakingInfo} from './StakePoolInfos'
 import {UserSummary} from './UserSummary'
-import {WithdrawStakingRewards} from './WithdrawStakingRewards'
+import {WithdrawStakingRewards} from './WithdrawStakingRewards/WithdrawStakingRewards'
 
 export const Dashboard = () => {
   const {styles} = useStyles()
   const intl = useIntl()
   const navigateTo = useNavigateTo()
-  const governanceStrings = useGovernanceStrings()
+  const governanceStrings = useStrings()
   const {isPoolRetiring} = usePoolTransition()
 
   const {wallet, meta} = useSelectedWallet()
@@ -204,27 +199,12 @@ const useCurrentTime = () => {
 
 const EpochInfo = () => {
   const currentTime = useCurrentTime()
-  const {wallet} = useSelectedWallet()
-  // TODO: revisit drop in favor of epochUtils
-  const config = getCardanoBaseConfig(getCardanoNetworkConfigById(wallet.isMainnet ? 1 : 300))
-
-  const toRelativeSlotNumberFn = genToRelativeSlotNumber(config)
-  const timeToSlotFn = genTimeToSlot(config)
-
-  const currentAbsoluteSlot = timeToSlotFn({
-    time: currentTime,
-  })
-
-  const currentRelativeTime = toRelativeSlotNumberFn(
-    timeToSlotFn({
-      time: Date.now(),
-    }).slot,
-  )
-  const epochLength = genCurrentEpochLength(config)()
-  const slotLength = genCurrentSlotLength(config)()
-
-  const secondsLeftInEpoch = (epochLength - currentRelativeTime.slot) * slotLength
-  const timeLeftInEpoch = new Date(1000 * secondsLeftInEpoch - currentAbsoluteSlot.msIntoSlot)
+  const {networkManager} = useSelectedNetwork()
+  const {epoch} = networkManager.epoch.info(new Date(currentTime))
+  const {
+    timeRemaining: {days, hours, minutes, seconds},
+    progress,
+  } = networkManager.epoch.progress(new Date(currentTime))
 
   const leftPadDate = (num: number) => {
     if (num < 10) return `0${num}`
@@ -233,13 +213,13 @@ const EpochInfo = () => {
 
   return (
     <EpochProgress
-      percentage={Math.floor((100 * currentRelativeTime.slot) / epochLength)}
-      currentEpoch={currentRelativeTime.epoch}
+      percentage={Math.floor(progress)}
+      currentEpoch={epoch}
       endTime={{
-        d: leftPadDate(Math.floor(secondsLeftInEpoch / (3600 * 24))),
-        h: leftPadDate(timeLeftInEpoch.getUTCHours()),
-        m: leftPadDate(timeLeftInEpoch.getUTCMinutes()),
-        s: leftPadDate(timeLeftInEpoch.getUTCSeconds()),
+        d: leftPadDate(days),
+        h: leftPadDate(hours),
+        m: leftPadDate(minutes),
+        s: leftPadDate(seconds),
       }}
     />
   )

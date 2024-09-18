@@ -12,7 +12,7 @@ import {Number3Empty} from './Number3Empty'
 import {Number4} from './Number4'
 import {Number4Empty} from './Number4Empty'
 
-export type StepperProgressProps = {
+type StepperProgressProps = {
   currentStep: number
   currentStepTitle: string
   totalSteps: number
@@ -24,9 +24,8 @@ export const StepperProgress = ({currentStep, currentStepTitle, totalSteps, styl
 
   if (currentStep > totalSteps) throw new Error("StepperProgress: currentStep can't be greater that totalSteps")
 
-  // 4 non empty icons
-  // 3 empty icons
-  if (4 < totalSteps || 3 < totalSteps) throw new Error('StepperProgress: total steps greater that number of icons')
+  // 4 non empty icons > 3 empty icons
+  if (4 < totalSteps) throw new Error('StepperProgress: not enough icons to cover total steps')
 
   const stepIndicatorFirstPart: Array<React.ReactNode> = Array.from({length: currentStep}).map((_, index) => {
     if (index <= currentStep - 2) return <CheckIllustration key={index} />

@@ -3,7 +3,7 @@ import {mockSwapManager, SwapProvider} from '@yoroi/swap'
 import React from 'react'
 
 import {QueryProvider} from '../../../../../../.storybook/decorators'
-import {Boundary} from '../../../../../components'
+import {Boundary} from '../../../../../components/Boundary/Boundary'
 import {mocks} from '../../../../../yoroi-wallets/mocks/wallet'
 import {WalletManagerProviderMock} from '../../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {SearchProvider} from '../../../../Search/SearchContext'

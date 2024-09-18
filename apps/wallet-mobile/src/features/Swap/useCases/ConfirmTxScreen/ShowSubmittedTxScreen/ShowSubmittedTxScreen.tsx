@@ -1,12 +1,13 @@
 import {createTypeGuardFromSchema, isString} from '@yoroi/common'
-import {useExplorers} from '@yoroi/explorers'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Linking, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {z} from 'zod'
 
-import {Button, Spacer, Text} from '../../../../../components'
+import {Button} from '../../../../../components/Button/Button'
+import {Spacer} from '../../../../../components/Spacer/Spacer'
+import {Text} from '../../../../../components/Text'
 import {useBlockGoBack, useUnsafeParams, useWalletNavigation} from '../../../../../kernel/navigation'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {useStrings} from '../../../common/strings'
@@ -20,7 +21,7 @@ export const ShowSubmittedTxScreen = () => {
   const strings = useStrings()
   const styles = useStyles()
   const {wallet} = useSelectedWallet()
-  const explorers = useExplorers(wallet.networkManager.network)
+  const explorers = wallet.networkManager.explorers
   const walletNavigate = useWalletNavigation()
 
   const unsafeParams = useUnsafeParams()

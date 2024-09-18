@@ -2,7 +2,7 @@ import React from 'react'
 import {Platform, ViewStyle} from 'react-native'
 
 import {isEmptyString} from '../kernel/utils'
-import {TextInput, TextInputProps} from './TextInput'
+import {TextInput, TextInputProps} from './TextInput/TextInput'
 
 type Props = TextInputProps & {
   label?: string

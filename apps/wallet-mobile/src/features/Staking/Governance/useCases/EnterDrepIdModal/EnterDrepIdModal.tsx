@@ -4,9 +4,12 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Alert, Linking, StyleSheet, View} from 'react-native'
 
-import {Button, Spacer, Text, TextInput} from '../../../../../components'
+import {Button} from '../../../../../components/Button/Button'
+import {Spacer} from '../../../../../components/Spacer/Spacer'
+import {Text} from '../../../../../components/Text'
+import {TextInput} from '../../../../../components/TextInput/TextInput'
 import {CardanoMobile} from '../../../../../yoroi-wallets/wallets'
-import {useStrings} from '../../common'
+import {useStrings} from '../../common/strings'
 
 type Props = {
   onSubmit?: (drepId: string) => void

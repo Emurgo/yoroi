@@ -6,7 +6,8 @@ import {StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
-import {PleaseWaitModal, Spacer} from '../../../components'
+import {PleaseWaitModal} from '../../../components/PleaseWaitModal'
+import {Spacer} from '../../../components/Spacer/Spacer'
 import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../../features/WalletManager/context/WalletManagerProvider'
 import {showErrorDialog} from '../../../kernel/dialogs'
@@ -15,7 +16,6 @@ import globalMessages from '../../../kernel/i18n/global-messages'
 import {logger} from '../../../kernel/logger/logger'
 import {useMetrics} from '../../../kernel/metrics/metricsManager'
 import {StakingCenterRouteNavigation} from '../../../kernel/navigation'
-import {NETWORKS} from '../../../yoroi-wallets/cardano/networks'
 import {NotEnoughMoneyToSendError} from '../../../yoroi-wallets/cardano/types'
 import {useStakingTx} from '../../Dashboard/StakePoolInfos'
 import {PoolDetailScreen} from '../PoolDetails'
@@ -39,6 +39,7 @@ export const StakingCenter = () => {
   )
 
   const [selectedPoolId, setSelectedPoolId] = React.useState<string | null>(null)
+  const [isContentLoaded, setIsContentLoaded] = React.useState(false)
 
   const {isLoading} = useStakingTx(
     {wallet, poolId: selectedPoolId ?? undefined, meta},
@@ -85,12 +86,15 @@ export const StakingCenter = () => {
           <Spacer height={8} />
 
           <WebView
+            style={{opacity: isContentLoaded ? 1 : 0}}
             originWhitelist={['*']}
             androidLayerType="software"
             source={{uri: prepareStakingURL(languageCode, plate)}}
             onMessage={(event) => handleOnMessage(event)}
+            onLoadEnd={() => setTimeout(() => setIsContentLoaded(true), 250)}
             {...(isDark && {
               injectedJavaScript: `
+              document.documentElement.style.overscrollBehavior = 'none'
               document.body.style.backgroundColor = "#222"
               document.body.style.filter = "invert(0.9) hue-rotate(180deg)"
               document.body.style.caretColor = "#FFFFFF"
@@ -134,13 +138,9 @@ const noPoolDataDialog = defineMessages({
   },
 })
 
-/**
- * Prepares WebView's target staking URI
- * @param {*} poolList : Array of delegated pool hash
- */
 const prepareStakingURL = (locale: string, plate: string): string => {
   // source=mobile is constant and already included
-  let finalURL = NETWORKS.HASKELL_SHELLEY.POOL_EXPLORER
+  let finalURL = 'https://adapools.yoroiwallet.com/?source=mobile'
 
   const lang = locale.slice(0, 2)
   finalURL += `&lang=${lang}`

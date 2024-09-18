@@ -2,7 +2,7 @@ import {Network} from '@yoroi/types'
 import {freeze} from 'immer'
 
 export function epochProgress(epochInfo: Network.EpochInfo) {
-  return (date: Date) => {
+  return (date: Date): Readonly<Network.EpochProgress> => {
     const epochStart = epochInfo.start
     const epochEnd = epochInfo.end
 

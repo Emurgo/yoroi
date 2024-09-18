@@ -7,6 +7,7 @@ import {useQuery, useQueryClient} from 'react-query'
 import {merge, switchMap} from 'rxjs'
 
 import {time} from '../../../kernel/constants'
+import {logger} from '../../../kernel/logger/logger'
 import {queryInfo} from '../../../kernel/query-client'
 import {useSelectedNetwork} from '../../WalletManager/common/hooks/useSelectedNetwork'
 import {useWalletManager} from '../../WalletManager/context/WalletManagerProvider'
@@ -121,7 +122,10 @@ export const PortfolioTokenActivityProvider = ({children}: Props) => {
 
       const response = await tokenManager.api.tokenActivity(state.secondaryTokenIds, state.activityWindow)
 
-      if (response.tag === 'left') throw response.error
+      if (response.tag === 'left') {
+        logger.error(JSON.stringify({endpoint: 'tokenActivity', ...response.error}))
+        return null
+      }
       return response.value.data
     },
   })
@@ -149,14 +153,14 @@ type PortfolioTokenActivityState = Readonly<{
   isLoading: boolean
 }>
 
-export enum PortfolioTokenActivityActionType {
+enum PortfolioTokenActivityActionType {
   AggregatedBalancesChanged = 'AggregatedBalancesChanged',
   SecondaryTokenIdsChanged = 'SecondaryTokenIdsChanged',
   TokenActivityChanged = 'TokenActivityChanged',
   ActivityWindowChanged = 'ActivityWindowChanged',
 }
 
-export type PortfolioTokenActivityAction =
+type PortfolioTokenActivityAction =
   | {
       type: PortfolioTokenActivityActionType.AggregatedBalancesChanged
       aggregatedBalances: Portfolio.Token.AmountRecords
@@ -174,7 +178,7 @@ export type PortfolioTokenActivityAction =
       activityWindow: Portfolio.Token.ActivityWindow
     }
 
-export const portfolioTokenActivityReducer = (
+const portfolioTokenActivityReducer = (
   state: PortfolioTokenActivityState,
   action: PortfolioTokenActivityAction,
 ): PortfolioTokenActivityState => {
@@ -196,7 +200,7 @@ export const portfolioTokenActivityReducer = (
   })
 }
 
-export type PortfolioTokenActivityActions = Readonly<{
+type PortfolioTokenActivityActions = Readonly<{
   aggregatedBalancesChanged: (aggregatedBalances: Portfolio.Token.AmountRecords) => void
   secondaryTokenIdsChanged: (secondaryTokenIds: Portfolio.Token.Id[]) => void
   tokenActivityChanged: (tokenActivity: Portfolio.Api.TokenActivityResponse) => void

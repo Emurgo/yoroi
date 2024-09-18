@@ -6,10 +6,11 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
 import {NetworkTag} from '../../features/Settings/ChangeNetwork/NetworkTag'
-import {useGovernanceManagerMaker} from '../../features/Staking/Governance'
+import {useGovernanceManagerMaker} from '../../features/Staking/Governance/common/helpers'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {DashboardRoutes, defaultStackNavigationOptions} from '../../kernel/navigation'
-import {DelegationConfirmation, FailedTxScreen} from '../Staking'
+import {DelegationConfirmation} from '../Staking/DelegationConfirmation'
+import {FailedTxScreen} from '../Staking/FailedTx/FailedTxScreen'
 import {StakingCenter} from '../Staking/StakingCenter'
 import {Dashboard} from './Dashboard'
 

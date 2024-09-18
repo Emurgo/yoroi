@@ -3,7 +3,7 @@ import {mockSwapManager, mockSwapStateDefault, SwapProvider} from '@yoroi/swap'
 import {produce} from 'immer'
 import React from 'react'
 
-import {mocks as walletMocks} from '../../../../../yoroi-wallets/mocks'
+import {mocks as walletMocks} from '../../../../../yoroi-wallets/mocks/wallet'
 import {WalletManagerProviderMock} from '../../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {SwapFormProvider} from '../../../common/SwapFormProvider'
 import {StartSwapOrderScreen} from './StartSwapOrderScreen'

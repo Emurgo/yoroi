@@ -3,7 +3,7 @@ import React from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
 
 import {Icon} from '../Icon'
-import {Tooltip} from './index'
+import {Tooltip} from './Tooltip'
 
 const styles = StyleSheet.create({
   container: {

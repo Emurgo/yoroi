@@ -5,13 +5,14 @@ import * as React from 'react'
 import {Alert, Platform, StyleSheet, Text, View} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
-import {Button, Icon} from '../../../../components'
+import {Button} from '../../../../components/Button/Button'
+import {Icon} from '../../../../components/Icon'
 import {Space} from '../../../../components/Space/Space'
 import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
-import {HARDWARE_WALLETS, useLedgerPermissions} from '../../../../yoroi-wallets/hw'
+import {HARDWARE_WALLETS, useLedgerPermissions} from '../../../../yoroi-wallets/hw/hw'
 import {useStrings} from '../../common/useStrings'
 
-export const useIsAndroidUsbSupported = () => {
+const useIsAndroidUsbSupported = () => {
   const [isAndroidUsbSupported, setIsAndroidUsbSupported] = React.useState(false)
   React.useEffect(() => {
     DeviceInfo.getApiLevel().then((sdk) =>
@@ -132,7 +133,7 @@ const useStyles = () => {
       ...atoms.py_lg,
     },
     iosWarning: {
-      color: color.text_gray_medium,
+      color: color.text_gray_low,
       ...atoms.body_2_md_regular,
     },
   })

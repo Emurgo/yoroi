@@ -4,13 +4,16 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 
-import {Button, Icon, Text, TitledCard} from '../../components'
+import {Button} from '../../components/Button/Button'
+import {Icon} from '../../components/Icon'
 import {Space} from '../../components/Space/Space'
+import {Text} from '../../components/Text'
+import {TitledCard} from '../../components/TitledCard'
 import {usePrivacyMode} from '../../features/Settings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import globalMessages from '../../kernel/i18n/global-messages'
-import {asQuantity} from '../../yoroi-wallets/utils'
 import {formatAdaWithText} from '../../yoroi-wallets/utils/format'
+import {asQuantity} from '../../yoroi-wallets/utils/utils'
 
 const ICON_DIM = 44
 
@@ -50,7 +53,7 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
             <Text bold style={styles.value} testID="userSummaryAvailableFundsText">
               {!isPrivacyActive
                 ? totalAdaSum != null
-                  ? formatAdaWithText(asQuantity(totalAdaSum), wallet.primaryToken)
+                  ? formatAdaWithText(asQuantity(totalAdaSum), wallet.portfolioPrimaryTokenInfo)
                   : '-'
                 : '**.******'}
             </Text>
@@ -77,7 +80,7 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
             <Text bold style={styles.value} testID="userSummaryRewardsText">
               {!isPrivacyActive
                 ? totalRewards != null
-                  ? formatAdaWithText(asQuantity(totalRewards), wallet.primaryToken)
+                  ? formatAdaWithText(asQuantity(totalRewards), wallet.portfolioPrimaryTokenInfo)
                   : '-'
                 : '**.******'}
             </Text>
@@ -104,7 +107,7 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
             <Text bold style={styles.value} testID="userSummaryDelegatedText">
               {!isPrivacyActive
                 ? totalDelegated != null
-                  ? formatAdaWithText(asQuantity(totalDelegated), wallet.primaryToken)
+                  ? formatAdaWithText(asQuantity(totalDelegated), wallet.portfolioPrimaryTokenInfo)
                   : '-'
                 : '**.******'}
             </Text>

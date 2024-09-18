@@ -1,7 +1,7 @@
+import {primaryTokenInfoMainnet} from '../../../features/WalletManager/network-manager/network-manager'
 import {RawTransaction, TRANSACTION_DIRECTION} from '../../types/other'
-import {PRIMARY_TOKEN} from '../constants/testnet/constants'
 import {MultiToken} from '../MultiToken'
-import {toCachedTx} from '../transactionManager'
+import {toCachedTx} from '../transactionManager/transactionManager'
 import {processTxHistoryData} from './processTransactions'
 
 //
@@ -276,7 +276,7 @@ describe('processTxHistoryData', () => {
       myAddresses,
       100, // confirmations
       'fake memo',
-      PRIMARY_TOKEN,
+      primaryTokenInfoMainnet,
     )
 
     const delta = MultiToken.fromArray(tx.delta)
@@ -292,7 +292,7 @@ describe('processTxHistoryData', () => {
       myAddresses,
       100, // confirmations
       'fake memo',
-      PRIMARY_TOKEN,
+      primaryTokenInfoMainnet,
     )
 
     const delta = MultiToken.fromArray(tx.delta)
@@ -308,7 +308,7 @@ describe('processTxHistoryData', () => {
       myAddresses,
       100, // confirmations
       'fake memo',
-      PRIMARY_TOKEN,
+      primaryTokenInfoMainnet,
     )
 
     const delta = MultiToken.fromArray(tx.delta)
@@ -329,7 +329,7 @@ describe('processTxHistoryData', () => {
       myAddresses,
       100, // confirmations
       'fake memo',
-      PRIMARY_TOKEN,
+      primaryTokenInfoMainnet,
     )
 
     const delta = MultiToken.fromArray(tx.delta)

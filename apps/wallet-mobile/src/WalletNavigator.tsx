@@ -16,19 +16,20 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Keyboard, Platform, StyleSheet, View} from 'react-native'
 
-import {Icon, OfflineBanner} from './components'
+import {Icon} from './components/Icon'
+import {OfflineBanner} from './components/OfflineBanner/OfflineBanner'
 import {DiscoverNavigator} from './features/Discover'
 import {ShowExchangeResultOrderScreen} from './features/Exchange/useCases/ShowExchangeResultOrderScreen/ShowExchangeResultOrderScreen'
 import {useLinksRequestAction} from './features/Links/common/useLinksRequestAction'
 import {useLinksShowActionResult} from './features/Links/common/useLinksShowActionResult'
-import {MenuNavigator} from './features/Menu'
+import {MenuNavigator} from './features/Menu/Menu'
 import {PortfolioNavigator} from './features/Portfolio/PortfolioNavigator'
-import {CatalystNavigator} from './features/RegisterCatalyst'
+import {CatalystNavigator} from './features/RegisterCatalyst/CatalystNavigator'
 import {SearchProvider} from './features/Search/SearchContext'
 import {SettingsScreenNavigator} from './features/Settings'
 import {NetworkTag} from './features/Settings/ChangeNetwork/NetworkTag'
 import {SetupWalletNavigator} from './features/SetupWallet/SetupWalletNavigator'
-import {GovernanceNavigator} from './features/Staking/Governance'
+import {GovernanceNavigator} from './features/Staking/Governance/GovernanceNavigator'
 import {SwapFormProvider} from './features/Swap/common/SwapFormProvider'
 import {ToggleAnalyticsSettingsNavigator} from './features/ToggleAnalyticsSettings'
 import {TxHistoryNavigator} from './features/Transactions/TxHistoryNavigator'
@@ -41,7 +42,7 @@ import {
   WalletStackRoutes,
   WalletTabRoutes,
 } from './kernel/navigation'
-import {DashboardNavigator} from './legacy/Dashboard'
+import {DashboardNavigator} from './legacy/Dashboard/DashboardNavigator'
 import {useFrontendFees, useStakingKey} from './yoroi-wallets/hooks'
 
 const Tab = createBottomTabNavigator<WalletTabRoutes>()
@@ -294,7 +295,7 @@ const useStyles = () => {
   const colors = {
     active: color.text_primary_max,
     inactive: color.text_gray_medium,
-    background: color.gray_min,
+    background: color.bg_color_max,
     divider: color.gray_200,
   }
 

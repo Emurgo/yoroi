@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {TouchableOpacity} from 'react-native'
 
-import {Icon} from '../../../components'
+import {Icon} from '../../../components/Icon'
 
 type Props = {
   disabled?: boolean

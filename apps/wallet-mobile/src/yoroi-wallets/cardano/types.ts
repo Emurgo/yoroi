@@ -10,20 +10,10 @@ import {
   TxMetadata as TxMetadataType,
   UnsignedTx as UnsignedTxType,
 } from '@emurgo/yoroi-lib'
-import {App, Balance, HW, Network, Portfolio, Wallet} from '@yoroi/types'
+import {App, HW, Network, Portfolio, Wallet} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 
 import {WalletEncryptedStorage} from '../../kernel/storage/EncryptedStorage'
-import {
-  AccountStates,
-  StakePoolInfoRequest,
-  StakePoolInfosAndHistories,
-  StakingInfo,
-  StakingStatus,
-  YoroiEntry,
-  YoroiSignedTx,
-  YoroiUnsignedTx,
-} from '../types'
 import type {
   FundInfoResponse,
   RawUtxo,
@@ -33,7 +23,14 @@ import type {
   TxStatusResponse,
   WalletState,
 } from '../types/other'
-import {DefaultAsset} from '../types/tokens'
+import {
+  AccountStates,
+  StakePoolInfoRequest,
+  StakePoolInfosAndHistories,
+  StakingInfo,
+  StakingStatus,
+} from '../types/staking'
+import {YoroiEntry, YoroiSignedTx, YoroiUnsignedTx} from '../types/yoroi'
 import type {Addresses} from './account-manager/account-manager'
 
 export type WalletEvent =
@@ -45,7 +42,7 @@ export type WalletEvent =
   | {type: 'collateral-id'; collateralId: RawUtxo['utxo_id']}
 
 export type WalletSubscription = (event: WalletEvent) => void
-export type Unsubscribe = () => void
+type Unsubscribe = () => void
 
 export type ServerStatus = {
   isServerOk: boolean
@@ -62,7 +59,6 @@ export type Pagination = {
 export interface YoroiWallet {
   id: string
   publicKeyHex: string
-  primaryToken: Readonly<DefaultAsset>
   readonly portfolioPrimaryTokenInfo: Readonly<Portfolio.Token.Info>
 
   // ---------------------------------------------------------------------------------------
@@ -161,7 +157,6 @@ export interface YoroiWallet {
   get confirmationCounts(): Record<string, null | number>
   fetchTipStatus(): Promise<TipStatusResponse>
   fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse>
-  fetchTokenInfo(tokenId: string): Promise<Balance.TokenInfo>
 
   // Utxos
   utxos: Array<RawUtxo>
@@ -169,7 +164,7 @@ export interface YoroiWallet {
   get collateralId(): string
   getCollateralInfo(): {
     utxo: RawUtxo | undefined
-    amount: Balance.Amount
+    amount: Portfolio.Token.Amount
     collateralId: RawUtxo['utxo_id']
     isConfirmed: boolean
   }
@@ -191,7 +186,6 @@ export const isYoroiWallet = (wallet: unknown): wallet is YoroiWallet => {
 const yoroiWalletKeys: Array<keyof YoroiWallet> = [
   'id',
   'publicKeyHex',
-  'primaryToken',
 
   // Portfolio
   'balance$',
@@ -240,7 +234,6 @@ const yoroiWalletKeys: Array<keyof YoroiWallet> = [
   'confirmationCounts',
   'fetchTipStatus',
   'fetchTxStatus',
-  'fetchTokenInfo',
 
   // Other
   'subscribe',
@@ -279,4 +272,4 @@ export namespace CardanoTypes {
 }
 
 export {RegistrationStatus} from '@emurgo/yoroi-lib'
-export {AssetOverflowError, NoOutputsError, NotEnoughMoneyToSendError} from '@emurgo/yoroi-lib/dist/errors'
+export {NoOutputsError, NotEnoughMoneyToSendError} from '@emurgo/yoroi-lib/dist/errors'

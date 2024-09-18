@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {TouchableOpacityProps} from 'react-native'
 
-import {Icon} from '../../../components'
+import {Icon} from '../../../components/Icon'
 import {PressableIcon} from '../../../components/PressableIcon/PressableIcon'
 
 const fallbackSize = 30

@@ -4,7 +4,7 @@ import {useTransfer} from '@yoroi/transfer'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Spacer} from '../../../../../components'
+import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {useStrings} from '../../../common/strings'
 
 export const ShowResolvedAddressSelected = () => {

@@ -37,7 +37,7 @@ export const useStrings = () => {
   } as const).current
 }
 
-export const messages = Object.freeze(
+const messages = Object.freeze(
   defineMessages({
     scanTitle: {
       id: 'scan.title',

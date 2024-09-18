@@ -5,7 +5,8 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Platform, ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Icon, Spacer} from '../../../components'
+import {Icon} from '../../../components/Icon'
+import {Spacer} from '../../../components/Spacer/Spacer'
 import {isNightly, isProduction} from '../../../kernel/env'
 import {useLanguage} from '../../../kernel/i18n'
 import {themeNames} from '../../../kernel/i18n/global-messages'
@@ -17,7 +18,7 @@ import {useSelectedNetwork} from '../../WalletManager/common/hooks/useSelectedNe
 import {networkConfigs} from '../../WalletManager/network-manager/network-manager'
 import {useNavigateTo} from '../common/navigation'
 import {SettingsSwitch} from '../common/SettingsSwitch'
-import {useCurrencyPairing} from '../Currency'
+import {useCurrencyPairing} from '../Currency/CurrencyContext'
 import {useChangeScreenShareSetting, useScreenShareSettingEnabled} from '../ScreenShare'
 import {NavigatedSettingsItem, SettingsItem, SettingsSection} from '../SettingsItems'
 

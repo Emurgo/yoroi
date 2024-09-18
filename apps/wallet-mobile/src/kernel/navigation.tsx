@@ -1,24 +1,15 @@
 import {MaterialTopTabNavigationOptions} from '@react-navigation/material-top-tabs'
-import {
-  NavigationProp,
-  NavigationState,
-  NavigatorScreenParams,
-  useNavigation,
-  useNavigationState,
-  useRoute,
-} from '@react-navigation/native'
-import {TransitionPresets} from '@react-navigation/stack'
-import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack'
+import {NavigationProp, NavigationState, NavigatorScreenParams, useNavigation, useRoute} from '@react-navigation/native'
+import {StackNavigationOptions, StackNavigationProp, TransitionPresets} from '@react-navigation/stack'
 import {isKeyOf} from '@yoroi/common'
 import {Atoms, ThemedPalette, useTheme} from '@yoroi/theme'
-import {Chain, Portfolio} from '@yoroi/types'
+import {Chain, Portfolio, Scan} from '@yoroi/types'
 import React from 'react'
 import {Dimensions, InteractionManager, Platform, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
-import {Icon} from '../components'
-import {ScanFeature} from '../features/Scan/common/types'
+import {Icon} from '../components/Icon'
 import {Routes as StakingGovernanceRoutes} from '../features/Staking/Governance/common/navigation'
-import {YoroiUnsignedTx} from '../yoroi-wallets/types'
+import {YoroiUnsignedTx} from '../yoroi-wallets/types/yoroi'
 import {compareArrays} from '../yoroi-wallets/utils/utils'
 
 // prettier-ignore
@@ -134,7 +125,6 @@ export type WalletStackRoutes = {
   governance: NavigatorScreenParams<StakingGovernanceRoutes>
   'staking-dashboard': NavigatorScreenParams<DashboardRoutes>
 }
-export type WalletStackRouteNavigation = StackNavigationProp<WalletStackRoutes>
 
 export type WalletInitRoutes = {
   'setup-wallet-choose-setup-type': undefined
@@ -154,10 +144,6 @@ export type WalletInitRoutes = {
   'setup-wallet-preparing-wallet': undefined
 }
 export type SetupWalletRouteNavigation = StackNavigationProp<WalletInitRoutes>
-
-export type ReceiveRoutes = {
-  'receive-ada-main': undefined
-}
 
 export type TxHistoryRoutes = {
   'history-list': undefined
@@ -181,18 +167,18 @@ export type TxHistoryRoutes = {
 export type TxHistoryRouteNavigation = StackNavigationProp<TxHistoryRoutes>
 
 type ScanStartParams = Readonly<{
-  insideFeature: ScanFeature
+  insideFeature: Scan.Feature
 }>
 export type ScanRoutes = {
   'scan-start': ScanStartParams
   'scan-claim-confirm-summary': undefined
   'scan-show-camera-permission-denied': undefined
 }
-export type ClaimRoutes = {
+type ClaimRoutes = {
   'claim-show-success': undefined
 }
 
-export type SwapTokenRoutes = {
+type SwapTokenRoutes = {
   'swap-start-swap': NavigatorScreenParams<SwapTabRoutes>
   'swap-confirm-tx': undefined
   'swap-select-sell-token': undefined
@@ -220,7 +206,7 @@ export type SwapTabRoutes = {
   orders: undefined
 }
 
-export type ExchangeRoutes = {
+type ExchangeRoutes = {
   'exchange-create-order': undefined
   'exchange-result': undefined
   'exchange-select-buy-provider': undefined
@@ -230,8 +216,6 @@ export type ExchangeRoutes = {
 export type ExchangeRoutesNavigation = StackNavigationProp<ExchangeRoutes>
 
 export type StakingCenterRouteNavigation = StackNavigationProp<StakingCenterRoutes>
-
-export type DiscoverRoutesNavigation = StackNavigationProp<DiscoverRoutes>
 
 export type SettingsTabRoutes = {
   'wallet-settings': undefined
@@ -279,10 +263,6 @@ export type ToggleAnalyticsSettingsRoutes = {
 
 export type SettingsRouteNavigation = StackNavigationProp<SettingsStackRoutes>
 
-export type SendConfirmParams = {
-  yoroiUnsignedTx: YoroiUnsignedTx
-}
-
 export type DiscoverRoutes = {
   'discover-browser': NavigatorScreenParams<BrowserRoutes>
   'discover-select-dapp-from-list': undefined
@@ -315,11 +295,6 @@ export type Portfolio2Routes = {
   history: NavigatorScreenParams<TxHistoryRoutes>
 }
 
-export type PortfolioTokenListTabRoutes = {
-  'wallet-token': undefined
-  'dapps-token': undefined
-}
-
 export type VotingRegistrationRoutes = {
   'download-catalyst': undefined
   'display-pin': undefined
@@ -342,13 +317,12 @@ export type InititalizationRoutes = {
 }
 export type InititalizationNavigation = StackNavigationProp<InititalizationRoutes>
 
-export type FirstRunRoutes = {
+type FirstRunRoutes = {
   'language-pick': undefined
   'accept-terms-of-service': undefined
   'accept-privacy-policy': undefined
   'enable-login-with-pin': undefined
 }
-export type FirstRunRouteNavigation = StackNavigationProp<FirstRunRoutes>
 
 export type NftRoutes = {
   'nft-gallery': undefined
@@ -357,16 +331,15 @@ export type NftRoutes = {
 }
 export type NftRouteNavigation = StackNavigationProp<NftRoutes>
 
-export type MenuRoutes = {
+type MenuRoutes = {
   menu: undefined
   'voting-registration': undefined
 }
 
-export type PortfolioRoutes = {
+type PortfolioRoutes = {
   'portfolio-dashboard': undefined
 }
 
-// TODO revisit portfolio
 export type AppRoutes = PortfolioRoutes & {
   'first-run': NavigatorScreenParams<FirstRunRoutes>
   developer: undefined
@@ -698,13 +671,6 @@ function useKeepRoutesInHistory(routesToKeep: string[]) {
 
     return () => task.cancel()
   }, [navigation, initialRouteId, routesToKeep])
-}
-
-export const useIsRouteActive = () => {
-  const navigation = useNavigation()
-  const currentRouteName = useNavigationState((s) => selectRouteName(s))
-  const [initialRouteName] = React.useState(() => selectRouteName(navigation.getState()))
-  return initialRouteName === currentRouteName
 }
 
 export function useOverridePreviousRoute<RouteName extends string>(previousRouteName: RouteName) {

@@ -1,4 +1,4 @@
-import {RawUtxo} from '../../../../yoroi-wallets/types'
+import {RawUtxo} from '../../../../yoroi-wallets/types/other'
 import {toBalanceManagerSyncArgs} from './toBalanceManagerSyncArgs'
 
 describe('toBalanceManagerSyncArgs', () => {

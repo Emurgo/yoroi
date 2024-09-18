@@ -5,7 +5,7 @@ import {StyleSheet, View} from 'react-native'
 
 import {rootStorage} from '../../../../kernel/storage/rootStorage'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
-import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks'
+import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks/wallet'
 import {WalletManagerProviderMock} from '../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {buildPortfolioTokenManagers} from '../../../Portfolio/common/helpers/build-token-managers'
 import {WalletManagerProvider} from '../../../WalletManager/context/WalletManagerProvider'

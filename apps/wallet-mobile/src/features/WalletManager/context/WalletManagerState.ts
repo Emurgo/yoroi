@@ -36,7 +36,7 @@ export const walletManagerReducer = (state: WalletManagerState, action: WalletMa
   })
 }
 
-export type WalletManagerAction =
+type WalletManagerAction =
   | {
       type: WalletManagerActionType.NetworkSelected
       network: Chain.SupportedNetworks

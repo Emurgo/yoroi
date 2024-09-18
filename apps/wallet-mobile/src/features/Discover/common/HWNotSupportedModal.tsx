@@ -1,8 +1,9 @@
-import {useCallback} from 'react'
-import React from 'react'
+import * as React from 'react'
 
-import {Button, Spacer, useModal} from '../../../components'
-import {Text} from '../../../components'
+import {Button} from '../../../components/Button/Button'
+import {useModal} from '../../../components/Modal/ModalContext'
+import {Spacer} from '../../../components/Spacer/Spacer'
+import {Text} from '../../../components/Text'
 import {useStrings} from './useStrings'
 
 type Props = {
@@ -14,7 +15,7 @@ const modalHeight = 350
 export const useShowHWNotSupportedModal = () => {
   const {openModal, closeModal} = useModal()
   const strings = useStrings()
-  const showHWNotSupportedModal = useCallback(
+  const showHWNotSupportedModal = React.useCallback(
     ({onConfirm, onClose}: {onConfirm: Props['onConfirm']; onClose: () => void}) => {
       openModal(strings.continueOnLedger, <HWNotSupportedModal onConfirm={onConfirm} />, modalHeight, onClose)
     },
@@ -23,7 +24,7 @@ export const useShowHWNotSupportedModal = () => {
   return {showHWNotSupportedModal, closeModal}
 }
 
-export const HWNotSupportedModal = ({onConfirm}: Props) => {
+const HWNotSupportedModal = ({onConfirm}: Props) => {
   const strings = useStrings()
   return (
     <>

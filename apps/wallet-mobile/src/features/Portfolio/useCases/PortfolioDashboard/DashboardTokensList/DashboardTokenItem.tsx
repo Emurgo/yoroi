@@ -5,15 +5,15 @@ import {PortfolioTokenAmount} from '@yoroi/types/lib/typescript/portfolio/amount
 import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
-import {Spacer} from '../../../../../components'
 import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
-import {useCurrencyPairing} from '../../../../Settings/Currency'
+import {Spacer} from '../../../../../components/Spacer/Spacer'
+import {useCurrencyPairing} from '../../../../Settings/Currency/CurrencyContext'
 import {usePrivacyMode} from '../../../../Settings/PrivacyMode/PrivacyMode'
 import {formatPriceChange, priceChange} from '../../../common/helpers/priceChange'
+import {useNavigateTo} from '../../../common/hooks/useNavigateTo'
 import {PnlTag} from '../../../common/PnlTag/PnlTag'
 import {usePortfolioTokenActivity} from '../../../common/PortfolioTokenActivityProvider'
 import {TokenInfoIcon} from '../../../common/TokenAmountItem/TokenInfoIcon'
-import {useNavigateTo} from '../../../common/useNavigateTo'
 
 type Props = {
   tokenInfo: PortfolioTokenAmount
@@ -34,10 +34,10 @@ export const DashboardTokenItem = ({tokenInfo}: Props) => {
 
   const {open, close} = isPrimaryToken(info)
     ? ptActivity
-    : {close: secondaryActivity?.close.toNumber() ?? 0, open: secondaryActivity?.open.toNumber() ?? 0}
+    : {close: secondaryActivity?.close.toNumber(), open: secondaryActivity?.open.toNumber()}
 
-  const {changePercent, variantPnl} = priceChange(open, close)
-  const isMissingPrices = open == null || close == null
+  const {changePercent, variantPnl} = priceChange(open ?? 0, close ?? 0)
+  const isMissingPrices = open === undefined || close === undefined
 
   return (
     <TouchableOpacity onPress={() => navigationTo.tokenDetail({id: info.id})} style={styles.root}>

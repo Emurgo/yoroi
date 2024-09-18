@@ -16,4 +16,8 @@ export type PortfolioTokenActivity = Readonly<{
 
 export enum PortfolioTokenActivityWindow {
   OneDay = '24h',
+  OneWeek = '7d',
+  OneMonth = '30d',
+  OneYear = '1y',
+  All = 'all',
 }

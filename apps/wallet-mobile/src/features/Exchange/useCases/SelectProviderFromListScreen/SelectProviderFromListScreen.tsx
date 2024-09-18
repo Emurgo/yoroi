@@ -5,7 +5,7 @@ import * as React from 'react'
 import {FlatList, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Icon} from '../../../../components'
+import {Icon} from '../../../../components/Icon'
 import {Space} from '../../../../components/Space/Space'
 import {ProviderItem} from '../../common/ProviderItem/ProviderItem'
 import {useStrings} from '../../common/useStrings'

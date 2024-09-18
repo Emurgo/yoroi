@@ -4,7 +4,7 @@ import {AsyncStorageProvider} from '@yoroi/common'
 import * as React from 'react'
 
 import {rootStorage} from '../../../../kernel/storage/rootStorage'
-import {mocks} from '../../../../yoroi-wallets/mocks'
+import {mocks} from '../../../../yoroi-wallets/mocks/wallet'
 import {WalletManagerProviderMock} from '../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {SingleOrMultipleAddressesModal} from './SingleOrMultipleAddressesModal'
 

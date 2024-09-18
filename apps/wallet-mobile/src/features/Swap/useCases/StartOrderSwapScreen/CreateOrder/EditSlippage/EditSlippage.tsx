@@ -4,7 +4,8 @@ import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
-import {Icon, Spacer} from '../../../../../../components'
+import {Icon} from '../../../../../../components/Icon'
+import {Spacer} from '../../../../../../components/Spacer/Spacer'
 import {useNavigateTo} from '../../../../common/navigation'
 import {ShowSlippageInfo} from './ShowSlippageInfo'
 

@@ -1,1 +1,0 @@
-export {NoFundsScreen} from './NoFundsScreen'

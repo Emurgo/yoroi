@@ -19,17 +19,17 @@ import {
   UseQueryOptions,
 } from 'react-query'
 
+import {cardanoConfig} from '../../features/WalletManager/common/adapters/cardano/cardano-config'
 import {useSelectedNetwork} from '../../features/WalletManager/common/hooks/useSelectedNetwork'
 import {isDev, isNightly} from '../../kernel/env'
 import {logger} from '../../kernel/logger/logger'
 import {deriveAddressFromXPub} from '../cardano/account-manager/derive-address-from-xpub'
 import {getSpendingKey, getStakingKey} from '../cardano/addressInfo/addressInfo'
-import {cardanoConfig} from '../cardano/constants/cardano-config'
 import {WalletEvent, YoroiWallet} from '../cardano/types'
-import {TRANSACTION_DIRECTION, TRANSACTION_STATUS, YoroiSignedTx, YoroiUnsignedTx} from '../types'
-import {TipStatusResponse, TxSubmissionStatus} from '../types/other'
+import {TipStatusResponse, TRANSACTION_DIRECTION, TRANSACTION_STATUS, TxSubmissionStatus} from '../types/other'
+import {YoroiSignedTx, YoroiUnsignedTx} from '../types/yoroi'
 import {delay} from '../utils/timeUtils'
-import {Amounts, Quantities, Utxos} from '../utils/utils'
+import {Utxos} from '../utils/utils'
 
 const crashReportsStorageKey = 'sendCrashReports'
 
@@ -39,7 +39,7 @@ export const getCrashReportsEnabled = async (storage: AsyncStorageStatic = Async
   return parseBoolean(data) ?? false
 }
 
-export const useCrashReportsEnabled = (storage: AsyncStorageStatic = AsyncStorage) => {
+const useCrashReportsEnabled = (storage: AsyncStorageStatic = AsyncStorage) => {
   const query = useQuery({
     suspense: true,
     queryKey: [crashReportsStorageKey],
@@ -51,7 +51,7 @@ export const useCrashReportsEnabled = (storage: AsyncStorageStatic = AsyncStorag
   return query.data
 }
 
-export const useSetCrashReportsEnabled = (storage: AsyncStorageStatic = AsyncStorage) => {
+const useSetCrashReportsEnabled = (storage: AsyncStorageStatic = AsyncStorage) => {
   const mutation = useMutationWithInvalidations<void, Error, boolean>({
     useErrorBoundary: true,
     mutationFn: async (enabled) => {
@@ -105,7 +105,7 @@ export const useReceiveAddresses = (wallet: YoroiWallet) => {
   return wallet.receiveAddresses
 }
 
-export const useUtxos = (wallet: YoroiWallet) => {
+const useUtxos = (wallet: YoroiWallet) => {
   useWallet(wallet, 'utxos')
 
   return wallet.utxos
@@ -155,62 +155,6 @@ export const useSync = (wallet: YoroiWallet, options?: UseMutationOptions<void, 
     ...mutation,
     sync: mutation.mutate,
   }
-}
-
-export const useTokenInfo = <T extends Balance.TokenInfo>(
-  {wallet, tokenId}: {wallet: YoroiWallet; tokenId: string},
-  options?: UseQueryOptions<Balance.TokenInfo, Error, T, [string, 'tokenInfo', string]>,
-) => {
-  const query = useQuery({
-    ...options,
-    suspense: true,
-    queryKey: [wallet.id, 'tokenInfo', tokenId],
-    queryFn: () => wallet.fetchTokenInfo(tokenId),
-    staleTime: 600_000,
-  })
-
-  if (!query.data) throw new Error('Invalid token id')
-
-  return query.data
-}
-
-export const useToken = (
-  {wallet, tokenId}: {wallet: YoroiWallet; tokenId: string},
-  options?: UseQueryOptions<Balance.TokenInfo, Error, Balance.TokenInfo, [string, 'tokenInfo', string]>,
-) => {
-  const query = useQuery({
-    ...options,
-    suspense: true,
-    queryKey: [wallet.id, 'tokenInfo', tokenId],
-    queryFn: () => wallet.fetchTokenInfo(tokenId),
-    staleTime: 600_000,
-  })
-
-  if (!query.data) throw new Error('Invalid token id')
-
-  return useTokenInfos({wallet, tokenIds: [tokenId]}, options)[0]
-}
-
-export const useTokenInfosDetailed = (
-  {wallet, tokenIds}: {wallet: YoroiWallet; tokenIds: Array<string>},
-  options?: UseQueryOptions<Balance.TokenInfo, Error, Balance.TokenInfo, any>,
-) => {
-  const queries = tokenIds.map((tokenId) => ({
-    ...options,
-    suspense: true,
-    queryKey: [wallet.id, 'tokenInfo', tokenId],
-    queryFn: () => wallet.fetchTokenInfo(tokenId),
-    staleTime: 600_000,
-  }))
-  return useQueries(queries)
-}
-
-export const useTokenInfos = (
-  {wallet, tokenIds}: {wallet: YoroiWallet; tokenIds: Array<string>},
-  options?: UseQueryOptions<Balance.TokenInfo, Error, Balance.TokenInfo, any>,
-) => {
-  const results = useTokenInfosDetailed({wallet, tokenIds}, options)
-  return results.reduce((result, {data}) => (data ? [...result, data] : result), [] as Array<Balance.TokenInfo>)
 }
 
 export const usePlate = ({
@@ -275,7 +219,7 @@ export const useWithdrawalTx = (
   }
 }
 
-export type VotingRegTxAndEncryptedKey = {
+type VotingRegTxAndEncryptedKey = {
   votingRegTx: YoroiUnsignedTx
 }
 
@@ -633,13 +577,6 @@ export const useBalances = (wallet: YoroiWallet): Balance.Amounts => {
   return Utxos.toAmounts(utxos, wallet.portfolioPrimaryTokenInfo.id)
 }
 
-export const useBalance = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string | undefined}) => {
-  const balances = useBalances(wallet)
-
-  if (tokenId == null) return Quantities.zero
-  return Amounts.getAmount(balances, tokenId).quantity
-}
-
 export const useResync = (wallet: YoroiWallet, options?: UseMutationOptions<void, Error>) => {
   const mutation = useMutation({
     mutationFn: () => wallet.resync(),
@@ -665,15 +602,6 @@ export const useSaveMemo = (
     saveMemo: mutation.mutate,
     ...mutation,
   }
-}
-
-export const useNft = (wallet: YoroiWallet, {id}: {id: string}): Balance.TokenInfo => {
-  const tokenInfo = useTokenInfo({wallet, tokenId: id}, {suspense: true})
-
-  if (tokenInfo.kind !== 'nft') {
-    throw new Error(`Invalid id used "${id}" to get NFT`)
-  }
-  return tokenInfo
 }
 
 const supportedTypes = [

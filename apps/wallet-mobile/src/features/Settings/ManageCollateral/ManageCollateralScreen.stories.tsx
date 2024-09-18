@@ -4,7 +4,7 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
-import {mocks} from '../../../yoroi-wallets/mocks'
+import {mocks} from '../../../yoroi-wallets/mocks/wallet'
 import {WalletManagerProviderMock} from '../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {ManageCollateralScreen} from './ManageCollateralScreen'
 
@@ -20,8 +20,8 @@ const goneCollateral: YoroiWallet = {
   getCollateralInfo: () => {
     return {
       amount: {
-        quantity: '0',
-        tokenId: mocks.wallet.portfolioPrimaryTokenInfo.id,
+        quantity: 0n,
+        info: mocks.wallet.portfolioPrimaryTokenInfo,
       },
       collateralId: mocks.wallet.collateralId,
       utxo: undefined,
@@ -36,8 +36,8 @@ const noCollateral: YoroiWallet = {
   getCollateralInfo: () => {
     return {
       amount: {
-        quantity: '0',
-        tokenId: mocks.wallet.portfolioPrimaryTokenInfo.id,
+        quantity: 0n,
+        info: mocks.wallet.portfolioPrimaryTokenInfo,
       },
       collateralId: '',
       utxo: undefined,
@@ -53,8 +53,8 @@ const noFundsWallet: YoroiWallet = {
   getCollateralInfo: () => {
     return {
       amount: {
-        quantity: '0',
-        tokenId: mocks.wallet.portfolioPrimaryTokenInfo.id,
+        quantity: 0n,
+        info: mocks.wallet.portfolioPrimaryTokenInfo,
       },
       collateralId: '',
       utxo: undefined,

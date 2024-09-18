@@ -3,8 +3,11 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 
-import {ProgressCircle, Spacer, Text, TitledCard} from '../../components'
+import {ProgressCircle} from '../../components/ProgressCircle'
 import {Space} from '../../components/Space/Space'
+import {Spacer} from '../../components/Spacer/Spacer'
+import {Text} from '../../components/Text'
+import {TitledCard} from '../../components/TitledCard'
 
 type Props = {
   percentage: number

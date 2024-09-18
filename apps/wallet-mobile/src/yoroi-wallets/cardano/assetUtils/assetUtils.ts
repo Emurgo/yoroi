@@ -4,7 +4,6 @@ import BigNumber from 'bignumber.js'
 
 import {logger} from '../../../kernel/logger/logger'
 import {RawUtxo} from '../../types/other'
-import {COINS_PER_UTXO_BYTE} from '../constants/common'
 import {cardanoValueFromRemoteFormat} from '../utils'
 import {wrappedCsl} from '../wrappedCsl'
 
@@ -14,11 +13,11 @@ const addressPlaceholder =
 export async function calcLockedDeposit({
   rawUtxos,
   address = addressPlaceholder,
-  coinsPerUtxoByteStr = COINS_PER_UTXO_BYTE,
+  coinsPerUtxoByteStr,
 }: {
   rawUtxos: RawUtxo[]
   address?: string
-  coinsPerUtxoByteStr?: string
+  coinsPerUtxoByteStr: string
 }) {
   const cslLocal = wrappedCsl()
   const csl = cslLocal.csl

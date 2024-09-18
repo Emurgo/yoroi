@@ -1,7 +1,7 @@
 import {Transfer} from '@yoroi/types'
 
-import {YoroiEntry} from '../../../yoroi-wallets/types'
-import {asQuantity} from '../../../yoroi-wallets/utils'
+import {YoroiEntry} from '../../../yoroi-wallets/types/yoroi'
+import {asQuantity} from '../../../yoroi-wallets/utils/utils'
 
 export function toYoroiEntry(entry: Transfer.Entry): YoroiEntry {
   const yoroiEntry: YoroiEntry = {

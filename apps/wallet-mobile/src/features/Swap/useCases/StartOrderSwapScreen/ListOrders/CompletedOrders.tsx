@@ -1,11 +1,10 @@
 import {useFocusEffect} from '@react-navigation/native'
-import {useExplorers} from '@yoroi/explorers'
+import {usePortfolioTokenInfo} from '@yoroi/portfolio'
 import {getPoolUrlByProvider} from '@yoroi/swap'
 import {useTheme} from '@yoroi/theme'
-import {Balance, Swap} from '@yoroi/types'
+import {Balance, Portfolio, Swap} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import _ from 'lodash'
-import {capitalize} from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
@@ -17,15 +16,17 @@ import {
   HeaderWrapper,
   HiddenInfoWrapper,
   MainInfoWrapper,
-  Spacer,
-  Text,
-  TokenIcon,
-} from '../../../../../components'
+} from '../../../../../components/ExpandableInfoCard/ExpandableInfoCard'
+import {Space} from '../../../../../components/Space/Space'
+import {Spacer} from '../../../../../components/Spacer/Spacer'
+import {Text} from '../../../../../components/Text'
 import {frontendFeeAddressMainnet, frontendFeeAddressPreprod} from '../../../../../kernel/env'
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
-import {useSync, useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
-import {TransactionInfo, TxMetadataInfo} from '../../../../../yoroi-wallets/types'
-import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils'
+import {useSync, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
+import {TransactionInfo, TxMetadataInfo} from '../../../../../yoroi-wallets/types/other'
+import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils/utils'
+import {usePortfolioTokenInfos} from '../../../../Portfolio/common/hooks/usePortfolioTokenInfos'
+import {TokenInfoIcon} from '../../../../Portfolio/common/TokenAmountItem/TokenInfoIcon'
 import {useSearch} from '../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelectedWallet'
 import {PRICE_PRECISION} from '../../../common/constants'
@@ -36,11 +37,13 @@ import {LiquidityPool} from '../../../common/LiquidityPool/LiquidityPool'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
 
-export type MappedRawOrder = {
+type MappedRawOrder = {
   id: string
   metadata: {
-    sellTokenId: string
-    buyTokenId: string
+    // NOTE: it will require transformation until it start using our own API for orders
+    // since the metadata contains "" for PT.
+    sellTokenId: Portfolio.Token.Id
+    buyTokenId: Portfolio.Token.Id
     buyQuantity: string
     sellQuantity: string
     provider: Swap.SupportedProvider
@@ -52,7 +55,7 @@ const compareByDate = (a: MappedRawOrder, b: MappedRawOrder) => {
   return new Date(b.date).getTime() - new Date(a.date).getTime()
 }
 
-const findCompletedOrderTx = (transactions: TransactionInfo[], primaryTokenId: string): MappedRawOrder[] => {
+const findCompletedOrderTx = (transactions: TransactionInfo[]): MappedRawOrder[] => {
   const sentTransactions = transactions.filter((tx) => tx.direction === 'SENT')
   const receivedTransactions = transactions.filter((tx) => tx.direction === 'RECEIVED')
 
@@ -67,7 +70,7 @@ const findCompletedOrderTx = (transactions: TransactionInfo[], primaryTokenId: s
           if (Boolean(input.id) && input?.id?.slice(0, -1) === sentTx?.id && receivedTx.inputs.length > 1) {
             result['id'] = sentTx?.id
             result['date'] = receivedTx?.lastUpdatedAt
-            const metadata = parseOrderTxMetadata(sentTx?.metadata?.['674'], primaryTokenId)
+            const metadata = parseOrderTxMetadata(sentTx?.metadata?.['674'])
             if (metadata) {
               result['metadata'] = metadata
               return acc.push(result as MappedRawOrder)
@@ -96,6 +99,7 @@ export const CompletedOrders = () => {
   const {styles} = useStyles()
   const {wallet} = useSelectedWallet()
   const {sync} = useSync(wallet)
+  const {visible: isSearchBarVisible} = useSearch()
 
   const {track} = useMetrics()
 
@@ -111,19 +115,19 @@ export const CompletedOrders = () => {
   }, [])
 
   const transactionsInfos = useTransactionInfos({wallet})
-  const completeOrders = findCompletedOrderTx(Object.values(transactionsInfos), wallet.portfolioPrimaryTokenInfo.id)
+  const completeOrders = findCompletedOrderTx(Object.values(transactionsInfos))
   const tokenIds = React.useMemo(
     () => _.uniq(completeOrders?.flatMap((o) => [o.metadata.sellTokenId, o.metadata.buyTokenId])),
     [completeOrders],
   )
-  const tokenInfos = useTokenInfos({wallet, tokenIds})
+  const {tokenInfos} = usePortfolioTokenInfos({wallet, tokenIds}, {suspense: true})
   const {search} = useSearch()
 
   const filteredOrders = React.useMemo(
     () =>
       completeOrders.filter((order) => {
-        const sellTokenInfo = tokenInfos.find((tokenInfo) => tokenInfo.id === order.metadata.sellTokenId)
-        const buyTokenInfo = tokenInfos.find((tokenInfo) => tokenInfo.id === order.metadata.buyTokenId)
+        const sellTokenInfo = tokenInfos?.get(order.metadata.sellTokenId)
+        const buyTokenInfo = tokenInfos?.get(order.metadata.buyTokenId)
 
         const sellLabel = sellTokenInfo?.ticker ?? sellTokenInfo?.name ?? '-'
         const buyLabel = buyTokenInfo?.ticker ?? buyTokenInfo?.name ?? '-'
@@ -139,34 +143,51 @@ export const CompletedOrders = () => {
         <FlatList
           contentContainerStyle={styles.list}
           data={filteredOrders}
-          renderItem={({item}: {item: MappedRawOrder}) => <ExpandableOrder tokenInfos={tokenInfos} order={item} />}
+          renderItem={({item}) => <ExpandableOrder order={item} />}
           keyExtractor={(item) => item.id}
           ListEmptyComponent={<ListEmptyComponent completedOrders={filteredOrders} />}
         />
       </View>
 
-      <Counter
-        style={styles.counter}
-        openingText={strings.youHave}
-        counter={filteredOrders?.length ?? 0}
-        closingText={strings.listCompletedOrders}
-      />
+      {!isSearchBarVisible && (
+        <Counter
+          style={styles.counter}
+          openingText={strings.youHave}
+          counter={filteredOrders?.length ?? 0}
+          closingText={strings.listCompletedOrders}
+        />
+      )}
     </>
   )
 }
 
-export const ExpandableOrder = ({order, tokenInfos}: {order: MappedRawOrder; tokenInfos: Array<Balance.TokenInfo>}) => {
+const ExpandableOrder = ({order}: {order: MappedRawOrder}) => {
   const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
   const {wallet} = useSelectedWallet()
   const intl = useIntl()
-  const explorers = useExplorers(wallet.networkManager.network)
+  const explorers = wallet.networkManager.explorers
   const metadata = order.metadata
   const id = order.id
   const expanded = id === hiddenInfoOpenId
-  const sellIcon = <TokenIcon wallet={wallet} tokenId={metadata.sellTokenId} variant="swap" />
-  const buyIcon = <TokenIcon wallet={wallet} tokenId={metadata.buyTokenId} variant="swap" />
-  const buyTokenInfo = tokenInfos.find((tokenInfo) => tokenInfo.id === metadata.buyTokenId)
-  const sellTokenInfo = tokenInfos.find((tokenInfo) => tokenInfo.id === metadata.sellTokenId)
+  const {tokenInfo: buyTokenInfo} = usePortfolioTokenInfo(
+    {
+      getTokenInfo: wallet.networkManager.tokenManager.api.tokenInfo,
+      id: metadata.buyTokenId,
+      network: wallet.networkManager.network,
+      primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
+    },
+    {suspense: true},
+  )
+  const {tokenInfo: sellTokenInfo} = usePortfolioTokenInfo({
+    getTokenInfo: wallet.networkManager.tokenManager.api.tokenInfo,
+    id: metadata.sellTokenId,
+    network: wallet.networkManager.network,
+    primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
+  })
+
+  if (!buyTokenInfo || !sellTokenInfo) return null
+  const sellIcon = <TokenInfoIcon info={sellTokenInfo} size="sm" />
+  const buyIcon = <TokenInfoIcon info={buyTokenInfo} size="sm" />
 
   const buyQuantity = Quantities.format(metadata.buyQuantity as Balance.Quantity, buyTokenInfo?.decimals ?? 0)
   const sellQuantity = Quantities.format(metadata.sellQuantity as Balance.Quantity, sellTokenInfo?.decimals ?? 0)
@@ -279,7 +300,7 @@ const HiddenInfo = ({
           value: (
             <LiquidityPool
               liquidityPoolIcon={<PoolIcon providerId={provider} size={28} />}
-              liquidityPoolName={capitalize(provider)}
+              liquidityPoolName={_.capitalize(provider)}
               poolUrl={getPoolUrlByProvider(provider)}
             />
           ),
@@ -369,7 +390,7 @@ const NoOrdersYet = () => {
 
       <EmptyCompletedOrdersIllustration style={styles.illustration} />
 
-      <Spacer height={15} />
+      <Space height="lg" />
 
       <Text style={styles.contentText}>{strings.emptyCompletedOrders}</Text>
     </View>
@@ -377,7 +398,21 @@ const NoOrdersYet = () => {
 }
 
 const EmptySearchResult = () => {
-  return null
+  const strings = useStrings()
+  const {styles} = useStyles()
+  const {search: assetSearchTerm} = useSearch()
+
+  return (
+    <View style={styles.notOrdersYetContainer}>
+      <Spacer height={80} />
+
+      <EmptyCompletedOrdersIllustration style={styles.illustration} />
+
+      <Space height="lg" />
+
+      <Text style={styles.contentText}>{`${strings.emptySearchCompletedOrders} "${assetSearchTerm}"`}</Text>
+    </View>
+  )
 }
 
 const useStyles = () => {
@@ -428,7 +463,7 @@ const useStyles = () => {
     contentText: {
       ...atoms.flex_1,
       ...atoms.text_center,
-      ...atoms.body_2_md_medium,
+      ...atoms.heading_3_medium,
       color: color.gray_max,
     },
   })

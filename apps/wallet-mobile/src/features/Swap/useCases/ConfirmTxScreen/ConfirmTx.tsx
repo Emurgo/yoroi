@@ -3,7 +3,7 @@ import {ErrorBoundary} from 'react-error-boundary'
 
 import {ModalError} from '../../../../components/ModalError/ModalError'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
-import {YoroiSignedTx, YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
+import {YoroiSignedTx, YoroiUnsignedTx} from '../../../../yoroi-wallets/types/yoroi'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {ConfirmTxWithHW} from './ConfirmTxWithHW'
 import {ConfirmTxWithPassword} from './ConfirmTxWithPassword'

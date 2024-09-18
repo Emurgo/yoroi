@@ -153,6 +153,8 @@ export const useStrings = () => {
     emptyOpenOrders: intl.formatMessage(messages.emptyOpenOrders),
     emptyOpenOrdersSub: intl.formatMessage(messages.emptyOpenOrdersSub),
     emptyCompletedOrders: intl.formatMessage(messages.emptyCompletedOrders),
+    emptySearchCompletedOrders: intl.formatMessage(messages.emptySearchCompletedOrders),
+    emptySearchOpenOrders: intl.formatMessage(messages.emptySearchOpenOrders),
     warning: intl.formatMessage(messages.warning),
     missingCollateral: intl.formatMessage(errorMessages.missingCollateral.title),
     backToSwapOrders: intl.formatMessage(messages.backToSwapOrders),
@@ -163,9 +165,7 @@ export const useStrings = () => {
   }
 }
 
-export const amountInputErrorMessages = defineMessages({})
-
-export const messages = defineMessages({
+const messages = defineMessages({
   swapFees: {
     id: 'swap.swapScreen.swapFees',
     defaultMessage: `!!!Swap fees include the following:\n • Matchmaker Fee\n • Frontend Fee\n • Liquidity Provider Fee`,
@@ -662,6 +662,14 @@ export const messages = defineMessages({
   emptyCompletedOrders: {
     id: 'swap.listOrders.emptyCompletedOrders',
     defaultMessage: '!!!No orders completed yet',
+  },
+  emptySearchCompletedOrders: {
+    id: 'swap.listOrders.emptySearchCompletedOrders',
+    defaultMessage: '!!!No orders found for',
+  },
+  emptySearchOpenOrders: {
+    id: 'swap.listOrders.emptySearchOpenOrders',
+    defaultMessage: '!!!No orders found for',
   },
   priceImpact: {
     id: 'swap.swapScreen.priceImpact',

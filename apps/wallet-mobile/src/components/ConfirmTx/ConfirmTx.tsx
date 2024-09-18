@@ -11,13 +11,14 @@ import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSe
 import {useWalletManager} from '../../features/WalletManager/context/WalletManagerProvider'
 import {debugWalletInfo, features} from '../../kernel/features'
 import {confirmationMessages, errorMessages, txLabels} from '../../kernel/i18n/global-messages'
-import LocalizableError from '../../kernel/i18n/LocalizableError'
+import {LocalizableError} from '../../kernel/i18n/LocalizableError'
 import {isEmptyString} from '../../kernel/utils'
 import {useSubmitTx} from '../../yoroi-wallets/hooks'
-import {withBLE, withUSB} from '../../yoroi-wallets/hw'
-import {YoroiSignedTx, YoroiUnsignedTx} from '../../yoroi-wallets/types'
+import {withBLE, withUSB} from '../../yoroi-wallets/hw/hwWallet'
+import {YoroiSignedTx, YoroiUnsignedTx} from '../../yoroi-wallets/types/yoroi'
 import {delay} from '../../yoroi-wallets/utils/timeUtils'
-import {Button, ButtonProps, ValidatedTextInput} from '..'
+import {Button, ButtonProps} from '../Button/Button'
+import {ValidatedTextInput} from '../ValidatedTextInput'
 import {Dialog, Step as DialogStep} from './Dialog'
 
 type ErrorData = {

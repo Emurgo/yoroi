@@ -1,10 +1,14 @@
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {ActivityIndicator, StyleSheet, TextInput as RNTextInput, View} from 'react-native'
+import {StyleSheet, TextInput as RNTextInput, View} from 'react-native'
 
-import {Button, Spacer, Text, TextInput} from '../../../../components'
+import {Button} from '../../../../components/Button/Button'
+import {Spacer} from '../../../../components/Spacer/Spacer'
+import {Text} from '../../../../components/Text'
+import {TextInput} from '../../../../components/TextInput/TextInput'
 import {debugWalletInfo, features} from '../../../../kernel/features'
 import {useStrings} from '../../common/strings'
+import {ActivityIndicator} from '../ConfirmRawTx/ActivityIndicator'
 import {getErrorMessage} from '../errors'
 
 export type ErrorData = {
@@ -61,7 +65,7 @@ export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error, onPassw
 
       {isLoading && (
         <View style={styles.loading}>
-          <ActivityIndicator size="large" color="black" />
+          <ActivityIndicator />
         </View>
       )}
     </View>
@@ -73,22 +77,21 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     root: {
-      flex: 1,
-      ...atoms.px_lg,
+      ...atoms.flex_1,
     },
     modalText: {
       paddingHorizontal: 70,
-      textAlign: 'center',
+      ...atoms.text_center,
       paddingBottom: 8,
       color: color.gray_900,
     },
     loading: {
-      position: 'absolute',
+      ...atoms.absolute,
       height: '100%',
       left: 0,
       right: 0,
-      alignItems: 'center',
-      justifyContent: 'center',
+      ...atoms.align_center,
+      ...atoms.justify_center,
     },
   })
 

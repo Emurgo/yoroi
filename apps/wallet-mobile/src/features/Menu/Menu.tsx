@@ -7,7 +7,11 @@ import {useIntl} from 'react-intl'
 import {Linking, ScrollView, StyleSheet, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Boundary, Icon, Spacer, Text, useModal} from '../../components'
+import {Boundary} from '../../components/Boundary/Boundary'
+import {Icon} from '../../components/Icon'
+import {useModal} from '../../components/Modal/ModalContext'
+import {Spacer} from '../../components/Spacer/Spacer'
+import {Text} from '../../components/Text'
 import globalMessages from '../../kernel/i18n/global-messages'
 import {useMetrics} from '../../kernel/metrics/metricsManager'
 import {defaultStackNavigationOptions, useWalletNavigation} from '../../kernel/navigation'
@@ -16,7 +20,7 @@ import {usePoolTransition} from '../../legacy/Staking/PoolTransition/usePoolTran
 import {useCanVote} from '../RegisterCatalyst/common/hooks'
 import {InsufficientFundsModal} from '../RegisterCatalyst/common/InsufficientFundsModal'
 import {NetworkTag} from '../Settings/ChangeNetwork/NetworkTag'
-import {useIsGovernanceFeatureEnabled} from '../Staking/Governance'
+import {useIsGovernanceFeatureEnabled} from '../Staking/Governance/common/helpers'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
 
 const MenuStack = createStackNavigator()

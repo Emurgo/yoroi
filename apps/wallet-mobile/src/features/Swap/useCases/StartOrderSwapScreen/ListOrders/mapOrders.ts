@@ -3,9 +3,9 @@ import {getPoolUrlByProvider} from '@yoroi/swap'
 import {Explorers, Portfolio, Swap} from '@yoroi/types'
 
 import {NumberLocale} from '../../../../../kernel/i18n/languages'
-import {TransactionInfo} from '../../../../../yoroi-wallets/types'
+import {TransactionInfo} from '../../../../../yoroi-wallets/types/other'
 
-export const MAX_DECIMALS = 10
+const MAX_DECIMALS = 10
 
 export type MappedOpenOrder = {
   owner: string | undefined
@@ -36,7 +36,7 @@ export type MappedOpenOrder = {
 
 export const mapOpenOrders = (
   orders: Array<Swap.OpenOrder | Swap.CompletedOrder>,
-  tokenInfos: Portfolio.Token.Info[],
+  tokenInfos: Readonly<Map<Portfolio.Token.Id, Portfolio.Token.Info>>,
   numberLocale: NumberLocale,
   transactionInfos: TransactionInfo[],
   explorerManager: Explorers.Manager,
@@ -55,12 +55,12 @@ export const mapOpenOrders = (
     const submittedAt = txInfo?.submittedAt
     const date = isString(submittedAt) ? new Date(submittedAt).toISOString() : ''
 
-    const fromTokenInfo = tokenInfos.find((tokenInfo) => tokenInfo.id === order.from.tokenId)
+    const fromTokenInfo = tokenInfos.get(order.from.tokenId)
     const fromLabel = fromTokenInfo?.ticker ?? fromTokenInfo?.name ?? '-'
     const fromQuantity = atomicBreakdown(from.quantity, fromTokenInfo?.decimals ?? 0).bn
     const total = fromQuantity.toFormat(numberLocale)
 
-    const toTokenInfo = tokenInfos.find((tokenInfo) => tokenInfo.id === order.to.tokenId)
+    const toTokenInfo = tokenInfos.get(order.to.tokenId)
     const toLabel = toTokenInfo?.ticker ?? toTokenInfo?.name ?? '-'
     const toQuantity = atomicBreakdown(to.quantity, toTokenInfo?.decimals ?? 0).bn
     const tokenAmount = toQuantity.decimalPlaces(MAX_DECIMALS).toFormat(numberLocale)

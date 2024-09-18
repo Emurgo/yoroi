@@ -9,11 +9,7 @@ import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {getTransactionUnspentOutput} from '../../../yoroi-wallets/cardano/utils'
 import {Cardano} from '../../../yoroi-wallets/wallets'
 
-export const validUrl = (url: string) => {
-  return /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!&',,=.+]+$/g.test(url)
-}
-
-export function hasProtocol(url: string) {
+function hasProtocol(url: string) {
   return /^[a-z]*:\/\//i.test(url)
 }
 
@@ -152,5 +148,5 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
 
 export const getDappFallbackLogo = (website: string) => {
   const withoutProtocol = website.replace(/(^\w+:|^)\/\//, '')
-  return `https://api.faviconkit.com/${withoutProtocol}/144`
+  return `https://api.faviconkit.com/${withoutProtocol}/32`
 }

@@ -2,9 +2,11 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Alert, ScrollView, StyleSheet, View} from 'react-native'
 
-import {Button, Spacer, Text} from '../../../../components'
+import {Button} from '../../../../components/Button/Button'
+import {Spacer} from '../../../../components/Spacer/Spacer'
+import {Text} from '../../../../components/Text'
 import {useIsUsbSupported} from '../../../../legacy/HW'
-import {HARDWARE_WALLETS, useLedgerPermissions} from '../../../../yoroi-wallets/hw'
+import {HARDWARE_WALLETS, useLedgerPermissions} from '../../../../yoroi-wallets/hw/hw'
 import {useStrings} from '../../common/strings'
 
 type Props = {
@@ -12,7 +14,7 @@ type Props = {
   onSelectBLE: () => void
 }
 
-export const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => {
+const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => {
   const strings = useStrings()
   const isUSBSupported = useIsUsbSupported()
   const styles = useStyles()

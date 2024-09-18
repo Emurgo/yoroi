@@ -5,9 +5,9 @@ import {Image, ImageSourcePropType, ImageStyle, StyleSheet, Text, View} from 're
 
 import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
 import {AssetLogo} from '../../../common/AssetLogo/AssetLogo'
+import {ILiquidityPool} from '../../../common/hooks/useGetLiquidityPool'
+import {useStrings} from '../../../common/hooks/useStrings'
 import {TokenInfoIcon} from '../../../common/TokenAmountItem/TokenInfoIcon'
-import {ILiquidityPool} from '../../../common/useGetLiquidityPool'
-import {useStrings} from '../../../common/useStrings'
 
 type Props = {
   tokenInfo: ILiquidityPool

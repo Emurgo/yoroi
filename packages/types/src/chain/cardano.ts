@@ -6,6 +6,18 @@ import {
 
 import {BalanceAmounts} from '../balance/token'
 
+export type ChainCardanoProtocolParams = Readonly<{
+  coinsPerUtxoByte: string
+  keyDeposit: string
+  linearFee: {
+    coefficient: string
+    constant: string
+  }
+  poolDeposit: string
+  epoch: number
+}>
+
+// START legacy
 export type CardanoUnsignedTx = CardanoTxInfo & {
   unsignedTx: UnsignedTxType
 }
@@ -52,3 +64,4 @@ export type CardanoVoting = {
 
 export type CardanoAddress = string
 export type CardanoTokenId = string
+// END legacy

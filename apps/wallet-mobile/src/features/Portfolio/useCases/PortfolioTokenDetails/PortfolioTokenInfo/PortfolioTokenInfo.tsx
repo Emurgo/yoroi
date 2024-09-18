@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {TabPanel, TabPanels} from '../../../../../components/Tabs'
+import {TabPanel, TabPanels} from '../../../../../components/Tabs/Tabs'
 import {usePortfolioTokenDetailContext} from '../../../common/PortfolioTokenDetailContext'
 import {Overview} from './Overview/Overview'
 import {Performance} from './Performance'

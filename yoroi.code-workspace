@@ -69,13 +69,17 @@
       "path": "./apps/wallet-mobile"
     },
     {
+      "name": "@yoroi/notifications",
+      "path": "./packages/notifications"
+    },
+    {
+      "name": "@yoroi/claim",
+      "path": "./packages/claim"
+    },
+    {
       "name": "@yoroi/e2e-wallet-mobile",
       "path": "./e2e/wallet-mobile"
     },
-    {
-      "name": "@yoroi/notifications",
-      "path": "./packages/notifications"
-    }
   ],
   "settings": {
     "jest.disabledWorkspaceFolders": [

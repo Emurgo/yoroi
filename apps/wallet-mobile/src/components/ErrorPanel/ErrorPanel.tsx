@@ -3,7 +3,7 @@ import * as React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
 import {Icon} from '../Icon'
-import {Spacer} from '../Spacer'
+import {Spacer} from '../Spacer/Spacer'
 
 export const ErrorPanel = ({style, children, ...props}: ViewProps) => {
   const {styles, colors} = useStyles()

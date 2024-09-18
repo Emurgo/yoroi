@@ -93,7 +93,6 @@ import {
   ApiOnChainMetadataRecord,
   ApiOnChainMetadataRequest,
   ApiOnChainMetadataResponse,
-  ApiProtocolParams,
   ApiTokenId,
   ApiTokenIdentity,
   ApiTokenRegistryEntry,
@@ -121,6 +120,7 @@ import {
   CardanoTxInfo,
   CardanoUnsignedTx,
   CardanoVoting,
+  ChainCardanoProtocolParams,
 } from './chain/cardano'
 import {ExchangeBlockchainCode} from './exchange/blockchain'
 import {ExchangeManagerOptions} from './exchange/build'
@@ -231,6 +231,27 @@ import {
   AppLoggerEntry,
   AppLoggerManager,
 } from './app/logger'
+import {ScanErrorUnknown, ScanErrorUnknownContent} from './scan/errors'
+import {
+  ScanAction,
+  ScanActionClaim,
+  ScanActionSendOnlyReceiver,
+  ScanActionSendSinglePt,
+  ScanFeature,
+} from './scan/actions'
+import {ClaimInfo, ClaimManager, ClaimStatus} from './claim/claim'
+import {
+  ClaimApiErrorsAlreadyClaimed,
+  ClaimApiErrorsExpired,
+  ClaimApiErrorsInvalidRequest,
+  ClaimApiErrorsNotFound,
+  ClaimApiErrorsRateLimited,
+  ClaimApiErrorsTooEarly,
+} from './claim/errors'
+import {
+  ClaimApiClaimTokensRequestPayload,
+  ClaimApiClaimTokensResponse,
+} from './claim/api'
 
 export namespace App {
   export namespace Errors {
@@ -424,9 +445,9 @@ export namespace Api {
     export type MetadataFile = ApiMetadataFile
     export type TokenId = ApiTokenId
 
-    export type ProtocolParams = ApiProtocolParams
+    export type ProtocolParams = ChainCardanoProtocolParams
 
-    export interface Actions {
+    export interface Api {
       getProtocolParams: () => Promise<ProtocolParams>
     }
   }
@@ -567,6 +588,7 @@ export namespace Chain {
     export type Voting = CardanoVoting
     export type Address = CardanoAddress
     export type TokenId = CardanoTokenId
+    export type ProtocolParams = ChainCardanoProtocolParams
   }
 }
 
@@ -607,6 +629,40 @@ export namespace Network {
   export type EraConfig = NetworkEraConfig
   export type EpochInfo = NetworkEpochInfo
   export type EpochProgress = NetworkEpochProgress
+}
+
+export namespace Scan {
+  export namespace Errors {
+    export class UnknownContent extends ScanErrorUnknownContent {}
+    export class Unknown extends ScanErrorUnknown {}
+  }
+
+  export type Feature = ScanFeature
+  export type Action = ScanAction
+  export type ActionClaim = ScanActionClaim
+  export type ActionSendOnlyReceiver = ScanActionSendOnlyReceiver
+  export type ActionSendSinglePt = ScanActionSendSinglePt
+}
+
+export namespace Claim {
+  // eslint-disable-next-line @typescript-eslint/no-shadow
+  export namespace Api {
+    export namespace Errors {
+      export class AlreadyClaimed extends ClaimApiErrorsAlreadyClaimed {}
+      export class Expired extends ClaimApiErrorsExpired {}
+      export class InvalidRequest extends ClaimApiErrorsInvalidRequest {}
+      export class NotFound extends ClaimApiErrorsNotFound {}
+      export class RateLimited extends ClaimApiErrorsRateLimited {}
+      export class TooEarly extends ClaimApiErrorsTooEarly {}
+    }
+
+    export type ClaimTokensRequestPayload = ClaimApiClaimTokensRequestPayload
+    export type ClaimTokensResponse = ClaimApiClaimTokensResponse
+  }
+
+  export type Status = ClaimStatus
+  export type Info = ClaimInfo
+  export type Manager = ClaimManager
 }
 
 export * from './helpers/types'

@@ -9,7 +9,7 @@ export const useAssetListStyles = () => {
       ...atoms.body_2_md_regular,
     },
     assetMeta: {
-      color: color.text_primary_medium,
+      color: color.text_gray_medium,
       ...atoms.link_1_lg,
     },
     assetRow: {

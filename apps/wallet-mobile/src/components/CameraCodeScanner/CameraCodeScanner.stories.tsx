@@ -5,8 +5,8 @@ import {Camera} from 'expo-camera'
 import React from 'react'
 import {Text, View} from 'react-native'
 
-import {Button} from '../Button'
-import {Spacer} from '../Spacer'
+import {Button} from '../Button/Button'
+import {Spacer} from '../Spacer/Spacer'
 import {CameraCodeScanner} from './CameraCodeScanner'
 
 storiesOf('QRCodeScanner', module).add('Default', () => <Wrapper />)

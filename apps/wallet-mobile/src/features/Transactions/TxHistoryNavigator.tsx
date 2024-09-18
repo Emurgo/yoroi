@@ -1,6 +1,7 @@
 import {init} from '@emurgo/cross-csl-mobile'
 import {useNavigation} from '@react-navigation/native'
 import {createStackNavigator, StackNavigationOptions} from '@react-navigation/stack'
+import {claimManagerMaker, ClaimProvider} from '@yoroi/claim'
 import {useAsyncStorage} from '@yoroi/common'
 import {exchangeApiMaker, exchangeManagerMaker, ExchangeProvider} from '@yoroi/exchange'
 import {resolverApiMaker, resolverManagerMaker, ResolverProvider, resolverStorageMaker} from '@yoroi/resolver'
@@ -10,7 +11,8 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
-import {Boundary, Spacer} from '../../components'
+import {Boundary} from '../../components/Boundary/Boundary'
+import {Spacer} from '../../components/Spacer/Spacer'
 import {unstoppableApiKey} from '../../kernel/env'
 import {
   BackButton,
@@ -18,8 +20,6 @@ import {
   TxHistoryRouteNavigation,
   TxHistoryRoutes,
 } from '../../kernel/navigation'
-import {claimApiMaker} from '../Claim/module/api'
-import {ClaimProvider} from '../Claim/module/ClaimProvider'
 import {ShowSuccessScreen} from '../Claim/useCases/ShowSuccessScreen'
 import {CreateExchangeOrderScreen} from '../Exchange/useCases/CreateExchangeOrderScreen/CreateExchangeOrderScreen'
 import {SelectProviderFromListScreen} from '../Exchange/useCases/SelectProviderFromListScreen/SelectProviderFromListScreen'
@@ -34,9 +34,9 @@ import {ShowCameraPermissionDeniedScreen} from '../Scan/useCases/ShowCameraPermi
 import {ConfirmTxScreen} from '../Send/useCases/ConfirmTx/ConfirmTxScreen'
 import {FailedTxScreen} from '../Send/useCases/ConfirmTx/FailedTx/FailedTxScreen'
 import {SubmittedTxScreen} from '../Send/useCases/ConfirmTx/SubmittedTx/SubmittedTxScreen'
-import {ListAmountsToSendScreen} from '../Send/useCases/ListAmountsToSend'
 import {SelectTokenFromListScreen} from '../Send/useCases/ListAmountsToSend/AddToken/SelectTokenFromListScreen'
 import {EditAmountScreen} from '../Send/useCases/ListAmountsToSend/EditAmount/EditAmountScreen'
+import {ListAmountsToSendScreen} from '../Send/useCases/ListAmountsToSend/ListAmountsToSendScreen'
 import {StartMultiTokenTxScreen} from '../Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
 import {NetworkTag} from '../Settings/ChangeNetwork/NetworkTag'
 import {SwapTabNavigator} from '../Swap/SwapNavigator'
@@ -52,7 +52,7 @@ import {ShowSanchoNoticeScreen} from '../Swap/useCases/ShowSanchoNoticeScreen/Sh
 import {SelectBuyTokenFromListScreen} from '../Swap/useCases/StartOrderSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
 import {SelectSellTokenFromListScreen} from '../Swap/useCases/StartOrderSwapScreen/CreateOrder/EditSellAmount/SelectSellTokenFromListScreen/SelectSellTokenFromListScreen'
 import {useSelectedWallet} from '../WalletManager/common/hooks/useSelectedWallet'
-import {TxDetails} from './useCases/TxDetails'
+import {TxDetails} from './useCases/TxDetails/TxDetails'
 import {TxHistory} from './useCases/TxHistory/TxHistory'
 
 const Stack = createStackNavigator<TxHistoryRoutes>()
@@ -79,12 +79,13 @@ export const TxHistoryNavigator = () => {
   }, [storage, wallet.id, wallet.isMainnet])
 
   // claim
-  const claimApi = React.useMemo(() => {
-    return claimApiMaker({
+  const claimManager = React.useMemo(() => {
+    return claimManagerMaker({
       address: wallet.externalAddresses[0],
-      primaryTokenId: wallet.portfolioPrimaryTokenInfo.id,
+      primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
+      tokenManager: wallet.networkManager.tokenManager,
     })
-  }, [wallet.externalAddresses, wallet.portfolioPrimaryTokenInfo.id])
+  }, [wallet.externalAddresses, wallet.networkManager.tokenManager, wallet.portfolioPrimaryTokenInfo])
 
   // navigator components
   const headerRightHistory = React.useCallback(() => <HeaderRightHistory />, [])
@@ -106,7 +107,7 @@ export const TxHistoryNavigator = () => {
   return (
     <ReceiveProvider key={wallet.id}>
       <ResolverProvider resolverManager={resolverManager}>
-        <ClaimProvider key={wallet.id} claimApi={claimApi}>
+        <ClaimProvider key={wallet.id} manager={claimManager}>
           <ExchangeProvider
             key={wallet.id}
             manager={exchangeManager}

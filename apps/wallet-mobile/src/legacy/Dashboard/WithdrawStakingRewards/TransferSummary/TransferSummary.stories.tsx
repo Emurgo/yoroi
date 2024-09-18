@@ -2,8 +2,8 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
 import {QueryProvider} from '../../../../../.storybook/decorators'
-import {Boundary} from '../../../../components'
-import {mocks} from '../../../../yoroi-wallets/mocks'
+import {Boundary} from '../../../../components/Boundary/Boundary'
+import {mocks} from '../../../../yoroi-wallets/mocks/wallet'
 import {TransferSummary} from './TransferSummary'
 
 storiesOf('TransferSummary', module)

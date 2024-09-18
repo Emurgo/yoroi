@@ -4,13 +4,14 @@ import assert from 'assert'
 import _ from 'lodash'
 import {defaultMemoize} from 'reselect'
 
+import {cardanoConfig} from '../../../features/WalletManager/common/adapters/cardano/cardano-config'
+import {derivationConfig} from '../../../features/WalletManager/common/derivation-config'
 import {logger} from '../../../kernel/logger/logger'
 import {CardanoMobile} from '../../wallets'
 import * as legacyApi from '../api/api'
-import {cardanoConfig} from '../constants/cardano-config'
 import {CardanoTypes} from '../types'
 
-// NOTE: needs refactor, client is reponsible to know when to save
+// NOTE: needs full refactor
 export class AddressGenerator {
   accountPubKeyHex: string
   role: number
@@ -281,7 +282,7 @@ export class AddressChain {
   }
 }
 
-export const getBIP44Addresses = async (
+const getBIP44Addresses = async (
   accountPubKeyHex: string,
   role: number,
   indexes: Array<number>,
@@ -331,7 +332,7 @@ export const accountManagerMaker = async ({
       : new AddressChain(
           new AddressGenerator(accountPubKeyHex, config.derivations.base.roles.internal, implementation, chainId),
           addressesPerRequest,
-          cardanoConfig.derivation.gapLimit,
+          derivationConfig.gapLimit,
         )
 
   const externalChain =
@@ -340,7 +341,7 @@ export const accountManagerMaker = async ({
       : new AddressChain(
           new AddressGenerator(accountPubKeyHex, config.derivations.base.roles.external, implementation, chainId),
           addressesPerRequest,
-          cardanoConfig.derivation.gapLimit,
+          derivationConfig.gapLimit,
         )
 
   await internalChain.initialize()
@@ -402,7 +403,7 @@ type AccountJSON = {
   externalChain: AddressChainJSON
 }
 
-export type AddressChainJSON = {
+type AddressChainJSON = {
   gapLimit: number
   blockSize: number
   lastUsedIndex: number
@@ -411,7 +412,7 @@ export type AddressChainJSON = {
   addressGenerator: AddressGeneratorJSON
 }
 
-export type AddressGeneratorJSON = {
+type AddressGeneratorJSON = {
   accountPubKeyHex: string
   implementation: Wallet.Implementation
   role: number

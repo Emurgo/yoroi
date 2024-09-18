@@ -5,7 +5,7 @@ import {ActivityIndicator, StyleSheet, Text, View} from 'react-native'
 import {useAuthOsWithEasyConfirmation} from '../../features/Auth/common/hooks'
 import {useSelectedWallet} from '../../features/WalletManager/common/hooks/useSelectedWallet'
 import {useSignTx, useSubmitTx} from '../../yoroi-wallets/hooks'
-import {YoroiSignedTx, YoroiUnsignedTx} from '../../yoroi-wallets/types'
+import {YoroiSignedTx, YoroiUnsignedTx} from '../../yoroi-wallets/types/yoroi'
 
 type Props = {
   onSuccess?: (signedTx: YoroiSignedTx) => void

@@ -5,7 +5,9 @@ import {Image, Platform, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import fingerprintImage from '../../../assets/img/fingerprint.png'
-import {Icon, ScreenBackground, Text} from '../../../components'
+import {Icon} from '../../../components/Icon'
+import {ScreenBackground} from '../../../components/ScreenBackground'
+import {Text} from '../../../components/Text'
 import {supportsAndroidFingerprintOverlay} from '../common/biometrics'
 
 type Props = {

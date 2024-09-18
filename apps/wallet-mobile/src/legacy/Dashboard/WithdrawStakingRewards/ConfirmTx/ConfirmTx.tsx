@@ -2,7 +2,7 @@ import React from 'react'
 
 import {useSelectedWallet} from '../../../../features/WalletManager/common/hooks/useSelectedWallet'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
-import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
+import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types/yoroi'
 import {ConfirmTxWithHW} from './ConfirmTxWithHW'
 import {ConfirmTxWithOS} from './ConfirmTxWithOS'
 import {ConfirmTxWithPassword} from './ConfirmTxWithPassword'

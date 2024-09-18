@@ -1,14 +1,12 @@
 import {linksCardanoModuleMaker} from '@yoroi/links'
-import {Links} from '@yoroi/types'
+import {Links, Scan} from '@yoroi/types'
 
-import {ScanAction, ScanErrorUnknownContent} from './types'
-
-export const parseScanAction = (codeContent: string): ScanAction => {
+export const parseScanAction = (codeContent: string): Scan.Action => {
   const isLink = codeContent.includes(':')
 
   // NOTE: if it is a string < 256 with valid characters, it'd be consider a Yoroi Receiver (wallet address | domain name)
   if (!isLink) {
-    if (codeContent.length > 255 || !nonProtocolRegex.test(codeContent)) throw new ScanErrorUnknownContent()
+    if (codeContent.length > 255 || !nonProtocolRegex.test(codeContent)) throw new Scan.Errors.UnknownContent()
     return {
       action: 'send-only-receiver',
       receiver: codeContent,

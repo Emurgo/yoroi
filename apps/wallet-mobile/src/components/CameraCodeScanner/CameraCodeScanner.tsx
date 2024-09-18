@@ -9,7 +9,7 @@ export type CameraCodeScannerMethods = {
   continueScanning: () => void
   stopScanning: () => void
 }
-export type CameraCodeScannerProps = {
+type CameraCodeScannerProps = {
   onRead: (event: BarCodeScannerResult) => void
   withMask?: boolean
   maskText?: string
@@ -161,7 +161,7 @@ const ArcSvg = (props: SvgProps) => {
   )
 }
 
-export const getScannerBounds = ({deviceHeight, deviceWidth}: {deviceHeight: number; deviceWidth: number}) => {
+const getScannerBounds = ({deviceHeight, deviceWidth}: {deviceHeight: number; deviceWidth: number}) => {
   const top = deviceHeight / 2 - QR_MAX_HEIGHT / 2
   const bottom = top + QR_MAX_HEIGHT
   const left = deviceWidth / 2 - QR_MAX_WIDTH / 2
@@ -177,7 +177,7 @@ export const getScannerBounds = ({deviceHeight, deviceWidth}: {deviceHeight: num
   }
 }
 
-export const getScaledQrBounds = ({
+const getScaledQrBounds = ({
   qrBounds,
   qrBoundingBox,
   deviceHeight,
@@ -206,7 +206,7 @@ export const getScaledQrBounds = ({
   }
 }
 
-export const getIsQrInsideScannerBounds = ({
+const getIsQrInsideScannerBounds = ({
   qrBounds,
   qrBoundingBox,
   scannerBounds,

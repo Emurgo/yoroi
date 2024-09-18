@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useRoute} from '@react-navigation/native'
 import {isNonNullable} from '@yoroi/common'
-import {useExplorers} from '@yoroi/explorers'
 import {useTheme} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
@@ -21,21 +20,27 @@ import {
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Banner, Boundary, Button, CopyButton, FadeIn, Icon, Text, useModal} from '../../../../components'
+import {Banner} from '../../../../components/Banner/Banner'
+import {Boundary} from '../../../../components/Boundary/Boundary'
+import {Button} from '../../../../components/Button/Button'
+import {CopyButton} from '../../../../components/CopyButton'
+import {FadeIn} from '../../../../components/FadeIn'
+import {Icon} from '../../../../components/Icon'
+import {useModal} from '../../../../components/Modal/ModalContext'
+import {Text} from '../../../../components/Text'
 import {isEmptyString} from '../../../../kernel/utils'
 import {MultiToken} from '../../../../yoroi-wallets/cardano/MultiToken'
 import {CardanoTypes, YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useTipStatus, useTransactionInfos} from '../../../../yoroi-wallets/hooks'
-import {TransactionInfo} from '../../../../yoroi-wallets/types'
-import {asQuantity} from '../../../../yoroi-wallets/utils'
+import {TransactionInfo} from '../../../../yoroi-wallets/types/other'
 import {formatDateAndTime, formatTokenWithSymbol} from '../../../../yoroi-wallets/utils/format'
+import {asQuantity} from '../../../../yoroi-wallets/utils/utils'
 import {usePrivacyMode} from '../../../Settings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {messages, useStrings} from '../../common/strings'
 import AddressModal from './AddressModal/AddressModal'
 import {AssetList} from './AssetList'
-import {useAssetListStyles} from './AssetListTransaction.style'
 
 export const TxDetails = () => {
   const {openModal} = useModal()
@@ -49,7 +54,7 @@ export const TxDetails = () => {
   const {
     selected: {network},
   } = useWalletManager()
-  const explorers = useExplorers(wallet.networkManager.network)
+  const explorers = wallet.networkManager.explorers
   const internalAddressIndex = fromPairs(wallet.internalAddresses.map((addr, i) => [addr, i]))
   const externalAddressIndex = fromPairs(wallet.externalAddresses.map((addr, i) => [addr, i]))
   const [expandedInItemId, setExpandedInItemId] = useState<null | ItemId>(null)
@@ -228,14 +233,14 @@ const AdaAmount = ({amount}: {amount: BigNumber}) => {
     return <Text style={amountStyle}>{privacyPlaceholder}</Text>
   }
 
-  return <Text style={amountStyle}>{formatTokenWithSymbol(asQuantity(amount), wallet.primaryToken)}</Text>
+  return <Text style={amountStyle}>{formatTokenWithSymbol(asQuantity(amount), wallet.portfolioPrimaryTokenInfo)}</Text>
 }
 
 const Fee = ({amount}: {amount: BigNumber}) => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
 
-  const text = `${strings.txDetailsFee} ${formatTokenWithSymbol(asQuantity(amount), wallet.primaryToken)}`
+  const text = `${strings.txDetailsFee} ${formatTokenWithSymbol(asQuantity(amount), wallet.portfolioPrimaryTokenInfo)}`
   return <Text small>{text}</Text>
 }
 
@@ -243,12 +248,7 @@ const ExpandableAssetList: React.VFC<{
   expanded: boolean
   assets: CardanoTypes.TokenEntry[]
 }> = ({expanded, assets}) => {
-  const assetListStyle = useAssetListStyles()
-  return (
-    <View style={{borderWidth: 1, borderColor: 'transparent'}}>
-      {expanded && <AssetList styles={assetListStyle} assets={assets} />}
-    </View>
-  )
+  return <View style={{borderWidth: 1, borderColor: 'transparent'}}>{expanded && <AssetList assets={assets} />}</View>
 }
 
 type AddressEntryProps = {
@@ -346,7 +346,7 @@ const getShownAddresses = (
   }
 }
 
-export type Params = {
+type Params = {
   id: string
 }
 

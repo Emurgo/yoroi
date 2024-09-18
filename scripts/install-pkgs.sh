@@ -65,5 +65,6 @@ yarn workspace @yoroi/wallet-mobile add @yoroi/theme@"$1"
 yarn workspace @yoroi/wallet-mobile add @yoroi/dapp-connector@"$1"
 yarn workspace @yoroi/wallet-mobile add @yoroi/identicon@"$1"
 yarn workspace @yoroi/wallet-mobile add @yoroi/notifications@"$1"
+yarn workspace @yoroi/wallet-mobile add @yoroi/claim@"$1"
 
 echo "Using new packages..."

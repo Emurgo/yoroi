@@ -11,11 +11,11 @@ import {useSelectedWallet} from '../../../../WalletManager/common/hooks/useSelec
 export const Fees = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => {
   const strings = useStrings()
   const {wallet} = useSelectedWallet()
-  const feeAmount = Amounts.getAmount(yoroiUnsignedTx.fee, wallet.primaryToken.identifier)
+  const feeAmount = Amounts.getAmount(yoroiUnsignedTx.fee, wallet.portfolioPrimaryTokenInfo.id)
 
   return (
     <Text small testID="feesText">
-      {`${strings.fees}: ${formatTokenWithSymbol(feeAmount.quantity, wallet.primaryToken)}`}
+      {`${strings.fees}: ${formatTokenWithSymbol(feeAmount.quantity, wallet.portfolioPrimaryTokenInfo)}`}
     </Text>
   )
 }

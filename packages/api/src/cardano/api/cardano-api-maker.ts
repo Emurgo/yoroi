@@ -10,7 +10,7 @@ export const cardanoApiMaker = ({
 }: {
   network: Chain.SupportedNetworks
   request?: Fetcher
-}): Readonly<Api.Cardano.Actions> => {
+}): Readonly<Api.Cardano.Api> => {
   const baseUrl = API_ENDPOINTS[network].root
   const getProtocolParams = getProtocolParamsWrapper(baseUrl, request)
 
