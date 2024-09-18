@@ -31,6 +31,7 @@ describe('claimManagerMaker - postClaimTokens', () => {
     sync: jest.fn(),
     api: {
       tokenActivity: jest.fn(),
+      tokenHistory: jest.fn(),
       tokenDiscovery: jest.fn(),
       tokenImageInvalidate: jest.fn(),
       tokenInfo: jest.fn(),
