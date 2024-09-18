@@ -13,8 +13,8 @@ import {
   toDullahanRequest,
   toProcessedMediaRequest,
   toSecondaryTokenInfos,
-  toTokenActivityUpdates,
-  toTokenHistoryUpdates,
+  toTokenActivity,
+  toTokenHistory,
 } from './transformers'
 import {
   DullahanApiCachedIdsRequest,
@@ -269,7 +269,7 @@ export const portfolioApiMaker = ({
           return firstError
 
         try {
-          const transformedResponseData = toTokenActivityUpdates(activities)
+          const transformedResponseData = toTokenActivity(activities)
 
           const transformedResponse: Api.Response<Portfolio.Api.TokenActivityResponse> =
             freeze(
@@ -311,8 +311,9 @@ export const portfolioApiMaker = ({
         })
 
         if (isRight(response)) {
-          const history: Portfolio.Token.History | undefined =
-            toTokenHistoryUpdates(response.value.data)
+          const history: Portfolio.Token.History | undefined = toTokenHistory(
+            response.value.data,
+          )
 
           if (!history) {
             return freeze(

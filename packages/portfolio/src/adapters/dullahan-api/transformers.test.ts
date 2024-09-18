@@ -2,8 +2,8 @@ import {
   toDullahanRequest,
   toProcessedMediaRequest,
   toSecondaryTokenInfos,
-  toTokenActivityUpdates,
-  toTokenHistoryUpdates,
+  toTokenActivity,
+  toTokenHistory,
 } from './transformers'
 import {Portfolio, Api} from '@yoroi/types'
 
@@ -13,7 +13,7 @@ import {
   DullahanApiTokenHistoryResponse,
 } from './types'
 import {tokenActivityMocks} from '../token-activity.mocks'
-import {duallahanTokenActivityUpdatesMocks} from './token-activity.mocks'
+import {duallahanTokenActivityMocks} from './token-activity.mocks'
 import {tokenHistoryMocks} from '../token-history.mocks'
 
 describe('transformers', () => {
@@ -112,36 +112,36 @@ describe('transformers', () => {
     })
   })
 
-  describe('toTokenActivityUpdates', () => {
-    it('should return an empty object if apiTokenActivityUpdates response is empty', () => {
+  describe('toTokenActivity', () => {
+    it('should return an empty object if apiTokenActivity response is empty', () => {
       const apiTokenInfosResponse: DullahanApiTokenActivityResponse = {}
 
-      expect(toTokenActivityUpdates(apiTokenInfosResponse)).toEqual({})
+      expect(toTokenActivity(apiTokenInfosResponse)).toEqual({})
     })
 
     it('should return the data and deal with empty records', () => {
       const responseWithEmptyRecords = {
-        ...duallahanTokenActivityUpdatesMocks.api.responseSuccessDataOnly,
+        ...duallahanTokenActivityMocks.api.responseSuccessDataOnly,
         'token.4': undefined,
         'token.5': [Api.HttpStatusCode.InternalServerError, 'Not found'],
       } as any
-      const result = toTokenActivityUpdates(responseWithEmptyRecords)
+      const result = toTokenActivity(responseWithEmptyRecords)
 
       expect(result).toEqual(tokenActivityMocks.api.responseDataOnly)
     })
   })
 
-  describe('toTokenHistoryUpdates', () => {
+  describe('toTokenHistory', () => {
     it('should return undefined if apiTokenHistory response is malformed', () => {
       expect(
-        toTokenHistoryUpdates({
+        toTokenHistory({
           whatever: false,
         } as unknown as DullahanApiTokenHistoryResponse),
       ).toEqual(undefined)
     })
 
     it('should return the data', () => {
-      const result = toTokenHistoryUpdates(
+      const result = toTokenHistory(
         tokenHistoryMocks.ftNamelessRaw as unknown as DullahanApiTokenHistoryResponse,
       )
 

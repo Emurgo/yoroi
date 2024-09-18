@@ -50,13 +50,11 @@ export const toSecondaryTokenInfos = (
   )
 }
 
-export const toTokenActivityUpdates = (
+export const toTokenActivity = (
   apiTokenActivityResponse: Readonly<DullahanApiTokenActivityResponse>,
 ) => {
-  const tokenActivityUpdates: Record<
-    Portfolio.Token.Id,
-    Portfolio.Token.Activity
-  > = {}
+  const toTokenActivity: Record<Portfolio.Token.Id, Portfolio.Token.Activity> =
+    {}
 
   return freeze(
     Object.entries(apiTokenActivityResponse).reduce(
@@ -84,13 +82,13 @@ export const toTokenActivityUpdates = (
 
         return acc
       },
-      tokenActivityUpdates,
+      toTokenActivity,
     ),
     true,
   )
 }
 
-export const toTokenHistoryUpdates = (
+export const toTokenHistory = (
   apiTokenHistoryResponse: Readonly<DullahanApiTokenHistoryResponse>,
 ) => {
   if (!TokenHistoryResponseSchema.safeParse(apiTokenHistoryResponse).success)

@@ -54,7 +54,7 @@ describe('portfolioApiMaker', () => {
     mockRequest.mockResolvedValue({
       tag: 'right',
       value: {
-        status: 200,
+        status: Api.HttpStatusCode.Ok,
         data: {},
       },
     })
@@ -154,7 +154,7 @@ describe('portfolioApiMaker', () => {
     mockRequest.mockResolvedValue({
       tag: 'right',
       value: {
-        status: 200,
+        status: Api.HttpStatusCode.Ok,
         data: {
           ['wrong']: [200, 'data'],
         },
@@ -272,7 +272,7 @@ describe('portfolioApiMaker', () => {
       },
     })
 
-    const resultTokenActivityUpdates = await api.tokenActivity(
+    const resultTokenActivity = await api.tokenActivity(
       tokenActivityMocks.api.request,
       Portfolio.Token.ActivityWindow.OneDay,
     )
@@ -289,7 +289,7 @@ describe('portfolioApiMaker', () => {
       },
     })
 
-    expect(resultTokenActivityUpdates).toEqual({
+    expect(resultTokenActivity).toEqual({
       tag: 'left',
       error: {
         status: -3,
@@ -331,7 +331,7 @@ describe('portfolioApiMaker', () => {
     mockRequest.mockResolvedValue({
       tag: 'left',
       value: {
-        status: 500,
+        status: Api.HttpStatusCode.InternalServerError,
         message: 'Internal Server Error',
         responseData: {},
       },
@@ -352,7 +352,7 @@ describe('portfolioApiMaker', () => {
     await expect(api.tokenInfos(mockTokenIdsWithCache)).resolves.toEqual({
       tag: 'left',
       value: {
-        status: 500,
+        status: Api.HttpStatusCode.InternalServerError,
         message: 'Internal Server Error',
         responseData: {},
       },
@@ -373,7 +373,7 @@ describe('portfolioApiMaker', () => {
     ).resolves.toEqual({
       tag: 'left',
       value: {
-        status: 500,
+        status: Api.HttpStatusCode.InternalServerError,
         message: 'Internal Server Error',
         responseData: {},
       },
@@ -396,7 +396,7 @@ describe('portfolioApiMaker', () => {
     ).resolves.toEqual({
       tag: 'left',
       value: {
-        status: 500,
+        status: Api.HttpStatusCode.InternalServerError,
         message: 'Internal Server Error',
         responseData: {},
       },
@@ -419,7 +419,7 @@ describe('portfolioApiMaker', () => {
     ).resolves.toEqual({
       tag: 'left',
       value: {
-        status: 500,
+        status: Api.HttpStatusCode.InternalServerError,
         message: 'Internal Server Error',
         responseData: {},
       },
@@ -445,7 +445,7 @@ describe('portfolioApiMaker', () => {
     ).resolves.toEqual({
       tag: 'left',
       value: {
-        status: 500,
+        status: Api.HttpStatusCode.InternalServerError,
         message: 'Internal Server Error',
         responseData: {},
       },
@@ -471,7 +471,7 @@ describe('portfolioApiMaker', () => {
     ).resolves.toEqual({
       tag: 'left',
       value: {
-        status: 500,
+        status: Api.HttpStatusCode.InternalServerError,
         message: 'Internal Server Error',
         responseData: {},
       },
@@ -492,7 +492,7 @@ describe('portfolioApiMaker', () => {
     mockRequest.mockResolvedValue({
       tag: 'right',
       value: {
-        status: 200,
+        status: Api.HttpStatusCode.Ok,
         data: tokenMocks.nftCryptoKitty.traits,
       },
     })
@@ -519,7 +519,7 @@ describe('portfolioApiMaker', () => {
     expect(result).toEqual({
       tag: 'right',
       value: {
-        status: 200,
+        status: Api.HttpStatusCode.Ok,
         data: tokenMocks.nftCryptoKitty.traits,
       },
     })
@@ -529,7 +529,7 @@ describe('portfolioApiMaker', () => {
     mockRequest.mockResolvedValue({
       tag: 'right',
       value: {
-        status: 200,
+        status: Api.HttpStatusCode.Ok,
         data: tokenMocks.nftCryptoKitty.info,
       },
     })
@@ -556,7 +556,7 @@ describe('portfolioApiMaker', () => {
     expect(result).toEqual({
       tag: 'right',
       value: {
-        status: 200,
+        status: Api.HttpStatusCode.Ok,
         data: tokenMocks.nftCryptoKitty.info,
       },
     })
@@ -593,7 +593,7 @@ describe('portfolioApiMaker', () => {
     expect(result).toEqual({
       tag: 'right',
       value: {
-        status: 200,
+        status: Api.HttpStatusCode.Ok,
         data: tokenActivityMocks.api.responseDataOnly,
       },
     })
@@ -628,7 +628,7 @@ describe('portfolioApiMaker', () => {
     expect(result).toEqual({
       tag: 'right',
       value: {
-        status: 200,
+        status: Api.HttpStatusCode.Ok,
         data: tokenHistoryMocks.api.responseDataOnly,
       },
     })
@@ -638,7 +638,7 @@ describe('portfolioApiMaker', () => {
     mockRequest.mockResolvedValue({
       tag: 'right',
       value: {
-        status: 200,
+        status: Api.HttpStatusCode.Ok,
         data: 0,
       },
     })
@@ -678,7 +678,7 @@ describe('portfolioApiMaker', () => {
     mockRequest.mockResolvedValue({
       tag: 'right',
       value: {
-        status: 200,
+        status: Api.HttpStatusCode.Ok,
         data: {
           ...tokenDiscoveryMocks.nftCryptoKitty,
           supply: undefined,
@@ -706,7 +706,7 @@ describe('portfolioApiMaker', () => {
     mockRequest.mockResolvedValue({
       tag: 'right',
       value: {
-        status: 200,
+        status: Api.HttpStatusCode.Ok,
         data: tokenDiscoveryMocks.nftCryptoKitty,
       },
     })
@@ -717,7 +717,7 @@ describe('portfolioApiMaker', () => {
     expect(right).toEqual({
       tag: 'right',
       value: {
-        status: 200,
+        status: Api.HttpStatusCode.Ok,
         data: tokenDiscoveryMocks.nftCryptoKitty,
       },
     })
@@ -727,7 +727,7 @@ describe('portfolioApiMaker', () => {
     mockRequest.mockResolvedValue({
       tag: 'right',
       value: {
-        status: 200,
+        status: Api.HttpStatusCode.Ok,
         data: {},
       },
     })
