@@ -1,5 +1,8 @@
 import {AppObservableStorage} from '../app/observable-storage'
-import {ChainCardanoProtocolParams} from '../chain/cardano'
+import {
+  ChainCardanoProtocolParams,
+  ChainCardanoBestBlock,
+} from '../chain/cardano'
 import {ChainSupportedNetworks} from '../chain/network'
 import {ExplorersExplorer} from '../explorers/explorer'
 import {ExplorersManager} from '../explorers/manager'
@@ -21,6 +24,7 @@ export type NetworkConfig = {
 // NOTE: NetworkConfig will be a generic type in the future
 export type NetworkApi = {
   protocolParams: () => Promise<Readonly<ChainCardanoProtocolParams>>
+  bestBlock: () => Promise<ChainCardanoBestBlock>
 }
 export type NetworkManager = Readonly<
   {

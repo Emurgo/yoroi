@@ -26,7 +26,7 @@ import {logger} from '../../kernel/logger/logger'
 import {deriveAddressFromXPub} from '../cardano/account-manager/derive-address-from-xpub'
 import {getSpendingKey, getStakingKey} from '../cardano/addressInfo/addressInfo'
 import {WalletEvent, YoroiWallet} from '../cardano/types'
-import {TipStatusResponse, TRANSACTION_DIRECTION, TRANSACTION_STATUS, TxSubmissionStatus} from '../types/other'
+import {TRANSACTION_DIRECTION, TRANSACTION_STATUS, TxSubmissionStatus} from '../types/other'
 import {YoroiSignedTx, YoroiUnsignedTx} from '../types/yoroi'
 import {delay} from '../utils/timeUtils'
 import {Utxos} from '../utils/utils'
@@ -545,30 +545,6 @@ const fetchTxStatus = async (
   return {
     status: 'WAITING',
   }
-}
-
-// TODO: tipStatus is a network responsability
-export const useTipStatus = ({
-  wallet,
-  options,
-}: {
-  wallet: YoroiWallet
-  options?: UseQueryOptions<TipStatusResponse, Error>
-}) => {
-  const {network} = useSelectedNetwork()
-  const query = useQuery<TipStatusResponse, Error>({
-    suspense: true,
-    staleTime: 10000,
-    retry: 3,
-    retryDelay: 1000,
-    queryKey: [network, 'tipStatus'],
-    queryFn: () => wallet.fetchTipStatus(),
-    ...options,
-  })
-
-  if (!query.data) throw new Error('Failed to retrive tipStatus')
-
-  return query.data
 }
 
 export const useBalances = (wallet: YoroiWallet): Balance.Amounts => {

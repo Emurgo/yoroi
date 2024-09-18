@@ -17,7 +17,6 @@ import {WalletEncryptedStorage} from '../../kernel/storage/EncryptedStorage'
 import type {
   FundInfoResponse,
   RawUtxo,
-  TipStatusResponse,
   TransactionInfo,
   TxStatusRequest,
   TxStatusResponse,
@@ -155,7 +154,6 @@ export interface YoroiWallet {
   saveMemo(txId: string, memo: string): Promise<void>
   get transactions(): Record<string, TransactionInfo>
   get confirmationCounts(): Record<string, null | number>
-  fetchTipStatus(): Promise<TipStatusResponse>
   fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse>
 
   // Utxos
@@ -232,7 +230,6 @@ const yoroiWalletKeys: Array<keyof YoroiWallet> = [
   // Balances, TxDetails
   'transactions',
   'confirmationCounts',
-  'fetchTipStatus',
   'fetchTxStatus',
 
   // Other
