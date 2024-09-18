@@ -27,7 +27,6 @@ export const ShowBuyBanner = () => {
   const showSmallBanner = useShowBuyBannerSmall()
   const {resetShowBuyBannerSmall} = useResetShowBuyBannerSmall()
 
-
   if (hasZeroPt && hasZeroTx && network === Chain.Network.Preprod) return <PreprodFaucetBanner />
   if (hasZeroPt && hasZeroTx && network === Chain.Network.Sancho) return <SanchonetFaucetBanner />
   if (hasZeroPt && hasZeroTx) return <BuyBannerBig />
