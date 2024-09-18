@@ -1,5 +1,9 @@
-import {fetchData} from '@yoroi/common'
-import {tokenInfoMocks, tokenMocks} from '@yoroi/portfolio'
+import {cacheRecordMaker, fetchData} from '@yoroi/common'
+import {
+  createTokenManagerMock,
+  tokenInfoMocks,
+  tokenMocks,
+} from '@yoroi/portfolio'
 import {Api, Portfolio, Scan} from '@yoroi/types'
 
 import {claimManagerMaker} from './manager'
@@ -27,32 +31,24 @@ describe('claimManagerMaker - postClaimTokens', () => {
     jest.clearAllMocks()
   })
 
-  const tokenManagerMock = {
-    sync: jest.fn(),
-    api: {
-      tokenActivity: jest.fn(),
-      tokenHistory: jest.fn(),
-      tokenDiscovery: jest.fn(),
-      tokenImageInvalidate: jest.fn(),
-      tokenInfo: jest.fn(),
-      tokenInfos: jest.fn(),
-      tokenTraits: jest.fn(),
-    },
-    clear: jest.fn(),
-    destroy: jest.fn(),
-    hydrate: jest.fn(),
-    subscribe: jest.fn(),
-    unsubscribe: jest.fn(),
-    observable$: {} as any,
-  }
+  const tokenManagerMock = createTokenManagerMock()
 
   tokenManagerMock.sync.mockResolvedValue(
     new Map([
       [
         tokenMocks.nftCryptoKitty.info.id,
-        {record: tokenMocks.nftCryptoKitty.info},
+        cacheRecordMaker(
+          {expires: Date.now() + 3_600_000, hash: 'hash3'},
+          tokenMocks.nftCryptoKitty.info,
+        ),
       ],
-      [tokenMocks.rnftWhatever.info.id, {record: tokenMocks.rnftWhatever.info}],
+      [
+        tokenMocks.rnftWhatever.info.id,
+        cacheRecordMaker(
+          {expires: Date.now() + 3_600_000, hash: 'hash3'},
+          tokenMocks.rnftWhatever.info,
+        ),
+      ],
     ]),
   )
 

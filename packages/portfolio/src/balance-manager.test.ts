@@ -10,6 +10,7 @@ import {portfolioBalanceStorageMaker} from './adapters/mmkv-storage/balance-stor
 import {tokenInfoMocks} from './adapters/token-info.mocks'
 import {isFt} from './helpers/is-ft'
 import {isNft} from './helpers/is-nft'
+import {createTokenManagerMock} from './token-manager.mock'
 
 const tokenInfoStorage = observableStorageMaker(
   mountMMKVStorage<Portfolio.Token.Id>({
@@ -37,24 +38,7 @@ describe('portfolioBalanceManagerMaker', () => {
     primaryBreakdownStorage,
     primaryTokenId,
   })
-  const tokenManager: Portfolio.Manager.Token = {
-    destroy: jest.fn(),
-    hydrate: jest.fn(),
-    subscribe: jest.fn(),
-    unsubscribe: jest.fn(),
-    observable$: new BehaviorSubject({} as any).asObservable(),
-    sync: jest.fn().mockResolvedValue(new Map()),
-    clear: jest.fn(),
-    api: {
-      tokenInfo: jest.fn(),
-      tokenInfos: jest.fn(),
-      tokenDiscovery: jest.fn(),
-      tokenTraits: jest.fn(),
-      tokenActivity: jest.fn(),
-      tokenHistory: jest.fn(),
-      tokenImageInvalidate: jest.fn(),
-    },
-  }
+  const tokenManager = createTokenManagerMock()
 
   it('should be instantiated', () => {
     const manager = portfolioBalanceManagerMaker({
@@ -86,24 +70,7 @@ describe('hydrate', () => {
     primaryBreakdownStorage,
     primaryTokenId,
   })
-  const tokenManager: Portfolio.Manager.Token = {
-    destroy: jest.fn(),
-    hydrate: jest.fn(),
-    subscribe: jest.fn(),
-    unsubscribe: jest.fn(),
-    observable$: new BehaviorSubject({} as any).asObservable(),
-    sync: jest.fn().mockResolvedValue(new Map()),
-    clear: jest.fn(),
-    api: {
-      tokenInfo: jest.fn(),
-      tokenInfos: jest.fn(),
-      tokenDiscovery: jest.fn(),
-      tokenTraits: jest.fn(),
-      tokenActivity: jest.fn(),
-      tokenHistory: jest.fn(),
-      tokenImageInvalidate: jest.fn(),
-    },
-  }
+  const tokenManager = createTokenManagerMock()
 
   afterEach(() => {
     storage.clear()
@@ -176,25 +143,7 @@ describe('destroy', () => {
     primaryBreakdownStorage,
     primaryTokenId,
   })
-  const tokenManagerObservable = new BehaviorSubject({} as any).asObservable()
-  const tokenManager: jest.Mocked<Portfolio.Manager.Token> = {
-    destroy: jest.fn(),
-    hydrate: jest.fn(),
-    subscribe: jest.fn(),
-    unsubscribe: jest.fn(),
-    observable$: tokenManagerObservable,
-    sync: jest.fn().mockResolvedValue(new Map()),
-    clear: jest.fn(),
-    api: {
-      tokenInfo: jest.fn(),
-      tokenInfos: jest.fn(),
-      tokenDiscovery: jest.fn(),
-      tokenTraits: jest.fn(),
-      tokenActivity: jest.fn(),
-      tokenHistory: jest.fn(),
-      tokenImageInvalidate: jest.fn(),
-    },
-  }
+  const tokenManager = createTokenManagerMock()
   const queueDestroy = jest.fn()
   const observerDestroy = jest.fn()
 
@@ -261,25 +210,7 @@ describe('primary updates', () => {
     primaryBreakdownStorage,
     primaryTokenId,
   })
-  const tokenManagerObservable = new BehaviorSubject({} as any)
-  const tokenManager: jest.Mocked<Portfolio.Manager.Token> = {
-    destroy: jest.fn(),
-    hydrate: jest.fn(),
-    subscribe: jest.fn(),
-    unsubscribe: jest.fn(),
-    observable$: tokenManagerObservable.asObservable(),
-    sync: jest.fn().mockResolvedValue(new Map()),
-    clear: jest.fn(),
-    api: {
-      tokenInfo: jest.fn(),
-      tokenInfos: jest.fn(),
-      tokenDiscovery: jest.fn(),
-      tokenTraits: jest.fn(),
-      tokenActivity: jest.fn(),
-      tokenHistory: jest.fn(),
-      tokenImageInvalidate: jest.fn(),
-    },
-  }
+  const tokenManager = createTokenManagerMock()
 
   afterEach(() => {
     storage.clear()
@@ -422,24 +353,9 @@ describe('sync & refresh', () => {
     primaryTokenId,
   })
   const tokenManagerObservable = new BehaviorSubject({} as any)
-  const tokenManager: jest.Mocked<Portfolio.Manager.Token> = {
-    destroy: jest.fn(),
-    hydrate: jest.fn(),
-    subscribe: jest.fn(),
-    unsubscribe: jest.fn(),
-    observable$: tokenManagerObservable.asObservable(),
-    sync: jest.fn().mockResolvedValue(new Map()),
-    clear: jest.fn(),
-    api: {
-      tokenInfo: jest.fn(),
-      tokenInfos: jest.fn(),
-      tokenDiscovery: jest.fn(),
-      tokenTraits: jest.fn(),
-      tokenActivity: jest.fn(),
-      tokenHistory: jest.fn(),
-      tokenImageInvalidate: jest.fn(),
-    },
-  }
+  const tokenManager = createTokenManagerMock(
+    tokenManagerObservable.asObservable(),
+  )
 
   afterEach(() => {
     storage.clear()
@@ -715,24 +631,7 @@ describe('clear', () => {
     primaryBreakdownStorage,
     primaryTokenId,
   })
-  const tokenManager: Portfolio.Manager.Token = {
-    destroy: jest.fn(),
-    hydrate: jest.fn(),
-    subscribe: jest.fn(),
-    unsubscribe: jest.fn(),
-    observable$: new BehaviorSubject({} as any).asObservable(),
-    sync: jest.fn().mockResolvedValue(new Map()),
-    clear: jest.fn(),
-    api: {
-      tokenInfo: jest.fn(),
-      tokenInfos: jest.fn(),
-      tokenDiscovery: jest.fn(),
-      tokenTraits: jest.fn(),
-      tokenActivity: jest.fn(),
-      tokenHistory: jest.fn(),
-      tokenImageInvalidate: jest.fn(),
-    },
-  }
+  const tokenManager = createTokenManagerMock()
 
   afterEach(() => {
     storage.clear()
