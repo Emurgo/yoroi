@@ -176,6 +176,7 @@ import {
   PortfolioApi,
   PortfolioApiTokenActivityResponse,
   PortfolioApiTokenDiscoveryResponse,
+  PortfolioApiTokenHistoryResponse,
   PortfolioApiTokenInfosResponse,
   PortfolioApiTokenTraitsResponse,
 } from './portfolio/api'
@@ -252,6 +253,10 @@ import {
   ClaimApiClaimTokensRequestPayload,
   ClaimApiClaimTokensResponse,
 } from './claim/api'
+import {
+  PortfolioTokenHistory,
+  PortfolioTokenHistoryPeriod,
+} from './portfolio/history'
 
 export namespace App {
   export namespace Errors {
@@ -524,6 +529,7 @@ export namespace Portfolio {
     export type TokenDiscoveryResponse = PortfolioApiTokenDiscoveryResponse
     export type TokenTraitsResponse = PortfolioApiTokenTraitsResponse
     export type TokenActivityResponse = PortfolioApiTokenActivityResponse
+    export type TokenHistoryResponse = PortfolioApiTokenHistoryResponse
     export type Api = PortfolioApi
   }
 
@@ -571,6 +577,10 @@ export namespace Portfolio {
     export type ActivityWindow = PortfolioTokenActivityWindow
     export const ActivityWindow = PortfolioTokenActivityWindow
     export type ActivityRecord = PortfolioTokenActivityRecord
+
+    export type History = PortfolioTokenHistory
+    export type HistoryPeriod = PortfolioTokenHistoryPeriod
+    export const HistoryPeriod = PortfolioTokenHistoryPeriod
   }
 }
 

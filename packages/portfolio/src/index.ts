@@ -42,6 +42,7 @@ export * from './translators/reactjs/usePortfolioTokenInfo'
 
 export * from './balance-manager'
 export * from './token-manager'
+export * from './token-manager.mock'
 
 export * from './types'
 export * from './constants'

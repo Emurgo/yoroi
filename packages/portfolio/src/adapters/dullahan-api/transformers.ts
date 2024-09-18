@@ -6,6 +6,7 @@ import {parseSecondaryTokenInfoWithCacheRecord} from '../../validators/token-inf
 import {
   DullahanApiCachedIdsRequest,
   DullahanApiTokenActivityResponse,
+  DullahanApiTokenHistoryResponse,
   DullahanApiTokenInfosResponse,
 } from './types'
 import {z} from 'zod'
@@ -49,44 +50,56 @@ export const toSecondaryTokenInfos = (
   )
 }
 
-export const toTokenActivityUpdates = (
+export const toTokenActivity = (
   apiTokenActivityResponse: Readonly<DullahanApiTokenActivityResponse>,
 ) => {
-  const tokenActivityUpdates: Record<
-    Portfolio.Token.Id,
-    Portfolio.Token.Activity
-  > = {}
+  const tokenActivity: Record<Portfolio.Token.Id, Portfolio.Token.Activity> = {}
 
   return freeze(
-    Object.entries(apiTokenActivityResponse).reduce(
-      (acc, [id, tokenActivity]) => {
-        if (!Array.isArray(tokenActivity)) return acc
-        const castedId = id as Portfolio.Token.Id
+    Object.entries(apiTokenActivityResponse).reduce((acc, [id, response]) => {
+      if (!Array.isArray(response)) return acc
+      const castedId = id as Portfolio.Token.Id
 
-        const [statusCode, tokenActivityData] = tokenActivity
-        if (statusCode !== Api.HttpStatusCode.Ok) return acc
+      const [statusCode, tokenActivityData] = response
+      if (statusCode !== Api.HttpStatusCode.Ok) return acc
 
-        TokenAcvitivyResponseSchema.parse(tokenActivityData)
+      TokenActivityResponseSchema.parse(tokenActivityData)
 
-        const parsedTokenActivity: Portfolio.Token.Activity = {
-          price: {
-            ts: tokenActivityData.price.ts,
-            open: new BigNumber(tokenActivityData.price.open),
-            close: new BigNumber(tokenActivityData.price.close),
-            low: new BigNumber(tokenActivityData.price.low),
-            high: new BigNumber(tokenActivityData.price.high),
-            change: tokenActivityData.price.change,
-          },
-        }
+      const parsedTokenActivity: Portfolio.Token.Activity = {
+        price: {
+          ts: tokenActivityData.price.ts,
+          open: new BigNumber(tokenActivityData.price.open),
+          close: new BigNumber(tokenActivityData.price.close),
+          low: new BigNumber(tokenActivityData.price.low),
+          high: new BigNumber(tokenActivityData.price.high),
+          change: tokenActivityData.price.change,
+        },
+      }
 
-        acc[castedId] = parsedTokenActivity
+      acc[castedId] = parsedTokenActivity
 
-        return acc
-      },
-      tokenActivityUpdates,
-    ),
+      return acc
+    }, tokenActivity),
     true,
   )
+}
+
+export const toTokenHistory = (
+  apiTokenHistoryResponse: Readonly<DullahanApiTokenHistoryResponse>,
+) => {
+  if (!TokenHistoryResponseSchema.safeParse(apiTokenHistoryResponse).success)
+    return undefined
+
+  return freeze({
+    prices: apiTokenHistoryResponse.prices.map((tokenHistoryRecord) => ({
+      ts: tokenHistoryRecord.ts,
+      open: new BigNumber(tokenHistoryRecord.open),
+      close: new BigNumber(tokenHistoryRecord.close),
+      low: new BigNumber(tokenHistoryRecord.low),
+      high: new BigNumber(tokenHistoryRecord.high),
+      change: tokenHistoryRecord.change,
+    })),
+  })
 }
 
 export const toDullahanRequest = (
@@ -96,7 +109,7 @@ export const toDullahanRequest = (
     ([tokenId, hash]) => `${tokenId}:${hash}`,
   ) as DullahanApiCachedIdsRequest
 
-const TokenAcvitivyResponseSchema = z.object({
+const TokenActivityResponseSchema = z.object({
   price: z.object({
     ts: z.number(),
     open: z.string(),
@@ -105,6 +118,19 @@ const TokenAcvitivyResponseSchema = z.object({
     high: z.string(),
     change: z.number(),
   }),
+})
+
+const TokenHistoryResponseSchema = z.object({
+  prices: z.array(
+    z.object({
+      ts: z.number(),
+      open: z.string(),
+      close: z.string(),
+      low: z.string(),
+      high: z.string(),
+      change: z.number(),
+    }),
+  ),
 })
 
 export const toProcessedMediaRequest = (request: Portfolio.Token.Id) => {
