@@ -452,7 +452,7 @@ export namespace Api {
     export type TokenId = ApiTokenId
 
     export type ProtocolParams = ChainCardanoProtocolParams
-    export type TipStatus = ChainCardanoBestBlock
+    export type BestBlock = ChainCardanoBestBlock
 
     export interface Api {
       getProtocolParams: () => Promise<ChainCardanoProtocolParams>

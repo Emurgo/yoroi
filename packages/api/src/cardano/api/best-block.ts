@@ -4,8 +4,8 @@ import {Api} from '@yoroi/types'
 
 export const getBestBlock =
   (baseUrl: string, request: Fetcher = fetcher) =>
-  async (): Promise<Api.Cardano.TipStatus> => {
-    return request<Api.Cardano.TipStatus>({
+  async (): Promise<Api.Cardano.BestBlock> => {
+    return request<Api.Cardano.BestBlock>({
       url: `${baseUrl}/bestblock`,
       data: undefined,
       method: 'GET',
@@ -13,7 +13,7 @@ export const getBestBlock =
         'Content-Type': 'application/json',
         'Response-Type': 'application/json',
       },
-    }).then((response: Api.Cardano.TipStatus) => {
+    }).then((response: Api.Cardano.BestBlock) => {
       const parsedResponse = parseBestBlock(response)
 
       if (!parsedResponse)
@@ -23,8 +23,8 @@ export const getBestBlock =
   }
 
 export const parseBestBlock = (
-  data: Api.Cardano.TipStatus,
-): Api.Cardano.TipStatus | undefined => {
+  data: Api.Cardano.BestBlock,
+): Api.Cardano.BestBlock | undefined => {
   return isBestBlock(data) ? data : undefined
 }
 
