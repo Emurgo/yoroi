@@ -1,12 +1,14 @@
 import {isRight} from '@yoroi/common'
 import {isPrimaryToken} from '@yoroi/portfolio'
-import {Chain} from '@yoroi/types'
+import {Chain, Portfolio} from '@yoroi/types'
 import {useQuery, UseQueryOptions} from 'react-query'
 
 import {supportedCurrencies, time} from '../../../../kernel/constants'
 import {useLanguage} from '../../../../kernel/i18n'
+import {logger} from '../../../../kernel/logger/logger'
 import {fetchPtPriceActivity} from '../../../../yoroi-wallets/cardano/usePrimaryTokenActivity'
 import {useCurrencyPairing} from '../../../Settings/Currency/CurrencyContext'
+import {useSelectedNetwork} from '../../../WalletManager/common/hooks/useSelectedNetwork'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {networkConfigs} from '../../../WalletManager/network-manager/network-manager'
 import {priceChange} from '../helpers/priceChange'
@@ -30,60 +32,6 @@ type TokenChartData = {
   changeValue: number
 }
 
-function generateMockChartData(timeInterval: TokenChartInterval = TOKEN_CHART_INTERVAL.DAY): TokenChartData[] {
-  const dataPoints = 50
-  const startValue = 100
-  const volatility = 50
-
-  const startDate = new Date('2024-02-02T15:09:00')
-
-  function getTimeIncrement(interval: TokenChartInterval): number {
-    switch (interval) {
-      case TOKEN_CHART_INTERVAL.DAY:
-        return 60 * 60 * 1000 // 1 hour
-      case TOKEN_CHART_INTERVAL.WEEK:
-        return 24 * 60 * 60 * 1000 // 1 day
-      case TOKEN_CHART_INTERVAL.MONTH:
-        return 30 * 24 * 60 * 60 * 1000 // 1 month (approximated as 30 days)
-      case TOKEN_CHART_INTERVAL.SIX_MONTHS:
-        return 6 * 30 * 24 * 60 * 60 * 1000 // 6 months
-      case TOKEN_CHART_INTERVAL.YEAR:
-        return 12 * 30 * 24 * 60 * 60 * 1000 // 1 year (approximated as 360 days)
-      default:
-        return 60 * 1000 // Default to 1 minute
-    }
-  }
-
-  const increment = getTimeIncrement(timeInterval)
-  const chartData: TokenChartData[] = []
-
-  let previousValue = startValue
-
-  for (let i = 0; i < dataPoints; i++) {
-    const date = new Date(startDate.getTime() + i * increment)
-    const label = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1)
-      .toString()
-      .padStart(2, '0')}/${date.getFullYear().toString().substr(-2)} ${date.getHours()}:${date
-      .getMinutes()
-      .toString()
-      .padStart(2, '0')}`
-    const value = i === 0 ? startValue : previousValue + (Math.random() - 0.5) * volatility
-    const changeValue = i === 0 ? 0 : value - previousValue
-    const changePercent = i === 0 ? 0 : (changeValue / previousValue) * 100
-
-    chartData.push({
-      label,
-      value,
-      changePercent,
-      changeValue,
-    })
-
-    previousValue = value // Update previousValue for the next iteration
-  }
-
-  return chartData
-}
-
 const getTimestamps = (timeInterval: TokenChartInterval) => {
   const now = Date.now()
   const [from, resolution] = {
@@ -104,9 +52,9 @@ const ptTicker = networkConfigs[Chain.Network.Mainnet].primaryTokenInfo.ticker
 export const useGetPortfolioTokenChart = (
   timeInterval = TOKEN_CHART_INTERVAL.DAY as TokenChartInterval,
   options: UseQueryOptions<
-    TokenChartData[],
+    TokenChartData[] | null,
     Error,
-    TokenChartData[],
+    TokenChartData[] | null,
     ['useGetPortfolioTokenChart', string, TokenChartInterval, ReturnType<typeof useCurrencyPairing>['currency']?]
   > = {},
 ) => {
@@ -114,6 +62,9 @@ export const useGetPortfolioTokenChart = (
   const {
     wallet: {balances},
   } = useSelectedWallet()
+  const {
+    networkManager: {tokenManager},
+  } = useSelectedNetwork()
   const tokenInfo = balances.records.get(tokenId)
   const {currency} = useCurrencyPairing()
   const {languageCode} = useLanguage()
@@ -135,6 +86,8 @@ export const useGetPortfolioTokenChart = (
         if (response.value.data.error) throw new Error(response.value.data.error)
 
         const tickers = response.value.data.tickers
+        if (tickers.length === 0) return null
+
         const validCurrency = currency === ptTicker ? supportedCurrencies.USD : currency ?? supportedCurrencies.USD
 
         const initialPrice = tickers[0].prices[validCurrency]
@@ -153,7 +106,8 @@ export const useGetPortfolioTokenChart = (
 
         return records
       }
-      throw new Error('Failed to fetch token chart data')
+      logger.error('Failed to fetch token chart data for PT')
+      return null
     },
   })
 
@@ -164,10 +118,42 @@ export const useGetPortfolioTokenChart = (
     ...options,
     queryKey: ['useGetPortfolioTokenChart', tokenInfo?.info.id ?? '', timeInterval],
     queryFn: async () => {
-      await new Promise((resolve) => setTimeout(resolve, 1))
-      return generateMockChartData(timeInterval)
+      const response = await tokenManager.api.tokenHistory(tokenId, chartIntervalToHistoryPeriod(timeInterval))
+      if (isRight(response)) {
+        const prices = response.value.data.prices
+
+        if (prices.length === 0) return null
+
+        const initialPrice = prices[0].open.toNumber()
+        const records = prices
+          .map((price) => {
+            const value = price.close.toNumber()
+            if (value === undefined) return undefined
+            const {changePercent, changeValue} = priceChange(initialPrice, value)
+            const label = new Date(price.ts).toLocaleString(languageCode, {
+              dateStyle: 'short',
+              timeStyle: 'short',
+            })
+            return {label, value, changePercent, changeValue}
+          })
+          .filter(Boolean) as TokenChartData[]
+
+        return records
+      }
+      logger.error(`Failed to fetch token chart data for ${tokenId}`)
+      return null
     },
   })
 
   return tokenInfo && isPrimaryToken(tokenInfo.info) ? ptQuery : otherQuery
 }
+
+const chartIntervalToHistoryPeriod = (i: TokenChartInterval): Portfolio.Token.HistoryPeriod =>
+  ({
+    [TOKEN_CHART_INTERVAL.DAY]: Portfolio.Token.HistoryPeriod.OneDay,
+    [TOKEN_CHART_INTERVAL.WEEK]: Portfolio.Token.HistoryPeriod.OneWeek,
+    [TOKEN_CHART_INTERVAL.MONTH]: Portfolio.Token.HistoryPeriod.OneMonth,
+    [TOKEN_CHART_INTERVAL.SIX_MONTHS]: Portfolio.Token.HistoryPeriod.SixMonth,
+    [TOKEN_CHART_INTERVAL.YEAR]: Portfolio.Token.HistoryPeriod.OneYear,
+    [TOKEN_CHART_INTERVAL.ALL]: Portfolio.Token.HistoryPeriod.All,
+  }[i] ?? Portfolio.Token.HistoryPeriod.OneDay)

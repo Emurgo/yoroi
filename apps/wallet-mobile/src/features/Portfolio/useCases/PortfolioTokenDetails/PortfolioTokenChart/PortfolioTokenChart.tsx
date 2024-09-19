@@ -1,7 +1,8 @@
 import {useTheme} from '@yoroi/theme'
 import React, {useCallback, useState} from 'react'
-import {StyleSheet, View} from 'react-native'
+import {Image, StyleSheet, View} from 'react-native'
 
+import ChartPlaceholder from '../../../../../assets/img/chart-placeholder.png'
 import {
   type TokenChartInterval,
   TOKEN_CHART_INTERVAL,
@@ -29,16 +30,20 @@ export const PortfolioTokenChart = () => {
 
   return (
     <View style={styles.root}>
-      {isFetching || !data ? (
+      {isFetching ? (
         <PortfolioTokenChartSkeleton />
       ) : (
         <>
           <TokenPerformance
-            tokenPerformance={data[Math.max(0, Math.min(data.length - 1, selectedIndex))]}
+            tokenPerformance={data?.[Math.max(0, Math.min(data.length - 1, selectedIndex))]}
             timeInterval={timeInterval}
           />
 
-          <TokenChart onValueSelected={handleChartSelected} dataSources={data} />
+          {!data ? (
+            <Image style={styles.chartUnavailable} source={ChartPlaceholder} />
+          ) : (
+            <TokenChart onValueSelected={handleChartSelected} dataSources={data} />
+          )}
         </>
       )}
 
@@ -53,6 +58,13 @@ const useStyles = () => {
     root: {
       ...atoms.flex_1,
       ...atoms.flex_col,
+    },
+    chartUnavailable: {
+      height: 112,
+      width: '100%',
+      marginVertical: 16,
+      resizeMode: 'stretch',
+      opacity: 0.8,
     },
   })
 

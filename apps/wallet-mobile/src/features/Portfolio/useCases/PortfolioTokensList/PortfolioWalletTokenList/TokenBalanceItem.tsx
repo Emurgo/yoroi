@@ -53,7 +53,7 @@ export const TokenBalanceItem = ({amount}: Props) => {
           </Text>
 
           <PnlTag withIcon variant={variantPnl}>
-            <Text>{isMissingPrices ? '—— ' : formatPriceChange(changePercent)}%</Text>
+            <Text>{isMissingPrices ? '— ' : formatPriceChange(changePercent)}%</Text>
           </PnlTag>
         </View>
       </View>

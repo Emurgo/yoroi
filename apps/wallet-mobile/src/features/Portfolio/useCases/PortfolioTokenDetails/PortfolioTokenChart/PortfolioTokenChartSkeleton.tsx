@@ -4,7 +4,6 @@ import {Image, StyleSheet, View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 import ChartPlaceholder from '../../../../../assets/img/chart-placeholder.png'
-import {Icon} from '../../../../../components/Icon'
 
 export const PortfolioTokenChartSkeleton = () => {
   const {color, styles} = useStyles()
@@ -19,8 +18,6 @@ export const PortfolioTokenChartSkeleton = () => {
               <SkeletonPlaceholder.Item width={64} height={24} />
             </SkeletonPlaceholder.Item>
           </SkeletonPlaceholder>
-
-          <Icon.InfoCircle />
         </View>
 
         <SkeletonPlaceholder borderRadius={20} backgroundColor={color.gray_100}>
