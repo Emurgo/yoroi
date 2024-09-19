@@ -3,7 +3,7 @@ import _ from 'lodash'
 import React, {useEffect, useRef} from 'react'
 import {StyleSheet, TextInput, View} from 'react-native'
 
-import {Spacer} from '../../../components/Spacer'
+import {Spacer} from '../../../components/Spacer/Spacer'
 import {Text} from '../../../components/Text'
 
 type Props = {
@@ -17,6 +17,7 @@ type Props = {
 
 export type PinInputRef = {
   clear: () => void
+  focus: () => void
 }
 
 export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
@@ -39,6 +40,9 @@ export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
     clear: () => {
       setPin('')
       inputRef.current?.clear()
+      inputRef.current?.focus()
+    },
+    focus: () => {
       inputRef.current?.focus()
     },
   }))
