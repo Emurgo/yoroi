@@ -69,6 +69,10 @@
       "path": "./apps/wallet-mobile"
     },
     {
+      "name": "@yoroi/wallet",
+      "path": "./apps/wallet"
+    },
+    {
       "name": "@yoroi/notifications",
       "path": "./packages/notifications"
     },
@@ -93,6 +97,7 @@
     "typescript.tsserver.maxTsServerMemory": 12072,
     "typescript.tsdk": "root/node_modules/typescript/lib",
     "javascript.preferences.importModuleSpecifier": "relative",
-    "typescript.preferences.importModuleSpecifier": "relative"
+    "typescript.preferences.importModuleSpecifier": "relative",
+    "java.configuration.updateBuildConfiguration": "disabled"
   }
 }
