@@ -1,16 +1,16 @@
 import {Notification, Notifications} from '@jamsinclair/react-native-notifications'
 import {useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
+import {notificationManagerMaker} from '@yoroi/notifications'
+import {useTheme} from '@yoroi/theme'
 import {Notifications as NotificationTypes} from '@yoroi/types'
 import * as React from 'react'
-import {Switch as RNSwitch, Text, View, StyleSheet} from 'react-native'
+import {StyleSheet, Switch as RNSwitch, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
+import {UseMutationOptions, useQuery, UseQueryOptions} from 'react-query'
 import {Subject} from 'rxjs'
+import uuid from 'uuid'
 
 import {Button} from '../../../components'
-import {notificationManagerMaker} from '@yoroi/notifications'
-import uuid from 'uuid'
-import {UseMutationOptions, useQuery, UseQueryOptions} from 'react-query'
-import {useTheme} from '@yoroi/theme'
 
 const useRequestPermissions = () => {
   React.useEffect(() => {
@@ -34,7 +34,7 @@ const useHandleNotification = () => {
 
 const useNotificationsConfig = () => {
   const manager = useNotificationsManager()
-  return useQuery(['notificationsConfig'], async () => await manager.config.read())
+  return useQuery(['notificationsConfig'], () => manager.config.read())
 }
 
 const useUpdateNotificationsConfig = () => {
@@ -53,7 +53,7 @@ const useResetNotificationsConfig = (options: UseMutationOptions<NotificationTyp
   const manager = useNotificationsManager()
   const mutationFn = async () => {
     await manager.config.reset()
-    return await manager.config.read()
+    return manager.config.read()
   }
 
   return useMutationWithInvalidations({
@@ -67,7 +67,7 @@ const useReceivedNotificationEvents = (
   options: UseQueryOptions<ReadonlyArray<NotificationTypes.Event>, Error> = {},
 ) => {
   const manager = useNotificationsManager()
-  const queryFn = async () => await manager.events.read()
+  const queryFn = () => manager.events.read()
   return useQuery({
     queryKey: ['receivedNotificationEvents'],
     queryFn,
@@ -76,37 +76,41 @@ const useReceivedNotificationEvents = (
 }
 
 const useSendNotification = () => {
-  const sendNotification = (title: string, body: string) => {
+  const sendNotification = React.useCallback((title: string, body: string) => {
     const notification = new Notification({
       title,
       body,
       sound: 'default',
     })
     Notifications.postLocalNotification(notification.payload)
-  }
+  }, [])
 
   return {send: sendNotification}
 }
 
-const useNotificationsManager = ({
-  subscriptions,
-}: {
-  subscriptions?: NotificationTypes.ManagerMakerProps['subscriptions']
-} = {}) => {
+const useNotificationsManager = (options?: {subscriptions?: NotificationTypes.ManagerMakerProps['subscriptions']}) => {
   const storage = useAsyncStorage()
+  const subscriptions = options?.subscriptions
 
-  return React.useMemo(() => {
+  const manager = React.useMemo(() => {
     const eventsStorage = storage.join('events/')
     const configStorage = storage.join('settings/')
 
-    const manager = notificationManagerMaker({
+    return notificationManagerMaker({
       eventsStorage,
       configStorage,
       subscriptions,
     })
+  }, [storage, subscriptions])
+
+  React.useEffect(() => {
     manager.hydrate()
-    return manager
-  }, [storage])
+    return () => {
+      manager.destroy()
+    }
+  }, [manager])
+
+  return manager
 }
 
 const useNotifications = () => {
@@ -116,7 +120,7 @@ const useNotifications = () => {
     subscriptions: {[NotificationTypes.Trigger.TransactionReceived]: transactionReceivedSubject},
   })
   React.useEffect(() => {
-    const subscription = manager.notification$.subscribe(async (notificationEvent) => {
+    const subscription = manager.notification$.subscribe((notificationEvent) => {
       if (notificationEvent.trigger === NotificationTypes.Trigger.TransactionReceived) {
         send('Transaction received', 'You have received a new transaction')
       }
@@ -124,7 +128,7 @@ const useNotifications = () => {
     return () => {
       subscription.unsubscribe()
     }
-  }, [manager])
+  }, [manager, send])
 
   const triggerTransactionReceived = (metadata: NotificationTypes.TransactionReceivedEvent['metadata']) => {
     transactionReceivedSubject.next({
@@ -165,6 +169,7 @@ export const NotificationsDevScreen = () => {
         />
 
         <Text style={{fontSize: 24}}>Settings</Text>
+
         <NotificationSettings />
       </View>
     </SafeAreaView>
@@ -215,16 +220,19 @@ const NotificationSettings = () => {
 
   return (
     <View>
-      <Button title={'Reset'} shelleyTheme onPress={handleOnReset}></Button>
+      <Button title="Reset" shelleyTheme onPress={handleOnReset}></Button>
+
       <View style={{gap: 16}}>
         <TransactionReceivedSetting
           value={config[NotificationTypes.Trigger.TransactionReceived]}
           onChange={handleOnUpdateTransactionReceivedConfig}
         />
+
         <RewardsUpdateSetting
           value={config[NotificationTypes.Trigger.RewardsUpdated]}
           onChange={handleOnUpdateRewardsUpdatedConfig}
         />
+
         <PrimaryTokenPriceChangedSetting
           value={config[NotificationTypes.Trigger.PrimaryTokenPriceChanged]}
           onChange={handleOnUpdatePrimaryTokenPriceChangedConfig}
@@ -245,8 +253,10 @@ const TransactionReceivedSetting = ({
   return (
     <View>
       <Text>Transaction Received</Text>
+
       <View style={styles.row}>
         <Text>Notify</Text>
+
         <Switch value={value.notify} onValueChange={(notify) => onChange({notify})} />
       </View>
     </View>
@@ -264,8 +274,10 @@ const RewardsUpdateSetting = ({
   return (
     <View>
       <Text>Rewards Updated</Text>
+
       <View style={styles.row}>
         <Text>Notify</Text>
+
         <Switch value={value.notify} onValueChange={(notify) => onChange({notify})} />
       </View>
     </View>
@@ -283,16 +295,22 @@ const PrimaryTokenPriceChangedSetting = ({
   return (
     <View>
       <Text>Primary Token Price Changed</Text>
+
       <View style={styles.row}>
         <Text>Notify</Text>
+
         <Switch value={value.notify} onValueChange={(notify) => onChange({...value, notify})} />
       </View>
+
       <View style={styles.row}>
         <Text>Threshold</Text>
+
         <Text>{value.thresholdInPercent}</Text>
       </View>
+
       <View style={styles.row}>
         <Text>Interval</Text>
+
         <Text>{value.interval}</Text>
       </View>
     </View>
