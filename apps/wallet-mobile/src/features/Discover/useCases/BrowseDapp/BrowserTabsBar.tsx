@@ -5,7 +5,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import uuid from 'uuid'
 
-import {Icon} from '../../../../components'
+import {Icon} from '../../../../components/Icon'
 import {useBrowser} from '../../common/BrowserProvider'
 import {useNavigateTo} from '../../common/useNavigateTo'
 import {useStrings} from '../../common/useStrings'

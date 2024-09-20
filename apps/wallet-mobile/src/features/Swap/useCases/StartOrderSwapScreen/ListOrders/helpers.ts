@@ -3,7 +3,7 @@ import {BalanceQuantity} from '@yoroi/types/src/balance/token'
 import {Buffer} from 'buffer'
 
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
-import {Quantities} from '../../../../../yoroi-wallets/utils'
+import {Quantities} from '../../../../../yoroi-wallets/utils/utils'
 import {CardanoMobile} from '../../../../../yoroi-wallets/wallets'
 
 type Options = {

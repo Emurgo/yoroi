@@ -3,7 +3,7 @@ import {mockSwapManager, mockSwapStateDefault, orderMocks, SwapProvider} from '@
 import React from 'react'
 
 import {rootStorage} from '../../../../kernel/storage/rootStorage'
-import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks'
+import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks/wallet'
 import {WalletManagerProviderMock} from '../../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {buildPortfolioTokenManagers} from '../../../Portfolio/common/helpers/build-token-managers'
 import {WalletManagerProvider} from '../../../WalletManager/context/WalletManagerProvider'

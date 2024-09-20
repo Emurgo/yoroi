@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {LoadingOverlay} from '../../components/LoadingOverlay'
+import {LoadingOverlay} from '../../components/LoadingOverlay/LoadingOverlay'
 import {useDisableAllEasyConfirmation} from './common/useDisableAllEasyConfirmation'
 import {CreatePinScreen} from './CreatePinScreen'
 

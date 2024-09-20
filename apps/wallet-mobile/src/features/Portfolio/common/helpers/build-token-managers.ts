@@ -3,7 +3,7 @@ import {portfolioApiMaker, portfolioTokenManagerMaker, portfolioTokenStorageMake
 import {App, Chain, Portfolio} from '@yoroi/types'
 import {freeze} from 'immer'
 
-export const buildPortfolioTokenManager = ({network}: {network: Chain.SupportedNetworks}) => {
+const buildPortfolioTokenManager = ({network}: {network: Chain.SupportedNetworks}) => {
   const rootStorage = mountMMKVStorage<Portfolio.Token.Id>({path: '/', id: `${network}.token-manager`})
   const appTokenInfoStorage = rootStorage.join('token-info/')
 

@@ -3,7 +3,7 @@ import {useQuery, UseQueryOptions} from 'react-query'
 
 import AdaLogo from '../../../../assets/img/ada.png'
 
-export interface IPortfolioBalance {
+interface IPortfolioBalance {
   logo: ImageSourcePropType | string
   symbol: string
   name: string

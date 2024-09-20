@@ -25,5 +25,3 @@ export const Bug = ({size = 40, color = 'black'}: Props) => {
     </Svg>
   )
 }
-
-export default Bug

@@ -2,9 +2,9 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {TouchableOpacity} from 'react-native'
 
-import {Icon} from '../../../../components'
+import {Icon} from '../../../../components/Icon'
 
-export type RemoveAmountButtonProps = {
+type RemoveAmountButtonProps = {
   onPress(): void
 }
 

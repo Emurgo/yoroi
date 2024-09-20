@@ -805,12 +805,3 @@ export const mockedLocalTransactions: Record<string, Transaction> = {
     memo: null,
   },
 }
-
-export const mockApi = {
-  getTipStatus: jest.fn().mockResolvedValue(mockedTipStatusResponse),
-  fetchNewTxHistory: jest
-    .fn()
-    .mockResolvedValueOnce(mockedHistoryResponse)
-    .mockResolvedValueOnce(mockedEmptyHistoryResponse)
-    .mockResolvedValueOnce(mockedEmptyHistoryResponse),
-}

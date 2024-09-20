@@ -7,7 +7,7 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
 
-import {Boundary} from '../../components'
+import {Boundary} from '../../components/Boundary/Boundary'
 import {NetworkTag} from '../../features/Settings/ChangeNetwork/NetworkTag'
 import globalMessages from '../../kernel/i18n/global-messages'
 import {useMetrics} from '../../kernel/metrics/metricsManager'

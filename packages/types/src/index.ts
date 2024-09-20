@@ -121,6 +121,7 @@ import {
   CardanoUnsignedTx,
   CardanoVoting,
   ChainCardanoProtocolParams,
+  ChainCardanoBestBlock,
 } from './chain/cardano'
 import {ExchangeBlockchainCode} from './exchange/blockchain'
 import {ExchangeManagerOptions} from './exchange/build'
@@ -176,6 +177,7 @@ import {
   PortfolioApi,
   PortfolioApiTokenActivityResponse,
   PortfolioApiTokenDiscoveryResponse,
+  PortfolioApiTokenHistoryResponse,
   PortfolioApiTokenInfosResponse,
   PortfolioApiTokenTraitsResponse,
 } from './portfolio/api'
@@ -252,6 +254,10 @@ import {
   ClaimApiClaimTokensRequestPayload,
   ClaimApiClaimTokensResponse,
 } from './claim/api'
+import {
+  PortfolioTokenHistory,
+  PortfolioTokenHistoryPeriod,
+} from './portfolio/history'
 import {
   NotificationConfig,
   NotificationEvent,
@@ -455,9 +461,11 @@ export namespace Api {
     export type TokenId = ApiTokenId
 
     export type ProtocolParams = ChainCardanoProtocolParams
+    export type BestBlock = ChainCardanoBestBlock
 
     export interface Api {
-      getProtocolParams: () => Promise<ProtocolParams>
+      getProtocolParams: () => Promise<ChainCardanoProtocolParams>
+      getBestBlock: () => Promise<ChainCardanoBestBlock>
     }
   }
 }
@@ -533,6 +541,7 @@ export namespace Portfolio {
     export type TokenDiscoveryResponse = PortfolioApiTokenDiscoveryResponse
     export type TokenTraitsResponse = PortfolioApiTokenTraitsResponse
     export type TokenActivityResponse = PortfolioApiTokenActivityResponse
+    export type TokenHistoryResponse = PortfolioApiTokenHistoryResponse
     export type Api = PortfolioApi
   }
 
@@ -580,6 +589,10 @@ export namespace Portfolio {
     export type ActivityWindow = PortfolioTokenActivityWindow
     export const ActivityWindow = PortfolioTokenActivityWindow
     export type ActivityRecord = PortfolioTokenActivityRecord
+
+    export type History = PortfolioTokenHistory
+    export type HistoryPeriod = PortfolioTokenHistoryPeriod
+    export const HistoryPeriod = PortfolioTokenHistoryPeriod
   }
 }
 
@@ -598,6 +611,7 @@ export namespace Chain {
     export type Address = CardanoAddress
     export type TokenId = CardanoTokenId
     export type ProtocolParams = ChainCardanoProtocolParams
+    export type BestBlock = ChainCardanoBestBlock
   }
 }
 

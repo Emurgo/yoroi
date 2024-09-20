@@ -33,9 +33,9 @@ export const useNavigateTo = () => {
   } as const).current
 }
 
-export type PortfolioTokenDetailParams = Portfolio2Routes['portfolio-token-details']
+type PortfolioTokenDetailParams = Portfolio2Routes['portfolio-token-details']
 
-export const isPortfolioTokenDetailParams = (
+const isPortfolioTokenDetailParams = (
   params?: PortfolioTokenDetailParams | object | undefined,
 ): params is PortfolioTokenDetailParams => {
   const isValidId = !!params && 'id' in params && !isEmptyString(params.id)

@@ -1,30 +1,24 @@
 import {useNavigation} from '@react-navigation/native'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {useTheme} from '@yoroi/theme'
-import {HW, Wallet} from '@yoroi/types'
+import {HW} from '@yoroi/types'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useModal} from '../../../../components'
+import {useModal} from '../../../../components/Modal/ModalContext'
 import {StepperProgress} from '../../../../components/StepperProgress/StepperProgress'
 import {showErrorDialog} from '../../../../kernel/dialogs'
 import {errorMessages} from '../../../../kernel/i18n/global-messages'
-import LocalizableError from '../../../../kernel/i18n/LocalizableError'
+import {LocalizableError} from '../../../../kernel/i18n/LocalizableError'
 import {SetupWalletRouteNavigation} from '../../../../kernel/navigation'
 import {LedgerConnect} from '../../../../legacy/HW'
-import {getHWDeviceInfo} from '../../../../yoroi-wallets/cardano/hw'
-import {Device, NetworkId} from '../../../../yoroi-wallets/types'
+import {getHWDeviceInfo} from '../../../../yoroi-wallets/cardano/hw/hw'
+import {Device} from '../../../../yoroi-wallets/types/hw'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {useStrings} from '../../common/useStrings'
 import {WalletDuplicatedModal} from '../../common/WalletDuplicatedModal/WalletDuplicatedModal'
-
-export type Params = {
-  useUSB?: boolean
-  walletImplementationId: Wallet.Implementation
-  networkId: NetworkId
-}
 
 type Props = {
   defaultDevices?: Array<Device> // for storybook

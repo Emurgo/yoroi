@@ -4,7 +4,7 @@ import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Icon} from '../Icon'
-import {Spacer} from '../Spacer'
+import {Spacer} from '../Spacer/Spacer'
 import {ExpandableInfoCard, Footer, HeaderWrapper, HiddenInfoWrapper, MainInfoWrapper} from './ExpandableInfoCard'
 
 const styles = StyleSheet.create({

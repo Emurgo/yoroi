@@ -3,7 +3,7 @@ import {useMutation, UseMutationOptions} from 'react-query'
 
 import {useWalletManager} from '../../context/WalletManagerProvider'
 
-export type CreateWalletMnemonic = {
+type CreateWalletMnemonic = {
   name: string
   mnemonicPhrase: string
   password: string

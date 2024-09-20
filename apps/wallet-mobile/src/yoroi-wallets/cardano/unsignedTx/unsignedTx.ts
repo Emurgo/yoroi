@@ -1,8 +1,8 @@
 import {Change, Datum, MultiTokenValue} from '@emurgo/yoroi-lib/dist/internals/models'
 import {Balance, Network} from '@yoroi/types'
 
-import {YoroiEntry, YoroiMetadata, YoroiUnsignedTx, YoroiVoting} from '../../types'
-import {Amounts, asQuantity, Entries, Quantities} from '../../utils'
+import {YoroiEntry, YoroiMetadata, YoroiUnsignedTx, YoroiVoting} from '../../types/yoroi'
+import {Amounts, asQuantity, Entries, Quantities} from '../../utils/utils'
 import {Cardano, CardanoMobile} from '../../wallets'
 import {CardanoTypes} from '../types'
 
@@ -97,7 +97,7 @@ export const toMetadata = (metadata: ReadonlyArray<CardanoTypes.TxMetadata>) =>
     {} as YoroiMetadata,
   )
 
-export const toEntriesFromChange = (changes: ReadonlyArray<Change>): Promise<YoroiEntry[]> => {
+const toEntriesFromChange = (changes: ReadonlyArray<Change>): Promise<YoroiEntry[]> => {
   return Promise.all(
     changes.map(async (change) => ({
       address: await toDisplayAddress(change.address),

@@ -15,9 +15,11 @@ import {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import uuid from 'uuid'
 
-import {Icon, Spacer, useModal} from '../../../../../components'
+import {Icon} from '../../../../../components/Icon'
+import {useModal} from '../../../../../components/Modal/ModalContext'
 import {Space} from '../../../../../components/Space/Space'
-import {Warning} from '../../../../../components/Warning'
+import {Spacer} from '../../../../../components/Spacer/Spacer'
+import {Warning} from '../../../../../components/Warning/Warning'
 import {useMetrics} from '../../../../../kernel/metrics/metricsManager'
 import {useBrowser} from '../../../common/BrowserProvider'
 import {type DAppItem, getDappFallbackLogo, isGoogleSearchItem} from '../../../common/helpers'

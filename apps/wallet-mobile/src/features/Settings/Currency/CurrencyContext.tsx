@@ -4,7 +4,7 @@ import {useMutation, UseMutationOptions, useQuery, useQueryClient} from 'react-q
 
 import {configCurrencies, supportedCurrencies} from '../../../kernel/constants'
 import {usePrimaryTokenActivity} from '../../../yoroi-wallets/cardano/usePrimaryTokenActivity'
-import {ConfigCurrencies, CurrencySymbol} from '../../../yoroi-wallets/types'
+import {ConfigCurrencies, CurrencySymbol} from '../../../yoroi-wallets/types/other'
 
 const CurrencyContext = React.createContext<undefined | CurrencyContext>(undefined)
 export const CurrencyProvider = ({children}: {children: React.ReactNode}) => {

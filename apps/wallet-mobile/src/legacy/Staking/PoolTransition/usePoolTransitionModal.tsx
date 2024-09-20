@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {useWindowDimensions} from 'react-native'
 
-import {useModal} from '../../../components'
+import {useModal} from '../../../components/Modal/ModalContext'
 import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
 import {PoolTransitionModal} from './PoolTransitionModal'
 import {usePoolTransitionContext} from './PoolTransitionProvider'

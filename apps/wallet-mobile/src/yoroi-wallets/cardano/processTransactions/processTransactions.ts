@@ -7,23 +7,23 @@ import {BigNumber} from 'bignumber.js'
 import {
   BaseAsset,
   CERTIFICATE_KIND,
-  Token,
   Transaction,
   TRANSACTION_DIRECTION,
   TRANSACTION_STATUS,
   TRANSACTION_TYPE,
   TransactionInfo,
-} from '../../types'
+} from '../../types/other'
+import {Token} from '../../types/tokens'
 import {getDefaultNetworkTokenEntry, MultiToken, strToDefaultMultiAsset} from '../MultiToken'
 import {multiTokenFromRemote} from '../utils'
 
-export const ASSURANCE_LEVELS = {
+const ASSURANCE_LEVELS = {
   LOW: 3,
   MEDIUM: 9,
 }
 
 type TransactionAssurance = 'PENDING' | 'FAILED' | 'LOW' | 'MEDIUM' | 'HIGH'
-export const getTransactionAssurance = (
+const getTransactionAssurance = (
   status: (typeof TRANSACTION_STATUS)[keyof typeof TRANSACTION_STATUS],
   confirmations: number,
 ): TransactionAssurance => {

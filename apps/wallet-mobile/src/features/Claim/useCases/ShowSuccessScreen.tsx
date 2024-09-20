@@ -6,8 +6,9 @@ import React from 'react'
 import {FlatList, Linking, Platform, StyleSheet, Text, TextProps, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {CopyButton, Icon} from '../../../components'
 import {Button} from '../../../components/Button/Button'
+import {CopyButton} from '../../../components/CopyButton'
+import {Icon} from '../../../components/Icon'
 import {PressableIcon} from '../../../components/PressableIcon/PressableIcon'
 import {Space} from '../../../components/Space/Space'
 import {Spacer} from '../../../components/Spacer/Spacer'
@@ -120,7 +121,7 @@ const TxHash = ({txHash}: {txHash: string}) => {
   )
 }
 
-export const AmountList = ({amounts}: {amounts: ReadonlyArray<Portfolio.Token.Amount>}) => {
+const AmountList = ({amounts}: {amounts: ReadonlyArray<Portfolio.Token.Amount>}) => {
   const {wallet} = useSelectedWallet()
   const {styles} = useStyles()
 

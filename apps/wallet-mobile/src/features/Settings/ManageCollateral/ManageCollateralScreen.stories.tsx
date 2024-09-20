@@ -4,7 +4,7 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
-import {mocks} from '../../../yoroi-wallets/mocks'
+import {mocks} from '../../../yoroi-wallets/mocks/wallet'
 import {WalletManagerProviderMock} from '../../../yoroi-wallets/mocks/WalletManagerProviderMock'
 import {ManageCollateralScreen} from './ManageCollateralScreen'
 

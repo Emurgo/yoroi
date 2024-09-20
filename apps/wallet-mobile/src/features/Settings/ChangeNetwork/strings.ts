@@ -19,7 +19,7 @@ export const useStrings = () => {
   }
 }
 
-export const messages = defineMessages({
+const messages = defineMessages({
   networkNoticeTitle: {
     id: 'components.settings.applicationsettingsscreen.network.notice.title',
     defaultMessage: '!!!What are the test networks?',

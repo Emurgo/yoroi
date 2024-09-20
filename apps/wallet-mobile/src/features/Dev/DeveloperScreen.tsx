@@ -10,7 +10,9 @@ import {useIntl} from 'react-intl'
 import {Alert, InteractionManager, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity} from 'react-native'
 import config from 'react-native-config'
 
-import {Button, Text, TextInput} from '../../components'
+import {Button} from '../../components/Button/Button'
+import {Text} from '../../components/Text'
+import {TextInput} from '../../components/TextInput/TextInput'
 import {agreementDate} from '../../kernel/config'
 import {showErrorDialog} from '../../kernel/dialogs'
 import {errorMessages} from '../../kernel/i18n/global-messages'
@@ -266,7 +268,7 @@ const useStyles = () => {
   return {styles}
 }
 
-export class StorageError extends Error {}
+class StorageError extends Error {}
 
 const checkPathFormat = (path: string) => path.startsWith('/') && !path.endsWith('/')
 

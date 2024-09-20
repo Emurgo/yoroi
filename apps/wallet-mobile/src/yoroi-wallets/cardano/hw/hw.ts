@@ -18,7 +18,7 @@ import {BleError} from 'react-native-ble-plx'
 import {cardanoConfig} from '../../../features/WalletManager/common/adapters/cardano/cardano-config'
 import {derivationConfig} from '../../../features/WalletManager/common/derivation-config'
 import {ledgerMessages} from '../../../kernel/i18n/global-messages'
-import LocalizableError from '../../../kernel/i18n/LocalizableError'
+import {LocalizableError} from '../../../kernel/i18n/LocalizableError'
 import {logger} from '../../../kernel/logger/logger'
 import {
   AdaAppClosedError,
@@ -26,16 +26,14 @@ import {
   HARDWARE_WALLETS,
   LedgerUserError,
   RejectedByUserError,
-} from '../../hw'
+} from '../../hw/hw'
 
 const MIN_ADA_APP_VERSION = '2.2.1'
 const MIN_ADA_APP_VERSION_SUPPORTING_CIP36 = 6
 const MIN_ADA_APP_VERSION_SUPPORTING_CIP1694 = 7
 
-export type WalletType = 'BIP44' | 'CIP1852'
-
 // these are defined in LedgerConnectStore.js in yoroi-frontend
-export type LedgerConnectionResponse = {
+type LedgerConnectionResponse = {
   extendedPublicKeyResp: GetExtendedPublicKeyResponse
   deviceId: string | null | undefined
   deviceObj: HW.DeviceObj | null | undefined
@@ -237,7 +235,7 @@ const validateHWResponse = (resp: LedgerConnectionResponse): boolean => {
   return true
 }
 
-export const normalizeHWResponse = (resp: LedgerConnectionResponse): HW.DeviceInfo => {
+const normalizeHWResponse = (resp: LedgerConnectionResponse): HW.DeviceInfo => {
   validateHWResponse(resp)
   const {extendedPublicKeyResp, deviceId, deviceObj, serialHex} = resp
   return {

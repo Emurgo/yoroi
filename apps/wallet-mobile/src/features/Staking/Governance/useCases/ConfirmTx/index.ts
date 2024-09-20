@@ -1,1 +1,0 @@
-export {ConfirmTxScreen} from './ConfirmTxScreen'

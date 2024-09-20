@@ -16,5 +16,3 @@ export const Magnify = ({size = 40, color = 'black', style = {}}: Props) => {
     </Svg>
   )
 }
-
-export default Magnify

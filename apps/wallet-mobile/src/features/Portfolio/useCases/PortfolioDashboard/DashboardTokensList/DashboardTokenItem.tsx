@@ -5,9 +5,9 @@ import {PortfolioTokenAmount} from '@yoroi/types/lib/typescript/portfolio/amount
 import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
-import {Spacer} from '../../../../../components'
 import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
-import {useCurrencyPairing} from '../../../../Settings/Currency'
+import {Spacer} from '../../../../../components/Spacer/Spacer'
+import {useCurrencyPairing} from '../../../../Settings/Currency/CurrencyContext'
 import {usePrivacyMode} from '../../../../Settings/PrivacyMode/PrivacyMode'
 import {formatPriceChange, priceChange} from '../../../common/helpers/priceChange'
 import {useNavigateTo} from '../../../common/hooks/useNavigateTo'
@@ -48,7 +48,7 @@ export const DashboardTokenItem = ({tokenInfo}: Props) => {
 
         <View style={styles.quantityContainer}>
           <PnlTag withIcon variant={variantPnl}>
-            <Text>{isMissingPrices ? '—— ' : formatPriceChange(changePercent)}%</Text>
+            <Text>{isMissingPrices ? '— ' : formatPriceChange(changePercent)}%</Text>
           </PnlTag>
 
           <Text ellipsizeMode="tail" numberOfLines={1} style={styles.tokenValue}>

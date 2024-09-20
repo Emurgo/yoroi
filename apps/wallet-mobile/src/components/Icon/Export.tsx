@@ -21,5 +21,3 @@ export const Export = ({size = 40, color = 'black'}: Props) => {
     </Svg>
   )
 }
-
-export default Export

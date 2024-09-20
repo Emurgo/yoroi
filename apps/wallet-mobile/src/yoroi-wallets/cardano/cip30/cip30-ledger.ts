@@ -5,9 +5,9 @@ import {HW, Wallet} from '@yoroi/types'
 
 import {toLedgerSignRequest} from '../../../features/Discover/common/ledger'
 import {cardanoConfig} from '../../../features/WalletManager/common/adapters/cardano/cardano-config'
-import type {RawUtxo} from '../../types'
+import type {RawUtxo} from '../../types/other'
 import {assertHasAllSigners} from '../common/signatureUtils'
-import {signTxWithLedger} from '../hw'
+import {signTxWithLedger} from '../hw/hw'
 import {CardanoTypes, YoroiWallet} from '../types'
 import {wrappedCsl} from '../wrappedCsl'
 

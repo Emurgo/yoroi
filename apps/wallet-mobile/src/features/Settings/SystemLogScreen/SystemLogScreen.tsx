@@ -3,8 +3,8 @@ import {App} from '@yoroi/types'
 import React from 'react'
 import {ScrollView, StyleSheet, TextProps, View} from 'react-native'
 
-import {Text} from '../../../components'
 import {Space} from '../../../components/Space/Space'
+import {Text} from '../../../components/Text'
 import {logger} from '../../../kernel/logger/logger'
 
 export const SystemLogScreen = () => {

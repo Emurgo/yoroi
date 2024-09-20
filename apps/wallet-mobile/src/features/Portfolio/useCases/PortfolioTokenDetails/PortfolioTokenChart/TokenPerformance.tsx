@@ -3,16 +3,16 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {Icon, Text} from '../../../../../components'
-import {Tooltip} from '../../../../../components/Tooltip'
-import {useCurrencyPairing} from '../../../../Settings/Currency'
+import {Text} from '../../../../../components/Text'
+import {Tooltip} from '../../../../../components/Tooltip/Tooltip'
+import {useCurrencyPairing} from '../../../../Settings/Currency/CurrencyContext'
 import {formatPriceChange} from '../../../common/helpers/priceChange'
 import {TOKEN_CHART_INTERVAL, TokenChartInterval} from '../../../common/hooks/useGetPortfolioTokenChart'
 import {useStrings} from '../../../common/hooks/useStrings'
 import {PnlTag} from '../../../common/PnlTag/PnlTag'
 
 type Props = {
-  tokenPerformance: {
+  tokenPerformance?: {
     changePercent: number
     changeValue: number
     value: number
@@ -26,11 +26,12 @@ export const TokenPerformance = ({tokenPerformance, timeInterval}: Props) => {
   const {currency, config} = useCurrencyPairing()
 
   const variant = React.useMemo(() => {
+    if (!tokenPerformance) return 'neutral'
     if (Number(tokenPerformance.changePercent) > 0) return 'success'
     if (Number(tokenPerformance.changePercent) < 0) return 'danger'
 
     return 'neutral'
-  }, [tokenPerformance.changePercent])
+  }, [tokenPerformance])
 
   const intervalLabel = React.useMemo(() => {
     switch (timeInterval) {
@@ -53,25 +54,31 @@ export const TokenPerformance = ({tokenPerformance, timeInterval}: Props) => {
 
   return (
     <View style={styles.root}>
-      <View style={styles.tokenChangeWrapper}>
-        <PnlTag withIcon={variant !== 'neutral'} variant={variant}>
-          {formatPriceChange(tokenPerformance.changePercent)}%
-        </PnlTag>
+      <Tooltip
+        numberOfLine={3}
+        title={!tokenPerformance ? strings.noDataFound : strings.tokenPriceChangeTooltip(intervalLabel)}
+      >
+        <View style={styles.tokenChangeWrapper}>
+          <PnlTag withIcon={variant !== 'neutral'} variant={variant}>
+            {!tokenPerformance ? '—' : formatPriceChange(tokenPerformance.changePercent)}%
+          </PnlTag>
 
-        <PnlTag variant={variant}>{`${formatPriceChange(
-          tokenPerformance.changeValue,
-          config.decimals,
-        )} ${currency}`}</PnlTag>
-
-        <Tooltip numberOfLine={3} title={strings.tokenPriceChangeTooltip(intervalLabel)}>
-          <Icon.InfoCircle />
-        </Tooltip>
-      </View>
+          <PnlTag variant={variant}>{`${
+            !tokenPerformance ? '—' : formatPriceChange(tokenPerformance.changeValue, config.decimals)
+          } ${currency}`}</PnlTag>
+        </View>
+      </Tooltip>
 
       <View style={styles.tokenWrapper}>
-        <Text style={styles.tokenPrice}>{formatPriceChange(tokenPerformance.value, config.decimals)}</Text>
+        {!tokenPerformance ? (
+          <Text style={styles.tokenPriceSymbol}>—</Text>
+        ) : (
+          <>
+            <Text style={styles.tokenPrice}>{formatPriceChange(tokenPerformance.value, config.decimals)}</Text>
 
-        <Text style={styles.tokenPriceSymbol}>{currency}</Text>
+            <Text style={styles.tokenPriceSymbol}>{currency}</Text>
+          </>
+        )}
       </View>
     </View>
   )

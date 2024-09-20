@@ -53,7 +53,7 @@ const apiResponseSuccessDataOnly: Readonly<DullahanApiTokenActivityResponse> = {
   [tokenInfoMocks.ftNameless.id]: [Api.HttpStatusCode.Ok, ftNameless],
 }
 
-export const duallahanTokenActivityUpdatesMocks = {
+export const duallahanTokenActivityMocks = {
   primaryETH,
   rnftWhatever,
   ftNoTicker,

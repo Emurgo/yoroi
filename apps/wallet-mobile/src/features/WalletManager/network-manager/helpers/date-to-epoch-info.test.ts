@@ -18,6 +18,7 @@ describe('dateToEpochInfo', () => {
       start: new Date('2024-05-09T21:44:51.000Z'),
       end: new Date('2024-05-14T21:44:51.000Z'),
       era: shelleyEraConfig,
+      eras: networkManagers[Chain.Network.Mainnet].eras,
     }
 
     const result = convertDateToEpoch(inputDate)
@@ -42,6 +43,7 @@ describe('dateToEpochInfo', () => {
       start: new Date('2017-09-23T21:44:51.000Z'),
       end: new Date('2017-09-28T21:44:51.000Z'),
       era: byronEraConfig,
+      eras: networkManagers[Chain.Network.Mainnet].eras,
     }
 
     const result = convertDateToEpoch(inputDate)
@@ -58,6 +60,7 @@ describe('dateToEpochInfo', () => {
       start: new Date('2020-07-24T21:44:51.000Z'),
       end: new Date('2020-07-29T21:44:51.000Z'),
       era: byronEraConfig,
+      eras: networkManagers[Chain.Network.Mainnet].eras,
     }
 
     const result = convertDateToEpoch(inputDate)
@@ -75,6 +78,7 @@ describe('dateToEpochInfo', () => {
       start: new Date('2020-07-29T21:44:51.000Z'),
       end: new Date('2020-08-03T21:44:51.000Z'),
       era: shelleyEraConfig,
+      eras: networkManagers[Chain.Network.Mainnet].eras,
     }
 
     const result = convertDateToEpoch(inputDate)
@@ -91,6 +95,7 @@ describe('dateToEpochInfo', () => {
       start: new Date('2024-05-11T01:00:00.000Z'),
       end: new Date('2024-05-16T01:00:00.000Z'),
       era: shelleyPreprodEraConfig,
+      eras: networkManagers['preprod'].eras,
     }
 
     const result = convertDateToEpoch(inputDate)

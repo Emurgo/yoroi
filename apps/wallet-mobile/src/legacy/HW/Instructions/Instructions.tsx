@@ -3,7 +3,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Platform, StyleSheet, Text, View} from 'react-native'
 
-import {BulletPointItem} from '../../../components'
+import {BulletPointItem} from '../../../components/BulletPointItem'
 import {Space} from '../../../components/Space/Space'
 import {ledgerMessages} from '../../../kernel/i18n/global-messages'
 

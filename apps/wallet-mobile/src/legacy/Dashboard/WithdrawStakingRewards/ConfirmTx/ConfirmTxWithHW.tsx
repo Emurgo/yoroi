@@ -4,16 +4,17 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
 
-import {Boundary, TwoActionView} from '../../../../components'
+import {Boundary} from '../../../../components/Boundary/Boundary'
+import {TwoActionView} from '../../../../components/TwoActionView/TwoActionView'
 import {useSelectedWallet} from '../../../../features/WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../../../features/WalletManager/context/WalletManagerProvider'
 import {confirmationMessages, txLabels} from '../../../../kernel/i18n/global-messages'
 import {throwLoggedError} from '../../../../kernel/logger/helpers/throw-logged-error'
 import {useSignWithHwAndSubmitTx} from '../../../../yoroi-wallets/hooks'
-import {withBLE, withUSB} from '../../../../yoroi-wallets/hw'
-import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
+import {withBLE, withUSB} from '../../../../yoroi-wallets/hw/hwWallet'
+import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types/yoroi'
 import {LedgerConnect, LedgerTransportSwitch} from '../../../HW'
-import {TransferSummary} from '../TransferSummary'
+import {TransferSummary} from '../TransferSummary/TransferSummary'
 
 type Props = {
   unsignedTx: YoroiUnsignedTx

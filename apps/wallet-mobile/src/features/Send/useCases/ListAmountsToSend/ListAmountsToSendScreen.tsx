@@ -11,11 +11,14 @@ import {FlatList} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useMutation} from 'react-query'
 
-import {Boundary, Button, Icon, Spacer} from '../../../../components'
+import {Boundary} from '../../../../components/Boundary/Boundary'
+import {Button} from '../../../../components/Button/Button'
+import {Icon} from '../../../../components/Icon'
+import {Spacer} from '../../../../components/Spacer/Spacer'
 import globalMessages from '../../../../kernel/i18n/global-messages'
 import {assetsToSendProperties} from '../../../../kernel/metrics/helpers'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
-import {YoroiEntry} from '../../../../yoroi-wallets/types'
+import {YoroiEntry} from '../../../../yoroi-wallets/types/yoroi'
 import {TokenAmountItem} from '../../../Portfolio/common/TokenAmountItem/TokenAmountItem'
 import {useSearch} from '../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
@@ -191,7 +194,7 @@ const ListAmountsNavigateBackButton = () => {
   )
 }
 
-export const useStrings = () => {
+const useStrings = () => {
   const intl = useIntl()
 
   return {

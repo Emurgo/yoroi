@@ -2,8 +2,10 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {Button, Spacer, Text} from '../../../../../components'
-import {useStrings} from '../../common'
+import {Button} from '../../../../../components/Button/Button'
+import {Spacer} from '../../../../../components/Spacer/Spacer'
+import {Text} from '../../../../../components/Text'
+import {useStrings} from '../../common/strings'
 
 type Props = {
   onParticipatePress: () => void

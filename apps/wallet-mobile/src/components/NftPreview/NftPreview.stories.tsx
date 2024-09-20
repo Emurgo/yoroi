@@ -1,7 +1,7 @@
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {nft} from '../../yoroi-wallets/mocks'
+import {nft} from '../../yoroi-wallets/mocks/wallet'
 import {NftPreview} from './NftPreview'
 
 storiesOf('NftPreview', module)

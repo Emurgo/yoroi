@@ -153,14 +153,14 @@ type PortfolioTokenActivityState = Readonly<{
   isLoading: boolean
 }>
 
-export enum PortfolioTokenActivityActionType {
+enum PortfolioTokenActivityActionType {
   AggregatedBalancesChanged = 'AggregatedBalancesChanged',
   SecondaryTokenIdsChanged = 'SecondaryTokenIdsChanged',
   TokenActivityChanged = 'TokenActivityChanged',
   ActivityWindowChanged = 'ActivityWindowChanged',
 }
 
-export type PortfolioTokenActivityAction =
+type PortfolioTokenActivityAction =
   | {
       type: PortfolioTokenActivityActionType.AggregatedBalancesChanged
       aggregatedBalances: Portfolio.Token.AmountRecords
@@ -178,7 +178,7 @@ export type PortfolioTokenActivityAction =
       activityWindow: Portfolio.Token.ActivityWindow
     }
 
-export const portfolioTokenActivityReducer = (
+const portfolioTokenActivityReducer = (
   state: PortfolioTokenActivityState,
   action: PortfolioTokenActivityAction,
 ): PortfolioTokenActivityState => {
@@ -200,7 +200,7 @@ export const portfolioTokenActivityReducer = (
   })
 }
 
-export type PortfolioTokenActivityActions = Readonly<{
+type PortfolioTokenActivityActions = Readonly<{
   aggregatedBalancesChanged: (aggregatedBalances: Portfolio.Token.AmountRecords) => void
   secondaryTokenIdsChanged: (secondaryTokenIds: Portfolio.Token.Id[]) => void
   tokenActivityChanged: (tokenActivity: Portfolio.Api.TokenActivityResponse) => void

@@ -1,6 +1,6 @@
 import {Portfolio} from '@yoroi/types'
 
-import {RawUtxo} from '../../../../yoroi-wallets/types'
+import {RawUtxo} from '../../../../yoroi-wallets/types/other'
 
 export function toBalanceManagerSyncArgs(rawUtxos: RawUtxo[], lockedAsStorageCost: bigint) {
   let primaryTokenBalance = 0n

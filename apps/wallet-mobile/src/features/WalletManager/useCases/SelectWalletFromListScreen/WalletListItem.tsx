@@ -5,7 +5,7 @@ import * as React from 'react'
 import {Alert, Animated, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {Swipeable} from 'react-native-gesture-handler'
 
-import {Icon} from '../../../../components'
+import {Icon} from '../../../../components/Icon'
 import {Loading} from '../../../../components/Loading/Loading'
 import {Space} from '../../../../components/Space/Space'
 import {features} from '../../../../kernel/features'

@@ -1,1 +1,0 @@
-export {SuccessTxScreen} from './SuccessTxScreen'

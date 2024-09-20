@@ -20,5 +20,3 @@ export const Edit = ({size = 40, color = 'black'}: Props) => {
     </Svg>
   )
 }
-
-export default Edit

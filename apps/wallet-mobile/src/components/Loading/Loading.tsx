@@ -32,7 +32,7 @@ export const Loading = () => {
   )
 }
 
-export const useRotationStyle = () => {
+const useRotationStyle = () => {
   const spin = React.useRef(new Animated.Value(0)).current
 
   React.useEffect(() => {

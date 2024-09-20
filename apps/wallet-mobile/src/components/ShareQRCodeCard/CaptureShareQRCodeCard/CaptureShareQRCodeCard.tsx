@@ -5,7 +5,8 @@ import LinearGradient from 'react-native-linear-gradient'
 import QRCode from 'react-native-qrcode-svg'
 
 import {YoroiLogoIllustration} from '../../../features/Receive/illustrations/YoroiLogo'
-import {Spacer, Text} from '../..'
+import {Spacer} from '../../Spacer/Spacer'
+import {Text} from '../../Text'
 
 type ShareProps = {
   content: string

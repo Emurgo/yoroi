@@ -1,12 +1,11 @@
-import {isPrimaryTokenInfo} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {App} from '@yoroi/types'
 import * as React from 'react'
 import {Animated, NativeScrollEvent, NativeSyntheticEvent, StyleSheet} from 'react-native'
 
-import {Spacer} from '../../../../components'
 import {SafeArea} from '../../../../components/SafeArea'
-import {Tab, Tabs} from '../../../../components/Tabs'
+import {Spacer} from '../../../../components/Spacer/Spacer'
+import {Tab, Tabs} from '../../../../components/Tabs/Tabs'
 import {features} from '../../../../kernel/features'
 import {throwLoggedError} from '../../../../kernel/logger/helpers/throw-logged-error'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
@@ -22,7 +21,7 @@ import {PortfolioTokenBalance} from './PortfolioTokenBalance/PortfolioTokenBalan
 import {PortfolioTokenChart} from './PortfolioTokenChart/PortfolioTokenChart'
 import {PortfolioTokenInfo} from './PortfolioTokenInfo/PortfolioTokenInfo'
 
-export type ActiveTab = 'performance' | 'overview' | 'transactions'
+type ActiveTab = 'performance' | 'overview' | 'transactions'
 
 type Tabs = 'Performance' | 'Overview' | 'Transactions'
 const tabs: Record<ActiveTab, Tabs> = {
@@ -30,6 +29,9 @@ const tabs: Record<ActiveTab, Tabs> = {
   overview: 'Overview',
   transactions: 'Transactions',
 }
+
+const HEADER_HEIGHT = 304
+
 export const PortfolioTokenDetailsScreen = () => {
   const strings = useStrings()
   const {activeTab, setActiveTab} = usePortfolioTokenDetailContext()
@@ -38,8 +40,6 @@ export const PortfolioTokenDetailsScreen = () => {
   const {id: tokenId} = usePortfolioTokenDetailParams()
   const {wallet} = useSelectedWallet()
   const tokenInfo = wallet.balances.records.get(tokenId)?.info
-  const isPrimaryToken = isPrimaryTokenInfo(tokenInfo)
-  const HEADER_HEIGHT = isPrimaryToken ? 304 : 85 // Graph only in PT
   const {styles} = useStyles(HEADER_HEIGHT)
 
   if (!tokenInfo) throwLoggedError(new App.Errors.InvalidState('Token info not found, invalid state'))
@@ -100,13 +100,9 @@ export const PortfolioTokenDetailsScreen = () => {
 
                 <Spacer height={16} />
 
-                {isPrimaryToken && (
-                  <>
-                    <PortfolioTokenChart />
+                <PortfolioTokenChart />
 
-                    <Spacer height={16} />
-                  </>
-                )}
+                <Spacer height={16} />
               </Animated.View>
 
               <Animated.View>{renderTabs}</Animated.View>

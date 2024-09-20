@@ -2,7 +2,7 @@ import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {Spacer} from '../../../../../components'
+import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {useStrings} from '../../../common/hooks/useStrings'
 import {TokenEmptyList} from '../../../common/TokenEmptyList/TokenEmptyList'
 

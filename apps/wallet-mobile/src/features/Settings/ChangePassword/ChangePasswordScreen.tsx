@@ -6,7 +6,9 @@ import {ScrollView, StyleSheet, TextInput as RNTextInput, View, ViewProps} from 
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {MutationOptions, useMutation} from 'react-query'
 
-import {Button, Checkmark, KeyboardAvoidingView, TextInput} from '../../../components'
+import {Button} from '../../../components/Button/Button'
+import {KeyboardAvoidingView} from '../../../components/KeyboardAvoidingView/KeyboardAvoidingView'
+import {Checkmark, TextInput} from '../../../components/TextInput/TextInput'
 import {errorMessages} from '../../../kernel/i18n/global-messages'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {REQUIRED_PASSWORD_LENGTH, validatePassword} from '../../../yoroi-wallets/utils/validators'

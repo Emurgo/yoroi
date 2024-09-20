@@ -7,9 +7,9 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 import {Icon} from '../Icon'
 import {Space} from '../Space/Space'
-import {Spacer} from '../Spacer'
+import {Spacer} from '../Spacer/Spacer'
 
-export type ExpandableInfoCardProps = {
+type ExpandableInfoCardProps = {
   info: React.ReactNode
   expanded?: boolean
   children?: React.ReactNode

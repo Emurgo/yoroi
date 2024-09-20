@@ -14,25 +14,22 @@ import {App, HW, Network, Portfolio, Wallet} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 
 import {WalletEncryptedStorage} from '../../kernel/storage/EncryptedStorage'
+import type {
+  FundInfoResponse,
+  RawUtxo,
+  TransactionInfo,
+  TxStatusRequest,
+  TxStatusResponse,
+  WalletState,
+} from '../types/other'
 import {
   AccountStates,
   StakePoolInfoRequest,
   StakePoolInfosAndHistories,
   StakingInfo,
   StakingStatus,
-  YoroiEntry,
-  YoroiSignedTx,
-  YoroiUnsignedTx,
-} from '../types'
-import type {
-  FundInfoResponse,
-  RawUtxo,
-  TipStatusResponse,
-  TransactionInfo,
-  TxStatusRequest,
-  TxStatusResponse,
-  WalletState,
-} from '../types/other'
+} from '../types/staking'
+import {YoroiEntry, YoroiSignedTx, YoroiUnsignedTx} from '../types/yoroi'
 import type {Addresses} from './account-manager/account-manager'
 
 export type WalletEvent =
@@ -44,7 +41,7 @@ export type WalletEvent =
   | {type: 'collateral-id'; collateralId: RawUtxo['utxo_id']}
 
 export type WalletSubscription = (event: WalletEvent) => void
-export type Unsubscribe = () => void
+type Unsubscribe = () => void
 
 export type ServerStatus = {
   isServerOk: boolean
@@ -157,7 +154,6 @@ export interface YoroiWallet {
   saveMemo(txId: string, memo: string): Promise<void>
   get transactions(): Record<string, TransactionInfo>
   get confirmationCounts(): Record<string, null | number>
-  fetchTipStatus(): Promise<TipStatusResponse>
   fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse>
 
   // Utxos
@@ -234,7 +230,6 @@ const yoroiWalletKeys: Array<keyof YoroiWallet> = [
   // Balances, TxDetails
   'transactions',
   'confirmationCounts',
-  'fetchTipStatus',
   'fetchTxStatus',
 
   // Other
@@ -274,4 +269,4 @@ export namespace CardanoTypes {
 }
 
 export {RegistrationStatus} from '@emurgo/yoroi-lib'
-export {AssetOverflowError, NoOutputsError, NotEnoughMoneyToSendError} from '@emurgo/yoroi-lib/dist/errors'
+export {NoOutputsError, NotEnoughMoneyToSendError} from '@emurgo/yoroi-lib/dist/errors'

@@ -7,7 +7,7 @@ import {Animated, StyleSheet} from 'react-native'
 
 import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {Text} from '../../../../../components/Text'
-import {Warning} from '../../../../../components/Warning'
+import {Warning} from '../../../../../components/Warning/Warning'
 import {ButtonGroup} from '../../../common/ButtonGroup/ButtonGroup'
 import {useStrings} from '../../../common/strings'
 

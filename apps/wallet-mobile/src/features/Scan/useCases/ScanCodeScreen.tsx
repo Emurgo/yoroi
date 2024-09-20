@@ -59,5 +59,5 @@ const ScanStartParamsSchema = z.object({
   insideFeature: z.union([z.literal('scan'), z.literal('send')]),
 })
 
-export const isScanStartParams = createTypeGuardFromSchema<Params>(ScanStartParamsSchema)
-export const isParams = (params?: unknown): params is Params => isScanStartParams(params)
+const isScanStartParams = createTypeGuardFromSchema<Params>(ScanStartParamsSchema)
+const isParams = (params?: unknown): params is Params => isScanStartParams(params)

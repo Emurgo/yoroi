@@ -4,8 +4,9 @@ import * as React from 'react'
 
 import {governaceAfterBlock} from '../../../../kernel/config'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
-import {useStakingKey, useTipStatus} from '../../../../yoroi-wallets/hooks'
+import {useStakingKey} from '../../../../yoroi-wallets/hooks'
 import {CardanoMobile} from '../../../../yoroi-wallets/wallets'
+import {useBestBlock} from '../../../WalletManager/common/hooks/useBestBlock'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {GovernanceVote} from '../types'
 
@@ -30,7 +31,7 @@ export const mapStakingKeyStateToGovernanceAction = (state: StakingKeyState): Go
 }
 
 export const useIsGovernanceFeatureEnabled = (wallet: YoroiWallet) => {
-  const {bestBlock} = useTipStatus({wallet, options: {suspense: true}})
+  const bestBlock = useBestBlock({options: {suspense: true}})
   return bestBlock.height >= governaceAfterBlock[wallet.networkManager.network]
 }
 

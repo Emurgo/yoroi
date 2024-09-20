@@ -14,16 +14,9 @@ import {cardanoConfig} from '../../features/WalletManager/common/adapters/cardan
 import {buildNetworkManagers} from '../../features/WalletManager/network-manager/network-manager'
 import {toTokenInfo, utf8ToHex} from '../cardano/api/utils'
 import {CardanoTypes, YoroiWallet} from '../cardano/types'
-import {
-  RemotePoolMetaSuccess,
-  StakePoolInfosAndHistories,
-  StakingInfo,
-  StakingStatus,
-  TransactionInfo,
-  YoroiNftModerationStatus,
-  YoroiSignedTx,
-  YoroiUnsignedTx,
-} from '../types'
+import {TransactionInfo} from '../types/other'
+import {RemotePoolMetaSuccess, StakePoolInfosAndHistories, StakingInfo, StakingStatus} from '../types/staking'
+import {YoroiNftModerationStatus, YoroiSignedTx, YoroiUnsignedTx} from '../types/yoroi'
 import {getTokenFingerprint} from '../utils/format'
 import {CardanoMobile} from '../wallets'
 import {mockEncryptedStorage} from './storage'
@@ -195,25 +188,6 @@ const wallet: YoroiWallet = {
     action('fetchTxStatus')(...args)
     return {}
   },
-  fetchTipStatus: async (...args: unknown[]) => {
-    action('fetchTipStatus')(...args)
-    return Promise.resolve({
-      bestBlock: {
-        epoch: 210,
-        slot: 76027,
-        globalSlot: 60426427,
-        hash: '2cf5a471a0c58cbc22534a0d437fbd91576ef10b98eea7ead5887e28f7a4fed8',
-        height: 3617708,
-      },
-      safeBlock: {
-        epoch: 210,
-        slot: 75415,
-        globalSlot: 60425815,
-        hash: 'ca18a2b607411dd18fbb2c1c0e653ec8a6a3f794f46ce050b4a07cf8ba4ab916',
-        height: 3617698,
-      },
-    })
-  },
   submitTransaction: () => {
     throw new Error('Not implemented: submitTransaction')
   },
@@ -267,7 +241,7 @@ const wallet: YoroiWallet = {
   },
 }
 
-export const metaHw: Wallet.Meta = {
+const metaHw: Wallet.Meta = {
   ...walletMeta,
   isHW: true,
   hwDeviceInfo: {
@@ -322,17 +296,6 @@ const fetchPoolInfo = {
     action('fetchPoolInfo')(...args)
     return new Promise(() => null) as unknown as StakePoolInfosAndHistories
   },
-}
-
-export const generateManyNfts = (): Balance.TokenInfo[] => {
-  return Array(30)
-    .fill(undefined)
-    .map((_, index) => ({
-      ...nft,
-      name: 'NFT ' + index,
-      id: index + '',
-      fingerprint: getTokenFingerprint({policyId: nft.group, assetNameHex: utf8ToHex('NFT ' + index)}),
-    }))
 }
 
 const fetchNftModerationStatus = {

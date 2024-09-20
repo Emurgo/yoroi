@@ -4,14 +4,15 @@ import {useIntl} from 'react-intl'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {Button, TextInput} from '../../../../components'
+import {Button} from '../../../../components/Button/Button'
 import {Space} from '../../../../components/Space/Space'
+import {TextInput} from '../../../../components/TextInput/TextInput'
 import {debugWalletInfo, features} from '../../../../kernel/features'
 import {confirmationMessages, txLabels} from '../../../../kernel/i18n/global-messages'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useSignWithPasswordAndSubmitTx} from '../../../../yoroi-wallets/hooks'
-import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
-import {TransferSummary} from '../TransferSummary'
+import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types/yoroi'
+import {TransferSummary} from '../TransferSummary/TransferSummary'
 
 type Props = {
   wallet: YoroiWallet

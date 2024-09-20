@@ -24,7 +24,7 @@ export type StakePoolInfoRequest = {
 
 export type StakePoolInfosAndHistories = Record<string, StakePoolInfoAndHistory | null>
 
-export type StakePoolInfo = {
+type StakePoolInfo = {
   name?: string
   ticker?: string
   description?: string
@@ -45,7 +45,7 @@ export type StakePoolInfoAndHistory = {
   history: StakePoolHistory
 }
 
-export type RemoteCertificate = {
+type RemoteCertificate = {
   kind: 'PoolRegistration' | 'PoolRetirement'
   certIndex: number
   poolParams: Record<string, unknown> // don't think this is relevant

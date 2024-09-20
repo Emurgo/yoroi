@@ -20,15 +20,23 @@ import {
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Banner, Boundary, Button, CopyButton, FadeIn, Icon, Text, useModal} from '../../../../components'
+import {Banner} from '../../../../components/Banner/Banner'
+import {Boundary} from '../../../../components/Boundary/Boundary'
+import {Button} from '../../../../components/Button/Button'
+import {CopyButton} from '../../../../components/CopyButton'
+import {FadeIn} from '../../../../components/FadeIn'
+import {Icon} from '../../../../components/Icon'
+import {useModal} from '../../../../components/Modal/ModalContext'
+import {Text} from '../../../../components/Text'
 import {isEmptyString} from '../../../../kernel/utils'
 import {MultiToken} from '../../../../yoroi-wallets/cardano/MultiToken'
-import {CardanoTypes, YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
-import {useTipStatus, useTransactionInfos} from '../../../../yoroi-wallets/hooks'
-import {TransactionInfo} from '../../../../yoroi-wallets/types'
-import {asQuantity} from '../../../../yoroi-wallets/utils'
+import {CardanoTypes} from '../../../../yoroi-wallets/cardano/types'
+import {useTransactionInfos} from '../../../../yoroi-wallets/hooks'
+import {TransactionInfo} from '../../../../yoroi-wallets/types/other'
 import {formatDateAndTime, formatTokenWithSymbol} from '../../../../yoroi-wallets/utils/format'
+import {asQuantity} from '../../../../yoroi-wallets/utils/utils'
 import {usePrivacyMode} from '../../../Settings/PrivacyMode/PrivacyMode'
+import {useBestBlock} from '../../../WalletManager/common/hooks/useBestBlock'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
 import {useWalletManager} from '../../../WalletManager/context/WalletManagerProvider'
 import {messages, useStrings} from '../../common/strings'
@@ -166,7 +174,7 @@ export const TxDetails = () => {
           </View>
 
           <Boundary loading={{size: 'small'}}>
-            <Confirmations transaction={transaction} wallet={wallet} />
+            <Confirmations transaction={transaction} />
           </Boundary>
 
           <Label>{strings.transactionId}</Label>
@@ -194,18 +202,17 @@ export const TxDetails = () => {
   )
 }
 
-const Confirmations = ({transaction, wallet}: {transaction: TransactionInfo; wallet: YoroiWallet}) => {
+const Confirmations = ({transaction}: {transaction: TransactionInfo}) => {
   const strings = useStrings()
-  const tipStatus = useTipStatus({
-    wallet,
+  const bestBlock = useBestBlock({
     options: {
-      refetchInterval: 5000,
+      refetchInterval: 5_000,
     },
   })
 
   return (
     <Text secondary>
-      {strings.confirmations(transaction.blockNumber === 0 ? 0 : tipStatus.bestBlock.height - transaction.blockNumber)}
+      {strings.confirmations(transaction.blockNumber === 0 ? 0 : bestBlock.height - transaction.blockNumber)}
     </Text>
   )
 }
@@ -339,7 +346,7 @@ const getShownAddresses = (
   }
 }
 
-export type Params = {
+type Params = {
   id: string
 }
 
