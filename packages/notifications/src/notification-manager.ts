@@ -1,4 +1,4 @@
-import {BehaviorSubject, Subscription} from 'rxjs'
+import {BehaviorSubject, Subject, Subscription} from 'rxjs'
 import {App, Notifications} from '@yoroi/types'
 
 type EventsStorageData = ReadonlyArray<Notifications.Event>
@@ -7,13 +7,13 @@ type ConfigStorageData = Notifications.Config
 const getAllTriggers = (): Array<Notifications.Trigger> =>
   Object.values(Notifications.Trigger)
 
-// TODO: Add trackers - these are only pointers to last notification event
 export const notificationManagerMaker = ({
   eventsStorage,
   configStorage,
   subscriptions,
 }: Notifications.ManagerMakerProps): Notifications.Manager => {
   const localSubscriptions: Subscription[] = []
+
   const hydrate = () => {
     const triggers = getAllTriggers()
     triggers.forEach((trigger) => {
@@ -27,7 +27,7 @@ export const notificationManagerMaker = ({
   }
 
   const config = configManagerMaker({storage: configStorage})
-  const {events, unreadCounterByGroup$} = eventsManagerMaker({
+  const {events, unreadCounterByGroup$, notification$} = eventsManagerMaker({
     storage: eventsStorage,
     config,
   })
@@ -42,7 +42,15 @@ export const notificationManagerMaker = ({
     localSubscriptions.forEach((subscription) => subscription.unsubscribe())
   }
 
-  return {hydrate, clear, destroy, events, config, unreadCounterByGroup$}
+  return {
+    hydrate,
+    clear,
+    destroy,
+    events,
+    config,
+    unreadCounterByGroup$,
+    notification$,
+  }
 }
 
 const getNotificationGroup = (
@@ -71,10 +79,12 @@ const eventsManagerMaker = ({
   unreadCounterByGroup$: BehaviorSubject<
     Readonly<Map<Notifications.Group, number>>
   >
+  notification$: Subject<Notifications.Event>
 } => {
   const unreadCounterByGroup$ = new BehaviorSubject<
     Map<Notifications.Group, number>
   >(buildUnreadCounterDefaultValue())
+  const notification$ = new Subject<Notifications.Event>()
 
   const updateUnreadCounter = async () => {
     const allEvents = await events.read()
@@ -118,6 +128,7 @@ const eventsManagerMaker = ({
       await storage.setItem('events', [...allEvents, event])
       if (!event.isRead) {
         await updateUnreadCounter()
+        notification$.next(event)
       }
     },
     clear: async (): Promise<void> => {
@@ -125,7 +136,7 @@ const eventsManagerMaker = ({
       unreadCounterByGroup$.next(buildUnreadCounterDefaultValue())
     },
   }
-  return {events, unreadCounterByGroup$}
+  return {events, unreadCounterByGroup$, notification$}
 }
 
 const configManagerMaker = ({

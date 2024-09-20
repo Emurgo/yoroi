@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/notifications",
-  "version": "1.5.2",
+  "version": "1.0.0",
   "description": "The Notifications package of Yoroi SDK",
   "keywords": [
     "yoroi",

@@ -10,7 +10,9 @@ export enum NotificationTrigger {
 export type NotificationManagerMakerProps = {
   eventsStorage: AppStorage<true, string>
   configStorage: AppStorage<true, string>
-  subscriptions?: Record<NotificationTrigger, Subject<NotificationEvent>>
+  subscriptions?: Partial<
+    Record<NotificationTrigger, Subject<NotificationEvent>>
+  >
 }
 
 export interface NotificationTransactionReceivedEvent
@@ -52,11 +54,13 @@ export type NotificationConfig = {
 
 export type NotificationManager = {
   hydrate: () => void // build up subscriptions
+
   unreadCounterByGroup$: BehaviorSubject<
     Readonly<Map<NotificationGroup, number>>
   >
+  notification$: Subject<NotificationEvent>
 
-  // NOTE: events represent a notification event that was trigger by a config rule
+  // Events represent a notification event that was trigger by a config rule
   events: {
     markAllAsRead: () => Promise<void>
     markAsRead(id: NotificationEventId): Promise<void>
@@ -64,12 +68,13 @@ export type NotificationManager = {
     save: (event: Readonly<NotificationEvent>) => Promise<void>
     clear: () => Promise<void>
   }
-  // NOTE: config sets the ground to what, when, and if should notify user
+  // Config sets the ground to what, when, and if should notify user
   config: {
     read: () => Promise<Readonly<NotificationConfig>> // return initial if empty
     save: (config: Readonly<NotificationConfig>) => Promise<void>
     reset: () => Promise<void>
   }
+
   destroy: () => Promise<void> // tear down subscriptions
   clear: () => Promise<void>
 }
