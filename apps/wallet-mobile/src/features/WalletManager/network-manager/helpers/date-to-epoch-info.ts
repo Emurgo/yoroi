@@ -17,6 +17,7 @@ export function dateToEpochInfo(eras: Network.Manager['eras']) {
           start: epochStart,
           end: epochEnd,
           era: era,
+          eras: eras,
         })
       }
 
