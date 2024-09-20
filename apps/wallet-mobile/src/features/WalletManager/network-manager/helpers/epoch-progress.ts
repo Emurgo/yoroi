@@ -14,7 +14,7 @@ export function epochProgress(epochInfo: Network.EpochInfo) {
         break
       }
       absoluteSlot += Math.floor(
-        ((era.end?.getTime() ?? new Date().getTime()) - era.start.getTime()) / 1e3 / era.slotInSeconds,
+        ((era.end?.getTime() ?? date.getTime()) - era.start.getTime()) / 1e3 / era.slotInSeconds,
       )
     }
 
