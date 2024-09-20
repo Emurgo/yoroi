@@ -1,9 +1,9 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {Image, StyleSheet, View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
-import ChartPlaceholder from '../../../../../assets/img/chart-placeholder.png'
+import {ChartPlaceholder} from './ChartPlaceholder'
 
 export const PortfolioTokenChartSkeleton = () => {
   const {color, styles} = useStyles()
@@ -25,7 +25,7 @@ export const PortfolioTokenChartSkeleton = () => {
         </SkeletonPlaceholder>
       </View>
 
-      <Image style={styles.chartPlaceholder} source={ChartPlaceholder} />
+      <ChartPlaceholder />
     </View>
   )
 }
@@ -47,12 +47,6 @@ const useStyles = () => {
       ...atoms.justify_start,
       ...atoms.align_center,
       ...atoms.gap_2xs,
-    },
-    chartPlaceholder: {
-      height: 112,
-      width: '100%',
-      marginVertical: 16,
-      resizeMode: 'stretch',
     },
   })
   return {styles, color} as const

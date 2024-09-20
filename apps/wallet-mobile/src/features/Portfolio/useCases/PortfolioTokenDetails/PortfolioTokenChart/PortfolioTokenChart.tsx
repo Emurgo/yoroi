@@ -1,13 +1,13 @@
 import {useTheme} from '@yoroi/theme'
 import React, {useCallback, useState} from 'react'
-import {Image, StyleSheet, View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 
-import ChartPlaceholder from '../../../../../assets/img/chart-placeholder.png'
 import {
   type TokenChartInterval,
   TOKEN_CHART_INTERVAL,
   useGetPortfolioTokenChart,
 } from '../../../common/hooks/useGetPortfolioTokenChart'
+import {ChartPlaceholder} from './ChartPlaceholder'
 import {PortfolioTokenChartSkeleton} from './PortfolioTokenChartSkeleton'
 import {TokenChart} from './TokenChart'
 import {TokenChartToolbar} from './TokenChartToolBar'
@@ -39,11 +39,7 @@ export const PortfolioTokenChart = () => {
             timeInterval={timeInterval}
           />
 
-          {!data ? (
-            <Image style={styles.chartUnavailable} source={ChartPlaceholder} />
-          ) : (
-            <TokenChart onValueSelected={handleChartSelected} dataSources={data} />
-          )}
+          {!data ? <ChartPlaceholder /> : <TokenChart onValueSelected={handleChartSelected} dataSources={data} />}
         </>
       )}
 
@@ -54,17 +50,11 @@ export const PortfolioTokenChart = () => {
 
 const useStyles = () => {
   const {atoms} = useTheme()
+
   const styles = StyleSheet.create({
     root: {
       ...atoms.flex_1,
       ...atoms.flex_col,
-    },
-    chartUnavailable: {
-      height: 112,
-      width: '100%',
-      marginVertical: 16,
-      resizeMode: 'stretch',
-      opacity: 0.8,
     },
   })
 
