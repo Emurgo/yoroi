@@ -1,3 +1,7 @@
+import {Balance} from '@yoroi/types'
+
+import {useFormattedTx} from './hooks/useFormattedTx'
+
 export type TransactionDetails = {
   id: string
   walletPlate: React.ReactNode
@@ -852,4 +856,39 @@ export type VotingProposals = VotingProposal[]
 
 export interface Withdrawals {
   [k: string]: string
+}
+
+export type FormattedInput = {
+  assets: Array<{
+    name: string
+    label: string
+    quantity: Balance.Quantity
+    isPrimary: boolean
+  }>
+  address: string | undefined
+  rewardAddress: string | null
+  ownAddress: boolean
+  txIndex: number
+  txHash: string
+}
+
+export type FormattedInputs = Array<FormattedInput>
+export type FormattedTx = ReturnType<typeof useFormattedTx>
+export type FormattedOutput = {
+  assets: Array<{
+    name: string
+    label: string
+    quantity: Balance.Quantity
+    isPrimary: boolean
+  }>
+  address: string
+  rewardAddress: string | null
+  ownAddress: boolean
+}
+export type FormattedOutputs = Array<FormattedOutput>
+export type FormattedFee = {
+  name: string
+  label: string
+  quantity: Balance.Quantity
+  isPrimary: boolean
 }

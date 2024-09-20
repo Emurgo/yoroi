@@ -31,6 +31,47 @@ export const deriveRewardAddressHex = async (
   return result
 }
 
+export const getAddressType = async (address: string) => {
+  const isKeyAddress = await getIsAddressKeyBech32Format(address)
+  if (isKeyAddress) return 'key'
+
+  const isScriptAddress = await getIsAddressScriptBech32Format(address)
+  if (isScriptAddress) return 'script'
+
+  const isRewardAddress = await getIsRewardAddressBech32Format(address)
+  if (isRewardAddress) return 'reward'
+
+  throw new Error('invalid address format')
+}
+
+const getIsAddressKeyBech32Format = async (address: string): Promise<boolean> => {
+  try {
+    await CardanoMobile.Ed25519KeyHash.fromBech32(address)
+    return true
+  } catch (e) {
+    return false
+  }
+}
+
+const getIsAddressScriptBech32Format = async (address: string): Promise<boolean> => {
+  try {
+    await CardanoMobile.ScriptHash.fromBech32(address)
+    return true
+  } catch (e) {
+    return false
+  }
+}
+
+const getIsRewardAddressBech32Format = async (addressBech32: string): Promise<boolean> => {
+  try {
+    const address = await CardanoMobile.Address.fromBech32(addressBech32)
+    await CardanoMobile.RewardAddress.fromAddress(address)
+    return true
+  } catch (e) {
+    return false
+  }
+}
+
 /**
  * Multi-asset related
  */

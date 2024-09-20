@@ -9,7 +9,7 @@ import {Dimensions, InteractionManager, Platform, TouchableOpacity, TouchableOpa
 
 import {Icon} from '../components/Icon'
 import {Routes as StakingGovernanceRoutes} from '../features/Staking/Governance/common/navigation'
-import {YoroiUnsignedTx} from '../yoroi-wallets/types/yoroi'
+import {YoroiSignedTx, YoroiUnsignedTx} from '../yoroi-wallets/types/yoroi'
 import {compareArrays} from '../yoroi-wallets/utils/utils'
 
 // prettier-ignore
@@ -118,8 +118,7 @@ export type WalletStackRoutes = {
   'wallet-selection': undefined
   'exchange-result': undefined
   'main-wallet-routes': NavigatorScreenParams<WalletTabRoutes>
-  'review-transaction-routes': NavigatorScreenParams<ReviewTransactionRoutes>
-  'nft-details-routes': NavigatorScreenParams<NftRoutes>
+  'review-tx-routes': NavigatorScreenParams<ReviewTxRoutes>
   settings: NavigatorScreenParams<SettingsStackRoutes>
   'voting-registration': NavigatorScreenParams<VotingRegistrationRoutes>
   'toggle-analytics-settings': NavigatorScreenParams<ToggleAnalyticsSettingsRoutes>
@@ -296,13 +295,13 @@ export type Portfolio2Routes = {
   history: NavigatorScreenParams<TxHistoryRoutes>
 }
 
-export type ReviewTransactionRoutes = {
-  'review-transaction': NavigatorScreenParams<ReviewTransactionTabRoutes>
-}
-
-export type ReviewTransactionTabRoutes = {
-  overview: undefined
-  utxos: undefined
+export type ReviewTxRoutes = {
+  'review-tx': {
+    unsignedTx?: YoroiUnsignedTx
+    cbor?: string
+    onSuccess: (signedTx: YoroiSignedTx) => void
+    onError: () => void
+  }
 }
 
 export type PortfolioTokenListTabRoutes = {
@@ -466,6 +465,16 @@ export const useWalletNavigation = () => {
           params: {
             screen: 'send-start-tx',
           },
+        },
+      })
+    },
+
+    navigateToTxReview: (params: ReviewTxRoutes['review-tx']) => {
+      navigation.navigate('manage-wallets', {
+        screen: 'review-tx-routes',
+        params: {
+          screen: 'review-tx',
+          params,
         },
       })
     },

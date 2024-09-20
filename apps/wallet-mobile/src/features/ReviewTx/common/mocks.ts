@@ -54,7 +54,7 @@ export const adaTransactionSingleReceiver: TransactionBody = {
   current_treasury_value: null,
 }
 
-export const multiAssetsOneReceiver: TransactionBody = {
+export const multiAssetsTransactionOneReceiver: TransactionBody = {
   inputs: [
     {
       transaction_id: '46fe71d85a733d970fe7bb8e6586624823803936d18c7e14601713d05b5b287a',

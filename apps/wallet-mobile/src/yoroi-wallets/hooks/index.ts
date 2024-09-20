@@ -30,7 +30,6 @@ import {TRANSACTION_DIRECTION, TRANSACTION_STATUS, TxSubmissionStatus} from '../
 import {YoroiSignedTx, YoroiUnsignedTx} from '../types/yoroi'
 import {delay} from '../utils/timeUtils'
 import {Utxos} from '../utils/utils'
-import {CardanoMobile} from '../wallets'
 
 const crashReportsStorageKey = 'sendCrashReports'
 
@@ -120,20 +119,6 @@ export const useStakingKey = (wallet: YoroiWallet) => {
       .then((h) => h.toBytes())
       .then((bytes) => Buffer.from(bytes).toString('hex'))
   const result = useQuery([wallet.id, 'stakingKey'], getPublicKeyHex, {suspense: true})
-  if (!result.data) throw new Error('invalid state')
-  return result.data
-}
-
-export const useRewardAddress = (wallet: YoroiWallet) => {
-  const result = useQuery(
-    [wallet.id, 'useRewardAddress'],
-    async () => {
-      const rewardAddress = await CardanoMobile.Address.fromBytes(Buffer.from(wallet.rewardAddressHex, 'hex'))
-      const bech32RewardAddress = await rewardAddress.toBech32(undefined)
-      return bech32RewardAddress
-    },
-    {suspense: true},
-  )
   if (!result.data) throw new Error('invalid state')
   return result.data
 }

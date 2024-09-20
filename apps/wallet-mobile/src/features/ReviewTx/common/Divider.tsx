@@ -1,10 +1,20 @@
-import {useTheme} from '@yoroi/theme'
+import {SpacingSize, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-export const Divider = () => {
+import {Space} from '../../../components/Space/Space'
+
+export const Divider = ({verticalSpace = 'none'}: {verticalSpace?: SpacingSize}) => {
   const {styles} = useStyles()
-  return <View style={styles.divider} />
+  return (
+    <>
+      <Space height={verticalSpace} />
+
+      <View style={styles.divider} />
+
+      <Space height={verticalSpace} />
+    </>
+  )
 }
 
 const useStyles = () => {
