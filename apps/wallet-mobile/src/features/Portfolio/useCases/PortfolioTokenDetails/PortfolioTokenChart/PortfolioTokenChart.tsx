@@ -7,6 +7,7 @@ import {
   TOKEN_CHART_INTERVAL,
   useGetPortfolioTokenChart,
 } from '../../../common/hooks/useGetPortfolioTokenChart'
+import {ChartPlaceholder} from './ChartPlaceholder'
 import {PortfolioTokenChartSkeleton} from './PortfolioTokenChartSkeleton'
 import {TokenChart} from './TokenChart'
 import {TokenChartToolbar} from './TokenChartToolBar'
@@ -29,16 +30,16 @@ export const PortfolioTokenChart = () => {
 
   return (
     <View style={styles.root}>
-      {isFetching || !data ? (
+      {isFetching ? (
         <PortfolioTokenChartSkeleton />
       ) : (
         <>
           <TokenPerformance
-            tokenPerformance={data[Math.max(0, Math.min(data.length - 1, selectedIndex))]}
+            tokenPerformance={data?.[Math.max(0, Math.min(data.length - 1, selectedIndex))]}
             timeInterval={timeInterval}
           />
 
-          <TokenChart onValueSelected={handleChartSelected} dataSources={data} />
+          {!data ? <ChartPlaceholder /> : <TokenChart onValueSelected={handleChartSelected} dataSources={data} />}
         </>
       )}
 
@@ -49,6 +50,7 @@ export const PortfolioTokenChart = () => {
 
 const useStyles = () => {
   const {atoms} = useTheme()
+
   const styles = StyleSheet.create({
     root: {
       ...atoms.flex_1,
