@@ -147,6 +147,7 @@ export const NotificationsDevScreen = () => {
   useRequestPermissions()
   useHandleNotification()
   const {triggerTransactionReceived} = useNotifications()
+  const {data: receivedNotifications} = useReceivedNotificationEvents()
 
   const handleOnTriggerTransactionReceived = () => {
     triggerTransactionReceived({
@@ -167,6 +168,12 @@ export const NotificationsDevScreen = () => {
           shelleyTheme
           onPress={handleOnTriggerTransactionReceived}
         />
+
+        <View>
+          <Text>Received Notifications</Text>
+
+          <Text>{JSON.stringify(receivedNotifications)}</Text>
+        </View>
 
         <Text style={{fontSize: 24}}>Settings</Text>
 
@@ -189,9 +196,9 @@ const NotificationSettings = () => {
     setLocalConfig(newConfig)
   }
 
-  const config = (localConfig || notificationsConfig) ?? null
+  const config = localConfig ?? notificationsConfig ?? null
 
-  if (!config) return null
+  if (config === null) return null
 
   const handleOnUpdateTransactionReceivedConfig = (value: NotificationTypes.Config['TransactionReceived']) => {
     handleSaveConfig({
