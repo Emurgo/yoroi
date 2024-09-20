@@ -64,7 +64,7 @@ const Price = ({amount, textStyle, ignorePrivacy, hidePrimaryPair}: Props) => {
 
     if (isPrivacyActive && !ignorePrivacy) return `${privacyPlaceholder} ${currency}`
 
-    if (!isPrimaryToken(amount.info) && tokenPrice == null) return `—— ${currency}`
+    if (!isPrimaryToken(amount.info) && tokenPrice == null) return `— ${currency}`
 
     if (hidePrimaryPair && isPrimaryToken(amount.info) && isPrimaryTokenActive) return ''
 
