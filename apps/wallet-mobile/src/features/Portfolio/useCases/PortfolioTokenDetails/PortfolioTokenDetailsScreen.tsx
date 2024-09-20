@@ -1,4 +1,3 @@
-import {isPrimaryTokenInfo} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {App} from '@yoroi/types'
 import * as React from 'react'
@@ -30,6 +29,9 @@ const tabs: Record<ActiveTab, Tabs> = {
   overview: 'Overview',
   transactions: 'Transactions',
 }
+
+const HEADER_HEIGHT = 304
+
 export const PortfolioTokenDetailsScreen = () => {
   const strings = useStrings()
   const {activeTab, setActiveTab} = usePortfolioTokenDetailContext()
@@ -38,8 +40,6 @@ export const PortfolioTokenDetailsScreen = () => {
   const {id: tokenId} = usePortfolioTokenDetailParams()
   const {wallet} = useSelectedWallet()
   const tokenInfo = wallet.balances.records.get(tokenId)?.info
-  const isPrimaryToken = isPrimaryTokenInfo(tokenInfo)
-  const HEADER_HEIGHT = isPrimaryToken ? 304 : 85 // Graph only in PT
   const {styles} = useStyles(HEADER_HEIGHT)
 
   if (!tokenInfo) throwLoggedError(new App.Errors.InvalidState('Token info not found, invalid state'))
@@ -100,13 +100,9 @@ export const PortfolioTokenDetailsScreen = () => {
 
                 <Spacer height={16} />
 
-                {isPrimaryToken && (
-                  <>
-                    <PortfolioTokenChart />
+                <PortfolioTokenChart />
 
-                    <Spacer height={16} />
-                  </>
-                )}
+                <Spacer height={16} />
               </Animated.View>
 
               <Animated.View>{renderTabs}</Animated.View>

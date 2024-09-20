@@ -53,11 +53,13 @@ export type NetworkEpochInfo = {
   start: Date
   end: Date
   era: NetworkEraConfig
+  eras: ReadonlyArray<NetworkEraConfig>
 }
 
 export type NetworkEpochProgress = {
   progress: number
   currentSlot: number
+  absoluteSlot: number
   timeRemaining: {
     days: number
     hours: number

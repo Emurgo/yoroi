@@ -48,7 +48,7 @@ export const DashboardTokenItem = ({tokenInfo}: Props) => {
 
         <View style={styles.quantityContainer}>
           <PnlTag withIcon variant={variantPnl}>
-            <Text>{isMissingPrices ? '—— ' : formatPriceChange(changePercent)}%</Text>
+            <Text>{isMissingPrices ? '— ' : formatPriceChange(changePercent)}%</Text>
           </PnlTag>
 
           <Text ellipsizeMode="tail" numberOfLines={1} style={styles.tokenValue}>
