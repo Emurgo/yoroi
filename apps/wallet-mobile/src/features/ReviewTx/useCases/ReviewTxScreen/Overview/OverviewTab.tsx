@@ -1,3 +1,5 @@
+// 🚧 TODO: grouping by staking address 🚧
+
 import {Blockies} from '@yoroi/identicon'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
@@ -14,11 +16,13 @@ import {Address} from '../../../common/Address'
 import {CollapsibleSection} from '../../../common/CollapsibleSection'
 import {Divider} from '../../../common/Divider'
 import {useAddressType} from '../../../common/hooks/useAddressType'
+import {useStrings} from '../../../common/hooks/useStrings'
 import {TokenItem} from '../../../common/TokenItem'
 import {FormattedOutputs, FormattedTx} from '../../../common/types'
 
 export const OverviewTab = ({tx}: {tx: FormattedTx}) => {
   const {styles} = useStyles()
+
   const notOwnedOutputs = React.useMemo(() => tx.outputs.filter((output) => !output.ownAddress), [tx.outputs])
   const ownedOutputs = React.useMemo(() => tx.outputs.filter((output) => output.ownAddress), [tx.outputs])
 
@@ -37,6 +41,7 @@ export const OverviewTab = ({tx}: {tx: FormattedTx}) => {
 
 const WalletInfoSection = ({tx}: {tx: FormattedTx}) => {
   const {styles} = useStyles()
+  const strings = useStrings()
   const {wallet, meta} = useSelectedWallet()
   const {walletManager} = useWalletManager()
   const {plate, seed} = walletManager.checksum(wallet.publicKeyHex)
@@ -45,7 +50,7 @@ const WalletInfoSection = ({tx}: {tx: FormattedTx}) => {
   return (
     <>
       <View style={styles.infoItem}>
-        <Text style={styles.infoLabel}>Wallet</Text>
+        <Text style={styles.infoLabel}>{strings.walletLabel}</Text>
 
         <View style={styles.plate}>
           <Icon.WalletAvatar image={seedImage} style={styles.walletChecksum} size={24} />
@@ -65,10 +70,11 @@ const WalletInfoSection = ({tx}: {tx: FormattedTx}) => {
 
 const FeeInfoItem = ({fee}: {fee: string}) => {
   const {styles} = useStyles()
+  const strings = useStrings()
 
   return (
     <View style={styles.infoItem}>
-      <Text style={styles.infoLabel}>Fee</Text>
+      <Text style={styles.infoLabel}>{strings.feeLabel}</Text>
 
       <Text style={styles.fee}>{fee}</Text>
     </View>
@@ -84,10 +90,11 @@ const SenderSection = ({
   notOwnedOutputs: FormattedOutputs
   ownedOutputs: FormattedOutputs
 }) => {
+  const strings = useStrings()
   const address = ownedOutputs[0]?.rewardAddress ?? ownedOutputs[0]?.address
 
   return (
-    <CollapsibleSection label="Your Wallet">
+    <CollapsibleSection label={strings.myWalletLabel}>
       <Space height="lg" />
 
       <Address address={address} />
@@ -101,8 +108,10 @@ const SenderSection = ({
   )
 }
 
+// 🚧 TODO: ADD MULTIRECEIVER SUPPORT 🚧
 const SenderTokens = ({tx, notOwnedOutputs}: {tx: FormattedTx; notOwnedOutputs: FormattedOutputs}) => {
   const {styles} = useStyles()
+
   const {wallet} = useSelectedWallet()
 
   const totalPrimaryTokenSent = React.useMemo(
@@ -142,6 +151,7 @@ const SenderTokens = ({tx, notOwnedOutputs}: {tx: FormattedTx; notOwnedOutputs: 
 
 const SenderSectionLabel = () => {
   const {styles, colors} = useStyles()
+  const strings = useStrings()
 
   return (
     <View style={styles.tokensSectionLabel}>
@@ -149,7 +159,7 @@ const SenderSectionLabel = () => {
 
       <Space width="_2xs" />
 
-      <Text style={styles.tokenSectionLabel}>Send</Text>
+      <Text style={styles.tokenSectionLabel}>{strings.sendLabel}</Text>
     </View>
   )
 }
@@ -157,6 +167,7 @@ const SenderSectionLabel = () => {
 const ReceiverSection = ({notOwnedOutputs}: {notOwnedOutputs: FormattedOutputs}) => {
   const address = notOwnedOutputs[0]?.rewardAddress ?? notOwnedOutputs[0]?.address
   const {styles} = useStyles()
+  const strings = useStrings()
   const addressType = useAddressType(address)
   const isScriptAddress = addressType === 'script'
 
@@ -165,7 +176,7 @@ const ReceiverSection = ({notOwnedOutputs}: {notOwnedOutputs: FormattedOutputs})
       <Space height="sm" />
 
       <View style={styles.receiverAddress}>
-        <Text>{isScriptAddress ? 'To script' : `To`}:</Text>
+        <Text>{isScriptAddress ? strings.receiveToScriptLabel : strings.receiveToLabel}:</Text>
 
         <Address address={address} textStyle={styles.receiverSectionAddress} />
       </View>
@@ -245,9 +256,9 @@ const useStyles = () => {
   return {styles, colors} as const
 }
 
-// WORK IN PROGRESS BELOW
+// 🚧 WORK IN PROGRESS BELOW 🚧
 
-// TODO: WIP
+//  🚧 TODO: WIP 🚧
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const CreatedByInfoItem = () => {
   const {styles} = useStyles()
@@ -269,7 +280,7 @@ const CreatedByInfoItem = () => {
   )
 }
 
-// TODO: WIP
+// 🚧 TODO: WIP 🚧
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ReceiverTokensSectionMultiReceiver = () => {
   const {styles} = useStyles()
@@ -328,7 +339,7 @@ const ReceiverTokensSectionMultiReceiver = () => {
   )
 }
 
-// TODO: WIP
+// 🚧 TODO: WIP 🚧
 const ReceiverSectionLabel = () => {
   const {styles, colors} = useStyles()
 

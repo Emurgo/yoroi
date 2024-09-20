@@ -11,26 +11,29 @@ import {ReviewTxRoutes, useUnsafeParams} from '../../../../kernel/navigation'
 import {Divider} from '../../common/Divider'
 import {useFormattedTx} from '../../common/hooks/useFormattedTx'
 import {useOnConfirm} from '../../common/hooks/useOnConfirm'
+import {useStrings} from '../../common/hooks/useStrings'
 import {useTxBody} from '../../common/hooks/useTxBody'
 import {OverviewTab} from './Overview/OverviewTab'
+import {UTxOsTab} from './UTxOs/UTxOsTab'
 
 type Tabs = 'overview' | 'utxos'
 
 export const ReviewTxScreen = () => {
   const {styles} = useStyles()
+  const strings = useStrings()
   const [activeTab, setActiveTab] = React.useState<Tabs>('overview')
 
+  // TODO: move this to a context
   const params = useUnsafeParams<ReviewTxRoutes['review-tx']>()
-
-  // TODO: add cbor arguments
-  const txBody = useTxBody({unsignedTx: params.unsignedTx})
-  const formatedTx = useFormattedTx(txBody)
-
   const {onConfirm} = useOnConfirm({
     unsignedTx: params.unsignedTx,
     onSuccess: params.onSuccess,
     onError: params.onError,
   })
+
+  // TODO: add cbor arguments
+  const txBody = useTxBody({unsignedTx: params.unsignedTx})
+  const formatedTx = useFormattedTx(txBody)
 
   const renderTabs = React.useMemo(() => {
     return (
@@ -39,13 +42,21 @@ export const ReviewTxScreen = () => {
           style={styles.tab}
           active={activeTab === 'overview'}
           onPress={() => setActiveTab('overview')}
-          label="Overview"
+          label={strings.overviewTab}
         />
 
-        <Tab style={styles.tab} active={activeTab === 'utxos'} onPress={() => setActiveTab('utxos')} label="UTxOs" />
+        <Tab
+          style={styles.tab}
+          active={activeTab === 'utxos'}
+          onPress={() => setActiveTab('utxos')}
+          label={strings.utxosTab}
+        />
       </Tabs>
     )
-  }, [activeTab, setActiveTab, styles.tab, styles.tabs])
+  }, [activeTab, strings.overviewTab, strings.utxosTab, styles.tab, styles.tabs])
+
+  const OverviewTabMemo = React.memo(() => <OverviewTab tx={formatedTx} />)
+  const UtxosTabMemo = React.memo(() => <UTxOsTab tx={formatedTx} />)
 
   return (
     <KeyboardAvoidingView style={styles.root}>
@@ -55,11 +66,13 @@ export const ReviewTxScreen = () => {
 
           <Divider />
 
-          {activeTab === 'overview' && <OverviewTab tx={formatedTx} />}
+          {activeTab === 'overview' && <OverviewTabMemo />}
+
+          {activeTab === 'utxos' && <UtxosTabMemo />}
         </ScrollView>
 
         <Actions>
-          <Button title="CONFIRM" shelleyTheme onPress={onConfirm} />
+          <Button title={strings.confirm} shelleyTheme onPress={onConfirm} />
         </Actions>
       </SafeArea>
     </KeyboardAvoidingView>

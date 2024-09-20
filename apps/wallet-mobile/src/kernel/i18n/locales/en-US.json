@@ -1218,5 +1218,17 @@
   "portfolio.portfolioTokensDetailScreen.6_months": "6 months",
   "portfolio.portfolioTokensDetailScreen.1_year": "1 year",
   "portfolio.portfolioTokensDetailScreen.all_time": "all time",
-  "portfolio.portfolioTokensDetailScreen.detailsOn": "Details on"
+  "portfolio.portfolioTokensDetailScreen.detailsOn": "Details on",
+  "txReview.tabLabel.utxos": "UTxOs",
+  "txReview.tabLabel.overview": "Overview",
+  "txReview.overview.wallet": "Wallet",
+  "txReview.fee": "Fee",
+  "txReview.overview.myWalletLabel": "Your Wallet",
+  "txReview.overview.sendLabel": "Send",
+  "txReview.overview.receiveToLabel": "receiveToLabel",
+  "txReview.overview.receiveToScriptLabel": "To script",
+  "txReview.utxos.utxosInputsLabel": "Inputs",
+  "txReview.utxos.utxosOutputsLabel": "Outputs",
+  "txReview.utxos.utxosYourAddressLabel": "Your address",
+  "txReview.utxos.utxosForeignAddressLabel": "Foreign address"
 }

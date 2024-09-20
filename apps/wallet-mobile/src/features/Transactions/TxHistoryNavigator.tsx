@@ -28,7 +28,6 @@ import {ReceiveProvider} from '../Receive/common/ReceiveProvider'
 import {DescribeSelectedAddressScreen} from '../Receive/useCases/DescribeSelectedAddressScreen'
 import {ListMultipleAddressesScreen} from '../Receive/useCases/ListMultipleAddressesScreen'
 import {RequestSpecificAmountScreen} from '../Receive/useCases/RequestSpecificAmountScreen'
-import {ReviewTxScreen} from '../ReviewTx/useCases/ReviewTxScreen/ReviewTxScreen'
 import {CodeScannerButton} from '../Scan/common/CodeScannerButton'
 import {ScanCodeScreen} from '../Scan/useCases/ScanCodeScreen'
 import {ShowCameraPermissionDeniedScreen} from '../Scan/useCases/ShowCameraPermissionDeniedScreen/ShowCameraPermissionDeniedScreen'
@@ -40,7 +39,7 @@ import {EditAmountScreen} from '../Send/useCases/ListAmountsToSend/EditAmount/Ed
 import {ListAmountsToSendScreen} from '../Send/useCases/ListAmountsToSend/ListAmountsToSendScreen'
 import {StartMultiTokenTxScreen} from '../Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
 import {NetworkTag} from '../Settings/ChangeNetwork/NetworkTag'
-// import {SwapTabNavigator} from '../Swap/SwapNavigator'
+import {SwapTabNavigator} from '../Swap/SwapNavigator'
 import {
   ConfirmTxScreen as ConfirmTxSwapScreen,
   EditSlippageScreen,
@@ -222,7 +221,7 @@ export const TxHistoryNavigator = () => {
 
               <Stack.Screen
                 name="swap-start-swap"
-                component={ReviewTxScreen}
+                component={SwapTabNavigator}
                 options={{
                   ...sendOptions(navigationOptions, color),
                   title: strings.swapTitle,

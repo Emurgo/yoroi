@@ -57,12 +57,7 @@ export const useFormattedInputs = (
 ) => {
   const query = useQuery<FormattedInputs>(
     ['useFormattedInputs', inputs],
-    async () => {
-      const inputss = await formatInputs(wallet, inputs, tokenInfosResult)
-      console.log('inputs', inputs)
-      console.log('inputss', inputss)
-      return inputss
-    },
+    async () => formatInputs(wallet, inputs, tokenInfosResult),
     {
       suspense: true,
     },
