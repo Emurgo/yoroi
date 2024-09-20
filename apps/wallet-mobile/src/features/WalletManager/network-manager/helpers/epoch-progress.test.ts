@@ -15,6 +15,7 @@ describe('epochProgress', () => {
     expect(result).toEqual({
       progress: 100,
       currentSlot: 431999,
+      absoluteSlot: 124156799,
       timeRemaining: {days: 0, hours: 0, minutes: 0, seconds: 1},
     })
   })
@@ -24,6 +25,7 @@ describe('epochProgress', () => {
     const result = epochProgress(dateToEpochInfo(networkManagers['mainnet'].eras)(currentDate))(currentDate)
 
     expect(result).toEqual({
+      absoluteSlot: 123724800,
       progress: 0,
       currentSlot: 0,
       timeRemaining: {days: 5, hours: 0, minutes: 0, seconds: 0},
@@ -35,6 +37,7 @@ describe('epochProgress', () => {
     const result = epochProgress(dateToEpochInfo(networkManagers['mainnet'].eras)(currentDate))(currentDate)
 
     expect(result).toEqual({
+      absoluteSlot: 123940800,
       progress: 50,
       currentSlot: 216000,
       timeRemaining: {days: 2, hours: 12, minutes: 0, seconds: 0},
@@ -47,6 +50,7 @@ describe('epochProgress', () => {
       start: new Date('2024-05-09T21:44:51.000Z'),
       end: new Date('2024-05-14T21:44:51.000Z'),
       era: shelleyEraConfig,
+      eras: networkManagers['mainnet'].eras,
     }
 
     const currentDate = new Date('2022-01-02T00:00:01Z')
@@ -56,6 +60,7 @@ describe('epochProgress', () => {
     expect(result).toEqual({
       progress: 100,
       currentSlot: 432000,
+      absoluteSlot: 49515310,
       timeRemaining: {days: 0, hours: 0, minutes: 0, seconds: 0},
     })
   })
@@ -68,6 +73,7 @@ describe('epochProgress', () => {
     const result = progressFn(currentDate)
 
     expect(result).toEqual({
+      absoluteSlot: 61718400,
       progress: 86.67,
       currentSlot: 374400,
       timeRemaining: {days: 0, hours: 16, minutes: 0, seconds: 0},
