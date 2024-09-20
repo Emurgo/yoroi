@@ -50,14 +50,14 @@ export function epochProgress(epochInfo: Network.EpochInfo) {
 
     return freeze(
       {
-        progress: progress,
-        currentSlot: currentSlot,
+        progress,
+        currentSlot,
         absoluteSlot,
         timeRemaining: {
-          days: days,
-          hours: hours,
-          minutes: minutes,
-          seconds: seconds,
+          days,
+          hours,
+          minutes,
+          seconds,
         },
       },
       true,
