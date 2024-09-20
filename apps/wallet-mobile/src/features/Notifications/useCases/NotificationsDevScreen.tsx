@@ -10,7 +10,7 @@ import {UseMutationOptions, useQuery, UseQueryOptions} from 'react-query'
 import {Subject} from 'rxjs'
 import uuid from 'uuid'
 
-import {Button} from '../../../components'
+import {Button} from '../../../components/Button/Button'
 
 const useRequestPermissions = () => {
   React.useEffect(() => {
