@@ -154,9 +154,6 @@ export type TxHistoryRoutes = {
   'receive-specific-amount': undefined
   'receive-multiple': undefined
   'send-start-tx': undefined
-  'send-confirm-tx': undefined
-  'send-submitted-tx': {txId: string}
-  'send-failed-tx': undefined
   'send-list-amounts-to-send': undefined
   'send-edit-amount': undefined
   'send-select-token-from-list': undefined
