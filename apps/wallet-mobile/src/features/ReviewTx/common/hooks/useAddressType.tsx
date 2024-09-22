@@ -7,6 +7,6 @@ export const useAddressType = (address: string) => {
     suspense: true,
   })
 
-  if (query.data === undefined) throw new Error('invalid formatted outputs')
+  if (query.data === undefined) throw new Error('invalid address type')
   return query.data
 }
