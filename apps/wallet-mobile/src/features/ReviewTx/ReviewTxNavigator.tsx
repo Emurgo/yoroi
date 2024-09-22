@@ -4,12 +4,14 @@ import React from 'react'
 
 import {Boundary} from '../../components/Boundary/Boundary'
 import {defaultStackNavigationOptions, ReviewTxRoutes} from '../../kernel/navigation'
+import {useStrings} from './common/hooks/useStrings'
 import {ReviewTxScreen} from './useCases/ReviewTxScreen/ReviewTxScreen'
 
 export const Stack = createStackNavigator<ReviewTxRoutes>()
 
 export const ReviewTxNavigator = () => {
   const {atoms, color} = useTheme()
+  const strings = useStrings()
 
   return (
     <Stack.Navigator
@@ -17,7 +19,7 @@ export const ReviewTxNavigator = () => {
         ...screenOptions(atoms, color),
       }}
     >
-      <Stack.Screen name="review-tx" options={{title: 'Transaction Review'}}>
+      <Stack.Screen name="review-tx" options={{title: strings.title}}>
         {() => (
           <Boundary>
             <ReviewTxScreen />

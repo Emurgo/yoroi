@@ -8,6 +8,7 @@ export const useStrings = () => {
   return {
     signTransaction: intl.formatMessage(txLabels.signingTx),
     confirm: intl.formatMessage(messages.confirm),
+    title: intl.formatMessage(messages.title),
     utxosTab: intl.formatMessage(messages.utxosTab),
     overviewTab: intl.formatMessage(messages.overviewTab),
     walletLabel: intl.formatMessage(messages.walletLabel),
@@ -27,6 +28,10 @@ const messages = defineMessages({
   confirm: {
     id: 'txReview.confirm',
     defaultMessage: '!!!Confirm',
+  },
+  title: {
+    id: 'txReview.title',
+    defaultMessage: '!!!UTxOs',
   },
   utxosTab: {
     id: 'txReview.tabLabel.utxos',

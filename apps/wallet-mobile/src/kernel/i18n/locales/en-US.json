@@ -1230,5 +1230,7 @@
   "txReview.utxos.utxosInputsLabel": "Inputs",
   "txReview.utxos.utxosOutputsLabel": "Outputs",
   "txReview.utxos.utxosYourAddressLabel": "Your address",
-  "txReview.utxos.utxosForeignAddressLabel": "Foreign address"
+  "txReview.utxos.utxosForeignAddressLabel": "Foreign address",
+  "txReview.title": "Transaction Review",
+  "txReview.confirm": "Confirm"
 }
