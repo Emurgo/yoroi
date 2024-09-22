@@ -114,11 +114,11 @@ const formatInputs = async (
           .map((a) => {
             const tokenInfo = portfolioTokenInfos.tokenInfos?.get(a.assetId as Portfolio.Token.Id)
             if (!tokenInfo) return null
-            const quantity = asQuantity(a.amount)
+            
             return {
               name: infoExtractName(tokenInfo),
               label: formatTokenWithText(quantity, tokenInfo),
-              quantity,
+              quantity: asQuantity(a.amount),
               isPrimary: false,
             }
           })
