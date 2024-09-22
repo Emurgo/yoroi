@@ -114,11 +114,12 @@ const formatInputs = async (
           .map((a) => {
             const tokenInfo = portfolioTokenInfos.tokenInfos?.get(a.assetId as Portfolio.Token.Id)
             if (!tokenInfo) return null
-            
+            const quantity = asQuantity(a.amount)
+
             return {
               name: infoExtractName(tokenInfo),
               label: formatTokenWithText(quantity, tokenInfo),
-              quantity: asQuantity(a.amount),
+              quantity: quantity,
               isPrimary: false,
             }
           })
@@ -161,10 +162,12 @@ const formatOutputs = async (
             return Object.entries(assets).map(([assetId, amount]) => {
               const tokenInfo = portfolioTokenInfos.tokenInfos?.get(`${policyId}.${assetId}`)
               if (tokenInfo == null) return null
+              const quantity = asQuantity(amount)
+
               return {
                 name: infoExtractName(tokenInfo),
                 label: formatTokenWithText(quantity, tokenInfo),
-                quantity:  asQuantity(amount),
+                quantity,
                 isPrimary: false,
               }
             })
