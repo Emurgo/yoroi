@@ -161,11 +161,10 @@ const formatOutputs = async (
             return Object.entries(assets).map(([assetId, amount]) => {
               const tokenInfo = portfolioTokenInfos.tokenInfos?.get(`${policyId}.${assetId}`)
               if (tokenInfo == null) return null
-              const quantity = asQuantity(amount)
               return {
                 name: infoExtractName(tokenInfo),
                 label: formatTokenWithText(quantity, tokenInfo),
-                quantity,
+                quantity:  asQuantity(amount),
                 isPrimary: false,
               }
             })
