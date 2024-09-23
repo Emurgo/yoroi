@@ -4,6 +4,7 @@ import {Chain, Portfolio} from '@yoroi/types'
 import {useQuery, UseQueryOptions} from 'react-query'
 
 import {supportedCurrencies, time} from '../../../../kernel/constants'
+import {features} from '../../../../kernel/features'
 import {useLanguage} from '../../../../kernel/i18n'
 import {logger} from '../../../../kernel/logger/logger'
 import {fetchPtPriceActivity} from '../../../../yoroi-wallets/cardano/usePrimaryTokenActivity'
@@ -118,6 +119,8 @@ export const useGetPortfolioTokenChart = (
     ...options,
     queryKey: ['useGetPortfolioTokenChart', tokenInfo?.info.id ?? '', timeInterval],
     queryFn: async () => {
+      if (!features.portfolioSecondaryCharts) return null
+
       const response = await tokenManager.api.tokenHistory(tokenId, chartIntervalToHistoryPeriod(timeInterval))
       if (isRight(response)) {
         const prices = response.value.data.prices
