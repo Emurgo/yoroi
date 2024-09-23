@@ -4,18 +4,18 @@ import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {useStrings} from '../../../common/hooks/useStrings'
+import {PortfolioListTab, usePortfolio} from '../../../common/PortfolioProvider'
 import {TotalTokensValueContent} from './TotalTokensValueContent'
 
 type Props = {
   amount: Portfolio.Token.Amount
-  cardType: 'wallet' | 'dapps'
 }
 
-export const TotalTokensValue = ({amount, cardType}: Props) => {
+export const TotalTokensValue = ({amount}: Props) => {
   const strings = useStrings()
   const {styles} = useStyles()
-  const isWallet = cardType === 'wallet'
-  const title = isWallet ? strings.totalWalletValue : strings.totalDAppValue
+  const {listTab} = usePortfolio()
+  const title = listTab === PortfolioListTab.Wallet ? strings.totalWalletValue : strings.totalDAppValue
 
   return (
     <View style={styles.root}>

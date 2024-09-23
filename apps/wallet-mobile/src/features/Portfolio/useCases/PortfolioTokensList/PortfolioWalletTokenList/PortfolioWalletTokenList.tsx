@@ -1,3 +1,4 @@
+import {useFocusEffect} from '@react-navigation/native'
 import {infoExtractName, isPrimaryToken} from '@yoroi/portfolio'
 import {useTheme} from '@yoroi/theme'
 import {Chain, Portfolio} from '@yoroi/types'
@@ -16,6 +17,7 @@ import {aggregatePrimaryAmount} from '../../../common/helpers/aggregatePrimaryAm
 import {useStrings} from '../../../common/hooks/useStrings'
 import {useZeroBalance} from '../../../common/hooks/useZeroBalance'
 import {Line} from '../../../common/Line'
+import {usePortfolio} from '../../../common/PortfolioProvider'
 import {usePortfolioTokenActivity} from '../../../common/PortfolioTokenActivityProvider'
 import {TokenEmptyList} from '../../../common/TokenEmptyList/TokenEmptyList'
 import {BuyADABanner} from '../../PortfolioDashboard/DashboardTokensList/BuyADABanner/BuyADABanner'
@@ -28,6 +30,7 @@ export const PortfolioWalletTokenList = () => {
   const {styles} = useStyles()
   const {search, isSearching} = useSearch()
   const isZeroADABalance = useZeroBalance()
+  const {resetTabs} = usePortfolio()
   const {track} = useMetrics()
   const {
     selected: {network},
@@ -63,6 +66,12 @@ export const PortfolioWalletTokenList = () => {
 
     return tokensList
   }, [isSearching, search, tokensList])
+
+  useFocusEffect(
+    React.useCallback(() => {
+      resetTabs()
+    }, [resetTabs]),
+  )
 
   React.useEffect(() => {
     let timeout: ReturnType<typeof setTimeout> | undefined
@@ -153,7 +162,7 @@ const HeadingList = ({isFirstUser, isShowBalanceCard, countTokensList, amount}: 
     <View>
       {isShowBalanceCard ? (
         <View>
-          <TotalTokensValue amount={amount} cardType="wallet" />
+          <TotalTokensValue amount={amount} />
 
           <Line />
         </View>

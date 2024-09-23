@@ -8,7 +8,7 @@ import {SearchProvider} from '../Search/SearchContext'
 import {NetworkTag} from '../Settings/ChangeNetwork/NetworkTag'
 import {TxDetails} from '../Transactions/useCases/TxDetails/TxDetails'
 import {useStrings} from './common/hooks/useStrings'
-import {PortfolioTokenDetailProvider} from './common/PortfolioTokenDetailContext'
+import {PortfolioProvider} from './common/PortfolioProvider'
 import {NftsNavigator} from './NftsNavigator'
 import {PortfolioDashboardScreen} from './useCases/PortfolioDashboard/PortfolioDashboardScreen'
 import ExportTokenTransactions from './useCases/PortfolioTokenDetails/ExportTokenTransactions'
@@ -22,7 +22,7 @@ export const PortfolioNavigator = () => {
   const strings = useStrings()
 
   return (
-    <PortfolioTokenDetailProvider>
+    <PortfolioProvider>
       <Stack.Navigator
         screenOptions={{
           ...defaultStackNavigationOptions(atoms, color),
@@ -65,6 +65,6 @@ export const PortfolioNavigator = () => {
           )}
         </Stack.Screen>
       </Stack.Navigator>
-    </PortfolioTokenDetailProvider>
+    </PortfolioProvider>
   )
 }

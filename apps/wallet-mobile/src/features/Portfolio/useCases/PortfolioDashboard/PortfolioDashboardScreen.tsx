@@ -6,6 +6,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Spacer} from '../../../../components/Spacer/Spacer'
 import {useMetrics} from '../../../../kernel/metrics/metricsManager'
+import {usePortfolio} from '../../common/PortfolioProvider'
 import {BalanceCard} from './BalanceCard/BalanceCard'
 import {DashboardNFTsList} from './DashboardNFTsList/DashboardNFTsList'
 import {DashboardTokensList} from './DashboardTokensList/DashboardTokensList'
@@ -13,11 +14,13 @@ import {DashboardTokensList} from './DashboardTokensList/DashboardTokensList'
 export const PortfolioDashboardScreen = () => {
   const {styles} = useStyles()
   const {track} = useMetrics()
+  const {resetTabs} = usePortfolio()
 
   useFocusEffect(
     React.useCallback(() => {
+      resetTabs()
       track.portfolioDashboardPageViewed()
-    }, [track]),
+    }, [resetTabs, track]),
   )
 
   return (
