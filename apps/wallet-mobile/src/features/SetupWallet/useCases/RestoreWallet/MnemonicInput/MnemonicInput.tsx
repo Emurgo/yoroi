@@ -1,9 +1,8 @@
 import {useTheme} from '@yoroi/theme'
 import {wordlists} from 'bip39'
 import * as React from 'react'
-import {Platform, StyleSheet, Text, TextInput as RNTextInput, TouchableOpacity, View} from 'react-native'
+import {Platform, ScrollView, StyleSheet, Text, TextInput as RNTextInput, TouchableOpacity, View} from 'react-native'
 
-import {useScrollView} from '../../../../../components/ScrollableView/ScrollableView'
 import {Space} from '../../../../../components/Space/Space'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {isEmptyString} from '../../../../../kernel/utils'
@@ -25,6 +24,7 @@ export const MnemonicInput = ({
   mnenonicRefs,
   mnemonic,
   inputErrorsIndexes,
+  scrollViewRef,
   onError,
   onClearError,
 }: {
@@ -41,6 +41,7 @@ export const MnemonicInput = ({
   mnenonicRefs: React.RefObject<MnemonicWordInputRef>[]
   inputErrorsIndexes: Array<number>
   mnemonic: string
+  scrollViewRef: React.MutableRefObject<ScrollView | null>
   onError: (index: number) => void
   onClearError: (index: number) => void
 }) => {
@@ -63,6 +64,7 @@ export const MnemonicInput = ({
         onFocus={onFocus}
         onError={onError}
         onClearError={onClearError}
+        scrollViewRef={scrollViewRef}
       />
 
       <Space height="lg" />
@@ -114,29 +116,30 @@ const ClearAllButton = ({onPress, testId}: {onPress: () => void; testId?: string
 type MnemonicWordsInputProps = {
   mnenonicRefs: React.RefObject<MnemonicWordInputRef>[]
   mnemonicSelectedWords: Array<string>
-  onSelect: (index: number, word: string) => void
   isValidPhrase: boolean
   suggestedWords: Array<string>
   inputErrorsIndexes: Array<number>
+  scrollViewRef: React.MutableRefObject<ScrollView | null>
+  onSelect: (index: number, word: string) => void
   setSuggestedWords: (suggestedWord: Array<string>) => void
   onFocus: (index: number) => void
   onError: (index: number) => void
   onClearError: (index: number) => void
 }
 const MnemonicWordsInput = ({
-  onSelect,
   mnemonicSelectedWords,
   mnenonicRefs,
   isValidPhrase = false,
   suggestedWords,
   inputErrorsIndexes,
+  scrollViewRef,
+  onSelect,
   setSuggestedWords,
   onFocus,
   onError,
   onClearError,
 }: MnemonicWordsInputProps) => {
   const {styles} = useStyles()
-  const scrollView = useScrollView()
   const rowHeightRef = React.useRef<number | void>()
 
   useAutoFocus(mnenonicRefs[0])
@@ -169,7 +172,7 @@ const MnemonicWordsInput = ({
                 const columnNumber = index % 3
                 const rowNumber = (index - columnNumber) / 3
                 // TODO: revist @banklesss for this to work it needs to be in a ScrollableView
-                scrollView?.scrollTo({y: rowNumber * rowHeightRef.current})
+                scrollViewRef?.current?.scrollTo({y: rowNumber * rowHeightRef.current})
 
                 onFocus(index)
               }}
