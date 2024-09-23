@@ -76,8 +76,6 @@ const WithdrawalTxForm = ({wallet, onDone}: {wallet: YoroiWallet; onDone: (withd
       ? Quantities.isGreaterThan(stakingInfo.rewards, '0')
       : false
 
-  console.log('isScrollBarShown', isScrollBarShown)
-
   return (
     <View style={styles.root} testID="dangerousActionView">
       <Header title={strings.warningModalTitle}></Header>
