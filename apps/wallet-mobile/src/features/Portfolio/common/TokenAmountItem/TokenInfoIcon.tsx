@@ -6,7 +6,10 @@ import React from 'react'
 import {ImageStyle, StyleSheet, View} from 'react-native'
 
 import {Icon} from '../../../../components/Icon'
+import {isDev} from '../../../../kernel/env'
+import {logger} from '../../../../kernel/logger/logger'
 import {useSelectedWallet} from '../../../WalletManager/common/hooks/useSelectedWallet'
+import {usePortfolioImageInvalidate} from '../hooks/usePortfolioImage'
 
 type TokenInfoIconProps = {
   info: Portfolio.Token.Info | undefined | null
@@ -16,6 +19,8 @@ type TokenInfoIconProps = {
 export const TokenInfoIcon = ({info, size = 'md', imageStyle}: TokenInfoIconProps) => {
   const {styles} = useStyles()
   const {wallet} = useSelectedWallet()
+  const {invalidate} = usePortfolioImageInvalidate()
+
   const [error, setError] = React.useState(false)
 
   if (error || !info) return <TokenIconPlaceholder size={size} />
@@ -42,7 +47,13 @@ export const TokenInfoIcon = ({info, size = 'md', imageStyle}: TokenInfoIconProp
       style={[size === 'sm' ? styles.iconSmall : styles.iconMedium, imageStyle]}
       placeholder={blurhash}
       cachePolicy="memory-disk"
-      onError={() => setError(true)}
+      onError={() => {
+        setError(true)
+        if (isDev) {
+          logger.debug(`invalidating token image ${info.id}`)
+          invalidate([info.id])
+        }
+      }}
     />
   )
 }
