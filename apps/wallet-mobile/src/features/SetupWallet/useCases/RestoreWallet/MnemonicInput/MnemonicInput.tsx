@@ -171,7 +171,6 @@ const MnemonicWordsInput = ({
                 if (rowHeightRef.current == null) return
                 const columnNumber = index % 3
                 const rowNumber = (index - columnNumber) / 3
-                // TODO: revist @banklesss for this to work it needs to be in a ScrollableView
                 scrollViewRef?.current?.scrollTo({y: rowNumber * rowHeightRef.current})
 
                 onFocus(index)
