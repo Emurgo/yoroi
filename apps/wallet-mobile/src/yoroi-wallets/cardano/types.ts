@@ -31,6 +31,7 @@ import {
 } from '../types/staking'
 import {YoroiEntry, YoroiSignedTx, YoroiUnsignedTx} from '../types/yoroi'
 import type {Addresses} from './account-manager/account-manager'
+import {Subject} from 'rxjs'
 
 export type WalletEvent =
   | {type: 'initialize'}
@@ -74,6 +75,8 @@ export interface YoroiWallet {
   get primaryBreakdown(): ReturnType<Portfolio.Manager.Balance['getPrimaryBreakdown']>
   get isEmpty(): boolean
   get hasOnlyPrimary(): boolean
+
+  readonly utxos$: Subject<{utxos: RawUtxo[]}>
 
   // account
   readonly accountVisual: number

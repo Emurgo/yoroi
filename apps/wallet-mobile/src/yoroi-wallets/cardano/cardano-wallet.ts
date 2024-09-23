@@ -12,7 +12,7 @@ import {Buffer} from 'buffer'
 import {freeze} from 'immer'
 import _ from 'lodash'
 import {defaultMemoize} from 'reselect'
-import {Observable} from 'rxjs'
+import {Observable, Subject} from 'rxjs'
 
 import {buildPortfolioBalanceManager} from '../../features/Portfolio/common/helpers/build-balance-manager'
 import {toBalanceManagerSyncArgs} from '../../features/Portfolio/common/transformers/toBalanceManagerSyncArgs'
@@ -87,6 +87,7 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
     readonly accountVisual: number
     private readonly utxoManager: UtxoManager
     private _utxos: RawUtxo[]
+    readonly utxos$: Subject<{utxos: RawUtxo[]}>
     private _collateralId = ''
 
     private readonly transactionManager: TransactionManager
@@ -141,6 +142,7 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
         storage: accountStorage.join('utxos/'),
         apiUrl: legacyApiBaseUrl,
       })
+
       const transactionManager = await TransactionManager.create(accountStorage.join('txs/'))
       // TODO: revisit memos should be per network and shouldn't be cleared on wallet clear (unless user selects it)
       const memosManager = await makeMemosManager(accountStorage.join('memos/'))
@@ -222,6 +224,7 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
       this.memosManager = memosManager
       this.balanceManager = balanceManager
       this.balance$ = balanceManager.observable$
+      this.utxos$ = new Subject()
       this.accountManager = accountManager
       this.portfolioPrimaryTokenInfo = portfolioPrimaryTokenInfo
 
@@ -1002,6 +1005,7 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
         this.balanceManager.syncBalances(balancesToSync)
 
         this._utxos = newUtxos
+        this.utxos$.next({utxos: newUtxos})
         this.notify({type: 'utxos', utxos: this.utxos})
         return true
       }

@@ -26,6 +26,19 @@ export interface NotificationTransactionReceivedEvent
   }
 }
 
+export interface NotificationRewardsUpdatedEvent extends NotificationEventBase {
+  trigger: NotificationTrigger.RewardsUpdated
+}
+
+export interface NotificationPrimaryTokenPriceChangedEvent
+  extends NotificationEventBase {
+  trigger: NotificationTrigger.PrimaryTokenPriceChanged
+  metadata: {
+    previousPrice: number
+    nextPrice: number
+  }
+}
+
 export type NotificationGroup = 'transaction-history' | 'portfolio'
 
 export type NotificationEvent = NotificationTransactionReceivedEvent

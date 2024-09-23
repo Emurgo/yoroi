@@ -1,153 +1,25 @@
-import {Notification, Notifications} from '@jamsinclair/react-native-notifications'
-import {useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
-import {notificationManagerMaker} from '@yoroi/notifications'
 import {useTheme} from '@yoroi/theme'
 import {Notifications as NotificationTypes} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, Switch as RNSwitch, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {UseMutationOptions, useQuery, UseQueryOptions} from 'react-query'
-import {Subject} from 'rxjs'
-import uuid from 'uuid'
 
 import {Button} from '../../../components/Button/Button'
-
-const useRequestPermissions = () => {
-  React.useEffect(() => {
-    Notifications.registerRemoteNotifications()
-  }, [])
-}
-
-const useHandleNotification = () => {
-  React.useEffect(() => {
-    const s = Notifications.events().registerNotificationReceivedForeground(
-      (notification: Notification, completion) => {
-        console.log(`Notification received in foreground: ${notification.title} : ${notification.body}`)
-        completion({alert: true, sound: true, badge: true})
-      },
-    )
-    return () => {
-      s.remove()
-    }
-  }, [])
-}
-
-const useNotificationsConfig = () => {
-  const manager = useNotificationsManager()
-  return useQuery(['notificationsConfig'], () => manager.config.read())
-}
-
-const useUpdateNotificationsConfig = () => {
-  const manager = useNotificationsManager()
-  const mutationFn = async (newConfig: NotificationTypes.Config) => {
-    await manager.config.save(newConfig)
-  }
-
-  return useMutationWithInvalidations({
-    mutationFn,
-    invalidateQueries: [['notificationsConfig']],
-  })
-}
-
-const useResetNotificationsConfig = (options: UseMutationOptions<NotificationTypes.Config, Error> = {}) => {
-  const manager = useNotificationsManager()
-  const mutationFn = async () => {
-    await manager.config.reset()
-    return manager.config.read()
-  }
-
-  return useMutationWithInvalidations({
-    mutationFn,
-    invalidateQueries: [['notificationsConfig']],
-    ...options,
-  })
-}
-
-const useReceivedNotificationEvents = (
-  options: UseQueryOptions<ReadonlyArray<NotificationTypes.Event>, Error> = {},
-) => {
-  const manager = useNotificationsManager()
-  const queryFn = () => manager.events.read()
-  return useQuery({
-    queryKey: ['receivedNotificationEvents'],
-    queryFn,
-    ...options,
-  })
-}
-
-const useSendNotification = () => {
-  const sendNotification = React.useCallback((title: string, body: string) => {
-    const notification = new Notification({
-      title,
-      body,
-      sound: 'default',
-    })
-    Notifications.postLocalNotification(notification.payload)
-  }, [])
-
-  return {send: sendNotification}
-}
-
-const useNotificationsManager = (options?: {subscriptions?: NotificationTypes.ManagerMakerProps['subscriptions']}) => {
-  const storage = useAsyncStorage()
-  const subscriptions = options?.subscriptions
-
-  const manager = React.useMemo(() => {
-    const eventsStorage = storage.join('events/')
-    const configStorage = storage.join('settings/')
-
-    return notificationManagerMaker({
-      eventsStorage,
-      configStorage,
-      subscriptions,
-    })
-  }, [storage, subscriptions])
-
-  React.useEffect(() => {
-    manager.hydrate()
-    return () => {
-      manager.destroy()
-    }
-  }, [manager])
-
-  return manager
-}
-
-const useNotifications = () => {
-  const {send} = useSendNotification()
-  const [transactionReceivedSubject] = React.useState(new Subject<NotificationTypes.TransactionReceivedEvent>())
-  const manager = useNotificationsManager({
-    subscriptions: {[NotificationTypes.Trigger.TransactionReceived]: transactionReceivedSubject},
-  })
-  React.useEffect(() => {
-    const subscription = manager.notification$.subscribe((notificationEvent) => {
-      if (notificationEvent.trigger === NotificationTypes.Trigger.TransactionReceived) {
-        send('Transaction received', 'You have received a new transaction')
-      }
-    })
-    return () => {
-      subscription.unsubscribe()
-    }
-  }, [manager, send])
-
-  const triggerTransactionReceived = (metadata: NotificationTypes.TransactionReceivedEvent['metadata']) => {
-    transactionReceivedSubject.next({
-      id: uuid.v4(),
-      date: new Date().toISOString(),
-      isRead: false,
-      trigger: NotificationTypes.Trigger.TransactionReceived,
-      metadata,
-    })
-  }
-
-  return {triggerTransactionReceived}
-}
+import {ScrollableView} from '../../../components/ScrollableView'
+import {
+  useHandleNotification,
+  useMockedNotifications,
+  useNotificationsConfig,
+  useReceivedNotificationEvents,
+  useRequestPermissions,
+  useResetNotificationsConfig,
+  useUpdateNotificationsConfig,
+} from './common/hooks'
 
 export const NotificationsDevScreen = () => {
   useRequestPermissions()
   useHandleNotification()
-  const {triggerTransactionReceived} = useNotifications()
-  const {data: receivedNotifications} = useReceivedNotificationEvents()
+  const {triggerTransactionReceived} = useMockedNotifications()
 
   const handleOnTriggerTransactionReceived = () => {
     triggerTransactionReceived({
@@ -160,26 +32,68 @@ export const NotificationsDevScreen = () => {
 
   return (
     <SafeAreaView edges={['bottom', 'top', 'left', 'right']}>
-      <View style={{padding: 16, gap: 8}}>
-        <Text style={{fontSize: 24}}>Notifications Playground</Text>
+      <ScrollableView>
+        <View style={{padding: 16, gap: 8}}>
+          <Text style={{fontSize: 24}}>Notifications Playground</Text>
 
-        <Button
-          title={`Trigger ${NotificationTypes.Trigger.TransactionReceived}`}
-          shelleyTheme
-          onPress={handleOnTriggerTransactionReceived}
-        />
+          <Button
+            title={`Trigger Transacrion Received Notification`}
+            shelleyTheme
+            onPress={handleOnTriggerTransactionReceived}
+          />
 
-        <View>
-          <Text>Received Notifications</Text>
+          <Text style={{fontSize: 24}}>Settings</Text>
 
-          <Text>{JSON.stringify(receivedNotifications)}</Text>
+          <NotificationSettings />
+
+          <ReceivedNotificationsList />
         </View>
-
-        <Text style={{fontSize: 24}}>Settings</Text>
-
-        <NotificationSettings />
-      </View>
+      </ScrollableView>
     </SafeAreaView>
+  )
+}
+
+const ReceivedNotificationsList = () => {
+  const {data: receivedNotifications} = useReceivedNotificationEvents()
+  return (
+    <View>
+      <Text
+        style={{
+          fontSize: 24,
+          marginTop: 16,
+        }}
+      >
+        Received Notifications
+      </Text>
+
+      {receivedNotifications?.map((notification) => (
+        <ReceivedNotification key={notification.id} notification={notification} />
+      ))}
+    </View>
+  )
+}
+
+const ReceivedNotification = ({notification}: {notification: NotificationTypes.Event}) => {
+  const readStatus = notification.isRead ? 'Read' : 'Unread'
+
+  if (notification.trigger === NotificationTypes.Trigger.TransactionReceived) {
+    const title = `You received a transaction at ${new Date(notification.date).toLocaleString()}`
+
+    return (
+      <View>
+        <Text>{title}</Text>
+        <Text>{notification.metadata.txId}</Text>
+        <Text>{readStatus}</Text>
+      </View>
+    )
+  }
+
+  return (
+    <View>
+      <Text>{notification.trigger}</Text>
+      <Text>{notification.date}</Text>
+      <Text>{readStatus}</Text>
+    </View>
   )
 }
 

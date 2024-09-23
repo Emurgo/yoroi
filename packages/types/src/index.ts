@@ -264,6 +264,8 @@ import {
   NotificationGroup,
   NotificationManager,
   NotificationManagerMakerProps,
+  NotificationPrimaryTokenPriceChangedEvent,
+  NotificationRewardsUpdatedEvent,
   NotificationTransactionReceivedEvent,
   NotificationTrigger,
 } from './notifications/manager'
@@ -661,6 +663,9 @@ export namespace Notifications {
   export type Manager = NotificationManager
   export type ManagerMakerProps = NotificationManagerMakerProps
   export type TransactionReceivedEvent = NotificationTransactionReceivedEvent
+  export type RewardsUpdatedEvent = NotificationRewardsUpdatedEvent
+  export type PrimaryTokenPriceChangedEvent =
+    NotificationPrimaryTokenPriceChangedEvent
   export const Trigger = NotificationTrigger
   export type Trigger = NotificationTrigger
 }
