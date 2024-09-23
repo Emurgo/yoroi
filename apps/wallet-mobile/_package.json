@@ -166,7 +166,7 @@
     "react": "18.2.0",
     "react-error-boundary": "^3.1.4",
     "react-intl": "^6.6.2",
-    "react-native": "~0.71.0",
+    "react-native": "0.74.4",
     "react-native-background-timer": "2.4.1",
     "react-native-ble-plx": "2.0.3",
     "react-native-bootsplash": "^4.6.0",

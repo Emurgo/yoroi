@@ -1,4 +1,4 @@
-const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
+const {getDefaultConfig, mergeConfig} = require('@react-native/metro-config');
 const path = require('path');
 
 const projectRoot = __dirname;
@@ -14,6 +14,7 @@ const config = {
   projectRoot,
   watchFolders: [workspaceRoot],
   resolver: {
+    unstable_enableSymlinks: true,
     nodeModulesPaths: [
       path.resolve(projectRoot, 'node_modules'),
       path.resolve(workspaceRoot, 'node_modules'),

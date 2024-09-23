@@ -1,5 +1,5 @@
 nodejs 18.19.1
 rust 1.69.0
-java adoptopenjdk-17.0.10+7
+java zulu-17.52.19
 ruby 3.1.2
 python 3.11.3
