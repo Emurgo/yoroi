@@ -5,7 +5,15 @@ import {useTheme} from '@yoroi/theme'
 import BigNumber from 'bignumber.js'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {
+  ActivityIndicator,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+  ViewProps,
+} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Banner} from '../../components/Banner/Banner'
@@ -43,14 +51,13 @@ export const Dashboard = () => {
   const {wallet, meta} = useSelectedWallet()
   const {isLoading: isSyncing, sync} = useSync(wallet)
   const isOnline = useIsOnline(wallet)
-  const {openModal, closeModal} = useModal()
+  const {openModal} = useModal()
+  const {height: windowHeight} = useWindowDimensions()
 
   const balances = useBalances(wallet)
   const primaryAmount = Amounts.getAmount(balances, wallet.portfolioPrimaryTokenInfo.id)
   const {stakingInfo, refetch: refetchStakingInfo, error, isLoading} = useStakingInfo(wallet)
   const isGovernanceFeatureEnabled = useIsGovernanceFeatureEnabled(wallet)
-
-  const {resetToTxHistory} = useWalletNavigation()
 
   const isParticipatingInGovernance = useIsParticipatingInGovernance(wallet)
   const walletNavigateTo = useWalletNavigation()
@@ -68,11 +75,7 @@ export const Dashboard = () => {
       return
     }
 
-    openModal(
-      '',
-      <WithdrawStakingRewards wallet={wallet} onSuccess={() => resetToTxHistory()} onCancel={() => closeModal()} />,
-      450,
-    )
+    openModal('', <WithdrawStakingRewards wallet={wallet} />, windowHeight * 0.8)
   }
 
   return (

@@ -30,7 +30,6 @@ import type {
   FundInfoResponse,
   PoolInfoRequest,
   RawUtxo,
-  TipStatusResponse,
   Transaction,
   TxStatusRequest,
   TxStatusResponse,
@@ -372,12 +371,9 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
       addressMode: Wallet.AddressMode
     }) {
       if (implementationConfig.features.staking) {
-        const time = await this.checkServerStatus()
-          .then(({serverTime}) => serverTime || Date.now())
-          .catch(() => Date.now())
         const primaryTokenId = this.portfolioPrimaryTokenInfo.id
 
-        const absSlotNumber = new BigNumber(this.networkManager.epoch.progress(new Date(time)).currentSlot)
+        const absSlotNumber = await this.getAbsoluteSlotNumber()
         const changeAddr = this.getAddressedChangeAddress(addressMode)
         const addressedUtxos = await this.getAddressedUtxos()
         const registrationStatus = this.getDelegationStatus().isRegistered
@@ -438,11 +434,7 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
         const primaryTokenId = this.portfolioPrimaryTokenInfo.id
 
         try {
-          const time = await this.checkServerStatus()
-            .then(({serverTime}) => serverTime || Date.now())
-            .catch(() => Date.now())
-
-          const absSlotNumber = new BigNumber(this.networkManager.epoch.progress(new Date(time)).currentSlot)
+          const absSlotNumber = await this.getAbsoluteSlotNumber()
           const votingPublicKey = await Promise.resolve(Buffer.from(catalystKeyHex, 'hex'))
             .then((bytes) => CardanoMobile.PrivateKey.fromExtendedBytes(bytes))
             .then((key) => key.toPublic())
@@ -529,12 +521,9 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
       addressMode: Wallet.AddressMode
     }): Promise<YoroiUnsignedTx> {
       if (implementationConfig.features.staking) {
-        const time = await this.checkServerStatus()
-          .then(({serverTime}) => serverTime || Date.now())
-          .catch(() => Date.now())
         const primaryTokenId = this.portfolioPrimaryTokenInfo.id
 
-        const absSlotNumber = new BigNumber(this.networkManager.epoch.progress(new Date(time)).currentSlot)
+        const absSlotNumber = await this.getAbsoluteSlotNumber()
         const changeAddr = this.getAddressedChangeAddress(addressMode)
         const addressedUtxos = await this.getAddressedUtxos()
         const accountState = await legacyApi.getAccountState(
@@ -590,11 +579,8 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
       votingCertificates: CardanoTypes.Certificate[]
       addressMode: Wallet.AddressMode
     }) {
-      const time = await this.checkServerStatus()
-        .then(({serverTime}) => serverTime || Date.now())
-        .catch(() => Date.now())
       const primaryTokenId = this.portfolioPrimaryTokenInfo.id
-      const absSlotNumber = new BigNumber(this.networkManager.epoch.progress(new Date(time)).currentSlot)
+      const absSlotNumber = await this.getAbsoluteSlotNumber()
       const changeAddr = this.getAddressedChangeAddress(addressMode)
       const addressedUtxos = await this.getAddressedUtxos()
 
@@ -759,6 +745,13 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
       return Promise.resolve(addressedUtxos)
     }
 
+    private async getAbsoluteSlotNumber() {
+      const time = await this.checkServerStatus()
+        .then(({serverTime}) => serverTime || Date.now())
+        .catch(() => Date.now())
+      return new BigNumber(this.networkManager.epoch.progress(new Date(time)).absoluteSlot)
+    }
+
     async createUnsignedTx({
       entries,
       addressMode,
@@ -768,11 +761,9 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
       addressMode: Wallet.AddressMode
       metadata?: Array<CardanoTypes.TxMetadata>
     }) {
-      const time = await this.checkServerStatus()
-        .then(({serverTime}) => serverTime || Date.now())
-        .catch(() => Date.now())
       const primaryTokenId = this.portfolioPrimaryTokenInfo.id
-      const absSlotNumber = new BigNumber(this.networkManager.epoch.progress(new Date(time)).currentSlot)
+      const absSlotNumber = await this.getAbsoluteSlotNumber()
+
       const changeAddr = this.getAddressedChangeAddress(addressMode)
       const addressedUtxos = await this.getAddressedUtxos()
 
@@ -1084,10 +1075,6 @@ export const makeCardanoWallet = (networkManager: Network.Manager, implementatio
 
     async fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse> {
       return legacyApi.fetchTxStatus(request, networkManager.legacyApiBaseUrl)
-    }
-
-    async fetchTipStatus(): Promise<TipStatusResponse> {
-      return legacyApi.getTipStatus(networkManager.legacyApiBaseUrl)
     }
 
     private isInitialized = false

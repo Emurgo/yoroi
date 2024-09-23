@@ -1,8 +1,9 @@
 import {Chain} from '@yoroi/types'
+import {freeze} from 'immer'
 
 export const API_ENDPOINTS: Readonly<
   Record<Chain.SupportedNetworks, {root: string}>
-> = {
+> = freeze({
   [Chain.Network.Mainnet]: {
     root: 'https://zero.yoroiwallet.com',
   },
@@ -15,4 +16,4 @@ export const API_ENDPOINTS: Readonly<
   [Chain.Network.Preview]: {
     root: 'https://yoroi-backend-zero-preview.emurgornd.com',
   },
-} as const
+} as const)

@@ -6,42 +6,51 @@ import {ScrollView, StyleSheet, Text, View} from 'react-native'
 import {Boundary} from '../../../components/Boundary/Boundary'
 import {Button} from '../../../components/Button/Button'
 import {Checkbox} from '../../../components/Checkbox/Checkbox'
+import {useModal} from '../../../components/Modal/ModalContext'
 import {PleaseWaitView} from '../../../components/PleaseWaitModal'
 import {Space} from '../../../components/Space/Space'
 import {Warning} from '../../../components/Warning/Warning'
 import {useSelectedWallet} from '../../../features/WalletManager/common/hooks/useSelectedWallet'
 import globalMessages, {confirmationMessages, ledgerMessages} from '../../../kernel/i18n/global-messages'
+import {useWalletNavigation} from '../../../kernel/navigation'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {useWithdrawalTx} from '../../../yoroi-wallets/hooks'
 import {YoroiUnsignedTx} from '../../../yoroi-wallets/types/yoroi'
+import {delay} from '../../../yoroi-wallets/utils/timeUtils'
 import {Quantities} from '../../../yoroi-wallets/utils/utils'
 import {useStakingInfo} from '../StakePoolInfos'
 import {ConfirmTx} from './ConfirmTx/ConfirmTx'
 type Props = {
   wallet: YoroiWallet
-  onCancel: () => void
-  onSuccess: () => void
 }
 
-export const WithdrawStakingRewards = ({wallet, onSuccess, onCancel}: Props) => {
+export const WithdrawStakingRewards = ({wallet}: Props) => {
   const strings = useWithdrawStakingRewardsStrings()
-  const [state, setState] = React.useState<
-    {step: 'form'; withdrawalTx: undefined} | {step: 'confirm'; withdrawalTx: YoroiUnsignedTx}
-  >({step: 'form', withdrawalTx: undefined})
+  const {closeModal, openModal} = useModal()
+  const {resetToTxHistory} = useWalletNavigation()
+
+  const handleOnConfirm = async (withdrawalTx: YoroiUnsignedTx) => {
+    closeModal()
+
+    await delay(1000)
+
+    openModal(
+      '',
+      <Boundary>
+        <ConfirmTx
+          wallet={wallet}
+          unsignedTx={withdrawalTx}
+          onSuccess={() => resetToTxHistory()}
+          onCancel={() => closeModal()}
+        />
+      </Boundary>,
+      400,
+    )
+  }
 
   return (
     <Boundary loading={{fallback: <PleaseWaitView title="" spinnerText={strings.pleaseWait} />}}>
-      <Route active={state.step === 'form'}>
-        <Boundary>
-          <WithdrawalTxForm wallet={wallet} onDone={(withdrawalTx) => setState({step: 'confirm', withdrawalTx})} />
-        </Boundary>
-      </Route>
-
-      {state.step === 'confirm' && (
-        <Route active={true}>
-          <ConfirmTx wallet={wallet} unsignedTx={state.withdrawalTx} onSuccess={onSuccess} onCancel={onCancel} />
-        </Route>
-      )}
+      <WithdrawalTxForm wallet={wallet} onDone={handleOnConfirm} />
     </Boundary>
   )
 }
@@ -127,8 +136,6 @@ const Header = ({title}: {title: string}) => {
   const styles = useStyles()
   return <View style={styles.header}>{title !== '' && <Text style={styles.title}>{title}</Text>}</View>
 }
-
-const Route = ({active, children}: {active: boolean; children: React.ReactNode}) => <>{active ? children : null}</>
 
 const useWithdrawStakingRewardsStrings = () => {
   const intl = useIntl()

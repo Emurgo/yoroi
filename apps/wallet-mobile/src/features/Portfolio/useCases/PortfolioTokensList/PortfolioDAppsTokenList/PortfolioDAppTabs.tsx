@@ -3,40 +3,37 @@ import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 
 import {useStrings} from '../../../common/hooks/useStrings'
+import {PortfolioDappsTab, usePortfolio} from '../../../common/PortfolioProvider'
 import {TabsGradient} from '../../../common/TabsGradient/Tabs'
-import {portfolioDAppsTabs, TPortfolioDAppsTabs} from '../../../common/types'
 
-type DAppTabsProps = {
-  activeTab: TPortfolioDAppsTabs
-  onChangeTab: (tab: TPortfolioDAppsTabs) => void
-}
-export const PortfolioDAppTabs = ({activeTab, onChangeTab}: DAppTabsProps) => {
+export const PortfolioDAppTabs = () => {
   const strings = useStrings()
+  const {dappsTab, setDappsTab} = usePortfolio()
 
   return (
     <TabsGradient>
       <Tab
         onPress={() => {
-          onChangeTab(portfolioDAppsTabs.LIQUIDITY_POOL)
+          setDappsTab(PortfolioDappsTab.LiquidityPool)
         }}
         label={strings.liquidityPool}
-        active={activeTab === portfolioDAppsTabs.LIQUIDITY_POOL}
+        active={dappsTab === PortfolioDappsTab.LiquidityPool}
       />
 
       <Tab
         onPress={() => {
-          onChangeTab(portfolioDAppsTabs.OPEN_ORDERS)
+          setDappsTab(PortfolioDappsTab.OpenOrders)
         }}
         label={strings.openOrders}
-        active={activeTab === portfolioDAppsTabs.OPEN_ORDERS}
+        active={dappsTab === PortfolioDappsTab.OpenOrders}
       />
 
       <Tab
         onPress={() => {
-          onChangeTab(portfolioDAppsTabs.LEND_BORROW)
+          setDappsTab(PortfolioDappsTab.LendAndBorrow)
         }}
         label={strings.lendAndBorrow}
-        active={activeTab === portfolioDAppsTabs.LEND_BORROW}
+        active={dappsTab === PortfolioDappsTab.LendAndBorrow}
       />
     </TabsGradient>
   )
