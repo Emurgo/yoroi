@@ -9,29 +9,27 @@ import {useSearchOnNavBar} from '../../../Search/SearchContext'
 import {NetworkTag} from '../../../Settings/ChangeNetwork/NetworkTag'
 import {useGetDAppsPortfolioBalance} from '../../common/hooks/useGetDAppsPortfolioBalance'
 import {useStrings} from '../../common/hooks/useStrings'
-import {PortfolioProvider} from '../../common/PortfolioProvider'
+import {PortfolioListTab, usePortfolio} from '../../common/PortfolioProvider'
 import {PortfolioDAppsTokenList} from './PortfolioDAppsTokenList/PortfolioDAppsTokenList'
 import {PortfolioWalletTokenList} from './PortfolioWalletTokenList/PortfolioWalletTokenList'
 
-type ActiveTab = 'wallet' | 'dapps'
-type Tabs = 'Wallet Token' | 'Dapps Token'
-const tabs: Record<ActiveTab, Tabs> = {
-  wallet: 'Wallet Token',
-  dapps: 'Dapps Token',
-}
+const tabs = {
+  [PortfolioListTab.Wallet]: 'Wallet Token',
+  [PortfolioListTab.Dapps]: 'Dapps Token',
+} as const
+
 export const PortfolioTokenListScreen = () => {
   const {styles} = useStyles()
   const strings = useStrings()
   const {track} = useMetrics()
+  const {listTab, setListTab} = usePortfolio()
   // TODO: missing dAppsBalance
   const dAppsBalance = useGetDAppsPortfolioBalance(0n)
   const hasDApps = dAppsBalance !== undefined && Number(dAppsBalance.quantity) > 0
 
-  const [activeTab, setActiveTab] = React.useState<'wallet' | 'dapps'>('wallet')
-
   React.useEffect(() => {
-    track.portfolioTokensListPageViewed({tokens_tab: tabs[activeTab]})
-  }, [activeTab, track])
+    track.portfolioTokensListPageViewed({tokens_tab: tabs[listTab]})
+  }, [listTab, track])
 
   useSearchOnNavBar({
     title: strings.tokenList,
@@ -40,25 +38,31 @@ export const PortfolioTokenListScreen = () => {
   })
 
   return (
-    <PortfolioProvider>
-      <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
-        {hasDApps && (
-          <Tabs>
-            <Tab onPress={() => setActiveTab('wallet')} label={strings.walletToken} active={activeTab === 'wallet'} />
+    <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
+      {hasDApps && (
+        <Tabs>
+          <Tab
+            onPress={() => setListTab(PortfolioListTab.Wallet)}
+            label={strings.walletToken}
+            active={listTab === PortfolioListTab.Wallet}
+          />
 
-            <Tab onPress={() => setActiveTab('dapps')} label={strings.dappsToken} active={activeTab === 'dapps'} />
-          </Tabs>
-        )}
+          <Tab
+            onPress={() => setListTab(PortfolioListTab.Dapps)}
+            label={strings.dappsToken}
+            active={listTab === PortfolioListTab.Dapps}
+          />
+        </Tabs>
+      )}
 
-        <TabPanel active={activeTab === 'wallet'}>
-          <PortfolioWalletTokenList />
-        </TabPanel>
+      <TabPanel active={listTab === PortfolioListTab.Wallet}>
+        <PortfolioWalletTokenList />
+      </TabPanel>
 
-        <TabPanel active={activeTab === 'dapps'}>
-          <PortfolioDAppsTokenList />
-        </TabPanel>
-      </SafeAreaView>
-    </PortfolioProvider>
+      <TabPanel active={listTab === PortfolioListTab.Dapps}>
+        <PortfolioDAppsTokenList />
+      </TabPanel>
+    </SafeAreaView>
   )
 }
 
